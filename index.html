@@ -17,7 +17,7 @@
   ╠══════════════════════════════════════════════════════════════╣
   ║  Developed by: Duvan Stiven Ramírez Duque                     ║
   ║  Fecha de creación: 2024                                       ║
-  ║  Versión: 5.7 · May 2026                            ║
+  ║  Versión: 5.8 · May 2026                            ║
   ╚══════════════════════════════════════════════════════════════╝
 -->
 <!DOCTYPE html>
@@ -28,7 +28,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>TXOKO · Formación</title>
 <meta name="description" content="Formación del equipo de sala — TXOKO by Martín Berasategui">
-<meta name="app-version" content="5.7">
+<meta name="app-version" content="5.8">
 <meta name="app-build" content="May 2026">
 <meta name="theme-color" content="#0e0c09">
 <!-- ═══ PWA ═══ -->
@@ -10136,7 +10136,7 @@ const CAT_COLORS={'Entrantes':'#c49a3c','Hamburguesas y Bocatas':'#b86050','Plat
 const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#c49a3c"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#a47a2c" opacity=".4"/><path d="M8 8v4a1 1 0 001 1h1v4M10 8v4" stroke="#fff" stroke-width="1.2" stroke-linecap="round" fill="none"/><path d="M15 8v8M14 8v3a1.5 1.5 0 003 0V8" stroke="#fff" stroke-width="1.2" stroke-linecap="round" fill="none"/></svg>`,'Hamburguesas y Bocatas':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#b86050"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#983838" opacity=".4"/><path d="M7 9h10M7 12h10M7 15h10" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/><path d="M8 9c0-2 2-3 4-3s4 1 4 3M8 15c0 2 2 3 4 3s4-1 4-3" fill="none" stroke="#fff" stroke-width="1" opacity=".7"/></svg>`,'Platos Principales':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#4888a0"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#2e6878" opacity=".4"/><path d="M5 15h14" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/><path d="M12 6a6 6 0 016 6H6a6 6 0 016-6z" fill="none" stroke="#fff" stroke-width="1.1"/><circle cx="10" cy="6" r=".7" fill="#fff" opacity=".7"/><circle cx="12" cy="5" r=".7" fill="#fff" opacity=".7"/><circle cx="14" cy="6" r=".7" fill="#fff" opacity=".7"/></svg>`,'Sugerencias':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#d4aa4c"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#a48a2c" opacity=".4"/><polygon points="12,5 14.5,10 20,10.5 16,14 17,20 12,17 7,20 8,14 4,10.5 9.5,10" fill="#fff" opacity=".9"/></svg>`,'Guarniciones y Salsas':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#4d8a5e"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#2d6a3e" opacity=".4"/><path d="M12 18V10M5 10c0-4 3-6 7-6s7 2 7 6c0 5-3 8-7 8s-7-3-7-8z" fill="none" stroke="#fff" stroke-width="1.1"/><path d="M5 10c3 0 5 1 7 2.5" fill="none" stroke="#fff" stroke-width=".8" opacity=".6"/></svg>`,'Postres':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#7a6aaa"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#5a4a8a" opacity=".4"/><path d="M9 19h6M12 12v7M7 6l2 4.5a3 3 0 006 0L17 6H7z" fill="none" stroke="#fff" stroke-width="1.1" stroke-linecap="round"/></svg>`,'Vegetariano':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#5a9a6e"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#3a7a4e" opacity=".4"/><path d="M9 18h6M12 18V10M12 10c0-3 2-5 5-5-.7 2.5-2.5 5-5 5zM12 10c0-3-2-5-5-5 .7 2.5 2.5 5 5 5z" fill="none" stroke="#fff" stroke-width="1.1" stroke-linecap="round"/></svg>`};
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='5.7';
+const APP_VERSION='5.8';
 const APP_BUILD='May 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;
@@ -31871,6 +31871,537 @@ const LQA_SITUATIONS = [
   {id:23, cat:'vino', scn:'Es una noche muy ocupada. Para ahorrar tiempo, viertes agua con gas en las copas en el área de servicio antes de llevarlas a la mesa.', scn_en:'It\'s a very busy night. To save time, you pour sparkling water into glasses in the service area before bringing them to the table.', q:'¿Es esto correcto según los estándares?', q_en:'Is this correct according to the standards?', opts:['Sí, ahorras tiempo y eficiencia','No, el estándar #48 requiere que el agua se sirva frente al huésped','Es aceptable solo si el agua ya está fría','Depende si el huésped está mirando o no'], opts_en:['Yes, you save time and efficiency','No, standard #48 requires water to be served in front of the guest','It\'s acceptable only if the water is already cold','It depends on whether the guest is watching or not'], corr:1, expl:'El estándar #48 es CLARO: el agua debe ofrecerse y servirse FRENTE al huésped. Servir pre-llenado en el área de servicio viola este estándar. La PRESENTACIÓN y CONTROL son críticos. No hay excepciones por eficiencia.', expl_en:'Standard #48 is CLEAR: water must be offered and served IN FRONT of the guest. Serving pre-filled in the service area violates this standard. PRESENTATION and CONTROL are critical. There are no exceptions for efficiency.', real:false},
   {id:24, cat:'llegada', scn:'La iluminación ambiente del restaurante es tenue para crear atmósfera. Un huésped está entrecérrando los ojos intentando leer el menú. No ha pedido ayuda.', scn_en:'The restaurant\'s ambient lighting is dim for atmosphere. A guest is squinting trying to read the menu. They haven\'t asked for help.', q:'¿Cuál es la acción correcta?', q_en:'What is the correct action?', opts:['Esperar a que el huésped pida una luz','Ofrecer proactivamente una luz de lectura o lámpara de mesa','Cambiar la iluminación general del restaurante','Sugerir un menú en letra grande'], opts_en:['Wait until the guest asks for light','Proactively offer a reading light or table lamp','Change the restaurant\'s overall lighting','Suggest a large-print menu'], corr:1, expl:'El estándar #50 requiere que la carta esté "clara y fácil de leer". El estándar #73 (Anticipatory Service) requiere detectar dificultades. Si la atmósfera crea un problema, la acción correcta es ofrecer soluciones sin que pidan: "¿Puedo traerle una luz para leer cómodo?"', expl_en:'Standard #50 requires the menu to be "clear and easy to read". Standard #73 (Anticipatory Service) requires detecting difficulties. If the atmosphere creates a problem, the correct action is to offer solutions without asking: "Can I bring you a light to read comfortably?"', real:false},
   {id:25, cat:'vino', scn:'Los huéspedes están poniéndose los abrigos y listos para irse. Ya has dado la cuenta. Han pagado y se despiden.', scn_en:'The guests are putting on their coats and getting ready to leave. You\'ve already given the bill. They\'ve paid and are saying goodbye.', q:'¿Cuál es la acción requerida por LQA en la despedida?', q_en:'What is the LQA-required action at the farewell?', opts:['Solo decir "Gracias por venir"','Despedida sincera, expresando aprecio por su visita y invitándoles a volver','Ayudar con los abrigos sin decir nada','Simplemente agitar la mano mientras se van'], opts_en:['Just say "Thank you for coming"','Sincere farewell expressing appreciation for their visit and inviting them back','Help with coats without saying anything','Simply wave as they leave'], corr:1, expl:'El estándar #77 (Despedida/Farewell) requiere una despedida SINCERA, cálida, y que exprese aprecio genuino. Debes hacer que se sientan valorados. La última impresión es tan importante como la primera. Esta es tu última oportunidad de crear memoria positiva.', expl_en:'Standard #77 (Farewell) requires a SINCERE, warm farewell that expresses genuine appreciation. You must make them feel valued. The last impression is as important as the first. This is your last chance to create a positive memory.', real:false},
+  // ─── BLOQUE v5.7.1 — Auditoría LQA 01-may-2026 (78.7%) ─────────────
+  // 16 error-prevention (ids 26-41) + 6 buenas prácticas auditadas (ids 42-47)
+  {
+    id: 26,
+    cat: 'comportamiento',
+    scn: "Una pareja joven (30 años aprox.) llega sin reserva en tono desenfadado y dice: \"¡Hola! ¿Tenéis mesa para dos?\"",
+    scn_en: "A young couple (around 30) arrives without reservation in a casual tone and says: \"Hi! Do you have a table for two?\"",
+    q: '¿Cuál es la respuesta más adecuada?',
+    q_en: 'What is the most appropriate response?',
+    opts: [
+      "\"¡Hola! Sí claro, ¿preferís dentro o en la terraza? Venid conmigo.\"",
+      "\"Buenas tardes, bienvenidos a Txoko. Por supuesto, permítanme acompañarles a su mesa.\"",
+      "\"Hola, buenas. Por aquí, síganme por favor.\"",
+      "\"Buenas tardes. Síganme.\""
+    ],
+    opts_en: [
+      "\"Hi! Sure, do you prefer inside or terrace? Come with me.\"",
+      "\"Good afternoon, welcome to Txoko. Of course, please allow me to escort you to your table.\"",
+      "\"Hi there. This way please, follow me.\"",
+      "\"Good afternoon. Follow me.\""
+    ],
+    corr: 1,
+    expl: 'El estándar #45 (Interacción) y los aspectos negativos de la auditoría requieren mantener "ustedes" aunque el cliente tutee, sustituir "hola" por "buenas tardes/noches" y nombrar el restaurante en la bienvenida. La opción 1 cumple los tres puntos manteniendo calidez. Las opciones 0 y 2 tutean; la 3 es formal pero seca y omite el nombre del restaurante.',
+    expl_en: 'Standard #45 (Interaction) and the audit findings require maintaining formal "ustedes" even when the guest uses informal speech, replacing "hola" with "buenas tardes/noches", and naming the restaurant in the welcome. Option 1 covers all three with warmth. Options 0 and 2 use informal speech; option 3 is formal but cold and omits the restaurant name.',
+    real: true
+  },
+  {
+    id: 27,
+    cat: 'comportamiento',
+    scn: 'Una familia se sienta. El niño de 8 años pregunta entusiasmado: "¿Tienes pizza?". Los padres miran el menú.',
+    scn_en: 'A family sits down. The 8-year-old asks enthusiastically: "Do you have pizza?". The parents look at the menu.',
+    q: '¿Cómo debes responder?',
+    q_en: 'How should you respond?',
+    opts: [
+      '"Claro que sí, ¿tú quieres jamón o margarita? Y vosotros, ¿qué os apetece para empezar?"',
+      '"Sí, tenemos pizza. ¿De qué la queréis?"',
+      '"Por supuesto. ¿De jamón o margarita te apetece? Y a ustedes, ¿les ayudo con alguna recomendación?"',
+      '"Por supuesto, señor. ¿De jamón o margarita le apetece al joven? Y para ustedes, ¿desean recomendación?"'
+    ],
+    opts_en: [
+      '"Of course! Do you want ham or margherita? And what do you guys fancy to start?"',
+      '"Yes, we have pizza. What kind would you like?"',
+      '"Of course! Would you like ham or margherita? And for you, sir and madam, may I suggest something?"',
+      '"Certainly, sir. Ham or margherita for the young gentleman? And for you, sir and madam, a recommendation?"'
+    ],
+    corr: 2,
+    expl: 'El estándar #45 permite calidez extra al dirigirse a un niño, pero exige mantener "ustedes" con los padres. La opción 2 tutea al niño con cariño y mantiene el "ustedes" con los padres. La 0 contagia el "vosotros" a los padres. La 1 trata a todos igual de informal. La 3 es excesivamente formal y rompe la naturalidad con el niño.',
+    expl_en: 'Standard #45 allows extra warmth when addressing a child but requires formal speech with parents. Option 2 uses warm informal address with the child and formal with parents. Option 0 spreads informal speech to the parents. Option 1 treats everyone informally. Option 3 is overly formal and breaks naturalness with the child.',
+    real: false
+  },
+  {
+    id: 28,
+    cat: 'servicio',
+    scn: 'Has presentado los postres. El cliente dice: "Sí, me apetece probar la tarta de queso, por favor."',
+    scn_en: 'You have presented the desserts. The guest says: "Yes, I\'d like to try the cheesecake, please."',
+    q: '¿Cuál es la siguiente acción correcta?',
+    q_en: 'What is the correct next action?',
+    opts: [
+      'Anotar la tarta y llevarla a cocina lo antes posible.',
+      'Anotar la tarta y preguntar de forma genérica: "¿Algo más?"',
+      'Anotar la tarta y ofrecer: "¿Le apetecería acompañarla con un café o una infusión? Tenemos también té verde, manzanilla, poleo menta…"',
+      'Sugerir un vino dulce para acompañar el postre.'
+    ],
+    opts_en: [
+      'Note the cake and take it to the kitchen as soon as possible.',
+      'Note the cake and ask generically: "Anything else?"',
+      'Note the cake and offer: "Would you like to accompany it with a coffee or an infusion? We also have green tea, chamomile, peppermint…"',
+      'Suggest a dessert wine to pair with the cake.'
+    ],
+    corr: 2,
+    expl: 'El estándar #19 (Sales Opportunity) exige ofrecer café/té automáticamente al pedir postre, especificando opciones (capuchino, expreso, té verde, etc.). En la auditoría se marcó como Below porque el huésped tuvo que pedirlo él mismo. La opción 2 cumple el estándar con detalle. La 1 es genérica y no específica. La 0 lo omite. La 3 desplaza el foco.',
+    expl_en: 'Standard #19 (Sales Opportunity) requires automatically offering coffee/tea when dessert is ordered, specifying options (cappuccino, espresso, green tea, etc.). The audit marked this Below because the guest had to request it themselves. Option 2 meets the standard with detail. Option 1 is generic. Option 0 omits it. Option 3 shifts focus.',
+    real: true
+  },
+  {
+    id: 29,
+    cat: 'servicio',
+    scn: 'Tras retirar los platos, ofreces postres. El cliente dice: "No, postre no quiero, gracias."',
+    scn_en: 'After clearing plates, you offer desserts. The guest says: "No, no dessert for me, thank you."',
+    q: '¿Cómo continúas el servicio?',
+    q_en: 'How do you continue service?',
+    opts: [
+      'Traer la cuenta directamente para no entretener al huésped.',
+      'Preguntar: "¿Le apetecería entonces un café o una infusión para terminar?"',
+      'Asumir que ha terminado y agradecerle la visita.',
+      'Insistir con el postre describiéndolo de nuevo por si cambia de opinión.'
+    ],
+    opts_en: [
+      'Bring the bill directly to avoid keeping the guest waiting.',
+      'Ask: "Would you like a coffee or an infusion to finish, then?"',
+      'Assume the guest has finished and thank them for their visit.',
+      'Insist on dessert by describing it again in case they change their mind.'
+    ],
+    corr: 1,
+    expl: 'El estándar #19 trata postre y café/té como dos oportunidades de venta independientes. Rechazar el postre no implica rechazar la bebida caliente. La opción 1 mantiene la oferta sin presión. La 0 acelera el cierre. La 2 cierra sin oportunidad. La 3 incomoda al huésped.',
+    expl_en: 'Standard #19 treats dessert and coffee/tea as two independent sales opportunities. Declining dessert does not imply declining a hot drink. Option 1 keeps the offer open without pressure. Option 0 rushes closure. Option 2 closes without opportunity. Option 3 makes the guest uncomfortable.',
+    real: false
+  },
+  {
+    id: 30,
+    cat: 'comportamiento',
+    scn: 'Una clienta sola, en viaje de trabajo, comenta al sentarse: "Llevo aquí desde el lunes y la verdad es que estoy intentando comer algo más ligero estos días, que ayer cené demasiado."',
+    scn_en: 'A solo female guest on a business trip says when seated: "I\'ve been here since Monday and I\'m really trying to eat something lighter these days because I had too much last night."',
+    q: '¿Cuál es la respuesta que demuestra verdadera PERSONALIZACIÓN?',
+    q_en: 'Which response demonstrates true PERSONALIZATION?',
+    opts: [
+      'Ofrecerle una revista para que se entretenga durante la comida.',
+      'Recomendar el menú degustación completo para que pruebe lo mejor de la casa.',
+      'Sugerir un entrante de pescado al horno y, al ofrecer postre, recordar su preferencia: "Como mencionaba que prefiere algo más ligero, le sugeriría el sorbete de mango antes que la tarta de queso."',
+      'Apuntar la comanda eficazmente sin demorarse para que pueda volver pronto a sus asuntos.'
+    ],
+    opts_en: [
+      'Offer her a magazine to entertain herself during the meal.',
+      'Recommend the full tasting menu so she can try the best of the house.',
+      'Suggest a baked fish starter and, when offering dessert, recall her preference: "Since you mentioned preferring something lighter, I\'d suggest the mango sorbet rather than the cheesecake."',
+      'Take the order efficiently without delay so she can return to her business soon.'
+    ],
+    corr: 2,
+    expl: 'El estándar #51 (Personalización) exige recordar y aplicar datos del huésped a lo largo del servicio, no solo gestos genéricos. En la auditoría se ofreció una revista (opción 0): se calificó como proactividad pero NO como personalización. La opción 2 conecta un dato concreto con una decisión posterior, que es exactamente la diferencia entre proactividad y personalización real.',
+    expl_en: 'Standard #51 (Personalization) requires remembering and applying guest information throughout service, not just generic gestures. In the audit a magazine was offered (option 0) — rated as proactivity but NOT personalization. Option 2 connects a specific cue with a later decision, which is exactly the difference between proactivity and true personalization.',
+    real: true
+  },
+  {
+    id: 31,
+    cat: 'comportamiento',
+    scn: 'Una pareja al sentarse menciona: "Estamos celebrando nuestro aniversario, 10 años ya."',
+    scn_en: 'A couple mentions while being seated: "We\'re celebrating our anniversary, 10 years already."',
+    q: '¿Cuál es la actuación más completa?',
+    q_en: 'What is the most complete course of action?',
+    opts: [
+      'Felicitarles cordialmente y continuar tomando la comanda con normalidad.',
+      'Felicitarles, comunicar a cocina y sala para coordinar un detalle (mensaje en plato del postre, copa de cava cortesía) y cerrar la despedida referenciando el aniversario.',
+      'Ofrecerles directamente la mejor mesa disponible aunque interrumpa otra reserva.',
+      'Apuntarlo mentalmente y mencionarlo solo si surge la ocasión más adelante.'
+    ],
+    opts_en: [
+      'Congratulate them warmly and continue taking the order normally.',
+      'Congratulate them, communicate with kitchen and floor staff to coordinate a gesture (message on dessert plate, complimentary cava) and close the farewell referencing the anniversary.',
+      'Offer them the best available table even if it disrupts another reservation.',
+      'Make a mental note and mention it only if the occasion arises later.'
+    ],
+    corr: 1,
+    expl: 'El estándar #51 (Personalización) y la cultura Ritz-Carlton exigen actuar sobre la información del huésped. La opción 1 cierra el círculo: reconocimiento inicial + acción coordinada con el equipo + cierre referenciado en la despedida. La 0 desperdicia la oportunidad. La 2 desorganiza la operativa. La 3 deja la personalización al azar.',
+    expl_en: 'Standard #51 (Personalization) and Ritz-Carlton culture require acting on guest information. Option 1 closes the loop: initial acknowledgment + coordinated team action + referenced farewell. Option 0 wastes the opportunity. Option 2 disrupts operations. Option 3 leaves personalization to chance.',
+    real: false
+  },
+  {
+    id: 32,
+    cat: 'servicio',
+    scn: 'Tu compañera ha sentado a una mesa de 4 y entregado los menús. Miras el reloj: 2 minutos y medio desde la presentación del menú. Los huéspedes siguen leyendo y conversando.',
+    scn_en: 'Your colleague has seated a 4-top and presented menus. You glance at the clock: 2.5 minutes since menu presentation. The guests are still reading and chatting.',
+    q: '¿Qué acción es la correcta?',
+    q_en: 'What is the correct action?',
+    opts: [
+      'Esperar a que llamen para no interrumpir su conversación.',
+      'Acercarse antes de cumplirse los 3 minutos y, si aún dudan, ofrecer ayuda con el menú o tomar al menos la comanda de bebidas.',
+      'Esperar 10 minutos en total para asegurarse de que han decidido todo.',
+      'Acercarse y preguntar directamente: "¿Han decidido ya?"'
+    ],
+    opts_en: [
+      'Wait until they call you so you don\'t interrupt their conversation.',
+      'Approach before the 3-minute mark and, if they\'re still undecided, offer help with the menu or at least take the drinks order.',
+      'Wait a full 10 minutes to ensure they\'ve decided everything.',
+      'Approach and ask directly: "Have you decided yet?"'
+    ],
+    corr: 1,
+    expl: 'El estándar #2 (Efficiency) exige tomar la comanda dentro de 3 minutos desde la presentación del menú. En la auditoría se marcó Below porque pasaron 7 minutos. La opción 1 cumple el tiempo y aporta valor (ayuda) sin presionar. La 0 deja al cliente esperando. La 2 viola el estándar. La 3 es brusca.',
+    expl_en: 'Standard #2 (Efficiency) requires taking the order within 3 minutes of menu presentation. The audit marked this Below because 7 minutes elapsed. Option 1 meets the time and adds value (help) without pressure. Option 0 leaves the guest waiting. Option 2 violates the standard. Option 3 is abrupt.',
+    real: true
+  },
+  {
+    id: 33,
+    cat: 'montaje',
+    scn: 'Plena hora de servicio. Tu pinza más cercana a la zona exterior tiene 4 platos sucios apilados, dos sobremanteles arrugados encima y dos copas con restos. Ves moscas alrededor y una pareja en la mesa contigua mira con desagrado.',
+    scn_en: 'Peak service. Your station nearest the outdoor area has 4 dirty plates stacked, two crumpled tablecloth covers on top, and two glasses with remains. You see flies around and a couple at the adjacent table looks displeased.',
+    q: '¿Cuál es la actuación correcta?',
+    q_en: 'What is the correct course of action?',
+    opts: [
+      'Apilar un plato más para llevar todo de una vez al office cuando termines tu ronda.',
+      'Detener lo que estés haciendo, retirar la pinza al office, limpiarla y comunicar al equipo el patrón para reforzar la frecuencia de retirada.',
+      'Encender una vela aromática en la mesa contigua para neutralizar el olor.',
+      'Esperar al cambio de turno para hacer una limpieza profunda de la pinza.'
+    ],
+    opts_en: [
+      'Stack one more plate to take everything at once when you finish your round.',
+      'Stop what you\'re doing, clear the station to the office, clean it, and inform the team of the pattern to reinforce clearing frequency.',
+      'Light a scented candle at the adjacent table to neutralize the smell.',
+      'Wait for shift change to do a deep clean of the station.'
+    ],
+    corr: 1,
+    expl: 'Los estándares #35 y #36 exigen una experiencia cómoda y mesas/superficies limpias. La auditoría señaló pinzas saturadas como problema crítico de higiene y percepción ante palomas y moscas. La opción 1 actúa en el momento y previene recurrencia. La 0 agrava el problema. La 2 enmascara. La 3 ignora la urgencia.',
+    expl_en: 'Standards #35 and #36 require a comfortable experience and clean tables/surfaces. The audit flagged saturated stations as a critical hygiene and perception issue with pigeons and flies. Option 1 acts immediately and prevents recurrence. Option 0 worsens it. Option 2 masks the issue. Option 3 ignores urgency.',
+    real: true
+  },
+  {
+    id: 34,
+    cat: 'montaje',
+    scn: 'Una pareja se acaba de levantar de su mesa. Quedan platos, copas y mantel arrugado. La hostess te avisa que hay otra pareja esperando para esa mesa.',
+    scn_en: 'A couple has just left their table. Plates, glasses and a wrinkled tablecloth remain. The hostess informs you another couple is waiting for that table.',
+    q: '¿Cuál es la secuencia correcta?',
+    q_en: 'What is the correct sequence?',
+    opts: [
+      'Limpiar y montar en menos de 10 minutos: retirar a pinza, cambiar mantel, montar bajoplato, cubertería, cristalería y saleros.',
+      'Pasar un trapo rápido y montar lo mínimo para sentar a la pareja cuanto antes.',
+      'Pedir a la hostess que distraiga a la pareja con bebidas mientras montas con calma.',
+      'Esperar a que un compañero pase a ayudar para no equivocarte con la mise en place.'
+    ],
+    opts_en: [
+      'Clean and reset in under 10 minutes: clear to station, change cloth, set base plate, cutlery, glassware, and salt/pepper.',
+      'Wipe quickly and set the minimum to seat the couple ASAP.',
+      'Ask the hostess to distract the couple with drinks while you set up calmly.',
+      'Wait for a colleague to help so you don\'t make mistakes with mise en place.'
+    ],
+    corr: 0,
+    expl: 'El estándar #36 exige limpieza en 5 minutos y montaje en 5 minutos adicionales (10 totales) y que el montaje sea uniforme con el resto del rango. La opción 0 cumple tiempo y completitud. La 1 sacrifica el estándar de mise en place. La 2 traslada el problema al cliente. La 3 viola el tiempo.',
+    expl_en: 'Standard #36 requires clearing in 5 minutes and setting in another 5 (10 total), with setup uniform across the section. Option 0 meets timing and completeness. Option 1 sacrifices mise en place standards. Option 2 shifts the problem to the guest. Option 3 violates timing.',
+    real: false
+  },
+  {
+    id: 35,
+    cat: 'comportamiento',
+    scn: 'Un cliente lleva 25 minutos con el plato principal. Quedan unos pocos bocados. La cubertería NO está en posición de "terminado" (cruzada/junta).',
+    scn_en: 'A guest has been on the main course for 25 minutes. A few bites remain. The cutlery is NOT in the "finished" position (crossed/together).',
+    q: '¿Cuál es la acción correcta?',
+    q_en: 'What is the correct action?',
+    opts: [
+      'Acercarse y preguntar directamente: "¿Ha terminado ya?" para agilizar la mesa.',
+      'Retirar el plato directamente, ya que apenas queda comida.',
+      'Esperar inmóvil junto a la mesa hasta que la cubertería indique "terminado".',
+      'Acercarse desde el lateral y preguntar: "¿Está disfrutando del plato?", leyendo la respuesta del huésped antes de actuar.'
+    ],
+    opts_en: [
+      'Approach and ask directly: "Have you finished?" to speed up the table.',
+      'Clear the plate directly, since there\'s hardly anything left.',
+      'Wait motionless near the table until cutlery signals "finished".',
+      'Approach from the side and ask: "Are you enjoying the dish?", reading the guest\'s response before acting.'
+    ],
+    corr: 3,
+    expl: 'La auditoría señaló como negativo que un compañero preguntara directamente "¿ya ha terminado?", transmitiendo prisa. La cubertería es la señal: si no está en posición de terminado, no se asume. La opción 3 abre conversación sin presión y permite leer al huésped. La 0 transmite prisa. La 1 invade. La 2 incomoda con la presencia.',
+    expl_en: 'The audit flagged negatively a colleague asking "have you finished?" directly, conveying haste. Cutlery is the signal: if not in finished position, don\'t assume. Option 3 opens conversation without pressure and reads the guest. Option 0 conveys haste. Option 1 is intrusive. Option 2 is uncomfortable due to looming presence.',
+    real: true
+  },
+  {
+    id: 36,
+    cat: 'servicio',
+    scn: 'Tienes 4 mesas con el mismo entrante (baos). En la mesa 1 explicaste con detalle los ingredientes, la salsa y la técnica. Ahora vas a servir a las mesas 2, 3 y 4.',
+    scn_en: 'You have 4 tables with the same starter (baos). At table 1 you explained ingredients, sauce, and technique in detail. Now you\'re serving tables 2, 3, and 4.',
+    q: '¿Qué haces?',
+    q_en: 'What do you do?',
+    opts: [
+      'Servir y marcharte; ya lo leyeron en el menú.',
+      'Decir solo el nombre del plato: "Sus baos."',
+      'Aplicar un guion mínimo idéntico a todas las mesas (2-3 frases del plato), ampliando si hay tiempo o interés del huésped.',
+      'Repetir exactamente la misma explicación palabra por palabra que en la mesa 1.'
+    ],
+    opts_en: [
+      'Serve and leave; they already read it on the menu.',
+      'Say only the dish name: "Your baos."',
+      'Apply an identical minimum script to all tables (2-3 sentences about the dish), expanding if there\'s time or guest interest.',
+      'Repeat the exact same explanation word-for-word as at table 1.'
+    ],
+    corr: 2,
+    expl: 'El estándar #13 (servicio coordinado) y la cultura LQA exigen consistencia entre mesas. La auditoría observó que el mismo camarero explicó muy bien una mesa pero a las demás solo dejó los platos. La opción 2 garantiza experiencia mínima uniforme con flexibilidad. Las 0 y 1 incumplen. La 3 es robótica y resta naturalidad.',
+    expl_en: 'Standard #13 (coordinated service) and LQA culture require consistency across tables. The audit noted the same waiter explained well at one table but just dropped plates at others. Option 2 ensures uniform minimum experience with flexibility. Options 0 and 1 fail. Option 3 is robotic and lacks naturalness.',
+    real: true
+  },
+  {
+    id: 37,
+    cat: 'servicio',
+    scn: 'Tienes 4 mesas en tu rango. Llevas 15 minutos atendiendo principalmente a 2 mesas demandantes. Las otras 2 están comiendo en silencio sin haberte llamado.',
+    scn_en: 'You have 4 tables in your section. For 15 minutes you\'ve been mainly serving 2 demanding tables. The other 2 are eating silently without calling you.',
+    q: '¿Qué deberías hacer?',
+    q_en: 'What should you do?',
+    opts: [
+      'Continuar atendiendo a las mesas demandantes; las silenciosas parecen satisfechas.',
+      'Pasar por las mesas silenciosas con contacto visual y preguntar: "¿Cómo está todo? ¿Está disfrutando del [plato]?"',
+      'Esperar a que terminen para ofrecer postre y no molestar.',
+      'Pedir al jefe de rango que se encargue él de las mesas silenciosas.'
+    ],
+    opts_en: [
+      'Continue serving the demanding tables; the silent ones seem satisfied.',
+      'Pass by the silent tables with eye contact and ask: "How is everything? Are you enjoying the [dish]?"',
+      'Wait until they finish to offer dessert so as not to disturb.',
+      'Ask the head waiter to handle the silent tables.'
+    ],
+    corr: 1,
+    expl: 'El estándar #22 exige una comprobación proactiva de la experiencia. La auditoría observó que en los rangos 500 y 300 no se realizó. Silencio no equivale a satisfacción: puede ser un problema no comunicado. La opción 1 cumple el estándar. La 0 asume sin verificar. La 2 deja el chequeo demasiado tarde. La 3 evade la responsabilidad propia.',
+    expl_en: 'Standard #22 requires proactive experience checks. The audit noted sections 500 and 300 received none. Silence ≠ satisfaction — it may indicate unspoken issues. Option 1 meets the standard. Option 0 assumes without verifying. Option 2 checks too late. Option 3 deflects responsibility.',
+    real: true
+  },
+  {
+    id: 38,
+    cat: 'servicio',
+    scn: 'Una mesa pide: "Una botella de agua, por favor."',
+    scn_en: 'A table orders: "A bottle of water, please."',
+    q: '¿Cuál es la oferta correcta?',
+    q_en: 'What is the correct offer?',
+    opts: [
+      'Servir Solán de Cabras directamente como estándar de la casa.',
+      'Preguntar: "¿Con gas o sin gas?" y traer la marca habitual.',
+      'Ofrecer primero la opción local canaria o filtrada del hotel: "Trabajamos con [agua local canaria/filtrada]. ¿Le parece bien?", y si insiste en otra opción, ofrecer alternativa.',
+      'Mostrar la carta de aguas para que elija sin sugerir nada.'
+    ],
+    opts_en: [
+      'Serve Solán de Cabras directly as the house standard.',
+      'Ask: "Sparkling or still?" and bring the usual brand.',
+      'First offer the local Canarian or hotel-filtered option: "We work with [local Canarian/filtered water]. Is that okay?", and offer alternatives if they insist.',
+      'Show the water list and let them choose without suggesting anything.'
+    ],
+    corr: 2,
+    expl: 'El estándar #3 (Sustainability) exige ofrecer agua mineral local o filtrada del hotel. En la auditoría se sirvió Solán de Cabras (manantial de Beteta, Cuenca — no canaria), marcado Below. La opción 2 cumple sostenibilidad y deja libertad al huésped. La 0 incumple el estándar. La 1 omite la opción local. La 3 desplaza la responsabilidad de la recomendación.',
+    expl_en: 'Standard #3 (Sustainability) requires offering local mineral water or hotel-filtered water. The audit had Solán de Cabras served (sourced from Beteta, Cuenca — not Canarian), marked Below. Option 2 meets sustainability and leaves choice to the guest. Option 0 fails the standard. Option 1 omits the local option. Option 3 deflects the recommendation.',
+    real: true
+  },
+  {
+    id: 39,
+    cat: 'montaje',
+    scn: 'Estás revisando tu rango durante la mise en place previa al servicio. Tienes 30 minutos antes de la primera reserva.',
+    scn_en: 'You\'re checking your section during pre-service mise en place. You have 30 minutes before the first reservation.',
+    q: '¿Qué control aplicas a saleros y pimenteros?',
+    q_en: 'What check do you apply to salt and pepper shakers?',
+    opts: [
+      'Mirar de lejos; si no se ven huellas, están bien.',
+      'Comprobar uno por uno: rellenos al menos 3/4, exterior limpio, tapón seco (sin sal apelmazada que bloquee), y consistencia con la política del rango (siempre en mesa o solo bajo petición).',
+      'Solo rellenar los que estén claramente vacíos; el resto se ve durante el servicio.',
+      'Confiar en el último turno; ya los habrán dejado bien.'
+    ],
+    opts_en: [
+      'Check from a distance; if no fingerprints visible, they\'re fine.',
+      'Check one by one: at least 3/4 full, clean exterior, dry cap (no caked salt blocking flow), consistent with section policy (always on table or only on request).',
+      'Only refill the obviously empty ones; the rest you\'ll see during service.',
+      'Trust the previous shift; they\'ll have left them ready.'
+    ],
+    corr: 1,
+    expl: 'El estándar #42 exige saleros/pimenteros limpios y llenos. La auditoría lo marcó Below. La mise en place es el momento para evitarlo. La opción 1 cubre los cuatro fallos posibles (vacío, sucio, atascado, inconsistente). Las demás dejan margen para descubrir el fallo durante el servicio, ya frente al huésped.',
+    expl_en: 'Standard #42 requires clean and full salt/pepper shakers. The audit marked this Below. Mise en place is the moment to prevent it. Option 1 covers all four possible failures (empty, dirty, clogged, inconsistent). The others leave room for discovery during service, in front of the guest.',
+    real: true
+  },
+  {
+    id: 40,
+    cat: 'carta',
+    scn: 'Un cliente pregunta al sentarse: "Soy vegano, ¿qué opciones tienen?"',
+    scn_en: 'A guest asks when seated: "I\'m vegan, what options do you have?"',
+    q: '¿Cuál es la respuesta correcta?',
+    q_en: 'What is the correct response?',
+    opts: [
+      '"Voy a preguntar a cocina y vuelvo enseguida."',
+      '"Tenemos ensalada como entrante y un plato de verduras de principal."',
+      'Ofrecer de memoria al menos 2 entrantes, 2 principales y 1 postre veganos (incluyendo opciones no marcadas en carta como la bolsa de helado), con descripción breve de cada uno.',
+      '"Recomiendo que pida fuera de carta lo que le apetezca y cocina lo adaptará."'
+    ],
+    opts_en: [
+      '"Let me ask the kitchen and I\'ll be right back."',
+      '"We have a salad starter and a vegetable main course."',
+      'Offer from memory at least 2 starters, 2 mains, and 1 dessert vegan options (including off-menu items like the ice cream bag), with a brief description of each.',
+      '"I\'d recommend ordering anything off-menu and the kitchen will adapt it."'
+    ],
+    corr: 2,
+    expl: 'El estándar #26 exige al menos 2 entrantes, 2 principales y 1 postre vegano disponibles, en menú o sugeridos verbalmente. La auditoría marcó Below porque el postre vegano (bolsa de helado) existe pero no se ofreció. La opción 2 cumple el estándar y demuestra conocimiento de carta. La 0 traslada el problema. La 1 es insuficiente. La 3 carga al cliente la responsabilidad.',
+    expl_en: 'Standard #26 requires at least 2 starters, 2 mains, and 1 dessert vegan available, on menu or verbally suggested. The audit marked this Below because the vegan dessert (ice cream bag) exists but wasn\'t offered. Option 2 meets the standard and shows menu knowledge. Option 0 deflects. Option 1 is insufficient. Option 3 burdens the guest.',
+    real: true
+  },
+  {
+    id: 41,
+    cat: 'llegada',
+    scn: 'Son las 13:45. Un huésped cruza la puerta de Txoko.',
+    scn_en: 'It\'s 13:45. A guest walks through the door of Txoko.',
+    q: '¿Cuál es el saludo correcto?',
+    q_en: 'What is the correct greeting?',
+    opts: [
+      '"¡Hola! Bienvenido."',
+      '"Hola, buenas. ¿Tiene reserva?"',
+      '"Buenas tardes, bienvenido a Txoko."',
+      '"Buenos días, bienvenido a Txoko."'
+    ],
+    opts_en: [
+      '"Hi! Welcome."',
+      '"Hi there. Do you have a reservation?"',
+      '"Good afternoon, welcome to Txoko."',
+      '"Good morning, welcome to Txoko."'
+    ],
+    corr: 2,
+    expl: 'La auditoría señaló como negativo el uso de "hola" como saludo de bienvenida; debe sustituirse por "buenas tardes/noches/días" según hora. A las 13:45 corresponde "buenas tardes". La opción 2 cumple hora correcta + nombra el restaurante + tono formal. Las 0 y 1 usan "hola". La 3 usa el tramo horario incorrecto (los días terminan al mediodía).',
+    expl_en: 'The audit flagged negatively the use of "hola" as a welcome greeting; it should be replaced by "buenas tardes/noches/días" depending on the time. 13:45 calls for "buenas tardes" (good afternoon). Option 2 covers correct time + restaurant name + formal tone. Options 0 and 1 use "hola". Option 3 uses the wrong time slot (mornings end at noon).',
+    real: true
+  },
+  // ─── Buenas prácticas auditadas (positivos del informe) ─────────
+  {
+    id: 42,
+    cat: 'comportamiento',
+    scn: 'Una huésped llega para almorzar. Antes de que la acompañes a la mesa, se encuentra con otro huésped del hotel y entablan una conversación animada en la entrada del restaurante.',
+    scn_en: 'A guest arrives for lunch. Before you escort her to the table, she runs into another hotel guest and they begin an animated conversation at the restaurant entrance.',
+    q: '¿Cuál es la actuación correcta?',
+    q_en: 'What is the correct course of action?',
+    opts: [
+      'Interrumpir educadamente: "Disculpen, su mesa está lista, ¿desean acompañarme?"',
+      'Esperar discretamente a una distancia respetuosa hasta que la conversación termine de forma natural, y entonces acompañarla a la mesa.',
+      'Sentar primero a otros huéspedes que estén esperando para no perder eficiencia.',
+      'Acercarte y unirte a la conversación mostrando interés.'
+    ],
+    opts_en: [
+      'Politely interrupt: "Excuse me, your table is ready, would you like to follow me?"',
+      'Wait discreetly at a respectful distance until the conversation ends naturally, then escort her to the table.',
+      'Seat other waiting guests first to avoid losing efficiency.',
+      'Approach and join the conversation showing interest.'
+    ],
+    corr: 1,
+    expl: 'El estándar #49 (Adaptación) exige adaptarse a la situación del huésped, esperando con paciencia cuando está ocupado. La auditoría destacó este comportamiento como ejemplar (Faride esperó a que la huésped terminara de hablar con otro huésped antes de acompañarla). La opción 1 respeta el momento del huésped sin presión. La 0 interrumpe. La 2 ignora la prioridad. La 3 invade la privacidad.',
+    expl_en: 'Standard #49 (Adaptation) requires adapting to the guest\'s situation, waiting patiently when the guest is occupied. The audit highlighted this behavior as exemplary (Faride waited for the guest to finish speaking with another guest before escorting her). Option 1 respects the guest\'s moment without pressure. Option 0 interrupts. Option 2 ignores priority. Option 3 invades privacy.',
+    real: true
+  },
+  {
+    id: 43,
+    cat: 'comportamiento',
+    scn: 'Estás atendiendo a una huésped sola con la que has conectado bien; conversáis de manera natural sobre la comida sana. La mesa de al lado son una pareja que también requiere tu atención.',
+    scn_en: 'You\'re serving a solo guest with whom you\'ve connected well; you\'re chatting naturally about healthy eating. The table next to her is a couple who also needs your attention.',
+    q: '¿Cuál es el comportamiento correcto al atender ambas mesas?',
+    q_en: 'What is the correct behavior when serving both tables?',
+    opts: [
+      'Mantener un tono cálido y cercano con la huésped sola, y ser más eficiente y formal con la pareja para no perder tiempo.',
+      'Mostrar la misma naturalidad y conexión con la pareja que con la huésped sola; la consistencia entre mesas es señal de servicio auténtico.',
+      'Reservar el storytelling solo para la huésped que ha mostrado interés conversacional, no todos quieren hablar.',
+      'Dedicar a cada mesa exactamente el mismo tiempo para garantizar equidad.'
+    ],
+    opts_en: [
+      'Keep a warm, close tone with the solo guest, and be more efficient and formal with the couple to save time.',
+      'Show the same naturalness and connection with the couple as with the solo guest; consistency across tables is a sign of authentic service.',
+      'Reserve storytelling only for guests who show conversational interest; not everyone wants to chat.',
+      'Devote exactly the same amount of time to each table to ensure equity.'
+    ],
+    corr: 1,
+    expl: 'El estándar #45 (Interacción) exige naturalidad consistente. La auditoría destacó positivamente que la camarera fue "igual de natural" con la mesa contigua que con la huésped sola — eso es lo que valida el servicio auténtico (no actuado). La opción 1 captura el principio. La 0 segmenta artificialmente. La 2 prejuzga al huésped. La 3 confunde igualdad con consistencia de calidad.',
+    expl_en: 'Standard #45 (Interaction) requires consistent naturalness. The audit positively highlighted that the waitress was "just as natural" with the adjacent table as with the solo guest — that is what validates authentic (not acted) service. Option 1 captures the principle. Option 0 segments artificially. Option 2 prejudges the guest. Option 3 confuses equality with consistency of quality.',
+    real: true
+  },
+  {
+    id: 44,
+    cat: 'servicio',
+    scn: 'Una huésped pide los espárragos pero solicita: "¿Sería posible servirlos solo con aceite y sal, sin la salsa que llevan?"',
+    scn_en: 'A guest orders the asparagus but asks: "Would it be possible to serve them with just olive oil and salt, without the sauce they normally come with?"',
+    q: '¿Cuál es la respuesta correcta?',
+    q_en: 'What is the correct response?',
+    opts: [
+      '"Lo siento, los platos vienen como están en carta y no se pueden modificar."',
+      '"Por supuesto, sin ningún problema. Aviso a cocina ahora mismo."',
+      '"Voy a preguntar a cocina si es posible y le confirmo."',
+      '"Le sugiero mejor pedir otro plato más sencillo si prefiere algo simple."'
+    ],
+    opts_en: [
+      '"I\'m sorry, dishes come as listed and cannot be modified."',
+      '"Of course, no problem at all. I\'ll inform the kitchen right away."',
+      '"Let me ask the kitchen if that\'s possible and I\'ll confirm."',
+      '"I\'d suggest ordering a simpler dish if you prefer something plain."'
+    ],
+    corr: 1,
+    expl: 'El estándar #6 exige acomodar solicitudes razonables fuera del menú. Quitar una salsa es una modificación trivial que no requiere consulta. La auditoría destacó positivamente este caso ("se hizo sin ningún problema"). La opción 1 demuestra confianza, conocimiento de cocina y servicio orientado al huésped. La 0 incumple. La 2 transmite inseguridad innecesaria. La 3 redirige indebidamente.',
+    expl_en: 'Standard #6 requires accommodating reasonable off-menu requests. Removing a sauce is a trivial modification that doesn\'t require consultation. The audit positively highlighted this case ("done without any problem"). Option 1 shows confidence, kitchen knowledge, and guest-focused service. Option 0 fails. Option 2 conveys unnecessary insecurity. Option 3 redirects inappropriately.',
+    real: true
+  },
+  {
+    id: 45,
+    cat: 'comportamiento',
+    scn: 'Es temporada de moscas. Estás atendiendo en terraza. Una huésped acaba de sentarse y observas que hay actividad de insectos en la zona.',
+    scn_en: 'It\'s fly season. You\'re serving on the terrace. A guest has just been seated and you observe insect activity in the area.',
+    q: '¿Cuál es la acción anticipativa correcta?',
+    q_en: 'What is the correct anticipatory action?',
+    opts: [
+      'Esperar a que la huésped se queje para tomar medidas.',
+      'Pulverizar repelente alrededor de la mesa antes de que llegue la comida.',
+      'Ofrecer activamente una vela aromática anti-insectos: "Si me lo permite, le acerco una vela por si las moscas pudieran molestarle."',
+      'Cerrar la zona de terraza y reubicar a la huésped al interior.'
+    ],
+    opts_en: [
+      'Wait for the guest to complain before taking measures.',
+      'Spray repellent around the table before the food arrives.',
+      'Proactively offer an anti-insect candle: "If you\'ll allow me, I\'ll bring you a candle in case the flies might bother you."',
+      'Close the terrace area and relocate the guest indoors.'
+    ],
+    corr: 2,
+    expl: 'El estándar #48 (Anticipación) exige actuar sobre necesidades futuras del huésped antes de que se manifiesten. La auditoría destacó positivamente este gesto exacto ("Se me ofreció una vela para las moscas por si me pudiesen llegar a molestar"). La opción 2 captura el principio: anticipar + ofrecer + permitir al huésped decidir. La 0 es reactiva. La 1 es invasiva. La 3 desproporcionada.',
+    expl_en: 'Standard #48 (Anticipation) requires acting on future guest needs before they manifest. The audit positively highlighted this exact gesture ("I was offered a candle in case the flies might bother me"). Option 2 captures the principle: anticipate + offer + let the guest decide. Option 0 is reactive. Option 1 is invasive. Option 3 is disproportionate.',
+    real: true
+  },
+  {
+    id: 46,
+    cat: 'carta',
+    scn: 'Una huésped pregunta al pedir: "¿Cómo están preparados los espárragos exactamente?"',
+    scn_en: 'A guest asks when ordering: "How exactly are the asparagus prepared?"',
+    q: '¿Cuál es la respuesta correcta?',
+    q_en: 'What is the correct response?',
+    opts: [
+      '"Voy a preguntar a cocina y vuelvo enseguida."',
+      '"Vienen muy ricos, le van a encantar."',
+      'Explicar concretamente la técnica de cocción, los ingredientes que acompañan y el tipo de salsa, demostrando conocimiento profundo del plato.',
+      '"Se preparan según la receta del chef Berasategui, son una especialidad de la casa."'
+    ],
+    opts_en: [
+      '"Let me ask the kitchen and I\'ll be right back."',
+      '"They\'re delicious, you\'ll love them."',
+      'Concretely explain the cooking technique, accompanying ingredients, and the type of sauce, demonstrating in-depth knowledge of the dish.',
+      '"They\'re prepared according to chef Berasategui\'s recipe, a house specialty."'
+    ],
+    corr: 2,
+    expl: 'El estándar #5 exige que el empleado pueda responder preguntas sobre el menú, ingredientes y alergias. La auditoría destacó positivamente este caso ("Le pregunté a Alessandra cómo estaban hechos los espárragos y me supo responder"). La opción 2 cumple el estándar y construye confianza. La 0 traslada el problema. La 1 es genérica/vacía. La 3 apela a autoridad sin contenido informativo.',
+    expl_en: 'Standard #5 requires the employee to answer questions about menu, ingredients, and allergies. The audit positively highlighted this case ("I asked Alessandra how the asparagus were prepared and she was able to answer"). Option 2 meets the standard and builds trust. Option 0 deflects. Option 1 is generic/empty. Option 3 appeals to authority without informative content.',
+    real: true
+  },
+  {
+    id: 47,
+    cat: 'carta',
+    scn: 'Estás explicando el menú a una mesa. Hay un plato de pescado del día.',
+    scn_en: 'You\'re explaining the menu to a table. There\'s a fish-of-the-day dish.',
+    q: '¿Qué información sobre el pescado debes incluir?',
+    q_en: 'What information about the fish should you include?',
+    opts: [
+      'Solo el nombre de la especie y la guarnición.',
+      'Mencionar la zona local de captura: "Pescado de las aguas entre Tenerife y El Hierro, capturado de forma sostenible."',
+      'Mencionar el precio antes que el origen para anticipar la decisión.',
+      'Esperar a que el huésped pregunte por el origen antes de mencionarlo.'
+    ],
+    opts_en: [
+      'Only the species name and the side dish.',
+      'Mention the local fishing area: "Fish from the waters between Tenerife and El Hierro, sustainably caught."',
+      'Mention the price before the origin to anticipate the decision.',
+      'Wait for the guest to ask about origin before mentioning it.'
+    ],
+    corr: 1,
+    expl: 'El estándar #31 (Sustainability) exige que el pescado de origen local/sostenible esté en carta o sea cantado por el empleado. La auditoría destacó positivamente este caso ("Fue mencionado por Alessandra. Entre Tenerife y El Hierro"). La opción 1 cumple el estándar y refuerza el valor de sostenibilidad. La 0 omite información clave. La 2 desplaza el foco. La 3 es pasiva.',
+    expl_en: 'Standard #31 (Sustainability) requires that locally/sustainably sourced fish be on the menu or verbally mentioned by the employee. The audit positively highlighted this case ("Mentioned by Alessandra. Between Tenerife and El Hierro"). Option 1 meets the standard and reinforces sustainability value. Option 0 omits key information. Option 2 shifts focus. Option 3 is passive.',
+    real: true
+  },
 ];
 
 const LQA_AUDIT_SCENARIOS = [
@@ -31928,6 +32459,65 @@ const LQA_EXAM_QUESTIONS=[
   {id:29, question:'Al servir vino, ¿cuál es el procedimiento correcto?', question_en:'What is the correct wine service procedure?', options:['Servir directamente sin presentar','Preguntar si quieren probarlo primero','Presentar la botella, abrir en la mesa, servir una prueba','Abrir en el office y servir directamente'], options_en:['Serve directly without presenting','Ask if they want to taste','Present bottle, open at table, pour taste','Open in office and serve directly'], correct:2, explanation:'Los estándares #43-44 requieren presentar la botella, abrir en la mesa, servir una pequeña cantidad para probar.', explanation_en:'Standards #43-44 require presenting bottle, opening at table, and pouring small tasting amount.', standardRef:43},
   {id:30, question:'¿Qué debes sugerir automáticamente después del postre?', question_en:'What should you automatically suggest after dessert?', options:['La cuenta directamente','Solo café','Nada, esperar a que pidan','Café/té y aclarar preferencia (capuchino, espresso...)'], options_en:['The bill directly','Just coffee','Nothing, wait for them to ask','Coffee/tea and clarify preference (cappuccino, espresso...)'], correct:3, explanation:'El estándar #36 requiere ofrecer automáticamente café/té y aclarar la preferencia.', explanation_en:'Standard #36 requires automatically offering coffee/tea and clarifying preference.', standardRef:36},
 ];
+
+// ═══════════════════════════════════════════════════════════
+// LQA SHARED ENGINE — used by exam / situation / auditor modes (v5.8)
+// ═══════════════════════════════════════════════════════════
+// Encapsulates state per-mode, captures time_sec, supports rich feedback,
+// review screens, per-category aggregates and keyboard shortcuts.
+function _lqaShuffle(arr){
+  // Fisher-Yates — replaces sort(()=>Math.random()-.5) which is biased.
+  const a = arr.slice();
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+function _lqaPushScore(emp, type, score, total, timeSec){
+  if (!emp.lqaScores) emp.lqaScores = [];
+  emp.lqaScores.push({ type, score, total, time_sec: timeSec, date: Date.now() });
+  // Rolling cap of 50 to avoid quota bloat over time.
+  if (emp.lqaScores.length > 50) emp.lqaScores = emp.lqaScores.slice(-50);
+}
+let _lqaKbdHandler = null;
+function _lqaUninstallKbd(){
+  if (_lqaKbdHandler) { document.removeEventListener('keydown', _lqaKbdHandler); _lqaKbdHandler = null; }
+}
+function _lqaInstallKbd(handler){
+  _lqaUninstallKbd();
+  _lqaKbdHandler = handler;
+  document.addEventListener('keydown', handler);
+}
+function _lqaConfirmExit(stateOpt){
+  // Skip confirm if the user hasn't actually answered anything yet.
+  const inProgress =
+    (lqaSitState.questions.length  > 0 && !lqaSitState.completed)  ||
+    (lqaExamState.questions.length > 0 && !lqaExamState.completed) ||
+    (lqaAudState.questions.length  > 0 && !lqaAudState.completed);
+  if (!inProgress) { _lqaUninstallKbd(); renderLqa(); return; }
+  const msg = LANG==='en' ? 'Exit this session? Progress will be lost.' : '¿Salir de esta sesión? Perderás el progreso.';
+  if (confirm(msg)) { _lqaUninstallKbd(); renderLqa(); }
+}
+// State objects — replace previous file-scoped lets across all 3 modes.
+const lqaSitState  = { questions:[], index:0, score:0, startedAt:0, answers:[], completed:false };
+const lqaExamState = { questions:[], index:0, score:0, startedAt:0, answers:[], completed:false };
+const lqaAudState  = { questions:[], index:0, score:0, startedAt:0, answers:[], completed:false };
+function _lqaResetState(s){
+  s.questions = []; s.index = 0; s.score = 0; s.startedAt = 0;
+  s.answers = []; s.completed = false;
+}
+// Build the "options as feedback" block: highlights user's pick + correct one.
+function _lqaOptionsFeedbackHtml(options, optionsEn, picked, correct){
+  return options.map((opt, idx) => {
+    const isPick = (idx === picked);
+    const isAns  = (idx === correct);
+    let bg = 'rgba(255,255,255,.55)', border = '1px solid var(--line2)', mark = '';
+    if (isAns)      { bg = 'rgba(77,138,94,.14)';  border = '2px solid #4d8a5e'; mark = '<span style="float:right;color:#4d8a5e;font-weight:700">✓</span>'; }
+    else if (isPick){ bg = 'rgba(196,112,104,.14)'; border = '2px solid #c47068'; mark = '<span style="float:right;color:#c47068;font-weight:700">✗</span>'; }
+    return `<div style="padding:.7rem .9rem;background:${bg};border:${border};border-radius:var(--r2);color:var(--parch2);font-size:.85rem;line-height:1.5;margin-bottom:.4rem;text-align:left">${mark}<span style="display:inline-block;width:1.4rem;font-weight:700;color:var(--parch3)">${idx+1}.</span>${LANG==='en'?optionsEn[idx]:opt}</div>`;
+  }).join('');
+}
 
 // LQA Render Functions
 function renderLqa(){
@@ -32122,289 +32712,492 @@ function renderLqaInfo(){
   </div>`;
 }
 
-let lqaExamIndex=0;let lqaExamQuestions=[];let lqaExamScore=0;
 function startLqaExam(){
-  lqaExamQuestions=[...LQA_EXAM_QUESTIONS].sort(()=>Math.random()-.5).slice(0,10);
-  lqaExamIndex=0;lqaExamScore=0;
-  lqaExamAnswered=false;
+  _lqaResetState(lqaExamState);
+  lqaExamState.questions = _lqaShuffle(LQA_EXAM_QUESTIONS).slice(0,10);
+  lqaExamState.startedAt = Date.now();
   renderLqaExamQuestion();
 }
 function renderLqaExamQuestion(){
-  if(lqaExamIndex>=lqaExamQuestions.length){renderLqaExamResults();return;}
-  const q=lqaExamQuestions[lqaExamIndex];
-  const c=document.getElementById('appContent');
-
-  if(!lqaExamAnswered){
-    c.innerHTML=`<div class="sup-wrap">
-      <div style="display:flex;align-items:center;gap:.6rem;margin-bottom:1rem">
-        <button onclick="renderLqa()" aria-label="${LANG==='en'?'Back to LQA menu':'Volver al menú LQA'}" style="background:transparent;border:1px solid var(--line);border-radius:var(--r2);padding:.4rem .8rem;font-size:.75rem;color:var(--parch3);cursor:pointer">←</button>
-        <div style="font-family:'Cinzel',serif;font-size:1rem;color:var(--parchment)">${LANG==='en'?'LQA Exam':'Examen LQA'}</div>
+  const s = lqaExamState;
+  if (s.index >= s.questions.length) { _lqaCompleteExam(); return; }
+  const q = s.questions[s.index];
+  const c = document.getElementById('appContent');
+  if (!c) return;
+  c.innerHTML = `<div class="sup-wrap" role="region" aria-label="${LANG==='en'?'LQA Exam question':'Pregunta examen LQA'}">
+    <div style="display:flex;align-items:center;gap:.6rem;margin-bottom:1rem">
+      <button onclick="_lqaConfirmExit()" aria-label="${LANG==='en'?'Back to LQA menu':'Volver al menú LQA'}" style="background:transparent;border:1px solid var(--line);border-radius:var(--r2);padding:.4rem .8rem;font-size:.75rem;color:var(--parch3);cursor:pointer">←</button>
+      <div style="font-family:'Cinzel',serif;font-size:1rem;color:var(--parchment)">${LANG==='en'?'LQA Exam':'Examen LQA'}</div>
+    </div>
+    <div style="margin-bottom:1rem;display:flex;justify-content:space-between;align-items:center">
+      <div style="font-size:.75rem;color:var(--parch3);text-transform:uppercase;font-weight:600">${LANG==='en'?'Question':'Pregunta'} ${s.index+1}/${s.questions.length}</div>
+      <div style="width:100px;height:6px;background:var(--parch4);border-radius:var(--r3);overflow:hidden">
+        <div style="background:#c49a3c;height:100%;width:${(s.index+1)/s.questions.length*100}%;transition:width .3s"></div>
       </div>
-
-      <div style="margin-bottom:1rem;display:flex;justify-content:space-between;align-items:center">
-        <div style="font-size:.75rem;color:var(--parch3);text-transform:uppercase;font-weight:600">${LANG==='en'?'Question':'Pregunta'} ${lqaExamIndex+1}/10</div>
-        <div style="width:100px;height:6px;background:var(--parch4);border-radius:var(--r3);overflow:hidden">
-          <div style="background:#c49a3c;height:100%;width:${(lqaExamIndex+1)/10*100}%;transition:width .3s"></div>
-        </div>
-      </div>
-
-      <div style="background:linear-gradient(155deg,#faf6ee,#f0e8d8);border:1px solid var(--line2);border-radius:var(--r2);padding:1.1rem;margin-bottom:1rem">
-        <div style="font-size:.9rem;color:var(--parch2);line-height:1.7;font-weight:600">${LANG==='en'?q.question_en:q.question}</div>
-      </div>
-
-      <div style="display:grid;grid-template-columns:1fr;gap:.5rem;margin-bottom:1rem">
-        ${q.options.map((opt,idx)=>`<button onclick="lqaExamAnswer(${idx})" style="padding:.9rem;background:linear-gradient(135deg,rgba(72,136,160,.06),rgba(72,136,160,.02));border:2px solid rgba(72,136,160,.2);border-radius:var(--r);color:var(--parch2);font-weight:600;cursor:pointer;transition:all .2s;text-align:left">${LANG==='en'?q.options_en[idx]:opt}</button>`).join('')}
-      </div>
-    </div>`;
-  }
+    </div>
+    <div style="background:linear-gradient(155deg,#faf6ee,#f0e8d8);border:1px solid var(--line2);border-radius:var(--r2);padding:1.1rem;margin-bottom:1rem">
+      <div style="font-size:.9rem;color:var(--parch2);line-height:1.7;font-weight:600">${LANG==='en'?q.question_en:q.question}</div>
+    </div>
+    <div role="radiogroup" aria-label="${LANG==='en'?'Answer options':'Opciones de respuesta'}" style="display:grid;grid-template-columns:1fr;gap:.5rem;margin-bottom:1rem">
+      ${q.options.map((opt,idx)=>`<button onclick="lqaExamAnswer(${idx})" role="radio" aria-checked="false" style="padding:.9rem;background:linear-gradient(135deg,rgba(72,136,160,.06),rgba(72,136,160,.02));border:2px solid rgba(72,136,160,.2);border-radius:var(--r);color:var(--parch2);font-weight:600;cursor:pointer;transition:all .2s;text-align:left;min-height:48px"><span style="display:inline-block;width:1.4rem;font-weight:700;color:#c49a3c">${idx+1}.</span>${LANG==='en'?q.options_en[idx]:opt}</button>`).join('')}
+    </div>
+    <div style="font-size:.65rem;color:var(--parch4);text-align:center">${LANG==='en'?'Tip: press 1-4 to choose · Esc to exit':'Tip: pulsa 1-4 para elegir · Esc para salir'}</div>
+  </div>`;
+  _lqaInstallKbd((e)=>{
+    if (e.key === 'Escape') { e.preventDefault(); _lqaConfirmExit(); return; }
+    const n = parseInt(e.key, 10);
+    if (n >= 1 && n <= q.options.length) { e.preventDefault(); lqaExamAnswer(n-1); }
+  });
 }
 function lqaExamAnswer(optIdx){
-  const q=lqaExamQuestions[lqaExamIndex];
-  const isCorrect=(optIdx===q.correct);
-  if(isCorrect) lqaExamScore++;
+  _lqaUninstallKbd();
+  const s = lqaExamState;
+  const q = s.questions[s.index];
+  const isCorrect = (optIdx === q.correct);
+  if (isCorrect) s.score++;
+  s.answers.push({ qIdx: s.index, picked: optIdx, isCorrect });
 
-  const c=document.getElementById('appContent');
-  c.innerHTML=`<div class="sup-wrap">
+  const c = document.getElementById('appContent');
+  c.innerHTML = `<div class="sup-wrap" role="region" aria-live="polite">
     <div style="display:flex;align-items:center;gap:.6rem;margin-bottom:1rem">
-      <button onclick="renderLqa()" aria-label="${LANG==='en'?'Back to LQA menu':'Volver al menú LQA'}" style="background:transparent;border:1px solid var(--line);border-radius:var(--r2);padding:.4rem .8rem;font-size:.75rem;color:var(--parch3);cursor:pointer">←</button>
-      <div style="font-family:'Cinzel',serif;font-size:1rem;color:var(--parchment)">${LANG==='en'?'LQA Exam':'Examen LQA'} · ${lqaExamIndex+1}/10</div>
+      <button onclick="_lqaConfirmExit()" aria-label="${LANG==='en'?'Back to LQA menu':'Volver al menú LQA'}" style="background:transparent;border:1px solid var(--line);border-radius:var(--r2);padding:.4rem .8rem;font-size:.75rem;color:var(--parch3);cursor:pointer">←</button>
+      <div style="font-family:'Cinzel',serif;font-size:1rem;color:var(--parchment)">${LANG==='en'?'LQA Exam':'Examen LQA'} · ${s.index+1}/${s.questions.length}</div>
     </div>
-
-    <div style="text-align:center;margin:1rem 0 1.5rem">
-      <div style="font-size:2rem;margin-bottom:1rem">${isCorrect?'✓':'✗'}</div>
-      <div style="font-family:'Cinzel',serif;font-size:1.3rem;color:${isCorrect?'#4d8a5e':'#c47068'};margin-bottom:1rem">${LANG==='en'?(isCorrect?'Correct!':'Incorrect'):(isCorrect?'¡Correcto!':'Incorrecto')}</div>
+    <div style="text-align:center;margin:.5rem 0 1rem">
+      <div style="font-size:1.6rem;margin-bottom:.4rem">${isCorrect?'✓':'✗'}</div>
+      <div style="font-family:'Cinzel',serif;font-size:1.15rem;color:${isCorrect?'#4d8a5e':'#c47068'}">${LANG==='en'?(isCorrect?'Correct':'Incorrect'):(isCorrect?'Correcto':'Incorrecto')}</div>
     </div>
-
+    <div style="margin-bottom:1rem">${_lqaOptionsFeedbackHtml(q.options, q.options_en, optIdx, q.correct)}</div>
     <div style="background:linear-gradient(155deg,#faf6ee,#f0e8d8);border:1px solid var(--line2);border-radius:var(--r2);padding:1rem;margin-bottom:1rem">
       <div style="font-size:.75rem;color:var(--parch3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:.5rem;font-weight:600">${LANG==='en'?'Explanation':'Explicación'}</div>
       <div style="font-size:.9rem;color:var(--parch2);line-height:1.6">${LANG==='en'?q.explanation_en:q.explanation}</div>
-      <div style="font-size:.8rem;color:var(--parch3);margin-top:1rem;font-style:italic">${LANG==='en'?'Standard #':'Estándar #'}${q.standardRef}</div>
+      ${q.standardRef ? `<div style="font-size:.75rem;color:var(--parch3);margin-top:.7rem;font-style:italic">${LANG==='en'?'Standard #':'Estándar #'}${q.standardRef}</div>` : ''}
     </div>
-
-    <button onclick="lqaExamIndex++;lqaExamAnswered=false;renderLqaExamQuestion()" style="width:100%;padding:.75rem;background:#c49a3c;border:none;border-radius:var(--r);color:#fff;font-weight:700;cursor:pointer;transition:all .2s">${LANG==='en'?'Next':'Siguiente'}</button>
+    <button id="lqaNextBtn" onclick="lqaExamState.index++;renderLqaExamQuestion()" style="width:100%;padding:.75rem;background:#c49a3c;border:none;border-radius:var(--r);color:#fff;font-weight:700;cursor:pointer">${LANG==='en'?'Next':'Siguiente'} ↵</button>
   </div>`;
-  lqaExamAnswered=true;
+  _lqaInstallKbd((e)=>{
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault(); _lqaUninstallKbd();
+      lqaExamState.index++; renderLqaExamQuestion();
+    } else if (e.key === 'Escape') { e.preventDefault(); _lqaConfirmExit(); }
+  });
+  setTimeout(()=>{ const b = document.getElementById('lqaNextBtn'); if (b) b.focus(); }, 50);
+}
+function _lqaCompleteExam(){
+  _lqaUninstallKbd();
+  const s = lqaExamState;
+  if (!s.completed) {
+    s.completed = true;
+    const total = s.questions.length;
+    const pct = total ? Math.round(s.score/total*100) : 0;
+    const xp = Math.round(s.score*15 + (pct>=90?50:pct>=70?25:0));
+    const timeSec = Math.max(1, Math.round((Date.now()-s.startedAt)/1000));
+    const emp = getEmp(currentUser);
+    if (emp) {
+      _lqaPushScore(emp, 'exam', s.score, total, timeSec);
+      if (!emp.lqaExamBest || pct > emp.lqaExamBest) emp.lqaExamBest = pct;
+      emp.lqaExamsCompleted = (emp.lqaExamsCompleted||0) + 1;
+      saveDB();
+    }
+    s._cachedXp = xp; s._cachedPct = pct; s._cachedTime = timeSec;
+    awardXP(xp, LANG==='en'?'LQA Exam':'Examen LQA', 'lqa');
+    checkNewAchievements();
+  }
+  renderLqaExamResults();
 }
 function renderLqaExamResults(){
-  const pct=Math.round(lqaExamScore/lqaExamQuestions.length*100);
-  const xpEarned=Math.round(lqaExamScore*15 + (pct>=90?50:pct>=70?25:0));
-  const emp=getEmp(currentUser);
-  if(emp){
-    if(!emp.lqaScores) emp.lqaScores=[];
-    emp.lqaScores.push({type:'exam',score:lqaExamScore,total:lqaExamQuestions.length,date:Date.now()});
-    if(!emp.lqaExamBest || pct > emp.lqaExamBest) emp.lqaExamBest = pct;
-    emp.lqaExamsCompleted = (emp.lqaExamsCompleted||0) + 1;
-    saveDB();
-  }
-  awardXP(xpEarned, LANG==='en'?'LQA Exam':'Examen LQA', 'lqa');
-  checkNewAchievements();
-
-  const c=document.getElementById('appContent');
-  c.innerHTML=`<div class="sup-wrap">
+  _lqaUninstallKbd();
+  const s = lqaExamState;
+  const total = s.questions.length;
+  const pct = s._cachedPct ?? (total ? Math.round(s.score/total*100) : 0);
+  const xp = s._cachedXp ?? 0;
+  const timeSec = s._cachedTime ?? 0;
+  const c = document.getElementById('appContent');
+  c.innerHTML = `<div class="sup-wrap">
     <div style="text-align:center;margin:2rem 0">
-      <div style="font-family:'Cinzel',serif;font-size:3rem;font-weight:700;color:#c49a3c;margin-bottom:.5rem">${lqaExamScore}/10</div>
-      <div style="font-size:1.1rem;color:var(--parchment);margin-bottom:2rem">${LANG==='en'?'LQA Exam Complete':'Examen LQA Completado'}</div>
-      <div style="background:linear-gradient(135deg,rgba(196,154,60,.08),rgba(196,154,60,.02));border:1px solid rgba(196,154,60,.2);border-radius:var(--r);padding:1rem;margin-bottom:1.5rem">
+      <div style="font-family:'Cinzel',serif;font-size:3rem;font-weight:700;color:#c49a3c;margin-bottom:.5rem">${s.score}/${total}</div>
+      <h1 tabindex="-1" id="lqaResHdr" style="font-size:1.1rem;color:var(--parchment);margin-bottom:1.5rem;font-family:'Cinzel',serif;font-weight:600">${LANG==='en'?'LQA Exam Complete':'Examen LQA Completado'}</h1>
+      <div style="background:linear-gradient(135deg,rgba(196,154,60,.08),rgba(196,154,60,.02));border:1px solid rgba(196,154,60,.2);border-radius:var(--r);padding:1rem;margin-bottom:1rem">
         <div style="font-size:.85rem;color:var(--parch3);text-transform:uppercase;margin-bottom:.3rem">${LANG==='en'?'Score':'Puntuación'}</div>
         <div style="font-size:2rem;font-weight:700;color:#c49a3c">${pct}%</div>
-        <div style="font-size:.75rem;color:var(--parch3);margin-top:.3rem">+${xpEarned} XP ${LANG==='en'?'earned':'ganados'}</div>
+        <div style="font-size:.75rem;color:var(--parch3);margin-top:.3rem">+${xp} XP · ${timeSec}s</div>
       </div>
     </div>
-
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:.6rem">
-      <button onclick="startLqaExam()" style="padding:.75rem;background:#c49a3c;border:none;border-radius:var(--r);color:#fff;font-weight:700;cursor:pointer;transition:all .2s">${LANG==='en'?'Try Again':'Intentar de Nuevo'}</button>
-      <button onclick="renderLqa()" style="padding:.75rem;background:var(--ink2);border:1px solid var(--line);border-radius:var(--r);color:var(--parch2);font-weight:700;cursor:pointer;transition:all .2s">${LANG==='en'?'Back to Menu':'Volver al Menú'}</button>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:.6rem;margin-bottom:.5rem">
+      <button onclick="renderLqaExamReview()" style="padding:.75rem;background:var(--ink2);border:1px solid var(--line);border-radius:var(--r);color:var(--parch2);font-weight:700;cursor:pointer">${LANG==='en'?'Review answers':'Revisar respuestas'}</button>
+      <button onclick="startLqaExam()" style="padding:.75rem;background:#c49a3c;border:none;border-radius:var(--r);color:#fff;font-weight:700;cursor:pointer">${LANG==='en'?'Try again':'Intentar de nuevo'}</button>
+    </div>
+    <button onclick="renderLqa()" style="width:100%;padding:.6rem;background:transparent;border:1px solid var(--line);border-radius:var(--r);color:var(--parch3);font-weight:600;cursor:pointer">${LANG==='en'?'Back to menu':'Volver al menú'}</button>
+  </div>`;
+  setTimeout(()=>{ const h = document.getElementById('lqaResHdr'); if (h) h.focus(); }, 100);
+}
+function renderLqaExamReview(){
+  _lqaUninstallKbd();
+  const s = lqaExamState;
+  const c = document.getElementById('appContent');
+  const items = s.answers.map((a, i) => {
+    const q = s.questions[a.qIdx];
+    const optsHtml = _lqaOptionsFeedbackHtml(q.options, q.options_en, a.picked, q.correct);
+    return `<details style="background:linear-gradient(155deg,#faf6ee,#f0e8d8);border:1px solid var(--line2);border-radius:var(--r2);margin-bottom:.6rem;padding:.6rem .8rem">
+      <summary style="cursor:pointer;font-size:.85rem;color:var(--parchment);font-weight:600;list-style:none;display:flex;justify-content:space-between;gap:.5rem"><span>${i+1}. ${LANG==='en'?q.question_en:q.question}</span><span style="color:${a.isCorrect?'#4d8a5e':'#c47068'};font-weight:700">${a.isCorrect?'✓':'✗'}</span></summary>
+      <div style="margin-top:.6rem">${optsHtml}</div>
+      <div style="font-size:.78rem;color:var(--parch3);margin-top:.5rem;line-height:1.5">${LANG==='en'?q.explanation_en:q.explanation}${q.standardRef?` <em>(${LANG==='en'?'Std #':'Est. #'}${q.standardRef})</em>`:''}</div>
+    </details>`;
+  }).join('');
+  c.innerHTML = `<div class="sup-wrap">
+    <div style="display:flex;align-items:center;gap:.6rem;margin-bottom:1rem">
+      <button onclick="renderLqaExamResults()" aria-label="${LANG==='en'?'Back to results':'Volver a resultados'}" style="background:transparent;border:1px solid var(--line);border-radius:var(--r2);padding:.4rem .8rem;font-size:.75rem;color:var(--parch3);cursor:pointer">←</button>
+      <div style="font-family:'Cinzel',serif;font-size:1rem;color:var(--parchment)">${LANG==='en'?'Review answers':'Revisar respuestas'}</div>
+    </div>
+    ${items}
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:.6rem;margin-top:1rem">
+      <button onclick="startLqaExam()" style="padding:.75rem;background:#c49a3c;border:none;border-radius:var(--r);color:#fff;font-weight:700;cursor:pointer">${LANG==='en'?'Try again':'Intentar de nuevo'}</button>
+      <button onclick="renderLqa()" style="padding:.75rem;background:var(--ink2);border:1px solid var(--line);border-radius:var(--r);color:var(--parch2);font-weight:700;cursor:pointer">${LANG==='en'?'Menu':'Menú'}</button>
     </div>
   </div>`;
 }
-
-let lqaSituationIndex=0;let lqaSituationQuestions=[];let lqaSituationScore=0;
 function startLqaSituations(){
-  lqaSituationQuestions=[...LQA_SITUATIONS].sort(()=>Math.random()-.5).slice(0,10);
-  lqaSituationIndex=0;lqaSituationScore=0;
+  _lqaResetState(lqaSitState);
+  lqaSitState.questions = _lqaShuffle(LQA_SITUATIONS).slice(0,10);
+  lqaSitState.startedAt = Date.now();
   renderLqaSituationQuestion();
 }
 function renderLqaSituationQuestion(){
-  if(lqaSituationIndex>=lqaSituationQuestions.length){renderLqaSituationResults();return;}
-  const s=lqaSituationQuestions[lqaSituationIndex];
-  const c=document.getElementById('appContent');
-  c.innerHTML=`<div class="sup-wrap">
+  const s = lqaSitState;
+  if (s.index >= s.questions.length) { _lqaCompleteSituations(); return; }
+  const sc = s.questions[s.index];
+  const c = document.getElementById('appContent');
+  if (!c) return;
+  c.innerHTML = `<div class="sup-wrap" role="region" aria-label="${LANG==='en'?'LQA situation':'Situación LQA'}">
     <div style="display:flex;align-items:center;gap:.6rem;margin-bottom:1rem">
-      <button onclick="renderLqa()" aria-label="${LANG==='en'?'Back to LQA menu':'Volver al menú LQA'}" style="background:transparent;border:1px solid var(--line);border-radius:var(--r2);padding:.4rem .8rem;font-size:.75rem;color:var(--parch3);cursor:pointer">←</button>
+      <button onclick="_lqaConfirmExit()" aria-label="${LANG==='en'?'Back to LQA menu':'Volver al menú LQA'}" style="background:transparent;border:1px solid var(--line);border-radius:var(--r2);padding:.4rem .8rem;font-size:.75rem;color:var(--parch3);cursor:pointer">←</button>
       <div style="font-family:'Cinzel',serif;font-size:1rem;color:var(--parchment)">${LANG==='en'?'Real Situations':'Situaciones Reales'}</div>
     </div>
-
     <div style="margin-bottom:1rem;display:flex;justify-content:space-between;align-items:center">
-      <div style="font-size:.75rem;color:var(--parch3);text-transform:uppercase;font-weight:600">${LANG==='en'?'Scenario':'Escenario'} ${lqaSituationIndex+1}/${lqaSituationQuestions.length}</div>
+      <div style="font-size:.75rem;color:var(--parch3);text-transform:uppercase;font-weight:600">${LANG==='en'?'Scenario':'Escenario'} ${s.index+1}/${s.questions.length}</div>
       <div style="width:100px;height:6px;background:var(--parch4);border-radius:var(--r3);overflow:hidden">
-        <div style="background:#7a6aaa;height:100%;width:${(lqaSituationIndex+1)/lqaSituationQuestions.length*100}%;transition:width .3s"></div>
+        <div style="background:#7a6aaa;height:100%;width:${(s.index+1)/s.questions.length*100}%;transition:width .3s"></div>
       </div>
     </div>
-
     <div style="background:linear-gradient(155deg,#faf6ee,#f0e8d8);border:1px solid var(--line2);border-radius:var(--r2);padding:1.1rem;margin-bottom:1rem">
-      <div style="font-size:.85rem;font-weight:600;color:var(--parchment);margin-bottom:.6rem">${LANG==='en'?'Situation':'Situación'}</div>
-      <div style="font-size:.9rem;color:var(--parch2);line-height:1.7;margin-bottom:1rem">${LANG==='en'?s.scn_en:s.scn}</div>
-      <div style="font-size:.85rem;font-weight:600;color:var(--parchment)">${LANG==='en'?s.q_en:s.q}</div>
+      <div style="display:flex;align-items:center;gap:.4rem;margin-bottom:.6rem">
+        <span style="font-size:.65rem;text-transform:uppercase;color:#7a6aaa;background:rgba(122,106,170,.12);padding:.15rem .55rem;border-radius:var(--r3);letter-spacing:.05em;font-weight:700">${escapeHTML(sc.cat)}</span>
+        <span style="font-size:.85rem;font-weight:600;color:var(--parchment)">${LANG==='en'?'Situation':'Situación'}</span>
+      </div>
+      <div style="font-size:.9rem;color:var(--parch2);line-height:1.7;margin-bottom:1rem">${LANG==='en'?sc.scn_en:sc.scn}</div>
+      <div style="font-size:.85rem;font-weight:600;color:var(--parchment)">${LANG==='en'?sc.q_en:sc.q}</div>
     </div>
-
-    <div style="display:grid;grid-template-columns:1fr;gap:.5rem;margin-bottom:1rem">
-      ${s.opts.map((o,i)=>`
-        <button onclick="lqaSituationAnswer(${i})" style="padding:.8rem;background:linear-gradient(155deg,#faf6ee,#f0e8d8);border:2px solid var(--line2);border-radius:var(--r2);text-align:left;cursor:pointer;transition:all .2s;color:var(--parch2);font-size:.85rem;line-height:1.5">
-          <div style="font-weight:600;color:var(--parchment);margin-bottom:.3rem">${String.fromCharCode(65+i)}.</div>
-          ${LANG==='en'?s.opts_en[i]:o}
-        </button>
-      `).join('')}
+    <div role="radiogroup" aria-label="${LANG==='en'?'Answer options':'Opciones de respuesta'}" style="display:grid;grid-template-columns:1fr;gap:.5rem;margin-bottom:1rem">
+      ${sc.opts.map((o,i)=>`<button onclick="lqaSituationAnswer(${i})" role="radio" aria-checked="false" style="padding:.85rem;background:linear-gradient(155deg,#faf6ee,#f0e8d8);border:2px solid var(--line2);border-radius:var(--r2);text-align:left;cursor:pointer;transition:all .2s;color:var(--parch2);font-size:.85rem;line-height:1.5;min-height:48px"><div style="font-weight:700;color:#7a6aaa;margin-bottom:.2rem">${i+1}.</div>${LANG==='en'?sc.opts_en[i]:o}</button>`).join('')}
     </div>
+    <div style="font-size:.65rem;color:var(--parch4);text-align:center">${LANG==='en'?'Tip: press 1-4 to choose · Esc to exit':'Tip: pulsa 1-4 para elegir · Esc para salir'}</div>
   </div>`;
+  _lqaInstallKbd((e)=>{
+    if (e.key === 'Escape') { e.preventDefault(); _lqaConfirmExit(); return; }
+    const n = parseInt(e.key, 10);
+    if (n >= 1 && n <= sc.opts.length) { e.preventDefault(); lqaSituationAnswer(n-1); }
+  });
 }
 function lqaSituationAnswer(idx){
-  const s=lqaSituationQuestions[lqaSituationIndex];
-  const isCorrect=idx===s.corr;
-  if(isCorrect) lqaSituationScore++;
+  _lqaUninstallKbd();
+  const s = lqaSitState;
+  const sc = s.questions[s.index];
+  const isCorrect = (idx === sc.corr);
+  if (isCorrect) s.score++;
+  s.answers.push({ qIdx: s.index, picked: idx, isCorrect, cat: sc.cat });
 
-  const c=document.getElementById('appContent');
-  c.innerHTML=`<div class="sup-wrap">
+  const c = document.getElementById('appContent');
+  c.innerHTML = `<div class="sup-wrap" role="region" aria-live="polite">
     <div style="display:flex;align-items:center;gap:.6rem;margin-bottom:1rem">
-      <button onclick="renderLqa()" aria-label="${LANG==='en'?'Back to LQA menu':'Volver al menú LQA'}" style="background:transparent;border:1px solid var(--line);border-radius:var(--r2);padding:.4rem .8rem;font-size:.75rem;color:var(--parch3);cursor:pointer">←</button>
-      <div style="font-family:'Cinzel',serif;font-size:1rem;color:var(--parchment)">${LANG==='en'?'Real Situations':'Situaciones Reales'} · ${lqaSituationIndex+1}/${lqaSituationQuestions.length}</div>
+      <button onclick="_lqaConfirmExit()" aria-label="${LANG==='en'?'Back to LQA menu':'Volver al menú LQA'}" style="background:transparent;border:1px solid var(--line);border-radius:var(--r2);padding:.4rem .8rem;font-size:.75rem;color:var(--parch3);cursor:pointer">←</button>
+      <div style="font-family:'Cinzel',serif;font-size:1rem;color:var(--parchment)">${LANG==='en'?'Real Situations':'Situaciones Reales'} · ${s.index+1}/${s.questions.length}</div>
     </div>
-
-    <div style="text-align:center;margin:1rem 0 1.5rem">
-      <div style="font-size:2rem;margin-bottom:1rem">${isCorrect?'✓':'✗'}</div>
-      <div style="font-family:'Cinzel',serif;font-size:1.3rem;color:${isCorrect?'#4d8a5e':'#c47068'};margin-bottom:1rem">${LANG==='en'?(isCorrect?'Correct!':'Incorrect'):(isCorrect?'¡Correcto!':'Incorrecto')}</div>
+    <div style="text-align:center;margin:.5rem 0 1rem">
+      <div style="font-size:1.6rem;margin-bottom:.4rem">${isCorrect?'✓':'✗'}</div>
+      <div style="font-family:'Cinzel',serif;font-size:1.15rem;color:${isCorrect?'#4d8a5e':'#c47068'}">${LANG==='en'?(isCorrect?'Correct':'Incorrect'):(isCorrect?'¡Correcto!':'Incorrecto')}</div>
     </div>
-
+    <div style="margin-bottom:1rem">${_lqaOptionsFeedbackHtml(sc.opts, sc.opts_en, idx, sc.corr)}</div>
     <div style="background:linear-gradient(155deg,#faf6ee,#f0e8d8);border:1px solid var(--line2);border-radius:var(--r2);padding:1rem;margin-bottom:1rem">
       <div style="font-size:.75rem;color:var(--parch3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:.5rem;font-weight:600">${LANG==='en'?'Explanation':'Explicación'}</div>
-      <div style="font-size:.85rem;color:var(--parch2);line-height:1.6">${LANG==='en'?s.expl_en:s.expl}</div>
+      <div style="font-size:.85rem;color:var(--parch2);line-height:1.6">${LANG==='en'?sc.expl_en:sc.expl}</div>
     </div>
-
-    <button onclick="lqaSituationIndex++;renderLqaSituationQuestion()" style="width:100%;padding:.75rem;background:#7a6aaa;border:none;border-radius:var(--r);color:#fff;font-weight:700;cursor:pointer;transition:all .2s">${LANG==='en'?'Next':'Siguiente'}</button>
+    <button id="lqaNextBtn" onclick="lqaSitState.index++;renderLqaSituationQuestion()" style="width:100%;padding:.75rem;background:#7a6aaa;border:none;border-radius:var(--r);color:#fff;font-weight:700;cursor:pointer">${LANG==='en'?'Next':'Siguiente'} ↵</button>
   </div>`;
+  _lqaInstallKbd((e)=>{
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault(); _lqaUninstallKbd();
+      lqaSitState.index++; renderLqaSituationQuestion();
+    } else if (e.key === 'Escape') { e.preventDefault(); _lqaConfirmExit(); }
+  });
+  setTimeout(()=>{ const b = document.getElementById('lqaNextBtn'); if (b) b.focus(); }, 50);
+}
+function _lqaCompleteSituations(){
+  _lqaUninstallKbd();
+  const s = lqaSitState;
+  if (!s.completed) {
+    s.completed = true;
+    const total = s.questions.length;
+    const pct = total ? Math.round(s.score/total*100) : 0;
+    const xp = Math.round(s.score*12 + (pct>=90?40:pct>=70?20:0));
+    const timeSec = Math.max(1, Math.round((Date.now()-s.startedAt)/1000));
+    const emp = getEmp(currentUser);
+    if (emp) {
+      _lqaPushScore(emp, 'situations', s.score, total, timeSec);
+      if (!emp.lqaSituationBest || pct > emp.lqaSituationBest) emp.lqaSituationBest = pct;
+      emp.lqaSituationsCompleted = (emp.lqaSituationsCompleted||0) + 1;
+      // A1: per-category aggregate — unlocks "weak areas" insight in the dashboard.
+      if (!emp.lqaSitByCat) emp.lqaSitByCat = {};
+      for (const a of s.answers) {
+        const k = a.cat || 'misc';
+        if (!emp.lqaSitByCat[k]) emp.lqaSitByCat[k] = { correct:0, total:0 };
+        emp.lqaSitByCat[k].total++;
+        if (a.isCorrect) emp.lqaSitByCat[k].correct++;
+      }
+      saveDB();
+    }
+    s._cachedXp = xp; s._cachedPct = pct; s._cachedTime = timeSec;
+    awardXP(xp, LANG==='en'?'LQA Situations':'Situaciones LQA', 'lqa');
+    checkNewAchievements();
+  }
+  renderLqaSituationResults();
 }
 function renderLqaSituationResults(){
-  const pct=Math.round(lqaSituationScore/lqaSituationQuestions.length*100);
-  const xpEarned=Math.round(lqaSituationScore*12 + (pct>=90?40:pct>=70?20:0));
-  const emp=getEmp(currentUser);
-  if(emp){
-    if(!emp.lqaScores) emp.lqaScores=[];
-    emp.lqaScores.push({type:'situations',score:lqaSituationScore,total:lqaSituationQuestions.length,date:Date.now()});
-    if(!emp.lqaSituationBest || pct > emp.lqaSituationBest) emp.lqaSituationBest = pct;
-    emp.lqaSituationsCompleted = (emp.lqaSituationsCompleted||0) + 1;
-    saveDB();
+  _lqaUninstallKbd();
+  const s = lqaSitState;
+  const total = s.questions.length;
+  const pct = s._cachedPct ?? (total ? Math.round(s.score/total*100) : 0);
+  const xp = s._cachedXp ?? 0;
+  const timeSec = s._cachedTime ?? 0;
+  // Build per-cat breakdown for THIS run
+  const byCat = {};
+  for (const a of s.answers) {
+    const k = a.cat || 'misc';
+    if (!byCat[k]) byCat[k] = { correct:0, total:0 };
+    byCat[k].total++;
+    if (a.isCorrect) byCat[k].correct++;
   }
-  awardXP(xpEarned, LANG==='en'?'LQA Situations':'Situaciones LQA', 'lqa');
-  checkNewAchievements();
-  const c=document.getElementById('appContent');
-  c.innerHTML=`<div class="sup-wrap">
-    <div style="text-align:center;margin:2rem 0">
-      <div style="font-family:'Cinzel',serif;font-size:3rem;font-weight:700;color:#7a6aaa;margin-bottom:.5rem">${lqaSituationScore}/${lqaSituationQuestions.length}</div>
-      <div style="font-size:1.1rem;color:var(--parchment);margin-bottom:.5rem">${LANG==='en'?'Situations Complete':'Situaciones Completadas'}</div>
-      <div style="font-size:.9rem;color:var(--parch2);margin-bottom:2rem">${pct}% · +${xpEarned} XP</div>
+  const catRows = Object.entries(byCat)
+    .sort((a,b) => (a[1].correct/a[1].total) - (b[1].correct/b[1].total))
+    .map(([cat, v]) => {
+      const cpct = Math.round(v.correct/v.total*100);
+      const color = cpct >= 70 ? '#4d8a5e' : cpct >= 50 ? '#c49a3c' : '#c47068';
+      return `<div style="display:flex;align-items:center;gap:.6rem;margin-bottom:.4rem;font-size:.8rem">
+        <span style="min-width:90px;color:var(--parch2);text-transform:capitalize">${escapeHTML(cat)}</span>
+        <div style="flex:1;height:6px;background:var(--parch4);border-radius:var(--r3);overflow:hidden"><div style="background:${color};height:100%;width:${cpct}%;transition:width .3s"></div></div>
+        <span style="min-width:60px;text-align:right;color:${color};font-weight:700">${v.correct}/${v.total}</span>
+      </div>`;
+    }).join('');
+  const c = document.getElementById('appContent');
+  c.innerHTML = `<div class="sup-wrap">
+    <div style="text-align:center;margin:1.5rem 0 1rem">
+      <div style="font-family:'Cinzel',serif;font-size:3rem;font-weight:700;color:#7a6aaa;margin-bottom:.5rem">${s.score}/${total}</div>
+      <h1 tabindex="-1" id="lqaResHdr" style="font-size:1.1rem;color:var(--parchment);margin-bottom:.5rem;font-family:'Cinzel',serif;font-weight:600">${LANG==='en'?'Situations Complete':'Situaciones Completadas'}</h1>
+      <div style="font-size:.9rem;color:var(--parch2);margin-bottom:1rem">${pct}% · +${xp} XP · ${timeSec}s</div>
     </div>
-
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:.6rem">
-      <button onclick="startLqaSituations()" style="padding:.75rem;background:#7a6aaa;border:none;border-radius:var(--r);color:#fff;font-weight:700;cursor:pointer;transition:all .2s">${LANG==='en'?'Again':'De Nuevo'}</button>
-      <button onclick="renderLqa()" style="padding:.75rem;background:var(--ink2);border:1px solid var(--line);border-radius:var(--r);color:var(--parch2);font-weight:700;cursor:pointer;transition:all .2s">${LANG==='en'?'Menu':'Menú'}</button>
+    <div style="background:linear-gradient(155deg,#faf6ee,#f0e8d8);border:1px solid var(--line2);border-radius:var(--r2);padding:1rem;margin-bottom:1rem">
+      <div style="font-size:.75rem;color:var(--parch3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:.7rem;font-weight:600">${LANG==='en'?'By category (this run)':'Por categoría (esta sesión)'}</div>
+      ${catRows}
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:.6rem;margin-bottom:.5rem">
+      <button onclick="renderLqaSituationReview()" style="padding:.75rem;background:var(--ink2);border:1px solid var(--line);border-radius:var(--r);color:var(--parch2);font-weight:700;cursor:pointer">${LANG==='en'?'Review answers':'Revisar respuestas'}</button>
+      <button onclick="startLqaSituations()" style="padding:.75rem;background:#7a6aaa;border:none;border-radius:var(--r);color:#fff;font-weight:700;cursor:pointer">${LANG==='en'?'Try again':'De nuevo'}</button>
+    </div>
+    <button onclick="renderLqa()" style="width:100%;padding:.6rem;background:transparent;border:1px solid var(--line);border-radius:var(--r);color:var(--parch3);font-weight:600;cursor:pointer">${LANG==='en'?'Back to menu':'Volver al menú'}</button>
+  </div>`;
+  setTimeout(()=>{ const h = document.getElementById('lqaResHdr'); if (h) h.focus(); }, 100);
+}
+function renderLqaSituationReview(){
+  _lqaUninstallKbd();
+  const s = lqaSitState;
+  const c = document.getElementById('appContent');
+  const items = s.answers.map((a, i) => {
+    const sc = s.questions[a.qIdx];
+    const optsHtml = _lqaOptionsFeedbackHtml(sc.opts, sc.opts_en, a.picked, sc.corr);
+    return `<details style="background:linear-gradient(155deg,#faf6ee,#f0e8d8);border:1px solid var(--line2);border-radius:var(--r2);margin-bottom:.6rem;padding:.6rem .8rem">
+      <summary style="cursor:pointer;font-size:.85rem;color:var(--parchment);font-weight:600;list-style:none;display:flex;justify-content:space-between;gap:.5rem;align-items:flex-start"><span><span style="display:inline-block;font-size:.6rem;text-transform:uppercase;color:#7a6aaa;background:rgba(122,106,170,.12);padding:.1rem .4rem;border-radius:var(--r3);margin-right:.4rem">${escapeHTML(sc.cat)}</span>${i+1}. ${LANG==='en'?sc.q_en:sc.q}</span><span style="color:${a.isCorrect?'#4d8a5e':'#c47068'};font-weight:700">${a.isCorrect?'✓':'✗'}</span></summary>
+      <div style="margin-top:.6rem;font-size:.8rem;color:var(--parch3);line-height:1.5;font-style:italic">${LANG==='en'?sc.scn_en:sc.scn}</div>
+      <div style="margin-top:.6rem">${optsHtml}</div>
+      <div style="font-size:.78rem;color:var(--parch3);margin-top:.5rem;line-height:1.5">${LANG==='en'?sc.expl_en:sc.expl}</div>
+    </details>`;
+  }).join('');
+  c.innerHTML = `<div class="sup-wrap">
+    <div style="display:flex;align-items:center;gap:.6rem;margin-bottom:1rem">
+      <button onclick="renderLqaSituationResults()" aria-label="${LANG==='en'?'Back to results':'Volver a resultados'}" style="background:transparent;border:1px solid var(--line);border-radius:var(--r2);padding:.4rem .8rem;font-size:.75rem;color:var(--parch3);cursor:pointer">←</button>
+      <div style="font-family:'Cinzel',serif;font-size:1rem;color:var(--parchment)">${LANG==='en'?'Review answers':'Revisar respuestas'}</div>
+    </div>
+    ${items}
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:.6rem;margin-top:1rem">
+      <button onclick="startLqaSituations()" style="padding:.75rem;background:#7a6aaa;border:none;border-radius:var(--r);color:#fff;font-weight:700;cursor:pointer">${LANG==='en'?'Try again':'De nuevo'}</button>
+      <button onclick="renderLqa()" style="padding:.75rem;background:var(--ink2);border:1px solid var(--line);border-radius:var(--r);color:var(--parch2);font-weight:700;cursor:pointer">${LANG==='en'?'Menu':'Menú'}</button>
     </div>
   </div>`;
 }
-
-let lqaAuditorIndex=0;let lqaAuditorScenarios=[];let lqaAuditorScore=0;
 function startLqaAuditor(){
-  lqaAuditorScenarios=[...LQA_AUDIT_SCENARIOS].sort(()=>Math.random()-.5).slice(0,10);
-  lqaAuditorIndex=0;lqaAuditorScore=0;
+  _lqaResetState(lqaAudState);
+  lqaAudState.questions = _lqaShuffle(LQA_AUDIT_SCENARIOS).slice(0,10);
+  lqaAudState.startedAt = Date.now();
   renderLqaAuditorScenario();
 }
 function renderLqaAuditorScenario(){
-  if(lqaAuditorIndex>=lqaAuditorScenarios.length){renderLqaAuditorResults();return;}
-  const s=lqaAuditorScenarios[lqaAuditorIndex];
-  const c=document.getElementById('appContent');
-  c.innerHTML=`<div class="sup-wrap">
+  const s = lqaAudState;
+  if (s.index >= s.questions.length) { _lqaCompleteAuditor(); return; }
+  const sc = s.questions[s.index];
+  const c = document.getElementById('appContent');
+  if (!c) return;
+  c.innerHTML = `<div class="sup-wrap" role="region" aria-label="${LANG==='en'?'Auditor scenario':'Escenario auditor'}">
     <div style="display:flex;align-items:center;gap:.6rem;margin-bottom:1rem">
-      <button onclick="renderLqa()" aria-label="${LANG==='en'?'Back to LQA menu':'Volver al menú LQA'}" style="background:transparent;border:1px solid var(--line);border-radius:var(--r2);padding:.4rem .8rem;font-size:.75rem;color:var(--parch3);cursor:pointer">←</button>
+      <button onclick="_lqaConfirmExit()" aria-label="${LANG==='en'?'Back':'Atrás'}" style="background:transparent;border:1px solid var(--line);border-radius:var(--r2);padding:.4rem .8rem;font-size:.75rem;color:var(--parch3);cursor:pointer">←</button>
       <div style="font-family:'Cinzel',serif;font-size:1rem;color:var(--parchment)">${LANG==='en'?'Would It Pass?':'¿Pasaría?'}</div>
     </div>
-
     <div style="margin-bottom:1rem;display:flex;justify-content:space-between;align-items:center">
-      <div style="font-size:.75rem;color:var(--parch3);text-transform:uppercase;font-weight:600">${LANG==='en'?'Scenario':'Escenario'} ${lqaAuditorIndex+1}/${lqaAuditorScenarios.length}</div>
+      <div style="font-size:.75rem;color:var(--parch3);text-transform:uppercase;font-weight:600">${LANG==='en'?'Scenario':'Escenario'} ${s.index+1}/${s.questions.length}</div>
       <div style="width:100px;height:6px;background:var(--parch4);border-radius:var(--r3);overflow:hidden">
-        <div style="background:#4d8a5e;height:100%;width:${(lqaAuditorIndex+1)/lqaAuditorScenarios.length*100}%;transition:width .3s"></div>
+        <div style="background:#4d8a5e;height:100%;width:${(s.index+1)/s.questions.length*100}%;transition:width .3s"></div>
       </div>
     </div>
-
     <div style="background:linear-gradient(155deg,#faf6ee,#f0e8d8);border:1px solid var(--line2);border-radius:var(--r2);padding:1.1rem;margin-bottom:1rem">
-      <div style="font-size:.75rem;color:var(--parch3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:.5rem;font-weight:600">${LANG==='en'?'Self-Evaluation':'Auto-Evaluación'}</div>
-      <div style="font-size:.9rem;color:var(--parch2);margin-bottom:1rem">${LANG==='en'?'Would this service pass the LQA audit?':'¿Este servicio pasaría la auditoría LQA?'}</div>
-
-      <div style="font-size:.85rem;font-weight:600;color:var(--parchment);margin-bottom:.6rem;margin-top:1rem">${LANG==='en'?'What You Observed':'Lo Que Observaste'}</div>
-      <div style="font-size:.9rem;color:var(--parch2);line-height:1.7;background:rgba(242,234,224,.3);padding:.8rem;border-radius:var(--r2);margin-bottom:1rem">${LANG==='en'?s.scn_en:s.scn}</div>
-
-      <div style="font-size:.85rem;font-weight:600;color:var(--parchment);margin-bottom:.6rem">${LANG==='en'?'Your Assessment':'Tu Evaluación'}</div>
+      <div style="font-size:.75rem;color:var(--parch3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:.5rem;font-weight:600">${LANG==='en'?'What You Observed':'Lo Que Observaste'}</div>
+      <div style="font-size:.9rem;color:var(--parch2);line-height:1.7;background:rgba(242,234,224,.3);padding:.8rem;border-radius:var(--r2);margin-bottom:1rem">${LANG==='en'?sc.scn_en:sc.scn}</div>
+      <div style="font-size:.85rem;font-weight:600;color:var(--parchment)">${LANG==='en'?'Would this service pass the LQA audit?':'¿Este servicio pasaría la auditoría LQA?'}</div>
     </div>
-
-    <div style="display:flex;gap:.6rem;margin-bottom:1rem">
-      <button onclick="lqaAuditorAnswer('meet')" style="flex:1;padding:.9rem;background:rgba(77,138,94,.1);border:2px solid #4d8a5e;border-radius:var(--r);color:#4d8a5e;font-weight:700;cursor:pointer;transition:all .2s">${LANG==='en'?'Yes, It Passes ✓':'Sí, Pasaría ✓'}</button>
-      <button onclick="lqaAuditorAnswer('below')" style="flex:1;padding:.9rem;background:rgba(196,112,104,.1);border:2px solid #c47068;border-radius:var(--r);color:#c47068;font-weight:700;cursor:pointer;transition:all .2s">${LANG==='en'?'No, It Fails ✗':'No, Suspendería ✗'}</button>
+    <div style="display:flex;gap:.6rem;margin-bottom:.5rem">
+      <button onclick="lqaAuditorAnswer('meet')" style="flex:1;padding:1rem;background:rgba(77,138,94,.1);border:2px solid #4d8a5e;border-radius:var(--r);color:#4d8a5e;font-weight:700;cursor:pointer;min-height:48px"><span style="display:inline-block;width:1.2rem;font-weight:700;opacity:.7">1.</span>${LANG==='en'?'Yes, it passes':'Sí, pasaría'} ✓</button>
+      <button onclick="lqaAuditorAnswer('below')" style="flex:1;padding:1rem;background:rgba(196,112,104,.1);border:2px solid #c47068;border-radius:var(--r);color:#c47068;font-weight:700;cursor:pointer;min-height:48px"><span style="display:inline-block;width:1.2rem;font-weight:700;opacity:.7">2.</span>${LANG==='en'?'No, it fails':'No, suspendería'} ✗</button>
     </div>
+    <div style="font-size:.65rem;color:var(--parch4);text-align:center">${LANG==='en'?'Tip: 1 = passes · 2 = fails · Esc to exit':'Tip: 1 = pasa · 2 = falla · Esc para salir'}</div>
   </div>`;
+  _lqaInstallKbd((e)=>{
+    if (e.key === 'Escape') { e.preventDefault(); _lqaConfirmExit(); return; }
+    if (e.key === '1') { e.preventDefault(); lqaAuditorAnswer('meet'); }
+    else if (e.key === '2') { e.preventDefault(); lqaAuditorAnswer('below'); }
+  });
 }
 function lqaAuditorAnswer(verdict){
-  const s=lqaAuditorScenarios[lqaAuditorIndex];
-  const isCorrect=(verdict===s.verd);
-  if(isCorrect) lqaAuditorScore++;
+  _lqaUninstallKbd();
+  const s = lqaAudState;
+  const sc = s.questions[s.index];
+  const isCorrect = (verdict === sc.verd);
+  if (isCorrect) s.score++;
+  s.answers.push({ qIdx: s.index, picked: verdict, isCorrect });
+  const std = (typeof LQA_STANDARDS!=='undefined') ? LQA_STANDARDS.find(x => x.id === sc.std) : null;
 
-  const std=LQA_STANDARDS.find(x=>x.id===s.std);
-  const c=document.getElementById('appContent');
-  c.innerHTML=`<div class="sup-wrap">
+  // Render BOTH verdict buttons highlighted: user's pick vs the correct one.
+  const meetIsAns  = (sc.verd === 'meet');
+  const meetIsPick = (verdict === 'meet');
+  const meetBg = meetIsAns ? 'rgba(77,138,94,.22)' : (meetIsPick ? 'rgba(196,112,104,.18)' : 'rgba(255,255,255,.5)');
+  const meetBd = meetIsAns ? '2px solid #4d8a5e' : (meetIsPick ? '2px solid #c47068' : '1px solid var(--line2)');
+  const meetMk = meetIsAns ? '<span style="float:right;color:#4d8a5e;font-weight:700">✓</span>' : (meetIsPick ? '<span style="float:right;color:#c47068;font-weight:700">✗</span>' : '');
+  const belowIsAns  = (sc.verd === 'below');
+  const belowIsPick = (verdict === 'below');
+  const belowBg = belowIsAns ? 'rgba(77,138,94,.22)' : (belowIsPick ? 'rgba(196,112,104,.18)' : 'rgba(255,255,255,.5)');
+  const belowBd = belowIsAns ? '2px solid #4d8a5e' : (belowIsPick ? '2px solid #c47068' : '1px solid var(--line2)');
+  const belowMk = belowIsAns ? '<span style="float:right;color:#4d8a5e;font-weight:700">✓</span>' : (belowIsPick ? '<span style="float:right;color:#c47068;font-weight:700">✗</span>' : '');
+
+  const c = document.getElementById('appContent');
+  c.innerHTML = `<div class="sup-wrap" role="region" aria-live="polite">
     <div style="display:flex;align-items:center;gap:.6rem;margin-bottom:1rem">
-      <button onclick="renderLqa()" aria-label="${LANG==='en'?'Back':'Atrás'}" style="background:transparent;border:1px solid var(--line);border-radius:var(--r2);padding:.4rem .8rem;font-size:.75rem;color:var(--parch3);cursor:pointer">←</button>
-      <div style="font-family:'Cinzel',serif;font-size:1rem;color:var(--parchment)">${LANG==='en'?'Would It Pass?':'¿Pasaría?'} · ${lqaAuditorIndex+1}/${lqaAuditorScenarios.length}</div>
+      <button onclick="_lqaConfirmExit()" aria-label="${LANG==='en'?'Back':'Atrás'}" style="background:transparent;border:1px solid var(--line);border-radius:var(--r2);padding:.4rem .8rem;font-size:.75rem;color:var(--parch3);cursor:pointer">←</button>
+      <div style="font-family:'Cinzel',serif;font-size:1rem;color:var(--parchment)">${LANG==='en'?'Would It Pass?':'¿Pasaría?'} · ${s.index+1}/${s.questions.length}</div>
     </div>
-
-    <div style="text-align:center;margin:1.5rem 0">
-      <div style="font-size:2rem;margin-bottom:1rem">${isCorrect?'✓':'✗'}</div>
-      <div style="font-family:'Cinzel',serif;font-size:1.3rem;color:${isCorrect?'#4d8a5e':'#c47068'};margin-bottom:1rem">${LANG==='en'?(isCorrect?'Correct Judgment':'Incorrect Judgment'):(isCorrect?'Juicio Correcto':'Juicio Incorrecto')}</div>
+    <div style="text-align:center;margin:.5rem 0 1rem">
+      <div style="font-size:1.6rem;margin-bottom:.4rem">${isCorrect?'✓':'✗'}</div>
+      <div style="font-family:'Cinzel',serif;font-size:1.15rem;color:${isCorrect?'#4d8a5e':'#c47068'}">${LANG==='en'?(isCorrect?'Correct judgment':'Incorrect judgment'):(isCorrect?'Juicio correcto':'Juicio incorrecto')}</div>
     </div>
-
+    <div style="margin-bottom:1rem">
+      <div style="padding:.7rem .9rem;background:${meetBg};border:${meetBd};border-radius:var(--r2);color:var(--parch2);font-size:.85rem;line-height:1.5;margin-bottom:.4rem">${meetMk}${LANG==='en'?'Yes, it passes':'Sí, pasaría'}</div>
+      <div style="padding:.7rem .9rem;background:${belowBg};border:${belowBd};border-radius:var(--r2);color:var(--parch2);font-size:.85rem;line-height:1.5">${belowMk}${LANG==='en'?'No, it fails':'No, suspendería'}</div>
+    </div>
     <div style="background:linear-gradient(155deg,#faf6ee,#f0e8d8);border:1px solid var(--line2);border-radius:var(--r2);padding:1rem;margin-bottom:1rem">
-      <div style="font-size:.75rem;color:var(--parch3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:.5rem;font-weight:600">${LANG==='en'?'Standard':'Estándar'} #${s.std}</div>
-      <div style="font-size:.85rem;color:var(--parch2);line-height:1.6;margin-bottom:1rem">${LANG==='en'?std?.std_en:std?.std}</div>
-
+      <div style="font-size:.75rem;color:var(--parch3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:.5rem;font-weight:600">${LANG==='en'?'Standard':'Estándar'} #${sc.std}</div>
+      <div style="font-size:.85rem;color:var(--parch2);line-height:1.6;margin-bottom:1rem">${std ? (LANG==='en' ? std.std_en : std.std) : ''}</div>
       <div style="font-size:.75rem;color:var(--parch3);text-transform:uppercase;letter-spacing:.06em;margin-top:1rem;margin-bottom:.5rem;font-weight:600">${LANG==='en'?'Analysis':'Análisis'}</div>
-      <div style="font-size:.85rem;color:var(--parch2);line-height:1.6">${LANG==='en'?s.expl_en:s.expl}</div>
+      <div style="font-size:.85rem;color:var(--parch2);line-height:1.6">${LANG==='en'?sc.expl_en:sc.expl}</div>
     </div>
-
-    <button onclick="lqaAuditorIndex++;renderLqaAuditorScenario()" style="width:100%;padding:.75rem;background:#4d8a5e;border:none;border-radius:var(--r);color:#fff;font-weight:700;cursor:pointer;transition:all .2s">${LANG==='en'?'Next':'Siguiente'}</button>
+    <button id="lqaNextBtn" onclick="lqaAudState.index++;renderLqaAuditorScenario()" style="width:100%;padding:.75rem;background:#4d8a5e;border:none;border-radius:var(--r);color:#fff;font-weight:700;cursor:pointer">${LANG==='en'?'Next':'Siguiente'} ↵</button>
   </div>`;
+  _lqaInstallKbd((e)=>{
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault(); _lqaUninstallKbd();
+      lqaAudState.index++; renderLqaAuditorScenario();
+    } else if (e.key === 'Escape') { e.preventDefault(); _lqaConfirmExit(); }
+  });
+  setTimeout(()=>{ const b = document.getElementById('lqaNextBtn'); if (b) b.focus(); }, 50);
+}
+function _lqaCompleteAuditor(){
+  _lqaUninstallKbd();
+  const s = lqaAudState;
+  if (!s.completed) {
+    s.completed = true;
+    const total = s.questions.length;
+    const pct = total ? Math.round(s.score/total*100) : 0;
+    const xp = Math.round(s.score*10 + (pct>=90?35:pct>=70?15:0));
+    const timeSec = Math.max(1, Math.round((Date.now()-s.startedAt)/1000));
+    const emp = getEmp(currentUser);
+    if (emp) {
+      _lqaPushScore(emp, 'audit', s.score, total, timeSec);
+      if (!emp.lqaAuditBest || pct > emp.lqaAuditBest) emp.lqaAuditBest = pct;
+      emp.lqaAuditsCompleted = (emp.lqaAuditsCompleted||0) + 1;
+      saveDB();
+    }
+    s._cachedXp = xp; s._cachedPct = pct; s._cachedTime = timeSec;
+    awardXP(xp, LANG==='en'?'LQA Audit Sim':'Simulador Auditoría', 'lqa');
+    checkNewAchievements();
+  }
+  renderLqaAuditorResults();
 }
 function renderLqaAuditorResults(){
-  const pct=Math.round(lqaAuditorScore/lqaAuditorScenarios.length*100);
-  const xpEarned=Math.round(lqaAuditorScore*10 + (pct>=90?35:pct>=70?15:0));
-  const emp=getEmp(currentUser);
-  if(emp){
-    if(!emp.lqaScores) emp.lqaScores=[];
-    emp.lqaScores.push({type:'audit',score:lqaAuditorScore,total:lqaAuditorScenarios.length,date:Date.now()});
-    if(!emp.lqaAuditBest || pct > emp.lqaAuditBest) emp.lqaAuditBest = pct;
-    emp.lqaAuditsCompleted = (emp.lqaAuditsCompleted||0) + 1;
-    saveDB();
-  }
-  awardXP(xpEarned, LANG==='en'?'LQA Audit Sim':'Simulador Auditoría', 'lqa');
-  checkNewAchievements();
-  const c=document.getElementById('appContent');
-  c.innerHTML=`<div class="sup-wrap">
-    <div style="text-align:center;margin:2rem 0">
-      <div style="font-family:'Cinzel',serif;font-size:3rem;font-weight:700;color:#4d8a5e;margin-bottom:.5rem">${lqaAuditorScore}/${lqaAuditorScenarios.length}</div>
-      <div style="font-size:1.1rem;color:var(--parchment);margin-bottom:.5rem">${LANG==='en'?'Are You Ready?':'¿Estás Preparado?'}</div>
-      <div style="font-size:.9rem;color:var(--parch2);margin-bottom:2rem">${LANG==='en'?'Evaluation Accuracy':'Precisión de Evaluación'}: <strong>${pct}%</strong> · +${xpEarned} XP</div>
-      <div style="background:linear-gradient(135deg,rgba(77,138,94,.08),rgba(77,138,94,.02));border:1px solid rgba(77,138,94,.2);border-radius:var(--r);padding:1rem">
-        <div style="font-size:.85rem;color:var(--parch2);line-height:1.6">${pct>=80?LANG==='en'?'Great job! You have a solid understanding of the audit standards and what needs to pass.':'¡Excelente! Tienes un sólido conocimiento de los estándares de auditoría.':LANG==='en'?'Keep studying the standards to improve your audit readiness.':'Sigue estudiando los estándares para mejorar tu preparación.'}</div>
+  _lqaUninstallKbd();
+  const s = lqaAudState;
+  const total = s.questions.length;
+  const pct = s._cachedPct ?? (total ? Math.round(s.score/total*100) : 0);
+  const xp = s._cachedXp ?? 0;
+  const timeSec = s._cachedTime ?? 0;
+  const c = document.getElementById('appContent');
+  const tip = pct >= 80
+    ? (LANG==='en' ? 'Great job! You have a solid understanding of audit standards.' : '¡Excelente! Tienes un sólido conocimiento de los estándares de auditoría.')
+    : (LANG==='en' ? 'Keep studying the standards to improve your audit readiness.' : 'Sigue estudiando los estándares para mejorar tu preparación.');
+  c.innerHTML = `<div class="sup-wrap">
+    <div style="text-align:center;margin:1.5rem 0 1rem">
+      <div style="font-family:'Cinzel',serif;font-size:3rem;font-weight:700;color:#4d8a5e;margin-bottom:.5rem">${s.score}/${total}</div>
+      <h1 tabindex="-1" id="lqaResHdr" style="font-size:1.1rem;color:var(--parchment);margin-bottom:.5rem;font-family:'Cinzel',serif;font-weight:600">${LANG==='en'?'Are You Ready?':'¿Estás Preparado?'}</h1>
+      <div style="font-size:.9rem;color:var(--parch2);margin-bottom:1rem">${LANG==='en'?'Evaluation accuracy':'Precisión de evaluación'}: <strong>${pct}%</strong> · +${xp} XP · ${timeSec}s</div>
+      <div style="background:linear-gradient(135deg,rgba(77,138,94,.08),rgba(77,138,94,.02));border:1px solid rgba(77,138,94,.2);border-radius:var(--r);padding:1rem;margin-bottom:1rem">
+        <div style="font-size:.85rem;color:var(--parch2);line-height:1.6">${tip}</div>
       </div>
     </div>
-
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:.6rem">
-      <button onclick="startLqaAuditor()" style="padding:.75rem;background:#4d8a5e;border:none;border-radius:var(--r);color:#fff;font-weight:700;cursor:pointer;transition:all .2s">${LANG==='en'?'Try Again':'Intentar de Nuevo'}</button>
-      <button onclick="renderLqa()" style="padding:.75rem;background:var(--ink2);border:1px solid var(--line);border-radius:var(--r);color:var(--parch2);font-weight:700;cursor:pointer;transition:all .2s">${LANG==='en'?'Menu':'Menú'}</button>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:.6rem;margin-bottom:.5rem">
+      <button onclick="renderLqaAuditorReview()" style="padding:.75rem;background:var(--ink2);border:1px solid var(--line);border-radius:var(--r);color:var(--parch2);font-weight:700;cursor:pointer">${LANG==='en'?'Review answers':'Revisar respuestas'}</button>
+      <button onclick="startLqaAuditor()" style="padding:.75rem;background:#4d8a5e;border:none;border-radius:var(--r);color:#fff;font-weight:700;cursor:pointer">${LANG==='en'?'Try again':'Intentar de nuevo'}</button>
+    </div>
+    <button onclick="renderLqa()" style="width:100%;padding:.6rem;background:transparent;border:1px solid var(--line);border-radius:var(--r);color:var(--parch3);font-weight:600;cursor:pointer">${LANG==='en'?'Back to menu':'Volver al menú'}</button>
+  </div>`;
+  setTimeout(()=>{ const h = document.getElementById('lqaResHdr'); if (h) h.focus(); }, 100);
+}
+function renderLqaAuditorReview(){
+  _lqaUninstallKbd();
+  const s = lqaAudState;
+  const c = document.getElementById('appContent');
+  const items = s.answers.map((a, i) => {
+    const sc = s.questions[a.qIdx];
+    const std = (typeof LQA_STANDARDS!=='undefined') ? LQA_STANDARDS.find(x => x.id === sc.std) : null;
+    const verdLabel = (v) => v === 'meet' ? (LANG==='en'?'Passes':'Pasa') : (LANG==='en'?'Fails':'Falla');
+    return `<details style="background:linear-gradient(155deg,#faf6ee,#f0e8d8);border:1px solid var(--line2);border-radius:var(--r2);margin-bottom:.6rem;padding:.6rem .8rem">
+      <summary style="cursor:pointer;font-size:.85rem;color:var(--parchment);font-weight:600;list-style:none;display:flex;justify-content:space-between;gap:.5rem;align-items:flex-start"><span>${i+1}. ${LANG==='en'?'Std #':'Est. #'}${sc.std} · ${LANG==='en'?'You said':'Dijiste'}: <em>${verdLabel(a.picked)}</em></span><span style="color:${a.isCorrect?'#4d8a5e':'#c47068'};font-weight:700">${a.isCorrect?'✓':'✗'}</span></summary>
+      <div style="margin-top:.6rem;font-size:.8rem;color:var(--parch3);line-height:1.5;font-style:italic">${LANG==='en'?sc.scn_en:sc.scn}</div>
+      ${std ? `<div style="margin-top:.5rem;font-size:.78rem;color:var(--parch2);line-height:1.5"><strong>${LANG==='en'?'Standard':'Estándar'}:</strong> ${LANG==='en'?std.std_en:std.std}</div>` : ''}
+      <div style="margin-top:.5rem;font-size:.8rem;color:var(--parch2);line-height:1.5"><strong>${LANG==='en'?'Correct verdict':'Veredicto correcto'}:</strong> <span style="color:#4d8a5e;font-weight:700">${verdLabel(sc.verd)}</span></div>
+      <div style="margin-top:.5rem;font-size:.78rem;color:var(--parch3);line-height:1.5">${LANG==='en'?sc.expl_en:sc.expl}</div>
+    </details>`;
+  }).join('');
+  c.innerHTML = `<div class="sup-wrap">
+    <div style="display:flex;align-items:center;gap:.6rem;margin-bottom:1rem">
+      <button onclick="renderLqaAuditorResults()" aria-label="${LANG==='en'?'Back to results':'Volver a resultados'}" style="background:transparent;border:1px solid var(--line);border-radius:var(--r2);padding:.4rem .8rem;font-size:.75rem;color:var(--parch3);cursor:pointer">←</button>
+      <div style="font-family:'Cinzel',serif;font-size:1rem;color:var(--parchment)">${LANG==='en'?'Review answers':'Revisar respuestas'}</div>
+    </div>
+    ${items}
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:.6rem;margin-top:1rem">
+      <button onclick="startLqaAuditor()" style="padding:.75rem;background:#4d8a5e;border:none;border-radius:var(--r);color:#fff;font-weight:700;cursor:pointer">${LANG==='en'?'Try again':'Intentar de nuevo'}</button>
+      <button onclick="renderLqa()" style="padding:.75rem;background:var(--ink2);border:1px solid var(--line);border-radius:var(--r);color:var(--parch2);font-weight:700;cursor:pointer">${LANG==='en'?'Menu':'Menú'}</button>
     </div>
   </div>`;
 }
