@@ -10136,7 +10136,7 @@ const CAT_COLORS={'Entrantes':'#c49a3c','Hamburguesas y Bocatas':'#b86050','Plat
 const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#c49a3c"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#a47a2c" opacity=".4"/><path d="M8 8v4a1 1 0 001 1h1v4M10 8v4" stroke="#fff" stroke-width="1.2" stroke-linecap="round" fill="none"/><path d="M15 8v8M14 8v3a1.5 1.5 0 003 0V8" stroke="#fff" stroke-width="1.2" stroke-linecap="round" fill="none"/></svg>`,'Hamburguesas y Bocatas':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#b86050"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#983838" opacity=".4"/><path d="M7 9h10M7 12h10M7 15h10" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/><path d="M8 9c0-2 2-3 4-3s4 1 4 3M8 15c0 2 2 3 4 3s4-1 4-3" fill="none" stroke="#fff" stroke-width="1" opacity=".7"/></svg>`,'Platos Principales':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#4888a0"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#2e6878" opacity=".4"/><path d="M5 15h14" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/><path d="M12 6a6 6 0 016 6H6a6 6 0 016-6z" fill="none" stroke="#fff" stroke-width="1.1"/><circle cx="10" cy="6" r=".7" fill="#fff" opacity=".7"/><circle cx="12" cy="5" r=".7" fill="#fff" opacity=".7"/><circle cx="14" cy="6" r=".7" fill="#fff" opacity=".7"/></svg>`,'Sugerencias':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#d4aa4c"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#a48a2c" opacity=".4"/><polygon points="12,5 14.5,10 20,10.5 16,14 17,20 12,17 7,20 8,14 4,10.5 9.5,10" fill="#fff" opacity=".9"/></svg>`,'Guarniciones y Salsas':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#4d8a5e"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#2d6a3e" opacity=".4"/><path d="M12 18V10M5 10c0-4 3-6 7-6s7 2 7 6c0 5-3 8-7 8s-7-3-7-8z" fill="none" stroke="#fff" stroke-width="1.1"/><path d="M5 10c3 0 5 1 7 2.5" fill="none" stroke="#fff" stroke-width=".8" opacity=".6"/></svg>`,'Postres':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#7a6aaa"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#5a4a8a" opacity=".4"/><path d="M9 19h6M12 12v7M7 6l2 4.5a3 3 0 006 0L17 6H7z" fill="none" stroke="#fff" stroke-width="1.1" stroke-linecap="round"/></svg>`,'Vegetariano':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#5a9a6e"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#3a7a4e" opacity=".4"/><path d="M9 18h6M12 18V10M12 10c0-3 2-5 5-5-.7 2.5-2.5 5-5 5zM12 10c0-3-2-5-5-5 .7 2.5 2.5 5 5 5z" fill="none" stroke="#fff" stroke-width="1.1" stroke-linecap="round"/></svg>`};
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='5.8';
+const APP_VERSION='5.8.1';
 const APP_BUILD='May 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;
@@ -32567,6 +32567,22 @@ function renderLqa(){
         </div>
         <svg class="hub-qa-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>
       </div>
+      ${(()=>{
+        const weak = _lqaWeakestCategory();
+        if (!weak) return '';
+        const c = weak.cat.color;
+        const accPct = Math.round(weak.acc * 100);
+        const catTitle = LANG==='en' ? weak.cat.title_en : weak.cat.title;
+        const iconWhite = weak.cat.icon.replace(/stroke="currentColor"/g, 'stroke="#fff"');
+        return `<div class="hub-qa hub-qa-wide" style="--qa-c:${c};--qa-b:${c}4D;--qa-shadow:${c}24;--qa-icon-bg:linear-gradient(135deg,${c},${c}B3);--qa-glow:${c}4D" onclick="startLqaWeakCategoryPractice('${weak.cat.id}')">
+          <div class="hub-qa-icon">${iconWhite}</div>
+          <div class="hub-qa-text">
+            <div class="hub-qa-label">${LANG==='en'?'Practice weak area':'Practica zona débil'}</div>
+            <div class="hub-qa-sub">${escapeHTML(catTitle)} · ${accPct}%</div>
+          </div>
+          <svg class="hub-qa-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>
+        </div>`;
+      })()}
       <div class="hub-banner" style="--hb-bg:linear-gradient(135deg,#1f4a28 0%,#2d6a3a 50%,#1f4a28 100%);--hb-b:rgba(140,200,150,.35);--hb-glow:rgba(140,200,150,.35);grid-column:span 2" onclick="startLqaAuditor()">
         <span class="hub-banner-shine"></span>
         <div class="hub-banner-icon">
@@ -32855,6 +32871,31 @@ function renderLqaExamReview(){
       <button onclick="renderLqa()" style="padding:.75rem;background:var(--ink2);border:1px solid var(--line);border-radius:var(--r);color:var(--parch2);font-weight:700;cursor:pointer">${LANG==='en'?'Menu':'Menú'}</button>
     </div>
   </div>`;
+}
+// F1: weakest LQA category for focused practice. Requires ≥3 attempts to qualify; ignores 100%.
+function _lqaWeakestCategory(){
+  const emp = getEmp(currentUser);
+  if (!emp || !emp.lqaSitByCat) return null;
+  const MIN_ATTEMPTS = 3;
+  let weakest = null;
+  for (const cat of LQA_CATEGORIES){
+    const stats = emp.lqaSitByCat[cat.id];
+    if (!stats || stats.total < MIN_ATTEMPTS) continue;
+    const acc = stats.correct / stats.total;
+    if (acc >= 1) continue;
+    if (!weakest || acc < weakest.acc) weakest = { cat, acc, correct: stats.correct, total: stats.total };
+  }
+  return weakest;
+}
+// F1: focused practice on a single category — reuses the standard situations render pipeline.
+function startLqaWeakCategoryPractice(catId){
+  const pool = LQA_SITUATIONS.filter(s => s.cat === catId);
+  if (pool.length === 0) return;
+  _lqaResetState(lqaSitState);
+  lqaSitState.questions = _lqaShuffle(pool).slice(0, Math.min(5, pool.length));
+  lqaSitState.startedAt = Date.now();
+  lqaSitState.weakCatMode = catId;
+  renderLqaSituationQuestion();
 }
 function startLqaSituations(){
   _lqaResetState(lqaSitState);
