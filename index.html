@@ -12858,8 +12858,8 @@ function _scenarioWinePairing(dish, dd, _en){
     const wNotes = _en ? (w.notes_en||w.notes||'') : (w.notes||'');
     const shortNote = wNotes.split('.')[0];
     explainParts.push(_en
-      ? `✗ ${w.name} (${wType}) — ${shortNote}. Better with: ${(w.pairings||[]).slice(0,2).join(', ')||'other dishes'}.`
-      : `✗ ${w.name} (${wType}) — ${shortNote}. Mejor con: ${(w.pairings||[]).slice(0,2).join(', ')||'otros platos'}.`);
+      ? `✗ ${escapeHTML(w.name)} (${wType}) — ${escapeHTML(shortNote)}. Better with: ${escapeHTML((w.pairings||[]).slice(0,2).join(', ')||'other dishes')}.`
+      : `✗ ${escapeHTML(w.name)} (${wType}) — ${escapeHTML(shortNote)}. Mejor con: ${escapeHTML((w.pairings||[]).slice(0,2).join(', ')||'otros platos')}.`);
   });
   return {
     q:_en?qEn:qEs,
@@ -15821,7 +15821,7 @@ const WINES = [
     name: 'Artifice Blanco',
     type: 'blanco',
     grapes: 'Listán Blanco',
-    region: 'DO Ycoden Daute Isora',
+    region: 'DO Ycoden-Daute-Isora',
     origin: 'Canarias',
     price: 80,
     glass: null,
@@ -16137,7 +16137,7 @@ const WINES = [
     name: 'La Fita Els Alpriots',
     type: 'blanco',
     grapes: 'Xarel-lo/Macabeo',
-    region: 'DO Penedés',
+    region: 'DO Penedès',
     origin: 'Cataluña',
     price: 75,
     glass: null,
@@ -16606,7 +16606,7 @@ const WINES = [
   },
   {
     id: 34,
-    name: 'El Rincon de los Enebros',
+    name: 'El Rincón de los Enebros',
     type: 'tinto',
     grapes: 'Garnacha/Tempranillo',
     region: 'DO Ca Rioja',
@@ -17191,7 +17191,7 @@ const WINES = [
     name: 'Artifice Tinto',
     type: 'tinto',
     grapes: 'Listán Negro',
-    region: 'DO Ycoden Daute Isora',
+    region: 'DO Ycoden-Daute-Isora',
     origin: 'Canarias',
     price: 80,
     glass: 16,
@@ -17201,7 +17201,7 @@ const WINES = [
     vegaSicilia: false,
     kosher: false,
     story: 'Artifice Tinto de Canarias expresa terroir volcánico único. Listán Negro cultiva en suelos de lava donde mineralidad y carácter frutal crean sincronía; fermentación natural y crianza breve destacan pureza y carácter insular refrescante.',
-    grapeSelection: 'Artifice Tinto cultiva Listán Negro autóctono en suelos volcánicos de Ycoden Daute Isora a 400-600 metros. Lava desmenuzada característica de Tenerife. Cepas de 40-60 años adaptadas a terroir volcánico. Vendimia manual selectiva en octubre captura madurez óptima con acidez típica de altura canaria.',
+    grapeSelection: 'Artifice Tinto cultiva Listán Negro autóctono en suelos volcánicos de Ycoden-Daute-Isora a 400-600 metros. Lava desmenuzada característica de Tenerife. Cepas de 40-60 años adaptadas a terroir volcánico. Vendimia manual selectiva en octubre captura madurez óptima con acidez típica de altura canaria.',
     winemaking: 'Fermentación en depósitos de acero inoxidable a 24-26°C durante 14-16 días. Maceración de 8-10 días. Envejecimiento 10 meses en barrica de roble francés. Fermentación maloláctica natural. Clarificación mínima para preservar mineralidad volcánica. Embotellado manteniendo frescura canaria.',
     pairings: ['Carpaccio con espuma de parmesano', 'Vitello tonnato', 'Tabla de quesos canarios', 'Tabla de embutidos', 'Jamón ibérico de bellota Gran Reserva', 'Pollo brasa con huevo a baja temperatura', 'Milanesa de pollo al mojo rojo', 'Pluma de cerdo Ibérico', 'Pimiento a la brasa relleno de pisto manchego', 'Pimientos del padrón', 'Parmentier de papa canaria', 'Chimichurri'],
     notes: 'Aromático y frutal, con notas de frutos rojos. Ideal con carnes y platos especiados.',
@@ -17557,10 +17557,10 @@ const WINES = [
     notes_en: 'Complex and structured, with red fruit aromas. Ideal with meats.'},
   {
     id: 73,
-    name: 'Cotes du Rhone 2021',
+    name: 'Côtes du Rhône 2021',
     type: 'tinto',
     grapes: 'Syrah/Garnacha/Monastrell',
-    region: 'AOC Cotes du Rhone',
+    region: 'AOC Côtes du Rhône',
     origin: 'Francia',
     price: 95,
     glass: null,
@@ -17700,14 +17700,14 @@ const WINES = [
     notes_en: 'Sophisticated and complex, with evolved aromas. A collector\'s wine.'
   },
 
-  // TINTOS - Sur Africa
+  // TINTOS - Sudáfrica
   {
     id: 79,
     name: 'David & Nadia 2021',
     type: 'tinto',
     grapes: 'Garnacha',
     region: 'Swartland',
-    origin: 'Sur Africa',
+    origin: 'Sudáfrica',
     price: 150,
     glass: null,
     year: 2021,
@@ -17782,7 +17782,7 @@ const WINES = [
     name: 'La Fita Sumolt Negre',
     type: 'tinto',
     grapes: 'Sumoll',
-    region: 'DO Penedés',
+    region: 'DO Penedès',
     origin: 'Cataluña',
     price: 75,
     glass: null,
@@ -17854,7 +17854,7 @@ const WINES = [
     name: 'Gran Caus',
     type: 'tinto',
     grapes: 'Cabernet Sauvignon/Cabernet Franc/Merlot',
-    region: 'DO Penedés',
+    region: 'DO Penedès',
     origin: 'Cataluña',
     price: 90,
     glass: null,
@@ -18519,7 +18519,7 @@ const WINES = [
     type: 'blanco',
     grapes: 'Verdejo',
     region: 'DO Rueda',
-    origin: 'Rueda',
+    origin: 'Castilla y León',
     price: 38,
     glass: 8,
     year: null,
@@ -19517,7 +19517,7 @@ const WINE_REGIONS = [
     icon: TXKO_ICONS.cMap,
     summary: 'Referentes mundiales de Borgoña, Burdeos y Ródano',
     script: 'Nuestra selección francesa abarca tres regiones icónicas. De Borgoña tenemos Pinot Noir y Chardonnay de elegancia suprema. Del Ródano, vinos de Garnacha y Syrah con cuerpo y especias. Y de Burdeos, blends clásicos de Cabernet y Merlot. También ofrecemos Champagne, la referencia mundial del espumoso.',
-    ourWines: 'Côte d\'Or Bourgogne, Domaine Charvin, Fanny Sabre, Cotes du Rhone, Andre Clouet, Gatinois',
+    ourWines: 'Côte d\'Or Bourgogne, Domaine Charvin, Fanny Sabre, Côtes du Rhône, Andre Clouet, Gatinois',
     keyGrapes: 'Pinot Noir, Chardonnay, Syrah, Garnacha, Merlot, Cabernet Sauvignon'
   }
 ];
@@ -20665,8 +20665,8 @@ function _buildNoteDetail(key, _en){
     <div class="sensory-card" onclick="_snsDetail={type:'wine',id:${w.id}};renderVinos()">
       <div class="sensory-card-dot" style="background:${typeColors[w.type]||'#888'}"></div>
       <div class="sensory-card-info">
-        <div class="sensory-card-name">${w.name}</div>
-        <div class="sensory-card-meta">${w.grapes} · ${w.origin}</div>
+        <div class="sensory-card-name">${escapeHTML(w.name)}</div>
+        <div class="sensory-card-meta">${escapeHTML(w.grapes)} · ${escapeHTML(w.origin)}</div>
       </div>
       <div class="sensory-intensity">${'<span class="sensory-dot on"></span>'.repeat(int)}${'<span class="sensory-dot"></span>'.repeat(3-int)}</div>
     </div>`).join('');
@@ -20720,8 +20720,8 @@ function _buildSensoryList(mode, _en){
       return `<div class="sensory-card" onclick="_snsDetail={type:'wine',id:${w.id}};renderVinos()" style="flex-wrap:wrap">
         <div class="sensory-card-dot" style="background:${typeColors[w.type]||'#888'}"></div>
         <div class="sensory-card-info">
-          <div class="sensory-card-name">${w.name}</div>
-          <div class="sensory-card-meta">${typeLabels[w.type]||w.type} · ${w.grapes} · ${w.price}€</div>
+          <div class="sensory-card-name">${escapeHTML(w.name)}</div>
+          <div class="sensory-card-meta">${typeLabels[w.type]||w.type} · ${escapeHTML(w.grapes)} · ${w.price}€</div>
         </div>
         <div style="width:100%;display:flex;flex-wrap:wrap;gap:3px;margin-top:3px;padding-left:18px">${tags}</div>
       </div>`;
@@ -20766,7 +20766,7 @@ function _snsRenderList(){
         const tags = profile.map(([k])=>`<span class="sensory-fp-tag" style="background:${SNS_NOTES[k].color}">${SNS_NOTES[k].icon} ${_en?SNS_NOTES[k].en:SNS_NOTES[k].es}</span>`).join('');
         return `<div class="sensory-card" onclick="_snsDetail={type:'wine',id:${w.id}};renderVinos()" style="flex-wrap:wrap">
           <div class="sensory-card-dot" style="background:${typeColors[w.type]||'#888'}"></div>
-          <div class="sensory-card-info"><div class="sensory-card-name">${w.name}</div><div class="sensory-card-meta">${typeLabels[w.type]||w.type} · ${w.grapes} · ${w.price}€</div></div>
+          <div class="sensory-card-info"><div class="sensory-card-name">${escapeHTML(w.name)}</div><div class="sensory-card-meta">${typeLabels[w.type]||w.type} · ${escapeHTML(w.grapes)} · ${w.price}€</div></div>
           <div style="width:100%;display:flex;flex-wrap:wrap;gap:3px;margin-top:3px;padding-left:18px">${tags}</div>
         </div>`;
       }).join('');
@@ -20822,10 +20822,10 @@ function _renderSensoryDetail(c, bar){
       <button class="sensory-back" onclick="_snsDetail=null;renderVinos()">← ${_en?'Back':'Volver'}</button>
       <div class="sensory-fp">
         <div class="sensory-fp-head">
-          <div class="sensory-fp-badge" style="background:${typeColors[w.type]||'#888'}">${w.type.toUpperCase()}</div>
-          <div class="sensory-fp-name">${w.name}</div>
+          <div class="sensory-fp-badge" style="background:${typeColors[w.type]||'#888'}">${escapeHTML(w.type).toUpperCase()}</div>
+          <div class="sensory-fp-name">${escapeHTML(w.name)}</div>
         </div>
-        <div style="font-size:.65rem;color:rgba(28,42,34,.5);margin-bottom:.5rem">${w.grapes} · ${w.origin} · ${w.price}€</div>
+        <div style="font-size:.65rem;color:rgba(28,42,34,.5);margin-bottom:.5rem">${escapeHTML(w.grapes)} · ${escapeHTML(w.origin)} · ${w.price}€</div>
         <div class="sensory-radar-wrap">${radar}</div>
         <div style="text-align:center;font-size:.6rem;color:rgba(28,42,34,.4);margin-bottom:.5rem">${_en?'Sensory Fingerprint':'Huella Sensorial'}</div>
         <div class="sensory-fp-notes">${tags}</div>
@@ -20856,7 +20856,7 @@ function _renderSensoryDetail(c, bar){
       const sharedTags = shared.map(([k])=>`<span style="display:inline-block;width:6px;height:6px;border-radius:50%;background:${SNS_NOTES[k].color}"></span>`).join(' ');
       return `<div class="sensory-card" onclick="_snsDetail={type:'wine',id:${w.id}};renderVinos()">
         <div class="sensory-card-dot" style="background:${typeColors[w.type]||'#888'}"></div>
-        <div class="sensory-card-info"><div class="sensory-card-name">${w.name}</div><div class="sensory-card-meta">${w.grapes} · ${w.price}€ · ${shared.length} ${_en?'shared':'compartidas'} ${sharedTags}</div></div>
+        <div class="sensory-card-info"><div class="sensory-card-name">${escapeHTML(w.name)}</div><div class="sensory-card-meta">${escapeHTML(w.grapes)} · ${w.price}€ · ${shared.length} ${_en?'shared':'compartidas'} ${sharedTags}</div></div>
       </div>`;
     }).join('');
 
@@ -20994,9 +20994,12 @@ function _renderSommelier(c, bar){
   ];
   const greeting = greetings[Math.floor(Date.now()/86400000) % greetings.length];
 
-  // Featured wines — rotate daily
-  const today = new Date().getDay();
-  const featured = WINES.filter(w => w.recommended).slice(today % 3, (today % 3) + 3);
+  // Featured wines — rotate daily through every recommended wine.
+  // Previous logic used getDay()%3 + slice, which only ever exposed indices 0..4 of a 13-item list.
+  const dayIdx = Math.floor(Date.now() / 86400000);
+  const recommended = WINES.filter(w => w.recommended);
+  const offset = recommended.length ? dayIdx % recommended.length : 0;
+  const featured = [...recommended, ...recommended].slice(offset, offset + 3);
 
   // Wine stats
   const byGlass = WINES.filter(w => w.glass).length;
@@ -21069,7 +21072,7 @@ function _renderSommelier(c, bar){
     <div class="section-eyebrow">${_en?'✦ Discover Today':'✦ Descubre Hoy'}</div>
     <div style="display:flex;flex-direction:column;gap:.5rem;margin-bottom:1.5rem">
       ${featured.map((w,i) => `
-        <div onclick="_showWineDetail(${w.id}, [${featured.map(f=>f.id).join(',')}])" class="wine-card wine-enchanted" style="animation-delay:${.1+i*.1}s">
+        <div role="button" tabindex="0" aria-label="${escapeHTML(w.name)}${w.price?', '+w.price+'€':''}" onclick="_showWineDetail(${w.id}, [${featured.map(f=>f.id).join(',')}])" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click()}" class="wine-card wine-enchanted" style="animation-delay:${.1+i*.1}s">
           <div class="wine-card-frame"></div>
           <div class="wine-shimmer-overlay"></div>
           ${_wineImgHtml(w, 'card')}
@@ -21250,7 +21253,7 @@ function _renderWineCard(w, idx, filteredList){
   const delay = Math.min((idx||0)*0.04, 0.3);
   const idList = (filteredList||[]).map(f=>f.id).join(',');
 
-  return `<div onclick="_showWineDetail(${w.id}, [${idList}])" class="wine-card card-animate" style="animation-delay:${delay}s">
+  return `<div role="button" tabindex="0" aria-label="${escapeHTML(w.name)}${w.price?', '+w.price+'€':''}" onclick="_showWineDetail(${w.id}, [${idList}])" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click()}" class="wine-card card-animate" style="animation-delay:${delay}s">
     <div style="display:flex;align-items:center;gap:.5rem;margin-bottom:.5rem;position:relative">
       <div class="wine-type-icon" style="background:linear-gradient(135deg,${bgColor},rgba(196,154,60,.3));display:flex;align-items:center;justify-content:center;font-size:1.1rem">${typeIconsSvg[w.type]||TXKO_ICONS.wTinto}</div>
       <div style="display:flex;flex-wrap:wrap;align-items:center;gap:.3rem;flex:1">
@@ -21546,19 +21549,6 @@ var _wineDOPolygons = [
       [28.35, -16.68], [28.32, -16.66], [28.28, -16.68],
       [28.24, -16.72], [28.20, -16.76],
       // West coast going north
-      [28.18, -16.82], [28.22, -16.86], [28.26, -16.90],
-      [28.30, -16.92], [28.34, -16.92]
-    ]
-  },
-  {
-    name: 'DO Ycoden Daute Isora',
-    origin: 'Canarias',
-    coords: [
-      // Same as above (duplicate entry)
-      [28.34, -16.92], [28.36, -16.90], [28.38, -16.86],
-      [28.39, -16.82], [28.40, -16.76], [28.38, -16.70],
-      [28.35, -16.68], [28.32, -16.66], [28.28, -16.68],
-      [28.24, -16.72], [28.20, -16.76],
       [28.18, -16.82], [28.22, -16.86], [28.26, -16.90],
       [28.30, -16.92], [28.34, -16.92]
     ]
@@ -21872,26 +21862,6 @@ var _wineDOPolygons = [
     ]
   },
   {
-    name: 'AOC Cotes du Rhone',
-    origin: 'Francia',
-    coords: [
-      // Same as above (duplicate with no accents)
-      [45.48, 4.76], [45.44, 4.82], [45.38, 4.86],
-      [45.30, 4.88], [45.22, 4.90],
-      [45.12, 4.88], [45.02, 4.86], [44.92, 4.82],
-      [44.82, 4.78], [44.72, 4.74], [44.62, 4.70],
-      [44.52, 4.68], [44.42, 4.64], [44.32, 4.62],
-      [44.22, 4.60], [44.12, 4.58], [44.02, 4.54],
-      [43.96, 4.52], [43.92, 4.56],
-      [43.98, 4.62], [44.06, 4.66], [44.16, 4.70],
-      [44.26, 4.74], [44.36, 4.78], [44.46, 4.82],
-      [44.56, 4.86], [44.66, 4.90], [44.76, 4.94],
-      [44.86, 4.96], [44.96, 4.98], [45.06, 4.96],
-      [45.16, 4.94], [45.26, 4.92], [45.36, 4.88],
-      [45.44, 4.84], [45.48, 4.76]
-    ]
-  },
-  {
     name: 'AOC Côtes du Provence',
     origin: 'Francia',
     coords: [
@@ -22003,7 +21973,7 @@ var _wineDOPolygons = [
   // ===== SOUTH AFRICA =====
   {
     name: 'Swartland',
-    origin: 'Sur Africa',
+    origin: 'Sudáfrica',
     coords: [
       // Swartland wine region, Western Cape
       [-33.24, 18.52], [-33.28, 18.58], [-33.34, 18.66],
@@ -22230,7 +22200,7 @@ function _renderWineMap(c, bar) {
     { name: 'Austria', lat: 47.5, lng: 14.5, wines: byOrigin['Austria'] || [] },
     { name: 'Hungría', lat: 47, lng: 19, wines: byOrigin['Hungría'] || [] },
     { name: 'Australia', lat: -25, lng: 135, wines: byOrigin['Australia'] || [] },
-    { name: 'Sur Africa', lat: -30, lng: 25, wines: byOrigin['Sur Africa'] || [] },
+    { name: 'Sudáfrica', lat: -30, lng: 25, wines: byOrigin['Sudáfrica'] || [] },
   ].filter(r => r.wines.length > 0);
 
   // Store byOrigin globally for in-place updates
@@ -22370,7 +22340,7 @@ async function _initWineLeafletMap(regionDots, byOrigin) {
   _mlCountryToOrigin = {
     'France': 'Francia', 'Hungary': 'Hungría', 'Argentina': 'Argentina',
     'Australia': 'Australia', 'Austria': 'Austria', 'Italy': 'Italia',
-    'Germany': 'Alemania', 'South Africa': 'Sur Africa'
+    'Germany': 'Alemania', 'South Africa': 'Sudáfrica'
   };
 
   // Region colors
@@ -22380,7 +22350,7 @@ async function _initWineLeafletMap(regionDots, byOrigin) {
     'Murcia': '#8B4726', 'Islas Baleares': '#3A5B7B', 'Andalucía': '#8B4513',
     'Francia': '#1B3A6C', 'Hungría': '#8B3A4A', 'Argentina': '#5B8AC0',
     'Italia': '#2B6B3A', 'Australia': '#C07830', 'Austria': '#7B3A5B',
-    'Alemania': '#4A6B3A', 'Sur Africa': '#6B4B2A'
+    'Alemania': '#4A6B3A', 'Sudáfrica': '#6B4B2A'
   };
 
   _wineProvinceLayers = {};
@@ -24863,7 +24833,7 @@ function _showWineDetail(id, list, direction){
         ${w.pairings.map(p=>`
           <div style="padding:.5rem .7rem;border-radius:8px;background:rgba(196,154,60,.03);border-left:3px solid rgba(77,138,94,.25)">
             <div style="font-family:'Cinzel',serif;font-size:.78rem;color:var(--parchment);margin-bottom:.2rem">${escapeHTML(_translateDish(p))}</div>
-            <div style="font-family:'Quicksand',sans-serif;font-size:.68rem;color:var(--sage);line-height:1.4;font-style:italic">${_pairingWhy(w, p)}</div>
+            <div style="font-family:'Quicksand',sans-serif;font-size:.68rem;color:var(--sage);line-height:1.4;font-style:italic">${escapeHTML(_pairingWhy(w, p))}</div>
           </div>
         `).join('')}
       </div>
@@ -25400,7 +25370,7 @@ function _generateWineChoices(q){
   else if(qLower.includes('región') || qLower.includes('region') || qLower.includes('origen') || qLower.includes('dónde') || qLower.includes('do ') || qLower.includes('denominación')){
     const regionGroups = {
       'españa': ['DO Ca Rioja','DO Ribera del Duero','DO Ca Priorat','DO Rías Baixas','DO Rueda','DO Bierzo','DO Jumilla','DO Toro','DO Penedès'],
-      'canarias': ['DO Ycoden Daute Isora','DO Tacoronte-Acentejo','DO Abona','DO La Orotava','DOP Islas Canarias-Tenerife','DO Gran Canaria','DO Lanzarote','DO Valle de Guimar'],
+      'canarias': ['DO Ycoden-Daute-Isora','DO Tacoronte-Acentejo','DO Abona','DO La Orotava','DOP Islas Canarias-Tenerife','DO Gran Canaria','DO Lanzarote','DO Valle de Guimar'],
       'galicia': ['DO Rías Baixas','DO Ribera Sacra','DO Valdeorras','DO Ourense','DO Pontevedra'],
       'francia': ['AOC Champagne','AOC Bourgogne','AOC Médoc','AOC Sancerre','AOC Côtes du Rhône','AOC Côtes du Provence'],
       'castilla': ['DO Ribera del Duero','DO Rueda','DO Toro','DO Bierzo','DO Ca Rioja']};
@@ -25782,7 +25752,7 @@ function _renderWineService(c, bar){
       <div class="wine-byglass-grid">
         <div style="display:grid;grid-template-columns:1fr auto;gap:.3rem .8rem;font-family:'Quicksand',sans-serif;font-size:.78rem;position:relative">
           ${WINES.filter(w=>w.glass).sort((a,b)=>a.glass-b.glass).map(w=>`
-            <div style="color:var(--parchment)">${escapeHTML(w.name)} <span style="font-size:.6rem;color:var(--parch4)">${escapeHTML(w.type)}</span></div>
+            <div style="color:var(--parchment)">${escapeHTML(w.name)} <span style="font-size:.6rem;color:var(--parch4)">${({blanco:_en?'White':'Blanco',tinto:_en?'Red':'Tinto',rosado:_en?'Rosé':'Rosado',espumoso:_en?'Sparkling':'Espumoso',dulce:_en?'Sweet':'Dulce'})[w.type]||w.type}</span></div>
             <div style="color:var(--gold);font-weight:600;text-align:right">${w.glass}€</div>
           `).join('')}
         </div>
@@ -36930,9 +36900,9 @@ function _svcUpdateResults(){
         const wTemp = (typeof SF_WINE_TEMPS!=='undefined' && SF_WINE_TEMPS[w.type]) ? SF_WINE_TEMPS[w.type].correct : '';
         return `<div class="svc-result" id="svcWine_${w.id}">
           <button class="svc-similar-btn" onclick="event.stopPropagation();_svcToggleSimilar(${w.id})" title="${_en?'Show similar wines':'Ver vinos similares'}">⚯ ${_en?'Similar':'Similar'}</button>
-          <div class="svc-result-name">${w.name}</div>
-          <div class="svc-result-cat"><span style="color:${typeColor}">${typeLabel}</span> · ${w.region||''} ${w.origin && w.origin!==w.region?'· '+w.origin:''}</div>
-          <div style="font-size:.65rem;color:rgba(244,237,226,.55);margin-top:.25rem">${w.grapes?'G '+w.grapes:''} ${wTemp?'· T° '+wTemp:''} ${w.price?'· €'+w.price:''}</div>
+          <div class="svc-result-name">${escapeHTML(w.name)}</div>
+          <div class="svc-result-cat"><span style="color:${typeColor}">${typeLabel}</span> · ${escapeHTML(w.region||'')} ${w.origin && w.origin!==w.region?'· '+escapeHTML(w.origin):''}</div>
+          <div style="font-size:.65rem;color:rgba(244,237,226,.55);margin-top:.25rem">${w.grapes?'G '+escapeHTML(w.grapes):''} ${wTemp?'· T° '+wTemp:''} ${w.price?'· €'+w.price:''}</div>
           <div class="svc-similar-slot" id="svcSimilarSlot_${w.id}"></div>
         </div>`;
       }).join('');
@@ -37069,9 +37039,9 @@ function _svcGetWineRecs(dish, _en){
     const typeLabel = _en ? {blanco:'White',tinto:'Red',rosado:'Rosé',espumoso:'Sparkling',dulce:'Dessert'}[w.type]||w.type : {blanco:'Blanco',tinto:'Tinto',rosado:'Rosado',espumoso:'Espumoso',dulce:'Dulce'}[w.type]||w.type;
     return `<div class="svc-result svc-wine-rec" id="svcWine_${w.id}" style="margin-top:.4rem">
       <button class="svc-similar-btn" onclick="event.stopPropagation();_svcToggleSimilar(${w.id})" title="${_en?'Show similar wines':'Ver vinos similares'}">⚯ ${_en?'Similar':'Similar'}</button>
-      <div class="svc-wine-name">${w.name}</div>
-      <div class="svc-wine-meta">${typeLabel} · ${w.region||''} ${(typeof SF_WINE_TEMPS!=='undefined'&&SF_WINE_TEMPS[w.type])?'· T° '+SF_WINE_TEMPS[w.type].correct:''}</div>
-      ${why ? `<div class="svc-wine-why">${why.substring(0,150)}${why.length>150?'...':''}</div>` : ''}
+      <div class="svc-wine-name">${escapeHTML(w.name)}</div>
+      <div class="svc-wine-meta">${typeLabel} · ${escapeHTML(w.region||'')} ${(typeof SF_WINE_TEMPS!=='undefined'&&SF_WINE_TEMPS[w.type])?'· T° '+SF_WINE_TEMPS[w.type].correct:''}</div>
+      ${why ? `<div class="svc-wine-why">${escapeHTML(why.substring(0,150))}${why.length>150?'...':''}</div>` : ''}
       <div class="svc-similar-slot" id="svcSimilarSlot_${w.id}"></div>
     </div>`;
   }).join('');
