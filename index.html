@@ -25692,12 +25692,197 @@ function _showMaridajeDish(dishName) {
   document.body.appendChild(div.firstChild);
 }
 
+// ═══ MARIDAJE QUIZ ═══
+// Active pairing-practice module in the vinos `servicio` subtab.
+// Builds 5 questions from WINES[].pairings: shows a dish, asks the user
+// which of 4 wines pairs with it. Correct answer uses `_pairingWhy()` for
+// localized feedback. Distractor wines are picked from the pool of wines
+// that do NOT list this dish in their pairings.
+
+let _mqState = null;
+
+function _mqBuildQuestions(){
+  // dish → array of wines that pair with it
+  const dishMap = {};
+  WINES.forEach(w => {
+    if(!w.pairings) return;
+    w.pairings.forEach(p => {
+      if(!dishMap[p]) dishMap[p] = [];
+      dishMap[p].push(w);
+    });
+  });
+  const dishes = Object.keys(dishMap);
+  if(dishes.length < 5) return [];
+  const picked = _lqaShuffle(dishes).slice(0, 5);
+  return picked.map(d => {
+    // Correct: prefer recommended wine, fall back to any pairing.
+    const goodPool = dishMap[d];
+    const recommended = goodPool.filter(w => w.recommended);
+    const correct = (recommended.length ? _lqaShuffle(recommended) : _lqaShuffle(goodPool))[0];
+    // Wrongs: wines that don't pair with this dish at all.
+    const wrongPool = WINES.filter(w =>
+      w.id !== correct.id && !((w.pairings || []).some(p => p === d))
+    );
+    const wrongs = _lqaShuffle(wrongPool).slice(0, 3);
+    const sources = [correct, ...wrongs];
+    const order = _lqaShuffle([0,1,2,3]);
+    return {
+      dish: d,
+      correctId: correct.id,
+      wineIds: order.map(i => sources[i].id),
+      correctIdx: order.indexOf(0)
+    };
+  });
+}
+
+function _mqStart(){
+  const questions = _mqBuildQuestions();
+  if(!questions.length){
+    if(typeof showToast === 'function') showToast(LANG==='en' ? 'Not enough pairing data yet' : 'Datos de maridaje insuficientes aún', 'warning', 2400);
+    return;
+  }
+  _mqState = { questions, qIdx: 0, score: 0, answered: false, startedAt: Date.now() };
+  _mqRender();
+}
+
+function _mqRender(){
+  const _en = LANG === 'en';
+  const s = _mqState;
+  if(!s){ _vinoSubTab = 'servicio'; renderVinos(); return; }
+  if(s.qIdx >= s.questions.length){ _mqResults(); return; }
+  const q = s.questions[s.qIdx];
+  const wines = q.wineIds.map(id => WINES.find(w => w.id === id));
+  const letters = ['A','B','C','D'];
+  const c = document.getElementById('appContent');
+  if(!c) return;
+  c.innerHTML = `
+    <div class="sup-wrap">
+      <div style="display:flex;align-items:center;gap:.6rem;margin-bottom:1rem">
+        <button onclick="_mqExit()" aria-label="${_en?'Exit pairing quiz':'Salir del quiz'}" style="background:transparent;border:1px solid var(--line);border-radius:var(--r2);padding:.4rem .8rem;font-size:.75rem;color:var(--parch3);cursor:pointer">←</button>
+        <div style="font-family:'Cinzel',serif;font-size:1rem;color:var(--parchment)">${_en?'Pairing Quiz':'Quiz de Maridaje'}</div>
+      </div>
+      <div style="margin-bottom:1rem;display:flex;justify-content:space-between;align-items:center">
+        <div style="font-size:.75rem;color:var(--parch3);text-transform:uppercase;font-weight:600">${_en?'Question':'Pregunta'} ${s.qIdx+1}/${s.questions.length}</div>
+        <div style="width:100px;height:6px;background:var(--parch4);border-radius:var(--r3);overflow:hidden">
+          <div style="background:var(--gold);height:100%;width:${(s.qIdx+1)/s.questions.length*100}%;transition:width .3s"></div>
+        </div>
+      </div>
+      <div style="background:linear-gradient(155deg,#faf6ee,#f0e8d8);border:1px solid var(--line2);border-radius:var(--r2);padding:1.1rem;margin-bottom:1rem">
+        <div style="font-size:.65rem;text-transform:uppercase;color:var(--gold);letter-spacing:.08em;font-weight:700;margin-bottom:.5rem">${_en?'◇ Dish':'◇ Plato'}</div>
+        <div style="font-size:1rem;color:var(--parchment);font-weight:600;line-height:1.35">${escapeHTML(_translateDish(q.dish))}</div>
+        <div style="font-size:.78rem;color:var(--parch3);margin-top:.4rem">${_en?'Which wine would you recommend?':'¿Qué vino recomendarías?'}</div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:.4rem;margin-bottom:.5rem">
+        ${wines.map((w,i)=>`<button class="duel-answer-btn" id="mqOpt${i}" onclick="_mqAnswer(${i})">${letters[i]}. ${escapeHTML(w.name)} <span style="font-size:.65rem;color:var(--parch3);font-weight:400">· ${({blanco:_en?'White':'Blanco',tinto:_en?'Red':'Tinto',rosado:_en?'Rosé':'Rosado',espumoso:_en?'Sparkling':'Espumoso',dulce:_en?'Sweet':'Dulce'})[w.type]||w.type} · ${w.price}€</span></button>`).join('')}
+      </div>
+      <div id="mqFeedback"></div>
+    </div>`;
+}
+
+function _mqAnswer(idx){
+  const s = _mqState;
+  if(!s || s.answered) return;
+  s.answered = true;
+  const _en = LANG === 'en';
+  const q = s.questions[s.qIdx];
+  const ok = idx === q.correctIdx;
+  if(ok){ s.score++; awardXP(3, _en?'Pairing ✓':'Maridaje ✓', 'vinos'); }
+  for(let i=0; i<q.wineIds.length; i++){
+    const btn = document.getElementById('mqOpt'+i);
+    if(!btn) continue;
+    btn.disabled = true;
+    if(i === q.correctIdx) btn.classList.add('correct');
+    else if(i === idx && !ok) btn.classList.add('wrong');
+  }
+  const correctWine = WINES.find(x => x.id === q.correctId);
+  const why = (typeof _pairingWhy === 'function' && correctWine) ? _pairingWhy(correctWine, q.dish) : '';
+  const fb = document.getElementById('mqFeedback');
+  if(fb){
+    fb.innerHTML = `
+      <div style="background:linear-gradient(155deg,#faf6ee,#f0e8d8);border:1px solid var(--line2);border-left:3px solid ${ok?'var(--sage)':'var(--rose)'};border-radius:var(--r2);padding:.85rem 1rem;margin-top:1rem;animation:fadeIn .25s ease">
+        <div style="font-family:'DM Mono',monospace;font-size:.6rem;color:${ok?'var(--sage)':'var(--rose)'};text-transform:uppercase;letter-spacing:.1em;margin-bottom:.4rem;font-weight:700">${ok?(_en?'✓ Correct':'✓ Correcto'):(_en?'✗ Better choice':'✗ Mejor opción')}</div>
+        <div style="font-size:.82rem;color:var(--parchment);margin-bottom:.5rem"><strong>${escapeHTML(correctWine.name)}</strong> ${_en?'pairs with':'marida con'} <em>${escapeHTML(_translateDish(q.dish))}</em></div>
+        ${why ? `<div style="font-size:.74rem;color:var(--parch2);line-height:1.55;font-style:italic">${escapeHTML(why)}</div>` : ''}
+        <button onclick="_mqNext()" style="width:100%;margin-top:.7rem;padding:.6rem;background:var(--gold);border:none;border-radius:var(--r2);color:#1c2a22;font-weight:700;cursor:pointer;font-family:'Quicksand',sans-serif">${s.qIdx < s.questions.length-1 ? (_en?'Next →':'Siguiente →') : (_en?'See results':'Ver resultados')}</button>
+      </div>`;
+  }
+}
+
+function _mqNext(){
+  if(!_mqState) return;
+  _mqState.qIdx++;
+  _mqState.answered = false;
+  _mqRender();
+}
+
+function _mqResults(){
+  const _en = LANG === 'en';
+  const s = _mqState;
+  const pct = Math.round(s.score / s.questions.length * 100);
+  const bonus = pct >= 80 ? 10 : pct >= 60 ? 5 : 0;
+  if(bonus) awardXP(bonus, _en?'Pairing Quiz complete':'Quiz Maridaje completo', 'vinos');
+  // Persist (rolling cap 50, mirrors LQA scoring schema).
+  const emp = getEmp(currentUser);
+  if(emp){
+    if(!emp.maridajeScores) emp.maridajeScores = [];
+    emp.maridajeScores.push({ score: s.score, total: s.questions.length, date: Date.now() });
+    if(emp.maridajeScores.length > 50) emp.maridajeScores = emp.maridajeScores.slice(-50);
+    if(!emp.maridajeBest || pct > emp.maridajeBest) emp.maridajeBest = pct;
+    saveDB();
+  }
+  if(typeof checkNewAchievements === 'function') checkNewAchievements();
+  if(typeof checkMissionCompletion === 'function') checkMissionCompletion();
+  const cls = pct >= 80 ? 'var(--sage)' : pct >= 60 ? 'var(--gold)' : 'var(--rose)';
+  const c = document.getElementById('appContent');
+  c.innerHTML = `
+    <div class="sup-wrap">
+      <div style="text-align:center;padding:1.5rem 0">
+        <div style="font-family:'Cinzel',serif;font-size:3rem;font-weight:700;color:${cls};margin-bottom:.5rem">${s.score}/${s.questions.length}</div>
+        <h1 tabindex="-1" style="font-size:1.1rem;color:var(--parchment);margin-bottom:.5rem;font-family:'Cinzel',serif;font-weight:600">${_en?'Pairing Quiz Complete':'Quiz Maridaje Completado'}</h1>
+        <div style="font-size:.9rem;color:var(--parch2);margin-bottom:1.5rem">${pct}%${bonus?` · +${bonus} XP`:''}</div>
+        ${pct >= 80 ? `<div style="font-size:.78rem;color:var(--sage);margin-bottom:1rem">${_en?'Sommelier-level taste!':'¡Paladar de sommelier!'}</div>` : pct >= 60 ? `<div style="font-size:.78rem;color:var(--gold);margin-bottom:1rem">${_en?'Solid pairing instincts':'Buen instinto de maridaje'}</div>` : `<div style="font-size:.78rem;color:var(--rose);margin-bottom:1rem">${_en?'Review the pairing guide and try again':'Repasa la guía y prueba de nuevo'}</div>`}
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:.6rem">
+        <button onclick="_mqStart()" style="padding:.75rem;background:var(--gold);border:none;border-radius:var(--r2);color:#1c2a22;font-weight:700;cursor:pointer;font-family:'Quicksand',sans-serif">${_en?'New quiz':'Otro quiz'}</button>
+        <button onclick="_mqExit()" style="padding:.75rem;background:var(--ink2);border:1px solid var(--line);border-radius:var(--r2);color:var(--parch2);font-weight:700;cursor:pointer;font-family:'Quicksand',sans-serif">${_en?'Back':'Volver'}</button>
+      </div>
+    </div>`;
+  setTimeout(()=>{ const h = c.querySelector('h1'); if(h) h.focus(); }, 100);
+}
+
+function _mqExit(){
+  _mqState = null;
+  _vinoSubTab = 'servicio';
+  renderVinos();
+}
+
 function _renderWineService(c, bar){
   const _en = LANG==='en';
+  // Maridaje Quiz stats badge — read from emp for the entry CTA.
+  const _mqEmp = getEmp(currentUser);
+  const _mqScores = (_mqEmp && _mqEmp.maridajeScores) || [];
+  const _mqBest = (_mqEmp && _mqEmp.maridajeBest) || 0;
+  const _mqLast = _mqScores.length ? _mqScores[_mqScores.length-1] : null;
+  const _mqLastPct = _mqLast ? Math.round(_mqLast.score / _mqLast.total * 100) : 0;
+  const _mqStatsHtml = _mqScores.length
+    ? `<span style="font-family:'DM Mono',monospace;font-size:.55rem;color:var(--parch3);letter-spacing:.05em">${_en?'Best':'Mejor'} ${_mqBest}% · ${_mqScores.length} ${_en?'sessions':'sesiones'}</span>`
+    : `<span style="font-family:'DM Mono',monospace;font-size:.55rem;color:var(--parch3);letter-spacing:.05em">${_en?'New':'Nuevo'}</span>`;
+
   c.innerHTML = bar + `<div style="padding:0 0 2rem">
     <div class="wine-section-header">
       <div class="wine-section-title">${_en?'◇ The Art of Service ◇':'◇ El Arte del Servicio ◇'}</div>
-      <div class="wine-section-sub">${_en?'Ready-to-use scripts for the guest':'Scripts listos para usar con el huésped'}</div>
+      <div class="wine-section-sub">${_en?'Practice · Pairings · Scripts':'Practica · Maridajes · Scripts'}</div>
+    </div>
+
+    <!-- Maridaje Quiz CTA (F-new) — converts the static service tab into an active practice loop. -->
+    <div role="button" tabindex="0" aria-label="${_en?'Start Pairing Quiz':'Empezar Quiz de Maridaje'}" onclick="_mqStart()" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click()}" class="wine-quiz-option" style="margin-bottom:1.2rem;cursor:pointer">
+      <div class="wine-quiz-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2h8l-1 9a5 5 0 01-3 4.5A5 5 0 019 11L8 2z"/><line x1="12" y1="15.5" x2="12" y2="22"/><line x1="8" y1="22" x2="16" y2="22"/></svg></div>
+      <div style="flex:1;display:flex;flex-direction:column;gap:.15rem">
+        <div style="font-family:'Cinzel',serif;font-size:.95rem;color:var(--parchment);font-weight:600">${_en?'Pairing Quiz':'Quiz de Maridaje'}</div>
+        <div style="font-size:.7rem;color:var(--parch3)">${_en?'5 dishes · pick the right wine · earn XP':'5 platos · elige el vino correcto · gana XP'}</div>
+        <div style="margin-top:.2rem">${_mqStatsHtml}</div>
+      </div>
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>
     </div>
 
     <div class="wine-storybook-intro wine-enchanted">
