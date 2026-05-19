@@ -29696,19 +29696,53 @@ function renderLiveQuizHost(empNames){
         ? participants.map(p=>`<span style="display:inline-block;background:var(--gold-b);border:1px solid var(--gold-a);border-radius:20px;padding:.2rem .6rem;font-size:.75rem;color:var(--gold);margin:.15rem">${escapeHTML(p)} ✓</span>`).join('')
         : `<span style="color:var(--parch3);font-style:italic">${_lqEn?'Waiting for participants…':'Esperando participantes…'}</span>`;
 
-      // Show current question results
-      const qIdx = s.current_q;
-      if(qIdx > 0 && answers[qIdx-1]) {
-        const q = questions[qIdx-1];
-        const qAnswers = answers[qIdx-1];
-        const correctCount = Object.values(qAnswers).filter(a=>a===q.correct).length;
-        const total = Object.values(qAnswers).length;
-        const pEl2 = document.getElementById('liveQuizProgress');
-        if(pEl2 && q) pEl2.innerHTML = `<div style="background:linear-gradient(155deg,#faf6ee,#f0e8d8);border:1px solid var(--line);border-radius:var(--r2);padding:.85rem 1rem">
-          <div style="font-size:.78rem;color:var(--parch3);margin-bottom:.35rem">${_lqEn?'Question':'Pregunta'} ${qIdx}: ${escapeHTML(q.dish||'')} — ${escapeHTML(q.topic||'')}</div>
-          <div style="font-size:.85rem;color:var(--parchment);margin-bottom:.5rem">${_lqEn?'Correct answer':'Respuesta correcta'}: <strong>${escapeHTML(q.correct||'')}</strong></div>
-          <div style="font-family:'DM Mono',monospace;font-size:.72rem;color:${correctCount/Math.max(1,total)>=.7?'var(--sage)':'var(--rose)'}">✓ ${correctCount}/${total} ${_lqEn?'correct':'correctos'}</div>
-        </div>`;
+      // Host real-time view: show the CURRENT question being asked (live)
+      // plus results of the PREVIOUS question, if any. Previously only the
+      // previous-question block existed, so the supervisor had zero visibility
+      // into what participants were currently seeing — which led to "no veo
+      // las preguntas en tiempo real" feedback.
+      const qIdx = s.current_q; // 1-indexed
+      const pEl2 = document.getElementById('liveQuizProgress');
+      if(pEl2){
+        const blocks = [];
+        // Current question (active right now)
+        if(qIdx >= 1 && qIdx <= questions.length){
+          const currentQ = questions[qIdx-1];
+          const currentAnswers = answers[qIdx-1] || {};
+          const submittedCount = Object.keys(currentAnswers).length;
+          const correctNow = Object.values(currentAnswers).filter(a=>a===currentQ.correct).length;
+          const choicesHtml = currentQ.choices.map((ch,i) => {
+            const isCorrect = ch === currentQ.correct;
+            return `<div style="display:flex;align-items:center;gap:.5rem;padding:.35rem .55rem;border-radius:var(--r3);background:${isCorrect?'rgba(77,138,94,.08)':'rgba(244,237,226,.04)'};border:1px solid ${isCorrect?'rgba(77,138,94,.35)':'var(--line)'};margin-bottom:.25rem">
+              <span style="font-family:'DM Mono',monospace;font-size:.62rem;color:var(--parch4);min-width:14px">${String.fromCharCode(65+i)}.</span>
+              <span style="flex:1;font-size:.78rem;color:var(--parchment)">${escapeHTML(ch||'')}</span>
+              ${isCorrect?`<span style="font-family:'DM Mono',monospace;font-size:.6rem;color:var(--sage);letter-spacing:.05em">✓ ${_lqEn?'CORRECT':'CORRECTA'}</span>`:''}
+            </div>`;
+          }).join('');
+          blocks.push(`<div style="background:linear-gradient(155deg,#faf6ee,#f0e8d8);border:1px solid var(--gold-a);border-left:3px solid var(--gold);border-radius:var(--r2);padding:.85rem 1rem;margin-bottom:.6rem">
+            <div style="font-family:'DM Mono',monospace;font-size:.58rem;color:var(--gold);letter-spacing:.08em;text-transform:uppercase;margin-bottom:.4rem">▶ ${_lqEn?'Live now':'En directo'} · ${_lqEn?'Question':'Pregunta'} ${qIdx} ${_lqEn?'of':'de'} ${questions.length}</div>
+            <div style="font-family:'Cinzel',serif;font-size:.95rem;color:var(--parchment);margin-bottom:.15rem">${escapeHTML(currentQ.dish||'')}</div>
+            <div style="font-size:.65rem;color:var(--parch3);margin-bottom:.55rem">${escapeHTML(currentQ.topic||'')}</div>
+            ${choicesHtml}
+            <div style="display:flex;justify-content:space-between;gap:.5rem;margin-top:.55rem;font-family:'DM Mono',monospace;font-size:.66rem">
+              <span style="color:var(--parch3)">${submittedCount}/${participants.length} ${_lqEn?'answered':'respondidas'}</span>
+              <span style="color:${correctNow/Math.max(1,submittedCount)>=.7?'var(--sage)':correctNow>0?'var(--gold)':'var(--parch4)'}">${correctNow} ${_lqEn?'correct':'correctas'}</span>
+            </div>
+          </div>`);
+        }
+        // Previous question results (only after at least one question has finished)
+        if(qIdx >= 2 && answers[qIdx-2]){
+          const prevQ = questions[qIdx-2];
+          const prevAnswers = answers[qIdx-2];
+          const prevCorrect = Object.values(prevAnswers).filter(a=>a===prevQ.correct).length;
+          const prevTotal = Object.values(prevAnswers).length;
+          blocks.push(`<div style="background:linear-gradient(155deg,#faf6ee,#f0e8d8);border:1px solid var(--line);border-radius:var(--r2);padding:.7rem 1rem;opacity:.85">
+            <div style="font-family:'DM Mono',monospace;font-size:.55rem;color:var(--parch4);letter-spacing:.08em;text-transform:uppercase;margin-bottom:.3rem">${_lqEn?'Previous':'Anterior'} · ${_lqEn?'Question':'Pregunta'} ${qIdx-1}</div>
+            <div style="font-size:.78rem;color:var(--parch3);margin-bottom:.3rem">${escapeHTML(prevQ.dish||'')} — <strong>${escapeHTML(prevQ.correct||'')}</strong></div>
+            <div style="font-family:'DM Mono',monospace;font-size:.68rem;color:${prevCorrect/Math.max(1,prevTotal)>=.7?'var(--sage)':'var(--rose)'}">✓ ${prevCorrect}/${prevTotal} ${_lqEn?'correct':'correctos'}</div>
+          </div>`);
+        }
+        pEl2.innerHTML = blocks.join('');
       }
     }, 2500);
   });
@@ -29787,7 +29821,12 @@ async function advanceLiveQuiz(code){
     } catch(e2) { /* non-critical */ }
   }
   const deadline = Date.now() + 20000; // 20 seconds
-  await supaUpdateLiveSession(decoded, { state: 'active', current_q: liveCurrentQ, answers: liveCurrentQ===0?'{}':undefined, deadline: new Date(deadline).toISOString() });
+  // Bug fix: current_q is shared in 1-indexed form (1 = first active question, etc.).
+  // Player reads `qIdx = sess.current_q - 1` (L29878) and host reads `qIdx = s.current_q`
+  // then `qIdx-1` (L29700) — both already 1-indexed. Previously this write used
+  // liveCurrentQ (0-indexed), making the player compute qIdx=-1 on the first
+  // question, which failed the bounds check and never rendered Q1 for participants.
+  await supaUpdateLiveSession(decoded, { state: 'active', current_q: liveCurrentQ + 1, answers: liveCurrentQ===0?'{}':undefined, deadline: new Date(deadline).toISOString() });
   liveCurrentQ++;
   const btn = document.getElementById('liveNextBtn');
   if(btn) btn.textContent = liveCurrentQ >= questions.length ? (_en?'Finish quiz':'Finalizar quiz') : `▶ ${_en?'Question':'Pregunta'} ${liveCurrentQ+1} ${_en?'of':'de'} ${questions.length}`;
