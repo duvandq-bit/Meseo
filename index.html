@@ -3747,6 +3747,7 @@ body::after{
   background:rgba(255,75,75,.08);border:1.5px solid rgba(255,75,75,.2);
   color:var(--candy-red);
 }
+.allergen-tag.safe{background:rgba(90,154,110,.12);border-color:rgba(90,154,110,.3);color:#5a9a6e}
 .repaso-note{font-family:'DM Mono',monospace;font-size:.62rem;color:var(--gold);margin-top:.35rem;opacity:.8}
 
 .known-btn{
@@ -8275,6 +8276,7 @@ li.fail .dj-qrv-mark{color:#e8a0a0}
       <button id="notifBell" onclick="renderNotifPanel()" aria-label="Notificaciones" role="button" style="display:none;background:transparent;border:none;cursor:pointer;padding:8px;position:relative;font-size:1.2rem;line-height:1;min-height:40px;min-width:40px">
         ◉<span id="notifBadge" style="position:absolute;top:-2px;right:-2px;background:var(--rose);color:#fff;border-radius:50%;width:18px;height:18px;font-size:.55rem;font-family:Jost,sans-serif;font-weight:700;display:none;align-items:center;justify-content:center"></span>
       </button>
+      <button id="helpBtn" onclick="showOnboarding()" aria-label="Ayuda — repetir tutorial" title="Ver tutorial / Show tutorial" style="background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.25);cursor:pointer;padding:6px 10px;border-radius:6px;font-family:'DM Mono',monospace;font-size:.7rem;color:rgba(255,255,255,.9);min-height:32px;min-width:32px;margin-right:.25rem">?</button>
       <!-- Language toggle in header -->
       <div style="display:flex;gap:.35rem;margin-right:.25rem">
         <button id="appLangEs" onclick="setLangApp('es')" style="background:rgba(255,255,255,.15);border:none;cursor:pointer;padding:6px 10px;border-radius:6px;font-family:'DM Mono',monospace;font-size:.6rem;color:rgba(255,255,255,.9);letter-spacing:.05em;min-height:32px">ES</button>
@@ -8288,7 +8290,7 @@ li.fail .dj-qrv-mark{color:#e8a0a0}
     <button class="nav-btn active" id="navDashboard" onclick="showTab('dashboard')"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9.5L12 3l9 6.5V20a1 1 0 01-1 1H4a1 1 0 01-1-1V9.5z"/><path d="M9 21V12h6v9"/></svg> Inicio</button>
     <button class="nav-btn" id="navAprender" onclick="showTab('aprender')"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg> Aprender</button>
     <button class="nav-btn" id="navExam" onclick="showTab('exam')"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/><path d="M9 12h6M9 16h4"/></svg> Examen</button>
-    <button class="nav-btn" id="navProtocolo" onclick="showTab('protocolo')"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg> LQA</button>
+    <button class="nav-btn" id="navProtocolo" onclick="showTab('protocolo')"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg> Quiz en Vivo</button>
     <button class="nav-btn" id="navVinos" onclick="showTab('vinos')"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2h8l-2 9H10L8 2z"/><path d="M12 11v7"/><path d="M8 18h8"/></svg> Vinos</button>
     <button class="nav-btn" id="navTxoko" onclick="showTab('txoko')"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 12h4l2 8 4-16 2 8h4"/></svg> Juegos</button>
     <button class="nav-btn" id="navRanking" onclick="showTab('ranking')"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg> Ranking</button>
@@ -8872,7 +8874,7 @@ function applyLangToApp() {
     navDashboard: LANG==='en'?'Home':'Inicio',
     navAprender: LANG==='en'?'Learn':'Aprender',
     navExam: LANG==='en'?'Exam':'Examen',
-    navProtocolo: 'LQA',
+    navProtocolo: LANG==='en'?'Live Quiz':'Quiz en Vivo',
     navVinos: LANG==='en'?'Wines':'Vinos',
     navTxoko: LANG==='en'?'Games':'Juegos',
     navRanking: 'Ranking',
@@ -10217,7 +10219,11 @@ function jParse(str, fallback){
 }
 // Track repeated quota errors so we don't spam the user.
 let _saveDBErrorShown = 0;
-function saveDB(){
+// Debounced batch save. Coalesces bursts of quiz/XP updates into one
+// localStorage write + one Supabase upsert. Flushed eagerly on tab hide /
+// unload so no data is lost. ~1.5s window keeps the UI snappy.
+let _saveDBTimer = null;
+function _saveDBNow(){
   let localOk = true;
   try{
     localStorage.setItem(STORAGE_KEY,JSON.stringify(DB));
@@ -10237,9 +10243,16 @@ function saveDB(){
     }
     dbgw('[saveDB] localStorage failed:', e);
   }
-  // Sync current user to Supabase in background (also a durability safeguard)
   if(currentUser) supaUpsertEmployee(currentUser);
   return localOk;
+}
+function _flushSaveDB(){
+  if(_saveDBTimer !== null){ clearTimeout(_saveDBTimer); _saveDBTimer = null; _saveDBNow(); }
+}
+function saveDB(){
+  if(_saveDBTimer !== null) clearTimeout(_saveDBTimer);
+  _saveDBTimer = setTimeout(()=>{ _saveDBTimer = null; _saveDBNow(); }, 1500);
+  return true;
 }
 function getEmp(name){
   if(!DB.employees[name])DB.employees[name]={name,created:Date.now(),topicScores:{allergens:{correct:0,total:0},ingredients:{correct:0,total:0},history:{correct:0,total:0}},knownDishes:{},examCorrect:{},sessions:[],fcHistory:[]};
@@ -12289,7 +12302,7 @@ function renderSmartReview(){
       <span class="ri-section-count">${allergenList.length}</span>
     </div>
     <div class="ri-allergen-grid">
-      ${allergenList.map(a=>`<span class="ri-allergen-chip">${a}</span>`).join('')}
+      ${allergenList.map(a=>`<span class="ri-allergen-chip">⚠ ${a}</span>`).join('')}
     </div>
   `;
 
@@ -14763,7 +14776,7 @@ function renderAprender(){
         id="aprenderGlobalSearch"
         type="search"
         placeholder="${_en?'Search dish, ingredient, allergen...':'Buscar plato, ingrediente, alérgeno...'}"
-        oninput="_aprenderGlobalSearch(this.value)"
+        oninput="(function(v){clearTimeout(window._aprSearchT);window._aprSearchT=setTimeout(()=>_aprenderGlobalSearch(v),120)})(this.value)"
         onfocus="_aprenderGlobalSearch(this.value)"
         onblur="setTimeout(()=>{const r=document.getElementById('aprenderGlobalSearchResults');if(r)r.style.display='none';},200)"
         autocomplete="off"
@@ -26033,7 +26046,7 @@ function renderRepasoCats(){
         id="repasoSearch"
         type="search"
         placeholder="${_en?'Search a dish by name, ingredient or allergen…':'Buscar un plato por nombre, ingrediente o alérgeno…'}"
-        oninput="searchRepaso(this.value)"
+        oninput="(function(v){clearTimeout(window._rpSearchT);window._rpSearchT=setTimeout(()=>searchRepaso(v),120)})(this.value)"
         style="width:100%;padding:.78rem 1rem .78rem 2.6rem;border:1.5px solid rgba(196,154,60,.22);border-radius:var(--r2);font-family:'Quicksand',sans-serif;font-size:.85rem;color:var(--parchment);background:linear-gradient(155deg,#faf6ee,#f0e8d8);outline:none;-webkit-appearance:none;box-shadow:inset 0 1px 2px rgba(0,0,0,.04),0 2px 0 rgba(196,154,60,.08);transition:all .2s"
         onfocus="this.style.borderColor='rgba(196,154,60,.5)';this.style.boxShadow='inset 0 1px 2px rgba(0,0,0,.04),0 2px 0 rgba(196,154,60,.15),0 0 0 3px rgba(196,154,60,.1)'"
         onblur="this.style.borderColor='rgba(196,154,60,.22)';this.style.boxShadow='inset 0 1px 2px rgba(0,0,0,.04),0 2px 0 rgba(196,154,60,.08)'"
@@ -26133,7 +26146,7 @@ function renderRepasoTopic(){
     const allergenN=(dd.allergens||[]).length;
     const catCol=CAT_COLORS[dd.cat]||'var(--gold)';
     const allergenHtml=topic.key==='allergens'
-      ?`<div class="repaso-allergen-row">${allergenN===0?`<span class="allergen-tag" style="background:rgba(90,154,110,.12);border-color:rgba(90,154,110,.3);color:#5a9a6e">${t('noAllergens').replace('.','')}</span>`:dd.allergens.map(a=>`<span class="allergen-tag">${allergenLocal(a)}</span>`).join('')}</div>`:'';
+      ?`<div class="repaso-allergen-row">${allergenN===0?`<span class="allergen-tag safe">✓ ${t('noAllergens').replace('.','')}</span>`:dd.allergens.map(a=>`<span class="allergen-tag">⚠ ${allergenLocal(a)}</span>`).join('')}</div>`:'';
     return `<div class="repaso-row${isMastered?' mastered':''}" id="ritem${d.id}" style="--cat-color:${catCol}">
       <div class="repaso-row-icon">${CAT_ICONS[dd.cat]||''}</div>
       <div class="repaso-row-body">
@@ -35658,15 +35671,18 @@ function txGameOver(){
 }
 
 
-// Sync when user leaves the app (closes tab, switches app)
+// Sync when user leaves the app (closes tab, switches app).
+// Flush the debounced localStorage write FIRST so nothing is lost.
 document.addEventListener('visibilitychange', () => {
-  if(document.visibilityState === 'hidden' && currentUser) {
-    _beaconSync(currentUser);
+  if(document.visibilityState === 'hidden') {
+    _flushSaveDB();
+    if(currentUser) _beaconSync(currentUser);
   }
 });
 
 // Sync before page unload — use sendBeacon for reliability
 window.addEventListener('beforeunload', () => {
+  _flushSaveDB();
   if(currentUser) _beaconSync(currentUser);
 });
 
@@ -35848,7 +35864,7 @@ function _svcUpdateResults(){
       html += filtered.slice(0,15).map(d => `<div class="svc-result" onclick="_svcSelectedDish=${d.id};_renderServiceMode()">
         <div class="svc-result-name">${d.name}</div>
         <div class="svc-result-cat">${d.cat||''}</div>
-        ${_svcTab === 'allergens' ? `<div>${(d.allergens && d.allergens.length) ? d.allergens.map(a => `<span class="svc-allergen-tag danger">${a}</span>`).join('') : `<span class="svc-allergen-tag safe">${_en?'None':'Ninguno'}</span>`}</div>` : ''}
+        ${_svcTab === 'allergens' ? `<div>${(d.allergens && d.allergens.length) ? d.allergens.map(a => `<span class="svc-allergen-tag danger">⚠ ${a}</span>`).join('') : `<span class="svc-allergen-tag safe">✓ ${_en?'None':'Ninguno'}</span>`}</div>` : ''}
         ${_svcTab === 'wine' ? _svcGetWinePreview(d, _en) : ''}
         ${_svcTab === 'ingredients' ? `<div style="font-size:.68rem;color:#8b949e;line-height:1.4;margin-top:.3rem">${(d.ingredients||'').substring(0,120)}${(d.ingredients||'').length>120?'...':''}</div>` : ''}
         ${_svcTab === 'plating' ? `<div style="font-size:.68rem;color:#8b949e;line-height:1.4;margin-top:.3rem">${(d.notes||'').substring(0,100)}${(d.notes||'').length>100?'...':''}</div>` : ''}
@@ -35893,7 +35909,7 @@ function _renderServiceMode(){
 
         ${_svcTab === 'allergens' || _svcTab === 'all' ? `
           <div class="svc-section-title">${_en?'Allergens':'Alérgenos'}</div>
-          <div style="margin-bottom:.6rem">${(d.allergens && d.allergens.length) ? d.allergens.map(a => `<span class="svc-allergen-tag danger">${a}</span>`).join('') : `<span class="svc-allergen-tag safe">${_en?'No declared allergens':'Sin alérgenos declarados'}</span>`}</div>
+          <div style="margin-bottom:.6rem">${(d.allergens && d.allergens.length) ? d.allergens.map(a => `<span class="svc-allergen-tag danger">⚠ ${a}</span>`).join('') : `<span class="svc-allergen-tag safe">✓ ${_en?'No declared allergens':'Sin alérgenos declarados'}</span>`}</div>
           ${d.notes ? `<div class="svc-section-title">${_en?'Important Notes':'Notas Importantes'}</div><div class="svc-notes">${d.notes.replace(/⚠/g,'<b style="color:#f85149">⚠</b>').replace(/NO se puede retirar/g,'<b>NO se puede retirar</b>').replace(/Cannot be removed/gi,'<b>Cannot be removed</b>')}</div>` : ''}
         ` : ''}
 
