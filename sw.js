@@ -4,11 +4,14 @@
 //   • Web Push notifications
 //   • Notification click → focus existing window in scope, or open one
 
-const VERSION = 'v5.8';
+const VERSION = 'v5.9';
 const CACHE_NAME = `txoko-shell-${VERSION}`;
 
 // Files cached as the app shell. Keep this list short — large data should be
 // fetched live and cached opportunistically by the runtime handler below.
+// Lazy-loaded data (data/*.json, ~200 KB) is NOT pre-cached: it's fetched
+// on-demand the first time a user enters Quiz en Vivo / Servicio Fantasma,
+// and the stale-while-revalidate handler below stores it automatically.
 const SHELL_URLS = [
   './',
   './index.html',
