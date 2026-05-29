@@ -191,8 +191,8 @@ dependencias CDN y ausencia de marcadores de conflicto de git.
 
 ## Despliegue
 
-Sitio estático. Subir `index.html`, `sw.js`, `manifest.json`, la carpeta `data/`
-(raíz) a cualquier hosting estático (GitHub Pages, Netlify, etc.).
+Sitio estático. Subir `index.html`, `styles.css`, `sw.js`, `manifest.json`, la
+carpeta `data/` (raíz) a cualquier hosting estático (GitHub Pages, Netlify, etc.).
 
 Requisito: HTTPS para que el service worker y push notifications funcionen.
 

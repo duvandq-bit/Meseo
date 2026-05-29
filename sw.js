@@ -4,7 +4,7 @@
 //   • Web Push notifications
 //   • Notification click → focus existing window in scope, or open one
 
-const VERSION = 'v6.3';
+const VERSION = 'v6.4';
 const CACHE_NAME = `txoko-shell-${VERSION}`;
 
 // Files cached as the app shell. Keep this list short — large data should be
@@ -16,6 +16,7 @@ const CACHE_NAME = `txoko-shell-${VERSION}`;
 const SHELL_URLS = [
   './',
   './index.html',
+  './styles.css',
   './manifest.json',
   './icon.svg'
 ];
