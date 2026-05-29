@@ -24,6 +24,22 @@
 <html lang="es" id="htmlRoot">
 <head>
 <meta charset="UTF-8">
+<!--
+  Content-Security-Policy (defense-in-depth). Built from a full audit of every
+  origin the app contacts. Notes:
+   • 'unsafe-inline' in script-src is REQUIRED: the app has ~294 inline onclick
+     handlers and one large inline <script>. Removing them is a separate
+     refactor (modularization); until then strict script CSP is impossible.
+     Even with 'unsafe-inline', this CSP still blocks injected EXTERNAL scripts
+     and limits where data can be exfiltrated (connect-src), which is the main
+     win here. No 'unsafe-eval' (the app uses no eval/Function/wasm).
+   • script/style: self + Google Fonts + the three pinned CDNs (maplibre,
+     topojson, supabase).  connect-src: Supabase REST + the map's tile/atlas
+     origins + same-origin data/*.json.  img-src: data:/blob: + map tiles.
+     frame-src: YouTube embeds.  worker-src blob: for MapLibre's workers.
+   • Rollback: delete this tag and bump the service-worker VERSION.
+-->
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://unpkg.com https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://unpkg.com https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob: https://*.tile.opentopomap.org https://demotiles.maplibre.org https://unpkg.com; connect-src 'self' https://advkoujfgbrrjvqexrcu.supabase.co https://unpkg.com https://demotiles.maplibre.org https://*.tile.opentopomap.org; worker-src 'self' blob:; frame-src https://www.youtube.com; object-src 'none'; base-uri 'self'; form-action 'self'; manifest-src 'self'">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>TXOKO · Formación</title>
