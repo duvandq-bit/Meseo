@@ -130,6 +130,20 @@ test('every loadLazyData("data/…") path exists on disk', () => {
   }
 });
 
+// ─── 4b. Extracted stylesheet wired + precached ─────────────────
+console.log('\nStylesheet');
+test('styles.css is linked, non-trivial, and not duplicated inline', () => {
+  assert(/<link\s+rel="stylesheet"\s+href="styles\.css">/.test(html), 'styles.css <link> missing');
+  assert(existsSync(join(ROOT, 'styles.css')), 'styles.css file missing');
+  const css = read('styles.css');
+  assert(css.length > 50000, `styles.css suspiciously small (${css.length} bytes)`);
+  // The big inline <style> block must be gone (no regression to inline CSS).
+  assert(!/<style>/.test(html), 'an inline <style> block is back in index.html');
+  // SW must precache it so first paint after install is instant + offline-safe.
+  const sw = read('sw.js');
+  assert(/['"`]\.\/styles\.css['"`]/.test(sw), 'styles.css not in SW SHELL_URLS');
+});
+
 // ─── 5. Service-worker version hygiene ──────────────────────────
 console.log('\nService worker');
 test('sw.js VERSION is well-formed and drives CACHE_NAME', () => {
