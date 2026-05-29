@@ -175,6 +175,19 @@ dependencias CDN y ausencia de marcadores de conflicto de git.
   node tools/compute-sri.mjs          # inyecta integrity="sha384-…" en index.html
   node tools/compute-sri.mjs --check  # CI/verificación: falla si falta o está stale
   ```
+- **PINs de empleado (server-side)**: por defecto los PINs se verifican localmente
+  contra `SHA-256(pin+salt)` — vulnerable porque el hash es legible con la anon key
+  y un PIN de 4 dígitos con salt compartido se revierte al instante. Para activar la
+  verificación con bcrypt server-side (no legible por anon):
+  1. Ejecutar `supabase/employee_pin.sql` en el editor SQL de Supabase.
+  2. Poner `USE_SERVER_EMP_PIN_VERIFY = true` en `index.html` y desplegar.
+  3. La migración es **lazy y no destructiva**: cada empleado verifica en local una
+     vez más y se migra a bcrypt al entrar. Tras 2-4 semanas (todos han entrado),
+     limpiar el hash legacy: `UPDATE public.employees SET pin = NULL;` y quitar `pin`
+     del payload de `supaUpsertEmployee()`.
+
+     Fallback: ante fallo de red/RPC, vuelve al compare local — un corte de Supabase
+     nunca deja al staff sin entrar. Rollback: `USE_SERVER_EMP_PIN_VERIFY = false`.
 
 ## Despliegue
 
