@@ -8114,3 +8114,59 @@ li.fail .dj-qrv-mark{color:#e8a0a0}
   contain:layout paint style;
 }
 
+
+/* ═══════════════════════════════════════════════════════════════
+   ATMOSPHERIC LAYER — prefers-reduced-motion guard (DESIGN_SYSTEM §7)
+   The atmospheric layer is decorative and must yield to accessibility.
+   When the OS asks for reduced motion we FREEZE the ambient, infinite,
+   pointer-events:none decoration (god-rays, breathing glows, shine
+   sweeps, sparkles, drifts, rotations) — and shorten UI transitions /
+   smooth-scroll. Every selector below is a behind-content decorative
+   layer, so freezing it can never hide functional content. Finite
+   "forwards" feedback effects (xp/ripple/float) are intentionally left
+   alone: they self-remove on animationend, which disabling would break.
+   ═══════════════════════════════════════════════════════════════ */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  /* UI state transitions → near-instant (transitions never gate visibility) */
+  *, *::before, *::after { transition-duration: 0.01ms !important; }
+  /* Freeze decorative infinite ambient motion */
+  body::before,
+  .onboarding-overlay::before,
+  .onboarding-overlay::after,
+  .onboarding-hex-icon-wrap::after,
+  .onboarding-btn::before,
+  .gem-rays,
+  .ri-cta::before,
+  .ri-cta::after,
+  .tunic-stab .tunic-shine,
+  .wine-section-header::before,
+  .wine-godrays,
+  .wine-sparkle,
+  .wine-hub-hero::after,
+  .wine-hub-sparkle,
+  .exam-hero-shine,
+  .opt-tile.sel .opt-shine,
+  .btn-start::after,
+  .exam-aura-backdrop,
+  .exam-aura-godrays,
+  .txoko-scene::after,
+  .lvl-modal::after,
+  .lvl-medallion-ring,
+  .lvl-sparkle,
+  .sensory-header::before,
+  .sensory-wheel-wrap::before,
+  .sensory-wheel-wrap::after,
+  .sup-hero-shine,
+  .hub-banner-shine,
+  .games-header-shine,
+  .login-godrays,
+  .login-hex-pattern,
+  .login-medallion-glow,
+  .login-hex-seal,
+  .login-hex-seal-inner,
+  #screenLogin::after,
+  .login-submit-btn::before {
+    animation: none !important;
+  }
+}

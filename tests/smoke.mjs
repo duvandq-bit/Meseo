@@ -171,6 +171,21 @@ test('semantic color tokens reference existing primitives (no dangling var())', 
   }
 });
 
+test('prefers-reduced-motion guard freezes the atmospheric layer', () => {
+  const css = read('styles.css');
+  const idx = css.indexOf('@media (prefers-reduced-motion: reduce)');
+  assert(idx !== -1, 'no prefers-reduced-motion media query');
+  const block = css.slice(idx, css.indexOf('}', css.lastIndexOf('animation: none', css.length)) + 1);
+  // Must freeze ambient decoration and not just exist empty.
+  assert(/body::before/.test(block), 'guard should freeze body::before ambient layer');
+  assert(/animation:\s*none/.test(block), 'guard should set animation:none on decoration');
+  // Must NOT disable the finite self-removing feedback effects (they clean up
+  // on animationend; freezing them would leave elements stuck on screen).
+  for (const finite of ['.xp-burst', '.ripple-circle', '.sr-xp-float']) {
+    assert(!new RegExp(`\\${finite}\\b`).test(block), `${finite} must stay animated (animationend cleanup)`);
+  }
+});
+
 test('DESIGN_SYSTEM.md exists and documents the scales', () => {
   const doc = read('DESIGN_SYSTEM.md');
   for (const s of ['Color', 'Typography', 'Spacing', 'Motion', 'Atmospheric', 'Dual mode']) {
