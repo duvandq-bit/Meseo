@@ -67,6 +67,26 @@ test('data/wines.json is a non-empty array with id/name/type', () => {
   assert(new Set(ids).size === ids.length, 'duplicate wine ids');
 });
 
+test('data/vinos-content.json keys match what loadVinosContent() assigns', () => {
+  const content = JSON.parse(read('data/vinos-content.json'));
+  const jsonKeys = Object.keys(content).sort();
+  assert(jsonKeys.length === 10, `expected 10 constants, got ${jsonKeys.length}`);
+  // Each value must be a non-empty object/array (no accidental nulls)
+  for (const k of jsonKeys) {
+    const v = content[k];
+    assert(v && typeof v === 'object', `${k} is not an object/array`);
+    const len = Array.isArray(v) ? v.length : Object.keys(v).length;
+    assert(len > 0, `${k} is empty`);
+  }
+  // Cross-check against the assignments in loadVinosContent() so the JSON and
+  // the loader can't drift apart (key added to one but not the other).
+  const loader = html.match(/async function loadVinosContent\([^)]*\)\s*\{[\s\S]*?\n\}/);
+  assert(loader, 'could not find loadVinosContent()');
+  const assigned = [...loader[0].matchAll(/^\s*([A-Za-z_][A-Za-z0-9_]*)\s*=\s*data\.\1\s*;/gm)].map(m => m[1]).sort();
+  assert(JSON.stringify(assigned) === JSON.stringify(jsonKeys),
+    `loader assigns [${assigned}] but JSON has [${jsonKeys}]`);
+});
+
 test('data/lqa-situations.json is valid JSON (non-empty array)', () => {
   const lqa = JSON.parse(read('data/lqa-situations.json'));
   assert(Array.isArray(lqa) && lqa.length > 0, 'not a non-empty array');
