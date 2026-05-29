@@ -162,9 +162,24 @@ Comprueba: sintaxis del `<script>` principal, validez/estructura de los JSON en
 de `loadLazyData` existan en disco, versión del service worker, `crossorigin` en
 dependencias CDN y ausencia de marcadores de conflicto de git.
 
+## Seguridad
+
+- **CSP**: `index.html` incluye una `Content-Security-Policy` (meta tag) construida
+  del inventario completo de orígenes que la app contacta. Bloquea scripts
+  externos inyectados y limita los destinos de `connect-src` (anti-exfiltración).
+  Usa `'unsafe-inline'` en `script-src` por los ~294 handlers `onclick` inline
+  (eliminarlos es trabajo de modularización). Rollback: borrar la meta + bump SW.
+- **SRI**: antes de cada deploy (o al cambiar versión de un CDN) ejecutar desde
+  una máquina con red:
+  ```bash
+  node tools/compute-sri.mjs          # inyecta integrity="sha384-…" en index.html
+  node tools/compute-sri.mjs --check  # CI/verificación: falla si falta o está stale
+  ```
+
 ## Despliegue
 
-Sitio estático. Subir `index.html`, `sw.js`, `manifest.json` (raíz) a cualquier hosting estático (GitHub Pages, Netlify, etc.).
+Sitio estático. Subir `index.html`, `sw.js`, `manifest.json`, la carpeta `data/`
+(raíz) a cualquier hosting estático (GitHub Pages, Netlify, etc.).
 
 Requisito: HTTPS para que el service worker y push notifications funcionen.
 

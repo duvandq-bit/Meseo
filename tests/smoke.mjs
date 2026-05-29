@@ -150,6 +150,34 @@ test('all third-party CDN <script>/<link> tags set crossorigin', () => {
   }
 });
 
+// ─── 6b. Content-Security-Policy present + covers critical origins ──
+console.log('\nContent-Security-Policy');
+test('CSP meta tag is present with core hardening directives', () => {
+  const m = html.match(/<meta\s+http-equiv="Content-Security-Policy"\s+content="([^"]+)"/i);
+  assert(m, 'CSP meta tag missing');
+  const csp = m[1];
+  for (const dir of ["default-src 'self'", 'script-src', 'connect-src', "object-src 'none'", "base-uri 'self'"]) {
+    assert(csp.includes(dir), `CSP missing directive: ${dir}`);
+  }
+});
+
+test('CSP does not break critical paths (Supabase, CDNs, fonts, map)', () => {
+  // A too-narrow CSP would silently break login/sync or the map. Assert the
+  // origins the app genuinely loads from are still allow-listed, so a future
+  // CSP edit can't quietly cut them off.
+  const csp = html.match(/Content-Security-Policy"\s+content="([^"]+)"/i)[1];
+  const required = [
+    'advkoujfgbrrjvqexrcu.supabase.co', // login + all data sync (connect-src)
+    'cdn.jsdelivr.net',                 // supabase-js (script-src)
+    'unpkg.com',                        // maplibre + topojson (script/style)
+    'fonts.googleapis.com',             // font CSS (style-src)
+    'fonts.gstatic.com',                // font files (font-src)
+    'tile.opentopomap.org',             // wine map tiles (img/connect)
+    'www.youtube.com'                   // video embeds (frame-src)
+  ];
+  for (const o of required) assert(csp.includes(o), `CSP no longer allows ${o} — would break a feature`);
+});
+
 // ─── 7. No leftover git conflict markers ────────────────────────
 console.log('\nHygiene');
 test('no git conflict markers in tracked source', () => {
