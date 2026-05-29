@@ -178,6 +178,28 @@ test('CSP does not break critical paths (Supabase, CDNs, fonts, map)', () => {
   for (const o of required) assert(csp.includes(o), `CSP no longer allows ${o} — would break a feature`);
 });
 
+// ─── 6c. Employee PIN server-verify wiring ──────────────────────
+console.log('\nAuth hardening');
+test('USE_SERVER_EMP_PIN_VERIFY exists and ships disabled (safe default)', () => {
+  const m = html.match(/const USE_SERVER_EMP_PIN_VERIFY\s*=\s*(true|false)\s*;/);
+  assert(m, 'USE_SERVER_EMP_PIN_VERIFY flag missing');
+  // Must ship false: enabling it requires deploying supabase/employee_pin.sql
+  // first, otherwise the verify RPC 404s. (It falls back to local, but the
+  // flag should not be flipped in the repo until the SQL is live.)
+  assert(m[1] === 'false', 'USE_SERVER_EMP_PIN_VERIFY must default to false in the repo');
+  // The helpers it relies on must exist.
+  assert(/async function verifyEmployeePinServer\(/.test(html), 'verifyEmployeePinServer() missing');
+  assert(/async function setEmployeePinServer\(/.test(html), 'setEmployeePinServer() missing');
+});
+
+test('supabase/employee_pin.sql defines the verify/set RPCs and locks the table', () => {
+  const sql = read('supabase/employee_pin.sql');
+  assert(/create or replace function public\.verify_employee_pin\(/.test(sql), 'verify_employee_pin RPC missing');
+  assert(/create or replace function public\.set_employee_pin\(/.test(sql), 'set_employee_pin RPC missing');
+  assert(/revoke all on public\.employee_pin_secret from anon/.test(sql), 'secret table not revoked from anon');
+  assert(/gen_salt\('bf'/.test(sql), 'not using bcrypt (gen_salt bf)');
+});
+
 // ─── 7. No leftover git conflict markers ────────────────────────
 console.log('\nHygiene');
 test('no git conflict markers in tracked source', () => {

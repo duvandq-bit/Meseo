@@ -8749,6 +8749,50 @@ async function verifySupervisorPin(pin){
 
 let supAuthenticated = false;
 
+// ═══ SERVER-SIDE EMPLOYEE PIN VERIFICATION ═══ (see supabase/employee_pin.sql)
+// When false (default) behavior is identical to before: each employee PIN is
+// checked locally against the SHA-256 hash in emp.pin. Flip to true ONLY after
+// deploying employee_pin.sql — then PINs verify against per-row bcrypt hashes
+// that the anon key cannot read. Network/RPC failures fall back to the local
+// compare so a Supabase outage can never lock kitchen staff out mid-service.
+const USE_SERVER_EMP_PIN_VERIFY = false;
+
+// Verify a PIN server-side. Returns:
+//   'ok'       confirmed — enter.
+//   'fail'     wrong PIN — reject.
+//   'migrate'  no server hash yet → caller runs its legacy local check and,
+//              on success, calls setEmployeePinServer() to migrate seamlessly.
+//   'fallback' flag off or network/RPC error → caller runs its local check.
+async function verifyEmployeePinServer(name, pin){
+  if(!USE_SERVER_EMP_PIN_VERIFY) return 'fallback';
+  try {
+    const res = await fetch(`${SUPA_URL}/rest/v1/rpc/verify_employee_pin`, {
+      method:'POST',
+      headers:{ 'apikey':SUPA_KEY, 'Authorization':`Bearer ${SUPA_KEY}`, 'Content-Type':'application/json' },
+      body: JSON.stringify({ emp_name:name, pin_input:String(pin) })
+    });
+    if(!res.ok){ dbgw('[empPin] verify RPC failed:', res.status); return 'fallback'; }
+    const v = await res.json();            // true | false | null
+    if(v === true) return 'ok';
+    if(v === null) return 'migrate';
+    return 'fail';
+  } catch(e){ dbgw('[empPin] verify RPC error:', e.message); return 'fallback'; }
+}
+
+// Upsert a bcrypt PIN server-side (setup + lazy migration). Fire-and-forget;
+// failures are non-fatal — the local hash stays the source of truth until the
+// migration window closes (see employee_pin.sql rollout step c).
+async function setEmployeePinServer(name, pin){
+  if(!USE_SERVER_EMP_PIN_VERIFY) return;
+  try {
+    await fetch(`${SUPA_URL}/rest/v1/rpc/set_employee_pin`, {
+      method:'POST',
+      headers:{ 'apikey':SUPA_KEY, 'Authorization':`Bearer ${SUPA_KEY}`, 'Content-Type':'application/json' },
+      body: JSON.stringify({ emp_name:name, new_pin:String(pin) })
+    });
+  } catch(e){ dbgw('[empPin] set RPC error:', e.message); }
+}
+
 
 
 
@@ -13975,18 +14019,7 @@ async function loginWithPassword(){
 
     if(emp && emp.pin){
       // Existing user (local or restored from cloud) — verify password
-      let match = false;
-      if(emp.pin.length === 64 && /^[0-9a-f]+$/.test(emp.pin)){
-        match = (hashed === emp.pin);
-      } else {
-        // Legacy plaintext + auto-migrate
-        match = (pass === emp.pin);
-        if(match){ emp.pin = hashed; saveDB(); }
-      }
-
-      if(match){
-        _completeLogin(resolvedName, emp, hashed);
-      } else {
+      const _onWrong = () => {
         if(typeof recordPinFail === 'function') recordPinFail();
         // Show PIN keypad if account was set up with 4-digit PIN (from cloud)
         if(emp._fromCloud || !localExistedBefore) {
@@ -13997,6 +14030,27 @@ async function loginWithPassword(){
           passInput.style.borderColor = '#e85d5d';
           setTimeout(() => { passInput.style.borderColor = ''; errEl.textContent = ''; }, 2500);
         }
+      };
+      // Server-side verification (no-op unless USE_SERVER_EMP_PIN_VERIFY).
+      const _srv = await verifyEmployeePinServer(resolvedName, pass);
+      if(_srv==='ok'){ _completeLogin(resolvedName, emp, hashed); }
+      else if(_srv==='fail'){ _onWrong(); }
+      else {
+        // 'migrate' | 'fallback' → legacy local compare.
+        let match = false;
+        if(emp.pin.length === 64 && /^[0-9a-f]+$/.test(emp.pin)){
+          match = (hashed === emp.pin);
+        } else {
+          // Legacy plaintext + auto-migrate
+          match = (pass === emp.pin);
+          if(match){ emp.pin = hashed; saveDB(); }
+        }
+        if(match){
+          if(_srv==='migrate') setEmployeePinServer(resolvedName, pass); // lazy migrate to bcrypt
+          _completeLogin(resolvedName, emp, hashed);
+        } else {
+          _onWrong();
+        }
       }
     } else {
       // New user — register with this password
@@ -14004,6 +14058,7 @@ async function loginWithPassword(){
       emp.pin = hashed;
       emp.lang = LANG;
       saveDB();
+      setEmployeePinServer(resolvedName, pass); // server bcrypt (no-op unless flag on)
       supaUpsertEmployee(resolvedName);
       localStorage.setItem('txoko_last_user', resolvedName);
       const rememberCb = document.getElementById('loginRemember');
@@ -14410,6 +14465,21 @@ async function pinSubmit(){
       setTimeout(()=>{ pinBuffer=''; updatePinDots(false); document.getElementById('pinErr').textContent=''; }, 1500);
       return;
     }
+    const _pinWrong = () => {
+      recordPinFail();
+      document.getElementById('pinErr').textContent=t('pinWrong');
+      updatePinDots(true);
+      setTimeout(()=>{
+        pinBuffer='';
+        updatePinDots(false);
+        document.getElementById('pinErr').textContent='';
+      }, 900);
+    };
+    // Server-side verification (no-op unless USE_SERVER_EMP_PIN_VERIFY).
+    const _srv = await verifyEmployeePinServer(pinTarget, pinBuffer);
+    if(_srv==='ok'){ recordPinSuccess(); closePinAndEnter(); return; }
+    if(_srv==='fail'){ _pinWrong(); return; }
+    // 'migrate' | 'fallback' → fall through to the legacy local compare.
     const inputHash=await hashPin(pinBuffer);
     // Support migration: if stored pin is not a 64-char hex hash, it's legacy plaintext
     let match=false;
@@ -14421,17 +14491,11 @@ async function pinSubmit(){
       if(match){ emp.pin=inputHash; saveDB(); }
     }
     if(match){
+      if(_srv==='migrate') setEmployeePinServer(pinTarget, pinBuffer); // lazy migrate to bcrypt
       recordPinSuccess();
       closePinAndEnter();
     } else {
-      recordPinFail();
-      document.getElementById('pinErr').textContent=t('pinWrong');
-      updatePinDots(true);
-      setTimeout(()=>{
-        pinBuffer='';
-        updatePinDots(false);
-        document.getElementById('pinErr').textContent='';
-      }, 900);
+      _pinWrong();
     }
   } else if(pinStep==='setup1'){
     pinFirst=pinBuffer;
@@ -14445,6 +14509,7 @@ async function pinSubmit(){
     if(pinBuffer===pinFirst){
       emp.pin=await hashPin(pinBuffer);
       saveDB();
+      setEmployeePinServer(pinTarget, pinBuffer); // server bcrypt (no-op unless flag on)
       closePinAndEnter();
     } else {
       document.getElementById('pinErr').textContent=t('pinNoMatch');
@@ -14499,13 +14564,8 @@ function _showCloudPinLogin(name, emp) {
           draw();
           if(buffer.length === 4) {
             setTimeout(function() {
-              hashPin(buffer).then(function(h) {
-                // Check hash match OR legacy plaintext match
-                var pinMatch = (h === emp.pin) || (buffer === emp.pin);
-                if(pinMatch) {
-                  // Migrate plaintext PIN to hash if needed
-                  if(buffer === emp.pin && emp.pin.length < 64) { emp.pin = h; }
-                  // Success!
+              hashPin(buffer).then(async function(h) {
+                var _enter = function() {
                   overlay.remove();
                   delete emp._fromCloud;
                   localStorage.setItem('txoko_last_user', name);
@@ -14518,11 +14578,25 @@ function _showCloudPinLogin(name, emp) {
                   supaUpsertEmployee(name);
                   pinTarget = name;
                   closePinAndEnter();
-                } else {
+                };
+                var _wrong = function() {
                   var err = document.getElementById('cloudPinErr');
                   if(err) err.textContent = _en ? 'Incorrect PIN' : 'PIN incorrecto';
                   buffer = '';
                   setTimeout(function(){ draw(); }, 600);
+                };
+                // Server-side verification (no-op unless USE_SERVER_EMP_PIN_VERIFY).
+                var _srv = await verifyEmployeePinServer(name, buffer);
+                if(_srv==='ok'){ _enter(); return; }
+                if(_srv==='fail'){ _wrong(); return; }
+                // 'migrate' | 'fallback' → legacy hash / plaintext compare.
+                var pinMatch = (h === emp.pin) || (buffer === emp.pin);
+                if(pinMatch) {
+                  if(buffer === emp.pin && emp.pin.length < 64) { emp.pin = h; } // migrate plaintext→hash
+                  if(_srv==='migrate') setEmployeePinServer(name, buffer);       // lazy migrate to bcrypt
+                  _enter();
+                } else {
+                  _wrong();
                 }
               });
             }, 150);
