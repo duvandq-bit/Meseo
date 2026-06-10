@@ -263,6 +263,32 @@ test('supabase/employee_pin.sql defines the verify/set RPCs and locks the table'
   assert(/gen_salt\('bf'/.test(sql), 'not using bcrypt (gen_salt bf)');
 });
 
+// ─── 6d. Quiz generator distractor-quality guards ───────────────
+console.log('\nQuiz generators');
+test('"Which ingredient is NOT in this dish?" rejects substring-ambiguous fakes', () => {
+  // The fix added a bidirectional substring filter so we never produce
+  // questions like "Which is NOT in this dish? Egg / Egg yolk / Squid / Onion"
+  // where the fake ("Egg") is a substring of a real ingredient ("Egg yolk").
+  const m = /const fakeIng = _djShuffle\(otherIngs\.filter\(i => \{([\s\S]*?)\}\)\)/.exec(html);
+  assert(m, 'fake-ingredient filter signature changed — bug-2 guard may be gone');
+  const body = m[1];
+  // Both directions of substring overlap must be filtered out.
+  assert(/real\.includes\(il\)/.test(body),
+    'filter must reject fakes that are substrings of real ingredients (real.includes(il))');
+  assert(/il\.includes\(real\)/.test(body),
+    'filter must reject real ingredients that are substrings of the fake (il.includes(real))');
+});
+
+test('modification quiz excludes the dish-defining ingredient from distractors', () => {
+  // The fix added isDishDefining() so we no longer produce options like
+  // "Comandar SIN CALAMAR" for Calamares a la Andaluza — those are obvious
+  // throwaways that defeat the test.
+  assert(/const isDishDefining\s*=/.test(html),
+    'isDishDefining helper missing — bug-3 guard may be gone');
+  assert(/_simExtractIngredients\(src\)\.filter\(i =>[\s\S]*?!isDishDefining\(i\)/.test(html),
+    'distractor pool must filter out dish-defining ingredients');
+});
+
 // ─── 7. No leftover git conflict markers ────────────────────────
 console.log('\nHygiene');
 test('no git conflict markers in tracked source', () => {

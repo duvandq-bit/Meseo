@@ -2973,7 +2973,16 @@ function _djGenerateQuiz(dish){
     const otherDishes = allDishes.filter(d=>d.id!==dish.id && d.ingredients);
     const otherIngs = otherDishes.flatMap(d=>d.ingredients.split(',').map(s=>s.trim()).filter(Boolean));
     const dishIngsLow = ingredients.map(i=>i.toLowerCase());
-    const fakeIng = _djShuffle(otherIngs.filter(i=>!dishIngsLow.includes(i.toLowerCase()) && i.length>2 && i.length<30))[0] || (_en?'Truffle oil':'Aceite de trufa');
+    // Reject fakes that overlap with any real ingredient — including substring
+    // matches in either direction. The exact-match filter alone was letting
+    // through near-duplicates like "Egg" (fake) vs "Egg yolk" (real) or
+    // "Pepper" vs "Roasted red pepper", which made the question ambiguous.
+    const fakeIng = _djShuffle(otherIngs.filter(i => {
+      if(i.length <= 2 || i.length >= 30) return false;
+      const il = i.toLowerCase();
+      if(dishIngsLow.includes(il)) return false;
+      return !dishIngsLow.some(real => real.includes(il) || il.includes(real));
+    }))[0] || (_en?'Truffle oil':'Aceite de trufa');
     const realIngs = _djShuffle(ingredients.filter(i=>i.length>2 && i.length<30)).slice(0,3);
     const allOpts = _djShuffle([fakeIng, ...realIngs]);
     questions.push({
@@ -3920,8 +3929,27 @@ function _scenarioModification(dish, dd, _en){
   const _prefix = _en ? 'Order WITHOUT ' : 'Comandar SIN ';
   const correctLabel = _prefix + mod.toUpperCase();
 
-  // Generate plausible wrong answers: other real ingredients from the dish
-  const ingList = _simExtractIngredients(src).filter(i=>i.toUpperCase()!==mod.toUpperCase());
+  // Generate plausible wrong answers: other real ingredients from the dish.
+  // Exclude the dish-defining ingredient (one that appears in the dish name)
+  // so we don't produce absurd options like "Comandar SIN CALAMAR" for
+  // "Calamares a la Andaluza" or "SIN OSTRAS" for an oyster selection — the
+  // trainee can dismiss those without thinking, defeating the test. The
+  // dish-name substring check is conservative: it only fires when the
+  // overlap is unambiguous (>3 chars, normalized for accents/case).
+  const _norm = s => (s||'').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'');
+  const dishNameNorm = _norm(src.name || '');
+  const dishNameWords = dishNameNorm.split(/\s+/).filter(w => w.length > 3);
+  const isDishDefining = (ing) => {
+    const il = _norm(ing);
+    if(il.length <= 3) return false;
+    // Ingredient appears verbatim in the dish name (e.g., "Calamar" ⊂ "Calamares a la Andaluza")
+    if(dishNameNorm.includes(il)) return true;
+    // A meaningful word from the dish name appears in the ingredient
+    return dishNameWords.some(w => il.includes(w));
+  };
+  const ingList = _simExtractIngredients(src).filter(i =>
+    i.toUpperCase() !== mod.toUpperCase() && !isDishDefining(i)
+  );
   const fakesPool = [];
   ingList.forEach(ing => { fakesPool.push(_prefix + ing.toUpperCase()); });
   // Also add the other "Comandar SIN" from this dish as plausible distractors
