@@ -289,6 +289,33 @@ test('modification quiz excludes the dish-defining ingredient from distractors',
     'distractor pool must filter out dish-defining ingredients');
 });
 
+// ─── 6e. Dashboard hierarchy — action-first, no duplication ─────
+console.log('\nDashboard hierarchy');
+test('hero is slim: no motivational quote, no duplicate level title', () => {
+  // The motivational quote and the badge-side level title were causing
+  // visual clutter and a duplicate (the XP bar already shows the title).
+  // These regressions matter because the user reports the screen feels
+  // overwhelming — keep the hero a single source of truth.
+  assert(!/dash-hero-quote/.test(html), 'hero motivational quote is back');
+  assert(!/dash-hero-lvl-title/.test(html), 'duplicate level title in hero badge is back');
+  assert(!/motivations_es|motivations_en/.test(html), 'dead motivational quote arrays returned');
+});
+
+test('Plan de hoy sits above Stats Strip on the dashboard', () => {
+  // Action-first hierarchy: the user opens the app to see WHAT TO DO,
+  // not how many flashcards exist. Stats are passive context, moved below.
+  const dashStart = html.indexOf("document.getElementById('appContent').innerHTML=`", html.indexOf('function renderDashboard'));
+  assert(dashStart !== -1, 'renderDashboard innerHTML template not found');
+  const dashEnd = html.indexOf('`;', dashStart);
+  const dashTpl = html.slice(dashStart, dashEnd);
+  const planIdx = dashTpl.indexOf('PLAN DE HOY');
+  const statsIdx = dashTpl.indexOf('STATS STRIP');
+  assert(planIdx !== -1, 'PLAN DE HOY section missing');
+  assert(statsIdx !== -1, 'STATS STRIP section missing');
+  assert(planIdx < statsIdx,
+    'PLAN DE HOY must come before STATS STRIP (action-first hierarchy)');
+});
+
 // ─── 7. No leftover git conflict markers ────────────────────────
 console.log('\nHygiene');
 test('no git conflict markers in tracked source', () => {
