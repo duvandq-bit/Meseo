@@ -13608,24 +13608,6 @@ function renderDashboard(){
   const _canaryH=(_now.getUTCHours()+(_isDST?1:0))%24;
   const greeting=_canaryH<12?t('greetingMorning'):_canaryH<20?t('greetingAfternoon'):t('greetingEvening');
 
-  // Contextual motivational message
-  const motivations_es = [
-    'El conocimiento de la carta es tu mejor herramienta de servicio.',
-    'Un buen camarero anticipa. Un gran camarero sorprende.',
-    'Cada plato tiene una historia. Tú eres quien la cuenta.',
-    'La excelencia no es un acto, es un hábito.',
-    'El detalle marca la diferencia entre lo bueno y lo extraordinario.'
-  ];
-  const motivations_en = [
-    'Menu knowledge is your best service tool.',
-    'A good waiter anticipates. A great waiter surprises.',
-    'Every dish has a story. You are the one who tells it.',
-    'Excellence is not an act, it is a habit.',
-    'Attention to detail is the difference between good and extraordinary.'
-  ];
-  const motivations = LANG==='en' ? motivations_en : motivations_es;
-  const motivation = motivations[Math.floor(Date.now()/86400000) % motivations.length];
-
   // Weak topic detection
   const topicArr = TOPICS.map(tp => {
     const s=topics[tp.key]||{correct:0,total:0};
@@ -13819,32 +13801,11 @@ function renderDashboard(){
         </div>
         <div class="dash-hero-lvl-badge">
           <div class="dash-hero-lvl-num">${tunicLevelIcon(lvl.level,lvl.color,14)} Lv.${lvl.level}</div>
-          <div class="dash-hero-lvl-title">${lvl.title}</div>
           ${streak>1?`<div class="dash-hero-streak"><svg width="8" height="8" viewBox="0 0 8 8"><polygon points="4,0 8,4 4,8 0,4" fill="#e4be68" opacity=".8"/></svg>${streak}d</div>`:''}
         </div>
       </div>
-      <!-- XP bar -->
+      <!-- XP bar (also shows level title — no need to duplicate it in the badge above) -->
       ${renderXPBar()}
-      <!-- Motivational quote -->
-      <div class="dash-hero-quote">${motivation}</div>
-    </div>
-
-    <!-- ── STATS STRIP ── -->
-    <div class="dash-stats">
-      ${[
-        {num:sessions.length, lbl:LANG==='en'?'Exams':'Exámenes', target:sessions.length, col:'#c49a3c', colD:'#a47a2c', col2:'#e4be68'},
-        {num:(avg||0)+'%', lbl:LANG==='en'?'Average':'Media', target:avg||0, suffix:'%', col:'#4d8a5e', colD:'#3a6a4a', col2:'#7aae8c'},
-        {num:known, lbl:LANG==='en'?'Mastered':'Dominados', target:known, col:'#4888a0', colD:'#36687a', col2:'#6aa8bc'},
-        {num:fc, lbl:LANG==='en'?'Cards':'Tarjetas', target:fc, col:'#7a6aaa', colD:'#5a4a8a', col2:'#9e82c8'}
-      ].map((s,i)=>`<div class="dash-stat" style="--ds-c:${s.col};--ds-c2:${s.col2};--ds-cd:${s.colD};animation-delay:${i*70}ms">
-        <span class="dash-stat-corner tl"></span>
-        <span class="dash-stat-corner tr"></span>
-        <span class="dash-stat-corner bl"></span>
-        <span class="dash-stat-corner br"></span>
-        <div class="dash-stat-icon"><svg width="14" height="14" viewBox="0 0 14 14"><polygon points="7,1 13,7 7,13 1,7" fill="${s.col}" opacity=".85"/><polygon points="7,1 10,7 7,10 4,7" fill="${s.col2}" opacity=".8"/><circle cx="7" cy="7" r="1.4" fill="#fff" opacity=".7"/></svg></div>
-        <div class="dash-stat-num" data-target="${s.target||0}" data-suffix="${s.suffix||''}">${s.num}</div>
-        <div class="dash-stat-lbl">${s.lbl}</div>
-      </div>`).join('')}
     </div>
 
     <!-- ── PLAN DE HOY (SRS due + next rank + top weakness) ── -->
@@ -13946,6 +13907,24 @@ function renderDashboard(){
         <svg width="22" height="22" viewBox="0 0 24 24"><polygon points="12,2 20,7 20,17 12,22 4,17 4,7" fill="#c49a3c"/><polygon points="12,22 20,17 20,7 12,12" fill="#a47a2c" opacity=".45"/><path d="M8 18h8M12 15v3" stroke="#fff" stroke-width="1.2" stroke-linecap="round"/><path d="M8 6h8v5a4 4 0 01-8 0V6z" fill="#fff" opacity=".85"/><path d="M8 6H6a1 1 0 00-1 1c0 1.5 1 2 2 2h1M16 6h2a1 1 0 011 1c0 1.5-1 2-2 2h-1" fill="none" stroke="#fff" stroke-width="1" opacity=".6"/></svg>
         <div class="dash-mini-lbl">Ranking</div>
       </button>
+    </div>
+
+    <!-- ── STATS STRIP (passive context — moved below the actionable plan) ── -->
+    <div class="dash-stats">
+      ${[
+        {num:sessions.length, lbl:LANG==='en'?'Exams':'Exámenes', target:sessions.length, col:'#c49a3c', colD:'#a47a2c', col2:'#e4be68'},
+        {num:(avg||0)+'%', lbl:LANG==='en'?'Average':'Media', target:avg||0, suffix:'%', col:'#4d8a5e', colD:'#3a6a4a', col2:'#7aae8c'},
+        {num:known, lbl:LANG==='en'?'Mastered':'Dominados', target:known, col:'#4888a0', colD:'#36687a', col2:'#6aa8bc'},
+        {num:fc, lbl:LANG==='en'?'Cards':'Tarjetas', target:fc, col:'#7a6aaa', colD:'#5a4a8a', col2:'#9e82c8'}
+      ].map((s,i)=>`<div class="dash-stat" style="--ds-c:${s.col};--ds-c2:${s.col2};--ds-cd:${s.colD};animation-delay:${i*70}ms">
+        <span class="dash-stat-corner tl"></span>
+        <span class="dash-stat-corner tr"></span>
+        <span class="dash-stat-corner bl"></span>
+        <span class="dash-stat-corner br"></span>
+        <div class="dash-stat-icon"><svg width="14" height="14" viewBox="0 0 14 14"><polygon points="7,1 13,7 7,13 1,7" fill="${s.col}" opacity=".85"/><polygon points="7,1 10,7 7,10 4,7" fill="${s.col2}" opacity=".8"/><circle cx="7" cy="7" r="1.4" fill="#fff" opacity=".7"/></svg></div>
+        <div class="dash-stat-num" data-target="${s.target||0}" data-suffix="${s.suffix||''}">${s.num}</div>
+        <div class="dash-stat-lbl">${s.lbl}</div>
+      </div>`).join('')}
     </div>
 
     <!-- ── PROGRESS RINGS ── -->
