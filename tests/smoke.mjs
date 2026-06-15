@@ -468,6 +468,46 @@ test('mobile input font-size avoids iOS Safari auto-zoom trap', () => {
     assert(min >= 16,
       `${sel} declares font-size ${min}px somewhere — iOS Safari auto-zooms <16px inputs on focus`);
   }
+
+  // Some inputs are styled inline (no CSS class) instead of via
+  // styles.css. Audit those by id directly against the inline style
+  // attribute on the <input id="..."> tag.
+  // Currently audited: maridajeSearch (sommelier pairing search).
+  const html = read('index.html');
+  for (const id of ['maridajeSearch']) {
+    const tagRe = new RegExp(`id="${id}"[^>]*style="([^"]+)"`);
+    const tagMatch = html.match(tagRe);
+    assert(tagMatch, `<input id="${id}"> not found with inline style`);
+    const sizeMatch = tagMatch[1].match(/font-size:\s*([\d.]+)(rem|px|em)/);
+    assert(sizeMatch, `#${id} no inline font-size declared`);
+    const px = sizeMatch[2] === 'px'
+      ? parseFloat(sizeMatch[1])
+      : parseFloat(sizeMatch[1]) * 16;
+    assert(px >= 16,
+      `#${id} inline font-size is ${px}px — iOS Safari auto-zooms <16px inputs on focus`);
+  }
+});
+
+test('live quiz answer submission guards against double-tap race', () => {
+  // submitLiveAnswer does a read-modify-write of sess.answers (not an
+  // atomic upsert). On slow restaurant Wi-Fi the round trip can take
+  // seconds; a second tap on another choice before the first resolves
+  // races the first and can silently overwrite it — the camarero's
+  // first (intended) answer gets replaced by whichever network call
+  // resolves last. The handler must disable #liveChoices buttons and
+  // bail on re-entry *before* the first await, synchronously on tap.
+  const startIdx = html.search(/async function submitLiveAnswer\(/);
+  assert(startIdx !== -1, 'submitLiveAnswer not found');
+  const slice = html.slice(startIdx, startIdx + 800);
+  const firstAwaitIdx = slice.search(/\bawait\b/);
+  assert(firstAwaitIdx !== -1, 'submitLiveAnswer has no await — guard expectations stale');
+  const beforeAwait = slice.slice(0, firstAwaitIdx);
+  assert(/#liveChoices button/.test(beforeAwait),
+    'submitLiveAnswer must inspect/disable #liveChoices buttons before the first await');
+  assert(/\.disabled\s*=\s*true/.test(beforeAwait),
+    'submitLiveAnswer must disable choice buttons before the first await — double-tap can overwrite the first answer');
+  assert(/return/.test(beforeAwait),
+    'submitLiveAnswer must bail out early on re-entry (already-disabled buttons) before the first await');
 });
 
 // ─── 7. No leftover git conflict markers ────────────────────────

@@ -13510,7 +13510,7 @@ function _renderWineService(c, bar){
     <div style="margin-bottom:1.8rem">
       <div class="section-eyebrow">${_en?'◇ Quick Pairing Guide':'◇ Guía Rápida de Maridaje'}</div>
       <div style="margin-bottom:.6rem;position:relative">
-        <input type="text" id="maridajeSearch" placeholder="${_en?'Search dish...':'Buscar plato...'}" oninput="_filterMaridaje(this.value)" style="width:100%;box-sizing:border-box;padding:.55rem .8rem .55rem 2rem;border:1.5px solid var(--line);border-radius:var(--r3);background:var(--ink);font-family:'Quicksand',sans-serif;font-size:.78rem;color:var(--parchment);outline:none;transition:border-color .2s" onfocus="this.style.borderColor='var(--gold)'" onblur="this.style.borderColor='var(--line)'"/>
+        <input type="text" id="maridajeSearch" placeholder="${_en?'Search dish...':'Buscar plato...'}" oninput="_filterMaridaje(this.value)" style="width:100%;box-sizing:border-box;padding:.55rem .8rem .55rem 2rem;border:1.5px solid var(--line);border-radius:var(--r3);background:var(--ink);font-family:'Quicksand',sans-serif;font-size:16px;color:var(--parchment);outline:none;transition:border-color .2s" onfocus="this.style.borderColor='var(--gold)'" onblur="this.style.borderColor='var(--line)'"/>
         <svg style="position:absolute;left:.6rem;top:50%;transform:translateY(-50%);opacity:.3" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--parchment)" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35"/></svg>
       </div>
       <div id="maridajeResults" style="display:flex;flex-direction:column;gap:.35rem;max-height:400px;overflow-y:auto;-webkit-overflow-scrolling:touch;scrollbar-width:thin">
@@ -16730,6 +16730,12 @@ async function submitLiveAnswer(code, qIdx, choiceIdx){
   if(!questions || !questions[qIdx]) return;
   const answer = questions[qIdx].choices[choiceIdx];
   if(typeof answer === 'undefined') return;
+  // Disable all choice buttons immediately so a double-tap (or a second tap
+  // while the round-trip is in flight on slow Wi-Fi) can't overwrite the
+  // first answer before the re-render lands.
+  const choiceBtns = document.querySelectorAll('#liveChoices button');
+  if([...choiceBtns].some(b=>b.disabled)) return;
+  choiceBtns.forEach(b=>{ b.disabled=true; b.style.opacity='.5'; });
   await supaSubmitLiveAnswer(decoded, currentUser, qIdx, answer);
   const sess = await supaGetLiveSession(decoded);
   if(sess) renderLiveQuizQuestion(decoded, questions, qIdx, jParse(sess.answers, {}));
