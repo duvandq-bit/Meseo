@@ -468,6 +468,24 @@ test('mobile input font-size avoids iOS Safari auto-zoom trap', () => {
     assert(min >= 16,
       `${sel} declares font-size ${min}px somewhere — iOS Safari auto-zooms <16px inputs on focus`);
   }
+
+  // Some inputs are styled inline (no CSS class) instead of via
+  // styles.css. Audit those by id directly against the inline style
+  // attribute on the <input id="..."> tag.
+  // Currently audited: maridajeSearch (sommelier pairing search).
+  const html = read('index.html');
+  for (const id of ['maridajeSearch']) {
+    const tagRe = new RegExp(`id="${id}"[^>]*style="([^"]+)"`);
+    const tagMatch = html.match(tagRe);
+    assert(tagMatch, `<input id="${id}"> not found with inline style`);
+    const sizeMatch = tagMatch[1].match(/font-size:\s*([\d.]+)(rem|px|em)/);
+    assert(sizeMatch, `#${id} no inline font-size declared`);
+    const px = sizeMatch[2] === 'px'
+      ? parseFloat(sizeMatch[1])
+      : parseFloat(sizeMatch[1]) * 16;
+    assert(px >= 16,
+      `#${id} inline font-size is ${px}px — iOS Safari auto-zooms <16px inputs on focus`);
+  }
 });
 
 // ─── 7. No leftover git conflict markers ────────────────────────
