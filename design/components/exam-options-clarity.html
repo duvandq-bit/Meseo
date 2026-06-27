@@ -11,7 +11,9 @@
 <style>
   :root{
     --ink:#f4ede2; --parchment:#1c2a22;
-    --gold:#c49a3c; --gold3:#e4be68; --sage:#4d8a5e; --rose:#c47068;
+    --gold:#c49a3c; --gold3:#e4be68;
+    --sage:#4d8a5e; --sage-dk:#2d6a3e;   /* badge correcto — 6.48:1 con blanco */
+    --rose:#c47068; --rose-dk:#a85848;    /* badge incorrecto — 5.05:1 con blanco */
     --line:rgba(196,154,60,.14);
     --font-sans:'Quicksand',sans-serif; --font-serif:'Cinzel',serif; --font-mono:'DM Mono',monospace;
   }
@@ -44,15 +46,15 @@
   .choice.sel{border-color:rgba(196,154,60,.45);box-shadow:0 2px 12px rgba(28,42,34,.08);transform:translateY(-1px)}
   .choice.sel .choice-ltr{background:var(--gold);color:#fff}
 
-  /* correcto: verde + icono ✓ */
+  /* correcto: fila verde claro, badge VERDE OSCURO → letra blanca nítida + ✓ */
   .choice.correct{border-color:var(--sage);background:linear-gradient(155deg,rgba(77,138,94,.12),rgba(77,138,94,.05));box-shadow:0 0 16px rgba(77,138,94,.14)}
-  .choice.correct .choice-ltr{background:var(--sage);color:#fff}
-  .choice.correct .choice-mark{opacity:1;color:var(--sage)}
+  .choice.correct .choice-ltr{background:var(--sage-dk);color:#fff}
+  .choice.correct .choice-mark{opacity:1;color:var(--sage-dk)}
 
-  /* incorrecto: rojo + icono ✕ */
+  /* incorrecto: fila roja clara, badge ROJO OSCURO → letra blanca nítida + ✕ */
   .choice.wrong{border-color:var(--rose);background:linear-gradient(155deg,rgba(196,112,104,.12),rgba(196,112,104,.05))}
-  .choice.wrong .choice-ltr{background:var(--rose);color:#fff}
-  .choice.wrong .choice-mark{opacity:1;color:var(--rose)}
+  .choice.wrong .choice-ltr{background:var(--rose-dk);color:#fff}
+  .choice.wrong .choice-mark{opacity:1;color:var(--rose-dk)}
 </style>
 </head>
 <body>
@@ -69,11 +71,12 @@
   <div id="answered"></div>
 
   <div class="recipe">
-    <b>Claridad (A) frente a la Mezcla:</b><br>
-    · Badge <b>circular en DM Mono</b> (no cuadrado serif) — más sobrio<br>
-    · <b>Sin barra dorada</b> a la izquierda — la selección se marca con borde + badge<br>
-    · Conserva el icono ✓/✕, el badge que toma color de estado y el tap de 52px<br>
-    · Es el cambio de <b>menor diff</b> sobre el .choice actual
+    <b>Claridad (A) — elegida:</b><br>
+    · Badge <b>circular en DM Mono</b>, sobrio, cercano al .choice actual<br>
+    · <b>Sin barra dorada</b> — la selección se marca con borde + badge<br>
+    · Icono ✓/✕ + badge que toma color de estado + tap de 52px<br>
+    · <b>Badge correcto/incorrecto en tono OSCURO</b> (verde 6.5:1, rojo 5.0:1)
+      para que la letra blanca se lea — antes el verde/rojo claro fallaba (4.1 / 3.6:1)
   </div>
 
 <script>
