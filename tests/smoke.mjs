@@ -536,6 +536,21 @@ test('pinSubmit guards against re-entrant double-submit', () => {
     'pinSubmit must clear the in-flight flag in a finally block so the next PIN entry is not permanently blocked');
 });
 
+test('PWA theme-color is unified across manifest and meta tag', () => {
+  // The launch splash on installed Android PWAs is drawn by the OS from
+  // the manifest. Keeping theme_color == background_color (the brand dark
+  // green #1c2a22) makes the status bar and splash one cohesive surface
+  // instead of a black flash. The <meta name="theme-color"> must match the
+  // manifest so the in-app status bar doesn't drift back to black.
+  const manifest = JSON.parse(read('manifest.json'));
+  assert(manifest.theme_color === manifest.background_color,
+    `manifest theme_color (${manifest.theme_color}) != background_color (${manifest.background_color}) — splash/status-bar mismatch returns`);
+  const meta = html.match(/<meta\s+name="theme-color"\s+content="([^"]+)"/i);
+  assert(meta, 'meta theme-color tag missing');
+  assert(meta[1].toLowerCase() === manifest.theme_color.toLowerCase(),
+    `<meta theme-color> (${meta[1]}) != manifest theme_color (${manifest.theme_color}) — they must stay in sync`);
+});
+
 test('Servicio Fantasma inactivity trigger stays disabled', () => {
   // The Servicio Fantasma drill used to intercept returning users on login
   // when inactive >= 7 days. The owner asked to remove that interception.
