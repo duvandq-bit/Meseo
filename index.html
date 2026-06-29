@@ -13845,7 +13845,7 @@ function renderDashboard(){
       ${_rankProg ? `
       <div class="dash-alert" style="--da-c:#c49a3c;cursor:default;flex-direction:column;align-items:stretch;gap:.45rem;padding:.75rem 1rem">
         <div style="display:flex;align-items:center;gap:.65rem">
-          <div style="font-size:1.3rem;line-height:1;flex-shrink:0" aria-hidden="true">${_rankProg.nextIcon}</div>
+          <div class="dash-num" aria-hidden="true"><span class="emoji">${_rankProg.nextIcon}</span></div>
           <div style="flex:1;min-width:0">
             <div class="dash-alert-title" style="color:#a47a2c">${_en?'Next rank':'Próximo rango'}: ${_rankProg.nextLabel}</div>
             <div class="dash-alert-sub">${_rankProg.dishesNeeded>0 ? `${_rankProg.dishesNeeded} ${_en?(_rankProg.dishesNeeded===1?'dish to master':'dishes to master'):(_rankProg.dishesNeeded===1?'plato por dominar':'platos por dominar')}` : (_en?'Mastery reached':'Dominio alcanzado')}${_rankProg.needsAcc ? ` · ${_en?'accuracy':'precisión'} ${_rankProg.curAccuracy}%` : ''}</div>
@@ -13857,11 +13857,11 @@ function renderDashboard(){
         </div>
       </div>` : ''}
       ${_weakDisplay ? `
-      <button class="dash-alert" style="--da-c:#c47068;min-height:56px;border:none;width:100%;text-align:left" onclick="_startSmartSession()" aria-label="${_en?`Practice weak ${_weakDisplay.type_en}: ${_weakDisplay.label}`:`Practicar ${_weakDisplay.type_es} débil: ${_weakDisplay.label}`}">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#c47068" stroke-width="1.5" aria-hidden="true"><polygon points="12,2 20,7 20,17 12,22 4,17 4,7" fill="#c47068"/><polygon points="12,22 20,17 20,7 12,12" fill="#a85848" opacity=".4"/><circle cx="12" cy="12" r="5" fill="none" stroke="#fff" stroke-width="1.3"/><circle cx="12" cy="12" r="2" fill="#fff"/></svg>
+      <button class="dash-alert" style="--da-c:#c47068;min-height:64px;border:none;width:100%;text-align:left" onclick="_startSmartSession()" aria-label="${_en?`Practice weak ${_weakDisplay.type_en}: ${_weakDisplay.label} — ${_weakDisplay.count} ${_weakDisplay.count===1?'miss':'misses'}`:`Practicar ${_weakDisplay.type_es} débil: ${_weakDisplay.label} — ${_weakDisplay.count} ${_weakDisplay.count===1?'fallo':'fallos'}`}">
+        <div class="dash-num" aria-hidden="true">${_weakDisplay.count}</div>
         <div class="dash-alert-body">
           <div class="dash-alert-title">${_en?'Focus practice':'Práctica enfocada'}: ${escapeHTML(_weakDisplay.label)}</div>
-          <div class="dash-alert-sub">${_weakDisplay.count} ${_en?(_weakDisplay.count===1?'miss':'misses'):(_weakDisplay.count===1?'fallo':'fallos')} · ${_en?'start smart review':'inicia repaso inteligente'}</div>
+          <div class="dash-alert-sub">${_en?'start smart review':'inicia repaso inteligente'}</div>
         </div>
         <span class="dash-alert-arrow">›</span>
       </button>` : ''}
@@ -13869,16 +13869,16 @@ function renderDashboard(){
 
     <!-- ── URGENT ALERT (weak topic) ── -->
     ${weakTopic && weakTopic.pct < 60 ? `
-    <div class="dash-alert" style="--da-c:#c47068" onclick="showTab('exam')">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#c47068" stroke-width="1.5"><polygon points="12,2 20,7 20,17 12,22 4,17 4,7" fill="#c47068"/><polygon points="12,22 20,17 20,7 12,12" fill="#a85848" opacity=".4"/><path d="M12 8v4M12 14v.5" stroke="#fff" stroke-width="1.5" stroke-linecap="round"/></svg>
+    <div class="dash-alert" style="--da-c:#c47068;min-height:64px" onclick="showTab('exam')">
+      <div class="dash-num" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><polygon points="12,2 20,7 20,17 12,22 4,17 4,7" fill="#c47068"/><path d="M12 8v4M12 15v.5" stroke="#fff" stroke-width="1.8" stroke-linecap="round"/></svg></div>
       <div class="dash-alert-body">
         <div class="dash-alert-title">${LANG==='en'?'Needs practice':'Necesita práctica'}: ${weakTopic.label}</div>
         <div class="dash-alert-sub">${weakTopic.pct}% ${LANG==='en'?'accuracy — tap to practice':'precisión — toca para practicar'}</div>
       </div>
       <span class="dash-alert-arrow">›</span>
     </div>` : bestTopic && bestTopic.pct >= 80 ? `
-    <div class="dash-alert" style="--da-c:#4d8a5e;cursor:default">
-      <svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,2 20,7 20,17 12,22 4,17 4,7" fill="#4d8a5e"/><polygon points="12,22 20,17 20,7 12,12" fill="#3a6a4a" opacity=".4"/><polyline points="8 13 11 16 16 9" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    <div class="dash-alert" style="--da-c:#4d8a5e;cursor:default;min-height:64px">
+      <div class="dash-num" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><polygon points="12,2 20,7 20,17 12,22 4,17 4,7" fill="#4d8a5e"/><polyline points="8 13 11 16 16 9" fill="none" stroke="#fff" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
       <div class="dash-alert-body">
         <div class="dash-alert-title">${LANG==='en'?'Excellent!':'¡Excelente!'} ${bestTopic.label}</div>
         <div class="dash-alert-sub">${bestTopic.pct}% ${LANG==='en'?'accuracy':'precisión'}</div>

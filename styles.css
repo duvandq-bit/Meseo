@@ -6321,6 +6321,10 @@ body::after{
   display:flex;align-items:center;justify-content:center;
   font-family:'Cinzel',serif;font-weight:700;font-size:1.3rem;
   color:var(--da-c,#c49a3c);line-height:1;position:relative;z-index:1}
+/* badge can also hold an svg state icon or an emoji rank glyph instead
+   of a number — number where there's a count, icon where it's a state */
+.dash-num svg{width:24px;height:24px}
+.dash-num .emoji{font-size:1.4rem;line-height:1}
 
 .sound-toggle{
   position:fixed;bottom:14px;left:12px;

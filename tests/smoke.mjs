@@ -544,8 +544,15 @@ test('dashboard review alert uses the .dash-num data badge', () => {
   const css = read('styles.css');
   assert(/\.dash-num\s*\{[^}]*width:\s*44px/.test(css),
     '.dash-num badge style missing or resized — data-badge redesign lost');
-  assert(/class="dash-num"/.test(html),
-    'dashboard review alert must render the .dash-num badge');
+  // The badge is now generalised to all dashboard alerts (review, rank,
+  // focus practice, needs-practice, excellent). Count the render sites so
+  // a regression that drops the badge from some cards is caught.
+  const badgeUses = (html.match(/class="dash-num"/g) || []).length;
+  assert(badgeUses >= 5,
+    `.dash-num used on only ${badgeUses} dashboard alerts; expected >= 5 after generalising the badge`);
+  // svg/emoji sub-styles must exist so icon/rank badges size correctly.
+  assert(/\.dash-num svg\s*\{[^}]*width:\s*24px/.test(css),
+    '.dash-num svg sizing missing — icon badges will render at wrong size');
   // Subtitle legibility bump shipped alongside: must clear the old .58rem.
   const sub = (css.match(/\.dash-alert-sub\s*\{([^}]*)\}/) || [])[1] || '';
   const subSize = (sub.match(/font-size:\s*([\d.]+)rem/) || [])[1];
