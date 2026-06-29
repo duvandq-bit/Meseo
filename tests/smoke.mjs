@@ -536,6 +536,22 @@ test('pinSubmit guards against re-entrant double-submit', () => {
     'pinSubmit must clear the in-flight flag in a finally block so the next PIN entry is not permanently blocked');
 });
 
+test('sub-tabs are tappable and use the flat (Sobria) active style', () => {
+  // .tunic-stab tap target was ~34px; the "Sobria" redesign sets a 44px
+  // min-height and a legible label, and drops the heavy pulsing aura on
+  // the active tab (no tunic-stab-aura animation).
+  const css = read('styles.css');
+  const base = (css.match(/\.tunic-stab\s*\{([^}]*)\}/) || [])[1] || '';
+  assert(/min-height:\s*44px/.test(base),
+    '.tunic-stab lost its 44px min tap target');
+  const lblSize = (base.match(/font-size:\s*([\d.]+)rem/) || [])[1];
+  assert(lblSize && parseFloat(lblSize) >= 0.64,
+    `.tunic-stab font-size ${lblSize}rem fell below the legible floor (.64rem)`);
+  const active = (css.match(/\.tunic-stab\.active\s*\{([^}]*)\}/) || [])[1] || '';
+  assert(!/tunic-stab-aura/.test(active),
+    'the pulsing aura animation came back to the active sub-tab — Sobria removed it');
+});
+
 test('flashcard hint + rating buttons stay legible and accessible', () => {
   // Flip hint was .52rem (~8px) with no flip affordance; rating buttons
   // packed a decorative keyboard glyph and the "Repasar" red failed WCAG

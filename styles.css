@@ -1828,9 +1828,9 @@ body::after{
 .tunic-stab{
   position:relative;flex:0 0 auto;flex-shrink:0;
   display:flex;align-items:center;gap:.4rem;
-  padding:.55rem .85rem .6rem;
+  padding:.7rem .95rem;min-height:44px;
   border-radius:9px;
-  font-family:'Cinzel',serif;font-size:.62rem;font-weight:500;cursor:pointer;
+  font-family:'Cinzel',serif;font-size:.66rem;font-weight:500;cursor:pointer;
   white-space:nowrap;
   letter-spacing:.14em;text-transform:uppercase;
   scroll-snap-align:center;
@@ -1878,32 +1878,17 @@ body::after{
 .tunic-stab:hover::after{ width:42% }
 
 /* ── ACTIVE TAB — divine hex medallion with pulsing aura ── */
+/* "Sobria" active: flat brand gold instead of the heavy aura medallion —
+   cleaner on a horizontally-scrolling bar. No pulsing aura/halo animation. */
 .tunic-stab.active{
   color:#fbf1d6;
-  background:
-    linear-gradient(180deg, rgba(255,246,226,.32) 0%, rgba(255,246,226,0) 45%),
-    radial-gradient(ellipse 120% 80% at 50% 0%, #e8c275 0%, transparent 68%),
-    linear-gradient(145deg,#c49a3c 0%,#9a7340 55%,#7a5a2c 100%);
-  border:1px solid rgba(90,60,20,.4);
-  text-shadow:0 1px 2px rgba(0,0,0,.32), 0 0 10px rgba(255,246,226,.28);
-  box-shadow:
-    0 1px 0 rgba(255,246,226,.45) inset,
-    0 -1px 0 rgba(0,0,0,.18) inset,
-    0 2px 0 #5a4020,
-    0 5px 14px rgba(154,115,64,.4),
-    0 8px 22px rgba(154,115,64,.25),
-    0 0 18px rgba(228,196,122,.35);
-  animation:tunic-stab-in .42s cubic-bezier(.2,.8,.3,1), tunic-stab-aura 3.2s ease-in-out infinite .42s;
+  background:linear-gradient(145deg,#c49a3c 0%,#9a7340 100%);
+  border:1px solid rgba(90,60,20,.35);
+  text-shadow:0 1px 1px rgba(0,0,0,.25);
+  box-shadow:0 1px 0 rgba(255,246,226,.35) inset, 0 2px 8px rgba(154,115,64,.3);
+  animation:tunic-stab-in .42s cubic-bezier(.2,.8,.3,1);
 }
-.tunic-stab.active::before{
-  opacity:1;transform:scale(1.1);
-  background:radial-gradient(ellipse 100% 90% at 50% 50%,
-    rgba(228,196,122,.4) 0%,
-    rgba(196,154,60,.16) 45%,
-    transparent 78%);
-  filter:blur(1.5px);
-  animation:tunic-stab-halo 3.2s ease-in-out infinite;
-}
+.tunic-stab.active::before{ opacity:0 }
 .tunic-stab.active::after{ width:0 }
 
 @keyframes tunic-stab-in{
