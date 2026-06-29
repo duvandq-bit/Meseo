@@ -536,6 +536,18 @@ test('pinSubmit guards against re-entrant double-submit', () => {
     'pinSubmit must clear the in-flight flag in a finally block so the next PIN entry is not permanently blocked');
 });
 
+test('login inputs are >=16px so iOS does not zoom on focus', () => {
+  // .login-input (name / PIN / password) was .9rem (14.4px) — iOS Safari
+  // auto-zooms inputs under 16px on focus, shifting the whole login. Must
+  // stay at the 16px floor, like svc-search / maridajeSearch.
+  const css = read('styles.css');
+  const rule = (css.match(/\.login-input\s*\{([^}]*)\}/) || [])[1] || '';
+  const m = rule.match(/font-size:\s*([\d.]+)(px|rem)/);
+  assert(m, '.login-input has no font-size');
+  const px = m[2] === 'px' ? parseFloat(m[1]) : parseFloat(m[1]) * 16;
+  assert(px >= 16, `.login-input font-size is ${px}px (<16) — iOS will zoom on focus`);
+});
+
 test('exam results ring is a real progress ring with result colour', () => {
   // The results ring was a decorative gold border with a gold % at
   // 2.25:1 on cream. Now it's a conic-gradient that fills to the score
