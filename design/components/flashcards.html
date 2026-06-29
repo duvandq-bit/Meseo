@@ -1,0 +1,105 @@
+<!-- @dsCard group="Components" name="Flashcards (.fc-*)" subtitle="Cara + botones de valoración · actual vs mejorado" -->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Txoko · Flashcards</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Quicksand:wght@300;400;500;600;700&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#f4ede2; --parchment:#1c2a22; --parch2:rgba(28,42,34,.82); --parch4:rgba(28,42,34,.45);
+    --gold:#c49a3c; --gold3:#e4be68; --gold-a:rgba(196,154,60,.14); --gold-b:rgba(196,154,60,.06);
+    --line:rgba(196,154,60,.14); --font-sans:'Quicksand',sans-serif; --font-serif:'Cinzel',serif; --font-mono:'DM Mono',monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--parchment);font-family:var(--font-sans);padding:1.5rem 1rem 4rem;max-width:460px;margin:0 auto}
+  h1{font-family:var(--font-serif);font-weight:600;font-size:1.4rem;color:var(--gold3);letter-spacing:.04em}
+  .sub{font-family:var(--font-mono);font-size:.6rem;color:#bfb5a3;text-transform:uppercase;letter-spacing:.14em;margin-bottom:1.5rem}
+  h2{font-family:var(--font-mono);font-size:.7rem;color:var(--gold);letter-spacing:.12em;text-transform:uppercase;margin:2rem 0 .6rem;padding-bottom:.5rem;border-bottom:1px solid var(--line)}
+  .blurb{font-size:.74rem;color:#cfc5b3;margin-bottom:1rem;line-height:1.45}
+  .blurb b{color:var(--gold3)}
+
+  /* cara de flashcard (front) */
+  .fc-face{position:relative;background:linear-gradient(155deg,#faf6ee,#f0e8d8);
+    border:1.5px solid rgba(196,154,60,.15);border-radius:16px;
+    padding:1.8rem 1.2rem;display:flex;flex-direction:column;align-items:center;justify-content:center;
+    min-height:240px;box-shadow:0 4px 16px rgba(28,42,34,.08);margin-bottom:.6rem}
+  .fc-topic-chip{font-family:var(--font-mono);font-size:.56rem;letter-spacing:.18em;text-transform:uppercase;
+    color:var(--gold);border:1px solid var(--gold-a);border-radius:20px;padding:.22rem .85rem;margin-bottom:1rem;background:var(--gold-b)}
+  .fc-dish{font-family:var(--font-serif);font-size:1.85rem;font-weight:400;color:var(--parchment);line-height:1.15;text-align:center}
+
+  /* hint actual */
+  .hint0{position:absolute;bottom:1.1rem;font-family:var(--font-mono);font-size:.52rem;letter-spacing:.16em;color:var(--parch4);text-transform:uppercase}
+  /* hint mejorado: más grande + icono girar */
+  .hintA{position:absolute;bottom:1.1rem;display:flex;align-items:center;gap:.4rem;
+    font-family:var(--font-mono);font-size:.64rem;letter-spacing:.1em;color:rgba(28,42,34,.6);text-transform:uppercase}
+  .hintA svg{width:14px;height:14px;stroke:var(--gold);fill:none;stroke-width:1.8}
+
+  /* botones de valoración */
+  .fc-rating{display:flex;gap:.5rem;margin-top:.4rem}
+  .fc-rate-btn{flex:1;min-width:0;padding:.6rem .4rem;border-radius:11px;cursor:pointer;
+    font-family:var(--font-serif);font-weight:500;letter-spacing:.04em;border:1.5px solid;
+    background:linear-gradient(155deg,#faf6ee,#f0e8d8);display:flex;flex-direction:column;align-items:center;gap:.35rem;
+    box-shadow:0 2px 0 rgba(28,42,34,.08),inset 0 1px 0 rgba(255,255,255,.7)}
+  .fc-rate-btn svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+
+  /* actual: 3 elementos (kbd ◇ + rune + label .7rem) */
+  .v0 .fc-rate-btn{font-size:.7rem;min-height:62px}
+  .v0 .kbd{font-size:.7rem;opacity:.5}
+  .v0 .rune{width:18px;height:18px;display:flex;align-items:center;justify-content:center;border-radius:50%;background:currentColor}
+  .v0 .rune svg{width:11px;height:11px;stroke:#faf6ee}
+  .v0 .lbl{font-size:.66rem}
+
+  /* mejorado: icono claro + label legible, sin el kbd, tap 64px, rojo con contraste */
+  .vA .fc-rate-btn{font-size:.78rem;min-height:64px;gap:.3rem}
+  .vA .lbl{font-size:.72rem}
+
+  .again{color:#b55858;border-color:rgba(201,112,112,.35)}
+  .ok{color:#4d6a96;border-color:rgba(112,149,200,.35)}
+  .good{color:#3e7d52;border-color:rgba(77,138,94,.4)}
+  .vA .again{color:#a04848}  /* corregido: 5.5:1 (antes 4.33, fallaba) */
+</style>
+</head>
+<body>
+  <h1>Flashcards</h1>
+  <div class="sub">cara + botones de valoración</div>
+
+  <h2>Cara frontal — actual</h2>
+  <div class="blurb">El hint "toca para girar" va a <b>.52rem (≈8px)</b> — apenas se ve, y no deja claro
+    que la tarjeta se voltea.</div>
+  <div class="fc-face">
+    <div class="fc-topic-chip">Ingredientes</div>
+    <div class="fc-dish">Calamares a la Andaluza</div>
+    <div class="hint0">Toca para ver ingredientes y alérgenos</div>
+  </div>
+
+  <h2>Cara frontal — mejorada</h2>
+  <div class="blurb">Hint a <b>.64rem</b> con más contraste y un <b>icono de girar ↻</b>, para que se
+    entienda el gesto de un vistazo.</div>
+  <div class="fc-face">
+    <div class="fc-topic-chip">Ingredientes</div>
+    <div class="fc-dish">Calamares a la Andaluza</div>
+    <div class="hintA"><svg viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 3-6.7M3 4v5h5"/></svg> Toca para girar</div>
+  </div>
+
+  <h2>Botones de valoración — actual</h2>
+  <div class="blurb">Tres elementos por botón (◇ teclado + runa + label). Recargado en móvil.</div>
+  <div class="fc-rating v0">
+    <div class="fc-rate-btn again"><span class="kbd">◇</span><span class="rune"><svg viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 3-6.7M3 4v5h5"/></svg></span><span class="lbl">↩ Repasar</span></div>
+    <div class="fc-rate-btn ok"><span class="kbd">◈</span><span class="rune"><svg viewBox="0 0 24 24"><path d="M5 12l4 4L19 7"/></svg></span><span class="lbl">✓ Lo sé</span></div>
+    <div class="fc-rate-btn good"><span class="kbd">✦</span><span class="rune"><svg viewBox="0 0 24 24"><path d="M12 3l2.6 5.6L20 9.4l-4 3.9 1 5.6L12 16.3l-5 2.6 1-5.6-4-3.9 5.4-.8z"/></svg></span><span class="lbl"> Dominado</span></div>
+  </div>
+
+  <h2>Botones de valoración — mejorados</h2>
+  <div class="blurb">Icono claro + label legible (.72rem), sin el símbolo de teclado. Tap target 64px.
+    El rojo de "Repasar" se oscurece un punto (pasaba a 4.33:1, ahora 5.5:1).</div>
+  <div class="fc-rating vA">
+    <div class="fc-rate-btn again"><svg viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 3-6.7M3 4v5h5"/></svg><span class="lbl">Repasar</span></div>
+    <div class="fc-rate-btn ok"><svg viewBox="0 0 24 24"><path d="M5 12l4 4L19 7"/></svg><span class="lbl">Lo sé</span></div>
+    <div class="fc-rate-btn good"><svg viewBox="0 0 24 24"><path d="M12 3l2.6 5.6L20 9.4l-4 3.9 1 5.6L12 16.3l-5 2.6 1-5.6-4-3.9 5.4-.8z"/></svg><span class="lbl">Dominado</span></div>
+  </div>
+</body>
+</html>
