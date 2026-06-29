@@ -1,0 +1,79 @@
+<!-- @dsCard group="Components" name="Sub-pestañas (.tunic-stab)" subtitle="Actual + táctil + sobria" -->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Txoko · Sub-pestañas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Quicksand:wght@300;400;500;600;700&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root{ --gold:#c49a3c; --gold3:#e4be68; --parchment:#1c2a22; --line:rgba(196,154,60,.14);
+    --font-sans:'Quicksand',sans-serif; --font-serif:'Cinzel',serif; --font-mono:'DM Mono',monospace; }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--parchment);font-family:var(--font-sans);padding:1.5rem 1rem 4rem;max-width:460px;margin:0 auto}
+  h1{font-family:var(--font-serif);font-weight:600;font-size:1.4rem;color:var(--gold3);letter-spacing:.04em}
+  .sub{font-family:var(--font-mono);font-size:.6rem;color:#bfb5a3;text-transform:uppercase;letter-spacing:.14em;margin-bottom:1.5rem}
+  h2{font-family:var(--font-mono);font-size:.7rem;color:var(--gold);letter-spacing:.12em;text-transform:uppercase;margin:2rem 0 .6rem;padding-bottom:.5rem;border-bottom:1px solid var(--line)}
+  .blurb{font-size:.74rem;color:#cfc5b3;margin-bottom:1rem;line-height:1.45}
+  .blurb b{color:var(--gold3)}
+  .ruler{height:1px;background:rgba(255,255,255,.06);margin:.4rem 0 0}
+
+  /* contenedor (real) */
+  .tunic-subtabs{position:relative;display:flex;gap:.5rem;overflow-x:auto;padding:.55rem .7rem;
+    flex-wrap:nowrap;max-width:100%;scrollbar-width:none;border-radius:14px;
+    background:radial-gradient(ellipse 70% 120% at 50% -20%, rgba(228,196,122,.16) 0%, rgba(228,196,122,.04) 45%, transparent 75%),linear-gradient(180deg, rgba(251,246,234,.75) 0%, rgba(243,234,207,.55) 100%);
+    border:1px solid rgba(196,154,60,.22);
+    box-shadow:0 1px 0 rgba(255,255,255,.8) inset,0 2px 10px rgba(154,115,64,.06)}
+  .tunic-subtabs::-webkit-scrollbar{display:none}
+  .tunic-stab{position:relative;flex:0 0 auto;display:flex;align-items:center;justify-content:center;gap:.4rem;
+    border-radius:9px;font-family:var(--font-serif);font-weight:500;cursor:pointer;white-space:nowrap;
+    letter-spacing:.12em;text-transform:uppercase;color:rgba(74,64,42,.75);background:transparent;border:1px solid transparent}
+  .tunic-stab.active{color:#fbf1d6;border:1px solid rgba(90,60,20,.4);
+    background:linear-gradient(180deg, rgba(255,246,226,.32) 0%, rgba(255,246,226,0) 45%),radial-gradient(ellipse 120% 80% at 50% 0%, #e8c275 0%, transparent 68%),linear-gradient(145deg,#c49a3c 0%,#9a7340 55%,#7a5a2c 100%);
+    text-shadow:0 1px 2px rgba(0,0,0,.32);box-shadow:0 2px 0 #5a4020,0 5px 14px rgba(154,115,64,.4),0 0 18px rgba(228,196,122,.35)}
+
+  /* ACTUAL */
+  .v0 .tunic-stab{padding:.55rem .85rem .6rem;font-size:.62rem}
+
+  /* TÁCTIL — misma estética, tap 44px + label legible */
+  .vA .tunic-stab{padding:.7rem .95rem;min-height:44px;font-size:.66rem}
+
+  /* SOBRIA — activo plano (sin medallón pesado), tap 44px */
+  .vB .tunic-stab{padding:.7rem .95rem;min-height:44px;font-size:.66rem}
+  .vB .tunic-stab.active{
+    background:linear-gradient(145deg,#c49a3c,#9a7340);border:1px solid rgba(90,60,20,.35);
+    text-shadow:0 1px 1px rgba(0,0,0,.25);box-shadow:0 2px 8px rgba(154,115,64,.3)}
+</style>
+</head>
+<body>
+  <h1>Sub-pestañas</h1>
+  <div class="sub">.tunic-stab · barra de Aprender</div>
+
+  <h2>Actual</h2>
+  <div class="blurb">Tap target ~34px (bajo el mínimo de 44px) y label a <b>.62rem (≈10px)</b>. El activo
+    es un "medallón" dorado con aura y animación.</div>
+  <div class="v0"><div class="tunic-subtabs" id="t0"></div></div>
+
+  <h2>Variante A — Táctil (conservadora)</h2>
+  <div class="blurb">Exactamente la misma estética (medallón, aura), pero <b>tap target 44px</b> y label a
+    <b>.66rem</b>. Solo arregla lo táctil; conserva todo el carácter.</div>
+  <div class="vA"><div class="tunic-subtabs" id="tA"></div></div>
+
+  <h2>Variante B — Sobria</h2>
+  <div class="blurb">Tap 44px + label legible, y el activo pasa a un <b>dorado más plano</b> (sin el medallón
+    con aura pesada). Más limpio y moderno; menos ornamentación.</div>
+  <div class="vB"><div class="tunic-subtabs" id="tB"></div></div>
+
+<script>
+  const tabs=[['Explorar',0],['Repaso Int.',1],['Flashcards',0],['Videos',0]];
+  const active=1; // "Repaso Inteligente" activa
+  function fill(id){
+    const el=document.getElementById(id);
+    el.innerHTML=tabs.map((t,i)=>`<button class="tunic-stab${i===active?' active':''}">${t[0]}${t[1]?' <span>🔴</span>':''}</button>`).join('');
+  }
+  ['t0','tA','tB'].forEach(fill);
+</script>
+</body>
+</html>
