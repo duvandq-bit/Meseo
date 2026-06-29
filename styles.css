@@ -252,8 +252,8 @@ body::after{
   text-shadow:0 0 30px rgba(228,190,104,.2);
 }
 .login-subtitle{
-  font-family:'DM Mono',monospace;font-size:.6rem;color:rgba(228,190,104,.5);
-  letter-spacing:.2em;text-transform:uppercase;
+  font-family:'DM Mono',monospace;font-size:.66rem;color:rgba(228,190,104,.8);
+  letter-spacing:.16em;text-transform:uppercase;
 }
 .login-card{
   background:linear-gradient(155deg,rgba(28,42,34,.7),rgba(20,32,26,.8));
@@ -6902,7 +6902,9 @@ body::after{
 .login-input{
   width:100%;padding:.7rem .9rem;
   background:rgba(244,237,226,.06);border:1px solid rgba(196,154,60,.15);
-  border-radius:8px;color:#f4ede2;font-family:'Jost',sans-serif;font-size:.9rem;
+  /* 16px (not .9rem) so iOS Safari doesn't auto-zoom on focus and shift
+     the whole cinematic login screen — same trap fixed on svc-search */
+  border-radius:8px;color:#f4ede2;font-family:'Jost',sans-serif;font-size:16px;
   outline:none;transition:border-color .2s,box-shadow .2s;
   box-sizing:border-box;
 }
