@@ -551,7 +551,7 @@ test('smart review screen is stripped to the simulation lead', () => {
   // Owner removed the focus-areas, difficulty-picker and allergen blocks
   // from the smart-review screen; difficulty is auto. Guard they stay out.
   const start = html.indexOf('function renderSmartReview()');
-  const fn = html.slice(start, start + 9000);
+  const fn = html.slice(start, start + 12000);
   assert(!/\$\{focusHTML\}/.test(fn) && !/\$\{diffHTML\}/.test(fn) && !/\$\{allergenHTML\}/.test(fn),
     'a removed block (focus/difficulty/allergens) is back in the smart-review render');
   assert(/const pickedDiff = autoDiff;/.test(html),
@@ -594,7 +594,7 @@ test('smart review leads with the simulation CTA, no live-case block', () => {
   // removed (redundant with the simulation).
   const start = html.indexOf('function renderSmartReview()');
   assert(start !== -1, 'renderSmartReview not found');
-  const fn = html.slice(start, start + 9000);
+  const fn = html.slice(start, start + 12000);
   assert(!/class="ri-case-quote"/.test(fn) && !/id="riCaseQuote"/.test(fn),
     'the EN VIVO / MESA AHORA case block markup is back');
   const ctaIdx = fn.indexOf('class="ri-cta-wrap"');
