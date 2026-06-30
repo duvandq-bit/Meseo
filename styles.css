@@ -1535,8 +1535,9 @@ body::after{
   padding-top:1.2rem;border-top:1px solid rgba(28,42,34,.08);
 }
 .ri-cta{
-  position:relative;display:flex;align-items:center;justify-content:flex-start;gap:1.1rem;
-  padding:1.2rem 1.4rem 1.2rem 1.6rem;width:100%;
+  position:relative;display:flex;align-items:center;justify-content:flex-start;gap:1.2rem;
+  /* bigger lead action now that the screen below it is lighter */
+  padding:1.9rem 1.5rem 1.9rem 1.7rem;width:100%;
   /* Fondo: negro profundo con gradient verde-cyber */
   background:
     radial-gradient(ellipse at 30% 50%,rgba(0,255,65,.08),transparent 60%),
@@ -1646,7 +1647,7 @@ body::after{
 .ri-cta-icon{
   position:relative;z-index:2;
   display:flex;align-items:center;justify-content:center;
-  width:42px;height:42px;
+  width:54px;height:54px;
   /* Hex shape NieR */
   clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);
   background:linear-gradient(165deg,rgba(0,255,90,.18),rgba(0,255,90,.04));
@@ -1668,8 +1669,8 @@ body::after{
 
 /* Texto principal — NieR style elegante con glow */
 .ri-cta-top{
-  font-family:'Cinzel',serif;font-size:1rem;font-weight:600;
-  letter-spacing:.28em;
+  font-family:'Cinzel',serif;font-size:1.3rem;font-weight:600;
+  letter-spacing:.24em;
   color:#dffff0;
   text-shadow:
     0 0 4px rgba(0,255,90,.7),
@@ -1701,7 +1702,7 @@ body::after{
 
 /* Subtítulo — terminal style con brackets */
 .ri-cta-sub{
-  font-family:'DM Mono',monospace;font-size:.55rem;font-weight:500;
+  font-family:'DM Mono',monospace;font-size:.66rem;font-weight:500;
   color:rgba(127,255,159,.78);letter-spacing:.18em;text-transform:uppercase;
   display:flex;align-items:center;gap:.45rem;
   text-shadow:0 0 5px rgba(0,255,90,.4);
