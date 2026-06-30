@@ -6872,12 +6872,12 @@ function _subTabBar(tabs, activeTab, parentTab){
 
 function renderAprender(){
   const c=document.getElementById('appContent');
-  const sub = _subTab.aprender || 'repaso';
+  const sub = _subTab.aprender || 'smart';
   const _en = LANG==='en';
   const _srsCount = _srsDueCount(getEmp(currentUser));
   const bar = _subTabBar([
-    ['repaso',_en?'Explore':'Explorar',''],
     ['smart',_en?'Smart Review':'Repaso Inteligente',_srsCount>0?'🔴':'🧠'],
+    ['repaso',_en?'Explore':'Explorar',''],
     ['flashcards','Flashcards',''],
     ['videos',_en?'Videos':'Videos','']
   ], sub, 'aprender');
