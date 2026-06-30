@@ -4339,7 +4339,8 @@ function renderSmartReview(){
   const ad = _adaptiveGetData(emp);
   const accuracy = ad.totalQuizzes > 0 ? Math.round((ad.totalCorrect/ad.totalQuizzes)*100) : 0;
   const autoDiff = _srGetDifficulty(emp);
-  const pickedDiff = emp.pickedDifficulty || autoDiff;
+  // Difficulty is always auto now (the manual "Elige tu desafío" picker was removed)
+  const pickedDiff = autoDiff;
   const rank = _srGetRank(emp);
   const sessionSize = 5;
   const svc = _riServiceInfo(_en);
@@ -4515,12 +4516,6 @@ function renderSmartReview(){
         </div>
 
         <div class="ri-stats-row">${statsHTML}</div>
-
-        ${focusHTML}
-
-        ${diffHTML}
-
-        ${allergenHTML}
       </div>
     </div>
   `;
@@ -4546,7 +4541,7 @@ function _riSetDifficulty(k){
 // ── Session Start ──
 function _startSmartSession(){
   const emp = getEmp(currentUser);
-  const diff = emp.pickedDifficulty || _srGetDifficulty(emp);
+  const diff = _srGetDifficulty(emp); // always auto — manual picker removed
   const dishes = _adaptiveSelectDishes(emp, 5);
   if(dishes.length === 0){
     // F-P0-2: previously a silent click-and-nothing-happens dead-end. Surface

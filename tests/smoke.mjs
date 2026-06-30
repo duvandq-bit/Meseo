@@ -536,6 +536,17 @@ test('pinSubmit guards against re-entrant double-submit', () => {
     'pinSubmit must clear the in-flight flag in a finally block so the next PIN entry is not permanently blocked');
 });
 
+test('smart review screen is stripped to the simulation lead', () => {
+  // Owner removed the focus-areas, difficulty-picker and allergen blocks
+  // from the smart-review screen; difficulty is auto. Guard they stay out.
+  const start = html.indexOf('function renderSmartReview()');
+  const fn = html.slice(start, start + 9000);
+  assert(!/\$\{focusHTML\}/.test(fn) && !/\$\{diffHTML\}/.test(fn) && !/\$\{allergenHTML\}/.test(fn),
+    'a removed block (focus/difficulty/allergens) is back in the smart-review render');
+  assert(/const pickedDiff = autoDiff;/.test(html),
+    'difficulty must be auto (pickedDiff = autoDiff) now the picker is gone');
+});
+
 test('simulation terminal uses the Pip-Boy phosphor-green palette', () => {
   // The contextual-simulation screen (.smart-terminal) was reskinned to a
   // Fallout Pip-Boy: phosphor green on near-black with a CRT bloom.
