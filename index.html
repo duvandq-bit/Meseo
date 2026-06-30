@@ -4376,10 +4376,14 @@ function renderSmartReview(){
   const bestStreak = ad.streakBest || 0;
   const currStreak = ad.streakCurrent || 0;
   const streakVal = currStreak > 0 ? currStreak : bestStreak;
+  // Line-art SVG icons (not colour emojis) to keep the Pip-Boy terminal monochrome
+  const _icoFlame = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22a7 7 0 0 0 7-7c0-5-4-7-4-11 0 0-3 2-3 6-1 0-2-1-2-3-2 1.5-3 4-3 8a7 7 0 0 0 8 7z"/></svg>';
+  const _icoBolt = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 4 14h7l-1 8 9-12h-7z"/></svg>';
+  const _icoTarget = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.6"/></svg>';
   const statsHTML = [
-    { icon:'🔥', v: streakVal, l: _en?'streak':'racha', c:'#dc5a32', cls: currStreak > 0 ? 'flame' : '' },
-    { icon:'⚡', v: bestStreak, l: _en?'best combo':'mejor combo', c:'#c49a3c', cls:'' },
-    { icon:'🎯', v: ad.totalQuizzes>0 ? accuracy+'%' : '—', l: _en?'precision':'precisión', c:'#4a8f6f', cls:'' }
+    { icon:_icoFlame, v: streakVal, l: _en?'streak':'racha', c:'#dc5a32', cls: currStreak > 0 ? 'flame' : '' },
+    { icon:_icoBolt, v: bestStreak, l: _en?'best combo':'mejor combo', c:'#c49a3c', cls:'' },
+    { icon:_icoTarget, v: ad.totalQuizzes>0 ? accuracy+'%' : '—', l: _en?'precision':'precisión', c:'#4a8f6f', cls:'' }
   ].map(s=>`
     <div class="ri-stat ${s.cls}" style="--stat-c:${s.c}">
       <div class="ri-stat-icon">${s.icon}</div>
