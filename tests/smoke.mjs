@@ -536,6 +536,19 @@ test('pinSubmit guards against re-entrant double-submit', () => {
     'pinSubmit must clear the in-flight flag in a finally block so the next PIN entry is not permanently blocked');
 });
 
+test('Aprender sub-tabs lead with Smart Review, then Explore', () => {
+  // Owner request: Repaso Inteligente (smart) comes before Explorar
+  // (repaso) in the Aprender sub-tab bar, and is the default sub-tab.
+  const bar = html.match(/_subTabBar\(\[\s*([\s\S]*?)\]\s*,\s*sub\s*,\s*'aprender'\)/);
+  assert(bar, 'aprender _subTabBar call not found');
+  const smartIdx = bar[1].indexOf("'smart'");
+  const repasoIdx = bar[1].indexOf("'repaso'");
+  assert(smartIdx !== -1 && repasoIdx !== -1, 'smart/repaso tabs missing');
+  assert(smartIdx < repasoIdx, 'Smart Review must come before Explore in the Aprender sub-tabs');
+  assert(/_subTab\.aprender\s*\|\|\s*'smart'/.test(html),
+    "Aprender default sub-tab must be 'smart' so the first tab is active on open");
+});
+
 test('smart review leads with the simulation CTA, no live-case block', () => {
   // Owner request: the "ENTRAR EN SIMULACIÓN" CTA moves to the top of the
   // smart-review body, and the "EN VIVO · MESA AHORA" single-case block is
