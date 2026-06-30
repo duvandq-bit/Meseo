@@ -1,0 +1,70 @@
+<!-- @dsCard group="Components" name="Videos — acordeón de plato" subtitle="Tap target + contraste de labels" -->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Txoko · Videos</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Quicksand:wght@300;400;500;600;700&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root{ --gold:#c49a3c; --gold-a:rgba(196,154,60,.14); --line2:rgba(196,154,60,.28); --parch2:rgba(28,42,34,.82); --parch4:rgba(28,42,34,.45);
+    --font-sans:'Quicksand',sans-serif; --font-serif:'Cinzel',serif; --font-mono:'DM Mono',monospace; }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:#f4ede2;color:#1c2a22;font-family:var(--font-sans);padding:1.2rem 1rem 3rem;max-width:440px;margin:0 auto}
+  .tag{font-family:var(--font-mono);font-size:.6rem;color:var(--gold);letter-spacing:.12em;text-transform:uppercase;margin:1.7rem 0 .8rem;padding-bottom:.4rem;border-bottom:1px solid var(--gold-a)}
+  .tag:first-child{margin-top:0}
+  .blurb{font-size:.74rem;color:rgba(28,42,34,.7);margin-bottom:1rem;line-height:1.45}
+  .blurb b{color:#7d5c2f}
+  .dish{font-family:var(--font-serif);font-size:1.1rem;color:#1c2a22;margin-bottom:.5rem}
+
+  .acc{border:1.5px solid rgba(196,154,60,.1);border-radius:12px;overflow:hidden}
+  .acc-row{border-bottom:1px solid var(--line2)}
+  .acc-row:last-child{border-bottom:none}
+  .acc-btn{width:100%;display:flex;align-items:center;justify-content:space-between;background:linear-gradient(155deg,#faf6ee,#f0e8d8);border:none;cursor:pointer;text-align:left}
+  .acc-lbl{font-family:var(--font-mono);letter-spacing:.1em;text-transform:uppercase}
+  .acc-arr{color:var(--parch4)}
+  .acc-body{padding:.65rem .85rem .8rem;background:linear-gradient(155deg,#faf6ee,#f0e8d8);border-top:1px solid rgba(196,154,60,.08);font-size:.78rem;color:var(--parch2);line-height:1.65}
+
+  /* ACTUAL: tap ~32px, label .58rem, colores que fallan */
+  .v0 .acc-btn{padding:.6rem .85rem}
+  .v0 .acc-lbl{font-size:.58rem}
+  .v0 .acc-arr{font-size:.6rem}
+  .v0 .c-ing{color:#c49a3c} .v0 .c-alg{color:#c47068} .v0 .c-not{color:#d4944c}
+
+  /* MEJORADO: tap 44px, label .64rem, colores legibles */
+  .vA .acc-btn{padding:.7rem .9rem;min-height:44px}
+  .vA .acc-lbl{font-size:.64rem}
+  .vA .acc-arr{font-size:.7rem}
+  .vA .c-ing{color:#7d5c2f} .vA .c-alg{color:#a04848} .vA .c-not{color:#b06828}
+  .vA .acc-body.open{border-left:3px solid #a04848}
+</style>
+</head>
+<body>
+  <div class="tag">Actual</div>
+  <div class="blurb">Cada pestaña del plato tiene un <b>tap pequeño (~32px)</b>, label a <b>.58rem (≈9px)</b>,
+    y los colores (oro, rojo alérgeno, naranja) <b>fallan contraste</b> (2.4-3.3:1).</div>
+  <div class="dish">Calamares a la Andaluza</div>
+  <div class="acc v0">
+    <div class="acc-row"><button class="acc-btn"><span class="acc-lbl c-ing">Ingredientes</span><span class="acc-arr">&#9662;</span></button></div>
+    <div class="acc-row"><button class="acc-btn"><span class="acc-lbl c-alg">Alérgenos</span><span class="acc-arr">&#9662;</span></button>
+      <div class="acc-body">Moluscos · Gluten · Huevos</div></div>
+    <div class="acc-row"><button class="acc-btn"><span class="acc-lbl c-not">Notas</span><span class="acc-arr">&#9662;</span></button></div>
+  </div>
+
+  <div class="tag">Mejorado</div>
+  <div class="blurb">Tap target <b>44px</b>, label a <b>.64rem</b>, y colores legibles (oro-oscuro, rojo,
+    naranja) ≥5:1 — mismo sistema que el resto de la app.</div>
+  <div class="dish">Calamares a la Andaluza</div>
+  <div class="acc vA">
+    <div class="acc-row"><button class="acc-btn"><span class="acc-lbl c-ing">Ingredientes</span><span class="acc-arr">&#9662;</span></button></div>
+    <div class="acc-row"><button class="acc-btn"><span class="acc-lbl c-alg">Alérgenos</span><span class="acc-arr">&#9652;</span></button>
+      <div class="acc-body open">Moluscos · Gluten · Huevos</div></div>
+    <div class="acc-row"><button class="acc-btn"><span class="acc-lbl c-not">Notas</span><span class="acc-arr">&#9662;</span></button></div>
+  </div>
+
+  <div class="blurb" style="margin-top:1.4rem">Nota: el contenido (ingredientes, alérgenos, notas, vídeos)
+    <b>no se toca</b> — solo el tamaño de las pestañas y el color de las etiquetas.</div>
+</body>
+</html>
