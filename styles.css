@@ -1852,6 +1852,30 @@ body::after{
 .tunic-dd--green .tunic-dd-item:active{background:rgba(34,255,136,.08)}
 .tunic-dd--green .tunic-dd-item.on{color:#c8ffe0;background:rgba(34,255,136,.08);border-left-color:#22ff88}
 
+/* ── Main nav as a dropdown (same Tenet pattern, always gold) ── */
+.nav-dd{position:relative;z-index:95;background:#25352b;padding:.5rem .8rem}
+.nav-dd-trigger{display:flex;align-items:center;justify-content:space-between;gap:.6rem;width:100%;min-height:50px;
+  border-radius:12px;padding:.7rem 1.05rem;cursor:pointer;border:1px solid rgba(196,154,60,.35);
+  font-family:'Cinzel',serif;font-weight:600;font-size:.82rem;letter-spacing:.08em;text-transform:uppercase;
+  color:#e4be68;background:linear-gradient(145deg,#1c2a22,#243028)}
+.nav-dd-trigger:active{transform:translateY(1px)}
+.nav-dd-cur{display:flex;align-items:center;gap:.6rem;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.nav-dd-cur svg{width:18px;height:18px;flex-shrink:0}
+.nav-dd-chev{color:var(--gold);font-size:.85rem;transition:transform .22s ease;flex-shrink:0}
+.nav-dd.open .nav-dd-chev{transform:rotate(180deg)}
+/* the list overrides the old horizontally-scrolling .app-nav */
+.nav-dd .nav-dd-list{position:absolute;top:calc(100% + .35rem);left:.8rem;right:.8rem;z-index:100;
+  display:none;flex-direction:column;overflow:hidden;max-width:none;padding:0;margin:0;
+  background:#faf6ee;border:1px solid rgba(196,154,60,.3);border-radius:14px;box-shadow:0 12px 30px rgba(28,42,34,.22)}
+.nav-dd.open .nav-dd-list{display:flex;animation:ddIn .18s ease both}
+.nav-dd-list .nav-btn{display:flex;align-items:center;gap:.85rem;width:100%;min-height:56px;padding:.9rem 1.1rem;
+  border:none;border-left:4px solid transparent;border-radius:0;background:transparent;cursor:pointer;text-align:left;
+  font-family:'Cinzel',serif;font-weight:500;font-size:.9rem;letter-spacing:.02em;text-transform:none;
+  color:rgba(28,42,34,.75);white-space:nowrap;flex:0 0 auto;margin:0}
+.nav-dd-list .nav-btn + .nav-btn{border-top:1px solid rgba(196,154,60,.14)}
+.nav-dd-list .nav-btn svg{width:19px;height:19px;flex-shrink:0}
+.nav-dd-list .nav-btn.active{color:#7d5c2f;background:rgba(196,154,60,.1);border-left-color:var(--gold);font-weight:600}
+
 .tunic-subtabs{
   position:relative;z-index:5;
   display:flex;gap:.5rem;margin:0 auto 1.6rem;overflow-x:auto;overflow-y:hidden;
