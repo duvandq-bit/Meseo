@@ -571,6 +571,28 @@ test('simulation terminal uses the Pip-Boy phosphor-green palette', () => {
     'the phosphor glow on the title is missing — core of the CRT look');
 });
 
+test('main nav is a dropdown, not a horizontal scroller', () => {
+  // The 8-section top nav scrolled horizontally, hiding half the sections.
+  // It's now a Tenet-style dropdown: a trigger + the .nav-btn list.
+  assert(/id="mainNavDD"/.test(html) && /class="nav-dd-trigger"/.test(html),
+    'main nav dropdown trigger missing');
+  assert(/class="app-nav nav-dd-list"/.test(html),
+    'the nav list must carry the .nav-dd-list class');
+  // showTab must reflect the active section into the trigger + close it
+  assert(/_navCur\.innerHTML = _activeNav\.innerHTML/.test(html),
+    'showTab must update the nav trigger to the active section');
+  assert(/_navDD\.classList\.remove\('open'\)/.test(html),
+    'showTab must close the nav dropdown after navigating');
+  const css = read('styles.css');
+  assert(/\.nav-dd-list \.nav-btn\.active\{[^}]*border-left-color:var\(--gold\)/.test(css),
+    'active nav item must show the gold accent bar');
+});
+
+test('Repaso Inteligente uses a green dot, not a red one', () => {
+  assert(/'Repaso Inteligente',_srsCount>0\?'🟢'/.test(html),
+    'the SRS-due indicator on Repaso Inteligente must be a green dot, not red');
+});
+
 test('sub-tab navigation is a dropdown, not a horizontal scroller', () => {
   // The scrolling .tunic-subtabs bar hid off-screen options. Both the
   // shared _subTabBar and the Vinos bar now render a .tunic-dd dropdown
