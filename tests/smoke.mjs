@@ -616,6 +616,12 @@ test('global search: entry, overlay and deep-link wiring', () => {
   // overlay + input exist and the input is >=16px (no iOS zoom) via .gs-input
   assert(/id="gsOverlay"/.test(html) && /id="gsInput"/.test(html),
     'search overlay + input must exist');
+  // The overlay MUST be hidden by an inline style so a stale styles.css in the
+  // PWA cache can never render it as a full-screen unstyled block over the app.
+  assert(/id="gsOverlay"[^>]*style="display:none"/.test(html),
+    'search overlay must be inline-hidden (stale-CSS safety)');
+  assert(/ov\.style\.display='flex'/.test(html) && /ov\.style\.display='none'/.test(html),
+    'openGlobalSearch/closeGlobalSearch must toggle the inline display');
   assert(/\.gs-input\{[^}]*font-size:16px/.test(css),
     'search input must be >=16px so iOS does not zoom on focus');
   // engine + deep-links into the real detail views
