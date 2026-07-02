@@ -58,7 +58,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="preconnect" href="https://unpkg.com" crossorigin>
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Quicksand:wght@300;400;500;600;700&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400;1,500&family=Quicksand:wght@300;400;500;600;700&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="styles.css">
 <!-- ═══ EXTERNAL DEPS (versions pinned for reproducibility) ═══
      SRI hashes intentionally NOT inlined here — compute them at deploy time:
@@ -9163,7 +9163,8 @@ function renderVinosCarta(){
   c.innerHTML = `
     <div style="padding:.5rem 0 1rem">
       <div class="wine-section-header">
-        <div class="wine-section-title">◇ ${_en?'Wine List':'Carta de Vinos'} ◇</div>
+        <div class="wine-section-title">${_en?'Wine List':'Carta de Vinos'}</div>
+        <div class="wine-hero-rule" aria-hidden="true"><span>◇</span></div>
         <div class="wine-section-sub">${(typeof ACTIVE_VENUE!=='undefined' && ACTIVE_VENUE && ACTIVE_VENUE.id!=='txoko') ? escapeHTML(ACTIVE_VENUE.name + (ACTIVE_VENUE.eyebrow ? ' · ' + ACTIVE_VENUE.eyebrow : '')) : 'TXOKO by Martín Berasategui'}</div>
       </div>
 
@@ -9181,7 +9182,7 @@ function renderVinosCarta(){
 
       <!-- Type filters — wrap so every option is visible, none hidden in a side-scroll -->
       <div style="display:flex;flex-wrap:wrap;gap:.35rem;margin-bottom:1rem">
-        ${types.map(([id,label,icon])=>`<button onclick="_wineFilter='${id}';renderVinos()" class="wine-filter-pill${_wineFilter===id?' active':''}">${icon} ${label} <span style="font-size:.6rem;opacity:.7">(${id==='all'?WINES.length:WINES.filter(w=>w.type===id).length})</span></button>`).join('')}
+        ${types.map(([id,label,icon])=>`<button onclick="_wineFilter='${id}';renderVinos()" class="wine-filter-pill${_wineFilter===id?' active':''}">${label} <i class="wfp-count">${id==='all'?WINES.length:WINES.filter(w=>w.type===id).length}</i></button>`).join('')}
       </div>
 
       <!-- Results count -->
@@ -9215,12 +9216,13 @@ function _wineCardMiniStats(w, _en){
     return h;
   };
 
-  // Cuerpo (todos)
+  // Cuerpo (todos) — full-word label + dots; the redundant value word is gone
+  // (the dot fill already encodes it), reading "CUERPO ●●○○" like a fine menu.
   if(p.body){
     const BODY_RANK = {ligero:1, medio:2, cuerpo:3, potente:4};
     const ES = {ligero:'Ligero', medio:'Medio', cuerpo:'Estruct.', potente:'Potente'};
     const EN = {ligero:'Light', medio:'Medium', cuerpo:'Struct.', potente:'Powerful'};
-    stats.push(`<span class="wcms-stat" title="${_en?'Body':'Cuerpo'}"><span class="wcms-stat-label">${_en?'B':'C'}</span>${renderDots(BODY_RANK[p.body],4)}<span class="wcms-stat-value">${(_en?EN:ES)[p.body]}</span></span>`);
+    stats.push(`<span class="wcms-stat" title="${_en?'Body':'Cuerpo'}: ${(_en?EN:ES)[p.body]}"><span class="wcms-stat-label">${_en?'Body':'Cuerpo'}</span>${renderDots(BODY_RANK[p.body],4)}</span>`);
   }
 
   // Taninos (tintos/rosados)
@@ -9228,7 +9230,7 @@ function _wineCardMiniStats(w, _en){
     const TANNIN_RANK = {soft:1, medium:2, firm:3};
     const ES = {soft:'Sedosos', medium:'Medios', firm:'Firmes'};
     const EN = {soft:'Silky', medium:'Med.', firm:'Firm'};
-    stats.push(`<span class="wcms-stat" title="${_en?'Tannins':'Taninos'}"><span class="wcms-stat-label">${_en?'T':'T'}</span>${renderDots(TANNIN_RANK[p.tannin],3)}<span class="wcms-stat-value">${(_en?EN:ES)[p.tannin]}</span></span>`);
+    stats.push(`<span class="wcms-stat" title="${_en?'Tannins':'Taninos'}: ${(_en?EN:ES)[p.tannin]}"><span class="wcms-stat-label">${_en?'Tannins':'Taninos'}</span>${renderDots(TANNIN_RANK[p.tannin],3)}</span>`);
   }
 
   // Acidez (blancos/espumosos/dulces)
@@ -9236,7 +9238,7 @@ function _wineCardMiniStats(w, _en){
     const ACID_RANK = {low:1, medium:2, high:3};
     const ES = {low:'Suave', medium:'Media', high:'Vibrante'};
     const EN = {low:'Soft', medium:'Med.', high:'Vibrant'};
-    stats.push(`<span class="wcms-stat" title="${_en?'Acidity':'Acidez'}"><span class="wcms-stat-label">${_en?'A':'A'}</span>${renderDots(ACID_RANK[p.acidity],3)}<span class="wcms-stat-value">${(_en?EN:ES)[p.acidity]}</span></span>`);
+    stats.push(`<span class="wcms-stat" title="${_en?'Acidity':'Acidez'}: ${(_en?EN:ES)[p.acidity]}"><span class="wcms-stat-label">${_en?'Acidity':'Acidez'}</span>${renderDots(ACID_RANK[p.acidity],3)}</span>`);
   }
 
   if(!stats.length) return '';
@@ -9246,7 +9248,6 @@ function _wineCardMiniStats(w, _en){
 function _renderWineCard(w, idx, filteredList){
   const _en = LANG==='en';
   const typeLabels = _en ? {blanco:'White',tinto:'Red',rosado:'Rosé',espumoso:'Sparkling',dulce:'Dessert'} : {blanco:'Blanco',tinto:'Tinto',rosado:'Rosado',espumoso:'Espumoso',dulce:'Dulce'};
-  const typeIconsSvg = {blanco:TXKO_ICONS.wBlanco,tinto:TXKO_ICONS.wTinto,rosado:TXKO_ICONS.wRosado,espumoso:TXKO_ICONS.wEspumoso,dulce:TXKO_ICONS.wDulce};
   const typeColors = {blanco:'var(--candy-yellow)',tinto:'var(--candy-red)',rosado:'var(--candy-pink)',espumoso:'var(--gold)',dulce:'var(--candy-orange)'};
   const bgColor = typeColors[w.type] || 'var(--gold)';
   const isWine = w.type !== 'cocktail';
@@ -9254,29 +9255,27 @@ function _renderWineCard(w, idx, filteredList){
   const idList = (filteredList||[]).map(f=>f.id).join(',');
 
   return `<div role="button" tabindex="0" aria-label="${escapeHTML(w.name)}${w.price?', '+w.price+'€':''}" onclick="_showWineDetail(${w.id}, [${idList}])" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click()}" class="wine-card card-animate" style="animation-delay:${delay}s">
-    <div style="display:flex;align-items:center;gap:.5rem;margin-bottom:.5rem;position:relative">
-      <div class="wine-type-icon" style="background:linear-gradient(135deg,${bgColor},rgba(196,154,60,.3));display:flex;align-items:center;justify-content:center;font-size:1.1rem">${typeIconsSvg[w.type]||TXKO_ICONS.wTinto}</div>
-      <div style="display:flex;flex-wrap:wrap;align-items:center;gap:.3rem;flex:1">
-        <span class="wine-badge" style="background:rgba(196,154,60,.08);color:var(--gold);border:1px solid rgba(196,154,60,.15)">${typeLabels[w.type]||w.type}</span>
-        ${w.recommended?'<span class="wine-badge" style="background:rgba(196,154,60,.12);color:var(--gold);border:1px solid rgba(196,154,60,.2)">★ '+(_en?'Recommended':'Recomendado')+'</span>':''}
-        ${w.vegaSicilia?'<span class="wine-badge" style="background:rgba(139,105,20,.08);color:#8b6914;border:1px solid rgba(139,105,20,.15)">◆ Vega Sicilia</span>':''}
-        ${w.glass?'<span class="wine-badge" style="background:var(--sage-a);color:var(--sage);border:1px solid rgba(77,138,94,.2)">◎ '+(_en?'By Glass':'Copa')+'</span>':''}
-      </div>
+    <div class="wc-top">
+      <span class="wc-type"><span class="wc-type-dot" style="background:${bgColor}"></span>${typeLabels[w.type]||w.type}</span>
+      <span class="wc-badges">
+        ${w.recommended?'<span class="wc-rec">★ '+(_en?'RECOMMENDED':'RECOMENDADO')+'</span>':''}
+        ${w.vegaSicilia?'<span class="wc-rec" style="color:#8b6914;border-color:rgba(139,105,20,.2);background:rgba(139,105,20,.08)">◆ VEGA SICILIA</span>':''}
+      </span>
     </div>
     ${_wineImgHtml(w, 'card')}
-    <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:.5rem;position:relative">
-      <div style="flex:1">
-        <div style="font-family:'Cinzel',serif;font-size:.95rem;color:var(--parchment);line-height:1.2">${escapeHTML(w.name)}</div>
-        ${isWine?`<div style="font-family:'Quicksand',sans-serif;font-size:.72rem;color:var(--parch3);margin-top:.2rem">${escapeHTML(w.grapes||'')}</div>
-        <div style="font-family:'DM Mono',monospace;font-size:.6rem;color:var(--parch4);margin-top:.15rem">${escapeHTML((w.origin?w.origin+' · ':'')+w.region)}</div>`:''}
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:.7rem;position:relative">
+      <div style="flex:1;min-width:0">
+        <div class="wc-name">${escapeHTML(w.name)}</div>
+        ${isWine?`<div class="wc-grape">${escapeHTML(w.grapes||'')}</div>
+        <div class="wc-region">${escapeHTML((w.origin?w.origin+' · ':'')+w.region)}</div>`:''}
       </div>
       <div style="text-align:right;flex-shrink:0;position:relative">
-        <div style="font-family:'Cinzel',serif;font-size:1.1rem;color:var(--gold);font-weight:600">${w.price}€</div>
-        ${w.glass?`<div style="font-size:.6rem;color:var(--sage);font-family:'DM Mono',monospace">Copa ${w.glass}€</div>`:''}
-        ${w.format&&w.format!=='75cl'?`<div style="font-size:.58rem;color:var(--parch4);font-family:'DM Mono',monospace">${escapeHTML(w.format)}</div>`:''}
+        <div class="wc-price">${w.price} €</div>
+        <div class="wc-price-sub">${w.glass?(_en?'glass ':'copa ')+w.glass+' €':(_en?'bottle':'botella')}</div>
+        ${w.format&&w.format!=='75cl'?`<div class="wc-price-sub">${escapeHTML(w.format)}</div>`:''}
       </div>
     </div>
-    <div style="font-family:'Quicksand',sans-serif;font-size:.7rem;color:var(--parch3);margin-top:.5rem;font-style:italic;line-height:1.4;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;position:relative">"${escapeHTML(_en && w.story_en ? w.story_en : w.story)}"</div>
+    <div class="wc-story">"${escapeHTML(_en && w.story_en ? w.story_en : w.story)}"</div>
     ${isWine ? _wineCardMiniStats(w, _en) : ''}
   </div>`;
 }

@@ -778,6 +778,38 @@ test('section labels share the tunic-divider recipe (no rogue styles)', () => {
     'orphaned section-label classes must be removed');
 });
 
+test('vinos carta premium port: fonts, search, pills, card, light sub-trigger', () => {
+  const css = read('styles.css');
+  // Cormorant Garamond powers the sommelier voice — it must actually load.
+  assert(/fonts\.googleapis\.com\/css2\?[^"]*Cormorant\+Garamond/.test(html),
+    'Cormorant Garamond must be in the Google Fonts link');
+  assert(/\.wine-storybook-text\{[^}]*Cormorant Garamond/.test(css)
+    && /\.wc-story\{[^}]*Cormorant Garamond/.test(css),
+    'hero quote and card story must use Cormorant');
+  // Jewel search: full pill and 16px (iOS zoom trap — was .82rem).
+  assert(/\.wine-search\{[^}]*font-size:16px/.test(css) && /\.wine-search\{[^}]*border-radius:999px/.test(css),
+    'wine search must be a 16px full pill');
+  // Pills: fine mono count, no spreadsheet parens in the type row.
+  assert(/class="wfp-count"/.test(html) && /\.wfp-count\{/.test(css),
+    'pill counts must use the fine mono style');
+  assert(!/wine-filter-pill[^>]*>\$\{icon\} \$\{label\} <span[^>]*>\(/.test(html),
+    'type pills must not render parenthesised counts');
+  // Active pill keeps dark ink on gold (white-on-gold is 2.2:1, WCAG fail).
+  assert(/\.wine-filter-pill\.active\{[^}]*color:#1a0f05/.test(css),
+    'active pill text must stay dark ink for contrast');
+  // Card hierarchy classes exist and are used.
+  for (const cls of ['wc-name','wc-price','wc-story','wc-type-dot','wc-rec']) {
+    assert(css.includes(`.${cls}`) && html.includes(`class="${cls}`),
+      `card class .${cls} missing from CSS or markup`);
+  }
+  // Sub-tab trigger is light (hierarchy: dark main nav → light sub-selector);
+  // the green Pip-Boy variant must still override it to dark.
+  assert(/\.tunic-dd-trigger\{[^}]*background:#faf6ee/.test(css),
+    'sub-tab trigger must be the light variant');
+  assert(/\.tunic-dd--green \.tunic-dd-trigger\{[^}]*#0c3a22/.test(css),
+    'green variant must keep its dark Pip-Boy trigger');
+});
+
 test('vinos hero is compact and venue-aware', () => {
   const css = read('styles.css');
   // Hero spacing: header + intro tightened so the first wine lands sooner.
