@@ -730,6 +730,35 @@ test('dropdown triggers use a clear chevron-chip (not a subtle glyph)', () => {
     'sub-tab trigger chevron must be an SVG, not a ▾ glyph');
 });
 
+test('achievement toasts stack and stay readable', () => {
+  // Several achievements unlocking together used to render at the same fixed
+  // position (text painted over text) with a dark-on-dark description.
+  assert(/achToastStack/.test(html), 'toasts must render into the shared stack');
+  assert(/flex-direction:column[^']*pointer-events:none/.test(html),
+    'toast stack must be a column that lets taps through');
+  assert(!/Logro Desbloqueado'\}[^]*?color:var\(--parch3\)/.test(
+    html.slice(html.indexOf('function showAchievementToast'), html.indexOf('function showAchievementToast') + 2200)),
+    'toast description must not use the dark parch3 color on the dark toast');
+});
+
+test('ranking rows drop the placeholder styling before injecting', () => {
+  // #rankingContent ships with text-align:center + 2rem padding for the "—"
+  // placeholder; leaked into the results it centered and squeezed the rows.
+  assert(/_rc\.removeAttribute\('style'\)/.test(html),
+    'renderRanking must clear the placeholder style before rows');
+});
+
+test('vinos filter pills wrap instead of side-scrolling', () => {
+  // Side-scrolling pill rows hid options past the viewport edge — the exact
+  // pattern the owner banned from the navigation.
+  const pillRows = [...html.matchAll(/<div style="([^"]*)">\s*\$\{(?:types|levels|\(_en\?\[\['all')/g)].map(m => m[1]);
+  assert(pillRows.length >= 3, `expected 3 pill containers, found ${pillRows.length}`);
+  for (const style of pillRows) {
+    assert(/flex-wrap:wrap/.test(style) && !/overflow-x:auto/.test(style),
+      `pill container must wrap, not scroll: ${style.slice(0,60)}`);
+  }
+});
+
 test('floating FABs hide behind the open nav sheet / search', () => {
   // The sound toggle + sync pill float above #screenApp and otherwise overlap
   // the bottom-sheet options; they must hide while the nav or search is open.
