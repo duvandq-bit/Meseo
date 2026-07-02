@@ -1,0 +1,187 @@
+<!-- @dsCard group="Screens" name="Vinos premium" subtitle="Carta elevada: jerarquía, buscador joya, tarjeta refinada" -->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Txoko · Vinos premium</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400;1,500&family=Quicksand:wght@300;400;500;600;700&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root{ --gold:#c49a3c; --gold3:#e4be68; --gold-deep:#7d5c2f; --ink:#1c2a22; --paper:#faf6ee;
+    --line:rgba(196,154,60,.16); --line2:rgba(196,154,60,.3); }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:#f4ede2;color:var(--ink);font-family:'Quicksand',sans-serif;margin:0;padding-bottom:4rem}
+  .note{padding:1rem 1rem .3rem;font-family:'DM Mono',monospace;font-size:.6rem;color:#8a8478;letter-spacing:.14em;text-transform:uppercase}
+  .blurb{padding:0 1rem .9rem;font-size:.74rem;color:rgba(28,42,34,.7);line-height:1.5}
+  .blurb b{color:var(--gold-deep)}
+  .frame{max-width:400px;margin:0 auto;border:1px solid rgba(0,0,0,.06)}
+
+  /* header + main nav (unchanged, for context) */
+  .hdr{background:linear-gradient(145deg,#d4b87a 0%,#c49a3c 30%,#9a7340 70%,#7d5c2f 100%);height:52px;display:flex;align-items:center;padding:0 1rem}
+  .logo{font-family:'Cinzel',serif;font-weight:700;color:#fff;font-size:1.05rem;letter-spacing:.1em}
+  .navdd{background:#25352b;padding:.5rem .8rem}
+  .navtrig{display:flex;align-items:center;justify-content:space-between;width:100%;min-height:50px;border-radius:12px;
+    padding:.7rem 1.05rem;border:1px solid rgba(196,154,60,.35);font-family:'Cinzel',serif;font-weight:600;font-size:.82rem;
+    letter-spacing:.08em;text-transform:uppercase;color:#e4be68;background:linear-gradient(145deg,#1c2a22,#243028)}
+  .chip{display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:8px;
+    color:var(--gold);background:rgba(196,154,60,.15);border:1px solid rgba(196,154,60,.32)}
+  .chip svg{width:15px;height:15px}
+
+  /* ── 1. SUB-NAV ALIGERADA: de losa oscura a selector fino ── */
+  .subsel{margin:.65rem .8rem .2rem;display:flex;align-items:center;justify-content:space-between;gap:.6rem;
+    min-height:46px;padding:.55rem .9rem;border-radius:11px;cursor:pointer;
+    background:var(--paper);border:1px solid var(--line2);box-shadow:0 1px 4px rgba(28,42,34,.05)}
+  .subsel-cur{display:flex;align-items:center;gap:.55rem;font-family:'Cinzel',serif;font-weight:600;
+    font-size:.8rem;letter-spacing:.09em;text-transform:uppercase;color:var(--gold-deep)}
+  .subsel-cur svg{width:16px;height:16px;stroke:var(--gold)}
+
+  /* ── 2. HERO compacto con ornamento fino ── */
+  .hero{text-align:center;padding:1.3rem 1rem .4rem}
+  .hero h2{font-family:'Cinzel',serif;font-size:1.45rem;font-weight:600;color:var(--gold-deep);letter-spacing:.06em}
+  .hero .rule{display:flex;align-items:center;gap:.5rem;justify-content:center;margin:.45rem auto .35rem;max-width:220px}
+  .hero .rule::before,.hero .rule::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,transparent,var(--line2),transparent)}
+  .hero .rule span{color:var(--gold);font-size:.6rem}
+  .hero .byline{font-family:'DM Mono',monospace;font-size:.58rem;color:rgba(28,42,34,.5);letter-spacing:.18em;text-transform:uppercase}
+  .hero .quote{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:.98rem;line-height:1.45;
+    color:rgba(28,42,34,.62);max-width:320px;margin:.7rem auto 0}
+
+  /* ── 3. BUSCADOR JOYA ── */
+  .search{margin:1rem .9rem .65rem;display:flex;align-items:center;gap:.6rem;min-height:50px;
+    background:var(--paper);border:1px solid var(--line2);border-radius:999px;padding:.7rem 1.1rem;
+    box-shadow:inset 0 1px 3px rgba(28,42,34,.04), 0 1px 6px rgba(196,154,60,.08)}
+  .search svg{width:17px;height:17px;stroke:var(--gold);flex-shrink:0}
+  .search span{font-size:16px;color:rgba(28,42,34,.4)}
+
+  /* ── 4. FILTROS REFINADOS: etiqueta + contador fino, activo dorado ── */
+  .pills{display:flex;flex-wrap:wrap;gap:.4rem;padding:0 .9rem;margin-bottom:.9rem}
+  .pill{display:inline-flex;align-items:baseline;gap:.35rem;min-height:40px;align-items:center;
+    padding:.45rem .85rem;border-radius:999px;font-family:'Quicksand',sans-serif;font-weight:600;font-size:.74rem;
+    background:var(--paper);border:1px solid var(--line);color:rgba(28,42,34,.68)}
+  .pill i{font-style:normal;font-family:'DM Mono',monospace;font-size:.56rem;color:var(--gold-deep);opacity:.75}
+  .pill.on{background:linear-gradient(145deg,#d4aa4c,#c49a3c);border-color:transparent;color:#fff;
+    box-shadow:0 2px 8px rgba(196,154,60,.35)}
+  .pill.on i{color:rgba(255,255,255,.85);opacity:1}
+
+  .count{font-family:'DM Mono',monospace;font-size:.58rem;color:rgba(28,42,34,.45);letter-spacing:.1em;padding:0 1rem .6rem}
+
+  /* ── 5. TARJETA DE VINO REFINADA ── */
+  .wcard{margin:0 .9rem 1rem;background:var(--paper);border:1px solid var(--line);border-radius:18px;overflow:hidden;
+    box-shadow:0 3px 14px rgba(28,42,34,.06)}
+  .wcard-top{display:flex;align-items:center;justify-content:space-between;padding:.7rem .95rem .5rem}
+  .wtype{display:inline-flex;align-items:center;gap:.4rem;font-family:'DM Mono',monospace;font-size:.56rem;
+    letter-spacing:.16em;text-transform:uppercase;color:rgba(28,42,34,.55)}
+  .wtype .dot{width:9px;height:9px;border-radius:50%;background:#f5e6b8;border:1px solid rgba(28,42,34,.15)}
+  .wrec{font-family:'DM Mono',monospace;font-size:.54rem;letter-spacing:.12em;color:var(--gold-deep);
+    background:rgba(196,154,60,.12);border:1px solid var(--line);border-radius:999px;padding:.25rem .6rem}
+  .wimg{height:150px;margin:0 .95rem;border-radius:12px;background:
+    radial-gradient(ellipse at 50% 30%, #fdfaf3, #f2ead9);display:flex;align-items:center;justify-content:center;
+    border:1px solid rgba(196,154,60,.1)}
+  .wimg svg{width:34px;height:34px;stroke:rgba(196,154,60,.5)}
+  .wbody{padding:.8rem 1rem 1rem}
+  .wname-row{display:flex;align-items:flex-start;justify-content:space-between;gap:.7rem}
+  .wname{font-family:'Cinzel',serif;font-size:1.08rem;font-weight:600;color:var(--ink);line-height:1.25}
+  .wgrape{font-size:.76rem;color:rgba(28,42,34,.62);margin-top:.15rem}
+  .wregion{font-family:'DM Mono',monospace;font-size:.58rem;letter-spacing:.1em;color:rgba(28,42,34,.48);margin-top:.3rem;text-transform:uppercase}
+  .wprice{text-align:right;flex-shrink:0}
+  .wprice .p{font-family:'Cinzel',serif;font-size:1.15rem;font-weight:600;color:var(--gold-deep)}
+  .wprice .g{font-family:'DM Mono',monospace;font-size:.56rem;color:rgba(28,42,34,.5);margin-top:.15rem}
+  .wquote{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:.95rem;line-height:1.4;
+    color:rgba(28,42,34,.6);margin-top:.65rem;padding-top:.6rem;border-top:1px dashed rgba(196,154,60,.22)}
+  .wmeters{display:flex;gap:1.2rem;margin-top:.7rem}
+  .wm{display:flex;align-items:center;gap:.45rem;font-family:'DM Mono',monospace;font-size:.56rem;
+    letter-spacing:.12em;text-transform:uppercase;color:rgba(28,42,34,.55)}
+  .wm .dots{display:inline-flex;gap:2.5px}
+  .wm .d{width:6px;height:6px;border-radius:50%;background:rgba(196,154,60,.22)}
+  .wm .d.f{background:var(--gold)}
+</style>
+</head>
+<body>
+  <div class="note">Vinos · Carta — propuesta premium</div>
+  <div class="blurb">Cinco cambios: <b>1)</b> la sub-pestaña deja de ser una segunda losa oscura y pasa a selector fino claro (la jerarquía se lee: sección → subsección), <b>2)</b> hero con ornamento fino y cita en serif de lectura, <b>3)</b> buscador tipo joya, <b>4)</b> filtros con contador elegante (sin paréntesis), activo dorado, <b>5)</b> tarjeta con jerarquía tipográfica fina: nombre Cinzel, precio dorado profundo, cita en Cormorant, medidores refinados.</div>
+
+  <div class="frame">
+    <div class="hdr"><span class="logo">TXOKO</span></div>
+    <div class="navdd"><button class="navtrig"><span>🍷&nbsp; Vinos</span><span class="chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M6 9l6 6 6-6"/></svg></span></button></div>
+
+    <!-- 1. sub-nav aligerada -->
+    <div class="subsel">
+      <span class="subsel-cur"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.6"><path d="M8 2h8l-2 9H10L8 2z"/><path d="M12 11v7"/><path d="M8 18h8"/></svg> Carta</span>
+      <span class="chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M6 9l6 6 6-6"/></svg></span>
+    </div>
+
+    <!-- 2. hero -->
+    <div class="hero">
+      <h2>Carta de Vinos</h2>
+      <div class="rule"><span>◇</span></div>
+      <div class="byline">Txoko by Martín Berasategui</div>
+      <div class="quote">"Cada botella guarda un viaje, cada copa abre un capítulo."</div>
+    </div>
+
+    <!-- 3. buscador -->
+    <div class="search">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+      <span>Buscar vinos, uvas, regiones…</span>
+    </div>
+
+    <!-- 4. filtros -->
+    <div class="pills">
+      <span class="pill on">Todos <i>120</i></span>
+      <span class="pill">Blancos <i>36</i></span>
+      <span class="pill">Tintos <i>70</i></span>
+      <span class="pill">Rosados <i>4</i></span>
+      <span class="pill">Espumosos <i>8</i></span>
+      <span class="pill">Dulces <i>2</i></span>
+    </div>
+    <div class="count">◇ 120 RESULTADOS</div>
+
+    <!-- 5. tarjeta -->
+    <div class="wcard">
+      <div class="wcard-top">
+        <span class="wtype"><span class="dot"></span> Blanco</span>
+        <span class="wrec">★ RECOMENDADO</span>
+      </div>
+      <div class="wimg"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.4"><path d="M8 2h8l-2 9H10L8 2z"/><path d="M12 11v7"/><path d="M8 18h8"/></svg></div>
+      <div class="wbody">
+        <div class="wname-row">
+          <div>
+            <div class="wname">Cepado</div>
+            <div class="wgrape">Godello</div>
+            <div class="wregion">Galicia · DO Valdeorras</div>
+          </div>
+          <div class="wprice"><div class="p">50 €</div><div class="g">botella</div></div>
+        </div>
+        <div class="wquote">"En empinadas terrazas de granito de Valdeorras, Godello prospera con clima atlántico…"</div>
+        <div class="wmeters">
+          <span class="wm">Cuerpo <span class="dots"><span class="d f"></span><span class="d f"></span><span class="d"></span></span></span>
+          <span class="wm">Acidez <span class="dots"><span class="d f"></span><span class="d f"></span><span class="d f"></span></span></span>
+        </div>
+      </div>
+    </div>
+
+    <div class="wcard">
+      <div class="wcard-top">
+        <span class="wtype"><span class="dot" style="background:#8b2252"></span> Tinto</span>
+        <span class="wrec">★ RECOMENDADO</span>
+      </div>
+      <div class="wimg"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.4"><path d="M8 2h8l-2 9H10L8 2z"/><path d="M12 11v7"/><path d="M8 18h8"/></svg></div>
+      <div class="wbody">
+        <div class="wname-row">
+          <div>
+            <div class="wname">Sitio de Valderíz</div>
+            <div class="wgrape">Tinto Fino</div>
+            <div class="wregion">Castilla y León · DO Ribera del Duero</div>
+          </div>
+          <div class="wprice"><div class="p">50 €</div><div class="g">copa 12 €</div></div>
+        </div>
+        <div class="wquote">"Ribera Duero altitud 850 m, suelos calizo-arcillosos. Tinto Fino 14 meses roble francés…"</div>
+        <div class="wmeters">
+          <span class="wm">Cuerpo <span class="dots"><span class="d f"></span><span class="d f"></span><span class="d f"></span></span></span>
+          <span class="wm">Taninos <span class="dots"><span class="d f"></span><span class="d f"></span><span class="d"></span></span></span>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
