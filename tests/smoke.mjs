@@ -20,6 +20,7 @@
 // ═══════════════════════════════════════════════════════════════
 
 import { readFileSync, existsSync } from 'node:fs';
+import { execSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
 
@@ -468,6 +469,29 @@ test('wine map is real cartography (Voyager basemap, no fake 3D or DO shapes)', 
   // OSM/CARTO tile usage requires visible attribution on the map.
   assert(/new maplibregl\.AttributionControl\(\{ compact: true \}\)/.test(html),
     'map attribution control missing (required by OSM/CARTO tile terms)');
+});
+
+test('ingredient-allergen base: valid schema + no NEW undeclared allergens', () => {
+  // data/ingredients.json is the single source of truth for ingredient →
+  // allergen tags (EU-14, app vocabulary). The audit (tests/allergen-audit.mjs)
+  // cross-checks it against every dish's hand-written allergen list.
+  const base = JSON.parse(read('data/ingredients.json'));
+  assert(Array.isArray(base.eu14) && base.eu14.length === 14, 'eu14 canon must have exactly 14 entries');
+  const canon = new Set(base.eu14.map(e => e.app));
+  for (const [key, e] of Object.entries(base.ingredientes)) {
+    assert(Array.isArray(e.alergenos) && e.alergenos.every(a => canon.has(a)),
+      `ingredient "${key}" carries a tag outside the EU-14 canon`);
+    assert(['certeza culinaria', 'notas del plato', 'pendiente'].includes(e.fuente),
+      `ingredient "${key}" has invalid fuente`);
+  }
+  // Ratchet: the ONLY allowed computed-but-undeclared mismatches are the three
+  // findings pending the owner's confirmation (Jul 2026). Anything new fails.
+  const audit = JSON.parse(execSync('node tests/allergen-audit.mjs --json', { cwd: ROOT }).toString());
+  const allowed = new Set(['5|Gluten', '54|Huevos', '89|Mostaza']);
+  for (const f of audit.no_declarado) {
+    assert(allowed.has(`${f.id}|${f.alergeno}`),
+      `NEW undeclared allergen: dish ${f.id} "${f.plato}" is missing ${f.alergeno} (from: ${f.por.join(', ')})`);
+  }
 });
 
 test('no dish in the Vegetariano category self-declares as not vegetarian', () => {
