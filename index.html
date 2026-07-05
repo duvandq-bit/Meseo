@@ -39,7 +39,7 @@
      frame-src: YouTube embeds.  worker-src blob: for MapLibre's workers.
    • Rollback: delete this tag and bump the service-worker VERSION.
 -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://unpkg.com https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://unpkg.com https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob: https://*.basemaps.cartocdn.com https://unpkg.com; connect-src 'self' https://advkoujfgbrrjvqexrcu.supabase.co https://unpkg.com https://*.basemaps.cartocdn.com; worker-src 'self' blob:; frame-src https://www.youtube.com; object-src 'none'; base-uri 'self'; form-action 'self'; manifest-src 'self'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://unpkg.com https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://unpkg.com https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob: https://advkoujfgbrrjvqexrcu.supabase.co https://*.basemaps.cartocdn.com https://unpkg.com; connect-src 'self' https://advkoujfgbrrjvqexrcu.supabase.co wss://advkoujfgbrrjvqexrcu.supabase.co https://unpkg.com https://*.basemaps.cartocdn.com; worker-src 'self' blob:; frame-src https://www.youtube.com; object-src 'none'; base-uri 'self'; form-action 'self'; manifest-src 'self'">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>TXOKO · Formación</title>
@@ -301,6 +301,7 @@
     <button class="nav-btn" id="navVinos" onclick="showTab('vinos')"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2h8l-2 9H10L8 2z"/><path d="M12 11v7"/><path d="M8 18h8"/></svg> Vinos</button>
     <button class="nav-btn" id="navTxoko" onclick="showTab('txoko')"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 12h4l2 8 4-16 2 8h4"/></svg> Juegos</button>
     <button class="nav-btn" id="navRanking" onclick="showTab('ranking')"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg> Ranking</button>
+    <button class="nav-btn" id="navChat" onclick="showTab('chat')"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"/></svg> Terraza</button>
     <button class="nav-btn" id="navSupervisor" onclick="showTab('supervisor')" style="display:none"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg> Sup.</button>
   </nav>
   </div>
@@ -7324,6 +7325,13 @@ document.addEventListener('keydown', function(e){
 });
 
 function showTab(tab){
+  // Tear down the chat realtime channel + presence when navigating away, so we
+  // don't leak the socket or leave a stale "online" marker for this user.
+  if(currentTab==='chat' && tab!=='chat'){
+    if(typeof _chatDisconnect==='function') _chatDisconnect();
+    const _ac = document.getElementById('appContent'); if(_ac) _ac.classList.remove('chat-host');
+    document.body.classList.remove('chat-open');
+  }
   currentTab=tab;
   // Track night study for achievement
   const _h = new Date().getHours();
@@ -7358,7 +7366,7 @@ function showTab(tab){
     c.style.transform='translateY(0)';
     try {
       // Route sub-tabs through their parent so the sub-tab bar is always rendered
-      const renderMap = {dashboard:renderDashboard,aprender:renderAprender,flashcards:renderAprender,exam:renderExam,repaso:renderAprender,smart:renderAprender,stats:renderRankingHub,txoko:renderTxoko,ranking:renderRankingHub,supervisor:renderSupervisor,protocolo:renderLqa,videos:renderAprender,lqa:renderLqa,vinos:renderVinos};
+      const renderMap = {dashboard:renderDashboard,aprender:renderAprender,flashcards:renderAprender,exam:renderExam,repaso:renderAprender,smart:renderAprender,stats:renderRankingHub,txoko:renderTxoko,ranking:renderRankingHub,supervisor:renderSupervisor,protocolo:renderLqa,videos:renderAprender,lqa:renderLqa,vinos:renderVinos,chat:renderChat};
       renderMap[tab]();
     } catch(e) {
       const _stackHtml = DEBUG ? '<pre style="font-size:.6rem;white-space:pre-wrap;margin-top:.5rem">'+escapeHtml(e.stack)+'</pre>' : '';
@@ -23228,6 +23236,378 @@ function _svcGetWinePreview(dish, _en){
   return `<div style="font-size:.65rem;color:var(--gold);margin-top:.25rem;font-family:'DM Mono',monospace">${suggestion}</div>`;
 }
 
+
+// ═══════════════════════════════════════════════════════════════════════
+// LA TERRAZA — staff chat (realtime + presence + photos + emojis)
+// One shared room ('terraza'). Realtime via the supabase-js client (presence
+// for "who's online" + postgres_changes for instant messages). History and
+// sends go over REST to match the rest of the app. Photos live in the public
+// `chat-images` bucket. Moderation: authors delete their own; 'Duvan' any.
+// ═══════════════════════════════════════════════════════════════════════
+const CHAT_ROOM = 'terraza';
+let _supaClient = null;
+let _chatChannel = null;
+let _chatMsgs = [];
+let _chatPresence = {};   // name -> {avatar, at}
+let _chatSeenIds = new Set();
+let _chatEmojiOpen = false;
+const CHAT_EMOJIS = ['😀','😂','🥹','😍','😎','🤩','😅','😉','🙂','😇','🤗','🤔','😴','🥳','😭','😤','😱','🙄','😬','🤤','👍','👏','🙌','🙏','💪','👌','🤝','✌️','🔥','✨','⭐','💯','❤️','🧡','💛','💚','💙','💜','🖤','🤍','☕','🍷','🍸','🥂','🍾','🍽️','🧑‍🍳','👨‍🍳','👩‍🍳','🥗','🍤','🧀','🍰','🎉','🎂','⚡','🌅','🌙','☀️','🌊'];
+
+function _getSupaClient(){
+  if(_supaClient) return _supaClient;
+  if(typeof supabase === 'undefined' || !supabase.createClient) return null;
+  _supaClient = supabase.createClient(SUPA_URL, SUPA_KEY, {
+    realtime: { params: { eventsPerSecond: 6 } }
+  });
+  return _supaClient;
+}
+
+function _chatEsc(s){ return escapeHTML(String(s==null?'':s)); }
+function _chatTime(iso){
+  try{
+    const d = new Date(iso);
+    return d.toLocaleTimeString(LANG==='en'?'en-US':'es-ES', {hour:'2-digit', minute:'2-digit'});
+  }catch(_){ return ''; }
+}
+function _chatDayLabel(iso){
+  try{
+    const d = new Date(iso), now = new Date();
+    const sameDay = d.toDateString() === now.toDateString();
+    const yest = new Date(now); yest.setDate(now.getDate()-1);
+    if(sameDay) return LANG==='en'?'Today':'Hoy';
+    if(d.toDateString() === yest.toDateString()) return LANG==='en'?'Yesterday':'Ayer';
+    return d.toLocaleDateString(LANG==='en'?'en-US':'es-ES', {day:'numeric', month:'short'});
+  }catch(_){ return ''; }
+}
+
+function renderChat(){
+  const c = document.getElementById('appContent');
+  const _en = LANG==='en';
+  c.innerHTML = `
+    <div class="chat-wrap">
+      <div class="chat-head">
+        <div class="chat-head-main">
+          <div class="chat-eyebrow">${_en?'STAFF ROOM':'SALA DEL EQUIPO'}</div>
+          <div class="chat-title">${_en?'The Terrace':'La Terraza'}</div>
+        </div>
+        <button class="chat-presence-toggle" id="chatPresenceToggle" onclick="_chatTogglePresence()" aria-label="${_en?'Who is online':'Quién está conectado'}">
+          <span class="chat-online-dot"></span>
+          <span id="chatOnlineCount">·</span>
+        </button>
+      </div>
+      <div class="chat-presence-rail" id="chatPresenceRail" aria-hidden="true"></div>
+      <div class="chat-stream" id="chatStream" role="log" aria-live="polite">
+        <div class="chat-loading">${_en?'Connecting…':'Conectando…'}</div>
+      </div>
+      <div class="chat-emoji-pop" id="chatEmojiPop" style="display:none" aria-hidden="true">
+        ${CHAT_EMOJIS.map(e=>`<button type="button" class="chat-emoji" onclick="_chatAddEmoji('${e}')">${e}</button>`).join('')}
+      </div>
+      <div class="chat-composer">
+        <button type="button" class="chat-tool" onclick="_chatPickPhoto()" aria-label="${_en?'Send photo':'Enviar foto'}" title="${_en?'Photo':'Foto'}">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8.5" cy="8.5" r="1.6"/><path d="M21 15l-5-5L5 21"/></svg>
+        </button>
+        <button type="button" class="chat-tool" onclick="_chatToggleEmoji()" aria-label="${_en?'Emojis':'Emojis'}" title="Emojis">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>
+        </button>
+        <textarea id="chatInput" class="chat-input" rows="1" maxlength="800"
+          placeholder="${_en?'Write to the team…':'Escribe al equipo…'}"
+          enterkeyhint="send" oninput="_chatGrow(this)"
+          onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();_chatSend();}"></textarea>
+        <button type="button" class="chat-send" id="chatSendBtn" onclick="_chatSend()" aria-label="${_en?'Send':'Enviar'}">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2L11 13"/><path d="M22 2l-7 20-4-9-9-4 20-7z"/></svg>
+        </button>
+      </div>
+      <input type="file" id="chatPhotoInput" accept="image/jpeg,image/png,image/webp" style="display:none" onchange="_chatUploadPhoto(this)">
+    </div>`;
+  c.classList.add('chat-host');
+  document.body.classList.add('chat-open');
+  _chatFit();
+  _chatConnect();
+}
+
+// Size the chat to the live viewport (header/nav/padding vary by device) so the
+// composer always sits on the bottom edge without page scroll.
+function _chatFit(){
+  const wrap = document.querySelector('.chat-wrap');
+  if(!wrap) return;
+  const top = wrap.getBoundingClientRect().top;
+  wrap.style.height = Math.max(320, window.innerHeight - top - 4) + 'px';
+}
+window.addEventListener('resize', ()=>{ if(currentTab==='chat') _chatFit(); });
+window.addEventListener('orientationchange', ()=>{ if(currentTab==='chat') setTimeout(_chatFit, 250); });
+
+async function _chatConnect(){
+  const client = _getSupaClient();
+  const stream = document.getElementById('chatStream');
+  if(!client){
+    if(stream) stream.innerHTML = `<div class="chat-loading">${LANG==='en'?'Chat unavailable offline':'Chat no disponible sin conexión'}</div>`;
+    return;
+  }
+  // 1) Load recent history over REST
+  try{
+    const res = await fetch(`${SUPA_URL}/rest/v1/chat_messages?select=id,employee,message,image_url,deleted,created_at&room=eq.${CHAT_ROOM}&order=created_at.desc&limit=80`,
+      { headers: { 'apikey': SUPA_KEY, 'Authorization': `Bearer ${SUPA_KEY}` } });
+    if(res.ok){
+      const rows = await res.json();
+      if(Array.isArray(rows)){
+        _chatMsgs = rows.reverse();
+        _chatSeenIds = new Set(_chatMsgs.map(m=>m.id));
+      }
+    }
+  }catch(_){}
+  _chatRenderStream();
+
+  // 2) Realtime channel: presence + message stream
+  if(_chatChannel){ try{ client.removeChannel(_chatChannel); }catch(_){} _chatChannel=null; }
+  const me = currentUser || '—';
+  _chatChannel = client.channel('room:'+CHAT_ROOM, { config: { presence: { key: me } } });
+  _chatChannel
+    .on('postgres_changes', { event:'INSERT', schema:'public', table:'chat_messages', filter:'room=eq.'+CHAT_ROOM },
+      (payload)=>_chatOnInsert(payload.new))
+    .on('postgres_changes', { event:'UPDATE', schema:'public', table:'chat_messages', filter:'room=eq.'+CHAT_ROOM },
+      (payload)=>_chatOnUpdate(payload.new))
+    .on('presence', { event:'sync' }, ()=>_chatSyncPresence())
+    .subscribe((status)=>{
+      if(status==='SUBSCRIBED'){
+        _chatChannel.track({ name: me, avatar: (getEmp(me)||{}).avatar || null, at: new Date().toISOString() });
+      }
+    });
+}
+
+function _chatDisconnect(){
+  const client = _supaClient;
+  if(client && _chatChannel){
+    try{ _chatChannel.untrack(); }catch(_){}
+    try{ client.removeChannel(_chatChannel); }catch(_){}
+  }
+  _chatChannel = null;
+  _chatEmojiOpen = false;
+}
+
+function _chatSyncPresence(){
+  if(!_chatChannel) return;
+  const state = _chatChannel.presenceState();
+  const map = {};
+  Object.keys(state).forEach(k=>{
+    const metas = state[k];
+    if(metas && metas[0]) map[metas[0].name || k] = metas[0];
+  });
+  _chatPresence = map;
+  const names = Object.keys(map);
+  const countEl = document.getElementById('chatOnlineCount');
+  if(countEl) countEl.textContent = names.length;
+  const rail = document.getElementById('chatPresenceRail');
+  if(rail && rail.classList.contains('open')) _chatRenderPresenceRail();
+}
+
+function _chatTogglePresence(){
+  const rail = document.getElementById('chatPresenceRail');
+  if(!rail) return;
+  const open = rail.classList.toggle('open');
+  rail.setAttribute('aria-hidden', open?'false':'true');
+  if(open) _chatRenderPresenceRail();
+}
+
+function _chatRenderPresenceRail(){
+  const rail = document.getElementById('chatPresenceRail');
+  if(!rail) return;
+  const names = Object.keys(_chatPresence);
+  if(!names.length){ rail.innerHTML = `<span class="chat-presence-empty">${LANG==='en'?'No one else online':'Nadie más conectado'}</span>`; return; }
+  rail.innerHTML = names.map(n=>`
+    <span class="chat-presence-chip${n===currentUser?' me':''}">
+      <span class="chat-avatar sm">${renderSmallAvatar(n, 22)}</span>
+      <span class="chat-presence-name">${_chatEsc(n)}${n===currentUser?(LANG==='en'?' (you)':' (tú)'):''}</span>
+    </span>`).join('');
+}
+
+function _chatOnInsert(row){
+  if(!row || _chatSeenIds.has(row.id)) return;
+  _chatSeenIds.add(row.id);
+  _chatMsgs.push(row);
+  _chatRenderStream(true);
+}
+function _chatOnUpdate(row){
+  if(!row) return;
+  const i = _chatMsgs.findIndex(m=>m.id===row.id);
+  if(i>=0){ _chatMsgs[i] = row; _chatRenderStream(); }
+}
+
+function _chatRenderStream(forceScroll){
+  const stream = document.getElementById('chatStream');
+  if(!stream) return;
+  const nearBottom = stream.scrollHeight - stream.scrollTop - stream.clientHeight < 120;
+  if(!_chatMsgs.length){
+    stream.innerHTML = `<div class="chat-empty">
+      <div class="chat-empty-ico">🌅</div>
+      <div>${LANG==='en'?'The terrace is quiet. Say hello 👋':'La terraza está tranquila. Saluda 👋'}</div>
+    </div>`;
+    return;
+  }
+  let html = '', lastDay = '', lastName = '', lastTs = 0;
+  _chatMsgs.forEach(m=>{
+    const day = _chatDayLabel(m.created_at);
+    if(day !== lastDay){ html += `<div class="chat-daysep"><span>${day}</span></div>`; lastDay = day; lastName=''; }
+    const mine = m.employee === currentUser;
+    const ts = new Date(m.created_at).getTime();
+    // Group consecutive messages from the same author within 4 min
+    const grouped = m.employee===lastName && (ts-lastTs) < 4*60*1000;
+    lastName = m.employee; lastTs = ts;
+    const canDel = !m.deleted && (mine || currentUser==='Duvan');
+    let body;
+    if(m.deleted){
+      body = `<span class="chat-deleted">${LANG==='en'?'message deleted':'mensaje eliminado'}</span>`;
+    } else if(m.image_url){
+      body = `<img class="chat-photo" src="${_chatEsc(m.image_url)}" alt="foto" loading="lazy" onclick="event.stopPropagation();_chatOpenPhoto('${_chatEsc(m.image_url)}')">`
+           + (m.message ? `<div class="chat-caption">${_chatEsc(m.message)}</div>` : '');
+    } else {
+      body = `<div class="chat-text">${_chatEsc(m.message)}</div>`;
+    }
+    html += `<div class="chat-row ${mine?'mine':'other'}${grouped?' grouped':''}" data-id="${m.id}">
+      ${(!mine && !grouped) ? `<span class="chat-avatar">${renderSmallAvatar(m.employee, 30)}</span>` : `<span class="chat-avatar-spacer"></span>`}
+      <div class="chat-bubble-wrap">
+        ${(!grouped) ? `<div class="chat-meta">${mine?'':`<span class="chat-author">${_chatEsc(m.employee)}</span>`}<span class="chat-ts">${_chatTime(m.created_at)}</span></div>` : ''}
+        <div class="chat-bubble" onclick="this.closest('.chat-row').classList.toggle('sel')">${body}${canDel?`<button class="chat-del" onclick="event.stopPropagation();_chatDelete(${m.id})" aria-label="${LANG==='en'?'Delete':'Eliminar'}" title="${LANG==='en'?'Delete':'Eliminar'}">✕</button>`:''}</div>
+      </div>
+    </div>`;
+  });
+  stream.innerHTML = html;
+  if(forceScroll || nearBottom) stream.scrollTop = stream.scrollHeight;
+}
+
+function _chatGrow(el){
+  el.style.height = 'auto';
+  el.style.height = Math.min(el.scrollHeight, 120) + 'px';
+}
+
+async function _chatSend(){
+  const input = document.getElementById('chatInput');
+  if(!input) return;
+  const text = input.value.trim();
+  if(!text) return;
+  input.value = ''; _chatGrow(input);
+  if(_chatEmojiOpen) _chatToggleEmoji();
+  await _chatInsert({ message: text });
+}
+
+async function _chatInsert(fields){
+  const me = currentUser;
+  if(!me) return;
+  const body = Object.assign({ employee: me, room: CHAT_ROOM }, fields);
+  try{
+    const res = await fetch(`${SUPA_URL}/rest/v1/chat_messages`, {
+      method:'POST',
+      headers:{ 'apikey':SUPA_KEY, 'Authorization':`Bearer ${SUPA_KEY}`, 'Content-Type':'application/json', 'Prefer':'return=representation' },
+      body: JSON.stringify(body)
+    });
+    if(res.ok){
+      const rows = await res.json();
+      const row = Array.isArray(rows) ? rows[0] : rows;
+      if(row) _chatOnInsert(row);  // append now; realtime echo is deduped by id
+    } else {
+      showToast(LANG==='en'?'Could not send':'No se pudo enviar', 'warning', 2600);
+    }
+  }catch(_){
+    showToast(LANG==='en'?'No connection':'Sin conexión', 'warning', 2600);
+  }
+}
+
+async function _chatDelete(id){
+  const m = _chatMsgs.find(x=>x.id===id);
+  if(!m) return;
+  if(!(m.employee===currentUser || currentUser==='Duvan')) return;
+  if(!confirm(LANG==='en'?'Delete this message?':'¿Eliminar este mensaje?')) return;
+  // Soft delete: blank the content so it is truly gone from the DB, keep the row
+  // for thread order. Optimistic; realtime UPDATE reconciles for everyone.
+  m.deleted = true; m.message = ''; m.image_url = null; _chatRenderStream();
+  try{
+    await fetch(`${SUPA_URL}/rest/v1/chat_messages?id=eq.${id}`, {
+      method:'PATCH',
+      headers:{ 'apikey':SUPA_KEY, 'Authorization':`Bearer ${SUPA_KEY}`, 'Content-Type':'application/json' },
+      body: JSON.stringify({ deleted:true, message:'', image_url:null })
+    });
+  }catch(_){}
+}
+
+function _chatToggleEmoji(){
+  const pop = document.getElementById('chatEmojiPop');
+  if(!pop) return;
+  _chatEmojiOpen = !_chatEmojiOpen;
+  pop.style.display = _chatEmojiOpen ? 'flex' : 'none';
+  pop.setAttribute('aria-hidden', _chatEmojiOpen?'false':'true');
+}
+function _chatAddEmoji(e){
+  const input = document.getElementById('chatInput');
+  if(!input) return;
+  input.value += e; input.focus(); _chatGrow(input);
+}
+
+function _chatPickPhoto(){
+  const inp = document.getElementById('chatPhotoInput');
+  if(inp){ inp.value=''; inp.click(); }
+}
+
+async function _chatUploadPhoto(inputEl){
+  const file = inputEl.files && inputEl.files[0];
+  if(!file) return;
+  const me = currentUser;
+  if(!me) return;
+  showToast(LANG==='en'?'Uploading photo…':'Subiendo foto…', 'info', 2000);
+  try{
+    const blob = await _chatDownscale(file, 1280, 0.82);
+    const ext = 'webp';
+    const path = `${CHAT_ROOM}/${_wineSlug(me)||'user'}-${new Date().getTime()}-${Math.random().toString(36).slice(2,7)}.${ext}`;
+    const up = await fetch(`${SUPA_URL}/storage/v1/object/chat-images/${path}`, {
+      method:'POST',
+      headers:{ 'apikey':SUPA_KEY, 'Authorization':`Bearer ${SUPA_KEY}`, 'Content-Type':'image/webp', 'x-upsert':'false' },
+      body: blob
+    });
+    if(!up.ok){ showToast(LANG==='en'?'Upload failed':'Fallo al subir', 'warning', 2800); return; }
+    const url = `${SUPA_URL}/storage/v1/object/public/chat-images/${path}`;
+    const caption = (document.getElementById('chatInput')||{}).value?.trim() || '';
+    if(document.getElementById('chatInput')) { document.getElementById('chatInput').value=''; _chatGrow(document.getElementById('chatInput')); }
+    await _chatInsert({ image_url: url, message: caption });
+  }catch(_){
+    showToast(LANG==='en'?'Could not process image':'No se pudo procesar la imagen', 'warning', 2800);
+  }
+}
+
+// Downscale + re-encode to WebP on the client so uploads stay small on mobile
+function _chatDownscale(file, maxDim, quality){
+  return new Promise((resolve, reject)=>{
+    const img = new Image();
+    const url = URL.createObjectURL(file);
+    img.onload = ()=>{
+      URL.revokeObjectURL(url);
+      let { width:w, height:h } = img;
+      if(w > maxDim || h > maxDim){
+        if(w >= h){ h = Math.round(h * maxDim / w); w = maxDim; }
+        else { w = Math.round(w * maxDim / h); h = maxDim; }
+      }
+      const canvas = document.createElement('canvas');
+      canvas.width = w; canvas.height = h;
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(img, 0, 0, w, h);
+      canvas.toBlob(b=> b?resolve(b):reject(new Error('encode')), 'image/webp', quality);
+    };
+    img.onerror = ()=>{ URL.revokeObjectURL(url); reject(new Error('load')); };
+    img.src = url;
+  });
+}
+
+function _chatOpenPhoto(url){
+  const ov = document.createElement('div');
+  ov.className = 'chat-photo-overlay';
+  ov.onclick = ()=>ov.remove();
+  ov.innerHTML = `<img src="${_chatEsc(url)}" alt="foto"><button class="chat-photo-close" aria-label="Cerrar">✕</button>`;
+  document.body.appendChild(ov);
+}
+
+// Drop the realtime socket if the app is backgrounded/closed while in chat.
+window.addEventListener('pagehide', ()=>{ if(currentTab==='chat') _chatDisconnect(); });
+document.addEventListener('visibilitychange', ()=>{
+  if(document.visibilityState==='hidden' && currentTab==='chat') _chatDisconnect();
+  else if(document.visibilityState==='visible' && currentTab==='chat' && !_chatChannel) _chatConnect();
+});
 
 // Init — check for remembered session
 (function autoLogin(){
