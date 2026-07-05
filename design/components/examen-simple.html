@@ -1,114 +1,167 @@
-<!-- @dsCard group="Screens" name="Examen simplificado" subtitle="Una acción principal, config plegada, roles claros" -->
+<!-- @dsCard group="Screens" name="Examen simplificado v2" subtitle="Una acción principal con el oficio TUNIC real de la app" -->
 <!DOCTYPE html>
 <html lang="es">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Txoko · Examen simplificado</title>
+<title>Txoko · Examen v2</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Cormorant+Garamond:ital@1&family=Quicksand:wght@300;400;500;600;700&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Cormorant+Garamond:ital@0;1&family=Quicksand:wght@300;400;500;600;700&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
   :root{ --gold:#c49a3c; --gold3:#e4be68; --gold-deep:#7d5c2f; --ink:#1c2a22; --paper:#faf6ee;
-    --line:rgba(196,154,60,.16); --line2:rgba(196,154,60,.3); --rose:#c47068; --green:#2d6a3e; }
+    --line:rgba(196,154,60,.16); --line2:rgba(196,154,60,.3); --rose:#c47068; }
   *{box-sizing:border-box;margin:0;padding:0}
   body{background:#f4ede2;color:var(--ink);font-family:'Quicksand',sans-serif;margin:0;padding:1.2rem 0 4rem}
-  .note{padding:0 1rem .3rem;font-family:'DM Mono',monospace;font-size:.6rem;color:#8a8478;letter-spacing:.14em;text-transform:uppercase}
-  .blurb{padding:0 1rem .9rem;font-size:.74rem;color:rgba(28,42,34,.7);line-height:1.5}
-  .blurb b{color:var(--gold-deep)}
-  .frame{max-width:400px;margin:0 auto;background:#f4ede2;border:1px solid rgba(0,0,0,.06);padding:1.2rem .9rem 2rem}
+  .note{padding:0 1rem .3rem;font-family:'DM Mono',monospace;font-size:.6rem;color:#8a8478;letter-spacing:.14em;text-transform:uppercase;max-width:400px;margin:0 auto}
+  .frame{max-width:400px;margin:0 auto;border:1px solid rgba(0,0,0,.06);overflow:hidden;position:relative;
+    background:
+      radial-gradient(circle at 50% 50%, rgba(154,115,64,.035) 1px, transparent 1.4px) 0 0/18px 18px,
+      linear-gradient(180deg,#f7f0e2 0%,#f4ede2 100%);
+    padding:1.6rem 1rem 2rem}
+  /* aura dorada real de la pantalla de examen */
+  .frame::before{content:'';position:absolute;inset:-8px -14px 55% -14px;pointer-events:none;
+    background:
+      radial-gradient(ellipse 70% 55% at 50% 12%, rgba(228,196,122,.30) 0%, rgba(228,196,122,.12) 30%, rgba(228,196,122,0) 65%),
+      radial-gradient(ellipse 90% 75% at 50% 40%, rgba(196,154,60,.08) 0%, rgba(196,154,60,0) 60%)}
 
-  /* hero mínimo */
-  .crown{display:flex;align-items:center;gap:.6rem;justify-content:center;margin-bottom:.6rem}
-  .crown::before,.crown::after{content:'';width:46px;height:1px;background:linear-gradient(90deg,transparent,rgba(196,154,60,.55),transparent)}
-  .crown span{font-family:'Cinzel',serif;font-size:.55rem;letter-spacing:.35em;color:var(--gold);opacity:.7}
-  h1{font-family:'Cinzel',serif;font-size:1.7rem;font-weight:500;text-align:center;color:var(--ink)}
-  .sub{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1rem;color:rgba(28,42,34,.6);text-align:center;margin:.35rem auto .3rem;max-width:300px;line-height:1.4}
-  /* orientación: qué es cada cosa */
-  .orient{font-family:'DM Mono',monospace;font-size:.56rem;letter-spacing:.08em;color:rgba(28,42,34,.5);
-    text-align:center;margin:.5rem auto 1.1rem;max-width:330px;line-height:1.7;text-transform:uppercase}
+  /* corona + medallón hexagonal (los reales) */
+  .crown{display:flex;align-items:center;gap:.7rem;justify-content:center;margin-bottom:1rem;position:relative}
+  .crown::before,.crown::after{content:'';width:52px;height:1px;background:linear-gradient(90deg,transparent,rgba(196,154,60,.55),transparent)}
+  .crown span{font-family:'Cinzel',serif;font-size:.55rem;letter-spacing:.35em;color:var(--gold);opacity:.75}
+  .medal-wrap{display:flex;justify-content:center;margin-bottom:.85rem;position:relative}
+  .medal{width:56px;height:56px;clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);
+    background:radial-gradient(circle at 35% 30%, #f6e0a0 0%, #d9ad55 45%, #a8802f 100%);
+    display:flex;align-items:center;justify-content:center;color:#3a2a10;
+    box-shadow:0 0 0 1px rgba(196,154,60,.35),0 0 22px rgba(228,196,122,.45),inset 0 1px 0 rgba(255,255,255,.45)}
+  .medal svg{width:22px;height:22px;stroke:#3a2a10}
+  .medal-wrap::after{content:'';position:absolute;top:50%;left:50%;width:110px;height:110px;transform:translate(-50%,-50%);
+    background:radial-gradient(circle,rgba(228,196,122,.35) 0%,transparent 65%);pointer-events:none;z-index:-1}
+
+  h1{font-family:'Cinzel',serif;font-size:1.9rem;font-weight:500;text-align:center;color:var(--ink);letter-spacing:.05em;position:relative}
+  .sub{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.05rem;color:rgba(28,42,34,.62);text-align:center;margin:.4rem auto .25rem;max-width:300px;line-height:1.4;position:relative}
+  .orient{font-family:'DM Mono',monospace;font-size:.55rem;letter-spacing:.1em;color:rgba(28,42,34,.5);
+    text-align:center;margin:.6rem auto 1.4rem;max-width:330px;line-height:1.8;text-transform:uppercase;position:relative}
   .orient b{color:var(--gold-deep);font-weight:500}
 
-  /* ACCIÓN PRINCIPAL: un tap y empiezas */
-  .primary{display:flex;align-items:center;gap:.8rem;width:100%;min-height:64px;padding:1rem 1.1rem;margin-bottom:.55rem;
-    border:none;border-radius:16px;cursor:pointer;text-align:left;
-    background:linear-gradient(145deg,#d4aa4c,#c49a3c);box-shadow:0 4px 16px rgba(196,154,60,.35)}
-  .primary .ic{width:38px;height:38px;flex-shrink:0;border-radius:10px;background:rgba(255,255,255,.22);display:flex;align-items:center;justify-content:center}
-  .primary .ic svg{width:20px;height:20px;stroke:#1a0f05}
-  .primary .tt{font-family:'Cinzel',serif;font-weight:600;font-size:1rem;color:#1a0f05}
-  .primary .ss{font-family:'DM Mono',monospace;font-size:.56rem;letter-spacing:.1em;color:rgba(26,15,5,.65);margin-top:.15rem;text-transform:uppercase}
-  .primary .go{margin-left:auto;color:#1a0f05;font-size:1.2rem}
+  /* ── BOTÓN PRINCIPAL: el btn-start real (relieve, brillo, sello) ── */
+  .primary{position:relative;overflow:hidden;cursor:pointer;display:block;width:100%;
+    background:linear-gradient(180deg,#b48a4a 0%,#9a7340 48%,var(--gold-deep) 100%);
+    color:#fff6df;border:1px solid rgba(196,154,60,.55);border-radius:14px;
+    padding:1.05rem 1.2rem .95rem;text-align:center;
+    font-family:'Cinzel',serif;font-weight:600;letter-spacing:.16em;text-transform:uppercase;
+    text-shadow:0 1px 2px rgba(30,20,10,.45);
+    box-shadow:0 5px 0 #5f4320,0 6px 14px rgba(196,154,60,.28),inset 0 1px 0 rgba(255,255,255,.22)}
+  .primary .tt{font-size:.95rem;display:block}
+  .primary .ss{display:block;font-family:'DM Mono',monospace;font-size:.52rem;letter-spacing:.18em;color:rgba(255,246,223,.75);margin-top:.35rem;text-transform:uppercase}
+  .primary::after{content:'';position:absolute;top:0;bottom:0;left:-70%;width:40%;transform:skewX(-20deg);
+    background:linear-gradient(90deg,transparent,rgba(255,255,255,.28),transparent);animation:shine 3.2s ease-in-out infinite}
+  @keyframes shine{0%,60%{left:-70%}100%{left:130%}}
+  .primary .corner{position:absolute;width:10px;height:10px;border:1.5px solid rgba(255,246,223,.5)}
+  .primary .c1{top:6px;left:6px;border-right:none;border-bottom:none}
+  .primary .c2{top:6px;right:6px;border-left:none;border-bottom:none}
+  .primary .c3{bottom:6px;left:6px;border-right:none;border-top:none}
+  .primary .c4{bottom:6px;right:6px;border-left:none;border-top:none}
 
-  /* config plegada */
-  .custom{display:flex;align-items:center;gap:.6rem;width:100%;min-height:50px;padding:.75rem 1rem;margin-bottom:1.1rem;
-    border:1px dashed rgba(196,154,60,.4);border-radius:13px;background:transparent;cursor:pointer;text-align:left;
-    font-family:'DM Mono',monospace;font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;color:var(--gold-deep)}
-  .custom .chev{margin-left:auto;display:inline-flex;width:24px;height:24px;border-radius:7px;align-items:center;justify-content:center;
-    background:rgba(196,154,60,.14);border:1px solid rgba(196,154,60,.3)}
-  .custom .chev svg{width:12px;height:12px;stroke:var(--gold)}
+  /* personalizar: pergamino con sello de lacre en chip */
+  .custom{display:flex;align-items:center;justify-content:center;gap:.6rem;width:100%;min-height:46px;padding:.7rem 1rem;
+    margin:.65rem 0 1.4rem;border:none;background:transparent;cursor:pointer;
+    font-family:'DM Mono',monospace;font-size:.6rem;letter-spacing:.16em;text-transform:uppercase;color:rgba(125,92,47,.85)}
+  .custom::before,.custom::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,transparent,rgba(196,154,60,.3),transparent)}
+  .custom .lbl{display:inline-flex;align-items:center;gap:.5rem}
+  .custom .chev{display:inline-flex;width:22px;height:22px;border-radius:6px;align-items:center;justify-content:center;
+    background:rgba(196,154,60,.13);border:1px solid rgba(196,154,60,.3)}
+  .custom .chev svg{width:11px;height:11px;stroke:var(--gold)}
 
-  /* simulacro de alérgenos: rol claro, separado */
-  .divider{display:flex;align-items:center;gap:.6rem;margin:.2rem 0 .7rem}
-  .divider::before,.divider::after{content:'';flex:1;height:1.5px;background:linear-gradient(90deg,transparent,rgba(196,154,60,.2),transparent)}
-  .divider span{font-family:'Cinzel',serif;font-size:.6rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--gold)}
-  .drill{display:flex;align-items:center;gap:.8rem;width:100%;min-height:60px;padding:.9rem 1rem;margin-bottom:1.2rem;
-    border:1px solid rgba(196,112,104,.35);border-left:4px solid var(--rose);border-radius:14px;background:var(--paper);cursor:pointer;text-align:left;
-    box-shadow:0 2px 10px rgba(196,112,104,.08)}
-  .drill .ic{width:36px;height:36px;flex-shrink:0;border-radius:10px;background:rgba(196,112,104,.12);display:flex;align-items:center;justify-content:center}
-  .drill .ic svg{width:19px;height:19px;stroke:var(--rose)}
-  .drill .tt{font-family:'Cinzel',serif;font-weight:600;font-size:.92rem;color:var(--ink)}
-  .drill .ss{font-size:.7rem;color:rgba(28,42,34,.6);margin-top:.15rem;line-height:1.35}
-  .drill .go{margin-left:auto;color:var(--rose)}
+  /* divisor dorado con gema (el gilded divider real) */
+  .gdiv{display:flex;align-items:center;justify-content:center;margin:.4rem 0 .9rem;position:relative}
+  .gdiv::before,.gdiv::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,transparent,rgba(196,154,60,.35),transparent)}
+  .gdiv .gem{width:9px;height:9px;transform:rotate(45deg);margin:0 .7rem;
+    background:linear-gradient(135deg,#e4be68,#c49a3c);box-shadow:0 0 8px rgba(228,190,104,.5)}
+  .gdiv-label{font-family:'Cinzel',serif;font-size:.6rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);margin:0 .5rem}
 
-  /* progreso compacto: stats + barras juntos, al final */
-  .prog{background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:1rem;box-shadow:0 2px 10px rgba(28,42,34,.05)}
-  .prog-stats{display:flex;justify-content:space-around;margin-bottom:.9rem}
-  .prog-stats .n{font-family:'Cinzel',serif;font-size:1.25rem;font-weight:600;color:var(--gold-deep);text-align:center}
-  .prog-stats .l{font-family:'DM Mono',monospace;font-size:.5rem;letter-spacing:.12em;color:rgba(28,42,34,.5);text-transform:uppercase;text-align:center;margin-top:.15rem}
-  .bar{margin-bottom:.6rem}
-  .bar .h{display:flex;justify-content:space-between;font-size:.68rem;font-weight:600;color:rgba(28,42,34,.7);margin-bottom:.25rem}
+  /* simulacro: tarjeta pergamino con esquinas grabadas y acento de alerta */
+  .drill{position:relative;display:flex;align-items:center;gap:.85rem;width:100%;min-height:66px;padding:1rem 1.05rem;
+    margin-bottom:1.5rem;border:1px solid rgba(196,112,104,.3);border-radius:14px;cursor:pointer;text-align:left;
+    background:linear-gradient(155deg,#faf6ee,#f6efe0);box-shadow:0 3px 12px rgba(196,112,104,.08)}
+  .drill .corner{position:absolute;width:9px;height:9px;border:1.2px solid rgba(196,112,104,.45)}
+  .drill .c1{top:5px;left:5px;border-right:none;border-bottom:none}
+  .drill .c2{top:5px;right:5px;border-left:none;border-bottom:none}
+  .drill .c3{bottom:5px;left:5px;border-right:none;border-top:none}
+  .drill .c4{bottom:5px;right:5px;border-left:none;border-top:none}
+  .drill .hex{width:40px;height:40px;flex-shrink:0;clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);
+    background:radial-gradient(circle at 35% 30%, #e8b0a8 0%, #c47068 60%, #a85848 100%);
+    display:flex;align-items:center;justify-content:center;box-shadow:inset 0 1px 0 rgba(255,255,255,.4)}
+  .drill .hex svg{width:18px;height:18px;stroke:#fff}
+  .drill .tt{font-family:'Cinzel',serif;font-weight:600;font-size:.95rem;color:var(--ink)}
+  .drill .ss{font-size:.7rem;color:rgba(28,42,34,.62);margin-top:.2rem;line-height:1.4}
+  .drill .ss b{color:var(--rose);font-weight:600}
+
+  /* dominio: panel oscuro con runas de esquina (el de Tu Progreso) */
+  .prog{position:relative;overflow:hidden;border-radius:16px;padding:1.15rem 1rem 1rem;
+    background:linear-gradient(160deg,#2a3530 0%,#1c2a22 40%,#243028 100%);
+    border:1.5px solid rgba(196,154,60,.25);
+    box-shadow:0 6px 24px rgba(0,0,0,.15),inset 0 1px 0 rgba(196,154,60,.1)}
+  .prog::before{content:'';position:absolute;inset:0;pointer-events:none;
+    background-image:url("data:image/svg+xml,%3Csvg width='40' height='35' viewBox='0 0 40 35' xmlns='http://www.w3.org/2000/svg'%3E%3Cpolygon points='20,2 38,17.5 20,33 2,17.5' fill='none' stroke='rgba(196,154,60,0.07)' stroke-width='0.5'/%3E%3C/svg%3E")}
+  .rune{position:absolute;width:14px;height:14px;opacity:.4}
+  .rune svg{width:14px;height:14px}
+  .r1{top:8px;left:10px}.r2{top:8px;right:10px}.r3{bottom:8px;left:10px}.r4{bottom:8px;right:10px}
+  .prog-stats{display:flex;justify-content:space-around;align-items:flex-start;margin-bottom:1rem;position:relative}
+  .prog-stats .sep{width:1px;align-self:stretch;background:linear-gradient(180deg,transparent,rgba(196,154,60,.35),transparent)}
+  .prog-stats .n{font-family:'Cinzel',serif;font-size:1.3rem;font-weight:600;color:#e4be68;text-align:center;text-shadow:0 0 14px rgba(228,190,104,.35)}
+  .prog-stats .l{font-family:'DM Mono',monospace;font-size:.5rem;letter-spacing:.14em;color:rgba(244,237,226,.5);text-transform:uppercase;text-align:center;margin-top:.2rem}
+  .bar{margin-bottom:.55rem;position:relative}
+  .bar .h{display:flex;justify-content:space-between;font-size:.66rem;font-weight:600;color:rgba(244,237,226,.8);margin-bottom:.25rem}
   .bar .h b{font-family:'DM Mono',monospace;font-weight:500}
-  .bar .t{height:6px;border-radius:3px;background:rgba(196,154,60,.12);overflow:hidden}
-  .bar .f{height:100%;border-radius:3px}
+  .bar .t{height:6px;border-radius:3px;background:rgba(0,0,0,.3);overflow:hidden;box-shadow:inset 0 1px 2px rgba(0,0,0,.4)}
+  .bar .f{height:100%;border-radius:3px;box-shadow:0 0 8px currentColor}
 </style>
 </head>
 <body>
-  <div class="note">Examen — propuesta simplificada</div>
-  <div class="blurb"><b>1)</b> Fuera "Modo Examen" (la pestaña ya dice Examen); <b>2)</b> una línea que orienta qué es cada cosa; <b>3)</b> UNA acción principal — empezar un examen rápido de un toque; <b>4)</b> la configuración (tema · categoría · nº preguntas) se pliega en "Personalizar"; <b>5)</b> el Test de Alérgenos se renombra <b>Simulacro de Alérgenos</b> con su rol explicado — no compite con el examen; <b>6)</b> stats + dominio en UNA tarjeta compacta al final.</div>
+  <div class="note">Examen — v2 con el oficio real de la app</div>
 
   <div class="frame">
     <div class="crown"><span>EVALUACIÓN</span></div>
+    <div class="medal-wrap"><div class="medal"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/><path d="M9 12h6M9 16h4"/></svg></div></div>
     <h1>Examen</h1>
     <div class="sub">"Mide tu dominio. Cada acierto sube tu precisión y tu rango."</div>
-    <div class="orient"><b>Repasar</b> entrena tu memoria a diario · <b>el examen</b> comprueba lo que ya dominas</div>
+    <div class="orient"><b>Repasar</b> entrena tu memoria a diario<br><b>El examen</b> comprueba lo que ya dominas</div>
 
     <button class="primary">
-      <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="6 3 20 12 6 21 6 3"/></svg></span>
-      <span><span class="tt">Empezar examen</span><br><span class="ss">10 preguntas · todos los temas</span></span>
-      <span class="go">›</span>
+      <span class="corner c1"></span><span class="corner c2"></span><span class="corner c3"></span><span class="corner c4"></span>
+      <span class="tt">Empezar examen</span>
+      <span class="ss">10 preguntas · todos los temas</span>
     </button>
 
-    <button class="custom">Personalizar — tema · categoría · nº de preguntas
-      <span class="chev"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.6" stroke-linecap="round"><path d="M6 9l6 6 6-6"/></svg></span>
+    <button class="custom"><span class="lbl">Personalizar
+      <span class="chev"><svg viewBox="0 0 24 24" fill="none" stroke-width="3" stroke-linecap="round"><path d="M6 9l6 6 6-6"/></svg></span></span>
     </button>
 
-    <div class="divider"><span>Entrenamiento crítico</span></div>
+    <div class="gdiv"><span class="gdiv-label">Entrenamiento crítico</span></div>
     <button class="drill">
-      <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></span>
-      <span><span class="tt">Simulacro de Alérgenos</span><br><span class="ss">Situaciones reales con trampas — distinto del repaso: aquí se entrena la seguridad</span></span>
-      <span class="go">›</span>
+      <span class="corner c1"></span><span class="corner c2"></span><span class="corner c3"></span><span class="corner c4"></span>
+      <span class="hex"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></span>
+      <span style="flex:1"><span class="tt">Simulacro de Alérgenos</span><br>
+      <span class="ss">Situaciones reales <b>con trampas</b> — aquí se entrena la seguridad, no la memoria</span></span>
     </button>
 
-    <div class="divider"><span>Tu dominio</span></div>
+    <div class="gdiv"><span class="gdiv-label">Tu dominio</span></div>
     <div class="prog">
+      <span class="rune r1"><svg viewBox="0 0 16 16"><polygon points="8,0 16,8 8,16 0,8" fill="none" stroke="rgba(196,154,60,.6)" stroke-width=".6"/><circle cx="8" cy="8" r="1" fill="rgba(196,154,60,.5)"/></svg></span>
+      <span class="rune r2"><svg viewBox="0 0 16 16"><polygon points="8,0 16,8 8,16 0,8" fill="none" stroke="rgba(196,154,60,.6)" stroke-width=".6"/><circle cx="8" cy="8" r="1" fill="rgba(196,154,60,.5)"/></svg></span>
+      <span class="rune r3"><svg viewBox="0 0 16 16"><polygon points="8,0 16,8 8,16 0,8" fill="none" stroke="rgba(196,154,60,.6)" stroke-width=".6"/><circle cx="8" cy="8" r="1" fill="rgba(196,154,60,.5)"/></svg></span>
+      <span class="rune r4"><svg viewBox="0 0 16 16"><polygon points="8,0 16,8 8,16 0,8" fill="none" stroke="rgba(196,154,60,.6)" stroke-width=".6"/><circle cx="8" cy="8" r="1" fill="rgba(196,154,60,.5)"/></svg></span>
       <div class="prog-stats">
         <div><div class="n">59</div><div class="l">Preguntas</div></div>
+        <div class="sep"></div>
         <div><div class="n">71%</div><div class="l">Precisión</div></div>
-        <div><div class="n">8<span style="font-size:.7em;opacity:.6">/90</span></div><div class="l">Dominados</div></div>
+        <div class="sep"></div>
+        <div><div class="n">8<span style="font-size:.65em;opacity:.6">/90</span></div><div class="l">Dominados</div></div>
       </div>
-      <div class="bar"><div class="h"><span>Alérgenos</span><b>67%</b></div><div class="t"><div class="f" style="width:67%;background:linear-gradient(90deg,#c47068,#c47068cc)"></div></div></div>
-      <div class="bar"><div class="h"><span>Ingredientes</span><b>73%</b></div><div class="t"><div class="f" style="width:73%;background:linear-gradient(90deg,#4888a0,#4888a0cc)"></div></div></div>
-      <div class="bar"><div class="h"><span>Storytelling</span><b>73%</b></div><div class="t"><div class="f" style="width:73%;background:linear-gradient(90deg,#7a6aaa,#7a6aaacc)"></div></div></div>
+      <div class="bar"><div class="h"><span>Alérgenos</span><b style="color:#f0c8c0">67%</b></div><div class="t"><div class="f" style="width:67%;background:linear-gradient(90deg,#c47068,#e8a89e);color:#c47068"></div></div></div>
+      <div class="bar"><div class="h"><span>Ingredientes</span><b style="color:#b0d8e8">73%</b></div><div class="t"><div class="f" style="width:73%;background:linear-gradient(90deg,#4888a0,#7ab8d0);color:#4888a0"></div></div></div>
+      <div class="bar" style="margin-bottom:0"><div class="h"><span>Storytelling</span><b style="color:#c8b8e0">73%</b></div><div class="t"><div class="f" style="width:73%;background:linear-gradient(90deg,#7a6aaa,#a898d0);color:#7a6aaa"></div></div></div>
     </div>
   </div>
 </body>
