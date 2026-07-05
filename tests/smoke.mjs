@@ -390,6 +390,31 @@ test('CSP does not break critical paths (Supabase, CDNs, fonts, map)', () => {
     'www.youtube.com'                   // video embeds (frame-src)
   ];
   for (const o of required) assert(csp.includes(o), `CSP no longer allows ${o} — would break a feature`);
+  // La Terraza chat needs the realtime WebSocket + storage images.
+  assert(/wss:\/\/advkoujfgbrrjvqexrcu\.supabase\.co/.test(csp),
+    'CSP connect-src must allow the Supabase realtime WebSocket (wss) for the chat');
+  assert(/img-src[^;]*advkoujfgbrrjvqexrcu\.supabase\.co/.test(csp),
+    'CSP img-src must allow Supabase storage so chat photos (and wine images) render');
+});
+
+test('La Terraza chat: nav wired, realtime teardown, safe render, moderation', () => {
+  // Nav button + route so the tab is reachable and renders.
+  assert(/showTab\('chat'\)/.test(html) && html.includes('navChat'), 'chat nav entry missing');
+  assert(/chat:renderChat/.test(html), 'chat route not registered in renderMap');
+  assert(/function renderChat\(/.test(html), 'renderChat() missing');
+  // Realtime must be torn down when leaving the tab (no socket/presence leak).
+  assert(/currentTab==='chat' && tab!=='chat'/.test(html) && /function _chatDisconnect\(/.test(html),
+    'chat realtime teardown on tab change missing');
+  // User content must be escaped (no XSS via message/name/photo url).
+  const rc = html.slice(html.indexOf('function _chatRenderStream'), html.indexOf('function _chatRenderStream') + 3000);
+  assert(/_chatEsc\(m\.message\)/.test(rc) && /_chatEsc\(m\.image_url\)/.test(rc) && /_chatEsc\(m\.employee\)/.test(rc),
+    'chat message/photo/author must be HTML-escaped');
+  // Moderation: author deletes own; supervisor 'Duvan' deletes any.
+  assert(/m\.employee===currentUser \|\| currentUser==='Duvan'/.test(html),
+    'chat delete gate (author or supervisor) missing');
+  // Photos are downscaled client-side before upload (mobile bandwidth).
+  assert(/function _chatDownscale\(/.test(html) && /\.toBlob\(/.test(html) && /'image\/webp'/.test(html),
+    'chat photo downscale-to-webp missing');
 });
 
 test('wine map is real cartography (Voyager basemap, no fake 3D or DO shapes)', () => {
