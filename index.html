@@ -13614,17 +13614,25 @@ function _generateWineChoices(q){
     }
   }
 
-  // 7. GENERAL/CONCEPT QUESTIONS → same category flashcards (most confusing)
-  else {
-    // Prioritize answers from same category (most plausible distractors)
-    const sameCat = WINE_FLASHCARDS.filter(f => (_en?(f.a_en||f.a):f.a) !== correctAnswer && f.cat === category);
-    sameCat.forEach(f => distractorPool.push(_en?(f.a_en||f.a):f.a));
+  // 7. FLASHCARD-ANSWER POOL — always computed (was only the fallback branch).
+  // Same-category answers first (most plausible), then a sample of the rest.
+  const fcPool = [];
+  const sameCat = WINE_FLASHCARDS.filter(f => (_en?(f.a_en||f.a):f.a) !== correctAnswer && f.cat === category);
+  sameCat.forEach(f => fcPool.push(_en?(f.a_en||f.a):f.a));
+  const otherCat = WINE_FLASHCARDS.filter(f => (_en?(f.a_en||f.a):f.a) !== correctAnswer && f.cat !== category);
+  otherCat.sort(() => Math.random() - .5);
+  otherCat.slice(0, 10).forEach(f => fcPool.push(_en?(f.a_en||f.a):f.a));
 
-    // Then other categories
-    const otherCat = WINE_FLASHCARDS.filter(f => (_en?(f.a_en||f.a):f.a) !== correctAnswer && f.cat !== category);
-    otherCat.sort(() => Math.random() - .5);
-    otherCat.slice(0, 10).forEach(f => distractorPool.push(_en?(f.a_en||f.a):f.a));
-  }
+  // ═══ SHAPE GUARD ═══
+  // A sentence-shaped correct among bare-term distractors (or the reverse)
+  // lets the option SHAPE answer the question — measured on the real cards:
+  // 14% (ES) / 36% (EN) of questions had a long correct vs all-short wrongs.
+  // Prefer distractors of the same shape as the correct answer; the other
+  // pool remains as backfill only.
+  const isSentence = correctAnswer.length > 50;
+  const mergedPool = isSentence
+    ? [...fcPool, ...distractorPool]
+    : [...distractorPool, ...fcPool];
 
   // ═══ DEDUPLICATION AND SELECTION ═══
   const normalize = s => s.toLowerCase().trim().replace(/[.,;:!?]/g, '');
@@ -13633,9 +13641,9 @@ function _generateWineChoices(q){
 
   // Shuffle pool but keep priority order (unshift items stay first)
   // Only shuffle the second half (non-priority items)
-  const priorityCount = Math.min(distractorPool.length, 8);
-  const priority = distractorPool.slice(0, priorityCount);
-  const rest = distractorPool.slice(priorityCount);
+  const priorityCount = Math.min(mergedPool.length, 8);
+  const priority = mergedPool.slice(0, priorityCount);
+  const rest = mergedPool.slice(priorityCount);
   for(let i = rest.length - 1; i > 0; i--){
     const j = Math.floor(Math.random() * (i + 1));
     [rest[i], rest[j]] = [rest[j], rest[i]];
@@ -13647,19 +13655,26 @@ function _generateWineChoices(q){
   }
   const finalPool = [...priority, ...rest];
 
-  for(const d of finalPool){
-    if(choices.length >= 4) break;
-    const dNorm = normalize(d);
-    if(seen.has(dNorm)) continue;
-    if(dNorm.length < 2) continue;
-    // Skip if >50% word overlap (stricter than before)
-    const cWords = new Set(correctNorm.split(/\s+/));
-    const dWords = new Set(dNorm.split(/\s+/));
-    const overlap = [...cWords].filter(w => dWords.has(w)).length;
-    if(cWords.size > 1 && overlap / Math.max(cWords.size, dWords.size) > 0.5) continue;
-    if(correctNorm.includes(dNorm) || dNorm.includes(correctNorm)) continue;
-    seen.add(dNorm);
-    choices.push({text: d, correct: false});
+  // Two-pass pick: first only distractors whose length is in the same window
+  // as the correct (kills "pick the longest" — correct was the longest option
+  // in ~50% of questions); second pass backfills with anything if needed.
+  const _inWindow = d => { const r = d.length / Math.max(1, correctAnswer.length); return r >= 0.35 && r <= 2.8; };
+  for(const strictLen of [true, false]){
+    for(const d of finalPool){
+      if(choices.length >= 4) break;
+      if(strictLen && !_inWindow(d)) continue;
+      const dNorm = normalize(d);
+      if(seen.has(dNorm)) continue;
+      if(dNorm.length < 2) continue;
+      // Skip if >50% word overlap (stricter than before)
+      const cWords = new Set(correctNorm.split(/\s+/));
+      const dWords = new Set(dNorm.split(/\s+/));
+      const overlap = [...cWords].filter(w => dWords.has(w)).length;
+      if(cWords.size > 1 && overlap / Math.max(cWords.size, dWords.size) > 0.5) continue;
+      if(correctNorm.includes(dNorm) || dNorm.includes(correctNorm)) continue;
+      seen.add(dNorm);
+      choices.push({text: d, correct: false});
+    }
   }
 
   // Fallback if still not enough
@@ -19952,9 +19967,20 @@ function renderLqaInfo(){
   </div>`;
 }
 
+// Session copy of an authored exam question with its options shuffled in
+// lockstep (ES+EN) and the correct index remapped. The authored order was
+// rendered as-is, so option positions were learnable across sessions.
+function _lqaShuffledExamQ(q){
+  const order = _lqaShuffle(q.options.map((_,i)=>i));
+  return Object.assign({}, q, {
+    options: order.map(i=>q.options[i]),
+    options_en: order.map(i=>q.options_en[i]),
+    correct: order.indexOf(q.correct)
+  });
+}
 function startLqaExam(){
   _lqaResetState(lqaExamState);
-  lqaExamState.questions = _lqaShuffle(LQA_EXAM_QUESTIONS).slice(0,10);
+  lqaExamState.questions = _lqaShuffle(LQA_EXAM_QUESTIONS).slice(0,10).map(_lqaShuffledExamQ);
   lqaExamState.startedAt = Date.now();
   renderLqaExamQuestion();
 }
@@ -20132,9 +20158,23 @@ async function startLqaSituations(){
   const emp = getEmp(currentUser);
   const recent = (emp && emp.lqaSitRecent) || [];
   _lqaResetState(lqaSitState);
-  lqaSitState.questions = _lqaPickFresh(LQA_SITUATIONS, recent, 10);
+  lqaSitState.questions = _lqaPickFresh(LQA_SITUATIONS, recent, 10).map(_lqaShuffledSituation);
   lqaSitState.startedAt = Date.now();
   renderLqaSituationQuestion();
+}
+// Session copy of a situation with options shuffled in lockstep (ES+EN).
+// Measured on the authored data: 44% of correct answers sat on option 2 and
+// 78% were the longest option — fixed order let position do the answering.
+// _map preserves displayed→original indices so LQA_OPTION_TAGS (philosophy
+// diagnostics) keep pointing at the authored option.
+function _lqaShuffledSituation(sc){
+  const order = _lqaShuffle(sc.opts.map((_,i)=>i));
+  return Object.assign({}, sc, {
+    opts: order.map(i=>sc.opts[i]),
+    opts_en: order.map(i=>sc.opts_en[i]),
+    corr: order.indexOf(sc.corr),
+    _map: order
+  });
 }
 function renderLqaSituationQuestion(){
   const s = lqaSitState;
@@ -20178,7 +20218,9 @@ function lqaSituationAnswer(idx){
   const sc = s.questions[s.index];
   const isCorrect = (idx === sc.corr);
   if (isCorrect) s.score++;
-  s.answers.push({ qIdx: s.index, picked: idx, isCorrect, cat: sc.cat, tag: _lqaTagFor(sc.id, idx) });
+  // _map translates the displayed index back to the authored one so the
+  // philosophy tag lands on the option the author annotated.
+  s.answers.push({ qIdx: s.index, picked: idx, isCorrect, cat: sc.cat, tag: _lqaTagFor(sc.id, sc._map ? sc._map[idx] : idx) });
 
   const c = document.getElementById('appContent');
   c.innerHTML = `<div class="sup-wrap" role="region" aria-live="polite">
