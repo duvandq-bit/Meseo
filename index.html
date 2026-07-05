@@ -3720,8 +3720,13 @@ function _simDedupeOptions(dishArr){
 }
 function _simExtractIngredients(dish){
   if(!dish.ingredients) return [];
-  // Split on commas, periods, colons; dedupe; filter short and trivially obvious
-  return dish.ingredients.split(/[,\.:;]/).map(s=>s.trim()).filter(s=>s.length>2 && s.length<30
+  // Split on commas, periods, colons; strip parentheses BEFORE filtering —
+  // "(Harina, agua)" used to leak the token "agua)" past the trivial-word
+  // filter and produce absurd guest questions like "¿lleva agua)?" (owner-
+  // reported). Dedupe; filter short and trivially obvious.
+  return dish.ingredients.split(/[,\.:;]/)
+    .map(s=>s.replace(/[()]/g,' ').replace(/\s+/g,' ').trim())
+    .filter(s=>s.length>2 && s.length<30
     && !/^(rebozado|tempura|espuma|salsa|refrito|aderezo|vinagreta|demi glace|polvo de)/i.test(s)
     && !/^(agua|water|sal|salt|aceite|oil|azúcar|sugar|pimienta|pepper|hielo|ice)$/i.test(s)
   );
@@ -4354,7 +4359,14 @@ function _scenarioMultipleAllergies(dish, dd, _en){
 function _scenarioPregnancy(dish, dd, _en){
   const text = ((dish.ingredients||'')+' '+(dish.notes||'')+' '+dish.name).toLowerCase();
   const raw = /(crudo|tartar|carpaccio|ceviche|tataki|marinado|sashimi|tiradito|huevo de codorniz|mahonesa|mayonesa casera)/i.test(text);
-  const alcohol = /(flamb|brandy|coñac|ron|whisky|vodka|porto|sake|vino(?! de)|cerveza)/i.test(text);
+  // Word-bounded liquor tokens: unbounded /ron/ matched inside "Txipiron" /
+  // "boquerones" and falsely flagged dishes as alcoholic (owner-reported on
+  // Calamares a la Andaluza). Beer/wine in a fried or baked preparation
+  // (tempura, rebozado, masa) loses its alcohol in cooking — owner-confirmed
+  // — so it only counts when no such preparation is mentioned.
+  const liquor = /\bflamb\w*|\b(brandy|coñac|ron|whisky|vodka|porto|oporto|sake)\b/i.test(text);
+  const fermented = /\b(vino(?! de)|cerveza)\b/i.test(text) && !/(tempura|rebozado|masa|frit\w*|hornead\w*)/i.test(text);
+  const alcohol = liquor || fermented;
   const blueCheese = /(cabrales|queso azul|roquefort|gorgonzola)/i.test(text);
   const risky = raw || alcohol || blueCheese;
   // Fire on safe dishes almost as often as risky ones — with the old 70% skip
@@ -4377,7 +4389,8 @@ function _scenarioPregnancy(dish, dd, _en){
 function _scenarioChildFriendly(dish, dd, _en){
   const text = ((dish.ingredients||'')+' '+(dish.notes||'')+' '+dish.name).toLowerCase();
   const spicy = /(guindilla|picante|cayena|chili|wasabi|jalapeño|pimentón picante)/i.test(text);
-  const alcohol = /(flamb|brandy|coñac|ron|whisky|vodka|porto|sake)/i.test(text);
+  // Word-bounded: /ron/ used to match inside "Txipiron" (owner-reported).
+  const alcohol = /\bflamb\w*|\b(brandy|coñac|ron|whisky|vodka|porto|oporto|sake)\b/i.test(text);
   const raw = /(crudo|tartar|carpaccio|ceviche|tataki|marinado|sashimi|tiradito)/i.test(text);
   const kidsOk = !spicy && !alcohol && !raw;
   // Dessert and Hamburguesas almost always kid-friendly — skip trivial
@@ -4489,7 +4502,11 @@ function _scenarioVariantRemovable(dish, dd, _en){
 // has it as a removable component per its card. Derived entirely from notes.
 function _scenarioWhichAdaptable(dish, dd, _en){
   if(!dish.allergens || dish.allergens.length===0) return null;
-  const mains = _simMainDishes();
+  // Exclude the current dish from the options: the Smart Review card header
+  // names it, which would bias guessing toward/away from it. Compare by
+  // display name too — lunch/dinner twins share names (e.g. Ensalada verde).
+  const _curName = _simDishName(dish).toLowerCase();
+  const mains = _simMainDishes().filter(d=>d.id!==dish.id && _simDishName(d).toLowerCase()!==_curName);
   for(const a of _djShuffle([...dish.allergens])){
     const withA = mains.filter(d=>d.allergens && d.allergens.includes(a));
     const adaptable = withA.filter(d=>!_simNonRemovableAllergens(d).includes(a));
@@ -4520,10 +4537,11 @@ function _scenarioWhichAdaptable(dish, dd, _en){
   return null;
 }
 
-// ═══ Prep-time notice — WHICH dish carries an explicit wait ═══
-// Every stated wait on this menu happens to be ~30 min, so asking for the
-// duration is answerable by rote after one round. The real skill is knowing
-// WHICH dishes carry a wait at all — options are dishes, correct varies.
+// ═══ Prep-time notice — does the CURRENT dish carry a stated wait? ═══
+// Options are uniform in shape (durations + "no special wait"), so the card
+// header naming the dish reveals nothing (owner-reported leak: the previous
+// which-dish form put the header dish among the options). Fires always on
+// wait-flagged dishes and rarely on clean ones, keeping both answers live.
 function _srWaitMins(d){
   const m = ((d && d.notes) || '').match(/~?\s*(\d{1,3})\s*(?:min\b|minutos?\b|-?minute)/i);
   const v = m ? parseInt(m[1], 10) : 0;
@@ -4531,25 +4549,29 @@ function _srWaitMins(d){
 }
 function _scenarioWaitTime(dish, dd, _en){
   const mins = _srWaitMins(dish);
-  if(!mins) return null;
-  // Wrongs: dishes whose cards state NO wait
-  const clean = _simMainDishes().filter(d=>d.id!==dish.id && !_srWaitMins(d));
-  if(clean.length < 3) return null;
-  let opts = _simDedupeOptions([dish, ..._djShuffle(clean).slice(0,3)]);
-  if(opts.length < 4){
-    const extra = _djShuffle(clean.filter(d=>!opts.includes(d))).slice(0, 4-opts.length);
-    opts = _simDedupeOptions([...opts, ...extra]);
+  if(!mins && Math.random() < 0.88) return null; // clean dishes vastly outnumber flagged ones
+  const label = x => _en ? `About ${x} minutes` : `Unos ${x} minutos`;
+  const optNone = _en ? 'None — its card states no special wait'
+                      : 'Ninguna — su ficha no indica espera especial';
+  let correct, options;
+  if(mins){
+    const distract = _djShuffle([10,15,20,45,60].filter(x=>Math.abs(x-mins)>=8)).slice(0,2);
+    if(distract.length < 2) return null;
+    correct = label(mins);
+    options = _djShuffle([correct, ...distract.map(label), optNone]);
+  } else {
+    correct = optNone;
+    options = _djShuffle([correct, ..._djShuffle([10,15,20,30,45,60]).slice(0,3).map(label)]);
   }
-  if(opts.length < 4 || !opts.includes(dish)) return null;
-  opts = _djShuffle(opts);
-  const qEs = `Huésped con prisa antes de una función: "¿Alguno de estos platos lleva espera especial?" ¿Cuál requiere avisar de un tiempo de preparación?`;
-  const qEn = `Guest in a hurry before a show: "Do any of these carry a special wait?" Which one requires warning about preparation time?`;
+  const qEs = `Huésped con prisa pide ${dd.name}. ¿Qué espera de preparación debes comunicarle al comandar?`;
+  const qEn = `A guest in a hurry orders ${dd.name}. What preparation wait must you communicate when ordering?`;
   return {
-    q:_en?qEn:qEs,
-    options: opts.map(d=>_simDishName(d)),
-    correctIdx: opts.indexOf(dish),
-    explain: _en ? `${dd.name} states ~${mins} min on its card — always inform the guest before confirming the order.`
-                 : `${dd.name} indica ~${mins} min en su ficha — avisar siempre al huésped antes de confirmar la comanda.`,
+    q:_en?qEn:qEs, options, correctIdx: options.indexOf(correct),
+    explain: mins
+      ? (_en ? `The card states ~${mins} min — always inform the guest before confirming the order.`
+             : `La ficha indica ~${mins} min — avisar siempre al huésped antes de confirmar la comanda.`)
+      : (_en ? `${dd.name} carries no stated wait on its card — it runs at normal kitchen pace.`
+             : `${dd.name} no tiene espera indicada en su ficha — va al ritmo normal de cocina.`),
     type:'modification'
   };
 }
@@ -4558,38 +4580,46 @@ function _scenarioWaitTime(dish, dd, _en){
 // Inverse of the ingredient check: the guest remembers an ingredient, the
 // waiter must place it on the right dish among same-category siblings that
 // verifiably do NOT carry it (synonym- and name-leak-safe).
+// LEAK GUARD (owner-reported): the Smart Review card shows the CURRENT dish
+// name in its header, so the current dish can never be the hidden answer —
+// the guest remembers a SIBLING dish; the current dish may appear only as a
+// wrong option.
 function _scenarioIngredientWhere(dish, dd, _en){
   if(dish.cat === 'Guarniciones y Salsas') return null;
-  const src = _en ? dd : dish;
   const localize = d => _en ? getDish(d) : d;
-  const ings = _simExtractIngredients(src).filter(i => i.length > 3 && !_simIngredientTrivialInName(i, src.name));
-  if(!ings.length) return null;
-  const sibs = _simMainDishes().filter(d=>d.id!==dish.id && d.id!==103 && d.cat===dish.cat && d.ingredients);
+  const _curName = _simDishName(dish).toLowerCase();
+  const sibs = _simMainDishes().filter(d=>d.id!==dish.id && d.id!==103 && d.cat===dish.cat && d.ingredients
+    && _simDishName(d).toLowerCase()!==_curName);
   if(sibs.length < 3) return null;
-  for(const ing of _djShuffle(ings)){
-    const clean = sibs.filter(s => {
-      const ls = localize(s);
-      return !_simHasIngredient(ls, ing) && !_simIngredientOverlapsDish(ing, ls) && !_simIngredientTrivialInName(ing, ls.name);
-    });
-    if(clean.length < 3) continue;
-    let opts = _simDedupeOptions([dish, ..._djShuffle(clean).slice(0,3)]);
-    if(opts.length < 4){
-      const extra = _djShuffle(clean.filter(d=>!opts.includes(d))).slice(0, 4-opts.length);
-      opts = _simDedupeOptions([...opts, ...extra]);
+  for(const target of _djShuffle(sibs)){
+    const tSrc = localize(target);
+    const ings = _simExtractIngredients(tSrc).filter(i => i.length > 3 && !_simIngredientTrivialInName(i, tSrc.name));
+    const pool = [dish, ...sibs.filter(s=>s.id!==target.id)];
+    for(const ing of _djShuffle(ings).slice(0,4)){
+      const clean = pool.filter(s => {
+        const ls = localize(s);
+        return !_simHasIngredient(ls, ing) && !_simIngredientOverlapsDish(ing, ls) && !_simIngredientTrivialInName(ing, ls.name);
+      });
+      if(clean.length < 3) continue;
+      let opts = _simDedupeOptions([target, ..._djShuffle(clean).slice(0,3)]);
+      if(opts.length < 4){
+        const extra = _djShuffle(clean.filter(d=>!opts.includes(d))).slice(0, 4-opts.length);
+        opts = _simDedupeOptions([...opts, ...extra]);
+      }
+      if(opts.length < 4 || !opts.includes(target)) continue;
+      opts = _djShuffle(opts);
+      const catLabel = (typeof catLocal==='function') ? catLocal(dish.cat) : dish.cat;
+      const qEs = `Huésped: "La última vez tomé un plato de ${catLabel} que llevaba ${ing.toLowerCase()} y me encantó. ¿Cuál era?"`;
+      const qEn = `Guest: "Last time I had a ${catLabel} dish with ${ing.toLowerCase()} and loved it. Which one was it?"`;
+      return {
+        q:_en?qEn:qEs,
+        options: opts.map(d=>_simDishName(d)),
+        correctIdx: opts.indexOf(target),
+        explain: _en ? `${_simDishName(target)} lists ${ing.toLowerCase()} among its ingredients — the others don't carry it.`
+                     : `${_simDishName(target)} lleva ${ing.toLowerCase()} entre sus ingredientes — los otros no lo llevan.`,
+        type:'ingredient'
+      };
     }
-    if(opts.length < 4 || !opts.includes(dish)) continue;
-    opts = _djShuffle(opts);
-    const catLabel = (typeof catLocal==='function') ? catLocal(dish.cat) : dish.cat;
-    const qEs = `Huésped: "La última vez tomé un plato de ${catLabel} que llevaba ${ing.toLowerCase()} y me encantó. ¿Cuál era?"`;
-    const qEn = `Guest: "Last time I had a ${catLabel} dish with ${ing.toLowerCase()} and loved it. Which one was it?"`;
-    return {
-      q:_en?qEn:qEs,
-      options: opts.map(d=>_simDishName(d)),
-      correctIdx: opts.indexOf(dish),
-      explain: _en ? `${dd.name} lists ${ing.toLowerCase()} among its ingredients — the others don't carry it.`
-                   : `${dd.name} lleva ${ing.toLowerCase()} entre sus ingredientes — los otros no lo llevan.`,
-      type:'ingredient'
-    };
   }
   return null;
 }

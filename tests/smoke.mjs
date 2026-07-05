@@ -1067,6 +1067,29 @@ test('smart review v2: unified frames, no set-fingerprint, smarter scenarios', (
     'dedupe must receive the correct option FIRST (shuffle after), or correctIdx can be -1');
 });
 
+test('smart review owner-reported fixes: header leak, agua), Txipiron≠ron', () => {
+  // 1. The Smart Review card header names the current dish, so cross-carta
+  //    questions must never use it as the hidden answer.
+  const iw = html.slice(html.indexOf('function _scenarioIngredientWhere'), html.indexOf('function _scenarioIngredientWhere') + 4200);
+  assert(/for\(const target of _djShuffle\(sibs\)\)/.test(iw), 'IngredientWhere must target a SIBLING, not the header dish');
+  const wa = html.slice(html.indexOf('function _scenarioWhichAdaptable'), html.indexOf('function _scenarioWhichAdaptable') + 3200);
+  assert(/d\.id!==dish\.id && _simDishName\(d\)\.toLowerCase\(\)!==_curName/.test(wa),
+    'WhichAdaptable must exclude the header dish (by id AND display name)');
+  const wt = html.slice(html.indexOf('function _scenarioWaitTime'), html.indexOf('function _scenarioWaitTime') + 3200);
+  assert(/optNone/.test(wt) && !/opts\.map\(d=>_simDishName\(d\)\)/.test(wt),
+    'WaitTime must use duration-shaped options, not dish names');
+  // 2. Ingredient extraction must strip parentheses ("¿lleva agua)?" bug).
+  assert(/replace\(\/\[\(\)\]\/g/.test(html.slice(html.indexOf('function _simExtractIngredients'), html.indexOf('function _simExtractIngredients') + 900)),
+    'ingredient extractor must strip parentheses before filtering');
+  // 3. Liquor detection must be word-bounded: /ron/ matched inside Txipiron.
+  assert(!/\(flamb\|brandy\|coñac\|ron\|whisky/.test(html), 'unbounded liquor regex is back (ron ⊂ Txipiron)');
+  assert(/\\bflamb\\w\*\|\\b\(brandy\|coñac\|ron\|whisky\|vodka\|porto\|oporto\|sake\)\\b/.test(html),
+    'word-bounded liquor regex missing');
+  // 4. Beer/wine in fried or baked preparations loses its alcohol
+  //    (owner-confirmed: Calamares tempura) — pregnancy must exempt it.
+  assert(/tempura\|rebozado\|masa\|frit/.test(html), 'cooked beer/wine exemption missing in pregnancy scenario');
+});
+
 test('exam surfaces shuffle options: LQA exam/situations + wine quiz shape guard', () => {
   // LQA exam & situations rendered the AUTHORED option order: measured on the
   // real data, 44% of situation answers sat on option 2, so position alone
