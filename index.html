@@ -222,7 +222,7 @@
 
   <!-- Welcome toast -->
   <div class="login-welcome-toast" id="loginWelcomeToast" aria-live="polite">
-    <span style="color:#e4be68;font-size:1rem">✦</span>
+    <span style="color:var(--gold3);font-size:1rem">✦</span>
     <span id="loginWelcomeToastTxt">Bienvenido al equipo Txoko</span>
   </div>
 
@@ -1338,7 +1338,7 @@ window.APP_BUILD=APP_BUILD;
 // DEBUG flag: only log when running locally or with ?debug=1
 const DEBUG = (location.hostname==='localhost' || location.hostname==='127.0.0.1' || location.search.includes('debug=1'));
 window.DEBUG = DEBUG;
-console.info(`%cTXOKO Formación · v${APP_VERSION} · ${APP_BUILD}`,'background:#1c2a22;color:#f4ede2;padding:4px 10px;border-radius:4px;font-weight:600');
+console.info(`%cTXOKO Formación · v${APP_VERSION} · ${APP_BUILD}`,'background:var(--parchment);color:var(--ink);padding:4px 10px;border-radius:4px;font-weight:600');
 
 // HTML escape helper — used wherever we interpolate untrusted strings into innerHTML
 function escapeHtml(str){
@@ -1946,7 +1946,7 @@ async function checkDuelBanner(user) {
     const hoursLeft = Math.max(0, Math.round((expires - Date.now()) / 3600000));
     const banner = document.createElement('div');
     banner.id = 'duelBanner';
-    banner.style.cssText = `position:fixed;top:0;left:0;right:0;z-index:9999;background:linear-gradient(135deg,#1c2a22,#2a3530);border-bottom:2px solid var(--rose);padding:1rem 1.25rem;animation:slideDown .4s ease;box-shadow:0 4px 20px rgba(0,0,0,.3)`;
+    banner.style.cssText = `position:fixed;top:0;left:0;right:0;z-index:9999;background:linear-gradient(135deg,var(--parchment),#2a3530);border-bottom:2px solid var(--rose);padding:1rem 1.25rem;animation:slideDown .4s ease;box-shadow:0 4px 20px rgba(0,0,0,.3)`;
     banner.innerHTML = `
       <div style="max-width:480px;margin:0 auto">
         <div style="font-family:'DM Mono',monospace;font-size:.58rem;color:var(--rose);letter-spacing:.15em;text-transform:uppercase;margin-bottom:.3rem">» ${LANG==='en'?'INCOMING CHALLENGE':'RETO PENDIENTE'}</div>
@@ -2823,7 +2823,7 @@ function showLevelUpModal(levelInfo){
     <div style="font-size:2.2rem;line-height:1;filter:drop-shadow(0 0 10px ${_lvlBright})">${levelInfo.icon}</div>
     <div style="flex:1;min-width:0">
       <div style="font-family:'DM Mono',monospace;font-size:.5rem;color:${_lvlBright};letter-spacing:.18em;text-transform:uppercase">${LANG==='en'?'Rank Up · Level':'Rango · Nivel'} ${levelInfo.level}</div>
-      <div style="font-family:'Cinzel',serif;font-size:1.05rem;color:#f4ede2;font-weight:700;margin-top:.05rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${levelInfo.title}</div>
+      <div style="font-family:'Cinzel',serif;font-size:1.05rem;color:var(--ink);font-weight:700;margin-top:.05rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${levelInfo.title}</div>
       <div style="font-family:'Quicksand',sans-serif;font-size:.62rem;color:rgba(244,237,226,.55);margin-top:.1rem">${LANG==='en'?'Tap to dismiss · Keep going':'Toca para cerrar · Sigue así'}</div>
     </div>`;
   banner.addEventListener('click', ()=>{ banner.style.opacity='0'; banner.style.transform='translateX(-50%) translateY(-20px)'; setTimeout(()=>banner.remove(), 400); });
@@ -6684,8 +6684,8 @@ function _showCloudPinLogin(name, emp) {
 
   function draw() {
     overlay.innerHTML = '<div style="background:linear-gradient(155deg,#faf6ee,#f0e8d8);border:1px solid rgba(196,154,60,.2);border-radius:16px;padding:2rem 1.8rem;width:300px;text-align:center;box-shadow:0 12px 40px rgba(0,0,0,.3)">' +
-      '<div style="font-family:Cinzel,serif;font-size:1.1rem;color:#1c2a22;margin-bottom:.3rem">' + escapeHTML(name) + '</div>' +
-      '<div style="font-family:DM Mono,monospace;font-size:.65rem;color:#c49a3c;margin-bottom:.2rem;letter-spacing:.08em">' +
+      '<div style="font-family:Cinzel,serif;font-size:1.1rem;color:var(--parchment);margin-bottom:.3rem">' + escapeHTML(name) + '</div>' +
+      '<div style="font-family:DM Mono,monospace;font-size:.65rem;color:var(--gold);margin-bottom:.2rem;letter-spacing:.08em">' +
       (_en ? 'Account found in cloud' : 'Cuenta encontrada en la nube') + ' ~</div>' +
       '<div style="font-family:Quicksand,sans-serif;font-size:.72rem;color:rgba(28,42,34,.6);margin-bottom:1.2rem;line-height:1.4">' +
       (_en ? 'This account uses a 4-digit PIN.<br>Enter your PIN to sign in.' : 'Esta cuenta usa un PIN de 4 d\u00edgitos.<br>Introduce tu PIN para entrar.') + '</div>' +
@@ -6695,7 +6695,7 @@ function _showCloudPinLogin(name, emp) {
       '<div id="cloudPinErr" style="font-size:.7rem;color:#e85d5d;min-height:1.2rem;margin-bottom:.4rem"></div>' +
       '<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:.4rem;max-width:200px;margin:0 auto .9rem">' +
       [1,2,3,4,5,6,7,8,9,'',0,'⌫'].map(function(k) {
-        return '<button id="cpk_' + k + '" style="background:rgba(28,42,34,.04);border:1px solid rgba(196,154,60,.15);border-radius:10px;padding:.65rem;font-size:1rem;font-weight:500;color:#1c2a22;cursor:pointer;' + (k === '' ? 'visibility:hidden;' : '') + '">' + k + '</button>';
+        return '<button id="cpk_' + k + '" style="background:rgba(28,42,34,.04);border:1px solid rgba(196,154,60,.15);border-radius:10px;padding:.65rem;font-size:1rem;font-weight:500;color:var(--parchment);cursor:pointer;' + (k === '' ? 'visibility:hidden;' : '') + '">' + k + '</button>';
       }).join('') +
       '</div>' +
       '<button id="cpkCancel" style="background:transparent;border:1px solid rgba(196,154,60,.15);border-radius:10px;padding:.4rem 1.2rem;font-family:Quicksand,sans-serif;font-size:.75rem;color:rgba(28,42,34,.5);cursor:pointer">' + (_en ? 'Cancel' : 'Cancelar') + '</button>' +
@@ -7273,12 +7273,12 @@ function _gsShowLqaSituation(id){
           const ok = i===corr;
           return '<div style="display:flex;align-items:flex-start;gap:.55rem;padding:.6rem .75rem;border-radius:11px;font-size:.82rem;line-height:1.4;'
             + (ok ? 'background:rgba(45,106,62,.08);border:1px solid rgba(45,106,62,.3);color:var(--green-deep);font-weight:600'
-                  : 'background:#f4ede2;border:1px solid rgba(196,154,60,.12);color:rgba(28,42,34,.6)')
+                  : 'background:var(--ink);border:1px solid rgba(196,154,60,.12);color:rgba(28,42,34,.6)')
             + '">'+(ok?'<span aria-hidden="true" style="flex-shrink:0;font-weight:700">✓</span>':'<span aria-hidden="true" style="flex-shrink:0;opacity:.35">○</span>')
             + '<span>'+escapeHtml(o)+'</span></div>';
         }).join('')}
       </div>
-      <div style="border-left:3px solid ${catColor};padding:.6rem .8rem;background:#f4ede2;border-radius:0 11px 11px 0;font-size:.8rem;line-height:1.5;color:rgba(28,42,34,.75);margin-bottom:1rem">${escapeHtml((_en && s.expl_en ? s.expl_en : s.expl)||'')}</div>
+      <div style="border-left:3px solid ${catColor};padding:.6rem .8rem;background:var(--ink);border-radius:0 11px 11px 0;font-size:.8rem;line-height:1.5;color:rgba(28,42,34,.75);margin-bottom:1rem">${escapeHtml((_en && s.expl_en ? s.expl_en : s.expl)||'')}</div>
       <button type="button" onclick="document.getElementById('gsLqaOverlay').remove();showTab('protocolo')" style="display:block;width:100%;min-height:48px;border:1px solid rgba(196,154,60,.35);border-radius:12px;background:transparent;cursor:pointer;font-family:'DM Mono',monospace;font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;color:var(--gold-deep)">${_en?'Practice in LQA →':'Practicar en LQA →'}</button>
     </div>`;
   ov.addEventListener('click', e=>{ if(e.target===ov) ov.remove(); });
@@ -7353,7 +7353,7 @@ function _aprenderGlobalSearch(query){
     return `<div role="button" tabindex="0" aria-label="${escapeHTML(dd.name)}" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click()}" onclick="_aprenderOpenDish(${d.id})" style="display:flex;align-items:center;gap:.7rem;padding:.7rem .9rem;cursor:pointer;border-bottom:1px solid var(--ink3);transition:background .15s" onmouseover="this.style.background='rgba(196,154,60,.08)'" onmouseout="this.style.background='transparent'">
       <div style="width:4px;height:32px;background:${catCol};border-radius:2px;flex-shrink:0"></div>
       <div style="flex:1;min-width:0">
-        <div style="font-family:'Quicksand',sans-serif;font-size:.85rem;font-weight:600;color:var(--parchment);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${escapeHTML(dd.name)}${isKnown?' <span style="color:#4d8a5e;font-size:.7rem">◈</span>':''}</div>
+        <div style="font-family:'Quicksand',sans-serif;font-size:.85rem;font-weight:600;color:var(--parchment);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${escapeHTML(dd.name)}${isKnown?' <span style="color:var(--sage);font-size:.7rem">◈</span>':''}</div>
         <div style="font-family:'DM Mono',monospace;font-size:.55rem;color:var(--parch3);letter-spacing:.04em;margin-top:.15rem">${escapeHTML(cat)} ${allergens?'· '+allergens:''}</div>
       </div>
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0"><polyline points="9 18 15 12 9 6"/></svg>
@@ -10241,7 +10241,7 @@ function _buildSpainSVG(regionDots, byOrigin) {
   svg += '<path d="M' + (compassX + 10) + ',' + compassY + ' L' + (compassX + 2) + ',' + (compassY - 2.5) + ' L' + (compassX - 1) + ',' + compassY + ' L' + (compassX + 2) + ',' + (compassY + 2.5) + ' Z" fill="rgba(196,154,60,0.5)"/>';
   // West arrow
   svg += '<path d="M' + (compassX - 10) + ',' + compassY + ' L' + (compassX - 2) + ',' + (compassY - 2.5) + ' L' + (compassX + 1) + ',' + compassY + ' L' + (compassX - 2) + ',' + (compassY + 2.5) + ' Z" fill="rgba(196,154,60,0.3)"/>';
-  svg += '<text style="font-family:Cinzel,serif;font-size:5px;fill:#c49a3c;text-anchor:middle;font-weight:bold" x="' + compassX + '" y="' + (compassY - 13) + '">N</text>';
+  svg += '<text style="font-family:Cinzel,serif;font-size:5px;fill:var(--gold);text-anchor:middle;font-weight:bold" x="' + compassX + '" y="' + (compassY - 13) + '">N</text>';
   svg += '</g>';
 
   return '<svg class="wine-map-svg" viewBox="0 0 800 700">' + svg + dots + '</svg>';
@@ -13618,12 +13618,12 @@ function _showMaridajeDish(dishName) {
 
   // Build overlay HTML
   var html = '<div id="maridajeDishOverlay" onclick="if(event.target===this)this.remove()" style="position:fixed;inset:0;z-index:9999;background:rgba(10,18,14,.85);backdrop-filter:blur(8px);display:flex;align-items:flex-end;justify-content:center;animation:fadeIn .2s ease">';
-  html += '<div style="width:100%;max-width:480px;max-height:85vh;background:linear-gradient(165deg,#1c2a22,#243428,#1c2a22);border-radius:20px 20px 0 0;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:1.2rem 1rem 2rem;box-shadow:0 -8px 40px rgba(0,0,0,.5);animation:slideUp .3s ease">';
+  html += '<div style="width:100%;max-width:480px;max-height:85vh;background:linear-gradient(165deg,var(--parchment),#243428,var(--parchment));border-radius:20px 20px 0 0;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:1.2rem 1rem 2rem;box-shadow:0 -8px 40px rgba(0,0,0,.5);animation:slideUp .3s ease">';
 
   // Header
   html += '<div style="text-align:center;margin-bottom:1rem">';
   html += '<div style="font-family:\'DM Mono\',monospace;font-size:.5rem;letter-spacing:.15em;text-transform:uppercase;color:rgba(196,154,60,.5);margin-bottom:.3rem">◇ ' + (_en?'Pairing for':'Maridaje para') + ' ◇</div>';
-  html += '<div style="font-family:\'Quicksand\',sans-serif;font-size:1.05rem;font-weight:700;color:#f4ede2;line-height:1.3">' + escapeHTML(_translateDish(dishName)) + '</div>';
+  html += '<div style="font-family:\'Quicksand\',sans-serif;font-size:1.05rem;font-weight:700;color:var(--ink);line-height:1.3">' + escapeHTML(_translateDish(dishName)) + '</div>';
   html += '<div style="font-family:\'DM Mono\',monospace;font-size:.55rem;color:rgba(196,154,60,.4);margin-top:.3rem">' + matched.length + (_en?' recommended wine'+(matched.length!==1?'s':''):' vino' + (matched.length !== 1 ? 's' : '') + ' recomendado' + (matched.length !== 1 ? 's' : '')) + '</div>';
   html += '</div>';
 
@@ -13646,20 +13646,20 @@ function _showMaridajeDish(dishName) {
     html += '<div style="display:flex;flex-direction:column;gap:.3rem">';
 
     groups[t].forEach(function(w, idx) {
-      var recBadge = w.recommended ? '<span style="display:inline-block;background:rgba(196,154,60,.15);color:#c49a3c;font-family:\'DM Mono\',monospace;font-size:.45rem;padding:.1rem .3rem;border-radius:6px;letter-spacing:.05em;margin-left:.3rem">★ ' + (_en?'RECOMMENDED':'RECOMENDADO') + '</span>' : '';
+      var recBadge = w.recommended ? '<span style="display:inline-block;background:rgba(196,154,60,.15);color:var(--gold);font-family:\'DM Mono\',monospace;font-size:.45rem;padding:.1rem .3rem;border-radius:6px;letter-spacing:.05em;margin-left:.3rem">★ ' + (_en?'RECOMMENDED':'RECOMENDADO') + '</span>' : '';
       var glassBadge = w.glass ? '<span style="font-family:\'DM Mono\',monospace;font-size:.5rem;color:rgba(244,237,226,.4)">' + (_en?'Glass':'Copa') + ' ' + w.glass + '€</span>' : '';
 
       html += '<div onclick="_showWineDetail(' + w.id + ');document.getElementById(\'maridajeDishOverlay\').remove()" style="padding:.55rem .7rem;background:linear-gradient(155deg,rgba(244,237,226,.06),rgba(244,237,226,.02));border:1px solid rgba(244,237,226,.06);border-left:3px solid ' + color + ';border-radius:10px;cursor:pointer;transition:all .2s;animation:fadeInUp .25s ' + (idx * 0.04) + 's both" onmouseenter="this.style.background=\'linear-gradient(155deg,rgba(244,237,226,.1),rgba(244,237,226,.05))\'" onmouseleave="this.style.background=\'linear-gradient(155deg,rgba(244,237,226,.06),rgba(244,237,226,.02))\'">';
       html += '<div style="display:flex;justify-content:space-between;align-items:center;gap:.4rem">';
       html += '<div style="flex:1;min-width:0">';
-      html += '<div style="font-family:\'Quicksand\',sans-serif;font-size:.78rem;font-weight:600;color:#f4ede2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">' + escapeHTML(w.name) + recBadge + '</div>';
+      html += '<div style="font-family:\'Quicksand\',sans-serif;font-size:.78rem;font-weight:600;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">' + escapeHTML(w.name) + recBadge + '</div>';
       html += '<div style="display:flex;align-items:center;gap:.4rem;margin-top:.15rem">';
       if (w.region) html += '<span style="font-family:\'DM Mono\',monospace;font-size:.5rem;color:rgba(244,237,226,.35)">' + escapeHTML(w.region) + '</span>';
       if (glassBadge) html += glassBadge;
       html += '</div>';
       html += '</div>';
       html += '<div style="text-align:right;flex-shrink:0">';
-      html += '<div style="font-family:\'DM Mono\',monospace;font-size:.75rem;font-weight:700;color:#c49a3c">' + w.price + '€</div>';
+      html += '<div style="font-family:\'DM Mono\',monospace;font-size:.75rem;font-weight:700;color:var(--gold)">' + w.price + '€</div>';
       html += '</div>';
       html += '</div>';
       html += '</div>';
@@ -13798,7 +13798,7 @@ function _mqAnswer(idx){
         <div style="font-family:'DM Mono',monospace;font-size:.6rem;color:${ok?'var(--sage)':'var(--rose)'};text-transform:uppercase;letter-spacing:.1em;margin-bottom:.4rem;font-weight:700">${ok?(_en?'✓ Correct':'✓ Correcto'):(_en?'✗ Better choice':'✗ Mejor opción')}</div>
         <div style="font-size:.82rem;color:var(--parchment);margin-bottom:.5rem"><strong>${escapeHTML(correctWine.name)}</strong> ${_en?'pairs with':'marida con'} <em>${escapeHTML(_translateDish(q.dish))}</em></div>
         ${why ? `<div style="font-size:.74rem;color:var(--parch2);line-height:1.55;font-style:italic">${escapeHTML(why)}</div>` : ''}
-        <button onclick="_mqNext()" style="width:100%;margin-top:.7rem;padding:.6rem;background:var(--gold);border:none;border-radius:var(--r2);color:#1c2a22;font-weight:700;cursor:pointer;font-family:'Quicksand',sans-serif">${s.qIdx < s.questions.length-1 ? (_en?'Next →':'Siguiente →') : (_en?'See results':'Ver resultados')}</button>
+        <button onclick="_mqNext()" style="width:100%;margin-top:.7rem;padding:.6rem;background:var(--gold);border:none;border-radius:var(--r2);color:var(--parchment);font-weight:700;cursor:pointer;font-family:'Quicksand',sans-serif">${s.qIdx < s.questions.length-1 ? (_en?'Next →':'Siguiente →') : (_en?'See results':'Ver resultados')}</button>
       </div>`;
   }
 }
@@ -13838,7 +13838,7 @@ function _mqResults(){
         ${pct >= 80 ? `<div style="font-size:.78rem;color:var(--sage);margin-bottom:1rem">${_en?'Sommelier-level taste!':'¡Paladar de sommelier!'}</div>` : pct >= 60 ? `<div style="font-size:.78rem;color:var(--gold);margin-bottom:1rem">${_en?'Solid pairing instincts':'Buen instinto de maridaje'}</div>` : `<div style="font-size:.78rem;color:var(--rose);margin-bottom:1rem">${_en?'Review the pairing guide and try again':'Repasa la guía y prueba de nuevo'}</div>`}
       </div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:.6rem">
-        <button onclick="_mqStart()" style="padding:.75rem;background:var(--gold);border:none;border-radius:var(--r2);color:#1c2a22;font-weight:700;cursor:pointer;font-family:'Quicksand',sans-serif">${_en?'New quiz':'Otro quiz'}</button>
+        <button onclick="_mqStart()" style="padding:.75rem;background:var(--gold);border:none;border-radius:var(--r2);color:var(--parchment);font-weight:700;cursor:pointer;font-family:'Quicksand',sans-serif">${_en?'New quiz':'Otro quiz'}</button>
         <button onclick="_mqExit()" style="padding:.75rem;background:var(--ink2);border:1px solid var(--line);border-radius:var(--r2);color:var(--parch2);font-weight:700;cursor:pointer;font-family:'Quicksand',sans-serif">${_en?'Back':'Volver'}</button>
       </div>
     </div>`;
@@ -13921,7 +13921,7 @@ function _renderWineService(c, bar){
             return '<div class="maridaje-item" data-dish="' + escapeHTML(dish.toLowerCase()) + ' ' + escapeHTML(_translateDish(dish).toLowerCase()) + '" onclick="_showMaridajeDish(\'' + dish.replace(/'/g,"\\'") + '\')" style="padding:.55rem .75rem;background:linear-gradient(155deg,#faf6ee,#f0e8d8);border:1px solid rgba(196,154,60,.1);border-left:3px solid ' + borderColor + ';border-radius:10px;cursor:pointer;transition:all .2s;animation:fadeInUp .3s ' + (i*0.015) + 's both">' +
               '<div style="display:flex;justify-content:space-between;align-items:center;gap:.4rem">' +
                 '<div style="flex:1;min-width:0">' +
-                  '<div style="font-family:\'Quicksand\',sans-serif;font-size:.78rem;font-weight:600;color:#1c2a22;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">' + escapeHTML(_translateDish(dish)) + '</div>' +
+                  '<div style="font-family:\'Quicksand\',sans-serif;font-size:.78rem;font-weight:600;color:var(--parchment);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">' + escapeHTML(_translateDish(dish)) + '</div>' +
                   '<div style="font-family:\'Quicksand\',sans-serif;font-size:.62rem;color:rgba(28,42,34,.5);margin-top:.15rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">' + preview + '</div>' +
                 '</div>' +
                 '<div style="display:flex;align-items:center;gap:.3rem;flex-shrink:0">' +
@@ -14185,7 +14185,7 @@ function renderDashboard(){
       <div class="dash-hero-rune br">${_runeSvg}</div>
       <div class="dash-hero-top">
         <div>
-          <div class="dash-hero-label">Ritz-Carlton Abama</div>
+          <div class="dash-hero-label">${(typeof ACTIVE_VENUE!=='undefined' && ACTIVE_VENUE && ACTIVE_VENUE.eyebrow) ? escapeHtml(ACTIVE_VENUE.eyebrow.split(' · ')[0]) : 'Ritz-Carlton Abama'}</div>
           <div class="dash-hero-greeting">${greeting},</div>
           <div class="dash-hero-name">${escapeHTML(currentUser)}</div>
         </div>
@@ -14212,7 +14212,7 @@ function renderDashboard(){
         <span class="dash-alert-arrow">›</span>
       </button>` : ''}
       ${_rankProg ? `
-      <div class="dash-alert" style="--da-c:#c49a3c;cursor:default;flex-direction:column;align-items:stretch;gap:.45rem;padding:.75rem 1rem">
+      <div class="dash-alert" style="--da-c:var(--gold);cursor:default;flex-direction:column;align-items:stretch;gap:.45rem;padding:.75rem 1rem">
         <div style="display:flex;align-items:center;gap:.65rem">
           <div class="dash-num" aria-hidden="true"><span class="emoji">${_rankProg.nextIcon}</span></div>
           <div style="flex:1;min-width:0">
@@ -14222,7 +14222,7 @@ function renderDashboard(){
           <div style="font-family:'DM Mono',monospace;font-size:.7rem;font-weight:700;color:#a47a2c;flex-shrink:0" aria-label="${_rankProg.overallPct}% ${_en?'progress':'progreso'}">${_rankProg.overallPct}%</div>
         </div>
         <div role="progressbar" aria-valuenow="${_rankProg.overallPct}" aria-valuemin="0" aria-valuemax="100" aria-label="${_en?'Progress to next rank':'Progreso al siguiente rango'}" style="height:6px;background:rgba(196,154,60,.15);border-radius:3px;overflow:hidden">
-          <div style="height:100%;width:${_rankProg.overallPct}%;background:linear-gradient(90deg,#c49a3c,#e4be68);border-radius:3px;transition:width .6s ease"></div>
+          <div style="height:100%;width:${_rankProg.overallPct}%;background:linear-gradient(90deg,var(--gold),var(--gold3));border-radius:3px;transition:width .6s ease"></div>
         </div>
       </div>` : ''}
       ${_weakDisplay ? `
@@ -14246,7 +14246,7 @@ function renderDashboard(){
       </div>
       <span class="dash-alert-arrow">›</span>
     </div>` : bestTopic && bestTopic.pct >= 80 ? `
-    <div class="dash-alert" style="--da-c:#4d8a5e;cursor:default;min-height:64px">
+    <div class="dash-alert" style="--da-c:var(--sage);cursor:default;min-height:64px">
       <div class="dash-num" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><polygon points="12,2 20,7 20,17 12,22 4,17 4,7" fill="#4d8a5e"/><polyline points="8 13 11 16 16 9" fill="none" stroke="#fff" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
       <div class="dash-alert-body">
         <div class="dash-alert-title">${LANG==='en'?'Excellent!':'¡Excelente!'} ${bestTopic.label}</div>
@@ -14261,7 +14261,7 @@ function renderDashboard(){
     <!-- ── PRIMARY ACTIONS ── -->
     <div class="tunic-divider"><span>${LANG==='en'?'Study':'Estudiar'}</span></div>
     <div class="dash-hub-grid">
-      <button class="dash-hub" style="--dh-c:#c49a3c;--dh-c2:#e4be68" onclick="showTab('flashcards')">
+      <button class="dash-hub" style="--dh-c:var(--gold);--dh-c2:var(--gold3)" onclick="showTab('flashcards')">
         <span class="dash-hub-corner tl"></span>
         <span class="dash-hub-corner tr"></span>
         <span class="dash-hub-corner bl"></span>
@@ -14293,7 +14293,7 @@ function renderDashboard(){
         <svg width="22" height="22" viewBox="0 0 24 24"><polygon points="12,2 20,7 20,17 12,22 4,17 4,7" fill="#c47068"/><polygon points="12,22 20,17 20,7 12,12" fill="#a85848" opacity=".45"/><circle cx="12" cy="12" r="6" fill="none" stroke="#fff" stroke-width="1.2"/><circle cx="12" cy="12" r="3" fill="none" stroke="#fff" stroke-width="1"/><circle cx="12" cy="12" r="1.2" fill="#fff"/></svg>
         <div class="dash-mini-lbl">${LANG==='en'?'Weak spots':'Débiles'}</div>
       </button>
-      <button class="dash-mini" style="--dm-c:#c49a3c" onclick="showTab('ranking')">
+      <button class="dash-mini" style="--dm-c:var(--gold)" onclick="showTab('ranking')">
         <svg width="22" height="22" viewBox="0 0 24 24"><polygon points="12,2 20,7 20,17 12,22 4,17 4,7" fill="#c49a3c"/><polygon points="12,22 20,17 20,7 12,12" fill="#a47a2c" opacity=".45"/><path d="M8 18h8M12 15v3" stroke="#fff" stroke-width="1.2" stroke-linecap="round"/><path d="M8 6h8v5a4 4 0 01-8 0V6z" fill="#fff" opacity=".85"/><path d="M8 6H6a1 1 0 00-1 1c0 1.5 1 2 2 2h1M16 6h2a1 1 0 011 1c0 1.5-1 2-2 2h-1" fill="none" stroke="#fff" stroke-width="1" opacity=".6"/></svg>
         <div class="dash-mini-lbl">Ranking</div>
       </button>
@@ -14315,7 +14315,7 @@ function renderDashboard(){
 
     <!-- ── PROGRESS RINGS ── -->
     <div class="tunic-divider"><span>${LANG==='en'?'Your progress':'Tu progreso'}</span></div>
-    <div class="dash-defer-sm" style="background:linear-gradient(160deg,#2a3530 0%,#1c2a22 40%,#243028 100%);border:1.5px solid rgba(196,154,60,.25);border-radius:var(--r);padding:1.4rem .8rem 1.2rem;display:flex;justify-content:space-around;align-items:flex-start;margin-bottom:1rem;position:relative;overflow:hidden;box-shadow:0 6px 24px rgba(0,0,0,.15),inset 0 1px 0 rgba(196,154,60,.1)">
+    <div class="dash-defer-sm" style="background:linear-gradient(160deg,#2a3530 0%,var(--parchment) 40%,#243028 100%);border:1.5px solid rgba(196,154,60,.25);border-radius:var(--r);padding:1.4rem .8rem 1.2rem;display:flex;justify-content:space-around;align-items:flex-start;margin-bottom:1rem;position:relative;overflow:hidden;box-shadow:0 6px 24px rgba(0,0,0,.15),inset 0 1px 0 rgba(196,154,60,.1)">
       <!-- Diamond pattern overlay -->
       <div style="position:absolute;inset:0;background-image:url(${`"data:image/svg+xml,%3Csvg width='40' height='35' viewBox='0 0 40 35' xmlns='http://www.w3.org/2000/svg'%3E%3Cpolygon points='20,2 38,17.5 20,33 2,17.5' fill='none' stroke='rgba(196,154,60,0.06)' stroke-width='0.5'/%3E%3C/svg%3E"`});pointer-events:none"></div>
       <!-- Ambient glow -->
@@ -15325,34 +15325,34 @@ function renderStats(){
 
     <!-- Key stats grid -->
     <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:.4rem;margin-bottom:1rem">
-      <div style="background:linear-gradient(155deg,#faf6ee,#f4ede2);border:1.5px solid rgba(196,154,60,.15);border-radius:var(--r2);padding:.65rem;text-align:center">
+      <div style="background:linear-gradient(155deg,#faf6ee,var(--ink));border:1.5px solid rgba(196,154,60,.15);border-radius:var(--r2);padding:.65rem;text-align:center">
         <div style="font-family:'Cinzel',serif;font-size:1.2rem;color:var(--parchment)">${sessions.length}</div>
         <div style="font-family:'DM Mono',monospace;font-size:.5rem;color:var(--parch4)">${LANG==='en'?'EXAMS':'EXÁMENES'}</div>
       </div>
-      <div style="background:linear-gradient(155deg,#faf6ee,#f4ede2);border:1.5px solid rgba(196,154,60,.15);border-radius:var(--r2);padding:.65rem;text-align:center">
+      <div style="background:linear-gradient(155deg,#faf6ee,var(--ink));border:1.5px solid rgba(196,154,60,.15);border-radius:var(--r2);padding:.65rem;text-align:center">
         <div style="font-family:'Cinzel',serif;font-size:1.2rem;color:var(--parchment)">${streak>0?'●':''} ${streak}</div>
         <div style="font-family:'DM Mono',monospace;font-size:.5rem;color:var(--parch4)">${LANG==='en'?'STREAK':'RACHA'}</div>
       </div>
-      <div style="background:linear-gradient(155deg,#faf6ee,#f4ede2);border:1.5px solid rgba(196,154,60,.15);border-radius:var(--r2);padding:.65rem;text-align:center">
+      <div style="background:linear-gradient(155deg,#faf6ee,var(--ink));border:1.5px solid rgba(196,154,60,.15);border-radius:var(--r2);padding:.65rem;text-align:center">
         <div style="font-family:'Cinzel',serif;font-size:1.2rem;color:var(--parchment)">${overall}%</div>
         <div style="font-family:'DM Mono',monospace;font-size:.5rem;color:var(--parch4)">${LANG==='en'?'ACCURACY':'PRECISIÓN'}</div>
       </div>
-      <div style="background:linear-gradient(155deg,#faf6ee,#f4ede2);border:1.5px solid rgba(196,154,60,.15);border-radius:var(--r2);padding:.65rem;text-align:center">
+      <div style="background:linear-gradient(155deg,#faf6ee,var(--ink));border:1.5px solid rgba(196,154,60,.15);border-radius:var(--r2);padding:.65rem;text-align:center">
         <div style="font-family:'Cinzel',serif;font-size:1.2rem;color:var(--parchment)">${totalTimeStr}</div>
         <div style="font-family:'DM Mono',monospace;font-size:.5rem;color:var(--parch4)">${LANG==='en'?'TIME':'TIEMPO'}</div>
       </div>
-      <div style="background:linear-gradient(155deg,#faf6ee,#f4ede2);border:1.5px solid rgba(196,154,60,.15);border-radius:var(--r2);padding:.65rem;text-align:center">
+      <div style="background:linear-gradient(155deg,#faf6ee,var(--ink));border:1.5px solid rgba(196,154,60,.15);border-radius:var(--r2);padding:.65rem;text-align:center">
         <div style="font-family:'Cinzel',serif;font-size:1.2rem;color:var(--parchment)">${txokoRecord}</div>
         <div style="font-family:'DM Mono',monospace;font-size:.5rem;color:var(--parch4)">MR. S.</div>
       </div>
-      <div style="background:linear-gradient(155deg,#faf6ee,#f4ede2);border:1.5px solid rgba(196,154,60,.15);border-radius:var(--r2);padding:.65rem;text-align:center">
+      <div style="background:linear-gradient(155deg,#faf6ee,var(--ink));border:1.5px solid rgba(196,154,60,.15);border-radius:var(--r2);padding:.65rem;text-align:center">
         <div style="font-family:'Cinzel',serif;font-size:1.2rem;color:var(--parchment)">${duelWins}</div>
         <div style="font-family:'DM Mono',monospace;font-size:.5rem;color:var(--parch4)">${LANG==='en'?'DUELS WON':'DUELOS'}</div>
       </div>
     </div>
 
     <!-- This week -->
-    <div style="background:linear-gradient(155deg,#faf6ee,#f4ede2);border:1.5px solid rgba(196,154,60,.15);border-radius:var(--r2);padding:.8rem;margin-bottom:.75rem">
+    <div style="background:linear-gradient(155deg,#faf6ee,var(--ink));border:1.5px solid rgba(196,154,60,.15);border-radius:var(--r2);padding:.8rem;margin-bottom:.75rem">
       <div style="font-family:'DM Mono',monospace;font-size:.55rem;color:var(--gold);letter-spacing:.1em;margin-bottom:.6rem">${LANG==='en'?'THIS WEEK':'ESTA SEMANA'}</div>
       <div style="display:flex;gap:1rem">
         <div><span style="font-family:'Cinzel',serif;font-size:1.1rem;color:var(--parchment)">${sessionsThisWeek}</span> <span style="font-family:'DM Mono',monospace;font-size:.6rem;color:var(--parch4)">${LANG==='en'?'exams':'exámenes'}</span></div>
@@ -15361,20 +15361,20 @@ function renderStats(){
     </div>
 
     <!-- Dominados por categoría -->
-    <div style="background:linear-gradient(155deg,#faf6ee,#f4ede2);border:1.5px solid rgba(196,154,60,.15);border-radius:var(--r2);padding:.8rem;margin-bottom:.75rem">
+    <div style="background:linear-gradient(155deg,#faf6ee,var(--ink));border:1.5px solid rgba(196,154,60,.15);border-radius:var(--r2);padding:.8rem;margin-bottom:.75rem">
       <div style="font-family:'DM Mono',monospace;font-size:.55rem;color:var(--gold);letter-spacing:.1em;margin-bottom:.6rem">${LANG==='en'?'DISHES MASTERED':'PLATOS DOMINADOS'} — ${knownCount}/${totalDishes} (${pctKnown}%)</div>
       ${catBars2}
     </div>
 
     <!-- Topic accuracy -->
-    <div style="background:linear-gradient(155deg,#faf6ee,#f4ede2);border:1.5px solid rgba(196,154,60,.15);border-radius:var(--r2);padding:.8rem;margin-bottom:.75rem">
+    <div style="background:linear-gradient(155deg,#faf6ee,var(--ink));border:1.5px solid rgba(196,154,60,.15);border-radius:var(--r2);padding:.8rem;margin-bottom:.75rem">
       <div style="font-family:'DM Mono',monospace;font-size:.55rem;color:var(--gold);letter-spacing:.1em;margin-bottom:.6rem">${LANG==='en'?'ACCURACY BY TOPIC':'PRECISIÓN POR TEMA'}</div>
       ${topicBars}
     </div>
 
     <!-- Recent sessions -->
     ${sessions.length>0?`
-    <div style="background:linear-gradient(155deg,#faf6ee,#f4ede2);border:1.5px solid rgba(196,154,60,.15);border-radius:var(--r2);padding:.8rem">
+    <div style="background:linear-gradient(155deg,#faf6ee,var(--ink));border:1.5px solid rgba(196,154,60,.15);border-radius:var(--r2);padding:.8rem">
       <div style="font-family:'DM Mono',monospace;font-size:.55rem;color:var(--gold);letter-spacing:.1em;margin-bottom:.6rem">${LANG==='en'?'RECENT EXAMS':'ÚLTIMOS EXÁMENES'}</div>
       ${recentSessions}
     </div>`:''}
@@ -15462,7 +15462,7 @@ function renderVideos(){
   c.innerHTML = `
     <div class="sup-wrap">
       <!-- Videos hero -->
-      <div style="background:linear-gradient(135deg,#1c2a22 0%,#2a3530 60%,#1c2a22 100%);border-radius:var(--r);padding:1.5rem 1.4rem 1.25rem;margin-bottom:1.25rem;position:relative;overflow:hidden">
+      <div style="background:linear-gradient(135deg,var(--parchment) 0%,#2a3530 60%,var(--parchment) 100%);border-radius:var(--r);padding:1.5rem 1.4rem 1.25rem;margin-bottom:1.25rem;position:relative;overflow:hidden">
         <div style="position:absolute;top:-30px;right:-30px;width:140px;height:140px;background:radial-gradient(circle,rgba(196,154,60,.1) 0%,transparent 70%);pointer-events:none"></div>
         <div style="position:absolute;bottom:-20px;left:-20px;width:100px;height:100px;background:radial-gradient(circle,rgba(196,154,60,.05) 0%,transparent 70%);pointer-events:none"></div>
         <div style="font-family:'DM Mono',monospace;font-size:.55rem;letter-spacing:.22em;color:rgba(228,190,104,.5);text-transform:uppercase;margin-bottom:.5rem">Txoko by Martín Berasategui</div>
@@ -15690,7 +15690,7 @@ function renderRanking(){
       return;
     }
 
-    const medals = [`<div style="width:28px;height:28px;clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);background:linear-gradient(135deg,#c49a3c,#9a7340);display:flex;align-items:center;justify-content:center;color:#1c2a22;font-weight:800;font-size:.75rem;font-family:'Cinzel',serif;box-shadow:0 2px 6px rgba(196,154,60,.3);text-shadow:none">1st</div>`,`<div style="width:28px;height:28px;clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);background:linear-gradient(135deg,#e8e8e8,#d0d0d0);display:flex;align-items:center;justify-content:center;color:#2a2a2a;font-weight:800;font-size:.75rem;font-family:'Cinzel',serif;box-shadow:0 2px 6px rgba(200,200,200,.4);text-shadow:none">2nd</div>`,`<div style="width:28px;height:28px;clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);background:linear-gradient(135deg,#d4a574,#b8865c);display:flex;align-items:center;justify-content:center;color:#2a2a2a;font-weight:800;font-size:.75rem;font-family:'Cinzel',serif;box-shadow:0 2px 6px rgba(180,140,100,.4);text-shadow:none">3rd</div>`];
+    const medals = [`<div style="width:28px;height:28px;clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);background:linear-gradient(135deg,var(--gold),#9a7340);display:flex;align-items:center;justify-content:center;color:var(--parchment);font-weight:800;font-size:.75rem;font-family:'Cinzel',serif;box-shadow:0 2px 6px rgba(196,154,60,.3);text-shadow:none">1st</div>`,`<div style="width:28px;height:28px;clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);background:linear-gradient(135deg,#e8e8e8,#d0d0d0);display:flex;align-items:center;justify-content:center;color:#2a2a2a;font-weight:800;font-size:.75rem;font-family:'Cinzel',serif;box-shadow:0 2px 6px rgba(200,200,200,.4);text-shadow:none">2nd</div>`,`<div style="width:28px;height:28px;clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);background:linear-gradient(135deg,#d4a574,#b8865c);display:flex;align-items:center;justify-content:center;color:#2a2a2a;font-weight:800;font-size:.75rem;font-family:'Cinzel',serif;box-shadow:0 2px 6px rgba(180,140,100,.4);text-shadow:none">3rd</div>`];
 
     const rows = sorted.map((emp, i) => {
       const lvl = getLevelInfo(emp.xp||0);
@@ -15722,7 +15722,7 @@ function renderRanking(){
 
       return `<div style="display:flex;align-items:center;gap:.9rem;padding:.9rem 1rem;background:${isMe?'linear-gradient(155deg,rgba(196,154,60,.06),rgba(196,154,60,.02))':'linear-gradient(155deg,#faf6ee,#f0e8d8)'};border:1.5px solid ${isMe?'rgba(196,154,60,.25)':'rgba(196,154,60,.12)'};border-radius:12px;margin-bottom:.55rem;box-shadow:${isMe?'0 0 12px rgba(196,154,60,.08)':'0 2px 8px rgba(28,42,34,.04)'};transition:all .2s">
         <div style="width:28px;text-align:center;flex-shrink:0">${i<3?medals[i]:`<span style="font-family:'Cinzel',serif;font-size:.82rem;font-weight:700;color:var(--parch3)">${i+1}</span>`}</div>
-        <div style="width:36px;height:36px;clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);background:${isMe?'linear-gradient(135deg,#c49a3c,#9a7340)':i===0?'linear-gradient(135deg,#c49a3c,#9a7340)':i===1?'linear-gradient(135deg,#e8e8e8,#d0d0d0)':i===2?'linear-gradient(135deg,#d4a574,#b8865c)':'rgba(196,154,60,.15)'};border:none;display:flex;align-items:center;justify-content:center;font-size:.85rem;color:${i<3||isMe?'#1c2a22':'var(--parch2)'};font-weight:700;flex-shrink:0;overflow:hidden">${renderSmallAvatar(emp.name, 36)}</div>
+        <div style="width:36px;height:36px;clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);background:${isMe?'linear-gradient(135deg,var(--gold),#9a7340)':i===0?'linear-gradient(135deg,var(--gold),#9a7340)':i===1?'linear-gradient(135deg,#e8e8e8,#d0d0d0)':i===2?'linear-gradient(135deg,#d4a574,#b8865c)':'rgba(196,154,60,.15)'};border:none;display:flex;align-items:center;justify-content:center;font-size:.85rem;color:${i<3||isMe?'#1c2a22':'var(--parch2)'};font-weight:700;flex-shrink:0;overflow:hidden">${renderSmallAvatar(emp.name, 36)}</div>
         <div style="flex:1;min-width:0">
           <div style="font-size:.9rem;font-weight:700;${isMe?'color:var(--gold)':'color:var(--parchment)'}">${escapeHTML(emp.name)}${isMe?` <span style="font-size:.6rem;opacity:.6;font-weight:500">${LANG==='en'?'(you)':'(tú)'}</span>`:''}</div>
           <div style="font-family:'Quicksand',sans-serif;font-size:.62rem;font-weight:500;color:var(--parch3);margin-top:.1rem">${lvl.title} · ${LANG==='en'?'Lvl':'Nv'}.${lvl.level}${streak>1?` · ●${streak}${LANG==='en'?'d':'d'}`:''}</div>
@@ -16170,7 +16170,7 @@ function renderSupDashboard(){
           <div class="tunic-divider"><span>${LANG==='en'?'Supervisor Tools':'Herramientas'}</span></div>
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:.65rem;margin-bottom:.75rem">
             <button onclick="renderCartaEditor()" style="display:flex;align-items:center;gap:.65rem;padding:.75rem .85rem;background:linear-gradient(155deg,#faf6ee,#f0e8d8);border:1.5px solid rgba(196,154,60,.12);border-left:3px solid #c49a3c;border-radius:12px;font-family:'Quicksand',sans-serif;cursor:pointer;transition:all .2s;position:relative;overflow:hidden">
-              <span style="width:32px;height:32px;display:flex;align-items:center;justify-content:center;clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);background:linear-gradient(135deg,#c49a3c,#a47a2c);flex-shrink:0"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.1 2.1 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></span>
+              <span style="width:32px;height:32px;display:flex;align-items:center;justify-content:center;clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);background:linear-gradient(135deg,var(--gold),#a47a2c);flex-shrink:0"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.1 2.1 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></span>
               <span style="font-size:.72rem;font-weight:600;color:var(--parchment)">${LANG==='en'?'Edit menu':'Editar carta'}</span>
             </button>
             <button onclick="renderSupAnalytics(_supAllEmps,_supEmpNames)" style="display:flex;align-items:center;gap:.65rem;padding:.75rem .85rem;background:linear-gradient(155deg,#faf6ee,#f0e8d8);border:1.5px solid rgba(196,154,60,.12);border-left:3px solid #4888a0;border-radius:12px;font-family:'Quicksand',sans-serif;cursor:pointer;transition:all .2s;position:relative;overflow:hidden">
@@ -16182,16 +16182,16 @@ function renderSupDashboard(){
               <span style="font-size:.72rem;font-weight:600;color:var(--parchment)">${LANG==='en'?'Send alert':'Enviar aviso'}</span>
             </button>
             <button onclick="renderLiveQuizHost(_supEmpNames)" style="display:flex;align-items:center;gap:.65rem;padding:.75rem .85rem;background:linear-gradient(155deg,rgba(77,138,94,.06),rgba(77,138,94,.02));border:1.5px solid rgba(77,138,94,.2);border-left:3px solid #4d8a5e;border-radius:12px;font-family:'Quicksand',sans-serif;cursor:pointer;transition:all .2s;position:relative;overflow:hidden">
-              <span style="width:32px;height:32px;display:flex;align-items:center;justify-content:center;clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);background:linear-gradient(135deg,#4d8a5e,#2d6a3e);flex-shrink:0"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="7"/><circle cx="12" cy="12" r="3"/><circle cx="12" cy="12" r="1" fill="#fff"/></svg></span>
-              <span style="font-size:.72rem;font-weight:700;color:#4d8a5e">${LANG==='en'?'Live quiz':'Quiz en vivo'}</span>
+              <span style="width:32px;height:32px;display:flex;align-items:center;justify-content:center;clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);background:linear-gradient(135deg,var(--sage),var(--green-deep));flex-shrink:0"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="7"/><circle cx="12" cy="12" r="3"/><circle cx="12" cy="12" r="1" fill="#fff"/></svg></span>
+              <span style="font-size:.72rem;font-weight:700;color:var(--sage)">${LANG==='en'?'Live quiz':'Quiz en vivo'}</span>
             </button>
             <button onclick="renderSupProtocolStats()" style="display:flex;align-items:center;gap:.65rem;padding:.75rem .85rem;background:linear-gradient(155deg,#faf6ee,#f0e8d8);border:1.5px solid rgba(196,154,60,.12);border-left:3px solid #7a6aaa;border-radius:12px;font-family:'Quicksand',sans-serif;cursor:pointer;transition:all .2s;position:relative;overflow:hidden">
               <span style="width:32px;height:32px;display:flex;align-items:center;justify-content:center;clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);background:linear-gradient(135deg,#7a6aaa,#5a4a8a);flex-shrink:0"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg></span>
               <span style="font-size:.72rem;font-weight:600;color:var(--parchment)">${LANG==='en'?'Protocol Stats':'Stats Protocolo'}</span>
             </button>
             <button onclick="renderSupLqaStats(_supAllEmps,_supEmpNames)" style="display:flex;align-items:center;gap:.65rem;padding:.75rem .85rem;background:linear-gradient(155deg,rgba(140,200,150,.08),rgba(140,200,150,.02));border:1.5px solid rgba(140,200,150,.25);border-left:3px solid #8fc499;border-radius:12px;font-family:'Quicksand',sans-serif;cursor:pointer;transition:all .2s;position:relative;overflow:hidden">
-              <span style="width:32px;height:32px;display:flex;align-items:center;justify-content:center;clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);background:linear-gradient(135deg,#8fc499,#4d8a5e);flex-shrink:0"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/><path d="M8 11l2 2 4-4"/></svg></span>
-              <span style="font-size:.72rem;font-weight:700;color:#4d8a5e">${LANG==='en'?'LQA Stats':'Stats LQA'}</span>
+              <span style="width:32px;height:32px;display:flex;align-items:center;justify-content:center;clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);background:linear-gradient(135deg,#8fc499,var(--sage));flex-shrink:0"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/><path d="M8 11l2 2 4-4"/></svg></span>
+              <span style="font-size:.72rem;font-weight:700;color:var(--sage)">${LANG==='en'?'LQA Stats':'Stats LQA'}</span>
             </button>
             <button onclick="renderSupDeleteEmployee(_supEmpNames)" style="display:flex;align-items:center;gap:.65rem;padding:.75rem .85rem;background:linear-gradient(155deg,rgba(196,112,104,.04),rgba(196,112,104,.01));border:1.5px solid rgba(196,112,104,.2);border-left:3px solid #c47068;border-radius:12px;font-family:'Quicksand',sans-serif;cursor:pointer;transition:all .2s;position:relative;overflow:hidden">
               <span style="width:32px;height:32px;display:flex;align-items:center;justify-content:center;clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);background:linear-gradient(135deg,#c47068,#a85848);flex-shrink:0"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/><path d="M10 11v6M14 11v6"/></svg></span>
@@ -18743,7 +18743,7 @@ function renderDailyMissions(){
         <div class="mission-icon">${done?'<svg width="22" height="22" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#4d8a5e"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#2d6a3e" opacity=".4"/><polyline points="8 12 11 15 16 9" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>':m.icon}</div>
         <div style="flex:1;min-width:0">
           <div style="font-family:'Cinzel',serif;font-size:.82rem;font-weight:600;color:${done?'var(--sage)':'var(--parchment)'};letter-spacing:.015em;line-height:1.2;${done?'text-decoration:line-through;opacity:.75':''}">${LANG==='en'?m.title_en:m.title}</div>
-          <div class="mission-progress"><div class="mission-progress-fill" style="width:${pct}%;background:${done?'linear-gradient(90deg,#4d8a5e,#7aae8c)':'linear-gradient(90deg,#c49a3c,#e4be68)'}"></div></div>
+          <div class="mission-progress"><div class="mission-progress-fill" style="width:${pct}%;background:${done?'linear-gradient(90deg,var(--sage),#7aae8c)':'linear-gradient(90deg,var(--gold),var(--gold3))'}"></div></div>
         </div>
         <div class="mission-xp">+${m.xp}xp</div>
       </div>`;
@@ -19181,7 +19181,7 @@ function showAchievementToast(ach){
     document.body.appendChild(stack);
   }
   const toast=document.createElement('div');
-  toast.style.cssText='background:linear-gradient(135deg,#1c2a22,#2a3530);border:1px solid var(--gold-a);border-radius:12px;padding:.75rem 1.2rem;display:flex;align-items:center;gap:.75rem;box-shadow:0 8px 32px rgba(0,0,0,.4),0 0 0 1px rgba(196,154,60,.1);opacity:0;transform:translateY(-20px);transition:all .4s cubic-bezier(.22,1,.36,1);overflow:visible;';
+  toast.style.cssText='background:linear-gradient(135deg,var(--parchment),#2a3530);border:1px solid var(--gold-a);border-radius:12px;padding:.75rem 1.2rem;display:flex;align-items:center;gap:.75rem;box-shadow:0 8px 32px rgba(0,0,0,.4),0 0 0 1px rgba(196,154,60,.1);opacity:0;transform:translateY(-20px);transition:all .4s cubic-bezier(.22,1,.36,1);overflow:visible;';
   toast.innerHTML=`
     <div style="position:relative;width:40px;height:40px;flex-shrink:0">
       <div class="gem-rays"></div>
@@ -19245,7 +19245,7 @@ function renderAchievementsSection(){
 
   return `<div style="margin-bottom:1rem" id="achSection">
     <div class="tunic-divider"><span>${LANG==='en'?'Achievements':'Logros'} (${unlocked.length}/${ACHIEVEMENTS.length})</span></div>
-    <div class="dash-defer" style="display:flex;flex-wrap:wrap;gap:.55rem;background:linear-gradient(155deg,#faf6ee 0%,#f4ede2 50%,#f0e8d8 100%);border:1.5px solid rgba(196,154,60,.18);border-radius:var(--r);padding:1.1rem;position:relative;overflow:hidden;box-shadow:inset 0 2px 8px rgba(196,154,60,.04),0 2px 12px rgba(28,42,34,.05)">
+    <div class="dash-defer" style="display:flex;flex-wrap:wrap;gap:.55rem;background:linear-gradient(155deg,#faf6ee 0%,var(--ink) 50%,#f0e8d8 100%);border:1.5px solid rgba(196,154,60,.18);border-radius:var(--r);padding:1.1rem;position:relative;overflow:hidden;box-shadow:inset 0 2px 8px rgba(196,154,60,.04),0 2px 12px rgba(28,42,34,.05)">
       <div style="position:absolute;inset:0;background-image:url(${"\"data:image/svg+xml,%3Csvg width='40' height='35' viewBox='0 0 40 35' xmlns='http://www.w3.org/2000/svg'%3E%3Cpolygon points='20,2 38,17.5 20,33 2,17.5' fill='none' stroke='rgba(196,154,60,0.035)' stroke-width='0.4'/%3E%3C/svg%3E\""});pointer-events:none"></div>
       ${_shown.map(a=>{
         const isUnlocked=unlockedIds.includes(a.id);
@@ -19590,7 +19590,7 @@ function _lqaOptionsFeedbackHtml(options, optionsEn, picked, correct){
     const isPick = (idx === picked);
     const isAns  = (idx === correct);
     let bg = 'rgba(255,255,255,.55)', border = '1px solid var(--line2)', mark = '';
-    if (isAns)      { bg = 'rgba(77,138,94,.14)';  border = '2px solid #4d8a5e'; mark = '<span style="float:right;color:#4d8a5e;font-weight:700">✓</span>'; }
+    if (isAns)      { bg = 'rgba(77,138,94,.14)';  border = '2px solid #4d8a5e'; mark = '<span style="float:right;color:var(--sage);font-weight:700">✓</span>'; }
     else if (isPick){ bg = 'rgba(196,112,104,.14)'; border = '2px solid #c47068'; mark = '<span style="float:right;color:#c47068;font-weight:700">✗</span>'; }
     return `<div style="padding:.7rem .9rem;background:${bg};border:${border};border-radius:var(--r2);color:var(--parch2);font-size:.85rem;line-height:1.5;margin-bottom:.4rem;text-align:left">${mark}<span style="display:inline-block;width:1.4rem;font-weight:700;color:var(--parch3)">${idx+1}.</span>${LANG==='en'?optionsEn[idx]:opt}</div>`;
   }).join('');
@@ -19767,7 +19767,7 @@ function renderLqaInfo(){
 
     <div style="font-size:.72rem;font-weight:700;color:#7a6aaa;text-transform:uppercase;margin-bottom:.8rem;letter-spacing:.06em">— ${LANG==='en'?'EI Guest Connection':'Conexión Emocional con el Huésped'} —</div>
 
-    <div style="background:linear-gradient(155deg,#faf6ee 0%,#f4ede2 50%,#f0e8d8 100%);border:1.5px solid rgba(196,154,60,.18);border-radius:var(--r);padding:1rem;margin-bottom:1.2rem;position:relative;overflow:hidden">
+    <div style="background:linear-gradient(155deg,#faf6ee 0%,var(--ink) 50%,#f0e8d8 100%);border:1.5px solid rgba(196,154,60,.18);border-radius:var(--r);padding:1rem;margin-bottom:1.2rem;position:relative;overflow:hidden">
       <div style="position:absolute;top:0;right:0;width:60px;height:60px;background:radial-gradient(circle,rgba(196,154,60,.06) 0%,transparent 70%);pointer-events:none"></div>
       ${eiScaleHtml}
     </div>
@@ -19825,14 +19825,14 @@ function renderLqaExamQuestion(){
     <div style="margin-bottom:1rem;display:flex;justify-content:space-between;align-items:center">
       <div style="font-size:.75rem;color:var(--parch3);text-transform:uppercase;font-weight:600">${LANG==='en'?'Question':'Pregunta'} ${s.index+1}/${s.questions.length}</div>
       <div style="width:100px;height:6px;background:var(--parch4);border-radius:var(--r3);overflow:hidden">
-        <div style="background:#c49a3c;height:100%;width:${(s.index+1)/s.questions.length*100}%;transition:width .3s"></div>
+        <div style="background:var(--gold);height:100%;width:${(s.index+1)/s.questions.length*100}%;transition:width .3s"></div>
       </div>
     </div>
     <div style="background:linear-gradient(155deg,#faf6ee,#f0e8d8);border:1px solid var(--line2);border-radius:var(--r2);padding:1.1rem;margin-bottom:1rem">
       <div style="font-size:.9rem;color:var(--parch2);line-height:1.7;font-weight:600">${LANG==='en'?q.question_en:q.question}</div>
     </div>
     <div role="radiogroup" aria-label="${LANG==='en'?'Answer options':'Opciones de respuesta'}" style="display:grid;grid-template-columns:1fr;gap:.5rem;margin-bottom:1rem">
-      ${q.options.map((opt,idx)=>`<button onclick="lqaExamAnswer(${idx})" role="radio" aria-checked="false" style="padding:.9rem;background:linear-gradient(135deg,rgba(72,136,160,.06),rgba(72,136,160,.02));border:2px solid rgba(72,136,160,.2);border-radius:var(--r);color:var(--parch2);font-weight:600;cursor:pointer;transition:all .2s;text-align:left;min-height:48px"><span style="display:inline-block;width:1.4rem;font-weight:700;color:#c49a3c">${idx+1}.</span>${LANG==='en'?q.options_en[idx]:opt}</button>`).join('')}
+      ${q.options.map((opt,idx)=>`<button onclick="lqaExamAnswer(${idx})" role="radio" aria-checked="false" style="padding:.9rem;background:linear-gradient(135deg,rgba(72,136,160,.06),rgba(72,136,160,.02));border:2px solid rgba(72,136,160,.2);border-radius:var(--r);color:var(--parch2);font-weight:600;cursor:pointer;transition:all .2s;text-align:left;min-height:48px"><span style="display:inline-block;width:1.4rem;font-weight:700;color:var(--gold)">${idx+1}.</span>${LANG==='en'?q.options_en[idx]:opt}</button>`).join('')}
     </div>
     <div style="font-size:.65rem;color:var(--parch4);text-align:center">${LANG==='en'?'Tip: press 1-4 to choose · Esc to exit':'Tip: pulsa 1-4 para elegir · Esc para salir'}</div>
   </div>`;
@@ -19866,7 +19866,7 @@ function lqaExamAnswer(optIdx){
       <div style="font-size:.9rem;color:var(--parch2);line-height:1.6">${LANG==='en'?q.explanation_en:q.explanation}</div>
       ${q.standardRef ? `<div style="font-size:.75rem;color:var(--parch3);margin-top:.7rem;font-style:italic">${LANG==='en'?'Standard #':'Estándar #'}${q.standardRef}</div>` : ''}
     </div>
-    <button id="lqaNextBtn" onclick="lqaExamState.index++;renderLqaExamQuestion()" style="width:100%;padding:.75rem;background:#c49a3c;border:none;border-radius:var(--r);color:#fff;font-weight:700;cursor:pointer">${LANG==='en'?'Next':'Siguiente'} ↵</button>
+    <button id="lqaNextBtn" onclick="lqaExamState.index++;renderLqaExamQuestion()" style="width:100%;padding:.75rem;background:var(--gold);border:none;border-radius:var(--r);color:#fff;font-weight:700;cursor:pointer">${LANG==='en'?'Next':'Siguiente'} ↵</button>
   </div>`;
   _lqaInstallKbd((e)=>{
     if (e.key === 'Enter' || e.key === ' ') {
@@ -19908,18 +19908,18 @@ function renderLqaExamResults(){
   const c = document.getElementById('appContent');
   c.innerHTML = `<div class="sup-wrap">
     <div style="text-align:center;margin:2rem 0">
-      <div style="font-family:'Cinzel',serif;font-size:3rem;font-weight:700;color:#c49a3c;margin-bottom:.5rem">${s.score}/${total}</div>
+      <div style="font-family:'Cinzel',serif;font-size:3rem;font-weight:700;color:var(--gold);margin-bottom:.5rem">${s.score}/${total}</div>
       <h1 tabindex="-1" id="lqaResHdr" style="font-size:1.1rem;color:var(--parchment);margin-bottom:1.5rem;font-family:'Cinzel',serif;font-weight:600">${LANG==='en'?'LQA Exam Complete':'Examen LQA Completado'}</h1>
       <div style="background:linear-gradient(135deg,rgba(196,154,60,.08),rgba(196,154,60,.02));border:1px solid rgba(196,154,60,.2);border-radius:var(--r);padding:1rem;margin-bottom:1rem">
         <div style="font-size:.85rem;color:var(--parch3);text-transform:uppercase;margin-bottom:.3rem">${LANG==='en'?'Score':'Puntuación'}</div>
-        <div style="font-size:2rem;font-weight:700;color:#c49a3c">${pct}%</div>
+        <div style="font-size:2rem;font-weight:700;color:var(--gold)">${pct}%</div>
         <div style="font-size:.75rem;color:var(--parch3);margin-top:.3rem">+${xp} XP · ${timeSec}s</div>
       </div>
     </div>
     ${_lqaTrendBlock(getEmp(currentUser), 'exam')}
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:.6rem;margin-bottom:.5rem">
       <button onclick="renderLqaExamReview()" style="padding:.75rem;background:var(--ink2);border:1px solid var(--line);border-radius:var(--r);color:var(--parch2);font-weight:700;cursor:pointer">${LANG==='en'?'Review answers':'Revisar respuestas'}</button>
-      <button onclick="startLqaExam()" style="padding:.75rem;background:#c49a3c;border:none;border-radius:var(--r);color:#fff;font-weight:700;cursor:pointer">${LANG==='en'?'Try again':'Intentar de nuevo'}</button>
+      <button onclick="startLqaExam()" style="padding:.75rem;background:var(--gold);border:none;border-radius:var(--r);color:#fff;font-weight:700;cursor:pointer">${LANG==='en'?'Try again':'Intentar de nuevo'}</button>
     </div>
     <button onclick="renderLqa()" style="width:100%;padding:.6rem;background:transparent;border:1px solid var(--line);border-radius:var(--r);color:var(--parch3);font-weight:600;cursor:pointer">${LANG==='en'?'Back to menu':'Volver al menú'}</button>
   </div>`;
@@ -19945,7 +19945,7 @@ function renderLqaExamReview(){
     </div>
     ${items}
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:.6rem;margin-top:1rem">
-      <button onclick="startLqaExam()" style="padding:.75rem;background:#c49a3c;border:none;border-radius:var(--r);color:#fff;font-weight:700;cursor:pointer">${LANG==='en'?'Try again':'Intentar de nuevo'}</button>
+      <button onclick="startLqaExam()" style="padding:.75rem;background:var(--gold);border:none;border-radius:var(--r);color:#fff;font-weight:700;cursor:pointer">${LANG==='en'?'Try again':'Intentar de nuevo'}</button>
       <button onclick="renderLqa()" style="padding:.75rem;background:var(--ink2);border:1px solid var(--line);border-radius:var(--r);color:var(--parch2);font-weight:700;cursor:pointer">${LANG==='en'?'Menu':'Menú'}</button>
     </div>
   </div>`;
@@ -20243,7 +20243,7 @@ function renderLqaAuditorScenario(){
     <div style="margin-bottom:1rem;display:flex;justify-content:space-between;align-items:center">
       <div style="font-size:.75rem;color:var(--parch3);text-transform:uppercase;font-weight:600">${LANG==='en'?'Scenario':'Escenario'} ${s.index+1}/${s.questions.length}</div>
       <div style="width:100px;height:6px;background:var(--parch4);border-radius:var(--r3);overflow:hidden">
-        <div style="background:#4d8a5e;height:100%;width:${(s.index+1)/s.questions.length*100}%;transition:width .3s"></div>
+        <div style="background:var(--sage);height:100%;width:${(s.index+1)/s.questions.length*100}%;transition:width .3s"></div>
       </div>
     </div>
     <div style="background:linear-gradient(155deg,#faf6ee,#f0e8d8);border:1px solid var(--line2);border-radius:var(--r2);padding:1.1rem;margin-bottom:1rem">
@@ -20252,7 +20252,7 @@ function renderLqaAuditorScenario(){
       <div style="font-size:.85rem;font-weight:600;color:var(--parchment)">${LANG==='en'?'Would this service pass the LQA audit?':'¿Este servicio pasaría la auditoría LQA?'}</div>
     </div>
     <div style="display:flex;gap:.6rem;margin-bottom:.5rem">
-      <button onclick="lqaAuditorAnswer('meet')" style="flex:1;padding:1rem;background:rgba(77,138,94,.1);border:2px solid #4d8a5e;border-radius:var(--r);color:#4d8a5e;font-weight:700;cursor:pointer;min-height:48px"><span style="display:inline-block;width:1.2rem;font-weight:700;opacity:.7">1.</span>${LANG==='en'?'Yes, it passes':'Sí, pasaría'} ✓</button>
+      <button onclick="lqaAuditorAnswer('meet')" style="flex:1;padding:1rem;background:rgba(77,138,94,.1);border:2px solid #4d8a5e;border-radius:var(--r);color:var(--sage);font-weight:700;cursor:pointer;min-height:48px"><span style="display:inline-block;width:1.2rem;font-weight:700;opacity:.7">1.</span>${LANG==='en'?'Yes, it passes':'Sí, pasaría'} ✓</button>
       <button onclick="lqaAuditorAnswer('below')" style="flex:1;padding:1rem;background:rgba(196,112,104,.1);border:2px solid #c47068;border-radius:var(--r);color:#c47068;font-weight:700;cursor:pointer;min-height:48px"><span style="display:inline-block;width:1.2rem;font-weight:700;opacity:.7">2.</span>${LANG==='en'?'No, it fails':'No, suspendería'} ✗</button>
     </div>
     <div style="font-size:.65rem;color:var(--parch4);text-align:center">${LANG==='en'?'Tip: 1 = passes · 2 = fails · Esc to exit':'Tip: 1 = pasa · 2 = falla · Esc para salir'}</div>
@@ -20277,12 +20277,12 @@ function lqaAuditorAnswer(verdict){
   const meetIsPick = (verdict === 'meet');
   const meetBg = meetIsAns ? 'rgba(77,138,94,.22)' : (meetIsPick ? 'rgba(196,112,104,.18)' : 'rgba(255,255,255,.5)');
   const meetBd = meetIsAns ? '2px solid #4d8a5e' : (meetIsPick ? '2px solid #c47068' : '1px solid var(--line2)');
-  const meetMk = meetIsAns ? '<span style="float:right;color:#4d8a5e;font-weight:700">✓</span>' : (meetIsPick ? '<span style="float:right;color:#c47068;font-weight:700">✗</span>' : '');
+  const meetMk = meetIsAns ? '<span style="float:right;color:var(--sage);font-weight:700">✓</span>' : (meetIsPick ? '<span style="float:right;color:#c47068;font-weight:700">✗</span>' : '');
   const belowIsAns  = (sc.verd === 'below');
   const belowIsPick = (verdict === 'below');
   const belowBg = belowIsAns ? 'rgba(77,138,94,.22)' : (belowIsPick ? 'rgba(196,112,104,.18)' : 'rgba(255,255,255,.5)');
   const belowBd = belowIsAns ? '2px solid #4d8a5e' : (belowIsPick ? '2px solid #c47068' : '1px solid var(--line2)');
-  const belowMk = belowIsAns ? '<span style="float:right;color:#4d8a5e;font-weight:700">✓</span>' : (belowIsPick ? '<span style="float:right;color:#c47068;font-weight:700">✗</span>' : '');
+  const belowMk = belowIsAns ? '<span style="float:right;color:var(--sage);font-weight:700">✓</span>' : (belowIsPick ? '<span style="float:right;color:#c47068;font-weight:700">✗</span>' : '');
 
   const c = document.getElementById('appContent');
   c.innerHTML = `<div class="sup-wrap" role="region" aria-live="polite">
@@ -20304,7 +20304,7 @@ function lqaAuditorAnswer(verdict){
       <div style="font-size:.75rem;color:var(--parch3);text-transform:uppercase;letter-spacing:.06em;margin-top:1rem;margin-bottom:.5rem;font-weight:600">${LANG==='en'?'Analysis':'Análisis'}</div>
       <div style="font-size:.85rem;color:var(--parch2);line-height:1.6">${LANG==='en'?sc.expl_en:sc.expl}</div>
     </div>
-    <button id="lqaNextBtn" onclick="lqaAudState.index++;renderLqaAuditorScenario()" style="width:100%;padding:.75rem;background:#4d8a5e;border:none;border-radius:var(--r);color:#fff;font-weight:700;cursor:pointer">${LANG==='en'?'Next':'Siguiente'} ↵</button>
+    <button id="lqaNextBtn" onclick="lqaAudState.index++;renderLqaAuditorScenario()" style="width:100%;padding:.75rem;background:var(--sage);border:none;border-radius:var(--r);color:#fff;font-weight:700;cursor:pointer">${LANG==='en'?'Next':'Siguiente'} ↵</button>
   </div>`;
   _lqaInstallKbd((e)=>{
     if (e.key === 'Enter' || e.key === ' ') {
@@ -20349,7 +20349,7 @@ function renderLqaAuditorResults(){
     : (LANG==='en' ? 'Keep studying the standards to improve your audit readiness.' : 'Sigue estudiando los estándares para mejorar tu preparación.');
   c.innerHTML = `<div class="sup-wrap">
     <div style="text-align:center;margin:1.5rem 0 1rem">
-      <div style="font-family:'Cinzel',serif;font-size:3rem;font-weight:700;color:#4d8a5e;margin-bottom:.5rem">${s.score}/${total}</div>
+      <div style="font-family:'Cinzel',serif;font-size:3rem;font-weight:700;color:var(--sage);margin-bottom:.5rem">${s.score}/${total}</div>
       <h1 tabindex="-1" id="lqaResHdr" style="font-size:1.1rem;color:var(--parchment);margin-bottom:.5rem;font-family:'Cinzel',serif;font-weight:600">${LANG==='en'?'Are You Ready?':'¿Estás Preparado?'}</h1>
       <div style="font-size:.9rem;color:var(--parch2);margin-bottom:1rem">${LANG==='en'?'Evaluation accuracy':'Precisión de evaluación'}: <strong>${pct}%</strong> · +${xp} XP · ${timeSec}s</div>
       <div style="background:linear-gradient(135deg,rgba(77,138,94,.08),rgba(77,138,94,.02));border:1px solid rgba(77,138,94,.2);border-radius:var(--r);padding:1rem;margin-bottom:1rem">
@@ -20359,7 +20359,7 @@ function renderLqaAuditorResults(){
     ${_lqaTrendBlock(getEmp(currentUser), 'audit')}
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:.6rem;margin-bottom:.5rem">
       <button onclick="renderLqaAuditorReview()" style="padding:.75rem;background:var(--ink2);border:1px solid var(--line);border-radius:var(--r);color:var(--parch2);font-weight:700;cursor:pointer">${LANG==='en'?'Review answers':'Revisar respuestas'}</button>
-      <button onclick="startLqaAuditor()" style="padding:.75rem;background:#4d8a5e;border:none;border-radius:var(--r);color:#fff;font-weight:700;cursor:pointer">${LANG==='en'?'Try again':'Intentar de nuevo'}</button>
+      <button onclick="startLqaAuditor()" style="padding:.75rem;background:var(--sage);border:none;border-radius:var(--r);color:#fff;font-weight:700;cursor:pointer">${LANG==='en'?'Try again':'Intentar de nuevo'}</button>
     </div>
     <button onclick="renderLqa()" style="width:100%;padding:.6rem;background:transparent;border:1px solid var(--line);border-radius:var(--r);color:var(--parch3);font-weight:600;cursor:pointer">${LANG==='en'?'Back to menu':'Volver al menú'}</button>
   </div>`;
@@ -20377,7 +20377,7 @@ function renderLqaAuditorReview(){
       <summary style="cursor:pointer;font-size:.85rem;color:var(--parchment);font-weight:600;list-style:none;display:flex;justify-content:space-between;gap:.5rem;align-items:flex-start"><span>${i+1}. ${LANG==='en'?'Std #':'Est. #'}${sc.std} · ${LANG==='en'?'You said':'Dijiste'}: <em>${verdLabel(a.picked)}</em></span><span style="color:${a.isCorrect?'#4d8a5e':'#c47068'};font-weight:700">${a.isCorrect?'✓':'✗'}</span></summary>
       <div style="margin-top:.6rem;font-size:.8rem;color:var(--parch3);line-height:1.5;font-style:italic">${LANG==='en'?sc.scn_en:sc.scn}</div>
       ${std ? `<div style="margin-top:.5rem;font-size:.78rem;color:var(--parch2);line-height:1.5"><strong>${LANG==='en'?'Standard':'Estándar'}:</strong> ${LANG==='en'?std.std_en:std.std}</div>` : ''}
-      <div style="margin-top:.5rem;font-size:.8rem;color:var(--parch2);line-height:1.5"><strong>${LANG==='en'?'Correct verdict':'Veredicto correcto'}:</strong> <span style="color:#4d8a5e;font-weight:700">${verdLabel(sc.verd)}</span></div>
+      <div style="margin-top:.5rem;font-size:.8rem;color:var(--parch2);line-height:1.5"><strong>${LANG==='en'?'Correct verdict':'Veredicto correcto'}:</strong> <span style="color:var(--sage);font-weight:700">${verdLabel(sc.verd)}</span></div>
       <div style="margin-top:.5rem;font-size:.78rem;color:var(--parch3);line-height:1.5">${LANG==='en'?sc.expl_en:sc.expl}</div>
     </details>`;
   }).join('');
@@ -20388,7 +20388,7 @@ function renderLqaAuditorReview(){
     </div>
     ${items}
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:.6rem;margin-top:1rem">
-      <button onclick="startLqaAuditor()" style="padding:.75rem;background:#4d8a5e;border:none;border-radius:var(--r);color:#fff;font-weight:700;cursor:pointer">${LANG==='en'?'Try again':'Intentar de nuevo'}</button>
+      <button onclick="startLqaAuditor()" style="padding:.75rem;background:var(--sage);border:none;border-radius:var(--r);color:#fff;font-weight:700;cursor:pointer">${LANG==='en'?'Try again':'Intentar de nuevo'}</button>
       <button onclick="renderLqa()" style="padding:.75rem;background:var(--ink2);border:1px solid var(--line);border-radius:var(--r);color:var(--parch2);font-weight:700;cursor:pointer">${LANG==='en'?'Menu':'Menú'}</button>
     </div>
   </div>`;
@@ -20440,7 +20440,7 @@ function renderGhostIntro(){
       <div style="font-size:.82rem;color:var(--parch2);line-height:1.6;margin-bottom:.5rem">${LANG==='en'?'In each of 5 scenes you\u2019ll face a real situation. Choose how you act. Each choice affects specific LQA standards.':'En cada una de las 5 escenas vivir\u00e1s una situaci\u00f3n real. Elige c\u00f3mo act\u00faas. Cada elecci\u00f3n afecta a est\u00e1ndares LQA concretos.'}</div>
       <div style="font-size:.78rem;color:var(--parch3);line-height:1.6">${LANG==='en'?'At the end, the inspector will file a report on YOUR service \u2014 with the exact standards you met or failed.':'Al final, el inspector presentar\u00e1 un informe sobre TU servicio \u2014 con los est\u00e1ndares exactos que cumpliste o fallaste.'}</div>
     </div>
-    <button onclick="renderGhostScene()" style="width:100%;padding:1rem;background:linear-gradient(135deg,#4d8a5e,#2d6a3e);border:none;border-radius:var(--r);color:#fff;font-family:'Cinzel',serif;font-size:.95rem;font-weight:700;cursor:pointer;letter-spacing:.08em;text-transform:uppercase;box-shadow:0 4px 16px rgba(77,138,94,.25)">${LANG==='en'?'Start Service':'Comenzar el Servicio'} \u2192</button>
+    <button onclick="renderGhostScene()" style="width:100%;padding:1rem;background:linear-gradient(135deg,var(--sage),var(--green-deep));border:none;border-radius:var(--r);color:#fff;font-family:'Cinzel',serif;font-size:.95rem;font-weight:700;cursor:pointer;letter-spacing:.08em;text-transform:uppercase;box-shadow:0 4px 16px rgba(77,138,94,.25)">${LANG==='en'?'Start Service':'Comenzar el Servicio'} \u2192</button>
   </div>`;
 }
 
@@ -20454,7 +20454,7 @@ function renderGhostScene(){
     </div>
     <div style="margin-bottom:1rem">
       <div style="width:100%;height:6px;background:var(--parch4);border-radius:var(--r3);overflow:hidden">
-        <div style="background:linear-gradient(90deg,#4d8a5e,#8fc499);height:100%;width:${(ghostSceneIdx)/ghostScenario.scenes.length*100}%;transition:width .3s"></div>
+        <div style="background:linear-gradient(90deg,var(--sage),#8fc499);height:100%;width:${(ghostSceneIdx)/ghostScenario.scenes.length*100}%;transition:width .3s"></div>
       </div>
     </div>
     <div style="background:linear-gradient(155deg,#1a2a20,#0f1d15);border:1px solid rgba(140,200,150,.15);border-radius:var(--r);padding:1.2rem;margin-bottom:1rem">
@@ -20464,7 +20464,7 @@ function renderGhostScene(){
     </div>
     <div style="display:flex;flex-direction:column;gap:.6rem;margin-bottom:1rem">
       ${sc.options.map((o,i)=>`<button onclick="ghostChoose(${i})" style="text-align:left;padding:.95rem 1rem;background:linear-gradient(155deg,#faf6ee,#f0e8d8);border:1.5px solid var(--line2);border-left:3px solid #c49a3c;border-radius:var(--r2);font-family:'Quicksand',sans-serif;font-size:.85rem;color:var(--parchment);line-height:1.5;cursor:pointer;transition:all .15s">
-        <span style="display:inline-block;font-family:'DM Mono',monospace;font-size:.6rem;color:#c49a3c;letter-spacing:.1em;margin-right:.5rem;font-weight:700">${String.fromCharCode(65+i)}</span>${LANG==='en'?o.label_en:o.label}
+        <span style="display:inline-block;font-family:'DM Mono',monospace;font-size:.6rem;color:var(--gold);letter-spacing:.1em;margin-right:.5rem;font-weight:700">${String.fromCharCode(65+i)}</span>${LANG==='en'?o.label_en:o.label}
       </button>`).join('')}
     </div>
   </div>`;
@@ -20509,7 +20509,7 @@ function ghostChoose(idx){
         }).join('')}
       </div>
     </div>
-    <button onclick="ghostNext()" style="width:100%;padding:.95rem;background:#4d8a5e;border:none;border-radius:var(--r);color:#fff;font-family:'Cinzel',serif;font-size:.9rem;font-weight:700;cursor:pointer;letter-spacing:.05em">${ghostSceneIdx+1>=ghostScenario.scenes.length?(LANG==='en'?'See Inspector Report':'Ver Informe del Inspector'):(LANG==='en'?'Next scene':'Siguiente escena')} \u2192</button>
+    <button onclick="ghostNext()" style="width:100%;padding:.95rem;background:var(--sage);border:none;border-radius:var(--r);color:#fff;font-family:'Cinzel',serif;font-size:.9rem;font-weight:700;cursor:pointer;letter-spacing:.05em">${ghostSceneIdx+1>=ghostScenario.scenes.length?(LANG==='en'?'See Inspector Report':'Ver Informe del Inspector'):(LANG==='en'?'Next scene':'Siguiente escena')} \u2192</button>
   </div>`;
 }
 
@@ -20589,7 +20589,7 @@ function renderGhostReport(){
       <div style="font-family:'DM Mono',monospace;font-size:.55rem;color:#8fc499;letter-spacing:.12em">${LANG==='en'?'Scenario':'Escenario'}: ${LANG==='en'?ghostScenario.title_en:ghostScenario.title}</div>
     </div>
     <div style="background:linear-gradient(155deg,#faf6ee,#f0e8d8);border:1px solid var(--line2);border-radius:var(--r);padding:1.2rem;margin-bottom:1rem;border-left:3px solid #c49a3c">
-      <div style="font-family:'DM Mono',monospace;font-size:.55rem;color:#c49a3c;letter-spacing:.18em;text-transform:uppercase;margin-bottom:.6rem">${LANG==='en'?'Inspector\u2019s written verdict':'Veredicto escrito del inspector'}</div>
+      <div style="font-family:'DM Mono',monospace;font-size:.55rem;color:var(--gold);letter-spacing:.18em;text-transform:uppercase;margin-bottom:.6rem">${LANG==='en'?'Inspector\u2019s written verdict':'Veredicto escrito del inspector'}</div>
       <div style="font-family:'Cinzel',serif;font-size:.95rem;color:var(--parchment);line-height:1.6;font-style:italic">${narrative}</div>
     </div>
     <div style="background:linear-gradient(155deg,#faf6ee,#f0e8d8);border:1px solid var(--line2);border-radius:var(--r);padding:1rem;margin-bottom:1rem">
@@ -20619,11 +20619,11 @@ function renderGhostReport(){
         </div>`;
       }).join('')}
     </div>` : `<div style="background:rgba(77,138,94,.06);border:1px solid rgba(77,138,94,.25);border-radius:var(--r);padding:1rem;margin-bottom:1rem;text-align:center">
-      <div style="font-family:'Cinzel',serif;font-size:1rem;color:#4d8a5e;margin-bottom:.3rem">\u2605 ${LANG==='en'?'Perfect inspection':'Inspecci\u00f3n perfecta'}</div>
+      <div style="font-family:'Cinzel',serif;font-size:1rem;color:var(--sage);margin-bottom:.3rem">\u2605 ${LANG==='en'?'Perfect inspection':'Inspecci\u00f3n perfecta'}</div>
       <div style="font-size:.82rem;color:var(--parch2)">${LANG==='en'?'Not a single standard failed. Audit-ready.':'Ni un solo est\u00e1ndar fallado. Listo para la auditor\u00eda.'}</div>
     </div>`}
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:.6rem">
-      <button onclick="startGhostInspection()" style="padding:.85rem;background:#4d8a5e;border:none;border-radius:var(--r);color:#fff;font-weight:700;cursor:pointer">${LANG==='en'?'New service':'Nuevo servicio'}</button>
+      <button onclick="startGhostInspection()" style="padding:.85rem;background:var(--sage);border:none;border-radius:var(--r);color:#fff;font-weight:700;cursor:pointer">${LANG==='en'?'New service':'Nuevo servicio'}</button>
       <button onclick="renderLqa()" style="padding:.85rem;background:var(--ink2);border:1px solid var(--line);border-radius:var(--r);color:var(--parch2);font-weight:700;cursor:pointer">${LANG==='en'?'Menu':'Men\u00fa'}</button>
     </div>
   </div>`;
@@ -21282,7 +21282,7 @@ function renderRuleta(){
         ${labels}
         <circle cx="50" cy="50" r="9" fill="var(--cream,#faf6ee)" stroke="var(--gold,#b6a169)" stroke-width="1.2"/>
         <circle cx="50" cy="50" r="6" fill="var(--gold,#b6a169)" opacity=".15"/>
-        <text x="50" y="51.5" text-anchor="middle" dominant-baseline="central" font-size="3" fill="var(--olive,#1c2a22)" font-weight="800" letter-spacing=".5">${_en?'SPIN':'GIRA'}</text>
+        <text x="50" y="51.5" text-anchor="middle" dominant-baseline="central" font-size="3" fill="var(--olive,var(--parchment))" font-weight="800" letter-spacing=".5">${_en?'SPIN':'GIRA'}</text>
       </svg>
     </div>
     <button class="ruleta-spin-btn" id="ruletaSpinBtn" onclick="_spinRuleta()" ${_ruletaSpinning?'disabled':''}>${_ruletaSpinning?(_en?'Spinning...':'Girando...'):(_en?'🎲 Spin the wheel!':'🎲 ¡Gira la ruleta!')}</button>
@@ -21415,7 +21415,7 @@ function renderTxoko(){
       </div>
 
       <!-- TXOKO: Survive the service — PRIMARY recommended game -->
-      <div role="button" tabindex="0" aria-label="${_en?'Recommended: Survive the service — Mr. Shoesmith':'Recomendado: Sobrevive al servicio — Mr. Shoesmith'}" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click()}" class="game-card game-card-primary" onclick="txStart()" style="--gc-accent:#c49a3c;--gc-accent2:#a47a2c;--gc-glow:rgba(196,154,60,.2)">
+      <div role="button" tabindex="0" aria-label="${_en?'Recommended: Survive the service — Mr. Shoesmith':'Recomendado: Sobrevive al servicio — Mr. Shoesmith'}" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click()}" class="game-card game-card-primary" onclick="txStart()" style="--gc-accent:var(--gold);--gc-accent2:#a47a2c;--gc-glow:rgba(196,154,60,.2)">
         <span class="gc-recommended-badge">★ ${_en?'Recommended':'Recomendado'}</span>
         ${_gcDeco}
         <div class="game-card-bg" style="background:linear-gradient(135deg,rgba(196,154,60,.08),rgba(196,154,60,.03))">
@@ -21589,7 +21589,7 @@ function txShowIntro(){
     <div style="max-width:400px;margin:0 auto;padding:0;text-align:center">
 
       <!-- Dark TUNIC header panel -->
-      <div style="background:linear-gradient(160deg,#2a3530 0%,#1c2a22 40%,#243028 100%);border-radius:var(--r) var(--r) 0 0;padding:1.5rem 1.25rem 1.8rem;position:relative;overflow:hidden">
+      <div style="background:linear-gradient(160deg,#2a3530 0%,var(--parchment) 40%,#243028 100%);border-radius:var(--r) var(--r) 0 0;padding:1.5rem 1.25rem 1.8rem;position:relative;overflow:hidden">
         <!-- Diamond pattern overlay -->
         <div style="position:absolute;inset:0;background-image:url(${"\"data:image/svg+xml,%3Csvg width='40' height='35' viewBox='0 0 40 35' xmlns='http://www.w3.org/2000/svg'%3E%3Cpolygon points='20,2 38,17.5 20,33 2,17.5' fill='none' stroke='rgba(196,154,60,0.05)' stroke-width='0.5'/%3E%3C/svg%3E\""});pointer-events:none"></div>
         <!-- Ambient glow -->
@@ -21621,7 +21621,7 @@ function txShowIntro(){
           </div>
           <!-- VIP Badge -->
           <div style="position:absolute;bottom:-4px;left:50%;transform:translateX(-50%);z-index:2">
-            <div style="background:linear-gradient(135deg,#c49a3c,#d4aa4c);color:#1c2a22;font-family:'DM Mono',monospace;font-size:.5rem;font-weight:700;padding:.25rem .65rem;border-radius:2px;letter-spacing:.1em;white-space:nowrap;clip-path:polygon(8% 0%,92% 0%,100% 50%,92% 100%,8% 100%,0% 50%)">
+            <div style="background:linear-gradient(135deg,var(--gold),var(--gold2));color:var(--parchment);font-family:'DM Mono',monospace;font-size:.5rem;font-weight:700;padding:.25rem .65rem;border-radius:2px;letter-spacing:.1em;white-space:nowrap;clip-path:polygon(8% 0%,92% 0%,100% 50%,92% 100%,8% 100%,0% 50%)">
               ${LANG==='en'?'VIP · TABLE 501':'VIP · MESA 501'}
             </div>
           </div>
@@ -21637,7 +21637,7 @@ function txShowIntro(){
       </div>
 
       <!-- Parchment body -->
-      <div style="background:linear-gradient(180deg,#f4ede2,#faf6ee);border:1.5px solid rgba(196,154,60,.15);border-top:none;border-radius:0 0 var(--r) var(--r);padding:1.2rem 1.25rem 1.5rem;position:relative">
+      <div style="background:linear-gradient(180deg,var(--ink),#faf6ee);border:1.5px solid rgba(196,154,60,.15);border-top:none;border-radius:0 0 var(--r) var(--r);padding:1.2rem 1.25rem 1.5rem;position:relative">
         <!-- Diamond pattern -->
         <div style="position:absolute;inset:0;background-image:url(${"\"data:image/svg+xml,%3Csvg width='40' height='35' viewBox='0 0 40 35' xmlns='http://www.w3.org/2000/svg'%3E%3Cpolygon points='20,2 38,17.5 20,33 2,17.5' fill='none' stroke='rgba(196,154,60,0.03)' stroke-width='0.4'/%3E%3C/svg%3E\""});pointer-events:none"></div>
 
@@ -21678,7 +21678,7 @@ function txShowIntro(){
         </div>
 
         <!-- CTA Button — hex styled -->
-        <button onclick="txStart(true)" style="width:100%;padding:.9rem 1rem;background:linear-gradient(135deg,#2a3530,#1c2a22);color:#f2eae0;border:1.5px solid rgba(196,154,60,.3);border-radius:6px;font-family:'Cinzel',serif;font-size:.9rem;font-weight:600;letter-spacing:.06em;cursor:pointer;position:relative;overflow:hidden;box-shadow:0 4px 16px rgba(0,0,0,.15),inset 0 1px 0 rgba(196,154,60,.1);margin-bottom:.5rem;transition:all .2s">
+        <button onclick="txStart(true)" style="width:100%;padding:.9rem 1rem;background:linear-gradient(135deg,#2a3530,var(--parchment));color:#f2eae0;border:1.5px solid rgba(196,154,60,.3);border-radius:6px;font-family:'Cinzel',serif;font-size:.9rem;font-weight:600;letter-spacing:.06em;cursor:pointer;position:relative;overflow:hidden;box-shadow:0 4px 16px rgba(0,0,0,.15),inset 0 1px 0 rgba(196,154,60,.1);margin-bottom:.5rem;transition:all .2s">
           <span style="position:relative;z-index:1">${LANG==='en'?'Begin service':'Comenzar servicio'} →</span>
         </button>
         <button onclick="renderTxoko()" style="background:transparent;border:none;font-family:'DM Mono',monospace;font-size:.6rem;color:var(--parch4);cursor:pointer;padding:.4rem;letter-spacing:.08em">
@@ -22736,7 +22736,7 @@ function _renderServiceMode(){
     const d = dishes.find(x => x.id === _svcSelectedDish);
     if(d){
       ov.innerHTML = _svcHeaderHTML(timeStr, _en) + `<div class="svc-body">
-        <button onclick="_svcSelectedDish=null;_renderServiceMode()" style="background:none;border:none;color:#c49a3c;font-size:.75rem;font-family:'DM Mono',monospace;cursor:pointer;margin-bottom:.6rem;padding:.4rem 0;min-height:36px;-webkit-tap-highlight-color:transparent">← ${_en?'Back':'Volver'}</button>
+        <button onclick="_svcSelectedDish=null;_renderServiceMode()" style="background:none;border:none;color:var(--gold);font-size:.75rem;font-family:'DM Mono',monospace;cursor:pointer;margin-bottom:.6rem;padding:.4rem 0;min-height:36px;-webkit-tap-highlight-color:transparent">← ${_en?'Back':'Volver'}</button>
         <div class="svc-result-name" style="font-size:1rem;margin-bottom:.2rem">${d.name}</div>
         <div class="svc-result-cat">${d.cat||''}</div>
 
@@ -22898,7 +22898,7 @@ function _svcGetWinePreview(dish, _en){
   else if(isMeat) suggestion = _en ? '→ Red' : '→ Tinto';
   else if(isDessert) suggestion = _en ? '→ Sweet' : '→ Dulce';
   else suggestion = _en ? '→ White / Rosé' : '→ Blanco / Rosado';
-  return `<div style="font-size:.65rem;color:#c49a3c;margin-top:.25rem;font-family:'DM Mono',monospace">${suggestion}</div>`;
+  return `<div style="font-size:.65rem;color:var(--gold);margin-top:.25rem;font-family:'DM Mono',monospace">${suggestion}</div>`;
 }
 
 

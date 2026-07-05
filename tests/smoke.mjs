@@ -212,6 +212,19 @@ test('styles.css defines the formalized token scales', () => {
   for (const t of ['--font-sans','--font-serif','--font-mono','--font-read']) assert(css.includes(`${t}:`), `${t} missing`);
 });
 
+test('tokenization phase 2: no raw brand hexes in CSS contexts of index.html', () => {
+  // Inline styles and template-literal CSS must reference the brand tokens,
+  // not raw hexes, so applyTheme() reskins them. Quoted JS strings and SVG
+  // presentation attributes are exempt (phase 3 — var() in SVG attributes is
+  // not Safari-safe).
+  const cssCtx = html.match(/[:,]#(c49a3c|e4be68|d4aa4c|7d5c2f|1c2a22|f4ede2|4d8a5e|2d6a3e)/gi) || [];
+  assert(cssCtx.length === 0,
+    `found ${cssCtx.length} raw brand hexes in CSS contexts: ${cssCtx.slice(0,4).join(' ')}`);
+  // The dashboard greeting eyebrow follows the active venue.
+  assert(/dash-hero-label">\$\{\(typeof ACTIVE_VENUE/.test(html),
+    'dashboard hero label must be venue-aware');
+});
+
 test('brand-token layer drives the palette (multi-restaurant ready)', () => {
   const css = read('styles.css');
   // The 8 brand tokens must be defined with the Txoko identity values so a new
