@@ -1067,6 +1067,28 @@ test('smart review v2: unified frames, no set-fingerprint, smarter scenarios', (
     'dedupe must receive the correct option FIRST (shuffle after), or correctIdx can be -1');
 });
 
+test('exam surfaces shuffle options: LQA exam/situations + wine quiz shape guard', () => {
+  // LQA exam & situations rendered the AUTHORED option order: measured on the
+  // real data, 44% of situation answers sat on option 2, so position alone
+  // scored. Both must build session copies with options shuffled in lockstep.
+  assert(/function _lqaShuffledExamQ\(/.test(html), '_lqaShuffledExamQ missing');
+  assert(/_lqaShuffle\(LQA_EXAM_QUESTIONS\)\.slice\(0,10\)\.map\(_lqaShuffledExamQ\)/.test(html),
+    'LQA exam questions must be session-shuffled');
+  assert(/function _lqaShuffledSituation\(/.test(html), '_lqaShuffledSituation missing');
+  assert(/_lqaPickFresh\(LQA_SITUATIONS, recent, 10\)\.map\(_lqaShuffledSituation\)/.test(html),
+    'LQA situations must be session-shuffled');
+  // Philosophy tags are keyed by AUTHORED option index — the answer handler
+  // must translate the displayed index back through _map.
+  assert(/_lqaTagFor\(sc\.id, sc\._map \? sc\._map\[idx\] : idx\)/.test(html),
+    'situation answer must map displayed index back to authored index for tags');
+  // Wine quiz shape guard: a sentence correct among bare-term wrongs (36% of
+  // EN questions) revealed the answer by shape; and the correct was the
+  // longest option ~50% of the time.
+  const wq = html.slice(html.indexOf('function _generateWineChoices'), html.indexOf('function _generateWineChoices') + 9000);
+  assert(/isSentence/.test(wq) && /mergedPool/.test(wq), 'wine quiz shape guard missing');
+  assert(/_inWindow/.test(wq) && /strictLen/.test(wq), 'wine quiz length-window two-pass pick missing');
+});
+
 test('exam anti-echo: ingredients/history questions are reversed and redacted', () => {
   // Measured on the real menu: the correct option leaked dish-name words in
   // 74% (ingredients) / 83% (history) of questions. Those topics now ask in
