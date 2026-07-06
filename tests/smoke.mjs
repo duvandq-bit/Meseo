@@ -191,10 +191,16 @@ test('data/ghost-scenarios.json full schema + std ids + ES/EN parity', () => {
         }
         if (o.effects.every(e => e.met)) allMet++;
       }
-      // The Jul-2026 scenarios follow the strict one-correct-answer convention.
-      // (Some earlier authored scenarios intentionally have 0 or 2 fully-correct
-      //  options — e.g. g_family's kitchen-chain failure — so this is NEW-only.)
-      if (NEW.has(s.id)) assert(allMet === 1, `${s.id} sc${i}: expected exactly 1 all-met option, got ${allMet}`);
+      // One correct answer per scene, for ALL scenarios (owner-reviewed fix,
+      // Jul 2026: the three farewell/clearing scenes that scored two options
+      // as fully correct now have exactly one). Sole documented exception:
+      // g_family scene 4 — the kitchen-chain failure is an intentional no-win
+      // crisis with ZERO perfect options.
+      if (s.id === 'g_family' && i === 3) {
+        assert(allMet === 0, `${s.id} sc${i}: the no-win crisis must have 0 all-met options, got ${allMet}`);
+      } else {
+        assert(allMet === 1, `${s.id} sc${i}: expected exactly 1 all-met option, got ${allMet}`);
+      }
     }
     // New scenarios: arc of 4-5 scenes.
     if (NEW.has(s.id)) assert(s.scenes.length >= 4 && s.scenes.length <= 5, `${s.id}: expected 4-5 scenes, got ${s.scenes.length}`);
