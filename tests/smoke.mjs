@@ -506,6 +506,40 @@ test('ingredient-allergen base: valid schema + no NEW undeclared allergens', () 
   }
 });
 
+test('DISH_ACTIONS matrix: full coverage, comandas present, Trifasi fix locked', () => {
+  // FASE 3b: retirability is DATA (DISH_ACTIONS), not prose parsing. Lock:
+  // every declared allergen of every dish has a matrix entry; every removable
+  // has its comanda; consumers read the matrix first; and the one intentional
+  // divergence from the old prose parser (Trifasi Huevos = structural, the
+  // veg-shortcut bug) stays fixed.
+  const iM = html.indexOf('const DISH_ACTIONS = {');
+  assert(iM !== -1, 'DISH_ACTIONS matrix missing');
+  const jM = html.indexOf('};', iM);
+  const M = JSON.parse(html.slice(iM + 'const DISH_ACTIONS = '.length, jM + 1));
+  const iEs = html.indexOf('const DISHES = ['), jEs = html.indexOf('\n];', iEs);
+  const dishBlock = html.slice(iEs, jEs);
+  let pairs = 0, removables = 0;
+  for (const m of dishBlock.matchAll(/\{id:(\d+),cat:'[^']*',name:'((?:[^'\\]|\\.)*)',allergens:\[([^\]]*)\]/g)) {
+    const id = m[1], name = m[2];
+    const allergens = [...m[3].matchAll(/'([^']+)'/g)].map(x => x[1]);
+    assert(M[id], `dish ${id} "${name}" has no DISH_ACTIONS entry`);
+    for (const a of allergens) {
+      pairs++;
+      const e = M[id][a];
+      assert(e && (e.r === 0 || e.r === 1), `dish ${id} "${name}": allergen ${a} missing from matrix`);
+      if (e.r === 1) { removables++; assert(e.c, `dish ${id} "${name}": removable ${a} has no comanda`); }
+    }
+  }
+  assert(pairs >= 260 && removables >= 70, `matrix coverage shrank (pairs=${pairs}, removables=${removables})`);
+  assert(M['89'] && M['89']['Huevos'] && M['89']['Huevos'].r === 0,
+    'Trifasi Huevos must stay STRUCTURAL (veg version keeps the fried egg; brioche egg is structural)');
+  // Consumers must consult the matrix before the prose parser.
+  const nr = html.slice(html.indexOf('function _simNonRemovableAllergens'), html.indexOf('function _simNonRemovableAllergens') + 1200);
+  assert(/DISH_ACTIONS\[dish\.id\]/.test(nr), '_simNonRemovableAllergens must read DISH_ACTIONS first');
+  const drill = html.slice(html.indexOf('function buildAllergenQuestions'), html.indexOf('function startAllergenTest'));
+  assert(/DISH_ACTIONS\[dish\.id\]/.test(drill), 'allergen drill comanda must read DISH_ACTIONS first');
+});
+
 test('ES and EN dish twins declare identical allergens', () => {
   // The EN cards are hand-written too — a divergent twin misinforms staff
   // using the app in English (found live: EN Croquettes missing Molluscs and
