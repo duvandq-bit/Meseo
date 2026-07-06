@@ -655,6 +655,35 @@ test('smart review console: simulation briefing with terminal typing', () => {
   assert(/\.ri-console \.ri-brief\{/.test(css), 'briefing styles must be scoped to the console');
 });
 
+test('offer rules: kids menu and Vegetariano never recommended to generic guests', () => {
+  // Reglas del propietario (jul 2026, reporte en vivo): el Fish and chips de
+  // la CENA es solo del menú infantil y los platos Vegetariano solo se
+  // recomiendan a vegetarianos. El Servicio Fantasma recomendaba ambos en
+  // una pregunta que además pedía ENTRANTES con un pool de cualquier
+  // categoría. _simOfferable centraliza la regla; se verifica ejecutándola.
+  assert(/KIDS_ONLY_DISH_IDS = new Set\(\[109\]\)/.test(html), 'kids-only set missing (Fish and chips Cena = 109)');
+  const cut = (start, endMark) => { const i = html.indexOf(start); assert(i !== -1, 'missing ' + start); return html.slice(i, html.indexOf(endMark, i)); };
+  const dishesSrc = cut('const DISHES = [', '\n];') + '\n];';
+  // extrae _simIsSideNamed + KIDS_ONLY + _simOfferable por marcadores fijos
+  const iH = html.indexOf('function _simIsSideNamed(d){');
+  const jH = html.indexOf('function _simOfferable(d){');
+  const kH = html.indexOf('}', jH) + 1;
+  const src = html.slice(iH, kH);
+  const stubs = "const LANG='es'; function getDish(d){return d;} const DISHES_EN=[];";
+  const f = new Function(stubs + dishesSrc + src + '; return {DISHES, _simOfferable};'); // eslint-disable-line no-new-func
+  const { DISHES, _simOfferable } = f();
+  const fish = DISHES.find(d => d.id === 109), arroz = DISHES.find(d => d.id === 53);
+  assert(fish && !_simOfferable(fish), 'Fish and chips (Cena) must NOT be offerable (kids menu)');
+  assert(arroz && !_simOfferable(arroz), 'Arroz cremoso (Vegetariano) must NOT be a generic recommendation');
+  assert(DISHES.filter(d => d.cat === 'Entrantes' && _simOfferable(d)).length >= 10,
+    'offerable starters pool collapsed');
+  // Consumidores: SR SafeAlternative/WhichAdaptable y SF alergia (entrantes)
+  const sfA = html.slice(html.indexOf("if(sc.type==='alergia')"), html.indexOf("} else if(sc.type==='maridaje')"));
+  assert(/cat==='Entrantes' && _sfOfr\(d\)/.test(sfA), 'ghost-service alergia must draw offerable STARTERS (text asks for entrantes)');
+  const wa2 = html.slice(html.indexOf('function _scenarioWhichAdaptable'), html.indexOf('function _srWaitMins'));
+  assert(/_simOfferable\(d\)/.test(wa2), 'WhichAdaptable offers must be offerable');
+});
+
 test('smart review provenance: DISH_COMPONENTS-driven, executed, anti-obvious', () => {
   // FASE 4 en el entrenamiento: las preguntas de procedencia derivan de
   // DISH_COMPONENTS (base única validada). El guard EJECUTA los builders con
@@ -2089,14 +2118,14 @@ test('bug 5+6: recommendations exclude side-named twins; avoid/adapt pools are t
   assert(/function _simIsSideNamed\(/.test(html), '_simIsSideNamed helper missing');
   assert(/function _simDisplayTwins\(/.test(html) && /function _simTwinsAll\(/.test(html), 'display-twin helpers missing');
   const sa = html.slice(html.indexOf('function _scenarioSafeAlternative'), html.indexOf('function _srShuffleOpts'));
-  assert(/!_simIsSideNamed\(d\)/.test(sa), 'SafeAlternative must exclude side-named dishes');
+  assert(/_simOfferable\(d\)/.test(sa), 'SafeAlternative must offer only offerable dishes (no sides, no kids menu, no Vegetariano)');
   assert(/_simTwinsAll\(d, t=>t\.allergens && t\.allergens\.includes\(allergen\) && _simNonRemovableAllergens\(t\)\.includes\(allergen\)\)/.test(sa),
     'SafeAlternative wrongs must be non-removable carriers for every twin');
   const sh = html.slice(html.indexOf('function _scenarioSharedAllergen'), html.indexOf('function _scenarioWinePairing'));
   assert(/_simNonRemovableAllergens\(t\)\.includes\(a\)/.test(sh) && /_simTwinsAll/.test(sh),
     'SharedAllergen correct pool must be twin-safe non-removable carriers');
   const wa = html.slice(html.indexOf('function _scenarioWhichAdaptable'), html.indexOf('function _srWaitMins'));
-  assert(/!_simIsSideNamed\(d\)/.test(wa) && /_simTwinsAll/.test(wa),
+  assert(/(_simOfferable\(d\)|!_simIsSideNamed\(d\))/.test(wa) && /_simTwinsAll/.test(wa),
     'WhichAdaptable must exclude side-named dishes and be twin-safe');
   const iw = html.slice(html.indexOf('function _scenarioIngredientWhere'), html.indexOf('function _srGenerateQuiz'));
   assert(/_simTwinsAll\(target/.test(iw) && /_simTwinsAll\(s/.test(iw), 'IngredientWhere must be twin-safe on target and clean pool');
