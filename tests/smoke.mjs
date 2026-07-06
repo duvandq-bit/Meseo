@@ -655,6 +655,18 @@ test('smart review console: simulation briefing with terminal typing', () => {
   assert(/\.ri-console \.ri-brief\{/.test(css), 'briefing styles must be scoped to the console');
 });
 
+test('app header respects the iOS notch (safe-area inset)', () => {
+  // black-translucent + viewport-fit=cover extienden la página bajo la barra
+  // de estado de iOS: con height fija la cabecera quedaba DEBAJO del reloj y
+  // sus botones eran intocables (reporte del propietario, iPhone de sala).
+  const css = read('styles.css');
+  const hdr = css.slice(css.indexOf('.app-header{'), css.indexOf('.header-logo{'));
+  assert(/height:calc\(56px \+ env\(safe-area-inset-top/.test(hdr), 'header height must grow with the notch');
+  assert(/padding:env\(safe-area-inset-top/.test(hdr), 'header padding must push content below the status bar');
+  assert(/viewport-fit=cover/.test(html) && /black-translucent/.test(html),
+    'iOS viewport/status-bar metas changed — re-audit safe-area handling');
+});
+
 test('force-update escape hatch + APP_VERSION synced to the SW', () => {
   // iOS PWAs se aferran a builds viejas (reporte del propietario: "en iPhone
   // sigue apareciendo la versión antigua"). El botón Actualizar del login
