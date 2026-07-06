@@ -1506,6 +1506,11 @@
    "alergenos": [],
    "fuente": "certeza culinaria"
   },
+  "curry verde": {
+   "nombre": "Curry verde",
+   "alergenos": [],
+   "fuente": "confirmado por propietario"
+  },
   "leche de coco": {
    "nombre": "Leche de coco",
    "alergenos": [],
@@ -1908,6 +1913,13 @@
    "alergenos": [],
    "fuente": "certeza culinaria"
   },
+  "espuma de pil pil": {
+   "nombre": "Espuma de pil pil",
+   "alergenos": [
+    "Moluscos"
+   ],
+   "fuente": "confirmado por propietario"
+  },
   "caldo/gelatina de pescado": {
    "nombre": "Caldo/Gelatina de pescado",
    "alergenos": [
@@ -2304,7 +2316,7 @@
    "alergenos": [
     "Sulfitos"
    ],
-   "fuente": "propuesta"
+   "fuente": "confirmado por propietario"
   },
   "escabeche": {
    "nombre": "Escabeche",
@@ -2638,11 +2650,6 @@
    "alergenos": [],
    "fuente": "pendiente"
   },
-  "curry verde": {
-   "nombre": "Curry verde",
-   "alergenos": [],
-   "fuente": "pendiente"
-  },
   "chocolate negro": {
    "nombre": "Chocolate negro",
    "alergenos": [],
@@ -2650,11 +2657,6 @@
   },
   "crema de mandarina": {
    "nombre": "Crema de mandarina",
-   "alergenos": [],
-   "fuente": "pendiente"
-  },
-  "espuma de pil pil": {
-   "nombre": "Espuma de pil pil",
    "alergenos": [],
    "fuente": "pendiente"
   },
