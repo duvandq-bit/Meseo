@@ -661,15 +661,10 @@ test('pairingExplanations: every entry matches a dish still on the menu', () => 
   const stem = w => w.replace(/(os|as|es)$/, '').replace(/[ao]$/, '');
   const toks = s2 => norm(s2).split(/[^a-z0-9ñ]+/).filter(w => w && !STOP.has(w)).map(stem);
   const nameToks = [...names].map(n => new Set(toks(n)));
-  // PENDIENTE DEL PROPIETARIO (jul 2026): las narrativas de cortes de carne y
-  // el helado no casan con ningún plato de la carta de formación. Puede ser
-  // carta de parrilla real no modelada o restos de una carta antigua — hasta
-  // su palabra, quedan en allowlist. Si confirma que ya no existen, se vacía
-  // esta lista y se limpian también los ~240 maridajes de wines.json.
-  const PENDING_OWNER = new Set(['entrecot de angus', 'entrecot de wagyu',
-    'cowboy de black angus', 'txuleta de rubia gallega', 'tomahawk de hereford',
-    't-bone de wagyu', 'lomo bajo de simmental', 'chateaubriand de vaca holstein',
-    'helados ben and jerrys']);
+  // Allowlist VACÍA: el propietario cerró todas las dudas (jul 2026) — los
+  // 8 cortes son fichas reales y la narrativa de Ben & Jerry's se eliminó
+  // junto a sus maridajes. Cualquier huérfano nuevo debe fallar aquí.
+  const PENDING_OWNER = new Set([]);
   for (const k of keys) {
     if (PENDING_OWNER.has(norm(k))) continue;
     const kt = toks(k);
