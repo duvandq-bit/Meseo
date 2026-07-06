@@ -456,6 +456,35 @@ test('La Terraza chat: WhatsApp features (mentions, replies, reactions, typing)'
     'chat animations need a reduced-motion gate');
 });
 
+test('push notifications: raster icons, deep links, rich payload', () => {
+  // Android renders an SVG notification icon as a generic grey circle — the
+  // logo must be raster (icon-192.png) plus a white-on-transparent status-bar
+  // badge (badge-96.png). Taps deep-link into the app (chat pushes land in
+  // La Terraza), mentions re-alert through a coalesced tag, photo messages
+  // show the picture itself. Deep link works even through the v2 send-push
+  // fn (title/body/tag only): the SW infers data.tab from tag === 'chat'.
+  const PNG = Buffer.from([0x89, 0x50, 0x4e, 0x47]);
+  for (const f of ['icon-192.png', 'badge-96.png']) {
+    assert(existsSync(join(ROOT, f)), `${f} missing`);
+    assert(readFileSync(join(ROOT, f)).subarray(0, 4).equals(PNG), `${f} is not a PNG`);
+  }
+  const sw = read('sw.js');
+  assert(sw.includes("'./icon-192.png'") && sw.includes("'./badge-96.png'"), 'SW must use raster icon + badge');
+  assert(/icon-192\.png/.test(sw.match(/const SHELL_URLS = \[[^\]]*\]/)[0]), 'raster icons must be pre-cached in the shell');
+  assert(/renotify: data\.renotify/.test(sw) && /options\.image = data\.image/.test(sw),
+    'SW push handler must support renotify + big-picture image');
+  assert(/data\.tag === 'chat'\) data\.data\.tab = 'chat'/.test(sw), 'chat tag must infer the deep link (v2 fn compatibility)');
+  assert(/postMessage\(\{ type: 'openTab', tab \}\)/.test(sw), 'notification click must deep-link an open window');
+  assert(sw.includes("'#tab=' + encodeURIComponent(tab)"), 'cold-start deep link (#tab= hash) missing from click handler');
+  // Client side: SW message listener, boot hash consumption, post-login landing.
+  assert(/type !== 'openTab'/.test(html) && /_pendingDeepTab/.test(html), 'client deep-link plumbing missing');
+  assert(html.includes("icon: 'icon-192.png'"), 'in-page Notification must use the raster icon too');
+  assert(/renotify:true, data:\{tab:'chat'\}/.test(html), 'mention push must renotify + deep-link to chat');
+  assert(/extra\.image = body\.image_url/.test(html), 'photo chat pushes must attach the image');
+  const manifest = JSON.parse(read('manifest.json'));
+  assert(manifest.icons.some(i => i.src === 'icon-192.png' && i.type === 'image/png'), 'manifest missing the PNG icon');
+});
+
 test('wine map is real cartography (Voyager basemap, no fake 3D or DO shapes)', () => {
   // Basemap must be CARTO Voyager retina raster served untouched — no hue/
   // saturation filters that make real cartography look artificial.

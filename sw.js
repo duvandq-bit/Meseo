@@ -4,7 +4,7 @@
 //   • Web Push notifications
 //   • Notification click → focus existing window in scope, or open one
 
-const VERSION = 'v7.95';
+const VERSION = 'v7.96';
 const CACHE_NAME = `txoko-shell-${VERSION}`;
 
 // Files cached as the app shell. Keep this list short — large data should be
@@ -18,7 +18,9 @@ const SHELL_URLS = [
   './index.html',
   './styles.css',
   './manifest.json',
-  './icon.svg'
+  './icon.svg',
+  './icon-192.png',
+  './badge-96.png'
 ];
 
 // ─── Install: pre-cache the shell ───────────────────────────────
@@ -105,8 +107,14 @@ self.addEventListener('fetch', (e) => {
 });
 
 // ─── Push: show notification ────────────────────────────────────
+// Android requires raster icons here: `icon` is the full-color logo shown in
+// the expanded card, `badge` the white-on-transparent silhouette drawn in the
+// status bar (an SVG in either slot falls back to a generic grey circle).
+// Payload extras (all optional, v3 fn passes them through): image (big
+// picture, e.g. a chat photo), renotify (mentions re-alert even when the tag
+// coalesces), data.tab (deep link opened on tap).
 self.addEventListener('push', (e) => {
-  let data = { title: 'TXOKO Formación', body: '', icon: 'icon.svg', tag: 'txoko' };
+  let data = { title: 'TXOKO Formación', body: '', tag: 'txoko', image: null, renotify: false, data: {} };
 
   if (e.data) {
     try {
@@ -114,32 +122,44 @@ self.addEventListener('push', (e) => {
       data.title = json.title || data.title;
       data.body = json.body || '';
       data.tag = json.tag || 'txoko';
+      data.image = json.image || null;
+      data.renotify = !!json.renotify;
       data.data = json.data || {};
     } catch (err) {
       data.body = e.data.text();
     }
   }
 
+  // Deep link: explicit data.tab wins; otherwise infer from the tag so chat
+  // taps land in La Terraza even through the v2 fn (title/body/tag only).
+  if (!data.data.tab && data.tag === 'chat') data.data.tab = 'chat';
+
   const options = {
     body: data.body,
-    icon: data.icon,
-    badge: data.icon,
+    icon: './icon-192.png',
+    badge: './badge-96.png',
     tag: data.tag,
-    vibrate: [200, 100, 200],
+    renotify: data.renotify,
+    vibrate: data.renotify ? [200, 100, 200, 100, 200] : [200, 100, 200],
     requireInteraction: false,
-    data: data.data || {},
-    actions: []
+    data: data.data,
+    actions: [{ action: 'open', title: data.data.tab === 'chat' ? 'Abrir chat' : 'Abrir' }]
   };
+  if (data.image) options.image = data.image;
 
   e.waitUntil(self.registration.showNotification(data.title, options));
 });
 
 // ─── Notification click: focus existing window in scope, or open one ──
 // Uses the SW scope (registration origin + path) instead of a hardcoded
-// substring — works regardless of where the app is hosted.
+// substring — works regardless of where the app is hosted. If the payload
+// carried a deep link (data.tab), an open window is told to navigate there
+// via postMessage; a fresh window gets it as a #tab= hash the app reads on
+// boot after auto-login.
 self.addEventListener('notificationclick', (e) => {
   e.notification.close();
 
+  const tab = (e.notification.data || {}).tab || null;
   const scopeUrl = new URL(self.registration.scope);
   e.waitUntil(
     self.clients.matchAll({ type: 'window', includeUncontrolled: true }).then((clients) => {
@@ -148,11 +168,12 @@ self.addEventListener('notificationclick', (e) => {
           const u = new URL(client.url);
           // Same origin AND path is within (or equal to) our scope
           if (u.origin === scopeUrl.origin && u.pathname.startsWith(scopeUrl.pathname) && 'focus' in client) {
+            if (tab) client.postMessage({ type: 'openTab', tab });
             return client.focus();
           }
         } catch (_) { /* ignore malformed URLs */ }
       }
-      return self.clients.openWindow(scopeUrl.href);
+      return self.clients.openWindow(scopeUrl.href + (tab ? '#tab=' + encodeURIComponent(tab) : ''));
     })
   );
 });

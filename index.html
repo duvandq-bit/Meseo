@@ -1775,7 +1775,7 @@ async function requestNotifPermission() {
 function showBrowserNotif(title, body, icon='✦') {
   if(!('Notification' in window) || Notification.permission !== 'granted') return;
   try {
-    new Notification(title, { body, icon: 'icon.svg', badge: 'icon.svg', tag: 'txoko' });
+    new Notification(title, { body, icon: 'icon-192.png', badge: 'badge-96.png', tag: 'txoko' });
   } catch(e) {}
 }
 
@@ -1801,6 +1801,24 @@ if ('serviceWorker' in navigator) {
     _swReloaded = true;
     location.reload();
   });
+}
+
+// ── Deep link from a notification tap ──
+// A running window receives {type:'openTab', tab} from the SW click handler;
+// a cold start gets it as a #tab= hash. Either way the tab opens right after
+// login instead of landing the user on the dashboard to hunt for the chat.
+let _pendingDeepTab = null;
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.addEventListener('message', (e) => {
+    const d = e.data || {};
+    if (d.type !== 'openTab' || !d.tab) return;
+    if (currentUser && typeof showTab === 'function') showTab(d.tab);
+    else _pendingDeepTab = d.tab;
+  });
+}
+if (location.hash && location.hash.indexOf('#tab=') === 0) {
+  _pendingDeepTab = decodeURIComponent(location.hash.slice(5));
+  try { history.replaceState(null, '', location.pathname + location.search); } catch(_) {}
 }
 async function registerServiceWorker() {
   if (!('serviceWorker' in navigator) || !('PushManager' in window)) return null;
@@ -7172,6 +7190,11 @@ function closePinAndEnter(){
     // codebase (unreferenced) so the feature can be re-enabled later if wanted.
     if(!emp.xp || emp.xp <= 0){
       showOnboarding();
+    } else if(_pendingDeepTab){
+      // Notification tap: land directly where the alert pointed (e.g. chat)
+      const _dt = _pendingDeepTab; _pendingDeepTab = null;
+      showTab(_dt);
+      checkStreak();
     } else {
       showTab('dashboard');
       checkStreak();
@@ -23678,7 +23701,9 @@ async function _chatSend(){
       supaCreateNotification(n, `💬 ${currentUser} te ha mencionado en La Terraza: "${snippet}"`, 'info');
       fetch(`${SUPA_URL}/functions/v1/send-push`, {
         method:'POST', headers:{ 'Content-Type':'application/json' },
-        body: JSON.stringify({ target:n, title:`💬 ${currentUser} · La Terraza`, body:snippet, tag:'chat' })
+        // renotify: a mention must ring even if a coalesced 'chat' notification
+        // is already on screen. data.tab deep-links the tap into La Terraza.
+        body: JSON.stringify({ target:n, title:`💬 ${currentUser} · La Terraza`, body:snippet, tag:'chat', renotify:true, data:{tab:'chat'} })
       }).catch(()=>{});
     });
   }
@@ -23727,10 +23752,14 @@ function _chatBroadcastPush(body){
     _chatLastBroadcastAt = now;
     const raw = body.image_url ? '📷 '+(body.message||(LANG==='en'?'Photo':'Foto')) : (body.message||'');
     const snippet = raw.length>90 ? raw.slice(0,90)+'…' : raw;
+    // Photo messages carry the image so the notification shows the picture
+    // itself (Android "big picture"); text-only pushes omit the field.
+    const extra = { tag:'chat', data:{tab:'chat'} };
+    if(body.image_url) extra.image = body.image_url;
     recipients.forEach(n=>{
       fetch(`${SUPA_URL}/functions/v1/send-push`, {
         method:'POST', headers:{ 'Content-Type':'application/json' },
-        body: JSON.stringify({ target:n, title:`💬 ${currentUser} · La Terraza`, body:snippet, tag:'chat' })
+        body: JSON.stringify(Object.assign({ target:n, title:`💬 ${currentUser} · La Terraza`, body:snippet }, extra))
       }).catch(()=>{});
     });
   }catch(_){}
