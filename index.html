@@ -1415,7 +1415,7 @@ const CAT_COLORS={'Entrantes':'#c49a3c','Hamburguesas y Bocatas':'#b86050','Plat
 const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#c49a3c"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#a47a2c" opacity=".4"/><path d="M8 8v4a1 1 0 001 1h1v4M10 8v4" stroke="#fff" stroke-width="1.2" stroke-linecap="round" fill="none"/><path d="M15 8v8M14 8v3a1.5 1.5 0 003 0V8" stroke="#fff" stroke-width="1.2" stroke-linecap="round" fill="none"/></svg>`,'Hamburguesas y Bocatas':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#b86050"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#983838" opacity=".4"/><path d="M7 9h10M7 12h10M7 15h10" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/><path d="M8 9c0-2 2-3 4-3s4 1 4 3M8 15c0 2 2 3 4 3s4-1 4-3" fill="none" stroke="#fff" stroke-width="1" opacity=".7"/></svg>`,'Platos Principales':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#4888a0"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#2e6878" opacity=".4"/><path d="M5 15h14" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/><path d="M12 6a6 6 0 016 6H6a6 6 0 016-6z" fill="none" stroke="#fff" stroke-width="1.1"/><circle cx="10" cy="6" r=".7" fill="#fff" opacity=".7"/><circle cx="12" cy="5" r=".7" fill="#fff" opacity=".7"/><circle cx="14" cy="6" r=".7" fill="#fff" opacity=".7"/></svg>`,'Sugerencias':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#d4aa4c"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#a48a2c" opacity=".4"/><polygon points="12,5 14.5,10 20,10.5 16,14 17,20 12,17 7,20 8,14 4,10.5 9.5,10" fill="#fff" opacity=".9"/></svg>`,'Guarniciones y Salsas':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#4d8a5e"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#2d6a3e" opacity=".4"/><path d="M12 18V10M5 10c0-4 3-6 7-6s7 2 7 6c0 5-3 8-7 8s-7-3-7-8z" fill="none" stroke="#fff" stroke-width="1.1"/><path d="M5 10c3 0 5 1 7 2.5" fill="none" stroke="#fff" stroke-width=".8" opacity=".6"/></svg>`,'Postres':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#7a6aaa"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#5a4a8a" opacity=".4"/><path d="M9 19h6M12 12v7M7 6l2 4.5a3 3 0 006 0L17 6H7z" fill="none" stroke="#fff" stroke-width="1.1" stroke-linecap="round"/></svg>`,'Vegetariano':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#5a9a6e"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#3a7a4e" opacity=".4"/><path d="M9 18h6M12 18V10M12 10c0-3 2-5 5-5-.7 2.5-2.5 5-5 5zM12 10c0-3-2-5-5-5 .7 2.5 2.5 5 5 5z" fill="none" stroke="#fff" stroke-width="1.1" stroke-linecap="round"/></svg>`};
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='7.113';  // sincronizada con sw.js VERSION (guard de CI)
+const APP_VERSION='7.114';  // sincronizada con sw.js VERSION (guard de CI)
 const APP_BUILD='Jul 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;
@@ -17389,7 +17389,44 @@ function renderSupNotifSender(empNames){
     </div>
     <button onclick="sendNotification()" class="btn-primary" style="width:100%;padding:.85rem">! Enviar aviso</button>
     <div id="notifSendMsg" style="text-align:center;margin-top:.5rem;font-size:.75rem;color:var(--sage);font-family:'DM Mono',monospace;display:none">✓ Aviso enviado</div>
+
+    <!-- Push de actualización: precachea la versión nueva en cada dispositivo -->
+    <div style="margin-top:1.25rem;padding-top:1.1rem;border-top:1px dashed var(--line)">
+      <div style="font-family:'DM Mono',monospace;font-size:.58rem;color:var(--gold);letter-spacing:.12em;text-transform:uppercase;margin-bottom:.4rem">📲 ${LANG==='en'?'Push the update':'Enviar actualización'}</div>
+      <div style="font-size:.72rem;color:var(--parch3);line-height:1.5;margin-bottom:.6rem">${LANG==='en'?'Every subscribed device pre-downloads the latest version in the background and gets a notification to open it.':'Cada dispositivo suscrito precarga la última versión en segundo plano y recibe un aviso para abrirla.'}</div>
+      <button onclick="sendAppUpdatePush()" style="width:100%;padding:.75rem;background:var(--ink2);border:1px solid var(--gold-a);border-radius:var(--r2);font-family:'DM Mono',monospace;font-size:.72rem;color:var(--gold2);cursor:pointer;letter-spacing:.06em">📲 ${LANG==='en'?'Send update to the team':'Enviar actualización al equipo'}</button>
+      <div id="updPushMsg" style="display:none;text-align:center;margin-top:.5rem;font-size:.75rem;color:var(--sage);font-family:'DM Mono',monospace">✓ ${LANG==='en'?'Update pushed to every device':'Actualización enviada a todos los dispositivos'}</div>
+    </div>
   </div>`;
+}
+
+// ── Push de actualización a todos los dispositivos (solo supervisor) ──
+// El SW de cada móvil recibe tag 'app-update', descarga la versión nueva en
+// segundo plano (registration.update + precacheo no-cache) y muestra el
+// aviso. Al abrir, la app ya está actualizada. iOS exige notificación
+// visible en todo push — hace de anuncio.
+async function sendAppUpdatePush(){
+  const ok = confirm(LANG==='en'
+    ? 'Send the update to every device on the team?'
+    : '¿Enviar la actualización a todos los dispositivos del equipo?');
+  if(!ok) return;
+  try{
+    await fetch(`${SUPA_URL}/functions/v1/send-push`, {
+      method:'POST', headers:{ 'Content-Type':'application/json' },
+      body: JSON.stringify({
+        target:'all',
+        title:'📲 TXOKO Formación · v'+APP_VERSION,
+        body: LANG==='en'
+          ? 'New version ready — tap to open with the update installed.'
+          : 'Nueva versión lista — toca para abrir con la actualización ya instalada.',
+        tag:'app-update', renotify:true, data:{}
+      })
+    });
+    const el = document.getElementById('updPushMsg');
+    if(el){ el.style.display='block'; setTimeout(()=>el.style.display='none', 4000); }
+  }catch(e){
+    if(typeof showToast==='function') showToast(LANG==='en'?'Could not send the update push':'No se pudo enviar la actualización', 'warning', 4000);
+  }
 }
 
 async function sendNotification(){

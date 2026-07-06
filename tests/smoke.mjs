@@ -662,6 +662,24 @@ test('smart review console: simulation briefing with terminal typing', () => {
   assert(/\.ri-console \.ri-brief\{/.test(css), 'briefing styles must be scoped to the console');
 });
 
+test('update push: SW pre-installs new build on tag app-update', () => {
+  // "¿Qué se necesita para enviar la actualización a los dispositivos?" —
+  // el push despierta al SW aunque la app esté cerrada: con tag 'app-update'
+  // dispara registration.update(), cuyo install precachea el shell FRESCO
+  // (no-cache), y muestra la notificación (obligatoria en iOS). El botón
+  // vive en el panel del supervisor.
+  const sw = read('sw.js');
+  assert(/new Request\(u, \{ cache: 'no-cache' \}\)/.test(sw), 'shell precache must bypass the HTTP cache');
+  assert(/data\.tag === 'app-update'/.test(sw) && /self\.registration\.update\(\)/.test(sw),
+    'push handler must background-update on tag app-update');
+  assert(/Promise\.all\(jobs\)/.test(sw), 'notification and update must both be awaited');
+  assert(/function sendAppUpdatePush/.test(html), 'supervisor sendAppUpdatePush missing');
+  const fn = html.slice(html.indexOf('async function sendAppUpdatePush'), html.indexOf('async function sendAppUpdatePush') + 1400);
+  assert(/tag:'app-update'/.test(fn) && /target:'all'/.test(fn) && /confirm\(/.test(fn),
+    'update push must target all with the app-update tag, behind a confirm');
+  assert(/onclick="sendAppUpdatePush\(\)"/.test(html), 'supervisor panel button missing');
+});
+
 test('login fits one phone screen; Share/Update buttons prominent', () => {
   // Petición del propietario: nada de arrastrar en el login, y Compartir/
   // Actualizar se veían "muy poco". Medido en headless a 390x844: el botón

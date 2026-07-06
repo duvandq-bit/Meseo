@@ -4,7 +4,7 @@
 //   • Web Push notifications
 //   • Notification click → focus existing window in scope, or open one
 
-const VERSION = 'v7.113';
+const VERSION = 'v7.114';
 const CACHE_NAME = `txoko-shell-${VERSION}`;
 
 // Files cached as the app shell. Keep this list short — large data should be
@@ -27,7 +27,10 @@ const SHELL_URLS = [
 self.addEventListener('install', (e) => {
   e.waitUntil(
     caches.open(CACHE_NAME)
-      .then(cache => cache.addAll(SHELL_URLS).catch(() => null))
+      // no-cache: el precacheo del shell debe venir de la RED, no del cache
+      // HTTP intermedio — clave para el push de actualización (la versión
+      // nueva queda lista en segundo plano antes de abrir la app).
+      .then(cache => cache.addAll(SHELL_URLS.map(u => new Request(u, { cache: 'no-cache' }))).catch(() => null))
       .then(() => self.skipWaiting())
   );
 });
@@ -147,7 +150,14 @@ self.addEventListener('push', (e) => {
   };
   if (data.image) options.image = data.image;
 
-  e.waitUntil(self.registration.showNotification(data.title, options));
+  // ── Push de ACTUALIZACIÓN (tag 'app-update') ──
+  // El push despierta este SW aunque la app esté cerrada: registration
+  // .update() descarga el sw.js nuevo, cuyo install precachea el shell
+  // fresco (no-cache). El usuario recibe la notificación y, al abrir, la
+  // versión nueva ya está instalada — sin descargas ni esperas.
+  const jobs = [self.registration.showNotification(data.title, options)];
+  if (data.tag === 'app-update') jobs.push(self.registration.update().catch(() => null));
+  e.waitUntil(Promise.all(jobs));
 });
 
 // ─── Notification click: focus existing window in scope, or open one ──
