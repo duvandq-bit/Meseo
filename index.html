@@ -3817,6 +3817,18 @@ function _simIsSideNamed(d){
   });
   return sides.has(_n(d.name)) || sides.has(_n(getDish(d).name));
 }
+
+// ── Reglas de OFERTA del propietario (jul 2026) ──
+// · El Fish and chips de la CENA (109) es solo del menú infantil: nunca se
+//   recomienda a un huésped genérico (sí puede estudiarse/adaptarse).
+// · Los platos de la categoría Vegetariano solo se recomiendan a huéspedes
+//   vegetarianos — nunca como recomendación genérica de carta.
+// · Las guarniciones nunca se ofrecen como plato (regla previa).
+const KIDS_ONLY_DISH_IDS = new Set([109]);
+function _simOfferable(d){
+  return !KIDS_ONLY_DISH_IDS.has(d.id) && d.cat !== 'Vegetariano' && !_simIsSideNamed(d);
+}
+
 function _simExtractIngredients(dish){
   if(!dish.ingredients) return [];
   // Split on commas, periods, colons; strip parentheses BEFORE filtering —
@@ -4054,7 +4066,7 @@ function _scenarioSafeAlternative(dish, dd, _en){
   // — owner: never recommend a guarnición as a substitute), free of the
   // allergen for EVERY dish sharing the display name (EN twins differ).
   const alternatives = _simMainDishes().filter(d=>d.id!==dish.id && d.cat===dish.cat
-    && !_simIsSideNamed(d)
+    && _simOfferable(d)
     && _simTwinsAll(d, t=>!t.allergens || !t.allergens.includes(allergen)));
   if(alternatives.length===0) return null;
   // Wrong answers: other real dishes (no sides) where the allergen is
@@ -4062,7 +4074,7 @@ function _scenarioSafeAlternative(dish, dd, _en){
   // allergen but removable was a defensible second recommendation ("pídalo
   // adaptado") — measured in 67% of questions before the fix.
   const allWrongs = _simMainDishes().filter(d=>d.id!==dish.id
-    && !_simIsSideNamed(d)
+    && _simOfferable(d)
     && _simTwinsAll(d, t=>t.allergens && t.allergens.includes(allergen) && _simNonRemovableAllergens(t).includes(allergen)));
   if(allWrongs.length<2) return null;
   const wrongsNonObvious = allWrongs.filter(d => !_simAllergenObviousInName(d, allergen));
@@ -4679,7 +4691,7 @@ function _scenarioWhichAdaptable(dish, dd, _en){
   // twins are excluded (owner: never offer a guarnición as a substitute) and
   // each verdict must hold for every dish sharing the display name.
   const mains = _simMainDishes().filter(d=>d.id!==dish.id && _simDishName(d).toLowerCase()!==_curName
-    && !_simIsSideNamed(d));
+    && _simOfferable(d));
   for(const a of _djShuffle([...dish.allergens])){
     const adaptable = mains.filter(d=>_simTwinsAll(d, t=>t.allergens && t.allergens.includes(a) && !_simNonRemovableAllergens(t).includes(a)));
     const blocked = mains.filter(d=>_simTwinsAll(d, t=>t.allergens && t.allergens.includes(a) && _simNonRemovableAllergens(t).includes(a)));
@@ -6036,16 +6048,23 @@ function _sfGenerateQuestions(count){
 
     // Generate options based on type
     if(sc.type==='alergia'){
-      var safe = DISHES.filter(function(d){ return d.cat===dish.cat && !(d.allergens||[]).includes(allergen) && d.id!==dish.id; });
-      if(!safe.length) safe = DISHES.filter(function(d){ return !(d.allergens||[]).includes(allergen); });
+      // El manager pide recomendación de ENTRANTES: el pool son entrantes
+      // ofertables (ni menú infantil, ni Vegetariano, ni guarniciones —
+      // reglas del propietario, jul 2026). Antes salía "Fish and chips
+      // (Cena)" (solo niños) como correcta y "Arroz cremoso de verduras"
+      // (solo vegetarianos) como distractor, en una pregunta de entrantes.
+      var _sfOfr = function(d){ return (typeof _simOfferable==='function') ? _simOfferable(d) : true; };
+      var safe = DISHES.filter(function(d){ return d.cat==='Entrantes' && _sfOfr(d) && !(d.allergens||[]).includes(allergen) && d.id!==dish.id; });
+      if(!safe.length) safe = DISHES.filter(function(d){ return _sfOfr(d) && !(d.allergens||[]).includes(allergen); });
       var safeDish = safe.length ? safe[Math.floor(Math.random()*safe.length)] : null;
-      var safeName = safeDish ? ((LANG==='en'&&dishEN)?((DISHES_EN.find(function(d2){return d2.id===safeDish.id;})||{}).name||safeDish.name):safeDish.name) : 'Ensalada';
-      var dangerDish = DISHES.filter(function(d){return (d.allergens||[]).includes(allergen)&&d.id!==dish.id;});
+      var safeName = safeDish ? ((LANG==='en')?((DISHES_EN.find(function(d2){return d2.id===safeDish.id;})||{}).name||safeDish.name):safeDish.name) : 'Ensalada';
+      var dangerDish = DISHES.filter(function(d){return d.cat==='Entrantes' && _sfOfr(d) && (d.allergens||[]).includes(allergen)&&d.id!==dish.id;});
+      if(!dangerDish.length) dangerDish = DISHES.filter(function(d){return _sfOfr(d) && (d.allergens||[]).includes(allergen)&&d.id!==dish.id;});
       var danger1 = dangerDish.length ? dangerDish[Math.floor(Math.random()*dangerDish.length)] : dish;
       var danger2 = dangerDish.length>1 ? dangerDish[(Math.floor(Math.random()*dangerDish.length)+1)%dangerDish.length] : dish;
       q.options = [
         (LANG==='en'?'I recommend ':'Recomiendo ')+'"'+safeName+'"'+(LANG==='en'?', it\'s free of ':' que no contiene ')+allergen,
-        (LANG==='en'?'Try ':'Pruebe ')+'"'+danger1.name+'"'+(LANG==='en'?', it\'s excellent':' está excelente'),
+        (LANG==='en'?'Try ':'Pruebe ')+'"'+((LANG==='en')?((DISHES_EN.find(function(d3){return d3.id===danger1.id;})||{}).name||danger1.name):danger1.name)+'"'+(LANG==='en'?', it\'s excellent':' está excelente'),
         (LANG==='en'?'All our starters are allergen-free':'Todos nuestros entrantes son libres de alérgenos')
       ];
       q.correctIdx = 0;
@@ -6090,8 +6109,9 @@ function _sfGenerateQuestions(count){
       q.feedback = LANG==='en' ? 'The story behind each dish creates an unforgettable experience.' : 'La historia detrás de cada plato crea una experiencia inolvidable.';
 
     } else if(sc.type==='alternativa'){
-      var safeDishes = DISHES.filter(function(d){return d.cat===dish.cat && !(d.allergens||[]).includes(allergen) && d.id!==dish.id;});
-      var safeAlt = safeDishes.length ? safeDishes[0] : DISHES.find(function(d){return !(d.allergens||[]).includes(allergen);});
+      var _sfKid = function(d){ return d.cat!=='Vegetariano' && (typeof _simIsSideNamed!=='function' || !_simIsSideNamed(d)); };
+      var safeDishes = DISHES.filter(function(d){return d.cat===dish.cat && _sfKid(d) && !(d.allergens||[]).includes(allergen) && d.id!==dish.id;});
+      var safeAlt = safeDishes.length ? safeDishes[0] : DISHES.find(function(d){return _sfKid(d) && !(d.allergens||[]).includes(allergen);});
       var safeAltName = safeAlt ? safeAlt.name : 'Ensalada de temporada';
       q.options = [
         (LANG==='en'?'I suggest "'+safeAltName+'", free of '+allergen:'Sugiero "'+safeAltName+'", libre de '+allergen),
