@@ -804,6 +804,11 @@
    ],
    "fuente": "certeza culinaria"
   },
+  "cacao": {
+   "nombre": "Cacao",
+   "alergenos": [],
+   "fuente": "confirmado por propietario"
+  },
   "platano": {
    "nombre": "Plátano",
    "alergenos": [],
@@ -1606,6 +1611,11 @@
    ],
    "fuente": "certeza culinaria"
   },
+  "chocolate negro": {
+   "nombre": "Chocolate negro",
+   "alergenos": [],
+   "fuente": "confirmado por propietario"
+  },
   "cremoso de chocolate blanco": {
    "nombre": "Cremoso de chocolate blanco",
    "alergenos": [
@@ -1619,6 +1629,11 @@
     "Lácteos"
    ],
    "fuente": "certeza culinaria"
+  },
+  "crema de mandarina": {
+   "nombre": "Crema de mandarina",
+   "alergenos": [],
+   "fuente": "confirmado por propietario"
   },
   "xantana": {
    "nombre": "Xantana",
@@ -2552,6 +2567,16 @@
    ],
    "fuente": "confirmado por propietario"
   },
+  "chocolate": {
+   "nombre": "Chocolate",
+   "alergenos": [],
+   "fuente": "confirmado por propietario"
+  },
+  "crema de platano": {
+   "nombre": "Crema de Plátano",
+   "alergenos": [],
+   "fuente": "confirmado por propietario"
+  },
   "almibar": {
    "nombre": "Almíbar",
    "alergenos": [],
@@ -2642,40 +2667,17 @@
    ],
    "fuente": "deducido de la carta"
   },
+  "caldo concentrado de manitas de cerdo": {
+   "nombre": "Caldo concentrado de manitas de cerdo",
+   "alergenos": [
+    "Apio"
+   ],
+   "fuente": "confirmado por propietario"
+  },
   "zanahorias": {
    "nombre": "Zanahorias",
    "alergenos": [],
    "fuente": "certeza culinaria"
-  },
-  "cacao": {
-   "nombre": "Cacao",
-   "alergenos": [],
-   "fuente": "pendiente"
-  },
-  "chocolate negro": {
-   "nombre": "Chocolate negro",
-   "alergenos": [],
-   "fuente": "pendiente"
-  },
-  "crema de mandarina": {
-   "nombre": "Crema de mandarina",
-   "alergenos": [],
-   "fuente": "pendiente"
-  },
-  "chocolate": {
-   "nombre": "Chocolate",
-   "alergenos": [],
-   "fuente": "pendiente"
-  },
-  "crema de platano": {
-   "nombre": "Crema de Plátano",
-   "alergenos": [],
-   "fuente": "pendiente"
-  },
-  "caldo concentrado de manitas de cerdo": {
-   "nombre": "Caldo concentrado de manitas de cerdo",
-   "alergenos": [],
-   "fuente": "pendiente"
   }
  }
 }
