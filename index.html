@@ -313,6 +313,8 @@
   <!-- Búsqueda siempre a la vista (petición del propietario): una píldora
        fina bajo Inicio que abre el buscador global existente. Estilos inline
        (lección de la caché) — no puede renderizar desnuda. -->
+  <div id="shiftBar" role="tablist" aria-label="Turno de estudio" style="display:flex;gap:.3rem;width:calc(100% - 2rem);margin:.55rem 1rem .1rem;padding:.28rem;background:rgba(28,42,34,.05);border:1px solid rgba(196,154,60,.2);border-radius:12px"></div>
+
   <button id="globalSearchPill" onclick="openGlobalSearch()" aria-label="Buscar plato, vino o alérgeno" style="display:flex;align-items:center;gap:.55rem;width:calc(100% - 2rem);margin:.45rem 1rem .1rem;padding:.55rem .9rem;background:rgba(255,255,255,.55);border:1px solid rgba(196,154,60,.3);border-radius:12px;cursor:pointer;min-height:40px;text-align:left;box-shadow:0 1px 3px rgba(28,42,34,.05)">
     <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="rgba(164,122,44,.85)" stroke-width="1.8" stroke-linecap="round" style="flex-shrink:0"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
     <span id="globalSearchPillLbl" style="font-family:'Quicksand',sans-serif;font-size:.78rem;color:rgba(74,64,42,.6);letter-spacing:.01em">Buscar plato, vino, alérgeno…</span>
@@ -1128,6 +1130,7 @@ function applyLangToApp() {
   if(_gsLbl) _gsLbl.textContent = LANG==='en' ? 'Search dish, wine, allergen…' : 'Buscar plato, vino, alérgeno…';
   const _gsPill = document.getElementById('globalSearchPillLbl');
   if(_gsPill) _gsPill.textContent = LANG==='en' ? 'Search dish, wine, allergen…' : 'Buscar plato, vino, alérgeno…';
+  if(typeof _renderShiftBar === 'function') _renderShiftBar();
   const _gsInp = document.getElementById('gsInput');
   if(_gsInp) _gsInp.placeholder = LANG==='en' ? 'Search dish, wine, allergen…' : 'Buscar plato, vino, alérgeno…';
 }
@@ -1398,6 +1401,31 @@ const DISH_COMPONENTS = {1:[{n:'Leche',a:['Lácteos'],m:0},{n:'Harina',a:['Glute
 // componentes. Para platos del menú devuelve exactamente dish.allergens (el CI
 // lo garantiza); la declaración manual queda como espejo verificado, no como
 // fuente editable.
+// ═══ FILTRO DE TURNO (almuerzo/cena) ═══
+// Cada plato lleva su servicio: 'a' almuerzo · 'c' cena · 'ambos'. Etiquetado
+// cruzando los 103 platos contra las cartas reales (almuerzo 05.04 + cena
+// 19.05 + ambos menús vegetarianos). Los gemelos con receta distinta por turno
+// (Tataki 9 cena / 78 almuerzo; Fish&chips 109/69) van cada uno a SU turno; los
+// idénticos en ambas cartas, a 'ambos'. Dudosos → 'ambos' (nunca oculta).
+const DISH_SERVICE = {1:'ambos',2:'ambos',3:'c',4:'c',5:'ambos',6:'c',7:'c',8:'c',9:'c',10:'c',11:'ambos',12:'ambos',13:'ambos',14:'c',15:'ambos',16:'ambos',17:'ambos',18:'ambos',19:'ambos',20:'ambos',21:'ambos',22:'ambos',23:'c',24:'c',25:'c',26:'c',27:'ambos',28:'c',29:'c',30:'ambos',32:'ambos',33:'c',34:'ambos',35:'c',36:'ambos',38:'c',39:'ambos',40:'ambos',41:'c',42:'c',43:'ambos',44:'c',45:'c',46:'ambos',48:'ambos',49:'ambos',50:'ambos',52:'ambos',53:'ambos',54:'ambos',55:'ambos',56:'ambos',57:'ambos',58:'ambos',65:'ambos',66:'ambos',67:'a',68:'ambos',69:'a',71:'a',72:'a',73:'ambos',74:'ambos',75:'ambos',77:'ambos',78:'a',80:'a',81:'a',82:'a',84:'ambos',86:'a',87:'a',88:'a',89:'a',90:'a',91:'a',92:'a',93:'a',94:'a',95:'ambos',96:'ambos',97:'ambos',100:'a',102:'ambos',103:'a',104:'ambos',105:'ambos',107:'ambos',108:'ambos',109:'c',110:'ambos',111:'ambos',112:'c',113:'ambos',114:'ambos',115:'ambos',116:'ambos',117:'ambos',119:'a',120:'a',121:'ambos',122:'ambos',123:'ambos'};
+// Turno de estudio activo: 'a' | 'c' | 'todo'. Persistente en localStorage.
+let _studyShift = 'todo';
+try { const _ss = localStorage.getItem('txoko_shift'); if(_ss === 'a' || _ss === 'c' || _ss === 'todo') _studyShift = _ss; } catch(_){}
+function _shiftOf(d){ return (typeof DISH_SERVICE !== 'undefined' && DISH_SERVICE[d && d.id]) || 'ambos'; }
+function _shiftDishOk(d){
+  if(_studyShift === 'todo') return true;
+  const s = _shiftOf(d);
+  return s === 'ambos' || s === _studyShift;
+}
+function _shiftDishes(arr){ return (arr || []).filter(_shiftDishOk); }
+function _setStudyShift(s){
+  if(s !== 'a' && s !== 'c' && s !== 'todo') return;
+  _studyShift = s;
+  try { localStorage.setItem('txoko_shift', s); } catch(_){}
+  if(typeof _renderShiftBar === 'function') _renderShiftBar();
+  if(typeof currentTab !== 'undefined' && typeof showTab === 'function') showTab(currentTab);
+}
+
 function computeDishAllergens(dishId){
   const comps = (typeof DISH_COMPONENTS !== 'undefined' && DISH_COMPONENTS[dishId]) || null;
   if(!comps) return null;
@@ -1437,7 +1465,7 @@ const CAT_COLORS={'Entrantes':'#c49a3c','Hamburguesas y Bocatas':'#b86050','Plat
 const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#c49a3c"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#a47a2c" opacity=".4"/><path d="M8 8v4a1 1 0 001 1h1v4M10 8v4" stroke="#fff" stroke-width="1.2" stroke-linecap="round" fill="none"/><path d="M15 8v8M14 8v3a1.5 1.5 0 003 0V8" stroke="#fff" stroke-width="1.2" stroke-linecap="round" fill="none"/></svg>`,'Hamburguesas y Bocatas':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#b86050"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#983838" opacity=".4"/><path d="M7 9h10M7 12h10M7 15h10" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/><path d="M8 9c0-2 2-3 4-3s4 1 4 3M8 15c0 2 2 3 4 3s4-1 4-3" fill="none" stroke="#fff" stroke-width="1" opacity=".7"/></svg>`,'Platos Principales':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#4888a0"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#2e6878" opacity=".4"/><path d="M5 15h14" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/><path d="M12 6a6 6 0 016 6H6a6 6 0 016-6z" fill="none" stroke="#fff" stroke-width="1.1"/><circle cx="10" cy="6" r=".7" fill="#fff" opacity=".7"/><circle cx="12" cy="5" r=".7" fill="#fff" opacity=".7"/><circle cx="14" cy="6" r=".7" fill="#fff" opacity=".7"/></svg>`,'Sugerencias':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#d4aa4c"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#a48a2c" opacity=".4"/><polygon points="12,5 14.5,10 20,10.5 16,14 17,20 12,17 7,20 8,14 4,10.5 9.5,10" fill="#fff" opacity=".9"/></svg>`,'Guarniciones y Salsas':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#4d8a5e"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#2d6a3e" opacity=".4"/><path d="M12 18V10M5 10c0-4 3-6 7-6s7 2 7 6c0 5-3 8-7 8s-7-3-7-8z" fill="none" stroke="#fff" stroke-width="1.1"/><path d="M5 10c3 0 5 1 7 2.5" fill="none" stroke="#fff" stroke-width=".8" opacity=".6"/></svg>`,'Postres':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#7a6aaa"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#5a4a8a" opacity=".4"/><path d="M9 19h6M12 12v7M7 6l2 4.5a3 3 0 006 0L17 6H7z" fill="none" stroke="#fff" stroke-width="1.1" stroke-linecap="round"/></svg>`,'Vegetariano':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#5a9a6e"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#3a7a4e" opacity=".4"/><path d="M9 18h6M12 18V10M12 10c0-3 2-5 5-5-.7 2.5-2.5 5-5 5zM12 10c0-3-2-5-5-5 .7 2.5 2.5 5 5 5z" fill="none" stroke="#fff" stroke-width="1.1" stroke-linecap="round"/></svg>`};
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='7.127';  // sincronizada con sw.js VERSION (guard de CI)
+const APP_VERSION='7.128';  // sincronizada con sw.js VERSION (guard de CI)
 const APP_BUILD='Jul 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;
@@ -1959,6 +1987,21 @@ async function forceAppUpdate(){
     }).catch(()=>{});
   }catch(_){ }
 })();
+
+function _renderShiftBar(){
+  const bar = document.getElementById('shiftBar');
+  if(!bar) return;
+  const _en = (typeof LANG !== 'undefined' && LANG === 'en');
+  const opts = [['a', _en?'Lunch':'Almuerzo'], ['c', _en?'Dinner':'Cena'], ['todo', _en?'All':'Todo']];
+  bar.innerHTML = opts.map(([k,lbl]) => {
+    const on = (typeof _studyShift !== 'undefined' ? _studyShift : 'todo') === k;
+    return '<button role="tab" aria-selected="'+on+'" onclick="_setStudyShift(\''+k+'\')" '+
+      'style="flex:1;min-height:36px;padding:.4rem .3rem;border:none;border-radius:9px;cursor:pointer;'+
+      'font-family:\'DM Mono\',monospace;font-size:.64rem;letter-spacing:.06em;text-transform:uppercase;'+
+      (on ? 'background:linear-gradient(155deg,#faf6ee,#f0e8d8);color:var(--gold-deep);font-weight:700;border:1px solid rgba(196,154,60,.35);box-shadow:0 1px 4px rgba(28,42,34,.08)'
+          : 'background:transparent;color:var(--parch3)')+'">'+lbl+'</button>';
+  }).join('');
+}
 
 async function registerServiceWorker() {
   if (!('serviceWorker' in navigator) || !('PushManager' in window)) return null;
@@ -3386,7 +3429,8 @@ function _djGenerateQuiz(dish){
   const ingredients = dish.ingredients ? dish.ingredients.split(',').map(s=>s.trim()).filter(Boolean) : [];
   if(ingredients.length >= 3){
     // "Which ingredient is NOT in this dish?"
-    const otherDishes = allDishes.filter(d=>d.id!==dish.id && d.ingredients);
+    let otherDishes = _shiftDishes(allDishes.filter(d=>d.id!==dish.id && d.ingredients));
+    if(otherDishes.length < 3) otherDishes = allDishes.filter(d=>d.id!==dish.id && d.ingredients);
     const otherIngs = otherDishes.flatMap(d=>d.ingredients.split(',').map(s=>s.trim()).filter(Boolean));
     const dishIngsLow = ingredients.map(i=>i.toLowerCase());
     // Reject fakes that overlap with any real ingredient — including substring
@@ -3665,6 +3709,7 @@ function _srsDueDishes(emp){
   const due = [];
   const unseen = [];
   DISHES.forEach(d => {
+    if(!_shiftDishOk(d)) return; // SRS respeta el turno de estudio activo
     const s = emp.srs[d.id];
     if(!s || s.reps === 0) unseen.push({ dish:d, urgency: 100, type:'new' });
     else if(now >= s.nextReview){
@@ -3767,7 +3812,7 @@ function _adaptiveSelectDishes(emp, count){
   // Priority 1: Dishes from weak allergen categories
   weaknesses.filter(w=>w.type==='allergen').forEach(w => {
     if(selected.length >= count) return;
-    const dishes = DISHES.filter(d => d.allergens && d.allergens.includes(w.key) && !used.has(d.id) && _isQuizableDish(d));
+    const dishes = DISHES.filter(d => d.allergens && d.allergens.includes(w.key) && !used.has(d.id) && _isQuizableDish(d) && _shiftDishOk(d));
     if(dishes.length){
       const pick = dishes[Math.floor(Math.random()*dishes.length)];
       selected.push(pick);
@@ -3778,7 +3823,7 @@ function _adaptiveSelectDishes(emp, count){
   // Priority 2: Dishes from weak categories
   weaknesses.filter(w=>w.type==='category').forEach(w => {
     if(selected.length >= count) return;
-    const dishes = DISHES.filter(d => d.cat === w.key && !used.has(d.id) && _isQuizableDish(d));
+    const dishes = DISHES.filter(d => d.cat === w.key && !used.has(d.id) && _isQuizableDish(d) && _shiftDishOk(d));
     if(dishes.length){
       const pick = dishes[Math.floor(Math.random()*dishes.length)];
       selected.push(pick);
@@ -3789,7 +3834,7 @@ function _adaptiveSelectDishes(emp, count){
   // Priority 3: Specific weak dishes
   weaknesses.filter(w=>w.type==='ingredient').forEach(w => {
     if(selected.length >= count) return;
-    const dish = DISHES.find(d => d.id === parseInt(w.key) && !used.has(d.id) && _isQuizableDish(d));
+    const dish = DISHES.find(d => d.id === parseInt(w.key) && !used.has(d.id) && _isQuizableDish(d) && _shiftDishOk(d));
     if(dish){ selected.push(dish); used.add(dish.id); }
   });
 
@@ -3895,9 +3940,9 @@ const _SIM_PROFILES = {
 };
 
 function _simPick(arr){ return arr[Math.floor(Math.random()*arr.length)]; }
-function _simDishes(){ return DISHES.filter(d=>!d.archived); }
+function _simDishes(){ return DISHES.filter(d=>!d.archived && _shiftDishOk(d)); }
 // Main-course dishes only: exclude sides/sauces (a guest asking for recommendations expects real dishes, not accompaniments)
-function _simMainDishes(){ return DISHES.filter(d=>!d.archived && d.cat!=='Guarniciones y Salsas'); }
+function _simMainDishes(){ return DISHES.filter(d=>!d.archived && d.cat!=='Guarniciones y Salsas' && _shiftDishOk(d)); }
 // Sides without storytelling produce no useful question — exclude them from every quiz system.
 function _isQuizableDish(d){
   if(!d || d.archived) return false;
@@ -5238,7 +5283,7 @@ function renderSmartReview(){
   const samples = [];
   const tried = new Set();
   for(let i=0;i<12 && samples.length<1;i++){
-    const d = DISHES[Math.floor(Math.random()*DISHES.length)];
+    const _srPool = _shiftDishes(DISHES); const d = (_srPool.length?_srPool:DISHES)[Math.floor(Math.random()*(_srPool.length||DISHES.length))];
     if(tried.has(d.id)) continue;
     tried.add(d.id);
     const qs = _srGenerateQuiz(d, pickedDiff);
@@ -6192,7 +6237,8 @@ function _sfGenerateQuestions(count){
 
     var mesa = _sfPickMesa();
     var guest = SF_GUEST_NAMES[Math.floor(Math.random()*SF_GUEST_NAMES.length)];
-    var dish = DISHES[Math.floor(Math.random()*DISHES.length)];
+    var _sfPool = _shiftDishes(DISHES); if(!_sfPool.length) _sfPool = DISHES;
+    var dish = _sfPool[Math.floor(Math.random()*_sfPool.length)];
     var dishEN = (typeof DISHES_EN!=='undefined' && DISHES_EN.length) ? DISHES_EN.find(function(d){return d.id===dish.id;}) : null;
     var dishName = (LANG==='en' && dishEN) ? dishEN.name : dish.name;
     var allergens = dish.allergens || [];
@@ -6217,11 +6263,11 @@ function _sfGenerateQuestions(count){
       // (Cena)" (solo niños) como correcta y "Arroz cremoso de verduras"
       // (solo vegetarianos) como distractor, en una pregunta de entrantes.
       var _sfOfr = function(d){ return (typeof _simOfferable==='function') ? _simOfferable(d) : true; };
-      var safe = DISHES.filter(function(d){ return d.cat==='Entrantes' && _sfOfr(d) && !(d.allergens||[]).includes(allergen) && d.id!==dish.id; });
+      var safe = DISHES.filter(function(d){ return _shiftDishOk(d) && d.cat==='Entrantes' && _sfOfr(d) && !(d.allergens||[]).includes(allergen) && d.id!==dish.id; });
       if(!safe.length) safe = DISHES.filter(function(d){ return _sfOfr(d) && !(d.allergens||[]).includes(allergen); });
       var safeDish = safe.length ? safe[Math.floor(Math.random()*safe.length)] : null;
       var safeName = safeDish ? ((LANG==='en')?((DISHES_EN.find(function(d2){return d2.id===safeDish.id;})||{}).name||safeDish.name):safeDish.name) : 'Ensalada';
-      var dangerDish = DISHES.filter(function(d){return d.cat==='Entrantes' && _sfOfr(d) && (d.allergens||[]).includes(allergen)&&d.id!==dish.id;});
+      var dangerDish = DISHES.filter(function(d){return _shiftDishOk(d) && d.cat==='Entrantes' && _sfOfr(d) && (d.allergens||[]).includes(allergen)&&d.id!==dish.id;});
       if(!dangerDish.length) dangerDish = DISHES.filter(function(d){return _sfOfr(d) && (d.allergens||[]).includes(allergen)&&d.id!==dish.id;});
       var danger1 = dangerDish.length ? dangerDish[Math.floor(Math.random()*dangerDish.length)] : dish;
       var danger2 = dangerDish.length>1 ? dangerDish[(Math.floor(Math.random()*dangerDish.length)+1)%dangerDish.length] : dish;
@@ -6273,7 +6319,7 @@ function _sfGenerateQuestions(count){
 
     } else if(sc.type==='alternativa'){
       var _sfKid = function(d){ return d.cat!=='Vegetariano' && (typeof _simIsSideNamed!=='function' || !_simIsSideNamed(d)); };
-      var safeDishes = DISHES.filter(function(d){return d.cat===dish.cat && _sfKid(d) && !(d.allergens||[]).includes(allergen) && d.id!==dish.id;});
+      var safeDishes = DISHES.filter(function(d){return _shiftDishOk(d) && d.cat===dish.cat && _sfKid(d) && !(d.allergens||[]).includes(allergen) && d.id!==dish.id;});
       var safeAlt = safeDishes.length ? safeDishes[0] : DISHES.find(function(d){return _sfKid(d) && !(d.allergens||[]).includes(allergen);});
       var safeAltName = safeAlt ? safeAlt.name : 'Ensalada de temporada';
       q.options = [
@@ -6285,8 +6331,8 @@ function _sfGenerateQuestions(count){
       q.feedback = LANG==='en' ? 'Always offer a safe alternative, never assume ingredients can be removed.' : 'Siempre ofrece una alternativa segura, nunca asumas que se pueden retirar ingredientes.';
 
     } else if(sc.type==='comanda'){
-      var gfDishes = DISHES.filter(function(d){return !(d.allergens||[]).includes('Gluten');}).slice(0,3);
-      var vegDishes = DISHES.filter(function(d){return d.cat==='Vegetariano';});
+      var gfDishes = _shiftDishes(DISHES.filter(function(d){return !(d.allergens||[]).includes('Gluten');})).slice(0,3);
+      var vegDishes = _shiftDishes(DISHES.filter(function(d){return d.cat==='Vegetariano';}));
       var gfNames = gfDishes.map(function(d){return d.name;}).join(', ');
       var vegName = vegDishes.length ? vegDishes[0].name : 'Ensalada';
       q.options = [
@@ -15092,7 +15138,7 @@ function stopLiveQuizPolling(){
 // ═══════ FLASHCARDS ═══════
 function initFlashcards(topic,cat){
   fcTopic=topic||'allergens';
-  let pool=cat&&cat!=='all'?DISHES.filter(d=>d.cat===cat):[...DISHES];
+  let pool=_shiftDishes(cat&&cat!=='all'?DISHES.filter(d=>d.cat===cat):[...DISHES]);
   // F-P1-2: Fisher-Yates instead of biased Math.random()-.5 sort.
   fcDishes=_lqaShuffle(pool);
   fcIndex=0;fcFlipped=false;
@@ -15465,8 +15511,10 @@ function selCount(el,n){_examSetSel('#countOpts', el);examConfig.count=n;}
 // recipe. Falls back to the wider pool only when the dish's category is
 // too small to source 3 valid distractors (Sugerencias has 2 dishes).
 function _pickDistractorPool(d){
-  const sameCat = DISHES.filter(x => x.id !== d.id && x.cat === d.cat);
-  return sameCat.length >= 6 ? sameCat : DISHES.filter(x => x.id !== d.id);
+  const sameCat = _shiftDishes(DISHES.filter(x => x.id !== d.id && x.cat === d.cat));
+  if(sameCat.length >= 6) return sameCat;
+  const anyShift = _shiftDishes(DISHES.filter(x => x.id !== d.id));
+  return anyShift.length >= 3 ? anyShift : DISHES.filter(x => x.id !== d.id);
 }
 
 // ── Anti-echo question reversal ─────────────────────────────────────
@@ -15494,7 +15542,7 @@ function _examRedact(text, candidates){
 }
 
 function startExam(){
-  let pool=examConfig.cat==='all'?[...DISHES]:DISHES.filter(d=>d.cat===examConfig.cat);
+  let pool=_shiftDishes(examConfig.cat==='all'?[...DISHES]:DISHES.filter(d=>d.cat===examConfig.cat));
   pool = pool.filter(d => _isQuizableDish(d));
   // For a fixed topic, also drop dishes that are not eligible for it (e.g. sides on non-history topics)
   if(examConfig.topic !== 'mixed') pool = pool.filter(d => _isDishQuizableForTopic(d, examConfig.topic));
@@ -17187,9 +17235,9 @@ function getAllAllergensList() {
 }
 
 function buildAllergenQuestions(cat) {
-  const pool = (cat && cat !== 'all')
+  const pool = _shiftDishes((cat && cat !== 'all')
     ? DISHES.filter(d => d.cat === cat)
-    : [...DISHES];
+    : [...DISHES]);
   if (!pool.length) return [];
 
   const questions = [];
@@ -18360,11 +18408,11 @@ function startPersonalErrorMode(){
   });
 
   // Priority 1: dishes attempted but with low correct rate
-  const attempted = DISHES.filter(d => dishAttempts[d.id] > 0 && (ec[d.id]||0) < dishAttempts[d.id] * 0.6);
+  const attempted = _shiftDishes(DISHES.filter(d => dishAttempts[d.id] > 0 && (ec[d.id]||0) < dishAttempts[d.id] * 0.6));
   // Priority 2: dishes with examCorrect < 2 (seen in exam but rarely correct)
-  const lowCorrect = DISHES.filter(d => !dishAttempts[d.id] && (ec[d.id]||0) > 0 && (ec[d.id]||0) < 3);
+  const lowCorrect = _shiftDishes(DISHES.filter(d => !dishAttempts[d.id] && (ec[d.id]||0) > 0 && (ec[d.id]||0) < 3));
   // Priority 3: never seen (only if no better candidates)
-  const neverSeen = DISHES.filter(d => !dishAttempts[d.id] && !(ec[d.id]));
+  const neverSeen = _shiftDishes(DISHES.filter(d => !dishAttempts[d.id] && !(ec[d.id])));
 
   // Combine with priority order, limit to 20
   const weakDishes = [...attempted, ...lowCorrect, ...neverSeen].filter((d,i,a)=>a.findIndex(x=>x.id===d.id)===i).slice(0,20);
@@ -21731,7 +21779,7 @@ function txBuildQuestion(){
   // Note: F-P2-5 (early-dish bias from break-on-first-match below) is not fully
   // resolved by an unbiased shuffle; that requires reservoir-sampling and is
   // tracked separately in PR-B.
-  const dishes = _lqaShuffle(DISHES);
+  const dishes = _lqaShuffle(_shiftDishes(DISHES).length ? _shiftDishes(DISHES) : DISHES);
   const topics  = _lqaShuffle(topicKeys);
 
   let chosenDish=null, chosenTopicKey=null, correctAnswer=null;
