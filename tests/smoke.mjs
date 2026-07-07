@@ -781,6 +781,43 @@ test('update push: SW pre-installs new build on tag app-update', () => {
   assert(/onclick="sendAppUpdatePush\(\)"/.test(html), 'supervisor panel button missing');
 });
 
+test('study shift filter: DISH_SERVICE complete + all generators route by shift', () => {
+  // Petición del propietario: estudiar los platos de almuerzo con los de
+  // almuerzo y los de cena con los de cena, en TODO (exámenes, flashcards,
+  // repaso, simulacro, quiz, fantasma). El guard EJECUTA el filtro: en modo
+  // almuerzo no puede salir ningún plato solo-cena y viceversa.
+  const cut = (a, b) => { const i = html.indexOf(a); assert(i !== -1, 'missing ' + a); return html.slice(i, html.indexOf(b, i) + b.length); };
+  const dishesSrc = cut('const DISHES = [', '\n];');
+  const svcSrc = cut('const DISH_SERVICE = {', '};') + ';';
+  const helpers = html.slice(html.indexOf('let _studyShift'), html.indexOf('function computeDishAllergens'));
+  const stub = 'function _renderShiftBar(){} var currentTab=null; function showTab(){}; var localStorage={getItem:()=>null,setItem:()=>{}};';
+  const M = new Function(stub + dishesSrc + svcSrc + helpers + 'return {DISHES, DISH_SERVICE, _shiftDishes, setShift:(s)=>{_studyShift=s;}};')(); // eslint-disable-line no-new-func
+  const bad = M.DISHES.filter(d => !['a', 'c', 'ambos'].includes(M.DISH_SERVICE[d.id]));
+  assert(bad.length === 0, `dishes without a valid service: ${bad.map(d => d.id).join(',')}`);
+  const twins = { 9: 'c', 78: 'a', 109: 'c', 69: 'a', 119: 'a' };
+  for (const [id, exp] of Object.entries(twins))
+    assert(M.DISH_SERVICE[id] === exp, `twin ${id} must be shift ${exp}, got ${M.DISH_SERVICE[id]}`);
+  for (const shift of ['a', 'c']) {
+    M.setShift(shift);
+    const leak = M._shiftDishes(M.DISHES).filter(d => { const s = M.DISH_SERVICE[d.id]; return s !== 'ambos' && s !== shift; });
+    assert(leak.length === 0, `shift ${shift} leaks ${leak.length} wrong-shift dishes`);
+  }
+  M.setShift('todo');
+  assert(M._shiftDishes(M.DISHES).length === M.DISHES.length, "'todo' must pass every dish");
+  const raw = (html.match(/DISHES\[Math\.floor\(Math\.random\(\)\*DISHES\.length\)\]/g) || []);
+  assert(raw.length === 0, `${raw.length} raw random DISHES[...] access left unrouted by shift`);
+  assert(/const dishes = _lqaShuffle\(_shiftDishes\(DISHES\)/.test(html), 'Txoko game must shuffle a shift-filtered pool');
+  assert(/let pool=_shiftDishes\(examConfig\.cat/.test(html), 'exam pool must be shift-filtered');
+  assert(/const pool = _shiftDishes\(\(cat && cat/.test(html), 'allergen drill pool must be shift-filtered');
+  assert(/let pool=_shiftDishes\(cat&&cat/.test(html), 'flashcards pool must be shift-filtered');
+  assert(/function _simDishes\(\)\{ return DISHES\.filter\(d=>!d\.archived && _shiftDishOk\(d\)\)/.test(html), '_simDishes must apply shift');
+  assert(/id="shiftBar"/.test(html) && /function _renderShiftBar/.test(html), 'shift selector bar missing');
+  const rsb = html.slice(html.indexOf('function _renderShiftBar'), html.indexOf('function _renderShiftBar') + 900);
+  assert(/\['a',[^\]]*\], \['c',[^\]]*\], \['todo',/.test(rsb) && /onclick="_setStudyShift/.test(rsb),
+    'shift bar must offer Lunch/Dinner/All');
+  assert(/localStorage\.setItem\('txoko_shift'/.test(html), 'shift choice must persist');
+});
+
 test('login fits one phone screen; Share/Update buttons prominent', () => {
   // Petición del propietario: nada de arrastrar en el login, y Compartir/
   // Actualizar se veían "muy poco". Medido en headless a 390x844: el botón
