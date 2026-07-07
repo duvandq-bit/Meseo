@@ -1006,6 +1006,44 @@ test('study shift filter: subject AND distractor pools route by shift (no wrong-
   }
 });
 
+test('study shift filter: Error Mode (Puntos Débiles) subject pool routes by shift', () => {
+  // Regresión (jul 2026, barrido exhaustivo): startErrorMode elegía el plato-
+  // sujeto de getFailedDishes() SIN filtrar por turno — medido: 47% del pool
+  // eran platos de otro turno en modo almuerzo. Ahora filtra con fallback.
+  assert(/const _failedSh=_shiftDishes\(_failedAll\);\s*\n\s*const failed=_failedSh\.length\?_failedSh:_failedAll;/.test(html),
+    'startErrorMode subject pool must be shift-filtered with a safe fallback');
+
+  // Guard empírico: ejecutar el startErrorMode real y exigir 0 sujetos de otro
+  // turno en modo almuerzo/cena, con suficientes preguntas (sin sobre-filtrar).
+  const cut = (a, b) => { const i = html.indexOf(a); assert(i !== -1, 'missing ' + a); return html.slice(i, html.indexOf(b, i) + b.length); };
+  const fn = (name) => { const sig = 'function ' + name + '('; const i = html.indexOf(sig); assert(i !== -1, 'missing fn ' + name); let depth = 0, k = html.indexOf('{', i);
+    while (true) { const ch = html[k]; if (ch === '{') depth++; else if (ch === '}') { depth--; if (depth === 0) return html.slice(i, k + 1); } k++; } };
+  const dishesSrc = cut('const DISHES = [', '\n];');
+  const svcSrc = cut('const DISH_SERVICE = {', '};') + ';';
+  const helpers = html.slice(html.indexOf('let _studyShift'), html.indexOf('function computeDishAllergens'));
+  const topicsSrc = cut('const TOPICS=[', '\n];');
+  const env = `var LANG='es';var localStorage={getItem:()=>null,setItem:()=>{}};function _renderShiftBar(){}
+    function allergenLocal(a){return a;} function getDish(d){return d;}
+    function t(k,a){ if(k==='noHistory')return '__NOHIST__'; if(k==='noAllergens')return '__NOALLERG__'; return (k||'')+(a?(' '+a):''); }
+    function showTab(){} var currentUser='u'; var _emp={examCorrect:{},sessions:[]}; function getEmp(){return _emp;}
+    var examConfig={cat:'all',topic:'mixed',count:15};
+    var examDishes=[],examIndex=0,examScore=0,examAnswered=false,examActive=false,examResults=null,examStartTime=0;`;
+  const M = new Function(env + dishesSrc + '\n' + svcSrc + '\n' + helpers + '\n' + topicsSrc + '\n' // eslint-disable-line no-new-func
+    + fn('_lqaShuffle') + fn('_pickDistractorPool') + fn('getFailedDishes') + fn('startErrorMode')
+    + 'return {DISHES, DISH_SERVICE, setShift:(s)=>{_studyShift=s;}, run:()=>{examDishes=[];examActive=false;startErrorMode();return examDishes.slice();}};')();
+  const svc = M.DISH_SERVICE;
+  for (const shift of ['a', 'c']) {
+    M.setShift(shift);
+    let nQ = 0, leak = 0;
+    for (let i = 0; i < 120; i++) {
+      const qs = M.run(); nQ += qs.length;
+      for (const q of qs) { const s = svc[q.dish.id]; if (s !== 'ambos' && s !== shift) leak++; }
+    }
+    assert(nQ > 500, `Error Mode produced too few questions in shift ${shift} (${nQ}) — over-filtered?`);
+    assert(leak === 0, `Error Mode leaked ${leak} wrong-shift subject dishes in shift ${shift}`);
+  }
+});
+
 test('login fits one phone screen; Share/Update buttons prominent', () => {
   // Petición del propietario: nada de arrastrar en el login, y Compartir/
   // Actualizar se veían "muy poco". Medido en headless a 390x844: el botón
