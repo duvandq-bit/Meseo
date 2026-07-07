@@ -974,6 +974,11 @@ test('app header respects the iOS notch (safe-area inset)', () => {
   assert(/@media \(max-width:520px\)\{\s*\n?\s*\.app-header\{padding-left:\.7rem/.test(css.replace(/\r/g,'')),
     'narrow-screen header compression missing');
   assert(/\.header-uname\{display:none\}/.test(css), 'username must hide on narrow screens (avatar identifies)');
+  // Android estrecho (Galaxy S20 = 360px CSS): "Salir" se cortaba por la
+  // derecha. Tiers de compresión extra a ≤400px y ≤340px; medido en headless:
+  // Salir dentro del ancho a 412/360/320px.
+  assert(/@media \(max-width:400px\)/.test(css) && /@media \(max-width:340px\)/.test(css),
+    'narrow-Android header compression tiers (400px/340px) missing');
 });
 
 test('force-update escape hatch + APP_VERSION synced to the SW', () => {
