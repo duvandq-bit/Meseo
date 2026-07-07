@@ -373,6 +373,13 @@
    ],
    "fuente": "certeza culinaria"
   },
+  "queso comté fundido": {
+   "nombre": "Queso Comté fundido",
+   "alergenos": [
+    "Lácteos"
+   ],
+   "fuente": "confirmado por propietario"
+  },
   "cerveza": {
    "nombre": "Cerveza",
    "alergenos": [
