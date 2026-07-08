@@ -2558,23 +2558,18 @@ test('EL TURNO teardown fully unmounts: cancels rAF, removes all its listeners, 
   assert(/overlay\.remove\(\)/.test(td), 'teardown does not remove the overlay element from the DOM');
 });
 
-test('dashboard mascot: shared SVG const, decorative-only, never breaks hero layout', () => {
-  // El personaje (manos en bolsillos) vive en UN solo sitio (TXOKO_MASCOT_SVG)
-  // y lo comparten el juego EL TURNO y la decoración del dashboard, para que
-  // no se desincronicen.
+test('character sprite: shared const stays, dashboard mascot removed', () => {
+  // TXOKO_MASCOT_SVG sigue siendo la fuente única del sprite del protagonista,
+  // que usa el juego EL TURNO. La mascota DECORATIVA del dashboard se retiró
+  // (petición del propietario: no capturaba la esencia Funko).
   assert((html.match(/const TXOKO_MASCOT_SVG\s*=/g) || []).length === 1,
-    'TXOKO_MASCOT_SVG must be defined exactly once (single source of truth)');
+    'TXOKO_MASCOT_SVG must be defined exactly once (still used by EL TURNO)');
   assert(/const HERO_SVG\s*=\s*TXOKO_MASCOT_SVG;/.test(html),
-    'EL TURNO must reuse TXOKO_MASCOT_SVG so the game sprite and the dashboard mascot stay identical');
-  // Dashboard uses it as a data-URI image inside the hero.
-  assert(/class="dash-mascot"[^>]*src="data:image\/svg\+xml,\$\{encodeURIComponent\(TXOKO_MASCOT_SVG\)\}"/.test(html),
-    'dashboard hero must render the mascot from TXOKO_MASCOT_SVG');
-  // Decorative-only: the mascot must be absolutely positioned and non-interactive
-  // so it can never push or capture taps in the hero card.
-  const css = read('styles.css').replace(/\s+/g,' ');
-  const rule = (css.match(/\.dash-mascot\{[^}]*\}/) || [''])[0];
-  assert(/position:absolute/.test(rule) && /pointer-events:none/.test(rule),
-    '.dash-mascot must be position:absolute + pointer-events:none (decorative, layout-safe)');
+    'EL TURNO must still reuse TXOKO_MASCOT_SVG as its player sprite');
+  assert(!/class="dash-mascot"/.test(html),
+    'the decorative dashboard mascot must be removed from the hero');
+  assert(!/\.dash-mascot\{/.test(read('styles.css')),
+    'the .dash-mascot CSS rule must be removed');
 });
 
 test('Mr. Shoesmith: reactive face sprites wired, intro framed (no hex crop)', () => {
