@@ -2522,13 +2522,13 @@ test('launchElTurno() is defined exactly once', () => {
   assert(defs === 1, `expected exactly 1 launchElTurno definition, found ${defs}`);
 });
 
-test('games hub (renderTxoko) has a card launching EL TURNO', () => {
+test('games hub (renderTxoko) has a card launching Camarero Survivors', () => {
   const hubStart = html.indexOf('function renderTxoko(');
   const hubEnd = html.indexOf('function renderTxTop10(');
   assert(hubStart !== -1 && hubEnd > hubStart, 'could not locate renderTxoko body');
   const hub = html.slice(hubStart, hubEnd);
   assert(hub.includes('launchElTurno()'), 'no game-card in renderTxoko() calls launchElTurno()');
-  assert(hub.includes('EL TURNO'), 'EL TURNO card title missing from games hub');
+  assert(hub.includes('Camarero Survivors'), 'Camarero Survivors card title missing from games hub');
 });
 
 test('launchElTurno() is idempotent (guards against a second overlay)', () => {
