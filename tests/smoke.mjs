@@ -2839,6 +2839,19 @@ test('Guía de emplatado: mapa de fotos íntegro, sección cableada, overlay y C
   // sección cableada como subtab de Aprender + overlay + búsqueda
   assert(/\['emplatado',_en\?'Plating':'Emplatado'/.test(html), 'Emplatado subtab missing from Aprender hub');
   assert(/emplatado:renderEmplatado/.test(html), 'renderEmplatado not wired into the Aprender dispatch');
+  // CADA subtab de Aprender debe existir en el enrutador global: _subTabBar
+  // conmuta con showTab('<subkey>'), así que renderMap y parentMap deben
+  // conocer todas las claves (bug real en producción: "renderMap[tab] is not
+  // a function" al tocar Emplatado).
+  const hubSrc = html.slice(html.indexOf('function renderAprender('), html.indexOf('function renderAprender(') + 1200);
+  const subkeys = [...hubSrc.matchAll(/\['([a-z]+)',/g)].map(m => m[1]);
+  assert(subkeys.length >= 5, `expected ≥5 Aprender subtabs, found ${subkeys.length}`);
+  const renderMapSrc = html.slice(html.indexOf('const renderMap = {'), html.indexOf('const renderMap = {') + 600);
+  const parentMapSrc = html.slice(html.indexOf('const parentMap = {'), html.indexOf('const parentMap = {') + 300);
+  for (const k of subkeys) {
+    assert(renderMapSrc.includes(k + ':'), `Aprender subtab '${k}' missing from showTab renderMap — tapping it crashes`);
+    if (k !== 'smart') assert(parentMapSrc.includes(k + ':'), `Aprender subtab '${k}' missing from showTab parentMap — nav highlight breaks`);
+  }
   assert(/function renderEmplatado\(/.test(html) && /function _emplOpen\(/.test(html), 'guide renderer/overlay functions missing');
   assert(/loadLazyData\('data\/dish-photos\.json'/.test(html), 'photo map must lazy-load like other data files');
   assert(/loading="lazy"/.test(html), 'grid images must lazy-load');
