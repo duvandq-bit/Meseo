@@ -9498,3 +9498,28 @@ body.chat-open .sound-toggle{ display:none !important; }
 .subtab-chip .subtab-chip-ico{font-size:.9rem;line-height:1}
 .subtab-chip.on{background:var(--gold);border-color:var(--gold);color:#1c1508;font-weight:700}
 .subtab-chip.on.subtab-chip--green{background:#0c3a22;border-color:#0c3a22;color:#7de8a0}
+
+/* ── Tarjeta "Guía de Emplatado" del dashboard: abanico de fotos reales ── */
+.dash-plating{position:relative;display:flex;align-items:center;gap:.95rem;margin-bottom:1.6rem;padding:.95rem 1rem;
+  background:linear-gradient(150deg,#26332c 0%,#1c2a22 55%,#233029 100%);
+  border:1px solid rgba(196,154,60,.38);border-radius:var(--r);overflow:hidden;cursor:pointer;
+  box-shadow:0 6px 20px rgba(28,42,34,.28), inset 0 1px 0 rgba(196,154,60,.18);
+  animation:slideUp .4s ease both;-webkit-tap-highlight-color:transparent;transition:transform .12s}
+.dash-plating:active{transform:scale(.985)}
+.dash-plating-strip{display:flex;flex-shrink:0;padding:.15rem .1rem}
+.dash-plating-strip img{width:50px;height:62px;object-fit:cover;border-radius:9px;
+  border:1.5px solid rgba(196,154,60,.55);box-shadow:0 4px 10px rgba(0,0,0,.45);background:#2c241a}
+.dash-plating-strip img:nth-child(1){transform:rotate(-7deg) translateX(7px) translateY(2px);z-index:1}
+.dash-plating-strip img:nth-child(2){transform:rotate(1deg) translateY(-3px);z-index:3}
+.dash-plating-strip img:nth-child(3){transform:rotate(7deg) translateX(-7px) translateY(2px);z-index:2}
+.dash-plating-tx{flex:1;min-width:0}
+.dash-plating-eyebrow{font-family:'DM Mono',monospace;font-size:.56rem;letter-spacing:.22em;
+  color:rgba(196,154,60,.8);text-transform:uppercase}
+.dash-plating-title{font-family:'Cinzel',serif;font-weight:700;font-size:1.02rem;color:#f2eae0;margin:.16rem 0 .18rem}
+.dash-plating-sub{font-size:.67rem;color:rgba(242,234,224,.55);line-height:1.35}
+.dash-plating-arrow{flex-shrink:0;display:grid;place-items:center}
+.dash-plating-shine{position:absolute;inset:0;pointer-events:none;
+  background:linear-gradient(115deg,transparent 35%,rgba(196,154,60,.10) 48%,transparent 60%);
+  transform:translateX(-120%);animation:dashPlatingShine 6.5s ease-in-out infinite}
+@keyframes dashPlatingShine{0%,64%{transform:translateX(-120%)}84%,100%{transform:translateX(120%)}}
+@media (prefers-reduced-motion:reduce){.dash-plating-shine{animation:none}}

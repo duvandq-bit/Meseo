@@ -2865,6 +2865,24 @@ test('Guía de emplatado: mapa de fotos íntegro, sección cableada, overlay y C
   }
 });
 
+test('Dashboard: tarjeta de acceso directo a la Guía de Emplatado (1 toque desde el inicio)', () => {
+  // La guía es consulta, no formación: debe estar a 1 toque de abrir la app.
+  // Tarjeta premium con abanico de fotos reales, cableada por la ruta enrutada.
+  assert(/class="dash-plating"/.test(html), 'dashboard must render the plating quick-access card');
+  assert(/dash-plating"[^>]*onclick="_subTab\.aprender='emplatado';showTab\('emplatado'\)"/.test(html.replace(/\s+/g,' ')),
+    'the card must navigate via the ROUTED path (_subTab + showTab emplatado)');
+  // las 3 fotos del abanico deben existir físicamente
+  const strip = [...html.matchAll(/dash-plating-strip[\s\S]{0,400}?<\/div>/g)][0][0];
+  const photos = [...strip.matchAll(/src="(img\/platos\/[^"]+)"/g)].map(m => m[1]);
+  assert(photos.length === 3, `the fan must show 3 photos, found ${photos.length}`);
+  for (const p of photos) assert(existsSync(join(ROOT, p)), `fan photo missing on disk: ${p}`);
+  const css = read('styles.css');
+  for (const sel of ['.dash-plating{', '.dash-plating-strip img{', '.dash-plating-shine{']) {
+    assert(css.includes(sel), `styles.css must style ${sel}`);
+  }
+  assert(/"Guía de emplatado"/.test(read('manifest.json')), 'the icon shortcut must be renamed to match its landing');
+});
+
 test('Acceso en 1 toque: sesión deslizante 90d, banner de instalación, hoja iOS, atajos del manifest', () => {
   // Fricción reportada por el propietario (jul 2026): el personal leía el PDF
   // porque abrir la app costaba. Este guard fija el paquete anti-fricción.

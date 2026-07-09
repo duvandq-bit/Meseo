@@ -15,7 +15,7 @@
     "lifestyle"
   ],
   "shortcuts": [
-    { "name": "Estudiar platos", "short_name": "Estudiar", "url": "./#tab=aprender", "icons": [{ "src": "icon-192.png", "sizes": "192x192" }] },
+    { "name": "Guía de emplatado", "short_name": "Emplatado", "url": "./#tab=aprender", "icons": [{ "src": "icon-192.png", "sizes": "192x192" }] },
     { "name": "Hacer un examen", "short_name": "Examen", "url": "./#tab=exam", "icons": [{ "src": "icon-192.png", "sizes": "192x192" }] },
     { "name": "Juegos", "short_name": "Juegos", "url": "./#tab=txoko", "icons": [{ "src": "icon-192.png", "sizes": "192x192" }] }
   ],
