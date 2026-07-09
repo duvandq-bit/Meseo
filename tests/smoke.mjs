@@ -2876,6 +2876,25 @@ test('Guía de emplatado: mapa de fotos íntegro, sección cableada, overlay y C
   }
 });
 
+test('Flashcards cómodas: volteo reversible y altura fija (nada empuja el layout)', () => {
+  // Quejas del propietario (jul 2026): al entrar a ingredientes no se podía
+  // volver, y la cara trasera crecía empujando los botones fuera de pantalla.
+  // (1) volteo reversible: tocar la tarjeta volteada vuelve a la delantera
+  const fc = html.slice(html.indexOf('let _fcAnimating'), html.indexOf('let _fcAnimating') + 1600);
+  assert(/function unflipCard\(\)/.test(fc), 'unflipCard must exist');
+  assert(/if\(fcFlipped\)\{ unflipCard\(\); return; \}/.test(fc),
+    'tapping a flipped card must flip it back (it used to be a dead tap)');
+  assert(/toca la tarjeta para volver/.test(html), 'the back face must hint that tapping goes back');
+  // (2) altura FIJA con scroll interno: el volteo no mueve el layout
+  const css = read('styles.css');
+  assert(/\.fc-scene\{[^}]*height:clamp\(280px,44vh,400px\)/.test(css),
+    'the card scene must have a FIXED height (front and back identical — no layout jump)');
+  assert(/\.fc-face\{[^}]*overflow:hidden/.test(css.slice(css.indexOf('.fc-face{'), css.indexOf('.fc-face{') + 600)),
+    'the face clips; scrolling lives in the back content wrapper');
+  assert(/id="fcBackScroll"[^>]*overflow-y:auto/.test(html),
+    'long ingredients must scroll INSIDE the card, not grow the page');
+});
+
 test('Fotos en toda la app: helper precargado + Explorar + ficha + flashcard + ambas búsquedas', () => {
   // Petición del propietario (jul 2026): fotos en todas las superficies de
   // CONSULTA. Nunca en exámenes/juegos donde el nombre del plato sea la
