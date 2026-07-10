@@ -6840,6 +6840,27 @@ button.et-big:active{transform:translateY(4px);box-shadow:0 2px 0 var(--et-ink)}
 .et-lg{display:flex;align-items:center;gap:5px;font-size:12px;color:var(--et-paper);font-family:ui-monospace,monospace}
 .et-lg span{font-family:Georgia,serif}
 
+/* ── Ranking rubber-hose (jul 2026): tablón de papel con contorno grueso,
+   ligeramente torcido, medallas-moneda (oro/plata/bronce) y filas a rayas
+   discontinuas — el mismo lenguaje de cartel años 30 del resto del juego. ── */
+.et-rank{width:100%;max-width:320px;margin:8px auto 4px;background:var(--et-paper);border:3px solid var(--et-ink);
+  border-radius:14px;padding:9px 13px 11px;box-shadow:0 5px 0 var(--et-ink);transform:rotate(-.7deg)}
+.et-rank-title{font-family:Georgia,serif;font-weight:bold;font-size:13px;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--et-ink);text-align:center;margin-bottom:4px}
+.et-rank-row{display:flex;align-items:center;gap:8px;padding:4px 0;border-top:2px dashed rgba(36,26,18,.28);
+  font-family:ui-monospace,monospace;font-size:12px;color:var(--et-ink)}
+.et-rank-row:first-of-type{border-top:none}
+.et-rank-pos{width:21px;height:21px;border-radius:50%;border:2.5px solid var(--et-ink);display:flex;align-items:center;
+  justify-content:center;font-family:Georgia,serif;font-weight:bold;font-size:11px;background:#efe6cf;flex-shrink:0;
+  box-shadow:inset -2px -2px 0 rgba(36,26,18,.14)}
+.et-rank-pos.g{background:#e8b83a}
+.et-rank-pos.s{background:#ccd4dc}
+.et-rank-pos.b{background:#cd7c32;color:#fff}
+.et-rank-name{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:700;text-align:left}
+.et-rank-name.me{color:#8a4a10}
+.et-rank-score{font-size:11px;white-space:nowrap;opacity:.85}
+.et-rank-empty{text-align:center;font-size:11px;opacity:.75;padding:4px 0 2px}
+
 .et-lvlhead{font-size:26px;font-weight:bold;color:var(--et-gold);text-shadow:2px 2px 0 var(--et-ink);letter-spacing:.04em}
 .et-picks{display:flex;flex-direction:column;gap:11px;width:100%;max-width:340px}
 .et-pick{pointer-events:auto;cursor:pointer;display:flex;align-items:center;gap:13px;text-align:left;

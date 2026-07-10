@@ -3023,6 +3023,37 @@ test('Camarero Survivors: propinas como monedas y bandejas de plata con estela (
   assert(/ctx\.fillStyle=n\.col\|\|'#fff'/.test(body), 'damage-number renderer must honor the per-float color');
 });
 
+test('Camarero Survivors: ranking rubber-hose de mejores turnos (jul 2026)', () => {
+  // "Vamos a añadir un ranking con diseño rubber-hose": tablón de papel torcido
+  // con medallas-moneda en la pantalla de inicio. Reutiliza la tabla genérica
+  // 'scores' de Supabase con topic='elturno' (cero migraciones) y el esquema
+  // local-primero + refresco remoto del Top 10 de Mr. Shoesmith.
+  assert(/async function supaInsertEtRecord\(/.test(html) && /topic: 'elturno'/.test(html),
+    'record insert must reuse the generic scores table with topic=elturno');
+  assert(/async function supaFetchEtTop\(/.test(html) && /topic=eq\.elturno/.test(html),
+    'top fetch must filter the scores table by topic=elturno');
+  const i = html.indexOf('function launchElTurno(');
+  const body = html.slice(i, i + 110000);
+  // Guardado por empleado al morir: local (etRecord) + Supabase + refresco del tablón.
+  assert(/_emp\.etRecord=\{secs:Math\.floor\(G\.time\),orders:G\.score\}/.test(body) && /saveDB\(\)/.test(body),
+    'gameOver must persist the per-employee record locally');
+  assert(/supaInsertEtRecord\(currentUser,Math\.floor\(G\.time\),G\.score\)/.test(body),
+    'gameOver must push the new record to Supabase');
+  // Tablón: markup en la pantalla de inicio + render local-primero + fusión remota.
+  assert(/<div id="etRank"><\/div>/.test(body), 'start screen must carry the ranking board slot');
+  assert(/function _etRankHtml\(/.test(body) && /function _etRenderRank\(/.test(body), 'ranking renderers missing');
+  assert(/el\.innerHTML=_etRankHtml\(local\)/.test(body) && /supaFetchEtTop\(\)\.then\(/.test(body),
+    'board must render local data instantly and merge the remote top afterwards');
+  assert(/b\.secs-a\.secs/.test(body) && /slice\(0,5\)/.test(body), 'ranking must sort by seconds survived, top 5');
+  assert(/Nadie ha sobrevivido aún/.test(body), 'empty state must invite the first run');
+  // CSS rubber-hose: papel torcido, contorno grueso, medallas oro/plata/bronce.
+  const css = read('styles.css');
+  assert(/\.et-rank\{[^}]*border:3px solid var\(--et-ink\)/.test(css) && /\.et-rank\{[^}]*rotate\(-\.7deg\)/.test(css),
+    '.et-rank must be the thick-outlined, slightly tilted paper board');
+  assert(/\.et-rank-pos\.g\{background:#e8b83a\}/.test(css) && /\.et-rank-pos\.s\{background:#ccd4dc\}/.test(css) && /\.et-rank-pos\.b\{background:#cd7c32/.test(css),
+    'medal coins must come in gold/silver/bronze');
+});
+
 test('Camarero Survivors gameplay: health pickups, damage curve, knockback, spawn grace, low-HP warning', () => {
   // Cinco mejoras de la auditoría de daño (petición del propietario: "cómo lo
   // podemos mejorar" → "aplica todo"). Guardan que cada mecánica sigue cableada.

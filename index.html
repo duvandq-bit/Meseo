@@ -1471,7 +1471,7 @@ const CAT_COLORS={'Entrantes':'#c49a3c','Hamburguesas y Bocatas':'#b86050','Plat
 const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#c49a3c"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#a47a2c" opacity=".4"/><path d="M8 8v4a1 1 0 001 1h1v4M10 8v4" stroke="#fff" stroke-width="1.2" stroke-linecap="round" fill="none"/><path d="M15 8v8M14 8v3a1.5 1.5 0 003 0V8" stroke="#fff" stroke-width="1.2" stroke-linecap="round" fill="none"/></svg>`,'Hamburguesas y Bocatas':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#b86050"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#983838" opacity=".4"/><path d="M7 9h10M7 12h10M7 15h10" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/><path d="M8 9c0-2 2-3 4-3s4 1 4 3M8 15c0 2 2 3 4 3s4-1 4-3" fill="none" stroke="#fff" stroke-width="1" opacity=".7"/></svg>`,'Platos Principales':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#4888a0"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#2e6878" opacity=".4"/><path d="M5 15h14" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/><path d="M12 6a6 6 0 016 6H6a6 6 0 016-6z" fill="none" stroke="#fff" stroke-width="1.1"/><circle cx="10" cy="6" r=".7" fill="#fff" opacity=".7"/><circle cx="12" cy="5" r=".7" fill="#fff" opacity=".7"/><circle cx="14" cy="6" r=".7" fill="#fff" opacity=".7"/></svg>`,'Sugerencias':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#d4aa4c"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#a48a2c" opacity=".4"/><polygon points="12,5 14.5,10 20,10.5 16,14 17,20 12,17 7,20 8,14 4,10.5 9.5,10" fill="#fff" opacity=".9"/></svg>`,'Guarniciones y Salsas':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#4d8a5e"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#2d6a3e" opacity=".4"/><path d="M12 18V10M5 10c0-4 3-6 7-6s7 2 7 6c0 5-3 8-7 8s-7-3-7-8z" fill="none" stroke="#fff" stroke-width="1.1"/><path d="M5 10c3 0 5 1 7 2.5" fill="none" stroke="#fff" stroke-width=".8" opacity=".6"/></svg>`,'Postres':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#7a6aaa"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#5a4a8a" opacity=".4"/><path d="M9 19h6M12 12v7M7 6l2 4.5a3 3 0 006 0L17 6H7z" fill="none" stroke="#fff" stroke-width="1.1" stroke-linecap="round"/></svg>`,'Vegetariano':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#5a9a6e"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#3a7a4e" opacity=".4"/><path d="M9 18h6M12 18V10M12 10c0-3 2-5 5-5-.7 2.5-2.5 5-5 5zM12 10c0-3-2-5-5-5 .7 2.5 2.5 5 5 5z" fill="none" stroke="#fff" stroke-width="1.1" stroke-linecap="round"/></svg>`};
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='7.186';  // sincronizada con sw.js VERSION (guard de CI)
+const APP_VERSION='7.187';  // sincronizada con sw.js VERSION (guard de CI)
 const APP_BUILD='Jul 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;
@@ -1783,6 +1783,37 @@ async function supaFetchTxokoTop10() {
       .map(([employee, record]) => ({ employee, record }))
       .sort((a, b) => b.record - a.record)
       .slice(0, 10);
+  } catch(e) { return null; }
+}
+
+// ── Récords de Camarero Survivors (jul 2026): misma tabla genérica 'scores'
+//    que Mr. Shoesmith, con topic='elturno'. score = segundos sobrevividos
+//    (la métrica de un survivors), total = comandas de esa partida.
+async function supaInsertEtRecord(employee, secs, orders) {
+  try {
+    await fetch(`${SUPA_URL}/rest/v1/scores`, {
+      method: 'POST',
+      headers: {
+        'apikey': SUPA_KEY,
+        'Authorization': `Bearer ${SUPA_KEY}`,
+        'Content-Type': 'application/json',
+        'Prefer': 'return=minimal'
+      },
+      body: JSON.stringify({ employee, score: secs, total: orders, topic: 'elturno', cat: 'all', time_sec: secs })
+    });
+  } catch(e) {}
+}
+
+async function supaFetchEtTop() {
+  try {
+    const res = await fetch(`${SUPA_URL}/rest/v1/scores?select=employee,score,total&topic=eq.elturno&order=score.desc&limit=200`,
+      { headers: { 'apikey': SUPA_KEY, 'Authorization': `Bearer ${SUPA_KEY}` } });
+    if(!res.ok) return null;
+    const rows = await res.json();
+    if(!Array.isArray(rows) || !rows.length) return null;
+    const best = {};
+    rows.forEach(r => { if(!best[r.employee] || r.score > best[r.employee].secs) best[r.employee] = { employee: r.employee, secs: r.score, orders: r.total || 0 }; });
+    return Object.values(best);
   } catch(e) { return null; }
 }
 
@@ -23458,6 +23489,7 @@ function launchElTurno(){
         <div class="et-card"><div class="et-title">Camarero<br>Survivors</div></div>
         <div class="et-kick">Sobrevive al servicio. Las <b>alergias</b> te rodean — despáchalas con la bandeja, sube de nivel y aguanta lo máximo. <b>Conócelas y sobrevivirás.</b></div>
         <div class="et-legend" id="etLegend"></div>
+        <div id="etRank"></div>
         <button class="et-big" id="etPlayBtn">Empezar turno</button>
         <div class="et-sub" style="opacity:.75">👆 Arrastra para moverte · 🌀 esquiva · disparo automático</div>
       </div>
@@ -23512,6 +23544,41 @@ function launchElTurno(){
   // ves aquí es exactamente lo que te ataca en la partida.
   document.getElementById('etLegend').innerHTML=ALLERGENS.slice(0,6).map(a=>
     `<div class="et-lg"><img src="${ET_FOE_SPRITES[a.key]}" alt="" style="height:22px;width:auto;vertical-align:middle">${a.name}</div>`).join('');
+
+  // ── Ranking rubber-hose (propietario, jul 2026): tablón de mejores turnos
+  //    en la pantalla de inicio. Local al instante, Supabase al llegar
+  //    (mismo esquema local-primero del Top 10 de Mr. Shoesmith). ──
+  function _etRankHtml(entries){
+    const top=entries.slice().sort((a,b)=>b.secs-a.secs).slice(0,5);
+    const fmt=s=>Math.floor(s/60)+':'+String(Math.floor(s%60)).padStart(2,'0');
+    const rows=top.map((e,i)=>{
+      const me=e.employee===currentUser;
+      return `<div class="et-rank-row"><span class="et-rank-pos ${i===0?'g':i===1?'s':i===2?'b':''}">${i+1}</span>`+
+        `<span class="et-rank-name${me?' me':''}">${escapeHTML(e.employee)}${me?' (tú)':''}</span>`+
+        `<span class="et-rank-score">${fmt(e.secs)} · ${e.orders} cmd</span></div>`;
+    }).join('');
+    return `<div class="et-rank"><div class="et-rank-title">★ Mejores turnos ★</div>`+
+      (rows||`<div class="et-rank-empty">Nadie ha sobrevivido aún. ¡Sé el primero!</div>`)+`</div>`;
+  }
+  function _etLocalRank(){
+    return Object.values(DB.employees)
+      .filter(e=>e.etRecord&&e.etRecord.secs>0)
+      .map(e=>({employee:e.name,secs:e.etRecord.secs,orders:e.etRecord.orders||0}));
+  }
+  function _etRenderRank(){
+    const el=document.getElementById('etRank'); if(!el) return;
+    const local=_etLocalRank();
+    el.innerHTML=_etRankHtml(local);
+    supaFetchEtTop().then(remote=>{
+      if(!remote||!remote.length) return;
+      const merged={};
+      local.forEach(r=>{ merged[r.employee]=r; });
+      remote.forEach(r=>{ if(!merged[r.employee]||r.secs>merged[r.employee].secs) merged[r.employee]=r; });
+      const el2=document.getElementById('etRank');
+      if(el2) el2.innerHTML=_etRankHtml(Object.values(merged));
+    }).catch(()=>{});
+  }
+  _etRenderRank();
 
   // ── HERO SPRITE: el protagonista, ciclo de carrera de 2 fotogramas reales
   //    (vídeo del propietario, jul 2026 — reemplaza la mascota vectorial). ──
@@ -24149,6 +24216,19 @@ function launchElTurno(){
     let best=0; try{ best=+localStorage.getItem('etBestTime')||0; }catch(_){}
     const isRec=Math.floor(G.time)>best;
     if(isRec){ try{ localStorage.setItem('etBestTime',String(Math.floor(G.time))); }catch(_){} }
+    // récord POR EMPLEADO para el ranking (jul 2026): local + Supabase
+    try{
+      const _emp=getEmp(currentUser);
+      if(_emp){
+        const _prev=(_emp.etRecord&&_emp.etRecord.secs)||0;
+        if(Math.floor(G.time)>_prev){
+          _emp.etRecord={secs:Math.floor(G.time),orders:G.score};
+          saveDB();
+          supaInsertEtRecord(currentUser,Math.floor(G.time),G.score);
+          _etRenderRank();   // el tablón de inicio ya refleja el récord al volver
+        }
+      }
+    }catch(_){}
     const bT=Math.max(best,Math.floor(G.time)), bm=Math.floor(bT/60), bs=bT%60;
     document.getElementById('etOverTitle').textContent=isRec?'¡RÉCORD!':'SE ACABÓ';
     document.getElementById('etOverSub').textContent=isRec?'Tu mejor turno hasta la fecha':'Fin del servicio';
