@@ -3856,6 +3856,18 @@ test('onboarding guide matches the real Juegos hub (no Modo Error promise)', () 
   assert(/onclick="startPersonalErrorMode\(\)"/.test(html), 'dashboard Débiles shortcut must survive');
 });
 
+test('EN mode: ranking chips and plating category dividers are localized', () => {
+  // EN sweep (v7.198): the Ranking hub chip said "Estadísticas" and the
+  // Emplatado guide grouped dishes under raw Spanish category keys.
+  assert(/\['stats',LANG==='en'\?'Stats':'Estadísticas','◇'\]/.test(html),
+    'ranking Stats chip must localize');
+  const empl = html.slice(html.indexOf('function _emplRender'), html.indexOf('function _emplOpen'));
+  assert(/catLocal\(cat\)/.test(empl),
+    'plating dividers must localize the canonical category key via catLocal');
+  // Canonical key must still drive the grouping/icons (only the label localizes).
+  assert(/CAT_ICONS\[dd\.cat\]/.test(empl), 'CAT_ICONS must keep using the canonical key');
+});
+
 // ─── 7. No leftover git conflict markers ────────────────────────
 console.log('\nHygiene');
 test('no git conflict markers in tracked source', () => {
