@@ -24070,7 +24070,12 @@ function launchElTurno(){
   }
   function spawnBoss(){
     const p=edgePos(); const a=G.roster[Math.floor(Math.random()*G.roster.length)];
-    const hp=130+G.time*11;
+    // Curva del jefe (jul 2026, "los usuarios no pasan del primer jefe"): la
+    // vida crecía solo con el reloj (548 HP en el 0:38 contra un héroe de
+    // nivel ~4 con ~22 DPS = pelea de +30s que se solapaba con élites,
+    // oleadas y el SIGUIENTE jefe). Ahora el primero es abatible (~200 HP)
+    // y cada jefe caído endurece al siguiente.
+    const hp=Math.round((65+G.time*3.5)*(1+G.bosses*0.4));
     // r 46→54 (propietario, jul 2026): "un poco más grandes" — presencia de
     // jefe de verdad ahora que trae su propio arte.
     G.enemies.push({x:p.x,y:p.y,a,hp,maxhp:hp,r:54,spd:0.5,kind:'boss',flash:0,boss:true,grace:24,lungeT:150,tele:0,dashing:0});
@@ -24164,16 +24169,23 @@ function launchElTurno(){
     // ── director de ritmo: presión con respiros, arquetipos que entran con el tiempo ──
     G.spawnT-=dt;
     const lull=(G.time%26)>21;   // ~5s de respiro cada 26s
-    const si=Math.max(8,G.spawnInt-G.time*0.35)*(lull?2.6:1);
+    // Con jefe en sala el director afloja (jul 2026): menos morralla = las
+    // bandejas (que apuntan al MÁS CERCANO) llegan de verdad al jefe, y el
+    // jugador pelea contra el jefe, no contra la marea de fondo.
+    const bossUp=G.enemies.some(e=>e.boss);
+    const si=Math.max(8,G.spawnInt-G.time*0.35)*(lull?2.6:1)*(bossUp?1.8:1);
     if(G.spawnT<=0){ G.spawnT=si; const rr=Math.random();
       let kind='norm'; if(G.time>45&&rr<0.15) kind='tank'; else if(G.time>60&&rr<0.28) kind='div'; else if(G.time>20&&rr<0.5) kind='fast';
-      spawnEnemy(kind); if(G.time>25&&Math.random()<0.5) spawnEnemy(Math.random()<0.4?'fast':'norm'); }
+      spawnEnemy(kind); if(!bossUp&&G.time>25&&Math.random()<0.5) spawnEnemy(Math.random()<0.4?'fast':'norm'); }
     // élite cada ~35s: más grande, brilla, suelta botín garantizado
     if(G.time>=G.nextElite){ G.nextElite+=35; spawnEnemy(Math.random()<0.5?'fast':'norm',true); flash('¡VIP ENFADADO!','#e0a02c'); sfx('surge'); }
     // oleada en anillo cada ~55s
     if(G.time>=G.nextSurge){ G.nextSurge+=55; surge(); }
-    // boss wave every 40s
-    if(G.time>=G.nextBoss){ G.nextBoss+=40; spawnBoss(); }
+    // jefe cada 40s — pero NUNCA dos a la vez (jul 2026): antes el segundo
+    // jefe entraba en el 1:18 aunque el primero siguiera vivo, y el
+    // apilamiento era la sentencia de muerte. Si hay jefe en sala, el
+    // siguiente espera a que caiga.
+    if(G.time>=G.nextBoss){ if(bossUp) G.nextBoss=G.time+8; else { G.nextBoss=G.time+40; spawnBoss(); } }
     if(G.time>=G.nextChef){ G.nextChef+=180; spawnChef(); }
     // cambio de escenario por nivel (propietario, jul 2026): comedor →
     // cocina (nv 5) → bodega (nv 10), rotando en niveles altos. Fundido ~1s.
@@ -24228,14 +24240,18 @@ function launchElTurno(){
       if(e.kind==='fast'&&!e.boss){ const wz=Math.sin(G.time*6.5+(e.ph||0))*0.6; const tx=-hy*wz, ty=hx*wz; hx+=tx; hy+=ty; }
       if(e.boss){ // embestida telegrafiada: se frena, avisa, y carga
         e.lungeT-=dt;
-        if(e.dashing>0){ e.dashing-=dt; spdMul=4.4; }
+        // jul 2026: aviso 28→42 (~0,7s, en móvil 0,47s no daba para reaccionar)
+        // y carga 4.4→3.8 — se esquiva moviéndose, no solo con el dash.
+        if(e.dashing>0){ e.dashing-=dt; spdMul=3.8; }
         else if(e.tele>0){ e.tele-=dt; spdMul=0.2; if(e.tele<=0){ e.dashing=32; sfx('boss'); G.shake=Math.max(G.shake,4); } }
-        else if(e.lungeT<=0){ e.lungeT=230; e.tele=28; }
+        else if(e.lungeT<=0){ e.lungeT=230; e.tele=42; }
       }
       e.x+=hx*e.spd*spdMul*dt; e.y+=hy*e.spd*spdMul*dt;
       if(d<G.pr+e.r && G.ifr<=0 && e.grace<=0){
         // damage curve: gentle at the start of the shift, ramps up, capped so it stays fair
-        const dmg=(e.boss?15:5)+Math.min(e.boss?9:6, G.time*0.05);
+        // (jul 2026: base del jefe 15→12 — con 100 HP, tres roces del jefe
+        // no deberían ser media vida)
+        const dmg=(e.boss?12:5)+Math.min(e.boss?9:6, G.time*0.05);
         G.hp-=dmg; G.ifr=e.boss?40:32; G.shake=Math.max(G.shake,e.boss?9:5); burst(G.px,G.py,'#a3372c',8); sfx('hurt'); vibe(e.boss?45:25);
         // knockback: shove the attacker (and the small pile around you) away so you can escape
         for(const o of G.enemies){ if(o.boss) continue; const od=Math.hypot(o.x-G.px,o.y-G.py)||1;

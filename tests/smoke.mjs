@@ -3260,6 +3260,30 @@ test('Camarero Survivors AAA: dash, racha, élites, oleadas, jefe con embestida,
   }
 });
 
+test('Camarero Survivors: primer jefe abatible — vida por jefes caídos, sin apilar jefes y con respiro (jul 2026)', () => {
+  // Ajuste de dificultad (propietario: "los usuarios no pasan del primer
+  // jefe"): (1) la vida del jefe ya no crece solo con el reloj (548 HP en el
+  // 0:38) sino con los jefes ya abatidos — el primero ronda 200; (2) nunca
+  // hay dos jefes de sala a la vez; (3) el director suelta menos morralla
+  // durante la pelea para que las bandejas (apuntan al más cercano) lleguen
+  // al jefe; (4) la embestida avisa ~0,7s y carga más lento; (5) el golpe de
+  // contacto del jefe baja de 15 a 12 de base.
+  const i = html.indexOf('function launchElTurno(');
+  const body = html.slice(i, i + 120000);
+  assert(/const hp=Math\.round\(\(65\+G\.time\*3\.5\)\*\(1\+G\.bosses\*0\.4\)\)/.test(body),
+    'boss hp must scale with bosses already defeated, not just the clock (gentle first boss)');
+  assert(/if\(bossUp\) G\.nextBoss=G\.time\+8; else \{ G\.nextBoss=G\.time\+40; spawnBoss\(\); \}/.test(body),
+    'a new room boss must wait while another boss is still alive (no boss stacking)');
+  assert(/const bossUp=G\.enemies\.some\(e=>e\.boss\);/.test(body) && /\(bossUp\?1\.8:1\)/.test(body),
+    'the spawn director must ease off the trash-mob pressure while a boss is alive');
+  assert(/if\(!bossUp&&G\.time>25/.test(body),
+    'the bonus double-spawn must pause during a boss fight');
+  assert(/e\.tele=42/.test(body) && /spdMul=3\.8/.test(body),
+    'the boss lunge must telegraph ~0.7s and charge at 3.8 (was 28 frames / 4.4)');
+  assert(/e\.boss\?12:5/.test(body),
+    'boss contact damage must start at 12 base, not 15');
+});
+
 test('Mr. Shoesmith está VIVO: respiración en reposo, enfado inmediato por error, celebración y temblor', () => {
   // Petición del propietario: el personaje debe estar animado y cambiar de
   // humor con cada error. Las animaciones antiguas apuntaban a `svg` (muertas
