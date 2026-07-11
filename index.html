@@ -23957,7 +23957,7 @@ function launchElTurno(){
         evoPierce:0, evoKnives:0, evoCava:0,
         combo:0, comboT:0, bestCombo:0, hitStop:0,
         dashT:0, dashCd:0, dashVX:0, dashVY:0, trail:[], rings:[],
-        enemies:[], bullets:[], gems:[], pickups:[], parts:[], bombs:[], explosions:[], dmgs:[],
+        enemies:[], bullets:[], gems:[], pickups:[], parts:[], bombs:[], explosions:[], dmgs:[], eshots:[], zones:[],
         spawnT:0, spawnInt:52, roster:ALLERGENS.slice(0,4).slice(),
         nextElite:55, nextSurge:75, bosses:0,
         target:null, targetT:0, kills:0, nextBoss:38, nextChef:180, shake:0,
@@ -24078,7 +24078,7 @@ function launchElTurno(){
     const hp=Math.round((65+G.time*3.5)*(1+G.bosses*0.4));
     // r 46→54 (propietario, jul 2026): "un poco más grandes" — presencia de
     // jefe de verdad ahora que trae su propio arte.
-    G.enemies.push({x:p.x,y:p.y,a,hp,maxhp:hp,r:54,spd:0.5,kind:'boss',flash:0,boss:true,grace:24,lungeT:150,tele:0,dashing:0});
+    G.enemies.push({x:p.x,y:p.y,a,hp,maxhp:hp,r:54,spd:0.5,kind:'boss',flash:0,boss:true,grace:24,lungeT:150,tele:0,dashing:0,abilT:150,wind:0});
     flash('¡JEFE: '+a.name+'!','#e8735a'); sfx('boss'); G.shake=8; vibe([25,35,25]);
   }
   // EL CHEF — jefe final (propietario, jul 2026): entra en el minuto 3 y cada
@@ -24088,8 +24088,31 @@ function launchElTurno(){
     const p=edgePos();
     const a={key:'chef',name:'El Chef',emoji:'🍳',col:'#f4ecd8'};
     const hp=Math.round((130+G.time*11)*1.9);
-    G.enemies.push({x:p.x,y:p.y,a,hp,maxhp:hp,r:64,spd:0.55,kind:'boss',flash:0,boss:true,chef:true,grace:28,lungeT:130,tele:0,dashing:0});
+    G.enemies.push({x:p.x,y:p.y,a,hp,maxhp:hp,r:64,spd:0.55,kind:'boss',flash:0,boss:true,chef:true,grace:28,lungeT:130,tele:0,dashing:0,abilT:110,wind:0});
     flash('★ ¡EL CHEF! ★','#e8b83a'); sfx('boss'); G.shake=11; vibe([40,50,40,50,40]);
+  }
+  // Habilidad especial del jefe (jul 2026, propietario): cada familia de
+  // alérgeno pelea distinto — proyectiles en abanico (gluten/huevo/pescado),
+  // refuerzos mini (frutos secos/crustáceos) o charco que frena y quema
+  // (lácteos/soja/sulfitos). EL CHEF barre la sala en abanico radial. Todas
+  // llegan tras un aviso (aro dorado de carga) y se esquivan con movimiento
+  // o dash — pedagogía intacta: el alérgeno "ataca" con su propia identidad.
+  const BOSS_ABIL={gluten:'volley',huevo:'volley',pescado:'volley',frutos:'summon',crust:'summon',lacteos:'zone',soja:'zone',sulfitos:'zone',chef:'volley'};
+  function bossAbility(e){
+    const ab=BOSS_ABIL[e.a.key]||'volley';
+    if(ab==='volley'){ // abanico apuntado (radial completo si es EL CHEF)
+      const n=e.chef?10:5, sp=e.chef?1.9:2.1, base=Math.atan2(G.py-e.y,G.px-e.x);
+      for(let i=0;i<n;i++){ const a2=e.chef?(i/n)*6.283+G.time:base+(i-(n-1)/2)*0.24;
+        G.eshots.push({x:e.x,y:e.y,vx:Math.cos(a2)*sp,vy:Math.sin(a2)*sp,life:150,col:e.a.col}); }
+      sfx('boss');
+    } else if(ab==='summon'){ // llama a tres minis de su alérgeno
+      if(G.enemies.length<70) for(let k=0;k<3;k++){ const a2=k/3*6.283+Math.random();
+        spawnMini(e.x+Math.cos(a2)*(e.r+18),e.y+Math.sin(a2)*(e.r+18),e.a); }
+      flash('¡REFUERZOS!','#e8735a'); sfx('surge');
+    } else { // charco bajo los pies del jugador: se arma, luego frena y quema
+      G.zones.push({x:G.px,y:G.py,r:54,arm:40,life:280,col:e.a.col});
+      sfx('hit');
+    }
   }
   // Oleada: anillo de enemigos alrededor del jugador, anunciada a bombo y platillo
   function surge(){
@@ -24158,6 +24181,8 @@ function launchElTurno(){
     G.moving=(Math.abs(mv.mx)+Math.abs(mv.my))>0.05?1:0;
     G.tilt+=(mv.mx*0.09-G.tilt)*Math.min(1,0.15*dt);
     let pvx=mv.mx*G.speed, pvy=mv.my*G.speed;
+    // charco de alérgeno activo bajo los pies: frena (el dash lo cruza limpio)
+    if(G.zones.some(z=>z.arm<=0&&Math.hypot(G.px-z.x,G.py-z.y)<z.r)){ pvx*=0.6; pvy*=0.6; }
     if(G.dashT>0){ pvx=G.dashVX; pvy=G.dashVY; G.dashT-=dt; G.trail.push({x:G.px,y:G.py,life:1,face:G.face,frame:_etHeroFrame(G)}); }
     if(G.dashCd>0) G.dashCd-=dt;
     G.px=Math.max(G.pr,Math.min(W-G.pr,G.px+pvx*dt));
@@ -24231,6 +24256,19 @@ function launchElTurno(){
 
     // bullets
     for(const b of G.bullets){ b.x+=b.vx*dt; b.y+=b.vy*dt; b.life-=dt; b.rot+=dt*0.5; }
+    // proyectiles de jefe: vuelan recto y se esquivan (el dash da i-frames)
+    for(let i=G.eshots.length-1;i>=0;i--){ const s=G.eshots[i]; s.x+=s.vx*dt; s.y+=s.vy*dt; s.life-=dt;
+      if(s.life<=0||s.x<-30||s.x>W+30||s.y<-30||s.y>H+30){ G.eshots.splice(i,1); continue; }
+      if(G.ifr<=0 && Math.hypot(s.x-G.px,s.y-G.py)<G.pr+6){
+        G.hp-=8; G.ifr=30; G.shake=Math.max(G.shake,5); burst(G.px,G.py,'#a3372c',7); sfx('hurt'); vibe(25);
+        G.eshots.splice(i,1); if(G.hp<=0){ return gameOver(); } } }
+    // charcos de alérgeno: se arman (aviso punteado), luego queman de a poco
+    for(let i=G.zones.length-1;i>=0;i--){ const z=G.zones[i];
+      if(z.arm>0){ z.arm-=dt; continue; }
+      z.life-=dt; if(z.life<=0){ G.zones.splice(i,1); continue; }
+      if(Math.hypot(G.px-z.x,G.py-z.y)<z.r){ G.hp-=0.06*dt;
+        if(Math.random()<0.1*dt) burst(G.px,G.py+10,z.col,2);
+        if(G.hp<=0){ return gameOver(); } } }
     // enemies move + collide (cada arquetipo se mueve distinto)
     for(const e of G.enemies){
       if(e.flash>0) e.flash-=dt;
@@ -24239,11 +24277,14 @@ function launchElTurno(){
       let hx=(G.px-e.x)/d, hy=(G.py-e.y)/d, spdMul=1;
       if(e.kind==='fast'&&!e.boss){ const wz=Math.sin(G.time*6.5+(e.ph||0))*0.6; const tx=-hy*wz, ty=hx*wz; hx+=tx; hy+=ty; }
       if(e.boss){ // embestida telegrafiada: se frena, avisa, y carga
-        e.lungeT-=dt;
+        e.lungeT-=dt; e.abilT-=dt;
         // jul 2026: aviso 28→42 (~0,7s, en móvil 0,47s no daba para reaccionar)
         // y carga 4.4→3.8 — se esquiva moviéndose, no solo con el dash.
         if(e.dashing>0){ e.dashing-=dt; spdMul=3.8; }
         else if(e.tele>0){ e.tele-=dt; spdMul=0.2; if(e.tele<=0){ e.dashing=32; sfx('boss'); G.shake=Math.max(G.shake,4); } }
+        // habilidad especial: carga (aro dorado, se frena) y suelta
+        else if(e.wind>0){ e.wind-=dt; spdMul=0.15; if(e.wind<=0) bossAbility(e); }
+        else if(e.abilT<=0){ e.abilT=e.chef?240:300; e.wind=30; sfx('surge'); }
         else if(e.lungeT<=0){ e.lungeT=230; e.tele=42; }
       }
       e.x+=hx*e.spd*spdMul*dt; e.y+=hy*e.spd*spdMul*dt;
@@ -24353,6 +24394,18 @@ function launchElTurno(){
     for(const r of G.rings){ ctx.globalAlpha=Math.max(0,r.life)*0.55; ctx.strokeStyle=r.col; ctx.lineWidth=2.5;
       ctx.beginPath(); ctx.arc(r.x,r.y,r.r,0,6.29); ctx.stroke(); }
     ctx.globalAlpha=1;
+    // charcos de alérgeno (habilidad de jefe): aviso punteado mientras se
+    // arman; charco brillante que burbujea mientras quema
+    for(const z of G.zones){
+      if(z.arm>0){ ctx.globalAlpha=.4+.25*Math.sin(G.time*12); ctx.strokeStyle=z.col; ctx.lineWidth=2.5;
+        ctx.setLineDash([6,5]); ctx.beginPath(); ctx.ellipse(z.x,z.y,z.r,z.r*0.72,0,0,6.29); ctx.stroke(); ctx.setLineDash([]); }
+      else { const zf=Math.min(1,z.life/60);
+        ctx.globalAlpha=.28*zf; ctx.fillStyle=z.col;
+        ctx.beginPath(); ctx.ellipse(z.x,z.y,z.r,z.r*0.72,0,0,6.29); ctx.fill();
+        ctx.globalAlpha=.55*zf; ctx.strokeStyle=z.col; ctx.lineWidth=2;
+        ctx.beginPath(); ctx.ellipse(z.x,z.y,z.r,z.r*0.72,0,0,6.29); ctx.stroke();
+        if(Math.random()<0.3) G.parts.push({x:z.x+(Math.random()-.5)*z.r*1.5,y:z.y+(Math.random()-.5)*z.r*1.0,vx:0,vy:-0.4,life:0.5,col:z.col}); }
+      ctx.globalAlpha=1; }
     // estela fantasma del dash
     for(const t of G.trail){ if(!heroReady) break; ctx.globalAlpha=Math.max(0,t.life)*0.3;
       ctx.save(); ctx.translate(t.x,t.y); ctx.scale(t.face,1); ctx.drawImage(HERO[t.frame||0],-23,-35,46,58); ctx.restore(); }
@@ -24430,6 +24483,9 @@ function launchElTurno(){
       // jefe en telegrafía: aro rojo que se cierra = va a embestir
       if(e.boss&&e.tele>0){ ctx.globalAlpha=.75; ctx.strokeStyle='#c43a2c'; ctx.lineWidth=4;
         ctx.setLineDash([7,6]); ctx.beginPath(); ctx.arc(e.x,e.y,e.r+8+e.tele*1.6,0,6.29); ctx.stroke(); ctx.setLineDash([]); ctx.globalAlpha=gA; }
+      // jefe cargando su habilidad: aro dorado que vibra = viene el especial
+      if(e.boss&&e.wind>0){ ctx.globalAlpha=.8; ctx.strokeStyle='#e0a02c'; ctx.lineWidth=3.5;
+        ctx.setLineDash([4,5]); ctx.beginPath(); ctx.arc(e.x,e.y,e.r+6+Math.sin(G.time*14)*4,0,6.29); ctx.stroke(); ctx.setLineDash([]); ctx.globalAlpha=gA; }
       ctx.save(); ctx.translate(e.x,e.y);
       // silueta por arquetipo: rápido=alargado, tanque=achatado, divisor=línea de corte
       if(e.kind==='fast'&&!e.boss) ctx.scale(1.12+wob,0.86-wob);
@@ -24502,25 +24558,41 @@ function launchElTurno(){
       ctx.font='26px Georgia'; ctx.fillText('🍾',0,0); ctx.restore();
     }
     ctx.textBaseline='alphabetic';
-    // bandejas — plata de camarero girando en vuelo (jul 2026): estela de dos
-    // fantasmas tras la trayectoria, plato plateado con aro interior y REFLEJO
-    // que rota con el giro. Las perforantes (evolución) siguen siendo doradas.
+    // bandejas — BANDEJA de camarero de verdad (jul 2026, reporte de usuarios:
+    // "parecen platos pequeños o monedas"). El culpable era el giro de canto
+    // (el mismo squash de elipse que usan las propinas): ahora es un óvalo
+    // ancho SIEMPRE, con aro exterior, pocillo interior, servilleta y tres
+    // canapés a bordo — comida encima = bandeja inequívoca. Conserva la
+    // estela de dos ecos y el reflejo giratorio; la perforante sigue dorada.
     for(const b of G.bullets){ if(b.life<=0)continue;
-      const sq=0.35+0.65*Math.abs(Math.sin(b.rot));
       const gold=b.pierce>0;
-      const ang=Math.atan2(b.vy,b.vx);
-      ctx.save(); ctx.translate(b.x,b.y); ctx.rotate(ang);
-      // estela: dos ecos desvanecidos detrás del plato
-      for(let k=1;k<=2;k++){ ctx.globalAlpha=0.22/k; ctx.fillStyle=gold?'#ffe9b0':'#dde3e8';
-        ctx.beginPath(); ctx.ellipse(-k*7,0,6.5,6.5*sq,0,0,6.29); ctx.fill(); }
+      const ang=Math.atan2(b.vy,b.vx), wob=Math.sin(b.rot*2)*0.16;
+      ctx.save(); ctx.translate(b.x,b.y); ctx.rotate(ang+wob);
+      // estela: dos ecos desvanecidos detrás de la bandeja
+      for(let k=1;k<=2;k++){ ctx.globalAlpha=0.20/k; ctx.fillStyle=gold?'#ffe9b0':'#dde3e8';
+        ctx.beginPath(); ctx.ellipse(-k*8,0,10.5,6.5,0,0,6.29); ctx.fill(); }
       ctx.globalAlpha=1;
+      // plato ovalado con borde de tinta
       ctx.fillStyle=gold?'#ffe9b0':'#dde3e8'; ctx.strokeStyle='#241a12'; ctx.lineWidth=2;
-      ctx.beginPath(); ctx.ellipse(0,0,6.5,6.5*sq,0,0,6.29); ctx.fill(); ctx.stroke();
-      ctx.strokeStyle=gold?'rgba(160,120,40,.6)':'rgba(110,125,140,.6)'; ctx.lineWidth=1.2;
-      ctx.beginPath(); ctx.ellipse(0,0,4,4*sq,0,0,6.29); ctx.stroke();
-      // reflejo que gira con el plato
+      ctx.beginPath(); ctx.ellipse(0,0,11,7,0,0,6.29); ctx.fill(); ctx.stroke();
+      // pocillo interior: el aro que dice "bandeja", no "moneda"
+      ctx.strokeStyle=gold?'rgba(160,120,40,.7)':'rgba(110,125,140,.7)'; ctx.lineWidth=1.3;
+      ctx.beginPath(); ctx.ellipse(0,0,8,4.6,0,0,6.29); ctx.stroke();
+      // servilleta + tres canapés a bordo
+      ctx.fillStyle='rgba(255,255,255,.92)'; ctx.beginPath(); ctx.ellipse(0,-0.4,6,3.1,0,0,6.29); ctx.fill();
+      ctx.fillStyle='#c94f38'; ctx.beginPath(); ctx.arc(-3.1,-0.9,1.7,0,6.29); ctx.fill();
+      ctx.fillStyle='#5d8f46'; ctx.beginPath(); ctx.arc(0.4,-1.7,1.6,0,6.29); ctx.fill();
+      ctx.fillStyle='#e0a02c'; ctx.beginPath(); ctx.arc(3.1,-0.5,1.5,0,6.29); ctx.fill();
+      // reflejo que gira con el bamboleo
       ctx.strokeStyle='rgba(255,255,255,.85)'; ctx.lineWidth=1.4;
-      ctx.beginPath(); ctx.ellipse(0,0,5.4,5.4*sq,0,b.rot*1.7,b.rot*1.7+0.9); ctx.stroke();
+      ctx.beginPath(); ctx.ellipse(0,0,9.6,5.8,0,b.rot*1.7,b.rot*1.7+0.8); ctx.stroke();
+      ctx.restore(); }
+    // proyectiles de jefe: gota del color del alérgeno con contorno y brillo
+    for(const s of G.eshots){
+      ctx.save(); ctx.translate(s.x,s.y); ctx.rotate(Math.atan2(s.vy,s.vx));
+      ctx.fillStyle=s.col; ctx.strokeStyle='#241a12'; ctx.lineWidth=2;
+      ctx.beginPath(); ctx.ellipse(0,0,7,5,0,0,6.29); ctx.fill(); ctx.stroke();
+      ctx.fillStyle='rgba(255,255,255,.7)'; ctx.beginPath(); ctx.arc(-2,-1.5,1.8,0,6.29); ctx.fill();
       ctx.restore(); }
     // particles
     for(const p of G.parts){ ctx.globalAlpha=Math.max(0,p.life); ctx.fillStyle=p.col; ctx.beginPath(); ctx.arc(p.x,p.y,3,0,6.29); ctx.fill(); }

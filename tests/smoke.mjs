@@ -3066,9 +3066,11 @@ test('Camarero Survivors: propinas como monedas y bandejas de plata con estela (
   assert(/const R=4\.5\+\(g\.val\|\|1\)\*0\.9/.test(body), 'coin size must grow with gem value');
   assert(/ctx\.ellipse\(0,0,R\*sqz,R,0,0,6\.29\)/.test(body), 'coins must spin via the squashed-ellipse phase');
   assert(!/ctx\.moveTo\(g\.x,g\.y-5\)/.test(body), 'the old abstract diamond gem must be gone');
-  assert(/estela: dos ecos desvanecidos/.test(body) && /ctx\.ellipse\(-k\*7,0,6\.5,6\.5\*sq,0,0,6\.29\)/.test(body),
+  // (jul 2026: la bandeja se rediseñó como óvalo fijo — ver el test del
+  // rediseño más abajo — pero la estela y el reflejo giratorio se conservan)
+  assert(/estela: dos ecos desvanecidos/.test(body) && /ctx\.ellipse\(-k\*8,0,10\.5,6\.5,0,0,6\.29\)/.test(body),
     'trays must leave a two-ghost motion trail');
-  assert(/ctx\.ellipse\(0,0,5\.4,5\.4\*sq,0,b\.rot\*1\.7,b\.rot\*1\.7\+0\.9\)/.test(body),
+  assert(/ctx\.ellipse\(0,0,9\.6,5\.8,0,b\.rot\*1\.7,b\.rot\*1\.7\+0\.8\)/.test(body),
     'trays must carry the rotating glint arc');
   assert(/b\.pierce>0/.test(body) && /#ffe9b0/.test(body), 'piercing trays must stay golden (evolution signal)');
   // Segunda vuelta a las propinas (propietario, jul 2026): juice de arcade.
@@ -3282,6 +3284,43 @@ test('Camarero Survivors: primer jefe abatible — vida por jefes caídos, sin a
     'the boss lunge must telegraph ~0.7s and charge at 3.8 (was 28 frames / 4.4)');
   assert(/e\.boss\?12:5/.test(body),
     'boss contact damage must start at 12 base, not 15');
+});
+
+test('Camarero Survivors: la bandeja PARECE bandeja y cada jefe tiene habilidad especial (jul 2026)', () => {
+  // (1) Reporte de usuarios: "las bandejas parecen platos pequeños o
+  // monedas". El culpable era el giro de canto (el mismo squash de elipse
+  // que usan las propinas-moneda). Ahora la bandeja es un óvalo ancho
+  // SIEMPRE, con pocillo interior, servilleta y tres canapés a bordo.
+  // (2) Habilidades de jefe por familia de alérgeno (propietario): abanico
+  // de proyectiles (gluten/huevo/pescado), refuerzos mini (frutos/crust) o
+  // charco que frena y quema (lácteos/soja/sulfitos); EL CHEF barre en
+  // radial. Todas avisan con un aro dorado de carga y se esquivan.
+  const i = html.indexOf('function launchElTurno(');
+  const body = html.slice(i, i + 130000);
+  // — bandeja: óvalo fijo con comida a bordo; el squash de moneda se fue —
+  assert(/ctx\.ellipse\(0,0,11,7,0,0,6\.29\)/.test(body),
+    'tray must be a wide oval platter (never edge-on like a coin)');
+  assert(/servilleta \+ tres canapés a bordo/.test(body),
+    'tray must carry the napkin + canapés that make it read as a tray');
+  assert(!/ctx\.ellipse\(0,0,6\.5,6\.5\*sq/.test(body),
+    'the old coin-spin tray (edge-on squash) must be gone');
+  // — habilidades de jefe: mapa por alérgeno + las tres familias cableadas —
+  assert(/const BOSS_ABIL=\{gluten:'volley',huevo:'volley',pescado:'volley',frutos:'summon',crust:'summon',lacteos:'zone',soja:'zone',sulfitos:'zone',chef:'volley'\}/.test(body),
+    'every allergen family (and the chef) must map to its boss ability');
+  assert(/function bossAbility\(e\)/.test(body) && /eshots:\[\], zones:\[\]/.test(body),
+    'bossAbility() and the eshots/zones state arrays must exist');
+  assert(/e\.wind-=dt; spdMul=0\.15; if\(e\.wind<=0\) bossAbility\(e\);/.test(body),
+    'abilities must be telegraphed by a windup that slows the boss');
+  assert(/jefe cargando su habilidad: aro dorado/.test(body),
+    'the golden windup ring must be drawn so the special never comes from nowhere');
+  assert(/G\.eshots\.push\(/.test(body) && /G\.zones\.push\(\{x:G\.px,y:G\.py/.test(body) && /spawnMini\(e\.x\+Math\.cos/.test(body),
+    'the three ability families (volley / zone / summon) must be wired');
+  assert(/G\.hp-=8; G\.ifr=30;/.test(body),
+    'boss shots must deal modest damage and grant i-frames (dodgeable, never a shred-loop)');
+  assert(/pvx\*=0\.6; pvy\*=0\.6;/.test(body) && /G\.hp-=0\.06\*dt/.test(body),
+    'active puddles must slow the player and burn slowly (not instantly kill)');
+  assert(/if\(G\.enemies\.length<70\)/.test(body),
+    'the summon ability must respect an enemy-count cap (no flooding)');
 });
 
 test('Mr. Shoesmith está VIVO: respiración en reposo, enfado inmediato por error, celebración y temblor', () => {
