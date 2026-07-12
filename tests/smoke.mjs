@@ -146,7 +146,7 @@ test('multi-restaurant theming is wired (applyTheme + login picker)', () => {
   // fue con esa responsabilidad y no debe volver.
   assert(!/classList\.toggle\('long'/.test(html),
     'applyTheme must not scale venue names into the login logo (the hero is always Meseo)');
-  assert(/\.login-venue-card\.on\{/.test(css), 'selected venue card style missing');
+  assert(/\.login-venue-card\.on\{/.test(read('styles.css')), 'selected venue card style missing');
 });
 
 test('data/ghost-scenarios.json scenarios have scenes with options', () => {
