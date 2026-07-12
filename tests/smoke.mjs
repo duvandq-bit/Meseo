@@ -3470,6 +3470,34 @@ test('Quiz del día: abierto 24/7 sin supervisor — semilla diaria, avance auto
     'the question timer must self-kill when the user navigates away mid-question');
 });
 
+test('Rebranding Meseo: la app se llama Meseo; TXOKO queda solo como venue (jul 2026)', () => {
+  // Propietario: «evitar demandas — la app es multi-restaurante; Txoko puede
+  // aparecer como uno de los restaurantes a escoger, pero el nombre de la
+  // app debe ser otro». La identidad del restaurante (TXOKO, Ritz-Carlton,
+  // Berasategui) vive SOLO en data/themes.json (venue) y en el contenido de
+  // los platos; la app se presenta como Meseo (meseo.es) en manifest,
+  // título, icono, login por defecto, créditos, push y compartir.
+  const man = JSON.parse(read('manifest.json'));
+  assert(man.short_name === 'Meseo' && /^Meseo/.test(man.name), 'manifest must carry the Meseo identity');
+  assert(!/txoko|berasategui|ritz/i.test(man.name + man.short_name + man.description),
+    'manifest must not present the app as any restaurant brand');
+  assert(/<title>Meseo · Formación de sala<\/title>/.test(html), 'the base tab title must be Meseo');
+  assert(/id="loginLogoName">Meseo</.test(html) && /id="loginEyebrow">Formación de sala</.test(html),
+    'login defaults must be neutral Meseo — venue identity arrives only via themes.json');
+  assert(!/Uso exclusivo Txoko/.test(html) && /app-credit[^>]*>© 2026 [^<]*Meseo/.test(html),
+    'the footer credit must be Meseo, not a restaurant');
+  assert(/%cMeseo · v/.test(html), 'the console banner must be Meseo');
+  assert(/no está afiliada, patrocinada ni respaldada/.test(html) && /sus respectivos titulares/.test(html),
+    'the legal modal must keep the trademark disclaimer, generalized to all venues');
+  const themes = read('data/themes.json');
+  assert(/"title": "Meseo · TXOKO"/.test(themes), 'venue tab titles must compose app brand + venue');
+  const icon = read('icon.svg');
+  assert(/MESEO/.test(icon) && !/TXOKO/.test(icon), 'the icon must be Meseo-branded');
+  assert(/title: 'Meseo'/.test(read('sw.js')), 'the push fallback title must be Meseo');
+  assert(/https:\/\/meseo\.es\//.test(html) && !/github\.io\/Txoko-Formacion/.test(html),
+    'the share link must point at meseo.es, not the old repo URL');
+});
+
 test('Mr. Shoesmith está VIVO: respiración en reposo, enfado inmediato por error, celebración y temblor', () => {
   // Petición del propietario: el personaje debe estar animado y cambiar de
   // humor con cada error. Las animaciones antiguas apuntaban a `svg` (muertas

@@ -1,7 +1,7 @@
 <!--
   ╔══════════════════════════════════════════════════════════════╗
   ║           TXOKO FORMACIÓN — Aplicación de Formación          ║
-  ║         Txoko by Martín Berasategui · Ritz-Carlton Abama     ║
+  ║              Meseo · Formación de equipos de sala             ║
   ╠══════════════════════════════════════════════════════════════╣
   ║  © 2026 Duvan Stiven Ramírez Duque. Todos los derechos    ║
   ║  reservados.                                                  ║
@@ -12,7 +12,7 @@
   ║  autor.                                                       ║
   ║                                                               ║
   ║  Licencia de uso concedida exclusivamente a:                  ║
-  ║  Txoko by Martín Berasategui · Ritz-Carlton Abama · Tenerife  ║
+  ║        Meseo — el oficio se entrena · https://meseo.es        ║
   ║  Uso interno · Fines educativos · Sin ánimo de lucro          ║
   ╠══════════════════════════════════════════════════════════════╣
   ║  Developed by: Duvan Stiven Ramírez Duque                     ║
@@ -42,9 +42,9 @@
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://unpkg.com https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://unpkg.com https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob: https://advkoujfgbrrjvqexrcu.supabase.co https://*.basemaps.cartocdn.com https://unpkg.com; connect-src 'self' https://advkoujfgbrrjvqexrcu.supabase.co wss://advkoujfgbrrjvqexrcu.supabase.co https://unpkg.com https://*.basemaps.cartocdn.com; worker-src 'self' blob:; frame-src https://www.youtube.com; object-src 'none'; base-uri 'self'; form-action 'self'; manifest-src 'self'">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>TXOKO · Formación</title>
-<meta name="description" content="Formación del equipo de sala — TXOKO by Martín Berasategui">
-<meta name="app-version" content="5.8">
+<title>Meseo · Formación de sala</title>
+<meta name="description" content="Meseo — Formación de equipos de sala: carta, alérgenos, vinos, exámenes y juegos de repaso.">
+<meta name="app-version" content="7.204">
 <meta name="app-build" content="May 2026">
 <meta name="theme-color" content="#1c2a22">
 <!-- ═══ PWA ═══ -->
@@ -133,11 +133,16 @@
 
   <div class="login-vignette" aria-hidden="true"></div>
 
-  <div class="login-eyebrow"><span id="loginEyebrow">Ritz-Carlton Abama · Tenerife</span></div>
+  <!-- Marca neutra Meseo por defecto (rebranding jul 2026): la identidad del
+       restaurante (TXOKO, Ritz-Carlton, Berasategui…) llega SOLO desde el
+       venue elegido en data/themes.json — la app ya no se presenta como
+       ningún restaurante. Si themes.json no carga (primera visita offline),
+       lo que se ve es Meseo, no una marca ajena. -->
+  <div class="login-eyebrow"><span id="loginEyebrow">Formación de sala</span></div>
   <div class="login-logo">
-    <h1 id="loginLogoName">TXOKO</h1>
+    <h1 id="loginLogoName">Meseo</h1>
     <div class="login-logo-line"></div>
-    <em class="login-subtitle" id="loginSubtitle">by Martín Berasategui · Formación de Equipo</em>
+    <em class="login-subtitle" id="loginSubtitle">El oficio se entrena · meseo.es</em>
   </div>
 
   <!-- Multi-restaurant selector (dropdown). Shown whenever the registry lists
@@ -243,8 +248,8 @@
   <div class="legal-modal" id="legalModal" role="dialog" aria-modal="true" aria-labelledby="legalModalTitle" style="display:none" onclick="if(event.target===this)this.style.display='none'">
     <div class="legal-modal-content">
       <div class="legal-modal-title" id="legalModalTitle">Aviso Legal</div>
-      <p>Esta aplicación es de uso exclusivo para el equipo de <strong>Txoko by Martín Berasategui</strong> y ha sido creada únicamente con fines educativos y formativos internos, sin ánimo de lucro.</p>
-      <p>Marriott International, The Ritz-Carlton y Martín Berasategui son marcas registradas independientes. Sus nombres, logotipos y denominaciones se mencionan únicamente en contexto formativo. Esta aplicación no está afiliada, patrocinada ni respaldada oficialmente por ninguna de dichas marcas.</p>
+      <p><strong>Meseo</strong> es una herramienta de formación interna para equipos de sala, de uso exclusivo del personal de los restaurantes dados de alta, creada únicamente con fines educativos y sin ánimo de lucro.</p>
+      <p>Los nombres, logotipos y denominaciones de los restaurantes y grupos que aparecen en la app (incluidos TXOKO, Martín Berasategui, The Ritz-Carlton y Marriott International) son marcas registradas de sus respectivos titulares y se mencionan únicamente en contexto formativo, para identificar el lugar de trabajo del equipo. Meseo no está afiliada, patrocinada ni respaldada oficialmente por ninguna de dichas marcas.</p>
       <p>© 2026 Duvan Stiven Ramírez Duque · Todos los derechos reservados</p>
       <button class="legal-modal-close" onclick="document.getElementById('legalModal').style.display='none'">Cerrar</button>
     </div>
@@ -268,7 +273,7 @@
 <!-- ═══════ APP ═══════ -->
 <div id="screenApp" class="screen">
   <header class="app-header" role="banner">
-    <div class="header-logo" id="headerLogo" role="button" tabindex="0" aria-label="Ir al inicio" title="Ir al inicio" style="cursor:pointer" onclick="showTab('dashboard')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();showTab('dashboard')}">TXOKO<sup>MB</sup></div>
+    <div class="header-logo" id="headerLogo" role="button" tabindex="0" aria-label="Ir al inicio" title="Ir al inicio" style="cursor:pointer" onclick="showTab('dashboard')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();showTab('dashboard')}">Meseo</div>
     <div class="header-spacer"></div>
     <div class="header-user">
       <div class="header-avatar" id="headerAvatar"></div>
@@ -340,7 +345,7 @@
   </div>
 
   <main class="app-content" id="appContent" aria-live="polite"></main>
-  <div class="app-credit" style="color:rgba(28,42,34,.4)">© 2026 Duvan Stiven Ramírez Duque · Uso exclusivo Txoko by Martín Berasategui · Fines educativos · Sin ánimo de lucro</div>
+  <div class="app-credit" style="color:rgba(28,42,34,.4)">© 2026 Duvan Stiven Ramírez Duque · Meseo · Formación de equipos de sala · Fines educativos · Sin ánimo de lucro</div>
   <button class="sound-toggle" id="soundToggle" onclick="toggleSound()" title="Sonido" aria-label="Alternar sonido" role="button">◉</button>
   <div class="txk-sync-pill" id="syncStatusPill" role="status" aria-live="polite" aria-atomic="true"><span class="dot"></span><span id="syncStatusText">Offline</span></div>
   <!-- Service Mode FAB removed per owner request; _svc* code kept, unreferenced -->
@@ -502,7 +507,7 @@ let LANG = (function(){
 
 const T = {
   es: {
-    subtitle: 'by Martín Berasategui · Formación de Equipo',
+    subtitle: 'El oficio se entrena · meseo.es',
     profileLabel: 'Tu perfil',
     newLabel: 'nuevo perfil',
     enterBtn: 'Entrar',
@@ -598,7 +603,7 @@ const T = {
     lbTitle: 'Mejores Puntuaciones',
     lbNoScores: 'Aún no hay puntuaciones'},
   en: {
-    subtitle: 'by Martín Berasategui · Team Training',
+    subtitle: 'Train the craft · meseo.es',
     profileLabel: 'Your profile',
     newLabel: 'new profile',
     enterBtn: 'Enter',
@@ -1486,7 +1491,7 @@ const CAT_COLORS={'Entrantes':'#c49a3c','Hamburguesas y Bocatas':'#b86050','Plat
 const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#c49a3c"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#a47a2c" opacity=".4"/><path d="M8 8v4a1 1 0 001 1h1v4M10 8v4" stroke="#fff" stroke-width="1.2" stroke-linecap="round" fill="none"/><path d="M15 8v8M14 8v3a1.5 1.5 0 003 0V8" stroke="#fff" stroke-width="1.2" stroke-linecap="round" fill="none"/></svg>`,'Hamburguesas y Bocatas':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#b86050"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#983838" opacity=".4"/><path d="M7 9h10M7 12h10M7 15h10" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/><path d="M8 9c0-2 2-3 4-3s4 1 4 3M8 15c0 2 2 3 4 3s4-1 4-3" fill="none" stroke="#fff" stroke-width="1" opacity=".7"/></svg>`,'Platos Principales':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#4888a0"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#2e6878" opacity=".4"/><path d="M5 15h14" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/><path d="M12 6a6 6 0 016 6H6a6 6 0 016-6z" fill="none" stroke="#fff" stroke-width="1.1"/><circle cx="10" cy="6" r=".7" fill="#fff" opacity=".7"/><circle cx="12" cy="5" r=".7" fill="#fff" opacity=".7"/><circle cx="14" cy="6" r=".7" fill="#fff" opacity=".7"/></svg>`,'Sugerencias':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#d4aa4c"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#a48a2c" opacity=".4"/><polygon points="12,5 14.5,10 20,10.5 16,14 17,20 12,17 7,20 8,14 4,10.5 9.5,10" fill="#fff" opacity=".9"/></svg>`,'Guarniciones y Salsas':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#4d8a5e"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#2d6a3e" opacity=".4"/><path d="M12 18V10M5 10c0-4 3-6 7-6s7 2 7 6c0 5-3 8-7 8s-7-3-7-8z" fill="none" stroke="#fff" stroke-width="1.1"/><path d="M5 10c3 0 5 1 7 2.5" fill="none" stroke="#fff" stroke-width=".8" opacity=".6"/></svg>`,'Postres':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#7a6aaa"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#5a4a8a" opacity=".4"/><path d="M9 19h6M12 12v7M7 6l2 4.5a3 3 0 006 0L17 6H7z" fill="none" stroke="#fff" stroke-width="1.1" stroke-linecap="round"/></svg>`,'Vegetariano':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#5a9a6e"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#3a7a4e" opacity=".4"/><path d="M9 18h6M12 18V10M12 10c0-3 2-5 5-5-.7 2.5-2.5 5-5 5zM12 10c0-3-2-5-5-5 .7 2.5 2.5 5 5 5z" fill="none" stroke="#fff" stroke-width="1.1" stroke-linecap="round"/></svg>`};
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='7.203';  // sincronizada con sw.js VERSION (guard de CI)
+const APP_VERSION='7.204';  // sincronizada con sw.js VERSION (guard de CI)
 const APP_BUILD='Jul 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;
@@ -1530,7 +1535,7 @@ const ET_HERO_RUN=['img/sprites/hero-a.webp','img/sprites/hero-b.webp'];
 // DEBUG flag: only log when running locally or with ?debug=1
 const DEBUG = (location.hostname==='localhost' || location.hostname==='127.0.0.1' || location.search.includes('debug=1'));
 window.DEBUG = DEBUG;
-console.info(`%cTXOKO Formación · v${APP_VERSION} · ${APP_BUILD}`,'background:var(--parchment);color:var(--ink);padding:4px 10px;border-radius:4px;font-weight:600');
+console.info(`%cMeseo · v${APP_VERSION} · ${APP_BUILD}`,'background:var(--parchment);color:var(--ink);padding:4px 10px;border-radius:4px;font-weight:600');
 
 // HTML escape helper — used wherever we interpolate untrusted strings into innerHTML
 function escapeHtml(str){
@@ -7096,8 +7101,8 @@ function showInstallSheet(){
   document.body.appendChild(sheet);
 }
 function shareApp(){
-  const url = 'https://duvandq-bit.github.io/Txoko-Formacion/';
-  const msg = encodeURIComponent('Hola! Te comparto la app de formación de Txoko by Martín Berasategui. Puedes acceder desde el móvil aquí: ' + url);
+  const url = 'https://meseo.es/';
+  const msg = encodeURIComponent('¡Hola! Te comparto Meseo, la app de formación de sala. Puedes entrar desde el móvil aquí: ' + url);
   window.open('https://wa.me/?text=' + msg, '_blank');
 }
 
@@ -7315,8 +7320,8 @@ function showLegalModal(){
         + '<p>© 2026 Duvan Stiven Ramírez Duque · All rights reserved</p>'
         + '<button class="legal-modal-close" onclick="document.getElementById(\'legalModal\').style.display=\'none\'">Close</button>'
       : '<div class="legal-modal-title">Aviso Legal</div>'
-        + '<p>Esta aplicación es de uso exclusivo para el equipo de <strong>Txoko by Martín Berasategui</strong> y ha sido creada únicamente con fines educativos y formativos internos, sin ánimo de lucro.</p>'
-        + '<p>Marriott International, The Ritz-Carlton y Martín Berasategui son marcas registradas independientes. Sus nombres, logotipos y denominaciones se mencionan únicamente en contexto formativo. Esta aplicación no está afiliada, patrocinada ni respaldada oficialmente por ninguna de dichas marcas.</p>'
+        + '<p><strong>Meseo</strong> es una herramienta de formación interna para equipos de sala, de uso exclusivo del personal de los restaurantes dados de alta, creada únicamente con fines educativos y sin ánimo de lucro.</p>'
+        + '<p>Los nombres, logotipos y denominaciones de los restaurantes y grupos que aparecen en la app (incluidos TXOKO, Martín Berasategui, The Ritz-Carlton y Marriott International) son marcas registradas de sus respectivos titulares y se mencionan únicamente en contexto formativo, para identificar el lugar de trabajo del equipo. Meseo no está afiliada, patrocinada ni respaldada oficialmente por ninguna de dichas marcas.</p>'
         + '<p>© 2026 Duvan Stiven Ramírez Duque · Todos los derechos reservados</p>'
         + '<button class="legal-modal-close" onclick="document.getElementById(\'legalModal\').style.display=\'none\'">Cerrar</button>';
   }
@@ -23490,7 +23495,7 @@ function launchElTurno(){
       </div>
 
       <div class="et-screen" id="etStart">
-        <div class="et-sub">Ritz-Carlton Abama · Txoko</div>
+        <div class="et-sub">${(typeof ACTIVE_VENUE!=='undefined'&&ACTIVE_VENUE&&ACTIVE_VENUE.eyebrow)?escapeHTML(ACTIVE_VENUE.eyebrow):'Meseo'}</div>
         <div class="et-card"><div class="et-title">Camarero<br>Survivors</div></div>
         <div class="et-kick">Sobrevive al servicio hasta el <b>cierre (10:00)</b>. Las <b>alergias</b> te rodean — despáchalas con la bandeja, sube de nivel y aguanta. <b>Conócelas y sobrevivirás.</b></div>
         <div class="et-chars" id="etChars"></div>
