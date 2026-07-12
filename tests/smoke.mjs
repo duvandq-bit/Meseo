@@ -3457,6 +3457,37 @@ test('Camarero Survivors: música v2 — swing, batería sintetizada, lead que r
     'the sequencer lifecycle (start with run, die in teardown) must stay intact');
 });
 
+test('Quiz del día: abierto 24/7 sin supervisor — semilla diaria, avance automático y ranking compartido (jul 2026)', () => {
+  // Propietario: «debería ser abierto y que todo el mundo pueda entrar
+  // cuando quiera, sin esperar por el supervisor para entrar o que inicie
+  // las preguntas». El quiz en vivo exigía sesión del supervisor (sin ella
+  // no había ni puerta en el dashboard) y un ▶ manual por pregunta. El Quiz
+  // del Día corre solo; el modo con anfitrión sobrevive como modo evento.
+  // — tile SIEMPRE visible (el del vivo sigue oculto salvo sesión activa) —
+  assert(/id="qdTile"[^>]*style="display:flex/.test(html), 'the daily-quiz tile must be always visible on the dashboard');
+  assert(/id="liveQuizTile" style="display:none/.test(html), 'the hosted live-quiz tile must stay hidden unless a session exists (event mode)');
+  // — mismas 5 preguntas para todos: fecha → mulberry32 → generación local —
+  assert(/function _qdRng\(\)/.test(html) && /0x6D2B79F5/.test(html) && /_qdDayKey\(\)\.replace/.test(html),
+    'questions must derive from a date-seeded RNG (same questions for everyone, no server)');
+  assert(/function _qdQuestions\(\)/.test(html) && /_qdShuffle\(DISHES,rng\)/.test(html),
+    'the generator must be a deterministic seeded shuffle over the full shared menu');
+  // — avance automático: deadline de 20s, el timeout cuenta como fallo —
+  assert(/Date\.now\(\)\+20000/.test(html) && /if\(remaining<=0\) _qdAnswer\(-1\)/.test(html),
+    'each question must auto-advance after 20s (no host pressing ▶)');
+  // — un intento clasificado al día + ranking en la tabla genérica scores —
+  assert(/'qd:'\+currentUser\+':'\+_qdDayKey\(\)/.test(html), 'the one-ranked-attempt guard must key on employee+date');
+  assert(/topic: 'quizdia', cat: _qdDayKey\(\)/.test(html) && /topic=eq\.quizdia&cat=eq\./.test(html),
+    'daily scores must reuse the generic scores table (topic=quizdia, cat=day) — zero migrations');
+  // — XP, aviso del primero del día, y limpieza de timers —
+  assert(/awardXP\(correct\*5/.test(html), 'finishing must pay XP like the live quiz did');
+  assert(/rows\.length===1 && rows\[0\]\.employee===currentUser/.test(html) && /quiz del día está servido/.test(html),
+    'the first finisher of the day must ping the team (turns the quiz into a daily rendezvous)');
+  assert(/clearInterval\(_qdTimer\); _qdTimer = null; _qdState = null;/.test(html),
+    'logout must clear the quiz timer/state like every other interval');
+  assert(/if\(!tEl\)\{ _qdStopTimer\(\); return; \}/.test(html),
+    'the question timer must self-kill when the user navigates away mid-question');
+});
+
 test('Mr. Shoesmith está VIVO: respiración en reposo, enfado inmediato por error, celebración y temblor', () => {
   // Petición del propietario: el personaje debe estar animado y cambiar de
   // humor con cada error. Las animaciones antiguas apuntaban a `svg` (muertas
