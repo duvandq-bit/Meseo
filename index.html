@@ -23768,10 +23768,12 @@ function launchElTurno(){
       <div class="et-screen" id="etStart">
         <div class="et-sub">Ritz-Carlton Abama · Txoko</div>
         <div class="et-card"><div class="et-title">Camarero<br>Survivors</div></div>
-        <div class="et-kick">Sobrevive al servicio. Las <b>alergias</b> te rodean — despáchalas con la bandeja, sube de nivel y aguanta lo máximo. <b>Conócelas y sobrevivirás.</b></div>
+        <div class="et-kick">Sobrevive al servicio hasta el <b>cierre (10:00)</b>. Las <b>alergias</b> te rodean — despáchalas con la bandeja, sube de nivel y aguanta. <b>Conócelas y sobrevivirás.</b></div>
+        <div class="et-chars" id="etChars"></div>
+        <div id="etShop"></div>
+        <button class="et-big" id="etPlayBtn">Empezar turno</button>
         <div class="et-legend" id="etLegend"></div>
         <div id="etRank"></div>
-        <button class="et-big" id="etPlayBtn">Empezar turno</button>
         <div class="et-sub" style="opacity:.75">👆 Arrastra para moverte · 🌀 esquiva · disparo automático</div>
       </div>
 
@@ -23786,6 +23788,19 @@ function launchElTurno(){
         <div class="et-lvlhead">¡SUBES DE NIVEL!</div>
         <div class="et-sub">Elige una mejora</div>
         <div class="et-picks" id="etPicks"></div>
+        <button class="et-mini" id="etReroll" style="display:none">🔄 Otra ronda</button>
+      </div>
+
+      <div class="et-screen" id="etChest" style="display:none">
+        <div class="et-sub">El jefe suelta su botín</div>
+        <div class="et-card"><div class="et-title" style="font-size:33px">¡CARRITO DE<br>POSTRES!</div></div>
+        <div class="et-picks" id="etChestSlot"></div>
+        <button class="et-big" id="etChestGo" style="display:none">¡Al turno!</button>
+      </div>
+
+      <div class="et-screen" id="etQuiz" style="display:none">
+        <div class="et-sub">Pregunta de la carta</div>
+        <div id="etQuizCard"></div>
       </div>
 
       <div class="et-screen" id="etOver" style="display:none">
@@ -23794,6 +23809,7 @@ function launchElTurno(){
         <div class="et-statgrid" id="etOverStats"></div>
         <button class="et-mini" id="etShareBtn" style="display:none">🏆 Presumir en la Terraza</button>
         <button class="et-big" id="etAgainBtn">Otra vez</button>
+        <button class="et-mini" id="etShopBtn">💰 Mejoras del oficio</button>
       </div>
 
       <div class="et-flash" id="etFlash"></div>
@@ -23861,6 +23877,57 @@ function launchElTurno(){
     }).catch(()=>{});
   }
   _etRenderRank();
+
+  // ── Meta-progresión (jul 2026, "vamos con todo"): las propinas del turno
+  //    se GUARDAN al morir y compran mejoras permanentes — cada derrota sigue
+  //    siendo progreso, el bucle de retención de Vampire Survivors. Cartera
+  //    por empleado y dispositivo (localStorage, como el mejor turno); los
+  //    récords del ranking no se tocan. ──
+  const ET_PERKS=[
+    {k:'vida',   ic:'❤️', t:'Fondo físico',  s:'+12 vida máxima por nivel',       max:5, fx:(g,n)=>{ g.maxhp+=12*n; g.hp+=12*n; }},
+    {k:'filo',   ic:'🔪', t:'Buen pulso',    s:'+6% daño por nivel',              max:5, fx:(g,n)=>{ g.dmg*=1+0.06*n; }},
+    {k:'piernas',ic:'👟', t:'Zancada',       s:'+4% velocidad por nivel',         max:5, fx:(g,n)=>{ g.speed*=1+0.04*n; }},
+    {k:'iman',   ic:'🧲', t:'Ojo de sala',   s:'+18 de imán por nivel',           max:5, fx:(g,n)=>{ g.pickR+=18*n; }},
+    {k:'recarga',ic:'⚡', t:'Muñeca suelta', s:'−5% recarga por nivel',           max:5, fx:(g,n)=>{ g.fireInt*=Math.pow(0.95,n); }},
+    {k:'ronda',  ic:'🔄', t:'Otra ronda',    s:'+1 cambio de cartas por partida', max:2, fx:(g,n)=>{ g.rerolls+=n; }}
+  ];
+  const ET_PERK_COST=[25,60,140,320,700];
+  function _etMeta(){
+    try{ const m=JSON.parse(localStorage.getItem('etMeta:'+currentUser)||'{}');
+      m.tips=m.tips||0; m.up=m.up||{}; m.char=m.char||'camarero'; return m; }
+    catch(_){ return {tips:0,up:{},char:'camarero'}; }
+  }
+  function _etMetaSave(m){ try{ localStorage.setItem('etMeta:'+currentUser,JSON.stringify(m)); }catch(_){} }
+
+  // ── Oficios de sala (VS: cada personaje arranca distinto): cuatro maneras
+  //    de empezar el turno. Mismo héroe, otro oficio. ──
+  const ET_CHARS=[
+    {k:'camarero',ic:'🤵', t:'Camarero', s:'Equilibrado. La casa de siempre.',       fx:g=>{}},
+    {k:'sumiller',ic:'🍾', t:'Sumiller', s:'Empieza con cava · −10 vida',            fx:g=>{ g.cava=1; g.maxhp-=10; g.hp-=10; }},
+    {k:'cortador',ic:'🗡️', t:'Cortador', s:'Empieza con cuchillo · −3 daño',        fx:g=>{ g.knives=1; g.dmg-=3; }},
+    {k:'maitre',  ic:'🎩', t:'Maître',   s:'+15% velocidad, +30 imán · −20 vida',    fx:g=>{ g.speed*=1.15; g.pickR+=30; g.maxhp-=20; g.hp-=20; }}
+  ];
+  function _etRenderChars(){
+    const m=_etMeta(); const el=document.getElementById('etChars'); if(!el) return;
+    el.innerHTML=ET_CHARS.map(c=>`<button class="et-char${m.char===c.k?' on':''}" data-k="${c.k}" aria-label="${c.t}: ${c.s}"><span class="et-char-ic">${c.ic}</span><b>${c.t}</b><span class="et-char-s">${c.s}</span></button>`).join('');
+    el.querySelectorAll('.et-char').forEach(b=>b.onclick=()=>{
+      const m2=_etMeta(); m2.char=b.dataset.k; _etMetaSave(m2); sfx('coin'); _etRenderChars(); });
+  }
+  function _etRenderShop(){
+    const m=_etMeta(); const el=document.getElementById('etShop'); if(!el) return;
+    el.innerHTML=`<div class="et-shop"><div class="et-shop-title">Mejoras del oficio · <b>💰 ${m.tips}</b></div>`+
+      ET_PERKS.map(p=>{ const lvl=m.up[p.k]||0, cost=ET_PERK_COST[lvl];
+        const pips='●'.repeat(lvl)+'○'.repeat(p.max-lvl);
+        const btn=lvl>=p.max?`<span class="et-shop-max">MAX</span>`
+          :`<button class="et-shop-buy${m.tips<cost?' off':''}" data-k="${p.k}" aria-label="Comprar ${p.t} por ${cost} propinas">💰${cost}</button>`;
+        return `<div class="et-shop-row"><span class="et-shop-ic">${p.ic}</span><span class="et-shop-tx"><b>${p.t}</b> <i>${pips}</i><br><span>${p.s}</span></span>${btn}</div>`; }).join('')+`</div>`;
+    el.querySelectorAll('.et-shop-buy').forEach(b=>b.onclick=()=>{
+      const m2=_etMeta(), k=b.dataset.k, lvl=m2.up[k]||0, cost=ET_PERK_COST[lvl];
+      const perk=ET_PERKS.find(p=>p.k===k);
+      if(!perk||lvl>=perk.max||m2.tips<cost){ sfx('hurt'); return; }
+      m2.tips-=cost; m2.up[k]=lvl+1; _etMetaSave(m2); sfx('level'); vibe(15); _etRenderShop(); });
+  }
+  _etRenderChars(); _etRenderShop();
 
   // ── HERO SPRITE: el protagonista, ciclo de carrera de 2 fotogramas reales
   //    (vídeo del propietario, jul 2026 — reemplaza la mascota vectorial). ──
@@ -23951,7 +24018,7 @@ function launchElTurno(){
   }
 
   // ── Game state ──
-  let G=null, running=false, paused=false, last=0, rafId=0;
+  let G=null, running=false, paused=false, last=0, rafId=0, _etChestIv=null;
   function newGame(){
     G={ px:W/2, py:H/2, pr:16, hp:100, maxhp:100, speed:2.6, ifr:0,
         level:1, xp:0, xpNext:6, score:0, time:0,
@@ -23965,7 +24032,13 @@ function launchElTurno(){
         spawnT:0, spawnInt:52, roster:ALLERGENS.slice(0,4).slice(),
         nextElite:55, nextSurge:75, bosses:0,
         target:null, targetT:0, kills:0, nextBoss:38, nextChef:180, shake:0,
+        rerolls:1, cloche:null, nextClo:50, closed:false, warned:false,
         bgIdx:0, bgPrev:0, bgFade:0 };
+    // lo permanente entra antes de que el turno empiece: mejoras del oficio
+    // compradas con propinas + el oficio elegido (jul 2026, meta-progresión)
+    const _m=_etMeta();
+    for(const p of ET_PERKS){ const n=_m.up[p.k]||0; if(n) p.fx(G,n); }
+    (ET_CHARS.find(c=>c.k===_m.char)||ET_CHARS[0]).fx(G);
     pickTarget(true);
   }
 
@@ -24029,7 +24102,8 @@ function launchElTurno(){
   const pauseBtn=document.getElementById('etPauseBtn'), muteBtn=document.getElementById('etMuteBtn');
   function setPaused(p){
     if(!running) return;
-    if(document.getElementById('etLevelup').style.display!=='none') return; // el level-up manda
+    // los overlays de decisión (level-up, carrito, pregunta) mandan sobre la pausa
+    for(const id of ['etLevelup','etChest','etQuiz']){ const el=document.getElementById(id); if(el&&el.style.display!=='none') return; }
     paused=p;
     document.getElementById('etPause').style.display=p?'flex':'none';
     if(!p) last=performance.now();
@@ -24094,6 +24168,16 @@ function launchElTurno(){
     const hp=Math.round((130+G.time*11)*1.9);
     G.enemies.push({x:p.x,y:p.y,a,hp,maxhp:hp,r:64,spd:0.55,kind:'boss',flash:0,boss:true,chef:true,grace:28,lungeT:130,tele:0,dashing:0,abilT:110,wind:0});
     flash('★ ¡EL CHEF! ★','#e8b83a'); sfx('boss'); G.shake=11; vibe([40,50,40,50,40]);
+  }
+  // CIERRE DEL LOCAL (jul 2026): a los 10:00 el turno tiene final, como la
+  // Muerte de Vampire Survivors a los 30. LA INSPECTORA no se puede matar y
+  // cada segundo corre más — llegar al cierre ES la victoria («SERVICIO
+  // COMPLETO»); lo que aguantes con ella en sala es propina.
+  function spawnInspectora(){
+    const p=edgePos();
+    const a={key:'inspec',name:'La Inspectora',emoji:'📋',col:'#32303c'};
+    G.enemies.push({x:p.x,y:p.y,a,hp:1e9,maxhp:1e9,r:46,spd:1.05,kind:'boss',flash:0,boss:true,inspec:true,grace:30,lungeT:170,tele:0,dashing:0,abilT:1e9,wind:0});
+    flash('★ ¡LA INSPECTORA! ★','#e8eef4'); sfx('boss'); G.shake=12; vibe([50,60,50,60,50]);
   }
   // Habilidad especial del jefe (jul 2026, propietario): cada familia de
   // alérgeno pelea distinto — proyectiles en abanico (gluten/huevo/pescado),
@@ -24164,7 +24248,79 @@ function launchElTurno(){
       if(G.level%3===0 && G.roster.length<ALLERGENS.length) G.roster.push(ALLERGENS[G.roster.length]);
       document.getElementById('etLevelup').style.display='none'; paused=false; last=performance.now();
     });
+    // otra ronda (QoL de Vampire Survivors, jul 2026): si las tres cartas no
+    // sirven, cámbialas — limitado por partida, ampliable en la tienda
+    const rb=document.getElementById('etReroll');
+    rb.style.display=G.rerolls>0?'inline-block':'none';
+    rb.textContent='🔄 Otra ronda ('+G.rerolls+')';
+    rb.onclick=()=>{ if(G.rerolls<=0) return; G.rerolls--; sfx('dash'); vibe(15); showLevelUp(); };
     document.getElementById('etLevelup').style.display='flex';
+  }
+
+  // ── Carrito de postres (jul 2026): el cofre del jefe de Vampire Survivors.
+  //    El jefe abatido suelta un carrito; recogerlo abre la ceremonia
+  //    tragaperras y regala 1 mejora (2 si era EL CHEF, o con suerte). ──
+  function showChest(dbl){
+    paused=true;
+    const el=document.getElementById('etChestSlot'), go=document.getElementById('etChestGo');
+    document.getElementById('etChest').style.display='flex'; go.style.display='none';
+    const n=dbl?2:(Math.random()<0.15?2:1);
+    const pool=UPGRADES.slice(), picks=[];
+    for(let i=0;i<n;i++) picks.push(pool.splice(Math.floor(Math.random()*pool.length),1)[0]);
+    // el texto se congela ANTES de aplicar (u.s puede depender del estado)
+    const cards=picks.map(u=>`<div class="et-pick et-evo"><div class="et-pick-ic">${u.ic}</div><div class="et-pick-tx"><b>${u.t}</b><span>${typeof u.s==='function'?u.s(G):u.s}</span></div></div>`).join('');
+    let spins=0;
+    _etChestIv=setInterval(()=>{
+      spins++;
+      const fake=UPGRADES[Math.floor(Math.random()*UPGRADES.length)];
+      el.innerHTML=`<div class="et-pick et-slot"><div class="et-pick-ic">${fake.ic}</div><div class="et-pick-tx"><b>???</b><span>girando…</span></div></div>`;
+      sfx('hit');
+      if(spins>=12){ clearInterval(_etChestIv); _etChestIv=null;
+        picks.forEach(u=>u.fn(G));
+        el.innerHTML=cards;
+        flash(n>1?'¡DOBLE PREMIO!':'¡PREMIO!','#e0a02c'); sfx('evo'); vibe([20,30,40]);
+        go.style.display='inline-block'; }
+    },95);
+    go.onclick=()=>{ document.getElementById('etChest').style.display='none'; paused=false; last=performance.now(); };
+  }
+
+  // ── Cloche misterioso (jul 2026): pregunta de la carta REAL. Deriva de
+  //    DISHES — los 8 alérgenos del roster usan los mismos nombres que la
+  //    carta — y la mitad de las veces pregunta por uno que SÍ lleva.
+  //    Acierta y la sala te lo paga; falles o no, te llevas la lección. ──
+  function showQuiz(){
+    paused=true;
+    // la pregunta respeta el turno de estudio (comida/cena), como todos los
+    // generadores de la app: al del almuerzo no le caen platos solo-cena
+    const _qPool=_shiftDishes(DISHES);
+    const dish=(_qPool.length?_qPool:DISHES)[Math.floor(Math.random()*(_qPool.length||DISHES.length))];
+    const has=ALLERGENS.filter(a=>(dish.allergens||[]).includes(a.name));
+    const not=ALLERGENS.filter(a=>!(dish.allergens||[]).includes(a.name));
+    const askYes=has.length>0&&(Math.random()<0.5||!not.length);
+    const a=askYes?has[Math.floor(Math.random()*has.length)]:not[Math.floor(Math.random()*not.length)];
+    const card=document.getElementById('etQuizCard');
+    document.getElementById('etQuiz').style.display='flex';
+    card.innerHTML=`<div class="et-quiz-dish">${escapeHTML(dish.name)}</div>
+      <div class="et-quiz-q">¿Lleva <b>${a.name} ${a.emoji}</b>?</div>
+      <div class="et-quiz-btns"><button class="et-big" id="etQz1">SÍ</button><button class="et-big" id="etQz0">NO</button></div>`;
+    const answer=ans=>{
+      const ok=ans===askYes;
+      const full=(dish.allergens||[]).join(', ')||'sin alérgenos declarados';
+      let rw='';
+      if(ok){ const r=Math.floor(Math.random()*3);
+        if(r===0){ for(const e of G.enemies){ if(!e.boss) e.hp=0; } rw='¡LIMPIEZA DE SALA! Todos los enemigos, fuera.'; G.shake=9; }
+        else if(r===1){ for(const g of G.gems){ g.x=G.px; g.y=G.py; } rw='¡PROPINA TOTAL! Todas las monedas, para ti.'; }
+        else { G.hp=Math.min(G.maxhp,G.hp+45); rw='¡BANQUETE! +45 de vida.'; }
+        sfx('evo'); vibe([20,30,40]); }
+      else sfx('hurt');
+      card.innerHTML=`<div class="et-quiz-dish">${ok?'✔ ¡Correcto!':'✘ Casi…'}</div>
+        <div class="et-quiz-q">${escapeHTML(dish.name)}<br>lleva: <b>${escapeHTML(full)}</b></div>
+        <div class="et-quiz-rw">${ok?rw:'Sin premio esta vez — pero esto ya no se te escapa en sala.'}</div>
+        <div class="et-quiz-btns"><button class="et-big" id="etQzGo">Seguir</button></div>`;
+      document.getElementById('etQzGo').onclick=()=>{ document.getElementById('etQuiz').style.display='none'; paused=false; last=performance.now(); };
+    };
+    document.getElementById('etQz1').onclick=()=>answer(true);
+    document.getElementById('etQz0').onclick=()=>answer(false);
   }
 
   function flash(txt,col){ const f=document.getElementById('etFlash'); f.textContent=txt; f.style.color=col||'var(--et-gold)';
@@ -24173,7 +24329,9 @@ function launchElTurno(){
   }
   function burst(x,y,col,n){ for(let i=0;i<n;i++){ const a=Math.random()*6.28,s=1+Math.random()*3;
     G.parts.push({x,y,vx:Math.cos(a)*s,vy:Math.sin(a)*s,life:1,col}); } }
-  function hurtEnemy(e,amt,silent){ e.hp-=amt; e.flash=6;
+  function hurtEnemy(e,amt,silent){
+    if(e.inspec) return;   // la inspectora no se negocia: inmune a todo
+    e.hp-=amt; e.flash=6;
     if(!silent && amt>=1) G.dmgs.push({x:e.x,y:e.y-e.r,val:Math.round(amt),life:1}); }
 
   // ── Update ──
@@ -24206,6 +24364,9 @@ function launchElTurno(){
     if(G.spawnT<=0){ G.spawnT=si; const rr=Math.random();
       let kind='norm'; if(G.time>45&&rr<0.15) kind='tank'; else if(G.time>60&&rr<0.28) kind='div'; else if(G.time>20&&rr<0.5) kind='fast';
       spawnEnemy(kind); if(!bossUp&&G.time>25&&Math.random()<0.5) spawnEnemy(Math.random()<0.4?'fast':'norm'); }
+    // los eventos programados solo hasta el cierre (10:00): después la sala
+    // es de LA INSPECTORA y solo queda la morralla de fondo
+    if(G.time<600){
     // élite cada ~35s: más grande, brilla, suelta botín garantizado
     if(G.time>=G.nextElite){ G.nextElite+=35; spawnEnemy(Math.random()<0.5?'fast':'norm',true); flash('¡VIP ENFADADO!','#e0a02c'); sfx('surge'); }
     // oleada en anillo cada ~55s
@@ -24216,6 +24377,21 @@ function launchElTurno(){
     // siguiente espera a que caiga.
     if(G.time>=G.nextBoss){ if(bossUp) G.nextBoss=G.time+8; else { G.nextBoss=G.time+40; spawnBoss(); } }
     if(G.time>=G.nextChef){ G.nextChef+=180; spawnChef(); }
+    }
+    // CIERRE DEL LOCAL: aviso a las 9:30, la inspectora entra a las 10:00
+    if(!G.warned&&G.time>=570){ G.warned=true; flash('¡ÚLTIMA COMANDA! CIERRE EN 30s','#e8b83a'); sfx('surge'); vibe([30,30,30]); }
+    if(!G.closed&&G.time>=600){ G.closed=true; spawnInspectora(); }
+    // cloche misterioso: aparece cada ~50s (nunca pegado al héroe ni en el
+    // tramo final), espera ~14s parpadeando y se esfuma si no lo recoges
+    if(typeof DISHES!=='undefined'&&DISHES.length){
+      if(!G.cloche&&G.time>=G.nextClo&&G.time<560){
+        const mrg=70; let cx=mrg+Math.random()*(W-mrg*2), cy=mrg+Math.random()*(H-mrg*2);
+        if(Math.hypot(cx-G.px,cy-G.py)<130){ cx=W-cx; cy=H-cy; }
+        G.cloche={x:cx,y:cy,life:840}; flash('¡PREGUNTA DE LA CARTA!','#e8c44c'); sfx('coin'); }
+      if(G.cloche){ G.cloche.life-=dt;
+        if(G.cloche.life<=0){ G.cloche=null; G.nextClo=G.time+50; }
+        else if(Math.hypot(G.px-G.cloche.x,G.py-G.cloche.y)<G.pr+20){ G.cloche=null; G.nextClo=G.time+50; showQuiz(); } }
+    }
     // cambio de escenario por nivel (propietario, jul 2026): comedor →
     // cocina (nv 5) → bodega (nv 10), rotando en niveles altos. Fundido ~1s.
     const _si=Math.floor(G.level/5)%ET_BGS.length;
@@ -24282,6 +24458,7 @@ function launchElTurno(){
       if(e.kind==='fast'&&!e.boss){ const wz=Math.sin(G.time*6.5+(e.ph||0))*0.6; const tx=-hy*wz, ty=hx*wz; hx+=tx; hy+=ty; }
       if(e.boss){ // embestida telegrafiada: se frena, avisa, y carga
         e.lungeT-=dt; e.abilT-=dt;
+        if(e.inspec) e.spd+=dt*0.0011;   // la inspectora acelera sin tregua: el final siempre llega
         // jul 2026: aviso 28→42 (~0,7s, en móvil 0,47s no daba para reaccionar)
         // y carga 4.4→3.8 — se esquiva moviéndose, no solo con el dash.
         if(e.dashing>0){ e.dashing-=dt; spdMul=3.8; }
@@ -24313,7 +24490,9 @@ function launchElTurno(){
       const cb=G.combo>=25?2:G.combo>=10?1:0;
       if(G.combo===10||G.combo===25||G.combo===50) { flash('¡RACHA ×'+G.combo+'!','#e0a02c'); sfx('surge'); vibe(20); }
       if(e.boss){ for(let g=0;g<10;g++) G.gems.push({x:e.x+(Math.random()-.5)*44,y:e.y+(Math.random()-.5)*44,val:3,col:'#e0a02c'});
-        G.hp=Math.min(G.maxhp,G.hp+15); G.shake=10; G.bosses++; G.hitStop=Math.max(G.hitStop,7); flash('¡JEFE ABATIDO!','#4fd0c0'); vibe([30,40,50]); }
+        G.hp=Math.min(G.maxhp,G.hp+15); G.shake=10; G.bosses++; G.hitStop=Math.max(G.hitStop,7); flash('¡JEFE ABATIDO!','#4fd0c0'); vibe([30,40,50]);
+        // carrito de postres: el botín ceremonial del jefe (EL CHEF, doble seguro)
+        G.pickups.push({x:e.x,y:e.y,chest:true,dbl:!!e.chef,life:9999}); }
       else G.gems.push({x:e.x,y:e.y,val:(isTarget?2:1)+cb,col:isTarget?'#e0a02c':'#4fd0c0'});
       if(e.elite){ for(let g=0;g<3;g++) G.gems.push({x:e.x+(Math.random()-.5)*30,y:e.y+(Math.random()-.5)*30,val:2,col:'#e0a02c'});
         G.hitStop=Math.max(G.hitStop,4); flash('¡VIP SATISFECHO!','#6ad46a'); }
@@ -24339,6 +24518,8 @@ function launchElTurno(){
     // = recoger; a tope de vida el plato da un bono pequeño de XP).
     for(let i=G.pickups.length-1;i>=0;i--){ const p=G.pickups[i]; p.life-=dt;
       const d=Math.hypot(G.px-p.x,G.py-p.y)||1;
+      // el carrito de postres se recoge al contacto y abre su ceremonia
+      if(p.chest){ if(d<G.pr+22){ G.pickups.splice(i,1); sfx('level'); showChest(p.dbl); } continue; }
       if(d<G.pickR && G.hp<G.maxhp){ p.x+=(G.px-p.x)/d*3.2*dt; p.y+=(G.py-p.y)/d*3.2*dt; }
       if(d<G.pr+14){
         if(G.hp<G.maxhp){ G.hp=Math.min(G.maxhp,G.hp+p.heal); flash('+'+p.heal+' ❤','#6ad46a'); burst(G.px,G.py,'rgba(106,212,106,.75)',9); }
@@ -24448,6 +24629,22 @@ function launchElTurno(){
     // luna plana). Halo verde pulsante, vapor ondulante, plato base, cúpula
     // con brillo, pomo de latón y el corazón grabado. Parpadea al expirar.
     for(const p of G.pickups){ if(p.life<80 && Math.floor(p.life/6)%2===0) continue;
+      // carrito de postres (botín del jefe): dorado, con ruedas y destellos —
+      // imposible confundirlo con la campana de curar
+      if(p.chest){ const cb=Math.sin(G.time*4+p.x*0.1)*2;
+        ctx.globalAlpha=.22+.12*Math.sin(G.time*6); ctx.fillStyle='#ffd24d';
+        ctx.beginPath(); ctx.arc(p.x,p.y+cb-4,26,0,6.29); ctx.fill(); ctx.globalAlpha=1;
+        ctx.fillStyle='rgba(0,0,0,.25)'; ctx.beginPath(); ctx.ellipse(p.x,p.y+17,18,4.5,0,0,6.29); ctx.fill();
+        ctx.fillStyle='#f4e4c1'; ctx.strokeStyle='#241a12'; ctx.lineWidth=2.5;
+        ctx.fillRect(p.x-14,p.y+cb+3,28,10); ctx.strokeRect(p.x-14,p.y+cb+3,28,10);
+        for(const wx of [-8,8]){ ctx.fillStyle='#3a2a1c'; ctx.beginPath(); ctx.arc(p.x+wx,p.y+cb+15,3.4,0,6.29); ctx.fill(); ctx.stroke(); }
+        ctx.fillStyle='#e8b83a'; ctx.beginPath(); ctx.ellipse(p.x,p.y+cb+2,17,5,0,0,6.29); ctx.fill(); ctx.stroke();
+        ctx.fillStyle='#ffe9b0'; ctx.beginPath(); ctx.arc(p.x,p.y+cb,12,Math.PI,0); ctx.closePath(); ctx.fill(); ctx.stroke();
+        ctx.fillStyle='#c9a86a'; ctx.beginPath(); ctx.arc(p.x,p.y+cb-12,2.6,0,6.29); ctx.fill(); ctx.stroke();
+        const ctw=Math.sin(G.time*8+p.x); if(ctw>0.7){ ctx.strokeStyle='rgba(255,255,255,.95)'; ctx.lineWidth=1.4; const s=(ctw-0.7)*14;
+          ctx.beginPath(); ctx.moveTo(p.x-17-s,p.y+cb-10); ctx.lineTo(p.x-17+s,p.y+cb-10);
+          ctx.moveTo(p.x-17,p.y+cb-10-s); ctx.lineTo(p.x-17,p.y+cb-10+s); ctx.stroke(); }
+        continue; }
       const bob=Math.sin(G.time*5+p.x*0.1)*1.6;
       // halo de "esto cura" pulsante
       ctx.globalAlpha=.18+.10*Math.sin(G.time*6+p.x); ctx.fillStyle='#8ae08a';
@@ -24473,6 +24670,20 @@ function launchElTurno(){
       ctx.fillStyle='#c33'; ctx.font='8px Georgia'; ctx.textAlign='center'; ctx.textBaseline='middle';
       ctx.fillText('❤',p.x,p.y+bob-4); }
     ctx.textBaseline='alphabetic';
+    // cloche misterioso: campana DORADA con interrogante — hay pregunta de la
+    // carta esperando; parpadea cuando está a punto de esfumarse
+    if(G.cloche){ const c=G.cloche;
+      if(!(c.life<150&&Math.floor(c.life/7)%2===0)){
+        const qb=Math.sin(G.time*4.5+c.x*0.1)*2;
+        ctx.globalAlpha=.2+.12*Math.sin(G.time*5.5); ctx.fillStyle='#ffd24d';
+        ctx.beginPath(); ctx.arc(c.x,c.y+qb-3,22,0,6.29); ctx.fill(); ctx.globalAlpha=1;
+        ctx.fillStyle='rgba(0,0,0,.22)'; ctx.beginPath(); ctx.ellipse(c.x,c.y+13,14,3.8,0,0,6.29); ctx.fill();
+        ctx.fillStyle='#e8b83a'; ctx.strokeStyle='#241a12'; ctx.lineWidth=2.5;
+        ctx.beginPath(); ctx.ellipse(c.x,c.y+qb+2,16,4.4,0,0,6.29); ctx.fill(); ctx.stroke();
+        ctx.fillStyle='#ffe9b0'; ctx.beginPath(); ctx.arc(c.x,c.y+qb,12.5,Math.PI,0); ctx.closePath(); ctx.fill(); ctx.stroke();
+        ctx.fillStyle='#c9a86a'; ctx.beginPath(); ctx.arc(c.x,c.y+qb-13,2.6,0,6.29); ctx.fill(); ctx.stroke();
+        ctx.fillStyle='#241a12'; ctx.font='bold 12px Georgia'; ctx.textAlign='center'; ctx.textBaseline='middle';
+        ctx.fillText('?',c.x,c.y+qb-5); ctx.textBaseline='alphabetic'; } }
     // enemies — Cuphead-style allergen monsters (colour + emblem = what to learn)
     ctx.textAlign='center'; ctx.textBaseline='middle';
     for(const e of G.enemies){
@@ -24528,7 +24739,7 @@ function launchElTurno(){
       ctx.moveTo(-e.r*0.66,-e.r*0.52); ctx.lineTo(-e.r*0.06,-e.r*0.26);
       ctx.moveTo(e.r*0.66,-e.r*0.52); ctx.lineTo(e.r*0.06,-e.r*0.26); ctx.stroke();
       }
-      if(e.boss&&!e.chef){ // corona del jefe de sala (el chef no la necesita: se le reconoce)
+      if(e.boss&&!e.chef&&!e.inspec){ // corona del jefe de sala (ni el chef ni la inspectora la llevan: se les reconoce)
         ctx.fillStyle='#e0a02c'; ctx.strokeStyle='#1c1512'; ctx.lineWidth=2.5; ctx.beginPath();
         ctx.moveTo(-e.r*0.5,-e.r*0.98); ctx.lineTo(-e.r*0.38,-e.r*1.3); ctx.lineTo(-e.r*0.18,-e.r*1.02);
         ctx.lineTo(0,-e.r*1.36); ctx.lineTo(e.r*0.18,-e.r*1.02); ctx.lineTo(e.r*0.38,-e.r*1.3);
@@ -24670,7 +24881,7 @@ function launchElTurno(){
     // barra de vida del jefe (solo mientras hay jefe en sala)
     const boss=G.enemies.find(e=>e.boss), bb=document.getElementById('etBossbar');
     if(boss){ bb.style.display='block';
-      document.getElementById('etBossName').textContent=boss.chef?'★ EL CHEF ★':'JEFE DE SALA · '+boss.a.name.toUpperCase();
+      document.getElementById('etBossName').textContent=boss.inspec?'★ LA INSPECTORA · CIERRE ★':boss.chef?'★ EL CHEF ★':'JEFE DE SALA · '+boss.a.name.toUpperCase();
       document.getElementById('etBossfill').style.width=Math.max(0,boss.hp/boss.maxhp*100)+'%'; }
     else bb.style.display='none';
     // cooldown del dash pintado como barrido circular
@@ -24692,6 +24903,9 @@ function launchElTurno(){
     document.getElementById('etStart').style.display='none';
     document.getElementById('etOver').style.display='none';
     document.getElementById('etPause').style.display='none';
+    document.getElementById('etChest').style.display='none';
+    document.getElementById('etQuiz').style.display='none';
+    if(_etChestIv){ clearInterval(_etChestIv); _etChestIv=null; }
     newGame(); running=true; paused=false; last=performance.now(); mStep=0;
     sfx('coin');                                    // desbloquea el AudioContext con el gesto
     if(!musicIv) musicIv=setInterval(musicTick,138); // arranca la banda sonora del servicio
@@ -24729,9 +24943,14 @@ function launchElTurno(){
       const _secs=Math.floor(G.time), _ord=G.score;
       _shareBtn.onclick=()=>_txShareRecord(_txRecordMsg('survivors',_secs,_ord),_shareBtn);
     }
+    // propinas al bolsillo (meta-progresión, jul 2026): comandas + tiempo +
+    // jefes; bonus gordo por llegar al cierre. Cada derrota sigue sumando.
+    const _mm=_etMeta();
+    const _earn=Math.round(G.score*0.5+Math.floor(G.time)/10+G.bosses*8)+(G.closed?60:0);
+    _mm.tips+=_earn; _etMetaSave(_mm); _etRenderShop();
     const bT=Math.max(best,Math.floor(G.time)), bm=Math.floor(bT/60), bs=bT%60;
-    document.getElementById('etOverTitle').textContent=isRec?'¡RÉCORD!':'SE ACABÓ';
-    document.getElementById('etOverSub').textContent=isRec?'Tu mejor turno hasta la fecha':'Fin del servicio';
+    document.getElementById('etOverTitle').textContent=G.closed?'¡SERVICIO COMPLETO!':isRec?'¡RÉCORD!':'SE ACABÓ';
+    document.getElementById('etOverSub').textContent=(G.closed?'Aguantaste hasta el cierre':isRec?'Tu mejor turno hasta la fecha':'Fin del servicio')+' · +'+_earn+' 💰';
     document.getElementById('etOverStats').innerHTML=
       `<div class="et-st"><b>${tstr}</b><span>Tiempo</span></div>
        <div class="et-st"><b>${G.score}</b><span>Comandas</span></div>
@@ -24743,6 +24962,13 @@ function launchElTurno(){
   }
   document.getElementById('etPlayBtn').onclick=start;
   document.getElementById('etAgainBtn').onclick=start;
+  // desde el fin de servicio se vuelve a la tienda: gastar lo recién ganado
+  // es EL momento (bucle de meta-progresión completo sin salir del juego)
+  document.getElementById('etShopBtn').onclick=()=>{
+    document.getElementById('etOver').style.display='none';
+    _etRenderChars(); _etRenderShop(); _etRenderRank();
+    document.getElementById('etStart').style.display='flex';
+  };
   // idle canvas so it isn't blank behind the start screen
   ctx.fillStyle='rgba(0,0,0,0)'; ctx.fillRect(0,0,W,H);
 
@@ -24751,6 +24977,7 @@ function launchElTurno(){
     running=false;
     if(rafId) cancelAnimationFrame(rafId);
     if(musicIv){ clearInterval(musicIv); musicIv=null; }
+    if(_etChestIv){ clearInterval(_etChestIv); _etChestIv=null; }
     document.removeEventListener('visibilitychange',onVis);
     window.removeEventListener('resize',resize);
     window.removeEventListener('keydown',onKeyDown);

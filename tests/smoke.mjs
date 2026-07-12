@@ -2814,7 +2814,7 @@ test('Camarero Survivors: héroe con ciclo de carrera de fotogramas reales (jul 
     'ET_HERO_RUN must wire the 2 run-cycle files');
   for (const f of ['hero-a', 'hero-b']) assert(existsSync(join(ROOT, `img/sprites/${f}.webp`)), `img/sprites/${f}.webp missing on disk`);
   const e = html.indexOf('function launchElTurno(');
-  const loaderSrc = html.slice(e, e + 60000);
+  const loaderSrc = html.slice(e, e + 150000);
   assert(/const HERO=ET_HERO_RUN\.map\(/.test(loaderSrc), 'HERO must be built from the ET_HERO_RUN frames, not a single SVG image');
   assert(/function _etHeroFrame\(G\)\{ return G\.moving\?\(Math\.sin\(G\.time\*13\)>=0\?0:1\):0; \}/.test(loaderSrc),
     'the frame picker must sync leg-swap to the existing vertical bob phase, and hold frame 0 when idle');
@@ -3050,7 +3050,7 @@ test('Camarero Survivors: EL CHEF, jefe final desde la foto del propietario (jul
   assert(/const _csp=e\.chef\?CHEF_SPR\[\(e\.tele>0\|\|e\.dashing>0\)\?'attack':'calm'\]:null;/.test(body),
     'chef must swap to the attack pose while telegraphing/lunging');
   // Sin corona (se le reconoce) y con rótulo propio en la barra de jefe.
-  assert(/if\(e\.boss&&!e\.chef\)\{ \/\/ corona/.test(body), 'the crown must be skipped for the chef');
+  assert(/if\(e\.boss&&!e\.chef&&!e\.inspec\)\{ \/\/ corona/.test(body), 'the crown must be skipped for the chef (and the inspector)');
   assert(/boss\.chef\?'★ EL CHEF ★'/.test(body), 'the boss bar must carry the chef\'s own label');
 });
 
@@ -3328,6 +3328,106 @@ test('Camarero Survivors: la bandeja PARECE bandeja y cada jefe tiene habilidad 
     'active puddles must slow the player and burn slowly (not instantly kill)');
   assert(/if\(G\.enemies\.length<70\)/.test(body),
     'the summon ability must respect an enemy-count cap (no flooding)');
+});
+
+test('Camarero Survivors: meta-progresión — propinas persistentes, tienda, oficios y otra ronda (jul 2026)', () => {
+  // El bucle de retención de Vampire Survivors ("vamos con todo" del
+  // propietario): las propinas se GUARDAN al morir (cada derrota es
+  // progreso), compran mejoras permanentes en la tienda de inicio, hay 4
+  // oficios de sala con arranque distinto y un cambio de cartas por partida
+  // (ampliable en la tienda). Los récords del ranking no se tocan.
+  const i = html.indexOf('function launchElTurno(');
+  const body = html.slice(i, i + 150000);
+  // cartera por empleado y dispositivo + tienda
+  assert(/localStorage\.getItem\('etMeta:'\+currentUser\)/.test(body) && /localStorage\.setItem\('etMeta:'\+currentUser/.test(body),
+    'the tips wallet must persist per employee+device (same pattern as etBestTime)');
+  assert(/const ET_PERKS=\[/.test(body) && /const ET_PERK_COST=\[25,60,140,320,700\]/.test(body),
+    'the permanent-perk catalog and its cost curve must exist');
+  assert(/function _etRenderShop\(\)/.test(body) && /Mejoras del oficio/.test(body),
+    'the shop panel must render on the start screen');
+  // ganancia al morir + botón de tienda en el fin de servicio
+  assert(/_mm\.tips\+=_earn; _etMetaSave\(_mm\); _etRenderShop\(\);/.test(body),
+    'gameOver must bank the earned tips and refresh the shop');
+  assert(/G\.closed\?60:0/.test(body), 'reaching the closing time must pay a fat tip bonus');
+  assert(/id="etShopBtn"/.test(body), 'the game-over screen must link back to the shop');
+  // lo permanente entra en newGame (perks + oficio elegido)
+  assert(/for\(const p of ET_PERKS\)\{ const n=_m\.up\[p\.k\]\|\|0; if\(n\) p\.fx\(G,n\); \}/.test(body),
+    'newGame must apply the purchased perk levels');
+  assert(/const ET_CHARS=\[/.test(body) && /\(ET_CHARS\.find\(c=>c\.k===_m\.char\)\|\|ET_CHARS\[0\]\)\.fx\(G\);/.test(body),
+    'newGame must apply the selected trade (oficio)');
+  const chars = [...body.slice(body.indexOf('const ET_CHARS=['), body.indexOf('];', body.indexOf('const ET_CHARS=['))).matchAll(/\{k:'([a-z]+)'/g)].map(m => m[1]);
+  assert(chars.length === 4 && chars.includes('camarero') && chars.includes('sumiller') && chars.includes('cortador') && chars.includes('maitre'),
+    'there must be exactly 4 trades: camarero/sumiller/cortador/maitre');
+  // otra ronda: botón en el level-up, gastable, ampliable con el perk 'ronda'
+  assert(/id="etReroll"/.test(body) && /G\.rerolls<=0\) return; G\.rerolls--;/.test(body),
+    'the level-up reroll button must exist and burn a charge per use');
+  assert(/\{k:'ronda'/.test(body) && /g\.rerolls\+=n/.test(body), 'the shop must sell extra rerolls');
+  // CSS de tienda y oficios
+  const css = read('styles.css');
+  for (const sel of ['.et-shop{', '.et-shop-buy', '.et-char{', '.et-char.on']) {
+    assert(css.includes(sel), `styles.css must style ${sel}`);
+  }
+});
+
+test('Camarero Survivors: carrito de postres del jefe y cloche con pregunta de la carta REAL (jul 2026)', () => {
+  // (1) El cofre de VS: el jefe abatido suelta un carrito dorado; recogerlo
+  // abre una ceremonia tragaperras que regala 1 mejora (2 si era EL CHEF).
+  // (2) El cloche misterioso: pregunta Sí/No derivada de DISHES (la carta
+  // real — mismos nombres de alérgeno que el roster del juego); acertar paga
+  // gordo (limpieza/imán/banquete) y fallar deja la lección a la vista.
+  const i = html.indexOf('function launchElTurno(');
+  const body = html.slice(i, i + 150000);
+  // carrito: drop en la muerte del jefe + ceremonia + limpieza del interval
+  assert(/G\.pickups\.push\(\{x:e\.x,y:e\.y,chest:true,dbl:!!e\.chef,life:9999\}\)/.test(body),
+    'a defeated boss must drop the dessert cart (chef: guaranteed double)');
+  assert(/function showChest\(dbl\)/.test(body) && /id="etChest"/.test(body),
+    'the chest ceremony overlay must exist');
+  assert(/_etChestIv=setInterval\(/.test(body) && (body.match(/clearInterval\(_etChestIv\)/g) || []).length >= 3,
+    'the slot-machine interval must be cleaned on settle, on start and in teardown');
+  // cloche: solo con datos de carta, ventana de spawn, pregunta 50/50 honesta
+  assert(/typeof DISHES!=='undefined'&&DISHES\.length/.test(body),
+    'the cloche must only spawn when the real menu data is present');
+  assert(/G\.time>=G\.nextClo&&G\.time<560/.test(body), 'the cloche must not spawn during the closing stretch');
+  assert(/const askYes=has\.length>0&&\(Math\.random\(\)<0\.5\|\|!not\.length\)/.test(body),
+    'the question must be a fair 50/50 between allergens the dish has and lacks');
+  assert(/dish\.allergens\|\|\[\]\)\.includes\(a\.name\)/.test(body),
+    'the answer key must derive from the dish allergen list (same names as the roster)');
+  // recompensas + feedback educativo siempre
+  assert(/¡LIMPIEZA DE SALA!/.test(body) && /¡PROPINA TOTAL!/.test(body) && /¡BANQUETE!/.test(body),
+    'the three cloche rewards must be wired');
+  assert(/lleva: <b>\$\{escapeHTML\(full\)\}/.test(body),
+    'both outcomes must show the dish\'s full allergen list (the lesson always lands)');
+  // los overlays de decisión mandan sobre la pausa
+  assert(/for\(const id of \['etLevelup','etChest','etQuiz'\]\)/.test(body),
+    'pause must defer to the level-up/chest/quiz overlays');
+  const css = read('styles.css');
+  for (const sel of ['.et-quiz-dish', '.et-quiz-btns', '.et-slot .et-pick-ic']) {
+    assert(css.includes(sel), `styles.css must style ${sel}`);
+  }
+});
+
+test('Camarero Survivors: CIERRE DEL LOCAL a las 10:00 — la inspectora imbatible y SERVICIO COMPLETO (jul 2026)', () => {
+  // El final de partida de VS (la Muerte a los 30:00), versión sala: aviso a
+  // las 9:30, LA INSPECTORA entra a las 10:00 (inmune, acelera sin tregua),
+  // los eventos programados se apagan y llegar al cierre es la victoria.
+  const i = html.indexOf('function launchElTurno(');
+  const body = html.slice(i, i + 150000);
+  assert(/if\(!G\.warned&&G\.time>=570\)/.test(body) && /CIERRE EN 30s/.test(body),
+    'the 30-second warning must fire at 9:30');
+  assert(/if\(!G\.closed&&G\.time>=600\)\{ G\.closed=true; spawnInspectora\(\); \}/.test(body),
+    'the inspector must arrive exactly at closing time');
+  assert(/function spawnInspectora\(\)/.test(body) && /hp:1e9,maxhp:1e9/.test(body) && /inspec:true/.test(body),
+    'the inspector must spawn effectively unkillable');
+  assert(/if\(e\.inspec\) return;\s+\/\/ la inspectora no se negocia/.test(body),
+    'hurtEnemy must ignore the inspector entirely (no damage, no flash)');
+  assert(/if\(e\.inspec\) e\.spd\+=dt\*0\.0011/.test(body),
+    'the inspector must accelerate relentlessly (the end always arrives)');
+  assert(/if\(G\.time<600\)\{/.test(body),
+    'scheduled events (elites/surges/bosses/chef) must stop at closing time');
+  assert(/boss\.inspec\?'★ LA INSPECTORA · CIERRE ★'/.test(body),
+    'the boss bar must announce the inspector');
+  assert(/G\.closed\?'¡SERVICIO COMPLETO!'/.test(body),
+    'surviving to the close must be celebrated as SERVICIO COMPLETO');
 });
 
 test('Mr. Shoesmith está VIVO: respiración en reposo, enfado inmediato por error, celebración y temblor', () => {
