@@ -1801,7 +1801,7 @@ test('pinSubmit guards against re-entrant double-submit', () => {
   // must prevent the re-entrant call.
   const startIdx = html.search(/async function pinSubmit\(\)\{/);
   assert(startIdx !== -1, 'pinSubmit not found');
-  const slice = html.slice(startIdx, startIdx + 3200);
+  const slice = html.slice(startIdx, startIdx + 3800);
   const endIdx = slice.search(/\n\}\n/);
   assert(endIdx !== -1, 'could not find end of pinSubmit');
   const body = slice.slice(0, endIdx);
@@ -4344,6 +4344,49 @@ test('Hook F1: record cards, crowns, duel juice and the overtaken trigger', () =
   // Anti-spam: record cards must NOT blast push notifications.
   const share = html.slice(html.indexOf('async function _txShareRecord'), html.indexOf('function _txThroneCheck'));
   assert(!/send-push/.test(share), 'record cards must not send mass push');
+});
+
+// ─── Recuperación de PIN por correo ─────────────────────────────
+console.log('\nRecuperación de PIN por correo');
+test('backend reset-pin existe y cubre las tres acciones', () => {
+  assert(existsSync(join(ROOT, 'supabase/functions/reset-pin/index.ts')),
+    'falta supabase/functions/reset-pin/index.ts');
+  const fn = read('supabase/functions/reset-pin/index.ts');
+  for (const a of ["'set-email'", "'request'", "'confirm'"])
+    assert(fn.includes(a), `la Edge Function debe manejar la acción ${a}`);
+  // set-email exige que el hash del PIN coincida (prueba de identidad)
+  assert(/emp\.pin\s*!==\s*pinHash/.test(fn) && /'auth'/.test(fn),
+    'set-email debe rechazar (auth) si el PIN no coincide');
+  // los tokens se guardan HASHEADOS, nunca en claro
+  assert(/token_hash/.test(fn) && /sha256hex\(token\)/.test(fn),
+    'los tokens deben guardarse como sha256(token)');
+  // los correos NO viven en employees (allow_all público) sino en la tabla protegida
+  assert(/employee_recovery/.test(fn), 'los correos deben ir a employee_recovery (tabla protegida)');
+  // request no debe filtrar si un correo existe (siempre ok:true)
+  assert(/no revelar existencia/.test(fn) || /no filtrar/.test(fn),
+    'request no debe revelar si el correo existe');
+});
+test('la app cablea recuperación de PIN sin enviar el PIN en claro', () => {
+  // helpers de red
+  for (const f of ['supaSetRecoveryEmail', 'supaRequestPinReset', 'supaConfirmPinReset',
+                   'openPinRecovery', 'showPinReset', 'promptRecoveryEmail'])
+    assert(html.includes('function ' + f), `falta la función ${f}`);
+  // deep-link #reset= capturado en el arranque y disparado en autoLogin
+  assert(/#reset=/.test(html) && /_pendingPinReset/.test(html),
+    'debe capturarse el deep-link #reset= y guardarlo en _pendingPinReset');
+  assert(/if\(_pendingPinReset\)\{[\s\S]*showPinReset/.test(html),
+    'autoLogin debe abrir showPinReset cuando hay token pendiente');
+  // el PIN nuevo se cifra en el cliente antes de confirmar (hashPin → newPinHash)
+  const reset = html.slice(html.indexOf('function showPinReset'), html.indexOf('function promptRecoveryEmail'));
+  assert(/hashPin\(buffer\)/.test(reset) && /supaConfirmPinReset\(token,\s*h\)/.test(reset),
+    'showPinReset debe hashear el PIN en el cliente y enviar solo el hash');
+  // el correo se guarda con el hash del PIN como prueba (nunca sin verificar)
+  assert(/supaSetRecoveryEmail\(name,\s*pinHash,\s*email\)/.test(html),
+    'set-email debe llevar el hash del PIN como prueba de identidad');
+  // el enlace "olvidaste" solo aparece al INTRODUCIR el PIN, no al configurarlo
+  const modal = html.slice(html.indexOf('function showPinModal'), html.indexOf('// ═══════ RECUPERACIÓN'));
+  assert(/pinStep==='enter'/.test(modal) && /openPinRecovery\(\)/.test(modal),
+    'el enlace de recuperación solo debe mostrarse en el paso "enter"');
 });
 
 // ─── 7. No leftover git conflict markers ────────────────────────
