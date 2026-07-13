@@ -1543,14 +1543,21 @@ test('no dish in the Vegetariano category self-declares as not vegetarian', () =
 
 // ─── 6c. Employee PIN server-verify wiring ──────────────────────
 console.log('\nAuth hardening');
-test('USE_SERVER_EMP_PIN_VERIFY exists and ships disabled (safe default)', () => {
+test('verificación del PIN de empleado en servidor (SHA RPCs) ACTIVADA', () => {
   const m = html.match(/const USE_SERVER_EMP_PIN_VERIFY\s*=\s*(true|false)\s*;/);
   assert(m, 'USE_SERVER_EMP_PIN_VERIFY flag missing');
-  // Must ship false: enabling it requires deploying supabase/employee_pin.sql
-  // first, otherwise the verify RPC 404s. (It falls back to local, but the
-  // flag should not be flipped in the repo until the SQL is live.)
-  assert(m[1] === 'false', 'USE_SERVER_EMP_PIN_VERIFY must default to false in the repo');
-  // The helpers it relies on must exist.
+  // jul 2026: ACTIVADO. Las RPCs verify_employee_pin_sha / set_employee_pin_sha
+  // están desplegadas; el cliente ya no lee/escribe employees.pin.
+  assert(m[1] === 'true', 'USE_SERVER_EMP_PIN_VERIFY debe estar en true (RPCs SHA desplegadas)');
+  assert(/rpc\/verify_employee_pin_sha/.test(html), 'debe usar verify_employee_pin_sha');
+  assert(/rpc\/set_employee_pin_sha/.test(html), 'debe usar set_employee_pin_sha');
+  assert(/rpc\/employee_has_pin/.test(html), 'debe usar employee_has_pin para "entrar vs crear"');
+  // el hash del pin ya NO se sube en los payloads de employees
+  assert(!/\bpin:\s*pin\b/.test(html) && !/\bpin:\s*emp\.pin\b/.test(html),
+    'los upserts de employees NO deben incluir el hash del pin');
+  // las lecturas de employees excluyen la columna pin
+  assert(/const _EMP_COLS\s*=/.test(html) && !/_EMP_COLS[^']*\bpin\b/.test(html),
+    '_EMP_COLS (columnas leídas) no debe incluir pin');
   assert(/async function verifyEmployeePinServer\(/.test(html), 'verifyEmployeePinServer() missing');
   assert(/async function setEmployeePinServer\(/.test(html), 'setEmployeePinServer() missing');
 });
@@ -3489,8 +3496,8 @@ test('sync: el upsert de empleado es MONÓTONO — nunca pisa la nube con ceros 
   // del usuario. El upsert ahora lee la nube primero y fusiona sin reducir.
   const fn = html.slice(html.indexOf('async function supaUpsertEmployee'), html.indexOf('async function supaFetchAllEmployees'));
   assert(fn.length > 400, 'supaUpsertEmployee not found');
-  // (1) lee la nube antes de escribir
-  assert(/employees\?name=ilike\.\$\{encodeURIComponent\(name\)\}&select=\*/.test(fn),
+  // (1) lee la nube antes de escribir (columnas sin pin: _EMP_COLS)
+  assert(/employees\?name=ilike\.\$\{encodeURIComponent\(name\)\}&select=\$\{_EMP_COLS\}/.test(fn),
     'the upsert must read the current cloud row before writing');
   // (2) aborta si no puede leer la nube y la ficha local está vacía
   assert(/const _localEmpty =/.test(fn) && /if\(!cloudReadOk && _localEmpty\) \{[^}]*return;/.test(fn),
@@ -3498,9 +3505,10 @@ test('sync: el upsert de empleado es MONÓTONO — nunca pisa la nube con ceros 
   // (3) fusión monótona: max en números, unión en mapas
   assert(/xp=Math\.max\(xp, cloud\.xp\|\|0\)/.test(fn) && /_etMergeMap\(JSON\.parse\(cloud\.known_dishes/.test(fn),
     'numeric fields must take max(local,cloud) and maps must merge (union)');
-  // (4) no anula credenciales sin querer
-  assert(/if\(!pin && cloud\.pin\) pin=cloud\.pin/.test(fn),
-    'the upsert must preserve the cloud pin when local has none (never null out credentials)');
+  // (4) el upsert ya NO toca el pin (el hash vive en el servidor; se fija/verifica
+  //     por RPC). No debe leerlo del cloud ni enviarlo en el payload.
+  assert(!/cloud\.pin/.test(fn) && !/\bpin:/.test(fn),
+    'the upsert must not read or write the pin (server-side now)');
   // (5) el helper de fusión de mapas existe y hace max por clave
   assert(/function _etMergeMap\(a, b\)\{/.test(html) && /Math\.max\(av, bv\)/.test(html),
     'the _etMergeMap helper must do per-key max');

@@ -786,21 +786,27 @@ let supAuthenticated = false;
 // deploying employee_pin.sql — then PINs verify against per-row bcrypt hashes
 // that the anon key cannot read. Network/RPC failures fall back to the local
 // compare so a Supabase outage can never lock kitchen staff out mid-service.
-const USE_SERVER_EMP_PIN_VERIFY = false;
+// jul 2026 — ACTIVADO. Los PINs se verifican en el servidor contra
+// verify_employee_pin_sha; la columna employees.pin deja de leerse/escribirse
+// desde la anon key (se cierra por separado). Red/RPC caída → 'fallback' local.
+const USE_SERVER_EMP_PIN_VERIFY = true;
 
-// Verify a PIN server-side. Returns:
-//   'ok'       confirmed — enter.
-//   'fail'     wrong PIN — reject.
-//   'migrate'  no server hash yet → caller runs its legacy local check and,
-//              on success, calls setEmployeePinServer() to migrate seamlessly.
-//   'fallback' flag off or network/RPC error → caller runs its local check.
+// Centinela local para cuentas cuyo PIN vive en la nube pero NO se descarga
+// (columna pin cerrada a la anon key): emp.pin = este valor significa "hay PIN
+// en el servidor, verifícalo por RPC". No es un hash de 64-hex, así que las
+// comparaciones locales de respaldo nunca lo dan por bueno.
+const SRV_PIN_SENTINEL = '__srv__';
+
+// Verify a PIN server-side (esquema SHA-256; ver verify_employee_pin_sha):
+//   'ok' | 'fail' | 'migrate' (sin pin en la nube) | 'fallback' (flag off/red).
 async function verifyEmployeePinServer(name, pin){
   if(!USE_SERVER_EMP_PIN_VERIFY) return 'fallback';
   try {
-    const res = await fetch(`${SUPA_URL}/rest/v1/rpc/verify_employee_pin`, {
+    const h = await hashPin(String(pin));
+    const res = await fetch(`${SUPA_URL}/rest/v1/rpc/verify_employee_pin_sha`, {
       method:'POST',
       headers:{ 'apikey':SUPA_KEY, 'Authorization':`Bearer ${SUPA_KEY}`, 'Content-Type':'application/json' },
-      body: JSON.stringify({ emp_name:name, pin_input:String(pin) })
+      body: JSON.stringify({ emp_name:name, sha_hex:h })
     });
     if(!res.ok){ dbgw('[empPin] verify RPC failed:', res.status); return 'fallback'; }
     const v = await res.json();            // true | false | null
@@ -810,16 +816,17 @@ async function verifyEmployeePinServer(name, pin){
   } catch(e){ dbgw('[empPin] verify RPC error:', e.message); return 'fallback'; }
 }
 
-// Upsert a bcrypt PIN server-side (setup + lazy migration). Fire-and-forget;
-// failures are non-fatal — the local hash stays the source of truth until the
-// migration window closes (see employee_pin.sql rollout step c).
+// Fija el PIN en el servidor (alta / migración). set_employee_pin_sha SOLO lo
+// establece si aún no había uno; los cambios de un PIN existente van por las
+// Edge Functions (recuperación / ajustes). Fire-and-forget.
 async function setEmployeePinServer(name, pin){
   if(!USE_SERVER_EMP_PIN_VERIFY) return;
   try {
-    await fetch(`${SUPA_URL}/rest/v1/rpc/set_employee_pin`, {
+    const h = await hashPin(String(pin));
+    await fetch(`${SUPA_URL}/rest/v1/rpc/set_employee_pin_sha`, {
       method:'POST',
       headers:{ 'apikey':SUPA_KEY, 'Authorization':`Bearer ${SUPA_KEY}`, 'Content-Type':'application/json' },
-      body: JSON.stringify({ emp_name:name, new_pin:String(pin) })
+      body: JSON.stringify({ emp_name:name, sha_hex:h })
     });
   } catch(e){ dbgw('[empPin] set RPC error:', e.message); }
 }
@@ -1508,7 +1515,7 @@ const CAT_COLORS={'Entrantes':'#c49a3c','Hamburguesas y Bocatas':'#b86050','Plat
 const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#c49a3c"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#a47a2c" opacity=".4"/><path d="M8 8v4a1 1 0 001 1h1v4M10 8v4" stroke="#fff" stroke-width="1.2" stroke-linecap="round" fill="none"/><path d="M15 8v8M14 8v3a1.5 1.5 0 003 0V8" stroke="#fff" stroke-width="1.2" stroke-linecap="round" fill="none"/></svg>`,'Hamburguesas y Bocatas':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#b86050"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#983838" opacity=".4"/><path d="M7 9h10M7 12h10M7 15h10" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/><path d="M8 9c0-2 2-3 4-3s4 1 4 3M8 15c0 2 2 3 4 3s4-1 4-3" fill="none" stroke="#fff" stroke-width="1" opacity=".7"/></svg>`,'Platos Principales':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#4888a0"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#2e6878" opacity=".4"/><path d="M5 15h14" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/><path d="M12 6a6 6 0 016 6H6a6 6 0 016-6z" fill="none" stroke="#fff" stroke-width="1.1"/><circle cx="10" cy="6" r=".7" fill="#fff" opacity=".7"/><circle cx="12" cy="5" r=".7" fill="#fff" opacity=".7"/><circle cx="14" cy="6" r=".7" fill="#fff" opacity=".7"/></svg>`,'Sugerencias':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#d4aa4c"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#a48a2c" opacity=".4"/><polygon points="12,5 14.5,10 20,10.5 16,14 17,20 12,17 7,20 8,14 4,10.5 9.5,10" fill="#fff" opacity=".9"/></svg>`,'Guarniciones y Salsas':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#4d8a5e"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#2d6a3e" opacity=".4"/><path d="M12 18V10M5 10c0-4 3-6 7-6s7 2 7 6c0 5-3 8-7 8s-7-3-7-8z" fill="none" stroke="#fff" stroke-width="1.1"/><path d="M5 10c3 0 5 1 7 2.5" fill="none" stroke="#fff" stroke-width=".8" opacity=".6"/></svg>`,'Postres':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#7a6aaa"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#5a4a8a" opacity=".4"/><path d="M9 19h6M12 12v7M7 6l2 4.5a3 3 0 006 0L17 6H7z" fill="none" stroke="#fff" stroke-width="1.1" stroke-linecap="round"/></svg>`,'Vegetariano':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#5a9a6e"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#3a7a4e" opacity=".4"/><path d="M9 18h6M12 18V10M12 10c0-3 2-5 5-5-.7 2.5-2.5 5-5 5zM12 10c0-3-2-5-5-5 .7 2.5 2.5 5 5 5z" fill="none" stroke="#fff" stroke-width="1.1" stroke-linecap="round"/></svg>`};
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='7.218';  // sincronizada con sw.js VERSION (guard de CI)
+const APP_VERSION='7.219';  // sincronizada con sw.js VERSION (guard de CI)
 const APP_BUILD='Jul 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;
@@ -1636,6 +1643,9 @@ const SUPA_URL='https://advkoujfgbrrjvqexrcu.supabase.co';
 const SUPA_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFkdmtvdWpmZ2Jycmp2cWV4cmN1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMxODAxODgsImV4cCI6MjA4ODc1NjE4OH0.4MTKzEy_c5x3eWjWJPfS216TTVAVNNlP1Wo_-h1Nt4c';
 
 // Wine image helpers
+// Columnas de employees que la anon key SÍ puede leer (todas menos `pin`, que
+// se cierra a la anon key: el PIN se verifica por RPC en el servidor).
+const _EMP_COLS='name,xp,streak,last_study_day,topic_scores,known_dishes,exam_correct,sessions_count,txoko_record,updated_at,sessions_data,duel_wins,avatar,last_active_at,last_login';
 const WINE_IMG_BASE = SUPA_URL + '/storage/v1/object/public/wine-images/';
 function _wineSlug(name){
   return name.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
@@ -1962,7 +1972,7 @@ async function supaUpsertEmployee(name, retries=2) {
   let cloud = null, cloudReadOk = false;
   try {
     const gr = await fetchT(
-      `${SUPA_URL}/rest/v1/employees?name=ilike.${encodeURIComponent(name)}&select=*`,
+      `${SUPA_URL}/rest/v1/employees?name=ilike.${encodeURIComponent(name)}&select=${_EMP_COLS}`,
       { headers: { 'apikey': SUPA_KEY, 'Authorization': `Bearer ${SUPA_KEY}` } },
       8000
     );
@@ -1975,7 +1985,7 @@ async function supaUpsertEmployee(name, retries=2) {
   let xp=emp.xp||0, streak=emp.streak||0, txr=emp.txokoRecord||0, dw=emp.duelWins||0;
   let known=emp.knownDishes||{}, exam=emp.examCorrect||{}, topics=emp.topicScores||{};
   let sess=(emp.sessions||[]).slice(-20), sessCount=(emp.sessions||[]).length;
-  let pin=emp.pin||null, avatar=emp.avatar||null, lastStudy=emp.lastStudyDay||null, lastLogin=emp.lastLoginTs||null;
+  let avatar=emp.avatar||null, lastStudy=emp.lastStudyDay||null, lastLogin=emp.lastLoginTs||null;
   if(cloud){
     xp=Math.max(xp, cloud.xp||0); streak=Math.max(streak, cloud.streak||0);
     txr=Math.max(txr, cloud.txoko_record||0); dw=Math.max(dw, cloud.duel_wins||0);
@@ -1984,14 +1994,13 @@ async function supaUpsertEmployee(name, retries=2) {
     try{ topics=_etMergeMap(JSON.parse(cloud.topic_scores||'{}'), topics); }catch(e){}
     try{ const cs=JSON.parse(cloud.sessions_data||'[]'); if(cs.length>sess.length) sess=cs.slice(-20); }catch(e){}
     sessCount=Math.max(sessCount, cloud.sessions_count||0, sess.length);
-    if(!pin && cloud.pin) pin=cloud.pin;                 // no anular credenciales
     if(!avatar && cloud.avatar) avatar=cloud.avatar;
     if((cloud.last_study_day||'') > (lastStudy||'')) lastStudy=cloud.last_study_day;
     if(!lastLogin && cloud.last_login) lastLogin=cloud.last_login;
     // reflejar la fusión en local para que la UI no muestre menos de lo real
     emp.xp=xp; emp.streak=streak; emp.txokoRecord=txr; emp.duelWins=dw;
     emp.knownDishes=known; emp.examCorrect=exam; emp.topicScores=topics;
-    if(pin) emp.pin=pin; if(avatar) emp.avatar=avatar; if(lastStudy) emp.lastStudyDay=lastStudy;
+    if(avatar) emp.avatar=avatar; if(lastStudy) emp.lastStudyDay=lastStudy;
     try{ saveDB(); }catch(e){}
   }
   // 3) Escribir la ficha fusionada.
@@ -2006,7 +2015,6 @@ async function supaUpsertEmployee(name, retries=2) {
       },
       body: JSON.stringify({
         name: name,
-        pin: pin,
         xp: xp,
         streak: streak,
         last_study_day: lastStudy,
@@ -2056,7 +2064,7 @@ async function supaRestoreEmployee(name) {
     // ilike does both exact and case-insensitive matching in one round-trip — no need for two queries
     // 8s timeout: on bad WiFi, fail fast so the login UI can fall back to local data.
     const res = await fetchT(
-      `${SUPA_URL}/rest/v1/employees?name=ilike.${encodeURIComponent(name)}&select=*`,
+      `${SUPA_URL}/rest/v1/employees?name=ilike.${encodeURIComponent(name)}&select=${_EMP_COLS}`,
       { headers: { 'apikey': SUPA_KEY, 'Authorization': `Bearer ${SUPA_KEY}` } },
       8000
     );
@@ -2065,20 +2073,32 @@ async function supaRestoreEmployee(name) {
 
     if(!Array.isArray(rows) || !rows.length) { _restoreCache.set(cacheKey, {ts:Date.now(), result:false}); return false; }
     const r = rows[0];
-    // If remote has no XP and no pin, nothing to restore
-    if((!r.xp || r.xp === 0) && !r.pin) { _restoreCache.set(cacheKey, {ts:Date.now(), result:false}); return false; }
+    // ¿La cuenta tiene PIN en la nube? La columna pin ya no se descarga (cerrada
+    // a la anon key); se consulta por RPC dedicada, que NO revela el hash.
+    let _hasPin = false;
+    try {
+      const hp = await fetchT(`${SUPA_URL}/rest/v1/rpc/employee_has_pin`, {
+        method:'POST',
+        headers:{ 'apikey':SUPA_KEY, 'Authorization':`Bearer ${SUPA_KEY}`, 'Content-Type':'application/json' },
+        body: JSON.stringify({ emp_name: r.name })
+      }, 8000);
+      if(hp.ok) _hasPin = (await hp.json()) === true;
+    } catch(e){ dbgw('[restore] has_pin RPC error:', e && e.message); }
+    // Si la nube no tiene ni XP ni PIN, nada que restaurar.
+    if((!r.xp || r.xp === 0) && !_hasPin) { _restoreCache.set(cacheKey, {ts:Date.now(), result:false}); return false; }
 
     // Use the name exactly as stored in Supabase (correct casing)
     const cloudName = r.name;
     const emp = getEmp(cloudName);
 
-    // ALWAYS restore PIN from cloud — cloud is the source of truth for credentials.
-    // This fixes the case where local data has a corrupted/stale PIN.
-    // Honour explicit null (e.g. supervisor reset cleared the PIN) so the reset
-    // propagates to other devices — the next login goes through the setup flow.
-    if(r.pin !== undefined) {
-      if(r.pin === null) delete emp.pin;
-      else emp.pin = r.pin;
+    // Credenciales: el hash vive en el servidor. Si hay PIN, marcamos el
+    // centinela (el login lo verifica por RPC) SALVO que ya exista un hash local
+    // real de un login previo en este equipo (no lo pisamos). Si la nube no
+    // tiene PIN (p. ej. reset del supervisor), quitamos el centinela → setup.
+    if(_hasPin) {
+      if(!(emp.pin && emp.pin.length === 64)) emp.pin = SRV_PIN_SENTINEL;
+    } else if(emp.pin === SRV_PIN_SENTINEL) {
+      delete emp.pin;
     }
     // Always take the highest XP between local and remote
     emp.xp = Math.max(emp.xp || 0, r.xp || 0);
@@ -2102,7 +2122,7 @@ async function supaRestoreEmployee(name) {
 async function supaFetchAllEmployees() {
   try {
     const res = await fetch(
-      `${SUPA_URL}/rest/v1/employees?select=*&order=xp.desc`,
+      `${SUPA_URL}/rest/v1/employees?select=${_EMP_COLS}&order=xp.desc`,
       { headers: { 'apikey': SUPA_KEY, 'Authorization': `Bearer ${SUPA_KEY}` } }
     );
     if(!res.ok) return null;
@@ -7325,6 +7345,7 @@ async function loginWithPassword(){
       }
       empObj.lang = LANG;
       empObj.lastLoginTs = new Date().toISOString();
+      empObj.pin = hashedPin;  // hash real en local (sustituye el centinela) → recordar sesión / auto-login
       saveDB();
       supaUpsertEmployee(userName);
       pinTarget = userName;
@@ -8118,7 +8139,7 @@ async function pinSubmit(){
     };
     // Server-side verification (no-op unless USE_SERVER_EMP_PIN_VERIFY).
     const _srv = await verifyEmployeePinServer(pinTarget, pinBuffer);
-    if(_srv==='ok'){ recordPinSuccess(); closePinAndEnter(); return; }
+    if(_srv==='ok'){ try{ emp.pin=await hashPin(pinBuffer); saveDB(); }catch(_){} recordPinSuccess(); closePinAndEnter(); return; }
     if(_srv==='fail'){ _pinWrong(); return; }
     // 'migrate' | 'fallback' → fall through to the legacy local compare.
     const inputHash=await hashPin(pinBuffer);
@@ -8233,7 +8254,7 @@ function _showCloudPinLogin(name, emp) {
                 };
                 // Server-side verification (no-op unless USE_SERVER_EMP_PIN_VERIFY).
                 var _srv = await verifyEmployeePinServer(name, buffer);
-                if(_srv==='ok'){ _enter(); return; }
+                if(_srv==='ok'){ try{ emp.pin=h; saveDB(); }catch(_){} _enter(); return; }
                 if(_srv==='fail'){ _wrong(); return; }
                 // 'migrate' | 'fallback' → legacy hash / plaintext compare.
                 var pinMatch = (h === emp.pin) || (buffer === emp.pin);
@@ -25694,7 +25715,6 @@ function _beaconSync(name){
   if(!emp) return;
   var payload = JSON.stringify({
     name: name,
-    pin: emp.pin || null,
     xp: emp.xp || 0,
     streak: emp.streak || 0,
     last_study_day: emp.lastStudyDay || null,

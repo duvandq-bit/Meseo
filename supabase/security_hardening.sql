@@ -32,3 +32,30 @@ REVOKE ALL ON public.sup_pin_attempts FROM anon, authenticated;
 -- verify_supervisor_pin(text) recreada con SET search_path = public, extensions
 -- y el contador por IP (ver migración supervisor_pin_rate_limit). El grant a
 -- anon/authenticated se mantiene (la app la sigue llamando igual).
+
+-- ── A) Proteger el PIN de empleado (verificación en servidor) ──────
+-- Problema: employees.pin (SHA-256, sal conocida, 4 dígitos) era legible Y
+-- escribible por la anon key pública → volcar+crackear u overwrite = suplantar.
+-- Solución (sin migrar datos, se mantiene SHA): la app verifica/fija el PIN por
+-- RPC SECURITY DEFINER y deja de leer/escribir employees.pin; luego se CIERRA la
+-- columna a la anon key (SELECT/INSERT/UPDATE por columnas, sin pin).
+-- RPCs (ver migraciones employee_pin_server_verify_sha + employee_has_pin_rpc):
+--   verify_employee_pin_sha(name, sha_hex) → true/false/null, rate-limit /cuenta
+--     (emp_pin_attempts): 10 fallos/15 min → bloqueo 15 min.
+--   set_employee_pin_sha(name, sha_hex)    → fija SOLO si pin IS NULL (anti-overwrite)
+--   employee_has_pin(name)                 → boolean (entrar vs crear), sin revelar hash
+-- Cliente: USE_SERVER_EMP_PIN_VERIFY=true; _EMP_COLS excluye pin en las lecturas;
+-- los upserts/beacon no envían pin; centinela '__srv__' para cuentas de la nube.
+--
+-- PASO FINAL — cerrar la columna pin a la anon key (tras desplegar el cliente):
+--   REVOKE SELECT, INSERT, UPDATE ON public.employees FROM anon, authenticated;
+--   GRANT SELECT (name,xp,streak,last_study_day,topic_scores,known_dishes,
+--     exam_correct,sessions_count,txoko_record,updated_at,sessions_data,
+--     duel_wins,avatar,last_active_at,last_login) ON public.employees TO anon, authenticated;
+--   GRANT INSERT (name,xp,streak,last_study_day,topic_scores,known_dishes,
+--     exam_correct,sessions_count,txoko_record,updated_at,sessions_data,
+--     duel_wins,avatar,last_active_at,last_login) ON public.employees TO anon, authenticated;
+--   GRANT UPDATE (xp,streak,last_study_day,topic_scores,known_dishes,exam_correct,
+--     sessions_count,txoko_record,updated_at,sessions_data,duel_wins,avatar,
+--     last_active_at,last_login) ON public.employees TO anon, authenticated;
+--   -- service-role (Edge Functions) y las RPCs SECURITY DEFINER conservan pin.
