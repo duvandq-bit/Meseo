@@ -6849,8 +6849,11 @@ button.et-mini{pointer-events:auto;cursor:pointer;background:transparent;border:
   color:var(--et-paper);opacity:.75;font-family:ui-monospace,monospace;font-size:12px;
   letter-spacing:.14em;text-transform:uppercase;padding:.55rem 1rem;min-height:44px;text-decoration:underline}
 
+/* z-index por ENCIMA de .et-screen (10): las pantallas (inicio/pausa/etc.)
+   cubren toda la superficie con fondo translúcido, así que a z-index 8 el botón
+   se veía pero la pantalla le robaba el clic → "Salir" no funcionaba. */
 #etExitBtn{
-  position:absolute;top:calc(.6rem + env(safe-area-inset-top,0px));right:.6rem;z-index:8;
+  position:absolute;top:calc(.6rem + env(safe-area-inset-top,0px));right:.6rem;z-index:12;
   min-width:44px;min-height:44px;padding:.4rem .8rem;display:flex;align-items:center;gap:.3rem;
   background:rgba(20,13,5,.62);color:var(--et-paper);border:2px solid rgba(244,228,193,.5);
   border-radius:12px;font-family:Georgia,serif;font-weight:bold;font-size:.85rem;cursor:pointer;
