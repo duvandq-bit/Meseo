@@ -250,6 +250,7 @@
       <div class="legal-modal-title" id="legalModalTitle">Aviso Legal</div>
       <p><strong>Meseo</strong> es una herramienta de formación interna para equipos de sala, de uso exclusivo del personal de los restaurantes dados de alta, creada únicamente con fines educativos y sin ánimo de lucro.</p>
       <p>Los nombres, logotipos y denominaciones de los restaurantes y personas que aparecen en la app (incluidos TXOKO y Martín Berasategui) son marcas o signos registrados de sus respectivos titulares y se mencionan únicamente en contexto formativo, para identificar el lugar de trabajo del equipo. Meseo no está afiliada, patrocinada ni respaldada oficialmente por ninguna de dichas marcas.</p>
+      <p><strong>Privacidad (RGPD):</strong> el correo electrónico es opcional y, si lo añades, se guarda cifrado y con el único fin de que puedas recuperar tu PIN. No se comparte con terceros ni se usa con fines publicitarios. Puedes solicitar su eliminación en cualquier momento a través del responsable de la app.</p>
       <p>© 2026 Duvan Stiven Ramírez Duque · Todos los derechos reservados</p>
       <button class="legal-modal-close" onclick="document.getElementById('legalModal').style.display='none'">Cerrar</button>
     </div>
@@ -1489,7 +1490,7 @@ const CAT_COLORS={'Entrantes':'#c49a3c','Hamburguesas y Bocatas':'#b86050','Plat
 const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#c49a3c"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#a47a2c" opacity=".4"/><path d="M8 8v4a1 1 0 001 1h1v4M10 8v4" stroke="#fff" stroke-width="1.2" stroke-linecap="round" fill="none"/><path d="M15 8v8M14 8v3a1.5 1.5 0 003 0V8" stroke="#fff" stroke-width="1.2" stroke-linecap="round" fill="none"/></svg>`,'Hamburguesas y Bocatas':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#b86050"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#983838" opacity=".4"/><path d="M7 9h10M7 12h10M7 15h10" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/><path d="M8 9c0-2 2-3 4-3s4 1 4 3M8 15c0 2 2 3 4 3s4-1 4-3" fill="none" stroke="#fff" stroke-width="1" opacity=".7"/></svg>`,'Platos Principales':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#4888a0"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#2e6878" opacity=".4"/><path d="M5 15h14" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/><path d="M12 6a6 6 0 016 6H6a6 6 0 016-6z" fill="none" stroke="#fff" stroke-width="1.1"/><circle cx="10" cy="6" r=".7" fill="#fff" opacity=".7"/><circle cx="12" cy="5" r=".7" fill="#fff" opacity=".7"/><circle cx="14" cy="6" r=".7" fill="#fff" opacity=".7"/></svg>`,'Sugerencias':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#d4aa4c"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#a48a2c" opacity=".4"/><polygon points="12,5 14.5,10 20,10.5 16,14 17,20 12,17 7,20 8,14 4,10.5 9.5,10" fill="#fff" opacity=".9"/></svg>`,'Guarniciones y Salsas':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#4d8a5e"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#2d6a3e" opacity=".4"/><path d="M12 18V10M5 10c0-4 3-6 7-6s7 2 7 6c0 5-3 8-7 8s-7-3-7-8z" fill="none" stroke="#fff" stroke-width="1.1"/><path d="M5 10c3 0 5 1 7 2.5" fill="none" stroke="#fff" stroke-width=".8" opacity=".6"/></svg>`,'Postres':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#7a6aaa"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#5a4a8a" opacity=".4"/><path d="M9 19h6M12 12v7M7 6l2 4.5a3 3 0 006 0L17 6H7z" fill="none" stroke="#fff" stroke-width="1.1" stroke-linecap="round"/></svg>`,'Vegetariano':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#5a9a6e"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#3a7a4e" opacity=".4"/><path d="M9 18h6M12 18V10M12 10c0-3 2-5 5-5-.7 2.5-2.5 5-5 5zM12 10c0-3-2-5-5-5 .7 2.5 2.5 5 5 5z" fill="none" stroke="#fff" stroke-width="1.1" stroke-linecap="round"/></svg>`};
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='7.212';  // sincronizada con sw.js VERSION (guard de CI)
+const APP_VERSION='7.213';  // sincronizada con sw.js VERSION (guard de CI)
 const APP_BUILD='Jul 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;
@@ -2213,6 +2214,17 @@ if ('serviceWorker' in navigator) {
 }
 if (location.hash && location.hash.indexOf('#tab=') === 0) {
   _pendingDeepTab = decodeURIComponent(location.hash.slice(5));
+  try { history.replaceState(null, '', location.pathname + location.search); } catch(_) {}
+}
+// ── Deep link de recuperación de PIN (#reset=TOKEN) ──
+// Enlace del correo de "¿Olvidaste tu PIN?". Guardamos el token y, tras
+// arrancar en el login, abrimos la pantalla para elegir un PIN nuevo. El hash
+// se limpia enseguida para que el token no quede en el historial ni se
+// reutilice al recargar.
+let _pendingPinReset = null;
+if (location.hash && location.hash.indexOf('#reset=') === 0) {
+  const _tk = decodeURIComponent(location.hash.slice(7)).trim();
+  if (/^[a-f0-9]{64}$/.test(_tk)) _pendingPinReset = _tk;
   try { history.replaceState(null, '', location.pathname + location.search); } catch(_) {}
 }
 // ── Actualización forzada (iOS PWA se aferra a builds viejas) ──
@@ -7379,11 +7391,13 @@ function showLegalModal(){
       ? '<div class="legal-modal-title">Legal Notice</div>'
         + '<p><strong>Meseo</strong> is an internal training tool for restaurant service teams, for the exclusive use of the staff of registered venues, created solely for educational purposes on a non-profit basis.</p>'
         + '<p>The names, logos and designations of the restaurants and people featured in the app (including TXOKO and Martín Berasategui) are registered trademarks of their respective owners and are mentioned solely in a training context, to identify the team\'s workplace. Meseo is not affiliated with, sponsored by or officially endorsed by any of these brands.</p>'
+        + '<p><strong>Privacy (GDPR):</strong> your email is optional and, if you add it, it is stored securely and used solely so you can recover your PIN. It is never shared with third parties or used for advertising. You may request its deletion at any time through the app owner.</p>'
         + '<p>© 2026 Duvan Stiven Ramírez Duque · All rights reserved</p>'
         + '<button class="legal-modal-close" onclick="document.getElementById(\'legalModal\').style.display=\'none\'">Close</button>'
       : '<div class="legal-modal-title">Aviso Legal</div>'
         + '<p><strong>Meseo</strong> es una herramienta de formación interna para equipos de sala, de uso exclusivo del personal de los restaurantes dados de alta, creada únicamente con fines educativos y sin ánimo de lucro.</p>'
         + '<p>Los nombres, logotipos y denominaciones de los restaurantes y personas que aparecen en la app (incluidos TXOKO y Martín Berasategui) son marcas o signos registrados de sus respectivos titulares y se mencionan únicamente en contexto formativo, para identificar el lugar de trabajo del equipo. Meseo no está afiliada, patrocinada ni respaldada oficialmente por ninguna de dichas marcas.</p>'
+        + '<p><strong>Privacidad (RGPD):</strong> el correo electrónico es opcional y, si lo añades, se guarda cifrado y con el único fin de que puedas recuperar tu PIN. No se comparte con terceros ni se usa con fines publicitarios. Puedes solicitar su eliminación en cualquier momento a través del responsable de la app.</p>'
         + '<p>© 2026 Duvan Stiven Ramírez Duque · Todos los derechos reservados</p>'
         + '<button class="legal-modal-close" onclick="document.getElementById(\'legalModal\').style.display=\'none\'">Cerrar</button>';
   }
@@ -7716,6 +7730,193 @@ function showPinModal(name, title, subtitle, isSetup){
   // control / password managers can dictate the PIN. The visual keypad still
   // works for touch.
   setTimeout(()=>{ const inp=document.getElementById('pinHiddenInput'); if(inp){ try{ inp.focus(); }catch(_){} } }, 50);
+  // Enlace "¿Olvidaste tu PIN?" — solo al INTRODUCIR (no al configurar uno nuevo).
+  if(pinStep==='enter'){
+    const _pm=overlay.querySelector('.pin-modal');
+    if(_pm){
+      const fb=document.createElement('button');
+      fb.type='button';
+      fb.textContent=LANG==='en'?'Forgot your PIN?':'¿Olvidaste tu PIN?';
+      fb.style.cssText="background:none;border:none;margin-top:.5rem;font-family:'Quicksand',sans-serif;font-size:.72rem;color:var(--gold);text-decoration:underline;cursor:pointer";
+      fb.onclick=()=>openPinRecovery();
+      _pm.appendChild(fb);
+    }
+  }
+}
+
+// ═══════ RECUPERACIÓN DE PIN POR CORREO ═══════
+// Todo pasa por la Edge Function reset-pin (service-role): los correos viven en
+// una tabla protegida que la anon key NO puede leer (privacidad/RGPD). Ver
+// supabase/functions/reset-pin/index.ts.
+const _RESET_FN_URL = SUPA_URL + '/functions/v1/reset-pin';
+async function _resetFn(payload){
+  try{
+    const res = await fetch(_RESET_FN_URL, {
+      method:'POST',
+      headers:{ 'apikey':SUPA_KEY, 'Authorization':`Bearer ${SUPA_KEY}`, 'Content-Type':'application/json' },
+      body: JSON.stringify(payload)
+    });
+    let data={}; try{ data=await res.json(); }catch(_){}
+    return { ok:res.ok, status:res.status, data };
+  }catch(e){ return { ok:false, status:0, data:{ error:String(e) } }; }
+}
+// Guarda/actualiza el correo de recuperación. Requiere el hash del PIN como
+// prueba de identidad (nadie puede atar su correo a la cuenta de otro).
+function supaSetRecoveryEmail(name, pinHash, email){ return _resetFn({ action:'set-email', name, pinHash, email }); }
+// Pide el enlace de recuperación a un correo.
+function supaRequestPinReset(email){ return _resetFn({ action:'request', email }); }
+// Confirma el PIN nuevo (ya hasheado) con el token del correo.
+function supaConfirmPinReset(token, newPinHash){ return _resetFn({ action:'confirm', token, newPinHash }); }
+
+// Overlay "¿Olvidaste tu PIN?": pide el correo y solicita el enlace mágico.
+// Siempre responde con el mismo mensaje (no revela si el correo existe).
+function openPinRecovery(){
+  const _en = LANG==='en';
+  const ex = document.getElementById('pinRecoveryOverlay'); if(ex) ex.remove();
+  const overlay = document.createElement('div');
+  overlay.id='pinRecoveryOverlay';
+  overlay.setAttribute('role','dialog'); overlay.setAttribute('aria-modal','true');
+  overlay.style.cssText='position:fixed;inset:0;background:rgba(28,42,34,.82);z-index:10000;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(8px);padding:1rem';
+  overlay.innerHTML = `
+    <div class="pin-modal" style="background:linear-gradient(155deg,#faf6ee,#f0e8d8);border:1px solid rgba(196,154,60,.2);border-radius:16px;padding:1.8rem 1.6rem;width:320px;max-width:100%;box-shadow:0 12px 40px rgba(0,0,0,.3)">
+      <div style="font-family:'Cinzel',serif;font-size:1.1rem;color:var(--parchment);text-align:center;margin-bottom:.3rem">${_en?'Recover your PIN':'Recupera tu PIN'}</div>
+      <div style="font-family:'Quicksand',sans-serif;font-size:.78rem;color:rgba(28,42,34,.62);text-align:center;line-height:1.45;margin-bottom:1.2rem">${_en?"Enter the email linked to your account and we'll send you a link to set a new PIN.":'Escribe el correo asociado a tu cuenta y te enviaremos un enlace para poner un PIN nuevo.'}</div>
+      <input id="pinRecEmail" type="email" inputmode="email" autocomplete="email" placeholder="${_en?'your@email.com':'tu@correo.com'}" style="width:100%;box-sizing:border-box;padding:.75rem .9rem;border:1px solid rgba(196,154,60,.35);border-radius:10px;font-size:16px;background:#fff;color:#2b2b2b;margin-bottom:.4rem">
+      <div id="pinRecMsg" role="status" aria-live="polite" style="font-size:.72rem;min-height:1.1rem;text-align:center;margin-bottom:.6rem;line-height:1.35"></div>
+      <button id="pinRecSend" style="width:100%;background:#8a5a2b;color:#fff;border:none;border-radius:10px;padding:.8rem;font-family:'Quicksand',sans-serif;font-weight:700;font-size:.9rem;cursor:pointer">${_en?'Send link':'Enviar enlace'}</button>
+      <button id="pinRecCancel" style="width:100%;background:transparent;border:none;margin-top:.5rem;padding:.5rem;font-family:'Quicksand',sans-serif;font-size:.78rem;color:rgba(28,42,34,.5);cursor:pointer">${_en?'Cancel':'Cancelar'}</button>
+    </div>`;
+  document.body.appendChild(overlay);
+  const emailInp = overlay.querySelector('#pinRecEmail');
+  const msg = overlay.querySelector('#pinRecMsg');
+  const sendBtn = overlay.querySelector('#pinRecSend');
+  overlay.querySelector('#pinRecCancel').onclick = ()=> overlay.remove();
+  setTimeout(()=>{ try{ emailInp.focus(); }catch(_){} }, 60);
+  sendBtn.onclick = async ()=>{
+    const email = (emailInp.value||'').trim();
+    if(!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){ msg.style.color='#c0392b'; msg.textContent=_en?'Enter a valid email':'Escribe un correo válido'; return; }
+    sendBtn.disabled=true; sendBtn.textContent=_en?'Sending…':'Enviando…';
+    await supaRequestPinReset(email);
+    msg.style.color='#2e7d32';
+    msg.textContent=_en?'If that email is registered, check your inbox for the link.':'Si ese correo está registrado, revisa tu bandeja: te hemos enviado el enlace.';
+    sendBtn.textContent=_en?'Link sent':'Enlace enviado';
+    setTimeout(()=>{ const o=document.getElementById('pinRecoveryOverlay'); if(o) o.remove(); }, 4600);
+  };
+  if(typeof setupModalA11y==='function') setupModalA11y(overlay, ()=>overlay.remove());
+}
+
+// Overlay del enlace de recuperación: elegir un PIN nuevo (dos veces) y
+// confirmarlo con el token. Al éxito, actualiza el hash local si el empleado
+// existe en este dispositivo y manda al login para entrar con el PIN nuevo.
+function showPinReset(token){
+  const _en = LANG==='en';
+  const ex = document.getElementById('pinResetOverlay'); if(ex) ex.remove();
+  let buffer='', first='', step=1, busy=false; // step 1=nuevo, 2=confirmar
+  const overlay=document.createElement('div');
+  overlay.id='pinResetOverlay';
+  overlay.setAttribute('role','dialog'); overlay.setAttribute('aria-modal','true');
+  overlay.style.cssText='position:fixed;inset:0;background:rgba(28,42,34,.86);z-index:10001;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(8px);padding:1rem';
+  function draw(done, err){
+    const sub = done ? (_en?'PIN updated. Sign in with your new PIN.':'PIN actualizado. Entra con tu nuevo PIN.')
+      : (step===1 ? (_en?'Choose a new 4-digit PIN':'Elige un PIN nuevo de 4 dígitos') : (_en?'Repeat it to confirm':'Repítelo para confirmar'));
+    overlay.innerHTML = `
+      <div class="pin-modal" style="background:linear-gradient(155deg,#faf6ee,#f0e8d8);border:1px solid rgba(196,154,60,.2);border-radius:16px;padding:1.8rem 1.6rem;width:300px;max-width:100%;text-align:center;box-shadow:0 12px 40px rgba(0,0,0,.3)">
+        <div style="font-family:'Cinzel',serif;font-size:1.1rem;color:var(--parchment);margin-bottom:.3rem">${done?(_en?'All set':'Listo'):(_en?'New PIN':'PIN nuevo')}</div>
+        <div style="font-family:'Quicksand',sans-serif;font-size:.76rem;color:rgba(28,42,34,.62);margin-bottom:1.1rem;line-height:1.4">${sub}</div>
+        ${done?`<div style="font-size:2rem;margin:.4rem 0 1rem;color:#2e7d32">✓</div>
+          <button id="pinResGo" style="width:100%;background:#8a5a2b;color:#fff;border:none;border-radius:10px;padding:.8rem;font-family:'Quicksand',sans-serif;font-weight:700;font-size:.9rem;cursor:pointer">${_en?'Go to sign in':'Ir a entrar'}</button>`:`
+        <div style="display:flex;gap:.5rem;justify-content:center;margin-bottom:.9rem">
+          ${[0,1,2,3].map(i=>`<div style="width:14px;height:14px;border-radius:50%;border:2px solid #c49a3c;background:${i<buffer.length?'#c49a3c':'transparent'}"></div>`).join('')}
+        </div>
+        <div style="font-size:.7rem;color:#c0392b;min-height:1.1rem;margin-bottom:.4rem">${err||''}</div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:.4rem;max-width:200px;margin:0 auto">
+          ${[1,2,3,4,5,6,7,8,9,'',0,'⌫'].map(k=>`<button data-k="${k}" style="background:rgba(28,42,34,.04);border:1px solid rgba(196,154,60,.15);border-radius:10px;padding:.65rem;font-size:1rem;color:var(--parchment);cursor:pointer;${k===''?'visibility:hidden;':''}">${k}</button>`).join('')}
+        </div>`}
+      </div>`;
+    if(done){
+      const go=overlay.querySelector('#pinResGo');
+      if(go) go.onclick=()=>{ overlay.remove(); try{ renderLogin(); }catch(_){} };
+      return;
+    }
+    overlay.querySelectorAll('button[data-k]').forEach(b=>{
+      const k=b.getAttribute('data-k');
+      b.onclick=()=>{
+        if(busy) return;
+        if(k==='⌫'){ buffer=buffer.slice(0,-1); draw(false,''); return; }
+        if(k===''||buffer.length>=4) return;
+        buffer+=k;
+        if(buffer.length===4){ draw(false,''); setTimeout(advance,140); }
+        else draw(false,'');
+      };
+    });
+  }
+  async function advance(){
+    if(step===1){ first=buffer; buffer=''; step=2; draw(false,''); return; }
+    if(buffer!==first){ buffer=''; first=''; step=1; draw(false, _en?"They don't match":'No coinciden'); return; }
+    busy=true;
+    const h=await hashPin(buffer);
+    const r=await supaConfirmPinReset(token, h);
+    busy=false;
+    if(r.ok && r.data && r.data.ok){
+      const nm=r.data.name;
+      try{ if(nm && typeof DB!=='undefined' && DB.employees && DB.employees[nm]){ DB.employees[nm].pin=h; saveDB(); } }catch(_){}
+      draw(true,'');
+    } else {
+      const code=(r.data&&r.data.error)||'';
+      buffer=''; first=''; step=1;
+      draw(false, code==='invalid_or_expired'
+        ? (_en?'Link expired. Request a new one.':'Enlace caducado. Pide otro.')
+        : (_en?'Could not reset. Try again.':'No se pudo. Inténtalo de nuevo.'));
+    }
+  }
+  document.body.appendChild(overlay);
+  draw(false,'');
+  if(typeof setupModalA11y==='function') setupModalA11y(overlay, ()=>overlay.remove());
+}
+
+// Overlay opcional tras crear el PIN (usuario nuevo): añadir correo de
+// recuperación. Se guarda con el hash del PIN recién creado como prueba.
+function promptRecoveryEmail(name, pinHash){
+  const _en = LANG==='en';
+  if(document.getElementById('recEmailOverlay')) return;
+  const overlay=document.createElement('div');
+  overlay.id='recEmailOverlay';
+  overlay.setAttribute('role','dialog'); overlay.setAttribute('aria-modal','true');
+  overlay.style.cssText='position:fixed;inset:0;background:rgba(28,42,34,.8);z-index:10000;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(8px);padding:1rem';
+  overlay.innerHTML=`
+    <div class="pin-modal" style="background:linear-gradient(155deg,#faf6ee,#f0e8d8);border:1px solid rgba(196,154,60,.2);border-radius:16px;padding:1.8rem 1.6rem;width:320px;max-width:100%;box-shadow:0 12px 40px rgba(0,0,0,.3)">
+      <div style="font-size:1.5rem;text-align:center;margin-bottom:.3rem">✉️</div>
+      <div style="font-family:'Cinzel',serif;font-size:1.05rem;color:var(--parchment);text-align:center;margin-bottom:.3rem">${_en?'Save your PIN':'Protege tu PIN'}</div>
+      <div style="font-family:'Quicksand',sans-serif;font-size:.78rem;color:rgba(28,42,34,.62);text-align:center;line-height:1.45;margin-bottom:1.1rem">${_en?'Add your email so you can recover your PIN if you ever forget it. Optional.':'Añade tu correo para poder recuperar tu PIN si algún día lo olvidas. Es opcional.'}</div>
+      <input id="recEmailInp" type="email" inputmode="email" autocomplete="email" placeholder="${_en?'your@email.com':'tu@correo.com'}" style="width:100%;box-sizing:border-box;padding:.75rem .9rem;border:1px solid rgba(196,154,60,.35);border-radius:10px;font-size:16px;background:#fff;color:#2b2b2b;margin-bottom:.4rem">
+      <div id="recEmailMsg" role="status" aria-live="polite" style="font-size:.72rem;min-height:1.1rem;text-align:center;margin-bottom:.6rem;line-height:1.35"></div>
+      <button id="recEmailSave" style="width:100%;background:#8a5a2b;color:#fff;border:none;border-radius:10px;padding:.8rem;font-family:'Quicksand',sans-serif;font-weight:700;font-size:.9rem;cursor:pointer">${_en?'Save email':'Guardar correo'}</button>
+      <button id="recEmailSkip" style="width:100%;background:transparent;border:none;margin-top:.5rem;padding:.5rem;font-family:'Quicksand',sans-serif;font-size:.78rem;color:rgba(28,42,34,.5);cursor:pointer">${_en?'Not now':'Ahora no'}</button>
+    </div>`;
+  document.body.appendChild(overlay);
+  const inp=overlay.querySelector('#recEmailInp');
+  const msg=overlay.querySelector('#recEmailMsg');
+  const saveBtn=overlay.querySelector('#recEmailSave');
+  overlay.querySelector('#recEmailSkip').onclick=()=>overlay.remove();
+  setTimeout(()=>{ try{ inp.focus(); }catch(_){} }, 60);
+  saveBtn.onclick=async ()=>{
+    const email=(inp.value||'').trim();
+    if(!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){ msg.style.color='#c0392b'; msg.textContent=_en?'Enter a valid email':'Escribe un correo válido'; return; }
+    saveBtn.disabled=true; saveBtn.textContent=_en?'Saving…':'Guardando…';
+    const r=await supaSetRecoveryEmail(name, pinHash, email);
+    if(r.ok && r.data && r.data.ok){
+      msg.style.color='#2e7d32'; msg.textContent=_en?'Saved! You can now recover your PIN by email.':'¡Guardado! Ya puedes recuperar tu PIN por correo.';
+      saveBtn.textContent=_en?'Saved ✓':'Guardado ✓';
+      setTimeout(()=>{ const o=document.getElementById('recEmailOverlay'); if(o) o.remove(); }, 2200);
+    } else {
+      const code=(r.data&&r.data.error)||'';
+      saveBtn.disabled=false; saveBtn.textContent=_en?'Save email':'Guardar correo';
+      msg.style.color='#c0392b';
+      msg.textContent = code==='email_taken' ? (_en?'That email is already linked to another account.':'Ese correo ya está en otra cuenta.')
+        : (_en?'Could not save. Try again later.':'No se pudo guardar. Prueba más tarde.');
+    }
+  };
+  if(typeof setupModalA11y==='function') setupModalA11y(overlay, ()=>overlay.remove());
 }
 
 // Sync visible dots from hidden input. Only digits are accepted; iOS sometimes
@@ -7820,7 +8021,9 @@ async function pinSubmit(){
       emp.pin=await hashPin(pinBuffer);
       saveDB();
       setEmployeePinServer(pinTarget, pinBuffer); // server bcrypt (no-op unless flag on)
+      const _rpName=pinTarget, _rpHash=emp.pin; // usuario nuevo → ofrecer correo de recuperación
       closePinAndEnter();
+      setTimeout(()=>{ try{ promptRecoveryEmail(_rpName, _rpHash); }catch(_){} }, 700);
     } else {
       document.getElementById('pinErr').textContent=t('pinNoMatch');
       updatePinDots(true);
@@ -26378,6 +26581,14 @@ document.addEventListener('visibilitychange', ()=>{
 
 // Init — check for remembered session
 (function autoLogin(){
+  // Enlace de recuperación (#reset=): siempre lleva al flujo de PIN nuevo, sin
+  // auto-entrar. Tras poner el PIN, el usuario entra por el login normal.
+  if(_pendingPinReset){
+    const _tk=_pendingPinReset; _pendingPinReset=null;
+    renderLogin();
+    setTimeout(()=>{ try{ showPinReset(_tk); }catch(_){} }, 150);
+    return;
+  }
   try {
     const sess = localStorage.getItem('txoko_session');
     if(sess){
