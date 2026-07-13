@@ -4376,10 +4376,13 @@ test('la app cablea recuperación de PIN sin enviar el PIN en claro', () => {
     'debe capturarse el deep-link #reset= y guardarlo en _pendingPinReset');
   assert(/if\(_pendingPinReset\)\{[\s\S]*showPinReset/.test(html),
     'autoLogin debe abrir showPinReset cuando hay token pendiente');
-  // el PIN nuevo se cifra en el cliente antes de confirmar (hashPin → newPinHash)
+  // la clave nueva se cifra en el cliente antes de confirmar (hashPin → hash)
   const reset = html.slice(html.indexOf('function showPinReset'), html.indexOf('function promptRecoveryEmail'));
-  assert(/hashPin\(buffer\)/.test(reset) && /supaConfirmPinReset\(token,\s*h\)/.test(reset),
-    'showPinReset debe hashear el PIN en el cliente y enviar solo el hash');
+  assert(/await hashPin\(a\)/.test(reset) && /supaConfirmPinReset\(token,\s*h\)/.test(reset),
+    'showPinReset debe hashear la clave en el cliente y enviar solo el hash');
+  // la pantalla de reset acepta contraseña de texto libre (sirve a ambos flujos)
+  assert(/id="pinResNew"/.test(reset) && /id="pinResConf"/.test(reset),
+    'showPinReset debe usar campos de contraseña de texto libre');
   // el correo se guarda con el hash del PIN como prueba (nunca sin verificar)
   assert(/supaSetRecoveryEmail\(name,\s*pinHash,\s*email\)/.test(html),
     'set-email debe llevar el hash del PIN como prueba de identidad');
@@ -4387,6 +4390,21 @@ test('la app cablea recuperación de PIN sin enviar el PIN en claro', () => {
   const modal = html.slice(html.indexOf('function showPinModal'), html.indexOf('// ═══════ RECUPERACIÓN'));
   assert(/pinStep==='enter'/.test(modal) && /openPinRecovery\(\)/.test(modal),
     'el enlace de recuperación solo debe mostrarse en el paso "enter"');
+});
+test('la recuperación está cableada también en el login por contraseña', () => {
+  // enlace "¿Olvidaste tu PIN o contraseña?" en el formulario visible
+  assert(/id="loginForgotLink"[^>]*onclick="openPinRecovery\(\)"/.test(html) ||
+         (/id="loginForgotRow"/.test(html) && /id="loginForgotLink"/.test(html) && /openPinRecovery\(\)/.test(html)),
+    'el login por contraseña debe ofrecer "¿Olvidaste tu PIN o contraseña?"');
+  // se muestra al iniciar sesión y se oculta al crear cuenta
+  assert(/forgot\.style\.display\s*=\s*'block'/.test(html) && /forgot\.style\.display\s*=\s*'none'/.test(html),
+    'el enlace de recuperación debe alternarse con el modo del login');
+  // usuario nuevo por contraseña → se le ofrece el correo de recuperación
+  assert(/promptRecoveryEmail\(_rn,\s*_rh\)/.test(html),
+    'un usuario nuevo (contraseña) debe recibir el prompt de correo');
+  // usuario existente → aviso único por dispositivo
+  assert(/recEmailAsked:/.test(html) && /promptRecoveryEmail\(userName,\s*hashedPin\)/.test(html),
+    'un usuario existente debe recibir el aviso de correo una sola vez por dispositivo');
 });
 
 // ─── 7. No leftover git conflict markers ────────────────────────
