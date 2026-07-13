@@ -4455,6 +4455,27 @@ test('la recuperación está cableada también en el login por contraseña', () 
     'un usuario existente debe recibir el aviso de correo una sola vez por dispositivo');
 });
 
+// ─── Endurecimiento de seguridad ────────────────────────────────
+console.log('\nSeguridad');
+test('custom_dishes: escrituras por Edge Function gateada, no anon directo', () => {
+  // backend con verificación de supervisor
+  assert(existsSync(join(ROOT, 'supabase/functions/manage-content/index.ts')),
+    'falta supabase/functions/manage-content/index.ts');
+  const fn = read('supabase/functions/manage-content/index.ts');
+  assert(/verify_supervisor_pin/.test(fn) && /'dish-upsert'/.test(fn) && /'dish-delete'/.test(fn),
+    'manage-content debe verificar el PIN de supervisor y cubrir upsert/delete');
+  assert(/error:\s*'auth'/.test(fn), 'manage-content debe rechazar sin PIN de supervisor');
+  // cliente: las escrituras van por manage-content, NO por el POST directo a la tabla
+  const up = html.slice(html.indexOf('async function supaUpsertCustomDish'), html.indexOf('async function syncCustomDishesFromCloud'));
+  assert(/functions\/v1\/manage-content/.test(up) && /supPin/.test(up),
+    'supaUpsertCustomDish debe llamar a manage-content con el PIN de supervisor');
+  assert(!/rest\/v1\/custom_dishes[^?]*`,\s*\{\s*method:\s*'POST'/.test(up),
+    'no debe quedar escritura directa (POST) a rest/v1/custom_dishes');
+  // el PIN de supervisor se guarda en memoria al autenticar y se borra al salir
+  assert(/let _supPin\s*=\s*null/.test(html) && /_supPin\s*=\s*entered/.test(html) && /_supPin\s*=\s*null;/.test(html),
+    '_supPin debe fijarse al autenticar y limpiarse al salir');
+});
+
 // ─── 7. No leftover git conflict markers ────────────────────────
 console.log('\nHygiene');
 test('no git conflict markers in tracked source', () => {
