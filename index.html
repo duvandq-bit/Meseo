@@ -44,7 +44,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Meseo · Formación de sala</title>
 <meta name="description" content="Meseo — Formación de equipos de sala: carta, alérgenos, vinos, exámenes y juegos de repaso.">
-<meta name="app-version" content="7.221">
+<meta name="app-version" content="7.222">
 <meta name="app-build" content="May 2026">
 <meta name="theme-color" content="#1c2a22">
 <!-- ═══ PWA ═══ -->
@@ -1515,7 +1515,7 @@ const CAT_COLORS={'Entrantes':'#c49a3c','Hamburguesas y Bocatas':'#b86050','Plat
 const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#c49a3c"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#a47a2c" opacity=".4"/><path d="M8 8v4a1 1 0 001 1h1v4M10 8v4" stroke="#fff" stroke-width="1.2" stroke-linecap="round" fill="none"/><path d="M15 8v8M14 8v3a1.5 1.5 0 003 0V8" stroke="#fff" stroke-width="1.2" stroke-linecap="round" fill="none"/></svg>`,'Hamburguesas y Bocatas':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#b86050"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#983838" opacity=".4"/><path d="M7 9h10M7 12h10M7 15h10" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/><path d="M8 9c0-2 2-3 4-3s4 1 4 3M8 15c0 2 2 3 4 3s4-1 4-3" fill="none" stroke="#fff" stroke-width="1" opacity=".7"/></svg>`,'Platos Principales':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#4888a0"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#2e6878" opacity=".4"/><path d="M5 15h14" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/><path d="M12 6a6 6 0 016 6H6a6 6 0 016-6z" fill="none" stroke="#fff" stroke-width="1.1"/><circle cx="10" cy="6" r=".7" fill="#fff" opacity=".7"/><circle cx="12" cy="5" r=".7" fill="#fff" opacity=".7"/><circle cx="14" cy="6" r=".7" fill="#fff" opacity=".7"/></svg>`,'Sugerencias':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#d4aa4c"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#a48a2c" opacity=".4"/><polygon points="12,5 14.5,10 20,10.5 16,14 17,20 12,17 7,20 8,14 4,10.5 9.5,10" fill="#fff" opacity=".9"/></svg>`,'Guarniciones y Salsas':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#4d8a5e"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#2d6a3e" opacity=".4"/><path d="M12 18V10M5 10c0-4 3-6 7-6s7 2 7 6c0 5-3 8-7 8s-7-3-7-8z" fill="none" stroke="#fff" stroke-width="1.1"/><path d="M5 10c3 0 5 1 7 2.5" fill="none" stroke="#fff" stroke-width=".8" opacity=".6"/></svg>`,'Postres':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#7a6aaa"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#5a4a8a" opacity=".4"/><path d="M9 19h6M12 12v7M7 6l2 4.5a3 3 0 006 0L17 6H7z" fill="none" stroke="#fff" stroke-width="1.1" stroke-linecap="round"/></svg>`,'Vegetariano':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#5a9a6e"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#3a7a4e" opacity=".4"/><path d="M9 18h6M12 18V10M12 10c0-3 2-5 5-5-.7 2.5-2.5 5-5 5zM12 10c0-3-2-5-5-5 .7 2.5 2.5 5 5 5z" fill="none" stroke="#fff" stroke-width="1.1" stroke-linecap="round"/></svg>`};
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='7.221';  // sincronizada con sw.js VERSION (guard de CI)
+const APP_VERSION='7.222';  // sincronizada con sw.js VERSION (guard de CI)
 const APP_BUILD='Jul 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;
@@ -1540,13 +1540,13 @@ const ET_CHEF_SPRITES={calm:'img/sprites/chef-calm.webp',attack:'img/sprites/che
 
 // ═══ Alérgeno Zero — JEFES alérgeno (hoja del propietario, estilo jefes de Cuphead, jul 2026) ═══
 // Versión jefe de cada monstruo, misma clave que ALLERGENS/ET_FOE_SPRITES.
-const ET_BOSS_SPRITES={gluten:'img/sprites/boss-gluten.webp',lacteos:'img/sprites/boss-lacteos.webp',frutos:'img/sprites/boss-frutos.webp',crust:'img/sprites/boss-crust.webp',huevo:'img/sprites/boss-huevo.webp',pescado:'img/sprites/boss-pescado.webp',soja:'img/sprites/boss-soja.webp',sulfitos:'img/sprites/boss-sulfitos.webp'};
+const ET_BOSS_SPRITES={gluten:'img/sprites/boss-gluten.webp',lacteos:'img/sprites/boss-lacteos.webp',frutos:'img/sprites/boss-frutos.webp',crust:'img/sprites/boss-crust.webp',huevo:'img/sprites/boss-huevo.webp',pescado:'img/sprites/boss-pescado.webp',soja:'img/sprites/boss-soja.webp',sulfitos:'img/sprites/boss-sulfitos.webp',cacahuete:'img/sprites/boss-cacahuete.webp',apio:'img/sprites/boss-apio.webp',mostaza:'img/sprites/boss-mostaza.webp',sesamo:'img/sprites/boss-sesamo.webp',molusco:'img/sprites/boss-molusco.webp',altramuz:'img/sprites/boss-altramuz.webp'};
 
 // ═══ Alérgeno Zero — monstruos-alérgeno ilustrados (hoja del propietario, Grok jul 2026) ═══
 // 8 sprites recortados de UNA hoja (estilo anclado con el sprite del héroe).
 // Clave = ALLERGENS[].key; el motor los dibuja con la misma sombra, squash por
 // arquetipo, aro de élite y corona de jefe que ya tenía el dibujo por código.
-const ET_FOE_SPRITES={gluten:'img/sprites/foe-gluten.webp',lacteos:'img/sprites/foe-lacteos.webp',frutos:'img/sprites/foe-frutos.webp',crust:'img/sprites/foe-crust.webp',huevo:'img/sprites/foe-huevo.webp',pescado:'img/sprites/foe-pescado.webp',soja:'img/sprites/foe-soja.webp',sulfitos:'img/sprites/foe-sulfitos.webp'};
+const ET_FOE_SPRITES={gluten:'img/sprites/foe-gluten.webp',lacteos:'img/sprites/foe-lacteos.webp',frutos:'img/sprites/foe-frutos.webp',crust:'img/sprites/foe-crust.webp',huevo:'img/sprites/foe-huevo.webp',pescado:'img/sprites/foe-pescado.webp',soja:'img/sprites/foe-soja.webp',sulfitos:'img/sprites/foe-sulfitos.webp',cacahuete:'img/sprites/foe-cacahuete.webp',apio:'img/sprites/foe-apio.webp',mostaza:'img/sprites/foe-mostaza.webp',sesamo:'img/sprites/foe-sesamo.webp',molusco:'img/sprites/foe-molusco.webp',altramuz:'img/sprites/foe-altramuz.webp'};
 
 // ═══ Alérgeno Zero — sprite del héroe (referencia del propietario, vídeo Grok jul 2026) ═══
 // Ciclo de carrera de 2 fotogramas (cámara fija → registro perfecto), recortado a
@@ -23901,6 +23901,14 @@ function launchElTurno(){
             <div style="flex:1" class="et-xpwrap"><div class="et-xpfill" id="etXpfill"></div></div>
             <div class="et-pill" id="etScorePill">0 <b>comandas</b></div>
           </div>
+          <!-- OBJETIVO visible (jul 2026): los usuarios decían "no tiene objetivo".
+               Barra de progreso hacia el CIERRE (10:00 = victoria) con hitos de
+               los 3 CHEFS, y contador de chefs despachados. Convierte el reloj que
+               solo subía en una meta con avance a la vista. -->
+          <div class="et-obj" id="etObj">
+            <div class="et-objfill" id="etObjfill"></div>
+            <div class="et-objlbl"><span id="etObjTxt">Aguanta al cierre</span><span id="etChefTxt">👨‍🍳 <b>0/3</b></span></div>
+          </div>
           <div class="et-order" id="etOrderBanner" style="display:none"></div>
           <div id="etBossbar" style="display:none">
             <span id="etBossName"></span>
@@ -23913,7 +23921,7 @@ function launchElTurno(){
       <div class="et-screen" id="etStart">
         <div class="et-sub">${(typeof ACTIVE_VENUE!=='undefined'&&ACTIVE_VENUE&&ACTIVE_VENUE.eyebrow)?escapeHTML(ACTIVE_VENUE.eyebrow):'Meseo'}</div>
         <div class="et-card"><div class="et-title">Alérgeno<br>Zero</div></div>
-        <div class="et-kick">Sobrevive al servicio hasta el <b>cierre (10:00)</b>. Las <b>alergias</b> te rodean — despáchalas con la bandeja, sube de nivel y aguanta. <b>Conócelas y sobrevivirás.</b></div>
+        <div class="et-kick"><b>TU MISIÓN:</b> aguanta hasta el <b>cierre (10:00)</b> y despacha a los <b>3 CHEFS</b> especiales (min 3, 6 y 9). Las <b>alergias</b> te rodean — despáchalas con la bandeja, sube de nivel y aguanta. <b>Llegar al cierre es ganar.</b></div>
         <div class="et-chars" id="etChars"></div>
         <div id="etShop"></div>
         <button class="et-big" id="etPlayBtn">Empezar turno</button>
@@ -23981,7 +23989,17 @@ function launchElTurno(){
     {key:'huevo',  name:'Huevos',       emoji:'🥚', col:'#e8d48a'},
     {key:'pescado',name:'Pescado',      emoji:'🐟', col:'#5a97a8'},
     {key:'soja',   name:'Soja',         emoji:'🫛', col:'#7a9a4a'},
-    {key:'sulfitos',name:'Sulfitos',    emoji:'🍷', col:'#8a3a5a'}
+    {key:'sulfitos',name:'Sulfitos',    emoji:'🍷', col:'#8a3a5a'},
+    // Los 6 alérgenos que faltaban para completar los 14 de la UE (jul 2026):
+    // más variedad de jefes Y valor formativo (el personal debe conocer los 14).
+    // Arte ilustrado por Grok se enchufa solo (foe-<clave>.webp / boss-<clave>.webp);
+    // sin sprite, el motor los dibuja como disco de color + emoji (respaldo).
+    {key:'cacahuete',name:'Cacahuetes', emoji:'🥜', col:'#c98a4a'},
+    {key:'apio',    name:'Apio',        emoji:'🥬', col:'#7aa53a'},
+    {key:'mostaza', name:'Mostaza',     emoji:'🫙', col:'#e0b81c'},
+    {key:'sesamo',  name:'Sésamo',      emoji:'🫓', col:'#d8c69a'},
+    {key:'molusco', name:'Moluscos',    emoji:'🦪', col:'#6a7ab0'},
+    {key:'altramuz',name:'Altramuces',  emoji:'🫘', col:'#d4b028'}
   ];
   // La leyenda muestra el SPRITE real de cada monstruo (no el emoji): lo que
   // ves aquí es exactamente lo que te ataca en la partida.
@@ -24231,7 +24249,7 @@ function launchElTurno(){
         dashT:0, dashCd:0, dashVX:0, dashVY:0, trail:[], rings:[],
         enemies:[], bullets:[], gems:[], pickups:[], parts:[], bombs:[], explosions:[], dmgs:[], eshots:[], zones:[],
         spawnT:0, spawnInt:52, roster:ALLERGENS.slice(0,4).slice(),
-        nextElite:55, nextSurge:75, bosses:0,
+        nextElite:55, nextSurge:75, bosses:0, chefsKilled:0,
         target:null, targetT:0, kills:0, nextBoss:38, nextChef:180, shake:0,
         rerolls:1, cloche:null, nextClo:50, closed:false, warned:false,
         bgIdx:0, bgPrev:0, bgFade:0 };
@@ -24386,7 +24404,8 @@ function launchElTurno(){
   // (lácteos/soja/sulfitos). EL CHEF barre la sala en abanico radial. Todas
   // llegan tras un aviso (aro dorado de carga) y se esquivan con movimiento
   // o dash — pedagogía intacta: el alérgeno "ataca" con su propia identidad.
-  const BOSS_ABIL={gluten:'volley',huevo:'volley',pescado:'volley',frutos:'summon',crust:'summon',lacteos:'zone',soja:'zone',sulfitos:'zone',chef:'volley'};
+  const BOSS_ABIL={gluten:'volley',huevo:'volley',pescado:'volley',frutos:'summon',crust:'summon',lacteos:'zone',soja:'zone',sulfitos:'zone',chef:'volley',
+    cacahuete:'summon',molusco:'summon',apio:'zone',mostaza:'zone',sesamo:'volley',altramuz:'volley'};
   function bossAbility(e){
     const ab=BOSS_ABIL[e.a.key]||'volley';
     if(ab==='volley'){ // abanico apuntado (radial completo si es EL CHEF)
@@ -24691,7 +24710,10 @@ function launchElTurno(){
       const cb=G.combo>=25?2:G.combo>=10?1:0;
       if(G.combo===10||G.combo===25||G.combo===50) { flash('¡RACHA ×'+G.combo+'!','#e0a02c'); sfx('surge'); vibe(20); }
       if(e.boss){ for(let g=0;g<10;g++) G.gems.push({x:e.x+(Math.random()-.5)*44,y:e.y+(Math.random()-.5)*44,val:3,col:'#e0a02c'});
-        G.hp=Math.min(G.maxhp,G.hp+15); G.shake=10; G.bosses++; G.hitStop=Math.max(G.hitStop,7); flash('¡JEFE ABATIDO!','#4fd0c0'); vibe([30,40,50]);
+        G.hp=Math.min(G.maxhp,G.hp+15); G.shake=10; G.bosses++; G.hitStop=Math.max(G.hitStop,7);
+        if(e.chef){ G.chefsKilled=(G.chefsKilled||0)+1; flash('¡CHEF '+G.chefsKilled+'/3 DESPACHADO!','#e8b83a'); }
+        else flash('¡JEFE ABATIDO!','#4fd0c0');
+        vibe([30,40,50]);
         // carrito de postres: el botín ceremonial del jefe (EL CHEF, doble seguro)
         G.pickups.push({x:e.x,y:e.y,chest:true,dbl:!!e.chef,life:9999}); }
       else G.gems.push({x:e.x,y:e.y,val:(isTarget?2:1)+cb,col:isTarget?'#e0a02c':'#4fd0c0'});
@@ -25074,6 +25096,13 @@ function launchElTurno(){
     document.getElementById('etLvlPill').innerHTML='Nv <b>'+G.level+'</b>';
     document.getElementById('etScorePill').innerHTML=G.score+' <b>comandas</b>';
     document.getElementById('etXpfill').style.width=(G.xp/G.xpNext*100)+'%';
+    // OBJETIVO: progreso hacia el cierre (10:00) + chefs despachados de 3.
+    const _prog=Math.max(0,Math.min(100,G.time/600*100));
+    document.getElementById('etObjfill').style.width=_prog+'%';
+    const _ck=G.chefsKilled||0;
+    document.getElementById('etChefTxt').innerHTML='👨‍🍳 <b>'+_ck+'/3</b>';
+    document.getElementById('etObjTxt').textContent = G.closed ? '¡CIERRE! aguanta a la Inspectora' : (_ck>=3 ? 'Aguanta al cierre' : 'Vence a los 3 chefs y llega al cierre');
+    document.getElementById('etObj').classList.toggle('et-obj-done', G.closed);
     // racha de comandas (aparece a partir de ×5, se calienta a partir de ×25)
     const cbEl=document.getElementById('etCombo');
     if(G.combo>=5){ cbEl.style.display='flex'; document.getElementById('etComboN').textContent=G.combo;
@@ -25108,6 +25137,7 @@ function launchElTurno(){
     document.getElementById('etQuiz').style.display='none';
     if(_etChestIv){ clearInterval(_etChestIv); _etChestIv=null; }
     newGame(); running=true; paused=false; last=performance.now(); mStep=0; mLoop=0;
+    flash('OBJETIVO: llega al CIERRE y vence a los 3 CHEFS','#e8c44c');
     sfx('coin');                                    // desbloquea el AudioContext con el gesto
     if(!musicIv) musicIv=setInterval(musicTick,138); // arranca la banda sonora del servicio
     if(!rafId) rafId=requestAnimationFrame(loop);
@@ -25151,12 +25181,13 @@ function launchElTurno(){
     _mm.tips+=_earn; _etMetaSave(_mm); _etRenderShop();
     const bT=Math.max(best,Math.floor(G.time)), bm=Math.floor(bT/60), bs=bT%60;
     document.getElementById('etOverTitle').textContent=G.closed?'¡SERVICIO COMPLETO!':isRec?'¡RÉCORD!':'SE ACABÓ';
-    document.getElementById('etOverSub').textContent=(G.closed?'Aguantaste hasta el cierre':isRec?'Tu mejor turno hasta la fecha':'Fin del servicio')+' · +'+_earn+' 💰';
+    const _ck=G.chefsKilled||0;
+    document.getElementById('etOverSub').textContent=(G.closed?'¡Servicio completo!':isRec?'Tu mejor turno hasta la fecha':'Fin del servicio')+' · '+_ck+'/3 chefs · +'+_earn+' 💰';
     document.getElementById('etOverStats').innerHTML=
       `<div class="et-st"><b>${tstr}</b><span>Tiempo</span></div>
        <div class="et-st"><b>${G.score}</b><span>Comandas</span></div>
        <div class="et-st"><b>${G.level}</b><span>Nivel</span></div>
-       <div class="et-st"><b>×${G.bestCombo}</b><span>Mejor racha</span></div>
+       <div class="et-st"><b>${_ck}/3</b><span>Chefs</span></div>
        <div class="et-st"><b>${G.bosses}</b><span>Jefes</span></div>
        <div class="et-st"><b>${bm}:${bs<10?'0':''}${bs}</b><span>Mejor turno</span></div>`;
     document.getElementById('etOver').style.display='flex';

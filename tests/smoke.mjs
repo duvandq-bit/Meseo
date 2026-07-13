@@ -2726,6 +2726,32 @@ test('games hub (renderTxoko) has a card launching Alérgeno Zero', () => {
   assert(hub.includes('Alérgeno Zero'), 'Alérgeno Zero card title missing from games hub');
 });
 
+test('Alérgeno Zero: 14 alérgenos de la UE + objetivo visible (jul 2026)', () => {
+  const s = html.indexOf('const ALLERGENS=[');
+  assert(s !== -1, 'no se encontró el array ALLERGENS');
+  const arr = html.slice(s, html.indexOf('];', s));
+  const nuevos = ['cacahuete','apio','mostaza','sesamo','molusco','altramuz'];
+  for (const k of nuevos) assert(arr.includes("key:'"+k+"'"), 'falta el alérgeno '+k+' en ALLERGENS');
+  // los 8 originales siguen presentes → total 14 (los oficiales de la UE)
+  const claves = (arr.match(/key:'[a-z]+'/g)||[]);
+  assert(claves.length === 14, 'deberían ser 14 alérgenos (UE), hay '+claves.length);
+  // mapas de sprites preparados para el arte de Grok (foe/boss por clave)
+  for (const k of nuevos) {
+    assert(html.includes('boss-'+k+'.webp'), 'falta el sprite boss de '+k);
+    assert(html.includes('foe-'+k+'.webp'), 'falta el sprite foe de '+k);
+  }
+  // cada jefe nuevo tiene habilidad definida (no cae en el volley por defecto)
+  const ab = html.slice(html.indexOf('const BOSS_ABIL='), html.indexOf('const BOSS_ABIL=')+420);
+  for (const k of nuevos) assert(ab.includes(k+':'), 'BOSS_ABIL sin entrada para '+k);
+  // OBJETIVO visible: barra de progreso al cierre + contador de chefs + misión
+  assert(/id="etObjfill"/.test(html) && /id="etChefTxt"/.test(html),
+    'falta la barra de objetivo o el contador de chefs en el HUD');
+  assert(/chefsKilled/.test(html), 'no se cuentan los chefs despachados (objetivo)');
+  assert(/TU MISIÓN/.test(html), 'la pantalla de inicio no comunica la misión');
+  const css = read('styles.css');
+  assert(/\.et-obj\{/.test(css) && /\.et-objfill\{/.test(css), 'falta el CSS de la barra de objetivo');
+});
+
 test('launchElTurno() is idempotent (guards against a second overlay)', () => {
   const i = html.indexOf('function launchElTurno(');
   assert(i !== -1, 'launchElTurno not found');
@@ -2968,7 +2994,11 @@ test('Camarero Survivors: monstruos-alérgeno ilustrados con respaldo (hoja del 
   assert(/const ET_FOE_SPRITES=\{/.test(html), 'ET_FOE_SPRITES map missing');
   const mapSrc = html.slice(html.indexOf('const ET_FOE_SPRITES={'), html.indexOf('};', html.indexOf('const ET_FOE_SPRITES={')));
   const spriteKeys = [...mapSrc.matchAll(/([a-z]+):'img\/sprites\/foe-([a-z]+)\.webp'/g)].map(m => m[1]);
-  for (const k of spriteKeys) assert(existsSync(join(ROOT, `img/sprites/foe-${k}.webp`)), `img/sprites/foe-${k}.webp missing on disk`);
+  // Arte en disco obligatorio solo para los 8 alérgenos originales; los 6 nuevos
+  // (para completar los 14 de la UE, jul 2026) están cableados en el mapa pero su
+  // arte de Grok puede llegar después (respaldo disco+emoji mientras tanto).
+  const CON_ARTE = ['gluten','lacteos','frutos','crust','huevo','pescado','soja','sulfitos'];
+  for (const k of CON_ARTE) assert(existsSync(join(ROOT, `img/sprites/foe-${k}.webp`)), `img/sprites/foe-${k}.webp missing on disk`);
   const i = html.indexOf('function launchElTurno(');
   const body = html.slice(i, i + 90000);
   // Las claves del mapa deben cubrir EXACTAMENTE el roster de ALLERGENS del juego.
@@ -2976,7 +3006,7 @@ test('Camarero Survivors: monstruos-alérgeno ilustrados con respaldo (hoja del 
   // como pseudo-alérgeno y no debe contarse aquí)
   const rosterSrc = body.slice(body.indexOf('const ALLERGENS=['), body.indexOf('];', body.indexOf('const ALLERGENS=[')));
   const roster = [...rosterSrc.matchAll(/\{key:'([a-z]+)',\s*name:/g)].map(m => m[1]);
-  assert(roster.length === 8, `expected 8 allergen foes in the roster, found ${roster.length}`);
+  assert(roster.length === 14, `expected 14 allergen foes (UE) in the roster, found ${roster.length}`);
   for (const k of roster) assert(spriteKeys.includes(k), `foe sprite missing for allergen '${k}'`);
   assert(spriteKeys.length === roster.length, 'ET_FOE_SPRITES must not carry unused sprites');
   // Cableado: loader por clave, dibujo del sprite con squash heredado y respaldo íntegro.
@@ -3007,14 +3037,17 @@ test('Camarero Survivors: JEFES alérgeno con arte propio y más grandes (jul 20
   assert(/const ET_BOSS_SPRITES=\{/.test(html), 'ET_BOSS_SPRITES map missing');
   const mapSrc = html.slice(html.indexOf('const ET_BOSS_SPRITES={'), html.indexOf('};', html.indexOf('const ET_BOSS_SPRITES={')));
   const bossKeys = [...mapSrc.matchAll(/([a-z]+):'img\/sprites\/boss-([a-z]+)\.webp'/g)].map(m => m[1]);
-  for (const k of bossKeys) assert(existsSync(join(ROOT, `img/sprites/boss-${k}.webp`)), `img/sprites/boss-${k}.webp missing on disk`);
+  // Arte en disco obligatorio solo para los 8 originales; los 6 nuevos alérgenos
+  // (UE) van cableados y con respaldo hasta que llegue su arte de Grok.
+  const CON_ARTE = ['gluten','lacteos','frutos','crust','huevo','pescado','soja','sulfitos'];
+  for (const k of CON_ARTE) assert(existsSync(join(ROOT, `img/sprites/boss-${k}.webp`)), `img/sprites/boss-${k}.webp missing on disk`);
   const i = html.indexOf('function launchElTurno(');
   const body = html.slice(i, i + 90000);
   // roster = SOLO el array ALLERGENS (EL CHEF también define {key:'chef',...}
   // como pseudo-alérgeno y no debe contarse aquí)
   const rosterSrc = body.slice(body.indexOf('const ALLERGENS=['), body.indexOf('];', body.indexOf('const ALLERGENS=[')));
   const roster = [...rosterSrc.matchAll(/\{key:'([a-z]+)',\s*name:/g)].map(m => m[1]);
-  assert(roster.length === 8 && bossKeys.length === 8, 'boss sprite map must cover the 8-allergen roster exactly');
+  assert(roster.length === 14 && bossKeys.length === 14, 'boss sprite map must cover the 14-allergen roster exactly');
   for (const k of roster) assert(bossKeys.includes(k), `boss sprite missing for allergen '${k}'`);
   // Cableado: loader propio + el dibujo del jefe PREFIERE su sprite de jefe.
   assert(/BOSSES\[a\.key\]=img/.test(body), 'per-key boss image loader missing');
@@ -3251,7 +3284,7 @@ test('Camarero Survivors AAA: dash, racha, élites, oleadas, jefe con embestida,
   assert(/G\.hitStop/.test(body) && /function vibe\(/.test(body), 'juice: hit-stop and haptics helpers must exist');
   assert(/id="etBossbar"/.test(body), 'HUD: the boss health bar must be in the overlay markup');
   // (9) fin de servicio con estadísticas + mejor turno persistente
-  assert(/etBestTime/.test(body) && /Mejor racha/.test(body), 'game over: run stats + persistent best time must render');
+  assert(/etBestTime/.test(body) && /Chefs/.test(body), 'game over: run stats + persistent best time must render');
   // CSS de los sistemas nuevos
   const css = read('styles.css');
   for (const sel of ['#etDashBtn', '#etCombo', '#etBossbar', '.et-pick.et-evo', '.et-statgrid']) {
@@ -3309,8 +3342,11 @@ test('Camarero Survivors: la bandeja PARECE bandeja y cada jefe tiene habilidad 
   assert(/if\(TRAY\._ok\)\{/.test(body),
     'tray draw must prefer the sprite and keep the code-drawn platter as fallback');
   // — habilidades de jefe: mapa por alérgeno + las tres familias cableadas —
-  assert(/const BOSS_ABIL=\{gluten:'volley',huevo:'volley',pescado:'volley',frutos:'summon',crust:'summon',lacteos:'zone',soja:'zone',sulfitos:'zone',chef:'volley'\}/.test(body),
+  assert(/const BOSS_ABIL=\{gluten:'volley',huevo:'volley',pescado:'volley',frutos:'summon',crust:'summon',lacteos:'zone',soja:'zone',sulfitos:'zone',chef:'volley',/.test(body),
     'every allergen family (and the chef) must map to its boss ability');
+  // los 6 alérgenos nuevos (UE) también tienen habilidad de jefe definida
+  for (const k of ['cacahuete','apio','mostaza','sesamo','molusco','altramuz'])
+    assert(new RegExp(k + ":'(volley|summon|zone)'").test(body), `BOSS_ABIL sin habilidad para ${k}`);
   assert(/function bossAbility\(e\)/.test(body) && /eshots:\[\], zones:\[\]/.test(body),
     'bossAbility() and the eshots/zones state arrays must exist');
   assert(/e\.wind-=dt; spdMul=0\.15; if\(e\.wind<=0\) bossAbility\(e\);/.test(body),
