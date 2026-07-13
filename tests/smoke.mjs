@@ -2994,11 +2994,10 @@ test('Camarero Survivors: monstruos-alérgeno ilustrados con respaldo (hoja del 
   assert(/const ET_FOE_SPRITES=\{/.test(html), 'ET_FOE_SPRITES map missing');
   const mapSrc = html.slice(html.indexOf('const ET_FOE_SPRITES={'), html.indexOf('};', html.indexOf('const ET_FOE_SPRITES={')));
   const spriteKeys = [...mapSrc.matchAll(/([a-z]+):'img\/sprites\/foe-([a-z]+)\.webp'/g)].map(m => m[1]);
-  // Arte en disco obligatorio solo para los 8 alérgenos originales; los 6 nuevos
-  // (para completar los 14 de la UE, jul 2026) están cableados en el mapa pero su
-  // arte de Grok puede llegar después (respaldo disco+emoji mientras tanto).
-  const CON_ARTE = ['gluten','lacteos','frutos','crust','huevo','pescado','soja','sulfitos'];
-  for (const k of CON_ARTE) assert(existsSync(join(ROOT, `img/sprites/foe-${k}.webp`)), `img/sprites/foe-${k}.webp missing on disk`);
+  // Arte en disco para los 14 alérgenos de la UE (los 6 nuevos recortados de la
+  // hoja Grok del propietario, jul 2026). Si algún día se añade un alérgeno sin
+  // sprite, el motor ya lo dibuja con el respaldo disco+emoji.
+  for (const k of spriteKeys) assert(existsSync(join(ROOT, `img/sprites/foe-${k}.webp`)), `img/sprites/foe-${k}.webp missing on disk`);
   const i = html.indexOf('function launchElTurno(');
   const body = html.slice(i, i + 90000);
   // Las claves del mapa deben cubrir EXACTAMENTE el roster de ALLERGENS del juego.
@@ -3037,10 +3036,9 @@ test('Camarero Survivors: JEFES alérgeno con arte propio y más grandes (jul 20
   assert(/const ET_BOSS_SPRITES=\{/.test(html), 'ET_BOSS_SPRITES map missing');
   const mapSrc = html.slice(html.indexOf('const ET_BOSS_SPRITES={'), html.indexOf('};', html.indexOf('const ET_BOSS_SPRITES={')));
   const bossKeys = [...mapSrc.matchAll(/([a-z]+):'img\/sprites\/boss-([a-z]+)\.webp'/g)].map(m => m[1]);
-  // Arte en disco obligatorio solo para los 8 originales; los 6 nuevos alérgenos
-  // (UE) van cableados y con respaldo hasta que llegue su arte de Grok.
-  const CON_ARTE = ['gluten','lacteos','frutos','crust','huevo','pescado','soja','sulfitos'];
-  for (const k of CON_ARTE) assert(existsSync(join(ROOT, `img/sprites/boss-${k}.webp`)), `img/sprites/boss-${k}.webp missing on disk`);
+  // Arte de jefe en disco para los 14 alérgenos de la UE (los 6 nuevos de la hoja
+  // Grok del propietario, jul 2026), con respaldo del motor para cualquier futuro.
+  for (const k of bossKeys) assert(existsSync(join(ROOT, `img/sprites/boss-${k}.webp`)), `img/sprites/boss-${k}.webp missing on disk`);
   const i = html.indexOf('function launchElTurno(');
   const body = html.slice(i, i + 90000);
   // roster = SOLO el array ALLERGENS (EL CHEF también define {key:'chef',...}
