@@ -44,7 +44,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Meseo · Formación de sala</title>
 <meta name="description" content="Meseo — Formación de equipos de sala: carta, alérgenos, vinos, exámenes y juegos de repaso.">
-<meta name="app-version" content="7.222">
+<meta name="app-version" content="7.223">
 <meta name="app-build" content="May 2026">
 <meta name="theme-color" content="#1c2a22">
 <!-- ═══ PWA ═══ -->
@@ -1515,7 +1515,7 @@ const CAT_COLORS={'Entrantes':'#c49a3c','Hamburguesas y Bocatas':'#b86050','Plat
 const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#c49a3c"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#a47a2c" opacity=".4"/><path d="M8 8v4a1 1 0 001 1h1v4M10 8v4" stroke="#fff" stroke-width="1.2" stroke-linecap="round" fill="none"/><path d="M15 8v8M14 8v3a1.5 1.5 0 003 0V8" stroke="#fff" stroke-width="1.2" stroke-linecap="round" fill="none"/></svg>`,'Hamburguesas y Bocatas':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#b86050"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#983838" opacity=".4"/><path d="M7 9h10M7 12h10M7 15h10" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/><path d="M8 9c0-2 2-3 4-3s4 1 4 3M8 15c0 2 2 3 4 3s4-1 4-3" fill="none" stroke="#fff" stroke-width="1" opacity=".7"/></svg>`,'Platos Principales':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#4888a0"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#2e6878" opacity=".4"/><path d="M5 15h14" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/><path d="M12 6a6 6 0 016 6H6a6 6 0 016-6z" fill="none" stroke="#fff" stroke-width="1.1"/><circle cx="10" cy="6" r=".7" fill="#fff" opacity=".7"/><circle cx="12" cy="5" r=".7" fill="#fff" opacity=".7"/><circle cx="14" cy="6" r=".7" fill="#fff" opacity=".7"/></svg>`,'Sugerencias':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#d4aa4c"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#a48a2c" opacity=".4"/><polygon points="12,5 14.5,10 20,10.5 16,14 17,20 12,17 7,20 8,14 4,10.5 9.5,10" fill="#fff" opacity=".9"/></svg>`,'Guarniciones y Salsas':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#4d8a5e"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#2d6a3e" opacity=".4"/><path d="M12 18V10M5 10c0-4 3-6 7-6s7 2 7 6c0 5-3 8-7 8s-7-3-7-8z" fill="none" stroke="#fff" stroke-width="1.1"/><path d="M5 10c3 0 5 1 7 2.5" fill="none" stroke="#fff" stroke-width=".8" opacity=".6"/></svg>`,'Postres':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#7a6aaa"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#5a4a8a" opacity=".4"/><path d="M9 19h6M12 12v7M7 6l2 4.5a3 3 0 006 0L17 6H7z" fill="none" stroke="#fff" stroke-width="1.1" stroke-linecap="round"/></svg>`,'Vegetariano':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#5a9a6e"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#3a7a4e" opacity=".4"/><path d="M9 18h6M12 18V10M12 10c0-3 2-5 5-5-.7 2.5-2.5 5-5 5zM12 10c0-3-2-5-5-5 .7 2.5 2.5 5 5 5z" fill="none" stroke="#fff" stroke-width="1.1" stroke-linecap="round"/></svg>`};
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='7.222';  // sincronizada con sw.js VERSION (guard de CI)
+const APP_VERSION='7.223';  // sincronizada con sw.js VERSION (guard de CI)
 const APP_BUILD='Jul 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;
@@ -1537,6 +1537,10 @@ const CRITIC_ANIM={talk:'img/sprites/critic-talk.jpg',bored:'img/sprites/critic-
 // color del fondo y el recorte por distancia la dejaba transparente (se veía
 // la tarima a través — 'se ve amarillo', reporte del propietario).
 const ET_CHEF_SPRITES={calm:'img/sprites/chef-calm.webp',attack:'img/sprites/chef-attack.webp'};
+// LA MÁNAGER — aliada (jul 2026): cruza volando de vez en cuando y suelta una
+// botella que explota y limpia enemigos. Arte de Grok (mujer volando con
+// botella) se enchufa aquí; sin sprite, se dibuja un respaldo.
+const ET_HELPER_SPRITE='img/sprites/helper-manager.webp';
 
 // ═══ Alérgeno Zero — JEFES alérgeno (hoja del propietario, estilo jefes de Cuphead, jul 2026) ═══
 // Versión jefe de cada monstruo, misma clave que ALLERGENS/ET_FOE_SPRITES.
@@ -24120,6 +24124,7 @@ function launchElTurno(){
   // imponente mientras patrulla, furioso con el cucharón al telegrafiar/embestir.
   const CHEF_SPR={};
   for(const k of ['calm','attack']){ const img=new Image(); img.onload=()=>{ img._ok=true; }; img.src=ET_CHEF_SPRITES[k]; CHEF_SPR[k]=img; }
+  const MGR_IMG=new Image(); MGR_IMG.onload=()=>{ MGR_IMG._ok=true; }; MGR_IMG.src=ET_HELPER_SPRITE;
   // Bandeja ilustrada (Grok del propietario, jul 2026): si el sprite existe,
   // las bandejas en vuelo lo usan; hasta entonces (o si falla la carga) el
   // dibujo por código con canapés hace de respaldo. Mismo patrón _ok de todos.
@@ -24247,11 +24252,12 @@ function launchElTurno(){
         evoPierce:0, evoKnives:0, evoCava:0,
         combo:0, comboT:0, bestCombo:0, hitStop:0,
         dashT:0, dashCd:0, dashVX:0, dashVY:0, trail:[], rings:[],
-        enemies:[], bullets:[], gems:[], pickups:[], parts:[], bombs:[], explosions:[], dmgs:[], eshots:[], zones:[],
+        enemies:[], bullets:[], gems:[], pickups:[], parts:[], bombs:[], explosions:[], dmgs:[], eshots:[], zones:[], mgrBottles:[],
         spawnT:0, spawnInt:52, roster:ALLERGENS.slice(0,4).slice(),
         nextElite:55, nextSurge:75, bosses:0, chefsKilled:0,
         target:null, targetT:0, kills:0, nextBoss:38, nextChef:180, shake:0,
         rerolls:1, cloche:null, nextClo:50, closed:false, warned:false,
+        manager:null, nextMgr:34,
         bgIdx:0, bgPrev:0, bgFade:0 };
     // lo permanente entra antes de que el turno empiece: mejoras del oficio
     // compradas con propinas + el oficio elegido (jul 2026, meta-progresión)
@@ -24612,6 +24618,34 @@ function launchElTurno(){
         if(G.cloche.life<=0){ G.cloche=null; G.nextClo=G.time+50; }
         else if(Math.hypot(G.px-G.cloche.x,G.py-G.cloche.y)<G.pr+20){ G.cloche=null; G.nextClo=G.time+50; showQuiz(); } }
     }
+    // LA MÁNAGER (aliada, jul 2026): cada ~28-40s cruza volando y, al llegar a
+    // media pantalla, suelta una botella hacia un enemigo; la botella cae y
+    // EXPLOTA limpiando la zona (ayuda de la casa). No aparece en el cierre.
+    if(!G.manager && G.time>=G.nextMgr && G.time<585 && !G.closed){
+      const fromLeft=Math.random()<0.5;
+      G.manager={ x: fromLeft? -70 : W+70, y: 66+Math.random()*90, dir: fromLeft?1:-1,
+                  dropX: W*(0.32+Math.random()*0.36), dropped:false, ph:0 };
+      flash('¡LA MÁNAGER! · invita la casa','#7ad0c0'); sfx('coin');
+    }
+    if(G.manager){ const m=G.manager; m.x+=m.dir*2.7*dt; m.ph+=dt*0.22;
+      if(!m.dropped && ((m.dir>0 && m.x>=m.dropX)||(m.dir<0 && m.x<=m.dropX))){
+        m.dropped=true;
+        // apunta a un enemigo (si hay); si no, a la zona del héroe
+        const tgt = G.enemies.length ? G.enemies[Math.floor(Math.random()*G.enemies.length)] : {x:G.px,y:G.py};
+        G.mgrBottles.push({ ox:m.x, oy:m.y+14, tx:tgt.x, ty:Math.min(H-40,Math.max(90,tgt.y)), cx:m.x, cy:m.y+14, t:0, dur:30, spin:0 });
+        sfx('surge');
+      }
+      if(m.x<-90 || m.x>W+90){ G.manager=null; G.nextMgr=G.time+28+Math.random()*14; }
+    }
+    for(let i=G.mgrBottles.length-1;i>=0;i--){ const b=G.mgrBottles[i]; b.t+=dt; b.spin+=dt*0.32;
+      const k=Math.min(1,b.t/b.dur);
+      b.cx=b.ox+(b.tx-b.ox)*k; b.cy=b.oy+(b.ty-b.oy)*k - Math.sin(k*Math.PI)*26;
+      if(k>=1){ const R=96, D=64;
+        for(const e of G.enemies){ if(!e.inspec && Math.hypot(e.x-b.cx,e.y-b.cy)<R+e.r) hurtEnemy(e,D); }
+        G.explosions.push({x:b.cx,y:b.cy,r:14,max:R,life:1});
+        burst(b.cx,b.cy,'#e8c44c',22); burst(b.cx,b.cy,'rgba(255,255,255,.75)',12);
+        G.shake=Math.max(G.shake,9); sfx('hit'); vibe([18,36]); G.mgrBottles.splice(i,1); }
+    }
     // cambio de escenario por nivel (propietario, jul 2026): comedor →
     // cocina (nv 5) → bodega (nv 10), rotando en niveles altos. Fundido ~1s.
     const _si=Math.floor(G.level/5)%ET_BGS.length;
@@ -24907,6 +24941,31 @@ function launchElTurno(){
         ctx.fillStyle='#c9a86a'; ctx.beginPath(); ctx.arc(c.x,c.y+qb-13,2.6,0,6.29); ctx.fill(); ctx.stroke();
         ctx.fillStyle='#241a12'; ctx.font='bold 12px Georgia'; ctx.textAlign='center'; ctx.textBaseline='middle';
         ctx.fillText('?',c.x,c.y+qb-5); ctx.textBaseline='alphabetic'; } }
+    // LA MÁNAGER (aliada) + su botella cayendo. Sprite ilustrado si carga; si no,
+    // respaldo dibujado (silueta con copa) para que la mecánica se vea igual.
+    if(G.manager){ const m=G.manager, fly=Math.sin(m.ph)*4;
+      ctx.save(); ctx.translate(m.x,m.y+fly);
+      if(m.dir<0) ctx.scale(-1,1);
+      if(MGR_IMG && MGR_IMG._ok){
+        const hh=96, ww=hh*(MGR_IMG.width/MGR_IMG.height); ctx.drawImage(MGR_IMG,-ww/2,-hh/2,ww,hh);
+      } else {
+        // respaldo: cuerpo con capa + estela de brillo
+        ctx.globalAlpha=.35; ctx.fillStyle='#7ad0c0'; ctx.beginPath(); ctx.ellipse(-m.dir*22,4,20,7,0,0,6.29); ctx.fill(); ctx.globalAlpha=1;
+        ctx.fillStyle='#2a1a12'; ctx.beginPath(); ctx.ellipse(0,10,15,20,0,0,6.29); ctx.fill();
+        ctx.fillStyle='#a3372c'; ctx.beginPath(); ctx.moveTo(-13,0); ctx.quadraticCurveTo(0,34,13,0); ctx.lineTo(11,18); ctx.quadraticCurveTo(0,30,-11,18); ctx.closePath(); ctx.fill();
+        ctx.fillStyle='#f3d9a0'; ctx.beginPath(); ctx.arc(0,-14,9,0,6.29); ctx.fill();
+        ctx.fillStyle='#c98a3a'; ctx.beginPath(); ctx.arc(0,-19,9,Math.PI,0); ctx.fill();
+        ctx.font='16px Georgia'; ctx.textAlign='center'; ctx.textBaseline='middle'; ctx.fillText('🍾',18,6);
+      }
+      ctx.restore();
+    }
+    for(const b of G.mgrBottles){
+      ctx.save(); ctx.translate(b.cx,b.cy); ctx.rotate(b.spin);
+      ctx.font='22px Georgia'; ctx.textAlign='center'; ctx.textBaseline='middle'; ctx.fillText('🍾',0,0);
+      ctx.restore();
+      // sombra objetivo en el suelo (dónde caerá)
+      ctx.globalAlpha=.25; ctx.fillStyle='#241a12'; ctx.beginPath(); ctx.ellipse(b.tx,b.ty,16,4,0,0,6.29); ctx.fill(); ctx.globalAlpha=1;
+    }
     // enemies — Cuphead-style allergen monsters (colour + emblem = what to learn)
     ctx.textAlign='center'; ctx.textBaseline='middle';
     for(const e of G.enemies){

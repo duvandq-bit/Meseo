@@ -2752,6 +2752,27 @@ test('Alérgeno Zero: 14 alérgenos de la UE + objetivo visible (jul 2026)', () 
   assert(/\.et-obj\{/.test(css) && /\.et-objfill\{/.test(css), 'falta el CSS de la barra de objetivo');
 });
 
+test('Alérgeno Zero: LA MÁNAGER aliada suelta una botella que explota (jul 2026)', () => {
+  const i = html.indexOf('function launchElTurno(');
+  const body = html.slice(i, i + 130000);
+  // estado + temporizador de aparición
+  assert(/manager:null, nextMgr:/.test(body), 'falta el estado de la mánager (manager/nextMgr)');
+  assert(/mgrBottles:\[\]/.test(body), 'falta el array de botellas de la mánager');
+  // cruza volando y suelta una botella hacia un enemigo
+  assert(/G\.manager=\{/.test(body) && /dropped:false/.test(body), 'la mánager no aparece/cruza');
+  assert(/G\.mgrBottles\.push\(/.test(body), 'la mánager no suelta la botella');
+  // la botella EXPLOTA dañando enemigos (reusa hurtEnemy + explosión) y NO toca al héroe
+  assert(/for\(let i=G\.mgrBottles\.length-1[\s\S]{0,400}hurtEnemy\(e,/.test(body),
+    'la botella de la mánager no daña a los enemigos al explotar');
+  assert(/mgrBottles[\s\S]{0,400}G\.explosions\.push/.test(body),
+    'la botella de la mánager no genera la onda de explosión');
+  // se reprograma para volver a pasar
+  assert(/G\.nextMgr=G\.time\+/.test(body), 'la mánager no se reprograma tras salir');
+  // sprite con respaldo dibujado
+  assert(/const ET_HELPER_SPRITE=/.test(html) && /MGR_IMG/.test(body),
+    'falta el sprite de la mánager o su respaldo');
+});
+
 test('launchElTurno() is idempotent (guards against a second overlay)', () => {
   const i = html.indexOf('function launchElTurno(');
   assert(i !== -1, 'launchElTurno not found');
@@ -3253,7 +3274,7 @@ test('Camarero Survivors AAA: dash, racha, élites, oleadas, jefe con embestida,
   // Pasada "estudio AAA" (petición del propietario): fija cada sistema nuevo
   // para que ninguna refactorización futura los deje caer en silencio.
   const i = html.indexOf('function launchElTurno(');
-  const body = html.slice(i, i + 90000);
+  const body = html.slice(i, i + 140000);
   // (1) esquiva: helper con cooldown + botón táctil + tecla espacio
   assert(/function tryDash\(\)/.test(body) && /G\.dashCd>0\) return/.test(body), 'dash: tryDash() with cooldown gate must exist');
   assert(/id="etDashBtn"/.test(body), 'dash: the touch button must be in the overlay markup');
