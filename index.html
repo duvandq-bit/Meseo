@@ -44,7 +44,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Meseo · Formación de sala</title>
 <meta name="description" content="Meseo — Formación de equipos de sala: carta, alérgenos, vinos, exámenes y juegos de repaso.">
-<meta name="app-version" content="7.235">
+<meta name="app-version" content="7.236">
 <meta name="app-build" content="May 2026">
 <meta name="theme-color" content="#1c2a22">
 <!-- ═══ PWA ═══ -->
@@ -1515,7 +1515,7 @@ const CAT_COLORS={'Entrantes':'#c49a3c','Hamburguesas y Bocatas':'#b86050','Plat
 const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#c49a3c"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#a47a2c" opacity=".4"/><path d="M8 8v4a1 1 0 001 1h1v4M10 8v4" stroke="#fff" stroke-width="1.2" stroke-linecap="round" fill="none"/><path d="M15 8v8M14 8v3a1.5 1.5 0 003 0V8" stroke="#fff" stroke-width="1.2" stroke-linecap="round" fill="none"/></svg>`,'Hamburguesas y Bocatas':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#b86050"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#983838" opacity=".4"/><path d="M7 9h10M7 12h10M7 15h10" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/><path d="M8 9c0-2 2-3 4-3s4 1 4 3M8 15c0 2 2 3 4 3s4-1 4-3" fill="none" stroke="#fff" stroke-width="1" opacity=".7"/></svg>`,'Platos Principales':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#4888a0"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#2e6878" opacity=".4"/><path d="M5 15h14" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/><path d="M12 6a6 6 0 016 6H6a6 6 0 016-6z" fill="none" stroke="#fff" stroke-width="1.1"/><circle cx="10" cy="6" r=".7" fill="#fff" opacity=".7"/><circle cx="12" cy="5" r=".7" fill="#fff" opacity=".7"/><circle cx="14" cy="6" r=".7" fill="#fff" opacity=".7"/></svg>`,'Sugerencias':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#d4aa4c"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#a48a2c" opacity=".4"/><polygon points="12,5 14.5,10 20,10.5 16,14 17,20 12,17 7,20 8,14 4,10.5 9.5,10" fill="#fff" opacity=".9"/></svg>`,'Guarniciones y Salsas':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#4d8a5e"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#2d6a3e" opacity=".4"/><path d="M12 18V10M5 10c0-4 3-6 7-6s7 2 7 6c0 5-3 8-7 8s-7-3-7-8z" fill="none" stroke="#fff" stroke-width="1.1"/><path d="M5 10c3 0 5 1 7 2.5" fill="none" stroke="#fff" stroke-width=".8" opacity=".6"/></svg>`,'Postres':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#7a6aaa"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#5a4a8a" opacity=".4"/><path d="M9 19h6M12 12v7M7 6l2 4.5a3 3 0 006 0L17 6H7z" fill="none" stroke="#fff" stroke-width="1.1" stroke-linecap="round"/></svg>`,'Vegetariano':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#5a9a6e"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#3a7a4e" opacity=".4"/><path d="M9 18h6M12 18V10M12 10c0-3 2-5 5-5-.7 2.5-2.5 5-5 5zM12 10c0-3-2-5-5-5 .7 2.5 2.5 5 5 5z" fill="none" stroke="#fff" stroke-width="1.1" stroke-linecap="round"/></svg>`};
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='7.235';  // sincronizada con sw.js VERSION (guard de CI)
+const APP_VERSION='7.236';  // sincronizada con sw.js VERSION (guard de CI)
 const APP_BUILD='Jul 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;
@@ -9134,10 +9134,13 @@ function renderAprender(){
 const TECNICA_FAMS = [
   {k:'seco',   es:'Calor seco y brasa',        en:'Dry heat & grill',       col:'#c47838'},
   {k:'fritura',es:'Fritura',                    en:'Frying',                 col:'#c99a3c'},
+  {k:'humeda', es:'Cocción húmeda',             en:'Moist-heat cooking',     col:'#4888a0'},
   {k:'lenta',  es:'Cocción lenta y melosa',     en:'Slow & tender cooking',  col:'#a3502a'},
   {k:'crudo',  es:'En crudo y marinados',       en:'Raw & marinated',        col:'#6a8f4f'},
-  {k:'conserva',es:'Conservación',              en:'Preserving',             col:'#7a7048'},
-  {k:'salsa',  es:'Salsas, emulsiones y espumas',en:'Sauces, emulsions & foams',col:'#b06a4a'},
+  {k:'conserva',es:'Conservación y fermentación',en:'Preserving & fermenting',col:'#7a7048'},
+  {k:'salsa',  es:'Salsas y emulsiones',         en:'Sauces & emulsions',     col:'#b06a4a'},
+  {k:'vanguardia',es:'Vanguardia y texturas',    en:'Avant-garde & textures', col:'#8a5a9c'},
+  {k:'pasteleria',es:'Pastelería y dulces',      en:'Pastry & sweets',        col:'#c47068'},
   {k:'cultura',es:'Producto y cultura culinaria',en:'Produce & culinary culture',col:'#8a6d3b'}
 ];
 const TECNICAS = [
@@ -9151,11 +9154,21 @@ const TECNICAS = [
    defEn:'A Catalan technique (escalivar = to roast in embers): whole vegetables — pepper, aubergine, onion — are roasted on the coals until the skin chars, then peeled for a smoky, silky flesh.',
    txoko:'Las peras escalivadas toman esta idea: se asan hasta quedar tiernas, melosas y dulces.',
    kw:['escaliv']},
+  {fam:'seco', ic:'🍖', es:'Sellado y Maillard', en:'Searing & Maillard',
+   def:'Dorar la superficie a fuego fuerte para crear una costra sabrosa (reacción de Maillard) que fija los jugos dentro.',
+   defEn:'Browning the surface over high heat to build a tasty crust (the Maillard reaction) that locks the juices in.',
+   txoko:'El tataki y las grandes carnes se sellan a fuego fuerte antes de reposar, para lograr esa costra.',
+   kw:['sellad','a la plancha']},
   {fam:'seco', ic:'🍞', es:'Tostado', en:'Toasting',
    def:'Dorar pan, cereales o frutos secos en seco para desarrollar aromas y textura crujiente (reacción de Maillard).',
    defEn:'Dry-browning bread, grains or nuts to develop aroma and crunch (the Maillard reaction).',
    txoko:'El gofio tostado, el pan de las tablas y las almendras aportan el punto tostado a varios platos canarios.',
    kw:['tostad']},
+  {fam:'seco', ic:'🍯', es:'Caramelizado', en:'Caramelising',
+   def:'Dorar el azúcar (el propio del alimento o añadido) con calor hasta que toma color ámbar y un sabor tostado y dulce.',
+   defEn:'Heating sugar (the food’s own or added) until it turns amber with a toasted, sweet flavour.',
+   txoko:'El arroz con leche caramelizado y los toffees de los postres juegan con el azúcar tostado.',
+   kw:['caramel','toffe']},
   {fam:'seco', ic:'💨', es:'Ahumado', en:'Smoking',
    def:'Aromatizar el alimento exponiéndolo al humo, que además ayuda a conservarlo.',
    defEn:'Flavouring food by exposing it to smoke, which also helps preserve it.',
@@ -9171,6 +9184,23 @@ const TECNICAS = [
    defEn:'Coating food (flour, egg, panko) and frying it in hot oil for a crunchy crust.',
    txoko:'De las croquetas al fish and chips, la coliflor o la milanesa: el rebozado crujiente está por toda la carta.',
    kw:['rebozad','panko','frito','frita','fritas','fritos']},
+  {fam:'humeda', ic:'♨️', es:'Al vapor', en:'Steaming',
+   def:'Cocinar con el vapor del agua sin sumergir el alimento: respeta color, textura y nutrientes.',
+   defEn:'Cooking in water steam without submerging the food: it keeps colour, texture and nutrients.',
+   txoko:'Las verduras al vapor conservan su color vivo y su punto justo.',
+   kw:['al vapor']},
+  {fam:'humeda', ic:'💧', es:'Escalfado (pochado)', en:'Poaching',
+   def:'Cocinar con delicadeza en un líquido caliente pero sin que llegue a hervir (huevos, pescados, frutas).',
+   defEn:'Cooking gently in hot but not boiling liquid (eggs, fish, fruit).',
+   kw:['escalfad','pochad','poché']},
+  {fam:'humeda', ic:'🥬', es:'Blanqueado y escaldado', en:'Blanching',
+   def:'Hervir el alimento unos segundos y cortarlo de golpe con agua helada: fija el color, ablanda y quita amargor.',
+   defEn:'Boiling food for seconds then shocking it in iced water: it sets colour, softens and removes bitterness.',
+   kw:['blanquead','escaldad']},
+  {fam:'humeda', ic:'📦', es:'En papillote', en:'En papillote',
+   def:'Cerrar el alimento en un paquete y cocinarlo con su propio vapor y aromas, concentrando el jugo.',
+   defEn:'Sealing food in a parcel and cooking it in its own steam and aromatics, concentrating the juices.',
+   kw:['papillote','papillot']},
   {fam:'lenta', ic:'🌡️', es:'Cocción a baja temperatura', en:'Low-temperature cooking',
    def:'Cocinar largo rato a una temperatura controlada y baja (sous-vide): la pieza queda jugosa y en su punto de lado a lado.',
    defEn:'Cooking a long time at a low, controlled temperature (sous-vide) for even, juicy results.',
@@ -9226,6 +9256,11 @@ const TECNICAS = [
    defEn:'Preserving vegetables in vinegar for a fresh, crunchy, acidic bite.',
    txoko:'Cebollas, rabanitos y manzana encurtidos aportan contraste ácido en muchos entrantes.',
    kw:['encurtid']},
+  {fam:'conserva', ic:'🥖', es:'Fermentación', en:'Fermentation',
+   def:'Transformar el alimento con microorganismos (levaduras, bacterias): pan, masa madre, encurtidos y salsas fermentadas.',
+   defEn:'Transforming food with microorganisms (yeasts, bacteria): bread, sourdough, pickles and fermented sauces.',
+   txoko:'La masa madre de los panes brioche es fermentación viva.',
+   kw:['ferment','masa madre']},
   {fam:'salsa', ic:'🥚', es:'Emulsión: alioli y mayonesa', en:'Emulsion: aioli & mayo',
    def:'Ligar dos ingredientes que no se mezclan (aceite y agua o huevo) en una salsa estable, cremosa y brillante.',
    defEn:'Binding two things that don’t mix (oil and water or egg) into a stable, creamy sauce.',
@@ -9236,11 +9271,50 @@ const TECNICAS = [
    defEn:'Reducing a meat stock into a glossy, thick sauce that coats the dish and concentrates flavour.',
    txoko:'La demi-glace y los glaseados dan brillo y profundidad a carnes y rellenos.',
    kw:['glasead','demi-glace','demi glace','demiglace']},
-  {fam:'salsa', ic:'☁️', es:'Espuma (cocina moderna)', en:'Foam (modern cuisine)',
+  {fam:'salsa', ic:'🍷', es:'Reducción', en:'Reduction',
+   def:'Hervir a fuego suave una salsa o un fondo para evaporar agua y concentrar sabor, color y cuerpo.',
+   defEn:'Gently simmering a sauce or stock to evaporate water and concentrate flavour, colour and body.',
+   txoko:'Las salsas de vino y las demi-glace se reducen hasta concentrar todo el sabor.',
+   kw:['reducci','reducid']},
+  {fam:'vanguardia', ic:'🫧', es:'Aire (aire de lecitina)', en:'Air (lecithin air)',
+   def:'Espuma ultraligera hecha con lecitina de soja: burbujas finísimas que llevan un sabor intenso casi sin peso. Emblema de la vanguardia española (Ferran Adrià).',
+   defEn:'An ultra-light foam made with soy lecithin: tiny bubbles carrying intense flavour with almost no weight — a hallmark of Spanish avant-garde cuisine (Ferran Adrià).',
+   kw:['aire de']},
+  {fam:'vanguardia', ic:'☁️', es:'Espuma (sifón)', en:'Foam (siphon)',
    def:'Aligerar un sabor concentrado convirtiéndolo en espuma con sifón: intensidad con textura ingrávida.',
    defEn:'Turning a concentrated flavour into a siphon foam: big taste, weightless texture.',
    txoko:'La espuma de parmesano o de queso de cabra son guiños de cocina moderna sobre bases clásicas.',
    kw:['espuma','sifón']},
+  {fam:'vanguardia', ic:'⚪', es:'Esferificación', en:'Spherification',
+   def:'Convertir un líquido en esferas con una fina membrana gelatinosa (con alginato) que estallan en boca, imitando una yema o un caviar.',
+   defEn:'Turning a liquid into gel-membraned spheres (using alginate) that burst in the mouth, mimicking a yolk or caviar.',
+   kw:['esferific','esfera de']},
+  {fam:'vanguardia', ic:'🍮', es:'Gelificación', en:'Gelling',
+   def:'Cuajar líquidos en geles con agar, gelatina o pectina: caldos, cremas o jugos con una textura nueva.',
+   defEn:'Setting liquids into gels with agar, gelatin or pectin: stocks, creams or juices with a new texture.',
+   kw:['gelific','agar-agar','gelatina']},
+  {fam:'vanguardia', ic:'❄️', es:'Nitrógeno líquido', en:'Liquid nitrogen',
+   def:'Congelar al instante a −196 °C: helados al momento, texturas crujientes por fuera y cremosas por dentro, y humo teatral en sala.',
+   defEn:'Flash-freezing at −196 °C: instant ice creams, crisp-outside creamy-inside textures and theatrical tableside smoke.',
+   kw:['nitrógeno','nitrogeno']},
+  {fam:'vanguardia', ic:'🍃', es:'Deshidratación y liofilizado', en:'Dehydrating & freeze-drying',
+   def:'Quitar el agua con calor suave o en frío (liofilizado) para concentrar el sabor y crear crujientes, polvos y chips.',
+   defEn:'Removing water with gentle heat or by freeze-drying to concentrate flavour and make crisps, powders and chips.',
+   txoko:'Polvos como el de aceituna kalamata nacen de deshidratar el producto.',
+   kw:['deshidrat','liofiliz','polvo de']},
+  {fam:'pasteleria', ic:'🍫', es:'Templado de chocolate', en:'Chocolate tempering',
+   def:'Fundir y enfriar el chocolate a temperaturas precisas para que quede brillante, con chasquido y sin vetas blancas.',
+   defEn:'Melting and cooling chocolate to precise temperatures so it sets glossy, snappy and streak-free.',
+   kw:['templado de choc','cobertura de choc']},
+  {fam:'pasteleria', ic:'🧁', es:'Merengue', en:'Meringue',
+   def:'Montar claras de huevo con azúcar hasta una espuma firme y brillante, base de muchos postres y horneados.',
+   defEn:'Whipping egg whites with sugar into a firm, glossy foam — the base of many desserts and bakes.',
+   kw:['merengue']},
+  {fam:'pasteleria', ic:'🌰', es:'Praliné y garrapiñado', en:'Praline & candied nuts',
+   def:'Caramelizar frutos secos con azúcar: garrapiñados crujientes o pralinés molidos que aportan dulzor y textura.',
+   defEn:'Caramelising nuts with sugar: crunchy candied nuts or ground pralines that add sweetness and texture.',
+   txoko:'Los piñones y las almendras garrapiñados dan un crujiente dulce a varios platos.',
+   kw:['pralin','garrapiñ','garrapin']},
   {fam:'cultura', ic:'🎣', es:'Almadraba (pesca del atún)', en:'Almadraba (tuna fishing)',
    def:'Arte de pesca milenario del Estrecho: un laberinto de redes captura el atún rojo en su migración, con respeto y selección.',
    defEn:'An ancient fishing art of the Strait: a maze of nets catches bluefin tuna on migration, selectively and respectfully.',
@@ -9274,7 +9348,7 @@ function renderTecnicas(){
       <div class="tec-hero-ic">🍳</div>
       <div>
         <div class="tec-hero-t">${_en?'Cooking techniques':'Técnicas de cocina'}</div>
-        <div class="tec-hero-s">${_en?'What each technique is, and the real Txoko dishes that use it. Tap a dish to open its sheet.':'Qué es cada técnica y los platos reales del Txoko que la usan. Toca un plato para abrir su ficha.'}</div>
+        <div class="tec-hero-s">${_en?'The techniques of a high-level kitchen: what each one is and, when we use it, the Txoko dishes where it appears.':'Las técnicas de una cocina de alto nivel: qué es cada una y, cuando la usamos, los platos del Txoko donde aparece.'}</div>
         <div class="tec-hero-stat">${TECNICAS.length} ${_en?'techniques':'técnicas'} · ${nFam} ${_en?'families':'familias'}</div>
       </div>
     </div>`;
@@ -9294,7 +9368,7 @@ function renderTecnicas(){
           <div class="tec-card-h">${escapeHTML(_en?t.en:t.es)}</div>
         </div>
         <div class="tec-def">${escapeHTML(_en?t.defEn:t.def)}</div>
-        <div class="tec-txoko"><span class="tec-txoko-lbl">${_en?'At Txoko':'En el Txoko'}</span> ${escapeHTML(t.txoko)}</div>
+        ${t.txoko?`<div class="tec-txoko"><span class="tec-txoko-lbl">${_en?'At Txoko':'En el Txoko'}</span> ${escapeHTML(t.txoko)}</div>`:''}
         ${dishes.length?`<div class="tec-dishes"><span class="tec-dishes-lbl">${_en?'Dishes':'Platos'}</span>${chips}${more}</div>`:''}
       </div>`;
     }

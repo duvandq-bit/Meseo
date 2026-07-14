@@ -2436,6 +2436,14 @@ test('Aprender → Técnicas: glosario de técnicas de cocina cableado y derivad
   // Datos + renderer + subpestaña, con enlaces a platos calculados en runtime.
   assert(/const TECNICAS\s*=\s*\[/.test(html) && /const TECNICA_FAMS\s*=\s*\[/.test(html),
     'faltan los datos de técnicas (TECNICAS / TECNICA_FAMS)');
+  // repertorio de alta cocina: el aire y las familias de vanguardia/húmeda/pastelería
+  assert(/es:'Aire \(aire de lecitina\)'/.test(html) && /es:'Esferificación'/.test(html),
+    'faltan técnicas de vanguardia (aire, esferificación)');
+  assert(/k:'vanguardia'/.test(html) && /k:'humeda'/.test(html) && /k:'pasteleria'/.test(html),
+    'faltan las familias de alta cocina (vanguardia, húmeda, pastelería)');
+  // la nota "En el Txoko" es opcional (técnicas aspiracionales sin plato en carta)
+  assert(/\$\{t\.txoko\?`<div class="tec-txoko"/.test(html),
+    'la nota En el Txoko debe ser opcional (solo cuando hay plato real)');
   assert(/function renderTecnicas\(\)/.test(html), 'falta el renderer renderTecnicas');
   // subpestaña cableada en los 5 puntos del enrutado de Aprender
   assert(/\['tecnicas',_en\?'Techniques':'Técnicas'/.test(html), 'la subpestaña Técnicas no está en la barra de chips');
