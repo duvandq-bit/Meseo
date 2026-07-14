@@ -2402,8 +2402,12 @@ test('global search: entry, overlay and deep-link wiring', () => {
   // engine + deep-links into the real detail views
   assert(/function openGlobalSearch\(/.test(html) && /function _gsRender\(/.test(html),
     'search engine functions missing');
-  assert(/if\(type==='dish'\)\{ if\(typeof launchDishJourney==='function'\) launchDishJourney\(id\)/.test(html),
-    'dish results must deep-link into launchDishJourney');
+  // Los resultados de plato abren la FICHA RÁPIDA (foto + info), no el viaje;
+  // el recorrido guiado queda como botón opcional dentro de la ficha.
+  assert(/if\(type==='dish'\)\{ if\(typeof _emplOpen==='function'\) _emplOpen\(id\)/.test(html),
+    'dish results must open the quick sheet (_emplOpen), not force the journey');
+  assert(/class="empl-ov-journey" onclick="[^"]*launchDishJourney\(\$\{d\.id\}\)"/.test(html),
+    'the quick sheet must offer the guided journey as an optional button');
   assert(/_showWineDetail\(id,/.test(html),
     'wine results must deep-link into _showWineDetail');
   // accent-insensitive index so "lacteos" matches "Lácteos", "gluten" the allergen
