@@ -2445,6 +2445,10 @@ test('Aprender → Técnicas: glosario de técnicas de cocina cableado y derivad
     'faltan técnicas de vanguardia (aire, esferificación)');
   assert(/k:'vanguardia'/.test(html) && /k:'humeda'/.test(html) && /k:'pasteleria'/.test(html),
     'faltan las familias de alta cocina (vanguardia, húmeda, pastelería)');
+  // técnicas de escuela de hostelería (sugeridas por el chef): prep + clásicas
+  assert(/k:'prep'/.test(html) && /es:'Bridar \(embridar\)'/.test(html) && /es:'Saltear'/.test(html) &&
+         /es:'Gratinar'/.test(html) && /es:'Desglasar'/.test(html) && /es:'Clarificar'/.test(html),
+    'faltan las técnicas clásicas de escuela (bridar, saltear, gratinar, desglasar, clarificar)');
   // la nota "En el Txoko" es opcional (técnicas aspiracionales sin plato en carta)
   assert(/\$\{t\.txoko\?`<div class="tec-txoko"/.test(html),
     'la nota En el Txoko debe ser opcional (solo cuando hay plato real)');
