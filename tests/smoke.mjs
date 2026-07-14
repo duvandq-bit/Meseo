@@ -2791,6 +2791,26 @@ test('Camarero Survivors: LA MÁNAGER aliada suelta una botella que explota (jul
     'falta el sprite de la mánager o su respaldo');
 });
 
+test('Camarero Survivors: armas nuevas — tenedor asta + pimentero pesado (jul 2026)', () => {
+  const i = html.indexOf('function launchElTurno(');
+  const body = html.slice(i, i + 150000);
+  // cartas de mejora y evoluciones
+  assert(/t:'Tenedor gigante'/.test(body) && /t:'Pimentero'/.test(body), 'faltan las cartas de tenedor/pimentero');
+  assert(/'Trinche real'/.test(body) && /'Pimienta negra'/.test(body), 'faltan las evoluciones de las armas nuevas');
+  // estado
+  assert(/fork:0, forkT:0/.test(body) && /pepper:0, pepperT:0/.test(body), 'falta el estado de las armas nuevas');
+  assert(/pClouds:\[\]/.test(body), 'falta el array de nubes de pimienta');
+  // TENEDOR: estocada al más cercano que atraviesa la línea y empuja
+  assert(/WEAPON — TENEDOR/.test(body) && /G\.forkFx=1/.test(body), 'falta la lógica del tenedor (estocada)');
+  // PIMENTERO: golpe pesado en área + nube que pica por segundo (DoT)
+  assert(/WEAPON — PIMENTERO/.test(body) && /G\.pClouds\.push/.test(body), 'falta la lógica del pimentero');
+  assert(/for\(const e of G\.enemies\)\{ if\(Math\.hypot\(e\.x-c\.x,e\.y-c\.y\)<c\.r\) hurtEnemy/.test(body),
+    'la nube de pimienta no hace daño por segundo');
+  // pimentero MARRÓN (no salero blanco): icono SVG marrón, nunca el emoji 🧂
+  assert(/const PEPPER_IC='<svg/.test(body) && /fill="#7a4a1e"/.test(body) && !/🧂/.test(body),
+    'el pimentero debe ser un SVG marrón, no el salero blanco 🧂');
+});
+
 test('launchElTurno() is idempotent (guards against a second overlay)', () => {
   const i = html.indexOf('function launchElTurno(');
   assert(i !== -1, 'launchElTurno not found');
