@@ -2431,6 +2431,29 @@ test('sub-tab navigation is VISIBLE chips (owner: the dropdown hid the subsectio
     'green variant must be scoped to Repaso Inteligente only');
 });
 
+test('Aprender → Técnicas: glosario de técnicas de cocina cableado y derivado de la carta', () => {
+  // Pedido por el chef (jul 2026): que el equipo aprenda qué es cada técnica.
+  // Datos + renderer + subpestaña, con enlaces a platos calculados en runtime.
+  assert(/const TECNICAS\s*=\s*\[/.test(html) && /const TECNICA_FAMS\s*=\s*\[/.test(html),
+    'faltan los datos de técnicas (TECNICAS / TECNICA_FAMS)');
+  assert(/function renderTecnicas\(\)/.test(html), 'falta el renderer renderTecnicas');
+  // subpestaña cableada en los 5 puntos del enrutado de Aprender
+  assert(/\['tecnicas',_en\?'Techniques':'Técnicas'/.test(html), 'la subpestaña Técnicas no está en la barra de chips');
+  assert(/const APR = \['aprender','repaso','tecnicas'/.test(html), 'tecnicas no está en la lista APR');
+  assert(/tecnicas:'aprender'/.test(html), 'tecnicas no está en parentMap');
+  assert(/tecnicas:renderAprender/.test(html), 'tecnicas no está en renderMap');
+  assert(/tecnicas:renderTecnicas/.test(html), 'renderAprender no despacha a renderTecnicas');
+  // los platos NO se escriben a mano: se buscan por palabra clave en las fichas
+  assert(/function _tecDishes\(kw\)/.test(html) && /kw\.some\(k=>hay\.includes\(k\)\)/.test(html),
+    'los enlaces a platos deben derivarse de DISHES en runtime, no hardcodearse');
+  // toca un plato → abre su ficha en La Carta
+  assert(/onclick="_aprenderOpenDish\(\$\{d\.id\}\)"/.test(html), 'los chips de plato deben abrir la ficha');
+  // color de texto correcto para tarjetas claras (usar --parchment, no --ink)
+  const css = read('styles.css');
+  assert(/\.tec-card-h\{[^}]*color:var\(--parchment\)/.test(css) && /\.tec-def\{[^}]*color:var\(--parch2\)/.test(css),
+    'el texto de las técnicas debe usar el color oscuro (--parchment/--parch2) sobre parchment');
+});
+
 test('Aprender lands on Emplatado and lists it first (owner request, jul 2026)', () => {
   // La guía visual es lo más consultado en servicio: primera opción y
   // subtab por defecto.
