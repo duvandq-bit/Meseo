@@ -3788,6 +3788,28 @@ test('reto del día + liga semanal: pregunta compartida determinista y XP semana
     'el inicio debe ofrecer el Reto del día');
 });
 
+test('El Código del Camarero: manual de oficio consultable (jul 2026)', () => {
+  // Petición del propietario: «crear el mejor camarero del mundo… eso que solo
+  // te enseñan los años y la experiencia». No es un examen: es un manual de
+  // campo — la lectura de la mesa, qué decir, qué hacer, nunca, y el porqué.
+  const raw = read('data/codigo-camarero.json');
+  let data;
+  try { data = JSON.parse(raw); } catch(e){ assert(false, 'codigo-camarero.json debe ser JSON válido: '+e.message); }
+  assert(Array.isArray(data.cats) && data.cats.length >= 8, 'debe haber al menos 8 categorías del código');
+  assert(Array.isArray(data.cards) && data.cards.length >= 50, 'debe haber al menos 50 códigos (hay '+(data.cards||[]).length+')');
+  const catIds = new Set(data.cats.map(c=>c.id));
+  for(const card of data.cards){
+    for(const k of ['t','t_en','read','read_en','steps','steps_en','why','why_en']){
+      assert(card[k] && (!Array.isArray(card[k]) || card[k].length), `código #${card.id} («${card.t}») sin campo ${k} — cada ficha va completa y bilingüe`);
+    }
+    assert(catIds.has(card.cat), `código #${card.id} con categoría desconocida: ${card.cat}`);
+  }
+  assert(/function startCodigo\(/.test(html) && /codigo-camarero\.json/.test(html),
+    'la app debe cargar el Código (lazy) con startCodigo()');
+  assert(/El Código del Camarero/.test(html) && /startCodigo\(\)/.test(html),
+    'el hub de Protocolo debe tener la entrada al Código del Camarero');
+});
+
 test('Rebranding Meseo: la app se llama Meseo; TXOKO queda solo como venue (jul 2026)', () => {
   // Propietario: «evitar demandas — la app es multi-restaurante; Txoko puede
   // aparecer como uno de los restaurantes a escoger, pero el nombre de la
