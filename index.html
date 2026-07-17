@@ -44,7 +44,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Meseo · Formación de sala</title>
 <meta name="description" content="Meseo — Formación de equipos de sala: carta, alérgenos, vinos, exámenes y juegos de repaso.">
-<meta name="app-version" content="7.250">
+<meta name="app-version" content="7.251">
 <meta name="app-build" content="May 2026">
 <meta name="theme-color" content="#1c2a22">
 <!-- ═══ PWA ═══ -->
@@ -1511,7 +1511,7 @@ const CAT_COLORS={'Entrantes':'#c49a3c','Hamburguesas y Bocatas':'#b86050','Plat
 const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#c49a3c"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#a47a2c" opacity=".4"/><path d="M8 8v4a1 1 0 001 1h1v4M10 8v4" stroke="#fff" stroke-width="1.2" stroke-linecap="round" fill="none"/><path d="M15 8v8M14 8v3a1.5 1.5 0 003 0V8" stroke="#fff" stroke-width="1.2" stroke-linecap="round" fill="none"/></svg>`,'Hamburguesas y Bocatas':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#b86050"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#983838" opacity=".4"/><path d="M7 9h10M7 12h10M7 15h10" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/><path d="M8 9c0-2 2-3 4-3s4 1 4 3M8 15c0 2 2 3 4 3s4-1 4-3" fill="none" stroke="#fff" stroke-width="1" opacity=".7"/></svg>`,'Platos Principales':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#4888a0"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#2e6878" opacity=".4"/><path d="M5 15h14" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/><path d="M12 6a6 6 0 016 6H6a6 6 0 016-6z" fill="none" stroke="#fff" stroke-width="1.1"/><circle cx="10" cy="6" r=".7" fill="#fff" opacity=".7"/><circle cx="12" cy="5" r=".7" fill="#fff" opacity=".7"/><circle cx="14" cy="6" r=".7" fill="#fff" opacity=".7"/></svg>`,'Sugerencias':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#d4aa4c"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#a48a2c" opacity=".4"/><polygon points="12,5 14.5,10 20,10.5 16,14 17,20 12,17 7,20 8,14 4,10.5 9.5,10" fill="#fff" opacity=".9"/></svg>`,'Guarniciones y Salsas':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#4d8a5e"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#2d6a3e" opacity=".4"/><path d="M12 18V10M5 10c0-4 3-6 7-6s7 2 7 6c0 5-3 8-7 8s-7-3-7-8z" fill="none" stroke="#fff" stroke-width="1.1"/><path d="M5 10c3 0 5 1 7 2.5" fill="none" stroke="#fff" stroke-width=".8" opacity=".6"/></svg>`,'Postres':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#7a6aaa"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#5a4a8a" opacity=".4"/><path d="M9 19h6M12 12v7M7 6l2 4.5a3 3 0 006 0L17 6H7z" fill="none" stroke="#fff" stroke-width="1.1" stroke-linecap="round"/></svg>`,'Vegetariano':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#5a9a6e"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#3a7a4e" opacity=".4"/><path d="M9 18h6M12 18V10M12 10c0-3 2-5 5-5-.7 2.5-2.5 5-5 5zM12 10c0-3-2-5-5-5 .7 2.5 2.5 5 5 5z" fill="none" stroke="#fff" stroke-width="1.1" stroke-linecap="round"/></svg>`};
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='7.250';  // sincronizada con sw.js VERSION (guard de CI)
+const APP_VERSION='7.251';  // sincronizada con sw.js VERSION (guard de CI)
 const APP_BUILD='Jul 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;
@@ -18469,8 +18469,8 @@ function renderRanking(){
     }).join('');
     const leagueHTML=`
       <div class="tunic-divider"><span>${LANG==='en'?'Weekly league':'Liga semanal'}</span></div>
-      <div style="font-family:'DM Mono',monospace;font-size:.62rem;color:var(--parch3);text-align:center;margin:-.3rem 0 .7rem">${LANG==='en'?'resets every Monday':'se reinicia cada lunes'} · ${_wkDaysLeft===1?(LANG==='en'?'last day!':'¡último día!'):(_wkDaysLeft+(LANG==='en'?' days left':' días restantes'))}</div>
-      ${_wkRows || `<div style="text-align:center;font-size:.78rem;color:var(--parch3);padding:.8rem 0 1rem">${LANG==='en'?'Nobody has scored this week yet — first to study takes the lead':'Nadie puntúa todavía esta semana — el primero en estudiar se pone líder'}</div>`}`;
+      <div style="font-family:'DM Mono',monospace;font-size:.62rem;color:rgba(228,190,104,.55);text-align:center;margin:-.3rem 0 .7rem">${LANG==='en'?'resets every Monday':'se reinicia cada lunes'} · ${_wkDaysLeft===1?(LANG==='en'?'last day!':'¡último día!'):(_wkDaysLeft+(LANG==='en'?' days left':' días restantes'))}</div>
+      ${_wkRows || `<div style="text-align:center;font-size:.78rem;color:rgba(228,190,104,.6);padding:.8rem 0 1rem">${LANG==='en'?'Nobody has scored this week yet — first to study takes the lead':'Nadie puntúa todavía esta semana — el primero en estudiar se pone líder'}</div>`}`;
 
     const _rc = document.getElementById('rankingContent');
     _rc.removeAttribute('style');
@@ -22429,6 +22429,94 @@ function _lqaOptionsFeedbackHtml(options, optionsEn, picked, correct){
 }
 
 // LQA Render Functions
+// ═══ EL CÓDIGO DEL CAMARERO — lo que solo enseñan los años ═══
+// Manual de oficio consultable (no un examen): leer la mesa, el momento
+// justo, las frases exactas, los fuegos, las personas difíciles, los
+// momentos delicados, la venta con clase y los trucos del oficio.
+// Contenido en data/codigo-camarero.json (lazy, ~90 KB solo al entrar).
+let CODIGO_CAMARERO=null;
+let _cdgCat='all', _cdgQ='';
+async function startCodigo(){
+  lqaView='codigo';
+  const c=document.getElementById('appContent');
+  if(!CODIGO_CAMARERO){
+    c.innerHTML=`<div class="sup-wrap" style="text-align:center;padding:3rem 1rem;color:var(--parch3);font-family:'DM Mono',monospace;font-size:.72rem">…</div>`;
+    try{ CODIGO_CAMARERO=await loadLazyData('data/codigo-camarero.json', LANG==='en'?'the Waiter’s Code':'el Código del Camarero'); }
+    catch(e){ renderLqa(); return; }
+  }
+  _cdgCat='all'; _cdgQ='';
+  renderCodigo();
+}
+function _cdgSetCat(id){ _cdgCat=id; renderCodigo(); }
+function _cdgSearch(v){
+  _cdgQ=(v||'').toLowerCase();
+  const list=document.getElementById('cdgList');
+  if(list) list.innerHTML=_cdgListHTML();
+}
+function _cdgCardHTML(card){
+  const en=LANG==='en';
+  const cat=CODIGO_CAMARERO.cats.find(x=>x.id===card.cat)||{};
+  const steps=(en?card.steps_en:card.steps)||[];
+  const never=(en?card.never_en:card.never)||[];
+  const sec=(icon,label,inner)=>`
+    <div style="margin-top:.7rem">
+      <div style="font-family:'DM Mono',monospace;font-size:.58rem;letter-spacing:.14em;text-transform:uppercase;color:var(--gold-deep);margin-bottom:.3rem">${icon} ${label}</div>
+      ${inner}
+    </div>`;
+  return `<details class="cdg-card" style="background:linear-gradient(155deg,#faf6ee,#f0e8d8);border:1.5px solid rgba(196,154,60,.18);border-radius:12px;margin-bottom:.55rem;overflow:hidden">
+    <summary style="list-style:none;cursor:pointer;display:flex;align-items:center;gap:.6rem;padding:.75rem .9rem">
+      <span style="font-size:1rem;flex-shrink:0" aria-hidden="true">${cat.icon||'◆'}</span>
+      <span style="flex:1;font-family:Georgia,serif;font-size:.9rem;font-weight:700;color:var(--parchment)">${en?card.t_en:card.t}</span>
+      <span style="color:var(--gold-deep);font-size:.8rem" aria-hidden="true">▾</span>
+    </summary>
+    <div style="padding:0 .9rem .9rem;border-top:1px dashed rgba(196,154,60,.25)">
+      <div style="font-size:.8rem;color:var(--parch2);line-height:1.5;margin-top:.6rem">${en?card.read_en:card.read}</div>
+      ${card.say?sec('💬',en?'What to say':'Qué decir',`<div style="font-family:Georgia,serif;font-size:.85rem;font-style:italic;color:var(--parchment);background:rgba(196,154,60,.08);border-left:3px solid var(--gold);border-radius:0 8px 8px 0;padding:.5rem .7rem">${en?card.say_en:card.say}</div>`):''}
+      ${sec('✅',en?'What to do':'Qué hacer',`<ul style="margin:0;padding-left:1.1rem;font-size:.78rem;color:var(--parch2);line-height:1.5">${steps.map(s=>`<li style="margin:.25rem 0">${s}</li>`).join('')}</ul>`)}
+      ${never.length?sec('🚫',en?'Never':'Nunca',`<ul style="margin:0;padding-left:1.1rem;font-size:.78rem;color:#a04848;line-height:1.5">${never.map(s=>`<li style="margin:.25rem 0">${s}</li>`).join('')}</ul>`):''}
+      ${sec('🧠',en?'Why it works':'El porqué',`<div style="font-size:.76rem;font-style:italic;color:var(--parch3);line-height:1.5">${en?card.why_en:card.why}</div>`)}
+    </div>
+  </details>`;
+}
+function _cdgListHTML(){
+  const en=LANG==='en';
+  const q=_cdgQ;
+  let cards=CODIGO_CAMARERO.cards;
+  if(_cdgCat!=='all') cards=cards.filter(c=>c.cat===_cdgCat);
+  if(q) cards=cards.filter(c=>{
+    const hay=(c.t+' '+c.t_en+' '+c.read+' '+(c.say||'')+' '+(c.steps||[]).join(' ')+' '+(c.never||[]).join(' ')+' '+c.why).toLowerCase();
+    return hay.includes(q);
+  });
+  if(!cards.length) return `<div style="text-align:center;padding:1.5rem;color:rgba(228,190,104,.6);font-size:.8rem">${en?'Nothing found':'No hay resultados'}</div>`;
+  // agrupado por categoría (en el orden del manual)
+  return CODIGO_CAMARERO.cats.map(cat=>{
+    const cc=cards.filter(c=>c.cat===cat.id);
+    if(!cc.length) return '';
+    return `<div class="tunic-divider" style="margin-top:1rem"><span>${cat.icon} ${en?cat.t_en:cat.t}</span></div>
+      <div style="font-family:'DM Mono',monospace;font-size:.6rem;color:rgba(228,190,104,.55);text-align:center;margin:-.3rem 0 .6rem">${en?cat.sub_en:cat.sub}</div>
+      ${cc.map(_cdgCardHTML).join('')}`;
+  }).join('');
+}
+function renderCodigo(){
+  const en=LANG==='en';
+  const c=document.getElementById('appContent');
+  const chips=[{id:'all',t:en?'All':'Todos',icon:'◆'}].concat(CODIGO_CAMARERO.cats.map(x=>({id:x.id,t:en?x.t_en:x.t,icon:x.icon})));
+  c.innerHTML=`<div class="sup-wrap">
+    <button onclick="renderLqa()" style="background:transparent;border:1px solid var(--line);border-radius:var(--r2);padding:.4rem .8rem;font-size:.75rem;color:var(--parch3);cursor:pointer;margin-bottom:.6rem">←</button>
+    <div class="sup-hero">
+      <div class="sup-hero-icon" style="font-size:1.6rem">🧭</div>
+      <div class="sup-hero-title">${en?'The Waiter’s Code':'El Código del Camarero'}</div>
+      <div class="sup-hero-sub">${en?'What only years and experience teach':'Lo que solo enseñan los años y la experiencia'}</div>
+    </div>
+    <input type="search" placeholder="${en?'Search a situation… (spill, hurry, allergy)':'Busca una situación… (derrame, prisa, alergia)'}" oninput="_cdgSearch(this.value)" value="${_cdgQ.replace(/"/g,'&quot;')}"
+      style="width:100%;padding:.65rem .9rem;border:1.5px solid rgba(196,154,60,.3);border-radius:12px;background:#faf6ee;color:var(--parchment);font-family:Quicksand,sans-serif;font-size:16px;margin-bottom:.6rem" aria-label="${en?'Search the code':'Buscar en el código'}">
+    <div style="display:flex;gap:.35rem;flex-wrap:wrap;margin-bottom:.4rem">
+      ${chips.map(ch=>`<button onclick="_cdgSetCat('${ch.id}')" style="border-radius:20px;padding:.32rem .7rem;font-family:Quicksand,sans-serif;font-size:.68rem;font-weight:700;cursor:pointer;border:1.5px solid ${_cdgCat===ch.id?'var(--gold)':'rgba(196,154,60,.35)'};background:${_cdgCat===ch.id?'rgba(196,154,60,.18)':'transparent'};color:${_cdgCat===ch.id?'var(--gold)':'rgba(228,190,104,.75)'}">${ch.icon} ${ch.t}</button>`).join('')}
+    </div>
+    <div id="cdgList">${_cdgListHTML()}</div>
+  </div>`;
+}
+
 function renderLqa(){
   lqaView='menu';
   const c=document.getElementById('appContent');
@@ -22456,6 +22544,18 @@ function renderLqa(){
         <div class="hub-banner-body">
           <div class="hub-banner-title">${LANG==='en'?'Ghost Inspection':'Inspección Fantasma'}</div>
           <div class="hub-banner-sub">${LANG==='en'?'Under the auditor\'s eye · Full-service simulation':'Bajo la mirada del auditor · Simulación completa'}</div>
+        </div>
+        <div class="hub-banner-arrow">›</div>
+      </div>
+
+      <!-- 🧭 EL CÓDIGO DEL CAMARERO: manual de oficio consultable -->
+      <div class="hub-banner" style="--hb-bg:linear-gradient(135deg,#1d1508 0%,#3a2c14 50%,#1d1508 100%);--hb-b:rgba(212,170,76,.45);--hb-glow:rgba(212,170,76,.5);position:relative;overflow:hidden;margin-bottom:.9rem" onclick="startCodigo()">
+        <span class="hub-banner-shine"></span>
+        <span style="position:absolute;top:.3rem;right:.5rem;font-family:'DM Mono',monospace;font-size:.5rem;color:#e0c483;letter-spacing:.15em;text-transform:uppercase;background:rgba(212,170,76,.15);padding:.2rem .45rem;border-radius:var(--r3);border:1px solid rgba(212,170,76,.3)">${LANG==='en'?'★ New':'★ Nuevo'}</span>
+        <div class="hub-banner-icon" style="font-size:1.4rem">🧭</div>
+        <div class="hub-banner-body">
+          <div class="hub-banner-title">${LANG==='en'?'The Waiter’s Code':'El Código del Camarero'}</div>
+          <div class="hub-banner-sub">${LANG==='en'?'What only years teach · 51 codes of the trade':'Lo que solo enseñan los años · 51 códigos del oficio'}</div>
         </div>
         <div class="hub-banner-arrow">›</div>
       </div>
