@@ -3839,6 +3839,17 @@ test('Actualidad: robot de noticias + calendario de eventos (jul 2026)', () => {
   assert(/\.slice\(0,3\)/.test(html.slice(html.indexOf('const dn=document.getElementById'), html.indexOf('// Posición en la liga semanal')))
     && /_subTab\.aprender='actualidad'/.test(html),
     'el teaser muestra 3 titulares y el Ver más lleva a Actualidad');
+  // Miniaturas (jul 2026): el robot resuelve el enlace real del artículo y
+  // extrae su og:image; la tarjeta pinta la foto solo si existe y se repliega
+  // a solo-texto si el medio bloquea el hotlink.
+  assert(/extractOgImage/.test(sc) && /og:image/.test(sc) && /garturlres/.test(sc),
+    'el robot debe extraer og:image y resolver el enlace real del artículo');
+  assert(/AbortController/.test(sc), 'toda descarga del robot lleva tope de tiempo');
+  const actSlice = html.slice(html.indexOf('function _actHTML'), html.indexOf('function renderActualidad'));
+  assert(/act-thumb/.test(actSlice) && /loading="lazy"/.test(actSlice)
+    && /referrerpolicy="no-referrer"/.test(actSlice) && /onerror=/.test(actSlice),
+    'las miniaturas cargan perezosas, sin referrer y con repliegue si la foto falla');
+  assert(/\.act-thumb\{/.test(read('styles.css')), 'estilos de la miniatura ausentes');
 });
 
 test('auditoría de botones: nada de tinta oscura sobre el fondo oscuro de la página (jul 2026)', () => {
