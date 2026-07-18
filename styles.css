@@ -9925,3 +9925,9 @@ body.chat-open .sound-toggle{ display:none !important; }
   background:transparent;border:1.5px solid rgba(196,154,60,.5);color:var(--gold-deep);
   font-family:'Quicksand',sans-serif;font-size:.78rem;font-weight:700}
 .act-more:active{background:rgba(196,154,60,.08)}
+
+/* Miniaturas de noticias (og:image que trae el robot; opcional por diseño) */
+.act-link.act-has-thumb{display:flex;gap:.7rem;align-items:flex-start}
+.act-thumb{width:74px;height:74px;flex:0 0 74px;border-radius:10px;object-fit:cover;
+  border:1px solid rgba(196,154,60,.35);background:rgba(196,154,60,.12)}
+.act-has-thumb .act-body{min-width:0;flex:1}
