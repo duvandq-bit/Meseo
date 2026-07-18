@@ -21,7 +21,9 @@ const FEEDS = [
 ];
 
 // Titulares que no pintan nada en una app de formación de sala.
-const BLOCKLIST = ['muere', 'muert', 'asesin', 'accident', 'incendi', 'crimen', 'agresi', 'apuñal', 'violen'];
+const BLOCKLIST = ['muere', 'muert', 'asesin', 'accident', 'incendi', 'crimen', 'agresi', 'apuñal', 'violen',
+  // deporte (se cuela por «estrella»/«chef de la selección» en las búsquedas)
+  'fútbol', 'futbol', 'scaloni', 'mundial', 'champions', 'la liga', 'partido', 'selección española', 'final contra'];
 
 const MAX_ITEMS = 30;
 const MIN_ITEMS = 5;          // por debajo de esto: conservar la edición anterior
@@ -57,7 +59,7 @@ function parseItems(xml){
 function tagFor(title, base){
   const t = title.toLowerCase();
   const tags = new Set(base);
-  if(/michelin|estrella/.test(t)) tags.add('MICHELIN');
+  if(/michelin/.test(t)) tags.add('MICHELIN');
   if(/canari|tenerife|lanzarote|gran canaria|la palma|fuerteventura|el hierro|la gomera/.test(t)) tags.add('CANARIAS');
   if(/vino|bodega|enolog|vendimia|maridaje|sumiller/.test(t)) tags.add('VINO');
   if(/berasategui/.test(t)) tags.add('CHEF');
