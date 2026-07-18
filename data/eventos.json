@@ -1,0 +1,57 @@
+{
+ "_readme": "Calendario gastro curado a mano. Los eventos con aprox:true llevan fecha estimada por la pauta anual del evento (confirmar en la web oficial antes de planear nada). Campos: t (título), lugar, d (fecha ISO), fin (opcional), aprox, tags, nota.",
+ "updated": "2026-07-18",
+ "eventos": [
+  {
+   "t": "Fiestas de la Vendimia · Tacoronte-Acentejo",
+   "lugar": "Tenerife",
+   "d": "2026-09-12",
+   "aprox": true,
+   "tags": ["CANARIAS", "VINO"],
+   "nota": "Arranque de la vendimia en la comarca vinícola histórica de Tenerife. Buen momento para repasar los listanes de la carta."
+  },
+  {
+   "t": "San Sebastián Gastronomika 2026",
+   "lugar": "Donostia / San Sebastián",
+   "d": "2026-10-05",
+   "fin": "2026-10-07",
+   "aprox": true,
+   "tags": ["ALTA COCINA"],
+   "nota": "El congreso de alta cocina de referencia en España — la casa Berasategui juega en casa."
+  },
+  {
+   "t": "Saborea Lanzarote · Festival Enogastronómico",
+   "lugar": "Lanzarote",
+   "d": "2026-11-14",
+   "aprox": true,
+   "tags": ["CANARIAS", "VINO"],
+   "nota": "El festival enogastronómico de referencia en Canarias: producto local y vinos volcánicos de La Geria."
+  },
+  {
+   "t": "Gala Guía MICHELIN España 2027",
+   "lugar": "España (sede por anunciar)",
+   "d": "2026-11-24",
+   "aprox": true,
+   "tags": ["MICHELIN"],
+   "nota": "La noche de las estrellas: se anuncian las estrellas Michelin de la edición 2027."
+  },
+  {
+   "t": "Madrid Fusión 2027",
+   "lugar": "IFEMA, Madrid",
+   "d": "2027-01-25",
+   "fin": "2027-01-27",
+   "aprox": true,
+   "tags": ["ALTA COCINA"],
+   "nota": "La cumbre internacional de gastronomía que abre el año: tendencias que luego llegan a todas las cartas."
+  },
+  {
+   "t": "GastroCanarias 2027",
+   "lugar": "Recinto Ferial, Santa Cruz de Tenerife",
+   "d": "2027-05-25",
+   "fin": "2027-05-27",
+   "aprox": true,
+   "tags": ["CANARIAS"],
+   "nota": "El salón gastronómico profesional de Canarias: concursos de cocina y sala, producto local y ponencias — en casa."
+  }
+ ]
+}

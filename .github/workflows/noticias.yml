@@ -1,0 +1,35 @@
+# ═══ Robot de noticias gastro ═══
+# Cada 6 horas lee los RSS (Google News, búsquedas fijas de gastronomía
+# Canarias/Tenerife, Michelin, Berasategui, vinos), filtra y etiqueta, y
+# si hay novedades hace commit de data/noticias.json. La app lo carga en
+# Aprender → Actualidad. Sin claves, sin servidores.
+name: Noticias gastro
+
+on:
+  schedule:
+    - cron: '17 5,11,17,23 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency: noticias
+
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Descargar y filtrar noticias
+        run: node scripts/fetch-noticias.mjs
+      - name: Commit si hay novedades
+        run: |
+          git config user.name 'meseo-noticias[bot]'
+          git config user.email 'noticias@meseo.es'
+          git add data/noticias.json
+          if git diff --cached --quiet; then
+            echo 'Sin cambios que publicar.'
+          else
+            git commit -m 'Noticias: edición automática'
+            git push
+          fi
