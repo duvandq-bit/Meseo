@@ -3798,6 +3798,42 @@ test('El Código del Camarero: manual de oficio consultable (jul 2026)', () => {
     'con prisa la cuenta se OFRECE (estándar: se presenta al pedirla) — no se lleva sin pedirla');
 });
 
+test('Actualidad: robot de noticias + calendario de eventos (jul 2026)', () => {
+  // Petición del propietario (inspirado en Tenet Research): feed de noticias
+  // gastro AUTOMÁTICO (Canarias/Tenerife, Michelin, vinos) + eventos con
+  // cuenta atrás. El robot corre en GitHub Actions cada 6 h; la app solo lee
+  // data/noticias.json (cero servidores, cero claves).
+  const wf = read('.github/workflows/noticias.yml');
+  assert(/schedule:/.test(wf) && /cron:/.test(wf) && /workflow_dispatch:/.test(wf),
+    'el workflow debe correr por cron Y a mano (workflow_dispatch)');
+  assert(/fetch-noticias\.mjs/.test(wf) && /contents: write/.test(wf),
+    'el workflow ejecuta el robot y puede hacer commit');
+  const sc = read('scripts/fetch-noticias.mjs');
+  assert(/news\.google\.com\/rss\/search/.test(sc), 'el robot lee Google News RSS');
+  assert(/gastronomía Canarias/.test(sc) && /Tenerife/.test(sc) && /Guía Michelin/.test(sc),
+    'las búsquedas fijas deben cubrir Canarias/Tenerife/Michelin');
+  assert(/MIN_ITEMS/.test(sc) && /process\.exit\(0\)/.test(sc),
+    'a prueba de fallos: con pocas noticias NO se escribe (se conserva la edición anterior)');
+  assert(/BLOCKLIST/.test(sc), 'el filtro de titulares que no pintan nada debe existir');
+  let noticias, eventos;
+  try { noticias = JSON.parse(read('data/noticias.json')); } catch(e){ assert(false, 'noticias.json debe ser JSON válido'); }
+  assert(Array.isArray(noticias.items), 'noticias.json debe tener items[]');
+  for(const i of noticias.items) assert(i.t && i.u && Array.isArray(i.tags), 'cada noticia lleva título, url y tags');
+  try { eventos = JSON.parse(read('data/eventos.json')); } catch(e){ assert(false, 'eventos.json debe ser JSON válido'); }
+  assert(Array.isArray(eventos.eventos) && eventos.eventos.length >= 4, 'el calendario debe traer eventos');
+  for(const e of eventos.eventos) assert(e.t && /^\d{4}-\d{2}-\d{2}$/.test(e.d) && Array.isArray(e.tags),
+    'cada evento lleva título, fecha ISO y tags');
+  assert(eventos.eventos.every(e => e.aprox !== undefined),
+    'las fechas estimadas van marcadas (aprox) — nunca se presentan como confirmadas');
+  // UI cableada como subpestaña de Aprender, con enlaces seguros.
+  assert(/function renderActualidad\(/.test(html) && /actualidad:renderActualidad/.test(html),
+    'renderActualidad debe existir y estar en el dispatch de Aprender');
+  assert(/\['actualidad',_en\?'News':'Actualidad'/.test(html), 'el chip Actualidad debe estar en la barra');
+  assert(/target="_blank" rel="noopener noreferrer"/.test(html.slice(html.indexOf('function _actHTML'), html.indexOf('function renderActualidad'))),
+    'las noticias abren fuera con rel=noopener');
+  assert(/\.act-card\{/.test(read('styles.css')), 'estilos del feed ausentes');
+});
+
 test('auditoría de botones: nada de tinta oscura sobre el fondo oscuro de la página (jul 2026)', () => {
   // Bug real (propietario): «en auditoría los botones para volver atrás no se
   // ven bien». El fondo de la página es oscuro (#1c2a22); un botón transparente

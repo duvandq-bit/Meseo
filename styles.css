@@ -9899,3 +9899,22 @@ body.chat-open .sound-toggle{ display:none !important; }
 #disclaimerText{font-size:.52rem!important;opacity:.85}
 .login-tools button{padding:.4rem .9rem!important;font-size:.6rem!important;min-height:34px}
 .login-footer{margin-top:.4rem}
+
+/* ═══ ACTUALIDAD — feed de noticias gastro + eventos (jul 2026) ═══ */
+.act-pulse{font-family:'DM Mono',monospace;font-size:.62rem;letter-spacing:.14em;color:var(--gold-deep);
+  text-align:center;padding:.45rem .6rem;border:1px solid rgba(196,154,60,.3);border-radius:20px;margin-bottom:.7rem;
+  background:rgba(196,154,60,.06)}
+.act-card{display:block;background:linear-gradient(155deg,#faf6ee,#f0e8d8);border:1.5px solid rgba(196,154,60,.16);
+  border-radius:12px;padding:.8rem .95rem;margin-bottom:.55rem;text-decoration:none}
+.act-link:active{background:linear-gradient(155deg,#f4eee2,#ece2d0)}
+.act-title{font-family:Georgia,serif;font-size:.9rem;font-weight:700;color:var(--parchment);line-height:1.35;margin-bottom:.25rem}
+.act-meta{font-family:'Quicksand',sans-serif;font-size:.66rem;font-weight:600;color:var(--parch3)}
+.act-nota{font-size:.76rem;color:var(--parch2);line-height:1.45;margin-bottom:.35rem}
+.act-tags{display:flex;gap:.3rem;flex-wrap:wrap;margin-top:.4rem}
+.act-tag{font-family:'DM Mono',monospace;font-size:.52rem;letter-spacing:.08em;padding:.18rem .45rem;
+  border-radius:10px;border:1px solid rgba(196,154,60,.4);color:var(--gold-deep);font-weight:700}
+.act-ev-top{display:flex;justify-content:space-between;align-items:baseline;gap:.6rem;margin-bottom:.25rem}
+.act-ev-count{font-family:'DM Mono',monospace;font-size:.58rem;letter-spacing:.12em;color:#faf6ee;
+  background:var(--gold-deep);border-radius:10px;padding:.2rem .5rem;font-weight:700}
+.act-empty{text-align:center;padding:1.2rem .8rem;font-size:.78rem;color:var(--parch3)}
+.act-foot{font-family:'DM Mono',monospace;font-size:.56rem;letter-spacing:.1em;color:var(--parch4);text-align:center;margin:.9rem 0 .4rem}

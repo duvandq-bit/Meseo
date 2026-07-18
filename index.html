@@ -44,7 +44,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Meseo · Formación de sala</title>
 <meta name="description" content="Meseo — Formación de equipos de sala: carta, alérgenos, vinos, exámenes y juegos de repaso.">
-<meta name="app-version" content="7.258">
+<meta name="app-version" content="7.259">
 <meta name="app-build" content="May 2026">
 <meta name="theme-color" content="#1c2a22">
 <!-- ═══ PWA ═══ -->
@@ -1528,7 +1528,7 @@ const CAT_COLORS={'Entrantes':'#c49a3c','Hamburguesas y Bocatas':'#b86050','Plat
 const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#c49a3c"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#a47a2c" opacity=".4"/><path d="M8 8v4a1 1 0 001 1h1v4M10 8v4" stroke="#fff" stroke-width="1.2" stroke-linecap="round" fill="none"/><path d="M15 8v8M14 8v3a1.5 1.5 0 003 0V8" stroke="#fff" stroke-width="1.2" stroke-linecap="round" fill="none"/></svg>`,'Hamburguesas y Bocatas':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#b86050"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#983838" opacity=".4"/><path d="M7 9h10M7 12h10M7 15h10" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/><path d="M8 9c0-2 2-3 4-3s4 1 4 3M8 15c0 2 2 3 4 3s4-1 4-3" fill="none" stroke="#fff" stroke-width="1" opacity=".7"/></svg>`,'Platos Principales':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#4888a0"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#2e6878" opacity=".4"/><path d="M5 15h14" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/><path d="M12 6a6 6 0 016 6H6a6 6 0 016-6z" fill="none" stroke="#fff" stroke-width="1.1"/><circle cx="10" cy="6" r=".7" fill="#fff" opacity=".7"/><circle cx="12" cy="5" r=".7" fill="#fff" opacity=".7"/><circle cx="14" cy="6" r=".7" fill="#fff" opacity=".7"/></svg>`,'Sugerencias':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#d4aa4c"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#a48a2c" opacity=".4"/><polygon points="12,5 14.5,10 20,10.5 16,14 17,20 12,17 7,20 8,14 4,10.5 9.5,10" fill="#fff" opacity=".9"/></svg>`,'Guarniciones y Salsas':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#4d8a5e"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#2d6a3e" opacity=".4"/><path d="M12 18V10M5 10c0-4 3-6 7-6s7 2 7 6c0 5-3 8-7 8s-7-3-7-8z" fill="none" stroke="#fff" stroke-width="1.1"/><path d="M5 10c3 0 5 1 7 2.5" fill="none" stroke="#fff" stroke-width=".8" opacity=".6"/></svg>`,'Postres':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#7a6aaa"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#5a4a8a" opacity=".4"/><path d="M9 19h6M12 12v7M7 6l2 4.5a3 3 0 006 0L17 6H7z" fill="none" stroke="#fff" stroke-width="1.1" stroke-linecap="round"/></svg>`,'Vegetariano':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#5a9a6e"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#3a7a4e" opacity=".4"/><path d="M9 18h6M12 18V10M12 10c0-3 2-5 5-5-.7 2.5-2.5 5-5 5zM12 10c0-3-2-5-5-5 .7 2.5 2.5 5 5 5z" fill="none" stroke="#fff" stroke-width="1.1" stroke-linecap="round"/></svg>`};
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='7.258';  // sincronizada con sw.js VERSION (guard de CI)
+const APP_VERSION='7.259';  // sincronizada con sw.js VERSION (guard de CI)
 const APP_BUILD='Jul 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;
@@ -9105,7 +9105,7 @@ function showTab(tab, instant){
   // Both 'protocolo' and 'lqa' routes target the same nav button (the tab now
   // shows only LQA content after Protocolo deletion; the button id stayed
   // navProtocolo for localStorage compat).
-  const parentMap = { flashcards:'aprender', repaso:'aprender', tecnicas:'aprender', videos:'aprender', emplatado:'aprender', lqa:'protocolo', stats:'ranking', logros:'ranking' };
+  const parentMap = { flashcards:'aprender', repaso:'aprender', tecnicas:'aprender', actualidad:'aprender', videos:'aprender', emplatado:'aprender', lqa:'protocolo', stats:'ranking', logros:'ranking' };
   const navTab = parentMap[tab] || tab;
   document.querySelectorAll('.nav-btn').forEach(b=>{
     const btnTab = b.id.replace('nav','').toLowerCase();
@@ -9118,7 +9118,7 @@ function showTab(tab, instant){
   const _navDD = document.getElementById('mainNavDD');
   if(_navDD) _navDD.classList.remove('open');
   const c=document.getElementById('appContent');
-  const renderMap = {dashboard:renderDashboard,aprender:renderAprender,flashcards:renderAprender,exam:renderExam,repaso:renderAprender,tecnicas:renderAprender,smart:renderAprender,emplatado:renderAprender,stats:renderRankingHub,logros:renderRankingHub,txoko:renderTxoko,ranking:renderRankingHub,supervisor:renderSupervisor,protocolo:renderLqa,videos:renderAprender,lqa:renderLqa,vinos:renderVinos,chat:renderChat};
+  const renderMap = {dashboard:renderDashboard,aprender:renderAprender,flashcards:renderAprender,exam:renderExam,repaso:renderAprender,tecnicas:renderAprender,actualidad:renderAprender,smart:renderAprender,emplatado:renderAprender,stats:renderRankingHub,logros:renderRankingHub,txoko:renderTxoko,ranking:renderRankingHub,supervisor:renderSupervisor,protocolo:renderLqa,videos:renderAprender,lqa:renderLqa,vinos:renderVinos,chat:renderChat};
   const _doRender = ()=>{
     c.innerHTML='';
     c.style.transition='none';
@@ -9624,12 +9624,13 @@ function _aprChipsBar(){
     ['smart',_en?'Simulation':'Simulación',_srsCount>0?'🟢':'🧠'],
     ['repaso',_en?'The Menu':'La Carta',''],
     ['tecnicas',_en?'Techniques':'Técnicas','🍳'],
+    ['actualidad',_en?'News':'Actualidad','📰'],
     ['flashcards','Flashcards',''],
     ['videos',_en?'Videos':'Videos','']
   ], _subTab.aprender || 'emplatado', 'aprender');
 }
 function _aprEnsureChips(){
-  const APR = ['aprender','repaso','tecnicas','flashcards','smart','videos','emplatado'];
+  const APR = ['aprender','repaso','tecnicas','actualidad','flashcards','smart','videos','emplatado'];
   if(typeof currentTab!=='undefined' && !APR.includes(currentTab)) return;
   const c=document.getElementById('appContent'); if(!c) return;
   if(!c.querySelector('.subtab-chips')) c.insertAdjacentHTML('afterbegin', _aprChipsBar());
@@ -9642,7 +9643,7 @@ function renderAprender(){
   const c=document.getElementById('appContent');
   const sub = _subTab.aprender || 'emplatado';   // aterrizaje: la guía visual (lo más consultado en servicio)
   const _en = LANG==='en';
-  ({smart:renderSmartReview, flashcards:renderFlashcards, repaso:renderRepaso, tecnicas:renderTecnicas, videos:renderVideos, emplatado:renderEmplatado})[sub]();
+  ({smart:renderSmartReview, flashcards:renderFlashcards, repaso:renderRepaso, tecnicas:renderTecnicas, actualidad:renderActualidad, videos:renderVideos, emplatado:renderEmplatado})[sub]();
   // Global quick search — only on Flashcards & Smart Review (Explore already has its own search, Videos doesn't need it)
   const _showSearch = (sub === 'flashcards');
   const searchBar = _showSearch ? `
@@ -9972,6 +9973,85 @@ function _tecDishes(kw,kwx){
   for(const o of out){ if(seen.has(o.name)) continue; seen.add(o.name); uniq.push(o); }
   return uniq;
 }
+// ═══ ACTUALIDAD — noticias gastro automáticas + calendario de eventos ═══
+// Inspirado en el feed de Tenet Research (petición del propietario, jul
+// 2026): tarjetas con fuente, hace-X-horas y etiquetas filtrables. Las
+// noticias las escribe el robot de GitHub Actions cada 6 h en
+// data/noticias.json (ver scripts/fetch-noticias.mjs); los eventos viven
+// curados en data/eventos.json. Todo perezoso y cacheado offline.
+let NOTICIAS=null, EVENTOS=null;
+let _actFilter='todo';   // todo | noticias | eventos
+let _actTag=null;
+async function _actLoad(){
+  if(!NOTICIAS){ try{ NOTICIAS=await loadLazyData('data/noticias.json', LANG==='en'?'news':'noticias', {silent:true}); }catch(e){ NOTICIAS={updated:null,items:[]}; } }
+  if(!EVENTOS){ try{ EVENTOS=await loadLazyData('data/eventos.json', LANG==='en'?'events':'eventos', {silent:true}); }catch(e){ EVENTOS={eventos:[]}; } }
+}
+function _actAgo(iso){
+  const en=LANG==='en';
+  if(!iso) return '';
+  const ms=Date.now()-new Date(iso).getTime();
+  const h=Math.floor(ms/3600000);
+  if(h<1) return en?'just now':'ahora mismo';
+  if(h<24) return en?`${h}h ago`:`hace ${h} h`;
+  const d=Math.floor(h/24);
+  return en?`${d}d ago`:`hace ${d} d`;
+}
+function _actSetFilter(f, tag){
+  _actFilter=f; _actTag=tag||null;
+  const el=document.getElementById('actWrap');
+  if(el) el.innerHTML=_actHTML();
+}
+function _actTagChip(tag){
+  const on=_actTag===tag;
+  return `<button type="button" onclick="_actSetFilter('todo'${on?'':`,'${tag}'`})" style="border-radius:16px;padding:.28rem .6rem;font-family:'DM Mono',monospace;font-size:.56rem;letter-spacing:.08em;cursor:pointer;border:1px solid ${on?'var(--gold-deep)':'rgba(196,154,60,.4)'};background:${on?'rgba(196,154,60,.18)':'transparent'};color:${on?'var(--gold-deep)':'var(--parch2)'};font-weight:700">${tag}</button>`;
+}
+function _actHTML(){
+  const en=LANG==='en';
+  const items=(NOTICIAS&&NOTICIAS.items)||[];
+  const evs=((EVENTOS&&EVENTOS.eventos)||[]).filter(e=>e.d>=todayStr()).sort((a,b)=>a.d.localeCompare(b.d));
+  const tags=[...new Set([].concat(...items.map(i=>i.tags||[]), ...evs.map(e=>e.tags||[])))].sort();
+  const fItems=items.filter(i=>!_actTag||(i.tags||[]).includes(_actTag));
+  const fEvs=evs.filter(e=>!_actTag||(e.tags||[]).includes(_actTag));
+  const seg=(id,lbl)=>`<button type="button" onclick="_actSetFilter('${id}'${_actTag?`,'${_actTag}'`:''})" style="flex:1;min-height:34px;border-radius:10px;cursor:pointer;font-family:'Quicksand',sans-serif;font-size:.72rem;font-weight:700;border:1.5px solid ${_actFilter===id?'var(--gold-deep)':'rgba(196,154,60,.3)'};background:${_actFilter===id?'rgba(196,154,60,.15)':'transparent'};color:${_actFilter===id?'var(--gold-deep)':'var(--parch2)'}">${lbl}</button>`;
+  const evCards=fEvs.map(e=>{
+    const dd=Math.max(0, Math.round((new Date(e.d+'T12:00:00Z')-new Date(todayStr()+'T12:00:00Z'))/86400000));
+    const dLbl=new Intl.DateTimeFormat(en?'en-GB':'es-ES',{day:'numeric',month:'short',year:'numeric'}).format(new Date(e.d+'T12:00:00Z'));
+    return `<div class="act-card">
+      <div class="act-ev-top"><span class="act-ev-count">${dd===0?(en?'TODAY':'HOY'):(en?`IN ${dd} DAYS`:`EN ${dd} DÍAS`)}</span><span class="act-meta">${dLbl}${e.aprox?(en?' · approx.':' · fecha aprox.'):''}</span></div>
+      <div class="act-title">${escapeHTML(e.t)}</div>
+      <div class="act-meta" style="margin-bottom:.3rem">📍 ${escapeHTML(e.lugar||'')}</div>
+      ${e.nota?`<div class="act-nota">${escapeHTML(e.nota)}</div>`:''}
+      <div class="act-tags">${(e.tags||[]).map(t=>`<span class="act-tag">${escapeHTML(t)}</span>`).join('')}</div>
+    </div>`;
+  }).join('');
+  const newsCards=fItems.map(i=>`<a class="act-card act-link" href="${escapeHTML(i.u)}" target="_blank" rel="noopener noreferrer">
+      <div class="act-title">${escapeHTML(i.t)}</div>
+      <div class="act-meta">${escapeHTML(i.s||'')}${i.d?` · ${_actAgo(i.d)}`:''}</div>
+      <div class="act-tags">${(i.tags||[]).map(t=>`<span class="act-tag">${escapeHTML(t)}</span>`).join('')}</div>
+    </a>`).join('');
+  const noNews=`<div class="act-empty">${en?'No news yet — the robot delivers a fresh edition every 6 hours.':'Todavía sin noticias — el robot trae una edición nueva cada 6 horas.'}</div>`;
+  const showEv=_actFilter!=='noticias', showNews=_actFilter!=='eventos';
+  return `
+    <div style="display:flex;gap:.4rem;margin-bottom:.5rem">${seg('todo',en?'All':'Todo')}${seg('noticias',en?'📰 News':'📰 Noticias')}${seg('eventos',en?'📅 Events':'📅 Eventos')}</div>
+    ${tags.length?`<div style="display:flex;gap:.3rem;flex-wrap:wrap;margin-bottom:.7rem">${tags.map(_actTagChip).join('')}</div>`:''}
+    ${showEv&&fEvs.length?`<div class="tunic-divider"><span>📅 ${en?'Upcoming events':'Próximos eventos'}</span></div>${evCards}`:''}
+    ${showNews?`<div class="tunic-divider" style="margin-top:${showEv&&fEvs.length?'1rem':'0'}"><span>📰 ${en?'Gastro news':'Noticias gastro'}</span></div>${fItems.length?newsCards:noNews}`:''}
+    <div class="act-foot">${en?'Automatic edition · updates every 6 h':'Edición automática · se actualiza cada 6 h'}${NOTICIAS&&NOTICIAS.updated?` · ${_actAgo(NOTICIAS.updated)}`:''}</div>`;
+}
+function renderActualidad(){
+  const en=LANG==='en';
+  const c=document.getElementById('appContent');
+  const emp=getEmp(currentUser);
+  const dateLbl=new Intl.DateTimeFormat(en?'en-GB':'es-ES',{timeZone:'Atlantic/Canary',weekday:'short',day:'numeric',month:'short'}).format(new Date()).toUpperCase().replace(/\./g,'');
+  const hour=+new Intl.DateTimeFormat('en-GB',{timeZone:'Atlantic/Canary',hour:'2-digit',hour12:false}).format(new Date());
+  const svc=hour<17?(en?'LUNCH SERVICE':'SERVICIO ALMUERZO'):(en?'DINNER SERVICE':'SERVICIO CENA');
+  c.innerHTML=`<div class="sup-wrap">
+    <div class="act-pulse">${dateLbl} · ${svc}${emp&&emp.dqStreak>0?` · 🔥 ${emp.dqStreak}`:''}</div>
+    <div id="actWrap"><div class="act-empty">…</div></div>
+  </div>`;
+  _actLoad().then(()=>{ const el=document.getElementById('actWrap'); if(el) el.innerHTML=_actHTML(); });
+}
+
 function renderTecnicas(){
   const c=document.getElementById('appContent');
   const _en = LANG==='en';
