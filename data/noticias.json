@@ -1,6 +1,27 @@
 {
- "updated": "2026-07-19T12:07:39.440Z",
+ "updated": "2026-07-19T18:10:22.020Z",
  "items": [
+  {
+   "t": "La alta cocina de 17 chefs internacionales se unira en Colombia por una causa social en el Davivienda Restaurant Tour",
+   "u": "https://www.infobae.com/colombia/2026/07/19/la-alta-cocina-de-17-chefs-internacionales-se-unira-en-colombia-por-una-causa-social-en-el-davivienda-restaurant-tour/",
+   "s": "Infobae",
+   "d": "2026-07-19T17:49:09.000Z",
+   "tags": [
+    "ALTA COCINA"
+   ],
+   "img": "https://www.infobae.com/resizer/v2/ZMPNSV7AVJCIZN5XXZNS5LYRDY.png?auth=edf32127d5af5266700b8d18774e24aaa4838d6cf021993e5b075a9a62f4a108&smart=true&width=1200&height=630&quality=85"
+  },
+  {
+   "t": "Martín Berasategui, chef español de 12 estrellas Michelin: \"No me gusta para nada la gente que no lucha por resolver\"",
+   "u": "https://www.huffingtonpost.es/virales/martin-berasategui-chef-espanol-12-estrellas-michelin-no-me-gusta-gente-lucha-resolver-f202607.html?outputType",
+   "s": "El HuffPost",
+   "d": "2026-07-19T16:23:56.000Z",
+   "tags": [
+    "CHEF",
+    "MICHELIN"
+   ],
+   "img": "https://img2.huffingtonpost.es/files/og_thumbnail/uploads/2024/10/25/el-cocinero-martin-berasategui.jpeg"
+  },
   {
    "t": "Joseba Arguiñano, chef: \"Para unos chipirones perfectos, dedica tiempo a pochar bien la cebolleta y el pimiento. Una fritada lentamente caramelizada es la clave para tener todo el sabor\"",
    "u": "https://www.vanitatis.elconfidencial.com/gastronomia/2026-07-19/joseba-arguinano-chipirones-receta-cocina-vasca-cebolleta-pimiento-pelayo-1qrt_4391703/",
@@ -20,6 +41,16 @@
     "ALTA COCINA"
    ],
    "img": "https://s3.elespanol.com/k/imgp/cms/elespanol/11318916.jpg?p=f:jpeg/w:1706/h:960&h=cSdhzMjB"
+  },
+  {
+   "t": "La villa juguetera de Alicante que conquista por su cocina: así es el pueblo donde mejor se come de España",
+   "u": "https://www.noticiasdelvino.com/restaurantes/2026/07/19/la-villa-juguetera-de-alicante-que-conquista-por-su-cocina-asi-es-el-pueblo-donde-mejor-se-come-de-espana-74836/",
+   "s": "Noticias del Vino",
+   "d": "2026-07-19T10:23:33.000Z",
+   "tags": [
+    "MICHELIN"
+   ],
+   "img": "https://www.noticiasdelvino.com/wp-content/uploads/restaurantes-5.jpg"
   },
   {
    "t": "Éxito del viñedo canario en la Guía Peñín: del mito a la admiración nacional",
@@ -111,6 +142,15 @@
    "img": "https://www.lanzadigital.com/wp-content/uploads/2026/04/Miguel-Angel-Exposito-con-su-equipo-de-Cantueso-1-768x432.jpg"
   },
   {
+   "t": "Los restaurantes gallegos a pie de playa que recomienda la 'Guía Michelin' para este verano",
+   "u": "https://www.msn.com/es-es/alimentaci%C3%B3n-y-bebidas/recetas/los-restaurantes-gallegos-a-pie-de-playa-que-recomienda-la-gu%C3%ADa-michelin-para-este-verano/ar-AA24XmLJ",
+   "s": "MSN",
+   "d": "2026-07-19T03:03:27.000Z",
+   "tags": [
+    "MICHELIN"
+   ]
+  },
+  {
    "t": "Padylla (19/07/26)",
    "u": "https://www.eldia.es/humor/2026/07/19/padylla-19-07-26-132592547.html",
    "s": "Eldía",
@@ -189,6 +229,15 @@
    ]
   },
   {
+   "t": "La expulsada de 'MasterChef' se queda a un paso de la semifinal con una reflexión que deja al jurado sin palabras: \"Solo he perdido\"",
+   "u": "https://www.msn.com/es-es/entretenimiento/celebridades/la-expulsada-de-masterchef-se-queda-a-un-paso-de-la-semifinal-con-una-reflexi%C3%B3n-que-deja-al-jurado-sin-palabras-solo-he-perdido/ar-AA259xLw?apiversion",
+   "s": "MSN",
+   "d": "2026-07-18T18:28:08.000Z",
+   "tags": [
+    "CHEF"
+   ]
+  },
+  {
    "t": "La pizza en honor a la Virgen de Candelaria que se ha hecho viral en Tenerife: tiene forma de templo y solo se podrá...",
    "u": "https://www.atlanticohoy.com/sociedad/pizza-en-honor-virgen-candelaria-se-ha-hecho-viral-en-tenerife-tiene-forma-templo-solo-se-podra-probar-por-tiempo-limitado_1564318_102.html",
    "s": "Atlántico Hoy",
@@ -240,63 +289,13 @@
   },
   {
    "t": "Sanabria: el restaurante de Santa Cruz, desde el paladar más 'kool'",
-   "u": "https://www.canarias7.es/gastronomia-c7/restaurantes/sanabria-restaurante-santa-cruz-paladar-kool-20260718140000-nt.html",
+   "u": "https://www.canarias7.es/gastronomia-c7/restaurantes/sanabria-restaurante-santa-cruz-paladar-kool-20260718140000-nt_amp.html",
    "s": "Canarias7",
    "d": "2026-07-18T06:42:38.000Z",
    "tags": [
     "CANARIAS"
    ],
-   "img": "https://s3.ppllstatics.com/canarias7/www/multimedia/gastronomia-c7/2026/07/17/berberechos-kvu-U30884458890BBD-1200x840@Canarias7.jpg"
-  },
-  {
-   "t": "Ni en Italia ni en Estados Unidos: el mejor helado de chocolate del mundo está en Las Palmas de Gran Canaria",
-   "u": "https://www.laprovincia.es/las-palmas/2026/07/17/italia-comes-igual-mejor-helado-chocolate-dv-119548807.html",
-   "s": "La Provincia",
-   "d": "2026-07-18T04:26:43.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://estaticos-cdn.prensaiberica.es/clip/e3d9acaf-32f1-429a-837e-42a5667f5f11_16-9-discover-aspect-ratio_default_0.jpg"
-  },
-  {
-   "t": "Lasarte, dos décadas de altísima cocina",
-   "u": "https://www.lavanguardia.com/comer/sitios/20260718/11592180/lasarte-dos-decadas-altisima-cocina.html",
-   "s": "La Vanguardia",
-   "d": "2026-07-18T04:00:00.000Z",
-   "tags": [
-    "CHEF"
-   ],
-   "img": "https://www.lavanguardia.com/files/og_thumbnail/files/fp/uploads/2026/07/14/6a56351590477.r_d.467-386-13058.jpeg"
-  },
-  {
-   "t": "Andalucía triunfa en la Gala de la Guía Michelin con cinco restaurantes que logran su primera Estrella",
-   "u": "https://www.101tv.es/andalucia/andalucia-triunfa-en-la-gala-de-la-guia-michelin-con-cinco-restaurantes-que-logran-su-primera-estrella/",
-   "s": "101TV",
-   "d": "2026-07-18T03:25:05.000Z",
-   "tags": [
-    "MICHELIN"
-   ]
-  },
-  {
-   "t": "Tres vinos volcánicos de Tenerife, el paraíso de las uvas que fascina al mundo",
-   "u": "https://elpais.com/gastronomia/beber/2026-07-18/tres-vinos-volcanicos-de-tenerife-el-paraiso-de-las-uvas-que-fascina-al-mundo.html",
-   "s": "EL PAÍS",
-   "d": "2026-07-18T03:25:00.000Z",
-   "tags": [
-    "CANARIAS",
-    "VINO"
-   ],
-   "img": "https://imagenes.elpais.com/resizer/v2/CJXMO3HNRJGD3JVJO6UIHBTXPY.JPG?auth=af2139933aedf139ab0d2235ab2639c488f3671258265f6fac0db44ab656742d&width=1200"
-  },
-  {
-   "t": "La historia de Arzak: cómo una taberna de pueblo de 1897 inventó el turismo gastronómico moderno",
-   "u": "https://grupoanimal.mx/gastronomia/historias-cocina/restaurante-arzak-san-sebastian-historia",
-   "s": "Grupo Animal",
-   "d": "2026-07-18T00:00:53.000Z",
-   "tags": [
-    "ALTA COCINA"
-   ],
-   "img": "https://grupoanimal.sfo3.cdn.digitaloceanspaces.com/uploads/2026/07/arzak-restaurante-historia.webp"
+   "img": "https://s3.ppllstatics.com/canarias7/www/multimedia/gastronomia-c7/2026/07/17/berberechos.jpg"
   }
  ]
 }
