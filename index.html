@@ -44,7 +44,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Meseo · Formación de sala</title>
 <meta name="description" content="Meseo — Formación de equipos de sala: carta, alérgenos, vinos, exámenes y juegos de repaso.">
-<meta name="app-version" content="7.263">
+<meta name="app-version" content="7.264">
 <meta name="app-build" content="May 2026">
 <meta name="theme-color" content="#1c2a22">
 <!-- ═══ PWA ═══ -->
@@ -339,6 +339,7 @@
     <div class="nav-group-lbl" id="navGrpEquipo" aria-hidden="true">Equipo</div>
     <button class="nav-btn" id="navTxoko" onclick="showTab('txoko')"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 12h4l2 8 4-16 2 8h4"/></svg> Juegos</button>
     <button class="nav-btn" id="navRanking" onclick="showTab('ranking')"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg> Ranking</button>
+    <button class="nav-btn" id="navHorarios" onclick="showTab('horarios')"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg> Horarios</button>
     <button class="nav-btn" id="navChat" onclick="showTab('chat')"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"/></svg> Terraza</button>
     <button class="nav-btn" id="navSupervisor" onclick="showTab('supervisor')" style="display:none"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg> Sup.</button>
   </nav>
@@ -1528,7 +1529,7 @@ const CAT_COLORS={'Entrantes':'#c49a3c','Hamburguesas y Bocatas':'#b86050','Plat
 const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#c49a3c"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#a47a2c" opacity=".4"/><path d="M8 8v4a1 1 0 001 1h1v4M10 8v4" stroke="#fff" stroke-width="1.2" stroke-linecap="round" fill="none"/><path d="M15 8v8M14 8v3a1.5 1.5 0 003 0V8" stroke="#fff" stroke-width="1.2" stroke-linecap="round" fill="none"/></svg>`,'Hamburguesas y Bocatas':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#b86050"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#983838" opacity=".4"/><path d="M7 9h10M7 12h10M7 15h10" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/><path d="M8 9c0-2 2-3 4-3s4 1 4 3M8 15c0 2 2 3 4 3s4-1 4-3" fill="none" stroke="#fff" stroke-width="1" opacity=".7"/></svg>`,'Platos Principales':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#4888a0"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#2e6878" opacity=".4"/><path d="M5 15h14" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/><path d="M12 6a6 6 0 016 6H6a6 6 0 016-6z" fill="none" stroke="#fff" stroke-width="1.1"/><circle cx="10" cy="6" r=".7" fill="#fff" opacity=".7"/><circle cx="12" cy="5" r=".7" fill="#fff" opacity=".7"/><circle cx="14" cy="6" r=".7" fill="#fff" opacity=".7"/></svg>`,'Sugerencias':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#d4aa4c"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#a48a2c" opacity=".4"/><polygon points="12,5 14.5,10 20,10.5 16,14 17,20 12,17 7,20 8,14 4,10.5 9.5,10" fill="#fff" opacity=".9"/></svg>`,'Guarniciones y Salsas':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#4d8a5e"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#2d6a3e" opacity=".4"/><path d="M12 18V10M5 10c0-4 3-6 7-6s7 2 7 6c0 5-3 8-7 8s-7-3-7-8z" fill="none" stroke="#fff" stroke-width="1.1"/><path d="M5 10c3 0 5 1 7 2.5" fill="none" stroke="#fff" stroke-width=".8" opacity=".6"/></svg>`,'Postres':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#7a6aaa"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#5a4a8a" opacity=".4"/><path d="M9 19h6M12 12v7M7 6l2 4.5a3 3 0 006 0L17 6H7z" fill="none" stroke="#fff" stroke-width="1.1" stroke-linecap="round"/></svg>`,'Vegetariano':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#5a9a6e"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#3a7a4e" opacity=".4"/><path d="M9 18h6M12 18V10M12 10c0-3 2-5 5-5-.7 2.5-2.5 5-5 5zM12 10c0-3-2-5-5-5 .7 2.5 2.5 5 5 5z" fill="none" stroke="#fff" stroke-width="1.1" stroke-linecap="round"/></svg>`};
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='7.263';  // sincronizada con sw.js VERSION (guard de CI)
+const APP_VERSION='7.264';  // sincronizada con sw.js VERSION (guard de CI)
 const APP_BUILD='Jul 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;
@@ -8996,7 +8997,7 @@ function showTab(tab, instant){
   const _navDD = document.getElementById('mainNavDD');
   if(_navDD) _navDD.classList.remove('open');
   const c=document.getElementById('appContent');
-  const renderMap = {dashboard:renderDashboard,aprender:renderAprender,flashcards:renderAprender,exam:renderExam,repaso:renderAprender,tecnicas:renderAprender,actualidad:renderAprender,smart:renderAprender,emplatado:renderAprender,stats:renderRankingHub,logros:renderRankingHub,txoko:renderTxoko,ranking:renderRankingHub,supervisor:renderSupervisor,protocolo:renderLqa,videos:renderAprender,lqa:renderLqa,vinos:renderVinos,chat:renderChat};
+  const renderMap = {dashboard:renderDashboard,aprender:renderAprender,flashcards:renderAprender,exam:renderExam,repaso:renderAprender,tecnicas:renderAprender,actualidad:renderAprender,smart:renderAprender,emplatado:renderAprender,stats:renderRankingHub,logros:renderRankingHub,txoko:renderTxoko,ranking:renderRankingHub,supervisor:renderSupervisor,horarios:renderHorarios,protocolo:renderLqa,videos:renderAprender,lqa:renderLqa,vinos:renderVinos,chat:renderChat};
   const _doRender = ()=>{
     c.innerHTML='';
     c.style.transition='none';
@@ -9851,6 +9852,373 @@ function _tecDishes(kw,kwx){
   for(const o of out){ if(seen.has(o.name)) continue; seen.add(o.name); uniq.push(o); }
   return uniq;
 }
+
+// ═══ HORARIOS DEL EQUIPO ═══════════════════════════════════════════
+// Petición del propietario (jul 2026): el cuadrante vivía en un Excel del
+// hotel detrás del login corporativo y el equipo lo consultaba por capturas
+// de WhatsApp. Ahora vive en Supabase (tabla horarios, una fila por semana)
+// y la app lo muestra: quién trabaja hoy, tu semana, el cuadrante completo
+// y un asistente de cambio de turno. Las celdas se guardan VERBATIM tal
+// cual el Excel — la app no inventa datos: turno con zona, o un código.
+// Leyenda confirmada por el propietario:
+//   L = Libre · L REQ = Libre pedido · DP HRS = Devolución de horas ·
+//   BOLSA = Vacaciones (bolsa) · FD = Fijo discontinuo
+let HORARIOS=null;
+let _horView='hoy';
+let _horWeekIdx=0;
+let _horSwapSel=null;    // {w,svc,di} turno propio elegido en el asistente
+const _HOR_CODES={
+  'L':      {es:'Libre',                en:'Day off',            k:'libre'},
+  'L REQ':  {es:'Libre pedido',         en:'Requested day off',  k:'librereq'},
+  'DP HRS': {es:'Devolución de horas',  en:'Hours-owed rest',    k:'dphrs'},
+  'BOLSA':  {es:'Vacaciones (bolsa)',   en:'Vacation (pool)',    k:'bolsa'},
+  'FD':     {es:'Fijo discontinuo',     en:'Seasonal contract',  k:'fd'}
+};
+const _HOR_POSROWS=['Veranda'];   // filas que son un puesto, no una persona
+function _horCellKind(cell){
+  if(!cell || !String(cell).trim()) return 'na';
+  if(/\d{1,2}[:.]\d{2}\s*-\s*\d{1,2}[:.]\d{2}/.test(cell)) return 'shift';
+  const c=String(cell).trim().toUpperCase();
+  return _HOR_CODES[c] ? _HOR_CODES[c].k : 'otro';
+}
+function _horCodeLbl(cell){
+  const c=String(cell||'').trim().toUpperCase();
+  return _HOR_CODES[c] ? (LANG==='en'?_HOR_CODES[c].en:_HOR_CODES[c].es) : cell;
+}
+function _horShiftParts(cell){
+  const m=String(cell).match(/(\d{1,2}[:.]\d{2}\s*-\s*\d{1,2}[:.]\d{2})\s*(.*)$/);
+  return m ? {hrs:m[1].replace(/\./g,':').replace(/\s/g,''), zona:(m[2]||'').trim()} : {hrs:String(cell), zona:''};
+}
+async function _horLoad(force){
+  if(HORARIOS && !force) return HORARIOS;
+  let cached=null;
+  try{ cached=JSON.parse(localStorage.getItem('txk_horarios_v1')||'null'); }catch(e){}
+  if(!force && cached && (Date.now()-new Date(cached.at).getTime()) < 20*60000){
+    HORARIOS=cached.weeks; return HORARIOS;
+  }
+  try{
+    const r=await fetch(`${SUPA_URL}/rest/v1/horarios?select=week_start,data&order=week_start.asc&limit=12`,
+      {headers:{'apikey':SUPA_KEY,'Authorization':`Bearer ${SUPA_KEY}`}});
+    if(!r.ok) throw new Error('http '+r.status);
+    const rows=await r.json();
+    HORARIOS=rows.map(x=>({start:x.week_start, data:x.data}));
+    try{ localStorage.setItem('txk_horarios_v1', JSON.stringify({at:new Date().toISOString(), weeks:HORARIOS})); }catch(e){}
+  }catch(e){
+    // sin red: la última caché sirve aunque sea vieja (mejor que nada)
+    HORARIOS=(cached&&cached.weeks)||[];
+  }
+  return HORARIOS;
+}
+function _horDayISO(start,i){ const d=new Date(start+'T12:00:00Z'); d.setUTCDate(d.getUTCDate()+i); return d.toISOString().slice(0,10); }
+function _horWeekOf(iso){ return (HORARIOS||[]).findIndex(w=> iso>=w.start && iso<=_horDayISO(w.start,6)); }
+function _horDayLbl(iso,long){
+  const d=new Date(iso+'T12:00:00Z');
+  return new Intl.DateTimeFormat(LANG==='en'?'en-GB':'es-ES',
+    long?{weekday:'long',day:'numeric',month:'long',timeZone:'UTC'}:{weekday:'short',day:'numeric',timeZone:'UTC'})
+    .format(d).replace(/\./g,'').toUpperCase();
+}
+function _horNorm(x){ return String(x||'').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[^a-z]+/g,' ').trim(); }
+function _horAllNames(){
+  const set=new Set();
+  (HORARIOS||[]).forEach(w=>(w.data.services||[]).forEach(sv=>(sv.rows||[]).forEach(r=>{
+    if(!_HOR_POSROWS.includes(r.n)) set.add(r.n);
+  })));
+  return [...set];
+}
+function _horMyName(){
+  const emp=getEmp(currentUser);
+  if(emp && emp.schedName) return emp.schedName;
+  const me=_horNorm(currentUser); if(!me) return null;
+  const names=_horAllNames();
+  let hit=names.find(n=>_horNorm(n)===me)
+       || names.find(n=>_horNorm(n).startsWith(me) || me.startsWith(_horNorm(n)));
+  if(!hit){
+    const first=me.split(' ')[0];
+    const cand=names.filter(n=>_horNorm(n).split(' ')[0]===first);
+    if(cand.length===1) hit=cand[0];
+  }
+  return hit||null;
+}
+function _horPickName(n){
+  const emp=getEmp(currentUser);
+  if(emp){ emp.schedName=n; if(typeof saveDB==='function') saveDB(); }
+  renderHorarios();
+}
+// Resumen persona×día dentro de una semana: turnos (únicos) + código si no trabaja
+function _horPersonDay(week,name,di){
+  const shifts=[]; let code='';
+  (week.data.services||[]).forEach(sv=>(sv.rows||[]).forEach(r=>{
+    if(r.n!==name) return;
+    const cell=(r.c||[])[di]||'';
+    const k=_horCellKind(cell);
+    if(k==='shift'){ const p=_horShiftParts(cell); if(!shifts.some(x=>x.hrs===p.hrs)) shifts.push({...p,svc:sv.label}); }
+    else if(k!=='na' && !code) code=cell.trim();
+  }));
+  return {shifts,code};
+}
+function _horSetView(v){ _horView=v; _horSwapSel=null; renderHorarios(); }
+function _horSetWeek(i){ _horWeekIdx=i; renderHorarios(); }
+
+function renderHorarios(){
+  const c=document.getElementById('appContent');
+  const en=LANG==='en';
+  if(!HORARIOS){
+    c.innerHTML=`<div class="sup-wrap"><div class="act-empty">…</div></div>`;
+    _horLoad().then(()=>{ if(currentTab==='horarios') renderHorarios(); });
+    return;
+  }
+  const chips=_chipsBar([
+    ['hoy',en?'Today':'Hoy'],['mio',en?'My week':'Mi semana'],
+    ['cuadrante',en?'Rota':'Cuadrante'],['cambio',en?'Swap shift':'Cambiar turno']
+  ], _horView, id=>`_horSetView('${id}')`);
+  let body='';
+  if(!HORARIOS.length){
+    body=`<div class="act-empty">${en?'No rota loaded yet — the supervisor uploads it from the panel.':'Aún no hay cuadrante cargado — el supervisor lo sube desde su panel.'}</div>`;
+  } else if(_horView==='hoy') body=_horHoyHTML();
+  else if(_horView==='mio') body=_horMioHTML();
+  else if(_horView==='cuadrante') body=_horCuadranteHTML();
+  else body=_horCambioHTML();
+  c.innerHTML=`<div class="sup-wrap">${chips}${body}
+    <div class="act-foot">${en?'Rota as published by the hotel · codes:':'Cuadrante tal cual lo publica el hotel · códigos:'} L = ${en?'day off':'libre'} · L REQ = ${en?'requested':'libre pedido'} · DP HRS = ${en?'hours-owed rest':'devolución de horas'} · BOLSA = ${en?'vacation':'vacaciones (bolsa)'} · FD = ${en?'seasonal':'fijo discontinuo'}</div>
+  </div>`;
+}
+function _horHoyHTML(){
+  const en=LANG==='en';
+  let iso=todayStr(), note='';
+  if(_horWeekOf(iso)===-1){
+    const next=HORARIOS.find(w=>w.start>iso);
+    if(next){ iso=next.start; note=en?'Today is not on the loaded rota — showing the first loaded day.':'Hoy no está en el cuadrante cargado — te enseño el primer día cargado.'; }
+    else { iso=null; }
+  }
+  if(!iso) return `<div class="act-empty">${en?'The loaded rota is over — waiting for the next week.':'El cuadrante cargado ya pasó — pendiente de subir la semana nueva.'}</div>`;
+  const w=HORARIOS[_horWeekOf(iso)];
+  const di=Math.round((new Date(iso+'T12:00:00Z')-new Date(w.start+'T12:00:00Z'))/86400000);
+  const nota=(w.data.notas||[])[di];
+  const hues=(w.data.huespedes||[])[di];
+  let html=`${note?`<div class="act-nota" style="margin-bottom:.6rem">${escapeHTML(note)}</div>`:''}
+    <div class="hor-day-head">
+      <div class="hor-day-title">${_horDayLbl(iso,true)}</div>
+      <div class="hor-day-meta">${hues!=null?`${en?'guests in house':'huéspedes en casa'}: <b>${hues}</b>`:''}${nota?` · <span style="color:var(--gold-deep);font-weight:700">${escapeHTML(nota)}</span>`:''}</div>
+    </div>`;
+  for(const sv of (w.data.services||[])){
+    const cub=(sv.cubiertos||[])[di];
+    const on=[], seen=new Set();
+    (sv.rows||[]).forEach(r=>{
+      const cell=(r.c||[])[di]||'';
+      if(_horCellKind(cell)!=='shift') return;
+      const p=_horShiftParts(cell);
+      const key=r.n+'|'+p.hrs; if(seen.has(key)) return; seen.add(key);
+      on.push(`<div class="hor-row"><span class="hor-row-n">${escapeHTML(r.n)}</span><span class="hor-row-h">${escapeHTML(p.hrs)}</span>${p.zona?`<span class="hor-row-z">${escapeHTML(p.zona)}</span>`:''}</div>`);
+    });
+    html+=`<div class="tunic-divider"><span>${escapeHTML(sv.label)}${cub!=null?` · ${cub} ${en?'covers':'cubiertos'}`:''}</span></div>
+      ${on.length?on.join(''):`<div class="act-empty" style="padding:.6rem">${en?'Nobody scheduled':'Nadie programado'}</div>`}`;
+  }
+  // libres / ausencias del día (personas, sin la fila-puesto)
+  const off=[], seenOff=new Set();
+  (w.data.services||[]).forEach(sv=>(sv.rows||[]).forEach(r=>{
+    if(_HOR_POSROWS.includes(r.n) || seenOff.has(r.n)) return;
+    const pd=_horPersonDay(w,r.n,di);
+    if(!pd.shifts.length && pd.code){ seenOff.add(r.n); off.push(`${escapeHTML(r.n)} <span class="hor-code hor-code-${_horCellKind(pd.code)}">${escapeHTML(_horCodeLbl(pd.code))}</span>`); }
+  }));
+  if(off.length) html+=`<div class="tunic-divider"><span>${en?'Off today':'Hoy libran'}</span></div><div class="hor-off">${off.join(' · ')}</div>`;
+  return html;
+}
+function _horMioHTML(){
+  const en=LANG==='en';
+  const mine=_horMyName();
+  if(!mine){
+    return `<div class="act-nota" style="margin-bottom:.7rem">${en?'Which one is you on the rota? (saved on this device)':'¿Cuál eres tú en el cuadrante? (se guarda en este dispositivo)'}</div>
+      ${_horAllNames().sort().map(n=>`<button type="button" class="hor-pick" onclick="_horPickName('${escapeHTML(n).replace(/'/g,"\\'")}')">${escapeHTML(n)}</button>`).join('')}`;
+  }
+  let html=`<div class="hor-day-head"><div class="hor-day-title">${escapeHTML(mine)}</div>
+    <div class="hor-day-meta">${en?'your rota':'tu horario'} · <button type="button" onclick="const e=getEmp(currentUser); if(e){delete e.schedName; saveDB();} renderHorarios()" style="background:none;border:none;color:var(--gold-deep);font-size:.62rem;cursor:pointer;text-decoration:underline;padding:0">${en?'not you?':'¿no eres tú?'}</button></div></div>`;
+  const today=todayStr();
+  let any=false;
+  HORARIOS.forEach(w=>{
+    if(_horDayISO(w.start,6)<today) return;   // semanas ya pasadas fuera
+    html+=`<div class="tunic-divider"><span>${en?'Week of':'Semana del'} ${_horDayLbl(w.start)}</span></div>`;
+    for(let di=0;di<7;di++){
+      const iso=_horDayISO(w.start,di);
+      const pd=_horPersonDay(w,mine,di);
+      const isToday=iso===today;
+      let cell;
+      if(pd.shifts.length) cell=pd.shifts.map(p=>`<b>${escapeHTML(p.hrs)}</b>${p.zona?` <span class="hor-row-z">${escapeHTML(p.zona)}</span>`:''}`).join(' · ');
+      else if(pd.code) cell=`<span class="hor-code hor-code-${_horCellKind(pd.code)}">${escapeHTML(_horCodeLbl(pd.code))}</span>`;
+      else cell=`<span style="color:var(--parch4)">—</span>`;
+      html+=`<div class="hor-row${isToday?' hor-today':''}"><span class="hor-row-d">${_horDayLbl(iso)}</span><span class="hor-row-c">${cell}</span></div>`;
+      any=true;
+    }
+  });
+  if(!any) html+=`<div class="act-empty">${en?'No upcoming weeks loaded.':'No hay semanas próximas cargadas.'}</div>`;
+  return html;
+}
+function _horCuadranteHTML(){
+  const en=LANG==='en';
+  if(_horWeekIdx>=HORARIOS.length) _horWeekIdx=HORARIOS.length-1;
+  const wsel=HORARIOS.length>1?`<div style="display:flex;gap:.4rem;flex-wrap:wrap;margin-bottom:.7rem">${HORARIOS.map((w,i)=>`<button type="button" class="hor-pick${i===_horWeekIdx?' on':''}" style="margin:0" onclick="_horSetWeek(${i})">${_horDayLbl(w.start)} – ${_horDayLbl(_horDayISO(w.start,6))}</button>`).join('')}</div>`:'';
+  const w=HORARIOS[_horWeekIdx];
+  const today=todayStr();
+  let html=wsel;
+  for(const sv of (w.data.services||[])){
+    html+=`<div class="tunic-divider"><span>${escapeHTML(sv.label)}</span></div>
+    <div class="hor-tblwrap"><table class="hor-table"><thead><tr><th></th>${[0,1,2,3,4,5,6].map(di=>{
+      const iso=_horDayISO(w.start,di);
+      return `<th class="${iso===today?'hor-today':''}">${_horDayLbl(iso)}</th>`;
+    }).join('')}</tr></thead><tbody>`;
+    let lastG='';
+    (sv.rows||[]).forEach(r=>{
+      if((r.g||'')!==lastG){ lastG=r.g||''; if(lastG) html+=`<tr class="hor-grp"><td colspan="8">${escapeHTML(lastG)}</td></tr>`; }
+      html+=`<tr><td class="hor-name">${escapeHTML(r.n)}${r.pct&&r.pct!==100?` <small>${r.pct}%</small>`:''}</td>${[0,1,2,3,4,5,6].map(di=>{
+        const cell=(r.c||[])[di]||'';
+        const k=_horCellKind(cell);
+        if(k==='shift'){ const p=_horShiftParts(cell); return `<td><b>${escapeHTML(p.hrs)}</b>${p.zona?`<br><small>${escapeHTML(p.zona)}</small>`:''}</td>`; }
+        if(k==='na') return `<td class="hor-na">—</td>`;
+        return `<td><span class="hor-code hor-code-${k}">${escapeHTML(cell.trim())}</span></td>`;
+      }).join('')}</tr>`;
+    });
+    html+=`</tbody></table></div>`;
+  }
+  return html;
+}
+function _horCambioHTML(){
+  const en=LANG==='en';
+  const mine=_horMyName();
+  if(!mine) return `<div class="act-empty">${en?'First pick who you are in “My week”.':'Primero dime quién eres en «Mi semana».'}</div>`;
+  const today=todayStr();
+  // mis turnos de hoy en adelante
+  const opts=[];
+  HORARIOS.forEach((w,wi)=>{ for(let di=0;di<7;di++){
+    const iso=_horDayISO(w.start,di); if(iso<today) continue;
+    const pd=_horPersonDay(w,mine,di);
+    pd.shifts.forEach(p=>opts.push({wi,di,iso,p}));
+  }});
+  if(!opts.length) return `<div class="act-empty">${en?'You have no upcoming shifts on the loaded rota.':'No tienes turnos próximos en el cuadrante cargado.'}</div>`;
+  let html=`<div class="act-nota" style="margin-bottom:.7rem">${en?'Pick the shift you want to swap and I will tell you who is viable. The manager approves every swap — the app only does the looking-up.':'Elige el turno que quieres cambiar y te digo con quién es viable. Todo cambio lo aprueba el manager — la app solo hace la búsqueda.'}</div>`;
+  html+=opts.map((o,i)=>`<button type="button" class="hor-pick${_horSwapSel===i?' on':''}" onclick="_horSwapSel=${i};renderHorarios()">${_horDayLbl(o.iso)} · ${escapeHTML(o.p.hrs)}${o.p.zona?' '+escapeHTML(o.p.zona):''}</button>`).join('');
+  if(_horSwapSel==null || !opts[_horSwapSel]) return html;
+  const sel=opts[_horSwapSel];
+  const w=HORARIOS[sel.wi];
+  const libres=[], permutas=[], noDisp=[];
+  const seen=new Set([mine]);
+  (w.data.services||[]).forEach(sv=>(sv.rows||[]).forEach(r=>{
+    if(_HOR_POSROWS.includes(r.n) || seen.has(r.n)) return;
+    seen.add(r.n);
+    const pd=_horPersonDay(w,r.n,sel.di);
+    if(pd.shifts.length){
+      if(!pd.shifts.some(p=>p.hrs===sel.p.hrs)) permutas.push({n:r.n,p:pd.shifts[0]});
+    } else {
+      const k=_horCellKind(pd.code);
+      if(k==='libre'||k==='librereq') libres.push({n:r.n,code:pd.code});
+      else if(pd.code) noDisp.push({n:r.n,code:pd.code});
+    }
+  }));
+  const msgFor=(name,motivo)=>{
+    const m=en
+      ? `Hi, this is ${currentUser}. Could I swap my ${_horDayLbl(sel.iso,true).toLowerCase()} shift (${sel.p.hrs}${sel.p.zona?' '+sel.p.zona:''}) with ${name}, who ${motivo}? Thank you.`
+      : `Hola, soy ${currentUser}. ¿Podría cambiar mi turno del ${_horDayLbl(sel.iso,true).toLowerCase()} (${sel.p.hrs}${sel.p.zona?' '+sel.p.zona:''}) con ${name}, que ${motivo}? Gracias.`;
+    return m;
+  };
+  const btn=(name,motivo)=>{
+    const msg=msgFor(name,motivo).replace(/'/g,"\\'").replace(/"/g,'&quot;');
+    return `<span style="display:inline-flex;gap:.35rem;margin-left:auto">
+      <button type="button" class="hor-mini" onclick="navigator.clipboard&&navigator.clipboard.writeText('${msg}');showToast('${en?'Message copied':'Mensaje copiado'}','success',1800)">⧉</button>
+      <button type="button" class="hor-mini" onclick="window.open('https://wa.me/?text='+encodeURIComponent('${msg}'),'_blank','noopener')">WA</button></span>`;
+  };
+  html+=`<div class="tunic-divider"><span>${en?'Free that day — can cover you':'Libres ese día — pueden cubrirte'}</span></div>`;
+  html+=libres.length?libres.map(x=>`<div class="hor-row"><span class="hor-row-n">${escapeHTML(x.n)}</span><span class="hor-code hor-code-${_horCellKind(x.code)}">${escapeHTML(_horCodeLbl(x.code))}</span>${btn(x.n, en?'is off that day':'libra ese día')}</div>`).join('')
+    :`<div class="act-empty" style="padding:.5rem">${en?'Nobody fully free that day.':'Nadie totalmente libre ese día.'}</div>`;
+  html+=`<div class="tunic-divider"><span>${en?'Different shift same day — swap shifts':'Turno distinto ese día — intercambio'}</span></div>`;
+  html+=permutas.length?permutas.map(x=>`<div class="hor-row"><span class="hor-row-n">${escapeHTML(x.n)}</span><span class="hor-row-h">${escapeHTML(x.p.hrs)}</span>${btn(x.n,(en?'works ':'tiene el turno de ')+x.p.hrs)}</div>`).join('')
+    :`<div class="act-empty" style="padding:.5rem">${en?'Nobody on a different shift.':'Nadie con turno distinto.'}</div>`;
+  if(noDisp.length) html+=`<div class="tunic-divider"><span>${en?'Not available':'No disponibles'}</span></div><div class="hor-off">${noDisp.map(x=>`${escapeHTML(x.n)} <span class="hor-code hor-code-${_horCellKind(x.code)}">${escapeHTML(_horCodeLbl(x.code))}</span>`).join(' · ')}</div>`;
+  return html;
+}
+
+// ── Editor del supervisor: la semana como texto plano (una línea por fila,
+//    campos con «|»), pegable y corregible. Guarda en Supabase (upsert). ──
+function _horSupSerialize(w){
+  const L=[`SEMANA ${w.start}`];
+  if(w.huespedes) L.push('HUESPEDES | '+w.huespedes.join(' | '));
+  if(w.notas && w.notas.some(x=>x)) L.push('NOTAS | '+w.notas.join(' | '));
+  (w.services||[]).forEach(sv=>{
+    L.push(`== ${sv.label} ==`);
+    if(sv.cubiertos) L.push('CUBIERTOS | '+sv.cubiertos.join(' | '));
+    let g='';
+    (sv.rows||[]).forEach(r=>{
+      if((r.g||'')!==g){ g=r.g||''; if(g) L.push('-- '+g); }
+      L.push([r.n, r.pct!=null?r.pct:100].concat((r.c||[]).concat(['','','','','','','']).slice(0,7)).join(' | '));
+    });
+  });
+  return L.join('\n');
+}
+function _horSupParse(text){
+  const out={start:null, services:[]};
+  let sv=null, g='';
+  for(const raw of text.split('\n')){
+    const line=raw.trim(); if(!line) continue;
+    let m;
+    if((m=line.match(/^SEMANA\s+(\d{4}-\d{2}-\d{2})$/))){ out.start=m[1]; continue; }
+    if((m=line.match(/^==\s*(.+?)\s*==$/))){ sv={k:_horNorm(m[1]).replace(/\s+/g,''), label:m[1], rows:[]}; out.services.push(sv); g=''; continue; }
+    if((m=line.match(/^--\s*(.+)$/))){ g=m[1].trim(); continue; }
+    const parts=line.split('|').map(x=>x.trim());
+    if(parts[0].toUpperCase()==='HUESPEDES'){ out.huespedes=parts.slice(1,8).map(Number); continue; }
+    if(parts[0].toUpperCase()==='NOTAS'){ out.notas=parts.slice(1,8); continue; }
+    if(parts[0].toUpperCase()==='CUBIERTOS'){ if(sv) sv.cubiertos=parts.slice(1,8).map(Number); continue; }
+    if(!sv) throw new Error('Fila antes de la primera sección == CENA ==: '+parts[0]);
+    if(parts.length<3) throw new Error('Fila incompleta: '+parts[0]);
+    sv.rows.push({n:parts[0], pct:parseInt(parts[1],10)||100, g:g, c:parts.slice(2,9).concat(['','','','','','','']).slice(0,7)});
+  }
+  if(!out.start) throw new Error('Falta la línea SEMANA AAAA-MM-DD');
+  if(!out.services.length) throw new Error('Falta al menos una sección == CENA ==');
+  return out;
+}
+function renderSupHorarios(){
+  const c=document.getElementById('appContent');
+  const draw=()=>{
+    const weeks=HORARIOS||[];
+    c.innerHTML=`<div class="sup-wrap">
+      <button type="button" class="act-more" style="margin-bottom:.8rem" onclick="renderSupervisor()">← ${LANG==='en'?'Back to panel':'Volver al panel'}</button>
+      <div class="hor-day-head"><div class="hor-day-title">${LANG==='en'?'Team rota':'Horarios del equipo'}</div>
+      <div class="hor-day-meta">${LANG==='en'?'One line per row: Name | % | 7 cells (shift or code). Sections with == CENA ==, groups with -- Name.':'Una línea por fila: Nombre | % | 7 celdas (turno o código). Secciones con == CENA ==, grupos con -- Nombre.'}</div></div>
+      <div style="display:flex;gap:.4rem;flex-wrap:wrap;margin-bottom:.6rem">
+        ${weeks.map((w,i)=>`<button type="button" class="hor-pick" style="margin:0" onclick="document.getElementById('horSupTxt').value=_horSupSerialize(HORARIOS[${i}].data)">${_horDayLbl(w.start)}</button>`).join('')}
+        <button type="button" class="hor-pick" style="margin:0" onclick="_horSupNextWeek()">＋ ${LANG==='en'?'Duplicate to next week':'Duplicar a semana siguiente'}</button>
+      </div>
+      <textarea id="horSupTxt" spellcheck="false" style="width:100%;box-sizing:border-box;min-height:300px;border:1.5px solid rgba(196,154,60,.4);border-radius:12px;background:#fdf9f0;padding:.7rem;font-family:'DM Mono',monospace;font-size:.62rem;line-height:1.6;color:var(--parchment)">${weeks.length?escapeHTML(_horSupSerialize(weeks[weeks.length-1].data)):''}</textarea>
+      <button type="button" class="ri-cta" style="margin-top:.7rem;padding:.9rem 1.1rem" onclick="_horSupSave()"><span class="ri-cta-text"><span class="ri-cta-top" style="font-size:.85rem">${LANG==='en'?'Save week':'Guardar semana'}</span></span></button>
+    </div>`;
+  };
+  if(!HORARIOS){ c.innerHTML=`<div class="sup-wrap"><div class="act-empty">…</div></div>`; _horLoad().then(draw); } else draw();
+}
+function _horSupNextWeek(){
+  const ta=document.getElementById('horSupTxt'); if(!ta) return;
+  try{
+    const w=_horSupParse(ta.value);
+    w.start=_horDayISO(w.start,7);
+    ta.value=_horSupSerialize(w);
+    showToast((LANG==='en'?'Dates moved to week of ':'Fechas movidas a la semana del ')+w.start+(LANG==='en'?' — edit cells and save':' — corrige celdas y guarda'),'info',3200);
+  }catch(e){ showToast(e.message,'warning',5000); }
+}
+async function _horSupSave(){
+  const ta=document.getElementById('horSupTxt'); if(!ta) return;
+  let w;
+  try{ w=_horSupParse(ta.value); }
+  catch(e){ showToast(e.message,'warning',6000); return; }
+  try{
+    const r=await fetch(`${SUPA_URL}/rest/v1/horarios`,{
+      method:'POST',
+      headers:{'apikey':SUPA_KEY,'Authorization':`Bearer ${SUPA_KEY}`,'Content-Type':'application/json','Prefer':'resolution=merge-duplicates'},
+      body:JSON.stringify([{week_start:w.start, data:w, updated_at:new Date().toISOString()}])
+    });
+    if(!r.ok) throw new Error('HTTP '+r.status);
+    try{ localStorage.removeItem('txk_horarios_v1'); }catch(e){}
+    HORARIOS=null;
+    await _horLoad(true);
+    showToast((LANG==='en'?'Week saved: ':'Semana guardada: ')+w.start,'success',2600);
+    renderSupHorarios();
+  }catch(e){ showToast((LANG==='en'?'Could not save: ':'No se pudo guardar: ')+e.message,'warning',6000); }
+}
+
 // ═══ ACTUALIDAD — noticias gastro automáticas + calendario de eventos ═══
 // Inspirado en el feed de Tenet Research (petición del propietario, jul
 // 2026): tarjetas con fuente, hace-X-horas y etiquetas filtrables. Las
@@ -16999,7 +17367,18 @@ function renderDashboard(){
       ${_m.rows}
     </div>` })()}
 
-    <!-- ── ACTUALIDAD (teaser): 2 titulares + Ver más. Se rellena en
+    <!-- ── HORARIOS: acceso directo al cuadrante (petición del propietario,
+       jul 2026 — antes vivía en capturas de WhatsApp). ── -->
+  <button type="button" class="hoy-numrow" onclick="showTab('horarios')" aria-label="${_en?'Rota — who works today and your week':'Horarios — quién trabaja hoy y tu semana'}">
+    <span class="hoy-num" aria-hidden="true">📅</span>
+    <span style="flex:1;min-width:0">
+      <span class="hoy-numrow-t">${_en?'Rota':'Horarios'}</span>
+      <span class="hoy-numrow-meta">${_en?'who works today · your week · swap shifts':'quién trabaja hoy · tu semana · cambios de turno'}</span>
+    </span>
+    <span style="color:var(--gold-deep)">›</span>
+  </button>
+
+  <!-- ── ACTUALIDAD (teaser): 2 titulares + Ver más. Se rellena en
          diferido desde data/noticias.json (3 titulares); sin noticias u
          offline sin caché, la sección entera queda oculta. ── -->
     <div id="dashNews" style="display:none"></div>
@@ -18944,6 +19323,7 @@ function _supTool(k){
        analitica: ()=>renderSupAnalytics(window._supAllEmps, window._supEmpNames),
        aviso: ()=>renderSupNotifSender(window._supEmpNames),
        fotos: ()=>renderSupPhotoQueue(),
+       horarios: ()=>renderSupHorarios(),
        lqa: ()=>renderSupLqaStats(window._supAllEmps, window._supEmpNames) })[k]();
   }catch(e){
     if(typeof showToast==='function') showToast('Error: '+e.message, 'warning', 6000);
@@ -19275,6 +19655,10 @@ function renderSupDashboard(silent){
             <!-- Quiz en vivo retirado del panel (propietario, jul 2026): el
                  Quiz del Día del dashboard lo sustituye — abierto 24/7, sin
                  anfitrión. -->
+            <button onclick="_supTool('horarios')" style="display:flex;align-items:center;gap:.65rem;padding:.75rem .85rem;background:linear-gradient(155deg,#faf6ee,#f0e8d8);border:1.5px solid rgba(196,154,60,.12);border-left:3px solid #6b8f71;border-radius:12px;font-family:'Quicksand',sans-serif;cursor:pointer;transition:all .2s;position:relative;overflow:hidden">
+              <span style="width:32px;height:32px;display:flex;align-items:center;justify-content:center;clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);background:linear-gradient(135deg,#6b8f71,#4a6b50);flex-shrink:0"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg></span>
+              <span style="font-size:.72rem;font-weight:600;color:var(--parchment)">${LANG==='en'?'Team rota':'Horarios'}</span>
+            </button>
             <button onclick="_supTool('lqa')" style="display:flex;align-items:center;gap:.65rem;padding:.75rem .85rem;background:linear-gradient(155deg,rgba(140,200,150,.08),rgba(140,200,150,.02));border:1.5px solid rgba(140,200,150,.25);border-left:3px solid #8fc499;border-radius:12px;font-family:'Quicksand',sans-serif;cursor:pointer;transition:all .2s;position:relative;overflow:hidden">
               <span style="width:32px;height:32px;display:flex;align-items:center;justify-content:center;clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);background:linear-gradient(135deg,#8fc499,var(--sage));flex-shrink:0"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/><path d="M8 11l2 2 4-4"/></svg></span>
               <span style="font-size:.72rem;font-weight:700;color:var(--sage)">${LANG==='en'?'LQA Stats':'Stats LQA'}</span>

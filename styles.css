@@ -9461,3 +9461,37 @@ body.chat-open .sound-toggle{ display:none !important; }
 .act-thumb{width:74px;height:74px;flex:0 0 74px;border-radius:10px;object-fit:cover;
   border:1px solid rgba(196,154,60,.35);background:rgba(196,154,60,.12)}
 .act-has-thumb .act-body{min-width:0;flex:1}
+
+/* ═══ HORARIOS DEL EQUIPO (jul 2026) — cuadrante sobre pergamino ═══ */
+.hor-day-head{margin:.4rem 0 .8rem}
+.hor-day-title{font-family:'Cinzel',serif;font-size:1.05rem;font-weight:700;color:var(--parchment)}
+.hor-day-meta{font-family:'Quicksand',sans-serif;font-size:.68rem;color:var(--parch3);margin-top:.2rem}
+.hor-row{display:flex;align-items:center;gap:.6rem;padding:.55rem .2rem;border-bottom:1px solid rgba(28,42,34,.08)}
+.hor-row.hor-today{background:rgba(196,154,60,.08);border-radius:8px;padding-left:.5rem;padding-right:.5rem}
+.hor-row-n{font-family:'Quicksand',sans-serif;font-size:.8rem;font-weight:600;color:var(--parchment);flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.hor-row-d{font-family:'DM Mono',monospace;font-size:.6rem;letter-spacing:.08em;color:var(--gold-deep);font-weight:700;width:64px;flex-shrink:0}
+.hor-row-c{flex:1;font-family:'Quicksand',sans-serif;font-size:.78rem;color:var(--parchment)}
+.hor-row-h{font-family:'DM Mono',monospace;font-size:.68rem;font-weight:700;color:var(--parchment)}
+.hor-row-z{font-family:'DM Mono',monospace;font-size:.54rem;letter-spacing:.06em;color:var(--gold-deep);font-weight:700;text-transform:uppercase}
+.hor-off{font-family:'Quicksand',sans-serif;font-size:.72rem;color:var(--parch2);line-height:2;padding:.2rem}
+.hor-code{display:inline-block;padding:.14rem .5rem;border-radius:10px;font-family:'DM Mono',monospace;font-size:.56rem;font-weight:700;letter-spacing:.04em;white-space:nowrap}
+.hor-code-libre,.hor-code-librereq{background:rgba(77,138,94,.12);color:#3d7a4e;border:1px solid rgba(77,138,94,.3)}
+.hor-code-dphrs{background:rgba(196,154,60,.12);color:#8a5a1c;border:1px solid rgba(196,154,60,.35)}
+.hor-code-bolsa{background:rgba(72,136,160,.12);color:#2e6878;border:1px solid rgba(72,136,160,.3)}
+.hor-code-fd,.hor-code-otro{background:rgba(28,42,34,.06);color:var(--parch3);border:1px solid rgba(28,42,34,.12)}
+.hor-tblwrap{overflow-x:auto;-webkit-overflow-scrolling:touch;border:1.5px solid var(--ink3);border-radius:12px;background:linear-gradient(155deg,#faf6ee,#f0e8d8);margin-bottom:.9rem}
+.hor-table{border-collapse:collapse;font-size:.6rem;min-width:640px}
+.hor-table th,.hor-table td{padding:.45rem .5rem;border-bottom:1px solid rgba(28,42,34,.08);text-align:left;vertical-align:top;white-space:nowrap}
+.hor-table th{font-family:'DM Mono',monospace;font-size:.54rem;letter-spacing:.08em;color:var(--gold-deep);font-weight:700}
+.hor-table th.hor-today{background:rgba(196,154,60,.14);border-radius:6px 6px 0 0}
+.hor-table td b{font-family:'DM Mono',monospace;font-size:.6rem;color:var(--parchment)}
+.hor-table td small{color:var(--gold-deep);font-family:'DM Mono',monospace;font-size:.48rem;letter-spacing:.04em}
+.hor-table .hor-name{position:sticky;left:0;background:#f7f1e4;font-family:'Quicksand',sans-serif;font-weight:700;font-size:.66rem;color:var(--parchment);max-width:120px;overflow:hidden;text-overflow:ellipsis;z-index:1}
+.hor-table .hor-grp td{font-family:'Cinzel',serif;font-size:.56rem;letter-spacing:.12em;text-transform:uppercase;color:var(--gold-deep);background:rgba(196,154,60,.07)}
+.hor-table .hor-na{color:var(--parch4)}
+.hor-pick{display:inline-block;margin:.2rem .3rem .2rem 0;padding:.5rem .8rem;min-height:40px;border-radius:12px;cursor:pointer;
+  background:transparent;border:1.5px solid rgba(196,154,60,.45);color:var(--gold-deep);
+  font-family:'Quicksand',sans-serif;font-size:.74rem;font-weight:700}
+.hor-pick.on{background:rgba(196,154,60,.15);border-color:var(--gold-deep)}
+.hor-mini{min-width:40px;min-height:32px;border-radius:9px;cursor:pointer;background:transparent;
+  border:1.5px solid rgba(196,154,60,.5);color:var(--gold-deep);font-family:'DM Mono',monospace;font-size:.6rem;font-weight:700}
