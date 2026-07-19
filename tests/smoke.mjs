@@ -952,6 +952,14 @@ test('study shift filter: DISH_SERVICE complete + all generators route by shift'
   assert(/\['a',[^\]]*\], \['c',[^\]]*\], \['todo',/.test(rsb) && /onclick="_setStudyShift/.test(rsb),
     'shift bar must offer Lunch/Dinner/All');
   assert(/localStorage\.setItem\('txoko_shift'/.test(html), 'shift choice must persist');
+  // Regresión (jul 2026): la barra de turno se veía en TODAS las secciones
+  // («no tiene uso en inicio», propietario). Nace oculta y showTab solo la
+  // muestra en Aprender y sus subpestañas.
+  const sbIx = html.indexOf('id="shiftBar"');
+  const sbTag = html.slice(html.lastIndexOf('<div', sbIx), html.indexOf('>', sbIx) + 1);
+  assert(/display:none/.test(sbTag), 'shiftBar must start hidden (display:none inline)');
+  assert(/_sb\.style\.display = navTab==='aprender' \? 'flex' : 'none'/.test(html),
+    'showTab must show shiftBar only for the Aprender section');
 });
 
 test('study shift filter: subject AND distractor pools route by shift (no wrong-shift leaks)', () => {
