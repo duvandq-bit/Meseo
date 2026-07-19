@@ -44,7 +44,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Meseo · Formación de sala</title>
 <meta name="description" content="Meseo — Formación de equipos de sala: carta, alérgenos, vinos, exámenes y juegos de repaso.">
-<meta name="app-version" content="7.266">
+<meta name="app-version" content="7.267">
 <meta name="app-build" content="May 2026">
 <meta name="theme-color" content="#1c2a22">
 <!-- ═══ PWA ═══ -->
@@ -1529,7 +1529,7 @@ const CAT_COLORS={'Entrantes':'#c49a3c','Hamburguesas y Bocatas':'#b86050','Plat
 const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#c49a3c"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#a47a2c" opacity=".4"/><path d="M8 8v4a1 1 0 001 1h1v4M10 8v4" stroke="#fff" stroke-width="1.2" stroke-linecap="round" fill="none"/><path d="M15 8v8M14 8v3a1.5 1.5 0 003 0V8" stroke="#fff" stroke-width="1.2" stroke-linecap="round" fill="none"/></svg>`,'Hamburguesas y Bocatas':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#b86050"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#983838" opacity=".4"/><path d="M7 9h10M7 12h10M7 15h10" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/><path d="M8 9c0-2 2-3 4-3s4 1 4 3M8 15c0 2 2 3 4 3s4-1 4-3" fill="none" stroke="#fff" stroke-width="1" opacity=".7"/></svg>`,'Platos Principales':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#4888a0"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#2e6878" opacity=".4"/><path d="M5 15h14" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/><path d="M12 6a6 6 0 016 6H6a6 6 0 016-6z" fill="none" stroke="#fff" stroke-width="1.1"/><circle cx="10" cy="6" r=".7" fill="#fff" opacity=".7"/><circle cx="12" cy="5" r=".7" fill="#fff" opacity=".7"/><circle cx="14" cy="6" r=".7" fill="#fff" opacity=".7"/></svg>`,'Sugerencias':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#d4aa4c"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#a48a2c" opacity=".4"/><polygon points="12,5 14.5,10 20,10.5 16,14 17,20 12,17 7,20 8,14 4,10.5 9.5,10" fill="#fff" opacity=".9"/></svg>`,'Guarniciones y Salsas':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#4d8a5e"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#2d6a3e" opacity=".4"/><path d="M12 18V10M5 10c0-4 3-6 7-6s7 2 7 6c0 5-3 8-7 8s-7-3-7-8z" fill="none" stroke="#fff" stroke-width="1.1"/><path d="M5 10c3 0 5 1 7 2.5" fill="none" stroke="#fff" stroke-width=".8" opacity=".6"/></svg>`,'Postres':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#7a6aaa"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#5a4a8a" opacity=".4"/><path d="M9 19h6M12 12v7M7 6l2 4.5a3 3 0 006 0L17 6H7z" fill="none" stroke="#fff" stroke-width="1.1" stroke-linecap="round"/></svg>`,'Vegetariano':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#5a9a6e"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#3a7a4e" opacity=".4"/><path d="M9 18h6M12 18V10M12 10c0-3 2-5 5-5-.7 2.5-2.5 5-5 5zM12 10c0-3-2-5-5-5 .7 2.5 2.5 5 5 5z" fill="none" stroke="#fff" stroke-width="1.1" stroke-linecap="round"/></svg>`};
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='7.266';  // sincronizada con sw.js VERSION (guard de CI)
+const APP_VERSION='7.267';  // sincronizada con sw.js VERSION (guard de CI)
 const APP_BUILD='Jul 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;
@@ -9977,6 +9977,59 @@ function _horSwapAllowed(week,me,other){
   if(_horIsHostess(week,other) || _horIsHostess(week,me)) return false;
   return _horTier(week,me)===_horTier(week,other);
 }
+// ── Rangos de servicio (regla del propietario, jul 2026) ──
+// Almuerzo 09:00–15:00 · Cena 16:00–00:00. Quien hace 9 o 10 horas
+// trabaja los dos servicios (p. ej. 12:00-21:00 o 14:00-00:00) y sale en
+// ambos rangos marcado como doble. Para el resto, el turno se asigna al
+// servicio con el que más se solapa. Los supervisores envían estos rangos
+// cada día — el botón genera el mensaje listo para WhatsApp.
+let _horDaySel=null;   // ISO del día elegido en la vista Hoy (null = hoy)
+function _horShiftMins(hrs){
+  const m=String(hrs).match(/(\d{1,2}):(\d{2})\s*-\s*(\d{1,2}):(\d{2})/);
+  if(!m) return null;
+  const a=(+m[1])*60+(+m[2]);
+  let b=(+m[3])*60+(+m[4]);
+  if(b<=a) b+=1440;            // cruza medianoche (00:00 = 24:00)
+  return {s:a,e:b,dur:b-a};
+}
+function _horRango(hrs){
+  const t=_horShiftMins(hrs);
+  if(!t) return 'cena';
+  if(t.dur>=540) return 'ambos';                 // 9 h o más: doble turno
+  const ovA=Math.max(0, Math.min(t.e,900)-Math.max(t.s,540));    // 09:00–15:00
+  const ovC=Math.max(0, Math.min(t.e,1440)-Math.max(t.s,960));   // 16:00–00:00
+  if(ovA===ovC) return t.s>=960?'cena':'almuerzo';
+  return ovA>ovC?'almuerzo':'cena';
+}
+// Rangos de un día: personas únicas con su turno, clasificadas. Las filas
+// de puesto (Veranda) también cuentan — cubren el servicio igualmente.
+function _horDayRangos(w,di){
+  const seen=new Set(), alm=[], cen=[];
+  (w.data.services||[]).forEach(sv=>(sv.rows||[]).forEach(r=>{
+    const cell=(r.c||[])[di]||'';
+    if(_horCellKind(cell)!=='shift') return;
+    const p=_horShiftParts(cell);
+    const key=r.n+'|'+p.hrs;
+    if(seen.has(key)) return; seen.add(key);
+    const rango=_horRango(p.hrs);
+    const item={n:r.n,hrs:p.hrs,zona:p.zona,doble:rango==='ambos'};
+    if(rango==='almuerzo'||rango==='ambos') alm.push(item);
+    if(rango==='cena'||rango==='ambos') cen.push(item);
+  }));
+  const byStart=(a,b)=>(_horShiftMins(a.hrs)||{s:0}).s-(_horShiftMins(b.hrs)||{s:0}).s || a.n.localeCompare(b.n);
+  alm.sort(byStart); cen.sort(byStart);
+  return {alm,cen};
+}
+function _horRangosMsg(w,di,iso){
+  const en=LANG==='en';
+  const {alm,cen}=_horDayRangos(w,di);
+  const cub=k=>{ const sv=(w.data.services||[]).find(x=>x.k===k); const v=sv&&(sv.cubiertos||[])[di]; return v!=null?` · ${v} ${en?'covers':'cubiertos'}`:''; };
+  const line=x=>`- ${x.n} · ${x.hrs}${x.zona?' '+x.zona:''}${x.doble?(en?' (double)':' (doble)'):''}`;
+  return `${en?'RANGES':'RANGOS'} ${_horDayLbl(iso,true)}\n\n`
+    +`${en?'Lunch':'Almuerzo'} (09:00-15:00)${cub('almuerzo')}:\n`+(alm.length?alm.map(line).join('\n'):(en?'- nobody scheduled':'- nadie programado'))
+    +`\n\n${en?'Dinner':'Cena'} (16:00-00:00)${cub('cena')}:\n`+(cen.length?cen.map(line).join('\n'):(en?'- nobody scheduled':'- nadie programado'));
+}
+function _horSetDay(iso){ _horDaySel=iso; renderHorarios(); }
 function _horSetView(v){ _horView=v; _horSwapSel=null; renderHorarios(); }
 function _horSetWeek(i){ _horWeekIdx=i; renderHorarios(); }
 
@@ -10005,7 +10058,7 @@ function renderHorarios(){
 }
 function _horHoyHTML(){
   const en=LANG==='en';
-  let iso=todayStr(), note='';
+  let iso=_horDaySel||todayStr(), note='';
   if(_horWeekOf(iso)===-1){
     const next=HORARIOS.find(w=>w.start>iso);
     if(next){ iso=next.start; note=en?'Today is not on the loaded rota — showing the first loaded day.':'Hoy no está en el cuadrante cargado — te enseño el primer día cargado.'; }
@@ -10016,24 +10069,26 @@ function _horHoyHTML(){
   const di=Math.round((new Date(iso+'T12:00:00Z')-new Date(w.start+'T12:00:00Z'))/86400000);
   const nota=(w.data.notas||[])[di];
   const hues=(w.data.huespedes||[])[di];
+  const today=todayStr();
+  // selector de día de la semana cargada (los supervisores miran los rangos a diario)
+  const dayChips=`<div style="display:flex;gap:.3rem;overflow-x:auto;margin-bottom:.7rem;-webkit-overflow-scrolling:touch">${[0,1,2,3,4,5,6].map(k=>{
+    const dIso=_horDayISO(w.start,k);
+    return `<button type="button" class="hor-pick${dIso===iso?' on':''}" style="margin:0;flex-shrink:0;padding:.4rem .6rem;min-height:36px;font-size:.66rem" onclick="_horSetDay('${dIso}')">${_horDayLbl(dIso)}${dIso===today?' ·':''}</button>`;
+  }).join('')}</div>`;
+  const {alm,cen}=_horDayRangos(w,di);
+  const cubFor=k=>{ const sv=(w.data.services||[]).find(x=>x.k===k); const v=sv&&(sv.cubiertos||[])[di]; return v!=null?` · ${v} ${en?'covers':'cubiertos'}`:''; };
+  const rows=list=>list.length?list.map(x=>`<div class="hor-row"><span class="hor-row-n">${escapeHTML(x.n)}</span>${x.doble?`<span class="hor-code hor-code-dphrs">${en?'double':'doble'}</span>`:''}<span class="hor-row-h">${escapeHTML(x.hrs)}</span>${x.zona?`<span class="hor-row-z">${escapeHTML(x.zona)}</span>`:''}</div>`).join('')
+    :`<div class="act-empty" style="padding:.6rem">${en?'Nobody scheduled':'Nadie programado'}</div>`;
   let html=`${note?`<div class="act-nota" style="margin-bottom:.6rem">${escapeHTML(note)}</div>`:''}
+    ${dayChips}
     <div class="hor-day-head">
       <div class="hor-day-title">${_horDayLbl(iso,true)}</div>
       <div class="hor-day-meta">${hues!=null?`${en?'guests in house':'huéspedes en casa'}: <b>${hues}</b>`:''}${nota?` · <span style="color:var(--gold-deep);font-weight:700">${escapeHTML(nota)}</span>`:''}</div>
-    </div>`;
-  for(const sv of (w.data.services||[])){
-    const cub=(sv.cubiertos||[])[di];
-    const on=[], seen=new Set();
-    (sv.rows||[]).forEach(r=>{
-      const cell=(r.c||[])[di]||'';
-      if(_horCellKind(cell)!=='shift') return;
-      const p=_horShiftParts(cell);
-      const key=r.n+'|'+p.hrs; if(seen.has(key)) return; seen.add(key);
-      on.push(`<div class="hor-row"><span class="hor-row-n">${escapeHTML(r.n)}</span><span class="hor-row-h">${escapeHTML(p.hrs)}</span>${p.zona?`<span class="hor-row-z">${escapeHTML(p.zona)}</span>`:''}</div>`);
-    });
-    html+=`<div class="tunic-divider"><span>${escapeHTML(sv.label)}${cub!=null?` · ${cub} ${en?'covers':'cubiertos'}`:''}</span></div>
-      ${on.length?on.join(''):`<div class="act-empty" style="padding:.6rem">${en?'Nobody scheduled':'Nadie programado'}</div>`}`;
-  }
+    </div>
+    <div class="tunic-divider"><span>${en?'LUNCH':'ALMUERZO'} · 09:00–15:00${cubFor('almuerzo')}</span></div>
+    ${rows(alm)}
+    <div class="tunic-divider"><span>${en?'DINNER':'CENA'} · 16:00–00:00${cubFor('cena')}</span></div>
+    ${rows(cen)}`;
   // libres / ausencias del día (personas, sin la fila-puesto)
   const off=[], seenOff=new Set();
   (w.data.services||[]).forEach(sv=>(sv.rows||[]).forEach(r=>{
@@ -10041,7 +10096,12 @@ function _horHoyHTML(){
     const pd=_horPersonDay(w,r.n,di);
     if(!pd.shifts.length && pd.code){ seenOff.add(r.n); off.push(`${escapeHTML(r.n)} <span class="hor-code hor-code-${_horCellKind(pd.code)}">${escapeHTML(_horCodeLbl(pd.code))}</span>`); }
   }));
-  if(off.length) html+=`<div class="tunic-divider"><span>${en?'Off today':'Hoy libran'}</span></div><div class="hor-off">${off.join(' · ')}</div>`;
+  if(off.length) html+=`<div class="tunic-divider"><span>${en?'Off that day':'Libran ese día'}</span></div><div class="hor-off">${off.join(' · ')}</div>`;
+  // mensaje de rangos listo para enviar (trabajo diario del supervisor)
+  html+=`<div style="display:flex;gap:.5rem;margin-top:1rem">
+    <button type="button" class="act-more" style="margin-bottom:0;flex:1" onclick="navigator.clipboard&&navigator.clipboard.writeText(_horRangosMsg(HORARIOS[${_horWeekOf(iso)}],${di},'${iso}'));showToast('${en?'Ranges copied':'Rangos copiados'}','success',1800)">⧉ ${en?'Copy ranges':'Copiar rangos'}</button>
+    <button type="button" class="act-more" style="margin-bottom:0;flex:1" onclick="window.open('https://wa.me/?text='+encodeURIComponent(_horRangosMsg(HORARIOS[${_horWeekOf(iso)}],${di},'${iso}')),'_blank','noopener')">WhatsApp</button>
+  </div>`;
   return html;
 }
 function _horMioHTML(){

@@ -3907,6 +3907,17 @@ test('Horarios del equipo: cuadrante desde Supabase, leyenda fiel y cambio asist
     'la lectura IA nunca guarda sola: rellena el editor y el supervisor revisa');
   assert(!/sk-ant/.test(html),
     'ninguna clave de API de Anthropic puede vivir en la app (va en secretos de Supabase)');
+  // Rangos de servicio (regla del propietario): almuerzo 09:00–15:00, cena
+  // 16:00–00:00, y quien hace 9-10 h (≥540 min) va en LOS DOS rangos como
+  // doble. Los supervisores envían el mensaje de rangos cada día.
+  assert(/if\(t\.dur>=540\) return 'ambos';/.test(html),
+    'la regla del doble turno (9 h o más → ambos rangos) debe estar en _horRango');
+  assert(/Math\.max\(t\.s,540\)/.test(html) && /Math\.max\(t\.s,960\)/.test(html),
+    'las ventanas de rango deben ser 09:00–15:00 y 16:00–00:00');
+  assert(/_horRangosMsg/.test(html) && /Copiar rangos/.test(html),
+    'el mensaje de rangos del día debe poder copiarse/enviarse por WhatsApp');
+  assert(/_horSetDay/.test(html),
+    'la vista Hoy debe permitir elegir cualquier día de la semana (rangos diarios)');
   // Acceso desde el inicio.
   const dash3 = html.slice(html.indexOf('function renderDashboard()'), html.indexOf('// ═══════ FLASHCARDS'));
   assert(/showTab\('horarios'\)/.test(dash3), 'el inicio debe llevar la fila de acceso a Horarios');
