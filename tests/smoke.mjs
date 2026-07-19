@@ -3868,6 +3868,42 @@ test('Actualidad: robot de noticias + calendario de eventos (jul 2026)', () => {
   assert(/\.act-thumb\{/.test(read('styles.css')), 'estilos de la miniatura ausentes');
 });
 
+test('Horarios del equipo: cuadrante desde Supabase, leyenda fiel y cambio asistido (jul 2026)', () => {
+  // Petición del propietario: el cuadrante vivía en un Excel del hotel tras
+  // el login corporativo (que NUNCA se automatiza) y en capturas de WhatsApp.
+  // Ahora: tabla horarios en Supabase, vistas Hoy/Mi semana/Cuadrante/Cambio,
+  // editor en el panel de supervisor y acceso desde el inicio.
+  assert(/id="navHorarios"/.test(html) && /horarios:renderHorarios/.test(html),
+    'la sección Horarios debe estar en la navegación y el render map');
+  assert(/rest\/v1\/horarios\?select=week_start,data/.test(html),
+    'el cuadrante se lee de la tabla horarios de Supabase');
+  assert(/txk_horarios_v1/.test(html) && /HORARIOS=\(cached&&cached\.weeks\)\|\|\[\]/.test(html),
+    'sin red debe servir la última caché (uso en servicio, offline primero)');
+  // Leyenda CONFIRMADA por el propietario — la app no inventa significados;
+  // los códigos desconocidos se muestran tal cual (kind otro).
+  assert(/Fijo discontinuo/.test(html) && /Devolución de horas/.test(html)
+    && /Vacaciones \(bolsa\)/.test(html) && /Libre pedido/.test(html),
+    'la leyenda de códigos debe llevar los significados confirmados por el propietario');
+  assert(/return _HOR_CODES\[c\] \? _HOR_CODES\[c\]\.k : 'otro';/.test(html),
+    'un código desconocido se clasifica otro y se muestra verbatim, nunca inventado');
+  // El cambio de turno solo SUGIERE: aprueba el manager. Mensaje listo para WhatsApp.
+  assert(/lo aprueba el manager/.test(html), 'el asistente debe dejar claro que aprueba el manager');
+  assert(/wa\.me\/\?text=/.test(html) && /navigator\.clipboard/.test(html),
+    'el mensaje del cambio sale por WhatsApp o portapapeles');
+  // Editor del supervisor: herramienta en el panel + upsert a Supabase.
+  assert(/horarios: \(\)=>renderSupHorarios\(\),/.test(html) && /_supTool\('horarios'\)/.test(html),
+    'el editor de horarios debe colgar del panel de supervisor');
+  assert(/_horSupSave/.test(html) && /'Prefer':'resolution=merge-duplicates'/.test(html),
+    'guardar semana debe hacer upsert (merge-duplicates) en horarios');
+  // Acceso desde el inicio.
+  const dash3 = html.slice(html.indexOf('function renderDashboard()'), html.indexOf('// ═══════ FLASHCARDS'));
+  assert(/showTab\('horarios'\)/.test(dash3), 'el inicio debe llevar la fila de acceso a Horarios');
+  // Cuadrante usable en móvil: scroll propio y columna de nombres fija.
+  const css = read('styles.css');
+  assert(/\.hor-tblwrap\{[^}]*overflow-x:auto/.test(css) && /\.hor-table \.hor-name\{[^}]*position:sticky/.test(css),
+    'la tabla del cuadrante debe hacer scroll con la columna de nombres fija');
+});
+
 test('auditoría de botones: nada de tinta oscura sobre el fondo oscuro de la página (jul 2026)', () => {
   // Bug real (propietario): «en auditoría los botones para volver atrás no se
   // ven bien». El fondo de la página es oscuro (#1c2a22); un botón transparente
