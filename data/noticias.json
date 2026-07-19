@@ -1,6 +1,76 @@
 {
- "updated": "2026-07-19T07:36:43.313Z",
+ "updated": "2026-07-19T12:07:39.440Z",
  "items": [
+  {
+   "t": "Joseba Arguiñano, chef: \"Para unos chipirones perfectos, dedica tiempo a pochar bien la cebolleta y el pimiento. Una fritada lentamente caramelizada es la clave para tener todo el sabor\"",
+   "u": "https://www.vanitatis.elconfidencial.com/gastronomia/2026-07-19/joseba-arguinano-chipirones-receta-cocina-vasca-cebolleta-pimiento-pelayo-1qrt_4391703/",
+   "s": "Vanitatis",
+   "d": "2026-07-19T11:45:00.000Z",
+   "tags": [
+    "ALTA COCINA"
+   ],
+   "img": "https://images.ecestaticos.com/tZVi59-P8TOsW6uNOElNzw1BFGw=/0x0:907x616/600x315/filters:fill(white):format(jpg):quality(99):watermark(f.elconfidencial.com/file/0f2/6d9/13e/0f26d913e1b27ca111e62b656aa354da.png,0,275,1)/f.elconfidencial.com/original/f64/c98/cac/f64c98cac0954430d9649f65db8113ce.jpg"
+  },
+  {
+   "t": "Iñaki, cocinero. \"El bocadillo más famoso de España no lleva ni jamón ni calamares, se hace con 1 tomate y aceite de oliva\"",
+   "u": "https://www.elespanol.com/cocinillas/recetas/20260719/inaki-cocinero-bocadillo-famoso-espana-no-lleva-jamon-calamares-hace-tomate-aceite-oliva/1003744326422_30.html",
+   "s": "El Español",
+   "d": "2026-07-19T11:38:09.000Z",
+   "tags": [
+    "ALTA COCINA"
+   ],
+   "img": "https://s3.elespanol.com/k/imgp/cms/elespanol/11318916.jpg?p=f:jpeg/w:1706/h:960&h=cSdhzMjB"
+  },
+  {
+   "t": "Éxito del viñedo canario en la Guía Peñín: del mito a la admiración nacional",
+   "u": "https://www.laprovincia.es/ocio/gastronomia/2026/07/19/exito-vinedo-canario-guia-penin-132598029.html",
+   "s": "La Provincia",
+   "d": "2026-07-19T10:16:35.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://estaticos-cdn.prensaiberica.es/clip/74304294-ef61-4fe0-938c-261ff1429fba_16-9-discover-aspect-ratio_default_0_x800y310.jpg"
+  },
+  {
+   "t": "Asador La Camella: el templo de la brasa en Tenerife Sur que tienes que probar",
+   "u": "https://www.soldelsurtenerife.com/portada1/gastronomia/asador-camella-templo-brasa-tenerife-sur-que-tienes-que-probar/20260719111241108209.html",
+   "s": "sol del sur tenerife",
+   "d": "2026-07-19T10:12:41.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://www.soldelsurtenerife.com/media/soldetenerifesur/images/2026/07/19/2026071911122853583.jpg"
+  },
+  {
+   "t": "Estepa Virgen conquista el Chef’s Award y consolida su prestigio en el mercado japonés",
+   "u": "https://www.oleorevista.com/texto-diario/mostrar/5956874/estepa-virgen-conquista-chefs-award-consolida-prestigio-mercado-japones",
+   "s": "oleorevista.com",
+   "d": "2026-07-19T08:31:31.000Z",
+   "tags": [
+    "ALTA COCINA"
+   ],
+   "img": "https://www.oleorevista.com/images/showid/8067733"
+  },
+  {
+   "t": "Bésame Mucho, un Tapas Best Chiringuito 2026 donde el Atlántico se disfruta con alma mediterránea",
+   "u": "https://www.tapasmagazine.es/besame-mucho-tapas-best-chiringuito-2026-costa-adeje/",
+   "s": "Tapas Magazine",
+   "d": "2026-07-19T07:50:37.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://www.tapasmagazine.es/wp-content/uploads/2026/07/Diseno-sin-titulo-2026-07-17T121521.652.png"
+  },
+  {
+   "t": "La Guía Michelin distingue una terraza de la Marina Alta entre las mejores de España para este verano",
+   "u": "https://lamarinaalta.com/la-guia-michelin-distingue-una-terraza-de-la-marina-alta-entre-las-mejores-de-espana-para-este-verano/",
+   "s": "La Marina Alta .COM",
+   "d": "2026-07-19T06:00:09.000Z",
+   "tags": [
+    "MICHELIN"
+   ],
+   "img": "https://lamarinaalta.com/wp-content/uploads/2026/07/terraza-en-orobianco-imagen-promocional-de-la-web-de-orobianco-1320x743.jpg"
+  },
   {
    "t": "Dónde saborear Gran Canaria según la dietista y nutricionista Ana Luisa Álvarez Falcón",
    "u": "https://www.canarias7.es/gastronomia-c7/a-fuego-lento/saborear-gran-canaria-segun-dietista-nutricionista-ana-20260719070000-nt.html",
@@ -77,7 +147,8 @@
    "d": "2026-07-18T22:59:17.000Z",
    "tags": [
     "CANARIAS"
-   ]
+   ],
+   "img": "https://estaticos-cdn.prensaiberica.es/clip/b1c2edcd-b06d-48bb-9b21-7072e93eecb0_16-9-aspect-ratio_default_0.jpg"
   },
   {
    "t": "Burger Fest Canarias Las Palmas 2026 ya tiene ganador y el premio se queda en Gran Canaria con Axel Smash",
@@ -90,21 +161,31 @@
    "img": "https://s2.ppllstatics.com/canarias7/www/multimedia/gastronomia-c7/2026/07/18/burguer6-kLdG-U30894921844VkC-1200x840@Canarias7.jpg"
   },
   {
+   "t": "De StreetXO a un 2 estrellas Michelin: 3 restaurantes que Bad Bunny ha visitado en Madrid",
+   "u": "https://www.msn.com/es-es/entretenimiento/celebridades/de-streetxo-a-un-2-estrellas-michelin-3-restaurantes-que-bad-bunny-ha-visitado-en-madrid/ar-AA26mbIW",
+   "s": "MSN",
+   "d": "2026-07-18T19:57:09.000Z",
+   "tags": [
+    "MICHELIN"
+   ]
+  },
+  {
+   "t": "Calderón, Berni Rodríguez y Toño Pérez piden ayuda para Diego, el niño de Alcuéscar con leucemia",
+   "u": "https://www.elperiodicoextremadura.com/extremadura/2026/07/18/calderon-berni-rodriguez-tono-perez-piden-ayuda-diego-nino-alcuescar-leucemia-132589933.html",
+   "s": "El Periódico Extremadura",
+   "d": "2026-07-18T19:33:23.000Z",
+   "tags": [
+    "ALTA COCINA"
+   ],
+   "img": "https://estaticos-cdn.prensaiberica.es/clip/fef0697c-8311-4550-8743-f1b8012ecb9a_16-9-discover-aspect-ratio_default_0_x600y225.jpg"
+  },
+  {
    "t": "Atlas Gastronomía: listado, nombres y rostros de referencia en el universo culinario de Cuenca",
    "u": "https://www.vocesdecuenca.com/culturayvida/atlas-gastronomia-listado-nombres-y-rostros-de-referencia-en-el-universo-culinario-de-cuenca/",
    "s": "Voces de Cuenca",
    "d": "2026-07-18T18:36:40.000Z",
    "tags": [
     "ALTA COCINA"
-   ]
-  },
-  {
-   "t": "La expulsada de 'MasterChef' se queda a un paso de la semifinal con una reflexión que deja al jurado sin palabras: \"Solo he perdido\"",
-   "u": "https://www.msn.com/es-es/entretenimiento/celebridades/la-expulsada-de-masterchef-se-queda-a-un-paso-de-la-semifinal-con-una-reflexi%C3%B3n-que-deja-al-jurado-sin-palabras-solo-he-perdido/ar-AA259xLw?apiversion",
-   "s": "MSN",
-   "d": "2026-07-18T18:28:08.000Z",
-   "tags": [
-    "CHEF"
    ]
   },
   {
@@ -149,7 +230,7 @@
   },
   {
    "t": "La mejor villa marinera de Canarias para visitar este verano: tiene el mejor pescado fresco, casas blancas, vistas al...",
-   "u": "https://www.atlanticohoy.com/sociedad/mejor-villa-marinera-canarias-visitar-verano-pescado-fresco-casas-blancas-piscinas-naturales_1564315_102_amp.html",
+   "u": "https://www.atlanticohoy.com/sociedad/mejor-villa-marinera-canarias-visitar-verano-pescado-fresco-casas-blancas-piscinas-naturales_1564315_102.html",
    "s": "Atlántico Hoy",
    "d": "2026-07-18T07:30:00.000Z",
    "tags": [
@@ -216,86 +297,6 @@
     "ALTA COCINA"
    ],
    "img": "https://grupoanimal.sfo3.cdn.digitaloceanspaces.com/uploads/2026/07/arzak-restaurante-historia.webp"
-  },
-  {
-   "t": "Luis dejó al maestro de Dabiz Muñoz para cocinar con pastores en Madrid: \"Hago menos de 40 horas a la semana\"",
-   "u": "https://www.elespanol.com/madrid/ocio/20260718/luis-dejo-maestro-dabiz-munoz-cocinar-pastores-madrid-hago-horas-semana/1003744322334_0.amp.html",
-   "s": "El Español",
-   "d": "2026-07-18T00:00:00.000Z",
-   "tags": [
-    "MICHELIN"
-   ],
-   "img": "https://s3.elespanol.com/k/imgp/cms/elespanol/11318089.jpg?p=f:jpeg/c:1023:577:nowe:0:326/w:1706/h:960&h=fBG8oF7G"
-  },
-  {
-   "t": "Posesión y efectividad defensiva, las virtudes de España",
-   "u": "https://enredaccion.com.ar/posesion-y-efectividad-defensiva-las-virtudes-de-espana/",
-   "s": "ENREDACCIÓN",
-   "d": "2026-07-17T23:38:01.000Z",
-   "tags": [
-    "MICHELIN"
-   ],
-   "img": "https://enredaccion.com.ar/wp-content/uploads/2026/07/z-de-la-fuente-1w.jpg"
-  },
-  {
-   "t": "Santy (18/07/26)",
-   "u": "https://www.eldia.es/humor/2026/07/18/santy-18-07-26-132569826.html",
-   "s": "Eldía",
-   "d": "2026-07-17T22:59:46.000Z",
-   "tags": [
-    "CANARIAS"
-   ]
-  },
-  {
-   "t": "Arranca la cuarta edición del Burger Fest Canarias Las Palmas 2026",
-   "u": "https://www.canarias7.es/gastronomia-c7/arranca-cuarta-edicion-burger-fest-canarias-palmas-20260717204735-vi.html",
-   "s": "Canarias7",
-   "d": "2026-07-17T19:47:39.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://s2.ppllstatics.com/canarias7/www/multimedia/2026/07/17/VIDEO-arranca-cuarta-edicin-burger.jpg"
-  },
-  {
-   "t": "Así ha sido la primera jornada de la cuarta edición del Burger Fest Canarias Las Palmas 2026",
-   "u": "https://www.canarias7.es/gastronomia-c7/primera-jornada-cuarta-edicion-burger-fest-canarias-20260717202349-nt.html",
-   "s": "Canarias7",
-   "d": "2026-07-17T19:23:50.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://s2.ppllstatics.com/canarias7/www/multimedia/gastronomia-c7/2026/07/17/burgerfest-k1nF-U3086093122403D-1200x840@Canarias7.jpg"
-  },
-  {
-   "t": "El plato malagueño que hace \"perder los papeles\" a Antonio Banderas y que puedes preparar en casa",
-   "u": "https://www.lavozdelsur.es/vida/sabor-del-sur/el-plato-malagueno-que-hace-perder-los-papeles-a-antonio-banderas-y-que-puedes-preparar-en-casa.html",
-   "s": "La Voz del Sur",
-   "d": "2026-07-17T18:12:05.000Z",
-   "tags": [
-    "MICHELIN"
-   ],
-   "img": "https://d2mqpxndxh0mbq.cloudfront.net/articulos/articulos-164432.jpg"
-  },
-  {
-   "t": "La gallega UARX aspira a ser la primera empresa de España en llegar a la Luna",
-   "u": "https://www.laopinioncoruna.es/economia/2026/07/17/uarx-aspira-primera-empresa-espana-132561981.html",
-   "s": "La Opinión A Coruña",
-   "d": "2026-07-17T16:05:35.000Z",
-   "tags": [
-    "MICHELIN"
-   ],
-   "img": "https://estaticos-cdn.prensaiberica.es/clip/4c48f6f9-256f-44b4-ab58-4e6853eb85f3_16-9-discover-aspect-ratio_default_0_x1000y477.jpg"
-  },
-  {
-   "t": "Cuatro estrellas Michelin aterrizan en Maspalomas para protagonizar las noches gastronómicas del verano",
-   "u": "https://www.canarias7.es/gastronomia-c7/bp-cuatro-estrellas-michelin-aterrizan-maspalomas-protagonizar-noches-20260717152239-nt.html",
-   "s": "Canarias7",
-   "d": "2026-07-17T14:24:10.000Z",
-   "tags": [
-    "CANARIAS",
-    "MICHELIN"
-   ],
-   "img": "https://s2.ppllstatics.com/canarias7/www/multimedia/gastronomia-c7/2026/07/17/estrellamichelin2.jpg"
   }
  ]
 }
