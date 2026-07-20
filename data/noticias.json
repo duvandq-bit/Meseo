@@ -1,6 +1,24 @@
 {
- "updated": "2026-07-19T18:10:22.020Z",
+ "updated": "2026-07-20T00:14:40.708Z",
  "items": [
+  {
+   "t": "Padylla (20/07/26)",
+   "u": "https://www.eldia.es/humor/2026/07/20/padylla-20-07-26-132615161.html",
+   "s": "Eldía",
+   "d": "2026-07-20T00:04:09.000Z",
+   "tags": [
+    "CANARIAS"
+   ]
+  },
+  {
+   "t": "Santy (20/07/26)",
+   "u": "https://www.eldia.es/humor/2026/07/20/santy-20-07-26-132610868.html",
+   "s": "Eldía",
+   "d": "2026-07-19T22:59:40.000Z",
+   "tags": [
+    "CANARIAS"
+   ]
+  },
   {
    "t": "La alta cocina de 17 chefs internacionales se unira en Colombia por una causa social en el Davivienda Restaurant Tour",
    "u": "https://www.infobae.com/colombia/2026/07/19/la-alta-cocina-de-17-chefs-internacionales-se-unira-en-colombia-por-una-causa-social-en-el-davivienda-restaurant-tour/",
@@ -43,18 +61,8 @@
    "img": "https://s3.elespanol.com/k/imgp/cms/elespanol/11318916.jpg?p=f:jpeg/w:1706/h:960&h=cSdhzMjB"
   },
   {
-   "t": "La villa juguetera de Alicante que conquista por su cocina: así es el pueblo donde mejor se come de España",
-   "u": "https://www.noticiasdelvino.com/restaurantes/2026/07/19/la-villa-juguetera-de-alicante-que-conquista-por-su-cocina-asi-es-el-pueblo-donde-mejor-se-come-de-espana-74836/",
-   "s": "Noticias del Vino",
-   "d": "2026-07-19T10:23:33.000Z",
-   "tags": [
-    "MICHELIN"
-   ],
-   "img": "https://www.noticiasdelvino.com/wp-content/uploads/restaurantes-5.jpg"
-  },
-  {
    "t": "Éxito del viñedo canario en la Guía Peñín: del mito a la admiración nacional",
-   "u": "https://www.laprovincia.es/ocio/gastronomia/2026/07/19/exito-vinedo-canario-guia-penin-132598029.html",
+   "u": "https://www.laprovincia.es/ocio/gastronomia/2026/07/19/exito-vinedo-canario-guia-penin-132598029.amp.html",
    "s": "La Provincia",
    "d": "2026-07-19T10:16:35.000Z",
    "tags": [
@@ -142,23 +150,13 @@
    "img": "https://www.lanzadigital.com/wp-content/uploads/2026/04/Miguel-Angel-Exposito-con-su-equipo-de-Cantueso-1-768x432.jpg"
   },
   {
-   "t": "Los restaurantes gallegos a pie de playa que recomienda la 'Guía Michelin' para este verano",
-   "u": "https://www.msn.com/es-es/alimentaci%C3%B3n-y-bebidas/recetas/los-restaurantes-gallegos-a-pie-de-playa-que-recomienda-la-gu%C3%ADa-michelin-para-este-verano/ar-AA24XmLJ",
-   "s": "MSN",
-   "d": "2026-07-19T03:03:27.000Z",
-   "tags": [
-    "MICHELIN"
-   ]
-  },
-  {
    "t": "Padylla (19/07/26)",
    "u": "https://www.eldia.es/humor/2026/07/19/padylla-19-07-26-132592547.html",
    "s": "Eldía",
    "d": "2026-07-18T23:23:33.000Z",
    "tags": [
     "CANARIAS"
-   ],
-   "img": "https://estaticos-cdn.prensaiberica.es/clip/beceaed1-08b6-4df8-839e-61150b7ad1ff_16-9-aspect-ratio_default_0.jpg"
+   ]
   },
   {
    "t": "Música, humor y una variada oferta gastronómica para poner punto y final a la gala de los premios nacionales",
@@ -187,8 +185,7 @@
    "d": "2026-07-18T22:59:17.000Z",
    "tags": [
     "CANARIAS"
-   ],
-   "img": "https://estaticos-cdn.prensaiberica.es/clip/b1c2edcd-b06d-48bb-9b21-7072e93eecb0_16-9-aspect-ratio_default_0.jpg"
+   ]
   },
   {
    "t": "Burger Fest Canarias Las Palmas 2026 ya tiene ganador y el premio se queda en Gran Canaria con Axel Smash",
@@ -199,6 +196,16 @@
     "CANARIAS"
    ],
    "img": "https://s2.ppllstatics.com/canarias7/www/multimedia/gastronomia-c7/2026/07/18/burguer6-kLdG-U30894921844VkC-1200x840@Canarias7.jpg"
+  },
+  {
+   "t": "La conexión desconocida de Dabiz Muñoz con un pueblo de Cuenca de solo 150 habitantes",
+   "u": "https://www.noticiasdelvino.com/escapadas/2026/07/18/la-conexion-desconocida-de-dabiz-munoz-con-un-pueblo-de-cuenca-de-solo-150-habitantes-68966/",
+   "s": "Noticias del Vino",
+   "d": "2026-07-18T20:00:08.000Z",
+   "tags": [
+    "ALTA COCINA"
+   ],
+   "img": "https://www.noticiasdelvino.com/wp-content/uploads/image-217.png"
   },
   {
    "t": "De StreetXO a un 2 estrellas Michelin: 3 restaurantes que Bad Bunny ha visitado en Madrid",
@@ -238,14 +245,14 @@
    ]
   },
   {
-   "t": "La pizza en honor a la Virgen de Candelaria que se ha hecho viral en Tenerife: tiene forma de templo y solo se podrá...",
-   "u": "https://www.atlanticohoy.com/sociedad/pizza-en-honor-virgen-candelaria-se-ha-hecho-viral-en-tenerife-tiene-forma-templo-solo-se-podra-probar-por-tiempo-limitado_1564318_102.html",
-   "s": "Atlántico Hoy",
-   "d": "2026-07-18T14:30:00.000Z",
+   "t": "Dos chiringuitos a menos de una hora de Jerez, reconocidos entre los mejores de España",
+   "u": "https://masjerez.com/noticias/dos-chiringuitos-a-menos-de-una-hora-de-jerez-reconocidos-entre-los-mejores-de-espana",
+   "s": "Masjerez",
+   "d": "2026-07-18T17:50:53.000Z",
    "tags": [
     "CANARIAS"
    ],
-   "img": "https://www.atlanticohoy.com/uploads/s1/37/45/24/8/diseno-sin-titulo-2026-07-16t102739-409.webp"
+   "img": "https://masjerez.com/storage/noticias/July2026/kByAErQFDYF9GH40MCtm.jpg"
   },
   {
    "t": "¿Quién decide la mejor hamburguesa del Burger Fest? Así es desde dentro",
@@ -256,16 +263,6 @@
     "CANARIAS"
    ],
    "img": "https://s2.ppllstatics.com/canarias7/www/multimedia/gastronomia-c7/2026/07/18/paula-ia.jpg"
-  },
-  {
-   "t": "El pequeño pueblo español de 50.000 vecinos que tiene más estrellas Michelin por habitante que Madrid o San Sebastián",
-   "u": "https://www.msn.com/es-es/viajes/bares-y-restaurantes/el-peque%C3%B1o-pueblo-espa%C3%B1ol-de-50-000-vecinos-que-tiene-m%C3%A1s-estrellas-michelin-por-habitante-que-madrid-o-san-sebasti%C3%A1n/ar-AA24Y5TF",
-   "s": "MSN",
-   "d": "2026-07-18T10:52:55.000Z",
-   "tags": [
-    "CANARIAS",
-    "MICHELIN"
-   ]
   },
   {
    "t": "El bochinche de Gran Canaria con vistas a la montaña que tienes que probar sí o sí: ofrece cocina canaria tradicional y medias raciones para compartir",
@@ -289,13 +286,13 @@
   },
   {
    "t": "Sanabria: el restaurante de Santa Cruz, desde el paladar más 'kool'",
-   "u": "https://www.canarias7.es/gastronomia-c7/restaurantes/sanabria-restaurante-santa-cruz-paladar-kool-20260718140000-nt_amp.html",
+   "u": "https://www.canarias7.es/gastronomia-c7/restaurantes/sanabria-restaurante-santa-cruz-paladar-kool-20260718140000-nt.html",
    "s": "Canarias7",
    "d": "2026-07-18T06:42:38.000Z",
    "tags": [
     "CANARIAS"
    ],
-   "img": "https://s3.ppllstatics.com/canarias7/www/multimedia/gastronomia-c7/2026/07/17/berberechos.jpg"
+   "img": "https://s3.ppllstatics.com/canarias7/www/multimedia/gastronomia-c7/2026/07/17/berberechos-kvu-U30884458890BBD-1200x840@Canarias7.jpg"
   }
  ]
 }
