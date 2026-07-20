@@ -1939,6 +1939,15 @@ test('el Repaso Inteligente vive dentro de La Carta, sin chip propio', () => {
   const rc = html.slice(html.indexOf('function renderRepasoCats()'), html.indexOf('function renderRepasoTopic()'));
   assert(/Repaso inteligente/.test(rc) && /_subTab\.aprender='smart'/.test(rc),
     'falta la tarjeta de entrada a la sesión al frente de La Carta');
+  // Refuerzo jul 2026 («no se ve, no se sabe de qué trata»): la entrada es
+  // una tarjeta ri-cta destacada con subtítulo explicativo, y su cuenta usa
+  // el MISMO criterio que la línea de resumen (solo repasos vencidos).
+  assert(/class="ri-cta"[^>]*onclick="_subTab\.aprender='smart'/.test(rc),
+    'la entrada debe ser la tarjeta destacada ri-cta');
+  assert(/la app elige los platos que más te conviene repasar/.test(rc),
+    'el subtítulo debe explicar qué es la sesión');
+  assert(/s\.reps > 0 && Date\.now\(\) >= s\.nextReview/.test(rc),
+    'la cuenta de pendientes debe contar solo repasos vencidos, como el resumen');
   assert(/REPASO INTELIGENTE/.test(html) && !/'SIMULACIÓN'/.test(html),
     'la pantalla debe presentarse como Repaso Inteligente, no Simulación');
 });
@@ -2749,7 +2758,7 @@ test('.btn-secondary has a real style rule (not a bare grey button)', () => {
 test('Explorar is a TUNIC manual page (statline + ledger categories)', () => {
   // Same de-boxing as dashboard/LQA: the boxed stats banner and the seven
   // ~200px category tiles became a mono stat line and hairline ledger rows.
-  const rep = html.slice(html.indexOf('const cards=smartCard+activeCats.map'), html.indexOf('function searchRepaso'));
+  const rep = html.slice(html.indexOf('const cards=activeCats.map'), html.indexOf('function searchRepaso'));
   assert(/dash-row" aria-label[^>]*onclick="openRepasoCat/.test(rep),
     'categories must render as ledger rows');
   assert(/repaso-statline/.test(rep), 'overview must be the mono stat line');
