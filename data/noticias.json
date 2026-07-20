@@ -1,6 +1,77 @@
 {
- "updated": "2026-07-20T00:14:40.708Z",
+ "updated": "2026-07-20T08:19:23.624Z",
  "items": [
+  {
+   "t": "La terraza de la Marina Alta, entre las mejores terrazas Michelin para el verano 2026",
+   "u": "https://www.que.es/2026/07/20/terrazas-michelin-marina-alta-verano-2026/",
+   "s": "que.es",
+   "d": "2026-07-20T07:23:00.000Z",
+   "tags": [
+    "MICHELIN"
+   ],
+   "img": "https://static.que.es/wp-content/uploads/2025/10/Madrid-renueva-sus-terrazas-con-una-nueva-ordenanza-que-cambiara-el-disfrute-y-descanso-en-el-espacio-publico.webp"
+  },
+  {
+   "t": "La chef vasca que ha llevado la estrella Michelin a Londres desembarca en Menorca",
+   "u": "https://www.elespanol.com/viajes/planes/20260720/chef-vasca-llevado-estrella-michelin-londres-desembarca-menorca/1003744324277_0.html",
+   "s": "El Español",
+   "d": "2026-07-20T06:36:20.000Z",
+   "tags": [
+    "ALTA COCINA",
+    "MICHELIN"
+   ],
+   "img": "https://s3.elespanol.com/k/imgp/cms/elespanol/11318189.jpg?p=f:jpeg/w:1706/h:960&h=S96YXNpw"
+  },
+  {
+   "t": "Los cuatro chiringuitos de la provincia de Málaga que están entre los 25 mejores de España",
+   "u": "https://www.malagahoy.es/la-farola/chiringuitos-provincia-malaga-mejores-espana_0_2007502435.html",
+   "s": "Málaga Hoy",
+   "d": "2026-07-20T04:20:24.000Z",
+   "tags": [
+    "MICHELIN"
+   ],
+   "img": "https://static.grupojoly.com/clip/c8478b15-731e-4f13-942f-0a25a495b413_facebook-aspect-ratio_default_0.jpg"
+  },
+  {
+   "t": "El gazpacho etéreo de Fernando Sánchez que conquistó el ayuno",
+   "u": "https://www.larazon.es/gastronomia/gazpacho-etereo-fernando-sanchez-que-conquisto-ayuno_202607206a5d9d6c1db8de040998e73b.html?outputType",
+   "s": "La Razón",
+   "d": "2026-07-20T04:00:44.000Z",
+   "tags": [
+    "ALTA COCINA"
+   ],
+   "img": "https://fotografias-2.larazon.es/clipping/cmsimages02/2026/07/19/DC8619FF-F291-4F02-A899-04A190513F59/fernando-sanchez_98.jpg?crop=2000,1125,x0,y101&width=1900&height=1069&optimize=low&format=webply"
+  },
+  {
+   "t": "4 vinos que destacan por su singular método de elaboración",
+   "u": "https://www.lavanguardia.com/comer/beber/guia-de-vinos/20260720/11594479/4-vinos-destacan-singular-metodo-elaboracion.amp.html",
+   "s": "La Vanguardia",
+   "d": "2026-07-20T04:00:00.000Z",
+   "tags": [
+    "VINO",
+    "CANARIAS"
+   ],
+   "img": "https://www.lavanguardia.com/files/og_thumbnail/uploads/2026/07/17/6a59e92c3b8d7.jpeg"
+  },
+  {
+   "t": "Buenos Aires amplía su liderazgo gastronómico con Guía MICHELIN 2026",
+   "u": "http://www.pulsoturistico.com.ar/mas_informacion.asp?id",
+   "s": "Pulso Turístico",
+   "d": "2026-07-20T03:01:21.000Z",
+   "tags": [
+    "MICHELIN"
+   ]
+  },
+  {
+   "t": "El hotel gastronómico de la Costa Blanca que convierte una escapada en una experiencia Michelin",
+   "u": "https://www.vozpopuli.com/amp/gastropoli/el-hotel-gastronomico-de-la-costa-blanca-que-convierte-una-escapada-en-una-experiencia-michelin.html",
+   "s": "Vozpopuli",
+   "d": "2026-07-20T02:45:00.000Z",
+   "tags": [
+    "MICHELIN"
+   ],
+   "img": "https://cdn.vozpopuli.com/cdn/posts/4231255/the-cookbook-hotel-calpe-2883447-1200-700.jpg"
+  },
   {
    "t": "Padylla (20/07/26)",
    "u": "https://www.eldia.es/humor/2026/07/20/padylla-20-07-26-132615161.html",
@@ -9,6 +80,16 @@
    "tags": [
     "CANARIAS"
    ]
+  },
+  {
+   "t": "‘Mira quién viene a cenar’ se estrena con Lydia Lozano",
+   "u": "https://diariodeavisos.elespanol.com/2026/07/mira-quien-viene-a-cenar-se-estrena-con-lydia-lozano/",
+   "s": "Diario de Avisos",
+   "d": "2026-07-19T23:04:02.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://cdn.diariodeavisos.com/wp-content/uploads/2026/07/Pagina-44-Rafa-Mendez-Lydia-Lozano-y-Luna-Zacharias.jpg"
   },
   {
    "t": "Santy (20/07/26)",
@@ -41,16 +122,6 @@
    "img": "https://img2.huffingtonpost.es/files/og_thumbnail/uploads/2024/10/25/el-cocinero-martin-berasategui.jpeg"
   },
   {
-   "t": "Joseba Arguiñano, chef: \"Para unos chipirones perfectos, dedica tiempo a pochar bien la cebolleta y el pimiento. Una fritada lentamente caramelizada es la clave para tener todo el sabor\"",
-   "u": "https://www.vanitatis.elconfidencial.com/gastronomia/2026-07-19/joseba-arguinano-chipirones-receta-cocina-vasca-cebolleta-pimiento-pelayo-1qrt_4391703/",
-   "s": "Vanitatis",
-   "d": "2026-07-19T11:45:00.000Z",
-   "tags": [
-    "ALTA COCINA"
-   ],
-   "img": "https://images.ecestaticos.com/tZVi59-P8TOsW6uNOElNzw1BFGw=/0x0:907x616/600x315/filters:fill(white):format(jpg):quality(99):watermark(f.elconfidencial.com/file/0f2/6d9/13e/0f26d913e1b27ca111e62b656aa354da.png,0,275,1)/f.elconfidencial.com/original/f64/c98/cac/f64c98cac0954430d9649f65db8113ce.jpg"
-  },
-  {
    "t": "Iñaki, cocinero. \"El bocadillo más famoso de España no lleva ni jamón ni calamares, se hace con 1 tomate y aceite de oliva\"",
    "u": "https://www.elespanol.com/cocinillas/recetas/20260719/inaki-cocinero-bocadillo-famoso-espana-no-lleva-jamon-calamares-hace-tomate-aceite-oliva/1003744326422_30.html",
    "s": "El Español",
@@ -62,13 +133,13 @@
   },
   {
    "t": "Éxito del viñedo canario en la Guía Peñín: del mito a la admiración nacional",
-   "u": "https://www.laprovincia.es/ocio/gastronomia/2026/07/19/exito-vinedo-canario-guia-penin-132598029.amp.html",
-   "s": "La Provincia",
-   "d": "2026-07-19T10:16:35.000Z",
+   "u": "https://www.eldia.es/ocio/gastronomia/2026/07/19/exito-vinedo-canario-guia-penin-132598980.amp.html",
+   "s": "Eldía",
+   "d": "2026-07-19T10:28:01.000Z",
    "tags": [
     "CANARIAS"
    ],
-   "img": "https://estaticos-cdn.prensaiberica.es/clip/74304294-ef61-4fe0-938c-261ff1429fba_16-9-discover-aspect-ratio_default_0_x800y310.jpg"
+   "img": "https://estaticos-cdn.prensaiberica.es/clip/803d3f0b-73bc-4119-a4c0-555acabf21de_16-9-discover-aspect-ratio_default_0_x800y310.jpg"
   },
   {
    "t": "Asador La Camella: el templo de la brasa en Tenerife Sur que tienes que probar",
@@ -131,7 +202,7 @@
   },
   {
    "t": "El Juan Sebastián de Elcano lleva mucho más que formación militar en cada escala y una iniciativa en Nueva York vuelve a demostrarlo",
-   "u": "https://www.elconfidencialdigital.com/articulo/gourmet/ivan-plademunt-lleva-autentico-sabor-alcala-henares-nueva-york-juan-sebastian-elcano/202607152137321031318.html",
+   "u": "https://www.elconfidencialdigital.com/articulo/gourmet/ivan-plademunt-lleva-autentico-sabor-alcala-henares-nueva-york-juan-sebastian-elcano/202607152137321031318.amp.html",
    "s": "Confidencial Digital",
    "d": "2026-07-19T04:05:00.000Z",
    "tags": [
@@ -150,6 +221,15 @@
    "img": "https://www.lanzadigital.com/wp-content/uploads/2026/04/Miguel-Angel-Exposito-con-su-equipo-de-Cantueso-1-768x432.jpg"
   },
   {
+   "t": "Los restaurantes gallegos a pie de playa que recomienda la 'Guía Michelin' para este verano",
+   "u": "https://www.msn.com/es-es/alimentaci%C3%B3n-y-bebidas/recetas/los-restaurantes-gallegos-a-pie-de-playa-que-recomienda-la-gu%C3%ADa-michelin-para-este-verano/ar-AA24XmLJ",
+   "s": "MSN",
+   "d": "2026-07-19T03:03:27.000Z",
+   "tags": [
+    "MICHELIN"
+   ]
+  },
+  {
    "t": "Padylla (19/07/26)",
    "u": "https://www.eldia.es/humor/2026/07/19/padylla-19-07-26-132592547.html",
    "s": "Eldía",
@@ -160,13 +240,13 @@
   },
   {
    "t": "Música, humor y una variada oferta gastronómica para poner punto y final a la gala de los premios nacionales",
-   "u": "https://diariodeavisos.elespanol.com/2026/07/musica-humor-y-una-variada-oferta-gastronomica-para-poner-punto-y-final-a-la-gala-de-los-premios-nacionales/",
+   "u": "https://diariodeavisos.elespanol.com/2026/07/musica-humor-y-una-variada-oferta-gastronomica-para-poner-punto-y-final-a-la-gala-de-los-premios-nacionales/amp/",
    "s": "Diario de Avisos",
    "d": "2026-07-18T23:19:40.000Z",
    "tags": [
     "CANARIAS"
    ],
-   "img": "https://cdn.diariodeavisos.com/wp-content/uploads/2026/07/41-premios-gastronomia-2026-1.jpg"
+   "img": "https://diariodeavisos.elespanol.com/wp-content/uploads/2026/07/41-premios-gastronomia-2026-1.jpg"
   },
   {
    "t": "La excelencia de la gastronomía se reunió en los premios nacionales",
@@ -198,16 +278,6 @@
    "img": "https://s2.ppllstatics.com/canarias7/www/multimedia/gastronomia-c7/2026/07/18/burguer6-kLdG-U30894921844VkC-1200x840@Canarias7.jpg"
   },
   {
-   "t": "La conexión desconocida de Dabiz Muñoz con un pueblo de Cuenca de solo 150 habitantes",
-   "u": "https://www.noticiasdelvino.com/escapadas/2026/07/18/la-conexion-desconocida-de-dabiz-munoz-con-un-pueblo-de-cuenca-de-solo-150-habitantes-68966/",
-   "s": "Noticias del Vino",
-   "d": "2026-07-18T20:00:08.000Z",
-   "tags": [
-    "ALTA COCINA"
-   ],
-   "img": "https://www.noticiasdelvino.com/wp-content/uploads/image-217.png"
-  },
-  {
    "t": "De StreetXO a un 2 estrellas Michelin: 3 restaurantes que Bad Bunny ha visitado en Madrid",
    "u": "https://www.msn.com/es-es/entretenimiento/celebridades/de-streetxo-a-un-2-estrellas-michelin-3-restaurantes-que-bad-bunny-ha-visitado-en-madrid/ar-AA26mbIW",
    "s": "MSN",
@@ -225,74 +295,6 @@
     "ALTA COCINA"
    ],
    "img": "https://estaticos-cdn.prensaiberica.es/clip/fef0697c-8311-4550-8743-f1b8012ecb9a_16-9-discover-aspect-ratio_default_0_x600y225.jpg"
-  },
-  {
-   "t": "Atlas Gastronomía: listado, nombres y rostros de referencia en el universo culinario de Cuenca",
-   "u": "https://www.vocesdecuenca.com/culturayvida/atlas-gastronomia-listado-nombres-y-rostros-de-referencia-en-el-universo-culinario-de-cuenca/",
-   "s": "Voces de Cuenca",
-   "d": "2026-07-18T18:36:40.000Z",
-   "tags": [
-    "ALTA COCINA"
-   ]
-  },
-  {
-   "t": "La expulsada de 'MasterChef' se queda a un paso de la semifinal con una reflexión que deja al jurado sin palabras: \"Solo he perdido\"",
-   "u": "https://www.msn.com/es-es/entretenimiento/celebridades/la-expulsada-de-masterchef-se-queda-a-un-paso-de-la-semifinal-con-una-reflexi%C3%B3n-que-deja-al-jurado-sin-palabras-solo-he-perdido/ar-AA259xLw?apiversion",
-   "s": "MSN",
-   "d": "2026-07-18T18:28:08.000Z",
-   "tags": [
-    "CHEF"
-   ]
-  },
-  {
-   "t": "Dos chiringuitos a menos de una hora de Jerez, reconocidos entre los mejores de España",
-   "u": "https://masjerez.com/noticias/dos-chiringuitos-a-menos-de-una-hora-de-jerez-reconocidos-entre-los-mejores-de-espana",
-   "s": "Masjerez",
-   "d": "2026-07-18T17:50:53.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://masjerez.com/storage/noticias/July2026/kByAErQFDYF9GH40MCtm.jpg"
-  },
-  {
-   "t": "¿Quién decide la mejor hamburguesa del Burger Fest? Así es desde dentro",
-   "u": "https://www.canarias7.es/gastronomia-c7/decide-mejor-hamburguesa-burger-fest-dentro-20260718132436-nt_amp.html",
-   "s": "Canarias7",
-   "d": "2026-07-18T12:24:36.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://s2.ppllstatics.com/canarias7/www/multimedia/gastronomia-c7/2026/07/18/paula-ia.jpg"
-  },
-  {
-   "t": "El bochinche de Gran Canaria con vistas a la montaña que tienes que probar sí o sí: ofrece cocina canaria tradicional y medias raciones para compartir",
-   "u": "https://www.laprovincia.es/gran-canaria/2026/07/18/bochinche-gran-canaria-vistas-montana-dv-128391567.amp.html",
-   "s": "La Provincia",
-   "d": "2026-07-18T09:00:00.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://estaticos-cdn.prensaiberica.es/clip/1e9d5610-5161-452e-b86c-55f3af5c0e16_16-9-discover-aspect-ratio_default_0_x540y351.jpg"
-  },
-  {
-   "t": "La mejor villa marinera de Canarias para visitar este verano: tiene el mejor pescado fresco, casas blancas, vistas al...",
-   "u": "https://www.atlanticohoy.com/sociedad/mejor-villa-marinera-canarias-visitar-verano-pescado-fresco-casas-blancas-piscinas-naturales_1564315_102.html",
-   "s": "Atlántico Hoy",
-   "d": "2026-07-18T07:30:00.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://www.atlanticohoy.com/uploads/s1/37/45/21/3/imagen-de-la-villa-marinera-puerto-de-las-nieves-hola-islas-canarias.webp"
-  },
-  {
-   "t": "Sanabria: el restaurante de Santa Cruz, desde el paladar más 'kool'",
-   "u": "https://www.canarias7.es/gastronomia-c7/restaurantes/sanabria-restaurante-santa-cruz-paladar-kool-20260718140000-nt.html",
-   "s": "Canarias7",
-   "d": "2026-07-18T06:42:38.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://s3.ppllstatics.com/canarias7/www/multimedia/gastronomia-c7/2026/07/17/berberechos-kvu-U30884458890BBD-1200x840@Canarias7.jpg"
   }
  ]
 }
