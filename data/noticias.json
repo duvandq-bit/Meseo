@@ -1,6 +1,17 @@
 {
- "updated": "2026-07-20T19:09:47.628Z",
+ "updated": "2026-07-21T00:12:43.457Z",
  "items": [
+  {
+   "t": "El chef colombiano Aris Pabón conquista una estrella Michelin al frente del restaurante Centauro",
+   "u": "https://caracol.com.co/2026/07/20/el-chef-colombiano-aris-pabon-conquista-una-estrella-michelin-al-frente-del-restaurante-centauro/?outputType",
+   "s": "Caracol Radio",
+   "d": "2026-07-20T20:51:37.000Z",
+   "tags": [
+    "ALTA COCINA",
+    "MICHELIN"
+   ],
+   "img": "https://caracol.com.co/resizer/v2/NRJ6SGOJ6JAN3IK25W22ELBRAE.jpeg?auth=72676043a714951816d76702140d412f9d077082216a97104b1ad11398ca422e&quality=70&width=1200&height=675&smart=true"
+  },
   {
    "t": "La gastronomía, el humor y el talento canario se dan cita en ‘El Club’, el nuevo concurso de Televisión Canaria",
    "u": "https://rtvc.es/la-gastronomia-el-humor-y-el-talento-canario-se-dan-cita-en-el-club/",
@@ -22,15 +33,33 @@
    "img": "https://cdn.diariodeavisos.com/wp-content/uploads/2025/04/Burger-Fest-La-Laguna.jpg"
   },
   {
+   "t": "La novena edición de LPA Estación acerca la cultura, el patrimonio y el ocio de Las Palmas de Gran Canaria",
+   "u": "https://www.laprovincia.es/las-palmas/2026/07/20/novena-edicion-lpa-estacion-acerca-132643847.amp.html",
+   "s": "La Provincia",
+   "d": "2026-07-20T18:12:50.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://estaticos-cdn.prensaiberica.es/clip/ee4fe036-3a28-4edc-ab10-03e1ffbbd962_16-9-discover-aspect-ratio_default_0_x1000y444.jpg"
+  },
+  {
    "t": "El buffet libre más caro y lujoso de Madrid: mariscos, sushi, ostras y jamón ibérico firmado por un chef con estrella Michelin",
    "u": "https://madridsecreto.co/el-buffet-libre-mas-caro-y-lujoso-de-madrid/",
    "s": "Madrid Secreto",
    "d": "2026-07-20T15:42:07.000Z",
    "tags": [
-    "ALTA COCINA",
     "MICHELIN"
    ],
    "img": "https://offloadmedia.feverup.com/madridsecreto.co/wp-content/uploads/2026/07/20163049/Photo-Collage-62.jpg"
+  },
+  {
+   "t": "El chef argentino que pasó de dormir en una parada de bus a cambiar la forma en la que comemos pescado en España",
+   "u": "https://www.msn.com/es-es/alimentaci%C3%B3n-y-bebidas/recetas/el-chef-argentino-que-pas%C3%B3-de-dormir-en-una-parada-de-bus-a-cambiar-la-forma-en-la-que-comemos-pescado-en-espa%C3%B1a/ar-AA231Yia",
+   "s": "MSN",
+   "d": "2026-07-20T12:59:29.000Z",
+   "tags": [
+    "ALTA COCINA"
+   ]
   },
   {
    "t": "Martín Berasategui no se muerde la lengua: \"No me gusta la gente que...\"",
@@ -175,7 +204,7 @@
   {
    "t": "Cómo salar el pescado y por qué deberías hacerlo con el truco de Jordi Cruz",
    "u": "https://www.hoyaragon.es/gastronomia/como-salar-pescado-que-deberias-hacerlo-truco-jordi-cruz/20260720102800138553.html",
-   "s": "hoy aragón",
+   "s": "Hoy Aragón",
    "d": "2026-07-20T08:28:00.000Z",
    "tags": [
     "ALTA COCINA"
@@ -271,36 +300,6 @@
    "tags": [
     "MICHELIN"
    ]
-  },
-  {
-   "t": "El hotel gastronómico de la Costa Blanca que convierte una escapada en una experiencia Michelin",
-   "u": "https://www.vozpopuli.com/amp/gastropoli/el-hotel-gastronomico-de-la-costa-blanca-que-convierte-una-escapada-en-una-experiencia-michelin.html",
-   "s": "Vozpopuli",
-   "d": "2026-07-20T02:45:00.000Z",
-   "tags": [
-    "MICHELIN"
-   ],
-   "img": "https://cdn.vozpopuli.com/cdn/posts/4231255/the-cookbook-hotel-calpe-2883447-1200-700.jpg"
-  },
-  {
-   "t": "Padylla (20/07/26)",
-   "u": "https://www.eldia.es/humor/2026/07/20/padylla-20-07-26-132615161.html",
-   "s": "Eldía",
-   "d": "2026-07-20T00:04:09.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://estaticos-cdn.prensaiberica.es/clip/beceaed1-08b6-4df8-839e-61150b7ad1ff_16-9-aspect-ratio_default_0.jpg"
-  },
-  {
-   "t": "‘Mira quién viene a cenar’ se estrena con Lydia Lozano",
-   "u": "https://diariodeavisos.elespanol.com/2026/07/mira-quien-viene-a-cenar-se-estrena-con-lydia-lozano/",
-   "s": "Diario de Avisos",
-   "d": "2026-07-19T23:04:02.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://cdn.diariodeavisos.com/wp-content/uploads/2026/07/Pagina-44-Rafa-Mendez-Lydia-Lozano-y-Luna-Zacharias.jpg"
   }
  ]
 }
