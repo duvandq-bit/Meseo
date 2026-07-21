@@ -44,7 +44,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Meseo · Formación de sala</title>
 <meta name="description" content="Meseo — Formación de equipos de sala: carta, alérgenos, vinos, exámenes y juegos de repaso.">
-<meta name="app-version" content="7.286">
+<meta name="app-version" content="7.287">
 <meta name="app-build" content="May 2026">
 <meta name="theme-color" content="#1c2a22">
 <!-- ═══ PWA ═══ -->
@@ -1541,7 +1541,7 @@ const CAT_COLORS={'Entrantes':'#c49a3c','Hamburguesas y Bocatas':'#b86050','Plat
 const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#c49a3c"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#a47a2c" opacity=".4"/><path d="M8 8v4a1 1 0 001 1h1v4M10 8v4" stroke="#fff" stroke-width="1.2" stroke-linecap="round" fill="none"/><path d="M15 8v8M14 8v3a1.5 1.5 0 003 0V8" stroke="#fff" stroke-width="1.2" stroke-linecap="round" fill="none"/></svg>`,'Hamburguesas y Bocatas':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#b86050"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#983838" opacity=".4"/><path d="M7 9h10M7 12h10M7 15h10" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/><path d="M8 9c0-2 2-3 4-3s4 1 4 3M8 15c0 2 2 3 4 3s4-1 4-3" fill="none" stroke="#fff" stroke-width="1" opacity=".7"/></svg>`,'Platos Principales':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#4888a0"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#2e6878" opacity=".4"/><path d="M5 15h14" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/><path d="M12 6a6 6 0 016 6H6a6 6 0 016-6z" fill="none" stroke="#fff" stroke-width="1.1"/><circle cx="10" cy="6" r=".7" fill="#fff" opacity=".7"/><circle cx="12" cy="5" r=".7" fill="#fff" opacity=".7"/><circle cx="14" cy="6" r=".7" fill="#fff" opacity=".7"/></svg>`,'Sugerencias':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#d4aa4c"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#a48a2c" opacity=".4"/><polygon points="12,5 14.5,10 20,10.5 16,14 17,20 12,17 7,20 8,14 4,10.5 9.5,10" fill="#fff" opacity=".9"/></svg>`,'Guarniciones y Salsas':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#4d8a5e"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#2d6a3e" opacity=".4"/><path d="M12 18V10M5 10c0-4 3-6 7-6s7 2 7 6c0 5-3 8-7 8s-7-3-7-8z" fill="none" stroke="#fff" stroke-width="1.1"/><path d="M5 10c3 0 5 1 7 2.5" fill="none" stroke="#fff" stroke-width=".8" opacity=".6"/></svg>`,'Postres':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#7a6aaa"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#5a4a8a" opacity=".4"/><path d="M9 19h6M12 12v7M7 6l2 4.5a3 3 0 006 0L17 6H7z" fill="none" stroke="#fff" stroke-width="1.1" stroke-linecap="round"/></svg>`,'Vegetariano':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#5a9a6e"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#3a7a4e" opacity=".4"/><path d="M9 18h6M12 18V10M12 10c0-3 2-5 5-5-.7 2.5-2.5 5-5 5zM12 10c0-3-2-5-5-5 .7 2.5 2.5 5 5 5z" fill="none" stroke="#fff" stroke-width="1.1" stroke-linecap="round"/></svg>`};
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='7.286';  // sincronizada con sw.js VERSION (guard de CI)
+const APP_VERSION='7.287';  // sincronizada con sw.js VERSION (guard de CI)
 const APP_BUILD='Jul 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;
@@ -20430,10 +20430,10 @@ function renderSupAnalytics(allEmps, empNames){
   const perEmpHTML = perEmp.map(e => {
     const col = e.pct>=80?'var(--sage)':e.pct>=50?'var(--gold)':'var(--rose)';
     const worstTxt = e.worst ? ` · <span style="color:var(--rose)">${LANG==='en'?'weakest':'más flojo'}: ${e.worst.label} ${Math.round(e.worst.p*100)}%</span>` : '';
-    return `<div style="display:flex;align-items:center;gap:.6rem;padding:.5rem 0;border-bottom:1px solid var(--line)">
+    return `<div onclick="renderSupEmployee(this.dataset.emp)" data-emp="${escapeHTML(e.name)}" role="button" tabindex="0" style="display:flex;align-items:center;gap:.6rem;padding:.5rem 0;border-bottom:1px solid var(--line);cursor:pointer">
       <div style="width:28px;height:28px;border-radius:50%;overflow:hidden;flex-shrink:0">${renderSmallAvatar(e.name,28)}</div>
       <div style="flex:1;min-width:0">
-        <div style="font-size:.82rem;color:var(--parchment);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${e.name}</div>
+        <div style="font-size:.82rem;color:var(--parchment);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${e.name} <span style="color:var(--gold);font-size:.7rem">›</span></div>
         <div style="font-family:'DM Mono',monospace;font-size:.55rem;color:var(--parch4)">${e.total} ${LANG==='en'?'answered':'respondidas'} · <span style="color:var(--rose)">${e.wrong} ${LANG==='en'?'wrong':'fallos'}</span>${worstTxt}</div>
       </div>
       <span style="font-family:'DM Mono',monospace;font-size:.75rem;font-weight:700;color:${col};width:36px;text-align:right">${e.pct}%</span>
@@ -20460,10 +20460,10 @@ function renderSupAnalytics(allEmps, empNames){
     const detail = [];
     if(r.examPct!=null) detail.push(`${LANG==='en'?'exam':'examen'} ${r.examPct}%${r.total?` · ${r.wrong} ${LANG==='en'?'wrong':'fallos'}`:''}`);
     if(r.drill!=null) detail.push(`${LANG==='en'?'drill':'simulacro'} ${r.drill}%`);
-    return `<div style="display:flex;align-items:center;gap:.6rem;padding:.5rem 0;border-bottom:1px solid ${risk?'rgba(196,112,104,.18)':'var(--line)'}">
+    return `<div onclick="renderSupEmployee(this.dataset.emp)" data-emp="${escapeHTML(r.name)}" role="button" tabindex="0" style="display:flex;align-items:center;gap:.6rem;padding:.5rem 0;border-bottom:1px solid ${risk?'rgba(196,112,104,.18)':'var(--line)'};cursor:pointer">
       <div style="width:26px;height:26px;border-radius:50%;overflow:hidden;flex-shrink:0">${renderSmallAvatar(r.name,26)}</div>
       <div style="flex:1;min-width:0">
-        <div style="font-size:.8rem;color:var(--parchment);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${risk?'⚠ ':''}${r.name}</div>
+        <div style="font-size:.8rem;color:var(--parchment);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${risk?'⚠ ':''}${r.name} <span style="color:var(--gold);font-size:.7rem">›</span></div>
         <div style="font-family:'DM Mono',monospace;font-size:.55rem;color:var(--parch4)">${detail.join(' · ')}</div>
       </div>
       <span style="font-family:'DM Mono',monospace;font-size:.78rem;font-weight:700;color:${col};width:36px;text-align:right">${r.val}%</span>
@@ -20652,11 +20652,11 @@ function renderSupLqaStats(allEmps, empNames){
         : readiness.map((r,i)=>{
             const col=r.score>=80?'#4d8a5e':r.score>=60?'#c49a3c':'#c47068';
             const medal=i===0?'🥇':i===1?'🥈':i===2?'🥉':'';
-            return `<div style="display:flex;align-items:center;gap:.6rem;padding:.55rem 0;border-bottom:1px solid rgba(196,154,60,.08)">
+            return `<div onclick="renderSupEmployee(this.dataset.emp)" data-emp="${escapeHTML(r.name)}" role="button" tabindex="0" style="display:flex;align-items:center;gap:.6rem;padding:.55rem 0;border-bottom:1px solid rgba(196,154,60,.08);cursor:pointer">
               <span style="font-family:'DM Mono',monospace;font-size:.65rem;color:var(--parch4);width:20px">${medal||(i+1)}</span>
               <div style="width:28px;height:28px;border-radius:50%;overflow:hidden;flex-shrink:0">${renderSmallAvatar(r.name, 28)}</div>
               <div style="flex:1;min-width:0">
-                <div style="font-size:.82rem;color:var(--parchment);font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${r.name}</div>
+                <div style="font-size:.82rem;color:var(--parchment);font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${r.name} <span style="color:var(--gold);font-size:.7rem">›</span></div>
                 <div style="font-family:'DM Mono',monospace;font-size:.55rem;color:var(--parch4)">${r.runs} ${LANG==='en'?'runs':'intentos'} · E:${r.e.lqaExamBest||'—'} · S:${r.e.lqaSituationBest||'—'} · P:${r.e.lqaAuditBest||'—'} · F:${r.e.ghostBest||'—'}</div>
                 ${(()=>{ const wc=empWeakCat(r.e); return wc?`<div style="font-family:'DM Mono',monospace;font-size:.55rem;color:var(--rose)">${LANG==='en'?'weakest':'más flojo'}: ${wc.cat.icon} ${LANG==='en'?wc.cat.title_en:wc.cat.title}</div>`:''; })()}
               </div>
@@ -20680,6 +20680,107 @@ function renderSupLqaStats(allEmps, empNames){
       <div style="font-family:'DM Mono',monospace;font-size:.55rem;color:var(--parch3);letter-spacing:.12em;text-transform:uppercase;margin-bottom:.6rem">📊 ${LANG==='en'?'What the Readiness Index means':'Qué significa el Índice'}</div>
       <div style="font-size:.78rem;color:var(--parch2);line-height:1.6">${LANG==='en'?'A weighted average of all LQA training modes. Ghost Inspection weighs most (×2) because it mirrors a real audit; Would-It-Pass weighs ×1.5; Exam and Situations ×1. Above 75% = audit-ready. Below 55% = needs reinforcement.':'Media ponderada de todos los modos de entrenamiento LQA. La Inspección Fantasma pesa más (×2) porque refleja una auditoría real; ¿Pasaría? pesa ×1.5; Examen y Situaciones ×1. Por encima del 75% = listo para auditoría. Por debajo del 55% = necesita refuerzo.'}</div>
     </div>
+  </div>`;
+}
+
+// ═══ FICHA INDIVIDUAL DEL EMPLEADO ═══
+// Reúne en una pantalla todo lo de una persona para una conversación de
+// feedback uno a uno: alérgenos (seguridad), temas flojos, exámenes, platos
+// a repasar y preparación LQA. Se abre tocando su nombre en la analítica o
+// en el ranking LQA. Lee window._supAllEmps (poblado por renderSupDashboard).
+function renderSupEmployee(name){
+  const allEmps = window._supAllEmps || {};
+  const e = allEmps[name];
+  const c = document.getElementById('appContent');
+  if(!e){ if(typeof renderSupAnalytics==='function') renderSupAnalytics(allEmps, window._supEmpNames||Object.keys(allEmps)); return; }
+  const _en = LANG==='en';
+  const lvl = getLevelInfo(e.xp||0);
+  const certs = (typeof getCertifications==='function') ? getCertifications(e) : [];
+  const _TL = {allergens:t('topicAllergens'), ingredients:t('topicIngredients'), history:t('topicHistory')};
+
+  // Alérgenos (seguridad)
+  const ats = (e.topicScores||{}).allergens;
+  const aExam = ats && ats.total>0 ? Math.round(ats.correct/ats.total*100) : null;
+  const aDrill = (e.allergenBest!=null && e.allergenBest>0) ? e.allergenBest : null;
+  const aVal = aExam!=null ? aExam : aDrill;
+  const aRisk = aVal!=null && aVal<80;
+
+  // Por tema
+  const topicBars = Object.keys(_TL).map(k=>{
+    const v=(e.topicScores||{})[k];
+    if(!v || !v.total) return '';
+    const pct=Math.round(v.correct/v.total*100);
+    const col=pct>=80?'var(--sage)':pct>=50?'var(--gold)':'var(--rose)';
+    return `<div style="display:flex;align-items:center;gap:.6rem;padding:.38rem 0;border-bottom:1px solid var(--line)">
+      <div style="flex:1;min-width:0"><div style="font-size:.8rem;color:var(--parchment)">${_TL[k]}</div><div style="font-family:'DM Mono',monospace;font-size:.55rem;color:var(--rose)">${v.total-v.correct} ${_en?'wrong':'fallos'} / ${v.total}</div></div>
+      <div style="width:70px;background:var(--ink3);border-radius:4px;height:6px"><div style="width:${pct}%;background:${col};border-radius:4px;height:6px"></div></div>
+      <span style="font-family:'DM Mono',monospace;font-size:.65rem;color:${col};width:30px;text-align:right">${pct}%</span>
+    </div>`;
+  }).filter(Boolean).join('');
+
+  // Exámenes
+  const ss = e.sessions||[];
+  let sC=0,sT=0,sTime=0,sTimeN=0,sBest=null;
+  ss.forEach(s=>{ sC+=s.score||0; sT+=s.total||0; if(s.time){sTime+=s.time;sTimeN++;} const p=s.total?Math.round((s.score||0)/s.total*100):0; if(sBest==null||p>sBest) sBest=p; });
+  const sAcc=sT?Math.round(sC/sT*100):null;
+  const sAvgT=sTimeN?Math.round(sTime/sTimeN):null;
+
+  // Platos: dominados y a repasar (SRS vencido, sin efectos secundarios)
+  const known=e.knownDishes||{};
+  const masteredN=DISHES.filter(d=>known[d.id]).length;
+  const srs=e.srs||{};
+  const dueDishes=DISHES.filter(d=>{ const s=srs[d.id]; return s && s.reps>0 && Date.now()>=s.nextReview; });
+  const dueList=dueDishes.slice(0,8).map(d=>escapeHTML(d.name)).join(', ');
+
+  // LQA
+  const parts=[]; if(e.lqaExamBest) parts.push({v:e.lqaExamBest,w:1}); if(e.lqaSituationBest) parts.push({v:e.lqaSituationBest,w:1}); if(e.lqaAuditBest) parts.push({v:e.lqaAuditBest,w:1.5}); if(e.ghostBest) parts.push({v:e.ghostBest,w:2});
+  const totW=parts.reduce((a,p)=>a+p.w,0);
+  const ready=totW?Math.round(parts.reduce((a,p)=>a+p.v*p.w,0)/totW):null;
+  const wcAgg={}; (e.ghostScores||[]).forEach(s=>(s.weakCats||[]).forEach(cid=>{wcAgg[cid]=(wcAgg[cid]||0)+1;}));
+  const wcTop=Object.entries(wcAgg).sort((a,b)=>b[1]-a[1])[0];
+  const wcCat=wcTop?LQA_CATEGORIES.find(x=>x.id===wcTop[0]):null;
+
+  const card=(title,inner,accent)=>`<div style="background:${accent||'linear-gradient(155deg,#faf6ee,#f0e8d8)'};border:1px solid ${accent?'rgba(196,112,104,.2)':'var(--line)'};border-radius:var(--r);padding:1rem;margin-bottom:.75rem">
+    <div style="font-family:'DM Mono',monospace;font-size:.6rem;color:${accent?'var(--rose)':'var(--gold)'};letter-spacing:.12em;text-transform:uppercase;margin-bottom:.55rem">${title}</div>${inner}</div>`;
+
+  c.innerHTML=`<div class="sup-wrap">
+    <div style="display:flex;align-items:center;gap:.75rem;margin-bottom:1rem">
+      <button onclick="renderSupAnalytics(window._supAllEmps, window._supEmpNames)" aria-label="${_en?'Back':'Volver'}" style="background:transparent;border:1.5px solid rgba(196,154,60,.55);border-radius:var(--r2);padding:.4rem .8rem;font-size:.75rem;color:var(--gold-deep);font-weight:700;cursor:pointer">←</button>
+      <div style="font-family:'Cinzel',serif;font-size:1.15rem;color:var(--parchment)">${_en?'Employee profile':'Ficha del empleado'}</div>
+    </div>
+
+    <div style="display:flex;align-items:center;gap:.85rem;background:linear-gradient(155deg,#1a2a20,#0f1d15);border:1px solid rgba(196,154,60,.25);border-radius:var(--r);padding:1rem;margin-bottom:.75rem">
+      <div style="width:52px;height:52px;border-radius:50%;overflow:hidden;flex-shrink:0">${renderSmallAvatar(name,52)}</div>
+      <div style="flex:1;min-width:0">
+        <div style="font-family:'Cinzel',serif;font-size:1.15rem;color:var(--ink)">${escapeHTML(name)} ${certs.map(x=>CAT_ICONS[x]||'').join('')}</div>
+        <div style="font-family:'DM Mono',monospace;font-size:.6rem;color:#a8c4b0;display:flex;align-items:center;gap:.3rem;margin-top:.15rem">${tunicLevelIcon(lvl.level,lvl.color,13)} ${_en?'Lv.':'Nv.'}${lvl.level} · ${(e.xp||0).toLocaleString()} XP · ${_en?'streak':'racha'} ${e.streak||0}</div>
+      </div>
+    </div>
+
+    ${aVal!=null ? card(`⚠ ${_en?'Allergens (safety)':'Alérgenos (seguridad)'}`,
+      `<div style="display:flex;align-items:center;gap:.7rem">
+        <div style="font-family:'Cinzel',serif;font-size:2rem;font-weight:700;color:${aVal>=90?'var(--sage)':aVal>=80?'var(--gold)':'var(--rose)'};line-height:1">${aVal}%</div>
+        <div style="font-family:'DM Mono',monospace;font-size:.62rem;color:var(--parch3);line-height:1.5">${aExam!=null?`${_en?'exam':'examen'} ${aExam}%${ats.total?` · ${ats.total-ats.correct} ${_en?'wrong':'fallos'}`:''}`:''}${aExam!=null&&aDrill!=null?'<br>':''}${aDrill!=null?`${_en?'drill':'simulacro'} ${aDrill}%`:''}</div>
+      </div>${aRisk?`<div style="margin-top:.5rem;font-size:.72rem;color:var(--rose)">${_en?'Reinforce allergens before service.':'Reforzar alérgenos antes del servicio.'}</div>`:''}`,
+      aRisk?'rgba(196,112,104,.06)':null) : ''}
+
+    ${topicBars ? card(_en?'By topic':'Por tema', topicBars) : ''}
+
+    ${ss.length ? card(_en?'Exams':'Exámenes',
+      `<div class="stats-row">
+        <div class="stat-tile"><div class="stat-num">${ss.length}</div><div class="stat-lbl">${_en?'Taken':'Hechos'}</div></div>
+        <div class="stat-tile"><div class="stat-num" style="color:${sAcc>=80?'var(--sage)':sAcc>=50?'var(--gold)':'var(--rose)'}">${sAcc!=null?sAcc+'%':'—'}</div><div class="stat-lbl">${_en?'Accuracy':'Precisión'}</div></div>
+        <div class="stat-tile"><div class="stat-num">${sAvgT!=null?Math.floor(sAvgT/60)+'m '+(sAvgT%60)+'s':'—'}</div><div class="stat-lbl">${_en?'Avg time':'T. medio'}</div></div>
+      </div>`) : ''}
+
+    ${card(_en?'Dishes':'Platos',
+      `<div style="font-family:'DM Mono',monospace;font-size:.7rem;color:var(--parch2);margin-bottom:${dueDishes.length?'.5rem':'0'}">${_en?'Mastered':'Dominados'}: <b style="color:var(--sage)">${masteredN}</b>/${DISHES.length} · ${_en?'due to review':'a repasar'}: <b style="color:${dueDishes.length?'var(--rose)':'var(--sage)'}">${dueDishes.length}</b></div>${dueDishes.length?`<div style="font-size:.75rem;color:var(--parch2);line-height:1.55">${_en?'Review with them':'Repasar con él/ella'}: ${dueList}${dueDishes.length>8?'…':''}</div>`:''}`)}
+
+    ${ready!=null ? card(_en?'LQA readiness':'Preparación LQA',
+      `<div style="display:flex;align-items:center;gap:.7rem;margin-bottom:.5rem">
+        <div style="font-family:'Cinzel',serif;font-size:2rem;font-weight:700;color:${ready>=75?'var(--sage)':ready>=55?'var(--gold)':'var(--rose)'};line-height:1">${ready}%</div>
+        <div style="font-family:'DM Mono',monospace;font-size:.6rem;color:var(--parch3);line-height:1.5">${_en?'Exam':'Examen'} ${e.lqaExamBest||'—'} · ${_en?'Situations':'Situac.'} ${e.lqaSituationBest||'—'}<br>${_en?'Would pass':'¿Pasaría?'} ${e.lqaAuditBest||'—'} · ${_en?'Ghost':'Fantasma'} ${e.ghostBest||'—'}</div>
+      </div>${wcCat?`<div style="font-size:.75rem;color:var(--rose)">${_en?'Weakest category':'Categoría más floja'}: ${wcCat.icon} ${_en?wcCat.title_en:wcCat.title}</div>`:''}`) : ''}
   </div>`;
 }
 

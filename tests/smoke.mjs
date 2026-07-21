@@ -841,6 +841,17 @@ test('supervisor panel: realtime employees channel + silent refresh + live pill'
     'debe existir el resumen de exámenes y la precisión por categoría de carta');
   assert(/const dishTeamCorrect=\{\}/.test(ana) && /const neverRight = DISHES\.filter/.test(ana) && /sin ningún acierto del equipo/.test(ana),
     'debe existir el punto ciego de platos sin aciertos');
+  // Ficha individual del empleado (jul 2026): tocar un nombre abre su perfil.
+  assert(/function renderSupEmployee\(name\)/.test(html), 'debe existir renderSupEmployee');
+  const emp = html.slice(html.indexOf('function renderSupEmployee(name)'), html.indexOf('function renderSupNotifSender'));
+  assert(/Ficha del empleado/.test(emp) && /Alérgenos \(seguridad\)/.test(emp) && /Preparación LQA/.test(emp) && /a repasar/.test(emp),
+    'la ficha debe reunir alérgenos, LQA y platos a repasar');
+  // el nombre en la cabecera oscura debe ir en claro (no var(--parchment) invisible)
+  assert(/font-family:'Cinzel',serif;font-size:1\.15rem;color:var\(--ink\)">\$\{escapeHTML\(name\)\}/.test(emp),
+    'el nombre en la cabecera oscura debe ir en color claro');
+  // los nombres en la analítica y el ranking LQA deben abrir la ficha
+  assert((html.match(/onclick="renderSupEmployee\(this\.dataset\.emp\)"/g) || []).length >= 3,
+    'los nombres deben ser tocables (analítica + alérgenos + ranking LQA)');
 });
 
 test('notification panel: fixed header, 44px close, mark-all-read', () => {
