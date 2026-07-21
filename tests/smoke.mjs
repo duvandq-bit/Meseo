@@ -820,6 +820,20 @@ test('supervisor panel: realtime employees channel + silent refresh + live pill'
     'the LQA Stats supervisor view (renderSupLqaStats) must be defined');
   assert(!/renderSupProtocolStats/.test(html),
     'dead renderSupProtocolStats reference must not linger (Protocolo was removed)');
+  // Analítica enriquecida (jul 2026): dónde y cuánto falla el equipo por tema,
+  // rendimiento por empleado (peor primero) y la categoría LQA más floja de
+  // cada persona.
+  const ana = html.slice(html.indexOf('function renderSupAnalytics'), html.indexOf('function renderSupLqaStats'));
+  assert(/const topicAgg = \{\}/.test(ana) && /topicScores\|\|\{\}\)\.forEach/.test(ana),
+    'la analítica debe agregar topicScores por tema');
+  assert(/Dónde falla el equipo — por tema/.test(ana) && /Where the team fails — by topic/.test(ana),
+    'debe existir la sección «Dónde falla el equipo» (ES+EN)');
+  assert(/const perEmp = empNames\.map/.test(ana) && /Rendimiento por empleado/.test(ana),
+    'debe existir el rendimiento por empleado');
+  assert(/wrong':'fallos'/.test(ana), 'la analítica debe mostrar el número de fallos');
+  const lqaFn = html.slice(html.indexOf('function renderSupLqaStats'), html.indexOf('function renderSupNotifSender'));
+  assert(/const empWeakCat=\(e\)=>/.test(lqaFn) && /empWeakCat\(r\.e\)/.test(lqaFn),
+    'la vista LQA debe mostrar la categoría más floja de cada empleado');
 });
 
 test('notification panel: fixed header, 44px close, mark-all-read', () => {
