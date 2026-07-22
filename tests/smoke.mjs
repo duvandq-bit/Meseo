@@ -4056,7 +4056,11 @@ test('resiliencia: outbox de sincronización (no se pierden datos con mal WiFi)'
   assert(/window\.addEventListener\('online', \(\) => setTimeout\(_outboxFlush/.test(html), 'el outbox debe reintentar al volver la conexión');
   assert(/setInterval\(_outboxFlush, 120000\)/.test(html), 'el outbox debe reintentar periódicamente');
   // El chip refleja "pendiente" sin pisar el estado offline
-  assert(/state==='pending'/.test(html), 'el indicador debe tener estado «pendiente»');
+  // El chip de sincronización es SILENCIOSO: solo se muestra 'offline'; los
+  // estados de sincronizando/guardando/sincronizado ya no molestan al usuario.
+  const pill = html.slice(html.indexOf('function _setSyncPill'), html.indexOf('function _updateOnlineStatus'));
+  assert(/if\(state==='offline'\)\{/.test(pill) && !/pill\.classList\.add\('synced','visible'\)/.test(pill) && !/'Sincronizando…'/.test(pill),
+    'el chip solo debe mostrarse offline (sin avisos de sincronizando/guardado/sincronizado)');
 });
 
 test('resiliencia: guardia anti-duplicados en el alta', () => {
