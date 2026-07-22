@@ -4077,6 +4077,78 @@ test('resiliencia: guardia anti-duplicados en el alta', () => {
     'al crear cuenta, un nombre muy parecido debe ofrecer entrar en el perfil existente');
 });
 
+test('telemetría Fase 1: captura local-first (track + opt-out + IndexedDB + retención)', () => {
+  // El módulo de captura debe existir con su sobre común versionado.
+  assert(/const TELEMETRY_V = 1;/.test(html), 'debe existir la versión del esquema de telemetría');
+  assert(/function track\(name, props\)\{/.test(html), 'debe existir la API pública track()');
+  assert(/const _TM_STORE = 'events';/.test(html) && /indexedDB\.open\(_TM_DB_NAME, 1\)/.test(html),
+    'los eventos deben persistir en un store IndexedDB');
+  assert(/const _TM_MAX_AGE_DAYS = 30;/.test(html) && /function _tmPurgeOld\(\)/.test(html),
+    'debe haber retención rodante de 30 días (RGPD)');
+  assert(/function _telemetryOn\(\)/.test(html) && /function _telemetrySetOptOut\(off\)/.test(html) && /function _tmPurgeAll\(\)/.test(html),
+    'opt-out y purga total (derecho de borrado) deben existir');
+  // Flush en tiempo idle, no bloqueante.
+  assert(/requestIdleCallback\(run, \{ timeout:2000 \}\)/.test(html), 'el flush debe ir en tiempo idle');
+
+  // Los 7 eventos del núcleo deben estar instrumentados en sus sitios reales.
+  assert(/track\('tab\.switch', \{ to: tab, from: currentTab \}\);/.test(html), 'falta tab.switch en showTab');
+  assert(/track\('exam\.answer', \{ dishId: q\.dish\.id, ok: ok\?1:0, topic: q\.topic\.key \}\);/.test(html), 'falta exam.answer');
+  assert(/track\('drill\.finish', \{ score, total: questions\.length, ms: \(time\|0\)\*1000, pct \}\);/.test(html), 'falta drill.finish');
+  assert(/track\('dish\.view', \{ dishId: dish\.id, from: 'repaso' \}\);/.test(html), 'falta dish.view');
+  assert(/track\('duel\.finish', \{ won: iWon\?1:0 \}\);/.test(html), 'falta duel.finish');
+  assert(/track\('session\.start',/.test(html) && /track\('session\.end',/.test(html), 'faltan session.start/end');
+  assert(/_tmTrackSearch\(query\.length, dishes\.length \+ wines\.length \+ lqas\.length\);/.test(html), 'falta search.query');
+
+  // PRIVACIDAD: la búsqueda NUNCA guarda el texto tecleado (solo longitud/hits).
+  const searchTrk = html.slice(html.indexOf('function _tmTrackSearch'), html.indexOf('function _tmMaybePrivacyNotice'));
+  assert(/qLen: qLen\|0, hits: hits\|0/.test(searchTrk) && !/\braw\b/.test(searchTrk),
+    'search.query solo debe registrar longitud y nº de resultados, jamás el texto');
+
+  // Ajustes › Privacidad: interruptor, contador y borrado cableados.
+  const aj = html.slice(html.indexOf('function openAjustes'), html.indexOf('function openAvatarPicker'));
+  assert(/id="ajTmToggle"/.test(aj) && /_telemetrySetOptOut\(!tog\.checked\)/.test(aj),
+    'Ajustes debe tener el interruptor de telemetría');
+  assert(/id="ajTmWipe"/.test(aj) && /_tmPurgeAll\(\)/.test(aj), 'Ajustes debe permitir borrar el comportamiento');
+
+  // ── Prueba FUNCIONAL del corazón de la captura (opt-out + buffer + no-lanza) ──
+  const mod = html.slice(html.indexOf('const TELEMETRY_V = 1;'), html.indexOf('// ═══ GUARDIA ANTI-DUPLICADOS'));
+  const store = new Map();
+  const ls = { getItem:(k)=>store.has(k)?store.get(k):null, setItem:(k,v)=>store.set(k,String(v)), removeItem:(k)=>store.delete(k) };
+  const noop = ()=>0;
+  const win = {}; // sin requestIdleCallback → usa la rama setTimeout (no-op)
+  const doc = { addEventListener: noop, visibilityState:'visible' };
+  const factory = new Function('window','document','indexedDB','localStorage','setInterval','setTimeout','requestIdleCallback',
+    mod + '\n; return { track, _telemetryOn, _telemetrySetOptOut, _buf: ()=>_tmBuf };');
+  const api = factory(win, doc, null, ls, noop, noop, noop);
+  // Por defecto activa; session.start ya se encoló al evaluar el módulo.
+  assert(api._telemetryOn() === true, 'la telemetría debe estar activa por defecto');
+  const n0 = api._buf().length;
+  api.track('test.event', { a: 1 });
+  assert(api._buf().length === n0 + 1, 'track() debe encolar un evento cuando está activa');
+  const ev = api._buf()[api._buf().length - 1];
+  assert(ev.v === 1 && ev.e === 'test.event' && typeof ev.t === 'number' && ev.p.a === 1,
+    'el sobre común (v,e,t,p) debe estar bien formado');
+  // Opt-out: deja de capturar y no lanza.
+  api._telemetrySetOptOut(true);
+  assert(api._telemetryOn() === false, 'el opt-out debe desactivar la captura');
+  const n1 = api._buf().length;
+  api.track('should.be.ignored', {});
+  assert(api._buf().length === n1, 'con opt-out, track() no debe encolar nada');
+  // Nunca lanza aunque le pasen basura.
+  api._telemetrySetOptOut(false);
+  api.track(); api.track(null); api.track('ok', undefined);
+  assert(true, 'track() nunca debe lanzar');
+  // REGRESIÓN (bug real): en el arranque, session.start se emite cuando
+  // `currentUser` aún está en la zona muerta temporal (TDZ). `typeof` sobre un
+  // binding léxico en TDZ LANZA, así que el evento se perdía en silencio. El
+  // acceso a currentUser debe ir con su propia guarda try/catch → u=null.
+  const trackFn = html.slice(html.indexOf('function track(name, props){'), html.indexOf('let _tmFlushing = false;'));
+  assert(/try\{ if\(typeof currentUser!=='undefined'\) u = currentUser \|\| null; \}catch\(_\)\{ u = null; \}/.test(trackFn),
+    'track() debe leer currentUser con guarda TDZ (no romper session.start en el arranque)');
+  assert(trackFn.indexOf('_tmBuf.push') > trackFn.indexOf('catch(_){ u = null; }'),
+    'la lectura protegida de currentUser debe preceder al push');
+});
+
 test('supervisor: "Conectados Hoy" usa lastActiveAt (además de lastLoginTs) y el login siempre sincroniza', () => {
   // Bug real (verificado con datos reales en Supabase): Alexis y Sol tenían
   // last_active_at DE HOY (el PATCH ligero de supaUpdateLastActive, que

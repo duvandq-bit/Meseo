@@ -52,7 +52,7 @@
 <meta property="og:description" content="Formación de equipos de sala: carta, alérgenos, vinos, exámenes y juegos de repaso.">
 <meta property="og:url" content="https://meseo.es/">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"Meseo","url":"https://meseo.es/"}</script>
-<meta name="app-version" content="7.301">
+<meta name="app-version" content="7.302">
 <meta name="app-build" content="May 2026">
 <meta name="theme-color" content="#1c2a22">
 <!-- ═══ PWA ═══ -->
@@ -1549,7 +1549,7 @@ const CAT_COLORS={'Entrantes':'#c49a3c','Hamburguesas y Bocatas':'#b86050','Plat
 const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#c49a3c"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#a47a2c" opacity=".4"/><path d="M8 8v4a1 1 0 001 1h1v4M10 8v4" stroke="#fff" stroke-width="1.2" stroke-linecap="round" fill="none"/><path d="M15 8v8M14 8v3a1.5 1.5 0 003 0V8" stroke="#fff" stroke-width="1.2" stroke-linecap="round" fill="none"/></svg>`,'Hamburguesas y Bocatas':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#b86050"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#983838" opacity=".4"/><path d="M7 9h10M7 12h10M7 15h10" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/><path d="M8 9c0-2 2-3 4-3s4 1 4 3M8 15c0 2 2 3 4 3s4-1 4-3" fill="none" stroke="#fff" stroke-width="1" opacity=".7"/></svg>`,'Platos Principales':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#4888a0"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#2e6878" opacity=".4"/><path d="M5 15h14" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/><path d="M12 6a6 6 0 016 6H6a6 6 0 016-6z" fill="none" stroke="#fff" stroke-width="1.1"/><circle cx="10" cy="6" r=".7" fill="#fff" opacity=".7"/><circle cx="12" cy="5" r=".7" fill="#fff" opacity=".7"/><circle cx="14" cy="6" r=".7" fill="#fff" opacity=".7"/></svg>`,'Sugerencias':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#d4aa4c"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#a48a2c" opacity=".4"/><polygon points="12,5 14.5,10 20,10.5 16,14 17,20 12,17 7,20 8,14 4,10.5 9.5,10" fill="#fff" opacity=".9"/></svg>`,'Guarniciones y Salsas':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#4d8a5e"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#2d6a3e" opacity=".4"/><path d="M12 18V10M5 10c0-4 3-6 7-6s7 2 7 6c0 5-3 8-7 8s-7-3-7-8z" fill="none" stroke="#fff" stroke-width="1.1"/><path d="M5 10c3 0 5 1 7 2.5" fill="none" stroke="#fff" stroke-width=".8" opacity=".6"/></svg>`,'Postres':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#7a6aaa"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#5a4a8a" opacity=".4"/><path d="M9 19h6M12 12v7M7 6l2 4.5a3 3 0 006 0L17 6H7z" fill="none" stroke="#fff" stroke-width="1.1" stroke-linecap="round"/></svg>`,'Vegetariano':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#5a9a6e"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#3a7a4e" opacity=".4"/><path d="M9 18h6M12 18V10M12 10c0-3 2-5 5-5-.7 2.5-2.5 5-5 5zM12 10c0-3-2-5-5-5 .7 2.5 2.5 5 5 5z" fill="none" stroke="#fff" stroke-width="1.1" stroke-linecap="round"/></svg>`};
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='7.301';  // sincronizada con sw.js VERSION (guard de CI)
+const APP_VERSION='7.302';  // sincronizada con sw.js VERSION (guard de CI)
 const APP_BUILD='Jul 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;
@@ -2153,6 +2153,180 @@ window.addEventListener('online', () => setTimeout(_outboxFlush, 800));
 document.addEventListener('visibilitychange', () => { if(document.visibilityState==='visible') _outboxFlush(); });
 setInterval(_outboxFlush, 120000);
 setTimeout(_outboxFlush, 4000);   // un intento al arrancar por si quedó algo de la sesión anterior
+
+// ═══ TELEMETRÍA DE COMPORTAMIENTO — Fase 1: solo captura ═════════════════
+// Observa CÓMO estudia cada camarero para, en fases futuras, personalizar la
+// formación (tarjeta HOY, búsqueda). LOCAL-FIRST: los eventos se guardan y se
+// agregarán en el PROPIO dispositivo (IndexedDB); a la nube NO viaja el flujo
+// bruto — solo llegará (Fase 2) un perfil resumido dentro de `extras`.
+// Esta fase NO cambia ninguna UX: únicamente empieza a observar, con un
+// opt-out real (Ajustes › Privacidad) y retención rodante de 30 días (RGPD).
+// No se captura contenido sensible: ni texto de chat/búsqueda ni credenciales.
+const TELEMETRY_V = 1;
+const _TM_OPTOUT_KEY = 'txk_tm_optout';
+const _TM_NOTICE_KEY = 'txk_tm_notice';
+const _TM_DB_NAME = 'txk_telemetry';
+const _TM_STORE = 'events';
+const _TM_MAX_AGE_DAYS = 30;
+let _tmSid = 's_' + Math.random().toString(36).slice(2, 8); // sesión efímera
+let _tmSessionStart = Date.now();
+let _tmEventCount = 0;
+let _tmBuf = [];          // buffer en memoria — no bloquea el hilo de UI
+let _tmDB = null;         // handle IndexedDB (apertura perezosa)
+let _tmDBFailed = false;
+
+// ¿Telemetría activa? Modelo opt-OUT: activa por defecto (interés legítimo de
+// formación + aviso), la desactiva solo un '1' explícito guardado por el usuario.
+function _telemetryOn(){
+  try{ return localStorage.getItem(_TM_OPTOUT_KEY) !== '1'; }catch(_){ return true; }
+}
+function _telemetrySetOptOut(off){
+  try{ localStorage.setItem(_TM_OPTOUT_KEY, off ? '1' : '0'); }catch(_){}
+  if(off) _tmPurgeAll();   // derecho de borrado: al desactivar, se purga todo
+}
+
+// Abre (o crea) la base IndexedDB perezosamente. Falla en silencio: sin IDB
+// (modo privado antiguo) la telemetría simplemente no persiste — nunca rompe.
+function _tmOpenDB(){
+  return new Promise((resolve)=>{
+    if(_tmDB) return resolve(_tmDB);
+    if(_tmDBFailed || typeof indexedDB==='undefined' || !indexedDB) return resolve(null);
+    let req;
+    try{ req = indexedDB.open(_TM_DB_NAME, 1); }catch(_){ _tmDBFailed=true; return resolve(null); }
+    req.onupgradeneeded = (e)=>{
+      const db = e.target.result;
+      if(!db.objectStoreNames.contains(_TM_STORE)){
+        const os = db.createObjectStore(_TM_STORE, { keyPath:'id', autoIncrement:true });
+        os.createIndex('t','t',{ unique:false });
+      }
+    };
+    req.onsuccess = (e)=>{ _tmDB = e.target.result; resolve(_tmDB); };
+    req.onerror = ()=>{ _tmDBFailed=true; resolve(null); };
+  });
+}
+
+// ── API PÚBLICA: único punto de entrada. Barata (push a un array) y NUNCA
+//    lanza. Respeta el opt-out. El sobre común (v,e,t,s,u,p) es interno y
+//    versionado (TELEMETRY_V): la legibilidad la da la especificación.
+function track(name, props){
+  try{
+    if(!name || !_telemetryOn()) return;
+    // `currentUser` es un binding léxico que en el arranque (p. ej. el evento
+    // session.start) aún está en la ZONA MUERTA TEMPORAL: incluso `typeof`
+    // lanza ReferenceError. Se lee con guarda propia → u=null si no está listo.
+    let u = null;
+    try{ if(typeof currentUser!=='undefined') u = currentUser || null; }catch(_){ u = null; }
+    _tmEventCount++;
+    _tmBuf.push({ v: TELEMETRY_V, e: name, t: Date.now(), s: _tmSid, u: u, p: props || {} });
+    if(_tmBuf.length >= 25) _tmFlush();
+  }catch(_){ /* la telemetría jamás debe romper la app */ }
+}
+
+// Vuelca el buffer a IndexedDB en tiempo IDLE (no compite con render/scroll).
+let _tmFlushing = false;
+function _tmFlush(){
+  if(_tmFlushing || !_tmBuf.length) return;
+  _tmFlushing = true;
+  const run = ()=>{ _tmOpenDB().then(db=>{
+    try{
+      if(!db){
+        // IndexedDB aún no lista / no disponible: NO descartar los eventos por
+        // un fallo transitorio. Se conservan para el próximo intento, con un
+        // tope para no crecer sin límite si IDB nunca llega (se sueltan los más
+        // viejos, que son los menos valiosos para el perfil).
+        if(_tmBuf.length > 500) _tmBuf.splice(0, _tmBuf.length - 500);
+        return;
+      }
+      const batch = _tmBuf.splice(0);
+      const tx = db.transaction(_TM_STORE, 'readwrite');
+      const os = tx.objectStore(_TM_STORE);
+      // Si la transacción aborta (raro), reencola el lote para no perder datos.
+      tx.onabort = ()=>{ try{ _tmBuf.unshift.apply(_tmBuf, batch); }catch(_){} };
+      batch.forEach(ev=>{ try{ os.add(ev); }catch(_){} });
+    }catch(_){ }
+    finally{ _tmFlushing = false; }
+  }).catch(()=>{ _tmFlushing=false; }); };
+  if('requestIdleCallback' in window) requestIdleCallback(run, { timeout:2000 });
+  else setTimeout(run, 200);
+}
+
+// Retención rodante (RGPD): elimina eventos más viejos que _TM_MAX_AGE_DAYS.
+function _tmPurgeOld(){
+  _tmOpenDB().then(db=>{
+    if(!db) return;
+    try{
+      const cutoff = Date.now() - _TM_MAX_AGE_DAYS*864e5;
+      const tx = db.transaction(_TM_STORE,'readwrite');
+      const range = IDBKeyRange.upperBound(cutoff);
+      const cur = tx.objectStore(_TM_STORE).index('t').openCursor(range);
+      cur.onsuccess = (e)=>{ const c=e.target.result; if(c){ try{c.delete();}catch(_){} c.continue(); } };
+    }catch(_){ }
+  });
+}
+
+// Purga TOTAL — derecho de borrado (opt-out o "borrar mi comportamiento").
+function _tmPurgeAll(){
+  _tmBuf = [];
+  _tmOpenDB().then(db=>{
+    if(!db) return;
+    try{ db.transaction(_TM_STORE,'readwrite').objectStore(_TM_STORE).clear(); }catch(_){ }
+  });
+}
+
+// Nº de eventos almacenados (para la vista "mis datos" de Ajustes › Privacidad).
+function _tmCount(){
+  return new Promise((resolve)=>{
+    _tmOpenDB().then(db=>{
+      if(!db) return resolve(0);
+      try{
+        const req = db.transaction(_TM_STORE,'readonly').objectStore(_TM_STORE).count();
+        req.onsuccess = ()=>resolve(req.result||0);
+        req.onerror = ()=>resolve(0);
+      }catch(_){ resolve(0); }
+    });
+  });
+}
+
+// Registro de búsqueda con rebote (debounce): solo longitud y nº de resultados,
+// JAMÁS el texto tecleado. Un hits:0 marca un hueco de contenido (Fase futura).
+let _tmSearchT = null;
+function _tmTrackSearch(qLen, hits){
+  if(_tmSearchT) clearTimeout(_tmSearchT);
+  _tmSearchT = setTimeout(()=>{ track('search.query', { qLen: qLen|0, hits: hits|0 }); }, 600);
+}
+
+// Aviso de privacidad único (RGPD): la primera vez informa de forma discreta
+// (no bloquea) y explica dónde desactivarlo. Se muestra una sola vez.
+function _tmMaybePrivacyNotice(){
+  try{
+    if(localStorage.getItem(_TM_NOTICE_KEY)==='1') return;
+    if(typeof showToast!=='function') return;
+    localStorage.setItem(_TM_NOTICE_KEY,'1');
+    const en = (typeof LANG!=='undefined' && LANG==='en');
+    showToast(
+      en ? 'We record anonymous learning metrics to improve your training. Turn it off anytime in Settings › Privacy.'
+         : 'Registramos métricas de aprendizaje anónimas para mejorar tu formación. Puedes desactivarlo en Ajustes › Privacidad.',
+      'info', 9000
+    );
+  }catch(_){ }
+}
+
+// ── Disparadores ─────────────────────────────────────────────────────────
+// Al OCULTAR la app (más fiable que 'unload' en móvil): cierra la sesión de
+// telemetría y vuelca. Cada 30 s como red de seguridad. La agregación a perfil
+// de arquetipos llega en la Fase 2.
+document.addEventListener('visibilitychange', ()=>{
+  if(document.visibilityState==='hidden'){
+    track('session.end', { dur: Date.now()-_tmSessionStart, events: _tmEventCount });
+    _tmFlush();
+  }
+});
+setInterval(_tmFlush, 30000);
+// Arranque: marca inicio de sesión, purga lo viejo (idle) y avisa (una vez).
+track('session.start', { hour: new Date().getHours(), dow: new Date().getDay() });
+if('requestIdleCallback' in window) requestIdleCallback(_tmPurgeOld, { timeout:6000 });
+else setTimeout(_tmPurgeOld, 3000);
+setTimeout(()=>{ if(typeof currentUser!=='undefined' && currentUser) _tmMaybePrivacyNotice(); }, 6000);
 
 // ═══ GUARDIA ANTI-DUPLICADOS ════════════════════════════════════════════
 // Evita partir los datos de una persona en varios perfiles por un nombre
@@ -8624,6 +8798,14 @@ function openAjustes(){
         <button id="ajLangEs" style="flex:1;padding:.6rem;border-radius:10px;border:1px solid rgba(196,154,60,.35);background:${LANG==='es'?'#8a5a2b':'#fff'};color:${LANG==='es'?'#fff':'#5a6a5e'};font-family:'Quicksand',sans-serif;font-weight:700;cursor:pointer">Español</button>
         <button id="ajLangEn" style="flex:1;padding:.6rem;border-radius:10px;border:1px solid rgba(196,154,60,.35);background:${LANG==='en'?'#8a5a2b':'#fff'};color:${LANG==='en'?'#fff':'#5a6a5e'};font-family:'Quicksand',sans-serif;font-weight:700;cursor:pointer">English</button>
       </div>
+      ${H(_en?'Privacy':'Privacidad')}
+      <div style="font-family:'Quicksand',sans-serif;font-size:.75rem;color:#5a6a5e;line-height:1.45;margin-bottom:.55rem">${_en?'We record anonymous learning metrics (which exercises you do, how you progress) to improve your training. Never your messages or search text. Data stays on this device and is deleted after 30 days.':'Registramos métricas de aprendizaje anónimas (qué ejercicios haces, cómo progresas) para mejorar tu formación. Nunca tus mensajes ni el texto de búsqueda. Se guardan en este dispositivo y se borran a los 30 días.'}</div>
+      <label for="ajTmToggle" style="display:flex;align-items:center;justify-content:space-between;gap:.75rem;padding:.65rem .75rem;border:1px solid rgba(196,154,60,.35);border-radius:10px;background:#fff;cursor:pointer;margin-bottom:.4rem">
+        <span style="font-family:'Quicksand',sans-serif;font-size:.82rem;font-weight:700;color:#2b2b2b">${_en?'Learning metrics':'Métricas de aprendizaje'}</span>
+        <input id="ajTmToggle" type="checkbox" style="width:20px;height:20px;accent-color:#8a5a2b;cursor:pointer" ${_telemetryOn()?'checked':''}>
+      </label>
+      <div id="ajTmCount" style="font-family:'DM Mono',monospace;font-size:.68rem;color:#8a6a2c;margin-bottom:.4rem">${_en?'Loading…':'Cargando…'}</div>
+      <button id="ajTmWipe" style="width:100%;background:transparent;border:1px solid rgba(200,60,60,.35);color:#b0432b;border-radius:10px;padding:.6rem;font-family:'Quicksand',sans-serif;font-weight:700;font-size:.78rem;cursor:pointer">${_en?'Delete my behavior data':'Borrar mis datos de comportamiento'}</button>
       <button id="ajLogout" style="width:100%;margin-top:1.3rem;background:transparent;border:1px solid rgba(200,60,60,.4);color:#c0392b;border-radius:10px;padding:.7rem;font-family:'Quicksand',sans-serif;font-weight:700;font-size:.85rem;cursor:pointer">${_en?'Log out':'Cerrar sesión'}</button>
     </div>`;
   document.body.appendChild(overlay);
@@ -8635,6 +8817,19 @@ function openAjustes(){
   $('ajLangEs').onclick = ()=>{ setLangApp('es'); overlay.remove(); openAjustes(); };
   $('ajLangEn').onclick = ()=>{ setLangApp('en'); overlay.remove(); openAjustes(); };
   $('ajLogout').onclick = ()=>{ overlay.remove(); logout(); };
+
+  // Privacidad — interruptor de telemetría, contador y borrado (RGPD)
+  const _tmRefreshCount = ()=>{ const el=$('ajTmCount'); if(!el||typeof _tmCount!=='function') return;
+    _tmCount().then(n=>{ el.textContent = _en?`${n} events stored on this device`:`${n} eventos guardados en este dispositivo`; }); };
+  if(typeof _telemetryOn==='function'){
+    _tmRefreshCount();
+    const tog=$('ajTmToggle'); if(tog) tog.onchange = ()=>{ _telemetrySetOptOut(!tog.checked); _tmRefreshCount(); };
+    const wipe=$('ajTmWipe'); if(wipe) wipe.onclick = ()=>{
+      if(!confirm(_en?'Delete all behavior data stored on this device?':'¿Borrar todos los datos de comportamiento guardados en este dispositivo?')) return;
+      _tmPurgeAll(); setTimeout(_tmRefreshCount, 200);
+      if(typeof showToast==='function') showToast(_en?'Behavior data deleted.':'Datos de comportamiento borrados.','success',3000);
+    };
+  }
 
   // Estado del correo (requiere el hash del PIN local como prueba)
   (async ()=>{
@@ -9162,6 +9357,7 @@ function showTab(tab, instant){
   if(currentTab==='supervisor' && tab!=='supervisor'){
     if(typeof _supDisconnect==='function') _supDisconnect();
   }
+  track('tab.switch', { to: tab, from: currentTab });
   currentTab=tab;
   // Track night study for achievement
   const _h = new Date().getHours();
@@ -9325,6 +9521,7 @@ function _gsRender(raw){
     .sort((a,b)=>_gsRank(a.name,first)-_gsRank(b.name,first) || (a.name>b.name?1:-1)).slice(0,40);
   const lqas = _gsLqaIndex().filter(it=>match(it.search))
     .sort((a,b)=>_gsRank(a.name,first)-_gsRank(b.name,first)).slice(0,25);
+  _tmTrackSearch(query.length, dishes.length + wines.length + lqas.length);
   if(!dishes.length && !wines.length && !lqas.length){
     box.innerHTML = '<div class="gs-empty"><svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg><div>'
       + (en?'No matches for':'Sin resultados para') + ' “' + escapeHtml(raw.trim()) + '”</div></div>';
@@ -18515,6 +18712,7 @@ function answerExam(idx){
   // aciertos, así que por sí solo no da una tasa).
   emp.examSeen=emp.examSeen||{};
   emp.examSeen[q.dish.id]=(emp.examSeen[q.dish.id]||0)+1;
+  track('exam.answer', { dishId: q.dish.id, ok: ok?1:0, topic: q.topic.key });
   if(ok){
     emp.topicScores[q.topic.key].correct++;
     emp.examCorrect=emp.examCorrect||{};
@@ -18833,6 +19031,7 @@ function _dishPairWines(dish, limit){
 function renderRepasoDishDetail(dishId){
   const dish = DISHES.find(d=>d.id===dishId);
   if(!dish){repasoView='topic';renderRepaso();return;}
+  track('dish.view', { dishId: dish.id, from: 'repaso' });
 
   const emp = getEmp(currentUser);
   const isKnown = emp && emp.knownDishes && emp.knownDishes[dish.id];
@@ -20582,6 +20781,7 @@ function renderAllergenResults() {
     if(!emp.allergenBest || pct > emp.allergenBest){ emp.allergenBest = pct; }
     saveDB();
   }
+  track('drill.finish', { score, total: questions.length, ms: (time|0)*1000, pct });
   document.getElementById('appContent').innerHTML = `<div class="sup-wrap">
     <div style="text-align:center;padding:2rem 1rem">
       <div style="font-size:3rem;margin-bottom:.5rem">${pct>=80?`<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>`:pct>=50?`<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle"><polygon points="12,2 20,7 20,17 12,22 4,17 4,7" fill="#c47068"/><polygon points="12,22 20,17 20,7 12,12" fill="#a85848" opacity=".4"/><path d="M12 8v4M12 14v.5" stroke="#fff" stroke-width="1.5" stroke-linecap="round"/></svg>`:`<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle"><polygon points="12,2 20,7 20,17 12,22 4,17 4,7" fill="#4d8a5e"/><polygon points="12,22 20,17 20,7 12,12" fill="#2d6a3e" opacity=".4"/><circle cx="12" cy="9" r="1" fill="#fff"/><path d="M12 12v4" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/></svg>`}</div>
@@ -22286,6 +22486,7 @@ async function submitDefense() {
     if(iWon){ emp.duelWins=(emp.duelWins||0)+1; emp.duelStreak=(emp.duelStreak||0)+1; }
     else if(cWins){ emp.duelStreak=0; }
     _duelStreak = emp.duelStreak||0; saveDB(); }
+  track('duel.finish', { won: iWon?1:0 });
   if(iWon && typeof launchConfetti==='function') launchConfetti(2200);
   awardXP(xpAmt, iWon ? (LANG==='en'?'Duel victory! VS':'¡Victoria en duelo! VS') : cWins ? (LANG==='en'?'Duel lost':'Duelo perdido') : (LANG==='en'?'Duel draw':'Empate en duelo'));
   // F-P1-1: a_duel_win/3/10 fire on duelWins thresholds; was previously delayed.
