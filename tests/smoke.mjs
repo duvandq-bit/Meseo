@@ -5693,6 +5693,20 @@ test('La Mesa Infinita (F1): huésped IA anclado a la fuente única + candados d
   assert(/briefing:_miS\.sc\.briefing\|\|''/.test(html), 'la ficha debe viajar al servidor');
   assert(/startMesaInfinita\(false,'hostess'\)/.test(html), 'la antesala debe ofrecer el modo Hostess');
   assert(/role:_miS\.role/.test(html), 'las llamadas deben llevar el rol');
+  // RESULTADOS → SUPERVISOR (petición del propietario): la nota de cada mesa
+  // se agrega en emp.miStats, viaja por extras.mi (merge monótono) y el panel
+  // de análisis la muestra con la seguridad de alérgenos por delante.
+  assert(/const m=_e\.miStats=_e\.miStats\|\|\{n:0,sum:0,best:0,pel:0,rsk:0,hn:0\};/.test(html),
+    'el cierre debe agregar el resultado en emp.miStats');
+  assert(/mi: emp\.miStats\|\|0/.test(html), 'extras debe transportar miStats a la nube');
+  const mrg = html.slice(html.indexOf('function _extrasMergeInto'), html.indexOf('function renderLeaderboard'));
+  assert(/x\.mi && typeof x\.mi==='object'/.test(mrg) && /Math\.max\(m\[k\]\|\|0, x\.mi\[k\]\|\|0\)/.test(mrg),
+    'el merge de extras.mi debe ser monótono');
+  assert(/miStats: \(\(\) => \{ try \{ const x=JSON\.parse\(r\.extras/.test(html),
+    'el fetch de empleados debe extraer miStats de extras');
+  const sup = html.slice(html.indexOf('function renderSupAnalytics'), html.indexOf('Ranking XP'));
+  assert(/La Mesa Infinita/.test(sup) && /_miPel/.test(sup) && /seguras en alérgenos/.test(sup),
+    'el panel de análisis debe mostrar la sección de La Mesa Infinita con la seguridad por delante');
 });
 
 // ─── 7. No leftover git conflict markers ────────────────────────
