@@ -5694,6 +5694,12 @@ test('La Mesa Infinita (F1): huésped IA anclado a la fuente única + candados d
   assert(/_MI_SURNAMES/.test(scFn2) && /briefing/.test(scFn2), 'el escenario de mesa debe generar la ficha de la hostess');
   assert(/Ficha de la hostess/.test(html), 'la ficha debe pintarse fija en el chat');
   assert(/briefing:_miS\.sc\.briefing\|\|''/.test(html), 'la ficha debe viajar al servidor');
+  // La ficha COMPLETA (petición del propietario): preguntar por alergias es
+  // obligación de la hostess → la restricción va SIEMPRE en la ficha, y a
+  // veces una preferencia (sin cerdo / sin alcohol) que el huésped respeta.
+  assert(/\$\{restr\}\$\{prefTxt\}/.test(html), 'la ficha debe incluir siempre la restricción del huésped');
+  assert(/no comen cerdo/.test(html) && /no beben alcohol/.test(html), 'la ficha debe poder llevar preferencias (sin cerdo / sin alcohol)');
+  assert(/situacion \+ lqaHook \+ prefHook/.test(html), 'el huésped debe respetar en conversación la preferencia de su ficha');
   assert(/startMesaInfinita\(false,'hostess'\)/.test(html), 'la antesala debe ofrecer el modo Hostess');
   assert(/role:_miS\.role/.test(html), 'las llamadas deben llevar el rol');
   // RESULTADOS → SUPERVISOR (petición del propietario): la nota de cada mesa
