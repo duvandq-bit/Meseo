@@ -1,6 +1,65 @@
 {
- "updated": "2026-07-23T07:44:58.147Z",
+ "updated": "2026-07-23T12:50:40.697Z",
  "items": [
+  {
+   "t": "Santa Cruz acoge una feria peruana para celebrar la gastronomía y la diversidad cultural",
+   "u": "https://www.lanocion.es/canarias/20260723/santa-cruz-acoge-una-feria-peruana-para-celebrar-l-68288.html",
+   "s": "La Noción",
+   "d": "2026-07-23T12:01:40.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://pictures.lanocion.es/2026/julio/23/1_1200wt/260723-feria-gastrocultural-peruana.jpeg"
+  },
+  {
+   "t": "Santa Cruz celebra la III Feria Gastrocultural Peruana en el parque Las Indias",
+   "u": "https://www.santacruzdetenerife.es/web/noticias-y-agenda/noticias/detalle-noticia/santa-cruz-celebra-la-iii-feria-gastrocultural-peruana-en-el-parque-las-indias",
+   "s": "Ayuntamiento de Santa Cruz de Tenerife",
+   "d": "2026-07-23T11:54:44.000Z",
+   "tags": [
+    "CANARIAS"
+   ]
+  },
+  {
+   "t": "El guachinche del sur de Tenerife donde comer cocina canaria tradicional a precios ajustados",
+   "u": "https://www.eldia.es/tenerife/2026/07/23/guachinche-sur-tenerife-comer-cocina-canaria-dv-132727097.html",
+   "s": "Eldía",
+   "d": "2026-07-23T11:08:03.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://estaticos-cdn.prensaiberica.es/clip/08b22bbe-e74c-45d1-96cf-8279e014b8d7_16-9-discover-aspect-ratio_default_0_x591y510.jpg"
+  },
+  {
+   "t": "El restaurante del hotel más pequeño del mundo abre al público: cocina canaria sobre una roca volcánica frente al Atlántico",
+   "u": "https://www.elespanol.com/mujer/20260723/restaurante-hotel-pequeno-mundo-abre-publico-cocina-canaria-roca-volcanica-frente-atlantico/1003744331384_0.amp.html",
+   "s": "El Español",
+   "d": "2026-07-23T10:33:12.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://s3.elespanol.com/k/imgp/cms/elespanol/11322071.jpg?p=f:jpeg/w:1706/h:960&h=90ATdPzb"
+  },
+  {
+   "t": "Gran Marbella Resort & Beach Club incorpora a João Silva como nuevo chef ejecutivo",
+   "u": "https://www.revistahosteleria.com/texto-diario/mostrar/5962592/gran-marbella-resort-beach-club-incorpora-joo-silva-como-nuevo-chef-ejecutivo",
+   "s": "Revista HOSTELERÍA",
+   "d": "2026-07-23T08:14:45.000Z",
+   "tags": [
+    "ALTA COCINA"
+   ],
+   "img": "https://www.revistahosteleria.com/images/showid/8074402"
+  },
+  {
+   "t": "Dos terrazas de Girona destacadas en la lista Michelin para comer mejor al aire libre",
+   "u": "https://laciutat.cat/es/laciutatdegirona/dos-terrazas-girona-destacadas-en-lista-michelin-comer-mejor-aire-libre_897072_102.html",
+   "s": "La Ciutat",
+   "d": "2026-07-23T07:31:22.000Z",
+   "tags": [
+    "MICHELIN"
+   ],
+   "img": "https://laciutat.cat/uploads/s1/42/77/96/6/terrassa-del-restaurant-castell-peralada-1.jpeg"
+  },
   {
    "t": "Así es el nuevo centro comercial de Tenerife: más de 30 tiendas, cine, restaurantes y 1.000 plazas de aparcamiento",
    "u": "https://www.20minutos.es/canarias/tenerife/centro-comercial-tenerife-tiendas-cine-restaurantes-plazas-aparcamiento_7017878_0.html",
@@ -25,7 +84,7 @@
    "t": "La alta cocina se sube al Gran Premio de Fórmula 1 de Madrid",
    "u": "https://sivarious.com/proveedores/la-alta-cocina-se-sube-al-gran-premio-de-formula-1-de-madrid-20260723-0522/",
    "s": "Sivarious",
-   "d": "2026-07-23T03:23:15.000Z",
+   "d": "2026-07-23T03:44:16.000Z",
    "tags": [
     "ALTA COCINA"
    ]
@@ -34,7 +93,7 @@
    "t": "Olas de calor redefinen las preferencias turísticas hacia España",
    "u": "http://www.pulsoturistico.com.ar/mas_informacion.asp?id",
    "s": "Pulso Turístico",
-   "d": "2026-07-23T03:02:28.000Z",
+   "d": "2026-07-23T03:33:00.000Z",
    "tags": [
     "MICHELIN"
    ]
@@ -104,7 +163,7 @@
   },
   {
    "t": "Los Realejos celebra la gran fiesta de la papa bonita, joya agrícola llegada desde Perú",
-   "u": "https://www.eldia.es/tenerife/2026/07/22/realejos-celebra-gran-fiesta-papa-132712466.amp.html",
+   "u": "https://www.eldia.es/tenerife/2026/07/22/realejos-celebra-gran-fiesta-papa-132712466.html",
    "s": "Eldía",
    "d": "2026-07-22T18:19:39.000Z",
    "tags": [
@@ -121,6 +180,16 @@
     "CANARIAS"
    ],
    "img": "https://s3-eu-west-1.amazonaws.com/beta.lagenda/images/vilaflor-late-2026.jpg"
+  },
+  {
+   "t": "Arrugadas, sancochadas o fritas: así se eligen las mejores papas de Gran Canaria",
+   "u": "https://www.canarias7.es/gastronomia-c7/arrugadas-sancochadas-fritas-eligen-mejores-papas-gran-20260722182717-nt.html",
+   "s": "Canarias7",
+   "d": "2026-07-22T17:27:17.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://s2.ppllstatics.com/canarias7/www/multimedia/gastronomia-c7/2026/07/22/visual-km6-U30960187187l8-1200x840@Canarias7.jpg"
   },
   {
    "t": "The Ritz-Carlton Tenerife, Abama acogerá el 7 de agosto el evento gastronómico Akira Back Chef Battle",
@@ -195,7 +264,7 @@
   },
   {
    "t": "El bar italiano de Tenerife que conquista con sus desayunos: sirve uno de los mejores cappuccinos de la isla",
-   "u": "https://www.eldia.es/tenerife/2026/07/22/bar-italiano-tenerife-conquista-desayunos-dv-132695521.amp.html",
+   "u": "https://www.eldia.es/tenerife/2026/07/22/bar-italiano-tenerife-conquista-desayunos-dv-132695521.html",
    "s": "Eldía",
    "d": "2026-07-22T12:31:00.000Z",
    "tags": [
@@ -232,76 +301,6 @@
     "CANARIAS"
    ],
    "img": "https://estaticos-cdn.prensaiberica.es/clip/55d6a069-b418-41d0-807d-9e8d691a7626_16-9-discover-aspect-ratio_default_0_x351y155.jpg"
-  },
-  {
-   "t": "La alta cocina echa anclas en Marbella: João Silva y su alta costura del sabor mediterráneo",
-   "u": "https://forbes.es/ultima-hora/985050/la-alta-cocina-echa-anclas-en-marbella-joao-silva-y-su-alta-costura-del-sabor-mediterraneo/",
-   "s": "Forbes España",
-   "d": "2026-07-22T11:57:24.000Z",
-   "tags": [
-    "ALTA COCINA"
-   ],
-   "img": "https://forbes.es/wp-content/uploads/2026/07/fotonoticia_20260722135724_1920-1200x675.jpg"
-  },
-  {
-   "t": "Ley antitabaco: empresarios de Tenerife piden que \"cada uno\" pueda elegir \"si quieren o no",
-   "u": "https://diariodeavisos.elespanol.com/2026/07/ley-antitabaco-empresarios-tenerife-piden-fumadores-en-terrazas/",
-   "s": "Diario de Avisos",
-   "d": "2026-07-22T11:39:23.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://cdn.diariodeavisos.com/wp-content/uploads/2026/07/EuropaPress_6949150_persona_fuma_terraza_12_septiembre_2025_madrid_espana_anteproyecto_ley.jpg"
-  },
-  {
-   "t": "Tenerife más allá de los imprescindibles: una forma diferente de descubrir la isla",
-   "u": "https://www.hola.com/viajes/20260722912983/tenerife-mas-alla-de-los-imprescindibles-una-forma-diferente-de-descubrir-la-isla/",
-   "s": "HOLA",
-   "d": "2026-07-22T10:44:33.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://www.hola.com/horizon/landscape/f47b9c69e55a-parque-rural-de-anaga-2-1.jpg?im=Resize=(1200)"
-  },
-  {
-   "t": "¿Puede un chef con estrella Michelin firmar un poke para el gran público sin renunciar a su identidad? Ricardo Sanz cree que sí",
-   "u": "https://foodandwineespanol.com/gastronomia/chefs/puede-un-chef-con-estrella-michelin-firmar-un-poke-para-el-gran-publico-sin-renunciar-a-su-identidad-ricardo-sanz-cree-que-si/",
-   "s": "Food & Wine en Español",
-   "d": "2026-07-22T10:19:34.000Z",
-   "tags": [
-    "ALTA COCINA",
-    "MICHELIN"
-   ],
-   "img": "https://foodandwineespanol.com/wp-content/uploads/2026/07/RICARDO-SANZ-X-HEALTHY-POKE_CHEF-Y-JUAN-URIBE-PRESENTAN.webp"
-  },
-  {
-   "t": "El Manantial de Murcia, entre las 50 mejores terrazas de España según el ranking TheFork 2026",
-   "u": "https://lasgastrocronicas.com/el-manantial-de-murcia-entre-las-50-mejores-terrazas-de-espana-segun-el-ranking-thefork-2026/",
-   "s": "Las Gastrocrónicas",
-   "d": "2026-07-22T10:00:15.000Z",
-   "tags": [
-    "MICHELIN"
-   ]
-  },
-  {
-   "t": "Adiós al chef Paco Ron, referente de la Nueva Cocina Asturiana",
-   "u": "https://www.lavanguardia.com/comer/al-dia/20260722/11598420/adios-chef-paco-ron-referente-nueva-cocina-asturiana.amp.html",
-   "s": "La Vanguardia",
-   "d": "2026-07-22T09:55:59.000Z",
-   "tags": [
-    "ALTA COCINA"
-   ],
-   "img": "https://www.lavanguardia.com/files/og_thumbnail/uploads/2026/07/22/6a60932fccb83.jpeg"
-  },
-  {
-   "t": "Apertura confirmada: el nuevo centro comercial de 18.000 m² de Tenerife ya tiene fecha de apertura y estas son todas...",
-   "u": "https://www.atlanticohoy.com/empresas/centro-comercial-18000-m2-tenerife-fecha-apertura-listado-tiendas_1564578_102_amp.html",
-   "s": "Atlántico Hoy",
-   "d": "2026-07-22T09:39:00.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://www.atlanticohoy.com/uploads/s1/37/49/97/6/imagen-del-centro-comercial-la-gran-manzana-de-tenerife-que-se-inaugura-este-jueves-montaje-ah.webp"
   }
  ]
 }
