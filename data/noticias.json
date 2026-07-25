@@ -1,6 +1,76 @@
 {
- "updated": "2026-07-25T12:10:59.291Z",
+ "updated": "2026-07-25T18:10:21.920Z",
  "items": [
+  {
+   "t": "Santa Cruz de Tenerife se viste de Perú por un día",
+   "u": "https://lavozcanaria.com/tenerife/general/santa-cruz-de-tenerife-se-viste-de-peru-por-un-dia",
+   "s": "La Voz Canaria",
+   "d": "2026-07-25T16:56:30.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://lavozcanaria.com/media/2026/07/santa-cruz-de-tenerife-se-viste-de-peru-por-un-dia.webp"
+  },
+  {
+   "t": "Estos son los 5 mejores restaurantes de Terrassa, según Tripadvisor: \"Marisco y arroces espectaculares\"",
+   "u": "https://www.elperiodico.com/es/gastronomia/20260725/terrassa-mejores-restaurantes-dv-loc-107419213",
+   "s": "El Periódico",
+   "d": "2026-07-25T16:40:30.000Z",
+   "tags": [
+    "MICHELIN"
+   ],
+   "img": "https://estaticos-cdn.prensaiberica.es/clip/065c07bf-f07c-49f1-8d41-c9e7f1658ab1_16-9-discover-aspect-ratio_default_0.jpg"
+  },
+  {
+   "t": "Ingenio 'se chupa los dedos' con las comidas interculturales de su Festival de Folclore",
+   "u": "https://www.canarias7.es/cultura/musica/ingenio-chupa-dedos-comidas-interculturales-festival-folclore-20260725171245-nt_amp.html",
+   "s": "Canarias7",
+   "d": "2026-07-25T16:12:45.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://s1.ppllstatics.com/canarias7/www/multimedia/cultura/2026/07/25/comidas-ingenio1.jpg"
+  },
+  {
+   "t": "Santa Cruz se transforma en Lima durante seis horas",
+   "u": "https://www.eldia.es/tenerife/2026/07/25/santa-cruz-transforma-lima-durante-132773989.amp.html",
+   "s": "Eldía",
+   "d": "2026-07-25T16:08:02.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://estaticos-cdn.prensaiberica.es/clip/0f1a97d7-3c1c-4385-9ef6-1577bb114c2b_16-9-discover-aspect-ratio_default_0_x900y399.jpg"
+  },
+  {
+   "t": "XII Muestra Gastronómica de la Papa Bonita en Tenerife",
+   "u": "https://www.eldia.es/videos/tenerife/2026/07/25/xii-muestra-gastronomica-papa-bonita-132803826.html",
+   "s": "Eldía",
+   "d": "2026-07-25T14:19:46.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://estaticos-cdn.prensaiberica.es/clip/6bcec403-7fc9-47b9-a10e-d57a348a31ad_16-9-aspect-ratio_default_0_x900y399.jpg"
+  },
+  {
+   "t": "XII Muestra Gastronómica de la Papa Bonita",
+   "u": "https://www.eldia.es/tenerife/2026/07/25/xii-muestra-gastronomica-papa-bonita-132803789.html",
+   "s": "Eldía",
+   "d": "2026-07-25T14:12:36.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://estaticos-cdn.prensaiberica.es/clip/2447b535-0bc8-498e-a461-650e30d3a085_media-libre-aspect-ratio_default_0_x900y399.jpg"
+  },
+  {
+   "t": "La Policía clausura un restaurante de Mallorca donde malvivían 15 personas que trabajan 13 horas sin días libres",
+   "u": "https://www.laprovincia.es/sucesos/2026/07/25/policia-clausura-restaurante-mallorca-explotacion-laboral-132801711.html",
+   "s": "La Provincia",
+   "d": "2026-07-25T12:08:26.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://estaticos-cdn.prensaiberica.es/clip/fc031d59-1417-461d-9507-56c76590f8a7_16-9-discover-aspect-ratio_default_0_x1024y512.jpg"
+  },
   {
    "t": "Los 8 mejores vinos de las Islas Canarias según el experto Santi Rivas",
    "u": "https://www.esquire.com/es/donde-comer-beber/a71451775/mejores-vinos-islas-canarias-santi-rivas/",
@@ -65,13 +135,13 @@
   },
   {
    "t": "Famtàstic ‘marida’ el eclipse solar desde Tenerife",
-   "u": "https://diariodeavisos.elespanol.com/2026/07/famtastic-marida-el-eclipse-solar-desde-tenerife/",
+   "u": "https://diariodeavisos.elespanol.com/2026/07/famtastic-marida-el-eclipse-solar-desde-tenerife/amp/",
    "s": "Diario de Avisos",
    "d": "2026-07-24T23:00:00.000Z",
    "tags": [
     "CANARIAS"
    ],
-   "img": "https://cdn.diariodeavisos.com/wp-content/uploads/2026/07/Pagina-44-Cada-una-de-las-actividades-gira-en-torno-a-la-superficie-del-sol-ocultada-por-la-luna.jpg"
+   "img": "https://diariodeavisos.elespanol.com/wp-content/uploads/2026/07/Pagina-44-Cada-una-de-las-actividades-gira-en-torno-a-la-superficie-del-sol-ocultada-por-la-luna.jpg"
   },
   {
    "t": "Padylla (25/07/26)",
@@ -82,6 +152,16 @@
     "CANARIAS"
    ],
    "img": "https://estaticos-cdn.prensaiberica.es/clip/beceaed1-08b6-4df8-839e-61150b7ad1ff_16-9-aspect-ratio_default_0.jpg"
+  },
+  {
+   "t": "La Ruta del Gen Explorador en Tenerife: la cara más auténtica de la isla de la eterna primavera",
+   "u": "https://amp.elmundo.es/viajes/espana/2026/07/25/6a5604eefc6c83703a8b458a.html",
+   "s": "El Mundo",
+   "d": "2026-07-24T22:12:00.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://e01-phantom-elmundo.uecdn.es/dc489bc928a650b603a3747ba357cf18/resize/1200/f/webp/assets/multimedia/imagenes/2026/07/14/17840231427343.jpg"
   },
   {
    "t": "Socarrat Fest ya tiene todos los ingredientes para la gran fiesta del arroz en Maspalomas",
@@ -224,87 +304,6 @@
     "CANARIAS"
    ],
    "img": "https://estaticos-cdn.prensaiberica.es/clip/deb7e0c8-9129-4055-b394-f4a3d4b4543d_16-9-discover-aspect-ratio_default_0_x620y342.jpg"
-  },
-  {
-   "t": "Cuando los grandes chefs hablan de esta pizza",
-   "u": "https://zizurardoi.com/zizur-ardoi/407679/cuando-los-grandes-chefs-hablan-de-esta-pizza",
-   "s": "Zizur Ardoi",
-   "d": "2026-07-24T10:20:32.000Z",
-   "tags": [
-    "ALTA COCINA"
-   ],
-   "img": "https://comunikazemedia.b-cdn.net/articulos/articulos-589148.jpg"
-  },
-  {
-   "t": "Ceviches, causas y ají de gallina: la propuesta culinaria de la III Feria Peruana en Tenerife",
-   "u": "https://www.eldia.es/santa-cruz-de-tenerife/2026/07/24/plan-gratis-sabado-tenerife-ceviche-dv-132763837.amp.html",
-   "s": "Eldía",
-   "d": "2026-07-24T09:02:29.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://estaticos-cdn.prensaiberica.es/clip/66b31b2d-bfc7-4f2d-b119-6d70ba91cf26_16-9-discover-aspect-ratio_default_0.jpg"
-  },
-  {
-   "t": "Qué y dónde comer en Cantabria, según el chef Jesús Sánchez",
-   "u": "https://guide.michelin.com/es/es/articulo/travel/que-y-donde-comer-en-cantabria-segun-el-chef-jesus-sanchez",
-   "s": "MICHELIN Guide",
-   "d": "2026-07-24T08:17:49.000Z",
-   "tags": [
-    "MICHELIN"
-   ]
-  },
-  {
-   "t": "El restaurante de Gran Canaria que conquista con cocina canaria, carnes a la brasa y sus famosas costillas con piña",
-   "u": "https://www.laprovincia.es/gran-canaria/2026/07/24/restaurante-gran-conquista-cocina-canaria-dv-132761509.amp.html",
-   "s": "La Provincia",
-   "d": "2026-07-24T08:16:13.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://estaticos-cdn.prensaiberica.es/clip/76a21336-652b-445d-b3ca-e1ef8af8322c_16-9-discover-aspect-ratio_default_0_x589y561.jpg"
-  },
-  {
-   "t": "Los chefs vascos coinciden: \"Para que las lentejas queden perfectas, necesitas es un refrito de aceite de oliva, ajo y pimentón\"",
-   "u": "https://www.heraldo.es/noticias/gastronomia/2026/07/24/chefs-vascos-coinciden-lentejas-perfectas-necesitas-refrito-ajo-aceite-oliva-pimenton-2014325.html",
-   "s": "heraldo.es",
-   "d": "2026-07-24T08:02:39.000Z",
-   "tags": [
-    "CHEF"
-   ],
-   "img": "https://imagenes.heraldo.es/files/image_1920_1080/uploads/imagenes/2026/05/15/6a06d073405b99-34487181.jpeg"
-  },
-  {
-   "t": "Canarias estrena el supermercado asiático más grande del Archipiélago",
-   "u": "https://www.atlanticohoy.com/empresas/canarias-estrena-supermercado-asiatico-mas-grande-archipielago-con-mas-1500-productos_1564672_102.html",
-   "s": "Atlántico Hoy",
-   "d": "2026-07-24T07:50:00.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://www.atlanticohoy.com/uploads/s1/37/51/76/0/diseno-sin-titulo-2026-07-24t084725-626.webp"
-  },
-  {
-   "t": "Los chefs con Estrella Michelin coinciden: \"Para conseguir un sándwich crujiente, el ingrediente clave está en la mantequilla\"",
-   "u": "https://www.heraldo.es/noticias/gastronomia/2026/07/24/chefs-estrella-michelin-lograr-sandwich-crujiente-ingrediente-clave-mantequilla-2025857.amp.html",
-   "s": "heraldo.es",
-   "d": "2026-07-24T07:36:09.000Z",
-   "tags": [
-    "CHEF",
-    "MICHELIN"
-   ],
-   "img": "https://imagenes.heraldo.es/files/image_1920_1080/uploads/imagenes/2026/06/18/6a339c761be427-30131273.jpeg"
-  },
-  {
-   "t": "Todas las bodegas de Fuencaliente participarán en la IV Feria del Vino",
-   "u": "https://www.eldiario.es/canariasahora/lapalmaahora/municipios/fuencaliente/bodegas-fuencaliente-participaran-iv-feria-vino_1_13403668.html",
-   "s": "elDiario.es",
-   "d": "2026-07-24T07:27:30.000Z",
-   "tags": [
-    "VINO",
-    "CANARIAS"
-   ],
-   "img": "https://static.eldiario.es/clip/67190536-c662-405d-b86e-0415cb3379eb_facebook-watermarked-aspect-ratio-1200-675_default_0_x760y807.jpg"
   }
  ]
 }
