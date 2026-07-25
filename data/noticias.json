@@ -1,6 +1,47 @@
 {
- "updated": "2026-07-24T18:48:38.258Z",
+ "updated": "2026-07-25T00:16:41.538Z",
  "items": [
+  {
+   "t": "Arranca la vendimia en la Denominación de Origen Protegida Islas Canarias",
+   "u": "https://diariodeavisos.elespanol.com/2026/07/arranca-la-vendimia-en-la-denominacion-de-origen-protegida-islas-canarias/",
+   "s": "Diario de Avisos",
+   "d": "2026-07-24T23:00:00.000Z",
+   "tags": [
+    "CANARIAS",
+    "VINO"
+   ],
+   "img": "https://cdn.diariodeavisos.com/wp-content/uploads/2026/07/Vendimia-Canary-Wine_03.jpg"
+  },
+  {
+   "t": "Padylla (25/07/26)",
+   "u": "https://www.eldia.es/humor/2026/07/25/padylla-25-07-26-132788580.html",
+   "s": "Eldía",
+   "d": "2026-07-24T22:59:49.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://estaticos-cdn.prensaiberica.es/clip/beceaed1-08b6-4df8-839e-61150b7ad1ff_16-9-aspect-ratio_default_0.jpg"
+  },
+  {
+   "t": "Socarrat Fest ya tiene todos los ingredientes para la gran fiesta del arroz en Maspalomas",
+   "u": "https://www.canarias7.es/gastronomia-c7/socarrat-fest-ingredientes-gran-fiesta-arroz-maspalomas-20260724190000-nt.html",
+   "s": "Canarias7",
+   "d": "2026-07-24T17:00:00.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://s1.ppllstatics.com/canarias7/www/multimedia/gastronomia-c7/2026/07/23/socarrat1-kyz-U309806172573P-1200x840@Canarias7.jpg"
+  },
+  {
+   "t": "Los negocios inmobiliarios de Pedri: un convento en Tenerife y un hotel en Madrid",
+   "u": "https://www.elconfidencial.com/deportes/2026-07-24/negocios-inmobiliarios-pedri-convento-tenerife-hotel-madrid-1qrt_4394838/",
+   "s": "El Confidencial",
+   "d": "2026-07-24T17:00:00.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://images.ecestaticos.com/2dMCgrw4EA3s-hr5qt5A6ov1ls4=/0x0:2272x1543/600x315/filters:fill(white):format(jpg):quality(99):watermark(f.elconfidencial.com/file/65c/43d/0ca/65c43d0ca5dbd5ff8f19b44167343db9.png,0,275,1)/f.elconfidencial.com/original/ce0/4e9/d06/ce04e9d062d2a02e5d52acc9707428b9.jpg"
+  },
   {
    "t": "La cocina, ese idioma que todos hablamos: Ingenio se rinde ante el tikvenik búlgaro",
    "u": "https://www.laprovincia.es/gran-canaria/2026/07/24/cocina-idioma-hablamos-ingenio-rinde-132774559.html",
@@ -10,6 +51,15 @@
     "CANARIAS"
    ],
    "img": "https://estaticos-cdn.prensaiberica.es/clip/86b6f28e-1c7d-43e4-bb72-1eeb4916b2e6_16-9-discover-aspect-ratio_default_0_x768y341.jpg"
+  },
+  {
+   "t": "Graduado de la ESPOCH entre los 25 mejores chefs del mundo",
+   "u": "https://laprensa.com.ec/graduado-espoch-entre-25-mejores-chefs-del-mundo/",
+   "s": "La Prensa Ecuador",
+   "d": "2026-07-24T16:13:07.000Z",
+   "tags": [
+    "ALTA COCINA"
+   ]
   },
   {
    "t": "El viñedo más alto de Europa está en Tenerife: así es el pueblo que desafía a los Alpes",
@@ -239,74 +289,25 @@
    "img": "https://cdn-3.expansion.mx/dims4/default/be4f011/2147483647/strip/true/crop/784x412+0+15/resize/1200x630!/format/jpg/quality/80/?url=https%3A%2F%2Fcdn-3.expansion.mx%2Fbd%2Fc4%2F3b1f56734c039d50a28c9089ce0c%2Fthe-out-lap-experiencia-gastronomica-formula-1.png"
   },
   {
-   "t": "El restaurante de carretera definitivo está en este pueblo medieval de Madrid: Martín Berasategui confiesa su secreto mejor guardado",
-   "u": "https://www.noticiasdelvino.com/escapadas/2026/07/23/el-restaurante-de-carretera-definitivo-esta-en-este-pueblo-medieval-de-madrid-martin-berasategui-confiesa-su-secreto-mejor-guardado-74843/",
-   "s": "Noticias del Vino",
-   "d": "2026-07-23T19:11:26.000Z",
+   "t": "El Jardín de La Emperatriz 2025 llega con una producción recortada hasta un 70%",
+   "u": "https://www.vinetur.com/amp/20260723104778/el-jardin-de-la-emperatriz-2025-llega-con-una-produccion-recortada-hasta-un-70.html",
+   "s": "Vinetur",
+   "d": "2026-07-23T20:00:00.000Z",
    "tags": [
-    "CHEF"
+    "VINO",
+    "CANARIAS"
    ],
-   "img": "https://www.noticiasdelvino.com/wp-content/uploads/image-583.png"
+   "img": "https://www.vinetur.com/imagenes/2026/july/24/20260724-191519-9560.jpg"
   },
   {
-   "t": "La audaz apuesta de Martín Berasategui: cierra un estrella Michelin para abrir un restaurante de tapas",
-   "u": "https://viajes.nationalgeographic.com.es/gastronomia/audaz-apuesta-martin-berasategui-cierra-estrella-michelin-para-abrir-restaurante-tapas_25480",
-   "s": "Viajes National Geographic",
-   "d": "2026-07-23T18:00:00.000Z",
-   "tags": [
-    "CHEF",
-    "MICHELIN"
-   ]
-  },
-  {
-   "t": "Eclipse solar: el Festival Famtàstic propone una velada única en El Sauzal con cine, cocina y observación",
-   "u": "https://www.eldia.es/canarias/2026/07/23/eclipse-solar-festival-famtastic-propone-velada-sauzal-cine-cocina-observacion-132746372.html",
-   "s": "Eldía",
-   "d": "2026-07-23T17:19:20.000Z",
+   "t": "Socarrat Fest 2026: Maspalomas, sede del gran festival del arroz en Canarias",
+   "u": "https://www.eldiario.es/canariasahora/por-fogones/socarrat-fest-2026-maspalomas-sede-gran-festival-arroz-canarias_1_13403157.html",
+   "s": "elDiario.es",
+   "d": "2026-07-23T19:34:47.000Z",
    "tags": [
     "CANARIAS"
    ],
-   "img": "https://estaticos-cdn.prensaiberica.es/clip/53193506-af62-4650-8ddc-e9eb150232f5_16-9-discover-aspect-ratio_default_1489985.jpg"
-  },
-  {
-   "t": "Albert Adrià y los Hermanos Padrón miran al cielo de Tenerife en la nueva edición de Inspirational Chef Stories",
-   "u": "https://www.canarias7.es/gastronomia-c7/albert-adria-hermanos-padron-miran-cielo-tenerife-20260723190000-nt.html",
-   "s": "Canarias7",
-   "d": "2026-07-23T17:00:00.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://s2.ppllstatics.com/canarias7/www/multimedia/gastronomia-c7/2026/07/23/poster-kp2G-U30969890251RsB-1200x840@Canarias7.jpg"
-  },
-  {
-   "t": "Perú y Santa Cruz de Tenerife se van de fiesta: el parque Las Indias acogerá la tercera Feria Gastrocultural",
-   "u": "https://www.eldia.es/santa-cruz-de-tenerife/2026/07/23/peru-santa-cruz-tenerife-fiesta-132745545.amp.html",
-   "s": "Eldía",
-   "d": "2026-07-23T16:43:35.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://estaticos-cdn.prensaiberica.es/clip/097cf53b-0943-4fe4-8c0f-2546a0f4e509_16-9-discover-aspect-ratio_default_0_x458y382.jpg"
-  },
-  {
-   "t": "Tenerife suma una nueva heladería dedicada al pistacho: regala 1.000 bolas de helado por su apertura",
-   "u": "https://diariodeavisos.elespanol.com/2026/07/tenerife-heladeria-pistacho-1000-gratis/",
-   "s": "Diario de Avisos",
-   "d": "2026-07-23T16:35:33.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://cdn.diariodeavisos.com/wp-content/uploads/2026/07/heladeria-tenerife-pistachios.jpg"
-  },
-  {
-   "t": "Abre el nuevo centro comercial La Gran Manzana en Tenerife: más de 50 tiendas y restaurantes, cine",
-   "u": "https://diariodeavisos.elespanol.com/2026/07/abre-centro-comercial-la-gran-manzana-en-tenerife/",
-   "s": "Diario de Avisos",
-   "d": "2026-07-23T15:28:34.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://diariodeavisos.elespanol.com/wp-content/uploads/2026/07/09-1.jpg"
+   "img": "https://static.eldiario.es/clip/3f375f28-ba85-41ce-9614-19f4ea44a2a5_facebook-watermarked-aspect-ratio-1200-675_default_0.jpg"
   }
  ]
 }
