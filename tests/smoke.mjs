@@ -792,8 +792,12 @@ test('supervisor panel: realtime employees channel + silent refresh + live pill'
   // Reorganización (petición del propietario: "hay que deslizar mucho"):
   // 4 secciones con pestañas y fichas de empleado PLEGADAS (details/summary).
   // El estado (sección activa + fichas abiertas) sobrevive al refresco EN VIVO.
-  assert(/class="sup-seg"/.test(html) && (html.match(/_supSetSection\('/g) || []).length >= 4,
-    'segmented control with 4 sections missing');
+  assert(/class="sup-seg"/.test(html) && (html.match(/_supSetSection\('/g) || []).length >= 3,
+    'segmented control missing');
+  // Auditoría jul 2026: la pestaña Análisis abre DIRECTAMENTE la pantalla
+  // Analítica (había dos «análisis» con casi el mismo nombre).
+  assert(/data-sec="analisis" onclick="_supTool\('analitica'\)"/.test(html),
+    'la pestaña Análisis debe abrir la pantalla Analítica (puerta única)');
   for (const sec of ['hoy', 'equipo', 'analisis', 'acciones']) {
     assert(html.includes(`data-sec="${sec}"`), `section ${sec} missing`);
   }
@@ -954,7 +958,7 @@ test('panel supervisor Fase 2b: cabecera de KPIs con impacto', () => {
   assert(/Alertas seguridad/.test(band) && /Safety alerts/.test(band) && /Precisión media/.test(band),
     'las etiquetas de KPI deben ser bilingües');
   // La sección Hoy debe usar el band, no las stat-tiles viejas.
-  const dash = html.slice(html.indexOf('data-sec="hoy">'), html.indexOf('data-sec="analisis">'));
+  const dash = html.slice(html.indexOf('data-sec="hoy">'), html.indexOf('data-sec="equipo">'));
   assert(/\$\{_supKpiBand\(allEmps, empNames\)\}/.test(dash) && !/class="stats-row"/.test(dash),
     'la sección Hoy debe pintar la cabecera de KPIs en lugar de las stat-tiles pequeñas');
 });
@@ -963,8 +967,17 @@ test('panel supervisor Fase 2c: analytics KPI, tarjeta con dominio, heatmap visu
   const css = read('styles.css');
   // ── Analytics: cabecera de KPIs (no las 3 stat-tiles planas) ──
   const ana = html.slice(html.indexOf('function renderSupAnalytics'), html.indexOf('function renderSupLqaStats'));
-  assert(/class="sup-kpis"/.test(ana) && /Riesgo alérgenos/.test(ana) && /Allergen risk/.test(ana),
-    'la analítica debe abrir con una cabecera de KPIs (equipo/exámenes/precisión/riesgo)');
+  // Auditoría jul 2026: la cabecera de KPIs duplicaba la banda de «Hoy» y se
+  // retiró; la analítica abre con la actividad (heatmap + tendencia +
+  // inactivos, antes en la sección Análisis del panel).
+  assert(!/class="sup-kpis"/.test(ana) && /renderSupActivityHeatmap\(Object\.values\(allEmps\)\)/.test(ana)
+    && /renderSupScoreTrend\(Object\.values\(allEmps\)\)/.test(ana) && /Inactive 3\+ days/.test(ana),
+    'la analítica abre con la actividad del equipo, sin KPIs duplicados');
+  assert(!/Ranking XP/.test(ana), 'el Ranking XP duplicado (pestaña Ranking) no puede volver a la analítica');
+  assert((html.match(/_supTool\('analitica'\)/g)||[]).length===1,
+    'una sola puerta a la Analítica (el botón duplicado de Acciones se retiró)');
+  assert(/if\(!document\.querySelector\(`\.sup-sec\[data-sec="\$\{cur\}"\]`\)\) cur = window\._supSection = 'hoy';/.test(html),
+    'un _supSection guardado de versiones viejas no puede dejar el panel en blanco');
   assert(!/<div class="stat-tile"><div class="stat-num">\$\{empNames\.length\}<\/div><div class="stat-lbl">Empleados/.test(ana),
     'las 3 stat-tiles planas de la analítica deben haberse sustituido');
   // ── Tarjeta de empleado: barra de dominio ──
