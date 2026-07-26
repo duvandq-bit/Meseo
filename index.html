@@ -52,7 +52,7 @@
 <meta property="og:description" content="Formación de equipos de sala: carta, alérgenos, vinos, exámenes y juegos de repaso.">
 <meta property="og:url" content="https://meseo.es/">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"Meseo","url":"https://meseo.es/"}</script>
-<meta name="app-version" content="7.327">
+<meta name="app-version" content="7.328">
 <meta name="app-build" content="May 2026">
 <meta name="theme-color" content="#1c2a22">
 <!-- ═══ PWA ═══ -->
@@ -1555,7 +1555,7 @@ const CAT_COLORS={'Entrantes':'#c49a3c','Hamburguesas y Bocatas':'#b86050','Plat
 const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#c49a3c"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#a47a2c" opacity=".4"/><path d="M8 8v4a1 1 0 001 1h1v4M10 8v4" stroke="#fff" stroke-width="1.2" stroke-linecap="round" fill="none"/><path d="M15 8v8M14 8v3a1.5 1.5 0 003 0V8" stroke="#fff" stroke-width="1.2" stroke-linecap="round" fill="none"/></svg>`,'Hamburguesas y Bocatas':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#b86050"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#983838" opacity=".4"/><path d="M7 9h10M7 12h10M7 15h10" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/><path d="M8 9c0-2 2-3 4-3s4 1 4 3M8 15c0 2 2 3 4 3s4-1 4-3" fill="none" stroke="#fff" stroke-width="1" opacity=".7"/></svg>`,'Platos Principales':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#4888a0"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#2e6878" opacity=".4"/><path d="M5 15h14" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/><path d="M12 6a6 6 0 016 6H6a6 6 0 016-6z" fill="none" stroke="#fff" stroke-width="1.1"/><circle cx="10" cy="6" r=".7" fill="#fff" opacity=".7"/><circle cx="12" cy="5" r=".7" fill="#fff" opacity=".7"/><circle cx="14" cy="6" r=".7" fill="#fff" opacity=".7"/></svg>`,'Sugerencias':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#d4aa4c"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#a48a2c" opacity=".4"/><polygon points="12,5 14.5,10 20,10.5 16,14 17,20 12,17 7,20 8,14 4,10.5 9.5,10" fill="#fff" opacity=".9"/></svg>`,'Guarniciones y Salsas':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#4d8a5e"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#2d6a3e" opacity=".4"/><path d="M12 18V10M5 10c0-4 3-6 7-6s7 2 7 6c0 5-3 8-7 8s-7-3-7-8z" fill="none" stroke="#fff" stroke-width="1.1"/><path d="M5 10c3 0 5 1 7 2.5" fill="none" stroke="#fff" stroke-width=".8" opacity=".6"/></svg>`,'Postres':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#7a6aaa"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#5a4a8a" opacity=".4"/><path d="M9 19h6M12 12v7M7 6l2 4.5a3 3 0 006 0L17 6H7z" fill="none" stroke="#fff" stroke-width="1.1" stroke-linecap="round"/></svg>`,'Vegetariano':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#5a9a6e"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#3a7a4e" opacity=".4"/><path d="M9 18h6M12 18V10M12 10c0-3 2-5 5-5-.7 2.5-2.5 5-5 5zM12 10c0-3-2-5-5-5 .7 2.5 2.5 5 5 5z" fill="none" stroke="#fff" stroke-width="1.1" stroke-linecap="round"/></svg>`};
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='7.327';  // sincronizada con sw.js VERSION (guard de CI)
+const APP_VERSION='7.328';  // sincronizada con sw.js VERSION (guard de CI)
 const APP_BUILD='Jul 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;
@@ -20545,7 +20545,10 @@ function _supSetSection(s){
   _supApplySection();
 }
 function _supApplySection(){
-  const cur = window._supSection || 'hoy';
+  let cur = window._supSection || 'hoy';
+  // 'analisis' ya no es un panel embebido (abre la pantalla Analítica):
+  // un valor guardado de versiones anteriores dejaría el panel en blanco.
+  if(!document.querySelector(`.sup-sec[data-sec="${cur}"]`)) cur = window._supSection = 'hoy';
   document.querySelectorAll('.sup-sec').forEach(d=>d.classList.toggle('active', d.dataset.sec===cur));
   document.querySelectorAll('.sup-seg button').forEach(b=>{
     const on = b.dataset.sec===cur;
@@ -20793,7 +20796,10 @@ function renderSupDashboard(silent){
         <div class="sup-seg" role="tablist" aria-label="${LANG==='en'?'Supervisor sections':'Secciones del panel'}">
           <button role="tab" aria-selected="false" data-sec="hoy" onclick="_supSetSection('hoy')">${LANG==='en'?'Today':'Hoy'}</button>
           <button role="tab" aria-selected="false" data-sec="equipo" onclick="_supSetSection('equipo')">${LANG==='en'?'Team':'Equipo'}</button>
-          <button role="tab" aria-selected="false" data-sec="analisis" onclick="_supSetSection('analisis')">${LANG==='en'?'Analysis':'Análisis'}</button>
+          <!-- La pestaña Análisis abre DIRECTAMENTE la pantalla completa: había
+               dos «análisis» distintos (sección + herramienta) con casi el
+               mismo nombre — auditoría jul 2026. -->
+          <button role="tab" aria-selected="false" data-sec="analisis" onclick="_supTool('analitica')">${LANG==='en'?'Analysis':'Análisis'}</button>
           <button role="tab" aria-selected="false" data-sec="acciones" onclick="_supSetSection('acciones')">${LANG==='en'?'Actions':'Acciones'}</button>
         </div>
         <div class="sup-sec" role="tabpanel" data-sec="hoy">
@@ -20860,33 +20866,9 @@ function renderSupDashboard(silent){
           </div>`;
         })()}
         </div>
-        <div class="sup-sec" role="tabpanel" data-sec="analisis">
-        ${renderSupActivityHeatmap(Object.values(allEmps))}
-        ${renderSupScoreTrend(Object.values(allEmps))}
-        ${(()=>{
-          // Inactivity alerts — employees with 3+ days without studying
-          const inactive = empNames.filter(n => {
-            const last = allEmps[n].lastStudyDay || '';
-            if(!last) return true;
-            const diff = _daysBetween(todayStr(), last);
-            return diff >= 3;
-          });
-          if(!inactive.length) return '';
-          return `<div style="background:rgba(196,112,104,.08);border:1px solid rgba(196,112,104,.2);border-radius:var(--r2);padding:.9rem 1rem;margin-bottom:1rem">
-            <div style="font-family:'DM Mono',monospace;font-size:.6rem;color:var(--rose);letter-spacing:.12em;text-transform:uppercase;margin-bottom:.6rem">⚠ ${LANG==='en'?'Inactive 3+ days':'Sin actividad 3+ días'}</div>
-            ${inactive.map(n => {
-              const last = allEmps[n].lastStudyDay || '';
-              const diff = last ? _daysBetween(todayStr(), last) : null;
-              const label = diff===null?(LANG==='en'?'Never':'Nunca'):diff===1?(LANG==='en'?'Yesterday':'Ayer'):`${diff}d`;
-              const urgency = diff===null||diff>=7 ? 'var(--rose)' : 'var(--gold)';
-              return `<div style="display:flex;align-items:center;justify-content:space-between;padding:.35rem 0;border-bottom:1px solid rgba(196,112,104,.1)">
-                <span style="font-size:.82rem;color:var(--parchment)">${escapeHTML(n)}</span>
-                <span style="font-family:'DM Mono',monospace;font-size:.65rem;color:${urgency};font-weight:600">${label}</span>
-              </div>`;
-            }).join('')}
-          </div>`;
-        })()}
-        </div>
+        <!-- La antigua sección Análisis (actividad 14 días, tendencia,
+             inactivos) vive ahora dentro de la pantalla Analítica: un solo
+             sitio para todo el análisis (auditoría jul 2026). -->
         <div class="sup-sec" role="tabpanel" data-sec="equipo">
         <div class="section-eyebrow">${LANG==='en'?'Individual progress':'Progreso individual'}</div>
         ${cards}
@@ -20899,10 +20881,7 @@ function renderSupDashboard(silent){
               <span style="width:32px;height:32px;display:flex;align-items:center;justify-content:center;clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);background:linear-gradient(135deg,var(--gold),#a47a2c);flex-shrink:0"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.1 2.1 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></span>
               <span style="font-size:.72rem;font-weight:600;color:var(--parchment)">${LANG==='en'?'Edit menu':'Editar carta'}</span>
             </button>
-            <button onclick="_supTool('analitica')" style="display:flex;align-items:center;gap:.65rem;padding:.75rem .85rem;background:linear-gradient(155deg,#faf6ee,#f0e8d8);border:1.5px solid rgba(196,154,60,.12);border-left:3px solid #4888a0;border-radius:12px;font-family:'Quicksand',sans-serif;cursor:pointer;transition:all .2s;position:relative;overflow:hidden">
-              <span style="width:32px;height:32px;display:flex;align-items:center;justify-content:center;clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);background:linear-gradient(135deg,#4888a0,#2e6878);flex-shrink:0"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round"><path d="M18 20V10M12 20V4M6 20v-6"/></svg></span>
-              <span style="font-size:.72rem;font-weight:600;color:var(--parchment)">${LANG==='en'?'Analytics':'Analítica'}</span>
-            </button>
+            <!-- Botón Analítica retirado: duplicaba la pestaña Análisis -->
             <button onclick="_supTool('aviso')" style="display:flex;align-items:center;gap:.65rem;padding:.75rem .85rem;background:linear-gradient(155deg,#faf6ee,#f0e8d8);border:1.5px solid rgba(196,154,60,.12);border-left:3px solid #d4944c;border-radius:12px;font-family:'Quicksand',sans-serif;cursor:pointer;transition:all .2s;position:relative;overflow:hidden">
               <span style="width:32px;height:32px;display:flex;align-items:center;justify-content:center;clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);background:linear-gradient(135deg,#d4944c,#b47430);flex-shrink:0"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg></span>
               <span style="font-size:.72rem;font-weight:600;color:var(--parchment)">${LANG==='en'?'Send alert':'Enviar aviso'}</span>
@@ -21506,23 +21485,6 @@ function renderSupAnalytics(allEmps, empNames){
       ${mesaRows}` : `<div style="font-family:'Quicksand',sans-serif;font-size:.74rem;color:#8a7a5c">${LANG==='en'?'No simulated tables yet — results will appear here as the team trains.':'Aún no hay mesas simuladas — los resultados aparecerán aquí cuando el equipo entrene.'}</div>`}
     </div>`;
 
-  // Ranking XP: por XP total acumulado (de mayor a menor).
-  const sorted = empNames.slice().sort((a,b)=>(allEmps[b].xp||0)-(allEmps[a].xp||0));
-  const leaderRows = sorted.slice(0,5).map((n,i)=>{
-    const emp = allEmps[n];
-    const lvl = getLevelInfo(emp.xp||0);
-    const certs = getCertifications(emp);
-    return `<div style="display:flex;align-items:center;gap:.6rem;padding:.45rem 0;border-bottom:1px solid var(--line)">
-      <span style="font-family:'DM Mono',monospace;font-size:.7rem;color:var(--parch4);width:16px">${i+1}</span>
-      <div style="width:28px;height:28px;border-radius:50%;background:var(--ink3);border:1px solid var(--gold-a);display:flex;align-items:center;justify-content:center;font-family:'Cinzel',serif;font-size:.85rem;color:var(--gold)">${n[0].toUpperCase()}</div>
-      <div style="flex:1">
-        <div style="font-size:.8rem;color:var(--parchment)">${n} ${certs.map(c=>CAT_ICONS[c]||'').join('')}</div>
-        <div style="font-family:'DM Mono',monospace;font-size:.55rem;color:var(--parch4);display:flex;align-items:center;gap:.2rem">${tunicLevelIcon(lvl.level,lvl.color,12)} Nv.${lvl.level} · ${(emp.sessions||[]).length} exámenes</div>
-      </div>
-      <span style="font-family:'DM Mono',monospace;font-size:.7rem;color:var(--gold)">${(emp.xp||0).toLocaleString()} XP</span>
-    </div>`;
-  }).join('');
-
   // ── DÓNDE FALLA EL EQUIPO — por tema (topicScores agregados de todos) ──
   // topicScores guarda {correct,total} por tema (Alérgenos/Ingredientes/
   // Storytelling) de exámenes y flashcards. Los sumamos para ver en qué
@@ -21642,22 +21604,32 @@ function renderSupAnalytics(allEmps, empNames){
       <div style="font-family:'Cinzel',serif;font-size:1.2rem;color:var(--parchment)"> Analytics del equipo</div>
     </div>
 
+    <!-- Auditoría jul 2026: la cabecera de KPIs repetía la banda de «Hoy» —
+         eliminada. Los widgets de actividad (antes en la sección Análisis del
+         panel, que duplicaba nombre con esta pantalla) viven ahora AQUÍ: una
+         sola pestaña Análisis, una sola pantalla. -->
+    ${renderSupActivityHeatmap(Object.values(allEmps))}
+    ${renderSupScoreTrend(Object.values(allEmps))}
     ${(()=>{
-      // Cabecera de KPIs de la analítica (mismo lenguaje que el dashboard).
-      const risk = allergenRows.filter(r => r.val==null || r.val<80).length;
-      const accCls = !exN?'info':exAcc>=80?'good':exAcc>=50?'warn':'bad';
-      const IC = {
-        team:'<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>',
-        exam:'<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>',
-        acc:'<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4.5"/><circle cx="12" cy="12" r="1"/></svg>',
-        shield:'<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>'
-      };
-      const card = (cls, icon, num, lbl, sub) => `<div class="sup-kpi ${cls}"><div class="sup-kpi-top"><span class="sup-kpi-icon">${icon}</span><span class="sup-kpi-lbl">${lbl}</span></div><div class="sup-kpi-num">${num}</div><div class="sup-kpi-sub">${sub}</div></div>`;
-      return `<div class="sup-kpis">
-        ${card('info', IC.team, empNames.length, LANG==='en'?'Team':'Equipo', LANG==='en'?'total staff':'personas')}
-        ${card('info', IC.exam, totalExams, LANG==='en'?'Exams':'Exámenes', LANG==='en'?'taken in total':'realizados')}
-        ${card(accCls, IC.acc, exN?`${exAcc}<small>%</small>`:'—', LANG==='en'?'Avg accuracy':'Precisión media', exN?(LANG==='en'?'in exams':'en exámenes'):(LANG==='en'?'no exams yet':'sin exámenes'))}
-        ${card(risk?'bad':'good', IC.shield, risk, LANG==='en'?'Allergen risk':'Riesgo alérgenos', risk?(LANG==='en'?'below 80%':'por debajo de 80%'):(LANG==='en'?'all safe':'todos seguros'))}
+      // Alertas de inactividad — 3+ días sin estudiar
+      const inactive = empNames.filter(n => {
+        const last = allEmps[n].lastStudyDay || '';
+        if(!last) return true;
+        return _daysBetween(todayStr(), last) >= 3;
+      });
+      if(!inactive.length) return '';
+      return `<div style="background:rgba(196,112,104,.08);border:1px solid rgba(196,112,104,.2);border-radius:var(--r2);padding:.9rem 1rem;margin-bottom:1rem">
+        <div style="font-family:'DM Mono',monospace;font-size:.6rem;color:var(--rose);letter-spacing:.12em;text-transform:uppercase;margin-bottom:.6rem">⚠ ${LANG==='en'?'Inactive 3+ days':'Sin actividad 3+ días'}</div>
+        ${inactive.map(n => {
+          const last = allEmps[n].lastStudyDay || '';
+          const diff = last ? _daysBetween(todayStr(), last) : null;
+          const label = diff===null?(LANG==='en'?'Never':'Nunca'):diff===1?(LANG==='en'?'Yesterday':'Ayer'):`${diff}d`;
+          const urgency = diff===null||diff>=7 ? 'var(--rose)' : 'var(--gold)';
+          return `<div style="display:flex;align-items:center;justify-content:space-between;padding:.35rem 0;border-bottom:1px solid rgba(196,112,104,.1)">
+            <span style="font-size:.82rem;color:var(--parchment)">${escapeHTML(n)}</span>
+            <span style="font-family:'DM Mono',monospace;font-size:.65rem;color:${urgency};font-weight:600">${label}</span>
+          </div>`;
+        }).join('')}
       </div>`;
     })()}
 
@@ -21705,11 +21677,8 @@ function renderSupAnalytics(allEmps, empNames){
 
     ${resumenSection}
     ${mesaSection}
-
-    <div style="background:linear-gradient(155deg,#faf6ee,#f0e8d8);border:1px solid var(--line);border-radius:var(--r);padding:1rem;margin-bottom:.75rem">
-      <div style="font-family:'DM Mono',monospace;font-size:.6rem;color:var(--gold);letter-spacing:.12em;text-transform:uppercase;margin-bottom:.5rem">Ranking XP</div>
-      ${leaderRows}
-    </div>
+    <!-- La clasificación por XP total se retiró de aquí (auditoría jul 2026):
+         repetía la pestaña pública de Ranking, que todo el mundo ya ve. -->
   </div>`;
 }
 
