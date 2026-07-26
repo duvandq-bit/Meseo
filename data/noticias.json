@@ -1,9 +1,9 @@
 {
- "updated": "2026-07-26T12:18:30.290Z",
+ "updated": "2026-07-26T18:14:00.462Z",
  "items": [
   {
    "t": "Ferran Adrià, cocinero catalán: \"En España, solo hay un 5% de personas que ganan más de 60.000 euros. Al que gana 1.500, ¿qué le importa dónde hay alta cocina?\"",
-   "u": "https://www.mundodeportivo.com/foodie/20260726/1004210318/ferran-adria-cocinero-catalan-espana-hay-5-personas-ganan-60-000-euros-gana-1-500-le-importa-hay-alta-cocina-xef-dct.html",
+   "u": "https://www.mundodeportivo.com/foodie/20260726/1004210318/ferran-adria-cocinero-catalan-espana-hay-5-personas-ganan-60-000-euros-gana-1-500-le-importa-hay-alta-cocina-xef-dct.html?facet",
    "s": "Mundo Deportivo",
    "d": "2026-07-26T11:55:11.000Z",
    "tags": [
@@ -13,7 +13,7 @@
   },
   {
    "t": "Preguntan al chef Gordon Ramsay qué opina de los vinos españoles y es contundente en su respuesta: «Llevan años siendo...»",
-   "u": "https://www.abc.es/recreo/preguntan-chef-gordom-ramsay-opina-vinos-espanoles-20260726103214-nt.html",
+   "u": "https://www.abc.es/recreo/preguntan-chef-gordom-ramsay-opina-vinos-espanoles-20260726103214-nt_amp.html",
    "s": "ABC",
    "d": "2026-07-26T10:30:00.000Z",
    "tags": [
@@ -256,6 +256,16 @@
    "img": "https://s1.ppllstatics.com/canarias7/www/multimedia/gastronomia-c7/2026/07/23/apertura.jpg"
   },
   {
+   "t": "Maymanta Ibiza reafirma su alta cocina peruana y coctelería de autor",
+   "u": "https://www.diariodeibiza.es/ibiza/2026/07/25/maymanta-ibiza-reafirma-alta-cocina-bc-132785475.html",
+   "s": "Diario de Ibiza",
+   "d": "2026-07-25T04:01:05.000Z",
+   "tags": [
+    "ALTA COCINA"
+   ],
+   "img": "https://estaticos-cdn.prensaiberica.es/clip/6dd28792-19ba-497f-b260-0b14587e8f0d_16-9-aspect-ratio_default_0.jpg"
+  },
+  {
    "t": "Julio Hernández y Anna Soohyun, un cuatro manos en Akira Back en el Abama",
    "u": "https://diariodeavisos.elespanol.com/2026/07/julio-hernandez-y-anna-soohyun-un-cuatro-manos-en-akira-back-en-el-abama/",
    "s": "Diario de Avisos",
@@ -285,16 +295,6 @@
     "CANARIAS"
    ],
    "img": "https://diariodeavisos.elespanol.com/wp-content/uploads/2026/07/Pagina-44-Cada-una-de-las-actividades-gira-en-torno-a-la-superficie-del-sol-ocultada-por-la-luna.jpg"
-  },
-  {
-   "t": "Padylla (25/07/26)",
-   "u": "https://www.eldia.es/humor/2026/07/25/padylla-25-07-26-132788580.html",
-   "s": "Eldía",
-   "d": "2026-07-24T22:59:49.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://estaticos-cdn.prensaiberica.es/clip/beceaed1-08b6-4df8-839e-61150b7ad1ff_16-9-aspect-ratio_default_0.jpg"
   },
   {
    "t": "Socarrat Fest ya tiene todos los ingredientes para la gran fiesta del arroz en Maspalomas",
