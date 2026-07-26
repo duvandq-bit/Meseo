@@ -5824,8 +5824,10 @@ test('Supervisor: resumen semanal listo para compartir (liga + actividad + Clien
   // de la liga, quién entrenó, quién no, y las mesas del Cliente IA.
   const fn = html.slice(html.indexOf('function _supResumenTxt'), html.indexOf('function renderSupAnalytics'));
   assert(fn.length > 100, 'falta el generador _supResumenTxt');
-  assert(/extras&&allEmps\[n\]\.extras\.wk/.test(fn) && /wk\.k===key/.test(fn),
-    'el podio debe salir de extras.wk — la MISMA fuente que la Liga semanal');
+  assert(/wk\.k===key/.test(fn) && /e\.wkKey===key/.test(fn) && /Math\.max\(xp, e\.wkXP\|\|0\)/.test(fn),
+    'el podio debe fusionar nube (extras.wk) Y datos locales (wkKey/wkXP) — solo nube dejaba fuera al supervisor');
+  assert(/_alive/.test(fn) && /30\*86400000/.test(fn) && /roster\.filter/.test(fn),
+    '«Sin actividad» solo cuenta al equipo vivo (30 días) — los perfiles fantasma inflaban la lista');
   assert(/_wkKey\(\)/.test(fn) && /d\.setUTCDate\(d\.getUTCDate\(\)-7\)/.test(fn),
     'debe poder generar la semana en curso Y la semana cerrada (lunes por la mañana)');
   assert(/m&&m\.ld&&m\.ld>=key&&m\.ld<=end/.test(fn),
