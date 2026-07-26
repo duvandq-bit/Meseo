@@ -5818,6 +5818,28 @@ test('Horarios: la semana nueva aparece sin reabrir la app (refresco >5 min)', (
     '_horLoad debe fechar los datos tanto de caché como de red');
 });
 
+test('Supervisor: resumen semanal listo para compartir (liga + actividad + Cliente IA)', () => {
+  // Ecosistema F1 (propietario): la palanca de enganche es la visibilidad —
+  // un mensaje semanal que el supervisor reenvía por WhatsApp con el podio
+  // de la liga, quién entrenó, quién no, y las mesas del Cliente IA.
+  const fn = html.slice(html.indexOf('function _supResumenTxt'), html.indexOf('function renderSupAnalytics'));
+  assert(fn.length > 100, 'falta el generador _supResumenTxt');
+  assert(/extras&&allEmps\[n\]\.extras\.wk/.test(fn) && /wk\.k===key/.test(fn),
+    'el podio debe salir de extras.wk — la MISMA fuente que la Liga semanal');
+  assert(/_wkKey\(\)/.test(fn) && /d\.setUTCDate\(d\.getUTCDate\(\)-7\)/.test(fn),
+    'debe poder generar la semana en curso Y la semana cerrada (lunes por la mañana)');
+  assert(/m&&m\.ld&&m\.ld>=key&&m\.ld<=end/.test(fn),
+    'las mesas del Cliente IA deben filtrarse por la fecha de la última mesa dentro de la semana');
+  assert(/Sin actividad/.test(fn), 'el mensaje debe nombrar a quien no entrenó (visibilidad suave)');
+  // La sección del panel: alternador de semana + copiar + WhatsApp
+  const sec = html.slice(html.indexOf('const resumenSection'), html.indexOf('const mesaSection'));
+  assert(/window\._supResWk/.test(html) && /'prev' : 'cur'/.test(html),
+    'el lunes debe abrirse en la semana CERRADA por defecto');
+  assert(/window\._supResText/.test(sec) && /wa\.me\/\?text=/.test(sec) && /clipboard\.writeText/.test(sec),
+    'la sección debe ofrecer copiar y compartir por WhatsApp sin pelear con comillas');
+  assert(/\$\{resumenSection\}/.test(html), 'la sección debe pintarse en el panel de análisis');
+});
+
 // ─── 7. No leftover git conflict markers ────────────────────────
 console.log('\nHygiene');
 test('no git conflict markers in tracked source', () => {
