@@ -5842,6 +5842,21 @@ test('Supervisor: resumen semanal listo para compartir (liga + actividad + Clien
   assert(/\$\{resumenSection\}/.test(html), 'la sección debe pintarse en el panel de análisis');
 });
 
+test('Supervisor: «Conectados hoy» compara en hora LOCAL, no UTC', () => {
+  // Bug real (captura del propietario a las 00:11 locales): las marcas de
+  // conexión son ISO UTC y se comparaban con todayStr() (fecha local) —
+  // entre medianoche y la 01:00 en Canarias todo el equipo salía como
+  // desconectado. _supLocalDay convierte la marca a día local.
+  assert(/function _supLocalDay\(iso\)/.test(html), 'falta el conversor a día local');
+  assert(/_supLocalDay[\s\S]{0,220}timeZone:'Atlantic\/Canary'/.test(html),
+    'el conversor debe usar la MISMA zona que todayStr() (día canario), no la del navegador');
+  const sup = html.slice(html.indexOf('function _supLocalDay'), html.indexOf('function renderSupAnalytics'));
+  assert((sup.match(/_supLocalDay\(lt\)/g)||[]).length>=3,
+    'KPI y listado de Conectados Hoy deben comparar con el día local');
+  assert(!/lt\.substring\(0,10\)\s*[=!]==?\s*today/.test(sup),
+    'no puede quedar ninguna comparación de fecha UTC contra todayStr()');
+});
+
 // ─── 7. No leftover git conflict markers ────────────────────────
 console.log('\nHygiene');
 test('no git conflict markers in tracked source', () => {
