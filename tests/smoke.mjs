@@ -5801,6 +5801,23 @@ test('Cliente IA F2: modo voz en el dispositivo (Web Speech API)', () => {
     'el pulso del micro debe respetar prefers-reduced-motion');
 });
 
+test('Horarios: la semana nueva aparece sin reabrir la app (refresco >5 min)', () => {
+  // Bug real (jul 2026): el supervisor subió la semana del lunes 27 y en los
+  // móviles con la PWA ya abierta «no aparecía» — el array HORARIOS en
+  // memoria no caducaba nunca. Ahora renderHorarios refresca en silencio si
+  // los datos tienen más de 5 min y solo repinta si el cuadrante cambió.
+  assert(/let _horAt=0;/.test(html), 'falta la marca de tiempo de la carga de HORARIOS');
+  const rh = html.slice(html.indexOf('function renderHorarios()'), html.indexOf('function _horHoyHTML'));
+  assert(/Date\.now\(\)-_horAt > 5\*60000/.test(rh), 'renderHorarios debe refrescar los datos con más de 5 min');
+  assert(/_horLoad\(true\)/.test(rh) && /JSON\.stringify\(HORARIOS\)!==prev/.test(rh),
+    'el refresco es silencioso: red directa y repintado SOLO si el cuadrante cambió');
+  assert(/_horAt=Date\.now\(\);\s*\/\/ una sola petición/.test(rh),
+    'la marca se adelanta para no disparar una petición por cada re-render');
+  const hl = html.slice(html.indexOf('async function _horLoad'), html.indexOf('function _horDayISO'));
+  assert(/_horAt=new Date\(cached\.at\)\.getTime\(\)/.test(hl) && /_horAt=Date\.now\(\)/.test(hl),
+    '_horLoad debe fechar los datos tanto de caché como de red');
+});
+
 // ─── 7. No leftover git conflict markers ────────────────────────
 console.log('\nHygiene');
 test('no git conflict markers in tracked source', () => {
