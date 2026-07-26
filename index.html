@@ -52,7 +52,7 @@
 <meta property="og:description" content="Formación de equipos de sala: carta, alérgenos, vinos, exámenes y juegos de repaso.">
 <meta property="og:url" content="https://meseo.es/">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"Meseo","url":"https://meseo.es/"}</script>
-<meta name="app-version" content="7.325">
+<meta name="app-version" content="7.326">
 <meta name="app-build" content="May 2026">
 <meta name="theme-color" content="#1c2a22">
 <!-- ═══ PWA ═══ -->
@@ -1555,7 +1555,7 @@ const CAT_COLORS={'Entrantes':'#c49a3c','Hamburguesas y Bocatas':'#b86050','Plat
 const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#c49a3c"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#a47a2c" opacity=".4"/><path d="M8 8v4a1 1 0 001 1h1v4M10 8v4" stroke="#fff" stroke-width="1.2" stroke-linecap="round" fill="none"/><path d="M15 8v8M14 8v3a1.5 1.5 0 003 0V8" stroke="#fff" stroke-width="1.2" stroke-linecap="round" fill="none"/></svg>`,'Hamburguesas y Bocatas':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#b86050"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#983838" opacity=".4"/><path d="M7 9h10M7 12h10M7 15h10" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/><path d="M8 9c0-2 2-3 4-3s4 1 4 3M8 15c0 2 2 3 4 3s4-1 4-3" fill="none" stroke="#fff" stroke-width="1" opacity=".7"/></svg>`,'Platos Principales':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#4888a0"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#2e6878" opacity=".4"/><path d="M5 15h14" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/><path d="M12 6a6 6 0 016 6H6a6 6 0 016-6z" fill="none" stroke="#fff" stroke-width="1.1"/><circle cx="10" cy="6" r=".7" fill="#fff" opacity=".7"/><circle cx="12" cy="5" r=".7" fill="#fff" opacity=".7"/><circle cx="14" cy="6" r=".7" fill="#fff" opacity=".7"/></svg>`,'Sugerencias':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#d4aa4c"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#a48a2c" opacity=".4"/><polygon points="12,5 14.5,10 20,10.5 16,14 17,20 12,17 7,20 8,14 4,10.5 9.5,10" fill="#fff" opacity=".9"/></svg>`,'Guarniciones y Salsas':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#4d8a5e"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#2d6a3e" opacity=".4"/><path d="M12 18V10M5 10c0-4 3-6 7-6s7 2 7 6c0 5-3 8-7 8s-7-3-7-8z" fill="none" stroke="#fff" stroke-width="1.1"/><path d="M5 10c3 0 5 1 7 2.5" fill="none" stroke="#fff" stroke-width=".8" opacity=".6"/></svg>`,'Postres':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#7a6aaa"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#5a4a8a" opacity=".4"/><path d="M9 19h6M12 12v7M7 6l2 4.5a3 3 0 006 0L17 6H7z" fill="none" stroke="#fff" stroke-width="1.1" stroke-linecap="round"/></svg>`,'Vegetariano':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#5a9a6e"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#3a7a4e" opacity=".4"/><path d="M9 18h6M12 18V10M12 10c0-3 2-5 5-5-.7 2.5-2.5 5-5 5zM12 10c0-3-2-5-5-5 .7 2.5 2.5 5 5 5z" fill="none" stroke="#fff" stroke-width="1.1" stroke-linecap="round"/></svg>`};
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='7.325';  // sincronizada con sw.js VERSION (guard de CI)
+const APP_VERSION='7.326';  // sincronizada con sw.js VERSION (guard de CI)
 const APP_BUILD='Jul 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;
@@ -21314,12 +21314,29 @@ function _supResumenTxt(allEmps, empNames, prev){
   const key= prev ? (()=>{ const d=new Date(cur+'T12:00:00Z'); d.setUTCDate(d.getUTCDate()-7); return d.toISOString().slice(0,10); })() : cur;
   const end=(()=>{ const d=new Date(key+'T12:00:00Z'); d.setUTCDate(d.getUTCDate()+6); return d.toISOString().slice(0,10); })();
   const fmt=iso=>new Intl.DateTimeFormat(en?'en-GB':'es-ES',{day:'numeric',month:'short',timeZone:'UTC'}).format(new Date(iso+'T12:00:00Z')).replace('.','');
-  // Liga: XP semanal desde extras.wk (misma fuente que la Liga semanal)
+  // Liga: XP semanal con la MISMA fusión que la Liga semanal — nube
+  // (extras.wk) Y datos locales del dispositivo (wkKey/wkXP). Solo nube
+  // dejaba fuera al propio supervisor (bug real: «Duvan no estudió» en el
+  // resumen mientras la Liga lo ponía 3º, jul 2026).
   const wkXP={};
-  empNames.forEach(n=>{ const wk=allEmps[n].extras&&allEmps[n].extras.wk; if(wk&&wk.k===key&&(wk.xp||0)>0) wkXP[n]=wk.xp||0; });
+  empNames.forEach(n=>{
+    const e=allEmps[n];
+    let xp=0;
+    const wk=e.extras&&e.extras.wk;
+    if(wk&&wk.k===key) xp=wk.xp||0;
+    if(e.wkKey===key) xp=Math.max(xp, e.wkXP||0);
+    if(xp>0) wkXP[n]=xp;
+  });
   const podium=Object.keys(wkXP).sort((a,b)=>wkXP[b]-wkXP[a]||a.localeCompare(b));
   const medal=['🥇','🥈','🥉'];
-  const idle=empNames.filter(n=>!wkXP[n]).sort();
+  // «Sin actividad» solo cuenta al equipo VIVO (señal de vida en 30 días):
+  // los perfiles fantasma/duplicados de la tabla inflaban la lista y el
+  // divisor («Entrenaron 10/24» con media plantilla siendo perfiles viejos).
+  const _cut=Date.now()-30*86400000;
+  const _alive=n=>{ const e=allEmps[n];
+    return (Date.parse(e.lastActiveAt||'')||0)>=_cut || (Date.parse(e.lastLoginTs||'')||0)>=_cut; };
+  const roster=empNames.filter(n=>wkXP[n]||_alive(n));
+  const idle=roster.filter(n=>!wkXP[n]).sort();
   // Cliente IA: última mesa de cada empleado si cayó dentro de la semana
   const mesas=empNames.filter(n=>{ const m=allEmps[n].miStats; return m&&m.ld&&m.ld>=key&&m.ld<=end; })
     .map(n=>{ const m=allEmps[n].miStats; const ic=m.lf==='ok'?'✅':m.lf==='riesgo'?'⚠️':'🚨'; return `${n} ${m.ls}% ${ic}`; });
@@ -21329,7 +21346,7 @@ function _supResumenTxt(allEmps, empNames, prev){
     ? `🏆 ${en?'League':'Liga'}: `+podium.slice(0,3).map((n,i)=>`${medal[i]} ${n} +${wkXP[n].toLocaleString()} XP`).join(' · ')
     : `🏆 ${en?'League: nobody scored this week':'Liga: nadie puntuó esta semana'}`);
   if(podium.length>3) L.push(`👏 ${en?'Also trained':'También entrenaron'}: `+podium.slice(3).map(n=>`${n} +${wkXP[n].toLocaleString()}`).join(' · '));
-  L.push(`✅ ${en?'Trained':'Entrenaron'} (${podium.length}/${empNames.length})`+(idle.length?` · 😴 ${en?'No activity':'Sin actividad'} (${idle.length}): ${idle.join(', ')}`:''));
+  L.push(`✅ ${en?'Trained':'Entrenaron'} (${podium.length}/${roster.length})`+(idle.length?` · 😴 ${en?'No activity':'Sin actividad'} (${idle.length}): ${idle.join(', ')}`:''));
   if(mesas.length) L.push(`🍽️ ${en?'AI Guest this week':'Cliente IA esta semana'}: ${mesas.join(' · ')}`);
   return L.join('\n');
 }
