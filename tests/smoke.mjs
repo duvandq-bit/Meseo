@@ -5795,8 +5795,9 @@ test('Cliente IA F2: modo voz en el dispositivo (Web Speech API)', () => {
   assert(/replace\(\/\[\*_#`~\]\+\/g,' '\)/.test(html), 'el TTS debe limpiar los asteriscos/markdown antes de hablar');
   assert(/_miSpeakStop\(\);\s*\/\/ que el micro no se escuche a sí mismo/.test(mic),
     'antes de escuchar hay que callar al TTS (eco del propio huésped)');
-  // El huésped habla su respuesta SOLO en modo voz
-  assert(/if\(_miV\.on\) _miSpeak\(j\.text\);/.test(html), 'la respuesta del huésped debe leerse en voz alta en modo voz');
+  // El huésped habla su respuesta SOLO en modo voz (desde F3.6 la lee el
+  // revelador de burbujas, al inicio del tecleo)
+  assert(/if\(_miV\.on\) _miSpeak\(text\)/.test(html), 'la respuesta del huésped debe leerse en voz alta en modo voz');
   // Idioma de voz = idioma de la mesa (huésped inglés → voz inglesa)
   assert(/\(_miS\.lang==='en'\)\?'en-GB':'es-ES'/.test(mic), 'el micro debe transcribir en el idioma de la mesa');
   assert(/u\.lang=\(_miS&&_miS\.lang==='en'\)\?'en-GB':'es-ES'/.test(html), 'el TTS debe hablar en el idioma de la mesa');
@@ -5888,6 +5889,27 @@ test('Cliente IA F3 «mesa viva»: humor que evoluciona + imprevistos de sala', 
     'el hook debe dejar claro que el imprevisto lo saca el huésped, una sola vez');
   assert(/situacion \+ lqaHook \+ prefHook \+ vivoHook/.test(fn),
     'el humor y el imprevisto deben viajar DENTRO de la situación (el servidor los recorta a 900)');
+});
+
+test('Cliente IA F3.6: ritmo humano del chat (burbujas + tecleo, solo pantalla)', () => {
+  // El huésped "escribe": mensajes largos en 2-3 burbujas con retardo según
+  // longitud. CRÍTICO: el troceo es SOLO de pantalla — msgs guarda el texto
+  // entero de una vez (la API del modelo exige turnos alternados y dos
+  // mensajes 'guest' seguidos romperían el historial del servidor).
+  const bub = html.slice(html.indexOf('function _miBubbles'), html.indexOf('function _miFriendly'));
+  assert(/function _miBubbles\(t\)/.test(bub) && /function _miRevealGuest\(text\)/.test(bub),
+    'faltan el troceador y el revelador');
+  assert(!/\(\?<[=!]/.test(bub), 'sin lookbehind en las regex — rompe el parseo entero en iOS Safari viejo');
+  assert(/_miS\.msgs\.push\(\{role:'guest',text\}\)/.test(bub),
+    'el mensaje COMPLETO se guarda de una vez en msgs (historial del servidor intacto)');
+  assert(/if\(_miV\.on\) _miSpeak\(text\)/.test(bub), 'la voz lee el mensaje completo desde el inicio del tecleo');
+  assert(/if\(_miS\.closeQueued && !_miS\.over\)\{ _miS\.closeQueued=false; _miEnd\(\); \}/.test(bub),
+    'el cierre encolado durante el tecleo debe ejecutarse al terminar');
+  const turn = html.slice(html.indexOf('async function _miCallTurn'), html.indexOf('function _miSend'));
+  assert(/_miRevealGuest\(String\(j\.text\|\|''\)\)/.test(turn), 'el turno debe entregar la respuesta por el revelador');
+  assert(/if\(_miS\.revealing\)\{/.test(turn), 'el finally no puede cortar el tecleo (busy lo libera el reveal)');
+  assert(/escribiendo…/.test(html) && /typing…/.test(html), 'indicador «escribiendo…» mientras teclea');
+  assert(/chunks=chunks\.slice\(0,_miS\.reveal\.n\)/.test(html), 'el último mensaje se muestra por burbujas progresivas');
 });
 
 // ─── 7. No leftover git conflict markers ────────────────────────
