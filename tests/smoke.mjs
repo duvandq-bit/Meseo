@@ -5870,6 +5870,26 @@ test('Supervisor: «Conectados hoy» compara en hora LOCAL, no UTC', () => {
     'no puede quedar ninguna comparación de fecha UTC contra todayStr()');
 });
 
+test('Cliente IA F3 «mesa viva»: humor que evoluciona + imprevistos de sala', () => {
+  // Paquete de realismo (propietario jul 2026): el huésped tiene humor
+  // inicial que evoluciona, el 70% de las mesas traen un imprevisto que el
+  // huésped saca él mismo, y el acompañante puede intervenir. El servidor
+  // (mesa-infinita.ts) lleva las reglas de comportamiento; aquí se fija la
+  // generación del escenario en el cliente.
+  const fn = html.slice(html.indexOf('function _miScenario'), html.indexOf('function renderMesaLobby'));
+  assert(/_MI_HUMORES = en \?/.test(fn), 'falta el catálogo de humores inicial (ES+EN)');
+  assert((fn.match(/'con hambre|de celebración|cansado del viaje|curioso, pregunta|indeciso, le cuesta/g)||[]).length>=5,
+    'debe haber al menos 5 humores en español');
+  assert(/_MI_EVENTOS = en \?/.test(fn) && (fn.match(/\('\(|'\(justo|'\(al llegar|'\(a mitad|'\(durante|'\(en cualquier|'\(cuando/g)||[]).length>=6,
+    'debe haber al menos 6 imprevistos, cada uno con su MOMENTO entre paréntesis');
+  assert(/Math\.random\(\)<0\.7 \? _MI_EVENTOS/.test(fn),
+    'el imprevisto aparece en ~70% de las mesas (el 30% sin él mantiene la variedad)');
+  assert(/TU HUMOR INICIAL/.test(fn) && /IMPREVISTO que debes sacar tú, una sola vez/.test(fn),
+    'el hook debe dejar claro que el imprevisto lo saca el huésped, una sola vez');
+  assert(/situacion \+ lqaHook \+ prefHook \+ vivoHook/.test(fn),
+    'el humor y el imprevisto deben viajar DENTRO de la situación (el servidor los recorta a 900)');
+});
+
 // ─── 7. No leftover git conflict markers ────────────────────────
 console.log('\nHygiene');
 test('no git conflict markers in tracked source', () => {
