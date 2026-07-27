@@ -52,7 +52,7 @@
 <meta property="og:description" content="Formación de equipos de sala: carta, alérgenos, vinos, exámenes y juegos de repaso.">
 <meta property="og:url" content="https://meseo.es/">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"Meseo","url":"https://meseo.es/"}</script>
-<meta name="app-version" content="7.329">
+<meta name="app-version" content="7.330">
 <meta name="app-build" content="May 2026">
 <meta name="theme-color" content="#1c2a22">
 <!-- ═══ PWA ═══ -->
@@ -1555,7 +1555,7 @@ const CAT_COLORS={'Entrantes':'#c49a3c','Hamburguesas y Bocatas':'#b86050','Plat
 const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#c49a3c"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#a47a2c" opacity=".4"/><path d="M8 8v4a1 1 0 001 1h1v4M10 8v4" stroke="#fff" stroke-width="1.2" stroke-linecap="round" fill="none"/><path d="M15 8v8M14 8v3a1.5 1.5 0 003 0V8" stroke="#fff" stroke-width="1.2" stroke-linecap="round" fill="none"/></svg>`,'Hamburguesas y Bocatas':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#b86050"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#983838" opacity=".4"/><path d="M7 9h10M7 12h10M7 15h10" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/><path d="M8 9c0-2 2-3 4-3s4 1 4 3M8 15c0 2 2 3 4 3s4-1 4-3" fill="none" stroke="#fff" stroke-width="1" opacity=".7"/></svg>`,'Platos Principales':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#4888a0"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#2e6878" opacity=".4"/><path d="M5 15h14" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/><path d="M12 6a6 6 0 016 6H6a6 6 0 016-6z" fill="none" stroke="#fff" stroke-width="1.1"/><circle cx="10" cy="6" r=".7" fill="#fff" opacity=".7"/><circle cx="12" cy="5" r=".7" fill="#fff" opacity=".7"/><circle cx="14" cy="6" r=".7" fill="#fff" opacity=".7"/></svg>`,'Sugerencias':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#d4aa4c"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#a48a2c" opacity=".4"/><polygon points="12,5 14.5,10 20,10.5 16,14 17,20 12,17 7,20 8,14 4,10.5 9.5,10" fill="#fff" opacity=".9"/></svg>`,'Guarniciones y Salsas':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#4d8a5e"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#2d6a3e" opacity=".4"/><path d="M12 18V10M5 10c0-4 3-6 7-6s7 2 7 6c0 5-3 8-7 8s-7-3-7-8z" fill="none" stroke="#fff" stroke-width="1.1"/><path d="M5 10c3 0 5 1 7 2.5" fill="none" stroke="#fff" stroke-width=".8" opacity=".6"/></svg>`,'Postres':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#7a6aaa"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#5a4a8a" opacity=".4"/><path d="M9 19h6M12 12v7M7 6l2 4.5a3 3 0 006 0L17 6H7z" fill="none" stroke="#fff" stroke-width="1.1" stroke-linecap="round"/></svg>`,'Vegetariano':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#5a9a6e"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#3a7a4e" opacity=".4"/><path d="M9 18h6M12 18V10M12 10c0-3 2-5 5-5-.7 2.5-2.5 5-5 5zM12 10c0-3-2-5-5-5 .7 2.5 2.5 5 5 5z" fill="none" stroke="#fff" stroke-width="1.1" stroke-linecap="round"/></svg>`};
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='7.329';  // sincronizada con sw.js VERSION (guard de CI)
+const APP_VERSION='7.330';  // sincronizada con sw.js VERSION (guard de CI)
 const APP_BUILD='Jul 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;
@@ -19211,16 +19211,66 @@ function _miRenderMsgs(){
   // Ficha de la hostess: fija arriba — el camarero CONOCE al huésped (nombre,
   // pax, ocasión) antes de acercarse, como en el pase real.
   const fichaHtml=_miS.sc.briefing?`<div style="align-self:stretch;background:rgba(122,90,138,.12);border:1px dashed rgba(122,90,138,.5);border-radius:10px;padding:.5rem .7rem;font-family:'DM Mono',monospace;font-size:.68rem;color:var(--parchment)">🛎️ ${_en?'Hostess briefing':'Ficha de la hostess'}: ${escapeHTML(_miS.sc.briefing)}</div>`:'';
-  box.innerHTML=fichaHtml+_miS.msgs.map(m=> m.role==='guest'
-    ? `<div style="align-self:flex-start;max-width:85%;background:rgba(255,255,255,.08);border:1px solid var(--ink3);border-radius:14px 14px 14px 4px;padding:.6rem .8rem;font-size:.85rem;color:var(--parchment);line-height:1.45">${escapeHTML(m.text)}</div>`
-    : `<div style="align-self:flex-end;max-width:85%;background:rgba(196,154,60,.16);border:1px solid rgba(196,154,60,.4);border-radius:14px 14px 4px 14px;padding:.6rem .8rem;font-size:.85rem;color:var(--parchment);line-height:1.45">${escapeHTML(m.text)}</div>`
-  ).join('')
-  + (_miS.busy?`<div style="align-self:flex-start;font-family:'DM Mono',monospace;font-size:.7rem;color:${_miS.evaluating?'var(--gold-deep)':'var(--parch3)'};padding:.2rem .4rem">${_miS.evaluating?(_en?'🧾 the auditor is reviewing your service… (~20 s)':'🧾 el auditor está revisando tu servicio… (~20 s)'):(_en?'the guest is thinking…':'el huésped piensa…')}</div>`:'')
+  // Índice del último mensaje del huésped: durante el "tecleo" (reveal) solo
+  // se muestran sus primeras burbujas, el resto va apareciendo con retardo.
+  let lastGuestIdx=-1;
+  for(let i=_miS.msgs.length-1;i>=0;i--) if(_miS.msgs[i].role==='guest'){ lastGuestIdx=i; break; }
+  box.innerHTML=fichaHtml+_miS.msgs.map((m,i)=>{
+    if(m.role!=='guest')
+      return `<div style="align-self:flex-end;max-width:85%;background:rgba(196,154,60,.16);border:1px solid rgba(196,154,60,.4);border-radius:14px 14px 4px 14px;padding:.6rem .8rem;font-size:.85rem;color:var(--parchment);line-height:1.45">${escapeHTML(m.text)}</div>`;
+    // El huésped escribe como una persona: mensajes largos en 2-3 burbujas.
+    let chunks=_miBubbles(m.text);
+    if(_miS.reveal && i===lastGuestIdx) chunks=chunks.slice(0,_miS.reveal.n);
+    return chunks.map(c=>`<div style="align-self:flex-start;max-width:85%;background:rgba(255,255,255,.08);border:1px solid var(--ink3);border-radius:14px 14px 14px 4px;padding:.6rem .8rem;font-size:.85rem;color:var(--parchment);line-height:1.45">${escapeHTML(c)}</div>`).join('');
+  }).join('')
+  + (_miS.busy?`<div style="align-self:flex-start;font-family:'DM Mono',monospace;font-size:.7rem;color:${_miS.evaluating?'var(--gold-deep)':'var(--parch3)'};padding:.2rem .4rem">${_miS.evaluating?(_en?'🧾 the auditor is reviewing your service… (~20 s)':'🧾 el auditor está revisando tu servicio… (~20 s)'):(_miS.reveal?(_en?'✍️ typing…':'✍️ escribiendo…'):(_en?'the guest is thinking…':'el huésped piensa…'))}</div>`:'')
   + (waiterN>=_MI_MAX_WAITER&&!_miS.over?`<div style="align-self:center;font-size:.72rem;color:var(--gold-deep);padding:.3rem">${_en?'The evening winds down — close the table.':'La velada se acaba — cierra la mesa.'}</div>`:'');
   const inp=document.getElementById('miInput'), btn=document.getElementById('miSendBtn');
   const lock=_miS.busy||_miS.over||waiterN>=_MI_MAX_WAITER;
   if(inp) inp.disabled=lock; if(btn) btn.disabled=lock;
   box.scrollTop=box.scrollHeight;
+}
+
+// ── Ritmo humano del chat (F3 punto 6): el troceo en burbujas y el tecleo
+// son SOLO de pantalla — _miS.msgs guarda el mensaje entero de una vez, así
+// el historial del servidor no cambia (la API exige turnos alternados). ──
+// Sin lookbehind en las regex: rompería el parseo entero en iOS Safari viejo.
+function _miBubbles(t){
+  t=String(t||'').trim();
+  if(t.length<110) return [t];
+  const fr=t.match(/[^.!?…]+[.!?…]+["»)]*\s*/g)||[];
+  const rest=t.slice(fr.join('').length);
+  if(rest.trim()) fr.push(rest);
+  if(fr.length<2) return [t];
+  const out=[]; let cur='';
+  for(const f of fr){
+    if(cur && (cur+f).length>150 && out.length<2){ out.push(cur.trim()); cur=f; }
+    else cur+=f;
+  }
+  if(cur.trim()) out.push(cur.trim());
+  return out;
+}
+function _miRevealGuest(text){
+  if(!_miS) return;
+  _miS.msgs.push({role:'guest',text});
+  if(_miV.on) _miSpeak(text);   // la voz lee el mensaje completo desde el principio
+  const chunks=_miBubbles(text);
+  _miS.reveal={n:0,total:chunks.length,chunks};
+  _miS.revealing=true;
+  const step=()=>{
+    if(!_miS||!_miS.reveal) return;   // la mesa se cerró o se abandonó
+    _miS.reveal.n++;
+    if(_miS.reveal.n>=_miS.reveal.total){
+      _miS.reveal=null; _miS.revealing=false; _miS.busy=false; _miRenderMsgs();
+      // Cierre encolado durante el tecleo: se ejecuta ahora, nunca se pierde.
+      if(_miS.closeQueued && !_miS.over){ _miS.closeQueued=false; _miEnd(); }
+      return;
+    }
+    _miRenderMsgs();
+    const next=_miS.reveal.chunks[_miS.reveal.n];
+    setTimeout(step, Math.min(2200, 420+next.length*14));
+  };
+  setTimeout(step, Math.min(1800, 380+chunks[0].length*12));
 }
 
 function _miFriendly(code){
@@ -19244,8 +19294,7 @@ async function _miCallTurn(start){
         scenario:{persona:_miS.sc.persona,situacion:_miS.sc.situacion,briefing:_miS.sc.briefing||''}, menu:_miS.role==='hostess'?'':_miMenu(_miS.lang,_miS.shift), messages:_miS.msgs }) });
     const j=await res.json().catch(()=>({}));
     if(!res.ok){ showToast(_miFriendly(j.error),'warning',6000); if(!_miS.started){ renderMesaLobby(); _miS=null; } return; }
-    _miS.msgs.push({role:'guest',text:String(j.text||'')});
-    if(_miV.on) _miSpeak(j.text);   // modo voz: el cliente IA habla su respuesta
+    _miRevealGuest(String(j.text||''));   // ritmo humano: burbujas con tecleo (y voz si toca)
     if(start&&!_miS.started){
       _miS.started=true;
       const emp=getEmp(currentUser);
@@ -19256,10 +19305,16 @@ async function _miCallTurn(start){
   finally{
     if(_tm) clearTimeout(_tm);
     if(_miS){
-      _miS.busy=false; _miRenderMsgs();
-      // Si el camarero pidió cerrar la mesa mientras el huésped respondía,
-      // se cierra ahora — el toque nunca se pierde en silencio.
-      if(_miS.closeQueued && !_miS.over){ _miS.closeQueued=false; _miEnd(); }
+      if(_miS.revealing){
+        // El huésped está "escribiendo" (reveal): busy sigue en true y el
+        // cierre encolado lo procesará el final del tecleo — no aquí.
+        _miRenderMsgs();
+      } else {
+        _miS.busy=false; _miRenderMsgs();
+        // Si el camarero pidió cerrar la mesa mientras el huésped respondía,
+        // se cierra ahora — el toque nunca se pierde en silencio.
+        if(_miS.closeQueued && !_miS.over){ _miS.closeQueued=false; _miEnd(); }
+      }
     }
   }
 }
