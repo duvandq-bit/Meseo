@@ -1,6 +1,26 @@
 {
- "updated": "2026-07-28T00:12:40.278Z",
+ "updated": "2026-07-28T07:48:37.327Z",
  "items": [
+  {
+   "t": "El guachinche de Tenerife que mantiene la esencia de siempre: la carne de fiesta es una de las especialidades de la casa",
+   "u": "https://www.eldia.es/tenerife/2026/07/28/guachinche-tenerife-mantiene-esencia-carne-fiesta-dv-132871466.html",
+   "s": "Eldía",
+   "d": "2026-07-28T07:41:20.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://estaticos-cdn.prensaiberica.es/clip/a8ba009e-e679-42cd-b90d-a099cc260efd_16-9-discover-aspect-ratio_default_0_x558y281.jpg"
+  },
+  {
+   "t": "Urrechu Velázquez, el refugio de verano de un cocinero imprescindible",
+   "u": "https://foodandwineespanol.com/gastronomia/restaurantes/urrechu-velazquez-el-refugio-de-verano-de-un-cocinero-imprescindible/",
+   "s": "Food & Wine en Español",
+   "d": "2026-07-28T04:30:00.000Z",
+   "tags": [
+    "ALTA COCINA"
+   ],
+   "img": "https://foodandwineespanol.com/wp-content/uploads/2026/07/Inigo-Urrechu_grupo-Urrechu-2.webp"
+  },
   {
    "t": "Santy (28/07/26)",
    "u": "https://www.eldia.es/humor/2026/07/28/santy-28-07-26-132866637.html",
@@ -10,6 +30,16 @@
     "CANARIAS"
    ],
    "img": "https://estaticos-cdn.prensaiberica.es/clip/b1c2edcd-b06d-48bb-9b21-7072e93eecb0_16-9-aspect-ratio_default_0.jpg"
+  },
+  {
+   "t": "Nueva edición de \"Noches que saben a Telde\" en San Gregorio…",
+   "u": "https://canariasnoticias.es/2026/07/27/nueva-edicion-de-noches-que-saben-a-telde-en-san-gregorio-con-gastronomia-y-musica-en-directo",
+   "s": "CanariasNoticias.es",
+   "d": "2026-07-27T21:46:27.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://lon1.digitaloceanspaces.com/canarias-noticias/media/images/2026/07/telde_noches_que_saben_a_telde.jpeg"
   },
   {
    "t": "El restaurante Le Petit Chef prepara una nueva receta española para competir con Francia, Italia y Japón",
@@ -30,16 +60,6 @@
     "CANARIAS"
    ],
    "img": "https://static.eldiario.es/clip/753f0ca8-99d7-49f6-9c19-43fdaa658eda_facebook-watermarked-aspect-ratio-1200-675_default_0.jpg"
-  },
-  {
-   "t": "La consejera de Hacienda de Canarias (PP) se va de vacaciones y será la de Presidencia (CC) la que vote el nuevo modelo de financiación",
-   "u": "https://www.eldiario.es/canariasahora/politica/consejera-de-presidencia-canarias-votar-nuevo-modelo-financiacion_1_13410704.html",
-   "s": "elDiario.es",
-   "d": "2026-07-27T18:02:50.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://static.eldiario.es/clip/0481934c-b616-4e7b-8263-8d126a029bd8_facebook-watermarked-aspect-ratio-1200-675_default_0_x982y344.jpg"
   },
   {
    "t": "Canarias aprueba cambios tributarios y de índole social para actualizar la normativa vigente",
@@ -165,16 +185,6 @@
    "img": "https://static.eldiario.es/clip/46d482d6-621e-4925-b6d9-8a9d12bc2924_facebook-watermarked-aspect-ratio-1200-675_default_0.jpg"
   },
   {
-   "t": "Urrechu Velázquez, el refugio de verano de un cocinero imprescindible",
-   "u": "https://foodandwineespanol.com/gastronomia/restaurantes/urrechu-velazquez-el-refugio-de-verano-de-un-cocinero-imprescindible/",
-   "s": "Food & Wine en Español",
-   "d": "2026-07-27T12:24:07.000Z",
-   "tags": [
-    "ALTA COCINA"
-   ],
-   "img": "https://foodandwineespanol.com/wp-content/uploads/2026/07/Inigo-Urrechu_grupo-Urrechu-2.webp"
-  },
-  {
    "t": "Maria Nicolau: \"Comía patatas y arroz y solo iba a casa de la abuela para comer proteína\"",
    "u": "https://www.elle.com/es/gourmet/gastronomia/a69509762/chef-maria-nicolau-infancia-barcelona-90-patatas-arroz-casa-abuela-comer-proteina/",
    "s": "ELLE",
@@ -292,16 +302,6 @@
     "CANARIAS"
    ],
    "img": "https://static.eldiario.es/clip/f568722a-e342-402e-a4f8-0ecbf5130913_facebook-watermarked-aspect-ratio-1200-675_default_0.jpg"
-  },
-  {
-   "t": "El rincón de Las Palmas de Gran Canaria que sorprende con el tamaño de sus tortillas y más de 20 sabores diferentes",
-   "u": "https://www.laprovincia.es/las-palmas/2026/07/27/rincon-palmas-gran-canaria-sorprende-tortillas-dv-132758512.amp.html",
-   "s": "La Provincia",
-   "d": "2026-07-27T06:46:01.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://estaticos-cdn.prensaiberica.es/clip/7c15c844-cbbd-498e-8cf6-aefa1039cd53_16-9-discover-aspect-ratio_default_0_x559y339.jpg"
   }
  ]
 }
