@@ -5912,6 +5912,15 @@ test('Cliente IA F3.6: ritmo humano del chat (burbujas + tecleo, solo pantalla)'
   assert(/chunks=chunks\.slice\(0,_miS\.reveal\.n\)/.test(html), 'el último mensaje se muestra por burbujas progresivas');
 });
 
+test('Horarios: entrar a las 14:00 cuenta también en almuerzo', () => {
+  // Petición del propietario: un 14:00-22:00 cubre el final del almuerzo
+  // aunque el grueso del turno sea de cena — debe salir en AMBOS rangos.
+  const fn = html.slice(html.indexOf('function _horRango('), html.indexOf('function _horDayRangos'));
+  assert(/if\(r==='cena' && t\.s<=840\) r='ambos';/.test(fn),
+    'los turnos que empiezan a las 14:00 o antes deben contar también en almuerzo');
+  assert(/t\.dur>=540/.test(fn), 'los dobles de 9h+ siguen contando en ambos');
+});
+
 // ─── 7. No leftover git conflict markers ────────────────────────
 console.log('\nHygiene');
 test('no git conflict markers in tracked source', () => {
