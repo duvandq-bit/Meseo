@@ -52,7 +52,7 @@
 <meta property="og:description" content="Formación de equipos de sala: carta, alérgenos, vinos, exámenes y juegos de repaso.">
 <meta property="og:url" content="https://meseo.es/">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"Meseo","url":"https://meseo.es/"}</script>
-<meta name="app-version" content="7.331">
+<meta name="app-version" content="7.332">
 <meta name="app-build" content="May 2026">
 <meta name="theme-color" content="#1c2a22">
 <!-- ═══ PWA ═══ -->
@@ -1555,7 +1555,7 @@ const CAT_COLORS={'Entrantes':'#c49a3c','Hamburguesas y Bocatas':'#b86050','Plat
 const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#c49a3c"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#a47a2c" opacity=".4"/><path d="M8 8v4a1 1 0 001 1h1v4M10 8v4" stroke="#fff" stroke-width="1.2" stroke-linecap="round" fill="none"/><path d="M15 8v8M14 8v3a1.5 1.5 0 003 0V8" stroke="#fff" stroke-width="1.2" stroke-linecap="round" fill="none"/></svg>`,'Hamburguesas y Bocatas':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#b86050"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#983838" opacity=".4"/><path d="M7 9h10M7 12h10M7 15h10" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/><path d="M8 9c0-2 2-3 4-3s4 1 4 3M8 15c0 2 2 3 4 3s4-1 4-3" fill="none" stroke="#fff" stroke-width="1" opacity=".7"/></svg>`,'Platos Principales':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#4888a0"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#2e6878" opacity=".4"/><path d="M5 15h14" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/><path d="M12 6a6 6 0 016 6H6a6 6 0 016-6z" fill="none" stroke="#fff" stroke-width="1.1"/><circle cx="10" cy="6" r=".7" fill="#fff" opacity=".7"/><circle cx="12" cy="5" r=".7" fill="#fff" opacity=".7"/><circle cx="14" cy="6" r=".7" fill="#fff" opacity=".7"/></svg>`,'Sugerencias':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#d4aa4c"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#a48a2c" opacity=".4"/><polygon points="12,5 14.5,10 20,10.5 16,14 17,20 12,17 7,20 8,14 4,10.5 9.5,10" fill="#fff" opacity=".9"/></svg>`,'Guarniciones y Salsas':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#4d8a5e"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#2d6a3e" opacity=".4"/><path d="M12 18V10M5 10c0-4 3-6 7-6s7 2 7 6c0 5-3 8-7 8s-7-3-7-8z" fill="none" stroke="#fff" stroke-width="1.1"/><path d="M5 10c3 0 5 1 7 2.5" fill="none" stroke="#fff" stroke-width=".8" opacity=".6"/></svg>`,'Postres':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#7a6aaa"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#5a4a8a" opacity=".4"/><path d="M9 19h6M12 12v7M7 6l2 4.5a3 3 0 006 0L17 6H7z" fill="none" stroke="#fff" stroke-width="1.1" stroke-linecap="round"/></svg>`,'Vegetariano':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#5a9a6e"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#3a7a4e" opacity=".4"/><path d="M9 18h6M12 18V10M12 10c0-3 2-5 5-5-.7 2.5-2.5 5-5 5zM12 10c0-3-2-5-5-5 .7 2.5 2.5 5 5 5z" fill="none" stroke="#fff" stroke-width="1.1" stroke-linecap="round"/></svg>`};
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='7.331';  // sincronizada con sw.js VERSION (guard de CI)
+const APP_VERSION='7.332';  // sincronizada con sw.js VERSION (guard de CI)
 const APP_BUILD='Jul 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;
@@ -21698,60 +21698,46 @@ function renderSupAnalytics(allEmps, empNames){
   empNames.forEach(n => Object.entries(allEmps[n].examCorrect||{}).forEach(([id,cnt])=>{ dishTeamCorrect[id]=(dishTeamCorrect[id]||0)+(cnt||0); }));
   const neverRight = DISHES.filter(d => !(dishTeamCorrect[d.id]>0));
 
-  c.innerHTML = `<div class="sup-wrap">
-    <div style="display:flex;align-items:center;gap:.75rem;margin-bottom:1.25rem">
-      <button onclick="renderSupDashboard()" aria-label="${LANG==='en'?'Back':'Volver'}" style="background:transparent;border:1.5px solid rgba(196,154,60,.55);border-radius:var(--r2);padding:.4rem .8rem;font-size:.75rem;color:var(--gold-deep);font-weight:700;cursor:pointer">←</button>
-      <div style="font-family:'Cinzel',serif;font-size:1.2rem;color:var(--parchment)"> Analytics del equipo</div>
-    </div>
-
-    <!-- Auditoría jul 2026: la cabecera de KPIs repetía la banda de «Hoy» —
-         eliminada. Los widgets de actividad (antes en la sección Análisis del
-         panel, que duplicaba nombre con esta pantalla) viven ahora AQUÍ: una
-         sola pestaña Análisis, una sola pantalla. -->
-    ${renderSupActivityHeatmap(Object.values(allEmps))}
-    ${renderSupScoreTrend(Object.values(allEmps))}
-    ${(()=>{
-      // Alertas de inactividad — 3+ días sin estudiar
-      const inactive = empNames.filter(n => {
+  // ── Rediseño (propietario jul 2026: «hay que deslizar mucho y la
+  // información es abrumadora»): titular con los 3 números que importan y
+  // secciones PLEGADAS. Cada cabecera lleva su dato clave — se escanea sin
+  // abrir nada — y solo Alérgenos se abre sola cuando hay riesgo. El estado
+  // abierto/cerrado se recuerda durante la sesión (_supAccOpen).
+  const _inact = empNames.filter(n => { const last=allEmps[n].lastStudyDay||''; return !last || _daysBetween(todayStr(), last) >= 3; });
+  const _riskN = allergenRows.filter(r => r.val==null || r.val<80).length;
+  if(!window._supAccOpen) window._supAccOpen = new Set(_riskN ? ['alg'] : []);
+  const _acc=(id,icon,title,meta,body)=>!body?'':`<details class="sup-acc" data-acc="${id}"${window._supAccOpen.has(id)?' open':''} ontoggle="if(this.open)window._supAccOpen.add('${id}');else window._supAccOpen.delete('${id}')">
+    <summary><span class="sup-acc-ic" aria-hidden="true">${icon}</span><span class="sup-acc-t">${title}</span><span class="sup-acc-m">${meta}</span><span class="sup-acc-ch" aria-hidden="true">›</span></summary>
+    <div class="sup-acc-body">${body}</div></details>`;
+  const _inactHTML = !_inact.length ? '' : `<div style="background:rgba(196,112,104,.08);border:1px solid rgba(196,112,104,.2);border-radius:var(--r2);padding:.9rem 1rem;margin-bottom:1rem">
+      <div style="font-family:'DM Mono',monospace;font-size:.6rem;color:var(--rose);letter-spacing:.12em;text-transform:uppercase;margin-bottom:.6rem">⚠ ${LANG==='en'?'Inactive 3+ days':'Sin actividad 3+ días'}</div>
+      ${_inact.map(n => {
         const last = allEmps[n].lastStudyDay || '';
-        if(!last) return true;
-        return _daysBetween(todayStr(), last) >= 3;
-      });
-      if(!inactive.length) return '';
-      return `<div style="background:rgba(196,112,104,.08);border:1px solid rgba(196,112,104,.2);border-radius:var(--r2);padding:.9rem 1rem;margin-bottom:1rem">
-        <div style="font-family:'DM Mono',monospace;font-size:.6rem;color:var(--rose);letter-spacing:.12em;text-transform:uppercase;margin-bottom:.6rem">⚠ ${LANG==='en'?'Inactive 3+ days':'Sin actividad 3+ días'}</div>
-        ${inactive.map(n => {
-          const last = allEmps[n].lastStudyDay || '';
-          const diff = last ? _daysBetween(todayStr(), last) : null;
-          const label = diff===null?(LANG==='en'?'Never':'Nunca'):diff===1?(LANG==='en'?'Yesterday':'Ayer'):`${diff}d`;
-          const urgency = diff===null||diff>=7 ? 'var(--rose)' : 'var(--gold)';
-          return `<div style="display:flex;align-items:center;justify-content:space-between;padding:.35rem 0;border-bottom:1px solid rgba(196,112,104,.1)">
-            <span style="font-size:.82rem;color:var(--parchment)">${escapeHTML(n)}</span>
-            <span style="font-family:'DM Mono',monospace;font-size:.65rem;color:${urgency};font-weight:600">${label}</span>
-          </div>`;
-        }).join('')}
-      </div>`;
-    })()}
-
-    ${(allergenTrained.length || allergenUntrained.length) ? `
-    <div style="background:rgba(196,112,104,.05);border:1px solid rgba(196,112,104,.2);border-radius:var(--r);padding:1rem;margin-bottom:.75rem">
-      <div style="font-family:'DM Mono',monospace;font-size:.6rem;color:var(--rose);letter-spacing:.12em;text-transform:uppercase;margin-bottom:.5rem">⚠ ${LANG==='en'?'Allergens — team safety':'Alérgenos — seguridad del equipo'}</div>
+        const diff = last ? _daysBetween(todayStr(), last) : null;
+        const label = diff===null?(LANG==='en'?'Never':'Nunca'):diff===1?(LANG==='en'?'Yesterday':'Ayer'):`${diff}d`;
+        const urgency = diff===null||diff>=7 ? 'var(--rose)' : 'var(--gold)';
+        return `<div style="display:flex;align-items:center;justify-content:space-between;padding:.35rem 0;border-bottom:1px solid rgba(196,112,104,.1)">
+          <span style="font-size:.82rem;color:var(--parchment)">${escapeHTML(n)}</span>
+          <span style="font-family:'DM Mono',monospace;font-size:.65rem;color:${urgency};font-weight:600">${label}</span>
+        </div>`;
+      }).join('')}
+    </div>`;
+  const _algBody = !(allergenTrained.length || allergenUntrained.length) ? '' : `
+    <div style="background:rgba(196,112,104,.05);border:1px solid rgba(196,112,104,.2);border-radius:var(--r);padding:1rem">
       ${allergenHTML}
       ${allergenUntrained.length ? `<div style="margin-top:.6rem;font-family:'DM Mono',monospace;font-size:.58rem;color:var(--gold);line-height:1.5">${LANG==='en'?'Not trained on allergens yet':'Aún sin entrenar alérgenos'}: ${allergenUntrained.map(r=>escapeHTML(r.name)).join(', ')}</div>` : ''}
-    </div>` : ''}
-
+    </div>`;
+  const _perfBody = `
     ${weeks.length ? `
     <div style="background:linear-gradient(155deg,#faf6ee,#f0e8d8);border:1px solid var(--line);border-radius:var(--r);padding:1rem;margin-bottom:.75rem">
       <div style="font-family:'DM Mono',monospace;font-size:.6rem;color:var(--gold);letter-spacing:.12em;text-transform:uppercase;margin-bottom:.75rem">Precisión del equipo por semana</div>
       <div style="display:flex;gap:.3rem;align-items:flex-end;height:${maxBar+40}px">${weekBars}</div>
     </div>` : ''}
-
     ${topicRows.length ? `
     <div style="background:linear-gradient(155deg,#faf6ee,#f0e8d8);border:1px solid var(--line);border-radius:var(--r);padding:1rem;margin-bottom:.75rem">
       <div style="font-family:'DM Mono',monospace;font-size:.6rem;color:var(--gold);letter-spacing:.12em;text-transform:uppercase;margin-bottom:.5rem">${LANG==='en'?'Where the team fails — by topic':'Dónde falla el equipo — por tema'}</div>
       ${topicHTML}
     </div>` : ''}
-
     ${exN ? `
     <div style="background:linear-gradient(155deg,#faf6ee,#f0e8d8);border:1px solid var(--line);border-radius:var(--r);padding:1rem;margin-bottom:.75rem">
       <div style="font-family:'DM Mono',monospace;font-size:.6rem;color:var(--gold);letter-spacing:.12em;text-transform:uppercase;margin-bottom:.6rem">${LANG==='en'?'Exams — team overview':'Exámenes — resumen del equipo'}</div>
@@ -21762,23 +21748,35 @@ function renderSupAnalytics(allEmps, empNames){
       </div>
       ${examCatRows.length ? `<div style="font-family:'DM Mono',monospace;font-size:.55rem;color:var(--parch3);letter-spacing:.1em;text-transform:uppercase;margin:.2rem 0 .4rem">${LANG==='en'?'Accuracy by menu category':'Precisión por categoría de carta'}</div>${examCatHTML}` : ''}
     </div>` : ''}
-
     ${perEmp.length ? `
-    <div style="background:linear-gradient(155deg,#faf6ee,#f0e8d8);border:1px solid var(--line);border-radius:var(--r);padding:1rem;margin-bottom:.75rem">
+    <div style="background:linear-gradient(155deg,#faf6ee,#f0e8d8);border:1px solid var(--line);border-radius:var(--r);padding:1rem">
       <div style="font-family:'DM Mono',monospace;font-size:.6rem;color:var(--gold);letter-spacing:.12em;text-transform:uppercase;margin-bottom:.5rem">${LANG==='en'?'Performance by employee — who needs help':'Rendimiento por empleado — quién necesita apoyo'}</div>
       ${perEmpHTML}
-    </div>` : ''}
-
-    <div style="background:linear-gradient(155deg,#faf6ee,#f0e8d8);border:1px solid var(--line);border-radius:var(--r);padding:1rem;margin-bottom:.75rem">
+    </div>` : ''}`;
+  const _dishBody = `
+    <div style="background:linear-gradient(155deg,#faf6ee,#f0e8d8);border:1px solid var(--line);border-radius:var(--r);padding:1rem">
       <div style="font-family:'DM Mono',monospace;font-size:.6rem;color:var(--gold);letter-spacing:.12em;text-transform:uppercase;margin-bottom:.5rem">${byFail ? (LANG==='en'?'Dishes with the highest fail rate (exam)':'Platos con más fallo (examen)') : (LANG==='en'?'Least mastered dishes':'Platos menos dominados')}</div>
       ${hardestRows}
       ${neverRight.length ? `<div style="margin-top:.7rem;padding-top:.6rem;border-top:1px dashed var(--line);font-family:'DM Mono',monospace;font-size:.58rem;color:var(--rose);line-height:1.5">⚠ ${neverRight.length} ${LANG==='en'?'dishes with no correct answer from anyone yet':'platos sin ningún acierto del equipo todavía'}${neverRight.length<=6?': '+neverRight.map(d=>escapeHTML(d.name)).join(', '):''}</div>` : ''}
+    </div>`;
+  const _en2 = LANG==='en';
+  c.innerHTML = `<div class="sup-wrap">
+    <div style="display:flex;align-items:center;gap:.75rem;margin-bottom:1rem">
+      <button onclick="renderSupDashboard()" aria-label="${_en2?'Back':'Volver'}" style="background:transparent;border:1.5px solid rgba(196,154,60,.55);border-radius:var(--r2);padding:.4rem .8rem;font-size:.75rem;color:var(--gold-deep);font-weight:700;cursor:pointer">←</button>
+      <div style="font-family:'Cinzel',serif;font-size:1.2rem;color:var(--parchment)">${_en2?'Team analysis':'Análisis del equipo'}</div>
     </div>
-
-    ${resumenSection}
-    ${mesaSection}
-    <!-- La clasificación por XP total se retiró de aquí (auditoría jul 2026):
-         repetía la pestaña pública de Ranking, que todo el mundo ya ve. -->
+    <!-- Titular: los 3 números que importan, sin abrir nada -->
+    <div class="sup-hl" role="group" aria-label="${_en2?'Key figures':'Lo esencial'}">
+      <div class="sup-hl-pill ${_riskN?'bad':'good'}"><b>${_riskN}</b><span>${_en2?'allergen risk':'riesgo alérgenos'}</span></div>
+      <div class="sup-hl-pill ${_inact.length?'warn':'good'}"><b>${_inact.length}</b><span>${_en2?'inactive 3+d':'sin actividad 3+d'}</span></div>
+      <div class="sup-hl-pill ${!exN?'info':exAcc>=80?'good':exAcc>=50?'warn':'bad'}"><b>${exN?exAcc+'%':'—'}</b><span>${_en2?'exam accuracy':'precisión exámenes'}</span></div>
+    </div>
+    ${_acc('alg','⚠️',_en2?'Allergens — safety':'Alérgenos — seguridad', `${_riskN} ${_en2?'at risk':'en riesgo'}${allergenUntrained.length?` · ${allergenUntrained.length} ${_en2?'untrained':'sin entrenar'}`:''}`, _algBody)}
+    ${_acc('res','📣',_en2?'Weekly summary':'Resumen semanal', _en2?'ready for WhatsApp':'listo para WhatsApp', resumenSection)}
+    ${_acc('act','📈',_en2?'Activity':'Actividad', `${_inact.length} ${_en2?'inactive':'sin actividad'}`, renderSupActivityHeatmap(Object.values(allEmps))+renderSupScoreTrend(Object.values(allEmps))+_inactHTML)}
+    ${_acc('perf','🎯',_en2?'Performance':'Rendimiento', exN?`${exN} ${_en2?'exams':'exámenes'} · ${exAcc}%`:(_en2?'no exams yet':'aún sin exámenes'), _perfBody)}
+    ${_acc('mesa','🍽️','Cliente IA', _miTot?`${_miTot} ${_en2?'tables':'mesas'} · Ø ${_miAvg}%`:(_en2?'no tables yet':'aún sin mesas'), mesaSection)}
+    ${_acc('dish','🧩',_en2?'Hardest dishes':'Platos difíciles', hardest.length?`${hardest.length} ${_en2?'to review':'a repasar'}`:'', _dishBody)}
   </div>`;
 }
 

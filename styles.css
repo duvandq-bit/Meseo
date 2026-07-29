@@ -1751,6 +1751,28 @@ body::after{
 @keyframes miMicPulse{ 0%,100%{box-shadow:0 0 0 0 rgba(160,72,72,.35)} 50%{box-shadow:0 0 0 7px rgba(160,72,72,0)} }
 @media (prefers-reduced-motion:reduce){ .mi-mic-live{ animation:none } }
 
+/* ── Analítica del supervisor: titular + acordeones (rediseño jul 2026 —
+   «hay que deslizar mucho y la información es abrumadora»). ── */
+.sup-hl{display:flex;gap:.5rem;margin-bottom:.9rem}
+.sup-hl-pill{flex:1;display:flex;flex-direction:column;align-items:center;gap:.15rem;padding:.6rem .35rem;border-radius:12px;border:1.5px solid var(--line);background:linear-gradient(155deg,#faf6ee,#f0e8d8)}
+.sup-hl-pill b{font-family:'Quicksand',sans-serif;font-size:1.15rem;font-weight:800}
+.sup-hl-pill span{font-family:'DM Mono',monospace;font-size:.52rem;letter-spacing:.05em;text-transform:uppercase;color:#8a7a5c;text-align:center;line-height:1.3}
+.sup-hl-pill.good b{color:var(--green-deep)}
+.sup-hl-pill.warn b{color:#b8862a}
+.sup-hl-pill.bad b{color:#a04848}
+.sup-hl-pill.info b{color:#8a7a5c}
+.sup-hl-pill.bad{border-color:rgba(160,72,72,.45);background:rgba(160,72,72,.07)}
+.sup-acc{border:1px solid var(--line);border-radius:var(--r2);background:linear-gradient(155deg,#faf6ee,#f0e8d8);margin-bottom:.55rem;overflow:hidden}
+.sup-acc summary{display:flex;align-items:center;gap:.55rem;padding:.8rem .9rem;min-height:48px;cursor:pointer;list-style:none;-webkit-tap-highlight-color:transparent}
+.sup-acc summary::-webkit-details-marker{display:none}
+.sup-acc-ic{font-size:1rem;flex-shrink:0}
+.sup-acc-t{font-family:'Quicksand',sans-serif;font-size:.82rem;font-weight:700;color:var(--brand-ink);flex-shrink:0}
+.sup-acc-m{font-family:'DM Mono',monospace;font-size:.6rem;color:#8a7a5c;margin-left:auto;text-align:right}
+.sup-acc-ch{color:var(--gold-deep);font-weight:700;transition:transform .2s;flex-shrink:0}
+.sup-acc[open] .sup-acc-ch{transform:rotate(90deg)}
+@media (prefers-reduced-motion:reduce){ .sup-acc-ch{ transition:none } }
+.sup-acc-body{padding:.15rem .6rem .6rem}
+
 /* Secundario — fantasma dorado como el resto de la app */
 .ri-secondary{
   background:transparent;border:1.5px solid rgba(196,154,60,.5);
