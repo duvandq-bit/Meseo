@@ -839,7 +839,7 @@ test('supervisor panel: realtime employees channel + silent refresh + live pill'
   assert(/const empWeakCat=\(e\)=>/.test(lqaFn) && /empWeakCat\(r\.e\)/.test(lqaFn),
     'la vista LQA debe mostrar la categoría más floja de cada empleado');
   // Analítica profunda de exámenes, platos y alérgenos (jul 2026).
-  assert(/const allergenRows = empNames\.map/.test(ana) && /Alérgenos — seguridad del equipo/.test(ana) && /allergenBest/.test(ana),
+  assert(/const allergenRows = empNames\.map/.test(ana) && /Alérgenos — seguridad/.test(ana) && /allergenBest/.test(ana),
     'debe existir la seguridad de alérgenos por empleado');
   assert(/const examCatAgg=\{\}/.test(ana) && /Exámenes — resumen del equipo/.test(ana) && /Precisión por categoría de carta/.test(ana),
     'debe existir el resumen de exámenes y la precisión por categoría de carta');
@@ -5853,7 +5853,8 @@ test('Supervisor: resumen semanal listo para compartir (liga + actividad + Clien
     'el lunes debe abrirse en la semana CERRADA por defecto');
   assert(/window\._supResText/.test(sec) && /wa\.me\/\?text=/.test(sec) && /clipboard\.writeText/.test(sec),
     'la sección debe ofrecer copiar y compartir por WhatsApp sin pelear con comillas');
-  assert(/\$\{resumenSection\}/.test(html), 'la sección debe pintarse en el panel de análisis');
+  assert(/_acc\('res',[\s\S]{0,220}resumenSection\)/.test(html),
+    'la sección debe pintarse en el panel de análisis (acordeón Resumen semanal)');
 });
 
 test('Supervisor: «Conectados hoy» compara en hora LOCAL, no UTC', () => {
@@ -5919,6 +5920,26 @@ test('Horarios: entrar a las 14:00 cuenta también en almuerzo', () => {
   assert(/if\(r==='cena' && t\.s<=840\) r='ambos';/.test(fn),
     'los turnos que empiezan a las 14:00 o antes deben contar también en almuerzo');
   assert(/t\.dur>=540/.test(fn), 'los dobles de 9h+ siguen contando en ambos');
+});
+
+test('Analítica del supervisor: titular + acordeones (rediseño anti-scroll)', () => {
+  // Propietario jul 2026: «hay que deslizar mucho y la información es
+  // abrumadora». La pantalla abre con 3 números (semáforo) y todas las
+  // secciones plegadas — la cabecera de cada una lleva su dato clave.
+  const ana = html.slice(html.indexOf('function renderSupAnalytics'), html.indexOf('function renderSupLqaStats'));
+  assert(/class="sup-hl"/.test(ana) && /sup-hl-pill/.test(ana),
+    'falta el titular con las píldoras de lo esencial');
+  assert(/const _acc=\(id,icon,title,meta,body\)=>/.test(ana) && /<details class="sup-acc"/.test(ana),
+    'las secciones deben ser acordeones <details> plegables');
+  assert(/window\._supAccOpen = new Set\(_riskN \? \['alg'\] : \[\]\)/.test(ana),
+    'solo Alérgenos se abre sola, y únicamente cuando hay riesgo');
+  assert(/window\._supAccOpen\.add\('\$\{id\}'\)/.test(ana),
+    'el estado abierto/cerrado debe recordarse entre re-renders');
+  for (const id of ['alg','res','act','perf','mesa','dish'])
+    assert(new RegExp("_acc\\('"+id+"'").test(ana), `falta el acordeón '${id}'`);
+  const css = read('styles.css');
+  assert(/\.sup-acc summary\{[^}]*min-height:48px/.test(css), 'cabeceras de acordeón con área táctil de 48px');
+  assert(/\.sup-acc\[open\] \.sup-acc-ch\{transform:rotate\(90deg\)\}/.test(css), 'el chevrón debe girar al abrir');
 });
 
 // ─── 7. No leftover git conflict markers ────────────────────────
