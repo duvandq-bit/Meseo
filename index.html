@@ -10511,8 +10511,8 @@ function _horRangosMsg(w,di,iso,only){
   const {alm,cen}=_horDayRangos(w,di);
   const cub=k=>{ const sv=(w.data.services||[]).find(x=>x.k===k); const v=sv&&(sv.cubiertos||[])[di]; return v!=null?` · ${v} ${en?'covers':'cubiertos'}`:''; };
   const line=x=>`- ${_horShort(x.n)} · ${x.hrs}${x.zona?' '+x.zona:''}${x.doble?(en?' (double)':' (doble)'):''}`;
-  const bloqueAlm=`${en?'Lunch':'Almuerzo'} (09:00-15:00)${cub('almuerzo')}:\n`+(alm.length?alm.map(line).join('\n'):(en?'- nobody scheduled':'- nadie programado'));
-  const bloqueCen=`${en?'Dinner':'Cena'} (16:00-00:00)${cub('cena')}:\n`+(cen.length?cen.map(line).join('\n'):(en?'- nobody scheduled':'- nadie programado'));
+  const bloqueAlm=`${en?'Lunch':'Almuerzo'}${cub('almuerzo')}:\n`+(alm.length?alm.map(line).join('\n'):(en?'- nobody scheduled':'- nadie programado'));
+  const bloqueCen=`${en?'Dinner':'Cena'}${cub('cena')}:\n`+(cen.length?cen.map(line).join('\n'):(en?'- nobody scheduled':'- nadie programado'));
   const titulo=only==='almuerzo'?(en?'LUNCH RANGES':'RANGOS ALMUERZO')
     : only==='cena'?(en?'DINNER RANGES':'RANGOS CENA')
     : (en?'RANGES':'RANGOS');
@@ -10615,9 +10615,9 @@ function _horHoyHTML(){
       </div>
       ${shareBtns(null, en?'full day':'día completo')}
     </div>
-    <div class="hor-svc-head"><span class="hor-svc-t">${en?'LUNCH':'ALMUERZO'} · 09:00–15:00${cubFor('almuerzo')}</span>${shareBtns('almuerzo', en?'lunch only':'solo almuerzo')}</div>
+    <div class="hor-svc-head"><span class="hor-svc-t">${en?'LUNCH':'ALMUERZO'}${cubFor('almuerzo')}</span>${shareBtns('almuerzo', en?'lunch only':'solo almuerzo')}</div>
     ${rows(alm)}
-    <div class="hor-svc-head"><span class="hor-svc-t">${en?'DINNER':'CENA'} · 16:00–00:00${cubFor('cena')}</span>${shareBtns('cena', en?'dinner only':'solo cena')}</div>
+    <div class="hor-svc-head"><span class="hor-svc-t">${en?'DINNER':'CENA'}${cubFor('cena')}</span>${shareBtns('cena', en?'dinner only':'solo cena')}</div>
     ${rows(cen)}`;
   // libres / ausencias del día (personas, sin la fila-puesto)
   const off=[], seenOff=new Set();

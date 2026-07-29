@@ -5958,6 +5958,15 @@ test('Horarios: sin apellidos en pantalla (solo nombre de pila)', () => {
     'el mensaje de rangos (copiar/WhatsApp) debe llevar el nombre corto');
   assert(/_horPickName\('\$\{escapeHTML\(n\)/.test(html),
     'el selector «¿cuál eres tú?» guarda el nombre COMPLETO aunque muestre el corto');
+  // Los títulos de servicio van limpios: solo «ALMUERZO» / «CENA», sin la
+  // franja horaria (petición del propietario) — la ventana sigue viva en la
+  // lógica de clasificación (_horRango), que no es cosa de pantalla.
+  assert(/'LUNCH':'ALMUERZO'\}\$\{cubFor\('almuerzo'\)\}/.test(html)
+      && /'DINNER':'CENA'\}\$\{cubFor\('cena'\)\}/.test(html),
+    'los títulos de servicio de la vista Hoy no llevan franja horaria');
+  assert(/'Lunch':'Almuerzo'\}\$\{cub\('almuerzo'\)\}/.test(html)
+      && /'Dinner':'Cena'\}\$\{cub\('cena'\)\}/.test(html),
+    'el mensaje de rangos tampoco lleva franja horaria');
 });
 
 test('Chip de actualización: aviso sutil en cabecera (sin push masivo)', () => {
