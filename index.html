@@ -52,7 +52,7 @@
 <meta property="og:description" content="Formación de equipos de sala: carta, alérgenos, vinos, exámenes y juegos de repaso.">
 <meta property="og:url" content="https://meseo.es/">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"Meseo","url":"https://meseo.es/"}</script>
-<meta name="app-version" content="7.332">
+<meta name="app-version" content="7.333">
 <meta name="app-build" content="May 2026">
 <meta name="theme-color" content="#1c2a22">
 <!-- ═══ PWA ═══ -->
@@ -314,6 +314,10 @@
       <button id="notifBell" onclick="renderNotifPanel()" aria-label="Notificaciones" role="button" style="display:none;background:transparent;border:none;cursor:pointer;padding:8px;position:relative;font-size:1.2rem;line-height:1;min-height:40px;min-width:40px">
         ◉<span id="notifBadge" style="position:absolute;top:-2px;right:-2px;background:var(--rose);color:#fff;border-radius:50%;width:18px;height:18px;font-size:.55rem;font-family:Jost,sans-serif;font-weight:700;display:none;align-items:center;justify-content:center"></span>
       </button>
+      <!-- Aviso SUTIL de versión nueva (el push masivo molestaba): un chip
+           dorado con pulso que solo aparece cuando hay build publicada más
+           nueva que la instalada. Tocarlo actualiza en limpio. -->
+      <button id="updChip" onclick="_updGo()" aria-label="Nueva versión disponible — actualizar" title="Nueva versión disponible — toca para actualizar" style="display:none;align-items:center;gap:.3rem;background:rgba(28,42,34,.82);border:1px solid rgba(228,190,104,.55);cursor:pointer;padding:6px 9px;border-radius:999px;font-family:'DM Mono',monospace;font-size:.58rem;color:var(--brand-accent-hi);letter-spacing:.03em;min-height:32px;margin-right:.25rem"><span class="upd-dot" aria-hidden="true"></span><span id="updChipV"></span></button>
       <button id="helpBtn" onclick="showOnboarding()" aria-label="Ayuda — repetir tutorial" title="Ver tutorial / Show tutorial" style="background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.25);cursor:pointer;padding:6px 10px;border-radius:6px;font-family:'DM Mono',monospace;font-size:.7rem;color:rgba(255,255,255,.9);min-height:32px;min-width:32px;margin-right:.25rem">?</button>
       <!-- Language toggle in header -->
       <div style="display:flex;gap:.35rem;margin-right:.25rem">
@@ -1555,7 +1559,7 @@ const CAT_COLORS={'Entrantes':'#c49a3c','Hamburguesas y Bocatas':'#b86050','Plat
 const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#c49a3c"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#a47a2c" opacity=".4"/><path d="M8 8v4a1 1 0 001 1h1v4M10 8v4" stroke="#fff" stroke-width="1.2" stroke-linecap="round" fill="none"/><path d="M15 8v8M14 8v3a1.5 1.5 0 003 0V8" stroke="#fff" stroke-width="1.2" stroke-linecap="round" fill="none"/></svg>`,'Hamburguesas y Bocatas':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#b86050"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#983838" opacity=".4"/><path d="M7 9h10M7 12h10M7 15h10" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/><path d="M8 9c0-2 2-3 4-3s4 1 4 3M8 15c0 2 2 3 4 3s4-1 4-3" fill="none" stroke="#fff" stroke-width="1" opacity=".7"/></svg>`,'Platos Principales':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#4888a0"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#2e6878" opacity=".4"/><path d="M5 15h14" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/><path d="M12 6a6 6 0 016 6H6a6 6 0 016-6z" fill="none" stroke="#fff" stroke-width="1.1"/><circle cx="10" cy="6" r=".7" fill="#fff" opacity=".7"/><circle cx="12" cy="5" r=".7" fill="#fff" opacity=".7"/><circle cx="14" cy="6" r=".7" fill="#fff" opacity=".7"/></svg>`,'Sugerencias':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#d4aa4c"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#a48a2c" opacity=".4"/><polygon points="12,5 14.5,10 20,10.5 16,14 17,20 12,17 7,20 8,14 4,10.5 9.5,10" fill="#fff" opacity=".9"/></svg>`,'Guarniciones y Salsas':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#4d8a5e"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#2d6a3e" opacity=".4"/><path d="M12 18V10M5 10c0-4 3-6 7-6s7 2 7 6c0 5-3 8-7 8s-7-3-7-8z" fill="none" stroke="#fff" stroke-width="1.1"/><path d="M5 10c3 0 5 1 7 2.5" fill="none" stroke="#fff" stroke-width=".8" opacity=".6"/></svg>`,'Postres':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#7a6aaa"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#5a4a8a" opacity=".4"/><path d="M9 19h6M12 12v7M7 6l2 4.5a3 3 0 006 0L17 6H7z" fill="none" stroke="#fff" stroke-width="1.1" stroke-linecap="round"/></svg>`,'Vegetariano':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#5a9a6e"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#3a7a4e" opacity=".4"/><path d="M9 18h6M12 18V10M12 10c0-3 2-5 5-5-.7 2.5-2.5 5-5 5zM12 10c0-3-2-5-5-5 .7 2.5 2.5 5 5 5z" fill="none" stroke="#fff" stroke-width="1.1" stroke-linecap="round"/></svg>`};
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='7.332';  // sincronizada con sw.js VERSION (guard de CI)
+const APP_VERSION='7.333';  // sincronizada con sw.js VERSION (guard de CI)
 const APP_BUILD='Jul 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;
@@ -2667,6 +2671,32 @@ async function forceAppUpdate(){
     }).catch(()=>{});
   }catch(_){ }
 })();
+
+// ── Aviso sutil de versión nueva DENTRO de la app ──
+// El push masivo de «actualiza» molestaba al equipo. Ahora: cuando hay una
+// build publicada más nueva que la que corre, aparece un chip dorado con
+// pulso en la cabecera (sin toasts ni banners). Tocarlo actualiza en limpio
+// con forceAppUpdate(). Chequeo barato: sw.js con no-store, cada 10 min como
+// mucho, y solo con la app visible y sesión iniciada.
+let _updLastCheck = 0;
+function _updGo(){
+  const _en = typeof LANG!=='undefined' && LANG==='en';
+  if(confirm(_en?'Update Meseo now? Takes about 2 seconds.':'¿Actualizar Meseo ahora? Tarda unos 2 segundos.')) forceAppUpdate();
+}
+function _updCheckInApp(){
+  if(Date.now()-_updLastCheck < 10*60000) return;
+  _updLastCheck = Date.now();
+  fetch('./sw.js', { cache:'no-store' }).then(r=>r.ok?r.text():null).then(src=>{
+    if(!src) return;
+    const m = src.match(/const VERSION = 'v([\d.]+)'/);
+    if(!m || m[1]===APP_VERSION) return;
+    const v=document.getElementById('updChipV'); if(v) v.textContent='v'+m[1];
+    const b=document.getElementById('updChip'); if(b) b.style.display='inline-flex';
+  }).catch(()=>{});
+}
+document.addEventListener('visibilitychange', ()=>{
+  if(document.visibilityState==='visible' && typeof currentUser!=='undefined' && currentUser) _updCheckInApp();
+});
 
 function _renderShiftBar(){
   const bar = document.getElementById('shiftBar');
@@ -9386,6 +9416,9 @@ function showTab(tab, instant){
   }
   track('tab.switch', { to: tab, from: currentTab });
   currentTab=tab;
+  // Chip de actualización: comprobación silenciosa al navegar (autolimitada a
+  // 1 petición cada 10 min por _updCheckInApp, así que es gratis).
+  if(typeof _updCheckInApp==='function' && typeof currentUser!=='undefined' && currentUser) _updCheckInApp();
   // Track night study for achievement
   const _h = new Date().getHours();
   if(_h >= 23 || _h < 5){

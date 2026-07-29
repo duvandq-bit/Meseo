@@ -1773,6 +1773,12 @@ body::after{
 @media (prefers-reduced-motion:reduce){ .sup-acc-ch{ transition:none } }
 .sup-acc-body{padding:.15rem .6rem .6rem}
 
+/* Chip de actualización en la cabecera: aviso sutil de nueva versión (el
+   empujón masivo por push resultaba molesto — el usuario decide cuándo). */
+.upd-dot{width:7px;height:7px;border-radius:50%;background:#e4be68;flex-shrink:0;animation:updPulse 2s ease-out infinite}
+@keyframes updPulse{ 0%{box-shadow:0 0 0 0 rgba(228,190,104,.45)} 70%{box-shadow:0 0 0 7px rgba(228,190,104,0)} 100%{box-shadow:0 0 0 0 rgba(228,190,104,0)} }
+@media (prefers-reduced-motion:reduce){ .upd-dot{ animation:none } }
+
 /* Secundario — fantasma dorado como el resto de la app */
 .ri-secondary{
   background:transparent;border:1.5px solid rgba(196,154,60,.5);
