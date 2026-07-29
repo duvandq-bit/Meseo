@@ -5942,6 +5942,29 @@ test('Analítica del supervisor: titular + acordeones (rediseño anti-scroll)', 
   assert(/\.sup-acc\[open\] \.sup-acc-ch\{transform:rotate\(90deg\)\}/.test(css), 'el chevrón debe girar al abrir');
 });
 
+test('Chip de actualización: aviso sutil en cabecera (sin push masivo)', () => {
+  // Propietario jul 2026: el empujón por push «resulta molesto». En su lugar,
+  // un chip dorado discreto aparece en la cabecera cuando el sw.js del
+  // servidor trae versión nueva; el usuario decide cuándo tocar.
+  assert(/id="updChip"[^>]*onclick="_updGo\(\)"/.test(html), 'falta el chip de actualización en la cabecera');
+  assert(/id="updChip"[^>]*style="display:none/.test(html), 'el chip debe nacer oculto');
+  const chk = html.slice(html.indexOf('function _updGo'), html.indexOf('function _renderShiftBar'));
+  assert(/Date\.now\(\)-_updLastCheck < 10\*60000/.test(chk),
+    'la comprobación debe autolimitarse a una cada 10 minutos');
+  assert(/fetch\('\.\/sw\.js', \{ cache:'no-store' \}\)/.test(chk),
+    'la versión del servidor se lee de sw.js sin caché');
+  assert(/m\[1\]===APP_VERSION/.test(chk), 'solo se muestra si la versión difiere de la instalada');
+  assert(/\.catch\(\(\)=>\{\}\)/.test(chk), 'un fallo de red no puede romper nada (silencioso)');
+  assert(/if\(confirm\([^)]*\)\) forceAppUpdate\(\)/.test(chk),
+    'tocar el chip confirma y lanza forceAppUpdate');
+  assert(/typeof _updCheckInApp==='function' && typeof currentUser!=='undefined' && currentUser\) _updCheckInApp\(\)/.test(html),
+    'la comprobación debe engancharse a la navegación (showTab)');
+  const css = read('styles.css');
+  assert(/\.upd-dot\{[^}]*animation:updPulse/.test(css), 'el punto dorado debe latir');
+  assert(/prefers-reduced-motion:reduce\)\{ \.upd-dot\{ animation:none \} \}/.test(css),
+    'sin latido con movimiento reducido');
+});
+
 // ─── 7. No leftover git conflict markers ────────────────────────
 console.log('\nHygiene');
 test('no git conflict markers in tracked source', () => {
