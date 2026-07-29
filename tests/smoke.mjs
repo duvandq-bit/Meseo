@@ -5942,6 +5942,24 @@ test('Analítica del supervisor: titular + acordeones (rediseño anti-scroll)', 
   assert(/\.sup-acc\[open\] \.sup-acc-ch\{transform:rotate\(90deg\)\}/.test(css), 'el chevrón debe girar al abrir');
 });
 
+test('Horarios: sin apellidos en pantalla (solo nombre de pila)', () => {
+  // Petición del propietario: los apellidos no salen en Horarios. El nombre
+  // COMPLETO sigue en los datos (es la clave de cada fila); _horShort lo
+  // recorta al pintar y añade la inicial del apellido solo si dos personas
+  // comparten nombre («Ana K.» / «Ana M.»).
+  assert(/function _horShort\(n\)/.test(html), 'falta el recortador _horShort');
+  assert(/first\+' '\+parts\[1\]\[0\]\+'\.'/.test(html),
+    'con nombres repetidos debe añadirse la inicial del apellido');
+  assert(/hor-row-n">\$\{escapeHTML\(_horShort\(x\.n\)\)\}/.test(html),
+    'las filas de rangos deben pintar el nombre corto');
+  assert(/hor-name">\$\{escapeHTML\(_horShort\(r\.n\)\)\}/.test(html),
+    'el cuadrante debe pintar el nombre corto');
+  assert(/- \$\{_horShort\(x\.n\)\}/.test(html),
+    'el mensaje de rangos (copiar/WhatsApp) debe llevar el nombre corto');
+  assert(/_horPickName\('\$\{escapeHTML\(n\)/.test(html),
+    'el selector «¿cuál eres tú?» guarda el nombre COMPLETO aunque muestre el corto');
+});
+
 test('Chip de actualización: aviso sutil en cabecera (sin push masivo)', () => {
   // Propietario jul 2026: el empujón por push «resulta molesto». En su lugar,
   // un chip dorado discreto aparece en la cabecera cuando el sw.js del

@@ -52,7 +52,7 @@
 <meta property="og:description" content="Formación de equipos de sala: carta, alérgenos, vinos, exámenes y juegos de repaso.">
 <meta property="og:url" content="https://meseo.es/">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"Meseo","url":"https://meseo.es/"}</script>
-<meta name="app-version" content="7.334">
+<meta name="app-version" content="7.335">
 <meta name="app-build" content="May 2026">
 <meta name="theme-color" content="#1c2a22">
 <!-- ═══ PWA ═══ -->
@@ -1561,7 +1561,7 @@ const CAT_COLORS={'Entrantes':'#c49a3c','Hamburguesas y Bocatas':'#b86050','Plat
 const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#c49a3c"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#a47a2c" opacity=".4"/><path d="M8 8v4a1 1 0 001 1h1v4M10 8v4" stroke="#fff" stroke-width="1.2" stroke-linecap="round" fill="none"/><path d="M15 8v8M14 8v3a1.5 1.5 0 003 0V8" stroke="#fff" stroke-width="1.2" stroke-linecap="round" fill="none"/></svg>`,'Hamburguesas y Bocatas':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#b86050"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#983838" opacity=".4"/><path d="M7 9h10M7 12h10M7 15h10" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/><path d="M8 9c0-2 2-3 4-3s4 1 4 3M8 15c0 2 2 3 4 3s4-1 4-3" fill="none" stroke="#fff" stroke-width="1" opacity=".7"/></svg>`,'Platos Principales':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#4888a0"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#2e6878" opacity=".4"/><path d="M5 15h14" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/><path d="M12 6a6 6 0 016 6H6a6 6 0 016-6z" fill="none" stroke="#fff" stroke-width="1.1"/><circle cx="10" cy="6" r=".7" fill="#fff" opacity=".7"/><circle cx="12" cy="5" r=".7" fill="#fff" opacity=".7"/><circle cx="14" cy="6" r=".7" fill="#fff" opacity=".7"/></svg>`,'Sugerencias':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#d4aa4c"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#a48a2c" opacity=".4"/><polygon points="12,5 14.5,10 20,10.5 16,14 17,20 12,17 7,20 8,14 4,10.5 9.5,10" fill="#fff" opacity=".9"/></svg>`,'Guarniciones y Salsas':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#4d8a5e"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#2d6a3e" opacity=".4"/><path d="M12 18V10M5 10c0-4 3-6 7-6s7 2 7 6c0 5-3 8-7 8s-7-3-7-8z" fill="none" stroke="#fff" stroke-width="1.1"/><path d="M5 10c3 0 5 1 7 2.5" fill="none" stroke="#fff" stroke-width=".8" opacity=".6"/></svg>`,'Postres':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#7a6aaa"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#5a4a8a" opacity=".4"/><path d="M9 19h6M12 12v7M7 6l2 4.5a3 3 0 006 0L17 6H7z" fill="none" stroke="#fff" stroke-width="1.1" stroke-linecap="round"/></svg>`,'Vegetariano':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#5a9a6e"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#3a7a4e" opacity=".4"/><path d="M9 18h6M12 18V10M12 10c0-3 2-5 5-5-.7 2.5-2.5 5-5 5zM12 10c0-3-2-5-5-5 .7 2.5 2.5 5 5 5z" fill="none" stroke="#fff" stroke-width="1.1" stroke-linecap="round"/></svg>`};
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='7.334';  // sincronizada con sw.js VERSION (guard de CI)
+const APP_VERSION='7.335';  // sincronizada con sw.js VERSION (guard de CI)
 const APP_BUILD='Jul 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;
@@ -10388,6 +10388,17 @@ function _horAllNames(){
   })));
   return [...set];
 }
+// Privacidad (petición del propietario, jul 2026): en pantalla y en los
+// mensajes compartidos solo sale el nombre de pila. Si dos personas del
+// cuadrante comparten nombre se añade la inicial del apellido («Ana K.» /
+// «Ana M.») para no confundir turnos. El nombre COMPLETO sigue en los datos:
+// es la clave con la que se casa cada fila con su perfil y sus cambios.
+function _horShort(n){
+  n=String(n||'').trim(); if(!n) return n;
+  const parts=n.split(/\s+/), first=parts[0], fn=_horNorm(first);
+  const dup=_horAllNames().some(o=>{ o=String(o).trim(); return o!==n && _horNorm(o.split(/\s+/)[0])===fn; });
+  return (dup && parts[1]) ? first+' '+parts[1][0]+'.' : first;
+}
 function _horMyName(){
   const emp=getEmp(currentUser);
   if(emp && emp.schedName) return emp.schedName;
@@ -10499,7 +10510,7 @@ function _horRangosMsg(w,di,iso,only){
   const en=LANG==='en';
   const {alm,cen}=_horDayRangos(w,di);
   const cub=k=>{ const sv=(w.data.services||[]).find(x=>x.k===k); const v=sv&&(sv.cubiertos||[])[di]; return v!=null?` · ${v} ${en?'covers':'cubiertos'}`:''; };
-  const line=x=>`- ${x.n} · ${x.hrs}${x.zona?' '+x.zona:''}${x.doble?(en?' (double)':' (doble)'):''}`;
+  const line=x=>`- ${_horShort(x.n)} · ${x.hrs}${x.zona?' '+x.zona:''}${x.doble?(en?' (double)':' (doble)'):''}`;
   const bloqueAlm=`${en?'Lunch':'Almuerzo'} (09:00-15:00)${cub('almuerzo')}:\n`+(alm.length?alm.map(line).join('\n'):(en?'- nobody scheduled':'- nadie programado'));
   const bloqueCen=`${en?'Dinner':'Cena'} (16:00-00:00)${cub('cena')}:\n`+(cen.length?cen.map(line).join('\n'):(en?'- nobody scheduled':'- nadie programado'));
   const titulo=only==='almuerzo'?(en?'LUNCH RANGES':'RANGOS ALMUERZO')
@@ -10593,7 +10604,7 @@ function _horHoyHTML(){
     <button type="button" class="hor-mini" aria-label="${en?'Copy':'Copiar'} ${lbl}" onclick="_horShareRangos(${_horWeekOf(iso)},${di},'${iso}',${only?`'${only}'`:'null'},false)">${_COPY_ICO}</button>
     <button type="button" class="hor-mini hor-mini-wa" aria-label="WhatsApp ${lbl}" onclick="_horShareRangos(${_horWeekOf(iso)},${di},'${iso}',${only?`'${only}'`:'null'},true)">${_WA_ICO}</button>
   </span>`;
-  const rows=list=>list.length?list.map(x=>`<div class="hor-row"><span class="hor-row-n">${escapeHTML(x.n)}</span>${x.doble?`<span class="hor-code hor-code-dphrs">${en?'double':'doble'}</span>`:''}<span class="hor-row-h">${escapeHTML(x.hrs)}</span>${x.zona?`<span class="hor-row-z">${escapeHTML(x.zona)}</span>`:''}</div>`).join('')
+  const rows=list=>list.length?list.map(x=>`<div class="hor-row"><span class="hor-row-n">${escapeHTML(_horShort(x.n))}</span>${x.doble?`<span class="hor-code hor-code-dphrs">${en?'double':'doble'}</span>`:''}<span class="hor-row-h">${escapeHTML(x.hrs)}</span>${x.zona?`<span class="hor-row-z">${escapeHTML(x.zona)}</span>`:''}</div>`).join('')
     :`<div class="act-empty" style="padding:.6rem">${en?'Nobody scheduled':'Nadie programado'}</div>`;
   let html=`${note?`<div class="act-nota" style="margin-bottom:.6rem">${escapeHTML(note)}</div>`:''}
     ${dayChips}
@@ -10613,7 +10624,7 @@ function _horHoyHTML(){
   (w.data.services||[]).forEach(sv=>(sv.rows||[]).forEach(r=>{
     if(_HOR_POSROWS.includes(r.n) || seenOff.has(r.n)) return;
     const pd=_horPersonDay(w,r.n,di);
-    if(!pd.shifts.length && pd.code){ seenOff.add(r.n); off.push(`${escapeHTML(r.n)} <span class="hor-code hor-code-${_horCellKind(pd.code)}">${escapeHTML(_horCodeLbl(pd.code))}</span>`); }
+    if(!pd.shifts.length && pd.code){ seenOff.add(r.n); off.push(`${escapeHTML(_horShort(r.n))} <span class="hor-code hor-code-${_horCellKind(pd.code)}">${escapeHTML(_horCodeLbl(pd.code))}</span>`); }
   }));
   if(off.length) html+=`<div class="tunic-divider"><span>${en?'Off that day':'Libran ese día'}</span></div><div class="hor-off">${off.join(' · ')}</div>`;
   return html;
@@ -10623,9 +10634,9 @@ function _horMioHTML(){
   const mine=_horMyName();
   if(!mine){
     return `<div class="act-nota" style="margin-bottom:.7rem">${en?'Which one is you on the rota? (saved on this device)':'¿Cuál eres tú en el cuadrante? (se guarda en este dispositivo)'}</div>
-      ${_horAllNames().sort().map(n=>`<button type="button" class="hor-pick" onclick="_horPickName('${escapeHTML(n).replace(/'/g,"\\'")}')">${escapeHTML(n)}</button>`).join('')}`;
+      ${_horAllNames().sort().map(n=>`<button type="button" class="hor-pick" onclick="_horPickName('${escapeHTML(n).replace(/'/g,"\\'")}')">${escapeHTML(_horShort(n))}</button>`).join('')}`;
   }
-  let html=`<div class="hor-day-head"><div class="hor-day-title">${escapeHTML(mine)}</div>
+  let html=`<div class="hor-day-head"><div class="hor-day-title">${escapeHTML(_horShort(mine))}</div>
     <div class="hor-day-meta">${en?'your rota':'tu horario'} · <button type="button" onclick="const e=getEmp(currentUser); if(e){delete e.schedName; saveDB();} renderHorarios()" style="background:none;border:none;color:var(--gold-deep);font-size:.62rem;cursor:pointer;text-decoration:underline;padding:0">${en?'not you?':'¿no eres tú?'}</button></div></div>`;
   const today=todayStr();
   let any=false;
@@ -10668,7 +10679,7 @@ function _horCuadranteHTML(){
     let lastG='';
     (sv.rows||[]).forEach(r=>{
       if((r.g||'')!==lastG){ lastG=r.g||''; if(lastG) html+=`<tr class="hor-grp"><td colspan="8">${escapeHTML(lastG)}</td></tr>`; }
-      html+=`<tr><td class="hor-name">${escapeHTML(r.n)}${r.pct&&r.pct!==100?` <small>${r.pct}%</small>`:''}</td>${[0,1,2,3,4,5,6].map(di=>{
+      html+=`<tr><td class="hor-name">${escapeHTML(_horShort(r.n))}${r.pct&&r.pct!==100?` <small>${r.pct}%</small>`:''}</td>${[0,1,2,3,4,5,6].map(di=>{
         const cell=(r.c||[])[di]||'';
         const k=_horCellKind(cell);
         if(k==='shift'){ const p=_horShiftParts(cell); return `<td><b>${escapeHTML(p.hrs)}</b>${p.zona?`<br><small>${escapeHTML(p.zona)}</small>`:''}</td>`; }
@@ -10718,9 +10729,10 @@ function _horCambioHTML(){
     }
   }));
   const msgFor=(name,motivo)=>{
+    const short=_horShort(name);
     const m=en
-      ? `Hi, this is ${currentUser}. Could I swap my ${_horDayLbl(sel.iso,true).toLowerCase()} shift (${sel.p.hrs}${sel.p.zona?' '+sel.p.zona:''}) with ${name}, who ${motivo}? Thank you.`
-      : `Hola, soy ${currentUser}. ¿Podría cambiar mi turno del ${_horDayLbl(sel.iso,true).toLowerCase()} (${sel.p.hrs}${sel.p.zona?' '+sel.p.zona:''}) con ${name}, que ${motivo}? Gracias.`;
+      ? `Hi, this is ${currentUser}. Could I swap my ${_horDayLbl(sel.iso,true).toLowerCase()} shift (${sel.p.hrs}${sel.p.zona?' '+sel.p.zona:''}) with ${short}, who ${motivo}? Thank you.`
+      : `Hola, soy ${currentUser}. ¿Podría cambiar mi turno del ${_horDayLbl(sel.iso,true).toLowerCase()} (${sel.p.hrs}${sel.p.zona?' '+sel.p.zona:''}) con ${short}, que ${motivo}? Gracias.`;
     return m;
   };
   const btn=(name,motivo)=>{
@@ -10730,12 +10742,12 @@ function _horCambioHTML(){
       <button type="button" class="hor-mini hor-mini-wa" aria-label="WhatsApp" onclick="window.open('https://wa.me/?text='+encodeURIComponent('${msg}'),'_blank','noopener')">${_WA_ICO}</button></span>`;
   };
   html+=`<div class="tunic-divider"><span>${en?'Free that day — can cover you':'Libres ese día — pueden cubrirte'}</span></div>`;
-  html+=libres.length?libres.map(x=>`<div class="hor-row"><span class="hor-row-n">${escapeHTML(x.n)}</span><span class="hor-code hor-code-${_horCellKind(x.code)}">${escapeHTML(_horCodeLbl(x.code))}</span>${btn(x.n, en?'is off that day':'libra ese día')}</div>`).join('')
+  html+=libres.length?libres.map(x=>`<div class="hor-row"><span class="hor-row-n">${escapeHTML(_horShort(x.n))}</span><span class="hor-code hor-code-${_horCellKind(x.code)}">${escapeHTML(_horCodeLbl(x.code))}</span>${btn(x.n, en?'is off that day':'libra ese día')}</div>`).join('')
     :`<div class="act-empty" style="padding:.5rem">${en?'Nobody fully free that day.':'Nadie totalmente libre ese día.'}</div>`;
   html+=`<div class="tunic-divider"><span>${en?'Different shift same day — swap shifts':'Turno distinto ese día — intercambio'}</span></div>`;
-  html+=permutas.length?permutas.map(x=>`<div class="hor-row"><span class="hor-row-n">${escapeHTML(x.n)}</span><span class="hor-row-h">${escapeHTML(x.p.hrs)}</span>${btn(x.n,(en?'works ':'tiene el turno de ')+x.p.hrs)}</div>`).join('')
+  html+=permutas.length?permutas.map(x=>`<div class="hor-row"><span class="hor-row-n">${escapeHTML(_horShort(x.n))}</span><span class="hor-row-h">${escapeHTML(x.p.hrs)}</span>${btn(x.n,(en?'works ':'tiene el turno de ')+x.p.hrs)}</div>`).join('')
     :`<div class="act-empty" style="padding:.5rem">${en?'Nobody on a different shift.':'Nadie con turno distinto.'}</div>`;
-  if(noDisp.length) html+=`<div class="tunic-divider"><span>${en?'Not available':'No disponibles'}</span></div><div class="hor-off">${noDisp.map(x=>`${escapeHTML(x.n)} <span class="hor-code hor-code-${_horCellKind(x.code)}">${escapeHTML(_horCodeLbl(x.code))}</span>`).join(' · ')}</div>`;
+  if(noDisp.length) html+=`<div class="tunic-divider"><span>${en?'Not available':'No disponibles'}</span></div><div class="hor-off">${noDisp.map(x=>`${escapeHTML(_horShort(x.n))} <span class="hor-code hor-code-${_horCellKind(x.code)}">${escapeHTML(_horCodeLbl(x.code))}</span>`).join(' · ')}</div>`;
   html+=`<div class="act-nota" style="margin-top:.8rem">${en
     ?'House rules: supervisors only swap with supervisors, the floor team with the floor team; the manager and the Hostess position are not part of swaps.'
     :'Reglas de la casa: los supervisores solo cambian entre supervisores y la sala con la sala; la manager y el puesto de Hostess no entran en los cambios.'}</div>`;
