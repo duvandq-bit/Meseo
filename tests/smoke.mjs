@@ -5674,9 +5674,10 @@ test('La Mesa Infinita (F1): huésped IA anclado a la fuente única + candados d
     'la carta del huésped no puede depender de la hora del reloj');
   assert(/function _miMenu\(lang, shift\)/.test(html) && /shift = shift==='a' \? 'a' : 'c';/.test(menuFn),
     '_miMenu recibe el turno elegido, con la cena como valor por defecto');
+  // El botón dice solo «Almuerzo» — sin «(terraza)» (petición del propietario).
   assert(/let _miShift='c';/.test(html) && /_miShift='\$\{k\}';renderMesaLobby\(\)/.test(html)
-    && /_shBtn\('a','☀️ '/.test(html) && /Almuerzo \(terraza\)/.test(html),
-    'la antesala debe ofrecer el selector Cena/Almuerzo (cena por defecto)');
+    && /_shBtn\('a','☀️ '\+\(_en\?'Lunch':'Almuerzo'\)\)/.test(html),
+    'la antesala debe ofrecer el selector Cena/Almuerzo (cena por defecto, sin «terraza»)');
   assert(/shift:\(_miShift==='a'\?'a':'c'\)/.test(html),
     'el turno elegido debe viajar con la sesión (no leerse en caliente)');
   assert((html.match(/_miMenu\(_miS\.lang,_miS\.shift\)/g)||[]).length===2,
