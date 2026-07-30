@@ -1,6 +1,57 @@
 {
- "updated": "2026-07-30T00:13:01.938Z",
+ "updated": "2026-07-30T07:43:15.214Z",
  "items": [
+  {
+   "t": "Juernes de por fogones: Ocho Islas, ocho restaurantes para saborearlas",
+   "u": "https://www.eldiario.es/canariasahora/por-fogones/losjuernesdeporfogones/ocho-islas-ocho-restaurantes-saborearlas_1_13416313.html",
+   "s": "elDiario.es",
+   "d": "2026-07-30T07:13:46.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://static.eldiario.es/clip/16f144eb-cc61-4d04-8d23-d6b623666080_facebook-watermarked-aspect-ratio-1200-675_default_0.jpg"
+  },
+  {
+   "t": "Sodepal revalida la máxima calificación en el Índice de Transparencia de Canarias",
+   "u": "https://www.eldiario.es/canariasahora/lapalmaahora/politica/sodepal-revalida-maxima-calificacion-indice-transparencia-canarias_1_13416758.html",
+   "s": "elDiario.es",
+   "d": "2026-07-30T06:56:44.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://static.eldiario.es/clip/773ffcf0-a996-468c-8b79-9aec8ef24827_facebook-watermarked-aspect-ratio-1200-675_default_0_x714y131.jpg"
+  },
+  {
+   "t": "Arranca el desarrollo de la nueva ciudad del sur de Tenerife: ya hay 13 peticiones para licencias de viviendas, hoteles y comercios en El Mojón",
+   "u": "https://www.eldia.es/tenerife/2026/07/30/arranca-desarrollo-nueva-ciudad-sur-132929886.html",
+   "s": "Eldía",
+   "d": "2026-07-30T06:00:34.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://estaticos-cdn.prensaiberica.es/clip/b3b3c5cc-26d1-40a8-8c63-ba7bc16c7a5c_16-9-discover-aspect-ratio_default_0_x961y427.jpg"
+  },
+  {
+   "t": "¿A qué saben los vinos de las islas alrededor del mundo, desde Hokkaido hasta Canarias? “No serán los mejores del mundo, pero son vinos únicos en el mundo”",
+   "u": "https://www.lavanguardia.com/comer/beber/20260730/11601890/que-vinos-islas-alrededor-mundo-hokkaido-canarias-seran-mejores-mundo-son-vinos-unicos-mundo.amp.html",
+   "s": "La Vanguardia",
+   "d": "2026-07-30T05:00:00.000Z",
+   "tags": [
+    "VINO",
+    "CANARIAS"
+   ],
+   "img": "https://www.lavanguardia.com/files/og_thumbnail/files/fp/uploads/2026/07/27/6a6759400e327.r_d.1046-1242-5658.jpeg"
+  },
+  {
+   "t": "Pedrito Sánchez, Premio Nacional de Gastronomía: \"Bagá no podría estar en otro sitio que no fuera Jaén\"",
+   "u": "https://www.jaenhoy.es/ocio/pedrito-sanchez-premio-nacional-gastronomia-baga-jaen_0_2007612739.amp.html",
+   "s": "Jaén Hoy",
+   "d": "2026-07-30T04:30:11.000Z",
+   "tags": [
+    "ALTA COCINA"
+   ],
+   "img": "https://static.grupojoly.com/clip/6f277714-b5f5-41f0-82bd-6ddf5035a1eb_facebook-aspect-ratio_default_0.jpg"
+  },
   {
    "t": "‘Sensaciones de Verano’ vuelve a El Médano con tapas y vinos desde 1 a 5 euros",
    "u": "https://diariodeavisos.elespanol.com/2026/07/sensaciones-de-verano-vuelve-a-el-medano-con-tapas-y-vinos-desde-1-a-5-euros/",
@@ -23,14 +74,15 @@
    "img": "https://estaticos-cdn.prensaiberica.es/clip/b1c2edcd-b06d-48bb-9b21-7072e93eecb0_16-9-aspect-ratio_default_0.jpg"
   },
   {
-   "t": "Dimitió al frente del banco de sangre de Canarias en plena crisis y al mes Sanidad lo 'premió' con un puesto de asesor",
-   "u": "https://www.eldiario.es/canariasahora/sociedad/dimitio-frente-banco-sangre-canarias-plena-crisis-mes-sanidad-premio-puesto-asesor_1_13411548.html",
-   "s": "elDiario.es",
-   "d": "2026-07-29T18:58:15.000Z",
+   "t": "Italia arranca la vendimia más temprana en Franciacorta por calor y falta de agua",
+   "u": "https://www.vinetur.com/amp/20260729105041/italys-2026-grape-harvest-starts-earlier-than-ever-in-franciacorta.html",
+   "s": "Vinetur",
+   "d": "2026-07-29T18:50:00.000Z",
    "tags": [
+    "VINO",
     "CANARIAS"
    ],
-   "img": "https://static.eldiario.es/clip/dfb1331e-5498-4f3f-8ca8-d7c74d9c9149_facebook-watermarked-aspect-ratio-1200-675_default_0_x701y754.jpg"
+   "img": "https://www.vinetur.com/imagenes/pube/2026-W30/image26.jpg"
   },
   {
    "t": "LPA Estación abre la venta de entradas: 11 días de rutas, talleres, mar y gastronomía en la capital",
@@ -51,6 +103,17 @@
     "CANARIAS"
    ],
    "img": "https://www.masscultura.com/wp-content/uploads/2026/07/ALCALDE-Y-CONCEJAL-COMERCIO-CON-REPRESENTANTES-BURGER-FEST.jpeg"
+  },
+  {
+   "t": "El consumidor deja de sostener el mercado cervecero de Estados Unidos",
+   "u": "https://www.vinetur.com/amp/20260729105019/us-beer-sales-fell-34-after-holiday-and-soccer-boosts-faded.html",
+   "s": "Vinetur",
+   "d": "2026-07-29T17:39:00.000Z",
+   "tags": [
+    "VINO",
+    "CANARIAS"
+   ],
+   "img": "https://www.vinetur.com/imagenes/2026/july/29/20260729-214617-pube6257.jpg"
   },
   {
    "t": "Calima y temperaturas de hasta 35 grados: el tiempo para este jueves en Canarias",
@@ -96,7 +159,7 @@
   {
    "t": "La Orotava acoge el 7 y 8 de agosto el Burger Fest Canarias con un amplio programa musical",
    "u": "https://www.canal4tenerife.tv/la-orotava-acoge-el-7-y-8-de-agosto-el-burger-fest-canarias-con-un-amplio-programa-musical/",
-   "s": "Canal 4 Tenerife",
+   "s": "canal4tenerife.tv",
    "d": "2026-07-29T15:33:17.000Z",
    "tags": [
     "CANARIAS"
@@ -116,21 +179,11 @@
    "t": "La Fonda de Alcalá de Calaceite entra en la prestigiosa Guía Michelín: «Es un reconocimiento para cuatro generaciones»",
    "u": "https://www.lacomarca.net/fonda-alcala-calaceite-entra-guia-michelin-reconocimiento-es-cuatro-generaciones/",
    "s": "La Comarca",
-   "d": "2026-07-29T15:17:35.000Z",
+   "d": "2026-07-29T15:18:19.000Z",
    "tags": [
     "MICHELIN"
    ],
    "img": "https://www.lacomarca.net/wp-content/uploads/2026/07/fonda-alcala-guia-michelin-29-07-2026.jpg"
-  },
-  {
-   "t": "El PSOE urge al presidente del Cabildo a que exija a Clavijo los fondos que “adeuda el Gobierno canario a la reconstrucción de La Palma”",
-   "u": "https://www.eldiario.es/canariasahora/lapalmaahora/politica/psoe-urge-presidente-cabildo-exija-clavijo-fondos-adeuda-gobierno-canario-reconstruccion-palma_1_13415632.html",
-   "s": "elDiario.es",
-   "d": "2026-07-29T14:36:26.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://static.eldiario.es/clip/1c8ece17-01ad-483e-8362-988c8072e39a_facebook-watermarked-aspect-ratio-1200-675_default_0_x1108y255.jpg"
   },
   {
    "t": "Así es Bagá: cuánto cuesta el menú de Pedro Sánchez, el mejor chef de 2026",
@@ -175,7 +228,7 @@
   },
   {
    "t": "Pedro Sánchez, del restaurante Bagá en Jaén, elegido Mejor Cocinero de 2026",
-   "u": "https://www.elmundo.es/metropoli/gastronomia/2026/07/29/6a69e73bfdddffc1488b4578.html",
+   "u": "https://amp.elmundo.es/metropoli/gastronomia/2026/07/29/6a69e73bfdddffc1488b4578.html",
    "s": "El Mundo",
    "d": "2026-07-29T13:59:47.000Z",
    "tags": [
@@ -195,7 +248,7 @@
   },
   {
    "t": "El chef jiennense Pedro Sánchez, de Bagá, recibe el Premio Nacional de Gastronomía 2026 al Mejor Jefe de Cocina",
-   "u": "https://www.democrata.es/agricultura-alimentacion/el-chef-jiennense-pedro-sanchez-de-baga-recibe-el-premio-nacional-de-gastronomia-2026-al-mejor-jefe-de-cocina/amp/",
+   "u": "https://www.democrata.es/agricultura-alimentacion/el-chef-jiennense-pedro-sanchez-de-baga-recibe-el-premio-nacional-de-gastronomia-2026-al-mejor-jefe-de-cocina/",
    "s": "Demócrata",
    "d": "2026-07-29T12:08:23.000Z",
    "tags": [
@@ -243,63 +296,14 @@
    "img": "https://lavozcanaria.com/media/2026/07/la-orotava-celebra-el-burger-fest-canarias-con-gastronomia-y-musica.webp"
   },
   {
-   "t": "Canarias declara la alerta por temperaturas máximas ante la llegada de la ola de calor",
-   "u": "https://www.eldiario.es/canariasahora/tiempo-canarias/canarias-alerta-aemet-calor-riesgo-altas-temperaturas-tiempo_1_13414952.html",
-   "s": "elDiario.es",
-   "d": "2026-07-29T11:40:47.000Z",
+   "t": "La Guardia Civil detiene en Tenerife a tres menores de edad por una docena de robos en comercios",
+   "u": "https://www.eldia.es/sucesos/sucesos-en-canarias/2026/07/29/guardia-civil-detiene-tenerife-tres-132919110.html",
+   "s": "Eldía",
+   "d": "2026-07-29T11:39:17.000Z",
    "tags": [
     "CANARIAS"
    ],
-   "img": "https://static.eldiario.es/clip/7cf079e7-e21e-4579-b471-f0a39fa64c93_facebook-watermarked-aspect-ratio-1200-675_default_0.jpg"
-  },
-  {
-   "t": "Pedro Sánchez lleva a Jaén a la cima de la gastronomía nacional",
-   "u": "https://lacontradejaen.eldiario.es/pedro-sanchez-premio-nacional-al-mejor-jefe-de-cocina/",
-   "s": "Lacontradejaén",
-   "d": "2026-07-29T11:37:12.000Z",
-   "tags": [
-    "ALTA COCINA"
-   ],
-   "img": "https://lacontradejaen.eldiario.es/img/galeria/2023/05/pedrosanchez_baga_jaen-41.jpeg"
-  },
-  {
-   "t": "El chef jiennense Pedro Sánchez, Premio Nacional de Gastronomía 2026 al Mejor Jefe de Cocina",
-   "u": "https://www.democrata.es/agricultura-alimentacion/el-chef-jiennense-pedro-sanchez-premio-nacional-de-gastronomia-2026-al-mejor-jefe-de-cocina/",
-   "s": "Demócrata",
-   "d": "2026-07-29T11:32:22.000Z",
-   "tags": [
-    "ALTA COCINA"
-   ]
-  },
-  {
-   "t": "El Estado transferirá 7.650 millones a Canarias en 2027, la mayor entrega a cuenta en la historia en las Islas",
-   "u": "https://www.eldiario.es/canariasahora/politica/entrega-cuenta-canarias-2027-7-650-millones-historia_1_13414865.html",
-   "s": "elDiario.es",
-   "d": "2026-07-29T11:26:27.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://static.eldiario.es/clip/958d0ac9-20d0-419f-8a24-8a51617c9f93_facebook-watermarked-aspect-ratio-1200-675_default_0_x1186y316.jpg"
-  },
-  {
-   "t": "Pedro Sánchez (Bagá) gana el Premio Nacional de Gastronomía 2026",
-   "u": "https://www.7canibales.com/noticias/pedro-sanchez-premio-nacional-gastronomia/",
-   "s": "7 Caníbales",
-   "d": "2026-07-29T11:00:27.000Z",
-   "tags": [
-    "ALTA COCINA"
-   ],
-   "img": "https://www.7canibales.com/wp-content/uploads/sites/2/2020/09/IMG-8156.jpg"
-  },
-  {
-   "t": "Ni chocolate ni vainilla: los doce helados de la heladería más alta de España se hacen con gofio, barraquito y pino",
-   "u": "https://www.larazon.es/canarias/chocolate-vainilla-doce-helados-heladeria-mas-alta-espana-hacen-gofio-barraquito-pino_202607296a698e0d71b42a0b5dcc3ae6.html",
-   "s": "La Razón",
-   "d": "2026-07-29T11:00:15.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://fotografias-2.larazon.es/clipping/cmsimages01/2026/07/29/429C4786-B098-458E-9F3E-641FE8050FD1/chocolate-vainilla-doce-helados-heladeria-mas-alta-espana-hacen-gofio-barraquito-pino_98.jpg?crop=1167,657,x0,y46&width=1900&height=1069&optimize=low&format=webply"
+   "img": "https://estaticos-cdn.prensaiberica.es/clip/0f74bf8d-a44e-44bd-90ae-38587c8d1383_16-9-discover-aspect-ratio_default_0_x759y295.jpg"
   }
  ]
 }
