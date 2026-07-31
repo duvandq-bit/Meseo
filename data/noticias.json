@@ -1,6 +1,88 @@
 {
- "updated": "2026-07-31T00:16:47.215Z",
+ "updated": "2026-07-31T08:10:48.924Z",
  "items": [
+  {
+   "t": "La cafetería de Tenerife que ofrece un menú del día por 12 euros: cocina casera, raciones generosas y precios económicos",
+   "u": "https://www.eldia.es/tenerife/2026/07/31/cafeteria-tenerife-ofrece-menu-dia-12-euros-dv-132979900.html",
+   "s": "Eldía",
+   "d": "2026-07-31T07:43:21.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://estaticos-cdn.prensaiberica.es/clip/701bccb2-3c7e-414d-87bb-62775b619280_16-9-discover-aspect-ratio_default_0_x562y272.jpg"
+  },
+  {
+   "t": "Los chefs vascos coinciden: \"Para unos mejillones más ricos, no los abras con agua; sino con 20 ml de aceite y 50 ml de vino\"",
+   "u": "https://www.elespanol.com/cocinillas/recetas/20260731/chefs-vascos-coinciden-mejillones-ricos-no-abras-agua-ml-aceite-vino/1003744338775_30.html",
+   "s": "El Español",
+   "d": "2026-07-31T05:46:03.000Z",
+   "tags": [
+    "CHEF",
+    "VINO"
+   ],
+   "img": "https://s3.elespanol.com/k/imgp/cms/elespanol/11326661.jpg?p=f:jpeg/w:1706/h:960&h=z3M3rI9J&fmt=jpeg"
+  },
+  {
+   "t": "El ranking definitivo de las comunidades autónomas con la mejor gastronomía de España",
+   "u": "https://www.que.es/2026/07/31/ranking-mejor-gastronomia-espana/",
+   "s": "que.es",
+   "d": "2026-07-31T05:28:00.000Z",
+   "tags": [
+    "MICHELIN"
+   ],
+   "img": "https://static.que.es/wp-content/uploads/2026/07/ranking-mejor-gastronomia-espana-portada-1024x711.webp"
+  },
+  {
+   "t": "Un chef catalán: \"La mahonesa, la salsa más conocida del mundo, es española y en la RAE aparece como francesa\"",
+   "u": "https://www.elespanol.com/mujer/estilo-vida/20260731/chef-catalan-mahonesa-salsa-conocida-mundo-espanola-rae-aparece-francesa/1003744339461_0.amp.html",
+   "s": "El Español",
+   "d": "2026-07-31T05:27:58.000Z",
+   "tags": [
+    "ALTA COCINA"
+   ],
+   "img": "https://s3.elespanol.com/k/imgp/cms/elespanol/11326963.jpg?p=f:jpeg/c:1710:960:nowe:61:0/w:1706/h:960&h=eK_Ecq3e&fmt=jpeg"
+  },
+  {
+   "t": "Pepe Rodríguez revela lo que está ocurriendo en España con muchos restaurantes con estrella Michelin: \"Algo no estamos haciendo bien aquí\"",
+   "u": "https://www.huffingtonpost.es/virales/pepe-rodriguez-revela-esta-ocurriendo-espana-restaurantes-estrella-michelinalgo-haciendo-aqui-f202607.html",
+   "s": "El HuffPost",
+   "d": "2026-07-31T05:18:24.000Z",
+   "tags": [
+    "ALTA COCINA",
+    "MICHELIN"
+   ],
+   "img": "https://img2.huffingtonpost.es/files/og_thumbnail/uploads/2024/09/09/pepe-rodriguez-junto-a-jordi-cruz-en-masterchef.jpeg"
+  },
+  {
+   "t": "Ugo Chan abre el telón de 'Star Nights' en Gran Canaria: «Queremos que el público viva la misma experiencia que en nuestro restaurante»",
+   "u": "https://www.canarias7.es/gastronomia-c7/ugo-chan-inaugura-star-nights-gran-canaria-20260731070000-nt_amp.html",
+   "s": "Canarias7",
+   "d": "2026-07-31T05:00:21.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://s2.ppllstatics.com/canarias7/www/multimedia/gastronomia-c7/2026/07/30/hugo.jpg"
+  },
+  {
+   "t": "El restaurante vasco favorito de Bad Bunny: la mejor chuleta, asombrosas gildas y un rodaballo a la parrilla espectacular",
+   "u": "https://cronicavasca.elespanol.com/gastronomia/20260731/restaurante-favorito-bad-bunny-asombrosas-rodaballo-espectacular-trt/1003742783465_0.html",
+   "s": "Crónica Vasca",
+   "d": "2026-07-31T05:00:00.000Z",
+   "tags": [
+    "MICHELIN"
+   ],
+   "img": "https://a2.elespanol.com/k/imgp/cms/asociados/560591.jpg?p=f:jpeg/w:1706/h:960&h=SnVFH6GG&fmt=jpeg"
+  },
+  {
+   "t": "“En la cocina todo el mundo habla el mismo idioma”: Tenerife y Florencia se retan en una \"batalla\" de chefs con el re...",
+   "u": "https://www.atlanticohoy.com/tenerife/tenerife-florencia-se-retan-en-batalla-chefs-con-reto-crear-menu-conjunto-akira-back-abama_1564865_102_amp.html",
+   "s": "Atlántico Hoy",
+   "d": "2026-07-31T04:00:00.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://www.atlanticohoy.com/uploads/s1/37/55/43/8/diseno-sin-titulo-2026-07-29t094403-205.webp"
+  },
   {
    "t": "Padylla (31/07/26)",
    "u": "https://www.eldia.es/humor/2026/07/31/padylla-31-07-26-132972728.html",
@@ -32,6 +114,16 @@
    "img": "https://static.eldiario.es/clip/27f991e1-ac40-4d10-bc27-3630c0a7c124_facebook-watermarked-aspect-ratio-1200-675_default_0.jpg"
   },
   {
+   "t": "Un hombre en estado crítico y una mujer grave tras el choque entre una moto y un camión en Tenerife",
+   "u": "https://www.eldiario.es/canariasahora/tenerifeahora/sucesos/hombre-critico-mujer-grave-choque-moto-camion-tenerife_1_13419218.html",
+   "s": "elDiario.es",
+   "d": "2026-07-30T17:48:25.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://static.eldiario.es/clip/94311beb-820b-4909-99a8-f9fd7ddd996d_facebook-watermarked-aspect-ratio-1200-675_default_0.jpg"
+  },
+  {
    "t": "La sequía amenaza con recortar la vendimia francesa desde su arranque",
    "u": "https://www.vinetur.com/amp/20260730105075/frances-grape-harvest-will-start-early-as-drought-shrinks-the-crop.html",
    "s": "Vinetur",
@@ -51,17 +143,6 @@
     "CANARIAS"
    ],
    "img": "https://static.eldiario.es/clip/6ef2ee6b-91ca-4c92-9a1f-874e76a28ebb_facebook-watermarked-aspect-ratio-1200-675_default_0_x1806y658.jpg"
-  },
-  {
-   "t": "Con el respaldo del equipo responsable de un concepto de Houston galardonado con una estrella Michelin, un nuevo concepto de alta cocina española de 3.500 pies cuadrados llega a Dallas",
-   "u": "https://secretdallas.com/es/anuncio-de-masia-dallas/",
-   "s": "Secret Dallas",
-   "d": "2026-07-30T15:37:00.000Z",
-   "tags": [
-    "ALTA COCINA",
-    "MICHELIN"
-   ],
-   "img": "https://offloadmedia.feverup.com/secretdallas.com/wp-content/uploads/2026/07/30060352/FotoJet-2026-07-30T140051.664.jpg"
   },
   {
    "t": "Pedro Sánchez, mejor cocinero 2026: cuánto cuesta y qué se come en su restaurante",
@@ -125,6 +206,16 @@
    "img": "https://static.eldiario.es/clip/5bf43434-b130-4180-ae81-cd1e05116e32_facebook-watermarked-aspect-ratio-1200-675_default_0.jpg"
   },
   {
+   "t": "Paulo Airaudo, el rey argentino de la alta cocina vasca: \"Evolución es hacer lo mismo, pero mejor que ayer\"",
+   "u": "https://www.elespanol.com/viajes/cocinillas-gastro/reportajes-gastronomicos/20260730/paulo-airaudo-rey-argentino-alta-cocina-vasca-evolucion-hacer-mismo-mejor-ayer/1003744302887_0.amp.html",
+   "s": "El Español",
+   "d": "2026-07-30T13:54:15.000Z",
+   "tags": [
+    "MICHELIN"
+   ],
+   "img": "https://s3.elespanol.com/k/imgp/cms/elespanol/11304507.jpg?p=f:jpeg/w:1706/h:960&h=kd31i5Ki&fmt=jpeg"
+  },
+  {
    "t": "Premios de Turismo Islas Canarias 2026 destacan a Bodegas Conatvs y Carlos Cebriá como referentes del sector.",
    "u": "https://elcongresista.mx/politica/nacional/bodegas-conatvs-carlos-cebria-premios-turismo-islas-canarias-2026",
    "s": "El Congresista",
@@ -167,6 +258,16 @@
    "img": "https://estaticos-cdn.prensaiberica.es/clip/9c1a5481-f533-43ec-aa01-93e963d942d5_16-9-discover-aspect-ratio_default_0_x679y272.jpg"
   },
   {
+   "t": "La villa juguetera de Alicante que conquista por su cocina: así es el pueblo donde mejor se come de España",
+   "u": "https://www.noticiasdelvino.com/restaurantes/2026/07/30/la-villa-juguetera-de-alicante-que-conquista-por-su-cocina-asi-es-el-pueblo-donde-mejor-se-come-de-espana-74836/",
+   "s": "Noticias del Vino",
+   "d": "2026-07-30T12:20:51.000Z",
+   "tags": [
+    "MICHELIN"
+   ],
+   "img": "https://www.noticiasdelvino.com/wp-content/uploads/restaurantes-5.jpg"
+  },
+  {
    "t": "NC ve una \"legislatura perdida\" en Canarias y tacha al Gobierno de CC-PP de \"fracaso absoluto\"",
    "u": "https://www.eldiario.es/canariasahora/politica/nc-ve-legislatura-perdida-canarias-tacha-gobierno-cc-pp-fracaso-absoluto_1_13418003.html",
    "s": "elDiario.es",
@@ -175,16 +276,6 @@
     "CANARIAS"
    ],
    "img": "https://static.eldiario.es/clip/d2428e20-170a-4f54-b945-b1578ec2f24d_facebook-watermarked-aspect-ratio-1200-675_default_0_x943y349.jpg"
-  },
-  {
-   "t": "La venta de viviendas cae en mayo un 9,5% en Canarias, con los precios subiendo un 13%, según los notarios",
-   "u": "https://www.eldiario.es/canariasahora/economia/venta-viviendas-canarias-mayo-precios-subiendo-13-notarios_1_13417372.html",
-   "s": "elDiario.es",
-   "d": "2026-07-30T10:02:18.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://static.eldiario.es/clip/c64b7501-08ea-470b-b822-542d6719f95a_facebook-watermarked-aspect-ratio-1200-675_default_0.jpg"
   },
   {
    "t": "José Andrés: \"Me preocupa mucho que un día nos despertemos y haya un Armagedón alimentario\"",
@@ -215,99 +306,6 @@
     "CANARIAS"
    ],
    "img": "https://estaticos-cdn.prensaiberica.es/clip/a7a44fa2-d24e-414b-872d-0ae383fc8c37_16-9-discover-aspect-ratio_default_0_x517y229.jpg"
-  },
-  {
-   "t": "El guachinche de Tenerife que arrasa con su cocina canaria tradicional, carnes a la brasa y vista al Teide",
-   "u": "https://www.eldia.es/tenerife/2026/07/30/guachinche-tenerife-arrasa-cocina-canaria-tradicional-vistas-teide-dv-132943103.html",
-   "s": "Eldía",
-   "d": "2026-07-30T07:48:08.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://estaticos-cdn.prensaiberica.es/clip/c80827a5-fabf-42b0-8f3e-a7954b4cd32a_16-9-discover-aspect-ratio_default_0_x580y582.jpg"
-  },
-  {
-   "t": "Ocho Islas, ocho restaurantes para saborearlas",
-   "u": "https://www.eldiario.es/canariasahora/por-fogones/losjuernesdeporfogones/ocho-islas-ocho-restaurantes-saborearlas_1_13416313.amp.html",
-   "s": "elDiario.es",
-   "d": "2026-07-30T07:13:46.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://static.eldiario.es/clip/16f144eb-cc61-4d04-8d23-d6b623666080_facebook-watermarked-aspect-ratio-1200-675_default_0.jpg"
-  },
-  {
-   "t": "Sodepal revalida la máxima calificación en el Índice de Transparencia de Canarias",
-   "u": "https://www.eldiario.es/canariasahora/lapalmaahora/politica/sodepal-revalida-maxima-calificacion-indice-transparencia-canarias_1_13416758.html",
-   "s": "elDiario.es",
-   "d": "2026-07-30T06:56:44.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://static.eldiario.es/clip/773ffcf0-a996-468c-8b79-9aec8ef24827_facebook-watermarked-aspect-ratio-1200-675_default_0_x714y131.jpg"
-  },
-  {
-   "t": "¿A qué saben los vinos de las islas alrededor del mundo, desde Hokkaido hasta Canarias? “No serán los mejores del mundo, pero son vinos únicos en el mundo”",
-   "u": "https://www.lavanguardia.com/comer/beber/20260730/11601890/que-vinos-islas-alrededor-mundo-hokkaido-canarias-seran-mejores-mundo-son-vinos-unicos-mundo.amp.html",
-   "s": "La Vanguardia",
-   "d": "2026-07-30T05:00:00.000Z",
-   "tags": [
-    "VINO",
-    "CANARIAS"
-   ],
-   "img": "https://www.lavanguardia.com/files/og_thumbnail/files/fp/uploads/2026/07/27/6a6759400e327.r_d.1046-1242-5658.jpeg"
-  },
-  {
-   "t": "Pedrito Sánchez, Premio Nacional de Gastronomía: \"Bagá no podría estar en otro sitio que no fuera Jaén\"",
-   "u": "https://www.jaenhoy.es/ocio/pedrito-sanchez-premio-nacional-gastronomia-baga-jaen_0_2007612739.amp.html",
-   "s": "Jaén Hoy",
-   "d": "2026-07-30T04:30:11.000Z",
-   "tags": [
-    "ALTA COCINA"
-   ],
-   "img": "https://static.grupojoly.com/clip/6f277714-b5f5-41f0-82bd-6ddf5035a1eb_facebook-aspect-ratio_default_0.jpg"
-  },
-  {
-   "t": "Con 3 históricas estrellas Michelin, restaurante mexicano en San Francisco desafía estereotipos",
-   "u": "https://www.americateve.com/con-3-historicas-estrellas-michelin-restaurante-mexicano-san-francisco-desafia-estereotipos-n5457761",
-   "s": "América TeVé",
-   "d": "2026-07-30T00:26:00.000Z",
-   "tags": [
-    "MICHELIN"
-   ],
-   "img": "https://media.americateve.com/p/781cd5a3c4f46bfdd92fdfe8691a86cb/adjuntos/179/imagenes/100/177/0100177685/1200x675/smart/file57d4c26ea91f17c08898b7bbb2daef41.jpg"
-  },
-  {
-   "t": "‘Sensaciones de Verano’ vuelve a El Médano con tapas y vinos desde 1 a 5 euros",
-   "u": "https://diariodeavisos.elespanol.com/2026/07/sensaciones-de-verano-vuelve-a-el-medano-con-tapas-y-vinos-desde-1-a-5-euros/",
-   "s": "Diario de Avisos",
-   "d": "2026-07-29T23:13:37.000Z",
-   "tags": [
-    "VINO",
-    "CANARIAS"
-   ],
-   "img": "https://cdn.diariodeavisos.com/wp-content/uploads/2026/07/WhatsApp-Image-2026-07-29-at-17.02.04.jpeg"
-  },
-  {
-   "t": "Dimitió al frente del banco de sangre de Canarias en plena crisis y al mes Sanidad lo 'premió' con un puesto de asesor",
-   "u": "https://www.eldiario.es/canariasahora/sociedad/dimitio-frente-banco-sangre-canarias-plena-crisis-mes-sanidad-premio-puesto-asesor_1_13411548.html",
-   "s": "elDiario.es",
-   "d": "2026-07-29T18:58:15.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://static.eldiario.es/clip/dfb1331e-5498-4f3f-8ca8-d7c74d9c9149_facebook-watermarked-aspect-ratio-1200-675_default_0_x701y754.jpg"
-  },
-  {
-   "t": "Italia arranca la vendimia más temprana en Franciacorta por calor y falta de agua",
-   "u": "https://www.vinetur.com/amp/20260729105041/italys-2026-grape-harvest-starts-earlier-than-ever-in-franciacorta.html",
-   "s": "Vinetur",
-   "d": "2026-07-29T18:50:00.000Z",
-   "tags": [
-    "VINO",
-    "CANARIAS"
-   ],
-   "img": "https://www.vinetur.com/imagenes/pube/2026-W30/image26.jpg"
   }
  ]
 }
