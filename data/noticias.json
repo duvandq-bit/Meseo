@@ -1,10 +1,20 @@
 {
- "updated": "2026-08-01T18:13:24.122Z",
+ "updated": "2026-08-02T00:14:41.397Z",
  "items": [
+  {
+   "t": "Julio Hernández, chef: \"Viajé por toda Asia para comer y poco a poco me fui enganchando\"",
+   "u": "https://diariodeavisos.elespanol.com/2026/08/julio-hernandez-chef-asia/",
+   "s": "Diario de Avisos",
+   "d": "2026-08-01T23:00:00.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://cdn.diariodeavisos.com/wp-content/uploads/2026/07/Julio-Hernandez.jpg"
+  },
   {
    "t": "La cofradía de pescadores de la Punta del Hidalgo toma el timón del pequeño muellito",
    "u": "https://www.eldia.es/tenerife/2026/08/01/punta-del-hidalgo-pescadores-cofradores-puerto-pesqueros-132999644.html",
-   "s": "eldia.es",
+   "s": "Eldía",
    "d": "2026-08-01T16:00:58.000Z",
    "tags": [
     "CANARIAS"
@@ -12,9 +22,19 @@
    "img": "https://estaticos-cdn.prensaiberica.es/clip/68bb98cd-93a5-4bfd-82c0-c4ae6bb1271c_16-9-discover-aspect-ratio_default_0_x967y429.jpg"
   },
   {
+   "t": "Canarias espera temperaturas de hasta 39 grados y calima este domingo",
+   "u": "https://www.eldiario.es/canariasahora/tiempo-canarias/canarias-espera-temperaturas-39-grados-calima-domingo_1_13422972.html",
+   "s": "elDiario.es",
+   "d": "2026-08-01T15:49:05.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://static.eldiario.es/clip/62dd2852-fa7c-4ed0-b63b-c40b898df029_facebook-watermarked-aspect-ratio-1200-675_default_0.jpg"
+  },
+  {
    "t": "El calor aprieta: el aeropuerto Tenerife norte registra 36,9 grados en un sábado de alerta en Canarias",
    "u": "https://www.eldia.es/tenerife/2026/08/01/calor-aprieta-aeropuerto-tenerife-norte-133018419.html",
-   "s": "eldia.es",
+   "s": "Eldía",
    "d": "2026-08-01T15:00:56.000Z",
    "tags": [
     "CANARIAS"
@@ -28,7 +48,8 @@
    "d": "2026-08-01T12:58:01.000Z",
    "tags": [
     "MICHELIN"
-   ]
+   ],
+   "img": "https://img.asmedia.epimg.net/resizer/v2/UB4Y4U3HZFEJTDP3CJHYAULGIE.png?auth=64ad51dea2e2420ed457cd515c112b79431160a1e7b6dfb8ccf67ccb3502a03c&width=1472&height=828&smart=true"
   },
   {
    "t": "Ferran Adrià, cocinero catalán: \"Cuando voy por Barcelona con un grupo de 8 o 10 personas y no me quiero gastar mucho, voy bastante a Taco Méndez\"",
@@ -43,22 +64,12 @@
   {
    "t": "La desaladora de Fonsalía alcanza su pleno rendimiento con 12.000 metros cúbicos diarios para el campo",
    "u": "https://www.eldia.es/tenerife/2026/08/01/desaladora-fonsalia-alcanza-pleno-rendimiento-133003027.html",
-   "s": "eldia.es",
+   "s": "Eldía",
    "d": "2026-08-01T11:00:20.000Z",
    "tags": [
     "CANARIAS"
    ],
    "img": "https://estaticos-cdn.prensaiberica.es/clip/adb5ffd6-0377-4805-a461-a5082cf1ad15_16-9-discover-aspect-ratio_default_0_x736y304.jpg"
-  },
-  {
-   "t": "El Cabildo de Tenerife recupera 65.000 metros cuadrados degradados junto a la TF-1",
-   "u": "https://www.eldia.es/tenerife/2026/08/01/cabildo-tenerife-recupera-65-000-133001937.html",
-   "s": "eldia.es",
-   "d": "2026-08-01T11:00:18.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://estaticos-cdn.prensaiberica.es/clip/32e66351-80a9-4ec1-9dd3-bae1a6200e2e_16-9-discover-aspect-ratio_default_0_x750y375.jpg"
   },
   {
    "t": "Pepe Rodríguez señala el gran problema de los restaurantes en España: \"La guía Michelin mueve todos los problemas de este país\"",
@@ -73,7 +84,7 @@
   {
    "t": "Hasta los huevos… se cansan de los egos",
    "u": "https://www.eldia.es/ocio/gastronomia/2026/08/01/huevos-cansan-egos-133016144.amp.html",
-   "s": "eldia.es",
+   "s": "Eldía",
    "d": "2026-08-01T10:31:39.000Z",
    "tags": [
     "CANARIAS"
@@ -93,7 +104,7 @@
   {
    "t": "Podcast | Luis Díaz de Losada: un gastrónomo ilustrado",
    "u": "https://www.eldia.es/ocio/gastronomia/2026/08/01/podcast-luis-diaz-losada-gastronomo-ilustrado-133015316.html",
-   "s": "eldia.es",
+   "s": "Eldía",
    "d": "2026-08-01T09:54:00.000Z",
    "tags": [
     "CANARIAS"
@@ -123,7 +134,7 @@
   {
    "t": "El restaurante de Tenerife donde el pescado fresco es el protagonista: una parada imprescindible por su relación calidad-precio",
    "u": "https://www.eldia.es/tenerife/2026/08/01/restaurante-tenerife-conquista-amantes-pescado-dv-132083183.amp.html",
-   "s": "eldia.es",
+   "s": "Eldía",
    "d": "2026-08-01T07:30:00.000Z",
    "tags": [
     "CANARIAS"
@@ -143,7 +154,7 @@
   {
    "t": "'Helados del Teide' creados en Tenerife: del pino canario y el quesillo al barraquito y el frangollo",
    "u": "https://www.eldia.es/tenerife/2026/08/01/helados-teide-creados-tenerife-pino-132989246.amp.html",
-   "s": "eldia.es",
+   "s": "Eldía",
    "d": "2026-08-01T07:00:46.000Z",
    "tags": [
     "CANARIAS"
@@ -202,7 +213,7 @@
   },
   {
    "t": "Telde reúne tapas, vinos y música en una noche de sabor local",
-   "u": "https://www.laprovincia.es/telde/2026/07/31/telde-reune-tapas-vinos-musica-133007977.amp.html",
+   "u": "https://www.laprovincia.es/telde/2026/07/31/telde-reune-tapas-vinos-musica-133007977.html",
    "s": "La Provincia",
    "d": "2026-07-31T20:04:36.000Z",
    "tags": [
@@ -291,16 +302,6 @@
     "MICHELIN"
    ],
    "img": "https://www.eluniversal.com.mx/resizer/v2/VQH4D5GTX5FPPMLJWHCX3W5IEQ.png?auth=7bd55f6b5dfea6051b1fac3a35387926df575a7a077ab2498fd532726b14c0b3"
-  },
-  {
-   "t": "Pepe Rodríguez describe uno de los mayores problemas de la restauración: \"Venimos acumulando unos errores duritos”",
-   "u": "https://amp.marca.com/tiramillas/gastronomia/2026/07/31/pepe-rodriguez-describe-mayores-problemas-restauracion-venimos-acumulando-errores-duritos.html",
-   "s": "MARCA",
-   "d": "2026-07-31T17:00:27.000Z",
-   "tags": [
-    "MICHELIN"
-   ],
-   "img": "https://objetos-xlk.estaticos-marca.com/files/article_main_microformat/uploads/2026/07/30/6a6b227e5a613.jpeg"
   }
  ]
 }
