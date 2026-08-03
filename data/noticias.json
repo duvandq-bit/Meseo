@@ -1,6 +1,55 @@
 {
- "updated": "2026-08-03T13:48:53.413Z",
+ "updated": "2026-08-03T18:58:47.561Z",
  "items": [
+  {
+   "t": "La ola de calor no da tregua en Canarias: se esperan temperaturas por encima de los 40 grados en algunas zonas",
+   "u": "https://www.eldiario.es/canariasahora/tiempo-canarias/tiempo-en-canarias-este-martes-4-de-agosto-manana-hoy_1_13426194.html",
+   "s": "elDiario.es",
+   "d": "2026-08-03T17:15:28.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://static.eldiario.es/clip/e4d77bf3-cf89-4c19-a094-33fdf31c11a8_facebook-watermarked-aspect-ratio-1200-675_default_0.jpg"
+  },
+  {
+   "t": "Granadilla consolida ‘Sensaciones, Sabores de Verano’ como referente gastronómico en el sur de Tenerife",
+   "u": "https://eldigitalsur.com/tenerifesur/granadilla-sensaciones-sabores-verano-referente-gastronomico-sur-tenerife/",
+   "s": "El Digital Sur",
+   "d": "2026-08-03T15:31:31.000Z",
+   "tags": [
+    "CANARIAS"
+   ]
+  },
+  {
+   "t": "Duelo gastronómico 'Akira Back Chef Battle' que cita a los talentos de Tenerife y Florencia",
+   "u": "https://www.europapress.es/turismo/nacional/noticia-duelo-gastronomico-akira-back-chef-battle-cita-talentos-tenerife-florencia-20260803170651.html",
+   "s": "Europa Press",
+   "d": "2026-08-03T15:06:51.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://img.europapress.es/fotoweb/fotonoticia_20260803170651_1200.jpg"
+  },
+  {
+   "t": "Este es el tour gastronómico de Rosalía en Buenos Aires",
+   "u": "https://caras.perfil.com/noticias/celebridades/tour-gastronomico-de-rosalia-en-buenos-aires.phtml",
+   "s": "Caras",
+   "d": "2026-08-03T14:00:53.000Z",
+   "tags": [
+    "MICHELIN"
+   ],
+   "img": "https://fotos.perfil.com/2026/08/03/trim/1140/641/rosalia-2296362.jpg"
+  },
+  {
+   "t": "El Cabildo de La Gomera y el Costa Adeje Tenerife renuevan su alianza para promocionar el producto local",
+   "u": "https://www.gomeranoticias.com/2026/08/03/el-cabildo-de-la-gomera-y-el-costa-adeje-tenerife-renuevan-su-alianza-para-promocionar-el-producto-local/",
+   "s": "gomeranoticias.com",
+   "d": "2026-08-03T13:34:33.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://www.gomeranoticias.com/wp-content/uploads/2026/08/Representantes-del-Cabildo-y-del-CD-Tenerife-Femenino.jpg"
+  },
   {
    "t": "Este vino albariño de 13 euros y 91 puntos Parker es uno de los blancos con mejor relación calidad-precio del mercado",
    "u": "https://www.esquire.com/es/donde-comer-beber/a72752683/vino-rias-baixas-albarino-la-val-2024-opinion-precio/",
@@ -13,14 +62,15 @@
    "img": "https://hips.hearstapps.com/hmg-prod/images/7cf10ee2-6f95-48e8-9b46-3e7b60c016fe.jpeg?crop=1xw:0.75xh;center,top&resize=1200:*"
   },
   {
-   "t": "Frutas y Verduras Eladio ficha a Thomas Stork, chef ejecutivo del Mandarin Oriental Ritz, para su expansión",
-   "u": "https://www.diariosigloxxi.com/texto-ep/mostrar/20260803125143/frutas-verduras-eladio-ficha-thomas-stork-chef-ejecutivo-mandarin-oriental-ritz-expansion",
-   "s": "diariosigloxxi.com",
-   "d": "2026-08-03T10:51:00.000Z",
+   "t": "Vino, cine y cocina de autor: el plan especial que prepara El Sauzal para vivir el eclipse del 12 de agosto en Tenerife",
+   "u": "https://www.atlanticohoy.com/tenerife/plan-especial-prepara-sauzal-vivir-eclipse-12-agosto-en-tenerife_1565057_102_amp.html",
+   "s": "Atlántico Hoy",
+   "d": "2026-08-03T12:00:00.000Z",
    "tags": [
-    "ALTA COCINA"
+    "CANARIAS",
+    "VINO"
    ],
-   "img": "https://www.diariosigloxxi.com/images/20537"
+   "img": "https://www.atlanticohoy.com/uploads/s1/37/58/66/8/diseno-sin-titulo-2026-08-03t091730-704.webp"
   },
   {
    "t": "Canarias mantiene casi el mismo turismo extranjero a mitad de 2026 que en el ejercicio récord anterior",
@@ -71,6 +121,15 @@
     "CANARIAS"
    ],
    "img": "https://estaticos-cdn.prensaiberica.es/clip/e5d640e6-0ff0-4ef1-9461-3e2e44e27d18_16-9-discover-aspect-ratio_default_0_x596y808.jpg"
+  },
+  {
+   "t": "Economía.- Frutas y Verduras Eladio ficha a Thomas Stork, chef ejecutivo del Mandarin Oriental Ritz, para su expansión",
+   "u": "https://www.bolsamania.com/mexico/noticias_amp/empresas/economia--frutas-y-verduras-eladio-ficha-a-thomas-stork-chef-ejecutivo-del-mandarin-oriental-ritz-para-su-expansion--23174056.html",
+   "s": "Bolsamania",
+   "d": "2026-08-03T03:51:42.000Z",
+   "tags": [
+    "ALTA COCINA"
+   ]
   },
   {
    "t": "8 Islas, 8 pistas de gastronomía canaria",
@@ -153,21 +212,23 @@
   {
    "t": "El restaurante de carretera definitivo está en este pueblo medieval de Madrid: Martín Berasategui confiesa su secreto mejor guardado",
    "u": "https://www.noticiasdelvino.com/escapadas/2026/08/02/el-restaurante-de-carretera-definitivo-esta-en-este-pueblo-medieval-de-madrid-martin-berasategui-confiesa-su-secreto-mejor-guardado-74843/",
-   "s": "Noticias del Vino",
+   "s": "noticiasdelvino.com",
    "d": "2026-08-02T17:01:16.000Z",
    "tags": [
     "CHEF"
-   ]
+   ],
+   "img": "https://www.noticiasdelvino.com/wp-content/uploads/image-583.png"
   },
   {
    "t": "El viñedo más alto de Europa está en Tenerife: así es el pueblo que desafía a los Alpes",
    "u": "https://www.noticiasdelvino.com/escapadas/2026/08/02/el-vinedo-mas-alto-de-europa-esta-en-tenerife-asi-es-el-pueblo-que-desafia-a-los-alpes-66331/",
-   "s": "Noticias del Vino",
+   "s": "noticiasdelvino.com",
    "d": "2026-08-02T16:38:33.000Z",
    "tags": [
     "VINO",
     "CANARIAS"
-   ]
+   ],
+   "img": "https://www.noticiasdelvino.com/wp-content/uploads/El-vinedo-mas-alto-de-Europa-esta-en-Tenerife.jpg"
   },
   {
    "t": "Pepe Rodríguez Michelin: 'Es un error montar restaurantes pensando en la guía, eso no te salva en España'",
@@ -192,11 +253,12 @@
   {
    "t": "La villa juguetera de Alicante que conquista por su cocina: así es el pueblo donde mejor se come de España",
    "u": "https://www.noticiasdelvino.com/restaurantes/2026/08/02/la-villa-juguetera-de-alicante-que-conquista-por-su-cocina-asi-es-el-pueblo-donde-mejor-se-come-de-espana-74836/",
-   "s": "Noticias del Vino",
+   "s": "noticiasdelvino.com",
    "d": "2026-08-02T14:26:46.000Z",
    "tags": [
     "MICHELIN"
-   ]
+   ],
+   "img": "https://www.noticiasdelvino.com/wp-content/uploads/restaurantes-5.jpg"
   },
   {
    "t": "La escapada hedonista de agosto: Taberna Laredo",
@@ -238,65 +300,6 @@
     "MICHELIN"
    ],
    "img": "https://s1.abcstatics.com/abc/www/multimedia/recreo/2026/07/31/pepe-ok-kkAE--1200x630@diario_abc.jpg"
-  },
-  {
-   "t": "El restaurante de Gran Canaria que conquista con cocina canaria y carnes a la brasa: sus costillas con piña son un imprescindible",
-   "u": "https://www.laprovincia.es/gran-canaria/2026/08/02/restaurante-gran-conquista-cocina-canaria-dv-132761509.html",
-   "s": "La Provincia",
-   "d": "2026-08-02T07:30:00.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://estaticos-cdn.prensaiberica.es/clip/76a21336-652b-445d-b3ca-e1ef8af8322c_16-9-discover-aspect-ratio_default_0_x589y561.jpg"
-  },
-  {
-   "t": "Prealerta por viento en Canarias",
-   "u": "https://www.eldiario.es/canariasahora/lapalmaahora/sociedad/prealerta-viento-canarias_1_13423359.html",
-   "s": "elDiario.es",
-   "d": "2026-08-02T06:32:01.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://static.eldiario.es/clip/dcddefbf-0527-4934-b46d-5d74b83a4edf_facebook-watermarked-aspect-ratio-1200-675_default_0.jpg"
-  },
-  {
-   "t": "Un influencer descubre el lado más amable de Tenerife: “Canarias exporta buen rollo y alegría”",
-   "u": "https://www.eldia.es/tenerife/2026/08/02/influencer-descubre-lado-amable-tenerife-dv-133005448.html",
-   "s": "Eldía",
-   "d": "2026-08-02T06:00:48.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://estaticos-cdn.prensaiberica.es/clip/c8862b08-f7c7-4e8d-8b63-25664175497d_16-9-discover-aspect-ratio_default_0_x600y240.jpg"
-  },
-  {
-   "t": "Dónde saborear Gran Canaria según Magüi Melián Villalobos, CEO Domingo Alonso Importer",
-   "u": "https://www.canarias7.es/gastronomia-c7/a-fuego-lento/saborear-gran-canaria-segun-magui-melian-ceo-20260802070000-nt_amp.html",
-   "s": "Canarias7",
-   "d": "2026-08-02T05:00:18.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://s3.ppllstatics.com/canarias7/www/multimedia/gastronomia-c7/2026/07/31/Mag%c3%bci1.jpg"
-  },
-  {
-   "t": "\"Prohibida la entrada a influencers\": un guachinche lagunero cierra la puerta a los creadores de contenido",
-   "u": "https://www.atlanticohoy.com/tenerife/prohibida-entrada-influencers-guachinche-lagunero-cierra-puerta-creadores-contenido_1565027_102.html",
-   "s": "Atlántico Hoy",
-   "d": "2026-08-02T04:00:00.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://www.atlanticohoy.com/uploads/s1/37/58/31/9/cartel-con-fondo-difuminado.webp"
-  },
-  {
-   "t": "Pepe Rodríguez critica la gestión de la alta cocina en España",
-   "u": "https://www.sekbernews.id/es/pepe-rodriguez-critica-alta-cocina-espana",
-   "s": "sekbernews.id",
-   "d": "2026-08-02T00:45:31.000Z",
-   "tags": [
-    "MICHELIN"
-   ]
   }
  ]
 }
