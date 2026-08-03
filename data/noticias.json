@@ -1,15 +1,76 @@
 {
- "updated": "2026-08-03T08:43:24.218Z",
+ "updated": "2026-08-03T13:48:53.413Z",
  "items": [
   {
-   "t": "El chef Jordi Roca enseña a preparar la ensaladilla rusa sin mayonesa",
-   "u": "https://www.hoyaragon.es/gastronomia/chef-jordi-roca-ensena-preparar-ensaladilla-rusa-mayonesa/20260803091840140440.html",
-   "s": "hoyaragon.es",
-   "d": "2026-08-03T07:18:40.000Z",
+   "t": "Este vino albariño de 13 euros y 91 puntos Parker es uno de los blancos con mejor relación calidad-precio del mercado",
+   "u": "https://www.esquire.com/es/donde-comer-beber/a72752683/vino-rias-baixas-albarino-la-val-2024-opinion-precio/",
+   "s": "Esquire",
+   "d": "2026-08-03T12:48:14.000Z",
+   "tags": [
+    "VINO",
+    "CANARIAS"
+   ],
+   "img": "https://hips.hearstapps.com/hmg-prod/images/7cf10ee2-6f95-48e8-9b46-3e7b60c016fe.jpeg?crop=1xw:0.75xh;center,top&resize=1200:*"
+  },
+  {
+   "t": "Frutas y Verduras Eladio ficha a Thomas Stork, chef ejecutivo del Mandarin Oriental Ritz, para su expansión",
+   "u": "https://www.diariosigloxxi.com/texto-ep/mostrar/20260803125143/frutas-verduras-eladio-ficha-thomas-stork-chef-ejecutivo-mandarin-oriental-ritz-expansion",
+   "s": "diariosigloxxi.com",
+   "d": "2026-08-03T10:51:00.000Z",
    "tags": [
     "ALTA COCINA"
    ],
-   "img": "https://www.hoyaragon.es/media/hoyaragon/images/2026/08/03/2026080309182558827.jpg"
+   "img": "https://www.diariosigloxxi.com/images/20537"
+  },
+  {
+   "t": "Canarias mantiene casi el mismo turismo extranjero a mitad de 2026 que en el ejercicio récord anterior",
+   "u": "https://www.eldiario.es/canariasahora/turismo/canarias-mantiene-turismo-extranjero-mitad-2026-ejercicio-record-anterior_1_13424814.html",
+   "s": "elDiario.es",
+   "d": "2026-08-03T10:21:02.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://static.eldiario.es/clip/919145a5-76f8-4d5b-9a0b-c25a1df3aa97_facebook-watermarked-aspect-ratio-1200-675_default_0.jpg"
+  },
+  {
+   "t": "El restaurante de un famoso chef andaluz en el que Kanye West cenó durante su paso por Madrid: con unas vistas impresionantes y recetas de alta cocina",
+   "u": "https://www.infobae.com/espana/2026/08/03/el-restaurante-de-un-famoso-chef-andaluz-en-el-que-kanye-west-ceno-durante-su-paso-por-madrid-con-unas-vistas-impresionantes-y-recetas-de-alta-cocina/",
+   "s": "Infobae",
+   "d": "2026-08-03T10:16:12.000Z",
+   "tags": [
+    "ALTA COCINA"
+   ],
+   "img": "https://www.infobae.com/resizer/v2/2YQUUIAITNEOLAEXPET73GMEEI.jpg?auth=294a06241c1fae4d6e4f9764f2f4734f2485d2b61be4ada9bd6bf498e708eddf&smart=true&width=1200&height=630&quality=85"
+  },
+  {
+   "t": "Dreamland Studios deja de patrocinar al Granca: ''Ha sido un honor formar parte de esta familia''",
+   "u": "https://www.eldiario.es/canariasahora/Deportes/dreamland-studios-deja-patrocinar-granca-sido-honor-formar-parte-familia_1_13424708.html",
+   "s": "elDiario.es",
+   "d": "2026-08-03T09:48:44.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://static.eldiario.es/clip/5c82c6bc-b71c-44df-836b-c5d9b71d08d9_facebook-watermarked-aspect-ratio-1200-675_default_0_x862y643.jpg"
+  },
+  {
+   "t": "La universidad pública y el futuro de Canarias",
+   "u": "https://www.eldiario.es/canariasahora/opinion/universidad-publica-futuro-canarias_132_13424460.html",
+   "s": "elDiario.es",
+   "d": "2026-08-03T08:17:30.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://static.eldiario.es/clip/bbb1823f-12c2-4e39-a354-2bc3b6d096cc_facebook-aspect-ratio-1200-675_default_0.jpg"
+  },
+  {
+   "t": "El restaurante de Gran Canaria con vistas al Atlántico que conquista con sus carnes, arroces y pescado fresco",
+   "u": "https://www.laprovincia.es/las-palmas/2026/08/03/restaurante-gran-canaria-vistas-atlantico-dv-133049123.amp.html",
+   "s": "La Provincia",
+   "d": "2026-08-03T07:09:16.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://estaticos-cdn.prensaiberica.es/clip/e5d640e6-0ff0-4ef1-9461-3e2e44e27d18_16-9-discover-aspect-ratio_default_0_x596y808.jpg"
   },
   {
    "t": "8 Islas, 8 pistas de gastronomía canaria",
@@ -37,7 +98,8 @@
    "d": "2026-08-02T23:00:05.000Z",
    "tags": [
     "CANARIAS"
-   ]
+   ],
+   "img": "https://estaticos-cdn.prensaiberica.es/clip/beceaed1-08b6-4df8-839e-61150b7ad1ff_16-9-aspect-ratio_default_0.jpg"
   },
   {
    "t": "El Hotel Balarés, en la selección de hoteles del la Guía Michelin",
@@ -47,6 +109,27 @@
    "tags": [
     "MICHELIN"
    ]
+  },
+  {
+   "t": "Don Omar, primer confirmado de Marenostrum Fuengirola 2027",
+   "u": "https://www.vinetur.com/amp/20260802105138/don-omar-primer-confirmado-de-marenostrum-fuengirola-2027.html",
+   "s": "Vinetur",
+   "d": "2026-08-02T20:00:00.000Z",
+   "tags": [
+    "VINO",
+    "CANARIAS"
+   ],
+   "img": "https://www.vinetur.com/imagenes/blog/8380/224_unnamed.jpg"
+  },
+  {
+   "t": "Ola de calor en Canarias: las islas alcanzarán los 40 grados este lunes",
+   "u": "https://www.eldiario.es/canariasahora/tiempo-canarias/canarias-alcanzara-40-grados-lunes-tiempo-3-agosto_1_13424124.html",
+   "s": "elDiario.es",
+   "d": "2026-08-02T19:50:15.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://static.eldiario.es/clip/1f87fe07-bdaf-4658-a377-1a00b4e3e98a_facebook-watermarked-aspect-ratio-1200-675_default_0.jpg"
   },
   {
    "t": "Azafrán consolida propuesta gastronómica de nueve tiempos en Mendoza",
@@ -74,8 +157,7 @@
    "d": "2026-08-02T17:01:16.000Z",
    "tags": [
     "CHEF"
-   ],
-   "img": "https://www.noticiasdelvino.com/wp-content/uploads/image-583.png"
+   ]
   },
   {
    "t": "El viñedo más alto de Europa está en Tenerife: así es el pueblo que desafía a los Alpes",
@@ -85,8 +167,7 @@
    "tags": [
     "VINO",
     "CANARIAS"
-   ],
-   "img": "https://www.noticiasdelvino.com/wp-content/uploads/El-vinedo-mas-alto-de-Europa-esta-en-Tenerife.jpg"
+   ]
   },
   {
    "t": "Pepe Rodríguez Michelin: 'Es un error montar restaurantes pensando en la guía, eso no te salva en España'",
@@ -100,7 +181,7 @@
   },
   {
    "t": "Pepe Rodríguez, chef estrella Michelin: \"Los grandes restaurantes no viven de su restaurante, la gran mayoría\"",
-   "u": "https://www.huffingtonpost.es/life/influencers-celebrities/pepe-rodriguez-chef-estrella-michelin-los-grandes-restaurantes-viven-restaurante-gran-mayoria-f202608.html?outputType",
+   "u": "https://www.huffingtonpost.es/life/influencers-celebrities/pepe-rodriguez-chef-estrella-michelin-los-grandes-restaurantes-viven-restaurante-gran-mayoria-f202608.html",
    "s": "El HuffPost",
    "d": "2026-08-02T15:07:50.000Z",
    "tags": [
@@ -115,8 +196,7 @@
    "d": "2026-08-02T14:26:46.000Z",
    "tags": [
     "MICHELIN"
-   ],
-   "img": "https://www.noticiasdelvino.com/wp-content/uploads/restaurantes-5.jpg"
+   ]
   },
   {
    "t": "La escapada hedonista de agosto: Taberna Laredo",
@@ -217,85 +297,6 @@
    "tags": [
     "MICHELIN"
    ]
-  },
-  {
-   "t": "Julio Hernández, chef: \"Viajé por toda Asia para comer y poco a poco me fui enganchando\"",
-   "u": "https://diariodeavisos.elespanol.com/2026/08/julio-hernandez-chef-asia/",
-   "s": "diariodeavisos.elespanol.com",
-   "d": "2026-08-01T23:00:00.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://cdn.diariodeavisos.com/wp-content/uploads/2026/07/Julio-Hernandez.jpg"
-  },
-  {
-   "t": "Padylla (02/08/26)",
-   "u": "https://www.eldia.es/humor/2026/08/02/padylla-02-08-26-133026780.html",
-   "s": "Eldía",
-   "d": "2026-08-01T22:59:18.000Z",
-   "tags": [
-    "CANARIAS"
-   ]
-  },
-  {
-   "t": "Santy (02/08/26)",
-   "u": "https://www.eldia.es/humor/2026/08/02/santy-02-08-26-133026767.html",
-   "s": "Eldía",
-   "d": "2026-08-01T22:59:18.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://estaticos-cdn.prensaiberica.es/clip/b1c2edcd-b06d-48bb-9b21-7072e93eecb0_16-9-aspect-ratio_default_0.jpg"
-  },
-  {
-   "t": "El Tenerife pierde en los penaltis en su primera prueba ante un rival de su categoría",
-   "u": "https://www.eldiario.es/canariasahora/Deportes/futbol/tenerife-pierde-penaltis-primera-prueba-rival-categoria_1_13423202.html",
-   "s": "elDiario.es",
-   "d": "2026-08-01T22:45:06.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://static.eldiario.es/clip/5b40e19c-5b5e-47bf-8de7-e20602de6c3c_facebook-watermarked-aspect-ratio-1200-675_default_0_x968y532.jpg"
-  },
-  {
-   "t": "La cofradía de pescadores de la Punta del Hidalgo toma el timón del pequeño muellito",
-   "u": "https://www.eldia.es/tenerife/2026/08/01/punta-del-hidalgo-pescadores-cofradores-puerto-pesqueros-132999644.html",
-   "s": "Eldía",
-   "d": "2026-08-01T16:00:58.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://estaticos-cdn.prensaiberica.es/clip/68bb98cd-93a5-4bfd-82c0-c4ae6bb1271c_16-9-discover-aspect-ratio_default_0_x967y429.jpg"
-  },
-  {
-   "t": "Canarias espera temperaturas de hasta 39 grados y calima este domingo",
-   "u": "https://www.eldiario.es/canariasahora/tiempo-canarias/canarias-espera-temperaturas-39-grados-calima-domingo_1_13422972.html",
-   "s": "elDiario.es",
-   "d": "2026-08-01T15:49:05.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://static.eldiario.es/clip/62dd2852-fa7c-4ed0-b63b-c40b898df029_facebook-watermarked-aspect-ratio-1200-675_default_0.jpg"
-  },
-  {
-   "t": "El calor aprieta: el aeropuerto Tenerife norte registra 36,9 grados en un sábado de alerta en Canarias",
-   "u": "https://www.eldia.es/tenerife/2026/08/01/calor-aprieta-aeropuerto-tenerife-norte-133018419.html",
-   "s": "Eldía",
-   "d": "2026-08-01T15:00:56.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://estaticos-cdn.prensaiberica.es/clip/903db075-3836-493b-b5ca-62c5fdd3d294_16-9-discover-aspect-ratio_default_0_x900y399.jpg"
-  },
-  {
-   "t": "Albino, albañil boliviano en España: “Trabajando en la construcción gano unos 1400 euros por mes, en mi país serían 400 euros”",
-   "u": "https://www.cronista.com/internacionales/albino-albanil-boliviano-en-espana-trabajando-en-la-construccion-gano-unos-1400-euros-por-mes-en-mi-pais-serian-400-euros/",
-   "s": "El Cronista",
-   "d": "2026-08-01T14:18:00.000Z",
-   "tags": [
-    "MICHELIN"
-   ],
-   "img": "https://www.cronista.com/resizer/v2/IQNUAXAB25HVHGIY6JDFFPNTPY.jpg?auth=b2aeb341fda8ff0c6dae64e5b93f610244fb65ea1d4ef550faf9b9cfee4f0c2d&height=630&width=1200&quality=70&focal=995%2C477"
   }
  ]
 }
