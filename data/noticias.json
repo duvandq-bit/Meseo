@@ -1,6 +1,33 @@
 {
- "updated": "2026-08-02T18:13:16.915Z",
+ "updated": "2026-08-03T00:14:40.547Z",
  "items": [
+  {
+   "t": "TURISMO INTERIOR | Gran Hotel Taoro propone un verano entre gastronomía, bienestar y paisaje en el norte de la isla",
+   "u": "https://www.elblogoferoz.com/2026/08/03/turismo-interior-gran-hotel-taoro-propone-un-verano-entre-gastronomia-bienestar-y-paisaje-en-el-norte-de-la-isla/",
+   "s": "elblogoferoz.com",
+   "d": "2026-08-02T23:30:00.000Z",
+   "tags": [
+    "CANARIAS"
+   ]
+  },
+  {
+   "t": "Padylla (03/08/26)",
+   "u": "https://www.eldia.es/humor/2026/08/03/padylla-03-08-26-133046274.html",
+   "s": "Eldía",
+   "d": "2026-08-02T23:00:05.000Z",
+   "tags": [
+    "CANARIAS"
+   ]
+  },
+  {
+   "t": "Azafrán consolida propuesta gastronómica de nueve tiempos en Mendoza",
+   "u": "https://www.asatunews.co.id/es/azafran-consolida-propuesta-gastronomica-mendoza",
+   "s": "asatunews.co.id",
+   "d": "2026-08-02T19:29:00.000Z",
+   "tags": [
+    "ALTA COCINA"
+   ]
+  },
   {
    "t": "El restaurante de carretera definitivo está en este pueblo medieval de Madrid: Martín Berasategui confiesa su secreto mejor guardado",
    "u": "https://www.noticiasdelvino.com/escapadas/2026/08/02/el-restaurante-de-carretera-definitivo-esta-en-este-pueblo-medieval-de-madrid-martin-berasategui-confiesa-su-secreto-mejor-guardado-74843/",
@@ -8,7 +35,8 @@
    "d": "2026-08-02T17:01:16.000Z",
    "tags": [
     "CHEF"
-   ]
+   ],
+   "img": "https://www.noticiasdelvino.com/wp-content/uploads/image-583.png"
   },
   {
    "t": "El viñedo más alto de Europa está en Tenerife: así es el pueblo que desafía a los Alpes",
@@ -18,7 +46,8 @@
    "tags": [
     "VINO",
     "CANARIAS"
-   ]
+   ],
+   "img": "https://www.noticiasdelvino.com/wp-content/uploads/El-vinedo-mas-alto-de-Europa-esta-en-Tenerife.jpg"
   },
   {
    "t": "Pepe Rodríguez Michelin: 'Es un error montar restaurantes pensando en la guía, eso no te salva en España'",
@@ -60,6 +89,26 @@
     "CANARIAS"
    ],
    "img": "https://estaticos-cdn.prensaiberica.es/clip/bc5590ba-f346-4c95-8365-45597b8ab98a_16-9-discover-aspect-ratio_default_0_x796y328.jpg"
+  },
+  {
+   "t": "El Ejército de tierra patrullará Gran Canaria a partir de este lunes",
+   "u": "https://www.eldiario.es/canariasahora/sociedad/ejercito-tierra-patrullara-gran-canaria-partir-lunes_1_13423636.html",
+   "s": "elDiario.es",
+   "d": "2026-08-02T10:38:50.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://static.eldiario.es/clip/60593bb9-d5b5-4e91-b4e7-1911ed1f3aaa_facebook-watermarked-aspect-ratio-1200-675_default_0.jpg"
+  },
+  {
+   "t": "La Aemet eleva a rojo el aviso en Gran Canaria por temperaturas máximas este lunes",
+   "u": "https://www.eldiario.es/canariasahora/tiempo-canarias/aemet-calor-canarias-avisos-temperaturas-maximas-agosto-tiempo_1_13423460.html",
+   "s": "elDiario.es",
+   "d": "2026-08-02T10:21:35.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://static.eldiario.es/clip/be077a45-57b0-4442-b2a7-b8b05efd22cf_facebook-watermarked-aspect-ratio-1200-675_default_0.jpg"
   },
   {
    "t": "Pepe Rodríguez: «Es un error que se monten restaurantes pensando en las estrellas Michelin. Eso no te salva en España»",
@@ -114,7 +163,7 @@
   {
    "t": "\"Prohibida la entrada a influencers\": un guachinche lagunero cierra la puerta a los creadores de contenido",
    "u": "https://www.atlanticohoy.com/tenerife/prohibida-entrada-influencers-guachinche-lagunero-cierra-puerta-creadores-contenido_1565027_102.html",
-   "s": "atlanticohoy.com",
+   "s": "Atlántico Hoy",
    "d": "2026-08-02T04:00:00.000Z",
    "tags": [
     "CANARIAS"
@@ -133,11 +182,12 @@
   {
    "t": "Julio Hernández, chef: \"Viajé por toda Asia para comer y poco a poco me fui enganchando\"",
    "u": "https://diariodeavisos.elespanol.com/2026/08/julio-hernandez-chef-asia/",
-   "s": "Diario de Avisos",
+   "s": "diariodeavisos.elespanol.com",
    "d": "2026-08-01T23:00:00.000Z",
    "tags": [
     "CANARIAS"
-   ]
+   ],
+   "img": "https://cdn.diariodeavisos.com/wp-content/uploads/2026/07/Julio-Hernandez.jpg"
   },
   {
    "t": "Padylla (02/08/26)",
@@ -146,8 +196,7 @@
    "d": "2026-08-01T22:59:18.000Z",
    "tags": [
     "CANARIAS"
-   ],
-   "img": "https://estaticos-cdn.prensaiberica.es/clip/beceaed1-08b6-4df8-839e-61150b7ad1ff_16-9-aspect-ratio_default_0.jpg"
+   ]
   },
   {
    "t": "Santy (02/08/26)",
@@ -168,6 +217,16 @@
     "CANARIAS"
    ],
    "img": "https://static.eldiario.es/clip/5b40e19c-5b5e-47bf-8de7-e20602de6c3c_facebook-watermarked-aspect-ratio-1200-675_default_0_x968y532.jpg"
+  },
+  {
+   "t": "El Gobierno de Canarias incumple año tras año la regla de gasto en la gestión de sus presupuestos",
+   "u": "https://www.eldiario.es/canariasahora/economia/gobierno-canarias-incumple-ano-ano-regla-gasto-gestion-presupuestos_1_13423053.html",
+   "s": "elDiario.es",
+   "d": "2026-08-01T17:11:58.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://static.eldiario.es/clip/910790b5-d1ee-497d-9edd-0ee493ab1c8c_facebook-watermarked-aspect-ratio-1200-675_default_0_x751y236.jpg"
   },
   {
    "t": "La cofradía de pescadores de la Punta del Hidalgo toma el timón del pequeño muellito",
@@ -202,7 +261,7 @@
   {
    "t": "Albino, albañil boliviano en España: “Trabajando en la construcción gano unos 1400 euros por mes, en mi país serían 400 euros”",
    "u": "https://www.cronista.com/internacionales/albino-albanil-boliviano-en-espana-trabajando-en-la-construccion-gano-unos-1400-euros-por-mes-en-mi-pais-serian-400-euros/",
-   "s": "cronista.com",
+   "s": "El Cronista",
    "d": "2026-08-01T14:18:00.000Z",
    "tags": [
     "MICHELIN"
@@ -237,66 +296,6 @@
     "MICHELIN"
    ],
    "img": "https://fotografias-2.larazon.es/clipping/cmsimages02/2024/10/28/19542547-ECCC-4DCB-9575-D71492105D81/chef-pepe-rodriguez-grabacion-nueva-campana-vegamar-grupo-disber_98.jpg?crop=2686,1511,x0,y1229&width=1900&height=1069&optimize=low&format=webply"
-  },
-  {
-   "t": "Hasta los huevos… se cansan de los egos",
-   "u": "https://www.laprovincia.es/ocio/gastronomia/2026/08/01/huevos-cansan-egos-133015823.html",
-   "s": "La Provincia",
-   "d": "2026-08-01T10:21:56.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://estaticos-cdn.prensaiberica.es/clip/c7c84071-f8ea-4d84-ac73-89f1444c0603_16-9-discover-aspect-ratio_default_1492929.jpg"
-  },
-  {
-   "t": "Galeatro difundirá a través de las artes escénicas el valor histórico de los molinos del Camino de Santiago",
-   "u": "https://www.larazon.es/cultura/teatro/galeatro-difundira-traves-artes-escenicas-valor-historico-molinos-camino-santiago_202608016a6dac07a5690f04735dfe0e.html?outputType",
-   "s": "La Razón",
-   "d": "2026-08-01T10:00:17.000Z",
-   "tags": [
-    "MICHELIN"
-   ],
-   "img": "https://fotografias-2.larazon.es/clipping/cmsimages02/2026/07/31/7CAC1F22-A0A2-429A-A9E9-6A68DDBB8623/98.jpg?crop=4539,2554,x0,y514&width=1900&height=1069&optimize=low&format=webply"
-  },
-  {
-   "t": "Podcast | Luis Díaz de Losada: un gastrónomo ilustrado",
-   "u": "https://www.eldia.es/ocio/gastronomia/2026/08/01/podcast-luis-diaz-losada-gastronomo-ilustrado-133015316.html",
-   "s": "Eldía",
-   "d": "2026-08-01T09:54:00.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://estaticos-cdn.prensaiberica.es/clip/f3beda3a-9757-4e88-b27d-6f1fb4e6a562_16-9-discover-aspect-ratio_default_0_x518y362.jpg"
-  },
-  {
-   "t": "Israel Ramos: “Nuestra identidad nos hace diferentes; la estandarización nos haría comer lo mismo en todas partes”",
-   "u": "https://www.andaluciainformacion.es/articulo/gastronomia/israel-ramos-nuestra-identidad-nos-hace-diferentes-estandarizacion-nos-haria-comer-mismo-todas-partes/202608011055063446481.html",
-   "s": "Andalucía Información",
-   "d": "2026-08-01T08:55:06.000Z",
-   "tags": [
-    "ALTA COCINA"
-   ],
-   "img": "https://www.andaluciainformacion.es/media/andaluciainformacion/images/2026/07/31/2026073114015060641.jpg"
-  },
-  {
-   "t": "El rincón gastronómico de Gran Canaria que triunfa con cocina canaria tradicional: raciones generosas a precios ajustados",
-   "u": "https://www.laprovincia.es/gran-canaria/2026/08/01/raciones-generosas-precios-economicos-rincon-gastronomico-gran-canaria-dv-132685393.amp.html",
-   "s": "La Provincia",
-   "d": "2026-08-01T08:00:00.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://estaticos-cdn.prensaiberica.es/clip/0c75d932-855f-4f55-adfb-902d65eb1881_16-9-discover-aspect-ratio_default_0_x475y1033.jpg"
-  },
-  {
-   "t": "El restaurante de Tenerife donde el pescado fresco es el protagonista: una parada imprescindible por su relación calidad-precio",
-   "u": "https://www.eldia.es/tenerife/2026/08/01/restaurante-tenerife-conquista-amantes-pescado-dv-132083183.amp.html",
-   "s": "Eldía",
-   "d": "2026-08-01T07:30:00.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://estaticos-cdn.prensaiberica.es/clip/4708af1c-0673-40c4-a500-a68e17b5bd29_16-9-discover-aspect-ratio_default_0_x668y987.jpg"
   }
  ]
 }
