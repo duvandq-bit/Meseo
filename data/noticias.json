@@ -1,6 +1,26 @@
 {
- "updated": "2026-08-03T18:58:47.561Z",
+ "updated": "2026-08-04T00:16:42.299Z",
  "items": [
+  {
+   "t": "La farsa de la guía Michelin en México y el negocio global de las estrellas",
+   "u": "https://www.merca20.com/la-farsa-de-la-guia-michelin-en-mexico-y-el-negocio-global-de-las-estrellas/",
+   "s": "merca20.com",
+   "d": "2026-08-03T19:08:13.000Z",
+   "tags": [
+    "MICHELIN"
+   ],
+   "img": "https://files.merca20.com/uploads/2026/03/Eddy_Warman.jpeg"
+  },
+  {
+   "t": "Mestizaje, garra y finura conforman el nuevo mapa gastronómico de Oporto",
+   "u": "https://www.mundiario.com/articulo/viajes/mestizaje-garra-finura-conforman-nuevo-mapa-gastronomico-oporto/20260803202758433693.amp.html",
+   "s": "MUNDIARIO",
+   "d": "2026-08-03T18:27:58.000Z",
+   "tags": [
+    "MICHELIN"
+   ],
+   "img": "https://www.mundiario.com/media/mundiario/images/2026/08/03/2026080320222296035.jpg"
+  },
   {
    "t": "La ola de calor no da tregua en Canarias: se esperan temperaturas por encima de los 40 grados en algunas zonas",
    "u": "https://www.eldiario.es/canariasahora/tiempo-canarias/tiempo-en-canarias-este-martes-4-de-agosto-manana-hoy_1_13426194.html",
@@ -19,6 +39,17 @@
    "tags": [
     "CANARIAS"
    ]
+  },
+  {
+   "t": "El Tardeo con la DO llena Requena y recauda 1.400 euros para AMACMA D8",
+   "u": "https://www.vinetur.com/amp/20260803105164/el-tardeo-con-la-do-llena-requena-y-recauda-1400-euros-para-amacma-d8.html",
+   "s": "Vinetur",
+   "d": "2026-08-03T15:29:55.000Z",
+   "tags": [
+    "VINO",
+    "CANARIAS"
+   ],
+   "img": "https://www.vinetur.com/imagenes/2026/august/3/20260803-192955-3706.jpg"
   },
   {
    "t": "Duelo gastronómico 'Akira Back Chef Battle' que cita a los talentos de Tenerife y Florencia",
@@ -43,7 +74,7 @@
   {
    "t": "El Cabildo de La Gomera y el Costa Adeje Tenerife renuevan su alianza para promocionar el producto local",
    "u": "https://www.gomeranoticias.com/2026/08/03/el-cabildo-de-la-gomera-y-el-costa-adeje-tenerife-renuevan-su-alianza-para-promocionar-el-producto-local/",
-   "s": "gomeranoticias.com",
+   "s": "Gomera Noticias",
    "d": "2026-08-03T13:34:33.000Z",
    "tags": [
     "CANARIAS"
@@ -212,7 +243,7 @@
   {
    "t": "El restaurante de carretera definitivo está en este pueblo medieval de Madrid: Martín Berasategui confiesa su secreto mejor guardado",
    "u": "https://www.noticiasdelvino.com/escapadas/2026/08/02/el-restaurante-de-carretera-definitivo-esta-en-este-pueblo-medieval-de-madrid-martin-berasategui-confiesa-su-secreto-mejor-guardado-74843/",
-   "s": "noticiasdelvino.com",
+   "s": "Noticias del Vino",
    "d": "2026-08-02T17:01:16.000Z",
    "tags": [
     "CHEF"
@@ -222,7 +253,7 @@
   {
    "t": "El viñedo más alto de Europa está en Tenerife: así es el pueblo que desafía a los Alpes",
    "u": "https://www.noticiasdelvino.com/escapadas/2026/08/02/el-vinedo-mas-alto-de-europa-esta-en-tenerife-asi-es-el-pueblo-que-desafia-a-los-alpes-66331/",
-   "s": "noticiasdelvino.com",
+   "s": "Noticias del Vino",
    "d": "2026-08-02T16:38:33.000Z",
    "tags": [
     "VINO",
@@ -253,7 +284,7 @@
   {
    "t": "La villa juguetera de Alicante que conquista por su cocina: así es el pueblo donde mejor se come de España",
    "u": "https://www.noticiasdelvino.com/restaurantes/2026/08/02/la-villa-juguetera-de-alicante-que-conquista-por-su-cocina-asi-es-el-pueblo-donde-mejor-se-come-de-espana-74836/",
-   "s": "noticiasdelvino.com",
+   "s": "Noticias del Vino",
    "d": "2026-08-02T14:26:46.000Z",
    "tags": [
     "MICHELIN"
@@ -270,36 +301,6 @@
     "CANARIAS"
    ],
    "img": "https://estaticos-cdn.prensaiberica.es/clip/bc5590ba-f346-4c95-8365-45597b8ab98a_16-9-discover-aspect-ratio_default_0_x796y328.jpg"
-  },
-  {
-   "t": "El Ejército de tierra patrullará Gran Canaria a partir de este lunes",
-   "u": "https://www.eldiario.es/canariasahora/sociedad/ejercito-tierra-patrullara-gran-canaria-partir-lunes_1_13423636.html",
-   "s": "elDiario.es",
-   "d": "2026-08-02T10:38:50.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://static.eldiario.es/clip/60593bb9-d5b5-4e91-b4e7-1911ed1f3aaa_facebook-watermarked-aspect-ratio-1200-675_default_0.jpg"
-  },
-  {
-   "t": "La Aemet eleva a rojo el aviso en Gran Canaria por temperaturas máximas este lunes",
-   "u": "https://www.eldiario.es/canariasahora/tiempo-canarias/aemet-calor-canarias-avisos-temperaturas-maximas-agosto-tiempo_1_13423460.html",
-   "s": "elDiario.es",
-   "d": "2026-08-02T10:21:35.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://static.eldiario.es/clip/be077a45-57b0-4442-b2a7-b8b05efd22cf_facebook-watermarked-aspect-ratio-1200-675_default_0.jpg"
-  },
-  {
-   "t": "Pepe Rodríguez: «Es un error que se monten restaurantes pensando en las estrellas Michelin. Eso no te salva en España»",
-   "u": "https://www.abc.es/recreo/pepe-rodriguez-error-monten-restaurantes-pensando-estrellas-20260802120000-nt.html",
-   "s": "ABC",
-   "d": "2026-08-02T10:00:10.000Z",
-   "tags": [
-    "MICHELIN"
-   ],
-   "img": "https://s1.abcstatics.com/abc/www/multimedia/recreo/2026/07/31/pepe-ok-kkAE--1200x630@diario_abc.jpg"
   }
  ]
 }
