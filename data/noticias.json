@@ -1,11 +1,52 @@
 {
- "updated": "2026-08-04T00:16:42.299Z",
+ "updated": "2026-08-04T07:49:07.411Z",
  "items": [
+  {
+   "t": "Restaurante Kanye West en Madrid: alta cocina del chef andaluz con vistas panorámicas",
+   "u": "https://www.que.es/2026/08/04/restaurante-kanye-west-madrid/",
+   "s": "que.es",
+   "d": "2026-08-04T07:31:00.000Z",
+   "tags": [
+    "ALTA COCINA"
+   ],
+   "img": "https://static.que.es/wp-content/uploads/2026/07/10-restaurantes-michelin-frent-comedores-con-vistas-1-1024x683.webp"
+  },
+  {
+   "t": "Frutas y Verduras Eladio incorpora al chef del Ritz para liderar su expansión",
+   "u": "https://www.vidaeconomica.com/2026/08/frutas-verduras-eladio-thomas-stork-director-expansion/",
+   "s": "vidaeconomica.com",
+   "d": "2026-08-04T07:14:00.000Z",
+   "tags": [
+    "ALTA COCINA"
+   ],
+   "img": "https://www.vidaeconomica.com/wp-content/uploads/2026/08/Thomas-Stork.jpg"
+  },
+  {
+   "t": "La bodega Otazu se convierte en la Pyme del Año en Navarra",
+   "u": "https://www.canarias7.es/economia/bodega-otazu-convierte-pyme-navarra-20260804061514-vi.html",
+   "s": "Canarias7",
+   "d": "2026-08-04T06:15:14.000Z",
+   "tags": [
+    "VINO",
+    "CANARIAS"
+   ],
+   "img": "https://s1.ppllstatics.com/canarias7/www/multimedia/202608/04/media/cortadas/bodega-otazu-convierte-pyme-navarra-20260804061514-vi.jpg"
+  },
+  {
+   "t": "Hotel gastronómico Calpe: The Cookbook reabre y refuerza la inversión en el turismo de lujo de la Costa Blanca",
+   "u": "https://www.merca2.es/2026/08/04/hotel-gastronomico-calpe-reapertura-cookbook-2429805/",
+   "s": "Merca2.es",
+   "d": "2026-08-04T05:48:00.000Z",
+   "tags": [
+    "MICHELIN"
+   ],
+   "img": "https://static.merca2.es/wp-content/uploads/2026/07/Pedraza-3.webp"
+  },
   {
    "t": "La farsa de la guía Michelin en México y el negocio global de las estrellas",
    "u": "https://www.merca20.com/la-farsa-de-la-guia-michelin-en-mexico-y-el-negocio-global-de-las-estrellas/",
-   "s": "merca20.com",
-   "d": "2026-08-03T19:08:13.000Z",
+   "s": "Revista Merca2.0",
+   "d": "2026-08-03T22:17:16.000Z",
    "tags": [
     "MICHELIN"
    ],
@@ -52,19 +93,29 @@
    "img": "https://www.vinetur.com/imagenes/2026/august/3/20260803-192955-3706.jpg"
   },
   {
-   "t": "Duelo gastronómico 'Akira Back Chef Battle' que cita a los talentos de Tenerife y Florencia",
-   "u": "https://www.europapress.es/turismo/nacional/noticia-duelo-gastronomico-akira-back-chef-battle-cita-talentos-tenerife-florencia-20260803170651.html",
-   "s": "Europa Press",
+   "t": "Tenerife, epicentro culinario internacional con la 'Akira Back Chef Battle' en The Ritz-Carlton Tenerife, Abama",
+   "u": "https://forbes.es/ultima-hora/993856/tenerife-epicentro-culinario-internacional-con-la-akira-back-chef-battle-en-the-ritz-carlton-tenerife-abama/",
+   "s": "Forbes España",
    "d": "2026-08-03T15:06:51.000Z",
    "tags": [
     "CANARIAS"
    ],
-   "img": "https://img.europapress.es/fotoweb/fotonoticia_20260803170651_1200.jpg"
+   "img": "https://forbes.es/wp-content/uploads/2026/08/fotonoticia_20260803170651_1920-1200x675.jpg"
+  },
+  {
+   "t": "El cierre de la GC-3 por obras en el Guiniguada colapsa Las Palmas de Gran Canaria en varios puntos de la capital",
+   "u": "https://www.eldiario.es/canariasahora/sociedad/obras-gc-3-guiniguada-colapsa-las-palmas-de-gran-canaria-desvios-trafico_1_13425623.html",
+   "s": "elDiario.es",
+   "d": "2026-08-03T14:33:14.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://static.eldiario.es/clip/42ce65c2-76e9-4acc-b5bc-93bb89de30f5_facebook-watermarked-aspect-ratio-1200-675_default_0.jpg"
   },
   {
    "t": "Este es el tour gastronómico de Rosalía en Buenos Aires",
    "u": "https://caras.perfil.com/noticias/celebridades/tour-gastronomico-de-rosalia-en-buenos-aires.phtml",
-   "s": "Caras",
+   "s": "caras.perfil.com",
    "d": "2026-08-03T14:00:53.000Z",
    "tags": [
     "MICHELIN"
@@ -102,6 +153,16 @@
     "VINO"
    ],
    "img": "https://www.atlanticohoy.com/uploads/s1/37/58/66/8/diseno-sin-titulo-2026-08-03t091730-704.webp"
+  },
+  {
+   "t": "Frutas y Verduras Eladio ficha a Thomas Stork, chef ejecutivo del Mandarin Oriental Ritz, para su expansión",
+   "u": "https://forbes.es/ultima-hora/993546/frutas-y-verduras-eladio-ficha-a-thomas-stork-chef-ejecutivo-del-mandarin-oriental-ritz-para-su-expansion/",
+   "s": "Forbes España",
+   "d": "2026-08-03T10:51:44.000Z",
+   "tags": [
+    "ALTA COCINA"
+   ],
+   "img": "https://forbes.es/wp-content/uploads/2026/08/fotonoticia_20260803125144_1920-1200x675.jpg"
   },
   {
    "t": "Canarias mantiene casi el mismo turismo extranjero a mitad de 2026 que en el ejercicio récord anterior",
@@ -144,6 +205,16 @@
    "img": "https://static.eldiario.es/clip/bbb1823f-12c2-4e39-a354-2bc3b6d096cc_facebook-aspect-ratio-1200-675_default_0.jpg"
   },
   {
+   "t": "El chef Jordi Roca enseña a preparar la ensaladilla rusa sin mayonesa",
+   "u": "https://www.hoyaragon.es/gastronomia/chef-jordi-roca-ensena-preparar-ensaladilla-rusa-mayonesa/20260803091840140440.html",
+   "s": "hoy aragón",
+   "d": "2026-08-03T07:18:40.000Z",
+   "tags": [
+    "ALTA COCINA"
+   ],
+   "img": "https://www.hoyaragon.es/media/hoyaragon/images/2026/08/03/2026080309182558827.jpg"
+  },
+  {
    "t": "El restaurante de Gran Canaria con vistas al Atlántico que conquista con sus carnes, arroces y pescado fresco",
    "u": "https://www.laprovincia.es/las-palmas/2026/08/03/restaurante-gran-canaria-vistas-atlantico-dv-133049123.amp.html",
    "s": "La Provincia",
@@ -152,15 +223,6 @@
     "CANARIAS"
    ],
    "img": "https://estaticos-cdn.prensaiberica.es/clip/e5d640e6-0ff0-4ef1-9461-3e2e44e27d18_16-9-discover-aspect-ratio_default_0_x596y808.jpg"
-  },
-  {
-   "t": "Economía.- Frutas y Verduras Eladio ficha a Thomas Stork, chef ejecutivo del Mandarin Oriental Ritz, para su expansión",
-   "u": "https://www.bolsamania.com/mexico/noticias_amp/empresas/economia--frutas-y-verduras-eladio-ficha-a-thomas-stork-chef-ejecutivo-del-mandarin-oriental-ritz-para-su-expansion--23174056.html",
-   "s": "Bolsamania",
-   "d": "2026-08-03T03:51:42.000Z",
-   "tags": [
-    "ALTA COCINA"
-   ]
   },
   {
    "t": "8 Islas, 8 pistas de gastronomía canaria",
@@ -212,25 +274,6 @@
    "img": "https://www.vinetur.com/imagenes/blog/8380/224_unnamed.jpg"
   },
   {
-   "t": "Ola de calor en Canarias: las islas alcanzarán los 40 grados este lunes",
-   "u": "https://www.eldiario.es/canariasahora/tiempo-canarias/canarias-alcanzara-40-grados-lunes-tiempo-3-agosto_1_13424124.html",
-   "s": "elDiario.es",
-   "d": "2026-08-02T19:50:15.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://static.eldiario.es/clip/1f87fe07-bdaf-4658-a377-1a00b4e3e98a_facebook-watermarked-aspect-ratio-1200-675_default_0.jpg"
-  },
-  {
-   "t": "Azafrán consolida propuesta gastronómica de nueve tiempos en Mendoza",
-   "u": "https://www.asatunews.co.id/es/azafran-consolida-propuesta-gastronomica-mendoza",
-   "s": "asatunews.co.id",
-   "d": "2026-08-02T19:29:00.000Z",
-   "tags": [
-    "ALTA COCINA"
-   ]
-  },
-  {
    "t": "El Gobierno de Canarias no ha adjudicado la construcción de ninguna vivienda pública en lo que va de año",
    "u": "https://www.eldiario.es/canariasahora/sociedad/gobierno-canarias-no-adjudicado-construccion-vivienda-publica-ano_1_13412703.html",
    "s": "elDiario.es",
@@ -260,47 +303,6 @@
     "CANARIAS"
    ],
    "img": "https://www.noticiasdelvino.com/wp-content/uploads/El-vinedo-mas-alto-de-Europa-esta-en-Tenerife.jpg"
-  },
-  {
-   "t": "Pepe Rodríguez Michelin: 'Es un error montar restaurantes pensando en la guía, eso no te salva en España'",
-   "u": "https://www.que.es/2026/08/02/pepe-rodriguez-michelin-error-restaurantes/",
-   "s": "que.es",
-   "d": "2026-08-02T15:57:29.000Z",
-   "tags": [
-    "MICHELIN"
-   ],
-   "img": "https://static.que.es/wp-content/uploads/2026/05/El-impacto-de-las-declaraciones-de-Pepe-Rodriguez-en-pleno-horario-estelar.webp"
-  },
-  {
-   "t": "Pepe Rodríguez, chef estrella Michelin: \"Los grandes restaurantes no viven de su restaurante, la gran mayoría\"",
-   "u": "https://www.huffingtonpost.es/life/influencers-celebrities/pepe-rodriguez-chef-estrella-michelin-los-grandes-restaurantes-viven-restaurante-gran-mayoria-f202608.html",
-   "s": "El HuffPost",
-   "d": "2026-08-02T15:07:50.000Z",
-   "tags": [
-    "MICHELIN"
-   ],
-   "img": "https://img2.huffingtonpost.es/files/og_thumbnail/uploads/2026/07/30/pepe-rodriguez-en-el-podcast-y-una-estrella-michellin.jpeg"
-  },
-  {
-   "t": "La villa juguetera de Alicante que conquista por su cocina: así es el pueblo donde mejor se come de España",
-   "u": "https://www.noticiasdelvino.com/restaurantes/2026/08/02/la-villa-juguetera-de-alicante-que-conquista-por-su-cocina-asi-es-el-pueblo-donde-mejor-se-come-de-espana-74836/",
-   "s": "Noticias del Vino",
-   "d": "2026-08-02T14:26:46.000Z",
-   "tags": [
-    "MICHELIN"
-   ],
-   "img": "https://www.noticiasdelvino.com/wp-content/uploads/restaurantes-5.jpg"
-  },
-  {
-   "t": "La escapada hedonista de agosto: Taberna Laredo",
-   "u": "https://www.eldia.es/ocio/gastronomia/2026/08/02/escapada-hedonista-agosto-taberna-laredo-133035856.amp.html",
-   "s": "Eldía",
-   "d": "2026-08-02T11:41:40.000Z",
-   "tags": [
-    "VINO",
-    "CANARIAS"
-   ],
-   "img": "https://estaticos-cdn.prensaiberica.es/clip/bc5590ba-f346-4c95-8365-45597b8ab98a_16-9-discover-aspect-ratio_default_0_x796y328.jpg"
   }
  ]
 }
