@@ -1,6 +1,55 @@
 {
- "updated": "2026-08-05T00:16:13.718Z",
+ "updated": "2026-08-05T07:57:20.677Z",
  "items": [
+  {
+   "t": "Arianne Bahala impulsa la nueva cocina filipina en Barcelona: “Intentamos ofrecer los platos y tapas menos conocidas”",
+   "u": "https://www.lavanguardia.com/comer/sitios/20260805/11607406/arianne-bahala-impulsa-nueva-cocina-filipina-barcelona-intentamos-ofrecer-platos-tapas-conocidas.amp.html",
+   "s": "La Vanguardia",
+   "d": "2026-08-05T04:00:00.000Z",
+   "tags": [
+    "CHEF"
+   ],
+   "img": "https://www.lavanguardia.com/files/og_thumbnail/files/fp/uploads/2026/08/04/6a7192f4bbe87.r_d.539-454-13072.jpeg"
+  },
+  {
+   "t": "Los platos favoritos de Rosalía: de la alta cocina porteña a su desayuno ideal",
+   "u": "https://www.infobae.com/tendencias/2026/08/04/los-platos-favoritos-de-rosalia-de-la-alta-cocina-portena-a-su-desayuno-ideal/?outputType",
+   "s": "Infobae",
+   "d": "2026-08-04T23:39:35.000Z",
+   "tags": [
+    "ALTA COCINA"
+   ],
+   "img": "https://www.infobae.com/resizer/v2/OUJ7IUYO4NBLHJPT3LDU6SLJOQ.jpg?auth=2df80394fc485ebe088dd47447dcea95449682edc9922b0dcd07baef0b06c840&smart=true&width=1200&height=630&quality=85"
+  },
+  {
+   "t": "Madrid no cierra en agosto: del desembarco de Eneko Atxa y otras aperturas a restaurantes ya clásicos que siguen siendo una apuesta segura",
+   "u": "https://amp.elmundo.es/metropoli/gastronomia/2026/08/05/6a6a2d5bfdddffd0678b45bc.html",
+   "s": "El Mundo",
+   "d": "2026-08-04T22:02:00.000Z",
+   "tags": [
+    "ALTA COCINA"
+   ],
+   "img": "https://e01-phantom-elmundo.uecdn.es/cfb733fc90febc10d2edb01154ced892/crop/458x573/2631x2023/resize/1200/f/webp/assets/multimedia/imagenes/2026/07/30/17854182117587.jpg"
+  },
+  {
+   "t": "Famtàstic presenta 'Eclipse'",
+   "u": "https://lagenda.org/programacion/famtastic-presenta-eclipse-tenerife-sauzal-2026-gastronomia-cine-43245",
+   "s": "Lagenda",
+   "d": "2026-08-04T21:30:23.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://s3-eu-west-1.amazonaws.com/beta.lagenda/programacion/especial-espacial-vol-2.jpg"
+  },
+  {
+   "t": "La Orotava sirve el plan más sabroso del verano con Burger Fest Canarias 2026 y entrada gratuita",
+   "u": "https://eldigitalsur.com/la-orotava/burger-fest-canarias-2026-la-orotava-hamburguesas-musica-entrada-gratuita/",
+   "s": "El Digital Sur",
+   "d": "2026-08-04T20:30:54.000Z",
+   "tags": [
+    "CANARIAS"
+   ]
+  },
   {
    "t": "\"Prohibida la entrada a influencers\": un guachinche lagunero cierra la puerta a los creadores de contenido",
    "u": "https://www.atlanticohoy.com/tenerife/prohibida-entrada-influencers-guachinche-lagunero-cierra-puerta-creadores-contenido_1565027_102.html",
@@ -14,15 +63,16 @@
   {
    "t": "El restaurante de carretera definitivo está en este pueblo medieval de Madrid: Martín Berasategui confiesa su secreto mejor guardado",
    "u": "https://www.noticiasdelvino.com/escapadas/2026/08/04/el-restaurante-de-carretera-definitivo-esta-en-este-pueblo-medieval-de-madrid-martin-berasategui-confiesa-su-secreto-mejor-guardado-74843/",
-   "s": "noticiasdelvino.com",
+   "s": "Noticias del Vino",
    "d": "2026-08-04T19:00:40.000Z",
    "tags": [
     "CHEF"
-   ]
+   ],
+   "img": "https://www.noticiasdelvino.com/wp-content/uploads/image-583.png"
   },
   {
    "t": "Andrés Madrigal, chef (58 años): “Para preparar las mejores gambas al ajillo, empieza siempre con el aceite en",
-   "u": "https://as.com/tikitakas/gastronomia/andres-madrigal-chef-58-anos-para-preparar-las-mejores-gambas-al-ajillo-empieza-siempre-con-el-aceite-en-frio-f202608-n/",
+   "u": "https://as.com/tikitakas/gastronomia/andres-madrigal-chef-58-anos-para-preparar-las-mejores-gambas-al-ajillo-empieza-siempre-con-el-aceite-en-frio-f202608-n/?outputType",
    "s": "Diario AS",
    "d": "2026-08-04T18:14:49.000Z",
    "tags": [
@@ -81,6 +131,16 @@
    "img": "https://tribunadecanarias.es/uploads/2022/10/IMG_DA148B812E8B-1.jpeg"
   },
   {
+   "t": "Alerta en una isla de Canarias por fuertes vientos que pueden superar los 90 kilómetros por hora",
+   "u": "https://www.eldiario.es/canariasahora/tiempo-canarias/alerta-canarias-fuertes-vientos_1_13428017.html",
+   "s": "elDiario.es",
+   "d": "2026-08-04T14:29:33.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://static.eldiario.es/clip/1f8ab992-81db-4741-b120-0194883734ab_facebook-watermarked-aspect-ratio-1200-675_default_0.jpg"
+  },
+  {
    "t": "La Policía Nacional descarta que el hallazgo en Icod el Alto sea un artefacto explosivo",
    "u": "https://www.eldiario.es/canariasahora/tenerifeahora/sucesos/guardia-civil-confirma-hallazgo-artefacto-explosivo-zona-icod-alto-realejos_1_13427945.html",
    "s": "elDiario.es",
@@ -89,6 +149,16 @@
     "CANARIAS"
    ],
    "img": "https://static.eldiario.es/clip/c1b637ec-c9a5-4cb3-b60e-c5e408f40d6e_facebook-watermarked-aspect-ratio-1200-675_default_0.jpg"
+  },
+  {
+   "t": "El beach club de Gran Canaria que triunfa este verano: cocina casera, vistas al océano y platos sorprendentes",
+   "u": "https://www.laprovincia.es/gran-canaria/2026/08/04/beach-club-gran-canaria-triunfa-verano-dv-133088088.html",
+   "s": "La Provincia",
+   "d": "2026-08-04T13:37:16.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://estaticos-cdn.prensaiberica.es/clip/0c177a7e-bae0-46f9-a30d-363b20615730_16-9-discover-aspect-ratio_default_0_x570y539.jpg"
   },
   {
    "t": "El sector primario y la gastronomía de las Islas, palmo a palmo",
@@ -108,7 +178,7 @@
    "tags": [
     "CANARIAS"
    ],
-   "img": "https://diariodeavisos.elespanol.com/wp-content/uploads/2026/08/Masca-Tenerife.jpeg"
+   "img": "https://cdn.diariodeavisos.com/wp-content/uploads/2026/08/Masca-Tenerife.jpeg"
   },
   {
    "t": "La receta de dorada a la plancha del chef Dani García: “Un platazo nivel chef con solo tres ingredientes bien elegidos”",
@@ -151,16 +221,6 @@
    "img": "https://s2.ppllstatics.com/canarias7/www/multimedia/gastronomia-c7/2026/08/04/turismo.jpg"
   },
   {
-   "t": "El director creativo Ivan Jiménez cae rendido a la hospitalidad de Tenerife: \"Qué maravilla de tierra y qué maravilla de gente\"",
-   "u": "https://www.eldia.es/tenerife/2026/08/04/director-creativo-ivan-jimenez-cae-133085296.html",
-   "s": "Eldía",
-   "d": "2026-08-04T10:58:58.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://estaticos-cdn.prensaiberica.es/clip/fe70dc3b-a05d-4194-8c09-55c79ab629d2_16-9-discover-aspect-ratio_default_0_x640y284.jpg"
-  },
-  {
    "t": "Martín Berasategui revela las claves para preparar la nevera antes de las vacaciones",
    "u": "https://amp.elperiodico.com/es/tecnologia/20260804/martin-berasategui-revela-claves-preparar-133083637",
    "s": "El Periódico",
@@ -191,14 +251,14 @@
    "img": "https://cdn.diariodeavisos.com/wp-content/uploads/2026/08/viuda-negra.jpg"
   },
   {
-   "t": "Clare de Boer, chef neoyorquina: “El mayor error al hacer ensalada de pasta es que no tenga sabor, y se debe a que se dejan enfriar los macarrones antes de mezclarlos con el aliño”",
-   "u": "https://www.infobae.com/espana/2026/08/04/clare-de-boer-chef-neoyorquina-el-mayor-error-al-hacer-ensalada-de-pasta-es-que-no-tenga-sabor-y-se-debe-a-que-se-dejan-enfriar-los-macarrones-antes-de-mezclarlos-con-el-alino/",
-   "s": "Infobae",
-   "d": "2026-08-04T09:35:00.000Z",
+   "t": "Maty Chevrière desafía al algoritmo de Instagram con NUDETOPIA, su exposición más íntima en Canarias",
+   "u": "https://www.eldiario.es/canariasahora/cultura/maty-chevriere-desafia-algoritmo-instagram-nudetopia-exposicion-intima-canarias_1_13425915.html",
+   "s": "elDiario.es",
+   "d": "2026-08-04T07:52:20.000Z",
    "tags": [
-    "ALTA COCINA"
+    "CANARIAS"
    ],
-   "img": "https://www.infobae.com/resizer/v2/OC46HYRIKZDITMWCQMAUVU5T44.jpeg?auth=ec75de69cc826fe82e37a1aafe9a137acb1eb3a6abf47ecb4e9ab3e5a16e8954&smart=true&width=1200&height=630&quality=85"
+   "img": "https://static.eldiario.es/clip/87f95e7c-bf0d-48c0-b7c8-b7c72d08ddf3_facebook-watermarked-aspect-ratio-1200-675_default_0_x1417y395.jpg"
   },
   {
    "t": "Restaurante Kanye West en Madrid: alta cocina del chef andaluz con vistas panorámicas",
@@ -217,12 +277,13 @@
    "d": "2026-08-04T07:14:00.000Z",
    "tags": [
     "ALTA COCINA"
-   ]
+   ],
+   "img": "https://www.vidaeconomica.com/wp-content/uploads/2026/08/Thomas-Stork.jpg"
   },
   {
    "t": "Santa Cruz pone a la venta este martes los Bonos Consumo con descuentos de hasta el 50 %",
    "u": "https://www.libertaddigital.com/canarias/2026-08-04/santa-cruz-pone-a-la-venta-este-martes-los-bonos-consumo-con-descuentos-de-hasta-el-50-por-ciento-7445087/amp.html",
-   "s": "libertaddigital.com",
+   "s": "Libertad Digital",
    "d": "2026-08-04T07:05:08.000Z",
    "tags": [
     "CANARIAS"
@@ -237,67 +298,6 @@
     "CANARIAS"
    ],
    "img": "https://estaticos-cdn.prensaiberica.es/clip/4700d0b7-35ca-4519-a7b2-b0eaf29aa3e9_16-9-discover-aspect-ratio_default_0_x567y517.jpg"
-  },
-  {
-   "t": "La bodega Otazu se convierte en la Pyme del Año en Navarra",
-   "u": "https://www.canarias7.es/economia/bodega-otazu-convierte-pyme-navarra-20260804061514-vi.html",
-   "s": "Canarias7",
-   "d": "2026-08-04T06:15:14.000Z",
-   "tags": [
-    "VINO",
-    "CANARIAS"
-   ],
-   "img": "https://s1.ppllstatics.com/canarias7/www/multimedia/202608/04/media/cortadas/bodega-otazu-convierte-pyme-navarra-20260804061514-vi.jpg"
-  },
-  {
-   "t": "Dominio de Atauta se incorpora a Enoturismo Spain",
-   "u": "https://www.vinetur.com/amp/20260804105200/dominio-de-atauta-se-incorpora-a-enoturismo-spain.html",
-   "s": "Vinetur",
-   "d": "2026-08-04T05:53:06.000Z",
-   "tags": [
-    "VINO",
-    "CANARIAS"
-   ]
-  },
-  {
-   "t": "Hotel gastronómico Calpe: The Cookbook reabre y refuerza la inversión en el turismo de lujo de la Costa Blanca",
-   "u": "https://www.merca2.es/2026/08/04/hotel-gastronomico-calpe-reapertura-cookbook-2429805/",
-   "s": "Merca2.es",
-   "d": "2026-08-04T05:48:00.000Z",
-   "tags": [
-    "MICHELIN"
-   ],
-   "img": "https://static.merca2.es/wp-content/uploads/2026/07/Pedraza-3.webp"
-  },
-  {
-   "t": "Duelo de alta cocina: cocineros de Tenerife y Florencia se enfrentan en la 'Akira Back Chef Battle'",
-   "u": "https://infonegocios.madrid/amp/y-ademas/duelo-gastronomico-akira-back-chef-battle-que-cita-a-los-talentos-de-tenerife-y-florencia",
-   "s": "InfoNegocios Madrid",
-   "d": "2026-08-04T04:46:36.000Z",
-   "tags": [
-    "CANARIAS"
-   ]
-  },
-  {
-   "t": "La farsa de la guía Michelin en México y el negocio global de las estrellas",
-   "u": "https://www.merca20.com/la-farsa-de-la-guia-michelin-en-mexico-y-el-negocio-global-de-las-estrellas/",
-   "s": "Revista Merca2.0",
-   "d": "2026-08-03T22:17:16.000Z",
-   "tags": [
-    "MICHELIN"
-   ],
-   "img": "https://files.merca20.com/uploads/2026/03/Eddy_Warman.jpeg"
-  },
-  {
-   "t": "Jorge Rodríguez: “El futuro de la viticultura canaria pasa por adelantar las vendimias”",
-   "u": "https://tribunadecanarias.es/directivos/26758/jorge-rodriguez-el-futuro-de-la-viticultura-canaria-pasa-por-adelantar-las-vendimias/",
-   "s": "Tribuna de Canarias",
-   "d": "2026-08-03T21:54:00.000Z",
-   "tags": [
-    "VINO",
-    "CANARIAS"
-   ],
-   "img": "https://tribunadecanarias.es/uploads/2022/10/IMG_BE3C955106EB-1.jpeg"
   }
  ]
 }
