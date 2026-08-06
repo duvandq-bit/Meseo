@@ -1,6 +1,85 @@
 {
- "updated": "2026-08-05T18:55:43.541Z",
+ "updated": "2026-08-06T00:11:45.420Z",
  "items": [
+  {
+   "t": "Come lo que quieras, paga lo que puedas abre la alta cocina",
+   "u": "https://foodandtravel.mx/sabores/come-lo-que-quieras-paga-lo-que-puedas-el-movimiento-que-abre-las-puertas-de-la-alta-cocina/",
+   "s": "Food and Travel México",
+   "d": "2026-08-05T23:09:11.000Z",
+   "tags": [
+    "MICHELIN"
+   ]
+  },
+  {
+   "t": "Padylla (06/08/26)",
+   "u": "https://www.eldia.es/humor/2026/08/06/padylla-06-08-26-133130227.html",
+   "s": "Eldía",
+   "d": "2026-08-05T22:59:31.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://estaticos-cdn.prensaiberica.es/clip/beceaed1-08b6-4df8-839e-61150b7ad1ff_16-9-aspect-ratio_default_0.jpg"
+  },
+  {
+   "t": "El único café que se cultiva en España es de Canarias y está a punto de hacer historia",
+   "u": "https://diariodeavisos.elespanol.com/2026/08/cafe-agaete-unico-cultivo-espana-igp-ue/amp/",
+   "s": "Diario de Avisos",
+   "d": "2026-08-05T20:33:19.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://diariodeavisos.elespanol.com/wp-content/uploads/2026/08/Cafe-de-Agaete.jpg"
+  },
+  {
+   "t": "La Oreja de Van Gogh vuelve a Buenos Aires: cuándo toca y cómo comprar las entradas",
+   "u": "https://www.diariopopular.com.ar/la-oreja-van-gogh-vuelve-buenos-aires-cuando-toca-y-como-comprar-las-entradas-n913240",
+   "s": "diariopopular.com.ar",
+   "d": "2026-08-05T20:19:00.000Z",
+   "tags": [
+    "MICHELIN"
+   ],
+   "img": "https://media.diariopopular.com.ar/p/b9538069111c95ff0e4949c18e4fe5e1/adjuntos/143/imagenes/008/250/0008250497/1200x675/smart/la-oreja-de-van-gogh-movistar-arena-argentina-marzo-2027-4.jpg"
+  },
+  {
+   "t": "La meteorología adversa en Canarias obliga a la Aemet a seguir activando avisos amarillos y naranjas",
+   "u": "https://www.eldiario.es/canariasahora/tiempo-canarias/aemet-avisos-amarillos-naranjas-canarias_1_13430837.amp.html",
+   "s": "elDiario.es",
+   "d": "2026-08-05T19:58:04.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://static.eldiario.es/clip/04a38b03-7c4d-4d7e-9502-8394e7802d53_facebook-watermarked-aspect-ratio-1200-675_default_0.jpg"
+  },
+  {
+   "t": "Los importadores descubren un nuevo plato de cocina canaria: papas de Israel arrugadas y con mojo",
+   "u": "https://www.eldiario.es/canariasahora/eldiario-agricola/agricultura/importadores-descubren-nuevo-plato-cocina-canaria-papas-israel-arrugadas-mojo_1_13430261.html",
+   "s": "elDiario.es",
+   "d": "2026-08-05T19:33:56.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://static.eldiario.es/clip/d0de148b-e380-4bbe-86b1-40951c15a718_facebook-watermarked-aspect-ratio-1200-675_default_0.jpg"
+  },
+  {
+   "t": "El calor da un respiro en Canarias: la Aemet prevé un descenso de las temperaturas este jueves",
+   "u": "https://www.eldiario.es/canariasahora/tiempo-canarias/tiempo-en-canarias-este-jueves-6-de-agosto-manana-hoy_1_13430779.amp.html",
+   "s": "elDiario.es",
+   "d": "2026-08-05T18:09:10.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://static.eldiario.es/clip/9df6a949-ac4f-410b-a651-1840c0367da6_facebook-watermarked-aspect-ratio-1200-675_default_0.jpg"
+  },
+  {
+   "t": "El Gobierno activa la alerta por altas temperaturas en dos islas de Canarias",
+   "u": "https://www.eldiario.es/canariasahora/tiempo-canarias/gobierno-activa-alerta-altas-temperaturas-islas-canarias_1_13430766.html",
+   "s": "elDiario.es",
+   "d": "2026-08-05T17:57:26.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://static.eldiario.es/clip/ebc18ddf-222c-4c2b-86a6-cb3b5ca60edc_facebook-watermarked-aspect-ratio-1200-675_default_0.jpg"
+  },
   {
    "t": "Gastroguía de Tenerife: los mejores restaurantes de la isla canaria donde comer como un local",
    "u": "https://www.directoalpaladar.com/viajes/gastroguia-tenerife-mejores-restaurantes-isla-canaria-donde-comer-como-local",
@@ -31,9 +110,19 @@
    ]
   },
   {
+   "t": "Albert Adrià y los Hermanos Padrón cruzarán sus cocinas en Tenerife",
+   "u": "https://www.tapasmagazine.es/albert-adria-y-los-hermanos-padron-cruzaran-sus-cocinas-en-tenerife/",
+   "s": "Tapas Magazine",
+   "d": "2026-08-05T12:53:34.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://www.tapasmagazine.es/wp-content/uploads/2026/08/adria.jpg"
+  },
+  {
    "t": "SobreTenerife.com: recorrer la isla a pie para contar lo que de verdad merece la pena",
    "u": "https://lavozcanaria.com/tenerife/general/sobretenerifecom-recorrer-la-isla-a-pie-para-contar-lo-que-de-verdad-merece-la-pena",
-   "s": "lavozcanaria.com",
+   "s": "La Voz Canaria",
    "d": "2026-08-05T12:19:51.000Z",
    "tags": [
     "CANARIAS"
@@ -53,7 +142,7 @@
   {
    "t": "De la croqueta roja a la torrija gigante: el restaurante canario que sorprende con su menú",
    "u": "https://www.laprovincia.es/lanzarote/2026/08/05/croqueta-roja-torrija-gigante-restaurante-canario-sorprende-menu-dv-133112988.html",
-   "s": "La Provincia",
+   "s": "laprovincia.es",
    "d": "2026-08-05T10:48:33.000Z",
    "tags": [
     "CANARIAS"
@@ -203,104 +292,14 @@
    "img": "https://s3-eu-west-1.amazonaws.com/beta.lagenda/programacion/especial-espacial-vol-2.jpg"
   },
   {
-   "t": "La Orotava sirve el plan más sabroso del verano con Burger Fest Canarias 2026 y entrada gratuita",
-   "u": "https://eldigitalsur.com/la-orotava/burger-fest-canarias-2026-la-orotava-hamburguesas-musica-entrada-gratuita/",
-   "s": "El Digital Sur",
-   "d": "2026-08-04T20:30:54.000Z",
-   "tags": [
-    "CANARIAS"
-   ]
-  },
-  {
-   "t": "\"Prohibida la entrada a influencers\": un guachinche lagunero cierra la puerta a los creadores de contenido",
-   "u": "https://www.atlanticohoy.com/tenerife/prohibida-entrada-influencers-guachinche-lagunero-cierra-puerta-creadores-contenido_1565027_102.html",
-   "s": "atlanticohoy.com",
-   "d": "2026-08-04T20:07:00.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://www.atlanticohoy.com/uploads/s1/37/58/31/9/cartel-con-fondo-difuminado.webp"
-  },
-  {
-   "t": "El restaurante de carretera definitivo está en este pueblo medieval de Madrid: Martín Berasategui confiesa su secreto mejor guardado",
-   "u": "https://www.noticiasdelvino.com/escapadas/2026/08/04/el-restaurante-de-carretera-definitivo-esta-en-este-pueblo-medieval-de-madrid-martin-berasategui-confiesa-su-secreto-mejor-guardado-74843/",
-   "s": "Noticias del Vino",
-   "d": "2026-08-04T19:00:40.000Z",
-   "tags": [
-    "CHEF"
-   ],
-   "img": "https://www.noticiasdelvino.com/wp-content/uploads/image-583.png"
-  },
-  {
-   "t": "Andrés Madrigal, chef (58 años): “Para preparar las mejores gambas al ajillo, empieza siempre con el aceite en",
-   "u": "https://as.com/tikitakas/gastronomia/andres-madrigal-chef-58-anos-para-preparar-las-mejores-gambas-al-ajillo-empieza-siempre-con-el-aceite-en-frio-f202608-n/?outputType",
-   "s": "Diario AS",
-   "d": "2026-08-04T18:14:49.000Z",
+   "t": "Ferran Adrià, cocinero catalán: \"Hoy, o tienes un restaurante muy grande o muy pequeño. Para mí, la culminación es BisAVis, en Barcelona: solo trabaja una persona y atiende a veinte clientes al día\"",
+   "u": "https://www.mundodeportivo.com/foodie/20260804/1004213213/ferran-adria-cocinero-catalan-mi-culminacion-bisavis-barcelona-trabaja-persona-atiende-veinte-clientes-dia-ticket-medio-150-euros-xef-dct.html?facet",
+   "s": "Mundo Deportivo",
+   "d": "2026-08-04T21:07:00.000Z",
    "tags": [
     "ALTA COCINA"
    ],
-   "img": "https://img.asmedia.epimg.net/resizer/v2/53BZ4DY7KBAHFNMTVX7N6NY5ZM.jpg?auth=d5943b9a06d09c9815cecfcb94a0df93741d7caf3e72f390b1b42ebe296c09c2&width=1472&height=828&smart=true"
-  },
-  {
-   "t": "Estados Unidos enfrentará a Perú, Chile, México y Canadá en amistosos",
-   "u": "https://pulsoslp.com.mx/meta/amistosos-de-estados-unidos-rumbo-al-mundial-2030/2073092",
-   "s": "Pulso Diario San Luis",
-   "d": "2026-08-04T17:01:00.000Z",
-   "tags": [
-    "MICHELIN"
-   ],
-   "img": "https://blobcore.pulsoslp.com.mx/images/2025/11/12/selecciones-en-busca-de-boletos-para-la-copa-del-mundo-2026-7b1a374a-focus-0-0-600-315.webp"
-  },
-  {
-   "t": "Canarias seguirá bajo intenso calor este miércoles con máximas de 37ºC",
-   "u": "https://www.eldiario.es/canariasahora/tiempo-canarias/tiempo-canarias-miercoles-5-de-agosto-manana-hoy-calor_1_13427824.html",
-   "s": "elDiario.es",
-   "d": "2026-08-04T16:51:21.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://static.eldiario.es/clip/f91993ff-9318-40c9-bb06-328e4c6db5b9_facebook-watermarked-aspect-ratio-1200-675_default_0_x1749y380.jpg"
-  },
-  {
-   "t": "Pedro Sánchez rechaza críticas de la UE por crisis migratoria",
-   "u": "https://pulsoslp.com.mx/mundo/crisis-migratoria-en-ceuta-respuesta-de-pedro-sanchez/2073082",
-   "s": "Pulso Diario San Luis",
-   "d": "2026-08-04T16:50:00.000Z",
-   "tags": [
-    "MICHELIN"
-   ],
-   "img": "https://blobcore.pulsoslp.com.mx/images/2026/08/04/pedro-sanchez-rechaza-criticas-de-la-ue-por-crisis-migratoria-en-ceuta-5df98807-focus-0-0-600-315.webp"
-  },
-  {
-   "t": "Un niño de dos años, víctima de un presunto maltrato en un restaurante de Canarias",
-   "u": "https://www.laprovincia.es/sucesos/sucesos-en-canarias/2026/08/04/nino-anos-victima-presunto-maltrato-133093252.amp.html",
-   "s": "La Provincia",
-   "d": "2026-08-04T16:10:34.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://estaticos-cdn.prensaiberica.es/clip/00add021-a849-4281-9d96-988651262236_16-9-discover-aspect-ratio_default_0.jpg"
-  },
-  {
-   "t": "Canarias registra el séptimo julio más cálido desde 1961: El Paso contabilizó con 38 grados la segunda temperatura más alta del archipiélago",
-   "u": "https://www.eldiario.es/canariasahora/lapalmaahora/sociedad/canarias-registra-septimo-julio-calido-1961-paso-contabilizo-38-grados-segunda-temperatura-alta-archipielago_1_13428164.amp.html",
-   "s": "elDiario.es",
-   "d": "2026-08-04T15:11:44.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://static.eldiario.es/clip/b1be179a-f4c6-4918-bb6d-b956b72f7f05_facebook-watermarked-aspect-ratio-1200-675_default_0.jpg"
-  },
-  {
-   "t": "Agustín García: “El sector de la viticultura debe resultar atractivo desde el punto de vista económico para las nuevas generaciones”",
-   "u": "https://tribunadecanarias.es/directivos/26670/agustin-garcia-el-sector-de-la-viticultura-debe-resultar-atractivo-desde-el-punto-de-vista-economico-para-las-nuevas-generaciones/",
-   "s": "Tribuna de Canarias",
-   "d": "2026-08-04T14:36:39.000Z",
-   "tags": [
-    "VINO",
-    "CANARIAS"
-   ],
-   "img": "https://tribunadecanarias.es/uploads/2022/10/IMG_DA148B812E8B-1.jpeg"
+   "img": "https://imagenes2.mundodeportivo.com/files/og_thumbnail/files/fp/uploads/2026/07/29/6a6a2b9122d7a.r_d.923-603-6273.jpeg"
   }
  ]
 }
