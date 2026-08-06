@@ -1,11 +1,51 @@
 {
- "updated": "2026-08-06T00:11:45.420Z",
+ "updated": "2026-08-06T07:56:40.374Z",
  "items": [
+  {
+   "t": "Martín Berasategui (66), sobre los inicios de su tres estrellas Michelin: \"Lo abrimos con la pintura que medio regalaba el Gobierno Vasco para los pisos de protección oficial\"",
+   "u": "https://www.huffingtonpost.es/economia/martin-berasategui-inicios-tres-estrellas-michelin-pintura-regalaba-pisos-proteccion-oficial-f202608.html",
+   "s": "El HuffPost",
+   "d": "2026-08-06T06:41:00.000Z",
+   "tags": [
+    "CHEF",
+    "MICHELIN"
+   ],
+   "img": "https://img2.huffingtonpost.es/files/og_thumbnail/uploads/2026/08/03/no-tenia-dinero-para-nada-explica-berasategui-al-rememorar-los-primeros-anos-de-un-proyecto-que-hoy-ofrece-un-ticket-medio-de-unos-500-euros.jpeg"
+  },
+  {
+   "t": "GASTRONOMÍA | Víctor Suárez (Haydée*, Tenerife) ha ultimado su primera creación de quesos de autor, un 'cabra' de alto nivel para el nuevo menú de octubre",
+   "u": "https://www.elblogoferoz.com/2026/08/06/gastronomia-victor-suarez-haydee-tenerife-ha-ultimado-su-primera-creacion-de-quesos-de-autor-un-cabra-de-alto-nivel-para-el-nuevo-menu-de-octubre/",
+   "s": "elblogoferoz.com",
+   "d": "2026-08-06T04:00:00.000Z",
+   "tags": [
+    "CANARIAS"
+   ]
+  },
+  {
+   "t": "El pueblo donde mejor se come de los Pirineos: famoso por su ternasco, por sus rutas de senderismo y por su récord de bares por habitante",
+   "u": "https://www.infobae.com/espana/2026/08/06/el-pueblo-donde-mejor-se-come-de-los-pirineos-famoso-por-su-ternasco-por-sus-rutas-de-senderismo-y-por-su-record-de-bares-por-habitante/?outputType",
+   "s": "Infobae",
+   "d": "2026-08-06T03:58:27.000Z",
+   "tags": [
+    "MICHELIN"
+   ],
+   "img": "https://www.infobae.com/resizer/v2/2Y2F2COMNFD73CZJ3QSKR5XSDU.jpeg?auth=cca5cced4fdb332aa810c1bec73614d53206774962ef18f295e0198140de2e84&smart=true&width=1200&height=630&quality=85"
+  },
+  {
+   "t": "Las mejores terrazas de Madrid: las nuevas, la favorita de una actriz, con la mejor croqueta de España, velas, música y un lago",
+   "u": "https://www.elespanol.com/madrid/ocio/20260806/mejores-terrazas-madrid-nuevas-favorita-actriz-mejor-croqueta-espana-velas-musica-lago/1003744325696_0.html",
+   "s": "El Español",
+   "d": "2026-08-06T00:00:00.000Z",
+   "tags": [
+    "MICHELIN"
+   ],
+   "img": "https://s3.elespanol.com/k/imgp/cms/elespanol/11318449.jpg?p=f:jpeg/c:1919:1079:nowe:0:136/w:1706/h:960&h=ibzfErtX"
+  },
   {
    "t": "Come lo que quieras, paga lo que puedas abre la alta cocina",
    "u": "https://foodandtravel.mx/sabores/come-lo-que-quieras-paga-lo-que-puedas-el-movimiento-que-abre-las-puertas-de-la-alta-cocina/",
    "s": "Food and Travel México",
-   "d": "2026-08-05T23:09:11.000Z",
+   "d": "2026-08-05T23:09:40.000Z",
    "tags": [
     "MICHELIN"
    ]
@@ -61,16 +101,6 @@
    "img": "https://static.eldiario.es/clip/d0de148b-e380-4bbe-86b1-40951c15a718_facebook-watermarked-aspect-ratio-1200-675_default_0.jpg"
   },
   {
-   "t": "El calor da un respiro en Canarias: la Aemet prevé un descenso de las temperaturas este jueves",
-   "u": "https://www.eldiario.es/canariasahora/tiempo-canarias/tiempo-en-canarias-este-jueves-6-de-agosto-manana-hoy_1_13430779.amp.html",
-   "s": "elDiario.es",
-   "d": "2026-08-05T18:09:10.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://static.eldiario.es/clip/9df6a949-ac4f-410b-a651-1840c0367da6_facebook-watermarked-aspect-ratio-1200-675_default_0.jpg"
-  },
-  {
    "t": "El Gobierno activa la alerta por altas temperaturas en dos islas de Canarias",
    "u": "https://www.eldiario.es/canariasahora/tiempo-canarias/gobierno-activa-alerta-altas-temperaturas-islas-canarias_1_13430766.html",
    "s": "elDiario.es",
@@ -79,6 +109,17 @@
     "CANARIAS"
    ],
    "img": "https://static.eldiario.es/clip/ebc18ddf-222c-4c2b-86a6-cb3b5ca60edc_facebook-watermarked-aspect-ratio-1200-675_default_0.jpg"
+  },
+  {
+   "t": "Villa de Mazo une astronomía y vino para preparar la observación del eclipse solar",
+   "u": "https://www.eldia.es/canarias/2026/08/05/villa-mazo-une-astronomia-vino-133126086.html",
+   "s": "Eldía",
+   "d": "2026-08-05T17:49:50.000Z",
+   "tags": [
+    "VINO",
+    "CANARIAS"
+   ],
+   "img": "https://estaticos-cdn.prensaiberica.es/clip/7a2b243a-48f5-41eb-bf9b-a5aa2a602697_16-9-discover-aspect-ratio_default_0_x800y300.jpg"
   },
   {
    "t": "Gastroguía de Tenerife: los mejores restaurantes de la isla canaria donde comer como un local",
@@ -112,7 +153,7 @@
   {
    "t": "Albert Adrià y los Hermanos Padrón cruzarán sus cocinas en Tenerife",
    "u": "https://www.tapasmagazine.es/albert-adria-y-los-hermanos-padron-cruzaran-sus-cocinas-en-tenerife/",
-   "s": "Tapas Magazine",
+   "s": "tapasmagazine.es",
    "d": "2026-08-05T12:53:34.000Z",
    "tags": [
     "CANARIAS"
@@ -142,7 +183,7 @@
   {
    "t": "De la croqueta roja a la torrija gigante: el restaurante canario que sorprende con su menú",
    "u": "https://www.laprovincia.es/lanzarote/2026/08/05/croqueta-roja-torrija-gigante-restaurante-canario-sorprende-menu-dv-133112988.html",
-   "s": "laprovincia.es",
+   "s": "La Provincia",
    "d": "2026-08-05T10:48:33.000Z",
    "tags": [
     "CANARIAS"
@@ -156,8 +197,7 @@
    "d": "2026-08-05T10:19:08.000Z",
    "tags": [
     "MICHELIN"
-   ],
-   "img": "https://img.asmedia.epimg.net/resizer/v2/ZVP7C2Z7XFAPJEE72I57K5KNI4.jpg?auth=1cb41a0eff3ff4af80518ae49bfa90c0a32413d882182c8906e69664285b3769&width=1472&height=828&focal=4980%2C1680"
+   ]
   },
   {
    "t": "El menú que tres chefs baleares han diseñado para Felipe VI y Letizia en el Palacio de Marivent: un banquete con tumbet mallorquín, vaca roja menorquina y flaó ibicenco",
@@ -199,6 +239,16 @@
     "CANARIAS"
    ],
    "img": "https://s2.ppllstatics.com/canarias7/www/multimedia/local/2026/08/05/hiperdino-lanzarote-1.jpg"
+  },
+  {
+   "t": "Vuelve el mercadillo canario de HiperDino: durará dos fines de semana y tiene gastronomía, artesanía y food trucks",
+   "u": "https://www.atlanticohoy.com/empresas/mercadillo-local-canario-hiperdino-agosto-gastronomia-artesania-food-trucks_1565179_102.html",
+   "s": "Atlántico Hoy",
+   "d": "2026-08-05T08:31:00.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://www.atlanticohoy.com/uploads/s1/37/61/37/2/imagen-del-hiperdino-local-market-en-lanzarote-hiperdino.webp"
   },
   {
    "t": "Desmanteladas dos plantaciones de marihuana en el norte de Tenerife con casi 450 plantas",
@@ -251,55 +301,6 @@
     "CANARIAS"
    ],
    "img": "https://s3.ppllstatics.com/canarias7/www/multimedia/gastronomia-c7/2026/08/04/maiz15-kEYB-U301150043355vmE-1200x840@Canarias7.jpg"
-  },
-  {
-   "t": "Arianne Bahala impulsa la nueva cocina filipina en Barcelona: “Intentamos ofrecer los platos y tapas menos conocidas”",
-   "u": "https://www.lavanguardia.com/comer/sitios/20260805/11607406/arianne-bahala-impulsa-nueva-cocina-filipina-barcelona-intentamos-ofrecer-platos-tapas-conocidas.amp.html",
-   "s": "La Vanguardia",
-   "d": "2026-08-05T04:00:00.000Z",
-   "tags": [
-    "CHEF"
-   ]
-  },
-  {
-   "t": "Los platos favoritos de Rosalía: de la alta cocina porteña a su desayuno ideal",
-   "u": "https://www.infobae.com/tendencias/2026/08/04/los-platos-favoritos-de-rosalia-de-la-alta-cocina-portena-a-su-desayuno-ideal/?outputType",
-   "s": "Infobae",
-   "d": "2026-08-04T23:39:35.000Z",
-   "tags": [
-    "ALTA COCINA"
-   ],
-   "img": "https://www.infobae.com/resizer/v2/OUJ7IUYO4NBLHJPT3LDU6SLJOQ.jpg?auth=2df80394fc485ebe088dd47447dcea95449682edc9922b0dcd07baef0b06c840&smart=true&width=1200&height=630&quality=85"
-  },
-  {
-   "t": "Madrid no cierra en agosto: del desembarco de Eneko Atxa y otras aperturas a restaurantes ya clásicos que siguen siendo una apuesta segura",
-   "u": "https://amp.elmundo.es/metropoli/gastronomia/2026/08/05/6a6a2d5bfdddffd0678b45bc.html",
-   "s": "El Mundo",
-   "d": "2026-08-04T22:02:00.000Z",
-   "tags": [
-    "ALTA COCINA"
-   ],
-   "img": "https://e01-phantom-elmundo.uecdn.es/cfb733fc90febc10d2edb01154ced892/crop/458x573/2631x2023/resize/1200/f/webp/assets/multimedia/imagenes/2026/07/30/17854182117587.jpg"
-  },
-  {
-   "t": "Famtàstic presenta 'Eclipse'",
-   "u": "https://lagenda.org/programacion/famtastic-presenta-eclipse-tenerife-sauzal-2026-gastronomia-cine-43245",
-   "s": "Lagenda",
-   "d": "2026-08-04T21:30:23.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://s3-eu-west-1.amazonaws.com/beta.lagenda/programacion/especial-espacial-vol-2.jpg"
-  },
-  {
-   "t": "Ferran Adrià, cocinero catalán: \"Hoy, o tienes un restaurante muy grande o muy pequeño. Para mí, la culminación es BisAVis, en Barcelona: solo trabaja una persona y atiende a veinte clientes al día\"",
-   "u": "https://www.mundodeportivo.com/foodie/20260804/1004213213/ferran-adria-cocinero-catalan-mi-culminacion-bisavis-barcelona-trabaja-persona-atiende-veinte-clientes-dia-ticket-medio-150-euros-xef-dct.html?facet",
-   "s": "Mundo Deportivo",
-   "d": "2026-08-04T21:07:00.000Z",
-   "tags": [
-    "ALTA COCINA"
-   ],
-   "img": "https://imagenes2.mundodeportivo.com/files/og_thumbnail/files/fp/uploads/2026/07/29/6a6a2b9122d7a.r_d.923-603-6273.jpeg"
   }
  ]
 }
