@@ -1,5 +1,5 @@
 {
- "updated": "2026-08-07T23:49:47.969Z",
+ "updated": "2026-08-08T05:59:16.654Z",
  "items": [
   {
    "t": "Santy (08/08/26)",
@@ -24,7 +24,7 @@
   {
    "t": "Dónde la IA ahorra de verdad horas en hoteles y restaurantes de Canarias",
    "u": "https://diariodeavisos.elespanol.com/canariasenred/como-aplicando-inteligencia-artificial-hosteleria-ia-ahorra/",
-   "s": "diariodeavisos.elespanol.com",
+   "s": "Diario de Avisos",
    "d": "2026-08-07T20:24:36.000Z",
    "tags": [
     "CANARIAS"
@@ -89,17 +89,6 @@
     "ALTA COCINA"
    ],
    "img": "https://imagenes.eleconomista.com.mx/files/image_1200_600/uploads/2026/08/06/6a75549490fb1.jpeg"
-  },
-  {
-   "t": "El viñedo más alto de Europa está en Tenerife: así es el pueblo que desafía a los Alpes",
-   "u": "https://www.noticiasdelvino.com/escapadas/2026/08/07/el-vinedo-mas-alto-de-europa-esta-en-tenerife-asi-es-el-pueblo-que-desafia-a-los-alpes-66331/",
-   "s": "Noticias del Vino",
-   "d": "2026-08-07T13:52:32.000Z",
-   "tags": [
-    "VINO",
-    "CANARIAS"
-   ],
-   "img": "https://www.noticiasdelvino.com/wp-content/uploads/El-vinedo-mas-alto-de-Europa-esta-en-Tenerife.jpg"
   },
   {
    "t": "La Orotava celebra DiverSaldo con descuentos y ocio familiar",
@@ -218,16 +207,6 @@
    "img": "https://estaticos-cdn.prensaiberica.es/clip/dd9f197f-982b-4927-8f0a-9ea2960c8d9f_16-9-discover-aspect-ratio_default_0_x620y201.jpg"
   },
   {
-   "t": "De la UTU de Flores a chef en Barcelona: el uruguayo que lidera la cocina del icónico restaurante Casa Tejada",
-   "u": "https://www.elpais.com.uy/el-empresario/de-la-utu-de-flores-a-chef-en-barcelona-el-uruguayo-que-lidera-la-cocina-del-iconico-restaurante-casa-tejada",
-   "s": "EL PAÍS Uruguay",
-   "d": "2026-08-07T06:46:38.000Z",
-   "tags": [
-    "ALTA COCINA"
-   ],
-   "img": "https://imgs.elpais.com.uy/dims4/default/38fad28/2147483647/strip/true/crop/945x591+0+0/resize/1200x750!/format/webp/quality/90/?url=https%3A%2F%2Fel-pais-uruguay-production-web.s3.us-east-1.amazonaws.com%2Fbrightspot%2F88%2F9e%2F226b64084392aa1f2dc1cb2363e6%2Fmartin-chef-2.jpeg"
-  },
-  {
    "t": "El festín de los centros de menas, 2.000 euros en restaurantes mientras las familias acuden al banco de alimentos",
    "u": "https://www.libertaddigital.com/canarias/2026-08-07/el-festin-de-los-centros-de-menas-2-000-euros-en-restaurantes-mientras-las-familias-acuden-al-banco-de-alimentos-7446302/amp.html",
    "s": "Libertad Digital",
@@ -266,6 +245,16 @@
    ]
   },
   {
+   "t": "La historia de elBulli y Ferran Adrià ya tiene una serie",
+   "u": "https://diariodeavisos.elespanol.com/2026/08/serie-ferran-adria-elbulli/amp/",
+   "s": "Diario de Avisos",
+   "d": "2026-08-06T23:00:00.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://diariodeavisos.elespanol.com/wp-content/uploads/2026/08/Ferran-Adria.jpg"
+  },
+  {
    "t": "Padylla (07/08/26)",
    "u": "https://www.eldia.es/humor/2026/08/07/padylla-07-08-26-133158933.html",
    "s": "eldia.es",
@@ -293,6 +282,16 @@
    "tags": [
     "CANARIAS"
    ]
+  },
+  {
+   "t": "El colegio de Arquitectos de Tenerife recurre el concurso para reformar el cine Chimisay, obras a las que aspira una sola empresa",
+   "u": "https://www.eldiario.es/canariasahora/tenerifeahora/sociedad/colegio-arquitectos-tenerife-recurre-concurso-reformar-cine-chimisay-obras-aspira-sola-empresa_1_13432991.html",
+   "s": "elDiario.es",
+   "d": "2026-08-06T17:39:05.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://static.eldiario.es/clip/8fe5aff4-8412-423f-a1a9-cafc0821a3bc_facebook-watermarked-aspect-ratio-1200-675_default_0.jpg"
   }
  ]
 }
