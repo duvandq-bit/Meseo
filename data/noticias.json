@@ -1,6 +1,26 @@
 {
- "updated": "2026-08-08T23:47:15.556Z",
+ "updated": "2026-08-09T06:00:12.613Z",
  "items": [
+  {
+   "t": "Rodrigo de la Calle: \"La resurrección del escabeche ha sido, en parte, gracias al ceviche\"",
+   "u": "https://www.vozpopuli.com/amp/altavoz/cultura/rodrigo-de-la-calle-la-resurreccion-del-escabeche-ha-sido-en-parte-gracias-al-ceviche.html",
+   "s": "Vozpopuli",
+   "d": "2026-08-09T02:45:00.000Z",
+   "tags": [
+    "ALTA COCINA"
+   ],
+   "img": "https://cdn.vozpopuli.com/cdn/posts/4232951/chef-rodrigo-calle-2883098-1200-700.jpg"
+  },
+  {
+   "t": "Mario Bakes, en Tenerife, optará a la final de los 50 Panaderos TOP de España",
+   "u": "https://diariodeavisos.elespanol.com/2026/08/mario-bakes-mejor-hogaza-canarias-2026/amp/",
+   "s": "Diario de Avisos",
+   "d": "2026-08-08T23:00:00.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://diariodeavisos.elespanol.com/wp-content/uploads/2026/08/Mario-Bakes-con-la-MIga-de-Oro.jpg"
+  },
   {
    "t": "La mejor milanesa de Fuerteventura se come en este restaurante de Corralejo: Mesón Las Tejas",
    "u": "https://www.canarias7.es/gastronomia-c7/restaurantes/mejor-milanesa-fuerteventura-come-restaurante-corralejo-meson-20260808191418-nt_amp.html",
@@ -32,15 +52,6 @@
    "img": "https://estaticos-cdn.prensaiberica.es/clip/92fe314e-8f94-428f-a485-4749a0d94ba1_16-9-discover-aspect-ratio_default_0_x242y144.jpg"
   },
   {
-   "t": "La Cámara de Comercio y Cervecera de Canarias clausuran el XI Programa Superior de Bares y Restaurantes con una veintena de personas formadas",
-   "u": "https://www.canal4tenerife.tv/la-camara-de-comercio-y-cervecera-de-canarias-clausuran-el-xi-programa-superior-de-bares-y-restaurantes-con-una-veintena-de-personas-formadas/",
-   "s": "Canal 4 Tenerife",
-   "d": "2026-08-08T14:01:17.000Z",
-   "tags": [
-    "CANARIAS"
-   ]
-  },
-  {
    "t": "El Centro de Atletismo albergará la primera Escuela de Atletismo en Silla de Ruedas de Tenerife",
    "u": "https://www.eldiario.es/canariasahora/Deportes/otros_deportes/centro-atletismo-albergara-primera-escuela-atletismo-silla-ruedas-tenerife_1_13436112.html",
    "s": "elDiario.es",
@@ -58,8 +69,7 @@
    "tags": [
     "VINO",
     "CANARIAS"
-   ],
-   "img": "https://www.noticiasdelvino.com/wp-content/uploads/El-vinedo-mas-alto-de-Europa-esta-en-Tenerife.jpg"
+   ]
   },
   {
    "t": "Los chefs vascos coinciden: \"El error más habitual para hacer una ensaladilla rusa perfecta está en dejar parte del aceite del atún en la mezcla\"",
@@ -111,6 +121,16 @@
    "img": "https://estaticos-cdn.prensaiberica.es/clip/9e9b4e48-a7ec-4180-a83c-6007c2dd3552_16-9-discover-aspect-ratio_default_0_x800y295.jpg"
   },
   {
+   "t": "El Aula de Cocina de GastroCanarias inaugura su sede en Las Palmas",
+   "u": "https://gastrocanarias.com/art/22724/el-aula-de-cocina-de-gastrocanarias-inaugura-su-sede-en-las-palmas",
+   "s": "Gastrocanarias",
+   "d": "2026-08-08T10:57:40.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://gastrocanarias.com/upload/images/04_2026/7885__mlb5886.jpg"
+  },
+  {
    "t": "Más de 800.000 turistas y unos 60.000 italianos residentes en Canarias tendrán que pasar control fronterizo",
    "u": "https://www.eldiario.es/canariasahora/sociedad/800-000-turistas-60-000-italianos-residentes-canarias-tendran-pasar-control-fronterizo_1_13435884.html",
    "s": "elDiario.es",
@@ -127,8 +147,7 @@
    "d": "2026-08-08T09:37:52.000Z",
    "tags": [
     "CHEF"
-   ],
-   "img": "https://www.noticiasdelvino.com/wp-content/uploads/image-583.png"
+   ]
   },
   {
    "t": "El clásico bar de Las Palmas de Gran Canaria que muchos recomiendan por sus platos caseros y su ambiente de toda la vida",
@@ -167,7 +186,8 @@
    "d": "2026-08-08T07:38:22.000Z",
    "tags": [
     "CANARIAS"
-   ]
+   ],
+   "img": "https://statics-maker.llt-services.com/ten/images/2026/04/28/large/95683e71-c869-4211-9148-3a156e0cf448-91.jpeg"
   },
   {
    "t": "El arte de cuidarse y saborear el verano: la espectacular transformación del Restaurante Gorbea&Chill Out",
@@ -275,28 +295,7 @@
    "d": "2026-08-07T16:06:56.000Z",
    "tags": [
     "MICHELIN"
-   ],
-   "img": "https://www.noticiasdelvino.com/wp-content/uploads/restaurantes-5.jpg"
-  },
-  {
-   "t": "El plato que emociona a los comensales de Toño Pérez en Atrio: \"Los clientes me lloran con ese bocado\"",
-   "u": "https://www.20minutos.es/gastronomia/restaurantes/plato-tono-perez-atrio-3-estrellas-michelin-emociona-clientes-lloran-bocado_7017648_0.html",
-   "s": "20Minutos",
-   "d": "2026-08-07T16:00:00.000Z",
-   "tags": [
-    "MICHELIN"
-   ],
-   "img": "https://imagenes.20minutos.es/files/image_1920_1080/uploads/imagenes/2021/06/08/tono-perez-cocinero-extremeno.jpeg"
-  },
-  {
-   "t": "¿Qué se come en una villa de lujo? Wishome apuesta por producto cántabro, Wagyu y chefs privados",
-   "u": "https://www.eleconomista.com.mx/bistronomie/come-villa-lujo-wishome-apuesta-producto-cantabro-wagyu-chefs-privados-20260807-827098.html",
-   "s": "El Economista",
-   "d": "2026-08-07T15:05:00.000Z",
-   "tags": [
-    "ALTA COCINA"
-   ],
-   "img": "https://imagenes.eleconomista.com.mx/files/image_1200_600/uploads/2026/08/06/6a75549490fb1.jpeg"
+   ]
   }
  ]
 }
