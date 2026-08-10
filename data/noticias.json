@@ -1,6 +1,47 @@
 {
- "updated": "2026-08-09T23:49:08.595Z",
+ "updated": "2026-08-10T06:43:59.758Z",
  "items": [
+  {
+   "t": "Kanye West eligió este restaurante de un conocido chef andaluz durante su visita a Madrid: lujo y alta cocina",
+   "u": "https://okdiario.com/cool/famosos/kanye-west-eligio-este-restaurante-conocido-chef-andaluz-durante-visita-madrid-lujo-alta-cocina-19152176",
+   "s": "OkDiario",
+   "d": "2026-08-10T06:15:14.000Z",
+   "tags": [
+    "ALTA COCINA"
+   ],
+   "img": "https://okdiario.com/img/2026/08/10/kanye-west.jpg"
+  },
+  {
+   "t": "Antonio Sánchez, el influencer gastronómico de Murcia que planta cara al ‘postureo’ y al canje",
+   "u": "https://lasgastrocronicas.com/antonio-sanchez-el-influencer-gastronomico-de-murcia-que-planta-cara-al-postureo-y-al-canje/",
+   "s": "Las Gastrocrónicas",
+   "d": "2026-08-10T05:00:56.000Z",
+   "tags": [
+    "CANARIAS"
+   ]
+  },
+  {
+   "t": "Ni Italia ni Colombia: el rincón español de Xuso Jones con el único café de Europa y playas de escándalo",
+   "u": "https://www.larazon.es/canarias/italia-colombia-rincon-espanol-xuso-jones-unico-cafe-europa-playas-escandalo_202608106a50c348c0b5fb431c4bc9d9.html",
+   "s": "La Razón",
+   "d": "2026-08-10T05:00:25.000Z",
+   "tags": [
+    "VINO",
+    "CANARIAS"
+   ],
+   "img": "https://fotografias-2.larazon.es/clipping/cmsimages02/2026/07/10/994F7B2E-E80D-4DA2-8B1B-8473981A420C/italia-colombia-rincon-espanol-xuso-jones-unico-cafe-europa-playas-escandalo_98.jpg?crop=1672,941,x0,y0&width=1900&height=1069&optimize=low&format=webply"
+  },
+  {
+   "t": "Dónde ver el eclipse total del 12 de agosto: los hoteles y restaurantes que han preparado experiencias únicas",
+   "u": "https://www.vozpopuli.com/amp/gastropoli/donde-ver-el-eclipse-total-del-12-de-agosto-los-hoteles-y-restaurantes-que-han-preparado-experiencias-unicas.html",
+   "s": "Vozpopuli",
+   "d": "2026-08-10T02:45:00.000Z",
+   "tags": [
+    "VINO",
+    "CANARIAS"
+   ],
+   "img": "https://cdn.vozpopuli.com/cdn/posts/4232835/recreacion-eclipse-2886739-1200-700.jpg"
+  },
   {
    "t": "Palacio Ico, la puesta en valor del producto canario",
    "u": "https://www.larazon.es/gastronomia/palacio-ico-puesta-valor-producto-canario_202608106a7906b171b42a0b5de66bc0.html",
@@ -10,15 +51,6 @@
     "CANARIAS"
    ],
    "img": "https://fotografias-2.larazon.es/clipping/cmsimages02/2026/08/10/0876D1C1-345C-4843-B050-AD0D27D7A4E0/victor-valverde-cocinero-palacio-ico_98.jpg?crop=1080,608,x0,y370&width=1900&height=1069&optimize=low&format=webply"
-  },
-  {
-   "t": "La villa juguetera de Alicante que conquista por su cocina: así es el pueblo donde mejor se come de España",
-   "u": "https://www.noticiasdelvino.com/restaurantes/2026/08/09/la-villa-juguetera-de-alicante-que-conquista-por-su-cocina-asi-es-el-pueblo-donde-mejor-se-come-de-espana-74836/",
-   "s": "Noticias del Vino",
-   "d": "2026-08-09T19:57:35.000Z",
-   "tags": [
-    "MICHELIN"
-   ]
   },
   {
    "t": "Canarias pone fin este lunes a la alerta por calor tras varios días de altas temperaturas",
@@ -72,7 +104,7 @@
   {
    "t": "La Guardia Civil frena a la banda que aterrorizaba a los comerciantes de Tenerife",
    "u": "https://diariodeavisos.elespanol.com/2026/08/guardia-civil-frena-banda-atractorizaba-comerciantes-tenerife/",
-   "s": "Diario de Avisos",
+   "s": "diariodeavisos.elespanol.com",
    "d": "2026-08-09T09:26:24.000Z",
    "tags": [
     "CANARIAS"
@@ -81,7 +113,7 @@
   {
    "t": "Cae la banda más activa de Tenerife: 8 detenidos por atracos a gasolineras y restaurantes",
    "u": "https://www.soldelsurtenerife.com/sucesos/cae-banda-mas-activa-tenerife-8-detenidos-atracos-gasolineras-restaurantes/20260809095841108909.html",
-   "s": "sol del sur tenerife",
+   "s": "soldelsurtenerife.com",
    "d": "2026-08-09T08:58:41.000Z",
    "tags": [
     "CANARIAS"
@@ -141,7 +173,7 @@
   {
    "t": "Mario Bakes, en Tenerife, optará a la final de los 50 Panaderos TOP de España",
    "u": "https://diariodeavisos.elespanol.com/2026/08/mario-bakes-mejor-hogaza-canarias-2026/",
-   "s": "Diario de Avisos",
+   "s": "diariodeavisos.elespanol.com",
    "d": "2026-08-08T23:00:00.000Z",
    "tags": [
     "CANARIAS"
@@ -188,14 +220,13 @@
    "img": "https://s2.ppllstatics.com/canarias7/www/multimedia/gastronomia-c7/2026/08/06/kool1.jpg"
   },
   {
-   "t": "Alerta al comprar entradas para conciertos y monumentos: los ciberdelincuentes clonan con IA webs oficiales",
-   "u": "https://www.eldia.es/sociedad/2026/08/08/alerta-estafas-entradas-conciertos-restaurantes-hoteles-webs-clonadas-133199539.amp.html",
-   "s": "Eldía",
-   "d": "2026-08-08T15:09:48.000Z",
+   "t": "La Cámara de Comercio y Cervecera de Canarias clausuran el XI Programa Superior de Bares y Restaurantes con una veintena de personas formadas",
+   "u": "https://www.canal4tenerife.tv/la-camara-de-comercio-y-cervecera-de-canarias-clausuran-el-xi-programa-superior-de-bares-y-restaurantes-con-una-veintena-de-personas-formadas/",
+   "s": "Canal 4 Tenerife",
+   "d": "2026-08-08T14:01:17.000Z",
    "tags": [
     "CANARIAS"
-   ],
-   "img": "https://estaticos-cdn.prensaiberica.es/clip/92fe314e-8f94-428f-a485-4749a0d94ba1_16-9-discover-aspect-ratio_default_0_x242y144.jpg"
+   ]
   },
   {
    "t": "El Centro de Atletismo albergará la primera Escuela de Atletismo en Silla de Ruedas de Tenerife",
@@ -229,7 +260,7 @@
   },
   {
    "t": "Un encuentro gastronómico único a cuatro manos entre Tenerife y Florencia",
-   "u": "https://www.canarias7.es/gastronomia-c7/encuentro-gastronomico-unico-cuatro-manos-tenerife-florencia-20260808130231-vi_amp.html",
+   "u": "https://www.canarias7.es/gastronomia-c7/encuentro-gastronomico-unico-cuatro-manos-tenerife-florencia-20260808130231-vi.html",
    "s": "Canarias7",
    "d": "2026-08-08T12:02:36.000Z",
    "tags": [
@@ -265,35 +296,6 @@
     "CANARIAS"
    ],
    "img": "https://estaticos-cdn.prensaiberica.es/clip/9e9b4e48-a7ec-4180-a83c-6007c2dd3552_16-9-discover-aspect-ratio_default_0_x800y295.jpg"
-  },
-  {
-   "t": "El Aula de Cocina de GastroCanarias inaugura su sede en Las Palmas",
-   "u": "https://gastrocanarias.com/art/22724/el-aula-de-cocina-de-gastrocanarias-inaugura-su-sede-en-las-palmas",
-   "s": "Gastrocanarias",
-   "d": "2026-08-08T10:57:40.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://gastrocanarias.com/upload/images/04_2026/7885__mlb5886.jpg"
-  },
-  {
-   "t": "Más de 800.000 turistas y unos 60.000 italianos residentes en Canarias tendrán que pasar control fronterizo",
-   "u": "https://www.eldiario.es/canariasahora/sociedad/800-000-turistas-60-000-italianos-residentes-canarias-tendran-pasar-control-fronterizo_1_13435884.html",
-   "s": "elDiario.es",
-   "d": "2026-08-08T10:37:26.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://static.eldiario.es/clip/df2afbbf-bd38-4555-982f-0e0f786b2957_facebook-watermarked-aspect-ratio-1200-675_default_0.jpg"
-  },
-  {
-   "t": "El restaurante de carretera definitivo está en este pueblo medieval de Madrid: Martín Berasategui confiesa su secreto mejor guardado",
-   "u": "https://www.noticiasdelvino.com/escapadas/2026/08/08/el-restaurante-de-carretera-definitivo-esta-en-este-pueblo-medieval-de-madrid-martin-berasategui-confiesa-su-secreto-mejor-guardado-74843/",
-   "s": "Noticias del Vino",
-   "d": "2026-08-08T09:37:52.000Z",
-   "tags": [
-    "CHEF"
-   ]
   }
  ]
 }
