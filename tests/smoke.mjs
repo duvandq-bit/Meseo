@@ -2017,8 +2017,9 @@ test('wine detail speaks the premium carta language', () => {
   // prices, Cormorant story, and the "G " label typo fixed to the ◇ ornament.
   const detail = html.slice(html.indexOf('function _showWineDetail'), html.indexOf('function _showWineDetail') + 9000);
   assert(/class="wc-type"/.test(detail), 'detail type must use the dot+mono style');
-  assert(/color:var\(--gold-deep\);font-weight:600">\$\{w\.price\} €/.test(detail),
-    'detail bottle price must be deep gold with a spaced euro');
+  // v7.203: los vinos solo-por-copa de la carta 11.08 muestran «—» en botella.
+  assert(/color:var\(--gold-deep\);font-weight:600">\$\{w\.price\?w\.price\+' €':'—'\}/.test(detail),
+    'detail bottle price must be deep gold with a spaced euro (— when the carta gives no bottle price)');
   assert(/Cormorant Garamond[^"]*"[^>]*>"\$\{escapeHTML\(_en && w\.story_en/.test(detail),
     'detail story must use Cormorant italic');
   assert(!/wine-info-label"[^>]*>G \$\{/.test(html),
@@ -4050,6 +4051,72 @@ test('Hook F1: record cards, crowns, duel juice and the overtaken trigger', () =
   // Anti-spam: record cards must NOT blast push notifications.
   const share = html.slice(html.indexOf('async function _txShareRecord'), html.indexOf('function _txThroneCheck'));
   assert(!/send-push/.test(share), 'record cards must not send mass push');
+});
+
+test('wine list matches CARTA_VINO_TXOKO 11.08 (owner PDF)', () => {
+  const wines = JSON.parse(read('data/wines.json'));
+  const by = n => wines.find(w => w.name === n);
+  // Sin duplicados de id ni de nombre.
+  assert(new Set(wines.map(w => w.id)).size === wines.length, 'duplicate wine ids');
+  assert(new Set(wines.map(w => w.name.toLowerCase())).size === wines.length, 'duplicate wine names');
+  // Altas de la carta 11.08 (muestra representativa de cada bloque nuevo).
+  for (const [name, price] of [['Hermanos Lurton', 65], ['Convento Santissima Annunciata', 140],
+       ['El Grifo Ariana', 75], ['Valdepoleo 2017', 90], ['Roda Reserva 2021', 145],
+       ['Clós Pepín', 55], ['Valduero I Cepa', 90], ['Almirez', 150], ['Hey Malbec', 95],
+       ["Syrah d'Ogier", 75], ['Petra Hebo 2023', 80], ["Col d'Orcia 2020", 150],
+       ['Dom Pérignon 2015', 650], ['Alion 2019 3L Doble Magnum', 1160]]) {
+    const w = by(name);
+    assert(w, `falta el vino nuevo: ${name}`);
+    assert(w.price === price, `${name}: precio ${w.price} ≠ carta ${price}`);
+  }
+  // Precios actualizados contra la carta.
+  for (const [name, price] of [['Louro', 65], ['As 2 Ladeiras', 75], ['El Grifo Lías', 95],
+       ['Amaren Blanco', 75], ['Titerok', 90], ['Les Terrasses', 140], ['Tobia Cuvee', 40],
+       ['Tokaji Oremus Aszú 3 Puttonyus 2017', 120], ['Remelluri Tinto 2017', 130]]) {
+    assert(by(name) && by(name).price === price, `${name} debe costar ${price} (carta 11.08)`);
+  }
+  // Selección por copa = la página de vinos por copa (14 referencias).
+  const copa = wines.filter(w => w.glass).map(w => w.name).sort();
+  assert(copa.length === 14, `la carta lista 14 vinos por copa, hay ${copa.length}: ${copa}`);
+  for (const n of ['Roger de Flor', 'Trevejos', 'Valtravieso', 'Valduero I Cepa', 'Titerok', 'Cepado'])
+    assert(by(n) && by(n).glass, `${n} debe estar disponible por copa`);
+  for (const n of ['Muga Rosado', 'Ferrera', 'Colet A Priori'])
+    assert(by(n) && !by(n).glass, `${n} ya no se sirve por copa`);
+  // Portada «NUESTROS VINOS RECOMENDADOS»: 5 blancos + 5 tintos, ni uno más.
+  const rec = wines.filter(w => w.recommended).map(w => w.name);
+  assert(rec.length === 10, `la carta recomienda 10 vinos, hay ${rec.length}: ${rec}`);
+  for (const n of ['Cepado', 'Louro', 'Artifice Blanco', 'Convento Santissima Annunciata',
+       'Remelluri Blanco', 'La Campagne', 'Marqués de Murrieta Reserva 2021', 'Viña Cubillo 2016',
+       'Poligonos', "Côte d'Or Bourgogne"])
+    assert(by(n) && by(n).recommended, `${n} es recomendado en la carta`);
+  // Los vinos sin precio de botella deben declararlo (copa o «consultar»).
+  const sinPrecio = wines.filter(w => !w.price);
+  assert(sinPrecio.length === 3, `esperados 3 vinos sin precio de botella, hay ${sinPrecio.length}`);
+  for (const w of sinPrecio) assert(w.glass || /consultar|Check the price/i.test(w.notes + w.notes_en),
+    `${w.name}: sin precio debe indicar copa o «consultar»`);
+  // Ficha completa y bilingüe en TODOS los vinos (los nuevos incluidos).
+  for (const w of wines) {
+    for (const f of ['name','type','grapes','region','origin','story','notes','story_en','notes_en'])
+      assert(w[f] && String(w[f]).trim(), `${w.name}: campo vacío ${f}`);
+    assert(Array.isArray(w.pairings) && w.pairings.length, `${w.name}: sin maridajes`);
+  }
+});
+
+test('price rendering survives bottle-less wines (no «null €»)', () => {
+  assert(/function _wPx\(w, spaced\)/.test(html), '_wPx helper missing');
+  // Ninguna ruta de pintado puede interpolar el precio SIN guardar el nulo:
+  // toda aparición de ${w.price}€ debe vivir dentro de un ternario w.price?…
+  assert(!/\$\{r\.wine\.price\}€/.test(html), 'raw ${r.wine.price}€ interpolation left');
+  for (const line of html.split('\n')) {
+    if (line.includes('${w.price}€') || line.includes('${w.price} €'))
+      assert(/w\.price\?/.test(line), `precio sin guarda de nulo: ${line.trim().slice(0, 90)}`);
+  }
+  assert(!/\+ w\.price \+ '€<\/div>'/.test(html), 'raw string-concat price left');
+  // Las ordenaciones por precio no pueden producir NaN con price:null.
+  assert(!/\|\| a\.price-b\.price/.test(html) && !/\|\| a\.price - b\.price;/.test(html),
+    'price sorts must fall back to glass price');
+  assert(/wines\.sort\(function\(a,b\) \{ return \(a\.price\|\|a\.glass\|\|0\)/.test(html),
+    'map D.O. list sort must be null-safe');
 });
 
 // ─── 7. No leftover git conflict markers ────────────────────────
