@@ -1,6 +1,56 @@
 {
- "updated": "2026-08-11T06:05:59.016Z",
+ "updated": "2026-08-11T11:59:40.575Z",
  "items": [
+  {
+   "t": "El restaurante de Tenerife donde comer cocina canaria, carnes y pollos a la brasa: raciones generosas a precios económicos",
+   "u": "https://www.eldia.es/tenerife/2026/08/11/restaurante-tenerife-comer-cocina-canaria-dv-133260502.html",
+   "s": "Eldía",
+   "d": "2026-08-11T11:04:13.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://estaticos-cdn.prensaiberica.es/clip/c1da1de2-3868-466d-9d2b-f139e88a2a34_16-9-discover-aspect-ratio_default_0_x621y405.jpg"
+  },
+  {
+   "t": "El poke que lleva la alta cocina japonesa al verano",
+   "u": "https://www.larazon.es/viajes/poke-que-lleva-alta-cocina-japonesa-verano_202608116a7afa15a046ad6ebcab4722.html",
+   "s": "La Razón",
+   "d": "2026-08-11T11:00:18.000Z",
+   "tags": [
+    "ALTA COCINA"
+   ],
+   "img": "https://fotografias-2.larazon.es/clipping/cmsimages02/2026/08/11/B7CCF68E-82F9-484D-BA4D-75F46F7B59E7/poke-que-lleva-alta-cocina-japonesa-verano_98.jpg?crop=1600,900,x0,y349&width=1900&height=1069&optimize=low&format=webply"
+  },
+  {
+   "t": "Popeyes suma un nuevo local en Tenerife: fecha, ubicación y comida gratis",
+   "u": "https://www.atlanticohoy.com/tenerife/popeyes-nuevo-local-tenerife-fecha-ubicacion-conseguir-comida-gratis_1565407_102.html",
+   "s": "Atlántico Hoy",
+   "d": "2026-08-11T10:00:00.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://www.atlanticohoy.com/uploads/s1/37/65/14/1/diseno-sin-titulo-2026-08-10t102030-260.webp"
+  },
+  {
+   "t": "El restaurante de Las Palmas de Gran Canaria que lleva desde 1977 sirviendo cocina canaria: la carne de cabra es uno de sus platos estrella",
+   "u": "https://www.laprovincia.es/las-palmas/2026/08/11/restaurante-palmas-gran-canaria-lleva-1977-cocina-dv-133254922.html",
+   "s": "La Provincia",
+   "d": "2026-08-11T07:19:07.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://estaticos-cdn.prensaiberica.es/clip/689ebf08-acd0-4eb4-91df-110d688be1f4_16-9-discover-aspect-ratio_default_0_x581y264.jpg"
+  },
+  {
+   "t": "Tenerife todo el año con planes de mar y bienestar",
+   "u": "https://www.lavozdelasubbetica.es/articulo/comunicados/tenerife-todo-ano-planes-mar-bienestar/20260811081310046141.amp.html",
+   "s": "La voz de la Subbética",
+   "d": "2026-08-11T06:13:10.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://www.lavozdelasubbetica.es/media/lavozdelasubbetica/images/2026/08/11/2026081108130162857.png"
+  },
   {
    "t": "Le Petit Chef: alta cocina inmersiva en el Hyatt Regency Barcelona Tower",
    "u": "https://www.revistagranhotel.com/le-petit-chef-alta-cocina-inmersiva-en-el-hyatt-regency-barcelona-tower/",
@@ -9,16 +59,6 @@
    "tags": [
     "ALTA COCINA"
    ]
-  },
-  {
-   "t": "Fernando Clavijo muestra la solidaridad de Canarias con las víctimas del terremoto de Colombia",
-   "u": "https://www.eldiario.es/canariasahora/politica/fernando-clavijo-muestra-solidaridad-canarias-victimas-terremoto-colombia_1_13439276.html",
-   "s": "elDiario.es",
-   "d": "2026-08-10T17:46:28.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://static.eldiario.es/clip/6a67ade9-0f83-477e-b2e3-e3c414bc3478_facebook-watermarked-aspect-ratio-1200-675_default_0_x1084y720.jpg"
   },
   {
    "t": "El número de abonados del CD Tenerife ya cubre el 71% del aforo del Heliodoro",
@@ -92,16 +132,6 @@
     "CANARIAS"
    ],
    "img": "https://static.eldiario.es/clip/9c767988-3a30-47e7-a42b-0c2b11d6212d_facebook-watermarked-aspect-ratio-1200-675_default_0.jpg"
-  },
-  {
-   "t": "Cincuenta años de la primera huelga legal en Canarias: Cesea, 9 de agosto de 1976",
-   "u": "https://www.eldiario.es/canariasahora/economia/cincuenta-anos-primera-huelga-legal-canarias-cesea-9-agosto-1976_1_13438575.html",
-   "s": "elDiario.es",
-   "d": "2026-08-10T13:34:46.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://static.eldiario.es/clip/e727f544-14d5-4b35-afb9-7546d72df581_facebook-watermarked-aspect-ratio-1200-675_default_0.jpg"
   },
   {
    "t": "Eclipse solar en Gran Canaria: la costa es la opción segura y estas son las zonas que conviene evitar",
@@ -202,16 +232,6 @@
    ]
   },
   {
-   "t": "Canarias no aplica todavía los controles fronterizos con Italia",
-   "u": "https://www.eldiario.es/canariasahora/sociedad/canarias-no-aplica-controles-fronterizos-italia_1_13437904.html",
-   "s": "elDiario.es",
-   "d": "2026-08-10T10:10:48.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://static.eldiario.es/clip/01272bd4-2612-48e0-a131-88980d7647ca_facebook-watermarked-aspect-ratio-1200-675_default_0.jpg"
-  },
-  {
    "t": "El mítico restaurante de Gran Canaria que se ha convertido en una parada obligatoria para quienes buscan cocina canaria tradicional y carnes a la brasa",
    "u": "https://www.laprovincia.es/gran-canaria/2026/08/10/mitico-restaurante-gran-canaria-cocina-carnes-brasa-dv-133227100.html",
    "s": "La Provincia",
@@ -280,24 +300,6 @@
     "CANARIAS"
    ],
    "img": "https://www.vinetur.com/imagenes/blog/8334/img-20260804-wa0055.jpg"
-  },
-  {
-   "t": "Bib Gourmand del mes: Arrocería Maribel, en El Palmar (Valencia)",
-   "u": "https://guide.michelin.com/es/es/articulo/dining-out/bib-gourmand-del-mes-arroceria-maribel-en-el-palmar-valencia",
-   "s": "MICHELIN Guide",
-   "d": "2026-08-10T05:22:40.000Z",
-   "tags": [
-    "MICHELIN"
-   ]
-  },
-  {
-   "t": "Antonio Sánchez, el influencer gastronómico de Murcia que planta cara al ‘postureo’ y al canje",
-   "u": "https://lasgastrocronicas.com/antonio-sanchez-el-influencer-gastronomico-de-murcia-que-planta-cara-al-postureo-y-al-canje/",
-   "s": "Las Gastrocrónicas",
-   "d": "2026-08-10T05:00:56.000Z",
-   "tags": [
-    "CANARIAS"
-   ]
   }
  ]
 }
