@@ -52,7 +52,7 @@
 <meta property="og:description" content="Formación de equipos de sala: carta, alérgenos, vinos, exámenes y juegos de repaso.">
 <meta property="og:url" content="https://meseo.es/">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"Meseo","url":"https://meseo.es/"}</script>
-<meta name="app-version" content="7.336">
+<meta name="app-version" content="7.337">
 <meta name="app-build" content="May 2026">
 <meta name="theme-color" content="#1c2a22">
 <!-- ═══ PWA ═══ -->
@@ -1561,7 +1561,7 @@ const CAT_COLORS={'Entrantes':'#c49a3c','Hamburguesas y Bocatas':'#b86050','Plat
 const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#c49a3c"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#a47a2c" opacity=".4"/><path d="M8 8v4a1 1 0 001 1h1v4M10 8v4" stroke="#fff" stroke-width="1.2" stroke-linecap="round" fill="none"/><path d="M15 8v8M14 8v3a1.5 1.5 0 003 0V8" stroke="#fff" stroke-width="1.2" stroke-linecap="round" fill="none"/></svg>`,'Hamburguesas y Bocatas':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#b86050"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#983838" opacity=".4"/><path d="M7 9h10M7 12h10M7 15h10" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/><path d="M8 9c0-2 2-3 4-3s4 1 4 3M8 15c0 2 2 3 4 3s4-1 4-3" fill="none" stroke="#fff" stroke-width="1" opacity=".7"/></svg>`,'Platos Principales':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#4888a0"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#2e6878" opacity=".4"/><path d="M5 15h14" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/><path d="M12 6a6 6 0 016 6H6a6 6 0 016-6z" fill="none" stroke="#fff" stroke-width="1.1"/><circle cx="10" cy="6" r=".7" fill="#fff" opacity=".7"/><circle cx="12" cy="5" r=".7" fill="#fff" opacity=".7"/><circle cx="14" cy="6" r=".7" fill="#fff" opacity=".7"/></svg>`,'Sugerencias':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#d4aa4c"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#a48a2c" opacity=".4"/><polygon points="12,5 14.5,10 20,10.5 16,14 17,20 12,17 7,20 8,14 4,10.5 9.5,10" fill="#fff" opacity=".9"/></svg>`,'Guarniciones y Salsas':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#4d8a5e"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#2d6a3e" opacity=".4"/><path d="M12 18V10M5 10c0-4 3-6 7-6s7 2 7 6c0 5-3 8-7 8s-7-3-7-8z" fill="none" stroke="#fff" stroke-width="1.1"/><path d="M5 10c3 0 5 1 7 2.5" fill="none" stroke="#fff" stroke-width=".8" opacity=".6"/></svg>`,'Postres':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#7a6aaa"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#5a4a8a" opacity=".4"/><path d="M9 19h6M12 12v7M7 6l2 4.5a3 3 0 006 0L17 6H7z" fill="none" stroke="#fff" stroke-width="1.1" stroke-linecap="round"/></svg>`,'Vegetariano':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#5a9a6e"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#3a7a4e" opacity=".4"/><path d="M9 18h6M12 18V10M12 10c0-3 2-5 5-5-.7 2.5-2.5 5-5 5zM12 10c0-3-2-5-5-5 .7 2.5 2.5 5 5 5z" fill="none" stroke="#fff" stroke-width="1.1" stroke-linecap="round"/></svg>`};
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='7.336';  // sincronizada con sw.js VERSION (guard de CI)
+const APP_VERSION='7.337';  // sincronizada con sw.js VERSION (guard de CI)
 const APP_BUILD='Jul 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;
@@ -12276,10 +12276,10 @@ function _buildSommelierResults() {
           <div class="sommelier-match-score">${Math.min(99,r.score)}%</div>
           <div style="flex:1;min-width:0">
             <div style="font-family:'Cinzel',serif;font-size:.82rem;color:var(--parchment);line-height:1.2">${escapeHTML(r.wine.name)}</div>
-            <div style="font-family:'Quicksand',sans-serif;font-size:.65rem;color:var(--parch3);margin-top:.15rem">${escapeHTML(r.wine.grapes||r.wine.type)} · ${r.wine.price}€${r.wine.glass?(_en?' · Glass ':' · Copa ')+r.wine.glass+'€':''}</div>
+            <div style="font-family:'Quicksand',sans-serif;font-size:.65rem;color:var(--parch3);margin-top:.15rem">${escapeHTML(r.wine.grapes||r.wine.type)} · ${_wPx(r.wine)}${r.wine.price&&r.wine.glass?(_en?' · Glass ':' · Copa ')+r.wine.glass+'€':''}</div>
             <div style="font-family:'Quicksand',sans-serif;font-size:.62rem;color:var(--sage);margin-top:.3rem;line-height:1.4;font-style:italic;padding:.25rem .4rem;background:rgba(77,138,94,.05);border-radius:6px;border-left:2px solid rgba(77,138,94,.2)">* ${_sommelierWhy(r.wine, _sommelierQuery)}</div>
           </div>
-          <div style="font-family:'Cinzel',serif;font-size:.9rem;color:var(--gold);font-weight:600;flex-shrink:0">${r.wine.price}€</div>
+          <div style="font-family:'Cinzel',serif;font-size:.9rem;color:var(--gold);font-weight:600;flex-shrink:0">${_wPx(r.wine)}</div>
         </div>`).join('')}
     </div>`;
   } else if(_sommelierQuery && _sommelierQuery.length >= 2) {
@@ -12510,7 +12510,7 @@ function _buildSensoryList(mode, _en){
         <div class="sensory-card-dot" style="background:${typeColors[w.type]||'#888'}"></div>
         <div class="sensory-card-info">
           <div class="sensory-card-name">${escapeHTML(w.name)}</div>
-          <div class="sensory-card-meta">${typeLabels[w.type]||w.type} · ${escapeHTML(w.grapes)} · ${w.price}€</div>
+          <div class="sensory-card-meta">${typeLabels[w.type]||w.type} · ${escapeHTML(w.grapes)} · ${_wPx(w)}</div>
         </div>
         <div style="width:100%;display:flex;flex-wrap:wrap;gap:3px;margin-top:3px;padding-left:18px">${tags}</div>
       </div>`;
@@ -12555,7 +12555,7 @@ function _snsRenderList(){
         const tags = profile.map(([k])=>`<span class="sensory-fp-tag" style="background:${SNS_NOTES[k].color}">${SNS_NOTES[k].icon} ${_en?SNS_NOTES[k].en:SNS_NOTES[k].es}</span>`).join('');
         return `<div class="sensory-card" onclick="_snsDetail={type:'wine',id:${w.id}};renderVinos()" style="flex-wrap:wrap">
           <div class="sensory-card-dot" style="background:${typeColors[w.type]||'#888'}"></div>
-          <div class="sensory-card-info"><div class="sensory-card-name">${escapeHTML(w.name)}</div><div class="sensory-card-meta">${typeLabels[w.type]||w.type} · ${escapeHTML(w.grapes)} · ${w.price}€</div></div>
+          <div class="sensory-card-info"><div class="sensory-card-name">${escapeHTML(w.name)}</div><div class="sensory-card-meta">${typeLabels[w.type]||w.type} · ${escapeHTML(w.grapes)} · ${_wPx(w)}</div></div>
           <div style="width:100%;display:flex;flex-wrap:wrap;gap:3px;margin-top:3px;padding-left:18px">${tags}</div>
         </div>`;
       }).join('');
@@ -12614,7 +12614,7 @@ function _renderSensoryDetail(c, bar){
           <div class="sensory-fp-badge" style="background:${typeColors[w.type]||'#888'}">${escapeHTML(w.type).toUpperCase()}</div>
           <div class="sensory-fp-name">${escapeHTML(w.name)}</div>
         </div>
-        <div style="font-size:.65rem;color:rgba(28,42,34,.5);margin-bottom:.5rem">${escapeHTML(w.grapes)} · ${escapeHTML(_wineOrigin(w.origin))} · ${w.price}€</div>
+        <div style="font-size:.65rem;color:rgba(28,42,34,.5);margin-bottom:.5rem">${escapeHTML(w.grapes)} · ${escapeHTML(_wineOrigin(w.origin))} · ${_wPx(w)}</div>
         <div class="sensory-radar-wrap">${radar}</div>
         <div style="text-align:center;font-size:.6rem;color:rgba(28,42,34,.4);margin-bottom:.5rem">${_en?'Sensory Fingerprint':'Huella Sensorial'}</div>
         <div class="sensory-fp-notes">${tags}</div>
@@ -12645,7 +12645,7 @@ function _renderSensoryDetail(c, bar){
       const sharedTags = shared.map(([k])=>`<span style="display:inline-block;width:6px;height:6px;border-radius:50%;background:${SNS_NOTES[k].color}"></span>`).join(' ');
       return `<div class="sensory-card" onclick="_snsDetail={type:'wine',id:${w.id}};renderVinos()">
         <div class="sensory-card-dot" style="background:${typeColors[w.type]||'#888'}"></div>
-        <div class="sensory-card-info"><div class="sensory-card-name">${escapeHTML(w.name)}</div><div class="sensory-card-meta">${escapeHTML(w.grapes)} · ${w.price}€ · ${shared.length} ${_en?'shared':'compartidas'} ${sharedTags}</div></div>
+        <div class="sensory-card-info"><div class="sensory-card-name">${escapeHTML(w.name)}</div><div class="sensory-card-meta">${escapeHTML(w.grapes)} · ${_wPx(w)} · ${shared.length} ${_en?'shared':'compartidas'} ${sharedTags}</div></div>
       </div>`;
     }).join('');
 
@@ -12889,7 +12889,7 @@ function _renderSommelier(c, bar){
               <div style="font-family:'Cinzel',serif;font-size:.95rem;color:var(--parchment);line-height:1.2;letter-spacing:.015em">${escapeHTML(w.name)}</div>
               <div style="font-family:'Quicksand',sans-serif;font-size:.68rem;color:var(--parch3);margin-top:.15rem">${escapeHTML(w.grapes||'')} · ${escapeHTML(w.region)}</div>
             </div>
-            <div class="wc-price" style="font-size:1.05rem">${w.price} €</div>
+            <div class="wc-price" style="font-size:1.05rem">${_wPx(w,1)}</div>
           </div>
           <div class="wc-story">"${escapeHTML(_en && w.story_en ? w.story_en : w.story)}"</div>
         </div>`).join('')}
@@ -12957,7 +12957,7 @@ function renderVinosCarta(){
   filtered.sort((a,b) => {
     if(a.recommended && !b.recommended) return -1;
     if(!a.recommended && b.recommended) return 1;
-    return a.price - b.price;
+    return (a.price||a.glass||0) - (b.price||b.glass||0);
   });
 
   const typeColors = {
@@ -13074,7 +13074,7 @@ function _renderWineCard(w, idx, filteredList){
         <div class="wc-region">${escapeHTML((w.origin?_wineOrigin(w.origin)+' · ':'')+w.region)}</div>`:''}
       </div>
       <div style="text-align:right;flex-shrink:0;position:relative">
-        <div class="wc-price">${w.price} €</div>
+        <div class="wc-price">${_wPx(w,1)}</div>
         <div class="wc-price-sub">${w.glass?(_en?'glass ':'copa ')+w.glass+' €':(_en?'bottle':'botella')}</div>
         ${w.format&&w.format!=='75cl'?`<div class="wc-price-sub">${escapeHTML(w.format)}</div>`:''}
       </div>
@@ -14688,11 +14688,11 @@ function _updateWineInfoPanel() {
     regions.map(function(r) { return '<span style="font-family:\'DM Mono\',monospace;font-size:.55rem;padding:.2rem .5rem;background:rgba(196,154,60,.08);border:1px solid rgba(196,154,60,.12);border-radius:6px;color:var(--parch2)">' + escapeHTML(r) + '</span>'; }).join('') +
     '</div>' +
     '<div class="wine-map-info-wines">' +
-    wines.sort(function(a,b) { return a.price - b.price; }).map(function(w) {
+    wines.sort(function(a,b) { return (a.price||a.glass||0) - (b.price||b.glass||0); }).map(function(w) {
       return '<div class="wine-map-wine-item" onclick="_showWineDetail(' + w.id + ', [' + wines.map(function(ww){return ww.id;}).join(',') + '])">' +
         '<div style="display:flex;justify-content:space-between;align-items:center">' +
         '<div style="font-family:\'Cinzel\',serif;font-size:.8rem;color:var(--parchment);display:flex;align-items:center;gap:.3rem"><span style="font-size:1rem;line-height:1">' + (typeIconsSvg[w.type]||TXKO_ICONS.wTinto) + '</span> ' + escapeHTML(w.name) + '</div>' +
-        '<div style="font-family:\'Cinzel\',serif;font-size:.85rem;color:var(--gold);font-weight:600">' + w.price + '€</div>' +
+        '<div style="font-family:\'Cinzel\',serif;font-size:.85rem;color:var(--gold);font-weight:600">' + _wPx(w) + '</div>' +
         '</div>' +
         '<div style="font-family:\'DM Mono\',monospace;font-size:.55rem;color:var(--parch3);margin-top:.15rem">' + escapeHTML(w.grapes||'') + ' · ' + escapeHTML(w.region) + '</div>' +
         '</div>';
@@ -14961,6 +14961,16 @@ function _wineServingTemp(w) {
 // claves de GLASS_TYPES — el panel «Copa recomendada» nunca encontraba la
 // copa y no se mostraba. La única definición válida es la de la sección de
 // datos de educación de vino.)
+
+// Precio de botella para pantalla. La carta 11.08 trae vinos que se sirven
+// SOLO por copa (Trevejos, Roger de Flor) y alguno sin precio impreso:
+// interpolar el precio en crudo pintaba «null €» en la ficha y en la carta.
+function _wPx(w, spaced){
+  const s = spaced ? ' €' : '€';
+  if(w && w.price) return w.price + s;
+  if(w && w.glass) return (LANG==='en'?'glass ':'copa ') + w.glass + s;
+  return '—';
+}
 
 function _wineDecantAdvice(w) {
   const type = w.type;
@@ -16535,7 +16545,7 @@ function _showWineDetail(id, list, direction){
     <div class="wine-price-box">
       <div>
         <div class="wine-info-label">${w.format||(_en?'Bottle':'Botella')}</div>
-        <div style="font-family:'Cinzel',serif;font-size:1.5rem;color:var(--gold-deep);font-weight:600">${w.price} €</div>
+        <div style="font-family:'Cinzel',serif;font-size:1.5rem;color:var(--gold-deep);font-weight:600">${w.price?w.price+' €':'—'}</div>
       </div>
       ${w.glass?`<div style="border-left:1px solid rgba(196,154,60,.25);padding-left:.8rem">
         <div class="wine-info-label">${_en?'Glass':'Copa'}</div>
@@ -17412,7 +17422,7 @@ function _showMaridajeDish(dishName) {
   // Sort wines within each group: recommended first, then by price
   Object.keys(groups).forEach(function(t) {
     groups[t].sort(function(a, b) {
-      return (b.recommended ? 1 : 0) - (a.recommended ? 1 : 0) || a.price - b.price;
+      return (b.recommended ? 1 : 0) - (a.recommended ? 1 : 0) || (a.price||a.glass||0) - (b.price||b.glass||0);
     });
   });
 
@@ -17459,7 +17469,7 @@ function _showMaridajeDish(dishName) {
       html += '</div>';
       html += '</div>';
       html += '<div style="text-align:right;flex-shrink:0">';
-      html += '<div style="font-family:\'DM Mono\',monospace;font-size:.75rem;font-weight:700;color:var(--gold)">' + w.price + '€</div>';
+      html += '<div style="font-family:\'DM Mono\',monospace;font-size:.75rem;font-weight:700;color:var(--gold)">' + _wPx(w) + '</div>';
       html += '</div>';
       html += '</div>';
       html += '</div>';
@@ -17568,7 +17578,7 @@ function _mqRender(){
         <div style="font-size:.78rem;color:var(--parch3);margin-top:.4rem">${_en?'Which wine would you recommend?':'¿Qué vino recomendarías?'}</div>
       </div>
       <div style="display:flex;flex-direction:column;gap:.4rem;margin-bottom:.5rem">
-        ${wines.map((w,i)=>`<button class="duel-answer-btn" id="mqOpt${i}" onclick="_mqAnswer(${i})">${letters[i]}. ${escapeHTML(w.name)} <span style="font-size:.65rem;color:var(--parch3);font-weight:400">· ${({blanco:_en?'White':'Blanco',tinto:_en?'Red':'Tinto',rosado:_en?'Rosé':'Rosado',espumoso:_en?'Sparkling':'Espumoso',dulce:_en?'Sweet':'Dulce'})[w.type]||w.type} · ${w.price}€</span></button>`).join('')}
+        ${wines.map((w,i)=>`<button class="duel-answer-btn" id="mqOpt${i}" onclick="_mqAnswer(${i})">${letters[i]}. ${escapeHTML(w.name)} <span style="font-size:.65rem;color:var(--parch3);font-weight:400">· ${({blanco:_en?'White':'Blanco',tinto:_en?'Red':'Tinto',rosado:_en?'Rosé':'Rosado',espumoso:_en?'Sparkling':'Espumoso',dulce:_en?'Sweet':'Dulce'})[w.type]||w.type} · ${_wPx(w)}</span></button>`).join('')}
       </div>
       <div id="mqFeedback"></div>
     </div>`;
@@ -17715,7 +17725,7 @@ function _renderWineService(c, bar){
             if(types.espumoso) typeIcons.push('<span style="font-size:.85rem;line-height:1">' + TXKO_ICONS.wEspumoso + '</span>');
             if(types.dulce) typeIcons.push('<span style="font-size:.85rem;line-height:1">' + TXKO_ICONS.wDulce + '</span>');
             var borderColor = types.tinto ? '#b86050' : types.blanco ? '#5a9ab8' : '#c49a3c';
-            var topWines = wines.sort(function(a,b){ return (b.recommended?1:0)-(a.recommended?1:0) || a.price-b.price; }).slice(0,2);
+            var topWines = wines.sort(function(a,b){ return (b.recommended?1:0)-(a.recommended?1:0) || (a.price||a.glass||0)-(b.price||b.glass||0); }).slice(0,2);
             var preview = topWines.map(function(w){ return escapeHTML(w.name); }).join(', ');
             if(wCount > 2) preview += ' +' + (wCount-2);
             return '<div class="maridaje-item" data-dish="' + escapeHTML(dish.toLowerCase()) + ' ' + escapeHTML(_translateDish(dish).toLowerCase()) + '" onclick="_showMaridajeDish(\'' + dish.replace(/'/g,"\\'") + '\')" style="padding:.6rem .15rem;border-bottom:1px solid rgba(28,42,34,.1);cursor:pointer;animation:fadeInUp .3s ' + (i*0.015) + 's both">' +

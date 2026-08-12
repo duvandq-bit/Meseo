@@ -81,11 +81,66 @@ test('carta de vinos 19.07.26: vinos nuevos, bilingües y con la copa oficial', 
       assert(w[f] && String(w[f]).trim(), `vino ${w.id} sin ${f}`);
   // Por copa: exactamente los diez de la página «vinos por copa» de la carta
   const glassIds = wines.filter(w => w.glass).map(w => w.id).sort((a, b) => a - b);
-  assert(JSON.stringify(glassIds) === JSON.stringify([8, 32, 35, 62, 96, 106, 107, 109, 112, 121]),
+  // Ampliado con la carta 11.08 (posterior): sus 14 vinos por copa + los 4 que
+  // venían de la 19.07 y esta carta ya no menciona (32, 96, 107, 121).
+  assert(JSON.stringify(glassIds) === JSON.stringify([2, 8, 32, 35, 61, 62, 96, 97, 106, 107, 109, 112, 121, 125, 137, 138, 141, 143]),
     'los vinos por copa no coinciden con la carta: ' + glassIds.join(','));
   // El juego sensorial cubre también los nuevos
   const vc = JSON.parse(read('data/vinos-content.json'));
   for (const w of wines) if (w.id >= 121) assert(vc.WINE_SNS[String(w.id)], 'WINE_SNS sin vino ' + w.id);
+});
+
+test('carta de vinos 11.08: altas, precios y copa oficial', () => {
+  const wines = JSON.parse(read('data/wines.json'));
+  const by = n => wines.find(w => w.name === n);
+  assert(wines.length >= 143, 'faltan vinos de la carta 11.08');
+  assert(new Set(wines.map(w => w.id)).size === wines.length, 'ids de vino duplicados');
+  assert(new Set(wines.map(w => w.name.toLowerCase())).size === wines.length, 'nombres de vino duplicados');
+  // Altas de la carta 11.08 con su precio (o su copa cuando no hay botella).
+  for (const [n, price, glass] of [['Hermanos Lurton', 65, null], ['Convento Santissima Annunciata', 140, null],
+       ['Trevejos', null, 15], ['Finca Vegas', 60, 12], ['Valdepoleo 2017', 90, null],
+       ['Viña Sastre 2023', null, null], ['Valduero I Cepa', 90, 18], ["Syrah d'Ogier", 75, null],
+       ['Roger de Flor', null, 12]]) {
+    const w = by(n);
+    assert(w, 'falta el vino nuevo ' + n);
+    assert(w.price === price, `${n}: precio ${w.price} ≠ carta ${price}`);
+    assert((w.glass || null) === glass, `${n}: copa ${w.glass} ≠ carta ${glass}`);
+  }
+  // Precios corregidos contra la carta.
+  for (const [n, price] of [['La Fita Els Alpriots', 55], ['Los Loros Tinto', 60], ['Vallegarcía', 75],
+       ['Amaren Selección de Viñedos 2021', 75], ['Remelluri Reserva 2017', 130], ['Corimbo', 95]])
+    assert(by(n) && by(n).price === price, `${n} debe costar ${price} (carta 11.08)`);
+  // Los 14 vinos de la página «vinos por copa» de esta carta, con su importe.
+  for (const [n, g] of [['Roger de Flor', 12], ['Andre Clouet', 25], ['Calera', 10], ['Cepado', 10],
+       ['Valtravieso Nogara', 12], ['Trevejos', 15], ['Artifice Blanco', 18], ['Finca Vegas', 12],
+       ['Arienzo Marques de Riscal 2022', 10], ['Valtravieso', 15], ['Los Loros Tinto', 15],
+       ['Marques de Murrieta Reserva', 17], ['Valduero I Cepa', 18], ['Titerok', 25]])
+    assert(by(n) && by(n).glass === g, `${n} debe servirse por copa a ${g}€`);
+  // Un vino sin precio de botella debe decir por qué (copa o «consultar»).
+  for (const w of wines.filter(w => !w.price))
+    assert(w.glass || /consultar|Check the price/i.test(String(w.notes) + w.notes_en),
+      `${w.name}: sin precio debe indicar copa o «consultar»`);
+  // Ficha completa: los nuevos entran con maridajes reales y perfil sensorial.
+  const vc = JSON.parse(read('data/vinos-content.json'));
+  const dishes = new Set((html.match(/name:'([^']+)'/g) || []).map(m => m.slice(6, -1)));
+  for (const w of wines) {
+    assert(Array.isArray(w.pairings) && w.pairings.length, `${w.name}: sin maridajes`);
+    assert(vc.WINE_SNS[String(w.id)], `${w.name}: sin perfil sensorial`);
+    if (w.id >= 135) for (const d of w.pairings)
+      assert(dishes.has(d), `${w.name}: maridaje inexistente «${d}»`);
+  }
+});
+
+test('el precio en pantalla aguanta vinos sin botella (nada de «null €»)', () => {
+  assert(/function _wPx\(w, spaced\)/.test(html), 'falta el helper _wPx');
+  assert(!/\$\{r\.wine\.price\}€/.test(html), 'queda un ${r.wine.price}€ sin guarda');
+  for (const line of html.split('\n'))
+    if (line.includes('${w.price}€') || line.includes('${w.price} €'))
+      assert(/w\.price\?/.test(line), 'precio sin guarda de nulo: ' + line.trim().slice(0, 80));
+  assert(!/\+ w\.price \+ '€<\/div>'/.test(html), 'queda una concatenación de precio sin guarda');
+  assert(!/\|\| a\.price-b\.price/.test(html) && !/\|\| a\.price - b\.price;/.test(html)
+      && !/return a\.price - b\.price;/.test(html),
+    'las ordenaciones por precio deben caer a la copa cuando no hay botella');
 });
 
 test('vinos EN: enciclopedia bilingüe, copa recomendada resucitada, origen traducido', () => {
@@ -2385,8 +2440,9 @@ test('wine detail speaks the premium carta language', () => {
   // prices, Cormorant story, and the "G " label typo fixed to the ◇ ornament.
   const detail = html.slice(html.indexOf('function _showWineDetail'), html.indexOf('function _showWineDetail') + 9000);
   assert(/class="wc-type"/.test(detail), 'detail type must use the dot+mono style');
-  assert(/color:var\(--gold-deep\);font-weight:600">\$\{w\.price\} €/.test(detail),
-    'detail bottle price must be deep gold with a spaced euro');
+  // Carta 11.08: los vinos solo-por-copa muestran «—» en la casilla de botella.
+  assert(/color:var\(--gold-deep\);font-weight:600">\$\{w\.price\?w\.price\+' €':'—'\}/.test(detail),
+    'detail bottle price must be deep gold with a spaced euro (— sin precio de botella)');
   assert(/Cormorant Garamond[^"]*"[^>]*>"\$\{escapeHTML\(_en && w\.story_en/.test(detail),
     'detail story must use Cormorant italic');
   assert(!/wine-info-label"[^>]*>G \$\{/.test(html),
