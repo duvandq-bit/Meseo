@@ -68,7 +68,7 @@ test('data/wines.json is a non-empty array with id/name/type', () => {
   assert(new Set(ids).size === ids.length, 'duplicate wine ids');
 });
 
-test('carta de vinos 19.07.26: vinos nuevos, bilingües y con la copa oficial', () => {
+test('carta de vinos 19.07.26: vinos nuevos y bilingües', () => {
   const wines = JSON.parse(read('data/wines.json'));
   assert(wines.length >= 134, 'faltan vinos de la carta 19.07.26');
   const names = wines.map(w => w.name);
@@ -79,47 +79,37 @@ test('carta de vinos 19.07.26: vinos nuevos, bilingües y con la copa oficial', 
   for (const w of wines)
     for (const f of ['story_en', 'notes_en', 'grapeSelection_en', 'winemaking_en'])
       assert(w[f] && String(w[f]).trim(), `vino ${w.id} sin ${f}`);
-  // Por copa: exactamente los diez de la página «vinos por copa» de la carta
-  const glassIds = wines.filter(w => w.glass).map(w => w.id).sort((a, b) => a - b);
-  // Ampliado con la carta 11.08 (posterior): sus 14 vinos por copa + los 4 que
-  // venían de la 19.07 y esta carta ya no menciona (32, 96, 107, 121).
-  assert(JSON.stringify(glassIds) === JSON.stringify([2, 8, 32, 35, 61, 62, 96, 97, 106, 107, 109, 112, 121, 125, 137, 138, 141, 143]),
-    'los vinos por copa no coinciden con la carta: ' + glassIds.join(','));
+  // La copa y los recomendados rotan con el stock: la app ya no los almacena.
+  assert(!wines.some(w => 'glass' in w || 'recommended' in w),
+    'los vinos no deben llevar copa ni recomendado (rotan con el stock)');
   // El juego sensorial cubre también los nuevos
   const vc = JSON.parse(read('data/vinos-content.json'));
   for (const w of wines) if (w.id >= 121) assert(vc.WINE_SNS[String(w.id)], 'WINE_SNS sin vino ' + w.id);
 });
 
-test('carta de vinos 11.08: altas, precios y copa oficial', () => {
+test('carta de vinos 11.08: altas y precios', () => {
   const wines = JSON.parse(read('data/wines.json'));
   const by = n => wines.find(w => w.name === n);
   assert(wines.length >= 143, 'faltan vinos de la carta 11.08');
   assert(new Set(wines.map(w => w.id)).size === wines.length, 'ids de vino duplicados');
   assert(new Set(wines.map(w => w.name.toLowerCase())).size === wines.length, 'nombres de vino duplicados');
   // Altas de la carta 11.08 con su precio (o su copa cuando no hay botella).
-  for (const [n, price, glass] of [['Hermanos Lurton', 65, null], ['Convento Santissima Annunciata', 140, null],
-       ['Trevejos', null, 15], ['Finca Vegas', 60, 12], ['Valdepoleo 2017', 90, null],
-       ['Viña Sastre 2023', null, null], ['Valduero I Cepa', 90, 18], ["Syrah d'Ogier", 75, null],
-       ['Roger de Flor', null, 12]]) {
+  for (const [n, price] of [['Hermanos Lurton', 65], ['Convento Santissima Annunciata', 140],
+       ['Trevejos', null], ['Finca Vegas', 60], ['Valdepoleo 2017', 90], ['Viña Sastre 2023', null],
+       ['Valduero I Cepa', 90], ["Syrah d'Ogier", 75], ['Roger de Flor', null]]) {
     const w = by(n);
     assert(w, 'falta el vino nuevo ' + n);
-    assert(w.price === price, `${n}: precio ${w.price} ≠ carta ${price}`);
-    assert((w.glass || null) === glass, `${n}: copa ${w.glass} ≠ carta ${glass}`);
+    assert((w.price ?? null) === price, `${n}: precio ${w.price} ≠ carta ${price}`);
   }
   // Precios corregidos contra la carta.
   for (const [n, price] of [['La Fita Els Alpriots', 55], ['Los Loros Tinto', 60], ['Vallegarcía', 75],
        ['Amaren Selección de Viñedos 2021', 75], ['Remelluri Reserva 2017', 130], ['Corimbo', 95]])
     assert(by(n) && by(n).price === price, `${n} debe costar ${price} (carta 11.08)`);
-  // Los 14 vinos de la página «vinos por copa» de esta carta, con su importe.
-  for (const [n, g] of [['Roger de Flor', 12], ['Andre Clouet', 25], ['Calera', 10], ['Cepado', 10],
-       ['Valtravieso Nogara', 12], ['Trevejos', 15], ['Artifice Blanco', 18], ['Finca Vegas', 12],
-       ['Arienzo Marques de Riscal 2022', 10], ['Valtravieso', 15], ['Los Loros Tinto', 15],
-       ['Marques de Murrieta Reserva', 17], ['Valduero I Cepa', 18], ['Titerok', 25]])
-    assert(by(n) && by(n).glass === g, `${n} debe servirse por copa a ${g}€`);
-  // Un vino sin precio de botella debe decir por qué (copa o «consultar»).
-  for (const w of wines.filter(w => !w.price))
-    assert(w.glass || /consultar|Check the price/i.test(String(w.notes) + w.notes_en),
-      `${w.name}: sin precio debe indicar copa o «consultar»`);
+  // La ficha no puede anunciar copa ni recomendación: rotan con el stock.
+  for (const w of wines)
+    for (const f of ['notes', 'notes_en', 'story', 'story_en'])
+      assert(!/por copa|by the glass|house pick/i.test(String(w[f] || '')),
+        `${w.name}: ${f} menciona la copa o la recomendación`);
   // Ficha completa: los nuevos entran con maridajes reales y perfil sensorial.
   const vc = JSON.parse(read('data/vinos-content.json'));
   const dishes = new Set((html.match(/name:'([^']+)'/g) || []).map(m => m.slice(6, -1)));
@@ -141,6 +131,31 @@ test('el precio en pantalla aguanta vinos sin botella (nada de «null €»)', (
   assert(!/\|\| a\.price-b\.price/.test(html) && !/\|\| a\.price - b\.price;/.test(html)
       && !/return a\.price - b\.price;/.test(html),
     'las ordenaciones por precio deben caer a la copa cuando no hay botella');
+});
+
+test('la app no almacena copa ni recomendados (rotan con el stock)', () => {
+  // Petición del propietario (ago 2026): «no especifiques qué es por copa y qué
+  // es recomendado porque eso cambia para rotar stock, solo la información de
+  // los vinos». Ni datos, ni distintivos, ni ordenaciones que lo presupongan.
+  const wines = JSON.parse(read('data/wines.json'));
+  for (const w of wines) {
+    assert(!('glass' in w), `${w.name} conserva el campo glass`);
+    assert(!('recommended' in w), `${w.name} conserva el campo recommended`);
+  }
+  assert(!/w\.glass/.test(html) && !/\.recommended\b/.test(html),
+    'el código sigue leyendo glass o recommended de los vinos');
+  // («house pick'» con comilla: «house pickles» del tataki no debe dar falso positivo)
+  for (const t of ['Vinos por Copa', 'Wines by Glass', 'By Glass', 'RECOMENDADO', "house pick'"])
+    assert(!html.includes(t), `sigue apareciendo el rótulo «${t}»`);
+  // «RECOMMENDED» solo puede sobrevivir dentro de «RECOMMENDED GLASS» (cristalería).
+  assert((html.match(/RECOMMENDED/g) || []).length === (html.match(/RECOMMENDED GLASS/g) || []).length,
+    'queda un rótulo RECOMMENDED que no es el de la cristalería');
+  // «Descubre hoy» rota por toda la carta, no por una lista de recomendados.
+  assert(/const featured = \[\.\.\.WINES, \.\.\.WINES\]\.slice\(offset, offset \+ 3\)/.test(html),
+    'la rotación diaria debe recorrer toda la carta');
+  // La copa RECOMENDADA (cristalería) sí se mantiene: es servicio, no stock.
+  assert(/RECOMMENDED GLASS|COPA RECOMENDADA/.test(html),
+    'la copa recomendada (cristalería) debe seguir existiendo');
 });
 
 test('vinos EN: enciclopedia bilingüe, copa recomendada resucitada, origen traducido', () => {
@@ -5684,15 +5699,15 @@ test('quiz del Viaje del plato: ingrediente falso limpio y de la misma categorí
     'allergenData_en debe traducir Granos de sésamo y Cacahuete (los usa la carta)');
 });
 
-test('ficha técnica del plato: muestra el maridaje priorizando la copa', () => {
+test('ficha técnica del plato: muestra el maridaje ordenado por precio', () => {
   // Reporte del propietario (jul 2026): «en la ficha técnica de los platos no
   // aparece el maridaje». renderRepasoDishDetail no tenía tarjeta de vinos.
   assert(/function _dishPairWines\(dish, limit\)\{/.test(html),
     'debe existir el helper _dishPairWines que cruza plato ↔ vinos');
   const helper = html.slice(html.indexOf('function _dishPairWines(dish, limit){'), html.indexOf('function renderRepasoDishDetail'));
-  // Prioridad de sala: primero los servidos POR COPA, luego los recomendados
-  assert(/w\.glass!=null\?0:1\)\*10 \+ \(w\.recommended\?0:1\)/.test(helper),
-    'el maridaje debe priorizar copa (glass) y luego recomendados');
+  // Orden por precio: la copa y los recomendados ya no viven en los datos.
+  assert(/sort\(\(a,b\)=>\(a\.price\|\|0\)-\(b\.price\|\|0\)\)/.test(helper),
+    'el maridaje debe ordenarse por precio');
   assert(/return null;/.test(helper),
     'debe devolver null si la lista de vinos aún no ha cargado (carga diferida)');
   // La ficha inserta la tarjeta y sabe recargar cuando llegan los vinos
