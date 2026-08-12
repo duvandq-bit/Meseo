@@ -52,7 +52,7 @@
 <meta property="og:description" content="Formación de equipos de sala: carta, alérgenos, vinos, exámenes y juegos de repaso.">
 <meta property="og:url" content="https://meseo.es/">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"Meseo","url":"https://meseo.es/"}</script>
-<meta name="app-version" content="7.337">
+<meta name="app-version" content="7.338">
 <meta name="app-build" content="May 2026">
 <meta name="theme-color" content="#1c2a22">
 <!-- ═══ PWA ═══ -->
@@ -1561,7 +1561,7 @@ const CAT_COLORS={'Entrantes':'#c49a3c','Hamburguesas y Bocatas':'#b86050','Plat
 const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#c49a3c"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#a47a2c" opacity=".4"/><path d="M8 8v4a1 1 0 001 1h1v4M10 8v4" stroke="#fff" stroke-width="1.2" stroke-linecap="round" fill="none"/><path d="M15 8v8M14 8v3a1.5 1.5 0 003 0V8" stroke="#fff" stroke-width="1.2" stroke-linecap="round" fill="none"/></svg>`,'Hamburguesas y Bocatas':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#b86050"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#983838" opacity=".4"/><path d="M7 9h10M7 12h10M7 15h10" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/><path d="M8 9c0-2 2-3 4-3s4 1 4 3M8 15c0 2 2 3 4 3s4-1 4-3" fill="none" stroke="#fff" stroke-width="1" opacity=".7"/></svg>`,'Platos Principales':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#4888a0"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#2e6878" opacity=".4"/><path d="M5 15h14" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/><path d="M12 6a6 6 0 016 6H6a6 6 0 016-6z" fill="none" stroke="#fff" stroke-width="1.1"/><circle cx="10" cy="6" r=".7" fill="#fff" opacity=".7"/><circle cx="12" cy="5" r=".7" fill="#fff" opacity=".7"/><circle cx="14" cy="6" r=".7" fill="#fff" opacity=".7"/></svg>`,'Sugerencias':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#d4aa4c"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#a48a2c" opacity=".4"/><polygon points="12,5 14.5,10 20,10.5 16,14 17,20 12,17 7,20 8,14 4,10.5 9.5,10" fill="#fff" opacity=".9"/></svg>`,'Guarniciones y Salsas':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#4d8a5e"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#2d6a3e" opacity=".4"/><path d="M12 18V10M5 10c0-4 3-6 7-6s7 2 7 6c0 5-3 8-7 8s-7-3-7-8z" fill="none" stroke="#fff" stroke-width="1.1"/><path d="M5 10c3 0 5 1 7 2.5" fill="none" stroke="#fff" stroke-width=".8" opacity=".6"/></svg>`,'Postres':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#7a6aaa"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#5a4a8a" opacity=".4"/><path d="M9 19h6M12 12v7M7 6l2 4.5a3 3 0 006 0L17 6H7z" fill="none" stroke="#fff" stroke-width="1.1" stroke-linecap="round"/></svg>`,'Vegetariano':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#5a9a6e"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#3a7a4e" opacity=".4"/><path d="M9 18h6M12 18V10M12 10c0-3 2-5 5-5-.7 2.5-2.5 5-5 5zM12 10c0-3-2-5-5-5 .7 2.5 2.5 5 5 5z" fill="none" stroke="#fff" stroke-width="1.1" stroke-linecap="round"/></svg>`};
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='7.337';  // sincronizada con sw.js VERSION (guard de CI)
+const APP_VERSION='7.338';  // sincronizada con sw.js VERSION (guard de CI)
 const APP_BUILD='Jul 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;
@@ -12248,11 +12248,6 @@ function _sommelierSearch(query){
       if(q.includes(food) && w.type === type) score += 20;
     }
 
-    // Boost recommended wines
-    if(score > 0 && w.recommended) score += 12;
-    // Boost by-the-glass availability
-    if(score > 0 && w.glass) score += 5;
-
     return { wine: w, score };
   }).filter(x => x.score > 0).sort((a,b) => b.score - a.score).slice(0, 6);
 
@@ -12801,15 +12796,15 @@ function _renderSommelier(c, bar){
   ];
   const greeting = greetings[Math.floor(Date.now()/86400000) % greetings.length];
 
-  // Featured wines — rotate daily through every recommended wine.
-  // Previous logic used getDay()%3 + slice, which only ever exposed indices 0..4 of a 13-item list.
+  // «Descubre hoy» — rotación diaria por TODA la carta. Antes se nutría de los
+  // vinos marcados como recomendados, pero esa selección rota con el stock y ya
+  // no vive en los datos: la carta impresa manda.
   const dayIdx = Math.floor(Date.now() / 86400000);
-  const recommended = WINES.filter(w => w.recommended);
-  const offset = recommended.length ? dayIdx % recommended.length : 0;
-  const featured = [...recommended, ...recommended].slice(offset, offset + 3);
+  const offset = WINES.length ? dayIdx % WINES.length : 0;
+  const featured = [...WINES, ...WINES].slice(offset, offset + 3);
 
   // Wine stats
-  const byGlass = WINES.filter(w => w.glass).length;
+  const denoms = new Set(WINES.filter(w=>w.region).map(w=>w.region)).size;
   const regions = [...new Set(WINES.filter(w=>w.origin).map(w=>w.origin))].length;
 
   c.innerHTML = bar + `<div style="padding:0 0 2rem;position:relative">
@@ -12838,8 +12833,8 @@ function _renderSommelier(c, bar){
         </div>
         <div style="width:1px;background:linear-gradient(180deg,transparent,rgba(196,154,60,.35),transparent)"></div>
         <div style="text-align:center">
-          <div style="font-family:'Cinzel',serif;font-size:1.5rem;color:var(--gold-deep);font-weight:600">${byGlass}</div>
-          <div style="font-family:'DM Mono',monospace;font-size:.5rem;color:var(--parch4);letter-spacing:.1em;text-transform:uppercase">${_en?'By Glass':'Por Copa'}</div>
+          <div style="font-family:'Cinzel',serif;font-size:1.5rem;color:var(--gold-deep);font-weight:600">${denoms}</div>
+          <div style="font-family:'DM Mono',monospace;font-size:.5rem;color:var(--parch4);letter-spacing:.1em;text-transform:uppercase">${_en?'Appellations':'D.O.'}</div>
         </div>
         <div style="width:1px;background:linear-gradient(180deg,transparent,rgba(196,154,60,.35),transparent)"></div>
         <div style="text-align:center">
@@ -12953,12 +12948,8 @@ function renderVinosCarta(){
     return true;
   });
 
-  // Sort: recommended first, then by price
-  filtered.sort((a,b) => {
-    if(a.recommended && !b.recommended) return -1;
-    if(!a.recommended && b.recommended) return 1;
-    return (a.price||a.glass||0) - (b.price||b.glass||0);
-  });
+  // Orden: por precio (la carta ya no marca recomendados — rotan con el stock)
+  filtered.sort((a,b) => (a.price||0) - (b.price||0));
 
   const typeColors = {
     blanco:'#f5e6b8', tinto:'#8b2252', rosado:'#e8a0bf', espumoso:'#d4af37',
@@ -13062,7 +13053,6 @@ function _renderWineCard(w, idx, filteredList){
     <div class="wc-top">
       <span class="wc-type"><span class="wc-type-dot" style="background:${bgColor}"></span>${typeLabels[w.type]||w.type}</span>
       <span class="wc-badges">
-        ${w.recommended?'<span class="wc-rec">★ '+(_en?'RECOMMENDED':'RECOMENDADO')+'</span>':''}
         ${w.vegaSicilia?'<span class="wc-rec" style="color:#8b6914;border-color:rgba(139,105,20,.2);background:rgba(139,105,20,.08)">◆ VEGA SICILIA</span>':''}
       </span>
     </div>
@@ -13075,7 +13065,7 @@ function _renderWineCard(w, idx, filteredList){
       </div>
       <div style="text-align:right;flex-shrink:0;position:relative">
         <div class="wc-price">${_wPx(w,1)}</div>
-        <div class="wc-price-sub">${w.glass?(_en?'glass ':'copa ')+w.glass+' €':(_en?'bottle':'botella')}</div>
+        <div class="wc-price-sub">${_en?'bottle':'botella'}</div>
         ${w.format&&w.format!=='75cl'?`<div class="wc-price-sub">${escapeHTML(w.format)}</div>`:''}
       </div>
     </div>
@@ -14688,7 +14678,7 @@ function _updateWineInfoPanel() {
     regions.map(function(r) { return '<span style="font-family:\'DM Mono\',monospace;font-size:.55rem;padding:.2rem .5rem;background:rgba(196,154,60,.08);border:1px solid rgba(196,154,60,.12);border-radius:6px;color:var(--parch2)">' + escapeHTML(r) + '</span>'; }).join('') +
     '</div>' +
     '<div class="wine-map-info-wines">' +
-    wines.sort(function(a,b) { return (a.price||a.glass||0) - (b.price||b.glass||0); }).map(function(w) {
+    wines.sort(function(a,b) { return (a.price||0) - (b.price||0); }).map(function(w) {
       return '<div class="wine-map-wine-item" onclick="_showWineDetail(' + w.id + ', [' + wines.map(function(ww){return ww.id;}).join(',') + '])">' +
         '<div style="display:flex;justify-content:space-between;align-items:center">' +
         '<div style="font-family:\'Cinzel\',serif;font-size:.8rem;color:var(--parchment);display:flex;align-items:center;gap:.3rem"><span style="font-size:1rem;line-height:1">' + (typeIconsSvg[w.type]||TXKO_ICONS.wTinto) + '</span> ' + escapeHTML(w.name) + '</div>' +
@@ -14966,9 +14956,7 @@ function _wineServingTemp(w) {
 // SOLO por copa (Trevejos, Roger de Flor) y alguno sin precio impreso:
 // interpolar el precio en crudo pintaba «null €» en la ficha y en la carta.
 function _wPx(w, spaced){
-  const s = spaced ? ' €' : '€';
-  if(w && w.price) return w.price + s;
-  if(w && w.glass) return (LANG==='en'?'glass ':'copa ') + w.glass + s;
+  if(w && w.price) return w.price + (spaced ? ' €' : '€');
   return '—';
 }
 
@@ -15627,8 +15615,6 @@ function findSimilarWines(wineId, count){
     const sharedPairings = (w.pairings || []).filter(p => targetPairings.has(p));
     score += Math.min(5, sharedPairings.length);
 
-    if(w.recommended) score += 2;
-
     // ── Perfil enológico ──
     const enoMatches = [];
 
@@ -15972,11 +15958,6 @@ function _consolidateChips(match, _en){
     out.push({text: (_en?'shares ':'') + match.sharedPairings.length + (_en?' pairings':' maridajes'), icon:'⊕', priority:5, color:'pairing', tooltip: top3});
   }
 
-  // Recomendado (chip especial al final)
-  if(match.wine && match.wine.recommended){
-    out.push({text: _en?'house pick':'recomendado', icon:'★', priority:6, color:'star'});
-  }
-
   // Datos parciales — chip neutro cuando cobertura incompleta
   if(match.isPartial){
     out.push({text: _en?'partial profile':'perfil parcial', icon:'◌', priority:6, color:'partial', tooltip: _en?'Some enology fields not detected from wine notes':'Algunos campos enológicos no se detectaron en las notas'});
@@ -16086,10 +16067,6 @@ function _wineSimilarityChips(match, _en){
     else if(m.k === 'body') chips.push(_en ? BODY_LBL_EN[m.v] : BODY_LBL_ES[m.v]);
     else if(m.k === 'aromas') chips.push((_en?'shares ':'comparte ') + m.v + (_en?' aroma fams.':' familias arom.'));
     else if(m.k === 'style') chips.push(STYLE_LBL[m.v] || m.v);
-  }
-  // Recomendado al final
-  if(match.wine.recommended){
-    chips.push(_en ? '★ house pick' : '★ recomendado');
   }
   return chips;
 }
@@ -16532,7 +16509,6 @@ function _showWineDetail(id, list, direction){
       <div class="wc-top" style="margin-bottom:.7rem;position:relative">
         <span class="wc-type" style="color:var(--gold3);border-color:rgba(228,190,104,.35);background:rgba(228,190,104,.08)"><span class="wc-type-dot" style="background:${({blanco:'var(--candy-yellow)',tinto:'var(--candy-red)',rosado:'var(--candy-pink)',espumoso:'var(--gold)',dulce:'var(--candy-orange)'})[w.type]||'var(--gold)'}"></span>${typeLabels[w.type]||w.type}</span>
         <span class="wc-badges">
-          ${w.recommended?'<span class="wc-rec" style="color:var(--gold3);border-color:rgba(228,190,104,.4);background:rgba(228,190,104,.1)">★ '+(_en?'RECOMMENDED':'RECOMENDADO')+'</span>':''}
           ${w.vegaSicilia?'<span class="wc-rec" style="color:var(--gold3);border-color:rgba(228,190,104,.35);background:rgba(228,190,104,.08)">◆ VEGA SICILIA</span>':''}
           ${w.kosher?'<span class="wc-rec" style="color:rgba(244,237,226,.7);border-color:rgba(244,237,226,.25)">✡ KOSHER</span>':''}
         </span>
@@ -16547,10 +16523,6 @@ function _showWineDetail(id, list, direction){
         <div class="wine-info-label">${w.format||(_en?'Bottle':'Botella')}</div>
         <div style="font-family:'Cinzel',serif;font-size:1.5rem;color:var(--gold-deep);font-weight:600">${w.price?w.price+' €':'—'}</div>
       </div>
-      ${w.glass?`<div style="border-left:1px solid rgba(196,154,60,.25);padding-left:.8rem">
-        <div class="wine-info-label">${_en?'Glass':'Copa'}</div>
-        <div style="font-family:'Cinzel',serif;font-size:1.2rem;color:var(--gold-deep);font-weight:600">${w.glass} €</div>
-      </div>`:''}
     </div>
 
     ${isWine?`
@@ -17419,11 +17391,9 @@ function _showMaridajeDish(dishName) {
     groups[t].push(w);
   });
 
-  // Sort wines within each group: recommended first, then by price
+  // Orden dentro de cada grupo: por precio
   Object.keys(groups).forEach(function(t) {
-    groups[t].sort(function(a, b) {
-      return (b.recommended ? 1 : 0) - (a.recommended ? 1 : 0) || (a.price||a.glass||0) - (b.price||b.glass||0);
-    });
+    groups[t].sort(function(a, b) { return (a.price||0) - (b.price||0); });
   });
 
   // Build overlay HTML
@@ -17456,16 +17426,12 @@ function _showMaridajeDish(dishName) {
     html += '<div style="display:flex;flex-direction:column;gap:.3rem">';
 
     groups[t].forEach(function(w, idx) {
-      var recBadge = w.recommended ? '<span style="display:inline-block;background:rgba(196,154,60,.15);color:var(--gold);font-family:\'DM Mono\',monospace;font-size:.45rem;padding:.1rem .3rem;border-radius:6px;letter-spacing:.05em;margin-left:.3rem">★ ' + (_en?'RECOMMENDED':'RECOMENDADO') + '</span>' : '';
-      var glassBadge = w.glass ? '<span style="font-family:\'DM Mono\',monospace;font-size:.5rem;color:rgba(244,237,226,.4)">' + (_en?'Glass':'Copa') + ' ' + w.glass + '€</span>' : '';
-
       html += '<div onclick="_showWineDetail(' + w.id + ');document.getElementById(\'maridajeDishOverlay\').remove()" style="padding:.55rem .7rem;background:linear-gradient(155deg,rgba(244,237,226,.06),rgba(244,237,226,.02));border:1px solid rgba(244,237,226,.06);border-left:3px solid ' + color + ';border-radius:10px;cursor:pointer;transition:all .2s;animation:fadeInUp .25s ' + (idx * 0.04) + 's both" onmouseenter="this.style.background=\'linear-gradient(155deg,rgba(244,237,226,.1),rgba(244,237,226,.05))\'" onmouseleave="this.style.background=\'linear-gradient(155deg,rgba(244,237,226,.06),rgba(244,237,226,.02))\'">';
       html += '<div style="display:flex;justify-content:space-between;align-items:center;gap:.4rem">';
       html += '<div style="flex:1;min-width:0">';
-      html += '<div style="font-family:\'Quicksand\',sans-serif;font-size:.78rem;font-weight:600;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">' + escapeHTML(w.name) + recBadge + '</div>';
+      html += '<div style="font-family:\'Quicksand\',sans-serif;font-size:.78rem;font-weight:600;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">' + escapeHTML(w.name) + '</div>';
       html += '<div style="display:flex;align-items:center;gap:.4rem;margin-top:.15rem">';
       if (w.region) html += '<span style="font-family:\'DM Mono\',monospace;font-size:.5rem;color:rgba(244,237,226,.35)">' + escapeHTML(w.region) + '</span>';
-      if (glassBadge) html += glassBadge;
       html += '</div>';
       html += '</div>';
       html += '<div style="text-align:right;flex-shrink:0">';
@@ -17520,10 +17486,9 @@ function _mqBuildQuestions(){
   if(dishes.length < 5) return [];
   const picked = _lqaShuffle(dishes).slice(0, 5);
   return picked.map(d => {
-    // Correct: prefer recommended wine, fall back to any pairing.
+    // Correcta: cualquier vino que marida con el plato.
     const goodPool = dishMap[d];
-    const recommended = goodPool.filter(w => w.recommended);
-    const correct = (recommended.length ? _lqaShuffle(recommended) : _lqaShuffle(goodPool))[0];
+    const correct = _lqaShuffle(goodPool)[0];
     // Wrongs: wines that don't pair with this dish at all.
     const wrongPool = WINES.filter(w =>
       w.id !== correct.id && !((w.pairings || []).some(p => p === d))
@@ -17709,7 +17674,7 @@ function _renderWineService(c, bar){
             if(!w.pairings) return;
             w.pairings.forEach(function(p){
               if(!dishWineMap[p]) dishWineMap[p] = [];
-              dishWineMap[p].push({id:w.id,name:w.name,type:w.type,glass:w.glass,price:w.price,recommended:w.recommended});
+              dishWineMap[p].push({id:w.id,name:w.name,type:w.type,price:w.price});
             });
           });
           var dishes = Object.keys(dishWineMap).sort(function(a,b){ return a.localeCompare(b,'es'); });
@@ -17725,7 +17690,7 @@ function _renderWineService(c, bar){
             if(types.espumoso) typeIcons.push('<span style="font-size:.85rem;line-height:1">' + TXKO_ICONS.wEspumoso + '</span>');
             if(types.dulce) typeIcons.push('<span style="font-size:.85rem;line-height:1">' + TXKO_ICONS.wDulce + '</span>');
             var borderColor = types.tinto ? '#b86050' : types.blanco ? '#5a9ab8' : '#c49a3c';
-            var topWines = wines.sort(function(a,b){ return (b.recommended?1:0)-(a.recommended?1:0) || (a.price||a.glass||0)-(b.price||b.glass||0); }).slice(0,2);
+            var topWines = wines.sort(function(a,b){ return (a.price||0)-(b.price||0); }).slice(0,2);
             var preview = topWines.map(function(w){ return escapeHTML(w.name); }).join(', ');
             if(wCount > 2) preview += ' +' + (wCount-2);
             return '<div class="maridaje-item" data-dish="' + escapeHTML(dish.toLowerCase()) + ' ' + escapeHTML(_translateDish(dish).toLowerCase()) + '" onclick="_showMaridajeDish(\'' + dish.replace(/'/g,"\\'") + '\')" style="padding:.6rem .15rem;border-bottom:1px solid rgba(28,42,34,.1);cursor:pointer;animation:fadeInUp .3s ' + (i*0.015) + 's both">' +
@@ -17752,7 +17717,7 @@ function _renderWineService(c, bar){
       <div class="section-eyebrow">${_en?'✦ Selling Scripts':'✦ Frases de Venta'}</div>
       <div style="display:flex;flex-direction:column;gap:.5rem">
         ${[
-          {situation:_en?'Guest doesn\'t know what to order':'El huésped no sabe qué pedir',script:_en?'"I can recommend something based on what you\'re having. Do you prefer white or red? If you like to try, we have an excellent by-the-glass selection from 10€."':'\"Le puedo recomendar algo según lo que va a comer. ¿Prefiere blanco o tinto? Si le gusta probar, tenemos una excelente selección por copa desde 10€.\"'},
+          {situation:_en?'Guest doesn\'t know what to order':'El huésped no sabe qué pedir',script:_en?'"I can recommend something based on what you\'re having. Do you prefer white or red? If you like to try, we have an excellent by-the-glass selection."':'\"Le puedo recomendar algo según lo que va a comer. ¿Prefiere blanco o tinto? Si le gusta probar, tenemos una excelente selección por copa.\"'},
           {situation:_en?'Wants something special to celebrate':'Quiere algo especial para celebrar',script:_en?'"For a special occasion I suggest our Andre Clouet Champagne, or if you prefer something Spanish, the Gramona III Lustros is an exceptional sparkling with over 7 years of ageing."':'\"Para una ocasión especial le sugiero nuestro Andre Clouet Champagne, o si prefiere algo español, el Gramona III Lustros es un espumoso excepcional con más de 7 años de crianza.\"'},
           {situation:_en?'Asks about Canarian wines':'Pregunta por los vinos canarios',script:_en?'"Canarian wines are unique in the world — born from centuries-old volcanic vineyards that were never affected by phylloxera. I recommend the Viñatigo Blanco or Ruku Ruku to discover this very special terroir."':'\"Los vinos canarios son únicos en el mundo — nacen de viñedos volcánicos centenarios que nunca fueron afectados por la filoxera. Le recomiendo el Viñatigo Blanco o el Ruku Ruku para descubrir este terroir tan especial.\"'},
           {situation:_en?'Asks for the cheapest wine':'Pide el vino más barato',script:_en?'"Our La Campagne is an excellent choice at 45€, a very pleasant French Cabernet Sauvignon. By the glass, the Arienzo de Marqués de Riscal at 10€ is wonderful."':'\"Nuestro La Campagne es una excelente opción a 45€, un Cabernet Sauvignon francés muy agradable. Por copa, el Arienzo de Marqués de Riscal a 10€ es estupendo.\"'},
@@ -17773,18 +17738,6 @@ function _renderWineService(c, bar){
       </div>
     </div>
 
-    <!-- By the glass highlight -->
-    <div>
-      <div class="section-eyebrow">${_en?'◇ Wines by Glass':'◇ Vinos por Copa'}</div>
-      <div class="wine-byglass-grid">
-        <div style="display:grid;grid-template-columns:1fr auto;gap:.3rem .8rem;font-family:'Quicksand',sans-serif;font-size:.78rem;position:relative">
-          ${WINES.filter(w=>w.glass).sort((a,b)=>a.glass-b.glass).map(w=>`
-            <div style="color:var(--parchment)">${escapeHTML(w.name)} <span style="font-size:.6rem;color:var(--parch4)">${({blanco:_en?'White':'Blanco',tinto:_en?'Red':'Tinto',rosado:_en?'Rosé':'Rosado',espumoso:_en?'Sparkling':'Espumoso',dulce:_en?'Sweet':'Dulce'})[w.type]||w.type}</span></div>
-            <div style="color:var(--gold);font-weight:600;text-align:right">${w.glass}€</div>
-          `).join('')}
-        </div>
-      </div>
-    </div>
   </div>`;
 }
 
@@ -19685,8 +19638,8 @@ function _dishPairWines(dish, limit){
     const pl = norm(p);
     return pl && (pl===n || pl.includes(n) || n.includes(pl));
   }));
-  const rank = w => (w.glass!=null?0:1)*10 + (w.recommended?0:1);
-  return matched.slice().sort((a,b)=>rank(a)-rank(b)).slice(0, limit||3);
+  // Orden por precio: la carta ya no marca copa ni recomendados (rotan con el stock).
+  return matched.slice().sort((a,b)=>(a.price||0)-(b.price||0)).slice(0, limit||3);
 }
 
 function renderRepasoDishDetail(dishId){
@@ -19758,16 +19711,12 @@ function renderRepasoDishDetail(dishId){
     const rows = _pairWines.map(w=>{
       const col = _wineTypeCol[w.type] || 'var(--gold)';
       const typeLbl = _wineTypeLbl[w.type] || (w.type||'');
-      const glassBadge = (w.glass!=null)
-        ? `<span style="font-family:'DM Mono',monospace;font-size:.55rem;color:var(--green-deep);font-weight:700;white-space:nowrap">${LANG==='en'?'by glass':'por copa'} ${w.glass}€</span>`
-        : '';
       return `<div style="display:flex;align-items:center;gap:.55rem;padding:.4rem 0;border-bottom:1px solid rgba(28,42,34,.08)">
         <span style="width:9px;height:9px;border-radius:50%;background:${col};flex-shrink:0;box-shadow:0 0 0 1px rgba(0,0,0,.08)"></span>
         <div style="flex:1;min-width:0">
           <div style="font-family:'Quicksand',sans-serif;font-size:.76rem;font-weight:600;color:var(--parchment);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${escapeHTML(w.name)}</div>
           <div style="font-family:'DM Mono',monospace;font-size:.55rem;color:var(--parch3);letter-spacing:.04em">${escapeHTML(typeLbl)}${w.region?` · ${escapeHTML(w.region)}`:''}</div>
         </div>
-        ${glassBadge}
       </div>`;
     }).join('');
     maridajeHtml = `
