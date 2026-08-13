@@ -2017,6 +2017,94 @@
         "mineral",
         2
       ]
+    ],
+    "144": [
+      [
+        "frutal",
+        3
+      ],
+      [
+        "floral",
+        1
+      ],
+      [
+        "mineral",
+        1
+      ]
+    ],
+    "145": [
+      [
+        "citrico",
+        2
+      ],
+      [
+        "frutal",
+        2
+      ],
+      [
+        "floral",
+        1
+      ]
+    ],
+    "146": [
+      [
+        "frutal",
+        3
+      ],
+      [
+        "especiado",
+        1
+      ],
+      [
+        "herbal",
+        1
+      ]
+    ],
+    "147": [
+      [
+        "citrico",
+        2
+      ],
+      [
+        "mineral",
+        3
+      ],
+      [
+        "salino",
+        2
+      ],
+      [
+        "herbal",
+        1
+      ]
+    ],
+    "148": [
+      [
+        "citrico",
+        3
+      ],
+      [
+        "mineral",
+        2
+      ],
+      [
+        "herbal",
+        1
+      ]
+    ],
+    "149": [
+      [
+        "frutal",
+        2
+      ],
+      [
+        "citrico",
+        1
+      ],
+      [
+        "herbal",
+        1
+      ]
     ]
   },
   "DISH_SNS": {
