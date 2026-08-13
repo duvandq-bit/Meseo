@@ -121,6 +121,34 @@ test('carta de vinos 11.08: altas y precios', () => {
   }
 });
 
+test('carta de vinos 12.08: altas', () => {
+  const wines = JSON.parse(read('data/wines.json'));
+  const by = n => wines.find(w => w.name === n);
+  assert(wines.length >= 149, 'faltan vinos de la carta 12.08');
+  assert(new Set(wines.map(w => w.id)).size === wines.length, 'ids de vino duplicados');
+  assert(new Set(wines.map(w => w.name.toLowerCase())).size === wines.length, 'nombres de vino duplicados');
+  for (const [n, price] of [['Chivite «Las Fincas» Rosado', 64], ['Bolet Brut', 55],
+       ['Albahra 2024 (Envínate)', 45], ['Althay Viticultores 2024', 110],
+       ['Guiberteau Saumur Blanc 2024', 120], ['Foresta Macabeu Ancestral 2021', 75]]) {
+    const w = by(n);
+    assert(w, 'falta el vino nuevo ' + n);
+    assert(w.price === price, `${n}: precio ${w.price} ≠ carta ${price}`);
+  }
+  // La app no debe llevar copa ni recomendado (petición del propietario, ago 2026).
+  assert(!wines.some(w => 'glass' in w || 'recommended' in w),
+    'los vinos no deben llevar copa ni recomendado');
+  // Ficha completa: maridajes reales y perfil sensorial también en los nuevos.
+  const vc = JSON.parse(read('data/vinos-content.json'));
+  const dishes = new Set((html.match(/name:'([^']+)'/g) || []).map(m => m.slice(6, -1)));
+  for (const w of wines.filter(w => w.id >= 144)) {
+    for (const f of ['story_en', 'notes_en', 'grapeSelection_en', 'winemaking_en'])
+      assert(w[f] && String(w[f]).trim(), `${w.name} sin ${f}`);
+    assert(Array.isArray(w.pairings) && w.pairings.length, `${w.name}: sin maridajes`);
+    for (const d of w.pairings) assert(dishes.has(d), `${w.name}: maridaje inexistente «${d}»`);
+    assert(vc.WINE_SNS[String(w.id)], `${w.name}: sin perfil sensorial`);
+  }
+});
+
 test('el precio en pantalla aguanta vinos sin botella (nada de «null €»)', () => {
   assert(/function _wPx\(w, spaced\)/.test(html), 'falta el helper _wPx');
   assert(!/\$\{r\.wine\.price\}€/.test(html), 'queda un ${r.wine.price}€ sin guarda');
