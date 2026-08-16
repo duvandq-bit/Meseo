@@ -1,6 +1,46 @@
 {
- "updated": "2026-08-16T17:36:19.302Z",
+ "updated": "2026-08-16T23:36:07.300Z",
  "items": [
+  {
+   "t": "I Jornadas Gastronómicas del Mencey: una celebración del paisaje culinario de Tenerife",
+   "u": "https://www.eldia.es/tenerife/2026/08/17/jornadas-gastronomicas-mencey-celebracion-paisaje-bc-133409986.html",
+   "s": "Eldía",
+   "d": "2026-08-16T23:01:08.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://estaticos-cdn.prensaiberica.es/clip/1d0cf0ea-aa79-4007-ac07-6874497e17c3_16-9-discover-aspect-ratio_default_0_x640y240.jpg"
+  },
+  {
+   "t": "Padylla (17/08/26)",
+   "u": "https://www.eldia.es/humor/2026/08/17/padylla-17-08-26-133414950.html",
+   "s": "Eldía",
+   "d": "2026-08-16T23:00:01.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://estaticos-cdn.prensaiberica.es/clip/17802de7-98b8-4148-8536-11b28aa98478_16-9-aspect-ratio_default_0_x699y320.jpg"
+  },
+  {
+   "t": "El Tenerife gana en Ipurua y empieza a aclarar las dudas",
+   "u": "https://www.eldiario.es/canariasahora/Deportes/futbol/tenerife-gana-ipurua-empieza-aclarar-dudas_1_13450721.html",
+   "s": "eldiario.es",
+   "d": "2026-08-16T22:49:01.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://static.eldiario.es/clip/a1ab0e01-eb48-4f56-9b16-616fe7547461_facebook-watermarked-aspect-ratio-1200-675_default_0_x286y89.jpg"
+  },
+  {
+   "t": "El restaurante más antiguo de España está en Zaragoza (y la Guía Michelin lo confirma)",
+   "u": "https://www.enjoyzaragoza.es/restaurante-mas-antiguo-de-espana/",
+   "s": "Enjoy Zaragoza",
+   "d": "2026-08-16T17:50:59.000Z",
+   "tags": [
+    "MICHELIN"
+   ],
+   "img": "https://www.enjoyzaragoza.es/wp-content/uploads/2018/12/casa-lac.png"
+  },
   {
    "t": "MESA ABIERTA: Aday Martín vuelve a casa y se incorpora de nuevo al Grupo Cobama",
    "u": "https://www.libertaddigital.com/canarias/2026-08-16/mesa-abierta-aday-martin-vuelve-a-casa-y-se-incorpora-de-nuevo-al-grupo-cobama-7449121/",
@@ -19,8 +59,7 @@
    "tags": [
     "VINO",
     "CANARIAS"
-   ],
-   "img": "https://www.canariasdiario.com/fotos/1/vendimia-la-geria1.JPG"
+   ]
   },
   {
    "t": "Ferran Adrià, cocinero catalán: \"Cuando la gente venía a casa, dábamos parmesano con vinagre de Módena, pero dije: '¿Por qué parmesano? Voy a buscar un manchego'. Hay dos o tres muy ricos ahora\"",
@@ -31,16 +70,6 @@
     "ALTA COCINA"
    ],
    "img": "https://imagenes2.mundodeportivo.com/files/og_thumbnail/files/fp/uploads/2025/12/23/694b03aa79695.r_d.688-232-0.jpeg"
-  },
-  {
-   "t": "El restaurante más antiguo de España está en Zaragoza (y la Guía Michelin lo confirma)",
-   "u": "https://www.enjoyzaragoza.es/restaurante-mas-antiguo-de-espana-2/",
-   "s": "Enjoy Zaragoza",
-   "d": "2026-08-16T15:00:19.000Z",
-   "tags": [
-    "MICHELIN"
-   ],
-   "img": "https://www.enjoyzaragoza.es/wp-content/uploads/2026/08/IMG_9110.jpeg"
   },
   {
    "t": "Canarias inscribe más de 200 vinos al 34º Mondial des Vins Extrêmes",
@@ -77,21 +106,12 @@
   {
    "t": "Los aeropuertos de Canarias operan este domingo 1.298 vuelos, 447 de ellos internacionales",
    "u": "https://www.eldiario.es/canariasahora/turismo/aeropuertos-canarias-operan-domingo-1-298-vuelos-447-internacionales_1_13450150.html",
-   "s": "elDiario.es",
+   "s": "eldiario.es",
    "d": "2026-08-16T10:43:01.000Z",
    "tags": [
     "CANARIAS"
    ],
    "img": "https://static.eldiario.es/clip/6c65e949-78fb-414d-96ef-330c032cef1e_facebook-watermarked-aspect-ratio-1200-675_default_0.jpg"
-  },
-  {
-   "t": "La argentina Romina Yanarello abre en España su primer restaurante solo de postres",
-   "u": "https://www.infobae.com/america/agencias/2026/08/16/la-argentina-romina-yanarello-abre-en-espana-su-primer-restaurante-solo-de-postres/?outputType",
-   "s": "Infobae",
-   "d": "2026-08-16T10:42:19.000Z",
-   "tags": [
-    "ALTA COCINA"
-   ]
   },
   {
    "t": "Culinary Hotel Awards ya tiene jurado",
@@ -106,7 +126,7 @@
   {
    "t": "Un domingo en Brick Lane: arte callejero, comida picante y compras en el Banglatown londinense",
    "u": "https://www.eldiario.es/canariasahora/viajarahora/destino_europa/brick-lane-arte-callejero-comida-banglatown-mapa-que-ver_1_13441475.amp.html",
-   "s": "elDiario.es",
+   "s": "eldiario.es",
    "d": "2026-08-16T09:34:18.000Z",
    "tags": [
     "CANARIAS"
@@ -126,7 +146,7 @@
   {
    "t": "Lecturas de verano para adentrarse en el mundo rural",
    "u": "https://www.infobae.com/espana/agencias/2026/08/16/lecturas-de-verano-para-adentrarse-en-el-mundo-rural/",
-   "s": "Infobae",
+   "s": "infobae.com",
    "d": "2026-08-16T08:53:30.000Z",
    "tags": [
     "ALTA COCINA"
@@ -135,7 +155,7 @@
   {
    "t": "La alta gastronomía se rinde al dulce",
    "u": "https://www.infobae.com/espana/agencias/2026/08/16/la-alta-gastronomia-se-rinde-al-dulce/",
-   "s": "Infobae",
+   "s": "infobae.com",
    "d": "2026-08-16T08:47:00.000Z",
    "tags": [
     "ALTA COCINA"
@@ -148,7 +168,8 @@
    "d": "2026-08-16T08:38:15.000Z",
    "tags": [
     "MICHELIN"
-   ]
+   ],
+   "img": "https://www.noticiasdelvino.com/wp-content/uploads/restaurantes-5.jpg"
   },
   {
    "t": "El guachinche del sur de Tenerife donde comer cocina canaria tradicional a precios ajustados",
@@ -177,7 +198,8 @@
    "d": "2026-08-16T07:53:32.000Z",
    "tags": [
     "CHEF"
-   ]
+   ],
+   "img": "https://www.noticiasdelvino.com/wp-content/uploads/image-583.png"
   },
   {
    "t": "Martín Berasategui sobre su padre: \"Me apena que no vea lo que he logrado, si lo viera no entendería nada\"",
@@ -201,7 +223,7 @@
    "img": "https://estaticos-cdn.prensaiberica.es/clip/339b1549-225f-4fc9-859e-1f429d2283a3_16-9-discover-aspect-ratio_default_0_x900y399.jpg"
   },
   {
-   "t": "Dónde Saborear Gran Canaria según el humorista y creador de contenido, Jorge Bolaños",
+   "t": "Dónde Saborear Gran Canaria según el humorista y creador de contenido Jorge Bolaños",
    "u": "https://www.canarias7.es/gastronomia-c7/a-fuego-lento/saborear-gran-canaria-segun-comico-creador-contenido-20260816070000-nt.html",
    "s": "Canarias7",
    "d": "2026-08-16T06:09:27.000Z",
@@ -262,19 +284,9 @@
    "img": "https://s1.staticld.com//2023/09/29/1200/675/1051x832/vendimia-cepa21-46.jpg"
   },
   {
-   "t": "Santy (16/08/26)",
-   "u": "https://www.eldia.es/humor/2026/08/16/santy-16-08-26-133394602.html",
-   "s": "Eldía",
-   "d": "2026-08-15T22:59:06.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://estaticos-cdn.prensaiberica.es/clip/b1c2edcd-b06d-48bb-9b21-7072e93eecb0_16-9-aspect-ratio_default_0.jpg"
-  },
-  {
    "t": "Domingo, 16 de agosto de 2026",
    "u": "https://www.infobae.com/espana/agencias/2026/08/15/domingo-16-de-agosto-de-2026/",
-   "s": "Infobae",
+   "s": "infobae.com",
    "d": "2026-08-15T19:25:05.000Z",
    "tags": [
     "ALTA COCINA"
@@ -283,22 +295,12 @@
   {
    "t": "Primera ‘pica’ de plátano del año en Canarias: Asprocan ordena la retirada de 630.000 kilos",
    "u": "https://www.eldiario.es/canariasahora/eldiario-agricola/agricultura/pica-platano-canarias-asprocan-retirada_1_13449642.html",
-   "s": "elDiario.es",
+   "s": "eldiario.es",
    "d": "2026-08-15T19:20:10.000Z",
    "tags": [
     "CANARIAS"
    ],
    "img": "https://static.eldiario.es/clip/29f7d578-0d4f-4054-bf68-b0d4d8e52f88_facebook-watermarked-aspect-ratio-1200-675_default_0_x165y207.jpg"
-  },
-  {
-   "t": "El gesto de cinco minutos que Martín Berasategui recomienda antes de irte de vacaciones para evitar comida estropeada y malos olores",
-   "u": "https://www.diariodeleon.es/sociedad/260815/2094383/martin-berasategui-limpiar-nevera-vacaciones.html",
-   "s": "Diario de León",
-   "d": "2026-08-15T18:15:54.000Z",
-   "tags": [
-    "CHEF"
-   ],
-   "img": "https://imagenes.diariodeleon.es/files/og_thumbnail/uploads/2026/08/15/6a80ac8435802.jpeg"
   }
  ]
 }
