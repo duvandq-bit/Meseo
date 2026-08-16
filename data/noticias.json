@@ -1,25 +1,36 @@
 {
- "updated": "2026-08-15T23:36:18.545Z",
+ "updated": "2026-08-16T05:45:46.899Z",
  "items": [
   {
-   "t": "Santy (16/08/26)",
-   "u": "https://www.eldia.es/humor/2026/08/16/santy-16-08-26-133394602.html",
-   "s": "eldia.es",
-   "d": "2026-08-15T22:59:06.000Z",
+   "t": "René, el restaurante de Málaga que ha entrado en la prestigiosa Star Wine List: \"Una bodega excepcional\"",
+   "u": "https://www.malagahoy.es/la-farola/rene-restaurante-malaga-prestigiosa-star-wine-list-bodega-excepcional_0_2007722799.html",
+   "s": "Málaga Hoy",
+   "d": "2026-08-16T04:00:20.000Z",
    "tags": [
-    "CANARIAS"
+    "MICHELIN",
+    "VINO"
    ],
-   "img": "https://estaticos-cdn.prensaiberica.es/clip/b1c2edcd-b06d-48bb-9b21-7072e93eecb0_16-9-aspect-ratio_default_0.jpg"
+   "img": "https://static.grupojoly.com/clip/1330dc78-c2f2-41b5-8e67-fc3b78af12dc_facebook-aspect-ratio_default_0.jpg"
   },
   {
-   "t": "Romería Sideral",
-   "u": "https://lagenda.org/programacion/romeria-sideral-2026-san-miguel-de-abona-tenerife-septiembre-43354",
-   "s": "Lagenda",
-   "d": "2026-08-15T21:20:53.000Z",
+   "t": "GASTRONOMÍA | PUNTAL Bistró Canario amplía la propuesta gastronómica de Kamezí en Playa Blanca, en Lanzarote",
+   "u": "https://www.elblogoferoz.com/2026/08/16/gastronomia-puntal-bistro-canario-amplia-la-propuesta-gastronomica-de-kamezi-en-playa-blanca-en-lanzarote/",
+   "s": "elblogoferoz.com",
+   "d": "2026-08-16T02:30:00.000Z",
    "tags": [
     "CANARIAS"
+   ]
+  },
+  {
+   "t": "El Cabildo sale definitivamente del negocio del vino y liquida Bodegas Insulares",
+   "u": "https://www.libertaddigital.com/canarias/2026-08-16/el-cabildo-sale-definitivamente-del-negocio-del-vino-y-liquida-bodegas-insulares-7449045/",
+   "s": "Libertad Digital",
+   "d": "2026-08-16T00:29:42.000Z",
+   "tags": [
+    "VINO",
+    "CANARIAS"
    ],
-   "img": "https://s3-eu-west-1.amazonaws.com/beta.lagenda/programacion/vaca-vino.jpg"
+   "img": "https://s1.staticld.com//2023/09/29/1200/675/1051x832/vendimia-cepa21-46.jpg"
   },
   {
    "t": "Ferran Adrià, cocinero catalán: \"Cuando la gente venía a casa, dábamos parmesano con vinagre de Módena, pero dije: '¿Por qué parmesano? Voy a buscar un manchego'. Hay dos o tres muy ricos ahora\"",
@@ -33,14 +44,13 @@
   },
   {
    "t": "Holland America Line invita a conocer cómo los volcanes transformaron las Islas Canarias",
-   "u": "https://portalcruceros.cl/holland-america-line-invita-a-conocer-como-los-volcanes-transformaron-las-islas-canarias/",
+   "u": "https://portalcruceros.cl/?p",
    "s": "PortalCruceros",
    "d": "2026-08-15T19:45:50.000Z",
    "tags": [
     "VINO",
     "CANARIAS"
-   ],
-   "img": "https://portalcruceros.cl/wp-content/uploads/2026/08/canary-island-volcano-HAL.jpg"
+   ]
   },
   {
    "t": "Domingo, 16 de agosto de 2026",
@@ -54,7 +64,7 @@
   {
    "t": "Primera ‘pica’ de plátano del año en Canarias: Asprocan ordena la retirada de 630.000 kilos",
    "u": "https://www.eldiario.es/canariasahora/eldiario-agricola/agricultura/pica-platano-canarias-asprocan-retirada_1_13449642.html",
-   "s": "eldiario.es",
+   "s": "elDiario.es",
    "d": "2026-08-15T19:20:10.000Z",
    "tags": [
     "CANARIAS"
@@ -74,7 +84,7 @@
   {
    "t": "Una asociación de protección a los árboles pide investigar los daños causados a un baobab protegido de Santa Cruz de Tenerife",
    "u": "https://www.eldiario.es/canariasahora/tenerifeahora/sociedad/actos-vandalicos-arboles-baobab-protegido-santa-cruz-tenerife_1_13449214.html",
-   "s": "eldiario.es",
+   "s": "elDiario.es",
    "d": "2026-08-15T13:57:56.000Z",
    "tags": [
     "CANARIAS"
@@ -84,7 +94,7 @@
   {
    "t": "El obispo de Tenerife carga contra la Inteligencia Artificial y advierte del \"riesgo\" de una sociedad \"sin dios\"",
    "u": "https://www.eldiario.es/canariasahora/tenerifeahora/sociedad/obispo-tenerife-inteligencia-artificial-vivir-sin-dios_1_13449215.html",
-   "s": "eldiario.es",
+   "s": "elDiario.es",
    "d": "2026-08-15T13:57:42.000Z",
    "tags": [
     "CANARIAS"
@@ -94,7 +104,7 @@
   {
    "t": "El Ayuntamiento de Santa Cruz de Tenerife prevé desvíos de tráfico por trabajos en la calzada",
    "u": "https://www.eldiario.es/canariasahora/tenerifeahora/sociedad/calle-simon-bolivar-santa-cruz-tenerife-desvios-trafico_1_13449173.html",
-   "s": "eldiario.es",
+   "s": "elDiario.es",
    "d": "2026-08-15T13:27:04.000Z",
    "tags": [
     "CANARIAS"
@@ -123,7 +133,7 @@
   {
    "t": "Isla Bonita Love Festival y Canarias Viaja unen fuerzas para que su 10º aniversario llegue a toda Canarias",
    "u": "https://www.eldiario.es/canariasahora/lapalmaahora/sociedad/isla-bonita-love-festival-canarias-viaja-unen-fuerzas-10o-aniversario-llegue-canarias_1_13449066.html",
-   "s": "eldiario.es",
+   "s": "elDiario.es",
    "d": "2026-08-15T11:04:11.000Z",
    "tags": [
     "CANARIAS"
@@ -143,7 +153,7 @@
   {
    "t": "Un restaurante de Tenerife denuncia a dos mujeres por un 'simpa' de más de 140 euros",
    "u": "https://www.eldiario.es/canariasahora/sociedad/aiko-sushi-restaurante-tenerife-simpa-144-50-euros_1_13449015.html",
-   "s": "eldiario.es",
+   "s": "elDiario.es",
    "d": "2026-08-15T10:38:53.000Z",
    "tags": [
     "CANARIAS"
@@ -189,6 +199,15 @@
     "CANARIAS"
    ],
    "img": "https://estaticos-cdn.prensaiberica.es/clip/97de7bd4-f34e-44fd-85e8-618c09413fc3_16-9-discover-aspect-ratio_default_0_x1097y491.jpg"
+  },
+  {
+   "t": "59 Locales de alquiler en Arona",
+   "u": "https://www.fotocasa.es/es/alquiler/locales/arona/todas-las-zonas/l",
+   "s": "Fotocasa",
+   "d": "2026-08-15T06:04:51.000Z",
+   "tags": [
+    "CANARIAS"
+   ]
   },
   {
    "t": "La Sociedad Gastronomika: el \"placer identitario\" de Eneko Atxa aterriza en Madrid",
@@ -280,27 +299,6 @@
     "MICHELIN"
    ],
    "img": "https://cdn.vozpopuli.com/cdn/posts/4233366/monasterio-2887728-1200-700.jpg"
-  },
-  {
-   "t": "Perplejidad en Canarias por un rezo coránico en la playa de Las Canteras de Las Palmas",
-   "u": "https://www.vozpopuli.com/amp/espana/canarias/perplejidad-en-canarias-por-un-rezo-coranico-en-la-playa-de-las-canteras-de-las-palmas.html",
-   "s": "Vozpopuli",
-   "d": "2026-08-15T02:45:00.000Z",
-   "tags": [
-    "MICHELIN",
-    "CANARIAS"
-   ],
-   "img": "https://cdn.vozpopuli.com/cdn/posts/4233358/tension-estupefaccion-canarias-rezo-coranico-que-desafia-convivencia-canteras-2887709-1200-700.jpg"
-  },
-  {
-   "t": "La Oktoberfest más antigua de Canarias ya tiene fecha: conciertos, gastronomía y espacio para perros",
-   "u": "https://diariodeavisos.elespanol.com/2026/08/oktoberfest-mas-antigua-canarias/",
-   "s": "Diario de Avisos",
-   "d": "2026-08-14T23:10:32.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://cdn.diariodeavisos.com/wp-content/uploads/2023/09/RS701109_sm-Oktoberfest-01-scr.jpg"
   }
  ]
 }
