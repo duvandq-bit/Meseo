@@ -1,10 +1,29 @@
 {
- "updated": "2026-08-16T23:36:07.300Z",
+ "updated": "2026-08-17T05:52:36.718Z",
  "items": [
+  {
+   "t": "Jesús Sánchez, chef: “Disfruto conduciendo un coche eléctrico; nos hemos adaptado a un modelo de viaje diferente, en el que también encontramos satisfacciones”",
+   "u": "https://www.lavanguardia.com/motor/actualidad/20260817/11606760/jesus-sanchez-chef-disfruto-conduciendo-coche-electrico-hemos-adaptado-modelo-viaje-diferente-encontramos-satisfacciones.html",
+   "s": "La Vanguardia",
+   "d": "2026-08-17T05:00:00.000Z",
+   "tags": [
+    "ALTA COCINA"
+   ],
+   "img": "https://www.lavanguardia.com/files/og_thumbnail/files/fp/uploads/2026/08/03/6a70a567e8072.r_d.1140-1435-7275.jpeg"
+  },
+  {
+   "t": "El hallazgo de hoy, lunes 17 de agosto: \"Por fin he conseguido que la comida no se pegue y que las recetas me salgan mejor\"",
+   "u": "https://www.lecturas.com/buenas-compras/hallazgo-dia-mejores-sartenes-aluminio-antiadherentes_197085",
+   "s": "Lecturas",
+   "d": "2026-08-17T03:00:00.000Z",
+   "tags": [
+    "CHEF"
+   ]
+  },
   {
    "t": "I Jornadas Gastronómicas del Mencey: una celebración del paisaje culinario de Tenerife",
    "u": "https://www.eldia.es/tenerife/2026/08/17/jornadas-gastronomicas-mencey-celebracion-paisaje-bc-133409986.html",
-   "s": "Eldía",
+   "s": "eldia.es",
    "d": "2026-08-16T23:01:08.000Z",
    "tags": [
     "CANARIAS"
@@ -14,7 +33,7 @@
   {
    "t": "Padylla (17/08/26)",
    "u": "https://www.eldia.es/humor/2026/08/17/padylla-17-08-26-133414950.html",
-   "s": "Eldía",
+   "s": "eldia.es",
    "d": "2026-08-16T23:00:01.000Z",
    "tags": [
     "CANARIAS"
@@ -24,7 +43,7 @@
   {
    "t": "El Tenerife gana en Ipurua y empieza a aclarar las dudas",
    "u": "https://www.eldiario.es/canariasahora/Deportes/futbol/tenerife-gana-ipurua-empieza-aclarar-dudas_1_13450721.html",
-   "s": "eldiario.es",
+   "s": "elDiario.es",
    "d": "2026-08-16T22:49:01.000Z",
    "tags": [
     "CANARIAS"
@@ -84,8 +103,8 @@
   },
   {
    "t": "La estupidez de prohibir la entrada a 'influencers' gastronómicos",
-   "u": "https://www.eldia.es/ocio/gastronomia/2026/08/16/estupidez-prohibir-entrada-influencers-gastronomicos-133407419.amp.html",
-   "s": "Eldía",
+   "u": "https://www.eldia.es/ocio/gastronomia/2026/08/16/estupidez-prohibir-entrada-influencers-gastronomicos-133407419.html",
+   "s": "eldia.es",
    "d": "2026-08-16T13:27:09.000Z",
    "tags": [
     "CANARIAS"
@@ -106,7 +125,7 @@
   {
    "t": "Los aeropuertos de Canarias operan este domingo 1.298 vuelos, 447 de ellos internacionales",
    "u": "https://www.eldiario.es/canariasahora/turismo/aeropuertos-canarias-operan-domingo-1-298-vuelos-447-internacionales_1_13450150.html",
-   "s": "eldiario.es",
+   "s": "elDiario.es",
    "d": "2026-08-16T10:43:01.000Z",
    "tags": [
     "CANARIAS"
@@ -126,7 +145,7 @@
   {
    "t": "Un domingo en Brick Lane: arte callejero, comida picante y compras en el Banglatown londinense",
    "u": "https://www.eldiario.es/canariasahora/viajarahora/destino_europa/brick-lane-arte-callejero-comida-banglatown-mapa-que-ver_1_13441475.amp.html",
-   "s": "eldiario.es",
+   "s": "elDiario.es",
    "d": "2026-08-16T09:34:18.000Z",
    "tags": [
     "CANARIAS"
@@ -136,7 +155,7 @@
   {
    "t": "Guachinches Modernos de Tenerife: «Nos gusta comer, pero nos gusta más contar las historias de cada sitio»",
    "u": "https://www.eldia.es/canarias/2026/08/16/guachinches-modernos-tenerife-gusta-comer-contar-historias-sitio-133366540.html",
-   "s": "Eldía",
+   "s": "eldia.es",
    "d": "2026-08-16T09:00:14.000Z",
    "tags": [
     "CANARIAS"
@@ -146,7 +165,7 @@
   {
    "t": "Lecturas de verano para adentrarse en el mundo rural",
    "u": "https://www.infobae.com/espana/agencias/2026/08/16/lecturas-de-verano-para-adentrarse-en-el-mundo-rural/",
-   "s": "infobae.com",
+   "s": "Infobae",
    "d": "2026-08-16T08:53:30.000Z",
    "tags": [
     "ALTA COCINA"
@@ -155,7 +174,7 @@
   {
    "t": "La alta gastronomía se rinde al dulce",
    "u": "https://www.infobae.com/espana/agencias/2026/08/16/la-alta-gastronomia-se-rinde-al-dulce/",
-   "s": "infobae.com",
+   "s": "Infobae",
    "d": "2026-08-16T08:47:00.000Z",
    "tags": [
     "ALTA COCINA"
@@ -174,7 +193,7 @@
   {
    "t": "El guachinche del sur de Tenerife donde comer cocina canaria tradicional a precios ajustados",
    "u": "https://www.eldia.es/tenerife/2026/08/16/guachinche-sur-tenerife-comer-cocina-canaria-dv-132727097.html",
-   "s": "Eldía",
+   "s": "eldia.es",
    "d": "2026-08-16T08:00:00.000Z",
    "tags": [
     "CANARIAS"
@@ -213,8 +232,8 @@
   },
   {
    "t": "Tenerife recupera su viñedo: prevén un gran volumen y calidad en la vendimia de 2026",
-   "u": "https://www.eldia.es/tenerife/2026/08/16/tenerife-recupera-vinedo-preven-gran-133352752.amp.html",
-   "s": "Eldía",
+   "u": "https://www.eldia.es/tenerife/2026/08/16/tenerife-recupera-vinedo-preven-gran-133352752.html",
+   "s": "eldia.es",
    "d": "2026-08-16T07:30:45.000Z",
    "tags": [
     "VINO",
@@ -282,25 +301,6 @@
     "CANARIAS"
    ],
    "img": "https://s1.staticld.com//2023/09/29/1200/675/1051x832/vendimia-cepa21-46.jpg"
-  },
-  {
-   "t": "Domingo, 16 de agosto de 2026",
-   "u": "https://www.infobae.com/espana/agencias/2026/08/15/domingo-16-de-agosto-de-2026/",
-   "s": "infobae.com",
-   "d": "2026-08-15T19:25:05.000Z",
-   "tags": [
-    "ALTA COCINA"
-   ]
-  },
-  {
-   "t": "Primera ‘pica’ de plátano del año en Canarias: Asprocan ordena la retirada de 630.000 kilos",
-   "u": "https://www.eldiario.es/canariasahora/eldiario-agricola/agricultura/pica-platano-canarias-asprocan-retirada_1_13449642.html",
-   "s": "eldiario.es",
-   "d": "2026-08-15T19:20:10.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://static.eldiario.es/clip/29f7d578-0d4f-4054-bf68-b0d4d8e52f88_facebook-watermarked-aspect-ratio-1200-675_default_0_x165y207.jpg"
   }
  ]
 }
