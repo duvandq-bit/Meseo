@@ -1,6 +1,73 @@
 {
- "updated": "2026-08-17T17:46:39.369Z",
+ "updated": "2026-08-17T23:40:33.772Z",
  "items": [
+  {
+   "t": "Viajar por Canarias a través de una copa",
+   "u": "https://www.laprovincia.es/ocio/gastronomia/2026/08/18/viajar-saborear-canarias-vino-copa-133436944.html",
+   "s": "La Provincia",
+   "d": "2026-08-17T22:59:03.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://estaticos-cdn.prensaiberica.es/clip/54d44d08-0379-4b37-b0d5-bdc04dd0a21c_16-9-discover-aspect-ratio_default_0_x720y360.jpg"
+  },
+  {
+   "t": "Santy (18/08/26)",
+   "u": "https://www.eldia.es/humor/2026/08/17/santy-18-08-26-133442292.html",
+   "s": "Eldía",
+   "d": "2026-08-17T21:55:48.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://estaticos-cdn.prensaiberica.es/clip/b1c2edcd-b06d-48bb-9b21-7072e93eecb0_16-9-aspect-ratio_default_0.jpg"
+  },
+  {
+   "t": "La conexión desconocida de Dabiz Muñoz con un pueblo de Cuenca de solo 150 habitantes",
+   "u": "https://www.noticiasdelvino.com/escapadas/2026/08/17/la-conexion-desconocida-de-dabiz-munoz-con-un-pueblo-de-cuenca-de-solo-150-habitantes-68966/",
+   "s": "Noticias del Vino",
+   "d": "2026-08-17T21:54:03.000Z",
+   "tags": [
+    "ALTA COCINA"
+   ],
+   "img": "https://www.noticiasdelvino.com/wp-content/uploads/image-217.png"
+  },
+  {
+   "t": "Martín Berasategui Y Sus Claves Para Cocinar Mejor",
+   "u": "https://www.elperiodico.digital/titulares/martin-berasategui-y-sus-claves-para-cocinar-mejor-461448.html",
+   "s": "elperiodico.digital",
+   "d": "2026-08-17T20:31:24.000Z",
+   "tags": [
+    "CHEF"
+   ]
+  },
+  {
+   "t": "Sanidad extiende los cuidados paliativos a domicilio a todas las zonas básicas de salud de Tenerife",
+   "u": "https://www.eldiario.es/canariasahora/tenerifeahora/sociedad/sanidad-extiende-cuidados-paliativos-domicilio-zonas-basicas-salud-tenerife_1_13452576.html",
+   "s": "elDiario.es",
+   "d": "2026-08-17T19:48:25.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://static.eldiario.es/clip/95acf8a0-9479-4f8e-8999-d6bbec991838_facebook-watermarked-aspect-ratio-1200-675_default_0.jpg"
+  },
+  {
+   "t": "Martín Berasategui repasa su trayectoria y la cultura del esfuerzo",
+   "u": "https://www.asatunews.co.id/es/martin-berasategui-repasa-trayectoria-esfuerzo",
+   "s": "asatunews.co.id",
+   "d": "2026-08-17T18:12:00.000Z",
+   "tags": [
+    "CHEF"
+   ]
+  },
+  {
+   "t": "Martín Berasategui reivindica el valor del esfuerzo en la cocina",
+   "u": "https://www.sekbernews.id/es/martin-berasategui-reivindica-esfuerzo-cocina",
+   "s": "sekbernews.id",
+   "d": "2026-08-17T17:57:00.000Z",
+   "tags": [
+    "CHEF"
+   ]
+  },
   {
    "t": "El CB Gran Canaria regresa al trabajo con la mirada en el ascenso",
    "u": "https://www.eldiario.es/canariasahora/deportes/baloncesto/cb-gran-canaria-regresa-trabajo-mirada-ascenso_1_13452258.html",
@@ -50,6 +117,17 @@
    "img": "https://s3.ppllstatics.com/canarias7/www/multimedia/gastronomia-c7/2026/08/17/portada.jpg"
   },
   {
+   "t": "L'Olivera adelanta la vendimia con Chardonnay y Xarel·lo tras un verano muy caluroso",
+   "u": "https://www.vinetur.com/amp/20260817105709/l-olivera-adelanta-la-vendimia-con-chardonnay-y-xarel%C2%B7lo-tras-un-verano-muy-caluroso.html",
+   "s": "Vinetur",
+   "d": "2026-08-17T14:46:08.000Z",
+   "tags": [
+    "VINO",
+    "CANARIAS"
+   ],
+   "img": "https://www.vinetur.com/imagenes/2026/august/17/20260817-184608-2408.jpg"
+  },
+  {
    "t": "Puerto de la Cruz celebra la 53ª Semana Bávara y su Oktoberfest",
    "u": "https://lavozcanaria.com/valle-de-la-orotava/general/puerto-de-la-cruz-celebra-la-53-semana-bavara-y-su-oktoberfest",
    "s": "La Voz Canaria",
@@ -67,16 +145,6 @@
    "tags": [
     "CHEF"
    ]
-  },
-  {
-   "t": "El calor deja una estela mortal de 75 personas en Canarias en apenas dos semanas",
-   "u": "https://www.eldiario.es/canariasahora/sociedad/calor-deja-estela-mortal-75-personas-canarias-apenas-semanas_1_13451927.html",
-   "s": "elDiario.es",
-   "d": "2026-08-17T13:05:06.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://static.eldiario.es/clip/be28fd48-7f52-4772-bf9a-c2d2089064ed_facebook-watermarked-aspect-ratio-1200-675_default_0.jpg"
   },
   {
    "t": "Popeyes lanza un 'dipper' de mojo rojo exclusivo en Canarias: 500 salsas gratis mañana en estos",
@@ -226,78 +294,6 @@
     "VINO",
     "CANARIAS"
    ]
-  },
-  {
-   "t": "Ferran Adrià, cocinero catalán: \"Cuando la gente venía a casa, dábamos parmesano con vinagre de Módena, pero dije: '¿Por qué parmesano? Voy a buscar un manchego'. Hay dos o tres muy ricos ahora\"",
-   "u": "https://www.mundodeportivo.com/foodie/20260815/1004216398/ferran-adria-cocinero-catalan-gente-venia-casa-dabamos-parmesano-vino-modena-dije-parmesano-buscar-manchego-hay-dos-tres-ricos-xef-dct.html",
-   "s": "Mundo Deportivo",
-   "d": "2026-08-16T15:01:47.000Z",
-   "tags": [
-    "ALTA COCINA"
-   ],
-   "img": "https://imagenes2.mundodeportivo.com/files/og_thumbnail/files/fp/uploads/2025/12/23/694b03aa79695.r_d.688-232-0.jpeg"
-  },
-  {
-   "t": "Canarias inscribe más de 200 vinos al 34º Mondial des Vins Extrêmes",
-   "u": "https://rtvc.es/canarias-inscribe-200-vinos-34o-mondial-des-vins-extremes-16-agosto-2026/",
-   "s": "Radio Televisión Canaria",
-   "d": "2026-08-16T14:30:00.000Z",
-   "tags": [
-    "VINO",
-    "CANARIAS"
-   ],
-   "img": "https://cdn.rtvc.es/archivos/2026/08/EuropaPress_7716334_canarias_inscribe_mas_200_vinos_34_mondial_des_vins_extremes_record.webp"
-  },
-  {
-   "t": "La estupidez de prohibir la entrada a 'influencers' gastronómicos",
-   "u": "https://www.eldia.es/ocio/gastronomia/2026/08/16/estupidez-prohibir-entrada-influencers-gastronomicos-133407419.html",
-   "s": "Eldía",
-   "d": "2026-08-16T13:27:09.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://estaticos-cdn.prensaiberica.es/clip/a23d3e94-66f2-4ff9-a71a-9bd4091ba059_16-9-discover-aspect-ratio_default_0_x836y313.jpg"
-  },
-  {
-   "t": "Canarias alcanza un nuevo récord de participación en el 34º concurso del CERVIM con más de 200 vinos inscritos",
-   "u": "https://canariasnoticias.es/2026/08/16/canarias-alcanza-un-nuevo-record-de-participacion-en-el-34-concurso-del-cervim",
-   "s": "CanariasNoticias.es",
-   "d": "2026-08-16T12:10:37.000Z",
-   "tags": [
-    "VINO",
-    "CANARIAS"
-   ],
-   "img": "https://lon1.digitaloceanspaces.com/canarias-noticias/media/images/2026/08/CERVIM.jpg"
-  },
-  {
-   "t": "Los aeropuertos de Canarias operan este domingo 1.298 vuelos, 447 de ellos internacionales",
-   "u": "https://www.eldiario.es/canariasahora/turismo/aeropuertos-canarias-operan-domingo-1-298-vuelos-447-internacionales_1_13450150.html",
-   "s": "elDiario.es",
-   "d": "2026-08-16T10:43:01.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://static.eldiario.es/clip/6c65e949-78fb-414d-96ef-330c032cef1e_facebook-watermarked-aspect-ratio-1200-675_default_0.jpg"
-  },
-  {
-   "t": "Culinary Hotel Awards ya tiene jurado",
-   "u": "https://www.laprovincia.es/ocio/gastronomia/2026/08/16/culinary-hotel-awards-jurado-133402596.amp.html",
-   "s": "La Provincia",
-   "d": "2026-08-16T09:59:56.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://estaticos-cdn.prensaiberica.es/clip/98ff126b-baa5-4131-82c7-c2e8fd29c362_16-9-aspect-ratio_default_0_x440y165.jpg"
-  },
-  {
-   "t": "El mundo rural a través de la lectura",
-   "u": "https://efeagro.com/mundo-rural-lectura/",
-   "s": "EFEAgro",
-   "d": "2026-08-16T09:37:31.000Z",
-   "tags": [
-    "ALTA COCINA"
-   ],
-   "img": "https://efeagro.com/wp-content/uploads/2026/08/4654104c1cb24e7ac630cf5677fa5a6b51869029w.jpg"
   }
  ]
 }
