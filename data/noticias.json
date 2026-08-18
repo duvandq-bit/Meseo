@@ -1,6 +1,45 @@
 {
- "updated": "2026-08-18T17:46:15.933Z",
+ "updated": "2026-08-18T23:39:52.730Z",
  "items": [
+  {
+   "t": "La búsqueda de restaurantes con terraza sube 10% según The Fork2",
+   "u": "https://factoriadecerveza.com/la-busqueda-de-restaurantes-con-terraza-sube-10-segun-the-fork/",
+   "s": "Factoría de Cerveza",
+   "d": "2026-08-18T23:32:27.000Z",
+   "tags": [
+    "CANARIAS"
+   ]
+  },
+  {
+   "t": "El restaurante de carretera definitivo está en este pueblo medieval de Madrid: Martín Berasategui confiesa su secreto mejor guardado",
+   "u": "https://www.noticiasdelvino.com/escapadas/2026/08/18/el-restaurante-de-carretera-definitivo-esta-en-este-pueblo-medieval-de-madrid-martin-berasategui-confiesa-su-secreto-mejor-guardado-74843/",
+   "s": "Noticias del Vino",
+   "d": "2026-08-18T21:10:36.000Z",
+   "tags": [
+    "CHEF"
+   ],
+   "img": "https://www.noticiasdelvino.com/wp-content/uploads/image-583.png"
+  },
+  {
+   "t": "Padylla (19/08/26)",
+   "u": "https://www.eldia.es/humor/2026/08/18/padylla-19-08-26-133469496.html",
+   "s": "eldia.es",
+   "d": "2026-08-18T20:05:21.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://estaticos-cdn.prensaiberica.es/clip/cd22ed07-30ba-465c-8f32-03d172b74d9a_16-9-aspect-ratio_default_0.jpg"
+  },
+  {
+   "t": "El Tenerife bate su récord de abonados en Segunda División",
+   "u": "https://www.eldiario.es/canariasahora/Deportes/futbol/tenerife-bate-record-abonados-segunda-division_1_13454608.html",
+   "s": "elDiario.es",
+   "d": "2026-08-18T18:13:02.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://static.eldiario.es/clip/db87aced-0a5c-4d4b-81b4-ed4ef98864ce_facebook-watermarked-aspect-ratio-1200-675_default_0_x1666y794.jpg"
+  },
   {
    "t": "El Costa Adeje Tenerife nombra a sus nuevas capitanas",
    "u": "https://www.eldiario.es/canariasahora/Deportes/futbol/costa-adeje-tenerife-nombra-nuevas-capitanas_1_13454485.html",
@@ -41,16 +80,6 @@
    "img": "https://img.europapress.es/fotoweb/fotonoticia_20260818170312_1200.jpg"
   },
   {
-   "t": "Prisión para un taxista por violar a una turista en el sur de Tenerife",
-   "u": "https://www.eldiario.es/canariasahora/tenerifeahora/tribunales/prision-taxista-violar-turista-sur-tenerife_1_13454095.html",
-   "s": "elDiario.es",
-   "d": "2026-08-18T14:47:40.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://static.eldiario.es/clip/e59a1ddc-852e-4f65-b06f-df3849bf5497_facebook-watermarked-aspect-ratio-1200-675_default_0.jpg"
-  },
-  {
    "t": "La villa juguetera de Alicante que conquista por su cocina: así es el pueblo donde mejor se come de España",
    "u": "https://www.noticiasdelvino.com/restaurantes/2026/08/18/la-villa-juguetera-de-alicante-que-conquista-por-su-cocina-asi-es-el-pueblo-donde-mejor-se-come-de-espana-74836/",
    "s": "Noticias del Vino",
@@ -83,7 +112,7 @@
   {
    "t": "Boncho Tour vuelve a Tenerife: horario, DJs y todo lo que habrá este sábado en Güímar",
    "u": "https://www.eldia.es/tenerife/2026/08/18/boncho-tour-vuelve-tenerife-horario-133456182.amp.html",
-   "s": "Eldía",
+   "s": "eldia.es",
    "d": "2026-08-18T11:58:02.000Z",
    "tags": [
     "CANARIAS"
@@ -133,7 +162,7 @@
   {
    "t": "El brunch de Tenerife que que se ha convertido en una parada obligatoria para desayunar: hasta 33 bocadillos gourmet para elegir",
    "u": "https://www.eldia.es/tenerife/2026/08/18/brunch-tenerife-convertido-parada-obligatoria-desayunar-dv-133432026.amp.html",
-   "s": "Eldía",
+   "s": "eldia.es",
    "d": "2026-08-18T08:13:29.000Z",
    "tags": [
     "CANARIAS"
@@ -163,7 +192,7 @@
   {
    "t": "Santy (18/08/26)",
    "u": "https://www.eldia.es/humor/2026/08/17/santy-18-08-26-133442292.html",
-   "s": "Eldía",
+   "s": "eldia.es",
    "d": "2026-08-17T21:55:48.000Z",
    "tags": [
     "CANARIAS"
@@ -192,7 +221,7 @@
   {
    "t": "Martín Berasategui repasa su trayectoria y la cultura del esfuerzo",
    "u": "https://www.asatunews.co.id/es/martin-berasategui-repasa-trayectoria-esfuerzo",
-   "s": "asatunews.co.id",
+   "s": "AsatuNews.co.id",
    "d": "2026-08-17T18:12:00.000Z",
    "tags": [
     "CHEF"
@@ -248,7 +277,7 @@
   {
    "t": "L'Olivera adelanta la vendimia con Chardonnay y Xarel·lo tras un verano muy caluroso",
    "u": "https://www.vinetur.com/amp/20260817105709/l-olivera-adelanta-la-vendimia-con-chardonnay-y-xarel%C2%B7lo-tras-un-verano-muy-caluroso.html",
-   "s": "vinetur.com",
+   "s": "Vinetur",
    "d": "2026-08-17T14:46:08.000Z",
    "tags": [
     "VINO",
@@ -265,35 +294,6 @@
     "CANARIAS"
    ],
    "img": "https://lavozcanaria.com/media/2026/08/puerto-de-la-cruz-celebra-la-53-semana-bavara-y-su-oktoberfest.webp"
-  },
-  {
-   "t": "Martín Berasategui: “Mi hermano mayor, Manolo, es electricista; Olatz, mi única hermana, trabaja en el archivo del Santuario de Loyola; mi hermano pequeño, Andrés, es asesor laboral”",
-   "u": "https://www.lecturas.com/actualidad/martin-berasategui-mi-hermano-mayor-manolo-es-electricista-olatz-mi-unica-hermana-trabaja-archivo-santuario-loyola-mi-hermano-pequeno-andres-es-asesor-laboral_197198",
-   "s": "Lecturas",
-   "d": "2026-08-17T13:26:00.000Z",
-   "tags": [
-    "CHEF"
-   ]
-  },
-  {
-   "t": "Popeyes lanza un 'dipper' de mojo rojo exclusivo en Canarias: 500 salsas gratis mañana en estos",
-   "u": "https://diariodeavisos.elespanol.com/2026/08/popeyes-mojo-rojo-gratis-canarias-tenerife/",
-   "s": "Diario de Avisos",
-   "d": "2026-08-17T11:53:15.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://cdn.diariodeavisos.com/wp-content/uploads/2026/08/mojo-rojo-popeyes-1.jpg"
-  },
-  {
-   "t": "Güímar Summer Fest: Música, gastronomía y concienciación ambiental gratis en El Puertito",
-   "u": "https://lavozcanaria.com/tenerife/general/guimar-summer-fest-musica-gastronomia-y-concienciacion-ambiental-gratis-en-el-puertito",
-   "s": "La Voz Canaria",
-   "d": "2026-08-17T10:59:29.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://lavozcanaria.com/media/2026/08/guimar-summer-fest-musica-gastronomia-y-concienciacion-ambiental-gratis-en-el-puertito.webp"
   }
  ]
 }
