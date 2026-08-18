@@ -1,14 +1,85 @@
 {
- "updated": "2026-08-18T05:46:57.539Z",
+ "updated": "2026-08-18T11:43:43.054Z",
  "items": [
   {
-   "t": "Martín Berasategui: “Mi hermano mayor, Manolo, es electricista; Olatz, mi única hermana, trabaja en el archivo del Santuario de Loyola; mi hermano pequeño, Andrés, es asesor laboral”",
-   "u": "https://www.lecturas.com/actualidad/martin-berasategui-mi-hermano-mayor-manolo-es-electricista-olatz-mi-unica-hermana-trabaja-archivo-santuario-loyola-mi-hermano-pequeno-andres-es-asesor-laboral_197198",
-   "s": "Lecturas",
-   "d": "2026-08-18T04:46:43.000Z",
+   "t": "El mesón de Gran Canaria que triunfa con carnes a la brasa y cocina canaria: un clásico que ofrece raciones generosas",
+   "u": "https://www.laprovincia.es/gran-canaria/2026/08/18/meson-gran-triunfa-carnes-brasa-cocina-canaria-dv-133453851.html",
+   "s": "La Provincia",
+   "d": "2026-08-18T11:40:11.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://estaticos-cdn.prensaiberica.es/clip/c02bd0bf-743e-458d-bb61-7b17e7d9fb44_16-9-discover-aspect-ratio_default_0_x569y448.jpg"
+  },
+  {
+   "t": "Así descubrí mi gen aventurero en Tenerife, la isla que no te esperas",
+   "u": "https://www.womenshealthmag.com/es/lifestyle/a71768550/tenerife-gen-aventurero/",
+   "s": "Women's Health",
+   "d": "2026-08-18T11:11:07.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://hips.hearstapps.com/hmg-prod/images/95313207-fe4c-4be9-944e-6448be9d8c87.jpg?crop=1xw:0.75020486206xh;center,top&resize=1200:*"
+  },
+  {
+   "t": "Una conocida cadena estrena en Canarias su versión del mojo rojo y repartirá 500 gratis",
+   "u": "https://www.laprovincia.es/canarias/2026/08/18/conocida-cadena-estrena-canarias-version-mojo-rojo-dv-133452278.html",
+   "s": "La Provincia",
+   "d": "2026-08-18T10:25:11.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://estaticos-cdn.prensaiberica.es/clip/f57730b9-19b4-4deb-975f-c5428d31b551_16-9-discover-aspect-ratio_default_0_x512y199.jpg"
+  },
+  {
+   "t": "Murgas y Pepe Monagas: el humor como válvula de escape en Canarias durante la Dictadura",
+   "u": "https://www.eldiario.es/canariasahora/sociedad/murgas-pepe-monagas-humor-valvula-escape-canarias-durante-dictadura_1_13453180.html",
+   "s": "elDiario.es",
+   "d": "2026-08-18T09:43:32.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://static.eldiario.es/clip/9fce8597-ad02-4f5b-bda5-188574af3beb_facebook-watermarked-aspect-ratio-1200-675_default_0.jpg"
+  },
+  {
+   "t": "Fonda España recupera su esencia y se adapta a los nuevos tiempos",
+   "u": "https://bcnfoodieguide.com/fonda-espana-recupera-su-esencia-y-se-adapta-a-los-nuevos-tiempos/",
+   "s": "BCN Foodie Guide",
+   "d": "2026-08-18T09:36:54.000Z",
    "tags": [
     "CHEF"
-   ]
+   ],
+   "img": "https://bcnfoodieguide.com/wp-content/uploads/2026/08/DSC06159-1030x687.jpg"
+  },
+  {
+   "t": "Dos detenidos por vender drogas en una zona turística del sur de Tenerife",
+   "u": "https://www.eldiario.es/canariasahora/tenerifeahora/sucesos/detenidos-vender-drogas-zona-turistica-sur-tenerife_1_13453140.html",
+   "s": "elDiario.es",
+   "d": "2026-08-18T09:32:56.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://static.eldiario.es/clip/7b0c863b-8220-4aac-aa76-3135fd4529e2_facebook-watermarked-aspect-ratio-1200-675_default_0.jpg"
+  },
+  {
+   "t": "El brunch de Tenerife que que se ha convertido en una parada obligatoria para desayunar: hasta 33 bocadillos gourmet para elegir",
+   "u": "https://www.eldia.es/tenerife/2026/08/18/brunch-tenerife-convertido-parada-obligatoria-desayunar-dv-133432026.amp.html",
+   "s": "Eldía",
+   "d": "2026-08-18T08:13:29.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://estaticos-cdn.prensaiberica.es/clip/4cab8c38-1442-408b-83ef-09af493eb07e_16-9-discover-aspect-ratio_default_0_x608y274.jpg"
+  },
+  {
+   "t": "Un viaje desde Venezuela hasta el plato de Amazonas Food",
+   "u": "https://www.canarias7.es/gastronomia-c7/restaurantes/viaje-venezuela-plato-amazonas-food-20260818070000-nt_amp.html",
+   "s": "canarias7.es",
+   "d": "2026-08-18T05:00:01.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://s3.ppllstatics.com/canarias7/www/multimedia/gastronomia-c7/2026/08/17/amazonas1-kBeE-U30132199553212G-1200x840@Canarias7.jpg"
   },
   {
    "t": "Viajar por Canarias a través de una copa",
@@ -78,6 +149,16 @@
    ]
   },
   {
+   "t": "Joan Roca confiesa cuál es el mejor restaurante de Barcelona: no tiene Estrella y comes de lujo por 40€",
+   "u": "https://www.noticiasdelvino.com/restaurantes/2026/08/17/joan-roca-confiesa-cual-es-el-mejor-restaurante-de-barcelona-no-tiene-estrella-y-comes-de-lujo-por-40e-71945/",
+   "s": "Noticias del Vino",
+   "d": "2026-08-17T17:21:17.000Z",
+   "tags": [
+    "ALTA COCINA"
+   ],
+   "img": "https://www.noticiasdelvino.com/wp-content/uploads/image-499.png"
+  },
+  {
    "t": "El CB Gran Canaria regresa al trabajo con la mirada en el ascenso",
    "u": "https://www.eldiario.es/canariasahora/deportes/baloncesto/cb-gran-canaria-regresa-trabajo-mirada-ascenso_1_13452258.html",
    "s": "elDiario.es",
@@ -108,7 +189,7 @@
   {
    "t": "Socarrat Fest convirtió Maspalomas en la gran fiesta del arroz",
    "u": "https://www.canarias7.es/gastronomia-c7/socarrat-fest-convirtio-maspalomas-gran-fiesta-arroz-20260817160957-nt_amp.html",
-   "s": "Canarias7",
+   "s": "canarias7.es",
    "d": "2026-08-17T15:09:57.000Z",
    "tags": [
     "CANARIAS"
@@ -137,9 +218,18 @@
    "img": "https://lavozcanaria.com/media/2026/08/puerto-de-la-cruz-celebra-la-53-semana-bavara-y-su-oktoberfest.webp"
   },
   {
+   "t": "Martín Berasategui: “Mi hermano mayor, Manolo, es electricista; Olatz, mi única hermana, trabaja en el archivo del Santuario de Loyola; mi hermano pequeño, Andrés, es asesor laboral”",
+   "u": "https://www.lecturas.com/actualidad/martin-berasategui-mi-hermano-mayor-manolo-es-electricista-olatz-mi-unica-hermana-trabaja-archivo-santuario-loyola-mi-hermano-pequeno-andres-es-asesor-laboral_197198",
+   "s": "Lecturas",
+   "d": "2026-08-17T13:26:00.000Z",
+   "tags": [
+    "CHEF"
+   ]
+  },
+  {
    "t": "Popeyes lanza un 'dipper' de mojo rojo exclusivo en Canarias: 500 salsas gratis mañana en estos",
    "u": "https://diariodeavisos.elespanol.com/2026/08/popeyes-mojo-rojo-gratis-canarias-tenerife/",
-   "s": "diariodeavisos.elespanol.com",
+   "s": "Diario de Avisos",
    "d": "2026-08-17T11:53:15.000Z",
    "tags": [
     "CANARIAS"
@@ -159,7 +249,7 @@
   {
    "t": "El Boncho Tour regresa a Tenerife: horarios, gastronomía y 11 horas de música gratis junto al mar",
    "u": "https://diariodeavisos.elespanol.com/2026/08/boncho-tour-2026-guimar-tenerife/",
-   "s": "diariodeavisos.elespanol.com",
+   "s": "Diario de Avisos",
    "d": "2026-08-17T10:46:24.000Z",
    "tags": [
     "CANARIAS"
@@ -197,17 +287,6 @@
    "img": "https://s3.elespanol.com/k/imgp/cms/elespanol/11327213.jpg?p=f:jpeg/w:1706/h:960&h=Ba8IMdpS"
   },
   {
-   "t": "Con 3 históricas estrellas Michelin, restaurante mexicano en San Francisco desafía estereotipos",
-   "u": "https://www.latimes.com/espanol/comida/articulo/2026-08-16/con-3-historicas-estrellas-michelin-restaurante-mexicano-en-san-francisco-desafia-estereotipos",
-   "s": "Los Angeles Times",
-   "d": "2026-08-17T06:31:00.000Z",
-   "tags": [
-    "ALTA COCINA",
-    "MICHELIN"
-   ],
-   "img": "https://ca-times.brightspotcdn.com/dims4/default/6632858/2147483647/strip/true/crop/5009x2630+0+355/resize/1200x630!/quality/75/?url=https%3A%2F%2Fcalifornia-times-brightspot.s3.amazonaws.com%2F59%2F7a%2F9cd6191b47f2b2968368ebad348d%2F4851ec39cbbe40ebbbc3c8b70e802bd5.jpg"
-  },
-  {
    "t": "El apagón en pleno agosto hunde la caja de los restaurantes de La Graciosa",
    "u": "https://www.libertaddigital.com/canarias/2026-08-17/el-apagon-en-pleno-agosto-hunde-la-caja-de-los-restaurantes-de-la-graciosa-7449149/",
    "s": "Libertad Digital",
@@ -216,85 +295,6 @@
     "CANARIAS"
    ],
    "img": "https://s1.staticld.com/2026/06/30/1200/675/la-graciosa.jpg"
-  },
-  {
-   "t": "Jesús Sánchez, chef: “Disfruto conduciendo un coche eléctrico; nos hemos adaptado a un modelo de viaje diferente, en el que también encontramos satisfacciones”",
-   "u": "https://www.lavanguardia.com/motor/actualidad/20260817/11606760/jesus-sanchez-chef-disfruto-conduciendo-coche-electrico-hemos-adaptado-modelo-viaje-diferente-encontramos-satisfacciones.html",
-   "s": "La Vanguardia",
-   "d": "2026-08-17T05:00:00.000Z",
-   "tags": [
-    "ALTA COCINA"
-   ],
-   "img": "https://www.lavanguardia.com/files/og_thumbnail/files/fp/uploads/2026/08/03/6a70a567e8072.r_d.1140-1435-7275.jpeg"
-  },
-  {
-   "t": "El hallazgo de hoy, lunes 17 de agosto: \"Por fin he conseguido que la comida no se pegue y que las recetas me salgan mejor\"",
-   "u": "https://www.lecturas.com/buenas-compras/hallazgo-dia-mejores-sartenes-aluminio-antiadherentes_197085",
-   "s": "Lecturas",
-   "d": "2026-08-17T03:00:00.000Z",
-   "tags": [
-    "CHEF"
-   ]
-  },
-  {
-   "t": "I Jornadas Gastronómicas del Mencey: una celebración del paisaje culinario de Tenerife",
-   "u": "https://www.eldia.es/tenerife/2026/08/17/jornadas-gastronomicas-mencey-celebracion-paisaje-bc-133409986.html",
-   "s": "Eldía",
-   "d": "2026-08-16T23:01:08.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://estaticos-cdn.prensaiberica.es/clip/1d0cf0ea-aa79-4007-ac07-6874497e17c3_16-9-discover-aspect-ratio_default_0_x640y240.jpg"
-  },
-  {
-   "t": "Padylla (17/08/26)",
-   "u": "https://www.eldia.es/humor/2026/08/17/padylla-17-08-26-133414950.html",
-   "s": "Eldía",
-   "d": "2026-08-16T23:00:01.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://estaticos-cdn.prensaiberica.es/clip/17802de7-98b8-4148-8536-11b28aa98478_16-9-aspect-ratio_default_0_x699y320.jpg"
-  },
-  {
-   "t": "El Tenerife gana en Ipurua y empieza a aclarar las dudas",
-   "u": "https://www.eldiario.es/canariasahora/Deportes/futbol/tenerife-gana-ipurua-empieza-aclarar-dudas_1_13450721.html",
-   "s": "elDiario.es",
-   "d": "2026-08-16T22:49:01.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://static.eldiario.es/clip/a1ab0e01-eb48-4f56-9b16-616fe7547461_facebook-watermarked-aspect-ratio-1200-675_default_0_x286y89.jpg"
-  },
-  {
-   "t": "El restaurante más antiguo de España está en Zaragoza (y la Guía Michelin lo confirma)",
-   "u": "https://www.enjoyzaragoza.es/restaurante-mas-antiguo-de-espana/",
-   "s": "Enjoy Zaragoza",
-   "d": "2026-08-16T17:50:59.000Z",
-   "tags": [
-    "MICHELIN"
-   ],
-   "img": "https://www.enjoyzaragoza.es/wp-content/uploads/2018/12/casa-lac.png"
-  },
-  {
-   "t": "Vendimia Tradicional en La Geria: Celebración con Camellos y Cosecha Excepcional",
-   "u": "https://www.canariasdiario.com/noticia/150973/viral/la-tradicion-acerca-a-cientos-de-personas-a-la-geria.html",
-   "s": "Canariasdiario.com",
-   "d": "2026-08-16T15:29:30.000Z",
-   "tags": [
-    "VINO",
-    "CANARIAS"
-   ]
-  },
-  {
-   "t": "Ferran Adrià, cocinero catalán: \"Cuando la gente venía a casa, dábamos parmesano con vinagre de Módena, pero dije: '¿Por qué parmesano? Voy a buscar un manchego'. Hay dos o tres muy ricos ahora\"",
-   "u": "https://www.mundodeportivo.com/foodie/20260815/1004216398/ferran-adria-cocinero-catalan-gente-venia-casa-dabamos-parmesano-vino-modena-dije-parmesano-buscar-manchego-hay-dos-tres-ricos-xef-dct.html",
-   "s": "Mundo Deportivo",
-   "d": "2026-08-16T15:01:47.000Z",
-   "tags": [
-    "ALTA COCINA"
-   ],
-   "img": "https://imagenes2.mundodeportivo.com/files/og_thumbnail/files/fp/uploads/2025/12/23/694b03aa79695.r_d.688-232-0.jpeg"
   }
  ]
 }
