@@ -1,0 +1,50 @@
+# ═══ Salud del cron de reenganche (check-inactive-employees) ═══
+# Ese cron de Supabase (lunes 10:00 UTC) manda el push "no pierdas tu
+# racha" a empleados inactivos — es el motor que traía de vuelta al
+# equipo. Del 24 jul al 18 ago 2026 estuvo fallando EN SILENCIO cada día
+# (faltaba la extensión pg_net) y nadie se enteró hasta revisar los
+# números casi un mes después; la actividad del equipo se desplomó justo
+# en esas fechas. Este workflow revisa cada semana, poco después de que
+# dispare, que el último run fue exitoso — si no lo fue (o si no corrió),
+# este job falla en rojo en la pestaña Actions para que no vuelva a pasar
+# desapercibido.
+name: Salud del cron de reenganche
+
+on:
+  schedule:
+    - cron: '24 10 * * 1'   # 10:24 UTC cada lunes — margen tras el cron de Supabase (10:00 UTC)
+  workflow_dispatch: {}      # permite lanzarla a mano desde la pestaña Actions
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    env:
+      SUPA_URL: https://advkoujfgbrrjvqexrcu.supabase.co
+      # Clave ANÓNIMA (pública, ya va en la app) — solo lectura, misma que backup.yml.
+      # Solo puede leer public.cron_health: una vista de una fila que expone
+      # jobname/status/return_message/start_time del cron, nada de datos de
+      # empleados.
+      SUPA_KEY: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFkdmtvdWpmZ2Jycmp2cWV4cmN1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMxODAxODgsImV4cCI6MjA4ODc1NjE4OH0.4MTKzEy_c5x3eWjWJPfS216TTVAVNNlP1Wo_-h1Nt4c
+    steps:
+      - name: Consultar el último run del cron en Supabase
+        run: |
+          RESP=$(curl -sS "$SUPA_URL/rest/v1/cron_health?select=*&limit=1" \
+            -H "apikey: $SUPA_KEY" -H "Authorization: Bearer $SUPA_KEY")
+          echo "Respuesta: $RESP"
+
+          STATUS=$(echo "$RESP" | jq -r '.[0].status // "sin_datos"')
+          START=$(echo "$RESP" | jq -r '.[0].start_time // "—"')
+          MSG=$(echo "$RESP" | jq -r '.[0].return_message // "—"')
+          RUN_DATE=$(echo "$START" | cut -c1-10)
+          TODAY=$(date -u +%F)
+          echo "status=$STATUS  fecha_run=$RUN_DATE  hoy=$TODAY"
+
+          if [ "$STATUS" != "succeeded" ]; then
+            echo "::error::El cron check-inactive-employees NO tuvo éxito (status=$STATUS). Mensaje: $MSG"
+            exit 1
+          fi
+          if [ "$RUN_DATE" != "$TODAY" ]; then
+            echo "::error::El cron check-inactive-employees no se ha ejecutado hoy ($TODAY) — el último run registrado es del $RUN_DATE. Puede que el cron de Supabase esté desactivado o no se haya disparado."
+            exit 1
+          fi
+          echo "✓ El cron de reenganche corrió con éxito hoy ($RUN_DATE)."

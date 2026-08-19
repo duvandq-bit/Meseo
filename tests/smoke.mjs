@@ -2052,20 +2052,27 @@ test('hero is slim: no motivational quote, no duplicate level title', () => {
   assert(!/motivations_es|motivations_en/.test(html), 'dead motivational quote arrays returned');
 });
 
-test('dashboard: plan first, stats folded into the dark progress panel', () => {
-  // TUNIC manual-page redesign (owner-approved): the standalone stats strip
-  // is gone — the four figures live as a mono line inside the progress panel,
-  // below the actionable plan.
+test('dashboard: una sola escalera de progreso (la barra de XP)', () => {
+  // Petición del propietario (ago 2026): «esto es innecesario y sobreestimula
+  // de información al usuario, tampoco tiene relación con la barra de
+  // experiencia». El Inicio mostraba TRES progresos que se contradecían:
+  // barra XP (Lv.7), «Próximo rango 0%» y hexágonos por tema al 95%, más una
+  // statline con «0 dominados» junto a «89% media». Ahora el Inicio solo
+  // lleva la barra de XP; el detalle vive en Ranking → Estadísticas.
   const dashStart = html.indexOf("document.getElementById('appContent').innerHTML=`", html.indexOf('function renderDashboard'));
   assert(dashStart !== -1, 'renderDashboard innerHTML template not found');
   const dashEnd = html.indexOf('`;', dashStart);
   const dashTpl = html.slice(dashStart, dashEnd);
-  // v7.199: PLAN DE HOY + reto + misiones se fusionaron en la sección «HOY».
   assert(dashTpl.indexOf('HOY:') !== -1, 'HOY section missing');
   assert(dashTpl.indexOf('STATS STRIP') === -1, 'the boxed stats strip must stay removed');
-  assert(/dash-statline/.test(dashTpl), 'stat line must live inside the progress panel');
-  assert(dashTpl.indexOf('HOY:') < dashTpl.indexOf('dash-statline'),
-    'plan (actions) must come before the stats (passive context)');
+  assert(!/dash-statline/.test(dashTpl), 'la statline de 4 cifras debe seguir fuera del Inicio');
+  assert(!/'Your progress':'Tu progreso'/.test(dashTpl), 'la sección «Tu progreso» debe seguir fuera del Inicio');
+  assert(!/Next rank|Próximo rango/.test(dashTpl), 'la fila «Próximo rango» debe seguir fuera del Inicio');
+  assert(/renderXPBar\(\)/.test(dashTpl), 'la barra de XP es la única medida de progreso del Inicio');
+  // El detalle no se pierde: sigue existiendo en la pantalla de Estadísticas.
+  const stats = html.slice(html.indexOf('function renderStats()'), html.indexOf('function renderVideos'));
+  assert(/topicBars/.test(stats) && /t-stat-row/.test(stats),
+    'Estadísticas debe conservar las barras de precisión por tema');
 });
 
 // ─── 6f. Latent-bug regression guards (sideways drift family) ───
@@ -2581,13 +2588,12 @@ test('vinos hero is compact and venue-aware', () => {
     'vinos hero byline must be venue-aware with the Txoko copy as default');
 });
 
-test('dashboard polish: readable progress hexes, capitalized alert, collapsed achievements', () => {
-  // Progress hex center % used colDark (dark red/blue/purple) on the dark
-  // green card — unreadable. Both the % and the n/6 subtext must use colLight.
-  assert(/fill="\$\{pct>=100\?'#fff':colLight\}"/.test(html),
-    'progress hex percentage must use the light topic tone');
-  assert(!/font-size="6" fill="\$\{colDark\}"/.test(html),
-    'progress hex subtext must not use colDark on the dark card');
+test('dashboard polish: capitalized alert, collapsed achievements', () => {
+  // Los hexágonos de progreso por tema se retiraron del Inicio (ago 2026):
+  // sobrecargaban la pantalla y contradecían a la barra de XP. Su guard de
+  // legibilidad ya no aplica — aquí solo se comprueba que no vuelvan.
+  assert(!/TOPIC_RING_COLORS|topicRings/.test(html),
+    'los hexágonos de progreso por tema deben seguir retirados');
   // The SRS alert title is capitalized like its sibling alerts.
   assert(/'Plato para repasar':'Platos para repasar'/.test(html),
     'SRS alert title must be capitalized');
@@ -5349,10 +5355,9 @@ test('dashboard «Hoy»: héroe pergamino de dos estados + stats + filas numerad
     'challenge and mission rows must live inside #hoyDetail');
   assert(!/'Needs practice':'Necesita práctica'/.test(dash),
     'the redundant weak-topic alert row must stay removed');
-  // «Próximo rango» is passive context — it moved to «Tu progreso».
-  const progIdx = dash.indexOf("'Your progress':'Tu progreso'");
-  const rankIdx = dash.indexOf('_rankProg ? `');
-  assert(progIdx !== -1 && rankIdx > progIdx, 'next-rank row must live under Tu progreso, not in Hoy');
+  // «Próximo rango» se retiró del Inicio entero (ago 2026): duplicaba la
+  // barra de XP con otra escalera distinta y confundía (0% junto a Lv.7).
+  assert(!/_rankProg/.test(dash), 'la fila «Próximo rango» debe seguir fuera del Inicio');
   // renderDailyMissions exposes per-mission state for the rows/detail.
   assert(/return \{ rows, done: doneCount, total: missions\.length, list \};/.test(html),
     'renderDailyMissions must return the per-mission list');
