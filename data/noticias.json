@@ -1,6 +1,44 @@
 {
- "updated": "2026-08-19T17:43:23.549Z",
+ "updated": "2026-08-19T23:40:36.831Z",
  "items": [
+  {
+   "t": "Si explicas el origen y transmites pasión, el cliente americano responde",
+   "u": "https://www.7canibales.com/?post_type",
+   "s": "7 Caníbales",
+   "d": "2026-08-19T22:00:00.000Z",
+   "tags": [
+    "ALTA COCINA"
+   ]
+  },
+  {
+   "t": "Los 12 mejores restaurantes de Playa Blanca (julio de 2026)",
+   "u": "https://www.teneriffa-news.com/es/restaurante/lanzarote/playa-blanca",
+   "s": "Teneriffa News",
+   "d": "2026-08-19T19:29:34.000Z",
+   "tags": [
+    "CANARIAS"
+   ]
+  },
+  {
+   "t": "La madurez identitaria de Los Guayres: Ruyman González consagra el recetario canario en la alta cocina",
+   "u": "https://www.eldiario.es/canariasahora/por-fogones/madurez-identitaria-guayres-ruyman-gonzalez-consagra-recetario-canario-alta-cocina_1_13456666.html",
+   "s": "elDiario.es",
+   "d": "2026-08-19T18:37:39.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://static.eldiario.es/clip/3a65880a-cd91-4af8-afee-623bc6484fc9_facebook-watermarked-aspect-ratio-1200-675_default_1149542.jpg"
+  },
+  {
+   "t": "Rodri, tiktoker gallego, alucina en un guachinche de Tenerife: \"El almogrote sabe al queso de los",
+   "u": "https://diariodeavisos.elespanol.com/2026/08/rodri-guahinche-en-tenerife/",
+   "s": "Diario de Avisos",
+   "d": "2026-08-19T18:37:03.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://cdn.diariodeavisos.com/wp-content/uploads/2026/08/almogrote.jpg"
+  },
   {
    "t": "Así se debe identificar por el olor una buena mozzarella, según el chef Martín Berasategui: \"Tiene que oler a leche fresca, pero sin ofender a nuestro olfato\"",
    "u": "https://www.directoalpaladar.com/ingredientes-y-alimentos/asi-se-debe-identificar-olor-buena-mozzarella-chef-martin-berasategui-tiene-que-oler-a-leche-fresca-ofender-a-nuestro-olfato",
@@ -20,16 +58,6 @@
     "CANARIAS"
    ],
    "img": "https://static.eldiario.es/clip/73111589-122f-478c-89f8-7d87645459a1_facebook-watermarked-aspect-ratio-1200-675_default_0.jpg"
-  },
-  {
-   "t": "España se mide a Nigeria y Bélgica en Tenerife",
-   "u": "https://www.eldiario.es/canariasahora/Deportes/futbol/espana-mide-nigeria-belgica-tenerife_1_13456437.html",
-   "s": "elDiario.es",
-   "d": "2026-08-19T15:55:24.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://static.eldiario.es/clip/82af2840-fd13-4f95-80a9-6113eca2a138_facebook-watermarked-aspect-ratio-1200-675_default_0_x797y708.jpg"
   },
   {
    "t": "Paco Roncero llevará su cocina al GP F1 Madrid 2026",
@@ -52,6 +80,16 @@
    "img": "https://forbes.es/wp-content/uploads/2026/08/fotonoticia_20260819173604_1920-1200x675.jpg"
   },
   {
+   "t": "Fendo pone fin a seis años de espera y devuelve a Huesca a la Guía Michelin",
+   "u": "https://www.enjoyzaragoza.es/restaurante-fendo-huesca/",
+   "s": "Enjoy Zaragoza",
+   "d": "2026-08-19T15:20:20.000Z",
+   "tags": [
+    "MICHELIN"
+   ],
+   "img": "https://www.enjoyzaragoza.es/wp-content/uploads/2026/08/FENDO.jpg"
+  },
+  {
    "t": "Ferran Adrià zanja el debate sobre la tortilla española: \"Primero fue solo de cebolla\"",
    "u": "https://www.diariodesevilla.es/sociedad/ferran-adria-zanja-debate-tortilla_0_2007746452.amp.html",
    "s": "Diario de Sevilla",
@@ -64,7 +102,7 @@
   {
    "t": "La feria de Pinolere se prepara para recibir a casi 200 artesanos con la madera como protagonista",
    "u": "https://www.eldia.es/tenerife/2026/08/19/pinolere-artesania-feria-la-orotava-133484447.amp.html",
-   "s": "eldia.es",
+   "s": "Eldía",
    "d": "2026-08-19T14:39:58.000Z",
    "tags": [
     "VINO",
@@ -75,7 +113,7 @@
   {
    "t": "El restaurante de Madrid que eligió Kanye West: alta cocina andaluza de la mano de un conocido chef",
    "u": "https://www.elconfidencial.com/espana/madrid/2026-08-19/restaurante-madrid-kanye-west-1tna-1qrt_4405416/",
-   "s": "El Confidencial",
+   "s": "elconfidencial.com",
    "d": "2026-08-19T14:38:00.000Z",
    "tags": [
     "ALTA COCINA"
@@ -93,14 +131,14 @@
    "img": "https://estaticos-cdn.prensaiberica.es/clip/3e27215d-9a8a-44e7-a96f-af435b73eb67_16-9-discover-aspect-ratio_default_0_x600y225.jpg"
   },
   {
-   "t": "Fendo pone fin a seis años de espera y devuelve a Huesca a la Guía Michelin",
-   "u": "https://www.enjoyzaragoza.es/restaurante-fendo-huesca/",
+   "t": "Así llegamos a las antípodas de Zaragoza: el viaje que lo empezó todo",
+   "u": "https://www.enjoyzaragoza.es/viaje-antipodas-zaragoza/",
    "s": "Enjoy Zaragoza",
-   "d": "2026-08-19T13:53:27.000Z",
+   "d": "2026-08-19T14:00:44.000Z",
    "tags": [
     "MICHELIN"
    ],
-   "img": "https://www.enjoyzaragoza.es/wp-content/uploads/2026/08/FENDO.jpg"
+   "img": "https://www.enjoyzaragoza.es/wp-content/uploads/2025/02/Nueva-Zelanda.png"
   },
   {
    "t": "Aguas residuales, formación, intenciones... ¿Cuándo resolverá Tenerife por fin estos problemas?",
@@ -199,16 +237,6 @@
    ]
   },
   {
-   "t": "Así llegamos a las antípodas de Zaragoza: el viaje que lo empezó todo",
-   "u": "https://www.enjoyzaragoza.es/viaje-antipodas-zaragoza/",
-   "s": "Enjoy Zaragoza",
-   "d": "2026-08-19T13:28:02.000Z",
-   "tags": [
-    "MICHELIN"
-   ],
-   "img": "https://www.enjoyzaragoza.es/wp-content/uploads/2025/02/Nueva-Zelanda.png"
-  },
-  {
    "t": "La chef María Nicolau, sobre la falta de trabajadores en la hostelería: \"Que haya escasez de personal para adaptarse a unas condiciones que están caducas me parece perfecto para que las condiciones cambien\"",
    "u": "https://www.elle.com/es/gourmet/gastronomia/a68008094/chef-maria-nicolau-falta-trabajadores-hosteleria-condiciones/",
    "s": "ELLE",
@@ -235,7 +263,8 @@
    "d": "2026-08-19T12:19:47.000Z",
    "tags": [
     "CHEF"
-   ]
+   ],
+   "img": "https://img.asmedia.epimg.net/resizer/v2/WQBRGEBYINGDPBT54GG3OQEZH4.jpg?auth=6f494826ce0ccf91f27868e47de99d50e5fa78bca9ab8a829c10bcfd2fbf5c49&width=1472&height=828&smart=true"
   },
   {
    "t": "Estos son los 7 nuevos restaurantes más destacados de las Islas Canarias",
@@ -265,37 +294,8 @@
    "d": "2026-08-19T12:09:11.000Z",
    "tags": [
     "CANARIAS"
-   ]
-  },
-  {
-   "t": "No solo los turistas que visitan las Islas Canarias se comportan de forma inadecuada",
-   "u": "https://www.teneriffa-news.com/es/los-lectores-escriben-para-los-lectores/las-malas-maneras-no-son-cosa-solo-de-los-turistas-en-canarias_1464869.html",
-   "s": "Teneriffa News",
-   "d": "2026-08-19T12:09:11.000Z",
-   "tags": [
-    "CANARIAS"
-   ]
-  },
-  {
-   "t": "El Taller de Seve Díaz, primera estrella Michelin en Puerto de la Cruz",
-   "u": "https://www.teneriffa-news.com/es/news/el-taller-de-seve-diaz-primera-estrella-michelin-en-puerto-de-la-cruz_1464742.html",
-   "s": "Teneriffa News",
-   "d": "2026-08-19T12:09:09.000Z",
-   "tags": [
-    "CANARIAS",
-    "MICHELIN"
    ],
-   "img": "https://www.teneriffa-news.com/media/fotostrecken/el-taller-puerto/el-taller-puerto-cruz-teneriffa-1-1600x1080.jpg"
-  },
-  {
-   "t": "Aquí podrá disfrutar de la singular floración de los almendros en las Islas Canarias",
-   "u": "https://www.teneriffa-news.com/es/guia-turistica-de-las-islas-canarias/los-almendros-florecen-entre-santiago-del-teide-tejeda-y-la-palma_1464395.html",
-   "s": "Teneriffa News",
-   "d": "2026-08-19T12:09:08.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://www.teneriffa-news.com/media/m/mandelbluete-teneriffa-1920x1080.jpg"
+   "img": "https://www.teneriffa-news.com/media/k/kanaren-touristen-restaurant-1920x1080.jpg"
   }
  ]
 }
