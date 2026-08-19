@@ -9536,33 +9536,33 @@ body.chat-open .sound-toggle{ display:none !important; }
 .login-footer{margin-top:.4rem}
 
 /* ═══ ACTUALIDAD — feed de noticias gastro + eventos (jul 2026) ═══ */
-.act-pulse{font-family:'DM Mono',monospace;font-size:.62rem;letter-spacing:.14em;color:var(--gold-deep);
-  text-align:center;padding:.45rem .6rem;border:1px solid rgba(196,154,60,.3);border-radius:20px;margin-bottom:.7rem;
-  background:rgba(196,154,60,.06)}
+/* Cabecera: dice en una frase qué es esta pantalla. */
+.act-head{margin-bottom:1rem}
+.act-head-t{font-family:'Cinzel',serif;font-size:1.15rem;color:var(--parchment);margin-bottom:.25rem}
+.act-head-s{font-family:'Quicksand',sans-serif;font-size:.82rem;line-height:1.5;color:var(--parch2)}
 .act-card{display:block;background:linear-gradient(155deg,#faf6ee,#f0e8d8);border:1.5px solid rgba(196,154,60,.16);
   border-radius:12px;padding:.8rem .95rem;margin-bottom:.55rem;text-decoration:none}
 .act-link:active{background:linear-gradient(155deg,#f4eee2,#ece2d0)}
 .act-title{font-family:Georgia,serif;font-size:.9rem;font-weight:700;color:var(--parchment);line-height:1.35;margin-bottom:.25rem}
 .act-meta{font-family:'Quicksand',sans-serif;font-size:.66rem;font-weight:600;color:var(--parch3)}
 .act-nota{font-size:.76rem;color:var(--parch2);line-height:1.45;margin-bottom:.35rem}
-.act-tags{display:flex;gap:.3rem;flex-wrap:wrap;margin-top:.4rem}
-.act-tag{font-family:'DM Mono',monospace;font-size:.52rem;letter-spacing:.08em;padding:.18rem .45rem;
-  border-radius:10px;border:1px solid rgba(196,154,60,.4);color:var(--gold-deep);font-weight:700}
-.act-ev-top{display:flex;justify-content:space-between;align-items:baseline;gap:.6rem;margin-bottom:.25rem}
-.act-ev-count{font-family:'DM Mono',monospace;font-size:.58rem;letter-spacing:.12em;color:#faf6ee;
-  background:var(--gold-deep);border-radius:10px;padding:.2rem .5rem;font-weight:700}
+/* Cuenta atrás del evento: lo primero y lo más legible de la tarjeta. */
+.act-when{display:inline-block;font-family:'Quicksand',sans-serif;font-size:.72rem;font-weight:700;
+  color:#faf6ee;background:var(--gold-deep);border-radius:10px;padding:.22rem .6rem;margin-bottom:.4rem}
+/* Flecha que avisa de que la noticia se abre fuera de la app. */
+.act-go{align-self:center;flex-shrink:0;color:var(--gold-deep);font-size:.95rem;opacity:.75}
 .act-empty{text-align:center;padding:1.2rem .8rem;font-size:.78rem;color:var(--parch3)}
 .act-foot{font-family:'DM Mono',monospace;font-size:.56rem;letter-spacing:.1em;color:var(--parch4);text-align:center;margin:.9rem 0 .4rem}
 
-/* Teaser de Actualidad en el inicio (2 titulares + Ver más) */
-.act-mini{padding:.6rem .8rem;margin-bottom:.45rem}
+/* «Ver más» de cada bloque de Actualidad */
 .act-more{display:block;width:100%;min-height:40px;margin-bottom:1rem;border-radius:12px;cursor:pointer;
   background:transparent;border:1.5px solid rgba(196,154,60,.5);color:var(--gold-deep);
   font-family:'Quicksand',sans-serif;font-size:.78rem;font-weight:700}
 .act-more:active{background:rgba(196,154,60,.08)}
 
 /* Miniaturas de noticias (og:image que trae el robot; opcional por diseño) */
-.act-link.act-has-thumb{display:flex;gap:.7rem;align-items:flex-start}
+.act-link{display:flex;gap:.7rem;align-items:flex-start}
+.act-link .act-body{min-width:0;flex:1}
 .act-thumb{width:74px;height:74px;flex:0 0 74px;border-radius:10px;object-fit:cover;
   border:1px solid rgba(196,154,60,.35);background:rgba(196,154,60,.12)}
 .act-has-thumb .act-body{min-width:0;flex:1}
