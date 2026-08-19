@@ -4490,13 +4490,11 @@ test('Actualidad: robot de noticias + calendario de eventos (jul 2026)', () => {
   assert(/target="_blank" rel="noopener noreferrer"/.test(html.slice(html.indexOf('function _actHTML'), html.indexOf('function renderActualidad'))),
     'las noticias abren fuera con rel=noopener');
   assert(/\.act-card\{/.test(read('styles.css')), 'estilos del feed ausentes');
-  // Teaser en el inicio: 2 titulares + «Ver más» (petición del propietario).
+  // Ago 2026 (propietario): «dejamos las noticias en su sección y las
+  // quitamos del inicio». El Inicio ya no las trae ni las carga.
   const dash2 = html.slice(html.indexOf('function renderDashboard()'), html.indexOf('// ═══════ FLASHCARDS'));
-  assert(/id="dashNews" style="display:none"/.test(dash2),
-    'el inicio debe llevar el hueco del teaser de Actualidad, oculto por defecto');
-  assert(/\.slice\(0,3\)/.test(html.slice(html.indexOf('const dn=document.getElementById'), html.indexOf('// Posición en la liga semanal')))
-    && /_subTab\.aprender='actualidad'/.test(html),
-    'el teaser muestra 3 titulares y el Ver más lleva a Actualidad');
+  assert(!/dashNews/.test(dash2), 'el inicio no debe traer el teaser de noticias');
+  assert(!/dashNews/.test(html), 'no puede quedar código del teaser de noticias');
   // Miniaturas (jul 2026): el robot resuelve el enlace real del artículo y
   // extrae su og:image; la tarjeta pinta la foto solo si existe y se repliega
   // a solo-texto si el medio bloquea el hotlink.
@@ -4515,6 +4513,40 @@ test('Actualidad: robot de noticias + calendario de eventos (jul 2026)', () => {
     && /referrerpolicy="no-referrer"/.test(actSlice) && /onerror=/.test(actSlice),
     'las miniaturas cargan perezosas, sin referrer y con repliegue si la foto falla');
   assert(/\.act-thumb\{/.test(read('styles.css')), 'estilos de la miniatura ausentes');
+});
+
+test('Actualidad: una pantalla que se lee de arriba abajo (ago 2026)', () => {
+  // Petición del propietario: «haz que sea más elegante y se entienda fácil».
+  // Antes había 8 controles (3 segmentos + 5 etiquetas) antes del primer
+  // titular, emoji en los divisores y jerga («fecha aprox.»).
+  const act = html.slice(html.indexOf('function _actHTML'), html.indexOf('function renderTecnicas'));
+  // Fuera los filtros: ni segmentos, ni chips de etiqueta, ni su estado.
+  for (const dead of ['_actFilter', '_actTag', '_actSetFilter', '_actTagChip'])
+    assert(!html.includes(dead), `el filtro ${dead} debe seguir retirado`);
+  assert(!/act-tag\b/.test(html), 'las etiquetas por tarjeta deben seguir fuera');
+  // Cabecera que explica la pantalla en una frase.
+  assert(/class="act-head"/.test(act) && /act-head-s/.test(act),
+    'la sección debe abrir con un titular y una frase que la explique');
+  // Cuenta atrás en lenguaje llano, no en jerga.
+  assert(/function _actFalta\(/.test(html) && /'Es hoy'/.test(html) && /'Es mañana'/.test(html),
+    'la cuenta atrás debe decir «Es hoy» / «Es mañana» / «Faltan N días»');
+  assert(/function _actFecha\(/.test(html) && /month:'long'/.test(html),
+    'la fecha del evento debe ir en texto largo y legible');
+  assert(!/fecha aprox\./.test(html), 'la jerga «fecha aprox.» debe desaparecer');
+  // Divisores sin emoji de color (el resto de la app es tipográfica).
+  assert(!/📰|📅/.test(act), 'los divisores de Actualidad no deben llevar emoji');
+  // La barra de fecha/servicio/racha era contexto de otra pantalla.
+  assert(!/act-pulse/.test(html), 'la barra de fecha/servicio debe seguir fuera');
+  // Lista acotada con «ver más» en vez de scroll infinito.
+  assert(/EV_N=3, NEWS_N=6/.test(act) && /function _actMore\(/.test(html),
+    'cada bloque muestra unos pocos y ofrece «ver más»');
+  // La noticia sigue avisando de que abre fuera, y de forma segura.
+  assert(/target="_blank" rel="noopener noreferrer"/.test(act), 'las noticias abren fuera con rel=noopener');
+  assert(/class="act-go"/.test(act), 'la tarjeta debe indicar que el enlace sale de la app');
+  const css = read('styles.css');
+  assert(/\.act-head\{/.test(css) && /\.act-when\{/.test(css) && /\.act-go\{/.test(css),
+    'estilos de la nueva Actualidad ausentes');
+  assert(!/\.act-mini\{/.test(css), 'el estilo del teaser del inicio debe irse con él');
 });
 
 test('Horarios del equipo: cuadrante desde Supabase, leyenda fiel y cambio asistido (jul 2026)', () => {
