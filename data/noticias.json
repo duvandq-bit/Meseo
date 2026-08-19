@@ -1,14 +1,44 @@
 {
- "updated": "2026-08-18T23:39:52.730Z",
+ "updated": "2026-08-19T05:48:32.722Z",
  "items": [
   {
    "t": "La búsqueda de restaurantes con terraza sube 10% según The Fork2",
    "u": "https://factoriadecerveza.com/la-busqueda-de-restaurantes-con-terraza-sube-10-segun-the-fork/",
-   "s": "Factoría de Cerveza",
-   "d": "2026-08-18T23:32:27.000Z",
+   "s": "factoriadecerveza.com",
+   "d": "2026-08-19T05:32:27.000Z",
    "tags": [
     "CANARIAS"
    ]
+  },
+  {
+   "t": "El restaurante que cambia su menú según el clima: la historia de Tuju en São Paulo",
+   "u": "https://www.minuto60.com/vida-moderna/restaurante-tres-estrellas-michelin-sao-paulo-se-adapta-clima/13734",
+   "s": "Minuto60",
+   "d": "2026-08-19T02:49:14.000Z",
+   "tags": [
+    "ALTA COCINA"
+   ],
+   "img": "https://minutobucket.s3.us-east-2.amazonaws.com/images/restaurante-tuju-en-sao-paulo-20260818-212924_20260818_212924_twitter.jpg"
+  },
+  {
+   "t": "El nuevo proyecto de Ricardo Sanz, fundador de Kabuki, para comer por 15 euros: «Permite probar la alta cocina sin venir a un sitio caro»",
+   "u": "https://www.eldebate.com/estilo-vida/restaurantes/20260819/nuevo-proyecto-ricardo-sanz-fundador-kabuki-comer-15-euros-permite-probar-alta-cocina-venir-sitio-caro_444914.html",
+   "s": "El Debate",
+   "d": "2026-08-19T02:30:00.000Z",
+   "tags": [
+    "ALTA COCINA"
+   ],
+   "img": "https://www.eldebate.com/files/article_social/uploads/2026/08/18/6a843e50a2004.jpeg"
+  },
+  {
+   "t": "¡El mejor del mundo! México se corona en lista turística como destino gastronómico 2026",
+   "u": "https://oem.com.mx/aderezo/tendencias/mexico-en-la-cima-como-mejor-destino-gastronomico-del-mundo-en-2026-31635178",
+   "s": "oem.com.mx",
+   "d": "2026-08-19T00:11:15.000Z",
+   "tags": [
+    "MICHELIN"
+   ],
+   "img": "https://oem.com.mx/aderezo/img/31638316/1787078369/BASE_LANDSCAPE/1200/image.jpg"
   },
   {
    "t": "El restaurante de carretera definitivo está en este pueblo medieval de Madrid: Martín Berasategui confiesa su secreto mejor guardado",
@@ -80,6 +110,16 @@
    "img": "https://img.europapress.es/fotoweb/fotonoticia_20260818170312_1200.jpg"
   },
   {
+   "t": "El Tenerife gana en Ipurua y empieza a aclarar las dudas",
+   "u": "https://www.eldiario.es/canariasahora/Deportes/futbol/tenerife-gana-ipurua-empieza-aclarar-dudas_1_13450721.html",
+   "s": "elDiario.es",
+   "d": "2026-08-18T13:20:52.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://static.eldiario.es/clip/a1ab0e01-eb48-4f56-9b16-616fe7547461_facebook-watermarked-aspect-ratio-1200-675_default_0_x286y89.jpg"
+  },
+  {
    "t": "La villa juguetera de Alicante que conquista por su cocina: así es el pueblo donde mejor se come de España",
    "u": "https://www.noticiasdelvino.com/restaurantes/2026/08/18/la-villa-juguetera-de-alicante-que-conquista-por-su-cocina-asi-es-el-pueblo-donde-mejor-se-come-de-espana-74836/",
    "s": "Noticias del Vino",
@@ -148,6 +188,16 @@
     "CANARIAS"
    ],
    "img": "https://estaticos-cdn.prensaiberica.es/clip/f57730b9-19b4-4deb-975f-c5428d31b551_16-9-discover-aspect-ratio_default_0_x512y199.jpg"
+  },
+  {
+   "t": "Murgas y Pepe Monagas: el humor como válvula de escape en Canarias durante la Dictadura",
+   "u": "https://www.eldiario.es/canariasahora/sociedad/murgas-pepe-monagas-humor-valvula-escape-canarias-durante-dictadura_1_13453180.html",
+   "s": "elDiario.es",
+   "d": "2026-08-18T09:43:32.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://static.eldiario.es/clip/9fce8597-ad02-4f5b-bda5-188574af3beb_facebook-watermarked-aspect-ratio-1200-675_default_0.jpg"
   },
   {
    "t": "Fonda España recupera su esencia y se adapta a los nuevos tiempos",
@@ -237,63 +287,14 @@
    ]
   },
   {
-   "t": "El CB Gran Canaria regresa al trabajo con la mirada en el ascenso",
-   "u": "https://www.eldiario.es/canariasahora/deportes/baloncesto/cb-gran-canaria-regresa-trabajo-mirada-ascenso_1_13452258.html",
-   "s": "elDiario.es",
-   "d": "2026-08-17T15:59:14.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://static.eldiario.es/clip/7c29876b-ce1e-40e7-963b-b109235e6ef0_facebook-watermarked-aspect-ratio-1200-675_default_0_x1039y273.jpg"
-  },
-  {
    "t": "Cenan por 144,50 euros en un restaurante de Canarias y se marchan sin pagar",
    "u": "https://www.laprovincia.es/canarias/2026/08/17/cenan-144-50-euros-restaurante-133435236.html",
    "s": "La Provincia",
    "d": "2026-08-17T15:35:25.000Z",
    "tags": [
     "CANARIAS"
-   ]
-  },
-  {
-   "t": "Dos mujeres cenan por 144,50 euros en un restaurante de Tenerife y se marchan sin pagar",
-   "u": "https://www.laprovincia.es/videos/canarias/2026/08/17/mujeres-cenan-144-50-euros-133435221.html",
-   "s": "La Provincia",
-   "d": "2026-08-17T15:32:28.000Z",
-   "tags": [
-    "CANARIAS"
-   ]
-  },
-  {
-   "t": "Socarrat Fest convirtió Maspalomas en la gran fiesta del arroz",
-   "u": "https://www.canarias7.es/gastronomia-c7/socarrat-fest-convirtio-maspalomas-gran-fiesta-arroz-20260817160957-nt_amp.html",
-   "s": "Canarias7",
-   "d": "2026-08-17T15:09:57.000Z",
-   "tags": [
-    "CANARIAS"
    ],
-   "img": "https://s3.ppllstatics.com/canarias7/www/multimedia/gastronomia-c7/2026/08/17/portada.jpg"
-  },
-  {
-   "t": "L'Olivera adelanta la vendimia con Chardonnay y Xarel·lo tras un verano muy caluroso",
-   "u": "https://www.vinetur.com/amp/20260817105709/l-olivera-adelanta-la-vendimia-con-chardonnay-y-xarel%C2%B7lo-tras-un-verano-muy-caluroso.html",
-   "s": "Vinetur",
-   "d": "2026-08-17T14:46:08.000Z",
-   "tags": [
-    "VINO",
-    "CANARIAS"
-   ],
-   "img": "https://www.vinetur.com/imagenes/2026/august/17/20260817-184608-2408.jpg"
-  },
-  {
-   "t": "Puerto de la Cruz celebra la 53ª Semana Bávara y su Oktoberfest",
-   "u": "https://lavozcanaria.com/valle-de-la-orotava/general/puerto-de-la-cruz-celebra-la-53-semana-bavara-y-su-oktoberfest",
-   "s": "La Voz Canaria",
-   "d": "2026-08-17T14:01:30.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://lavozcanaria.com/media/2026/08/puerto-de-la-cruz-celebra-la-53-semana-bavara-y-su-oktoberfest.webp"
+   "img": "https://estaticos-cdn.prensaiberica.es/clip/e79ab22c-8fa7-4092-8de9-4d21fd36a6ef_16-9-aspect-ratio_default_0_x512y227.jpg"
   }
  ]
 }
