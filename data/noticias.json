@@ -1,6 +1,36 @@
 {
- "updated": "2026-08-19T23:40:36.831Z",
+ "updated": "2026-08-20T05:48:09.838Z",
  "items": [
+  {
+   "t": "La cocinera linarense Estefanía Marchal entra en la Guía Michelin con Alinea",
+   "u": "https://elnuevoobservador.com/la-cocinera-linarense-estefania-marchal-entra-en-la-guia-michelin-con-alinea/",
+   "s": "El Nuevo Observador",
+   "d": "2026-08-20T02:21:26.000Z",
+   "tags": [
+    "MICHELIN"
+   ],
+   "img": "https://elnuevoobservador.com/wp-content/uploads/Estefania-Marchal-Linares.jpg"
+  },
+  {
+   "t": "El secreto del chef Martín Berasategui para conseguir la ensaladilla rusa perfecta: debes triturar estos dos ingredientes",
+   "u": "https://www.ultimahora.es/xaloc/gastronomia/2026/08/20/2689239/secreto-del-chef-martin-berasategui-para-conseguir-ensaladilla-rusa-perfecta-debes-triturar-estos-dos-ingredientes.html",
+   "s": "Ultima Hora",
+   "d": "2026-08-20T01:47:28.000Z",
+   "tags": [
+    "CHEF"
+   ],
+   "img": "https://uh.gsstatic.es/sfAttachPlugin/social/4735793.webp"
+  },
+  {
+   "t": "Rodri, tiktoker asturiano, alucina en un guachinche de Tenerife: \"El almogrote sabe al queso de los",
+   "u": "https://diariodeavisos.elespanol.com/2026/08/rodri-come-guahinche-en-tenerife/amp/",
+   "s": "Diario de Avisos",
+   "d": "2026-08-20T00:39:04.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://diariodeavisos.elespanol.com/wp-content/uploads/2026/08/almogrote.jpg"
+  },
   {
    "t": "Si explicas el origen y transmites pasión, el cliente americano responde",
    "u": "https://www.7canibales.com/?post_type",
@@ -11,6 +41,35 @@
    ]
   },
   {
+   "t": "Los mejores bares de Puerto Rico (agosto de 2026)",
+   "u": "https://www.teneriffa-news.com/es/nueve-bares-de-puerto-rico-ordenados-por-las-valoraciones-de-los-clientes",
+   "s": "Teneriffa News",
+   "d": "2026-08-19T21:57:06.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://www.teneriffa-news.com/media/die-besten-bars-in-puerto-rico-1880x1080.jpg"
+  },
+  {
+   "t": "Las 10 mejores tabernas de Lanzarote (abril de 2026)",
+   "u": "https://www.teneriffa-news.com/es/restaurante/lanzarote/vinotecas",
+   "s": "Teneriffa News",
+   "d": "2026-08-19T21:28:11.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://www.teneriffa-news.com/media/die-10-besten-weinstuben-auf-lanzarote-1880x1080.jpg"
+  },
+  {
+   "t": "Los 12 mejores restaurantes de Tías (julio de 2026)",
+   "u": "https://www.teneriffa-news.com/es/restaurante/lanzarote/tias",
+   "s": "Teneriffa News",
+   "d": "2026-08-19T19:52:37.000Z",
+   "tags": [
+    "CANARIAS"
+   ]
+  },
+  {
    "t": "Los 12 mejores restaurantes de Playa Blanca (julio de 2026)",
    "u": "https://www.teneriffa-news.com/es/restaurante/lanzarote/playa-blanca",
    "s": "Teneriffa News",
@@ -18,6 +77,16 @@
    "tags": [
     "CANARIAS"
    ]
+  },
+  {
+   "t": "Estas 7 heladerías de Tenerife se encuentran entre las mejores del mundo",
+   "u": "https://www.teneriffa-news.com/es/news/siete-heladerias-de-tenerife-entran-en-el-gelato-festival-world-ranking_1464822.html",
+   "s": "Teneriffa News",
+   "d": "2026-08-19T18:39:22.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://www.teneriffa-news.com/media/schokoladen-eis-kanaren-2400x1350.jpg"
   },
   {
    "t": "La madurez identitaria de Los Guayres: Ruyman González consagra el recetario canario en la alta cocina",
@@ -113,7 +182,7 @@
   {
    "t": "El restaurante de Madrid que eligió Kanye West: alta cocina andaluza de la mano de un conocido chef",
    "u": "https://www.elconfidencial.com/espana/madrid/2026-08-19/restaurante-madrid-kanye-west-1tna-1qrt_4405416/",
-   "s": "elconfidencial.com",
+   "s": "El Confidencial",
    "d": "2026-08-19T14:38:00.000Z",
    "tags": [
     "ALTA COCINA"
@@ -159,16 +228,6 @@
     "CANARIAS"
    ],
    "img": "https://www.teneriffa-news.com/media/a/abwasser-teneriffa-meer-atlantik-panne-2400x1350.jpg"
-  },
-  {
-   "t": "Por qué echo de menos el antiguo Las Verónicas de Tenerife",
-   "u": "https://www.teneriffa-news.com/es/news/echo-de-menos-las-veronicas_1464899.html",
-   "s": "Teneriffa News",
-   "d": "2026-08-19T13:35:29.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://www.teneriffa-news.com/media/b/britinnen-pruegelei-teneriffa-2287x1350.jpg"
   },
   {
    "t": "Los 12 mejores restaurantes de Santa Cruz de Tenerife (julio de 2026)",
@@ -235,67 +294,6 @@
    "tags": [
     "CANARIAS"
    ]
-  },
-  {
-   "t": "La chef María Nicolau, sobre la falta de trabajadores en la hostelería: \"Que haya escasez de personal para adaptarse a unas condiciones que están caducas me parece perfecto para que las condiciones cambien\"",
-   "u": "https://www.elle.com/es/gourmet/gastronomia/a68008094/chef-maria-nicolau-falta-trabajadores-hosteleria-condiciones/",
-   "s": "ELLE",
-   "d": "2026-08-19T13:08:15.000Z",
-   "tags": [
-    "ALTA COCINA"
-   ],
-   "img": "https://hips.hearstapps.com/hmg-prod/images/eff4c92a-df9a-46b1-8d56-d045d3acdf6b.jpg?crop=1.00xw:0.334xh;0,0.268xh&resize=1200:*"
-  },
-  {
-   "t": "Christian y Eneko, dos amigos que han devuelto Huesca a la Guía Michelín después de seis años",
-   "u": "https://www.hoyaragon.es/gastronomia/christian-eneko-restaurante-fendo-huesca-guia-michelin/20260819145139142558.html",
-   "s": "Hoy Aragón",
-   "d": "2026-08-19T12:51:39.000Z",
-   "tags": [
-    "MICHELIN"
-   ],
-   "img": "https://www.hoyaragon.es/media/hoyaragon/images/2026/08/19/2026081914482544266.jpg"
-  },
-  {
-   "t": "Martín Berasategui, chef: “El truco para preparar un pollo jugoso no está en cocinarlo lentamente, sino a fueg",
-   "u": "https://as.com/tikitakas/gastronomia/martin-berasategui-chef-el-truco-para-preparar-un-pollo-jugoso-no-esta-en-cocinarlo-lentamente-sino-a-fuego-fuerte-dos-minutos-f202608-n/?outputType",
-   "s": "Diario AS",
-   "d": "2026-08-19T12:19:47.000Z",
-   "tags": [
-    "CHEF"
-   ],
-   "img": "https://img.asmedia.epimg.net/resizer/v2/WQBRGEBYINGDPBT54GG3OQEZH4.jpg?auth=6f494826ce0ccf91f27868e47de99d50e5fa78bca9ab8a829c10bcfd2fbf5c49&width=1472&height=828&smart=true"
-  },
-  {
-   "t": "Estos son los 7 nuevos restaurantes más destacados de las Islas Canarias",
-   "u": "https://www.teneriffa-news.com/es/news/siete-restaurantes-canarios-suman-nuevos-soles-repsol-en-la-guia-2026_1464389.html",
-   "s": "Teneriffa News",
-   "d": "2026-08-19T12:09:20.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://www.teneriffa-news.com/media/a/adrian-bosch-san-ho-costa-adeje-repsol-sol-1600x1080.jpg"
-  },
-  {
-   "t": "\"El Taller\" trae a Tenerife su undécima estrella Michelin",
-   "u": "https://www.teneriffa-news.com/es/news/el-taller-de-seve-diaz-logra-su-primera-estrella-michelin_1464736.html",
-   "s": "Teneriffa News",
-   "d": "2026-08-19T12:09:11.000Z",
-   "tags": [
-    "CANARIAS",
-    "MICHELIN"
-   ],
-   "img": "https://www.teneriffa-news.com/media/fotostrecken/el-taller-puerto/el-taller-puerto-cruz-teneriffa-9-1600x1080.jpg"
-  },
-  {
-   "t": "La delgada línea que separa unas vacaciones en Canarias de la descaro",
-   "u": "https://www.teneriffa-news.com/es/news/cuando-el-visitante-confunde-la-isla-con-un-todo-incluido_1464877.html",
-   "s": "Teneriffa News",
-   "d": "2026-08-19T12:09:11.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://www.teneriffa-news.com/media/k/kanaren-touristen-restaurant-1920x1080.jpg"
   }
  ]
 }
