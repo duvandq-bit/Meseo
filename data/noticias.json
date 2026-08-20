@@ -1,14 +1,196 @@
 {
- "updated": "2026-08-20T11:45:28.515Z",
+ "updated": "2026-08-20T17:47:50.360Z",
  "items": [
   {
+   "t": "El CD Tenerife sube el precio de sus entradas entre un 25 y un 42,86%",
+   "u": "https://www.eldiario.es/canariasahora/Deportes/futbol/cd-tenerife-sube-precio-entradas-25-42-86_1_13458638.html",
+   "s": "elDiario.es",
+   "d": "2026-08-20T16:51:02.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://static.eldiario.es/clip/2118f042-fe68-4152-a4bd-08d2108f29c5_facebook-watermarked-aspect-ratio-1200-675_default_0.jpg"
+  },
+  {
+   "t": "Fendo entra en la Guía Michelin: así es el nuevo restaurante recomendado de Huesca",
+   "u": "https://zaragozala.com/gastronomia/fendo-huesca-guia-michelin-2026/",
+   "s": "ZARAGOZALA.com",
+   "d": "2026-08-20T15:40:04.000Z",
+   "tags": [
+    "MICHELIN"
+   ],
+   "img": "https://zaragozala.com/wp-content/uploads/2026/08/Fendo_huesca_guia_michelion.webp"
+  },
+  {
+   "t": "Cuatro terrazas gallegas, entre las 50 mejores de España para este verano",
+   "u": "https://enfoques.gal/galicia/gastronomia/cuatro-terrazas-gallegas-entre-las-50-mejores-de-espana-para-este-verano/",
+   "s": "Enfoques.gal",
+   "d": "2026-08-20T14:01:02.000Z",
+   "tags": [
+    "MICHELIN"
+   ],
+   "img": "https://enfoques.gal/wp-content/uploads/2026/08/BeFunky-collage-5-3.jpg"
+  },
+  {
+   "t": "Frank Rosin reforma el restaurante \"Volcanic Islands\" en Golf del Sur • Imagen 1 de 1",
+   "u": "https://www.teneriffa-news.com/es/fotografias-de-las-islas-canarias/frank-rosin-islas-volcanicas-tenerife_1465152.html",
+   "s": "Teneriffa News",
+   "d": "2026-08-20T13:42:03.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://www.teneriffa-news.com/media/r/frank-rosin-teneriffa-volcanic-island-kochen-1280x720.jpg"
+  },
+  {
+   "t": "El Rebusco Bodegas: el vino canario que envejece bajo el mar",
+   "u": "https://www.canariasenpleno.com/el-rebusco-bodegas/",
+   "s": "Canarias en Pleno",
+   "d": "2026-08-20T13:28:31.000Z",
+   "tags": [
+    "VINO",
+    "CANARIAS"
+   ]
+  },
+  {
+   "t": "Los chefs internacionales coinciden: la mejor barra de tapas del mundo está en una calle de menos de 200 metros con más de 80 bares",
+   "u": "https://viajar.elperiodico.com/planes/gastro/chefs-internacionales-coinciden-mejor-barra-tapas-mundo-calle-80-bares-133390819",
+   "s": "Viajar",
+   "d": "2026-08-20T13:13:43.000Z",
+   "tags": [
+    "ALTA COCINA"
+   ],
+   "img": "https://estaticos-cdn.prensaiberica.es/clip/1ce169bb-8d3b-4a88-96e5-6d9c386f48e2_16-9-discover-aspect-ratio_default_0_x960y360.jpg"
+  },
+  {
+   "t": "Dos nuevos restaurantes de Galicia entran en la Guía Michelin: uno destaca por su \"meteórica progresión\" y otro por una propuesta \"refrescante\"",
+   "u": "https://www.elcorreogallego.es/galicia/2026/08/20/restaurantes-galicia-incluidos-guia-michelin-agosto-133508722.html",
+   "s": "El Correo Gallego",
+   "d": "2026-08-20T12:00:34.000Z",
+   "tags": [
+    "MICHELIN"
+   ],
+   "img": "https://estaticos-cdn.prensaiberica.es/clip/234b5c29-570a-4acb-8d0e-69f932923739_16-9-discover-aspect-ratio_default_0_x600y225.jpg"
+  },
+  {
+   "t": "El chef canario Braulio Simancas lo tiene claro: para cocinar el chicharro usa vino blanco, pimienta palmera y 8 dien...",
+   "u": "https://www.atlanticohoy.com/sociedad/chef-canario-braulio-simancas-cocinar-chicharro-vino-blanco-pimienta-palmera-ajo_1565811_102_amp.html",
+   "s": "Atlántico Hoy",
+   "d": "2026-08-20T12:00:00.000Z",
+   "tags": [
+    "CANARIAS",
+    "VINO"
+   ],
+   "img": "https://www.atlanticohoy.com/uploads/s1/37/71/71/7/diseno-sin-titulo-2026-08-19t120421-098.webp"
+  },
+  {
+   "t": "Tenerife: Esto es lo que significan las nuevas matrículas azules",
+   "u": "https://www.teneriffa-news.com/es/informacion-sobre-tenerife/nuevas-matriculas-azules-tenerife_1464948.html",
+   "s": "Teneriffa News",
+   "d": "2026-08-20T11:49:21.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://www.teneriffa-news.com/media/k/karten/teneriffa-karte-2400x1350.jpg"
+  },
+  {
+   "t": "Don Camilo: Italia se encuentra con el Puerto de la Cruz",
+   "u": "https://www.teneriffa-news.com/es/puerto-de-la-cruz-es/cafeterias-bares-y-restaurantes-en-puerto-de-la-cruz/don-camilo-es_1465035.html",
+   "s": "Teneriffa News",
+   "d": "2026-08-20T11:49:18.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://www.teneriffa-news.com/media/d/don-camilo-puerto-de-la-cruz-2400x1350.jpg"
+  },
+  {
+   "t": "Bodega Julián: delicias canarias y música en directo",
+   "u": "https://www.teneriffa-news.com/es/puerto-de-la-cruz-es/cafeterias-bares-y-restaurantes-en-puerto-de-la-cruz/bodega-julian-es_1465043.html",
+   "s": "Teneriffa News",
+   "d": "2026-08-20T11:49:17.000Z",
+   "tags": [
+    "CANARIAS",
+    "VINO"
+   ],
+   "img": "https://www.teneriffa-news.com/media/b/bodega-julian-puerto-de-la-cruz-2400x1350.jpg"
+  },
+  {
+   "t": "¿Todo bien? \"El Rincón de Edu\" es el restaurante más recomendado de Tenerife",
+   "u": "https://www.teneriffa-news.com/es/san-juan-de-rambla-es/el-rincon-de-edu-restaurante_1465015.html",
+   "s": "Teneriffa News",
+   "d": "2026-08-20T11:48:45.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://www.teneriffa-news.com/media/e/el-rincon-de-edu-bananenplantage-teneriffa-bannen-tortilla-2400x1350.jpg"
+  },
+  {
+   "t": "No solo los turistas que visitan las Islas Canarias se comportan de forma inadecuada",
+   "u": "https://www.teneriffa-news.com/es/los-lectores-escriben-para-los-lectores/turistas-olvidaron-modales-normas_1464869.html",
+   "s": "Teneriffa News",
+   "d": "2026-08-20T11:48:45.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://www.teneriffa-news.com/media/k/kanaren-touristen-restaurant-1920x1080.jpg"
+  },
+  {
+   "t": "La Guía Michelin vuelve a mirar a Huesca seis años después: Fendo se abre paso en la alta cocina",
+   "u": "https://www.aragondigital.es/articulo/huesca/guia-michelin-vuelve-mirar-huesca-seis-anos-despues-fendo-abre-paso-alta-cocina/202608201338201002818.amp.html",
+   "s": "Aragón Digital",
+   "d": "2026-08-20T11:38:20.000Z",
+   "tags": [
+    "MICHELIN"
+   ],
+   "img": "https://www.aragondigital.es/media/aragondigital/images/2026/08/20/2026082013163293456.jpg"
+  },
+  {
+   "t": "El arte cervecero canario: ¡Estas cervezas no puede dejar de probarlas!",
+   "u": "https://www.teneriffa-news.com/es/guia-turistica-de-las-islas-canarias/cinco-cervecerias-artesanales-que-marcan-el-mapa-cervecero-canario_1464832.html",
+   "s": "Teneriffa News",
+   "d": "2026-08-20T11:37:03.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://www.teneriffa-news.com/media/b/bier-kanaren-2400x1350.jpg"
+  },
+  {
    "t": "Chef Martín Berasategui: Para dar un toque especial a la tortilla hay que freír las patatas primero a fuego fuerte, y \"añadir pimiento verde y ajo al sofrito\"",
-   "u": "https://www.eleconomista.es/evasion/noticias/14009059/08/26/chef-martin-berasategui-para-dar-un-toque-especial-a-la-tortilla-hay-que-freir-las-patatas-primero-a-fuego-fuerte-y-anadir-pimiento-verde-y-ajo-al-sofrito.html",
+   "u": "https://www.eleconomista.es/evasion/amp/14009059/chef-martin-berasategui-para-dar-un-toque-especial-a-la-tortilla-hay-que-freir-las-patatas-primero-a-fuego-fuerte-y-anadir-pimiento-verde-y-ajo-al-sofrito",
    "s": "El Economista",
    "d": "2026-08-20T11:14:43.000Z",
    "tags": [
     "CHEF"
    ]
+  },
+  {
+   "t": "Iberostar Beachfront Resorts y el chef José Pizarro eligen Tenerife para estrenar su primera experiencia gastronómica en España",
+   "u": "https://www.soldelsurtenerife.com/portada1/gastronomia/iberostar-beachfront-resorts-chef-jose-pizarro-eligen-tenerife-estrenar-primera-experiencia-gastronomica-espana/20260820115440109184.html",
+   "s": "sol del sur tenerife",
+   "d": "2026-08-20T10:54:40.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://www.soldelsurtenerife.com/media/soldetenerifesur/images/2026/08/20/2026082011470327946.jpg"
+  },
+  {
+   "t": "El bacalao toma San Sebastián para celebrar medio siglo de la nueva cocina vasca",
+   "u": "https://www.lavanguardia.com/comer/al-dia/20260820/11617003/bacalao-toma-san-sebastian-celebrar-medio-siglo-nueva-cocina-vasca.amp.html",
+   "s": "La Vanguardia",
+   "d": "2026-08-20T10:21:27.000Z",
+   "tags": [
+    "CHEF"
+   ],
+   "img": "https://www.lavanguardia.com/files/og_thumbnail/files/fp/uploads/2023/10/10/65252e5fb7248.r_d.3003-2057.jpeg"
+  },
+  {
+   "t": "Los 12 mejores bares de Costa Teguise (julio de 2026)",
+   "u": "https://www.teneriffa-news.com/es/restaurante/lanzarote/costa-teguise/bares",
+   "s": "Teneriffa News",
+   "d": "2026-08-20T09:32:57.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://www.teneriffa-news.com/media/die-12-besten-bars-in-costa-teguise-1880x1080.jpg"
   },
   {
    "t": "Ferran Adrià zanja el debate de la tortilla de patatas: 'primero fue solo con cebolla'",
@@ -21,16 +203,6 @@
    "img": "https://static.que.es/wp-content/uploads/2026/02/tortilla-de-patatas-sin-cebollas.webp"
   },
   {
-   "t": "Diez chefs se reunirán en A Coruña para la gala solidaria TrezeLuzes el 17 de septiembre",
-   "u": "https://www.elespanol.com/quincemil/vivir/gastrocoruna/20260820/chefs-reuniran-coruna-gala-solidaria-trezeluzes-septiembre/1003744358069_0.html",
-   "s": "El Español",
-   "d": "2026-08-20T08:52:04.000Z",
-   "tags": [
-    "ALTA COCINA"
-   ],
-   "img": "https://s3.elespanol.com/k/imgp/cms/elespanol/11338161.jpg?p=f:jpeg/w:1706/h:960&h=8xKVWXET"
-  },
-  {
    "t": "Los chefs vascos coinciden: \"El error más habitual en una ensaladilla rusa perfecta está en dejar parte del aceite del atún en la mezcla\"",
    "u": "https://www.heraldo.es/noticias/gastronomia/2026/08/20/chefs-vascos-coinciden-error-mas-habitual-ensaladilla-rusa-perfecta-dejar-aceite-atun-mezcla-2020301.html",
    "s": "heraldo.es",
@@ -39,6 +211,16 @@
     "CHEF"
    ],
    "img": "https://imagenes.heraldo.es/files/image_1920_1080/uploads/imagenes/2026/03/16/ensaladilla-rusa-gsc1.jpeg"
+  },
+  {
+   "t": "José Pizarro debutará en España con una experiencia gastronómica creada para Iberostar en Tenerife",
+   "u": "https://www.vinetur.com/amp/20260820105869/jose-pizarro-debutara-en-espana-con-una-experiencia-gastronomica-creada-para-iberostar-en-tenerife.html",
+   "s": "Vinetur",
+   "d": "2026-08-20T07:53:05.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://www.vinetur.com/imagenes/2026/august/20/20260820-115305-7094.jpg"
   },
   {
    "t": "David Broncano: “Mi única droga es el deporte y el gofio”",
@@ -52,9 +234,9 @@
   },
   {
    "t": "El restaurante Fendo de Huesca, nueva recomendación de la Guía Michelin en agosto",
-   "u": "https://cadenaser.com/aragon/2026/08/20/el-restaurante-fendo-de-huesca-nueva-recomendacion-de-la-guia-michelin-en-agosto-radio-huesca/?outputType",
+   "u": "https://cadenaser.com/aragon/2026/08/20/el-restaurante-fendo-de-huesca-nueva-recomendacion-de-la-guia-michelin-en-agosto-radio-huesca/",
    "s": "Cadena SER",
-   "d": "2026-08-20T07:08:38.000Z",
+   "d": "2026-08-20T07:08:36.000Z",
    "tags": [
     "MICHELIN"
    ],
@@ -92,6 +274,17 @@
    "img": "https://fotografias-2.larazon.es/clipping/cmsimages01/2026/08/19/AE7A19C7-F374-4514-A675-E732ECB33126/haydee-guachinche-chivo-victor-suarez_98.jpg?crop=914,514,x0,y543&width=1900&height=1069&optimize=low&format=webply"
   },
   {
+   "t": "Fotografías de Icod de los Vinos, en el norte de Tenerife • Imagen de 1, de 4",
+   "u": "https://www.teneriffa-news.com/es/fotografias-de-las-islas-canarias/fotos-icod-de-los-vinos_1465063.html",
+   "s": "Teneriffa News",
+   "d": "2026-08-20T03:51:57.000Z",
+   "tags": [
+    "CANARIAS",
+    "VINO"
+   ],
+   "img": "https://www.teneriffa-news.com/media/k/icod-de-los-vinos-kirchplatz.jpg"
+  },
+  {
    "t": "La cocinera linarense Estefanía Marchal entra en la Guía Michelin con Alinea",
    "u": "https://elnuevoobservador.com/la-cocinera-linarense-estefania-marchal-entra-en-la-guia-michelin-con-alinea/",
    "s": "El Nuevo Observador",
@@ -110,195 +303,6 @@
     "CHEF"
    ],
    "img": "https://uh.gsstatic.es/sfAttachPlugin/social/4735793.webp"
-  },
-  {
-   "t": "Si explicas el origen y transmites pasión, el cliente americano responde",
-   "u": "https://www.7canibales.com/?post_type",
-   "s": "7 Caníbales",
-   "d": "2026-08-19T22:00:00.000Z",
-   "tags": [
-    "ALTA COCINA"
-   ]
-  },
-  {
-   "t": "Los mejores bares de Puerto Rico (agosto de 2026)",
-   "u": "https://www.teneriffa-news.com/es/nueve-bares-de-puerto-rico-ordenados-por-las-valoraciones-de-los-clientes",
-   "s": "Teneriffa News",
-   "d": "2026-08-19T21:57:06.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://www.teneriffa-news.com/media/die-besten-bars-in-puerto-rico-1880x1080.jpg"
-  },
-  {
-   "t": "Las 10 mejores tabernas de Lanzarote (abril de 2026)",
-   "u": "https://www.teneriffa-news.com/es/restaurante/lanzarote/vinotecas",
-   "s": "Teneriffa News",
-   "d": "2026-08-19T21:28:12.000Z",
-   "tags": [
-    "VINO",
-    "CANARIAS"
-   ],
-   "img": "https://www.teneriffa-news.com/media/die-10-besten-weinstuben-auf-lanzarote-1880x1080.jpg"
-  },
-  {
-   "t": "Prohibición de la carne de la UE: las Islas Canarias advierten del encarecimiento de los filetes",
-   "u": "https://www.teneriffa-news.com/es/news/canarias-alerta-veto-carne_1463890.html",
-   "s": "Teneriffa News",
-   "d": "2026-08-19T20:46:47.000Z",
-   "tags": [
-    "CANARIAS"
-   ]
-  },
-  {
-   "t": "Los 12 mejores restaurantes de Tías (julio de 2026)",
-   "u": "https://www.teneriffa-news.com/es/restaurante/lanzarote/tias",
-   "s": "Teneriffa News",
-   "d": "2026-08-19T19:52:37.000Z",
-   "tags": [
-    "CANARIAS"
-   ]
-  },
-  {
-   "t": "Los 12 mejores restaurantes de Playa Blanca (julio de 2026)",
-   "u": "https://www.teneriffa-news.com/es/restaurante/lanzarote/playa-blanca",
-   "s": "Teneriffa News",
-   "d": "2026-08-19T19:29:35.000Z",
-   "tags": [
-    "CANARIAS"
-   ]
-  },
-  {
-   "t": "Estas 7 heladerías de Tenerife se encuentran entre las mejores del mundo",
-   "u": "https://www.teneriffa-news.com/es/news/siete-heladerias-de-tenerife-entran-en-el-gelato-festival-world-ranking_1464822.html",
-   "s": "Teneriffa News",
-   "d": "2026-08-19T18:39:22.000Z",
-   "tags": [
-    "MICHELIN",
-    "CANARIAS"
-   ],
-   "img": "https://www.teneriffa-news.com/media/schokoladen-eis-kanaren-2400x1350.jpg"
-  },
-  {
-   "t": "La madurez identitaria de Los Guayres: Ruyman González consagra el recetario canario en la alta cocina",
-   "u": "https://www.eldiario.es/canariasahora/por-fogones/madurez-identitaria-guayres-ruyman-gonzalez-consagra-recetario-canario-alta-cocina_1_13456666.html",
-   "s": "elDiario.es",
-   "d": "2026-08-19T18:37:39.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://static.eldiario.es/clip/3a65880a-cd91-4af8-afee-623bc6484fc9_facebook-watermarked-aspect-ratio-1200-675_default_1149542.jpg"
-  },
-  {
-   "t": "Rodri, tiktoker asturiano, alucina en un guachinche de Tenerife: \"El almogrote sabe al queso de los",
-   "u": "https://diariodeavisos.elespanol.com/2026/08/rodri-come-guahinche-en-tenerife/",
-   "s": "Diario de Avisos",
-   "d": "2026-08-19T18:37:03.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://cdn.diariodeavisos.com/wp-content/uploads/2026/08/almogrote.jpg"
-  },
-  {
-   "t": "Así se debe identificar por el olor una buena mozzarella, según el chef Martín Berasategui: \"Tiene que oler a leche fresca, pero sin ofender a nuestro olfato\"",
-   "u": "https://www.directoalpaladar.com/ingredientes-y-alimentos/asi-se-debe-identificar-olor-buena-mozzarella-chef-martin-berasategui-tiene-que-oler-a-leche-fresca-ofender-a-nuestro-olfato",
-   "s": "Directo al Paladar",
-   "d": "2026-08-19T17:01:34.000Z",
-   "tags": [
-    "CHEF"
-   ],
-   "img": "https://i.blogs.es/7c39d3/berasategui-mozzarella/840_560.jpeg"
-  },
-  {
-   "t": "El Plan de Movilidad Sostenible de Tenerife pasa la evaluación ambiental, según el Cabildo",
-   "u": "https://www.eldiario.es/canariasahora/tenerifeahora/politica/plan-movilidad-sostenible-evaluacion-ambiental-cabildo-tenerife_1_13456327.html",
-   "s": "elDiario.es",
-   "d": "2026-08-19T16:33:06.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://static.eldiario.es/clip/73111589-122f-478c-89f8-7d87645459a1_facebook-watermarked-aspect-ratio-1200-675_default_0.jpg"
-  },
-  {
-   "t": "España se mide a Nigeria y Bélgica en Tenerife",
-   "u": "https://www.eldiario.es/canariasahora/Deportes/futbol/espana-mide-nigeria-belgica-tenerife_1_13456437.html",
-   "s": "elDiario.es",
-   "d": "2026-08-19T15:55:24.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://static.eldiario.es/clip/82af2840-fd13-4f95-80a9-6113eca2a138_facebook-watermarked-aspect-ratio-1200-675_default_0_x797y708.jpg"
-  },
-  {
-   "t": "Paco Roncero llevará su cocina al GP F1 Madrid 2026",
-   "u": "https://www.madridactual.es/noticias-regionales/estilo/cocina-y-gastronomia/chef-madrileno-paco-roncero-suma-oferta-gastronomica-gp-20260819-8115580.html",
-   "s": "Madrid Actual",
-   "d": "2026-08-19T15:51:01.000Z",
-   "tags": [
-    "ALTA COCINA"
-   ],
-   "img": "https://www.madridactual.es/images/stories/noticias/agencias/ep/2026/08/chef-madrileno-paco-roncero-suma-oferta-gastronomica-gp.jpg"
-  },
-  {
-   "t": "El chef madrileño Paco Roncero se suma a la oferta gastronómica del GP de Fórmula 1 de Madrid",
-   "u": "https://forbes.es/ultima-hora/1002302/el-chef-madrileno-paco-roncero-se-suma-a-la-oferta-gastronomica-del-gp-de-formula-1-de-madrid/",
-   "s": "Forbes España",
-   "d": "2026-08-19T15:36:04.000Z",
-   "tags": [
-    "ALTA COCINA"
-   ],
-   "img": "https://forbes.es/wp-content/uploads/2026/08/fotonoticia_20260819173604_1920-1200x675.jpg"
-  },
-  {
-   "t": "Fendo pone fin a seis años de espera y devuelve a Huesca a la Guía Michelin",
-   "u": "https://www.enjoyzaragoza.es/restaurante-fendo-huesca/",
-   "s": "Enjoy Zaragoza",
-   "d": "2026-08-19T15:20:20.000Z",
-   "tags": [
-    "MICHELIN"
-   ],
-   "img": "https://www.enjoyzaragoza.es/wp-content/uploads/2026/08/FENDO.jpg"
-  },
-  {
-   "t": "Ferran Adrià zanja el debate sobre la tortilla española: \"Primero fue solo de cebolla\"",
-   "u": "https://www.diariodesevilla.es/sociedad/ferran-adria-zanja-debate-tortilla_0_2007746452.amp.html",
-   "s": "Diario de Sevilla",
-   "d": "2026-08-19T15:18:44.000Z",
-   "tags": [
-    "ALTA COCINA"
-   ],
-   "img": "https://static.grupojoly.com/clip/c55bc9b9-8e2a-46ac-b8c6-5bb057ca8ce7_facebook-aspect-ratio_default_0.jpg"
-  },
-  {
-   "t": "La feria de Pinolere se prepara para recibir a casi 200 artesanos con la madera como protagonista",
-   "u": "https://www.eldia.es/tenerife/2026/08/19/pinolere-artesania-feria-la-orotava-133484447.amp.html",
-   "s": "Eldía",
-   "d": "2026-08-19T14:39:58.000Z",
-   "tags": [
-    "VINO",
-    "CANARIAS"
-   ],
-   "img": "https://estaticos-cdn.prensaiberica.es/clip/ff4d57ac-3763-4639-a9fe-4e6fe8c4808c_16-9-discover-aspect-ratio_default_0_x900y399.jpg"
-  },
-  {
-   "t": "El restaurante de Madrid que eligió Kanye West: alta cocina andaluza de la mano de un conocido chef",
-   "u": "https://www.elconfidencial.com/espana/madrid/2026-08-19/restaurante-madrid-kanye-west-1tna-1qrt_4405416/",
-   "s": "El Confidencial",
-   "d": "2026-08-19T14:38:00.000Z",
-   "tags": [
-    "ALTA COCINA"
-   ],
-   "img": "https://images.ecestaticos.com/Ad67dFJyzuK_6x5neJedO0yqaX0=/0x0:1080x1080/600x315/filters:fill(white):format(jpg):quality(99):watermark(f.elconfidencial.com/file/65c/43d/0ca/65c43d0ca5dbd5ff8f19b44167343db9.png,0,275,1)/f.elconfidencial.com/original/0d9/b08/ebf/0d9b08ebf0decf8b8b0e4ca22afc623c.jpg"
-  },
-  {
-   "t": "Ferran Adrià (64 años): \"Históricamente, la primera tortilla no fue de patata o de patata con cebolla, fue solo de cebolla porque llegó mucho antes a España\"",
-   "u": "https://www.sport.es/es/noticias/actualidad/ferran-adria-64-anos-historicamente-133486967",
-   "s": "SPORT",
-   "d": "2026-08-19T14:21:09.000Z",
-   "tags": [
-    "ALTA COCINA"
-   ],
-   "img": "https://estaticos-cdn.prensaiberica.es/clip/3e27215d-9a8a-44e7-a96f-af435b73eb67_16-9-discover-aspect-ratio_default_0_x600y225.jpg"
   }
  ]
 }
