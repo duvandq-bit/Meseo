@@ -4515,6 +4515,26 @@ test('Actualidad: robot de noticias + calendario de eventos (jul 2026)', () => {
   assert(/\.act-thumb\{/.test(read('styles.css')), 'estilos de la miniatura ausentes');
 });
 
+test('Panel de dirección: la preparación LQA está en el titular (ago 2026)', () => {
+  // Para presentar a dirección/propiedad, la métrica que importa es la de la
+  // auditoría Forbes/LQA, no el XP. Estaba calculada pero enterrada en otra
+  // pantalla; ahora encabeza el análisis del equipo junto al resto de KPIs.
+  assert(/function _lqaReady\(e\)\{/.test(html), 'debe existir el helper compartido _lqaReady');
+  // Una sola fórmula: el panel LQA y el titular miden lo mismo.
+  assert((html.match(/if\(e\.ghostBest\) parts\.push/g) || []).length === 1,
+    'la fórmula de preparación LQA no puede estar duplicada');
+  assert(/const readiness = emps\.map\(_lqaReady\)/.test(html),
+    'el panel LQA debe usar el helper compartido');
+  const an = html.slice(html.indexOf('function renderSupAnalytics'), html.indexOf('function _lqaReady'));
+  assert(/_rdyAll = empNames\.map\(n=>allEmps\[n\]\)\.filter\(Boolean\)\.map\(_lqaReady\)/.test(an),
+    'el titular debe calcular la preparación del equipo con el helper');
+  assert(/\.filter\(r=>r\.runs>0\)/.test(an),
+    'solo cuentan quienes han hecho alguna prueba (si no, la media sale falseada)');
+  assert(/'LQA readiness':'preparación LQA'/.test(an), 'la pastilla debe estar rotulada en ambos idiomas');
+  const css = read('styles.css');
+  assert(/\.sup-hl\{[^}]*flex-wrap:wrap/.test(css), 'el titular debe poder envolver con 4 pastillas');
+});
+
 test('showTab fija la subpestaña de destino (Flashcards no cae en Emplatado)', () => {
   // Reporte del propietario (ago 2026): «el botón flashcards lleva a plating
   // guide». renderAprender/renderRankingHub pintan lo que dice _subTab, NO el
