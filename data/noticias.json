@@ -1,6 +1,37 @@
 {
- "updated": "2026-08-20T23:42:54.745Z",
+ "updated": "2026-08-21T05:50:00.774Z",
  "items": [
+  {
+   "t": "Está en España y es la vendimia más madrugadora de Europa: sus viñas crecen sobre ceniza volcánica y la uva se paga a 4 euros el kilo",
+   "u": "https://www.larazon.es/canarias/esta-espana-vendimia-mas-madrugadora-europa-sus-vinas-crecen-ceniza-volcanica-uva-paga-4-euros-kilo_202608216a86b82ca046ad6ebcbc0b27.html",
+   "s": "La Razón",
+   "d": "2026-08-21T05:00:13.000Z",
+   "tags": [
+    "VINO",
+    "CANARIAS"
+   ],
+   "img": "https://fotografias-2.larazon.es/clipping/cmsimages02/2026/08/20/9D3BC888-DFB8-4BDE-8FEB-E95BE24B2260/esta-espana-vendimia-mas-madrugadora-europa-sus-vinas-crecen-ceniza-volcanica-uva-paga-4-euros-kilo_98.jpg?crop=1402,789,x0,y69&width=1900&height=1069&optimize=low&format=webply"
+  },
+  {
+   "t": "El restaurante recomendado por el chef Dabiz Muñoz en Asturias con vistas increíbles y pescado a la brasa: “Es un templo del producto que merece el viaje”",
+   "u": "https://www.infobae.com/espana/2026/08/21/el-restaurante-recomendado-por-el-chef-dabiz-munoz-en-asturias-con-vistas-increibles-y-pescado-a-la-brasa-es-un-templo-del-producto-que-merece-el-viaje/?outputType",
+   "s": "Infobae",
+   "d": "2026-08-21T04:11:49.000Z",
+   "tags": [
+    "MICHELIN"
+   ],
+   "img": "https://www.infobae.com/resizer/v2/YWCEZW73DBDSTCHGGJ7PMDFGBQ.jpg?auth=05dc6f4fef49bb4324bc70a03c400cfd35c96c9c4a677fbd1de4ea5e764d69bc&smart=true&width=1200&height=630&quality=85"
+  },
+  {
+   "t": "Cávala, la apuesta sostenida de Málaga por la Estrella Michelin que gana enteros este año",
+   "u": "https://www.malagahoy.es/la-farola/cavala-apuesta-malaga-sostenida-estrella-michelin_0_2007729206.html",
+   "s": "Málaga Hoy",
+   "d": "2026-08-21T04:00:39.000Z",
+   "tags": [
+    "MICHELIN"
+   ],
+   "img": "https://static.grupojoly.com/clip/91084561-ea25-43e9-9c27-6caeaf3145e6_facebook-aspect-ratio_default_0.jpg"
+  },
   {
    "t": "Meditar en las Islas Canarias: tres lugares de retiro que todo el mundo debería conocer",
    "u": "https://www.teneriffa-news.com/es/guia-turistica-de-las-islas-canarias/tres-rincones-de-canarias-para-meditar-lejos-de-las-rutas-turisticas_1464778.html",
@@ -32,6 +63,16 @@
    "img": "https://cdn.diariodeavisos.com/wp-content/uploads/2026/08/guachinches.jpg"
   },
   {
+   "t": "Los distribuidores canarios miran a Europa para sustituir el pollo brasileño: \"Hasta tres euros más caro\"",
+   "u": "https://www.eldia.es/canarias/2026/08/20/distribuidores-canarios-miran-europa-sustituir-133460940.amp.html",
+   "s": "Eldía",
+   "d": "2026-08-20T19:30:05.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://estaticos-cdn.prensaiberica.es/clip/c6d3db4f-47f8-41a0-b200-28ec7798cae6_16-9-aspect-ratio_default_1498858.jpg"
+  },
+  {
    "t": "Fendo entra en la Guía Michelin: así es el nuevo restaurante recomendado de Huesca",
    "u": "https://zaragozala.com/gastronomia/fendo-huesca-guia-michelin-2026/",
    "s": "ZARAGOZALA.com",
@@ -40,6 +81,17 @@
     "MICHELIN"
    ],
    "img": "https://zaragozala.com/wp-content/uploads/2026/08/Fendo_huesca_guia_michelion.webp"
+  },
+  {
+   "t": "Cena estrellas Michelin en Córdoba: siete chefs, una noche única y fecha confirmada",
+   "u": "https://www.que.es/2026/08/20/cena-estrellas-michelin-cordoba/",
+   "s": "que.es",
+   "d": "2026-08-20T17:45:19.000Z",
+   "tags": [
+    "ALTA COCINA",
+    "MICHELIN"
+   ],
+   "img": "https://static.que.es/wp-content/uploads/2024/05/Estrellas-en-escena.webp"
   },
   {
    "t": "Tenerife espera una vendimia récord que duplica la producción de años anteriores",
@@ -113,16 +165,6 @@
    "img": "https://estaticos-cdn.prensaiberica.es/clip/1ce169bb-8d3b-4a88-96e5-6d9c386f48e2_16-9-discover-aspect-ratio_default_0_x960y360.jpg"
   },
   {
-   "t": "Fotografías del Día de Canarias: así fue la celebración del Día de Canarias • Imagen de 1, de 8",
-   "u": "https://www.teneriffa-news.com/es/fotografias-de-las-islas-canarias/fotos-dia-de-canarias_1464983.html",
-   "s": "Teneriffa News",
-   "d": "2026-08-20T12:17:54.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://www.teneriffa-news.com/media/fotostrecken/dia-canarias/dia-canarias-01-1280x720.jpg"
-  },
-  {
    "t": "Dos nuevos restaurantes de Galicia entran en la Guía Michelin: uno destaca por su \"meteórica progresión\" y otro por una propuesta \"refrescante\"",
    "u": "https://www.elcorreogallego.es/galicia/2026/08/20/restaurantes-galicia-incluidos-guia-michelin-agosto-133508722.html",
    "s": "El Correo Gallego",
@@ -152,6 +194,16 @@
     "CANARIAS"
    ],
    "img": "https://www.teneriffa-news.com/media/k/karten/teneriffa-karte-2400x1350.jpg"
+  },
+  {
+   "t": "Mi maravilloso Puerto de la Cruz, en Tenerife",
+   "u": "https://www.teneriffa-news.com/es/los-lectores-escriben-para-los-lectores/maravilloso-puerto-de-la-cruz_1464943.html",
+   "s": "Teneriffa News",
+   "d": "2026-08-20T11:49:20.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://www.teneriffa-news.com/media/p/puerto-de-la-cruz-teneriffa-fischer-hafen-2400x1350.jpg"
   },
   {
    "t": "Don Camilo: Italia se encuentra con el Puerto de la Cruz",
@@ -252,56 +304,6 @@
     "CHEF"
    ],
    "img": "https://www.lavanguardia.com/files/og_thumbnail/files/fp/uploads/2023/10/10/65252e5fb7248.r_d.3003-2057.jpeg"
-  },
-  {
-   "t": "Ferran Adrià zanja el debate de la tortilla de patatas: 'primero fue solo con cebolla'",
-   "u": "https://www.que.es/2026/08/20/tortilla-patatas-cebolla-adria/",
-   "s": "que.es",
-   "d": "2026-08-20T09:25:00.000Z",
-   "tags": [
-    "ALTA COCINA"
-   ],
-   "img": "https://static.que.es/wp-content/uploads/2026/02/tortilla-de-patatas-sin-cebollas.webp"
-  },
-  {
-   "t": "Los chefs vascos coinciden: \"El error más habitual en una ensaladilla rusa perfecta está en dejar parte del aceite del atún en la mezcla\"",
-   "u": "https://www.heraldo.es/noticias/gastronomia/2026/08/20/chefs-vascos-coinciden-error-mas-habitual-ensaladilla-rusa-perfecta-dejar-aceite-atun-mezcla-2020301.html",
-   "s": "heraldo.es",
-   "d": "2026-08-20T08:48:05.000Z",
-   "tags": [
-    "CHEF"
-   ],
-   "img": "https://imagenes.heraldo.es/files/image_1920_1080/uploads/imagenes/2026/03/16/ensaladilla-rusa-gsc1.jpeg"
-  },
-  {
-   "t": "José Pizarro debutará en España con una experiencia gastronómica creada para Iberostar en Tenerife",
-   "u": "https://www.vinetur.com/amp/20260820105869/jose-pizarro-debutara-en-espana-con-una-experiencia-gastronomica-creada-para-iberostar-en-tenerife.html",
-   "s": "Vinetur",
-   "d": "2026-08-20T07:53:05.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://www.vinetur.com/imagenes/2026/august/20/20260820-115305-7094.jpg"
-  },
-  {
-   "t": "David Broncano: “Mi única droga es el deporte y el gofio”",
-   "u": "https://www.atlanticohoy.com/sociedad/david-broncano-gofio-desayuno-platano-avena-leche_1565805_102_amp.html",
-   "s": "Atlántico Hoy",
-   "d": "2026-08-20T07:53:00.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://www.atlanticohoy.com/uploads/s1/33/30/17/0/db.webp"
-  },
-  {
-   "t": "El restaurante Fendo de Huesca, nueva recomendación de la Guía Michelin en agosto",
-   "u": "https://cadenaser.com/aragon/2026/08/20/el-restaurante-fendo-de-huesca-nueva-recomendacion-de-la-guia-michelin-en-agosto-radio-huesca/",
-   "s": "Cadena SER",
-   "d": "2026-08-20T07:08:36.000Z",
-   "tags": [
-    "MICHELIN"
-   ],
-   "img": "https://cadenaser.com/resizer/v2/YVSTVGCL6FB6JCE2TH7OV6K7TY.jpg?auth=373d9a37122fd136ec344bf74d0ae600983f4112999488efc399a261ecff2b0b&quality=70&width=1200&height=675&focal=262,214"
   }
  ]
 }
