@@ -4515,6 +4515,26 @@ test('Actualidad: robot de noticias + calendario de eventos (jul 2026)', () => {
   assert(/\.act-thumb\{/.test(read('styles.css')), 'estilos de la miniatura ausentes');
 });
 
+test('showTab fija la subpestaña de destino (Flashcards no cae en Emplatado)', () => {
+  // Reporte del propietario (ago 2026): «el botón flashcards lleva a plating
+  // guide». renderAprender/renderRankingHub pintan lo que dice _subTab, NO el
+  // destino de showTab(), así que showTab('flashcards') caía en la subpestaña
+  // de aterrizaje (Emplatado). Igual le pasaba a showTab('stats') → Ranking.
+  const st = html.slice(html.indexOf('function showTab('), html.indexOf('function showTab(') + 4000);
+  assert(/const _subParent = parentMap\[tab\]/.test(st), 'showTab debe derivar el padre de la subpestaña');
+  assert(/if\(_subParent === 'aprender'\) _subTab\.aprender = tab;/.test(st),
+    'entrar por una subpestaña de Aprender debe fijar _subTab.aprender');
+  assert(/else if\(_subParent === 'ranking'\) _subTab\.ranking = tab;/.test(st),
+    'entrar por una subpestaña de Ranking debe fijar _subTab.ranking');
+  // El arreglo debe ocurrir ANTES de pintar (si no, se pinta lo anterior).
+  assert(st.indexOf('_subTab.aprender = tab') < st.indexOf('renderMap'),
+    'la subpestaña debe fijarse antes de elegir el renderer');
+  // Los atajos del índice del inicio siguen apuntando a sus subpestañas.
+  const dash = html.slice(html.indexOf('function renderDashboard()'), html.indexOf('// ═══════ FLASHCARDS'));
+  assert(/onclick="showTab\('flashcards'\)"/.test(dash), 'el atajo Flashcards debe seguir en el índice');
+  assert(/onclick="showTab\('repaso'\)"/.test(dash), 'el atajo Repaso debe seguir en el índice');
+});
+
 test('Actualidad: una pantalla que se lee de arriba abajo (ago 2026)', () => {
   // Petición del propietario: «haz que sea más elegante y se entienda fácil».
   // Antes había 8 controles (3 segmentos + 5 etiquetas) antes del primer
