@@ -4515,6 +4515,22 @@ test('Actualidad: robot de noticias + calendario de eventos (jul 2026)', () => {
   assert(/\.act-thumb\{/.test(read('styles.css')), 'estilos de la miniatura ausentes');
 });
 
+test('Cuadrante: la tabla horarios no acepta escrituras con la clave pública', () => {
+  // La tabla guarda nombres y turnos del personal y tenía el RLS DESACTIVADO:
+  // cualquiera con la clave pública (que va en la app) podía leerla Y
+  // modificarla. Se cerró la escritura por RLS y se canalizó por save_rota
+  // (SECURITY DEFINER + verificación del PIN de supervisor en servidor).
+  assert(/rest\/v1\/rpc\/save_rota/.test(html), 'el guardado debe ir por save_rota');
+  // Lectura: la app sigue leyendo el cuadrante con la clave pública.
+  assert(/rest\/v1\/horarios\?select=/.test(html), 'la lectura del cuadrante debe seguir funcionando');
+  // Ninguna escritura directa (POST/PATCH/DELETE) contra la tabla.
+  for (const m of ["method:'POST'", "method:'PATCH'", "method:'DELETE'"]) {
+    const idx = html.indexOf('rest/v1/horarios`');
+    if (idx !== -1) assert(!html.slice(idx, idx + 400).includes(m),
+      `queda una escritura directa (${m}) contra horarios`);
+  }
+});
+
 test('Panel de dirección: la preparación LQA está en el titular (ago 2026)', () => {
   // Para presentar a dirección/propiedad, la métrica que importa es la de la
   // auditoría Forbes/LQA, no el XP. Estaba calculada pero enterrada en otra
@@ -4614,8 +4630,17 @@ test('Horarios del equipo: cuadrante desde Supabase, leyenda fiel y cambio asist
   // Editor del supervisor: herramienta en el panel + upsert a Supabase.
   assert(/horarios: \(\)=>renderSupHorarios\(\),/.test(html) && /_supTool\('horarios'\)/.test(html),
     'el editor de horarios debe colgar del panel de supervisor');
-  assert(/_horSupSave/.test(html) && /'Prefer':'resolution=merge-duplicates'/.test(html),
-    'guardar semana debe hacer upsert (merge-duplicates) en horarios');
+  // Ago 2026 — el cuadrante lleva datos de personal: la tabla `horarios`
+  // quedó en SOLO LECTURA para la clave pública (RLS) y el guardado pasa por
+  // la función save_rota, que verifica el PIN de supervisor en el servidor.
+  assert(/_horSupSave/.test(html) && /rest\/v1\/rpc\/save_rota/.test(html),
+    'guardar semana debe ir por la función save_rota, no por la tabla');
+  assert(!/rest\/v1\/horarios`,\{\s*method:'POST'/.test(html),
+    'no puede quedar escritura directa a horarios con la clave pública');
+  const _hs = html.slice(html.indexOf('async function _horSupSave'), html.indexOf('// ═══ ACTUALIDAD'));
+  assert(/pin_input:_supPin/.test(_hs), 'save_rota debe recibir el PIN de supervisor');
+  assert(/\(await r\.json\(\)\)!==true/.test(_hs),
+    'si save_rota devuelve false (PIN inválido) la app debe avisar, no dar por guardado');
   // Lector de capturas con IA: la imagen se comprime en el móvil, viaja a la
   // Edge Function leer-horario con el PIN de supervisor, y el resultado SOLO
   // rellena el editor (revisar antes de guardar — nunca se autopublica).
@@ -4727,6 +4752,16 @@ test('Rebranding Meseo: la app se llama Meseo; TXOKO queda solo como venue (jul 
   assert(/<title>Meseo · Formación de sala<\/title>/.test(html), 'the base tab title must be Meseo');
   assert(/id="loginLogoName">Meseo</.test(html) && /id="loginEyebrow">Formación de sala</.test(html),
     'login defaults must be neutral Meseo — venue identity arrives only via themes.json');
+  // Ago 2026 (propietario): fuera «fines educativos · sin ánimo de lucro» —
+  // contradecía presentar Meseo como producto. El pie afirma la marca.
+  assert(!/ánimo de lucro|non-profit|fines educativos/i.test(html),
+    'la app no debe seguir declarándose sin ánimo de lucro');
+  assert(/app-credit[^>]*>© 2026 Meseo® · Marca registrada</.test(html),
+    'el pie debe afirmar la marca');
+  // El aviso sobre marcas de TERCEROS se mantiene: es lo que ampara usar
+  // TXOKO y Martín Berasategui en contexto formativo.
+  assert((html.match(/no está afiliada, patrocinada ni respaldada/g) || []).length >= 1,
+    'el aviso de marcas de terceros debe conservarse');
   assert(!/Uso exclusivo Txoko/.test(html) && /app-credit[^>]*>© 2026 [^<]*Meseo/.test(html),
     'the footer credit must be Meseo, not a restaurant');
   assert(/%cMeseo · v/.test(html), 'the console banner must be Meseo');

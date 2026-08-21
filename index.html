@@ -13,7 +13,7 @@
   ║                                                               ║
   ║  Licencia de uso concedida exclusivamente a:                  ║
   ║        Meseo — el oficio se entrena · https://meseo.es        ║
-  ║  Uso interno · Fines educativos · Sin ánimo de lucro          ║
+  ║  Meseo® · Marca registrada                                    ║
   ╠══════════════════════════════════════════════════════════════╣
   ║  Developed by: Duvan Stiven Ramírez Duque                     ║
   ║  Fecha de creación: 2024                                       ║
@@ -52,7 +52,7 @@
 <meta property="og:description" content="Formación de equipos de sala: carta, alérgenos, vinos, exámenes y juegos de repaso.">
 <meta property="og:url" content="https://meseo.es/">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"Meseo","url":"https://meseo.es/"}</script>
-<meta name="app-version" content="7.343">
+<meta name="app-version" content="7.344">
 <meta name="app-build" content="May 2026">
 <meta name="theme-color" content="#1c2a22">
 <!-- ═══ PWA ═══ -->
@@ -279,7 +279,7 @@
   <div class="legal-modal" id="legalModal" role="dialog" aria-modal="true" aria-labelledby="legalModalTitle" style="display:none" data-nosnippet onclick="if(event.target===this)this.style.display='none'">
     <div class="legal-modal-content">
       <div class="legal-modal-title" id="legalModalTitle">Aviso Legal</div>
-      <p><strong>Meseo</strong> es una herramienta de formación interna para equipos de sala, de uso exclusivo del personal de los restaurantes dados de alta, creada únicamente con fines educativos y sin ánimo de lucro.</p>
+      <p><strong>Meseo</strong> es una herramienta de formación interna para equipos de sala, de uso exclusivo del personal de los restaurantes dados de alta, creada como herramienta de formación profesional. Meseo® es una marca registrada.</p>
       <p>Los nombres, logotipos y denominaciones de los restaurantes y personas que aparecen en la app (incluidos TXOKO y Martín Berasategui) son marcas o signos registrados de sus respectivos titulares y se mencionan únicamente en contexto formativo, para identificar el lugar de trabajo del equipo. Meseo no está afiliada, patrocinada ni respaldada oficialmente por ninguna de dichas marcas.</p>
       <p><strong>Privacidad (RGPD):</strong> el correo electrónico es opcional y, si lo añades, se guarda cifrado y con el único fin de que puedas recuperar tu PIN. No se comparte con terceros ni se usa con fines publicitarios. Puedes solicitar su eliminación en cualquier momento a través del responsable de la app.</p>
       <p>© 2026 Duvan Stiven Ramírez Duque · Todos los derechos reservados</p>
@@ -395,7 +395,7 @@
   </div>
 
   <main class="app-content" id="appContent" aria-live="polite"></main>
-  <div class="app-credit" style="color:rgba(28,42,34,.4)">© 2026 Duvan Stiven Ramírez Duque · Meseo · Formación de equipos de sala · Fines educativos · Sin ánimo de lucro</div>
+  <div class="app-credit" style="color:rgba(28,42,34,.4)">© 2026 Meseo® · Marca registrada</div>
   <button class="sound-toggle" id="soundToggle" onclick="toggleSound()" title="Sonido" aria-label="Alternar sonido" role="button">◉</button>
   <div class="txk-sync-pill" id="syncStatusPill" role="status" aria-live="polite" aria-atomic="true"><span class="dot"></span><span id="syncStatusText">Offline</span></div>
   <!-- Service Mode FAB removed per owner request; _svc* code kept, unreferenced -->
@@ -1561,7 +1561,7 @@ const CAT_COLORS={'Entrantes':'#c49a3c','Hamburguesas y Bocatas':'#b86050','Plat
 const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#c49a3c"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#a47a2c" opacity=".4"/><path d="M8 8v4a1 1 0 001 1h1v4M10 8v4" stroke="#fff" stroke-width="1.2" stroke-linecap="round" fill="none"/><path d="M15 8v8M14 8v3a1.5 1.5 0 003 0V8" stroke="#fff" stroke-width="1.2" stroke-linecap="round" fill="none"/></svg>`,'Hamburguesas y Bocatas':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#b86050"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#983838" opacity=".4"/><path d="M7 9h10M7 12h10M7 15h10" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/><path d="M8 9c0-2 2-3 4-3s4 1 4 3M8 15c0 2 2 3 4 3s4-1 4-3" fill="none" stroke="#fff" stroke-width="1" opacity=".7"/></svg>`,'Platos Principales':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#4888a0"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#2e6878" opacity=".4"/><path d="M5 15h14" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/><path d="M12 6a6 6 0 016 6H6a6 6 0 016-6z" fill="none" stroke="#fff" stroke-width="1.1"/><circle cx="10" cy="6" r=".7" fill="#fff" opacity=".7"/><circle cx="12" cy="5" r=".7" fill="#fff" opacity=".7"/><circle cx="14" cy="6" r=".7" fill="#fff" opacity=".7"/></svg>`,'Sugerencias':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#d4aa4c"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#a48a2c" opacity=".4"/><polygon points="12,5 14.5,10 20,10.5 16,14 17,20 12,17 7,20 8,14 4,10.5 9.5,10" fill="#fff" opacity=".9"/></svg>`,'Guarniciones y Salsas':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#4d8a5e"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#2d6a3e" opacity=".4"/><path d="M12 18V10M5 10c0-4 3-6 7-6s7 2 7 6c0 5-3 8-7 8s-7-3-7-8z" fill="none" stroke="#fff" stroke-width="1.1"/><path d="M5 10c3 0 5 1 7 2.5" fill="none" stroke="#fff" stroke-width=".8" opacity=".6"/></svg>`,'Postres':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#7a6aaa"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#5a4a8a" opacity=".4"/><path d="M9 19h6M12 12v7M7 6l2 4.5a3 3 0 006 0L17 6H7z" fill="none" stroke="#fff" stroke-width="1.1" stroke-linecap="round"/></svg>`,'Vegetariano':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#5a9a6e"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#3a7a4e" opacity=".4"/><path d="M9 18h6M12 18V10M12 10c0-3 2-5 5-5-.7 2.5-2.5 5-5 5zM12 10c0-3-2-5-5-5 .7 2.5 2.5 5 5 5z" fill="none" stroke="#fff" stroke-width="1.1" stroke-linecap="round"/></svg>`};
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='7.343';  // sincronizada con sw.js VERSION (guard de CI)
+const APP_VERSION='7.344';  // sincronizada con sw.js VERSION (guard de CI)
 const APP_BUILD='Jul 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;
@@ -8267,13 +8267,13 @@ function showLegalModal(){
     const en = LANG==='en';
     content.innerHTML = en
       ? '<div class="legal-modal-title">Legal Notice</div>'
-        + '<p><strong>Meseo</strong> is an internal training tool for restaurant service teams, for the exclusive use of the staff of registered venues, created solely for educational purposes on a non-profit basis.</p>'
+        + '<p><strong>Meseo</strong> is an internal training tool for restaurant service teams, for the exclusive use of the staff of registered venues, created as a professional training tool. Meseo® is a registered trademark.</p>'
         + '<p>The names, logos and designations of the restaurants and people featured in the app (including TXOKO and Martín Berasategui) are registered trademarks of their respective owners and are mentioned solely in a training context, to identify the team\'s workplace. Meseo is not affiliated with, sponsored by or officially endorsed by any of these brands.</p>'
         + '<p><strong>Privacy (GDPR):</strong> your email is optional and, if you add it, it is stored securely and used solely so you can recover your PIN. It is never shared with third parties or used for advertising. You may request its deletion at any time through the app owner.</p>'
         + '<p>© 2026 Duvan Stiven Ramírez Duque · All rights reserved</p>'
         + '<button class="legal-modal-close" onclick="document.getElementById(\'legalModal\').style.display=\'none\'">Close</button>'
       : '<div class="legal-modal-title">Aviso Legal</div>'
-        + '<p><strong>Meseo</strong> es una herramienta de formación interna para equipos de sala, de uso exclusivo del personal de los restaurantes dados de alta, creada únicamente con fines educativos y sin ánimo de lucro.</p>'
+        + '<p><strong>Meseo</strong> es una herramienta de formación interna para equipos de sala, de uso exclusivo del personal de los restaurantes dados de alta, creada como herramienta de formación profesional. Meseo® es una marca registrada.</p>'
         + '<p>Los nombres, logotipos y denominaciones de los restaurantes y personas que aparecen en la app (incluidos TXOKO y Martín Berasategui) son marcas o signos registrados de sus respectivos titulares y se mencionan únicamente en contexto formativo, para identificar el lugar de trabajo del equipo. Meseo no está afiliada, patrocinada ni respaldada oficialmente por ninguna de dichas marcas.</p>'
         + '<p><strong>Privacidad (RGPD):</strong> el correo electrónico es opcional y, si lo añades, se guarda cifrado y con el único fin de que puedas recuperar tu PIN. No se comparte con terceros ni se usa con fines publicitarios. Puedes solicitar su eliminación en cualquier momento a través del responsable de la app.</p>'
         + '<p>© 2026 Duvan Stiven Ramírez Duque · Todos los derechos reservados</p>'
@@ -10894,12 +10894,18 @@ async function _horSupSave(){
     showToast(LANG==='en'?'The week has no rows':'La semana no tiene ninguna fila','warning',5000); return;
   }
   try{
-    const r=await fetch(`${SUPA_URL}/rest/v1/horarios`,{
+    // El cuadrante guarda datos de personal: la tabla `horarios` ya NO acepta
+    // escrituras con la clave pública (RLS: solo lectura). Se guarda por la
+    // función save_rota, que verifica el PIN de supervisor en el servidor.
+    const r=await fetch(`${SUPA_URL}/rest/v1/rpc/save_rota`,{
       method:'POST',
-      headers:{'apikey':SUPA_KEY,'Authorization':`Bearer ${SUPA_KEY}`,'Content-Type':'application/json','Prefer':'resolution=merge-duplicates'},
-      body:JSON.stringify([{week_start:w.start, data:w, updated_at:new Date().toISOString()}])
+      headers:{'apikey':SUPA_KEY,'Authorization':`Bearer ${SUPA_KEY}`,'Content-Type':'application/json'},
+      body:JSON.stringify({pin_input:_supPin||'', week_start_input:w.start, data_input:w})
     });
     if(!r.ok) throw new Error('HTTP '+r.status);
+    // save_rota devuelve false si el PIN no vale: el servidor manda, no el
+    // panel (que solo controla lo que se ve).
+    if((await r.json())!==true) throw new Error(LANG==='en'?'supervisor PIN not valid — sign in again':'PIN de supervisor no válido — vuelve a entrar');
     try{ localStorage.removeItem('txk_horarios_v1'); }catch(e){}
     HORARIOS=null;
     await _horLoad(true);
