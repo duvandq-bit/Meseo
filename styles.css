@@ -1753,7 +1753,8 @@ body::after{
 
 /* ── Analítica del supervisor: titular + acordeones (rediseño jul 2026 —
    «hay que deslizar mucho y la información es abrumadora»). ── */
-.sup-hl{display:flex;gap:.5rem;margin-bottom:.9rem}
+.sup-hl{display:flex;gap:.4rem;margin-bottom:.9rem;flex-wrap:wrap}
+.sup-hl-pill{flex:1 1 22%;min-width:74px}
 .sup-hl-pill{flex:1;display:flex;flex-direction:column;align-items:center;gap:.15rem;padding:.6rem .35rem;border-radius:12px;border:1.5px solid var(--line);background:linear-gradient(155deg,#faf6ee,#f0e8d8)}
 .sup-hl-pill b{font-family:'Quicksand',sans-serif;font-size:1.15rem;font-weight:800}
 .sup-hl-pill span{font-family:'DM Mono',monospace;font-size:.52rem;letter-spacing:.05em;text-transform:uppercase;color:#8a7a5c;text-align:center;line-height:1.3}

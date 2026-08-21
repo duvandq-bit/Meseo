@@ -52,7 +52,7 @@
 <meta property="og:description" content="Formación de equipos de sala: carta, alérgenos, vinos, exámenes y juegos de repaso.">
 <meta property="og:url" content="https://meseo.es/">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"Meseo","url":"https://meseo.es/"}</script>
-<meta name="app-version" content="7.342">
+<meta name="app-version" content="7.343">
 <meta name="app-build" content="May 2026">
 <meta name="theme-color" content="#1c2a22">
 <!-- ═══ PWA ═══ -->
@@ -1561,7 +1561,7 @@ const CAT_COLORS={'Entrantes':'#c49a3c','Hamburguesas y Bocatas':'#b86050','Plat
 const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#c49a3c"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#a47a2c" opacity=".4"/><path d="M8 8v4a1 1 0 001 1h1v4M10 8v4" stroke="#fff" stroke-width="1.2" stroke-linecap="round" fill="none"/><path d="M15 8v8M14 8v3a1.5 1.5 0 003 0V8" stroke="#fff" stroke-width="1.2" stroke-linecap="round" fill="none"/></svg>`,'Hamburguesas y Bocatas':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#b86050"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#983838" opacity=".4"/><path d="M7 9h10M7 12h10M7 15h10" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/><path d="M8 9c0-2 2-3 4-3s4 1 4 3M8 15c0 2 2 3 4 3s4-1 4-3" fill="none" stroke="#fff" stroke-width="1" opacity=".7"/></svg>`,'Platos Principales':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#4888a0"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#2e6878" opacity=".4"/><path d="M5 15h14" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/><path d="M12 6a6 6 0 016 6H6a6 6 0 016-6z" fill="none" stroke="#fff" stroke-width="1.1"/><circle cx="10" cy="6" r=".7" fill="#fff" opacity=".7"/><circle cx="12" cy="5" r=".7" fill="#fff" opacity=".7"/><circle cx="14" cy="6" r=".7" fill="#fff" opacity=".7"/></svg>`,'Sugerencias':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#d4aa4c"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#a48a2c" opacity=".4"/><polygon points="12,5 14.5,10 20,10.5 16,14 17,20 12,17 7,20 8,14 4,10.5 9.5,10" fill="#fff" opacity=".9"/></svg>`,'Guarniciones y Salsas':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#4d8a5e"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#2d6a3e" opacity=".4"/><path d="M12 18V10M5 10c0-4 3-6 7-6s7 2 7 6c0 5-3 8-7 8s-7-3-7-8z" fill="none" stroke="#fff" stroke-width="1.1"/><path d="M5 10c3 0 5 1 7 2.5" fill="none" stroke="#fff" stroke-width=".8" opacity=".6"/></svg>`,'Postres':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#7a6aaa"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#5a4a8a" opacity=".4"/><path d="M9 19h6M12 12v7M7 6l2 4.5a3 3 0 006 0L17 6H7z" fill="none" stroke="#fff" stroke-width="1.1" stroke-linecap="round"/></svg>`,'Vegetariano':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#5a9a6e"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#3a7a4e" opacity=".4"/><path d="M9 18h6M12 18V10M12 10c0-3 2-5 5-5-.7 2.5-2.5 5-5 5zM12 10c0-3-2-5-5-5 .7 2.5 2.5 5 5 5z" fill="none" stroke="#fff" stroke-width="1.1" stroke-linecap="round"/></svg>`};
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='7.342';  // sincronizada con sw.js VERSION (guard de CI)
+const APP_VERSION='7.343';  // sincronizada con sw.js VERSION (guard de CI)
 const APP_BUILD='Jul 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;
@@ -21588,6 +21588,12 @@ function renderSupAnalytics(allEmps, empNames){
       ${neverRight.length ? `<div style="margin-top:.7rem;padding-top:.6rem;border-top:1px dashed var(--line);font-family:'DM Mono',monospace;font-size:.58rem;color:var(--rose);line-height:1.5">⚠ ${neverRight.length} ${LANG==='en'?'dishes with no correct answer from anyone yet':'platos sin ningún acierto del equipo todavía'}${neverRight.length<=6?': '+neverRight.map(d=>escapeHTML(d.name)).join(', '):''}</div>` : ''}
     </div>`;
   const _en2 = LANG==='en';
+  // Preparación LQA del equipo: la métrica de la auditoría Forbes/LQA, que es
+  // por la que se mide un hotel de esta categoría. Solo cuentan quienes han
+  // hecho al menos una prueba (si no, la media saldría falseada a la baja).
+  const _rdyAll = empNames.map(n=>allEmps[n]).filter(Boolean).map(_lqaReady).filter(r=>r.runs>0);
+  const _rdyN = _rdyAll.length;
+  const _rdy = _rdyN ? Math.round(_rdyAll.reduce((a,r)=>a+r.score,0)/_rdyN) : 0;
   c.innerHTML = `<div class="sup-wrap">
     <div style="display:flex;align-items:center;gap:.75rem;margin-bottom:1rem">
       <button onclick="renderSupDashboard()" aria-label="${_en2?'Back':'Volver'}" style="background:transparent;border:1.5px solid rgba(196,154,60,.55);border-radius:var(--r2);padding:.4rem .8rem;font-size:.75rem;color:var(--gold-deep);font-weight:700;cursor:pointer">←</button>
@@ -21598,6 +21604,7 @@ function renderSupAnalytics(allEmps, empNames){
       <div class="sup-hl-pill ${_riskN?'bad':'good'}"><b>${_riskN}</b><span>${_en2?'allergen risk':'riesgo alérgenos'}</span></div>
       <div class="sup-hl-pill ${_inact.length?'warn':'good'}"><b>${_inact.length}</b><span>${_en2?'inactive 3+d':'sin actividad 3+d'}</span></div>
       <div class="sup-hl-pill ${!exN?'info':exAcc>=80?'good':exAcc>=50?'warn':'bad'}"><b>${exN?exAcc+'%':'—'}</b><span>${_en2?'exam accuracy':'precisión exámenes'}</span></div>
+      <div class="sup-hl-pill ${!_rdyN?'info':_rdy>=75?'good':_rdy>=55?'warn':'bad'}"><b>${_rdyN?_rdy+'%':'—'}</b><span>${_en2?'LQA readiness':'preparación LQA'}</span></div>
     </div>
     ${_acc('alg','⚠️',_en2?'Allergens — safety':'Alérgenos — seguridad', `${_riskN} ${_en2?'at risk':'en riesgo'}${allergenUntrained.length?` · ${allergenUntrained.length} ${_en2?'untrained':'sin entrenar'}`:''}`, _algBody)}
     ${_acc('res','📣',_en2?'Weekly summary':'Resumen semanal', _en2?'ready for WhatsApp':'listo para WhatsApp', resumenSection)}
@@ -21608,23 +21615,28 @@ function renderSupAnalytics(allEmps, empNames){
   </div>`;
 }
 
+// Nota LQA de un empleado: media ponderada de sus mejores marcas en los
+// cuatro modos (la Inspección Fantasma pesa más porque integra todas las
+// categorías). Vive aquí para que el panel del equipo y el titular del
+// análisis midan EXACTAMENTE lo mismo.
+function _lqaReady(e){
+  const parts=[];
+  if(e.lqaExamBest) parts.push({v:e.lqaExamBest, w:1});
+  if(e.lqaSituationBest) parts.push({v:e.lqaSituationBest, w:1});
+  if(e.lqaAuditBest) parts.push({v:e.lqaAuditBest, w:1.5});
+  if(e.ghostBest) parts.push({v:e.ghostBest, w:2});
+  const totalW=parts.reduce((a,p)=>a+p.w,0);
+  const score=totalW>0?parts.reduce((a,p)=>a+p.v*p.w,0)/totalW:0;
+  const runs=(e.lqaExamsCompleted||0)+(e.lqaSituationsCompleted||0)+(e.lqaAuditsCompleted||0)+(e.ghostRuns||0);
+  return {name:e.name||'—', score:Math.round(score), runs, e};
+}
+
 function renderSupLqaStats(allEmps, empNames){
   allEmps = allEmps || window._supAllEmps || {};
   empNames = empNames || window._supEmpNames || Object.keys(allEmps);
   const emps = empNames.map(n=>allEmps[n]).filter(Boolean);
 
-  // Readiness index: weighted avg of all LQA modes (exam + situations + auditor + ghost)
-  const readiness = emps.map(e=>{
-    const parts=[];
-    if(e.lqaExamBest) parts.push({v:e.lqaExamBest, w:1});
-    if(e.lqaSituationBest) parts.push({v:e.lqaSituationBest, w:1});
-    if(e.lqaAuditBest) parts.push({v:e.lqaAuditBest, w:1.5});
-    if(e.ghostBest) parts.push({v:e.ghostBest, w:2}); // ghost weights more — integrates all categories
-    const totalW=parts.reduce((a,p)=>a+p.w,0);
-    const score=totalW>0?parts.reduce((a,p)=>a+p.v*p.w,0)/totalW:0;
-    const runs=(e.lqaExamsCompleted||0)+(e.lqaSituationsCompleted||0)+(e.lqaAuditsCompleted||0)+(e.ghostRuns||0);
-    return {name:e.name||'—', score:Math.round(score), runs, e};
-  }).filter(r=>r.runs>0).sort((a,b)=>b.score-a.score);
+  const readiness = emps.map(_lqaReady).filter(r=>r.runs>0).sort((a,b)=>b.score-a.score);
 
   const noData=emps.filter(e=>{const r=(e.lqaExamsCompleted||0)+(e.lqaSituationsCompleted||0)+(e.lqaAuditsCompleted||0)+(e.ghostRuns||0);return r===0;});
 
@@ -21787,10 +21799,9 @@ function renderSupEmployee(name){
   const dueDishes=DISHES.filter(d=>{ const s=srs[d.id]; return s && s.reps>0 && Date.now()>=s.nextReview; });
   const dueList=dueDishes.slice(0,8).map(d=>escapeHTML(d.name)).join(', ');
 
-  // LQA
-  const parts=[]; if(e.lqaExamBest) parts.push({v:e.lqaExamBest,w:1}); if(e.lqaSituationBest) parts.push({v:e.lqaSituationBest,w:1}); if(e.lqaAuditBest) parts.push({v:e.lqaAuditBest,w:1.5}); if(e.ghostBest) parts.push({v:e.ghostBest,w:2});
-  const totW=parts.reduce((a,p)=>a+p.w,0);
-  const ready=totW?Math.round(parts.reduce((a,p)=>a+p.v*p.w,0)/totW):null;
+  // LQA — misma fórmula que el panel del equipo y el titular (_lqaReady)
+  const _rd = _lqaReady(e);
+  const ready = _rd.score > 0 ? _rd.score : null;
   const wcAgg={}; (e.ghostScores||[]).forEach(s=>(s.weakCats||[]).forEach(cid=>{wcAgg[cid]=(wcAgg[cid]||0)+1;}));
   const wcTop=Object.entries(wcAgg).sort((a,b)=>b[1]-a[1])[0];
   const wcCat=wcTop?LQA_CATEGORIES.find(x=>x.id===wcTop[0]):null;
