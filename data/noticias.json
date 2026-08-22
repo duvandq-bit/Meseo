@@ -1,6 +1,66 @@
 {
- "updated": "2026-08-22T11:38:08.909Z",
+ "updated": "2026-08-22T17:39:26.163Z",
  "items": [
+  {
+   "t": "Estos son los 7 nuevos restaurantes más destacados de las Islas Canarias",
+   "u": "https://www.teneriffa-news.com/es/actualidad/noticias-de-canarias/siete-restaurantes-canarios-suman-nuevos-soles-repsol-en-la-guia-2026_1464389.html",
+   "s": "Teneriffa News",
+   "d": "2026-08-22T17:34:10.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://www.teneriffa-news.com/media/a/adrian-bosch-san-ho-costa-adeje-repsol-sol-1600x1080.jpg"
+  },
+  {
+   "t": "Aquí podrá disfrutar de la singular floración de los almendros en las Islas Canarias",
+   "u": "https://www.teneriffa-news.com/es/guia-turistica-de-las-islas-canarias/los-almendros-florecen-entre-santiago-del-teide-tejeda-y-la-palma_1464395.html",
+   "s": "Teneriffa News",
+   "d": "2026-08-22T17:33:21.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://www.teneriffa-news.com/media/m/mandelbluete-teneriffa-1920x1080.jpg"
+  },
+  {
+   "t": "Fallece Rosa Martina Bolaños, presidenta del CV Emalsa Gran Canaria",
+   "u": "https://www.eldiario.es/voleibol-2/fallece-rosa-martina-bolanos-presidenta-cv-emalsa-gran-canaria_1_13461650.html",
+   "s": "elDiario.es",
+   "d": "2026-08-22T12:20:46.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://static.eldiario.es/clip/0fe3f127-318b-4f0f-90cf-a231afb22639_facebook-watermarked-aspect-ratio-1200-675_default_0_x609y174.jpg"
+  },
+  {
+   "t": "Gofio vuelve a casa y emociona a Gran Canaria: Safe Cruz conquista Star Nights con los sabores de siempre",
+   "u": "https://www.canarias7.es/gastronomia-c7/gofio-vuelve-casa-emociona-gran-canaria-safe-20260822130937-nt.html",
+   "s": "Canarias7",
+   "d": "2026-08-22T12:09:37.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://s1.ppllstatics.com/canarias7/www/multimedia/gastronomia-c7/2026/08/22/portada-k0NF-U3013910420322Q-1200x840@Canarias7.jpg"
+  },
+  {
+   "t": "La raíz que mira al Atlántico",
+   "u": "https://www.canarias7.es/gastronomia-c7/raiz-mira-atlantico-20260822140000-nt.html",
+   "s": "Canarias7",
+   "d": "2026-08-22T12:00:00.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://s1.ppllstatics.com/canarias7/www/multimedia/gastronomia-c7/2026/08/20/foodkool6-k1AD-U301365129643T1C-1200x840@Canarias7.jpg"
+  },
+  {
+   "t": "El restaurante donde comer a reventar carnes a la parrilla de gran calidad: \"Buena materia prima y un trato muy amable\"",
+   "u": "https://www.elespanol.com/quincemil/vivir/gastrogalicia/20260822/restaurante-comer-reventar-carnes-parrilla-gran-calidad-buena-materia-prima-trato-amable-trt/1003744355466_0.html",
+   "s": "El Español",
+   "d": "2026-08-22T12:00:00.000Z",
+   "tags": [
+    "MICHELIN"
+   ],
+   "img": "https://s3.elespanol.com/k/imgp/cms/elespanol/11336708.jpg?p=f:jpeg/w:1706/h:960&h=iiQ7C1mq"
+  },
   {
    "t": "El Cabildo proyecta una residencia en Tenerife para alojar a estudiantes de La Palma",
    "u": "https://www.eldiario.es/canariasahora/lapalmaahora/politica/cabildo-proyecta-residencia-tenerife-facilitar-alojamiento-estudiantes-palma_1_13461578.html",
@@ -42,6 +102,16 @@
    "img": "https://s3.elespanol.com/k/imgp/cms/elespanol/11339325.jpg?p=f:jpeg/g:fp:0.35:0.4/w:1706/h:960&h=52rwTr_L"
   },
   {
+   "t": "La villa juguetera de Alicante que conquista por su cocina: así es el pueblo donde mejor se come de España",
+   "u": "https://www.noticiasdelvino.com/restaurantes/2026/08/22/la-villa-juguetera-de-alicante-que-conquista-por-su-cocina-asi-es-el-pueblo-donde-mejor-se-come-de-espana-74836/",
+   "s": "Noticias del Vino",
+   "d": "2026-08-22T07:36:03.000Z",
+   "tags": [
+    "MICHELIN"
+   ],
+   "img": "https://www.noticiasdelvino.com/wp-content/uploads/restaurantes-5.jpg"
+  },
+  {
    "t": "El nuevo restaurante de alta cocina basado solo en postres",
    "u": "https://www.diariodesevilla.es/gente/nuevo-restaurante-alta-cocina-basado_0_2007762442.amp.html",
    "s": "Diario de Sevilla",
@@ -60,6 +130,16 @@
     "CHEF"
    ],
    "img": "https://s3.elespanol.com/k/imgp/cms/elespanol/11336663.jpg?p=f:jpeg/c:1669:938:nowe:118:100/w:1706/h:960&h=yX9HjAo2"
+  },
+  {
+   "t": "El restaurante italiano de San Agustín que muchos sitúan como el mejor de Gran Canaria",
+   "u": "https://www.canarias7.es/gastronomia-c7/restaurantes/restaurante-italiano-san-agustin-situan-mejor-gran-20260822070000-nt.html",
+   "s": "Canarias7",
+   "d": "2026-08-22T05:00:13.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://s2.ppllstatics.com/canarias7/www/multimedia/gastronomia-c7/2026/08/21/langostinos-kSdD-U3013780861041t-1200x840@Canarias7.jpg"
   },
   {
    "t": "Los siete restaurantes recomendados por Michelin este año: uno empezó en Lugo y otro en 4 metros cuadrados",
@@ -128,7 +208,8 @@
    "d": "2026-08-21T16:54:30.000Z",
    "tags": [
     "CANARIAS"
-   ]
+   ],
+   "img": "https://eldigitalsur.com/wp-content/uploads/2026/08/Inauguracion-Terraza-Mirador-de-Costa-Martianez-210826.webp"
   },
   {
    "t": "Franck Putelat, chef con dos estrellas Michelin: «Es cada vez más difícil llenar un restaurante. Pero no podemos trabajar solo por dinero»",
@@ -162,16 +243,6 @@
    "img": "https://s3.elespanol.com/k/imgp/cms/elespanol/11339235.jpg?p=f:jpeg/c:1254:706:nowe:0:141/w:1706/h:960&h=d8fgo0If"
   },
   {
-   "t": "Sugerencia para una excursión: el tajinaste vuelve a florecer en las Islas Canarias",
-   "u": "https://www.teneriffa-news.com/es/guia-turistica-de-las-islas-canarias/el-tajinaste-rosado-vuelve-a-florecer-en-las-cumbres-de-tenerife-y-la-palma_1464731.html",
-   "s": "Teneriffa News",
-   "d": "2026-08-21T15:37:53.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://www.teneriffa-news.com/media/t/tajinaste-kanaren-1600x1350.jpg"
-  },
-  {
    "t": "La Guancha celebra este viernes su Vinofest: horario, bodegas y actuaciones",
    "u": "https://diariodeavisos.elespanol.com/2026/08/vinofest-la-guancha-vinos/",
    "s": "Diario de Avisos",
@@ -200,7 +271,18 @@
    "tags": [
     "VINO",
     "CANARIAS"
-   ]
+   ],
+   "img": "https://eldigitalsur.com/wp-content/uploads/2026/08/Bodegas-El-Rebusco-210826.webp"
+  },
+  {
+   "t": "Creó dos restaurantes innovadores que hoy son recomendados por la Guía Michelin",
+   "u": "https://www.lanacion.com.ar/sabado/se-formo-en-europa-volvio-al-pais-y-despues-de-10-anos-de-trabajar-para-abrir-un-restaurante-propio-nid21082026/",
+   "s": "La Nación",
+   "d": "2026-08-21T14:41:00.000Z",
+   "tags": [
+    "MICHELIN"
+   ],
+   "img": "https://www.lanacion.com.ar/resizer/v2/tanto-picaron-como-ultramarinos-se-encuentran-en-QGKGH354VFEG7M2YAGWKPAM43Q.jpg?auth=9f549de9c2e81a095e439768dc25d5cbf55a34cdbda71758e8dbd9e1c1eb18ff&width=1200&height=800&quality=70&smart=true"
   },
   {
    "t": "Tijarafe reúne música, gastronomía y punto cubano en la cuarta edición de Guajira y Punto!",
@@ -210,7 +292,7 @@
    "tags": [
     "CANARIAS"
    ],
-   "img": "https://eltime.es/images/210826 Tijarafe Prepara Fin 01 0b8eb66e49.png"
+   "img": "https://www.eltime.es/images/210826 Tijarafe Prepara Fin 01 0b8eb66e49.png"
   },
   {
    "t": "Un patio sobre el río y un discípulo de Jordi Cruz, los nuevos restaurantes de la Guía Michelín en Galicia",
@@ -221,88 +303,6 @@
     "MICHELIN"
    ],
    "img": "https://metropolitano.gal/wp-content/uploads/2026/08/Restaurantes-Guia-Michelin-Galicia-agosto-2026-redes.jpg"
-  },
-  {
-   "t": "La Bundesliga en directo: DAZN y bares de Sky en Puerto de la Cruz, Tenerife",
-   "u": "https://www.teneriffa-news.com/es/puerto-de-la-cruz-es/cafeterias-bares-y-restaurantes-en-puerto-de-la-cruz/bundesliga-bares-puerto-de-la_1465052.html",
-   "s": "Teneriffa News",
-   "d": "2026-08-21T12:58:40.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://www.teneriffa-news.com/media/s/sky-bundesliga-sport-live-teneriffa-puerto-de-la-cruz-drago-1920x1080.jpg"
-  },
-  {
-   "t": "Canarias flexibiliza el movimiento de uva para la vendimia 2026 y refuerza las medidas de bioseguridad frente a la filoxera",
-   "u": "https://www.eldiario.es/canariasahora/lapalmaahora/politica/canarias-flexibiliza-movimiento-uva-vendimia-2026-refuerza-medidas-bioseguridad-frente-filoxera_1_13459894.html",
-   "s": "elDiario.es",
-   "d": "2026-08-21T11:15:41.000Z",
-   "tags": [
-    "CANARIAS",
-    "VINO"
-   ],
-   "img": "https://static.eldiario.es/clip/f54faacc-fcae-466f-a06e-d445cdbb7ea5_facebook-watermarked-aspect-ratio-1200-675_default_0.jpg"
-  },
-  {
-   "t": "CaixaBank concede 969 millones en nueva financiación a empresas de Canarias en el primer semestre del año",
-   "u": "https://www.eldiario.es/canariasahora/lapalmaahora/economia/caixabank-concede-969-millones-nueva-financiacion-empresas-canarias-primer-semestre-ano_1_13459886.html",
-   "s": "elDiario.es",
-   "d": "2026-08-21T11:12:47.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://static.eldiario.es/clip/d23a34ca-93ad-46b8-b430-e1f89349d603_facebook-watermarked-aspect-ratio-1200-675_default_0.jpg"
-  },
-  {
-   "t": "Iberostar y José Pizarro cocinan en Tenerife",
-   "u": "https://www.excelenciasgourmet.com/es/eventos/jose-pizarro-cocina-tenerife-iberostar",
-   "s": "Excelencias Gourmet",
-   "d": "2026-08-21T11:00:00.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://static.excelenciasgourmet.com/cdn/ff/xRlxTsLY2ndnSgllkO2ZhbwVGRQ3sss5gqz6QtK2etk/1787295875/public/articulos/2026-08/colaboracion-iberostar-pizarro.png"
-  },
-  {
-   "t": "Jordi Cruz, chef: \"El picante de la comida no se rebaja con agua, sino con un poco de leche, con aceite de oliva o con limón\"",
-   "u": "https://cronicaglobal.elespanol.com/gastronomia/20260821/jordi-cruz-picante-comida-rebaja-leche-aceite-trt/1003742788282_0.html",
-   "s": "Crónica Global",
-   "d": "2026-08-21T10:53:54.000Z",
-   "tags": [
-    "CHEF"
-   ],
-   "img": "https://a2.elespanol.com/k/imgp/cms/asociados/563215.jpg?p=f:jpeg/c:1899:1068:nowe:0:43/w:1706/h:960&h=woSY04Gp"
-  },
-  {
-   "t": "El norte de Tenerife pierde su único restaurante con estrella Michelin",
-   "u": "https://www.teneriffa-news.com/es/actualidad/noticias-de-tenerife/norte-tenerife-pierde-estrella_1464367.html",
-   "s": "Teneriffa News",
-   "d": "2026-08-21T10:42:16.000Z",
-   "tags": [
-    "CANARIAS",
-    "MICHELIN"
-   ],
-   "img": "https://www.teneriffa-news.com/media/m/michelin-sterne-restaurants-teneriffa-2121x1350.jpg"
-  },
-  {
-   "t": "Por qué echo de menos el antiguo Las Verónicas de Tenerife",
-   "u": "https://www.teneriffa-news.com/es/los-lectores-escriben-para-los-lectores/echo-de-menos-las-veronicas_1464899.html",
-   "s": "Teneriffa News",
-   "d": "2026-08-21T10:16:42.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://www.teneriffa-news.com/media/b/britinnen-pruegelei-teneriffa-2287x1350.jpg"
-  },
-  {
-   "t": "Dénia suma un nuevo restaurante recomendado por la Guía Michelin",
-   "u": "https://www.denia.com/denia-nuevo-restaurante-recomendado-guia-michelin/",
-   "s": "Dénia.com",
-   "d": "2026-08-21T08:36:17.000Z",
-   "tags": [
-    "MICHELIN"
-   ],
-   "img": "https://www.denia.com/wp-content/uploads/2026/08/producto-de-proximidad-1320x752.jpg"
   }
  ]
 }
