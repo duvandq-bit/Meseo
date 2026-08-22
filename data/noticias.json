@@ -1,6 +1,27 @@
 {
- "updated": "2026-08-21T23:41:40.587Z",
+ "updated": "2026-08-22T05:45:21.914Z",
  "items": [
+  {
+   "t": "Martín Berasategui, 66 años: \"Mis padres estuvieron 13 años sin descansar y yo he trabajado 6 días a la semana por 15 años\"",
+   "u": "https://www.elespanol.com/corazon/20260822/martin-berasategui-anos-padres-sin-descansar-trabajado-dias-semana/1003744355472_0.html",
+   "s": "El Español",
+   "d": "2026-08-22T05:14:31.000Z",
+   "tags": [
+    "CHEF"
+   ],
+   "img": "https://s3.elespanol.com/k/imgp/cms/elespanol/11336663.jpg?p=f:jpeg/c:1669:938:nowe:118:100/w:1706/h:960&h=yX9HjAo2"
+  },
+  {
+   "t": "Este es el lujoso restaurante donde Kanye West probó la cocina andaluza a su paso por Madrid: chef Michelin, platos de autor y vistas privilegiadas",
+   "u": "https://amp.epe.es/es/madrid/20260822/restaurante-madrid-kanye-west-cocina-andaluza-dani-brasserie-dv-133513178",
+   "s": "El Periódico de España",
+   "d": "2026-08-22T02:50:07.000Z",
+   "tags": [
+    "ALTA COCINA",
+    "MICHELIN"
+   ],
+   "img": "https://estaticos-cdn.prensaiberica.es/clip/8d538424-cafb-4c4a-9d19-fabaaaf78cb2_16-9-discover-aspect-ratio_default_0_x600y225.jpg"
+  },
   {
    "t": "Chef Adrián Peregrina presenta la 3.ª edición de Apapaxoa » ¡ Uniendo al Caribe !",
    "u": "https://caribempresarial.com/chef-adrian-peregrina-presenta-la-3-a-edicion-de-apapaxoa/",
@@ -11,6 +32,16 @@
    ]
   },
   {
+   "t": "Ibiza y Formentera, las islas de verano de Ramón Freixa",
+   "u": "https://amp.expansion.com/directivos/estilo-vida/rincones-gastronomicos/2026/08/21/6a8845f2e5fdea5d7e8b4575.html",
+   "s": "Expansión",
+   "d": "2026-08-21T21:17:31.000Z",
+   "tags": [
+    "ALTA COCINA"
+   ],
+   "img": "https://e01-phantom-expansion.uecdn.es/3a767609a51f016e8326ed4073021add/crop/0x151/949x783/f/webp/assets/multimedia/imagenes/2026/08/14/17867031837000.jpg"
+  },
+  {
    "t": "El viñedo más alto de Europa está en Tenerife: así es el pueblo que desafía a los Alpes",
    "u": "https://www.noticiasdelvino.com/escapadas/2026/08/21/el-vinedo-mas-alto-de-europa-esta-en-tenerife-asi-es-el-pueblo-que-desafia-a-los-alpes-66331/",
    "s": "Noticias del Vino",
@@ -18,8 +49,7 @@
    "tags": [
     "VINO",
     "CANARIAS"
-   ],
-   "img": "https://www.noticiasdelvino.com/wp-content/uploads/El-vinedo-mas-alto-de-Europa-esta-en-Tenerife.jpg"
+   ]
   },
   {
    "t": "Las pérdidas de los plataneros de Canarias se agudizan: el valor recibido por ventas en la Península llega a 0,33 euros el kilo",
@@ -38,8 +68,7 @@
    "d": "2026-08-21T17:36:34.000Z",
    "tags": [
     "CHEF"
-   ],
-   "img": "https://www.noticiasdelvino.com/wp-content/uploads/image-583.png"
+   ]
   },
   {
    "t": "La Terraza Mirador de Costa Martiánez recupera un espacio infrautilizado con una nueva apuesta gastronómica",
@@ -99,18 +128,7 @@
    "tags": [
     "CANARIAS",
     "VINO"
-   ],
-   "img": "https://cdn.diariodeavisos.com/wp-content/uploads/2025/06/vino.jpg"
-  },
-  {
-   "t": "Tenerife abre la primera área de servicio público para caravanas del norte de la isla",
-   "u": "https://www.eldiario.es/canariasahora/tenerifeahora/sociedad/area-servicio-caravanas-tenerife_1_13460531.html",
-   "s": "elDiario.es",
-   "d": "2026-08-21T15:25:09.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://static.eldiario.es/clip/0f341f9c-5cb7-4ea5-8209-375afec35a2f_facebook-watermarked-aspect-ratio-1200-675_default_0_x771y347.jpg"
+   ]
   },
   {
    "t": "El Rebusco Bodegas impulsa la vendimia en Tenerife con la primera bodega submarina permanente de Canarias",
@@ -139,8 +157,7 @@
    "d": "2026-08-21T14:34:17.000Z",
    "tags": [
     "CANARIAS"
-   ],
-   "img": "https://www.eltime.es/images/210826 Tijarafe Prepara Fin 01 0b8eb66e49.png"
+   ]
   },
   {
    "t": "Un patio sobre el río y un discípulo de Jordi Cruz, los nuevos restaurantes de la Guía Michelín en Galicia",
@@ -283,28 +300,6 @@
     "CANARIAS"
    ],
    "img": "https://estaticos-cdn.prensaiberica.es/clip/c1201471-40ec-42e3-a5fc-cfee7cc35794_16-9-discover-aspect-ratio_default_0_x567y507.jpg"
-  },
-  {
-   "t": "El guachinche de Tenerife donde comer cocina canaria tradicional: carnes a la brasa y vino de la tierra",
-   "u": "https://www.eldia.es/tenerife/2026/08/21/guachinche-tenerife-comer-cocina-canaria-carnes-brasa-dv-133533953.html",
-   "s": "Eldía",
-   "d": "2026-08-21T06:59:17.000Z",
-   "tags": [
-    "CANARIAS",
-    "VINO"
-   ],
-   "img": "https://estaticos-cdn.prensaiberica.es/clip/87d67334-75bc-4eed-8846-21567139d698_16-9-discover-aspect-ratio_default_0_x574y370.jpg"
-  },
-  {
-   "t": "Está en España y es la vendimia más madrugadora de Europa: sus viñas crecen sobre ceniza volcánica y la uva se paga a 4 euros el kilo",
-   "u": "https://www.larazon.es/canarias/esta-espana-vendimia-mas-madrugadora-europa-sus-vinas-crecen-ceniza-volcanica-uva-paga-4-euros-kilo_202608216a86b82ca046ad6ebcbc0b27.html",
-   "s": "La Razón",
-   "d": "2026-08-21T05:00:13.000Z",
-   "tags": [
-    "VINO",
-    "CANARIAS"
-   ],
-   "img": "https://fotografias-2.larazon.es/clipping/cmsimages02/2026/08/20/9D3BC888-DFB8-4BDE-8FEB-E95BE24B2260/esta-espana-vendimia-mas-madrugadora-europa-sus-vinas-crecen-ceniza-volcanica-uva-paga-4-euros-kilo_98.jpg?crop=1402,789,x0,y69&width=1900&height=1069&optimize=low&format=webply"
   }
  ]
 }
