@@ -1,6 +1,46 @@
 {
- "updated": "2026-08-23T05:47:51.510Z",
+ "updated": "2026-08-23T11:38:18.354Z",
  "items": [
+  {
+   "t": "De una granja de cerdos abandonada a cultivar setas exóticas en Tenerife",
+   "u": "https://diariodeavisos.elespanol.com/2026/08/granja-cerdos-setas-exoticas-tenerife/amp/",
+   "s": "Diario de Avisos",
+   "d": "2026-08-23T10:03:55.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://diariodeavisos.elespanol.com/wp-content/uploads/2026/08/Pagina-62-SETAS-EXOTICAS_1.jpg"
+  },
+  {
+   "t": "El restaurante de Las Palmas de Gran Canaria donde disfrutar de platos para compartir con vistas al mar y ambiente acogedor",
+   "u": "https://www.laprovincia.es/las-palmas/2026/08/23/restaurante-palmas-gran-canaria-vistas-mar-dv-130523666.amp.html",
+   "s": "La Provincia",
+   "d": "2026-08-23T09:00:00.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://estaticos-cdn.prensaiberica.es/clip/742312e0-456e-44a2-97ac-be73fe2ddc4a_16-9-discover-aspect-ratio_default_0_x627y569.jpg"
+  },
+  {
+   "t": "Dónde Saborear Gran Canaria según Ginés Cedrés, guitarrista y voz de «Los Coquillos» y «Madafaka All Star»",
+   "u": "https://www.canarias7.es/gastronomia-c7/a-fuego-lento/saborear-gran-canaria-segun-gines-cedres-guitarrista-20260823070000-nt_amp.html",
+   "s": "Canarias7",
+   "d": "2026-08-23T06:03:47.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://s1.ppllstatics.com/canarias7/www/multimedia/gastronomia-c7/2026/08/21/gines2.jpg"
+  },
+  {
+   "t": "Un menú del día por 25 euros en un restaurante de Madrid que mezcla en el mismo fogón lo mejor de Perú, México y España",
+   "u": "https://www.20minutos.es/gastronomia/restaurantes/menu-dia-25-euros-restaurante-madrid-mezcla-peru-mexico-espana_7015737_0.html",
+   "s": "20Minutos",
+   "d": "2026-08-23T05:00:00.000Z",
+   "tags": [
+    "MICHELIN"
+   ],
+   "img": "https://imagenes.20minutos.es/files/image_1920_1080/uploads/imagenes/2026/07/17/6a59d5727c3b00-16601243.jpeg"
+  },
   {
    "t": "Martín Berasategui, chef (66 años): “Lo único fácil que hay en la cocina es comer, beber, hablar y engordar”",
    "u": "https://as.com/tikitakas/gastronomia/martin-berasategui-chef-66-anos-lo-unico-facil-que-hay-en-la-cocina-es-comer-beber-hablar-y-engordar-f202608-n/",
@@ -8,8 +48,7 @@
    "d": "2026-08-22T20:16:59.000Z",
    "tags": [
     "CHEF"
-   ],
-   "img": "https://img.asmedia.epimg.net/resizer/v2/AFQAZBQL5JOEDJDJM5U7T57CNM.jpg?auth=5e21bf723efd23b62f565f56bf23631fc4290faeb80347ed9063f06c3da9bd09&width=1472&height=828&smart=true"
+   ]
   },
   {
    "t": "Nuevo 'simpa' en un guachinche de Tenerife: las cámaras captan a una pareja saliendo del local sin pagar",
@@ -53,7 +92,7 @@
   },
   {
    "t": "Gofio pone el sabor canario al cierre de la primera edición de Maspalomas Golf Star Nights",
-   "u": "https://www.laprovincia.es/gran-canaria/2026/08/22/gofio-pone-sabor-canario-cierre-133552005.html",
+   "u": "https://www.laprovincia.es/gran-canaria/2026/08/22/gofio-pone-sabor-canario-cierre-133552005.amp.html",
    "s": "La Provincia",
    "d": "2026-08-22T16:41:37.000Z",
    "tags": [
@@ -62,14 +101,44 @@
    "img": "https://estaticos-cdn.prensaiberica.es/clip/bc751ecd-457c-44c0-9190-85e2749656b7_16-9-discover-aspect-ratio_default_0_x609y216.jpg"
   },
   {
+   "t": "Tenerife: una banda proporciona documentos falsos a migrantes; 19 detenidos",
+   "u": "https://www.teneriffa-news.com/es/actualidad/noticias-de-tenerife/tenerife-detenidos-papeles-falsos_1463885.html",
+   "s": "Teneriffa News",
+   "d": "2026-08-22T12:31:28.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://www.teneriffa-news.com/media/p/polizei-nationalpolizei-kanaren-2400x1350.jpg"
+  },
+  {
+   "t": "Fallece Rosa Martina Bolaños, presidenta del CV Emalsa Gran Canaria",
+   "u": "https://www.eldiario.es/voleibol-2/fallece-rosa-martina-bolanos-presidenta-cv-emalsa-gran-canaria_1_13461650.html",
+   "s": "elDiario.es",
+   "d": "2026-08-22T12:20:46.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://static.eldiario.es/clip/0fe3f127-318b-4f0f-90cf-a231afb22639_facebook-watermarked-aspect-ratio-1200-675_default_0_x609y174.jpg"
+  },
+  {
    "t": "Gofio vuelve a casa y emociona a Gran Canaria: Safe Cruz conquista Star Nights con los sabores de siempre",
-   "u": "https://www.canarias7.es/gastronomia-c7/gofio-vuelve-casa-emociona-gran-canaria-safe-20260822130937-nt_amp.html",
+   "u": "https://www.canarias7.es/gastronomia-c7/gofio-vuelve-casa-emociona-gran-canaria-safe-20260822130937-nt.html",
    "s": "Canarias7",
    "d": "2026-08-22T12:09:37.000Z",
    "tags": [
     "CANARIAS"
    ],
-   "img": "https://s2.ppllstatics.com/canarias7/www/multimedia/gastronomia-c7/2026/08/22/portada.jpg"
+   "img": "https://s1.ppllstatics.com/canarias7/www/multimedia/gastronomia-c7/2026/08/22/portada-k0NF-U3013910420322Q-1200x840@Canarias7.jpg"
+  },
+  {
+   "t": "La raíz que mira al Atlántico",
+   "u": "https://www.canarias7.es/gastronomia-c7/raiz-mira-atlantico-20260822140000-nt.html",
+   "s": "Canarias7",
+   "d": "2026-08-22T12:00:00.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://s1.ppllstatics.com/canarias7/www/multimedia/gastronomia-c7/2026/08/20/foodkool6-k1AD-U301365129643T1C-1200x840@Canarias7.jpg"
   },
   {
    "t": "El restaurante donde comer a reventar carnes a la parrilla de gran calidad: \"Buena materia prima y un trato muy amable\"",
@@ -142,6 +211,16 @@
    "img": "https://static.grupojoly.com/clip/343f5433-4146-4815-bbe9-d7908d36b4a6_facebook-aspect-ratio_default_0.jpg"
   },
   {
+   "t": "Los dos restaurantes de la Marina Alta que acaban de entrar en la Guía Michelin",
+   "u": "https://lamarinaalta.com/los-dos-restaurantes-de-la-marina-alta-que-acaban-de-entrar-en-la-guia-michelin/",
+   "s": "La Marina Alta .COM",
+   "d": "2026-08-22T06:00:12.000Z",
+   "tags": [
+    "MICHELIN"
+   ],
+   "img": "https://lamarinaalta.com/wp-content/uploads/2026/08/ca-seko-y-carvon-nuevos-recomendados-de-agosto-2026-de-la-seleccion-espanola-de-la-guia-michelin-1320x743.jpg"
+  },
+  {
    "t": "Guía turística de Los Gigantes: de pueblo pesquero a destino turístico de gran atractivo",
    "u": "https://www.teneriffa-news.com/es/los-gigantes-es/guia-los-gigantes-tenerife_1465051.html",
    "s": "Teneriffa News",
@@ -160,6 +239,16 @@
     "CHEF"
    ],
    "img": "https://s3.elespanol.com/k/imgp/cms/elespanol/11336663.jpg?p=f:jpeg/c:1669:938:nowe:118:100/w:1706/h:960&h=yX9HjAo2"
+  },
+  {
+   "t": "El restaurante italiano de San Agustín que muchos sitúan como el mejor de Gran Canaria",
+   "u": "https://www.canarias7.es/gastronomia-c7/restaurantes/restaurante-italiano-san-agustin-situan-mejor-gran-20260822070000-nt.html",
+   "s": "Canarias7",
+   "d": "2026-08-22T05:00:13.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://s2.ppllstatics.com/canarias7/www/multimedia/gastronomia-c7/2026/08/21/langostinos-kSdD-U3013780861041t-1200x840@Canarias7.jpg"
   },
   {
    "t": "El debate sobre el turismo en las Islas Canarias: así son realmente las cosas • 1 de 13",
@@ -192,6 +281,16 @@
    "img": "https://estaticos-cdn.prensaiberica.es/clip/8d538424-cafb-4c4a-9d19-fabaaaf78cb2_16-9-discover-aspect-ratio_default_0_x600y225.jpg"
   },
   {
+   "t": "Entrada a Siam Park: con descuentos o traslado en autobús",
+   "u": "https://www.teneriffa-news.com/es/siam-park-de-tenerife/siam-park-entradas_1465003.html",
+   "s": "Teneriffa News",
+   "d": "2026-08-21T23:31:22.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://www.teneriffa-news.com/media/s/siam-park-teneriffa-kinnaree-1-2400x1350.jpg"
+  },
+  {
    "t": "Chef Adrián Peregrina presenta la 3.ª edición de Apapaxoa » ¡ Uniendo al Caribe !",
    "u": "https://caribempresarial.com/chef-adrian-peregrina-presenta-la-3-a-edicion-de-apapaxoa/",
    "s": "caribempresarial.com",
@@ -199,109 +298,6 @@
    "tags": [
     "ALTA COCINA"
    ]
-  },
-  {
-   "t": "El viñedo más alto de Europa está en Tenerife: así es el pueblo que desafía a los Alpes",
-   "u": "https://www.noticiasdelvino.com/escapadas/2026/08/21/el-vinedo-mas-alto-de-europa-esta-en-tenerife-asi-es-el-pueblo-que-desafia-a-los-alpes-66331/",
-   "s": "Noticias del Vino",
-   "d": "2026-08-21T20:58:52.000Z",
-   "tags": [
-    "VINO",
-    "CANARIAS"
-   ],
-   "img": "https://www.noticiasdelvino.com/wp-content/uploads/El-vinedo-mas-alto-de-Europa-esta-en-Tenerife.jpg"
-  },
-  {
-   "t": "Las pérdidas de los plataneros de Canarias se agudizan: el valor recibido por ventas en la Península llega a 0,33 euros el kilo",
-   "u": "https://www.eldiario.es/canariasahora/eldiario-agricola/agricultura/perdidas-plataneros-canarias-agudizan-recibido-ventas-peninsula-llega-0-33-euros-kilo_1_13460562.html",
-   "s": "elDiario.es",
-   "d": "2026-08-21T18:57:25.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://static.eldiario.es/clip/2c874eb2-69a5-4185-9b70-51be8f2286c9_facebook-watermarked-aspect-ratio-1200-675_default_0.jpg"
-  },
-  {
-   "t": "El restaurante de carretera definitivo está en este pueblo medieval de Madrid: Martín Berasategui confiesa su secreto mejor guardado",
-   "u": "https://www.noticiasdelvino.com/escapadas/2026/08/21/el-restaurante-de-carretera-definitivo-esta-en-este-pueblo-medieval-de-madrid-martin-berasategui-confiesa-su-secreto-mejor-guardado-74843/",
-   "s": "Noticias del Vino",
-   "d": "2026-08-21T17:36:34.000Z",
-   "tags": [
-    "CHEF"
-   ],
-   "img": "https://www.noticiasdelvino.com/wp-content/uploads/image-583.png"
-  },
-  {
-   "t": "Dos jóvenes de Linares superan una de las oposiciones más exigentes de España",
-   "u": "https://elnuevoobservador.com/dos-jovenes-de-linares-superan-una-de-las-oposiciones-mas-exigentes-de-espana/",
-   "s": "El Nuevo Observador",
-   "d": "2026-08-21T17:05:22.000Z",
-   "tags": [
-    "MICHELIN"
-   ],
-   "img": "https://elnuevoobservador.com/wp-content/uploads/Inspectoras-Hacienda-Linares.jpg"
-  },
-  {
-   "t": "La Terraza Mirador de Costa Martiánez recupera un espacio infrautilizado con una nueva apuesta gastronómica",
-   "u": "https://eldigitalsur.com/puerto-de-la-cruz/terraza-mirador-costa-martianez-puerto-cruz/",
-   "s": "El Digital Sur",
-   "d": "2026-08-21T16:54:30.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://eldigitalsur.com/wp-content/uploads/2026/08/Inauguracion-Terraza-Mirador-de-Costa-Martianez-210826.webp"
-  },
-  {
-   "t": "Franck Putelat, chef con dos estrellas Michelin: «Es cada vez más difícil llenar un restaurante. Pero no podemos trabajar solo por dinero»",
-   "u": "https://viajes.nationalgeographic.com.es/gastronomia/frank-putelat-chef-dos-estrellas-michelin-es-cada-vez-mas-dificil-llenar-restaurante-pero-no-podemos-trabajar-solo-por-dinero_25726",
-   "s": "Viajes National Geographic",
-   "d": "2026-08-21T16:00:00.000Z",
-   "tags": [
-    "ALTA COCINA",
-    "MICHELIN"
-   ]
-  },
-  {
-   "t": "La Guancha celebra su II Vinofest con vinos, gastronomía y música",
-   "u": "https://lavozcanaria.com/icod/general/la-guancha-celebra-su-ii-vinofest-con-vinos-gastronomia-y-musica",
-   "s": "La Voz Canaria",
-   "d": "2026-08-21T15:58:03.000Z",
-   "tags": [
-    "CANARIAS",
-    "VINO"
-   ],
-   "img": "https://lavozcanaria.com/media/2026/08/la-guancha-celebra-su-ii-vinofest-con-vinos-gastronomia-y-musica.webp"
-  },
-  {
-   "t": "Dos restaurantes de Galicia se incorporan a la Guía Michelin España 2026",
-   "u": "https://www.elespanol.com/quincemil/vivir/gastrogalicia/20260821/restaurantes-galicia-incorporan-guia-michelin-espana/1003744359786_0.html",
-   "s": "El Español",
-   "d": "2026-08-21T15:43:14.000Z",
-   "tags": [
-    "MICHELIN"
-   ],
-   "img": "https://s3.elespanol.com/k/imgp/cms/elespanol/11339235.jpg?p=f:jpeg/c:1254:706:nowe:0:141/w:1706/h:960&h=d8fgo0If"
-  },
-  {
-   "t": "La Guancha celebra este viernes su Vinofest: horario, bodegas y actuaciones",
-   "u": "https://diariodeavisos.elespanol.com/2026/08/vinofest-la-guancha-vinos/",
-   "s": "Diario de Avisos",
-   "d": "2026-08-21T15:34:24.000Z",
-   "tags": [
-    "CANARIAS",
-    "VINO"
-   ],
-   "img": "https://cdn.diariodeavisos.com/wp-content/uploads/2025/06/vino.jpg"
-  },
-  {
-   "t": "Tenerife abre la primera área de servicio público para caravanas del norte de la isla",
-   "u": "https://www.eldiario.es/canariasahora/tenerifeahora/sociedad/area-servicio-caravanas-tenerife_1_13460531.html",
-   "s": "elDiario.es",
-   "d": "2026-08-21T15:25:09.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://static.eldiario.es/clip/0f341f9c-5cb7-4ea5-8209-375afec35a2f_facebook-watermarked-aspect-ratio-1200-675_default_0_x771y347.jpg"
   }
  ]
 }
