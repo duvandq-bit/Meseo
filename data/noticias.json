@@ -1,6 +1,36 @@
 {
- "updated": "2026-08-23T17:37:35.563Z",
+ "updated": "2026-08-23T23:37:57.173Z",
  "items": [
+  {
+   "t": "Karlos Arguiñano, chef: \"La clave para un buen sancocho canario está en el cherne, hay que desalarlo durante 24 horas\"",
+   "u": "https://diariodeavisos.elespanol.com/2026/08/karlos-arguinano-sancocho-canario-receta/amp/",
+   "s": "Diario de Avisos",
+   "d": "2026-08-23T19:12:58.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://diariodeavisos.elespanol.com/wp-content/uploads/2026/08/arguinano-sancocho-canario.jpg"
+  },
+  {
+   "t": "Dos heridos tras colisionar dos automóviles en Santa Cruz de Tenerife",
+   "u": "https://www.eldiario.es/canariasahora/tenerifeahora/sucesos/heridos-colisionar-automoviles-santa-cruz-tenerife_1_13462739.html",
+   "s": "elDiario.es",
+   "d": "2026-08-23T17:34:13.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://static.eldiario.es/clip/114f85cf-6982-4c4f-8121-1512247fdf86_facebook-watermarked-aspect-ratio-1200-675_default_0.jpg"
+  },
+  {
+   "t": "Catherine Zeta-Jones deslumbra en una comedia romántica que tiene la fórmula de éxito de Netflix",
+   "u": "https://almomento.mx/catherine-zeta-jones-deslumbra-en-una-comedia-romantica-que-tiene-la-formula-de-exito-de-netflix/",
+   "s": "Noticias - Almomento",
+   "d": "2026-08-23T17:00:48.000Z",
+   "tags": [
+    "ALTA COCINA"
+   ],
+   "img": "https://almomento.mx/wp-content/uploads/2026/08/Catherine-Zeta-Jones-sin-reservas.jpg"
+  },
   {
    "t": "Nueva Canarias critica “la falta de respuesta al grave problema de la vivienda” en Santa Cruz de La Palma",
    "u": "https://www.eldiario.es/canariasahora/lapalmaahora/municipios/santa_cruz_de_la_palma/nueva-canarias-critica-falta-respuesta-grave-problema-vivienda-santa-cruz-palma_1_13462713.html",
@@ -133,7 +163,7 @@
   {
    "t": "Un menú del día por 25 euros en un restaurante de Madrid que mezcla en el mismo fogón lo mejor de Perú, México y España",
    "u": "https://www.20minutos.es/gastronomia/restaurantes/menu-dia-25-euros-restaurante-madrid-mezcla-peru-mexico-espana_7015737_0.html",
-   "s": "20minutos.es",
+   "s": "20Minutos",
    "d": "2026-08-23T05:00:00.000Z",
    "tags": [
     "MICHELIN"
@@ -221,6 +251,16 @@
    "img": "https://static.eldiario.es/clip/0fe3f127-318b-4f0f-90cf-a231afb22639_facebook-watermarked-aspect-ratio-1200-675_default_0_x609y174.jpg"
   },
   {
+   "t": "El restaurante betanceiro A Artesa da Moza Crecha, reconocido por la Guía Michelin por su \"meteórica progresión\": \"La estrella sería un sueño, pero no es nuestro objetivo\"",
+   "u": "https://www.laopinioncoruna.es/gran-coruna/2026/08/22/restaurante-betanceiro-artesa-da-moza-133564002.html",
+   "s": "La Opinión A Coruña",
+   "d": "2026-08-22T12:13:50.000Z",
+   "tags": [
+    "MICHELIN"
+   ],
+   "img": "https://estaticos-cdn.prensaiberica.es/clip/cf5ce86c-69ad-4ee2-a1ef-109e136fe5da_16-9-discover-aspect-ratio_default_0_x800y355.jpg"
+  },
+  {
    "t": "Gofio vuelve a casa y emociona a Gran Canaria: Safe Cruz conquista Star Nights con los sabores de siempre",
    "u": "https://www.canarias7.es/gastronomia-c7/gofio-vuelve-casa-emociona-gran-canaria-safe-20260822130937-nt.html",
    "s": "Canarias7",
@@ -232,13 +272,13 @@
   },
   {
    "t": "La raíz que mira al Atlántico",
-   "u": "https://www.canarias7.es/gastronomia-c7/raiz-mira-atlantico-20260822140000-nt.html",
+   "u": "https://www.canarias7.es/gastronomia-c7/raiz-mira-atlantico-20260822140000-nt_amp.html",
    "s": "Canarias7",
    "d": "2026-08-22T12:00:00.000Z",
    "tags": [
     "CANARIAS"
    ],
-   "img": "https://s1.ppllstatics.com/canarias7/www/multimedia/gastronomia-c7/2026/08/20/foodkool6-k1AD-U301365129643T1C-1200x840@Canarias7.jpg"
+   "img": "https://s1.ppllstatics.com/canarias7/www/multimedia/gastronomia-c7/2026/08/20/foodkool6.jpg"
   },
   {
    "t": "El Cabildo proyecta una residencia en Tenerife para alojar a estudiantes de La Palma",
@@ -259,46 +299,6 @@
     "ALTA COCINA"
    ],
    "img": "https://www.noticiasdelvino.com/wp-content/uploads/image-217.png"
-  },
-  {
-   "t": "Los expertos coinciden: \"El hígado de rape eleva mucho el sabor del arroz de pescado\"",
-   "u": "https://www.elespanol.com/alicante/vivir/gastronomia/20260822/expertos-coinciden-higado-rape-eleva-sabor-arroz-pescado/1003744358576_0.amp.html",
-   "s": "El Español",
-   "d": "2026-08-22T09:00:00.000Z",
-   "tags": [
-    "MICHELIN"
-   ],
-   "img": "https://s3.elespanol.com/k/imgp/cms/elespanol/11339325.jpg?p=f:jpeg/g:fp:0.35:0.4/w:1706/h:960&h=52rwTr_L"
-  },
-  {
-   "t": "La villa juguetera de Alicante que conquista por su cocina: así es el pueblo donde mejor se come de España",
-   "u": "https://www.noticiasdelvino.com/restaurantes/2026/08/22/la-villa-juguetera-de-alicante-que-conquista-por-su-cocina-asi-es-el-pueblo-donde-mejor-se-come-de-espana-74836/",
-   "s": "Noticias del Vino",
-   "d": "2026-08-22T07:36:03.000Z",
-   "tags": [
-    "MICHELIN"
-   ],
-   "img": "https://www.noticiasdelvino.com/wp-content/uploads/restaurantes-5.jpg"
-  },
-  {
-   "t": "Para nosotros, estos son los mejores churros de Tenerife",
-   "u": "https://www.teneriffa-news.com/es/informacion-sobre-tenerife/cinco-churrerias-de-tenerife-que-merecen-la-parada_1464388.html",
-   "s": "Teneriffa News",
-   "d": "2026-08-22T07:29:47.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://www.teneriffa-news.com/media/c/churros-schokolade-2400x1350.jpg"
-  },
-  {
-   "t": "El nuevo restaurante de alta cocina basado solo en postres",
-   "u": "https://www.diariodesevilla.es/gente/nuevo-restaurante-alta-cocina-basado_0_2007762442.amp.html",
-   "s": "Diario de Sevilla",
-   "d": "2026-08-22T07:05:09.000Z",
-   "tags": [
-    "ALTA COCINA"
-   ],
-   "img": "https://static.grupojoly.com/clip/343f5433-4146-4815-bbe9-d7908d36b4a6_facebook-aspect-ratio_default_0.jpg"
   }
  ]
 }
