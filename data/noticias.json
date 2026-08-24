@@ -1,11 +1,71 @@
 {
- "updated": "2026-08-24T05:55:24.081Z",
+ "updated": "2026-08-24T11:45:46.944Z",
  "items": [
+  {
+   "t": "Dos nuevos restaurantes gallegos se cuelan en la Guía Michelin",
+   "u": "https://enfoques.gal/galicia/dos-nuevos-restaurantes-gallegos-se-cuelan-en-la-guia-michelin/",
+   "s": "Enfoques.gal",
+   "d": "2026-08-24T11:33:43.000Z",
+   "tags": [
+    "MICHELIN"
+   ],
+   "img": "https://enfoques.gal/wp-content/uploads/2026/08/BeFunky-collage-4-4.jpg"
+  },
+  {
+   "t": "El chef José Pizarro debuta en España con una propuesta gastronómica exclusiva en el hotel JOIA El Mirador de Tenerife",
+   "u": "https://www.europapress.es/turismo/nacional/noticia-chef-jose-pizarro-debuta-espana-propuesta-gastronomica-exclusiva-hotel-joia-mirador-tenerife-20260824123114.html",
+   "s": "Europa Press",
+   "d": "2026-08-24T10:31:14.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://img.europapress.es/fotoweb/fotonoticia_20260824123114_1200.jpg"
+  },
+  {
+   "t": "Dos jóvenes de Linares superan una de las oposiciones más exigentes de España",
+   "u": "https://elnuevoobservador.com/dos-jovenes-de-linares-superan-una-de-las-oposiciones-mas-exigentes-de-espana/",
+   "s": "El Nuevo Observador",
+   "d": "2026-08-24T10:10:01.000Z",
+   "tags": [
+    "MICHELIN"
+   ],
+   "img": "https://elnuevoobservador.com/wp-content/uploads/Inspectoras-Hacienda-Linares.jpg"
+  },
+  {
+   "t": "El Rebusco: Vinos de Calidad y Enoturismo en el Valle de Güímar - Tradición Familiar y Bodega Submarina",
+   "u": "https://www.canariasdiario.com/noticia/151121/gastronomia/el-rebusco-bodegas-referente-en-innovacion-y-diversificacion-vitivinicola.html",
+   "s": "Canariasdiario.com",
+   "d": "2026-08-24T09:54:07.000Z",
+   "tags": [
+    "CANARIAS",
+    "VINO"
+   ]
+  },
+  {
+   "t": "El rincón de Tenerife donde comer pasta fresca artesanal desde 7 euros: no es el típico restaurante italiano",
+   "u": "https://www.eldia.es/tenerife/2026/08/24/rincon-tenerife-comer-pasta-fresca-desde-7-euros-dv-133604071.html",
+   "s": "Eldía",
+   "d": "2026-08-24T09:14:51.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://estaticos-cdn.prensaiberica.es/clip/aa388086-ec38-442a-a329-983484eb5cd1_16-9-discover-aspect-ratio_default_0_x643y454.jpg"
+  },
+  {
+   "t": "La alta gastronomía se rinde al dulce",
+   "u": "https://www.diariopalentino.es/noticia/z34f43242-da2b-41b6-b6d879dd6bfdfb5a/202608/la-alta-gastronomia-se-rinde-al-dulce",
+   "s": "Diario Palentino",
+   "d": "2026-08-24T09:10:25.000Z",
+   "tags": [
+    "ALTA COCINA"
+   ],
+   "img": "https://www.diariopalentino.es/media/IMG/2026/36D9B301-8E39-4523-80DDE541583ABE10.JPG"
+  },
   {
    "t": "El pueblo donde mejor se come de Badajoz es poco conocido, pero perfecto para una escapada gastronómica: cerdo ibérico, restaurantes y un museo del turrón",
    "u": "https://www.infobae.com/espana/2026/08/24/el-pueblo-donde-mejor-se-come-de-badajoz-es-poco-conocido-pero-perfecto-para-una-escapada-gastronomica-cerdo-iberico-restaurantes-y-un-museo-del-turron/",
    "s": "Infobae",
-   "d": "2026-08-24T03:11:33.000Z",
+   "d": "2026-08-24T04:00:00.000Z",
    "tags": [
     "MICHELIN"
    ],
@@ -53,6 +113,16 @@
    "img": "https://diariodeavisos.elespanol.com/wp-content/uploads/2026/08/arguinano-sancocho-canario.jpg"
   },
   {
+   "t": "Ruinas mortales en Tenerife, padres exigen acción política y esta es la respuesta",
+   "u": "https://www.teneriffa-news.com/es/actualidad/noticias-de-tenerife/ruina-mortal-tenerife-permanece_1465408.html",
+   "s": "Teneriffa News",
+   "d": "2026-08-23T19:07:21.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://www.teneriffa-news.com/media/a/anaza-hochhaus-santa-cruz-teneriffa-1920x1080.jpg"
+  },
+  {
    "t": "Dos heridos tras colisionar dos automóviles en Santa Cruz de Tenerife",
    "u": "https://www.eldiario.es/canariasahora/tenerifeahora/sucesos/heridos-colisionar-automoviles-santa-cruz-tenerife_1_13462739.html",
    "s": "elDiario.es",
@@ -93,16 +163,6 @@
    "img": "https://cdn.diariodeavisos.com/wp-content/uploads/2026/08/simpa-guachinche-canonazo.jpg"
   },
   {
-   "t": "El documental sobre el restaurante de Estrella Michelín de un pueblo de 40 habitantes en Huesca llega a los cines",
-   "u": "https://www.elperiodicodearagon.com/cultura/2026/08/23/documental-restaurante-estrella-michelin-pueblo-133590711.html",
-   "s": "El Periódico de Aragón",
-   "d": "2026-08-23T15:48:55.000Z",
-   "tags": [
-    "ALTA COCINA"
-   ],
-   "img": "https://estaticos-cdn.prensaiberica.es/clip/9f15a11f-24dd-4b11-87ca-cb3aa46d3367_16-9-discover-aspect-ratio_default_0_x750y262.jpg"
-  },
-  {
    "t": "Dani García, chef: \"El gazpacho más refrescante no lleva agua ni pan, sino 700 g de tomates maduros, 200 g de fresas y queso feta\"",
    "u": "https://cronicaglobal.elespanol.com/gastronomia/20260823/dani-garcia-gazpacho-refrescante-tomates-maduros-fresas-trt/1003742788222_30.amp.html",
    "s": "Crónica Global",
@@ -111,6 +171,16 @@
     "ALTA COCINA"
    ],
    "img": "https://a2.elespanol.com/k/imgp/cms/asociados/563192.jpg?p=f:jpeg/w:1706/h:960&h=lOycD8vo"
+  },
+  {
+   "t": "Nuevo revés: se suspende el proyecto del circuito de Fórmula 1 en Tenerife",
+   "u": "https://www.teneriffa-news.com/es/actualidad/noticias-de-tenerife/paran-circuito-formula-1-tenerife_1464307.html",
+   "s": "Teneriffa News",
+   "d": "2026-08-23T14:18:06.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://www.teneriffa-news.com/media/t/teneriffa-rennbahn-formel-1-rennstrecke-2400x1350.jpg"
   },
   {
    "t": "Las comidas canarias que pides en la Península y casi nadie entiende a la primera",
@@ -131,15 +201,6 @@
     "MICHELIN"
    ],
    "img": "https://s3.elespanol.com/k/imgp/cms/elespanol/11337772.jpg?p=f:jpeg/w:1706/h:960&h=7dk3ujRX"
-  },
-  {
-   "t": "El restaurante asturiano que cautiva a Dabiz Muñoz, uno de los mejores cocineros del mundo",
-   "u": "https://www.lavozdeasturias.es/amp/noticia/gastronomia/2026/08/23/restaurante-asturiano-cautiva-dabiz-munoz-mejores-cocineros-mundo/00031787482701381924752.htm?utm_campaign",
-   "s": "La Voz de Asturias",
-   "d": "2026-08-23T11:43:00.000Z",
-   "tags": [
-    "ALTA COCINA"
-   ]
   },
   {
    "t": "Tenerife y Almería quieren alargar en el Heliodoro su buen estreno",
@@ -163,13 +224,13 @@
   },
   {
    "t": "De una granja de cerdos abandonada a cultivar setas exóticas en Tenerife",
-   "u": "https://diariodeavisos.elespanol.com/2026/08/granja-cerdos-setas-exoticas-tenerife/amp/",
+   "u": "https://diariodeavisos.elespanol.com/2026/08/granja-cerdos-setas-exoticas-tenerife/",
    "s": "Diario de Avisos",
-   "d": "2026-08-23T10:03:55.000Z",
+   "d": "2026-08-23T10:36:15.000Z",
    "tags": [
     "CANARIAS"
    ],
-   "img": "https://diariodeavisos.elespanol.com/wp-content/uploads/2026/08/Pagina-62-SETAS-EXOTICAS_1.jpg"
+   "img": "https://cdn.diariodeavisos.com/wp-content/uploads/2026/08/Pagina-62-SETAS-EXOTICAS_1.jpg"
   },
   {
    "t": "El restaurante de Las Palmas de Gran Canaria donde disfrutar de platos para compartir con vistas al mar y ambiente acogedor",
@@ -194,7 +255,7 @@
   {
    "t": "Un menú del día por 25 euros en un restaurante de Madrid que mezcla en el mismo fogón lo mejor de Perú, México y España",
    "u": "https://www.20minutos.es/gastronomia/restaurantes/menu-dia-25-euros-restaurante-madrid-mezcla-peru-mexico-espana_7015737_0.html",
-   "s": "20Minutos",
+   "s": "20minutos.es",
    "d": "2026-08-23T05:00:00.000Z",
    "tags": [
     "MICHELIN"
@@ -208,7 +269,8 @@
    "d": "2026-08-22T20:16:59.000Z",
    "tags": [
     "CHEF"
-   ]
+   ],
+   "img": "https://img.asmedia.epimg.net/resizer/v2/AFQAZBQL5JOEDJDJM5U7T57CNM.jpg?auth=5e21bf723efd23b62f565f56bf23631fc4290faeb80347ed9063f06c3da9bd09&width=1472&height=828&smart=true"
   },
   {
    "t": "Nuevo 'simpa' en un guachinche de Tenerife: las cámaras captan a una pareja saliendo del local sin pagar",
@@ -219,16 +281,6 @@
     "CANARIAS"
    ],
    "img": "https://estaticos-cdn.prensaiberica.es/clip/6f599b32-3817-4375-bc1d-b3a16c8723f4_16-9-discover-aspect-ratio_default_0_x241y154.jpg"
-  },
-  {
-   "t": "El TSJEx avala la expulsión de un marroquí pese a vivir desde niño en España",
-   "u": "https://www.hoy.es/extremadura/tsjex-avala-expulsion-marroqui-pese-vivir-nino-20260822125220-nt_amp.html",
-   "s": "Hoy",
-   "d": "2026-08-22T19:00:31.000Z",
-   "tags": [
-    "MICHELIN"
-   ],
-   "img": "https://s1.ppllstatics.com/hoy/www/multimedia/local/2026/08/22/tsjex-U42234041074ACN-1200x630@Hoy.jpg"
   },
   {
    "t": "Esta es la reina del Carnaval de Tenerife de 2026",
@@ -249,56 +301,6 @@
     "CANARIAS"
    ],
    "img": "https://www.teneriffa-news.com/media/t/tajinaste-kanaren-1600x1350.jpg"
-  },
-  {
-   "t": "Tres personas heridas al volcar un vehículo en la vía TF-2 en Santa Cruz de Tenerife",
-   "u": "https://www.eldiario.es/canariasahora/tenerifeahora/sucesos/tres-personas-heridas-volcar-vehiculo-via-tf-2-santa-cruz-tenerife_1_13461831.html",
-   "s": "elDiario.es",
-   "d": "2026-08-22T16:45:30.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://static.eldiario.es/clip/f8d7efe9-9942-4829-bb69-c8bd40391163_facebook-watermarked-aspect-ratio-1200-675_default_0.jpg"
-  },
-  {
-   "t": "Gofio pone el sabor canario al cierre de la primera edición de Maspalomas Golf Star Nights",
-   "u": "https://www.laprovincia.es/gran-canaria/2026/08/22/gofio-pone-sabor-canario-cierre-133552005.amp.html",
-   "s": "La Provincia",
-   "d": "2026-08-22T16:41:37.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://estaticos-cdn.prensaiberica.es/clip/bc751ecd-457c-44c0-9190-85e2749656b7_16-9-discover-aspect-ratio_default_0_x609y216.jpg"
-  },
-  {
-   "t": "Tenerife: una banda proporciona documentos falsos a migrantes; 19 detenidos",
-   "u": "https://www.teneriffa-news.com/es/actualidad/noticias-de-tenerife/tenerife-detenidos-papeles-falsos_1463885.html",
-   "s": "Teneriffa News",
-   "d": "2026-08-22T12:31:28.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://www.teneriffa-news.com/media/p/polizei-nationalpolizei-kanaren-2400x1350.jpg"
-  },
-  {
-   "t": "Fallece Rosa Martina Bolaños, presidenta del CV Emalsa Gran Canaria",
-   "u": "https://www.eldiario.es/voleibol-2/fallece-rosa-martina-bolanos-presidenta-cv-emalsa-gran-canaria_1_13461650.html",
-   "s": "elDiario.es",
-   "d": "2026-08-22T12:20:46.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://static.eldiario.es/clip/0fe3f127-318b-4f0f-90cf-a231afb22639_facebook-watermarked-aspect-ratio-1200-675_default_0_x609y174.jpg"
-  },
-  {
-   "t": "El restaurante betanceiro A Artesa da Moza Crecha, reconocido por la Guía Michelin por su \"meteórica progresión\": \"La estrella sería un sueño, pero no es nuestro objetivo\"",
-   "u": "https://www.laopinioncoruna.es/gran-coruna/2026/08/22/restaurante-betanceiro-artesa-da-moza-133564002.html",
-   "s": "La Opinión A Coruña",
-   "d": "2026-08-22T12:13:50.000Z",
-   "tags": [
-    "MICHELIN"
-   ],
-   "img": "https://estaticos-cdn.prensaiberica.es/clip/cf5ce86c-69ad-4ee2-a1ef-109e136fe5da_16-9-discover-aspect-ratio_default_0_x800y355.jpg"
   }
  ]
 }
