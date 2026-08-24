@@ -1,6 +1,47 @@
 {
- "updated": "2026-08-23T23:37:57.173Z",
+ "updated": "2026-08-24T05:55:24.081Z",
  "items": [
+  {
+   "t": "El pueblo donde mejor se come de Badajoz es poco conocido, pero perfecto para una escapada gastronómica: cerdo ibérico, restaurantes y un museo del turrón",
+   "u": "https://www.infobae.com/espana/2026/08/24/el-pueblo-donde-mejor-se-come-de-badajoz-es-poco-conocido-pero-perfecto-para-una-escapada-gastronomica-cerdo-iberico-restaurantes-y-un-museo-del-turron/",
+   "s": "Infobae",
+   "d": "2026-08-24T03:11:33.000Z",
+   "tags": [
+    "MICHELIN"
+   ],
+   "img": "https://www.infobae.com/resizer/v2/5YSS5K76MRFKLIM6L4K5ZBCX3I.jpg?auth=5602a8bcbe030d11d88c3deb02a8b2471aa51f8f28a2ecb7c98c37caa72da2dd&smart=true&width=1200&height=630&quality=85"
+  },
+  {
+   "t": "Del discípulo de Jordi Cruz al tándem culinario de Betanzos: los nuevos restaurantes de Galicia de la Guía Michelin",
+   "u": "https://www.eldebate.com/espana/galicia/20260824/discipulo-jordi-cruz-tandem-culinario-betanzos-nuevos-restaurantes-galicia-guia-michelin_451590.html",
+   "s": "El Debate",
+   "d": "2026-08-24T02:30:00.000Z",
+   "tags": [
+    "MICHELIN"
+   ],
+   "img": "https://www.eldebate.com/files/article_social/files/fp/uploads/2026/08/23/6a8b0aa33f70a.r_d.657-1107-10256.webp"
+  },
+  {
+   "t": "7 vinos canarios para refrescar (y disfrutar) las noches más calurosas",
+   "u": "https://amp.elmundo.es/metropoli/elmundovino/2026/08/24/6a6cf61221efa0e55f8b45ba.html",
+   "s": "El Mundo",
+   "d": "2026-08-24T00:12:00.000Z",
+   "tags": [
+    "VINO",
+    "CANARIAS"
+   ],
+   "img": "https://e01-phantom-elmundo.uecdn.es/1c97cf43d24ae6bae0e8be2fc392496c/crop/281x255/2739x1893/resize/1200/f/webp/assets/multimedia/imagenes/2026/07/31/17855261170034.jpg"
+  },
+  {
+   "t": "Entrada al Loro Parque de Tenerife: con descuento y traslado VIP",
+   "u": "https://www.teneriffa-news.com/es/loro-parque-tenerife-es/loro-parque-entradas_1464373.html",
+   "s": "Teneriffa News",
+   "d": "2026-08-23T23:03:25.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://www.teneriffa-news.com/media/l/loro-parque-teneriffa-eingang-1280x720.jpg"
+  },
   {
    "t": "Karlos Arguiñano, chef: \"La clave para un buen sancocho canario está en el cherne, hay que desalarlo durante 24 horas\"",
    "u": "https://diariodeavisos.elespanol.com/2026/08/karlos-arguinano-sancocho-canario-receta/amp/",
@@ -92,16 +133,6 @@
    "img": "https://s3.elespanol.com/k/imgp/cms/elespanol/11337772.jpg?p=f:jpeg/w:1706/h:960&h=7dk3ujRX"
   },
   {
-   "t": "El restaurante de carretera definitivo está en este pueblo medieval de Madrid: Martín Berasategui confiesa su secreto mejor guardado",
-   "u": "https://www.noticiasdelvino.com/escapadas/2026/08/23/el-restaurante-de-carretera-definitivo-esta-en-este-pueblo-medieval-de-madrid-martin-berasategui-confiesa-su-secreto-mejor-guardado-74843/",
-   "s": "Noticias del Vino",
-   "d": "2026-08-23T11:56:38.000Z",
-   "tags": [
-    "CHEF"
-   ],
-   "img": "https://www.noticiasdelvino.com/wp-content/uploads/image-583.png"
-  },
-  {
    "t": "El restaurante asturiano que cautiva a Dabiz Muñoz, uno de los mejores cocineros del mundo",
    "u": "https://www.lavozdeasturias.es/amp/noticia/gastronomia/2026/08/23/restaurante-asturiano-cautiva-dabiz-munoz-mejores-cocineros-mundo/00031787482701381924752.htm?utm_campaign",
    "s": "La Voz de Asturias",
@@ -177,8 +208,7 @@
    "d": "2026-08-22T20:16:59.000Z",
    "tags": [
     "CHEF"
-   ],
-   "img": "https://img.asmedia.epimg.net/resizer/v2/AFQAZBQL5JOEDJDJM5U7T57CNM.jpg?auth=5e21bf723efd23b62f565f56bf23631fc4290faeb80347ed9063f06c3da9bd09&width=1472&height=828&smart=true"
+   ]
   },
   {
    "t": "Nuevo 'simpa' en un guachinche de Tenerife: las cámaras captan a una pareja saliendo del local sin pagar",
@@ -189,6 +219,16 @@
     "CANARIAS"
    ],
    "img": "https://estaticos-cdn.prensaiberica.es/clip/6f599b32-3817-4375-bc1d-b3a16c8723f4_16-9-discover-aspect-ratio_default_0_x241y154.jpg"
+  },
+  {
+   "t": "El TSJEx avala la expulsión de un marroquí pese a vivir desde niño en España",
+   "u": "https://www.hoy.es/extremadura/tsjex-avala-expulsion-marroqui-pese-vivir-nino-20260822125220-nt_amp.html",
+   "s": "Hoy",
+   "d": "2026-08-22T19:00:31.000Z",
+   "tags": [
+    "MICHELIN"
+   ],
+   "img": "https://s1.ppllstatics.com/hoy/www/multimedia/local/2026/08/22/tsjex-U42234041074ACN-1200x630@Hoy.jpg"
   },
   {
    "t": "Esta es la reina del Carnaval de Tenerife de 2026",
@@ -211,14 +251,14 @@
    "img": "https://www.teneriffa-news.com/media/t/tajinaste-kanaren-1600x1350.jpg"
   },
   {
-   "t": "Estos son los 7 nuevos restaurantes más destacados de las Islas Canarias",
-   "u": "https://www.teneriffa-news.com/es/actualidad/noticias-de-canarias/siete-restaurantes-canarios-suman-nuevos-soles-repsol-en-la-guia-2026_1464389.html",
-   "s": "Teneriffa News",
-   "d": "2026-08-22T17:34:10.000Z",
+   "t": "Tres personas heridas al volcar un vehículo en la vía TF-2 en Santa Cruz de Tenerife",
+   "u": "https://www.eldiario.es/canariasahora/tenerifeahora/sucesos/tres-personas-heridas-volcar-vehiculo-via-tf-2-santa-cruz-tenerife_1_13461831.html",
+   "s": "elDiario.es",
+   "d": "2026-08-22T16:45:30.000Z",
    "tags": [
     "CANARIAS"
    ],
-   "img": "https://www.teneriffa-news.com/media/a/adrian-bosch-san-ho-costa-adeje-repsol-sol-1600x1080.jpg"
+   "img": "https://static.eldiario.es/clip/f8d7efe9-9942-4829-bb69-c8bd40391163_facebook-watermarked-aspect-ratio-1200-675_default_0.jpg"
   },
   {
    "t": "Gofio pone el sabor canario al cierre de la primera edición de Maspalomas Golf Star Nights",
@@ -259,46 +299,6 @@
     "MICHELIN"
    ],
    "img": "https://estaticos-cdn.prensaiberica.es/clip/cf5ce86c-69ad-4ee2-a1ef-109e136fe5da_16-9-discover-aspect-ratio_default_0_x800y355.jpg"
-  },
-  {
-   "t": "Gofio vuelve a casa y emociona a Gran Canaria: Safe Cruz conquista Star Nights con los sabores de siempre",
-   "u": "https://www.canarias7.es/gastronomia-c7/gofio-vuelve-casa-emociona-gran-canaria-safe-20260822130937-nt.html",
-   "s": "Canarias7",
-   "d": "2026-08-22T12:09:37.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://s1.ppllstatics.com/canarias7/www/multimedia/gastronomia-c7/2026/08/22/portada-k0NF-U3013910420322Q-1200x840@Canarias7.jpg"
-  },
-  {
-   "t": "La raíz que mira al Atlántico",
-   "u": "https://www.canarias7.es/gastronomia-c7/raiz-mira-atlantico-20260822140000-nt_amp.html",
-   "s": "Canarias7",
-   "d": "2026-08-22T12:00:00.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://s1.ppllstatics.com/canarias7/www/multimedia/gastronomia-c7/2026/08/20/foodkool6.jpg"
-  },
-  {
-   "t": "El Cabildo proyecta una residencia en Tenerife para alojar a estudiantes de La Palma",
-   "u": "https://www.eldiario.es/canariasahora/lapalmaahora/politica/cabildo-proyecta-residencia-tenerife-facilitar-alojamiento-estudiantes-palma_1_13461578.html",
-   "s": "elDiario.es",
-   "d": "2026-08-22T11:14:51.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://static.eldiario.es/clip/f5cc39b3-792e-4e9d-a5a7-0ccd828659a6_facebook-watermarked-aspect-ratio-1200-675_default_0_x734y647.jpg"
-  },
-  {
-   "t": "La conexión desconocida de Dabiz Muñoz con un pueblo de Cuenca de solo 150 habitantes",
-   "u": "https://www.noticiasdelvino.com/escapadas/2026/08/22/la-conexion-desconocida-de-dabiz-munoz-con-un-pueblo-de-cuenca-de-solo-150-habitantes-68966/",
-   "s": "Noticias del Vino",
-   "d": "2026-08-22T09:38:56.000Z",
-   "tags": [
-    "ALTA COCINA"
-   ],
-   "img": "https://www.noticiasdelvino.com/wp-content/uploads/image-217.png"
   }
  ]
 }
