@@ -9644,7 +9644,7 @@ body.chat-open .sound-toggle{ display:none !important; }
 .install-banner{display:flex;align-items:center;gap:.7rem;margin-bottom:1.4rem;padding:.75rem .85rem;
   background:linear-gradient(155deg,rgba(196,154,60,.12),rgba(196,154,60,.04));
   border:1.5px solid rgba(196,154,60,.4);border-radius:var(--r2);animation:slideUp .4s ease both}
-.install-banner-ic{font-size:1.3rem;flex-shrink:0}
+.install-banner-ic{flex-shrink:0;display:flex;align-items:center}
 .install-banner-tx{flex:1;min-width:0}
 .install-banner-tx b{display:block;font-family:'Cinzel',serif;font-size:.82rem;color:var(--gold)}
 .install-banner-tx span{font-size:.7rem;color:var(--parch3);line-height:1.35;display:block}

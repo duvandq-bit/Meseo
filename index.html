@@ -52,7 +52,7 @@
 <meta property="og:description" content="Formación de equipos de sala: carta, alérgenos, vinos, exámenes y juegos de repaso.">
 <meta property="og:url" content="https://meseo.es/">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"Meseo","url":"https://meseo.es/"}</script>
-<meta name="app-version" content="7.344">
+<meta name="app-version" content="7.345">
 <meta name="app-build" content="May 2026">
 <meta name="theme-color" content="#1c2a22">
 <!-- ═══ PWA ═══ -->
@@ -1596,7 +1596,7 @@ const CAT_COLORS={'Entrantes':'#c49a3c','Hamburguesas y Bocatas':'#b86050','Plat
 const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#c49a3c"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#a47a2c" opacity=".4"/><path d="M8 8v4a1 1 0 001 1h1v4M10 8v4" stroke="#fff" stroke-width="1.2" stroke-linecap="round" fill="none"/><path d="M15 8v8M14 8v3a1.5 1.5 0 003 0V8" stroke="#fff" stroke-width="1.2" stroke-linecap="round" fill="none"/></svg>`,'Hamburguesas y Bocatas':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#b86050"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#983838" opacity=".4"/><path d="M7 9h10M7 12h10M7 15h10" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/><path d="M8 9c0-2 2-3 4-3s4 1 4 3M8 15c0 2 2 3 4 3s4-1 4-3" fill="none" stroke="#fff" stroke-width="1" opacity=".7"/></svg>`,'Platos Principales':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#4888a0"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#2e6878" opacity=".4"/><path d="M5 15h14" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/><path d="M12 6a6 6 0 016 6H6a6 6 0 016-6z" fill="none" stroke="#fff" stroke-width="1.1"/><circle cx="10" cy="6" r=".7" fill="#fff" opacity=".7"/><circle cx="12" cy="5" r=".7" fill="#fff" opacity=".7"/><circle cx="14" cy="6" r=".7" fill="#fff" opacity=".7"/></svg>`,'Sugerencias':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#d4aa4c"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#a48a2c" opacity=".4"/><polygon points="12,5 14.5,10 20,10.5 16,14 17,20 12,17 7,20 8,14 4,10.5 9.5,10" fill="#fff" opacity=".9"/></svg>`,'Guarniciones y Salsas':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#4d8a5e"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#2d6a3e" opacity=".4"/><path d="M12 18V10M5 10c0-4 3-6 7-6s7 2 7 6c0 5-3 8-7 8s-7-3-7-8z" fill="none" stroke="#fff" stroke-width="1.1"/><path d="M5 10c3 0 5 1 7 2.5" fill="none" stroke="#fff" stroke-width=".8" opacity=".6"/></svg>`,'Postres':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#7a6aaa"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#5a4a8a" opacity=".4"/><path d="M9 19h6M12 12v7M7 6l2 4.5a3 3 0 006 0L17 6H7z" fill="none" stroke="#fff" stroke-width="1.1" stroke-linecap="round"/></svg>`,'Vegetariano':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#5a9a6e"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#3a7a4e" opacity=".4"/><path d="M9 18h6M12 18V10M12 10c0-3 2-5 5-5-.7 2.5-2.5 5-5 5zM12 10c0-3-2-5-5-5 .7 2.5 2.5 5 5 5z" fill="none" stroke="#fff" stroke-width="1.1" stroke-linecap="round"/></svg>`};
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='7.344';  // sincronizada con sw.js VERSION (guard de CI)
+const APP_VERSION='7.345';  // sincronizada con sw.js VERSION (guard de CI)
 const APP_BUILD='Jul 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;
@@ -7606,7 +7606,7 @@ function _dqRender(){
   ov.innerHTML=`
     <div role="dialog" aria-modal="true" aria-label="${en?'Daily quiz':'Reto del día'}" style="background:linear-gradient(155deg,#faf6ee,#f0e8d8);border:1.5px solid rgba(196,154,60,.4);border-radius:16px;max-width:460px;width:100%;padding:1.3rem 1.3rem 1rem;box-shadow:0 18px 60px rgba(0,0,0,.45)">
       <div style="display:flex;justify-content:space-between;align-items:baseline;gap:.6rem">
-        <div style="font-family:'DM Mono',monospace;font-size:.62rem;letter-spacing:.16em;text-transform:uppercase;color:var(--gold-deep)">⭐ ${en?'Daily quiz':'Reto del día'}</div>
+        <div style="font-family:'DM Mono',monospace;font-size:.62rem;letter-spacing:.16em;text-transform:uppercase;color:var(--gold-deep)"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align:-.15em;flex:none"><path d="M12 3.5l2.6 5.6 6.1.8-4.5 4.2 1.2 6-5.4-3-5.4 3 1.2-6L3.3 9.9l6.1-.8L12 3.5z"/></svg> ${en?'Daily quiz':'Reto del día'}</div>
         <div style="font-family:'DM Mono',monospace;font-size:.6rem;color:var(--parch3)">${dateLbl}</div>
       </div>
       <div style="font-family:Georgia,serif;font-size:1rem;font-weight:700;color:var(--parchment);margin:.6rem 0 .7rem;line-height:1.35">${escapeHTML(q.q)}</div>
@@ -7652,7 +7652,7 @@ function _pddHeroHTML(emp,en){
   if(!_dqIsDone(emp)){
     const s=emp.dqStreak||0;
     return `<div class="pdd-hero">
-      <div class="pdd-eyebrow"><span>⭐ ${en?'Daily quiz':'Reto del día'}</span><span>≈ 30 s</span></div>
+      <div class="pdd-eyebrow"><span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align:-.15em;flex:none"><path d="M12 3.5l2.6 5.6 6.1.8-4.5 4.2 1.2 6-5.4-3-5.4 3 1.2-6L3.3 9.9l6.1-.8L12 3.5z"/></svg> ${en?'Daily quiz':'Reto del día'}</span><span>≈ 30 s</span></div>
       <div class="pdd-title">${en?'Today’s question':'La pregunta de hoy'}</div>
       <div class="pdd-sub">${en?'Same question for the whole team':'La misma pregunta para todo el equipo'}${s>0?` · 🔥 ${s}`:''}</div>
       <button type="button" class="pdd-cta" onclick="openDailyReto()">${en?'Start':'Empezar'}</button>
@@ -7834,7 +7834,7 @@ async function _luCodeOpen(){
   const emp=getEmp(currentUser); emp.luCdgDay=todayStr(); saveDB();
   const card=_cdgCardHTML(c).replace('<details class="cdg-card"','<details class="cdg-card" open');
   _luOverlay(`
-    <div style="font-family:'DM Mono',monospace;font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;color:var(--gold-deep);margin-bottom:.5rem">🧭 ${en?'Code of the day':'Código del día'}</div>
+    <div style="font-family:'DM Mono',monospace;font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;color:var(--gold-deep);margin-bottom:.5rem"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align:-.15em;flex:none"><circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2 5-5 2 2-5 5-2z"/></svg> ${en?'Code of the day':'Código del día'}</div>
     ${card}
   `, en?'Code of the day':'Código del día');
 }
@@ -8052,7 +8052,7 @@ function renderInstallBanner(){
   if(_isStandalone() || _installSnoozed()) return '';
   const _en=LANG==='en';
   return `<div class="install-banner" id="installBanner" role="region" aria-label="${_en?'Install the app':'Instalar la app'}">
-    <div class="install-banner-ic">⚡</div>
+    <div class="install-banner-ic" style="color:var(--gold)"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align:-.15em;flex:none"><path d="M13 2.5L4.5 13.5H11l-1 8 8.5-11H12l1-8z"/></svg></div>
     <div class="install-banner-tx">
       <b>${_en?'1-tap access':'Acceso en 1 toque'}</b>
       <span>${_en?'Add Meseo to your home screen — opens instantly, works offline':'Añade Meseo a tu pantalla de inicio: abre al instante y funciona sin conexión'}</span>
@@ -8873,7 +8873,7 @@ function _recEmailShow(name, pinHash){
   overlay.style.cssText='position:fixed;inset:0;background:rgba(28,42,34,.8);z-index:10000;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(8px);padding:1rem';
   overlay.innerHTML=`
     <div class="pin-modal" style="background:linear-gradient(155deg,#faf6ee,#f0e8d8);border:1px solid rgba(196,154,60,.2);border-radius:16px;padding:1.8rem 1.6rem;width:320px;max-width:100%;box-shadow:0 12px 40px rgba(0,0,0,.3)">
-      <div style="font-size:1.5rem;text-align:center;margin-bottom:.3rem">✉️</div>
+      <div style="text-align:center;margin-bottom:.4rem;color:var(--gold)"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align:-.15em;flex:none"><rect x="2.5" y="5" width="19" height="14" rx="2"/><path d="M3 6.5l9 6.5 9-6.5"/></svg></div>
       <div style="font-family:'Cinzel',serif;font-size:1.05rem;color:var(--parchment);text-align:center;margin-bottom:.3rem">${_en?'Protect your access':'Protege tu acceso'}</div>
       <div style="font-family:'Quicksand',sans-serif;font-size:.78rem;color:rgba(28,42,34,.62);text-align:center;line-height:1.45;margin-bottom:1.1rem">${_en?'Add your email so you can recover your PIN or password if you ever forget it. Optional.':'Añade tu correo para poder recuperar tu PIN o contraseña si algún día lo olvidas. Es opcional.'}</div>
       <input id="recEmailInp" type="email" inputmode="email" autocomplete="email" placeholder="${_en?'your@email.com':'tu@correo.com'}" style="width:100%;box-sizing:border-box;padding:.75rem .9rem;border:1px solid rgba(196,154,60,.35);border-radius:10px;font-size:16px;background:#fff;color:#2b2b2b;margin-bottom:.4rem">
@@ -9967,10 +9967,10 @@ function _emplRender(q){
           <div class="empl-card-name">${escapeHtml(dd.name)}</div>
           ${pend(d.id)
             ?`<div class="empl-pend">🕒 ${_en?'In review':'En revisión'}</div>`
-            :`<button class="empl-upload-btn" onclick="event.stopPropagation();_dishPhotoPick(${d.id})">📷 ${_en?'Upload photo':'Subir foto'}</button>`}
+            :`<button class="empl-upload-btn" onclick="event.stopPropagation();_dishPhotoPick(${d.id})"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align:-.15em;flex:none"><path d="M3 8.5A1.5 1.5 0 014.5 7h2L8 5h8l1.5 2h2A1.5 1.5 0 0121 8.5v9A1.5 1.5 0 0119.5 19h-15A1.5 1.5 0 013 17.5v-9z"/><circle cx="12" cy="12.5" r="3.2"/></svg> ${_en?'Upload photo':'Subir foto'}</button>`}
         </div>`; }).join('')}
     </div>`).join('')
-    + ((missing.length && _isSupDevice())?`<div class="empl-missing">📷 ${_en?'No photo yet':'Sin foto aún'} (${_en?'only you see this':'solo tú ves este aviso'}): ${missing.length} ${_en?'dishes':'platos'} · ${escapeHtml(missing.join(' · '))}</div>`:'');
+    + ((missing.length && _isSupDevice())?`<div class="empl-missing"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align:-.15em;flex:none"><path d="M3 8.5A1.5 1.5 0 014.5 7h2L8 5h8l1.5 2h2A1.5 1.5 0 0121 8.5v9A1.5 1.5 0 0119.5 19h-15A1.5 1.5 0 013 17.5v-9z"/><circle cx="12" cy="12.5" r="3.2"/></svg> ${_en?'No photo yet':'Sin foto aún'} (${_en?'only you see this':'solo tú ves este aviso'}): ${missing.length} ${_en?'dishes':'platos'} · ${escapeHtml(missing.join(' · '))}</div>`:'');
 }
 function _emplOpen(id){
   const d=DISHES.find(x=>x.id===id); if(!d) return;
@@ -10016,7 +10016,7 @@ function _emplOpen(id){
         <button class="empl-ov-journey" onclick="document.getElementById('emplOverlay').remove();launchDishJourney(${d.id})">🗺️ ${_en?'Guided journey (optional)':'Recorrido guiado (opcional)'}</button>
         ${(DISH_PHOTO_PENDING&&DISH_PHOTO_PENDING.has(d.id))
           ?`<div class="empl-pend" style="margin-top:.7rem">🕒 ${_en?'A new photo is in review':'Hay una foto nueva en revisión'}</div>`
-          :`<button class="empl-ov-upload" onclick="_dishPhotoPick(${d.id})">📷 ${_en?'Got a better photo? Submit it':'¿Tienes una foto mejor? Súbela'}</button>`}
+          :`<button class="empl-ov-upload" onclick="_dishPhotoPick(${d.id})"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align:-.15em;flex:none"><path d="M3 8.5A1.5 1.5 0 014.5 7h2L8 5h8l1.5 2h2A1.5 1.5 0 0121 8.5v9A1.5 1.5 0 0119.5 19h-15A1.5 1.5 0 013 17.5v-9z"/><circle cx="12" cy="12.5" r="3.2"/></svg> ${_en?'Got a better photo? Submit it':'¿Tienes una foto mejor? Súbela'}</button>`}
       </div>
     </div>`;
   document.body.appendChild(ov);
@@ -17959,7 +17959,7 @@ function renderDashboard(){
   // un template anidado dentro rompería el recorte de las guardas de CI.
   const _miDashCard = (typeof _miLeft==='function') ? (()=>{ const _miL=_miLeft(emp);
     return `<button type="button" class="ri-cta ri-cta-mesa" style="margin:0 0 1rem" aria-label="${_en?'AI Guest':'Cliente IA'}" onclick="_miGo()">
-      <span class="ri-cta-icon" aria-hidden="true">🍽️</span>
+      <span class="ri-cta-icon" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align:-.15em;flex:none"><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="4.5"/></svg></span>
       <span class="ri-cta-text">
         <span class="ri-cta-top">${_en?'AI Guest':'Cliente IA'} <span style="font-size:.6rem;background:rgba(228,190,104,.16);border:1px solid rgba(228,190,104,.5);border-radius:99px;padding:.05rem .45rem;vertical-align:2px">${_en?'NEW':'NUEVO'}</span></span>
         <span class="ri-cta-sub">${_en?`Real-time service simulation · a 5★ auditor scores you · ${_miL}/${_MI_DAILY} today`:`Simulación de servicio en tiempo real · te puntúa un auditor 5★ · ${_miL}/${_MI_DAILY} hoy`}</span>
@@ -17993,7 +17993,7 @@ function renderDashboard(){
            propietario). Se rellena en diferido desde el cuadrante; si tu
            nombre no casa aún, la línea lleva al cuadrante igualmente. ── -->
       <button type="button" class="dash-hero-hor" onclick="showTab('horarios')" aria-label="${_en?'Rota — your shift today and tomorrow':'Horarios — tu turno de hoy y de mañana'}">
-        <span aria-hidden="true">📅</span>
+        <span aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align:-.15em;flex:none"><rect x="3.5" y="5.5" width="17" height="15" rx="2"/><path d="M8 3.5v4M16 3.5v4M3.5 10.5h17"/></svg></span>
         <span id="hoyHorMeta" style="flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;text-align:left">${_en?'Rota · your shift today and tomorrow':'Horarios · tu turno de hoy y mañana'}</span>
         <span aria-hidden="true">›</span>
       </button>
@@ -19473,7 +19473,7 @@ function renderRepasoCats(){
     ${(function(){
       const left=_miLeft(emp);
       return `<button type="button" class="ri-cta ri-cta-mesa" style="margin:0 0 1rem" aria-label="${_en?'AI Guest':'Cliente IA'}" onclick="renderMesaLobby()">
-      <span class="ri-cta-icon" aria-hidden="true">🍽️</span>
+      <span class="ri-cta-icon" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align:-.15em;flex:none"><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="4.5"/></svg></span>
       <span class="ri-cta-text">
         <span class="ri-cta-top">${_en?'AI Guest':'Cliente IA'} <span style="font-size:.6rem;background:rgba(228,190,104,.16);border:1px solid rgba(228,190,104,.5);border-radius:99px;padding:.05rem .45rem;vertical-align:2px">${_en?'NEW':'NUEVO'}</span></span>
         <span class="ri-cta-sub">${_en?`Real-time service simulation · a 5★ auditor scores you · ${left}/${_MI_DAILY} today`:`Simulación de servicio en tiempo real · te puntúa un auditor 5★ · ${left}/${_MI_DAILY} hoy`}</span>
@@ -24787,7 +24787,7 @@ function renderLqa(){
       <div class="hub-banner" style="--hb-bg:linear-gradient(135deg,#1d1508 0%,#3a2c14 50%,#1d1508 100%);--hb-b:rgba(212,170,76,.45);--hb-glow:rgba(212,170,76,.5);position:relative;overflow:hidden;margin-bottom:.9rem" onclick="startCodigo()">
         <span class="hub-banner-shine"></span>
         <span style="position:absolute;top:.3rem;right:.5rem;font-family:'DM Mono',monospace;font-size:.72rem;color:#e0c483;letter-spacing:.12em;text-transform:uppercase;background:rgba(212,170,76,.15);padding:.2rem .45rem;border-radius:var(--r3);border:1px solid rgba(212,170,76,.3)">${LANG==='en'?'★ New':'★ Nuevo'}</span>
-        <div class="hub-banner-icon" style="font-size:1.4rem">🧭</div>
+        <div class="hub-banner-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align:-.15em;flex:none"><circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2 5-5 2 2-5 5-2z"/></svg></div>
         <div class="hub-banner-body">
           <div class="hub-banner-title">${LANG==='en'?'The Waiter’s Code':'El Código del Camarero'}</div>
           <div class="hub-banner-sub">${LANG==='en'?'What only years teach · 51 codes of the trade':'Lo que solo enseñan los años · 51 códigos del oficio'}</div>

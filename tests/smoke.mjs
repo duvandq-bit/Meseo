@@ -571,6 +571,38 @@ test('CSP meta tag is present with core hardening directives', () => {
   }
 });
 
+test('Los iconos de pantalla son SVG, no emoji a color', () => {
+  // Auditoría ago 2026: recorriendo la app se pintaban 7 emoji a color (103
+  // instancias, 100 de ellas el 📷 del botón de subir foto). Cada sistema los
+  // dibuja a su manera y rompen la estética de oro y serif — el sobre azul del
+  // diálogo de correo era el ejemplo más visible.
+  // Se cambian los que salen A COLOR. Los glifos tipográficos monocromos
+  // (★ ✦ ◆ ✕ ⚙) son parte del vocabulario de la app y se quedan.
+  const aColor = /[\u{1F300}-\u{1FAFF}]|[\u{26A1}\u{2B50}\u{2705}\u{274C}]/u;
+  const sitios = [
+    ['botón de subir foto',      /class="empl-upload-btn"[^>]*>(.{0,400}?)\$\{_en\?'Upload photo'/s],
+    ['subir foto desde la ficha',/class="empl-ov-upload"[^>]*>(.{0,400}?)\$\{_en\?'Got a better photo/s],
+    ['aviso de fotos que faltan',/class="empl-missing">(.{0,400}?)\$\{_en\?'No photo yet'/s],
+    ['diálogo de correo',        /text-align:center;margin-bottom:\.4rem;color:var\(--gold\)">(.{0,400}?)<\/div>/s],
+    ['banner de instalar',       /class="install-banner-ic"[^>]*>(.{0,400}?)<\/div>/s],
+    ['reto del día',             /<div class="pdd-eyebrow"><span>(.{0,400}?)\$\{en\?'Daily quiz'/s],
+    ['atajo de horarios',        /<span aria-hidden="true">(<svg.{0,400}?)<\/span>/s],
+  ];
+  for (const [nombre, re] of sitios) {
+    const m = html.match(re);
+    assert(m, `no encuentro el icono de: ${nombre}`);
+    assert(!aColor.test(m[1]), `${nombre} sigue usando un emoji a color`);
+    // Y el sustituto sigue el estilo de la casa: viewBox 24, grosor 1,5, hereda
+    // el color del texto y se oculta al lector de pantalla (es decorativo).
+    const svg = (m[1].match(/<svg[^>]*>/) || [])[0];
+    assert(svg, `${nombre} debería llevar un SVG`);
+    assert(/viewBox="0 0 24 24"/.test(svg), `el icono de ${nombre} debe usar el viewBox 24 de la casa`);
+    assert(/stroke="currentColor"/.test(svg), `el icono de ${nombre} debe heredar el color del texto`);
+    assert(/stroke-width="1\.5"/.test(svg), `el icono de ${nombre} debe usar el grosor 1,5 de la casa`);
+    assert(/aria-hidden="true"/.test(svg), `el icono de ${nombre} es decorativo: debe ocultarse al lector de pantalla`);
+  }
+});
+
 test('Cambiar de idioma repinta los diálogos abiertos', () => {
   // Auditoría ago 2026: el diálogo del correo está bien traducido en el código,
   // pero se construye con el idioma que hubiera en ese momento y nadie lo vuelve
