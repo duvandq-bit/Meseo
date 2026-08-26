@@ -1,6 +1,6 @@
 <!--
   ╔══════════════════════════════════════════════════════════════╗
-  ║           TXOKO FORMACIÓN — Aplicación de Formación          ║
+  ║                  MESEO — Aplicación de Formación             ║
   ║              Meseo · Formación de equipos de sala             ║
   ╠══════════════════════════════════════════════════════════════╣
   ║  © 2026 Duvan Stiven Ramírez Duque. Todos los derechos    ║
@@ -39,7 +39,7 @@
      frame-src: YouTube embeds.  worker-src blob: for MapLibre's workers.
    • Rollback: delete this tag and bump the service-worker VERSION.
 -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://unpkg.com https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://unpkg.com https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob: https://advkoujfgbrrjvqexrcu.supabase.co https://*.basemaps.cartocdn.com https://unpkg.com; connect-src 'self' https://advkoujfgbrrjvqexrcu.supabase.co wss://advkoujfgbrrjvqexrcu.supabase.co https://unpkg.com https://*.basemaps.cartocdn.com; worker-src 'self' blob:; frame-src https://www.youtube.com; object-src 'none'; base-uri 'self'; form-action 'self'; manifest-src 'self'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://unpkg.com https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://unpkg.com; font-src 'self'; img-src 'self' data: blob: https://advkoujfgbrrjvqexrcu.supabase.co https://*.basemaps.cartocdn.com https://unpkg.com; connect-src 'self' https://advkoujfgbrrjvqexrcu.supabase.co wss://advkoujfgbrrjvqexrcu.supabase.co https://unpkg.com https://*.basemaps.cartocdn.com; worker-src 'self' blob:; frame-src https://www.youtube.com; object-src 'none'; base-uri 'self'; form-action 'self'; manifest-src 'self'">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Meseo · Formación de sala</title>
@@ -52,7 +52,7 @@
 <meta property="og:description" content="Formación de equipos de sala: carta, alérgenos, vinos, exámenes y juegos de repaso.">
 <meta property="og:url" content="https://meseo.es/">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"Meseo","url":"https://meseo.es/"}</script>
-<meta name="app-version" content="7.344">
+<meta name="app-version" content="7.345">
 <meta name="app-build" content="May 2026">
 <meta name="theme-color" content="#1c2a22">
 <!-- ═══ PWA ═══ -->
@@ -62,18 +62,29 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Meseo">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="preconnect" href="https://unpkg.com" crossorigin>
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400;1,500&family=Quicksand:wght@300;400;500;600;700&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<!-- ═══ TIPOGRAFÍAS ═══
+     Se sirven desde el propio dominio (fonts/, declaradas al principio de
+     styles.css). Antes venían de fonts.googleapis.com con un <link> que BLOQUEA
+     el primer pintado: medido, la app tardaba 12,7 s en dibujar algo en una red
+     lenta y NUNCA dibujaba si esa petición se quedaba colgada — que es justo lo
+     que hace un portal cautivo de wifi de hotel. Con el código propio solo, el
+     primer pintado es de 256 ms. Además ya no se ceden datos a un tercero (RGPD).
+     Se precargan las dos caras que salen en el primer pintado; el resto las pide
+     el CSS. crossorigin es obligatorio en preload de fuentes aunque sean propias. -->
+<link rel="preload" as="font" type="font/woff2" href="fonts/Quicksand-300-latin.woff2" crossorigin>
+<link rel="preload" as="font" type="font/woff2" href="fonts/Cinzel-400-latin.woff2" crossorigin>
 <link rel="stylesheet" href="styles.css">
 <!-- ═══ EXTERNAL DEPS (versions pinned for reproducibility) ═══
      SRI hashes intentionally NOT inlined here — compute them at deploy time:
        curl -sL <url> | openssl dgst -sha384 -binary | openssl base64 -A
      Then add  integrity="sha384-…"  to each tag below.
      `crossorigin="anonymous"` is required for SRI verification to work. -->
-<link rel="stylesheet" href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css" crossorigin="anonymous"/>
+<!-- maplibre-gl.css NO se enlaza aquí: un <link rel="stylesheet"> externo bloquea
+     el primer pintado de TODA la app, y si unpkg tarda o se queda colgado (wifi
+     de hotel con portal cautivo) la pantalla se queda en blanco por un mapa que
+     solo se usa en una pestaña. Lo inyecta _mlEnsureCss() al abrir el mapa. -->
 <script defer src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js" crossorigin="anonymous"></script>
 <script defer src="https://unpkg.com/topojson-client@3.1.0/dist/topojson-client.min.js" crossorigin="anonymous"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js" crossorigin="anonymous"></script>
@@ -574,7 +585,7 @@ const T = {
     greetingMorning: 'Buenos días',
     greetingAfternoon: 'Buenas tardes',
     greetingEvening: 'Buenas noches',
-    dashSub: 'Centro de formación TXOKO',
+    dashSub: 'Centro de formación Meseo',
     dishesOnMenu: 'platos en carta',
     statExams: 'Exámenes',
     statAvg: 'Media de aciertos',
@@ -670,7 +681,7 @@ const T = {
     greetingMorning: 'Good morning',
     greetingAfternoon: 'Good afternoon',
     greetingEvening: 'Good evening',
-    dashSub: 'TXOKO Training Centre',
+    dashSub: 'Meseo Training Centre',
     dishesOnMenu: 'dishes on menu',
     statExams: 'Exams',
     statAvg: 'Average score',
@@ -1215,6 +1226,30 @@ function applyLangToApp() {
   if(typeof _renderShiftBar === 'function') _renderShiftBar();
   const _gsInp = document.getElementById('gsInput');
   if(_gsInp) _gsInp.placeholder = LANG==='en' ? 'Search dish, wine, allergen…' : 'Buscar plato, vino, alérgeno…';
+  // Los diálogos abiertos se construyeron con el idioma que hubiera entonces y
+  // no se repintan solos: cambiar de idioma dejaba un diálogo en inglés dentro
+  // de una app en español. Se vuelven a montar con el idioma nuevo.
+  _langRemountOverlays();
+}
+
+// Diálogos que se pintan de una vez y no se refrescan solos. Cada entrada dice
+// cómo repintarlo; si no está en pantalla, no se hace nada. `quitar` es para los
+// que solo saben construirse de cero — la guía se repinta ella sola sobre su
+// propio overlay y quitarlo le re-dispararía la animación de entrada.
+function _langRemountOverlays(){
+  const overlays = [
+    { id:'recEmailOverlay', quitar:true, repintar:()=>{
+        if(typeof _recEmailShow==='function' && _recEmailArgs)
+          _recEmailShow(_recEmailArgs.name, _recEmailArgs.pinHash); } },
+    { id:'onboardingOverlay', quitar:false, repintar:()=>{
+        if(typeof renderOnboardingStep==='function') renderOnboardingStep(); } }
+  ];
+  for(const o of overlays){
+    const el = document.getElementById(o.id);
+    if(!el) continue;
+    if(o.quitar) el.remove();
+    try{ o.repintar(); }catch(_){ }
+  }
 }
 
 // ═══════════════════════════════════════════════════
@@ -1561,7 +1596,7 @@ const CAT_COLORS={'Entrantes':'#c49a3c','Hamburguesas y Bocatas':'#b86050','Plat
 const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#c49a3c"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#a47a2c" opacity=".4"/><path d="M8 8v4a1 1 0 001 1h1v4M10 8v4" stroke="#fff" stroke-width="1.2" stroke-linecap="round" fill="none"/><path d="M15 8v8M14 8v3a1.5 1.5 0 003 0V8" stroke="#fff" stroke-width="1.2" stroke-linecap="round" fill="none"/></svg>`,'Hamburguesas y Bocatas':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#b86050"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#983838" opacity=".4"/><path d="M7 9h10M7 12h10M7 15h10" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/><path d="M8 9c0-2 2-3 4-3s4 1 4 3M8 15c0 2 2 3 4 3s4-1 4-3" fill="none" stroke="#fff" stroke-width="1" opacity=".7"/></svg>`,'Platos Principales':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#4888a0"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#2e6878" opacity=".4"/><path d="M5 15h14" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/><path d="M12 6a6 6 0 016 6H6a6 6 0 016-6z" fill="none" stroke="#fff" stroke-width="1.1"/><circle cx="10" cy="6" r=".7" fill="#fff" opacity=".7"/><circle cx="12" cy="5" r=".7" fill="#fff" opacity=".7"/><circle cx="14" cy="6" r=".7" fill="#fff" opacity=".7"/></svg>`,'Sugerencias':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#d4aa4c"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#a48a2c" opacity=".4"/><polygon points="12,5 14.5,10 20,10.5 16,14 17,20 12,17 7,20 8,14 4,10.5 9.5,10" fill="#fff" opacity=".9"/></svg>`,'Guarniciones y Salsas':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#4d8a5e"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#2d6a3e" opacity=".4"/><path d="M12 18V10M5 10c0-4 3-6 7-6s7 2 7 6c0 5-3 8-7 8s-7-3-7-8z" fill="none" stroke="#fff" stroke-width="1.1"/><path d="M5 10c3 0 5 1 7 2.5" fill="none" stroke="#fff" stroke-width=".8" opacity=".6"/></svg>`,'Postres':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#7a6aaa"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#5a4a8a" opacity=".4"/><path d="M9 19h6M12 12v7M7 6l2 4.5a3 3 0 006 0L17 6H7z" fill="none" stroke="#fff" stroke-width="1.1" stroke-linecap="round"/></svg>`,'Vegetariano':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#5a9a6e"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#3a7a4e" opacity=".4"/><path d="M9 18h6M12 18V10M12 10c0-3 2-5 5-5-.7 2.5-2.5 5-5 5zM12 10c0-3-2-5-5-5 .7 2.5 2.5 5 5 5z" fill="none" stroke="#fff" stroke-width="1.1" stroke-linecap="round"/></svg>`};
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='7.344';  // sincronizada con sw.js VERSION (guard de CI)
+const APP_VERSION='7.345';  // sincronizada con sw.js VERSION (guard de CI)
 const APP_BUILD='Jul 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;
@@ -2307,6 +2342,50 @@ function _tmTrackSearch(qLen, hits){
   _tmSearchT = setTimeout(()=>{ track('search.query', { qLen: qLen|0, hits: hits|0 }); }, 600);
 }
 
+// ══ COLA DE PRIMERAS IMPRESIONES ═════════════════════════════════════════
+// Auditoría ago 2026: al darse de alta, un empleado nuevo recibía la guía de 9
+// pasos, encima el diálogo del correo de recuperación (a los 900 ms, sin mirar
+// si la guía seguía abierta) y encima el aviso de métricas (a los 6 s). Tres
+// muros antes del primer contenido útil — y sabemos que la plantilla ya
+// encuentra la app complicada. Ahora hacen cola: cada aviso espera a que no
+// haya nada delante, y van de uno en uno.
+// Se comprueba que estén VISIBLES, no solo presentes: el buscador (.gs-overlay)
+// vive siempre en el DOM con display:none, así que mirar solo si existe dejaba
+// la cola bloqueada para siempre y ningún aviso llegaba a salir nunca.
+const _UI_OVERLAY_SEL = ['#onboardingOverlay','#recEmailOverlay','#pinOverlay',
+  '#pinRecoveryOverlay','#pinResetOverlay','#luOverlay','#delOverlay','#dqOverlay',
+  '.gs-overlay','.svc-overlay'];
+function _uiVisible(el){
+  if(!el) return false;
+  const cs = getComputedStyle(el);
+  if(cs.display==='none' || cs.visibility==='hidden' || parseFloat(cs.opacity)===0) return false;
+  const r = el.getBoundingClientRect();
+  return r.width > 0 && r.height > 0;
+}
+function _uiOverlayUp(){
+  return _UI_OVERLAY_SEL.some(sel=>{
+    for(const el of document.querySelectorAll(sel)) if(_uiVisible(el)) return true;
+    return false;
+  });
+}
+// Ejecuta fn cuando no quede ningún overlay delante. Comprueba cada 700 ms y
+// se rinde a los 3 min (si el usuario deja la guía abierta, el aviso no vale ya
+// la pena). _uiQueue evita que dos avisos salgan a la vez.
+let _uiQueueBusy = false;
+function _uiWhenClear(fn, timeoutMs){
+  const deadline = Date.now() + (timeoutMs || 180000);
+  const tick = ()=>{
+    if(Date.now() > deadline) return;
+    if(_uiOverlayUp() || _uiQueueBusy){ setTimeout(tick, 700); return; }
+    _uiQueueBusy = true;
+    try{ fn(); }catch(_){ }
+    // Se libera un poco después para que el siguiente de la cola vea ya
+    // dibujado el overlay que acaba de abrir este.
+    setTimeout(()=>{ _uiQueueBusy = false; }, 900);
+  };
+  setTimeout(tick, 700);
+}
+
 // Aviso de privacidad único (RGPD): la primera vez informa de forma discreta
 // (no bloquea) y explica dónde desactivarlo. Se muestra una sola vez.
 function _tmMaybePrivacyNotice(){
@@ -2338,7 +2417,11 @@ setInterval(_tmFlush, 30000);
 track('session.start', { hour: new Date().getHours(), dow: new Date().getDay() });
 if('requestIdleCallback' in window) requestIdleCallback(_tmPurgeOld, { timeout:6000 });
 else setTimeout(_tmPurgeOld, 3000);
-setTimeout(()=>{ if(typeof currentUser!=='undefined' && currentUser) _tmMaybePrivacyNotice(); }, 6000);
+// El aviso de métricas espera su turno en la cola: nunca encima de la guía.
+setTimeout(()=>{
+  if(typeof currentUser==='undefined' || !currentUser) return;
+  _uiWhenClear(_tmMaybePrivacyNotice);
+}, 6000);
 
 // ═══ GUARDIA ANTI-DUPLICADOS ════════════════════════════════════════════
 // Evita partir los datos de una persona en varios perfiles por un nombre
@@ -7523,7 +7606,7 @@ function _dqRender(){
   ov.innerHTML=`
     <div role="dialog" aria-modal="true" aria-label="${en?'Daily quiz':'Reto del día'}" style="background:linear-gradient(155deg,#faf6ee,#f0e8d8);border:1.5px solid rgba(196,154,60,.4);border-radius:16px;max-width:460px;width:100%;padding:1.3rem 1.3rem 1rem;box-shadow:0 18px 60px rgba(0,0,0,.45)">
       <div style="display:flex;justify-content:space-between;align-items:baseline;gap:.6rem">
-        <div style="font-family:'DM Mono',monospace;font-size:.62rem;letter-spacing:.16em;text-transform:uppercase;color:var(--gold-deep)">⭐ ${en?'Daily quiz':'Reto del día'}</div>
+        <div style="font-family:'DM Mono',monospace;font-size:.62rem;letter-spacing:.16em;text-transform:uppercase;color:var(--gold-deep)"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align:-.15em;flex:none"><path d="M12 3.5l2.6 5.6 6.1.8-4.5 4.2 1.2 6-5.4-3-5.4 3 1.2-6L3.3 9.9l6.1-.8L12 3.5z"/></svg> ${en?'Daily quiz':'Reto del día'}</div>
         <div style="font-family:'DM Mono',monospace;font-size:.6rem;color:var(--parch3)">${dateLbl}</div>
       </div>
       <div style="font-family:Georgia,serif;font-size:1rem;font-weight:700;color:var(--parchment);margin:.6rem 0 .7rem;line-height:1.35">${escapeHTML(q.q)}</div>
@@ -7569,7 +7652,7 @@ function _pddHeroHTML(emp,en){
   if(!_dqIsDone(emp)){
     const s=emp.dqStreak||0;
     return `<div class="pdd-hero">
-      <div class="pdd-eyebrow"><span>⭐ ${en?'Daily quiz':'Reto del día'}</span><span>≈ 30 s</span></div>
+      <div class="pdd-eyebrow"><span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align:-.15em;flex:none"><path d="M12 3.5l2.6 5.6 6.1.8-4.5 4.2 1.2 6-5.4-3-5.4 3 1.2-6L3.3 9.9l6.1-.8L12 3.5z"/></svg> ${en?'Daily quiz':'Reto del día'}</span><span>≈ 30 s</span></div>
       <div class="pdd-title">${en?'Today’s question':'La pregunta de hoy'}</div>
       <div class="pdd-sub">${en?'Same question for the whole team':'La misma pregunta para todo el equipo'}${s>0?` · 🔥 ${s}`:''}</div>
       <button type="button" class="pdd-cta" onclick="openDailyReto()">${en?'Start':'Empezar'}</button>
@@ -7751,7 +7834,7 @@ async function _luCodeOpen(){
   const emp=getEmp(currentUser); emp.luCdgDay=todayStr(); saveDB();
   const card=_cdgCardHTML(c).replace('<details class="cdg-card"','<details class="cdg-card" open');
   _luOverlay(`
-    <div style="font-family:'DM Mono',monospace;font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;color:var(--gold-deep);margin-bottom:.5rem">🧭 ${en?'Code of the day':'Código del día'}</div>
+    <div style="font-family:'DM Mono',monospace;font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;color:var(--gold-deep);margin-bottom:.5rem"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align:-.15em;flex:none"><circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2 5-5 2 2-5 5-2z"/></svg> ${en?'Code of the day':'Código del día'}</div>
     ${card}
   `, en?'Code of the day':'Código del día');
 }
@@ -7969,10 +8052,10 @@ function renderInstallBanner(){
   if(_isStandalone() || _installSnoozed()) return '';
   const _en=LANG==='en';
   return `<div class="install-banner" id="installBanner" role="region" aria-label="${_en?'Install the app':'Instalar la app'}">
-    <div class="install-banner-ic">⚡</div>
+    <div class="install-banner-ic" style="color:var(--gold)"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align:-.15em;flex:none"><path d="M13 2.5L4.5 13.5H11l-1 8 8.5-11H12l1-8z"/></svg></div>
     <div class="install-banner-tx">
       <b>${_en?'1-tap access':'Acceso en 1 toque'}</b>
-      <span>${_en?'Add TXOKO to your home screen — opens instantly, works offline':'Añade TXOKO a tu pantalla de inicio: abre al instante y funciona sin conexión'}</span>
+      <span>${_en?'Add Meseo to your home screen — opens instantly, works offline':'Añade Meseo a tu pantalla de inicio: abre al instante y funciona sin conexión'}</span>
     </div>
     <button class="install-banner-btn" onclick="promptInstallSmart()">${_en?'Install':'Instalar'}</button>
     <button class="install-banner-x" onclick="dismissInstallBanner()" aria-label="${_en?'Dismiss':'Descartar'}">✕</button>
@@ -7989,16 +8072,16 @@ function showInstallSheet(){
   const steps = isIos
     ? [ ['1','⬆️', _en?'Tap the <b>Share</b> button in Safari (square with an arrow, bottom bar)':'Pulsa el botón <b>Compartir</b> de Safari (cuadrado con flecha, barra inferior)'],
         ['2','➕', _en?'Scroll and choose <b>“Add to Home Screen”</b>':'Baja y elige <b>«Añadir a pantalla de inicio»</b>'],
-        ['3','✅', _en?'Tap <b>Add</b> — TXOKO appears as an app':'Pulsa <b>Añadir</b> — TXOKO aparece como una app'] ]
+        ['3','✅', _en?'Tap <b>Add</b> — Meseo appears as an app':'Pulsa <b>Añadir</b> — Meseo aparece como una app'] ]
     : [ ['1','⋮', _en?'Open your browser menu (three dots)':'Abre el menú del navegador (tres puntos)'],
         ['2','➕', _en?'Choose <b>“Add to Home screen”</b> or <b>“Install app”</b>':'Elige <b>«Añadir a pantalla de inicio»</b> o <b>«Instalar aplicación»</b>'],
-        ['3','✅', _en?'Confirm — TXOKO appears as an app':'Confirma — TXOKO aparece como una app'] ];
+        ['3','✅', _en?'Confirm — Meseo appears as an app':'Confirma — Meseo aparece como una app'] ];
   const sheet=document.createElement('div');
   sheet.id='installSheet';
   sheet.innerHTML=`<div class="install-sheet-scrim" onclick="document.getElementById('installSheet').remove()"></div>
     <div class="install-sheet" role="dialog" aria-modal="true" aria-label="${_en?'How to install':'Cómo instalar'}">
       <div class="install-sheet-grab"></div>
-      <div class="install-sheet-title">${_en?'Install TXOKO on your phone':'Instala TXOKO en tu móvil'}</div>
+      <div class="install-sheet-title">${_en?'Install Meseo on your phone':'Instala Meseo en tu móvil'}</div>
       <div class="install-sheet-sub">${_en?'30 seconds, once — then it opens in 1 tap':'30 segundos, una vez — luego abre en 1 toque'}</div>
       ${steps.map(s=>`<div class="install-step"><div class="install-step-n">${s[0]}</div><div class="install-step-ic">${s[1]}</div><div class="install-step-tx">${s[2]}</div></div>`).join('')}
       <button class="btn-primary" style="width:100%;margin-top:.6rem" onclick="document.getElementById('installSheet').remove()">${_en?'Got it':'Entendido'}</button>
@@ -8183,8 +8266,11 @@ async function loginWithPassword(){
           (async ()=>{
             let hasEmail=false;
             try{ const st=await supaEmailStatus(userName, hashedPin); if(st && st.ok && st.data && st.data.ok) hasEmail=!!st.data.hasEmail; }catch(_){}
-            try{ localStorage.setItem('recEmailAsked:'+userName,'1'); }catch(_){}
-            if(!hasEmail){ setTimeout(()=>{ try{ promptRecoveryEmail(userName, hashedPin); }catch(_){} }, 900); }
+            // Si ya lo tiene registrado en otro dispositivo, no se pregunta y se
+            // marca aquí. Si no, decide promptRecoveryEmail: aplaza la primera
+            // sesión y pone la marca solo cuando llega a enseñarlo.
+            if(hasEmail){ try{ localStorage.setItem('recEmailAsked:'+userName,'1'); }catch(_){} }
+            else { promptRecoveryEmail(userName, hashedPin); }
           })();
         }
       }catch(_){}
@@ -8247,8 +8333,9 @@ async function loginWithPassword(){
       closePinAndEnter();
       // Usuario nuevo (contraseña) → ofrecer correo de recuperación, con el
       // hash de la contraseña recién creada como prueba de identidad.
-      const _rn=resolvedName, _rh=hashed;
-      setTimeout(()=>{ try{ promptRecoveryEmail(_rn, _rh); }catch(_){} }, 800);
+      // La espera la gestiona la cola de primeras impresiones (_uiWhenClear):
+      // aqui solo se pide turno.
+      try{ promptRecoveryEmail(resolvedName, hashed); }catch(_){}
     }
 
     submitBtn.disabled = false;
@@ -8751,18 +8838,42 @@ function showPinReset(token){
   if(typeof setupModalA11y==='function') setupModalA11y(overlay, ()=>overlay.remove());
 }
 
-// Overlay opcional tras crear el PIN (usuario nuevo): añadir correo de
-// recuperación. Se guarda con el hash del PIN recién creado como prueba.
+// Puerta del diálogo de correo de recuperación.
+// Auditoría ago 2026: se abría 900 ms después del alta, encima de la guía de 9
+// pasos y justo antes del aviso de métricas — tres muros seguidos antes de ver
+// nada útil. Ahora la primera sesión se deja limpia y se pide a partir de la
+// segunda, cuando el empleado ya sabe qué es la app y le encuentra sentido a
+// protegerla. La marca «ya preguntado» se pone al MOSTRARLO, no antes: si se
+// pusiera antes, aplazar equivaldría a no preguntar nunca.
 function promptRecoveryEmail(name, pinHash){
+  if(document.getElementById('recEmailOverlay')) return;
+  try{
+    if(localStorage.getItem('recEmailAsked:'+name)) return;
+    const k = 'recEmailSesiones:'+name;
+    const n = (parseInt(localStorage.getItem(k)||'0', 10) || 0) + 1;
+    localStorage.setItem(k, String(n));
+    if(n < 2) return;   // primera sesión: sin interrupciones
+  }catch(_){ }
+  _uiWhenClear(()=>{
+    try{ localStorage.setItem('recEmailAsked:'+name, '1'); }catch(_){ }
+    _recEmailShow(name, pinHash);
+  });
+}
+
+// Overlay opcional: añadir correo de recuperación. Se guarda con el hash del
+// PIN/contraseña recién validado como prueba de identidad.
+let _recEmailArgs = null;   // para poder repintarlo si cambia el idioma
+function _recEmailShow(name, pinHash){
   const _en = LANG==='en';
   if(document.getElementById('recEmailOverlay')) return;
+  _recEmailArgs = { name, pinHash };
   const overlay=document.createElement('div');
   overlay.id='recEmailOverlay';
   overlay.setAttribute('role','dialog'); overlay.setAttribute('aria-modal','true');
   overlay.style.cssText='position:fixed;inset:0;background:rgba(28,42,34,.8);z-index:10000;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(8px);padding:1rem';
   overlay.innerHTML=`
     <div class="pin-modal" style="background:linear-gradient(155deg,#faf6ee,#f0e8d8);border:1px solid rgba(196,154,60,.2);border-radius:16px;padding:1.8rem 1.6rem;width:320px;max-width:100%;box-shadow:0 12px 40px rgba(0,0,0,.3)">
-      <div style="font-size:1.5rem;text-align:center;margin-bottom:.3rem">✉️</div>
+      <div style="text-align:center;margin-bottom:.4rem;color:var(--gold)"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align:-.15em;flex:none"><rect x="2.5" y="5" width="19" height="14" rx="2"/><path d="M3 6.5l9 6.5 9-6.5"/></svg></div>
       <div style="font-family:'Cinzel',serif;font-size:1.05rem;color:var(--parchment);text-align:center;margin-bottom:.3rem">${_en?'Protect your access':'Protege tu acceso'}</div>
       <div style="font-family:'Quicksand',sans-serif;font-size:.78rem;color:rgba(28,42,34,.62);text-align:center;line-height:1.45;margin-bottom:1.1rem">${_en?'Add your email so you can recover your PIN or password if you ever forget it. Optional.':'Añade tu correo para poder recuperar tu PIN o contraseña si algún día lo olvidas. Es opcional.'}</div>
       <input id="recEmailInp" type="email" inputmode="email" autocomplete="email" placeholder="${_en?'your@email.com':'tu@correo.com'}" style="width:100%;box-sizing:border-box;padding:.75rem .9rem;border:1px solid rgba(196,154,60,.35);border-radius:10px;font-size:16px;background:#fff;color:#2b2b2b;margin-bottom:.4rem">
@@ -9024,7 +9135,7 @@ async function pinSubmit(){
       setEmployeePinServer(pinTarget, pinBuffer); // server bcrypt (no-op unless flag on)
       const _rpName=pinTarget, _rpHash=emp.pin; // usuario nuevo → ofrecer correo de recuperación
       closePinAndEnter();
-      setTimeout(()=>{ try{ promptRecoveryEmail(_rpName, _rpHash); }catch(_){} }, 700);
+      try{ promptRecoveryEmail(_rpName, _rpHash); }catch(_){}
     } else {
       document.getElementById('pinErr').textContent=t('pinNoMatch');
       updatePinDots(true);
@@ -9207,7 +9318,7 @@ function closePinAndEnter(){
 
 // ═══════ TUNIC ONBOARDING GUIDE ═══════
 const ONBOARDING_PAGES = [
-  {icon:`<svg width="28" height="28" viewBox="0 0 24 24"><polygon points="12,2 20,7 20,17 12,22 4,17 4,7" fill="none" stroke="#fff" stroke-width="1.5"/><circle cx="12" cy="11" r="3" fill="#fff" opacity=".8"/></svg>`,color:'#c49a3c',title_es:'¡Bienvenido a TXOKO!',title_en:'Welcome to TXOKO!',text_es:'Tu guía de formación para dominar la carta del restaurante Txoko by Martín Berasategui. Aprenderás cada plato, alérgeno, ingrediente, protocolo de servicio y maridaje de vinos.',text_en:'Your training guide to master the menu of Txoko by Martín Berasategui. You\'ll learn every dish, allergen, ingredient, service protocol and wine pairing.'},
+  {icon:`<svg width="28" height="28" viewBox="0 0 24 24"><polygon points="12,2 20,7 20,17 12,22 4,17 4,7" fill="none" stroke="#fff" stroke-width="1.5"/><circle cx="12" cy="11" r="3" fill="#fff" opacity=".8"/></svg>`,color:'#c49a3c',title_es:'¡Bienvenido a Meseo!',title_en:'Welcome to Meseo!',text_es:'Tu guía de formación para dominar la carta del restaurante Txoko by Martín Berasategui. Aprenderás cada plato, alérgeno, ingrediente, protocolo de servicio y maridaje de vinos.',text_en:'Your training guide to master the menu of Txoko by Martín Berasategui. You\'ll learn every dish, allergen, ingredient, service protocol and wine pairing.'},
   {icon:`<svg width="28" height="28" viewBox="0 0 24 24"><rect x="4" y="6" width="16" height="11" rx="2" fill="none" stroke="#fff" stroke-width="1.5"/><line x1="4" y1="10" x2="20" y2="10" stroke="#fff" stroke-width="1" opacity=".6"/></svg>`,color:'#d4aa4c',title_es:'Flashcards y Repaso SRS',title_en:'Flashcards & SRS Review',text_es:'Repasa cada plato con tarjetas interactivas: ingredientes, alérgenos e historia. El sistema de repetición espaciada (SRS) te muestra primero los platos que más necesitas repasar.',text_en:'Review each dish with interactive cards: ingredients, allergens and history. The spaced repetition system (SRS) shows you the dishes you need to review most first.'},
   {icon:`<svg width="28" height="28" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4" fill="none" stroke="#fff" stroke-width="1.5"/><path d="M12 11v2M10 13h4" stroke="#fff" stroke-width="1.5" stroke-linecap="round"/></svg>`,color:'#c47068',title_es:'Repaso inteligente',title_en:'Smart review',text_es:'Situaciones reales de servicio: un huésped te dice su alergia, te pide recomendaciones o pregunta cómo modificar un plato. La sesión elige justo los platos que estás a punto de olvidar. La encontrarás en Aprender → Repaso.',text_en:'Real service scenarios: a guest tells you their allergy, asks for recommendations or how to modify a dish. Each session picks exactly the dishes you are about to forget. You\'ll find it under Learn → Review.'},
   {icon:`<svg width="28" height="28" viewBox="0 0 24 24"><rect x="6" y="4" width="12" height="16" rx="2" fill="none" stroke="#fff" stroke-width="1.5"/><line x1="9" y1="10" x2="15" y2="10" stroke="#fff" stroke-width="1" opacity=".7"/><line x1="9" y1="13" x2="13" y2="13" stroke="#fff" stroke-width="1" opacity=".7"/></svg>`,color:'#4888a0',title_es:'Exámenes por Tema',title_en:'Topic-based Exams',text_es:'Pon a prueba tus conocimientos con exámenes de opción múltiple. Elige entre alérgenos, ingredientes o historia, filtra por categoría de plato y personaliza la cantidad de preguntas.',text_en:'Test your knowledge with multiple-choice exams. Choose between allergens, ingredients or history, filter by dish category and customise the number of questions.'},
@@ -9390,7 +9501,22 @@ function _navDDClose(){
   const t = n.querySelector('.nav-dd-trigger');
   if(t) t.setAttribute('aria-expanded','false');
 }
+// Rutas válidas de showTab(). Debe coincidir EXACTAMENTE con las claves de
+// renderMap (más abajo, dentro de showTab); un guard de tests/smoke.mjs lo
+// comprueba para que las dos listas no se separen al añadir una pestaña.
+const TAB_ROUTES = ['dashboard','aprender','flashcards','exam','repaso','tecnicas','actualidad','smart','emplatado','stats','logros','txoko','ranking','supervisor','horarios','protocolo','videos','lqa','vinos','chat'];
+
 function showTab(tab, instant){
+  // ── Pestaña desconocida → INICIO ──────────────────────────────────────
+  // Los avisos push abren la app con un enlace #tab=… Si ese nombre ya no
+  // existe (hemos renombrado y movido pestañas varias veces), no había función
+  // que pintar y reventaba mostrando la traza de JavaScript en rojo y en inglés
+  // a un camarero. Un enlace roto ahora abre INICIO, que es lo que el usuario
+  // esperaría, y el fallo se registra en silencio.
+  if(!TAB_ROUTES.includes(tab)){
+    console.warn('showTab: pestaña desconocida «'+tab+'» → dashboard');
+    tab = 'dashboard';
+  }
   // Tear down the chat realtime channel + presence when navigating away, so we
   // don't leak the socket or leave a stale "online" marker for this user.
   if(currentTab==='chat' && tab!=='chat'){
@@ -9450,9 +9576,19 @@ function showTab(tab, instant){
     c.style.transform='translateY(0)';
     try { renderMap[tab](); }
     catch(e) {
-      const _stackHtml = DEBUG ? '<pre style="font-size:.6rem;white-space:pre-wrap;margin-top:.5rem">'+escapeHtml(e.stack)+'</pre>' : '';
-      c.innerHTML='<div style="padding:2rem;color:red;font-size:.8rem"><b>Error en tab '+escapeHtml(tab)+':</b><br>'+escapeHtml(e.message)+_stackHtml+'</div>';
-      console.error('showTab error:', e);
+      // Si una pantalla revienta, el usuario ve un mensaje en su idioma y una
+      // salida — no la traza de JavaScript. El detalle técnico sigue estando
+      // en la consola siempre, y en pantalla solo con DEBUG activado.
+      const _en = LANG === 'en';
+      const _stackHtml = DEBUG ? '<pre style="font-size:.6rem;white-space:pre-wrap;margin-top:1rem;text-align:left;opacity:.7">'+escapeHtml(tab+': '+e.stack)+'</pre>' : '';
+      c.innerHTML='<div style="padding:2.5rem 1.5rem;text-align:center">'
+        +'<div style="font-family:\'Cinzel\',serif;font-size:1.1rem;color:var(--gold);margin-bottom:.6rem">'
+        +(_en?'This screen could not open':'Esta pantalla no se ha podido abrir')+'</div>'
+        +'<div style="font-size:.9rem;color:var(--ink3);line-height:1.5;margin-bottom:1.4rem">'
+        +(_en?'Try again in a moment.':'Vuelve a intentarlo en un momento.')+'</div>'
+        +'<button onclick="showTab(\'dashboard\')" style="background:var(--gold);color:var(--parchment);border:none;border-radius:10px;padding:.8rem 1.6rem;font-family:\'Quicksand\',sans-serif;font-weight:600;font-size:.9rem;min-height:44px;cursor:pointer">'
+        +(_en?'Go to Home':'Ir a INICIO')+'</button>'+_stackHtml+'</div>';
+      console.error('showTab error:', tab, e);
     }
     if(!instant){ c.classList.remove('tab-entering'); void c.offsetWidth; c.classList.add('tab-entering'); }
   };
@@ -9831,10 +9967,10 @@ function _emplRender(q){
           <div class="empl-card-name">${escapeHtml(dd.name)}</div>
           ${pend(d.id)
             ?`<div class="empl-pend">🕒 ${_en?'In review':'En revisión'}</div>`
-            :`<button class="empl-upload-btn" onclick="event.stopPropagation();_dishPhotoPick(${d.id})">📷 ${_en?'Upload photo':'Subir foto'}</button>`}
+            :`<button class="empl-upload-btn" onclick="event.stopPropagation();_dishPhotoPick(${d.id})"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align:-.15em;flex:none"><path d="M3 8.5A1.5 1.5 0 014.5 7h2L8 5h8l1.5 2h2A1.5 1.5 0 0121 8.5v9A1.5 1.5 0 0119.5 19h-15A1.5 1.5 0 013 17.5v-9z"/><circle cx="12" cy="12.5" r="3.2"/></svg> ${_en?'Upload photo':'Subir foto'}</button>`}
         </div>`; }).join('')}
     </div>`).join('')
-    + ((missing.length && _isSupDevice())?`<div class="empl-missing">📷 ${_en?'No photo yet':'Sin foto aún'} (${_en?'only you see this':'solo tú ves este aviso'}): ${missing.length} ${_en?'dishes':'platos'} · ${escapeHtml(missing.join(' · '))}</div>`:'');
+    + ((missing.length && _isSupDevice())?`<div class="empl-missing"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align:-.15em;flex:none"><path d="M3 8.5A1.5 1.5 0 014.5 7h2L8 5h8l1.5 2h2A1.5 1.5 0 0121 8.5v9A1.5 1.5 0 0119.5 19h-15A1.5 1.5 0 013 17.5v-9z"/><circle cx="12" cy="12.5" r="3.2"/></svg> ${_en?'No photo yet':'Sin foto aún'} (${_en?'only you see this':'solo tú ves este aviso'}): ${missing.length} ${_en?'dishes':'platos'} · ${escapeHtml(missing.join(' · '))}</div>`:'');
 }
 function _emplOpen(id){
   const d=DISHES.find(x=>x.id===id); if(!d) return;
@@ -9880,7 +10016,7 @@ function _emplOpen(id){
         <button class="empl-ov-journey" onclick="document.getElementById('emplOverlay').remove();launchDishJourney(${d.id})">🗺️ ${_en?'Guided journey (optional)':'Recorrido guiado (opcional)'}</button>
         ${(DISH_PHOTO_PENDING&&DISH_PHOTO_PENDING.has(d.id))
           ?`<div class="empl-pend" style="margin-top:.7rem">🕒 ${_en?'A new photo is in review':'Hay una foto nueva en revisión'}</div>`
-          :`<button class="empl-ov-upload" onclick="_dishPhotoPick(${d.id})">📷 ${_en?'Got a better photo? Submit it':'¿Tienes una foto mejor? Súbela'}</button>`}
+          :`<button class="empl-ov-upload" onclick="_dishPhotoPick(${d.id})"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align:-.15em;flex:none"><path d="M3 8.5A1.5 1.5 0 014.5 7h2L8 5h8l1.5 2h2A1.5 1.5 0 0121 8.5v9A1.5 1.5 0 0119.5 19h-15A1.5 1.5 0 013 17.5v-9z"/><circle cx="12" cy="12.5" r="3.2"/></svg> ${_en?'Got a better photo? Submit it':'¿Tienes una foto mejor? Súbela'}</button>`}
       </div>
     </div>`;
   document.body.appendChild(ov);
@@ -13095,6 +13231,23 @@ function _renderWineCard(w, idx, filteredList){
 // ═══ INTERACTIVE WINE MAP (MapLibre GL JS — WebGL/GPU) ═══
 let _mapSelectedOrigin = null;
 let _wineLeafletMap = null;       // MapLibre GL JS map instance (kept name for compat)
+
+// Pide la hoja de estilos de maplibre la primera vez que se abre el mapa.
+// Va aquí y no en <head> porque un <link rel="stylesheet"> externo bloquea el
+// primer pintado de toda la app: con unpkg lento o colgado, la pantalla se
+// quedaba en blanco por culpa de una pestaña que casi nadie abre. Cargada así
+// no bloquea nada; si no llega, el mapa se ve sin estilos pero la app entera
+// arranca igual (y sin maplibre-gl.js ya hay una lista de D.O. de respaldo).
+function _mlEnsureCss(){
+  if(document.getElementById('maplibreCss')) return;
+  const l = document.createElement('link');
+  l.id = 'maplibreCss';
+  l.rel = 'stylesheet';
+  l.href = 'https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css';
+  l.crossOrigin = 'anonymous';
+  document.head.appendChild(l);
+}
+
 let _wineGeoLayer = null;
 let _wineGeoLayers = {};
 let _wineDotMarkers = [];         // Array of {name, marker, element, baseSize, count}
@@ -14116,6 +14269,10 @@ async function _initWineLeafletMap(regionDots, byOrigin) {
     mapEl.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100%;font-family:DM Mono,monospace;font-size:.7rem;color:var(--parch3);text-align:center;padding:2rem">'+(LANG==='en'?'Your device does not support WebGL.<br>The map requires GPU acceleration.':'Tu dispositivo no soporta WebGL.<br>El mapa requiere aceleración GPU.')+'</div>';
     return;
   }
+
+  // La hoja de estilos de maplibre se pide AQUÍ, no en <head>: así el mapa no
+  // puede retrasar ni bloquear el arranque de la app (ver comentario del <head>).
+  _mlEnsureCss();
 
   // GPU badge
   var badge = document.createElement('div');
@@ -17802,7 +17959,7 @@ function renderDashboard(){
   // un template anidado dentro rompería el recorte de las guardas de CI.
   const _miDashCard = (typeof _miLeft==='function') ? (()=>{ const _miL=_miLeft(emp);
     return `<button type="button" class="ri-cta ri-cta-mesa" style="margin:0 0 1rem" aria-label="${_en?'AI Guest':'Cliente IA'}" onclick="_miGo()">
-      <span class="ri-cta-icon" aria-hidden="true">🍽️</span>
+      <span class="ri-cta-icon" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align:-.15em;flex:none"><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="4.5"/></svg></span>
       <span class="ri-cta-text">
         <span class="ri-cta-top">${_en?'AI Guest':'Cliente IA'} <span style="font-size:.6rem;background:rgba(228,190,104,.16);border:1px solid rgba(228,190,104,.5);border-radius:99px;padding:.05rem .45rem;vertical-align:2px">${_en?'NEW':'NUEVO'}</span></span>
         <span class="ri-cta-sub">${_en?`Real-time service simulation · a 5★ auditor scores you · ${_miL}/${_MI_DAILY} today`:`Simulación de servicio en tiempo real · te puntúa un auditor 5★ · ${_miL}/${_MI_DAILY} hoy`}</span>
@@ -17836,7 +17993,7 @@ function renderDashboard(){
            propietario). Se rellena en diferido desde el cuadrante; si tu
            nombre no casa aún, la línea lleva al cuadrante igualmente. ── -->
       <button type="button" class="dash-hero-hor" onclick="showTab('horarios')" aria-label="${_en?'Rota — your shift today and tomorrow':'Horarios — tu turno de hoy y de mañana'}">
-        <span aria-hidden="true">📅</span>
+        <span aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align:-.15em;flex:none"><rect x="3.5" y="5.5" width="17" height="15" rx="2"/><path d="M8 3.5v4M16 3.5v4M3.5 10.5h17"/></svg></span>
         <span id="hoyHorMeta" style="flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;text-align:left">${_en?'Rota · your shift today and tomorrow':'Horarios · tu turno de hoy y mañana'}</span>
         <span aria-hidden="true">›</span>
       </button>
@@ -19316,7 +19473,7 @@ function renderRepasoCats(){
     ${(function(){
       const left=_miLeft(emp);
       return `<button type="button" class="ri-cta ri-cta-mesa" style="margin:0 0 1rem" aria-label="${_en?'AI Guest':'Cliente IA'}" onclick="renderMesaLobby()">
-      <span class="ri-cta-icon" aria-hidden="true">🍽️</span>
+      <span class="ri-cta-icon" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align:-.15em;flex:none"><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="4.5"/></svg></span>
       <span class="ri-cta-text">
         <span class="ri-cta-top">${_en?'AI Guest':'Cliente IA'} <span style="font-size:.6rem;background:rgba(228,190,104,.16);border:1px solid rgba(228,190,104,.5);border-radius:99px;padding:.05rem .45rem;vertical-align:2px">${_en?'NEW':'NUEVO'}</span></span>
         <span class="ri-cta-sub">${_en?`Real-time service simulation · a 5★ auditor scores you · ${left}/${_MI_DAILY} today`:`Simulación de servicio en tiempo real · te puntúa un auditor 5★ · ${left}/${_MI_DAILY} hoy`}</span>
@@ -24615,7 +24772,7 @@ function renderLqa(){
       <!-- ⭐ FEATURED: Inspección Fantasma (flagship banner, kept) -->
       <div class="hub-banner" style="--hb-bg:linear-gradient(135deg,#0f1d15 0%,#1a3a24 50%,#0f1d15 100%);--hb-b:rgba(140,200,150,.45);--hb-glow:rgba(140,200,150,.5);position:relative;overflow:hidden;margin-bottom:.9rem" onclick="startGhostInspection()">
         <span class="hub-banner-shine"></span>
-        <span style="position:absolute;top:.3rem;right:.5rem;font-family:'DM Mono',monospace;font-size:.5rem;color:#8fc499;letter-spacing:.15em;text-transform:uppercase;background:rgba(140,200,150,.15);padding:.2rem .45rem;border-radius:var(--r3);border:1px solid rgba(140,200,150,.3)">${LANG==='en'?'★ New':'★ Nuevo'}</span>
+        <span style="position:absolute;top:.3rem;right:.5rem;font-family:'DM Mono',monospace;font-size:.72rem;color:#8fc499;letter-spacing:.12em;text-transform:uppercase;background:rgba(140,200,150,.15);padding:.2rem .45rem;border-radius:var(--r3);border:1px solid rgba(140,200,150,.3)">${LANG==='en'?'★ New':'★ Nuevo'}</span>
         <div class="hub-banner-icon">
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#d4f0dc" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a3 3 0 00-3 3v1a7 7 0 00-7 7v2a3 3 0 003 3h1l.5 3 1.5-3h10l1.5 3 .5-3h1a3 3 0 003-3v-2a7 7 0 00-7-7V5a3 3 0 00-3-3z"/><circle cx="9" cy="13" r="1" fill="#d4f0dc"/><circle cx="15" cy="13" r="1" fill="#d4f0dc"/></svg>
         </div>
@@ -24629,8 +24786,8 @@ function renderLqa(){
       <!-- 🧭 EL CÓDIGO DEL CAMARERO: manual de oficio consultable -->
       <div class="hub-banner" style="--hb-bg:linear-gradient(135deg,#1d1508 0%,#3a2c14 50%,#1d1508 100%);--hb-b:rgba(212,170,76,.45);--hb-glow:rgba(212,170,76,.5);position:relative;overflow:hidden;margin-bottom:.9rem" onclick="startCodigo()">
         <span class="hub-banner-shine"></span>
-        <span style="position:absolute;top:.3rem;right:.5rem;font-family:'DM Mono',monospace;font-size:.5rem;color:#e0c483;letter-spacing:.15em;text-transform:uppercase;background:rgba(212,170,76,.15);padding:.2rem .45rem;border-radius:var(--r3);border:1px solid rgba(212,170,76,.3)">${LANG==='en'?'★ New':'★ Nuevo'}</span>
-        <div class="hub-banner-icon" style="font-size:1.4rem">🧭</div>
+        <span style="position:absolute;top:.3rem;right:.5rem;font-family:'DM Mono',monospace;font-size:.72rem;color:#e0c483;letter-spacing:.12em;text-transform:uppercase;background:rgba(212,170,76,.15);padding:.2rem .45rem;border-radius:var(--r3);border:1px solid rgba(212,170,76,.3)">${LANG==='en'?'★ New':'★ Nuevo'}</span>
+        <div class="hub-banner-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align:-.15em;flex:none"><circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2 5-5 2 2-5 5-2z"/></svg></div>
         <div class="hub-banner-body">
           <div class="hub-banner-title">${LANG==='en'?'The Waiter’s Code':'El Código del Camarero'}</div>
           <div class="hub-banner-sub">${LANG==='en'?'What only years teach · 51 codes of the trade':'Lo que solo enseñan los años · 51 códigos del oficio'}</div>
@@ -26629,7 +26786,7 @@ function renderTxoko(){
       </div>
 
       <!-- TXOKO: Survive the service — PRIMARY recommended game -->
-      <div role="button" tabindex="0" aria-label="${_en?'Recommended: Survive the service — Mr. Shoesmith':'Recomendado: Sobrevive al servicio — Mr. Shoesmith'}" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click()}" class="game-card game-card-primary" onclick="txStart()" style="--gc-accent:var(--gold);--gc-accent2:#a47a2c;--gc-glow:rgba(196,154,60,.2)">
+      <div role="button" tabindex="0" aria-label="${_en?'Recommended: Survive the service — Mr. Shoesmith':'Recomendado: Sobrevive al servicio — Mr. Shoesmith'}" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click()}" class="game-card game-card-primary" onclick="txStart()" style="--gc-accent:var(--gold);--gc-ink:var(--gold-ink);--gc-accent2:#a47a2c;--gc-glow:rgba(196,154,60,.2)">
         <span class="gc-recommended-badge">★ ${_en?'Recommended':'Recomendado'}</span>
         ${_gcDeco}
         <div class="game-card-bg" style="background:linear-gradient(135deg,rgba(196,154,60,.08),rgba(196,154,60,.03))">
@@ -26650,7 +26807,7 @@ function renderTxoko(){
       <div class="tunic-divider" style="margin-top:1.2rem"><span>${_en?'More ways to train':'Más formas de entrenar'}</span></div>
 
       <!-- DUEL REMOTE -->
-      <div role="button" tabindex="0" aria-label="${_en?'Remote Duel':'Duelo Remoto'}" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click()}" class="game-card game-card-secondary" onclick="renderDuel()" style="--gc-accent:#5a9ab8;--gc-accent2:#3a7a98;--gc-glow:rgba(90,154,184,.2)">
+      <div role="button" tabindex="0" aria-label="${_en?'Remote Duel':'Duelo Remoto'}" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click()}" class="game-card game-card-secondary" onclick="renderDuel()" style="--gc-accent:#5a9ab8;--gc-ink:#2f6379;--gc-accent2:#3a7a98;--gc-glow:rgba(90,154,184,.2)">
         ${_gcDeco}
         <div class="game-card-bg" style="background:linear-gradient(135deg,rgba(90,154,184,.08),rgba(90,154,184,.03))"><svg viewBox="0 0 40 40" width="40" height="40"><polygon points="20,2 38,11 38,29 20,38 2,29 2,11" fill="none" stroke="rgba(90,154,184,.15)" stroke-width=".8"/><polygon points="20,6 34,13 34,27 20,34 6,27 6,13" fill="rgba(90,154,184,.06)"/><path d="M12 12l8 8-8 8" fill="none" stroke="#5a9ab8" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/><path d="M28 12l-8 8 8 8" fill="none" stroke="#5a9ab8" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
         <div class="game-card-body">
@@ -26666,7 +26823,7 @@ function renderTxoko(){
       </div>
 
       <!-- RULETA TXOKO -->
-      <div role="button" tabindex="0" aria-label="${_en?'Txoko Roulette':'Ruleta Txoko'}" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click()}" class="game-card game-card-secondary" onclick="renderRuleta()" style="--gc-accent:#9b59b6;--gc-accent2:#7d3c98;--gc-glow:rgba(155,89,182,.2)">
+      <div role="button" tabindex="0" aria-label="${_en?'Txoko Roulette':'Ruleta Txoko'}" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click()}" class="game-card game-card-secondary" onclick="renderRuleta()" style="--gc-accent:#9b59b6;--gc-ink:#6b477c;--gc-accent2:#7d3c98;--gc-glow:rgba(155,89,182,.2)">
         ${_gcDeco}
         <div class="game-card-bg" style="background:linear-gradient(135deg,rgba(155,89,182,.08),rgba(155,89,182,.03))"><svg viewBox="0 0 40 40" width="40" height="40"><polygon points="20,2 38,11 38,29 20,38 2,29 2,11" fill="none" stroke="rgba(155,89,182,.15)" stroke-width=".8"/><polygon points="20,6 34,13 34,27 20,34 6,27 6,13" fill="rgba(155,89,182,.06)"/><circle cx="20" cy="20" r="12" fill="none" stroke="#9b59b6" stroke-width="1"/><line x1="20" y1="8" x2="20" y2="14" stroke="#9b59b6" stroke-width=".8"/><line x1="20" y1="26" x2="20" y2="32" stroke="#9b59b6" stroke-width=".8"/><line x1="8" y1="20" x2="14" y2="20" stroke="#9b59b6" stroke-width=".8"/><line x1="26" y1="20" x2="32" y2="20" stroke="#9b59b6" stroke-width=".8"/><circle cx="20" cy="20" r="3" fill="#9b59b6"/><polygon points="20,6 18,3 22,3" fill="#e74c3c"/></svg></div>
         <div class="game-card-body">
@@ -26682,7 +26839,7 @@ function renderTxoko(){
       </div>
 
       <!-- Camarero Survivors — survivors mini-game (BETA) -->
-      <div role="button" tabindex="0" aria-label="${_en?'Camarero Survivors, allergen survivors game, beta':'Camarero Survivors, survivors de alérgenos, beta'}" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click()}" class="game-card game-card-secondary" onclick="launchElTurno()" style="--gc-accent:#c4693c;--gc-accent2:#a3502a;--gc-glow:rgba(196,105,60,.2)">
+      <div role="button" tabindex="0" aria-label="${_en?'Camarero Survivors, allergen survivors game, beta':'Camarero Survivors, survivors de alérgenos, beta'}" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click()}" class="game-card game-card-secondary" onclick="launchElTurno()" style="--gc-accent:#c4693c;--gc-ink:#8f431d;--gc-accent2:#a3502a;--gc-glow:rgba(196,105,60,.2)">
         ${_gcDeco}
         <div class="game-card-bg" style="background:linear-gradient(135deg,rgba(196,105,60,.08),rgba(196,105,60,.03))"><div class="tx-rh-hero-frame et-hero-frame"><img src="${ET_HERO_RUN[0]}" alt="${_en?'Camarero Survivors':'Camarero Survivors'}"></div></div>
         <div class="game-card-body">

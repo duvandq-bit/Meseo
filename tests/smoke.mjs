@@ -19,7 +19,7 @@
 // Exit: 0 = all green, 1 = at least one failure.
 // ═══════════════════════════════════════════════════════════════
 
-import { readFileSync, existsSync } from 'node:fs';
+import { readFileSync, existsSync, readdirSync } from 'node:fs';
 import { execSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
@@ -571,6 +571,256 @@ test('CSP meta tag is present with core hardening directives', () => {
   }
 });
 
+test('Los iconos de pantalla son SVG, no emoji a color', () => {
+  // Auditoría ago 2026: recorriendo la app se pintaban 7 emoji a color (103
+  // instancias, 100 de ellas el 📷 del botón de subir foto). Cada sistema los
+  // dibuja a su manera y rompen la estética de oro y serif — el sobre azul del
+  // diálogo de correo era el ejemplo más visible.
+  // Se cambian los que salen A COLOR. Los glifos tipográficos monocromos
+  // (★ ✦ ◆ ✕ ⚙) son parte del vocabulario de la app y se quedan.
+  const aColor = /[\u{1F300}-\u{1FAFF}]|[\u{26A1}\u{2B50}\u{2705}\u{274C}]/u;
+  const sitios = [
+    ['botón de subir foto',      /class="empl-upload-btn"[^>]*>(.{0,400}?)\$\{_en\?'Upload photo'/s],
+    ['subir foto desde la ficha',/class="empl-ov-upload"[^>]*>(.{0,400}?)\$\{_en\?'Got a better photo/s],
+    ['aviso de fotos que faltan',/class="empl-missing">(.{0,400}?)\$\{_en\?'No photo yet'/s],
+    ['diálogo de correo',        /text-align:center;margin-bottom:\.4rem;color:var\(--gold\)">(.{0,400}?)<\/div>/s],
+    ['banner de instalar',       /class="install-banner-ic"[^>]*>(.{0,400}?)<\/div>/s],
+    ['reto del día',             /<div class="pdd-eyebrow"><span>(.{0,400}?)\$\{en\?'Daily quiz'/s],
+    ['atajo de horarios',        /<span aria-hidden="true">(<svg.{0,400}?)<\/span>/s],
+  ];
+  for (const [nombre, re] of sitios) {
+    const m = html.match(re);
+    assert(m, `no encuentro el icono de: ${nombre}`);
+    assert(!aColor.test(m[1]), `${nombre} sigue usando un emoji a color`);
+    // Y el sustituto sigue el estilo de la casa: viewBox 24, grosor 1,5, hereda
+    // el color del texto y se oculta al lector de pantalla (es decorativo).
+    const svg = (m[1].match(/<svg[^>]*>/) || [])[0];
+    assert(svg, `${nombre} debería llevar un SVG`);
+    assert(/viewBox="0 0 24 24"/.test(svg), `el icono de ${nombre} debe usar el viewBox 24 de la casa`);
+    assert(/stroke="currentColor"/.test(svg), `el icono de ${nombre} debe heredar el color del texto`);
+    assert(/stroke-width="1\.5"/.test(svg), `el icono de ${nombre} debe usar el grosor 1,5 de la casa`);
+    assert(/aria-hidden="true"/.test(svg), `el icono de ${nombre} es decorativo: debe ocultarse al lector de pantalla`);
+  }
+});
+
+test('Cambiar de idioma repinta los diálogos abiertos', () => {
+  // Auditoría ago 2026: el diálogo del correo está bien traducido en el código,
+  // pero se construye con el idioma que hubiera en ese momento y nadie lo vuelve
+  // a pintar. Medido: tras poner LANG='es' y applyLangToApp(), seguía en inglés
+  // dentro de una app en español.
+  const al = _xFn('applyLangToApp');
+  assert(/_langRemountOverlays\(\)/.test(al), 'applyLangToApp debe repintar los overlays abiertos');
+  const rm = _xFn('_langRemountOverlays');
+  assert(/'recEmailOverlay'/.test(rm) && /'onboardingOverlay'/.test(rm),
+    'el repintado debe cubrir el diálogo de correo y la guía');
+  // El de correo necesita sus argumentos para reconstruirse.
+  assert(/_recEmailArgs = \{ name, pinHash \}/.test(html),
+    '_recEmailShow debe guardar sus argumentos para poder repintarse');
+  // La guía se repinta sobre su propio overlay; quitarlo re-dispararía su
+  // animación de entrada, así que solo el de correo lleva quitar:true.
+  assert(/id:'onboardingOverlay', quitar:false/.test(rm),
+    'la guía no debe desmontarse: se repinta en su sitio');
+});
+
+test('La marca del producto es Meseo; TXOKO es el restaurante', () => {
+  // Auditoría ago 2026: el título y el manifiesto ya decían Meseo, pero la
+  // PRIMERA pantalla que ve un empleado nuevo seguía diciendo «¡Bienvenido a
+  // TXOKO!», y lo mismo el aviso de instalación. La distinción importa: «Txoko
+  // by Martín Berasategui» como nombre del restaurante es correcto y se queda;
+  // lo que sobra es TXOKO usado como nombre de la app.
+  assert(/title_es:'¡Bienvenido a Meseo!',title_en:'Welcome to Meseo!'/.test(html),
+    'la guía debe dar la bienvenida a Meseo, no a TXOKO');
+  for (const frag of ['Añade Meseo a tu pantalla de inicio', 'Instala Meseo en tu móvil',
+                      'Meseo aparece como una app', 'Install Meseo on your phone']) {
+    assert(html.includes(frag), `el flujo de instalación debe decir Meseo: falta «${frag}»`);
+  }
+  assert(/<title>[^<]*Meseo/.test(html), 'el <title> debe llevar Meseo');
+  const mf = JSON.parse(read('manifest.json'));
+  assert(/Meseo/.test(mf.name) && /Meseo/.test(mf.short_name), 'el manifiesto debe llevar Meseo');
+  // Y el aviso legal CONSERVA la protección de marcas de terceros: el nombre del
+  // restaurante y el del chef no son nuestros y deben seguir reconocidos.
+  assert(/incluidos TXOKO y Martín Berasategui\) son marcas/.test(html),
+    'el aviso legal debe seguir reconociendo las marcas del restaurante y del chef');
+  assert(/no está afiliada, patrocinada ni respaldada/.test(html),
+    'el aviso legal debe mantener el descargo de no afiliación');
+});
+
+test('Suelo de 12px en texto y 44px en zonas táctiles', () => {
+  // Auditoría ago 2026, medido en 390×844 recorriendo 9 pantallas:
+  //   580 elementos de texto por debajo de 12px (273 solo la franja de datos de
+  //   la ficha de vino, a 10px) y 61 botones por debajo de 44px de alto.
+  //   Región, precio y perfil son justo lo que se consulta de pie y en segundos
+  //   antes de entrar a mesa, y eran lo más pequeño de la pantalla.
+  // Tras el arreglo: 0 y 0. Este guard vigila las reglas que lo causaban.
+  const css = read('styles.css');
+  // Anclado a principio de línea: si no, `.game-card-badge` casaría dentro de
+  // `.tx-rh-hub .game-card-badge`, que es otra regla y no lleva font-size.
+  const ruleOf = (sel) => {
+    const re = new RegExp('^' + sel.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '\\s*\\{([^}]*)\\}', 'm');
+    const m = css.match(re);
+    assert(m, `no encuentro la regla ${sel}`);
+    // Sin comentarios: un comentario que mencione «min-height:34px» explicando
+    // por qué se quitó no puede hacer fallar la comprobación del valor real.
+    return m[1].replace(/\/\*[\s\S]*?\*\//g, '');
+  };
+  const sizeOf = (sel) => {
+    const m = ruleOf(sel).match(/font-size:([\d.]+)rem/);
+    assert(m, `${sel} no declara font-size`);
+    return parseFloat(m[1]) * 16;
+  };
+  for (const sel of ['.wcms-stat', '.wc-region', '.wc-price-sub', '.wc-rec', '.dash-index-meta',
+                     '.game-card-label', '.game-card-badge', '.tunic-divider span', '.xp-bar-sub',
+                     '.hoy-numrow-meta', '.sup-hero-sub', '.hub-banner-sub', '.chat-eyebrow',
+                     '.dash-row-meta', '.ri-cta-sub', '.act-foot']) {
+    const px = sizeOf(sel);
+    assert(px >= 11.5, `${sel} se lee a ${px.toFixed(1)}px — el suelo es 12px`);
+  }
+  const minH = (sel) => {
+    const hits = [...ruleOf(sel).matchAll(/min-height:(\d+)px/g)].map(m => +m[1]);
+    assert(hits.length, `${sel} no declara min-height`);
+    // La ÚLTIMA declaración gana: .chat-presence-toggle llevaba un 44 seguido de
+    // un 34 en el mismo bloque, así que el arreglo no hacía nada.
+    return hits[hits.length - 1];
+  };
+  for (const sel of ['.empl-upload-btn', '.wine-filter-pill', '.chat-presence-toggle',
+                     '.dash-hero-hor', '.install-banner-btn']) {
+    assert(minH(sel) >= 44, `${sel} mide ${minH(sel)}px de alto — el mínimo táctil es 44px`);
+  }
+  // Y ninguna media query puede volver a bajarlos por debajo del suelo.
+  for (const m of css.match(/@media[^{]*\{[\s\S]*?\n\}/g) || []) {
+    for (const r of m.match(/\.(wine-filter-pill|empl-upload-btn|chat-presence-toggle)[^{]*\{[^}]*\}/g) || []) {
+      const h = r.match(/min-height:(\d+)px/);
+      if (h) assert(+h[1] >= 44, `una media query baja a ${h[1]}px: ${r.slice(0, 70)}`);
+      const f = r.match(/font-size:([\d.]+)rem/);
+      if (f) assert(parseFloat(f[1]) * 16 >= 11.5,
+        `una media query baja el texto a ${(parseFloat(f[1]) * 16).toFixed(1)}px: ${r.slice(0, 70)}`);
+    }
+  }
+});
+
+test('Contraste: la tinta secundaria y el oro de texto son legibles', () => {
+  // Auditoría ago 2026. Midiendo sobre el fondo real de cada elemento salían 37
+  // fallos AA repartidos por 8 pantallas, todos de 10 reglas. Comprobado además
+  // píxel a píxel sobre captura: el texto que va sobre degradado o foto estaba
+  // bien; los fallos eran los de fondo sólido. Tras el arreglo: 0.
+  const css = read('styles.css');
+  const srgb = (h) => [1, 3, 5].map(i => parseInt(h.slice(i, i + 2), 16));
+  const lum = (c) => { const f = v => (v /= 255) <= .03928 ? v / 12.92 : Math.pow((v + .055) / 1.055, 2.4);
+                       return .2126 * f(c[0]) + .7152 * f(c[1]) + .0722 * f(c[2]); };
+  const ratio = (a, b) => { const [x, y] = [lum(a), lum(b)]; return (Math.max(x, y) + .05) / (Math.min(x, y) + .05); };
+  const over = (c, a, bg) => c.map((v, i) => v * a + bg[i] * (1 - a));
+  const CREAM = srgb('#f4ede2'), CARD = srgb('#f4e4c1'), INK = [28, 42, 34];
+
+  const alpha = (tok) => {
+    const m = css.match(new RegExp('--' + tok + ':\\s*rgba\\(28,42,34,\\.(\\d+)\\)'));
+    assert(m, `no encuentro el token --${tok}`);
+    return parseFloat('.' + m[1]);
+  };
+  for (const tok of ['parch3', 'parch4']) {
+    const r = ratio(over(INK, alpha(tok), CREAM), CREAM);
+    assert(r >= 4.5, `--${tok} da ${r.toFixed(2)} sobre pergamino — el mínimo legible es 4,5`);
+  }
+  // El oro de marca vale para filetes y titulares, no para texto pequeño: por eso
+  // existe --gold-ink. Debe pasar 4,5 sobre pergamino Y sobre la tarjeta crema.
+  // Se resuelve la cadena de tokens (--gold-ink → --gold-deep → --brand-accent-deep)
+  // para que siga midiendo el color real si se re-tematiza el restaurante.
+  const resolve = (tok, depth = 0) => {
+    assert(depth < 6, `cadena de tokens demasiado profunda en --${tok}`);
+    const m = css.match(new RegExp('--' + tok + ':\\s*([^;]+);'));
+    assert(m, `falta el token --${tok}`);
+    const v = m[1].trim();
+    const ref = v.match(/^var\(--([\w-]+)\)$/);
+    return ref ? resolve(ref[1], depth + 1) : v;
+  };
+  const goldInk = resolve('gold-ink');
+  assert(/^#[0-9a-f]{6}$/i.test(goldInk), `--gold-ink no resuelve a un color sólido: ${goldInk}`);
+  for (const [bg, name] of [[CREAM, 'pergamino'], [CARD, 'tarjeta crema']]) {
+    const r = ratio(srgb(goldInk), bg);
+    assert(r >= 4.5, `--gold-ink (${goldInk}) da ${r.toFixed(2)} sobre ${name} — el mínimo es 4,5`);
+  }
+  // Las cuatro tarjetas de juego declaran tinta propia junto a su acento vivo.
+  const cards = html.match(/--gc-accent:[^;"]+;--gc-ink:[^;"]+;/g) || [];
+  assert(cards.length === 4, `las 4 tarjetas de juego deben declarar --gc-ink, encontradas ${cards.length}`);
+  assert(/\.game-card-label\{[^}]*color:var\(--gc-ink,var\(--gold-ink\)\)/s.test(css),
+    'la etiqueta de tarjeta debe usar --gc-ink, no el acento vivo');
+  assert(!/\.game-card-label\{[^}]*opacity:\.85/s.test(css),
+    'la etiqueta de tarjeta no puede llevar opacity: rebaja el contraste ya ajustado');
+  // El rótulo de sección sale 14 veces en INICIO: con --gold daba 2,25.
+  assert(/\.tunic-divider span\{[^}]*color:var\(--gold-ink\)/s.test(css),
+    'el rótulo de sección debe usar --gold-ink');
+});
+
+test('Una pestaña desconocida abre INICIO, no una traza de JavaScript', () => {
+  // Auditoría ago 2026: los push abren la app con #tab=… Si el nombre ya no
+  // existe (hemos renombrado pestañas varias veces), se pintaba en rojo
+  // «Error en tab X: renderMap[tab] is not a function» — en inglés, a un
+  // camarero. Medido: showTab('estaNoExiste') producía exactamente eso.
+  const st = _xFn('showTab');
+  assert(/if\(!TAB_ROUTES\.includes\(tab\)\)/.test(st), 'showTab debe validar la pestaña contra TAB_ROUTES');
+  assert(/tab = 'dashboard';/.test(st), 'una pestaña desconocida debe caer en INICIO');
+  // La validación va ANTES de tocar estado (currentTab, track, teardown).
+  assert(st.indexOf('TAB_ROUTES.includes') < st.indexOf('currentTab=tab'),
+    'la pestaña debe validarse antes de fijar currentTab');
+  // TAB_ROUTES y renderMap no pueden separarse al añadir una pestaña.
+  const routes = JSON.parse(_xConst('TAB_ROUTES', '];').match(/\[[^\]]*\]/)[0].replace(/'/g, '"'));
+  const mapKeys = (st.match(/const renderMap = \{([^}]*)\}/)[1].match(/(\w+):/g) || [])
+    .map(k => k.slice(0, -1));
+  assert(routes.slice().sort().join() === mapKeys.slice().sort().join(),
+    `TAB_ROUTES y renderMap se han separado:\n  solo en TAB_ROUTES: ${routes.filter(r => !mapKeys.includes(r))}\n  solo en renderMap: ${mapKeys.filter(k => !routes.includes(k))}`);
+  // Si una pantalla conocida revienta, tampoco se enseña la traza.
+  assert(/Esta pantalla no se ha podido abrir/.test(st) && /This screen could not open/.test(st),
+    'el fallo de render debe explicarse en el idioma del usuario');
+  assert(/showTab\(\\?'dashboard\\?'\)/.test(st), 'el fallo de render debe ofrecer una salida a INICIO');
+  assert(/DEBUG \? '<pre/.test(st), 'la traza solo puede verse con DEBUG activado');
+});
+
+test('Arranque: nada externo puede bloquear el primer pintado', () => {
+  // Auditoría ago 2026, medido con Chromium en 390×844:
+  //   red normal ................ primer pintado 12 748 ms
+  //   fonts.googleapis colgado .. NUNCA (>20 s), blanco total
+  //   solo dominio propio ....... 256 ms
+  // La causa era un <link rel="stylesheet"> a fonts.googleapis.com, que bloquea
+  // el pintado. Un portal cautivo de wifi de hotel no rechaza la petición: la
+  // deja colgada, así que la app no dibujaba nada. Tras alojarlas: 632 ms en red
+  // normal y 424 ms con Google caído. Este guard impide que vuelva a entrar.
+  const head = html.slice(0, html.indexOf('</head>'));
+  const blocking = head.match(/<link[^>]+rel=["']stylesheet["'][^>]*>/gi) || [];
+  for (const tag of blocking) {
+    const href = (tag.match(/href=["']([^"']+)["']/) || [])[1] || '';
+    assert(!/^https?:\/\//.test(href),
+      `hoja de estilos externa que BLOQUEA el pintado: ${href} — alójala o cárgala sin bloquear`);
+  }
+  // Las cuatro familias del sistema de diseño deben existir en disco.
+  for (const f of ['Cinzel-400-latin.woff2', 'CormorantGaramond-400-latin.woff2',
+                   'Quicksand-300-latin.woff2', 'DMMono-400-latin.woff2']) {
+    assert(existsSync(join(ROOT, 'fonts', f)), `falta la tipografía propia fonts/${f}`);
+  }
+  // Y estar declaradas en styles.css apuntando a fonts/ (no a un CDN).
+  const css = read('styles.css');
+  const faces = css.match(/@font-face\s*\{[^}]*\}/g) || [];
+  assert(faces.length >= 8, `esperaba las @font-face propias en styles.css, hay ${faces.length}`);
+  for (const f of faces) {
+    assert(/url\(fonts\//.test(f), '@font-face debe cargar desde fonts/ del propio dominio');
+  }
+  // TODA referencia debe existir en disco. Cinzel y Quicksand son fuentes
+  // VARIABLES: Google sirve el mismo woff2 para todos los pesos, así que
+  // nombrar los archivos por peso creó 5 rutas inexistentes y las negritas
+  // caían a la fuente del sistema sin avisar. Lo cazó el chequeo de 404.
+  const refs = [...new Set([...css.matchAll(/url\(fonts\/([^)]+)\)/g)].map(m => m[1]))];
+  assert(refs.length >= 8, `esperaba varias referencias a fonts/, hay ${refs.length}`);
+  for (const r of refs) {
+    assert(existsSync(join(ROOT, 'fonts', r)), `styles.css referencia fonts/${r} y no existe`);
+  }
+  // Y ningún archivo huérfano: peso muerto en cada despliegue.
+  for (const f of readdirSync(join(ROOT, 'fonts'))) {
+    assert(refs.includes(f), `fonts/${f} no lo referencia nadie — sobra`);
+  }
+  // Las dos caras del primer pintado se precargan.
+  assert(/<link rel="preload" as="font"[^>]*Quicksand-300-latin\.woff2[^>]*crossorigin>/.test(head)
+      && /<link rel="preload" as="font"[^>]*Cinzel-400-latin\.woff2[^>]*crossorigin>/.test(head),
+    'Quicksand y Cinzel deben precargarse (crossorigin es obligatorio en preload de fuentes)');
+});
+
 test('CSP does not break critical paths (Supabase, CDNs, fonts, map)', () => {
   // A too-narrow CSP would silently break login/sync or the map. Assert the
   // origins the app genuinely loads from are still allow-listed, so a future
@@ -580,12 +830,12 @@ test('CSP does not break critical paths (Supabase, CDNs, fonts, map)', () => {
     'advkoujfgbrrjvqexrcu.supabase.co', // login + all data sync (connect-src)
     'cdn.jsdelivr.net',                 // supabase-js (script-src)
     'unpkg.com',                        // maplibre + topojson (script/style)
-    'fonts.googleapis.com',             // font CSS (style-src)
-    'fonts.gstatic.com',                // font files (font-src)
     'basemaps.cartocdn.com',            // wine map tiles — CARTO Voyager (img/connect)
     'www.youtube.com'                   // video embeds (frame-src)
   ];
   for (const o of required) assert(csp.includes(o), `CSP no longer allows ${o} — would break a feature`);
+  // Las tipografías son propias desde v7.345: font-src no necesita terceros.
+  assert(/font-src 'self';/.test(csp), "font-src debe ser 'self' — las fuentes se sirven del propio dominio");
   // The team chat needs the realtime WebSocket + storage images.
   assert(/wss:\/\/advkoujfgbrrjvqexrcu\.supabase\.co/.test(csp),
     'CSP connect-src must allow the Supabase realtime WebSocket (wss) for the chat');
@@ -1237,7 +1487,9 @@ test('shift change refreshes in place without the fade flicker', () => {
   // no-entrance-anim de forma síncrona, y quitar animation:none re-dispara la
   // animación slideUp del héroe. El fix: dejar la clase puesta (return sin
   // remove) y retirarla solo en la siguiente navegación real.
-  const stBody = html.slice(html.indexOf('function showTab(tab, instant)'), html.indexOf('function showTab(tab, instant)') + 5200);
+  // Cuerpo REAL de la función (con emparejado de llaves): recortar por número
+  // fijo de caracteres se rompía en cuanto se añadía un comentario arriba.
+  const stBody = _xFn('showTab');
   const _instStart = stBody.indexOf('if(instant){');
   const instBlock = stBody.slice(_instStart, stBody.indexOf('return;', _instStart) + 7);
   assert(!/classList\.remove\('no-entrance-anim'\)/.test(instBlock),
@@ -2454,8 +2706,9 @@ test('section labels share the tunic-divider recipe (no rogue styles)', () => {
 test('vinos carta premium port: fonts, search, pills, card, light sub-trigger', () => {
   const css = read('styles.css');
   // Cormorant Garamond powers the sommelier voice — it must actually load.
-  assert(/fonts\.googleapis\.com\/css2\?[^"]*Cormorant\+Garamond/.test(html),
-    'Cormorant Garamond must be in the Google Fonts link');
+  // Desde v7.345 se sirve del propio dominio, no de Google.
+  assert(/@font-face\{?[^}]*font-family:\s*'Cormorant Garamond'[^}]*fonts\/CormorantGaramond-[^}]*\.woff2/s.test(css),
+    'Cormorant Garamond debe tener @font-face propio en styles.css');
   assert(/\.wine-storybook-text\{[^}]*Cormorant Garamond/.test(css)
     && /\.wc-story\{[^}]*Cormorant Garamond/.test(css),
     'hero quote and card story must use Cormorant');
@@ -4556,7 +4809,7 @@ test('showTab fija la subpestaña de destino (Flashcards no cae en Emplatado)', 
   // guide». renderAprender/renderRankingHub pintan lo que dice _subTab, NO el
   // destino de showTab(), así que showTab('flashcards') caía en la subpestaña
   // de aterrizaje (Emplatado). Igual le pasaba a showTab('stats') → Ranking.
-  const st = html.slice(html.indexOf('function showTab('), html.indexOf('function showTab(') + 4000);
+  const st = _xFn('showTab');
   assert(/const _subParent = parentMap\[tab\]/.test(st), 'showTab debe derivar el padre de la subpestaña');
   assert(/if\(_subParent === 'aprender'\) _subTab\.aprender = tab;/.test(st),
     'entrar por una subpestaña de Aprender debe fijar _subTab.aprender');
@@ -5751,16 +6004,60 @@ test('la recuperación está cableada también en el login por contraseña', () 
   assert(/forgot\.style\.display\s*=\s*'block'/.test(html) && /forgot\.style\.display\s*=\s*'none'/.test(html),
     'el enlace de recuperación debe alternarse con el modo del login');
   // usuario nuevo por contraseña → se le ofrece el correo de recuperación
-  assert(/promptRecoveryEmail\(_rn,\s*_rh\)/.test(html),
+  assert(/promptRecoveryEmail\(resolvedName,\s*hashed\)/.test(html),
     'un usuario nuevo (contraseña) debe recibir el prompt de correo');
   // usuario existente → aviso único por dispositivo
   assert(/recEmailAsked:/.test(html) && /promptRecoveryEmail\(userName,\s*hashedPin\)/.test(html),
     'un usuario existente debe recibir el aviso de correo una sola vez por dispositivo');
   // ...pero NO si la cuenta ya tiene correo en el servidor (evita re-preguntar
   // al entrar desde otro dispositivo, donde la bandera local no existe)
-  assert(/const st=await supaEmailStatus\(userName, hashedPin\)[\s\S]{0,120}hasEmail=!!st\.data\.hasEmail/.test(html) &&
-         /if\(!hasEmail\)\{ setTimeout\(\(\)=>\{ try\{ promptRecoveryEmail\(userName, hashedPin\)/.test(html),
+  assert(/const st=await supaEmailStatus\(userName, hashedPin\)[\s\S]{0,120}hasEmail=!!st\.data\.hasEmail/.test(html),
     'el aviso de correo debe comprobar el servidor (email-status) antes de pedirlo');
+  assert(/if\(hasEmail\)\{[^}]*recEmailAsked:'\+userName[\s\S]{0,120}else \{ promptRecoveryEmail\(userName, hashedPin\); \}/.test(html),
+    'si el servidor dice que ya tiene correo se marca y no se pregunta; si no, decide la puerta');
+});
+
+test('Primera sesión: los avisos hacen cola, no se apilan', () => {
+  // Auditoría ago 2026: al darse de alta salían la guía de 9 pasos, el diálogo
+  // del correo (900 ms después, sin mirar si la guía seguía abierta) y el aviso
+  // de métricas (a los 6 s). Medido en captura: dos overlays a la vez encima del
+  // dashboard. Para una plantilla que ya encuentra la app complicada, son tres
+  // muros antes del primer contenido útil.
+  assert(/function _uiOverlayUp\(\)/.test(html) && /function _uiWhenClear\(/.test(html),
+    'debe existir la cola de primeras impresiones');
+  assert(/_UI_OVERLAY_SEL\s*=\s*\[[^\]]*'#onboardingOverlay'[^\]]*'#recEmailOverlay'/.test(html),
+    'la cola debe reconocer la guía y el diálogo de correo como overlays');
+  assert(/_uiQueueBusy/.test(html), 'la cola debe impedir que dos avisos salgan a la vez');
+  // Trampa encontrada al verificar: .gs-overlay (el buscador) vive SIEMPRE en el
+  // DOM con display:none. Comprobar solo si el elemento existe dejaba la cola
+  // bloqueada para siempre y ningún aviso salía nunca. Hay que mirar si se ve.
+  const up = _xFn('_uiOverlayUp');
+  assert(/_uiVisible/.test(up), '_uiOverlayUp debe comprobar visibilidad, no solo presencia');
+  const visFn = _xFn('_uiVisible');
+  assert(/display==='none'/.test(visFn) && /visibility==='hidden'/.test(visFn)
+      && /getBoundingClientRect/.test(visFn),
+    '_uiVisible debe descartar display:none, visibility:hidden y cajas de tamaño cero');
+  assert(/'\.gs-overlay'/.test(html), 'el buscador debe estar en la lista (es el que reveló la trampa)');
+  // El aviso de métricas pasa por la cola.
+  assert(/_uiWhenClear\(_tmMaybePrivacyNotice\)/.test(html),
+    'el aviso de métricas debe esperar turno');
+  // La puerta del correo: nada en la primera sesión, y la marca «ya preguntado»
+  // se pone al mostrarlo — si se pusiera antes, aplazar sería no preguntar nunca.
+  const gate = _xFn('promptRecoveryEmail');
+  assert(/recEmailSesiones:/.test(gate) && /if\(n < 2\) return;/.test(gate),
+    'el correo no puede pedirse en la primera sesión');
+  assert(/_uiWhenClear\(\(\)=>\{[\s\S]*recEmailAsked:'\+name, '1'[\s\S]*_recEmailShow\(name, pinHash\)/.test(gate),
+    'la marca «ya preguntado» debe ponerse dentro de la cola, al mostrarlo');
+  assert(gate.indexOf('_uiWhenClear') < gate.indexOf('_recEmailShow'),
+    'el diálogo solo se muestra a través de la cola');
+  // Y el diálogo en sí no puede invocarse saltándose la puerta. Solo hay dos
+  // sitios legítimos: la propia puerta y el repintado por cambio de idioma
+  // (que reabre uno que YA estaba en pantalla, no lo estrena).
+  const permitidos = [_xFn('promptRecoveryEmail'), _xFn('_langRemountOverlays'), _xFn('_recEmailShow')];
+  const totales = (html.match(/_recEmailShow\(/g) || []).length;
+  const justificadas = permitidos.reduce((n, f) => n + (f.match(/_recEmailShow\(/g) || []).length, 0);
+  assert(totales === justificadas,
+    `_recEmailShow se llama desde algún sitio que no es la puerta ni el repintado de idioma (${totales} usos, ${justificadas} justificados)`);
 });
 
 // ─── Endurecimiento de seguridad ────────────────────────────────
