@@ -1,6 +1,15 @@
 {
- "updated": "2026-08-25T23:40:58.762Z",
+ "updated": "2026-08-26T05:52:12.938Z",
  "items": [
+  {
+   "t": "El secreto del restaurante de Pontevedra que recomienda la Guía Michelin",
+   "u": "https://www.diariodepontevedra.es/articulo/pontevedra/distinciones-estan-muy-mas-importante-es-que-local-lleno/202608251912191465174.html",
+   "s": "Diario de Pontevedra",
+   "d": "2026-08-26T03:00:00.000Z",
+   "tags": [
+    "MICHELIN"
+   ]
+  },
   {
    "t": "Dos jóvenes de Linares superan una de las oposiciones más exigentes de España",
    "u": "https://elnuevoobservador.com/dos-jovenes-de-linares-superan-una-de-las-oposiciones-mas-exigentes-de-espana/",
@@ -13,7 +22,7 @@
   },
   {
    "t": "Dos organizaciones piden investigar si la papa con origen Israel procede de territorios ocupados: Canarias, en el punto de mira",
-   "u": "https://www.eldiario.es/canariasahora/eldiario-agricola/agricultura/organizaciones-piden-investigar-si-papa-origen-israel-procede-territorios-ocupados-canarias-punto-mira_1_13466896.amp.html",
+   "u": "https://www.eldiario.es/canariasahora/eldiario-agricola/agricultura/organizaciones-piden-investigar-si-papa-origen-israel-procede-territorios-ocupados-canarias-punto-mira_1_13466896.html",
    "s": "elDiario.es",
    "d": "2026-08-25T19:22:36.000Z",
    "tags": [
@@ -35,7 +44,7 @@
    "t": "La vendimia de Señorío de Agüimes recolecta el doble de uva que la campaña anterior",
    "u": "https://canariasinformativa.com/la-vendimia-de-senorio-de-aguimes-recolecta-el-doble-de-uva-que-la-campana-anterior/",
    "s": "Canarias Informativa",
-   "d": "2026-08-25T19:03:54.000Z",
+   "d": "2026-08-25T19:03:38.000Z",
    "tags": [
     "VINO",
     "CANARIAS"
@@ -133,6 +142,16 @@
     "ALTA COCINA"
    ],
    "img": "https://imagenes2.mundodeportivo.com/files/og_thumbnail/uploads/2025/05/04/6817421a1364d.png"
+  },
+  {
+   "t": "El PSOE dice que el Gobierno canario “elude la transparencia y aviva la incertidumbre entre los afectados”",
+   "u": "https://www.eldiario.es/canariasahora/lapalmaahora/politica/psoe-dice-gobierno-canario-elude-transparencia-aviva-incertidumbre-afectados_1_13466246.html",
+   "s": "elDiario.es",
+   "d": "2026-08-25T13:39:40.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://static.eldiario.es/clip/bac71f27-476a-42ad-b5fb-d6ff775a04a1_facebook-watermarked-aspect-ratio-1200-675_default_0_x407y90.jpg"
   },
   {
    "t": "Los cocineros coinciden: \"Un buen sofrito no se hace ‘a ojo’, sino midiendo cantidades exactas, por ejemplo, 100 gramos de cebolla por cada 80 gramos de tomate\"",
@@ -235,6 +254,16 @@
    "img": "https://cdn.diariodeavisos.com/wp-content/uploads/2026/08/manu-arroyo.jpg"
   },
   {
+   "t": "Dónde se puede degustar la mejor pizza de Tenerife",
+   "u": "https://www.teneriffa-news.com/es/informacion-sobre-tenerife/las-cinco-pizzerias-mejor-valoradas-de-tenerife-segun-tripadvisor_1464396.html",
+   "s": "Teneriffa News",
+   "d": "2026-08-25T08:11:38.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://www.teneriffa-news.com/media/p/pizza-teneriffa-2400x1350.jpg"
+  },
+  {
    "t": "Grupo Kapital abre SEXTO, su nueva apuesta por la alta cocina de la mano del chef Juan Suárez de Lezo",
    "u": "https://okdiario.com/cool/lifestyle/grupo-kapital-abre-sexto-nueva-apuesta-alta-cocina-mano-del-chef-juan-suarez-lezo-20168331",
    "s": "OkDiario",
@@ -273,37 +302,6 @@
     "CANARIAS"
    ],
    "img": "https://www.teneriffa-news.com/media/t/teneriffa-rennbahn-formel-1-rennstrecke-2400x1350.jpg"
-  },
-  {
-   "t": "La villa juguetera de Alicante que conquista por su cocina: así es el pueblo donde mejor se come de España",
-   "u": "https://www.noticiasdelvino.com/restaurantes/2026/08/24/la-villa-juguetera-de-alicante-que-conquista-por-su-cocina-asi-es-el-pueblo-donde-mejor-se-come-de-espana-74836/",
-   "s": "Noticias del Vino",
-   "d": "2026-08-24T21:22:30.000Z",
-   "tags": [
-    "MICHELIN"
-   ],
-   "img": "https://www.noticiasdelvino.com/wp-content/uploads/restaurantes-5.jpg"
-  },
-  {
-   "t": "23 restaurantes de la Costa Blanca por los que merece la pena viajar a Alicante para comer",
-   "u": "https://www.elle.com/es/gourmet/donde-comer/a36740388/mejores-restaurantes-costa-blanca-alicante/",
-   "s": "ELLE",
-   "d": "2026-08-24T20:55:11.000Z",
-   "tags": [
-    "ALTA COCINA"
-   ],
-   "img": "https://hips.hearstapps.com/hmg-prod/images/0a56f2a2-17bf-4d62-bd62-718c1d8493c1.jpg?crop=1.00xw:0.963xh;0,0.0369xh&resize=1200:*"
-  },
-  {
-   "t": "Jaime, de Historia a Vitivinicultura: el joven que revitaliza el sector del vino en Lanzarote",
-   "u": "https://www.laprovincia.es/canarias/2026/08/24/jaime-historia-vitivinicultura-joven-revitaliza-133625302.html",
-   "s": "La Provincia",
-   "d": "2026-08-24T19:11:11.000Z",
-   "tags": [
-    "VINO",
-    "CANARIAS"
-   ],
-   "img": "https://estaticos-cdn.prensaiberica.es/clip/b53b787d-5d09-4d1e-8b2d-4385097d2d18_16-9-discover-aspect-ratio_default_1499493.jpg"
   }
  ]
 }
