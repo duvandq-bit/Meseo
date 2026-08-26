@@ -571,6 +571,64 @@ test('CSP meta tag is present with core hardening directives', () => {
   }
 });
 
+test('Una pestaña desconocida abre INICIO, no una traza de JavaScript', () => {
+  // Auditoría ago 2026: los push abren la app con #tab=… Si el nombre ya no
+  // existe (hemos renombrado pestañas varias veces), se pintaba en rojo
+  // «Error en tab X: renderMap[tab] is not a function» — en inglés, a un
+  // camarero. Medido: showTab('estaNoExiste') producía exactamente eso.
+  const st = _xFn('showTab');
+  assert(/if\(!TAB_ROUTES\.includes\(tab\)\)/.test(st), 'showTab debe validar la pestaña contra TAB_ROUTES');
+  assert(/tab = 'dashboard';/.test(st), 'una pestaña desconocida debe caer en INICIO');
+  // La validación va ANTES de tocar estado (currentTab, track, teardown).
+  assert(st.indexOf('TAB_ROUTES.includes') < st.indexOf('currentTab=tab'),
+    'la pestaña debe validarse antes de fijar currentTab');
+  // TAB_ROUTES y renderMap no pueden separarse al añadir una pestaña.
+  const routes = JSON.parse(_xConst('TAB_ROUTES', '];').match(/\[[^\]]*\]/)[0].replace(/'/g, '"'));
+  const mapKeys = (st.match(/const renderMap = \{([^}]*)\}/)[1].match(/(\w+):/g) || [])
+    .map(k => k.slice(0, -1));
+  assert(routes.slice().sort().join() === mapKeys.slice().sort().join(),
+    `TAB_ROUTES y renderMap se han separado:\n  solo en TAB_ROUTES: ${routes.filter(r => !mapKeys.includes(r))}\n  solo en renderMap: ${mapKeys.filter(k => !routes.includes(k))}`);
+  // Si una pantalla conocida revienta, tampoco se enseña la traza.
+  assert(/Esta pantalla no se ha podido abrir/.test(st) && /This screen could not open/.test(st),
+    'el fallo de render debe explicarse en el idioma del usuario');
+  assert(/showTab\(\\?'dashboard\\?'\)/.test(st), 'el fallo de render debe ofrecer una salida a INICIO');
+  assert(/DEBUG \? '<pre/.test(st), 'la traza solo puede verse con DEBUG activado');
+});
+
+test('Arranque: nada externo puede bloquear el primer pintado', () => {
+  // Auditoría ago 2026, medido con Chromium en 390×844:
+  //   red normal ................ primer pintado 12 748 ms
+  //   fonts.googleapis colgado .. NUNCA (>20 s), blanco total
+  //   solo dominio propio ....... 256 ms
+  // La causa era un <link rel="stylesheet"> a fonts.googleapis.com, que bloquea
+  // el pintado. Un portal cautivo de wifi de hotel no rechaza la petición: la
+  // deja colgada, así que la app no dibujaba nada. Tras alojarlas: 632 ms en red
+  // normal y 424 ms con Google caído. Este guard impide que vuelva a entrar.
+  const head = html.slice(0, html.indexOf('</head>'));
+  const blocking = head.match(/<link[^>]+rel=["']stylesheet["'][^>]*>/gi) || [];
+  for (const tag of blocking) {
+    const href = (tag.match(/href=["']([^"']+)["']/) || [])[1] || '';
+    assert(!/^https?:\/\//.test(href),
+      `hoja de estilos externa que BLOQUEA el pintado: ${href} — alójala o cárgala sin bloquear`);
+  }
+  // Las cuatro familias del sistema de diseño deben existir en disco.
+  for (const f of ['Cinzel-400-latin.woff2', 'CormorantGaramond-400-latin.woff2',
+                   'Quicksand-300-latin.woff2', 'DMMono-400-latin.woff2']) {
+    assert(existsSync(join(ROOT, 'fonts', f)), `falta la tipografía propia fonts/${f}`);
+  }
+  // Y estar declaradas en styles.css apuntando a fonts/ (no a un CDN).
+  const css = read('styles.css');
+  const faces = css.match(/@font-face\s*\{[^}]*\}/g) || [];
+  assert(faces.length >= 8, `esperaba las @font-face propias en styles.css, hay ${faces.length}`);
+  for (const f of faces) {
+    assert(/url\(fonts\//.test(f), '@font-face debe cargar desde fonts/ del propio dominio');
+  }
+  // Las dos caras del primer pintado se precargan.
+  assert(/<link rel="preload" as="font"[^>]*Quicksand-300-latin\.woff2[^>]*crossorigin>/.test(head)
+      && /<link rel="preload" as="font"[^>]*Cinzel-400-latin\.woff2[^>]*crossorigin>/.test(head),
+    'Quicksand y Cinzel deben precargarse (crossorigin es obligatorio en preload de fuentes)');
+});
+
 test('CSP does not break critical paths (Supabase, CDNs, fonts, map)', () => {
   // A too-narrow CSP would silently break login/sync or the map. Assert the
   // origins the app genuinely loads from are still allow-listed, so a future
@@ -580,12 +638,12 @@ test('CSP does not break critical paths (Supabase, CDNs, fonts, map)', () => {
     'advkoujfgbrrjvqexrcu.supabase.co', // login + all data sync (connect-src)
     'cdn.jsdelivr.net',                 // supabase-js (script-src)
     'unpkg.com',                        // maplibre + topojson (script/style)
-    'fonts.googleapis.com',             // font CSS (style-src)
-    'fonts.gstatic.com',                // font files (font-src)
     'basemaps.cartocdn.com',            // wine map tiles — CARTO Voyager (img/connect)
     'www.youtube.com'                   // video embeds (frame-src)
   ];
   for (const o of required) assert(csp.includes(o), `CSP no longer allows ${o} — would break a feature`);
+  // Las tipografías son propias desde v7.345: font-src no necesita terceros.
+  assert(/font-src 'self';/.test(csp), "font-src debe ser 'self' — las fuentes se sirven del propio dominio");
   // The team chat needs the realtime WebSocket + storage images.
   assert(/wss:\/\/advkoujfgbrrjvqexrcu\.supabase\.co/.test(csp),
     'CSP connect-src must allow the Supabase realtime WebSocket (wss) for the chat');
@@ -1237,7 +1295,9 @@ test('shift change refreshes in place without the fade flicker', () => {
   // no-entrance-anim de forma síncrona, y quitar animation:none re-dispara la
   // animación slideUp del héroe. El fix: dejar la clase puesta (return sin
   // remove) y retirarla solo en la siguiente navegación real.
-  const stBody = html.slice(html.indexOf('function showTab(tab, instant)'), html.indexOf('function showTab(tab, instant)') + 5200);
+  // Cuerpo REAL de la función (con emparejado de llaves): recortar por número
+  // fijo de caracteres se rompía en cuanto se añadía un comentario arriba.
+  const stBody = _xFn('showTab');
   const _instStart = stBody.indexOf('if(instant){');
   const instBlock = stBody.slice(_instStart, stBody.indexOf('return;', _instStart) + 7);
   assert(!/classList\.remove\('no-entrance-anim'\)/.test(instBlock),
@@ -2454,8 +2514,9 @@ test('section labels share the tunic-divider recipe (no rogue styles)', () => {
 test('vinos carta premium port: fonts, search, pills, card, light sub-trigger', () => {
   const css = read('styles.css');
   // Cormorant Garamond powers the sommelier voice — it must actually load.
-  assert(/fonts\.googleapis\.com\/css2\?[^"]*Cormorant\+Garamond/.test(html),
-    'Cormorant Garamond must be in the Google Fonts link');
+  // Desde v7.345 se sirve del propio dominio, no de Google.
+  assert(/@font-face\{?[^}]*font-family:\s*'Cormorant Garamond'[^}]*fonts\/CormorantGaramond-[^}]*\.woff2/s.test(css),
+    'Cormorant Garamond debe tener @font-face propio en styles.css');
   assert(/\.wine-storybook-text\{[^}]*Cormorant Garamond/.test(css)
     && /\.wc-story\{[^}]*Cormorant Garamond/.test(css),
     'hero quote and card story must use Cormorant');
@@ -4556,7 +4617,7 @@ test('showTab fija la subpestaña de destino (Flashcards no cae en Emplatado)', 
   // guide». renderAprender/renderRankingHub pintan lo que dice _subTab, NO el
   // destino de showTab(), así que showTab('flashcards') caía en la subpestaña
   // de aterrizaje (Emplatado). Igual le pasaba a showTab('stats') → Ranking.
-  const st = html.slice(html.indexOf('function showTab('), html.indexOf('function showTab(') + 4000);
+  const st = _xFn('showTab');
   assert(/const _subParent = parentMap\[tab\]/.test(st), 'showTab debe derivar el padre de la subpestaña');
   assert(/if\(_subParent === 'aprender'\) _subTab\.aprender = tab;/.test(st),
     'entrar por una subpestaña de Aprender debe fijar _subTab.aprender');
