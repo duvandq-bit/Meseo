@@ -571,6 +571,58 @@ test('CSP meta tag is present with core hardening directives', () => {
   }
 });
 
+test('Contraste: la tinta secundaria y el oro de texto son legibles', () => {
+  // Auditoría ago 2026. Midiendo sobre el fondo real de cada elemento salían 37
+  // fallos AA repartidos por 8 pantallas, todos de 10 reglas. Comprobado además
+  // píxel a píxel sobre captura: el texto que va sobre degradado o foto estaba
+  // bien; los fallos eran los de fondo sólido. Tras el arreglo: 0.
+  const css = read('styles.css');
+  const srgb = (h) => [1, 3, 5].map(i => parseInt(h.slice(i, i + 2), 16));
+  const lum = (c) => { const f = v => (v /= 255) <= .03928 ? v / 12.92 : Math.pow((v + .055) / 1.055, 2.4);
+                       return .2126 * f(c[0]) + .7152 * f(c[1]) + .0722 * f(c[2]); };
+  const ratio = (a, b) => { const [x, y] = [lum(a), lum(b)]; return (Math.max(x, y) + .05) / (Math.min(x, y) + .05); };
+  const over = (c, a, bg) => c.map((v, i) => v * a + bg[i] * (1 - a));
+  const CREAM = srgb('#f4ede2'), CARD = srgb('#f4e4c1'), INK = [28, 42, 34];
+
+  const alpha = (tok) => {
+    const m = css.match(new RegExp('--' + tok + ':\\s*rgba\\(28,42,34,\\.(\\d+)\\)'));
+    assert(m, `no encuentro el token --${tok}`);
+    return parseFloat('.' + m[1]);
+  };
+  for (const tok of ['parch3', 'parch4']) {
+    const r = ratio(over(INK, alpha(tok), CREAM), CREAM);
+    assert(r >= 4.5, `--${tok} da ${r.toFixed(2)} sobre pergamino — el mínimo legible es 4,5`);
+  }
+  // El oro de marca vale para filetes y titulares, no para texto pequeño: por eso
+  // existe --gold-ink. Debe pasar 4,5 sobre pergamino Y sobre la tarjeta crema.
+  // Se resuelve la cadena de tokens (--gold-ink → --gold-deep → --brand-accent-deep)
+  // para que siga midiendo el color real si se re-tematiza el restaurante.
+  const resolve = (tok, depth = 0) => {
+    assert(depth < 6, `cadena de tokens demasiado profunda en --${tok}`);
+    const m = css.match(new RegExp('--' + tok + ':\\s*([^;]+);'));
+    assert(m, `falta el token --${tok}`);
+    const v = m[1].trim();
+    const ref = v.match(/^var\(--([\w-]+)\)$/);
+    return ref ? resolve(ref[1], depth + 1) : v;
+  };
+  const goldInk = resolve('gold-ink');
+  assert(/^#[0-9a-f]{6}$/i.test(goldInk), `--gold-ink no resuelve a un color sólido: ${goldInk}`);
+  for (const [bg, name] of [[CREAM, 'pergamino'], [CARD, 'tarjeta crema']]) {
+    const r = ratio(srgb(goldInk), bg);
+    assert(r >= 4.5, `--gold-ink (${goldInk}) da ${r.toFixed(2)} sobre ${name} — el mínimo es 4,5`);
+  }
+  // Las cuatro tarjetas de juego declaran tinta propia junto a su acento vivo.
+  const cards = html.match(/--gc-accent:[^;"]+;--gc-ink:[^;"]+;/g) || [];
+  assert(cards.length === 4, `las 4 tarjetas de juego deben declarar --gc-ink, encontradas ${cards.length}`);
+  assert(/\.game-card-label\{[^}]*color:var\(--gc-ink,var\(--gold-ink\)\)/s.test(css),
+    'la etiqueta de tarjeta debe usar --gc-ink, no el acento vivo');
+  assert(!/\.game-card-label\{[^}]*opacity:\.85/s.test(css),
+    'la etiqueta de tarjeta no puede llevar opacity: rebaja el contraste ya ajustado');
+  // El rótulo de sección sale 14 veces en INICIO: con --gold daba 2,25.
+  assert(/\.tunic-divider span\{[^}]*color:var\(--gold-ink\)/s.test(css),
+    'el rótulo de sección debe usar --gold-ink');
+});
+
 test('Una pestaña desconocida abre INICIO, no una traza de JavaScript', () => {
   // Auditoría ago 2026: los push abren la app con #tab=… Si el nombre ya no
   // existe (hemos renombrado pestañas varias veces), se pintaba en rojo
