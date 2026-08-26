@@ -1,6 +1,85 @@
 {
- "updated": "2026-08-26T05:52:12.938Z",
+ "updated": "2026-08-26T11:47:47.912Z",
  "items": [
+  {
+   "t": "El restaurante Artigi de Castuera entra en la Guía Michelin con su apuesta por el producto extremeño",
+   "u": "https://www.cope.es/emisoras/extremadura/noticias/restaurante-artigi-castuera-entra-guia-michelin-apuesta-producto-extremeno-20260826_3425159.html",
+   "s": "COPE",
+   "d": "2026-08-26T11:00:52.000Z",
+   "tags": [
+    "MICHELIN"
+   ]
+  },
+  {
+   "t": "El MUNA une Canarias y México a través de la música, la cultura y la gastronomía en el XIII Festival MUSA",
+   "u": "https://lagenda.org/noticias/el-muna-une-canarias-y-mexico-traves-de-la-musica-la-cultura-y-la-gastronomia-en-el-xiii",
+   "s": "Lagenda",
+   "d": "2026-08-26T10:53:15.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://s3-eu-west-1.amazonaws.com/beta.lagenda/images/musamexico2026-2.jpg"
+  },
+  {
+   "t": "EN IMÁGENES.- Fonda Alcalá, el restaurante centenario del Matarraña que entra en la Guía Michelin",
+   "u": "https://www.aragondigital.es/album/teruel/imagenes-fonda-alcala-restaurante-centenario-matarrana-que-entra-guia-michelin/202608261158411003863.amp.html",
+   "s": "Aragón Digital",
+   "d": "2026-08-26T09:58:41.000Z",
+   "tags": [
+    "MICHELIN"
+   ],
+   "img": "https://www.aragondigital.es/media/aragondigital/images/2026/08/26/2026082611555437120.jpg"
+  },
+  {
+   "t": "Martín Berasategui y ASICCAZA más unidos que nunca por la carne de caza silvestre",
+   "u": "https://www.lanzadigital.com/provincia/martin-berasategui-y-asiccaza-mas-unidos-que-nunca-por-la-carne-de-caza-silvestre/",
+   "s": "Lanza Digital",
+   "d": "2026-08-26T09:55:34.000Z",
+   "tags": [
+    "CHEF"
+   ],
+   "img": "https://www.lanzadigital.com/wp-content/uploads/2026/08/Imagen-acuerdo-entre-ASICCAZA-y-Martin-Berasategui-768x432.jpeg"
+  },
+  {
+   "t": "Ciudad Real: Asiccaza renueva su alianza con Martín Berasategui para promocionar la carne de caza",
+   "u": "https://www.latribunadeciudadreal.es/noticia/zd216023d-82d4-4cd5-9ef7115b1d4ccd48/202608/un-chef-de-estrellas-para-reivindicar-la-carne-de-caza",
+   "s": "La Tribuna de Ciudad Real",
+   "d": "2026-08-26T09:43:36.000Z",
+   "tags": [
+    "CHEF"
+   ],
+   "img": "https://www.latribunadeciudadreal.es/media/IMG/2026/EE89DC99-5412-4418-B3764CE1339089D4.JPEG"
+  },
+  {
+   "t": "El Paso celebra su Cena de Magos el 4 de septiembre",
+   "u": "https://lavozcanaria.com/valle-de-aridane/general/el-paso-celebra-su-cena-de-magos-el-4-de-septiembre",
+   "s": "La Voz Canaria",
+   "d": "2026-08-26T08:56:13.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://lavozcanaria.com/media/2026/08/el-paso-celebra-su-cena-de-magos-el-4-de-septiembre.webp"
+  },
+  {
+   "t": "La cafetería Ebano, situada en la plaza de la Iglesia de Puerto de la Cruz",
+   "u": "https://www.teneriffa-news.com/es/puerto-de-la-cruz-es/cafeterias-bares-y-restaurantes-en-puerto-de-la-cruz/cafe-ebano-puerto-de-la-es_1465047.html",
+   "s": "Teneriffa News",
+   "d": "2026-08-26T07:03:50.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://www.teneriffa-news.com/media/c/cafe-ebano-puerto-de-la-cruz-e1481650052593-2400x1350.jpg"
+  },
+  {
+   "t": "Planes de Verano | Guayadeque, perdidos en un barranco lleno de historia y gastronomía",
+   "u": "https://www.canarias7.es/canarias/gran-canaria/planes-verano-guayadeque-perdidos-barranco-lleno-historia-20260825071805-vi.html",
+   "s": "Canarias7",
+   "d": "2026-08-26T06:18:10.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://s3.ppllstatics.com/canarias7/www/multimedia/2026/08/25/VIDEO-planes-verano-guayadeque-perdidos.jpg"
+  },
   {
    "t": "El secreto del restaurante de Pontevedra que recomienda la Guía Michelin",
    "u": "https://www.diariodepontevedra.es/articulo/pontevedra/distinciones-estan-muy-mas-importante-es-que-local-lleno/202608251912191465174.html",
@@ -11,14 +90,14 @@
    ]
   },
   {
-   "t": "Dos jóvenes de Linares superan una de las oposiciones más exigentes de España",
-   "u": "https://elnuevoobservador.com/dos-jovenes-de-linares-superan-una-de-las-oposiciones-mas-exigentes-de-espana/",
-   "s": "El Nuevo Observador",
-   "d": "2026-08-25T19:34:13.000Z",
+   "t": "Cinco paradas imprescindibles para descubrir Calpe a través de su gastronomía",
+   "u": "https://www.larazon.es/viajes/cinco-paradas-imprescindibles-descubrir-calpe-traves-gastronomia_202608266a8e1441ae2f3735da1390e2.html",
+   "s": "La Razón",
+   "d": "2026-08-26T00:37:21.000Z",
    "tags": [
     "MICHELIN"
    ],
-   "img": "https://elnuevoobservador.com/wp-content/uploads/Inspectoras-Hacienda-Linares.jpg"
+   "img": "https://fotografias-2.larazon.es/clipping/cmsimages01/2026/08/25/D36EFFC1-B4D2-410F-8087-906B2A813011/ruta-sabores-calpe-cinco-paradas-imprescindibles-saborear-mediterraneo_98.jpg?crop=1536,864,x0,y79&width=1900&height=1069&optimize=low&format=webply"
   },
   {
    "t": "Dos organizaciones piden investigar si la papa con origen Israel procede de territorios ocupados: Canarias, en el punto de mira",
@@ -28,7 +107,7 @@
    "tags": [
     "CANARIAS"
    ],
-   "img": "https://static.eldiario.es/clip/d0de148b-e380-4bbe-86b1-40951c15a718_facebook-watermarked-aspect-ratio-1200-675_default_0.jpg"
+   "img": "https://static.eldiario.es/clip/d0de148b-e380-4bbe-86b1-40951c15a718_facebook-aspect-ratio-1200-675_default_0.jpg"
   },
   {
    "t": "Dani García, chef: \"Los huevos más ricos no son los fritos; me los hacía mi madre con chorizo y salsa de tomate de la abuela\"",
@@ -52,6 +131,16 @@
    "img": "https://canariasinformativa.com/wp-content/uploads/2026/08/Vendimia-de-Aguimes.jpg"
   },
   {
+   "t": "25 restaurantes de la Costa Brava donde comer muy bien: de chiringuitos frente al mar a estrellas Michelin",
+   "u": "https://www.elle.com/es/gourmet/donde-comer/g22050292/los-mejores-restaurantes-de-la-costa-brava/",
+   "s": "ELLE",
+   "d": "2026-08-25T18:24:56.000Z",
+   "tags": [
+    "MICHELIN"
+   ],
+   "img": "https://hips.hearstapps.com/hmg-prod/images/bb6b048a-6c57-4b35-beea-9c829d941749.jpg?crop=1.00xw:0.771xh;0,0.157xh&resize=1200:*"
+  },
+  {
    "t": "Burguer Fest Canarias vuelve a Santa Cruz de La Palma con tres días de gastronomía y música",
    "u": "https://www.eldiario.es/canariasahora/lapalmaahora/municipios/santa_cruz_de_la_palma/burguer-fest-canarias-vuelve-santa-cruz-palma-tres-dias-gastronomia-musica_1_13466840.amp.html",
    "s": "elDiario.es",
@@ -59,7 +148,7 @@
    "tags": [
     "CANARIAS"
    ],
-   "img": "https://static.eldiario.es/clip/7027683b-098e-48a1-9df1-f660b949be81_facebook-watermarked-aspect-ratio-1200-675_default_0.jpg"
+   "img": "https://static.eldiario.es/clip/7027683b-098e-48a1-9df1-f660b949be81_facebook-aspect-ratio-1200-675_default_0.jpg"
   },
   {
    "t": "El restaurante de carretera definitivo está en este pueblo medieval de Madrid: Martín Berasategui confiesa su secreto mejor guardado",
@@ -92,10 +181,20 @@
    "img": "https://hips.hearstapps.com/hmg-prod/images/9f113545-122b-44dc-be3a-96c910115fd8.jpg?crop=1.00xw:0.752xh;0,0.0564xh&resize=1200:*"
   },
   {
+   "t": "El esqueleto de La Matanza se degrada en la costa norte de Tenerife • Imagen 1 de 8",
+   "u": "https://www.teneriffa-news.com/es/fotografias-de-las-islas-canarias/lugares-abandonados-esqueleto-la-matanza_1464977.html",
+   "s": "Teneriffa News",
+   "d": "2026-08-25T17:18:22.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://www.teneriffa-news.com/media/r/rohbau-skelett-la-matanza-teneriffa-1-2400x1350.jpg"
+  },
+  {
    "t": "La vendimia en Canarias gana perspectivas tras años de sequía y con una flexibilización por la filoxera que los vitic...",
    "u": "https://www.atlanticohoy.com/economia/vendimia-canaria-gana-perspectivas-anos-sequia-con-flexibilizacion-por-filoxera-viticultores-pedian-hace-tiempo_1566055_102.html",
    "s": "Atlántico Hoy",
-   "d": "2026-08-25T14:50:00.000Z",
+   "d": "2026-08-25T14:52:00.000Z",
    "tags": [
     "VINO",
     "CANARIAS"
@@ -142,16 +241,6 @@
     "ALTA COCINA"
    ],
    "img": "https://imagenes2.mundodeportivo.com/files/og_thumbnail/uploads/2025/05/04/6817421a1364d.png"
-  },
-  {
-   "t": "El PSOE dice que el Gobierno canario “elude la transparencia y aviva la incertidumbre entre los afectados”",
-   "u": "https://www.eldiario.es/canariasahora/lapalmaahora/politica/psoe-dice-gobierno-canario-elude-transparencia-aviva-incertidumbre-afectados_1_13466246.html",
-   "s": "elDiario.es",
-   "d": "2026-08-25T13:39:40.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://static.eldiario.es/clip/bac71f27-476a-42ad-b5fb-d6ff775a04a1_facebook-watermarked-aspect-ratio-1200-675_default_0_x407y90.jpg"
   },
   {
    "t": "Los cocineros coinciden: \"Un buen sofrito no se hace ‘a ojo’, sino midiendo cantidades exactas, por ejemplo, 100 gramos de cebolla por cada 80 gramos de tomate\"",
@@ -204,16 +293,6 @@
    "img": "https://www.tapasmagazine.es/wp-content/uploads/2026/08/XABI.jpg"
   },
   {
-   "t": "Elecciones en Canarias en 2027: fechas, diputados y todas las claves de los comicios",
-   "u": "https://www.eldiario.es/canariasahora/politica/elecciones-canarias-2027-fecha-candidatos-claves_1_13464366.html",
-   "s": "elDiario.es",
-   "d": "2026-08-25T12:00:32.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://static.eldiario.es/clip/af622acb-aa29-41f3-9330-1450811fea8c_facebook-watermarked-aspect-ratio-1200-675_default_0.jpg"
-  },
-  {
    "t": "Todo está brutal: el empobrecimiento del lenguaje gastronómico",
    "u": "https://www.canarias7.es/gastronomia-c7/brutal-empobrecimiento-lenguaje-gastronomico-20260825140000-nt.html",
    "s": "Canarias7",
@@ -222,86 +301,6 @@
     "CANARIAS"
    ],
    "img": "https://s1.ppllstatics.com/canarias7/www/multimedia/gastronomia-c7/2026/08/24/gastro1.jpg"
-  },
-  {
-   "t": "En estos cinco restaurantes se saborea auténtica cocina canaria",
-   "u": "https://www.eldiario.es/canariasahora/por-fogones/noticias/restaurantes-autentica-cocina-canaria_1_13465805.amp.html",
-   "s": "elDiario.es",
-   "d": "2026-08-25T11:31:14.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://static.eldiario.es/clip/6fd98e2d-94c1-4283-a8d3-938efeced65e_facebook-watermarked-aspect-ratio-1200-675_default_0.jpg"
-  },
-  {
-   "t": "La feria gastronómica ideal para visitar en Barcelona: más de 400 puestos con los mejores arroces, carnes a la brasa y marisco",
-   "u": "https://metropoliabierta.elespanol.com/gastro/20260825/feria-gastronomica-ideal-visitar-barcelona-puestos-mejores-arroces-carnes-brasa-marisco-trt/1003742789115_0.amp.html",
-   "s": "Metrópoli Abierta",
-   "d": "2026-08-25T11:30:00.000Z",
-   "tags": [
-    "ALTA COCINA"
-   ],
-   "img": "https://a2.elespanol.com/k/imgp/cms/asociados/563653.jpg?p=f:jpeg/c:1602:901:nowe:0:696/w:1706/h:960&h=glubajp8"
-  },
-  {
-   "t": "Manu Arroyo, influencer, se sorprende al recibir pan con alioli de entrante: \"Esto solo pasa en",
-   "u": "https://diariodeavisos.elespanol.com/2026/08/manu-arroyo-influencer-en-canarias/",
-   "s": "Diario de Avisos",
-   "d": "2026-08-25T10:38:55.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://cdn.diariodeavisos.com/wp-content/uploads/2026/08/manu-arroyo.jpg"
-  },
-  {
-   "t": "Dónde se puede degustar la mejor pizza de Tenerife",
-   "u": "https://www.teneriffa-news.com/es/informacion-sobre-tenerife/las-cinco-pizzerias-mejor-valoradas-de-tenerife-segun-tripadvisor_1464396.html",
-   "s": "Teneriffa News",
-   "d": "2026-08-25T08:11:38.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://www.teneriffa-news.com/media/p/pizza-teneriffa-2400x1350.jpg"
-  },
-  {
-   "t": "Grupo Kapital abre SEXTO, su nueva apuesta por la alta cocina de la mano del chef Juan Suárez de Lezo",
-   "u": "https://okdiario.com/cool/lifestyle/grupo-kapital-abre-sexto-nueva-apuesta-alta-cocina-mano-del-chef-juan-suarez-lezo-20168331",
-   "s": "OkDiario",
-   "d": "2026-08-25T08:05:51.000Z",
-   "tags": [
-    "ALTA COCINA"
-   ],
-   "img": "https://okdiario.com/img/2026/08/25/juan-suarez-de-lezo.jpg"
-  },
-  {
-   "t": "Popeyes adapta su oferta a Canarias con un Dipper inspirado en el mojo rojo",
-   "u": "https://www.elpublicista.es/anunciantes/popeyes-adapta-oferta-canarias-dipper-inspirado-mojo-rojo",
-   "s": "elpublicista.es",
-   "d": "2026-08-25T07:05:00.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://www.elpublicista.es/adjuntos/fichero_46979_20260824.jpg"
-  },
-  {
-   "t": "Entregan placas a los restaurantes de CdMx que están dentro de la Guía Michelin",
-   "u": "https://oem.com.mx/aderezo/tendencias/entregan-placas-a-los-restaurantes-de-cdmx-que-estan-dentro-de-la-guia-michelin-31726983",
-   "s": "El Sol de México",
-   "d": "2026-08-25T04:45:05.000Z",
-   "tags": [
-    "MICHELIN"
-   ],
-   "img": "https://oem.com.mx/aderezo/img/31727119/1787596620/BASE_LANDSCAPE/1200/image.jpg"
-  },
-  {
-   "t": "Nuevo revés: se suspende el proyecto del circuito de Fórmula 1 en Tenerife",
-   "u": "https://www.teneriffa-news.com/es/actualidad/noticias-de-tenerife/paran-circuito-formula-1-tenerife_1464307.html",
-   "s": "Teneriffa News",
-   "d": "2026-08-25T04:11:11.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://www.teneriffa-news.com/media/t/teneriffa-rennbahn-formel-1-rennstrecke-2400x1350.jpg"
   }
  ]
 }
