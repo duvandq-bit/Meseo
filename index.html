@@ -52,7 +52,7 @@
 <meta property="og:description" content="Formación de equipos de sala: carta, alérgenos, vinos, exámenes y juegos de repaso.">
 <meta property="og:url" content="https://meseo.es/">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"Meseo","url":"https://meseo.es/"}</script>
-<meta name="app-version" content="7.345">
+<meta name="app-version" content="7.346">
 <meta name="app-build" content="May 2026">
 <meta name="theme-color" content="#1c2a22">
 <!-- ═══ PWA ═══ -->
@@ -1595,8 +1595,24 @@ const catLocal=(c)=>LANG==='en'?catEn(c):c;
 const CAT_COLORS={'Entrantes':'#c49a3c','Hamburguesas y Bocatas':'#b86050','Platos Principales':'#4888a0','Guarniciones y Salsas':'#4d8a5e','Postres':'#7a6aaa','Vegetariano':'#5a9a6e','Sugerencias':'#d4aa4c'};
 const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#c49a3c"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#a47a2c" opacity=".4"/><path d="M8 8v4a1 1 0 001 1h1v4M10 8v4" stroke="#fff" stroke-width="1.2" stroke-linecap="round" fill="none"/><path d="M15 8v8M14 8v3a1.5 1.5 0 003 0V8" stroke="#fff" stroke-width="1.2" stroke-linecap="round" fill="none"/></svg>`,'Hamburguesas y Bocatas':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#b86050"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#983838" opacity=".4"/><path d="M7 9h10M7 12h10M7 15h10" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/><path d="M8 9c0-2 2-3 4-3s4 1 4 3M8 15c0 2 2 3 4 3s4-1 4-3" fill="none" stroke="#fff" stroke-width="1" opacity=".7"/></svg>`,'Platos Principales':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#4888a0"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#2e6878" opacity=".4"/><path d="M5 15h14" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/><path d="M12 6a6 6 0 016 6H6a6 6 0 016-6z" fill="none" stroke="#fff" stroke-width="1.1"/><circle cx="10" cy="6" r=".7" fill="#fff" opacity=".7"/><circle cx="12" cy="5" r=".7" fill="#fff" opacity=".7"/><circle cx="14" cy="6" r=".7" fill="#fff" opacity=".7"/></svg>`,'Sugerencias':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#d4aa4c"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#a48a2c" opacity=".4"/><polygon points="12,5 14.5,10 20,10.5 16,14 17,20 12,17 7,20 8,14 4,10.5 9.5,10" fill="#fff" opacity=".9"/></svg>`,'Guarniciones y Salsas':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#4d8a5e"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#2d6a3e" opacity=".4"/><path d="M12 18V10M5 10c0-4 3-6 7-6s7 2 7 6c0 5-3 8-7 8s-7-3-7-8z" fill="none" stroke="#fff" stroke-width="1.1"/><path d="M5 10c3 0 5 1 7 2.5" fill="none" stroke="#fff" stroke-width=".8" opacity=".6"/></svg>`,'Postres':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#7a6aaa"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#5a4a8a" opacity=".4"/><path d="M9 19h6M12 12v7M7 6l2 4.5a3 3 0 006 0L17 6H7z" fill="none" stroke="#fff" stroke-width="1.1" stroke-linecap="round"/></svg>`,'Vegetariano':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#5a9a6e"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#3a7a4e" opacity=".4"/><path d="M9 18h6M12 18V10M12 10c0-3 2-5 5-5-.7 2.5-2.5 5-5 5zM12 10c0-3-2-5-5-5 .7 2.5 2.5 5 5 5z" fill="none" stroke="#fff" stroke-width="1.1" stroke-linecap="round"/></svg>`};
 
+// ═══════ ATRIBUTO src DE LAS IMÁGENES ═══════
+// El escáner de precarga del navegador lee por adelantado el bloque de código
+// de 2 MB. Cuando el analizador se para —esperando una hoja de estilos, p. ej.—
+// llega a las plantillas de HTML de aquí abajo, cree que `src="${…}"` es una
+// ruta real y la pide. Medido en la v7.344: 9 peticiones 404 por carga, en el
+// 100 % de las cargas. Ninguna llega a la página, pero son viajes de red
+// tirados y errores rojos en consola.
+//
+// Escribiendo el atributo a través de esta constante, la secuencia `src="` no
+// existe en el texto del script y el escáner no tiene nada que reconocer. El
+// HTML que se genera es idéntico byte a byte.
+//
+// Las rutas ESTÁTICAS de verdad (img/platos/*.webp del carrusel del inicio) SÍ
+// llevan `src=` literal a propósito: esas queremos que se precarguen.
+const SRC = 'src';
+
 // ═══════ APP VERSION ═══════
-const APP_VERSION='7.345';  // sincronizada con sw.js VERSION (guard de CI)
+const APP_VERSION='7.346';  // sincronizada con sw.js VERSION (guard de CI)
 const APP_BUILD='Jul 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;
@@ -1794,7 +1810,7 @@ function _wineImgHtml(wine, size){
     return `<div class="wine-bottle-wrap ${cls}" ${_wrapStyle}>${placeholder}</div>`;
   }
   return `<div class="wine-bottle-wrap ${cls}" ${_wrapStyle}>
-    <img class="wine-bottle-img" src="${url}" alt="${escapeHTML(wine.name)}"
+    <img class="wine-bottle-img" ${SRC}="${url}" alt="${escapeHTML(wine.name)}"
       loading="lazy" decoding="async" fetchpriority="low"
       onerror="_wineImgCache[${wine.id}]=false;this.style.display='none';this.nextElementSibling.style.display='flex'"
       onload="_wineImgCache[${wine.id}]=true;this.nextElementSibling.style.display='none'">
@@ -9728,7 +9744,7 @@ function _gsRender(raw){
       const sub = [it.cat, alg].filter(Boolean).join(' · ');
       const _ph=typeof dishPhotoSrc==='function'?dishPhotoSrc(it.id):null;
       return '<button type="button" class="gs-hit" role="option" onclick="_gsGo(\'dish\','+it.id+')">'
-        + '<span class="gs-hit-ic">'+(_ph?'<img class="gs-hit-ph" loading="lazy" src="'+_ph+'" alt="">':_GS_ICON_DISH)+'</span>'
+        + '<span class="gs-hit-ic">'+(_ph?'<img class="gs-hit-ph" loading="lazy" '+SRC+'="'+_ph+'" alt="">':_GS_ICON_DISH)+'</span>'
         + '<span class="gs-hit-body"><span class="gs-hit-name">'+_gsMark(nm,tokens)+'</span><span class="gs-hit-sub">'+escapeHtml(sub)+'</span></span>'
         + '<span class="gs-hit-go">›</span></button>';
     }).join('');
@@ -9956,7 +9972,7 @@ function _emplRender(q){
         <div class="empl-card" role="button" tabindex="0" onclick="_emplOpen(${d.id})"
           onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click()}"
           aria-label="${escapeHtml(dd.name)}">
-          <img loading="lazy" src="${DISH_PHOTOS[String(d.id)]}" alt="${escapeHtml(dd.name)}">
+          <img loading="lazy" ${SRC}="${DISH_PHOTOS[String(d.id)]}" alt="${escapeHtml(dd.name)}">
           <div class="empl-card-name">${escapeHtml(dd.name)}</div>
         </div>`; }).join('')}
       ${g.wo.map(d=>{ const dd=getDish(d); return `
@@ -10004,7 +10020,7 @@ function _emplOpen(id){
     <div class="empl-ov-card">
       <button class="empl-ov-x" onclick="document.getElementById('emplOverlay').remove()" aria-label="${_en?'Close':'Cerrar'}">✕</button>
       ${dishPhotoSrc(d.id)
-        ?`<img src="${dishPhotoSrc(d.id)}" alt="${escapeHtml(dd.name)}">`
+        ?`<img ${SRC}="${dishPhotoSrc(d.id)}" alt="${escapeHtml(dd.name)}">`
         :`<div class="empl-ov-nophoto" aria-hidden="true">${CAT_ICONS[dd.cat]||'🍽️'}</div>`}
       <div class="empl-ov-body">
         <div class="empl-ov-cat">${escapeHtml(dd.cat||'')}</div>
@@ -10051,7 +10067,7 @@ async function renderSupPhotoQueue(){
     const nm=d?getDish(d).name:((_en?'Dish ':'Plato ')+row.dish_id);
     const cur=d&&typeof dishPhotoSrc==='function'?dishPhotoSrc(d.id):null;
     return `<div class="sup-photo-card">
-      <img src="${escapeHtml(row.url)}" loading="lazy" alt="">
+      <img ${SRC}="${escapeHtml(row.url)}" loading="lazy" alt="">
       <div class="sup-photo-meta">
         <b>${escapeHTML(nm)}</b>
         <span>${escapeHTML(row.author||'—')} · ${new Date(row.created_at).toLocaleDateString()}${cur?` · ${_en?'replaces current photo':'sustituye a la foto actual'}`:''}</span>
@@ -11121,7 +11137,7 @@ function _actHTML(){
   // enlace sale de la app. Miniatura solo si el robot logró la og:image;
   // si el medio bloquea el hotlink, onerror vuelve a solo texto.
   const newsCards=newsShown.map(i=>`<a class="act-card act-link${i.img?' act-has-thumb':''}" href="${escapeHTML(i.u)}" target="_blank" rel="noopener noreferrer">
-      ${i.img?`<img class="act-thumb" src="${escapeHTML(i.img)}" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.closest('a').classList.remove('act-has-thumb');this.remove()">`:''}
+      ${i.img?`<img class="act-thumb" ${SRC}="${escapeHTML(i.img)}" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.closest('a').classList.remove('act-has-thumb');this.remove()">`:''}
       <div class="act-body">
         <div class="act-title">${escapeHTML(i.t)}</div>
         <div class="act-meta">${escapeHTML(i.s||'')}${i.d?` · ${_actAgo(i.d)}`:''}</div>
@@ -11225,7 +11241,7 @@ function _aprenderGlobalSearch(query){
     const cat = (typeof catLocal==='function') ? catLocal(dd.cat) : dd.cat;
     const allergens = (dd.allergens||[]).slice(0,3).map(a => `<span style="display:inline-block;padding:.08rem .35rem;border-radius:8px;background:rgba(196,112,104,.1);color:#a8564c;font-size:.55rem;font-family:'DM Mono',monospace;margin-right:.25rem">${escapeHTML(a)}</span>`).join('');
     return `<div role="button" tabindex="0" aria-label="${escapeHTML(dd.name)}" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click()}" onclick="_aprenderOpenDish(${d.id})" style="display:flex;align-items:center;gap:.7rem;padding:.7rem .9rem;cursor:pointer;border-bottom:1px solid var(--ink3);transition:background .15s" onmouseover="this.style.background='rgba(196,154,60,.08)'" onmouseout="this.style.background='transparent'">
-      ${(typeof dishPhotoSrc==='function'&&dishPhotoSrc(d.id))?`<img loading="lazy" src="${dishPhotoSrc(d.id)}" alt="" style="width:36px;height:36px;object-fit:cover;border-radius:9px;border:1.5px solid rgba(196,154,60,.45);flex-shrink:0">`:`<div style="width:4px;height:32px;background:${catCol};border-radius:2px;flex-shrink:0"></div>`}
+      ${(typeof dishPhotoSrc==='function'&&dishPhotoSrc(d.id))?`<img loading="lazy" ${SRC}="${dishPhotoSrc(d.id)}" alt="" style="width:36px;height:36px;object-fit:cover;border-radius:9px;border:1.5px solid rgba(196,154,60,.45);flex-shrink:0">`:`<div style="width:4px;height:32px;background:${catCol};border-radius:2px;flex-shrink:0"></div>`}
       <div style="flex:1;min-width:0">
         <div style="font-family:'Quicksand',sans-serif;font-size:.85rem;font-weight:600;color:var(--parchment);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${escapeHTML(dd.name)}${isKnown?' <span style="color:var(--sage);font-size:.7rem">◈</span>':''}</div>
         <div style="font-family:'DM Mono',monospace;font-size:.55rem;color:var(--parch3);letter-spacing:.04em;margin-top:.15rem">${escapeHTML(cat)} ${allergens?'· '+allergens:''}</div>
@@ -18214,7 +18230,7 @@ function renderFcCard(){
       <span>${escapeHTML(catLocal(dd.cat)||'')}</span>
     </div>
     <!-- Foto real del plato (si existe): memoria visual + verbal a la vez -->
-    ${(typeof dishPhotoSrc==='function'&&dishPhotoSrc(d.id))?`<img class="fc-photo" loading="lazy" src="${dishPhotoSrc(d.id)}" alt="">`:''}
+    ${(typeof dishPhotoSrc==='function'&&dishPhotoSrc(d.id))?`<img class="fc-photo" loading="lazy" ${SRC}="${dishPhotoSrc(d.id)}" alt="">`:''}
     <!-- Dish name LARGE (primary focus of the card) -->
     <div class="fc-dish" style="font-size:1.85rem;line-height:1.15;padding:0 .6rem;text-align:center">${escapeHTML(dd.name)}</div>
     <div class="fc-flip-hint" style="margin-top:1.3rem"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 3-6.7M3 4v5h5"/></svg> ${_en?'Tap to see ingredients & allergens':'Toca para ver ingredientes y alérgenos'}</div>
@@ -19578,7 +19594,7 @@ function renderRepasoTopic(){
       ?`<div class="repaso-allergen-row">${allergenN===0?`<span class="allergen-tag safe">✓ ${t('noAllergens').replace('.','')}</span>`:dd.allergens.map(a=>`<span class="allergen-tag">⚠ ${allergenLocal(a)}</span>`).join('')}</div>`:'';
     const _ph=typeof dishPhotoSrc==='function'?dishPhotoSrc(d.id):null;
     return `<div class="repaso-row${isMastered?' mastered':''}" id="ritem${d.id}" style="--cat-color:${catCol}">
-      <div class="repaso-row-icon">${_ph?`<img loading="lazy" src="${_ph}" alt="">`:(CAT_ICONS[dd.cat]||'')}</div>
+      <div class="repaso-row-icon">${_ph?`<img loading="lazy" ${SRC}="${_ph}" alt="">`:(CAT_ICONS[dd.cat]||'')}</div>
       <div class="repaso-row-body">
         <div role="button" tabindex="0" aria-label="${escapeHTML(dd.name)}" class="repaso-row-name" onclick="repasoDishId=${d.id};repasoView='dish';renderRepaso()" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click()}" style="cursor:pointer">${escapeHTML(dd.name)}</div>
         <div class="repaso-row-chips">
@@ -19720,7 +19736,7 @@ function renderRepasoDishDetail(dishId){
 
     <div style="display:flex;justify-content:center;margin-bottom:1.2rem">
       ${(typeof dishPhotoSrc==='function'&&dishPhotoSrc(dish.id))?`
-      <div class="dish-hero-photo"><img src="${dishPhotoSrc(dish.id)}" alt="${escapeHTML(dish.name)}"></div>
+      <div class="dish-hero-photo"><img ${SRC}="${dishPhotoSrc(dish.id)}" alt="${escapeHTML(dish.name)}"></div>
       `:`
       <svg width="${plateSize}" height="${plateSize}" viewBox="0 0 ${plateSize} ${plateSize}" style="filter:drop-shadow(0 4px 12px rgba(0,0,0,.1))">
         <circle cx="${cx}" cy="${cy}" r="${cx-5}" fill="none" stroke="var(--gold-a)" stroke-width="1"/>
@@ -26790,7 +26806,7 @@ function renderTxoko(){
         <span class="gc-recommended-badge">★ ${_en?'Recommended':'Recomendado'}</span>
         ${_gcDeco}
         <div class="game-card-bg" style="background:linear-gradient(135deg,rgba(196,154,60,.08),rgba(196,154,60,.03))">
-          <div class="tx-rh-hero-frame"><img src="${SHOESMITH_FACES[0]}" alt="Mr. Shoesmith"></div>
+          <div class="tx-rh-hero-frame"><img ${SRC}="${SHOESMITH_FACES[0]}" alt="Mr. Shoesmith"></div>
         </div>
         <div class="game-card-body">
           <div class="game-card-label">${_en?'SURVIVAL':'SUPERVIVENCIA'}</div>
@@ -26841,7 +26857,7 @@ function renderTxoko(){
       <!-- Camarero Survivors — survivors mini-game (BETA) -->
       <div role="button" tabindex="0" aria-label="${_en?'Camarero Survivors, allergen survivors game, beta':'Camarero Survivors, survivors de alérgenos, beta'}" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click()}" class="game-card game-card-secondary" onclick="launchElTurno()" style="--gc-accent:#c4693c;--gc-ink:#8f431d;--gc-accent2:#a3502a;--gc-glow:rgba(196,105,60,.2)">
         ${_gcDeco}
-        <div class="game-card-bg" style="background:linear-gradient(135deg,rgba(196,105,60,.08),rgba(196,105,60,.03))"><div class="tx-rh-hero-frame et-hero-frame"><img src="${ET_HERO_RUN[0]}" alt="${_en?'Camarero Survivors':'Camarero Survivors'}"></div></div>
+        <div class="game-card-bg" style="background:linear-gradient(135deg,rgba(196,105,60,.08),rgba(196,105,60,.03))"><div class="tx-rh-hero-frame et-hero-frame"><img ${SRC}="${ET_HERO_RUN[0]}" alt="${_en?'Camarero Survivors':'Camarero Survivors'}"></div></div>
         <div class="game-card-body">
           <div class="game-card-label">SURVIVORS · BETA</div>
           <div class="game-card-title">Camarero Survivors</div>
@@ -27060,7 +27076,7 @@ function launchElTurno(){
   // La leyenda muestra el SPRITE real de cada monstruo (no el emoji): lo que
   // ves aquí es exactamente lo que te ataca en la partida.
   document.getElementById('etLegend').innerHTML=ALLERGENS.slice(0,6).map(a=>
-    `<div class="et-lg"><img src="${ET_FOE_SPRITES[a.key]}" alt="" style="height:22px;width:auto;vertical-align:middle">${a.name}</div>`).join('');
+    `<div class="et-lg"><img ${SRC}="${ET_FOE_SPRITES[a.key]}" alt="" style="height:22px;width:auto;vertical-align:middle">${a.name}</div>`).join('');
 
   // ── Ranking rubber-hose (propietario, jul 2026): tablón de mejores turnos
   //    en la pantalla de inicio. Local al instante, Supabase al llegar
@@ -27506,7 +27522,7 @@ function launchElTurno(){
   // de respaldo por si el webp no cargara (mantiene el color pimienta).
   const PEPPER_IC='<svg viewBox="0 0 24 24" width="24" height="24" style="vertical-align:middle"><rect x="7" y="9" width="10" height="12.5" rx="4" fill="#7a4a1e" stroke="#3a2410" stroke-width="1.4"/><path d="M7.4 9.5h9.2l-.7-3.3a3.7 3.7 0 0 0-7.8 0z" fill="#5a3414" stroke="#3a2410" stroke-width="1.2"/><circle cx="10" cy="5.6" r="0.9" fill="#241408"/><circle cx="12" cy="5" r="0.9" fill="#241408"/><circle cx="14" cy="5.6" r="0.9" fill="#241408"/><circle cx="10.6" cy="14" r="1" fill="#241408"/><circle cx="13.4" cy="16.4" r="1" fill="#241408"/></svg>';
   // Icono de carta = molinillo real; si el webp falla, cae al SVG marrón anterior.
-  const PEPPER_CARD_IC='<img src="'+ET_PEPPER_SPRITE+'" width="26" height="34" alt="" style="vertical-align:middle;object-fit:contain" onerror="this.outerHTML=this.dataset.fb" data-fb=\''+PEPPER_IC+'\'>';
+  const PEPPER_CARD_IC='<img '+SRC+'="'+ET_PEPPER_SPRITE+'" width="26" height="34" alt="" style="vertical-align:middle;object-fit:contain" onerror="this.outerHTML=this.dataset.fb" data-fb=\''+PEPPER_IC+'\'>';
   const UPGRADES=[
     {ic:'🍽️',t:'Más bandejas',s:'Lanzas una bandeja más a la vez',fn:g=>{g.proj++;g.spread+=0.12;}},
     {ic:'⚡',t:'Servicio rápido',s:'Disparas más seguido (−16% recarga)',fn:g=>{g.fireInt=Math.max(11,g.fireInt*0.84);}},
@@ -28508,7 +28524,7 @@ function txShowIntro(personaId){
         <!-- Portrait (framed) -->
         <div style="position:relative;display:inline-block;margin-bottom:1.1rem">
           <div style="width:150px;height:150px;border-radius:16px;overflow:hidden;border:3px solid var(--gold);box-shadow:0 6px 18px rgba(0,0,0,.45);background:#241a12;margin:0 auto">
-            <img src="${p.intro}" alt="${escapeHtml(name)}" style="width:100%;height:100%;object-fit:cover;object-position:${p.introPos};display:block">
+            <img ${SRC}="${p.intro}" alt="${escapeHtml(name)}" style="width:100%;height:100%;object-fit:cover;object-position:${p.introPos};display:block">
           </div>
           <!-- Badge -->
           <div style="position:absolute;bottom:-10px;left:50%;transform:translateX(-50%);z-index:2">
@@ -28593,7 +28609,7 @@ function txShowPersonaPicker(){
       style="display:flex;align-items:center;gap:.9rem;background:linear-gradient(155deg,#faf6ee,#f0e8d8);border:1.5px solid rgba(196,154,60,.25);border-radius:var(--r2);padding:.85rem 1rem;cursor:pointer;text-align:left;box-shadow:0 3px 10px rgba(0,0,0,.08);transition:transform .15s"
       onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
       <div style="width:58px;height:58px;border-radius:12px;overflow:hidden;border:2px solid var(--gold);flex-shrink:0;background:#241a12">
-        <img src="${p.faces[0]}" alt="" style="width:100%;height:100%;object-fit:cover;object-position:50% 12%;display:block">
+        <img ${SRC}="${p.faces[0]}" alt="" style="width:100%;height:100%;object-fit:cover;object-position:50% 12%;display:block">
       </div>
       <div style="flex:1;min-width:0">
         <div style="font-family:'Cinzel',serif;font-size:1.05rem;color:var(--parchment);font-weight:700">${escapeHtml(_en?p.name_en:p.name)}</div>
@@ -28795,7 +28811,7 @@ function txClientFace(lives, pct){
   const p=txPersona();
   // tx-shoe-mN: encuadre por pose — en los sprites enfadados la cabeza es más
   // pequeña y está descentrada, así que cada humor lleva su propio recorte.
-  return '<img class="tx-shoe-face tx-shoe-m'+mood+'" alt="'+escapeHtml(LANG==='en'?p.name_en:p.name)+'" src="'+p.faces[mood]+'">';
+  return '<img class="tx-shoe-face tx-shoe-m'+mood+'" alt="'+escapeHtml(LANG==='en'?p.name_en:p.name)+'" '+SRC+'="'+p.faces[mood]+'">';
 }
 // Clase de comportamiento del marco según el humor: en calma respira lento,
 // molesto se inquieta, furioso hierve — el personaje VIVE, no solo cambia de foto.
@@ -29630,7 +29646,7 @@ function _chatRenderStream(forceScroll){
     if(m.deleted){
       body = `<span class="chat-deleted">${LANG==='en'?'message deleted':'mensaje eliminado'}</span>`;
     } else if(m.image_url){
-      body = `<img class="chat-photo" src="${_chatEsc(m.image_url)}" alt="foto" loading="lazy" onclick="event.stopPropagation();_chatOpenPhoto('${_chatEsc(m.image_url)}')">`
+      body = `<img class="chat-photo" ${SRC}="${_chatEsc(m.image_url)}" alt="foto" loading="lazy" onclick="event.stopPropagation();_chatOpenPhoto('${_chatEsc(m.image_url)}')">`
            + (m.message ? `<div class="chat-caption">${_chatDecorateMentions(_chatEsc(m.message), mentions)}</div>` : '');
     } else if(/^\[récord\] /.test(m.message||'')){
       // Tarjeta de récord (Hook F1): publicada desde el fin de partida de
@@ -29975,7 +29991,7 @@ function _chatOpenPhoto(url){
   const ov = document.createElement('div');
   ov.className = 'chat-photo-overlay';
   ov.onclick = ()=>ov.remove();
-  ov.innerHTML = `<img src="${_chatEsc(url)}" alt="foto"><button class="chat-photo-close" aria-label="Cerrar">✕</button>`;
+  ov.innerHTML = `<img ${SRC}="${_chatEsc(url)}" alt="foto"><button class="chat-photo-close" aria-label="Cerrar">✕</button>`;
   document.body.appendChild(ov);
 }
 
