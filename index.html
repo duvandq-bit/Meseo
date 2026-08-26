@@ -2318,6 +2318,50 @@ function _tmTrackSearch(qLen, hits){
   _tmSearchT = setTimeout(()=>{ track('search.query', { qLen: qLen|0, hits: hits|0 }); }, 600);
 }
 
+// ══ COLA DE PRIMERAS IMPRESIONES ═════════════════════════════════════════
+// Auditoría ago 2026: al darse de alta, un empleado nuevo recibía la guía de 9
+// pasos, encima el diálogo del correo de recuperación (a los 900 ms, sin mirar
+// si la guía seguía abierta) y encima el aviso de métricas (a los 6 s). Tres
+// muros antes del primer contenido útil — y sabemos que la plantilla ya
+// encuentra la app complicada. Ahora hacen cola: cada aviso espera a que no
+// haya nada delante, y van de uno en uno.
+// Se comprueba que estén VISIBLES, no solo presentes: el buscador (.gs-overlay)
+// vive siempre en el DOM con display:none, así que mirar solo si existe dejaba
+// la cola bloqueada para siempre y ningún aviso llegaba a salir nunca.
+const _UI_OVERLAY_SEL = ['#onboardingOverlay','#recEmailOverlay','#pinOverlay',
+  '#pinRecoveryOverlay','#pinResetOverlay','#luOverlay','#delOverlay','#dqOverlay',
+  '.gs-overlay','.svc-overlay'];
+function _uiVisible(el){
+  if(!el) return false;
+  const cs = getComputedStyle(el);
+  if(cs.display==='none' || cs.visibility==='hidden' || parseFloat(cs.opacity)===0) return false;
+  const r = el.getBoundingClientRect();
+  return r.width > 0 && r.height > 0;
+}
+function _uiOverlayUp(){
+  return _UI_OVERLAY_SEL.some(sel=>{
+    for(const el of document.querySelectorAll(sel)) if(_uiVisible(el)) return true;
+    return false;
+  });
+}
+// Ejecuta fn cuando no quede ningún overlay delante. Comprueba cada 700 ms y
+// se rinde a los 3 min (si el usuario deja la guía abierta, el aviso no vale ya
+// la pena). _uiQueue evita que dos avisos salgan a la vez.
+let _uiQueueBusy = false;
+function _uiWhenClear(fn, timeoutMs){
+  const deadline = Date.now() + (timeoutMs || 180000);
+  const tick = ()=>{
+    if(Date.now() > deadline) return;
+    if(_uiOverlayUp() || _uiQueueBusy){ setTimeout(tick, 700); return; }
+    _uiQueueBusy = true;
+    try{ fn(); }catch(_){ }
+    // Se libera un poco después para que el siguiente de la cola vea ya
+    // dibujado el overlay que acaba de abrir este.
+    setTimeout(()=>{ _uiQueueBusy = false; }, 900);
+  };
+  setTimeout(tick, 700);
+}
+
 // Aviso de privacidad único (RGPD): la primera vez informa de forma discreta
 // (no bloquea) y explica dónde desactivarlo. Se muestra una sola vez.
 function _tmMaybePrivacyNotice(){
@@ -2349,7 +2393,11 @@ setInterval(_tmFlush, 30000);
 track('session.start', { hour: new Date().getHours(), dow: new Date().getDay() });
 if('requestIdleCallback' in window) requestIdleCallback(_tmPurgeOld, { timeout:6000 });
 else setTimeout(_tmPurgeOld, 3000);
-setTimeout(()=>{ if(typeof currentUser!=='undefined' && currentUser) _tmMaybePrivacyNotice(); }, 6000);
+// El aviso de métricas espera su turno en la cola: nunca encima de la guía.
+setTimeout(()=>{
+  if(typeof currentUser==='undefined' || !currentUser) return;
+  _uiWhenClear(_tmMaybePrivacyNotice);
+}, 6000);
 
 // ═══ GUARDIA ANTI-DUPLICADOS ════════════════════════════════════════════
 // Evita partir los datos de una persona en varios perfiles por un nombre
@@ -8194,8 +8242,11 @@ async function loginWithPassword(){
           (async ()=>{
             let hasEmail=false;
             try{ const st=await supaEmailStatus(userName, hashedPin); if(st && st.ok && st.data && st.data.ok) hasEmail=!!st.data.hasEmail; }catch(_){}
-            try{ localStorage.setItem('recEmailAsked:'+userName,'1'); }catch(_){}
-            if(!hasEmail){ setTimeout(()=>{ try{ promptRecoveryEmail(userName, hashedPin); }catch(_){} }, 900); }
+            // Si ya lo tiene registrado en otro dispositivo, no se pregunta y se
+            // marca aquí. Si no, decide promptRecoveryEmail: aplaza la primera
+            // sesión y pone la marca solo cuando llega a enseñarlo.
+            if(hasEmail){ try{ localStorage.setItem('recEmailAsked:'+userName,'1'); }catch(_){} }
+            else { promptRecoveryEmail(userName, hashedPin); }
           })();
         }
       }catch(_){}
@@ -8258,8 +8309,9 @@ async function loginWithPassword(){
       closePinAndEnter();
       // Usuario nuevo (contraseña) → ofrecer correo de recuperación, con el
       // hash de la contraseña recién creada como prueba de identidad.
-      const _rn=resolvedName, _rh=hashed;
-      setTimeout(()=>{ try{ promptRecoveryEmail(_rn, _rh); }catch(_){} }, 800);
+      // La espera la gestiona la cola de primeras impresiones (_uiWhenClear):
+      // aqui solo se pide turno.
+      try{ promptRecoveryEmail(resolvedName, hashed); }catch(_){}
     }
 
     submitBtn.disabled = false;
@@ -8762,9 +8814,31 @@ function showPinReset(token){
   if(typeof setupModalA11y==='function') setupModalA11y(overlay, ()=>overlay.remove());
 }
 
-// Overlay opcional tras crear el PIN (usuario nuevo): añadir correo de
-// recuperación. Se guarda con el hash del PIN recién creado como prueba.
+// Puerta del diálogo de correo de recuperación.
+// Auditoría ago 2026: se abría 900 ms después del alta, encima de la guía de 9
+// pasos y justo antes del aviso de métricas — tres muros seguidos antes de ver
+// nada útil. Ahora la primera sesión se deja limpia y se pide a partir de la
+// segunda, cuando el empleado ya sabe qué es la app y le encuentra sentido a
+// protegerla. La marca «ya preguntado» se pone al MOSTRARLO, no antes: si se
+// pusiera antes, aplazar equivaldría a no preguntar nunca.
 function promptRecoveryEmail(name, pinHash){
+  if(document.getElementById('recEmailOverlay')) return;
+  try{
+    if(localStorage.getItem('recEmailAsked:'+name)) return;
+    const k = 'recEmailSesiones:'+name;
+    const n = (parseInt(localStorage.getItem(k)||'0', 10) || 0) + 1;
+    localStorage.setItem(k, String(n));
+    if(n < 2) return;   // primera sesión: sin interrupciones
+  }catch(_){ }
+  _uiWhenClear(()=>{
+    try{ localStorage.setItem('recEmailAsked:'+name, '1'); }catch(_){ }
+    _recEmailShow(name, pinHash);
+  });
+}
+
+// Overlay opcional: añadir correo de recuperación. Se guarda con el hash del
+// PIN/contraseña recién validado como prueba de identidad.
+function _recEmailShow(name, pinHash){
   const _en = LANG==='en';
   if(document.getElementById('recEmailOverlay')) return;
   const overlay=document.createElement('div');
@@ -9035,7 +9109,7 @@ async function pinSubmit(){
       setEmployeePinServer(pinTarget, pinBuffer); // server bcrypt (no-op unless flag on)
       const _rpName=pinTarget, _rpHash=emp.pin; // usuario nuevo → ofrecer correo de recuperación
       closePinAndEnter();
-      setTimeout(()=>{ try{ promptRecoveryEmail(_rpName, _rpHash); }catch(_){} }, 700);
+      try{ promptRecoveryEmail(_rpName, _rpHash); }catch(_){}
     } else {
       document.getElementById('pinErr').textContent=t('pinNoMatch');
       updatePinDots(true);

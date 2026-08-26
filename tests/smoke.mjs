@@ -5864,16 +5864,55 @@ test('la recuperación está cableada también en el login por contraseña', () 
   assert(/forgot\.style\.display\s*=\s*'block'/.test(html) && /forgot\.style\.display\s*=\s*'none'/.test(html),
     'el enlace de recuperación debe alternarse con el modo del login');
   // usuario nuevo por contraseña → se le ofrece el correo de recuperación
-  assert(/promptRecoveryEmail\(_rn,\s*_rh\)/.test(html),
+  assert(/promptRecoveryEmail\(resolvedName,\s*hashed\)/.test(html),
     'un usuario nuevo (contraseña) debe recibir el prompt de correo');
   // usuario existente → aviso único por dispositivo
   assert(/recEmailAsked:/.test(html) && /promptRecoveryEmail\(userName,\s*hashedPin\)/.test(html),
     'un usuario existente debe recibir el aviso de correo una sola vez por dispositivo');
   // ...pero NO si la cuenta ya tiene correo en el servidor (evita re-preguntar
   // al entrar desde otro dispositivo, donde la bandera local no existe)
-  assert(/const st=await supaEmailStatus\(userName, hashedPin\)[\s\S]{0,120}hasEmail=!!st\.data\.hasEmail/.test(html) &&
-         /if\(!hasEmail\)\{ setTimeout\(\(\)=>\{ try\{ promptRecoveryEmail\(userName, hashedPin\)/.test(html),
+  assert(/const st=await supaEmailStatus\(userName, hashedPin\)[\s\S]{0,120}hasEmail=!!st\.data\.hasEmail/.test(html),
     'el aviso de correo debe comprobar el servidor (email-status) antes de pedirlo');
+  assert(/if\(hasEmail\)\{[^}]*recEmailAsked:'\+userName[\s\S]{0,120}else \{ promptRecoveryEmail\(userName, hashedPin\); \}/.test(html),
+    'si el servidor dice que ya tiene correo se marca y no se pregunta; si no, decide la puerta');
+});
+
+test('Primera sesión: los avisos hacen cola, no se apilan', () => {
+  // Auditoría ago 2026: al darse de alta salían la guía de 9 pasos, el diálogo
+  // del correo (900 ms después, sin mirar si la guía seguía abierta) y el aviso
+  // de métricas (a los 6 s). Medido en captura: dos overlays a la vez encima del
+  // dashboard. Para una plantilla que ya encuentra la app complicada, son tres
+  // muros antes del primer contenido útil.
+  assert(/function _uiOverlayUp\(\)/.test(html) && /function _uiWhenClear\(/.test(html),
+    'debe existir la cola de primeras impresiones');
+  assert(/_UI_OVERLAY_SEL\s*=\s*\[[^\]]*'#onboardingOverlay'[^\]]*'#recEmailOverlay'/.test(html),
+    'la cola debe reconocer la guía y el diálogo de correo como overlays');
+  assert(/_uiQueueBusy/.test(html), 'la cola debe impedir que dos avisos salgan a la vez');
+  // Trampa encontrada al verificar: .gs-overlay (el buscador) vive SIEMPRE en el
+  // DOM con display:none. Comprobar solo si el elemento existe dejaba la cola
+  // bloqueada para siempre y ningún aviso salía nunca. Hay que mirar si se ve.
+  const up = _xFn('_uiOverlayUp');
+  assert(/_uiVisible/.test(up), '_uiOverlayUp debe comprobar visibilidad, no solo presencia');
+  const visFn = _xFn('_uiVisible');
+  assert(/display==='none'/.test(visFn) && /visibility==='hidden'/.test(visFn)
+      && /getBoundingClientRect/.test(visFn),
+    '_uiVisible debe descartar display:none, visibility:hidden y cajas de tamaño cero');
+  assert(/'\.gs-overlay'/.test(html), 'el buscador debe estar en la lista (es el que reveló la trampa)');
+  // El aviso de métricas pasa por la cola.
+  assert(/_uiWhenClear\(_tmMaybePrivacyNotice\)/.test(html),
+    'el aviso de métricas debe esperar turno');
+  // La puerta del correo: nada en la primera sesión, y la marca «ya preguntado»
+  // se pone al mostrarlo — si se pusiera antes, aplazar sería no preguntar nunca.
+  const gate = _xFn('promptRecoveryEmail');
+  assert(/recEmailSesiones:/.test(gate) && /if\(n < 2\) return;/.test(gate),
+    'el correo no puede pedirse en la primera sesión');
+  assert(/_uiWhenClear\(\(\)=>\{[\s\S]*recEmailAsked:'\+name, '1'[\s\S]*_recEmailShow\(name, pinHash\)/.test(gate),
+    'la marca «ya preguntado» debe ponerse dentro de la cola, al mostrarlo');
+  assert(gate.indexOf('_uiWhenClear') < gate.indexOf('_recEmailShow'),
+    'el diálogo solo se muestra a través de la cola');
+  // Y el diálogo en sí no puede invocarse saltándose la puerta.
+  const calls = (html.match(/_recEmailShow\(/g) || []).length;
+  assert(calls === 2, `_recEmailShow solo puede llamarse desde la puerta (definición + 1 uso), encontrados ${calls}`);
 });
 
 // ─── Endurecimiento de seguridad ────────────────────────────────
