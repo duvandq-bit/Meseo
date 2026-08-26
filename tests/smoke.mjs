@@ -571,6 +571,59 @@ test('CSP meta tag is present with core hardening directives', () => {
   }
 });
 
+test('Suelo de 12px en texto y 44px en zonas táctiles', () => {
+  // Auditoría ago 2026, medido en 390×844 recorriendo 9 pantallas:
+  //   580 elementos de texto por debajo de 12px (273 solo la franja de datos de
+  //   la ficha de vino, a 10px) y 61 botones por debajo de 44px de alto.
+  //   Región, precio y perfil son justo lo que se consulta de pie y en segundos
+  //   antes de entrar a mesa, y eran lo más pequeño de la pantalla.
+  // Tras el arreglo: 0 y 0. Este guard vigila las reglas que lo causaban.
+  const css = read('styles.css');
+  // Anclado a principio de línea: si no, `.game-card-badge` casaría dentro de
+  // `.tx-rh-hub .game-card-badge`, que es otra regla y no lleva font-size.
+  const ruleOf = (sel) => {
+    const re = new RegExp('^' + sel.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '\\s*\\{([^}]*)\\}', 'm');
+    const m = css.match(re);
+    assert(m, `no encuentro la regla ${sel}`);
+    // Sin comentarios: un comentario que mencione «min-height:34px» explicando
+    // por qué se quitó no puede hacer fallar la comprobación del valor real.
+    return m[1].replace(/\/\*[\s\S]*?\*\//g, '');
+  };
+  const sizeOf = (sel) => {
+    const m = ruleOf(sel).match(/font-size:([\d.]+)rem/);
+    assert(m, `${sel} no declara font-size`);
+    return parseFloat(m[1]) * 16;
+  };
+  for (const sel of ['.wcms-stat', '.wc-region', '.wc-price-sub', '.wc-rec', '.dash-index-meta',
+                     '.game-card-label', '.game-card-badge', '.tunic-divider span', '.xp-bar-sub',
+                     '.hoy-numrow-meta', '.sup-hero-sub', '.hub-banner-sub', '.chat-eyebrow',
+                     '.dash-row-meta', '.ri-cta-sub', '.act-foot']) {
+    const px = sizeOf(sel);
+    assert(px >= 11.5, `${sel} se lee a ${px.toFixed(1)}px — el suelo es 12px`);
+  }
+  const minH = (sel) => {
+    const hits = [...ruleOf(sel).matchAll(/min-height:(\d+)px/g)].map(m => +m[1]);
+    assert(hits.length, `${sel} no declara min-height`);
+    // La ÚLTIMA declaración gana: .chat-presence-toggle llevaba un 44 seguido de
+    // un 34 en el mismo bloque, así que el arreglo no hacía nada.
+    return hits[hits.length - 1];
+  };
+  for (const sel of ['.empl-upload-btn', '.wine-filter-pill', '.chat-presence-toggle',
+                     '.dash-hero-hor', '.install-banner-btn']) {
+    assert(minH(sel) >= 44, `${sel} mide ${minH(sel)}px de alto — el mínimo táctil es 44px`);
+  }
+  // Y ninguna media query puede volver a bajarlos por debajo del suelo.
+  for (const m of css.match(/@media[^{]*\{[\s\S]*?\n\}/g) || []) {
+    for (const r of m.match(/\.(wine-filter-pill|empl-upload-btn|chat-presence-toggle)[^{]*\{[^}]*\}/g) || []) {
+      const h = r.match(/min-height:(\d+)px/);
+      if (h) assert(+h[1] >= 44, `una media query baja a ${h[1]}px: ${r.slice(0, 70)}`);
+      const f = r.match(/font-size:([\d.]+)rem/);
+      if (f) assert(parseFloat(f[1]) * 16 >= 11.5,
+        `una media query baja el texto a ${(parseFloat(f[1]) * 16).toFixed(1)}px: ${r.slice(0, 70)}`);
+    }
+  }
+});
+
 test('Contraste: la tinta secundaria y el oro de texto son legibles', () => {
   // Auditoría ago 2026. Midiendo sobre el fondo real de cada elemento salían 37
   // fallos AA repartidos por 8 pantallas, todos de 10 reglas. Comprobado además
