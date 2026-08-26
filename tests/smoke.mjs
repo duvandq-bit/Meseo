@@ -774,6 +774,39 @@ test('Una pestaña desconocida abre INICIO, no una traza de JavaScript', () => {
   assert(/DEBUG \? '<pre/.test(st), 'la traza solo puede verse con DEBUG activado');
 });
 
+test('El escáner de precarga no puede pedir plantillas sin evaluar', () => {
+  // Auditoría ago 2026, hallazgo 09. El escáner de precarga del navegador lee
+  // por adelantado el bloque de código de 2 MB. Cuando el analizador se para
+  // —esperando una hoja de estilos, p. ej.— llega a las plantillas de HTML,
+  // cree que `src="${…}"` es una ruta real y la pide.
+  // Medido: v7.344 fallaba en 10/10 cargas con 82 peticiones 404; con el
+  // atributo escrito a través de SRC, 0/10 en esa MISMA condición adversa.
+  assert(/^const SRC = 'src';$/m.test(html), "debe existir la constante SRC = 'src'");
+
+  // Ningún atributo precargable puede llevar una plantilla o una concatenación
+  // pegada al nombre del atributo: es lo único que el escáner sabe reconocer.
+  const precargables = [
+    ['img', 'src'], ['img', 'srcset'], ['source', 'srcset'], ['link', 'href'],
+    ['script', 'src'], ['video', 'poster'],
+  ];
+  for (const [tag, attr] of precargables) {
+    // Sin tope de longitud entre la etiqueta y el atributo (pero sin cruzar un
+    // '>'): con una ventana corta se escapaba el sprite de Mr. Shoesmith, que
+    // lleva class= y alt= largos delante del src. Lo cazó la prueba en la
+    // condición adversa, no el guard — de ahí que ahora no tenga tope.
+    const re = new RegExp(`<${tag}(?:(?!>)[\\s\\S]){0,400}?${attr}="(?=\\$\\{|'\\+|"\\+)`, 'g');
+    const hits = html.match(re) || [];
+    assert(hits.length === 0,
+      `${hits.length} <${tag}> con ${attr}=" seguido de plantilla: el escáner los pedirá. ` +
+      `Escribe el atributo con \${SRC} (plantilla) o '+SRC+' (concatenación). Ej: ${hits[0]}`);
+  }
+
+  // Y las rutas ESTÁTICAS de verdad siguen literales: esas SÍ deben precargarse.
+  const literales = (html.match(/<img src="img\//g) || []).length;
+  assert(literales >= 3,
+    `las rutas estáticas del carrusel deben seguir con src= literal para que se precarguen (hay ${literales})`);
+});
+
 test('Arranque: nada externo puede bloquear el primer pintado', () => {
   // Auditoría ago 2026, medido con Chromium en 390×844:
   //   red normal ................ primer pintado 12 748 ms
@@ -3712,7 +3745,7 @@ test('Camarero Survivors: armas nuevas — tenedor asta + pimentero pesado (jul 
   assert(/G\.pepperFx=1;/.test(body) && /PEPPER_IMG && PEPPER_IMG\._ok/.test(body),
     'el molinillo no se muestra en el golpe pesado');
   // la carta usa el molinillo ilustrado, con respaldo (onerror) al SVG marrón
-  assert(body.includes('const PEPPER_CARD_IC=\'<img src="') && body.includes("ic:PEPPER_CARD_IC,t:'Pimentero'") &&
+  assert(body.includes('const PEPPER_CARD_IC=\'<img \'+SRC+\'="') && body.includes("ic:PEPPER_CARD_IC,t:'Pimentero'") &&
          body.includes('this.outerHTML=this.dataset.fb'),
     'la carta del pimentero debe usar el sprite del molinillo con respaldo SVG');
 });
@@ -3870,7 +3903,9 @@ test('Games hub: Mr. Shoesmith card shows the real character photo, not the old 
   const hubEnd = html.indexOf('function renderTxTop10(');
   assert(hubStart !== -1 && hubEnd > hubStart, 'could not locate renderTxoko body');
   const hub = html.slice(hubStart, hubEnd);
-  assert(/class="tx-rh-hero-frame"><img src="\$\{SHOESMITH_FACES\[0\]\}"/.test(hub),
+  // El atributo se escribe con ${SRC} para que el escáner de precarga no lo
+  // confunda con una ruta real (ver la constante SRC en index.html).
+  assert(/class="tx-rh-hero-frame"><img \$\{SRC\}="\$\{SHOESMITH_FACES\[0\]\}"/.test(hub),
     'the Mr. Shoesmith game-card must render SHOESMITH_FACES[0] inside .tx-rh-hero-frame');
   assert(!/Mini Mr\. Shoesmith face/.test(hub), 'the old placeholder SVG face (ellipse/path sketch) must be gone');
   assert(hub.includes('class="txoko-wrap tx-rh-hub"'), 'the hub wrapper must carry the tx-rh-hub rubber-hose scope');
@@ -3986,7 +4021,7 @@ test('Camarero Survivors: monstruos-alérgeno ilustrados con respaldo (hoja del 
   assert(/if\(!\(_sp&&_sp\._ok\)\)\{ ctx\.font=/.test(body),
     'the emoji emblem must draw ONLY in the fallback (the sprite already carries the identity)');
   // La leyenda de inicio enseña el sprite real, no el emoji.
-  assert(/et-lg"><img src="\$\{ET_FOE_SPRITES\[a\.key\]\}"/.test(body),
+  assert(/et-lg"><img \$\{SRC\}="\$\{ET_FOE_SPRITES\[a\.key\]\}"/.test(body),
     'the start-screen legend must show the real sprites');
   // El lenguaje visual heredado sigue: sombra, aro de élite, corona del jefe, flash.
   for (const token of ['e.elite', 'corona del jefe', 'e.flash>0']) {
