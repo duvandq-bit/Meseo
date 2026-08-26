@@ -19,7 +19,7 @@
 // Exit: 0 = all green, 1 = at least one failure.
 // ═══════════════════════════════════════════════════════════════
 
-import { readFileSync, existsSync } from 'node:fs';
+import { readFileSync, existsSync, readdirSync } from 'node:fs';
 import { execSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
@@ -571,6 +571,48 @@ test('CSP meta tag is present with core hardening directives', () => {
   }
 });
 
+test('Cambiar de idioma repinta los diálogos abiertos', () => {
+  // Auditoría ago 2026: el diálogo del correo está bien traducido en el código,
+  // pero se construye con el idioma que hubiera en ese momento y nadie lo vuelve
+  // a pintar. Medido: tras poner LANG='es' y applyLangToApp(), seguía en inglés
+  // dentro de una app en español.
+  const al = _xFn('applyLangToApp');
+  assert(/_langRemountOverlays\(\)/.test(al), 'applyLangToApp debe repintar los overlays abiertos');
+  const rm = _xFn('_langRemountOverlays');
+  assert(/'recEmailOverlay'/.test(rm) && /'onboardingOverlay'/.test(rm),
+    'el repintado debe cubrir el diálogo de correo y la guía');
+  // El de correo necesita sus argumentos para reconstruirse.
+  assert(/_recEmailArgs = \{ name, pinHash \}/.test(html),
+    '_recEmailShow debe guardar sus argumentos para poder repintarse');
+  // La guía se repinta sobre su propio overlay; quitarlo re-dispararía su
+  // animación de entrada, así que solo el de correo lleva quitar:true.
+  assert(/id:'onboardingOverlay', quitar:false/.test(rm),
+    'la guía no debe desmontarse: se repinta en su sitio');
+});
+
+test('La marca del producto es Meseo; TXOKO es el restaurante', () => {
+  // Auditoría ago 2026: el título y el manifiesto ya decían Meseo, pero la
+  // PRIMERA pantalla que ve un empleado nuevo seguía diciendo «¡Bienvenido a
+  // TXOKO!», y lo mismo el aviso de instalación. La distinción importa: «Txoko
+  // by Martín Berasategui» como nombre del restaurante es correcto y se queda;
+  // lo que sobra es TXOKO usado como nombre de la app.
+  assert(/title_es:'¡Bienvenido a Meseo!',title_en:'Welcome to Meseo!'/.test(html),
+    'la guía debe dar la bienvenida a Meseo, no a TXOKO');
+  for (const frag of ['Añade Meseo a tu pantalla de inicio', 'Instala Meseo en tu móvil',
+                      'Meseo aparece como una app', 'Install Meseo on your phone']) {
+    assert(html.includes(frag), `el flujo de instalación debe decir Meseo: falta «${frag}»`);
+  }
+  assert(/<title>[^<]*Meseo/.test(html), 'el <title> debe llevar Meseo');
+  const mf = JSON.parse(read('manifest.json'));
+  assert(/Meseo/.test(mf.name) && /Meseo/.test(mf.short_name), 'el manifiesto debe llevar Meseo');
+  // Y el aviso legal CONSERVA la protección de marcas de terceros: el nombre del
+  // restaurante y el del chef no son nuestros y deben seguir reconocidos.
+  assert(/incluidos TXOKO y Martín Berasategui\) son marcas/.test(html),
+    'el aviso legal debe seguir reconociendo las marcas del restaurante y del chef');
+  assert(/no está afiliada, patrocinada ni respaldada/.test(html),
+    'el aviso legal debe mantener el descargo de no afiliación');
+});
+
 test('Suelo de 12px en texto y 44px en zonas táctiles', () => {
   // Auditoría ago 2026, medido en 390×844 recorriendo 9 pantallas:
   //   580 elementos de texto por debajo de 12px (273 solo la franja de datos de
@@ -727,6 +769,19 @@ test('Arranque: nada externo puede bloquear el primer pintado', () => {
   assert(faces.length >= 8, `esperaba las @font-face propias en styles.css, hay ${faces.length}`);
   for (const f of faces) {
     assert(/url\(fonts\//.test(f), '@font-face debe cargar desde fonts/ del propio dominio');
+  }
+  // TODA referencia debe existir en disco. Cinzel y Quicksand son fuentes
+  // VARIABLES: Google sirve el mismo woff2 para todos los pesos, así que
+  // nombrar los archivos por peso creó 5 rutas inexistentes y las negritas
+  // caían a la fuente del sistema sin avisar. Lo cazó el chequeo de 404.
+  const refs = [...new Set([...css.matchAll(/url\(fonts\/([^)]+)\)/g)].map(m => m[1]))];
+  assert(refs.length >= 8, `esperaba varias referencias a fonts/, hay ${refs.length}`);
+  for (const r of refs) {
+    assert(existsSync(join(ROOT, 'fonts', r)), `styles.css referencia fonts/${r} y no existe`);
+  }
+  // Y ningún archivo huérfano: peso muerto en cada despliegue.
+  for (const f of readdirSync(join(ROOT, 'fonts'))) {
+    assert(refs.includes(f), `fonts/${f} no lo referencia nadie — sobra`);
   }
   // Las dos caras del primer pintado se precargan.
   assert(/<link rel="preload" as="font"[^>]*Quicksand-300-latin\.woff2[^>]*crossorigin>/.test(head)
@@ -5963,9 +6018,14 @@ test('Primera sesión: los avisos hacen cola, no se apilan', () => {
     'la marca «ya preguntado» debe ponerse dentro de la cola, al mostrarlo');
   assert(gate.indexOf('_uiWhenClear') < gate.indexOf('_recEmailShow'),
     'el diálogo solo se muestra a través de la cola');
-  // Y el diálogo en sí no puede invocarse saltándose la puerta.
-  const calls = (html.match(/_recEmailShow\(/g) || []).length;
-  assert(calls === 2, `_recEmailShow solo puede llamarse desde la puerta (definición + 1 uso), encontrados ${calls}`);
+  // Y el diálogo en sí no puede invocarse saltándose la puerta. Solo hay dos
+  // sitios legítimos: la propia puerta y el repintado por cambio de idioma
+  // (que reabre uno que YA estaba en pantalla, no lo estrena).
+  const permitidos = [_xFn('promptRecoveryEmail'), _xFn('_langRemountOverlays'), _xFn('_recEmailShow')];
+  const totales = (html.match(/_recEmailShow\(/g) || []).length;
+  const justificadas = permitidos.reduce((n, f) => n + (f.match(/_recEmailShow\(/g) || []).length, 0);
+  assert(totales === justificadas,
+    `_recEmailShow se llama desde algún sitio que no es la puerta ni el repintado de idioma (${totales} usos, ${justificadas} justificados)`);
 });
 
 // ─── Endurecimiento de seguridad ────────────────────────────────

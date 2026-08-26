@@ -1,6 +1,6 @@
 <!--
   ╔══════════════════════════════════════════════════════════════╗
-  ║           TXOKO FORMACIÓN — Aplicación de Formación          ║
+  ║                  MESEO — Aplicación de Formación             ║
   ║              Meseo · Formación de equipos de sala             ║
   ╠══════════════════════════════════════════════════════════════╣
   ║  © 2026 Duvan Stiven Ramírez Duque. Todos los derechos    ║
@@ -585,7 +585,7 @@ const T = {
     greetingMorning: 'Buenos días',
     greetingAfternoon: 'Buenas tardes',
     greetingEvening: 'Buenas noches',
-    dashSub: 'Centro de formación TXOKO',
+    dashSub: 'Centro de formación Meseo',
     dishesOnMenu: 'platos en carta',
     statExams: 'Exámenes',
     statAvg: 'Media de aciertos',
@@ -681,7 +681,7 @@ const T = {
     greetingMorning: 'Good morning',
     greetingAfternoon: 'Good afternoon',
     greetingEvening: 'Good evening',
-    dashSub: 'TXOKO Training Centre',
+    dashSub: 'Meseo Training Centre',
     dishesOnMenu: 'dishes on menu',
     statExams: 'Exams',
     statAvg: 'Average score',
@@ -1226,6 +1226,30 @@ function applyLangToApp() {
   if(typeof _renderShiftBar === 'function') _renderShiftBar();
   const _gsInp = document.getElementById('gsInput');
   if(_gsInp) _gsInp.placeholder = LANG==='en' ? 'Search dish, wine, allergen…' : 'Buscar plato, vino, alérgeno…';
+  // Los diálogos abiertos se construyeron con el idioma que hubiera entonces y
+  // no se repintan solos: cambiar de idioma dejaba un diálogo en inglés dentro
+  // de una app en español. Se vuelven a montar con el idioma nuevo.
+  _langRemountOverlays();
+}
+
+// Diálogos que se pintan de una vez y no se refrescan solos. Cada entrada dice
+// cómo repintarlo; si no está en pantalla, no se hace nada. `quitar` es para los
+// que solo saben construirse de cero — la guía se repinta ella sola sobre su
+// propio overlay y quitarlo le re-dispararía la animación de entrada.
+function _langRemountOverlays(){
+  const overlays = [
+    { id:'recEmailOverlay', quitar:true, repintar:()=>{
+        if(typeof _recEmailShow==='function' && _recEmailArgs)
+          _recEmailShow(_recEmailArgs.name, _recEmailArgs.pinHash); } },
+    { id:'onboardingOverlay', quitar:false, repintar:()=>{
+        if(typeof renderOnboardingStep==='function') renderOnboardingStep(); } }
+  ];
+  for(const o of overlays){
+    const el = document.getElementById(o.id);
+    if(!el) continue;
+    if(o.quitar) el.remove();
+    try{ o.repintar(); }catch(_){ }
+  }
 }
 
 // ═══════════════════════════════════════════════════
@@ -8031,7 +8055,7 @@ function renderInstallBanner(){
     <div class="install-banner-ic">⚡</div>
     <div class="install-banner-tx">
       <b>${_en?'1-tap access':'Acceso en 1 toque'}</b>
-      <span>${_en?'Add TXOKO to your home screen — opens instantly, works offline':'Añade TXOKO a tu pantalla de inicio: abre al instante y funciona sin conexión'}</span>
+      <span>${_en?'Add Meseo to your home screen — opens instantly, works offline':'Añade Meseo a tu pantalla de inicio: abre al instante y funciona sin conexión'}</span>
     </div>
     <button class="install-banner-btn" onclick="promptInstallSmart()">${_en?'Install':'Instalar'}</button>
     <button class="install-banner-x" onclick="dismissInstallBanner()" aria-label="${_en?'Dismiss':'Descartar'}">✕</button>
@@ -8048,16 +8072,16 @@ function showInstallSheet(){
   const steps = isIos
     ? [ ['1','⬆️', _en?'Tap the <b>Share</b> button in Safari (square with an arrow, bottom bar)':'Pulsa el botón <b>Compartir</b> de Safari (cuadrado con flecha, barra inferior)'],
         ['2','➕', _en?'Scroll and choose <b>“Add to Home Screen”</b>':'Baja y elige <b>«Añadir a pantalla de inicio»</b>'],
-        ['3','✅', _en?'Tap <b>Add</b> — TXOKO appears as an app':'Pulsa <b>Añadir</b> — TXOKO aparece como una app'] ]
+        ['3','✅', _en?'Tap <b>Add</b> — Meseo appears as an app':'Pulsa <b>Añadir</b> — Meseo aparece como una app'] ]
     : [ ['1','⋮', _en?'Open your browser menu (three dots)':'Abre el menú del navegador (tres puntos)'],
         ['2','➕', _en?'Choose <b>“Add to Home screen”</b> or <b>“Install app”</b>':'Elige <b>«Añadir a pantalla de inicio»</b> o <b>«Instalar aplicación»</b>'],
-        ['3','✅', _en?'Confirm — TXOKO appears as an app':'Confirma — TXOKO aparece como una app'] ];
+        ['3','✅', _en?'Confirm — Meseo appears as an app':'Confirma — Meseo aparece como una app'] ];
   const sheet=document.createElement('div');
   sheet.id='installSheet';
   sheet.innerHTML=`<div class="install-sheet-scrim" onclick="document.getElementById('installSheet').remove()"></div>
     <div class="install-sheet" role="dialog" aria-modal="true" aria-label="${_en?'How to install':'Cómo instalar'}">
       <div class="install-sheet-grab"></div>
-      <div class="install-sheet-title">${_en?'Install TXOKO on your phone':'Instala TXOKO en tu móvil'}</div>
+      <div class="install-sheet-title">${_en?'Install Meseo on your phone':'Instala Meseo en tu móvil'}</div>
       <div class="install-sheet-sub">${_en?'30 seconds, once — then it opens in 1 tap':'30 segundos, una vez — luego abre en 1 toque'}</div>
       ${steps.map(s=>`<div class="install-step"><div class="install-step-n">${s[0]}</div><div class="install-step-ic">${s[1]}</div><div class="install-step-tx">${s[2]}</div></div>`).join('')}
       <button class="btn-primary" style="width:100%;margin-top:.6rem" onclick="document.getElementById('installSheet').remove()">${_en?'Got it':'Entendido'}</button>
@@ -8838,9 +8862,11 @@ function promptRecoveryEmail(name, pinHash){
 
 // Overlay opcional: añadir correo de recuperación. Se guarda con el hash del
 // PIN/contraseña recién validado como prueba de identidad.
+let _recEmailArgs = null;   // para poder repintarlo si cambia el idioma
 function _recEmailShow(name, pinHash){
   const _en = LANG==='en';
   if(document.getElementById('recEmailOverlay')) return;
+  _recEmailArgs = { name, pinHash };
   const overlay=document.createElement('div');
   overlay.id='recEmailOverlay';
   overlay.setAttribute('role','dialog'); overlay.setAttribute('aria-modal','true');
@@ -9292,7 +9318,7 @@ function closePinAndEnter(){
 
 // ═══════ TUNIC ONBOARDING GUIDE ═══════
 const ONBOARDING_PAGES = [
-  {icon:`<svg width="28" height="28" viewBox="0 0 24 24"><polygon points="12,2 20,7 20,17 12,22 4,17 4,7" fill="none" stroke="#fff" stroke-width="1.5"/><circle cx="12" cy="11" r="3" fill="#fff" opacity=".8"/></svg>`,color:'#c49a3c',title_es:'¡Bienvenido a TXOKO!',title_en:'Welcome to TXOKO!',text_es:'Tu guía de formación para dominar la carta del restaurante Txoko by Martín Berasategui. Aprenderás cada plato, alérgeno, ingrediente, protocolo de servicio y maridaje de vinos.',text_en:'Your training guide to master the menu of Txoko by Martín Berasategui. You\'ll learn every dish, allergen, ingredient, service protocol and wine pairing.'},
+  {icon:`<svg width="28" height="28" viewBox="0 0 24 24"><polygon points="12,2 20,7 20,17 12,22 4,17 4,7" fill="none" stroke="#fff" stroke-width="1.5"/><circle cx="12" cy="11" r="3" fill="#fff" opacity=".8"/></svg>`,color:'#c49a3c',title_es:'¡Bienvenido a Meseo!',title_en:'Welcome to Meseo!',text_es:'Tu guía de formación para dominar la carta del restaurante Txoko by Martín Berasategui. Aprenderás cada plato, alérgeno, ingrediente, protocolo de servicio y maridaje de vinos.',text_en:'Your training guide to master the menu of Txoko by Martín Berasategui. You\'ll learn every dish, allergen, ingredient, service protocol and wine pairing.'},
   {icon:`<svg width="28" height="28" viewBox="0 0 24 24"><rect x="4" y="6" width="16" height="11" rx="2" fill="none" stroke="#fff" stroke-width="1.5"/><line x1="4" y1="10" x2="20" y2="10" stroke="#fff" stroke-width="1" opacity=".6"/></svg>`,color:'#d4aa4c',title_es:'Flashcards y Repaso SRS',title_en:'Flashcards & SRS Review',text_es:'Repasa cada plato con tarjetas interactivas: ingredientes, alérgenos e historia. El sistema de repetición espaciada (SRS) te muestra primero los platos que más necesitas repasar.',text_en:'Review each dish with interactive cards: ingredients, allergens and history. The spaced repetition system (SRS) shows you the dishes you need to review most first.'},
   {icon:`<svg width="28" height="28" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4" fill="none" stroke="#fff" stroke-width="1.5"/><path d="M12 11v2M10 13h4" stroke="#fff" stroke-width="1.5" stroke-linecap="round"/></svg>`,color:'#c47068',title_es:'Repaso inteligente',title_en:'Smart review',text_es:'Situaciones reales de servicio: un huésped te dice su alergia, te pide recomendaciones o pregunta cómo modificar un plato. La sesión elige justo los platos que estás a punto de olvidar. La encontrarás en Aprender → Repaso.',text_en:'Real service scenarios: a guest tells you their allergy, asks for recommendations or how to modify a dish. Each session picks exactly the dishes you are about to forget. You\'ll find it under Learn → Review.'},
   {icon:`<svg width="28" height="28" viewBox="0 0 24 24"><rect x="6" y="4" width="12" height="16" rx="2" fill="none" stroke="#fff" stroke-width="1.5"/><line x1="9" y1="10" x2="15" y2="10" stroke="#fff" stroke-width="1" opacity=".7"/><line x1="9" y1="13" x2="13" y2="13" stroke="#fff" stroke-width="1" opacity=".7"/></svg>`,color:'#4888a0',title_es:'Exámenes por Tema',title_en:'Topic-based Exams',text_es:'Pon a prueba tus conocimientos con exámenes de opción múltiple. Elige entre alérgenos, ingredientes o historia, filtra por categoría de plato y personaliza la cantidad de preguntas.',text_en:'Test your knowledge with multiple-choice exams. Choose between allergens, ingredients or history, filter by dish category and customise the number of questions.'},

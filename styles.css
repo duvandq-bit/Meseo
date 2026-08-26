@@ -1,10 +1,13 @@
 /* Tipografías alojadas en el propio dominio.
    Antes se cargaban desde fonts.googleapis.com con un <link> que BLOQUEA el
-   pintado: en una red lenta la app tardaba 12,7 s en dibujar algo y, si esa
-   petición se quedaba colgada (portal cautivo de wifi de hotel), no dibujaba
-   NUNCA. Sirviéndolas desde aquí el primer pintado baja a ~250 ms, funcionan
+   pintado: medido, la app tardaba 12,7 s en dibujar algo en una red lenta y no
+   dibujaba NUNCA si esa petición se quedaba colgada (portal cautivo de wifi de
+   hotel). Sirviéndolas desde aquí el primer pintado baja a ~250 ms, funcionan
    sin conexión y desaparece la cesión de datos a un tercero (RGPD).
-   Subconjuntos latin + latin-ext: cubren español, euskera e inglés. */
+   Subconjuntos latin + latin-ext: cubren español, euskera e inglés, y
+   unicode-range hace que latin-ext solo se descargue si de verdad hace falta.
+   OJO: Cinzel y Quicksand son fuentes VARIABLES — un mismo archivo sirve todos
+   los pesos, por eso varios @font-face apuntan al mismo .woff2. */
 
 /* Cinzel 400 · latin-ext */
 @font-face {
@@ -32,7 +35,7 @@
   font-style: normal;
   font-weight: 500;
   font-display: swap;
-  src: url(fonts/Cinzel-500-latin-ext.woff2) format('woff2');
+  src: url(fonts/Cinzel-400-latin-ext.woff2) format('woff2');
   unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
 }
 
@@ -42,7 +45,7 @@
   font-style: normal;
   font-weight: 500;
   font-display: swap;
-  src: url(fonts/Cinzel-500-latin.woff2) format('woff2');
+  src: url(fonts/Cinzel-400-latin.woff2) format('woff2');
   unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
 }
 
@@ -52,7 +55,7 @@
   font-style: normal;
   font-weight: 600;
   font-display: swap;
-  src: url(fonts/Cinzel-600-latin-ext.woff2) format('woff2');
+  src: url(fonts/Cinzel-400-latin-ext.woff2) format('woff2');
   unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
 }
 
@@ -62,7 +65,7 @@
   font-style: normal;
   font-weight: 600;
   font-display: swap;
-  src: url(fonts/Cinzel-600-latin.woff2) format('woff2');
+  src: url(fonts/Cinzel-400-latin.woff2) format('woff2');
   unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
 }
 
@@ -72,7 +75,7 @@
   font-style: normal;
   font-weight: 700;
   font-display: swap;
-  src: url(fonts/Cinzel-700-latin-ext.woff2) format('woff2');
+  src: url(fonts/Cinzel-400-latin-ext.woff2) format('woff2');
   unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
 }
 
@@ -82,7 +85,7 @@
   font-style: normal;
   font-weight: 700;
   font-display: swap;
-  src: url(fonts/Cinzel-700-latin.woff2) format('woff2');
+  src: url(fonts/Cinzel-400-latin.woff2) format('woff2');
   unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
 }
 
@@ -112,7 +115,7 @@
   font-style: italic;
   font-weight: 500;
   font-display: swap;
-  src: url(fonts/CormorantGaramond-500i-latin-ext.woff2) format('woff2');
+  src: url(fonts/CormorantGaramond-400i-latin-ext.woff2) format('woff2');
   unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
 }
 
@@ -122,7 +125,7 @@
   font-style: italic;
   font-weight: 500;
   font-display: swap;
-  src: url(fonts/CormorantGaramond-500i-latin.woff2) format('woff2');
+  src: url(fonts/CormorantGaramond-400i-latin.woff2) format('woff2');
   unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
 }
 
@@ -152,7 +155,7 @@
   font-style: normal;
   font-weight: 500;
   font-display: swap;
-  src: url(fonts/CormorantGaramond-500-latin-ext.woff2) format('woff2');
+  src: url(fonts/CormorantGaramond-400-latin-ext.woff2) format('woff2');
   unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
 }
 
@@ -162,7 +165,7 @@
   font-style: normal;
   font-weight: 500;
   font-display: swap;
-  src: url(fonts/CormorantGaramond-500-latin.woff2) format('woff2');
+  src: url(fonts/CormorantGaramond-400-latin.woff2) format('woff2');
   unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
 }
 
@@ -252,7 +255,7 @@
   font-style: normal;
   font-weight: 400;
   font-display: swap;
-  src: url(fonts/Quicksand-400-latin-ext.woff2) format('woff2');
+  src: url(fonts/Quicksand-300-latin-ext.woff2) format('woff2');
   unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
 }
 
@@ -262,7 +265,7 @@
   font-style: normal;
   font-weight: 400;
   font-display: swap;
-  src: url(fonts/Quicksand-400-latin.woff2) format('woff2');
+  src: url(fonts/Quicksand-300-latin.woff2) format('woff2');
   unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
 }
 
@@ -272,7 +275,7 @@
   font-style: normal;
   font-weight: 500;
   font-display: swap;
-  src: url(fonts/Quicksand-500-latin-ext.woff2) format('woff2');
+  src: url(fonts/Quicksand-300-latin-ext.woff2) format('woff2');
   unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
 }
 
@@ -282,7 +285,7 @@
   font-style: normal;
   font-weight: 500;
   font-display: swap;
-  src: url(fonts/Quicksand-500-latin.woff2) format('woff2');
+  src: url(fonts/Quicksand-300-latin.woff2) format('woff2');
   unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
 }
 
@@ -292,7 +295,7 @@
   font-style: normal;
   font-weight: 600;
   font-display: swap;
-  src: url(fonts/Quicksand-600-latin-ext.woff2) format('woff2');
+  src: url(fonts/Quicksand-300-latin-ext.woff2) format('woff2');
   unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
 }
 
@@ -302,7 +305,7 @@
   font-style: normal;
   font-weight: 600;
   font-display: swap;
-  src: url(fonts/Quicksand-600-latin.woff2) format('woff2');
+  src: url(fonts/Quicksand-300-latin.woff2) format('woff2');
   unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
 }
 
@@ -312,7 +315,7 @@
   font-style: normal;
   font-weight: 700;
   font-display: swap;
-  src: url(fonts/Quicksand-700-latin-ext.woff2) format('woff2');
+  src: url(fonts/Quicksand-300-latin-ext.woff2) format('woff2');
   unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
 }
 
@@ -322,10 +325,9 @@
   font-style: normal;
   font-weight: 700;
   font-display: swap;
-  src: url(fonts/Quicksand-700-latin.woff2) format('woff2');
+  src: url(fonts/Quicksand-300-latin.woff2) format('woff2');
   unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
 }
-
 /* ─────────────────────────────────────────────────
    RESET & TOKENS
 ───────────────────────────────────────────────── */
