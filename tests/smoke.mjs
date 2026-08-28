@@ -774,6 +774,93 @@ test('Una pestaña desconocida abre INICIO, no una traza de JavaScript', () => {
   assert(/DEBUG \? '<pre/.test(st), 'la traza solo puede verse con DEBUG activado');
 });
 
+test('Buscador de alérgenos: el bloque «no declara» nunca miente', () => {
+  // El propietario (ago 2026) reporta que la plantilla usa el buscador en sala,
+  // con el cliente delante, y que ha puesto la app en tablets para eso. Medido
+  // entonces, fallaba justo en ese uso — y de forma peligrosa:
+  //   «sin gluten» ... 6 platos, LOS 6 CON GLUTEN (la lista contraria)
+  //   «celiaco» ...... 0 · «marisco» ... 0 · «lactosa» ... 1 (hay 50 con Lácteos)
+  // Este guard ejecuta la detección REAL sobre los datos REALES.
+  const cut = (a, b) => { const i = html.indexOf(a); assert(i !== -1, 'missing ' + a); return html.slice(i, html.indexOf(b, i)); };
+  const dishesSrc = cut('const DISHES = [', '\n];') + '\n];';
+  const M = new Function( // eslint-disable-line no-new-func
+    'let LANG="es";\n' + dishesSrc + '\n'
+    + _xConst('GS_ALLERGEN_VOCAB', '\n};') + '\n'   // _xConst ya incluye el cierre
+    + _xConst('GS_INTENT_WORDS', ']);') + '\n'
+    + _xFn('_gsAllergenIntent')
+    + '\nreturn {DISHES, _gsAllergenIntent, GS_ALLERGEN_VOCAB, setLang:(l)=>{LANG=l;}};')();
+
+  const norm = (s) => String(s || '').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
+  const pregunta = (q) => M._gsAllergenIntent(norm(q).trim().split(/\s+/).filter(Boolean));
+
+  // ── El invariante de seguridad ────────────────────────────────────────
+  // Para CADA término del vocabulario: ningún plato del bloque «no declara»
+  // puede declarar el alérgeno. Es la promesa que se lee en voz alta al cliente.
+  for (const termino of Object.keys(M.GS_ALLERGEN_VOCAB)) {
+    const algs = pregunta(termino);
+    assert(algs, `«${termino}» está en el vocabulario pero no se detecta como alérgeno`);
+    const libres = M.DISHES.filter((d) => !algs.some((a) => (d.allergens || []).includes(a)));
+    const mentira = libres.find((d) => algs.some((a) => (d.allergens || []).includes(a)));
+    assert(!mentira, `«${termino}»: «${mentira && mentira.name}» aparecería como que no declara ${algs.join('/')}`);
+  }
+
+  // ── Los términos que fallaban ─────────────────────────────────────────
+  const debeDetectar = {
+    'sin gluten': ['Gluten'], 'celiaco': ['Gluten'], 'alergia gluten': ['Gluten'],
+    'lactosa': ['Lácteos'], 'frutos secos': ['Frutos secos'], 'cacahuete': ['Cacahuete'],
+    'no puede comer huevo': ['Huevos'], 'marisco': ['Crustáceos', 'Moluscos'],
+  };
+  for (const [q, esperado] of Object.entries(debeDetectar)) {
+    const got = pregunta(q);
+    assert(got && esperado.every((a) => got.includes(a)) && got.length === esperado.length,
+      `«${q}» debería dar ${esperado.join('+')}, dio ${got ? got.join('+') : 'nada'}`);
+  }
+  // «soy» en español es el verbo, no la soja: convertía «soy alergico al
+  // pescado» en «Soja o Pescado». Solo cuenta como alérgeno en inglés.
+  assert(JSON.stringify(pregunta('soy alergico al pescado')) === JSON.stringify(['Pescado']),
+    '«soy alergico al pescado» no puede añadir Soja');
+  M.setLang('en');
+  assert((pregunta('soy') || []).includes('Soja'), 'en inglés «soy» sí es soja');
+  M.setLang('es');
+
+  // ── Y una búsqueda normal sigue siendo una búsqueda normal ────────────
+  for (const q of ['croqueta', 'rioja', 'cebolla', 'croqueta gluten', 'wagyu']) {
+    assert(pregunta(q) === null, `«${q}» debe ir a la búsqueda normal, no a la respuesta de alérgeno`);
+  }
+
+  // ── Cobertura: todo alérgeno de la carta debe poder preguntarse ────────
+  const enCarta = new Set();
+  M.DISHES.forEach((d) => (d.allergens || []).forEach((a) => enCarta.add(a)));
+  const alcanzables = new Set();
+  Object.values(M.GS_ALLERGEN_VOCAB).forEach((v) => v.forEach((a) => alcanzables.add(a)));
+  for (const a of enCarta) {
+    assert(alcanzables.has(a), `el alérgeno «${a}» está en la carta pero ninguna palabra lo encuentra`);
+  }
+});
+
+test('En una consulta de sala nada tapa la respuesta', () => {
+  // Visto en captura sobre la respuesta de «sin gluten»: el aviso de logro, el
+  // confeti y el +50 XP encima de la lista que hay que leer al cliente.
+  assert(/function _gsIsOpen\(\)/.test(html), 'debe existir _gsIsOpen');
+  for (const fn of ['showXPToast', 'showLevelUpModal', 'showAchievementToast']) {
+    const body = _xFn(fn);
+    assert(/_gsIsOpen\(\)/.test(body) && /_uiWhenClear/.test(body),
+      `${fn} debe aplazarse mientras el buscador está abierto`);
+  }
+  // El confeti se corta en el ORIGEN: hay cinco sitios que lo lanzan y cerrarlos
+  // uno a uno se presta a olvidar alguno (pasó con el aviso de logro).
+  assert(/_gsIsOpen\(\) *\) *return;/.test(_xFn('launchConfetti')),
+    'launchConfetti debe cortarse en el origen, no en cada llamada');
+  // Y lo que YA estuviera en pantalla se retira al abrir la consulta: la
+  // celebración puede haberse disparado justo antes.
+  const clear = _xFn('_gsClearCelebrations');
+  for (const id of ['achToastStack', 'xpToast', 'luOverlay', 'confettiCanvas']) {
+    assert(clear.includes(id), `_gsClearCelebrations debe retirar #${id}`);
+  }
+  assert(/_gsClearCelebrations\(\)/.test(_xFn('openGlobalSearch')),
+    'openGlobalSearch debe limpiar lo que ya estuviera puesto');
+});
+
 test('El escáner de precarga no puede pedir plantillas sin evaluar', () => {
   // Auditoría ago 2026, hallazgo 09. El escáner de precarga del navegador lee
   // por adelantado el bloque de código de 2 MB. Cuando el analizador se para
