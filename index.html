@@ -52,7 +52,7 @@
 <meta property="og:description" content="Formación de equipos de sala: carta, alérgenos, vinos, exámenes y juegos de repaso.">
 <meta property="og:url" content="https://meseo.es/">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"Meseo","url":"https://meseo.es/"}</script>
-<meta name="app-version" content="7.346">
+<meta name="app-version" content="7.347">
 <meta name="app-build" content="May 2026">
 <meta name="theme-color" content="#1c2a22">
 <!-- ═══ PWA ═══ -->
@@ -1612,7 +1612,7 @@ const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><p
 const SRC = 'src';
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='7.346';  // sincronizada con sw.js VERSION (guard de CI)
+const APP_VERSION='7.347';  // sincronizada con sw.js VERSION (guard de CI)
 const APP_BUILD='Jul 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;
@@ -7522,12 +7522,34 @@ function _dqQuestion(dayStr){
     // (: / paréntesis). El PRNG sembrado se mantiene: _simExtractIngredients es
     // puro y el orden de recorrido no cambia.
     const _DQ_STRUCT=/^(masa|topping|base|relleno|guarnici|sabores|caldo|bisque|fondo)\b/i;
+    // Reporte del propietario (ago 2026): «las preguntas del día son absurdas».
+    // El caso que enseñó: «¿Qué plato lleva "Alitas de pollo"?» → «Alitas
+    // melosas glaseadas». El ingrediente era distintivo, sí, pero su nombre
+    // estaba dentro del nombre del plato: la respuesta se regalaba sin saber
+    // nada de la carta. Medido sobre los 223 candidatos que producía el
+    // troceo: 55 (25 %) hacían eco del nombre y 10 eran cantidades, no
+    // ingredientes. Al día, 19 de las 80 preguntas de este tipo (24 %).
+    //
+    // _DQ_VACIAS son palabras de unión: que coincida «de» o «con» no delata
+    // nada. Se comparan solo las palabras con carga (>3 letras).
+    const _DQ_VACIAS=new Set(['de','del','la','el','los','las','con','al','y','en','un','una','sobre','estilo']);
+    const _dqPal=s=>_normName(s).replace(/[^a-z0-9 ]/g,' ').split(/\s+/)
+      .filter(w=>w.length>3 && !_DQ_VACIAS.has(w));
+    // Cantidades y pesos que el troceo dejaba como si fueran ingredientes:
+    // «180 grs de carne de buey», «Entrecot de Angus 300 g», «Tomahawk de
+    // Hereford 1», «1 Pularda», «Ostras número 2».
+    const _DQ_CANT=/\d|\b(grs?|kg|gramos?|ml|cl|litros?|uds?|unidades?|numero|n[ºo])\b/i;
     const cand=[];
     dishes.forEach(d=>{
+      const nombre=new Set(_dqPal(d.name));
       _simExtractIngredients(d).forEach(tk=>{
         if(tk.length<6||tk.length>40) return;
         if(_DQ_STRUCT.test(tk)) return;
         if(/[:\/()]/.test(tk)) return;
+        if(_DQ_CANT.test(tk)) return;
+        const pal=_dqPal(tk);
+        if(!pal.length) return;              // sin palabra con carga: no enseña nada
+        if(pal.some(w=>nombre.has(w))) return; // eco: la respuesta está en el enunciado
         const lk=tk.toLowerCase();
         if(!dishes.some(o=>o.id!==d.id && (o.ingredients||'').toLowerCase().includes(lk))) cand.push({d,tk});
       });
@@ -7616,9 +7638,9 @@ function _dqRender(){
     <div style="margin:.6rem 0 .2rem;padding:.7rem .9rem;border-radius:10px;background:${emp.dqLastOk?'rgba(77,138,94,.1)':'rgba(160,72,72,.07)'};border:1px solid ${emp.dqLastOk?'rgba(77,138,94,.3)':'rgba(160,72,72,.25)'}">
       <div style="font-weight:800;font-size:.88rem;color:${emp.dqLastOk?'#3a6a4a':'#a04848'}">${emp.dqLastOk?(en?'Correct! ':'¡Correcto! ')+'+'+_dqXpFor(streak,true)+' XP':(en?'Not this time':'Esta vez no')+' · +'+_dqXpFor(streak,false)+' XP'}</div>
       <div style="font-size:.78rem;color:var(--parch2);margin-top:.25rem">${escapeHTML(q.info||'')}</div>
-      <div style="font-size:.74rem;color:var(--parch3);margin-top:.4rem">🔥 ${en?'Streak':'Racha'}: <b>${streak}</b> ${en?(streak===1?'day':'days'):(streak===1?'día':'días')} · ${en?'come back tomorrow':'mañana hay otra'}</div>
+      <div style="font-size:.74rem;color:var(--parch3);margin-top:.4rem"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align:-.15em;flex:none"><path d="M12 3s4 3.5 4 7.5a4 4 0 01-8 0c0-1.5.6-2.6 1.2-3.4C9.8 6.3 12 5 12 3z"/><path d="M12 21a5 5 0 005-5c0-2-1.2-3.6-2.4-4.8"/><path d="M12 21a5 5 0 01-5-5c0-1.2.4-2.2 1-3"/></svg> ${en?'Streak':'Racha'}: <b>${streak}</b> ${en?(streak===1?'day':'days'):(streak===1?'día':'días')} · ${en?'come back tomorrow':'mañana hay otra'}</div>
     </div>` : `
-    <div style="font-size:.72rem;color:var(--parch3);margin:.2rem 0 .4rem">🔥 ${en?'Streak':'Racha'}: <b>${streak}</b> · ${en?'answering daily raises the bonus':'responder a diario sube el bonus'}</div>`;
+    <div style="font-size:.72rem;color:var(--parch3);margin:.2rem 0 .4rem"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align:-.15em;flex:none"><path d="M12 3s4 3.5 4 7.5a4 4 0 01-8 0c0-1.5.6-2.6 1.2-3.4C9.8 6.3 12 5 12 3z"/><path d="M12 21a5 5 0 005-5c0-2-1.2-3.6-2.4-4.8"/><path d="M12 21a5 5 0 01-5-5c0-1.2.4-2.2 1-3"/></svg> ${en?'Streak':'Racha'}: <b>${streak}</b> · ${en?'answering daily raises the bonus':'responder a diario sube el bonus'}</div>`;
   ov.innerHTML=`
     <div role="dialog" aria-modal="true" aria-label="${en?'Daily quiz':'Reto del día'}" style="background:linear-gradient(155deg,#faf6ee,#f0e8d8);border:1.5px solid rgba(196,154,60,.4);border-radius:16px;max-width:460px;width:100%;padding:1.3rem 1.3rem 1rem;box-shadow:0 18px 60px rgba(0,0,0,.45)">
       <div style="display:flex;justify-content:space-between;align-items:baseline;gap:.6rem">
@@ -7670,7 +7692,7 @@ function _pddHeroHTML(emp,en){
     return `<div class="pdd-hero">
       <div class="pdd-eyebrow"><span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align:-.15em;flex:none"><path d="M12 3.5l2.6 5.6 6.1.8-4.5 4.2 1.2 6-5.4-3-5.4 3 1.2-6L3.3 9.9l6.1-.8L12 3.5z"/></svg> ${en?'Daily quiz':'Reto del día'}</span><span>≈ 30 s</span></div>
       <div class="pdd-title">${en?'Today’s question':'La pregunta de hoy'}</div>
-      <div class="pdd-sub">${en?'Same question for the whole team':'La misma pregunta para todo el equipo'}${s>0?` · 🔥 ${s}`:''}</div>
+      <div class="pdd-sub">${en?'Same question for the whole team':'La misma pregunta para todo el equipo'}${s>0?` · <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align:-.15em;flex:none"><path d="M12 3s4 3.5 4 7.5a4 4 0 01-8 0c0-1.5.6-2.6 1.2-3.4C9.8 6.3 12 5 12 3z"/><path d="M12 21a5 5 0 005-5c0-2-1.2-3.6-2.4-4.8"/><path d="M12 21a5 5 0 01-5-5c0-1.2.4-2.2 1-3"/></svg> ${s}`:''}</div>
       <button type="button" class="pdd-cta" onclick="openDailyReto()">${en?'Start':'Empezar'}</button>
     </div>`;
   }

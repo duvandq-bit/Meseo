@@ -2163,10 +2163,18 @@ test('Reto del Día: ingredient subjects are clean tokens, no section labels', (
   const stub = 'let LANG="es";const DISHES_EN=[];function getDish(d){return d;}function _djShuffle(a){return a;}'
     + 'function escapeHTML(s){return s;}function _srCap(s){return s;}function _shiftDishes(a){return a;}function catLocal(c){return c;}';
   const M = new Function(stub + '\n' + dishesSrc + '\n' + svcSrc + '\n' + block + '\n' // eslint-disable-line no-new-func
-    + fnBody('_mulberry32') + '\n' + fnBody('_dqSample') + '\n' + fnBody('_dqQuestion')
+    + fnBody('_mulberry32') + '\n' + fnBody('_dqSample') + '\n' + fnBody('_normName') + '\n' + fnBody('_dqQuestion')
     + '\nreturn {_dqQuestion, setLang:(l)=>{LANG=l;}};')();
   const dayStr = (n) => { const d = new Date(2026, 0, 1); d.setDate(d.getDate() + n); return d.toISOString().slice(0, 10); };
   const STRUCT = /^(masa|topping|base|relleno|guarnici|sabores|caldo|bisque|fondo)\b/i;
+  // Cantidades y pesos que el troceo dejaba como si fueran ingredientes:
+  // «180 grs de carne de buey», «Tomahawk de Hereford 1», «1 Pularda».
+  const CANT = /\d|\b(grs?|kg|gramos?|ml|cl|litros?|uds?|unidades?|numero|n[ºo])\b/i;
+  // Palabras con carga: que coincida «de» o «con» no delata nada.
+  const VACIAS = new Set(['de', 'del', 'la', 'el', 'los', 'las', 'con', 'al', 'y', 'en', 'un', 'una', 'sobre', 'estilo',
+                          'the', 'of', 'and', 'with', 'from']);
+  const pal = (s) => String(s || '').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '')
+    .replace(/[^a-z0-9 ]/g, ' ').split(/\s+/).filter((w) => w.length > 3 && !VACIAS.has(w));
   let ing = 0;
   for (const lang of ['es', 'en']) {
     M.setLang(lang);
@@ -2183,6 +2191,18 @@ test('Reto del Día: ingredient subjects are clean tokens, no section labels', (
         const tk = m[1] || m[2];
         assert(!/[:\/()]/.test(tk), `Reto del Día: ingredient subject has an artifact token (${lang}): «${tk}»`);
         assert(!STRUCT.test(tk), `Reto del Día: ingredient subject is a section label (${lang}): «${tk}»`);
+        // ── La respuesta no puede estar en el enunciado ──────────────────
+        // Reporte del propietario (ago 2026): «las preguntas del día son
+        // absurdas». El caso que enseñó: «¿Qué plato lleva "Alitas de
+        // pollo"?» → «Alitas melosas glaseadas». Medido entonces: 19 de las
+        // 80 preguntas de este tipo al año (24 %) se regalaban así.
+        assert(!CANT.test(tk),
+          `Reto del Día: el sujeto es una cantidad, no un ingrediente (${lang}): «${tk}»`);
+        const nombre = new Set(pal(q.opts[q.correctIdx]));
+        const eco = pal(tk).filter((w) => nombre.has(w));
+        assert(eco.length === 0,
+          `Reto del Día: la respuesta está en el enunciado (${lang}): «${tk}» → «${q.opts[q.correctIdx]}» ` +
+          `(comparten: ${eco.join(', ')})`);
       }
     }
   }
