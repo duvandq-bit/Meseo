@@ -52,7 +52,7 @@
 <meta property="og:description" content="Formación de equipos de sala: carta, alérgenos, vinos, exámenes y juegos de repaso.">
 <meta property="og:url" content="https://meseo.es/">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"Meseo","url":"https://meseo.es/"}</script>
-<meta name="app-version" content="7.347">
+<meta name="app-version" content="7.348">
 <meta name="app-build" content="May 2026">
 <meta name="theme-color" content="#1c2a22">
 <!-- ═══ PWA ═══ -->
@@ -1612,7 +1612,7 @@ const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><p
 const SRC = 'src';
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='7.347';  // sincronizada con sw.js VERSION (guard de CI)
+const APP_VERSION='7.348';  // sincronizada con sw.js VERSION (guard de CI)
 const APP_BUILD='Jul 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;
@@ -3839,6 +3839,11 @@ function awardXP(amount, reason, mode){
 }
 
 function showXPToast(amount, reason){
+  // Consulta de alérgenos en curso: la celebración espera su turno.
+  if(typeof _gsIsOpen==='function' && _gsIsOpen()){
+    _uiWhenClear(()=>showXPToast(amount, reason));
+    return;
+  }
   const existing = document.getElementById('xpToast');
   if(existing) existing.remove();
   const toast = document.createElement('div');
@@ -3866,6 +3871,11 @@ function showXPToast(amount, reason){
 }
 
 function showLevelUpModal(levelInfo){
+  // Consulta de alérgenos en curso: la celebración espera su turno.
+  if(typeof _gsIsOpen==='function' && _gsIsOpen()){
+    _uiWhenClear(()=>showLevelUpModal(levelInfo));
+    return;
+  }
   // Non-blocking celebratory banner (was a full-screen modal blocking the
   // post-quiz flow for 3+ seconds). Auto-dismisses; click to dismiss earlier.
   // Respects prefers-reduced-motion for the confetti burst.
@@ -9689,6 +9699,83 @@ const _GS_ICON_WINE = '<svg width="20" height="20" viewBox="0 0 24 24" fill="non
 const _GS_ICON_LQA = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>';
 let _gsDishIdx = null, _gsWineIdx = null;
 function _gsNorm(s){ return (s==null?'':String(s)).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,''); }
+
+// \u2550\u2550 BUSCADOR DE AL\u00c9RGENOS EN SALA \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550
+// El propietario (ago 2026) reporta que la plantilla usa el buscador sobre todo
+// con el cliente delante, para responder por al\u00e9rgenos e ingredientes, y que ha
+// puesto la app en tablets para eso. Medido entonces, el buscador fallaba justo
+// en ese uso:
+//   \u00absin gluten\u00bb ....... 6 platos, LOS 6 CON GLUTEN (la lista contraria)
+//   \u00abceliaco\u00bb .......... 0 resultados
+//   \u00abalergia gluten\u00bb ... 0 resultados
+//   \u00abmarisco\u00bb .......... 0 platos
+//   \u00ablactosa\u00bb .......... 1 plato (hay 50 con L\u00e1cteos)
+// La causa: el buscador casaba subcadenas contra el texto del plato, sin
+// entender ni el vocabulario del cliente ni la negaci\u00f3n (\u00absin\u00bb casaba dentro de
+// otras palabras). Y contestaba \u00abqu\u00e9 platos LLEVAN X\u00bb cuando en mesa la
+// pregunta casi siempre es la inversa: \u00abes al\u00e9rgico a X, \u00bfqu\u00e9 puede tomar?\u00bb.
+//
+// Vocabulario del cliente \u2192 al\u00e9rgeno declarado en la ficha. Solo t\u00e9rminos que
+// apuntan a un al\u00e9rgeno REAL de la carta: esto no inventa datos, traduce c\u00f3mo
+// lo dice un comensal a c\u00f3mo lo llama la ficha. \u00abMarisco\u00bb abarca crust\u00e1ceos y
+// moluscos, que es lo que significa en la mesa.
+const GS_ALLERGEN_VOCAB = {
+  gluten:['Gluten'], celiaco:['Gluten'], celiaca:['Gluten'], celiaquia:['Gluten'],
+  coeliac:['Gluten'], trigo:['Gluten'], wheat:['Gluten'],
+  lactosa:['L\u00e1cteos'], lactose:['L\u00e1cteos'], leche:['L\u00e1cteos'], milk:['L\u00e1cteos'],
+  lacteo:['L\u00e1cteos'], lacteos:['L\u00e1cteos'], dairy:['L\u00e1cteos'],
+  huevo:['Huevos'], huevos:['Huevos'], egg:['Huevos'], eggs:['Huevos'],
+  pescado:['Pescado'], fish:['Pescado'],
+  marisco:['Crust\u00e1ceos','Moluscos'], mariscos:['Crust\u00e1ceos','Moluscos'],
+  seafood:['Crust\u00e1ceos','Moluscos'], shellfish:['Crust\u00e1ceos','Moluscos'],
+  crustaceo:['Crust\u00e1ceos'], crustaceos:['Crust\u00e1ceos'], crustacean:['Crust\u00e1ceos'],
+  gamba:['Crust\u00e1ceos'], gambas:['Crust\u00e1ceos'], langostino:['Crust\u00e1ceos'],
+  langostinos:['Crust\u00e1ceos'], prawn:['Crust\u00e1ceos'], shrimp:['Crust\u00e1ceos'],
+  molusco:['Moluscos'], moluscos:['Moluscos'], mollusc:['Moluscos'],
+  mejillon:['Moluscos'], mejillones:['Moluscos'], almeja:['Moluscos'],
+  almejas:['Moluscos'], calamar:['Moluscos'], calamares:['Moluscos'], pulpo:['Moluscos'],
+  fruto:['Frutos secos'], frutos:['Frutos secos'], secos:['Frutos secos'], nuez:['Frutos secos'],
+  nueces:['Frutos secos'], almendra:['Frutos secos'], almendras:['Frutos secos'],
+  avellana:['Frutos secos'], avellanas:['Frutos secos'], anacardo:['Frutos secos'],
+  anacardos:['Frutos secos'], pistacho:['Frutos secos'], pistachos:['Frutos secos'],
+  nut:['Frutos secos'], nuts:['Frutos secos'],
+  cacahuete:['Cacahuete'], cacahuetes:['Cacahuete'], cacahuate:['Cacahuete'],
+  mani:['Cacahuete'], peanut:['Cacahuete'], peanuts:['Cacahuete'],
+  soja:['Soja'], soya:['Soja'],   // «soy» NO va aquí: en español es «yo soy»
+                                  // (se colaba en «soy alergico al pescado»).
+  mostaza:['Mostaza'], mustard:['Mostaza'],
+  apio:['Apio'], celery:['Apio'],
+  sulfito:['Sulfitos'], sulfitos:['Sulfitos'], sulphite:['Sulfitos'],
+  sulphites:['Sulfitos'], sulfite:['Sulfitos'], sulfites:['Sulfitos'], so2:['Sulfitos'],
+  sesamo:['Granos de s\u00e9samo'], ajonjoli:['Granos de s\u00e9samo'], sesame:['Granos de s\u00e9samo'],
+  altramuz:['Altramuces'], altramuces:['Altramuces'], lupin:['Altramuces'],
+  cereal:['Cereales'], cereales:['Cereales']
+};
+// Palabras que solo marcan la intenci\u00f3n (\u00absin gluten\u00bb, \u00abalergia al gluten\u00bb).
+// Se ignoran al buscar el al\u00e9rgeno; su presencia no cambia la respuesta porque
+// SIEMPRE se ense\u00f1an los dos bloques \u2014 lo que evita cualquier lectura torcida.
+const GS_INTENT_WORDS = new Set(['sin','no','nada','evitar','alergia','alergias','alergico',
+  'alergica','intolerante','intolerancia','apto','aptos','puede','comer','tomar','que','al',
+  'a','de','del','la','el','los','las','con','para','es','soy','tiene','lleva','contiene',
+  'without','free','allergy','allergic','intolerant','safe','can','eat','has','contains','the','to']);
+
+// Devuelve los al\u00e9rgenos que pide la consulta, o null si no va de al\u00e9rgenos.
+// Todas las palabras deben ser o un t\u00e9rmino de al\u00e9rgeno o una palabra de
+// intenci\u00f3n: as\u00ed \u00abgluten\u00bb y \u00absin gluten\u00bb entran, pero \u00abcroqueta gluten\u00bb no
+// (ah\u00ed el camarero busca un plato concreto y manda la b\u00fasqueda normal).
+function _gsAllergenIntent(tokens){
+  if(!tokens.length) return null;
+  // «soy» solo cuenta como alérgeno en inglés: en español es el verbo, y
+  // convertía «soy alérgico al pescado» en «Soja o Pescado».
+  const vocab = LANG==='en' ? Object.assign({soy:['Soja']}, GS_ALLERGEN_VOCAB) : GS_ALLERGEN_VOCAB;
+  const found = [];
+  for(const t of tokens){
+    const hit = vocab[t];
+    if(hit){ hit.forEach(a=>{ if(!found.includes(a)) found.push(a); }); continue; }
+    if(!GS_INTENT_WORDS.has(t)) return null;   // palabra ajena \u2192 b\u00fasqueda normal
+  }
+  return found.length ? found : null;
+}
 function _gsDishIndex(){
   if(_gsDishIdx) return _gsDishIdx;
   if(typeof DISHES==='undefined' || !Array.isArray(DISHES)) return [];
@@ -9733,6 +9820,79 @@ function _gsRank(name, first){
   if(n.indexOf(first)>=0) return 1;
   return 2;
 }
+// Respuesta a «es alérgico a X»: SIEMPRE los dos bloques, y primero el que se
+// necesita en mesa — lo que SÍ puede tomar. Nunca una lista mezclada sin
+// etiquetar: así no hay forma de leerla al revés (era el fallo peligroso de
+// «sin gluten», que devolvía seis platos y los seis llevaban gluten).
+// Se dice «no declara» y no «apto» o «seguro»: la ficha declara alérgenos, la
+// cocina comparte superficies. Por eso el aviso de contaminación cruzada.
+function _gsAllergenAnswer(algs, en){
+  const nombres = algs.map(a=>typeof allergenLocal==='function'?allergenLocal(a):a);
+  const etiqueta = nombres.join(en?' or ':' o ');
+  const idx = _gsDishIndex();
+  const lleva = idx.filter(it=>algs.some(a=>(it.allergens||[]).includes(a)));
+  const libre = idx.filter(it=>!algs.some(a=>(it.allergens||[]).includes(a)));
+  const fila = (it, peligro)=>{
+    const nm = en?it.nameEn:it.name;
+    const alg = (it.allergens||[]).map(a=>typeof allergenLocal==='function'?allergenLocal(a):a);
+    const marcados = alg.map(a=>nombres.includes(a)?'<b class="gs-al-hit">'+escapeHtml(a)+'</b>':escapeHtml(a)).join(', ');
+    const _ph=typeof dishPhotoSrc==='function'?dishPhotoSrc(it.id):null;
+    return '<button type="button" class="gs-hit'+(peligro?' gs-hit-danger':'')+'" role="option" onclick="_gsGo(\'dish\','+it.id+')">'
+      + '<span class="gs-hit-ic">'+(_ph?'<img class="gs-hit-ph" loading="lazy" '+SRC+'="'+_ph+'" alt="">':_GS_ICON_DISH)+'</span>'
+      + '<span class="gs-hit-body"><span class="gs-hit-name">'+escapeHtml(nm)+'</span>'
+      + '<span class="gs-hit-sub">'+(marcados||(en?'no allergens declared':'sin alérgenos declarados'))+'</span></span>'
+      + '<span class="gs-hit-go">›</span></button>';
+  };
+  // El bloque de aptos se agrupa por categoría: es como se recorre una carta
+  // delante del cliente («de entrantes puede tomar…»).
+  const porCat = {};
+  libre.forEach(it=>{ const c=it.cat||(en?'Other':'Otros'); (porCat[c]=porCat[c]||[]).push(it); });
+  let html = '<div class="gs-al-head"><div class="gs-al-title">'
+    + (en?'Guest allergic to':'Cliente alérgico a') + ' <b>' + escapeHtml(etiqueta) + '</b></div>'
+    + '<div class="gs-al-note">' + (en
+        ? 'The kitchen shares surfaces and fryers: for a severe allergy, always confirm with the chef.'
+        : 'La cocina comparte superficies y freidoras: ante una alergia grave, confirma siempre con cocina.')
+    + '</div></div>';
+  // Cada bloque va en su propia sección: con las dos bandas «sticky» en el
+  // mismo contenedor, la verde se quedaba pegada detrás de la roja y asomaba
+  // un trozo. En su propia sección, cada banda se despega al salir su bloque.
+  html += '<div class="gs-al-sec"><div class="gs-al-band safe">' + (en?'Does not declare':'No declara') + ' '
+    + escapeHtml(etiqueta) + ' · ' + libre.length + '</div>';
+  if(!libre.length){
+    html += '<div class="gs-hint">'+(en?'No dish on the menu is free of it.':'Ningún plato de la carta está libre.')+'</div>';
+  } else {
+    Object.keys(porCat).sort().forEach(c=>{
+      html += '<div class="gs-group-lbl">'+escapeHtml(typeof catLocal==='function'?catLocal(c):c)+' · '+porCat[c].length+'</div>';
+      html += porCat[c].map(it=>fila(it,false)).join('');
+    });
+  }
+  html += '</div><div class="gs-al-sec"><div class="gs-al-band danger">' + (en?'Declares':'Lleva') + ' '
+    + escapeHtml(etiqueta) + ' · ' + lleva.length + '</div>';
+  html += lleva.length
+    ? lleva.map(it=>fila(it,true)).join('')
+    : '<div class="gs-hint">'+(en?'No dish declares it.':'Ningún plato lo declara.')+'</div>';
+  return html + '</div>';
+}
+
+// Con el buscador abierto hay un cliente delante esperando una respuesta sobre
+// alérgenos. Las celebraciones (subida de nivel, confeti, aviso de XP) tapaban
+// justo la lista que hay que leer en voz alta — visto en captura sobre la
+// respuesta de «sin gluten». No se pierden: esperan a que se cierre la consulta.
+function _gsIsOpen(){
+  const ov = document.getElementById('gsOverlay');
+  return !!ov && getComputedStyle(ov).display !== 'none';
+}
+// Cortarlas al lanzarlas no basta: la celebración puede haberse disparado justo
+// ANTES de abrir el buscador y seguir en pantalla varios segundos — así apareció
+// «Logro: Búho nocturno» encima de la lista de platos sin gluten. Al abrir la
+// consulta se retira lo que ya esté puesto.
+function _gsClearCelebrations(){
+  ['achToastStack','xpToast','luOverlay','confettiCanvas'].forEach(id=>{
+    const el = document.getElementById(id);
+    if(el) el.remove();
+  });
+}
+
 function _gsRender(raw){
   const box = document.getElementById('gsResults');
   if(!box) return;
@@ -9743,6 +9903,9 @@ function _gsRender(raw){
     return;
   }
   const tokens = query.split(/\s+/).filter(Boolean);
+  // Consulta de alérgeno → respuesta de sala, no una lista de coincidencias.
+  const _alg = _gsAllergenIntent(tokens);
+  if(_alg){ _tmTrackSearch(query.length, 0); box.innerHTML = _gsAllergenAnswer(_alg, en); return; }
   const first = tokens[0];
   const match = s => tokens.every(t=>s.indexOf(t)>=0);
   const dishes = _gsDishIndex().filter(it=>match(it.search))
@@ -9799,6 +9962,7 @@ async function openGlobalSearch(){
   if(!ov) return;
   ov.style.display='flex';        // inline — wins over any stale/fresh CSS
   ov.classList.add('open');
+  _gsClearCelebrations();
   const inp = document.getElementById('gsInput');
   if(inp){ inp.value=''; setTimeout(()=>{ try{ inp.focus(); }catch(e){} }, 60); }
   _gsRender('');
@@ -23708,6 +23872,11 @@ function burstEmoji(emoji){
 
 // ═══════ CONFETTI SYSTEM ═══════
 function launchConfetti(duration=3000){
+  // Se corta en el origen y no en cada llamada: hay cinco sitios que lo lanzan
+  // y cerrarlos uno a uno se presta a olvidar alguno (pasó con el aviso de
+  // logro). Aquí no puede colarse ninguno. El confeti no se aplaza: sobre una
+  // consulta con el cliente delante, sencillamente no toca.
+  if(typeof _gsIsOpen==='function' && _gsIsOpen()) return;
   let canvas=document.getElementById('confettiCanvas');
   if(!canvas){canvas=document.createElement('canvas');canvas.id='confettiCanvas';canvas.style.cssText='position:fixed;inset:0;z-index:9999;pointer-events:none';document.body.appendChild(canvas);}
   const ctx=canvas.getContext('2d');
@@ -24275,6 +24444,11 @@ function showAchievementDetail(achievementId){
 }
 
 function showAchievementToast(ach){
+  // Consulta de alérgenos en curso: el logro espera su turno.
+  if(typeof _gsIsOpen==='function' && _gsIsOpen()){
+    _uiWhenClear(()=>showAchievementToast(ach));
+    return;
+  }
   // Toasts live in one fixed stack: several achievements unlocking together
   // used to render at the same fixed spot, painting text over text and
   // covering the nav. The stack sits below the header and lets taps through.

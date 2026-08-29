@@ -2248,6 +2248,42 @@ body::after{
 .gs-hit-sub{font-size:.72rem;color:rgba(28,42,34,.6);margin-top:.1rem;
   overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .gs-hit mark{background:rgba(196,154,60,.28);color:inherit;border-radius:3px;padding:0 .1em}
+
+/* ── Buscador de alérgenos en sala ─────────────────────────────────────────
+   El nombre y el subtítulo eran dos <span> dentro de un contenedor sin
+   dirección: en móvil envolvían por falta de sitio, pero en la tablet salían
+   pegados en la misma línea («Huevo frito con chistorraEntrantes · Huevos»).
+   En columna se leen bien en los dos anchos. */
+.gs-hit-body{display:flex;flex-direction:column;gap:.1rem}
+/* Los alérgenos son EL dato cuando hay un cliente delante: dejan de ir en gris
+   de subtítulo y se leen a tamaño de lectura. */
+.gs-hit-sub{font-size:.78rem;color:var(--parch3);white-space:normal}
+.gs-al-hit{color:#a32319;font-weight:700}
+.gs-hit-danger{background:rgba(163,35,25,.05);border-color:rgba(163,35,25,.25)}
+
+.gs-al-head{padding:.9rem .3rem .2rem}
+.gs-al-title{font-family:'Cinzel',serif;font-size:1.05rem;color:var(--parchment);line-height:1.35}
+.gs-al-note{font-size:.78rem;color:var(--parch3);line-height:1.45;margin-top:.35rem;max-width:60ch}
+/* Banda de bloque: separa sin ambigüedad lo que puede tomar de lo que no. */
+.gs-al-sec{position:relative}
+/* El nombre completo importa: se lee en voz alta al cliente. En la respuesta
+   de alérgenos envuelve en vez de cortarse con puntos suspensivos. */
+.gs-al-sec .gs-hit-name{white-space:normal}
+.gs-al-band{position:sticky;top:0;z-index:2;margin:1rem 0 .5rem;padding:.55rem .8rem;
+  border-radius:9px;font-family:'DM Mono',monospace;font-size:.8rem;font-weight:600;
+  letter-spacing:.08em;text-transform:uppercase}
+.gs-al-band.safe{background:#26614a;color:#f4ede2}
+.gs-al-band.danger{background:#a32319;color:#f4ede2}
+
+/* Tablet: la app se instaló en tablets para consultar en sala. Los resultados
+   se estiraban a todo lo ancho dejando un hueco muerto enorme a la derecha. */
+@media (min-width:820px){
+  .gs-results{max-width:56rem;margin:0 auto;width:100%}
+  .gs-bar{max-width:56rem;margin:0 auto;width:100%}
+  .gs-hit-name{font-size:1rem}
+  .gs-hit-sub{font-size:.82rem}
+}
+
 .gs-hit-go{flex-shrink:0;color:rgba(28,42,34,.25);font-size:1rem}
 .gs-empty{text-align:center;color:rgba(28,42,34,.5);font-size:.85rem;padding:3rem 1rem;line-height:1.6}
 .gs-empty svg{width:34px;height:34px;stroke:rgba(28,42,34,.28);margin-bottom:.7rem}
