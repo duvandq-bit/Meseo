@@ -1,6 +1,26 @@
 {
- "updated": "2026-08-30T15:21:41.666Z",
+ "updated": "2026-08-30T19:51:03.072Z",
  "items": [
+  {
+   "t": "Jordi Jacas, el chef que ha convertido un molino histórico de l'Escala en una industria de la felicidad",
+   "u": "https://www.abc.es/espana/cataluna/jordi-jacas-chef-convertido-molino-historico-lescala-20260830185715-nt.html",
+   "s": "ABC",
+   "d": "2026-08-30T16:57:15.000Z",
+   "tags": [
+    "ALTA COCINA"
+   ],
+   "img": "https://s1.abcstatics.com/abc/www/multimedia/espana/2026/08/30/Jordi%20Jacas%20Moli%20Escala-U37132102601DeZ-1200x630@diario_abc.jpg"
+  },
+  {
+   "t": "El Tenerife refuerza su ataque con el hispano-senegalés Christian Gomis",
+   "u": "https://www.eldiario.es/canariasahora/Deportes/futbol/tenerife-refuerza-ataque-hispano-senegales-christian-gomis_1_13475441.html",
+   "s": "elDiario.es",
+   "d": "2026-08-30T15:16:35.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://static.eldiario.es/clip/e7e0cc33-f351-4ea7-a47c-7c6d665d39b8_facebook-aspect-ratio-1200-675_default_0_x338y50.jpg"
+  },
   {
    "t": "Así es el embalse más pequeño de la Sierra de Guadarrama: rodeado de pinos y con un restaurante recomendado por la Guía Michelin",
    "u": "https://www.elconfidencial.com/viajes/2026-08-30/embalse-mas-pequeno-sierra-guadarrama-1qrt_4412194/",
@@ -41,6 +61,16 @@
    "img": "https://estaticos-cdn.prensaiberica.es/clip/8f4506eb-bfdf-4992-93f1-a690fa7818e0_16-9-discover-aspect-ratio_default_0_x600y266.jpg"
   },
   {
+   "t": "La villa juguetera de Alicante que conquista por su cocina: así es el pueblo donde mejor se come de España",
+   "u": "https://www.noticiasdelvino.com/restaurantes/2026/08/30/la-villa-juguetera-de-alicante-que-conquista-por-su-cocina-asi-es-el-pueblo-donde-mejor-se-come-de-espana-74836/",
+   "s": "Noticias del Vino",
+   "d": "2026-08-30T09:27:06.000Z",
+   "tags": [
+    "MICHELIN"
+   ],
+   "img": "https://www.noticiasdelvino.com/wp-content/uploads/restaurantes-5.jpg"
+  },
+  {
    "t": "El guachinche de este municipio de Tenerife que conquista con su cocina canaria casera y sus carnes a la brasa",
    "u": "https://www.eldia.es/tenerife/2026/08/30/guachinche-tenerife-conquista-cocina-casera-carnes-brasa-dv-129902761.html",
    "s": "Eldía",
@@ -49,6 +79,16 @@
     "CANARIAS"
    ],
    "img": "https://estaticos-cdn.prensaiberica.es/clip/1fa5cedd-f29d-441c-8ecf-97a4b9c703ae_16-9-discover-aspect-ratio_default_0_x520y513.jpg"
+  },
+  {
+   "t": "Rafa Molina, chef: \"La mejor fritura de bacalao se hace en 3 minutos y se corona con una salsa de chistorra y sidra\"",
+   "u": "https://www.elespanol.com/alicante/vivir/20260830/rafa-molina-chef-mejor-fritura-bacalao-hace-minutos-corona-salsa-chistorra-sidra-trt/1003744365869_0.html",
+   "s": "El Español",
+   "d": "2026-08-30T08:00:00.000Z",
+   "tags": [
+    "MICHELIN"
+   ],
+   "img": "https://s3.elespanol.com/k/imgp/cms/elespanol/11342977.jpg?p=f:jpeg/w:1706/h:960&h=6pO_HDKn"
   },
   {
    "t": "El bar de Las Palmas de Gran Canaria que conquista con sus platos de cocina canaria: las costillas asadas son la especialidad de la casa",
@@ -189,6 +229,16 @@
    "img": "https://s3.elespanol.com/k/imgp/cms/elespanol/11341982.jpg?p=f:jpeg/w:1706/h:960&h=8NZA_u8r"
   },
   {
+   "t": "Por qué las mareas del Pino paran el viento: el fenómeno que anuncia el cambio de estación en Canarias",
+   "u": "https://www.eldiario.es/canariasahora/sociedad/mareas-vivas-pino-2026-cuando-playas-canarias_1_13471296.html",
+   "s": "elDiario.es",
+   "d": "2026-08-29T12:10:50.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://static.eldiario.es/clip/d7758bf7-44f4-4225-bb01-3d262fde1cf5_facebook-aspect-ratio-1200-675_default_0.jpg"
+  },
+  {
    "t": "Los controladores aéreos de Canarias alertan de recortes en seguridad",
    "u": "https://www.teneriffa-news.com/es/actualidad/noticias-de-canarias/los-controladores-aereos-de-canarias-alertan-de-recortes-en-seguridad_1465613.html",
    "s": "Teneriffa News",
@@ -247,56 +297,6 @@
     "ALTA COCINA"
    ],
    "img": "https://s3.elespanol.com/k/imgp/cms/elespanol/11342022.jpg?p=f:jpeg/w:1706/h:960&h=K-OZ-hMl"
-  },
-  {
-   "t": "Joseba Arguiñano, sobre su padre Karlos Arguiñano: \"La cocina de mi aita es la cocina del hogar y es la comida que comemos en casa: puchero, rebozados, empanados, con salsa de tomate...\"",
-   "u": "https://www.elle.com/es/gourmet/gastronomia/a73381531/joseba-arguinano-padre-karlos-arguinano-cocina-hogar/",
-   "s": "ELLE",
-   "d": "2026-08-29T05:47:43.000Z",
-   "tags": [
-    "ALTA COCINA"
-   ],
-   "img": "https://hips.hearstapps.com/hmg-prod/images/joseba-arguinano-elle-gourmet-1-698332ad2e88c.jpg?crop=1xw:0.750733137829912xh;center,top&resize=1200:*"
-  },
-  {
-   "t": "El pueblo donde mejor se come de Valencia es poco conocido, pero ideal para una visita gastronómica: huerta, arroces y dos restaurantes de premio",
-   "u": "https://www.infobae.com/espana/2026/08/29/el-pueblo-donde-mejor-se-come-de-valencia-es-poco-conocido-pero-ideal-para-una-visita-gastronomica-huerta-arroces-y-dos-restaurantes-de-premio/?outputType",
-   "s": "Infobae",
-   "d": "2026-08-29T05:02:39.000Z",
-   "tags": [
-    "MICHELIN"
-   ],
-   "img": "https://www.infobae.com/resizer/v2/JBY3DYMVJBHMDCHA52THUF77VM.jpg?auth=8c1ccb469d46d3b638eb75d5efce931be768b5e5dfe72e6050f304809860d4fb&smart=true&width=1200&height=630&quality=85"
-  },
-  {
-   "t": "Los chefs vascos coinciden: \"Los ingredientes esenciales de un marmitako son bonito, patata, pimientos y cebolla\"",
-   "u": "https://www.heraldo.es/noticias/gastronomia/2026/08/29/chefs-vascos-coinciden-ingredientes-marmitako-bonito-patata-pimientos-cebolla-2046784.amp.html",
-   "s": "heraldo.es",
-   "d": "2026-08-29T03:00:00.000Z",
-   "tags": [
-    "CHEF"
-   ],
-   "img": "https://imagenes.heraldo.es/files/image_1920_1080/uploads/imagenes/2014/07/09/_marmitako_e5137415.jpg"
-  },
-  {
-   "t": "La cocina local vuelve a seducir a los inspectores de la Guía Michelín",
-   "u": "https://diariodeferrol.elidealgallego.com/ferrol/2026-08-29/la-cocina-local-vuelve-a-seducir-a-los-inspectores-de-la-guia-michelin-875967.html",
-   "s": "Diario de Ferrol",
-   "d": "2026-08-29T02:30:00.000Z",
-   "tags": [
-    "MICHELIN"
-   ],
-   "img": "https://diariodeferrol-imagenes.elidealgallego.com/files/og_thumbnail/uploads/2026/08/28/6a91ebcb153f2.JPG"
-  },
-  {
-   "t": "La primera derrota del curso baja a tierra al Tenerife",
-   "u": "https://www.eldiario.es/canariasahora/Deportes/futbol/primera-derrota-curso-baja-tierra-tenerife_1_13473887.html",
-   "s": "elDiario.es",
-   "d": "2026-08-28T23:35:19.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://static.eldiario.es/clip/7da4d5a5-ee87-465b-a39b-06324843eb0e_facebook-aspect-ratio-1200-675_default_0_x490y93.jpg"
   }
  ]
 }
