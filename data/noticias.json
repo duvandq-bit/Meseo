@@ -1,6 +1,16 @@
 {
- "updated": "2026-08-29T19:46:39.413Z",
+ "updated": "2026-08-30T01:17:24.055Z",
  "items": [
+  {
+   "t": "Pedro Hernández, el chef de Canarias que sigue luchando contra las alergias",
+   "u": "https://diariodeavisos.elespanol.com/2026/08/pedro-hernandez-chef-canarias-alergias/",
+   "s": "Diario de Avisos",
+   "d": "2026-08-29T23:00:00.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://cdn.diariodeavisos.com/wp-content/uploads/2026/08/Pagina-62-PEDRO-HDEZ.jpg"
+  },
   {
    "t": "Hormigonar palmeras como modelo urbanístico: “Canarias lleva 50 años de turbo desarrollo y tiene que regenerar ciclos”",
    "u": "https://www.eldiario.es/canariasahora/sociedad/hormigonar-palmeras-modelo-urbanistico-canarias-lleva-50-anos-turbo-desarrollo-regenerar-ciclos_1_13473322.html",
@@ -32,16 +42,6 @@
    "img": "https://s1.ppllstatics.com/diariosur/www/multimedia/malagaenlamesa/2026/08/29/terrazas-kxe-U301485064094KzB-1200x840@Diario%20Sur.jpg"
   },
   {
-   "t": "El viento vuelve a coger fuerza: la previsión del tiempo para este domingo en Canarias",
-   "u": "https://www.eldiario.es/canariasahora/tiempo-canarias/tiempo-canarias-hoy-domingo-manana-prevision_1_13474636.html",
-   "s": "elDiario.es",
-   "d": "2026-08-29T16:48:36.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://static.eldiario.es/clip/e35c190c-3f27-4a62-801e-ecb12dfea1a7_facebook-aspect-ratio-1200-675_default_0.jpg"
-  },
-  {
    "t": "Rick Stein, chef británico, prueba las gambas de Palamós y se queda sin palabras: \"Lo siento, estoy teniendo un momento difícil\"",
    "u": "https://www.huffingtonpost.es/sociedad/rick-stein-chef-britanico-prueba-gambas-palamos-queda-palabras-lo-siento-teniendo-momento-dificil-f202608.html",
    "s": "El HuffPost",
@@ -60,16 +60,6 @@
    ]
   },
   {
-   "t": "La villa juguetera de Alicante que conquista por su cocina: así es el pueblo donde mejor se come de España",
-   "u": "https://www.noticiasdelvino.com/restaurantes/2026/08/29/la-villa-juguetera-de-alicante-que-conquista-por-su-cocina-asi-es-el-pueblo-donde-mejor-se-come-de-espana-74836/",
-   "s": "Noticias del Vino",
-   "d": "2026-08-29T13:12:05.000Z",
-   "tags": [
-    "MICHELIN"
-   ],
-   "img": "https://www.noticiasdelvino.com/wp-content/uploads/restaurantes-5.jpg"
-  },
-  {
    "t": "El pueblo donde comer mariscos y carnes a reventar: \"La comida abundante y deliciosa. Muy buen servicio\"",
    "u": "https://www.elespanol.com/quincemil/vivir/escapadas/20260829/pueblo-comer-mariscos-carnes-reventar-comida-abundante-deliciosa-buen-servicio-trt/1003744363821_0.amp.html",
    "s": "El Español",
@@ -80,14 +70,14 @@
    "img": "https://s3.elespanol.com/k/imgp/cms/elespanol/11341982.jpg?p=f:jpeg/w:1706/h:960&h=8NZA_u8r"
   },
   {
-   "t": "Sugerencia para una excursión: el tajinaste vuelve a florecer en las Islas Canarias",
-   "u": "https://www.teneriffa-news.com/es/guia-turistica-de-las-islas-canarias/el-tajinaste-rosado-vuelve-a-florecer-en-las-cumbres-de-tenerife-y-la-palma_1464731.html",
+   "t": "Los controladores aéreos de Canarias alertan de recortes en seguridad",
+   "u": "https://www.teneriffa-news.com/es/actualidad/noticias-de-canarias/los-controladores-aereos-de-canarias-alertan-de-recortes-en-seguridad_1465613.html",
    "s": "Teneriffa News",
-   "d": "2026-08-29T10:13:37.000Z",
+   "d": "2026-08-29T11:12:49.000Z",
    "tags": [
     "CANARIAS"
    ],
-   "img": "https://www.teneriffa-news.com/media/t/tajinaste-kanaren-1600x1350.jpg"
+   "img": "https://www.teneriffa-news.com/media/r/flughafen-teneriffa-sued-rollfeld-2400x1350.jpg"
   },
   {
    "t": "Convocadas en Canarias hasta cinco concentraciones en apoyo de Ceuta",
@@ -103,7 +93,7 @@
    "t": "El bar de Tenerife donde la carne de cabra es uno de sus platos estrella: raciones generosas a precios económicos",
    "u": "https://www.eldia.es/tenerife/2026/08/29/bar-tenerife-carne-cabra-platos-estrella-dv-132841649.html",
    "s": "Eldía",
-   "d": "2026-08-29T08:30:00.000Z",
+   "d": "2026-08-29T08:30:32.000Z",
    "tags": [
     "CANARIAS"
    ],
@@ -189,6 +179,26 @@
     "VINO"
    ],
    "img": "https://cdn.diariodeavisos.com/wp-content/uploads/2026/08/Pagina-45-Vilaflor-despliega-entre-el-25-y-el-27-de-septiembre-una-intensa-agenda-de-propuestas.jpg"
+  },
+  {
+   "t": "Padylla (29/08/26)",
+   "u": "https://www.eldia.es/humor/2026/08/29/padylla-29-08-26-133750951.html",
+   "s": "Eldía",
+   "d": "2026-08-28T22:59:34.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://estaticos-cdn.prensaiberica.es/clip/beceaed1-08b6-4df8-839e-61150b7ad1ff_16-9-aspect-ratio_default_0.jpg"
+  },
+  {
+   "t": "Santy (29/08/26)",
+   "u": "https://www.eldia.es/humor/2026/08/29/santy-29-08-26-133751010.html",
+   "s": "Eldía",
+   "d": "2026-08-28T22:59:33.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://estaticos-cdn.prensaiberica.es/clip/b1c2edcd-b06d-48bb-9b21-7072e93eecb0_16-9-aspect-ratio_default_0.jpg"
   },
   {
    "t": "La Taberna del Chef del Mar: así es la tasca marinera de Ángel León",
@@ -288,15 +298,6 @@
     "CANARIAS"
    ],
    "img": "https://gastrocanarias.com/upload/images/08_2026/305_emfr2122.jpg"
-  },
-  {
-   "t": "El chef José Pizarro lleva su cocina al hotel Joia El Mirador de Iberostar en Tenerife",
-   "u": "https://www.revistagranhotel.com/el-chef-jose-pizarro-lleva-su-cocina-al-hotel-joia-el-mirador-de-iberostar-en-tenerife/",
-   "s": "Revista Gran Hotel",
-   "d": "2026-08-28T11:53:22.000Z",
-   "tags": [
-    "CANARIAS"
-   ]
   }
  ]
 }
