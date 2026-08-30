@@ -1,9 +1,38 @@
 {
- "updated": "2026-08-30T10:30:05.845Z",
+ "updated": "2026-08-30T15:21:41.666Z",
  "items": [
   {
+   "t": "Así es el embalse más pequeño de la Sierra de Guadarrama: rodeado de pinos y con un restaurante recomendado por la Guía Michelin",
+   "u": "https://www.elconfidencial.com/viajes/2026-08-30/embalse-mas-pequeno-sierra-guadarrama-1qrt_4412194/",
+   "s": "El Confidencial",
+   "d": "2026-08-30T15:05:00.000Z",
+   "tags": [
+    "MICHELIN"
+   ],
+   "img": "https://images.ecestaticos.com/toCYpbzY8G1--tpCCjHGDKGJNj0=/0x0:1600x1200/600x315/filters:fill(white):format(jpg):quality(99):watermark(f.elconfidencial.com/file/a73/f85/d17/a73f85d17f0b2300eddff0d114d4ab10.png,0,275,1)/f.elconfidencial.com/original/104/216/a9f/104216a9f07dad34061420d158486d79.jpg"
+  },
+  {
+   "t": "Santa Cruz de Tenerife sufrirá cortes de tráfico en las próximas horas: estas son las calles afectadas",
+   "u": "https://www.eldiario.es/canariasahora/tenerifeahora/santa-cruz-tenerife-sufrira-cortes-trafico-proximas-horas-son-calles-afectadas-obras-meridiano_1_13475306.html",
+   "s": "elDiario.es",
+   "d": "2026-08-30T12:47:02.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://static.eldiario.es/clip/f8932116-a913-4172-a6c9-ecb19b78c4ac_facebook-aspect-ratio-1200-675_default_0.jpg"
+  },
+  {
+   "t": "Martín Berasategui (66 años), cocinero: “El mejor sándwich mixto se hace untando mantequilla en el pan”",
+   "u": "https://as.com/tikitakas/gastronomia/martin-berasategui-66-anos-cocinero-el-mejor-sandwich-mixto-se-hace-untando-mantequilla-en-el-pan-f202608-n/",
+   "s": "Diario AS",
+   "d": "2026-08-30T12:15:36.000Z",
+   "tags": [
+    "CHEF"
+   ]
+  },
+  {
    "t": "Los Culinary Hotel Awards ya tienen finalistas: estos son los 60 nominados",
-   "u": "https://www.eldia.es/ocio/gastronomia/2026/08/30/culinary-hotel-awards-finalistas-son-los-nominados-133776957.html",
+   "u": "https://www.eldia.es/ocio/gastronomia/2026/08/30/culinary-hotel-awards-finalistas-son-los-nominados-133776957.amp.html",
    "s": "Eldía",
    "d": "2026-08-30T09:58:33.000Z",
    "tags": [
@@ -220,16 +249,6 @@
    "img": "https://s3.elespanol.com/k/imgp/cms/elespanol/11342022.jpg?p=f:jpeg/w:1706/h:960&h=K-OZ-hMl"
   },
   {
-   "t": "El pueblo donde mejor se come de Valencia es poco conocido, pero ideal para una visita gastronómica: huerta, arroces y dos restaurantes de premio",
-   "u": "https://www.infobae.com/espana/2026/08/29/el-pueblo-donde-mejor-se-come-de-valencia-es-poco-conocido-pero-ideal-para-una-visita-gastronomica-huerta-arroces-y-dos-restaurantes-de-premio/",
-   "s": "Infobae",
-   "d": "2026-08-29T06:00:00.000Z",
-   "tags": [
-    "MICHELIN"
-   ],
-   "img": "https://www.infobae.com/resizer/v2/JBY3DYMVJBHMDCHA52THUF77VM.jpg?auth=8c1ccb469d46d3b638eb75d5efce931be768b5e5dfe72e6050f304809860d4fb&smart=true&width=1200&height=630&quality=85"
-  },
-  {
    "t": "Joseba Arguiñano, sobre su padre Karlos Arguiñano: \"La cocina de mi aita es la cocina del hogar y es la comida que comemos en casa: puchero, rebozados, empanados, con salsa de tomate...\"",
    "u": "https://www.elle.com/es/gourmet/gastronomia/a73381531/joseba-arguinano-padre-karlos-arguinano-cocina-hogar/",
    "s": "ELLE",
@@ -238,6 +257,16 @@
     "ALTA COCINA"
    ],
    "img": "https://hips.hearstapps.com/hmg-prod/images/joseba-arguinano-elle-gourmet-1-698332ad2e88c.jpg?crop=1xw:0.750733137829912xh;center,top&resize=1200:*"
+  },
+  {
+   "t": "El pueblo donde mejor se come de Valencia es poco conocido, pero ideal para una visita gastronómica: huerta, arroces y dos restaurantes de premio",
+   "u": "https://www.infobae.com/espana/2026/08/29/el-pueblo-donde-mejor-se-come-de-valencia-es-poco-conocido-pero-ideal-para-una-visita-gastronomica-huerta-arroces-y-dos-restaurantes-de-premio/?outputType",
+   "s": "Infobae",
+   "d": "2026-08-29T05:02:39.000Z",
+   "tags": [
+    "MICHELIN"
+   ],
+   "img": "https://www.infobae.com/resizer/v2/JBY3DYMVJBHMDCHA52THUF77VM.jpg?auth=8c1ccb469d46d3b638eb75d5efce931be768b5e5dfe72e6050f304809860d4fb&smart=true&width=1200&height=630&quality=85"
   },
   {
    "t": "Los chefs vascos coinciden: \"Los ingredientes esenciales de un marmitako son bonito, patata, pimientos y cebolla\"",
@@ -268,37 +297,6 @@
     "CANARIAS"
    ],
    "img": "https://static.eldiario.es/clip/7da4d5a5-ee87-465b-a39b-06324843eb0e_facebook-aspect-ratio-1200-675_default_0_x490y93.jpg"
-  },
-  {
-   "t": "Parradisco llega a Tenerife: tres días de vino, gastronomía y música en vinilo",
-   "u": "https://diariodeavisos.elespanol.com/2026/08/parradisco-vilaflor-vino-gastronomia-vinilos/",
-   "s": "Diario de Avisos",
-   "d": "2026-08-28T23:00:00.000Z",
-   "tags": [
-    "CANARIAS",
-    "VINO"
-   ],
-   "img": "https://cdn.diariodeavisos.com/wp-content/uploads/2026/08/Pagina-45-Vilaflor-despliega-entre-el-25-y-el-27-de-septiembre-una-intensa-agenda-de-propuestas.jpg"
-  },
-  {
-   "t": "La Taberna del Chef del Mar: así es la tasca marinera de Ángel León",
-   "u": "https://www.elmundo.es/metropoli/gastronomia/2026/08/29/6a69db4bfdddff42388b45a9.html",
-   "s": "El Mundo",
-   "d": "2026-08-28T22:11:00.000Z",
-   "tags": [
-    "ALTA COCINA"
-   ],
-   "img": "https://e01-phantom-elmundo.uecdn.es/8e82ebf68849801ac6fc1f64ede32c32/crop/148x107/1300x875/f/webp/assets/multimedia/imagenes/2026/07/29/17853227795699.jpg"
-  },
-  {
-   "t": "El viaje a Italia de Paco Morales",
-   "u": "https://amp.expansion.com/estilo-vida/rincones-gastronomicos/2026/08/28/6a9171a4e5fdea871c8b457c.html",
-   "s": "Expansión",
-   "d": "2026-08-28T21:53:23.000Z",
-   "tags": [
-    "ALTA COCINA"
-   ],
-   "img": "https://e01-phantom-expansion.uecdn.es/9b3ba516c6bb5a4649b25c5fd8862f99/crop/0x241/879x827/f/webp/assets/multimedia/imagenes/2026/08/28/17879167420456.jpg"
   }
  ]
 }
