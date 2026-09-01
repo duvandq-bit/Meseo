@@ -1,6 +1,46 @@
 {
- "updated": "2026-09-01T15:28:27.564Z",
+ "updated": "2026-09-01T19:57:06.988Z",
  "items": [
+  {
+   "t": "Ferran Adrià: «El tiempo para pensar y reflexionar es lo más difícil que hay en la vida actual»",
+   "u": "https://elcapitalino.mx/rincones-y-sabores/ferran-adria-el-tiempo-para-pensar-y-reflexionar-es-lo-mas-dificil-que-hay-en-la-vida-actual/",
+   "s": "El Capitalino",
+   "d": "2026-09-01T19:48:16.000Z",
+   "tags": [
+    "ALTA COCINA"
+   ]
+  },
+  {
+   "t": "El pequeño embalse de Madrid que esconde una aldea bajo el agua y tiene un restaurante Michelin",
+   "u": "https://www.idealista.com/news/vacacional/destinos-turisticos/2026/09/01/911794-el-pequeno-embalse-de-madrid-que-esconde-una-aldea-bajo-el-agua-y-tiene-un?amp",
+   "s": "Idealista",
+   "d": "2026-09-01T18:30:04.000Z",
+   "tags": [
+    "MICHELIN"
+   ],
+   "img": "https://st3.idealista.com/news/archivos/styles/open_graph/public/2026-09/images/embalse_la_jarosa_-_panoramio.jpg?VersionId=H9YoAJ0ANtGZScEz9jNztAzfqchJZazB&itok=tV-tJjF9"
+  },
+  {
+   "t": "Clavijo apuesta por el enoturismo para generar más valor en el sector primario y diferenciar la oferta turística",
+   "u": "https://www.radiofarodelnoroeste.es/gobierno-de-canarias/item/40079-clavijo-apuesta-por-el-enoturismo-para-generar-mas-valor-en-el-sector-primario-y-diferenciar-la-oferta-turistica",
+   "s": "Radio Faro del Noroeste",
+   "d": "2026-09-01T17:57:05.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://www.radiofarodelnoroeste.es/media/k2/items/cache/64eb9dec0f1f570fb63dacaefd3a6304_M.jpg?t=20260901_182925"
+  },
+  {
+   "t": "Canarias impulsa el enoturismo ante una vendimia al alza",
+   "u": "https://maspalomasnews.com/canarias-apuesta-por-el-enoturismo-para-impulsar-el-vino-y-diferenciar-su-oferta-turistica/",
+   "s": "maspalomasnews.com",
+   "d": "2026-09-01T15:59:06.000Z",
+   "tags": [
+    "VINO",
+    "CANARIAS"
+   ],
+   "img": "https://maspalomasnews.com/wp-content/uploads/2026/09/Visita-bodegas-El-Lomo-100x100.jpeg"
+  },
   {
    "t": "Fernando Clavijo plantea el enoturismo como vía para diversificar el sector vitivinícola canario",
    "u": "https://teldeactualidad.com/art/183920/fernando-clavijo-plantea-enoturismo-para-diversificar-sector-vitivinicola-canario",
@@ -45,16 +85,6 @@
    "img": "https://estaticos-cdn.prensaiberica.es/clip/1cb33cc3-cf49-4467-adff-a600e3e9af66_16-9-discover-aspect-ratio_default_0_x609y270.jpg"
   },
   {
-   "t": "Martín Berasategui, chef: “La mejor forma de preparar las anchoas es marinarlas y acompañarlas con una mayonesa casera de aceitunas y un sofrito de ajo y cayena”",
-   "u": "https://www.infobae.com/espana/2026/09/01/martin-berasategui-chef-la-mejor-forma-de-preparar-las-anchoas-es-marinarlas-y-acompanarlas-con-una-mayonesa-casera-de-aceitunas-y-un-sofrito-de-ajo-y-cayena/",
-   "s": "Infobae",
-   "d": "2026-09-01T13:12:10.000Z",
-   "tags": [
-    "CHEF"
-   ],
-   "img": "https://www.infobae.com/resizer/v2/H3JZY4QSP5FE3FDOO6MJQO7GME.jpg?auth=46f3ca8e0f47fb5322c30f79f05eb2b794fbf754e14bfe159455911edc06cafb&smart=true&width=1200&height=630&quality=85"
-  },
-  {
    "t": "El peaje sunset: cuando el atardecer también aparece en la cuenta",
    "u": "https://www.canarias7.es/gastronomia-c7/peaje-sunset-atardecer-aparece-cuenta-20260901140000-nt_amp.html",
    "s": "Canarias7",
@@ -65,15 +95,13 @@
    "img": "https://s2.ppllstatics.com/canarias7/www/multimedia/gastronomia-c7/2026/09/01/sunset.jpg"
   },
   {
-   "t": "Canarias impulsa el enoturismo ante una vendimia al alza",
-   "u": "https://maspalomasnews.com/canarias-apuesta-por-el-enoturismo-para-impulsar-el-vino-y-diferenciar-su-oferta-turistica/",
-   "s": "maspalomasnews.com",
-   "d": "2026-09-01T12:33:39.000Z",
+   "t": "Festival MUSA México: el MUNA recupera un puente cultural con Canarias",
+   "u": "https://www.canariasenpleno.com/festival-musa-mexico-canarias/",
+   "s": "Canarias en Pleno",
+   "d": "2026-09-01T12:13:43.000Z",
    "tags": [
-    "VINO",
     "CANARIAS"
-   ],
-   "img": "https://maspalomasnews.com/wp-content/uploads/2026/09/Visita-bodegas-El-Lomo-100x100.jpeg"
+   ]
   },
   {
    "t": "Samuel Naviera y Periko Ortega crean un menú exclusivo junto a Gancedo",
@@ -97,34 +125,43 @@
    "img": "https://s1.staticld.com/2026/09/01/1200/675/imagen.jpg"
   },
   {
+   "t": "Enoturismo en Canarias: la apuesta que busca dar más valor al campo",
+   "u": "https://www.canariasenpleno.com/enoturismo-canarias-sector-primario/",
+   "s": "Canarias en Pleno",
+   "d": "2026-09-01T11:41:59.000Z",
+   "tags": [
+    "CANARIAS"
+   ]
+  },
+  {
    "t": "El Festival MUSA une Canarias con México a través de la música, la cultura y la gastronomía",
-   "u": "https://www.infobae.com/america/agencias/2026/09/01/el-festival-musa-une-canarias-con-mexico-a-traves-de-la-musica-la-cultura-y-la-gastronomia/?outputType",
-   "s": "Infobae",
-   "d": "2026-09-01T11:43:20.000Z",
+   "u": "https://forbes.es/ultima-hora/1009163/el-festival-musa-une-canarias-con-mexico-a-traves-de-la-musica-la-cultura-y-la-gastronomia/",
+   "s": "Forbes España",
+   "d": "2026-09-01T11:23:11.000Z",
    "tags": [
     "CANARIAS"
    ],
-   "img": "https://www.infobae.com/resizer/v2/CV54L3P6VBB2FKNLSNKM5BLVPQ.jpg?auth=9561f008006b530cd2bae2be96ba51d85d2ed083789eaae6d4644ef0a92c4318&smart=true&width=1200&height=630&quality=85"
+   "img": "https://forbes.es/wp-content/uploads/2026/09/fotonoticia_20260901132311_1920-1200x675.jpg"
   },
   {
    "t": "El Festival MUSA une a Canarias con México a través de la música, la cultura y la gastronomía",
-   "u": "https://www.europapress.es/islas-canarias/noticia-festival-musa-une-canarias-mexico-traves-musica-cultura-gastronomia-20260901131346.html",
-   "s": "Europa Press",
-   "d": "2026-09-01T11:13:46.000Z",
+   "u": "https://www.notimerica.com/espana/noticia-festival-musa-une-canarias-mexico-traves-musica-cultura-gastronomia-20260901131422.html",
+   "s": "Notimérica",
+   "d": "2026-09-01T11:14:22.000Z",
    "tags": [
     "CANARIAS"
    ],
-   "img": "https://img.europapress.es/fotoweb/fotonoticia_20260901131346_1200.jpg"
+   "img": "https://img.europapress.es/fotoweb/fotonoticia_20260901131422_1200.jpg"
   },
   {
-   "t": "El MUNA une Canarias y México a través de la música, la cultura y la gastronomía en el XIII Festival MUSA",
-   "u": "https://www.diariodetenerife.info/muna-une-canarias-mexico-musica-cultura-gastronomia-xiii-festival-musa/",
-   "s": "diariodetenerife.info",
-   "d": "2026-09-01T10:54:50.000Z",
+   "t": "Madring reúne grandes chefs españoles para el Gran Premio de F1",
+   "u": "https://www.madridactual.es/noticias-regionales/estilo/cocina-y-gastronomia/ifema-alta-gastronomia-cita-premio-f1-chefs-michelin-20260901-8116843.html",
+   "s": "Madrid Actual",
+   "d": "2026-09-01T10:34:02.000Z",
    "tags": [
-    "CANARIAS"
+    "ALTA COCINA"
    ],
-   "img": "https://www.diariodetenerife.info/wp-content/uploads/2026/09/Festival-MUSA-Mexico-1.jpg"
+   "img": "https://www.madridactual.es/images/stories/noticias/agencias/ep/2026/09/ifema-alta-gastronomia-cita-premio-f1-chefs-michelin.jpg"
   },
   {
    "t": "La Oliva activa un convenio de 20.384 euros para dinamizar su comercio",
@@ -138,7 +175,7 @@
   {
    "t": "Las Islas Canarias generan ya una cuarta parte de su electricidad con fuentes renovables",
    "u": "https://www.teneriffa-news.com/es/actualidad/noticias-de-canarias/las-islas-canarias-generan-ya-una-cuarta-parte-de-su-electricidad-con-fuentes-renovables_1465641.html",
-   "s": "teneriffa-news.com",
+   "s": "Teneriffa News",
    "d": "2026-09-01T09:38:26.000Z",
    "tags": [
     "CANARIAS"
@@ -146,20 +183,9 @@
    "img": "https://www.teneriffa-news.com/media/e/el-hiero-windenergie-1-2400x1350.jpg"
   },
   {
-   "t": "Clavijo apuesta por el enoturismo para generar más valor en el sector primario y diferenciar la oferta turística",
-   "u": "https://elsurdigitalgc.es/art/23896/clavijo-apuesta-por-el-enoturismo-para-generar-mas-valor-en-el-sector-primario-y-diferenciar-la-oferta-turistica/",
-   "s": "El Sur Digital Gran Canaria",
-   "d": "2026-09-01T09:13:53.000Z",
-   "tags": [
-    "VINO",
-    "CANARIAS"
-   ],
-   "img": "https://elsurdigitalgc.es/upload/images/09_2026/456_clavijo-visita-bodegas-el-lomo-2.png"
-  },
-  {
    "t": "Rusia pide a España pruebas sobre su supuesta implicación en la crisis migratoria de Ceuta",
    "u": "https://www.laopiniondemalaga.es/sociedad/2026/09/01/rusia-pide-espana-pruebas-supuesta-133830331.html",
-   "s": "La Opinión de Málaga",
+   "s": "laopiniondemalaga.es",
    "d": "2026-09-01T09:03:07.000Z",
    "tags": [
     "MICHELIN"
@@ -219,7 +245,7 @@
   {
    "t": "La Guía Michelin incorpora 47 nuevos restaurantes a su selección en España durante el verano",
    "u": "https://www.infohoreca.com/noticias/20260901/nuevos-restaurantes-guia-michelin",
-   "s": "infohoreca.com",
+   "s": "InfoHoreca",
    "d": "2026-09-01T07:56:20.000Z",
    "tags": [
     "MICHELIN"
@@ -238,7 +264,7 @@
   {
    "t": "Disminuye el número de turistas y se acortan las estancias en las Islas Canarias",
    "u": "https://www.teneriffa-news.com/es/actualidad/noticias-de-canarias/disminuye-el-numero-de-turistas-y-se-acortan-las-estancias-en-las-islas-canarias_1465638.html",
-   "s": "teneriffa-news.com",
+   "s": "Teneriffa News",
    "d": "2026-09-01T07:13:45.000Z",
    "tags": [
     "CANARIAS"
@@ -247,7 +273,7 @@
   },
   {
    "t": "El rincón de Gran Canaria con más de 100 años de historia donde comer un auténtico bocadillo de chorizo de Teror",
-   "u": "https://www.laprovincia.es/gran-canaria/2026/09/01/rincon-gran-canaria-100-anos-bocadillo-chorizo-teror-dv-133826164.html",
+   "u": "https://www.laprovincia.es/gran-canaria/2026/09/01/rincon-gran-canaria-100-anos-bocadillo-chorizo-teror-dv-133826164.amp.html",
    "s": "La Provincia",
    "d": "2026-09-01T06:57:38.000Z",
    "tags": [
@@ -275,36 +301,6 @@
     "CHEF"
    ],
    "img": "https://imagenes.heraldo.es/files/image_1920_1080/uploads/imagenes/2026/05/15/6a06d073405b99-34487181.jpeg"
-  },
-  {
-   "t": "Las Islas Canarias comienzan septiembre con mal tiempo: alerta amarilla por oleaje intenso",
-   "u": "https://www.teneriffa-news.com/es/actualidad/noticias-de-canarias/las-islas-canarias-comienzan-septiembre-con-mal-tiempo-alerta-amarilla-por-oleaje-intenso_1465634.html",
-   "s": "teneriffa-news.com",
-   "d": "2026-09-01T05:18:57.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://www.teneriffa-news.com/media/w/wellen-teneriffa-bajamar-kai-2400x1350.jpg"
-  },
-  {
-   "t": "Las mejores arrocerías de España para celebrar el Día Internacional de la Paella: deliciosas, con reconocimientos y las mejor valoradas por los usuarios",
-   "u": "https://woman.elperiodico.com/lifestyle/2026/09/01/mejores-arrocerias-espana-celebrar-dia-133545489",
-   "s": "Woman Madame Figaro",
-   "d": "2026-09-01T05:01:45.000Z",
-   "tags": [
-    "MICHELIN"
-   ],
-   "img": "https://estaticos-cdn.prensaiberica.es/clip/1b13f0ba-f86c-43b7-bd3c-c58c82bff70f_16-9-discover-aspect-ratio_default_0_x589y446.jpg"
-  },
-  {
-   "t": "Las Palmas de Gran Canaria se llena de novedades gastro: estas son las nuevas aperturas",
-   "u": "https://www.canarias7.es/gastronomia-c7/restaurantes/palmas-gran-canaria-llena-novedades-gastro-nuevas-20260901070000-nt.html",
-   "s": "Canarias7",
-   "d": "2026-09-01T05:00:04.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://s3.ppllstatics.com/canarias7/www/multimedia/gastronomia-c7/2026/08/31/portada-kF6D-U301507672277IuE-1200x840@Canarias7.jpg"
   }
  ]
 }
