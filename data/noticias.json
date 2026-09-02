@@ -1,6 +1,36 @@
 {
- "updated": "2026-09-01T19:57:06.988Z",
+ "updated": "2026-09-02T01:03:19.205Z",
  "items": [
+  {
+   "t": "Padylla (02/09/26)",
+   "u": "https://www.eldia.es/humor/2026/09/02/padylla-02-09-26-133857163.html",
+   "s": "Eldía",
+   "d": "2026-09-01T23:17:05.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://estaticos-cdn.prensaiberica.es/clip/cd22ed07-30ba-465c-8f32-03d172b74d9a_16-9-aspect-ratio_default_0.jpg"
+  },
+  {
+   "t": "Santy (02/09/26)",
+   "u": "https://www.eldia.es/humor/2026/09/02/santy-02-09-26-133857161.html",
+   "s": "Eldía",
+   "d": "2026-09-01T23:14:48.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://estaticos-cdn.prensaiberica.es/clip/b1c2edcd-b06d-48bb-9b21-7072e93eecb0_16-9-aspect-ratio_default_0.jpg"
+  },
+  {
+   "t": "Los Cabos se reafirma como gran destino gastronómico con la Guía MICHELIN 2026",
+   "u": "https://www.expreso.info/noticias/gastronomia/114225_los_cabos_se_reafirma_como_gran_destino_gastronomico_con_la_guia",
+   "s": "Expreso - Diario de viajes y turismo",
+   "d": "2026-09-01T20:02:40.000Z",
+   "tags": [
+    "MICHELIN"
+   ],
+   "img": "https://www.expreso.info/files/styles/expreso_theme_teaser_secundario_desktop/public/2026-08/Los_Cabos_gastro4.jpg?itok=ZTn4uGwO"
+  },
   {
    "t": "Ferran Adrià: «El tiempo para pensar y reflexionar es lo más difícil que hay en la vida actual»",
    "u": "https://elcapitalino.mx/rincones-y-sabores/ferran-adria-el-tiempo-para-pensar-y-reflexionar-es-lo-mas-dificil-que-hay-en-la-vida-actual/",
@@ -21,14 +51,14 @@
    "img": "https://st3.idealista.com/news/archivos/styles/open_graph/public/2026-09/images/embalse_la_jarosa_-_panoramio.jpg?VersionId=H9YoAJ0ANtGZScEz9jNztAzfqchJZazB&itok=tV-tJjF9"
   },
   {
-   "t": "Clavijo apuesta por el enoturismo para generar más valor en el sector primario y diferenciar la oferta turística",
-   "u": "https://www.radiofarodelnoroeste.es/gobierno-de-canarias/item/40079-clavijo-apuesta-por-el-enoturismo-para-generar-mas-valor-en-el-sector-primario-y-diferenciar-la-oferta-turistica",
-   "s": "Radio Faro del Noroeste",
-   "d": "2026-09-01T17:57:05.000Z",
+   "t": "Jesús Sánchez, chef: “Disfruto conduciendo un auto eléctrico; nos hemos adaptado a un modelo de viaje diferente, en el que también encontramos satisfacciones”",
+   "u": "https://www.clarin.com/internacional/jesus-sanchez-chef-disfruto-conduciendo-auto-electrico-adaptado-modelo-viaje-diferente-encontramos-satisfacciones_0_7VJoAX50n3.html",
+   "s": "Clarin.com",
+   "d": "2026-09-01T16:27:20.000Z",
    "tags": [
-    "CANARIAS"
+    "ALTA COCINA"
    ],
-   "img": "https://www.radiofarodelnoroeste.es/media/k2/items/cache/64eb9dec0f1f570fb63dacaefd3a6304_M.jpg?t=20260901_182925"
+   "img": "https://www.clarin.com/img/2026/09/01/4Ofq3_DlH_2000x1500__1.jpg"
   },
   {
    "t": "Canarias impulsa el enoturismo ante una vendimia al alza",
@@ -42,15 +72,24 @@
    "img": "https://maspalomasnews.com/wp-content/uploads/2026/09/Visita-bodegas-El-Lomo-100x100.jpeg"
   },
   {
-   "t": "Fernando Clavijo plantea el enoturismo como vía para diversificar el sector vitivinícola canario",
-   "u": "https://teldeactualidad.com/art/183920/fernando-clavijo-plantea-enoturismo-para-diversificar-sector-vitivinicola-canario",
-   "s": "Telde Actualidad",
-   "d": "2026-09-01T15:24:20.000Z",
+   "t": "Clavijo apuesta por el enoturismo para generar más valor en el sector primario y diferenciar la oferta turística",
+   "u": "https://www.digitalfarocanarias.com/index.php/2026/09/01/clavijo-apuesta-por-el-enoturismo-para-generar-mas-valor-en-el-sector-primario-y-diferenciar-la-oferta-turistica/",
+   "s": "Digital Faro Canarias",
+   "d": "2026-09-01T15:28:54.000Z",
    "tags": [
-    "VINO",
     "CANARIAS"
    ],
-   "img": "https://teldeactualidad.b-cdn.net/upload/images/09_2026/8159_visita-bodegas-el-lomo.jpeg"
+   "img": "https://www.digitalfarocanarias.com/wp-content/uploads/2026/09/Visita-bodegas-El-Lomo-1.jpeg"
+  },
+  {
+   "t": "Descubre el embalse más reducido de la Sierra de Guadarrama, rodeado de pinos y con un restaurante reconocido por la Guía Michelin",
+   "u": "https://www.nuevaradio.org/2026/09/01/descubre-el-embalse-mas-reducido-de-la-sierra-de-guadarrama-rodeado-de-pinos-y-con-un-restaurante-reconocido-por-la-guia-michelin/",
+   "s": "Nuevaradio",
+   "d": "2026-09-01T15:26:45.000Z",
+   "tags": [
+    "MICHELIN"
+   ],
+   "img": "https://www.nuevaradio.org/wp-content/uploads/2026/09/a75ff51b4fc34b5ec17870ac27a348da.jpg"
   },
   {
    "t": "El sector vitivinícola canario afronta la vendimia con mejores previsiones tras dos años de descenso",
@@ -64,16 +103,6 @@
    "img": "https://maspalomasahora.com/upload/images/09_2026/5038_visita-del-ejecutivo-canario-a-las-bodegas-el-lomo-maspalomas-ahora.jpg"
   },
   {
-   "t": "Descubre el embalse más reducido de la Sierra de Guadarrama, rodeado de pinos y con un restaurante reconocido por la Guía Michelin",
-   "u": "https://www.nuevaradio.org/2026/09/01/descubre-el-embalse-mas-reducido-de-la-sierra-de-guadarrama-rodeado-de-pinos-y-con-un-restaurante-reconocido-por-la-guia-michelin/",
-   "s": "Nuevaradio",
-   "d": "2026-09-01T14:22:01.000Z",
-   "tags": [
-    "MICHELIN"
-   ],
-   "img": "https://www.nuevaradio.org/wp-content/uploads/2026/09/a75ff51b4fc34b5ec17870ac27a348da.jpg"
-  },
-  {
    "t": "La vendimia de Lanzarote encara su recta final con una previsión de más de tres millones de kilos de uva",
    "u": "https://www.laprovincia.es/lanzarote/2026/09/01/vendimia-lanzarote-encara-recta-final-133845195.html",
    "s": "La Provincia",
@@ -83,6 +112,16 @@
     "CANARIAS"
    ],
    "img": "https://estaticos-cdn.prensaiberica.es/clip/1cb33cc3-cf49-4467-adff-a600e3e9af66_16-9-discover-aspect-ratio_default_0_x609y270.jpg"
+  },
+  {
+   "t": "Martín Berasategui, chef: “La mejor forma de preparar las anchoas es marinarlas y acompañarlas con una mayonesa casera de aceitunas y un sofrito de ajo y cayena”",
+   "u": "https://www.infobae.com/espana/2026/09/01/martin-berasategui-chef-la-mejor-forma-de-preparar-las-anchoas-es-marinarlas-y-acompanarlas-con-una-mayonesa-casera-de-aceitunas-y-un-sofrito-de-ajo-y-cayena/",
+   "s": "Infobae",
+   "d": "2026-09-01T13:13:00.000Z",
+   "tags": [
+    "CHEF"
+   ],
+   "img": "https://www.infobae.com/resizer/v2/H3JZY4QSP5FE3FDOO6MJQO7GME.jpg?auth=46f3ca8e0f47fb5322c30f79f05eb2b794fbf754e14bfe159455911edc06cafb&smart=true&width=1200&height=630&quality=85"
   },
   {
    "t": "El peaje sunset: cuando el atardecer también aparece en la cuenta",
@@ -125,6 +164,16 @@
    "img": "https://s1.staticld.com/2026/09/01/1200/675/imagen.jpg"
   },
   {
+   "t": "El Festival MUSA une Canarias con México a través de la música, la cultura y la gastronomía",
+   "u": "https://www.infobae.com/america/agencias/2026/09/01/el-festival-musa-une-canarias-con-mexico-a-traves-de-la-musica-la-cultura-y-la-gastronomia/?outputType",
+   "s": "Infobae",
+   "d": "2026-09-01T11:43:20.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://www.infobae.com/resizer/v2/CV54L3P6VBB2FKNLSNKM5BLVPQ.jpg?auth=9561f008006b530cd2bae2be96ba51d85d2ed083789eaae6d4644ef0a92c4318&smart=true&width=1200&height=630&quality=85"
+  },
+  {
    "t": "Enoturismo en Canarias: la apuesta que busca dar más valor al campo",
    "u": "https://www.canariasenpleno.com/enoturismo-canarias-sector-primario/",
    "s": "Canarias en Pleno",
@@ -134,24 +183,24 @@
    ]
   },
   {
-   "t": "El Festival MUSA une Canarias con México a través de la música, la cultura y la gastronomía",
-   "u": "https://forbes.es/ultima-hora/1009163/el-festival-musa-une-canarias-con-mexico-a-traves-de-la-musica-la-cultura-y-la-gastronomia/",
-   "s": "Forbes España",
-   "d": "2026-09-01T11:23:11.000Z",
+   "t": "El restaurante español de bravas, salmorejo, tapas y tortilla que ha elegido Ferran Torres en París",
+   "u": "https://www.eldebate.com/estilo-vida/restaurantes/20260901/restaurante-espanol-bravas-salmorejo-tapas-tortilla-elegido-ferran-torres-paris_454109.html",
+   "s": "El Debate",
+   "d": "2026-09-01T10:59:39.000Z",
    "tags": [
-    "CANARIAS"
+    "ALTA COCINA"
    ],
-   "img": "https://forbes.es/wp-content/uploads/2026/09/fotonoticia_20260901132311_1920-1200x675.jpg"
+   "img": "https://www.eldebate.com/files/article_social/uploads/2026/09/01/6a96a76f3d940.jpeg"
   },
   {
-   "t": "El Festival MUSA une a Canarias con México a través de la música, la cultura y la gastronomía",
-   "u": "https://www.notimerica.com/espana/noticia-festival-musa-une-canarias-mexico-traves-musica-cultura-gastronomia-20260901131422.html",
-   "s": "Notimérica",
-   "d": "2026-09-01T11:14:22.000Z",
+   "t": "El MUNA une Canarias y México a través de la música, la cultura y la gastronomía en el XIII Festival MUSA",
+   "u": "https://www.diariodetenerife.info/muna-une-canarias-mexico-musica-cultura-gastronomia-xiii-festival-musa/",
+   "s": "diariodetenerife.info",
+   "d": "2026-09-01T10:54:50.000Z",
    "tags": [
     "CANARIAS"
    ],
-   "img": "https://img.europapress.es/fotoweb/fotonoticia_20260901131422_1200.jpg"
+   "img": "https://www.diariodetenerife.info/wp-content/uploads/2026/09/Festival-MUSA-Mexico-1.jpg"
   },
   {
    "t": "Madring reúne grandes chefs españoles para el Gran Premio de F1",
@@ -162,15 +211,6 @@
     "ALTA COCINA"
    ],
    "img": "https://www.madridactual.es/images/stories/noticias/agencias/ep/2026/09/ifema-alta-gastronomia-cita-premio-f1-chefs-michelin.jpg"
-  },
-  {
-   "t": "La Oliva activa un convenio de 20.384 euros para dinamizar su comercio",
-   "u": "https://www.canariasenpleno.com/comercio-local-la-oliva/",
-   "s": "Canarias en Pleno",
-   "d": "2026-09-01T10:08:01.000Z",
-   "tags": [
-    "CANARIAS"
-   ]
   },
   {
    "t": "Las Islas Canarias generan ya una cuarta parte de su electricidad con fuentes renovables",
@@ -191,16 +231,6 @@
     "MICHELIN"
    ],
    "img": "https://estaticos-cdn.prensaiberica.es/clip/4cc567fb-bdaf-43f1-9b2f-d62548bdb11c_16-9-discover-aspect-ratio_default_0_x1200y533.jpg"
-  },
-  {
-   "t": "Gran destrucción en la población chilena de Ñuble tras el paso de un tornado",
-   "u": "https://www.elperiodicodearagon.com/videos/internacional/2026/09/01/gran-destruccion-poblacion-chilena-nuble-133830270.html",
-   "s": "El Periódico de Aragón",
-   "d": "2026-09-01T09:01:06.000Z",
-   "tags": [
-    "MICHELIN"
-   ],
-   "img": "https://estaticos-cdn.prensaiberica.es/clip/3af794fa-6b17-4065-b7a9-5b3fa29f1ac7_16-9-discover-aspect-ratio_default_0_x960y360.jpg"
   },
   {
    "t": "El restaurante de carretera definitivo está en este pueblo medieval de Madrid: Martín Berasategui confiesa su secreto mejor guardado",
@@ -233,19 +263,9 @@
    "img": "https://estaticos-cdn.prensaiberica.es/clip/6b007381-3180-4b0a-b483-7779ff3fbd0a_16-9-aspect-ratio_default_0_x585y368.jpg"
   },
   {
-   "t": "Tinajo impulsa su oferta gastronómica con apoyo del Gobierno de Canarias",
-   "u": "https://lavozcanaria.com/suroeste-lanzarote/general/tinajo-impulsa-su-oferta-gastronomica-con-apoyo-del-gobierno-de-canarias",
-   "s": "La Voz Canaria",
-   "d": "2026-09-01T07:57:28.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://lavozcanaria.com/media/2026/09/tinajo-impulsa-su-oferta-gastronomica-con-apoyo-del-gobierno-de-canarias.webp"
-  },
-  {
    "t": "La Guía Michelin incorpora 47 nuevos restaurantes a su selección en España durante el verano",
    "u": "https://www.infohoreca.com/noticias/20260901/nuevos-restaurantes-guia-michelin",
-   "s": "InfoHoreca",
+   "s": "infohoreca.com",
    "d": "2026-09-01T07:56:20.000Z",
    "tags": [
     "MICHELIN"
@@ -273,34 +293,13 @@
   },
   {
    "t": "El rincón de Gran Canaria con más de 100 años de historia donde comer un auténtico bocadillo de chorizo de Teror",
-   "u": "https://www.laprovincia.es/gran-canaria/2026/09/01/rincon-gran-canaria-100-anos-bocadillo-chorizo-teror-dv-133826164.amp.html",
+   "u": "https://www.laprovincia.es/gran-canaria/2026/09/01/rincon-gran-canaria-100-anos-bocadillo-chorizo-teror-dv-133826164.html",
    "s": "La Provincia",
    "d": "2026-09-01T06:57:38.000Z",
    "tags": [
     "CANARIAS"
    ],
    "img": "https://estaticos-cdn.prensaiberica.es/clip/781fd9ca-10f9-4672-b9c6-4045b79f765e_16-9-discover-aspect-ratio_default_0_x617y418.jpg"
-  },
-  {
-   "t": "La línea de altura de Bodega Tempus",
-   "u": "https://www.eldia.es/ocio/gastronomia/2026/09/01/linea-altura-bodega-tempus-133826162.amp.html",
-   "s": "Eldía",
-   "d": "2026-09-01T06:34:12.000Z",
-   "tags": [
-    "VINO",
-    "CANARIAS"
-   ],
-   "img": "https://estaticos-cdn.prensaiberica.es/clip/f2e39390-590a-462b-8ae6-943cb50614da_16-9-discover-aspect-ratio_default_0_x720y360.jpg"
-  },
-  {
-   "t": "Los chefs vascos coinciden: \"Para cocinar las mejores lentejas, necesitas un refrito de oliva, ajo y pimentón\"",
-   "u": "https://www.heraldo.es/noticias/gastronomia/2026/09/01/chefs-vascos-coinciden-cocinar-mejores-lentejas-necesitas-refrto-oliva-ajo-pimenton-2014325.html",
-   "s": "heraldo.es",
-   "d": "2026-09-01T06:32:13.000Z",
-   "tags": [
-    "CHEF"
-   ],
-   "img": "https://imagenes.heraldo.es/files/image_1920_1080/uploads/imagenes/2026/05/15/6a06d073405b99-34487181.jpeg"
   }
  ]
 }
