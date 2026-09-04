@@ -1,16 +1,35 @@
 {
- "updated": "2026-09-03T19:52:58.838Z",
+ "updated": "2026-09-04T01:01:33.595Z",
  "items": [
   {
-   "t": "El viñedo más alto de Europa está en Tenerife: así es el pueblo que desafía a los Alpes",
-   "u": "https://www.noticiasdelvino.com/escapadas/2026/09/03/el-vinedo-mas-alto-de-europa-esta-en-tenerife-asi-es-el-pueblo-que-desafia-a-los-alpes-66331/",
-   "s": "Noticias del Vino",
-   "d": "2026-09-03T17:24:34.000Z",
+   "t": "Ferran Adrià, chef estrella del D*na Festival Dénia",
+   "u": "https://www.lasprovincias.es/gastronomia/ferran-adria-chef-estrella-dna-festival-denia-20260903153007-nt.html",
+   "s": "Las Provincias",
+   "d": "2026-09-03T22:43:58.000Z",
    "tags": [
-    "VINO",
+    "ALTA COCINA"
+   ],
+   "img": "https://s3.ppllstatics.com/lasprovincias/www/multimedia/gastronomia/2026/09/03/presentaciondna-RkuxGqs7gvFKNrEaofP4HhI-1200x840@Las%20Provincias.jpg"
+  },
+  {
+   "t": "Pez Gordo en Puerto de la Cruz: donde las Islas Canarias se funden con Europa",
+   "u": "https://www.teneriffa-news.com/es/puerto-de-la-cruz-es/cafeterias-bares-y-restaurantes-en-puerto-de-la-cruz/pez-gordo-fusion-canarias-europa_1464922.html",
+   "s": "Teneriffa News",
+   "d": "2026-09-03T22:04:15.000Z",
+   "tags": [
     "CANARIAS"
    ],
-   "img": "https://www.noticiasdelvino.com/wp-content/uploads/El-vinedo-mas-alto-de-Europa-esta-en-Tenerife.jpg"
+   "img": "https://www.teneriffa-news.com/media/p/pez-gordo-puerto-de-la-cruz-innen-2400x1350.jpg"
+  },
+  {
+   "t": "El restaurante de carretera definitivo está en este pueblo medieval de Madrid: Martín Berasategui confiesa su secreto mejor guardado",
+   "u": "https://www.noticiasdelvino.com/escapadas/2026/09/03/el-restaurante-de-carretera-definitivo-esta-en-este-pueblo-medieval-de-madrid-martin-berasategui-confiesa-su-secreto-mejor-guardado-74843/",
+   "s": "Noticias del Vino",
+   "d": "2026-09-03T21:35:11.000Z",
+   "tags": [
+    "CHEF"
+   ],
+   "img": "https://www.noticiasdelvino.com/wp-content/uploads/image-583.png"
   },
   {
    "t": "Comercio, gastronomía y diversión familiar se dan cita este sábado en la Feria de Saldos de La Cuesta",
@@ -37,17 +56,28 @@
    "d": "2026-09-03T14:37:47.000Z",
    "tags": [
     "CANARIAS"
-   ]
+   ],
+   "img": "https://financialfood.es/wp-content/uploads/2026/09/200-GR-Meridiano-Klepierre-030926.jpg"
   },
   {
    "t": "Los chefs confirman: el sandwich mixto perfecto no lleva jamon york, lleva ibérico y mozarella",
    "u": "https://www.vanitatis.elconfidencial.com/gastronomia/2026-09-03/sandwich-jamon-iberico-mozzarella-berasategui-jose-andres-queso-receta-1qrt_4417157/",
-   "s": "Vanitatis",
+   "s": "vanitatis.elconfidencial.com",
    "d": "2026-09-03T14:19:00.000Z",
    "tags": [
     "CHEF"
    ],
    "img": "https://images.ecestaticos.com/omOX8znxTXHdR77NVDHw1M-3d8o=/0x0:1600x900/600x315/filters:fill(white):format(jpg):quality(99):watermark(f.elconfidencial.com/file/0f2/6d9/13e/0f26d913e1b27ca111e62b656aa354da.png,0,275,1)/f.elconfidencial.com/original/036/1e6/a87/0361e6a8709c024dd6e424c2866b15a4.jpg"
+  },
+  {
+   "t": "Woki: la startup argentina que lleva IA a la Guía Michelin",
+   "u": "https://ecosistemastartup.com/woki-la-startup-argentina-que-lleva-ia-a-la-guia-michelin/",
+   "s": "El Ecosistema Startup",
+   "d": "2026-09-03T14:07:02.000Z",
+   "tags": [
+    "MICHELIN"
+   ],
+   "img": "https://ecosistemastartup.com/wp-content/uploads/2026/09/woki-startup-ia-michelin-1200x675.jpg"
   },
   {
    "t": "“La Frontera al rojo vivo” una nueva iniciativa gastronómica",
@@ -59,14 +89,13 @@
    ]
   },
   {
-   "t": "La plaza del Príncipe de Santa Cruz de Tenerife, cerrada por la presencia de ratas",
-   "u": "https://www.eldiario.es/canariasahora/tenerifeahora/santa_cruz/plaza-principe-santa-cruz-tenerife-cerrada-presencia-ratas_1_13485390.html",
-   "s": "elDiario.es",
-   "d": "2026-09-03T13:45:52.000Z",
+   "t": "Meridiano alcanza el lleno en restauración con 200 GR Burguer",
+   "u": "https://revistacentroscomerciales.com/noticias/marcas/meridiano-alcanza-el-100-en-restauracion-con-200-gr-burguer/",
+   "s": "Revista Centros Comerciales",
+   "d": "2026-09-03T13:39:48.000Z",
    "tags": [
     "CANARIAS"
-   ],
-   "img": "https://static.eldiario.es/clip/55603f55-6170-4523-8e34-33f4a27e33bf_facebook-aspect-ratio-1200-675_default_0.jpg"
+   ]
   },
   {
    "t": "IN’CAMILO: El chef cusqueño que trabajó en restaurantes Michelin y hoy llena su local en Lince",
@@ -80,14 +109,14 @@
    "img": "https://trome.com/resizer/v2/HEOKAEUUS5HL3CR6HULPNIUMEY.jpg?auth=c964a8f216fd3fe0f18ef9f39706cece397aac8106f7761b966d419d06843486&width=980&height=528&quality=75&smart=true"
   },
   {
-   "t": "Canarias presenta su propuesta en la Mercedes-Benz Fashion Week Madrid con nueve firmas locales",
-   "u": "https://canariastimes.com/canarias/cultura-ocio/canarias-propuesta-mercedes-benz-fashion-week-madrid-nueve-firmas/",
-   "s": "Canarias Times",
-   "d": "2026-09-03T13:26:16.000Z",
+   "t": "Las vacaciones en la playa: una auténtica delicia",
+   "u": "https://www.teneriffa-news.com/es/los-lectores-escriben-para-los-lectores/una-lectora-dedica-un-poema-a-la-playa-jardin-cerrada_1464820.html",
+   "s": "Teneriffa News",
+   "d": "2026-09-03T13:30:35.000Z",
    "tags": [
     "CANARIAS"
    ],
-   "img": "https://cdn.canariastimes.com/2026/09/WhatsApp-Image-2026-09-03-at-12.13.19.jpeg"
+   "img": "https://www.teneriffa-news.com/media/p/playa-jardin-teneriffa-gesperrt-abwasser-2400x1350.jpg"
   },
   {
    "t": "Traslado de orcas en Loro Parque, en Tenerife, plantea alternativa de la UE a los parques de ballenas",
@@ -152,20 +181,9 @@
    "img": "https://www.lavanguardia.com/files/og_thumbnail/uploads/2026/09/03/6a99561faadcb.jpeg"
   },
   {
-   "t": "Martín Berasategui, chef Michelin, se rinde a uno de sus compañeros de profesión: “Me parece increíble lo que ha hecho Karlos Arguiñano”",
-   "u": "https://www.directoalpaladar.com/consumidores/martin-berasategui-chef-michelin-se-rinde-a-uno-sus-companeros-profesion-me-parece-increible-que-ha-hecho-karlos-arguinano/amp",
-   "s": "Directo al Paladar",
-   "d": "2026-09-03T11:07:57.000Z",
-   "tags": [
-    "CHEF",
-    "MICHELIN"
-   ],
-   "img": "https://i.blogs.es/5abcd8/martin-karlos/840_560.jpeg"
-  },
-  {
    "t": "La gastronomía de Gran Canaria se promociona en Madrid de la mano de Iberia Express",
    "u": "https://www.canarias7.es/gastronomia-c7/gastronomia-gran-canaria-promociona-madrid-mano-iberia-20260903120311-nt.html",
-   "s": "Canarias7",
+   "s": "canarias7.es",
    "d": "2026-09-03T11:03:11.000Z",
    "tags": [
     "CANARIAS"
@@ -182,6 +200,17 @@
     "MICHELIN"
    ],
    "img": "https://www.hoyaragon.es/media/hoyaragon/images/2026/09/03/2026090313020631786.jpg"
+  },
+  {
+   "t": "Martín Berasategui, chef Michelin, se rinde a uno de sus compañeros de profesión: “Me parece increíble lo que ha hecho Karlos Arguiñano”",
+   "u": "https://www.directoalpaladar.com/consumidores/martin-berasategui-chef-michelin-se-rinde-a-uno-sus-companeros-profesion-me-parece-increible-que-ha-hecho-karlos-arguinano",
+   "s": "Directo al Paladar",
+   "d": "2026-09-03T11:01:49.000Z",
+   "tags": [
+    "CHEF",
+    "MICHELIN"
+   ],
+   "img": "https://i.blogs.es/5abcd8/martin-karlos/840_560.jpeg"
   },
   {
    "t": "Del Balseiro a la Guía Michelin: la startup argentina que aplica IA en los mejores restaurantes para potenciar sus ventas",
@@ -243,6 +272,27 @@
    ]
   },
   {
+   "t": "El restaurate favorito de Berasategui: 2 Soles Repsol, los mejores mariscos y especializado en brasa",
+   "u": "https://cronicavasca.elespanol.com/gastronomia/20260903/restaurate-favorito-berasategui-soles-repsol-mariscos-especializado-trt/1003742791574_0.html",
+   "s": "Crónica Vasca",
+   "d": "2026-09-03T10:21:56.000Z",
+   "tags": [
+    "CHEF"
+   ],
+   "img": "https://a2.elespanol.com/k/imgp/cms/asociados/565151.jpg?p=f:jpeg/w:1706/h:960&h=X_QGLQ6B"
+  },
+  {
+   "t": "Los quesos y vinos de Fuerteventura se promocionan en Madrid de la mano de Iberia Express",
+   "u": "https://www.diariodefuerteventura.com/noticia/los-quesos-y-vinos-de-fuerteventura-se-promocionan-en-madrid-de-la-mano-de-iberia-express",
+   "s": "Diario de Fuerteventura",
+   "d": "2026-09-03T09:03:16.000Z",
+   "tags": [
+    "VINO",
+    "CANARIAS"
+   ],
+   "img": "https://www.diariodefuerteventura.com/sites/default/files/archivos/2015/Abril%202015/20250404_feaga_quesos.jpg"
+  },
+  {
    "t": "La villa juguetera de Alicante que conquista por su cocina: así es el pueblo donde mejor se come de España",
    "u": "https://www.noticiasdelvino.com/restaurantes/2026/09/03/la-villa-juguetera-de-alicante-que-conquista-por-su-cocina-asi-es-el-pueblo-donde-mejor-se-come-de-espana-74836/",
    "s": "Noticias del Vino",
@@ -251,56 +301,6 @@
     "MICHELIN"
    ],
    "img": "https://www.noticiasdelvino.com/wp-content/uploads/restaurantes-5.jpg"
-  },
-  {
-   "t": "Los quesos y vinos de Fuerteventura se promocionan en Madrid de la mano de Iberia Express",
-   "u": "https://www.lavozdefuerteventura.com/articulo/turismo/quesos-vinos-fuerteventura-promocionan-madrid-mano-iberia-express/20260903094203030995.amp.html",
-   "s": "la voz de fuerteventura",
-   "d": "2026-09-03T08:42:03.000Z",
-   "tags": [
-    "VINO",
-    "CANARIAS"
-   ],
-   "img": "https://www.lavozdefuerteventura.com/media/lavozdefuerteventura/images/2026/09/03/2026090309415516055.jpg"
-  },
-  {
-   "t": "“Prohibida la entrada a influencers”: la polémica que divide a restaurantes y creadores de contenido",
-   "u": "https://www.hosteleriasalamanca.es/noticias-hosteleria/septiembre-2026/prohibida-entrada-influencers-polemica-divide-restaurantes-y-creadores-contenido",
-   "s": "Hostelería Salamanca",
-   "d": "2026-09-03T08:15:00.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://www.hosteleriasalamanca.es/images/contents/4b45a674-349e-44e1-a02c-7558c3818a55-1788423973.jpg"
-  },
-  {
-   "t": "El bar de Gran Canaria que lleva abierto desde 1963 y al que muchos acuden por su especialidad: las costillas al horno",
-   "u": "https://www.laprovincia.es/gran-canaria/2026/09/03/bar-gran-canaria-lleva-abierto-1963-costillas-horno-dv-133899827.html",
-   "s": "La Provincia",
-   "d": "2026-09-03T07:57:09.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://estaticos-cdn.prensaiberica.es/clip/c321ebcc-0646-4be2-8947-2cb71014e582_16-9-discover-aspect-ratio_default_0_x697y701.jpg"
-  },
-  {
-   "t": "El Burger Fest Canarias 2026 llega a Santa Cruz de La Palma: horarios, cartel musical y más de 15 restaurantes de hamburguesas",
-   "u": "https://elfarodelapalma.es/burger-fest-canarias-2026-santa-cruz-de-la-palma/",
-   "s": "elfarodelapalma.es",
-   "d": "2026-09-03T07:46:33.000Z",
-   "tags": [
-    "CANARIAS"
-   ]
-  },
-  {
-   "t": "El centro comercial Meridiano alcanza el 100% de ocupación en restauración con la apertura de 200 GR Burger",
-   "u": "https://elinmobiliariomesames.com/noticias-inmobiliarias/el-centro-comercial-meridiano-alcanza-el-100-de-ocupacion-en-restauracion-con-la-apertura-de-200-gr-burger/",
-   "s": "El Inmobiliario mes a mes",
-   "d": "2026-09-03T07:35:59.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://elinmobiliariomesames.com/wp-content/uploads/2026/09/200-GR-Meridiano-e1788423951337.jpg"
   }
  ]
 }
