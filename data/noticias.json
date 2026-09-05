@@ -1,6 +1,64 @@
 {
- "updated": "2026-09-04T19:39:04.572Z",
+ "updated": "2026-09-05T01:01:02.108Z",
  "items": [
+  {
+   "t": "Cinco restaurantes de Terrasa que aparecen en la Guía Michelín: 'Una experiencia gastronómica diferente pero muy interesante'",
+   "u": "https://www.elperiodico.com/es/gastronomia/20260904/restaurantes-terrassa-guia-michelin-dv-loc-107059229",
+   "s": "elperiodico.com",
+   "d": "2026-09-04T23:29:09.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://estaticos-cdn.prensaiberica.es/clip/2442eff9-8607-4597-91f4-8cd2d177e340_16-9-discover-aspect-ratio_default_0.jpg"
+  },
+  {
+   "t": "Índice de contenidos del portal Teneriffa News",
+   "u": "https://www.teneriffa-news.com/es/mapa-web",
+   "s": "Teneriffa News",
+   "d": "2026-09-04T23:16:57.000Z",
+   "tags": [
+    "CANARIAS"
+   ]
+  },
+  {
+   "t": "Santy (05/09/26)",
+   "u": "https://www.eldia.es/humor/2026/09/05/santy-05-09-26-133970421.html",
+   "s": "Eldía",
+   "d": "2026-09-04T22:59:12.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://estaticos-cdn.prensaiberica.es/clip/b1c2edcd-b06d-48bb-9b21-7072e93eecb0_16-9-aspect-ratio_default_0.jpg"
+  },
+  {
+   "t": "Pez Gordo en Puerto de la Cruz: donde las Islas Canarias se funden con Europa",
+   "u": "https://www.teneriffa-news.com/es/puerto-de-la-cruz-es/cafeterias-bares-y-restaurantes-en-puerto-de-la-cruz/pez-gordo-fusion-canarias-europa_1464922.html",
+   "s": "Teneriffa News",
+   "d": "2026-09-04T22:17:36.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://www.teneriffa-news.com/media/p/pez-gordo-puerto-de-la-cruz-innen-2400x1350.jpg"
+  },
+  {
+   "t": "500 euros y DJs en directo: así es el Burger Fest que llena La Palma de hamburguesas este fin de semana",
+   "u": "https://estenerife.com/burger-fest-palma-2026-hamburguesas-djs-premios/",
+   "s": "estenerife.com",
+   "d": "2026-09-04T22:11:49.000Z",
+   "tags": [
+    "CANARIAS"
+   ]
+  },
+  {
+   "t": "Vallarta Nayarit Gastronómica 2026 reunirá a chefs de México y España",
+   "u": "https://amexi.com.mx/espectaculos/vallarta-nayarit-gastronomica-2026-reunira-a-chefs-de-mexico-y-espana/",
+   "s": "Amexi",
+   "d": "2026-09-04T20:10:16.000Z",
+   "tags": [
+    "MICHELIN"
+   ],
+   "img": "https://amexi.com.mx/wp-content/uploads/2026/09/vallarta.jpg"
+  },
   {
    "t": "El refugio de Tenerife donde el lujo atlántico y la alta gastronomía marcan el ritmo del viaje",
    "u": "https://okdiario.com/lifestyle/refugio-tenerife-donde-lujo-atlantico-alta-gastronomia-marcan-ritmo-del-viaje-20230088",
@@ -22,11 +80,12 @@
    "img": "https://www.teneriffa-news.com/media/f/flughafen-teneriffa-nord-innen-2400x1350.jpg"
   },
   {
-   "t": "Índice de contenidos del portal Teneriffa News",
-   "u": "https://www.teneriffa-news.com/es/mapa-web",
-   "s": "Teneriffa News",
-   "d": "2026-09-04T17:25:31.000Z",
+   "t": "Viticultura heroica canaria: 105 premios y un golpe histórico en el CERVIM",
+   "u": "https://www.canariasenpleno.com/viticultura-heroica-canaria-premios-cervim/",
+   "s": "Canarias en Pleno",
+   "d": "2026-09-04T18:00:37.000Z",
    "tags": [
+    "VINO",
     "CANARIAS"
    ]
   },
@@ -38,17 +97,8 @@
    "tags": [
     "VINO",
     "CANARIAS"
-   ]
-  },
-  {
-   "t": "Canarian Wines Win 105 Awards at Mondial des Vins Extrêmes",
-   "u": "https://lavozcanaria.com/en/abona/general/canarian-wines-triumph-at-mondial-des-vins-extremes",
-   "s": "La Voz Canaria",
-   "d": "2026-09-04T15:59:56.000Z",
-   "tags": [
-    "VINO",
-    "CANARIAS"
-   ]
+   ],
+   "img": "https://lavozcanaria.com/media/2026/09/vinos-canarios-triunfan-en-el-mondial-des-vins-extremes.webp"
   },
   {
    "t": "Anuncian 18va. edición de Vallarta-Nayarit Gastronómica",
@@ -61,7 +111,7 @@
   },
   {
    "t": "Bodegas Reverón se integra oficialmente en la red de Enoturismo Spain",
-   "u": "https://www.vinetur.com/20260904106621/bodegas-reveron-se-integra-oficialmente-en-la-red-de-enoturismo-spain.html",
+   "u": "https://www.vinetur.com/amp/20260904106621/bodegas-reveron-se-integra-oficialmente-en-la-red-de-enoturismo-spain.html",
    "s": "Vinetur",
    "d": "2026-09-04T15:19:04.000Z",
    "tags": [
@@ -91,16 +141,6 @@
    "img": "https://www.teneriffa-news.com/media/p/playa-jardin-puerto-de-la-cruz-teneriffa-abwasser-sperrung-2400x1350.jpg"
   },
   {
-   "t": "Viticultura heroica canaria: 105 premios y un golpe histórico en el CERVIM",
-   "u": "https://www.canariasenpleno.com/viticultura-heroica-canaria-premios-cervim/",
-   "s": "Canarias en Pleno",
-   "d": "2026-09-04T14:05:03.000Z",
-   "tags": [
-    "VINO",
-    "CANARIAS"
-   ]
-  },
-  {
    "t": "Tres vinos heroicos de Juan Jesús Pérez y Adrián logran una gran medalla de oro en el 34º 'Mondial des Vins Extrêmes' de Italia",
    "u": "https://www.eldiario.es/canariasahora/lapalmaahora/sociedad/tres-vinos-heroicos-juan-jesus-perez-adrian-logran-gran-medalla-oro-34o-mondial-des-vins-extremes-italia_1_13488004.amp.html",
    "s": "elDiario.es",
@@ -110,16 +150,6 @@
     "CANARIAS"
    ],
    "img": "https://static.eldiario.es/clip/ab7c8188-add5-4ee0-a769-2c9b8c2557ed_facebook-aspect-ratio-1200-675_default_0.jpg"
-  },
-  {
-   "t": "Cinco restaurantes de Terrasa que aparecen en la Guía Michelín: 'Una experiencia gastronómica diferente pero muy interesante'",
-   "u": "https://www.elperiodico.com/es/gastronomia/20260904/restaurantes-terrassa-guia-michelin-dv-loc-107059229",
-   "s": "El Periódico",
-   "d": "2026-09-04T11:00:00.000Z",
-   "tags": [
-    "MICHELIN"
-   ],
-   "img": "https://estaticos-cdn.prensaiberica.es/clip/2442eff9-8607-4597-91f4-8cd2d177e340_16-9-discover-aspect-ratio_default_0.jpg"
   },
   {
    "t": "Llegó a Buenos Aires sin saber lo que quería, fue chef de Chila y no paró; ahora abre un omakase criollo: “Será para 18 comensales”",
@@ -174,7 +204,16 @@
    "t": "500 euros y DJs en directo: así es el Burger Fest que llena La Palma de hamburguesas y música este fin de semana",
    "u": "https://estenerife.com/500-euros-y-djs-en-directo-asi-es-el-burger-fest-que-llena-la-palma-de-hamburguesas-y-musica-este-fin-de-semana/",
    "s": "estenerife.com",
-   "d": "2026-09-04T08:31:26.000Z",
+   "d": "2026-09-04T08:53:57.000Z",
+   "tags": [
+    "CANARIAS"
+   ]
+  },
+  {
+   "t": "Tenerife-Montreal, todo el año: Air Canada da el paso que refuerza la conexión con Canadá",
+   "u": "https://www.canariasenpleno.com/ruta-tenerife-montreal-air-canada/",
+   "s": "Canarias en Pleno",
+   "d": "2026-09-04T08:34:19.000Z",
    "tags": [
     "CANARIAS"
    ]
@@ -212,7 +251,7 @@
   {
    "t": "Conoce las empresas que darán acceso a la Volvo Experience 2026",
    "u": "https://www.biosferadigital.com/articulo/comunicacion/conoce-empresas-que-daran-acceso-volvo-experience-2026/20260904084559163668.html",
-   "s": "biosferadigital.com",
+   "s": "Biosferadigital",
    "d": "2026-09-04T07:45:59.000Z",
    "tags": [
     "CANARIAS"
@@ -260,46 +299,6 @@
     "MICHELIN"
    ],
    "img": "https://s1.abcstatics.com/abc/www/multimedia/espana/2026/09/03/angel-leon-U63184716313NJx-1200x630@diario_abc.jpeg"
-  },
-  {
-   "t": "Lo que vamos a comer este otoño: las tendencias gastro que llegan con fuerza",
-   "u": "https://www.canarias7.es/gastronomia-c7/vamos-comer-otono-tendencias-gastro-llegan-fuerza-20260904070000-nt.html",
-   "s": "Canarias7",
-   "d": "2026-09-04T05:00:25.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://s3.ppllstatics.com/canarias7/www/multimedia/gastronomia-c7/2026/09/02/lentejas-kU5B-U301542967180uGG-1200x840@Canarias7.jpg"
-  },
-  {
-   "t": "Todos los grandes conciertos y eventos de Santiago de Compostela para disfrutar este septiembre 2026",
-   "u": "https://www.elespanol.com/quincemil/vivir/20260904/grandes-conciertos-eventos-santiago-compostela-disfrutar-septiembre/1003744365920_0.amp.html",
-   "s": "El Español",
-   "d": "2026-09-04T03:00:00.000Z",
-   "tags": [
-    "MICHELIN"
-   ],
-   "img": "https://s3.elespanol.com/k/imgp/cms/elespanol/11344100.jpg?p=f:jpeg/w:1706/h:960&h=qOzlNM6O"
-  },
-  {
-   "t": "Padylla (04/09/26)",
-   "u": "https://www.eldia.es/humor/2026/09/04/padylla-04-09-26-133932239.html",
-   "s": "Eldía",
-   "d": "2026-09-04T02:15:48.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://estaticos-cdn.prensaiberica.es/clip/cd22ed07-30ba-465c-8f32-03d172b74d9a_16-9-aspect-ratio_default_0.jpg"
-  },
-  {
-   "t": "Santy (04/09/26)",
-   "u": "https://www.eldia.es/humor/2026/09/04/santy-04-09-26-133932235.html",
-   "s": "Eldía",
-   "d": "2026-09-04T02:13:48.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://estaticos-cdn.prensaiberica.es/clip/b1c2edcd-b06d-48bb-9b21-7072e93eecb0_16-9-aspect-ratio_default_0.jpg"
   }
  ]
 }
