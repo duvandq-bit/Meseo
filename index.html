@@ -52,7 +52,7 @@
 <meta property="og:description" content="Formación de equipos de sala: carta, alérgenos, vinos, exámenes y juegos de repaso.">
 <meta property="og:url" content="https://meseo.es/">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"Meseo","url":"https://meseo.es/"}</script>
-<meta name="app-version" content="7.349">
+<meta name="app-version" content="7.350">
 <meta name="app-build" content="May 2026">
 <meta name="theme-color" content="#1c2a22">
 <!-- ═══ PWA ═══ -->
@@ -1612,7 +1612,7 @@ const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><p
 const SRC = 'src';
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='7.349';  // sincronizada con sw.js VERSION (guard de CI)
+const APP_VERSION='7.350';  // sincronizada con sw.js VERSION (guard de CI)
 const APP_BUILD='Jul 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;
@@ -6743,10 +6743,8 @@ function renderXPBar(){
       <div style="position:absolute;inset:0;background-image:url(${"\"data:image/svg+xml,%3Csvg width='40' height='35' viewBox='0 0 40 35' xmlns='http://www.w3.org/2000/svg'%3E%3Cpolygon points='20,2 38,17.5 20,33 2,17.5' fill='none' stroke='rgba(196,154,60,0.04)' stroke-width='0.4'/%3E%3C/svg%3E\""});pointer-events:none"></div>
       <div class="xp-bar-top">
         <span class="xp-bar-title" style="color:${barColor};display:flex;align-items:center;gap:.3rem">${hexIcon} <span>${cur.title}</span></span>
-        <span class="xp-bar-lvl" style="display:flex;align-items:center;gap:.25rem">
-          <svg width="10" height="10" viewBox="0 0 10 10"><polygon points="5,0 10,5 5,10 0,5" fill="${barColor}" opacity=".7"/></svg>
-          Lv.${cur.level}
-        </span>
+        <!-- El nivel ya sale en la esquina de la tarjeta. Aqui salia por
+             segunda vez, compitiendo con el titulo del rango que tiene al lado. -->
       </div>
       <div class="xp-bar-track" style="position:relative">
         <div class="xp-bar-fill" style="width:${pct}%;background:linear-gradient(90deg,${cur.color},${barColor})"></div>
@@ -18181,8 +18179,7 @@ function renderDashboard(){
       <div class="dash-hero-top">
         <div>
           <div class="dash-hero-label">${(typeof ACTIVE_VENUE!=='undefined' && ACTIVE_VENUE && ACTIVE_VENUE.eyebrow) ? escapeHtml(ACTIVE_VENUE.eyebrow.split(' · ')[0]) : 'Tenerife'}</div>
-          <div class="dash-hero-greeting">${greeting},</div>
-          <div class="dash-hero-name">${escapeHTML(currentUser)}</div>
+          <div class="dash-hero-saludo"><span class="dash-hero-greeting">${greeting},</span> <span class="dash-hero-name">${escapeHTML(currentUser)}</span></div>
         </div>
         <div class="dash-hero-lvl-badge">
           <div class="dash-hero-lvl-num">${tunicLevelIcon(lvl.level,lvl.color,14)} Lv.${lvl.level}</div>

@@ -3161,10 +3161,8 @@ body::after{
    DASHBOARD
 ───────────────────────────────────────────────── */
 .dash-hero{margin-bottom:2.5rem;animation:slideUp .4s ease both}
-.dash-hero-greeting{
-  font-family:'Quicksand',sans-serif;font-size:2.1rem;font-weight:800;
-  color:var(--parchment);line-height:1.15;margin-bottom:.5rem;
-}
+/* .dash-hero-greeting se define más abajo (junto a .dash-hero-name); aquí
+   había una segunda definición que quedaba pisada y nunca se aplicaba. */
 .dash-hero-greeting em{color:var(--gold);font-style:normal}
 .dash-hero-sub{font-size:.82rem;color:var(--parch3);font-weight:500}
 
@@ -4518,7 +4516,9 @@ body::after{
   .fc-dish,.exam-dish-title{font-size:1.5rem}
   .results-pct{font-size:2rem}
   .login-logo h1{font-size:2.6rem}
-  .dash-hero-greeting{font-size:1.5rem}
+  /* En movil el saludo NO crece: era lo que lo devolvia a ser el texto mas
+     grande de la pantalla justo donde menos sitio hay. */
+  .dash-hero-greeting{font-size:1.15rem}
 
   /* ── Textos micro que siguen demasiado pequeños incluso con 18px base ── */
   /* Labels DM Mono (antes .5-.58rem = 9-9.3px → ahora .62rem = 11.2px) */
@@ -5172,22 +5172,25 @@ body::after{
 /* ═══ XP BAR ═══ */
 .xp-bar-wrap{
   background:linear-gradient(155deg,rgba(36,48,40,.55) 0%,rgba(28,42,34,.7) 50%,rgba(36,48,40,.55) 100%);
-  border:1px solid rgba(196,154,60,.3);border-radius:var(--r2);
-  padding:.7rem .9rem;cursor:pointer;transition:transform .3s cubic-bezier(.22,1,.36,1),box-shadow .3s,border-color .3s;margin-bottom:0;
+  /* El rango vivía en una caja con borde propio DENTRO de la tarjeta, que ya
+     tiene el suyo. Un solo contenedor basta; el fondo se queda para que siga
+     leyéndose como pulsable. */
+  border:none;border-radius:var(--r2);
+  padding:12px;cursor:pointer;transition:transform .3s cubic-bezier(.22,1,.36,1),box-shadow .3s,border-color .3s;margin-bottom:0;
   box-shadow:inset 0 1px 0 rgba(196,154,60,.15),inset 0 -1px 0 rgba(0,0,0,.25),0 1px 4px rgba(0,0,0,.15);
   border-left:2.5px solid var(--gold);
 }
 .xp-bar-wrap:hover{border-color:rgba(228,190,104,.55);border-left-color:var(--gold3);transform:translateY(-1px);box-shadow:inset 0 1px 0 rgba(228,190,104,.25),inset 0 -1px 0 rgba(0,0,0,.25),0 4px 14px rgba(196,154,60,.2)}
 .xp-bar-wrap .xp-bar-title{color:var(--gold3) !important;text-shadow:0 1px 0 rgba(0,0,0,.3)}
 .xp-bar-wrap .xp-bar-lvl{background:linear-gradient(135deg,rgba(228,190,104,.25),rgba(196,154,60,.1)) !important;color:#f4dfac !important;border-color:rgba(228,190,104,.35) !important;text-shadow:0 1px 0 rgba(0,0,0,.25)}
-.xp-bar-wrap .xp-bar-sub{color:rgba(228,190,104,.7) !important}
-.xp-bar-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:.35rem;}
-.xp-bar-title{font-family:'Cinzel',serif;font-size:.78rem;font-weight:600;color:var(--parchment);}
+.xp-bar-wrap .xp-bar-sub{color:rgba(228,190,104,.7) !important;gap:8px}
+.xp-bar-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;}
+.xp-bar-title{font-family:'Cinzel',serif;font-size:.78rem;font-weight:600;color:var(--parchment);gap:8px}
 .xp-bar-lvl{font-family:'DM Mono',monospace;font-size:.58rem;font-weight:600;color:var(--parchment);
   background:linear-gradient(135deg,rgba(196,154,60,.15),rgba(196,154,60,.08));border:1px solid rgba(196,154,60,.2);
   clip-path:polygon(10% 0%,90% 0%,100% 50%,90% 100%,10% 100%,0% 50%);
   padding:.2rem .65rem;letter-spacing:.06em}
-.xp-bar-track{height:8px;background:rgba(196,154,60,.08);border-radius:2px;overflow:hidden;margin-bottom:.3rem;
+.xp-bar-track{height:8px;background:rgba(196,154,60,.08);border-radius:2px;overflow:hidden;margin-bottom:8px;
   border:1px solid rgba(196,154,60,.1);clip-path:polygon(0% 50%,1% 0%,99% 0%,100% 50%,99% 100%,1% 100%)}
 .xp-bar-fill{height:100%;border-radius:1px;position:relative;
   transition:width .6s cubic-bezier(.4,0,.2,1);
@@ -7243,23 +7246,28 @@ button.et-big:active{transform:translateY(4px);box-shadow:0 2px 0 var(--et-ink)}
 .dash-hero-rune.tr{top:9px;right:10px}
 .dash-hero-rune.bl{bottom:9px;left:10px}
 .dash-hero-rune.br{bottom:9px;right:10px}
-.dash-hero-top{position:relative;z-index:2;display:flex;align-items:flex-start;justify-content:space-between;gap:1rem;margin-bottom:.95rem}
+.dash-hero-top{position:relative;z-index:2;display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin-bottom:16px}
 .dash-hero-label{
-  font-family:'DM Mono',monospace;font-size:.75rem;letter-spacing:.24em;
-  color:rgba(228,190,104,.75);text-transform:uppercase;margin-bottom:.4rem;
+  /* .24em era el cuarto espaciado distinto para DM Mono en la misma pantalla */
+  font-family:'DM Mono',monospace;font-size:.75rem;letter-spacing:.16em;
+  color:rgba(228,190,104,.75);text-transform:uppercase;margin-bottom:8px;
   display:inline-flex;align-items:center;gap:.45rem;
 }
 .dash-hero-label::before,.dash-hero-label::after{
   content:'';width:14px;height:1px;background:linear-gradient(90deg,transparent,rgba(228,190,104,.55));
 }
 .dash-hero-label::after{background:linear-gradient(90deg,rgba(228,190,104,.55),transparent)}
-.dash-hero-greeting{font-family:'Cinzel',serif;font-size:1.35rem;color:var(--ink);line-height:1.1;font-weight:500;letter-spacing:.01em;text-shadow:0 1px 2px rgba(0,0,0,.35)}
+/* El saludo era el texto MÁS grande de INICIO para una frase que no lleva
+   información. Baja al tamaño del nombre y comparten línea: sube el contenido. */
+.dash-hero-greeting{font-family:'Cinzel',serif;font-size:1.15rem;color:var(--ink);line-height:1.3;font-weight:500;letter-spacing:.01em;display:inline;text-shadow:0 1px 2px rgba(0,0,0,.35)}
 .dash-hero-name{
-  font-family:'Cinzel',serif;font-size:1.55rem;line-height:1.05;font-weight:700;font-style:italic;
+  font-family:'Cinzel',serif;font-size:1.15rem;line-height:1.3;font-weight:700;font-style:italic;
+  display:inline;
   background:linear-gradient(135deg,#e8c985 0%,#f4dfac 45%,#c8952c 100%);
   -webkit-background-clip:text;background-clip:text;color:transparent;
   text-shadow:0 0 14px rgba(228,190,104,.2);
-  letter-spacing:.015em;margin-top:.05rem;
+  letter-spacing:.01em;margin-top:0;   /* mismo espaciado que el saludo: solo
+     los distingue el énfasis, no un acento distinto */
 }
 .dash-hero-lvl-badge{
   position:relative;text-align:center;flex-shrink:0;
@@ -9996,7 +10004,7 @@ body.chat-open .sound-toggle{ display:none !important; }
 
 /* ── Línea de Horarios dentro de la tarjeta verde del Dashboard ──
    (petición del propietario: el turno de hoy y mañana, arriba del todo) */
-.dash-hero-hor{position:relative;z-index:2;display:flex;align-items:center;gap:.5rem;width:100%;min-height:44px;
+.dash-hero-hor{position:relative;z-index:2;display:flex;align-items:center;gap:8px;width:100%;min-height:44px;
   margin-top:.7rem;padding:.5rem .65rem;cursor:pointer;
   background:rgba(228,190,104,.08);border:1px solid rgba(228,190,104,.28);border-radius:10px;
   font-family:'DM Mono',monospace;font-size:.64rem;letter-spacing:.04em;font-weight:600;color:#e8c275;
