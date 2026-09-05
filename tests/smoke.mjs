@@ -774,6 +774,53 @@ test('Una pestaña desconocida abre INICIO, no una traza de JavaScript', () => {
   assert(/DEBUG \? '<pre/.test(st), 'la traza solo puede verse con DEBUG activado');
 });
 
+test('Reducir movimiento: la red general no puede desaparecer', () => {
+  // DESIGN_SYSTEM §7 dejaba el guard general como «fase pendiente», y al ir a
+  // hacerlo resultó que YA existía y YA funcionaba: medido con la métrica
+  // correcta (movimiento perceptible, >50 ms), la app detiene el 100 % de la
+  // animación cuando el sistema pide reducir movimiento — 180 elementos → 0,
+  // en 5 pantallas, sin perder contenido en ninguna de las 10 comprobadas.
+  // Este guard no añade nada: impide que esa red se borre por descuido, porque
+  // sin ella vuelven 180 elementos en movimiento.
+  const css = read('styles.css');
+  const bloques = css.match(/@media\s*\(prefers-reduced-motion:\s*reduce\)\s*\{[\s\S]*?\n\}/g) || [];
+  const red = bloques.find((b) => /\*,\s*\*::before,\s*\*::after/.test(b) && /animation-iteration-count/.test(b));
+  assert(red, 'falta la red general de reducir movimiento (cubre lo que la lista de selectores no alcanza)');
+  for (const prop of ['animation-duration', 'animation-iteration-count', 'transition-duration']) {
+    assert(new RegExp(prop + ':\\s*[^;]*!important').test(red),
+      `la red debe neutralizar ${prop} con !important`);
+  }
+  // Duración mínima y NO «none»: los efectos finitos «forwards» se auto-retiran
+  // en animationend, y con «none» ese evento no llegaría a dispararse nunca.
+  // Es la excepción que documenta §7 y que hay que respetar.
+  assert(/animation-duration:\s*\.?0*\.?00?1ms/.test(red),
+    'debe usar una duración mínima, no «none»: si no, lo que se limpia en animationend se queda pegado');
+  assert(/animation-iteration-count:\s*1\s*!important/.test(red),
+    'iteration-count:1 es lo que detiene los bucles infinitos del ambiente');
+  assert(/addEventListener\('animationend'/.test(html),
+    'si ya no hay efectos que se limpien en animationend, revisa si la duración mínima sigue siendo lo correcto');
+});
+
+test('Afinado: equilibrado de línea, alto real de pantalla y foco de teclado', () => {
+  const css = read('styles.css');
+  // Titulares equilibrados y prosa sin palabra huérfana: la app tiene 40+
+  // clases de titular y ninguna lo hacía.
+  assert(/text-wrap:\s*balance/.test(css), 'los titulares deben equilibrar el corte de línea');
+  assert(/text-wrap:\s*pretty/.test(css), 'la prosa debe evitar la palabra huérfana');
+  // 100vh no descuenta la barra del navegador móvil. Se deja como respaldo.
+  const alto = css.match(/body,\s*\.screen\{[^}]*\}/);
+  assert(alto, 'falta la regla de alto de pantalla');
+  assert(/min-height:\s*100vh/.test(alto[0]) && /min-height:\s*100dvh/.test(alto[0]),
+    'debe declarar 100vh como respaldo y 100dvh después');
+  assert(alto[0].indexOf('100vh') < alto[0].indexOf('100dvh'), 'el respaldo va primero');
+  // Foco: NO estaba roto — medido con TAB real, 19 de 20 elementos ya
+  // mostraban el anillo del navegador. Lo que cambia es que ahora es el oro de
+  // la app y solo sale al navegar con teclado, no al tocar en la tablet.
+  assert(/:focus-visible\{[^}]*outline:\s*2px solid var\(--gold\)/.test(css),
+    'el anillo de foco debe ser el oro de la app');
+  assert(/:focus-visible\{[^}]*outline-offset/.test(css), 'el anillo necesita separación');
+});
+
 test('Buscador de alérgenos: el bloque «no declara» nunca miente', () => {
   // El propietario (ago 2026) reporta que la plantilla usa el buscador en sala,
   // con el cliente delante, y que ha puesto la app en tablets para eso. Medido

@@ -10011,3 +10011,53 @@ body.chat-open .sound-toggle{ display:none !important; }
 .hor-mini{display:inline-flex;align-items:center;justify-content:center}
 .hor-mini-wa{border-color:rgba(31,170,83,.45)}
 .hor-mini-wa:active{background:rgba(31,170,83,.1)}
+
+/* ═══════════════════════════════════════════════════════════════
+   AFINADO TIPOGRÁFICO
+   ───────────────────────────────────────────────────────────────
+   La app tiene 40+ clases de titular y ninguna equilibraba el corte
+   de línea: un titular de dos líneas podía dejar una sola palabra
+   colgando abajo. `balance` reparte las líneas de los titulares
+   cortos; `pretty` evita la palabra huérfana al final de un párrafo.
+   Donde el navegador no lo soporta, no pasa nada: se ignora.
+   ═══════════════════════════════════════════════════════════════ */
+h1, h2, h3, h4, h5, h6,
+[class$="-title"], [class*="-title "],
+.gs-al-title, .pdd-title, .gs-hit-name{
+  text-wrap: balance;
+}
+/* Prosa: sin huérfanas al final del párrafo */
+.gs-al-note, .pdd-sub, .dash-row-sub, .wine-storybook-text, .wc-story,
+[class$="-sub"], [class$="-text"], [class$="-desc"]{
+  text-wrap: pretty;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   ALTO DE PANTALLA EN MÓVIL
+   ───────────────────────────────────────────────────────────────
+   100vh no descuenta la barra del navegador móvil: la app quedaba
+   más alta que lo visible y aparecía un scroll de sobra. 100dvh se
+   ajusta a lo que de verdad se ve. Se deja 100vh delante como
+   respaldo para navegadores que no conozcan dvh.
+   ═══════════════════════════════════════════════════════════════ */
+body, .screen{ min-height: 100vh; min-height: 100dvh; }
+
+/* ═══════════════════════════════════════════════════════════════
+   FOCO DE TECLADO
+   ───────────────────────────────────────────────────────────────
+   Medido navegando con TAB: 19 de 20 elementos ya mostraban el
+   anillo por defecto del navegador — el foco NO estaba roto. Lo que
+   faltaba: el botón de salir se quedaba sin ninguna marca, y el
+   anillo era el del sistema, ajeno a la paleta. Se usa
+   :focus-visible para que solo salga al navegar con teclado y no al
+   tocar con el dedo, que es lo que se quiere en una tablet de sala.
+   ═══════════════════════════════════════════════════════════════ */
+:focus-visible{
+  outline: 2px solid var(--gold);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+.btn-logout:focus-visible, .nav-btn:focus-visible, .gs-hit:focus-visible{
+  outline: 2px solid var(--gold);
+  outline-offset: 2px;
+}
