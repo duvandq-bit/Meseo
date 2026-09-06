@@ -52,7 +52,7 @@
 <meta property="og:description" content="Formación de equipos de sala: carta, alérgenos, vinos, exámenes y juegos de repaso.">
 <meta property="og:url" content="https://meseo.es/">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"Meseo","url":"https://meseo.es/"}</script>
-<meta name="app-version" content="7.350">
+<meta name="app-version" content="7.351">
 <meta name="app-build" content="May 2026">
 <meta name="theme-color" content="#1c2a22">
 <!-- ═══ PWA ═══ -->
@@ -1612,7 +1612,7 @@ const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><p
 const SRC = 'src';
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='7.350';  // sincronizada con sw.js VERSION (guard de CI)
+const APP_VERSION='7.351';  // sincronizada con sw.js VERSION (guard de CI)
 const APP_BUILD='Jul 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;
@@ -9852,9 +9852,23 @@ function _gsAllergenAnswer(algs, en){
         : 'La cocina comparte superficies y freidoras: ante una alergia grave, confirma siempre con cocina.')
     + '</div></div>';
   // Cada bloque va en su propia sección: con las dos bandas «sticky» en el
-  // mismo contenedor, la verde se quedaba pegada detrás de la roja y asomaba
-  // un trozo. En su propia sección, cada banda se despega al salir su bloque.
-  html += '<div class="gs-al-sec"><div class="gs-al-band safe">' + (en?'Does not declare':'No declara') + ' '
+  // mismo contenedor, la de arriba se quedaba pegada detrás de la de abajo y
+  // asomaba un trozo. En su propia sección, cada banda se despega al salir.
+  //
+  // ORDEN: primero LO QUE LLEVA el alérgeno (petición del propietario, sept
+  // 2026, ya con la app en uso en sala). Yo lo había puesto al revés pensando
+  // que en mesa interesa «qué puede tomar», pero en la práctica el bloque rojo
+  // quedaba enterrado: para llegar a él había que bajar por 59 platos en seis
+  // grupos. Además suele ser la lista más corta (43 frente a 59 con gluten) y
+  // es la que se consulta para descartar un plato concreto.
+  // Las dos bandas siguen etiquetadas sin ambigüedad, que es lo que impide
+  // leer una lista por la otra.
+  html += '<div class="gs-al-sec"><div class="gs-al-band danger">' + (en?'Declares':'Lleva') + ' '
+    + escapeHtml(etiqueta) + ' · ' + lleva.length + '</div>';
+  html += lleva.length
+    ? lleva.map(it=>fila(it,true)).join('')
+    : '<div class="gs-hint">'+(en?'No dish declares it.':'Ningún plato lo declara.')+'</div>';
+  html += '</div><div class="gs-al-sec"><div class="gs-al-band safe">' + (en?'Does not declare':'No declara') + ' '
     + escapeHtml(etiqueta) + ' · ' + libre.length + '</div>';
   if(!libre.length){
     html += '<div class="gs-hint">'+(en?'No dish on the menu is free of it.':'Ningún plato de la carta está libre.')+'</div>';
@@ -9864,11 +9878,6 @@ function _gsAllergenAnswer(algs, en){
       html += porCat[c].map(it=>fila(it,false)).join('');
     });
   }
-  html += '</div><div class="gs-al-sec"><div class="gs-al-band danger">' + (en?'Declares':'Lleva') + ' '
-    + escapeHtml(etiqueta) + ' · ' + lleva.length + '</div>';
-  html += lleva.length
-    ? lleva.map(it=>fila(it,true)).join('')
-    : '<div class="gs-hint">'+(en?'No dish declares it.':'Ningún plato lo declara.')+'</div>';
   return html + '</div>';
 }
 
