@@ -1,19 +1,48 @@
 {
- "updated": "2026-09-05T19:04:31.137Z",
+ "updated": "2026-09-06T01:01:49.574Z",
  "items": [
   {
-   "t": "La Frontera al rojo vivo: el reto de chiles que pone a El Hierro en llamas",
-   "u": "https://www.canariasenpleno.com/la-frontera-rojo-vivo/",
-   "s": "Canarias en Pleno",
-   "d": "2026-09-05T16:00:32.000Z",
+   "t": "Padylla (06/09/26)",
+   "u": "https://www.eldia.es/humor/2026/09/06/padylla-06-09-26-133994534.html",
+   "s": "Eldía",
+   "d": "2026-09-06T00:20:59.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://estaticos-cdn.prensaiberica.es/clip/beceaed1-08b6-4df8-839e-61150b7ad1ff_16-9-aspect-ratio_default_0.jpg"
+  },
+  {
+   "t": "Santy (06/09/26)",
+   "u": "https://www.eldia.es/humor/2026/09/06/santy-06-09-26-133994532.html",
+   "s": "Eldía",
+   "d": "2026-09-06T00:19:50.000Z",
    "tags": [
     "CANARIAS"
    ]
   },
   {
+   "t": "La Frontera al rojo vivo: el reto de chiles que pone a El Hierro en llamas",
+   "u": "https://www.canariasenpleno.com/la-frontera-rojo-vivo/",
+   "s": "Canarias en Pleno",
+   "d": "2026-09-05T17:59:01.000Z",
+   "tags": [
+    "CANARIAS"
+   ]
+  },
+  {
+   "t": "Se registran 29.112 horas extras no remuneradas cada semana en las Islas Canarias",
+   "u": "https://www.teneriffa-news.com/es/actualidad/noticias-de-canarias/se-registran-29-112-horas-extras-no-remuneradas-cada-semana-en-las-islas-canarias_1465631.html",
+   "s": "Teneriffa News",
+   "d": "2026-09-05T16:55:43.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://www.teneriffa-news.com/media/k/kanaren-baustelle-arbeit-bau-2400x1350.jpg"
+  },
+  {
    "t": "Jordi Cruz, chef: \"Con 16 empecé de camarero, a los 18 ya era jefe de cocina y con 24 logré la primera estrella Michelin\"",
    "u": "https://www.elespanol.com/corazon/bluper/20260905/jordi-cruz-chef-empece-camarero-jefe-cocina-logre-primera-estrella-michelin-td/1003744364518_0.amp.html",
-   "s": "elespanol.com",
+   "s": "El Español",
    "d": "2026-09-05T15:41:08.000Z",
    "tags": [
     "ALTA COCINA",
@@ -72,6 +101,17 @@
    "img": "https://s1.ppllstatics.com/canarias7/www/multimedia/gastronomia-c7/2026/09/04/burger12.jpg"
   },
   {
+   "t": "Canarias Wine Academy incorpora las cualificaciones WSET en Espirituosos a su oferta formativa",
+   "u": "https://www.vinetur.com/20260905106642/canarias-wine-academy-incorpora-las-cualificaciones-wset-en-espirituosos-a-su-oferta-formativa.html",
+   "s": "Vinetur",
+   "d": "2026-09-05T09:49:38.000Z",
+   "tags": [
+    "VINO",
+    "CANARIAS"
+   ],
+   "img": "https://www.vinetur.com/imagenes/blog/8895/wset-image-bank-for-apps_spirits4.jpg"
+  },
+  {
    "t": "Cuatro vinos de La Palma se cuelgan la máxima medalla del Mondial des Vins Extrêmes 2026",
    "u": "https://elfarodelapalma.es/vinos-la-palma-medallas-mondial-des-vins-extremes-cervim-2026/",
    "s": "El Faro de La Palma",
@@ -99,7 +139,8 @@
    "d": "2026-09-05T08:47:43.000Z",
    "tags": [
     "CHEF"
-   ]
+   ],
+   "img": "https://www.noticiasdelvino.com/wp-content/uploads/image-583.png"
   },
   {
    "t": "Dónde comer durante el Gran Premio de F1: este restaurante cerca de Madring tiene un menú por menos de 25 euros",
@@ -114,7 +155,7 @@
   {
    "t": "El restaurante de Gran Canaria que conquista con cocina canaria y carnes a la brasa: sus costillas con piña son un imprescindible",
    "u": "https://www.laprovincia.es/gran-canaria/2026/09/05/restaurante-gran-conquista-cocina-canaria-dv-132761509.amp.html",
-   "s": "laprovincia.es",
+   "s": "La Provincia",
    "d": "2026-09-05T08:00:00.000Z",
    "tags": [
     "CANARIAS"
@@ -183,7 +224,7 @@
   {
    "t": "El clásico de Madrid que reinventa la casquería para convertirla en alta cocina de estilo informal",
    "u": "https://www.eldebate.com/estilo-vida/restaurantes/20260905/clasico-madrid-reinventa-casqueria-convertirla-alta-cocina-estilo-informal_453651.html",
-   "s": "El Debate",
+   "s": "eldebate.com",
    "d": "2026-09-05T02:30:00.000Z",
    "tags": [
     "ALTA COCINA"
@@ -197,8 +238,7 @@
    "d": "2026-09-04T22:59:12.000Z",
    "tags": [
     "CANARIAS"
-   ],
-   "img": "https://estaticos-cdn.prensaiberica.es/clip/b1c2edcd-b06d-48bb-9b21-7072e93eecb0_16-9-aspect-ratio_default_0.jpg"
+   ]
   },
   {
    "t": "Pez Gordo en Puerto de la Cruz: donde las Islas Canarias se funden con Europa",
@@ -222,7 +262,7 @@
   {
    "t": "Vallarta Nayarit Gastronómica 2026 reunirá a chefs de México y España",
    "u": "https://amexi.com.mx/espectaculos/vallarta-nayarit-gastronomica-2026-reunira-a-chefs-de-mexico-y-espana/",
-   "s": "Amexi",
+   "s": "amexi.com.mx",
    "d": "2026-09-04T20:10:16.000Z",
    "tags": [
     "MICHELIN"
@@ -231,13 +271,13 @@
   },
   {
    "t": "El refugio de Tenerife donde el lujo atlántico y la alta gastronomía marcan el ritmo del viaje",
-   "u": "https://okdiario.com/lifestyle/refugio-tenerife-donde-lujo-atlantico-alta-gastronomia-marcan-ritmo-del-viaje-20230088/amp",
+   "u": "https://okdiario.com/lifestyle/refugio-tenerife-donde-lujo-atlantico-alta-gastronomia-marcan-ritmo-del-viaje-20230088",
    "s": "OkDiario",
    "d": "2026-09-04T18:39:55.000Z",
    "tags": [
     "CANARIAS"
    ],
-   "img": "https://okdiario.com/img/2026/09/04/243kgranmeliapalaciodeisora-entrecielos-rooftop.jpg"
+   "img": "https://okdiario.com/img/2026/09/04/303vgranmeliapalaciodeisora-infinity-pool.jpg"
   },
   {
    "t": "Estos son los aeropuertos de Canarias más puntuales y menos puntuales",
@@ -258,47 +298,6 @@
     "VINO",
     "CANARIAS"
    ]
-  },
-  {
-   "t": "Vinos Canarios Triunfan en el Mondial des Vins Extrêmes",
-   "u": "https://lavozcanaria.com/abona/general/vinos-canarios-triunfan-en-el-mondial-des-vins-extremes",
-   "s": "La Voz Canaria",
-   "d": "2026-09-04T15:59:56.000Z",
-   "tags": [
-    "VINO",
-    "CANARIAS"
-   ],
-   "img": "https://lavozcanaria.com/media/2026/09/vinos-canarios-triunfan-en-el-mondial-des-vins-extremes.webp"
-  },
-  {
-   "t": "Anuncian 18va. edición de Vallarta-Nayarit Gastronómica",
-   "u": "https://www.emsavalles.com/NL283003/anuncian-18va-edicion-de-vallarta-nayarit-gastronomica",
-   "s": "emsavalles.com",
-   "d": "2026-09-04T15:50:00.000Z",
-   "tags": [
-    "MICHELIN"
-   ]
-  },
-  {
-   "t": "Bodegas Reverón se integra oficialmente en la red de Enoturismo Spain",
-   "u": "https://www.vinetur.com/amp/20260904106621/bodegas-reveron-se-integra-oficialmente-en-la-red-de-enoturismo-spain.html",
-   "s": "Vinetur",
-   "d": "2026-09-04T15:19:04.000Z",
-   "tags": [
-    "VINO",
-    "CANARIAS"
-   ],
-   "img": "https://www.vinetur.com/imagenes/blog/7640/reveron.jpg"
-  },
-  {
-   "t": "Las Islas Canarias duplican el número de puntos de recarga registrados para coches eléctricos",
-   "u": "https://www.teneriffa-news.com/es/actualidad/noticias-de-canarias/las-islas-canarias-duplican-el-numero-de-puntos-de-recarga-registrados-para-coches-electricos_1465689.html",
-   "s": "Teneriffa News",
-   "d": "2026-09-04T14:46:00.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://www.teneriffa-news.com/media/l/ladestation-e-auto-kanaren-2400x1350.jpg"
   }
  ]
 }
