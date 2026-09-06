@@ -5614,55 +5614,9 @@ body::after{
 /* Sensory responsive: small phones */
 @media(max-width:380px){.sensory-wheel-wrap{width:260px;height:260px}.sensory-note{width:50px;height:50px}.sensory-note .sn-ico{font-size:1rem}.sensory-note .sn-lbl{font-size:.48rem}.sensory-wheel-center{width:68px;height:68px;font-size:.52rem}.sensory-radar-wrap{width:190px;height:190px}}
 @media(max-width:320px){.sensory-wheel-wrap{width:230px;height:230px}.sensory-note{width:44px;height:44px}.sensory-note .sn-ico{font-size:.9rem}.sensory-note .sn-lbl{display:none}.sensory-wheel-center{width:60px;height:60px;font-size:.48rem}.sensory-wrap{padding:.3rem .5rem 2rem}.sensory-radar-wrap{width:170px;height:170px}}
-/* ═══ RULETA TXOKO ═══ */
-.ruleta-wrap{padding:.5rem 0 2rem;max-width:540px;margin:0 auto;text-align:center}
-.ruleta-header{margin-bottom:.8rem}
-.ruleta-header h2{font-family:var(--ff-display);font-size:1.3rem;color:var(--gold);margin:0 0 .15rem;text-shadow:0 1px 3px rgba(182,161,105,.2)}
-.ruleta-header p{font-size:.72rem;color:rgba(28,42,34,.45);margin:0}
-.ruleta-players{display:flex;flex-wrap:wrap;gap:.4rem;justify-content:center;margin:.8rem 0;align-items:center}
-.ruleta-player{padding:.3rem .7rem;border-radius:20px;font-size:.65rem;font-weight:700;background:linear-gradient(135deg,rgba(182,161,105,.15),rgba(182,161,105,.05));color:var(--olive);border:1.5px solid rgba(182,161,105,.3);cursor:pointer;transition:all .2s;position:relative;overflow:hidden}
-.ruleta-player::before{content:'';position:absolute;inset:0;background:linear-gradient(45deg,transparent 40%,rgba(255,255,255,.1) 50%,transparent 60%);transition:transform .3s}
-.ruleta-player:hover::before{transform:translateX(100%)}
-.ruleta-player.active{background:linear-gradient(135deg,var(--gold),#a07830);color:#fff;border-color:var(--gold);box-shadow:0 2px 8px rgba(182,161,105,.3)}
-.ruleta-player.remove:hover{background:linear-gradient(135deg,#e74c3c,#c0392b);color:#fff;border-color:#e74c3c}
-.ruleta-add-player{padding:.3rem .7rem;border-radius:20px;font-size:.65rem;border:1.5px dashed rgba(182,161,105,.4);background:transparent;color:var(--gold);cursor:pointer;font-weight:600;transition:all .2s}
-.ruleta-add-player:hover{background:rgba(182,161,105,.08);border-color:var(--gold)}
-.ruleta-wheel-area{position:relative;width:300px;height:300px;margin:0 auto 1rem;touch-action:none;filter:drop-shadow(0 8px 25px rgba(0,0,0,.15))}
-.ruleta-pointer{position:absolute;top:-16px;left:50%;transform:translateX(-50%);z-index:10;width:0;height:0;border-left:12px solid transparent;border-right:12px solid transparent;border-top:20px solid var(--gold);filter:drop-shadow(0 3px 6px rgba(0,0,0,.3));animation:pointerBounce 1.2s ease infinite}
-@keyframes pointerBounce{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(5px)}}
-.ruleta-pointer::after{content:'';position:absolute;top:-20px;left:-6px;width:0;height:0;border-left:6px solid transparent;border-right:6px solid transparent;border-top:10px solid #e0c070}
-.ruleta-wheel-glow{position:absolute;inset:-15px;border-radius:50%;background:radial-gradient(circle,rgba(182,161,105,.12) 40%,transparent 70%);pointer-events:none;z-index:0}
-.ruleta-svg{width:100%;height:100%;transition:transform 4.5s cubic-bezier(.15,.7,.08,.98);transform-origin:center center;position:relative;z-index:1}
-.ruleta-svg.spinning{pointer-events:none}
-.ruleta-spin-btn{margin-top:.6rem;padding:.8rem 2.5rem;border-radius:30px;background:linear-gradient(135deg,var(--gold),#a07830);color:#fff;font-size:.88rem;font-weight:700;font-family:var(--ff-display);border:none;cursor:pointer;box-shadow:0 4px 18px rgba(182,161,105,.35);transition:all .2s;min-height:50px;touch-action:manipulation;position:relative;overflow:hidden;letter-spacing:.5px}
-.ruleta-spin-btn::before{content:'';position:absolute;top:-50%;left:-50%;width:200%;height:200%;background:radial-gradient(circle,rgba(255,255,255,.15) 0%,transparent 60%);animation:ruletaBtnGlow 2.5s ease infinite}
-@keyframes ruletaBtnGlow{0%,100%{transform:translate(-30%,-30%) scale(1);opacity:.5}50%{transform:translate(30%,30%) scale(1.2);opacity:1}}
-.ruleta-spin-btn:hover{transform:scale(1.06);box-shadow:0 6px 24px rgba(182,161,105,.45)}
-.ruleta-spin-btn:active{transform:scale(.96)}
-.ruleta-spin-btn:disabled{opacity:.5;cursor:not-allowed;transform:none;animation:none}
-.ruleta-spin-btn:disabled::before{animation:none}
-.ruleta-result{margin-top:1.2rem;padding:1.2rem;border-radius:16px;animation:ruletaResultIn .5s cubic-bezier(.34,1.56,.64,1);text-align:left;position:relative;overflow:hidden;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
-@keyframes ruletaResultIn{from{opacity:0;transform:scale(.85) translateY(15px)}to{opacity:1;transform:scale(1) translateY(0)}}
-.ruleta-result::before{content:'';position:absolute;top:0;right:0;width:80px;height:80px;border-radius:50%;filter:blur(30px);opacity:.15;pointer-events:none}
-.ruleta-result-cat{display:flex;align-items:center;gap:.5rem;font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.8px;margin-bottom:.6rem}
-.ruleta-result-cat svg{width:1.2em;height:1.2em}
-.ruleta-result-text{font-size:.92rem;color:var(--olive);line-height:1.65;font-weight:500}
-.ruleta-result-player{font-size:.72rem;color:rgba(28,42,34,.5);margin-top:.7rem;font-style:italic;display:flex;align-items:center;gap:.3rem}
-.ruleta-result-player::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--gold);flex-shrink:0}
-.ruleta-result-actions{display:flex;gap:.5rem;margin-top:.8rem}
-.ruleta-result-action{padding:.35rem .7rem;border-radius:12px;font-size:.62rem;font-weight:600;border:1.5px solid rgba(182,161,105,.3);background:transparent;color:var(--olive);cursor:pointer;transition:all .2s}
-.ruleta-result-action:hover{background:rgba(182,161,105,.1);border-color:var(--gold)}
-.ruleta-history{margin-top:1.2rem;text-align:left}
-.ruleta-history-title{font-size:.62rem;font-weight:700;color:var(--gold);text-transform:uppercase;letter-spacing:1px;margin-bottom:.5rem;display:flex;align-items:center;gap:.3rem}
-.ruleta-history-title::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,rgba(182,161,105,.3),transparent)}
-.ruleta-history-item{font-size:.65rem;color:rgba(28,42,34,.5);padding:.4rem .5rem;border-bottom:1px solid rgba(0,0,0,.04);display:flex;align-items:flex-start;gap:.4rem;border-radius:6px;transition:background .15s}
-.ruleta-history-item:hover{background:rgba(182,161,105,.04)}
-.ruleta-history-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;margin-top:4px}
-.ruleta-back{display:inline-flex;align-items:center;gap:.3rem;padding:.4rem .8rem;border-radius:14px;border:1px solid rgba(182,161,105,.3);background:transparent;font-size:.72rem;color:var(--olive);cursor:pointer;margin-bottom:.8rem;transition:all .2s}
-.ruleta-back:hover{background:rgba(182,161,105,.08)}
 
 /* Unified "back to games" control — SAME look, position and behaviour on every
-   game screen (Duelo, Ruleta, Mr. Shoesmith). A slim TUNIC-style pill: dark
+   game screen (Duelo, Mr. Shoesmith). A slim TUNIC-style pill: dark
    green with soft gold text + hairline gold border. Reads cleanly on both the
    light parchment screens and the dark ones, and stays discreet (it's a
    secondary control, not a call to action). */
@@ -5673,11 +5627,6 @@ body::after{
   cursor:pointer;margin:0 0 1rem;box-shadow:0 2px 7px rgba(0,0,0,.22);
   -webkit-tap-highlight-color:transparent;transition:opacity .18s,transform .06s}
 .game-back:active{opacity:.75;transform:translateY(1px)}
-.ruleta-score{display:flex;justify-content:center;gap:1.2rem;margin:.6rem 0;font-size:.65rem;color:rgba(28,42,34,.4)}
-.ruleta-score-item{display:flex;flex-direction:column;align-items:center;gap:.1rem}
-.ruleta-score-num{font-size:1.1rem;font-weight:700;color:var(--gold)}
-@media(max-width:380px){.ruleta-wheel-area{width:260px;height:260px}.ruleta-spin-btn{font-size:.78rem;padding:.65rem 1.8rem}}
-@media(min-width:768px){.ruleta-wheel-area{width:380px;height:380px}.ruleta-result-text{font-size:1rem}.ruleta-header h2{font-size:1.5rem}.ruleta-wrap{max-width:600px}}
 
 /* Sensory responsive: desktop */
 @media(min-width:768px){.sensory-wheel-wrap{width:420px;height:420px}.sensory-note{width:72px;height:72px}.sensory-note .sn-ico{font-size:1.4rem}.sensory-note .sn-lbl{font-size:.62rem}.sensory-wheel-center{width:100px;height:100px;font-size:.7rem}.sensory-radar-wrap{width:280px;height:280px}.sensory-card-name{font-size:.82rem}.sensory-why{font-size:.78rem}.sensory-detail-title{font-size:1.05rem}.sensory-fp-name{font-size:1.05rem}.sensory-header h2{font-size:1.4rem}}

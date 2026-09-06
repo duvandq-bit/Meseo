@@ -738,9 +738,15 @@ test('Contraste: la tinta secundaria y el oro de texto son legibles', () => {
     const r = ratio(srgb(goldInk), bg);
     assert(r >= 4.5, `--gold-ink (${goldInk}) da ${r.toFixed(2)} sobre ${name} — el mínimo es 4,5`);
   }
-  // Las cuatro tarjetas de juego declaran tinta propia junto a su acento vivo.
-  const cards = html.match(/--gc-accent:[^;"]+;--gc-ink:[^;"]+;/g) || [];
-  assert(cards.length === 4, `las 4 tarjetas de juego deben declarar --gc-ink, encontradas ${cards.length}`);
+  // Toda tarjeta de juego declara tinta propia junto a su acento vivo: si el
+  // acento va sin --gc-ink, el título se pinta con el color vivo y pierde
+  // contraste. Se cuentan las que hay, no un número fijo — la Ruleta se retiró
+  // (sept 2026) y quedaron tres.
+  const acentos = (html.match(/--gc-accent:/g) || []).length;
+  const conTinta = (html.match(/--gc-accent:[^;"]+;--gc-ink:[^;"]+;/g) || []).length;
+  assert(acentos >= 3, `esperaba al menos 3 tarjetas de juego, encontradas ${acentos}`);
+  assert(conTinta === acentos,
+    `${acentos - conTinta} tarjeta(s) de juego declaran --gc-accent sin --gc-ink`);
   assert(/\.game-card-label\{[^}]*color:var\(--gc-ink,var\(--gold-ink\)\)/s.test(css),
     'la etiqueta de tarjeta debe usar --gc-ink, no el acento vivo');
   assert(!/\.game-card-label\{[^}]*opacity:\.85/s.test(css),
@@ -4112,8 +4118,8 @@ test('every game has a uniform, working "back to games" control', () => {
   // no funcionaba). Ahora todos usan la misma píldora .game-back → showTab('txoko').
   // (1) shared style exists
   assert(/\.game-back\{/.test(read('styles.css')), 'the shared .game-back button style must exist');
-  // (2) Duelo, Ruleta, Mr. Shoesmith intro + question screen all carry .game-back
-  for (const fn of ['renderDuel(', 'renderRuleta(', 'txShowIntro(', 'txRender(']) {
+  // (2) Duelo y Mr. Shoesmith (intro + pregunta) llevan .game-back
+  for (const fn of ['renderDuel(', 'txShowIntro(', 'txRender(']) {
     const i = html.indexOf('function ' + fn);
     assert(i !== -1, `${fn} not found`);
     const body = html.slice(i, html.indexOf('\nfunction ', i + 10));
@@ -4241,11 +4247,15 @@ test('Games hub: Mr. Shoesmith card shows the real character photo, not the old 
   assert(hub.includes('class="txoko-wrap tx-rh-hub"'), 'the hub wrapper must carry the tx-rh-hub rubber-hose scope');
   // structure/behaviour untouched — every card must still be present and wired
   // Puntos Débiles (startErrorMode) fue retirado del hub a petición del
-  // propietario: los exámenes ya cubren el repaso de fallos.
-  for (const onclick of ['txStart()', 'renderDuel()', 'renderRuleta()', 'launchElTurno()']) {
+  // propietario: los exámenes ya cubren el repaso de fallos. La Ruleta Txoko
+  // se retiró entera (sept 2026): «no tiene ninguna utilidad» — era el único
+  // juego que no entrenaba nada de la carta.
+  for (const onclick of ['txStart()', 'renderDuel()', 'launchElTurno()']) {
     assert(hub.includes(onclick), `hub must still wire up ${onclick} — reskin must not drop a game card`);
   }
   assert(!hub.includes('startErrorMode()'), 'Puntos Débiles card must be removed from the games hub');
+  assert(!/ruleta|Ruleta|Roulette/.test(html) && !/ruleta/i.test(read('styles.css')),
+    'la Ruleta Txoko se retiró: no puede quedar ni marcado, ni estilos, ni la tarjeta del hub');
 });
 
 test('tx-rh rubber-hose CSS exists, is scoped, and covers every class the markup uses', () => {
