@@ -1,6 +1,86 @@
 {
- "updated": "2026-09-06T09:28:44.077Z",
+ "updated": "2026-09-06T14:13:09.635Z",
  "items": [
+  {
+   "t": "\"Las mejores de toda España\": el bar de Terrassa elogiado por sus sabrosas recetas",
+   "u": "https://www.elperiodico.com/es/gastronomia/20260906/bar-terrassa-mejores-croquetas-pollo-dv-loc-107422044",
+   "s": "El Periódico",
+   "d": "2026-09-06T12:30:00.000Z",
+   "tags": [
+    "MICHELIN"
+   ],
+   "img": "https://estaticos-cdn.prensaiberica.es/clip/46f69487-9c71-456b-87e4-d6c1f714525b_16-9-discover-aspect-ratio_default_1504126.jpg"
+  },
+  {
+   "t": "La feria tradicional, con puestos de artesanía y alimentación, los días 1 y 16 de cada mes de 09:00 a 14:00 horas",
+   "u": "https://www.elespanol.com/quincemil/vivir/20260906/feria-tradicional-puestos-artesania-alimentacion-dias-mes-horas-trt/1003744365565_0.amp.html",
+   "s": "El Español",
+   "d": "2026-09-06T12:15:00.000Z",
+   "tags": [
+    "MICHELIN"
+   ],
+   "img": "https://s3.elespanol.com/k/imgp/cms/elespanol/11342790.jpg?p=f:jpeg/w:1706/h:960&h=ii4yDMgJ"
+  },
+  {
+   "t": "Comparativa de precios de alquiler: aquí es donde las Islas Canarias son más caras",
+   "u": "https://www.teneriffa-news.com/es/actualidad/noticias-de-canarias/alquiler-canarias-mas-caras_1465413.html",
+   "s": "Teneriffa News",
+   "d": "2026-09-06T12:11:17.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://www.teneriffa-news.com/media/p/puerto-de-la-cruz-teneriffa-ueberblick-2400x1350.jpg"
+  },
+  {
+   "t": "Cafeterías de Santa Cruz de La Palma según las valoraciones de los usuarios",
+   "u": "https://www.teneriffa-news.com/es/restaurante/la-palma/santa-cruz-de-la-palma/cafeterias",
+   "s": "Teneriffa News",
+   "d": "2026-09-06T11:34:59.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://www.teneriffa-news.com/media/r/restaurant-tipps-puerto-de-la-cruz-e1481908361568-2400x1350.jpg"
+  },
+  {
+   "t": "Cámaras web de Tenerife: ¡vea Tenerife en directo ahora mismo!",
+   "u": "https://www.teneriffa-news.com/es/webcams-es/webcams-tenerife",
+   "s": "Teneriffa News",
+   "d": "2026-09-06T11:34:46.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://www.teneriffa-news.com/media/p/playa-de-las-teresitas-strand-teneriffa-2400x1350.jpg"
+  },
+  {
+   "t": "D*na reunirá a Ferran Adrià, Paco Roncero y Susi Díaz en una gran mesa frente al Mediterráneo",
+   "u": "https://www.expreso.info/noticias/gastronomia/114332_dna_reunira_ferran_adria_paco_roncero_y_susi_diaz_en_una_gran_mesa",
+   "s": "Expreso - Diario de viajes y turismo",
+   "d": "2026-09-06T10:07:27.000Z",
+   "tags": [
+    "ALTA COCINA"
+   ],
+   "img": "https://www.expreso.info/files/styles/expreso_theme_teaser_secundario_desktop/public/2026-09/Denia_DNA_2026.jpg?itok=lvGXHRKh"
+  },
+  {
+   "t": "El bocadillo de pata de Gran Canaria \"que vuelve locos\" a los canarios: se personaliza y cuesta desde 3,80 euros",
+   "u": "https://www.laprovincia.es/gran-canaria/2026/09/06/bocadillo-pata-gran-canaria-dv-126083673.amp.html",
+   "s": "La Provincia",
+   "d": "2026-09-06T08:30:00.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://estaticos-cdn.prensaiberica.es/clip/67de9ad6-d006-454e-a526-a1597f16285e_16-9-discover-aspect-ratio_default_0_x600y225.jpg"
+  },
+  {
+   "t": "¿La isla de los bienaventurados? Tenerife ha cambiado mucho",
+   "u": "https://www.teneriffa-news.com/es/los-lectores-escriben-para-los-lectores/tenerife-isla-afortunada-cambiada_1465136.html",
+   "s": "Teneriffa News",
+   "d": "2026-09-06T08:18:11.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://www.teneriffa-news.com/media/h/historisch/teneriffa-sued-frueher-hotel-bananen-2040x1350.jpg"
+  },
   {
    "t": "El viñedo más alto de Europa está en Tenerife: así es el pueblo que desafía a los Alpes",
    "u": "https://www.noticiasdelvino.com/escapadas/2026/09/06/el-vinedo-mas-alto-de-europa-esta-en-tenerife-asi-es-el-pueblo-que-desafia-a-los-alpes-66331/",
@@ -34,23 +114,13 @@
   },
   {
    "t": "«Desde siempre se ha dicho que Abadía Retuerta está en venta, pero estamos llenos de proyectos»",
-   "u": "https://www.elnortedecastilla.es/valladolid/provincia/siempre-dicho-abadia-retuerta-venta-llenos-proyectos-20260906092019-nt_amp.html",
-   "s": "El Norte de Castilla",
+   "u": "https://www.elnortedecastilla.es/valladolid/provincia/siempre-dicho-abadia-retuerta-venta-llenos-proyectos-20260906092019-nt.html",
+   "s": "elnortedecastilla.es",
    "d": "2026-09-06T07:20:19.000Z",
    "tags": [
     "MICHELIN"
    ],
-   "img": "https://s2.ppllstatics.com/elnortedecastilla/www/multimedia/local/2026/09/04/1501985283-U62660037644yWL-1200x630@El%20Norte.jpg"
-  },
-  {
-   "t": "Cafeterías de Santa Cruz de La Palma según las valoraciones de los usuarios",
-   "u": "https://www.teneriffa-news.com/es/restaurante/la-palma/santa-cruz-de-la-palma/cafeterias",
-   "s": "Teneriffa News",
-   "d": "2026-09-06T07:14:35.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://www.teneriffa-news.com/media/r/restaurant-tipps-puerto-de-la-cruz-e1481908361568-2400x1350.jpg"
+   "img": "https://s3.ppllstatics.com/elnortedecastilla/www/multimedia/local/2026/09/04/1501985283-R6D2M3JxCANS1C8yOA5bS0N-1200x840@El%20Norte.jpg"
   },
   {
    "t": "Joseba, sobre su padre Karlos Arguiñano: \"La cocina de mi aita es la cocina del hogar y es la comida que comemos en casa: puchero, rebozados, empanados, con salsa de tomate. Comemos normal\"",
@@ -63,8 +133,18 @@
    "img": "https://www.clarin.com/img/2026/08/12/k4wqgzeA0_2000x1500__1.jpg"
   },
   {
+   "t": "Pintadas hostiles hacia los turistas en Tenerife",
+   "u": "https://www.teneriffa-news.com/es/los-lectores-escriben-para-los-lectores/pintadas-contra-el-turismo-en-tenerife-segun-una-lectora_1464844.html",
+   "s": "Teneriffa News",
+   "d": "2026-09-06T06:00:32.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://www.teneriffa-news.com/media/g/graffiti-kill-a-tourist-teneriffa-2400x1350.jpg"
+  },
+  {
    "t": "Dónde Saborear Gran Canaria según Davinia Santana, directora y socia de Provalliance Canarias, SL",
-   "u": "https://www.canarias7.es/gastronomia-c7/a-fuego-lento/saborear-gran-canaria-segun-davinia-santana-20260906070000-nt_amp.html",
+   "u": "https://www.canarias7.es/gastronomia-c7/a-fuego-lento/saborear-gran-canaria-segun-davinia-santana-20260906070000-nt.html",
    "s": "Canarias7",
    "d": "2026-09-06T05:00:31.000Z",
    "tags": [
@@ -73,14 +153,13 @@
    "img": "https://s3.ppllstatics.com/canarias7/www/multimedia/gastronomia-c7/2026/09/03/davinia3_papel_xoptimizadax-knw-U301556483686XDG-1200x840@Canarias7.jpg"
   },
   {
-   "t": "Puerto de la Cruz: \"La Tasquita\", en Tenerife, ha renovado su imagen",
-   "u": "https://www.teneriffa-news.com/es/puerto-de-la-cruz-es/cafeterias-bares-y-restaurantes-en-puerto-de-la-cruz/la-tasquita-nueva-imagen_1464870.html",
-   "s": "Teneriffa News",
-   "d": "2026-09-06T01:15:39.000Z",
+   "t": "OTTO: Experiencia gastronómica japonesa única siempre.",
+   "u": "https://columnadigital.com/otto-experiencia-gastronomica-japonesa-unica-siempre/",
+   "s": "Columna Digital",
+   "d": "2026-09-06T04:57:46.000Z",
    "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://www.teneriffa-news.com/media/l/la-tasquita-puerto-cruz-teneriffa-2400x1350.jpg"
+    "ALTA COCINA"
+   ]
   },
   {
    "t": "El nuevo gastronómico de Madrid escondido en uno de sus templos del ocio nocturno",
@@ -113,16 +192,6 @@
    "img": "https://estaticos-cdn.prensaiberica.es/clip/b1c2edcd-b06d-48bb-9b21-7072e93eecb0_16-9-aspect-ratio_default_0.jpg"
   },
   {
-   "t": "Teno-Rasca: Muy pocos conocen esta zona de protección de ballenas situada frente a las costas de Tenerife",
-   "u": "https://www.teneriffa-news.com/es/los-lectores-escriben-para-los-lectores/entre-tenerife-y-la-gomera-viven-de-400-a-500-calderones-tropicales_1464741.html",
-   "s": "Teneriffa News",
-   "d": "2026-09-05T18:31:05.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://www.teneriffa-news.com/media/fotostrecken/wale/whale-watching-teneriffa-grindwal-2400x1350.jpg"
-  },
-  {
    "t": "Los Rodeos, el aeropuerto del norte de Tenerife entre viento y nubes",
    "u": "https://www.teneriffa-news.com/es/informacion-sobre-tenerife/aeropuerto-tenerife-norte-los-rodeos_1464309.html",
    "s": "Teneriffa News",
@@ -140,16 +209,6 @@
    "tags": [
     "CANARIAS"
    ]
-  },
-  {
-   "t": "Se registran 29.112 horas extras no remuneradas cada semana en las Islas Canarias",
-   "u": "https://www.teneriffa-news.com/es/actualidad/noticias-de-canarias/se-registran-29-112-horas-extras-no-remuneradas-cada-semana-en-las-islas-canarias_1465631.html",
-   "s": "Teneriffa News",
-   "d": "2026-09-05T16:55:43.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://www.teneriffa-news.com/media/k/kanaren-baustelle-arbeit-bau-2400x1350.jpg"
   },
   {
    "t": "Jordi Cruz, chef: \"Con 16 empecé de camarero, a los 18 ya era jefe de cocina y con 24 logré la primera estrella Michelin\"",
@@ -214,6 +273,16 @@
    "img": "https://s1.ppllstatics.com/canarias7/www/multimedia/gastronomia-c7/2026/09/04/burger12.jpg"
   },
   {
+   "t": "Ni Tenerife ni Valencia: este es el mejor destino para viajar en septiembre",
+   "u": "https://www.infobae.com/espana/viajes/2026/09/05/ni-tenerife-ni-valencia-este-es-el-mejor-destino-para-viajar-en-septiembre/",
+   "s": "Infobae",
+   "d": "2026-09-05T11:42:00.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://www.infobae.com/resizer/v2/KML2CNAU2JGURKW7ZJO6GVDDPU.jpeg?auth=769ba42af8b15022faca37ce05212b94336377d0fe0051a74243d4bc713cacd6&smart=true&width=1200&height=630&quality=85"
+  },
+  {
    "t": "Canarias Wine Academy incorpora las cualificaciones WSET en Espirituosos a su oferta formativa",
    "u": "https://www.vinetur.com/20260905106642/canarias-wine-academy-incorpora-las-cualificaciones-wset-en-espirituosos-a-su-oferta-formativa.html",
    "s": "Vinetur",
@@ -233,77 +302,6 @@
     "VINO",
     "CANARIAS"
    ]
-  },
-  {
-   "t": "Ramón Bilbao eleva su apuesta por los blancos de Rueda",
-   "u": "https://www.larazon.es/gastronomia/ramon-bilbao-eleva-apuesta-blancos-rueda_202609056a9bd7de4941316b1e78a23c.html?outputType",
-   "s": "larazon.es",
-   "d": "2026-09-05T08:50:38.000Z",
-   "tags": [
-    "VINO",
-    "CANARIAS"
-   ],
-   "img": "https://fotografias-2.larazon.es/clipping/cmsimages02/2026/09/05/525B5B74-E23D-4F97-BE1F-42D5E57E3632/ramon-bilbao-verdejo_98.jpg?crop=3983,2241,x0,y1384&width=1900&height=1069&optimize=low&format=webply"
-  },
-  {
-   "t": "El restaurante de carretera definitivo está en este pueblo medieval de Madrid: Martín Berasategui confiesa su secreto mejor guardado",
-   "u": "https://www.noticiasdelvino.com/escapadas/2026/09/05/el-restaurante-de-carretera-definitivo-esta-en-este-pueblo-medieval-de-madrid-martin-berasategui-confiesa-su-secreto-mejor-guardado-74843/",
-   "s": "Noticias del Vino",
-   "d": "2026-09-05T08:47:43.000Z",
-   "tags": [
-    "CHEF"
-   ],
-   "img": "https://www.noticiasdelvino.com/wp-content/uploads/image-583.png"
-  },
-  {
-   "t": "Dónde comer durante el Gran Premio de F1: este restaurante cerca de Madring tiene un menú por menos de 25 euros",
-   "u": "https://www.elconfidencial.com/espana/madrid/2026-09-05/menu-especial-restaurante-madrid-premio-f1_4416564/",
-   "s": "El Confidencial",
-   "d": "2026-09-05T08:25:00.000Z",
-   "tags": [
-    "ALTA COCINA"
-   ],
-   "img": "https://images.ecestaticos.com/sxm3_eEcBX3desJmUuDKTH-dJQ4=/0x0:1200x675/600x315/filters:fill(white):format(jpg):quality(99):watermark(f.elconfidencial.com/file/65c/43d/0ca/65c43d0ca5dbd5ff8f19b44167343db9.png,0,275,1)/f.elconfidencial.com/original/b15/8c9/3df/b158c93df64f76d1e14c4c0a12394bc6.jpg"
-  },
-  {
-   "t": "El restaurante de Gran Canaria que conquista con cocina canaria y carnes a la brasa: sus costillas con piña son un imprescindible",
-   "u": "https://www.laprovincia.es/gran-canaria/2026/09/05/restaurante-gran-conquista-cocina-canaria-dv-132761509.amp.html",
-   "s": "La Provincia",
-   "d": "2026-09-05T08:00:00.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://estaticos-cdn.prensaiberica.es/clip/76a21336-652b-445d-b3ca-e1ef8af8322c_16-9-discover-aspect-ratio_default_0_x589y561.jpg"
-  },
-  {
-   "t": "El bar de Tenerife que conquista con cocina canaria tradicional: platos generosos y precios difíciles de encontrar",
-   "u": "https://www.eldia.es/tenerife/2026/09/05/bar-tenerife-precios-conquista-cocina-canaria-dv-123667112.amp.html",
-   "s": "Eldía",
-   "d": "2026-09-05T07:30:00.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://estaticos-cdn.prensaiberica.es/clip/a23b2493-b7ee-4527-adc7-6aab2d1bbbb7_16-9-discover-aspect-ratio_default_0_x472y704.jpg"
-  },
-  {
-   "t": "Video receta jucarne septiembre",
-   "u": "https://www.canarias7.es/gastronomia-c7/recetas/video-receta-jucarne-septiembre-20260903074741-vi.html",
-   "s": "Canarias7",
-   "d": "2026-09-05T06:47:45.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://s1.ppllstatics.com/canarias7/www/multimedia/2026/09/03/VIDEO-video-receta-jucarne-septiembre.jpg"
-  },
-  {
-   "t": "Miquel Pardo, el chef castellonense que cocina paella y conejo en la Ciudad Condal: “Barcelona está mejor a nivel de pizzas que de arroces”",
-   "u": "https://www.infobae.com/espana/2026/09/05/miquel-pardo-el-chef-castellonense-que-cocina-paella-y-conejo-en-la-ciudad-condal-barcelona-esta-mejor-a-nivel-de-pizzas-que-de-arroces/",
-   "s": "Infobae",
-   "d": "2026-09-05T04:00:00.000Z",
-   "tags": [
-    "MICHELIN"
-   ],
-   "img": "https://www.infobae.com/resizer/v2/ANIX5CJ76ZGYDCFQFLGE2OINFE.png?auth=fb907502ec23997ae02ae5fd241c353ef1c34dfdadd68deec9f5e20aea65d9d5&smart=true&width=1200&height=630&quality=85"
   }
  ]
 }
