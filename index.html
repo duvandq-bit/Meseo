@@ -52,7 +52,7 @@
 <meta property="og:description" content="Formación de equipos de sala: carta, alérgenos, vinos, exámenes y juegos de repaso.">
 <meta property="og:url" content="https://meseo.es/">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"Meseo","url":"https://meseo.es/"}</script>
-<meta name="app-version" content="7.351">
+<meta name="app-version" content="7.352">
 <meta name="app-build" content="May 2026">
 <meta name="theme-color" content="#1c2a22">
 <!-- ═══ PWA ═══ -->
@@ -1612,7 +1612,7 @@ const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><p
 const SRC = 'src';
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='7.351';  // sincronizada con sw.js VERSION (guard de CI)
+const APP_VERSION='7.352';  // sincronizada con sw.js VERSION (guard de CI)
 const APP_BUILD='Jul 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;
@@ -6050,16 +6050,30 @@ function _srGenerateQuiz(dish, difficulty){
   const candidates = [];
   const tryAdd = (fn, weight) => { for(let i=0;i<weight;i++) candidates.push(fn); };
 
-  // Always viable
-  tryAdd(()=>_scenarioDeclaredAllergy(dish, dd, _en), 3);
+  // ── Reparto del sorteo (sept 2026) ────────────────────────────────────
+  // Reporte del propietario: «en Repaso hay muchas opciones y son casi lo
+  // mismo — por ejemplo Repaso Inteligente y Simulacro de Alérgenos».
+  // Medido: de 900 casos generados, el 71 % hablaba de alérgenos, porque de
+  // las ~30 papeletas del sorteo 20 eran escenarios de alérgeno. Al lado de un
+  // simulacro que es 100 % alérgenos, los dos ejercicios se sienten iguales.
+  //
+  // Los otros escenarios YA EXISTEN y funcionan (vegetariano en 22 platos,
+  // embarazo en 69, infantil en 92, picante en 31, espera y procedencia): solo
+  // no salían nunca. Bajar el peso de la familia de alérgenos no quita
+  // contenido — deja salir el que ya estaba escrito.
+  //
+  // Los alérgenos siguen siendo el tema con más peso individual, y el
+  // Simulacro de Alérgenos sigue siendo 100 % alérgenos con sus trampas: quien
+  // quiera solo eso, lo tiene entero al lado.
+  tryAdd(()=>_scenarioDeclaredAllergy(dish, dd, _en), 2);
   tryAdd(()=>_scenarioIngredientCheck(dish, dd, _en), 3);
 
   // Conditional
   if(dish.allergens && dish.allergens.length>0){
-    tryAdd(()=>_scenarioSafeAlternative(dish, dd, _en), 2);
-    tryAdd(()=>_scenarioSharedAllergen(dish, dd, _en), 2);
-    tryAdd(()=>_scenarioModification(dish, dd, _en), 2);
-    tryAdd(()=>_scenarioCrossContamination(dish, dd, _en), 2);
+    tryAdd(()=>_scenarioSafeAlternative(dish, dd, _en), 1);
+    tryAdd(()=>_scenarioSharedAllergen(dish, dd, _en), 1);
+    tryAdd(()=>_scenarioModification(dish, dd, _en), 1);
+    tryAdd(()=>_scenarioCrossContamination(dish, dd, _en), 1);
   }
   // Variant-specific removable allergen → only for dishes with a variants array (legacy; none remain on the current carta)
   if(dish.variants && Array.isArray(dish.variants)){
@@ -6070,21 +6084,23 @@ function _srGenerateQuiz(dish, difficulty){
   // _scenarioWinePairing removed from Smart Review — guests don't order a bottle
   // based on one entrée/main alone; pairing is done over the full menu selection,
   // not per dish. Wine knowledge lives in the dedicated Vinos section.
-  tryAdd(()=>_scenarioMultipleAllergies(dish, dd, _en), 2);
+  tryAdd(()=>_scenarioMultipleAllergies(dish, dd, _en), 1);
   // Smarter cross-carta scenarios (v2): inverse retirability, explicit wait
   // times, and ingredient placement across sibling dishes.
-  if(dish.allergens && dish.allergens.length>0) tryAdd(()=>_scenarioWhichAdaptable(dish, dd, _en), 2);
+  if(dish.allergens && dish.allergens.length>0) tryAdd(()=>_scenarioWhichAdaptable(dish, dd, _en), 1);
   tryAdd(()=>_scenarioWaitTime(dish, dd, _en), 2);
   tryAdd(()=>_scenarioIngredientWhere(dish, dd, _en), 2);
   // FASE 4 — procedencia desde DISH_COMPONENTS (base única validada): dónde
   // está el alérgeno dentro del plato y qué aporta cada componente.
   if(typeof DISH_COMPONENTS!=='undefined' && DISH_COMPONENTS[dish.id]){
-    tryAdd(()=>_scenarioAllergenSource(dish, dd, _en), 3);
-    tryAdd(()=>_scenarioComponentAllergen(dish, dd, _en), 2);
+    tryAdd(()=>_scenarioAllergenSource(dish, dd, _en), 2);
+    tryAdd(()=>_scenarioComponentAllergen(dish, dd, _en), 1);
   }
-  tryAdd(()=>_scenarioPregnancy(dish, dd, _en), 1);
-  tryAdd(()=>_scenarioChildFriendly(dish, dd, _en), 1);
-  tryAdd(()=>_scenarioSpicy(dish, dd, _en), 1);
+  // Estos tres estaban a peso 1 contra 20 papeletas de alérgeno: no salían
+  // nunca. Son situaciones de sala reales y frecuentes.
+  tryAdd(()=>_scenarioPregnancy(dish, dd, _en), 2);
+  tryAdd(()=>_scenarioChildFriendly(dish, dd, _en), 2);
+  tryAdd(()=>_scenarioSpicy(dish, dd, _en), 2);
 
   // Shuffle candidates and draw unique scenario types until we have enough
   const shuffled = _djShuffle([...candidates]);
@@ -6233,9 +6249,16 @@ function renderSmartReview(){
       <div class="ri-pad">
         <!-- Qué es esto, en dos frases (antes era un «briefing de terminal»
              con efecto de tecleo; ahora es una nota elegante de la casa) -->
+        <!-- El texto dice ahora de QUÉ va, no solo para qué sirve. Reporte del
+             propietario: «Repaso Inteligente y Simulacro de Alérgenos son casi
+             lo mismo». Lo eran: el 71 % de los casos hablaba de alérgenos. Tras
+             reequilibrar el sorteo son el 47 %, y el resto son alergias no,
+             vegetarianos, embarazo, mesa con niños, picante, tiempos de espera
+             y de qué lleva cada plato. Nombrarlo es lo que hace visible la
+             diferencia con el simulacro, que es solo alérgenos. -->
         <p class="ri-brief">${_en
-          ? 'Guest cases built from our menu, chosen for you: this session reviews exactly the dishes you are about to forget. Here you may get it wrong — in front of the guest, you cannot.'
-          : 'Casos de huésped creados desde nuestra carta, elegidos para ti: esta sesión repasa justo los platos que estás a punto de olvidar. Aquí puedes equivocarte — delante del huésped, no.'}</p>
+          ? 'Guest cases built from our menu, chosen for you: allergies, vegetarians, pregnancy, a table with children, spice, waiting times. It reviews exactly the dishes you are about to forget. Here you may get it wrong — in front of the guest, you cannot.'
+          : 'Casos de huésped creados desde nuestra carta, elegidos para ti: alergias, vegetarianos, embarazo, mesa con niños, picante, tiempos de espera. Repasa justo los platos que estás a punto de olvidar. Aquí puedes equivocarte — delante del huésped, no.'}</p>
         <div class="ri-cta-wrap">
           <button onclick="_startSmartSession()" class="ri-cta" aria-label="${_en?'Start review session':'Empezar sesión de repaso'}">
             <span class="ri-cta-icon" aria-hidden="true">
@@ -6259,7 +6282,7 @@ function renderSmartReview(){
           <span class="ri-drill-icon" aria-hidden="true">⚠</span>
           <span class="ri-drill-body">
             <span class="ri-drill-title">${_en?'ALLERGEN DRILL':'SIMULACRO DE ALÉRGENOS'}</span>
-            <span class="ri-drill-sub">${_en?'Real situations with traps — this trains safety, not memory':'Situaciones reales con trampas — aquí se entrena la seguridad, no la memoria'}</span>
+            <span class="ri-drill-sub">${_en?'Only allergens, with traps — this trains safety, not memory':'Solo alérgenos, con trampas — aquí se entrena la seguridad, no la memoria'}</span>
           </span>
           <span class="ri-drill-go" aria-hidden="true">›</span>
         </button>
