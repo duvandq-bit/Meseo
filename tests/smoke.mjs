@@ -821,6 +821,42 @@ test('Afinado: equilibrado de línea, alto real de pantalla y foco de teclado', 
   assert(/:focus-visible\{[^}]*outline-offset/.test(css), 'el anillo necesita separación');
 });
 
+test('Repaso Inteligente no es otro simulacro de alérgenos', () => {
+  // Reporte del propietario (sept 2026): «en Repaso hay muchas opciones y son
+  // casi lo mismo — por ejemplo Repaso Inteligente y Simulacro de Alérgenos».
+  // Lo eran: medido sobre 900 casos generados, el 71 % hablaba de alérgenos,
+  // porque de las ~30 papeletas del sorteo 20 eran escenarios de alérgeno. Al
+  // lado de un simulacro que es 100 % alérgenos, se sentían iguales.
+  // Los demás escenarios YA existían y funcionaban (vegetariano en 22 platos,
+  // embarazo en 69, infantil en 92, picante en 31): solo no salían nunca.
+  // Tras reequilibrar: 47 % alérgenos y 7 familias vivas en vez de 5.
+  const fn = _xFn('_srGenerateQuiz');
+  const peso = (nombre) => {
+    const m = fn.match(new RegExp('_scenario' + nombre + '\\(dish, dd, _en\\), (\\d+)'));
+    assert(m, `no encuentro el peso de ${nombre} en el sorteo`);
+    return parseInt(m[1], 10);
+  };
+  // Ningún escenario de la familia de alérgenos puede pesar más que el mayor
+  // de los que NO lo son: es lo que volvía a ahogar la variedad.
+  const alerg = ['DeclaredAllergy', 'SafeAlternative', 'SharedAllergen', 'Modification',
+                 'CrossContamination', 'MultipleAllergies', 'WhichAdaptable',
+                 'AllergenSource', 'ComponentAllergen'].map(peso);
+  const otros = ['IngredientCheck', 'Vegetarian', 'WaitTime', 'IngredientWhere',
+                 'Pregnancy', 'ChildFriendly', 'Spicy'].map(peso);
+  assert(Math.max(...alerg) <= Math.max(...otros),
+    `un escenario de alérgeno pesa ${Math.max(...alerg)} y el mayor de los demás ${Math.max(...otros)}: vuelve a ahogar la variedad`);
+  // Los tres que estaban dormidos a peso 1 no pueden volver a quedarse ahí.
+  for (const n of ['Pregnancy', 'ChildFriendly', 'Spicy', 'Vegetarian']) {
+    assert(peso(n) >= 2, `${n} vuelve a estar a peso ${peso(n)}: no saldría nunca`);
+  }
+  // Y los textos deben decir de qué va cada uno: es lo que hace visible la
+  // diferencia entre los dos ejercicios.
+  assert(/alergias, vegetarianos, embarazo, mesa con niños/.test(html),
+    'el texto del Repaso debe nombrar de qué van sus casos');
+  assert(/Solo alérgenos, con trampas/.test(html),
+    'el texto del Simulacro debe decir que es solo de alérgenos');
+});
+
 test('Buscador de alérgenos: primero lo que LLEVA el alérgeno', () => {
   // Peticion del propietario (sept 2026), con la app ya en uso en sala. Yo lo
   // habia puesto al reves pensando que en mesa interesa «que puede tomar»,
