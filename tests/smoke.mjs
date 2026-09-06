@@ -821,6 +821,33 @@ test('Afinado: equilibrado de línea, alto real de pantalla y foco de teclado', 
   assert(/:focus-visible\{[^}]*outline-offset/.test(css), 'el anillo necesita separación');
 });
 
+test('Repaso: poco que leer antes de poder empezar', () => {
+  // Reporte del propietario (sept 2026): «los usuarios son camareros que
+  // normalmente están cansados o entre horarios; mucha información agobia».
+  // Medido en un móvil de 390 px: había 55 palabras ANTES del botón de
+  // empezar, que quedaba a 628 px de una pantalla de 844 — tres cuartos de
+  // pantalla para poder actuar. Tras aligerar: 32 palabras y 512 px, y la
+  // pantalla entera cabe sin scroll (939 → 791 px).
+  const sr = html.slice(html.indexOf('function renderSmartReview'), html.indexOf('function _startSmartSession'));
+  // La nota de entrada es una frase, no un párrafo: era de 36 palabras.
+  const brief = sr.match(/class="ri-brief">\$\{_en\s*\?\s*'([^']+)'\s*:\s*'([^']+)'/);
+  assert(brief, 'no encuentro la nota de entrada del Repaso');
+  for (const t of [brief[1], brief[2]]) {
+    const n = t.split(/\s+/).length;
+    assert(n <= 20, `la nota de entrada tiene ${n} palabras: se lee de pie y cansado, máximo 20`);
+  }
+  // El botón principal decide con cuántos casos y cuánto dura. Con la
+  // dificultad dentro, la línea partía en TRES en 390 px y parecía roto.
+  const cta = sr.match(/class="ri-cta-sub">([^<]*)</);
+  assert(cta, 'no encuentro la línea del botón de empezar');
+  assert(!/_srDiffLabel/.test(cta[1]),
+    'la dificultad no cabe en el botón: la línea partía en tres en un móvil');
+  // Y no vuelven ni el saludo con nombre ni el turno/fecha, que ya salen en
+  // INICIO: eran cuatro datos más que atravesar.
+  assert(!/ri-greet-name/.test(sr), 'el saludo con nombre repite lo que ya dice INICIO');
+  assert(!/ri-shift-date/.test(sr), 'el turno y la fecha ya salen en INICIO y en el móvil');
+});
+
 test('Repaso Inteligente no es otro simulacro de alérgenos', () => {
   // Reporte del propietario (sept 2026): «en Repaso hay muchas opciones y son
   // casi lo mismo — por ejemplo Repaso Inteligente y Simulacro de Alérgenos».
@@ -851,8 +878,19 @@ test('Repaso Inteligente no es otro simulacro de alérgenos', () => {
   }
   // Y los textos deben decir de qué va cada uno: es lo que hace visible la
   // diferencia entre los dos ejercicios.
-  assert(/alergias, vegetarianos, embarazo, mesa con niños/.test(html),
-    'el texto del Repaso debe nombrar de qué van sus casos');
+  // La lista pasó de prosa a línea escaneable y de ahí a etiquetas (reporte:
+  // «mucha información agobia»), pero debe seguir nombrando las familias: es
+  // lo que distingue este ejercicio del Simulacro. Se comprueba el contenido,
+  // no la forma en que se dibuja.
+  const sr2 = html.slice(html.indexOf('function renderSmartReview'),
+                         html.indexOf('function _startSmartSession'));
+  const fams = (sr2.match(/class="ri-fams">([\s\S]*?)<\/div>/) || [])[1] || '';
+  for (const f of ['Alergias','Vegetarianos','Embarazo','Niños','Picante','Esperas']) {
+    assert(fams.includes(f), `el Repaso ya no nombra «${f}» entre sus familias de casos`);
+  }
+  for (const f of ['Allergies','Vegetarians','Pregnancy','Children','Spice','Wait times']) {
+    assert(fams.includes(f), `the English families list dropped «${f}»`);
+  }
   assert(/Solo alérgenos, con trampas/.test(html),
     'el texto del Simulacro debe decir que es solo de alérgenos');
 });
@@ -1333,8 +1371,13 @@ test('repaso inteligente: nota de la casa en vez de briefing de terminal', () =>
   assert(!/riBriefText/.test(sr) && !/_srBriefTyped/.test(html),
     'el efecto de tecleo de terminal debe quedar retirado');
   const css = read('styles.css');
-  assert(/\.ri-brief\{/.test(css) && /Georgia,serif/.test((css.match(/\.ri-brief\{[^}]*\}/)||[''])[0]),
-    'la nota va en serif de la casa, no en monoespaciada de terminal');
+  // La serif de la casa es Cormorant Garamond (DESIGN_SYSTEM §3). Georgia solo
+  // vale como respaldo: era la única pantalla de la app que la usaba de
+  // primaria.
+  const brf = (css.match(/\.ri-brief\{[^}]*\}/) || [''])[0];
+  assert(/\.ri-brief\{/.test(css) && /'Cormorant Garamond'/.test(brf),
+    'la nota va en la serif de la casa (Cormorant Garamond), no en Georgia ni en monoespaciada');
+  assert(!/monospace/.test(brf), 'la nota no puede volver a la monoespaciada de terminal');
 });
 
 test('supervisor panel: realtime employees channel + silent refresh + live pill', () => {
@@ -2774,8 +2817,19 @@ test('la consola del Repaso Inteligente viste pergamino, no terminal', () => {
   // tarjeta de pergamino como el resto — y que no vuelva el fósforo.
   const css = read('styles.css');
   const con = (css.match(/\.ri-console\{([^}]*)\}/) || [])[1] || '';
-  assert(/#faf6ee/.test(con) && /#f0e8d8/.test(con),
-    '.ri-console debe ser tarjeta de pergamino (como .card)');
+  assert(/#faf6ee/.test(con), '.ri-console debe ser tarjeta de pergamino (como .card)');
+  // Y con el MISMO marco que las tarjetas del resto de la app: llevaba 2 px de
+  // tinta y radio 20, un tratamiento que no existe en ninguna otra pantalla
+  // («no hay congruencia con el diseño», sept 2026).
+  // Anclado a principio de línea: hay reglas posteriores como
+  // «.tx-rh-hub .game-card» que redefinen el marco y no son la base.
+  const gc = (css.match(/^\.game-card\{([^}]*)\}/m) || [])[1] || '';
+  const marco = (b) => ((b.match(/border:\s*([^;]+)/) || [])[1] || '').trim();
+  const radio = (b) => ((b.match(/border-radius:\s*([^;]+)/) || [])[1] || '').trim();
+  assert(marco(con) === marco(gc),
+    `.ri-console usa «${marco(con)}» y las tarjetas de la app «${marco(gc)}»`);
+  assert(radio(con) === radio(gc),
+    `.ri-console usa radio ${radio(con)} y las tarjetas de la app ${radio(gc)}`);
   assert(!/3dffa0|22ff88|9fffc8|7fffb8|03160c|02110a/.test(css),
     'paleta de fósforo Pip-Boy detectada en styles.css — el terminal no debe volver');
   assert(!/smart-terminal\s*\{/.test(css),
@@ -2785,6 +2839,71 @@ test('la consola del Repaso Inteligente viste pergamino, no terminal', () => {
   const cta = (css.match(/\.ri-cta\{([^}]*)\}/) || [])[1] || '';
   assert(/var\(--gold\)/.test(cta),
     'el CTA «Empezar sesión» debe ser el oro de la casa');
+});
+
+test('la cabecera del Repaso usa piezas de la casa, no inventadas', () => {
+  // Reporte del propietario (sept 2026): «no hay congruencia con el diseño,
+  // no se entiende a primera vista». Medido: la cabecera llevaba un anillo
+  // SVG de 72 px con trazo en degradado y el porcentaje en Cinzel recortado
+  // a degradado — una pieza única en toda la app — que dejaba al titular
+  // 222 px de los 300 útiles de un móvil de 375 y lo partía en dos líneas.
+  const css = read('styles.css');
+  const hero = html.slice(html.indexOf('<div class="ri-hero">'),
+                          html.indexOf('<div class="ri-pad">'));
+  assert(hero, 'no encuentro la cabecera del Repaso');
+  // 1 · El titular va SOLO en su línea: nada flota a su lado empujándolo.
+  assert(!/riRingGrad|ri-ring/.test(hero),
+    'el anillo de 72 px vuelve a competir con el titular en la cabecera');
+  const heroCss = (css.match(/^\.ri-hero\{([^}]*)\}/m) || [])[1] || '';
+  assert(!/display:\s*flex/.test(heroCss),
+    '.ri-hero en fila vuelve a estrechar el titular: debe apilar');
+  // 2 · Cejilla, chip y barra son las mismas piezas que ya usa la app.
+  const eq = (sel, prop) => {
+    const b = (css.match(new RegExp('^\\' + sel + '\\{([^}]*)\\}', 'm')) || [])[1] || '';
+    return ((b.match(new RegExp(prop + ':\\s*([^;]+)')) || [])[1] || '').trim();
+  };
+  assert(eq('.ri-eyebrow', 'letter-spacing') === eq('.dash-hero-label', 'letter-spacing'),
+    'la cejilla del Repaso no lleva el espaciado de la cejilla de INICIO');
+  assert(eq('.ri-rank', 'clip-path') === eq('.xp-bar-lvl', 'clip-path'),
+    'el rango debe ser el chip hexagonal de la casa, no una píldora propia');
+  assert(eq('.ri-mast-track', 'clip-path') === eq('.xp-bar-track', 'clip-path') &&
+         eq('.ri-mast-track', 'height') === eq('.xp-bar-track', 'height'),
+    'la barra de dominio debe ser la barra de progreso de la casa');
+  // 3 · Y el dominio deja de ser el titular: el porcentaje no puede volver a
+  //     salir a tamaño de titular en Cinzel.
+  assert(!/-webkit-text-fill-color:transparent/.test((css.match(/^\.ri-mast-sub\{([^}]*)\}/m)||[])[1]||''),
+    'el dominio vuelve a ir en degradado recortado: es una línea de apoyo');
+  // 4 · Ningún texto de la pantalla por debajo de 12 px. La etiqueta de las
+  //     cifras iba a .52rem (9,4 px) — el texto más pequeño de la app, y era
+  //     justo la palabra que explica el número.
+  const rem = (v) => v.endsWith('rem') ? parseFloat(v) * 18 : parseFloat(v);
+  for (const sel of ['.ri-stat-l', '.ri-mast-sub', '.ri-fam', '.ri-drill-sub']) {
+    const px = rem(eq(sel, 'font-size'));
+    assert(px >= 12, `${sel} va a ${px.toFixed(1)} px: no se lee de pie y cansado`);
+  }
+  // Y las cifras en tinta plana: el degradado recortado dejaba media cifra
+  // del color del dato (oro claro en «mejor combo»).
+  assert(!/-webkit-text-fill-color:transparent/.test((css.match(/^\.ri-stat-v\{([^}]*)\}/m)||[])[1]||''),
+    'las cifras del Repaso vuelven al degradado recortado: se leen a medias');
+});
+
+test('el Repaso no arrastra CSS muerto de rediseños anteriores', () => {
+  // El propietario retiró hace tiempo el caso de la noche, el selector manual
+  // de dificultad, las zonas a reforzar y la rejilla de alérgenos, y sus
+  // constructores se fueron con el rediseño a pergamino — pero 200 líneas de
+  // CSS se quedaron, con seis animaciones que ningún elemento podía disparar.
+  // Cada pasada de diseño obligaba a leerlas para saber si estaban vivas.
+  const css = read('styles.css');
+  const clases = new Set();
+  for (const m of css.matchAll(/^\.(ri-[a-z0-9-]+)/gm)) clases.add(m[1]);
+  const muertas = [...clases].filter(c => !html.includes(c));
+  assert(muertas.length === 0,
+    `reglas .ri- que ningún elemento usa: ${muertas.join(', ')}`);
+  // Y ninguna animación de la pantalla sin quien la dispare.
+  for (const m of css.matchAll(/^@keyframes (ri-[a-z0-9-]+)/gm)) {
+    const usada = new RegExp(`animation(-name)?:\\s*(?:[^;]*\\s)?${m[1]}\\b`).test(css);
+    assert(usada, `@keyframes ${m[1]} no la dispara nadie`);
+  }
 });
 
 test('smart review screen is stripped to the simulation lead', () => {
@@ -3122,7 +3241,9 @@ test('exam setup: one-tap start, folded customize, drill role, dark mastery pane
     'quick-start button must launch a mixed 10-question exam in one tap');
   assert(/id="examCustom" style="display:none"/.test(html) && /function _examToggleCustom\(/.test(html),
     'topic/category/count pickers must fold behind Personalizar');
-  assert(/Simulacro de Alérgenos/.test(html) && /aquí se entrena la seguridad, no la memoria/.test(html),
+  // El nombre y el papel siguen ahí; el texto se acortó (sept 2026, «mucha
+  // información agobia»): «Solo alérgenos, con trampas — seguridad, no memoria».
+  assert(/Simulacro de Alérgenos/.test(html) && /trampas — seguridad, no memoria/.test(html),
     'the allergen drill must be renamed and explain its role');
   const css = read('styles.css');
   assert(/\.exam-dom-panel\{/.test(css) && /class="exam-dom-panel"/.test(html),
@@ -5922,8 +6043,13 @@ test('la actividad lleva UN solo nombre en todas partes: Repaso Inteligente', ()
     'la guía de onboarding debe usar el nombre nuevo');
   assert(/Aprender → Repaso/.test(html) && /Learn → Review/.test(html),
     'la guía debe decir DÓNDE vive ahora la sesión (renombrada a Repaso, jul 2026)');
-  assert(/\$\{_en\?'SMART REVIEW':'REPASO INTELIGENTE'\}/.test(html),
-    'la cabecera de la pantalla debe decir Repaso Inteligente');
+  // El titular de la pantalla, sea cual sea la caja: lo que se comprueba es
+  // que la actividad se llame igual aquí que en la guía, no que vaya en
+  // mayúsculas (sept 2026 dejó de ir en versalitas forzadas).
+  const tit = html.match(/class="ri-title">\$\{_en\?'([^']+)':'([^']+)'\}/);
+  assert(tit, 'no encuentro el titular de la pantalla de Repaso');
+  assert(/^smart review$/i.test(tit[1]) && /^repaso inteligente$/i.test(tit[2]),
+    `la cabecera de la pantalla debe decir Repaso Inteligente, dice «${tit[2]}»`);
   assert(/'Smart review' : 'Repaso inteligente'/.test(html),
     'el historial de XP debe usar el nombre nuevo');
 });

@@ -1620,9 +1620,12 @@ body::after{
    propietario: fuera terminal, dentro la casa — pergamino, oro y serif. */
 .ri-console{
   position:relative;max-width:680px;margin:0 auto;padding:0;
-  background:linear-gradient(155deg,#faf6ee,#f0e8d8);
-  border:2px solid var(--ink3);
-  border-radius:20px;
+  background:linear-gradient(155deg,#faf6ee 0%,#f5ecda 50%,#f0e4cc 100%);
+  /* Mismo marco que las tarjetas del resto de la app (.game-card): 1 px de oro
+     al 18 % y radio 14. Llevaba 2 px de tinta y radio 20 — un tratamiento que
+     no existe en ninguna otra pantalla y la hacia parecer de otra aplicacion. */
+  border:1px solid rgba(196,154,60,.18);
+  border-radius:14px;
   box-shadow:0 2px 0 var(--ink4), 0 12px 40px rgba(28,42,34,.08);
   overflow:hidden;
   animation:ri-console-fade .55s cubic-bezier(.2,.8,.3,1);
@@ -1681,12 +1684,29 @@ body::after{
 }
 
 /* nota de la casa: qué es el repaso, en dos frases */
+/* La frase que da la razon para entrar: una linea, sin recuadro. El marco con
+   borde y fondo la convertia en un bloque mas que atravesar antes de poder
+   empezar. */
 .ri-brief{
-  margin:0 0 1.1rem;padding:.7rem .9rem;
-  border:1px solid rgba(196,154,60,.3);border-left:3px solid var(--gold);
-  background:rgba(196,154,60,.06);border-radius:10px;
-  font-family:Georgia,serif;font-style:italic;font-size:.8rem;line-height:1.55;
-  color:var(--parch2);
+  margin:0 0 4px;padding:0;
+  /* Cormorant Garamond es la fuente de lectura del sistema (§3). Aqui Georgia
+     estaba de primaria: era la unica pantalla de la app que la usaba asi. */
+  font-family:'Cormorant Garamond','Georgia',serif;font-style:italic;
+  font-size:1.05rem;line-height:1.45;color:var(--parchment);
+}
+/* Las familias de casos, en las etiquetas de la casa (.wine-similar-card-chip):
+   discretas, escaneables y en Quicksand — la monoespaciada es para metadatos,
+   no para una lista de contenido (§3). */
+.ri-fams{
+  display:flex;flex-wrap:wrap;gap:.35rem;
+  margin:0 0 16px;padding:0;
+}
+.ri-fam{
+  display:inline-flex;align-items:center;
+  padding:.22rem .55rem;
+  background:transparent;border:1px solid rgba(196,154,60,.28);border-radius:10px;
+  font-family:'Quicksand',sans-serif;font-size:.68rem;font-weight:500;
+  color:#5b461c;letter-spacing:.01em;line-height:1.2;white-space:nowrap;
 }
 
 /* ── Simulacro de Alérgenos — segunda misión de la pantalla. Ámbar de
@@ -1702,14 +1722,29 @@ body::after{
 @media (hover:hover){.ri-drill:hover{border-color:rgba(196,112,60,.6);box-shadow:0 4px 14px rgba(196,112,60,.12)}}
 .ri-drill-icon{font-size:1.15rem;line-height:1;color:#c9822e;flex-shrink:0}
 .ri-drill-body{flex:1;min-width:0;display:flex;flex-direction:column;gap:.22rem}
-.ri-drill-title{font-family:'Cinzel',serif;font-size:.72rem;font-weight:700;letter-spacing:.08em;color:#8a5a1c}
-.ri-drill-sub{font-family:'Quicksand',sans-serif;font-size:.66rem;line-height:1.45;color:var(--parch3)}
+.ri-drill-title{font-family:'Cinzel',serif;font-size:.78rem;font-weight:700;letter-spacing:.06em;color:#8a5a1c}
+/* .66rem = 11,9 px: por debajo del suelo de legibilidad de la pantalla. */
+.ri-drill-sub{font-family:'Quicksand',sans-serif;font-size:.68rem;line-height:1.45;color:var(--parch3)}
 .ri-drill-go{font-size:1.25rem;color:#c9822e;flex-shrink:0}
 
-/* ── Hero greeting with radial progress ── */
+/* ── Cabecera ──────────────────────────────────────────────────────────
+   Reporte del propietario (sept 2026): «no hay congruencia con el diseño,
+   no se entiende a primera vista». Era literal: la cabecera llevaba un
+   anillo SVG de 72 px con el trazo en degradado y el porcentaje en Cinzel
+   recortado a degradado — una pieza que no existe en ninguna otra pantalla
+   (la casa tiene su anillo, .hoy-ring: 64 px, aro de oro plano, cifra en
+   Cinzel lisa). Ese anillo dejaba al título 222 px de los 300 útiles de un
+   móvil de 375, así que «Repaso Inteligente» partía en dos líneas, y lo
+   primero que veía un usuario nuevo era un «0 %» del tamaño de un titular.
+   Ahora, todo con piezas que ya existen en la app:
+     · cejilla con filetes de oro   → .dash-hero-label
+     · título a línea completa      → Cinzel, como todos los titulares
+     · chip de rango hexagonal      → .xp-bar-lvl
+     · barra de progreso            → .xp-bar-track / -fill / -sub
+   El dominio sigue estando, pero como una línea fina: el titular vuelve a
+   ser lo que la pantalla ES, no lo poco que llevas hecho. */
 .ri-hero{
-  display:flex;align-items:center;gap:1.1rem;
-  padding:1.4rem 1.5rem 1.3rem;
+  padding:1.25rem 1.5rem 1.15rem;
   background:
     linear-gradient(135deg, rgba(45,92,68,.04) 0%, rgba(196,154,60,.03) 100%);
   border-bottom:1px solid rgba(28,42,34,.08);
@@ -1719,72 +1754,57 @@ body::after{
   content:'';position:absolute;left:1.5rem;right:1.5rem;bottom:-1px;height:1px;
   background:linear-gradient(90deg, transparent, rgba(196,154,60,.45), transparent);
 }
-.ri-ring{
-  position:relative;width:72px;height:72px;flex-shrink:0;
-  filter:drop-shadow(0 2px 8px rgba(45,92,68,.18));
+.ri-hero-top{
+  display:flex;align-items:center;justify-content:space-between;
+  gap:.75rem;margin-bottom:8px;
 }
-.ri-ring svg{ transform:rotate(-90deg) }
-.ri-ring-track{ fill:none;stroke:rgba(28,42,34,.1);stroke-width:5 }
-.ri-ring-fill{
-  fill:none;stroke:url(#riRingGrad);stroke-width:5;stroke-linecap:round;
-  stroke-dasharray:201;stroke-dashoffset:201;
-  animation:ri-ring-draw 1.4s cubic-bezier(.2,.8,.3,1) forwards;
+/* Misma cejilla que INICIO: mono, .16em y los dos filetes de oro. */
+.ri-eyebrow{
+  font-family:'DM Mono',monospace;font-size:.75rem;letter-spacing:.16em;
+  color:var(--gold-deep);text-transform:uppercase;
+  display:inline-flex;align-items:center;gap:.45rem;min-width:0;
 }
-@keyframes ri-ring-draw{ to{ stroke-dashoffset:var(--ring-target,60) } }
-.ri-ring-center{
-  position:absolute;inset:0;display:flex;flex-direction:column;
-  align-items:center;justify-content:center;line-height:1;
+.ri-eyebrow::before,.ri-eyebrow::after{
+  content:'';width:14px;height:1px;flex-shrink:0;
+  background:linear-gradient(90deg,transparent,rgba(196,154,60,.55));
 }
-.ri-ring-pct{
-  font-family:'Cinzel',serif;font-size:1.1rem;font-weight:700;
-  color:var(--parchment);
-  background:linear-gradient(135deg,var(--parchment) 0%,#4a8f6f 100%);
-  -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
+.ri-eyebrow::after{ background:linear-gradient(90deg,rgba(196,154,60,.55),transparent) }
+/* Mismo chip que el nivel de INICIO (.xp-bar-lvl): hexágono, no píldora. */
+.ri-rank{
+  display:inline-flex;align-items:center;gap:.35rem;flex-shrink:0;
+  padding:.25rem .7rem;
+  background:linear-gradient(135deg,rgba(196,154,60,.15),rgba(196,154,60,.08));
+  border:1px solid rgba(196,154,60,.28);
+  clip-path:polygon(10% 0%,90% 0%,100% 50%,90% 100%,10% 100%,0% 50%);
+  font-family:'DM Mono',monospace;font-size:.58rem;font-weight:600;
+  color:#7a5a22;letter-spacing:.06em;text-transform:uppercase;white-space:nowrap;
 }
-.ri-ring-lbl{
-  font-family:'DM Mono',monospace;font-size:.5rem;color:#6b7e73;
-  letter-spacing:.14em;margin-top:.15rem;text-transform:uppercase;
+.ri-rank-icon{ font-size:.8rem;line-height:1 }
+.ri-title{
+  font-family:'Cinzel',serif;font-size:1.35rem;font-weight:700;line-height:1.15;
+  color:var(--parchment);letter-spacing:.01em;margin:0 0 12px;
+  text-wrap:balance;
 }
-.ri-greet{ flex:1;min-width:0 }
-.ri-greet-hi{
-  font-family:'DM Mono',monospace;font-size:.58rem;
-  color:var(--gold);letter-spacing:.22em;text-transform:uppercase;
-  margin-bottom:.3rem;
+.ri-mast{ display:flex;align-items:center;gap:.7rem }
+.ri-mast-track{
+  height:8px;flex:1;min-width:0;overflow:hidden;
+  /* Sobre pergamino el hueco del .xp-bar-track (pensado para fondo oscuro)
+     casi no se ve: a cero parecía un filete decorativo, no una barra. */
+  background:rgba(28,42,34,.07);border:1px solid rgba(196,154,60,.28);
+  border-radius:2px;
+  clip-path:polygon(0% 50%,1% 0%,99% 0%,100% 50%,99% 100%,1% 100%);
 }
-.ri-greet-name{
-  font-family:'Cinzel',serif;font-size:1.15rem;font-weight:700;
-  color:var(--parchment);line-height:1.1;margin-bottom:.35rem;letter-spacing:.02em;
+.ri-mast-fill{
+  height:100%;border-radius:1px;
+  background:linear-gradient(90deg,var(--gold),#4a8f6f);
+  box-shadow:0 0 6px rgba(196,154,60,.25);
+  transition:width .6s cubic-bezier(.4,0,.2,1);
 }
-.ri-greet-rank{
-  display:inline-flex;align-items:center;gap:.4rem;
-  padding:.25rem .6rem;
-  background:linear-gradient(135deg,rgba(196,154,60,.15),rgba(196,154,60,.05));
-  border:1px solid rgba(196,154,60,.35);border-radius:999px;
-  font-family:'DM Mono',monospace;font-size:.56rem;font-weight:600;
-  color:#7a5a22;letter-spacing:.1em;text-transform:uppercase;
-}
-.ri-greet-rank-icon{ font-size:.85rem;line-height:1 }
-.ri-shift{
-  display:flex;flex-direction:column;align-items:flex-end;gap:.3rem;flex-shrink:0;
-}
-.ri-shift-dot{
-  display:flex;align-items:center;gap:.4rem;
-  font-family:'DM Mono',monospace;font-size:.54rem;font-weight:600;
-  color:#2d5c44;letter-spacing:.14em;text-transform:uppercase;
-}
-.ri-shift-dot::before{
-  content:'';width:6px;height:6px;border-radius:50%;background:#4a8f6f;
-  box-shadow:0 0 0 0 rgba(74,143,111,.5);
-  animation:ri-pulse 2s ease-out infinite;
-}
-@keyframes ri-pulse{
-  0%{ box-shadow:0 0 0 0 rgba(74,143,111,.55) }
-  70%{ box-shadow:0 0 0 9px rgba(74,143,111,0) }
-  100%{ box-shadow:0 0 0 0 rgba(74,143,111,0) }
-}
-.ri-shift-date{
-  font-family:'DM Mono',monospace;font-size:.5rem;color:#6b7e73;
-  letter-spacing:.16em;text-transform:uppercase;
+/* Un punto por debajo de la línea de familias del cuerpo: es apoyo del
+   titular, no un dato que haya que leer para decidir entrar. */
+.ri-mast-sub{
+  font-family:'DM Mono',monospace;font-size:.68rem;letter-spacing:.02em;
+  color:var(--parch3);white-space:nowrap;flex-shrink:0;
 }
 
 /* ── Stats trio ── */
@@ -1793,7 +1813,9 @@ body::after{
   margin:1.1rem 0 1.3rem;
 }
 .ri-stat{
-  position:relative;text-align:center;padding:.85rem .45rem .8rem;
+  /* .45rem de lado dejaba 72 px útiles y «PRECISIÓN» pide 77: la palabra se
+     cortaba al subir la etiqueta a un cuerpo legible. */
+  position:relative;text-align:center;padding:.85rem .3rem .8rem;
   background:linear-gradient(180deg,rgba(255,255,255,.85),rgba(255,255,255,.4));
   border:1px solid rgba(28,42,34,.1);border-radius:12px;
   transition:all .25s cubic-bezier(.2,.8,.3,1);
@@ -1813,15 +1835,19 @@ body::after{
   display:inline-block;filter:drop-shadow(0 1px 2px rgba(0,0,0,.08));
 }
 .ri-stat-icon svg{width:22px;height:22px;display:block;margin:0 auto}
+/* El degradado recortado dejaba la mitad baja de las cifras en el color del
+   dato (oro claro en «mejor combo»): tinta plana, que se lee de pie. El color
+   propio de cada dato ya lo llevan el icono y el filete de arriba. */
 .ri-stat-v{
   font-family:'Cinzel',serif;font-size:1.35rem;font-weight:700;
   color:var(--parchment);line-height:1;margin-bottom:.35rem;
-  background:linear-gradient(135deg,var(--parchment) 0%,var(--stat-c,#4a8f6f) 100%);
-  -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
 }
+/* Iba a .52rem — 9,4 px: el texto más pequeño de la app, y era justo la
+   palabra que explica el número (reporte sept 2026: «no se entiende a primera
+   vista»). Sube al mismo cuerpo que la línea de dominio de la cabecera. */
 .ri-stat-l{
-  font-family:'DM Mono',monospace;font-size:.52rem;
-  color:#6b7e73;letter-spacing:.14em;text-transform:uppercase;
+  font-family:'DM Mono',monospace;font-size:.68rem;
+  color:var(--parch3);letter-spacing:.06em;text-transform:uppercase;
 }
 .ri-stat.flame .ri-stat-icon{ animation:ri-flicker 1.8s ease-in-out infinite }
 @keyframes ri-flicker{
@@ -1829,209 +1855,12 @@ body::after{
   50%{ transform:scale(1.08) rotate(2deg); filter:drop-shadow(0 2px 6px rgba(196,154,60,.6)) }
 }
 
-/* ── Tonight's Case (scenario preview) ── */
-.ri-case{
-  position:relative;padding:1.15rem 1.2rem 1.1rem;margin-bottom:1.3rem;
-  background:
-    linear-gradient(135deg,rgba(28,42,34,.95) 0%,rgba(45,92,68,.9) 100%);
-  border:1px solid rgba(196,154,60,.35);
-  border-radius:14px;color:#fff6e2;
-  box-shadow:
-    0 1px 0 rgba(255,255,255,.08) inset,
-    0 6px 24px rgba(28,42,34,.25);
-  overflow:hidden;
-}
-.ri-case::before{
-  content:'';position:absolute;top:0;left:0;right:0;height:3px;
-  background:linear-gradient(90deg,var(--gold) 0%,#e8c275 50%,var(--gold) 100%);
-  background-size:200% 100%;
-  animation:ri-shimmer 3.5s linear infinite;
-}
-.ri-case::after{
-  content:'';position:absolute;inset:0;pointer-events:none;
-  background:
-    radial-gradient(ellipse 60% 40% at 90% 0%, rgba(196,154,60,.18), transparent 70%),
-    radial-gradient(ellipse 50% 30% at 0% 100%, rgba(74,143,111,.15), transparent 70%);
-}
-@keyframes ri-shimmer{
-  0%{ background-position:0% 0 }
-  100%{ background-position:200% 0 }
-}
-.ri-case-head{
-  position:relative;display:flex;align-items:center;justify-content:space-between;
-  gap:.6rem;margin-bottom:.7rem;
-}
-.ri-case-tag{
-  display:inline-flex;align-items:center;gap:.4rem;
-  padding:.25rem .55rem;
-  background:rgba(196,154,60,.18);
-  border:1px solid rgba(196,154,60,.45);border-radius:4px;
-  font-family:'DM Mono',monospace;font-size:.52rem;font-weight:700;
-  color:#e8c275;letter-spacing:.22em;text-transform:uppercase;
-}
-.ri-case-tag::before{
-  content:'';width:5px;height:5px;border-radius:50%;background:#e8c275;
-  animation:ri-tag-blink 1.3s ease-in-out infinite;
-}
-@keyframes ri-tag-blink{
-  0%,100%{ opacity:1;transform:scale(1) }
-  50%{ opacity:.35;transform:scale(.85) }
-}
-.ri-case-badge{
-  font-family:'DM Mono',monospace;font-size:.5rem;
-  color:rgba(255,246,226,.55);letter-spacing:.15em;
-}
-.ri-case-quote{
-  position:relative;
-  font-family:'Cormorant Garamond','Georgia',serif;font-size:1.08rem;
-  line-height:1.5;font-style:italic;color:#fff6e2;
-  padding-left:1.6rem;margin-bottom:.85rem;
-  min-height:1.5em;
-}
-.ri-case-quote::before{
-  content:'"';position:absolute;left:0;top:-.2em;
-  font-family:'Cormorant Garamond',serif;font-size:2.4rem;line-height:1;
-  color:#e8c275;opacity:.55;font-style:normal;
-}
-.ri-type-caret{
-  display:inline-block;width:2px;height:1em;margin-left:2px;vertical-align:-2px;
-  background:#e8c275;animation:ri-caret 1s step-end infinite;
-}
-@keyframes ri-caret{ 50%{ opacity:0 } }
-.ri-case-meta{
-  position:relative;display:flex;align-items:center;gap:.55rem;flex-wrap:wrap;
-  padding-top:.55rem;border-top:1px solid rgba(255,246,226,.08);
-  font-family:'DM Mono',monospace;font-size:.56rem;letter-spacing:.08em;
-}
-.ri-case-dish{
-  color:#e8c275;font-weight:600;letter-spacing:.04em;
-}
-.ri-case-dot{ color:rgba(255,246,226,.3) }
-.ri-case-cat{
-  color:rgba(255,246,226,.7);text-transform:uppercase;letter-spacing:.15em;font-size:.5rem;
-}
-.ri-case-refresh{
-  margin-left:auto;background:none;border:none;
-  color:rgba(255,246,226,.55);cursor:pointer;
-  font-family:'DM Mono',monospace;font-size:.56rem;letter-spacing:.12em;
-  text-transform:uppercase;padding:.2rem .35rem;border-radius:4px;
-  transition:all .2s;
-}
-.ri-case-refresh:hover{ color:#e8c275;background:rgba(196,154,60,.1) }
-
-/* ── Difficulty picker ── */
-.ri-diff-row{
-  display:grid;grid-template-columns:repeat(4,1fr);gap:.45rem;margin-bottom:1.2rem;
-}
-.ri-diff{
-  position:relative;cursor:pointer;
-  padding:.75rem .3rem;text-align:center;
-  background:linear-gradient(180deg,rgba(255,255,255,.75),rgba(255,255,255,.35));
-  border:1px solid rgba(28,42,34,.1);border-radius:10px;
-  transition:all .25s cubic-bezier(.2,.8,.3,1);
-}
-.ri-diff:hover{
-  border-color:rgba(196,154,60,.45);transform:translateY(-2px);
-  box-shadow:0 6px 16px rgba(28,42,34,.08);
-}
-.ri-diff.active{
-  background:linear-gradient(180deg,rgba(45,92,68,.95),rgba(28,42,34,.95));
-  border-color:var(--gold);color:#fff6e2;
-  box-shadow:0 4px 14px rgba(45,92,68,.3), 0 0 0 2px rgba(196,154,60,.25);
-  transform:translateY(-1px);
-}
-.ri-diff.active .ri-diff-lbl{ color:#fff6e2 }
-.ri-diff.active .ri-diff-sub{ color:rgba(255,246,226,.72) }
-.ri-diff-icon{
-  font-size:1.15rem;line-height:1;margin-bottom:.35rem;display:block;
-  filter:drop-shadow(0 1px 2px rgba(0,0,0,.12));
-}
-.ri-diff-lbl{
-  font-family:'Cinzel',serif;font-size:.65rem;font-weight:700;
-  color:var(--parchment);letter-spacing:.08em;line-height:1;margin-bottom:.25rem;
-  text-transform:uppercase;
-}
-.ri-diff-sub{
-  font-family:'DM Mono',monospace;font-size:.5rem;
-  color:#6b7e73;letter-spacing:.08em;
-}
-
-/* ── Section head ── */
-.ri-section-head{
-  display:flex;align-items:center;justify-content:space-between;
-  margin:0 .2rem .7rem;
-}
-.ri-section-title{
-  display:flex;align-items:center;gap:.4rem;
-  font-family:'DM Mono',monospace;font-size:.6rem;font-weight:600;
-  color:#2d5c44;letter-spacing:.15em;text-transform:uppercase;
-}
-.ri-section-title::before{
-  content:'';width:16px;height:1px;background:linear-gradient(90deg,var(--gold),transparent);
-}
-.ri-section-count{
-  font-family:'DM Mono',monospace;font-size:.54rem;
-  color:var(--gold);font-weight:700;
-  padding:.15rem .5rem;border:1px solid rgba(196,154,60,.4);
-  border-radius:999px;background:rgba(196,154,60,.08);
-  letter-spacing:.08em;
-}
-
-/* ── Weakness chips (focus areas) ── */
-.ri-focus{
-  display:flex;flex-wrap:wrap;gap:.4rem;margin-bottom:1.3rem;
-}
-.ri-focus-chip{
-  display:inline-flex;align-items:center;gap:.35rem;
-  padding:.4rem .7rem;
-  background:linear-gradient(135deg,rgba(220,90,50,.08),rgba(196,154,60,.08));
-  border:1px solid rgba(220,90,50,.3);border-radius:999px;
-  font-family:'Quicksand',sans-serif;font-size:.7rem;font-weight:600;
-  color:#8b3a1a;letter-spacing:.02em;
-  animation:ri-focus-in .5s cubic-bezier(.2,.8,.3,1) backwards;
-}
-.ri-focus-chip::before{
-  content:'';width:5px;height:5px;border-radius:50%;background:#dc5a32;
-  animation:ri-pulse-red 2s ease-out infinite;
-}
-@keyframes ri-pulse-red{
-  0%{ box-shadow:0 0 0 0 rgba(220,90,50,.5) }
-  70%{ box-shadow:0 0 0 6px rgba(220,90,50,0) }
-  100%{ box-shadow:0 0 0 0 rgba(220,90,50,0) }
-}
-@keyframes ri-focus-in{
-  from{ opacity:0;transform:translateY(4px) scale(.95) }
-  to{ opacity:1;transform:translateY(0) scale(1) }
-}
-.ri-focus-chip:nth-child(2){ animation-delay:.06s }
-.ri-focus-chip:nth-child(3){ animation-delay:.12s }
-.ri-focus-chip:nth-child(4){ animation-delay:.18s }
-.ri-focus-chip:nth-child(5){ animation-delay:.24s }
-.ri-focus-chip:nth-child(6){ animation-delay:.3s }
-.ri-focus-count{
-  font-family:'DM Mono',monospace;font-size:.58rem;font-weight:700;
-  color:#dc5a32;margin-left:.15rem;
-}
-
-/* ── Allergen grid ── */
-.ri-allergen-grid{
-  display:flex;flex-wrap:wrap;gap:.4rem;margin-bottom:1.4rem;
-}
-.ri-allergen-chip{
-  font-family:'Quicksand',sans-serif;font-size:.72rem;font-weight:500;
-  color:var(--parchment);
-  background:linear-gradient(180deg,rgba(255,255,255,.85),rgba(255,255,255,.5));
-  border:1px solid rgba(28,42,34,.12);
-  padding:.4rem .75rem;border-radius:7px;
-  transition:all .22s cubic-bezier(.2,.8,.3,1);
-  cursor:default;
-}
-.ri-allergen-chip:hover{
-  border-color:var(--gold);
-  background:linear-gradient(135deg,rgba(196,154,60,.12),rgba(74,143,111,.08));
-  transform:translateY(-1px);
-  box-shadow:0 3px 10px rgba(28,42,34,.08);
-}
+/* Aquí vivían .ri-case-*, .ri-diff-*, .ri-section-*, .ri-focus-* y
+   .ri-allergen-* — el caso de la noche, el selector manual de dificultad,
+   las zonas a reforzar y la rejilla de alérgenos. El propietario retiró esos
+   bloques de la pantalla hace tiempo y sus constructores se fueron con el
+   rediseño a pergamino; el CSS se quedó. 200 líneas que ningún elemento
+   podía usar, con seis animaciones que nunca corrían. */
 
 /* ═══════════════════════════════════════════════════════════
    ── CTA «Empezar sesión» — oro de la casa (antes: terminal
@@ -2135,14 +1964,10 @@ body::after{
 
 @media(max-width:640px){
   .ri-pad{ padding:1.2rem 1rem 1.1rem }
-  .ri-hero{ padding:1.15rem 1rem 1.1rem; flex-wrap:wrap; gap:.85rem }
-  .ri-shift{ width:100%; align-items:flex-start; flex-direction:row; justify-content:space-between }
-  .ri-greet-name{ font-size:1rem }
-  .ri-ring{ width:62px;height:62px }
-  .ri-ring-pct{ font-size:.95rem }
-  .ri-case-quote{ font-size:.95rem; padding-left:1.2rem }
-  .ri-case-quote::before{ font-size:2rem }
-  .ri-diff-row{ grid-template-columns:repeat(2,1fr) }
+  .ri-hero{ padding:1.15rem 1rem 1.1rem }
+  /* A 375 px el titular debe seguir cabiendo en UNA línea. */
+  .ri-title{ font-size:1.2rem }
+  .ri-eyebrow{ font-size:.68rem;letter-spacing:.12em }
   .ri-cta-top{ font-size:.9rem }
   .ri-stat-v{ font-size:1.15rem }
 }
