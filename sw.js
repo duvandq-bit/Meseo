@@ -4,7 +4,7 @@
 //   • Web Push notifications
 //   • Notification click → focus existing window in scope, or open one
 
-const VERSION = 'v7.352';
+const VERSION = 'v7.353';
 const CACHE_NAME = `txoko-shell-${VERSION}`;
 // Caché ESTABLE para assets perezosos (sprites de img/, data/*.json). A
 // diferencia del shell (versionado), NO se borra al cambiar de versión: así

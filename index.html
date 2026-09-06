@@ -52,7 +52,7 @@
 <meta property="og:description" content="Formación de equipos de sala: carta, alérgenos, vinos, exámenes y juegos de repaso.">
 <meta property="og:url" content="https://meseo.es/">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"Meseo","url":"https://meseo.es/"}</script>
-<meta name="app-version" content="7.352">
+<meta name="app-version" content="7.353">
 <meta name="app-build" content="May 2026">
 <meta name="theme-color" content="#1c2a22">
 <!-- ═══ PWA ═══ -->
@@ -1612,7 +1612,7 @@ const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><p
 const SRC = 'src';
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='7.352';  // sincronizada con sw.js VERSION (guard de CI)
+const APP_VERSION='7.353';  // sincronizada con sw.js VERSION (guard de CI)
 const APP_BUILD='Jul 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;
@@ -6153,17 +6153,8 @@ function _srGenerateQuiz(dish, difficulty){
 // Light theme, high-contrast, data-forward, neural-grid aesthetic.
 // Anchored in real restaurant vocabulary: turno, mesa, sala, alérgenos.
 // ═══════════════════════════════════════════════════════════════════════
-function _riServiceInfo(_en){
-  const d = new Date();
-  const h = d.getHours();
-  const turno = (h < 16)
-    ? (_en ? 'LUNCH SHIFT' : 'TURNO · ALMUERZO')
-    : (_en ? 'DINNER SHIFT' : 'TURNO · CENA');
-  const fmt = _en
-    ? d.toLocaleDateString('en-US', {weekday:'short', day:'numeric', month:'short'})
-    : d.toLocaleDateString('es-ES', {weekday:'short', day:'numeric', month:'short'});
-  return { turno, fecha: fmt.toUpperCase().replace(/\./g,'') };
-}
+// (_riServiceInfo — turno y fecha de la cabecera — se retiró con ella: los dos
+// datos ya salen en INICIO y la fecha además en la barra del propio móvil.)
 
 function renderSmartReview(){
   const c = document.getElementById('appContent');
@@ -6176,19 +6167,10 @@ function renderSmartReview(){
   const pickedDiff = autoDiff;
   const rank = _srGetRank(emp);
   const sessionSize = 5;
-  const svc = _riServiceInfo(_en);
 
-  // ── Greeting based on time of day ──
-  const hour = new Date().getHours();
-  const greeting = _en
-    ? (hour < 12 ? 'Good morning' : hour < 19 ? 'Good afternoon' : 'Good evening')
-    : (hour < 12 ? 'Buenos días'   : hour < 19 ? 'Buenas tardes' : 'Buenas noches');
-  const empName = (emp && emp.name) ? emp.name.split(' ')[0] : (currentUser || '');
-
-  // ── Mastered dishes (for ring) ──
+  // ── Platos dominados (barra de progreso de la cabecera) ──
   const mastered = DISHES.filter(d => { const s = (emp.srs||{})[d.id]; return s && s.reps >= 4 && s.ef >= 2.2; }).length;
   const masteryPct = DISHES.length > 0 ? Math.round((mastered / DISHES.length) * 100) : 0;
-  const ringTarget = 201 - (201 * masteryPct / 100); // circle circumference ~ 201 for r=32
 
   // ── Stats trio (racha, mejor combo, precisión) ──
   const bestStreak = ad.streakBest || 0;
@@ -6215,50 +6197,55 @@ function renderSmartReview(){
 
   c.innerHTML = `
     <div class="ri-console">
+      <!-- Cabecera. Reporte del propietario (sept 2026): «no hay congruencia
+           con el diseño, no se entiende a primera vista». Lo era: el anillo
+           SVG de 72 px empujaba el título a dos líneas y el primer dato que
+           veía un usuario nuevo era un «0 %» a tamaño de titular. Ahora la
+           misma gramática que el resto de la app: cejilla con filetes
+           (.dash-hero-label), título a línea completa, chip de rango
+           hexagonal y la barra de progreso de la casa (.xp-bar-*). -->
       <div class="ri-hero">
-        <div class="ri-ring" style="--ring-target:${ringTarget}">
-          <svg width="72" height="72" viewBox="0 0 72 72" aria-hidden="true">
-            <defs>
-              <linearGradient id="riRingGrad" x1="0" y1="0" x2="1" y2="1">
-                <stop offset="0%" stop-color="#c49a3c"/>
-                <stop offset="100%" stop-color="#4a8f6f"/>
-              </linearGradient>
-            </defs>
-            <circle class="ri-ring-track" cx="36" cy="36" r="32"/>
-            <circle class="ri-ring-fill"  cx="36" cy="36" r="32"/>
-          </svg>
-          <div class="ri-ring-center">
-            <span class="ri-ring-pct">${masteryPct}%</span>
-            <span class="ri-ring-lbl">${_en?'mastery':'dominio'}</span>
-          </div>
-        </div>
-        <div class="ri-greet">
-          <div class="ri-greet-hi">${_en?'SMART REVIEW':'REPASO INTELIGENTE'}</div>
-          <div class="ri-greet-name">${greeting}${empName?', '+empName:''}</div>
-          <span class="ri-greet-rank">
-            <span class="ri-greet-rank-icon">${rank.icon}</span>
-            ${_en?rank.label_en:rank.label_es}
+        <div class="ri-hero-top">
+          <span class="ri-eyebrow">${_en?'Training':'Entrenamiento'}</span>
+          <span class="ri-rank">
+            <span class="ri-rank-icon" aria-hidden="true">${rank.icon}</span>${_en?rank.label_en:rank.label_es}
           </span>
         </div>
-        <div class="ri-shift">
-          <span class="ri-shift-dot">${svc.turno}</span>
-          <span class="ri-shift-date">${svc.fecha}</span>
+        <h2 class="ri-title">${_en?'Smart Review':'Repaso Inteligente'}</h2>
+        <!-- Barra y cifra en la MISMA fila: así la barra se lee como barra
+             aunque esté a cero, y la cabecera no gana otra línea. -->
+        <div class="ri-mast">
+          <div class="ri-mast-track" role="progressbar" aria-valuemin="0" aria-valuemax="100"
+               aria-valuenow="${masteryPct}"
+               aria-label="${_en?'Menu mastery':'Dominio de la carta'}">
+            <div class="ri-mast-fill" style="width:${masteryPct}%"></div>
+          </div>
+          <span class="ri-mast-sub">${mastered}/${DISHES.length} ${_en?'mastered':'dominados'}</span>
         </div>
       </div>
 
       <div class="ri-pad">
-        <!-- Qué es esto, en dos frases (antes era un «briefing de terminal»
-             con efecto de tecleo; ahora es una nota elegante de la casa) -->
-        <!-- El texto dice ahora de QUÉ va, no solo para qué sirve. Reporte del
-             propietario: «Repaso Inteligente y Simulacro de Alérgenos son casi
-             lo mismo». Lo eran: el 71 % de los casos hablaba de alérgenos. Tras
-             reequilibrar el sorteo son el 47 %, y el resto son alergias no,
-             vegetarianos, embarazo, mesa con niños, picante, tiempos de espera
-             y de qué lleva cada plato. Nombrarlo es lo que hace visible la
-             diferencia con el simulacro, que es solo alérgenos. -->
+        <!-- Reporte del propietario (sept 2026): «los usuarios son camareros
+             que normalmente están cansados o entre horarios; mucha información
+             agobia». Medido en esta pantalla: 55 palabras ANTES del botón de
+             empezar, que quedaba a 628 px de una pantalla de 844 — había que
+             leerse tres cuartos de pantalla para poder actuar. Solo este
+             párrafo eran 36 palabras en 7 líneas (y lo había alargado yo al
+             diferenciarlo del Simulacro).
+             Ahora: una frase que es la razón para entrar, y una línea
+             escaneable con las familias — sigue distinguiéndose del Simulacro
+             («solo alérgenos»), pero se lee de un vistazo y no en prosa. -->
         <p class="ri-brief">${_en
-          ? 'Guest cases built from our menu, chosen for you: allergies, vegetarians, pregnancy, a table with children, spice, waiting times. It reviews exactly the dishes you are about to forget. Here you may get it wrong — in front of the guest, you cannot.'
-          : 'Casos de huésped creados desde nuestra carta, elegidos para ti: alergias, vegetarianos, embarazo, mesa con niños, picante, tiempos de espera. Repasa justo los platos que estás a punto de olvidar. Aquí puedes equivocarte — delante del huésped, no.'}</p>
+          ? 'The dishes you are about to forget. Get it wrong here — not in front of the guest.'
+          : 'Los platos que estás a punto de olvidar. Aquí puedes equivocarte — delante del huésped, no.'}</p>
+        <!-- Las familias iban en una tirada monoespaciada que a 360 px salía
+             en TRES líneas. DM Mono es la voz de los metadatos (§3), no la de
+             una lista de contenido: en etiquetas se leen de un vistazo y son
+             las mismas etiquetas que usa el resto de la app. -->
+        <div class="ri-fams">${(_en
+          ? ['Allergies','Vegetarians','Pregnancy','Children','Spice','Wait times']
+          : ['Alergias','Vegetarianos','Embarazo','Niños','Picante','Esperas'])
+          .map(f=>`<span class="ri-fam">${f}</span>`).join('')}</div>
         <div class="ri-cta-wrap">
           <button onclick="_startSmartSession()" class="ri-cta" aria-label="${_en?'Start review session':'Empezar sesión de repaso'}">
             <span class="ri-cta-icon" aria-hidden="true">
@@ -6268,7 +6255,11 @@ function renderSmartReview(){
             </span>
             <span class="ri-cta-text">
               <span class="ri-cta-top">${_en?'Start session':'Empezar sesión'}</span>
-              <span class="ri-cta-sub">${sessionSize} ${_en?'cases':'casos'} · ${_srDiffLabel(pickedDiff,_en)} · ≈ ${Math.round(sessionSize * _srTimerSeconds(pickedDiff) / 60)} ${_en?'min':'min'}</span>
+              <!-- Con la dificultad dentro, esta línea partía en TRES en un
+                   móvil de 390 px y el botón principal parecía roto. Para
+                   decidir entrar hacen falta cuántos casos y cuánto dura; la
+                   dificultad la elige la app sola y ya sale en la cabecera. -->
+              <span class="ri-cta-sub">${sessionSize} ${_en?'cases':'casos'} · ≈ ${Math.round(sessionSize * _srTimerSeconds(pickedDiff) / 60)} min</span>
             </span>
           </button>
           <button onclick="renderAprender()" class="ri-secondary">↻ ${_en?'Reshuffle selection':'Regenerar selección'}</button>
@@ -6282,7 +6273,7 @@ function renderSmartReview(){
           <span class="ri-drill-icon" aria-hidden="true">⚠</span>
           <span class="ri-drill-body">
             <span class="ri-drill-title">${_en?'ALLERGEN DRILL':'SIMULACRO DE ALÉRGENOS'}</span>
-            <span class="ri-drill-sub">${_en?'Only allergens, with traps — this trains safety, not memory':'Solo alérgenos, con trampas — aquí se entrena la seguridad, no la memoria'}</span>
+            <span class="ri-drill-sub">${_en?'Only allergens, with traps — safety, not memory':'Solo alérgenos, con trampas — seguridad, no memoria'}</span>
           </span>
           <span class="ri-drill-go" aria-hidden="true">›</span>
         </button>
