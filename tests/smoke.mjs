@@ -2887,6 +2887,25 @@ test('la cabecera del Repaso usa piezas de la casa, no inventadas', () => {
     'las cifras del Repaso vuelven al degradado recortado: se leen a medias');
 });
 
+test('el Repaso no arrastra CSS muerto de rediseños anteriores', () => {
+  // El propietario retiró hace tiempo el caso de la noche, el selector manual
+  // de dificultad, las zonas a reforzar y la rejilla de alérgenos, y sus
+  // constructores se fueron con el rediseño a pergamino — pero 200 líneas de
+  // CSS se quedaron, con seis animaciones que ningún elemento podía disparar.
+  // Cada pasada de diseño obligaba a leerlas para saber si estaban vivas.
+  const css = read('styles.css');
+  const clases = new Set();
+  for (const m of css.matchAll(/^\.(ri-[a-z0-9-]+)/gm)) clases.add(m[1]);
+  const muertas = [...clases].filter(c => !html.includes(c));
+  assert(muertas.length === 0,
+    `reglas .ri- que ningún elemento usa: ${muertas.join(', ')}`);
+  // Y ninguna animación de la pantalla sin quien la dispare.
+  for (const m of css.matchAll(/^@keyframes (ri-[a-z0-9-]+)/gm)) {
+    const usada = new RegExp(`animation(-name)?:\\s*(?:[^;]*\\s)?${m[1]}\\b`).test(css);
+    assert(usada, `@keyframes ${m[1]} no la dispara nadie`);
+  }
+});
+
 test('smart review screen is stripped to the simulation lead', () => {
   // Owner removed the focus-areas, difficulty-picker and allergen blocks;
   // the jul 2026 redesign deleted even their dead builders. Guard they stay out.
