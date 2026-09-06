@@ -821,6 +821,25 @@ test('Afinado: equilibrado de línea, alto real de pantalla y foco de teclado', 
   assert(/:focus-visible\{[^}]*outline-offset/.test(css), 'el anillo necesita separación');
 });
 
+test('Buscador de alérgenos: primero lo que LLEVA el alérgeno', () => {
+  // Peticion del propietario (sept 2026), con la app ya en uso en sala. Yo lo
+  // habia puesto al reves pensando que en mesa interesa «que puede tomar»,
+  // pero medido en el movil el bloque rojo quedaba a 4.066 px de scroll: habia
+  // que bajar por 59 platos en seis grupos para llegar a el. Ademas suele ser
+  // la lista mas corta (43 frente a 59 con gluten) y es la que se consulta
+  // para descartar un plato concreto. Ahora se ve de entrada.
+  const fn = _xFn('_gsAllergenAnswer');
+  const iLleva = fn.indexOf("gs-al-band danger");
+  const iLibre = fn.indexOf("gs-al-band safe");
+  assert(iLleva !== -1 && iLibre !== -1, 'faltan las dos bandas de la respuesta');
+  assert(iLleva < iLibre,
+    'el bloque «Lleva» debe pintarse ANTES que el de «No declara» (petición del propietario)');
+  // Las dos bandas siguen etiquetadas sin ambigüedad: es lo que impide leer
+  // una lista por la otra, y no el orden.
+  assert(/'Declares':'Lleva'/.test(fn) && /'Does not declare':'No declara'/.test(fn),
+    'las dos bandas deben seguir nombrando qué son');
+});
+
 test('Buscador de alérgenos: el bloque «no declara» nunca miente', () => {
   // El propietario (ago 2026) reporta que la plantilla usa el buscador en sala,
   // con el cliente delante, y que ha puesto la app en tablets para eso. Medido
