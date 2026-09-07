@@ -1296,6 +1296,29 @@ test('ninguna ficha de plato tiene una clave repetida que se trague el contenido
     `platos sin historia (el capítulo I les dice «No hay historia disponible»): ${sin.map(d => d.id + ' ' + d.name).join(', ')}`);
 });
 
+test('la croqueta de boletus sale en las dos cartas, y cat2 no se cuela en la lógica', () => {
+  // Confirmado por el propietario (sept 2026): la croqueta de boletus es
+  // vegetariana Y entrante del menú normal. El campo cat2 la lista en las dos
+  // cartas; para todo lo demás —quiz, detección de vegetariano, platos
+  // hermanos— manda cat, que sigue siendo «Vegetariano».
+  const iD = html.indexOf('const DISHES = ['), jD = html.indexOf('\n];', iD);
+  const DISHES = new Function(html.slice(iD, jD + 3) + '; return DISHES;')(); // eslint-disable-line no-new-func
+  const cats = new Set(DISHES.map(d => d.cat));
+  const con2 = DISHES.filter(d => d.cat2);
+  assert(con2.length >= 1, 'la croqueta de boletus debe llevar cat2');
+  for (const d of con2) {
+    assert(cats.has(d.cat2), `${d.id}: cat2 «${d.cat2}» no es una categoría real de la carta`);
+    assert(d.cat2 !== d.cat, `${d.id}: cat2 repite la categoría principal`);
+  }
+  const bol = DISHES.find(d => d.id === 50);
+  assert(bol && bol.cat === 'Vegetariano' && bol.cat2 === 'Entrantes',
+    'la croqueta de boletus debe ser Vegetariano (principal) + Entrantes (segunda carta)');
+  // cat2 SOLO puede usarse para listar. Si se colara en la lógica de quiz o de
+  // platos hermanos, un plato vegetariano empezaría a comportarse como entrante.
+  const usos = [...html.matchAll(/cat2/g)].length;
+  assert(usos <= 3, `cat2 aparece ${usos} veces: solo debe declararse y usarse en el filtro de la lista`);
+});
+
 test('recorrido guiado: la ficha de servicio no corta ninguna comanda', () => {
   // Auditoría (sept 2026): el capítulo de Servicio cortaba la nota con
   // substring(0,200)+'...'. Medido: 69 fichas cortadas, 8.302 caracteres
@@ -2116,7 +2139,10 @@ test('study shift filter: subject AND distractor pools route by shift (no wrong-
     /const _anyUnSh   = _shiftDishes\(_anyUnAll\)/.test(html),
     'journey next-dish suggestion must be shift-filtered with a fallback');
   // #3 renderRepasoTopic — lista por categoría por turno + estado vacío
-  assert(/const _repAll=DISHES\.filter\(d=>d\.cat===repasoCat\);\s*\n\s*const dishes=_shiftDishes\(_repAll\)/.test(html),
+  // El filtro admite ahora cat2: un plato puede salir en dos cartas (la
+  // croqueta de boletus es vegetariana Y entrante del menú normal). Lo que
+  // este guard protege sigue igual: la lista se filtra por turno.
+  assert(/const _repAll=DISHES\.filter\(d=>d\.cat===repasoCat \|\| d\.cat2===repasoCat\);\s*\n\s*const dishes=_shiftDishes\(_repAll\)/.test(html),
     'renderRepasoTopic per-category list must be shift-filtered');
   assert(/\$\{dishes\.length\?rows:/.test(html),
     'renderRepasoTopic must show an empty state when the shift leaves no dishes');

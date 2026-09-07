@@ -1232,31 +1232,23 @@
   },
   "salchichon iberico": {
    "nombre": "Salchichón ibérico",
-   "alergenos": [
-    "Sulfitos"
-   ],
-   "fuente": "deducido de la carta"
+   "alergenos": [],
+   "fuente": "confirmado por propietario"
   },
   "chorizo iberico": {
    "nombre": "Chorizo ibérico",
-   "alergenos": [
-    "Sulfitos"
-   ],
-   "fuente": "deducido de la carta"
+   "alergenos": [],
+   "fuente": "confirmado por propietario"
   },
   "lomo iberico": {
    "nombre": "Lomo ibérico",
-   "alergenos": [
-    "Sulfitos"
-   ],
-   "fuente": "deducido de la carta"
+   "alergenos": [],
+   "fuente": "confirmado por propietario"
   },
   "cecina de wagyu premium": {
    "nombre": "Cecina de Wagyu Premium",
-   "alergenos": [
-    "Sulfitos"
-   ],
-   "fuente": "deducido de la carta"
+   "alergenos": [],
+   "fuente": "confirmado por propietario"
   },
   "solomillo vacuno": {
    "nombre": "Solomillo vacuno",
