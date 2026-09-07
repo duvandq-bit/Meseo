@@ -5926,10 +5926,26 @@ test('Guía de emplatado: mapa de fotos íntegro, sección cableada, overlay y C
   // Regresión (jul 2026, reporte del propietario): el emparejador difuso por
   // nombre de página coló dos fotos de OTROS platos por coincidencia parcial
   // de palabras ("Tarta de limón"→"Tarta de queso" id 105, "Salsa Bearnesa"→
-  // "Salsa de hongos" id 38). Ninguno de los dos tiene foto real en los PDF
-  // originales — deben quedar sin foto, no con una equivocada.
-  assert(!('38' in map), 'dish 38 (Salsa de hongos) must stay photo-less — its only PDF match was a mislabeled Salsa Bearnesa photo');
-  assert(!('105' in map), 'dish 105 (Tarta de queso) must stay photo-less — its only PDF match was a mislabeled Tarta de limón photo');
+  // "Salsa de hongos" id 38). La página del 38 en el plating guide 2026 sigue
+  // sin llevar foto (sólo texto y pictogramas), así que el 38 se queda sin ella.
+  assert(!('38' in map), 'dish 38 (Salsa de hongos) must stay photo-less — its page in the 2026 guide carries no photo');
+  // El 105 sí la recuperó: la página 47 del plating guide de almuerzo 2026 se
+  // titula «Tarta de queso» y su foto es la tarta con confitura de frutos rojos
+  // que describe la ficha (ya no la de limón del guide antiguo).
+  assert(map['105'] === 'img/platos/105-tarta-de-queso.webp',
+    'dish 105 must use its own cheesecake photo from the 2026 lunch guide');
+  // Cada plato tiene su propio fichero: si dos ids apuntan a la misma ruta es
+  // que un emparejamiento se coló (los gemelos por turno llevan copia propia).
+  const porRuta = new Map();
+  for (const [id, p] of Object.entries(map)) {
+    if (!porRuta.has(p)) porRuta.set(p, []);
+    porRuta.get(p).push(id);
+  }
+  for (const [p, dup] of porRuta)
+    assert(dup.length === 1, `photo ${p} is shared by dishes ${dup.join(', ')}`);
+  // el nombre del fichero empieza por el id del plato que lo usa
+  for (const [id, p] of Object.entries(map))
+    assert(p.startsWith(`img/platos/${id}-`), `photo for dish ${id} is named after another dish: ${p}`);
   // cada ruta del mapa debe existir físicamente en el repo
   for (const [id, p] of Object.entries(map)) {
     assert(/^img\/platos\/[a-z0-9-]+\.webp$/.test(p), `photo path malformed for dish ${id}: ${p}`);
