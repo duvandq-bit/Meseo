@@ -235,8 +235,10 @@
   },
   "pepinillo": {
    "nombre": "Pepinillo",
-   "alergenos": [],
-   "fuente": "certeza culinaria"
+   "alergenos": [
+    "Sulfitos"
+   ],
+   "fuente": "confirmado por propietario"
   },
   "aceite de girasol": {
    "nombre": "Aceite de girasol",
@@ -293,7 +295,6 @@
    "nombre": "Salsa Perrins",
    "alergenos": [
     "Pescado",
-    "Sulfitos",
     "Gluten"
    ],
    "fuente": "confirmado por propietario"
@@ -605,7 +606,6 @@
     "Lácteos",
     "Mostaza",
     "Pescado",
-    "Sulfitos",
     "Gluten"
    ],
    "fuente": "confirmado por propietario"
