@@ -1334,6 +1334,11 @@
    "alergenos": [],
    "fuente": "certeza culinaria"
   },
+  "trufa": {
+   "nombre": "Trufa",
+   "alergenos": [],
+   "fuente": "confirmado por propietario"
+  },
   "trufa negra": {
    "nombre": "Trufa negra",
    "alergenos": [],
