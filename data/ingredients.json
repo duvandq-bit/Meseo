@@ -3028,52 +3028,6 @@
    ],
    "fuente": "certeza culinaria"
   },
-  "sabores disponibles": {
-   "nombre": "Sabores disponibles",
-   "nombre_en": "Available flavours",
-   "alergenos": [],
-   "fuente": "certeza culinaria"
-  },
-  "cookie dough": {
-   "nombre": "Cookie Dough",
-   "nombre_en": "Cookie Dough",
-   "alergenos": [
-    "Gluten",
-    "Huevos",
-    "Lácteos",
-    "Soja"
-   ],
-   "fuente": "confirmado por propietario"
-  },
-  "chocolate fudge brownie": {
-   "nombre": "Chocolate Fudge Brownie",
-   "nombre_en": "Chocolate Fudge Brownie",
-   "alergenos": [
-    "Gluten",
-    "Huevos",
-    "Lácteos",
-    "Soja"
-   ],
-   "fuente": "confirmado por propietario"
-  },
-  "strawberry tarta de queso": {
-   "nombre": "Strawberry Tarta de queso",
-   "nombre_en": "Strawberry Cheesecake",
-   "alergenos": [
-    "Lácteos"
-   ],
-   "fuente": "certeza culinaria"
-  },
-  "vainilla pecan brittle": {
-   "nombre": "Vainilla Pecan Brittle",
-   "nombre_en": "Vanilla Pecan Brittle",
-   "alergenos": [
-    "Frutos secos",
-    "Lácteos",
-    "Huevos"
-   ],
-   "fuente": "confirmado por propietario"
-  },
   "flan": {
    "nombre": "Flan",
    "nombre_en": "Flan",
@@ -3245,14 +3199,6 @@
    "alergenos": [
     "Pescado",
     "Sulfitos"
-   ],
-   "fuente": "certeza culinaria"
-  },
-  "helado de crema varios sabores": {
-   "nombre": "Helado de crema (varios sabores)",
-   "nombre_en": "Cream ice cream (various flavours)",
-   "alergenos": [
-    "Lácteos"
    ],
    "fuente": "certeza culinaria"
   },

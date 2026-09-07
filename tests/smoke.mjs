@@ -1654,12 +1654,13 @@ test('DISH_ACTIONS matrix: full coverage, comandas present, Trifasi fix locked',
       if (e.r === 1) { removables++; assert(e.c, `dish ${id} "${name}": removable ${a} has no comanda`); }
     }
   }
-  // Medido tras fusionar el 49 en el 15: 260 pares y 63 adaptables. Bajan
-  // porque el 49 era el MISMO plato duplicado —sus siete pares y sus seis
-  // comandas se contaban dos veces—, no porque se haya perdido cobertura:
-  // todos los pares siguen teniendo entrada en la matriz, que es lo que
+  // Medido tras fusionar el 49 en el 15 (260 pares) y tras eliminar los dos
+  // Ben & Jerry's (254 pares, sep 2026). Los seis pares que faltan son los del
+  // 103 y el 119, platos retirados de la carta; los 63 adaptables no se mueven
+  // porque ninguno de los dos tenía comanda. No se ha perdido cobertura: todos
+  // los pares que quedan siguen teniendo entrada en la matriz, que es lo que
   // este guard protege de verdad.
-  assert(pairs >= 255 && removables >= 60, `matrix coverage shrank (pairs=${pairs}, removables=${removables})`);
+  assert(pairs >= 249 && removables >= 60, `matrix coverage shrank (pairs=${pairs}, removables=${removables})`);
   assert(M['89'] && M['89']['Huevos'] && M['89']['Huevos'].r === 0,
     'Trifasi Huevos must stay STRUCTURAL (veg version keeps the fried egg; brioche egg is structural)');
   // Vitello tonnato (owner, jul 2026): la salsa tonnata es ingrediente
@@ -2167,7 +2168,7 @@ test('study shift filter: DISH_SERVICE complete + all generators route by shift'
   const M = new Function(stub + dishesSrc + svcSrc + helpers + 'return {DISHES, DISH_SERVICE, _shiftDishes, setShift:(s)=>{_studyShift=s;}};')(); // eslint-disable-line no-new-func
   const bad = M.DISHES.filter(d => !['a', 'c', 'ambos'].includes(M.DISH_SERVICE[d.id]));
   assert(bad.length === 0, `dishes without a valid service: ${bad.map(d => d.id).join(',')}`);
-  const twins = { 9: 'c', 78: 'a', 109: 'c', 69: 'a', 119: 'a' };
+  const twins = { 9: 'c', 78: 'a', 109: 'c', 69: 'a' };
   for (const [id, exp] of Object.entries(twins))
     assert(M.DISH_SERVICE[id] === exp, `twin ${id} must be shift ${exp}, got ${M.DISH_SERVICE[id]}`);
   for (const shift of ['a', 'c']) {
@@ -2255,7 +2256,7 @@ test('study shift filter: subject AND distractor pools route by shift (no wrong-
     + 'var TX_VOICE_MSGS={}; var TX_VOICE_MSGS_REV={};';
   const M = new Function(stub + dishesSrc + svcSrc + helpers + wmRev + examStop // eslint-disable-line no-new-func
     + fn('_txRevBubble') + fn('_examNameTokens') + fn('_examRedact')
-    + fn('_lqaShuffle') + fn('txNorm') + fn('txGetAnswer') + fn('txTruncate') + fn('_txNameWords') + fn('_txNameTwin') + fn('_txDishBanned') + fn('txBuildQuestion')
+    + fn('_lqaShuffle') + fn('txNorm') + fn('txGetAnswer') + fn('txTruncate') + fn('_txNameWords') + fn('_txNameTwin') + fn('txBuildQuestion')
     + 'return {DISHES, DISH_SERVICE, txBuildQuestion, txGetAnswer, txTruncate, txNorm, setShift:(s)=>{_studyShift=s;}};')();
   const svc = M.DISH_SERVICE;
   // Mapea una opción a los platos que la producen. Las opciones invertidas son
@@ -2348,7 +2349,7 @@ test('Mr. Shoesmith habla en 1ª persona y las carnes de autor van por storytell
     + cut('const _EXAM_STOP = new Set', ']);') + ';' + cut('const _ING_GENERIC = new Set', ']);') + ';'
     + fn('_txIngredientsVacuous') + fn('_isQuizableDish') + fn('_isDishQuizableForTopic')
     + fn('_txRevBubble') + fn('_examNameTokens') + fn('_examRedact')
-    + fn('_lqaShuffle') + fn('txNorm') + fn('txGetAnswer') + fn('txTruncate') + fn('_txNameWords') + fn('_txNameTwin') + fn('_txDishBanned') + fn('txBuildQuestion')
+    + fn('_lqaShuffle') + fn('txNorm') + fn('txGetAnswer') + fn('txTruncate') + fn('_txNameWords') + fn('_txNameTwin') + fn('txBuildQuestion')
     + 'return {DISHES, SHOESMITH_MSGS, SHOESMITH_MSGS_REV, txBuildQuestion, txNorm, _txIngredientsVacuous,'
     + '  setShift:(s)=>{_studyShift=s;}, setLang:(l)=>{LANG=l;}, dishByName:(n)=>DISHES.find(d=>getDish(d).name===n)};')();
   // Todo enunciado del pool de Shoesmith, en ambos idiomas, debe estar en SU voz:
@@ -2459,7 +2460,7 @@ test('La Crítica: segundo personaje jugable — selector, ficha, voz propia sin
     + cut('const _EXAM_STOP = new Set', ']);') + ';' + cut('const _ING_GENERIC = new Set', ']);') + ';'
     + fn('_txIngredientsVacuous') + fn('_isQuizableDish') + fn('_isDishQuizableForTopic')
     + fn('_txRevBubble') + fn('_examNameTokens') + fn('_examRedact')
-    + fn('_lqaShuffle') + fn('txNorm') + fn('txGetAnswer') + fn('txTruncate') + fn('_txNameWords') + fn('_txNameTwin') + fn('_txDishBanned') + fn('txBuildQuestion')
+    + fn('_lqaShuffle') + fn('txNorm') + fn('txGetAnswer') + fn('txTruncate') + fn('_txNameWords') + fn('_txNameTwin') + fn('txBuildQuestion')
     + 'return {DISHES, CRITIC_MSGS, CRITIC_MSGS_REV, txBuildQuestion, txNorm, _txIngredientsVacuous,'
     + '  setShift:(s)=>{_studyShift=s;}, setLang:(l)=>{LANG=l;}, dishByName:(n)=>DISHES.find(d=>getDish(d).name===n)};')();
   const NOT_HER_VOICE = /\b(mesa|table)\s*\d+|hu[eé]sped|guest|compa[ñn]ero|colleague|cocina|kitchen|mi mujer|my wife|Mr\.?\s*Shoesmith|VIP/i;
@@ -2482,7 +2483,8 @@ test('La Crítica: segundo personaje jugable — selector, ficha, voz propia sin
         const q = M.txBuildQuestion('critic'); if (!q) continue; n++;
         const stem = String(q.msg).split('<div')[0].replace(/<[^>]+>/g, ' ');
         assert(!NOT_HER_VOICE.test(stem), `stem out of Critic voice (${lang}/${shift}): «${stem}»`);
-        // Veto Ben & Jerry's (propietario, jul 2026): ni sujeto ni opción.
+        // Ben & Jerry's se eliminó de la app (propietario, sep 2026): no puede
+        // volver a aparecer ni como sujeto ni como opción.
         assert(!/jerry/i.test(q.dishName), `Ben & Jerry's reached a question as subject (${lang}/${shift})`);
         for (const o of (q.choices || [])) assert(!/jerry/i.test(o), `Ben & Jerry's leaked as an option (${lang}/${shift}): «${o}»`);
         if (q.topicKey === 'ingredients') {
@@ -2496,7 +2498,7 @@ test('La Crítica: segundo personaje jugable — selector, ficha, voz propia sin
   }
 });
 
-test('La Crítica sarcástica + veto Ben & Jerry\'s + un segundo más por nivel (jul 2026)', () => {
+test('La Crítica sarcástica + Ben & Jerry\'s fuera de la app + un segundo más por nivel', () => {
   // Tres ajustes del propietario tras probar el juego:
   // (1) Tono sarcástico: anclamos dos frases características para que una
   //     reescritura futura no la devuelva al tono neutro sin querer.
@@ -2504,15 +2506,20 @@ test('La Crítica sarcástica + veto Ben & Jerry\'s + un segundo más por nivel 
     'critic voice must keep its sarcastic edge (allergens stem)');
   assert(html.includes('permítame dudarlo'), 'critic voice must keep its sarcastic edge (history stem)');
   assert(html.includes('yo solo anoto todo lo que haga mal'), 'critic intro quote must stay sarcastic');
-  // (2) Ben & Jerry's fuera del generador del juego: filtro estructural en el
-  //     pool de sujetos, en AMBOS pools de distractores y en el recuento de
-  //     respuestas únicas (el barrido empírico vive en el test de La Crítica).
-  assert(/function _txDishBanned\(d\)\{ return \/jerry\/i\.test\(d\.name\)/.test(html), '_txDishBanned helper missing');
-  assert(/const dishes = _lqaShuffle\([^)]*\)\.filter\(d=>!_txDishBanned\(d\)\)/.test(html.replace(/_shiftDishes\(DISHES\)\.length \? _shiftDishes\(DISHES\) : DISHES/g, 'P')),
-    'subject pool must exclude banned dishes');
-  assert((html.match(/x\.id!==chosenDish\.id&&!_txDishBanned\(x\)/g) || []).length === 2,
-    'BOTH distractor pools must exclude banned dishes');
-  assert(/if\(_txDishBanned\(d\)\) return;/.test(html), 'unique-answer viability count must skip banned dishes');
+  // (2) Ben & Jerry's ya no existe en la app (propietario, sep 2026). Antes se
+  //     vetaba sólo en el juego con _txDishBanned; ahora las dos fichas (103
+  //     postres y 119 almuerzo) están fuera de DISHES, de las matrices por id,
+  //     de las fotos y del maridaje. Ni la marca ni el helper pueden volver.
+  assert(!/jerry/i.test(html), 'Ben & Jerry\'s must not appear anywhere in the app');
+  assert(!html.includes('_txDishBanned'),
+    'the per-dish ban helper is gone — the dishes were removed, not filtered');
+  for (const id of ['103', '119']) {
+    assert(!new RegExp(`\\{id:${id},`).test(html), `dish ${id} (Ben & Jerry's) must stay deleted from DISHES`);
+    for (const mapa of ['DISH_ACTIONS', 'DISH_COMPONENTS', 'DISH_SERVICE']) {
+      const linea = html.slice(html.indexOf(`const ${mapa} =`), html.indexOf('\n', html.indexOf(`const ${mapa} =`)));
+      assert(!new RegExp(`[{,]\\s*"?${id}"?\\s*:`).test(linea), `${mapa} still keys dish ${id}`);
+    }
+  }
   // (3) +1s por nivel: leer la pregunta ya consume tiempo. Valores exactos.
   const lv = html.slice(html.indexOf('const TXOKO_LEVELS=['), html.indexOf('];', html.indexOf('const TXOKO_LEVELS=[')));
   for (const t of ['time:14', 'time:11', 'time:8', 'time:6']) {
@@ -6752,7 +6759,6 @@ test('filtro de turno (DISH_SERVICE) coherente con las cartas reales', () => {
   // gemelos por turno (recetas distintas) — cada uno a SU carta
   assert(SV[69] === 'a' && SV[109] === 'c', 'Fish&chips: 69 almuerzo · 109 cena');
   assert(SV[78] === 'a' && SV[9] === 'c', 'Tataki: 78 almuerzo · 9 cena');
-  assert(SV[103] === 'a' && SV[119] === 'a', 'Helados B&J son de almuerzo');
   // lunch-only reales (no deben salir en cena)
   for (const id of [95, 96, 97, 92, 93, 94, 73, 74, 84, 102, 104, 105, 86, 91])
     assert(SV[id] === 'a', `#${id} debe ser solo ALMUERZO`);
