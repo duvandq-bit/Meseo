@@ -52,7 +52,7 @@
 <meta property="og:description" content="Formación de equipos de sala: carta, alérgenos, vinos, exámenes y juegos de repaso.">
 <meta property="og:url" content="https://meseo.es/">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"Meseo","url":"https://meseo.es/"}</script>
-<meta name="app-version" content="7.358">
+<meta name="app-version" content="7.359">
 <meta name="app-build" content="May 2026">
 <meta name="theme-color" content="#1c2a22">
 <!-- ═══ PWA ═══ -->
@@ -1602,7 +1602,7 @@ const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><p
 const SRC = 'src';
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='7.358';  // sincronizada con sw.js VERSION (guard de CI)
+const APP_VERSION='7.359';  // sincronizada con sw.js VERSION (guard de CI)
 const APP_BUILD='Jul 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;
@@ -4211,8 +4211,8 @@ function _djPhaseIngredients(dish, dd, _en){
 
   return `
     <div style="text-align:center;margin-bottom:.8rem;animation:djSlideUp .5s .2s both">
-      <div style="font-family:'DM Mono',monospace;font-size:.6rem;color:rgba(196,154,60,.4);margin-bottom:.3rem">${_en?'TAP TO EXPLORE':'EXPLORA LOS INGREDIENTES'}</div>
-      <div style="font-family:'Quicksand',sans-serif;font-size:.72rem;color:rgba(244,237,226,.5)">${_en?'Items marked with ⚠ carry an allergen — the name is right there':'Los marcados con ⚠ llevan alérgeno — al lado pone cuál'}</div>
+      <div style="font-family:'DM Mono',monospace;font-size:.7rem;color:#e8c98a;margin-bottom:.35rem">${_en?'TAP TO EXPLORE':'EXPLORA LOS INGREDIENTES'}</div>
+      <div style="font-family:'Quicksand',sans-serif;font-size:.75rem;color:rgba(244,237,226,.85)">${_en?'Items marked with ⚠ carry an allergen — the name is right there':'Los marcados con ⚠ llevan alérgeno — al lado pone cuál'}</div>
     </div>
     <div class="dj-ing-grid">${grid}</div>
     <div class="dj-ing-count">${items.length} ${_en?'ingredients':'ingredientes'} · ${conAlerg} ${_en?'with allergens':'con alérgeno'}</div>
@@ -4229,16 +4229,23 @@ function _djPhaseAllergens(dish, dd, _en){
     'Lácteos':{icon:'🥛',color:'#4888a0',en:'Dairy',desc_en:'Milk, cream, cheese, butter. Common in sauces and desserts.',desc_es:'Leche, nata, queso, mantequilla. Común en salsas y postres.'},
     'Huevos':{icon:'🥚',color:'#f5a623',en:'Eggs',desc_en:'Eggs, yolk, whites. In mayonnaise, breading, desserts.',desc_es:'Huevos, yema, clara. En mayonesas, rebozados, postres.'},
     'Pescado':{icon:'🐟',color:'#2e86c1',en:'Fish',desc_en:'All types of fish. Pay attention to sauces and broths.',desc_es:'Todo tipo de pescado. Atención a salsas y caldos.'},
-    'Mariscos':{icon:'🦐',color:'#e74c3c',en:'Shellfish',desc_en:'Crustaceans: shrimp, lobster, crab.',desc_es:'Crustáceos: langostino, bogavante, cangrejo.'},
+
     'Crustáceos':{icon:'🦀',color:'#e74c3c',en:'Crustaceans',desc_en:'Shrimp, lobster, crab and derivatives.',desc_es:'Langostino, bogavante, cangrejo y derivados.'},
     'Moluscos':{icon:'🦑',color:'#dc143c',en:'Molluscs',desc_en:'Squid, octopus, mussels, oysters.',desc_es:'Calamar, pulpo, mejillones, ostras.'},
     'Frutos secos':{icon:'🥜',color:'#8b4513',en:'Tree Nuts',desc_en:'Almonds, walnuts, hazelnuts, pistachios.',desc_es:'Almendras, nueces, avellanas, pistachos.'},
     'Soja':{icon:'🫘',color:'#5a9a6e',en:'Soy',desc_en:'Soy sauce, tofu, edamame, soy lecithin.',desc_es:'Salsa de soja, tofu, edamame, lecitina de soja.'},
     'Apio':{icon:'🥬',color:'#228b22',en:'Celery',desc_en:'Celery stalks, root, and in spice mixes.',desc_es:'Tallos, raíz de apio, en mezclas de especias.'},
     'Mostaza':{icon:'🟡',color:'#daa520',en:'Mustard',desc_en:'Mustard seeds, powder, and prepared mustard.',desc_es:'Semillas, polvo y mostaza preparada.'},
-    'Sésamo':{icon:'⚪',color:'#d2691e',en:'Sesame',desc_en:'Sesame seeds, tahini, sesame oil.',desc_es:'Semillas de sésamo, tahini, aceite de sésamo.'},
+    // Auditoría (sept 2026): faltaban las fichas de «Granos de sésamo»,
+    // «Cacahuete» y «Altramuces» — los tres del canon UE-14 de la app — así que
+    // salían como «⚠️ Precaución» sin explicar nada. Afectaba al Tataki de atún
+    // y al Pincho Moruno, cuyo Ras al hanout lleva justo cacahuete y sésamo.
+    // Y sobraban «Mariscos», «Sésamo» y «Cacahuetes», nombres que no existen en
+    // ninguna otra pantalla. Ahora las catorce fichas son las catorce del canon.
+    'Granos de sésamo':{icon:'⚪',color:'#d2691e',en:'Sesame',desc_en:'Sesame seeds, tahini, sesame oil. Hidden in spice mixes.',desc_es:'Semillas de sésamo, tahini, aceite de sésamo. Escondido en mezclas de especias.'},
+    'Altramuces':{icon:'🌱',color:'#9a8c3c',en:'Lupin',desc_en:'Lupin flour, in some breads, pasta and vegan products.',desc_es:'Harina de altramuz, en algunos panes, pastas y productos veganos.'},
     'Sulfitos':{icon:'🍷',color:'#7a6aaa',en:'Sulphites',desc_en:'In wines, vinegars, dried fruits, some sauces.',desc_es:'En vinos, vinagres, frutas secas, algunas salsas.'},
-    'Cacahuetes':{icon:'🥜',color:'#cd853f',en:'Peanuts',desc_en:'Peanuts and peanut oil.',desc_es:'Cacahuetes y aceite de cacahuete.'}
+    'Cacahuete':{icon:'🥜',color:'#cd853f',en:'Peanuts',desc_en:'Peanuts and peanut oil. Also in spice mixes such as ras al hanout.',desc_es:'Cacahuete y aceite de cacahuete. También en mezclas de especias como el ras al hanout.'}
   };
 
   if(allergens.length===0){
@@ -4254,9 +4261,9 @@ function _djPhaseAllergens(dish, dd, _en){
     let verdict = '';
     if(act && act.r === 1){
       const cmd = _en ? (act.c_en || act.c) : act.c;
-      verdict = `<div style="margin-top:.3rem;font-family:'DM Mono',monospace;font-size:.52rem;color:#6b8f71;background:rgba(77,138,94,.08);padding:.2rem .4rem;border-radius:6px;display:inline-block">✓ ${_en?'Adaptable':'Se adapta'}${cmd?` — ${_en?'order':'comandar'} <b>${escapeHTML(cmd)}</b>`:''}</div>`;
+      verdict = `<div style="margin-top:.3rem;font-family:'DM Mono',monospace;font-size:.7rem;color:#a8d8b4;background:rgba(77,138,94,.18);padding:.25rem .5rem;border-radius:6px;display:inline-block">✓ ${_en?'Adaptable':'Se adapta'}${cmd?` — ${_en?'order':'comandar'} <b>${escapeHTML(cmd)}</b>`:''}</div>`;
     } else if(act && act.r === 0){
-      verdict = `<div style="margin-top:.3rem;font-family:'DM Mono',monospace;font-size:.52rem;color:#a86868;background:rgba(160,72,72,.07);padding:.2rem .4rem;border-radius:6px;display:inline-block">■ ${_en?'Structural — not suitable for this allergy':'Estructural — no apto para esta alergia'}</div>`;
+      verdict = `<div style="margin-top:.3rem;font-family:'DM Mono',monospace;font-size:.7rem;color:#f0a8a8;background:rgba(160,72,72,.18);padding:.25rem .5rem;border-radius:6px;display:inline-block">■ ${_en?'Structural — not suitable for this allergy':'Estructural — no apto para esta alergia'}</div>`;
     }
     return `<div class="dj-allerg-card" style="--delay:${0.15+i*0.12}s;border-left:4px solid ${data.color}">
       <div class="dj-allerg-name">${data.icon} ${_en?data.en:a}</div>
@@ -4276,6 +4283,27 @@ function _djPhaseAllergens(dish, dd, _en){
 }
 
 // ── Phase 4: Service ──
+// Trocea la nota de servicio en avisos y resalta la comanda. El separador real
+// de estas fichas es «⚠» (57 de las 90 lo usan); el « · » solo aparece en 7.
+function _djNotasHTML(notas){
+  const trozos = String(notas||'')
+    .split(/\s*·\s*|(?=⚠)/)
+    .map(t=>t.replace(/^⚠\s*/,'').trim())
+    .filter(Boolean);
+  const marca = t => escapeHtml(t)
+    // «Comandar SIN PIPARRA», «Order WITHOUT BREAD»: la instrucción que hay que
+    // dar a cocina, en negrita, para encontrarla sin leer el párrafo entero.
+    // Sin el punto en la clase: con él, «Comandar SIN BROTES DE MOSTAZA. ⚠
+    // Huevos…» se resaltaba hasta la H de la frase siguiente.
+    .replace(/\b(SIN|WITHOUT)\s+[A-ZÁÉÍÓÚÜÑ0-9][A-ZÁÉÍÓÚÜÑ0-9 ,\-]*/g, m=>{
+      // El espacio final se queda FUERA de la etiqueta: dentro, con el
+      // white-space:nowrap del resaltado, salía «SIN PIPARRApara eliminar…».
+      const t = m.replace(/\s+$/,'');
+      return `<b class="dj-comanda">${t}</b>${m.slice(t.length)}`;
+    });
+  return trozos.map(t=>`<span class="dj-nota">${marca(t)}</span>`).join('');
+}
+
 function _djPhaseService(dish, dd, _en){
   const items = [];
   items.push({icon:'📂', label:_en?'CATEGORY':'CATEGORÍA', value:_en?catLocal(dish.cat):dish.cat});
@@ -4285,8 +4313,17 @@ function _djPhaseService(dish, dd, _en){
   }
 
   if(dd.notes){
-    const shortNotes = dd.notes.length > 200 ? dd.notes.substring(0,200)+'...' : dd.notes;
-    items.push({icon:'📝', label:_en?'SPECIAL NOTES':'NOTAS ESPECIALES', value:shortNotes});
+    // Auditoría (sept 2026): esta ficha se cortaba con substring(0,200)+'...'.
+    // Medido: 69 fichas cortadas y 8.302 caracteres ocultos, y en 30 de ellas
+    // se perdía AL MENOS UNA COMANDA de alérgeno. El peor, el Entrecot de
+    // Angus: se veían 0 de 1, y el corte caía en «la mermelada NO...», que
+    // leído a medias dice justo lo contrario de lo que pone.
+    // Instrucción del propietario: «no cortes información cuando es
+    // información valiosa o importante». No se corta nada. Para que además se
+    // lea mejor que el bloque cortado, cada aviso «⚠» va en su propia línea y
+    // la comanda queda resaltada, que es lo que el camarero busca de un golpe.
+    items.push({icon:'📝', label:_en?'SPECIAL NOTES':'NOTAS ESPECIALES',
+                value:_djNotasHTML(dd.notes)});
   }
 
   // Add pairing wines if any — match on significant words (len>=4) from dish name
@@ -4645,7 +4682,7 @@ function _djPhaseQuiz(dish, dd, _en){
     </div>`;
   }).join('') + `
     <div style="text-align:center;margin-top:.8rem;animation:djSlideUp .5s .5s both">
-      <div style="font-family:'DM Mono',monospace;font-size:.55rem;color:rgba(244,237,226,.3)">${_djState.quizAnswered}/${_djState.quizTotal} ${_en?'answered':'respondidas'}</div>
+      <div style="font-family:'DM Mono',monospace;font-size:.7rem;color:rgba(244,237,226,.62)">${_djState.quizAnswered}/${_djState.quizTotal} ${_en?'answered':'respondidas'}</div>
     </div>
   `;
 }

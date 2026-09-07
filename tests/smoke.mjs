@@ -1226,6 +1226,101 @@ test('wine map is real cartography (Voyager basemap, no fake 3D or DO shapes)', 
     'map attribution control missing (required by OSM/CARTO tile terms)');
 });
 
+test('recorrido guiado: nada por debajo de 12 px ni fuera de contraste', () => {
+  // Auditoría (sept 2026), medida sobre los píxeles pintados: 30 elementos por
+  // debajo del mínimo de contraste y 32 por debajo de 12 px. El peor de los
+  // dos: «■ Estructural — no apto para esta alergia» a 9,4 px y 3,25:1 — la
+  // frase que decide si un plato se le puede servir a un alérgico.
+  const css = read('styles.css');
+  const rem = v => v.endsWith('rem') ? parseFloat(v) * 18 : parseFloat(v);
+  const px = sel => {
+    const b = (css.match(new RegExp('^\\' + sel + '\\{([^}]*)\\}', 'm')) || [])[1] || '';
+    const m = b.match(/font-size:\s*([^;]+)/);
+    return m ? rem(m[1].trim()) : null;
+  };
+  for (const sel of ['.dj-dot', '.dj-phase-label', '.dj-ing-al', '.dj-ing-count',
+                     '.dj-allerg-info', '.dj-service-label', '.dj-mastery-label',
+                     '.dj-qrv-ans', '.dj-next-cat', '.dj-next-label']) {
+    const v = px(sel);
+    assert(v !== null, `no encuentro el tamaño de ${sel}`);
+    assert(v >= 12, `${sel} va a ${v.toFixed(1)} px: no se lee de pie y cansado`);
+  }
+  // Los dos veredictos de la fase de alérgenos van en estilo en línea.
+  for (const m of html.matchAll(/font-size:\.(\d+)rem;color:#[0-9a-f]{6};background:rgba\((?:160,72,72|77,138,94)/g))
+    assert(parseFloat('.' + m[1]) * 18 >= 12,
+      `el veredicto de adaptación vuelve a ${(parseFloat('.' + m[1]) * 18).toFixed(1)} px`);
+  // Y la comanda resaltada debe poder partirse: con white-space:nowrap las
+  // largas («SIN HUEVO DE CODORNIZ, SIN YEMA Y SIN MAYONESA DE CÍTRICOS»)
+  // sacaban la fase 110 px fuera de un móvil de 360.
+  // Sin comentarios: el que explica el arreglo cita el nowrap que se retiró.
+  const cmd = ((css.match(/^\.dj-comanda\{([^}]*)\}/m) || [])[1] || '').replace(/\/\*[\s\S]*?\*\//g, '');
+  assert(!/white-space:\s*nowrap/.test(cmd), 'la comanda con nowrap desborda la pantalla');
+  assert(/overflow-wrap/.test(cmd), 'la comanda debe poder partirse en varias líneas');
+});
+
+test('reducir movimiento significa SIN movimiento, también sin retardo', () => {
+  // Auditoría (sept 2026): la red global anulaba la duración pero NO el
+  // retardo, así que «reducir movimiento» se convertía en «aparecer a saltos».
+  // Medido en el recorrido: con la preferencia activada las fichas de Servicio
+  // seguían desplazadas 60 px a la derecha —desbordando 38 px— hasta que
+  // vencía su retardo escalonado, unos 0,7 s.
+  const css = read('styles.css');
+  const i = css.indexOf('@media (prefers-reduced-motion: reduce){');
+  assert(i !== -1, 'falta la red global de movimiento reducido');
+  const bloque = css.slice(i, css.indexOf('\n}', css.indexOf('{', i + 40)));
+  for (const prop of ['animation-duration', 'animation-delay', 'transition-duration', 'transition-delay'])
+    assert(new RegExp(prop + ':[^;]*!important').test(bloque),
+      `la red de movimiento reducido no anula ${prop}: el contenido sigue moviéndose`);
+});
+
+test('recorrido guiado: la ficha de servicio no corta ninguna comanda', () => {
+  // Auditoría (sept 2026): el capítulo de Servicio cortaba la nota con
+  // substring(0,200)+'...'. Medido: 69 fichas cortadas, 8.302 caracteres
+  // ocultos, y en 30 de ellas se perdía AL MENOS UNA COMANDA de alérgeno. El
+  // peor, el Entrecot de Angus: 0 de 1 visibles, y el corte caía en «la
+  // mermelada NO...», que leído a medias dice lo contrario de lo que pone.
+  // Instrucción del propietario: «no cortes información cuando es información
+  // valiosa o importante».
+  // Se busca por el código que cortaba, no por la frase: el comentario que
+  // explica el arreglo cita el substring.
+  assert(!/shortNotes/.test(html), 'vuelve el corte a 200 caracteres de la ficha de servicio');
+  assert(/value:_djNotasHTML\(dd\.notes\)/.test(html),
+    'la ficha de servicio debe dibujar la nota entera con _djNotasHTML');
+  const fn = _xFn('_djNotasHTML');
+  // escapeHtml es una dependencia de la función; se inyecta equivalente.
+  const build = new Function('escapeHtml', fn + '; return _djNotasHTML;'); // eslint-disable-line no-new-func
+  const notas = build(s => String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'));
+  const quitar = t => t.replace(/<[^>]*>/g,'').replace(/&amp;/g,'&').replace(/&lt;/g,'<').replace(/&gt;/g,'>');
+  const norm = t => t.replace(/[⚠·\s]+/g,'');
+
+  const iD = html.indexOf('const DISHES = ['), jD = html.indexOf('\n];', iD);
+  const DISHES = new Function(html.slice(iD, jD + 3) + '; return DISHES;')(); // eslint-disable-line no-new-func
+  const iE = html.indexOf('const DISHES_EN = ['), jE = html.indexOf('\n];', iE);
+  const EN = new Function(html.slice(iE, jE + 3) + '; return DISHES_EN;')(); // eslint-disable-line no-new-func
+  const enById = new Map(EN.map(d => [d.id, d]));
+
+  let fichas = 0, comandas = 0;
+  for (const d of DISHES) {
+    for (const dd of [d, enById.get(d.id)]) {
+      if (!dd || !dd.notes) continue;
+      fichas++;
+      const out = notas(dd.notes);
+      // 1 · NADA de la nota puede desaparecer.
+      assert(norm(quitar(out)) === norm(dd.notes),
+        `la ficha de servicio de ${d.id} pierde texto: la nota debe salir entera`);
+      // 2 · Y la comanda queda resaltada, sin invadir la frase siguiente.
+      for (const m of out.matchAll(/<b class="dj-comanda">([^<]*)<\/b>/g)) {
+        comandas++;
+        assert(!/[.;]/.test(m[1]), `el resaltado invade la frase siguiente: «${m[1]}»`);
+      }
+      if (/\b(Comandar|Order)\s+(SIN|WITHOUT)/.test(dd.notes))
+        assert(/dj-comanda/.test(out), `la comanda de ${d.id} no queda resaltada`);
+    }
+  }
+  assert(fichas > 150, `esperaba ~180 fichas con notas (ES+EN), medidas ${fichas}`);
+  assert(comandas > 100, `esperaba >100 comandas resaltadas, medidas ${comandas}`);
+});
+
 test('recorrido guiado: las preguntas van de alérgenos e ingredientes y no se regalan', () => {
   // Reporte del propietario (sept 2026): «hay preguntas absurdas según los
   // usuarios», y el recorrido había que reforzarlo «sobre todo en alérgenos e

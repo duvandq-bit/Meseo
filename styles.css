@@ -8670,10 +8670,14 @@ body:has(#gsOverlay.open) .txk-sync-pill{
 .dj-phase-dots{display:flex;gap:4px;align-items:center;position:relative}
 .dj-phase-dots::before{content:'';position:absolute;top:50%;left:4px;right:4px;height:1px;background:linear-gradient(90deg,transparent,rgba(196,154,60,.18) 15%,rgba(196,154,60,.18) 85%,transparent);pointer-events:none;z-index:0}
 .dj-dot{
-  position:relative;z-index:1;width:22px;height:28px;
+  /* Auditoría (sept 2026): .56rem = 10,1 px, el último texto del recorrido por
+     debajo del suelo de 12. Los seis caben de sobra a 360 px: 6×26 + 5×6 de
+     hueco = 186 px. También sube el contraste del capítulo aún no visitado,
+     que a .35 de opacidad casi no se leía. */
+  position:relative;z-index:1;width:26px;height:30px;
   display:flex;align-items:center;justify-content:center;
-  font-family:'Cinzel',serif;font-size:.56rem;font-weight:700;letter-spacing:.02em;
-  color:rgba(244,237,226,.35);
+  font-family:'Cinzel',serif;font-size:.7rem;font-weight:700;letter-spacing:.02em;
+  color:rgba(244,237,226,.62);
   background:linear-gradient(165deg,rgba(244,237,226,.05),rgba(244,237,226,.02));
   border:1px solid rgba(244,237,226,.1);
   border-radius:3px;
@@ -8702,8 +8706,9 @@ body:has(#gsOverlay.open) .txk-sync-pill{
 .dj-body::-webkit-scrollbar{display:none}
 
 .dj-phase-label{
-  font-family:'DM Mono',monospace;font-size:.62rem;letter-spacing:.32em;
-  text-transform:uppercase;color:rgba(196,154,60,.85);
+  /* .62rem = 11,2 px y 2,5:1 de contraste sobre el fondo del recorrido. */
+  font-family:'DM Mono',monospace;font-size:.7rem;letter-spacing:.28em;
+  text-transform:uppercase;color:#e8c98a;
   text-align:center;margin-bottom:.55rem;padding-top:.2rem;
   animation:djSlideUp .5s ease;
   display:flex;align-items:center;justify-content:center;gap:.7rem
@@ -8725,8 +8730,9 @@ body:has(#gsOverlay.open) .txk-sync-pill{
   animation:djSlideUp .5s .1s both;text-shadow:0 2px 20px rgba(0,0,0,.5)
 }
 .dj-dish-name{
-  font-family:'Quicksand',sans-serif;font-size:.85rem;font-weight:600;
-  color:rgba(196,154,60,.72);text-align:center;margin-bottom:1.2rem;
+  /* 3,92:1 — el nombre del plato, en todas las fases. */
+  font-family:'Quicksand',sans-serif;font-size:.9rem;font-weight:600;
+  color:rgba(226,190,116,.95);text-align:center;margin-bottom:1.2rem;
   animation:djSlideUp .5s .2s both
 }
 .dj-mastered-banner{
@@ -8741,7 +8747,7 @@ body:has(#gsOverlay.open) .txk-sync-pill{
 
 /* Phase 1: Story */
 .dj-story-card{background:linear-gradient(165deg,rgba(244,237,226,.04),rgba(244,237,226,.01));border:1px solid rgba(196,154,60,.1);border-radius:16px;padding:1.5rem 1.2rem;margin-bottom:1rem;animation:djSlideUp .6s .3s both}
-.dj-story-text{font-family:'Quicksand',sans-serif;font-size:.82rem;color:rgba(244,237,226,.85);line-height:1.8;text-align:justify}
+.dj-story-text{font-family:'Quicksand',sans-serif;font-size:.82rem;color:rgba(244,237,226,.92);line-height:1.8;text-align:left}
 .dj-story-text::first-letter{font-family:'Cinzel',serif;font-size:2.5rem;float:left;line-height:1;margin-right:.4rem;color:var(--gold);font-weight:700}
 .dj-story-quote{font-family:'Cinzel',serif;font-size:.9rem;color:var(--gold);text-align:center;font-style:italic;margin:1.2rem 0;line-height:1.6;animation:djSlideUp .6s .5s both}
 
@@ -8753,21 +8759,43 @@ body:has(#gsOverlay.open) .txk-sync-pill{
 /* El triángulo decía QUE hay alérgeno pero no CUÁL: había que salir de la fase
    para saberlo. Ahora cada ficha lo lleva escrito debajo. */
 .dj-ing-item.allergen{display:flex;flex-direction:column;align-items:flex-start;gap:.15rem;text-align:left}
-.dj-ing-al{font-family:'DM Mono',monospace;font-size:.62rem;letter-spacing:.04em;color:rgba(232,160,160,.75)}
-.dj-ing-count{font-family:'DM Mono',monospace;font-size:.55rem;color:rgba(244,237,226,.3);text-align:center;margin-top:1rem;animation:djSlideUp .5s .8s both}
+/* Auditoría (sept 2026): .62rem = 11,2 px, por debajo del suelo de 12 que ya
+   se aplicó al Repaso; y 4,47:1 de contraste, por debajo de 4,5. */
+.dj-ing-al{font-family:'DM Mono',monospace;font-size:.7rem;letter-spacing:.04em;color:rgba(240,178,178,.95)}
+/* Iba a 9,9 px y 2,48:1: el recuento de ingredientes era el texto más pequeño
+   y el menos legible de todo el recorrido. */
+.dj-ing-count{font-family:'DM Mono',monospace;font-size:.7rem;color:rgba(244,237,226,.62);text-align:center;margin-top:1rem;animation:djSlideUp .5s .8s both}
 
 /* Phase 3: Allergens */
 .dj-allerg-card{background:linear-gradient(165deg,rgba(231,76,60,.06),rgba(231,76,60,.02));border:1px solid rgba(231,76,60,.12);border-radius:16px;padding:1rem;margin-bottom:.8rem;animation:djSlideUp .4s var(--delay) both}
 .dj-allerg-name{font-family:'Quicksand',sans-serif;font-size:.82rem;font-weight:700;color:#e8a0a0;margin-bottom:.25rem}
-.dj-allerg-info{font-family:'DM Mono',monospace;font-size:.6rem;color:rgba(244,237,226,.45);line-height:1.5}
+/* 10,8 px y 3,7:1 — es la explicación de dónde se esconde cada alérgeno. */
+.dj-allerg-info{font-family:'DM Mono',monospace;font-size:.7rem;color:rgba(244,237,226,.78);line-height:1.55}
 .dj-safe-card{background:linear-gradient(165deg,rgba(77,138,94,.08),rgba(77,138,94,.02));border:1px solid rgba(77,138,94,.15);border-radius:16px;padding:1rem;text-align:center;animation:djSlideUp .5s .2s both}
 .dj-safe-text{font-family:'Quicksand',sans-serif;font-size:.82rem;color:#6b8f71}
 
 /* Phase 4: Service */
 .dj-service-item{display:flex;gap:.7rem;align-items:flex-start;padding:.8rem;background:linear-gradient(135deg,rgba(244,237,226,.04),rgba(244,237,226,.01));border:1px solid rgba(244,237,226,.06);border-left:3px solid rgba(196,154,60,.3);border-radius:0 12px 12px 0;margin-bottom:.6rem;animation:djSlideLeft .4s var(--delay) both}
 .dj-service-icon{font-size:1.1rem;flex-shrink:0;margin-top:.1rem}
-.dj-service-label{font-family:'DM Mono',monospace;font-size:.5rem;letter-spacing:.1em;text-transform:uppercase;color:rgba(196,154,60,.5);margin-bottom:.15rem}
+/* 9 px y bajo contraste: es el rótulo que dice qué estás leyendo. */
+.dj-service-label{font-family:'DM Mono',monospace;font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:rgba(214,176,94,.9);margin-bottom:.25rem}
 .dj-service-value{font-family:'Quicksand',sans-serif;font-size:.78rem;color:rgba(244,237,226,.85);line-height:1.5}
+/* Un aviso por línea, con su triángulo: la nota ya no se corta, así que hay
+   que poder recorrerla con la vista en vez de leer un párrafo seguido. */
+.dj-nota{display:block;position:relative;padding-left:1.15rem;margin-bottom:.55rem}
+.dj-nota:last-child{margin-bottom:0}
+.dj-nota::before{content:'⚠';position:absolute;left:0;top:.05em;font-size:.85em;color:#e8b06a}
+/* La comanda es lo que el camarero necesita encontrar de un golpe. */
+.dj-comanda{
+  font-family:'DM Mono',monospace;font-size:.94em;font-weight:600;
+  color:#f0d9a8;background:rgba(196,154,60,.16);
+  border-radius:5px;padding:.05em .35em;
+  /* Con white-space:nowrap, comandas como «SIN HUEVO DE CODORNIZ, SIN YEMA Y
+     SIN MAYONESA DE CÍTRICOS» sacaban la fase 110 px fuera de un móvil de 360.
+     Se parten, y el recuadro se corta limpio en cada línea. */
+  overflow-wrap:break-word;
+  -webkit-box-decoration-break:clone;box-decoration-break:clone;
+}
 
 /* Phase 5: Quiz */
 .dj-quiz-card{background:linear-gradient(165deg,rgba(244,237,226,.05),rgba(244,237,226,.02));border:1px solid rgba(244,237,226,.08);border-radius:16px;padding:1.2rem;margin-bottom:1rem;animation:djSlideUp .5s var(--delay) both}
@@ -8796,9 +8824,10 @@ body:has(#gsOverlay.open) .txk-sync-pill{
 .dj-mastery{text-align:center;padding:2rem 1rem;animation:djSlideUp .6s ease}
 .dj-mastery-icon{font-size:4rem;margin-bottom:.8rem;animation:djPulse 1.5s ease infinite}
 .dj-mastery-title{font-family:'Cinzel',serif;font-size:1.4rem;color:var(--gold);margin-bottom:.4rem;text-shadow:0 0 20px rgba(196,154,60,.3)}
-.dj-mastery-subtitle{font-family:'Quicksand',sans-serif;font-size:.78rem;color:rgba(244,237,226,.5);margin-bottom:1.5rem}
+.dj-mastery-subtitle{font-family:'Quicksand',sans-serif;font-size:.78rem;color:rgba(244,237,226,.85);margin-bottom:1.5rem}
 .dj-mastery-score{font-family:'DM Mono',monospace;font-size:2.5rem;font-weight:700;color:var(--ink);margin-bottom:.3rem;animation:djCountUp .5s .3s both}
-.dj-mastery-label{font-family:'DM Mono',monospace;font-size:.55rem;color:rgba(196,154,60,.5);letter-spacing:.15em;text-transform:uppercase;margin-bottom:1.5rem}
+/* 10 px y 2,49:1 — es el rótulo que explica la cifra de aciertos. */
+.dj-mastery-label{font-family:'DM Mono',monospace;font-size:.7rem;color:#e8c98a;letter-spacing:.15em;text-transform:uppercase;margin-bottom:1.5rem}
 .dj-mastery-bar{height:6px;background:rgba(244,237,226,.06);border-radius:3px;margin:0 auto 1.5rem;max-width:240px;overflow:hidden}
 .dj-mastery-fill{height:100%;border-radius:3px;background:linear-gradient(90deg,var(--gold),#e8c44c);animation:djProgressFill 1s .5s both}
 .dj-mastery-xp{font-family:'DM Mono',monospace;font-size:1rem;color:var(--gold);margin-bottom:1.5rem;animation:djCountUp .5s .7s both}
@@ -8811,8 +8840,8 @@ body:has(#gsOverlay.open) .txk-sync-pill{
   animation:djSlideUp .5s .8s both
 }
 .dj-quiz-review-title{
-  font-family:'DM Mono',monospace;font-size:.55rem;letter-spacing:.2em;
-  color:rgba(196,154,60,.72);margin-bottom:.65rem;text-transform:uppercase
+  font-family:'DM Mono',monospace;font-size:.7rem;letter-spacing:.2em;
+  color:#e8c98a;margin-bottom:.65rem;text-transform:uppercase
 }
 .dj-quiz-review-list{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:.45rem}
 .dj-quiz-review-list li{
@@ -8829,13 +8858,14 @@ li.ok .dj-qrv-mark{color:#a8d8b0}
 li.fail .dj-qrv-mark{color:#e8a0a0}
 .dj-qrv-body{flex:1;min-width:0}
 .dj-qrv-q{font-family:'Quicksand',sans-serif;font-size:.72rem;color:rgba(244,237,226,.82);line-height:1.4}
-.dj-qrv-ans{font-family:'DM Mono',monospace;font-size:.6rem;color:rgba(196,154,60,.72);margin-top:.2rem;letter-spacing:.04em}
+/* 11 px: es la respuesta correcta del repaso, hay que poder leerla. */
+.dj-qrv-ans{font-family:'DM Mono',monospace;font-size:.7rem;color:#e8c98a;margin-top:.2rem;letter-spacing:.04em}
 
 /* Mastery: suggested next dish */
 .dj-next-dish{margin:1.1rem auto 0;max-width:340px;text-align:left;animation:djSlideUp .5s .95s both}
 .dj-next-label{
-  font-family:'DM Mono',monospace;font-size:.55rem;letter-spacing:.2em;
-  color:rgba(196,154,60,.72);margin-bottom:.45rem;text-transform:uppercase
+  font-family:'DM Mono',monospace;font-size:.7rem;letter-spacing:.2em;
+  color:#e8c98a;margin-bottom:.45rem;text-transform:uppercase
 }
 .dj-next-btn{
   display:flex;align-items:center;gap:.7rem;width:100%;
@@ -8857,7 +8887,7 @@ li.fail .dj-qrv-mark{color:#e8a0a0}
 .dj-next-icon svg{width:18px;height:18px}
 .dj-next-txt{flex:1;min-width:0}
 .dj-next-name{font-family:'Cinzel',serif;font-size:.88rem;font-weight:700;color:var(--ink);line-height:1.25;letter-spacing:.015em}
-.dj-next-cat{font-family:'DM Mono',monospace;font-size:.55rem;letter-spacing:.15em;color:rgba(196,154,60,.65);text-transform:uppercase;margin-top:.15rem}
+.dj-next-cat{font-family:'DM Mono',monospace;font-size:.7rem;letter-spacing:.15em;color:#e8c98a;text-transform:uppercase;margin-top:.15rem}
 .dj-next-arrow{font-family:'Cinzel',serif;color:var(--gold);font-size:1.15rem;flex-shrink:0}
 
 /* Mastery: dual CTA */
@@ -9118,6 +9148,14 @@ li.fail .dj-qrv-mark{color:#e8a0a0}
     animation-iteration-count:1 !important;
     transition-duration:.001ms !important;
     scroll-behavior:auto !important;
+    /* Auditoría (sept 2026): la red anulaba la duración pero NO el retardo, y
+       eso convertía «reducir movimiento» en «aparecer a saltos». Medido en el
+       recorrido guiado: con la preferencia activada, las fichas de Servicio
+       seguían desplazadas 60 px a la derecha —desbordando 38 px la pantalla—
+       hasta que vencía su retardo escalonado, unos 0,7 s. Con el retardo a
+       cero, el contenido sale ya colocado, que es lo que pide la preferencia. */
+    animation-delay:0s !important;
+    transition-delay:0s !important;
   }
 }
 
