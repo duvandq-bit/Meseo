@@ -1495,8 +1495,14 @@ test('recorrido guiado: ningún ingrediente con alérgeno se pinta como seguro',
     if (esperado === null) assert(it.a.length === 0, `«${chip}» vuelve a marcarse sin motivo (${it.a.join('+')})`);
     else for (const a of esperado) assert(it.a.includes(a), `«${chip}» (plato ${id}) ya no avisa de ${a}`);
   };
-  caso(128, 'aderezo césar', ['Huevos', 'Lácteos', 'Mostaza', 'Pescado', 'Sulfitos']);
-  caso(15, 'Salsa Perrins', ['Pescado', 'Sulfitos']);
+  // Los sets salen de la ETIQUETA del bote que usa la casa (Lea & Perrins 2 L
+  // de Heinz Foodservice, foto aportada por el propietario): «vinagre de malta
+  // (cebada) … anchoas (pescado)». Dos alérgenos, cebada y pescado. Ni soja
+  // —que el plating guide sí le atribuía— ni sulfitos. Los sulfitos del aliño
+  // de los tartares vienen del pepinillo, confirmado por el propietario.
+  caso(128, 'aderezo césar', ['Huevos', 'Lácteos', 'Mostaza', 'Pescado', 'Gluten']);
+  caso(15, 'Salsa Perrins', ['Pescado', 'Gluten']);
+  caso(15, 'Pepinillo', ['Sulfitos']);
   caso(15, 'Stracciatella', ['Lácteos']);
   caso(80, 'Burrata', ['Lácteos']);
   caso(80, 'Piñones', ['Frutos secos']);
@@ -1511,6 +1517,8 @@ test('recorrido guiado: ningún ingrediente con alérgeno se pinta como seguro',
       if (!/aderezo c[eé]sar|salsa perrins/i.test(c.n)) continue;
       salsas++;
       assert(c.a.includes('Pescado'), `«${c.n}» (plato ${d.id}) ha perdido el Pescado de las anchoas`);
+      assert(c.a.includes('Gluten'), `«${c.n}» (plato ${d.id}) ha perdido el Gluten del vinagre de malta`);
+      assert(!c.a.includes('Soja'), `«${c.n}» (plato ${d.id}) vuelve a declarar Soja: la etiqueta del bote no la lleva`);
       const it = F.ing(d, COMP).find(i => F.n(i.t).includes(F.n(c.n)));
       assert(it && it.a.includes('Pescado'),
         `${d.id} «${c.n}» vuelve a pintarse sin el aviso de Pescado`);
