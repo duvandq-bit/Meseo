@@ -1273,6 +1273,52 @@ test('reducir movimiento significa SIN movimiento, también sin retardo', () => 
       `la red de movimiento reducido no anula ${prop}: el contenido sigue moviéndose`);
 });
 
+test('ninguna ficha de plato tiene una clave repetida que se trague el contenido', () => {
+  // El Rejo de pulpo tenía su historia escrita Y un segundo history:'' al final
+  // del mismo objeto: en JavaScript gana el último, así que el capítulo I
+  // llevaba quién sabe cuánto diciendo «No hay historia disponible» con el
+  // texto delante. No se ve leyendo la ficha, solo midiendo.
+  for (const lista of ['DISHES', 'DISHES_EN']) {
+    const i = html.indexOf('const ' + lista + ' = ['), j = html.indexOf('\n];', i);
+    const bloque = html.slice(i, j);
+    for (const m of bloque.matchAll(/\{id:(\d+),[\s\S]*?\n/g)) {
+      for (const k of ['id', 'cat', 'name', 'allergens', 'ingredients', 'history', 'notes']) {
+        const n = (m[0].match(new RegExp('(?:^|[,{])' + k + ':', 'g')) || []).length;
+        assert(n <= 1, `${lista}: el plato ${m[1]} repite la clave «${k}» ${n} veces — la última anula a la primera`);
+      }
+    }
+  }
+  // Y ninguna ficha se queda sin historia: es un capítulo entero del recorrido.
+  const iD = html.indexOf('const DISHES = ['), jD = html.indexOf('\n];', iD);
+  const DISHES = new Function(html.slice(iD, jD + 3) + '; return DISHES;')(); // eslint-disable-line no-new-func
+  const sin = DISHES.filter(d => !d.history || !d.history.trim());
+  assert(sin.length === 0,
+    `platos sin historia (el capítulo I les dice «No hay historia disponible»): ${sin.map(d => d.id + ' ' + d.name).join(', ')}`);
+});
+
+test('la croqueta de boletus sale en las dos cartas, y cat2 no se cuela en la lógica', () => {
+  // Confirmado por el propietario (sept 2026): la croqueta de boletus es
+  // vegetariana Y entrante del menú normal. El campo cat2 la lista en las dos
+  // cartas; para todo lo demás —quiz, detección de vegetariano, platos
+  // hermanos— manda cat, que sigue siendo «Vegetariano».
+  const iD = html.indexOf('const DISHES = ['), jD = html.indexOf('\n];', iD);
+  const DISHES = new Function(html.slice(iD, jD + 3) + '; return DISHES;')(); // eslint-disable-line no-new-func
+  const cats = new Set(DISHES.map(d => d.cat));
+  const con2 = DISHES.filter(d => d.cat2);
+  assert(con2.length >= 1, 'la croqueta de boletus debe llevar cat2');
+  for (const d of con2) {
+    assert(cats.has(d.cat2), `${d.id}: cat2 «${d.cat2}» no es una categoría real de la carta`);
+    assert(d.cat2 !== d.cat, `${d.id}: cat2 repite la categoría principal`);
+  }
+  const bol = DISHES.find(d => d.id === 50);
+  assert(bol && bol.cat === 'Vegetariano' && bol.cat2 === 'Entrantes',
+    'la croqueta de boletus debe ser Vegetariano (principal) + Entrantes (segunda carta)');
+  // cat2 SOLO puede usarse para listar. Si se colara en la lógica de quiz o de
+  // platos hermanos, un plato vegetariano empezaría a comportarse como entrante.
+  const usos = [...html.matchAll(/cat2/g)].length;
+  assert(usos <= 3, `cat2 aparece ${usos} veces: solo debe declararse y usarse en el filtro de la lista`);
+});
+
 test('recorrido guiado: la ficha de servicio no corta ninguna comanda', () => {
   // Auditoría (sept 2026): el capítulo de Servicio cortaba la nota con
   // substring(0,200)+'...'. Medido: 69 fichas cortadas, 8.302 caracteres
@@ -2093,7 +2139,10 @@ test('study shift filter: subject AND distractor pools route by shift (no wrong-
     /const _anyUnSh   = _shiftDishes\(_anyUnAll\)/.test(html),
     'journey next-dish suggestion must be shift-filtered with a fallback');
   // #3 renderRepasoTopic — lista por categoría por turno + estado vacío
-  assert(/const _repAll=DISHES\.filter\(d=>d\.cat===repasoCat\);\s*\n\s*const dishes=_shiftDishes\(_repAll\)/.test(html),
+  // El filtro admite ahora cat2: un plato puede salir en dos cartas (la
+  // croqueta de boletus es vegetariana Y entrante del menú normal). Lo que
+  // este guard protege sigue igual: la lista se filtra por turno.
+  assert(/const _repAll=DISHES\.filter\(d=>d\.cat===repasoCat \|\| d\.cat2===repasoCat\);\s*\n\s*const dishes=_shiftDishes\(_repAll\)/.test(html),
     'renderRepasoTopic per-category list must be shift-filtered');
   assert(/\$\{dishes\.length\?rows:/.test(html),
     'renderRepasoTopic must show an empty state when the shift leaves no dishes');
@@ -2761,11 +2810,12 @@ test('ES and EN dish twins declare identical allergens', () => {
   }
 });
 
-test('búsqueda: alias de plato (aka) indexado — "Lomo de atún" encuentra la Txuleta', () => {
-  // El mismo plato se oye llamar de dos formas (Txuleta / Lomo de atún). El
-  // campo `aka` lo hace encontrable por ambos nombres sin duplicar la ficha.
-  assert(/\{id:21,cat:'Platos Principales',name:'Txuleta de atún con tomate en texturas',aka:'Lomo de atún',/.test(html),
-    'id21 debe llevar aka:"Lomo de atún"');
+test('búsqueda: alias de plato (aka) indexado — "Txuleta de atún" encuentra el Lomo', () => {
+  // El mismo plato se oye llamar de dos formas. El plating guide 2026 lo llama
+  // «Lomo de atún con tomate en texturas», así que ése es el nombre oficial y
+  // el alias pasa a ser el antiguo: quien aprendió «Txuleta» sigue encontrándolo.
+  assert(/\{id:21,cat:'Platos Principales',name:'Lomo de atún con tomate en texturas',aka:'Txuleta de atún',/.test(html),
+    'id21 debe llamarse «Lomo de atún…» y llevar aka:"Txuleta de atún"');
   const idx = html.slice(html.indexOf('function _gsDishIndex'), html.indexOf('function _gsWineIndex'));
   assert(/d\.aka\|\|''/.test(idx), '_gsDishIndex debe incluir d.aka en el texto buscable');
 });
@@ -3568,20 +3618,30 @@ test('allergen drill: three action-frames per question, no fixed traps', () => {
     'question shuffle must be unbiased (_lqaShuffle)');
 });
 
-test('tartar gluten is a removable side (pan carasau) — owner-reported correction', () => {
-  // The gluten in the tomato and sirloin tartares comes ONLY from the carasau
-  // bread, which is served on the side: without it the dish is gluten-free.
-  // Notes must say so in one drill-parsable segment (no ·/— between the word
-  // "gluten" and the removal phrase) so the drill classifies it as ADAPT.
+test('los tartares NO pueden ofrecerse sin gluten: la Perrins lleva vinagre de malta', () => {
+  // Corrección del propietario, tras consultar a cocina (sept 2026): «la
+  // Perrins lleva vinagre de malta». Esto ANULA una corrección suya anterior,
+  // que decía que el gluten de los tartares de tomate y de solomillo venía
+  // SOLO del pan carasau y que retirándolo el plato quedaba sin gluten. Con
+  // el vinagre de malta —cebada— eso era falso: la app le estaba diciendo al
+  // camarero que podía servirle esos tartares a un celíaco.
+  // Este guard fija lo contrario, que es lo que ahora es cierto.
+  assert(!/queda SIN GLUTEN|is then GLUTEN-FREE/.test(html),
+    'vuelve la promesa de que retirando el pan el tartar queda sin gluten: la Perrins lleva vinagre de malta');
+  // El aviso dice que no se puede GARANTIZAR sin gluten y remite a cocina, no
+  // «no se lo des a un celíaco»: decidir si un huésped puede comer algo no es
+  // trabajo de la app, y el bote concreto de Perrins puede estar certificado.
   const need = [
-    // ES — both tartares
-    'Gluten SOLO en las tostas de pan carasau, que se sirven aparte: se puede retirar y el plato queda SIN GLUTEN. Comandar SIN PAN CARASAU.',
-    'Gluten SOLO en el pan carasau, que se sirve aparte: se puede retirar y el plato queda SIN GLUTEN. Comandar SIN PAN CARASAU.',
-    // EN — both tartares
-    'Gluten ONLY in the carasau bread toasts, served on the side and removable: the dish can be served without them and is then GLUTEN-FREE. Order WITHOUT CARASAU BREAD.',
-    'Gluten ONLY in the carasau bread, served on the side and removable: the dish can be served without it and is then GLUTEN-FREE. Order WITHOUT CARASAU BREAD.'
+    'el plato NO se puede garantizar sin gluten: si el huésped es celíaco, consultar con cocina.',
+    'the dish CANNOT be guaranteed gluten-free: if the guest is coeliac, check with the kitchen.'
   ];
-  for (const s of need) assert(html.includes(s), `tartar gluten note lost or reworded: "${s.slice(0, 60)}…"`);
+  for (const s of need) assert(html.includes(s), `falta el aviso de que el tartar no puede ir sin gluten: "${s.slice(0, 60)}…"`);
+  // Y el gluten de los dos tartares debe estar declarado como estructural.
+  const iM = html.indexOf('const DISH_ACTIONS = ');
+  const M = JSON.parse(html.slice(iM + 'const DISH_ACTIONS = '.length, html.indexOf('};', iM) + 1));
+  for (const id of ['15', '16'])
+    assert(M[id].Gluten && M[id].Gluten.r === 0,
+      `el gluten del plato ${id} vuelve a figurar como retirable por comanda`);
   // The generator must extract EN comanda instructions too ("Order WITHOUT …"),
   // otherwise the correct adapt answer shows a fake generic instruction in EN.
   assert(html.includes('(?:Comandar|Order) ([^.]+)\\.'),
