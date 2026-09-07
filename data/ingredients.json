@@ -323,6 +323,13 @@
    ],
    "fuente": "notas del plato"
   },
+  "salsa de soja": {
+   "nombre": "Salsa de soja",
+   "alergenos": [
+    "Soja"
+   ],
+   "fuente": "certeza culinaria"
+  },
   "soja": {
    "nombre": "Soja",
    "alergenos": [
