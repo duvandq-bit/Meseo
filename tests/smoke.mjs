@@ -3618,20 +3618,27 @@ test('allergen drill: three action-frames per question, no fixed traps', () => {
     'question shuffle must be unbiased (_lqaShuffle)');
 });
 
-test('tartar gluten is a removable side (pan carasau) — owner-reported correction', () => {
-  // The gluten in the tomato and sirloin tartares comes ONLY from the carasau
-  // bread, which is served on the side: without it the dish is gluten-free.
-  // Notes must say so in one drill-parsable segment (no ·/— between the word
-  // "gluten" and the removal phrase) so the drill classifies it as ADAPT.
+test('los tartares NO pueden ofrecerse sin gluten: la Perrins lleva vinagre de malta', () => {
+  // Corrección del propietario, tras consultar a cocina (sept 2026): «la
+  // Perrins lleva vinagre de malta». Esto ANULA una corrección suya anterior,
+  // que decía que el gluten de los tartares de tomate y de solomillo venía
+  // SOLO del pan carasau y que retirándolo el plato quedaba sin gluten. Con
+  // el vinagre de malta —cebada— eso era falso: la app le estaba diciendo al
+  // camarero que podía servirle esos tartares a un celíaco.
+  // Este guard fija lo contrario, que es lo que ahora es cierto.
+  assert(!/queda SIN GLUTEN|is then GLUTEN-FREE/.test(html),
+    'vuelve la promesa de que retirando el pan el tartar queda sin gluten: la Perrins lleva vinagre de malta');
   const need = [
-    // ES — both tartares
-    'Gluten SOLO en las tostas de pan carasau, que se sirven aparte: se puede retirar y el plato queda SIN GLUTEN. Comandar SIN PAN CARASAU.',
-    'Gluten SOLO en el pan carasau, que se sirve aparte: se puede retirar y el plato queda SIN GLUTEN. Comandar SIN PAN CARASAU.',
-    // EN — both tartares
-    'Gluten ONLY in the carasau bread toasts, served on the side and removable: the dish can be served without them and is then GLUTEN-FREE. Order WITHOUT CARASAU BREAD.',
-    'Gluten ONLY in the carasau bread, served on the side and removable: the dish can be served without it and is then GLUTEN-FREE. Order WITHOUT CARASAU BREAD.'
+    'El plato NO se puede servir sin gluten: no ofrecerlo a un celíaco.',
+    'The dish CANNOT be served gluten-free: do not offer it to a coeliac guest.'
   ];
-  for (const s of need) assert(html.includes(s), `tartar gluten note lost or reworded: "${s.slice(0, 60)}…"`);
+  for (const s of need) assert(html.includes(s), `falta el aviso de que el tartar no puede ir sin gluten: "${s.slice(0, 60)}…"`);
+  // Y el gluten de los dos tartares debe estar declarado como estructural.
+  const iM = html.indexOf('const DISH_ACTIONS = ');
+  const M = JSON.parse(html.slice(iM + 'const DISH_ACTIONS = '.length, html.indexOf('};', iM) + 1));
+  for (const id of ['15', '16'])
+    assert(M[id].Gluten && M[id].Gluten.r === 0,
+      `el gluten del plato ${id} vuelve a figurar como retirable por comanda`);
   // The generator must extract EN comanda instructions too ("Order WITHOUT …"),
   // otherwise the correct adapt answer shows a fake generic instruction in EN.
   assert(html.includes('(?:Comandar|Order) ([^.]+)\\.'),
