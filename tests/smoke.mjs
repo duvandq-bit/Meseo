@@ -1549,7 +1549,7 @@ test('recorrido guiado: ningún ingrediente con alérgeno se pinta como seguro',
         `${d.id} «${c.n}» vuelve a pintarse sin el aviso de Pescado`);
     }
   }
-  assert(salsas >= 7, `esperaba las 7 apariciones de césar/Perrins, encontradas ${salsas}`);
+  assert(salsas >= 6, `esperaba las 6 apariciones de césar/Perrins, encontradas ${salsas}`);
   caso(15, 'Polvo de aceitunas', null); // «acei-TUNA-s» no es atún
   F.base(BASE);
   caso(125, 'alioli de tinta', ['Huevos']); // la base lo tiene como «Ali-oli»
@@ -1617,7 +1617,12 @@ test('DISH_ACTIONS matrix: full coverage, comandas present, Trifasi fix locked',
       if (e.r === 1) { removables++; assert(e.c, `dish ${id} "${name}": removable ${a} has no comanda`); }
     }
   }
-  assert(pairs >= 260 && removables >= 70, `matrix coverage shrank (pairs=${pairs}, removables=${removables})`);
+  // Medido tras fusionar el 49 en el 15: 260 pares y 63 adaptables. Bajan
+  // porque el 49 era el MISMO plato duplicado —sus siete pares y sus seis
+  // comandas se contaban dos veces—, no porque se haya perdido cobertura:
+  // todos los pares siguen teniendo entrada en la matriz, que es lo que
+  // este guard protege de verdad.
+  assert(pairs >= 255 && removables >= 60, `matrix coverage shrank (pairs=${pairs}, removables=${removables})`);
   assert(M['89'] && M['89']['Huevos'] && M['89']['Huevos'].r === 0,
     'Trifasi Huevos must stay STRUCTURAL (veg version keeps the fried egg; brioche egg is structural)');
   // Vitello tonnato (owner, jul 2026): la salsa tonnata es ingrediente
@@ -3669,12 +3674,22 @@ test('los tartares NO pueden ofrecerse sin gluten: la Perrins lleva vinagre de m
     'the dish CANNOT be guaranteed gluten-free: if the guest is coeliac, check with the kitchen.'
   ];
   for (const s of need) assert(html.includes(s), `falta el aviso de que el tartar no puede ir sin gluten: "${s.slice(0, 60)}…"`);
-  // Y el gluten de los dos tartares debe estar declarado como estructural.
+  // El gluten de estos tartares viene de DOS sitios: el pan carasau y el
+  // vinagre de malta de la Perrins. El propietario confirmó después que la
+  // Perrins SÍ se puede dejar fuera, así que el gluten pasa a retirable — pero
+  // SOLO con las dos comandas. Lo que este guard prohíbe es lo peligroso:
+  // que la comanda del gluten mencione el pan y NO la Worcestershire, porque
+  // entonces se estaría prometiendo un plato sin gluten que sigue teniéndolo.
   const iM = html.indexOf('const DISH_ACTIONS = ');
   const M = JSON.parse(html.slice(iM + 'const DISH_ACTIONS = '.length, html.indexOf('};', iM) + 1));
-  for (const id of ['15', '16'])
-    assert(M[id].Gluten && M[id].Gluten.r === 0,
-      `el gluten del plato ${id} vuelve a figurar como retirable por comanda`);
+  for (const id of ['15', '16']) {
+    const gl = M[id] && M[id].Gluten;
+    assert(gl, `el plato ${id} no declara qué hacer con el gluten`);
+    if (gl.r !== 1) continue;                       // estructural: nada que prometer
+    for (const cmd of [gl.c, gl.c_en].filter(Boolean))
+      assert(/worcestershire|perrins/i.test(cmd),
+        `la comanda de gluten del plato ${id} («${cmd}») no retira la Worcestershire: el plato seguiría llevando gluten`);
+  }
   // The generator must extract EN comanda instructions too ("Order WITHOUT …"),
   // otherwise the correct adapt answer shows a fake generic instruction in EN.
   assert(html.includes('(?:Comandar|Order) ([^.]+)\\.'),
@@ -6689,7 +6704,9 @@ test('filtro de turno (DISH_SERVICE) coherente con las cartas reales', () => {
   for (const id of [95, 96, 97, 92, 93, 94, 73, 74, 84, 102, 104, 105, 86, 91])
     assert(SV[id] === 'a', `#${id} debe ser solo ALMUERZO`);
   // dinner-only reales (no deben salir en almuerzo) — incluye veg de solo-cena
-  for (const id of [23, 24, 25, 26, 40, 41, 34, 17, 18, 19, 20, 21, 22, 112, 48, 49, 52, 53, 54])
+  // El 49 se fusionó con el 15 (mismo plato, dos páginas del plating guide);
+  // el 15 es «ambos», así que sale de esta lista de solo-cena.
+  for (const id of [23, 24, 25, 26, 40, 41, 34, 17, 18, 19, 20, 21, 22, 112, 48, 52, 53, 54])
     assert(SV[id] === 'c', `#${id} debe ser solo CENA`);
   // vegetarianos de solo-almuerzo
   for (const id of [120, 121]) assert(SV[id] === 'a', `#${id} debe ser solo ALMUERZO`);
