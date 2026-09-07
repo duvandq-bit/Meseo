@@ -1244,6 +1244,22 @@ test('recorrido guiado: las preguntas van de alérgenos e ingredientes y no se r
     'vuelve la pregunta de relleno del storytelling (respuesta siempre «Sí»)');
   assert(/function _djQComponente\(/.test(html) && /function _djQAdaptar\(/.test(html),
     'faltan las preguntas de componente y de adaptación');
+  // La categoría se retiró entera a petición del propietario: «son muy fáciles
+  // y obvias». Lo eran — en 25 de los 102 platos el nombre daba la respuesta.
+  // Los 14 platos que caían ahí no declaran NINGÚN alérgeno (guarniciones y
+  // carnes a la brasa); ahora se les pregunta justo eso, y cuál se le puede
+  // ofrecer a un alérgico — que es la habilidad que se usa en la mesa.
+  // Se busca por el código que la construía, no por su enunciado: la frase la
+  // cita el comentario que explica por qué se retiró.
+  const zonaQuiz = html.slice(html.indexOf('function _djDistractores'), html.indexOf('function _djShuffle'));
+  assert(!/_djQCategoria/.test(html) && !/catLocal/.test(zonaQuiz),
+    'vuelve la pregunta de categoría, que el propietario retiró por obvia');
+  assert(/function _djQSinAlergenos\(/.test(html) && /function _djQCualSinAlergenos\(/.test(html),
+    'faltan las dos preguntas de los platos sin alérgenos declarados');
+  // Y el cuestionario no se rellena: si un plato solo da para dos preguntas
+  // honestas, se quedan dos y el contador las sigue.
+  assert(/_djState\.quizTotal = _djState\.quizQuestions\.length/.test(html),
+    'el contador del test debe seguir al número real de preguntas');
   // El pool de distractores es el vocabulario de la casa: «Mariscos» y
   // «Sésamo» no existen en ninguna otra pantalla de la app.
   const pool = (html.match(/const allergenPool = \[([\s\S]*?)\];/) || [])[1] || '';
