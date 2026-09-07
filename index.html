@@ -772,6 +772,14 @@ function setLangApp(lang) {
 function setLang(lang) {
   LANG = lang;
   localStorage.setItem('txoko_lang', lang);
+  // Los índices del buscador global se construyen una vez y se cachean. Los de
+  // vinos y situaciones LQA hornean el texto EN EL IDIOMA ACTIVO, así que al
+  // cambiar de idioma sin recargar seguían saliendo en el anterior (medido: se
+  // pulsa EN y las situaciones seguían en español). Se invalidan aquí para que
+  // el siguiente render los reconstruya. El try/catch es por el arranque:
+  // setLang() se llama antes de que se ejecuten sus `let`, y en esa zona muerta
+  // hasta un typeof lanza — si aún no existen, tampoco hay nada que invalidar.
+  try { _gsDishIdx = null; _gsWineIdx = null; _gsLqaIdx = null; } catch (e) { /* boot */ }
   const root = document.getElementById('htmlRoot');
   if(root) root.lang = lang;
   // Update login lang buttons if they exist
@@ -10117,8 +10125,12 @@ function _gsDishIndex(){
   if(typeof DISHES_EN!=='undefined' && Array.isArray(DISHES_EN)) DISHES_EN.forEach(d=>{ enMap[d.id]=d; });
   _gsDishIdx = DISHES.map(d=>{
     const e = enMap[d.id] || {};
-    const search = _gsNorm([d.name, e.name, d.aka||'', d.cat, (d.allergens||[]).join(' '), (e.allergens||[]).join(' '), d.ingredients, e.ingredients].join(' '));
-    return { type:'dish', id:d.id, name:d.name, nameEn:e.name||d.name, cat:d.cat||'', allergens:d.allergens||[], search };
+    // La categoría entra al índice en los DOS idiomas: si no, en inglés no se
+    // puede buscar «sides» ni «desserts» (medido: 0 resultados) mientras que en
+    // español «postres» devolvía los 12 platos.
+    const catIng = typeof catEn==='function' ? catEn(d.cat) : d.cat;
+    const search = _gsNorm([d.name, e.name, d.aka||'', d.cat, catIng, (d.allergens||[]).join(' '), (e.allergens||[]).join(' '), d.ingredients, e.ingredients].join(' '));
+    return { type:'dish', id:d.id, name:d.name, nameEn:e.name||d.name, cat:d.cat||'', catEn:catIng||'', allergens:d.allergens||[], search };
   });
   return _gsDishIdx;
 }
@@ -10180,7 +10192,7 @@ function _gsAllergenAnswer(algs, en){
   // El bloque de aptos se agrupa por categoría: es como se recorre una carta
   // delante del cliente («de entrantes puede tomar…»).
   const porCat = {};
-  libre.forEach(it=>{ const c=it.cat||(en?'Other':'Otros'); (porCat[c]=porCat[c]||[]).push(it); });
+  libre.forEach(it=>{ const c=(en?it.catEn:it.cat)||(en?'Other':'Otros'); (porCat[c]=porCat[c]||[]).push(it); });
   let html = '<div class="gs-al-head"><div class="gs-al-title">'
     + (en?'Guest allergic to':'Cliente alérgico a') + ' <b>' + escapeHtml(etiqueta) + '</b></div>'
     + '<div class="gs-al-note">' + (en
@@ -10269,7 +10281,7 @@ function _gsRender(raw){
     html += dishes.map(it=>{
       const nm = en?it.nameEn:it.name;
       const alg = (it.allergens||[]).map(a=>typeof allergenLocal==='function'?allergenLocal(a):a).join(', ');
-      const sub = [it.cat, alg].filter(Boolean).join(' · ');
+      const sub = [(en?it.catEn:it.cat), alg].filter(Boolean).join(' · ');
       const _ph=typeof dishPhotoSrc==='function'?dishPhotoSrc(it.id):null;
       return '<button type="button" class="gs-hit" role="option" onclick="_gsGo(\'dish\','+it.id+')">'
         + '<span class="gs-hit-ic">'+(_ph?'<img class="gs-hit-ph" loading="lazy" '+SRC+'="'+_ph+'" alt="">':_GS_ICON_DISH)+'</span>'

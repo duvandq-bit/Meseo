@@ -2100,6 +2100,31 @@ test('las dos cartas cuadran: ninguna ficha inglesa sin plato español (sep 2026
   assert(huerfanas.length === 0, `DISHES_EN keeps dishes with no Spanish card: ${huerfanas.join(', ')}`);
 });
 
+test('el buscador global habla el idioma activo: categoría e índices (sep 2026)', () => {
+  // Dos fallos medidos en el buscador, que es lo único que quedó del Modo
+  // Servicio y por tanto la herramienta de consulta en sala.
+  //
+  // 1 · La categoría salía SIEMPRE en español: «Padrón peppers · Guarniciones
+  //     y Salsas». Y como el índice sólo guardaba la española, en inglés no se
+  //     podía buscar por categoría: «sides» y «desserts» devolvían 0 platos
+  //     mientras «guarniciones» daba 13 y «postres» 9.
+  const idx = html.slice(html.indexOf('function _gsDishIndex()'), html.indexOf('function _gsWineIndex()'));
+  assert(/catEn:\s*catIng/.test(idx), 'the dish index must store the English category');
+  assert(/_gsNorm\(\[[^\]]*\bcatIng\b/.test(idx), 'the search string must include the English category');
+  assert(/function catEn\b|const catEn\s*=/.test(html), 'catEn() must exist to translate the category');
+  for (const uso of [/const sub = \[\(en\?it\.catEn:it\.cat\), alg\]/, /const c=\(en\?it\.catEn:it\.cat\)\|\|/])
+    assert(uso.test(html), `a search renderer still prints the Spanish category: ${uso}`);
+  //
+  // 2 · Los índices se cachean y los de vinos y LQA hornean el texto en el
+  //     idioma activo, así que al pulsar EN sin recargar las situaciones
+  //     seguían en español. setLang los invalida.
+  const sl = html.slice(html.indexOf('function setLang(lang)'), html.indexOf('function setLang(lang)') + 1400);
+  assert(/_gsDishIdx = null; _gsWineIdx = null; _gsLqaIdx = null;/.test(sl),
+    'setLang must drop the cached search indexes so they rebuild in the new language');
+  assert(/try \{ _gsDishIdx/.test(sl),
+    'the invalidation must be guarded — setLang runs at boot, inside the let temporal dead zone');
+});
+
 test('el Modo Servicio no vuelve: se eliminó y sólo queda el buscador (sep 2026)', () => {
   // El propietario retiró el Modo Servicio hace tiempo, pero sólo se quitó su
   // botón: quedaban 311 líneas de JS, 70 reglas de CSS y el div del overlay,
