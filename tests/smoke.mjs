@@ -1273,6 +1273,29 @@ test('reducir movimiento significa SIN movimiento, también sin retardo', () => 
       `la red de movimiento reducido no anula ${prop}: el contenido sigue moviéndose`);
 });
 
+test('ninguna ficha de plato tiene una clave repetida que se trague el contenido', () => {
+  // El Rejo de pulpo tenía su historia escrita Y un segundo history:'' al final
+  // del mismo objeto: en JavaScript gana el último, así que el capítulo I
+  // llevaba quién sabe cuánto diciendo «No hay historia disponible» con el
+  // texto delante. No se ve leyendo la ficha, solo midiendo.
+  for (const lista of ['DISHES', 'DISHES_EN']) {
+    const i = html.indexOf('const ' + lista + ' = ['), j = html.indexOf('\n];', i);
+    const bloque = html.slice(i, j);
+    for (const m of bloque.matchAll(/\{id:(\d+),[\s\S]*?\n/g)) {
+      for (const k of ['id', 'cat', 'name', 'allergens', 'ingredients', 'history', 'notes']) {
+        const n = (m[0].match(new RegExp('(?:^|[,{])' + k + ':', 'g')) || []).length;
+        assert(n <= 1, `${lista}: el plato ${m[1]} repite la clave «${k}» ${n} veces — la última anula a la primera`);
+      }
+    }
+  }
+  // Y ninguna ficha se queda sin historia: es un capítulo entero del recorrido.
+  const iD = html.indexOf('const DISHES = ['), jD = html.indexOf('\n];', iD);
+  const DISHES = new Function(html.slice(iD, jD + 3) + '; return DISHES;')(); // eslint-disable-line no-new-func
+  const sin = DISHES.filter(d => !d.history || !d.history.trim());
+  assert(sin.length === 0,
+    `platos sin historia (el capítulo I les dice «No hay historia disponible»): ${sin.map(d => d.id + ' ' + d.name).join(', ')}`);
+});
+
 test('recorrido guiado: la ficha de servicio no corta ninguna comanda', () => {
   // Auditoría (sept 2026): el capítulo de Servicio cortaba la nota con
   // substring(0,200)+'...'. Medido: 69 fichas cortadas, 8.302 caracteres
