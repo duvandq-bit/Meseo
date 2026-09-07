@@ -293,9 +293,10 @@
    "nombre": "Salsa Perrins",
    "alergenos": [
     "Pescado",
-    "Sulfitos"
+    "Sulfitos",
+    "Soja"
    ],
-   "fuente": "notas del plato"
+   "fuente": "confirmado por propietario"
   },
   "guindilla": {
    "nombre": "Guindilla",
@@ -604,9 +605,10 @@
     "Lácteos",
     "Mostaza",
     "Pescado",
-    "Sulfitos"
+    "Sulfitos",
+    "Soja"
    ],
-   "fuente": "notas del plato"
+   "fuente": "confirmado por propietario"
   },
   "calamar": {
    "nombre": "Calamar",
@@ -935,6 +937,25 @@
    "alergenos": [
     "Lácteos"
    ],
+   "fuente": "certeza culinaria"
+  },
+  "leche de almendras": {
+   "nombre": "Leche de almendras",
+   "alergenos": [
+    "Frutos secos"
+   ],
+   "fuente": "confirmado por propietario"
+  },
+  "crumble": {
+   "nombre": "Crumble",
+   "alergenos": [
+    "Gluten"
+   ],
+   "fuente": "certeza culinaria"
+  },
+  "arroz": {
+   "nombre": "Arroz",
+   "alergenos": [],
    "fuente": "certeza culinaria"
   },
   "canela": {
