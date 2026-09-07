@@ -52,7 +52,7 @@
 <meta property="og:description" content="Formación de equipos de sala: carta, alérgenos, vinos, exámenes y juegos de repaso.">
 <meta property="og:url" content="https://meseo.es/">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"Meseo","url":"https://meseo.es/"}</script>
-<meta name="app-version" content="7.376">
+<meta name="app-version" content="7.377">
 <meta name="app-build" content="May 2026">
 <meta name="theme-color" content="#1c2a22">
 <!-- ═══ PWA ═══ -->
@@ -409,9 +409,7 @@
   <div class="app-credit" style="color:rgba(28,42,34,.4)">© 2026 Meseo® · Marca registrada</div>
   <button class="sound-toggle" id="soundToggle" onclick="toggleSound()" title="Sonido" aria-label="Alternar sonido" role="button">◉</button>
   <div class="txk-sync-pill" id="syncStatusPill" role="status" aria-live="polite" aria-atomic="true"><span class="dot"></span><span id="syncStatusText">Offline</span></div>
-  <!-- Service Mode FAB removed per owner request; _svc* code kept, unreferenced -->
 </div>
-<div class="svc-overlay svc-hidden" id="svcOverlay"></div>
 
 <script>
 
@@ -774,6 +772,14 @@ function setLangApp(lang) {
 function setLang(lang) {
   LANG = lang;
   localStorage.setItem('txoko_lang', lang);
+  // Los índices del buscador global se construyen una vez y se cachean. Los de
+  // vinos y situaciones LQA hornean el texto EN EL IDIOMA ACTIVO, así que al
+  // cambiar de idioma sin recargar seguían saliendo en el anterior (medido: se
+  // pulsa EN y las situaciones seguían en español). Se invalidan aquí para que
+  // el siguiente render los reconstruya. El try/catch es por el arranque:
+  // setLang() se llama antes de que se ejecuten sus `let`, y en esa zona muerta
+  // hasta un typeof lanza — si aún no existen, tampoco hay nada que invalidar.
+  try { _gsDishIdx = null; _gsWineIdx = null; _gsLqaIdx = null; } catch (e) { /* boot */ }
   const root = document.getElementById('htmlRoot');
   if(root) root.lang = lang;
   // Update login lang buttons if they exist
@@ -1300,12 +1306,8 @@ const DISHES_EN = [
   {id:129,name:'Caramelised rice pudding',allergens:['Tree nuts'],ingredients:'Rice, Almond milk, Cinnamon, Lemon.',history:'Centuries ago, rice was already cooked with milk and honey in the East as a dessert for nobles. When the Arabs reached Spain in the Middle Ages they brought rice, sugar and cinnamon with them. There rice pudding was born as we know it: sweet, creamy and fragrant. Later the Spanish took it to the Americas, where each country gave it its own twist.',notes:'VEGAN dessert: made with almond milk, not cow\'s milk. ⚠ Its ONLY allergen is TREE NUTS, and it cannot be removed: the almond milk is the base of the dessert. Careful with anyone who reads «vegan» as «allergen-free» — this is the perfect example.'},
   {id:53,name:'Creamy vegetable rice',allergens:['Dairy','Sulphites'],ingredients:'Bomba rice, Seasonal organic baby vegetables (carrot, courgette, green bean, broccoli), Vegetable stock, Onion, White wine, Butter, Parmesan cheese, Olive oil, Salt, Pepper.',history:'Creamy rice with organic mini vegetables from Guía de Isora.',notes:'[V] VEGAN adaptable. Creamy rice with seasonal organic vegetables.'},
   {id:54,name:'Spinach and Parmesan ravioli',allergens:['Gluten','Dairy','Eggs'],ingredients:'Fresh pasta: Flour, Egg, Water, Salt. Filling: Fresh spinach, Ricotta, Parmesan cheese, Nutmeg, Oregano, Salt, Pepper. Parmesan foam: Grated Parmesan, Milk, Cream, Salt.',history:'This ravioli was born at the meeting point between the garden and Italian tradition. Fresh spinach wrapped in fresh pasta. The Parmesan foam adds depth and character.',notes:'Artisan pasta made in-house, filled with spinach, ricotta, Parmesan, nutmeg, oregano, salt and pepper. Finished with Parmesan foam gratinated in the salamander.'},
-  {id:55,name:'Green salad (vegetarian)',allergens:['Sulphites'],ingredients:'Lettuce, Red onion.',history:'Lettuce from our organic supplier in Granadilla de Abona.',notes:'[V] VEGAN adaptable. Fresh lettuce and onion salad with vinaigrette.'},
-  {id:56,name:'Padrón peppers (vegetarian)',allergens:[],ingredients:'Padrón peppers, Pepper, Salt.',history:'Our Padrón peppers are organic and sourced from Granadilla.',notes:'[V] VEGAN adaptable.'},
   {id:57,name:'Creamy potato purée',allergens:['Dairy'],ingredients:'Local potatoes, Cream, Milk, Butter, Chicken stock.',history:'Our local potatoes come from Tacoronte.',notes:'⚠ ATTENTION: NOT vegetarian as it contains chicken stock.'},
-  {id:58,name:'French fries',allergens:[],ingredients:'Local potatoes, Oil, Salt.',history:'Our local potatoes come from Tacoronte.',notes:'[V] VEGAN adaptable. ⚠ No allergens but possible cross-contamination with gluten. Always serve with sauces for children.'},
         // ===== NEW DISHES EN =====
-  {id:65,name:'Padrón peppers',allergens:[],ingredients:'Padrón peppers, Pepper, Salt',history:'Our Padrón peppers are organic and sourced from Granadilla.',notes:'⚠ Can be prepared gluten-free — alert kitchen team.'},
   {id:66,name:'Grilled asparagus',allergens:[],ingredients:'Asparagus, Olive oil, Salt.',history:'Charcoal-grilled asparagus with olive oil and salt. The grill lends a smoky note that heightens the vegetable\'s natural flavour, served with the utmost simplicity.',notes:null},
   {id:67,name:'Sweetened wings',allergens:['Soy'],ingredients:'Chicken wings, Sunflower oil, Soy, Palm honey, Ginger, Vegetable stock (Onion, Leek, Carrot, Pumpkin and Chickpeas), Salt',history:'Chicken wings glazed with soy and Gomeran palm honey — a product unique to La Gomera — until sticky and glossy. Ginger adds a fresh, spicy counterpoint.',notes:'⚠ Soy in the glaze — CANNOT be removed: it is what makes the sticky glaze the dish is named after.'},
   {id:68,name:'Txoko-style patatas bravas',allergens:['Eggs','Sulphites','Dairy'],ingredients:'Potato, Parmesan cheese, Chicken stock, Onion, Tomato, Sherry vinegar, Cayenne, Garlic, Egg, Sunflower oil, Salt',history:'Our patatas bravas are made with a potato terrine base (with parmesan cheese between each layer as a binder). Finished with dots of brava sauce and aioli.',notes:'⚠ Eggs in the ali-oli — order WITHOUT ALI-OLI.'},
@@ -1594,7 +1596,7 @@ const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><p
 const SRC = 'src';
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='7.376';  // sincronizada con sw.js VERSION (guard de CI)
+const APP_VERSION='7.377';  // sincronizada con sw.js VERSION (guard de CI)
 const APP_BUILD='Jul 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;
@@ -2352,7 +2354,7 @@ function _tmTrackSearch(qLen, hits){
 // la cola bloqueada para siempre y ningún aviso llegaba a salir nunca.
 const _UI_OVERLAY_SEL = ['#onboardingOverlay','#recEmailOverlay','#pinOverlay',
   '#pinRecoveryOverlay','#pinResetOverlay','#luOverlay','#delOverlay','#dqOverlay',
-  '.gs-overlay','.svc-overlay'];
+  '.gs-overlay'];
 function _uiVisible(el){
   if(!el) return false;
   const cs = getComputedStyle(el);
@@ -10123,8 +10125,12 @@ function _gsDishIndex(){
   if(typeof DISHES_EN!=='undefined' && Array.isArray(DISHES_EN)) DISHES_EN.forEach(d=>{ enMap[d.id]=d; });
   _gsDishIdx = DISHES.map(d=>{
     const e = enMap[d.id] || {};
-    const search = _gsNorm([d.name, e.name, d.aka||'', d.cat, (d.allergens||[]).join(' '), (e.allergens||[]).join(' '), d.ingredients, e.ingredients].join(' '));
-    return { type:'dish', id:d.id, name:d.name, nameEn:e.name||d.name, cat:d.cat||'', allergens:d.allergens||[], search };
+    // La categoría entra al índice en los DOS idiomas: si no, en inglés no se
+    // puede buscar «sides» ni «desserts» (medido: 0 resultados) mientras que en
+    // español «postres» devolvía los 12 platos.
+    const catIng = typeof catEn==='function' ? catEn(d.cat) : d.cat;
+    const search = _gsNorm([d.name, e.name, d.aka||'', d.cat, catIng, (d.allergens||[]).join(' '), (e.allergens||[]).join(' '), d.ingredients, e.ingredients].join(' '));
+    return { type:'dish', id:d.id, name:d.name, nameEn:e.name||d.name, cat:d.cat||'', catEn:catIng||'', allergens:d.allergens||[], search };
   });
   return _gsDishIdx;
 }
@@ -10186,7 +10192,7 @@ function _gsAllergenAnswer(algs, en){
   // El bloque de aptos se agrupa por categoría: es como se recorre una carta
   // delante del cliente («de entrantes puede tomar…»).
   const porCat = {};
-  libre.forEach(it=>{ const c=it.cat||(en?'Other':'Otros'); (porCat[c]=porCat[c]||[]).push(it); });
+  libre.forEach(it=>{ const c=(en?it.catEn:it.cat)||(en?'Other':'Otros'); (porCat[c]=porCat[c]||[]).push(it); });
   let html = '<div class="gs-al-head"><div class="gs-al-title">'
     + (en?'Guest allergic to':'Cliente alérgico a') + ' <b>' + escapeHtml(etiqueta) + '</b></div>'
     + '<div class="gs-al-note">' + (en
@@ -10275,7 +10281,7 @@ function _gsRender(raw){
     html += dishes.map(it=>{
       const nm = en?it.nameEn:it.name;
       const alg = (it.allergens||[]).map(a=>typeof allergenLocal==='function'?allergenLocal(a):a).join(', ');
-      const sub = [it.cat, alg].filter(Boolean).join(' · ');
+      const sub = [(en?it.catEn:it.cat), alg].filter(Boolean).join(' · ');
       const _ph=typeof dishPhotoSrc==='function'?dishPhotoSrc(it.id):null;
       return '<button type="button" class="gs-hit" role="option" onclick="_gsGo(\'dish\','+it.id+')">'
         + '<span class="gs-hit-ic">'+(_ph?'<img class="gs-hit-ph" loading="lazy" '+SRC+'="'+_ph+'" alt="">':_GS_ICON_DISH)+'</span>'
@@ -16251,8 +16257,8 @@ function findSimilarWines(wineId, count){
   // Needs both the wine list and the lazy educational content. Guarding on
   // _WINE_ADJACENT_TYPES (loaded with the rest of vinos-content) protects the
   // whole transitive chain (_wineGrapes→GRAPE_SYNONYMS, _wineProfile, …).
-  // Callers (Service View's _svcToggleSimilar, the Vinos similar section)
-  // already handle an empty array gracefully.
+  // The caller (the Vinos similar section) already handles an empty array
+  // gracefully.
   if(!WINES || !_WINE_ADJACENT_TYPES) return [];
   const target = WINES.find(w => w.id === wineId);
   if(!target) return [];
@@ -28996,310 +29002,6 @@ if(DEBUG) window.txokoDiag = txokoDiag;
 
 
 
-
-
-// ═══════════════════════════════════════════════
-// ═══ SERVICE COMPANION MODE ═══
-// ═══════════════════════════════════════════════
-
-let _svcActive = false;
-let _svcTab = 'allergens';
-let _svcQuery = '';
-let _svcSelectedDish = null;
-let _svcDebounce = null;
-
-function toggleServiceMode(){
-  _svcActive = !_svcActive;
-  const ov = document.getElementById('svcOverlay');
-  if(_svcActive){
-    ov.classList.remove('svc-hidden');
-    _svcQuery = '';
-    _svcSelectedDish = null;
-    _svcTab = 'allergens';
-    _renderServiceMode();
-    setTimeout(() => { const inp = document.getElementById('svcSearchInput'); if(inp) inp.focus(); }, 250);
-  } else {
-    ov.classList.add('svc-hidden');
-  }
-}
-
-function _svcShowFab(){
-  const fab = document.getElementById('svcFab');
-  if(fab) fab.style.display = currentUser ? 'flex' : 'none';
-}
-
-// Debounced search handler — updates results without destroying the input
-function _svcOnSearch(val){
-  _svcQuery = val;
-  clearTimeout(_svcDebounce);
-  _svcDebounce = setTimeout(() => {
-    _svcUpdateResults();
-  }, 80);
-}
-
-// Only update the results area, not the whole overlay — preserves input focus
-function _svcUpdateResults(){
-  const container = document.getElementById('svcResultsArea');
-  if(!container) return _renderServiceMode();
-  const _en = LANG === 'en';
-  const dishes = _en ? DISHES_EN : DISHES;
-  const q = _svcQuery.toLowerCase().trim();
-
-  // Also search wines when in wine tab
-  let filteredWines = [];
-  if(_svcTab === 'wine' && q.length >= 2 && WINES){
-    filteredWines = WINES.filter(w => {
-      const fields = [w.name, w.region||'', w.grapes||'', w.type||'', w.origin||''].join(' ').toLowerCase();
-      return q.split(/\s+/).every(word => fields.includes(word));
-    });
-  }
-
-  let filtered = dishes;
-  if(q.length >= 2){
-    filtered = dishes.filter(d => {
-      const searchFields = [d.name, d.cat, (d.allergens||[]).join(' '), d.ingredients||'', d.notes||''].join(' ').toLowerCase();
-      return q.split(/\s+/).every(w => searchFields.includes(w));
-    });
-  }
-
-  if(q.length < 2){
-    container.innerHTML = `<div class="svc-empty">
-      <div style="font-size:2rem;margin-bottom:.5rem">»</div>
-      <div>${_en?'Type a dish name to get instant info':'Escribe el nombre de un plato para info instantánea'}</div>
-      <div style="font-size:.65rem;color:#30363d;margin-top:.5rem">${_en?'Try: "tataki", "croquetas", "wagyu"':'Prueba: "tataki", "croquetas", "wagyu"'}</div>
-    </div>`;
-  } else if(filtered.length === 0 && filteredWines.length === 0){
-    container.innerHTML = `<div class="svc-empty">
-      <div style="font-size:1.5rem;margin-bottom:.3rem">◎</div>
-      <div>${_en?'No results found':'No se encontraron resultados'}</div>
-    </div>`;
-  } else {
-    let html = '';
-    // Show wine results first when in wine tab
-    if(filteredWines.length > 0){
-      html += `<div class="svc-section-title" style="margin-bottom:.4rem">T ${_en?'Wines':'Vinos'} (${filteredWines.length})</div>`;
-      html += filteredWines.slice(0,8).map(w => {
-        const typeLabel = _en ? {blanco:'White',tinto:'Red',rosado:'Rosé',espumoso:'Sparkling',dulce:'Dessert'}[w.type]||w.type : {blanco:'Blanco',tinto:'Tinto',rosado:'Rosado',espumoso:'Espumoso',dulce:'Dulce'}[w.type]||w.type;
-        const typeColor = {blanco:'#e8d44d',tinto:'#e85d5d',rosado:'#f0a0b0',espumoso:'#7ec8e3',dulce:'#d4944c'}[w.type]||'#c49a3c';
-        const wTemp = (typeof SF_WINE_TEMPS!=='undefined' && SF_WINE_TEMPS[w.type]) ? SF_WINE_TEMPS[w.type].correct : '';
-        return `<div class="svc-result" id="svcWine_${w.id}">
-          <button class="svc-similar-btn" onclick="event.stopPropagation();_svcToggleSimilar(${w.id})" title="${_en?'Show similar wines':'Ver vinos similares'}">⚯ ${_en?'Similar':'Similar'}</button>
-          <div class="svc-result-name">${escapeHTML(w.name)}</div>
-          <div class="svc-result-cat"><span style="color:${typeColor}">${typeLabel}</span> · ${escapeHTML(w.region||'')} ${w.origin && w.origin!==w.region?'· '+escapeHTML(_wineOrigin(w.origin)):''}</div>
-          <div style="font-size:.65rem;color:rgba(244,237,226,.55);margin-top:.25rem">${w.grapes?'G '+escapeHTML(w.grapes):''} ${wTemp?'· T° '+wTemp:''} ${w.price?'· €'+w.price:''}</div>
-          <div class="svc-similar-slot" id="svcSimilarSlot_${w.id}"></div>
-        </div>`;
-      }).join('');
-    }
-    // Show dish results
-    if(filtered.length > 0){
-      if(filteredWines.length > 0) html += `<div class="svc-section-title" style="margin-top:.6rem;margin-bottom:.4rem">P ${_en?'Dishes':'Platos'} (${filtered.length})</div>`;
-      html += filtered.slice(0,15).map(d => `<div class="svc-result" onclick="_svcSelectedDish=${d.id};_renderServiceMode()">
-        <div class="svc-result-name">${d.name}</div>
-        <div class="svc-result-cat">${d.cat||''}</div>
-        ${_svcTab === 'allergens' ? `<div>${(d.allergens && d.allergens.length) ? d.allergens.map(a => `<span class="svc-allergen-tag danger">⚠ ${a}</span>`).join('') : `<span class="svc-allergen-tag safe">✓ ${_en?'None':'Ninguno'}</span>`}</div>` : ''}
-        ${_svcTab === 'wine' ? _svcGetWinePreview(d, _en) : ''}
-        ${_svcTab === 'ingredients' ? `<div style="font-size:.68rem;color:#8b949e;line-height:1.4;margin-top:.3rem">${(d.ingredients||'').substring(0,120)}${(d.ingredients||'').length>120?'...':''}</div>` : ''}
-        ${_svcTab === 'plating' ? `<div style="font-size:.68rem;color:#8b949e;line-height:1.4;margin-top:.3rem">${(d.notes||'').substring(0,100)}${(d.notes||'').length>100?'...':''}</div>` : ''}
-      </div>`).join('');
-    }
-    container.innerHTML = html;
-  }
-}
-
-function _svcSwitchTab(id){
-  _svcTab = id;
-  // Update tab highlights without rebuilding input
-  document.querySelectorAll('.svc-tab').forEach(t => {
-    const onc = t.getAttribute('onclick')||'';
-    t.classList.toggle('active', onc.includes("'"+id+"'"));
-  });
-  _svcUpdateResults();
-}
-
-function _renderServiceMode(){
-  const ov = document.getElementById('svcOverlay');
-  const _en = LANG === 'en';
-  const now = new Date();
-  const timeStr = now.getHours().toString().padStart(2,'0') + ':' + now.getMinutes().toString().padStart(2,'0');
-  const dishes = _en ? DISHES_EN : DISHES;
-
-  const tabData = [
-    ['allergens', _en?'Allergens':'Alérgenos', '⚠'],
-    ['wine', _en?'Wine':'Vinos', 'T'],
-    ['plating', _en?'Plating':'Emplatado', 'P'],
-    ['ingredients', _en?'Ingredients':'Ingredientes', '◇']
-  ];
-
-  // Detail view of a selected dish
-  if(_svcSelectedDish !== null){
-    const d = dishes.find(x => x.id === _svcSelectedDish);
-    if(d){
-      ov.innerHTML = _svcHeaderHTML(timeStr, _en) + `<div class="svc-body">
-        <button onclick="_svcSelectedDish=null;_renderServiceMode()" style="background:none;border:none;color:var(--gold);font-size:.75rem;font-family:'DM Mono',monospace;cursor:pointer;margin-bottom:.6rem;padding:.4rem 0;min-height:36px;-webkit-tap-highlight-color:transparent">← ${_en?'Back':'Volver'}</button>
-        <div class="svc-result-name" style="font-size:1rem;margin-bottom:.2rem">${d.name}</div>
-        <div class="svc-result-cat">${d.cat||''}</div>
-
-        ${_svcTab === 'allergens' || _svcTab === 'all' ? `
-          <div class="svc-section-title">${_en?'Allergens':'Alérgenos'}</div>
-          <div style="margin-bottom:.6rem">${(d.allergens && d.allergens.length) ? d.allergens.map(a => `<span class="svc-allergen-tag danger">⚠ ${a}</span>`).join('') : `<span class="svc-allergen-tag safe">✓ ${_en?'No declared allergens':'Sin alérgenos declarados'}</span>`}</div>
-          ${d.notes ? `<div class="svc-section-title">${_en?'Important Notes':'Notas Importantes'}</div><div class="svc-notes">${d.notes.replace(/⚠/g,'<b style="color:#f85149">⚠</b>').replace(/NO se puede retirar/g,'<b>NO se puede retirar</b>').replace(/Cannot be removed/gi,'<b>Cannot be removed</b>')}</div>` : ''}
-        ` : ''}
-
-        ${_svcTab === 'wine' || _svcTab === 'all' ? `
-          <div class="svc-section-title">${_en?'Recommended Wines':'Vinos Recomendados'}</div>
-          ${_svcGetWineRecs(d, _en)}
-        ` : ''}
-
-        ${_svcTab === 'plating' || _svcTab === 'all' ? `
-          <div class="svc-section-title">${_en?'Plating & Description':'Emplatado y Descripción'}</div>
-          <div style="font-size:.75rem;color:#e6edf3;line-height:1.6;margin-bottom:.5rem">${d.notes || (_en?'See plating guide':'Ver guía de emplatado')}</div>
-          ${d.history ? `<div style="font-size:.7rem;color:#8b949e;line-height:1.5;font-style:italic;border-left:2px solid #c49a3c;padding-left:.6rem;margin-top:.5rem">${d.history}</div>` : ''}
-        ` : ''}
-
-        ${_svcTab === 'ingredients' || _svcTab === 'all' ? `
-          <div class="svc-section-title">${_en?'Ingredients':'Ingredientes'}</div>
-          ${d.ingredients ? `<div style="font-size:.75rem;color:#e6edf3;line-height:1.7">${d.ingredients}</div>` : `<div style="font-size:.72rem;color:#484f58">${_en?'Not specified':'No especificado'}</div>`}
-        ` : ''}
-      </div>`;
-      return;
-    }
-  }
-
-  // List view — search input is separate from results area so it doesn't get destroyed on search
-  ov.innerHTML = _svcHeaderHTML(timeStr, _en) + `<div class="svc-body">
-    <div class="svc-search-wrap">
-      <span class="svc-search-icon">◎</span>
-      <input class="svc-search" id="svcSearchInput" type="search" inputmode="search" placeholder="${_en?'Search dish, allergen, wine...':'Buscar plato, alérgeno, vino...'}" value="${_svcQuery}" oninput="_svcOnSearch(this.value)" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
-    </div>
-    <div class="svc-tabs">
-      ${tabData.map(([id,label,icon]) => `<button class="svc-tab${_svcTab===id?' active':''}" onclick="_svcSwitchTab('${id}')">${icon} ${label}</button>`).join('')}
-    </div>
-    <div id="svcResultsArea"></div>
-  </div>`;
-
-  // Populate results without destroying input
-  _svcUpdateResults();
-}
-
-function _svcHeaderHTML(timeStr, _en){
-  return `<div class="svc-header">
-    <div>
-      <div class="svc-header-title">» ${_en?'Service Mode':'Modo Servicio'}</div>
-      <div class="svc-header-time">${timeStr} · ${currentUser||''}</div>
-    </div>
-    <button class="svc-close" onclick="toggleServiceMode()">✕ ${_en?'Close':'Cerrar'}</button>
-  </div>`;
-}
-
-function _svcGetWineRecs(dish, _en){
-  // Find wines that pair with this dish type
-  const dishName = dish.name.toLowerCase();
-  const cat = dish.cat ? dish.cat.toLowerCase() : '';
-  let matchedWines = [];
-
-  // Use WINES data + pairings
-  if(WINES){
-    // Simple matching: fish dishes → white/sparkling, meat → red, etc.
-    const isSeafood = /pescado|marisco|atún|tuna|lubina|mero|calamar|pulpo|langost|gambas|ostras|fish|seafood|mejillon|lobster|pampano/.test(dishName);
-    const isMeat = /carne|solomillo|wagyu|costilla|cordero|pluma|brisket|carrillera|hamburguesa|entrecot|txuleta|tomahawk|chateaubriand|paletilla|pollo|milanesa/.test(dishName);
-    const isDessert = /brownie|mousse|flan|tarta|goxua|pastel|tocinillo|helado|chocolate|postre/.test(dishName);
-    const isVeg = /ensalada|verdura|alcachofa|esparrago|pimiento|tomate|remolacha|coliflor/.test(dishName);
-
-    let preferredTypes = [];
-    if(isSeafood) preferredTypes = ['blanco','espumoso','rosado'];
-    else if(isMeat) preferredTypes = ['tinto','rosado'];
-    else if(isDessert) preferredTypes = ['dulce'];
-    else if(isVeg) preferredTypes = ['blanco','rosado'];
-    else preferredTypes = ['blanco','tinto','rosado'];
-
-    matchedWines = WINES.filter(w => preferredTypes.includes(w.type)).slice(0,3);
-  }
-
-  if(!matchedWines.length) return `<div style="font-size:.72rem;color:#484f58">${_en?'No wine data available':'Sin datos de vinos'}</div>`;
-
-  return matchedWines.map(w => {
-    const why = typeof _pairingWhy === 'function' ? _pairingWhy(w, dish.name) : '';
-    const typeLabel = _en ? {blanco:'White',tinto:'Red',rosado:'Rosé',espumoso:'Sparkling',dulce:'Dessert'}[w.type]||w.type : {blanco:'Blanco',tinto:'Tinto',rosado:'Rosado',espumoso:'Espumoso',dulce:'Dulce'}[w.type]||w.type;
-    return `<div class="svc-result svc-wine-rec" id="svcWine_${w.id}" style="margin-top:.4rem">
-      <button class="svc-similar-btn" onclick="event.stopPropagation();_svcToggleSimilar(${w.id})" title="${_en?'Show similar wines':'Ver vinos similares'}">⚯ ${_en?'Similar':'Similar'}</button>
-      <div class="svc-wine-name">${escapeHTML(w.name)}</div>
-      <div class="svc-wine-meta">${typeLabel} · ${escapeHTML(w.region||'')} ${(typeof SF_WINE_TEMPS!=='undefined'&&SF_WINE_TEMPS[w.type])?'· T° '+SF_WINE_TEMPS[w.type].correct:''}</div>
-      ${why ? `<div class="svc-wine-why">${escapeHTML(why.substring(0,150))}${why.length>150?'...':''}</div>` : ''}
-      <div class="svc-similar-slot" id="svcSimilarSlot_${w.id}"></div>
-    </div>`;
-  }).join('');
-}
-
-/**
- * Service Mode: toggle del panel "Vinos similares" inline.
- * Caso real: vino agotado en sala → camarero tap "Similar" → ve 3 alternativas con %.
- */
-function _svcToggleSimilar(wineId){
-  const _en = LANG === 'en';
-  const slot = document.getElementById('svcSimilarSlot_' + wineId);
-  const card = document.getElementById('svcWine_' + wineId);
-  if(!slot || !card) return;
-  const btn = card.querySelector('.svc-similar-btn');
-  if(slot.children.length){
-    // Ya abierto → cerrar
-    slot.innerHTML = '';
-    if(btn) btn.classList.remove('active');
-    return;
-  }
-  if(btn) btn.classList.add('active');
-  const matches = findSimilarWines(wineId, 6);
-  if(!matches.length){
-    slot.innerHTML = `<div class="svc-similar-panel">
-      <div class="svc-similar-empty">${_en?'No comparable wines available.':'Sin alternativas comparables.'}</div>
-    </div>`;
-    return;
-  }
-  const TYPE_LBL_ES = {blanco:'Blanco',tinto:'Tinto',rosado:'Rosado',espumoso:'Espumoso',dulce:'Dulce'};
-  const TYPE_LBL_EN = {blanco:'White',tinto:'Red',rosado:'Rosé',espumoso:'Sparkling',dulce:'Dessert'};
-  const items = matches.map(m => {
-    const w = m.wine;
-    const allChips = _consolidateChips(m, _en);
-    allChips.sort((a,b) => a.priority - b.priority);
-    // En sala mostramos compacto: top 5 chips esenciales
-    const topChips = allChips.slice(0, 5);
-    const typeLabel = (_en ? TYPE_LBL_EN : TYPE_LBL_ES)[w.type] || w.type;
-    const meta = `${typeLabel} · ${escapeHTML(w.origin||'')}${w.price?' · '+w.price+'€':''}`;
-    const pctColor = m.scorePct >= 75 ? '#a8d8b0' : m.scorePct >= 50 ? '#e8c275' : '#e88070';
-    const chipHtml = topChips.map(c => {
-      let cls = '';
-      if(c.color === 'cheaper') cls = ' cheaper';
-      else if(c.color === 'pricier') cls = ' pricier';
-      else if(c.color === 'gold-strong' || c.color === 'star') cls = ' gold';
-      return `<span class="svc-similar-chip${cls}">${escapeHTML(c.text)}</span>`;
-    }).join('');
-    const oosClass = m.outOfStock ? ' svc-oos' : '';
-    const recClass = (_wineRecommendedToday[w.id]) ? ' svc-already-rec' : '';
-    return `<div class="svc-similar-item${oosClass}${recClass}" style="--svc-pct:${m.scorePct};--svc-pct-color:${pctColor}" onclick="markWineRecommended(${w.id});this.classList.add('svc-already-rec');">
-      <div class="svc-similar-pct" data-pct="${m.scorePct}"><span class="svc-similar-pct-inner">${m.scorePct}%</span></div>
-      <div class="svc-similar-name">${escapeHTML(w.name)}</div>
-      <div class="svc-similar-meta">${meta}</div>
-      ${chipHtml ? `<div class="svc-similar-chips">${chipHtml}</div>` : ''}
-    </div>`;
-  }).join('');
-  slot.innerHTML = `<div class="svc-similar-panel">
-    <div class="svc-similar-head">${_en?'If unavailable, recommend':'Si se ha agotado, recomienda'}</div>
-    ${items}
-  </div>`;
-}
-
-function _svcGetWinePreview(dish, _en){
-  const dishName = dish.name.toLowerCase();
-  const isSeafood = /pescado|atún|tuna|lubina|mero|calamar|pulpo|langost|gambas|ostras|fish|mejillon|lobster|pampano|marisco/.test(dishName);
-  const isMeat = /carne|solomillo|wagyu|costilla|cordero|pluma|brisket|carrillera|hamburguesa|entrecot|txuleta|tomahawk|chateaubriand|paletilla|pollo|milanesa/.test(dishName);
-  const isDessert = /brownie|mousse|flan|tarta|goxua|pastel|tocinillo|helado|chocolate/.test(dishName);
-  let suggestion = '';
-  if(isSeafood) suggestion = _en ? '→ White / Sparkling' : '→ Blanco / Espumoso';
-  else if(isMeat) suggestion = _en ? '→ Red' : '→ Tinto';
-  else if(isDessert) suggestion = _en ? '→ Sweet' : '→ Dulce';
-  else suggestion = _en ? '→ White / Rosé' : '→ Blanco / Rosado';
-  return `<div style="font-size:.65rem;color:var(--gold);margin-top:.25rem;font-family:'DM Mono',monospace">${suggestion}</div>`;
-}
 
 
 // ═══════════════════════════════════════════════════════════════════════

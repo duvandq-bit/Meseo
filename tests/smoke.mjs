@@ -206,7 +206,8 @@ test('vinos EN: enciclopedia bilingüe, copa recomendada resucitada, origen trad
   assert(/glass\.use_en\|\|glass\.use/.test(html), 'el panel de copa debe usar use_en');
   assert(/const _ORIGIN_EN = \{'Francia':'France'/.test(html) && /function _wineOrigin\(/.test(html),
     'falta el traductor de origen _wineOrigin');
-  assert((html.match(/_wineOrigin\(w\.origin\)/g) || []).length >= 5,
+  // Eran 5 sitios hasta que se eliminó el Modo Servicio, que pintaba uno.
+  assert((html.match(/_wineOrigin\(w\.origin\)/g) || []).length >= 4,
     'las tarjetas deben pintar el origen con _wineOrigin');
   assert(/'Crianza en barrica':'Barrel-aged'/.test(html), '_wineStoryTags debe traducir las etiquetas');
   // El radar del perfil de cata pintaba Cuerpo/Acidez/Especias también en
@@ -2082,6 +2083,63 @@ test('every dish has name, ingredients and story in ES and EN', () => {
   }
 });
 
+test('las dos cartas cuadran: ninguna ficha inglesa sin plato español (sep 2026)', () => {
+  // DISHES_EN arrastraba cuatro fichas (55 ensalada verde, 56 y 65 pimientos
+  // del padrón, 58 patatas fritas) cuyo plato español ya no existía: copias
+  // viejas de los platos 27, 30 y 32 con una numeración anterior, olvidadas al
+  // renumerar la carta. Nadie las veía —el resto de la app busca la ficha
+  // inglesa por id desde DISHES— pero eran dato caducado y peor que el
+  // original: la 55 declaraba Sulfitos habiendo perdido la comanda «SIN
+  // ADEREZO», y la 58 la de la freidora aparte.
+  const ids = lista => {
+    const i = html.indexOf(`const ${lista} = [`);
+    return new Set([...html.slice(i, html.indexOf('\n];', i)).matchAll(/\{id:(\d+),/g)].map(m => +m[1]));
+  };
+  const es = ids('DISHES'), en = ids('DISHES_EN');
+  const huerfanas = [...en].filter(id => !es.has(id));
+  assert(huerfanas.length === 0, `DISHES_EN keeps dishes with no Spanish card: ${huerfanas.join(', ')}`);
+});
+
+test('el buscador global habla el idioma activo: categoría e índices (sep 2026)', () => {
+  // Dos fallos medidos en el buscador, que es lo único que quedó del Modo
+  // Servicio y por tanto la herramienta de consulta en sala.
+  //
+  // 1 · La categoría salía SIEMPRE en español: «Padrón peppers · Guarniciones
+  //     y Salsas». Y como el índice sólo guardaba la española, en inglés no se
+  //     podía buscar por categoría: «sides» y «desserts» devolvían 0 platos
+  //     mientras «guarniciones» daba 13 y «postres» 9.
+  const idx = html.slice(html.indexOf('function _gsDishIndex()'), html.indexOf('function _gsWineIndex()'));
+  assert(/catEn:\s*catIng/.test(idx), 'the dish index must store the English category');
+  assert(/_gsNorm\(\[[^\]]*\bcatIng\b/.test(idx), 'the search string must include the English category');
+  assert(/function catEn\b|const catEn\s*=/.test(html), 'catEn() must exist to translate the category');
+  for (const uso of [/const sub = \[\(en\?it\.catEn:it\.cat\), alg\]/, /const c=\(en\?it\.catEn:it\.cat\)\|\|/])
+    assert(uso.test(html), `a search renderer still prints the Spanish category: ${uso}`);
+  //
+  // 2 · Los índices se cachean y los de vinos y LQA hornean el texto en el
+  //     idioma activo, así que al pulsar EN sin recargar las situaciones
+  //     seguían en español. setLang los invalida.
+  const sl = html.slice(html.indexOf('function setLang(lang)'), html.indexOf('function setLang(lang)') + 1400);
+  assert(/_gsDishIdx = null; _gsWineIdx = null; _gsLqaIdx = null;/.test(sl),
+    'setLang must drop the cached search indexes so they rebuild in the new language');
+  assert(/try \{ _gsDishIdx/.test(sl),
+    'the invalidation must be guarded — setLang runs at boot, inside the let temporal dead zone');
+});
+
+test('el Modo Servicio no vuelve: se eliminó y sólo queda el buscador (sep 2026)', () => {
+  // El propietario retiró el Modo Servicio hace tiempo, pero sólo se quitó su
+  // botón: quedaban 311 líneas de JS, 70 reglas de CSS y el div del overlay,
+  // inalcanzables desde la interfaz. Era la única parte de la app que recorría
+  // DISHES_EN por su cuenta, así que era también donde el dato caducado podía
+  // reaparecer. Fuera entero — el buscador global es el que se usa.
+  const css = read('styles.css');
+  for (const [f, t] of [[html, 'index.html'], [css, 'styles.css']]) {
+    const restos = [...f.matchAll(/(?<!hor-)svc-[a-z-]+|toggleServiceMode|_svc[A-Z]/g)].map(m => m[0]);
+    assert(restos.length === 0, `${t} still carries Service Mode leftovers: ${[...new Set(restos)].join(', ')}`);
+  }
+  assert(!html.includes('SERVICE COMPANION MODE'), 'the Service Mode block must stay deleted');
+  assert(!html.includes('id="svcOverlay"'), 'the Service Mode overlay must stay out of the markup');
+});
+
 test('audit fixes: exam empty-pool guard + journey/txoko option de-dup', () => {
   // Auditoría jul 2026 (55k preguntas ejecutadas). Tres arreglos de robustez:
   // 1) el Examen crasheaba con pool vacío (categoría mono-turno en el turno
@@ -3014,7 +3072,7 @@ test('every fullscreen-ish overflow-y:auto container also clips X', () => {
   // or near-fullscreen, so they're the high-impact ones — child-level
   // pills/chips with their own intentional horizontal scrollers are fine.
   const mustClip = [
-    '.sf-overlay', '.svc-body', '.dj-body', '.ranks-body',
+    '.sf-overlay', '.dj-body', '.ranks-body',
     '.wine-detail-overlay', '.login-employees'
   ];
   for (const sel of mustClip) {
@@ -3130,13 +3188,15 @@ test('mobile input font-size avoids iOS Safari auto-zoom trap', () => {
   // input. Hot-path search inputs that the camarero uses during service
   // must sit at the 16px floor in the mobile media block.
   //
-  // Currently audited: .svc-search (service panel search). Add more
-  // selectors to this list as future passes migrate other inputs.
+  // Currently audited: .gs-input (el buscador global, que es el que usa el
+  // camarero en sala). Antes se auditaba .svc-search, del Modo Servicio, que
+  // ya no existe. Add more selectors to this list as future passes migrate
+  // other inputs.
   const css = read('styles.css');
   // Each selector in the list must have at least one mobile-context rule
   // where font-size is >= 16px. Walk every `.selector{...}` block,
   // measure font-size if present, and require at least one safe variant.
-  for (const sel of ['.svc-search']) {
+  for (const sel of ['.gs-input']) {
     const ruleRe = new RegExp(`\\${sel}\\s*\\{([^}]+)\\}`, 'g');
     const sizes = [];
     let m;
@@ -4129,8 +4189,8 @@ test('profile stat numbers clear large-text contrast', () => {
 });
 
 test('sommelier search input is >=16px (no iOS zoom)', () => {
-  // 4th input with the iOS auto-zoom trap (after svc-search,
-  // maridajeSearch, login). The camarero uses it tableside.
+  // Otro input con la trampa del auto-zoom de iOS, como maridajeSearch,
+  // login y el buscador global. El camarero lo usa en la mesa.
   const css = read('styles.css');
   const rule = (css.match(/\.sommelier-input\s*\{([^}]*)\}/) || [])[1] || '';
   const m = rule.match(/font-size:\s*([\d.]+)(px|rem)/);
@@ -4156,7 +4216,7 @@ test('leaderboard scores are WCAG-legible and names truncate', () => {
 test('login inputs are >=16px so iOS does not zoom on focus', () => {
   // .login-input (name / PIN / password) was .9rem (14.4px) — iOS Safari
   // auto-zooms inputs under 16px on focus, shifting the whole login. Must
-  // stay at the 16px floor, like svc-search / maridajeSearch.
+  // stay at the 16px floor, like maridajeSearch / el buscador global.
   const css = read('styles.css');
   const rule = (css.match(/\.login-input\s*\{([^}]*)\}/) || [])[1] || '';
   const m = rule.match(/font-size:\s*([\d.]+)(px|rem)/);
