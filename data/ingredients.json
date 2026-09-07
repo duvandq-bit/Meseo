@@ -2110,10 +2110,8 @@
   },
   "paletilla iberica de bellota": {
    "nombre": "Paletilla ibérica de bellota",
-   "alergenos": [
-    "Sulfitos"
-   ],
-   "fuente": "deducido de la carta"
+   "alergenos": [],
+   "fuente": "confirmado por propietario"
   },
   "proteina de soja": {
    "nombre": "Proteína de soja",

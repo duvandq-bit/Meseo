@@ -1251,6 +1251,20 @@ test('recorrido guiado: las preguntas van de alérgenos e ingredientes y no se r
   // ofrecer a un alérgico — que es la habilidad que se usa en la mesa.
   // Se busca por el código que la construía, no por su enunciado: la frase la
   // cita el comentario que explica por qué se retiró.
+  // Reporte del propietario (sept 2026): «también se están repitiendo
+  // preguntas» — la Paletilla y el Jamón mostraban DOS veces seguidas la misma
+  // «¿Se puede adaptar a Gluten?». Era un fallo del ensamblado: Q2 y Q3
+  // llamaban cada una por su cuenta al mismo generador. Ahora salen de una
+  // lista ordenada que no admite ni el mismo tipo ni el mismo enunciado.
+  assert(/tipos\.has\(q\.tipo\) \|\| enunciados\.has\(q\.q\)/.test(html),
+    'el ensamblado del cuestionario debe rechazar tipo y enunciado repetidos');
+  for (const g of ['_djQComponente', '_djQIngredienteAusente', '_djQAdaptar',
+                   '_djQCualSinAlergenos', '_djQCuantos', '_djQSinAlergenos']) {
+    const i = html.indexOf('function ' + g + '(');
+    assert(i !== -1, `falta ${g}`);
+    const cuerpo = html.slice(i, html.indexOf('\nfunction ', i + 10));
+    assert(/\btipo\s*:\s*'[a-z-]+'/.test(cuerpo), `${g} no etiqueta su tipo: no se puede evitar que se repita`);
+  }
   const zonaQuiz = html.slice(html.indexOf('function _djDistractores'), html.indexOf('function _djShuffle'));
   assert(!/_djQCategoria/.test(html) && !/catLocal/.test(zonaQuiz),
     'vuelve la pregunta de categoría, que el propietario retiró por obvia');
@@ -6632,7 +6646,11 @@ test('quiz del Viaje del plato: ingrediente falso limpio y de la misma categorí
   // ("brócoli)", "Flan: Leche") y el falso salía de CUALQUIER plato, así que
   // la pregunta se respondía por absurdo. Ahora comparte tokenizador con los
   // escenarios y el falso solo sale de platos hermanos de categoría.
-  const djGen = html.slice(html.indexOf('function _djGenerateQuiz(dish){'), html.indexOf('var allergenData_en'));
+  // La pregunta del ingrediente ausente vive ahora en su propia función, justo
+  // antes del ensamblado: se retiró de dentro de _djGenerateQuiz para que las
+  // preguntas puedan elegirse sin repetir tipo (sept 2026, «también se están
+  // repitiendo preguntas»). La ventana empieza ahí para seguir cubriéndola.
+  const djGen = html.slice(html.indexOf('function _djQIngredienteAusente('), html.indexOf('var allergenData_en'));
   assert(/const ingredients = _simExtractIngredients\(dd\);/.test(djGen),
     'los ingredientes reales del quiz deben pasar por _simExtractIngredients (limpia paréntesis)');
   assert(!/dish\.ingredients\.split\(','\)/.test(djGen),
