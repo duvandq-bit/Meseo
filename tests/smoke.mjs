@@ -6035,16 +6035,42 @@ test('Guía de emplatado: mapa de fotos íntegro, sección cableada, overlay y C
     'dish 105 must use its own cheesecake photo from the 2026 lunch guide');
   // Cada plato tiene su propio fichero: si dos ids apuntan a la misma ruta es
   // que un emparejamiento se coló (los gemelos por turno llevan copia propia).
+  //
+  // La ÚNICA excepción, y es deliberada: las cinco croquetas premium. Los dos
+  // guides las agrupan en una sola página («Croquetas premium», cena p3 y
+  // lunch p8) con una foto de las dos tablas de madera donde se distingue cada
+  // una por su topping. No hay foto por sabor, así que las cinco comparten esa
+  // —una copia, no cinco ficheros idénticos—, y por eso su nombre no lleva id.
+  const COMPARTIDA = 'img/platos/croquetas-premium.webp';
+  const CROQUETAS = ['124', '125', '126', '127', '128'];
   const porRuta = new Map();
   for (const [id, p] of Object.entries(map)) {
     if (!porRuta.has(p)) porRuta.set(p, []);
     porRuta.get(p).push(id);
   }
-  for (const [p, dup] of porRuta)
+  for (const [p, dup] of porRuta) {
+    if (p === COMPARTIDA) {
+      assert(dup.sort().join(',') === CROQUETAS.join(','),
+        `only the five croquetas may share ${COMPARTIDA}, found ${dup.join(', ')}`);
+      continue;
+    }
     assert(dup.length === 1, `photo ${p} is shared by dishes ${dup.join(', ')}`);
+  }
   // el nombre del fichero empieza por el id del plato que lo usa
   for (const [id, p] of Object.entries(map))
-    assert(p.startsWith(`img/platos/${id}-`), `photo for dish ${id} is named after another dish: ${p}`);
+    assert(p === COMPARTIDA || p.startsWith(`img/platos/${id}-`),
+      `photo for dish ${id} is named after another dish: ${p}`);
+  // y si una croqueta deja de compartirla, que sea porque tiene la suya propia
+  for (const id of CROQUETAS)
+    assert(!map[id] || map[id] === COMPARTIDA || map[id].startsWith(`img/platos/${id}-`),
+      `croqueta ${id} must use either the shared board photo or its own`);
+  // Cotejo completo de las 101 fichas de los dos guides contra la carta de la
+  // app (sept 2026): sólo una página no tiene plato, «Pimientos rojos
+  // confitados» (cena p62). El propietario confirma que ya NO está en carta,
+  // así que no se añade — queda anotado aquí para que el próximo repaso no la
+  // vuelva a levantar como plato que falta.
+  assert(!/Pimientos rojos confitados/i.test(html),
+    'los pimientos rojos confitados salieron de carta (propietario, sept 2026) — no re-añadir desde el guide');
   // cada ruta del mapa debe existir físicamente en el repo
   for (const [id, p] of Object.entries(map)) {
     assert(/^img\/platos\/[a-z0-9-]+\.webp$/.test(p), `photo path malformed for dish ${id}: ${p}`);
