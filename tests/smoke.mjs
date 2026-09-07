@@ -1345,6 +1345,38 @@ test('ningún plato de la carta vegetariana lleva pescado, carne ni marisco', ()
       `${d.id} «${d.name}» está en la carta vegetariana y sus ingredientes citan un producto animal`);
 });
 
+test('ningún plato con pescado se DESCRIBE como vegetariano, esté en la carta que esté', () => {
+  // El mismo error que traen impresos los plating guides: la página 53 marca
+  // como VEGANO un tartar con huevo, lácteos y anchoas. En la app el 15 ya no
+  // estaba en la carta vegetariana, pero su historia seguía llamándolo «este
+  // tartar vegetariano» («this vegetarian version» en inglés) declarando
+  // Pescado. La categoría estaba corregida y la prosa no, que es la que lee
+  // el camarero en el Viaje y en las preguntas de historia.
+  //
+  // Ojo con lo que NO es un fallo: decir que un plato PUEDE HACERSE
+  // vegetariano quitando algo es correcto y accionable (la Niçoise sin atún,
+  // los tomates ecológicos sin anchoas). Lo que no vale es afirmarlo del
+  // plato tal como se sirve.
+  const PESCADO = { es: ['Pescado', 'Crustáceos', 'Moluscos'], en: ['Fish', 'Crustaceans', 'Molluscs'] };
+  const AFIRMA = [
+    /\beste?\s+\w*\s*vegetarian[oa]\b/i,      // «este tartar vegetariano»
+    /\bthis\s+\w*\s*vegetarian\b/i,           // «this vegetarian version»
+    /\bes\s+(un|una)\s+plato\s+vegetarian/i,
+    /\bis\s+(a\s+)?vegetarian\s+dish\b/i,
+  ];
+  for (const [lista, idioma] of [['DISHES', 'es'], ['DISHES_EN', 'en']]) {
+    const i = html.indexOf(`const ${lista} = [`), j = html.indexOf('\n];', i);
+    const arr = new Function(html.slice(i, j + 3) + `; return ${lista};`)(); // eslint-disable-line no-new-func
+    for (const d of arr) {
+      if (!PESCADO[idioma].some(a => (d.allergens || []).includes(a))) continue;
+      const prosa = [d.history || '', d.notes || '', d.name || ''].join(' ');
+      for (const re of AFIRMA)
+        assert(!re.test(prosa),
+          `${lista} ${d.id} «${d.name}» declara pescado y su texto lo llama vegetariano: ${(prosa.match(re) || [])[0]}`);
+    }
+  }
+});
+
 test('el recorrido en inglés no mezcla idiomas: cada ingrediente tiene su nombre', () => {
   // Auditoría (sept 2026): en el recorrido en inglés los nombres de
   // ingrediente salían en español —«Leche», «aderezo césar»— dentro de una
