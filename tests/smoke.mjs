@@ -1319,6 +1319,31 @@ test('la croqueta de boletus sale en las dos cartas, y cat2 no se cuela en la l�
   assert(usos <= 3, `cat2 aparece ${usos} veces: solo debe declararse y usarse en el filtro de la lista`);
 });
 
+test('ningún plato de la carta vegetariana lleva pescado, carne ni marisco', () => {
+  // Corrección del propietario (sept 2026): «el tartar de tomate y queso
+  // stracciatella no es un plato vegetariano». Y era cierto por una razón que
+  // salió el día antes: su aliño lleva Salsa Perrins, y la Perrins lleva
+  // anchoas. Estaba en cat:'Vegetariano' declarando Pescado — el único de los
+  // nueve. No es cosmético: hay un escenario que construye la respuesta
+  // correcta con el primer plato de esa lista y se la ofrece a un huésped
+  // vegano, así que la app podía enseñar a ofrecer un plato con anchoas.
+  const iD = html.indexOf('const DISHES = ['), jD = html.indexOf('\n];', iD);
+  const DISHES = new Function(html.slice(iD, jD + 3) + '; return DISHES;')(); // eslint-disable-line no-new-func
+  const veg = DISHES.filter(d => d.cat === 'Vegetariano' || d.cat2 === 'Vegetariano');
+  assert(veg.length >= 5, `esperaba una carta vegetariana con varios platos, hay ${veg.length}`);
+  const PROHIBIDOS = ['Pescado', 'Crustáceos', 'Moluscos'];
+  for (const d of veg)
+    for (const a of PROHIBIDOS)
+      assert(!(d.allergens || []).includes(a),
+        `${d.id} «${d.name}» está en la carta vegetariana y declara ${a}`);
+  // Y tampoco por el texto de sus ingredientes: un alérgeno puede no declararse
+  // (la carne no es alérgeno) pero seguir siendo un producto animal.
+  const CARNE = /\b(pollo|ternera|cerdo|jam[oó]n|chorizo|panceta|morcilla|wagyu|cecina|cordero|solomillo|at[uú]n|bacalao|pulpo|anchoa|boquer[oó]n|mero|langostino|gamba)\b/i;
+  for (const d of veg)
+    assert(!CARNE.test(d.ingredients || ''),
+      `${d.id} «${d.name}» está en la carta vegetariana y sus ingredientes citan un producto animal`);
+});
+
 test('recorrido guiado: la ficha de servicio no corta ninguna comanda', () => {
   // Auditoría (sept 2026): el capítulo de Servicio cortaba la nota con
   // substring(0,200)+'...'. Medido: 69 fichas cortadas, 8.302 caracteres
