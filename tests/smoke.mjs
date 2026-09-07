@@ -1344,6 +1344,43 @@ test('ningún plato de la carta vegetariana lleva pescado, carne ni marisco', ()
       `${d.id} «${d.name}» está en la carta vegetariana y sus ingredientes citan un producto animal`);
 });
 
+test('el recorrido en inglés no mezcla idiomas: cada ingrediente tiene su nombre', () => {
+  // Auditoría (sept 2026): en el recorrido en inglés los nombres de
+  // ingrediente salían en español —«Leche», «aderezo césar»— dentro de una
+  // ficha en inglés. Se traducen en data/ingredients.json, que es la fuente
+  // única: el nombre inglés vive donde vive el alérgeno y no se duplica.
+  const base = JSON.parse(read('data/ingredients.json')).ingredientes;
+  const nombres = Object.entries(base);
+  assert(nombres.length > 400, `esperaba los ~465 ingredientes, hay ${nombres.length}`);
+  const sin = nombres.filter(([, v]) => !v.nombre_en || !String(v.nombre_en).trim());
+  assert(sin.length === 0,
+    `${sin.length} ingredientes sin nombre en inglés: ${sin.slice(0, 5).map(x => x[0]).join(', ')}`);
+  // En vez de adivinar por los acentos —«Comté», «crudité» y «purée» son
+  // inglés culinario perfectamente correcto— se comprueban dos cosas concretas.
+  // 1 · Los ingredientes que más salen en pantalla, traducidos de verdad.
+  const ESPERADO = {
+    'leche': 'Milk', 'harina': 'Flour', 'huevo': 'Egg', 'nata': 'Cream',
+    'mantequilla': 'Butter', 'pepinillo': 'Gherkin', 'cebolla': 'Onion',
+    'salsa perrins': 'Worcestershire sauce', 'aderezo cesar': 'Caesar dressing',
+    'yema de huevo': 'Egg yolk', 'anchoas': 'Anchovies', 'papa': 'Potato',
+    'vinagre de jerez': 'Sherry vinegar', 'queso de cabra': 'Goat cheese',
+    'tostas de pan carasau': 'Carasau bread toasts'
+  };
+  for (const [k, en] of Object.entries(ESPERADO)) {
+    assert(base[k], `falta el ingrediente «${k}» en la base`);
+    assert(base[k].nombre_en === en,
+      `«${k}» debería traducirse como «${en}» y pone «${base[k].nombre_en}»`);
+  }
+  // 2 · Y los nombres propios y de producto siguen SIN traducir, a propósito:
+  //     inventarles un nombre inglés sería inventar algo que no existe en cocina.
+  for (const k of ['gofio', 'ras al hanout', 'stracciatella', 'pedro ximenez', 'chistorra', 'tabasco'])
+    assert(base[k] && base[k].nombre_en === base[k].nombre,
+      `«${k}» es un nombre propio y no debe traducirse (pone «${base[k] && base[k].nombre_en}»)`);
+  // Y el recorrido debe usarlas: si no, la traducción no llega a la pantalla.
+  assert(/function _djIngName\(/.test(html) && /_djIngredients\(dish, _en\)/.test(html),
+    'el recorrido no está usando los nombres en inglés de la base');
+});
+
 test('recorrido guiado: la ficha de servicio no corta ninguna comanda', () => {
   // Auditoría (sept 2026): el capítulo de Servicio cortaba la nota con
   // substring(0,200)+'...'. Medido: 69 fichas cortadas, 8.302 caracteres
