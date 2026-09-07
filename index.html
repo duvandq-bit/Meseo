@@ -52,7 +52,7 @@
 <meta property="og:description" content="Formación de equipos de sala: carta, alérgenos, vinos, exámenes y juegos de repaso.">
 <meta property="og:url" content="https://meseo.es/">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"Meseo","url":"https://meseo.es/"}</script>
-<meta name="app-version" content="7.355">
+<meta name="app-version" content="7.357">
 <meta name="app-build" content="May 2026">
 <meta name="theme-color" content="#1c2a22">
 <!-- ═══ PWA ═══ -->
@@ -1602,7 +1602,7 @@ const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><p
 const SRC = 'src';
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='7.355';  // sincronizada con sw.js VERSION (guard de CI)
+const APP_VERSION='7.357';  // sincronizada con sw.js VERSION (guard de CI)
 const APP_BUILD='Jul 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;
@@ -3935,7 +3935,18 @@ function launchDishJourney(dishId){
   if(!dish) return;
   _djState = { dishId:dishId, phase:0, quizScore:0, quizAnswered:0, quizTotal:3, quizQuestions:null };
   _djState.quizQuestions = _djGenerateQuiz(dish);
+  // Hay platos que solo dan para dos preguntas honestas: un T-bone con sal
+  // gruesa no tiene una tercera que no sea relleno. El contador sigue al
+  // número real en vez de obligar a inventarla.
+  _djState.quizTotal = _djState.quizQuestions.length;
   _djRender();
+  // La base de ingredientes se trae en segundo plano: el recorrido ya se ve con
+  // los componentes validados (van en el propio archivo) y se refresca solo
+  // cuando llega el detalle por ingrediente. Sin base, la fase sigue siendo
+  // correcta — solo menos detallada.
+  _djLoadIngBase().then(b=>{
+    if(b && _djState && _djState.dishId===dishId && document.getElementById('djOverlay')) _djRender();
+  });
   // Keyboard navigation: ESC to close, ← → to navigate
   document.addEventListener('keydown', _djKeydown);
 }
@@ -4066,50 +4077,145 @@ function _djPhaseStory(dish, dd, _en){
 }
 
 // ── Phase 2: Ingredients ──
-function _djPhaseIngredients(dish, dd, _en){
-  const raw = dish.ingredients || '';
-  const items = raw.split(',').map(s=>s.trim()).filter(Boolean);
-  if(items.length===0 && raw){
-    raw.split('.').forEach(s=>{if(s.trim()) items.push(s.trim());});
-  }
-  const allergenNames = (dish.allergens||[]).map(a=>a.toLowerCase());
-  const allergenIngredients = {
-    'gluten':['harina','pan','trigo','cebada','centeno','avena','tempura','rebozado','breadcrumbs','flour','wheat'],
-    'lácteos':['leche','nata','queso','mantequilla','crema','yogur','parmesano','milk','cream','cheese','butter'],
-    'huevos':['huevo','yema','clara','mayonesa','egg','mayo'],
-    'pescado':['pescado','atún','mero','lubina','salmón','anchoa','fish','tuna','bass','salmon'],
-    'mariscos':['langostino','gamba','bogavante','cangrejo','shrimp','prawn','lobster','crab'],
-    'crustáceos':['langostino','gamba','bogavante','cangrejo','shrimp','prawn','lobster','crab'],
-    'moluscos':['calamar','pulpo','mejillón','ostra','txipiron','squid','octopus','mussel','oyster'],
-    'frutos secos':['almendra','nuez','avellana','pistacho','cacahuete','almond','walnut','hazelnut','pistachio','peanut'],
-    'soja':['soja','soy','edamame','tofu'],
-    'apio':['apio','celery'],
-    'mostaza':['mostaza','mustard'],
-    'sésamo':['sésamo','sesame'],
-    'sulfitos':['vino','vinagre','wine','vinegar','sulfito']
-  };
+// ═══ INGREDIENTE → ALÉRGENO EN EL RECORRIDO GUIADO ═══
+// Reporte del propietario (sept 2026): «algunos ingredientes no están marcados
+// como Alérgenos». Medido sobre los 102 platos con ficha, la fase llevaba:
+//   · 83 falsos NEGATIVOS — componentes con alérgeno pintados como seguros.
+//     El peor: «aderezo césar» de la Croqueta de Pollo, que aporta CINCO
+//     (Huevos, Lácteos, Mostaza, Pescado, Sulfitos) y salía sin aviso. También
+//     «Ponzu», «Salsa Perrins», «Stracciatella», «Burrata», «Piñones».
+//   · 53 de 288 pares plato-alérgeno (18 %) en los que el plato declaraba un
+//     alérgeno y NI UN SOLO ingrediente aparecía marcado por él.
+//   · 10 falsos POSITIVOS, y absurdos: «Pimiento palmero» salía como PESCADO
+//     porque "pal-mero-" contiene «mero», y «Polvo de aceitunas» también,
+//     porque "acei-tuna-s" contiene «tuna» (atún en inglés).
+//   · 181 de 972 fichas mal partidas: «Masa: Leche», «Huevo. Topping: cogollo
+//     de lechuga» — el rótulo de sección pegado al ingrediente.
+// Causa: un mapa de trece palabras clave escrito a mano que buscaba subcadenas,
+// cuando la app YA tiene la base única de 460 ingredientes
+// (data/ingredients.json) y los componentes derivados de ella (DISH_COMPONENTS),
+// ambos cerrados por CI. Ahora la fase se dibuja desde ese dato.
+let _djIngBase = null;          // índice de data/ingredients.json (perezoso)
+let _djIngBaseTried = false;
 
-  const isAllergenIngredient = (ing) => {
-    const low = ing.toLowerCase();
-    for(const a of allergenNames){
-      const keywords = allergenIngredients[a]||[];
-      for(const kw of keywords){ if(low.includes(kw)) return true; }
+// Nombre del alérgeno en inglés. Único sitio: lo comparten la fase de
+// ingredientes y la de alérgenos, para que no puedan decir cosas distintas.
+const DJ_ALERGENOS_EN = {
+  'Gluten':'Gluten', 'Lácteos':'Dairy', 'Huevos':'Eggs', 'Pescado':'Fish',
+  'Crustáceos':'Crustaceans', 'Mariscos':'Shellfish', 'Moluscos':'Molluscs',
+  'Frutos secos':'Tree nuts', 'Cacahuete':'Peanuts', 'Soja':'Soy', 'Apio':'Celery',
+  'Mostaza':'Mustard', 'Granos de sésamo':'Sesame', 'Sulfitos':'Sulphites',
+  'Altramuces':'Lupin'
+};
+const _djAlEn = a => DJ_ALERGENOS_EN[a] || a;
+
+const _djNorm = s => (s||'').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'')
+  .replace(/[^a-z0-9ñ ]+/g,' ').replace(/\s+/g,' ').trim();
+// Palabra COMPLETA: es lo que impide que «mero» marque «Pimiento palmero».
+const _djWordIn = (needle, hay) =>
+  new RegExp('(^| )'+needle.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+'( |$)').test(hay);
+
+async function _djLoadIngBase(){
+  if(_djIngBase || _djIngBaseTried) return _djIngBase;
+  _djIngBaseTried = true;
+  try{
+    if(typeof loadLazyData !== 'function') return null;
+    const raw = await loadLazyData('data/ingredients.json', LANG==='en'?'ingredients':'ingredientes', { silent:true });
+    if(!raw || !raw.ingredientes) return null;
+    const idx = new Map();
+    for(const [k,v] of Object.entries(raw.ingredientes)){
+      for(const key of [v.nombre, k]){
+        const nk = _djNorm(key);
+        if(nk && !idx.has(nk)) idx.set(nk, v.alergenos);
+        // «Ali-oli» en la base, «alioli» en la prosa de la ficha: misma cosa.
+        if(/-/.test(key)){ const sk = nk.replace(/ /g,''); if(sk && !idx.has(sk)) idx.set(sk, v.alergenos); }
+      }
     }
-    return false;
-  };
+    _djIngBase = { idx, claves:[...idx.keys()].sort((a,b)=>b.length-a.length) };
+  }catch(e){ /* sin base: los componentes validados siguen marcándose */ }
+  return _djIngBase;
+}
 
+// Rótulos de sección: no son un ingrediente y se tiran. Cualquier OTRA etiqueta
+// («Pan brioche:», «Ali-oli:», «Mojo rojo:») SÍ es una elaboración real y se
+// queda como su propia ficha: al tirarla desaparecía justo la pieza con los
+// alérgenos — eran 30 componentes validados sin dónde aparecer.
+const _DJ_SECCION = /^(masa|topping|base|relleno|guarnicion|sabores disponibles|salsa base|sazonador|marinada|elaboracion)$/;
+function _djSplitIngredients(raw){
+  const out = [];
+  (raw||'').split(/[,.]/).forEach(tr=>{
+    let s = tr.trim(); if(!s) return;
+    if(s.startsWith('(') && !s.includes(')')) s = s.slice(1);
+    if(s.endsWith(')') && !s.includes('(')) s = s.slice(0,-1);
+    s = s.trim();
+    const m = s.match(/^([^:]{2,34}):\s*(.+)$/);
+    if(m){
+      const rot = m[1].trim();
+      if(!_DJ_SECCION.test(_djNorm(rot))) out.push(rot);
+      s = m[2].trim();
+    }
+    if(s) out.push(s);
+  });
+  return out;
+}
+function _djSameThing(item, comp){
+  const a = _djNorm(item), b = _djNorm(comp);
+  if(!a || !b) return false;
+  if(a===b || _djWordIn(b,a) || _djWordIn(a,b)) return true;
+  const pa = a.split(' ').filter(w=>w.length>=4), pb = b.split(' ').filter(w=>w.length>=4);
+  if(!pa.length || !pb.length) return false;
+  const comunes = pb.filter(w=>pa.includes(w));
+  return comunes.length >= Math.min(2, pb.length) && comunes.length/pb.length >= .5;
+}
+
+// Devuelve [{t, a:[alérgenos]}] para un plato. DOS niveles:
+//   1 · la base única, si está cargada — detalle por ingrediente;
+//   2 · DISH_COMPONENTS (siempre, va en el propio archivo y lo cierra el CI) —
+//       garantiza que NINGÚN componente validado se pinte como seguro.
+// Y nunca se muestra un alérgeno que el plato no declare: la ficha, el buscador
+// y el recorrido tienen que decir lo mismo.
+function _djIngredients(dish){
+  const declarados = new Set(dish.allergens||[]);
+  const items = _djSplitIngredients(dish.ingredients).map(t=>({t, a:new Set()}));
+  const base = _djIngBase;
+  if(base){
+    for(const it of items){
+      const h = _djNorm(it.t);
+      let al = base.idx.get(h);
+      if(!al) for(const k of base.claves){ if(k.length>=4 && _djWordIn(k,h)){ al = base.idx.get(k); break; } }
+      if(al) for(const a of al) if(declarados.has(a)) it.a.add(a);
+    }
+  }
+  const comps = (typeof DISH_COMPONENTS!=='undefined' && DISH_COMPONENTS[dish.id]) || [];
+  for(const c of comps){
+    const hit = items.find(i=>_djSameThing(i.t, c.n));
+    if(hit) (c.a||[]).forEach(a=>hit.a.add(a));
+    else items.push({t:c.n, a:new Set(c.a||[])});
+  }
+  return items.map(i=>({t:i.t, a:[...i.a]}));
+}
+
+function _djPhaseIngredients(dish, dd, _en){
+  const items = _djIngredients(dish);
+  const conAlerg = items.filter(i=>i.a.length).length;
   const grid = items.map((ing,i)=>{
-    const isA = isAllergenIngredient(ing);
-    return `<div class="dj-ing-item${isA?' allergen':''}" style="--delay:${0.15+i*0.06}s">${isA?'⚠ ':''}${ing}</div>`;
+    const isA = ing.a.length > 0;
+    // Ya no basta con el triángulo: el recorrido enseña, así que cada ficha
+    // dice QUÉ alérgeno aporta. Era la pregunta que el camarero se lleva a la
+    // mesa, y estaba a dos pantallas de distancia.
+    const lista = isA
+      ? `<span class="dj-ing-al">${ing.a.map(a=>escapeHtml(_en?_djAlEn(a):a)).join(' · ')}</span>`
+      : '';
+    return `<div class="dj-ing-item${isA?' allergen':''}" style="--delay:${0.15+i*0.06}s">${isA?'⚠ ':''}${escapeHtml(ing.t)}${lista}</div>`;
   }).join('');
 
   return `
     <div style="text-align:center;margin-bottom:.8rem;animation:djSlideUp .5s .2s both">
       <div style="font-family:'DM Mono',monospace;font-size:.6rem;color:rgba(196,154,60,.4);margin-bottom:.3rem">${_en?'TAP TO EXPLORE':'EXPLORA LOS INGREDIENTES'}</div>
-      <div style="font-family:'Quicksand',sans-serif;font-size:.72rem;color:rgba(244,237,226,.5)">${_en?'Items marked with ⚠ contain allergens':'Los marcados con ⚠ contienen alérgenos'}</div>
+      <div style="font-family:'Quicksand',sans-serif;font-size:.72rem;color:rgba(244,237,226,.5)">${_en?'Items marked with ⚠ carry an allergen — the name is right there':'Los marcados con ⚠ llevan alérgeno — al lado pone cuál'}</div>
     </div>
     <div class="dj-ing-grid">${grid}</div>
-    <div class="dj-ing-count">${items.length} ${_en?'ingredients':'ingredientes'}</div>
+    <div class="dj-ing-count">${items.length} ${_en?'ingredients':'ingredientes'} · ${conAlerg} ${_en?'with allergens':'con alérgeno'}</div>
   `;
 }
 
@@ -4209,12 +4315,170 @@ function _djPhaseService(dish, dd, _en){
 }
 
 // ── Phase 5: Quiz Generator ──
+// ── Preguntas del recorrido guiado, todas sobre alérgenos e ingredientes ──
+// Distractores: alérgenos del canon UE-14 que el plato NO declara, para que
+// nunca se dé por falsa una respuesta que en la carta es verdadera.
+function _djDistractores(dish, pool, n){
+  const _norm = a => (a||'').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'')
+    .replace(/^granos de /,'').replace(/s$/,'').trim();
+  const suyos = new Set((dish.allergens||[]).map(_norm));
+  if(suyos.has('crustaceo') || suyos.has('molusco')) suyos.add('marisco');
+  return _djShuffle(pool.filter(a=>!suyos.has(_norm(a)))).slice(0,n);
+}
+
+// «¿De dónde sale el Pescado en este plato?» — la pregunta que se hace de
+// verdad en la mesa. Componentes y alérgenos salen de DISH_COMPONENTS.
+function _djQComponente(dish, dd, _en, pool){
+  const comps = ((typeof DISH_COMPONENTS!=='undefined' && DISH_COMPONENTS[dish.id]) || [])
+    .filter(c => c && c.n && (c.a||[]).length && !/^(base de todas las variantes|según la variante elegida)$/i.test(c.n));
+  if(comps.length < 4) return null;   // hacen falta 1 buena + 3 distractores
+  // El nombre del componente no puede REGALAR el alérgeno: «¿cuál aporta
+  // Huevos?» → «Huevo», o «¿cuál aporta Soja?» → «Soja». Medido en el
+  // generador nuevo antes de publicarlo: pasaba en 8 platos.
+  const _n = s => (s||'').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'')
+    .replace(/^granos de /,'').replace(/[^a-z0-9ñ ]+/g,' ').replace(/\s+/g,' ').trim();
+  const _sing = w => w.replace(/es$/,'').replace(/s$/,'');
+  const _pal = s => _n(s).split(' ').filter(w=>w.length>=4).map(_sing);
+  // (a) el nombre del componente contiene el del alérgeno: «¿cuál aporta
+  //     Huevos?» → «Huevo»; «Frutos secos» → «Frutos secos».
+  const _ecoAlerg = (comp, al) => {
+    const c = new Set(_pal(comp)), pa = _pal(al);
+    if(!pa.length) return _n(comp).split(' ').map(_sing).includes(_sing(_n(al)));
+    return pa.every(w => c.has(w));
+  };
+  // (b) el NOMBRE DEL PLATO lo delata: «En "Croqueta de Langostino", ¿cuál
+  //     aporta Crustáceos?» → «Langostino». Mismo criterio que ya se aplicó a
+  //     la pregunta del día («Alitas de pollo» → «Alitas melosas glaseadas»).
+  const platoPal = new Set(_pal(dd.name));
+  const _ecoPlato = comp => _pal(comp).some(w => platoPal.has(w));
+  const _eco = (comp, al) => _ecoAlerg(comp, al) || _ecoPlato(comp);
+  // Todas las parejas (componente, alérgeno) válidas, barajadas: si una regala
+  // la respuesta o no reúne tres distractores, se prueba la siguiente.
+  const parejas = _djShuffle(comps.flatMap(c => (c.a||[]).map(a => ({c, a}))));
+  for(const {c:bueno, a:alerg} of parejas){
+    if(_eco(bueno.n, alerg)) continue;
+    const malos = _djShuffle(comps.filter(x => x!==bueno && !(x.a||[]).includes(alerg)
+                                            && _n(x.n) !== _n(bueno.n))).slice(0,3);
+    if(malos.length < 3) continue;
+    const opts = _djShuffle([bueno.n, ...malos.map(x=>x.n)]);
+    const alN = _en ? _djAlEn(alerg) : alerg;
+    return {
+      q: _en ? `In "${dd.name}", which of these carries ${alN}?`
+             : `En "${dd.name}", ¿cuál de estos aporta ${alN}?`,
+      options: opts,
+      correctIdx: opts.indexOf(bueno.n),
+      explain: _en ? `${bueno.n} carries: ${bueno.a.map(_djAlEn).join(', ')}.`
+                   : `${bueno.n} aporta: ${bueno.a.join(', ')}.`
+    };
+  }
+  return null;
+}
+
+// «¿Se puede adaptar para una alergia a X?» — con la comanda exacta en la
+// explicación. Sale de DISH_ACTIONS, la matriz validada por cocina.
+function _djQAdaptar(dish, dd, _en){
+  const acts = (typeof DISH_ACTIONS!=='undefined' && DISH_ACTIONS[dish.id]) || {};
+  const claves = Object.keys(acts).filter(a=>acts[a] && (acts[a].r===0 || acts[a].r===1));
+  if(!claves.length) return null;
+  const a = claves[Math.floor(Math.random()*claves.length)];
+  const act = acts[a];
+  const cmd = _en ? (act.c_en || act.c) : act.c;
+  const alN = _en ? _djAlEn(a) : a;
+  const opts = _en
+    ? ['Yes, with a change to the order', 'No — it is structural to the dish',
+       'Yes, no change needed', 'Only at dinner service']
+    : ['Sí, cambiando la comanda', 'No — es estructural del plato',
+       'Sí, sin cambiar nada', 'Solo en el servicio de cena'];
+  return {
+    // «alérgico a Sulfitos» / «el Sulfitos es estructural» no concuerdan en
+    // español: los nombres de alérgeno van en plural unos y en singular otros.
+    // Con «tiene alergia a X» y «ese alérgeno» la frase vale para los catorce.
+    q: _en ? `A guest is allergic to ${alN}. Can "${dd.name}" be adapted?`
+           : `Un huésped tiene alergia a ${alN}. ¿Se puede adaptar "${dd.name}"?`,
+    options: opts,
+    correctIdx: act.r===1 ? 0 : 1,
+    explain: act.r===1
+      ? (_en ? `Yes${cmd?` — order ${cmd}`:''}.` : `Sí${cmd?` — se comanda ${cmd}`:''}.`)
+      : (_en ? `No: in this dish that allergen is structural — offer another one.`
+             : `No: en este plato ese alérgeno es estructural — hay que ofrecer otro.`)
+  };
+}
+
+// Último recurso. Antes aquí estaba «¿A qué categoría pertenece este plato?»,
+// retirada a petición del propietario: «son muy fáciles y obvias» — y lo eran,
+// en 25 de los 102 platos el propio nombre daba la respuesta.
+// Medido quién llegaba hasta aquí: 14 platos, y los 14 del mismo tipo —
+// guarniciones y carnes a la brasa SIN ningún alérgeno declarado. Para esos, lo
+// que hay que saber en la mesa es exactamente eso, y saberlo con seguridad:
+// poder decirle a un huésped «este plato no declara ninguno» sin dudar. Los
+// distractores son alérgenos reales del canon de la casa, no relleno.
+function _djQSinAlergenos(dish, dd, _en, pool){
+  if((dish.allergens||[]).length !== 0) return null;
+  const malos = _djShuffle(pool).slice(0,3);
+  const nada = _en ? 'None — it declares no allergens' : 'Ninguno — no declara alérgenos';
+  const opts = _djShuffle([nada, ...malos.map(a=>_en?`It declares ${_djAlEn(a)}`:`Declara ${a}`)]);
+  return {
+    q: _en ? `Per its card, which allergens does "${dd.name}" declare?`
+           : `Según su ficha, ¿qué alérgenos declara "${dd.name}"?`,
+    options: opts,
+    correctIdx: opts.indexOf(nada),
+    // Sin sobrevender: «no declara» no es lo mismo que «no hay riesgo».
+    explain: _en ? 'None declared. If the guest has a severe allergy, check cross-contamination with the kitchen.'
+                 : 'No declara ninguno. Si la alergia es severa, confirma con cocina la contaminación cruzada.'
+  };
+}
+
+// La vuelta del calcetín: entre estos cuatro platos, ¿cuál puedes ofrecerle a
+// un alérgico? Es la habilidad que de verdad se usa en la mesa cuando hay que
+// proponer una alternativa, y es otra cosa que recordar los alérgenos de UN
+// plato. Sin ella, las guarniciones y las carnes a la brasa se quedaban con
+// una sola pregunta en todo el cuestionario.
+function _djQCualSinAlergenos(dish, dd, _en, allDishes){
+  if((dish.allergens||[]).length !== 0) return null;
+  const conAlerg = allDishes.filter(d=>d.id!==dish.id && (d.allergens||[]).length>0);
+  const mismaCat = conAlerg.filter(d=>d.cat===dish.cat);
+  const malos = _djShuffle(mismaCat.length>=3 ? mismaCat : conAlerg).slice(0,3);
+  if(malos.length < 3) return null;
+  const nom = d => (getDish(d)||d).name;
+  const opts = _djShuffle([dd.name, ...malos.map(nom)]);
+  const uno = malos[0];
+  return {
+    q: _en ? 'A guest with allergies asks for something safe. Which of these declares NO allergens?'
+           : 'Un huésped con alergias pide algo seguro. ¿Cuál de estos NO declara ningún alérgeno?',
+    options: opts,
+    correctIdx: opts.indexOf(dd.name),
+    explain: _en ? `"${dd.name}" declares none. "${nom(uno)}", for example, declares ${(uno.allergens||[]).map(_djAlEn).join(', ')}.`
+                 : `"${dd.name}" no declara ninguno. "${nom(uno)}", por ejemplo, declara ${(uno.allergens||[]).join(', ')}.`
+  };
+}
+
+// Y si un plato con alérgenos llegara hasta aquí (hoy no ocurre en ninguno),
+// se pregunta cuántos declara antes que nada obvio.
+function _djQCuantos(dish, dd, _en){
+  const n = (dish.allergens||[]).length;
+  const set = [];
+  [n, n+1, n+2, Math.max(0,n-1), n+3].forEach(v=>{ const s=String(v); if(!set.includes(s) && set.length<4) set.push(s); });
+  const opts = _djShuffle(set);
+  return {
+    q: _en ? `How many allergens does "${dd.name}" declare?` : `¿Cuántos alérgenos declara "${dd.name}"?`,
+    options: opts,
+    correctIdx: opts.indexOf(String(n)),
+    explain: _en ? `It declares ${n}: ${(dish.allergens||[]).map(_djAlEn).join(', ')||'none'}.`
+                 : `Declara ${n}: ${(dish.allergens||[]).join(', ')||'ninguno'}.`
+  };
+}
+
 function _djGenerateQuiz(dish){
   const _en = LANG==='en';
   const dd = getDish(dish);
   const questions = [];
   const allDishes = DISHES;
-  const allergenPool = ['Gluten','Lácteos','Huevos','Pescado','Mariscos','Crustáceos','Moluscos','Frutos secos','Soja','Apio','Mostaza','Sésamo','Sulfitos'];
+  // El vocabulario de la casa, que es el de la ficha y el del buscador. Antes
+  // el pool ofrecía «Mariscos» y «Sésamo», dos nombres que no existen en
+  // ninguna otra pantalla de la app: el camarero aprendía un alérgeno que
+  // luego no encontraba en la carta.
+  const allergenPool = ['Gluten','Crustáceos','Huevos','Pescado','Cacahuete','Soja','Lácteos',
+                        'Frutos secos','Apio','Mostaza','Granos de sésamo','Sulfitos','Altramuces','Moluscos'];
 
   // Normaliza nombres de alérgeno para comparar vocabularios distintos: la
   // carta usa "Granos de sésamo"/"Cacahuete" y el pool de distractores usa
@@ -4239,25 +4503,26 @@ function _djGenerateQuiz(dish){
       explain: _en ? `${dd.name} contains: ${dish.allergens.map(a=>allergenData_en[a]||a).join(', ')}` : `${dd.name} contiene: ${dish.allergens.join(', ')}`
     });
   } else {
-    questions.push({
-      q: _en ? `How many allergens does "${dd.name}" have?` : `¿Cuántos alérgenos tiene "${dd.name}"?`,
-      options: ['0', '1', '2', '3+'],
-      correctIdx: 0,
-      explain: _en ? 'This dish has no declared allergens!' : '¡Este plato no tiene alérgenos declarados!'
-    });
+    // Sin alérgenos declarados: una sola pregunta sobre el hecho, no dos. Antes
+    // salía «¿cuántos alérgenos tiene?» aquí y «¿qué alérgenos declara?»
+    // después: el mismo dato preguntado dos veces en el mismo cuestionario.
+    questions.push(_djQSinAlergenos(dish, dd, _en, allergenPool));
   }
 
-  // Q2: Category question
-  const allCats = [...new Set(allDishes.map(d=>d.cat))];
-  const correctCat = dish.cat;
-  const wrongCats = _djShuffle(allCats.filter(c=>c!==correctCat)).slice(0,3);
-  const catOpts = _djShuffle([correctCat,...wrongCats]);
-  questions.push({
-    q: _en ? `What category does "${dd.name}" belong to?` : `¿A qué categoría pertenece "${dd.name}"?`,
-    options: catOpts.map(c=>catLocal?catLocal(c):c),
-    correctIdx: catOpts.indexOf(correctCat),
-    explain: _en ? `It belongs to: ${catLocal?catLocal(correctCat):correctCat}` : `Pertenece a: ${catLocal?catLocal(correctCat):correctCat}`
-  });
+  // Q2: de dónde SALE el alérgeno.
+  // Reporte del propietario (sept 2026): «hay preguntas absurdas según los
+  // usuarios», y el recorrido debía reforzarse «sobre todo en alérgenos e
+  // ingredientes». Medido: una de cada TRES preguntas era «¿a qué categoría
+  // pertenece este plato?», y en 25 de los 102 platos el nombre la regalaba
+  // («Croqueta de Jamón» → Entrantes). No entrena nada de lo que se pregunta
+  // en la mesa. Ahora se pregunta qué componente aporta el alérgeno, que es
+  // justo lo que hay que saber para responder a un huésped y para decidir si
+  // el plato se adapta. Sale de DISH_COMPONENTS, dato cerrado por CI.
+  const q2 = _djQComponente(dish, dd, _en, allergenPool)
+          || _djQAdaptar(dish, dd, _en)
+          || _djQCualSinAlergenos(dish, dd, _en, allDishes)
+          || ((dish.allergens||[]).length ? _djQCuantos(dish, dd, _en) : null);
+  if(q2) questions.push(q2);
 
   // Q3: Ingredient or storytelling question
   // Tokenización compartida con los escenarios (_simExtractIngredients): parte
@@ -4290,11 +4555,19 @@ function _djGenerateQuiz(dish){
     if(otherDishes.length === 0) otherDishes = sameCat;
     const otherIngs = otherDishes.map(d=>getDish(d)).flatMap(d=>_simExtractIngredients(d));
     const dishIngsLow = ingredients.map(i=>i.toLowerCase());
+    // El falso tampoco puede aparecer en el NOMBRE del plato: «Flan
+    // tradicional con chantilly» ofrecía «Chantilly» como el que NO lleva, y
+    // «Brownie ... con crema de mandarina» ofrecía «Crema de mandarina».
+    const _sing = w => w.replace(/es$/,'').replace(/s$/,'');
+    const _pal = t => (t||'').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'')
+      .replace(/[^a-z0-9ñ ]+/g,' ').split(/\s+/).filter(w=>w.length>=4).map(_sing);
+    const _nombrePal = new Set(_pal(dd.name));
     fakeIng = _djShuffle(otherIngs.filter(i => {
       const il = i.toLowerCase();
       if(il === _dishNameLow) return false;
       if(dishIngsLow.includes(il)) return false;
       if(dishIngsLow.some(real => real.includes(il) || il.includes(real))) return false;
+      if(_pal(i).some(w => _nombrePal.has(w))) return false;
       return !_simIngredientOverlapsDish(i, dd);
     }))[0] || null;
   }
@@ -4307,16 +4580,16 @@ function _djGenerateQuiz(dish){
       correctIdx: allOpts.indexOf(fakeIng),
       explain: _en ? `"${fakeIng}" is not part of this dish.` : `"${fakeIng}" no forma parte de este plato.`
     });
-  } else if(dish.history && dish.history.length > 30){
-    // Storytelling question - true/false style
-    questions.push({
-      q: _en ? `Does this dish have a storytelling narrative associated with it?` : `¿Tiene este plato una historia/storytelling asociada?`,
-      options: [_en?'Yes':'Sí', _en?'No':'No', _en?'Only in dinner':'Solo en cena', _en?'Only for VIP':'Solo para VIP'],
-      correctIdx: 0,
-      explain: _en ? 'Yes! Every dish at Txoko has a story worth sharing with guests.' : '¡Sí! Cada plato de Txoko tiene una historia que vale la pena compartir con los huéspedes.'
-    });
-  } else {
-    // Fallback: allergen count question
+  } else if(_djQAdaptar(dish, dd, _en)){
+    // Antes aquí salía «¿Tiene este plato una historia/storytelling asociada?»
+    // con opciones «Sí · No · Solo en cena · Solo para VIP». La respuesta era
+    // SIEMPRE «Sí» y dos de las opciones no significaban nada: era relleno, y
+    // salía en los platos de ficha corta. Se cambia por la pregunta que sí se
+    // hace en la mesa: si el plato se puede adaptar a esa alergia.
+    questions.push(_djQAdaptar(dish, dd, _en));
+  } else if((dish.allergens||[]).length){
+    // Fallback: allergen count question. Solo si el plato TIENE alérgenos: en
+    // los que no declaran ninguno repetía por tercera vez el mismo dato.
     const nAll = (dish.allergens||[]).length;
     const _nSet = []; [nAll, nAll+1, nAll+2, nAll+3, Math.max(0,nAll-1)].forEach(n=>{ const s=String(n); if(!_nSet.includes(s) && _nSet.length<4) _nSet.push(s); });
     const nOpts = _djShuffle(_nSet);
@@ -4331,7 +4604,13 @@ function _djGenerateQuiz(dish){
   return questions;
 }
 
-var allergenData_en = {'Gluten':'Gluten','Lácteos':'Dairy','Huevos':'Eggs','Pescado':'Fish','Mariscos':'Shellfish','Crustáceos':'Crustaceans','Moluscos':'Molluscs','Frutos secos':'Tree Nuts','Soja':'Soy','Apio':'Celery','Mostaza':'Mustard','Sésamo':'Sesame','Granos de sésamo':'Sesame','Sulfitos':'Sulphites','Cacahuete':'Peanut','Cacahuetes':'Peanuts'};
+// Un solo mapa de nombres de alérgeno en inglés, el de DJ_ALERGENOS_EN. Este
+// llevaba su propia copia y le faltaban «Altramuces» y «Cacahuete»: al pasar
+// el pool al canon UE-14 salían sin traducir dentro de una pregunta en inglés.
+// Se conservan los alias antiguos («Mariscos», «Sésamo») porque otras
+// pantallas todavía los pasan.
+var allergenData_en = Object.assign({}, DJ_ALERGENOS_EN,
+  {'Mariscos':'Shellfish','Sésamo':'Sesame','Cacahuetes':'Peanuts'});
 
 function _djShuffle(arr){
   const a=[...arr];
@@ -4929,6 +5208,14 @@ function _simExtractIngredients(dish){
     .filter(s=>s.length>2 && s.length<30
     && !/^(rebozado|tempura|espuma|salsa|refrito|aderezo|vinagreta|demi glace|polvo de)/i.test(s)
     && !/^(agua|water|sal|salt|aceite|oil|azúcar|sugar|pimienta|pepper|hielo|ice)$/i.test(s)
+    // Rótulos de sección de la ficha, no ingredientes. Salían como opción en
+    // «¿cuál de estos ingredientes NO lleva el plato?» — «Masa», «Topping»,
+    // «Marinada»: absurdo, porque no son cosas que se puedan llevar o no.
+    && !/^(masa|topping|base|relleno|guarnici|sabores|caldo|bisque|fondo|sazonador|marinada|dough|filling|garnish|topping|broth|stock|marinade|seasoning)\b/i.test(s)
+    // Gramajes y restos de paréntesis: «T-bone de Wagyu (1,1 kg)» dejaba las
+    // opciones «1 kg» y «T-bone de Wagyu 1». No son ingredientes.
+    && !/^[\d.,]+\s*(kg|kgs|g|gr|gramos|ml|cl|l|oz|lb|u|uds)?$/i.test(s)
+    && !/[\d]$/.test(s)
     // Oils are ubiquitous house pantry (owner: "La mayoría de platos están
     // hechos con aceite de Oliva, no usamos otro aceite") — the bare-word
     // filter above missed compounds like "Aceite de oliva" / "Aceite Dauro" /
