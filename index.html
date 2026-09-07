@@ -52,7 +52,7 @@
 <meta property="og:description" content="Formación de equipos de sala: carta, alérgenos, vinos, exámenes y juegos de repaso.">
 <meta property="og:url" content="https://meseo.es/">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"Meseo","url":"https://meseo.es/"}</script>
-<meta name="app-version" content="7.374">
+<meta name="app-version" content="7.375">
 <meta name="app-build" content="May 2026">
 <meta name="theme-color" content="#1c2a22">
 <!-- ═══ PWA ═══ -->
@@ -1598,7 +1598,7 @@ const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><p
 const SRC = 'src';
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='7.374';  // sincronizada con sw.js VERSION (guard de CI)
+const APP_VERSION='7.375';  // sincronizada con sw.js VERSION (guard de CI)
 const APP_BUILD='Jul 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;
@@ -4118,15 +4118,23 @@ async function _djLoadIngBase(){
     const raw = await loadLazyData('data/ingredients.json', LANG==='en'?'ingredients':'ingredientes', { silent:true });
     if(!raw || !raw.ingredientes) return null;
     const idx = new Map();
+    // en: el mismo ingrediente escrito en inglés. La base es la fuente única,
+    // así que el nombre inglés vive donde vive el alérgeno y no se duplica.
+    const en = new Map();
     for(const [k,v] of Object.entries(raw.ingredientes)){
       for(const key of [v.nombre, k]){
         const nk = _djNorm(key);
         if(nk && !idx.has(nk)) idx.set(nk, v.alergenos);
+        if(nk && v.nombre_en && !en.has(nk)) en.set(nk, v.nombre_en);
         // «Ali-oli» en la base, «alioli» en la prosa de la ficha: misma cosa.
-        if(/-/.test(key)){ const sk = nk.replace(/ /g,''); if(sk && !idx.has(sk)) idx.set(sk, v.alergenos); }
+        if(/-/.test(key)){
+          const sk = nk.replace(/ /g,'');
+          if(sk && !idx.has(sk)) idx.set(sk, v.alergenos);
+          if(sk && v.nombre_en && !en.has(sk)) en.set(sk, v.nombre_en);
+        }
       }
     }
-    _djIngBase = { idx, claves:[...idx.keys()].sort((a,b)=>b.length-a.length) };
+    _djIngBase = { idx, en, claves:[...idx.keys()].sort((a,b)=>b.length-a.length) };
   }catch(e){ /* sin base: los componentes validados siguen marcándose */ }
   return _djIngBase;
 }
@@ -4169,7 +4177,22 @@ function _djSameThing(item, comp){
 //       garantiza que NINGÚN componente validado se pinte como seguro.
 // Y nunca se muestra un alérgeno que el plato no declare: la ficha, el buscador
 // y el recorrido tienen que decir lo mismo.
-function _djIngredients(dish){
+// El nombre del ingrediente en el idioma de la app. Si la base no lo tiene
+// traducido —o aún no ha cargado— se queda el español, que es mejor que nada:
+// el alérgeno ya sale traducido al lado en cualquier caso.
+function _djIngName(t, _en){
+  if(!_en || !_djIngBase || !_djIngBase.en) return t;
+  const h = _djNorm(t);
+  if(_djIngBase.en.has(h)) return _djIngBase.en.get(h);
+  // El chip puede traer algo más que el ingrediente («Tostas de pan carasau.»,
+  // «Mostaza savora (apio)»); se busca la clave más larga que encaje entera.
+  for(const k of _djIngBase.claves){
+    if(k.length>=4 && _djWordIn(k,h) && _djIngBase.en.has(k)) return _djIngBase.en.get(k);
+  }
+  return t;
+}
+
+function _djIngredients(dish, _en){
   const declarados = new Set(dish.allergens||[]);
   const items = _djSplitIngredients(dish.ingredients).map(t=>({t, a:new Set()}));
   const base = _djIngBase;
@@ -4187,11 +4210,11 @@ function _djIngredients(dish){
     if(hit) (c.a||[]).forEach(a=>hit.a.add(a));
     else items.push({t:c.n, a:new Set(c.a||[])});
   }
-  return items.map(i=>({t:i.t, a:[...i.a]}));
+  return items.map(i=>({t:_djIngName(i.t, _en), a:[...i.a]}));
 }
 
 function _djPhaseIngredients(dish, dd, _en){
-  const items = _djIngredients(dish);
+  const items = _djIngredients(dish, _en);
   const conAlerg = items.filter(i=>i.a.length).length;
   const grid = items.map((ing,i)=>{
     const isA = ing.a.length > 0;
