@@ -3628,9 +3628,12 @@ test('los tartares NO pueden ofrecerse sin gluten: la Perrins lleva vinagre de m
   // Este guard fija lo contrario, que es lo que ahora es cierto.
   assert(!/queda SIN GLUTEN|is then GLUTEN-FREE/.test(html),
     'vuelve la promesa de que retirando el pan el tartar queda sin gluten: la Perrins lleva vinagre de malta');
+  // El aviso dice que no se puede GARANTIZAR sin gluten y remite a cocina, no
+  // «no se lo des a un celíaco»: decidir si un huésped puede comer algo no es
+  // trabajo de la app, y el bote concreto de Perrins puede estar certificado.
   const need = [
-    'El plato NO se puede servir sin gluten: no ofrecerlo a un celíaco.',
-    'The dish CANNOT be served gluten-free: do not offer it to a coeliac guest.'
+    'el plato NO se puede garantizar sin gluten: si el huésped es celíaco, consultar con cocina.',
+    'the dish CANNOT be guaranteed gluten-free: if the guest is coeliac, check with the kitchen.'
   ];
   for (const s of need) assert(html.includes(s), `falta el aviso de que el tartar no puede ir sin gluten: "${s.slice(0, 60)}…"`);
   // Y el gluten de los dos tartares debe estar declarado como estructural.
