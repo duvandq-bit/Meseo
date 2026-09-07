@@ -25,7 +25,7 @@
       "Tataki de atún (Cena)",
       "Tataki de Atún (Almuerzo)",
       "Parmentier de papa canaria",
-      "Rejo de pulpo frito con papa y mojo verde"
+      "Rejo de pulpo con papa y mojo verde"
     ],
     "notes": "Fresco y mineral, con aromas de cítricos y flor blanca. Perfecto como aperitivo o con mariscos frescos.",
     "story_en": "On the volcanic slopes of Tenerife, where terroir is shaped by black volcanic soils and Atlantic breezes, Listán Blanco achieves mineral expression. Viñatigo respects Canarian tradition through stainless steel fermentation that preserves Atlantic salinity and freshness.",
@@ -64,7 +64,7 @@
       "Tomate Cherry al ajillo",
       "Coca de calabacín",
       "Coca de tomate",
-      "Rejo de pulpo frito con papa y mojo verde"
+      "Rejo de pulpo con papa y mojo verde"
     ],
     "notes": "Mineral y salado, con notas de hierba fresca y cítricos. Ideal para maridar con cefalópodos y pescados.",
     "story_en": "Artifice, on Tenerife, cultivates Listán Blanco in ancient vineyards on Atlantic volcanic soil with minimal intervention. The wine emerges fresh and mineral, preserving the unique identity of terroir without oenological compromise.",
@@ -94,7 +94,7 @@
       "Fish and chips",
       "Tataki de atún",
       "Tartar de lomo de atún",
-      "Rejo de pulpo frito con papa y mojo verde"
+      "Rejo de pulpo con papa y mojo verde"
     ],
     "notes": "Complejo y equilibrado, con notas florales y herbáceas. Recomendado con platos de verduras y pescados blancos.",
     "story_en": "Harmonious blend of Canarian autochthonous varieties (Listán, Albillo, Gual, Marmajuelo) on volcanic soils of Tenerife. Natural fermentation honors centuries-old tradition with a minimalist style that reveals the mineral complexity of volcanic terroir.",
@@ -124,7 +124,7 @@
       "Fish and chips",
       "Lubina a la brasa con ensalada de papaya",
       "Tataki de atún",
-      "Rejo de pulpo frito con papa y mojo verde"
+      "Rejo de pulpo con papa y mojo verde"
     ],
     "notes": "Aromático y fresco, con notas de miel y flores blancas. Excelente con mariscos y pescados.",
     "story_en": "On Lanzarote, Akaet rescues pre-phylloxera vineyards in volcanic soil with Atlantic influence. Autochthonous varieties ferment gently, revealing volcanic minerality and marine salinity that define this unique terroir.",
@@ -155,7 +155,7 @@
       "Tataki de atún",
       "Tartar de lomo de atún",
       "Lobster Roll",
-      "Rejo de pulpo frito con papa y mojo verde"
+      "Rejo de pulpo con papa y mojo verde"
     ],
     "notes": "Elegante y minerál, con toques cítricos delicados. Ideal como vino de aperitivo o con ensaladas frescas.",
     "story_en": "Vegas el Pinalete on Tenerife cultivates Albillo Criollo in volcanic terrain at a special microclimate between volcanoes. Limited production, gentle fermentation and natural aging highlight the citrus elegance and minerality of this singular terroir.",
@@ -186,7 +186,7 @@
       "Tataki de atún",
       "Tartar de lomo de atún",
       "Lobster Roll",
-      "Rejo de pulpo frito con papa y mojo verde"
+      "Rejo de pulpo con papa y mojo verde"
     ],
     "notes": "Fresco y expresivo, con aromas cítricos y minerales. Perfecto con mariscos y pescados a la parrilla.",
     "story_en": "Guimar Valley in Tenerife, where ancestral volcanoes shape unique terroir. Varieties like Listán Blanco flourish in mineral soils. Harvests on volcanic slopes, low-temperature fermentation in stainless steel, minimal intervention. Los Loros seeks to express pure terroir purity from Guimar without oenological compromise.",
@@ -280,7 +280,7 @@
       "Tataki de atún",
       "Tartar de lomo de atún",
       "Ensalada de Mero del Hierro",
-      "Txuleta de atún con tomate en texturas",
+      "Lomo de atún con tomate en texturas",
       "Peras escalivadas con cremoso de queso de cabra",
       "Arroz cremoso de verduras",
       "Raviolis de espinaca y queso parmesano"
@@ -2948,7 +2948,7 @@
       "Goxua",
       "Brownie de avellanas con crema de cacao y mandarina",
       "Tarta de queso",
-      "Tocinillo de cielo",
+      "Tocinillo del cielo",
       "Mousse de gofio con helado de plátano canario",
       "Pastel Vasco invertido con tartar de manzana",
       "Flan marmolado de chocolate y plátano",
@@ -2980,7 +2980,7 @@
       "Goxua",
       "Brownie de avellanas con crema de cacao y mandarina",
       "Tarta de queso",
-      "Tocinillo de cielo",
+      "Tocinillo del cielo",
       "Mousse de gofio con helado de plátano canario",
       "Pastel Vasco invertido con tartar de manzana",
       "Flan marmolado de chocolate y plátano",
@@ -3458,7 +3458,7 @@
       "Lubina crujiente con mayonesa de leche de tigre",
       "Tataki de atún (Cena)",
       "Tataki de Atún (Almuerzo)",
-      "Rejo de pulpo frito con papa y mojo verde"
+      "Rejo de pulpo con papa y mojo verde"
     ],
     "notes": "Aromático y complejo, con notas de miel y flores. Ideal con mariscos.",
     "story_en": "Malvasía from Lanzarote, on volcanic soils and lava pits under Atlantic influence. Extended sur lie ageing in barrel reveals complex aromatics with honeyed notes and the volcanic salinity that defines this singular Canarian white.",
@@ -3562,7 +3562,7 @@
       "Mejillones a la brasa",
       "Lubina crujiente con mayonesa de leche de tigre",
       "Tataki de atún",
-      "Rejo de pulpo frito con papa y mojo verde"
+      "Rejo de pulpo con papa y mojo verde"
     ],
     "notes": "Fresco y atlántico, con aromas de fruta blanca, cítricos y notas salinas. Perfecto como aperitivo o con mariscos frescos.",
     "grapeSelection_en": "100% Albariño grown on traditional Galician pergola trellises over granite soils of Rías Baixas. 25–40-year-old vines with Atlantic exposure. Manual harvest in September, rigorous selection of clusters at optimal ripeness with natural acidity preserved. Controlled yield (60 hl/ha).",
@@ -3624,7 +3624,7 @@
       "Tomates aliñados",
       "Lubina crujiente con mayonesa de leche de tigre",
       "Parmentier de papa canaria",
-      "Rejo de pulpo frito con papa y mojo verde"
+      "Rejo de pulpo con papa y mojo verde"
     ],
     "notes": "Aromático y floral, con notas de azahar, frutas tropicales y mineralidad volcánica. Versátil con pescados y mariscos.",
     "grapeSelection_en": "Listán Blanco (85%) and Moscatel (15%) grown on the volcanic slopes of Tenerife at 400–600 metres. 40–70-year-old vines on black volcanic soils. Selective manual harvest in September. Criteria: optimal aromatic ripeness, balance between sugars and acidity.",
@@ -3776,7 +3776,7 @@
       "Bao de brisket",
       "Milanesa de pollo al mojo rojo",
       "Tabla de quesos canarios",
-      "Rejo de pulpo frito con papa y mojo verde"
+      "Rejo de pulpo con papa y mojo verde"
     ],
     "notes": "Fresco y volcánico, con aromas de frutos rojos, pimienta y notas ahumadas. Un tinto atlántico único.",
     "grapeSelection_en": "100% Listán Negro from pre-phylloxera vineyards in Tenerife at 450–700 metres on black volcanic soil. Century-old vines (80–120 years) on their own roots. Manual harvest in September–October. Criteria: oldest vines, low yields (30–35 hl/ha), complete phenolic ripeness.",
@@ -3806,7 +3806,7 @@
       "Tabla de quesos canarios",
       "Tartar de Wagyu dry",
       "Bao de brisket",
-      "Rejo de pulpo frito con papa y mojo verde"
+      "Rejo de pulpo con papa y mojo verde"
     ],
     "notes": "Complejo y atlántico, con aromas de frutos negros, hierbas aromáticas y mineralidad volcánica. Expresión auténtica del terroir canario.",
     "grapeSelection_en": "Listán Negro (75%) and Tintilla (25%) de century-old vineyards en el Valle de la Orotava a 500-800 metros. Suelos volcánicos oscuros with excelente drenaje. 80-100+-year-old Vines en own roots. Manual harvest selective en october. yield muy low (25-30 hl/ha).",
@@ -3998,7 +3998,7 @@
     "notes": "Ligero, fresco y frutal, con la acidez atlántica del Bierzo. Puede servirse ligeramente fresco (14-15°C).",
     "pairings": [
       "Pulpo a la brasa sobre trinxat de papa canaria",
-      "Rejo de pulpo frito con papa y mojo verde",
+      "Rejo de pulpo con papa y mojo verde",
       "Pluma de cerdo Ibérico",
       "Alitas melosas glaseadas",
       "Milanesa de pollo al mojo rojo"
@@ -4301,7 +4301,7 @@
     "pairings": [
       "Selección de ostras",
       "Pulpo a la brasa sobre trinxat de papa canaria",
-      "Rejo de pulpo frito con papa y mojo verde",
+      "Rejo de pulpo con papa y mojo verde",
       "Pámpano marinado al mojo rojo",
       "Tabla de quesos canarios"
     ],
@@ -4581,7 +4581,7 @@
       "Selección de ostras",
       "Ensalada de Mero del Hierro",
       "Pulpo a la brasa sobre trinxat de papa canaria",
-      "Rejo de pulpo frito con papa y mojo verde",
+      "Rejo de pulpo con papa y mojo verde",
       "Croqueta de Langostino"
     ],
     "notes": "Blanco volcánico complejo: cítricos, hierbas de monte y un fondo salino muy marcado por el suelo de picón.",

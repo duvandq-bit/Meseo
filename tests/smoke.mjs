@@ -2784,11 +2784,12 @@ test('ES and EN dish twins declare identical allergens', () => {
   }
 });
 
-test('búsqueda: alias de plato (aka) indexado — "Lomo de atún" encuentra la Txuleta', () => {
-  // El mismo plato se oye llamar de dos formas (Txuleta / Lomo de atún). El
-  // campo `aka` lo hace encontrable por ambos nombres sin duplicar la ficha.
-  assert(/\{id:21,cat:'Platos Principales',name:'Txuleta de atún con tomate en texturas',aka:'Lomo de atún',/.test(html),
-    'id21 debe llevar aka:"Lomo de atún"');
+test('búsqueda: alias de plato (aka) indexado — "Txuleta de atún" encuentra el Lomo', () => {
+  // El mismo plato se oye llamar de dos formas. El plating guide 2026 lo llama
+  // «Lomo de atún con tomate en texturas», así que ése es el nombre oficial y
+  // el alias pasa a ser el antiguo: quien aprendió «Txuleta» sigue encontrándolo.
+  assert(/\{id:21,cat:'Platos Principales',name:'Lomo de atún con tomate en texturas',aka:'Txuleta de atún',/.test(html),
+    'id21 debe llamarse «Lomo de atún…» y llevar aka:"Txuleta de atún"');
   const idx = html.slice(html.indexOf('function _gsDishIndex'), html.indexOf('function _gsWineIndex'));
   assert(/d\.aka\|\|''/.test(idx), '_gsDishIndex debe incluir d.aka en el texto buscable');
 });
