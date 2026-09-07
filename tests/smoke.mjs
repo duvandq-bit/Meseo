@@ -1226,6 +1226,135 @@ test('wine map is real cartography (Voyager basemap, no fake 3D or DO shapes)', 
     'map attribution control missing (required by OSM/CARTO tile terms)');
 });
 
+test('recorrido guiado: las preguntas van de alérgenos e ingredientes y no se regalan', () => {
+  // Reporte del propietario (sept 2026): «hay preguntas absurdas según los
+  // usuarios», y el recorrido había que reforzarlo «sobre todo en alérgenos e
+  // ingredientes». Medido sobre 102 platos × 10 tiradas (3.060 preguntas):
+  //   · una de cada TRES era «¿a qué categoría pertenece este plato?», y en 25
+  //     platos el nombre la regalaba («Croqueta de Jamón» → Entrantes);
+  //   · el 5 % era «¿tiene este plato una historia asociada?», cuya respuesta
+  //     es siempre «Sí» y cuyas otras opciones («Solo para VIP») no significan
+  //     nada — relleno puro.
+  // Ahora la categoría solo aparece cuando el plato no tiene ni componentes ni
+  // matriz de adaptación, y entran dos preguntas de las que sí se hacen en la
+  // mesa: de qué componente sale el alérgeno, y si el plato se adapta.
+  // Se busca por sus opciones, que no existían en ninguna otra pregunta: la
+  // frase del enunciado la cita el comentario que explica por qué se retiró.
+  assert(!/'Solo para VIP'|'Only for VIP'|'Solo en cena'/.test(html),
+    'vuelve la pregunta de relleno del storytelling (respuesta siempre «Sí»)');
+  assert(/function _djQComponente\(/.test(html) && /function _djQAdaptar\(/.test(html),
+    'faltan las preguntas de componente y de adaptación');
+  // El pool de distractores es el vocabulario de la casa: «Mariscos» y
+  // «Sésamo» no existen en ninguna otra pantalla de la app.
+  const pool = (html.match(/const allergenPool = \[([\s\S]*?)\];/) || [])[1] || '';
+  const canon = new Set(JSON.parse(read('data/ingredients.json')).eu14.map(e => e.app));
+  const usados = [...pool.matchAll(/'([^']+)'/g)].map(m => m[1]);
+  assert(usados.length === 14, `el pool debe ser el canon UE-14, tiene ${usados.length}`);
+  for (const a of usados) assert(canon.has(a), `«${a}» no es un alérgeno del vocabulario de la app`);
+});
+
+test('recorrido guiado: ningún ingrediente con alérgeno se pinta como seguro', () => {
+  // Reporte del propietario (sept 2026): «algunos ingredientes no están
+  // marcados como Alérgenos», con capturas de sala. Medido sobre los 102
+  // platos con ficha, la fase llevaba 83 falsos NEGATIVOS — el peor, «aderezo
+  // césar» de la Croqueta de Pollo, que aporta CINCO alérgenos y salía sin
+  // aviso — y 10 falsos POSITIVOS absurdos: «Pimiento palmero» marcado como
+  // PESCADO porque contiene «mero», y «Polvo de aceitunas» porque «aceitunas»
+  // contiene «tuna». Causa: un mapa de trece palabras clave que buscaba
+  // subcadenas, teniendo la app la base única de 460 ingredientes.
+  // Este guard reconstruye la fase con SUS funciones y comprueba tres cosas.
+  const src = html.slice(html.indexOf('let _djIngBase = null;'), html.indexOf('function _djPhaseIngredients'));
+  const F = new Function(src + `
+    return {n:_djNorm, split:_djSplitIngredients, same:_djSameThing,
+            base:function(b){ _djIngBase = b; },
+            ing:function(dish,COMP){ globalThis.DISH_COMPONENTS=COMP; return _djIngredients(dish); }};`)(); // eslint-disable-line no-new-func
+  // Índice de la base única, montado igual que en la app.
+  const crudo = JSON.parse(read('data/ingredients.json')).ingredientes;
+  const idx = new Map();
+  for (const [k, v] of Object.entries(crudo)) {
+    for (const key of [v.nombre, k]) {
+      const nk = F.n(key);
+      if (nk && !idx.has(nk)) idx.set(nk, v.alergenos);
+      if (/-/.test(key)) { const sk = nk.replace(/ /g, ''); if (sk && !idx.has(sk)) idx.set(sk, v.alergenos); }
+    }
+  }
+  const BASE = { idx, claves: [...idx.keys()].sort((a, b) => b.length - a.length) };
+  // El mapa de palabras clave no puede volver.
+  assert(!/allergenIngredients\s*=/.test(html),
+    'vuelve el mapa de palabras clave: marcaba «Pimiento palmero» como pescado');
+
+  const iD = html.indexOf('const DISHES = ['), jD = html.indexOf('\n];', iD);
+  const DISHES = new Function(html.slice(iD, jD + 3) + '; return DISHES;')(); // eslint-disable-line no-new-func
+  const iC = html.indexOf('const DISH_COMPONENTS = {'), jC = html.indexOf('};', iC);
+  const COMP = new Function(html.slice(iC, jC + 2) + '; return DISH_COMPONENTS;')(); // eslint-disable-line no-new-func
+
+  let medidos = 0, fuera = [], ocultos = [];
+  // Los dos modos: sin la base (primer arranque / sin red) y con ella.
+  for (const conBase of [false, true]) {
+   F.base(conBase ? BASE : null);
+   medidos = 0;
+   for (const d of DISHES) {
+    if (!d.ingredients) continue;
+    const declarados = new Set(d.allergens || []);
+    const items = F.ing(d, COMP);
+    medidos++;
+    // 1 · Ningún componente validado puede quedar sin su aviso. Es la
+    //     invariante de seguridad: DISH_COMPONENTS lo cierra el CI contra
+    //     data/ingredients.json, así que si algo lleva alérgeno, se ve.
+    for (const c of (COMP[d.id] || [])) {
+      const visto = items.some(i => F.same(i.t, c.n) && (c.a || []).every(a => i.a.includes(a)));
+      if (!visto) ocultos.push(`${d.id} ${d.name}: «${c.n}» (${(c.a || []).join('+')})`);
+    }
+    // 2 · Y nunca un alérgeno que el plato no declare: la ficha, el buscador y
+    //     el recorrido tienen que decir lo mismo.
+    for (const i of items) for (const a of i.a) if (!declarados.has(a)) fuera.push(`${conBase?'con base':'sin base'} ${d.id} «${i.t}» → ${a}`);
+   }
+  }
+  assert(medidos > 90, `esperaba los ~102 platos con ficha, medidos ${medidos}`);
+  assert(ocultos.length === 0,
+    `componentes con alérgeno pintados como seguros (${ocultos.length}): ${ocultos.slice(0, 4).join(' · ')}`);
+  assert(fuera.length === 0,
+    `el recorrido enseña alérgenos que el plato no declara: ${fuera.slice(0, 4).join(' · ')}`);
+
+  // 3 · Los casos concretos que reportó el propietario, uno por uno.
+  const caso = (id, chip, esperado) => {
+    const d = DISHES.find(x => x.id === id);
+    const it = F.ing(d, COMP).find(i => F.n(i.t).includes(F.n(chip)));
+    assert(it, `no encuentro «${chip}» en los ingredientes de ${id}`);
+    if (esperado === null) assert(it.a.length === 0, `«${chip}» vuelve a marcarse sin motivo (${it.a.join('+')})`);
+    else for (const a of esperado) assert(it.a.includes(a), `«${chip}» (plato ${id}) ya no avisa de ${a}`);
+  };
+  caso(128, 'aderezo césar', ['Huevos', 'Lácteos', 'Mostaza', 'Pescado', 'Sulfitos']);
+  caso(15, 'Salsa Perrins', ['Pescado', 'Sulfitos']);
+  caso(15, 'Stracciatella', ['Lácteos']);
+  caso(80, 'Burrata', ['Lácteos']);
+  caso(80, 'Piñones', ['Frutos secos']);
+  caso(5, 'Pimiento palmero', null);   // «pal-MERO-» no es pescado
+  // Reporte del propietario, textual: «la salsa césar contiene anchoas y
+  // debería tener alergia al pescado, y la salsa Perrins también tiene
+  // pescado». La base ya lo decía y la carta ya lo declaraba: fallaba SOLO el
+  // recorrido. Se fija en los seis platos donde aparecen las dos salsas.
+  let salsas = 0;
+  for (const d of DISHES) {
+    for (const c of (COMP[d.id] || [])) {
+      if (!/aderezo c[eé]sar|salsa perrins/i.test(c.n)) continue;
+      salsas++;
+      assert(c.a.includes('Pescado'), `«${c.n}» (plato ${d.id}) ha perdido el Pescado de las anchoas`);
+      const it = F.ing(d, COMP).find(i => F.n(i.t).includes(F.n(c.n)));
+      assert(it && it.a.includes('Pescado'),
+        `${d.id} «${c.n}» vuelve a pintarse sin el aviso de Pescado`);
+    }
+  }
+  assert(salsas >= 7, `esperaba las 7 apariciones de césar/Perrins, encontradas ${salsas}`);
+  caso(15, 'Polvo de aceitunas', null); // «acei-TUNA-s» no es atún
+  F.base(BASE);
+  caso(125, 'alioli de tinta', ['Huevos']); // la base lo tiene como «Ali-oli»
+  // Y los rótulos de sección ya no se pegan al ingrediente.
+  const chips = F.split('Masa: Leche, Harina. Topping: loncha de jamón.');
+  assert(chips.includes('Leche') && !chips.some(c => /^Masa/.test(c)),
+    `el rótulo de sección vuelve pegado al ingrediente: ${JSON.stringify(chips)}`);
+});
+
 test('ingredient-allergen base: valid schema + no NEW undeclared allergens', () => {
   // data/ingredients.json is the single source of truth for ingredient →
   // allergen tags (EU-14, app vocabulary). The audit (tests/allergen-audit.mjs)
