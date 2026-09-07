@@ -1,5 +1,5 @@
 {
- "updated": "2026-09-07T16:29:59.341Z",
+ "updated": "2026-09-07T20:36:52.703Z",
  "items": [
   {
    "t": "La Nueva Cocina Vasca celebra sus 50 años reuniendo a sus grandes nombres en un libro",
@@ -12,9 +12,20 @@
    "img": "https://www.donostitik.com/wp-content/uploads/2026/09/01.jpg"
   },
   {
+   "t": "Guía Michelin: nuevos restaurantes de Tenerife galardonados con estrellas",
+   "u": "https://www.teneriffa-news.com/es/actualidad/noticias-de-tenerife/haydee-y-taste-1973-logran-su-primera-estrella-michelin-en-tenerife_1464390.html",
+   "s": "Teneriffa News",
+   "d": "2026-09-07T14:59:23.000Z",
+   "tags": [
+    "CANARIAS",
+    "MICHELIN"
+   ],
+   "img": "https://www.teneriffa-news.com/media/m/michelin-sterne-restaurants-teneriffa-2121x1350.jpg"
+  },
+  {
    "t": "Premio de Turismo Islas Canarias 2026: Bodegas Conatvs y el Enoturismo en Fuerteventura",
    "u": "https://www.canariasdiario.com/noticia/151440/gastronomia/el-modelo-de-enoturismo-de-bodegas-conatvs-premio-a-la-excelencia-turistica.html",
-   "s": "Canariasdiario.com",
+   "s": "canariasdiario.com",
    "d": "2026-09-07T14:58:08.000Z",
    "tags": [
     "CANARIAS",
@@ -22,7 +33,7 @@
    ]
   },
   {
-   "t": "La consejera de Turismo, distingue el modelo de enoturismo de Bodegas Conatvs, Premio a la Excelencia Turística de Canarias 2026",
+   "t": "Bodegas Conatvs, Premio a la Excelencia Turística de Canarias 2026",
    "u": "https://radioinsular.es/la-consejera-de-turismo-distingue-el-modelo-de-enoturismo-de-bodegas-conatvs-premio-a-la-excelencia-turistica-de-canarias-2026",
    "s": "radioinsular.es",
    "d": "2026-09-07T14:28:00.000Z",
@@ -31,6 +42,16 @@
     "CANARIAS"
    ],
    "img": "https://radioinsular.es/wp-content/uploads/2026/09/JESSICA-DE-LEON-VISITA-BODEGAS-CONATVS.jpeg"
+  },
+  {
+   "t": "Los chefs vascos coinciden: \"Para cocinar las lentejas perfectas, necesitas un refrito de oliva, ajo y pimentón\"",
+   "u": "https://www.heraldo.es/noticias/gastronomia/2026/09/07/chefs-vascos-coinciden-cocinar-lentejas-perfectas-necesitas-refrto-oliva-ajo-pimenton-2014325.amp.html",
+   "s": "heraldo.es",
+   "d": "2026-09-07T14:11:47.000Z",
+   "tags": [
+    "CHEF"
+   ],
+   "img": "https://imagenes.heraldo.es/files/image_1920_1080/uploads/imagenes/2025/10/13/collage-formado-por-una-imagen-de-fondo-de-un-plato-de-lentejas-y-otra-silueteada-del-chef-martin-berasategui.jpeg"
   },
   {
    "t": "En 1978, un embalse dejó sin habitantes a este pueblo del Pirineo; 48 años después es el pueblo más bonito de España, levantado por ellos mismos piedra a piedra",
@@ -45,7 +66,7 @@
   {
    "t": "Turismo destaca el modelo de enoturismo de Bodegas Conatvs, Premio a la Excelencia Turística de Canarias",
    "u": "https://www.lavozdefuerteventura.com/articulo/turismo/turismo-destaca-modelo-enoturismo-bodegas-conatvs-premio-excelencia-turistica-canarias/20260907150145031061.amp.html",
-   "s": "la voz de fuerteventura",
+   "s": "lavozdefuerteventura.com",
    "d": "2026-09-07T14:01:45.000Z",
    "tags": [
     "VINO",
@@ -81,6 +102,17 @@
     "VINO",
     "CANARIAS"
    ]
+  },
+  {
+   "t": "Turismo resalta el modelo de enoturismo de Bodegas Conatvs en Fuerteventura",
+   "u": "https://canariastimes.com/fuerteventura/cultura-ocio/turismo-modelo-enoturismo-bodegas-conatvs-fuerteventura/",
+   "s": "Canarias Times",
+   "d": "2026-09-07T13:12:15.000Z",
+   "tags": [
+    "VINO",
+    "CANARIAS"
+   ],
+   "img": "https://cdn.canariastimes.com/2026/09/Jessica-de-Leon-en-su-visita-a-Bodegas-Conatvs-2.jpeg"
   },
   {
    "t": "Resumen: cuánto cuestan las vacaciones en las Islas Canarias",
@@ -134,16 +166,6 @@
    "img": "https://estaticos-cdn.prensaiberica.es/clip/f05340f3-b0ea-4143-a858-a8eef867476f_16-9-discover-aspect-ratio_default_0_x595y237.jpg"
   },
   {
-   "t": "Las tradiciones y fiestas más importantes de Tenerife",
-   "u": "https://www.teneriffa-news.com/es/informacion-sobre-tenerife/tradiciones-fiestas-tenerife_1464378.html",
-   "s": "Teneriffa News",
-   "d": "2026-09-07T11:29:30.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://www.teneriffa-news.com/media/fotostrecken/la-orotava/la-orotava-sandteppich-1-2400x1350.jpg"
-  },
-  {
    "t": "Las zonas con mayor crecimiento anual de reservas online de restaurantes este verano",
    "u": "https://diariodegastronomia.com/las-zonas-mayor-crecimiento-anual-reservas-online-restaurantes-este-verano/",
    "s": "Diario de Gastronomía",
@@ -162,16 +184,6 @@
     "CANARIAS"
    ],
    "img": "https://www.teneriffa-news.com/media/fotostrecken/karneval/karneval-teneriffa-1200x720.jpg"
-  },
-  {
-   "t": "Estación Espacial Internacional: la ISS se puede ver sobre las Islas Canarias",
-   "u": "https://www.teneriffa-news.com/es/informacion-sobre-tenerife/iss-visible-canarias_1465081.html",
-   "s": "Teneriffa News",
-   "d": "2026-09-07T11:05:03.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://www.teneriffa-news.com/media/k/kanaren-satelitenbild-luftaufnahme-nasa-2400x1350.jpg"
   },
   {
    "t": "Encuentran el 'único guachinche auténtico' abierto en septiembre en Tenerife: \"Abre hasta que",
@@ -245,6 +257,16 @@
    "img": "https://s3.elespanol.com/k/imgp/cms/elespanol/11348503.jpg?p=f:jpeg/w:1706/h:960&h=251pPax0"
   },
   {
+   "t": "Tenerife lidera la subida de reservas por internet en restaurantes españoles con un 31% más",
+   "u": "https://www.vinetur.com/20260907106664/tenerife-lidera-la-subida-de-reservas-por-internet-en-restaurantes-espanoles-con-un-31-mas.html",
+   "s": "Vinetur",
+   "d": "2026-09-07T09:26:00.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://www.vinetur.com/imagenes/2023/febrero/16/copas-vino-restaurante.jpg"
+  },
+  {
    "t": "El restaurante Fuentelgato cierra en Huerta del Marquesado para abrir en Valencia",
    "u": "https://www.vocesdecuenca.com/provincia/el-restaurante-fuentelgato-cierra-en-huerta-del-marquesado-para-abrir-en-valencia/",
    "s": "Voces de Cuenca",
@@ -281,27 +303,6 @@
     "CANARIAS"
    ],
    "img": "https://www.teneriffa-news.com/media/s/steak-teneriffa-guachinche-2400x1350.jpg"
-  },
-  {
-   "t": "El bar de Tenerife con 50 años de historia donde disfrutar de unos de los bocadillos más famosos de la isla",
-   "u": "https://www.eldia.es/tenerife/2026/09/07/bar-tenerife-50-anos-historia-bacadillos-dv-134002651.amp.html",
-   "s": "Eldía",
-   "d": "2026-09-07T07:46:12.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://estaticos-cdn.prensaiberica.es/clip/d4c10cf8-c742-4e09-b5a3-e6f605bb8720_16-9-discover-aspect-ratio_default_0_x621y599.jpg"
-  },
-  {
-   "t": "El norte de Tenerife pierde su único restaurante con estrella Michelin",
-   "u": "https://www.teneriffa-news.com/es/actualidad/noticias-de-tenerife/norte-tenerife-pierde-estrella_1464367.html",
-   "s": "Teneriffa News",
-   "d": "2026-09-07T07:24:43.000Z",
-   "tags": [
-    "CANARIAS",
-    "MICHELIN"
-   ],
-   "img": "https://www.teneriffa-news.com/media/m/michelin-sterne-restaurants-teneriffa-2121x1350.jpg"
   }
  ]
 }
