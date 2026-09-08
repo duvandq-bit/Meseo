@@ -52,7 +52,7 @@
 <meta property="og:description" content="Formación de equipos de sala: carta, alérgenos, vinos, exámenes y juegos de repaso.">
 <meta property="og:url" content="https://meseo.es/">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"Meseo","url":"https://meseo.es/"}</script>
-<meta name="app-version" content="7.385">
+<meta name="app-version" content="7.386">
 <meta name="app-build" content="May 2026">
 <meta name="theme-color" content="#1c2a22">
 <!-- ═══ PWA ═══ -->
@@ -1596,7 +1596,7 @@ const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><p
 const SRC = 'src';
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='7.385';  // sincronizada con sw.js VERSION (guard de CI)
+const APP_VERSION='7.386';  // sincronizada con sw.js VERSION (guard de CI)
 const APP_BUILD='Jul 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;
@@ -2571,7 +2571,6 @@ async function supaFetchAllEmployees() {
       examSeen: (() => { try { const x=JSON.parse(r.extras||'{}'); return (x&&x.es&&typeof x.es==='object')?x.es:{}; } catch(e){ return {}; } })(),
       // Seguridad de alérgenos (mejor % del Simulacro), guardado en extras.ab.
       allergenBest: (() => { try { const x=JSON.parse(r.extras||'{}'); return (x&&typeof x.ab==='number')?x.ab:0; } catch(e){ return 0; } })(),
-      miStats: (() => { try { const x=JSON.parse(r.extras||'{}'); return (x&&x.mi&&typeof x.mi==='object')?x.mi:null; } catch(e){ return null; } })(),
       avatar: r.avatar || null,   // el avatar se descargaba pero no se mapeaba → equipo remoto sin foto
       sessions: (() => { try { const sd=JSON.parse(r.sessions_data||'[]'); return sd.length ? sd : Array(r.sessions_count||0).fill({}); } catch(e){ dbgw('[fetchAll] bad sessions_data for', r.name, e.message); return Array(r.sessions_count||0).fill({}); } })(),
       txokoRecord: r.txoko_record || 0,
@@ -8312,7 +8311,6 @@ function _extrasCompose(emp){
     dq:{ d:emp.dqLastDay||'', s:emp.dqStreak||0, ok:emp.dqLastOk?1:0, p:(emp.dqLastPick==null?-1:emp.dqLastPick), t:emp.dqTotal||0, h:emp.dqHits||0 },
     es: emp.examSeen||{},   // intentos por plato → tasa de fallo real del supervisor
     ab: emp.allergenBest||0, // mejor % del Simulacro de alérgenos → seguridad del equipo
-    mi: emp.miStats||0      // Cliente IA (Mesa Infinita) → notas y seguridad para el supervisor
   });
 }
 function _extrasMergeInto(emp, extrasStr){
@@ -8344,12 +8342,6 @@ function _extrasMergeInto(emp, extrasStr){
   }
   // Mejor % del Simulacro de alérgenos: el máximo entre local y nube.
   if(typeof x.ab==='number') emp.allergenBest=Math.max(emp.allergenBest||0, x.ab||0);
-  // Cliente IA (Mesa Infinita): contadores al máximo (monótonos) y "última mesa" por fecha.
-  if(x.mi && typeof x.mi==='object'){
-    const m=emp.miStats=emp.miStats||{n:0,sum:0,best:0,pel:0,rsk:0,hn:0};
-    for(const k of ['n','sum','best','pel','rsk','hn']) m[k]=Math.max(m[k]||0, x.mi[k]||0);
-    if((x.mi.ld||'')>(m.ld||'')){ m.ld=x.mi.ld; m.ls=x.mi.ls; m.lf=x.mi.lf; m.lr=x.mi.lr; }
-  }
 }
 
 
@@ -18505,32 +18497,13 @@ function renderDashboard(){
     }
   }
 
+  // El Pase, destacado en el inicio («que esté a la vista, un acceso más
+  // rápido», propietario sep 2026). Se calcula FUERA de la plantilla: un
+  // template anidado dentro rompería el recorte de las guardas de CI.
+  const _paseDashCard = (typeof launchPase==="function") ? _paseCtaHTML(_en) : "";
+
   const _runeSvg = `<svg viewBox="0 0 16 16"><polygon points="8,0 16,8 8,16 0,8" fill="none" stroke="rgba(228,190,104,.55)" stroke-width=".7"/><polygon points="8,3 13,8 8,13 3,8" fill="none" stroke="rgba(228,190,104,.35)" stroke-width=".45"/><circle cx="8" cy="8" r="1" fill="rgba(228,190,104,.6)"/></svg>`;
 
-  // Cliente IA (Mesa Infinita) destacado en el inicio («es una gran adición, debería
-  // destacar», propietario jul 2026). Verde profundo + oro para que no se
-  // confunda con los CTA dorados de sesión. Se calcula FUERA de la plantilla:
-  // un template anidado dentro rompería el recorte de las guardas de CI.
-  // El Pase, al lado del Cliente IA («que esté a la vista, acceso más rápido»,
-  // propietario sep 2026). Verde salvia: es el color del juego, y así no se
-  // confunde ni con el verde profundo del Cliente IA ni con los CTA dorados.
-  const _paseDashCard = (typeof launchPase==='function')
-    ? `<button type="button" class="ri-cta ri-cta-pase" style="margin:0 0 1rem" aria-label="${_en?'Plating pass':'Pase de cocina'}" onclick="_paseGo()">
-      <span class="ri-cta-icon" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4.2"/></svg></span>
-      <span class="ri-cta-text">
-        <span class="ri-cta-top">${_en?'Plating pass':'Pase de cocina'} <span style="font-size:.6rem;background:rgba(122,178,132,.16);border:1px solid rgba(122,178,132,.5);border-radius:99px;padding:.05rem .45rem;vertical-align:2px">${_en?'NEW':'NUEVO'}</span></span>
-        <span class="ri-cta-sub">${_en?'Build the dish and take the allergen off · 30 seconds, no signal needed':'Monta el plato y retira el alérgeno · 30 segundos, sin necesidad de cobertura'}</span>
-      </span>
-    </button>` : '';
-
-  const _miDashCard = (typeof _miLeft==='function') ? (()=>{ const _miL=_miLeft(emp);
-    return `<button type="button" class="ri-cta ri-cta-mesa" style="margin:0 0 1rem" aria-label="${_en?'AI Guest':'Cliente IA'}" onclick="_miGo()">
-      <span class="ri-cta-icon" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align:-.15em;flex:none"><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="4.5"/></svg></span>
-      <span class="ri-cta-text">
-        <span class="ri-cta-top">${_en?'AI Guest':'Cliente IA'} <span style="font-size:.6rem;background:rgba(228,190,104,.16);border:1px solid rgba(228,190,104,.5);border-radius:99px;padding:.05rem .45rem;vertical-align:2px">${_en?'NEW':'NUEVO'}</span></span>
-        <span class="ri-cta-sub">${_en?`Real-time service simulation · a 5★ auditor scores you · ${_miL}/${_MI_DAILY} today`:`Simulación de servicio en tiempo real · te puntúa un auditor 5★ · ${_miL}/${_MI_DAILY} hoy`}</span>
-      </span>
-    </button>`; })() : '';
 
   document.getElementById('appContent').innerHTML=`
 
@@ -18585,8 +18558,8 @@ function renderDashboard(){
       <span class="dash-plating-shine" aria-hidden="true"></span>
     </div>
 
-    <!-- ── LA MESA INFINITA: destacada en el inicio (tarjeta calculada arriba) ── -->
-    ${_paseDashCard}${_miDashCard}
+    <!-- ── EL PASE: destacado en el inicio (tarjeta calculada arriba) ── -->
+    ${_paseDashCard}
 
     <!-- ── HOY: rediseño «una acción dominante» (exploración de diseño jul
          2026). UNA tarjeta pergamino (héroe) con dos estados — Reto del día
@@ -19434,527 +19407,6 @@ function renderExamResults(){
 }
 
 // ═══════ REPASO ═══════
-// ═══ LA MESA INFINITA — Fase 1: el huésped IA por texto ═══════════════════
-// El camarero atiende una mesa simulada: un huésped IA (Edge Function
-// mesa-infinita) conversa anclado a la carta REAL (fuente única: DISHES +
-// DISH_ACTIONS) y, al pedir la cuenta, un auditor IA puntúa el servicio con
-// la seguridad de alérgenos como criterio nº1. La conversación NO se guarda
-// en la nube: solo la nota (XP local) y telemetría agregada.
-// Coste bajo control: 2 sesiones/día por camarero aquí + topes en el servidor
-// (cupo global diario y por usuario en la Edge Function).
-const _MI_FN_URL = SUPA_URL + '/functions/v1/mesa-infinita';
-const _MI_DAILY = 3;          // mesas al día por camarero
-const _MI_MAX_WAITER = 12;    // intervenciones del camarero antes de forzar el cierre (arco completo: comanda → revisita → postre → café → cuenta)
-let _miS = null;              // sesión viva {sc, msgs, lang, started, busy, over}
-
-function _miToday(){ return new Date().toISOString().slice(0,10); }
-function _miLeft(emp){ return (emp && emp.miDay===_miToday()) ? Math.max(0, _MI_DAILY-(emp.miCount||0)) : _MI_DAILY; }
-
-// Carta compacta para la IA — SIEMPRE derivada de la fuente única y del turno
-// actual (mismo criterio horario que el resto de la app: cena desde las 17h).
-function _miMenu(lang, shift){
-  const en = lang==='en';
-  // El turno lo ELIGE el camarero en la antesala (petición del propietario):
-  // 🌙 cena (carta principal, por defecto) o ☀️ almuerzo (terraza). Nunca el
-  // reloj: filtrar por hora enviaba la carta equivocada y el huésped negaba
-  // platos reales de cena («raviolis de espinaca no existe», jul 2026).
-  shift = shift==='a' ? 'a' : 'c';
-  const lines=[];
-  for(const d of DISHES){
-    const sv=(typeof DISH_SERVICE!=='undefined'&&DISH_SERVICE[d.id])||'ambos';
-    if(sv!=='ambos'&&sv!==shift) continue;
-    const dd = en ? getDish(d) : d;
-    const acts=(typeof DISH_ACTIONS!=='undefined'&&DISH_ACTIONS[d.id])||{};
-    const al=(d.allergens||[]).map(a=>{
-      const e=acts[a];
-      const nm=en?(ALLERGEN_ES_TO_EN[a]||a):a;
-      if(e&&e.r===1&&(e.c||e.c_en)) return nm+(en?' (removable: '+(e.c_en||e.c)+')':' (retirable: '+e.c+')');
-      return nm;
-    }).join(', ');
-    lines.push('- '+dd.name+' ['+d.cat+'] · '+(al||(en?'no allergens':'sin alérgenos')));
-  }
-  return lines.join('\n');
-}
-
-// Escenario: personaje + restricción REAL (un alérgeno presente en la carta,
-// o vegetariano). Nada inventado: la restricción siempre existe en los datos.
-// En modo mesa, la HOSTESS entrega una ficha (apellido, pax, ocasión): así el
-// camarero puede usar el nombre del huésped (Estándar #71) con justicia.
-const _MI_SURNAMES=['García','Marrero','Hernández','Weiss','Dupont','Rossi','Smith','Müller','Laurent','Tanaka'];
-function _miScenario(lang, role){
-  const en=lang==='en';
-  const surname=_MI_SURNAMES[Math.floor(Math.random()*_MI_SURNAMES.length)];
-  const trato=Math.random()<0.5?(en?'Mr.':'Sr.'):(en?'Mrs.':'Sra.');
-  const pax=2+Math.floor(Math.random()*3);
-  const occ=[en?'anniversary':'aniversario',en?'birthday':'cumpleaños',en?'business dinner':'cena de negocios',en?'no special occasion':'sin ocasión especial'][Math.floor(Math.random()*4)];
-  if(role==='hostess'){
-    // Dos situaciones: reserva por teléfono (estándares #1-#6) o llegada (#7-#10).
-    const call=Math.random()<0.5;
-    const present=[...new Set(DISHES.flatMap(d=>d.allergens||[]))];
-    const alg=present[Math.floor(Math.random()*present.length)]||'Gluten';
-    const algN=en?(ALLERGEN_ES_TO_EN[alg]||alg):alg;
-    const persona= en
-      ? `${trato} ${surname}, polite but expects 5-star treatment. If asked for details you give them; your phone ends in 4471 (or room 512 if asked).`
-      : `${trato} ${surname}, educado/a pero espera trato de 5 estrellas. Si te piden datos los das; tu teléfono termina en 4471 (o habitación 512 si te la piden).`;
-    const situacion= call
-      ? (en?`You are CALLING to book a table for ${pax} people tomorrow at 8:30 pm (${occ}). One of you has a ${algN} allergy — mention it ONLY if asked about special requirements.`
-           :`LLAMAS por teléfono para reservar mesa para ${pax} personas mañana a las 20:30 (${occ}). Uno de vosotros tiene alergia a ${algN} — menciónala SOLO si te preguntan por peticiones especiales.`)
-      : (en?`You have JUST ARRIVED at the restaurant with a booking under ${surname} for ${pax}. You had to wait a little at the desk. You want to be seated and get the menus.`
-           :`ACABAS DE LLEGAR al restaurante con reserva a nombre de ${surname} para ${pax}. Has tenido que esperar un poco en el atril. Quieres que te sienten y te den las cartas.`);
-    return { persona, situacion, briefing:'',
-             label: call?(en?'Hostess · phone booking':'Hostess · reserva por teléfono'):(en?'Hostess · arrival':'Hostess · llegada'), role:'hostess' };
-  }
-  const P= en ? [
-    'An elegant regular guest of the hotel, warm but demanding; dining alone and enjoys a chat.',
-    'A couple celebrating their anniversary; you speak for both and want a perfect evening.',
-    'A business guest, polite but time-conscious: a great dinner without a long evening.',
-    'A curious first-time visitor to the Canary Islands who loves local produce.',
-    'A parent dining with their teenage daughter; it is her birthday and he wants safe choices and something special for dessert.'
-  ] : [
-    'Señora mayor elegante, clienta habitual del hotel, cercana pero exigente; cena sola y le gusta conversar.',
-    'Pareja celebrando su aniversario; llevas tú la voz y quieres una noche perfecta.',
-    'Huésped de negocios, educado pero con el tiempo justo: cenar muy bien sin sobremesa larga.',
-    'Turista curioso, primera vez en Canarias, le encanta el producto local.',
-    'Padre con su hija adolescente; es el cumpleaños de ella y quiere opciones seguras y algo especial de postre.'
-  ];
-  // COHERENCIA ficha ↔ personaje (bug real jul 2026: la ficha decía «sin
-  // ocasión especial» y el huésped hablaba de su aniversario): la ocasión,
-  // los comensales y el trato se DERIVAN del personaje elegido, no al azar.
-  const pIdx=Math.floor(Math.random()*P.length);
-  const occM=[en?'no special occasion':'sin ocasión especial', en?'anniversary':'aniversario', en?'business dinner':'cena de negocios', en?'no special occasion':'sin ocasión especial', en?'birthday':'cumpleaños'][pIdx];
-  const paxM=[1,2,2+Math.floor(Math.random()*3),2,2][pIdx];
-  const tratoM= pIdx===0 ? (en?'Mrs.':'Sra.') : pIdx===4 ? (en?'Mr.':'Sr.') : trato;
-  const present=[...new Set(DISHES.flatMap(d=>d.allergens||[]))];
-  // VARIEDAD (bug real: dos mesas seguidas con la misma alergia): la
-  // restricción de la sesión anterior queda vetada en esta — ni el mismo
-  // alérgeno dos veces, ni dos vegetarianos seguidos.
-  const _emp=(typeof getEmp==='function'&&currentUser)?getEmp(currentUser):null;
-  const _last=_emp&&_emp.miLastScn||null;
-  let veg=Math.random()<0.25;
-  if(veg&&_last==='veg') veg=false;
-  const _pool=_last&&present.length>1?present.filter(a=>a!==_last):present;
-  const alg=_pool[Math.floor(Math.random()*_pool.length)]||'Gluten';
-  if(_emp) _emp.miLastScn=veg?'veg':alg;
-  const algN=en?(ALLERGEN_ES_TO_EN[alg]||alg):alg;
-  const situacion= veg
-    ? (en?'You are strictly vegetarian (no meat, no fish). You want a couple of starters and a main, and you like to ask before deciding.'
-         :'Eres estrictamente vegetariano/a (ni carne ni pescado). Quieres un par de entrantes y un principal, y te gusta preguntar antes de decidir.')
-    : (en?'You have a serious '+algN+' allergy. You want '+(paxM===1?'a couple of starters and a main':'to share two starters and order a main')+', but you accept nothing until you are sure it is safe for you.'
-         :'Tienes una alergia seria a '+algN+'. Quieres '+(paxM===1?'un par de entrantes y un principal':'compartir dos entrantes y pedir un principal')+', pero no aceptas nada sin estar seguro de que es seguro para ti.');
-  // Aperturas LQA: el huésped deja hueco para agua, vino, postre y café —
-  // así el auditor puede observar los estándares de venta sugerente.
-  const lqaHook = en
-    ? ' During the evening, react naturally if offered water, wine, dessert or coffee — and wait to be offered dessert before asking for the bill.'
-    : ' Durante la velada, reacciona con naturalidad si te ofrecen agua, vino, postre o café — y espera a que te ofrezcan el postre antes de pedir la cuenta.';
-  const mesa=1+Math.floor(Math.random()*20);
-  // Ficha COMPLETA de la hostess (petición del propietario): preguntar por
-  // alergias es obligación de la hostess, así que la restricción SIEMPRE va
-  // en la ficha; a veces también una preferencia (sin cerdo / sin alcohol),
-  // que el huésped respeta de verdad en la conversación.
-  const _prefRoll=Math.random();
-  let pref=_prefRoll<0.25?'cerdo':_prefRoll<0.5?'alcohol':null;
-  if(veg&&pref==='cerdo') pref='alcohol';   // «vegetariano · sin cerdo» sería redundante
-  const prefHook= pref==='cerdo'
-    ? (en?' Also, your table does not eat pork — politely decline any dish or garnish with pork (ham, chistorra, bacon…).'
-         :' Además, en tu mesa no se come cerdo — rechaza con amabilidad cualquier plato o guarnición con cerdo (jamón, chistorra, tocineta…).')
-    : pref==='alcohol'
-    ? (en?' Also, no one at your table drinks alcohol — if offered wine, decline politely and ask for an alcohol-free alternative.'
-         :' Además, en tu mesa no se bebe alcohol — si te ofrecen vino, recházalo con amabilidad y pide una alternativa sin alcohol.')
-    : '';
-  // MESA VIVA (jul 2026): humor inicial que EVOLUCIONA con el servicio y, en
-  // el 70% de las mesas, un imprevisto de sala que el huésped saca él mismo
-  // en el momento indicado. El auditor evalúa la gestión de ambos.
-  const _MI_HUMORES = en ? [
-    'hungry and slightly impatient',
-    'celebrating — expansive and chatty',
-    'tired from the trip, a person of few words at first',
-    'curious — asks about everything',
-    'indecisive — struggles to choose and appreciates guidance'
-  ] : [
-    'con hambre y algo impaciente',
-    'de celebración, expansivo y hablador',
-    'cansado del viaje, de pocas palabras al principio',
-    'curioso, pregunta por todo',
-    'indeciso, le cuesta elegir y agradece que le guíen'
-  ];
-  const humor=_MI_HUMORES[Math.floor(Math.random()*_MI_HUMORES.length)];
-  const _MI_EVENTOS = en ? [
-    '(right after the order is closed) a glass of water spills on the tablecloth',
-    '(when the dishes arrive) one dish arrives lukewarm and you mention it',
-    '(mid-meal) a fork falls to the floor and you need a clean one',
-    '(during the meal) the next table is very loud and it bothers you',
-    '(at any point) you ask the waiter to take a photo of the table',
-    '(when dessert is offered) you suddenly worry about nuts in the desserts and ask them to double-check'
-  ] : [
-    '(justo tras cerrar la comanda) se os derrama una copa de agua sobre el mantel',
-    '(al llegar los platos) uno de los platos llega tibio y lo comentáis',
-    '(a mitad de comida) un tenedor se cae al suelo y necesitáis otro limpio',
-    '(durante la comida) la mesa de al lado hace mucho ruido y os molesta',
-    '(en cualquier momento) pedís al camarero que os haga una foto de la mesa',
-    '(cuando os ofrezcan postre) os entra la duda de los frutos secos en los postres y pedís que lo confirme'
-  ];
-  const evento = Math.random()<0.7 ? _MI_EVENTOS[Math.floor(Math.random()*_MI_EVENTOS.length)] : null;
-  const vivoHook = (en
-    ? ` YOUR STARTING MOOD: ${humor}.`
-    : ` TU HUMOR INICIAL: ${humor}.`)
-    + (evento ? (en
-    ? ` UNEXPECTED INCIDENT you must bring up yourself, once, at the moment indicated: ${evento}.`
-    : ` IMPREVISTO que debes sacar tú, una sola vez, en el momento indicado: ${evento}.`) : '');
-  const restr= veg ? (en?'Vegetarian':'Vegetariano') : (en?algN+' allergy':'Alergia: '+algN);
-  const prefTxt= pref==='cerdo' ? (en?' · no pork':' · no comen cerdo') : pref==='alcohol' ? (en?' · no alcohol':' · no beben alcohol') : '';
-  const briefing= en
-    ? `Table ${mesa} · ${tratoM} ${surname} · ${paxM} ${paxM===1?'guest':'guests'} · ${occM} · ${restr}${prefTxt}`
-    : `Mesa ${mesa} · ${tratoM} ${surname} · ${paxM} pax · ${occM} · ${restr}${prefTxt}`;
-  return { persona:P[pIdx]+(en?` Your surname is ${surname}.`:` Te apellidas ${surname}.`),
-           situacion: situacion + lqaHook + prefHook + vivoHook,
-           briefing,
-           label: veg?(en?'Vegetarian guest':'Huésped vegetariano'):(en?algN+' allergy':'Alergia: '+algN), role:'mesa' };
-}
-
-// Estándares LQA observables en una conversación de mesa (subconjunto de
-// LQA_STANDARDS por id): los de tiempos físicos (bandeja, minutos, montaje)
-// no se pueden auditar por chat y se excluyen. El auditor cita el nº real.
-const _MI_LQA_IDS = [13,15,16,19,20,21,22,23,25,34,36,40,42,71,73,76,78];
-// Hostess: estándares de reserva (#1-#6) y llegada (#7-#10) + oficio común.
-const _MI_LQA_IDS_HOSTESS = [1,2,3,4,5,6,7,8,9,10,70,71,76,78];
-function _miLqa(lang, role){
-  if(typeof LQA_STANDARDS==='undefined') return '';
-  const en = lang==='en';
-  const ids = role==='hostess' ? _MI_LQA_IDS_HOSTESS : _MI_LQA_IDS;
-  return LQA_STANDARDS.filter(s=>ids.includes(s.id))
-    .map(s=>'#'+s.id+' '+(en?(s.std_en||s.std):s.std)).join('\n');
-}
-
-// Entrada desde fuera de Aprender (tarjeta del inicio): fija la subpestaña y
-// el resaltado del nav ANTES de pintar la antesala — el render instantáneo de
-// showTab evita que el _doRender diferido (120 ms) pise la antesala.
-function _miGo(){ _subTab.aprender='repaso'; showTab('aprender', true); renderMesaLobby(); }
-// Turno elegido en la antesala: 🌙 cena (carta principal, por defecto) o
-// ☀️ almuerzo (terraza). Decide qué carta viaja al huésped y al auditor.
-let _miShift='c';
-// Antesala: explica el modo, muestra las mesas restantes y deja elegir idioma.
-function renderMesaLobby(){
-  const emp=getEmp(currentUser); const _en=LANG==='en'; const left=_miLeft(emp);
-  const _shBtn=(k,txt)=>`<button type="button" onclick="_miShift='${k}';renderMesaLobby()" aria-pressed="${_miShift===k?'true':'false'}" style="flex:1;padding:.55rem .6rem;min-height:44px;background:${_miShift===k?'rgba(196,154,60,.22)':'transparent'};border:1.5px solid rgba(196,154,60,${_miShift===k?'.8':'.35'});border-radius:var(--r2);font-family:'Quicksand',sans-serif;font-size:.78rem;font-weight:700;color:${_miShift===k?'var(--gold-deep)':'var(--parch3)'};cursor:pointer">${txt}</button>`;
-  document.getElementById('appContent').innerHTML=`<div class="sup-wrap" style="max-width:560px;margin:0 auto">
-    <button type="button" class="exam-exit" onclick="_subTab.aprender='repaso';showTab('aprender')" aria-label="${_en?'Back':'Volver'}">←</button>
-    <div style="text-align:center;padding:1.2rem .5rem .4rem">
-      <div style="font-size:2.4rem">🍽️</div>
-      <div style="font-family:'Cinzel',serif;font-size:1.35rem;color:var(--parchment);margin:.3rem 0">${_en?'AI Guest':'Cliente IA'}</div>
-      <p style="font-size:.85rem;color:var(--parch3);line-height:1.5;max-width:42ch;margin:0 auto .9rem">${_en
-        ?'A guest sits at your table. Serve them by chat: listen, recommend from the real menu and keep their allergies safe. When you close the order, a 5-star auditor scores your service.'
-        :'Un huésped se sienta en tu mesa. Atiéndelo por chat: escucha, recomienda desde la carta real y cuida sus alergias. Al cerrar la comanda, un auditor 5★ puntúa tu servicio.'}</p>
-      ${(typeof _miVoiceSupported==='function'&&_miVoiceSupported())?`<div style="font-family:'DM Mono',monospace;font-size:.68rem;color:var(--gold-deep);margin-bottom:.5rem">🎙️ ${_en?'NEW: turn on voice mode at the table — speak and listen to your guest.':'NUEVO: activa el modo voz en la mesa — habla y escucha a tu cliente.'}</div>`:''}
-      <div style="font-family:'DM Mono',monospace;font-size:.72rem;color:${left>0?'var(--gold-deep)':'#a04848'};margin-bottom:.8rem">${_en?'Tables left today':'Mesas disponibles hoy'}: ${left}/${_MI_DAILY}</div>
-      <!-- Turno del servicio: decide la carta que conoce el huésped -->
-      <div style="display:flex;gap:.5rem;margin-bottom:.9rem" role="group" aria-label="${_en?'Service shift':'Turno del servicio'}">
-        ${_shBtn('c','🌙 '+(_en?'Dinner':'Cena'))}
-        ${_shBtn('a','☀️ '+(_en?'Lunch':'Almuerzo'))}
-      </div>
-      <button class="btn-primary" style="width:100%;margin-bottom:.5rem" ${left<=0?'disabled':''} onclick="startMesaInfinita(false,'mesa')">🍽️ ${_en?'Serve a table (waiter)':'Atender una mesa (camarero)'}</button>
-      <button class="btn-primary" style="width:100%;margin-bottom:.5rem;background:linear-gradient(135deg,#7a5a8a,#5a4a7a)" ${left<=0?'disabled':''} onclick="startMesaInfinita(false,'hostess')">🛎️ ${_en?'Reception (hostess)':'La Recepción (hostess)'} <span style="font-size:.6rem;background:rgba(255,255,255,.2);border-radius:99px;padding:.05rem .45rem;vertical-align:2px">${_en?'NEW':'NUEVO'}</span></button>
-      <button style="width:100%;padding:.65rem;background:transparent;border:1.5px solid rgba(196,154,60,.55);border-radius:var(--r2);font-family:'Quicksand',sans-serif;font-size:.8rem;color:var(--gold-deep);cursor:pointer" ${left<=0?'disabled':''} onclick="startMesaInfinita(true,'mesa')">🇬🇧 ${_en?'English-speaking guest':'Huésped en inglés'}</button>
-      <p style="font-size:.68rem;color:var(--parch3);opacity:.75;margin-top:.9rem">${_en?'The guest is an AI and may make mistakes — the menu is the truth.':'El huésped es una IA y puede equivocarse — la carta es la verdad.'}</p>
-    </div></div>`;
-}
-
-function startMesaInfinita(guestEn, role){
-  const emp=getEmp(currentUser); const _en=LANG==='en';
-  role = role==='hostess' ? 'hostess' : 'mesa';
-  if(navigator.onLine===false){ showToast(_en?'You need a connection to serve the table.':'Necesitas conexión para atender la mesa.','warning'); return; }
-  if(_miLeft(emp)<=0){ showToast(_en?'You have served your tables for today — come back tomorrow.':'Ya has atendido tus mesas de hoy — vuelve mañana.','warning'); return; }
-  const lang = guestEn ? 'en' : (LANG==='en'?'en':'es');
-  _miS={ sc:_miScenario(lang, role), msgs:[], lang, role, shift:(_miShift==='a'?'a':'c'), started:false, busy:false, over:false };
-  _miV={ on:false, rec:null, listening:false };   // cada mesa arranca en modo texto
-  if(typeof track==='function') track('mesa.start',{lang, role});
-  _miRender();
-  _miCallTurn(true);
-}
-
-// ═══ FASE 2: MODO VOZ (Web Speech API, todo en el dispositivo) ═══
-// STT: SpeechRecognition (webkit en Safari/iOS) transcribe lo que dice el
-// camarero; al callar, se envía solo (manos libres). TTS: speechSynthesis lee
-// las respuestas del cliente IA. Cero coste de API extra, y el audio sigue el
-// enrutado del sistema — funciona con bluetooth, coche o altavoces.
-let _miV={ on:false, rec:null, listening:false };
-function _miVoiceSupported(){
-  return !!(window.SpeechRecognition||window.webkitSpeechRecognition) && ('speechSynthesis' in window);
-}
-function _miPickVoice(lang){
-  try{
-    const vs=speechSynthesis.getVoices()||[];
-    const pref= lang==='en' ? ['en-gb','en-us','en'] : ['es-es','es-mx','es'];
-    for(const p of pref){
-      const v=vs.find(v=>v.lang&&v.lang.toLowerCase().startsWith(p)&&v.localService)
-           || vs.find(v=>v.lang&&v.lang.toLowerCase().startsWith(p));
-      if(v) return v;
-    }
-  }catch(_){ }
-  return null;
-}
-function _miSpeak(text){
-  if(!_miV.on||!('speechSynthesis' in window)) return;
-  try{
-    speechSynthesis.cancel();
-    // El modelo a veces decora con markdown (*cursivas*, guiones) y el TTS
-    // leía «asterisco» en voz alta — se limpia todo antes de hablar.
-    const clean=String(text||'').replace(/[*_#`~]+/g,' ').replace(/\s{2,}/g,' ').trim();
-    const u=new SpeechSynthesisUtterance(clean);
-    u.lang=(_miS&&_miS.lang==='en')?'en-GB':'es-ES';
-    const v=_miPickVoice(_miS?_miS.lang:'es'); if(v) u.voice=v;
-    u.rate=1.04;
-    speechSynthesis.speak(u);
-  }catch(_){ }
-}
-function _miSpeakStop(){ try{ if('speechSynthesis' in window) speechSynthesis.cancel(); }catch(_){ } }
-function _miRecStop(){ try{ if(_miV.rec) _miV.rec.stop(); }catch(_){ } _miV.listening=false; }
-function _miVoiceToggle(){
-  _miV.on=!_miV.on;
-  if(!_miV.on){ _miSpeakStop(); _miRecStop(); }
-  const tb=document.getElementById('miVoiceBtn');
-  if(tb){ tb.style.background=_miV.on?'rgba(196,154,60,.25)':'transparent'; tb.setAttribute('aria-pressed',String(_miV.on)); }
-  const mb=document.getElementById('miMicBtn'); if(mb) mb.style.display=_miV.on?'':'none';
-  _miMicUI();
-  if(_miV.on){
-    try{ speechSynthesis.getVoices(); }catch(_){ }   // iOS: precalienta la lista de voces
-    if(typeof track==='function') track('mesa.voice',{role:_miS?_miS.role:''});
-    showToast(LANG==='en'?'Voice mode on — tap the mic and speak; replies are read aloud.':'Modo voz activado — toca el micro y habla; las respuestas se leen en voz alta.','info',4200);
-  }
-}
-function _miMicUI(){
-  const b=document.getElementById('miMicBtn'); if(!b) return;
-  b.classList.toggle('mi-mic-live',_miV.listening);
-  b.textContent=_miV.listening?'⏺':'🎙️';
-}
-function _miMicTap(){
-  if(!_miV.on||!_miS||_miS.over) return;
-  if(_miV.listening){ _miRecStop(); _miMicUI(); return; }
-  const SR=window.SpeechRecognition||window.webkitSpeechRecognition; if(!SR) return;
-  _miSpeakStop();   // que el micro no se escuche a sí mismo
-  const r=new SR(); _miV.rec=r;
-  r.lang=(_miS.lang==='en')?'en-GB':'es-ES';
-  r.interimResults=true; r.continuous=false; r.maxAlternatives=1;
-  const inp=document.getElementById('miInput');
-  r.onresult=(e)=>{ let t=''; for(const res of e.results) t+=res[0].transcript; if(inp) inp.value=t; };
-  r.onerror=()=>{ _miV.listening=false; _miMicUI(); };
-  r.onend=()=>{
-    _miV.listening=false; _miMicUI();
-    // La transcripción se QUEDA en el cajón para revisarla — el dictado se
-    // equivoca con nombres de carta («niçoise», «raviolis de espinaca») y
-    // enviarla sola mandaba errores (propietario jul 2026). Envía el camarero.
-    if(inp&&inp.value.trim()){ try{ inp.focus(); }catch(_){ } }
-  };
-  _miV.listening=true; _miMicUI();
-  try{ r.start(); }catch(_){ _miV.listening=false; _miMicUI(); }
-}
-
-function _miRender(){
-  const _en=LANG==='en';
-  document.getElementById('appContent').innerHTML=`<div class="sup-wrap" style="max-width:640px;margin:0 auto;display:flex;flex-direction:column;min-height:70vh">
-    <div style="display:flex;align-items:center;gap:.6rem;margin-bottom:.6rem">
-      <button type="button" class="exam-exit" onclick="_miExit()" aria-label="${_en?'Leave table':'Abandonar mesa'}">←</button>
-      <div style="flex:1">
-        <div style="font-family:'Cinzel',serif;font-size:1.02rem;color:var(--parchment)">${_miS.role==='hostess'?'🛎️':'🍽️'} ${_miS.role==='hostess'?(_en?'The Reception':'La Recepción'):(_en?'AI Guest':'Cliente IA')}</div>
-        <div style="font-family:'DM Mono',monospace;font-size:.66rem;color:var(--gold-deep)">${escapeHTML(_miS.sc.label)} · ${_miS.shift==='a'?'☀️':'🌙'}</div>
-      </div>
-      ${_miVoiceSupported()?`<button type="button" id="miVoiceBtn" onclick="_miVoiceToggle()" aria-pressed="${_miV.on?'true':'false'}" aria-label="${_en?'Voice mode':'Modo voz'}" title="${_en?'Voice mode':'Modo voz'}" style="padding:.5rem .65rem;min-height:44px;background:${_miV.on?'rgba(196,154,60,.25)':'transparent'};border:1.5px solid rgba(196,154,60,.55);border-radius:var(--r2);font-size:.95rem;cursor:pointer">🎙️</button>`:''}
-      <button type="button" onclick="_miEnd()" style="padding:.5rem .8rem;background:rgba(196,154,60,.14);border:1.5px solid rgba(196,154,60,.55);border-radius:var(--r2);font-family:'Quicksand',sans-serif;font-size:.74rem;font-weight:700;color:var(--gold-deep);cursor:pointer">🧾 ${_en?'Close table':'Cerrar mesa'}</button>
-    </div>
-    <div id="miMsgs" style="flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:.5rem;padding:.25rem 0 .75rem"></div>
-    <div style="display:flex;gap:.5rem;align-items:flex-end">
-      <textarea id="miInput" rows="2" placeholder="${_en?'Speak to your guest…':'Habla con tu huésped…'}" style="flex:1;resize:none;padding:.65rem .8rem;border:1.5px solid var(--ink3);border-radius:var(--r2);font-family:'Quicksand',sans-serif;font-size:16px;background:rgba(255,255,255,.06);color:var(--parchment)" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();_miSend();}"></textarea>
-      <button type="button" id="miMicBtn" onclick="_miMicTap()" aria-label="${_en?'Hold a conversation by voice':'Hablar por voz'}" style="display:${_miV.on?'':'none'};padding:.7rem .85rem;min-height:44px;background:rgba(196,154,60,.14);border:1.5px solid rgba(196,154,60,.55);border-radius:var(--r2);font-size:1rem;cursor:pointer">🎙️</button>
-      <button type="button" id="miSendBtn" onclick="_miSend()" class="btn-primary" style="padding:.7rem 1rem;min-height:44px">➤</button>
-    </div>
-  </div>`;
-  _miRenderMsgs();
-}
-
-function _miRenderMsgs(){
-  const box=document.getElementById('miMsgs'); if(!box||!_miS) return;
-  const _en=LANG==='en';
-  const waiterN=_miS.msgs.filter(m=>m.role==='waiter').length;
-  // Ficha de la hostess: fija arriba — el camarero CONOCE al huésped (nombre,
-  // pax, ocasión) antes de acercarse, como en el pase real.
-  const fichaHtml=_miS.sc.briefing?`<div style="align-self:stretch;background:rgba(122,90,138,.12);border:1px dashed rgba(122,90,138,.5);border-radius:10px;padding:.5rem .7rem;font-family:'DM Mono',monospace;font-size:.68rem;color:var(--parchment)">🛎️ ${_en?'Hostess briefing':'Ficha de la hostess'}: ${escapeHTML(_miS.sc.briefing)}</div>`:'';
-  // Índice del último mensaje del huésped: durante el "tecleo" (reveal) solo
-  // se muestran sus primeras burbujas, el resto va apareciendo con retardo.
-  let lastGuestIdx=-1;
-  for(let i=_miS.msgs.length-1;i>=0;i--) if(_miS.msgs[i].role==='guest'){ lastGuestIdx=i; break; }
-  box.innerHTML=fichaHtml+_miS.msgs.map((m,i)=>{
-    if(m.role!=='guest')
-      return `<div style="align-self:flex-end;max-width:85%;background:rgba(196,154,60,.16);border:1px solid rgba(196,154,60,.4);border-radius:14px 14px 4px 14px;padding:.6rem .8rem;font-size:.85rem;color:var(--parchment);line-height:1.45">${escapeHTML(m.text)}</div>`;
-    // El huésped escribe como una persona: mensajes largos en 2-3 burbujas.
-    let chunks=_miBubbles(m.text);
-    if(_miS.reveal && i===lastGuestIdx) chunks=chunks.slice(0,_miS.reveal.n);
-    return chunks.map(c=>`<div style="align-self:flex-start;max-width:85%;background:rgba(255,255,255,.08);border:1px solid var(--ink3);border-radius:14px 14px 14px 4px;padding:.6rem .8rem;font-size:.85rem;color:var(--parchment);line-height:1.45">${escapeHTML(c)}</div>`).join('');
-  }).join('')
-  + (_miS.busy?`<div style="align-self:flex-start;font-family:'DM Mono',monospace;font-size:.7rem;color:${_miS.evaluating?'var(--gold-deep)':'var(--parch3)'};padding:.2rem .4rem">${_miS.evaluating?(_en?'🧾 the auditor is reviewing your service… (~20 s)':'🧾 el auditor está revisando tu servicio… (~20 s)'):(_miS.reveal?(_en?'✍️ typing…':'✍️ escribiendo…'):(_en?'the guest is thinking…':'el huésped piensa…'))}</div>`:'')
-  + (waiterN>=_MI_MAX_WAITER&&!_miS.over?`<div style="align-self:center;font-size:.72rem;color:var(--gold-deep);padding:.3rem">${_en?'The evening winds down — close the table.':'La velada se acaba — cierra la mesa.'}</div>`:'');
-  const inp=document.getElementById('miInput'), btn=document.getElementById('miSendBtn');
-  const lock=_miS.busy||_miS.over||waiterN>=_MI_MAX_WAITER;
-  if(inp) inp.disabled=lock; if(btn) btn.disabled=lock;
-  box.scrollTop=box.scrollHeight;
-}
-
-// ── Ritmo humano del chat (F3 punto 6): el troceo en burbujas y el tecleo
-// son SOLO de pantalla — _miS.msgs guarda el mensaje entero de una vez, así
-// el historial del servidor no cambia (la API exige turnos alternados). ──
-// Sin lookbehind en las regex: rompería el parseo entero en iOS Safari viejo.
-function _miBubbles(t){
-  t=String(t||'').trim();
-  if(t.length<110) return [t];
-  const fr=t.match(/[^.!?…]+[.!?…]+["»)]*\s*/g)||[];
-  const rest=t.slice(fr.join('').length);
-  if(rest.trim()) fr.push(rest);
-  if(fr.length<2) return [t];
-  const out=[]; let cur='';
-  for(const f of fr){
-    if(cur && (cur+f).length>150 && out.length<2){ out.push(cur.trim()); cur=f; }
-    else cur+=f;
-  }
-  if(cur.trim()) out.push(cur.trim());
-  return out;
-}
-function _miRevealGuest(text){
-  if(!_miS) return;
-  _miS.msgs.push({role:'guest',text});
-  if(_miV.on) _miSpeak(text);   // la voz lee el mensaje completo desde el principio
-  const chunks=_miBubbles(text);
-  _miS.reveal={n:0,total:chunks.length,chunks};
-  _miS.revealing=true;
-  const step=()=>{
-    if(!_miS||!_miS.reveal) return;   // la mesa se cerró o se abandonó
-    _miS.reveal.n++;
-    if(_miS.reveal.n>=_miS.reveal.total){
-      _miS.reveal=null; _miS.revealing=false; _miS.busy=false; _miRenderMsgs();
-      // Cierre encolado durante el tecleo: se ejecuta ahora, nunca se pierde.
-      if(_miS.closeQueued && !_miS.over){ _miS.closeQueued=false; _miEnd(); }
-      return;
-    }
-    _miRenderMsgs();
-    const next=_miS.reveal.chunks[_miS.reveal.n];
-    setTimeout(step, Math.min(2200, 420+next.length*14));
-  };
-  setTimeout(step, Math.min(1800, 380+chunks[0].length*12));
-}
-
-function _miFriendly(code){
-  const _en=LANG==='en';
-  if(code==='falta_api_key') return _en?'The simulator is not activated yet.':'El simulador aún no está activado por el administrador.';
-  if(code==='limite_usuario') return _en?'You have used up your tables for today.':'Has agotado tus mesas de hoy.';
-  if(code==='limite_diario') return _en?'The team has used today\'s full quota — back tomorrow.':'El equipo ha agotado el cupo de hoy — mañana más.';
-  return _en?'Could not reach the service. Try again.':'No se pudo contactar con el servicio. Inténtalo de nuevo.';
-}
-
-async function _miCallTurn(start){
-  if(!_miS||_miS.busy) return;
-  _miS.busy=true; _miRenderMsgs();
-  // Tiempo máximo: un turno nunca deja la mesa colgada (45 s y se avisa).
-  const _ac = (typeof AbortController!=='undefined') ? new AbortController() : null;
-  const _tm = _ac ? setTimeout(()=>{ try{_ac.abort();}catch(_){} }, 45000) : null;
-  try{
-    const res=await fetch(_MI_FN_URL,{ method:'POST', signal:_ac?_ac.signal:undefined,
-      headers:{'Content-Type':'application/json','apikey':SUPA_KEY,'Authorization':'Bearer '+SUPA_KEY},
-      body:JSON.stringify({ mode:'turn', startSession:!!start, user:currentUser, lang:_miS.lang, role:_miS.role,
-        scenario:{persona:_miS.sc.persona,situacion:_miS.sc.situacion,briefing:_miS.sc.briefing||''}, menu:_miS.role==='hostess'?'':_miMenu(_miS.lang,_miS.shift), messages:_miS.msgs }) });
-    const j=await res.json().catch(()=>({}));
-    if(!res.ok){ showToast(_miFriendly(j.error),'warning',6000); if(!_miS.started){ renderMesaLobby(); _miS=null; } return; }
-    _miRevealGuest(String(j.text||''));   // ritmo humano: burbujas con tecleo (y voz si toca)
-    if(start&&!_miS.started){
-      _miS.started=true;
-      const emp=getEmp(currentUser);
-      if(emp.miDay!==_miToday()){ emp.miDay=_miToday(); emp.miCount=0; }
-      emp.miCount=(emp.miCount||0)+1; saveDB();
-    }
-  }catch(_){ showToast(_miFriendly('red'),'warning',6000); if(_miS&&!_miS.started){ renderMesaLobby(); _miS=null; return; } }
-  finally{
-    if(_tm) clearTimeout(_tm);
-    if(_miS){
-      if(_miS.revealing){
-        // El huésped está "escribiendo" (reveal): busy sigue en true y el
-        // cierre encolado lo procesará el final del tecleo — no aquí.
-        _miRenderMsgs();
-      } else {
-        _miS.busy=false; _miRenderMsgs();
-        // Si el camarero pidió cerrar la mesa mientras el huésped respondía,
-        // se cierra ahora — el toque nunca se pierde en silencio.
-        if(_miS.closeQueued && !_miS.over){ _miS.closeQueued=false; _miEnd(); }
-      }
-    }
-  }
-}
-
-function _miSend(){
-  if(!_miS||_miS.busy||_miS.over) return;
-  const inp=document.getElementById('miInput'); if(!inp) return;
-  const txt=(inp.value||'').trim(); if(!txt) return;
-  if(_miS.msgs.filter(m=>m.role==='waiter').length>=_MI_MAX_WAITER) return;
-  inp.value='';
-  _miS.msgs.push({role:'waiter',text:txt.slice(0,700)});
-  _miCallTurn(false);
-}
-
-function _miExit(){
-  const _en=LANG==='en';
-  if(_miS&&_miS.started&&!_miS.over&&!confirm(_en?'Leave the table? The session will be lost.':'¿Abandonar la mesa? Se perderá la sesión.')) return;
-  _miSpeakStop(); _miRecStop(); _miV.on=false;   // nada sigue sonando al salir
-  _miS=null; _subTab.aprender='repaso'; showTab('aprender');
-}
-
-async function _miEnd(){
-  if(!_miS||_miS.over) return;
-  const _en=LANG==='en';
-  if(_miS.busy){
-    // El huésped aún responde: se ENCOLA el cierre en vez de ignorar el toque.
-    if(!_miS.closeQueued){ _miS.closeQueued=true; showToast(_en?'Closing the table as soon as the guest finishes…':'Cerrando la mesa en cuanto termine el huésped…','info',3500); }
-    return;
-  }
-  if(_miS.msgs.filter(m=>m.role==='waiter').length<2){ _miExit(); return; }
-  _miSpeakStop(); _miRecStop();   // la mesa se cierra: micro y voz en silencio
-  _miS.busy=true; _miS.evaluating=true; _miRenderMsgs();
-  const _ac=(typeof AbortController!=='undefined')?new AbortController():null;
-  const _tm=_ac?setTimeout(()=>{ try{_ac.abort();}catch(_){} },90000):null;
-  try{
-    const res=await fetch(_MI_FN_URL,{ method:'POST', signal:_ac?_ac.signal:undefined,
-      headers:{'Content-Type':'application/json','apikey':SUPA_KEY,'Authorization':'Bearer '+SUPA_KEY},
-      body:JSON.stringify({ mode:'eval', user:currentUser, lang:_miS.lang, role:_miS.role,
-        scenario:{persona:_miS.sc.persona,situacion:_miS.sc.situacion,briefing:_miS.sc.briefing||''}, menu:_miS.role==='hostess'?'':_miMenu(_miS.lang,_miS.shift), lqa:_miLqa(_miS.lang,_miS.role), messages:_miS.msgs }) });
-    const j=await res.json().catch(()=>({}));
-    if(!res.ok||!j.eval){ _miS.busy=false; _miS.evaluating=false; _miRenderMsgs(); showToast(_miFriendly(j.error),'warning',7000); return; }
-    _miS.over=true; _miS.busy=false; _miS.evaluating=false;
-    if(_tm) clearTimeout(_tm);
-    const ev=j.eval;
-    const xp= ev.score>=85?50: ev.score>=70?35: ev.score>=50?20: 10;
-    awardXP(xp,(_en?'AI Guest':'Cliente IA')+' ('+ev.score+'%)');
-    if(typeof track==='function') track('mesa.finish',{score:ev.score,safety:ev.safety,turns:_miS.msgs.length,role:_miS.role});
-    // Resultado → panel del supervisor: agregado compacto en emp.miStats,
-    // sincronizado por extras.mi (merge monótono, misma fuente única).
-    { const _e=getEmp(currentUser);
-      const m=_e.miStats=_e.miStats||{n:0,sum:0,best:0,pel:0,rsk:0,hn:0};
-      m.n=(m.n||0)+1; m.sum=(m.sum||0)+ev.score; m.best=Math.max(m.best||0,ev.score);
-      if(ev.safety==='peligro') m.pel=(m.pel||0)+1; else if(ev.safety==='riesgo') m.rsk=(m.rsk||0)+1;
-      if(_miS.role==='hostess') m.hn=(m.hn||0)+1;
-      m.ld=_miToday(); m.ls=ev.score; m.lf=ev.safety; m.lr=_miS.role;
-      saveDB(); }
-    const sCol= ev.safety==='ok'?'var(--green-deep)': ev.safety==='riesgo'?'#b8862a':'#a04848';
-    const sTxt= ev.safety==='ok'?(_en?'Allergen-safe service':'Servicio seguro en alérgenos')
-              : ev.safety==='riesgo'?(_en?'Allergen risk — review':'Riesgo de alérgenos — repasa')
-              : (_en?'DANGEROUS recommendation':'Recomendación PELIGROSA');
-    document.getElementById('appContent').innerHTML=`<div class="sup-wrap" style="max-width:560px;margin:0 auto;text-align:center;padding:1.2rem .5rem">
-      <div style="font-family:'Cinzel',serif;font-size:1.25rem;color:var(--parchment);margin-bottom:.4rem">${_en?'Table closed':'Mesa cerrada'}</div>
-      <div class="results-ring" style="margin:1rem auto"><div class="results-pct">${ev.score}<sup>%</sup></div></div>
-      <div style="font-family:'DM Mono',monospace;font-size:.72rem;color:${sCol};margin-bottom:.6rem">${sTxt}</div>
-      <p style="font-size:.85rem;color:var(--parchment);line-height:1.5;max-width:46ch;margin:0 auto .9rem">${escapeHTML(ev.resumen||'')}</p>
-      ${(ev.aciertos||[]).length?`<div style="text-align:left;background:rgba(90,138,94,.08);border:1px solid rgba(90,138,94,.25);border-radius:var(--r2);padding:.7rem .9rem;margin-bottom:.6rem">${ev.aciertos.map(a=>`<div style="font-size:.78rem;color:var(--parchment);margin:.2rem 0">✓ ${escapeHTML(a)}</div>`).join('')}</div>`:''}
-      ${(ev.mejoras||[]).length?`<div style="text-align:left;background:rgba(196,112,104,.07);border:1px solid rgba(196,112,104,.22);border-radius:var(--r2);padding:.7rem .9rem;margin-bottom:1rem">${ev.mejoras.map(a=>`<div style="font-size:.78rem;color:var(--parchment);margin:.2rem 0">→ ${escapeHTML(a)}</div>`).join('')}</div>`:''}
-      <button class="btn-primary" style="width:100%;margin-bottom:.5rem" onclick="renderMesaLobby()">${_en?'Back to the lobby':'Volver a la antesala'}</button>
-    </div>`;
-  }catch(_){ if(_miS){ _miS.busy=false; _miS.evaluating=false; _miRenderMsgs(); } showToast(_miFriendly('red'),'warning',7000); }
-  finally{ if(_tm) clearTimeout(_tm); }
-}
-
-
 // ═══════════════════════════════════════════════════════════════════════
 // MONTAJE DE PLATO · PASE DE COCINA
 // Dos fases sobre el mismo plato:
@@ -20012,6 +19464,17 @@ function _paseDistractores(dish, reales, n){
 // Atajo desde las tarjetas destacadas: el juego elige plato del turno activo,
 // sin obligar a entrar en una categoría y buscar uno.
 function _paseGo(){ launchPase(null); }
+
+// La tarjeta destacada del Pase, compartida por el inicio y por Repaso.
+function _paseCtaHTML(_en){
+  return `<button type="button" class="ri-cta ri-cta-pase" style="margin:0 0 1rem" aria-label="${_en?'Plating pass':'Pase de cocina'}" onclick="_paseGo()">
+      <span class="ri-cta-icon" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4.2"/></svg></span>
+      <span class="ri-cta-text">
+        <span class="ri-cta-top">${_en?'Plating pass':'Pase de cocina'} <span style="font-size:.6rem;background:rgba(122,178,132,.16);border:1px solid rgba(122,178,132,.5);border-radius:99px;padding:.05rem .45rem;vertical-align:2px">${_en?'NEW':'NUEVO'}</span></span>
+        <span class="ri-cta-sub">${_en?'Build the dish and take the allergen off · 30 seconds, no signal needed':'Monta el plato y retira el alérgeno · 30 segundos, sin necesidad de cobertura'}</span>
+      </span>
+    </button>`;
+}
 
 function launchPase(dishId){
   const jugables = _paseJugables();
@@ -20588,24 +20051,8 @@ function renderRepasoCats(){
     </div>
     <!-- Search results -->
     <div id="repasoSearchResults" style="display:none;margin-bottom:1rem"></div>
-    <!-- Cliente IA (Mesa Infinita) PRIMERO («debería destacar», propietario jul 2026),
-         después la sesión inteligente, fuera de la lista de secciones -->
-    ${(typeof launchPase==='function' ? `<button type="button" class="ri-cta ri-cta-pase" style="margin:0 0 1rem" aria-label="${_en?'Plating pass':'Pase de cocina'}" onclick="_paseGo()">
-      <span class="ri-cta-icon" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4.2"/></svg></span>
-      <span class="ri-cta-text">
-        <span class="ri-cta-top">${_en?'Plating pass':'Pase de cocina'} <span style="font-size:.6rem;background:rgba(122,178,132,.16);border:1px solid rgba(122,178,132,.5);border-radius:99px;padding:.05rem .45rem;vertical-align:2px">${_en?'NEW':'NUEVO'}</span></span>
-        <span class="ri-cta-sub">${_en?'Build the dish and take the allergen off · 30 seconds, no signal needed':'Monta el plato y retira el alérgeno · 30 segundos, sin necesidad de cobertura'}</span>
-      </span>
-    </button>` : '')}
-    ${(function(){
-      const left=_miLeft(emp);
-      return `<button type="button" class="ri-cta ri-cta-mesa" style="margin:0 0 1rem" aria-label="${_en?'AI Guest':'Cliente IA'}" onclick="renderMesaLobby()">
-      <span class="ri-cta-icon" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align:-.15em;flex:none"><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="4.5"/></svg></span>
-      <span class="ri-cta-text">
-        <span class="ri-cta-top">${_en?'AI Guest':'Cliente IA'} <span style="font-size:.6rem;background:rgba(228,190,104,.16);border:1px solid rgba(228,190,104,.5);border-radius:99px;padding:.05rem .45rem;vertical-align:2px">${_en?'NEW':'NUEVO'}</span></span>
-        <span class="ri-cta-sub">${_en?`Real-time service simulation · a 5★ auditor scores you · ${left}/${_MI_DAILY} today`:`Simulación de servicio en tiempo real · te puntúa un auditor 5★ · ${left}/${_MI_DAILY} hoy`}</span>
-      </span>
-    </button>`;})()}
+    <!-- El Pase primero; después la sesión inteligente, fuera de la lista -->
+    ${(typeof launchPase==="function" ? _paseCtaHTML(_en) : "")}
     ${smartCard}
     <!-- Category grid -->
     <div id="repasoCatGrid">
@@ -22518,7 +21965,7 @@ function renderAllergenResults() {
 // ═══ ANALYTICS ═══
 // ── Resumen semanal para el supervisor (petición del propietario): mensaje
 // listo para reenviar por WhatsApp con el podio de la liga, quién entrenó,
-// quién no, y las mesas del Cliente IA de la semana. La palanca de enganche
+// quién no. La palanca de enganche
 // es la visibilidad: que la liga se COMENTE en el pase, no que exista. ──
 function _supResumenTxt(allEmps, empNames, prev){
   const en=LANG==='en';
@@ -22550,17 +21997,6 @@ function _supResumenTxt(allEmps, empNames, prev){
     return (Date.parse(e.lastActiveAt||'')||0)>=_cut || (Date.parse(e.lastLoginTs||'')||0)>=_cut; };
   const roster=empNames.filter(n=>wkXP[n]||_alive(n));
   const idle=roster.filter(n=>!wkXP[n]).sort();
-  // Cliente IA: última mesa de cada empleado si cayó dentro de la semana
-  const mesas=empNames.filter(n=>{ const m=allEmps[n].miStats; return m&&m.ld&&m.ld>=key&&m.ld<=end; })
-    .map(n=>{ const m=allEmps[n].miStats; const ic=m.lf==='ok'?'✅':m.lf==='riesgo'?'⚠️':'🚨'; return `${n} ${m.ls}% ${ic}`; });
-  const L=[];
-  L.push(`📊 Meseo · ${en?'Weekly summary':'Resumen semanal'} (${fmt(key)}–${fmt(end)})`);
-  L.push(podium.length
-    ? `🏆 ${en?'League':'Liga'}: `+podium.slice(0,3).map((n,i)=>`${medal[i]} ${n} +${wkXP[n].toLocaleString()} XP`).join(' · ')
-    : `🏆 ${en?'League: nobody scored this week':'Liga: nadie puntuó esta semana'}`);
-  if(podium.length>3) L.push(`👏 ${en?'Also trained':'También entrenaron'}: `+podium.slice(3).map(n=>`${n} +${wkXP[n].toLocaleString()}`).join(' · '));
-  L.push(`✅ ${en?'Trained':'Entrenaron'} (${podium.length}/${roster.length})`+(idle.length?` · 😴 ${en?'No activity':'Sin actividad'} (${idle.length}): ${idle.join(', ')}`:''));
-  if(mesas.length) L.push(`🍽️ ${en?'AI Guest this week':'Cliente IA esta semana'}: ${mesas.join(' · ')}`);
   return L.join('\n');
 }
 function renderSupAnalytics(allEmps, empNames){
@@ -22653,31 +22089,6 @@ function renderSupAnalytics(allEmps, empNames){
       </div>
     </div>`;
   }).join('');
-
-  // Cliente IA (Mesa Infinita): notas del simulador de huésped/hostess por empleado.
-  // La seguridad manda: cualquier 'peligro' en simulación es aviso de coaching.
-  const _miEmp = empNames.filter(n => allEmps[n].miStats && (allEmps[n].miStats.n||0) > 0);
-  const _miTot = _miEmp.reduce((a,n)=>a+(allEmps[n].miStats.n||0),0);
-  const _miSum = _miEmp.reduce((a,n)=>a+(allEmps[n].miStats.sum||0),0);
-  const _miPel = _miEmp.reduce((a,n)=>a+(allEmps[n].miStats.pel||0),0);
-  const _miRsk = _miEmp.reduce((a,n)=>a+(allEmps[n].miStats.rsk||0),0);
-  const _miAvg = _miTot ? Math.round(_miSum/_miTot) : 0;
-  const _miSafe = _miTot ? Math.round(100*(_miTot-_miPel-_miRsk)/_miTot) : 0;
-  const mesaRows = _miEmp
-    .sort((a,b)=>(allEmps[b].miStats.n||0)-(allEmps[a].miStats.n||0))
-    .map(n=>{
-      const m=allEmps[n].miStats; const avg=m.n?Math.round(m.sum/m.n):0;
-      const col = m.pel>0 ? '#a04848' : m.rsk>0 ? '#b8862a' : 'var(--green-deep)';
-      const flags = (m.pel>0?`<span style="color:#a04848;font-weight:700"> ⚠${m.pel} ${LANG==='en'?'danger':'peligro'}</span>`:'')
-                  + (m.rsk>0?`<span style="color:#b8862a"> ·${m.rsk} ${LANG==='en'?'risk':'riesgo'}</span>`:'');
-      const hostess = (m.hn||0)>0?` · 🛎️${m.hn}`:'';
-      return `<div style="display:flex;align-items:center;gap:.55rem;padding:.32rem 0;border-bottom:1px dashed rgba(140,110,60,.18)">
-        <span style="font-family:'Quicksand',sans-serif;font-size:.72rem;font-weight:700;color:var(--brand-ink);flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${escapeHTML(n)}</span>
-        <span style="font-family:'DM Mono',monospace;font-size:.6rem;color:#8a7a5c">${m.n} ${LANG==='en'?'tables':'mesas'}${hostess}</span>
-        <span style="font-family:'DM Mono',monospace;font-size:.66rem;color:${col};font-weight:700;width:58px;text-align:right">${avg}% <span style="font-weight:400;color:#8a7a5c">Ø</span></span>
-        <span style="font-family:'DM Mono',monospace;font-size:.58rem;color:#8a7a5c;width:66px;text-align:right">${LANG==='en'?'best':'mejor'} ${m.best}%${flags}</span>
-      </div>`;
-    }).join('');
   // ── Resumen semanal: lunes por la mañana interesa la semana CERRADA ──
   if(window._supResWk===undefined) window._supResWk = (new Date(todayStr()+'T12:00:00Z').getUTCDay()===1) ? 'prev' : 'cur';
   const _resTxt = _supResumenTxt(allEmps, empNames, window._supResWk==='prev');
@@ -22696,18 +22107,6 @@ function renderSupAnalytics(allEmps, empNames){
       </div>
     </div>`;
 
-  const mesaSection = `
-    <div style="background:linear-gradient(155deg,#faf6ee,#f0e8d8);border:1px solid var(--line);border-radius:var(--r);padding:1rem;margin-bottom:.75rem">
-      <div style="font-family:'DM Mono',monospace;font-size:.6rem;color:var(--gold);letter-spacing:.12em;text-transform:uppercase;margin-bottom:.5rem">🍽️ Cliente IA — ${LANG==='en'?'real-time service simulator':'simulador de servicio en tiempo real'}</div>
-      ${_miTot ? `
-      <div style="display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:.6rem;font-family:'DM Mono',monospace;font-size:.62rem">
-        <span style="background:rgba(140,110,60,.1);border-radius:8px;padding:.3rem .55rem;color:var(--brand-ink)"><b>${_miTot}</b> ${LANG==='en'?'tables served':'mesas atendidas'}</span>
-        <span style="background:rgba(140,110,60,.1);border-radius:8px;padding:.3rem .55rem;color:var(--brand-ink)">Ø <b>${_miAvg}%</b></span>
-        <span style="background:${_miSafe>=90?'rgba(90,138,94,.12)':'rgba(196,112,104,.12)'};border-radius:8px;padding:.3rem .55rem;color:${_miSafe>=90?'var(--green-deep)':'#a04848'}"><b>${_miSafe}%</b> ${LANG==='en'?'allergen-safe':'seguras en alérgenos'}</span>
-        ${_miPel?`<span style="background:rgba(160,72,72,.14);border-radius:8px;padding:.3rem .55rem;color:#a04848;font-weight:700">⚠ ${_miPel} ${LANG==='en'?'DANGER — coach now':'PELIGRO — coaching ya'}</span>`:''}
-      </div>
-      ${mesaRows}` : `<div style="font-family:'Quicksand',sans-serif;font-size:.74rem;color:#8a7a5c">${LANG==='en'?'No simulated tables yet — results will appear here as the team trains.':'Aún no hay mesas simuladas — los resultados aparecerán aquí cuando el equipo entrene.'}</div>`}
-    </div>`;
 
   // ── DÓNDE FALLA EL EQUIPO — por tema (topicScores agregados de todos) ──
   // topicScores guarda {correct,total} por tema (Alérgenos/Ingredientes/
@@ -22906,7 +22305,6 @@ function renderSupAnalytics(allEmps, empNames){
     ${_acc('res','📣',_en2?'Weekly summary':'Resumen semanal', _en2?'ready for WhatsApp':'listo para WhatsApp', resumenSection)}
     ${_acc('act','📈',_en2?'Activity':'Actividad', `${_inact.length} ${_en2?'inactive':'sin actividad'}`, renderSupActivityHeatmap(Object.values(allEmps))+renderSupScoreTrend(Object.values(allEmps))+_inactHTML)}
     ${_acc('perf','🎯',_en2?'Performance':'Rendimiento', exN?`${exN} ${_en2?'exams':'exámenes'} · ${exAcc}%`:(_en2?'no exams yet':'aún sin exámenes'), _perfBody)}
-    ${_acc('mesa','🍽️','Cliente IA', _miTot?`${_miTot} ${_en2?'tables':'mesas'} · Ø ${_miAvg}%`:(_en2?'no tables yet':'aún sin mesas'), mesaSection)}
     ${_acc('dish','🧩',_en2?'Hardest dishes':'Platos difíciles', hardest.length?`${hardest.length} ${_en2?'to review':'a repasar'}`:'', _dishBody)}
   </div>`;
 }
