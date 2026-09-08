@@ -52,7 +52,7 @@
 <meta property="og:description" content="Formación de equipos de sala: carta, alérgenos, vinos, exámenes y juegos de repaso.">
 <meta property="og:url" content="https://meseo.es/">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"Meseo","url":"https://meseo.es/"}</script>
-<meta name="app-version" content="7.383">
+<meta name="app-version" content="7.385">
 <meta name="app-build" content="May 2026">
 <meta name="theme-color" content="#1c2a22">
 <!-- ═══ PWA ═══ -->
@@ -1596,7 +1596,7 @@ const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><p
 const SRC = 'src';
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='7.383';  // sincronizada con sw.js VERSION (guard de CI)
+const APP_VERSION='7.385';  // sincronizada con sw.js VERSION (guard de CI)
 const APP_BUILD='Jul 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;
@@ -9728,7 +9728,7 @@ const ONBOARDING_PAGES = [
   {icon:`<svg width="28" height="28" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4" fill="none" stroke="#fff" stroke-width="1.5"/><path d="M12 11v2M10 13h4" stroke="#fff" stroke-width="1.5" stroke-linecap="round"/></svg>`,color:'#c47068',title_es:'Repaso inteligente',title_en:'Smart review',text_es:'Situaciones reales de servicio: un huésped te dice su alergia, te pide recomendaciones o pregunta cómo modificar un plato. La sesión elige justo los platos que estás a punto de olvidar. La encontrarás en Aprender → Repaso.',text_en:'Real service scenarios: a guest tells you their allergy, asks for recommendations or how to modify a dish. Each session picks exactly the dishes you are about to forget. You\'ll find it under Learn → Review.'},
   {icon:`<svg width="28" height="28" viewBox="0 0 24 24"><rect x="6" y="4" width="12" height="16" rx="2" fill="none" stroke="#fff" stroke-width="1.5"/><line x1="9" y1="10" x2="15" y2="10" stroke="#fff" stroke-width="1" opacity=".7"/><line x1="9" y1="13" x2="13" y2="13" stroke="#fff" stroke-width="1" opacity=".7"/></svg>`,color:'#4888a0',title_es:'Exámenes por Tema',title_en:'Topic-based Exams',text_es:'Pon a prueba tus conocimientos con exámenes de opción múltiple. Elige entre alérgenos, ingredientes o historia, filtra por categoría de plato y personaliza la cantidad de preguntas.',text_en:'Test your knowledge with multiple-choice exams. Choose between allergens, ingredients or history, filter by dish category and customise the number of questions.'},
   {icon:`<svg width="28" height="28" viewBox="0 0 24 24"><path d="M8 2h8l-2 9H10L8 2z" fill="none" stroke="#fff" stroke-width="1.5"/><path d="M12 11v7" stroke="#fff" stroke-width="1.5"/><path d="M8 18h8" stroke="#fff" stroke-width="1.5"/></svg>`,color:'#722f37',title_es:'Vinos y Maridaje',title_en:'Wines & Pairing',text_es:'Explora la carta de vinos completa con fichas detalladas: tipo, temperatura, maridajes y notas de cata. Incluye un flash quiz para entrenar tu conocimiento de vinos.',text_en:'Explore the full wine list with detailed cards: type, temperature, pairings and tasting notes. Includes a flash quiz to train your wine knowledge.'},
-  {icon:`<svg width="28" height="28" viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5z" fill="none" stroke="#fff" stroke-width="1.5"/><path d="M2 17l10 5 10-5" stroke="#fff" stroke-width="1.5"/><path d="M2 12l10 5 10-5" stroke="#fff" stroke-width="1.5"/></svg>`,color:'#4d8a5e',title_es:'Auditoría de Servicio',title_en:'Service Audit',text_es:'Prepárate para la auditoría con los estándares LQA (Leading Quality Assurance): examen, situaciones reales, el simulador «¿Pasaría?» y la Inspección Fantasma. También puedes consultar todos los estándares de servicio por categoría.',text_en:'Prepare for the audit with the LQA (Leading Quality Assurance) standards: exam, real situations, the "Would It Pass?" simulator and the Ghost Inspection. You can also browse every service standard by category.'},
+  {icon:`<svg width="28" height="28" viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5z" fill="none" stroke="#fff" stroke-width="1.5"/><path d="M2 17l10 5 10-5" stroke="#fff" stroke-width="1.5"/><path d="M2 12l10 5 10-5" stroke="#fff" stroke-width="1.5"/></svg>`,color:'#4d8a5e',title_es:'Auditoría de Servicio',title_en:'Service Audit',text_es:'Prepárate para la auditoría con los estándares LQA (Leading Quality Assurance): examen, situaciones reales, el simulador «¿Pasaría?» y la Auditoría. También puedes consultar todos los estándares de servicio por categoría.',text_en:'Prepare for the audit with the LQA (Leading Quality Assurance) standards: exam, real situations, the "Would It Pass?" simulator and the Audit. You can also browse every service standard by category.'},
   {icon:`<svg width="28" height="28" viewBox="0 0 24 24"><polygon points="12,2 15,9 22,9.5 17,13.5 18.5,20 12,16.5 5.5,20 7,13.5 2,9.5 9,9" fill="none" stroke="#fff" stroke-width="1.5"/></svg>`,color:'#7a6aaa',title_es:'Juegos y Duelos',title_en:'Games & Duels',text_es:'Modo supervivencia "Mr. Shoesmith" en la mesa 501, esquiva alérgenos-monstruo en Camarero Survivors y reta a compañeros en Duelos 1v1 remotos. Compite por el ranking global y desbloquea logros.',text_en:'Survival mode "Mr. Shoesmith" at table 501, dodge allergen-monsters in Camarero Survivors, and challenge colleagues in remote 1v1 Duels. Compete for the global ranking and unlock achievements.'},
   {icon:`<svg width="28" height="28" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="none" stroke="#fff" stroke-width="1.5"/><circle cx="12" cy="12" r="6" fill="none" stroke="#fff" stroke-width="1" opacity=".6"/><circle cx="12" cy="12" r="2" fill="#fff" opacity=".8"/></svg>`,color:'#5a9ab8',title_es:'Quiz en Vivo y Retos',title_en:'Live Quiz & Challenges',text_es:'El supervisor puede lanzar un Quiz en Vivo para todo el equipo en tiempo real. Cada semana hay un Reto Semanal con un tema diferente. Recibirás notificaciones en tu móvil cuando haya actividad.',text_en:'The supervisor can launch a Live Quiz for the whole team in real time. Each week there\'s a Weekly Challenge with a different topic. You\'ll receive mobile notifications when there\'s activity.'},
   {icon:`<svg width="28" height="28" viewBox="0 0 24 24"><path d="M12 2l8 4.5v11L12 22l-8-4.5v-11z" fill="none" stroke="#fff" stroke-width="1.5"/><polygon points="12,7 15,11 12,15 9,11" fill="#fff" opacity=".6"/></svg>`,color:'#c49a3c',title_es:'¡Comienza tu aventura!',title_en:'Start your adventure!',text_es:'Practica todos los días para mantener tu racha, sube de nivel ganando XP y escala en el ranking. ¡Buena suerte!',text_en:'Practice every day to keep your streak, level up by earning XP and climb the ranking. Good luck!'}
@@ -18511,6 +18511,18 @@ function renderDashboard(){
   // destacar», propietario jul 2026). Verde profundo + oro para que no se
   // confunda con los CTA dorados de sesión. Se calcula FUERA de la plantilla:
   // un template anidado dentro rompería el recorte de las guardas de CI.
+  // El Pase, al lado del Cliente IA («que esté a la vista, acceso más rápido»,
+  // propietario sep 2026). Verde salvia: es el color del juego, y así no se
+  // confunde ni con el verde profundo del Cliente IA ni con los CTA dorados.
+  const _paseDashCard = (typeof launchPase==='function')
+    ? `<button type="button" class="ri-cta ri-cta-pase" style="margin:0 0 1rem" aria-label="${_en?'Plating pass':'Pase de cocina'}" onclick="_paseGo()">
+      <span class="ri-cta-icon" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4.2"/></svg></span>
+      <span class="ri-cta-text">
+        <span class="ri-cta-top">${_en?'Plating pass':'Pase de cocina'} <span style="font-size:.6rem;background:rgba(122,178,132,.16);border:1px solid rgba(122,178,132,.5);border-radius:99px;padding:.05rem .45rem;vertical-align:2px">${_en?'NEW':'NUEVO'}</span></span>
+        <span class="ri-cta-sub">${_en?'Build the dish and take the allergen off · 30 seconds, no signal needed':'Monta el plato y retira el alérgeno · 30 segundos, sin necesidad de cobertura'}</span>
+      </span>
+    </button>` : '';
+
   const _miDashCard = (typeof _miLeft==='function') ? (()=>{ const _miL=_miLeft(emp);
     return `<button type="button" class="ri-cta ri-cta-mesa" style="margin:0 0 1rem" aria-label="${_en?'AI Guest':'Cliente IA'}" onclick="_miGo()">
       <span class="ri-cta-icon" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align:-.15em;flex:none"><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="4.5"/></svg></span>
@@ -18574,7 +18586,7 @@ function renderDashboard(){
     </div>
 
     <!-- ── LA MESA INFINITA: destacada en el inicio (tarjeta calculada arriba) ── -->
-    ${_miDashCard}
+    ${_paseDashCard}${_miDashCard}
 
     <!-- ── HOY: rediseño «una acción dominante» (exploración de diseño jul
          2026). UNA tarjeta pergamino (héroe) con dos estados — Reto del día
@@ -19997,6 +20009,10 @@ function _paseDistractores(dish, reales, n){
   return _lqaShuffle(cand).slice(0, n);
 }
 
+// Atajo desde las tarjetas destacadas: el juego elige plato del turno activo,
+// sin obligar a entrar en una categoría y buscar uno.
+function _paseGo(){ launchPase(null); }
+
 function launchPase(dishId){
   const jugables = _paseJugables();
   let dish = dishId ? DISHES.find(d=>d.id===dishId) : null;
@@ -20574,6 +20590,13 @@ function renderRepasoCats(){
     <div id="repasoSearchResults" style="display:none;margin-bottom:1rem"></div>
     <!-- Cliente IA (Mesa Infinita) PRIMERO («debería destacar», propietario jul 2026),
          después la sesión inteligente, fuera de la lista de secciones -->
+    ${(typeof launchPase==='function' ? `<button type="button" class="ri-cta ri-cta-pase" style="margin:0 0 1rem" aria-label="${_en?'Plating pass':'Pase de cocina'}" onclick="_paseGo()">
+      <span class="ri-cta-icon" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4.2"/></svg></span>
+      <span class="ri-cta-text">
+        <span class="ri-cta-top">${_en?'Plating pass':'Pase de cocina'} <span style="font-size:.6rem;background:rgba(122,178,132,.16);border:1px solid rgba(122,178,132,.5);border-radius:99px;padding:.05rem .45rem;vertical-align:2px">${_en?'NEW':'NUEVO'}</span></span>
+        <span class="ri-cta-sub">${_en?'Build the dish and take the allergen off · 30 seconds, no signal needed':'Monta el plato y retira el alérgeno · 30 segundos, sin necesidad de cobertura'}</span>
+      </span>
+    </button>` : '')}
     ${(function(){
       const left=_miLeft(emp);
       return `<button type="button" class="ri-cta ri-cta-mesa" style="margin:0 0 1rem" aria-label="${_en?'AI Guest':'Cliente IA'}" onclick="renderMesaLobby()">
@@ -21951,7 +21974,7 @@ function renderSupDashboard(silent){
               ${tile('Examen',lqaExam,'196,154,60')}
               ${tile(LANG==='en'?'Situ.':'Situ.',lqaSit,'122,106,170')}
               ${tile(LANG==='en'?'Pass?':'Pasa?',lqaAud,'77,138,94')}
-              ${tile(LANG==='en'?'Ghost':'Fantasma',lqaGhost,'143,196,153')}
+              ${tile(LANG==='en'?'Audit':'Auditoría',lqaGhost,'143,196,153')}
             </div>
           </div>`;
         })()}
@@ -22889,7 +22912,7 @@ function renderSupAnalytics(allEmps, empNames){
 }
 
 // Nota LQA de un empleado: media ponderada de sus mejores marcas en los
-// cuatro modos (la Inspección Fantasma pesa más porque integra todas las
+// cuatro modos (la Auditoría pesa más porque integra todas las
 // categorías). Vive aquí para que el panel del equipo y el titular del
 // análisis midan EXACTAMENTE lo mismo.
 function _lqaReady(e){
@@ -22972,7 +22995,7 @@ function renderSupLqaStats(allEmps, empNames){
       <div class="stat-tile"><div class="stat-num" style="color:var(--gold)">${avgExam||'—'}${avgExam?'%':''}</div><div class="stat-lbl">${LANG==='en'?'Exam avg':'Examen'}</div></div>
       <div class="stat-tile"><div class="stat-num" style="color:#7a6aaa">${avgSit||'—'}${avgSit?'%':''}</div><div class="stat-lbl">${LANG==='en'?'Situations':'Situaciones'}</div></div>
       <div class="stat-tile"><div class="stat-num" style="color:var(--sage)">${avgAud||'—'}${avgAud?'%':''}</div><div class="stat-lbl">${LANG==='en'?'Would pass?':'¿Pasaría?'}</div></div>
-      <div class="stat-tile"><div class="stat-num" style="color:#8fc499">${avgGhost||'—'}${avgGhost?'%':''}</div><div class="stat-lbl">${LANG==='en'?'Ghost':'Fantasma'}</div></div>
+      <div class="stat-tile"><div class="stat-num" style="color:#8fc499">${avgGhost||'—'}${avgGhost?'%':''}</div><div class="stat-lbl">${LANG==='en'?'Audit':'Auditoría'}</div></div>
     </div>
 
     ${weakCatsSorted.length ? `<div style="background:rgba(196,112,104,.06);border:1px solid rgba(196,112,104,.18);border-radius:var(--r);padding:1rem;margin-bottom:1rem">
@@ -22986,7 +23009,7 @@ function renderSupLqaStats(allEmps, empNames){
 
     <div style="background:linear-gradient(155deg,#faf6ee,#f0e8d8);border:1px solid var(--line2);border-radius:var(--r);padding:1rem;margin-bottom:1rem">
       <div style="font-family:'DM Mono',monospace;font-size:.55rem;color:var(--parch3);letter-spacing:.12em;text-transform:uppercase;margin-bottom:.35rem">🏆 ${LANG==='en'?'Readiness Ranking':'Ranking de Preparación'}</div>
-      ${_hasReady?`<div style="font-family:'DM Mono',monospace;font-size:.5rem;color:var(--parch4);margin-bottom:.6rem">${LANG==='en'?'E=Exam · S=Situations · P=Would pass? · F=Ghost':'E=Examen · S=Situaciones · P=¿Pasaría? · F=Fantasma'}</div>`:''}
+      ${_hasReady?`<div style="font-family:'DM Mono',monospace;font-size:.5rem;color:var(--parch4);margin-bottom:.6rem">${LANG==='en'?'E=Exam · S=Situations · P=Would pass? · A=Audit':'E=Examen · S=Situaciones · P=¿Pasaría? · A=Auditoría'}</div>`:''}
       ${readiness.length===0
         ? `<div style="font-size:.8rem;color:var(--parch4);font-style:italic;text-align:center;padding:1rem 0">${LANG==='en'?'No LQA activity yet.':'Sin actividad LQA aún.'}</div>`
         : readiness.map((r,i)=>{
@@ -23018,7 +23041,7 @@ function renderSupLqaStats(allEmps, empNames){
 
     <div style="background:linear-gradient(155deg,#faf6ee,#f0e8d8);border:1px solid var(--line2);border-radius:var(--r);padding:1rem;margin-bottom:1rem">
       <div style="font-family:'DM Mono',monospace;font-size:.55rem;color:var(--parch3);letter-spacing:.12em;text-transform:uppercase;margin-bottom:.6rem">📊 ${LANG==='en'?'What the Readiness Index means':'Qué significa el Índice'}</div>
-      <div style="font-size:.78rem;color:var(--parch2);line-height:1.6">${LANG==='en'?'A weighted average of all LQA training modes. Ghost Inspection weighs most (×2) because it mirrors a real audit; Would-It-Pass weighs ×1.5; Exam and Situations ×1. Above 75% = audit-ready. Below 55% = needs reinforcement.':'Media ponderada de todos los modos de entrenamiento LQA. La Inspección Fantasma pesa más (×2) porque refleja una auditoría real; ¿Pasaría? pesa ×1.5; Examen y Situaciones ×1. Por encima del 75% = listo para auditoría. Por debajo del 55% = necesita refuerzo.'}</div>
+      <div style="font-size:.78rem;color:var(--parch2);line-height:1.6">${LANG==='en'?'A weighted average of all LQA training modes. the Audit weighs most (×2) because it mirrors a real audit; Would-It-Pass weighs ×1.5; Exam and Situations ×1. Above 75% = audit-ready. Below 55% = needs reinforcement.':'Media ponderada de todos los modos de entrenamiento LQA. La Auditoría pesa más (×2) porque refleja una auditoría real; ¿Pasaría? pesa ×1.5; Examen y Situaciones ×1. Por encima del 75% = listo para auditoría. Por debajo del 55% = necesita refuerzo.'}</div>
     </div>
   </div>`;
 }
@@ -23118,7 +23141,7 @@ function renderSupEmployee(name){
     ${ready!=null ? card(_en?'LQA readiness':'Preparación LQA',
       `<div style="display:flex;align-items:center;gap:.7rem;margin-bottom:.5rem">
         <div style="font-family:'Cinzel',serif;font-size:2rem;font-weight:700;color:${ready>=75?'var(--sage)':ready>=55?'var(--gold)':'var(--rose)'};line-height:1">${ready}%</div>
-        <div style="font-family:'DM Mono',monospace;font-size:.6rem;color:var(--parch3);line-height:1.5">${_en?'Exam':'Examen'} ${e.lqaExamBest||'—'} · ${_en?'Situations':'Situac.'} ${e.lqaSituationBest||'—'}<br>${_en?'Would pass':'¿Pasaría?'} ${e.lqaAuditBest||'—'} · ${_en?'Ghost':'Fantasma'} ${e.ghostBest||'—'}</div>
+        <div style="font-family:'DM Mono',monospace;font-size:.6rem;color:var(--parch3);line-height:1.5">${_en?'Exam':'Examen'} ${e.lqaExamBest||'—'} · ${_en?'Situations':'Situac.'} ${e.lqaSituationBest||'—'}<br>${_en?'Would pass':'¿Pasaría?'} ${e.lqaAuditBest||'—'} · ${_en?'Audit':'Auditoría'} ${e.ghostBest||'—'}</div>
       </div>${wcCat?`<div style="font-size:.75rem;color:var(--rose)">${_en?'Weakest category':'Categoría más floja'}: ${wcCat.icon} ${_en?wcCat.title_en:wcCat.title}</div>`:''}`) : ''}
   </div>`;
 }
@@ -25889,7 +25912,7 @@ function renderLqa(){
     <!-- LQA hub — TUNIC manual page: one flagship banner, then a 2-col index
          and hairline ledger rows (same de-boxing language as the dashboard) -->
     <div class="hub-qa-grid" style="display:block">
-      <!-- ⭐ FEATURED: Inspección Fantasma (flagship banner, kept) -->
+      <!-- ⭐ FEATURED: Auditoría (flagship banner, kept) -->
       <div class="hub-banner" style="--hb-bg:linear-gradient(135deg,#0f1d15 0%,#1a3a24 50%,#0f1d15 100%);--hb-b:rgba(140,200,150,.45);--hb-glow:rgba(140,200,150,.5);position:relative;overflow:hidden;margin-bottom:.9rem" onclick="startGhostInspection()">
         <span class="hub-banner-shine"></span>
         <span style="position:absolute;top:.3rem;right:.5rem;font-family:'DM Mono',monospace;font-size:.72rem;color:#8fc499;letter-spacing:.12em;text-transform:uppercase;background:rgba(140,200,150,.15);padding:.2rem .45rem;border-radius:var(--r3);border:1px solid rgba(140,200,150,.3)">${LANG==='en'?'★ New':'★ Nuevo'}</span>
@@ -25897,7 +25920,7 @@ function renderLqa(){
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#d4f0dc" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a3 3 0 00-3 3v1a7 7 0 00-7 7v2a3 3 0 003 3h1l.5 3 1.5-3h10l1.5 3 .5-3h1a3 3 0 003-3v-2a7 7 0 00-7-7V5a3 3 0 00-3-3z"/><circle cx="9" cy="13" r="1" fill="#d4f0dc"/><circle cx="15" cy="13" r="1" fill="#d4f0dc"/></svg>
         </div>
         <div class="hub-banner-body">
-          <div class="hub-banner-title">${LANG==='en'?'Ghost Inspection':'Inspección Fantasma'}</div>
+          <div class="hub-banner-title">${LANG==='en'?'Full audit':'Auditoría completa'}</div>
           <div class="hub-banner-sub">${LANG==='en'?'Under the auditor\'s eye · Full-service simulation':'Bajo la mirada del auditor · Simulación completa'}</div>
         </div>
         <div class="hub-banner-arrow">›</div>
@@ -26727,7 +26750,7 @@ function _ghostPick(exclude){
 }
 
 async function startGhostInspection(reroll){
-  try { if(!GHOST_SCENARIOS) GHOST_SCENARIOS = await loadLazyData('data/ghost-scenarios.json', LANG==='en'?'Ghost Service scenarios':'escenarios de Servicio Fantasma'); } catch(_){ return; }
+  try { if(!GHOST_SCENARIOS) GHOST_SCENARIOS = await loadLazyData('data/ghost-scenarios.json', LANG==='en'?'Audit scenarios':'escenarios de Auditoría'); } catch(_){ return; }
   // Session copy with each scene's options shuffled: measured on the authored
   // data, the all-standards-met option sat on position B in 95/96 scenes —
   // fixed render order let position do the answering. Options are self-contained
@@ -26747,7 +26770,7 @@ function renderGhostIntro(){
   c.innerHTML=`<div class="sup-wrap">
     <div style="display:flex;align-items:center;gap:.6rem;margin-bottom:1rem">
       <button onclick="renderLqa()" aria-label="${LANG==='en'?'Back':'Atr\u00e1s'}" style="background:transparent;border:1.5px solid rgba(196,154,60,.55);border-radius:var(--r2);padding:.4rem .8rem;font-size:.75rem;color:var(--gold-deep);font-weight:700;cursor:pointer">\u2190</button>
-      <div style="font-family:'Cinzel',serif;font-size:1rem;color:var(--parchment)">${LANG==='en'?'Ghost Inspection':'Inspecci\u00f3n Fantasma'}</div>
+      <div style="font-family:'Cinzel',serif;font-size:1rem;color:var(--parchment)">${LANG==='en'?'Full audit':'Auditor\u00eda completa'}</div>
     </div>
     <div style="background:linear-gradient(155deg,#1a2a20,#0f1d15);border:1px solid rgba(140,200,150,.2);border-radius:var(--r);padding:1.5rem;margin-bottom:1.1rem;position:relative;overflow:hidden">
       <div style="position:absolute;top:0;right:0;font-size:5rem;opacity:.08;line-height:1;padding:.5rem">${s.icon}</div>
@@ -26776,7 +26799,7 @@ function renderGhostScene(){
   c.innerHTML=`<div class="sup-wrap">
     <div style="display:flex;align-items:center;gap:.6rem;margin-bottom:1rem">
       <button onclick="if(confirm('${LANG==='en'?'Exit? Progress will be lost.':'\u00bfSalir? Se perder\u00e1 el progreso.'}'))renderLqa()" aria-label="${LANG==='en'?'Back':'Atr\u00e1s'}" style="background:transparent;border:1.5px solid rgba(196,154,60,.55);border-radius:var(--r2);padding:.4rem .8rem;font-size:.75rem;color:var(--gold-deep);font-weight:700;cursor:pointer">\u2190</button>
-      <div style="font-family:'Cinzel',serif;font-size:1rem;color:var(--parchment)">${LANG==='en'?'Ghost Inspection':'Inspecci\u00f3n Fantasma'} \u00b7 ${ghostSceneIdx+1}/${ghostScenario.scenes.length}</div>
+      <div style="font-family:'Cinzel',serif;font-size:1rem;color:var(--parchment)">${LANG==='en'?'Full audit':'Auditor\u00eda completa'} \u00b7 ${ghostSceneIdx+1}/${ghostScenario.scenes.length}</div>
     </div>
     <div style="margin-bottom:1rem">
       <div style="width:100%;height:6px;background:var(--parch4);border-radius:var(--r3);overflow:hidden">
@@ -26794,6 +26817,48 @@ function renderGhostScene(){
       </button>`).join('')}
     </div>
   </div>`;
+}
+
+// La opción que el inspector esperaba. Sale del propio dato: 95 de las 96
+// escenas tienen exactamente UNA opción que cumple todos sus estándares, y las
+// 288 opciones traen su feedback en los dos idiomas. En la única escena sin
+// jugada redonda —el incidente de la familia— se coge la que más cumple, que
+// es lo honesto: ahí no hay respuesta perfecta que enseñar.
+function _ghostEsperada(sc, elegida){
+  const opts=(sc&&sc.options)||[];
+  const nota=o=>(o.effects||[]).filter(e=>e.met).length-(o.effects||[]).filter(e=>!e.met).length;
+  let mejor=null, mejorN=-99;
+  for(const o of opts){ if(o===elegida) continue; const n=nota(o); if(n>mejorN){ mejorN=n; mejor=o; } }
+  return (mejor && mejorN>nota(elegida)) ? mejor : null;
+}
+
+// Al fallar, la nota del inspector reprochaba sin enseñar la jugada: se veía
+// QUÉ estándar se rompió pero no QUÉ había que hacer. Esto añade la opción que
+// él esperaba, con su consecuencia y con los estándares TUYOS que arregla.
+// Todo sale del dato; aquí no se redacta ni un juicio.
+function _ghostEsperadaHTML(sc, opt){
+  const esperada=_ghostEsperada(sc, opt);
+  if(!esperada) return '';
+  const _en=LANG==='en';
+  const rotos=new Set((opt.effects||[]).filter(e=>!e.met).map(e=>e.std));
+  const arregla=(esperada.effects||[]).filter(e=>e.met && rotos.has(e.std));
+  const filas=arregla.map(ef=>{
+    const std=LQA_STANDARDS.find(x=>x.id===ef.std);
+    const txt=_en?(std&&std.std_en||''):(std&&std.std||'');
+    return '<div style="display:flex;align-items:flex-start;gap:.5rem;padding:.3rem 0">'
+      + '<span style="color:var(--green-deep);font-weight:700;font-size:.9rem">&#10003;</span>'
+      + '<span style="font-family:\'DM Mono\',monospace;font-size:.6rem;color:var(--green-deep);flex-shrink:0;min-width:30px">#'+ef.std+'</span>'
+      + '<span style="font-size:.75rem;color:var(--parch2);line-height:1.45;flex:1">'+escapeHTML(txt)+'</span></div>';
+  }).join('');
+  return '<div style="background:linear-gradient(155deg,#f3f8f4,#e9f2ec);border:1px solid rgba(77,138,94,.28);border-left:4px solid var(--green-deep);border-radius:var(--r2);padding:1.1rem;margin-bottom:1rem">'
+    + '<div style="font-family:\'DM Mono\',monospace;font-size:.55rem;color:var(--green-deep);letter-spacing:.15em;text-transform:uppercase;margin-bottom:.6rem">'
+    + (_en?'What the inspector expected':'Lo que esperaba el inspector')+'</div>'
+    + '<div style="font-size:.86rem;color:var(--parchment);line-height:1.55;font-weight:600;margin-bottom:.6rem">'+escapeHTML(_en?esperada.label_en:esperada.label)+'</div>'
+    + '<div style="font-size:.82rem;color:var(--parch2);line-height:1.6;font-style:italic">'+escapeHTML(_en?esperada.feedback_en:esperada.feedback)+'</div>'
+    + (filas?'<div style="border-top:1px solid rgba(77,138,94,.18);margin-top:.8rem;padding-top:.7rem">'
+        + '<div style="font-family:\'DM Mono\',monospace;font-size:.55rem;color:var(--parch3);letter-spacing:.12em;text-transform:uppercase;margin-bottom:.45rem">'
+        + (_en?'This would have met':'Con eso habrías cumplido')+'</div>'+filas+'</div>':'')
+    + '</div>';
 }
 
 function ghostChoose(idx){
@@ -26835,6 +26900,7 @@ function ghostChoose(idx){
         }).join('')}
       </div>
     </div>
+    ${_ghostEsperadaHTML(sc, opt)}
     <button onclick="ghostNext()" style="width:100%;padding:.95rem;background:var(--sage);border:none;border-radius:var(--r);color:#fff;font-family:'Cinzel',serif;font-size:.9rem;font-weight:700;cursor:pointer;letter-spacing:.05em">${ghostSceneIdx+1>=ghostScenario.scenes.length?(LANG==='en'?'See Inspector Report':'Ver Informe del Inspector'):(LANG==='en'?'Next scene':'Siguiente escena')} \u2192</button>
   </div>`;
 }
@@ -26898,7 +26964,7 @@ function renderGhostReport(){
     emp.lqaScores.push({type:'ghost',score:met,total,date:Date.now()});
     saveDB();
   }
-  awardXP(xpEarned, LANG==='en'?'Ghost Inspection':'Inspecci\u00f3n Fantasma', 'ghost');
+  awardXP(xpEarned, LANG==='en'?'Full audit':'Auditor\u00eda completa', 'ghost');
   checkNewAchievements();
 
   const c=document.getElementById('appContent');
