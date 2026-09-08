@@ -52,7 +52,7 @@
 <meta property="og:description" content="Formación de equipos de sala: carta, alérgenos, vinos, exámenes y juegos de repaso.">
 <meta property="og:url" content="https://meseo.es/">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"Meseo","url":"https://meseo.es/"}</script>
-<meta name="app-version" content="7.394">
+<meta name="app-version" content="7.395">
 <meta name="app-build" content="May 2026">
 <meta name="theme-color" content="#1c2a22">
 <!-- ═══ PWA ═══ -->
@@ -1596,7 +1596,7 @@ const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><p
 const SRC = 'src';
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='7.394';  // sincronizada con sw.js VERSION (guard de CI)
+const APP_VERSION='7.395';  // sincronizada con sw.js VERSION (guard de CI)
 const APP_BUILD='Jul 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;
@@ -19572,10 +19572,22 @@ function _paseEsSazonador(it){
 // y marcar una sí y otra no daba «falta» sobre una etiqueta igual a la de al
 // lado (medido: 17 platos en español, 18 en inglés). Se fusionan por etiqueta
 // ya traducida, quedándose con la unión de sus alérgenos.
+// Clave que ignora el plural. «Huevo» y «Huevos» son la misma cosa, y con
+// _djNorm a secas no lo eran: el Flan tradicional salía con «Huevos» de ficha
+// y «Huevo» de señuelo a la vez, así que señalar el huevo en un flan contaba
+// como error. Mismo fallo que el «Soja» del Vitello tonnato, por singular.
+// Medido sobre los 191 nombres de componente de la carta: esta clave funde un
+// único grupo, que es justo ese — no arrastra nada más.
+function _djClave(t){
+  return _djNorm(t).split(' ').map(w=>
+    w.length>3 && /es$/.test(w) ? w.slice(0,-2)
+    : w.length>3 && /s$/.test(w) ? w.slice(0,-1) : w).join(' ');
+}
+
 function _paseFusionar(items){
   const por=new Map();
   for(const it of items){
-    const k=_djNorm(it.t);
+    const k=_djClave(it.t);
     if(!k) continue;
     const y=por.get(k);
     if(y){ for(const al of (it.a||[])) if(!y.a.includes(al)) y.a.push(al); }
@@ -19609,7 +19621,7 @@ function _paseComponentes(dish, _en){
 
 function _paseSenuelos(dish, reales, n, _en){
   const mios=reales.map(r=>r.t);
-  const vistos=new Set(reales.map(r=>_djNorm(r.t)));
+  const vistos=new Set(reales.map(r=>_djClave(r.t)));
   // Se descarta también lo que nombre la FICHA del propio plato, no sólo sus
   // componentes alergénicos. Medido en la auditoría de sep 2026: el Vitello
   // tonnato ofrecía «Soja» como señuelo y el Fish and chips «Pepinillo»,
@@ -19617,12 +19629,12 @@ function _paseSenuelos(dish, reales, n, _en){
   // lleva. Coincidencia exacta y nada más: _djSameThing empareja por palabra
   // suelta («Aceite» dentro de «Vinagreta de mostaza Aceite de oliva») y con
   // ese criterio se caían 64 señuelos legítimos.
-  try{ for(const it of _djIngredients(dish,_en)) vistos.add(_djNorm(it.t)); }catch(e){}
+  try{ for(const it of _djIngredients(dish,_en)) vistos.add(_djClave(it.t)); }catch(e){}
   const cand=[];
   for(const o of DISHES){
     if(o.id===dish.id || o.cat!==dish.cat) continue;
     for(const it of _paseComponentes(o,_en)){
-      const k=_djNorm(it.t);
+      const k=_djClave(it.t);
       if(!k || vistos.has(k)) continue;
       if(mios.some(m=>_djSameThing(m, it.t))) continue;
       if(_paseEsSazonador(it)) continue;
