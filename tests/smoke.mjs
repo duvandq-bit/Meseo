@@ -6533,6 +6533,13 @@ test('Pase: los señuelos no pueden ser cosas que el plato lleva', () => {
   // mismo eco cuando lo haya (12 de los 31 platos afectados lo tienen).
   assert(/const eco = t =>/.test(sen) && /conEco/.test(sen),
     'debe intentarse que algún señuelo haga el mismo eco que el título');
+  // Pero un señuelo cuyo nombre ENTERO está en el título no es un señuelo, es
+  // el plato: salía «Flan» de opción falsa en el «Flan tradicional con
+  // chantilly». Se compara el nombre completo, no palabra a palabra, o se
+  // caerían los 41 legítimos que comparten una palabra sin ser lo mismo
+  // («Tartar de tomate y queso ← Queso azul»). Medido: quita 1 de 42.
+  assert(/_djWordIn\(_djNorm\(it\.t\), _djNorm\(dish\.name\)\)/.test(sen),
+    'un señuelo no puede ser el propio plato');
 });
 
 test('Pase: ningún señuelo es lo mismo que algo correcto, ni en singular', () => {
