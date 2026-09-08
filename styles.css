@@ -8886,6 +8886,9 @@ li.fail .dj-qrv-mark{color:#e8a0a0}
 
 .pase-mise{margin-bottom:var(--space-4)}
 .pase-mise-in{display:flex;flex-wrap:wrap;gap:var(--space-2)}
+.pase-sec-lbl{display:flex;align-items:center;gap:var(--space-2);font-family:var(--font-read);font-style:italic;font-size:var(--text-xs);color:rgba(244,237,226,.55);margin:var(--space-3) 0 var(--space-2)}
+.pase-sec-lbl::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,rgba(196,154,60,.22),transparent)}
+.pase-mise-in + .pase-sec-lbl{margin-top:var(--space-4)}
 .pase-mise.fuera .pase-mise-in{min-height:52px;border:1px dashed rgba(193,74,58,.3);border-radius:var(--radius-md);padding:var(--space-2);align-content:flex-start}
 
 /* ── Ficha de ingrediente ── */

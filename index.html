@@ -52,7 +52,7 @@
 <meta property="og:description" content="Formación de equipos de sala: carta, alérgenos, vinos, exámenes y juegos de repaso.">
 <meta property="og:url" content="https://meseo.es/">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"Meseo","url":"https://meseo.es/"}</script>
-<meta name="app-version" content="7.382">
+<meta name="app-version" content="7.383">
 <meta name="app-build" content="May 2026">
 <meta name="theme-color" content="#1c2a22">
 <!-- ═══ PWA ═══ -->
@@ -1596,7 +1596,7 @@ const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><p
 const SRC = 'src';
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='7.382';  // sincronizada con sw.js VERSION (guard de CI)
+const APP_VERSION='7.383';  // sincronizada con sw.js VERSION (guard de CI)
 const APP_BUILD='Jul 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;
@@ -4142,9 +4142,20 @@ async function _djLoadIngBase(){
 // queda como su propia ficha: al tirarla desaparecía justo la pieza con los
 // alérgenos — eran 30 componentes validados sin dónde aparecer.
 const _DJ_SECCION = /^(masa|topping|base|relleno|guarnicion|sabores disponibles|salsa base|sazonador|marinada|elaboracion)$/;
+function _djTrozos(raw){
+  const out=[]; let cur='', prof=0;
+  for(const ch of (raw||'')){
+    if(ch==='(') prof++;
+    else if(ch===')') prof=Math.max(0,prof-1);
+    if((ch===','||ch==='.') && !prof){ out.push(cur); cur=''; continue; }
+    cur+=ch;
+  }
+  out.push(cur);
+  return out;
+}
 function _djSplitIngredients(raw){
   const out = [];
-  (raw||'').split(/[,.]/).forEach(tr=>{
+  _djTrozos(raw).forEach(tr=>{
     let s = tr.trim(); if(!s) return;
     if(s.startsWith('(') && !s.includes(')')) s = s.slice(1);
     if(s.endsWith(')') && !s.includes('(')) s = s.slice(0,-1);
@@ -20010,6 +20021,64 @@ function launchPase(dishId){
   document.addEventListener('keydown', _paseKeydown);
 }
 
+// La ficha nombra sus elaboraciones —«Masa: Leche, Harina… Topping: loncha de
+// jamón»— y así es como lo piensa cocina. Se respeta ese orden y esos rótulos
+// para agrupar la mise en place, en vez de una lista larga y plana.
+//
+// Devuelve un array PARALELO a _djSplitIngredients(raw): para cada chip que
+// aquella produce, en qué elaboración cae (o null si va suelto). El recorrido
+// tiene que ser idéntico al suyo o los índices dejarían de casar.
+//
+// Alcance real, medido: 34 de los 83 platos jugables traen rótulos, y de los
+// 44 platos con 12+ ingredientes —los que de verdad piden scroll— solo 24 los
+// tienen. En los otros no hay nada que agrupar y la lista se queda plana, que
+// es lo honesto: la ficha no dice más.
+function _paseSecDe(raw){
+  const out=[]; let sec=null;
+  _djTrozos(raw).forEach(tr=>{
+    let s=tr.trim(); if(!s) return;
+    if(s.startsWith('(') && !s.includes(')')) s=s.slice(1);
+    if(s.endsWith(')') && !s.includes('(')) s=s.slice(0,-1);
+    s=s.trim();
+    const m=s.match(/^([^:]{2,34}):\s*(.+)$/);
+    if(m){
+      const rot=m[1].trim();
+      sec=rot;
+      // Un rótulo que NO está en _DJ_SECCION lo emite _djSplitIngredients como
+      // un chip más («Mojo verde», «Ali-oli»): pertenece a su propia sección.
+      if(!_DJ_SECCION.test(_djNorm(rot))) out.push(sec);
+      s=m[2].trim();
+    }
+    if(s) out.push(sec);
+  });
+  return out;
+}
+
+// Los señuelos NO pueden formar grupo aparte: sería regalar la respuesta —se
+// gana eligiendo todos los grupos menos el último. Se reparten entre las
+// elaboraciones reales del plato, así que ningún grupo es enteramente falso.
+function _paseRepartirSenuelos(falsos, secciones){
+  if(!secciones.length) return falsos.map(f=>({...f, sec:null}));
+  return falsos.map((f,k)=>({...f, sec:secciones[k % secciones.length]}));
+}
+
+// Agrupa para pintar: primero lo que va suelto (sin rótulo, porque la ficha
+// tampoco se lo pone) y después cada elaboración con el suyo, en el orden en
+// que aparecen en la ficha.
+function _paseAgrupar(items, orden){
+  const por=new Map();
+  for(const it of items){
+    const k=it.sec||'';
+    if(!por.has(k)) por.set(k,[]);
+    por.get(k).push(it);
+  }
+  // Cocina lee la ficha de arriba abajo —masa y luego topping—, así que los
+  // grupos salen en ESE orden, no en el del barajado. Lo que va suelto, primero:
+  // en la ficha tampoco lleva rótulo.
+  const pos=k=>{ if(!k) return -1; const i=(orden||[]).indexOf(k); return i<0?1e6:i; };
+  return [...por.keys()].sort((a,b)=>pos(a)-pos(b)).map(k=>({sec:k, items:por.get(k)}));
+}
+
 // Una ficha nombra el mismo ingrediente en varias elaboraciones —«Sal» en la
 // masa y en la salsa, «Langostino» suelto y en el tartar— y eso en una receta
 // es correcto, pero como piscina no se puede jugar: salían dos fichas idénticas
@@ -20023,7 +20092,7 @@ function _paseFusionar(items){
     if(!k) continue;
     const y=por.get(k);
     if(y){ for(const al of (it.a||[])) if(!y.a.includes(al)) y.a.push(al); }
-    else por.set(k, {t:it.t, a:(it.a||[]).slice(), falso:it.falso});
+    else por.set(k, {t:it.t, a:(it.a||[]).slice(), falso:it.falso, sec:it.sec||null});
   }
   return [...por.values()];
 }
@@ -20031,9 +20100,17 @@ function _paseFusionar(items){
 function _paseArmar(){
   const dish = DISHES.find(d=>d.id===_paseState.dishId);
   const _en = LANG==='en';
-  const reales = _paseFusionar(_djIngredients(dish,_en).map(i=>({t:i.t, a:i.a, falso:false})));
+  // La elaboración de cada ingrediente sale de la propia ficha. _paseSecDe
+  // recorre la cadena igual que _djSplitIngredients, así que sus índices casan
+  // uno a uno con los primeros items; los componentes que _djIngredients añade
+  // por su cuenta al final se quedan sin sección, que es lo correcto.
+  const sec = _paseSecDe(dish.ingredients);
+  const reales = _paseFusionar(_djIngredients(dish,_en).map((i,k)=>({t:i.t, a:i.a, falso:false, sec:sec[k]||null})));
   const nFalsos = Math.min(4, Math.max(3, Math.round(reales.length/3)));
-  const falsos = _paseDistractores(dish, reales, nFalsos);
+  // Orden en que la ficha nombra sus elaboraciones, para pintarlas igual.
+  const usadas = [...new Set(sec.filter(Boolean))].filter(s=>reales.some(r=>r.sec===s));
+  _paseState.orden = usadas;
+  const falsos = _paseRepartirSenuelos(_paseDistractores(dish, reales, nFalsos), usadas);
   _paseState.piscina = _lqaShuffle(reales.concat(falsos));
   _paseState.sel = new Set();
   _paseState.veredicto = null;
@@ -20267,6 +20344,18 @@ function _paseRender(){
   document.body.appendChild(ov);
 }
 
+// Pinta la mise en place agrupada por elaboración. Si el plato no trae rótulos
+// —49 de los 83 jugables no traen ninguno— sale una lista plana, sin inventarle
+// secciones que la ficha no tiene.
+function _paseMiseHTML(enMise){
+  const grupos=_paseAgrupar(enMise, _paseState && _paseState.orden);
+  const conRotulo=grupos.filter(g=>g.sec).length;
+  if(!conRotulo) return '<div class="pase-mise-in">'+enMise.map(x=>x.chip).join('')+'</div>';
+  return grupos.map(g=>
+    (g.sec?'<div class="pase-sec-lbl">'+escapeHTML(g.sec)+'</div>':'')
+    +'<div class="pase-mise-in">'+g.items.map(x=>x.chip).join('')+'</div>').join('');
+}
+
 function _paseMontajeHTML(dish, dd, _en){
   const S=_paseState, V=S.veredicto;
 
@@ -20275,7 +20364,10 @@ function _paseMontajeHTML(dish, dd, _en){
     // un ingrediente lo mueve de uno a otro. La posición es el estado, que es
     // como se monta un plato de verdad y se lee de un vistazo sin leer nada.
     const enPlato=[], enMise=[];
-    S.piscina.forEach((it,i)=>(S.sel.has(i)?enPlato:enMise).push(_paseChip(it,i,S.sel.has(i),`_paseToggle(${i})`,'')));
+    S.piscina.forEach((it,i)=>{
+      const chip=_paseChip(it,i,S.sel.has(i),`_paseToggle(${i})`,'');
+      if(S.sel.has(i)) enPlato.push(chip); else enMise.push({sec:it.sec||null, chip});
+    });
     return `
     <section class="pase-plato${S.sel.size?'':' vacio'}" aria-label="${_en?'The plate':'El plato'}">
       <div class="pase-zone-lbl">${_en?'The plate':'El plato'}<span class="pase-count">${S.sel.size}</span></div>
@@ -20284,7 +20376,7 @@ function _paseMontajeHTML(dish, dd, _en){
     </section>
     <section class="pase-mise" aria-label="Mise en place">
       <div class="pase-zone-lbl">Mise en place</div>
-      <div class="pase-mise-in" id="paseEnMise">${enMise.join('')}</div>
+      <div id="paseEnMise">${_paseMiseHTML(enMise)}</div>
     </section>
     <div class="pase-actions">
       <button class="pase-serve" onclick="_paseServir()"${S.sel.size?'':' disabled'}>${_en?'Send the pass':'Servir Pase'}</button>

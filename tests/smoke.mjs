@@ -6058,6 +6058,60 @@ test('Pase de cocina: sin fichas repetidas y sin repintar en cada toque', () => 
     'el tablero de alérgenos debe refrescarse solo, sin volver a pintar la piscina');
 });
 
+test('Pase de cocina: la mise en place se agrupa por elaboración sin regalar la respuesta', () => {
+  // La ficha nombra sus elaboraciones —«Masa: … Topping: …»— y así lo piensa
+  // cocina, así que la mise en place se agrupa igual en vez de ser una lista
+  // plana. Alcance real, medido: 34 de los 83 platos jugables traen rótulos, y
+  // de los 44 con 12+ ingredientes solo 24. En los demás no hay nada que
+  // agrupar y la lista se queda plana — la ficha no dice más y no se le
+  // inventan secciones.
+  //
+  // La trampa que esto abre, y por la que hay guard: si los señuelos formaran
+  // grupo aparte, el juego se resolvería eligiendo todos los grupos menos el
+  // último. Se reparten entre las elaboraciones REALES, así que ningún grupo
+  // puede ser enteramente falso.
+  const arm = html.slice(html.indexOf('function _paseArmar('), html.indexOf('function _paseKeydown('));
+  assert(arm.includes('_paseRepartirSenuelos('), 'los señuelos deben repartirse entre las elaboraciones reales');
+  const rep = html.slice(html.indexOf('function _paseRepartirSenuelos('), html.indexOf('function _paseAgrupar('));
+  assert(rep.includes('secciones[k % secciones.length]'),
+    'el reparto debe recorrer las secciones existentes, nunca crear una propia');
+  // El rótulo sale de la ficha, no se lo inventa el juego.
+  const sec = html.slice(html.indexOf('function _paseSecDe('), html.indexOf('function _paseRepartirSenuelos('));
+  assert(sec.includes('_djTrozos(raw)'),
+    '_paseSecDe debe recorrer la ficha igual que _djSplitIngredients o los índices dejan de casar');
+  // Y se pintan en el orden en que la ficha las nombra, no en el del barajado.
+  const agr = html.slice(html.indexOf('function _paseAgrupar('), html.indexOf('function _paseFusionar('));
+  assert(agr.includes('.indexOf(k)'), 'los grupos deben ordenarse por el orden de la ficha');
+  assert(agr.includes('if(!k) return -1'), 'lo que va suelto se pinta primero, como en la ficha');
+});
+
+test('el troceador de ingredientes no parte dentro de un paréntesis', () => {
+  // «Granadina (Vinagre de manzana, Azúcar)» es UN ingrediente y salía partido
+  // en «Granadina (Vinagre de manzana» y «Azúcar)»; la txuleta «(1,2 kg)»
+  // quedaba en «(1». Medido: 15 chips con el paréntesis descompensado. Esto lo
+  // pinta también el Viaje Inmersivo, así que llevaba tiempo a la vista.
+  assert(html.includes('function _djTrozos(raw)'), 'falta el troceador que respeta los paréntesis');
+  assert(!html.includes(".split(/[,.]/).forEach(tr=>{"),
+    'nadie puede volver a trocear la ficha con un split ciego por comas');
+  const tro = html.slice(html.indexOf('function _djTrozos('), html.indexOf('function _djSplitIngredients('));
+  assert(tro.includes('prof++') && tro.includes('prof=Math.max(0,prof-1)') && tro.includes('&& !prof'),
+    'el corte debe contar la profundidad de paréntesis y no cortar dentro');
+  // Y el resultado: ninguna ficha puede sacar un chip con el paréntesis abierto.
+  const iD = html.indexOf('const DISHES = ['), jD = html.indexOf('\n];', iD);
+  const DISHES = new Function(html.slice(iD, jD + 3) + '; return DISHES;')(); // eslint-disable-line no-new-func
+  const fn = n => { const i = html.indexOf('function ' + n + '('); let d = 0;
+    for (let k = html.indexOf('{', i); k < html.length; k++) {
+      if (html[k] === '{') d++; else if (html[k] === '}') { d--; if (!d) return html.slice(i, k + 1); } } };
+  const M = new Function(`${html.slice(html.indexOf('const _djNorm ='), html.indexOf('async function _djLoadIngBase'))}
+    const _DJ_SECCION = ${/^(masa|topping|base|relleno|guarnicion|sabores disponibles|salsa base|sazonador|marinada|elaboracion)$/};
+    ${fn('_djTrozos')}${fn('_djSplitIngredients')}; return _djSplitIngredients;`)(); // eslint-disable-line no-new-func
+  const rotos = [];
+  for (const d of DISHES)
+    for (const t of M(d.ingredients))
+      if ((t.match(/\(/g) || []).length !== (t.match(/\)/g) || []).length) rotos.push(`${d.id}: «${t}»`);
+  assert(rotos.length === 0, `chips con el paréntesis descompensado: ${rotos.slice(0, 6).join(' · ')}`);
+});
+
 test('Pase de cocina: la respuesta correcta gana, en los 83 platos jugables', () => {
   // Barrido funcional sobre el dato real: se monta cada plato con TODOS sus
   // ingredientes reales y ninguno falso, y eso tiene que dar «pase perfecto»
@@ -6082,8 +6136,9 @@ test('Pase de cocina: la respuesta correcta gana, en los 83 platos jugables', ()
     + cut('const DISH_COMPONENTS = ', '};')
     + cut('const DISH_ACTIONS = ', '};')
     + html.slice(html.indexOf('const _djNorm ='), html.indexOf('async function _djLoadIngBase'))
-    + fn('_djSplitIngredients') + fn('_djSameThing') + fn('_djIngName') + fn('_djIngredients')
+    + fn('_djTrozos') + fn('_djSplitIngredients') + fn('_djSameThing') + fn('_djIngName') + fn('_djIngredients')
     + fn('_lqaShuffle')
+    + fn('_paseSecDe') + fn('_paseRepartirSenuelos') + fn('_paseAgrupar') + fn('_paseMiseHTML')
     + fn('_paseJugables') + fn('_paseDistractores') + fn('_paseFusionar') + fn('_paseArmar')
     + fn('_paseAlergenosMontados') + fn('_paseServir') + fn('_paseRender')
     + fn('_paseMontajeHTML') + fn('_paseDesmontajeHTML') + fn('_paseChip')
