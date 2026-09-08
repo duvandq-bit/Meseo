@@ -6317,6 +6317,36 @@ test('Pase: la fase de la alergia no lleva la respuesta escrita en las fichas', 
     'al corregir la fase 2 las insignias vuelven, que es cuando enseñan');
 });
 
+test('Pase: al acabar un plato el botón dorado sigue jugando, no sale', () => {
+  // Propietario, sep 2026: «terminas un plato y la aplicación te lanza al
+  // inicio». Medido en los cuatro accesos (tarjeta del inicio, tarjeta de
+  // Repaso y el botón de dos listas de platos): ni la pestaña, ni la vista, ni
+  // el scroll cambian al cerrar — no había salto. Lo que había era que el
+  // juego se abre desde el inicio y el ÚNICO botón dorado de la pantalla final
+  // era «Terminar»: pulsas lo que el diseño te pide y apareces donde entraste.
+  const des = html.slice(html.indexOf('function _paseDesmontajeHTML('), html.indexOf('function renderRepaso('));
+  const fin = des.slice(des.lastIndexOf('<div class="pase-actions">'));
+  assert(/class="pase-serve" onclick="_paseOtroPlato\(\)"/.test(fin),
+    'el botón principal de la pantalla final debe seguir jugando');
+  assert(/class="pase-retry" onclick="_paseClose\(\)"/.test(fin),
+    'salir es la acción discreta, nunca la dorada');
+  assert(!/class="pase-serve" onclick="_paseClose\(\)"/.test(html),
+    'ninguna pantalla del Pase puede tener el cierre como acción dorada');
+  // Y pedir el plato nuevo ANTES de borrar el viejo: si no quedara ninguno
+  // jugable, quitar primero dejaba al usuario en la pantalla de detrás — que
+  // es literalmente el salto que se denunció.
+  const otro = html.slice(html.indexOf('function _paseOtroPlato('), html.indexOf('function _paseClose('));
+  assert(otro.indexOf('launchPase(null)') < otro.indexOf('.remove()'),
+    'se pide el plato antes de retirar la partida anterior');
+  // La tanda se cuenta, para que seguir tenga un porqué y salir sea una
+  // decisión en vez del gesto por defecto.
+  assert(/function _paseRachaHTML\(/.test(html), 'falta el recuento de la tanda');
+  assert(/_paseRacha\.n\+\+/.test(html), 'la tanda se cuenta al registrar el plato');
+  assert(/_paseRacha=\{n:0, perf:0\}/.test(html.slice(html.indexOf('function _paseClose('))),
+    'cerrar el juego reinicia la tanda');
+  assert(/\.pase-racha\{/.test(read('styles.css')), 'el recuento de la tanda necesita su estilo');
+});
+
 test('Pase: los sazonadores no entran en la piscina', () => {
   // «Hay ingredientes que no tiene sentido que estén, como el agua y la sal»
   // (propietario, sep 2026). No identifican el plato —la sal sale en 33 de los

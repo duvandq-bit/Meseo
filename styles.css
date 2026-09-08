@@ -8907,6 +8907,9 @@ li.fail .dj-qrv-mark{color:#e8a0a0}
 .pase-tally.ok{background:rgba(122,178,132,.14);color:var(--green-deep);border-color:rgba(122,178,132,.45)}
 .pase-tally.falta{background:rgba(212,170,76,.16);color:#8a6a1c;border-color:rgba(212,170,76,.5)}
 .pase-tally.sobra{background:rgba(193,74,58,.12);color:#8f3f38;border-color:rgba(193,74,58,.45)}
+/* La tanda en curso, justo encima de los botones: da un motivo para seguir y
+   convierte «Terminar» en una decisión, no en el gesto por defecto. */
+.pase-racha{font-family:var(--font-mono);font-size:var(--text-micro);letter-spacing:.09em;text-transform:uppercase;color:var(--parch3);text-align:center;margin:var(--space-3) 0 var(--space-2)}
 /* Leyenda: los colores de las fichas explicados una vez, para no repetir los
    nombres arriba. */
 .pase-leyenda{display:flex;flex-wrap:wrap;gap:var(--space-3);margin-bottom:var(--space-3);font-family:var(--font-mono);font-size:var(--text-micro);letter-spacing:.08em;text-transform:uppercase;color:var(--parch3)}
