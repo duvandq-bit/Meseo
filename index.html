@@ -52,7 +52,7 @@
 <meta property="og:description" content="Formación de equipos de sala: carta, alérgenos, vinos, exámenes y juegos de repaso.">
 <meta property="og:url" content="https://meseo.es/">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"Meseo","url":"https://meseo.es/"}</script>
-<meta name="app-version" content="7.396">
+<meta name="app-version" content="7.397">
 <meta name="app-build" content="May 2026">
 <meta name="theme-color" content="#1c2a22">
 <!-- ═══ PWA ═══ -->
@@ -1596,7 +1596,7 @@ const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><p
 const SRC = 'src';
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='7.396';  // sincronizada con sw.js VERSION (guard de CI)
+const APP_VERSION='7.397';  // sincronizada con sw.js VERSION (guard de CI)
 const APP_BUILD='Jul 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;
@@ -4450,30 +4450,48 @@ function _djQComponente(dish, dd, _en, pool){
 // explicación. Sale de DISH_ACTIONS, la matriz validada por cocina.
 function _djQAdaptar(dish, dd, _en){
   const acts = (typeof DISH_ACTIONS!=='undefined' && DISH_ACTIONS[dish.id]) || {};
-  const claves = Object.keys(acts).filter(a=>acts[a] && (acts[a].r===0 || acts[a].r===1));
+  // Sólo los alérgenos que SÍ se pueden retirar. Antes la pregunta era de sí o
+  // no, y en esta carta el 73% de las retiradas posibles son estructurales: la
+  // respuesta era «No» tres de cada cuatro veces y bastaba con marcarla
+  // siempre. Equilibrar el sorteo del alérgeno sólo bajaba al 68%, porque 40
+  // de los 84 platos no tienen ninguna retirada posible — el desequilibrio es
+  // de la cocina, no del sorteo, y no se falsea.
+  //
+  // Así que se cambia la pregunta por la que de verdad se usa en el pase: no
+  // «¿se puede?», sino «¿QUÉ se comanda?». La respuesta es la comanda validada
+  // por cocina y los distractores son comandas reales de otros platos, que es
+  // lo que hace que haya que conocer ESTE. Lo estructural se sigue entrenando
+  // en el Pase, que exige señalar qué aporta el alérgeno antes de decidir.
+  const claves = Object.keys(acts).filter(a=>acts[a] && acts[a].r===1 && (_en?(acts[a].c_en||acts[a].c):acts[a].c));
   if(!claves.length) return null;
   const a = claves[Math.floor(Math.random()*claves.length)];
-  const act = acts[a];
-  const cmd = _en ? (act.c_en || act.c) : act.c;
+  const cmd = _en ? (acts[a].c_en || acts[a].c) : acts[a].c;
   const alN = _en ? _djAlEn(a) : a;
-  const opts = _en
-    ? ['Yes, with a change to the order', 'No — it is structural to the dish',
-       'Yes, no change needed', 'Only at dinner service']
-    : ['Sí, cambiando la comanda', 'No — es estructural del plato',
-       'Sí, sin cambiar nada', 'Solo en el servicio de cena'];
+  // Comandas de OTROS platos, sin repetir la nuestra ni entre ellas.
+  const vistas = new Set([String(cmd).toLowerCase().trim()]);
+  const otras = [];
+  for(const o of DISHES){
+    if(o.id===dish.id) continue;
+    const oa = (typeof DISH_ACTIONS!=='undefined' && DISH_ACTIONS[o.id]) || {};
+    for(const k of Object.keys(oa)){
+      if(!oa[k] || oa[k].r!==1) continue;
+      const c = _en ? (oa[k].c_en||oa[k].c) : oa[k].c;
+      if(!c) continue;
+      const key=String(c).toLowerCase().trim();
+      if(vistas.has(key)) continue;
+      vistas.add(key); otras.push(c);
+    }
+  }
+  if(otras.length < 3) return null;
+  const opts = _djShuffle([cmd, ..._djShuffle(otras).slice(0,3)]);
   return {
     tipo:'adaptar',
-    // «alérgico a Sulfitos» / «el Sulfitos es estructural» no concuerdan en
-    // español: los nombres de alérgeno van en plural unos y en singular otros.
-    // Con «tiene alergia a X» y «ese alérgeno» la frase vale para los catorce.
-    q: _en ? `A guest is allergic to ${alN}. Can "${dd.name}" be adapted?`
-           : `Un huésped tiene alergia a ${alN}. ¿Se puede adaptar "${dd.name}"?`,
+    q: _en ? `A guest is allergic to ${alN}. What is ordered for "${dd.name}"?`
+           : `Un huésped tiene alergia a ${alN}. ¿Qué se comanda en "${dd.name}"?`,
     options: opts,
-    correctIdx: act.r===1 ? 0 : 1,
-    explain: act.r===1
-      ? (_en ? `Yes${cmd?` — order ${cmd}`:''}.` : `Sí${cmd?` — se comanda ${cmd}`:''}.`)
-      : (_en ? `No: in this dish that allergen is structural — offer another one.`
-             : `No: en este plato ese alérgeno es estructural — hay que ofrecer otro.`)
+    correctIdx: opts.indexOf(cmd),
+    explain: _en ? `Order ${cmd}. The kitchen has validated this change for this dish.`
+                 : `Se comanda ${cmd}. Cocina tiene validado ese cambio para este plato.`
   };
 }
 
@@ -4488,12 +4506,20 @@ function _djQAdaptar(dish, dd, _en){
 function _djQSinAlergenos(dish, dd, _en, pool){
   if((dish.allergens||[]).length !== 0) return null;
   const malos = _djShuffle(pool).slice(0,3);
-  const nada = _en ? 'None — it declares no allergens' : 'Ninguno — no declara alérgenos';
-  const opts = _djShuffle([nada, ...malos.map(a=>_en?`It declares ${_djAlEn(a)}`:`Declara ${a}`)]);
+  // Las opciones eran «Ninguno — no declara alérgenos» contra «Declara X»: la
+  // correcta era la única negada Y la más larga, siempre. Medido en la
+  // auditoría de sep 2026: predecible el 100% de 168 preguntas sin leer el
+  // plato. Ahora las cuatro tienen la misma forma —un nombre a secas— y no hay
+  // nada que las distinga salvo saber la respuesta.
+  const nada = _en ? 'None' : 'Ninguno';
+  const opts = _djShuffle([nada, ...malos.map(a=>_en?_djAlEn(a):a)]);
   return {
     tipo:'que-declara',
-    q: _en ? `Per its card, which allergens does "${dd.name}" declare?`
-           : `Según su ficha, ¿qué alérgenos declara "${dd.name}"?`,
+    // Mismo enunciado que la pregunta de alérgeno de un plato que sí lleva. Con
+    // el suyo propio —«¿qué alérgenos declara?»— bastaba leerlo para saber que
+    // la respuesta era «Ninguno»: medido, acertaba el 100% de 140 casos.
+    q: _en ? `Which of these allergens is present in "${dd.name}"?`
+           : `¿Cuál de estos alérgenos tiene "${dd.name}"?`,
     options: opts,
     correctIdx: opts.indexOf(nada),
     // Sin sobrevender: «no declara» no es lo mismo que «no hay riesgo».
@@ -4531,9 +4557,29 @@ function _djQCualSinAlergenos(dish, dd, _en, allDishes){
 // se pregunta cuántos declara antes que nada obvio.
 function _djQCuantos(dish, dd, _en){
   const n = (dish.allergens||[]).length;
-  const set = [];
-  [n, n+1, n+2, Math.max(0,n-1), n+3].forEach(v=>{ const s=String(v); if(!set.includes(s) && set.length<4) set.push(s); });
-  const opts = _djShuffle(set);
+  // Los distractores salían siempre de [n-1, n, n+1, n+2]: ordenados, la
+  // correcta era SIEMPRE la segunda más pequeña. Medido en la auditoría de
+  // sep 2026: «elegir el segundo número más pequeño» acertaba el 100% de 420
+  // preguntas, sin mirar el plato. Ahora el rango se elige al azar alrededor
+  // de n, de modo que la correcta cae en cualquier posición del orden.
+  // Se sortea PRIMERO en qué puesto del orden va a caer la correcta y luego se
+  // eligen los distractores para que caiga ahí. Elegirlos al azar alrededor de
+  // n no bastaba: con n pequeño (1-3 en casi toda la carta) seguía saliendo la
+  // segunda más pequeña el 68% de las veces.
+  const abajo = [], arriba = [];
+  for(let v=Math.max(0,n-4); v<n; v++) abajo.push(v);
+  for(let v=n+1; v<=n+4; v++) arriba.push(v);
+  const nAbajo = Math.min(abajo.length, Math.floor(Math.random()*4));
+  const nArriba = Math.min(arriba.length, 3-nAbajo);
+  const elegidos = _djShuffle(abajo).slice(-nAbajo || abajo.length).slice(0,nAbajo)
+    .concat(_djShuffle(arriba).slice(0,nArriba));
+  // si un lado no da de sí, se completa con el otro
+  while(elegidos.length<3){
+    const resto=[...abajo,...arriba].filter(v=>!elegidos.includes(v));
+    if(!resto.length) break;
+    elegidos.push(resto[Math.floor(Math.random()*resto.length)]);
+  }
+  const opts = _djShuffle([String(n), ...elegidos.map(String)]);
   return {
     tipo:'cuantos',
     q: _en ? `How many allergens does "${dd.name}" declare?` : `¿Cuántos alérgenos declara "${dd.name}"?`,
@@ -4633,6 +4679,9 @@ function _djGenerateQuiz(dish){
     if(dishAllNorm.has('crustaceo') || dishAllNorm.has('molusco')) dishAllNorm.add('marisco');
     const wrongPool = allergenPool.filter(a=>!dishAllNorm.has(_allNorm(a)));
     const wrongs = _djShuffle(wrongPool).slice(0,3);
+    // «Ninguno» tiene que poder salir también aquí, donde es FALSO. Si sólo
+    // aparecía en los platos sin alérgenos, verlo en la lista era la respuesta.
+    if(Math.random() < 0.34) wrongs[Math.floor(Math.random()*wrongs.length)] = _en ? 'None' : 'Ninguno';
     const opts = _djShuffle([correctA, ...wrongs]);
     questions.push({
       tipo:'que-alergeno',

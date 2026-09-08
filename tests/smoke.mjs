@@ -40,6 +40,92 @@ const html = read('index.html');
 
 // ─── 1. Main inline <script> parses ─────────────────────────────
 console.log('\nJS syntax');
+test('Cuestionario del Viaje: no se aprueba con trucos, sin mirar el plato', () => {
+  // Auditoría de sep 2026, a petición del propietario: «caza de preguntas y
+  // respuestas absurdas, sobre todo respuestas trampa fáciles de predecir».
+  // Se midió qué acertaba un camarero perezoso que no lee el plato. Lo que
+  // salió, sobre el generador real:
+  //   · «¿qué alérgenos declara?»  → la correcta era la única negada Y la más
+  //     larga: 100% de 168. Además el propio enunciado sólo aparecía en platos
+  //     sin alérgenos, así que leerlo ya daba la respuesta.
+  //   · «¿cuántos declara?»        → las opciones eran siempre [n-1,n,n+1,n+2]:
+  //     la correcta era SIEMPRE la segunda más pequeña, 100% de 420.
+  //   · «¿se puede adaptar?»       → «No, es estructural» era la más larga y es
+  //     la verdad el 73% de las veces en esta carta: 73% eligiendo la larga.
+  // Este guard vuelve a medirlo cada vez, sobre el dato real, en vez de fiarse
+  // de que el texto del código siga diciendo lo que decía.
+  const cut = (ini, fin) => { const i = html.indexOf(ini); return html.slice(i, html.indexOf(fin, i) + fin.length); };
+  const fn = n => { const i = html.indexOf('function ' + n + '('); let d = 0;
+    for (let k = html.indexOf('{', i); k < html.length; k++) {
+      if (html[k] === '{') d++; else if (html[k] === '}') { d--; if (!d) return html.slice(i, k + 1); } } };
+  const src = `
+    var LANG='es', _djState={};
+    function getDish(d){return d;} function escapeHTML(s){return String(s);}
+    const _DJ_SECCION = /^(masa|topping|base|relleno|guarnicion|sabores disponibles|salsa base|sazonador|marinada|elaboracion)$/;
+    `
+    + cut('const DISHES = [', '\n];') + cut('const DISH_COMPONENTS = ', '};') + cut('const DISH_ACTIONS = ', '};')
+    + cut('const DJ_ALERGENOS_EN = ', '};')
+    + html.slice(html.indexOf('const _djNorm ='), html.indexOf('async function _djLoadIngBase'))
+    + fn('_djTrozos') + fn('_djSplitIngredients') + fn('_djSameThing') + fn('_djIngName') + fn('_djIngredients')
+    + fn('_djShuffle') + fn('_djAlEn')
+    + fn('_djQComponente') + fn('_djQAdaptar') + fn('_djQSinAlergenos')
+    + fn('_djQCualSinAlergenos') + fn('_djQCuantos') + fn('_djQIngredienteAusente')
+    + fn('_djGenerateQuiz')
+    + `
+    var allergenData_en = Object.assign({}, DJ_ALERGENOS_EN,
+      {'Mariscos':'Shellfish','Sésamo':'Sesame','Cacahuetes':'Peanuts'});
+    const P=[];
+    for(let r=0;r<10;r++) for(const d of DISHES){
+      let qs=[]; try{ qs=_djGenerateQuiz(d)||[]; }catch(e){ }
+      for(const q of qs) if(q && q.options && q.correctIdx>=0) P.push(q);
+    }
+    const num = o => Number(String(o).trim());
+    const largo = o => String(o).length;
+    const uni = (q,f)=>{ const v=q.options.map(f); const m=Math.max(...v);
+      const c=v.map((x,i)=>x===m?i:-1).filter(i=>i>=0); return c.length===1?c[0]:-1; };
+    const uniMin = (q,f)=>{ const v=q.options.map(f); const m=Math.min(...v);
+      const c=v.map((x,i)=>x===m?i:-1).filter(i=>i>=0); return c.length===1?c[0]:-1; };
+    const trucos = {
+      larga:  q=>uni(q,largo),
+      corta:  q=>uniMin(q,largo),
+      negada: q=>{ const c=q.options.map((o,i)=>/\b(no|ning|nunca|sin)\b/i.test(String(o))?i:-1).filter(i=>i>=0);
+                   return c.length===1?c[0]:-1; },
+      segundoMenor: q=>{ const v=q.options.map(num); if(v.some(x=>!Number.isFinite(x))) return -1;
+        const o=[...v].sort((a,b)=>a-b)[1];
+        const c=v.map((x,i)=>x===o?i:-1).filter(i=>i>=0); return c.length===1?c[0]:-1; },
+    };
+    const res={n:P.length}; 
+    for(const k of Object.keys(trucos)) res[k]=P.filter(q=>trucos[k](q)===q.correctIdx).length/P.length;
+    // ¿algún molde de enunciado tiene una sola respuesta posible? Leerlo bastaría.
+    const por={};
+    for(const q of P){ const m=String(q.q).replace(/"[^"]*"/g,'«X»'); (por[m]=por[m]||[]).push(q); }
+    res.moldesQueDelatan = Object.entries(por)
+      .filter(([m,qs])=>qs.length>=20 && new Set(qs.map(x=>String(x.options[x.correctIdx]).toLowerCase())).size===1)
+      .map(([m])=>m.slice(0,60));
+    // Y por tipo, que es donde se esconden
+    res.porTipo={};
+    for(const t of [...new Set(P.map(q=>q.tipo))]){
+      const s=P.filter(q=>q.tipo===t);
+      res.porTipo[t]=Object.fromEntries(Object.keys(trucos).map(k=>[k, s.filter(q=>trucos[k](q)===q.correctIdx).length/s.length]));
+      res.porTipo[t].n=s.length;
+    }
+    return res;
+  `;
+  const R = new Function(src)(); // eslint-disable-line no-new-func
+  assert(R.n > 2000, `esperaba miles de preguntas para medir, hay ${R.n}`);
+  assert(R.moldesQueDelatan.length === 0,
+    `hay enunciados con una sola respuesta posible: leerlos ya da el punto — ${R.moldesQueDelatan.join(' | ')}`);
+  // El azar es 25% con cuatro opciones. Se deja margen (45%) porque algunas
+  // distribuciones reales de la carta no se pueden aplanar sin falsear el dato;
+  // lo que no puede volver es un truco que acierte casi siempre.
+  for(const [tipo, m] of Object.entries(R.porTipo)){
+    for(const truco of ['larga','corta','negada','segundoMenor']){
+      assert(m[truco] <= 0.45,
+        `en «${tipo}» (${m.n} preguntas) el truco «${truco}» acierta el ${(100*m[truco]).toFixed(0)}%: la respuesta se predice sin mirar el plato`);
+    }
+  }
+});
+
 test('main inline <script> block parses without syntax errors', () => {
   // The app's logic lives in the last, largest <script> block. Slice from
   // the final `<script>` (no src) to the final `</script>` and verify the
