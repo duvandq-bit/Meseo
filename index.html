@@ -52,7 +52,7 @@
 <meta property="og:description" content="Formación de equipos de sala: carta, alérgenos, vinos, exámenes y juegos de repaso.">
 <meta property="og:url" content="https://meseo.es/">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"Meseo","url":"https://meseo.es/"}</script>
-<meta name="app-version" content="7.386">
+<meta name="app-version" content="7.387">
 <meta name="app-build" content="May 2026">
 <meta name="theme-color" content="#1c2a22">
 <!-- ═══ PWA ═══ -->
@@ -1596,7 +1596,7 @@ const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><p
 const SRC = 'src';
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='7.386';  // sincronizada con sw.js VERSION (guard de CI)
+const APP_VERSION='7.387';  // sincronizada con sw.js VERSION (guard de CI)
 const APP_BUILD='Jul 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;
@@ -19454,6 +19454,7 @@ function _paseDistractores(dish, reales, n){
       const h=_djNorm(it.t);
       if(!h || vistos.has(h)) continue;
       if(mios.some(m=>_djSameThing(m, it.t))) continue;
+      if(_paseEsSazonador(it)) continue;   // un señuelo de sal no engaña a nadie
       vistos.add(h);
       cand.push({t:it.t, a:it.a, falso:true});
     }
@@ -19512,6 +19513,18 @@ function launchPase(dishId){
 // 44 platos con 12+ ingredientes —los que de verdad piden scroll— solo 24 los
 // tienen. En los otros no hay nada que agrupar y la lista se queda plana, que
 // es lo honesto: la ficha no dice más.
+// Sazonadores y bases: no aportan nada al ejercicio. Ni identifican el plato
+// —la sal está en 33 de los 98— ni llevan alérgeno nunca, así que sólo alargan
+// la mise en place (mediana medida: 15 fichas, máximo 31). El propietario lo
+// dijo mirándolo en el móvil: «el agua y la sal no tiene sentido que estén».
+// Verduras y frutas NO entran aquí: el tomate o la lechuga sí dicen qué plato
+// es. Si algún día uno de estos pasara a llevar alérgeno, el guard lo canta.
+const _PASE_SAZONADOR = new Set(['sal','sal gruesa','agua','azucar','aceite',
+  'aceite de oliva','aceite de girasol','pimienta','pimienta negra']);
+function _paseEsSazonador(it){
+  return !(it.a||[]).length && _PASE_SAZONADOR.has(_djNorm(it.t));
+}
+
 function _paseSecDe(raw){
   const out=[]; let sec=null;
   _djTrozos(raw).forEach(tr=>{
@@ -19584,7 +19597,8 @@ function _paseArmar(){
   // uno a uno con los primeros items; los componentes que _djIngredients añade
   // por su cuenta al final se quedan sin sección, que es lo correcto.
   const sec = _paseSecDe(dish.ingredients);
-  const reales = _paseFusionar(_djIngredients(dish,_en).map((i,k)=>({t:i.t, a:i.a, falso:false, sec:sec[k]||null})));
+  const reales = _paseFusionar(_djIngredients(dish,_en).map((i,k)=>({t:i.t, a:i.a, falso:false, sec:sec[k]||null})))
+    .filter(it=>!_paseEsSazonador(it));
   const nFalsos = Math.min(4, Math.max(3, Math.round(reales.length/3)));
   // Orden en que la ficha nombra sus elaboraciones, para pintarlas igual.
   const usadas = [...new Set(sec.filter(Boolean))].filter(s=>reales.some(r=>r.sec===s));
@@ -19787,8 +19801,12 @@ function _paseClose(){
 }
 
 // ── Render ─────────────────────────────────────────────────────────────
-function _paseChip(it, i, on, onclick, extra){
-  const al=(it.a||[]).map(a=>`<span class="pase-al">${escapeHTML(allergenLocal(a))}</span>`).join('');
+function _paseChip(it, i, on, onclick, extra, ocultarAl){
+  // En la fase de la alergia las insignias se ocultan hasta corregir: si la
+  // ficha lleva escrito «Sulfitos», «retira lo que aporta Sulfitos» se resuelve
+  // leyendo, no sabiendo. Medido antes: el 100% de las retiradas se acertaba
+  // mirando la insignia.
+  const al=ocultarAl ? '' : (it.a||[]).map(a=>`<span class="pase-al">${escapeHTML(allergenLocal(a))}</span>`).join('');
   return `<button type="button" class="pase-chip${on?' on':''}${extra||''}" data-i="${i}" onclick="${onclick}"
     aria-pressed="${on?'true':'false'}"><span class="pase-chip-t">${escapeHTML(it.t)}</span>${al?`<span class="pase-chip-al">${al}</span>`:''}</button>`;
 }
@@ -19911,7 +19929,7 @@ function _paseDesmontajeHTML(dish, dd, _en){
 
   if(!R){
     const enPlato=[], retirados=[];
-    S.plato.forEach((it,i)=>(S.quitar.has(i)?retirados:enPlato).push(_paseChip(it,i,S.quitar.has(i),`_paseToggleQuitar(${i})`,'')));
+    S.plato.forEach((it,i)=>(S.quitar.has(i)?retirados:enPlato).push(_paseChip(it,i,S.quitar.has(i),`_paseToggleQuitar(${i})`,'',true)));
     return `
     <div class="pase-alerta"><span class="pase-alerta-ic">⚠</span>
       <span>${_en?'Table 4. A guest is allergic to':'Mesa 4. Un comensal tiene alergia a'} <b>${escapeHTML(alLoc)}</b>.

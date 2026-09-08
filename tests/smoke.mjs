@@ -6186,6 +6186,66 @@ test('la Inspección Fantasma se llama Auditoría (sep 2026)', () => {
     'el Servicio Fantasma (otra función, ya retirada) no entra en este renombrado');
 });
 
+test('Pase: la fase de la alergia no lleva la respuesta escrita en las fichas', () => {
+  // El propietario, jugándolo en el móvil: «cuando llega un cliente alérgeno la
+  // pantalla te dice la alergia». Y era peor que eso: cada ficha llevaba su
+  // alérgeno impreso, así que «retira lo que aporta Sulfitos» se resolvía
+  // tocando la que ponía «Sulfitos». Medido: el 100% de las retiradas se
+  // acertaba leyendo, sin saber nada del plato.
+  // Las insignias se ocultan mientras se responde y aparecen al corregir, que
+  // es cuando enseñan algo.
+  const chip = html.slice(html.indexOf('function _paseChip('), html.indexOf('function _paseRender('));
+  assert(/ocultarAl/.test(chip), '_paseChip debe poder pintar la ficha sin su insignia');
+  assert(/const al=ocultarAl \? '' :/.test(chip), 'ocultarAl tiene que suprimir la insignia, no atenuarla');
+  const des = html.slice(html.indexOf('function _paseDesmontajeHTML('), html.indexOf('function renderRepaso('));
+  const sinResolver = des.slice(0, des.indexOf('const chips=S.plato.map'));
+  assert(/_paseToggleQuitar\(\$\{i\}\)`,'',true\)/.test(sinResolver),
+    'mientras se responde la fase 2, las fichas van SIN insignia');
+  // y al corregir sí se ven
+  assert(/_paseChip\(it,i,on,'void 0',cls\)/.test(des),
+    'al corregir la fase 2 las insignias vuelven, que es cuando enseñan');
+});
+
+test('Pase: los sazonadores no entran en la piscina', () => {
+  // «Hay ingredientes que no tiene sentido que estén, como el agua y la sal»
+  // (propietario, sep 2026). No identifican el plato —la sal sale en 33 de los
+  // 98— ni llevan alérgeno nunca: sólo alargaban la mise en place. Medido: la
+  // mediana de la piscina baja de 15 fichas a 13, y el máximo de 31 a 27.
+  assert(/const _PASE_SAZONADOR = new Set\(/.test(html), 'falta la lista de sazonadores');
+  const lista = html.slice(html.indexOf('const _PASE_SAZONADOR'), html.indexOf('function _paseEsSazonador'));
+  for (const x of ['sal', 'agua', 'azucar', 'aceite de oliva', 'pimienta'])
+    assert(lista.includes(`'${x}'`), `el sazonador «${x}» debe estar en la lista`);
+  // Verduras y frutas NO: el tomate o la lechuga sí dicen qué plato es.
+  for (const x of ['tomate', 'lechuga', 'cebolla', 'zanahoria', 'papa'])
+    assert(!new RegExp(`'${x}'`).test(lista), `«${x}» identifica el plato y no puede filtrarse`);
+  // Un sazonador que llegara a llevar alérgeno dejaría de filtrarse solo.
+  const fn = html.slice(html.indexOf('function _paseEsSazonador'), html.indexOf('function _paseSecDe('));
+  assert(/!\(it\.a\|\|\[\]\)\.length &&/.test(fn),
+    'sólo se filtra lo que NO lleva alérgeno: si mañana la sal llevara uno, vuelve a la piscina');
+  // Se filtran de los reales Y de los señuelos.
+  const arm = html.slice(html.indexOf('function _paseArmar('), html.indexOf('function _paseKeydown('));
+  assert(/\.filter\(it=>!_paseEsSazonador\(it\)\)/.test(arm), 'los ingredientes reales se filtran');
+  const dis = html.slice(html.indexOf('function _paseDistractores('), html.indexOf('function _paseGo('));
+  assert(/if\(_paseEsSazonador\(it\)\) continue;/.test(dis), 'un señuelo de sal no engaña a nadie');
+});
+
+test('Pase: tema pergamino, como el resto de la app', () => {
+  // «Muy confuso, el diseño muy oscuro» (propietario, viéndolo en el móvil).
+  // Era un overlay oscuro heredado del Viaje Inmersivo: entrar desde un Repaso
+  // claro era saltar a otra app. Ojo con los tokens, que están al revés de lo
+  // que parece: --ink (#f4ede2) es el PAPEL claro y --parchment (#1c2a22) la
+  // TINTA. Poner --color-bg de fondo dejaba texto oscuro sobre fondo oscuro.
+  const css = read('styles.css');
+  assert(/\.pase-overlay\{[^}]*background:var\(--ink\)/.test(css),
+    'el fondo del pase es el papel claro (--ink), no --color-bg ni --parchment');
+  assert(!/\.pase-overlay\{[^}]*background:var\(--color-bg\)/.test(css),
+    '--color-bg es la tinta oscura: no vale como fondo');
+  // El oro de la casa es demasiado claro para texto blanco encima.
+  assert(/\.pase-serve\{[^}]*color:var\(--parchment\)/.test(css),
+    'el botón dorado lleva texto en tinta: en blanco no llegaba a AA (medido 2.94)');
+  assert(!/\.pase-serve\{[^}]*color:#fff/.test(css), 'nada de texto blanco sobre el oro');
+});
+
 test('Pase de cocina: la mise en place se agrupa por elaboración sin regalar la respuesta', () => {
   // La ficha nombra sus elaboraciones —«Masa: … Topping: …»— y así lo piensa
   // cocina, así que la mise en place se agrupa igual en vez de ser una lista
@@ -6266,6 +6326,7 @@ test('Pase de cocina: la respuesta correcta gana, en los 83 platos jugables', ()
     + html.slice(html.indexOf('const _djNorm ='), html.indexOf('async function _djLoadIngBase'))
     + fn('_djTrozos') + fn('_djSplitIngredients') + fn('_djSameThing') + fn('_djIngName') + fn('_djIngredients')
     + fn('_lqaShuffle')
+    + html.slice(html.indexOf('const _PASE_SAZONADOR'), html.indexOf('function _paseSecDe('))
     + fn('_paseSecDe') + fn('_paseRepartirSenuelos') + fn('_paseAgrupar') + fn('_paseMiseHTML')
     + fn('_paseJugables') + fn('_paseDistractores') + fn('_paseFusionar') + fn('_paseArmar')
     + fn('_paseAlergenosMontados') + fn('_paseServir') + fn('_paseRender')
@@ -6339,8 +6400,8 @@ test('Pase de cocina: cableado, accesibilidad y sin foto', () => {
   assert(/setAttribute\('aria-modal','true'\)/.test(juego) && /_paseKeydown/.test(juego),
     'el overlay debe ser un diálogo modal cerrable con ESC');
   const css = read('styles.css');
-  assert(/\.pase-chip\{[^}]*min-height:40px/.test(css), 'las fichas necesitan altura de dedo (40px)');
-  assert(/\.pase-serve,\.pase-retry\{[^}]*min-height:46px/.test(css), 'los botones de acción necesitan 46px');
+  assert(/\.pase-chip\{[^}]*min-height:44px/.test(css), 'las fichas necesitan altura de dedo (44px)');
+  assert(/\.pase-serve,\.pase-retry\{[^}]*min-height:48px/.test(css), 'los botones de acción necesitan 48px');
   assert(/\.pase-chip-t\{[^}]*overflow-wrap:break-word/.test(css),
     'los nombres largos de ingrediente deben partir, no desbordar');
 });
