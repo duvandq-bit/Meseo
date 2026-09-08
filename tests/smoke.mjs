@@ -6058,6 +6058,41 @@ test('Pase de cocina: sin fichas repetidas y sin repintar en cada toque', () => 
     'el tablero de alérgenos debe refrescarse solo, sin volver a pintar la piscina');
 });
 
+test('el Pase tiene su acceso destacado, con un handler que de verdad dispara', () => {
+  // «Que esté a la vista como Cliente IA, un acceso más rápido» (propietario,
+  // sep 2026): tarjeta propia en el inicio y en Repaso, al lado de la del
+  // Cliente IA, para no tener que entrar en una categoría y buscar un plato.
+  assert((html.match(/class="ri-cta ri-cta-pase"/g) || []).length === 2,
+    'la tarjeta del Pase debe estar en el inicio Y en Repaso');
+  assert(/function _paseGo\(\)\{ launchPase\(null\); \}/.test(html),
+    'el atajo debe abrir el juego eligiendo plato del turno, sin pedir uno');
+  // La primera versión salió con el marcador sin sustituir: el atributo se
+  // resolvía a «null» en tiempo de ejecución, así que la tarjeta se veía
+  // perfecta y al tocarla no pasaba nada. La única forma de pillarlo fue
+  // pulsarla de verdad; el guard lo fija.
+  assert((html.match(/class="ri-cta ri-cta-pase"[^>]*onclick="_paseGo\(\)"/g) || []).length === 2,
+    'las dos tarjetas del Pase deben llevar su handler resuelto, no un marcador');
+  const css = read('styles.css');
+  assert(/\.ri-cta-pase\{/.test(css), 'la tarjeta del Pase necesita su propio estilo');
+});
+
+test('la Inspección Fantasma se llama Auditoría (sep 2026)', () => {
+  // El propietario cambió el nombre: «Fantasma» era jerga interna y lo que el
+  // ejercicio simula es exactamente una auditoría — 22 escenarios de 4-5
+  // escenas bajo la mirada de un inspector.
+  for (const viejo of ['Ghost Inspection', 'Inspección Fantasma', 'Inspecci\\u00f3n Fantasma'])
+    assert(!html.includes(viejo), `«${viejo}» debe llamarse Auditoría`);
+  assert(html.includes("'Audit':'Auditoría'") || html.includes("'Audit':'Auditor\\u00eda'"),
+    'el nombre nuevo tiene que estar en los dos idiomas');
+  // Ni en los rótulos cortos de las fichas de estadística ni en la leyenda.
+  assert(!/'Ghost':'Fantasma'/.test(html), 'los rótulos de estadística siguen diciendo Fantasma');
+  assert(!/F=Fantasma|F=Ghost/.test(html), 'la leyenda de iniciales sigue con la F de Fantasma');
+  // El Servicio Fantasma es OTRA cosa —retirada por inactividad— y no se toca:
+  // renombrarlo aquí habría mezclado dos funciones distintas.
+  assert(html.includes('launchServicioFantasma'),
+    'el Servicio Fantasma (otra función, ya retirada) no entra en este renombrado');
+});
+
 test('Pase de cocina: la mise en place se agrupa por elaboración sin regalar la respuesta', () => {
   // La ficha nombra sus elaboraciones —«Masa: … Topping: …»— y así lo piensa
   // cocina, así que la mise en place se agrupa igual en vez de ser una lista
