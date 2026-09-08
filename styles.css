@@ -8843,6 +8843,79 @@ li.fail .dj-qrv-mark{color:#e8a0a0}
 .dj-launch-btn:hover{background:linear-gradient(135deg,rgba(196,154,60,.2),rgba(196,154,60,.1));box-shadow:0 2px 12px rgba(196,154,60,.2)}
 .dj-launch-btn.mastered{background:linear-gradient(135deg,rgba(77,138,94,.12),rgba(77,138,94,.05));border-color:rgba(77,138,94,.25);color:#6b8f71}
 
+/* ═══ MONTAJE DE PLATO · PASE DE COCINA ═══
+   Mismo lenguaje que el Viaje Inmersivo (fondo oscuro a pantalla completa,
+   oro sobre verde) porque es la misma familia: ejercicio inmersivo lanzado
+   desde la ficha del plato en Repaso. */
+.pase-launch-btn{display:inline-flex;align-items:center;gap:.3rem;padding:.3rem .6rem;border-radius:20px;background:linear-gradient(135deg,rgba(122,178,132,.12),rgba(122,178,132,.05));border:1px solid rgba(122,178,132,.28);color:#6b8f71;font-family:'DM Mono',monospace;font-size:.52rem;letter-spacing:.05em;cursor:pointer;transition:all .3s;text-transform:uppercase;min-height:32px}
+.pase-launch-btn:hover{background:linear-gradient(135deg,rgba(122,178,132,.22),rgba(122,178,132,.1));box-shadow:0 2px 12px rgba(122,178,132,.2)}
+
+.pase-overlay{position:fixed;inset:0;z-index:9999;background:#0a120e;overflow:hidden;animation:djFadeIn .4s ease;display:flex;flex-direction:column}
+.pase-container{display:flex;flex-direction:column;height:100%;min-height:0}
+.pase-head{display:flex;align-items:flex-start;justify-content:space-between;gap:.8rem;padding:1rem 1.1rem .7rem;border-bottom:1px solid rgba(196,154,60,.18);flex-shrink:0}
+.pase-eyebrow{font-family:'DM Mono',monospace;font-size:.55rem;letter-spacing:.18em;text-transform:uppercase;color:var(--gold-deep)}
+.pase-dish{font-family:'Cinzel',serif;font-size:1.05rem;font-weight:600;color:#f4ede2;line-height:1.25;margin-top:.2rem}
+.pase-cat{font-family:'DM Mono',monospace;font-size:.55rem;letter-spacing:.12em;text-transform:uppercase;color:rgba(244,237,226,.5);margin-top:.25rem}
+.pase-x{background:none;border:1px solid rgba(196,154,60,.3);color:rgba(244,237,226,.65);border-radius:9px;width:34px;height:34px;font-size:.85rem;cursor:pointer;flex-shrink:0;transition:all .2s}
+.pase-x:hover{color:#e8c275;border-color:rgba(196,154,60,.6)}
+.pase-body{flex:1;overflow-y:auto;overflow-x:hidden;touch-action:pan-y;-webkit-overflow-scrolling:touch;padding:.9rem 1.1rem 2rem;scrollbar-width:none}
+.pase-body::-webkit-scrollbar{display:none}
+.pase-intro{font-family:'Quicksand',sans-serif;font-size:.78rem;line-height:1.5;color:rgba(244,237,226,.7);margin:0 0 .9rem}
+
+/* Cuadro de alérgenos: lo que lleva el plato TAL Y COMO está montado ahora */
+.pase-board{background:linear-gradient(165deg,rgba(44,32,22,.55),rgba(20,28,22,.4));border:1px solid rgba(196,154,60,.2);border-radius:12px;padding:.7rem .8rem;margin-bottom:.9rem}
+.pase-board-lbl{font-family:'DM Mono',monospace;font-size:.52rem;letter-spacing:.14em;text-transform:uppercase;color:var(--gold-deep);margin-bottom:.45rem}
+.pase-board-al{display:flex;flex-wrap:wrap;gap:.3rem}
+
+.pase-al{display:inline-block;padding:.1rem .4rem;border-radius:6px;font-family:'DM Mono',monospace;font-size:.5rem;letter-spacing:.04em;background:rgba(193,74,58,.18);color:#e88070;border:1px solid rgba(193,74,58,.35);white-space:nowrap}
+.pase-al.big{font-size:.6rem;padding:.2rem .5rem}
+.pase-al.big.none{background:rgba(122,178,132,.12);color:#a8d8b0;border-color:rgba(122,178,132,.3)}
+
+/* Piscina de ingredientes */
+.pase-pool{display:flex;flex-wrap:wrap;gap:.45rem;margin-bottom:1rem}
+.pase-chip{display:flex;flex-direction:column;align-items:flex-start;gap:.22rem;padding:.5rem .65rem;border-radius:11px;background:linear-gradient(165deg,rgba(244,237,226,.05),rgba(244,237,226,.02));border:1.5px solid rgba(196,154,60,.2);color:rgba(244,237,226,.85);font-family:'Quicksand',sans-serif;font-size:.74rem;text-align:left;cursor:pointer;transition:all .18s;min-height:40px;-webkit-tap-highlight-color:transparent;touch-action:manipulation;max-width:100%}
+.pase-chip:hover{border-color:rgba(196,154,60,.45)}
+.pase-chip.on{background:linear-gradient(165deg,rgba(196,154,60,.25),rgba(196,154,60,.08));border-color:rgba(196,154,60,.7);color:#f7e9c8;box-shadow:0 0 12px rgba(196,154,60,.18)}
+.pase-chip-t{overflow-wrap:break-word;word-break:break-word;line-height:1.25}
+.pase-chip-al{display:flex;flex-wrap:wrap;gap:.2rem}
+/* Corrección: verde lo acertado, ámbar lo que faltaba, rojo lo que sobraba */
+.pase-chip.ok{border-color:rgba(122,178,132,.75);background:linear-gradient(165deg,rgba(122,178,132,.22),rgba(122,178,132,.07));color:#c6e8cd;cursor:default}
+.pase-chip.falta{border-color:rgba(212,170,76,.8);background:linear-gradient(165deg,rgba(212,170,76,.18),rgba(212,170,76,.05));color:#f0d79a;cursor:default;border-style:dashed}
+.pase-chip.sobra{border-color:rgba(193,74,58,.8);background:linear-gradient(165deg,rgba(193,74,58,.2),rgba(193,74,58,.06));color:#f0a99e;cursor:default;text-decoration:line-through}
+.pase-chip.mudo{opacity:.42;cursor:default}
+
+/* Veredicto */
+.pase-verdict{border-radius:12px;padding:.85rem .9rem;margin-bottom:.9rem;border:1px solid}
+.pase-verdict.ok{background:linear-gradient(165deg,rgba(122,178,132,.16),rgba(122,178,132,.05));border-color:rgba(122,178,132,.4)}
+.pase-verdict.warn{background:linear-gradient(165deg,rgba(212,170,76,.14),rgba(212,170,76,.04));border-color:rgba(212,170,76,.42)}
+.pase-verdict.bad{background:linear-gradient(165deg,rgba(193,74,58,.14),rgba(193,74,58,.04));border-color:rgba(193,74,58,.4)}
+.pase-verdict-t{font-family:'Cinzel',serif;font-size:.92rem;font-weight:600;color:#f4ede2;margin-bottom:.3rem}
+.pase-verdict-s{font-family:'Quicksand',sans-serif;font-size:.76rem;line-height:1.5;color:rgba(244,237,226,.75)}
+.pase-fix{font-family:'Quicksand',sans-serif;font-size:.74rem;line-height:1.5;color:rgba(244,237,226,.8);margin-top:.5rem;overflow-wrap:break-word}
+.pase-fix-l{display:inline-block;font-family:'DM Mono',monospace;font-size:.5rem;letter-spacing:.1em;text-transform:uppercase;padding:.1rem .38rem;border-radius:5px;margin-right:.35rem}
+.pase-fix-l.falta{background:rgba(212,170,76,.2);color:#f0d79a;border:1px solid rgba(212,170,76,.35)}
+.pase-fix-l.sobra{background:rgba(193,74,58,.2);color:#f0a99e;border:1px solid rgba(193,74,58,.35)}
+
+/* Fase 2 · la alergia en la mesa */
+.pase-alerta{font-family:'Quicksand',sans-serif;font-size:.86rem;line-height:1.45;color:#f4ede2;background:linear-gradient(165deg,rgba(193,74,58,.16),rgba(193,74,58,.05));border:1px solid rgba(193,74,58,.4);border-radius:12px;padding:.75rem .85rem;margin-bottom:.85rem}
+.pase-alerta b{color:#f0a99e}
+.pase-comanda{margin-top:.6rem;font-family:'Quicksand',sans-serif;font-size:.78rem;line-height:1.5;color:#f7e9c8;overflow-wrap:break-word}
+.pase-comanda-l{display:inline-block;font-family:'DM Mono',monospace;font-size:.5rem;letter-spacing:.12em;text-transform:uppercase;padding:.1rem .4rem;border-radius:5px;background:rgba(196,154,60,.2);color:#e8c275;border:1px solid rgba(196,154,60,.4);margin-right:.4rem}
+
+/* Acciones */
+.pase-actions{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:.3rem}
+.pase-serve,.pase-retry{flex:1 1 auto;min-height:46px;padding:.7rem 1rem;border-radius:12px;font-family:'DM Mono',monospace;font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;transition:all .2s;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
+.pase-serve{background:linear-gradient(135deg,#e8c275,var(--gold) 55%,#a07828);border:none;color:#1a120c;font-weight:700}
+.pase-serve:hover:not(:disabled){box-shadow:0 4px 18px rgba(196,154,60,.35)}
+.pase-serve:disabled{opacity:.38;cursor:not-allowed}
+.pase-retry{background:linear-gradient(165deg,rgba(244,237,226,.06),rgba(244,237,226,.02));border:1px solid rgba(196,154,60,.32);color:rgba(244,237,226,.8)}
+.pase-retry:hover{border-color:rgba(196,154,60,.6);color:#e8c275}
+
+@media(max-width:380px){
+  .pase-chip{font-size:.7rem;padding:.45rem .55rem}
+  .pase-dish{font-size:.95rem}
+}
+
 /* ═══ Smart Review v2: Timer, Combo, Difficulty (light parchment theme) ═══ */
 .sr-timer-ring{width:52px;height:52px;position:relative;flex-shrink:0}
 .sr-timer-ring svg{transform:rotate(-90deg);width:52px;height:52px}

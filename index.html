@@ -52,7 +52,7 @@
 <meta property="og:description" content="Formación de equipos de sala: carta, alérgenos, vinos, exámenes y juegos de repaso.">
 <meta property="og:url" content="https://meseo.es/">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"Meseo","url":"https://meseo.es/"}</script>
-<meta name="app-version" content="7.380">
+<meta name="app-version" content="7.381">
 <meta name="app-build" content="May 2026">
 <meta name="theme-color" content="#1c2a22">
 <!-- ═══ PWA ═══ -->
@@ -1596,7 +1596,7 @@ const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><p
 const SRC = 'src';
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='7.380';  // sincronizada con sw.js VERSION (guard de CI)
+const APP_VERSION='7.381';  // sincronizada con sw.js VERSION (guard de CI)
 const APP_BUILD='Jul 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;
@@ -19932,6 +19932,412 @@ async function _miEnd(){
 }
 
 
+// ═══════════════════════════════════════════════════════════════════════
+// MONTAJE DE PLATO · PASE DE COCINA
+// Dos fases sobre el mismo plato:
+//   1 · MONTAJE   — se arma el plato eligiendo sus ingredientes entre una
+//                   piscina que mezcla los reales con distractores, y el
+//                   cuadro de alérgenos se recalcula a cada toque.
+//   2 · DESMONTAJE— entra una alergia en la mesa y hay que retirar lo que
+//                   la aporta, o decir que no se puede, con su comanda.
+//
+// De dónde sale la piscina, que es la decisión que sostiene el juego:
+// NO de DISH_COMPONENTS. Esa matriz es, por definición del guard de CI, solo
+// lo que aporta alérgeno (medido: 417 componentes, 0 sin alérgeno). Montar la
+// croqueta de jamón con ella daría «leche, harina, mantequilla, nata, huevo»
+// — sin jamón. Y como el 100% de esos aciertos lleva chip de alérgeno y el 56%
+// de la base no lleva ninguno, se ganaría pulsando todo lo que tenga chip, sin
+// mirar el plato.
+// La piscina sale de _djIngredients(), que devuelve la ficha ENTERA con los
+// alérgenos pegados a cada ingrediente (medido: 40% de los reales llevan
+// alérgeno, 42% de los distractores — indistinguibles por el chip).
+// ═══════════════════════════════════════════════════════════════════════
+let _paseState = null;
+let _paseVistos = [];   // no repetir plato dentro de la misma sesión
+
+// Platos jugables: los que tienen suficiente ficha para que montar signifique
+// algo. Con menos de 4 ingredientes el juego se resuelve de un vistazo.
+function _paseJugables(){
+  const base = (typeof _shiftDishes==='function') ? _shiftDishes(DISHES) : DISHES;
+  const pool = base.filter(d=>_djIngredients(d,false).length>=4);
+  return pool.length ? pool : DISHES.filter(d=>_djIngredients(d,false).length>=4);
+}
+
+// Distractores: ingredientes de OTROS platos de la MISMA categoría. Misma
+// categoría porque un brócoli en un postre se descarta por absurdo y no
+// entrena nada. Se filtran con _djSameThing y no por igualdad de texto: hay
+// colisiones reales (el mismo ingrediente escrito de otra forma en otra ficha),
+// y colar como «sobra» algo que el plato sí lleva sería enseñar mal.
+function _paseDistractores(dish, reales, n){
+  const _en = LANG==='en';
+  const mios = reales.map(r=>r.t);
+  const vistos = new Set(reales.map(r=>_djNorm(r.t)));
+  const cand = [];
+  for(const o of DISHES){
+    if(o.id===dish.id || o.cat!==dish.cat) continue;
+    for(const it of _djIngredients(o,_en)){
+      const h=_djNorm(it.t);
+      if(!h || vistos.has(h)) continue;
+      if(mios.some(m=>_djSameThing(m, it.t))) continue;
+      vistos.add(h);
+      cand.push({t:it.t, a:it.a, falso:true});
+    }
+  }
+  return _lqaShuffle(cand).slice(0, n);
+}
+
+function launchPase(dishId){
+  const jugables = _paseJugables();
+  let dish = dishId ? DISHES.find(d=>d.id===dishId) : null;
+  if(!dish){
+    const frescos = jugables.filter(d=>!_paseVistos.includes(d.id));
+    dish = _lqaShuffle(frescos.length?frescos:jugables)[0];
+  }
+  if(!dish) return;
+  _paseVistos.push(dish.id);
+  if(_paseVistos.length>20) _paseVistos.shift();
+  _paseState = { dishId:dish.id, fase:'montaje', sel:new Set(), piscina:null, veredicto:null,
+                 alergia:null, quitar:new Set(), resuelto:null };
+  _paseArmar();
+  _paseRender();
+  // La base de ingredientes llega en diferido; sin ella la piscina sigue
+  // siendo correcta (DISH_COMPONENTS va en el propio fichero) pero con menos
+  // detalle, así que se rearma cuando entra.
+  _djLoadIngBase().then(b=>{
+    if(b && _paseState && _paseState.dishId===dish.id && document.getElementById('paseOverlay')
+       && _paseState.fase==='montaje' && !_paseState.veredicto){ _paseArmar(); _paseRender(); }
+  });
+  document.addEventListener('keydown', _paseKeydown);
+}
+
+// Una ficha nombra el mismo ingrediente en varias elaboraciones —«Sal» en la
+// masa y en la salsa, «Langostino» suelto y en el tartar— y eso en una receta
+// es correcto, pero como piscina no se puede jugar: salían dos fichas idénticas
+// y marcar una sí y otra no daba «falta» sobre una etiqueta igual a la de al
+// lado (medido: 17 platos en español, 18 en inglés). Se fusionan por etiqueta
+// ya traducida, quedándose con la unión de sus alérgenos.
+function _paseFusionar(items){
+  const por=new Map();
+  for(const it of items){
+    const k=_djNorm(it.t);
+    if(!k) continue;
+    const y=por.get(k);
+    if(y){ for(const al of (it.a||[])) if(!y.a.includes(al)) y.a.push(al); }
+    else por.set(k, {t:it.t, a:(it.a||[]).slice(), falso:it.falso});
+  }
+  return [...por.values()];
+}
+
+function _paseArmar(){
+  const dish = DISHES.find(d=>d.id===_paseState.dishId);
+  const _en = LANG==='en';
+  const reales = _paseFusionar(_djIngredients(dish,_en).map(i=>({t:i.t, a:i.a, falso:false})));
+  const nFalsos = Math.min(4, Math.max(3, Math.round(reales.length/3)));
+  const falsos = _paseDistractores(dish, reales, nFalsos);
+  _paseState.piscina = _lqaShuffle(reales.concat(falsos));
+  _paseState.sel = new Set();
+  _paseState.veredicto = null;
+}
+
+function _paseKeydown(e){
+  if(!document.getElementById('paseOverlay')) return;
+  if(e.key==='Escape'){ e.preventDefault(); _paseClose(); }
+}
+
+// Al tocar una ficha NO se repinta el contenedor entero. Se medía el efecto:
+// el scroll saltaba de 52 a 0 en cada toque porque el nodo se reemplazaba, así
+// que en una piscina de veinte fichas la lista volvía arriba diez veces
+// seguidas. Se cambia solo la ficha tocada y el tablero de alérgenos.
+function _paseToggle(i){
+  if(!_paseState || _paseState.veredicto) return;
+  const s=_paseState.sel;
+  if(s.has(i)) s.delete(i); else s.add(i);
+  const ov=document.getElementById('paseOverlay');
+  const chip=ov && ov.querySelectorAll('.pase-chip')[i];
+  if(!chip) return _paseRender();
+  chip.classList.toggle('on', s.has(i));
+  chip.setAttribute('aria-pressed', s.has(i)?'true':'false');
+  _paseRefrescarTablero();
+}
+
+function _paseRefrescarTablero(){
+  const ov=document.getElementById('paseOverlay'); if(!ov) return;
+  const _en=LANG==='en';
+  const lbl=ov.querySelector('.pase-board-lbl');
+  if(lbl) lbl.textContent=(_en?'On the plate':'En el plato')+' · '+_paseState.sel.size;
+  const caja=ov.querySelector('.pase-board-al');
+  if(caja){
+    const al=_paseAlergenosMontados();
+    caja.innerHTML = al.length
+      ? al.map(a=>'<span class=\'pase-al big\'>'+escapeHTML(allergenLocal(a))+'</span>').join('')
+      : '<span class=\'pase-al big none\'>'+(_en?'no allergens yet':'sin alérgenos todavía')+'</span>';
+  }
+  const srv=ov.querySelector('.pase-serve');
+  if(srv) srv.disabled = _paseState.sel.size===0;
+}
+
+// Alérgenos que lleva AHORA MISMO lo que hay en el plato. Se calcula desde la
+// selección, no desde la ficha: si el jugador mete un distractor con Pescado,
+// el cuadro tiene que enseñar Pescado aunque el plato no lo declare — que es
+// justo lo que se quiere que vea.
+function _paseAlergenosMontados(){
+  const out=new Set();
+  for(const i of _paseState.sel) (_paseState.piscina[i].a||[]).forEach(a=>out.add(a));
+  return [...out];
+}
+
+function _paseServir(){
+  if(!_paseState || _paseState.veredicto) return;
+  const dish = DISHES.find(d=>d.id===_paseState.dishId);
+  const P=_paseState.piscina, sel=_paseState.sel;
+  const faltan=[], sobran=[];
+  P.forEach((it,i)=>{
+    if(!it.falso && !sel.has(i)) faltan.push(it);
+    if(it.falso && sel.has(i)) sobran.push(it);
+  });
+  const montados=_paseAlergenosMontados().sort();
+  const declarados=(dish.allergens||[]).slice().sort();
+  const mismos = montados.length===declarados.length && montados.every((a,k)=>a===declarados[k]);
+  // Dos niveles, y la diferencia importa en sala: fallar el montaje no es lo
+  // mismo que fallar los alérgenos. Con la piscina sacada de la ficha entera
+  // esto SÍ puede darse — hay ingredientes que no aportan alérgeno, así que
+  // olvidarse de uno deja el cuadro intacto.
+  _paseState.veredicto = { faltan, sobran, montados, declarados,
+    perfecto: !faltan.length && !sobran.length,
+    seguro: (faltan.length||sobran.length) && mismos };
+  if(typeof playSound==='function') playSound(_paseState.veredicto.perfecto?'correct':'wrong');
+  _paseRender();
+}
+
+function _paseReintentar(){
+  if(!_paseState) return;
+  _paseState.veredicto=null;
+  _paseRender();
+}
+
+// ── Fase 2 · el comensal alérgico ──────────────────────────────────────
+// La alergia se elige entre las que el plato DECLARA y que además tienen
+// entrada en DISH_ACTIONS, que es lo que cocina validó. Si no hay ninguna,
+// el plato no da para esta fase y se cierra en la primera.
+function _paseAlergiasPosibles(dish){
+  const act=(typeof DISH_ACTIONS!=='undefined' && DISH_ACTIONS[dish.id])||{};
+  return (dish.allergens||[]).filter(a=>act[a]);
+}
+
+function _paseIrDesmontaje(){
+  if(!_paseState) return;
+  const dish=DISHES.find(d=>d.id===_paseState.dishId);
+  const posibles=_paseAlergiasPosibles(dish);
+  if(!posibles.length){ _paseClose(); return; }
+  _paseState.alergia=_lqaShuffle(posibles)[0];
+  _paseState.fase='desmontaje';
+  _paseState.quitar=new Set();
+  _paseState.resuelto=null;
+  // En esta fase el plato ya está montado bien: se parte de los ingredientes
+  // REALES, no de lo que el jugador eligiera antes.
+  _paseState.plato=_paseState.piscina.filter(it=>!it.falso);
+  _paseRender();
+}
+
+// Mismo motivo que en el montaje: sin repintar todo.
+function _paseToggleQuitar(i){
+  if(!_paseState || _paseState.resuelto) return;
+  const q=_paseState.quitar;
+  if(q.has(i)) q.delete(i); else q.add(i);
+  const ov=document.getElementById('paseOverlay');
+  const chip=ov && ov.querySelectorAll('.pase-chip')[i];
+  if(!chip) return _paseRender();
+  chip.classList.toggle('on', q.has(i));
+  chip.setAttribute('aria-pressed', q.has(i)?'true':'false');
+  const srv=ov.querySelector('.pase-serve');
+  if(srv) srv.disabled = _paseState.quitar.size===0;
+}
+
+function _paseConfirmarRetirada(noSePuede){
+  if(!_paseState || _paseState.resuelto) return;
+  const dish=DISHES.find(d=>d.id===_paseState.dishId);
+  const A=_paseState.alergia;
+  const act=((typeof DISH_ACTIONS!=='undefined' && DISH_ACTIONS[dish.id])||{})[A]||{};
+  const retirable = act.r===1;
+  const debenSalir=[];
+  _paseState.plato.forEach((it,i)=>{ if((it.a||[]).includes(A)) debenSalir.push(i); });
+  const elegidos=[..._paseState.quitar].sort((a,b)=>a-b);
+  const esperados=debenSalir.slice().sort((a,b)=>a-b);
+  const acertoQue = elegidos.length===esperados.length && elegidos.every((v,k)=>v===esperados[k]);
+  _paseState.resuelto = {
+    retirable, noSePuede:!!noSePuede, debenSalir, acertoQue,
+    comanda: LANG==='en' ? (act.c_en||act.c||'') : (act.c||''),
+    // Acierta quien dice «no se puede» cuando es estructural, o quien señala
+    // exactamente los ingredientes que lo aportan cuando sí se puede.
+    bien: retirable ? (!noSePuede && acertoQue) : !!noSePuede
+  };
+  if(typeof playSound==='function') playSound(_paseState.resuelto.bien?'correct':'wrong');
+  _paseRender();
+}
+
+function _paseOtroPlato(){ const o=document.getElementById('paseOverlay'); if(o) o.remove(); launchPase(null); }
+
+function _paseClose(){
+  document.removeEventListener('keydown', _paseKeydown);
+  const o=document.getElementById('paseOverlay');
+  if(o){ o.style.opacity='0'; o.style.transition='opacity .3s'; setTimeout(()=>o.remove(),300); }
+  _paseState=null;
+}
+
+// ── Render ─────────────────────────────────────────────────────────────
+function _paseChip(it, i, on, onclick, extra){
+  const al=(it.a||[]).map(a=>`<span class="pase-al">${escapeHTML(allergenLocal(a))}</span>`).join('');
+  return `<button type="button" class="pase-chip${on?' on':''}${extra||''}" onclick="${onclick}"
+    aria-pressed="${on?'true':'false'}"><span class="pase-chip-t">${escapeHTML(it.t)}</span>${al?`<span class="pase-chip-al">${al}</span>`:''}</button>`;
+}
+
+function _paseRender(){
+  if(!_paseState) return;
+  const dish=DISHES.find(d=>d.id===_paseState.dishId);
+  if(!dish) return;
+  const dd=getDish(dish), _en=LANG==='en';
+  const cuerpo = _paseState.fase==='montaje' ? _paseMontajeHTML(dish,dd,_en) : _paseDesmontajeHTML(dish,dd,_en);
+  const head = `<div class="pase-head">
+      <div class="pase-head-l">
+        <div class="pase-eyebrow">${_paseState.fase==='montaje'?(_en?'PASS · PLATING':'PASE · MONTAJE'):(_en?'PASS · ALLERGY':'PASE · ALERGIA')}</div>
+        <div class="pase-dish">${escapeHTML(dd.name)}</div>
+        <div class="pase-cat">${escapeHTML(catLocal(dd.cat))}</div>
+      </div>
+      <button class="pase-x" onclick="_paseClose()" aria-label="${_en?'Close':'Cerrar'}">✕</button>
+    </div>`;
+  const html=`<div class="pase-container">${head}<div class="pase-body">${cuerpo}</div></div>`;
+  const ex=document.getElementById('paseOverlay');
+  if(ex){ const c=ex.querySelector('.pase-container'); if(c){ c.outerHTML=html; return; } ex.remove(); }
+  const ov=document.createElement('div');
+  ov.id='paseOverlay'; ov.className='pase-overlay';
+  ov.setAttribute('role','dialog'); ov.setAttribute('aria-modal','true');
+  ov.setAttribute('aria-label', _en?'Plating pass':'Pase de cocina');
+  ov.innerHTML=html;
+  document.body.appendChild(ov);
+}
+
+function _paseMontajeHTML(dish, dd, _en){
+  const S=_paseState, V=S.veredicto;
+  const montados=_paseAlergenosMontados();
+  const chips=S.piscina.map((it,i)=>_paseChip(it,i,S.sel.has(i),`_paseToggle(${i})`,'')).join('');
+  const cuadro = montados.length
+    ? montados.map(a=>`<span class="pase-al big">${escapeHTML(allergenLocal(a))}</span>`).join('')
+    : `<span class="pase-al big none">${_en?'no allergens yet':'sin alérgenos todavía'}</span>`;
+
+  if(!V) return `
+    <p class="pase-intro">${_en
+      ? 'Build the dish: tap the ingredients that really go in it. The allergen board updates as you plate.'
+      : 'Monta el plato: toca los ingredientes que de verdad lleva. El cuadro de alérgenos se actualiza según emplatas.'}</p>
+    <div class="pase-board"><div class="pase-board-lbl">${_en?'On the plate':'En el plato'} · ${S.sel.size}</div>
+      <div class="pase-board-al">${cuadro}</div></div>
+    <div class="pase-pool">${chips}</div>
+    <button class="pase-serve" onclick="_paseServir()"${S.sel.size?'':' disabled'}>${_en?'Send the pass':'Servir Pase'}</button>`;
+
+  // ── Corrección. Sin castigo: se enseña qué sobraba y qué faltaba, y se
+  //    puede reintentar sobre el mismo plato para fijar la imagen.
+  const marcado=S.piscina.map((it,i)=>{
+    const on=S.sel.has(i);
+    let cls='';
+    if(!it.falso && on) cls=' ok';
+    else if(!it.falso && !on) cls=' falta';
+    else if(it.falso && on) cls=' sobra';
+    else cls=' mudo';
+    return _paseChip(it,i,on,'void 0',cls);
+  }).join('');
+  const titulo = V.perfecto ? (_en?'Perfect pass':'Pase perfecto')
+    : V.seguro ? (_en?'Safe pass — but not exact':'Pase seguro — pero no exacto')
+    : (_en?'The pass comes back':'El pase vuelve a cocina');
+  const sub = V.perfecto ? (_en?'Every ingredient right, and the allergens match the sheet.':'Todos los ingredientes bien, y los alérgenos coinciden con la ficha.')
+    : V.seguro ? (_en?'You missed the plating, but the allergen board is exactly the one on the sheet — nobody would have been at risk.':'Fallaste el montaje, pero el cuadro de alérgenos es exactamente el de la ficha — nadie habría corrido riesgo.')
+    : (_en?'The allergen board does not match the sheet.':'El cuadro de alérgenos no coincide con el de la ficha.');
+  const listaFalta=V.faltan.length?`<div class="pase-fix"><span class="pase-fix-l falta">${_en?'Missing':'Faltaba'}</span> ${V.faltan.map(f=>escapeHTML(f.t)).join(' · ')}</div>`:'';
+  const listaSobra=V.sobran.length?`<div class="pase-fix"><span class="pase-fix-l sobra">${_en?'Not in this dish':'No lleva'}</span> ${V.sobran.map(f=>escapeHTML(f.t)).join(' · ')}</div>`:'';
+  const dif=(()=>{
+    const de=V.declarados, mo=V.montados;
+    const extra=mo.filter(a=>!de.includes(a)), menos=de.filter(a=>!mo.includes(a));
+    if(!extra.length && !menos.length) return '';
+    let s='<div class="pase-fix">';
+    if(extra.length) s+=`<span class="pase-fix-l sobra">${_en?'You added':'Metiste'}</span> ${extra.map(a=>escapeHTML(allergenLocal(a))).join(' · ')} `;
+    if(menos.length) s+=`<span class="pase-fix-l falta">${_en?'You left out':'Te dejaste'}</span> ${menos.map(a=>escapeHTML(allergenLocal(a))).join(' · ')}`;
+    return s+'</div>';
+  })();
+  const puedeSeguir=_paseAlergiasPosibles(dish).length>0;
+  return `
+    <div class="pase-verdict${V.perfecto?' ok':V.seguro?' warn':' bad'}">
+      <div class="pase-verdict-t">${titulo}</div>
+      <div class="pase-verdict-s">${sub}</div>
+      ${listaFalta}${listaSobra}${dif}
+    </div>
+    <div class="pase-pool">${marcado}</div>
+    <div class="pase-actions">
+      <button class="pase-retry" onclick="_paseReintentar()">${_en?'Try again':'Reintentar'}</button>
+      ${puedeSeguir?`<button class="pase-serve" onclick="_paseIrDesmontaje()">${_en?'A guest with an allergy arrives →':'Llega un alérgico a la mesa →'}</button>`
+        :`<button class="pase-serve" onclick="_paseOtroPlato()">${_en?'Another dish':'Otro plato'}</button>`}
+    </div>`;
+}
+
+function _paseDesmontajeHTML(dish, dd, _en){
+  const S=_paseState, R=S.resuelto, A=S.alergia;
+  const alLoc=allergenLocal(A);
+  const chips=S.plato.map((it,i)=>{
+    const on=S.quitar.has(i);
+    let cls='';
+    if(R){
+      const debe=(it.a||[]).includes(A);
+      // Si el alérgeno es ESTRUCTURAL no hay nada que retirar: marcar en verde
+      // el ingrediente que lo aporta contradiría el veredicto («Así no» con la
+      // ficha en verde al lado). Cualquier retirada es un error.
+      cls = !R.retirable ? (on ? ' sobra' : ' mudo')
+          : debe && on ? ' ok' : debe && !on ? ' falta' : !debe && on ? ' sobra' : ' mudo';
+    }
+    return _paseChip(it,i,on,R?'void 0':`_paseToggleQuitar(${i})`,cls);
+  }).join('');
+
+  if(!R) return `
+    <div class="pase-alerta">${_en?'Table 4. A guest is allergic to':'Mesa 4. Un comensal es alérgico a'} <b>${escapeHTML(alLoc)}</b>.</div>
+    <p class="pase-intro">${_en
+      ? 'Tap what has to come off the plate. If it cannot be taken out, say so — that answer is also right when it is right.'
+      : 'Toca lo que hay que retirar del plato. Si no se puede quitar, dilo — esa respuesta también es correcta cuando lo es.'}</p>
+    <div class="pase-pool">${chips}</div>
+    <div class="pase-actions">
+      <button class="pase-retry" onclick="_paseConfirmarRetirada(true)">${_en?'It cannot be removed':'No se puede retirar'}</button>
+      <button class="pase-serve" onclick="_paseConfirmarRetirada(false)"${S.quitar.size?'':' disabled'}>${_en?'Confirm removal':'Confirmar retirada'}</button>
+    </div>`;
+
+  const t = R.bien ? (_en?'Right':'Correcto') : (_en?'Not like that':'Así no');
+  let s;
+  if(R.retirable){
+    s = R.bien
+      ? (_en?`${alLoc} can be taken out of this dish, and you pointed at exactly what carries it.`
+            :`Ese alérgeno sí se puede retirar de este plato, y señalaste exactamente lo que lo aporta.`)
+      : R.noSePuede
+        ? (_en?`It can be removed — the kitchen has a validated comanda for it.`
+              :`Sí se puede retirar — cocina tiene una comanda validada para ello.`)
+        : (_en?`Not exactly what carries ${alLoc}. The plate keeps the allergen.`
+              :`No es exactamente lo que aporta ese alérgeno. El plato se queda con él.`);
+  } else {
+    s = R.bien
+      ? (_en?`Right: that allergen is structural here. It cannot be taken out, and offering the dish would be a mistake.`
+            :`Correcto: en este plato ese alérgeno es estructural. No se puede retirar, y ofrecer el plato sería un error — hay que proponer otro.`)
+      : (_en?`That allergen is structural here — it is not something you can take off the plate. The dish has to be swapped for another one.`
+            :`En este plato ese alérgeno es estructural — no es algo que se pueda retirar. Hay que ofrecer otro plato.`);
+  }
+  const comanda = R.retirable && R.comanda
+    ? `<div class="pase-comanda"><span class="pase-comanda-l">${_en?'Comanda':'Comanda'}</span> ${escapeHTML(R.comanda)}</div>` : '';
+  return `
+    <div class="pase-alerta">${_en?'Allergic to':'Alérgico a'} <b>${escapeHTML(alLoc)}</b></div>
+    <div class="pase-verdict${R.bien?' ok':' bad'}">
+      <div class="pase-verdict-t">${t}</div>
+      <div class="pase-verdict-s">${s}</div>
+      ${comanda}
+    </div>
+    <div class="pase-pool">${chips}</div>
+    <div class="pase-actions">
+      <button class="pase-retry" onclick="_paseOtroPlato()">${_en?'Another dish':'Otro plato'}</button>
+      <button class="pase-serve" onclick="_paseClose()">${_en?'Done':'Terminar'}</button>
+    </div>`;
+}
+
 function renderRepaso(){
   if(repasoView==='dish' && repasoDishId) renderRepasoDishDetail(repasoDishId);
   else repasoView==='topic'?renderRepasoTopic():renderRepasoCats();
@@ -20083,6 +20489,7 @@ function searchRepaso(query) {
       </div>
       <div style="display:flex;flex-direction:column;align-items:center;gap:.45rem;flex-shrink:0">
         <button class="dj-launch-btn${isMastered?' mastered':''}" onclick="event.stopPropagation();launchDishJourney(${d.id})" title="${LANG==='en'?'Immersive Journey':'Viaje Inmersivo'}">${isMastered?'✓ ':'▶ '}${LANG==='en'?'Journey':'Viaje'}</button>
+        <button class="pase-launch-btn" onclick="event.stopPropagation();launchPase(${d.id})" title="${LANG==='en'?'Plating pass game':'Juego del pase'}">🍽 ${LANG==='en'?'Pass':'Pase'}</button>
         <button class="known-btn${isKnown?' yes':''}" onclick="event.stopPropagation();toggleKnown(${d.id})" title="${LANG==='en'?'Mark as mastered':'Marcar como dominado'}">${isKnown?'✓':'○'}</button>
       </div>
     </div>`;
@@ -20139,6 +20546,7 @@ function renderRepasoTopic(){
       </div>
       <div style="display:flex;flex-direction:column;align-items:center;gap:.45rem;flex-shrink:0">
         <button class="dj-launch-btn${isMastered?' mastered':''}" onclick="event.stopPropagation();launchDishJourney(${d.id})" title="${LANG==='en'?'Immersive Journey':'Viaje Inmersivo'}">${isMastered?'✓ ':'▶ '}${LANG==='en'?'Journey':'Viaje'}</button>
+        <button class="pase-launch-btn" onclick="event.stopPropagation();launchPase(${d.id})" title="${LANG==='en'?'Plating pass game':'Juego del pase'}">🍽 ${LANG==='en'?'Pass':'Pase'}</button>
         <button class="known-btn${isKnown?' yes':''}" onclick="toggleKnown(${d.id})" title="${LANG==='en'?'Mark as mastered':'Marcar como dominado'}">${isKnown?'✓':'○'}</button>
       </div>
     </div>`;

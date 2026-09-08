@@ -6016,6 +6016,150 @@ test('Mr. Shoesmith: animación por FOTOGRAMAS (parpadeo, habla, guiño, gruñid
   }
 });
 
+
+test('Pase de cocina: la piscina sale de la FICHA, no de la matriz de alérgenos', () => {
+  // La decisión que sostiene el juego, y la que es fácil deshacer sin darse
+  // cuenta. DISH_COMPONENTS es, por el guard de CI, SOLO lo que aporta alérgeno
+  // (medido: 417 componentes, 0 sin alérgeno). Montar con esa matriz daría una
+  // croqueta de jamón sin jamón, y como el 100% de esos aciertos lleva chip de
+  // alérgeno y el 56% de la base no lleva ninguno, se ganaría pulsando todo lo
+  // que tuviera chip sin mirar el plato.
+  const arm = html.slice(html.indexOf('function _paseArmar('), html.indexOf('function _paseKeydown('));
+  assert(/_djIngredients\(dish,\s*_en\)/.test(arm),
+    'la piscina debe construirse con _djIngredients (la ficha entera con sus alérgenos)');
+  assert(!/DISH_COMPONENTS\s*\[/.test(arm),
+    'el juego no puede leer DISH_COMPONENTS directamente: esa matriz es solo lo alergénico');
+  // y los distractores se filtran por _djSameThing, no por igualdad de texto:
+  // hay colisiones reales (el mismo ingrediente escrito de otro modo).
+  const dis = html.slice(html.indexOf('function _paseDistractores('), html.indexOf('function launchPase('));
+  assert(/_djSameThing\(/.test(dis),
+    'los distractores deben descartarse con _djSameThing, no solo por nombre exacto');
+  assert(/o\.cat!==dish\.cat/.test(dis),
+    'los distractores deben salir de la MISMA categoría (un brócoli en un postre se descarta por absurdo)');
+});
+
+test('Pase de cocina: sin fichas repetidas y sin repintar en cada toque', () => {
+  // (1) Una ficha nombra el mismo ingrediente en varias elaboraciones («Sal» en
+  //     la masa y en la salsa): salían dos fichas idénticas en la piscina y
+  //     marcar una sí y otra no daba «falta» sobre una etiqueta igual a la de
+  //     al lado. Medido antes de la fusión: 17 platos en español, 18 en inglés.
+  assert(/function _paseFusionar\(/.test(html), 'falta la fusión de etiquetas repetidas');
+  const arm = html.slice(html.indexOf('function _paseArmar('), html.indexOf('function _paseKeydown('));
+  assert(/_paseFusionar\(_djIngredients/.test(arm), 'la piscina real debe pasar por _paseFusionar');
+  // (2) Tocar una ficha NO puede repintar el contenedor: se medía que el scroll
+  //     saltaba de 52 a 0 en cada toque, así que en una piscina de veinte
+  //     fichas la lista volvía arriba diez veces seguidas.
+  for (const f of ['_paseToggle', '_paseToggleQuitar']) {
+    const cuerpo = html.slice(html.indexOf(`function ${f}(`), html.indexOf(`function ${f}(`) + 700);
+    assert(/classList\.toggle\('on'/.test(cuerpo),
+      `${f} debe cambiar solo la ficha tocada, no repintar el contenedor`);
+  }
+  assert(/function _paseRefrescarTablero\(/.test(html),
+    'el tablero de alérgenos debe refrescarse solo, sin volver a pintar la piscina');
+});
+
+test('Pase de cocina: la respuesta correcta gana, en los 83 platos jugables', () => {
+  // Barrido funcional sobre el dato real: se monta cada plato con TODOS sus
+  // ingredientes reales y ninguno falso, y eso tiene que dar «pase perfecto»
+  // y un cuadro de alérgenos idéntico al declarado en la ficha. Si un día la
+  // ficha y la matriz dejan de cuadrar, este test lo canta antes que el juego.
+  const cut = (ini, fin) => { const i = html.indexOf(ini); return html.slice(i, html.indexOf(fin, i) + fin.length); };
+  const fn = n => { const i = html.indexOf('function ' + n + '('); let d = 0;
+    for (let k = html.indexOf('{', i); k < html.length; k++) {
+      if (html[k] === '{') d++; else if (html[k] === '}') { d--; if (!d) return html.slice(i, k + 1); } } };
+  const stub = `
+    var LANG='es', _studyShift=null, _paseState=null, _paseVistos=[];
+    function getDish(d){return d;} function allergenLocal(a){return a;}
+    function catLocal(c){return c;} function escapeHTML(s){return String(s);}
+    function _shiftDishes(a){return a;} function _djLoadIngBase(){return Promise.resolve(null);}
+    var _djIngBase=null;
+    var document={getElementById:()=>null,createElement:()=>({setAttribute(){},style:{},querySelector:()=>null,querySelectorAll:()=>[]}),
+      body:{appendChild(){}},addEventListener(){},removeEventListener(){}};
+    const _DJ_SECCION = ${/^(masa|topping|base|relleno|guarnicion|sabores disponibles|salsa base|sazonador|marinada|elaboracion)$/};
+  `;
+  const src = stub
+    + cut('const DISHES = [', '\n];')
+    + cut('const DISH_COMPONENTS = ', '};')
+    + cut('const DISH_ACTIONS = ', '};')
+    + html.slice(html.indexOf('const _djNorm ='), html.indexOf('async function _djLoadIngBase'))
+    + fn('_djSplitIngredients') + fn('_djSameThing') + fn('_djIngName') + fn('_djIngredients')
+    + fn('_lqaShuffle')
+    + fn('_paseJugables') + fn('_paseDistractores') + fn('_paseFusionar') + fn('_paseArmar')
+    + fn('_paseAlergenosMontados') + fn('_paseServir') + fn('_paseRender')
+    + fn('_paseMontajeHTML') + fn('_paseDesmontajeHTML') + fn('_paseChip')
+    + fn('_paseAlergiasPosibles') + fn('_paseClose') + fn('launchPase')
+    + `
+    let ok=0, malos=[], dup=[], regalo=[], pocos=[];
+    for(const d of DISHES){
+      if(_djIngredients(d,false).length<4) continue;
+      _paseState={dishId:d.id,fase:'montaje',sel:new Set(),piscina:null,veredicto:null};
+      _paseArmar();
+      const P=_paseState.piscina;
+      const reales=P.filter(i=>!i.falso), falsos=P.filter(i=>i.falso);
+      // fichas repetidas
+      const et=P.map(i=>_djNorm(i.t));
+      if(new Set(et).size!==et.length) dup.push(d.id);
+      // ¿se gana pulsando solo lo que lleva alérgeno?
+      if(reales.length && reales.every(x=>x.a.length)) regalo.push(d.id);
+      if(falsos.length<3) pocos.push(d.id);
+      // jugar la respuesta correcta
+      P.forEach((it,i)=>{ if(!it.falso) _paseState.sel.add(i); });
+      _paseServir();
+      const V=_paseState.veredicto;
+      const dec=(d.allergens||[]).slice().sort().join('|');
+      const mon=V.montados.slice().sort().join('|');
+      if(V.perfecto && dec===mon) ok++; else malos.push(d.id+':'+(V.perfecto?'alérgenos':'montaje'));
+    }
+    return {ok, malos, dup, regalo, pocos};
+  `;
+  const R = new Function(src)(); // eslint-disable-line no-new-func
+  assert(R.ok >= 80, `esperaba ~83 platos jugables ganando con la respuesta correcta, hay ${R.ok}`);
+  assert(R.malos.length === 0, `la respuesta correcta NO gana en: ${R.malos.join(', ')}`);
+  assert(R.dup.length === 0, `piscina con fichas repetidas en los platos: ${R.dup.join(', ')}`);
+  assert(R.regalo.length === 0,
+    `en estos platos TODOS los ingredientes llevan alérgeno: se gana sin mirar el plato (${R.regalo.join(', ')})`);
+  assert(R.pocos.length === 0, `menos de 3 distractores en: ${R.pocos.join(', ')}`);
+});
+
+test('Pase de cocina: el desmontaje obedece a lo que validó cocina', () => {
+  // La fase 2 no puede inventarse qué se retira: sale de DISH_ACTIONS, que es
+  // la matriz que cocina validó. Si el alérgeno es estructural (r:0) la única
+  // respuesta correcta es «no se puede», y NINGUNA ficha puede pintarse en
+  // verde — marcar en verde el ingrediente que lo aporta contradiría el
+  // veredicto que se está enseñando al lado.
+  const conf = html.slice(html.indexOf('function _paseConfirmarRetirada('), html.indexOf('function _paseOtroPlato('));
+  assert(/DISH_ACTIONS\[dish\.id\]/.test(conf), 'el veredicto del desmontaje debe leer DISH_ACTIONS');
+  assert(/act\.r===1/.test(conf), 'la retirabilidad se decide por r===1, no por si hay comanda');
+  assert(/bien:\s*retirable\s*\?\s*\(!noSePuede && acertoQue\)\s*:\s*!!noSePuede/.test(conf),
+    'con alérgeno estructural la respuesta correcta es «no se puede»; con retirable, señalar lo que lo aporta');
+  const des = html.slice(html.indexOf('function _paseDesmontajeHTML('), html.indexOf('function _paseDesmontajeHTML(') + 1400);
+  assert(/!R\.retirable \?\s*\(on \? ' sobra' : ' mudo'\)/.test(des),
+    'si el alérgeno es estructural ninguna ficha puede salir en verde');
+  // La comanda que se enseña es la de cocina, en el idioma de la app.
+  assert(/act\.c_en\|\|act\.c/.test(conf) && /act\.c\|\|''/.test(conf),
+    'la comanda debe salir de DISH_ACTIONS (c / c_en), nunca redactada por el juego');
+});
+
+test('Pase de cocina: cableado, accesibilidad y sin foto', () => {
+  // Se lanza desde las DOS listas de Repaso (la de categoría y la del buscador).
+  assert((html.match(/onclick="event\.stopPropagation\(\);launchPase\(\$\{d\.id\}\)"/g) || []).length === 2,
+    'el botón del pase debe estar en las dos listas de Repaso');
+  // El nombre del plato SE DA: la foto no añadiría nada y la regla de la casa
+  // es que las fotos no entran en los ejercicios. El juego no la pinta.
+  const juego = html.slice(html.indexOf('let _paseState = null;'), html.indexOf('function renderRepaso('));
+  assert(!/dishPhotoSrc|img\/platos/.test(juego), 'el juego del pase no debe pintar la foto del plato');
+  // Accesibilidad y dedo: las fichas son botones con aria-pressed, y el overlay
+  // es un diálogo modal que se cierra con ESC.
+  assert(/aria-pressed="\$\{on\?'true':'false'\}"/.test(juego), 'las fichas deben exponer aria-pressed');
+  assert(/setAttribute\('aria-modal','true'\)/.test(juego) && /_paseKeydown/.test(juego),
+    'el overlay debe ser un diálogo modal cerrable con ESC');
+  const css = read('styles.css');
+  assert(/\.pase-chip\{[^}]*min-height:40px/.test(css), 'las fichas necesitan altura de dedo (40px)');
+  assert(/\.pase-serve,\.pase-retry\{[^}]*min-height:46px/.test(css), 'los botones de acción necesitan 46px');
+  assert(/\.pase-chip-t\{[^}]*overflow-wrap:break-word/.test(css),
+    'los nombres largos de ingrediente deben partir, no desbordar');
+});
+
 test('Guía de emplatado: mapa de fotos íntegro, sección cableada, overlay y CSS', () => {
   // El personal leía el PDF del plating guide; esta sección lo sustituye con
   // las fotos reales del propietario. Guard: integridad del mapa + cableado.
