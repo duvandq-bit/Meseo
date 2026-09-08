@@ -6332,6 +6332,12 @@ test('Pase: al acabar un plato el botón dorado sigue jugando, no sale', () => {
     'salir es la acción discreta, nunca la dorada');
   assert(!/class="pase-serve" onclick="_paseClose\(\)"/.test(html),
     'ninguna pantalla del Pase puede tener el cierre como acción dorada');
+  // Y el dorado va SIEMPRE a la derecha, como en las otras tres pantallas del
+  // juego (Reintentar→Llega un alérgico, No se puede retirar→Confirmar,
+  // No lleva ninguno→Servir Pase). Se coló al revés y el propietario lo vio
+  // en el móvil a la primera.
+  assert(fin.indexOf('pase-retry') < fin.indexOf('pase-serve'),
+    'el botón dorado va a la derecha: primero el discreto en el marcado');
   // Y pedir el plato nuevo ANTES de borrar el viejo: si no quedara ninguno
   // jugable, quitar primero dejaba al usuario en la pantalla de detrás — que
   // es literalmente el salto que se denunció.
