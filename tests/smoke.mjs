@@ -6186,6 +6186,60 @@ test('la Inspección Fantasma se llama Auditoría (sep 2026)', () => {
     'el Servicio Fantasma (otra función, ya retirada) no entra en este renombrado');
 });
 
+test('Pase: la corrección no repite lo que las fichas ya dicen con su color', () => {
+  // «La corrección debe verse clara y fácil de entender» (propietario, sep
+  // 2026). Antes listaba FALTABA / NO LLEVA / METISTE con los nombres
+  // completos: tres párrafos que repetían lo que las fichas de abajo ya
+  // enseñan pintadas. Ahora arriba va sólo lo que las fichas NO pueden decir
+  // —el cuadro de alérgenos, que es lo que decide si alguien corría riesgo—,
+  // un recuento que manda a mirarlas y la leyenda de los colores.
+  const v = html.slice(html.indexOf('  // ── La comanda que vuelve de cocina'), html.indexOf('function _paseRailHTML('));
+  assert(!/V\.faltan\.map\(f=>f\.t\)/.test(v) && !/V\.sobran\.map\(f=>f\.t\)/.test(v),
+    'la corrección no puede volver a listar los nombres: para eso están las fichas pintadas');
+  assert(/pase-tally/.test(v), 'debe haber un recuento compacto de lo que faltó y lo que sobró');
+  assert(/pase-leyenda/.test(v), 'los colores de las fichas necesitan su leyenda');
+  assert(/metidos/.test(v) && /dejados/.test(v),
+    'el cuadro de alérgenos sí se detalla: es lo único que las fichas no enseñan');
+  const css = read('styles.css');
+  assert(/\.pase-tally\{/.test(css) && /\.pase-leyenda\{/.test(css), 'faltan sus estilos');
+});
+
+test('Pase: el resultado alimenta el SRS y las notas del supervisor', () => {
+  // «Que se recopile la información de los resultados en el panel de
+  // supervisor» y «el juego debería insistir en los platos que más fallas».
+  // Las dos cosas se apoyan en lo que la app ya tenía: el SM-2 por plato
+  // (emp.srs) que usan el Viaje y el Repaso Inteligente.
+  assert(html.includes('function _paseRegistrar('), 'falta el registro del resultado');
+  const reg = html.slice(html.indexOf('function _paseRegistrar('), html.indexOf('function _paseHoy('));
+  assert(/_srsUpdate\(emp, dish\.id, q\)/.test(reg), 'el resultado debe entrar en el SRS de la app');
+  assert(/V\.perfecto \? 5 : V\.seguro \? 3 : 1/.test(reg),
+    'perfecto=5, seguro=3, fallo=1 en la escala SM-2');
+  assert(/m\.fallos\[dish\.id\]/.test(reg), 'hay que anotar QUÉ plato se falla, no sólo cuántos');
+  assert(/_paseRegistrar\(dish, _paseState\.veredicto\)/.test(html), 'servir el pase debe registrarlo');
+  // La ponderación: insiste, pero no bloquea.
+  const peso = html.slice(html.indexOf('function _pasePeso('), html.indexOf('function _paseElegir('));
+  assert(/if\(fall\) return 6\+Math\.min\(fall,4\)/.test(peso), 'lo fallado pesa más');
+  assert(/return 4;/.test(peso) && /return 2;/.test(peso) && /return 1;/.test(peso),
+    'vencido en el SRS > nunca jugado > dominado, pero ninguno queda excluido');
+  assert(/function _paseElegir\(jugables, emp\)/.test(html) && /r-=pesos\[i\]/.test(html),
+    'el sorteo debe ser ponderado, no un filtro');
+  // Y viaja a la nube para que el supervisor lo vea de todo el equipo.
+  assert(/ps: emp\.paseStats\|\|0,/.test(html), 'las notas del Pase deben subir en extras');
+  assert(/const m=emp\.paseStats=emp\.paseStats\|\|\{n:0,perf:0,seg:0,mal:0,fallos:\{\}\};/.test(html),
+    'y bajar de la nube fusionadas al máximo');
+});
+
+test('Pase: el supervisor ve quién acierta, quién falla y en qué platos', () => {
+  const sup = html.slice(html.indexOf('  // ── PASE DE COCINA: quién acierta'), html.indexOf('  // ── DÓNDE FALLA EL EQUIPO'));
+  assert(sup.length > 500, 'falta la sección del Pase en el panel');
+  assert(/_psSeguro/.test(sup) && /_psPerf/.test(sup),
+    'manda el % de pases seguros en alérgenos; los perfectos van detrás');
+  assert(/_psRows/.test(sup), 'tiene que verse empleado por empleado');
+  assert(/Most failed dishes|Platos que más se fallan/.test(sup),
+    'y los platos que más falla el equipo, que es donde hay que insistir');
+  assert(/_acc\('pase'/.test(html), 'la sección necesita su acordeón en el panel');
+});
+
 test('Pase: la fase de la alergia no lleva la respuesta escrita en las fichas', () => {
   // El propietario, jugándolo en el móvil: «cuando llega un cliente alérgeno la
   // pantalla te dice la alergia». Y era peor que eso: cada ficha llevaba su
@@ -6315,6 +6369,7 @@ test('Pase de cocina: la respuesta correcta gana, en los 83 platos jugables', ()
     function catLocal(c){return c;} function escapeHTML(s){return String(s);}
     function _shiftDishes(a){return a;} function _djLoadIngBase(){return Promise.resolve(null);}
     var _djIngBase=null;
+    function getEmp(){return null;} function saveDB(){} function _paseRegistrar(){} 
     var document={getElementById:()=>null,createElement:()=>({setAttribute(){},style:{},querySelector:()=>null,querySelectorAll:()=>[]}),
       body:{appendChild(){}},addEventListener(){},removeEventListener(){}};
     const _DJ_SECCION = ${/^(masa|topping|base|relleno|guarnicion|sabores disponibles|salsa base|sazonador|marinada|elaboracion)$/};

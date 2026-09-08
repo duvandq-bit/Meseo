@@ -52,7 +52,7 @@
 <meta property="og:description" content="Formación de equipos de sala: carta, alérgenos, vinos, exámenes y juegos de repaso.">
 <meta property="og:url" content="https://meseo.es/">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"Meseo","url":"https://meseo.es/"}</script>
-<meta name="app-version" content="7.387">
+<meta name="app-version" content="7.388">
 <meta name="app-build" content="May 2026">
 <meta name="theme-color" content="#1c2a22">
 <!-- ═══ PWA ═══ -->
@@ -1596,7 +1596,7 @@ const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><p
 const SRC = 'src';
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='7.387';  // sincronizada con sw.js VERSION (guard de CI)
+const APP_VERSION='7.388';  // sincronizada con sw.js VERSION (guard de CI)
 const APP_BUILD='Jul 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;
@@ -8311,6 +8311,7 @@ function _extrasCompose(emp){
     dq:{ d:emp.dqLastDay||'', s:emp.dqStreak||0, ok:emp.dqLastOk?1:0, p:(emp.dqLastPick==null?-1:emp.dqLastPick), t:emp.dqTotal||0, h:emp.dqHits||0 },
     es: emp.examSeen||{},   // intentos por plato → tasa de fallo real del supervisor
     ab: emp.allergenBest||0, // mejor % del Simulacro de alérgenos → seguridad del equipo
+    ps: emp.paseStats||0,   // Pase de cocina → quién acierta, quién falla y en qué platos
   });
 }
 function _extrasMergeInto(emp, extrasStr){
@@ -8342,6 +8343,15 @@ function _extrasMergeInto(emp, extrasStr){
   }
   // Mejor % del Simulacro de alérgenos: el máximo entre local y nube.
   if(typeof x.ab==='number') emp.allergenBest=Math.max(emp.allergenBest||0, x.ab||0);
+  // Pase de cocina: contadores al máximo (son monótonos) y los fallos por
+  // plato sumados al mayor de los dos lados, que es lo que el supervisor mira.
+  if(x.ps && typeof x.ps==='object'){
+    const m=emp.paseStats=emp.paseStats||{n:0,perf:0,seg:0,mal:0,fallos:{}};
+    for(const k of ['n','perf','seg','mal']) m[k]=Math.max(m[k]||0, x.ps[k]||0);
+    m.fallos=m.fallos||{};
+    for(const [id,v] of Object.entries(x.ps.fallos||{})) m.fallos[id]=Math.max(m.fallos[id]||0, v||0);
+    if((x.ps.ld||'')>(m.ld||'')) m.ld=x.ps.ld;
+  }
 }
 
 
@@ -19438,6 +19448,30 @@ function _paseJugables(){
   return pool.length ? pool : DISHES.filter(d=>_djIngredients(d,false).length>=4);
 }
 
+// A quién le toca. «El juego debería insistir en los platos que más fallas»
+// (propietario, sep 2026): se pondera con lo que la app ya sabe de cada plato.
+// Pesa 6 el que se ha fallado aquí, 4 el que el SRS da por vencido, 2 el que
+// nunca se ha jugado y 1 el que va bien. No es un filtro: un plato dominado
+// sigue pudiendo salir, sólo que seis veces menos.
+function _pasePeso(emp, d){
+  const m=(emp&&emp.paseStats)||{};
+  const fall=(m.fallos&&m.fallos[d.id])||0;
+  if(fall) return 6+Math.min(fall,4);
+  const s=(emp&&emp.srs&&emp.srs[d.id])||null;
+  if(!s || !s.reps) return 2;                       // nunca practicado
+  if(s.nextReview && Date.now()>=s.nextReview) return 4;   // vencido
+  return 1;
+}
+function _paseElegir(jugables, emp){
+  const frescos=jugables.filter(d=>!_paseVistos.includes(d.id));
+  const pool=frescos.length?frescos:jugables;
+  const pesos=pool.map(d=>_pasePeso(emp,d));
+  let total=pesos.reduce((a,b)=>a+b,0);
+  let r=Math.random()*total;
+  for(let i=0;i<pool.length;i++){ r-=pesos[i]; if(r<=0) return pool[i]; }
+  return pool[pool.length-1];
+}
+
 // Distractores: ingredientes de OTROS platos de la MISMA categoría. Misma
 // categoría porque un brócoli en un postre se descarta por absurdo y no
 // entrena nada. Se filtran con _djSameThing y no por igualdad de texto: hay
@@ -19480,10 +19514,7 @@ function _paseCtaHTML(_en){
 function launchPase(dishId){
   const jugables = _paseJugables();
   let dish = dishId ? DISHES.find(d=>d.id===dishId) : null;
-  if(!dish){
-    const frescos = jugables.filter(d=>!_paseVistos.includes(d.id));
-    dish = _lqaShuffle(frescos.length?frescos:jugables)[0];
-  }
+  if(!dish) dish = _paseElegir(jugables, getEmp(currentUser));
   if(!dish) return;
   _paseVistos.push(dish.id);
   if(_paseVistos.length>20) _paseVistos.shift();
@@ -19714,6 +19745,33 @@ function _paseAlergenosMontados(){
   return [...out];
 }
 
+// El resultado del Pase se guarda en dos sitios, los dos que ya existen:
+//
+//  · emp.srs[dishId] — el mismo SM-2 que usan el Viaje y el Repaso Inteligente,
+//    para que el juego insista en los platos que se fallan. Un pase perfecto
+//    vale 5, uno seguro (alérgenos bien, montaje no) 3, y un fallo 1.
+//  · emp.paseStats — el agregado que ve el supervisor: cuántos pases, cuántos
+//    perfectos, cuántos seguros y qué platos se están fallando.
+function _paseRegistrar(dish, V){
+  const emp=getEmp(currentUser); if(!emp) return;
+  const q = V.perfecto ? 5 : V.seguro ? 3 : 1;
+  if(typeof _srsUpdate==='function') _srsUpdate(emp, dish.id, q);
+  const m = emp.paseStats = emp.paseStats || {n:0, perf:0, seg:0, mal:0, fallos:{}};
+  m.n=(m.n||0)+1;
+  if(V.perfecto) m.perf=(m.perf||0)+1;
+  else if(V.seguro) m.seg=(m.seg||0)+1;
+  else {
+    m.mal=(m.mal||0)+1;
+    // se anota el plato fallado para que el supervisor vea DÓNDE falla el equipo
+    m.fallos=m.fallos||{}; m.fallos[dish.id]=(m.fallos[dish.id]||0)+1;
+  }
+  m.ld=_paseHoy();
+  saveDB();
+  if(typeof awardXP==='function') awardXP(V.perfecto?18:V.seguro?10:4,
+    (LANG==='en'?'Plating pass':'Pase de cocina'), 'pase');
+}
+function _paseHoy(){ return new Date().toISOString().slice(0,10); }
+
 function _paseServir(){
   if(!_paseState || _paseState.veredicto) return;
   const dish = DISHES.find(d=>d.id===_paseState.dishId);
@@ -19733,6 +19791,7 @@ function _paseServir(){
   _paseState.veredicto = { faltan, sobran, montados, declarados,
     perfecto: !faltan.length && !sobran.length,
     seguro: (faltan.length||sobran.length) && mismos };
+  _paseRegistrar(dish, _paseState.veredicto);
   if(typeof playSound==='function') playSound(_paseState.veredicto.perfecto?'correct':'wrong');
   _paseRender();
 }
@@ -19880,32 +19939,53 @@ function _paseMontajeHTML(dish, dd, _en){
     </div>`;
   }
 
-  // ── La comanda que vuelve de cocina: se enseña qué sobraba y qué faltaba,
-  //    sin castigo y con las fichas pintadas para fijar la imagen.
+  // ── La comanda que vuelve de cocina ──────────────────────────────
+  // Antes se listaban FALTABA / NO LLEVA / METISTE con los nombres completos:
+  // tres párrafos que REPETÍAN lo que las fichas de abajo ya dicen con su
+  // color. Ahora arriba va solo lo que las fichas NO pueden decir —el cuadro
+  // de alérgenos, que es el que decide si alguien corría riesgo— y el recuento
+  // manda a mirar las fichas, que es donde está el detalle.
   const marcado=S.piscina.map((it,i)=>{
     const on=S.sel.has(i);
     const cls = !it.falso && on ? ' ok' : !it.falso && !on ? ' falta' : it.falso && on ? ' sobra' : ' mudo';
     return _paseChip(it,i,on,'void 0',cls);
   }).join('');
+  const de=V.declarados, mo=V.montados;
+  const metidos=mo.filter(a=>!de.includes(a)), dejados=de.filter(a=>!mo.includes(a));
   const titulo = V.perfecto ? (_en?'Perfect pass':'Pase perfecto')
     : V.seguro ? (_en?'Safe pass':'Pase seguro')
     : (_en?'The pass comes back':'El pase vuelve');
   const sub = V.perfecto ? (_en?'Every ingredient right, and the allergen board matches the sheet.':'Todos los ingredientes bien, y el cuadro de alérgenos coincide con la ficha.')
-    : V.seguro ? (_en?'You missed the plating, but the allergen board is exactly the one on the sheet — nobody would have been at risk.':'Fallaste el montaje, pero el cuadro de alérgenos es exactamente el de la ficha — nadie habría corrido riesgo.')
-    : (_en?'The allergen board does not match the sheet.':'El cuadro de alérgenos no coincide con el de la ficha.');
-  const fila=(l,cls,xs)=>xs.length?`<div class="pase-fix"><span class="pase-fix-l ${cls}">${l}</span><span>${xs.map(escapeHTML).join(' · ')}</span></div>`:'';
-  const de=V.declarados, mo=V.montados;
-  const dif = fila(_en?'You added':'Metiste','sobra',mo.filter(a=>!de.includes(a)).map(allergenLocal))
-            + fila(_en?'You left out':'Te dejaste','falta',de.filter(a=>!mo.includes(a)).map(allergenLocal));
+    : V.seguro ? (_en?'You missed the plating, but the allergen board is exactly the one on the sheet — nobody would have been at risk.':'Fallaste el montaje, pero el cuadro de alérgenos es el de la ficha — nadie habría corrido riesgo.')
+    : (_en?'The allergen board does not match the sheet.':'El cuadro de alérgenos no es el de la ficha.');
+
+  // Lo único que las fichas no enseñan: en qué se ha desviado el cuadro.
+  const filaAl = (l,cls,xs)=>xs.length
+    ? `<div class="pase-fix"><span class="pase-fix-l ${cls}">${l}</span><span>${xs.map(a=>escapeHTML(allergenLocal(a))).join(' · ')}</span></div>`
+    : '';
+  const alergenos = (metidos.length||dejados.length)
+    ? filaAl(_en?'Added':'De más','sobra',metidos) + filaAl(_en?'Left out':'De menos','falta',dejados)
+    : `<div class="pase-fix"><span class="pase-fix-l ok">${_en?'Allergens':'Alérgenos'}</span><span>${_en?'exactly the ones on the sheet':'exactamente los de la ficha'}</span></div>`;
+
+  // Y un recuento que dice dónde mirar, en vez de repetir los nombres.
+  const cuenta=[];
+  if(V.faltan.length) cuenta.push(`<span class="pase-tally falta">${V.faltan.length} ${_en?(V.faltan.length===1?'missing':'missing'):(V.faltan.length===1?'faltaba':'faltaban')}</span>`);
+  if(V.sobran.length) cuenta.push(`<span class="pase-tally sobra">${V.sobran.length} ${_en?'not in the dish':(V.sobran.length===1?'no iba':'no iban')}</span>`);
+  if(!cuenta.length) cuenta.push(`<span class="pase-tally ok">${_en?'every ingredient right':'todos los ingredientes bien'}</span>`);
+
   const puedeSeguir=_paseAlergiasPosibles(dish).length>0;
   return `
     <div class="pase-verdict${V.perfecto?' ok':V.seguro?' warn':' bad'}">
       <div class="pase-verdict-sello">${V.perfecto?'✓':V.seguro?'≈':'↩'}</div>
       <div class="pase-verdict-t">${titulo}</div>
       <div class="pase-verdict-s">${sub}</div>
-      ${fila(_en?'Missing':'Faltaba','falta',V.faltan.map(f=>f.t))}
-      ${fila(_en?'Not in this dish':'No lleva','sobra',V.sobran.map(f=>f.t))}
-      ${dif}
+      ${alergenos}
+    </div>
+    <div class="pase-tallies">${cuenta.join('')}</div>
+    <div class="pase-leyenda">
+      <span><i class="pase-lg ok"></i>${_en?'right':'bien'}</span>
+      <span><i class="pase-lg falta"></i>${_en?'was missing':'faltaba'}</span>
+      <span><i class="pase-lg sobra"></i>${_en?'not in the dish':'no iba'}</span>
     </div>
     <div class="pase-mise-in revision">${marcado}</div>
     <div class="pase-actions">
@@ -19915,7 +19995,6 @@ function _paseMontajeHTML(dish, dd, _en){
     </div>`;
 }
 
-// El riel de alérgenos del plato: lo que lleva AHORA MISMO lo que hay montado.
 function _paseRailHTML(_en){
   const al=_paseAlergenosMontados();
   return al.length
@@ -22126,6 +22205,51 @@ function renderSupAnalytics(allEmps, empNames){
     </div>`;
 
 
+  // ── PASE DE COCINA: quién acierta y quién falla ──
+  // Lo que pidió el propietario: «seguimiento de quienes fallan y quienes
+  // aciertan». Manda el porcentaje de pases SEGUROS —los que dejan el cuadro
+  // de alérgenos correcto— porque es el dato de seguridad; el de perfectos va
+  // detrás, que es destreza. Y los platos más fallados del equipo, que es
+  // donde hay que insistir en el briefing.
+  const _psEmp = empNames.filter(n => allEmps[n].paseStats && (allEmps[n].paseStats.n||0) > 0);
+  const _psTot = _psEmp.reduce((a,n)=>a+(allEmps[n].paseStats.n||0),0);
+  const _psPerf = _psEmp.reduce((a,n)=>a+(allEmps[n].paseStats.perf||0),0);
+  const _psSeg = _psEmp.reduce((a,n)=>a+(allEmps[n].paseStats.seg||0),0);
+  const _psMal = _psEmp.reduce((a,n)=>a+(allEmps[n].paseStats.mal||0),0);
+  const _psSeguro = _psTot ? Math.round(100*(_psPerf+_psSeg)/_psTot) : 0;
+  const _psFallos = {};
+  for(const n of _psEmp) for(const [id,v] of Object.entries(allEmps[n].paseStats.fallos||{})) _psFallos[id]=(_psFallos[id]||0)+v;
+  const _psTop = Object.entries(_psFallos).sort((a,b)=>b[1]-a[1]).slice(0,6)
+    .map(([id,v])=>{ const d=DISHES.find(x=>x.id===+id); return d?{n:(getDish(d).name||d.name), v}:null; }).filter(Boolean);
+  const _psRows = _psEmp
+    .sort((a,b)=>(allEmps[b].paseStats.n||0)-(allEmps[a].paseStats.n||0))
+    .map(n=>{
+      const m=allEmps[n].paseStats;
+      const seg=m.n?Math.round(100*((m.perf||0)+(m.seg||0))/m.n):0;
+      const col=seg>=90?'var(--green-deep)':seg>=70?'var(--gold-deep)':'#a04848';
+      return `<div style="display:flex;align-items:center;justify-content:space-between;gap:.5rem;padding:.4rem 0;border-bottom:1px solid var(--line)">
+        <span style="font-family:'Quicksand',sans-serif;font-size:.78rem;color:var(--parchment)">${escapeHTML(n)}</span>
+        <span style="font-family:'DM Mono',monospace;font-size:.62rem;color:var(--parch3)">${m.n} ${LANG==='en'?'passes':'pases'} · ${m.perf||0} ${LANG==='en'?'perfect':'perfectos'}</span>
+        <span style="font-family:'DM Mono',monospace;font-size:.7rem;font-weight:700;color:${col};min-width:38px;text-align:right">${seg}%</span>
+      </div>`;
+    }).join('');
+  const paseSection = `
+    <div style="background:linear-gradient(155deg,#faf6ee,#f0e8d8);border:1px solid var(--line);border-radius:var(--r2);padding:1rem">
+      <div style="font-family:'DM Mono',monospace;font-size:.6rem;color:var(--gold-deep);letter-spacing:.12em;text-transform:uppercase;margin-bottom:.5rem">◎ ${LANG==='en'?'Plating pass':'Pase de cocina'}</div>
+      ${_psTot ? `
+      <div style="display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:.6rem;font-family:'DM Mono',monospace;font-size:.62rem">
+        <span style="background:rgba(140,110,60,.1);border-radius:8px;padding:.3rem .55rem;color:var(--parchment)"><b>${_psTot}</b> ${LANG==='en'?'passes':'pases'}</span>
+        <span style="background:${_psSeguro>=90?'rgba(90,138,94,.14)':'rgba(196,112,104,.12)'};border-radius:8px;padding:.3rem .55rem;color:var(--parchment)"><b>${_psSeguro}%</b> ${LANG==='en'?'allergen-safe':'seguros en alérgenos'}</span>
+        <span style="background:rgba(140,110,60,.1);border-radius:8px;padding:.3rem .55rem;color:var(--parchment)"><b>${_psPerf}</b> ${LANG==='en'?'perfect':'perfectos'}</span>
+        ${_psMal?`<span style="background:rgba(160,72,72,.14);border-radius:8px;padding:.3rem .55rem;color:#a04848;font-weight:700">${_psMal} ${LANG==='en'?'returned':'devueltos'}</span>`:''}
+      </div>
+      ${_psRows}
+      ${_psTop.length?`<div style="margin-top:.7rem;padding-top:.6rem;border-top:1px solid var(--line)">
+        <div style="font-family:'DM Mono',monospace;font-size:.55rem;color:var(--parch3);letter-spacing:.1em;text-transform:uppercase;margin-bottom:.4rem">${LANG==='en'?'Most failed dishes':'Platos que más se fallan'}</div>
+        <div style="display:flex;flex-wrap:wrap;gap:.3rem">${_psTop.map(x=>`<span style="font-family:'Quicksand',sans-serif;font-size:.72rem;background:rgba(160,72,72,.1);border:1px solid rgba(160,72,72,.25);border-radius:8px;padding:.2rem .5rem;color:var(--parchment)">${escapeHTML(x.n)} <b>×${x.v}</b></span>`).join('')}</div>
+      </div>`:''}` : `<div style="font-family:'Quicksand',sans-serif;font-size:.74rem;color:#8a7a5c">${LANG==='en'?'No passes played yet.':'Todavía nadie ha jugado un pase.'}</div>`}
+    </div>`;
+
   // ── DÓNDE FALLA EL EQUIPO — por tema (topicScores agregados de todos) ──
   // topicScores guarda {correct,total} por tema (Alérgenos/Ingredientes/
   // Storytelling) de exámenes y flashcards. Los sumamos para ver en qué
@@ -22322,6 +22446,7 @@ function renderSupAnalytics(allEmps, empNames){
     ${_acc('alg','⚠️',_en2?'Allergens — safety':'Alérgenos — seguridad', `${_riskN} ${_en2?'at risk':'en riesgo'}${allergenUntrained.length?` · ${allergenUntrained.length} ${_en2?'untrained':'sin entrenar'}`:''}`, _algBody)}
     ${_acc('res','📣',_en2?'Weekly summary':'Resumen semanal', _en2?'ready for WhatsApp':'listo para WhatsApp', resumenSection)}
     ${_acc('act','📈',_en2?'Activity':'Actividad', `${_inact.length} ${_en2?'inactive':'sin actividad'}`, renderSupActivityHeatmap(Object.values(allEmps))+renderSupScoreTrend(Object.values(allEmps))+_inactHTML)}
+    ${_acc('pase','◎',_en2?'Plating pass':'Pase de cocina', _psTot?`${_psTot} ${_en2?'passes':'pases'} · ${_psSeguro}% ${_en2?'safe':'seguros'}`:(_en2?'not played yet':'aún sin jugar'), paseSection)}
     ${_acc('perf','🎯',_en2?'Performance':'Rendimiento', exN?`${exN} ${_en2?'exams':'exámenes'} · ${exAcc}%`:(_en2?'no exams yet':'aún sin exámenes'), _perfBody)}
     ${_acc('dish','🧩',_en2?'Hardest dishes':'Platos difíciles', hardest.length?`${hardest.length} ${_en2?'to review':'a repasar'}`:'', _dishBody)}
   </div>`;
