@@ -52,7 +52,7 @@
 <meta property="og:description" content="Formación de equipos de sala: carta, alérgenos, vinos, exámenes y juegos de repaso.">
 <meta property="og:url" content="https://meseo.es/">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"Meseo","url":"https://meseo.es/"}</script>
-<meta name="app-version" content="7.384">
+<meta name="app-version" content="7.385">
 <meta name="app-build" content="May 2026">
 <meta name="theme-color" content="#1c2a22">
 <!-- ═══ PWA ═══ -->
@@ -1596,7 +1596,7 @@ const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><p
 const SRC = 'src';
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='7.384';  // sincronizada con sw.js VERSION (guard de CI)
+const APP_VERSION='7.385';  // sincronizada con sw.js VERSION (guard de CI)
 const APP_BUILD='Jul 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;
@@ -25920,7 +25920,7 @@ function renderLqa(){
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#d4f0dc" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a3 3 0 00-3 3v1a7 7 0 00-7 7v2a3 3 0 003 3h1l.5 3 1.5-3h10l1.5 3 .5-3h1a3 3 0 003-3v-2a7 7 0 00-7-7V5a3 3 0 00-3-3z"/><circle cx="9" cy="13" r="1" fill="#d4f0dc"/><circle cx="15" cy="13" r="1" fill="#d4f0dc"/></svg>
         </div>
         <div class="hub-banner-body">
-          <div class="hub-banner-title">${LANG==='en'?'Audit':'Auditoría'}</div>
+          <div class="hub-banner-title">${LANG==='en'?'Full audit':'Auditoría completa'}</div>
           <div class="hub-banner-sub">${LANG==='en'?'Under the auditor\'s eye · Full-service simulation':'Bajo la mirada del auditor · Simulación completa'}</div>
         </div>
         <div class="hub-banner-arrow">›</div>
@@ -26770,7 +26770,7 @@ function renderGhostIntro(){
   c.innerHTML=`<div class="sup-wrap">
     <div style="display:flex;align-items:center;gap:.6rem;margin-bottom:1rem">
       <button onclick="renderLqa()" aria-label="${LANG==='en'?'Back':'Atr\u00e1s'}" style="background:transparent;border:1.5px solid rgba(196,154,60,.55);border-radius:var(--r2);padding:.4rem .8rem;font-size:.75rem;color:var(--gold-deep);font-weight:700;cursor:pointer">\u2190</button>
-      <div style="font-family:'Cinzel',serif;font-size:1rem;color:var(--parchment)">${LANG==='en'?'Audit':'Auditor\u00eda'}</div>
+      <div style="font-family:'Cinzel',serif;font-size:1rem;color:var(--parchment)">${LANG==='en'?'Full audit':'Auditor\u00eda completa'}</div>
     </div>
     <div style="background:linear-gradient(155deg,#1a2a20,#0f1d15);border:1px solid rgba(140,200,150,.2);border-radius:var(--r);padding:1.5rem;margin-bottom:1.1rem;position:relative;overflow:hidden">
       <div style="position:absolute;top:0;right:0;font-size:5rem;opacity:.08;line-height:1;padding:.5rem">${s.icon}</div>
@@ -26799,7 +26799,7 @@ function renderGhostScene(){
   c.innerHTML=`<div class="sup-wrap">
     <div style="display:flex;align-items:center;gap:.6rem;margin-bottom:1rem">
       <button onclick="if(confirm('${LANG==='en'?'Exit? Progress will be lost.':'\u00bfSalir? Se perder\u00e1 el progreso.'}'))renderLqa()" aria-label="${LANG==='en'?'Back':'Atr\u00e1s'}" style="background:transparent;border:1.5px solid rgba(196,154,60,.55);border-radius:var(--r2);padding:.4rem .8rem;font-size:.75rem;color:var(--gold-deep);font-weight:700;cursor:pointer">\u2190</button>
-      <div style="font-family:'Cinzel',serif;font-size:1rem;color:var(--parchment)">${LANG==='en'?'Audit':'Auditor\u00eda'} \u00b7 ${ghostSceneIdx+1}/${ghostScenario.scenes.length}</div>
+      <div style="font-family:'Cinzel',serif;font-size:1rem;color:var(--parchment)">${LANG==='en'?'Full audit':'Auditor\u00eda completa'} \u00b7 ${ghostSceneIdx+1}/${ghostScenario.scenes.length}</div>
     </div>
     <div style="margin-bottom:1rem">
       <div style="width:100%;height:6px;background:var(--parch4);border-radius:var(--r3);overflow:hidden">
@@ -26817,6 +26817,48 @@ function renderGhostScene(){
       </button>`).join('')}
     </div>
   </div>`;
+}
+
+// La opción que el inspector esperaba. Sale del propio dato: 95 de las 96
+// escenas tienen exactamente UNA opción que cumple todos sus estándares, y las
+// 288 opciones traen su feedback en los dos idiomas. En la única escena sin
+// jugada redonda —el incidente de la familia— se coge la que más cumple, que
+// es lo honesto: ahí no hay respuesta perfecta que enseñar.
+function _ghostEsperada(sc, elegida){
+  const opts=(sc&&sc.options)||[];
+  const nota=o=>(o.effects||[]).filter(e=>e.met).length-(o.effects||[]).filter(e=>!e.met).length;
+  let mejor=null, mejorN=-99;
+  for(const o of opts){ if(o===elegida) continue; const n=nota(o); if(n>mejorN){ mejorN=n; mejor=o; } }
+  return (mejor && mejorN>nota(elegida)) ? mejor : null;
+}
+
+// Al fallar, la nota del inspector reprochaba sin enseñar la jugada: se veía
+// QUÉ estándar se rompió pero no QUÉ había que hacer. Esto añade la opción que
+// él esperaba, con su consecuencia y con los estándares TUYOS que arregla.
+// Todo sale del dato; aquí no se redacta ni un juicio.
+function _ghostEsperadaHTML(sc, opt){
+  const esperada=_ghostEsperada(sc, opt);
+  if(!esperada) return '';
+  const _en=LANG==='en';
+  const rotos=new Set((opt.effects||[]).filter(e=>!e.met).map(e=>e.std));
+  const arregla=(esperada.effects||[]).filter(e=>e.met && rotos.has(e.std));
+  const filas=arregla.map(ef=>{
+    const std=LQA_STANDARDS.find(x=>x.id===ef.std);
+    const txt=_en?(std&&std.std_en||''):(std&&std.std||'');
+    return '<div style="display:flex;align-items:flex-start;gap:.5rem;padding:.3rem 0">'
+      + '<span style="color:var(--green-deep);font-weight:700;font-size:.9rem">&#10003;</span>'
+      + '<span style="font-family:\'DM Mono\',monospace;font-size:.6rem;color:var(--green-deep);flex-shrink:0;min-width:30px">#'+ef.std+'</span>'
+      + '<span style="font-size:.75rem;color:var(--parch2);line-height:1.45;flex:1">'+escapeHTML(txt)+'</span></div>';
+  }).join('');
+  return '<div style="background:linear-gradient(155deg,#f3f8f4,#e9f2ec);border:1px solid rgba(77,138,94,.28);border-left:4px solid var(--green-deep);border-radius:var(--r2);padding:1.1rem;margin-bottom:1rem">'
+    + '<div style="font-family:\'DM Mono\',monospace;font-size:.55rem;color:var(--green-deep);letter-spacing:.15em;text-transform:uppercase;margin-bottom:.6rem">'
+    + (_en?'What the inspector expected':'Lo que esperaba el inspector')+'</div>'
+    + '<div style="font-size:.86rem;color:var(--parchment);line-height:1.55;font-weight:600;margin-bottom:.6rem">'+escapeHTML(_en?esperada.label_en:esperada.label)+'</div>'
+    + '<div style="font-size:.82rem;color:var(--parch2);line-height:1.6;font-style:italic">'+escapeHTML(_en?esperada.feedback_en:esperada.feedback)+'</div>'
+    + (filas?'<div style="border-top:1px solid rgba(77,138,94,.18);margin-top:.8rem;padding-top:.7rem">'
+        + '<div style="font-family:\'DM Mono\',monospace;font-size:.55rem;color:var(--parch3);letter-spacing:.12em;text-transform:uppercase;margin-bottom:.45rem">'
+        + (_en?'This would have met':'Con eso habrías cumplido')+'</div>'+filas+'</div>':'')
+    + '</div>';
 }
 
 function ghostChoose(idx){
@@ -26858,6 +26900,7 @@ function ghostChoose(idx){
         }).join('')}
       </div>
     </div>
+    ${_ghostEsperadaHTML(sc, opt)}
     <button onclick="ghostNext()" style="width:100%;padding:.95rem;background:var(--sage);border:none;border-radius:var(--r);color:#fff;font-family:'Cinzel',serif;font-size:.9rem;font-weight:700;cursor:pointer;letter-spacing:.05em">${ghostSceneIdx+1>=ghostScenario.scenes.length?(LANG==='en'?'See Inspector Report':'Ver Informe del Inspector'):(LANG==='en'?'Next scene':'Siguiente escena')} \u2192</button>
   </div>`;
 }
@@ -26921,7 +26964,7 @@ function renderGhostReport(){
     emp.lqaScores.push({type:'ghost',score:met,total,date:Date.now()});
     saveDB();
   }
-  awardXP(xpEarned, LANG==='en'?'Audit':'Auditor\u00eda', 'ghost');
+  awardXP(xpEarned, LANG==='en'?'Full audit':'Auditor\u00eda completa', 'ghost');
   checkNewAchievements();
 
   const c=document.getElementById('appContent');

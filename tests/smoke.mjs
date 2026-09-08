@@ -6076,6 +6076,65 @@ test('el Pase tiene su acceso destacado, con un handler que de verdad dispara', 
   assert(/\.ri-cta-pase\{/.test(css), 'la tarjeta del Pase necesita su propio estilo');
 });
 
+test('Auditoría: al fallar se enseña la jugada que esperaba el inspector', () => {
+  // «Reforzar la auditoría» (propietario, sep 2026) = mejor corrección. Antes
+  // la nota reprochaba sin enseñar: veías QUÉ estándar rompiste pero no QUÉ
+  // había que hacer. Ahora, al elegir peor de lo que podías, se muestra la
+  // opción que el inspector esperaba, su consecuencia y los estándares TUYOS
+  // que arregla. Todo del dato: 95 de las 96 escenas tienen exactamente una
+  // opción que cumple todos sus estándares y las 288 traen feedback bilingüe.
+  assert(html.includes('function _ghostEsperada('), 'falta el selector de la jugada esperada');
+  assert(html.includes('function _ghostEsperadaHTML('), 'falta el bloque de corrección');
+  assert(html.includes('${_ghostEsperadaHTML(sc, opt)}'), 'la nota del inspector debe pintarlo');
+  // No se redacta ningún juicio aquí: sale de label/feedback/effects del dato.
+  const fn = html.slice(html.indexOf('function _ghostEsperadaHTML('), html.indexOf('function ghostChoose('));
+  assert(/esperada\.label_en:esperada\.label/.test(fn) && /esperada\.feedback_en:esperada\.feedback/.test(fn),
+    'la jugada y su consecuencia salen del escenario, no se escriben en el código');
+  assert(/rotos\.has\(e\.std\)/.test(fn),
+    'solo se listan los estándares que TÚ rompiste y esa jugada arregla');
+
+  // Y el barrido de verdad, sobre las 96 escenas: eligiendo siempre la peor
+  // opción, todas tienen una jugada mejor que enseñar y ninguna se enseña a
+  // sí misma.
+  const G = JSON.parse(read('data/ghost-scenarios.json'));
+  const esc = (Array.isArray(G) ? G : Object.values(G)).flatMap(s => (s.scenes || []).map(sc => ({ id: s.id, sc })));
+  const M = new Function(html.slice(html.indexOf('function _ghostEsperada('), html.indexOf('function _ghostEsperadaHTML(')) // eslint-disable-line no-new-func
+    + '; return _ghostEsperada;')();
+  const nota = o => (o.effects || []).filter(e => e.met).length - (o.effects || []).filter(e => !e.met).length;
+  const sin = [];
+  for (const { id, sc } of esc) {
+    const peor = [...sc.options].sort((a, b) => nota(a) - nota(b))[0];
+    const esperada = M(sc, peor);
+    if (!esperada) sin.push(`${id} «${sc.title}» no tiene jugada que enseñar`);
+    else if (esperada === peor) sin.push(`${id} «${sc.title}» se enseña a sí misma`);
+    else if (nota(esperada) <= nota(peor)) sin.push(`${id} «${sc.title}» enseña una jugada que no es mejor`);
+  }
+  assert(esc.length >= 90, `esperaba ~96 escenas, hay ${esc.length}`);
+  assert(sin.length === 0, `escenas sin corrección útil: ${sin.slice(0, 5).join(' · ')}`);
+  // Y al revés, que es donde se cuela el error de verdad: si aciertas con la
+  // MEJOR opción no puede ofrecerse ninguna \"jugada esperada\", porque sería
+  // enseñar como modelo algo peor que lo que hiciste.
+  const sobran = [];
+  for (const { id, sc } of esc) {
+    const mejor = [...sc.options].sort((a, b) => nota(b) - nota(a))[0];
+    if (M(sc, mejor)) sobran.push(`${id} «${sc.title}»`);
+  }
+  assert(sobran.length === 0,
+    `acertando la mejor opción no debe enseñarse otra jugada: ${sobran.slice(0, 5).join(' · ')}`);
+});
+
+test('Auditoría: la sección y el ejercicio no se llaman igual', () => {
+  // La pestaña ya se llamaba Auditoría; al renombrar la Inspección Fantasma
+  // quedaban las dos con el mismo nombre, una dentro de la otra. El ejercicio
+  // pasa a «Auditoría completa» y la sección se queda como estaba.
+  assert(/navProtocolo: LANG==='en'\?'Audit':'Auditoría',/.test(html),
+    'la pestaña sigue llamándose Auditoría');
+  assert(html.includes(`'Full audit':'Auditoría completa'`) || html.includes(`'Full audit':'Auditor\\u00eda completa'`),
+    'el ejercicio debe llamarse Auditoría completa');
+  const banner = html.slice(html.indexOf('hub-banner-title'), html.indexOf('hub-banner-title') + 120);
+  assert(/Full audit/.test(banner), 'el banner del hub es el del ejercicio, no el de la sección');
+});
+
 test('la Inspección Fantasma se llama Auditoría (sep 2026)', () => {
   // El propietario cambió el nombre: «Fantasma» era jerga interna y lo que el
   // ejercicio simula es exactamente una auditoría — 22 escenarios de 4-5
