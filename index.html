@@ -52,7 +52,7 @@
 <meta property="og:description" content="Formación de equipos de sala: carta, alérgenos, vinos, exámenes y juegos de repaso.">
 <meta property="og:url" content="https://meseo.es/">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"Meseo","url":"https://meseo.es/"}</script>
-<meta name="app-version" content="7.393">
+<meta name="app-version" content="7.394">
 <meta name="app-build" content="May 2026">
 <meta name="theme-color" content="#1c2a22">
 <!-- ═══ PWA ═══ -->
@@ -1596,7 +1596,7 @@ const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><p
 const SRC = 'src';
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='7.393';  // sincronizada con sw.js VERSION (guard de CI)
+const APP_VERSION='7.394';  // sincronizada con sw.js VERSION (guard de CI)
 const APP_BUILD='Jul 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;
@@ -8355,7 +8355,11 @@ function _extrasMergeInto(emp, extrasStr){
   // plato sumados al mayor de los dos lados, que es lo que el supervisor mira.
   if(x.ps && typeof x.ps==='object'){
     const m=emp.paseStats=emp.paseStats||{n:0,perf:0,seg:0,mal:0,fallos:{}};
-    for(const k of ['n','perf','seg','mal','al','alOk']) m[k]=Math.max(m[k]||0, x.ps[k]||0);
+    for(const k of ['n','perf','seg','mal','al','alOk','mem','memOk']) m[k]=Math.max(m[k]||0, x.ps[k]||0);
+    // Las rachas por plato deciden quién juega de memoria: se queda la mayor,
+    // que es la que refleja el progreso real del empleado.
+    m.rachas=m.rachas||{};
+    for(const [id,v] of Object.entries(x.ps.rachas||{})) m.rachas[id]=Math.max(m.rachas[id]||0, v||0);
     m.fallos=m.fallos||{};
     for(const [id,v] of Object.entries(x.ps.fallos||{})) m.fallos[id]=Math.max(m.fallos[id]||0, v||0);
     if((x.ps.ld||'')>(m.ld||'')) m.ld=x.ps.ld;
@@ -19515,8 +19519,14 @@ function launchPase(dishId){
   if(!dish) return;
   _paseVistos.push(dish.id);
   if(_paseVistos.length>20) _paseVistos.shift();
-  _paseState = { dishId:dish.id, fase:'montaje', sel:new Set(), piscina:null, veredicto:null,
+  // Dos pases perfectos seguidos en este plato y se le retiran las fichas: la
+  // siguiente vez toca de memoria. Un fallo devuelve el plato al nivel 1.
+  const nivel = _paseNivel(getEmp(currentUser), dish.id);
+  _paseState = { dishId:dish.id, nivel, fase: nivel===2?'memoria':'montaje',
+                 sel:new Set(), piscina:null, veredicto:null,
                  alergia:null, quitar:new Set(), resuelto:null };
+  // La piscina se arma también en el nivel 2 aunque no se enseñe: la fase de
+  // la alergia trabaja sobre ella, y así el desmontaje no cambia.
   _paseArmar();
   _paseRender();
   // La base de ingredientes llega en diferido; sin ella la piscina sigue
@@ -19783,6 +19793,27 @@ function _paseAlergenosMontados(){
 //    vale 5, uno seguro (alérgenos bien, montaje no) 3, y un fallo 1.
 //  · emp.paseStats — el agregado que ve el supervisor: cuántos pases, cuántos
 //    perfectos, cuántos seguros y qué platos se están fallando.
+// ── Retirar el andamio ────────────────────────────────────────────────────
+// Idea del propietario (sep 2026), viendo cómo lo hace Duolingo: primero eliges
+// de un banco de opciones, y cuando ya lo llevas, te lo piden de memoria. Lo
+// que teníamos era sólo reconocimiento —ves «Panko» y juzgas sí o no—, y en
+// sala nadie te da la lista: el huésped pregunta «¿lleva gluten?».
+//
+// Nivel 2: sólo el nombre del plato, y marcas sus alérgenos entre los 14 de la
+// lista legal. No es una muleta porque esos 14 hay que saberlos igual, y el
+// dato lo sostiene: media de 2,8 alérgenos por plato, 48 combinaciones
+// distintas entre los 98, y la mejor estrategia fija posible acierta el 14%
+// (marcar nada, que sólo vale en los 14 platos sin alérgenos).
+//
+// Se descartó la otra lectura de «de memoria» —la ficha completa sin señuelos—
+// porque sigue siendo reconocimiento y devuelve el plato de 31 fichas que
+// acabábamos de quitar.
+const _PASE_ASCENSO = 2;   // pases perfectos seguidos para que te quiten las fichas
+function _paseNivel(emp, dishId){
+  const r=(emp && emp.paseStats && emp.paseStats.rachas) || {};
+  return (r[dishId]||0) >= _PASE_ASCENSO ? 2 : 1;
+}
+
 function _paseRegistrar(dish, V){
   _paseRacha.n++; if(V.perfecto) _paseRacha.perf++;
   const emp=getEmp(currentUser); if(!emp) return;
@@ -19797,9 +19828,17 @@ function _paseRegistrar(dish, V){
     // se anota el plato fallado para que el supervisor vea DÓNDE falla el equipo
     m.fallos=m.fallos||{}; m.fallos[dish.id]=(m.fallos[dish.id]||0)+1;
   }
+  // La racha por plato decide cuándo se retira el andamio. Un fallo la corta:
+  // el plato vuelve al nivel con fichas, que es donde se vuelve a aprender.
+  m.rachas=m.rachas||{};
+  if(V.perfecto) m.rachas[dish.id]=(m.rachas[dish.id]||0)+1;
+  else m.rachas[dish.id]=0;
+  if(V.memoria){ m.mem=(m.mem||0)+1; if(V.perfecto) m.memOk=(m.memOk||0)+1; }
   m.ld=_paseHoy();
   saveDB();
-  if(typeof awardXP==='function') awardXP(V.perfecto?18:V.seguro?10:4,
+  if(typeof awardXP==='function') awardXP(
+    // De memoria vale más: no hay banco de opciones del que tirar.
+    V.memoria ? (V.perfecto?26:6) : (V.perfecto?18:V.seguro?10:4),
     (LANG==='en'?'Plating pass':'Pase de cocina'), 'pase');
 }
 function _paseHoy(){ return new Date().toISOString().slice(0,10); }
@@ -19826,6 +19865,39 @@ function _paseServir(ninguno){
   _paseState.veredicto = { faltan, sobran, montados, declarados,
     perfecto: !faltan.length && !sobran.length,
     seguro: (faltan.length||sobran.length) && mismos };
+  _paseRegistrar(dish, _paseState.veredicto);
+  if(typeof playSound==='function') playSound(_paseState.veredicto.perfecto?'correct':'wrong');
+  _paseRender();
+}
+
+// Los 14 alérgenos de declaración obligatoria, en el orden en que los piensa
+// sala: primero los que más aparecen en esta carta. Salen de ALLERGEN_MAP, que
+// ya es la lista con la que trabajan la ficha y el buscador — no una nueva.
+const _PASE_ALERGENOS = ['Gluten','Lácteos','Huevos','Sulfitos','Pescado','Mostaza',
+  'Apio','Frutos secos','Soja','Moluscos','Crustáceos','Granos de sésamo',
+  'Cacahuete','Altramuces'];
+
+function _paseToggleAl(i){
+  if(!_paseState || _paseState.veredicto) return;
+  const s=_paseState.sel;
+  if(s.has(i)) s.delete(i); else s.add(i);
+  _paseRender();
+}
+
+// Nivel 2: sin fichas del plato. Marcas los alérgenos que declara, de memoria.
+function _paseServirMemoria(ninguno){
+  if(!_paseState || _paseState.veredicto) return;
+  if(ninguno) _paseState.sel=new Set();
+  const dish = DISHES.find(d=>d.id===_paseState.dishId);
+  const dichos = [..._paseState.sel].map(i=>_PASE_ALERGENOS[i]).filter(Boolean);
+  const declarados = (dish.allergens||[]).slice();
+  const faltan = declarados.filter(a=>!dichos.includes(a));
+  const sobran = dichos.filter(a=>!declarados.includes(a));
+  _paseState.veredicto = { memoria:true, faltan, sobran, dichos,
+    montados: dichos.slice().sort(), declarados: declarados.slice().sort(),
+    // De memoria el cuadro ES la respuesta, así que no cabe el «seguro» del
+    // nivel 1: o el cuadro está bien o no lo está.
+    perfecto: !faltan.length && !sobran.length, seguro:false };
   _paseRegistrar(dish, _paseState.veredicto);
   if(typeof playSound==='function') playSound(_paseState.veredicto.perfecto?'correct':'wrong');
   _paseRender();
@@ -19966,13 +20038,18 @@ function _paseRender(){
   if(!dish) return;
   const dd=getDish(dish), _en=LANG==='en';
   const f2=_paseState.fase==='desmontaje';
-  const cuerpo = f2 ? _paseDesmontajeHTML(dish,dd,_en) : _paseMontajeHTML(dish,dd,_en);
+  const mem=_paseState.fase==='memoria';
+  const cuerpo = f2 ? _paseDesmontajeHTML(dish,dd,_en)
+    : mem ? _paseMemoriaHTML(dish,dd,_en)
+    : _paseMontajeHTML(dish,dd,_en);
   // Dos fases, marcadas como los capítulos del Viaje: rombo de la casa con su
   // número, para que se vea dónde se está y cuánto queda.
   const pasos=[1,2].map(n=>`<span class="pase-step${n===(f2?2:1)?' on':''}${n<(f2?2:1)?' done':''}">${n===1?'I':'II'}</span>`).join('');
   const head = `<div class="pase-head">
       <div class="pase-head-top">
-        <div class="pase-eyebrow">${f2?(_en?'PASS · ALLERGY':'PASE · ALERGIA'):(_en?'PASS · ALLERGENS':'PASE · ALÉRGENOS')}</div>
+        <div class="pase-eyebrow">${f2?(_en?'PASS · ALLERGY':'PASE · ALERGIA')
+          :mem?(_en?'PASS · FROM MEMORY':'PASE · DE MEMORIA')
+          :(_en?'PASS · ALLERGENS':'PASE · ALÉRGENOS')}</div>
         <div class="pase-steps">${pasos}</div>
         <button class="pase-x" onclick="_paseClose()" aria-label="${_en?'Close':'Cerrar'}">✕</button>
       </div>
@@ -19988,6 +20065,78 @@ function _paseRender(){
   ov.setAttribute('aria-label', _en?'Plating pass':'Pase de cocina');
   ov.innerHTML=html;
   document.body.appendChild(ov);
+}
+
+// Nivel 2, el del andamio retirado: sólo el nombre del plato y los 14
+// alérgenos. Al corregir se enseña además QUÉ los aporta, que es lo que no se
+// puede deducir y lo único que las fichas no dicen.
+function _paseMemoriaHTML(dish, dd, _en){
+  const S=_paseState, V=S.veredicto;
+  if(!V){
+    const chips=_PASE_ALERGENOS.map((a,i)=>{
+      const on=S.sel.has(i);
+      return `<button type="button" class="pase-chip pase-chip-alg${on?' on':''}" data-i="${i}"
+        aria-pressed="${on?'true':'false'}" onclick="_paseToggleAl(${i})">${escapeHTML(allergenLocal(a))}</button>`;
+    }).join('');
+    return `
+    <p class="pase-intro">${_en
+      ? 'No list this time. Which allergens does this dish declare? A guest asks exactly this.'
+      : 'Esta vez sin lista. ¿Qué alérgenos declara este plato? Un huésped pregunta justo esto.'}</p>
+    <section class="pase-mise" aria-label="${_en?'Allergens':'Alérgenos'}">
+      <div class="pase-zone-lbl">${_en?'It declares':'Declara'}<span class="pase-count">${S.sel.size}</span></div>
+      <div class="pase-mise-in">${chips}</div>
+    </section>
+    <div class="pase-actions">
+      <button class="pase-retry" onclick="_paseServirMemoria(true)">${_en?'It carries none':'No lleva ninguno'}</button>
+      <button class="pase-serve" onclick="_paseServirMemoria()"${S.sel.size?'':' disabled'}>${_en?'Answer':'Responder'}</button>
+    </div>`;
+  }
+
+  const chips=_PASE_ALERGENOS.map((a,i)=>{
+    const dicho=S.sel.has(i), debe=(dish.allergens||[]).includes(a);
+    const cls = debe && dicho ? ' ok' : debe && !dicho ? ' falta' : !debe && dicho ? ' sobra' : ' mudo';
+    // Un alérgeno que ni lleva ni dijo no aporta nada: fuera de la revisión.
+    return (!debe && !dicho) ? '' :
+      `<span class="pase-chip pase-chip-alg${cls}">${escapeHTML(allergenLocal(a))}</span>`;
+  }).join('');
+  // Lo que las fichas no enseñan: qué ingrediente aporta cada alérgeno fallado.
+  const porQue=(V.faltan||[]).map(a=>{
+    const quien=_paseComponentes(dish,_en).filter(c=>c.a.includes(a)).map(c=>c.t);
+    return quien.length
+      ? `<div class="pase-fix"><span class="pase-fix-l falta">${escapeHTML(allergenLocal(a))}</span><span>${_en?'comes from':'lo aporta'} ${escapeHTML(quien.join(' · '))}</span></div>`
+      : '';
+  }).join('');
+  const t = V.perfecto ? (_en?'Right, and from memory':'Correcto, y de memoria') : (_en?'Not like that':'Así no');
+  const s = V.perfecto
+    ? (_en?'That is exactly what the sheet declares — and you did it without a list.'
+          :'Es exactamente lo que declara la ficha, y sin lista delante.')
+    : V.faltan.length && V.sobran.length
+      ? (_en?'Some are missing and some are not in the dish.':'Faltan unos y sobran otros.')
+      : V.faltan.length
+        ? (_en?'The dish carries more than that. Missing one is the mistake that matters.'
+              :'El plato lleva más de eso. Dejarse uno es el fallo que importa.')
+        : (_en?'The dish does not carry all of those. Saying too many costs a sale for nothing.'
+              :'El plato no lleva todos esos. Decir de más cuesta una venta sin motivo.');
+  const puedeSeguir=_paseAlergiasPosibles(dish).length>0;
+  return `
+    <div class="pase-verdict${V.perfecto?' ok':' bad'}">
+      <div class="pase-verdict-sello">${V.perfecto?'✓':'↩'}</div>
+      <div class="pase-verdict-t">${t}</div>
+      <div class="pase-verdict-s">${s}</div>
+      ${porQue}
+    </div>
+    ${V.perfecto?'':`<div class="pase-leyenda">
+      <span><i class="pase-lg ok"></i>${_en?'right':'bien'}</span>
+      <span><i class="pase-lg falta"></i>${_en?'was missing':'faltaba'}</span>
+      <span><i class="pase-lg sobra"></i>${_en?'not in the dish':'no lo lleva'}</span>
+    </div>`}
+    <div class="pase-mise-in revision">${chips}</div>
+    ${puedeSeguir?'':_paseRachaHTML(_en)}
+    <div class="pase-actions">
+      <button class="pase-retry" onclick="_paseReintentar()">${_en?'Try again':'Reintentar'}</button>
+      ${puedeSeguir?`<button class="pase-serve" onclick="_paseIrDesmontaje()">${_en?'A guest with an allergy →':'Llega un alérgico →'}</button>`
+        :`<button class="pase-serve" onclick="_paseOtroPlato()">${_en?'Next dish':'Siguiente plato'}</button>`}
+    </div>`;
 }
 
 // La carta de la que se elige. Sin agrupar: los componentes que aportan
@@ -22342,10 +22491,13 @@ function renderSupAnalytics(allEmps, empNames){
       // La alergia va aparte del cuadro: son dos destrezas y conviene ver cuál
       // falla. Sólo se enseña a quien haya llegado a la fase 2 alguna vez.
       const alPct=(m.al||0)?Math.round(100*(m.alOk||0)/m.al):null;
+      // Platos que ya juega sin fichas: la señal de dominio de verdad, porque
+      // ahí no hay banco de opciones del que tirar.
+      const dom=Object.values(m.rachas||{}).filter(v=>v>=_PASE_ASCENSO).length;
       const alCol=alPct===null?'var(--parch3)':alPct>=90?'var(--green-deep)':alPct>=70?'var(--gold-deep)':'#a04848';
       return `<div style="display:flex;align-items:center;justify-content:space-between;gap:.5rem;padding:.4rem 0;border-bottom:1px solid var(--line)">
         <span style="font-family:'Quicksand',sans-serif;font-size:.78rem;color:var(--parchment)">${escapeHTML(n)}</span>
-        <span style="font-family:'DM Mono',monospace;font-size:.62rem;color:var(--parch3)">${m.n} ${LANG==='en'?'passes':'pases'}${(m.al||0)?` · ${m.al} ${LANG==='en'?'allergies':'alergias'}`:''}</span>
+        <span style="font-family:'DM Mono',monospace;font-size:.62rem;color:var(--parch3)">${m.n} ${LANG==='en'?'passes':'pases'}${(m.al||0)?` · ${m.al} ${LANG==='en'?'allergies':'alergias'}`:''}${dom?` · ${dom} ${LANG==='en'?'from memory':'de memoria'}`:''}</span>
         <span style="font-family:'DM Mono',monospace;font-size:.7rem;font-weight:700;color:${col};min-width:38px;text-align:right">${seg}%</span>
         <span style="font-family:'DM Mono',monospace;font-size:.7rem;font-weight:700;color:${alCol};min-width:38px;text-align:right" title="${LANG==='en'?'Allergy phase':'Fase de la alergia'}">${alPct===null?'—':alPct+'%'}</span>
       </div>`;

@@ -6380,6 +6380,90 @@ test('Pase: la fase 2 no se aprueba pulsando siempre «no se puede retirar»', (
     `hay alergias que ninguna ficha del plato aporta: ${R.sinPortador.slice(0,5).join(', ')}`);
 });
 
+test('Pase: el andamio se retira — dos pases perfectos y el plato se pide de memoria', () => {
+  // Idea del propietario (sep 2026), del método de Duolingo: primero eliges de
+  // un banco de opciones, y cuando ya lo llevas te lo piden de memoria. Lo que
+  // había era sólo reconocimiento; en sala nadie te da la lista.
+  assert(/const _PASE_ASCENSO = 2;/.test(html), 'falta el umbral de ascenso');
+  const niv = (() => { const i = html.indexOf('function _paseNivel('); let d = 0;
+    for (let k = html.indexOf('{', i); k < html.length; k++) {
+      if (html[k] === '{') d++; else if (html[k] === '}') { d--; if (!d) return html.slice(i, k + 1); } } })();
+  assert(/r\[dishId\]\|\|0\) >= _PASE_ASCENSO \? 2 : 1/.test(niv), 'el nivel sale de la racha del plato');
+  // La racha sube con el pase perfecto y se CORTA al fallar: el plato vuelve al
+  // nivel con fichas, que es donde se vuelve a aprender.
+  const reg = (() => { const i = html.indexOf('function _paseRegistrar('); let d = 0;
+    for (let k = html.indexOf('{', i); k < html.length; k++) {
+      if (html[k] === '{') d++; else if (html[k] === '}') { d--; if (!d) return html.slice(i, k + 1); } } })();
+  assert(/if\(V\.perfecto\) m\.rachas\[dish\.id\]=\(m\.rachas\[dish\.id\]\|\|0\)\+1;/.test(reg), 'la racha sube al acertar');
+  assert(/else m\.rachas\[dish\.id\]=0;/.test(reg), 'y se corta al fallar');
+  assert(/const nivel = _paseNivel\(getEmp\(currentUser\), dish\.id\);/.test(html),
+    'launchPase decide el nivel antes de armar');
+  assert(/fase: nivel===2\?'memoria':'montaje'/.test(html), 'el nivel 2 entra por la fase de memoria');
+  // La piscina se arma igual en el nivel 2 aunque no se enseñe, porque la fase
+  // de la alergia trabaja sobre ella.
+  assert(/const mem=_paseState\.fase==='memoria';/.test(html), '_paseRender tiene que enrutar la fase nueva');
+  // Y las rachas viajan a la nube: si no, el nivel se perdería al cambiar de
+  // dispositivo y el camarero volvería a las fichas.
+  const merge = html.slice(html.indexOf('if(x.ps && typeof x.ps'), html.indexOf('function renderLeaderboard'));
+  assert(/m\.rachas\[id\]=Math\.max\(m\.rachas\[id\]\|\|0, v\|\|0\)/.test(merge), 'las rachas deben sincronizarse');
+  assert(/'mem','memOk'/.test(merge), 'y los contadores del nivel 2 también');
+});
+
+test('Pase de memoria: la respuesta correcta gana en los 98, y no se adivina', () => {
+  // Barrido funcional sobre el dato real. Además del acierto, se mide lo que
+  // justificó el diseño: ninguna estrategia fija —marcar siempre los alérgenos
+  // más comunes de la carta— puede aprobar.
+  const cut = (ini, fin) => { const i = html.indexOf(ini); return html.slice(i, html.indexOf(fin, i) + fin.length); };
+  const fn = n => { const i = html.indexOf('function ' + n + '('); let d = 0;
+    for (let k = html.indexOf('{', i); k < html.length; k++) {
+      if (html[k] === '{') d++; else if (html[k] === '}') { d--; if (!d) return html.slice(i, k + 1); } } };
+  const src = `
+    var LANG='es', _paseState=null, _paseRacha={n:0,perf:0,xp:0}, currentUser=null;
+    function getEmp(){return null;} function saveDB(){} function playSound(){}
+    function _paseRender(){} function _srsUpdate(){} function awardXP(){}
+    function _paseHoy(){return '';}
+    `
+    + cut('const DISHES = [', '\n];')
+    + html.slice(html.indexOf('const _PASE_ALERGENOS'), html.indexOf('function _paseToggleAl('))
+    + fn('_paseRegistrar') + fn('_paseServirMemoria')
+    + `
+    let ok=0, n=0, fuera=[];
+    for(const d of DISHES){
+      // todo alérgeno declarado tiene que existir en la lista de los 14, o el
+      // plato sería irresoluble de memoria
+      for(const a of d.allergens||[]) if(!_PASE_ALERGENOS.includes(a)) fuera.push(d.id+':'+a);
+      _paseState={dishId:d.id, nivel:2, fase:'memoria', sel:new Set(), veredicto:null};
+      _PASE_ALERGENOS.forEach((a,i)=>{ if((d.allergens||[]).includes(a)) _paseState.sel.add(i); });
+      _paseServirMemoria();
+      n++; if(_paseState.veredicto.perfecto) ok++;
+    }
+    // estrategias ciegas: marcar siempre los N alérgenos más frecuentes
+    const cuenta={};
+    for(const d of DISHES) for(const a of d.allergens||[]) cuenta[a]=(cuenta[a]||0)+1;
+    const orden=Object.entries(cuenta).sort((a,b)=>b[1]-a[1]).map(x=>x[0]);
+    let mejorCiego=0;
+    for(let N=0;N<=6;N++){
+      const fijo=orden.slice(0,N);
+      let g=0;
+      for(const d of DISHES){
+        const dec=(d.allergens||[]).slice().sort().join('|');
+        if(dec===fijo.slice().sort().join('|')) g++;
+      }
+      if(g>mejorCiego) mejorCiego=g;
+    }
+    return {ok, n, fuera:[...new Set(fuera)], mejorCiego};
+  `;
+  const R = new Function(src)(); // eslint-disable-line no-new-func
+  assert(R.fuera.length === 0,
+    `hay alérgenos declarados que no están entre los 14 de la lista: ${R.fuera.join(', ')}`);
+  assert(R.ok === R.n, `de memoria, la respuesta correcta gana en ${R.ok} de ${R.n}`);
+  // Medido al diseñarlo: la mejor estrategia fija acierta 14/98 (marcar nada,
+  // que sólo vale en los platos sin alérgenos). Si subiera mucho, el ejercicio
+  // se habría vuelto adivinable.
+  assert(R.mejorCiego <= R.n * 0.2,
+    `una estrategia fija aprueba ${R.mejorCiego}/${R.n}: el nivel de memoria se ha vuelto adivinable`);
+});
+
 test('Pase: la piscina tiene techo y el cuadro de alérgenos sobrevive al recorte', () => {
   // Auditoría sep 2026: la piscina no tenía tope. El Tataki de Atún (Almuerzo)
   // salía con 20 fichas —15 correctas— y llenaba una pantalla de móvil entera;
