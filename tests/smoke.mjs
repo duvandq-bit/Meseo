@@ -6262,8 +6262,8 @@ test('Pase: la respuesta correcta gana en todos los platos jugables', () => {
     + html.slice(html.indexOf('const _djNorm ='), html.indexOf('async function _djLoadIngBase'))
     + fn('_djTrozos') + fn('_djSplitIngredients') + fn('_djSameThing') + fn('_djIngName') + fn('_djIngredients')
     + fn('_lqaShuffle')
-    + html.slice(html.indexOf('const _PASE_SAZONADOR'), html.indexOf('function _paseComponentes('))
-    + fn('_paseFusionar') + fn('_paseComponentes') + fn('_paseSenuelos') + fn('_paseArmar')
+    + html.slice(html.indexOf('const _PASE_SAZONADOR'), html.indexOf('function _paseRecortar('))
+    + fn('_paseRecortar') + fn('_paseFusionar') + fn('_paseComponentes') + fn('_paseSenuelos') + fn('_paseArmar')
     + fn('_paseJugables') + fn('_paseAlergenosMontados') + fn('_paseServir')
     + `
     let ok=0, malos=[], dup=[], pocos=[], sinAl=0;
@@ -6317,6 +6317,187 @@ test('Pase: la fase de la alergia no lleva la respuesta escrita en las fichas', 
     'al corregir la fase 2 las insignias vuelven, que es cuando enseñan');
 });
 
+test('Pase: la fase 2 no se aprueba pulsando siempre «no se puede retirar»', () => {
+  // Barrido funcional sobre el dato real, no sobre el texto del código: se
+  // juega la fase 2 de todos los platos con las dos estrategias ciegas y se
+  // comprueba que ninguna gana. Antes, «no se puede» a ciegas acertaba el
+  // 74,3% de 5.150 partidas simuladas.
+  const cut = (ini, fin) => { const i = html.indexOf(ini); return html.slice(i, html.indexOf(fin, i) + fin.length); };
+  const fn = n => { const i = html.indexOf('function ' + n + '('); let d = 0;
+    for (let k = html.indexOf('{', i); k < html.length; k++) {
+      if (html[k] === '{') d++; else if (html[k] === '}') { d--; if (!d) return html.slice(i, k + 1); } } };
+  const stub = `
+    var LANG='es', _studyShift=null, _paseState=null, _paseVistos=[], _djIngBase=null;
+    var _paseRacha={n:0,perf:0}, currentUser=null;
+    function getDish(d){return d;} function allergenLocal(a){return a;} function getEmp(){return null;}
+    function catLocal(c){return c;} function escapeHTML(s){return String(s);} function saveDB(){}
+    function _shiftDishes(a){return a;} function _paseRegistrar(){} function _paseRender(){}
+    function _paseClose(){} function playSound(){} function _paseRegistrarAlergia(){}
+    var document={getElementById:()=>null,createElement:()=>({setAttribute(){},style:{},querySelector:()=>null,querySelectorAll:()=>[]}),
+      body:{appendChild(){}},addEventListener(){},removeEventListener(){}};
+  `;
+  const src = stub
+    + cut('const DISHES = [', '\n];') + cut('const DISH_COMPONENTS = ', '};') + cut('const DISH_ACTIONS = ', '};')
+    + html.slice(html.indexOf('const _djNorm ='), html.indexOf('async function _djLoadIngBase'))
+    + fn('_djTrozos') + fn('_djSplitIngredients') + fn('_djSameThing') + fn('_djIngName') + fn('_lqaShuffle')
+    + html.slice(html.indexOf('const _PASE_SAZONADOR'), html.indexOf('function _paseRecortar('))
+    + fn('_paseRecortar') + fn('_paseFusionar') + fn('_paseComponentes') + fn('_paseSenuelos') + fn('_paseArmar')
+    + fn('_paseJugables') + fn('_paseAlergiasPosibles') + fn('_paseIrDesmontaje') + fn('_paseConfirmarRetirada')
+    + `
+    let n=0, ciegoNo=0, ciegoSi=0, sabiendo=0, sinPortador=[];
+    for(const d of _paseJugables()){
+      if(!_paseAlergiasPosibles(d).length) continue;
+      for(let rep=0; rep<6; rep++){
+        _paseState={dishId:d.id, fase:'montaje', sel:new Set(), piscina:null, veredicto:null,
+                    alergia:null, quitar:new Set(), resuelto:null};
+        _paseArmar(); _paseIrDesmontaje();
+        const A=_paseState.alergia;
+        const portan=_paseState.plato.map((it,i)=>i).filter(i=>(_paseState.plato[i].a||[]).includes(A));
+        if(!portan.length){ sinPortador.push(d.id+':'+A); continue; }
+        n++;
+        // ciego 1 · pulsar «no se puede» sin señalar nada
+        _paseState.quitar=new Set(); _paseState.resuelto=null;
+        _paseConfirmarRetirada(true); if(_paseState.resuelto.bien) ciegoNo++;
+        // ciego 2 · pulsar «sí se puede» sin señalar nada
+        _paseState.quitar=new Set(); _paseState.resuelto=null;
+        _paseConfirmarRetirada(false); if(_paseState.resuelto.bien) ciegoSi++;
+        // sabiendo · señalar los portadores y acertar la retirabilidad
+        _paseState.quitar=new Set(portan); _paseState.resuelto=null;
+        const ret=(DISH_ACTIONS[d.id][A]||{}).r===1;
+        _paseConfirmarRetirada(!ret); if(_paseState.resuelto.bien) sabiendo++;
+      }
+    }
+    return {n, ciegoNo, ciegoSi, sabiendo, sinPortador:[...new Set(sinPortador)]};
+  `;
+  const R = new Function(src)(); // eslint-disable-line no-new-func
+  assert(R.n > 400, `esperaba cientos de casos de fase 2, hay ${R.n}`);
+  assert(R.ciegoNo === 0, `«no se puede» a ciegas gana ${R.ciegoNo}/${R.n} = ${(100*R.ciegoNo/R.n).toFixed(1)}%`);
+  assert(R.ciegoSi === 0, `«sí se puede» a ciegas gana ${R.ciegoSi}/${R.n}`);
+  assert(R.sabiendo === R.n, `quien sabe la respuesta debe ganar siempre: ${R.sabiendo}/${R.n}`);
+  // Si algún alérgeno no lo aportara ninguna ficha del plato, exigir el
+  // portador dejaría ese caso sin respuesta posible. Medido: no pasa nunca.
+  assert(R.sinPortador.length === 0,
+    `hay alergias que ninguna ficha del plato aporta: ${R.sinPortador.slice(0,5).join(', ')}`);
+});
+
+test('Pase: la piscina tiene techo y el cuadro de alérgenos sobrevive al recorte', () => {
+  // Auditoría sep 2026: la piscina no tenía tope. El Tataki de Atún (Almuerzo)
+  // salía con 20 fichas —15 correctas— y llenaba una pantalla de móvil entera;
+  // 20 platos pasaban de 12 fichas. Se recorta a 8 correctas, pero jamás a
+  // costa del cuadro: primero entra un conjunto que cubra todos los alérgenos
+  // declarados (7 en el peor plato de la carta, así que cabe).
+  assert(/const _PASE_TOPE = 8;/.test(html), 'falta el tope de fichas correctas');
+  const rec = (() => { const i = html.indexOf('function _paseRecortar('); let d = 0;
+    for (let k = html.indexOf('{', i); k < html.length; k++) {
+      if (html[k] === '{') d++; else if (html[k] === '}') { d--; if (!d) return html.slice(i, k + 1); } } })();
+  assert(rec && /falta=new Set\(dish\.allergens/.test(rec),
+    'el recorte parte de los alérgenos declarados, no de un corte a ciegas');
+  assert(/const reales = _paseRecortar\(dish, _paseFusionar\(/.test(html),
+    'el recorte se aplica al armar la piscina');
+  // El barrido funcional que ya existe («la respuesta correcta gana») comprueba
+  // que el cuadro montado sigue siendo idéntico al declarado en los 98 platos,
+  // así que aquí basta con fijar el techo medido.
+  const cut = (ini, fin) => { const i = html.indexOf(ini); return html.slice(i, html.indexOf(fin, i) + fin.length); };
+  const fn = n => { const i = html.indexOf('function ' + n + '('); let d = 0;
+    for (let k = html.indexOf('{', i); k < html.length; k++) {
+      if (html[k] === '{') d++; else if (html[k] === '}') { d--; if (!d) return html.slice(i, k + 1); } } };
+  const src = `var LANG='es';function getDish(d){return d;}function _djIngName(n){return n;}`
+    + cut('const DISHES = [', '\n];') + cut('const DISH_COMPONENTS = ', '};')
+    + html.slice(html.indexOf('const _djNorm ='), html.indexOf('async function _djLoadIngBase'))
+    + fn('_djTrozos') + fn('_djSplitIngredients') + fn('_djSameThing') + fn('_djIngredients') + fn('_lqaShuffle')
+    + html.slice(html.indexOf('const _PASE_SAZONADOR'), html.indexOf('function _paseRecortar('))
+    + fn('_paseRecortar') + fn('_paseFusionar') + fn('_paseComponentes') + fn('_paseSenuelos')
+    + fn('_paseArmar') + fn('_paseJugables')
+    + `
+    let max=0, maxR=0, doce=0, peor='';
+    for(const d of _paseJugables()){
+      _paseState={dishId:d.id, fase:'montaje', sel:new Set(), piscina:null, veredicto:null};
+      _paseArmar();
+      const P=_paseState.piscina, r=P.filter(i=>!i.falso).length;
+      if(P.length>max){ max=P.length; peor=d.name; }
+      if(r>maxR) maxR=r;
+      if(P.length>=14) doce++;
+    }
+    return {max, maxR, doce, peor};`;
+  const R = new Function('var _paseState=null;' + src)(); // eslint-disable-line no-new-func
+  assert(R.maxR <= 8, `el tope de fichas correctas se ha roto: ${R.maxR}`);
+  assert(R.max <= 13, `la piscina más larga es de ${R.max} fichas (${R.peor}); antes del tope eran 20`);
+  assert(R.doce === 0, `${R.doce} platos vuelven a pasar de 13 fichas`);
+});
+
+test('Pase: los señuelos no pueden ser cosas que el plato lleva', () => {
+  // Auditoría sep 2026: el Vitello tonnato ofrecía «Soja» como señuelo y el
+  // Fish and chips (Almuerzo) «Pepinillo», y sus fichas los listan — el juego
+  // llamaba error a algo que el plato lleva de verdad. El filtro miraba sólo
+  // DISH_COMPONENTS (lo que aporta alérgeno), no la ficha entera.
+  const sen = (() => { const i = html.indexOf('function _paseSenuelos('); let d = 0;
+    for (let k = html.indexOf('{', i); k < html.length; k++) {
+      if (html[k] === '{') d++; else if (html[k] === '}') { d--; if (!d) return html.slice(i, k + 1); } } })();
+  assert(/for\(const it of _djIngredients\(dish,_en\)\) vistos\.add\(_djNorm\(it\.t\)\)/.test(sen),
+    'la ficha completa del plato tiene que excluirse de los señuelos');
+  // Coincidencia EXACTA y nada más: con _djSameThing («Aceite» dentro de
+  // «Vinagreta de mostaza Aceite de oliva») se caían 64 señuelos legítimos.
+  assert(!/_djSameThing\([^)]*_djIngredients/.test(sen),
+    'excluir por parecido, no por igualdad, dejaría el juego sin señuelos');
+  // Y el eco del título: si lo correcto repite una palabra del nombre del plato
+  // y ningún señuelo lo hace, se resuelve leyendo. Se fuerza un señuelo con el
+  // mismo eco cuando lo haya (12 de los 31 platos afectados lo tienen).
+  assert(/const eco = t =>/.test(sen) && /conEco/.test(sen),
+    'debe intentarse que algún señuelo haga el mismo eco que el título');
+});
+
+test('Pase: el aviso de XP no tapa la corrección', () => {
+  // Medido en la auditoría: el aviso se planta abajo (bottom:80px) y tapaba
+  // tres fichas de la revisión durante 2,5 s — justo lo que hay que leer.
+  // El XP no se pierde: se acumula en la tanda y se enseña al acabar el plato.
+  const toast = (() => { const i = html.indexOf('function showXPToast('); let d = 0;
+    for (let k = html.indexOf('{', i); k < html.length; k++) {
+      if (html[k] === '{') d++; else if (html[k] === '}') { d--; if (!d) return html.slice(i, k + 1); } } })();
+  assert(/if\(document\.getElementById\('paseOverlay'\)\)\{/.test(toast),
+    'con el Pase abierto el aviso no debe pintarse');
+  assert(/_paseRacha\.xp=\(_paseRacha\.xp\|\|0\)\+amount/.test(toast), 'pero el XP se suma a la tanda');
+  assert(/\+\$\{x\} XP/.test(html), 'y la tanda lo enseña');
+  // El hueco del plato decía dos cosas distintas según cómo se vaciara, y una
+  // de ellas era de la era del montaje («mise en place»), la jerga que se quitó
+  // al cambiar la pregunta.
+  const tog = (() => { const i = html.indexOf('function _paseToggle('); let d = 0;
+    for (let k = html.indexOf('{', i); k < html.length; k++) {
+      if (html[k] === '{') d++; else if (html[k] === '}') { d--; if (!d) return html.slice(i, k + 1); } } })();
+  assert(!/mise en place/i.test(tog), 'nada de «mise en place» en la fase 1');
+  assert(/Todavía no has señalado nada/.test(tog),
+    'el hueco tiene que decir lo mismo se llegue como se llegue');
+});
+
+test('Pase: la fase de la alergia también llega al panel del supervisor', () => {
+  // Hasta sep 2026 _paseRegistrar sólo se llamaba desde _paseServir: la fase 2
+  // no se anotaba en ningún sitio —ni paseStats, ni SRS, ni panel— justo la
+  // mitad que mide la competencia de alérgenos, que es lo que el propietario
+  // pidió poder seguir. Se registra aparte porque son dos destrezas distintas.
+  assert(/_paseRegistrarAlergia\(dish, _paseState\.resuelto\)/.test(html),
+    'resolver la alergia tiene que registrarse');
+  // Corte por llaves balanceadas: cortar «hasta la siguiente función» me ha
+  // fallado ya por orden de declaración y el guard se quedaba mirando vacío.
+  const reg = (() => { const i = html.indexOf('function _paseRegistrarAlergia('); let d = 0;
+    for (let k = html.indexOf('{', i); k < html.length; k++) {
+      if (html[k] === '{') d++; else if (html[k] === '}') { d--; if (!d) return html.slice(i, k + 1); } } })();
+  assert(reg && reg.length > 200, 'no se ha podido recortar _paseRegistrarAlergia');
+  assert(/m\.al=\(m\.al\|\|0\)\+1/.test(reg) && /m\.alOk=\(m\.alOk\|\|0\)\+1/.test(reg),
+    'se cuentan las alergias resueltas y las acertadas');
+  assert(/m\.fallos\[dish\.id\]=\(m\.fallos\[dish\.id\]\|\|0\)\+1/.test(reg),
+    'fallar la alergia cuenta como fallo del plato, para que el juego insista en él');
+  assert(/_srsUpdate\(emp, dish\.id, 1\)/.test(reg), 'y baja el SRS de ese plato');
+  assert(/saveDB\(\)/.test(reg), 'sin guardar no llega al panel');
+  // Los contadores nuevos tienen que viajar en la columna extras, o el
+  // supervisor sólo vería lo del dispositivo en el que se jugó.
+  const merge = html.slice(html.indexOf('if(x.ps && typeof x.ps'), html.indexOf('function renderLeaderboard'));
+  assert(/'n','perf','seg','mal','al','alOk'/.test(merge),
+    'al y alOk deben sincronizarse como el resto de contadores');
+  // Y verse: un porcentaje propio, separado del cuadro de alérgenos.
+  assert(/const _psAlPct = _psAl \? Math\.round\(100\*_psAlOk\/_psAl\) : 0;/.test(html),
+    'el panel calcula el acierto de la fase de la alergia');
+  assert(/alergias<\/span>|in \$\{_psAl\} allergy calls/.test(html), 'y lo enseña');
+});
+
 test('Pase: al acabar un plato el botón dorado sigue jugando, no sale', () => {
   // Propietario, sep 2026: «terminas un plato y la aplicación te lanza al
   // inicio». Medido en los cuatro accesos (tarjeta del inicio, tarjeta de
@@ -6348,7 +6529,7 @@ test('Pase: al acabar un plato el botón dorado sigue jugando, no sale', () => {
   // decisión en vez del gesto por defecto.
   assert(/function _paseRachaHTML\(/.test(html), 'falta el recuento de la tanda');
   assert(/_paseRacha\.n\+\+/.test(html), 'la tanda se cuenta al registrar el plato');
-  assert(/_paseRacha=\{n:0, perf:0\}/.test(html.slice(html.indexOf('function _paseClose('))),
+  assert(/_paseRacha=\{n:0, perf:0, xp:0\}/.test(html.slice(html.indexOf('function _paseClose('))),
     'cerrar el juego reinicia la tanda');
   assert(/\.pase-racha\{/.test(read('styles.css')), 'el recuento de la tanda necesita su estilo');
 });
@@ -6429,20 +6610,30 @@ test('el troceador de ingredientes no parte dentro de un paréntesis', () => {
 
 test('Pase de cocina: el desmontaje obedece a lo que validó cocina', () => {
   // La fase 2 no puede inventarse qué se retira: sale de DISH_ACTIONS, que es
-  // la matriz que cocina validó. Si el alérgeno es estructural (r:0) la única
-  // respuesta correcta es «no se puede», y NINGUNA ficha puede pintarse en
-  // verde — marcar en verde el ingrediente que lo aporta contradiría el
-  // veredicto que se está enseñando al lado.
+  // la matriz que cocina validó.
   const conf = html.slice(html.indexOf('function _paseConfirmarRetirada('), html.indexOf('function _paseOtroPlato('));
   assert(/DISH_ACTIONS\[dish\.id\]/.test(conf), 'el veredicto del desmontaje debe leer DISH_ACTIONS');
   assert(/act\.r===1/.test(conf), 'la retirabilidad se decide por r===1, no por si hay comanda');
-  assert(/bien:\s*retirable\s*\?\s*\(!noSePuede && acertoQue\)\s*:\s*!!noSePuede/.test(conf),
-    'con alérgeno estructural la respuesta correcta es «no se puede»; con retirable, señalar lo que lo aporta');
+  // Señalar QUÉ aporta el alérgeno se exige SIEMPRE, se pueda retirar o no.
+  // Antes bastaba pulsar «no se puede» cuando era estructural y la selección se
+  // ignoraba; medido sobre 5.150 partidas simuladas, pulsarlo a ciegas acertaba
+  // el 74,3%, porque 199 de las 271 alergias posibles de la carta son
+  // estructurales. Ese reparto es la verdad de la cocina y no se toca: lo que
+  // se quita es el premio por adivinarlo. Con el portador exigido, el atajo
+  // baja al 0% (y no hay ningún caso en que ninguna ficha porte el alérgeno).
+  assert(/bien:\s*acertoQue && \(retirable \? !noSePuede : !!noSePuede\)/.test(conf),
+    'acertar exige señalar el portador Y decir bien si se puede retirar');
   // La función entera, no los primeros N caracteres: al reordenarla el guard
   // dejaba de mirar donde importaba sin que nadie se enterase.
   const des = html.slice(html.indexOf('function _paseDesmontajeHTML('), html.indexOf('function renderRepaso('));
-  assert(/!R\.retirable \?\s*\(on \? ' sobra' : ' mudo'\)/.test(des),
-    'si el alérgeno es estructural ninguna ficha puede salir en verde');
+  assert(/const cls = debe && on \? ' ok'/.test(des),
+    'la revisión pinta el portador igual sea estructural o no: ahora también se exigía señalarlo');
+  // Y los dos botones esperan a que haya algo señalado: si «no se puede»
+  // siguiera activo desde el principio, volvería a ser un atajo de un toque.
+  const preg = des.slice(0, des.indexOf('const chips=S.plato.map'));
+  const botones = preg.slice(preg.indexOf('<div class="pase-actions">'));
+  assert((botones.match(/\$\{S\.quitar\.size\?'':' disabled'\}/g)||[]).length === 2,
+    'los dos botones de la fase 2 esperan a que se señale el portador');
   // La comanda que se enseña es la de cocina, en el idioma de la app.
   assert(/act\.c_en\|\|act\.c/.test(conf) && /act\.c\|\|''/.test(conf),
     'la comanda debe salir de DISH_ACTIONS (c / c_en), nunca redactada por el juego');
