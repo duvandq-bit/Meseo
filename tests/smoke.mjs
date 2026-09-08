@@ -6517,8 +6517,13 @@ test('Pase: los señuelos no pueden ser cosas que el plato lleva', () => {
   const sen = (() => { const i = html.indexOf('function _paseSenuelos('); let d = 0;
     for (let k = html.indexOf('{', i); k < html.length; k++) {
       if (html[k] === '{') d++; else if (html[k] === '}') { d--; if (!d) return html.slice(i, k + 1); } } })();
-  assert(/for\(const it of _djIngredients\(dish,_en\)\) vistos\.add\(_djNorm\(it\.t\)\)/.test(sen),
+  assert(/for\(const it of _djIngredients\(dish,_en\)\) vistos\.add\(_djClave\(it\.t\)\)/.test(sen),
     'la ficha completa del plato tiene que excluirse de los señuelos');
+  // Y por una clave que ignore el plural: «Huevo» de señuelo con «Huevos» de
+  // ficha hacía que señalar el huevo en un flan contara como error.
+  assert(/const vistos=new Set\(reales\.map\(r=>_djClave\(r\.t\)\)\)/.test(sen),
+    'los componentes se excluyen por la clave sin plural');
+  assert(/const k=_djClave\(it\.t\);/.test(sen), 'y el candidato se compara con la misma clave');
   // Coincidencia EXACTA y nada más: con _djSameThing («Aceite» dentro de
   // «Vinagreta de mostaza Aceite de oliva») se caían 64 señuelos legítimos.
   assert(!/_djSameThing\([^)]*_djIngredients/.test(sen),
@@ -6528,6 +6533,54 @@ test('Pase: los señuelos no pueden ser cosas que el plato lleva', () => {
   // mismo eco cuando lo haya (12 de los 31 platos afectados lo tienen).
   assert(/const eco = t =>/.test(sen) && /conEco/.test(sen),
     'debe intentarse que algún señuelo haga el mismo eco que el título');
+  // Pero un señuelo cuyo nombre ENTERO está en el título no es un señuelo, es
+  // el plato: salía «Flan» de opción falsa en el «Flan tradicional con
+  // chantilly». Se compara el nombre completo, no palabra a palabra, o se
+  // caerían los 41 legítimos que comparten una palabra sin ser lo mismo
+  // («Tartar de tomate y queso ← Queso azul»). Medido: quita 1 de 42.
+  assert(/_djWordIn\(_djNorm\(it\.t\), _djNorm\(dish\.name\)\)/.test(sen),
+    'un señuelo no puede ser el propio plato');
+});
+
+test('Pase: ningún señuelo es lo mismo que algo correcto, ni en singular', () => {
+  // El propietario, jugando el Flan tradicional con chantilly: «hay huevo dos
+  // veces». Y no era cosmético — «Huevos» era la ficha correcta y «Huevo» un
+  // señuelo, así que señalar el huevo en un flan contaba como error. Barrido
+  // funcional: se pide el catálogo ENTERO de señuelos de cada plato y se coteja
+  // con sus componentes por una clave que ignora el plural.
+  const cut = (ini, fin) => { const i = html.indexOf(ini); return html.slice(i, html.indexOf(fin, i) + fin.length); };
+  const fn = n => { const i = html.indexOf('function ' + n + '('); let d = 0;
+    for (let k = html.indexOf('{', i); k < html.length; k++) {
+      if (html[k] === '{') d++; else if (html[k] === '}') { d--; if (!d) return html.slice(i, k + 1); } } };
+  const src = `
+    var LANG='es';
+    function getDish(d){return d;} function _djIngName(n){return n;}
+    const _DJ_SECCION = /^(masa|topping|base|relleno|guarnicion|sabores disponibles|salsa base|sazonador|marinada|elaboracion)$/;
+    `
+    + cut('const DISHES = [', '\n];') + cut('const DISH_COMPONENTS = ', '};')
+    + html.slice(html.indexOf('const _djNorm ='), html.indexOf('async function _djLoadIngBase'))
+    + fn('_djTrozos') + fn('_djSplitIngredients') + fn('_djSameThing') + fn('_djIngredients') + fn('_lqaShuffle')
+    + html.slice(html.indexOf('const _PASE_SAZONADOR'), html.indexOf('function _paseRecortar('))
+    + fn('_paseRecortar') + fn('_paseFusionar') + fn('_paseComponentes') + fn('_paseSenuelos')
+    + `
+    const choques=[], dobles=[];
+    for(const d of DISHES){
+      const reales=_paseFusionar(_paseComponentes(d,false)).filter(it=>!_paseEsSazonador(it));
+      // 1 · la piscina correcta no puede traer dos fichas que sean lo mismo
+      const claves=reales.map(r=>_djClave(r.t));
+      if(new Set(claves).size!==claves.length) dobles.push(d.name);
+      // 2 · ningún señuelo posible puede ser lo mismo que algo correcto
+      const mios=new Set(claves);
+      for(const s of _paseSenuelos(d, reales, 9999, false)){
+        if(mios.has(_djClave(s.t))) choques.push(d.name+' ← «'+s.t+'»');
+      }
+    }
+    return {choques:[...new Set(choques)], dobles:[...new Set(dobles)]};
+  `;
+  const R = new Function(src)(); // eslint-disable-line no-new-func
+  assert(R.dobles.length === 0, `fichas correctas repetidas en: ${R.dobles.slice(0,5).join(', ')}`);
+  assert(R.choques.length === 0,
+    `hay señuelos que son lo mismo que una ficha correcta: ${R.choques.slice(0,5).join(', ')}`);
 });
 
 test('Pase: el aviso de XP no tapa la corrección', () => {
