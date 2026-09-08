@@ -52,7 +52,7 @@
 <meta property="og:description" content="Formación de equipos de sala: carta, alérgenos, vinos, exámenes y juegos de repaso.">
 <meta property="og:url" content="https://meseo.es/">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"Meseo","url":"https://meseo.es/"}</script>
-<meta name="app-version" content="7.392">
+<meta name="app-version" content="7.393">
 <meta name="app-build" content="May 2026">
 <meta name="theme-color" content="#1c2a22">
 <!-- ═══ PWA ═══ -->
@@ -1596,7 +1596,7 @@ const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><p
 const SRC = 'src';
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='7.392';  // sincronizada con sw.js VERSION (guard de CI)
+const APP_VERSION='7.393';  // sincronizada con sw.js VERSION (guard de CI)
 const APP_BUILD='Jul 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;
@@ -3824,6 +3824,14 @@ function showXPToast(amount, reason){
   // Consulta de alérgenos en curso: la celebración espera su turno.
   if(typeof _gsIsOpen==='function' && _gsIsOpen()){
     _uiWhenClear(()=>showXPToast(amount, reason));
+    return;
+  }
+  // Pase en curso: el aviso se planta abajo, justo encima de la corrección.
+  // Medido en la auditoría de sep 2026: tapaba tres fichas de la revisión —lo
+  // único que hay que leer— durante 2,5 s. Aquí el XP no se pierde, se suma a
+  // la tanda y se enseña al acabar el plato, que es cuando se mira.
+  if(document.getElementById('paseOverlay')){
+    if(typeof _paseRacha==='object' && _paseRacha) _paseRacha.xp=(_paseRacha.xp||0)+amount;
     return;
   }
   const existing = document.getElementById('xpToast');
@@ -19445,7 +19453,7 @@ let _paseVistos = [];   // no repetir plato dentro de la misma sesión
 // accesos, ni la pestaña ni el scroll cambian—: el problema era que el botón
 // dorado, el que todo el diseño te empuja a pulsar, era el de SALIR. Se
 // invierte, y la tanda se lleva la cuenta para que seguir tenga sentido.
-let _paseRacha = { n:0, perf:0 };
+let _paseRacha = { n:0, perf:0, xp:0 };
 
 // Platos jugables: los que tienen suficiente ficha para que montar signifique
 // algo. Con menos de 4 ingredientes el juego se resuelve de un vistazo.
@@ -19592,6 +19600,14 @@ function _paseComponentes(dish, _en){
 function _paseSenuelos(dish, reales, n, _en){
   const mios=reales.map(r=>r.t);
   const vistos=new Set(reales.map(r=>_djNorm(r.t)));
+  // Se descarta también lo que nombre la FICHA del propio plato, no sólo sus
+  // componentes alergénicos. Medido en la auditoría de sep 2026: el Vitello
+  // tonnato ofrecía «Soja» como señuelo y el Fish and chips «Pepinillo»,
+  // cuando sus fichas los listan — el juego llamaba error a algo que el plato
+  // lleva. Coincidencia exacta y nada más: _djSameThing empareja por palabra
+  // suelta («Aceite» dentro de «Vinagreta de mostaza Aceite de oliva») y con
+  // ese criterio se caían 64 señuelos legítimos.
+  try{ for(const it of _djIngredients(dish,_en)) vistos.add(_djNorm(it.t)); }catch(e){}
   const cand=[];
   for(const o of DISHES){
     if(o.id===dish.id || o.cat!==dish.cat) continue;
@@ -19603,13 +19619,47 @@ function _paseSenuelos(dish, reales, n, _en){
       vistos.add(k); cand.push({...it, falso:true});
     }
   }
-  return _lqaShuffle(cand).slice(0, n);
+  // Si lo correcto repite una palabra del nombre del plato y ningún señuelo lo
+  // hace, se resuelve leyendo el título. Medido: pasaba en 4 platos de un solo
+  // componente (Arroz con leche, Fettuccine aglio e olio, Ensalada de frutas),
+  // donde acertaba el 100% de las veces. Se fuerza que al menos un señuelo
+  // haga el mismo eco, cuando lo haya.
+  const eco = t => { const p=new Set(_djNorm(dish.name).split(' ').filter(w=>w.length>3));
+    return _djNorm(t).split(' ').some(w=>w.length>3 && p.has(w)); };
+  const sal=_lqaShuffle(cand).slice(0, n);
+  if(n>0 && reales.some(r=>eco(r.t)) && !sal.some(s=>eco(s.t))){
+    const conEco=cand.filter(c=>eco(c.t) && !sal.includes(c));
+    if(conEco.length) sal[sal.length-1]=_lqaShuffle(conEco)[0];
+  }
+  return sal;
+}
+
+// Tope de fichas correctas por partida. Sin él la piscina no tenía techo: el
+// Tataki de Atún (Almuerzo) salía con 20 fichas —15 correctas— y llenaba una
+// pantalla entera de móvil. Medido en la auditoría de sep 2026: 20 platos
+// pasaban de 12 fichas y 7 de 16, justo la complejidad de la que se quejó el
+// propietario. Se recorta, pero NUNCA a costa del cuadro de alérgenos: primero
+// entra un conjunto que cubra todos los declarados —hacen falta 7 en el peor
+// plato de la carta, así que caben— y el resto se rellena al azar.
+const _PASE_TOPE = 8;
+function _paseRecortar(dish, reales){
+  if(reales.length<=_PASE_TOPE) return reales;
+  const falta=new Set(dish.allergens||[]);
+  const sel=[], resto=reales.slice();
+  while(falta.size && sel.length<_PASE_TOPE){
+    let mejor=-1, gana=0;
+    resto.forEach((c,i)=>{ const n=(c.a||[]).filter(a=>falta.has(a)).length; if(n>gana){gana=n;mejor=i;} });
+    if(mejor<0) break;
+    const [c]=resto.splice(mejor,1);
+    sel.push(c); (c.a||[]).forEach(a=>falta.delete(a));
+  }
+  return sel.concat(_lqaShuffle(resto).slice(0, Math.max(0,_PASE_TOPE-sel.length)));
 }
 
 function _paseArmar(){
   const dish = DISHES.find(d=>d.id===_paseState.dishId);
   const _en = LANG==='en';
-  const reales = _paseFusionar(_paseComponentes(dish,_en)).filter(it=>!_paseEsSazonador(it));
+  const reales = _paseRecortar(dish, _paseFusionar(_paseComponentes(dish,_en)).filter(it=>!_paseEsSazonador(it)));
   // Un plato SIN alérgenos también se juega: la respuesta correcta es «no lleva
   // ninguno», que es conocimiento de sala tanto como saber cuáles lleva. Ahí la
   // piscina es sólo de señuelos y no elegir nada es acertar.
@@ -19669,7 +19719,7 @@ function _paseToggle(i){
   chip.classList.toggle('on', !dentro);
   chip.setAttribute('aria-pressed', !dentro?'true':'false');
   _paseMover(chip, dentro?mise:plato, {
-    paseEnPlato:`<span class="pase-vacio">${_en?'Empty plate. Pick from the mise en place below.':'Plato vacío. Elige abajo, en la mise en place.'}</span>`
+    paseEnPlato:`<span class="pase-vacio">${_en?'Nothing marked yet.':'Todavía no has señalado nada.'}</span>`
   });
   _paseRefrescarTablero();
 }
@@ -19866,10 +19916,10 @@ function _paseRegistrarAlergia(dish, R){
 // mismo; con esto, salir es una decisión que dejas a medias.
 function _paseRachaHTML(_en){
   if(_paseRacha.n<1) return '';
-  const p=_paseRacha.perf;
+  const p=_paseRacha.perf, x=_paseRacha.xp||0;
   return `<div class="pase-racha">${_en
-    ? `${_paseRacha.n} ${_paseRacha.n===1?'dish':'dishes'} this round${p?` · ${p} perfect`:''}`
-    : `${_paseRacha.n} ${_paseRacha.n===1?'plato':'platos'} en esta tanda${p?` · ${p} ${p===1?'perfecto':'perfectos'}`:''}`}</div>`;
+    ? `${_paseRacha.n} ${_paseRacha.n===1?'dish':'dishes'} this round${p?` · ${p} perfect`:''}${x?` · +${x} XP`:''}`
+    : `${_paseRacha.n} ${_paseRacha.n===1?'plato':'platos'} en esta tanda${p?` · ${p} ${p===1?'perfecto':'perfectos'}`:''}${x?` · +${x} XP`:''}`}</div>`;
 }
 
 // Se pide el plato ANTES de quitar lo que hay en pantalla: si no quedara
@@ -19896,7 +19946,7 @@ function _paseClose(){
     setTimeout(()=>{ if(o.parentNode) o.remove(); },300);
   }
   _paseState=null;
-  _paseRacha={n:0, perf:0};   // la tanda termina aquí; la siguiente cuenta desde cero
+  _paseRacha={n:0, perf:0, xp:0};   // la tanda termina aquí; la siguiente cuenta desde cero
 }
 
 // ── Render ─────────────────────────────────────────────────────────────
