@@ -8831,7 +8831,7 @@ li.fail .dj-qrv-mark{color:#e8a0a0}
 .pase-launch-btn{display:inline-flex;align-items:center;gap:var(--space-1);padding:var(--space-1) var(--space-2);border-radius:var(--radius-full);background:rgba(122,178,132,.12);border:1px solid rgba(122,178,132,.4);color:var(--green-deep);font-family:var(--font-mono);font-size:var(--text-micro);letter-spacing:.05em;cursor:pointer;transition:all var(--motion-base) var(--ease-standard);text-transform:uppercase;min-height:32px}
 .pase-launch-btn:hover{background:rgba(122,178,132,.22);box-shadow:var(--elev-1)}
 
-.pase-overlay{position:fixed;inset:0;z-index:9999;background:var(--ink);overflow:hidden;animation:djFadeIn var(--motion-slow) var(--ease-decelerate);display:flex;flex-direction:column}
+.pase-overlay{position:fixed;inset:0;z-index:9999;background:var(--ink);color:var(--parchment);overflow:hidden;animation:djFadeIn var(--motion-slow) var(--ease-decelerate);display:flex;flex-direction:column}
 .pase-container{position:relative;z-index:1;display:flex;flex-direction:column;height:100%;min-height:0}
 
 /* Cabecera */
@@ -8849,6 +8849,7 @@ li.fail .dj-qrv-mark{color:#e8a0a0}
 
 .pase-body{flex:1;overflow-y:auto;overflow-x:hidden;touch-action:pan-y;-webkit-overflow-scrolling:touch;padding:var(--space-4) var(--space-4) var(--space-6);scrollbar-width:none}
 .pase-body::-webkit-scrollbar{display:none}
+.pase-intro{font-family:var(--font-read);font-size:var(--text-sm);line-height:1.55;color:var(--parch2);margin:0 0 var(--space-4)}
 
 /* Las dos zonas */
 .pase-zone-lbl{display:flex;align-items:center;gap:var(--space-2);font-family:var(--font-mono);font-size:var(--text-micro);letter-spacing:.18em;text-transform:uppercase;color:var(--gold-deep);margin-bottom:var(--space-2)}
