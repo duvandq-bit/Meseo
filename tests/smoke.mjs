@@ -6132,7 +6132,9 @@ test('Pase de cocina: el desmontaje obedece a lo que validó cocina', () => {
   assert(/act\.r===1/.test(conf), 'la retirabilidad se decide por r===1, no por si hay comanda');
   assert(/bien:\s*retirable\s*\?\s*\(!noSePuede && acertoQue\)\s*:\s*!!noSePuede/.test(conf),
     'con alérgeno estructural la respuesta correcta es «no se puede»; con retirable, señalar lo que lo aporta');
-  const des = html.slice(html.indexOf('function _paseDesmontajeHTML('), html.indexOf('function _paseDesmontajeHTML(') + 1400);
+  // La función entera, no los primeros N caracteres: al reordenarla el guard
+  // dejaba de mirar donde importaba sin que nadie se enterase.
+  const des = html.slice(html.indexOf('function _paseDesmontajeHTML('), html.indexOf('function renderRepaso('));
   assert(/!R\.retirable \?\s*\(on \? ' sobra' : ' mudo'\)/.test(des),
     'si el alérgeno es estructural ninguna ficha puede salir en verde');
   // La comanda que se enseña es la de cocina, en el idioma de la app.
