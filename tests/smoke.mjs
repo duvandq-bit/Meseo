@@ -6058,20 +6058,54 @@ test('Pase de cocina: sin fichas repetidas y sin repintar en cada toque', () => 
     'el tablero de alérgenos debe refrescarse solo, sin volver a pintar la piscina');
 });
 
+test('el Cliente IA se eliminó y no puede volver (sep 2026)', () => {
+  // Decisión del propietario: meses en la app y sólo dos usos. El motivo que
+  // dio: nadie invierte tanto tiempo en una sesión de aprendizaje —eran hasta
+  // 12 intervenciones escribiendo en el móvil— y quien compre la aplicación no
+  // va a pagar por un chat de texto cuando lo que de verdad prepara para una
+  // auditoría es el role play. Su sitio en el inicio y en Repaso lo ocupa el
+  // Pase, que es el mismo entrenamiento en treinta segundos y sin cobertura.
+  //
+  // Con él se van tres cosas que llevaba encima: la factura del LLM, una Edge
+  // Function («mesa-infinita») que nunca estuvo en el repo —así que su prompt
+  // y sus topes no se podían revisar aquí— y un veredicto de seguridad en
+  // alérgenos que dictaba el modelo y que nada verificaba contra DISH_ACTIONS,
+  // la única afirmación sobre alérgenos de toda la app que no se comprobaba.
+  const css = read('styles.css');
+  for (const [f, t] of [[html, 'index.html'], [css, 'styles.css']]) {
+    const restos = [...f.matchAll(/_mi[A-Za-z]+|_MI_[A-Z_]+|renderMesaLobby|Mesa Infinita|miStats|mesa-infinita|ri-cta-mesa/g)].map(m => m[0]);
+    assert(restos.length === 0, `${t} conserva restos del Cliente IA: ${[...new Set(restos)].join(', ')}`);
+  }
+  assert(!/Cliente IA|AI Guest/.test(html), 'el nombre no puede reaparecer en la app');
+  // Y sobre todo: la app no vuelve a llamar a ninguna función de IA por turno.
+  assert(!/functions\/v1\/mesa-infinita/.test(html), 'la Edge Function del huésped IA queda fuera');
+  // El acordeón del supervisor y el bloque del resumen semanal se fueron con él.
+  assert(!/const mesaSection/.test(html), 'la sección del supervisor debe irse con la función');
+  assert(!/_acc\('mesa'/.test(html), 'el acordeón del supervisor debe irse con la función');
+});
+
 test('el Pase tiene su acceso destacado, con un handler que de verdad dispara', () => {
-  // «Que esté a la vista como Cliente IA, un acceso más rápido» (propietario,
+  // «Que esté a la vista, un acceso más rápido» (propietario,
   // sep 2026): tarjeta propia en el inicio y en Repaso, al lado de la del
-  // Cliente IA, para no tener que entrar en una categoría y buscar un plato.
-  assert((html.match(/class="ri-cta ri-cta-pase"/g) || []).length === 2,
-    'la tarjeta del Pase debe estar en el inicio Y en Repaso');
+  // para no tener que entrar en una categoría y buscar un plato. Ocupa el sitio
+  // que tenía el Cliente IA, retirado por el propietario en sep 2026.
+  assert((html.match(/_paseCtaHTML\(_en\)/g) || []).length === 3,
+    'la tarjeta del Pase debe pintarse en el inicio Y en Repaso desde su helper');
   assert(/function _paseGo\(\)\{ launchPase\(null\); \}/.test(html),
     'el atajo debe abrir el juego eligiendo plato del turno, sin pedir uno');
   // La primera versión salió con el marcador sin sustituir: el atributo se
   // resolvía a «null» en tiempo de ejecución, así que la tarjeta se veía
   // perfecta y al tocarla no pasaba nada. La única forma de pillarlo fue
   // pulsarla de verdad; el guard lo fija.
-  assert((html.match(/class="ri-cta ri-cta-pase"[^>]*onclick="_paseGo\(\)"/g) || []).length === 2,
-    'las dos tarjetas del Pase deben llevar su handler resuelto, no un marcador');
+  assert((html.match(/class="ri-cta ri-cta-pase"[^>]*onclick="_paseGo\(\)"/g) || []).length === 1,
+    'el helper de la tarjeta debe llevar su handler resuelto, no un marcador');
+  // Y que sus textos se interpolen de verdad. Esto falló DOS veces al generar
+  // el helper: los marcadores salían escapados y la tarjeta se pintaba con el
+  // literal en pantalla —«${_en?'Plating pass':…}»— en vez del texto. Se veía
+  // perfecta en el código y rota en el móvil; sólo se caza mirando el render.
+  const iCta = html.indexOf('function _paseCtaHTML(');
+  const cta = html.slice(iCta, iCta + 1600);
+  assert(!cta.includes('\\${'), 'el helper de la tarjeta no puede llevar marcadores escapados');
   const css = read('styles.css');
   assert(/\.ri-cta-pase\{/.test(css), 'la tarjeta del Pase necesita su propio estilo');
 });
@@ -7379,171 +7413,6 @@ test('ficha técnica del plato: muestra el maridaje ordenado por precio', () => 
     'si los vinos no habían cargado, la ficha debe recargarse al recibirlos (solo si sigue abierta)');
 });
 
-test('La Mesa Infinita (F1): huésped IA anclado a la fuente única + candados de coste', () => {
-  // El simulador de huésped por chat. Candados que no pueden regresar:
-  // carta SIEMPRE derivada de la fuente única, límite diario en cliente,
-  // errores del servidor con mensaje amable, y sin clave de API en la app.
-  assert(/const _MI_FN_URL = SUPA_URL \+ '\/functions\/v1\/mesa-infinita';/.test(html),
-    'la app debe llamar a la Edge Function mesa-infinita (nunca a la API de IA directa)');
-  assert(/const _MI_DAILY = 3;/.test(html), 'límite de 3 mesas/día por camarero');
-  // VARIEDAD (bug real: dos mesas seguidas con alergia a soja): la restricción
-  // anterior queda vetada — ni alérgeno repetido ni dos vegetarianos seguidos.
-  const scVar = html.slice(html.indexOf('function _miScenario'), html.indexOf('function renderMesaLobby'));
-  assert(/miLastScn/.test(scVar) && /present\.filter\(a=>a!==_last\)/.test(scVar) && /_last==='veg'/.test(scVar),
-    'el escenario debe vetar la restricción de la sesión anterior');
-  // La carta que viaja a la IA se construye desde DISHES + DISH_ACTIONS + DISH_SERVICE
-  const menuFn = html.slice(html.indexOf('function _miMenu'), html.indexOf('function _miScenario'));
-  assert(/DISH_SERVICE\[d\.id\]/.test(menuFn) && /DISH_ACTIONS\[d\.id\]/.test(menuFn) && /d\.allergens/.test(menuFn),
-    '_miMenu debe derivar la carta de la fuente única (platos, alérgenos y comandas reales)');
-  // El turno lo ELIGE el camarero en la antesala (🌙 cena por defecto /
-  // ☀️ almuerzo): filtrar por reloj hacía que entrenar de día negara platos
-  // reales de cena («raviolis de espinaca no existe»). Nunca por hora.
-  assert(!/new Date\(\)\.getHours\(\)/.test(menuFn),
-    'la carta del huésped no puede depender de la hora del reloj');
-  assert(/function _miMenu\(lang, shift\)/.test(html) && /shift = shift==='a' \? 'a' : 'c';/.test(menuFn),
-    '_miMenu recibe el turno elegido, con la cena como valor por defecto');
-  // El botón dice solo «Almuerzo» — sin «(terraza)» (petición del propietario).
-  assert(/let _miShift='c';/.test(html) && /_miShift='\$\{k\}';renderMesaLobby\(\)/.test(html)
-    && /_shBtn\('a','☀️ '\+\(_en\?'Lunch':'Almuerzo'\)\)/.test(html),
-    'la antesala debe ofrecer el selector Cena/Almuerzo (cena por defecto, sin «terraza»)');
-  assert(/shift:\(_miShift==='a'\?'a':'c'\)/.test(html),
-    'el turno elegido debe viajar con la sesión (no leerse en caliente)');
-  assert((html.match(/_miMenu\(_miS\.lang,_miS\.shift\)/g)||[]).length===2,
-    'huésped Y auditor deben recibir la carta del turno elegido');
-  assert(/ALLERGEN_ES_TO_EN\[a\]/.test(menuFn), 'la carta EN debe usar el vocabulario canónico de alérgenos');
-  // El escenario usa restricciones REALES (alérgenos presentes en la carta)
-  const scFn = html.slice(html.indexOf('function _miScenario'), html.indexOf('function renderMesaLobby'));
-  assert(/DISHES\.flatMap\(d=>d\.allergens/.test(scFn), 'la restricción del huésped debe existir en la carta real');
-  // Cupo diario: se consume al CONFIRMAR el primer turno, y bloquea al agotarse
-  assert(/_miLeft\(emp\)<=0/.test(html) && /emp\.miCount=\(emp\.miCount\|\|0\)\+1; saveDB\(\);/.test(html),
-    'el límite diario debe comprobarse y consumirse de verdad');
-  // Errores del servidor → mensajes amables (nunca un fallo mudo)
-  for (const code of ['falta_api_key', 'limite_usuario', 'limite_diario'])
-    assert(html.includes(`'${code}'`), `_miFriendly debe cubrir el error ${code}`);
-  // Entrada visible: tarjeta en el hub de Repaso
-  assert(/renderMesaLobby\(\)/.test(html) && /Cliente IA/.test(html), 'tarjeta de entrada en Repaso');
-  // La evaluación premia XP y telemetría sin subir la conversación a la nube
-  const endFn = html.slice(html.indexOf('async function _miEnd'), html.indexOf('async function _miEnd') + 5200);
-  assert(/awardXP\(xp/.test(endFn) && /track\('mesa\.finish'/.test(endFn), 'cierre: XP + telemetría agregada');
-  // REGRESIÓN (bug real): "Cerrar mesa" durante la respuesta del huésped se
-  // ignoraba en silencio (guard de busy) y la mesa parecía colgada. Ahora se
-  // ENCOLA y se ejecuta al terminar el turno; y todo fetch lleva tiempo máximo.
-  assert(/closeQueued=true/.test(endFn), 'cerrar mesa con el huésped hablando debe ENCOLARSE, no ignorarse');
-  const turnFn = html.slice(html.indexOf('async function _miCallTurn'), html.indexOf('function _miSend'));
-  assert(/closeQueued && !_miS\.over/.test(turnFn) && /_miEnd\(\)/.test(turnFn), 'el cierre encolado debe ejecutarse al resolver el turno');
-  assert(/AbortController/.test(turnFn) && /45000/.test(turnFn), 'el turno debe tener tiempo máximo (45 s)');
-  assert(/90000/.test(endFn), 'la evaluación debe tener tiempo máximo (90 s)');
-  assert(/evaluating/.test(endFn), 'la evaluación debe mostrar su propio estado (no "el huésped piensa")');
-  // LQA: el auditor recibe los estándares REALES observables por chat
-  assert(/const _MI_LQA_IDS = \[13,15,16,19,20,21,22,23,25,34,36,40,42,71,73,76,78\];/.test(html),
-    'subconjunto de estándares LQA observables en conversación');
-  assert(/const _MI_LQA_IDS_HOSTESS = \[1,2,3,4,5,6,7,8,9,10,70,71,76,78\];/.test(html),
-    'la hostess se audita con los estándares de reserva/llegada');
-  const lqaFn = html.slice(html.indexOf('function _miLqa'), html.indexOf('function renderMesaLobby'));
-  assert(/LQA_STANDARDS\.filter/.test(lqaFn), '_miLqa debe derivar de LQA_STANDARDS (fuente única)');
-  assert(/lqa:_miLqa\(_miS\.lang,_miS\.role\)/.test(endFn), 'la evaluación debe enviar los estándares LQA de su rol');
-  // FICHA DE LA HOSTESS (feedback real del propietario): el camarero conoce
-  // el apellido/pax/ocasión ANTES de acercarse — así el Estándar #71 (nombre)
-  // es exigible con justicia. La ficha se fija arriba del chat y viaja al
-  // auditor. El modo Hostess entrena reservas/llegadas (#1-#10).
-  const scFn2 = html.slice(html.indexOf('function _miScenario'), html.indexOf('function renderMesaLobby'));
-  assert(/_MI_SURNAMES/.test(scFn2) && /briefing/.test(scFn2), 'el escenario de mesa debe generar la ficha de la hostess');
-  assert(/Ficha de la hostess/.test(html), 'la ficha debe pintarse fija en el chat');
-  assert(/briefing:_miS\.sc\.briefing\|\|''/.test(html), 'la ficha debe viajar al servidor');
-  // La ficha COMPLETA (petición del propietario): preguntar por alergias es
-  // obligación de la hostess → la restricción va SIEMPRE en la ficha, y a
-  // veces una preferencia (sin cerdo / sin alcohol) que el huésped respeta.
-  assert(/\$\{restr\}\$\{prefTxt\}/.test(html), 'la ficha debe incluir siempre la restricción del huésped');
-  assert(/no comen cerdo/.test(html) && /no beben alcohol/.test(html), 'la ficha debe poder llevar preferencias (sin cerdo / sin alcohol)');
-  assert(/situacion \+ lqaHook \+ prefHook/.test(html), 'el huésped debe respetar en conversación la preferencia de su ficha');
-  // COHERENCIA ficha ↔ personaje (bug real: ficha «sin ocasión especial» y el
-  // huésped hablaba de su aniversario): ocasión, pax y trato derivan del
-  // personaje elegido (índice pIdx), nunca de una tirada independiente.
-  assert(/const pIdx=Math\.floor\(Math\.random\(\)\*P\.length\);/.test(html) && /\[pIdx\];/.test(html)
-    && /persona:P\[pIdx\]/.test(html) && /\$\{occM\}/.test(html),
-    'la ocasión de la ficha debe derivar del personaje (coherencia ficha ↔ conversación)');
-  assert(/startMesaInfinita\(false,'hostess'\)/.test(html), 'la antesala debe ofrecer el modo Hostess');
-  assert(/role:_miS\.role/.test(html), 'las llamadas deben llevar el rol');
-  // RESULTADOS → SUPERVISOR (petición del propietario): la nota de cada mesa
-  // se agrega en emp.miStats, viaja por extras.mi (merge monótono) y el panel
-  // de análisis la muestra con la seguridad de alérgenos por delante.
-  assert(/const m=_e\.miStats=_e\.miStats\|\|\{n:0,sum:0,best:0,pel:0,rsk:0,hn:0\};/.test(html),
-    'el cierre debe agregar el resultado en emp.miStats');
-  assert(/mi: emp\.miStats\|\|0/.test(html), 'extras debe transportar miStats a la nube');
-  const mrg = html.slice(html.indexOf('function _extrasMergeInto'), html.indexOf('function renderLeaderboard'));
-  assert(/x\.mi && typeof x\.mi==='object'/.test(mrg) && /Math\.max\(m\[k\]\|\|0, x\.mi\[k\]\|\|0\)/.test(mrg),
-    'el merge de extras.mi debe ser monótono');
-  assert(/miStats: \(\(\) => \{ try \{ const x=JSON\.parse\(r\.extras/.test(html),
-    'el fetch de empleados debe extraer miStats de extras');
-  const sup = html.slice(html.indexOf('function renderSupAnalytics'), html.indexOf('Ranking XP'));
-  assert(/Cliente IA/.test(sup) && /_miPel/.test(sup) && /seguras en alérgenos/.test(sup),
-    'el panel de análisis debe mostrar la sección de Cliente IA con la seguridad por delante');
-});
-
-test('Cliente IA (Mesa Infinita) destacado: tarjeta en el inicio + primera en Repaso + estilo propio', () => {
-  // «Es una gran adición, debería destacar» (propietario, jul 2026): entrada
-  // a 1 toque desde el inicio y primera tarjeta del hub de Repaso, con una
-  // variante visual propia (verde profundo + oro) que no se confunde con los
-  // CTA dorados de sesión.
-  assert(/function _miGo\(\)\{ _subTab\.aprender='repaso'; showTab\('aprender', true\); renderMesaLobby\(\); \}/.test(html),
-    '_miGo debe navegar con showTab INSTANTÁNEO — el render diferido (120 ms) pisaría la antesala');
-  const dash = html.slice(html.indexOf('function renderDashboard()'), html.indexOf('function checkActiveLiveSession'));
-  assert(/ri-cta ri-cta-mesa/.test(dash) && /onclick="_miGo\(\)"/.test(dash),
-    'el inicio debe mostrar la tarjeta destacada de La Mesa Infinita');
-  const cats = html.slice(html.indexOf('function renderRepasoCats()'), html.indexOf('function searchRepaso'));
-  // Orden de PINTADO: la tarjeta de la Mesa va antes del hueco ${smartCard}
-  // (la definición de smartCard vive arriba y no cuenta como orden visual).
-  const iMesa = cats.indexOf('ri-cta-mesa'), iSmart = cats.indexOf('${smartCard}');
-  assert(iMesa > -1 && iSmart > -1 && iMesa < iSmart,
-    'en Repaso la Mesa Infinita debe ir ANTES de la sesión inteligente');
-  assert(!/'La Mesa Infinita'/.test(html) && !/'The Infinite Table'/.test(html),
-    'el nombre visible es Cliente IA — «La Mesa Infinita» prometía conversación sin límite (propietario jul 2026)');
-  const css = read('styles.css');
-  assert(/\.ri-cta-mesa\{/.test(css) && /@keyframes miShine/.test(css),
-    'styles.css debe definir la variante destacada .ri-cta-mesa');
-  assert(/prefers-reduced-motion:reduce\)\{ \.ri-cta-mesa::after\{ animation:none \} \}/.test(css),
-    'el brillo animado debe respetar prefers-reduced-motion');
-});
-
-test('Cliente IA F2: modo voz en el dispositivo (Web Speech API)', () => {
-  // Fase 2 (propietario): hablar y escuchar al cliente IA. Todo local — STT
-  // con SpeechRecognition (webkit en Safari/iOS) y TTS con speechSynthesis —
-  // cero coste de API extra y audio por el enrutado del sistema (bluetooth).
-  assert(/window\.SpeechRecognition\|\|window\.webkitSpeechRecognition/.test(html) && /'speechSynthesis' in window/.test(html),
-    'la detección debe cubrir Chrome/Android Y Safari/iOS (prefijo webkit)');
-  // El botón de voz solo aparece si el navegador lo soporta (nada de botones muertos)
-  assert(/\$\{_miVoiceSupported\(\)\?`<button type="button" id="miVoiceBtn"/.test(html),
-    'el toggle de voz debe ocultarse en navegadores sin soporte');
-  // La transcripción NUNCA se envía sola: el dictado falla con nombres de
-  // carta («niçoise») y el camarero debe poder corregir antes de enviar
-  // (feedback real del propietario, jul 2026).
-  const mic = html.slice(html.indexOf('function _miMicTap'), html.indexOf('function _miRender'));
-  assert(/r\.onend=/.test(mic) && !/_miSend\(\)/.test(mic), 'la transcripción debe quedarse en el cajón para editarla — nada de auto-envío');
-  assert(/inp\.focus\(\)/.test(mic), 'al terminar el dictado, el foco va al cajón para corregir');
-  // El TTS no lee markdown: «asterisco» en voz alta rompía la ilusión
-  assert(/replace\(\/\[\*_#`~\]\+\/g,' '\)/.test(html), 'el TTS debe limpiar los asteriscos/markdown antes de hablar');
-  assert(/_miSpeakStop\(\);\s*\/\/ que el micro no se escuche a sí mismo/.test(mic),
-    'antes de escuchar hay que callar al TTS (eco del propio huésped)');
-  // El huésped habla su respuesta SOLO en modo voz (desde F3.6 la lee el
-  // revelador de burbujas, al inicio del tecleo)
-  assert(/if\(_miV\.on\) _miSpeak\(text\)/.test(html), 'la respuesta del huésped debe leerse en voz alta en modo voz');
-  // Idioma de voz = idioma de la mesa (huésped inglés → voz inglesa)
-  assert(/\(_miS\.lang==='en'\)\?'en-GB':'es-ES'/.test(mic), 'el micro debe transcribir en el idioma de la mesa');
-  assert(/u\.lang=\(_miS&&_miS\.lang==='en'\)\?'en-GB':'es-ES'/.test(html), 'el TTS debe hablar en el idioma de la mesa');
-  // Silencio garantizado al salir o cerrar la mesa (nada sigue sonando)
-  const exitFn = html.slice(html.indexOf('function _miExit'), html.indexOf('async function _miEnd'));
-  assert(/_miSpeakStop\(\); _miRecStop\(\)/.test(exitFn), 'salir de la mesa debe parar voz y micro');
-  const endFn2 = html.slice(html.indexOf('async function _miEnd'), html.indexOf('async function _miEnd') + 1200);
-  assert(/_miSpeakStop\(\); _miRecStop\(\)/.test(endFn2), 'cerrar la mesa debe parar voz y micro');
-  // Cada mesa arranca en modo texto (el modo voz no se hereda por sorpresa)
-  assert(/_miV=\{ on:false, rec:null, listening:false \};/.test(html), 'cada mesa debe arrancar en modo texto');
-  // El micro en escucha se ve (pulso) y respeta reduced-motion
-  const css = read('styles.css');
-  assert(/\.mi-mic-live\{/.test(css) && /@keyframes miMicPulse/.test(css), 'styles.css debe marcar el micro en escucha');
-  assert(/prefers-reduced-motion:reduce\)\{ \.mi-mic-live\{ animation:none \} \}/.test(css),
-    'el pulso del micro debe respetar prefers-reduced-motion');
-});
-
 test('Horarios: la semana nueva aparece sin reabrir la app (refresco >5 min)', () => {
   // Bug real (jul 2026): el supervisor subió la semana del lunes 27 y en los
   // móviles con la PWA ya abierta «no aparecía» — el array HORARIOS en
@@ -7561,10 +7430,10 @@ test('Horarios: la semana nueva aparece sin reabrir la app (refresco >5 min)', (
     '_horLoad debe fechar los datos tanto de caché como de red');
 });
 
-test('Supervisor: resumen semanal listo para compartir (liga + actividad + Cliente IA)', () => {
+test('Supervisor: resumen semanal listo para compartir (liga + actividad)', () => {
   // Ecosistema F1 (propietario): la palanca de enganche es la visibilidad —
   // un mensaje semanal que el supervisor reenvía por WhatsApp con el podio
-  // de la liga, quién entrenó, quién no, y las mesas del Cliente IA.
+  // de la liga, quién entrenó y quién no.
   const fn = html.slice(html.indexOf('function _supResumenTxt'), html.indexOf('function renderSupAnalytics'));
   assert(fn.length > 100, 'falta el generador _supResumenTxt');
   assert(/wk\.k===key/.test(fn) && /e\.wkKey===key/.test(fn) && /Math\.max\(xp, e\.wkXP\|\|0\)/.test(fn),
@@ -7573,11 +7442,9 @@ test('Supervisor: resumen semanal listo para compartir (liga + actividad + Clien
     '«Sin actividad» solo cuenta al equipo vivo (30 días) — los perfiles fantasma inflaban la lista');
   assert(/_wkKey\(\)/.test(fn) && /d\.setUTCDate\(d\.getUTCDate\(\)-7\)/.test(fn),
     'debe poder generar la semana en curso Y la semana cerrada (lunes por la mañana)');
-  assert(/m&&m\.ld&&m\.ld>=key&&m\.ld<=end/.test(fn),
-    'las mesas del Cliente IA deben filtrarse por la fecha de la última mesa dentro de la semana');
   assert(/Sin actividad/.test(fn), 'el mensaje debe nombrar a quien no entrenó (visibilidad suave)');
   // La sección del panel: alternador de semana + copiar + WhatsApp
-  const sec = html.slice(html.indexOf('const resumenSection'), html.indexOf('const mesaSection'));
+  const sec = html.slice(html.indexOf('const resumenSection'), html.indexOf('// ── DÓNDE FALLA EL EQUIPO'));
   assert(/window\._supResWk/.test(html) && /'prev' : 'cur'/.test(html),
     'el lunes debe abrirse en la semana CERRADA por defecto');
   assert(/window\._supResText/.test(sec) && /wa\.me\/\?text=/.test(sec) && /clipboard\.writeText/.test(sec),
@@ -7599,47 +7466,6 @@ test('Supervisor: «Conectados hoy» compara en hora LOCAL, no UTC', () => {
     'KPI y listado de Conectados Hoy deben comparar con el día local');
   assert(!/lt\.substring\(0,10\)\s*[=!]==?\s*today/.test(sup),
     'no puede quedar ninguna comparación de fecha UTC contra todayStr()');
-});
-
-test('Cliente IA F3 «mesa viva»: humor que evoluciona + imprevistos de sala', () => {
-  // Paquete de realismo (propietario jul 2026): el huésped tiene humor
-  // inicial que evoluciona, el 70% de las mesas traen un imprevisto que el
-  // huésped saca él mismo, y el acompañante puede intervenir. El servidor
-  // (mesa-infinita.ts) lleva las reglas de comportamiento; aquí se fija la
-  // generación del escenario en el cliente.
-  const fn = html.slice(html.indexOf('function _miScenario'), html.indexOf('function renderMesaLobby'));
-  assert(/_MI_HUMORES = en \?/.test(fn), 'falta el catálogo de humores inicial (ES+EN)');
-  assert((fn.match(/'con hambre|de celebración|cansado del viaje|curioso, pregunta|indeciso, le cuesta/g)||[]).length>=5,
-    'debe haber al menos 5 humores en español');
-  assert(/_MI_EVENTOS = en \?/.test(fn) && (fn.match(/\('\(|'\(justo|'\(al llegar|'\(a mitad|'\(durante|'\(en cualquier|'\(cuando/g)||[]).length>=6,
-    'debe haber al menos 6 imprevistos, cada uno con su MOMENTO entre paréntesis');
-  assert(/Math\.random\(\)<0\.7 \? _MI_EVENTOS/.test(fn),
-    'el imprevisto aparece en ~70% de las mesas (el 30% sin él mantiene la variedad)');
-  assert(/TU HUMOR INICIAL/.test(fn) && /IMPREVISTO que debes sacar tú, una sola vez/.test(fn),
-    'el hook debe dejar claro que el imprevisto lo saca el huésped, una sola vez');
-  assert(/situacion \+ lqaHook \+ prefHook \+ vivoHook/.test(fn),
-    'el humor y el imprevisto deben viajar DENTRO de la situación (el servidor los recorta a 900)');
-});
-
-test('Cliente IA F3.6: ritmo humano del chat (burbujas + tecleo, solo pantalla)', () => {
-  // El huésped "escribe": mensajes largos en 2-3 burbujas con retardo según
-  // longitud. CRÍTICO: el troceo es SOLO de pantalla — msgs guarda el texto
-  // entero de una vez (la API del modelo exige turnos alternados y dos
-  // mensajes 'guest' seguidos romperían el historial del servidor).
-  const bub = html.slice(html.indexOf('function _miBubbles'), html.indexOf('function _miFriendly'));
-  assert(/function _miBubbles\(t\)/.test(bub) && /function _miRevealGuest\(text\)/.test(bub),
-    'faltan el troceador y el revelador');
-  assert(!/\(\?<[=!]/.test(bub), 'sin lookbehind en las regex — rompe el parseo entero en iOS Safari viejo');
-  assert(/_miS\.msgs\.push\(\{role:'guest',text\}\)/.test(bub),
-    'el mensaje COMPLETO se guarda de una vez en msgs (historial del servidor intacto)');
-  assert(/if\(_miV\.on\) _miSpeak\(text\)/.test(bub), 'la voz lee el mensaje completo desde el inicio del tecleo');
-  assert(/if\(_miS\.closeQueued && !_miS\.over\)\{ _miS\.closeQueued=false; _miEnd\(\); \}/.test(bub),
-    'el cierre encolado durante el tecleo debe ejecutarse al terminar');
-  const turn = html.slice(html.indexOf('async function _miCallTurn'), html.indexOf('function _miSend'));
-  assert(/_miRevealGuest\(String\(j\.text\|\|''\)\)/.test(turn), 'el turno debe entregar la respuesta por el revelador');
-  assert(/if\(_miS\.revealing\)\{/.test(turn), 'el finally no puede cortar el tecleo (busy lo libera el reveal)');
-  assert(/escribiendo…/.test(html) && /typing…/.test(html), 'indicador «escribiendo…» mientras teclea');
-  assert(/chunks=chunks\.slice\(0,_miS\.reveal\.n\)/.test(html), 'el último mensaje se muestra por burbujas progresivas');
 });
 
 test('Horarios: entrar a las 14:00 cuenta también en almuerzo', () => {
@@ -7664,7 +7490,8 @@ test('Analítica del supervisor: titular + acordeones (rediseño anti-scroll)', 
     'solo Alérgenos se abre sola, y únicamente cuando hay riesgo');
   assert(/window\._supAccOpen\.add\('\$\{id\}'\)/.test(ana),
     'el estado abierto/cerrado debe recordarse entre re-renders');
-  for (const id of ['alg','res','act','perf','mesa','dish'])
+  // El acordeón 'mesa' era el del Cliente IA, retirado en sep 2026.
+  for (const id of ['alg','res','act','perf','dish'])
     assert(new RegExp("_acc\\('"+id+"'").test(ana), `falta el acordeón '${id}'`);
   const css = read('styles.css');
   assert(/\.sup-acc summary\{[^}]*min-height:48px/.test(css), 'cabeceras de acordeón con área táctil de 48px');

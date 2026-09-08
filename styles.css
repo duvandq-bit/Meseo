@@ -525,7 +525,6 @@ body::after{
    .tab-entering on #appContent, which is not an ancestor of the nav. */
 .screen.active{display:flex;animation:screenEnter .4s cubic-bezier(.22,1,.36,1) both}
 
-
 /* ─────────────────────────────────────────────────
    LOGIN
 ───────────────────────────────────────────────── */
@@ -572,7 +571,6 @@ body::after{
   font-size:.72rem;letter-spacing:.28em;color:rgba(196,154,60,.45);
   text-transform:uppercase;margin-top:.6rem;font-weight:300;
 }
-
 
 .login-section-label{
   font-family:'Quicksand',sans-serif;font-size:.68rem;font-weight:700;letter-spacing:.1em;
@@ -762,7 +760,6 @@ body::after{
 .screen{display:none;min-height:100vh;position:relative;z-index:1}
 .screen.active{display:flex}
 
-
 /* ─────────────────────────────────────────────────
    LOGIN
 ───────────────────────────────────────────────── */
@@ -781,7 +778,6 @@ body::after{
   background:radial-gradient(ellipse 80% 60% at 50% 50%,rgba(196,154,60,.03),transparent);
   pointer-events:none;
 }
-
 
 @keyframes loginFadeIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
 @keyframes lineExpand{from{width:0;opacity:0}to{width:100%;opacity:1}}
@@ -1891,35 +1887,21 @@ body::after{
 .ri-cta-top{font-family:'Cinzel',serif;font-size:1.05rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#fff;text-shadow:0 1px 2px rgba(0,0,0,.15)}
 .ri-cta-sub{font-family:'DM Mono',monospace;font-size:.75rem;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.85)}
 
-/* ── La Mesa Infinita — variante destacada del CTA («es una gran adición,
-   debería destacar», propietario jul 2026). Verde comedor profundo con borde
-   y brillo de oro: se distingue a primera vista de los CTA dorados de sesión
-   sin salirse del lenguaje pergamino de la casa. ── */
-.ri-cta-mesa{
-  background:linear-gradient(150deg,#22302a 0%,#2e3d33 55%,#22302a 100%);
-  border:1.5px solid rgba(228,190,104,.55);
-  box-shadow:0 4px 16px rgba(0,0,0,.28), inset 0 1px 0 rgba(228,190,104,.18);
-  overflow:hidden;
-}
-/* El Pase: mismo peso visual que la tarjeta del Cliente IA pero en salvia,
-   que es el color del juego — se distinguen de un vistazo. */
+/* ── El Pase — variante destacada del CTA. Verde salvia, que es el color del
+   juego: se distingue a primera vista de los CTA dorados de sesión sin salirse
+   del lenguaje pergamino de la casa. Ocupa el sitio que tenía la tarjeta del
+   Cliente IA, retirado por el propietario en sep 2026. ── */
 .ri-cta-pase{
   background:linear-gradient(150deg,#1c2b22 0%,#26382c 55%,#1c2b22 100%);
   border:1.5px solid rgba(122,178,132,.5);
   box-shadow:0 4px 16px rgba(0,0,0,.28), inset 0 1px 0 rgba(122,178,132,.16);
   overflow:hidden;
 }
-.ri-cta-mesa::after{
-  content:'';position:absolute;top:0;left:-75%;width:50%;height:100%;
-  background:linear-gradient(105deg,transparent,rgba(228,190,104,.16),transparent);
-  animation:miShine 3.8s ease-in-out infinite;pointer-events:none;
-}
+
 @keyframes miShine{ 0%,55%{left:-75%} 85%,100%{left:125%} }
-@media (prefers-reduced-motion:reduce){ .ri-cta-mesa::after{ animation:none } }
-.ri-cta-mesa .ri-cta-icon{ background:rgba(228,190,104,.14);border-color:rgba(228,190,104,.5) }
-.ri-cta-mesa .ri-cta-top{ color:#f2e6c8 }
-.ri-cta-mesa .ri-cta-sub{ color:rgba(242,230,200,.82) }
-@media (hover:hover){ .ri-cta-mesa:hover{ box-shadow:0 8px 26px rgba(0,0,0,.35), 0 0 0 1px rgba(228,190,104,.35), inset 0 1px 0 rgba(228,190,104,.22) } }
+@media (prefers-reduced-motion:reduce){  }
+
+@media (hover:hover){  }
 
 /* Cliente IA · modo voz: el micro en escucha late en rojo suave para que se
    vea de un vistazo que está grabando (y cuándo ha dejado de hacerlo). */
@@ -5400,7 +5382,6 @@ body::after{
 }
 @keyframes fadeIn{from{opacity:0}to{opacity:1}}
 
-
 /* ═══ WEEKLY CHALLENGE — TUNIC amethyst scroll ═══ */
 .weekly-card{
   background:linear-gradient(155deg,#faf6ee 0%,var(--ink) 50%,#ece1ca 100%);
@@ -5435,8 +5416,6 @@ body::after{
   background:linear-gradient(90deg,#7a6aaa,#9070cc,#a084dc);transition:width .6s ease;box-shadow:0 0 8px rgba(122,106,170,.35);position:relative}
 .weekly-bar-fill::after{content:'';position:absolute;top:0;left:0;right:0;height:55%;background:linear-gradient(180deg,rgba(255,255,255,.4),transparent);border-radius:inherit}
 .weekly-bar-label{font-family:'DM Mono',monospace;font-size:.55rem;font-weight:500;color:var(--parch3);letter-spacing:.03em}
-
-
 
 /* ═══ SERVICE COMPANION MODE ═══ */
 /* ═══ SENSORY MAP ═══ */
@@ -5638,7 +5617,6 @@ body::after{
 
 /* Sensory responsive: desktop */
 @media(min-width:768px){.sensory-wheel-wrap{width:420px;height:420px}.sensory-note{width:72px;height:72px}.sensory-note .sn-ico{font-size:1.4rem}.sensory-note .sn-lbl{font-size:.62rem}.sensory-wheel-center{width:100px;height:100px;font-size:.7rem}.sensory-radar-wrap{width:280px;height:280px}.sensory-card-name{font-size:.82rem}.sensory-why{font-size:.78rem}.sensory-detail-title{font-size:1.05rem}.sensory-fp-name{font-size:1.05rem}.sensory-header h2{font-size:1.4rem}}
-
 
 /* ═══ SERVICE MODE · TUNIC nocturno (warm dark, parchment-tinted for real service) ═══ */
 /* ── Service Mode · botón "Similar" cuando un vino se agota ── */
@@ -6390,7 +6368,6 @@ body::after{
   box-shadow:0 0 8px rgba(196,154,60,.3);
 }
 
-
 /* ═══ DUELO REMOTO ═══ */
 .duel-lobby{padding:1rem 0;}
 .duel-rival-card{display:flex;align-items:center;gap:.75rem;padding:.75rem 1rem;background:linear-gradient(155deg,#faf6ee,#f0e8d8);border:1px solid var(--line);border-radius:var(--r2);margin-bottom:.5rem;cursor:pointer;transition:all .2s;}
@@ -6419,7 +6396,6 @@ body::after{
 .duel-answer-btn.correct{background:#e8f5ee;border-color:var(--sage);color:var(--sage);}
 .duel-answer-btn.wrong{background:#fdecea;border-color:var(--rose);color:var(--rose);}
 .trophy-badge{font-size:.75rem;letter-spacing:-.05em;}
-
 
 /* ═══ CATEGORY COLORS ═══ */
 :root{
@@ -7502,7 +7478,6 @@ body:has(#gsOverlay.open) .txk-sync-pill{
 .lqa-ei-scale-4 .lqa-ei-dot:nth-child(-n+4){background:var(--sage,var(--sage));border-color:rgba(77,138,94,.3);}
 .lqa-ei-scale-5 .lqa-ei-dot:nth-child(-n+5){background:var(--azure,#4888a0);border-color:rgba(72,136,160,.3);}
 
-
 /* ═══ LOGIN FADE IN ═══ */
 @keyframes loginFadeIn{
   from{opacity:0;transform:scale(.9) translateY(10px)}
@@ -7700,7 +7675,6 @@ body:has(#gsOverlay.open) .txk-sync-pill{
   100%{transform:translateX(250%) skewX(-20deg);opacity:0}
 }
 
-
 /* ═══ WINE QUIZ — TUNIC styled multiple choice ═══ */
 .wq-container{max-width:520px;margin:0 auto;padding:0 0 2rem}
 .wq-progress-bar{
@@ -7882,7 +7856,6 @@ body:has(#gsOverlay.open) .txk-sync-pill{
   animation:orbFloat1 22s ease-in-out infinite reverse, orbPulse 9s ease-in-out infinite;
   animation-delay:-15s,-4s;
 }
-
 
 /* ═══ NEW LOGIN FORM STYLES ═══ */
 .login-field{text-align:left;width:100%}
@@ -8262,7 +8235,6 @@ body:has(#gsOverlay.open) .txk-sync-pill{
   text-transform:uppercase;margin-top:.8rem;
 }
 
-
 /* ═══ RADAR CHART ═══ */
 .radar-container{position:relative;display:flex;flex-direction:column;align-items:center;margin:1rem 0 1.2rem;padding:1rem;background:rgba(196,154,60,.03);border:1px solid rgba(196,154,60,.1);border-radius:var(--r2)}
 .radar-svg{width:100%;max-width:280px;height:auto}
@@ -8319,7 +8291,6 @@ body:has(#gsOverlay.open) .txk-sync-pill{
   font-family:'Cinzel',serif;font-size:.6rem;color:#fff6e2;
   margin:0 .25rem;letter-spacing:.08em;
 }
-
 
 /* ═══ WINE MAP ═══ */
 .wine-map-container{position:relative;padding:0 0 1.5rem}
@@ -9238,7 +9209,6 @@ li.fail .dj-qrv-mark{color:#e8a0a0}
   contain-intrinsic-size:auto 200px;
   contain:layout paint style;
 }
-
 
 /* ═══════════════════════════════════════════════════════════════
    ATMOSPHERIC LAYER — prefers-reduced-motion guard (DESIGN_SYSTEM §7)
