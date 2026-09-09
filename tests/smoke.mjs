@@ -2468,7 +2468,11 @@ test('study shift filter: DISH_SERVICE complete + all generators route by shift'
   const M = new Function(stub + dishesSrc + svcSrc + helpers + 'return {DISHES, DISH_SERVICE, _shiftDishes, setShift:(s)=>{_studyShift=s;}};')(); // eslint-disable-line no-new-func
   const bad = M.DISHES.filter(d => !['a', 'c', 'ambos'].includes(M.DISH_SERVICE[d.id]));
   assert(bad.length === 0, `dishes without a valid service: ${bad.map(d => d.id).join(',')}`);
-  const twins = { 9: 'c', 78: 'a', 109: 'c', 69: 'a' };
+  // El Fish and chips de cena (109) salió de la carta en sep 2026: queda un
+  // solo Fish and chips, el del almuerzo. Los Tataki siguen siendo gemelos.
+  const twins = { 9: 'c', 78: 'a', 69: 'a' };
+  assert(!M.DISHES.some(d => d.id === 109), 'el plato 109 se retiró de la carta');
+  assert(M.DISH_SERVICE[109] === undefined, 'DISH_SERVICE no puede conservar el 109');
   for (const [id, exp] of Object.entries(twins))
     assert(M.DISH_SERVICE[id] === exp, `twin ${id} must be shift ${exp}, got ${M.DISH_SERVICE[id]}`);
   for (const shift of ['a', 'c']) {
@@ -2983,7 +2987,14 @@ test('offer rules: kids menu and Vegetariano never recommended to generic guests
   // recomiendan a vegetarianos. El Servicio Fantasma recomendaba ambos en
   // una pregunta que además pedía ENTRANTES con un pool de cualquier
   // categoría. _simOfferable centraliza la regla; se verifica ejecutándola.
-  assert(/KIDS_ONLY_DISH_IDS = new Set\(\[109\]\)/.test(html), 'kids-only set missing (Fish and chips Cena = 109)');
+  // El plato infantil era el Fish and chips de cena. Salió de la carta en sep
+  // 2026 y el propietario confirmó que el del almuerzo NO hereda la marca, así
+  // que hoy la lista está vacía — pero la regla tiene que seguir existiendo,
+  // porque el día que haya carta infantil se marca ahí.
+  assert(/KIDS_ONLY_DISH_IDS = new Set\(\[\]\)/.test(html),
+    'la lista de platos solo-infantiles debe existir aunque esté vacía');
+  assert(/!KIDS_ONLY_DISH_IDS\.has\(d\.id\)/.test(html),
+    '_simOfferable tiene que seguir consultándola');
   const cut = (start, endMark) => { const i = html.indexOf(start); assert(i !== -1, 'missing ' + start); return html.slice(i, html.indexOf(endMark, i)); };
   const dishesSrc = cut('const DISHES = [', '\n];') + '\n];';
   // extrae _simIsSideNamed + KIDS_ONLY + _simOfferable por marcadores fijos
@@ -2994,8 +3005,7 @@ test('offer rules: kids menu and Vegetariano never recommended to generic guests
   const stubs = "const LANG='es'; function getDish(d){return d;} const DISHES_EN=[];";
   const f = new Function(stubs + dishesSrc + src + '; return {DISHES, _simOfferable};'); // eslint-disable-line no-new-func
   const { DISHES, _simOfferable } = f();
-  const fish = DISHES.find(d => d.id === 109), arroz = DISHES.find(d => d.id === 53);
-  assert(fish && !_simOfferable(fish), 'Fish and chips (Cena) must NOT be offerable (kids menu)');
+  const arroz = DISHES.find(d => d.id === 53);
   assert(arroz && !_simOfferable(arroz), 'Arroz cremoso (Vegetariano) must NOT be a generic recommendation');
   assert(DISHES.filter(d => d.cat === 'Entrantes' && _simOfferable(d)).length >= 10,
     'offerable starters pool collapsed');
@@ -8007,7 +8017,9 @@ test('filtro de turno (DISH_SERVICE) coherente con las cartas reales', () => {
   for (const [id, v] of Object.entries(SV))
     assert(v === 'a' || v === 'c' || v === 'ambos', `#${id} tiene servicio inválido: ${v}`);
   // gemelos por turno (recetas distintas) — cada uno a SU carta
-  assert(SV[69] === 'a' && SV[109] === 'c', 'Fish&chips: 69 almuerzo · 109 cena');
+  // Ya no son gemelos: el de cena salió de la carta y queda uno, de almuerzo.
+  assert(SV[69] === 'a', 'Fish and chips: solo almuerzo');
+  assert(SV[109] === undefined, 'el Fish and chips de cena ya no está en la carta');
   assert(SV[78] === 'a' && SV[9] === 'c', 'Tataki: 78 almuerzo · 9 cena');
   // lunch-only reales (no deben salir en cena)
   for (const id of [95, 96, 97, 92, 93, 94, 73, 74, 84, 102, 104, 105, 86, 91])
