@@ -40,6 +40,38 @@ const html = read('index.html');
 
 // ─── 1. Main inline <script> parses ─────────────────────────────
 console.log('\nJS syntax');
+test('Auditoría completa: la opción correcta no es la más larga', () => {
+  // Auditoría de sep 2026: «elegir la opción más larga» acertaba el 99% de las
+  // 95 escenas con respuesta única, sin leer nada. La correcta medía 140
+  // caracteres de media y las incorrectas 64, porque la correcta enumeraba la
+  // secuencia entera de acciones y las falsas eran una frase de descarte.
+  // Se reescribieron los 187 distractores al mismo nivel de detalle, sin tocar
+  // ni un `effects`: el error de cada opción es el mismo, contado entero.
+  const g = JSON.parse(read('data/ghost-scenarios.json'));
+  const esc = [];
+  for (const e of g) for (const sc of e.scenes || []) {
+    const p = (sc.options || []).map(o => (o.effects || []).filter(x => x.met).length);
+    const m = Math.max(...p);
+    const idx = p.map((x, i) => x === m ? i : -1).filter(i => i >= 0);
+    if (idx.length !== 1) continue;   // escenas con empate: no hay «la correcta»
+    esc.push({opts: sc.options, c: idx[0]});
+  }
+  assert(esc.length > 80, `esperaba ~95 escenas con respuesta única, hay ${esc.length}`);
+  for (const idioma of ['label', 'label_en']) {
+    const unicaMax = (L, c) => { const m = Math.max(...L);
+      return L.filter(x => x === m).length === 1 && L[c] === m; };
+    let gana = 0;
+    for (const e of esc) if (unicaMax(e.opts.map(o => String(o[idioma] || '').length), e.c)) gana++;
+    const pct = gana / esc.length;
+    // El azar con tres opciones es 33%. Se exige que el truco no lo supere.
+    assert(pct <= 0.36,
+      `en ${idioma}, «elegir la más larga» acierta el ${(100*pct).toFixed(0)}% de las escenas: la Auditoría se aprueba sin leer`);
+  }
+  // Y ninguna opción puede quedarse sin su versión en inglés.
+  for (const e of esc) for (const o of e.opts)
+    assert(String(o.label_en || '').trim(), 'hay una opción sin texto en inglés');
+});
+
 test('Cuestionario del Viaje: no se aprueba con trucos, sin mirar el plato', () => {
   // Auditoría de sep 2026, a petición del propietario: «caza de preguntas y
   // respuestas absurdas, sobre todo respuestas trampa fáciles de predecir».
