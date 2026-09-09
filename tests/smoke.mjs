@@ -6476,6 +6476,68 @@ test('Pase: la fase de la alergia no lleva la respuesta escrita en las fichas', 
     'al corregir la fase 2 las insignias vuelven, que es cuando enseñan');
 });
 
+test('Pase: la corrección no promete más de lo que ha preguntado', () => {
+  // El propietario, jugando el Tartar de Wagyu dry: «falta carne de wagyu
+  // madurada, cebolleta, cebollino, Tabasco, crujiente de papa y trufa negra».
+  // Comprobado en la base: ninguno de esos aporta alérgeno, así que es correcto
+  // que no entren en el juego — pero la corrección decía «Todos los ingredientes
+  // bien», que promete el plato ENTERO. El fallo era del texto, y encima la
+  // pantalla dejaba la impresión de que el plato es sólo esas fichas.
+  const des = html.slice(html.indexOf('function _paseDesmontajeHTML('), html.indexOf('function renderRepaso('));
+  const mon = html.slice(html.indexOf('function _paseMontajeHTML('), html.indexOf('function _paseRailHTML('));
+  assert(!/[Tt]odos los ingredientes bien|[Ee]very ingredient right/.test(mon),
+    'la corrección no puede decir «todos los ingredientes»: sólo se pregunta por los que aportan alérgeno');
+  assert(!/Fallaste el montaje|You missed the plating/.test(mon),
+    'vuelve el vocabulario del ejercicio de montaje, que se retiró');
+  // Y se nombra lo que el plato lleva y NO entró en juego, para que nadie salga
+  // pensando que el plato son cuatro fichas.
+  assert(/const _resto = \(function\(\)\{/.test(mon), 'falta la línea que nombra el resto del plato');
+  assert(/ninguno aporta alérgeno/.test(mon) && /none of these carries an allergen/.test(mon),
+    'esa línea tiene que decir por qué no entraron, en los dos idiomas');
+  assert(/\$\{_resto\}/.test(mon), 'y tiene que pintarse en el veredicto');
+  // Barrido funcional: en los 98 platos, lo que se nombra como «también lleva»
+  // no puede contener nada que sí aporte alérgeno — sería decir una falsedad
+  // sobre seguridad alimentaria.
+  const cut = (ini, fin) => { const i = html.indexOf(ini); return html.slice(i, html.indexOf(fin, i) + fin.length); };
+  const fn = n => { const i = html.indexOf('function ' + n + '('); let d = 0;
+    for (let k = html.indexOf('{', i); k < html.length; k++) {
+      if (html[k] === '{') d++; else if (html[k] === '}') { d--; if (!d) return html.slice(i, k + 1); } } };
+  const src = `var LANG='es', _djIngBase=null;
+    function getDish(d){return d;}function _djIngName(n){return n;}
+    const _DJ_SECCION = /^(masa|topping|base|relleno|guarnicion|sabores disponibles|salsa base|sazonador|marinada|elaboracion)$/;`
+    + cut('const DISHES = [', '\n];') + cut('const DISH_COMPONENTS = ', '};')
+    + html.slice(html.indexOf('const _djNorm ='), html.indexOf('async function _djLoadIngBase'))
+    + fn('_djTrozos') + fn('_djSplitIngredients') + fn('_djSameThing') + fn('_djIngredients') + fn('_lqaShuffle')
+    + html.slice(html.indexOf('const _PASE_SAZONADOR'), html.indexOf('function _paseRecortar('))
+    + fn('_paseComponentes')
+    + `
+    const malos=[], vistos=[];
+    for(const d of DISHES){
+      const dentro=new Set(_paseComponentes(d,false).map(c=>_djClave(c.t)));
+      for(const it of _djIngredients(d,false)){
+        if(dentro.has(_djClave(it.t)) || _paseEsSazonador(it)) continue;
+        // Estos son el peligro: la ficha los nombra, su nombre NO casa con
+        // ningún componente, y sin embargo aportan alérgeno. Si el filtro del
+        // código sólo mirase la coincidencia con los componentes, saldrían
+        // anunciados como «no aporta alérgeno».
+        if((it.a||[]).length) malos.push(d.name+' → «'+it.t+'» ('+it.a.join(',')+')');
+        else vistos.push(d.name+':'+it.t);
+      }
+    }
+    return {malos, n:vistos.length};`;
+  const R = new Function(src)(); // eslint-disable-line no-new-func
+  assert(R.n > 200, `esperaba cientos de ingredientes sin alérgeno que nombrar, hay ${R.n}`);
+  // El barrido demuestra que el peligro EXISTE en el dato real: hay fichas que
+  // nombran compuestos («Alioli cítrico y alioli de tinta de calamar: Huevo»)
+  // que aportan alérgeno sin casar con ningún componente. Por eso el filtro del
+  // código tiene que mirar lo que el ingrediente APORTA, no sólo si coincide.
+  assert(R.malos.length > 0,
+    'ya no hay compuestos con alérgeno fuera de los componentes: revisa si este guard sigue teniendo sentido');
+  const resto = mon.slice(mon.indexOf('const _resto = '), mon.indexOf('const puedeSeguir'));
+  assert(/!\(it\.a\|\|\[\]\)\.length/.test(resto),
+    `el filtro debe excluir lo que aporte alérgeno, o se anunciarían como inocuos: ${R.malos.slice(0,3).join(' | ')}`);
+});
+
 test('Pase: un botón desactivado tiene que parecerlo', () => {
   // Reportado en el móvil: «el botón no se puede retirar no funciona». Y no era
   // que no funcionara: está desactivado a propósito hasta que se señala qué
