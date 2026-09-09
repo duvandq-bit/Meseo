@@ -8941,7 +8941,12 @@ li.fail .dj-qrv-mark{color:#e8a0a0}
 .pase-serve:active:not(:disabled){transform:scale(.98)}
 .pase-serve:disabled{opacity:.4;cursor:not-allowed;box-shadow:none}
 .pase-retry{background:#fff;border:1.5px solid var(--line2);color:var(--parch2)}
-.pase-retry:hover{border-color:var(--gold);color:var(--gold-deep)}
+.pase-retry:hover:not(:disabled){border-color:var(--gold);color:var(--gold-deep)}
+/* «No se puede retirar» espera a que se señale el portador, igual que el
+   dorado. Sin este estilo el botón quedaba desactivado pero con la misma pinta
+   que uno activo —y el dorado de al lado SÍ se veía apagado—, así que parecía
+   que debía funcionar y no hacía nada al tocarlo. Reportado en el móvil. */
+.pase-retry:disabled{opacity:.4;cursor:not-allowed;border-color:var(--line2);color:var(--parch3)}
 
 @media(prefers-reduced-motion:reduce){
   .pase-overlay,.pase-chip.entra{animation:none}
