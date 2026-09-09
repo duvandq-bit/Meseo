@@ -6786,8 +6786,16 @@ test('Pase: la preparación y sus ingredientes no salen como fichas hermanas', (
     for (let k = html.indexOf('{', i); k < html.length; k++) {
       if (html[k] === '{') d++; else if (html[k] === '}') { d--; if (!d) return html.slice(i, k + 1); } } })();
   assert(pleg, 'falta el plegado de preparaciones');
-  assert(/for\(const al of \(c\.a\|\|\[\]\)\) if\(!padre\.a\.includes\(al\)\) padre\.a\.push\(al\)/.test(pleg),
-    'el padre debe ABSORBER los alérgenos del hijo, no descartarlos');
+  // Regla nueva (sep 2026), tras verlo el propietario en el Arroz negro: la
+  // ficha dice «Fondo: Calamar, Cebolleta, Vino blanco», así que el calamar
+  // —lo único que aporta Moluscos— desaparecía dentro de «Fondo» y en la fase
+  // de la alergia había que adivinar que el fondo lleva calamar. Un hijo que
+  // trae un alérgeno que el padre no tiene NO se pliega: es justo la ficha que
+  // el camarero debe señalar. Medido: pasaba con 15 ingredientes.
+  assert(/const suyo = new Set\(padre\.a \|\| \[\]\)/.test(pleg),
+    'hay que mirar lo que el padre aporta POR SÍ MISMO antes de plegar nada');
+  assert(/if\(\(c\.a\|\|\[\]\)\.some\(al => !suyo\.has\(al\)\)\) continue;/.test(pleg),
+    'un hijo que trae un alérgeno que el padre no tiene no puede plegarse');
   // Barrido funcional sobre el dato real: cuántas fichas se pliegan, y sobre
   // todo que no se pierda ni un alérgeno por el camino — medido antes de
   // hacerlo, en 28 casos el hijo aporta algo que el padre no declaraba solo
@@ -6805,20 +6813,34 @@ test('Pase: la preparación y sus ingredientes no salen como fichas hermanas', (
     + html.slice(html.indexOf('const _PASE_SAZONADOR'), html.indexOf('function _pasePlegar('))
     + fn('_pasePlegar') + fn('_paseFusionar') + fn('_paseComponentes')
     + `
-    let plegadas=0, perdidos=[];
+    let plegadas=0, perdidos=[], escondidos=[];
     for(const d of DISHES){
       const antes=_paseFusionar(_paseComponentes(d,false));
       const alAntes=new Set(antes.flatMap(x=>x.a||[]));
+      const propio=new Map(antes.map(c=>[_djClave(c.t), new Set(c.a||[])]));
       const despues=_pasePlegar(d, _paseFusionar(_paseComponentes(d,false)));
       plegadas += antes.length - despues.length;
       const alDespues=new Set(despues.flatMap(x=>x.a||[]));
       for(const a of alAntes) if(!alDespues.has(a)) perdidos.push(d.name+' pierde '+a);
+      // Ninguna ficha con alérgeno puede quedar escondida bajo un padre que no
+      // lo aporte por sí mismo: es la que el camarero tiene que señalar.
+      const quedan=new Set(despues.map(c=>_djClave(c.t)));
+      for(const c of antes){
+        if(quedan.has(_djClave(c.t)) || !(c.a||[]).length) continue;
+        const cubierto = despues.some(p=>{
+          const suyo = propio.get(_djClave(p.t));
+          return suyo && (c.a||[]).every(a=>suyo.has(a));
+        });
+        if(!cubierto) escondidos.push(d.name+' esconde «'+c.t+'» ('+c.a.join('/')+')');
+      }
     }
-    return {plegadas, perdidos};`;
+    return {plegadas, perdidos, escondidos};`;
   const R = new Function(src)(); // eslint-disable-line no-new-func
   assert(R.plegadas > 50, `esperaba plegar ~100 fichas, se plegaron ${R.plegadas}`);
   assert(R.perdidos.length === 0,
     `al plegar se pierde un alérgeno del plato: ${R.perdidos.slice(0,5).join(' | ')}`);
+  assert(R.escondidos.length === 0,
+    `el plegado esconde la ficha que aporta el alérgeno: ${R.escondidos.slice(0,5).join(' | ')}`);
 });
 
 test('Pase: la piscina tiene techo y el cuadro de alérgenos sobrevive al recorte', () => {
