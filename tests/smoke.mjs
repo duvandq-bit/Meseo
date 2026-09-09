@@ -8598,6 +8598,53 @@ test('Acceso: el nombre visible se cambia, el usuario no', () => {
     'renombrarse exige la contraseña y lo hace el servidor');
 });
 
+test('Acceso: ninguna consulta cruza de un restaurante a otro', () => {
+  // Hasta ahora el selector de restaurante del login sólo pintaba colores: el
+  // chat, el marcador, los duelos, los avisos y los horarios eran comunes. El
+  // día que entrara M.B., su equipo habría visto el chat y el ranking de Txoko,
+  // que es justo lo que el restaurante no quiere.
+  //
+  // Se barren TODAS las URLs sobre tablas compartidas y se exige el filtro a
+  // las que leen una colección. Las de una sola fila (id=eq., name=eq.) no lo
+  // necesitan: ya van a una fila concreta.
+  assert(/function _venueActual\(\)/.test(html) && /function _vq\(\)/.test(html),
+    'falta el resolutor de restaurante');
+  // Manda el de la nube, que lo fijó el código del manager. El selector del
+  // login no vale como fuente: es estética y se cambia tocando otra tarjeta.
+  const va = html.slice(html.indexOf('function _venueActual(){'), html.indexOf('function _vq()'));
+  assert(va.indexOf('DB.employees[currentUser]') < va.indexOf('ACTIVE_VENUE'),
+    'el restaurante de la nube manda sobre el del selector');
+
+  const TABLAS = ['chat_messages','scores','notifications','duels','horarios','employees','live_sessions'];
+  const re = /\/rest\/v1\/(\w+)([^`'"]*)/g;
+  const fugas = [], colecciones = [];
+  let m;
+  while ((m = re.exec(html))) {
+    const [, tabla, resto] = m;
+    if (!TABLAS.includes(tabla)) continue;
+    // Ojo con la frontera: sin el [?&] delante, «season_id=eq.» contiene
+    // «id=eq.» y dos consultas de duelos se colaban como si fueran de una fila.
+    const unaFila = /[?&](id|name|endpoint|employee_name)=(eq|ilike)\./.test(resto);
+    const lee = /select=|order=|&or=|state=eq\.|expires_at=/.test(resto);
+    if (!lee || unaFila) continue;
+    const linea = html.slice(0, m.index).split('\n').length;
+    colecciones.push(linea);
+    if (!/_vq\(\)/.test(resto)) fugas.push(`L${linea} ${tabla}${resto.slice(0, 70)}`);
+  }
+  assert(colecciones.length >= 12,
+    `el barrido sólo ve ${colecciones.length} consultas de colección: el detector se ha quedado ciego`);
+  assert(fugas.length === 0,
+    `consultas sin filtro de restaurante: ${fugas.slice(0, 6).join(' · ')}`);
+  // Y lo que se escribe queda sellado, o el filtro de mañana no lo encuentra.
+  for (const marca of [
+    "_vSello({ employee, score: record, total: 1, topic: 'txoko'",
+    "_vSello({ employee, score: secs, total: orders, topic: 'elturno'",
+    '_vSello({ target, message, type, read: false })',
+    '_vSello({ employee: me, room: CHAT_ROOM })',
+    '_vSello({ challenger: fromUser, challenged: toUser,',
+  ]) assert(html.includes(marca), `falta el sello de restaurante en: ${marca.slice(0, 50)}`);
+});
+
 test('Acceso: el código del restaurante no se pinta solo', () => {
   // El panel se abre encima de una mesa en pleno pase: un código que se enseña
   // sin querer deja de ser un código.

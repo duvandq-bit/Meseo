@@ -52,7 +52,7 @@
 <meta property="og:description" content="Formación de equipos de sala: carta, alérgenos, vinos, exámenes y juegos de repaso.">
 <meta property="og:url" content="https://meseo.es/">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"Meseo","url":"https://meseo.es/"}</script>
-<meta name="app-version" content="7.411">
+<meta name="app-version" content="7.412">
 <meta name="app-build" content="May 2026">
 <meta name="theme-color" content="#1c2a22">
 <!-- ═══ PWA ═══ -->
@@ -1604,7 +1604,7 @@ const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><p
 const SRC = 'src';
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='7.411';  // sincronizada con sw.js VERSION (guard de CI)
+const APP_VERSION='7.412';  // sincronizada con sw.js VERSION (guard de CI)
 const APP_BUILD='Jul 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;
@@ -1783,6 +1783,27 @@ function _dispLearn(rows){
   for(const r of rows) if(r && r.name && r.display_name) _DISP.set(r.name, r.display_name);
 }
 
+// ═══ EL RESTAURANTE DE CADA UNO ════════════════════════════════════════════
+// Hasta ahora el selector de restaurante del login sólo pintaba colores: el
+// chat, el marcador, los duelos, los avisos y los horarios eran comunes. El día
+// que entrara M.B., su equipo habría visto el chat y el ranking de Txoko.
+//
+// Manda el restaurante que trae la NUBE, que es el que fijó el código del
+// manager al darse de alta. El selector del login no vale como fuente: es
+// estética y se cambia tocando otra tarjeta.
+const _VENUE_POR_DEFECTO = 'txoko';
+function _venueActual(){
+  try{
+    const e = (typeof currentUser!=='undefined' && currentUser) ? DB.employees[currentUser] : null;
+    if(e && e.venue) return e.venue;
+  }catch(_){}
+  try{ if(typeof ACTIVE_VENUE!=='undefined' && ACTIVE_VENUE && ACTIVE_VENUE.id) return ACTIVE_VENUE.id; }catch(_){}
+  return _VENUE_POR_DEFECTO;
+}
+// Trozo de filtro para pegar en una consulta, y sello para pegar en un alta.
+function _vq(){ return 'venue=eq.' + encodeURIComponent(_venueActual()); }
+function _vSello(o){ o = o || {}; o.venue = _venueActual(); return o; }
+
 const WINE_IMG_BASE = SUPA_URL + '/storage/v1/object/public/wine-images/';
 function _wineSlug(name){
   return name.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
@@ -1842,14 +1863,14 @@ async function supaInsertScore(session, employee) {
         'Content-Type': 'application/json',
         'Prefer': 'return=minimal'
       },
-      body: JSON.stringify({
+      body: JSON.stringify(_vSello({
         employee,
         score: session.score,
         total: session.total,
         topic: session.topic,
         cat: session.cat,
         time_sec: session.time
-      })
+      }))
     });
   } catch(e) { /* silent fail - local data always saved */ }
 }
@@ -1857,7 +1878,7 @@ async function supaInsertScore(session, employee) {
 async function supaFetchLeaderboard() {
   try {
     const res = await fetch(
-      `${SUPA_URL}/rest/v1/scores?select=employee,score,total&limit=1000`,
+      `${SUPA_URL}/rest/v1/scores?select=employee,score,total&limit=1000&${_vq()}`,
       { headers: { 'apikey': SUPA_KEY, 'Authorization': `Bearer ${SUPA_KEY}` } }
     );
     if (!res.ok) return null;
@@ -1888,7 +1909,7 @@ async function supaInsertTxokoRecord(employee, record) {
         'Content-Type': 'application/json',
         'Prefer': 'return=minimal'
       },
-      body: JSON.stringify({ employee, score: record, total: 1, topic: 'txoko', cat: 'all', time_sec: 0 })
+      body: JSON.stringify(_vSello({ employee, score: record, total: 1, topic: 'txoko', cat: 'all', time_sec: 0 }))
     });
   } catch(e) {}
 }
@@ -1897,9 +1918,9 @@ async function supaFetchTxokoTop10() {
   try {
     // Fetch from scores table (topic=txoko)
     const [scoresRes, empsRes] = await Promise.all([
-      fetch(`${SUPA_URL}/rest/v1/scores?select=employee,score&topic=eq.txoko&order=score.desc&limit=200`,
+      fetch(`${SUPA_URL}/rest/v1/scores?select=employee,score&topic=eq.txoko&order=score.desc&limit=200&${_vq()}`,
         { headers: { 'apikey': SUPA_KEY, 'Authorization': `Bearer ${SUPA_KEY}` } }),
-      fetch(`${SUPA_URL}/rest/v1/employees?select=name,txoko_record&txoko_record=gt.0&order=txoko_record.desc`,
+      fetch(`${SUPA_URL}/rest/v1/employees?select=name,txoko_record&txoko_record=gt.0&order=txoko_record.desc&${_vq()}`,
         { headers: { 'apikey': SUPA_KEY, 'Authorization': `Bearer ${SUPA_KEY}` } })
     ]);
 
@@ -1943,14 +1964,14 @@ async function supaInsertEtRecord(employee, secs, orders) {
         'Content-Type': 'application/json',
         'Prefer': 'return=minimal'
       },
-      body: JSON.stringify({ employee, score: secs, total: orders, topic: 'elturno', cat: 'all', time_sec: secs })
+      body: JSON.stringify(_vSello({ employee, score: secs, total: orders, topic: 'elturno', cat: 'all', time_sec: secs }))
     });
   } catch(e) {}
 }
 
 async function supaFetchEtTop() {
   try {
-    const res = await fetch(`${SUPA_URL}/rest/v1/scores?select=employee,score,total&topic=eq.elturno&order=score.desc&limit=200`,
+    const res = await fetch(`${SUPA_URL}/rest/v1/scores?select=employee,score,total&topic=eq.elturno&order=score.desc&limit=200&${_vq()}`,
       { headers: { 'apikey': SUPA_KEY, 'Authorization': `Bearer ${SUPA_KEY}` } });
     if(!res.ok) return null;
     const rows = await res.json();
@@ -2020,7 +2041,7 @@ async function _txShareRecord(text, btn){
     const res = await fetch(`${SUPA_URL}/rest/v1/chat_messages`, {
       method:'POST',
       headers:{ 'apikey':SUPA_KEY, 'Authorization':`Bearer ${SUPA_KEY}`, 'Content-Type':'application/json', 'Prefer':'return=minimal' },
-      body: JSON.stringify({ employee: currentUser, room: CHAT_ROOM, message: '[récord] '+text })
+      body: JSON.stringify(_vSello({ employee: currentUser, room: CHAT_ROOM, message: '[récord] '+text }))
     });
     if(!res.ok) throw 0;
     if(btn) btn.textContent = LANG==='en'?'✓ Posted on the Terrace':'✓ Publicado en la Terraza';
@@ -2476,7 +2497,7 @@ let _nameListCache=null, _nameListTs=0;
 async function _fetchEmployeeNames(){
   if(_nameListCache && (Date.now()-_nameListTs)<60000) return _nameListCache;
   try{
-    const r=await fetchT(`${SUPA_URL}/rest/v1/employees?select=name`, { headers:{ 'apikey':SUPA_KEY, 'Authorization':`Bearer ${SUPA_KEY}` } }, 6000);
+    const r=await fetchT(`${SUPA_URL}/rest/v1/employees?select=name&${_vq()}`, { headers:{ 'apikey':SUPA_KEY, 'Authorization':`Bearer ${SUPA_KEY}` } }, 6000);
     if(r.ok){ const rows=await r.json(); _nameListCache=(rows||[]).map(x=>x&&x.name).filter(Boolean); _nameListTs=Date.now(); return _nameListCache; }
   }catch(_){}
   return _nameListCache || Object.keys(DB.employees);
@@ -2587,7 +2608,7 @@ async function supaRestoreEmployee(name) {
 async function supaFetchAllEmployees() {
   try {
     const res = await fetch(
-      `${SUPA_URL}/rest/v1/employees?select=${_EMP_COLS}&order=xp.desc`,
+      `${SUPA_URL}/rest/v1/employees?select=${_EMP_COLS}&order=xp.desc&${_vq()}`,
       { headers: { 'apikey': SUPA_KEY, 'Authorization': `Bearer ${SUPA_KEY}` } }
     );
     if(!res.ok) return null;
@@ -2632,7 +2653,7 @@ async function supaFetchAllEmployees() {
 async function supaFetchNotifications(name) {
   try {
     const res = await fetch(
-      `${SUPA_URL}/rest/v1/notifications?select=*&or=(target.eq.all,target.eq.${encodeURIComponent(name)})&read.eq.false&order=created_at.desc&limit=10`,
+      `${SUPA_URL}/rest/v1/notifications?select=*&or=(target.eq.all,target.eq.${encodeURIComponent(name)})&read.eq.false&order=created_at.desc&limit=10&${_vq()}`,
       { headers: { 'apikey': SUPA_KEY, 'Authorization': `Bearer ${SUPA_KEY}` } }
     );
     if(!res.ok) return [];
@@ -2654,7 +2675,7 @@ async function supaCreateNotification(target, message, type='info') {
         'Content-Type': 'application/json',
         'Prefer': 'return=minimal'
       },
-      body: JSON.stringify({ target, message, type, read: false })
+      body: JSON.stringify(_vSello({ target, message, type, read: false }))
     });
   } catch(e) {}
 }
@@ -11500,7 +11521,7 @@ async function _horLoad(force){
     // filtro, al acumularse historial el límite devolvería las semanas MÁS
     // VIEJAS y la actual quedaría fuera (fallo de multi-semana).
     const since=_horDayISO(todayStr(),-7);
-    const r=await fetch(`${SUPA_URL}/rest/v1/horarios?select=week_start,data&order=week_start.asc&week_start=gte.${since}&limit=12`,
+    const r=await fetch(`${SUPA_URL}/rest/v1/horarios?select=week_start,data&order=week_start.asc&week_start=gte.${since}&limit=12&${_vq()}`,
       {headers:{'apikey':SUPA_KEY,'Authorization':`Bearer ${SUPA_KEY}`}});
     if(!r.ok) throw new Error('http '+r.status);
     const rows=await r.json();
@@ -12049,7 +12070,7 @@ async function _horSupSave(){
     const r=await fetch(`${SUPA_URL}/rest/v1/rpc/save_rota`,{
       method:'POST',
       headers:{'apikey':SUPA_KEY,'Authorization':`Bearer ${SUPA_KEY}`,'Content-Type':'application/json'},
-      body:JSON.stringify({pin_input:_supPin||'', week_start_input:w.start, data_input:w})
+      body:JSON.stringify({pin_input:_supPin||'', week_start_input:w.start, data_input:w, venue_input:_venueActual()})
     });
     if(!r.ok) throw new Error('HTTP '+r.status);
     // save_rota devuelve false si el PIN no vale: el servidor manda, no el
@@ -24282,9 +24303,9 @@ async function supaCreateChallenge(fromUser, toUser, questions) {
       method: 'POST',
       headers: { 'apikey': SUPA_KEY, 'Authorization': `Bearer ${SUPA_KEY}`,
         'Content-Type': 'application/json', 'Prefer': 'return=representation' },
-      body: JSON.stringify({ challenger: fromUser, challenged: toUser,
+      body: JSON.stringify(_vSello({ challenger: fromUser, challenged: toUser,
         questions: JSON.stringify(questions), season_id: seasonId,
-        expires_at: expires, state: 'pending' })
+        expires_at: expires, state: 'pending' }))
     });
     if (!res.ok) return null;
     const rows = await res.json();
@@ -24347,7 +24368,7 @@ async function supaFetchMyDuels(user) {
   try {
     const seasonId = getDuelSeasonId();
     const res = await fetch(
-      `${SUPA_URL}/rest/v1/duels?or=(challenger.eq.${encodeURIComponent(user)},challenged.eq.${encodeURIComponent(user)})&season_id=eq.${seasonId}&order=created_at.desc&limit=50`,
+      `${SUPA_URL}/rest/v1/duels?${_vq()}&or=(challenger.eq.${encodeURIComponent(user)},challenged.eq.${encodeURIComponent(user)})&season_id=eq.${seasonId}&order=created_at.desc&limit=50`,
       { headers: { 'apikey': SUPA_KEY, 'Authorization': `Bearer ${SUPA_KEY}` } }
     );
     if (!res.ok) return [];
@@ -24358,7 +24379,7 @@ async function supaFetchMyDuels(user) {
 async function supaFetchDuelSeason(seasonId) {
   try {
     const res = await fetch(
-      `${SUPA_URL}/rest/v1/duels?season_id=eq.${seasonId}&state=eq.completed&select=challenger,challenged,challenger_score,defender_score`,
+      `${SUPA_URL}/rest/v1/duels?${_vq()}&season_id=eq.${seasonId}&state=eq.completed&select=challenger,challenged,challenger_score,defender_score`,
       { headers: { 'apikey': SUPA_KEY, 'Authorization': `Bearer ${SUPA_KEY}` } }
     );
     if (!res.ok) return [];
@@ -24369,7 +24390,7 @@ async function supaFetchDuelSeason(seasonId) {
 async function supaFetchDuelFeed() {
   try {
     const res = await fetch(
-      `${SUPA_URL}/rest/v1/duels?state=eq.completed&order=completed_at.desc&limit=10&select=challenger,challenged,challenger_score,defender_score,completed_at`,
+      `${SUPA_URL}/rest/v1/duels?${_vq()}&state=eq.completed&order=completed_at.desc&limit=10&select=challenger,challenged,challenger_score,defender_score,completed_at`,
       { headers: { 'apikey': SUPA_KEY, 'Authorization': `Bearer ${SUPA_KEY}` } }
     );
     if (!res.ok) return [];
@@ -24380,13 +24401,13 @@ async function supaFetchDuelFeed() {
 async function supaExpireOldDuels() {
   try {
     const now = new Date().toISOString();
-    await fetch(`${SUPA_URL}/rest/v1/duels?state=eq.pending&expires_at=lt.${now}`, {
+    await fetch(`${SUPA_URL}/rest/v1/duels?${_vq()}&state=eq.pending&expires_at=lt.${now}`, {
       method: 'PATCH',
       headers: { 'apikey': SUPA_KEY, 'Authorization': `Bearer ${SUPA_KEY}`,
         'Content-Type': 'application/json' },
       body: JSON.stringify({ state: 'expired' })
     });
-    await fetch(`${SUPA_URL}/rest/v1/duels?state=eq.waiting&expires_at=lt.${now}`, {
+    await fetch(`${SUPA_URL}/rest/v1/duels?${_vq()}&state=eq.waiting&expires_at=lt.${now}`, {
       method: 'PATCH',
       headers: { 'apikey': SUPA_KEY, 'Authorization': `Bearer ${SUPA_KEY}`,
         'Content-Type': 'application/json' },
@@ -24747,7 +24768,7 @@ async function submitChallenge() {
   await fetch(`${SUPA_URL}/rest/v1/notifications`, {
     method: 'POST',
     headers: { 'apikey': SUPA_KEY, 'Authorization': `Bearer ${SUPA_KEY}`, 'Content-Type': 'application/json', 'Prefer': 'return=minimal' },
-    body: JSON.stringify({ target: rivalName, message: `» ${currentUser} ${LANG==='en'?'has challenged you! You have 24h to respond.':'te ha retado. Tienes 24h para responder.'}`, type: 'duel' })
+    body: JSON.stringify(_vSello({ target: rivalName, message: `» ${currentUser} ${LANG==='en'?'has challenged you! You have 24h to respond.':'te ha retado. Tienes 24h para responder.'}`, type: 'duel' }))
   });
   document.getElementById('appContent').innerHTML = `<div class="sup-wrap">
     <div style="text-align:center;padding:2rem 1rem">
@@ -24869,7 +24890,7 @@ async function submitDefense() {
   await fetch(`${SUPA_URL}/rest/v1/notifications`, {
     method: 'POST',
     headers: { 'apikey': SUPA_KEY, 'Authorization': `Bearer ${SUPA_KEY}`, 'Content-Type': 'application/json', 'Prefer': 'return=minimal' },
-    body: JSON.stringify({ target: rivalName, message: cWins ? `VS ${LANG==='en'?'You won the duel vs':'Ganaste el duelo vs'} ${currentUser}! ${cScore}-${dScore}` : dWins ? ` ${LANG==='en'?'You lost the duel vs':'Perdiste el duelo vs'} ${currentUser}. ${cScore}-${dScore}` : `TIE ${LANG==='en'?'Draw vs':'Empate vs'} ${currentUser}. ${cScore}-${dScore}`, type: 'duel' })
+    body: JSON.stringify(_vSello({ target: rivalName, message: cWins ? `VS ${LANG==='en'?'You won the duel vs':'Ganaste el duelo vs'} ${currentUser}! ${cScore}-${dScore}` : dWins ? ` ${LANG==='en'?'You lost the duel vs':'Perdiste el duelo vs'} ${currentUser}. ${cScore}-${dScore}` : `TIE ${LANG==='en'?'Draw vs':'Empate vs'} ${currentUser}. ${cScore}-${dScore}`, type: 'duel' }))
   });
 
   document.getElementById('appContent').innerHTML = `<div class="sup-wrap">
@@ -30160,7 +30181,7 @@ async function txokoDiag() {
   
   // Test connection
   try {
-    const res = await fetch(`${SUPA_URL}/rest/v1/employees?select=name,xp&order=xp.desc&limit=5`,
+    const res = await fetch(`${SUPA_URL}/rest/v1/employees?select=name,xp&order=xp.desc&limit=5&${_vq()}`,
       { headers: { 'apikey': SUPA_KEY, 'Authorization': `Bearer ${SUPA_KEY}` }});
     if(res.ok) {
       const rows = await res.json();
@@ -30321,7 +30342,7 @@ async function _chatConnect(){
   }
   // 1) Load recent history over REST
   try{
-    const res = await fetch(`${SUPA_URL}/rest/v1/chat_messages?select=id,employee,message,image_url,deleted,created_at,reply_to,reactions,mentions&room=eq.${CHAT_ROOM}&order=created_at.desc&limit=80`,
+    const res = await fetch(`${SUPA_URL}/rest/v1/chat_messages?select=id,employee,message,image_url,deleted,created_at,reply_to,reactions,mentions&${_vq()}&room=eq.${CHAT_ROOM}&order=created_at.desc&limit=80`,
       { headers: { 'apikey': SUPA_KEY, 'Authorization': `Bearer ${SUPA_KEY}` } });
     if(res.ok){
       const rows = await res.json();
@@ -30564,7 +30585,7 @@ async function _chatSend(){
 async function _chatInsert(fields){
   const me = currentUser;
   if(!me) return;
-  const body = Object.assign({ employee: me, room: CHAT_ROOM }, fields);
+  const body = Object.assign(_vSello({ employee: me, room: CHAT_ROOM }), fields);
   try{
     const res = await fetch(`${SUPA_URL}/rest/v1/chat_messages`, {
       method:'POST',
