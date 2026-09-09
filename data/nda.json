@@ -1,9 +1,9 @@
 {
   "_readme": "Acuerdo de confidencialidad que se firma una sola vez al entrar. BORRADOR: revísalo con un abogado antes de darlo por bueno. Si cambias el texto, SUBE LA VERSIÓN: la app compara la versión firmada con esta y vuelve a pedir la firma a todo el mundo si no coinciden. La firma es escribir nombre y apellidos; queda guardada con la fecha y la versión del texto que se firmó.",
-  "version": "2026-09-borrador-2",
+  "version": "2026-09-borrador-3",
   "es": {
     "titulo": "Acuerdo de confidencialidad y uso",
-    "intro": "Aquí dentro hay dos cosas que proteger: lo que es del restaurante y la propia aplicación. Léelo con calma: se firma una sola vez.",
+    "intro": "Aquí dentro hay dos cosas que proteger: la información del restaurante y la propia aplicación. Y una que conviene tener clara: de qué responde cada uno. Léelo con calma: se firma una sola vez.",
     "clausulas": [
       {
         "t": "Quiénes somos aquí",
@@ -19,11 +19,15 @@
       },
       {
         "t": "La aplicación no es del restaurante ni tuya",
-        "p": "Meseo y todo lo que la forma —su programación, su diseño, sus textos, sus ejercicios, su forma de evaluar y de organizar la formación, y la manera en que todo eso está montado— pertenecen a su titular. Que el restaurante la use, y que tú entres a formarte, no da a ninguno de los dos ningún derecho sobre ella."
+        "p": "Meseo y todo lo que la forma pertenecen a su titular: su programación y su diseño, pero también las ideas que hay detrás —el método de formación, la manera de plantear cada ejercicio y de evaluarlo, cómo se organizan los contenidos y cómo encaja todo entre sí—. Que el restaurante la use, y que tú entres a formarte, no da a ninguno de los dos ningún derecho sobre ella."
       },
       {
         "t": "Qué no puedes hacer con la aplicación",
-        "p": "No copiarla, reproducirla ni distribuirla, ni entera ni por partes. No estudiarla para reconstruirla ni para hacer otra parecida, ni por ti ni para un tercero. No extraer sus contenidos, sus ejercicios ni su método para usarlos fuera. No grabar la pantalla ni automatizar la descarga de lo que hay dentro. No ceder ni revender tu acceso."
+        "p": "No copiarla, reproducirla ni distribuirla, ni entera ni por partes. No estudiarla para reconstruirla ni para hacer otra parecida, ni por ti ni para un tercero, aunque cambies los textos o el aspecto: lo que se protege es también la idea. No extraer sus contenidos, sus ejercicios ni su método para usarlos fuera. No grabar la pantalla ni automatizar la descarga de lo que hay dentro. No ceder ni revender tu acceso."
+      },
+      {
+        "t": "De quién es la responsabilidad",
+        "p": "El contenido del restaurante —recetas, ingredientes, alérgenos, estándares y guías de emplatado— lo aporta y lo mantiene el restaurante. Meseo es la herramienta que te lo enseña, no la fuente. El uso que hagas de esa información es responsabilidad tuya: guardarla, y confirmar con tu responsable o con cocina lo que vayas a decirle a un huésped, muy especialmente cuando haya un alérgeno de por medio. El titular de Meseo no responde del contenido que aporta el restaurante ni del uso que cada usuario haga de él."
       },
       {
         "t": "Tu acceso es un permiso, y se puede retirar",
@@ -59,7 +63,7 @@
   },
   "en": {
     "titulo": "Confidentiality and use agreement",
-    "intro": "There are two things to protect in here: what belongs to the restaurant, and the app itself. Take your time reading it: you only sign once.",
+    "intro": "There are two things to protect in here: the restaurant’s information and the app itself. And one worth being clear about: who answers for what. Take your time reading it: you only sign once.",
     "clausulas": [
       {
         "t": "Who is who here",
@@ -75,11 +79,15 @@
       },
       {
         "t": "The app belongs neither to the restaurant nor to you",
-        "p": "Meseo and everything that makes it up — its code, its design, its texts, its exercises, the way it assesses and organises training, and how all of that is put together — belong to its owner. The restaurant using it, and you signing in to train, give neither of you any rights over it."
+        "p": "Meseo and everything that makes it up belong to its owner: its code and its design, but also the ideas behind it — the training method, the way each exercise is framed and marked, how the content is organised and how it all fits together. The restaurant using it, and you signing in to train, give neither of you any rights over it."
       },
       {
         "t": "What you may not do with the app",
-        "p": "Do not copy, reproduce or distribute it, in whole or in part. Do not study it in order to rebuild it or to make something similar, whether for yourself or for a third party. Do not extract its contents, its exercises or its method for use elsewhere. Do not record the screen or automate the download of what is inside. Do not transfer or resell your access."
+        "p": "Do not copy, reproduce or distribute it, in whole or in part. Do not study it in order to rebuild it or to make something similar, whether for yourself or for a third party, even with different wording or a different look: what is protected is the idea too. Do not extract its contents, its exercises or its method for use elsewhere. Do not record the screen or automate the download of what is inside. Do not transfer or resell your access."
+      },
+      {
+        "t": "Where responsibility lies",
+        "p": "The restaurant's content — recipes, ingredients, allergens, standards and plating guides — is supplied and maintained by the restaurant. Meseo is the tool that teaches it to you, not the source. What you do with that information is your responsibility: keeping it, and confirming with your manager or with the kitchen whatever you are about to tell a guest, most of all where an allergen is involved. The owner of Meseo is not answerable for the content the restaurant supplies nor for the use each user makes of it."
       },
       {
         "t": "Your access is a permission, and it can be withdrawn",
