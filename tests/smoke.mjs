@@ -6476,6 +6476,28 @@ test('Pase: la fase de la alergia no lleva la respuesta escrita en las fichas', 
     'al corregir la fase 2 las insignias vuelven, que es cuando enseñan');
 });
 
+test('Pase: un botón desactivado tiene que parecerlo', () => {
+  // Reportado en el móvil: «el botón no se puede retirar no funciona». Y no era
+  // que no funcionara: está desactivado a propósito hasta que se señala qué
+  // aporta el alérgeno. El fallo era de estilo — .pase-serve tenía su regla
+  // :disabled y .pase-retry no, así que el dorado se veía apagado y el blanco
+  // idéntico a uno activo. Parecía que debía funcionar y no hacía nada.
+  const css = read('styles.css');
+  // Todo botón del Pase al que el marcado pueda ponerle `disabled` necesita su
+  // regla, o volvemos al mismo sitio.
+  for (const clase of ['pase-serve', 'pase-retry']) {
+    const puedeApagarse = new RegExp('class="' + clase + '"[^>]*\\$\\{[^}]*disabled').test(html);
+    if (!puedeApagarse) continue;
+    assert(new RegExp('\\.' + clase + ':disabled\\{[^}]*opacity').test(css),
+      `.${clase} puede quedar desactivado y no tiene regla :disabled: se ve igual que uno activo`);
+    assert(new RegExp('\\.' + clase + ':disabled\\{[^}]*cursor:not-allowed').test(css),
+      `.${clase}:disabled debe decir que no se puede pulsar`);
+  }
+  // Y el :hover no puede seguir respondiendo a un botón apagado.
+  assert(/\.pase-retry:hover:not\(:disabled\)/.test(css),
+    'el hover de .pase-retry tiene que excluir el estado desactivado');
+});
+
 test('Pase: la fase 2 no se aprueba pulsando siempre «no se puede retirar»', () => {
   // Barrido funcional sobre el dato real, no sobre el texto del código: se
   // juega la fase 2 de todos los platos con las dos estrategias ciegas y se
