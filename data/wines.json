@@ -2865,8 +2865,6 @@
       "Tabla de quesos canarios",
       "Alitas melosas glaseadas",
       "Ravioli de pularda",
-      "Fish and chips (Almuerzo)",
-      "Fish and chips (Cena)",
       "Tomates aliñados",
       "Tomates aliñados con granizado de gazpacho",
       "Tomates ecológicos",
@@ -3020,8 +3018,6 @@
       "Tabla de quesos canarios",
       "Carpaccio con espuma de parmesano",
       "Mejillones a la brasa",
-      "Fish and chips (Almuerzo)",
-      "Fish and chips (Cena)",
       "Tartar de remolacha",
       "Tartar de remolacha, aguacate y manzana ácida",
       "Croquetas de boletus"
@@ -3364,8 +3360,6 @@
       "Ensalada de Mero del Hierro",
       "Lobster Roll",
       "Carpaccio con espuma de parmesano",
-      "Fish and chips (Almuerzo)",
-      "Fish and chips (Cena)",
       "Tomates aliñados",
       "Tomates aliñados con granizado de gazpacho",
       "Tomates ecológicos",
@@ -3415,8 +3409,6 @@
       "Lobster Roll",
       "Carpaccio con espuma de parmesano",
       "Lubina crujiente con mayonesa de leche de tigre",
-      "Fish and chips (Almuerzo)",
-      "Fish and chips (Cena)",
       "Tomates aliñados",
       "Tomates aliñados con granizado de gazpacho",
       "Ensalada Niçoise",
@@ -4468,7 +4460,7 @@
       "Croquetas de boletus",
       "Calamares a la Andaluza",
       "Papas bravas al estilo Txoko",
-      "Fish and chips (Cena)",
+      "Fish and chips",
       "Pimientos del padrón"
     ],
     "notes": "Espumoso fresco y cítrico, con burbuja fina y final seco.",
@@ -4526,7 +4518,7 @@
       "Croqueta de Txipirón",
       "Calamares a la Andaluza",
       "Mejillones a la brasa",
-      "Fish and chips (Cena)"
+      "Fish and chips"
     ],
     "notes": "Cava ecológico fresco y afrutado, burbuja fina y final seco. Aperitivo clásico de la casa.",
     "story_en": "Bolet is a family winery in the Penedès working organically since the 1990s, long before it was fashionable. Its Brut is the entry point to a house that treats Cava as wine, not formula.",
