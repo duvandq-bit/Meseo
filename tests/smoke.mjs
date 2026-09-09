@@ -6534,8 +6534,16 @@ test('Pase: la corrección no promete más de lo que ha preguntado', () => {
   assert(R.malos.length > 0,
     'ya no hay compuestos con alérgeno fuera de los componentes: revisa si este guard sigue teniendo sentido');
   const resto = mon.slice(mon.indexOf('const _resto = '), mon.indexOf('const puedeSeguir'));
-  assert(/!\(it\.a\|\|\[\]\)\.length/.test(resto),
-    `el filtro debe excluir lo que aporte alérgeno, o se anunciarían como inocuos: ${R.malos.slice(0,3).join(' | ')}`);
+  assert(/\(it\.a\|\|\[\]\)\.length/.test(resto),
+    `el filtro debe mirar lo que el ingrediente APORTA, o se anunciarían como inocuos: ${R.malos.slice(0,3).join(' | ')}`);
+  // Y no puede repetir: un plato nombra el mismo ingrediente en dos
+  // elaboraciones —el ajo y el limón de los dos aliolis de los Calamares— y
+  // salían dos veces en la misma línea.
+  assert(/visto\.has\(k\)/.test(resto), 'la línea no puede repetir el mismo ingrediente');
+  // Ni listar la preparación y su contenido a la vez, como hacía con
+  // «Batata confitada en almíbar · Batata» en la tabla de quesos.
+  assert(/_pasePlegar\(dish, _djIngredients\(dish,_en\)\)/.test(resto),
+    'la línea tiene que plegar las preparaciones igual que la piscina');
 });
 
 test('Pase: un botón desactivado tiene que parecerlo', () => {
