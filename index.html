@@ -52,7 +52,7 @@
 <meta property="og:description" content="Formación de equipos de sala: carta, alérgenos, vinos, exámenes y juegos de repaso.">
 <meta property="og:url" content="https://meseo.es/">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"Meseo","url":"https://meseo.es/"}</script>
-<meta name="app-version" content="7.401">
+<meta name="app-version" content="7.402">
 <meta name="app-build" content="May 2026">
 <meta name="theme-color" content="#1c2a22">
 <!-- ═══ PWA ═══ -->
@@ -1596,7 +1596,7 @@ const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><p
 const SRC = 'src';
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='7.401';  // sincronizada con sw.js VERSION (guard de CI)
+const APP_VERSION='7.402';  // sincronizada con sw.js VERSION (guard de CI)
 const APP_BUILD='Jul 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;
@@ -20259,8 +20259,14 @@ function _paseMontajeHTML(dish, dd, _en){
   const titulo = V.perfecto ? (_en?'Perfect pass':'Pase perfecto')
     : V.seguro ? (_en?'Safe pass':'Pase seguro')
     : (_en?'The pass comes back':'El pase vuelve');
-  const sub = V.perfecto ? (_en?'Every ingredient right, and the allergen board matches the sheet.':'Todos los ingredientes bien, y el cuadro de alérgenos coincide con la ficha.')
-    : V.seguro ? (_en?'You missed the plating, but the allergen board is exactly the one on the sheet — nobody would have been at risk.':'Fallaste el montaje, pero el cuadro de alérgenos es el de la ficha — nadie habría corrido riesgo.')
+  // El veredicto hablaba de «los ingredientes» a secas, lo que daba a entender
+  // que se había preguntado por el plato ENTERO cuando sólo se pregunta por lo
+  // que aporta alérgeno. El propietario
+  // lo cazó en el Tartar de Wagyu: echaba en falta la carne, la cebolleta, el
+  // cebollino, el Tabasco, el crujiente de papa y la trufa — ninguno aporta
+  // alérgeno, así que no entran en el juego. El fallo era del texto, no del dato.
+  const sub = V.perfecto ? (_en?'You marked everything that carries an allergen, and the board matches the sheet.':'Has señalado todo lo que aporta alérgeno, y el cuadro coincide con la ficha.')
+    : V.seguro ? (_en?'You slipped on a chip, but the allergen board is exactly the one on the sheet — nobody would have been at risk.':'Se te ha escapado alguna ficha, pero el cuadro de alérgenos es el de la ficha — nadie habría corrido riesgo.')
     : (_en?'The allergen board does not match the sheet.':'El cuadro de alérgenos no es el de la ficha.');
 
   // Lo único que las fichas no enseñan: en qué se ha desviado el cuadro.
@@ -20275,7 +20281,27 @@ function _paseMontajeHTML(dish, dd, _en){
   const cuenta=[];
   if(V.faltan.length) cuenta.push(`<span class="pase-tally falta">${V.faltan.length} ${_en?(V.faltan.length===1?'missing':'missing'):(V.faltan.length===1?'faltaba':'faltaban')}</span>`);
   if(V.sobran.length) cuenta.push(`<span class="pase-tally sobra">${V.sobran.length} ${_en?'not in the dish':(V.sobran.length===1?'no iba':'no iban')}</span>`);
-  if(!cuenta.length) cuenta.push(`<span class="pase-tally ok">${_en?'every ingredient right':'todos los ingredientes bien'}</span>`);
+  if(!cuenta.length) cuenta.push(`<span class="pase-tally ok">${_en?'everything that carries an allergen':'todo lo que aporta alérgeno'}</span>`);
+
+  // El plato tiene más cosas que las que se preguntan. Se nombran para que la
+  // corrección no deje la impresión de que el plato es sólo esas fichas: en el
+  // Tartar de Wagyu, la carne y la trufa no salían por ninguna parte.
+  const _resto = (function(){
+    try{
+      const dentro=new Set(_paseComponentes(dish,_en).map(c=>_djClave(c.t)));
+      // Se filtra por lo que el ingrediente APORTA, no sólo por si coincide con
+      // un componente: la ficha lista compuestos («Alioli cítrico y alioli de
+      // tinta de calamar: Huevo») cuyo nombre no casa con ningún componente
+      // pero que sí llevan alérgeno. Anunciarlos como que no sería una falsedad
+      // de seguridad alimentaria, y la guarda de CI encontró cinco platos así.
+      const fuera=_djIngredients(dish,_en).filter(it=>
+        !dentro.has(_djClave(it.t)) && !(it.a||[]).length && !_paseEsSazonador(it));
+      if(!fuera.length) return '';
+      const n=fuera.map(it=>escapeHTML(it.t));
+      return `<div class="pase-fix"><span class="pase-fix-l">${_en?'Also in the dish':'También lleva'}</span><span>${
+        n.join(' · ')} — ${_en?'none of these carries an allergen':'ninguno aporta alérgeno'}</span></div>`;
+    }catch(e){ return ''; }
+  })();
 
   const puedeSeguir=_paseAlergiasPosibles(dish).length>0;
   return `
@@ -20284,6 +20310,7 @@ function _paseMontajeHTML(dish, dd, _en){
       <div class="pase-verdict-t">${titulo}</div>
       <div class="pase-verdict-s">${sub}</div>
       ${alergenos}
+      ${_resto}
     </div>
     <div class="pase-tallies">${cuenta.join('')}</div>
     <div class="pase-leyenda">
