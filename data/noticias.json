@@ -1,6 +1,28 @@
 {
- "updated": "2026-09-08T19:55:44.027Z",
+ "updated": "2026-09-09T01:16:25.110Z",
  "items": [
+  {
+   "t": "Tacoronte-Acentejo, un espacio sostenible",
+   "u": "https://www.eldia.es/tenerife/2026/09/09/tacoronte-acentejo-espacio-sostenible-bc-134086174.amp.html",
+   "s": "Eldía",
+   "d": "2026-09-08T23:00:14.000Z",
+   "tags": [
+    "VINO",
+    "CANARIAS"
+   ],
+   "img": "https://estaticos-cdn.prensaiberica.es/clip/f11a7c65-4303-4458-a51e-0110f733e12b_16-9-aspect-ratio_default_0.jpg"
+  },
+  {
+   "t": "Aprendió a cocinar por YouTube, ganó un Michelin y tuvo que reinventar su negocio en plena crisis gastronómica",
+   "u": "https://www.infobae.com/tendencias/2026/09/08/aprendio-a-cocinar-por-youtube-gano-un-michelin-y-tuvo-que-reinventar-su-negocio-en-plena-crisis-gastronomica/",
+   "s": "Infobae",
+   "d": "2026-09-08T21:57:00.000Z",
+   "tags": [
+    "ALTA COCINA",
+    "MICHELIN"
+   ],
+   "img": "https://www.infobae.com/resizer/v2/5H6UJ4JOYVGS5EHOG2ERLS2FBU.png?auth=6aae53dc11217d3a4a86581e41d7b0856a7da44c768504a84a60a19f64363b5b&smart=true&width=1200&height=630&quality=85"
+  },
   {
    "t": "Tenerife: una banda proporciona documentos falsos a migrantes; 19 detenidos",
    "u": "https://www.teneriffa-news.com/es/actualidad/noticias-de-tenerife/tenerife-detenidos-papeles-falsos_1463885.html",
@@ -22,9 +44,19 @@
    "img": "https://www.lavozdelanzarote.com/uploads/s1/56/55/59/0/bf1_16_1200x630.jpeg"
   },
   {
+   "t": "Quiénes son los invitados de \"Pasapalabra\" hoy: Así son Alberto Chicote, Lucrecia, Antonia San Juan y Jesús Olmedo",
+   "u": "https://www.europafm.com/noticias/tv-cine/quienes-son-invitados-pasapalabra-hoy-asi-son-alberto-chicote-lucrecia-antonia-san-juan-jesus-olmedo_202609086aa046a08f91e12896d67480.html",
+   "s": "EuropaFM",
+   "d": "2026-09-08T17:32:16.000Z",
+   "tags": [
+    "MICHELIN"
+   ],
+   "img": "https://image.europafm.com/clipping/cmsimages02/2026/09/03/C64E168D-2746-4365-A108-5FE609D7AFF6/katy-perry-alucina-estreno-alex-villazan-pasapalabra-victoria-muy-hot-cold-pista_69.jpg?crop=1920,1080,x0,y0&width=1280&height=720&optimize=low&format=webply"
+  },
+  {
    "t": "El restaurante de carretera definitivo está en este pueblo medieval de Madrid: Martín Berasategui confiesa su secreto mejor guardado",
    "u": "https://www.noticiasdelvino.com/escapadas/2026/09/08/el-restaurante-de-carretera-definitivo-esta-en-este-pueblo-medieval-de-madrid-martin-berasategui-confiesa-su-secreto-mejor-guardado-74843/",
-   "s": "noticiasdelvino.com",
+   "s": "Noticias del Vino",
    "d": "2026-09-08T16:26:19.000Z",
    "tags": [
     "CHEF"
@@ -49,6 +81,26 @@
     "CANARIAS"
    ],
    "img": "https://estaticos-cdn.prensaiberica.es/clip/781e0236-fa9e-44e8-8b6d-7215909d44bf_16-9-discover-aspect-ratio_default_0_x605y233.jpg"
+  },
+  {
+   "t": "Campaña \"Su aire es mi aire\" en Tenerife",
+   "u": "https://www.teneriffa-news.com/es/los-lectores-escriben-para-los-lectores/campana-tu-aire-mi-aire_1464884.html",
+   "s": "Teneriffa News",
+   "d": "2026-09-08T14:54:28.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://www.teneriffa-news.com/media/s/stau-playa-teresitas-teneriffa-2400x1350.jpg"
+  },
+  {
+   "t": "Santa Cruz de Tenerife, elegida como Capital Española de la Gastronomía 2027",
+   "u": "https://rtvc.es/santa-cruz-tenerife-elegida-capital-espanola-gastronomia-2027-8-septiembre-2026/",
+   "s": "Radio Televisión Canaria",
+   "d": "2026-09-08T14:32:41.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://cdn.rtvc.es/archivos/2026/09/260908-Santa-Cruz-de-Tenerife-Capital-Espanola-de-la-Gastronomia-2027.webp"
   },
   {
    "t": "Santa Cruz se corona como la gran capital de la gastronomía española en 2027",
@@ -84,7 +136,7 @@
    "t": "Santa Cruz de Tenerife será la capital española de la gastronomía en 2027",
    "u": "https://efe.com/canarias/2026-09-08/santa-cruz-de-tenerife-sera-la-capital-espanola-de-la-gastronomia-en-2027/",
    "s": "EFE - Agencia de noticias",
-   "d": "2026-09-08T14:03:45.000Z",
+   "d": "2026-09-08T14:03:51.000Z",
    "tags": [
     "CANARIAS"
    ],
@@ -97,8 +149,7 @@
    "d": "2026-09-08T14:01:46.000Z",
    "tags": [
     "CANARIAS"
-   ],
-   "img": "https://cdn.diariodeavisos.com/wp-content/uploads/2026/09/260908-Santa-Cruz-de-Tenerife-Capital-Espanola-de-la-Gastronomia-2027.jpg"
+   ]
   },
   {
    "t": "Santa Cruz de Tenerife, Capital Española de la Gastronomía 2027",
@@ -109,6 +160,16 @@
     "CANARIAS"
    ],
    "img": "https://lavozcanaria.com/media/2026/09/santa-cruz-de-tenerife-capital-espanola-de-la-gastronomia-2027.webp"
+  },
+  {
+   "t": "Santa Cruz de Tenerife, elegida Capital Española de la Gastronomía 2027",
+   "u": "https://gastrocanarias.com/art/22828/santa-cruz-de-tenerife-elegida-capital-espanola-de-la-gastronomia-2027",
+   "s": "Gastrocanarias",
+   "d": "2026-09-08T13:55:55.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://gastrocanarias.com/upload/images/09_2026/1485_recova.jpeg"
   },
   {
    "t": "Santa Cruz toma el relevo de Jerez y será Capital Española de la Gastronomía en 2027",
@@ -131,15 +192,6 @@
    "img": "https://pictures.lanocion.es/2026/septiembre/8/1_1200wt/260908-santa-cruz-de-tenerife-capital-espanyola-de-la-gastronomia-2027.jpg"
   },
   {
-   "t": "Santa Cruz de Tenerife elegida como Capital Española de la Gastronomía 2027",
-   "u": "https://www.santacruzdetenerife.es/web/noticias-y-agenda/noticias/detalle-noticia/santa-cruz-de-tenerife-elegida-como-capital-espanola-de-la-gastronomia-2027",
-   "s": "Ayuntamiento de Santa Cruz de Tenerife",
-   "d": "2026-09-08T13:21:11.000Z",
-   "tags": [
-    "CANARIAS"
-   ]
-  },
-  {
    "t": "MESA ABIERTA: Santa Cruz de Tenerife será la Capital Española de la Gastronomía 2027",
    "u": "https://www.libertaddigital.com/canarias/2026-09-08/mesa-abierta-santa-cruz-de-tenerife-sera-la-capital-espanola-de-la-gastronomia-2027-7456598/",
    "s": "Libertad Digital",
@@ -148,16 +200,6 @@
     "CANARIAS"
    ],
    "img": "https://s1.staticld.com/2026/09/08/980/490/x-ld/foto-alcalde-con-chefs-980x500.jpg"
-  },
-  {
-   "t": "Santa Cruz de Tenerife, elegida Capital Española de la Gastronomía 2027",
-   "u": "https://www.eldia.es/santa-cruz-de-tenerife/2026/09/08/santa-cruz-tenerife-elegida-capital-134068895.html",
-   "s": "Eldía",
-   "d": "2026-09-08T12:27:20.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://estaticos-cdn.prensaiberica.es/clip/f92a1d4f-d5fd-42da-8d93-7dbbf97656fb_16-9-discover-aspect-ratio_default_0_x765y359.jpg"
   },
   {
    "t": "Los mejores hoteles de lujo en Madrid: elegancia, historia y alta cocina en la capital española",
@@ -182,7 +224,7 @@
   {
    "t": "El almuerzo valenciano conquista a los mejores chefs de Europa: la Diputació convierte La Beneficència en un mercado gastronómico de la tradición",
    "u": "https://www.valenciaextra.com/es/comarcas/el-almuerzo-valenciano-conquista-a-los-mejores-chefs-de-europa-la-diputacio-convierte-la-beneficencia-en-un-mercado-gastronomico-de-la-tradicion_597297_102.html",
-   "s": "valenciaextra.com",
+   "s": "València Extra",
    "d": "2026-09-08T11:55:12.000Z",
    "tags": [
     "ALTA COCINA"
@@ -201,7 +243,7 @@
   {
    "t": "La villa juguetera de Alicante que conquista por su cocina: así es el pueblo donde mejor se come de España",
    "u": "https://www.noticiasdelvino.com/restaurantes/2026/09/08/la-villa-juguetera-de-alicante-que-conquista-por-su-cocina-asi-es-el-pueblo-donde-mejor-se-come-de-espana-74836/",
-   "s": "noticiasdelvino.com",
+   "s": "Noticias del Vino",
    "d": "2026-09-08T10:18:08.000Z",
    "tags": [
     "MICHELIN"
@@ -228,6 +270,27 @@
    ]
   },
   {
+   "t": "Lluvias en las Islas Canarias desde el jueves",
+   "u": "https://www.teneriffa-news.com/es/actualidad/noticias-de-canarias/lluvias-en-las-islas-canarias-desde-el-jueves_1465466.html",
+   "s": "Teneriffa News",
+   "d": "2026-09-08T08:10:52.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://www.teneriffa-news.com/media/s/sturm-regen-teneriffa-kanaren-2400x1350.jpg"
+  },
+  {
+   "t": "DO Vinos de Lanzarote suma 7 medallas en el Mondial des Vins Extrêmes",
+   "u": "https://lavozcanaria.com/lanzarote/general/do-vinos-de-lanzarote-suma-7-medallas-en-el-mondial-des-vins-extremes",
+   "s": "La Voz Canaria",
+   "d": "2026-09-08T07:55:29.000Z",
+   "tags": [
+    "VINO",
+    "CANARIAS"
+   ],
+   "img": "https://lavozcanaria.com/media/2026/09/do-vinos-de-lanzarote-suma-7-medallas-en-el-mondial-des-vins-extremes.webp"
+  },
+  {
    "t": "El restaurante de Tenerife al que muchos van por un solo plato: lleva más de 40 años ofreciendo conejo",
    "u": "https://www.eldia.es/tenerife/2026/09/08/restaurante-tenerife-plato-lleva-40-conejo-dv-134055152.html",
    "s": "Eldía",
@@ -236,66 +299,6 @@
     "CANARIAS"
    ],
    "img": "https://estaticos-cdn.prensaiberica.es/clip/1b4d3e7e-4951-4ee8-9041-e76919b81ca2_16-9-discover-aspect-ratio_default_0_x607y239.jpg"
-  },
-  {
-   "t": "El antiguo granero de Gran Canaria convertido en restaurante donde disfrutar de carnes a la brasa y cocina canaria",
-   "u": "https://www.laprovincia.es/gran-canaria/2026/09/08/antiguo-granero-gran-canaria-convertido-restuarante-carnes-dv-134054160.html",
-   "s": "La Provincia",
-   "d": "2026-09-08T06:45:04.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://estaticos-cdn.prensaiberica.es/clip/c3378468-08e7-4e75-9495-a78fa16ff7a7_16-9-discover-aspect-ratio_default_0_x635y547.jpg"
-  },
-  {
-   "t": "Las Islas Canarias comienzan septiembre con mal tiempo: alerta amarilla por oleaje intenso",
-   "u": "https://www.teneriffa-news.com/es/actualidad/noticias-de-canarias/las-islas-canarias-comienzan-septiembre-con-mal-tiempo-alerta-amarilla-por-oleaje-intenso_1465634.html",
-   "s": "Teneriffa News",
-   "d": "2026-09-08T06:12:12.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://www.teneriffa-news.com/media/w/wellen-teneriffa-bajamar-kai-2400x1350.jpg"
-  },
-  {
-   "t": "Un desayuno internacional a base de producto canario en Fresquito Brunch",
-   "u": "https://www.canarias7.es/gastronomia-c7/desayuno-internacional-base-producto-canario-fresquito-brunch-20260908070000-nt.html",
-   "s": "Canarias7",
-   "d": "2026-09-08T06:10:31.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://s1.ppllstatics.com/canarias7/www/multimedia/gastronomia-c7/2026/09/07/fresquito19-kmBC-U301607596281cNH-1200x840@Canarias7.jpg"
-  },
-  {
-   "t": "Saúl Craviotto, Hijo Adoptivo de Asturias: piragüista de oro, chef de alta cocina y gijonés de corazón",
-   "u": "https://www.elcomercio.es/asturias/saul-craviotto-hijo-adoptivo-asturias-piraguista-oro-20260907080939-nt.html",
-   "s": "El Comercio",
-   "d": "2026-09-08T06:09:39.000Z",
-   "tags": [
-    "ALTA COCINA"
-   ],
-   "img": "https://s1.ppllstatics.com/elcomercio/www/multimedia/deportes/2026/09/07/saul-craviotto-REJPg8TR9HGCP9fQ6hxxP7K-1200x840@El%20Comercio.jpg"
-  },
-  {
-   "t": "Pedro Sánchez, Premio Nacional de Gastronomía 2026: \"En Jaén vas a las tabernas y no encuentras un bao\"",
-   "u": "https://www.elespanol.com/viajes/personajes/20260908/pedro-sanchez-premio-nacional-gastronomia-jaen-vas-tabernas-no-encuentras-bao/1003744372019_0.amp.html",
-   "s": "El Español",
-   "d": "2026-09-08T06:09:18.000Z",
-   "tags": [
-    "ALTA COCINA"
-   ],
-   "img": "https://s3.elespanol.com/k/imgp/cms/elespanol/11349077.jpg?p=f:jpeg/w:1706/h:960&h=5ZX4XRgW"
-  },
-  {
-   "t": "La ceramista tinerfeña que convierte la ceniza del volcán en vajilla para restaurantes",
-   "u": "https://www.elespanol.com/viajes/cocinillas-gastro/reportajes-gastronomicos/20260908/ceramista-tinerfena-convierte-ceniza-volcan-vajilla-restaurantes/1003744369591_0.amp.html",
-   "s": "El Español",
-   "d": "2026-09-08T06:03:45.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://s3.elespanol.com/k/imgp/cms/elespanol/11349063.jpg?p=f:jpeg/c:3573:2008:nowe:0:706/w:1706/h:960&h=FEYDOCi0"
   }
  ]
 }
