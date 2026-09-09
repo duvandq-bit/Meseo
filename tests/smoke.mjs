@@ -8514,6 +8514,107 @@ test('Chip de actualización: aviso sutil en cabecera (sin push masivo)', () => 
     'sin latido con movimiento reducido');
 });
 
+// ─── 6b. Alta, acuerdo de confidencialidad y nombre visible ─────
+console.log('\nAcceso');
+
+test('Acceso: la cuenta la crea el SERVIDOR, no el móvil', () => {
+  // Llega con M.B.: el restaurante quiere que su plating guide y los datos de su
+  // equipo no se vean desde fuera. La clave anónima va escrita en el HTML, así
+  // que un código comprobado en el móvil se salta abriendo las herramientas del
+  // navegador: la única comprobación que vale es la del servidor.
+  assert(/function supaRegisterEmployee\(/.test(html), 'falta la llamada de alta');
+  assert(/_supaRpc\('employee_register'/.test(html),
+    'el alta pasa por employee_register, que es quien valida el código');
+  const log = html.slice(html.indexOf('async function loginWithPassword(){'),
+                         html.indexOf('function showLegalModal('));
+  assert(/alta = await supaRegisterEmployee\(resolvedName, hashed, codigo\)/.test(log),
+    'la rama de cuenta nueva tiene que llamar al servidor');
+  assert(!/emp\.pin = hashed;\s*\n\s*emp\.lang = LANG;\s*\n\s*saveDB\(\);\s*\n\s*setEmployeePinServer/.test(log),
+    'ya no se crea la cuenta en local y se sube después: eso saltaba el código');
+  assert(/if\(!isSignup\)\{/.test(log),
+    'entrar con una cuenta que no existe ya no la crea en silencio');
+  // El código decide el restaurante. Si lo eligiera quien se registra, entrar en
+  // M.B. sería tan fácil como tocar otra tarjeta en el selector del login.
+  assert(/if\(alta\.venue\) selectVenue\(alta\.venue\)/.test(log),
+    'el restaurante lo fija el código, no el selector');
+  // Y el campo sólo aparece al crear cuenta.
+  assert(/id="loginFieldCode"/.test(html), 'falta el campo del código');
+  assert(/if\(fieldCode\) fieldCode\.style\.display = 'block';/.test(html)
+      && /if\(fieldCode\) fieldCode\.style\.display = 'none';/.test(html),
+    'el código se enseña en alta y se esconde al entrar');
+});
+
+test('Acceso: el acuerdo de confidencialidad se firma una vez y con su versión', () => {
+  // La firma vale para el TEXTO que se firmó. Si el acuerdo cambia, se sube la
+  // versión en data/nda.json y vuelve a pedirse: una firma vieja no cubre un
+  // texto nuevo.
+  const nda = JSON.parse(read('data/nda.json'));
+  assert(nda.version && typeof nda.version === 'string', 'el acuerdo necesita versión');
+  // El interruptor. Hoy está en false a petición del propietario, que paró el
+  // asunto de las firmas mientras cierra la parte legal; el texto y el
+  // mecanismo se quedan montados. Encenderlo es poner 'activo': true.
+  assert(typeof nda.activo === 'boolean', 'el acuerdo necesita su interruptor «activo»');
+  assert(/if\(nda\.activo === false\) return false;/.test(html),
+    'con el interruptor apagado no se le pide la firma a nadie');
+  for (const lang of ['es', 'en']) {
+    const t = nda[lang];
+    assert(t && t.titulo && t.intro, `falta el acuerdo en ${lang}`);
+    assert(Array.isArray(t.clausulas) && t.clausulas.length >= 4,
+      `el acuerdo en ${lang} se ha quedado sin cláusulas`);
+    for (const c of t.clausulas) assert(c && c.t && c.p, `cláusula incompleta en ${lang}`);
+    assert(t.firma_boton && t.firma_ayuda && t.firma_placeholder, `falta la firma en ${lang}`);
+  }
+  assert(/_supaRpc\('nda_sign'/.test(html), 'la firma la guarda el servidor');
+  assert(/supaNdaSign\(name, v, \(_NDA\|\|\{\}\)\.version\)/.test(html),
+    'la versión del texto viaja con la firma');
+  // Nombre y apellidos: dos palabras de verdad. Se comprueba aquí Y en el
+  // servidor; «asdf» no es firmar.
+  const val = html.slice(html.indexOf('function _ndaNombreValido('),
+                         html.indexOf('async function ndaFirmar('));
+  assert(/\{2,\}\( \[A-Za-z/.test(val), 'la firma exige al menos dos palabras');
+  assert(/try\{ ndaPendiente\(pinTarget\)\.then\(hay => \{ if\(hay\) ndaMostrar\(pinTarget\)/.test(html),
+    'el acuerdo se comprueba al entrar');
+  const css = read('styles.css');
+  assert(/\.nda-overlay\{[^}]*position: fixed[^}]*inset: 0/.test(css), 'el acuerdo tapa la app entera');
+  assert(/\.nda-firma-input\{[^}]*font-size: 16px/.test(css),
+    '16px reales: por debajo iOS Safari hace zoom al enfocar y descoloca el documento');
+  assert(/\.nda-boton\{[^}]*min-height: 48px/.test(css), 'el botón se toca con el dedo');
+});
+
+test('Acceso: el nombre visible se cambia, el usuario no', () => {
+  // Con dos restaurantes habrá dos Marías. El usuario es la clave primaria y de
+  // ella cuelgan el chat, el marcador, los duelos y los avisos, así que no se
+  // toca; lo que se personaliza es el nombre que ve el equipo.
+  assert(/const _DISP = new Map\(\)/.test(html) && /function _dispName\(name\)/.test(html),
+    'falta el resolutor de nombre visible');
+  assert(/_EMP_COLS='[^']*display_name/.test(html) && /_EMP_COLS='[^']*nda_version/.test(html),
+    'las consultas de siempre tienen que bajar display_name y nda_version');
+  assert(/_dispLearn\(rows\)/.test(html), 'la caché se llena con lo que ya baja el ranking');
+  assert(/escapeHTML\(_dispName\(pinTarget\)\)/.test(html), 'la cabecera enseña el nombre visible');
+  // El cambio va por el servidor con el hash como prueba: la policy de
+  // employees deja escribir a cualquiera, así que un PATCH desde el móvil
+  // permitiría renombrar a un compañero.
+  assert(/_supaRpc\('employee_set_display_name', \{p_name:currentUser, p_sha:pinHash/.test(html),
+    'renombrarse exige la contraseña y lo hace el servidor');
+});
+
+test('Acceso: el código del restaurante no se pinta solo', () => {
+  // El panel se abre encima de una mesa en pleno pase: un código que se enseña
+  // sin querer deja de ser un código.
+  assert(/function renderSupCodigoHTML\(\)/.test(html), 'falta la tarjeta del código');
+  const card = html.slice(html.indexOf('function renderSupCodigoHTML()'),
+                          html.indexOf('function _supVenueId('));
+  assert(/••••••/.test(card), 'el código sale tapado hasta que se pide');
+  assert(!/venue_code_show/.test(card), 'la tarjeta no trae el código dentro');
+  assert(/_supaRpc\('venue_code_show', \{p_pin:_supPin/.test(html),
+    'verlo exige el PIN de supervisor');
+  assert(/_supaRpc\('venue_code_rotate', \s*\{p_pin:_supPin/.test(html.replace(/\n\s*/g, ' ')),
+    'renovarlo también');
+  assert(/if\(!confirm\(_en[\s\S]{0,400}?\)\) return;/.test(
+      html.slice(html.indexOf('async function supRenovarCodigo('))),
+    'renovar se confirma: deja fuera a quien tenga el código viejo');
+});
+
 // ─── 7. No leftover git conflict markers ────────────────────────
 console.log('\nHygiene');
 test('no git conflict markers in tracked source', () => {

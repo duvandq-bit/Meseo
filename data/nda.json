@@ -1,0 +1,85 @@
+{
+  "_readme": "Compromiso que el EQUIPO firma una sola vez al entrar. DESACTIVADO por ahora ('activo': false): el texto y el mecanismo estan montados y probados, pero no se le pide la firma a nadie hasta que el propietario cierre el asunto legal. Para encenderlo, pon 'activo': true. Deliberadamente corto y amable: el camarero no es quien puede replicar la aplicacion, y una pantalla de catorce clausulas juridicas asusta a quien no hace falta. La proteccion comercial y de propiedad intelectual frente al RESTAURANTE va en documento aparte: docs/acuerdo-restaurante-borrador.md, que NO se ensena en la app. BORRADOR: revisar con abogado. Marco usado — Ley 1/2019 de Secretos Empresariales (el metodo se protege como secreto y exige medidas razonables: el codigo de acceso y esta firma lo son); RDLeg 1/1996 TRLPI; RDLeg 2/2015 Estatuto de los Trabajadores art. 21.2 (por eso se declara que NO es pacto de no competencia, que exigiria compensacion economica); RGPD 2016/679 y LO 3/2018; eIDAS 910/2014 art. 25.1. PENDIENTE: correo de contacto para ejercer derechos. Si cambias el texto SUBE LA VERSION: la app compara la firmada con esta y vuelve a pedirla si no coinciden.",
+  "activo": false,
+  "version": "2026-09-borrador-5-es",
+  "es": {
+    "titulo": "Antes de entrar",
+    "intro": "Es corto, y se hace una sola vez.",
+    "clausulas": [
+      {
+        "t": "Lo que ves aquí es del restaurante",
+        "p": "Recetas, guías de emplatado, fichas de alérgenos, proveedores, estándares y los datos de tus compañeros. Se te confía para que hagas tu trabajo. No lo compartas fuera, no lo publiques en redes ni en grupos de mensajería, y no hagas capturas para usarlas fuera del trabajo."
+      },
+      {
+        "t": "Tu cuenta es tuya",
+        "p": "No prestes tu usuario ni tu contraseña, y no des el código del restaurante a nadie que no trabaje aquí. Lo que se haga con tu cuenta se te atribuye a ti."
+      },
+      {
+        "t": "Pregunta siempre antes de responder a un huésped",
+        "p": "Aquí entrenas, pero la carta cambia y la última palabra la tiene cocina. Confirma con tu responsable lo que vayas a decirle a un huésped, sobre todo si hay un alérgeno de por medio. El contenido lo mantiene el restaurante; la aplicación sólo te lo enseña."
+      },
+      {
+        "t": "La aplicación es de quien la hizo",
+        "p": "Meseo® la desarrolló Duvan Stiven Ramírez Duque por su cuenta, y sigue siendo suya: su programación, sus textos y su forma de enseñar. Úsala para formarte todo lo que quieras. Lo único que no cabe es copiarla, o llevarse sus ejercicios y su método para montar otra parecida."
+      },
+      {
+        "t": "Esto no te ata a ningún sitio",
+        "p": "No es un pacto de no competencia. Puedes irte a otro restaurante y seguir tu carrera donde quieras, cuando quieras. Sólo se te pide que no te lleves lo que aquí es confidencial y que no reproduzcas la aplicación. Ese compromiso sigue después, mientras esa información no sea pública."
+      },
+      {
+        "t": "Tus datos",
+        "p": "De esta firma se guarda tu usuario, el nombre y apellidos que escribas, la fecha y la versión de este texto. Sirve para acreditar que lo aceptaste y para nada más: no se cede a nadie ni se usa para publicidad. Responsable, Duvan Stiven Ramírez Duque, junto con el restaurante en lo que toca a su información. Puedes pedirle acceso, rectificación, supresión, limitación, oposición o portabilidad, y reclamar ante la Agencia Española de Protección de Datos."
+      },
+      {
+        "t": "La firma",
+        "p": "Escribir tu nombre y apellidos y pulsar el botón vale como firma electrónica; queda con su fecha y con la versión exacta del texto. Puedes pedir una copia cuando quieras. Se rige por la ley española y, si la traducción al inglés dice algo distinto, manda esta."
+      }
+    ],
+    "firma_titulo": "Firma",
+    "firma_ayuda": "Escribe tu nombre y apellidos completos. Con eso queda firmado.",
+    "firma_placeholder": "Nombre y apellidos",
+    "firma_boton": "Firmar y entrar",
+    "firma_error": "Escribe tu nombre y tus apellidos completos.",
+    "firma_error_servidor": "No se ha podido guardar la firma. Comprueba la conexión e inténtalo otra vez."
+  },
+  "en": {
+    "titulo": "Before you go in",
+    "intro": "It is short, and you only do it once.",
+    "clausulas": [
+      {
+        "t": "What you see here belongs to the restaurant",
+        "p": "Recipes, plating guides, allergen sheets, suppliers, standards and your colleagues' data. It is entrusted to you so you can do your job. Do not share it outside, do not post it on social media or messaging groups, and do not take screenshots to use away from work."
+      },
+      {
+        "t": "Your account is yours",
+        "p": "Do not lend your username or password, and do not give the restaurant code to anyone who does not work here. Whatever is done with your account is attributed to you."
+      },
+      {
+        "t": "Always check before answering a guest",
+        "p": "You train here, but the menu changes and the kitchen has the last word. Confirm with your manager whatever you are about to tell a guest, above all where an allergen is involved. The content is maintained by the restaurant; the app only teaches it to you."
+      },
+      {
+        "t": "The app belongs to the person who made it",
+        "p": "Meseo® was built by Duvan Stiven Ramírez Duque on his own, and remains his: its code, its texts and its way of teaching. Use it to train as much as you like. The only thing that is off limits is copying it, or taking its exercises and method to build something similar."
+      },
+      {
+        "t": "This ties you to nothing",
+        "p": "It is not a non-compete. You can move to another restaurant and take your career wherever you like, whenever you like. All you are asked is not to take what is confidential here and not to reproduce the app. That commitment continues afterwards, for as long as the information is not public."
+      },
+      {
+        "t": "Your data",
+        "p": "From this signature we keep your username, the full name you type, the date and the version of this text. It serves to evidence that you accepted it and nothing else: it is not passed to anyone and is not used for advertising. Controller: Duvan Stiven Ramírez Duque, together with the restaurant as regards its own information. You may request access, rectification, erasure, restriction, objection or portability from him, and lodge a complaint with the Spanish Data Protection Agency (AEPD)."
+      },
+      {
+        "t": "The signature",
+        "p": "Typing your full name and pressing the button counts as an electronic signature; it is recorded with its date and the exact version of the text. You may request a copy at any time. Spanish law applies and, if this English translation says anything different, the Spanish version prevails."
+      }
+    ],
+    "firma_titulo": "Signature",
+    "firma_ayuda": "Type your full name and surnames. That signs it.",
+    "firma_placeholder": "Full name and surnames",
+    "firma_boton": "Sign and enter",
+    "firma_error": "Please type your full name and surnames.",
+    "firma_error_servidor": "The signature could not be saved. Check your connection and try again."
+  }
+}
