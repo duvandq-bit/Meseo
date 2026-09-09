@@ -6422,7 +6422,7 @@ test('Pase: la respuesta correcta gana en todos los platos jugables', () => {
     + fn('_djTrozos') + fn('_djSplitIngredients') + fn('_djSameThing') + fn('_djIngName') + fn('_djIngredients')
     + fn('_lqaShuffle')
     + html.slice(html.indexOf('const _PASE_SAZONADOR'), html.indexOf('function _paseRecortar('))
-    + fn('_paseRecortar') + fn('_paseFusionar') + fn('_paseComponentes') + fn('_paseSenuelos') + fn('_paseArmar')
+    + fn('_paseRecortar') + fn('_pasePlegar') + fn('_paseFusionar') + fn('_paseComponentes') + fn('_paseSenuelos') + fn('_paseArmar')
     + fn('_paseJugables') + fn('_paseAlergenosMontados') + fn('_paseServir')
     + `
     let ok=0, malos=[], dup=[], pocos=[], sinAl=0;
@@ -6584,7 +6584,7 @@ test('Pase: la fase 2 no se aprueba pulsando siempre «no se puede retirar»', (
     + html.slice(html.indexOf('const _djNorm ='), html.indexOf('async function _djLoadIngBase'))
     + fn('_djTrozos') + fn('_djSplitIngredients') + fn('_djSameThing') + fn('_djIngName') + fn('_lqaShuffle')
     + html.slice(html.indexOf('const _PASE_SAZONADOR'), html.indexOf('function _paseRecortar('))
-    + fn('_paseRecortar') + fn('_paseFusionar') + fn('_paseComponentes') + fn('_paseSenuelos') + fn('_paseArmar')
+    + fn('_paseRecortar') + fn('_pasePlegar') + fn('_paseFusionar') + fn('_paseComponentes') + fn('_paseSenuelos') + fn('_paseArmar')
     + fn('_paseJugables') + fn('_paseAlergiasPosibles') + fn('_paseIrDesmontaje') + fn('_paseConfirmarRetirada')
     + `
     let n=0, ciegoNo=0, ciegoSi=0, sabiendo=0, sinPortador=[];
@@ -6707,6 +6707,51 @@ test('Pase de memoria: la respuesta correcta gana en los 98, y no se adivina', (
     `una estrategia fija aprueba ${R.mejorCiego}/${R.n}: el nivel de memoria se ha vuelto adivinable`);
 });
 
+test('Pase: la preparación y sus ingredientes no salen como fichas hermanas', () => {
+  // El propietario, en los Raviolis de espinaca: «hay dos parmesano». Eran tres
+  // —Queso parmesano, Espuma de parmesano, Parmesano rayado— porque la ficha
+  // nombra la preparación y su contenido en la misma línea: «Espuma de
+  // parmesano: Parmesano rayado, Leche, Nata, Sal». Ambos acababan en el juego.
+  // En sala lo que hay en el plato es la preparación.
+  const pleg = (() => { const i = html.indexOf('function _pasePlegar('); let d = 0;
+    for (let k = html.indexOf('{', i); k < html.length; k++) {
+      if (html[k] === '{') d++; else if (html[k] === '}') { d--; if (!d) return html.slice(i, k + 1); } } })();
+  assert(pleg, 'falta el plegado de preparaciones');
+  assert(/for\(const al of \(c\.a\|\|\[\]\)\) if\(!padre\.a\.includes\(al\)\) padre\.a\.push\(al\)/.test(pleg),
+    'el padre debe ABSORBER los alérgenos del hijo, no descartarlos');
+  // Barrido funcional sobre el dato real: cuántas fichas se pliegan, y sobre
+  // todo que no se pierda ni un alérgeno por el camino — medido antes de
+  // hacerlo, en 28 casos el hijo aporta algo que el padre no declaraba solo
+  // (el huevo dentro del rebozado, las anchoas dentro de la salsa tártara).
+  const cut = (ini, fin) => { const i = html.indexOf(ini); return html.slice(i, html.indexOf(fin, i) + fin.length); };
+  const fn = n => { const i = html.indexOf('function ' + n + '('); let d = 0;
+    for (let k = html.indexOf('{', i); k < html.length; k++) {
+      if (html[k] === '{') d++; else if (html[k] === '}') { d--; if (!d) return html.slice(i, k + 1); } } };
+  const src = `var LANG='es', _djIngBase=null;
+    function getDish(d){return d;} function _djIngName(n){return n;}
+    const _DJ_SECCION = /^(masa|topping|base|relleno|guarnicion|sabores disponibles|salsa base|sazonador|marinada|elaboracion)$/;`
+    + cut('const DISHES = [', '\n];') + cut('const DISH_COMPONENTS = ', '};')
+    + html.slice(html.indexOf('const _djNorm ='), html.indexOf('async function _djLoadIngBase'))
+    + fn('_djTrozos') + fn('_djSplitIngredients') + fn('_djSameThing') + fn('_djIngredients') + fn('_lqaShuffle')
+    + html.slice(html.indexOf('const _PASE_SAZONADOR'), html.indexOf('function _pasePlegar('))
+    + fn('_pasePlegar') + fn('_paseFusionar') + fn('_paseComponentes')
+    + `
+    let plegadas=0, perdidos=[];
+    for(const d of DISHES){
+      const antes=_paseFusionar(_paseComponentes(d,false));
+      const alAntes=new Set(antes.flatMap(x=>x.a||[]));
+      const despues=_pasePlegar(d, _paseFusionar(_paseComponentes(d,false)));
+      plegadas += antes.length - despues.length;
+      const alDespues=new Set(despues.flatMap(x=>x.a||[]));
+      for(const a of alAntes) if(!alDespues.has(a)) perdidos.push(d.name+' pierde '+a);
+    }
+    return {plegadas, perdidos};`;
+  const R = new Function(src)(); // eslint-disable-line no-new-func
+  assert(R.plegadas > 50, `esperaba plegar ~100 fichas, se plegaron ${R.plegadas}`);
+  assert(R.perdidos.length === 0,
+    `al plegar se pierde un alérgeno del plato: ${R.perdidos.slice(0,5).join(' | ')}`);
+});
+
 test('Pase: la piscina tiene techo y el cuadro de alérgenos sobrevive al recorte', () => {
   // Auditoría sep 2026: la piscina no tenía tope. El Tataki de Atún (Almuerzo)
   // salía con 20 fichas —15 correctas— y llenaba una pantalla de móvil entera;
@@ -6719,8 +6764,8 @@ test('Pase: la piscina tiene techo y el cuadro de alérgenos sobrevive al recort
       if (html[k] === '{') d++; else if (html[k] === '}') { d--; if (!d) return html.slice(i, k + 1); } } })();
   assert(rec && /falta=new Set\(dish\.allergens/.test(rec),
     'el recorte parte de los alérgenos declarados, no de un corte a ciegas');
-  assert(/const reales = _paseRecortar\(dish, _paseFusionar\(/.test(html),
-    'el recorte se aplica al armar la piscina');
+  assert(/const reales = _paseRecortar\(dish, _pasePlegar\(dish, _paseFusionar\(/.test(html),
+    'el recorte se aplica al armar la piscina, después de plegar las preparaciones');
   // El barrido funcional que ya existe («la respuesta correcta gana») comprueba
   // que el cuadro montado sigue siendo idéntico al declarado en los 98 platos,
   // así que aquí basta con fijar el techo medido.
@@ -6733,7 +6778,7 @@ test('Pase: la piscina tiene techo y el cuadro de alérgenos sobrevive al recort
     + html.slice(html.indexOf('const _djNorm ='), html.indexOf('async function _djLoadIngBase'))
     + fn('_djTrozos') + fn('_djSplitIngredients') + fn('_djSameThing') + fn('_djIngredients') + fn('_lqaShuffle')
     + html.slice(html.indexOf('const _PASE_SAZONADOR'), html.indexOf('function _paseRecortar('))
-    + fn('_paseRecortar') + fn('_paseFusionar') + fn('_paseComponentes') + fn('_paseSenuelos')
+    + fn('_paseRecortar') + fn('_pasePlegar') + fn('_paseFusionar') + fn('_paseComponentes') + fn('_paseSenuelos')
     + fn('_paseArmar') + fn('_paseJugables')
     + `
     let max=0, maxR=0, doce=0, peor='';
@@ -6804,7 +6849,7 @@ test('Pase: ningún señuelo es lo mismo que algo correcto, ni en singular', () 
     + html.slice(html.indexOf('const _djNorm ='), html.indexOf('async function _djLoadIngBase'))
     + fn('_djTrozos') + fn('_djSplitIngredients') + fn('_djSameThing') + fn('_djIngredients') + fn('_lqaShuffle')
     + html.slice(html.indexOf('const _PASE_SAZONADOR'), html.indexOf('function _paseRecortar('))
-    + fn('_paseRecortar') + fn('_paseFusionar') + fn('_paseComponentes') + fn('_paseSenuelos')
+    + fn('_paseRecortar') + fn('_pasePlegar') + fn('_paseFusionar') + fn('_paseComponentes') + fn('_paseSenuelos')
     + `
     const choques=[], dobles=[];
     for(const d of DISHES){
