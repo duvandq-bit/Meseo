@@ -1,6 +1,6 @@
 {
-  "_readme": "Acuerdo de confidencialidad que se firma una sola vez al entrar. BORRADOR: revísalo con un abogado antes de darlo por bueno. Si cambias el texto, SUBE LA VERSIÓN: la app compara la versión firmada con esta y vuelve a pedir la firma a todo el mundo si no coinciden. La firma es escribir nombre y apellidos; queda guardada con la fecha y la versión del texto que se firmó.",
-  "version": "2026-09-borrador-3",
+  "_readme": "Acuerdo de confidencialidad y uso que se firma una sola vez al entrar. BORRADOR ajustado a derecho español: revísalo con un abogado antes de darlo por bueno. Marco de referencia usado — Ley 1/2019 de Secretos Empresariales (el metodo se protege como secreto, y exige medidas razonables de proteccion: el codigo de acceso y esta firma lo son); RDLeg 1/1996 TRLPI (software y textos como obra; art. 96.4: las ideas subyacentes no son obra; arts. 100.5-6: limites que una clausula no puede excluir, de ahi la salvedad legal); RDLeg 2/2015 Estatuto de los Trabajadores (arts. 5.a y 20.2 buena fe; art. 21.2: un pacto de NO COMPETENCIA postcontractual exige compensacion economica, por eso el texto declara expresamente que NO lo es); RGPD 2016/679 y LO 3/2018; Reglamento eIDAS 910/2014 art. 25.1 y Ley 6/2020 (la firma electronica simple no pierde valor por ser electronica). PENDIENTE DEL PROPIETARIO: correo de contacto para ejercer derechos. Si cambias el texto, SUBE LA VERSION: la app compara la firmada con esta y vuelve a pedirla si no coinciden.",
+  "version": "2026-09-borrador-4-es",
   "es": {
     "titulo": "Acuerdo de confidencialidad y uso",
     "intro": "Aquí dentro hay dos cosas que proteger: la información del restaurante y la propia aplicación. Y una que conviene tener clara: de qué responde cada uno. Léelo con calma: se firma una sola vez.",
@@ -11,19 +11,23 @@
       },
       {
         "t": "Qué es información confidencial del restaurante",
-        "p": "Todo lo que veas dentro de la aplicación y en tu puesto de trabajo: recetas y escandallos, guías de emplatado, fichas de ingredientes y alérgenos, proveedores y precios, estándares internos de servicio, resultados de auditorías, fotografías de los platos, y los datos de tus compañeros (nombres, horarios, resultados de formación)."
+        "p": "Todo lo que veas dentro de la aplicación y en tu puesto de trabajo: recetas y escandallos, guías de emplatado, fichas de ingredientes y alérgenos, proveedores y precios, estándares internos de servicio, resultados de auditorías, fotografías de los platos, y los datos de tus compañeros (nombres, horarios, resultados de formación). Todo ello tiene valor porque no es público, y se te confía sólo para que hagas tu trabajo."
       },
       {
         "t": "A qué te comprometes con esa información",
-        "p": "A no compartirla con nadie ajeno al restaurante, ni de palabra ni por escrito. A no publicarla en redes sociales ni en grupos de mensajería. A no hacer fotos, capturas de pantalla ni copias para uso fuera del trabajo. A usar la aplicación únicamente para tu formación."
+        "p": "A no compartirla con nadie ajeno al restaurante, ni de palabra ni por escrito. A no publicarla en redes sociales ni en grupos de mensajería. A no hacer fotos, capturas de pantalla ni copias para uso fuera del trabajo. A usar la aplicación únicamente para tu formación. Este deber no nace hoy: ya forma parte de tu contrato, por la buena fe que el Estatuto de los Trabajadores exige a las dos partes. Aquí se concreta por escrito."
       },
       {
-        "t": "La aplicación no es del restaurante ni tuya",
-        "p": "Meseo y todo lo que la forma pertenecen a su titular: su programación y su diseño, pero también las ideas que hay detrás —el método de formación, la manera de plantear cada ejercicio y de evaluarlo, cómo se organizan los contenidos y cómo encaja todo entre sí—. Que el restaurante la use, y que tú entres a formarte, no da a ninguno de los dos ningún derecho sobre ella."
+        "t": "La aplicación y su método son de Meseo",
+        "p": "Meseo pertenece a su titular: su programación, su diseño y sus textos, protegidos como obra; y también su método de formación —cómo se plantea cada ejercicio, cómo se evalúa, cómo se organizan los contenidos y cómo encaja todo—, que se protege como secreto empresarial mientras no sea público. Que el restaurante use la aplicación, y que tú entres a formarte, no da a ninguno de los dos ningún derecho sobre ella."
       },
       {
         "t": "Qué no puedes hacer con la aplicación",
-        "p": "No copiarla, reproducirla ni distribuirla, ni entera ni por partes. No estudiarla para reconstruirla ni para hacer otra parecida, ni por ti ni para un tercero, aunque cambies los textos o el aspecto: lo que se protege es también la idea. No extraer sus contenidos, sus ejercicios ni su método para usarlos fuera. No grabar la pantalla ni automatizar la descarga de lo que hay dentro. No ceder ni revender tu acceso."
+        "p": "No copiarla, reproducirla ni distribuirla, ni entera ni por partes. No extraer sus contenidos, sus ejercicios ni su método para usarlos fuera o para construir algo parecido, ni por ti ni para un tercero, aunque cambies los textos o el aspecto. No grabar la pantalla ni automatizar la descarga de lo que hay dentro. No ceder ni revender tu acceso. Queda a salvo lo que la ley permita expresamente hacer con un programa de ordenador."
+      },
+      {
+        "t": "Esto no te impide trabajar en otro sitio",
+        "p": "Este acuerdo es de confidencialidad, no de no competencia. No te prohíbe irte a otro restaurante ni seguir tu carrera donde quieras, ni ahora ni después. Lo único que te pide es que no te lleves ni cuentes lo que aquí es confidencial, y que no reproduzcas la aplicación."
       },
       {
         "t": "De quién es la responsabilidad",
@@ -43,15 +47,19 @@
       },
       {
         "t": "Cuánto dura",
-        "p": "Mientras trabajes aquí y también después de que termine tu relación laboral. Al terminar, dejarás de usar la aplicación y no conservarás copias ni de la información confidencial ni de los contenidos de Meseo."
+        "p": "Mientras trabajes aquí y también después. La obligación se mantiene mientras la información siga sin ser pública: el día que algo deje de ser secreto por causa ajena a ti, deja de estar cubierto. Al terminar tu relación con el restaurante dejarás de usar la aplicación y no conservarás copias ni de la información confidencial ni de los contenidos de Meseo."
       },
       {
         "t": "Si se incumple",
-        "p": "El incumplimiento puede dar lugar a las medidas disciplinarias que correspondan y, cuando proceda, a la reclamación por parte del restaurante o del titular de Meseo de los daños que se causen, conforme a la legislación aplicable."
+        "p": "Según el caso, el incumplimiento puede dar lugar a las medidas disciplinarias que correspondan en el ámbito laboral y, cuando proceda, a que el restaurante o el titular de Meseo reclamen el cese de la conducta y los daños causados, conforme a la legislación aplicable sobre secretos empresariales y propiedad intelectual."
       },
       {
         "t": "Tus datos",
-        "p": "De esta firma guardamos tu usuario, el nombre y apellidos que escribas, la fecha y la versión de este texto. Es la prueba de que lo aceptaste y no se usa para nada más. Puedes pedir una copia, o el borrado de tus datos, al titular de la aplicación."
+        "p": "Responsable: Duvan Stiven Ramírez Duque, titular de Meseo, junto con el restaurante en lo que a su información se refiere. Qué guardamos de esta firma: tu usuario, el nombre y apellidos que escribas, la fecha y hora, la versión de este texto y datos técnicos mínimos de la conexión. Para qué: acreditar que aceptaste este acuerdo, y nada más. Por qué podemos: interés legítimo en proteger información confidencial y en poder probar esa aceptación. Cuánto: mientras dure tu acceso y el tiempo en que pueda reclamarse el incumplimiento. No se cede a terceros ni se usa para publicidad ni para decisiones automatizadas. Puedes pedir acceso, rectificación, supresión, limitación, oposición y portabilidad al titular de la aplicación, y reclamar ante la Agencia Española de Protección de Datos."
+      },
+      {
+        "t": "Cómo se firma y qué ley se aplica",
+        "p": "Escribir tu nombre y apellidos y pulsar el botón es una firma electrónica: la ley no le niega valor por ser electrónica, y queda registrada con su fecha y con la versión exacta del texto que aceptaste. Puedes pedir una copia cuando quieras. Este acuerdo se rige por la ley española. Si hay diferencias entre la versión en español y la traducción al inglés, manda la española."
       }
     ],
     "firma_titulo": "Firma",
@@ -71,19 +79,23 @@
       },
       {
         "t": "What counts as the restaurant's confidential information",
-        "p": "Everything you see inside the app and at your workplace: recipes and costings, plating guides, ingredient and allergen sheets, suppliers and prices, internal service standards, audit results, dish photographs, and your colleagues' data (names, rotas, training results)."
+        "p": "Everything you see inside the app and at your workplace: recipes and costings, plating guides, ingredient and allergen sheets, suppliers and prices, internal service standards, audit results, dish photographs, and your colleagues' data (names, rotas, training results). All of it has value because it is not public, and it is entrusted to you only so that you can do your job."
       },
       {
         "t": "What you commit to with that information",
-        "p": "Not to share it with anyone outside the restaurant, whether spoken or written. Not to post it on social media or messaging groups. Not to take photos, screenshots or copies for use outside work. To use the app solely for your own training."
+        "p": "Not to share it with anyone outside the restaurant, whether spoken or written. Not to post it on social media or messaging groups. Not to take photos, screenshots or copies for use outside work. To use the app solely for your own training. This duty does not start today: it is already part of your contract, through the good faith Spanish employment law requires of both sides. Here it is set down in writing."
       },
       {
-        "t": "The app belongs neither to the restaurant nor to you",
-        "p": "Meseo and everything that makes it up belong to its owner: its code and its design, but also the ideas behind it — the training method, the way each exercise is framed and marked, how the content is organised and how it all fits together. The restaurant using it, and you signing in to train, give neither of you any rights over it."
+        "t": "The app and its method belong to Meseo",
+        "p": "Meseo belongs to its owner: its code, its design and its texts, protected as a work; and also its training method — how each exercise is framed, how it is marked, how the content is organised and how it all fits together — which is protected as a trade secret for as long as it is not public. The restaurant using the app, and you signing in to train, give neither of you any rights over it."
       },
       {
         "t": "What you may not do with the app",
-        "p": "Do not copy, reproduce or distribute it, in whole or in part. Do not study it in order to rebuild it or to make something similar, whether for yourself or for a third party, even with different wording or a different look: what is protected is the idea too. Do not extract its contents, its exercises or its method for use elsewhere. Do not record the screen or automate the download of what is inside. Do not transfer or resell your access."
+        "p": "Do not copy, reproduce or distribute it, in whole or in part. Do not extract its contents, its exercises or its method for use elsewhere or to build something similar, whether for yourself or for a third party, even with different wording or a different look. Do not record the screen or automate the download of what is inside. Do not transfer or resell your access. Whatever the law expressly permits you to do with a computer program is unaffected."
+      },
+      {
+        "t": "This does not stop you working elsewhere",
+        "p": "This is a confidentiality agreement, not a non-compete. It does not stop you moving to another restaurant or taking your career wherever you like, now or later. All it asks is that you do not take or tell what is confidential here, and that you do not reproduce the app."
       },
       {
         "t": "Where responsibility lies",
@@ -103,15 +115,19 @@
       },
       {
         "t": "How long it lasts",
-        "p": "While you work here and also after your employment ends. On leaving, you will stop using the app and will keep no copies of either the confidential information or Meseo's content."
+        "p": "While you work here and afterwards too. The obligation holds for as long as the information remains non-public: the day something stops being secret through no doing of yours, it stops being covered. When your relationship with the restaurant ends you will stop using the app and will keep no copies of either the confidential information or Meseo's content."
       },
       {
         "t": "If it is breached",
-        "p": "A breach may lead to the appropriate disciplinary measures and, where applicable, to a claim by the restaurant or by the owner of Meseo for any damages caused, in accordance with applicable law."
+        "p": "Depending on the case, a breach may lead to the appropriate disciplinary measures at work and, where applicable, to the restaurant or the owner of Meseo seeking that the conduct stops and claiming the damage caused, under the applicable law on trade secrets and intellectual property."
       },
       {
         "t": "Your data",
-        "p": "From this signature we keep your username, the full name you type, the date and the version of this text. It is the record that you accepted it and is used for nothing else. You may request a copy, or the deletion of your data, from the app owner."
+        "p": "Controller: Duvan Stiven Ramírez Duque, owner of Meseo, together with the restaurant as regards its own information. What we keep from this signature: your username, the full name you type, the date and time, the version of this text and minimal technical connection data. What for: to evidence that you accepted this agreement, and nothing else. On what basis: legitimate interest in protecting confidential information and in being able to prove that acceptance. How long: while your access lasts and for as long as a breach could be claimed. It is not passed to third parties, nor used for advertising or automated decisions. You may request access, rectification, erasure, restriction, objection and portability from the app owner, and lodge a complaint with the Spanish Data Protection Agency (AEPD)."
+      },
+      {
+        "t": "How you sign and which law applies",
+        "p": "Typing your full name and pressing the button is an electronic signature: the law does not deny it legal effect for being electronic, and it is recorded with its date and with the exact version of the text you accepted. You may request a copy at any time. This agreement is governed by Spanish law. If the Spanish version and the English translation differ, the Spanish one prevails."
       }
     ],
     "firma_titulo": "Signature",
