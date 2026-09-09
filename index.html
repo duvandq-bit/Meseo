@@ -52,7 +52,7 @@
 <meta property="og:description" content="Formación de equipos de sala: carta, alérgenos, vinos, exámenes y juegos de repaso.">
 <meta property="og:url" content="https://meseo.es/">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"Meseo","url":"https://meseo.es/"}</script>
-<meta name="app-version" content="7.412">
+<meta name="app-version" content="7.413">
 <meta name="app-build" content="May 2026">
 <meta name="theme-color" content="#1c2a22">
 <!-- ═══ PWA ═══ -->
@@ -1506,6 +1506,90 @@ const DISH_ACTIONS = {"124":{"Huevos":{"r":0},"Gluten":{"r":0},"Lácteos":{"r":0
 // por comanda según DISH_ACTIONS) / 0 estructural · v: 1 depende de la variante.
 const DISH_COMPONENTS = {124:[{n:'Leche',a:['Lácteos'],m:0},{n:'Harina',a:['Gluten'],m:0},{n:'Mantequilla',a:['Lácteos'],m:0},{n:'Nata',a:['Lácteos'],m:0},{n:'Huevo',a:['Huevos'],m:0}],125:[{n:'Leche',a:['Lácteos'],m:0},{n:'Harina',a:['Gluten'],m:0},{n:'Mantequilla',a:['Lácteos'],m:0},{n:'Nata',a:['Lácteos'],m:0},{n:'Huevo',a:['Huevos'],m:0},{n:'tartar de txipiron',a:['Moluscos'],m:0}],126:[{n:'Leche',a:['Lácteos'],m:0},{n:'Harina',a:['Gluten'],m:0},{n:'Mantequilla',a:['Lácteos'],m:0},{n:'Nata',a:['Lácteos'],m:0},{n:'Huevo',a:['Huevos'],m:0},{n:'Langostino',a:['Crustáceos'],m:0},{n:'Apio',a:['Apio'],m:1}],127:[{n:'Leche',a:['Lácteos'],m:0},{n:'Harina',a:['Gluten'],m:0},{n:'Mantequilla',a:['Lácteos'],m:0},{n:'Nata',a:['Lácteos'],m:0},{n:'Huevo',a:['Huevos'],m:0},{n:'tartar de Dry y piparra',a:['Sulfitos'],m:1}],128:[{n:'Leche',a:['Lácteos'],m:0},{n:'Harina',a:['Gluten'],m:0},{n:'Mantequilla',a:['Lácteos'],m:0},{n:'Nata',a:['Lácteos'],m:0},{n:'Huevo',a:['Huevos'],m:0},{n:'aderezo césar',a:['Huevos','Lácteos','Mostaza','Pescado','Gluten'],m:0}],2:[{n:'Huevo',a:['Huevos'],m:0},{n:'Nata',a:['Lácteos'],m:0},{n:'Chistorra',a:['Sulfitos'],m:0}],3:[{n:'Calamar',a:['Moluscos'],m:0},{n:'Harina',a:['Gluten'],m:0},{n:'Cerveza',a:['Gluten'],m:0},{n:'Tinta de Txipiron',a:['Moluscos'],m:0},{n:'Huevo',a:['Huevos'],m:1}],4:[{n:'Ventresca',a:['Pescado'],m:1},{n:'Anchoas',a:['Pescado'],m:1},{n:'Vinagre de Jerez',a:['Sulfitos'],m:0},{n:'Oporto',a:['Sulfitos'],m:0},{n:'Vinagreta de Cabernet Sauvignon',a:['Sulfitos'],m:0}],5:[{n:'Pámpano',a:['Pescado'],m:0},{n:'Vinagre',a:['Sulfitos'],m:0},{n:'Huevas de salmón',a:['Pescado'],m:0},{n:'Huevas de Tobiko',a:['Pescado'],m:0},{n:'Pan de algas',a:['Gluten'],m:0}],6:[{n:'Espuma de queso de cabra Nata',a:['Lácteos'],m:0},{n:'Leche',a:['Lácteos'],m:0},{n:'Queso de cabra',a:['Lácteos'],m:0},{n:'Queso azul',a:['Lácteos'],m:0},{n:'Migas de Ibérico Ibéricos y miga de pan',a:['Gluten'],m:0},{n:'Vinagreta de mostaza Aceite de oliva',a:['Mostaza'],m:1},{n:'Vinagre de manzana',a:['Sulfitos'],m:0},{n:'Mostaza Dijon',a:['Mostaza'],m:1},{n:'Mostaza antigua',a:['Mostaza'],m:1},{n:'Almendras',a:['Frutos secos'],m:1},{n:'Brotes de mostaza y mézclum',a:['Mostaza'],m:1}],7:[{n:'Tataki de atún',a:['Pescado'],m:1},{n:'Huevo de Codorniz',a:['Huevos'],m:1},{n:'Salsa de cítricos',a:['Sulfitos','Huevos'],m:0},{n:'Vinagreta de cabernet',a:['Sulfitos'],m:0},{n:'Brotes de mostaza',a:['Mostaza'],m:1},{n:'Yema de huevo',a:['Huevos'],m:1}],8:[{n:'Salsa tonnata',a:['Pescado','Huevos','Soja'],m:0},{n:'Mayonesa',a:['Huevos'],m:0},{n:'Ventresca de lata',a:['Pescado'],m:0},{n:'Anchoas',a:['Pescado'],m:0},{n:'Pan brioche',a:['Gluten','Huevos','Lácteos'],m:0},{n:'Vinagreta de cabernet',a:['Sulfitos'],m:0}],9:[{n:'Atún',a:['Pescado'],m:0},{n:'Soja',a:['Soja'],m:0},{n:'Mirim',a:['Sulfitos'],m:0},{n:'Mantequilla',a:['Lácteos'],m:0},{n:'Nata',a:['Lácteos'],m:0},{n:'Vinagre de manzana',a:['Sulfitos'],m:0},{n:'Mostaza Dijon',a:['Mostaza'],m:0},{n:'Mostaza antigua',a:['Mostaza'],m:0},{n:'Mayonesa de wasabi',a:['Huevos'],m:0},{n:'Sésamo',a:['Granos de sésamo'],m:0}],10:[{n:'Ostras número 2',a:['Moluscos'],m:0},{n:'Ponzu',a:['Soja','Pescado','Sulfitos'],m:0},{n:'Panko',a:['Gluten'],m:1},{n:'Huevo',a:['Huevos'],m:1}],11:[{n:'Crujiente de pan',a:['Gluten'],m:1},{n:'Vinagreta de tomate fresco',a:['Sulfitos'],m:1}],12:[{n:'Crujiente de pan',a:['Gluten'],m:1},{n:'Vinagreta de tomate fresco',a:['Sulfitos'],m:1}],13:[{n:'Pan tostado',a:['Gluten'],m:1},{n:'Vinagreta de tomate fresco',a:['Sulfitos'],m:1}],14:[{n:'Láminas de rabanitos encurtidas',a:['Sulfitos'],m:0}],15:[{n:'Pepinillo',a:['Sulfitos'],m:0},{n:'Mostaza savora apio',a:['Apio','Mostaza'],m:1},{n:'Salsa Perrins',a:['Pescado','Gluten'],m:1},{n:'Yema de huevo',a:['Huevos'],m:1},{n:'Stracciatella',a:['Lácteos'],m:1},{n:'Tostas de pan carasau',a:['Gluten'],m:1}],16:[{n:'Pepinillo',a:['Sulfitos'],m:0},{n:'Pan carasau',a:['Gluten'],m:0},{n:'Yema de huevo',a:['Huevos'],m:0},{n:'Salsa Perrins',a:['Pescado','Gluten'],m:0},{n:'Mostaza savora apio',a:['Apio','Mostaza'],m:1}],17:[{n:'Lomo de atún rojo',a:['Pescado'],m:0},{n:'Teriyaki',a:['Soja'],m:0},{n:'Espuma de tomate Agua de tomate',a:['Huevos'],m:1},{n:'claras de huevo y gelatina',a:['Huevos'],m:1},{n:'Yema de huevo curada en soja',a:['Huevos','Soja'],m:0},{n:'Soja',a:['Soja'],m:0},{n:'Ponzu',a:['Soja','Pescado','Sulfitos'],m:0},{n:'Katsuobusi',a:['Pescado'],m:0},{n:'Sake',a:['Sulfitos'],m:0}],18:[{n:'Pepinillo',a:['Sulfitos'],m:0},{n:'Huevo',a:['Huevos'],m:0},{n:'Salsa Perrins',a:['Pescado','Gluten'],m:0},{n:'Mostaza savora',a:['Mostaza','Apio'],m:1}],19:[{n:'Apio',a:['Apio'],m:0},{n:'Vino tinto',a:['Sulfitos'],m:0},{n:'Mantequilla de la demi glace',a:['Lácteos'],m:1}],20:[{n:'Pulpo',a:['Moluscos'],m:0},{n:'Morcilla',a:['Sulfitos'],m:0},{n:'Chorizo',a:['Sulfitos'],m:0},{n:'Huevo',a:['Huevos'],m:0}],21:[{n:'Atún',a:['Pescado'],m:0},{n:'Sake',a:['Sulfitos'],m:0},{n:'Soja',a:['Soja'],m:0},{n:'Vinagre de Jerez',a:['Sulfitos'],m:0},{n:'Huevo',a:['Huevos'],m:1},{n:'Vinagreta de cabernet',a:['Sulfitos'],m:0}],22:[{n:'Lubina',a:['Pescado'],m:0},{n:'Vinagre de manzana',a:['Sulfitos'],m:0}],23:[{n:'Coñac',a:['Sulfitos'],m:0},{n:'Porto',a:['Sulfitos'],m:0},{n:'Tocineta curada',a:['Sulfitos'],m:0},{n:'Leche',a:['Lácteos'],m:0},{n:'Mantequilla',a:['Lácteos'],m:0},{n:'Harina',a:['Gluten'],m:0},{n:'Huevo',a:['Huevos'],m:0}],24:[{n:'Vino tinto',a:['Sulfitos'],m:0},{n:'Nata',a:['Lácteos'],m:0}],25:[{n:'Manzana encurtida',a:['Sulfitos'],m:0},{n:'Puré de apiobola mantequilla',a:['Lácteos','Apio'],m:1},{n:'Vinagre',a:['Sulfitos'],m:0}],26:[{n:'Vino tinto',a:['Sulfitos'],m:0},{n:'Demi de jarrete',a:['Apio'],m:0},{n:'Vinagre de cabernet',a:['Sulfitos'],m:0}],27:[{n:'Vinagre',a:['Sulfitos'],m:1}],34:[{n:'Nata',a:['Lácteos'],m:0},{n:'Mantequilla',a:['Lácteos'],m:0},{n:'Leche',a:['Lácteos'],m:0},{n:'Queso Comté fundido',a:['Lácteos'],m:0}],36:[{n:'Mantequilla',a:['Lácteos'],m:0},{n:'Brandy',a:['Sulfitos'],m:0},{n:'Nata',a:['Lácteos'],m:0}],38:[{n:'Nata',a:['Lácteos'],m:0},{n:'Mantequilla',a:['Lácteos'],m:0},{n:'Vino blanco',a:['Sulfitos'],m:0}],39:[{n:'Vinagre de Jerez',a:['Sulfitos'],m:0}],40:[{n:'Leche entera',a:['Lácteos'],m:0},{n:'Huevos',a:['Huevos'],m:0},{n:'Leche condensada',a:['Lácteos'],m:0},{n:'Chantilly',a:['Lácteos'],m:0},{n:'Mascarpone',a:['Lácteos'],m:0}],41:[{n:'Huevos',a:['Huevos'],m:0},{n:'Avellanas',a:['Frutos secos'],m:1},{n:'Crujiente de café',a:['Lácteos','Gluten'],m:0},{n:'Crujiente de cacao',a:['Lácteos','Gluten'],m:0},{n:'Espuma de yogur',a:['Lácteos'],m:0}],42:[{n:'Claras',a:['Huevos'],m:0},{n:'Harina de avellanas',a:['Frutos secos'],m:0},{n:'Cremoso de chocolate blanco',a:['Lácteos'],m:0},{n:'Helado de chocolate',a:['Lácteos'],m:0}],43:[{n:'Leche',a:['Lácteos'],m:0},{n:'Gofio',a:['Gluten'],m:1},{n:'Huevo',a:['Huevos'],m:0},{n:'Nata',a:['Lácteos'],m:0},{n:'Mantequilla',a:['Lácteos'],m:0},{n:'Harina',a:['Gluten'],m:1},{n:'Vinagre de manzana',a:['Sulfitos'],m:0},{n:'Almendras tostadas',a:['Frutos secos'],m:1},{n:'Toffe',a:['Lácteos'],m:0}],44:[{n:'Harina',a:['Gluten'],m:0},{n:'Mantequilla',a:['Lácteos'],m:0},{n:'Huevo',a:['Huevos'],m:0},{n:'Leche',a:['Lácteos'],m:0},{n:'Nata',a:['Lácteos'],m:0}],45:[{n:'Vinagreta de Cabernet Sauvignon',a:['Sulfitos'],m:0}],46:[{n:'Huevo de Codorniz',a:['Huevos'],m:1},{n:'Mayonesa de cítricos',a:['Huevos','Sulfitos'],m:0},{n:'Vinagreta de cabernet',a:['Sulfitos'],m:0},{n:'Brotes de mostaza',a:['Mostaza'],m:1},{n:'Yema de huevo',a:['Huevos'],m:1}],48:[{n:'Láminas de rabanitos encurtidas',a:['Sulfitos'],m:0}],50:[{n:'Leche',a:['Lácteos'],m:0},{n:'Harina',a:['Gluten'],m:0},{n:'Mantequilla',a:['Lácteos'],m:0},{n:'Nata',a:['Lácteos'],m:0},{n:'Huevo',a:['Huevos'],m:0},{n:'Rebozado',a:['Gluten'],m:0},{n:'Pan rallado',a:['Gluten'],m:0}],52:[{n:'Mantequilla de la demi glace',a:['Lácteos'],m:1},{n:'Reducción de vino tinto',a:['Sulfitos'],m:0}],129:[{n:'Leche de almendras',a:['Frutos secos'],m:0}],53:[{n:'Vino blanco',a:['Sulfitos'],m:0},{n:'Mantequilla',a:['Lácteos'],m:0},{n:'Queso parmesano',a:['Lácteos'],m:0}],54:[{n:'Pasta fresca',a:['Gluten','Huevos'],m:0},{n:'Harina',a:['Gluten'],m:0},{n:'Huevo',a:['Huevos'],m:0},{n:'Ricota',a:['Lácteos'],m:0},{n:'Queso parmesano',a:['Lácteos'],m:0},{n:'Espuma de parmesano',a:['Lácteos'],m:0},{n:'Parmesano rayado',a:['Lácteos'],m:0},{n:'Leche',a:['Lácteos'],m:0},{n:'Nata',a:['Lácteos'],m:0}],57:[{n:'Nata',a:['Lácteos'],m:0},{n:'Leche',a:['Lácteos'],m:0},{n:'Mantequilla',a:['Lácteos'],m:0}],67:[{n:'Soja',a:['Soja'],m:0}],68:[{n:'Queso parmesano',a:['Lácteos'],m:0},{n:'Vinagre de Jerez',a:['Sulfitos'],m:0},{n:'Ali-oli',a:['Huevos'],m:1},{n:'Huevo',a:['Huevos'],m:1}],69:[{n:'Bacalao',a:['Pescado'],m:0},{n:'Rebozado',a:['Gluten'],m:0},{n:'Harina floja',a:['Gluten'],m:0},{n:'Panko',a:['Gluten'],m:0},{n:'Huevo',a:['Huevos'],m:0},{n:'Trisol',a:['Gluten'],m:0},{n:'Cerveza',a:['Gluten'],m:0},{n:'Salsa tártara',a:['Huevos','Mostaza','Sulfitos'],m:0},{n:'Mayonesa',a:['Huevos'],m:0},{n:'Huevo duro',a:['Huevos'],m:0},{n:'Mostaza Dijon',a:['Mostaza'],m:1},{n:'Anchoas',a:['Pescado'],m:0}],71:[{n:'Mejillones',a:['Moluscos'],m:0},{n:'Vinagre de manzana',a:['Sulfitos'],m:0}],72:[{n:'Anchoas',a:['Pescado'],m:1},{n:'Boquerones',a:['Pescado'],m:1},{n:'Vinagreta de cabernet',a:['Sulfitos'],m:0}],73:[{n:'Parmesano',a:['Lácteos'],m:0},{n:'Vinagreta',a:['Sulfitos'],m:0},{n:'Mostaza',a:['Mostaza'],m:1},{n:'Vinagre de Jerez',a:['Sulfitos'],m:0},{n:'Parmesano rayado',a:['Lácteos'],m:0},{n:'Leche',a:['Lácteos'],m:0},{n:'Nata',a:['Lácteos'],m:0}],74:[{n:'Pulpo',a:['Moluscos'],m:0},{n:'Mantequilla',a:['Lácteos'],m:1},{n:'Fumet (caldo de pescado)',a:['Pescado'],m:0},{n:'Vinagre de manzana',a:['Sulfitos'],m:0}],75:[{n:'Huevo',a:['Huevos'],m:0},{n:'Nata',a:['Lácteos'],m:0},{n:'Mantequilla',a:['Lácteos'],m:0}],77:[{n:'Mero',a:['Pescado'],m:0},{n:'Huevo de Codorniz',a:['Huevos'],m:1},{n:'Espuma de pil pil',a:['Pescado'],m:0},{n:'Caldo/Gelatina de pescado',a:['Pescado'],m:0},{n:'Brotes de mostaza',a:['Mostaza'],m:0}],78:[{n:'Atún',a:['Pescado'],m:0},{n:'Rebozado',a:['Gluten'],m:0},{n:'Harina',a:['Gluten'],m:0},{n:'Huevo',a:['Huevos'],m:0},{n:'Panko',a:['Gluten'],m:0},{n:'Cebollas encurtidas',a:['Sulfitos'],m:0},{n:'Granadina Vinagre de manzana',a:['Sulfitos'],m:0},{n:'Porto Vinagre de jerez',a:['Sulfitos'],m:0},{n:'Oporto',a:['Sulfitos'],m:0},{n:'Sake Vinagre de cabernet',a:['Sulfitos'],m:0},{n:'Sake',a:['Sulfitos'],m:0},{n:'Huevas de Tobiko',a:['Pescado'],m:0},{n:'Vinagre de manzana',a:['Sulfitos'],m:0},{n:'Mayonesa de wasabi',a:['Huevos'],m:0},{n:'Vinagreta de Mostaza antigua y Miel',a:['Mostaza'],m:1}],80:[{n:'Harina',a:['Gluten'],m:0},{n:'Queso de cabra',a:['Lácteos'],m:0},{n:'Burrata',a:['Lácteos'],m:0},{n:'Piñones',a:['Frutos secos'],m:1}],81:[{n:'Harina',a:['Gluten'],m:0},{n:'Aceto balsámico',a:['Sulfitos'],m:0},{n:'Queso mozzarella',a:['Lácteos'],m:0}],82:[{n:'Queso de cabra madurado con gofio',a:['Lácteos','Gluten'],m:0},{n:'Queso de cabra con pimentón',a:['Lácteos'],m:0},{n:'Queso Comté',a:['Lácteos'],m:0},{n:'Queso de cabra y vaca',a:['Lácteos'],m:0},{n:'Tosta de pan con mantequilla',a:['Gluten','Lácteos'],m:0},{n:'Pan tostado',a:['Gluten'],m:0},{n:'Mantequilla',a:['Lácteos'],m:0}],84:[{n:'Pan tostado',a:['Gluten'],m:1},{n:'Vinagreta de tomate fresco',a:['Sulfitos'],m:1}],86:[{n:'Proteína de soja',a:['Soja'],m:0},{n:'Pan de semillas',a:['Gluten'],m:0},{n:'Panko',a:['Gluten'],m:0},{n:'Chimichurri',a:['Sulfitos'],m:1},{n:'Vinagre de Jerez',a:['Sulfitos'],m:1}],87:[{n:'Pan Bao',a:['Gluten'],m:0},{n:'Harina',a:['Gluten'],m:0},{n:'Leche',a:['Lácteos'],m:0},{n:'Mostaza Savora Contiene Apio',a:['Apio','Mostaza'],m:1},{n:'Crema agria',a:['Lácteos'],m:0},{n:'Nata',a:['Lácteos'],m:0}],88:[{n:'Focaccia',a:['Gluten'],m:0},{n:'Harina',a:['Gluten'],m:0},{n:'Queso de cabra',a:['Lácteos'],m:0},{n:'Frutos secos',a:['Frutos secos'],m:1}],89:[{n:'Pan brioche',a:['Gluten','Huevos','Lácteos'],m:0},{n:'Harina fuerte',a:['Gluten'],m:0},{n:'Huevo',a:['Huevos'],m:0},{n:'Mantequilla',a:['Lácteos'],m:0},{n:'Mojo rojo',a:['Sulfitos'],m:1},{n:'Vinagre',a:['Sulfitos'],m:1},{n:'Queso Emmental',a:['Lácteos'],m:0},{n:'Huevo frito',a:['Huevos'],m:0},{n:'Mayonesa japonesa',a:['Huevos'],m:0},{n:'Mostaza',a:['Mostaza'],m:1},{n:'Antioxidantes',a:['Sulfitos'],m:1}],90:[{n:'Pan brioche',a:['Gluten','Huevos','Lácteos'],m:0},{n:'Bogavante/Langostinos',a:['Crustáceos'],m:0},{n:'Mayonesa',a:['Huevos'],m:0},{n:'Vinagre de manzana',a:['Sulfitos'],m:0},{n:'Salsa de mantequilla',a:['Lácteos'],m:0},{n:'Mantequilla',a:['Lácteos'],m:0}],91:[{n:'Pan brioche',a:['Gluten','Huevos','Lácteos'],m:0},{n:'Masa madre',a:['Gluten'],m:1},{n:'Harina fuerte',a:['Gluten'],m:1},{n:'Huevo',a:['Huevos'],m:0},{n:'Mantequilla',a:['Lácteos'],m:0},{n:'Queso trufado',a:['Lácteos'],m:0},{n:'Pedro Ximénez',a:['Sulfitos'],m:0},{n:'Aliño de queso azul',a:['Lácteos'],m:0},{n:'Nata',a:['Lácteos'],m:0},{n:'Queso azul',a:['Lácteos'],m:0},{n:'Mostaza antigua',a:['Mostaza'],m:0}],92:[{n:'Bisque Caldo de Langostino',a:['Crustáceos'],m:0},{n:'Apio',a:['Apio'],m:0},{n:'Langostino',a:['Crustáceos'],m:0},{n:'Brandy',a:['Sulfitos'],m:0},{n:'Fondo',a:['Apio'],m:0},{n:'Calamar',a:['Moluscos'],m:0},{n:'Vino blanco',a:['Sulfitos'],m:0},{n:'Ali-oli clásico y con Tinta de calamar',a:['Huevos','Moluscos'],m:0}],93:[{n:'Ras al hanout',a:['Granos de sésamo','Mostaza','Cacahuete','Apio','Crustáceos','Soja'],m:0},{n:'Cous Cous',a:['Gluten'],m:0},{n:'Almendras',a:['Frutos secos'],m:0},{n:'Pasas de uva',a:['Sulfitos'],m:0}],94:[{n:'Escabeche',a:['Sulfitos'],m:0},{n:'Vinagre de manzana',a:['Sulfitos'],m:0},{n:'Veal jus',a:['Apio'],m:0},{n:'Demi de carne Contiene Apio',a:['Apio'],m:0},{n:'Vino tinto',a:['Sulfitos'],m:0},{n:'Vinagre',a:['Sulfitos'],m:0},{n:'Crema de escabeche de zanahoria',a:['Sulfitos'],m:0},{n:'Mantequilla',a:['Lácteos'],m:1},{n:'Nata',a:['Lácteos'],m:1},{n:'Mojo verde de Aguacate',a:['Sulfitos'],m:0}],95:[{n:'Mojo rojo',a:['Sulfitos'],m:0},{n:'Vinagre',a:['Sulfitos'],m:0},{n:'Rebozado',a:['Gluten'],m:0},{n:'Huevo',a:['Huevos'],m:0},{n:'Harina',a:['Gluten'],m:0},{n:'Pan rallado',a:['Gluten'],m:0},{n:'Panko',a:['Gluten'],m:0},{n:'aderezo césar',a:['Huevos','Lácteos','Mostaza','Pescado','Gluten'],m:0},{n:'Anchoas',a:['Pescado'],m:1},{n:'Mostaza Dijon',a:['Mostaza'],m:1},{n:'Queso parmesano',a:['Lácteos'],m:1},{n:'Salsa Perrins',a:['Pescado','Gluten'],m:0},{n:'Crujiente de Parmesano',a:['Lácteos'],m:1}],96:[{n:'Pasta linguini fresca harina',a:['Gluten','Huevos'],m:0},{n:'Gambas',a:['Crustáceos'],m:0},{n:'Brandy',a:['Sulfitos'],m:0},{n:'Emulsión final con Mantequilla',a:['Lácteos'],m:0},{n:'Tartar de langostino crudo',a:['Crustáceos'],m:0},{n:'Burrata',a:['Lácteos'],m:0}],97:[{n:'Lomo de Lubina',a:['Pescado'],m:0},{n:'Harina',a:['Gluten'],m:0},{n:'Huevo',a:['Huevos'],m:0},{n:'Panko',a:['Gluten'],m:0},{n:'Mayonesa de leche de tigre',a:['Huevos'],m:0},{n:'Mayonesa Huevo',a:['Huevos'],m:0},{n:'Vinagre',a:['Sulfitos'],m:1},{n:'Mostaza',a:['Mostaza'],m:1},{n:'Leche de Tigre Fumet',a:['Pescado'],m:0},{n:'Apio',a:['Apio'],m:1},{n:'Recortes de Lubina',a:['Pescado'],m:0}],102:[{n:'Bizcocho',a:['Gluten'],m:0},{n:'Huevo',a:['Huevos'],m:0},{n:'Harina',a:['Gluten'],m:0},{n:'Chantilly',a:['Lácteos'],m:0},{n:'Nata',a:['Lácteos'],m:0},{n:'Mascarpone',a:['Lácteos'],m:0},{n:'Leche',a:['Lácteos'],m:0},{n:'Crema Pastelera',a:['Lácteos','Huevos'],m:0},{n:'Mantequilla',a:['Lácteos'],m:0}],104:[{n:'Flan',a:['Huevos','Lácteos'],m:0},{n:'Leche',a:['Lácteos'],m:0},{n:'Huevo',a:['Huevos'],m:0},{n:'Leche condensada',a:['Lácteos'],m:0},{n:'Flan de Chocolate',a:['Huevos','Lácteos'],m:0},{n:'Nata',a:['Lácteos'],m:0},{n:'Mascarpone',a:['Lácteos'],m:0},{n:'Vinagre de manzana',a:['Sulfitos'],m:0}],105:[{n:'Tarta de queso',a:['Lácteos'],m:0},{n:'Queso San Millán',a:['Lácteos'],m:0},{n:'Yogurt natural',a:['Lácteos'],m:0},{n:'Huevo',a:['Huevos'],m:0},{n:'Yema',a:['Huevos'],m:0},{n:'Sablé',a:['Gluten','Lácteos'],m:0},{n:'Harina',a:['Gluten'],m:0},{n:'Mantequilla',a:['Lácteos'],m:0}],110:[{n:'Piparra encurtida',a:['Sulfitos'],m:1}],112:[{n:'Mantequilla',a:['Lácteos'],m:1}],120:[{n:'Fettuccine al huevo',a:['Gluten','Huevos'],m:0}],121:[{n:'Vinagre',a:['Sulfitos'],m:0}],123:[{n:'Sorbete (2% lactosa)',a:['Lácteos'],m:0}]};
 
+// ═══ EL RESTAURANTE DE CADA UNO ════════════════════════════════════════════
+// Hasta ahora el selector de restaurante del login sólo pintaba colores: el
+// chat, el marcador, los duelos, los avisos y los horarios eran comunes. El día
+// que entrara M.B., su equipo habría visto el chat y el ranking de Txoko.
+//
+// Manda el restaurante que trae la NUBE, que es el que fijó el código del
+// manager al darse de alta. El selector del login no vale como fuente: es
+// estética y se cambia tocando otra tarjeta.
+const _VENUE_POR_DEFECTO = 'txoko';
+function _venueActual(){
+  try{
+    const e = (typeof currentUser!=='undefined' && currentUser) ? DB.employees[currentUser] : null;
+    if(e && e.venue) return e.venue;
+  }catch(_){}
+  try{ if(typeof ACTIVE_VENUE!=='undefined' && ACTIVE_VENUE && ACTIVE_VENUE.id) return ACTIVE_VENUE.id; }catch(_){}
+  return _VENUE_POR_DEFECTO;
+}
+// Trozo de filtro para pegar en una consulta, y sello para pegar en un alta.
+function _vq(){ return 'venue=eq.' + encodeURIComponent(_venueActual()); }
+function _vSello(o){ o = o || {}; o.venue = _venueActual(); return o; }
+
+// ═══ LA CARTA DE CADA RESTAURANTE ═════════════════════════════════════════
+// Los cuatro bloques de arriba —DISHES, DISHES_EN, DISH_COMPONENTS y
+// DISH_ACTIONS— son la carta de TXOKO y se quedan donde están. No se sacan a un
+// archivo por una razón concreta: 42 puntos de las pruebas y de la auditoría de
+// alérgenos los leen del propio HTML, y moverlos obligaría a reescribir eso
+// entero por ninguna ganancia. La carta de un restaurante NUEVO llega en
+// data/carta-<restaurante>.json y SUSTITUYE a estas cuatro.
+//
+// La sustitución es EN EL SITIO —vaciar y rellenar el mismo array, borrar y
+// reponer las mismas claves— porque son const y de ellas cuelgan treinta mil
+// líneas. const impide reasignar, no modificar.
+//
+// Copia intacta de la carta de Txoko, tomada antes de que nadie la toque. Sin
+// ella, cerrar sesión desde M.B. y volver a entrar con una cuenta de Txoko
+// dejaría puesta la carta de M.B.: la misma fuga, por la puerta de atrás.
+const _CARTA_BASE = {
+  DISHES: DISHES.slice(),
+  DISHES_EN: DISHES_EN.slice(),
+  DISH_COMPONENTS: Object.assign({}, DISH_COMPONENTS),
+  DISH_ACTIONS: Object.assign({}, DISH_ACTIONS)
+};
+let _cartaPuesta = _VENUE_POR_DEFECTO;
+
+function _cartaAplicar(c){
+  if(!c || !Array.isArray(c.DISHES) || !c.DISHES.length) return false;
+  DISHES.length = 0;    for(const d of c.DISHES)    DISHES.push(d);
+  DISHES_EN.length = 0; for(const d of (c.DISHES_EN || [])) DISHES_EN.push(d);
+  for(const k of Object.keys(DISH_COMPONENTS)) delete DISH_COMPONENTS[k];
+  Object.assign(DISH_COMPONENTS, c.DISH_COMPONENTS || {});
+  for(const k of Object.keys(DISH_ACTIONS)) delete DISH_ACTIONS[k];
+  Object.assign(DISH_ACTIONS, c.DISH_ACTIONS || {});
+  return true;
+}
+
+// Devuelve false si NO se pudo dejar puesta la carta del restaurante que toca.
+// Quien llama no debe dejar entrar: enseñarle a alguien de M.B. la carta de
+// Txoko sería exactamente la fuga que todo esto viene a cerrar. Fallar cerrado.
+async function cargarCarta(venue){
+  venue = venue || _VENUE_POR_DEFECTO;
+  if(venue === _cartaPuesta) return true;
+  if(venue === _VENUE_POR_DEFECTO){
+    _cartaAplicar(_CARTA_BASE);
+    _cartaPuesta = _VENUE_POR_DEFECTO;
+    return true;
+  }
+  const ruta = 'data/carta-' + encodeURIComponent(venue) + '.json';
+  try{
+    const carta = await loadLazyData(ruta, LANG==='en' ? 'the menu' : 'la carta', {silent:true});
+    // El archivo declara de quién es. Si no coincide, se rechaza: soltar la
+    // carta equivocada en la carpeta no puede acabar en enseñarla.
+    if(!carta || carta.venue !== venue) throw new Error('carta ajena');
+    if(!_cartaAplicar(carta)) throw new Error('carta vacía');
+    _cartaPuesta = venue;
+    return true;
+  }catch(e){
+    if(typeof showToast === 'function') showToast(LANG==='en'
+      ? 'Could not load your restaurant’s menu. Check your connection and try again.'
+      : 'No se ha podido cargar la carta de tu restaurante. Comprueba la conexión e inténtalo otra vez.',
+      'error', 7000);
+    return false;
+  }
+}
+
 // Derivación automática: los alérgenos de un plato son la unión de los de sus
 // componentes. Para platos del menú devuelve exactamente dish.allergens (el CI
 // lo garantiza); la declaración manual queda como espejo verificado, no como
@@ -1604,7 +1688,7 @@ const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><p
 const SRC = 'src';
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='7.412';  // sincronizada con sw.js VERSION (guard de CI)
+const APP_VERSION='7.413';  // sincronizada con sw.js VERSION (guard de CI)
 const APP_BUILD='Jul 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;
@@ -1782,27 +1866,6 @@ function _dispLearn(rows){
   if(!Array.isArray(rows)) return;
   for(const r of rows) if(r && r.name && r.display_name) _DISP.set(r.name, r.display_name);
 }
-
-// ═══ EL RESTAURANTE DE CADA UNO ════════════════════════════════════════════
-// Hasta ahora el selector de restaurante del login sólo pintaba colores: el
-// chat, el marcador, los duelos, los avisos y los horarios eran comunes. El día
-// que entrara M.B., su equipo habría visto el chat y el ranking de Txoko.
-//
-// Manda el restaurante que trae la NUBE, que es el que fijó el código del
-// manager al darse de alta. El selector del login no vale como fuente: es
-// estética y se cambia tocando otra tarjeta.
-const _VENUE_POR_DEFECTO = 'txoko';
-function _venueActual(){
-  try{
-    const e = (typeof currentUser!=='undefined' && currentUser) ? DB.employees[currentUser] : null;
-    if(e && e.venue) return e.venue;
-  }catch(_){}
-  try{ if(typeof ACTIVE_VENUE!=='undefined' && ACTIVE_VENUE && ACTIVE_VENUE.id) return ACTIVE_VENUE.id; }catch(_){}
-  return _VENUE_POR_DEFECTO;
-}
-// Trozo de filtro para pegar en una consulta, y sello para pegar en un alta.
-function _vq(){ return 'venue=eq.' + encodeURIComponent(_venueActual()); }
-function _vSello(o){ o = o || {}; o.venue = _venueActual(); return o; }
 
 const WINE_IMG_BASE = SUPA_URL + '/storage/v1/object/public/wine-images/';
 function _wineSlug(name){
@@ -10111,7 +10174,15 @@ function _showCloudPinLogin(name, emp) {
   setupModalA11y(overlay, () => overlay.remove());
 }
 
-function closePinAndEnter(){
+async function closePinAndEnter(){
+  // La carta ANTES de nada, y con el restaurante que trae la ficha del que
+  // entra —no el del selector del login, que es estética—. Si no se puede
+  // dejar puesta la que toca, no se entra: enseñarle a alguien de M.B. la
+  // carta de Txoko sería exactamente la fuga que todo esto viene a cerrar.
+  try{
+    const _e = (typeof DB!=='undefined' && DB.employees) ? DB.employees[pinTarget] : null;
+    if(!(await cargarCarta((_e && _e.venue) || _VENUE_POR_DEFECTO))) return;
+  }catch(e){ return; }
   const overlay=document.getElementById('pinOverlay');
   if(overlay) overlay.remove();
 

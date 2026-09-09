@@ -7436,7 +7436,10 @@ test('Fotos en toda la app: helper precargado + Explorar + ficha + flashcard + a
   // CONSULTA. Nunca en exámenes/juegos donde el nombre del plato sea la
   // respuesta (chivarían la solución).
   assert(/function dishPhotoSrc\(id\)/.test(html), 'dishPhotoSrc helper missing');
-  assert(/loadDishPhotos\(\);/.test(html.slice(html.indexOf('function closePinAndEnter('), html.indexOf('function closePinAndEnter(') + 900)),
+  // La ventana subió de 900 a 1800: la carga de la carta por restaurante entró
+  // por delante en closePinAndEnter y empujó esta línea. Sigue comprobando que
+  // la precarga va al principio de la función, que es lo que importa.
+  assert(/loadDishPhotos\(\);/.test(html.slice(html.indexOf('function closePinAndEnter('), html.indexOf('function closePinAndEnter(') + 1800)),
     'the photo map must preload on login so sync renders can use it');
   // Explorar: la foto vive dentro del hexágono de la fila
   const topic = html.slice(html.indexOf('function renderRepasoTopic('), html.indexOf('function renderRepasoDishDetail('));
@@ -8643,6 +8646,43 @@ test('Acceso: ninguna consulta cruza de un restaurante a otro', () => {
     '_vSello({ employee: me, room: CHAT_ROOM })',
     '_vSello({ challenger: fromUser, challenged: toUser,',
   ]) assert(html.includes(marca), `falta el sello de restaurante en: ${marca.slice(0, 50)}`);
+});
+
+test('Carta: cada restaurante carga la suya, y si no llega no se entra', () => {
+  // Los cuatro bloques de la carta se quedan dentro del HTML a propósito: 42
+  // puntos de las pruebas y de la auditoría de alérgenos los leen de ahí, y
+  // sacarlos obligaría a reescribir todo eso por ninguna ganancia. La carta de
+  // un restaurante nuevo llega en data/carta-<restaurante>.json y sustituye a
+  // las cuatro EN EL SITIO —son const y de ellas cuelgan treinta mil líneas—.
+  assert(/const _CARTA_BASE = \{/.test(html), 'falta la copia intacta de la carta de Txoko');
+  const ap = html.slice(html.indexOf('function _cartaAplicar('), html.indexOf('async function cargarCarta('));
+  assert(/DISHES\.length = 0;/.test(ap) && /DISHES_EN\.length = 0;/.test(ap),
+    'la sustitución tiene que ser en el sitio: const impide reasignar, no modificar');
+  assert(/for\(const k of Object\.keys\(DISH_COMPONENTS\)\) delete DISH_COMPONENTS\[k\];/.test(ap)
+      && /for\(const k of Object\.keys\(DISH_ACTIONS\)\) delete DISH_ACTIONS\[k\];/.test(ap),
+    'las claves viejas se borran: si no, quedarían platos del otro restaurante mezclados');
+
+  const cc = html.slice(html.indexOf('async function cargarCarta('), html.indexOf('// Derivación automática'));
+  // Volver a Txoko tiene que REPONER la carta original. Sin esto, cerrar sesión
+  // desde M.B. y entrar con una cuenta de Txoko dejaba puesta la de M.B.
+  assert(/_cartaAplicar\(_CARTA_BASE\)/.test(cc),
+    'volver a Txoko repone su carta: si no, la del otro restaurante se queda puesta');
+  assert(/carta\.venue !== venue/.test(cc),
+    'el archivo declara de quién es: soltar la carta equivocada no puede acabar en enseñarla');
+  assert(/return false;/.test(cc), 'si no se puede dejar puesta la carta que toca, se dice que no');
+
+  // Y quien llama FALLA CERRADO. Enseñarle a alguien de M.B. la carta de Txoko
+  // sería exactamente la fuga que todo esto viene a cerrar.
+  const i = html.indexOf('async function closePinAndEnter(');
+  assert(i > 0, 'entrar tiene que poder esperar a la carta: closePinAndEnter debe ser async');
+  const cuerpo = (() => { let d = 0;
+    for (let k = html.indexOf('{', i); k < html.length; k++) {
+      if (html[k] === '{') d++; else if (html[k] === '}') { d--; if (!d) return html.slice(i, k + 1); } } })();
+  assert(/if\(!\(await cargarCarta\(\(_e && _e\.venue\) \|\| _VENUE_POR_DEFECTO\)\)\) return;/.test(cuerpo),
+    'sin la carta de su restaurante no se entra');
+  const iCarta = cuerpo.indexOf('cargarCarta'), iApp = cuerpo.indexOf('screenApp');
+  assert(iCarta > 0 && iApp > 0 && iCarta < iApp,
+    'la carta se resuelve ANTES de pintar la app');
 });
 
 test('Acceso: el código del restaurante no se pinta solo', () => {
