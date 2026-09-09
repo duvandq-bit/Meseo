@@ -52,7 +52,7 @@
 <meta property="og:description" content="Formación de equipos de sala: carta, alérgenos, vinos, exámenes y juegos de repaso.">
 <meta property="og:url" content="https://meseo.es/">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"Meseo","url":"https://meseo.es/"}</script>
-<meta name="app-version" content="7.407">
+<meta name="app-version" content="7.408">
 <meta name="app-build" content="May 2026">
 <meta name="theme-color" content="#1c2a22">
 <!-- ═══ PWA ═══ -->
@@ -1594,7 +1594,7 @@ const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><p
 const SRC = 'src';
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='7.407';  // sincronizada con sw.js VERSION (guard de CI)
+const APP_VERSION='7.408';  // sincronizada con sw.js VERSION (guard de CI)
 const APP_BUILD='Jul 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;
@@ -19680,10 +19680,18 @@ function _pasePlegar(dish, items){
     if(!m) continue;
     const padre = porClave.get(_djClave(m[1]));
     if(!padre) continue;
+    // Lo que el padre aporta POR SÍ MISMO, antes de absorber nada.
+    const suyo = new Set(padre.a || []);
     for(const hijo of m[2].split(/,\s*/)){
       const c = porClave.get(_djClave(hijo));
       if(!c || c===padre || fuera.has(c)) continue;
-      for(const al of (c.a||[])) if(!padre.a.includes(al)) padre.a.push(al);
+      // Si el hijo trae un alérgeno que el padre no tiene, NO se pliega. El
+      // propietario lo vio en el Arroz negro: la ficha dice «Fondo: Calamar,
+      // Cebolleta, Vino blanco», así que el calamar —lo único que aporta
+      // Moluscos— desaparecía dentro de «Fondo», y en la fase de la alergia
+      // había que adivinar que el fondo lleva calamar. Eso no es plegar ruido,
+      // es esconder la respuesta. Medido: pasaba con 15 ingredientes.
+      if((c.a||[]).some(al => !suyo.has(al))) continue;
       fuera.add(c);
     }
   }
@@ -20308,7 +20316,13 @@ function _paseMontajeHTML(dish, dd, _en){
   // manda a mirar las fichas, que es donde está el detalle.
   const marcado=S.piscina.map((it,i)=>{
     const on=S.sel.has(i);
-    const cls = !it.falso && on ? ' ok' : !it.falso && !on ? ' falta' : it.falso && on ? ' sobra' : ' mudo';
+    // Un señuelo que NO se marcó no se pinta. Salía en gris, sin entrada en la
+    // leyenda —que solo tiene bien / faltaba / no iba— y se leía como si fuera
+    // del plato: el propietario preguntó «¿dónde tiene el flan marmolado
+    // almendras tostadas?» al ver una. No las tiene: era un señuelo de otro
+    // postre que él no eligió, y acertó no eligiéndolo.
+    if(it.falso && !on) return '';
+    const cls = !it.falso && on ? ' ok' : !it.falso && !on ? ' falta' : ' sobra';
     return _paseChip(it,i,on,'void 0',cls);
   }).join('');
   const de=V.declarados, mo=V.montados;
