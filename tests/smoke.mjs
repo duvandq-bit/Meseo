@@ -113,6 +113,57 @@ test('Auditoría completa: la opción correcta no es la más larga', () => {
     assert(String(o.label_en || '').trim(), 'hay una opción sin texto en inglés');
 });
 
+test('Pregunta del día: no se pregunta el turno de un plato que lo lleva en el nombre', () => {
+  // El propietario, el 9 de septiembre: «¿En qué servicio se ofrece "Fish and
+  // chips (Almuerzo)"?» con opciones Solo almuerzo / Solo cena / Almuerzo y
+  // cena. La respuesta está en el enunciado. Son cuatro platos de la carta y
+  // medido sobre un año salía 6 días.
+  //
+  // Mi propia auditoría dio esta pregunta por limpia, y era un punto ciego del
+  // medidor: sólo contaba un tell cuando señalaba UNA opción, y aquí
+  // «almuerzo» aparece en dos («Solo almuerzo» y «Almuerzo y cena»), así que
+  // reduce de tres a dos sin decidir. Este guard mide el enunciado, no el tell.
+  const dq = html.slice(html.indexOf('function _dqQuestion('), html.indexOf('function _dqRender'));
+  assert(dq.includes('(almuerzo|cena|lunch|dinner)') && dq.includes('.test(d.name)'),
+    'la pregunta del turno debe excluir los platos que lo dicen en su nombre');
+  // Y el barrido sobre el año entero, que es lo que de verdad lo prueba.
+  const cut = (ini, fin) => { const i = html.indexOf(ini); return html.slice(i, html.indexOf(fin, i) + fin.length); };
+  const fn = n => { const i = html.indexOf('function ' + n + '('); let d = 0;
+    for (let k = html.indexOf('{', i); k < html.length; k++) {
+      if (html[k] === '{') d++; else if (html[k] === '}') { d--; if (!d) return html.slice(i, k + 1); } } };
+  const src = `var LANG='es', _djIngBase=null;
+    function getDish(d){return d;} function escapeHtml(s){return String(s);}
+    const _DJ_SECCION = /^(masa|topping|base|relleno|guarnicion|sabores disponibles|salsa base|sazonador|marinada|elaboracion)$/;`
+    + cut('const DISHES = [', '\n];') + cut('const DISH_SERVICE = ', '};') + cut('const DISH_COMPONENTS = ', '};')
+    + html.slice(html.indexOf('const _djNorm ='), html.indexOf('async function _djLoadIngBase'))
+    + fn('_djTrozos') + fn('_djSplitIngredients') + fn('_djSameThing') + fn('_djIngName') + fn('_djIngredients')
+    + fn('_mulberry32') + fn('_dqSample') + fn('_simExtractIngredients') + fn('_djAlEn') + fn('_dqQuestion')
+    + `
+    const malas=[], repes=[];
+    let n=0;
+    for(let i=0;i<365;i++){
+      const dia=new Date(2026,0,1+i).toISOString().slice(0,10);
+      let q; try{ q=_dqQuestion(dia); }catch(e){ continue; }
+      if(!q) continue; n++;
+      if(q.type==='service' && /\((almuerzo|cena|lunch|dinner)\)/i.test(q.q)) malas.push(dia+': '+q.q);
+    }
+    // Y de paso: la ficha no puede repetir el mismo ingrediente. El Goxua
+    // pintaba «Azúcar» cuatro veces y «Vainilla» otras cuatro — 26 fichas para
+    // 17 ingredientes. Pasaba en 15 de los 98 platos.
+    for(const d of DISHES){
+      const its=_djIngredients(d,false);
+      const claves=its.map(x=>_djClave(x.t));
+      if(new Set(claves).size !== claves.length) repes.push(d.name);
+    }
+    return {n, malas, repes};`;
+  const R = new Function(src)(); // eslint-disable-line no-new-func
+  assert(R.n > 250, `esperaba ~285 preguntas en el año, hay ${R.n}`);
+  assert(R.malas.length === 0,
+    `hay preguntas del turno con la respuesta en el enunciado: ${R.malas.slice(0,3).join(' | ')}`);
+  assert(R.repes.length === 0,
+    `hay fichas que repiten el mismo ingrediente: ${R.repes.slice(0,5).join(', ')}`);
+});
+
 test('Cuestionario del Viaje: no se aprueba con trucos, sin mirar el plato', () => {
   // Auditoría de sep 2026, a petición del propietario: «caza de preguntas y
   // respuestas absurdas, sobre todo respuestas trampa fáciles de predecir».
