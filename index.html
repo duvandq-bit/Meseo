@@ -52,7 +52,7 @@
 <meta property="og:description" content="Formación de equipos de sala: carta, alérgenos, vinos, exámenes y juegos de repaso.">
 <meta property="og:url" content="https://meseo.es/">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"Meseo","url":"https://meseo.es/"}</script>
-<meta name="app-version" content="7.410">
+<meta name="app-version" content="7.411">
 <meta name="app-build" content="May 2026">
 <meta name="theme-color" content="#1c2a22">
 <!-- ═══ PWA ═══ -->
@@ -1604,7 +1604,7 @@ const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><p
 const SRC = 'src';
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='7.410';  // sincronizada con sw.js VERSION (guard de CI)
+const APP_VERSION='7.411';  // sincronizada con sw.js VERSION (guard de CI)
 const APP_BUILD='Jul 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;
@@ -9039,6 +9039,11 @@ function ndaCargar(){
 async function ndaPendiente(name){
   const nda = await ndaCargar();
   if(!nda || !nda.version) return false;   // sin texto no se bloquea a nadie
+  // Interruptor. El propietario paró el asunto de las firmas mientras cierra la
+  // parte legal: «vamos a parar lo de las cláusulas y las firmas por un tiempo».
+  // El texto y el mecanismo se quedan montados y probados; no se le pide la
+  // firma a nadie hasta que ponga 'activo': true en data/nda.json.
+  if(nda.activo === false) return false;
   try{
     const res = await fetchT(
       `${SUPA_URL}/rest/v1/employees?name=eq.${encodeURIComponent(name)}&select=nda_version`,

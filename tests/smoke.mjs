@@ -8550,6 +8550,12 @@ test('Acceso: el acuerdo de confidencialidad se firma una vez y con su versión'
   // texto nuevo.
   const nda = JSON.parse(read('data/nda.json'));
   assert(nda.version && typeof nda.version === 'string', 'el acuerdo necesita versión');
+  // El interruptor. Hoy está en false a petición del propietario, que paró el
+  // asunto de las firmas mientras cierra la parte legal; el texto y el
+  // mecanismo se quedan montados. Encenderlo es poner 'activo': true.
+  assert(typeof nda.activo === 'boolean', 'el acuerdo necesita su interruptor «activo»');
+  assert(/if\(nda\.activo === false\) return false;/.test(html),
+    'con el interruptor apagado no se le pide la firma a nadie');
   for (const lang of ['es', 'en']) {
     const t = nda[lang];
     assert(t && t.titulo && t.intro, `falta el acuerdo en ${lang}`);
