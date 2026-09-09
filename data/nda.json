@@ -1,73 +1,113 @@
 {
   "_readme": "Acuerdo de confidencialidad que se firma una sola vez al entrar. BORRADOR: revísalo con un abogado antes de darlo por bueno. Si cambias el texto, SUBE LA VERSIÓN: la app compara la versión firmada con esta y vuelve a pedir la firma a todo el mundo si no coinciden. La firma es escribir nombre y apellidos; queda guardada con la fecha y la versión del texto que se firmó.",
-  "version": "2026-09-borrador",
+  "version": "2026-09-borrador-2",
   "es": {
-    "titulo": "Acuerdo de confidencialidad",
-    "intro": "Antes de entrar necesitamos tu compromiso de confidencialidad. Léelo con calma: se firma una sola vez.",
+    "titulo": "Acuerdo de confidencialidad y uso",
+    "intro": "Aquí dentro hay dos cosas que proteger: lo que es del restaurante y la propia aplicación. Léelo con calma: se firma una sola vez.",
     "clausulas": [
       {
-        "t": "Qué es información confidencial",
-        "p": "Todo lo que veas dentro de esta aplicación y en tu puesto de trabajo: recetas y escandallos, guías de emplatado, fichas de ingredientes y alérgenos, proveedores y precios, estándares internos de servicio, resultados de auditorías, fotografías de los platos, y los datos de tus compañeros (nombres, horarios, resultados de formación)."
+        "t": "Quiénes somos aquí",
+        "p": "Meseo® es una aplicación de formación desarrollada de forma independiente por Duvan Stiven Ramírez Duque, que es su titular. El restaurante en el que trabajas la usa para formar a su equipo. Este acuerdo te vincula con los dos: con el restaurante, por su información; y con el titular de Meseo, por la aplicación."
       },
       {
-        "t": "A qué te comprometes",
-        "p": "A no compartir esa información con nadie ajeno al restaurante, ni de palabra ni por escrito. A no publicarla en redes sociales ni en grupos de mensajería. A no hacer fotos, capturas de pantalla ni copias para uso fuera del trabajo. A usar la aplicación únicamente para tu formación."
+        "t": "Qué es información confidencial del restaurante",
+        "p": "Todo lo que veas dentro de la aplicación y en tu puesto de trabajo: recetas y escandallos, guías de emplatado, fichas de ingredientes y alérgenos, proveedores y precios, estándares internos de servicio, resultados de auditorías, fotografías de los platos, y los datos de tus compañeros (nombres, horarios, resultados de formación)."
+      },
+      {
+        "t": "A qué te comprometes con esa información",
+        "p": "A no compartirla con nadie ajeno al restaurante, ni de palabra ni por escrito. A no publicarla en redes sociales ni en grupos de mensajería. A no hacer fotos, capturas de pantalla ni copias para uso fuera del trabajo. A usar la aplicación únicamente para tu formación."
+      },
+      {
+        "t": "La aplicación no es del restaurante ni tuya",
+        "p": "Meseo y todo lo que la forma —su programación, su diseño, sus textos, sus ejercicios, su forma de evaluar y de organizar la formación, y la manera en que todo eso está montado— pertenecen a su titular. Que el restaurante la use, y que tú entres a formarte, no da a ninguno de los dos ningún derecho sobre ella."
+      },
+      {
+        "t": "Qué no puedes hacer con la aplicación",
+        "p": "No copiarla, reproducirla ni distribuirla, ni entera ni por partes. No estudiarla para reconstruirla ni para hacer otra parecida, ni por ti ni para un tercero. No extraer sus contenidos, sus ejercicios ni su método para usarlos fuera. No grabar la pantalla ni automatizar la descarga de lo que hay dentro. No ceder ni revender tu acceso."
+      },
+      {
+        "t": "Tu acceso es un permiso, y se puede retirar",
+        "p": "Entras porque trabajas aquí y para formarte. Es un permiso personal, no transferible y revocable: termina cuando termina tu relación con el restaurante, o antes si se incumple este acuerdo."
       },
       {
         "t": "Tu cuenta es tuya",
         "p": "No prestes tu usuario ni tu contraseña, y no des el código de acceso del restaurante a nadie que no trabaje aquí. El acceso es nominal: lo que se haga con tu cuenta se te atribuye a ti."
       },
       {
+        "t": "Lo que tú subas",
+        "p": "Si subes una foto de un plato, escribes en el chat o propones contenido, confirmas que puedes hacerlo y que no infringe derechos de nadie. Ese material se usa dentro de la aplicación para la formación del equipo, y podrás pedir que se retire."
+      },
+      {
         "t": "Cuánto dura",
-        "p": "Mientras trabajes aquí y también después de que termine tu relación laboral. Al terminar, dejarás de usar la aplicación y no conservarás copias de la información confidencial."
+        "p": "Mientras trabajes aquí y también después de que termine tu relación laboral. Al terminar, dejarás de usar la aplicación y no conservarás copias ni de la información confidencial ni de los contenidos de Meseo."
       },
       {
         "t": "Si se incumple",
-        "p": "El incumplimiento puede dar lugar a las medidas disciplinarias que correspondan y, cuando proceda, a la reclamación de los daños que se causen, conforme a la legislación aplicable."
+        "p": "El incumplimiento puede dar lugar a las medidas disciplinarias que correspondan y, cuando proceda, a la reclamación por parte del restaurante o del titular de Meseo de los daños que se causen, conforme a la legislación aplicable."
       },
       {
         "t": "Tus datos",
-        "p": "De esta firma guardamos tu usuario, el nombre y apellidos que escribas, la fecha y la versión de este texto. Es la prueba de que lo aceptaste y no se usa para nada más. Puedes pedir una copia o consultar cualquier duda al responsable de la aplicación."
+        "p": "De esta firma guardamos tu usuario, el nombre y apellidos que escribas, la fecha y la versión de este texto. Es la prueba de que lo aceptaste y no se usa para nada más. Puedes pedir una copia, o el borrado de tus datos, al titular de la aplicación."
       }
     ],
     "firma_titulo": "Firma",
-    "firma_ayuda": "Escribe tu nombre y apellidos completos. Al escribirlos y pulsar «Firmar y entrar» estás aceptando este acuerdo.",
+    "firma_ayuda": "Escribe tu nombre y apellidos completos. Al escribirlos y pulsar «Firmar y entrar» aceptas este acuerdo frente al restaurante y frente al titular de Meseo.",
     "firma_placeholder": "Nombre y apellidos",
     "firma_boton": "Firmar y entrar",
     "firma_error": "Escribe tu nombre y tus apellidos completos.",
     "firma_error_servidor": "No se ha podido guardar la firma. Comprueba la conexión e inténtalo otra vez."
   },
   "en": {
-    "titulo": "Confidentiality agreement",
-    "intro": "Before you go in we need your confidentiality commitment. Take your time reading it: you only sign once.",
+    "titulo": "Confidentiality and use agreement",
+    "intro": "There are two things to protect in here: what belongs to the restaurant, and the app itself. Take your time reading it: you only sign once.",
     "clausulas": [
       {
-        "t": "What counts as confidential",
-        "p": "Everything you see inside this app and at your workplace: recipes and costings, plating guides, ingredient and allergen sheets, suppliers and prices, internal service standards, audit results, dish photographs, and your colleagues' data (names, rotas, training results)."
+        "t": "Who is who here",
+        "p": "Meseo® is a training app independently developed by Duvan Stiven Ramírez Duque, who owns it. The restaurant where you work uses it to train its team. This agreement binds you to both: to the restaurant, for its information; and to the owner of Meseo, for the app."
       },
       {
-        "t": "What you commit to",
-        "p": "Not to share that information with anyone outside the restaurant, whether spoken or written. Not to post it on social media or messaging groups. Not to take photos, screenshots or copies for use outside work. To use the app solely for your own training."
+        "t": "What counts as the restaurant's confidential information",
+        "p": "Everything you see inside the app and at your workplace: recipes and costings, plating guides, ingredient and allergen sheets, suppliers and prices, internal service standards, audit results, dish photographs, and your colleagues' data (names, rotas, training results)."
+      },
+      {
+        "t": "What you commit to with that information",
+        "p": "Not to share it with anyone outside the restaurant, whether spoken or written. Not to post it on social media or messaging groups. Not to take photos, screenshots or copies for use outside work. To use the app solely for your own training."
+      },
+      {
+        "t": "The app belongs neither to the restaurant nor to you",
+        "p": "Meseo and everything that makes it up — its code, its design, its texts, its exercises, the way it assesses and organises training, and how all of that is put together — belong to its owner. The restaurant using it, and you signing in to train, give neither of you any rights over it."
+      },
+      {
+        "t": "What you may not do with the app",
+        "p": "Do not copy, reproduce or distribute it, in whole or in part. Do not study it in order to rebuild it or to make something similar, whether for yourself or for a third party. Do not extract its contents, its exercises or its method for use elsewhere. Do not record the screen or automate the download of what is inside. Do not transfer or resell your access."
+      },
+      {
+        "t": "Your access is a permission, and it can be withdrawn",
+        "p": "You are in because you work here and in order to train. It is a personal, non-transferable and revocable permission: it ends when your relationship with the restaurant ends, or earlier if this agreement is breached."
       },
       {
         "t": "Your account is yours",
         "p": "Do not lend your username or password, and do not give the restaurant access code to anyone who does not work here. Access is personal: whatever is done with your account is attributed to you."
       },
       {
+        "t": "What you upload",
+        "p": "If you upload a dish photo, write in the chat or propose content, you confirm that you are entitled to do so and that it infringes nobody's rights. That material is used inside the app for the team's training, and you may ask for it to be removed."
+      },
+      {
         "t": "How long it lasts",
-        "p": "While you work here and also after your employment ends. On leaving, you will stop using the app and will keep no copies of confidential information."
+        "p": "While you work here and also after your employment ends. On leaving, you will stop using the app and will keep no copies of either the confidential information or Meseo's content."
       },
       {
         "t": "If it is breached",
-        "p": "A breach may lead to the appropriate disciplinary measures and, where applicable, to a claim for any damages caused, in accordance with applicable law."
+        "p": "A breach may lead to the appropriate disciplinary measures and, where applicable, to a claim by the restaurant or by the owner of Meseo for any damages caused, in accordance with applicable law."
       },
       {
         "t": "Your data",
-        "p": "From this signature we keep your username, the full name you type, the date and the version of this text. It is the record that you accepted it and is used for nothing else. You may request a copy or raise any question with the app owner."
+        "p": "From this signature we keep your username, the full name you type, the date and the version of this text. It is the record that you accepted it and is used for nothing else. You may request a copy, or the deletion of your data, from the app owner."
       }
     ],
     "firma_titulo": "Signature",
-    "firma_ayuda": "Type your full name and surnames. By typing them and pressing \"Sign and enter\" you are accepting this agreement.",
+    "firma_ayuda": "Type your full name and surnames. By typing them and pressing \"Sign and enter\" you accept this agreement towards both the restaurant and the owner of Meseo.",
     "firma_placeholder": "Full name and surnames",
     "firma_boton": "Sign and enter",
     "firma_error": "Please type your full name and surnames.",

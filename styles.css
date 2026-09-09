@@ -9938,11 +9938,16 @@ body, .screen{ min-height: 100vh; min-height: 100dvh; }
    claro y --parchment (#1c2a22) la TINTA. Es un documento, así que
    se lee sobre papel, no sobre el fondo oscuro de la app.
    ═══════════════════════════════════════════════════════════════ */
+/* La pantalla NO hace scroll: sólo el documento, por dentro. Con el acuerdo a
+   once cláusulas el botón de firmar caía por debajo del borde en un móvil de
+   390×844 (medido) y había que recorrer todo el texto para volver a bajar. Con
+   la tarjeta en columna, el documento se encoge lo que haga falta y la firma se
+   queda siempre a la vista. */
 .nda-overlay{
   position: fixed; inset: 0; z-index: 9000;
   background: var(--ink);
-  display: flex; align-items: flex-start; justify-content: center;
-  overflow-y: auto;
+  display: flex; align-items: stretch; justify-content: center;
+  overflow: hidden;
   padding: max(1rem, env(safe-area-inset-top)) 1rem
            max(1rem, env(safe-area-inset-bottom)) 1rem;
   overscroll-behavior: contain;
@@ -9950,8 +9955,9 @@ body, .screen{ min-height: 100vh; min-height: 100dvh; }
 .nda-card{
   width: 100%; max-width: 34rem;
   color: var(--parchment);
-  margin: auto 0;
+  display: flex; flex-direction: column; min-height: 0;
 }
+.nda-titulo, .nda-intro, .nda-firma{ flex: 0 0 auto; }
 .nda-titulo{
   font-size: 1.35rem; line-height: 1.2; margin: .4rem 0 .5rem;
   color: var(--parchment);
@@ -9961,7 +9967,8 @@ body, .screen{ min-height: 100vh; min-height: 100dvh; }
    fuera de la caja, el botón quedaba siempre alcanzable sin tener que
    recorrer seis cláusulas para volver a subir. */
 .nda-texto{
-  max-height: 42vh; overflow-y: auto; -webkit-overflow-scrolling: touch;
+  flex: 1 1 auto; min-height: 5rem;
+  overflow-y: auto; -webkit-overflow-scrolling: touch; overscroll-behavior: contain;
   border: 1px solid color-mix(in srgb, var(--parchment) 22%, transparent);
   border-radius: 10px; padding: .9rem 1rem; background: rgba(0,0,0,.03);
 }
