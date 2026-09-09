@@ -52,7 +52,7 @@
 <meta property="og:description" content="Formación de equipos de sala: carta, alérgenos, vinos, exámenes y juegos de repaso.">
 <meta property="og:url" content="https://meseo.es/">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"Meseo","url":"https://meseo.es/"}</script>
-<meta name="app-version" content="7.409">
+<meta name="app-version" content="7.410">
 <meta name="app-build" content="May 2026">
 <meta name="theme-color" content="#1c2a22">
 <!-- ═══ PWA ═══ -->
@@ -228,7 +228,8 @@
 
     <div class="login-field">
       <label class="login-label" id="loginUserLabel" for="loginUser">Usuario</label>
-      <input type="text" id="loginUser" class="login-input" placeholder="Tu nombre..." maxlength="30" autocomplete="username" spellcheck="false">
+      <input type="text" id="loginUser" class="login-input" placeholder="Tu nombre..." maxlength="30" autocomplete="username" spellcheck="false" oninput="_altaComprobarUsuario()">
+      <div class="login-pass-meter-label" id="loginUserHint" role="status" aria-live="polite" style="display:none">&nbsp;</div>
     </div>
     <div class="login-field" style="margin-top:.8rem">
       <label class="login-label" id="loginPassLabel" for="loginPass">Contraseña</label>
@@ -246,6 +247,15 @@
     <div class="login-field login-field-confirm" id="loginFieldConfirm" style="display:none;margin-top:.8rem">
       <label class="login-label" id="loginConfirmLabel" for="loginConfirm">Confirmar contraseña</label>
       <input type="password" id="loginConfirm" class="login-input" placeholder="Repite la contraseña" maxlength="30" autocomplete="new-password">
+    </div>
+    <!-- Código del restaurante — sólo en alta. Lo da el manager y es lo único
+         que decide en qué restaurante entras: sin él no se crea la cuenta. -->
+    <div class="login-field login-field-confirm" id="loginFieldCode" style="display:none;margin-top:.8rem">
+      <label class="login-label" id="loginCodeLabel" for="loginCode">Código del restaurante</label>
+      <input type="text" id="loginCode" class="login-input" placeholder="Te lo da tu manager" maxlength="12"
+             autocomplete="one-time-code" spellcheck="false" autocapitalize="characters"
+             inputmode="text" style="text-transform:uppercase;letter-spacing:.12em">
+      <div class="login-pass-meter-label" id="loginCodeHelp">Pídeselo a tu responsable de sala.</div>
     </div>
 
     <div class="login-error" id="loginError"></div>
@@ -1594,7 +1604,7 @@ const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><p
 const SRC = 'src';
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='7.409';  // sincronizada con sw.js VERSION (guard de CI)
+const APP_VERSION='7.410';  // sincronizada con sw.js VERSION (guard de CI)
 const APP_BUILD='Jul 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;
@@ -1750,7 +1760,29 @@ const SUPA_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJ
 // app jamás renombre. Sin él, los GET van bien y SOLO fallan los POST (401
 // en bucle de reintentos). Diagnóstico rápido: logs api = POST 401 + logs
 // postgres = «permission denied for table employees».
-const _EMP_COLS='name,xp,streak,last_study_day,topic_scores,known_dishes,exam_correct,sessions_count,txoko_record,updated_at,sessions_data,duel_wins,avatar,last_active_at,last_login,achievements,extras';
+const _EMP_COLS='name,xp,streak,last_study_day,topic_scores,known_dishes,exam_correct,sessions_count,txoko_record,updated_at,sessions_data,duel_wins,avatar,last_active_at,last_login,achievements,extras,venue,display_name,nda_version';
+// ═══ NOMBRE VISIBLE ════════════════════════════════════════════════════════
+// El usuario con el que se entra y el nombre que se ve dejan de ser lo mismo.
+// Llega con el segundo restaurante: habrá dos Marías, y una tiene que poder
+// entrar como «maria.mb» y salir en el ranking como «María». El usuario no se
+// puede cambiar —es la clave primaria y de ella cuelgan el chat, el marcador,
+// los duelos y los avisos—, pero el nombre visible sí.
+//
+// La caché se llena con lo que ya bajan las consultas de siempre: _EMP_COLS
+// trae display_name, así que esto no añade ni un viaje a la red.
+const _DISP = new Map();
+function _dispName(name){
+  if(!name) return '';
+  const v = _DISP.get(name);
+  if(v) return v;
+  try{ const e = DB.employees[name]; if(e && e.displayName) return e.displayName; }catch(_){}
+  return name;
+}
+function _dispLearn(rows){
+  if(!Array.isArray(rows)) return;
+  for(const r of rows) if(r && r.name && r.display_name) _DISP.set(r.name, r.display_name);
+}
+
 const WINE_IMG_BASE = SUPA_URL + '/storage/v1/object/public/wine-images/';
 function _wineSlug(name){
   return name.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
@@ -2482,6 +2514,7 @@ async function supaRestoreEmployee(name) {
 
     if(!Array.isArray(rows) || !rows.length) { _restoreCache.set(cacheKey, {ts:Date.now(), result:false}); return false; }
     const r = rows[0];
+    _dispLearn(rows);
     // ¿La cuenta tiene PIN en la nube? La columna pin ya no se descarga (cerrada
     // a la anon key); se consulta por RPC dedicada, que NO revela el hash.
     let _hasPin = false;
@@ -2499,6 +2532,11 @@ async function supaRestoreEmployee(name) {
     // Use the name exactly as stored in Supabase (correct casing)
     const cloudName = r.name;
     const emp = getEmp(cloudName);
+    // Restaurante, nombre visible y versión del acuerdo firmada: mandan los de
+    // la nube, que es donde se cambian y donde vale la prueba de la firma.
+    if(r.venue) emp.venue = r.venue;
+    emp.displayName = r.display_name || cloudName;
+    emp.ndaVersion = r.nda_version || null;
 
     // Credenciales: el hash vive en el servidor. Si hay PIN, marcamos el
     // centinela (el login lo verifica por RPC) SALVO que ya exista un hash local
@@ -2555,8 +2593,11 @@ async function supaFetchAllEmployees() {
     if(!res.ok) return null;
     const rows = await res.json();
     if(!Array.isArray(rows) || !rows.length) return null;
+    _dispLearn(rows);   // el ranking ya baja display_name: se aprovecha
     return rows.map(r => ({
       name: r.name,
+      displayName: r.display_name || r.name,
+      venue: r.venue || null,
       xp: r.xp || 0,
       streak: r.streak || 0,
       lastStudyDay: r.last_study_day || '',
@@ -8603,6 +8644,75 @@ function shareApp(){
 }
 
 // ═══ NEW LOGIN WITH PASSWORD ═══
+// ═══ ALTA CON CÓDIGO DEL RESTAURANTE ═══════════════════════════════════════
+// Todo lo que decide quién entra vive en el servidor, no aquí. La clave anónima
+// viaja en el HTML, así que cualquiera puede llamar a la API a mano: si el
+// código se comprobara en el móvil, la puerta sería decorativa y el plating
+// guide quedaría abierto. Estas funciones sólo transportan la respuesta.
+async function _supaRpc(fn, body, ms){
+  const res = await fetchT(`${SUPA_URL}/rest/v1/rpc/${fn}`, {
+    method:'POST',
+    headers:{ 'apikey':SUPA_KEY, 'Authorization':`Bearer ${SUPA_KEY}`, 'Content-Type':'application/json' },
+    body: JSON.stringify(body||{})
+  }, ms||9000);
+  if(!res.ok) throw new Error('rpc ' + fn + ' ' + res.status);
+  return res.json();
+}
+function supaUsernameAvailable(name){ return _supaRpc('username_available', {p_name:name}); }
+function supaRegisterEmployee(name, sha, code, display){
+  return _supaRpc('employee_register', {p_name:name, p_sha:sha, p_code:code, p_display:display||null});
+}
+function supaNdaSign(name, fullName, version){
+  return _supaRpc('nda_sign', {p_name:name, p_full_name:fullName, p_version:version});
+}
+// El servidor devuelve la causa; aquí sólo se traduce. Nunca se dice «el código
+// es correcto pero el usuario está cogido» al revés: cada fallo, su motivo.
+function _altaError(code){
+  const en = LANG==='en';
+  switch(code){
+    case 'code_invalid': return en ? 'That restaurant code is not valid. Ask your manager.'
+                                   : 'Ese código de restaurante no vale. Pídeselo a tu manager.';
+    case 'name_taken':   return en ? 'That username is already taken. Try another.'
+                                   : 'Ese usuario ya está cogido. Prueba con otro.';
+    case 'name_invalid': return en ? 'The username has invalid characters (3–30, letters, numbers, . _ -).'
+                                   : 'El usuario tiene caracteres no válidos (3–30, letras, números, . _ -).';
+    case 'locked':       return en ? 'Too many wrong codes. Wait 15 minutes.'
+                                   : 'Demasiados códigos fallidos. Espera 15 minutos.';
+    case 'pin_invalid':  return en ? 'Could not secure that password. Try again.'
+                                   : 'No se ha podido asegurar esa contraseña. Inténtalo otra vez.';
+    default:             return en ? 'Could not create the account. Try again.'
+                                   : 'No se ha podido crear la cuenta. Inténtalo otra vez.';
+  }
+}
+
+// ¿Está libre el usuario? Se pregunta mientras escribe, sin bloquear el alta:
+// si la red falla, se calla y ya lo dirá el servidor al pulsar «Crear cuenta».
+let _altaLibreT = null;
+function _altaComprobarUsuario(){
+  if(typeof _loginMode==='undefined' || _loginMode!=='signup') return;
+  const el = document.getElementById('loginUser');
+  const help = document.getElementById('loginUserHint');
+  if(!el || !help) return;
+  clearTimeout(_altaLibreT);
+  const v = (el.value||'').trim();
+  if(v.length < 3){ help.style.display = 'none'; return; }
+  help.style.display = 'block';
+  _altaLibreT = setTimeout(async () => {
+    try{
+      const libre = await supaUsernameAvailable(v);
+      const en = LANG==='en';
+      if(libre === false){
+        help.textContent = en ? `"${v}" is taken — try ${v}.2 or add your restaurant.`
+                              : `«${v}» está cogido — prueba ${v}.2 o añade tu restaurante.`;
+        help.style.color = '#e85d5d';
+      } else if(libre === true){
+        help.textContent = en ? `"${v}" is free.` : `«${v}» está libre.`;
+        help.style.color = '#2d6a3e';
+      }
+    }catch(e){ /* sin red: lo dirá el servidor al crear la cuenta */ }
+  }, 450);
+}
+
 async function loginWithPassword(){
   const nameInput = document.getElementById('loginUser');
   const passInput = document.getElementById('loginPass');
@@ -8614,6 +8724,8 @@ async function loginWithPassword(){
   let name = (nameInput.value || '').trim();
   let pass = (passInput.value || '').trim();
   let conf = confInput ? (confInput.value || '').trim() : '';
+  const codeInput = document.getElementById('loginCode');
+  const codigo = codeInput ? (codeInput.value || '').trim().toUpperCase() : '';
 
   // OWASP: Strip HTML/script chars
   name = name.replace(/[^a-záéíóúüñA-ZÁÉÍÓÚÜÑA-Za-z0-9 ]/g, '').trim();
@@ -8645,6 +8757,13 @@ async function loginWithPassword(){
     if(pass !== conf){
       errEl.textContent = LANG==='en' ? 'Passwords do not match' : 'Las contraseñas no coinciden';
       if(confInput){ confInput.style.borderColor = '#e85d5d'; setTimeout(() => { confInput.style.borderColor = ''; }, 2500); }
+      return;
+    }
+    // Sin código no hay alta. Se corta aquí para no hacerle dar una vuelta al
+    // servidor por algo que se ve desde el móvil; el que decide sigue siendo él.
+    if(!codigo){
+      errEl.textContent = LANG==='en' ? 'Enter the code your manager gave you' : 'Introduce el código que te dio tu manager';
+      if(codeInput){ codeInput.style.borderColor = '#e85d5d'; setTimeout(() => { codeInput.style.borderColor = ''; }, 2500); }
       return;
     }
   }
@@ -8820,12 +8939,53 @@ async function loginWithPassword(){
         }
       }
     } else {
-      // New user — register with this password
+      // Cuenta nueva. Ya NO se crea desde el móvil: el alta la hace el servidor
+      // y exige el código del restaurante, porque la clave anónima va en el
+      // HTML y cualquiera podía crearse una cuenta llamando a la API a mano.
+      // El código además decide EN QUÉ restaurante entras: no lo elige quien se
+      // registra, lo decide lo único que el manager controla.
+      if(!isSignup){
+        // Antes, no encontrar la cuenta creaba una nueva en silencio y partía
+        // el historial en dos. Ahora se dice, que es lo honesto.
+        errEl.textContent = LANG==='en'
+          ? 'We could not find that account. If you are new, create one with your restaurant code.'
+          : 'No encontramos esa cuenta. Si eres nuevo, crea una con el código de tu restaurante.';
+        submitBtn.disabled = false;
+        submitBtn.textContent = LANG==='en' ? 'Enter' : 'Entrar';
+        setTimeout(() => { if(_loginMode==='signin') setLoginMode('signup'); }, 2200);
+        return;
+      }
+      let alta;
+      try{
+        alta = await supaRegisterEmployee(resolvedName, hashed, codigo);
+      }catch(e){
+        errEl.textContent = LANG==='en'
+          ? 'No connection with the server. An account cannot be created offline.'
+          : 'Sin conexión con el servidor. Una cuenta no se puede crear sin red.';
+        submitBtn.disabled = false;
+        submitBtn.textContent = LANG==='en' ? 'Create account' : 'Crear cuenta';
+        return;
+      }
+      if(!alta || alta.ok !== true){
+        errEl.textContent = _altaError(alta && alta.error);
+        const campo = document.getElementById(
+          (alta && alta.error === 'name_taken') || (alta && alta.error === 'name_invalid')
+            ? 'loginUser' : 'loginCode');
+        if(campo){ campo.style.borderColor = '#e85d5d';
+          setTimeout(() => { campo.style.borderColor = ''; }, 2500); }
+        submitBtn.disabled = false;
+        submitBtn.textContent = LANG==='en' ? 'Create account' : 'Crear cuenta';
+        return;
+      }
+      resolvedName = alta.name || resolvedName;
       emp = getEmp(resolvedName);
       emp.pin = hashed;
       emp.lang = LANG;
+      emp.venue = alta.venue || null;
+      emp.displayName = resolvedName;
       saveDB();
-      setEmployeePinServer(resolvedName, pass); // server bcrypt (no-op unless flag on)
+      // El restaurante lo fija el código, no el selector del login.
+      try{ if(alta.venue) selectVenue(alta.venue); }catch(_){}
       supaUpsertEmployee(resolvedName);
       localStorage.setItem('txoko_last_user', resolvedName);
       const rememberCb = document.getElementById('loginRemember');
@@ -8853,6 +9013,123 @@ async function loginWithPassword(){
     submitBtn.disabled = false;
     submitBtn.textContent = isSignup ? (LANG==='en' ? 'Create account' : 'Crear cuenta') : (LANG==='en' ? 'Enter' : 'Entrar');
   });
+}
+
+// ═══ ACUERDO DE CONFIDENCIALIDAD ═══════════════════════════════════════════
+// Se firma UNA vez, al entrar, y bloquea la app hasta que está firmado: lo que
+// hay dentro son recetas, guías de emplatado y datos de compañeros, y eso es lo
+// que el restaurante quiere que no salga de aquí.
+//
+// La versión del texto viaja con la firma. Si algún día se cambia el acuerdo,
+// se sube la versión en data/nda.json y vuelve a pedirse a todo el mundo: una
+// firma sólo vale para el texto que se firmó.
+let _NDA = null, _ndaCargando = null;
+function ndaCargar(){
+  if(_NDA) return Promise.resolve(_NDA);
+  if(_ndaCargando) return _ndaCargando;
+  _ndaCargando = fetch('data/nda.json')
+    .then(r => r.ok ? r.json() : null)
+    .then(j => { _NDA = j; return j; })
+    .catch(() => null);
+  return _ndaCargando;
+}
+
+// ¿Le toca firmar? Se pregunta al servidor, que es quien guarda la prueba: la
+// marca local no vale porque se borra con los datos del navegador.
+async function ndaPendiente(name){
+  const nda = await ndaCargar();
+  if(!nda || !nda.version) return false;   // sin texto no se bloquea a nadie
+  try{
+    const res = await fetchT(
+      `${SUPA_URL}/rest/v1/employees?name=eq.${encodeURIComponent(name)}&select=nda_version`,
+      { headers:{ 'apikey':SUPA_KEY, 'Authorization':`Bearer ${SUPA_KEY}` } }, 8000);
+    if(!res.ok) return false;
+    const rows = await res.json();
+    const firmada = Array.isArray(rows) && rows[0] ? rows[0].nda_version : null;
+    return firmada !== nda.version;
+  }catch(e){ return false; }  // sin red no se deja a nadie fuera de su formación
+}
+
+function _ndaTextos(){
+  const nda = _NDA || {};
+  return (LANG==='en' ? nda.en : nda.es) || nda.es || {};
+}
+
+function ndaMostrar(name){
+  const t = _ndaTextos();
+  const nda = _NDA || {};
+  if(document.getElementById('ndaOverlay')) return;
+  const el = document.createElement('div');
+  el.id = 'ndaOverlay';
+  el.className = 'nda-overlay';
+  el.setAttribute('role','dialog');
+  el.setAttribute('aria-modal','true');
+  el.setAttribute('aria-labelledby','ndaTitulo');
+  el.innerHTML = `
+    <div class="nda-card">
+      <h2 class="nda-titulo" id="ndaTitulo">${escapeHTML(t.titulo||'')}</h2>
+      <p class="nda-intro">${escapeHTML(t.intro||'')}</p>
+      <div class="nda-texto" tabindex="0">
+        ${(t.clausulas||[]).map(c =>
+          `<h3>${escapeHTML(c.t||'')}</h3><p>${escapeHTML(c.p||'')}</p>`).join('')}
+      </div>
+      <div class="nda-firma">
+        <label class="nda-firma-lbl" for="ndaFirmaInput">${escapeHTML(t.firma_titulo||'')}</label>
+        <p class="nda-firma-ayuda">${escapeHTML(t.firma_ayuda||'')}</p>
+        <input type="text" id="ndaFirmaInput" class="nda-firma-input" maxlength="80"
+               autocomplete="name" spellcheck="false"
+               placeholder="${escapeHTML(t.firma_placeholder||'')}">
+        <div class="nda-error" id="ndaError" role="alert"></div>
+        <button type="button" class="nda-boton" id="ndaBoton">${escapeHTML(t.firma_boton||'')}</button>
+        <div class="nda-version">${escapeHTML(nda.version||'')}</div>
+      </div>
+    </div>`;
+  document.body.appendChild(el);
+  // El nombre se ata aquí, no en un onclick del HTML: hay usuarios con comilla
+  // en el nombre y meterlo dentro de una cadena JavaScript rompía el botón.
+  const btn = document.getElementById('ndaBoton');
+  if(btn) btn.addEventListener('click', () => ndaFirmar(name));
+  const inp = document.getElementById('ndaFirmaInput');
+  if(inp){
+    inp.addEventListener('keydown', e => { if(e.key==='Enter'){ e.preventDefault(); ndaFirmar(name); } });
+    setTimeout(() => { try{ inp.focus(); }catch(_){} }, 250);
+  }
+}
+
+// Nombre y apellidos: al menos dos palabras de dos letras, sólo letras. Se
+// comprueba aquí para responder al instante Y en el servidor, que es el que
+// manda: «asdf» no es una firma.
+function _ndaNombreValido(v){
+  return /^[A-Za-zÁÉÍÓÚÜÑáéíóúüñ'-]{2,}( [A-Za-zÁÉÍÓÚÜÑáéíóúüñ'-]{2,})+$/.test(v) && v.length <= 80;
+}
+
+async function ndaFirmar(name){
+  const t = _ndaTextos();
+  const inp = document.getElementById('ndaFirmaInput');
+  const err = document.getElementById('ndaError');
+  const btn = document.getElementById('ndaBoton');
+  if(!inp || !err || !btn) return;
+  const v = (inp.value||'').replace(/\s+/g,' ').trim();
+  if(!_ndaNombreValido(v)){
+    err.textContent = t.firma_error || '';
+    inp.style.borderColor = '#e85d5d';
+    setTimeout(() => { inp.style.borderColor = ''; }, 2500);
+    return;
+  }
+  btn.disabled = true;
+  err.textContent = '';
+  try{
+    const r = await supaNdaSign(name, v, (_NDA||{}).version);
+    if(!r || r.ok !== true) throw new Error((r && r.error) || 'nda');
+    const emp = getEmp(name);
+    if(emp){ emp.ndaVersion = (_NDA||{}).version; emp.ndaFirma = v; saveDB(); }
+    const ov = document.getElementById('ndaOverlay');
+    if(ov) ov.remove();
+    try{ if(typeof playSound==='function') playSound('correct'); }catch(_){}
+  }catch(e){
+    err.textContent = t.firma_error_servidor || '';
+    btn.disabled = false;
+  }
 }
 
 function showLegalModal(){
@@ -8886,6 +9163,7 @@ function setLoginMode(mode){
   const tabUp = document.getElementById('loginTabSignup');
   const intro = document.getElementById('loginSignupIntro');
   const fieldConf = document.getElementById('loginFieldConfirm');
+  const fieldCode = document.getElementById('loginFieldCode');
   const meter = document.getElementById('loginPassMeter');
   const meterLbl = document.getElementById('loginPassMeterLabel');
   const hint = document.getElementById('loginNewUserHint');
@@ -8901,6 +9179,7 @@ function setLoginMode(mode){
     tabUp && tabUp.setAttribute('aria-selected','true');
     if(intro) intro.style.display = 'flex';
     if(fieldConf) fieldConf.style.display = 'block';
+    if(fieldCode) fieldCode.style.display = 'block';
     if(meter) meter.style.display = 'flex';
     if(meterLbl) meterLbl.style.display = 'block';
     if(hint) hint.style.display = 'none';
@@ -8914,6 +9193,9 @@ function setLoginMode(mode){
     tabIn && tabIn.setAttribute('aria-selected','true');
     if(intro) intro.style.display = 'none';
     if(fieldConf) fieldConf.style.display = 'none';
+    if(fieldCode) fieldCode.style.display = 'none';
+    const uHint = document.getElementById('loginUserHint');
+    if(uHint) uHint.style.display = 'none';
     if(meter) meter.style.display = 'none';
     if(meterLbl) meterLbl.style.display = 'none';
     if(hint) hint.style.display = 'block';
@@ -8996,6 +9278,15 @@ function renderLogin(){
   if(confLbl) confLbl.textContent = LANG==='en' ? 'Confirm password' : 'Confirmar contraseña';
   const confInp = document.getElementById('loginConfirm');
   if(confInp) confInp.placeholder = LANG==='en' ? 'Repeat the password' : 'Repite la contraseña';
+  // Código del restaurante
+  const codeLbl = document.getElementById('loginCodeLabel');
+  if(codeLbl) codeLbl.textContent = LANG==='en' ? 'Restaurant code' : 'Código del restaurante';
+  const codeInp = document.getElementById('loginCode');
+  if(codeInp) codeInp.placeholder = LANG==='en' ? 'Your manager gives it to you' : 'Te lo da tu manager';
+  const codeHelp = document.getElementById('loginCodeHelp');
+  if(codeHelp && !codeHelp.style.color){
+    codeHelp.textContent = LANG==='en' ? 'Ask your floor manager for it.' : 'Pídeselo a tu responsable de sala.';
+  }
   // New-user hint
   const hintTxt = document.getElementById('loginNewUserHintTxt');
   const hintLnk = document.getElementById('loginNewUserHintLink');
@@ -9443,10 +9734,17 @@ function openAjustes(){
       <div style="display:flex;align-items:center;gap:.85rem">
         <div id="ajAvatar" style="cursor:pointer">${renderAvatarDisplay(currentUser,'48px','1.6rem')}</div>
         <div>
-          <div style="font-family:'Cinzel',serif;font-size:1rem;font-weight:700">${escapeHTML(currentUser)}</div>
+          <div style="font-family:'Cinzel',serif;font-size:1rem;font-weight:700">${escapeHTML(_dispName(currentUser))}</div>
           <button id="ajAvatarBtn" style="background:none;border:none;padding:0;font-family:'Quicksand',sans-serif;font-size:.75rem;color:#8a6a2c;text-decoration:underline;cursor:pointer">${_en?'Change avatar':'Cambiar avatar'}</button>
         </div>
       </div>
+      ${H(_en?'Display name':'Nombre visible')}
+      <div style="font-family:'Quicksand',sans-serif;font-size:.75rem;color:#5a6a5e;line-height:1.45;margin-bottom:.5rem">${_en
+        ? 'How your name appears to the team. You still sign in as <b>'+escapeHTML(currentUser)+'</b>, which never changes.'
+        : 'Cómo te ve el equipo. Sigues entrando como <b>'+escapeHTML(currentUser)+'</b>, que no cambia.'}</div>
+      <input id="ajDisp" type="text" maxlength="24" autocomplete="nickname" placeholder="${escapeHTML(currentUser)}" value="${escapeHTML(_dispName(currentUser))}" style="${inp}">
+      <div id="ajDispMsg" role="status" aria-live="polite" style="font-size:.72rem;min-height:1rem;margin-bottom:.4rem"></div>
+      <button id="ajDispSave" style="${btn}">${_en?'Save name':'Guardar nombre'}</button>
       ${H(_en?'Recovery email':'Correo de recuperación')}
       <div id="ajEmailStatus" style="font-family:'Quicksand',sans-serif;font-size:.78rem;color:#5a6a5e;margin-bottom:.5rem;line-height:1.4">${_en?'Loading…':'Cargando…'}</div>
       <input id="ajEmail" type="email" inputmode="email" autocomplete="email" placeholder="${_en?'your@email.com':'tu@correo.com'}" style="${inp}">
@@ -9481,6 +9779,40 @@ function openAjustes(){
   $('ajLangEs').onclick = ()=>{ setLangApp('es'); overlay.remove(); openAjustes(); };
   $('ajLangEn').onclick = ()=>{ setLangApp('en'); overlay.remove(); openAjustes(); };
   $('ajLogout').onclick = ()=>{ overlay.remove(); logout(); };
+
+  // Nombre visible. Lo guarda el servidor con el hash de la contraseña como
+  // prueba: la policy de employees deja escribir a cualquiera, así que desde el
+  // móvil se podría renombrar a un compañero.
+  const _dispSave = $('ajDispSave');
+  if(_dispSave) _dispSave.onclick = async ()=>{
+    const el = $('ajDisp'), msg = $('ajDispMsg');
+    if(!el || !msg) return;
+    const v = (el.value||'').replace(/\s+/g,' ').trim();
+    if(!pinHash){ msg.style.color='#b0432b';
+      msg.textContent = _en?'Set a PIN/password first.':'Primero configura un PIN o contraseña.'; return; }
+    _dispSave.disabled = true;
+    msg.style.color = '#5a6a5e';
+    msg.textContent = _en?'Saving…':'Guardando…';
+    try{
+      const r = await _supaRpc('employee_set_display_name', {p_name:currentUser, p_sha:pinHash, p_display:v});
+      if(!r || r.ok !== true) throw new Error((r && r.error) || 'x');
+      const emp2 = getEmp(currentUser);
+      if(emp2){ emp2.displayName = r.display_name; saveDB(); }
+      _DISP.set(currentUser, r.display_name);
+      msg.style.color = '#2d6a3e';
+      msg.textContent = _en?'Saved.':'Guardado.';
+      // La cabecera lleva el nombre puesto desde que entró: se repinta.
+      const hu = document.getElementById('headerUsername');
+      if(hu){ const tr = getTrophyBadge((emp2 && emp2.trophies) || 0);
+        hu.innerHTML = escapeHTML(r.display_name) + (tr || ''); }
+    }catch(e){
+      msg.style.color = '#b0432b';
+      msg.textContent = (e && e.message === 'invalid')
+        ? (_en?'Use 2–24 characters, letters and numbers.':'Usa entre 2 y 24 caracteres, letras y números.')
+        : (_en?'Could not save. Check your connection.':'No se ha podido guardar. Comprueba la conexión.');
+    }
+    _dispSave.disabled = false;
+  };
 
   // Privacidad — interruptor de telemetría, contador y borrado (RGPD)
   const _tmRefreshCount = ()=>{ const el=$('ajTmCount'); if(!el||typeof _tmCount!=='function') return;
@@ -9773,7 +10105,7 @@ function closePinAndEnter(){
   supaUpdateLastActive(pinTarget);
   const empH=getEmp(pinTarget);
   const trophyH=getTrophyBadge(empH?.trophies||0);
-  document.getElementById('headerUsername').innerHTML=escapeHTML(pinTarget)+(trophyH?trophyH:'');
+  document.getElementById('headerUsername').innerHTML=escapeHTML(_dispName(pinTarget))+(trophyH?trophyH:'');
   const _av = getEmpAvatar(pinTarget);
   const _headerAv = document.getElementById('headerAvatar');
   _renderHeaderAvatar(_headerAv, _av, pinTarget);
@@ -9783,6 +10115,11 @@ function closePinAndEnter(){
   document.getElementById('screenLogin').classList.remove('active');
   document.getElementById('screenApp').classList.add('active');
   applyLangToApp();
+  // El acuerdo de confidencialidad tapa la app hasta que se firma. Va después
+  // de entrar y no antes, para que se vea sobre la app y quede claro qué es lo
+  // que se está protegiendo; sin red no bloquea a nadie (ndaPendiente devuelve
+  // false), que dejar a alguien fuera de su formación por el wifi sería peor.
+  try{ ndaPendiente(pinTarget).then(hay => { if(hay) ndaMostrar(pinTarget); }); }catch(_){}
   // Show supervisor tab for Duvan
   const _supBtn=document.getElementById('navSupervisor');
   if(_supBtn) _supBtn.style.display=currentUser==='Duvan'?'':'none';
@@ -23047,7 +23384,80 @@ function renderSupAnalytics(allEmps, empNames){
     ${_acc('pase','◎',_en2?'Plating pass':'Pase de cocina', _psTot?`${_psTot} ${_en2?'passes':'pases'} · ${_psSeguro}% ${_en2?'safe':'seguros'}`:(_en2?'not played yet':'aún sin jugar'), paseSection)}
     ${_acc('perf','🎯',_en2?'Performance':'Rendimiento', exN?`${exN} ${_en2?'exams':'exámenes'} · ${exAcc}%`:(_en2?'no exams yet':'aún sin exámenes'), _perfBody)}
     ${_acc('dish','🧩',_en2?'Hardest dishes':'Platos difíciles', hardest.length?`${hardest.length} ${_en2?'to review':'a repasar'}`:'', _dishBody)}
+    ${_acc('acc','🔑',_en2?'Access code':'Código de acceso', _en2?'who can register':'quién puede registrarse', renderSupCodigoHTML())}
   </div>`;
+}
+
+// ═══ CÓDIGO DE ACCESO DEL RESTAURANTE ══════════════════════════════════════
+// Sin este código no se crea ninguna cuenta. Es lo que impide que alguien de
+// fuera entre a ver el plating guide y los datos del equipo.
+//
+// No se pinta solo: hay que pedirlo. En el pase, el panel se abre encima de una
+// mesa y un código que se enseña sin querer deja de ser un código.
+function renderSupCodigoHTML(){
+  const _en = LANG==='en';
+  const venue = (typeof ACTIVE_VENUE!=='undefined' && ACTIVE_VENUE && ACTIVE_VENUE.name) || 'TXOKO';
+  return `<div style="font-family:'Quicksand',sans-serif;font-size:.8rem;color:var(--parch2);line-height:1.5;margin-bottom:.7rem">
+      ${_en
+        ? `Nobody can create an account in <b>${escapeHTML(venue)}</b> without this code. Give it only to people who work here, and renew it when someone leaves.`
+        : `Nadie puede crearse una cuenta en <b>${escapeHTML(venue)}</b> sin este código. Dáselo solo a quien trabaja aquí, y renuévalo cuando alguien se vaya.`}
+    </div>
+    <div id="supCodigoCaja" style="font-family:'DM Mono',monospace;font-size:1.5rem;letter-spacing:.28em;text-align:center;padding:.9rem;border:1px dashed var(--line2);border-radius:var(--r);color:var(--parch3);margin-bottom:.6rem">••••••</div>
+    <div style="display:flex;gap:.5rem">
+      <button onclick="supVerCodigo()" style="flex:1;min-height:44px;background:var(--gold);color:var(--parchment);border:none;border-radius:10px;font-family:'Quicksand',sans-serif;font-weight:700;font-size:.82rem;cursor:pointer">${_en?'Show code':'Ver código'}</button>
+      <button onclick="supRenovarCodigo()" style="flex:1;min-height:44px;background:transparent;border:1px solid rgba(200,60,60,.4);color:#c0392b;border-radius:10px;font-family:'Quicksand',sans-serif;font-weight:700;font-size:.82rem;cursor:pointer">${_en?'Renew':'Renovar'}</button>
+    </div>
+    <div id="supCodigoMsg" role="status" aria-live="polite" style="font-family:'Quicksand',sans-serif;font-size:.74rem;min-height:1.1rem;margin-top:.45rem;color:var(--parch3)"></div>`;
+}
+
+function _supVenueId(){
+  return (typeof ACTIVE_VENUE!=='undefined' && ACTIVE_VENUE && ACTIVE_VENUE.id) || 'txoko';
+}
+
+async function supVerCodigo(){
+  const _en = LANG==='en';
+  const caja = document.getElementById('supCodigoCaja');
+  const msg = document.getElementById('supCodigoMsg');
+  if(!caja || !msg) return;
+  msg.textContent = _en ? 'Loading…' : 'Cargando…';
+  try{
+    const r = await _supaRpc('venue_code_show', {p_pin:_supPin||'', p_venue:_supVenueId()});
+    if(!r || r.ok !== true) throw new Error('denied');
+    if(!r.code){
+      caja.textContent = '——————';
+      msg.textContent = _en ? 'No code yet. Press Renew to create one.'
+                            : 'Todavía no hay código. Pulsa Renovar para crear uno.';
+      return;
+    }
+    caja.textContent = r.code;
+    caja.style.color = 'var(--gold-deep)';
+    msg.textContent = _en ? 'Give it only to people who work here.'
+                          : 'Dáselo solo a quien trabaja aquí.';
+  }catch(e){
+    msg.textContent = _en ? 'Could not read the code.' : 'No se ha podido leer el código.';
+  }
+}
+
+async function supRenovarCodigo(){
+  const _en = LANG==='en';
+  if(!confirm(_en
+    ? 'Renew the code? The current one stops working immediately and anyone who has it will no longer be able to register.'
+    : '¿Renovar el código? El actual deja de valer al momento y quien lo tenga ya no podrá registrarse.')) return;
+  const caja = document.getElementById('supCodigoCaja');
+  const msg = document.getElementById('supCodigoMsg');
+  if(!caja || !msg) return;
+  msg.textContent = _en ? 'Renewing…' : 'Renovando…';
+  try{
+    const r = await _supaRpc('venue_code_rotate',
+      {p_pin:_supPin||'', p_venue:_supVenueId(), p_by:(typeof currentUser!=='undefined'?currentUser:null)});
+    if(!r || r.ok !== true) throw new Error('denied');
+    caja.textContent = r.code;
+    caja.style.color = 'var(--gold-deep)';
+    msg.textContent = _en ? 'New code. The previous one no longer works.'
+                          : 'Código nuevo. El anterior ya no vale.';
+  }catch(e){
+    msg.textContent = _en ? 'Could not renew the code.' : 'No se ha podido renovar el código.';
+  }
 }
 
 // Nota LQA de un empleado: media ponderada de sus mejores marcas en los

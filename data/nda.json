@@ -1,0 +1,76 @@
+{
+  "_readme": "Acuerdo de confidencialidad que se firma una sola vez al entrar. BORRADOR: revísalo con un abogado antes de darlo por bueno. Si cambias el texto, SUBE LA VERSIÓN: la app compara la versión firmada con esta y vuelve a pedir la firma a todo el mundo si no coinciden. La firma es escribir nombre y apellidos; queda guardada con la fecha y la versión del texto que se firmó.",
+  "version": "2026-09-borrador",
+  "es": {
+    "titulo": "Acuerdo de confidencialidad",
+    "intro": "Antes de entrar necesitamos tu compromiso de confidencialidad. Léelo con calma: se firma una sola vez.",
+    "clausulas": [
+      {
+        "t": "Qué es información confidencial",
+        "p": "Todo lo que veas dentro de esta aplicación y en tu puesto de trabajo: recetas y escandallos, guías de emplatado, fichas de ingredientes y alérgenos, proveedores y precios, estándares internos de servicio, resultados de auditorías, fotografías de los platos, y los datos de tus compañeros (nombres, horarios, resultados de formación)."
+      },
+      {
+        "t": "A qué te comprometes",
+        "p": "A no compartir esa información con nadie ajeno al restaurante, ni de palabra ni por escrito. A no publicarla en redes sociales ni en grupos de mensajería. A no hacer fotos, capturas de pantalla ni copias para uso fuera del trabajo. A usar la aplicación únicamente para tu formación."
+      },
+      {
+        "t": "Tu cuenta es tuya",
+        "p": "No prestes tu usuario ni tu contraseña, y no des el código de acceso del restaurante a nadie que no trabaje aquí. El acceso es nominal: lo que se haga con tu cuenta se te atribuye a ti."
+      },
+      {
+        "t": "Cuánto dura",
+        "p": "Mientras trabajes aquí y también después de que termine tu relación laboral. Al terminar, dejarás de usar la aplicación y no conservarás copias de la información confidencial."
+      },
+      {
+        "t": "Si se incumple",
+        "p": "El incumplimiento puede dar lugar a las medidas disciplinarias que correspondan y, cuando proceda, a la reclamación de los daños que se causen, conforme a la legislación aplicable."
+      },
+      {
+        "t": "Tus datos",
+        "p": "De esta firma guardamos tu usuario, el nombre y apellidos que escribas, la fecha y la versión de este texto. Es la prueba de que lo aceptaste y no se usa para nada más. Puedes pedir una copia o consultar cualquier duda al responsable de la aplicación."
+      }
+    ],
+    "firma_titulo": "Firma",
+    "firma_ayuda": "Escribe tu nombre y apellidos completos. Al escribirlos y pulsar «Firmar y entrar» estás aceptando este acuerdo.",
+    "firma_placeholder": "Nombre y apellidos",
+    "firma_boton": "Firmar y entrar",
+    "firma_error": "Escribe tu nombre y tus apellidos completos.",
+    "firma_error_servidor": "No se ha podido guardar la firma. Comprueba la conexión e inténtalo otra vez."
+  },
+  "en": {
+    "titulo": "Confidentiality agreement",
+    "intro": "Before you go in we need your confidentiality commitment. Take your time reading it: you only sign once.",
+    "clausulas": [
+      {
+        "t": "What counts as confidential",
+        "p": "Everything you see inside this app and at your workplace: recipes and costings, plating guides, ingredient and allergen sheets, suppliers and prices, internal service standards, audit results, dish photographs, and your colleagues' data (names, rotas, training results)."
+      },
+      {
+        "t": "What you commit to",
+        "p": "Not to share that information with anyone outside the restaurant, whether spoken or written. Not to post it on social media or messaging groups. Not to take photos, screenshots or copies for use outside work. To use the app solely for your own training."
+      },
+      {
+        "t": "Your account is yours",
+        "p": "Do not lend your username or password, and do not give the restaurant access code to anyone who does not work here. Access is personal: whatever is done with your account is attributed to you."
+      },
+      {
+        "t": "How long it lasts",
+        "p": "While you work here and also after your employment ends. On leaving, you will stop using the app and will keep no copies of confidential information."
+      },
+      {
+        "t": "If it is breached",
+        "p": "A breach may lead to the appropriate disciplinary measures and, where applicable, to a claim for any damages caused, in accordance with applicable law."
+      },
+      {
+        "t": "Your data",
+        "p": "From this signature we keep your username, the full name you type, the date and the version of this text. It is the record that you accepted it and is used for nothing else. You may request a copy or raise any question with the app owner."
+      }
+    ],
+    "firma_titulo": "Signature",
+    "firma_ayuda": "Type your full name and surnames. By typing them and pressing \"Sign and enter\" you are accepting this agreement.",
+    "firma_placeholder": "Full name and surnames",
+    "firma_boton": "Sign and enter",
+    "firma_error": "Please type your full name and surnames.",
+    "firma_error_servidor": "The signature could not be saved. Check your connection and try again."
+  }
+}

@@ -9929,3 +9929,64 @@ body, .screen{ min-height: 100vh; min-height: 100dvh; }
   outline: 2px solid var(--gold);
   outline-offset: 2px;
 }
+
+/* ═══════════════════════════════════════════════════════════════
+   ACUERDO DE CONFIDENCIALIDAD
+   ───────────────────────────────────────────────────────────────
+   Tapa la app entera hasta que se firma. Ojo con los tokens, que
+   están al revés de lo que parece: --ink (#f4ede2) es el PAPEL
+   claro y --parchment (#1c2a22) la TINTA. Es un documento, así que
+   se lee sobre papel, no sobre el fondo oscuro de la app.
+   ═══════════════════════════════════════════════════════════════ */
+.nda-overlay{
+  position: fixed; inset: 0; z-index: 9000;
+  background: var(--ink);
+  display: flex; align-items: flex-start; justify-content: center;
+  overflow-y: auto;
+  padding: max(1rem, env(safe-area-inset-top)) 1rem
+           max(1rem, env(safe-area-inset-bottom)) 1rem;
+  overscroll-behavior: contain;
+}
+.nda-card{
+  width: 100%; max-width: 34rem;
+  color: var(--parchment);
+  margin: auto 0;
+}
+.nda-titulo{
+  font-size: 1.35rem; line-height: 1.2; margin: .4rem 0 .5rem;
+  color: var(--parchment);
+}
+.nda-intro{ margin: 0 0 1rem; opacity: .85; font-size: .95rem; }
+/* El texto tiene su propio scroll: en un móvil en vertical, con la firma
+   fuera de la caja, el botón quedaba siempre alcanzable sin tener que
+   recorrer seis cláusulas para volver a subir. */
+.nda-texto{
+  max-height: 42vh; overflow-y: auto; -webkit-overflow-scrolling: touch;
+  border: 1px solid color-mix(in srgb, var(--parchment) 22%, transparent);
+  border-radius: 10px; padding: .9rem 1rem; background: rgba(0,0,0,.03);
+}
+.nda-texto h3{ font-size: .95rem; margin: .9rem 0 .25rem; }
+.nda-texto h3:first-child{ margin-top: 0; }
+.nda-texto p{ margin: 0 0 .5rem; font-size: .9rem; line-height: 1.5; opacity: .9; }
+.nda-firma{ margin-top: 1.1rem; }
+.nda-firma-lbl{ display: block; font-weight: 600; margin-bottom: .2rem; }
+.nda-firma-ayuda{ margin: 0 0 .6rem; font-size: .85rem; opacity: .8; line-height: 1.45; }
+.nda-firma-input{
+  width: 100%; box-sizing: border-box;
+  /* 16px reales: por debajo, iOS Safari hace zoom al enfocar y descoloca
+     el documento entero justo cuando hay que firmarlo. */
+  font-size: 16px; padding: .7rem .8rem;
+  border: 1px solid color-mix(in srgb, var(--parchment) 35%, transparent);
+  border-radius: 8px; background: var(--ink); color: var(--parchment);
+  font-family: Georgia, 'Times New Roman', serif; letter-spacing: .01em;
+}
+.nda-error{ min-height: 1.2rem; color: #c0392b; font-size: .85rem; margin: .35rem 0 .1rem; }
+.nda-boton{
+  width: 100%; padding: .85rem 1rem; border: 0; border-radius: 10px;
+  background: var(--gold); color: var(--parchment);
+  font-size: 1rem; font-weight: 700; cursor: pointer;
+  min-height: 48px;            /* dedo, no ratón */
+  touch-action: manipulation;  /* sin zoom por doble toque */
+}
+.nda-boton[disabled]{ opacity: .55; cursor: default; }
+.nda-version{ margin-top: .6rem; font-size: .7rem; opacity: .5; text-align: right; }
