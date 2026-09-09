@@ -79,9 +79,24 @@ test('Auditoría completa: la opción correcta no es la más larga', () => {
     const p = (sc.options || []).map(o => (o.effects || []).filter(x => x.met).length);
     const m = Math.max(...p);
     const idx = p.map((x, i) => x === m ? i : -1).filter(i => i >= 0);
-    if (idx.length !== 1) continue;   // escenas con empate: no hay «la correcta»
+    // Ninguna escena puede tener empate: si dos opciones suman los mismos
+    // estándares cumplidos, no hay «la correcta» y el ejercicio no puede
+    // corregir. Pasaba en [1.3] Aniversario/Retirada, donde la opción de
+    // preguntar «¿puedo retirar?» tenía un {std:19, met:true} — el estándar de
+    // saber responder sobre alérgenos, que no pinta nada en una retirada, y que
+    // además contradecía su propio feedback («preguntar es el error»).
+    assert(idx.length === 1,
+      `la escena «${sc.title || sc.prompt || ''}» tiene ${idx.length} opciones empatadas: no hay respuesta correcta`);
     esc.push({opts: sc.options, c: idx[0]});
   }
+  // Y todo estándar citado tiene que existir en LQA_STANDARDS: su texto se le
+  // enseña al camarero en la corrección, así que un id suelto pinta una línea
+  // vacía donde debería explicarse qué se esperaba de él.
+  const ids = new Set();
+  for (const e of g) for (const sc of e.scenes || []) for (const o of sc.options || [])
+    for (const x of o.effects || []) ids.add(x.std);
+  for (const id of ids) assert(new RegExp('\\{id:' + id + ', cat:').test(html),
+    `la Auditoría cita el estándar #${id}, que no está en LQA_STANDARDS`);
   assert(esc.length > 80, `esperaba ~95 escenas con respuesta única, hay ${esc.length}`);
   for (const idioma of ['label', 'label_en']) {
     const unicaMax = (L, c) => { const m = Math.max(...L);
