@@ -40,6 +40,32 @@ const html = read('index.html');
 
 // ─── 1. Main inline <script> parses ─────────────────────────────
 console.log('\nJS syntax');
+test('Situaciones LQA: la correcta no es la más larga ni la única que cita un estándar', () => {
+  // Auditoría de sep 2026: «elegir la más larga» acertaba el 44% con un azar
+  // del 25% (67% en la categoría vino), porque la correcta medía 100 caracteres
+  // y las incorrectas 69. Y había un segundo tell: en cuatro situaciones la
+  // correcta era la ÚNICA que citaba un estándar («Incumple el estándar #50…»),
+  // así que se acertaba buscando el número — el 67% en montaje.
+  const l = JSON.parse(read('data/lqa-situations.json'));
+  assert(l.length > 40, `esperaba ~59 situaciones, hay ${l.length}`);
+  for (const [campo, etiqueta] of [['opts', 'es'], ['opts_en', 'en']]) {
+    let masLarga = 0, conNumero = 0, n = 0;
+    for (const s of l) {
+      const o = s[campo]; if (!Array.isArray(o) || o.length < 2) continue;
+      n++;
+      const L = o.map(x => String(x || '').length), m = Math.max(...L);
+      if (L.filter(x => x === m).length === 1 && L[s.corr] === m) masLarga++;
+      const cita = o.map((x, k) => /#\d+|est[áa]ndar \d+|standard \d+/i.test(String(x)) ? k : -1).filter(k => k >= 0);
+      if (cita.length === 1 && cita[0] === s.corr) conNumero++;
+    }
+    assert(n > 40, `${etiqueta}: solo ${n} situaciones con opciones`);
+    assert(masLarga / n <= 0.28,
+      `${etiqueta}: «elegir la más larga» acierta el ${(100*masLarga/n).toFixed(0)}%: la correcta se ve sin leer`);
+    assert(conNumero === 0,
+      `${etiqueta}: en ${conNumero} situaciones solo la correcta cita el estándar — el número la delata`);
+  }
+});
+
 test('Auditoría completa: la opción correcta no es la más larga', () => {
   // Auditoría de sep 2026: «elegir la opción más larga» acertaba el 99% de las
   // 95 escenas con respuesta única, sin leer nada. La correcta medía 140
