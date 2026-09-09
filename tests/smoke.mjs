@@ -40,6 +40,150 @@ const html = read('index.html');
 
 // ─── 1. Main inline <script> parses ─────────────────────────────
 console.log('\nJS syntax');
+test('Situaciones LQA: la correcta no es la más larga ni la única que cita un estándar', () => {
+  // Auditoría de sep 2026: «elegir la más larga» acertaba el 44% con un azar
+  // del 25% (67% en la categoría vino), porque la correcta medía 100 caracteres
+  // y las incorrectas 69. Y había un segundo tell: en cuatro situaciones la
+  // correcta era la ÚNICA que citaba un estándar («Incumple el estándar #50…»),
+  // así que se acertaba buscando el número — el 67% en montaje.
+  const l = JSON.parse(read('data/lqa-situations.json'));
+  assert(l.length > 40, `esperaba ~59 situaciones, hay ${l.length}`);
+  for (const [campo, etiqueta] of [['opts', 'es'], ['opts_en', 'en']]) {
+    let masLarga = 0, conNumero = 0, n = 0;
+    for (const s of l) {
+      const o = s[campo]; if (!Array.isArray(o) || o.length < 2) continue;
+      n++;
+      const L = o.map(x => String(x || '').length), m = Math.max(...L);
+      if (L.filter(x => x === m).length === 1 && L[s.corr] === m) masLarga++;
+      const cita = o.map((x, k) => /#\d+|est[áa]ndar \d+|standard \d+/i.test(String(x)) ? k : -1).filter(k => k >= 0);
+      if (cita.length === 1 && cita[0] === s.corr) conNumero++;
+    }
+    assert(n > 40, `${etiqueta}: solo ${n} situaciones con opciones`);
+    assert(masLarga / n <= 0.28,
+      `${etiqueta}: «elegir la más larga» acierta el ${(100*masLarga/n).toFixed(0)}%: la correcta se ve sin leer`);
+    assert(conNumero === 0,
+      `${etiqueta}: en ${conNumero} situaciones solo la correcta cita el estándar — el número la delata`);
+  }
+});
+
+test('Auditoría completa: la opción correcta no es la más larga', () => {
+  // Auditoría de sep 2026: «elegir la opción más larga» acertaba el 99% de las
+  // 95 escenas con respuesta única, sin leer nada. La correcta medía 140
+  // caracteres de media y las incorrectas 64, porque la correcta enumeraba la
+  // secuencia entera de acciones y las falsas eran una frase de descarte.
+  // Se reescribieron los 187 distractores al mismo nivel de detalle, sin tocar
+  // ni un `effects`: el error de cada opción es el mismo, contado entero.
+  const g = JSON.parse(read('data/ghost-scenarios.json'));
+  const esc = [];
+  for (const e of g) for (const sc of e.scenes || []) {
+    const p = (sc.options || []).map(o => (o.effects || []).filter(x => x.met).length);
+    const m = Math.max(...p);
+    const idx = p.map((x, i) => x === m ? i : -1).filter(i => i >= 0);
+    if (idx.length !== 1) continue;   // escenas con empate: no hay «la correcta»
+    esc.push({opts: sc.options, c: idx[0]});
+  }
+  assert(esc.length > 80, `esperaba ~95 escenas con respuesta única, hay ${esc.length}`);
+  for (const idioma of ['label', 'label_en']) {
+    const unicaMax = (L, c) => { const m = Math.max(...L);
+      return L.filter(x => x === m).length === 1 && L[c] === m; };
+    let gana = 0;
+    for (const e of esc) if (unicaMax(e.opts.map(o => String(o[idioma] || '').length), e.c)) gana++;
+    const pct = gana / esc.length;
+    // El azar con tres opciones es 33%. Se exige que el truco no lo supere.
+    assert(pct <= 0.36,
+      `en ${idioma}, «elegir la más larga» acierta el ${(100*pct).toFixed(0)}% de las escenas: la Auditoría se aprueba sin leer`);
+  }
+  // Y ninguna opción puede quedarse sin su versión en inglés.
+  for (const e of esc) for (const o of e.opts)
+    assert(String(o.label_en || '').trim(), 'hay una opción sin texto en inglés');
+});
+
+test('Cuestionario del Viaje: no se aprueba con trucos, sin mirar el plato', () => {
+  // Auditoría de sep 2026, a petición del propietario: «caza de preguntas y
+  // respuestas absurdas, sobre todo respuestas trampa fáciles de predecir».
+  // Se midió qué acertaba un camarero perezoso que no lee el plato. Lo que
+  // salió, sobre el generador real:
+  //   · «¿qué alérgenos declara?»  → la correcta era la única negada Y la más
+  //     larga: 100% de 168. Además el propio enunciado sólo aparecía en platos
+  //     sin alérgenos, así que leerlo ya daba la respuesta.
+  //   · «¿cuántos declara?»        → las opciones eran siempre [n-1,n,n+1,n+2]:
+  //     la correcta era SIEMPRE la segunda más pequeña, 100% de 420.
+  //   · «¿se puede adaptar?»       → «No, es estructural» era la más larga y es
+  //     la verdad el 73% de las veces en esta carta: 73% eligiendo la larga.
+  // Este guard vuelve a medirlo cada vez, sobre el dato real, en vez de fiarse
+  // de que el texto del código siga diciendo lo que decía.
+  const cut = (ini, fin) => { const i = html.indexOf(ini); return html.slice(i, html.indexOf(fin, i) + fin.length); };
+  const fn = n => { const i = html.indexOf('function ' + n + '('); let d = 0;
+    for (let k = html.indexOf('{', i); k < html.length; k++) {
+      if (html[k] === '{') d++; else if (html[k] === '}') { d--; if (!d) return html.slice(i, k + 1); } } };
+  const src = `
+    var LANG='es', _djState={};
+    function getDish(d){return d;} function escapeHTML(s){return String(s);}
+    const _DJ_SECCION = /^(masa|topping|base|relleno|guarnicion|sabores disponibles|salsa base|sazonador|marinada|elaboracion)$/;
+    `
+    + cut('const DISHES = [', '\n];') + cut('const DISH_COMPONENTS = ', '};') + cut('const DISH_ACTIONS = ', '};')
+    + cut('const DJ_ALERGENOS_EN = ', '};')
+    + html.slice(html.indexOf('const _djNorm ='), html.indexOf('async function _djLoadIngBase'))
+    + fn('_djTrozos') + fn('_djSplitIngredients') + fn('_djSameThing') + fn('_djIngName') + fn('_djIngredients')
+    + fn('_djShuffle') + fn('_djAlEn')
+    + fn('_djQComponente') + fn('_djQAdaptar') + fn('_djQSinAlergenos')
+    + fn('_djQCualSinAlergenos') + fn('_djQCuantos') + fn('_djQIngredienteAusente')
+    + fn('_djGenerateQuiz')
+    + `
+    var allergenData_en = Object.assign({}, DJ_ALERGENOS_EN,
+      {'Mariscos':'Shellfish','Sésamo':'Sesame','Cacahuetes':'Peanuts'});
+    const P=[];
+    for(let r=0;r<10;r++) for(const d of DISHES){
+      let qs=[]; try{ qs=_djGenerateQuiz(d)||[]; }catch(e){ }
+      for(const q of qs) if(q && q.options && q.correctIdx>=0) P.push(q);
+    }
+    const num = o => Number(String(o).trim());
+    const largo = o => String(o).length;
+    const uni = (q,f)=>{ const v=q.options.map(f); const m=Math.max(...v);
+      const c=v.map((x,i)=>x===m?i:-1).filter(i=>i>=0); return c.length===1?c[0]:-1; };
+    const uniMin = (q,f)=>{ const v=q.options.map(f); const m=Math.min(...v);
+      const c=v.map((x,i)=>x===m?i:-1).filter(i=>i>=0); return c.length===1?c[0]:-1; };
+    const trucos = {
+      larga:  q=>uni(q,largo),
+      corta:  q=>uniMin(q,largo),
+      negada: q=>{ const c=q.options.map((o,i)=>/\b(no|ning|nunca|sin)\b/i.test(String(o))?i:-1).filter(i=>i>=0);
+                   return c.length===1?c[0]:-1; },
+      segundoMenor: q=>{ const v=q.options.map(num); if(v.some(x=>!Number.isFinite(x))) return -1;
+        const o=[...v].sort((a,b)=>a-b)[1];
+        const c=v.map((x,i)=>x===o?i:-1).filter(i=>i>=0); return c.length===1?c[0]:-1; },
+    };
+    const res={n:P.length}; 
+    for(const k of Object.keys(trucos)) res[k]=P.filter(q=>trucos[k](q)===q.correctIdx).length/P.length;
+    // ¿algún molde de enunciado tiene una sola respuesta posible? Leerlo bastaría.
+    const por={};
+    for(const q of P){ const m=String(q.q).replace(/"[^"]*"/g,'«X»'); (por[m]=por[m]||[]).push(q); }
+    res.moldesQueDelatan = Object.entries(por)
+      .filter(([m,qs])=>qs.length>=20 && new Set(qs.map(x=>String(x.options[x.correctIdx]).toLowerCase())).size===1)
+      .map(([m])=>m.slice(0,60));
+    // Y por tipo, que es donde se esconden
+    res.porTipo={};
+    for(const t of [...new Set(P.map(q=>q.tipo))]){
+      const s=P.filter(q=>q.tipo===t);
+      res.porTipo[t]=Object.fromEntries(Object.keys(trucos).map(k=>[k, s.filter(q=>trucos[k](q)===q.correctIdx).length/s.length]));
+      res.porTipo[t].n=s.length;
+    }
+    return res;
+  `;
+  const R = new Function(src)(); // eslint-disable-line no-new-func
+  assert(R.n > 2000, `esperaba miles de preguntas para medir, hay ${R.n}`);
+  assert(R.moldesQueDelatan.length === 0,
+    `hay enunciados con una sola respuesta posible: leerlos ya da el punto — ${R.moldesQueDelatan.join(' | ')}`);
+  // El azar es 25% con cuatro opciones. Se deja margen (45%) porque algunas
+  // distribuciones reales de la carta no se pueden aplanar sin falsear el dato;
+  // lo que no puede volver es un truco que acierte casi siempre.
+  for(const [tipo, m] of Object.entries(R.porTipo)){
+    for(const truco of ['larga','corta','negada','segundoMenor']){
+      assert(m[truco] <= 0.45,
+        `en «${tipo}» (${m.n} preguntas) el truco «${truco}» acierta el ${(100*m[truco]).toFixed(0)}%: la respuesta se predice sin mirar el plato`);
+    }
+  }
+});
+
 test('main inline <script> block parses without syntax errors', () => {
   // The app's logic lives in the last, largest <script> block. Slice from
   // the final `<script>` (no src) to the final `</script>` and verify the
