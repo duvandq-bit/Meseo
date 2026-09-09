@@ -564,7 +564,7 @@
             "label_en": "I clear Mrs. Okonkwo's plate from her right now, so she is not left with a dirty plate while her husband finishes.",
             "effects": [
               {
-                "std": 20,
+                "std": 32,
                 "met": false
               }
             ],
@@ -576,7 +576,7 @@
             "label_en": "Wait for both to finish and clear plates simultaneously from the right.",
             "effects": [
               {
-                "std": 20,
+                "std": 32,
                 "met": true
               }
             ],
@@ -588,12 +588,8 @@
             "label_en": "Ask: \"May I clear?\" before touching anything.",
             "effects": [
               {
-                "std": 20,
+                "std": 32,
                 "met": false
-              },
-              {
-                "std": 19,
-                "met": true
               }
             ],
             "feedback": "Preguntar mientras el Sr. Okonkwo aún come le presiona a terminar. La retirada espera a que AMBOS acaben — el gesto correcto es la paciencia, no el permiso. El inspector: \"Presión sutil al comensal más lento · sincronismo roto\".",
