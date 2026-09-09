@@ -6419,39 +6419,114 @@ test('Pase: el supervisor ve quién acierta, quién falla y en qué platos', () 
   assert(/_acc\('pase'/.test(html), 'la sección necesita su acordeón en el panel');
 });
 
-test('Pase: la pregunta es la del oficio — qué lleva alérgeno, no cómo se monta', () => {
-  // Cambió en sep 2026 al probarlo el propietario: «lo encuentro complicado
-  // para camareros que no son cocineros; ¿dónde va la vainilla?, ¿dónde va la
-  // canela?». Tenía razón y el fallo era de premisa: montar el plato ENTERO es
-  // un ejercicio de cocina. Medido en la versión anterior: 10,4 ingredientes a
-  // acertar de media y el 53% sin ningún alérgeno — gelatina, clavo, granadina,
-  // Tabasco. En sala eso ni se ve ni hace falta.
+test('Pase: la piscina es lo que lleva alérgeno MÁS lo que se ve en el plato', () => {
+  // Dos correcciones seguidas del propietario, y el punto medio es este.
+  // Primero (sep 2026): «lo encuentro complicado para camareros que no son
+  // cocineros; ¿dónde va la vainilla?, ¿dónde va la canela?» — montar el plato
+  // entero era un ejercicio de cocina, así que la piscina se redujo a
+  // DISH_COMPONENTS. Después, jugándolo: «en el pase a veces faltan
+  // ingredientes importantes, como en la focaccia las verduras y en el arroz
+  // negro los txipirones» y «hay que añadir los ingredientes que están a la
+  // vista» — con sólo los componentes se enseñaba el 42% de la carta (415 de
+  // 992 ingredientes) y la focaccia nunca enseñaba su berenjena.
   //
-  // La piscina sale ahora de DISH_COMPONENTS, que es exactamente «lo que aporta
-  // alérgeno en este plato», validado por cocina y cerrado por el guard de CI.
+  // El corte es la estructura de la ficha: lo de nivel superior va montado en el
+  // plato; lo que cuelga de un rótulo —«Focaccia: Harina, Levadura»— está DENTRO
+  // de una preparación y no se ve. Los sazonadores y los aditivos técnicos no
+  // entran por ninguna vía.
   assert(html.includes('function _paseComponentes('), 'falta el constructor de la piscina');
-  const comp = html.slice(html.indexOf('function _paseComponentes('), html.indexOf('function _paseSenuelos('));
-  assert(/DISH_COMPONENTS\[dish\.id\]/.test(comp), 'la piscina son los componentes alergénicos del plato');
+  const comp = html.slice(html.indexOf('function _paseComponentes('), html.indexOf('function _paseVisibles('));
+  assert(/DISH_COMPONENTS\[dish\.id\]/.test(comp), 'los alérgenos siguen saliendo del dato que cocina valida');
   assert(/dec\.has\(a\)/.test(comp),
     'nunca se enseña un alérgeno que el plato no declare: la ficha, el buscador y el juego dicen lo mismo');
-  // Los señuelos también llevan alérgeno: si no, se distinguirían por no tener
-  // insignia, y volveríamos a poder resolverlo sin saber nada del plato.
-  const sen = html.slice(html.indexOf('function _paseSenuelos('), html.indexOf('function _paseArmar('));
-  assert(/_paseComponentes\(o,_en\)/.test(sen), 'los señuelos salen de los componentes de OTROS platos');
+  const vis = html.slice(html.indexOf('function _paseVisibles('), html.indexOf('function _paseMismoPrefijo('));
+  assert(/_paseRotulos\(dish, _en\)/.test(vis) && /if\(hijos\.has\(_djClave\(it\.t\)\)\) continue;/.test(vis),
+    'lo que cuelga de un rótulo está dentro de una preparación y no se ve');
+  // Los rótulos se leen de la ficha ESPAÑOLA y se traducen nombre a nombre, igual
+  // que _djIngredients. Leerlos con getDish() era el fallo: en inglés devuelve la
+  // ficha de DISHES_EN entera, los rótulos salían en otro idioma que los
+  // ingredientes y no casaba ni uno. Comprobado en el navegador con LANG='en':
+  // el arroz negro ofrecía «Zanahoria», «Puerro» y «Cebolla blanca» como si
+  // fueran del plato, cuando van dentro del bisque y no se ven.
+  const rot = html.slice(html.indexOf('function _paseRotulos('), html.indexOf('function _pasePlegar('));
+  assert(/String\(dish\.ingredients\|\|''\)/.test(rot), 'los rótulos salen de la ficha española');
+  assert(!/getDish/.test(rot), 'getDish devuelve la ficha del otro idioma entera: aquí no vale');
+  assert(/_djClave\(_djIngName\(m\[1\], _en\)\)/.test(rot), 'y cada nombre se traduce igual que en _djIngredients');
+  assert(/_pasePlegar\(dish, items, _en\)/.test(html) || /function _pasePlegar\(dish, items, _en\)/.test(html),
+    '_pasePlegar necesita el idioma: arrastraba el mismo fallo desde que existe');
+  assert(/a:\(it\.a\|\|\[\]\)\.filter\(a=>dec\.has\(a\)\)/.test(vis),
+    'tampoco por esta vía puede aparecer un alérgeno que el plato no declara');
+  const fich = html.slice(html.indexOf('function _paseFichas('), html.indexOf('function _paseSenuelos('));
+  assert(/_paseComponentes\(dish,_en\)/.test(fich) && /_paseVisibles\(dish,_en\)/.test(fich),
+    'la piscina real es la unión de las dos');
+  assert(/_paseMismoPrefijo\(c\.t, x\.t\)/.test(fich),
+    '«Bisque» y «Bisque Caldo de Langostino» son lo mismo y no pueden salir las dos');
+  assert(/!_paseEsSazonador\(it\)/.test(fich), 'la sal y los aditivos técnicos no entran');
+  // Los señuelos salen de la MISMA fuente. Si siguieran saliendo sólo de los
+  // componentes, todos llevarían insignia de alérgeno y muchas fichas correctas
+  // no: «sin insignia = es del plato» resolvería la fase 1 sin saber nada.
+  const sen = html.slice(html.indexOf('function _paseSenuelos('), html.indexOf('const _PASE_TOPE'));
+  assert(/_paseFichas\(o,_en\)/.test(sen), 'los señuelos salen de las fichas de OTROS platos, no sólo de sus componentes');
   assert(/o\.cat!==dish\.cat/.test(sen), 'de la MISMA categoría: un brócoli en un postre se descarta por absurdo');
   assert(/_djSameThing\(m, it\.t\)/.test(sen), 'y no puede colarse como señuelo algo que el plato sí lleva');
 });
 
-test('Pase: un plato sin alérgenos también se juega', () => {
-  // Petición del propietario: que sigan los 98. Saber que un plato NO lleva
-  // ninguno es conocimiento de sala tanto como saber cuáles lleva; ahí la
-  // piscina es sólo señuelos y acertar es no señalar nada.
+test('Pase: los ingredientes que el propietario echó en falta están en la piscina', () => {
+  // Los tres casos que él nombró jugando, clavados sobre el dato real. No es
+  // una comprobación de que la regla existe: es la lista concreta que faltaba.
+  //   «en la focaccia las verduras y en el arroz negro los txipirones»
+  //   «falta carne de wagyu madurada, cebolleta, cebollino, Tabasco y huevo
+  //    (yema de huevo), crujiente de papa y trufa negra»
+  const cut = (ini, fin) => { const i = html.indexOf(ini); return html.slice(i, html.indexOf(fin, i) + fin.length); };
+  const fn = n => { const i = html.indexOf('function ' + n + '('); let d = 0;
+    for (let k = html.indexOf('{', i); k < html.length; k++) {
+      if (html[k] === '{') d++; else if (html[k] === '}') { d--; if (!d) return html.slice(i, k + 1); } } };
+  // _djIngBase hace falta aunque no se cargue: _djIngredients lo referencia y sin
+  // él lanza, y _paseVisibles se come la excepción y devuelve la piscina vieja.
+  const src = `var LANG='es', _djIngBase=null; function getDish(d){return d;} function _djIngName(n){return n;}
+    const _DJ_SECCION = ${/^(masa|topping|base|relleno|guarnicion|sabores disponibles|salsa base|sazonador|marinada|elaboracion)$/};`
+    + cut('const DISHES = [', '\n];') + cut('const DISH_COMPONENTS = ', '};')
+    + html.slice(html.indexOf('const _djNorm ='), html.indexOf('async function _djLoadIngBase'))
+    + fn('_djTrozos') + fn('_djSplitIngredients') + fn('_djSameThing') + fn('_djIngredients')
+    + html.slice(html.indexOf('const _PASE_SAZONADOR'), html.indexOf('function _paseSenuelos('))
+    + `
+    const pide = {
+      88: ['Berenjena','Calabacín','Espinaca aliñada'],
+      92: ['Calamar','Arroz bomba'],
+      18: ['Carne de Wagyu madurada dry','Cebolleta','Cebollino','Tabasco','Huevo','Crujiente de papa','Trufa negra'],
+    };
+    const faltan=[], vacios=[], repes=[];
+    for(const d of DISHES){
+      const F=_paseFichas(d,false), et=F.map(x=>_djNorm(x.t));
+      if(!F.length) vacios.push(d.id);
+      if(new Set(et).size!==et.length) repes.push(d.id);
+      for(const q of (pide[d.id]||[])) if(!et.includes(_djNorm(q))) faltan.push(d.id+':'+q);
+      // Ni sal ni aditivos técnicos por ninguna de las dos vías.
+      for(const mal of ['sal','pimienta','levadura','gelatinas','xantana','laurel'])
+        if(et.includes(mal)) faltan.push(d.id+':sobra «'+mal+'»');
+    }
+    return {faltan, vacios, repes};`;
+  const R = new Function(src)(); // eslint-disable-line no-new-func
+  assert(R.faltan.length === 0, `la piscina no cuadra: ${R.faltan.slice(0, 8).join(', ')}`);
+  assert(R.vacios.length === 0, `platos con la piscina vacía: ${R.vacios.join(', ')}`);
+  assert(R.repes.length === 0, `la ficha y el componente salen dos veces en: ${R.repes.join(', ')}`);
+});
+
+test('Pase: se juegan los 98 platos y ninguno se queda sin fichas', () => {
+  // Petición del propietario: que sigan los 98. Mientras la piscina salía sólo
+  // de los componentes alergénicos había 14 platos que no declaran ninguno, y
+  // para ésos existía el botón «No lleva ninguno»: acertar era no señalar nada.
+  // Con los ingredientes que se ven ya no hay ni un plato con la piscina vacía
+  // —medido sobre los 97 jugables—, así que ese botón pasó a ser una respuesta
+  // siempre falsa y se quitó. El barrido funcional de más abajo comprueba que
+  // sigue sin haber ninguno; si algún día lo hubiera, hay que devolverlo.
   const arm = html.slice(html.indexOf('function _paseArmar(){'), html.indexOf('function _paseKeydown('));
-  assert(/reales\.length \? Math\.min\(5/.test(arm), 'un plato sin componentes también arma piscina');
-  assert(/function _paseServir\(ninguno\)/.test(html), 'servir debe aceptar la respuesta «no lleva ninguno»');
+  assert(/reales\.length\s*\n?\s*\? Math\.min\(5/.test(arm), 'un plato sin componentes también arma piscina');
+  assert(/function _paseServir\(ninguno\)/.test(html), 'servir conserva el enganche por si volviera a hacer falta');
   assert(/if\(ninguno\) _paseState\.sel=new Set\(\);/.test(html),
     '«no lleva ninguno» es responder con la selección vacía');
-  assert(/onclick="_paseServir\(true\)"/.test(html), 'y necesita su botón');
+  assert(!/onclick="_paseServir\(true\)"/.test(html),
+    'el botón «No lleva ninguno» ya no puede acertar nunca: es una trampa');
   // Jugables: todos los que su categoría pueda surtir de señuelos.
   const jug = html.slice(html.indexOf('function _paseJugables(){'), html.indexOf('function _pasePeso('));
   assert(/\.length >= 3/.test(jug), 'sólo se exige que haya al menos tres señuelos entre los que elegir');
@@ -6483,10 +6558,11 @@ test('Pase: la respuesta correcta gana en todos los platos jugables', () => {
     + fn('_djTrozos') + fn('_djSplitIngredients') + fn('_djSameThing') + fn('_djIngName') + fn('_djIngredients')
     + fn('_lqaShuffle')
     + html.slice(html.indexOf('const _PASE_SAZONADOR'), html.indexOf('function _paseRecortar('))
-    + fn('_paseRecortar') + fn('_pasePlegar') + fn('_paseFusionar') + fn('_paseComponentes') + fn('_paseSenuelos') + fn('_paseArmar')
+    + fn('_paseRecortar') + fn('_pasePlegar') + fn('_paseFusionar') + fn('_paseComponentes')
+    + fn('_paseVisibles') + fn('_paseMismoPrefijo') + fn('_paseFichas') + fn('_paseSenuelos') + fn('_paseArmar')
     + fn('_paseJugables') + fn('_paseAlergenosMontados') + fn('_paseServir')
     + `
-    let ok=0, malos=[], dup=[], pocos=[], sinAl=0;
+    let ok=0, malos=[], dup=[], pocos=[], sinAl=0, delata=[];
     for(const d of _paseJugables()){
       _paseState={dishId:d.id, fase:'montaje', sel:new Set(), piscina:null, veredicto:null};
       _paseArmar();
@@ -6496,8 +6572,23 @@ test('Pase: la respuesta correcta gana en todos los platos jugables', () => {
       const et=P.map(i=>_djNorm(i.t));
       if(new Set(et).size!==et.length) dup.push(d.id);
       if(falsos.length<3) pocos.push(d.id);
-      // todo señuelo debe llevar alérgeno: si no, se distinguiría a simple vista
-      if(falsos.some(f=>!f.a.length)) malos.push(d.id+':señuelo sin alérgeno');
+      // La insignia de alérgeno no puede separar las correctas de los señuelos.
+      // Antes todas las correctas Y todos los señuelos llevaban insignia, así
+      // que no delataba; desde que entran los ingredientes que sólo se ven, si
+      // los señuelos siguieran saliendo sólo de los componentes se resolvería
+      // con «sin insignia = es del plato». Se mide en 20 rondas por plato.
+      let sep=0;
+      for(let k=0;k<20;k++){
+        _paseState={dishId:d.id, fase:'montaje', sel:new Set(), piscina:null, veredicto:null};
+        _paseArmar();
+        const Q=_paseState.piscina;
+        const r=Q.filter(i=>!i.falso), f=Q.filter(i=>i.falso);
+        const rA=r.filter(i=>(i.a||[]).length).length, fA=f.filter(i=>(i.a||[]).length).length;
+        if(r.length&&f.length&&((rA===r.length&&fA===0)||(rA===0&&fA===f.length))) sep++;
+      }
+      if(sep>10) delata.push(d.id+':'+sep+'/20');
+      _paseState={dishId:d.id, fase:'montaje', sel:new Set(), piscina:null, veredicto:null};
+      _paseState.piscina=P;
       P.forEach((it,i)=>{ if(!it.falso) _paseState.sel.add(i); });
       _paseServir();
       const V=_paseState.veredicto;
@@ -6506,7 +6597,7 @@ test('Pase: la respuesta correcta gana en todos los platos jugables', () => {
       if(V.perfecto && dec===mon) ok++;
       else malos.push(d.id+':'+(V.perfecto?'alérgenos «'+mon+'»≠«'+dec+'»':'montaje'));
     }
-    return {ok, malos, dup, pocos, sinAl, n:_paseJugables().length};
+    return {ok, malos, dup, pocos, sinAl, delata, n:_paseJugables().length};
   `;
   const R = new Function(src)(); // eslint-disable-line no-new-func
   assert(R.n >= 90, `esperaba jugar casi los 98 platos, hay ${R.n}`);
@@ -6514,7 +6605,13 @@ test('Pase: la respuesta correcta gana en todos los platos jugables', () => {
   assert(R.ok === R.n, `ganan ${R.ok} de ${R.n}`);
   assert(R.dup.length === 0, `piscina con fichas repetidas: ${R.dup.join(', ')}`);
   assert(R.pocos.length === 0, `menos de 3 señuelos en: ${R.pocos.join(', ')}`);
-  assert(R.sinAl > 0, 'los platos sin alérgenos deben seguir jugándose (respuesta: ninguno)');
+  assert(R.sinAl === 0,
+    `${R.sinAl} platos se quedan con la piscina vacía y ya no hay botón para responder «no lleva ninguno»`);
+  // Medido con los señuelos saliendo de _paseFichas: el peor plato separa en el
+  // 32% de las rondas, por azar y porque tiene pocas fichas. Volver a sacarlos
+  // sólo de _paseComponentes lo dispara al 100% en decenas de platos.
+  assert(R.delata.length === 0,
+    `la insignia de alérgeno delata cuál es el señuelo en: ${R.delata.slice(0,8).join(', ')}`);
 });
 
 test('Pase: la fase de la alergia no lleva la respuesta escrita en las fichas', () => {
@@ -6846,17 +6943,27 @@ test('Pase: la preparación y sus ingredientes no salen como fichas hermanas', (
 test('Pase: la piscina tiene techo y el cuadro de alérgenos sobrevive al recorte', () => {
   // Auditoría sep 2026: la piscina no tenía tope. El Tataki de Atún (Almuerzo)
   // salía con 20 fichas —15 correctas— y llenaba una pantalla de móvil entera;
-  // 20 platos pasaban de 12 fichas. Se recorta a 8 correctas, pero jamás a
+  // 20 platos pasaban de 12 fichas. Se recorta a 10 correctas, pero jamás a
   // costa del cuadro: primero entra un conjunto que cubra todos los alérgenos
   // declarados (7 en el peor plato de la carta, así que cabe).
-  assert(/const _PASE_TOPE = 8;/.test(html), 'falta el tope de fichas correctas');
+  //
+  // El tope subió de 8 a 10 al entrar los ingredientes que se ven: con 8, el
+  // Tartar de Wagyu se quedaba sin «Crujiente de papa» ni «Trufa negra», que
+  // son dos de los siete que el propietario echó en falta por su nombre. Lo que
+  // NO sube es la piscina entera: sigue en 13 fichas, y los señuelos ceden el
+  // sitio que ganan las correctas.
+  assert(/const _PASE_TOPE = 10;/.test(html), 'falta el tope de fichas correctas');
   const rec = (() => { const i = html.indexOf('function _paseRecortar('); let d = 0;
     for (let k = html.indexOf('{', i); k < html.length; k++) {
       if (html[k] === '{') d++; else if (html[k] === '}') { d--; if (!d) return html.slice(i, k + 1); } } })();
   assert(rec && /falta=new Set\(dish\.allergens/.test(rec),
     'el recorte parte de los alérgenos declarados, no de un corte a ciegas');
-  assert(/const reales = _paseRecortar\(dish, _pasePlegar\(dish, _paseFusionar\(/.test(html),
+  assert(/const reales = _paseRecortar\(dish, _pasePlegar\(dish, _paseFichas\(dish,_en\), _en\)\)/.test(html),
     'el recorte se aplica al armar la piscina, después de plegar las preparaciones');
+  assert(/const comp=resto\.filter\(c=>!c\.vis\), vis=resto\.filter\(c=>c\.vis\)/.test(rec),
+    'el relleno alterna alérgeno y visible: si no, el arroz negro gasta las plazas y pierde el «Arroz bomba»');
+  assert(!/_lqaShuffle\(resto\)/.test(rec),
+    'el relleno respeta el orden de cocina: barajarlo cambiaba el plato correcto en cada ronda');
   // El barrido funcional que ya existe («la respuesta correcta gana») comprueba
   // que el cuadro montado sigue siendo idéntico al declarado en los 98 platos,
   // así que aquí basta con fijar el techo medido.
@@ -6864,12 +6971,14 @@ test('Pase: la piscina tiene techo y el cuadro de alérgenos sobrevive al recort
   const fn = n => { const i = html.indexOf('function ' + n + '('); let d = 0;
     for (let k = html.indexOf('{', i); k < html.length; k++) {
       if (html[k] === '{') d++; else if (html[k] === '}') { d--; if (!d) return html.slice(i, k + 1); } } };
-  const src = `var LANG='es';function getDish(d){return d;}function _djIngName(n){return n;}`
+  const src = `var LANG='es', _djIngBase=null;function getDish(d){return d;}function _djIngName(n){return n;}
+    const _DJ_SECCION = ${/^(masa|topping|base|relleno|guarnicion|sabores disponibles|salsa base|sazonador|marinada|elaboracion)$/};`
     + cut('const DISHES = [', '\n];') + cut('const DISH_COMPONENTS = ', '};')
     + html.slice(html.indexOf('const _djNorm ='), html.indexOf('async function _djLoadIngBase'))
     + fn('_djTrozos') + fn('_djSplitIngredients') + fn('_djSameThing') + fn('_djIngredients') + fn('_lqaShuffle')
     + html.slice(html.indexOf('const _PASE_SAZONADOR'), html.indexOf('function _paseRecortar('))
-    + fn('_paseRecortar') + fn('_pasePlegar') + fn('_paseFusionar') + fn('_paseComponentes') + fn('_paseSenuelos')
+    + fn('_paseRecortar') + fn('_pasePlegar') + fn('_paseFusionar') + fn('_paseComponentes')
+    + fn('_paseVisibles') + fn('_paseMismoPrefijo') + fn('_paseFichas') + fn('_paseSenuelos')
     + fn('_paseArmar') + fn('_paseJugables')
     + `
     let max=0, maxR=0, doce=0, peor='';
@@ -6883,7 +6992,7 @@ test('Pase: la piscina tiene techo y el cuadro de alérgenos sobrevive al recort
     }
     return {max, maxR, doce, peor};`;
   const R = new Function('var _paseState=null;' + src)(); // eslint-disable-line no-new-func
-  assert(R.maxR <= 8, `el tope de fichas correctas se ha roto: ${R.maxR}`);
+  assert(R.maxR <= 10, `el tope de fichas correctas se ha roto: ${R.maxR}`);
   assert(R.max <= 13, `la piscina más larga es de ${R.max} fichas (${R.peor}); antes del tope eran 20`);
   assert(R.doce === 0, `${R.doce} platos vuelven a pasar de 13 fichas`);
 });
@@ -7062,14 +7171,34 @@ test('Pase: los sazonadores no entran en la piscina', () => {
   // Verduras y frutas NO: el tomate o la lechuga sí dicen qué plato es.
   for (const x of ['tomate', 'lechuga', 'cebolla', 'zanahoria', 'papa'])
     assert(!new RegExp(`'${x}'`).test(lista), `«${x}» identifica el plato y no puede filtrarse`);
+  // Y las dos listas tienen que valer en inglés. Están escritas en español, y
+  // en inglés las fichas llegan ya traducidas: medido en el navegador con
+  // LANG='en', el Tartar de Wagyu ofrecía «Salt» y «Pepper» como ingredientes
+  // del plato. Se traduce la lista con el mismo diccionario, no se duplica.
+  const fuera = html.slice(html.indexOf('const _PASE_TRAD'), html.indexOf('function _paseEsSazonador'));
+  assert(/en\.add\(_djNorm\(_djIngName\(k, true\)\)\)/.test(fuera),
+    'la lista se traduce con _djIngName, que es el mismo diccionario que traduce las fichas');
+  assert(/_paseFuera\(_PASE_SAZONADOR, _djNorm\(it\.t\)\)/.test(html), 'los sazonadores pasan por ahí');
+  assert(/_paseFuera\(_PASE_GENERICO, _djNorm\(t\)\)/.test(html), 'los rótulos genéricos también');
   // Un sazonador que llegara a llevar alérgeno dejaría de filtrarse solo.
   const fn = html.slice(html.indexOf('function _paseEsSazonador'), html.indexOf('function _paseSecDe('));
   assert(/!\(it\.a\|\|\[\]\)\.length &&/.test(fn),
     'sólo se filtra lo que NO lleva alérgeno: si mañana la sal llevara uno, vuelve a la piscina');
-  // Se filtran de los reales Y de los señuelos.
-  const arm = html.slice(html.indexOf('function _paseArmar('), html.indexOf('function _paseKeydown('));
-  assert(/\.filter\(it=>!_paseEsSazonador\(it\)\)/.test(arm), 'los ingredientes reales se filtran');
-  const dis = html.slice(html.indexOf('function _paseSenuelos('), html.indexOf('function _paseArmar('));
+  // Aditivos técnicos y aromáticos de cocción: entraron con los ingredientes
+  // que se ven, porque la ficha los lista en el nivel de arriba igual que la
+  // berenjena. Nadie los canta en sala y ninguno lleva alérgeno.
+  for (const x of ['levadura', 'gelatina', 'xantana', 'maizena', 'laurel', 'canela'])
+    assert(lista.includes(`'${x}'`), `«${x}» no se ve en el plato y no puede entrar en la piscina`);
+  // «Pimienta verde» NO: es un plato de la carta y se quedaría sin fichas.
+  assert(!/'pimienta verde'/.test(lista), '«pimienta verde» es la Salsa de pimienta verde, no un sazonador');
+  // Rótulos que no nombran nada enseñable.
+  const gen = html.slice(html.indexOf('const _PASE_GENERICO'), html.indexOf('function _paseEsSazonador'));
+  for (const x of ['alino', 'bano', 'guarnicion emplatada'])
+    assert(gen.includes(`'${x}'`), `«${x}» es un encabezado de ficha, no un ingrediente`);
+  // Se filtran de los reales Y de los señuelos, y ambos salen de _paseFichas.
+  const fich = html.slice(html.indexOf('function _paseFichas('), html.indexOf('function _paseSenuelos('));
+  assert(/\.filter\(it=>!_paseEsSazonador\(it\)\)/.test(fich), 'los ingredientes reales se filtran');
+  const dis = html.slice(html.indexOf('function _paseSenuelos('), html.indexOf('const _PASE_TOPE'));
   assert(/if\(_paseEsSazonador\(it\)\) continue;/.test(dis), 'un señuelo de sal no engaña a nadie');
 });
 
