@@ -52,7 +52,7 @@
 <meta property="og:description" content="Formación de equipos de sala: carta, alérgenos, vinos, exámenes y juegos de repaso.">
 <meta property="og:url" content="https://meseo.es/">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"Meseo","url":"https://meseo.es/"}</script>
-<meta name="app-version" content="7.402">
+<meta name="app-version" content="7.403">
 <meta name="app-build" content="May 2026">
 <meta name="theme-color" content="#1c2a22">
 <!-- ═══ PWA ═══ -->
@@ -1596,7 +1596,7 @@ const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><p
 const SRC = 'src';
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='7.402';  // sincronizada con sw.js VERSION (guard de CI)
+const APP_VERSION='7.403';  // sincronizada con sw.js VERSION (guard de CI)
 const APP_BUILD='Jul 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;
@@ -20355,8 +20355,8 @@ function _paseDesmontajeHTML(dish, dd, _en){
       <div class="pase-mise-in">${retirados.join('')||`<span class="pase-vacio">${_en?'Nothing pointed at yet.':'Todavía no has señalado nada.'}</span>`}</div>
     </section>
     <div class="pase-actions">
-      <button class="pase-retry" onclick="_paseConfirmarRetirada(true)"${S.quitar.size?'':' disabled'}>${_en?'It cannot come off':'No se puede retirar'}</button>
-      <button class="pase-serve" onclick="_paseConfirmarRetirada(false)"${S.quitar.size?'':' disabled'}>${_en?'It can, take it off':'Sí se puede retirar'}</button>
+      <button class="pase-retry" onclick="_paseConfirmarRetirada(true)">${_en?'It cannot come off':'No se puede retirar'}</button>
+      <button class="pase-serve" onclick="_paseConfirmarRetirada(false)">${_en?'It can, take it off':'Sí se puede retirar'}</button>
     </div>`;
   }
 
@@ -20384,7 +20384,14 @@ function _paseDesmontajeHTML(dish, dd, _en){
   } else if(!R.acertoQue){
     // Sabía la mitad —o ninguna—, pero lo que falló primero es el portador.
     const mitad = R.retirable ? !R.noSePuede : R.noSePuede;
-    s = (_en?`Not what carries ${alLoc}. `:`Eso no es lo que aporta ese alérgeno. `)
+    // Contestar sin señalar nada no es «señalar mal»: es no haber contestado la
+    // primera mitad. El propietario avisó dos veces de que el botón «no
+    // funciona» — estaba desactivado a propósito, y un botón que no responde es
+    // peor que una respuesta corregida. Ahora responde, y esto lo explica.
+    const vacio = !R.debenSalir.length ? false : (_paseState && _paseState.quitar.size===0);
+    s = (vacio
+        ? (_en?`You did not point at anything. `:`No has señalado nada. `)
+        : (_en?`Not what carries ${alLoc}. `:`Eso no es lo que aporta ese alérgeno. `))
       + (mitad
         ? (R.retirable
             ? (_en?`You were right that it can come off — but the comanda has to name the right thing.`

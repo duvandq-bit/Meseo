@@ -7008,12 +7008,17 @@ test('Pase de cocina: el desmontaje obedece a lo que validó cocina', () => {
   const des = html.slice(html.indexOf('function _paseDesmontajeHTML('), html.indexOf('function renderRepaso('));
   assert(/const cls = debe && on \? ' ok'/.test(des),
     'la revisión pinta el portador igual sea estructural o no: ahora también se exigía señalarlo');
-  // Y los dos botones esperan a que haya algo señalado: si «no se puede»
-  // siguiera activo desde el principio, volvería a ser un atajo de un toque.
+  // Los dos botones responden SIEMPRE. Estuvieron desactivados hasta señalar el
+  // portador y el propietario avisó dos veces de que «no funcionan»: un botón
+  // que no responde es peor que una respuesta corregida, y el atajo ya no vive
+  // ahí — vive en el veredicto, que exige acertoQue. Se comprueba con el
+  // barrido funcional de más abajo, no con el marcado.
   const preg = des.slice(0, des.indexOf('const chips=S.plato.map'));
   const botones = preg.slice(preg.indexOf('<div class="pase-actions">'));
-  assert((botones.match(/\$\{S\.quitar\.size\?'':' disabled'\}/g)||[]).length === 2,
-    'los dos botones de la fase 2 esperan a que se señale el portador');
+  assert(!/disabled/.test(botones),
+    'los botones de la fase 2 no pueden desactivarse: hay que poder contestar y que el veredicto corrija');
+  assert(/_paseConfirmarRetirada\(true\)/.test(botones) && /_paseConfirmarRetirada\(false\)/.test(botones),
+    'faltan las dos respuestas de la fase 2');
   // La comanda que se enseña es la de cocina, en el idioma de la app.
   assert(/act\.c_en\|\|act\.c/.test(conf) && /act\.c\|\|''/.test(conf),
     'la comanda debe salir de DISH_ACTIONS (c / c_en), nunca redactada por el juego');
