@@ -1,6 +1,6 @@
 {
  "venue": "mb",
- "_readme": "Carro de quesos de M.B., transcrito del PDF de cocina. «en_carro» false = las filas marcadas en rojo: NO están en el carro ahora mismo, pero estuvieron y seguramente vuelvan. «cuajo» importa: sólo el vegetal o el láctico valen para un vegetariano estricto, y hay diez quesos sin cuajo anotado sobre los que no se puede responder. «leche cruda» importa para embarazadas. Todos llevan Lácteos. BORRADOR hasta que exista la sección en la app.",
+ "_readme": "Carro de quesos de M.B. «en_carro» false = las filas marcadas en rojo en el PDF de cocina: NO están en el carro ahora mismo, pero estuvieron y seguramente vuelvan. «cuajo» importa: sólo el vegetal o el láctico valen para un vegetariano estricto, y hay quesos sin cuajo anotado sobre los que la app dice «sin confirmar» y NUNCA que sí. «leche cruda» importa para embarazadas. Todos llevan Lácteos. La sección sale sola en cuanto existe data/quesos-<restaurante>.json.",
  "quesos": [
   {
    "grupo": "Canarios",

@@ -1,6 +1,6 @@
 # Por dónde seguir
 
-Estado a **10 de septiembre de 2026** · versión **7.423** · 321 pruebas en verde ·
+Estado a **10 de septiembre de 2026** · versión **7.429** · 323 pruebas en verde ·
 auditoría de alérgenos 0/0.
 
 ---
@@ -69,6 +69,16 @@ Vinagre de manzana» lleva Sulfitos. Acortarla los habría borrado en silencio.
 Ha pasado dos veces: escribir una comprobación que reproduce el mismo filtro que
 el código en vez de comprobar el del código. **Siempre verificar que el guard
 muerde**: romper la cosa a propósito y ver que salta.
+
+Y una tercera, peor: un guard que **lee el código fuente con expresiones
+regulares en vez de ejecutarlo**. El del resumen semanal comprobaba que el texto
+de la función contuviera «Sin actividad»… y lo encontraba **en un comentario**.
+Cuando el PR #433 borró de golpe las cinco líneas que construían el mensaje, las
+seis comprobaciones siguieron en verde y `return L.join('\n')` se quedó
+apuntando a una variable que ya no existía. **Dos días con la pantalla de
+Análisis del supervisor reventada entera** —y con ella el Código de acceso, que
+vive dentro— hasta que el propietario lo vio. Si un guard puede ejecutar la
+función, que la ejecute.
 
 Y un guard que mide algo aleatorio necesita margen: el del delator por insignia
 tenía el umbral pegado al ruido y **fallaba el 2% de las tiradas sin que nada

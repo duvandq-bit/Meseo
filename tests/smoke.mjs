@@ -8416,13 +8416,50 @@ test('Supervisor: resumen semanal listo para compartir (liga + actividad)', () =
   // de la liga, quién entrenó y quién no.
   const fn = html.slice(html.indexOf('function _supResumenTxt'), html.indexOf('function renderSupAnalytics'));
   assert(fn.length > 100, 'falta el generador _supResumenTxt');
-  assert(/wk\.k===key/.test(fn) && /e\.wkKey===key/.test(fn) && /Math\.max\(xp, e\.wkXP\|\|0\)/.test(fn),
-    'el podio debe fusionar nube (extras.wk) Y datos locales (wkKey/wkXP) — solo nube dejaba fuera al supervisor');
-  assert(/_alive/.test(fn) && /30\*86400000/.test(fn) && /roster\.filter/.test(fn),
-    '«Sin actividad» solo cuenta al equipo vivo (30 días) — los perfiles fantasma inflaban la lista');
-  assert(/_wkKey\(\)/.test(fn) && /d\.setUTCDate\(d\.getUTCDate\(\)-7\)/.test(fn),
-    'debe poder generar la semana en curso Y la semana cerrada (lunes por la mañana)');
-  assert(/Sin actividad/.test(fn), 'el mensaje debe nombrar a quien no entrenó (visibilidad suave)');
+  // ── Este guard EJECUTA el generador; antes solo leía su código fuente. ──
+  // La versión de lectura no vio que el PR #433 («Fuera el Cliente IA») se
+  // llevó por delante las CINCO líneas que construían el mensaje y dejó
+  // `return L.join('\n')` apuntando a una variable borrada. Todas sus
+  // expresiones regulares seguían encontrando lo que buscaban: «Sin
+  // actividad» estaba, sí, pero en un COMENTARIO. Resultado: la pantalla de
+  // Análisis del supervisor reventaba entera desde la v7.386 —y con ella el
+  // Código de acceso, que vive dentro— hasta que el propietario lo vio.
+  const lunes = (() => { const d = new Date(); d.setUTCDate(d.getUTCDate() - ((d.getUTCDay() + 6) % 7));
+    return d.toISOString().slice(0, 10); })();
+  const ahora = new Date().toISOString();
+  const hace60 = new Date(Date.now() - 60 * 86400000).toISOString();
+  const mk = o => Object.assign({ extras: {}, lastActiveAt: ahora }, o);
+  const equipo = {
+    Nube:  mk({ extras: { wk: { k: lunes, xp: 900 } } }),   // XP solo en la nube
+    Local: mk({ wkKey: lunes, wkXP: 400 }),                  // XP solo en el dispositivo
+    Vago:  mk({}),                                           // vivo y sin entrenar
+    Viejo: mk({ lastActiveAt: hace60 })                      // perfil fantasma
+  };
+  const nombres = Object.keys(equipo);
+  const cargar = new Function('LANG', '_wkKey', '_dispName', fn + '; return _supResumenTxt;'); // eslint-disable-line no-new-func
+  const run = (lang, prev) => cargar(lang, () => lunes, n => n)(equipo, nombres, prev);
+
+  for (const lang of ['es', 'en']) {
+    const txt = run(lang, false);
+    assert(typeof txt === 'string' && txt.length > 0, `el resumen (${lang}) no devuelve texto`);
+    const L = txt.split('\n');
+    assert(L.length >= 3, `el resumen (${lang}) sale con ${L.length} línea(s): ${JSON.stringify(txt)}`);
+    // El podio fusiona nube Y dispositivo: solo nube dejaba fuera al propio
+    // supervisor («Duvan no estudió» mientras la Liga lo ponía 3º, jul 2026).
+    assert(/🥇 Nube \+900/.test(txt), `el podio debe leer la XP de la nube (${lang}): ${txt}`);
+    assert(/🥈 Local \+400/.test(txt), `el podio debe leer la XP del dispositivo (${lang}): ${txt}`);
+    // «Sin actividad» nombra a quien no entrenó, pero solo al equipo VIVO.
+    assert(/Vago/.test(txt), `el mensaje debe nombrar a quien no entrenó (${lang}): ${txt}`);
+    assert(!/Viejo/.test(txt), `un perfil sin señal de vida en 30 días no cuenta (${lang}): ${txt}`);
+    assert(/\(2\/3\)/.test(txt), `entrenaron 2 de una plantilla viva de 3 (${lang}): ${txt}`);
+  }
+  // Semana en curso y semana cerrada dan cabeceras distintas (lunes por la
+  // mañana el supervisor quiere la que acaba de terminar).
+  assert(run('es', false).split('\n')[0] !== run('es', true).split('\n')[0],
+    'la semana cerrada debe generar una cabecera distinta de la semana en curso');
+  // El mensaje se reenvía por WhatsApp: van los nombres VISIBLES.
+  assert(/🥇 Ada L\./.test(cargar('es', () => lunes, n => (n === 'Nube' ? 'Ada L.' : n))(equipo, nombres, false)),
+    'el resumen debe usar el nombre visible, no el usuario');
   // La sección del panel: alternador de semana + copiar + WhatsApp
   const sec = html.slice(html.indexOf('const resumenSection'), html.indexOf('// ── DÓNDE FALLA EL EQUIPO'));
   assert(/window\._supResWk/.test(html) && /'prev' : 'cur'/.test(html),
@@ -8657,6 +8694,94 @@ test('Acceso: ninguna consulta cruza de un restaurante a otro', () => {
     '_vSello({ employee: me, room: CHAT_ROOM })',
     '_vSello({ challenger: fromUser, challenged: toUser,',
   ]) assert(html.includes(marca), `falta el sello de restaurante en: ${marca.slice(0, 50)}`);
+});
+
+test('Quesos: nunca se le dice a un vegetariano que sí sin saberlo', () => {
+  // Sección de consulta, no de plato: 48 fichas no caben como uno. Lo que se
+  // pregunta en mesa no es la maduración, es «¿puedo comerlo?».
+  assert(/function renderQuesos\(\)/.test(html), 'falta la sección de quesos');
+  assert(/'lqa','vinos','quesos','chat'/.test(html), 'quesos tiene que ser una ruta válida');
+  assert(/renderMap = \{quesos:renderQuesos,/.test(html), 'y tener quien la pinte');
+  assert(/id="navQuesos"[^>]*style="display:none"/.test(html),
+    'el botón sale sólo si el restaurante tiene carro, así que arranca escondido');
+
+  // LA regla: sin cuajo anotado NO se afirma que valga. Decirle a un vegetariano
+  // que un queso le vale cuando no se sabe es peor que no saberlo.
+  const apto = html.slice(html.indexOf('function _qApto(q){'), html.indexOf('function _qCruda('));
+  assert(/if\(!c\) return null;/.test(apto),
+    'sin cuajo anotado se devuelve null (no consta), nunca true');
+  assert(/return c !== 'animal';/.test(apto), 'sólo el cuajo no animal vale');
+  assert(/_qApto\(q\) !== true/.test(html),
+    'el filtro de vegetarianos exige true: «no consta» no cuela');
+  assert(/apto === null[\s\S]{0,160}?q-m-duda/.test(html),
+    'un queso sin cuajo anotado tiene que llevar su marca de duda en la ficha');
+
+  // El filtro de cerdo mira «cerdo», no «manteca»: el Cerro del Ángel está
+  // «madurado de manteca floral» y se le escondía a quien no come cerdo.
+  assert(/function _qCerdo\(q\)\{ return \/cerdo\/i\.test/.test(html),
+    '«manteca» sola no es cerdo');
+
+  // Y el dato, con la polaridad buena: rojo en el PDF = NO está en el carro.
+  const q = JSON.parse(read('data/quesos-mb.json'));
+  assert(Array.isArray(q.quesos) && q.quesos.length >= 40, 'el carro se ha quedado corto');
+  const hoy = q.quesos.filter(x => x.en_carro);
+  assert(hoy.length > 0 && hoy.length < q.quesos.length,
+    'en_carro tiene que separar los que hay de los que descansan');
+  for (const x of q.quesos) {
+    assert(x.nombre && x.grupo, 'cada queso necesita nombre y grupo');
+    assert(typeof x.en_carro === 'boolean', `«${x.nombre}» sin en_carro`);
+    assert(!x.cuajo || /^(animal|vegetal|láctica)$/i.test(x.cuajo),
+      `«${x.nombre}» tiene un cuajo que la app no sabe leer: ${x.cuajo}`);
+  }
+  const css = read('styles.css');
+  assert(/\.q-busca\{[^}]*font-size: 16px/.test(css),
+    '16px reales: por debajo iOS Safari hace zoom al enfocar el buscador');
+  assert(/\.q-chip\{[^}]*min-height: 36px/.test(css), 'los filtros se tocan con el dedo');
+});
+
+test('Administración: mira cualquier restaurante y no deja rastro', () => {
+  // Cuenta para revisar el contenido antes de que lo vea el equipo: entra en
+  // cualquier restaurante, incluidos los que aún no están abiertos, y no escribe
+  // ni aparece en ninguna puntuación. Si contara, el ranking mediría a quien
+  // está revisando la carta y no a quien se la está aprendiendo.
+  assert(/function _esAdmin\(nombre\)/.test(html), 'falta el resolutor de administración');
+  assert(/_EMP_COLS='[^']*,role'/.test(html), 'el rol tiene que bajar con la ficha');
+
+  // Para el administrador manda el restaurante ELEGIDO; para el resto, el de la
+  // nube, que lo fijó el código del manager y no se cambia tocando una tarjeta.
+  const va = html.slice(html.indexOf('function _venueActual(){'), html.indexOf('function _vq()'));
+  assert(/if\(e && e\.role === 'admin'\)/.test(va) && /localStorage\.getItem\('txk_venue'\)/.test(va),
+    'el administrador elige restaurante; el resto no');
+  assert(va.indexOf("role === 'admin'") < va.indexOf('if(e && e.venue) return e.venue;'),
+    'la preferencia del administrador va ANTES del restaurante de su ficha');
+
+  // Se corta ANTES de escribir. Una fila que no existe no se cuela en un ranking.
+  const fn = n => { const i = html.indexOf('async function ' + n + '('); let d = 0;
+    for (let k = html.indexOf('{', i); k < html.length; k++) {
+      if (html[k] === '{') d++; else if (html[k] === '}') { d--; if (!d) return html.slice(i, k + 1); } } };
+  for (const [nombre, arg] of [['supaInsertScore', 'employee'], ['supaInsertTxokoRecord', 'employee'],
+                               ['supaInsertEtRecord', 'employee'], ['supaUpsertEmployee', 'name']]) {
+    const cuerpo = fn(nombre);
+    assert(cuerpo, `no encuentro ${nombre}`);
+    assert(new RegExp(`if\\(_esAdmin\\(${arg}\\)\\) return`).test(cuerpo),
+      `${nombre} tiene que cortar antes de escribir si es la cuenta de administración`);
+    assert(cuerpo.indexOf('_esAdmin') < cuerpo.indexOf('rest/v1/'),
+      `en ${nombre} el corte va ANTES de la llamada, no después`);
+  }
+
+  // Cinturón y tirantes: además de no escribir, tampoco se lista.
+  const listas = [...html.matchAll(/\/rest\/v1\/employees\?select=([^`'"]*)/g)]
+    .map(m => m[1]).filter(u => /order=|limit=/.test(u) && !/name=(eq|ilike)\./.test(u));
+  assert(listas.length >= 3, `el barrido sólo ve ${listas.length} listados de empleados`);
+  for (const u of listas)
+    assert(/role=neq\.admin/.test(u),
+      `este listado no excluye a la cuenta de administración: ${u.slice(0, 70)}`);
+
+  // Y el cambio de restaurante desde dentro falla CERRADO.
+  const aj = html.slice(html.indexOf('if(_esAdmin()){'), html.indexOf('// Nombre visible.'));
+  assert(/const ok = await cargarCarta\(id\);/.test(aj), 'cambiar de restaurante carga su carta');
+  assert(/if\(!ok\)\{[\s\S]{0,400}?cargarCarta\(anterior\)/.test(aj),
+    'si la carta no llega, se vuelve al restaurante anterior: enseñar la de otro es justo lo que no debe pasar');
 });
 
 test('Multi-restaurante: nadie lee el nombre del vecino en su propia formación', () => {
