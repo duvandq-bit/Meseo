@@ -8659,6 +8659,60 @@ test('Acceso: ninguna consulta cruza de un restaurante a otro', () => {
   ]) assert(html.includes(marca), `falta el sello de restaurante en: ${marca.slice(0, 50)}`);
 });
 
+test('Multi-restaurante: nadie lee el nombre del vecino en su propia formación', () => {
+  // El nombre del restaurante estaba escrito a fuego en seis sitios que ve el
+  // empleado: dos títulos de nivel, la bienvenida, la guía de emplatado y las
+  // técnicas. Con M.B. de camino eso significa que su equipo iba a formarse
+  // leyendo «Leyenda Viviente de Txoko».
+  assert(/function _venueCasa\(\)/.test(html) && /function _venueRotulo\(\)/.test(html),
+    'falta el nombre de la casa');
+  const casa = html.slice(html.indexOf('function _venueCasa(){'), html.indexOf('function _venueRotulo(){'));
+  assert(/ACTIVE_VENUE\.casa \|\| ACTIVE_VENUE\.name \|\| 'Meseo'/.test(casa),
+    'un restaurante sin nombre configurado no puede dejar un hueco en la frase');
+
+  // Los títulos de nivel llevan {casa} y se sustituyen en getLevelInfo, que es
+  // por donde pasan TODOS antes de pintarse.
+  const gli = html.slice(html.indexOf('function getLevelInfo(xp){'), html.indexOf('function getNextLevel('));
+  assert(/replace\(\/\\\{casa\\\}\/g, casa\)/.test(gli) && /replace\(\/\\\{CASA\\\}\/g, casa\.toUpperCase\(\)\)/.test(gli),
+    'los títulos de nivel tienen que tomar el nombre del restaurante activo');
+  assert(/title:'Leyenda Viviente de \{casa\}'/.test(html) && /title:'\{CASA\} ASCENDIDO ∞'/.test(html),
+    'los dos títulos con marca usan el marcador, no el nombre escrito a fuego');
+
+  // themes.json trae el nombre de cada restaurante en sus dos formas.
+  const th = JSON.parse(read('data/themes.json'));
+  for (const v of th.venues) {
+    assert(v.casa, `al restaurante «${v.id}» le falta «casa» (el nombre dentro de una frase)`);
+    assert(v.rotulo, `al restaurante «${v.id}» le falta «rotulo» (el nombre con el que se presenta)`);
+  }
+
+  // Y el barrido: ningún texto NUEVO puede volver a nombrar Txoko a fuego. La
+  // carta queda fuera —ahí el nombre es contenido del restaurante y se sustituye
+  // con ella— y el aviso legal también, que menciona la marca a propósito.
+  const iEn = html.indexOf('const DISHES_EN = [');
+  const jEs = html.indexOf('\n];', html.indexOf('const DISHES = ['));
+  const sinCarta = html.slice(0, iEn) + html.slice(jEs);
+  const PERMITIDOS = [
+    'TXOKO DIAGNÓSTICO',                 // consola de depuración
+    'restaurante (TXOKO, Berasategui',   // comentario del código
+    'incluidos TXOKO y Martín',          // aviso legal: menciona la marca a propósito
+    'including TXOKO and Martín',
+    'Papas bravas al estilo Txoko',      // es el NOMBRE de un plato
+    'papas bravas al estilo txoko',
+    'Las papas bravas Txoko',
+  ];
+  const fugas = [];
+  const re = /['"`]([^'"`\n]{4,140}?[Tt][Xx][Oo][Kk][Oo][^'"`\n]{0,90})['"`]/g;
+  let m;
+  while ((m = re.exec(sinCarta))) {
+    const t = m[1].trim();
+    if (/txoko_|localStorage|topic|_record|showTab|navTxoko|renderTxoko|tec-txoko|TXOKO_LEVELS|\/|\.js|\.json|#/.test(t)) continue;
+    if (PERMITIDOS.some(p => t.includes(p))) continue;
+    fugas.push(t.slice(0, 90));
+  }
+  assert(fugas.length === 0,
+    `textos que nombran Txoko a fuego y los verá otro restaurante: ${fugas.join(' · ')}`);
+});
+
 test('Pase: lo que va montado encima no se esconde como si fuera relleno', () => {
   // «Topping» y «Guarnición» no son preparaciones: son secciones de EMPLATADO.
   // Tratarlas como preparación escondía justo lo que distingue un plato de su
