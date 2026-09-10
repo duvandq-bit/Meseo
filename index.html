@@ -52,7 +52,7 @@
 <meta property="og:description" content="Formación de equipos de sala: carta, alérgenos, vinos, exámenes y juegos de repaso.">
 <meta property="og:url" content="https://meseo.es/">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"Meseo","url":"https://meseo.es/"}</script>
-<meta name="app-version" content="7.426">
+<meta name="app-version" content="7.427">
 <meta name="app-build" content="May 2026">
 <meta name="theme-color" content="#1c2a22">
 <!-- ═══ PWA ═══ -->
@@ -1541,9 +1541,26 @@ function _venueRotulo(){
 }
 
 const _VENUE_POR_DEFECTO = 'txoko';
+// La cuenta de ADMINISTRACIÓN existe para probar el contenido: entra en
+// cualquier restaurante —incluidos los que todavía están cerrados— y no escribe
+// ni aparece en ninguna puntuación. Si contara, el ranking del equipo mediría a
+// quien está revisando la carta, no a quien se la está aprendiendo.
+function _esAdmin(nombre){
+  try{
+    const n = nombre || (typeof currentUser!=='undefined' ? currentUser : null);
+    return !!(n && DB.employees[n] && DB.employees[n].role === 'admin');
+  }catch(_){ return false; }
+}
+
 function _venueActual(){
   try{
     const e = (typeof currentUser!=='undefined' && currentUser) ? DB.employees[currentUser] : null;
+    // Para el administrador manda el restaurante ELEGIDO, no el de su ficha:
+    // ésa es toda la gracia de la cuenta. Para el resto manda el de la nube,
+    // que lo fijó el código del manager y no se cambia tocando una tarjeta.
+    if(e && e.role === 'admin'){
+      try{ const v = localStorage.getItem('txk_venue'); if(v) return v; }catch(_){}
+    }
     if(e && e.venue) return e.venue;
   }catch(_){}
   try{ if(typeof ACTIVE_VENUE!=='undefined' && ACTIVE_VENUE && ACTIVE_VENUE.id) return ACTIVE_VENUE.id; }catch(_){}
@@ -1714,7 +1731,7 @@ const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><p
 const SRC = 'src';
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='7.426';  // sincronizada con sw.js VERSION (guard de CI)
+const APP_VERSION='7.427';  // sincronizada con sw.js VERSION (guard de CI)
 const APP_BUILD='Jul 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;
@@ -1870,7 +1887,7 @@ const SUPA_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJ
 // app jamás renombre. Sin él, los GET van bien y SOLO fallan los POST (401
 // en bucle de reintentos). Diagnóstico rápido: logs api = POST 401 + logs
 // postgres = «permission denied for table employees».
-const _EMP_COLS='name,xp,streak,last_study_day,topic_scores,known_dishes,exam_correct,sessions_count,txoko_record,updated_at,sessions_data,duel_wins,avatar,last_active_at,last_login,achievements,extras,venue,display_name,nda_version';
+const _EMP_COLS='name,xp,streak,last_study_day,topic_scores,known_dishes,exam_correct,sessions_count,txoko_record,updated_at,sessions_data,duel_wins,avatar,last_active_at,last_login,achievements,extras,venue,display_name,nda_version,role';
 // ═══ NOMBRE VISIBLE ════════════════════════════════════════════════════════
 // El usuario con el que se entra y el nombre que se ve dejan de ser lo mismo.
 // Llega con el segundo restaurante: habrá dos Marías, y una tiene que poder
@@ -1943,6 +1960,10 @@ function _wineImgHtml(wine, size){
 }
 
 async function supaInsertScore(session, employee) {
+  // La cuenta de administración no deja rastro: está para revisar el
+  // contenido, no para competir. Se corta ANTES de escribir, no se filtra
+  // después: una fila que no existe no se puede colar en un ranking.
+  if(_esAdmin(employee)) return;
   try {
     await fetch(`${SUPA_URL}/rest/v1/scores`, {
       method: 'POST',
@@ -1988,6 +2009,10 @@ async function supaFetchLeaderboard() {
   } catch(e) { return null; }
 }
 async function supaInsertTxokoRecord(employee, record) {
+  // La cuenta de administración no deja rastro: está para revisar el
+  // contenido, no para competir. Se corta ANTES de escribir, no se filtra
+  // después: una fila que no existe no se puede colar en un ranking.
+  if(_esAdmin(employee)) return;
   // Store txoko record in 'scores' table using topic='txoko', score=record
   try {
     await fetch(`${SUPA_URL}/rest/v1/scores`, {
@@ -2009,7 +2034,7 @@ async function supaFetchTxokoTop10() {
     const [scoresRes, empsRes] = await Promise.all([
       fetch(`${SUPA_URL}/rest/v1/scores?select=employee,score&topic=eq.txoko&order=score.desc&limit=200&${_vq()}`,
         { headers: { 'apikey': SUPA_KEY, 'Authorization': `Bearer ${SUPA_KEY}` } }),
-      fetch(`${SUPA_URL}/rest/v1/employees?select=name,txoko_record&txoko_record=gt.0&order=txoko_record.desc&${_vq()}`,
+      fetch(`${SUPA_URL}/rest/v1/employees?select=name,txoko_record&txoko_record=gt.0&order=txoko_record.desc&${_vq()}&role=neq.admin`,
         { headers: { 'apikey': SUPA_KEY, 'Authorization': `Bearer ${SUPA_KEY}` } })
     ]);
 
@@ -2044,6 +2069,10 @@ async function supaFetchTxokoTop10() {
 //    que Mr. Shoesmith, con topic='elturno'. score = segundos sobrevividos
 //    (la métrica de un survivors), total = comandas de esa partida.
 async function supaInsertEtRecord(employee, secs, orders) {
+  // La cuenta de administración no deja rastro: está para revisar el
+  // contenido, no para competir. Se corta ANTES de escribir, no se filtra
+  // después: una fila que no existe no se puede colar en un ranking.
+  if(_esAdmin(employee)) return;
   try {
     await fetch(`${SUPA_URL}/rest/v1/scores`, {
       method: 'POST',
@@ -2210,6 +2239,10 @@ function _etMergeMap(a, b){
 // guardar), false si quedó pendiente (offline/error) → lo usa el outbox para
 // reintentar hasta que confirme, sin perder datos.
 async function supaUpsertEmployee(name, retries=2) {
+  // La cuenta de administración no deja rastro: está para revisar el
+  // contenido, no para competir. Se corta ANTES de escribir, no se filtra
+  // después: una fila que no existe no se puede colar en un ranking.
+  if(_esAdmin(name)) return true;
   if(!name) return true;
   const emp = DB.employees[name];
   if(!emp) return true;
@@ -2586,7 +2619,7 @@ let _nameListCache=null, _nameListTs=0;
 async function _fetchEmployeeNames(){
   if(_nameListCache && (Date.now()-_nameListTs)<60000) return _nameListCache;
   try{
-    const r=await fetchT(`${SUPA_URL}/rest/v1/employees?select=name&${_vq()}`, { headers:{ 'apikey':SUPA_KEY, 'Authorization':`Bearer ${SUPA_KEY}` } }, 6000);
+    const r=await fetchT(`${SUPA_URL}/rest/v1/employees?select=name&${_vq()}&role=neq.admin`, { headers:{ 'apikey':SUPA_KEY, 'Authorization':`Bearer ${SUPA_KEY}` } }, 6000);
     if(r.ok){ const rows=await r.json(); _nameListCache=(rows||[]).map(x=>x&&x.name).filter(Boolean); _nameListTs=Date.now(); return _nameListCache; }
   }catch(_){}
   return _nameListCache || Object.keys(DB.employees);
@@ -2697,7 +2730,7 @@ async function supaRestoreEmployee(name) {
 async function supaFetchAllEmployees() {
   try {
     const res = await fetch(
-      `${SUPA_URL}/rest/v1/employees?select=${_EMP_COLS}&order=xp.desc&${_vq()}`,
+      `${SUPA_URL}/rest/v1/employees?select=${_EMP_COLS}&order=xp.desc&${_vq()}&role=neq.admin`,
       { headers: { 'apikey': SUPA_KEY, 'Authorization': `Bearer ${SUPA_KEY}` } }
     );
     if(!res.ok) return null;
@@ -9864,6 +9897,14 @@ function openAjustes(){
       <input id="ajDisp" type="text" maxlength="24" autocomplete="nickname" placeholder="${escapeHTML(currentUser)}" value="${escapeHTML(_dispName(currentUser))}" style="${inp}">
       <div id="ajDispMsg" role="status" aria-live="polite" style="font-size:.72rem;min-height:1rem;margin-bottom:.4rem"></div>
       <button id="ajDispSave" style="${btn}">${_en?'Save name':'Guardar nombre'}</button>
+      ${_esAdmin() ? `
+      ${H(_en?'Restaurant (admin)':'Restaurante (admin)')}
+      <div style="font-family:'Quicksand',sans-serif;font-size:.75rem;color:#5a6a5e;line-height:1.45;margin-bottom:.5rem">${_en
+        ? 'Your account can look at any restaurant, including the ones not open yet. Nothing you do is recorded: no scores, no ranking, no supervisor panel.'
+        : 'Tu cuenta puede mirar cualquier restaurante, incluidos los que aún no están abiertos. Nada de lo que hagas se guarda: ni puntuaciones, ni ranking, ni panel de supervisor.'}</div>
+      <div id="ajVenues" style="display:flex;flex-direction:column;gap:.4rem"></div>
+      <div id="ajVenueMsg" role="status" aria-live="polite" style="font-size:.72rem;min-height:1rem;margin-top:.35rem"></div>
+      ` : ''}
       ${H(_en?'Recovery email':'Correo de recuperación')}
       <div id="ajEmailStatus" style="font-family:'Quicksand',sans-serif;font-size:.78rem;color:#5a6a5e;margin-bottom:.5rem;line-height:1.4">${_en?'Loading…':'Cargando…'}</div>
       <input id="ajEmail" type="email" inputmode="email" autocomplete="email" placeholder="${_en?'your@email.com':'tu@correo.com'}" style="${inp}">
@@ -9898,6 +9939,46 @@ function openAjustes(){
   $('ajLangEs').onclick = ()=>{ setLangApp('es'); overlay.remove(); openAjustes(); };
   $('ajLangEn').onclick = ()=>{ setLangApp('en'); overlay.remove(); openAjustes(); };
   $('ajLogout').onclick = ()=>{ overlay.remove(); logout(); };
+
+  // Cambiar de restaurante SIN cerrar sesión: se carga su carta, se repinta el
+  // tema y se vuelve a dibujar la pestaña actual. Si la carta no llega, no se
+  // cambia nada — enseñar la carta de otro restaurante es justo lo que no debe
+  // pasar, aunque quien mire sea el administrador.
+  if(_esAdmin()){
+    const cajaV = $('ajVenues');
+    const todos = (typeof THEMES!=='undefined' && THEMES && Array.isArray(THEMES.venues))
+      ? THEMES.venues.filter(v => v && v.id && v.name && v.id !== 'plantilla') : [];
+    const ahora = _venueActual();
+    if(cajaV) cajaV.innerHTML = todos.map(v => {
+      const on = v.id === ahora;
+      return `<button type="button" data-v="${escapeHTML(v.id)}" style="display:flex;align-items:center;justify-content:space-between;gap:.5rem;padding:.6rem .75rem;border:1px solid ${on?'#8a5a2b':'rgba(196,154,60,.35)'};border-radius:10px;background:${on?'#8a5a2b':'#fff'};color:${on?'#fff':'#2b2b2b'};font-family:'Quicksand',sans-serif;font-weight:700;font-size:.82rem;cursor:pointer;min-height:44px">
+        <span>${escapeHTML(v.name)}${v.enabled?'':` <span style="font-weight:400;opacity:.7;font-size:.72rem">${_en?'(not open yet)':'(aún cerrado)'}</span>`}</span>
+        <span>${on?'✓':''}</span></button>`;
+    }).join('');
+    if(cajaV) cajaV.querySelectorAll('button[data-v]').forEach(btnV => {
+      btnV.onclick = async () => {
+        const id = btnV.dataset.v, msg = $('ajVenueMsg');
+        if(id === _venueActual()) return;
+        if(msg){ msg.style.color='#5a6a5e'; msg.textContent = _en?'Loading its menu…':'Cargando su carta…'; }
+        const anterior = _venueActual();
+        try{ localStorage.setItem('txk_venue', id); }catch(_){}
+        const ok = await cargarCarta(id);
+        if(!ok){
+          try{ localStorage.setItem('txk_venue', anterior); }catch(_){}
+          await cargarCarta(anterior);
+          if(msg){ msg.style.color='#b0432b';
+            msg.textContent = _en?'That restaurant has no menu yet.':'Ese restaurante todavía no tiene carta.'; }
+          return;
+        }
+        const tema = (THEMES.venues||[]).find(v => v.id === id);
+        if(tema) applyTheme(tema);
+        overlay.remove();
+        if(typeof showTab==='function') showTab(typeof currentTab!=='undefined' ? currentTab : 'dashboard');
+        if(typeof showToast==='function') showToast(
+          (_en?'Now looking at ':'Ahora estás viendo ') + ((tema && tema.name) || id), 'info', 3500);
+      };
+    });
+  }
 
   // Nombre visible. Lo guarda el servidor con el hash de la contraseña como
   // prueba: la policy de employees deja escribir a cualquiera, así que desde el
@@ -23559,6 +23640,7 @@ function renderSupAnalytics(allEmps, empNames){
     ${_acc('perf','🎯',_en2?'Performance':'Rendimiento', exN?`${exN} ${_en2?'exams':'exámenes'} · ${exAcc}%`:(_en2?'no exams yet':'aún sin exámenes'), _perfBody)}
     ${_acc('dish','🧩',_en2?'Hardest dishes':'Platos difíciles', hardest.length?`${hardest.length} ${_en2?'to review':'a repasar'}`:'', _dishBody)}
     ${_acc('acc','🔑',_en2?'Access code':'Código de acceso', _en2?'who can register':'quién puede registrarse', renderSupCodigoHTML())}
+    ${_acc('adm','🛠',_en2?'Admin account':'Cuenta de administración', _en2?'to review content':'para revisar contenido', renderSupAdminHTML())}
   </div>`;
 }
 
@@ -23582,6 +23664,60 @@ function renderSupCodigoHTML(){
       <button onclick="supRenovarCodigo()" style="flex:1;min-height:44px;background:transparent;border:1px solid rgba(200,60,60,.4);color:#c0392b;border-radius:10px;font-family:'Quicksand',sans-serif;font-weight:700;font-size:.82rem;cursor:pointer">${_en?'Renew':'Renovar'}</button>
     </div>
     <div id="supCodigoMsg" role="status" aria-live="polite" style="font-family:'Quicksand',sans-serif;font-size:.74rem;min-height:1.1rem;margin-top:.45rem;color:var(--parch3)"></div>`;
+}
+
+// La cuenta de administración: entra en cualquier restaurante, incluidos los
+// que aún no están abiertos, y NO deja rastro — ni puntuaciones, ni ranking, ni
+// panel. Es para revisar la carta antes de que la vea el equipo.
+//
+// Se pone desde aquí y no desde el móvil de cada uno, detrás del PIN de
+// supervisor. Ojo: con la policy actual de employees cualquiera con la clave
+// anónima podría escribir esa columna a mano, así que esto NO es una barrera de
+// seguridad; es el camino limpio, y lo que el rol concede —ver la carta de otro
+// restaurante— ya era alcanzable de todos modos.
+function renderSupAdminHTML(){
+  const _en = LANG==='en';
+  return `<div style="font-family:'Quicksand',sans-serif;font-size:.8rem;color:var(--parch2);line-height:1.5;margin-bottom:.7rem">
+      ${_en
+        ? 'An admin account can look at any restaurant, including the ones not open yet, and nothing it does is recorded: no scores, no ranking, no supervisor panel. Give it to whoever reviews the content — not to someone who is also training.'
+        : 'Una cuenta de administración puede mirar cualquier restaurante, incluidos los que aún no están abiertos, y nada de lo que haga se guarda: ni puntuaciones, ni ranking, ni panel. Dásela a quien revisa el contenido, no a alguien que además se está formando.'}
+    </div>
+    <input id="supAdmName" type="text" maxlength="30" autocomplete="off" spellcheck="false"
+      placeholder="${_en?'Username of the account':'Usuario de la cuenta'}"
+      style="width:100%;box-sizing:border-box;padding:.7rem .85rem;border:1px solid var(--line2);border-radius:10px;font-size:16px;background:#fff;color:#2b2b2b;margin-bottom:.5rem">
+    <div style="display:flex;gap:.5rem">
+      <button onclick="supPonerRol('admin')" style="flex:1;min-height:44px;background:var(--gold);color:var(--parchment);border:none;border-radius:10px;font-family:'Quicksand',sans-serif;font-weight:700;font-size:.82rem;cursor:pointer">${_en?'Make admin':'Hacer administrador'}</button>
+      <button onclick="supPonerRol('staff')" style="flex:1;min-height:44px;background:transparent;border:1px solid var(--line2);color:var(--parch2);border-radius:10px;font-family:'Quicksand',sans-serif;font-weight:700;font-size:.82rem;cursor:pointer">${_en?'Back to staff':'Volver a normal'}</button>
+    </div>
+    <div id="supAdmMsg" role="status" aria-live="polite" style="font-family:'Quicksand',sans-serif;font-size:.74rem;min-height:1.1rem;margin-top:.45rem;color:var(--parch3)"></div>`;
+}
+
+async function supPonerRol(rol){
+  const _en = LANG==='en';
+  const el = document.getElementById('supAdmName'), msg = document.getElementById('supAdmMsg');
+  if(!el || !msg) return;
+  const nombre = (el.value||'').trim();
+  if(!nombre){ msg.style.color='#c0392b';
+    msg.textContent = _en?'Type the username first.':'Escribe primero el usuario.'; return; }
+  msg.style.color='var(--parch3)';
+  msg.textContent = _en?'Saving…':'Guardando…';
+  try{
+    const r = await _supaRpc('employee_set_role', {p_pin:_supPin||'', p_name:nombre, p_role:rol});
+    if(!r || r.ok !== true) throw new Error((r && r.error) || 'x');
+    msg.style.color = '#2d6a3e';
+    msg.textContent = rol==='admin'
+      ? (_en?`"${nombre}" is now an admin account: it will not appear in any ranking.`
+            :`«${nombre}» ya es cuenta de administración: dejará de salir en los rankings.`)
+      : (_en?`"${nombre}" is back to a normal account.`:`«${nombre}» vuelve a ser una cuenta normal.`);
+    if(rol!=='admin') msg.textContent += _en
+      ? ' Its past activity was never recorded, so it starts from zero.'
+      : ' Su actividad de antes no se guardó, así que empieza de cero.';
+  }catch(e){
+    msg.style.color='#c0392b';
+    msg.textContent = (e && e.message==='unknown_employee')
+      ? (_en?'There is no account with that username.':'No hay ninguna cuenta con ese usuario.')
+      : (_en?'Could not save. Check the username and your connection.':'No se ha podido guardar. Comprueba el usuario y la conexión.');
+  }
 }
 
 function _supVenueId(){
@@ -30329,7 +30465,7 @@ async function txokoDiag() {
   
   // Test connection
   try {
-    const res = await fetch(`${SUPA_URL}/rest/v1/employees?select=name,xp&order=xp.desc&limit=5&${_vq()}`,
+    const res = await fetch(`${SUPA_URL}/rest/v1/employees?select=name,xp&order=xp.desc&limit=5&${_vq()}&role=neq.admin`,
       { headers: { 'apikey': SUPA_KEY, 'Authorization': `Bearer ${SUPA_KEY}` }});
     if(res.ok) {
       const rows = await res.json();

@@ -8659,6 +8659,51 @@ test('Acceso: ninguna consulta cruza de un restaurante a otro', () => {
   ]) assert(html.includes(marca), `falta el sello de restaurante en: ${marca.slice(0, 50)}`);
 });
 
+test('Administración: mira cualquier restaurante y no deja rastro', () => {
+  // Cuenta para revisar el contenido antes de que lo vea el equipo: entra en
+  // cualquier restaurante, incluidos los que aún no están abiertos, y no escribe
+  // ni aparece en ninguna puntuación. Si contara, el ranking mediría a quien
+  // está revisando la carta y no a quien se la está aprendiendo.
+  assert(/function _esAdmin\(nombre\)/.test(html), 'falta el resolutor de administración');
+  assert(/_EMP_COLS='[^']*,role'/.test(html), 'el rol tiene que bajar con la ficha');
+
+  // Para el administrador manda el restaurante ELEGIDO; para el resto, el de la
+  // nube, que lo fijó el código del manager y no se cambia tocando una tarjeta.
+  const va = html.slice(html.indexOf('function _venueActual(){'), html.indexOf('function _vq()'));
+  assert(/if\(e && e\.role === 'admin'\)/.test(va) && /localStorage\.getItem\('txk_venue'\)/.test(va),
+    'el administrador elige restaurante; el resto no');
+  assert(va.indexOf("role === 'admin'") < va.indexOf('if(e && e.venue) return e.venue;'),
+    'la preferencia del administrador va ANTES del restaurante de su ficha');
+
+  // Se corta ANTES de escribir. Una fila que no existe no se cuela en un ranking.
+  const fn = n => { const i = html.indexOf('async function ' + n + '('); let d = 0;
+    for (let k = html.indexOf('{', i); k < html.length; k++) {
+      if (html[k] === '{') d++; else if (html[k] === '}') { d--; if (!d) return html.slice(i, k + 1); } } };
+  for (const [nombre, arg] of [['supaInsertScore', 'employee'], ['supaInsertTxokoRecord', 'employee'],
+                               ['supaInsertEtRecord', 'employee'], ['supaUpsertEmployee', 'name']]) {
+    const cuerpo = fn(nombre);
+    assert(cuerpo, `no encuentro ${nombre}`);
+    assert(new RegExp(`if\\(_esAdmin\\(${arg}\\)\\) return`).test(cuerpo),
+      `${nombre} tiene que cortar antes de escribir si es la cuenta de administración`);
+    assert(cuerpo.indexOf('_esAdmin') < cuerpo.indexOf('rest/v1/'),
+      `en ${nombre} el corte va ANTES de la llamada, no después`);
+  }
+
+  // Cinturón y tirantes: además de no escribir, tampoco se lista.
+  const listas = [...html.matchAll(/\/rest\/v1\/employees\?select=([^`'"]*)/g)]
+    .map(m => m[1]).filter(u => /order=|limit=/.test(u) && !/name=(eq|ilike)\./.test(u));
+  assert(listas.length >= 3, `el barrido sólo ve ${listas.length} listados de empleados`);
+  for (const u of listas)
+    assert(/role=neq\.admin/.test(u),
+      `este listado no excluye a la cuenta de administración: ${u.slice(0, 70)}`);
+
+  // Y el cambio de restaurante desde dentro falla CERRADO.
+  const aj = html.slice(html.indexOf('if(_esAdmin()){'), html.indexOf('// Nombre visible.'));
+  assert(/const ok = await cargarCarta\(id\);/.test(aj), 'cambiar de restaurante carga su carta');
+  assert(/if\(!ok\)\{[\s\S]{0,400}?cargarCarta\(anterior\)/.test(aj),
+    'si la carta no llega, se vuelve al restaurante anterior: enseñar la de otro es justo lo que no debe pasar');
+});
+
 test('Multi-restaurante: nadie lee el nombre del vecino en su propia formación', () => {
   // El nombre del restaurante estaba escrito a fuego en seis sitios que ve el
   // empleado: dos títulos de nivel, la bienvenida, la guía de emplatado y las
