@@ -1,6 +1,57 @@
 {
- "updated": "2026-09-10T15:00:07.341Z",
+ "updated": "2026-09-10T19:44:43.253Z",
  "items": [
+  {
+   "t": "Ángel León alegra la vuelta de las vacaciones a los dueños del bar de Granada donde alucina José Andrés",
+   "u": "https://www.lavozdelsur.es/vida/sabor-del-sur/angel-leon-alegra-la-vuelta-de-las-vacaciones-a-los-duenos-del-bar-de-granada-donde-alucina-jose-andres.html",
+   "s": "La Voz del Sur",
+   "d": "2026-09-10T17:39:12.000Z",
+   "tags": [
+    "ALTA COCINA"
+   ],
+   "img": "https://d2mqpxndxh0mbq.cloudfront.net/articulos/articulos-178939.jpg?v=202609102144"
+  },
+  {
+   "t": "Tajao: el pueblo de Tenerife que se hizo famoso gracias a un vídeo de Cocituber",
+   "u": "https://estenerife.com/tajao-el-pueblo-de-tenerife-que-se-hizo-famoso-gracias-a-un-video-de-cocituber/",
+   "s": "estenerife.com",
+   "d": "2026-09-10T17:07:59.000Z",
+   "tags": [
+    "CANARIAS"
+   ]
+  },
+  {
+   "t": "El chef Álvaro Sanz está de vuelta en Ibiza: “Dije 'voy a traer una estrella Michelin a esta isla'; la gente no se lo creía y ocho años después se trajo”",
+   "u": "https://www.directoalpaladar.com/viajes/chef-alvaro-sanz-esta-vuelta-ibiza-dije-voy-a-traer-estrella-michelin-a-esta-isla-gente-no-se-creia-ocho-anos-despues-se-trajo/amp",
+   "s": "Directo al Paladar",
+   "d": "2026-09-10T16:34:40.000Z",
+   "tags": [
+    "CHEF",
+    "MICHELIN"
+   ],
+   "img": "https://i.blogs.es/8116a3/alvaro/840_560.jpeg"
+  },
+  {
+   "t": "‘Cebollas Verdes’ estrena temporada en La Radio Canaria con una entrega dedicada al vino",
+   "u": "https://rtvc.es/cebollas-verdes-estrena-temporada-en-la-radio-canaria-con-una-entrega-dedicada-al-vino-prensa-11-septiembre-2026/",
+   "s": "Radio Televisión Canaria",
+   "d": "2026-09-10T15:30:00.000Z",
+   "tags": [
+    "VINO",
+    "CANARIAS"
+   ],
+   "img": "https://cdn.rtvc.es/archivos/2026/09/BOdegas-Teneguia-1.webp"
+  },
+  {
+   "t": "Toni Romero exprime el último tomate del verano antes de volver a sorprender con su menú de alcachofas",
+   "u": "https://www.abc.es/espana/cataluna/toni-romero-exprime-ultimo-tomate-verano-volver-20260910162024-nt_amp.html",
+   "s": "ABC",
+   "d": "2026-09-10T14:20:25.000Z",
+   "tags": [
+    "ALTA COCINA"
+   ],
+   "img": "https://s1.abcstatics.com/abc/www/multimedia/espana/2026/09/10/ABCTONIROMERO-U34515265083eEY-1200x630@diario_abc.jpg"
+  },
   {
    "t": "Ángel León, tres estrellas Michelin en Aponiente: «Nos hemos olvidado de caminar, de mirar el cielo»",
    "u": "https://www.elmira.es/articulo/noticias-interesantes/angel-leon-tres-estrellas-michelin-aponiente-nos-hemos-olvidado-caminar-mirar-cielo/20260910153000615906.html",
@@ -15,8 +66,8 @@
   {
    "t": "Andorra Taste situará la gastronomía ante el desafío de proteger el patrimonio natural y alimentario",
    "u": "https://www.revistagranhotel.com/andorra-taste-situara-la-gastronomia-ante-el-desafio-de-proteger-el-patrimonio-natural-y-alimentario/",
-   "s": "revistagranhotel.com",
-   "d": "2026-09-10T12:49:35.000Z",
+   "s": "Revista Gran Hotel",
+   "d": "2026-09-10T12:49:26.000Z",
    "tags": [
     "ALTA COCINA"
    ]
@@ -24,7 +75,7 @@
   {
    "t": "Un cocinero de un restaurante de Candelaria competirá por la mejor paella del mundo",
    "u": "https://www.eldia.es/tenerife/2026/09/10/cocinero-restaurante-candelaria-competira-mejor-134145882.html",
-   "s": "eldia.es",
+   "s": "Eldía",
    "d": "2026-09-10T12:30:42.000Z",
    "tags": [
     "CANARIAS"
@@ -34,7 +85,7 @@
   {
    "t": "El rioja de Marqués de Murrieta, vino elegido para la zona VIP del GP de España en Madring",
    "u": "https://www.teleprensa.com/articulo/deportes/rioja-marques-murrieta-vino-elegido-zona-vip-gp-espana-madring/202609101217212504150.html",
-   "s": "Teleprensa",
+   "s": "teleprensa.com",
    "d": "2026-09-10T12:17:21.000Z",
    "tags": [
     "MICHELIN",
@@ -44,7 +95,7 @@
   {
    "t": "Zafir: un restaurante de alta cocina nacido del alma de Andalucía, en las alturas de Mijas",
    "u": "https://www.diariosur.es/malagaenlamesa/restaurantes/zafir-restaurante-alta-cocina-nacido-alma-andalucia-20260910134134-nt.html",
-   "s": "Diario Sur",
+   "s": "diariosur.es",
    "d": "2026-09-10T11:41:34.000Z",
    "tags": [
     "ALTA COCINA"
@@ -83,7 +134,7 @@
   {
    "t": "Cocituber, influencer gastronómico en España: \"Tajao acabó siendo el pueblo más famoso de Tenerife para",
    "u": "https://diariodeavisos.elespanol.com/2026/09/cocituber-influencer-gastronomico-tajao-tenerife-historia-pescado/",
-   "s": "diariodeavisos.elespanol.com",
+   "s": "Diario de Avisos",
    "d": "2026-09-10T10:04:36.000Z",
    "tags": [
     "CANARIAS"
@@ -91,14 +142,34 @@
    "img": "https://cdn.diariodeavisos.com/wp-content/uploads/2026/09/cats-20.jpg"
   },
   {
+   "t": "Las Islas Canarias aprueban dos proyectos para mejorar el suministro eléctrico en Gran Canaria",
+   "u": "https://www.teneriffa-news.com/es/actualidad/noticias-de-gran-canaria/las-islas-canarias-aprueban-dos-proyectos-para-mejorar-el-suministro-electrico-en-gran-canaria_1465746.html",
+   "s": "Teneriffa News",
+   "d": "2026-09-10T09:41:50.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://www.teneriffa-news.com/media/w/windkraft-kanaren-windrad-oekostrom-windpark-2400x1350.jpg"
+  },
+  {
    "t": "Grupo Kapital abre SEXTO, su nueva apuesta por la alta cocina de la mano del chef Juan Suárez de Lezo",
    "u": "https://www.marca.com/tiramillas/gastronomia/2026/09/10/grupo-kapital-abre-sexto-nueva-apuesta-alta-cocina-mano-chef-juan-suarez-lezo.html",
-   "s": "marca.com",
+   "s": "MARCA",
    "d": "2026-09-10T09:31:57.000Z",
    "tags": [
     "ALTA COCINA"
    ],
    "img": "https://objetos-xlk.estaticos-marca.com/files/article_main_microformat/uploads/2026/09/10/6aa277e52483f.jpeg"
+  },
+  {
+   "t": "La villa juguetera de Alicante que conquista por su cocina: así es el pueblo donde mejor se come de España",
+   "u": "https://www.noticiasdelvino.com/restaurantes/2026/09/10/la-villa-juguetera-de-alicante-que-conquista-por-su-cocina-asi-es-el-pueblo-donde-mejor-se-come-de-espana-74836/",
+   "s": "Noticias del Vino",
+   "d": "2026-09-10T09:21:55.000Z",
+   "tags": [
+    "MICHELIN"
+   ],
+   "img": "https://www.noticiasdelvino.com/wp-content/uploads/restaurantes-5.jpg"
   },
   {
    "t": "Ferran Adrià, chef Michelin: \"Para un tomate frito de bote perfecto, no añadas azúcar; usa orégano fresco, nata, aceite de oliva y pimienta\"",
@@ -134,7 +205,7 @@
   {
    "t": "El restaurante de este municipio que conquista con su gofio escaldado y carne a la parrilla: una parada obligatoria en Tenerife",
    "u": "https://www.eldia.es/tenerife/2026/09/10/restaurante-municipio-tenerife-conquista-gofio-escaldado-dv-128201107.html",
-   "s": "eldia.es",
+   "s": "Eldía",
    "d": "2026-09-10T08:15:00.000Z",
    "tags": [
     "CANARIAS"
@@ -150,6 +221,16 @@
     "ALTA COCINA"
    ],
    "img": "https://s1.abcstatics.com/abc/www/multimedia/espana/2026/09/10/Presentacion%20Andorra%20Taste%209%20septiembre-U60374182454auW-1200x630@diario_abc.jpg"
+  },
+  {
+   "t": "¡Primero, a gritar! El problema fundamental de Canarias",
+   "u": "https://www.teneriffa-news.com/es/opinion-y-comentario/gritar-primero-problema-canarias_1464906.html",
+   "s": "Teneriffa News",
+   "d": "2026-09-10T07:59:20.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://www.teneriffa-news.com/media/w/warten-flughafen-teneriffa-sued-2400x1350.jpg"
   },
   {
    "t": "Los restaurantes MUNA y ZUARA harán un menú exclusivo en `Diálogos sobre Japón´",
@@ -202,7 +283,7 @@
   {
    "t": "El enoturismo reserva finos viajes de sensaciones entre bodegas y paisajes",
    "u": "https://diariodeavisos.elespanol.com/2026/09/enoturismo-viajes-sensaciones-bodegas-paisajes/",
-   "s": "diariodeavisos.elespanol.com",
+   "s": "Diario de Avisos",
    "d": "2026-09-10T00:08:05.000Z",
    "tags": [
     "VINO",
@@ -219,86 +300,6 @@
     "CANARIAS"
    ],
    "img": "https://www.teneriffa-news.com/media/p/pizza-teneriffa-2400x1350.jpg"
-  },
-  {
-   "t": "Las Jornadas Colombinas llevan la gastronomía, el humor y la música a Agulo, San Sebastián y Valle Gran Rey",
-   "u": "https://www.canal4tenerife.tv/las-jornadas-colombinas-llevan-la-gastronomia-el-humor-y-la-musica-a-agulo-san-sebastian-y-valle-gran-rey/",
-   "s": "Canal 4 Tenerife",
-   "d": "2026-09-09T20:56:58.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://www.canal4tenerife.tv/wp-content/uploads/2026/09/090926-Kike-Perez-en-una-de-sus-ultimas-actuaciones-en-la-isla-de-La-Gomera-scaled-e1788987390220.jpg"
-  },
-  {
-   "t": "¿Crisis en la alta cocina? Bruno Verjus cierra Table y Slow & Low hace lo propio renunciando a su estrella",
-   "u": "https://www.7canibales.com/noticias/crisis-en-la-alta-cocina-bruno-verjus-cierra/",
-   "s": "7 Caníbales",
-   "d": "2026-09-09T19:43:48.000Z",
-   "tags": [
-    "ALTA COCINA"
-   ],
-   "img": "https://www.7canibales.com/wp-content/uploads/sites/2/2023/06/Bruno-Verjus-retrato.jpg"
-  },
-  {
-   "t": "Toni Romero homenajea al último tomate de la temporada en Bart Burger Gastronòmic",
-   "u": "https://www.catacultural.com/toni-romero-homenajea-al-ultimo-tomate-de-la-temporada-en-bart-burger-gastronomic/",
-   "s": "Catacultural",
-   "d": "2026-09-09T19:00:11.000Z",
-   "tags": [
-    "ALTA COCINA"
-   ]
-  },
-  {
-   "t": "Santa Cruz de Tenerife, capital gastronómica de España",
-   "u": "https://www.canarias7.es/gastronomia-c7/santa-cruz-tenerife-capital-gastronomica-espana-20260909191740-nt.html",
-   "s": "Canarias7",
-   "d": "2026-09-09T18:17:40.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://s1.ppllstatics.com/canarias7/www/multimedia/gastronomia-c7/2026/09/09/1-kuKF-U301647826177zDG-1200x840@Canarias7.jpg"
-  },
-  {
-   "t": "La conexión desconocida de Dabiz Muñoz con un pueblo de Cuenca de solo 150 habitantes",
-   "u": "https://www.noticiasdelvino.com/escapadas/2026/09/09/la-conexion-desconocida-de-dabiz-munoz-con-un-pueblo-de-cuenca-de-solo-150-habitantes-68966/",
-   "s": "noticiasdelvino.com",
-   "d": "2026-09-09T18:03:10.000Z",
-   "tags": [
-    "ALTA COCINA"
-   ]
-  },
-  {
-   "t": "Los Realejos celebra la 9ª Fiesta de Vinos de Tenerife en la Playa de El Socorro",
-   "u": "https://lavozcanaria.com/valle-de-la-orotava/general/los-realejos-celebra-la-9-fiesta-de-vinos-de-tenerife-en-la-playa-de-el-socorro",
-   "s": "La Voz Canaria",
-   "d": "2026-09-09T17:56:42.000Z",
-   "tags": [
-    "CANARIAS",
-    "VINO"
-   ],
-   "img": "https://lavozcanaria.com/media/2026/09/los-realejos-celebra-la-9-fiesta-de-vinos-de-tenerife-en-la-playa-de-el-socorro.webp"
-  },
-  {
-   "t": "Gran reseña: Hotel Botánico en Tenerife - así es realmente",
-   "u": "https://www.teneriffa-news.com/es/puerto-de-la-cruz-es/test-hotel-botanico-tenerife_1465059.html",
-   "s": "Teneriffa News",
-   "d": "2026-09-09T17:55:31.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://www.teneriffa-news.com/media/fotostrecken/hotel-botanico/hotel-botanico-teneriffa-eingang-2400x1350.jpg"
-  },
-  {
-   "t": "Los Realejos celebra este sábado 12 desde las 18:00 horas la 9ª Gran Fiesta de Vinos de Tenerife en la Playa de El Socorro",
-   "u": "https://losrealejos.es/ix-fiesta-vinos-tenerife-playa-socorro-2026/",
-   "s": "losrealejos.es",
-   "d": "2026-09-09T17:43:11.000Z",
-   "tags": [
-    "VINO",
-    "CANARIAS"
-   ],
-   "img": "https://losrealejos.es/wp-content/uploads/2026/09/090926-Presentacion-IX-Gran-Fiesta-de-Vinos-de-Tenerife-2026-Playa-El-Socorro-scaled.jpeg"
   }
  ]
 }
