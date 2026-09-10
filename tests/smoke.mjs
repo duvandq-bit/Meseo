@@ -8416,13 +8416,50 @@ test('Supervisor: resumen semanal listo para compartir (liga + actividad)', () =
   // de la liga, quién entrenó y quién no.
   const fn = html.slice(html.indexOf('function _supResumenTxt'), html.indexOf('function renderSupAnalytics'));
   assert(fn.length > 100, 'falta el generador _supResumenTxt');
-  assert(/wk\.k===key/.test(fn) && /e\.wkKey===key/.test(fn) && /Math\.max\(xp, e\.wkXP\|\|0\)/.test(fn),
-    'el podio debe fusionar nube (extras.wk) Y datos locales (wkKey/wkXP) — solo nube dejaba fuera al supervisor');
-  assert(/_alive/.test(fn) && /30\*86400000/.test(fn) && /roster\.filter/.test(fn),
-    '«Sin actividad» solo cuenta al equipo vivo (30 días) — los perfiles fantasma inflaban la lista');
-  assert(/_wkKey\(\)/.test(fn) && /d\.setUTCDate\(d\.getUTCDate\(\)-7\)/.test(fn),
-    'debe poder generar la semana en curso Y la semana cerrada (lunes por la mañana)');
-  assert(/Sin actividad/.test(fn), 'el mensaje debe nombrar a quien no entrenó (visibilidad suave)');
+  // ── Este guard EJECUTA el generador; antes solo leía su código fuente. ──
+  // La versión de lectura no vio que el PR #433 («Fuera el Cliente IA») se
+  // llevó por delante las CINCO líneas que construían el mensaje y dejó
+  // `return L.join('\n')` apuntando a una variable borrada. Todas sus
+  // expresiones regulares seguían encontrando lo que buscaban: «Sin
+  // actividad» estaba, sí, pero en un COMENTARIO. Resultado: la pantalla de
+  // Análisis del supervisor reventaba entera desde la v7.386 —y con ella el
+  // Código de acceso, que vive dentro— hasta que el propietario lo vio.
+  const lunes = (() => { const d = new Date(); d.setUTCDate(d.getUTCDate() - ((d.getUTCDay() + 6) % 7));
+    return d.toISOString().slice(0, 10); })();
+  const ahora = new Date().toISOString();
+  const hace60 = new Date(Date.now() - 60 * 86400000).toISOString();
+  const mk = o => Object.assign({ extras: {}, lastActiveAt: ahora }, o);
+  const equipo = {
+    Nube:  mk({ extras: { wk: { k: lunes, xp: 900 } } }),   // XP solo en la nube
+    Local: mk({ wkKey: lunes, wkXP: 400 }),                  // XP solo en el dispositivo
+    Vago:  mk({}),                                           // vivo y sin entrenar
+    Viejo: mk({ lastActiveAt: hace60 })                      // perfil fantasma
+  };
+  const nombres = Object.keys(equipo);
+  const cargar = new Function('LANG', '_wkKey', '_dispName', fn + '; return _supResumenTxt;'); // eslint-disable-line no-new-func
+  const run = (lang, prev) => cargar(lang, () => lunes, n => n)(equipo, nombres, prev);
+
+  for (const lang of ['es', 'en']) {
+    const txt = run(lang, false);
+    assert(typeof txt === 'string' && txt.length > 0, `el resumen (${lang}) no devuelve texto`);
+    const L = txt.split('\n');
+    assert(L.length >= 3, `el resumen (${lang}) sale con ${L.length} línea(s): ${JSON.stringify(txt)}`);
+    // El podio fusiona nube Y dispositivo: solo nube dejaba fuera al propio
+    // supervisor («Duvan no estudió» mientras la Liga lo ponía 3º, jul 2026).
+    assert(/🥇 Nube \+900/.test(txt), `el podio debe leer la XP de la nube (${lang}): ${txt}`);
+    assert(/🥈 Local \+400/.test(txt), `el podio debe leer la XP del dispositivo (${lang}): ${txt}`);
+    // «Sin actividad» nombra a quien no entrenó, pero solo al equipo VIVO.
+    assert(/Vago/.test(txt), `el mensaje debe nombrar a quien no entrenó (${lang}): ${txt}`);
+    assert(!/Viejo/.test(txt), `un perfil sin señal de vida en 30 días no cuenta (${lang}): ${txt}`);
+    assert(/\(2\/3\)/.test(txt), `entrenaron 2 de una plantilla viva de 3 (${lang}): ${txt}`);
+  }
+  // Semana en curso y semana cerrada dan cabeceras distintas (lunes por la
+  // mañana el supervisor quiere la que acaba de terminar).
+  assert(run('es', false).split('\n')[0] !== run('es', true).split('\n')[0],
+    'la semana cerrada debe generar una cabecera distinta de la semana en curso');
+  // El mensaje se reenvía por WhatsApp: van los nombres VISIBLES.
+  assert(/🥇 Ada L\./.test(cargar('es', () => lunes, n => (n === 'Nube' ? 'Ada L.' : n))(equipo, nombres, false)),
+    'el resumen debe usar el nombre visible, no el usuario');
   // La sección del panel: alternador de semana + copiar + WhatsApp
   const sec = html.slice(html.indexOf('const resumenSection'), html.indexOf('// ── DÓNDE FALLA EL EQUIPO'));
   assert(/window\._supResWk/.test(html) && /'prev' : 'cur'/.test(html),

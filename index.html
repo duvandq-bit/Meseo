@@ -52,7 +52,7 @@
 <meta property="og:description" content="Formación de equipos de sala: carta, alérgenos, vinos, exámenes y juegos de repaso.">
 <meta property="og:url" content="https://meseo.es/">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"Meseo","url":"https://meseo.es/"}</script>
-<meta name="app-version" content="7.428">
+<meta name="app-version" content="7.429">
 <meta name="app-build" content="May 2026">
 <meta name="theme-color" content="#1c2a22">
 <!-- ═══ PWA ═══ -->
@@ -1733,7 +1733,7 @@ const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><p
 const SRC = 'src';
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='7.428';  // sincronizada con sw.js VERSION (guard de CI)
+const APP_VERSION='7.429';  // sincronizada con sw.js VERSION (guard de CI)
 const APP_BUILD='Jul 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;
@@ -23416,6 +23416,15 @@ function _supResumenTxt(allEmps, empNames, prev){
     return (Date.parse(e.lastActiveAt||'')||0)>=_cut || (Date.parse(e.lastLoginTs||'')||0)>=_cut; };
   const roster=empNames.filter(n=>wkXP[n]||_alive(n));
   const idle=roster.filter(n=>!wkXP[n]).sort();
+  // El mensaje se reenvía al equipo por WhatsApp: van los nombres visibles,
+  // no los usuarios (desde que se separaron, el usuario puede no decir nada).
+  const L=[];
+  L.push(`📊 Meseo · ${en?'Weekly summary':'Resumen semanal'} (${fmt(key)}–${fmt(end)})`);
+  L.push(podium.length
+    ? `🏆 ${en?'League':'Liga'}: `+podium.slice(0,3).map((n,i)=>`${medal[i]} ${_dispName(n)} +${wkXP[n].toLocaleString()} XP`).join(' · ')
+    : `🏆 ${en?'League: nobody scored this week':'Liga: nadie puntuó esta semana'}`);
+  if(podium.length>3) L.push(`👏 ${en?'Also trained':'También entrenaron'}: `+podium.slice(3).map(n=>`${_dispName(n)} +${wkXP[n].toLocaleString()}`).join(' · '));
+  L.push(`✅ ${en?'Trained':'Entrenaron'} (${podium.length}/${roster.length})`+(idle.length?` · 😴 ${en?'No activity':'Sin actividad'} (${idle.length}): ${idle.map(_dispName).join(', ')}`:''));
   return L.join('\n');
 }
 function renderSupAnalytics(allEmps, empNames){
