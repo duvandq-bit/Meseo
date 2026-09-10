@@ -6586,7 +6586,7 @@ test('Pase: la respuesta correcta gana en todos los platos jugables', () => {
         const rA=r.filter(i=>(i.a||[]).length).length, fA=f.filter(i=>(i.a||[]).length).length;
         if(r.length&&f.length&&((rA===r.length&&fA===0)||(rA===0&&fA===f.length))) sep++;
       }
-      if(sep>10) delata.push(d.id+':'+sep+'/20');
+      if(sep>15) delata.push(d.id+':'+sep+'/20');
       _paseState={dishId:d.id, fase:'montaje', sel:new Set(), piscina:null, veredicto:null};
       _paseState.piscina=P;
       P.forEach((it,i)=>{ if(!it.falso) _paseState.sel.add(i); });
@@ -6607,9 +6607,15 @@ test('Pase: la respuesta correcta gana en todos los platos jugables', () => {
   assert(R.pocos.length === 0, `menos de 3 señuelos en: ${R.pocos.join(', ')}`);
   assert(R.sinAl === 0,
     `${R.sinAl} platos se quedan con la piscina vacía y ya no hay botón para responder «no lleva ninguno»`);
-  // Medido con los señuelos saliendo de _paseFichas: el peor plato separa en el
-  // 32% de las rondas, por azar y porque tiene pocas fichas. Volver a sacarlos
-  // sólo de _paseComponentes lo dispara al 100% en decenas de platos.
+  // El umbral es 16 de 20, y sale de medir, no de elegirlo a ojo:
+  //   · con los señuelos saliendo de _paseFichas (como está), el peor plato
+  //     —Lomo bajo de Simmental— separa en el 30% de las rondas por puro azar,
+  //     porque tiene pocas fichas. Medido sobre 600 rondas por plato.
+  //   · volviendo a sacarlos sólo de _paseComponentes —la regresión que este
+  //     guard existe para cazar— hay 14 platos que separan el 100% de las veces.
+  // Entre 30% y 100% hay sitio de sobra. El umbral anterior estaba en 11 de 20
+  // y hacía fallar el CI sin que nada estuviera roto el 2% de las tiradas: pasó
+  // una vez en pleno trabajo. Con 16 la probabilidad baja a 6 de cada millón.
   assert(R.delata.length === 0,
     `la insignia de alérgeno delata cuál es el señuelo en: ${R.delata.slice(0,8).join(', ')}`);
 });
@@ -7436,7 +7442,10 @@ test('Fotos en toda la app: helper precargado + Explorar + ficha + flashcard + a
   // CONSULTA. Nunca en exámenes/juegos donde el nombre del plato sea la
   // respuesta (chivarían la solución).
   assert(/function dishPhotoSrc\(id\)/.test(html), 'dishPhotoSrc helper missing');
-  assert(/loadDishPhotos\(\);/.test(html.slice(html.indexOf('function closePinAndEnter('), html.indexOf('function closePinAndEnter(') + 900)),
+  // La ventana subió de 900 a 1800: la carga de la carta por restaurante entró
+  // por delante en closePinAndEnter y empujó esta línea. Sigue comprobando que
+  // la precarga va al principio de la función, que es lo que importa.
+  assert(/loadDishPhotos\(\);/.test(html.slice(html.indexOf('function closePinAndEnter('), html.indexOf('function closePinAndEnter(') + 1800)),
     'the photo map must preload on login so sync renders can use it');
   // Explorar: la foto vive dentro del hexágono de la fila
   const topic = html.slice(html.indexOf('function renderRepasoTopic('), html.indexOf('function renderRepasoDishDetail('));
@@ -8643,6 +8652,85 @@ test('Acceso: ninguna consulta cruza de un restaurante a otro', () => {
     '_vSello({ employee: me, room: CHAT_ROOM })',
     '_vSello({ challenger: fromUser, challenged: toUser,',
   ]) assert(html.includes(marca), `falta el sello de restaurante en: ${marca.slice(0, 50)}`);
+});
+
+test('Pase: los nombres pegados se limpian al PINTAR, nunca en el dato', () => {
+  // La ficha dice «Migas de Ibérico (Ibéricos y miga de pan)» y, al trocearla
+  // quitando los paréntesis, queda «Migas de Ibérico Ibéricos y miga de pan».
+  // Esa forma pegada es la clave con la que la base encuentra el alérgeno: se
+  // intentó renombrarla en el dato y el plato 6 se quedó sin quien explicara su
+  // Gluten. Por eso se limpia SÓLO la etiqueta, y este guard existe para que a
+  // nadie —yo el primero— se le ocurra volver a tocar el dato.
+  assert(/const _PASE_PEGADOS = \{/.test(html), 'falta la tabla de nombres pegados');
+  const tabla = html.slice(html.indexOf('const _PASE_PEGADOS = {'), html.indexOf('function _paseEtiqueta('));
+  const claves = [...tabla.matchAll(/'([^']+)':\s*'([^']+)'/g)].map(m => [m[1], m[2]]);
+  assert(claves.length >= 10, `la tabla se ha quedado en ${claves.length} nombres`);
+
+  // Cada clave tiene que existir TAL CUAL como componente. Si no, es un typo
+  // que no limpia nada y nadie se entera.
+  const comps = html.slice(html.indexOf('const DISH_COMPONENTS = '), html.indexOf('\n};', html.indexOf('const DISH_COMPONENTS = ')));
+  for (const [pegado, limpio] of claves) {
+    assert(comps.includes(`n:'${pegado}'`), `«${pegado}» no existe como componente: la tabla no limpia nada`);
+    assert(limpio && limpio !== pegado && pegado.startsWith(limpio),
+      `«${limpio}» tiene que ser el principio de «${pegado}»: es recortar, no renombrar`);
+  }
+
+  // Cuatro quedan fuera A PROPÓSITO y no pueden colarse:
+  //  · Granadina — «Granadina» a secas NO lleva alérgeno en la base y los
+  //    Sulfitos vienen del vinagre: acortarla los borra del plato en silencio.
+  //  · Porto y Sake — son cebolla encurtida 24 h, no licores sueltos; su nombre
+  //    bueno es otro y está pendiente de que lo confirme el propietario.
+  //  · Bisque — «Bisque» a secas enseña menos: la palabra que avisa del
+  //    crustáceo es «Langostino».
+  for (const fuera of ['Granadina Vinagre de manzana', 'Porto Vinagre de jerez',
+                       'Sake Vinagre de cabernet', 'Bisque Caldo de Langostino'])
+    assert(!tabla.includes(`'${fuera}'`),
+      `«${fuera}» está fuera a propósito: léete el comentario antes de meterlo`);
+
+  // Y se usa SÓLO al pintar la ficha. Si apareciera en el armado, la clave
+  // cambiaría y con ella el emparejado contra la base de alérgenos.
+  const usos = (html.match(/_paseEtiqueta\(/g) || []).length;
+  assert(usos === 2, `_paseEtiqueta debe usarse una sola vez (su definición + el chip); hay ${usos}`);
+  const chip = html.slice(html.indexOf('function _paseChip('), html.indexOf('function _paseRender('));
+  assert(/pase-chip-t">\$\{escapeHTML\(_paseEtiqueta\(it\.t\)\)\}/.test(chip),
+    'la etiqueta limpia va en el chip');
+});
+
+test('Carta: cada restaurante carga la suya, y si no llega no se entra', () => {
+  // Los cuatro bloques de la carta se quedan dentro del HTML a propósito: 42
+  // puntos de las pruebas y de la auditoría de alérgenos los leen de ahí, y
+  // sacarlos obligaría a reescribir todo eso por ninguna ganancia. La carta de
+  // un restaurante nuevo llega en data/carta-<restaurante>.json y sustituye a
+  // las cuatro EN EL SITIO —son const y de ellas cuelgan treinta mil líneas—.
+  assert(/const _CARTA_BASE = \{/.test(html), 'falta la copia intacta de la carta de Txoko');
+  const ap = html.slice(html.indexOf('function _cartaAplicar('), html.indexOf('async function cargarCarta('));
+  assert(/DISHES\.length = 0;/.test(ap) && /DISHES_EN\.length = 0;/.test(ap),
+    'la sustitución tiene que ser en el sitio: const impide reasignar, no modificar');
+  assert(/for\(const k of Object\.keys\(DISH_COMPONENTS\)\) delete DISH_COMPONENTS\[k\];/.test(ap)
+      && /for\(const k of Object\.keys\(DISH_ACTIONS\)\) delete DISH_ACTIONS\[k\];/.test(ap),
+    'las claves viejas se borran: si no, quedarían platos del otro restaurante mezclados');
+
+  const cc = html.slice(html.indexOf('async function cargarCarta('), html.indexOf('// Derivación automática'));
+  // Volver a Txoko tiene que REPONER la carta original. Sin esto, cerrar sesión
+  // desde M.B. y entrar con una cuenta de Txoko dejaba puesta la de M.B.
+  assert(/_cartaAplicar\(_CARTA_BASE\)/.test(cc),
+    'volver a Txoko repone su carta: si no, la del otro restaurante se queda puesta');
+  assert(/carta\.venue !== venue/.test(cc),
+    'el archivo declara de quién es: soltar la carta equivocada no puede acabar en enseñarla');
+  assert(/return false;/.test(cc), 'si no se puede dejar puesta la carta que toca, se dice que no');
+
+  // Y quien llama FALLA CERRADO. Enseñarle a alguien de M.B. la carta de Txoko
+  // sería exactamente la fuga que todo esto viene a cerrar.
+  const i = html.indexOf('async function closePinAndEnter(');
+  assert(i > 0, 'entrar tiene que poder esperar a la carta: closePinAndEnter debe ser async');
+  const cuerpo = (() => { let d = 0;
+    for (let k = html.indexOf('{', i); k < html.length; k++) {
+      if (html[k] === '{') d++; else if (html[k] === '}') { d--; if (!d) return html.slice(i, k + 1); } } })();
+  assert(/if\(!\(await cargarCarta\(\(_e && _e\.venue\) \|\| _VENUE_POR_DEFECTO\)\)\) return;/.test(cuerpo),
+    'sin la carta de su restaurante no se entra');
+  const iCarta = cuerpo.indexOf('cargarCarta'), iApp = cuerpo.indexOf('screenApp');
+  assert(iCarta > 0 && iApp > 0 && iCarta < iApp,
+    'la carta se resuelve ANTES de pintar la app');
 });
 
 test('Acceso: el código del restaurante no se pinta solo', () => {

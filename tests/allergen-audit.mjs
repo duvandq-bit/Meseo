@@ -15,7 +15,7 @@
 //                    (pendiente) o la declaración sobra.
 // La declaración manual de los platos NO se toca: este auditor solo informa.
 // Cuando el propietario valide la base, la derivación podrá ser automática.
-import { readFileSync } from 'node:fs';
+import { readFileSync, readdirSync, existsSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
 
@@ -50,7 +50,32 @@ for (let k = 0; k < starts.length; k++) {
   if (baseM) for (const x of baseM[1].matchAll(/'([^']+)'/g)) variantAllergens.push(x[1]);
   for (const x of obj.matchAll(/extra:\[([^\]]*)\]/g))
     for (const y of x[1].matchAll(/'([^']+)'/g)) variantAllergens.push(y[1]);
-  dishes.push({ id: +starts[k][1], cat: field('cat'), name: field('name'), declared, tokens, variantAllergens });
+  dishes.push({ id: +starts[k][1], cat: field('cat'), name: field('name'), declared, tokens, variantAllergens, carta: 'txoko' });
+}
+
+// ── Y la carta de cualquier OTRO restaurante ──────────────────────────────
+// La de Txoko vive dentro del HTML; la de un restaurante nuevo llega en
+// data/carta-<restaurante>.json. Tiene que pasar exactamente la misma
+// auditoría: unos alérgenos sin verificar son unos alérgenos sin verificar,
+// esté el dato donde esté. Con los platos ya en objetos no hace falta parsear
+// nada, sólo trocear los ingredientes igual que arriba.
+const trozos = (txt) => String(txt || '').split(/[,.:;]/)
+  .map(t => t.replace(/[()]/g, ' ').replace(/\s+/g, ' ').trim())
+  .filter(t => t.length > 2 && t.length < 40);
+
+const dirDatos = join(root, 'data');
+const cartas = existsSync(dirDatos)
+  ? readdirSync(dirDatos).filter(f => /^carta-.+\.json$/.test(f))
+  : [];
+for (const archivo of cartas) {
+  const carta = JSON.parse(readFileSync(join(dirDatos, archivo), 'utf-8'));
+  const quien = carta.venue || archivo;
+  for (const d of (carta.DISHES || [])) {
+    const variantAllergens = [...(d.baseAllergens || [])];
+    for (const v of (d.variants || [])) for (const a of (v.extra || [])) variantAllergens.push(a);
+    dishes.push({ id: d.id, cat: d.cat || '', name: d.name || '',
+      declared: d.allergens || [], tokens: trozos(d.ingredients), variantAllergens, carta: quien });
+  }
 }
 
 const ING = base.ingredientes;
@@ -75,12 +100,12 @@ for (const d of dishes) {
   }
   for (const [a, sources] of computed) {
     if (!d.declared.includes(a)) {
-      results.no_declarado.push({ id: d.id, plato: d.name, alergeno: a, por: sources });
+      results.no_declarado.push({ id: d.id, plato: d.name, alergeno: a, por: sources, carta: d.carta });
     }
   }
   for (const a of d.declared) {
     if (!computed.has(a)) {
-      results.sin_origen.push({ id: d.id, plato: d.name, alergeno: a });
+      results.sin_origen.push({ id: d.id, plato: d.name, alergeno: a, carta: d.carta });
     }
   }
 }
@@ -95,12 +120,12 @@ const out = {
 if (process.argv.includes('--json')) {
   console.log(JSON.stringify(out));
 } else {
-  console.log(`Platos auditados: ${dishes.length}\n`);
+  console.log(`Platos auditados: ${dishes.length}` + (cartas.length ? ` (Txoko + ${cartas.length} carta(s) en data/)` : '') + `\n`);
   console.log(`⛔ NO DECLARADO (${out.no_declarado.length}) — ingrediente etiquetado implica alérgeno ausente del plato:`);
-  out.no_declarado.forEach(r => console.log(`   [${r.id}] ${r.plato} → falta ${r.alergeno} (por: ${r.por.join(', ')})`));
+  out.no_declarado.forEach(r => console.log(`   ${r.carta} [${r.id}] ${r.plato} → falta ${r.alergeno} (por: ${r.por.join(', ')})`));
   console.log(`\n⚠ SIN ORIGEN (${out.sin_origen.length}) — alérgeno declarado que ningún ingrediente etiquetado explica:`);
   const byA = {};
-  out.sin_origen.forEach(r => { (byA[r.alergeno] = byA[r.alergeno] || []).push(`[${r.id}] ${r.plato}`); });
+  out.sin_origen.forEach(r => { (byA[r.alergeno] = byA[r.alergeno] || []).push(`${r.carta} [${r.id}] ${r.plato}`); });
   Object.entries(byA).forEach(([a, list]) => console.log(`   ${a} (${list.length}): ${list.join(' · ')}`));
   console.log(`\nIngredientes 'pendiente' aún en uso: ${out.ingredientes_pendientes_en_uso} (revisar en data/ingredients.json)`);
 }
