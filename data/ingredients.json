@@ -3667,6 +3667,183 @@
         "Frutos secos"
       ],
       "fuente": "certeza culinaria"
+    },
+    "cigala": {
+      "nombre": "Cigala",
+      "nombre_en": "Langoustine",
+      "alergenos": [
+        "Crustáceos"
+      ],
+      "fuente": "certeza culinaria"
+    },
+    "polvo de cigala": {
+      "nombre": "Polvo de cigala",
+      "nombre_en": "Langoustine powder",
+      "alergenos": [
+        "Crustáceos"
+      ],
+      "fuente": "certeza culinaria"
+    },
+    "tartar de cigala": {
+      "nombre": "Tartar de cigala",
+      "nombre_en": "Langoustine tartare",
+      "alergenos": [
+        "Crustáceos"
+      ],
+      "fuente": "certeza culinaria"
+    },
+    "champagne": {
+      "nombre": "Champagne",
+      "nombre_en": "Champagne",
+      "alergenos": [
+        "Sulfitos"
+      ],
+      "fuente": "certeza culinaria"
+    },
+    "esferas de champagne": {
+      "nombre": "Esferas de champagne",
+      "nombre_en": "Champagne spheres",
+      "alergenos": [
+        "Sulfitos"
+      ],
+      "fuente": "certeza culinaria"
+    },
+    "pasta de sesamo": {
+      "nombre": "Pasta de sésamo",
+      "nombre_en": "Sesame paste",
+      "alergenos": [
+        "Granos de sésamo"
+      ],
+      "fuente": "certeza culinaria"
+    },
+    "albumina de huevo": {
+      "nombre": "Albúmina de huevo",
+      "nombre_en": "Egg albumin",
+      "alergenos": [
+        "Huevos"
+      ],
+      "fuente": "certeza culinaria"
+    },
+    "yema de huevo curada": {
+      "nombre": "Yema de huevo curada",
+      "nombre_en": "Cured egg yolk",
+      "alergenos": [
+        "Huevos"
+      ],
+      "fuente": "certeza culinaria"
+    },
+    "queso": {
+      "nombre": "Queso",
+      "nombre_en": "Cheese",
+      "alergenos": [
+        "Lácteos"
+      ],
+      "fuente": "certeza culinaria"
+    },
+    "queso marino": {
+      "nombre": "Queso marino",
+      "nombre_en": "Marine cheese",
+      "alergenos": [
+        "Lácteos",
+        "Pescado",
+        "Mostaza"
+      ],
+      "fuente": "certeza culinaria"
+    },
+    "sardinilla": {
+      "nombre": "Sardinilla",
+      "nombre_en": "Small sardine",
+      "alergenos": [
+        "Pescado"
+      ],
+      "fuente": "certeza culinaria"
+    },
+    "espinaca": {
+      "nombre": "Espinaca",
+      "nombre_en": "Spinach",
+      "alergenos": [],
+      "fuente": "certeza culinaria"
+    },
+    "nabo": {
+      "nombre": "Nabo",
+      "nombre_en": "Turnip",
+      "alergenos": [],
+      "fuente": "certeza culinaria"
+    },
+    "curry": {
+      "nombre": "Curry",
+      "nombre_en": "Curry",
+      "alergenos": [],
+      "fuente": "certeza culinaria"
+    },
+    "velo de nata": {
+      "nombre": "Velo de nata",
+      "nombre_en": "Cream veil",
+      "alergenos": [
+        "Lácteos"
+      ],
+      "fuente": "certeza culinaria"
+    },
+    "helado de fresa": {
+      "nombre": "Helado de fresa",
+      "nombre_en": "Strawberry ice cream",
+      "alergenos": [
+        "Lácteos"
+      ],
+      "fuente": "certeza culinaria"
+    },
+    "salsa de pistacho": {
+      "nombre": "Salsa de pistacho",
+      "nombre_en": "Pistachio sauce",
+      "alergenos": [
+        "Frutos secos"
+      ],
+      "fuente": "certeza culinaria"
+    },
+    "pasta de pistacho": {
+      "nombre": "Pasta de pistacho",
+      "nombre_en": "Pistachio paste",
+      "alergenos": [
+        "Frutos secos"
+      ],
+      "fuente": "certeza culinaria"
+    },
+    "crema de yogur griego": {
+      "nombre": "Crema de yogur griego",
+      "nombre_en": "Greek yoghurt cream",
+      "alergenos": [
+        "Lácteos"
+      ],
+      "fuente": "certeza culinaria"
+    },
+    "merengue de yogur": {
+      "nombre": "Merengue de yogur",
+      "nombre_en": "Yoghurt meringue",
+      "alergenos": [
+        "Lácteos",
+        "Huevos"
+      ],
+      "fuente": "certeza culinaria"
+    },
+    "ventresca de lubina": {
+      "nombre": "Ventresca de lubina",
+      "nombre_en": "Sea bass belly",
+      "alergenos": [
+        "Pescado"
+      ],
+      "fuente": "certeza culinaria"
+    },
+    "demi-glace": {
+      "nombre": "Demi-glace",
+      "nombre_en": "Demi-glace",
+      "alergenos": [],
+      "fuente": "certeza culinaria"
+    },
+    "carre de cordero": {
+      "nombre": "Carré de cordero",
+      "nombre_en": "Rack of lamb",
+      "alergenos": [],
+      "fuente": "certeza culinaria"
     }
   }
 }

@@ -3,7 +3,7 @@
  "DISHES": [
   {
    "id": 1,
-   "cat": "Menú Degustación",
+   "cat": "Entrantes fríos",
    "name": "Atún",
    "allergens": [
     "Pescado",
@@ -18,7 +18,7 @@
   },
   {
    "id": 2,
-   "cat": "Menú Degustación",
+   "cat": "Entrantes fríos",
    "name": "Camarón",
    "allergens": [
     "Crustáceos",
@@ -33,7 +33,7 @@
   },
   {
    "id": 3,
-   "cat": "Menú Degustación",
+   "cat": "Entrantes fríos",
    "name": "Hamachi",
    "allergens": [
     "Pescado",
@@ -41,11 +41,11 @@
    ],
    "ingredients": "Medregal. Jugo: Jazmín, Pepino, Yuzu. Puntos de gel: Caldo, Jengibre encurtido. Aceite de hierbas: Cilantro, Cebollino, Perejil. Perlas heladas de mandarina y de ají amarillo. Vinagreta thai: Chili, Salsa de pescado, Ajo.",
    "history": "Medregal de nuestra costa madurado durante 15 días con toques de brasa, sobre extracto de jazmín y shoots helados agridulces. El medregal es un pescado azul de la familia de los carángidos que habita en las aguas de Canarias; en la península se conoce como pez limón y en Japón como hamachi. Pesa unos 5 kg y entre limpieza y maduración se queda en un kilo estimado. Se cocina directamente a la llama con sarmientos: marcado por fuera, sin cocción por dentro.",
-   "notes": "🍴 Tenedor, cuchara y cuchillo de plata. · ⚠ Pescado (medregal, y salsa de pescado de la vinagreta thai) y Sulfitos — NO se pueden retirar."
+   "notes": "🍴 Tenedor, cuchara y cuchillo de plata. · ⚠ Pescado (medregal, y salsa de pescado de la vinagreta thai) y Sulfitos — NO se pueden retirar. · Sólo en el Gran Menú Degustación: no está en la carta."
   },
   {
    "id": 4,
-   "cat": "Menú Degustación",
+   "cat": "Entrantes calientes",
    "name": "Cochino",
    "allergens": [
     "Lácteos",
@@ -63,7 +63,7 @@
   },
   {
    "id": 5,
-   "cat": "Menú Degustación",
+   "cat": "Entrantes calientes",
    "name": "Chipirón",
    "allergens": [
     "Moluscos",
@@ -78,7 +78,7 @@
   },
   {
    "id": 6,
-   "cat": "Menú Degustación",
+   "cat": "Pescados",
    "name": "Rodaballo",
    "allergens": [
     "Pescado",
@@ -91,16 +91,18 @@
   },
   {
    "id": 7,
-   "cat": "Menú Degustación",
+   "cat": "Carnes",
    "name": "Wagyu",
    "allergens": [
     "Lácteos",
     "Apio",
-    "Frutos secos"
+    "Frutos secos",
+    "Huevos",
+    "Gluten"
    ],
-   "ingredients": "Milhojas de wagyu: Wagyu, Grasa de chuleta de rubia gallega. Nabo daikon glaseado: Nabo daikon, Praliné de avellanas, Caldo de carne. Crema de apionabo: Apio, Mantequilla noisette. Queso Comté, Hojas de salvia.",
+   "ingredients": "Milhojas de wagyu: Wagyu, Grasa de chuleta de rubia gallega. Nabo daikon glaseado: Nabo daikon, Praliné de avellanas, Caldo de carne. Crema de apionabo: Apio, Mantequilla noisette. Queso Comté, Hojas de salvia. Ñoquis de espinaca: Harina, Huevo, Espinaca.",
    "history": "Milhojas de wagyu, nabo glaseado con avellanas y comté. El wagyu es de Teruel, España, Full Blood: tanto la hembra como el macho son de sangre 100% japonesa. Los cortes utilizados son espaldilla y sobrecostilla, ambos con mucha infiltración de grasa. Hacemos un milhojas alternando cada cuatro capas de carne una de grasa de chuleta de rubia gallega. El nabo daikon es de origen japonés, con un sabor menos intenso que el apionabo: se corta en lámina muy fina, lleva praliné de avellanas y luego se cuece en caldo de carne. Para los puntos de crema de apionabo se cocinan algunos dados hasta caramelizar y se finaliza con mantequilla noisette.",
-   "notes": "🍴 Tenedor negro de carne y cuchillo de carne de colores. · ⚠ Lácteos (Comté y mantequilla noisette), Apio (crema de apionabo) y Frutos secos (avellana del praliné) — NO se pueden retirar."
+   "notes": "🍴 Tenedor negro de carne y cuchillo de carne de colores. · ⚠ SE PUEDEN RETIRAR: Huevos y Gluten, que vienen de los ñoquis de espinaca. Comandar SIN ÑOQUIS. · ⚠ Lácteos (Comté y mantequilla noisette), Apio (crema de apionabo) y Frutos secos (avellana del praliné) — NO se pueden retirar. · ⚠ OJO: los ñoquis de espinaca sólo van en la versión de LA CARTA; en el Gran Menú Degustación el plato va sin ellos. Se declaran igual porque sobredeclarar es el lado seguro. · ⚠ El GLUTEN está PENDIENTE DE CONFIRMAR: la propia ficha de cocina escribe «gluten (a confirmar)»."
   },
   {
    "id": 8,
@@ -114,7 +116,7 @@
    ],
    "ingredients": "Capa externa: Manteca de cacao, Chocolate blanco. Crema de limón: Claras, Azúcar, Gelatina, Ralladura y zumo de limón, Nata. Helado de limón: Nata, Ralladura y zumo de limón, Leche, Azúcar, Estabilizantes. Espuma de limón: Zumo de limón, Azúcar, Nata, Gelatina. Bizcocho de limón: Yogur, Aceite, Harina, Ralladura de lima, Licor de limón. Hoja de té verde matcha, Caramelo en polvo.",
    "history": "Para pasar del salado al dulce, aquí tenemos nuestro pre postre: un limón completamente comestible, acompañado con una hoja de té verde matcha. Nuestro chef recomienda romper la corteza con la cuchara y disfrutar. La capa externa es manteca y chocolate blanco, en un molde que se hace de limones reales para que tenga la forma de un limón de verdad. Las varias elaboraciones son para simular todos los sabores de un limón normal. La hoja lleva té verde matcha y caramelo en polvo, para aportar amargor y ese color, ya que las hojas del limón son verdes y amargas. Historia del limón: a nuestro chef Erlantz, de pequeño, le gustaba comer un sorbete de limón muy típico de España en esa época, que venía dentro de la cáscara de un limón real. Lo que le ocurría es que no podía comerlo al completo, porque la cáscara no se podía comer. Inspirado en ello, Erlantz hizo su propia versión, 100% comestible.",
-   "notes": "🍴 Tenedor dorado y cuchara dorada. · ⚠ CONTIENE ALCOHOL (licor de limón del bizcocho). · ⚠ SE PUEDEN RETIRAR: Gluten (harina del bizcocho) y Sulfitos (licor de limón). Comandar SIN BIZCOCHO. · ⚠ Lácteos (nata, leche, chocolate blanco, yogur) y Huevos (clara de la crema) — NO se pueden retirar."
+   "notes": "🍴 Tenedor dorado y cuchara dorada. · ⚠ CONTIENE ALCOHOL (licor de limón del bizcocho). · ⚠ SE PUEDEN RETIRAR: Gluten (harina del bizcocho) y Sulfitos (licor de limón). Comandar SIN BIZCOCHO. · ⚠ Lácteos (nata, leche, chocolate blanco, yogur) y Huevos (clara de la crema) — NO se pueden retirar. · Pre-postre del Gran Menú Degustación."
   },
   {
    "id": 9,
@@ -145,6 +147,57 @@
    "ingredients": "Helado de maíz ahumado: Maíz, Whisky, Nata, Leche, Huevo. Tierra: Crumble de cacao, Harina, Harina de almendras, Café. Dados de gelatina de café y whisky. Maíz seco frito y triturado. Crujiente de merengue y maíz frito. Espuma de chocolate al 70% y café. Nudo de caramelo salado.",
    "history": "Maíz ahumado helado, sobre nudo de caramelo salado, cacao y café. La tierra se hace con crumble de cacao, harina de almendras y café. Lleva dados de gelatina de café y whisky, maíz seco frito y triturado, un crujiente de merengue y maíz frito, y espuma de chocolate al 70% con café. El helado de maíz ahumado lleva whisky turbado.",
    "notes": "🍴 Tenedor dorado y cuchara dorada. · ⚠ CONTIENE ALCOHOL (whisky turbado). · ⚠ SE PUEDEN RETIRAR: Gluten (la tierra), Frutos secos (harina de almendras) y Sulfitos. Comandar SIN TIERRA. · ⚠ Lácteos y Huevos — NO se pueden retirar."
+  },
+  {
+   "id": 11,
+   "cat": "Pescados",
+   "name": "Lubina",
+   "allergens": [
+    "Gluten",
+    "Huevos",
+    "Lácteos",
+    "Pescado",
+    "Crustáceos",
+    "Moluscos",
+    "Mostaza",
+    "Sulfitos",
+    "Soja"
+   ],
+   "ingredients": "Lubina madurada 48 h, Ventresca de lubina, Nabo. Salsa thai: Curry. Crujiente de espinas: Harina, Polvo de cigala. Queso marino: Queso, Sardinilla, Mostaza, Oliva, Sal. Tartar de cigala.",
+   "history": "Lubina madurada por 48 horas, salsa thai y tartar de cigala, acompañamos con crujiente de espinas, ventresca de lubina y queso marino. Recomendamos empezar por el crujiente. La lubina, o róbalo, es un pez blanco de la familia Moronidae, común en las costas del Atlántico y el Mar Mediterráneo; su mejor temporada de pesca es de abril a septiembre. La maduramos 48 horas para obtener una piel más crujiente y sabores más intensos. El crujiente de espinas se elabora con harina y polvo de cigala, y se acompaña con láminas de ventresca de lubina; encima lleva puntos de queso marino y nabo.",
+   "notes": "🍴 Tenedor negro de pesca, pala negra de pesca y cuchillo negro de pesca. · ⚠ SE PUEDEN RETIRAR: Lácteos, Gluten, Soja y Mostaza — están todos en el crujiente. Comandar SIN CRUJIENTE. · ⚠ Crustáceos (cigala) — SE PUEDE RETIRAR: cuando se quita el crustáceo, el plato se acompaña con tartar de lubina. Comandar SIN CIGALA. · ⚠ Pescado (lubina y sardinilla del queso marino) — NO se puede retirar. · ⚠ PENDIENTE DE CONFIRMAR CON COCINA de dónde salen los Moluscos, los Huevos y los Sulfitos."
+  },
+  {
+   "id": 12,
+   "cat": "Carnes",
+   "name": "Cordero",
+   "allergens": [
+    "Lácteos",
+    "Frutos secos",
+    "Mostaza",
+    "Sulfitos",
+    "Huevos",
+    "Granos de sésamo",
+    "Pescado",
+    "Apio"
+   ],
+   "ingredients": "Carré de cordero. Cogollo a la brasa: Queso parmesano, Ajo frito, Pasta de pistacho, Pistacho, Yema de huevo curada, Mostaza Dijon, Mostaza savora. Crema Baba Ganoush: Berenjena, Comino, Pasta de sésamo, Lima, Naranja. Crema de yogur griego, Nata. Crujiente de yogur: Merengue de yogur, Albúmina de huevo. Demi-glace.",
+   "history": "Nuestro carré de cordero francés, sobre cogollo crujiente aderezado, acompañado de crema de berenjena especiada, toques de yogur, y terminamos con su demi-glace. El cordero es del sur de Francia, de Normandía, Mont Saint Michel: recental, de entre tres y cuatro meses de edad. Es un corte francés cocinado a baja temperatura. Los cogollos se marcan a la brasa y se terminan al horno. La crema Baba Ganoush lleva berenjena, comino, pasta de sésamo, lima y naranja.",
+   "notes": "🍴 Tenedor negro de carne y cuchillo de carne de colores. · ⚠ SE PUEDEN RETIRAR: Lácteos, Huevos, Granos de sésamo, Mostaza y Frutos secos. · ⚠ Apio en la mostaza savora del cogollo — NO se puede retirar salvo que se quite la mostaza. · ⚠ PENDIENTE DE CONFIRMAR CON COCINA de dónde salen el Pescado y los Sulfitos."
+  },
+  {
+   "id": 13,
+   "cat": "Postres",
+   "name": "Texturas de fresa",
+   "allergens": [
+    "Sulfitos",
+    "Lácteos",
+    "Frutos secos",
+    "Pescado"
+   ],
+   "ingredients": "Velo de nata, Fresa, Helado de fresa, Esferas de champagne. Salsa de pistacho, Caviar. Fresa albina.",
+   "history": "Texturas de fresa, piel de nata, perlas de champagne y salsa de pistacho con caviar. En el interior lleva fresa osmotizada en su jugo, helado de fresa con sabor lácteo y esferas semilíquidas de champagne. Se termina en sala, colocando la salsa de pistacho y rallando fresa albina, que tiene un sabor dulce y cítrico. El caviar es osietra.",
+   "notes": "🍴 Tenedor, cuchara y cuchillo dorado. · ⚠ SE PUEDEN RETIRAR: Frutos secos (salsa de pistacho), Sulfitos (esferas de champagne) y Pescado (caviar). · ⚠ Lácteos (velo de nata y helado) — NO se pueden retirar. · ⚠ CONTIENE ALCOHOL (champagne)."
   }
  ],
  "DISHES_EN": [
@@ -185,7 +238,7 @@
    ],
    "ingredients": "Amberjack. Juice: Jasmine, Cucumber, Yuzu. Gel dots: Broth, Pickled ginger. Herb oil: Coriander, Chives, Parsley. Frozen pearls of mandarin and yellow ají. Thai vinaigrette: Chilli, Fish sauce, Garlic.",
    "history": "Amberjack from our coast, aged for 15 days, with subtle ember notes, over jasmine extract and sweet-and-sour frozen pearls. Amberjack is an oily fish of the jack family living in Canarian waters; it is known as pez limón on the mainland and as hamachi in Japan. It weighs around 5 kg and, after cleaning and ageing, comes down to an estimated kilo. It is cooked directly over the flame with vine shoots: seared outside, raw within.",
-   "notes": "🍴 Silver fork, spoon and knife. · ⚠ Fish (amberjack, and fish sauce in the Thai vinaigrette) and Sulphites — cannot be removed."
+   "notes": "🍴 Silver fork, spoon and knife. · ⚠ Fish (amberjack, and fish sauce in the Thai vinaigrette) and Sulphites — cannot be removed. · Gran Tasting Menu only: it is not on the à la carte."
   },
   {
    "id": 4,
@@ -236,11 +289,13 @@
    "allergens": [
     "Dairy",
     "Celery",
-    "Tree nuts"
+    "Tree nuts",
+    "Eggs",
+    "Gluten"
    ],
-   "ingredients": "Wagyu mille-feuille: Wagyu, Fat from Rubia Gallega rib. Glazed daikon: Daikon turnip, Hazelnut praline, Beef stock. Celeriac cream: Celery, Noisette butter. Comté cheese, Sage leaves.",
+   "ingredients": "Wagyu mille-feuille: Wagyu, Fat from Rubia Gallega rib. Glazed daikon: Daikon turnip, Hazelnut praline, Beef stock. Celeriac cream: Celery, Noisette butter. Comté cheese, Sage leaves. Spinach gnocchi: Flour, Egg, Spinach.",
    "history": "Wagyu mille-feuille, glazed Japanese turnip with hazelnuts and Comté cheese. The wagyu comes from Teruel, Spain, Full Blood: both female and male are 100% Japanese blood. The cuts used are chuck and short rib, both heavily marbled. We build a mille-feuille alternating one layer of Rubia Gallega rib fat for every four of meat. The daikon turnip is Japanese, milder than celeriac: it is sliced very thinly, carries hazelnut praline and is then cooked in beef stock. For the celeriac cream dots, some cubes are cooked until caramelised and finished with noisette butter.",
-   "notes": "🍴 Black meat fork and coloured meat knife. · ⚠ Dairy (Comté and noisette butter), Celery (celeriac cream) and Tree nuts (hazelnut in the praline) — cannot be removed."
+   "notes": "🍴 Black meat fork and coloured meat knife. · ⚠ CAN BE REMOVED: Eggs and Gluten, which come from the spinach gnocchi. Order WITHOUT GNOCCHI. · ⚠ Dairy (Comté and noisette butter), Celery (celeriac cream) and Tree nuts (hazelnut in the praline) — cannot be removed. · ⚠ NOTE: the spinach gnocchi are only on the À LA CARTE version; in the Gran Tasting Menu the dish comes without them. They are declared anyway because over-declaring is the safe side. · ⚠ The GLUTEN is TO BE CONFIRMED: the kitchen sheet itself writes «gluten (to be confirmed)»."
   },
   {
    "id": 8,
@@ -253,7 +308,7 @@
    ],
    "ingredients": "Outer shell: Cocoa butter, White chocolate. Lemon cream: Egg whites, Sugar, Gelatine, Lemon zest and juice, Cream. Lemon ice cream: Cream, Lemon zest and juice, Milk, Sugar, Stabilisers. Lemon foam: Lemon juice, Sugar, Cream, Gelatine. Lemon sponge: Yoghurt, Oil, Flour, Lime zest, Limoncello. Matcha green tea leaf, Caramel powder.",
    "history": "To move from savoury to sweet, here is our pre-dessert: a completely edible lemon, served with a matcha green tea leaf. Our chef recommends breaking the shell with the spoon and enjoying. The outer shell is cocoa butter and white chocolate, in a mould made from real lemons so it takes the shape of a real one. The various preparations are there to mimic every flavour of an ordinary lemon. The leaf carries matcha green tea and caramel powder, to bring bitterness and that colour, since lemon leaves are green and bitter. The story of the lemon: as a child, our chef Erlantz liked to eat a lemon sorbet, very typical of Spain at the time, which came inside the peel of a real lemon. The trouble was he could never eat all of it, because the peel was not edible. Inspired by that, Erlantz made his own version, 100% edible.",
-   "notes": "🍴 Gold fork and gold spoon. · ⚠ CONTAINS ALCOHOL (limoncello in the sponge). · ⚠ CAN BE REMOVED: Gluten (flour in the sponge) and Sulphites (limoncello). Order WITHOUT SPONGE. · ⚠ Dairy (cream, milk, white chocolate, yoghurt) and Eggs (egg white in the cream) — cannot be removed."
+   "notes": "🍴 Gold fork and gold spoon. · ⚠ CONTAINS ALCOHOL (limoncello in the sponge). · ⚠ CAN BE REMOVED: Gluten (flour in the sponge) and Sulphites (limoncello). Order WITHOUT SPONGE. · ⚠ Dairy (cream, milk, white chocolate, yoghurt) and Eggs (egg white in the cream) — cannot be removed. · Pre-dessert of the Gran Tasting Menu."
   },
   {
    "id": 9,
@@ -282,6 +337,54 @@
    "ingredients": "Smoked corn ice cream: Corn, Whisky, Cream, Milk, Egg. Soil: Cocoa crumble, Flour, Almond flour, Coffee. Coffee and whisky jelly cubes. Dried fried and crushed corn. Meringue and fried corn crisp. 70% chocolate and coffee foam. Salted caramel knot.",
    "history": "Smoked corn ice cream, accompanied with salted caramel knot, cocoa and coffee. The soil is made with cocoa crumble, almond flour and coffee. It carries coffee and whisky jelly cubes, dried fried and crushed corn, a meringue and fried corn crisp, and 70% chocolate and coffee foam. The smoked corn ice cream carries peated whisky.",
    "notes": "🍴 Gold fork and gold spoon. · ⚠ CONTAINS ALCOHOL (peated whisky). · ⚠ CAN BE REMOVED: Gluten (the soil), Tree nuts (almond flour) and Sulphites. Order WITHOUT SOIL. · ⚠ Dairy and Eggs — cannot be removed."
+  },
+  {
+   "id": 11,
+   "name": "Sea bass",
+   "allergens": [
+    "Gluten",
+    "Eggs",
+    "Dairy",
+    "Fish",
+    "Crustaceans",
+    "Molluscs",
+    "Mustard",
+    "Sulphites",
+    "Soy"
+   ],
+   "ingredients": "Sea bass aged for 48 h, Sea bass belly, Turnip. Thai sauce: Curry. Fishbone cracker: Flour, Langoustine powder. Marine cheese: Cheese, Small sardine, Mustard, Olive, Salt. Langoustine tartare.",
+   "history": "Sea bass aged for 48 hours, Thai sauce and langoustine tartare, served with a fishbone cracker, sea bass belly and marine cheese. We recommend starting with the cracker. Sea bass, or róbalo, is a white fish of the Moronidae family, common on Atlantic and Mediterranean coasts; its best season runs from April to September. We age it for 48 hours for crisper skin and more intense flavour. The fishbone cracker is made with flour and langoustine powder, and comes with slices of sea bass belly; on top it carries dots of marine cheese and turnip.",
+   "notes": "🍴 Black fish fork, black fish server and black fish knife. · ⚠ CAN BE REMOVED: Dairy, Gluten, Soy and Mustard — they are all in the cracker. Order WITHOUT CRACKER. · ⚠ Crustaceans (langoustine) — CAN BE REMOVED: when the crustacean is left out, the dish comes with sea bass tartare instead. Order WITHOUT LANGOUSTINE. · ⚠ Fish (sea bass, and small sardine in the marine cheese) — cannot be removed. · ⚠ TO BE CONFIRMED WITH THE KITCHEN where the Molluscs, Eggs and Sulphites come from."
+  },
+  {
+   "id": 12,
+   "name": "Lamb",
+   "allergens": [
+    "Dairy",
+    "Tree nuts",
+    "Mustard",
+    "Sulphites",
+    "Eggs",
+    "Sesame",
+    "Fish",
+    "Celery"
+   ],
+   "ingredients": "Rack of lamb. Grilled lettuce heart: Parmesan cheese, Fried garlic, Pistachio paste, Pistachio, Cured egg yolk, Dijon mustard, Savora mustard. Baba Ganoush cream: Aubergine, Cumin, Sesame paste, Lime, Orange. Greek yoghurt cream, Cream. Yoghurt crisp: Yoghurt meringue, Egg albumin. Demi-glace.",
+   "history": "Our rack of French lamb over a crunchy dressed lettuce heart, accompanied by a spiced aubergine cream, yoghurt touches, and finished with its demi-glace. The lamb comes from southern France, Normandy, Mont Saint Michel: milk-fed, between three and four months old. It is a French cut cooked at low temperature. The lettuce hearts are grilled and finished in the oven. The Baba Ganoush cream carries aubergine, cumin, sesame paste, lime and orange.",
+   "notes": "🍴 Black meat fork and coloured meat knife. · ⚠ CAN BE REMOVED: Dairy, Eggs, Sesame, Mustard and Tree nuts. · ⚠ Celery in the Savora mustard of the lettuce heart — cannot be removed unless the mustard is left out. · ⚠ TO BE CONFIRMED WITH THE KITCHEN where the Fish and Sulphites come from."
+  },
+  {
+   "id": 13,
+   "name": "Strawberry textures",
+   "allergens": [
+    "Sulphites",
+    "Dairy",
+    "Tree nuts",
+    "Fish"
+   ],
+   "ingredients": "Cream veil. Strawberry osmotised in its own juice, Strawberry ice cream, Champagne spheres. Pistachio sauce, Caviar. Albino strawberry.",
+   "history": "Strawberry textures, cream skin, champagne pearls and pistachio sauce with caviar. Inside it carries strawberry osmotised in its own juice, strawberry ice cream with a dairy note and semi-liquid champagne spheres. It is finished at the table, spooning the pistachio sauce and grating albino strawberry, which is sweet and citrusy. The caviar is oscietra.",
+   "notes": "🍴 Gold fork, spoon and knife. · ⚠ CAN BE REMOVED: Tree nuts (pistachio sauce), Sulphites (champagne spheres) and Fish (caviar). · ⚠ Dairy (cream veil and ice cream) — cannot be removed. · ⚠ CONTAINS ALCOHOL (champagne)."
   }
  ],
  "DISH_COMPONENTS": {
@@ -467,6 +570,20 @@
      "Lácteos"
     ],
     "m": 0
+   },
+   {
+    "n": "Harina",
+    "a": [
+     "Gluten"
+    ],
+    "m": 1
+   },
+   {
+    "n": "Huevo",
+    "a": [
+     "Huevos"
+    ],
+    "m": 1
    }
   ],
   "8": [
@@ -607,6 +724,184 @@
     ],
     "m": 1
    }
+  ],
+  "11": [
+   {
+    "n": "Ventresca de lubina",
+    "a": [
+     "Pescado"
+    ],
+    "m": 0
+   },
+   {
+    "n": "Harina",
+    "a": [
+     "Gluten"
+    ],
+    "m": 1
+   },
+   {
+    "n": "Polvo de cigala",
+    "a": [
+     "Crustáceos"
+    ],
+    "m": 1
+   },
+   {
+    "n": "Queso marino",
+    "a": [
+     "Lácteos",
+     "Pescado",
+     "Mostaza"
+    ],
+    "m": 0
+   },
+   {
+    "n": "Queso",
+    "a": [
+     "Lácteos"
+    ],
+    "m": 1
+   },
+   {
+    "n": "Sardinilla",
+    "a": [
+     "Pescado"
+    ],
+    "m": 0
+   },
+   {
+    "n": "Mostaza",
+    "a": [
+     "Mostaza"
+    ],
+    "m": 1
+   },
+   {
+    "n": "Tartar de cigala",
+    "a": [
+     "Crustáceos"
+    ],
+    "m": 1
+   }
+  ],
+  "12": [
+   {
+    "n": "Queso parmesano",
+    "a": [
+     "Lácteos"
+    ],
+    "m": 1
+   },
+   {
+    "n": "Pasta de pistacho",
+    "a": [
+     "Frutos secos"
+    ],
+    "m": 1
+   },
+   {
+    "n": "Pistacho",
+    "a": [
+     "Frutos secos"
+    ],
+    "m": 1
+   },
+   {
+    "n": "Yema de huevo curada",
+    "a": [
+     "Huevos"
+    ],
+    "m": 1
+   },
+   {
+    "n": "Mostaza Dijon",
+    "a": [
+     "Mostaza"
+    ],
+    "m": 1
+   },
+   {
+    "n": "Mostaza savora",
+    "a": [
+     "Mostaza",
+     "Apio"
+    ],
+    "m": 0
+   },
+   {
+    "n": "Pasta de sésamo",
+    "a": [
+     "Granos de sésamo"
+    ],
+    "m": 1
+   },
+   {
+    "n": "Crema de yogur griego",
+    "a": [
+     "Lácteos"
+    ],
+    "m": 1
+   },
+   {
+    "n": "Nata",
+    "a": [
+     "Lácteos"
+    ],
+    "m": 1
+   },
+   {
+    "n": "Merengue de yogur",
+    "a": [
+     "Lácteos",
+     "Huevos"
+    ],
+    "m": 1
+   },
+   {
+    "n": "Albúmina de huevo",
+    "a": [
+     "Huevos"
+    ],
+    "m": 1
+   }
+  ],
+  "13": [
+   {
+    "n": "Velo de nata",
+    "a": [
+     "Lácteos"
+    ],
+    "m": 0
+   },
+   {
+    "n": "Helado de fresa",
+    "a": [
+     "Lácteos"
+    ],
+    "m": 0
+   },
+   {
+    "n": "Esferas de champagne",
+    "a": [
+     "Sulfitos"
+    ],
+    "m": 1
+   },
+   {
+    "n": "Salsa de pistacho",
+    "a": [
+     "Frutos secos"
+    ],
+    "m": 1
+   },
+   {
+    "n": "Caviar",
+    "a": [
+     "Pescado"
+    ],
+    "m": 1
+   }
   ]
  },
  "DISH_ACTIONS": {
@@ -725,6 +1020,16 @@
    },
    "Frutos secos": {
     "r": 0
+   },
+   "Huevos": {
+    "r": 1,
+    "c": "SIN ÑOQUIS",
+    "c_en": "WITHOUT GNOCCHI"
+   },
+   "Gluten": {
+    "r": 1,
+    "c": "SIN ÑOQUIS",
+    "c_en": "WITHOUT GNOCCHI"
    }
   },
   "8": {
@@ -785,6 +1090,101 @@
     "r": 1,
     "c": "SIN TIERRA",
     "c_en": "WITHOUT SOIL"
+   }
+  },
+  "11": {
+   "Gluten": {
+    "r": 1,
+    "c": "SIN CRUJIENTE",
+    "c_en": "WITHOUT CRACKER"
+   },
+   "Huevos": {
+    "r": 0
+   },
+   "Lácteos": {
+    "r": 1,
+    "c": "SIN CRUJIENTE",
+    "c_en": "WITHOUT CRACKER"
+   },
+   "Pescado": {
+    "r": 0
+   },
+   "Crustáceos": {
+    "r": 1,
+    "c": "SIN CIGALA — se acompaña con tartar de lubina",
+    "c_en": "WITHOUT LANGOUSTINE — served with sea bass tartare instead"
+   },
+   "Moluscos": {
+    "r": 0
+   },
+   "Mostaza": {
+    "r": 1,
+    "c": "SIN CRUJIENTE",
+    "c_en": "WITHOUT CRACKER"
+   },
+   "Sulfitos": {
+    "r": 0
+   },
+   "Soja": {
+    "r": 1,
+    "c": "SIN CRUJIENTE",
+    "c_en": "WITHOUT CRACKER"
+   }
+  },
+  "12": {
+   "Lácteos": {
+    "r": 1,
+    "c": "SIN YOGUR NI PARMESANO",
+    "c_en": "WITHOUT YOGHURT OR PARMESAN"
+   },
+   "Frutos secos": {
+    "r": 1,
+    "c": "SIN PISTACHO",
+    "c_en": "WITHOUT PISTACHIO"
+   },
+   "Mostaza": {
+    "r": 1,
+    "c": "SIN MOSTAZA",
+    "c_en": "WITHOUT MUSTARD"
+   },
+   "Sulfitos": {
+    "r": 0
+   },
+   "Huevos": {
+    "r": 1,
+    "c": "SIN YEMA CURADA NI CRUJIENTE DE YOGUR",
+    "c_en": "WITHOUT CURED YOLK OR YOGHURT CRISP"
+   },
+   "Granos de sésamo": {
+    "r": 1,
+    "c": "SIN BABA GANOUSH",
+    "c_en": "WITHOUT BABA GANOUSH"
+   },
+   "Pescado": {
+    "r": 0
+   },
+   "Apio": {
+    "r": 0
+   }
+  },
+  "13": {
+   "Sulfitos": {
+    "r": 1,
+    "c": "SIN ESFERAS DE CHAMPAGNE",
+    "c_en": "WITHOUT CHAMPAGNE SPHERES"
+   },
+   "Lácteos": {
+    "r": 0
+   },
+   "Frutos secos": {
+    "r": 1,
+    "c": "SIN SALSA DE PISTACHO",
+    "c_en": "WITHOUT PISTACHIO SAUCE"
+   },
+   "Pescado": {
+    "r": 1,
+    "c": "SIN CAVIAR",
+    "c_en": "WITHOUT CAVIAR"
    }
   }
  }
