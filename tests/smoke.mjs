@@ -8659,6 +8659,49 @@ test('Acceso: ninguna consulta cruza de un restaurante a otro', () => {
   ]) assert(html.includes(marca), `falta el sello de restaurante en: ${marca.slice(0, 50)}`);
 });
 
+test('Quesos: nunca se le dice a un vegetariano que sí sin saberlo', () => {
+  // Sección de consulta, no de plato: 48 fichas no caben como uno. Lo que se
+  // pregunta en mesa no es la maduración, es «¿puedo comerlo?».
+  assert(/function renderQuesos\(\)/.test(html), 'falta la sección de quesos');
+  assert(/'lqa','vinos','quesos','chat'/.test(html), 'quesos tiene que ser una ruta válida');
+  assert(/renderMap = \{quesos:renderQuesos,/.test(html), 'y tener quien la pinte');
+  assert(/id="navQuesos"[^>]*style="display:none"/.test(html),
+    'el botón sale sólo si el restaurante tiene carro, así que arranca escondido');
+
+  // LA regla: sin cuajo anotado NO se afirma que valga. Decirle a un vegetariano
+  // que un queso le vale cuando no se sabe es peor que no saberlo.
+  const apto = html.slice(html.indexOf('function _qApto(q){'), html.indexOf('function _qCruda('));
+  assert(/if\(!c\) return null;/.test(apto),
+    'sin cuajo anotado se devuelve null (no consta), nunca true');
+  assert(/return c !== 'animal';/.test(apto), 'sólo el cuajo no animal vale');
+  assert(/_qApto\(q\) !== true/.test(html),
+    'el filtro de vegetarianos exige true: «no consta» no cuela');
+  assert(/apto === null[\s\S]{0,160}?q-m-duda/.test(html),
+    'un queso sin cuajo anotado tiene que llevar su marca de duda en la ficha');
+
+  // El filtro de cerdo mira «cerdo», no «manteca»: el Cerro del Ángel está
+  // «madurado de manteca floral» y se le escondía a quien no come cerdo.
+  assert(/function _qCerdo\(q\)\{ return \/cerdo\/i\.test/.test(html),
+    '«manteca» sola no es cerdo');
+
+  // Y el dato, con la polaridad buena: rojo en el PDF = NO está en el carro.
+  const q = JSON.parse(read('data/quesos-mb.json'));
+  assert(Array.isArray(q.quesos) && q.quesos.length >= 40, 'el carro se ha quedado corto');
+  const hoy = q.quesos.filter(x => x.en_carro);
+  assert(hoy.length > 0 && hoy.length < q.quesos.length,
+    'en_carro tiene que separar los que hay de los que descansan');
+  for (const x of q.quesos) {
+    assert(x.nombre && x.grupo, 'cada queso necesita nombre y grupo');
+    assert(typeof x.en_carro === 'boolean', `«${x.nombre}» sin en_carro`);
+    assert(!x.cuajo || /^(animal|vegetal|láctica)$/i.test(x.cuajo),
+      `«${x.nombre}» tiene un cuajo que la app no sabe leer: ${x.cuajo}`);
+  }
+  const css = read('styles.css');
+  assert(/\.q-busca\{[^}]*font-size: 16px/.test(css),
+    '16px reales: por debajo iOS Safari hace zoom al enfocar el buscador');
+  assert(/\.q-chip\{[^}]*min-height: 36px/.test(css), 'los filtros se tocan con el dedo');
+});
+
 test('Administración: mira cualquier restaurante y no deja rastro', () => {
   // Cuenta para revisar el contenido antes de que lo vea el equipo: entra en
   // cualquier restaurante, incluidos los que aún no están abiertos, y no escribe

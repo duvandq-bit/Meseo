@@ -9997,3 +9997,71 @@ body, .screen{ min-height: 100vh; min-height: 100dvh; }
 }
 .nda-boton[disabled]{ opacity: .55; cursor: default; }
 .nda-version{ margin-top: .6rem; font-size: .7rem; opacity: .5; text-align: right; }
+
+/* ═══════════════════════════════════════════════════════════════
+   CARRO DE QUESOS
+   ───────────────────────────────────────────────────────────────
+   Sección de consulta. Lo que se pregunta en mesa no es la
+   maduración: es «¿puedo comerlo?». Por eso las marcas de la ficha
+   —apto, cuajo sin confirmar, leche cruda, lleva cerdo— van
+   arriba, antes que la región y el productor.
+   ═══════════════════════════════════════════════════════════════ */
+.q-aviso{
+  background: rgba(196,154,60,.12);
+  border: 1px solid var(--line2);
+  border-radius: var(--r);
+  padding: .8rem .9rem;
+  font-family: 'Quicksand', sans-serif; font-size: .82rem; line-height: 1.5;
+  color: var(--parch2); margin-bottom: .75rem;
+}
+.q-busca{
+  width: 100%; box-sizing: border-box;
+  /* 16px reales: por debajo, iOS Safari hace zoom al enfocar. */
+  font-size: 16px; padding: .7rem .85rem;
+  border: 1px solid var(--line2); border-radius: 10px;
+  background: #fff; color: #2b2b2b; margin-bottom: .55rem;
+}
+.q-chips{ display: flex; flex-wrap: wrap; gap: .35rem; margin-bottom: .5rem; }
+.q-chip{
+  border: 1px solid var(--line2); background: transparent; color: var(--parch2);
+  border-radius: 999px; padding: .4rem .75rem;
+  font-family: 'Quicksand', sans-serif; font-size: .76rem; font-weight: 700;
+  cursor: pointer; min-height: 36px;      /* dedo, no ratón */
+  touch-action: manipulation;             /* sin zoom por doble toque */
+}
+.q-chip.on{ background: var(--gold); color: var(--parchment); border-color: var(--gold); }
+.q-cuenta{
+  font-family: 'DM Mono', monospace; font-size: .62rem; letter-spacing: .1em;
+  text-transform: uppercase; color: var(--parch3); margin: .5rem 0 .4rem;
+}
+.q-card{
+  border: 1px solid var(--line2); border-radius: var(--r);
+  padding: .8rem .9rem; margin-bottom: .5rem;
+  background: linear-gradient(155deg, #faf6ee, #f0e8d8);
+}
+.q-card.q-off{ opacity: .62; }
+.q-card header{ display: flex; align-items: baseline; justify-content: space-between; gap: .5rem; }
+.q-card h3{ font-family: 'Cinzel', serif; font-size: .98rem; margin: 0; color: var(--parchment); }
+.q-grupo{
+  font-family: 'DM Mono', monospace; font-size: .55rem; letter-spacing: .1em;
+  text-transform: uppercase; color: var(--gold-deep); white-space: nowrap;
+}
+.q-marcas{ display: flex; flex-wrap: wrap; gap: .3rem; margin: .45rem 0 .3rem; }
+.q-m{
+  font-family: 'Quicksand', sans-serif; font-size: .68rem; font-weight: 700;
+  border-radius: 999px; padding: .16rem .5rem; border: 1px solid transparent;
+}
+.q-m-ok  { background: rgba(45,106,62,.14);  color: #2d6a3e; border-color: rgba(45,106,62,.3); }
+.q-m-duda{ background: rgba(176,67,43,.10);  color: #b0432b; border-color: rgba(176,67,43,.3); }
+.q-m-avi { background: rgba(138,90,43,.10);  color: #8a5a2b; border-color: rgba(138,90,43,.28); }
+.q-m-off { background: rgba(28,42,34,.07);   color: var(--parch3); border-color: var(--line2); }
+.q-dato{ font-family: 'Quicksand', sans-serif; font-size: .78rem; color: var(--parch2); line-height: 1.55; }
+.q-dato span{
+  font-family: 'DM Mono', monospace; font-size: .58rem; letter-spacing: .08em;
+  text-transform: uppercase; color: var(--parch3);
+}
+.q-info{
+  font-family: 'Quicksand', sans-serif; font-size: .78rem; line-height: 1.55;
+  color: var(--parch2); margin: .45rem 0 0; opacity: .92;
+}
+.q-vacio{ text-align: center; padding: 2rem 1rem; color: var(--parch3); font-size: .82rem; }

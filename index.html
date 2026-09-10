@@ -52,7 +52,7 @@
 <meta property="og:description" content="Formación de equipos de sala: carta, alérgenos, vinos, exámenes y juegos de repaso.">
 <meta property="og:url" content="https://meseo.es/">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"Meseo","url":"https://meseo.es/"}</script>
-<meta name="app-version" content="7.427">
+<meta name="app-version" content="7.428">
 <meta name="app-build" content="May 2026">
 <meta name="theme-color" content="#1c2a22">
 <!-- ═══ PWA ═══ -->
@@ -380,6 +380,8 @@
     <button class="nav-btn" id="navExam" onclick="showTab('exam')"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/><path d="M9 12h6M9 16h4"/></svg> Examen</button>
     <button class="nav-btn" id="navProtocolo" onclick="showTab('protocolo')"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg> Auditoría</button>
     <button class="nav-btn" id="navVinos" onclick="showTab('vinos')"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2h8l-2 9H10L8 2z"/><path d="M12 11v7"/><path d="M8 18h8"/></svg> Vinos</button>
+    <!-- Sale sólo si el restaurante tiene data/quesos-<id>.json -->
+    <button class="nav-btn" id="navQuesos" onclick="showTab('quesos')" style="display:none"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17V9l9-4 9 4v8a1 1 0 01-1 1H4a1 1 0 01-1-1z"/><circle cx="8" cy="13" r="1.1"/><circle cx="12.5" cy="15" r="1.1"/><circle cx="16" cy="12" r="1.1"/></svg><span data-i18n="nav.quesos">Quesos</span></button>
     <div class="nav-group-lbl" id="navGrpEquipo" aria-hidden="true">Equipo</div>
     <button class="nav-btn" id="navTxoko" onclick="showTab('txoko')"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 12h4l2 8 4-16 2 8h4"/></svg> Juegos</button>
     <button class="nav-btn" id="navRanking" onclick="showTab('ranking')"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg> Ranking</button>
@@ -1731,7 +1733,7 @@ const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><p
 const SRC = 'src';
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='7.427';  // sincronizada con sw.js VERSION (guard de CI)
+const APP_VERSION='7.428';  // sincronizada con sw.js VERSION (guard de CI)
 const APP_BUILD='Jul 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;
@@ -9973,6 +9975,8 @@ function openAjustes(){
         const tema = (THEMES.venues||[]).find(v => v.id === id);
         if(tema) applyTheme(tema);
         overlay.remove();
+        QUESOS = null; _quesosVenue = null;   // el carro es de cada restaurante
+        try{ _navQuesosSync(); }catch(_){}
         if(typeof showTab==='function') showTab(typeof currentTab!=='undefined' ? currentTab : 'dashboard');
         if(typeof showToast==='function') showToast(
           (_en?'Now looking at ':'Ahora estás viendo ') + ((tema && tema.name) || id), 'info', 3500);
@@ -10328,6 +10332,8 @@ async function closePinAndEnter(){
   // que se está protegiendo; sin red no bloquea a nadie (ndaPendiente devuelve
   // false), que dejar a alguien fuera de su formación por el wifi sería peor.
   try{ ndaPendiente(pinTarget).then(hay => { if(hay) ndaMostrar(pinTarget); }); }catch(_){}
+  // El botón del carro de quesos sale sólo si este restaurante tiene uno.
+  try{ _navQuesosSync(); }catch(_){}
   // Show supervisor tab for Duvan
   const _supBtn=document.getElementById('navSupervisor');
   if(_supBtn) _supBtn.style.display=currentUser==='Duvan'?'':'none';
@@ -10553,7 +10559,147 @@ function _navDDClose(){
 // Rutas válidas de showTab(). Debe coincidir EXACTAMENTE con las claves de
 // renderMap (más abajo, dentro de showTab); un guard de tests/smoke.mjs lo
 // comprueba para que las dos listas no se separen al añadir una pestaña.
-const TAB_ROUTES = ['dashboard','aprender','flashcards','exam','repaso','tecnicas','actualidad','smart','emplatado','stats','logros','txoko','ranking','supervisor','horarios','protocolo','videos','lqa','vinos','chat'];
+// ═══ CARRO DE QUESOS ═══════════════════════════════════════════════════════
+// Sección de consulta, no de plato: cuarenta y ocho fichas no caben como uno.
+// Sale sola en cuanto existe data/quesos-<restaurante>.json, igual que la carta.
+//
+// Lo que de verdad se pregunta en mesa no es la maduración: es «¿puedo comerlo?».
+// Por eso los filtros son ésos y por eso el cuajo se trata con cuidado — de los
+// quesos sin cuajo anotado la app dice SIN CONFIRMAR, nunca que sí. Decirle a un
+// vegetariano que un queso le vale cuando no se sabe es peor que no saberlo.
+let QUESOS = null, _quesosVenue = null;
+let _qBusca = '', _qFiltro = { carro:true, veg:false, cruda:false, cerdo:false }, _qGrupo = null;
+
+async function cargarQuesos(){
+  const v = _venueActual();
+  if(QUESOS && _quesosVenue === v) return QUESOS;
+  try{
+    // La ruta se arma antes: pasarla en trozos dentro de la llamada engañaría al
+    // guard que comprueba que cada archivo cargado existe en disco, y ese guard
+    // ha de seguir viendo las rutas literales de todos los demás.
+    const ruta = 'data/quesos-' + encodeURIComponent(v) + '.json';
+    const d = await loadLazyData(ruta,
+      LANG==='en' ? 'the cheese trolley' : 'el carro de quesos', {silent:true});
+    QUESOS = (d && Array.isArray(d.quesos)) ? d.quesos : [];
+  }catch(e){ QUESOS = []; }
+  _quesosVenue = v;
+  return QUESOS;
+}
+// Para el botón de la barra: ¿este restaurante tiene carro? Se pregunta una vez
+// y se recuerda, para no pedir el archivo en cada navegación.
+const _hayQuesos = new Map();
+async function hayCarroDeQuesos(){
+  const v = _venueActual();
+  if(_hayQuesos.has(v)) return _hayQuesos.get(v);
+  let ok = false;
+  try{ const r = await fetch('data/quesos-' + encodeURIComponent(v) + '.json', {method:'HEAD'}); ok = r.ok; }
+  catch(e){ ok = false; }
+  _hayQuesos.set(v, ok);
+  return ok;
+}
+function _navQuesosSync(){
+  const b = document.getElementById('navQuesos');
+  if(!b) return;
+  hayCarroDeQuesos().then(hay => { b.style.display = hay ? '' : 'none'; });
+}
+
+// Apto para un vegetariano ESTRICTO sólo si el cuajo no es animal. Sin cuajo
+// anotado no se afirma nada: se dice que no consta.
+function _qApto(q){
+  const c = (q.cuajo||'').toLowerCase();
+  if(!c) return null;                    // no consta
+  return c !== 'animal';
+}
+function _qCruda(q){ return /crud/i.test(q.leche||''); }
+// Sólo «cerdo». Buscar también «manteca» sacaba al Cerro del Ángel, que está
+// «madurado de manteca floral» y no lleva nada de cerdo — a un huésped que no
+// come cerdo se le habría escondido un queso que sí puede comer.
+function _qCerdo(q){ return /cerdo/i.test(q.info||''); }
+
+function _qCoincide(q){
+  if(_qFiltro.carro && !q.en_carro) return false;
+  if(_qFiltro.veg   && _qApto(q) !== true) return false;
+  if(_qFiltro.cruda && !_qCruda(q)) return false;
+  if(_qFiltro.cerdo && _qCerdo(q)) return false;
+  if(_qGrupo && q.grupo !== _qGrupo) return false;
+  if(_qBusca){
+    const h = _djNorm([q.nombre,q.productor,q.region,q.leche,q.info,q.grupo].join(' '));
+    if(!_djNorm(_qBusca).split(' ').every(w => h.includes(w))) return false;
+  }
+  return true;
+}
+
+function renderQuesos(){
+  const c = document.getElementById('appContent');
+  const _en = LANG==='en';
+  if(!QUESOS){
+    c.innerHTML = `<div class="sup-wrap"><div style="text-align:center;padding:3rem 1rem;color:var(--parch3);font-family:'DM Mono',monospace;font-size:.72rem;letter-spacing:.1em">⏳ ${_en?'Loading the cheese trolley…':'Cargando el carro de quesos…'}</div></div>`;
+    cargarQuesos().then(()=>{ if(currentTab==='quesos') renderQuesos(); });
+    return;
+  }
+  const hoy = QUESOS.filter(q => q.en_carro);
+  const lista = QUESOS.filter(_qCoincide);
+  const grupos = [...new Set(QUESOS.map(q => q.grupo))];
+  const chip = (on, txt, fn) => `<button type="button" onclick="${fn}" class="q-chip${on?' on':''}">${escapeHTML(txt)}</button>`;
+
+  const aptos = hoy.filter(q => _qApto(q) === true).length;
+  const dudan = hoy.filter(q => _qApto(q) === null).length;
+
+  c.innerHTML = `<div class="sup-wrap">
+    <div class="sup-hero">
+      <div class="sup-hero-icon">🧀</div>
+      <div class="sup-hero-title">${_en?'Cheese trolley':'Carro de quesos'}</div>
+      <div class="sup-hero-sub">${hoy.length} ${_en?'on the trolley today':'en el carro hoy'} · ${QUESOS.length-hoy.length} ${_en?'resting':'descansando'}</div>
+    </div>
+
+    <div class="q-aviso">
+      <b>${aptos} ${_en?'of':'de'} ${hoy.length}</b> ${_en
+        ? `are suitable for a strict vegetarian (non-animal rennet). ${dudan} more have no rennet recorded: for those, say you will check — never that they are suitable.`
+        : `valen para un vegetariano estricto (cuajo no animal). De otros ${dudan} no consta el cuajo: ahí se dice que lo consultas, nunca que sí.`}
+    </div>
+
+    <input type="search" class="q-busca" value="${escapeHTML(_qBusca)}" oninput="_qBusca=this.value;renderQuesos();this.focus()"
+      placeholder="${_en?'Search a cheese, a region, a producer…':'Busca un queso, una región, un productor…'}">
+
+    <div class="q-chips">
+      ${chip(_qFiltro.carro, _en?'On the trolley':'En el carro', '_qFiltro.carro=!_qFiltro.carro;renderQuesos()')}
+      ${chip(_qFiltro.veg,   _en?'Vegetarian':'Apto vegetariano', '_qFiltro.veg=!_qFiltro.veg;renderQuesos()')}
+      ${chip(_qFiltro.cruda, _en?'Raw milk':'Leche cruda', '_qFiltro.cruda=!_qFiltro.cruda;renderQuesos()')}
+      ${chip(_qFiltro.cerdo, _en?'No pork':'Sin cerdo', '_qFiltro.cerdo=!_qFiltro.cerdo;renderQuesos()')}
+    </div>
+    <div class="q-chips">
+      ${chip(!_qGrupo, _en?'All':'Todos', '_qGrupo=null;renderQuesos()')}
+      ${grupos.map(g => chip(_qGrupo===g, g, `_qGrupo=${JSON.stringify(g)};renderQuesos()`)).join('')}
+    </div>
+
+    <div class="q-cuenta">${lista.length} ${lista.length===1?(_en?'cheese':'queso'):(_en?'cheeses':'quesos')}</div>
+    ${lista.length ? lista.map(_qFicha).join('') : `<div class="q-vacio">${_en?'Nothing matches those filters.':'Nada encaja con esos filtros.'}</div>`}
+  </div>`;
+}
+
+function _qFicha(q){
+  const _en = LANG==='en';
+  const apto = _qApto(q);
+  const marcas = [];
+  if(!q.en_carro) marcas.push(`<span class="q-m q-m-off">${_en?'not on the trolley':'no está en el carro'}</span>`);
+  if(apto === true)  marcas.push(`<span class="q-m q-m-ok">${_en?'vegetarian':'apto vegetariano'}</span>`);
+  if(apto === null)  marcas.push(`<span class="q-m q-m-duda">${_en?'rennet unrecorded':'cuajo sin confirmar'}</span>`);
+  if(_qCruda(q))     marcas.push(`<span class="q-m q-m-avi">${_en?'raw milk':'leche cruda'}</span>`);
+  if(_qCerdo(q))     marcas.push(`<span class="q-m q-m-avi">${_en?'contains pork':'lleva cerdo'}</span>`);
+  const dato = (et, v) => v ? `<div class="q-dato"><span>${et}</span> ${escapeHTML(v)}</div>` : '';
+  return `<article class="q-card${q.en_carro?'':' q-off'}">
+    <header><h3>${escapeHTML(q.nombre)}</h3><span class="q-grupo">${escapeHTML(q.grupo)}</span></header>
+    ${marcas.length?`<div class="q-marcas">${marcas.join('')}</div>`:''}
+    ${dato(_en?'Region':'Región', q.region)}
+    ${dato(_en?'Producer':'Productor', q.productor)}
+    ${dato(_en?'Milk':'Leche', q.leche)}
+    ${dato(_en?'Rennet':'Cuajo', q.cuajo || (_en?'not recorded':'no consta'))}
+    ${dato(_en?'Ageing':'Maduración', q.maduracion)}
+    ${q.info?`<p class="q-info">${escapeHTML(q.info)}</p>`:''}
+  </article>`;
+}
+
+const TAB_ROUTES = ['dashboard','aprender','flashcards','exam','repaso','tecnicas','actualidad','smart','emplatado','stats','logros','txoko','ranking','supervisor','horarios','protocolo','videos','lqa','vinos','quesos','chat'];
 
 function showTab(tab, instant){
   // ── Pestaña desconocida → INICIO ──────────────────────────────────────
@@ -10617,7 +10763,7 @@ function showTab(tab, instant){
   if(_activeNav && _navCur) _navCur.innerHTML = _activeNav.innerHTML;
   _navDDClose();
   const c=document.getElementById('appContent');
-  const renderMap = {dashboard:renderDashboard,aprender:renderAprender,flashcards:renderAprender,exam:renderExam,repaso:renderAprender,tecnicas:renderAprender,actualidad:renderAprender,smart:renderAprender,emplatado:renderAprender,stats:renderRankingHub,logros:renderRankingHub,txoko:renderTxoko,ranking:renderRankingHub,supervisor:renderSupervisor,horarios:renderHorarios,protocolo:renderLqa,videos:renderAprender,lqa:renderLqa,vinos:renderVinos,chat:renderChat};
+  const renderMap = {quesos:renderQuesos,dashboard:renderDashboard,aprender:renderAprender,flashcards:renderAprender,exam:renderExam,repaso:renderAprender,tecnicas:renderAprender,actualidad:renderAprender,smart:renderAprender,emplatado:renderAprender,stats:renderRankingHub,logros:renderRankingHub,txoko:renderTxoko,ranking:renderRankingHub,supervisor:renderSupervisor,horarios:renderHorarios,protocolo:renderLqa,videos:renderAprender,lqa:renderLqa,vinos:renderVinos,chat:renderChat};
   const _doRender = ()=>{
     c.innerHTML='';
     c.style.transition='none';
