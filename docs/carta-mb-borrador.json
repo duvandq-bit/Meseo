@@ -1,0 +1,791 @@
+{
+ "venue": "mb",
+ "DISHES": [
+  {
+   "id": 1,
+   "cat": "Menú Degustación",
+   "name": "Atún",
+   "allergens": [
+    "Pescado",
+    "Apio",
+    "Gluten",
+    "Sulfitos",
+    "Mostaza"
+   ],
+   "ingredients": "Atún. Caldo transparente: Manzana Granny Smith, Apio, Lima, Albariño sin alcohol, Xantana. Tartar de atún: Ralladura de naranja, Wasabi, Sal, Aceite. Crujiente: Wasabi, Agua, Harina de trigo, Harina de arroz, Sal, Aceite. Aceite de cebollino, Polvo de foie gras y wasabi.",
+   "history": "Atún rojo, jugo de manzana ácida, esencia de cebollino y polvo ligeramente picante. El atún patudo o rojo pasa por Canarias más o menos por marzo o abril: se hace el despiece y se congela a -80 ºC. El lomo se cura 20 minutos en sal, azúcar y ralladuras de cítricos, se marca, reposa y se congela para poder cortarlo en láminas finas.",
+   "notes": "🍴 Tenedor y cuchara de plata. · ⚠ Gluten en la harina de trigo del crujiente — SE PUEDE RETIRAR. Comandar SIN CRUJIENTE. · ⚠ Pescado (atún), Apio y Sulfitos (albariño) del caldo, y Mostaza del wasabi — NO se pueden retirar."
+  },
+  {
+   "id": 2,
+   "cat": "Menú Degustación",
+   "name": "Camarón",
+   "allergens": [
+    "Crustáceos",
+    "Frutos secos",
+    "Sulfitos",
+    "Granos de sésamo",
+    "Lácteos"
+   ],
+   "ingredients": "Camarón soldado. Panacotta: Leche de almendras. Gazpacho verde: Pimiento italiano, Jalapeño, Mirin, Vinagre de arroz. Sorbete de manzana verde y shiso. Confitado: Aceite, Guindilla, Jengibre. Albahaca frita, Borraja.",
+   "history": "Camarón soldado del Hierro, sobre cremoso de almendra, gazpacho verde y sorbete de shiso. El camarón soldado es de origen canario y vive a 350 metros de profundidad: de ahí el color azul de sus huevas. Va confitado en aceite, guindilla y jengibre.",
+   "notes": "🍴 Tenedor y cuchara de plata. · ⚠ Crustáceos (camarón), Frutos secos (leche de almendras) y Sulfitos (mirin y vinagre de arroz) — NO se pueden retirar. · ⚠ PENDIENTE DE CONFIRMAR CON COCINA de dónde salen los Granos de sésamo y los Lácteos: la ficha de cocina los declara pero no dice en qué elaboración están."
+  },
+  {
+   "id": 3,
+   "cat": "Menú Degustación",
+   "name": "Hamachi",
+   "allergens": [
+    "Pescado",
+    "Sulfitos"
+   ],
+   "ingredients": "Medregal. Jugo: Jazmín, Pepino, Yuzu. Puntos de gel: Caldo, Jengibre encurtido. Aceite de hierbas: Cilantro, Cebollino, Perejil. Perlas heladas de mandarina y de ají amarillo. Vinagreta thai: Chili, Salsa de pescado, Ajo.",
+   "history": "Medregal de nuestra costa madurado durante 15 días con toques de brasa, sobre extracto de jazmín y shoots helados agridulces. El medregal es un pescado azul de la familia de los carángidos que habita en las aguas de Canarias; en la península se conoce como pez limón y en Japón como hamachi. Pesa unos 5 kg y entre limpieza y maduración se queda en un kilo estimado. Se cocina directamente a la llama con sarmientos: marcado por fuera, sin cocción por dentro.",
+   "notes": "🍴 Tenedor, cuchara y cuchillo de plata. · ⚠ Pescado (medregal, y salsa de pescado de la vinagreta thai) y Sulfitos — NO se pueden retirar."
+  },
+  {
+   "id": 4,
+   "cat": "Menú Degustación",
+   "name": "Cochino",
+   "allergens": [
+    "Lácteos",
+    "Frutos secos",
+    "Cacahuete",
+    "Pescado",
+    "Crustáceos",
+    "Moluscos",
+    "Sulfitos",
+    "Soja"
+   ],
+   "ingredients": "Papada de cochino negro, Gamba roja, Caviar, Azúcar moreno. Salsa de albahaca: Suero de parmesano, Albahaca, Pistacho. Salsa chili crab: Cabezas de camarón, Soja, Vinagre de arroz, Pasta Tom Yum. Pasta Tom Yum: Aceite de soja, Chalote, Chili, Galanga, Hoja de lima kaffir.",
+   "history": "Cochino negro canario al estilo chino con gamba roja, caviar y salsas de albahaca y chili crab. La papada se cura en sal, azúcar y pimienta 12 horas y luego se cocina 30 horas a 70 ºC. Se marca con azúcar moreno y se termina con la salsa de reducción al momento del servicio. La salsa chili crab es la tradicional de Singapur. Terminamos el plato con un quenelle de unos 7 gramos de caviar.",
+   "notes": "🍴 Tenedor, cuchara y cuchillo de plata. · ⚠ SE PUEDEN RETIRAR: Lácteos (suero de parmesano), Frutos secos (pistacho) y Pescado (caviar). Comandar SIN SALSA DE ALBAHACA Y SIN CAVIAR. · ⚠ Crustáceos, Soja y Sulfitos de la salsa chili crab y la pasta Tom Yum — NO se pueden retirar. · ⚠ PENDIENTE DE CONFIRMAR CON COCINA de dónde salen el Cacahuete y los Moluscos: la ficha de cocina los declara pero no dice en qué elaboración están."
+  },
+  {
+   "id": 5,
+   "cat": "Menú Degustación",
+   "name": "Chipirón",
+   "allergens": [
+    "Moluscos",
+    "Sulfitos",
+    "Pescado",
+    "Apio",
+    "Gluten"
+   ],
+   "ingredients": "Chipirón. Relleno: Cebolla de Masca. Pil pil de tinta: Merluza, Aceite de oliva, Ajo, Guindilla, Tinta de chipirón. Jugo infusionado en galanga.",
+   "history": "Chipirón de anzuelo a lo «Pelayo», relleno con cebolla de Masca, pil pil de tinta y su propio jugo infusionado en galanga. Los chipirones a lo Pelayo son un plato tradicional del País Vasco originario de Getaria: chipirones frescos salteados a la sartén sobre una base de cebolla y pimiento verde muy pochados, sin la típica tinta negra. Su nombre viene de una antigua taberna del municipio, Casa Pelayo, una tasca dirigida por Pelayo Manterola y su esposa Teresa Irure. El chipirón de anzuelo se captura uno a uno de forma artesanal, lo que evita que su carne sufra daños. El pil pil se forma al emulsionar el aceite con la gelatina natural del pescado; en nuestro caso lo elaboramos con cabezas de merluza para obtener el colágeno. La galanga, también conocida como jengibre azul, es una raíz de la especie Alpinia galanga originaria del sur de Asia.",
+   "notes": "🍴 Tenedor, cuchillo y cuchara de plata. · ⚠ Gluten — SE PUEDE RETIRAR. · ⚠ Moluscos (chipirón y mejillón), Pescado (merluza del pil pil), Apio y Sulfitos — NO se pueden retirar. · ⚠ PENDIENTE DE CONFIRMAR CON COCINA en qué elaboración están el Gluten, el Apio y los Sulfitos, y de dónde sale el mejillón que declara la ficha."
+  },
+  {
+   "id": 6,
+   "cat": "Menú Degustación",
+   "name": "Rodaballo",
+   "allergens": [
+    "Pescado",
+    "Lácteos",
+    "Sulfitos"
+   ],
+   "ingredients": "Rodaballo. Salsa meuniere: Mantequilla, Zumo de limón, Perejil. Bombón de trinxat: Col, Puré de papa, Panceta, Pimienta rosa. Puré de col, Refrito de ajo. Kale crujiente.",
+   "history": "Rodaballo salvaje, con nuestra meuniere, bombón de tinxat y kale crujiente. La salsa meunière es un clásico de la cocina francesa que se hace con tres ingredientes sencillos: mantequilla, zumo de limón y perejil picado; nosotros elaboramos una reversión que la lleva a la actualidad. El trinxat de la Cerdanya es un plato tradicional de los Pirineos; su nombre significa «triturado» en catalán y se elabora con col, puré de papa y panceta dorada con pimienta rosa. El kale es una verdura de hoja verde de la familia de las crucíferas, conocida también como col rizada. El rodaballo es un pescado blanco semigraso, de tipo plano y de agua salada, de la familia de los escoftálmidos (Scophthalmus maximus); en nuestro caso proveniente de Galicia.",
+   "notes": "🍴 Tenedor, cuchara y cuchillo de pescado. · 🐖 CONTIENE CERDO (la panceta del bombón de trinxat). No es un alérgeno de la UE-14, pero hay que decirlo: para un huésped que no come cerdo por religión o por dieta es tan importante como un alérgeno. · ⚠ Pescado (rodaballo), Lácteos (mantequilla de la meuniere) y Sulfitos — NO se pueden retirar. · ⚠ PENDIENTE DE CONFIRMAR CON COCINA en qué elaboración están los Sulfitos."
+  },
+  {
+   "id": 7,
+   "cat": "Menú Degustación",
+   "name": "Wagyu",
+   "allergens": [
+    "Lácteos",
+    "Apio",
+    "Frutos secos"
+   ],
+   "ingredients": "Milhojas de wagyu: Wagyu, Grasa de chuleta de rubia gallega. Nabo daikon glaseado: Nabo daikon, Praliné de avellanas, Caldo de carne. Crema de apionabo: Apio, Mantequilla noisette. Queso Comté, Hojas de salvia.",
+   "history": "Milhojas de wagyu, nabo glaseado con avellanas y comté. El wagyu es de Teruel, España, Full Blood: tanto la hembra como el macho son de sangre 100% japonesa. Los cortes utilizados son espaldilla y sobrecostilla, ambos con mucha infiltración de grasa. Hacemos un milhojas alternando cada cuatro capas de carne una de grasa de chuleta de rubia gallega. El nabo daikon es de origen japonés, con un sabor menos intenso que el apionabo: se corta en lámina muy fina, lleva praliné de avellanas y luego se cuece en caldo de carne. Para los puntos de crema de apionabo se cocinan algunos dados hasta caramelizar y se finaliza con mantequilla noisette.",
+   "notes": "🍴 Tenedor negro de carne y cuchillo de carne de colores. · ⚠ Lácteos (Comté y mantequilla noisette), Apio (crema de apionabo) y Frutos secos (avellana del praliné) — NO se pueden retirar."
+  },
+  {
+   "id": 8,
+   "cat": "Postres",
+   "name": "Limón",
+   "allergens": [
+    "Gluten",
+    "Lácteos",
+    "Huevos",
+    "Sulfitos"
+   ],
+   "ingredients": "Capa externa: Manteca de cacao, Chocolate blanco. Crema de limón: Claras, Azúcar, Gelatina, Ralladura y zumo de limón, Nata. Helado de limón: Nata, Ralladura y zumo de limón, Leche, Azúcar, Estabilizantes. Espuma de limón: Zumo de limón, Azúcar, Nata, Gelatina. Bizcocho de limón: Yogur, Aceite, Harina, Ralladura de lima, Licor de limón. Hoja de té verde matcha, Caramelo en polvo.",
+   "history": "Para pasar del salado al dulce, aquí tenemos nuestro pre postre: un limón completamente comestible, acompañado con una hoja de té verde matcha. Nuestro chef recomienda romper la corteza con la cuchara y disfrutar. La capa externa es manteca y chocolate blanco, en un molde que se hace de limones reales para que tenga la forma de un limón de verdad. Las varias elaboraciones son para simular todos los sabores de un limón normal. La hoja lleva té verde matcha y caramelo en polvo, para aportar amargor y ese color, ya que las hojas del limón son verdes y amargas. Historia del limón: a nuestro chef Erlantz, de pequeño, le gustaba comer un sorbete de limón muy típico de España en esa época, que venía dentro de la cáscara de un limón real. Lo que le ocurría es que no podía comerlo al completo, porque la cáscara no se podía comer. Inspirado en ello, Erlantz hizo su propia versión, 100% comestible.",
+   "notes": "🍴 Tenedor dorado y cuchara dorada. · ⚠ CONTIENE ALCOHOL (licor de limón del bizcocho). · ⚠ SE PUEDEN RETIRAR: Gluten (harina del bizcocho) y Sulfitos (licor de limón). Comandar SIN BIZCOCHO. · ⚠ Lácteos (nata, leche, chocolate blanco, yogur) y Huevos (clara de la crema) — NO se pueden retirar."
+  },
+  {
+   "id": 9,
+   "cat": "Postres",
+   "name": "Helado de sake",
+   "allergens": [
+    "Huevos",
+    "Lácteos",
+    "Granos de sésamo",
+    "Frutos secos",
+    "Sulfitos"
+   ],
+   "ingredients": "Helado de sake: Sake, Nata, Leche, Huevo, Azúcar. Bizcocho de avellanas y chocolate: Avellana, Chocolate negro, Huevo. Ganache de sésamo negro y chocolate blanco: Nata, Chocolate blanco, Sésamo negro. Teja de cacao negro puro: Cacao, Almíbar, Sésamo tostado. Polvo de cacao y sésamo.",
+   "history": "Helado de sake sobre bizcocho de avellanas y chocolate, crema de sésamo tostado y láminas de cacao. El sake es una bebida alcohólica a base de fermento de arroz. La ganache es una crema a partes iguales de nata y chocolate, con consistencia cremosa; la nuestra es de sésamo negro y chocolate blanco. La teja es de cacao negro puro, almíbar y sésamo tostado, y se termina el plato con polvo de cacao y sésamo.",
+   "notes": "🍴 Tenedor y cuchara dorada. · ⚠ CONTIENE ALCOHOL (sake). · ⚠ Sulfitos — SE PUEDEN RETIRAR cambiando el helado de sake por helado de sésamo. Comandar CON HELADO DE SÉSAMO. · ⚠ Huevos, Lácteos, Granos de sésamo y Frutos secos (avellana) — NO se pueden retirar."
+  },
+  {
+   "id": 10,
+   "cat": "Postres",
+   "name": "Maíz",
+   "allergens": [
+    "Gluten",
+    "Frutos secos",
+    "Lácteos",
+    "Huevos",
+    "Sulfitos"
+   ],
+   "ingredients": "Helado de maíz ahumado: Maíz, Whisky, Nata, Leche, Huevo. Tierra: Crumble de cacao, Harina, Harina de almendras, Café. Dados de gelatina de café y whisky. Maíz seco frito y triturado. Crujiente de merengue y maíz frito. Espuma de chocolate al 70% y café. Nudo de caramelo salado.",
+   "history": "Maíz ahumado helado, sobre nudo de caramelo salado, cacao y café. La tierra se hace con crumble de cacao, harina de almendras y café. Lleva dados de gelatina de café y whisky, maíz seco frito y triturado, un crujiente de merengue y maíz frito, y espuma de chocolate al 70% con café. El helado de maíz ahumado lleva whisky turbado.",
+   "notes": "🍴 Tenedor dorado y cuchara dorada. · ⚠ CONTIENE ALCOHOL (whisky turbado). · ⚠ SE PUEDEN RETIRAR: Gluten (la tierra), Frutos secos (harina de almendras) y Sulfitos. Comandar SIN TIERRA. · ⚠ Lácteos y Huevos — NO se pueden retirar."
+  }
+ ],
+ "DISHES_EN": [
+  {
+   "id": 1,
+   "name": "Tuna",
+   "allergens": [
+    "Fish",
+    "Celery",
+    "Gluten",
+    "Sulphites",
+    "Mustard"
+   ],
+   "ingredients": "Tuna. Clear broth: Granny Smith apple, Celery, Lime, Alcohol-free Albariño, Xanthan. Tuna tartare: Orange zest, Wasabi, Salt, Oil. Crisp: Wasabi, Water, Wheat flour, Rice flour, Salt, Oil. Chive oil, Foie gras and wasabi powder.",
+   "history": "Red tuna, sour apple juice, chives infusion and slightly spicy powder. Bigeye or bluefin tuna passes through the Canaries around March or April: it is butchered and frozen at -80 ºC. The loin is cured for 20 minutes in salt, sugar and citrus zest, seared, rested and frozen so it can be sliced thinly.",
+   "notes": "🍴 Silver fork and spoon. · ⚠ Gluten in the wheat flour of the crisp — CAN BE REMOVED. Order WITHOUT CRISP. · ⚠ Fish (tuna), Celery and Sulphites (Albariño) from the broth, and Mustard from the wasabi — cannot be removed."
+  },
+  {
+   "id": 2,
+   "name": "Shrimp",
+   "allergens": [
+    "Crustaceans",
+    "Tree nuts",
+    "Sulphites",
+    "Sesame",
+    "Dairy"
+   ],
+   "ingredients": "Soldier shrimp. Panna cotta: Almond milk. Green gazpacho: Italian pepper, Jalapeño, Mirin, Rice vinegar. Green apple and shiso sorbet. Confit: Oil, Chilli, Ginger. Fried basil, Borage.",
+   "history": "Soldier shrimp from El Hierro, over an almond kernel panna cotta, green gazpacho and shiso sorbet. The soldier shrimp is Canarian and lives 350 metres deep: that is where the blue colour of its roe comes from. It is confit in oil, chilli and ginger.",
+   "notes": "🍴 Silver fork and spoon. · ⚠ Crustaceans (shrimp), Tree nuts (almond milk) and Sulphites (mirin and rice vinegar) — cannot be removed. · ⚠ TO BE CONFIRMED WITH THE KITCHEN where the Sesame and Dairy come from: the kitchen sheet declares them but does not say in which preparation."
+  },
+  {
+   "id": 3,
+   "name": "Hamachi",
+   "allergens": [
+    "Fish",
+    "Sulphites"
+   ],
+   "ingredients": "Amberjack. Juice: Jasmine, Cucumber, Yuzu. Gel dots: Broth, Pickled ginger. Herb oil: Coriander, Chives, Parsley. Frozen pearls of mandarin and yellow ají. Thai vinaigrette: Chilli, Fish sauce, Garlic.",
+   "history": "Amberjack from our coast, aged for 15 days, with subtle ember notes, over jasmine extract and sweet-and-sour frozen pearls. Amberjack is an oily fish of the jack family living in Canarian waters; it is known as pez limón on the mainland and as hamachi in Japan. It weighs around 5 kg and, after cleaning and ageing, comes down to an estimated kilo. It is cooked directly over the flame with vine shoots: seared outside, raw within.",
+   "notes": "🍴 Silver fork, spoon and knife. · ⚠ Fish (amberjack, and fish sauce in the Thai vinaigrette) and Sulphites — cannot be removed."
+  },
+  {
+   "id": 4,
+   "name": "Pork",
+   "allergens": [
+    "Dairy",
+    "Tree nuts",
+    "Peanut",
+    "Fish",
+    "Crustaceans",
+    "Molluscs",
+    "Sulphites",
+    "Soy"
+   ],
+   "ingredients": "Black pork jowl, Scarlet prawn, Caviar, Brown sugar. Basil sauce: Parmesan whey, Basil, Pistachio. Chilli crab sauce: Shrimp heads, Soy, Rice vinegar, Tom Yum paste. Tom Yum paste: Soy oil, Shallot, Chilli, Galangal, Kaffir lime leaf.",
+   "history": "Canary black pork Chinese-style with scarlet prawn, caviar, and basil and chilli crab sauces. The jowl is cured in salt, sugar and pepper for 12 hours, then cooked for 30 hours at 70 ºC. It is seared with brown sugar and finished with the reduction sauce at the moment of service. The chilli crab sauce is the traditional Singaporean one. We finish the dish with a quenelle of about 7 g of caviar.",
+   "notes": "🍴 Silver fork, spoon and knife. · ⚠ CAN BE REMOVED: Dairy (parmesan whey), Tree nuts (pistachio) and Fish (caviar). Order WITHOUT BASIL SAUCE AND WITHOUT CAVIAR. · ⚠ Crustaceans, Soy and Sulphites from the chilli crab sauce and the Tom Yum paste — cannot be removed. · ⚠ TO BE CONFIRMED WITH THE KITCHEN where the Peanut and Molluscs come from: the kitchen sheet declares them but does not say in which preparation."
+  },
+  {
+   "id": 5,
+   "name": "Baby squid",
+   "allergens": [
+    "Molluscs",
+    "Sulphites",
+    "Fish",
+    "Celery",
+    "Gluten"
+   ],
+   "ingredients": "Baby squid. Filling: Masca onion. Ink pil pil: Hake, Olive oil, Garlic, Chilli, Squid ink. Jus infused with galangal.",
+   "history": "Line-caught baby squid «Pelayo» style, stuffed with Masca onion, ink pil pil and its own jus infused with galangal. Squid «Pelayo» style is a traditional Basque dish from Getaria: fresh squid pan-seared over a base of slowly stewed onion and green pepper, without the typical black ink. The name comes from an old tavern in the town, Casa Pelayo, run by Pelayo Manterola and his wife Teresa Irure. Line-caught squid is fished one by one by hand, which keeps the flesh undamaged. Pil pil forms when the oil emulsifies with the fish's natural gelatine; we make ours with hake heads to obtain the collagen. Galangal, also known as blue ginger, is a root of the species Alpinia galanga from southern Asia.",
+   "notes": "🍴 Silver fork, knife and spoon. · ⚠ Gluten — CAN BE REMOVED. · ⚠ Molluscs (squid and mussel), Fish (hake in the pil pil), Celery and Sulphites — cannot be removed. · ⚠ TO BE CONFIRMED WITH THE KITCHEN which preparation carries the Gluten, Celery and Sulphites, and where the mussel declared on the sheet comes from."
+  },
+  {
+   "id": 6,
+   "name": "Turbot",
+   "allergens": [
+    "Fish",
+    "Dairy",
+    "Sulphites"
+   ],
+   "ingredients": "Turbot. Meunière sauce: Butter, Lemon juice, Parsley. Trinxat bonbon: Cabbage, Potato purée, Pork belly, Pink pepper. Cabbage purée, Garlic refrito. Crispy kale.",
+   "history": "Wild turbot with our meunière sauce, trinxat bonbon and crispy kale. Meunière sauce is a French classic made with three simple ingredients: butter, lemon juice and chopped parsley; ours is a reworking that brings it up to date. Trinxat de la Cerdanya is a traditional Pyrenean dish; its name means «mashed» in Catalan and it is made with cabbage, potato purée and pork belly browned with pink pepper. Kale is a green leafy vegetable of the brassica family. Turbot is a semi-oily flatfish of the family Scophthalmidae (Scophthalmus maximus); ours comes from Galicia.",
+   "notes": "🍴 Fish fork, spoon and knife. · 🐖 CONTAINS PORK (the pork belly in the trinxat bonbon). It is not an EU-14 allergen, but it must be said: for a guest who does not eat pork for religious or dietary reasons it matters as much as one. · ⚠ Fish (turbot), Dairy (butter in the meunière) and Sulphites — cannot be removed. · ⚠ TO BE CONFIRMED WITH THE KITCHEN which preparation carries the Sulphites."
+  },
+  {
+   "id": 7,
+   "name": "Wagyu",
+   "allergens": [
+    "Dairy",
+    "Celery",
+    "Tree nuts"
+   ],
+   "ingredients": "Wagyu mille-feuille: Wagyu, Fat from Rubia Gallega rib. Glazed daikon: Daikon turnip, Hazelnut praline, Beef stock. Celeriac cream: Celery, Noisette butter. Comté cheese, Sage leaves.",
+   "history": "Wagyu mille-feuille, glazed Japanese turnip with hazelnuts and Comté cheese. The wagyu comes from Teruel, Spain, Full Blood: both female and male are 100% Japanese blood. The cuts used are chuck and short rib, both heavily marbled. We build a mille-feuille alternating one layer of Rubia Gallega rib fat for every four of meat. The daikon turnip is Japanese, milder than celeriac: it is sliced very thinly, carries hazelnut praline and is then cooked in beef stock. For the celeriac cream dots, some cubes are cooked until caramelised and finished with noisette butter.",
+   "notes": "🍴 Black meat fork and coloured meat knife. · ⚠ Dairy (Comté and noisette butter), Celery (celeriac cream) and Tree nuts (hazelnut in the praline) — cannot be removed."
+  },
+  {
+   "id": 8,
+   "name": "Lemon",
+   "allergens": [
+    "Gluten",
+    "Dairy",
+    "Eggs",
+    "Sulphites"
+   ],
+   "ingredients": "Outer shell: Cocoa butter, White chocolate. Lemon cream: Egg whites, Sugar, Gelatine, Lemon zest and juice, Cream. Lemon ice cream: Cream, Lemon zest and juice, Milk, Sugar, Stabilisers. Lemon foam: Lemon juice, Sugar, Cream, Gelatine. Lemon sponge: Yoghurt, Oil, Flour, Lime zest, Limoncello. Matcha green tea leaf, Caramel powder.",
+   "history": "To move from savoury to sweet, here is our pre-dessert: a completely edible lemon, served with a matcha green tea leaf. Our chef recommends breaking the shell with the spoon and enjoying. The outer shell is cocoa butter and white chocolate, in a mould made from real lemons so it takes the shape of a real one. The various preparations are there to mimic every flavour of an ordinary lemon. The leaf carries matcha green tea and caramel powder, to bring bitterness and that colour, since lemon leaves are green and bitter. The story of the lemon: as a child, our chef Erlantz liked to eat a lemon sorbet, very typical of Spain at the time, which came inside the peel of a real lemon. The trouble was he could never eat all of it, because the peel was not edible. Inspired by that, Erlantz made his own version, 100% edible.",
+   "notes": "🍴 Gold fork and gold spoon. · ⚠ CONTAINS ALCOHOL (limoncello in the sponge). · ⚠ CAN BE REMOVED: Gluten (flour in the sponge) and Sulphites (limoncello). Order WITHOUT SPONGE. · ⚠ Dairy (cream, milk, white chocolate, yoghurt) and Eggs (egg white in the cream) — cannot be removed."
+  },
+  {
+   "id": 9,
+   "name": "Sake ice cream",
+   "allergens": [
+    "Eggs",
+    "Dairy",
+    "Sesame",
+    "Tree nuts",
+    "Sulphites"
+   ],
+   "ingredients": "Sake ice cream: Sake, Cream, Milk, Egg, Sugar. Hazelnut and chocolate sponge: Hazelnut, Dark chocolate, Egg. Black sesame and white chocolate ganache: Cream, White chocolate, Black sesame. Pure dark cocoa tuile: Cocoa, Syrup, Toasted sesame. Cocoa and sesame powder.",
+   "history": "Sake ice cream over hazelnut and chocolate sponge cake, toasted black sesame cream and crispy cocoa. Sake is an alcoholic drink made from fermented rice. Ganache is a cream of equal parts cream and chocolate, with a creamy consistency; ours is black sesame and white chocolate. The tuile is pure dark cocoa, syrup and toasted sesame, and the dish is finished with cocoa and sesame powder.",
+   "notes": "🍴 Gold fork and spoon. · ⚠ CONTAINS ALCOHOL (sake). · ⚠ Sulphites — CAN BE REMOVED by swapping the sake ice cream for sesame ice cream. Order WITH SESAME ICE CREAM. · ⚠ Eggs, Dairy, Sesame and Tree nuts (hazelnut) — cannot be removed."
+  },
+  {
+   "id": 10,
+   "name": "Corn",
+   "allergens": [
+    "Gluten",
+    "Tree nuts",
+    "Dairy",
+    "Eggs",
+    "Sulphites"
+   ],
+   "ingredients": "Smoked corn ice cream: Corn, Whisky, Cream, Milk, Egg. Soil: Cocoa crumble, Flour, Almond flour, Coffee. Coffee and whisky jelly cubes. Dried fried and crushed corn. Meringue and fried corn crisp. 70% chocolate and coffee foam. Salted caramel knot.",
+   "history": "Smoked corn ice cream, accompanied with salted caramel knot, cocoa and coffee. The soil is made with cocoa crumble, almond flour and coffee. It carries coffee and whisky jelly cubes, dried fried and crushed corn, a meringue and fried corn crisp, and 70% chocolate and coffee foam. The smoked corn ice cream carries peated whisky.",
+   "notes": "🍴 Gold fork and gold spoon. · ⚠ CONTAINS ALCOHOL (peated whisky). · ⚠ CAN BE REMOVED: Gluten (the soil), Tree nuts (almond flour) and Sulphites. Order WITHOUT SOIL. · ⚠ Dairy and Eggs — cannot be removed."
+  }
+ ],
+ "DISH_COMPONENTS": {
+  "1": [
+   {
+    "n": "Atún",
+    "a": [
+     "Pescado"
+    ],
+    "m": 0
+   },
+   {
+    "n": "Apio",
+    "a": [
+     "Apio"
+    ],
+    "m": 0
+   },
+   {
+    "n": "Albariño sin alcohol",
+    "a": [
+     "Sulfitos"
+    ],
+    "m": 0
+   },
+   {
+    "n": "Harina de trigo",
+    "a": [
+     "Gluten"
+    ],
+    "m": 1
+   }
+  ],
+  "2": [
+   {
+    "n": "Camarón soldado",
+    "a": [
+     "Crustáceos"
+    ],
+    "m": 0
+   },
+   {
+    "n": "Leche de almendras",
+    "a": [
+     "Frutos secos"
+    ],
+    "m": 0
+   },
+   {
+    "n": "Mirin",
+    "a": [
+     "Sulfitos"
+    ],
+    "m": 0
+   },
+   {
+    "n": "Vinagre de arroz",
+    "a": [
+     "Sulfitos"
+    ],
+    "m": 0
+   }
+  ],
+  "3": [
+   {
+    "n": "Medregal",
+    "a": [
+     "Pescado"
+    ],
+    "m": 0
+   },
+   {
+    "n": "Salsa de pescado",
+    "a": [
+     "Pescado"
+    ],
+    "m": 0
+   }
+  ],
+  "4": [
+   {
+    "n": "Gamba roja",
+    "a": [
+     "Crustáceos"
+    ],
+    "m": 0
+   },
+   {
+    "n": "Caviar",
+    "a": [
+     "Pescado"
+    ],
+    "m": 1
+   },
+   {
+    "n": "Suero de parmesano",
+    "a": [
+     "Lácteos"
+    ],
+    "m": 1
+   },
+   {
+    "n": "Pistacho",
+    "a": [
+     "Frutos secos"
+    ],
+    "m": 1
+   },
+   {
+    "n": "Soja",
+    "a": [
+     "Soja"
+    ],
+    "m": 0
+   },
+   {
+    "n": "Vinagre de arroz",
+    "a": [
+     "Sulfitos"
+    ],
+    "m": 0
+   },
+   {
+    "n": "Pasta Tom Yum",
+    "a": [
+     "Crustáceos",
+     "Pescado",
+     "Soja"
+    ],
+    "m": 0
+   }
+  ],
+  "5": [
+   {
+    "n": "Chipirón",
+    "a": [
+     "Moluscos"
+    ],
+    "m": 0
+   },
+   {
+    "n": "Merluza",
+    "a": [
+     "Pescado"
+    ],
+    "m": 0
+   }
+  ],
+  "6": [
+   {
+    "n": "Rodaballo",
+    "a": [
+     "Pescado"
+    ],
+    "m": 0
+   },
+   {
+    "n": "Mantequilla",
+    "a": [
+     "Lácteos"
+    ],
+    "m": 0
+   }
+  ],
+  "7": [
+   {
+    "n": "Praliné de avellanas",
+    "a": [
+     "Frutos secos"
+    ],
+    "m": 0
+   },
+   {
+    "n": "Apio",
+    "a": [
+     "Apio"
+    ],
+    "m": 0
+   },
+   {
+    "n": "Queso Comté",
+    "a": [
+     "Lácteos"
+    ],
+    "m": 0
+   }
+  ],
+  "8": [
+   {
+    "n": "Chocolate blanco",
+    "a": [
+     "Lácteos"
+    ],
+    "m": 0
+   },
+   {
+    "n": "Claras",
+    "a": [
+     "Huevos"
+    ],
+    "m": 0
+   },
+   {
+    "n": "Nata",
+    "a": [
+     "Lácteos"
+    ],
+    "m": 0
+   },
+   {
+    "n": "Leche",
+    "a": [
+     "Lácteos"
+    ],
+    "m": 0
+   },
+   {
+    "n": "Yogur",
+    "a": [
+     "Lácteos"
+    ],
+    "m": 0
+   },
+   {
+    "n": "Harina",
+    "a": [
+     "Gluten"
+    ],
+    "m": 1
+   },
+   {
+    "n": "Licor de limón",
+    "a": [
+     "Sulfitos"
+    ],
+    "m": 1
+   }
+  ],
+  "9": [
+   {
+    "n": "Sake",
+    "a": [
+     "Sulfitos"
+    ],
+    "m": 1
+   },
+   {
+    "n": "Nata",
+    "a": [
+     "Lácteos"
+    ],
+    "m": 0
+   },
+   {
+    "n": "Leche",
+    "a": [
+     "Lácteos"
+    ],
+    "m": 0
+   },
+   {
+    "n": "Huevo",
+    "a": [
+     "Huevos"
+    ],
+    "m": 0
+   },
+   {
+    "n": "Avellana",
+    "a": [
+     "Frutos secos"
+    ],
+    "m": 0
+   },
+   {
+    "n": "Chocolate blanco",
+    "a": [
+     "Lácteos"
+    ],
+    "m": 0
+   },
+   {
+    "n": "Sésamo negro",
+    "a": [
+     "Granos de sésamo"
+    ],
+    "m": 0
+   }
+  ],
+  "10": [
+   {
+    "n": "Nata",
+    "a": [
+     "Lácteos"
+    ],
+    "m": 0
+   },
+   {
+    "n": "Leche",
+    "a": [
+     "Lácteos"
+    ],
+    "m": 0
+   },
+   {
+    "n": "Huevo",
+    "a": [
+     "Huevos"
+    ],
+    "m": 0
+   },
+   {
+    "n": "Harina",
+    "a": [
+     "Gluten"
+    ],
+    "m": 1
+   },
+   {
+    "n": "Harina de almendras",
+    "a": [
+     "Frutos secos"
+    ],
+    "m": 1
+   }
+  ]
+ },
+ "DISH_ACTIONS": {
+  "1": {
+   "Pescado": {
+    "r": 0
+   },
+   "Apio": {
+    "r": 0
+   },
+   "Gluten": {
+    "r": 1,
+    "c": "SIN CRUJIENTE",
+    "c_en": "WITHOUT CRISP"
+   },
+   "Sulfitos": {
+    "r": 0
+   },
+   "Mostaza": {
+    "r": 0
+   }
+  },
+  "2": {
+   "Crustáceos": {
+    "r": 0
+   },
+   "Frutos secos": {
+    "r": 0
+   },
+   "Sulfitos": {
+    "r": 0
+   },
+   "Granos de sésamo": {
+    "r": 0
+   },
+   "Lácteos": {
+    "r": 0
+   }
+  },
+  "3": {
+   "Pescado": {
+    "r": 0
+   },
+   "Sulfitos": {
+    "r": 0
+   }
+  },
+  "4": {
+   "Lácteos": {
+    "r": 1,
+    "c": "SIN SALSA DE ALBAHACA",
+    "c_en": "WITHOUT BASIL SAUCE"
+   },
+   "Frutos secos": {
+    "r": 1,
+    "c": "SIN SALSA DE ALBAHACA",
+    "c_en": "WITHOUT BASIL SAUCE"
+   },
+   "Cacahuete": {
+    "r": 0
+   },
+   "Pescado": {
+    "r": 1,
+    "c": "SIN CAVIAR",
+    "c_en": "WITHOUT CAVIAR"
+   },
+   "Crustáceos": {
+    "r": 0
+   },
+   "Moluscos": {
+    "r": 0
+   },
+   "Sulfitos": {
+    "r": 0
+   },
+   "Soja": {
+    "r": 0
+   }
+  },
+  "5": {
+   "Moluscos": {
+    "r": 0
+   },
+   "Sulfitos": {
+    "r": 0
+   },
+   "Pescado": {
+    "r": 0
+   },
+   "Apio": {
+    "r": 0
+   },
+   "Gluten": {
+    "r": 1,
+    "c": "SIN GLUTEN — consultar con cocina",
+    "c_en": "WITHOUT GLUTEN — check with the kitchen"
+   }
+  },
+  "6": {
+   "Pescado": {
+    "r": 0
+   },
+   "Lácteos": {
+    "r": 0
+   },
+   "Sulfitos": {
+    "r": 0
+   }
+  },
+  "7": {
+   "Lácteos": {
+    "r": 0
+   },
+   "Apio": {
+    "r": 0
+   },
+   "Frutos secos": {
+    "r": 0
+   }
+  },
+  "8": {
+   "Gluten": {
+    "r": 1,
+    "c": "SIN BIZCOCHO",
+    "c_en": "WITHOUT SPONGE"
+   },
+   "Lácteos": {
+    "r": 0
+   },
+   "Huevos": {
+    "r": 0
+   },
+   "Sulfitos": {
+    "r": 1,
+    "c": "SIN BIZCOCHO",
+    "c_en": "WITHOUT SPONGE"
+   }
+  },
+  "9": {
+   "Huevos": {
+    "r": 0
+   },
+   "Lácteos": {
+    "r": 0
+   },
+   "Granos de sésamo": {
+    "r": 0
+   },
+   "Frutos secos": {
+    "r": 0
+   },
+   "Sulfitos": {
+    "r": 1,
+    "c": "CON HELADO DE SÉSAMO en vez de sake",
+    "c_en": "WITH SESAME ICE CREAM instead of sake"
+   }
+  },
+  "10": {
+   "Gluten": {
+    "r": 1,
+    "c": "SIN TIERRA",
+    "c_en": "WITHOUT SOIL"
+   },
+   "Frutos secos": {
+    "r": 1,
+    "c": "SIN TIERRA",
+    "c_en": "WITHOUT SOIL"
+   },
+   "Lácteos": {
+    "r": 0
+   },
+   "Huevos": {
+    "r": 0
+   },
+   "Sulfitos": {
+    "r": 1,
+    "c": "SIN TIERRA",
+    "c_en": "WITHOUT SOIL"
+   }
+  }
+ }
+}

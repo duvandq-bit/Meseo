@@ -1,6 +1,6 @@
 # Por dónde seguir
 
-Estado a **10 de septiembre de 2026** · versión **7.422** · 321 pruebas en verde ·
+Estado a **10 de septiembre de 2026** · versión **7.423** · 321 pruebas en verde ·
 auditoría de alérgenos 0/0.
 
 ---
@@ -111,6 +111,7 @@ vuelve a estar abierta.
 | Restaurantes, colores y nombres | `data/themes.json` |
 | Ingredientes → alérgenos | `data/ingredients.json` (468 entradas) |
 | Vinos | `data/wines.json` — **común a los dos restaurantes, todavía sin separar** |
+| La carta de M.B. | `docs/carta-mb-borrador.json` — borrador, fuera de `data/` a propósito |
 | El acuerdo de confidencialidad | `data/nda.json` — **apagado** (`"activo": false`) |
 | El acuerdo con el restaurante | `docs/acuerdo-restaurante-borrador.md` — no se enseña en la app |
 
@@ -123,9 +124,12 @@ ingrediente, un vino ni un estándar.**
 
 ### Del propietario — datos
 
-- [ ] **La carta de M.B.** Con la estructura de `docs/carta-nuevo-restaurante.md`:
-      nombre, categoría, ingredientes con preparaciones agrupadas, historia, y
-      qué alérgeno se retira y con qué comanda.
+- [ ] **M.B.: once preguntas para cocina.** La carta ya está transcrita en
+      `docs/carta-mb-borrador.json`, pero en once casos la ficha de cocina
+      declara un alérgeno y no dice de dónde sale. La lista, lista para
+      reenviar, está en `docs/mb-preguntas-cocina.md`. **Hasta que se
+      contesten, la carta no puede pasar a `data/` — el guard de CI lo
+      impide, y hace bien.**
 - [ ] **[121] Ensalada vegetariana mixta** — su ficha entera es «Hojas verdes,
       Verduras de temporada, Vinagre, Aceite». No enseña nada.
 - [ ] **[46] la miel** — el plato promete «VEGAN adaptable» y la comanda no
