@@ -8659,6 +8659,54 @@ test('Acceso: ninguna consulta cruza de un restaurante a otro', () => {
   ]) assert(html.includes(marca), `falta el sello de restaurante en: ${marca.slice(0, 50)}`);
 });
 
+test('Pase: lo que va montado encima no se esconde como si fuera relleno', () => {
+  // «Topping» y «Guarnición» no son preparaciones: son secciones de EMPLATADO.
+  // Tratarlas como preparación escondía justo lo que distingue un plato de su
+  // gemelo — la Croqueta de Jamón enseñaba Leche, Harina, Mantequilla, Nata y
+  // Huevo, y NO el jamón, y las cinco croquetas tenían la misma piscina.
+  // «Masa», «Relleno» o «Marinada» sí son preparaciones y siguen escondiendo lo
+  // suyo: la bechamel de dentro de la croqueta no se ve.
+  assert(/const _PASE_SECCION_VISIBLE = /.test(html), 'falta la lista de secciones de emplatado');
+  const rot = html.slice(html.indexOf('function _paseRotulos('), html.indexOf('function _pasePlegar('));
+  assert(/if\(_PASE_SECCION_VISIBLE\.test\(_djNorm\(m\[1\]\)\)\) continue;/.test(rot),
+    'una sección de emplatado no puede tratarse como preparación');
+  const lista = html.slice(html.indexOf('const _PASE_SECCION_VISIBLE'), html.indexOf('function _paseRotulos('));
+  for (const x of ['topping', 'guarnicion']) assert(lista.includes(x), `falta «${x}»`);
+  for (const x of ['masa', 'relleno', 'marinada'])
+    assert(!new RegExp(`\\|${x}\\||\\(${x}\\||\\|${x}\\)`).test(lista),
+      `«${x}» ES una preparación: lo que lleva dentro no se ve`);
+
+  // Y funcional: cada croqueta tiene que poder distinguirse de sus hermanas.
+  const cut = (ini, fin) => { const i = html.indexOf(ini); return html.slice(i, html.indexOf(fin, i) + fin.length); };
+  const fn = n => { const i = html.indexOf('function ' + n + '('); let d = 0;
+    for (let k = html.indexOf('{', i); k < html.length; k++) {
+      if (html[k] === '{') d++; else if (html[k] === '}') { d--; if (!d) return html.slice(i, k + 1); } } };
+  const src = `var LANG='es', _djIngBase=null; function getDish(d){return d;} function _djIngName(n){return n;}
+    const _DJ_SECCION = ${/^(masa|topping|base|relleno|guarnicion|sabores disponibles|salsa base|sazonador|marinada|elaboracion)$/};`
+    + cut('const DISHES = [', '\n];') + cut('const DISH_COMPONENTS = ', '};')
+    + html.slice(html.indexOf('const _djNorm ='), html.indexOf('async function _djLoadIngBase'))
+    + fn('_djTrozos') + fn('_djSplitIngredients') + fn('_djSameThing') + fn('_djIngredients')
+    + html.slice(html.indexOf('const _PASE_SAZONADOR'), html.indexOf('function _paseSenuelos('))
+    + `
+    const croquetas = [124,125,126,127,128];
+    const iguales = [], sinLoSuyo = [];
+    const firmas = new Map();
+    for(const id of croquetas){
+      const d = DISHES.find(x=>x.id===id); if(!d) continue;
+      const f = _paseFichas(d,false).map(x=>_djNorm(x.t)).sort().join('|');
+      if(firmas.has(f)) iguales.push(id + ' = ' + firmas.get(f)); else firmas.set(f, id);
+    }
+    // El jamón de la croqueta de jamón, por su nombre.
+    const j = DISHES.find(x=>x.id===124);
+    const tieneJamon = j ? _paseFichas(j,false).some(x=>/jamon/.test(_djNorm(x.t))) : false;
+    return {iguales, tieneJamon, n:firmas.size};`;
+  const R = new Function(src)(); // eslint-disable-line no-new-func
+  assert(R.tieneJamon, 'la Croqueta de Jamón tiene que enseñar el jamón');
+  assert(R.iguales.length === 0,
+    `croquetas con la piscina idéntica: ${R.iguales.join(', ')} — no hay forma de distinguirlas`);
+  assert(R.n === 5, `esperaba 5 croquetas distinguibles, hay ${R.n}`);
+});
+
 test('Pase: los nombres pegados se limpian al PINTAR, nunca en el dato', () => {
   // La ficha dice «Migas de Ibérico (Ibéricos y miga de pan)» y, al trocearla
   // quitando los paréntesis, queda «Migas de Ibérico Ibéricos y miga de pan».
