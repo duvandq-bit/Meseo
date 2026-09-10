@@ -7198,9 +7198,14 @@ test('Pase: los sazonadores no entran en la piscina', () => {
   // «Pimienta verde» NO: es un plato de la carta y se quedaría sin fichas.
   assert(!/'pimienta verde'/.test(lista), '«pimienta verde» es la Salsa de pimienta verde, no un sazonador');
   // Rótulos que no nombran nada enseñable.
-  const gen = html.slice(html.indexOf('const _PASE_GENERICO'), html.indexOf('function _paseEsSazonador'));
+  const gen = html.slice(html.indexOf('const _PASE_GENERICO'), html.indexOf('const _PASE_TRAD'));
   for (const x of ['alino', 'bano', 'guarnicion emplatada'])
     assert(gen.includes(`'${x}'`), `«${x}» es un encabezado de ficha, no un ingrediente`);
+  // Y las TÉCNICAS. La ficha de la carrillera dice «Cocción a baja temperatura:
+  // Ajo, Puerros, Cebolla…» y el rótulo salía de ficha para escoger, como si
+  // fuera algo que lleva el plato. Lo que lleva es el ajo.
+  for (const x of ['coccion a baja temperatura', 'marinada'])
+    assert(gen.includes(`'${x}'`), `«${x}» es una técnica, no un ingrediente`);
   // Se filtran de los reales Y de los señuelos, y ambos salen de _paseFichas.
   const fich = html.slice(html.indexOf('function _paseFichas('), html.indexOf('function _paseSenuelos('));
   assert(/\.filter\(it=>!_paseEsSazonador\(it\)\)/.test(fich), 'los ingredientes reales se filtran');
