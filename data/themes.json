@@ -1,5 +1,5 @@
 {
- "_readme": "Registro multi-restaurante. Cada 'venue' define identidad (nombre, logo, textos) y los 8 tokens de marca que pintan la app POR DENTRO tras elegirlo. El héroe del login es SIEMPRE la marca Meseo; el selector de restaurante se muestra en cuanto hay al menos un venue (los 'Próximamente' incluidos). Para estrenar un restaurante: duplica la plantilla, rellena los campos y pon enabled:true.",
+ "_readme": "Registro multi-restaurante. Cada 'venue' define identidad (nombre, logo, textos) y los 8 tokens de marca que pintan la app POR DENTRO tras elegirlo. El héroe del login es SIEMPRE la marca Meseo; el selector de restaurante se muestra en cuanto hay al menos un venue (los 'Próximamente' incluidos). Para estrenar un restaurante: duplica la plantilla, rellena los campos y pon enabled:true. · 'casa' es el nombre como se lee dentro de una frase («Leyenda Viviente de Txoko») y 'rotulo'/'rotulo_en' el nombre largo con el que se presenta el restaurante («Txoko by Martín Berasategui»). Los usa la app en los títulos de nivel, la bienvenida, la guía de emplatado y las técnicas, para que un empleado de otro restaurante no lea el nombre del vecino.",
  "version": 1,
  "venues": [
   {
@@ -20,6 +20,32 @@
     "accentDeep": "#7d5c2f",
     "ink": "#1c2a22",
     "paper": "#f4ede2"
+   },
+   "casa": "Txoko",
+   "rotulo": "Txoko by Martín Berasategui",
+   "rotulo_en": "Txoko by Martín Berasategui"
+  },
+  {
+   "id": "mb",
+   "enabled": false,
+   "name": "M.B.",
+   "logoSup": "MB",
+   "eyebrow": "Tenerife",
+   "casa": "M.B.",
+   "rotulo": "M.B. by Martín Berasategui",
+   "rotulo_en": "M.B. by Martín Berasategui",
+   "subtitle": "by Martín Berasategui · Formación de Equipo",
+   "subtitle_en": "by Martín Berasategui · Team Training",
+   "title": "Meseo · Formación de sala",
+   "brand": {
+    "primary": "#26364f",
+    "secondary": "#41597a",
+    "accent": "#b99055",
+    "accentHi": "#d9b478",
+    "accent2": "#c8a163",
+    "accentDeep": "#6d5330",
+    "ink": "#1a2029",
+    "paper": "#f2ece1"
    }
   },
   {
@@ -40,7 +66,10 @@
     "accentDeep": "#6e4a26",
     "ink": "#221a1e",
     "paper": "#f4ede6"
-   }
+   },
+   "casa": "Nuevo Restaurante",
+   "rotulo": "Nuevo Restaurante",
+   "rotulo_en": "New Restaurant"
   }
  ]
 }

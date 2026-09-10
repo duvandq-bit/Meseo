@@ -52,7 +52,7 @@
 <meta property="og:description" content="Formación de equipos de sala: carta, alérgenos, vinos, exámenes y juegos de repaso.">
 <meta property="og:url" content="https://meseo.es/">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"Meseo","url":"https://meseo.es/"}</script>
-<meta name="app-version" content="7.420">
+<meta name="app-version" content="7.426">
 <meta name="app-build" content="May 2026">
 <meta name="theme-color" content="#1c2a22">
 <!-- ═══ PWA ═══ -->
@@ -1093,7 +1093,12 @@ async function initVenues(){
   // con el héroe del login ya en marca Meseo, el restaurante vive aquí —
   // «Txoko puede aparecer como uno de los restaurantes a escoger». Los
   // bloqueados (Próximamente) siguen visibles para enseñar lo que viene.
-  const all = (THEMES && Array.isArray(THEMES.venues)) ? THEMES.venues.filter(v => v && v.id && v.name) : [];
+  // La plantilla de copiar-pegar de themes.json NO es un restaurante: salía en
+  // el selector como «NUEVO RESTAURANTE · Próximamente», al lado de los de
+  // verdad. Con un solo venue pasaba por un adelanto; con M.B. dado de alta es
+  // ruido, y encima anuncia algo que no existe.
+  const all = (THEMES && Array.isArray(THEMES.venues))
+    ? THEMES.venues.filter(v => v && v.id && v.name && v.id !== 'plantilla') : [];
   if(all.length) renderVenuePicker(all, current.id);
 }
 
@@ -1514,6 +1519,27 @@ const DISH_COMPONENTS = {124:[{n:'Leche',a:['Lácteos'],m:0},{n:'Harina',a:['Glu
 // Manda el restaurante que trae la NUBE, que es el que fijó el código del
 // manager al darse de alta. El selector del login no vale como fuente: es
 // estética y se cambia tocando otra tarjeta.
+// ═══ CÓMO SE LLAMA LA CASA ═════════════════════════════════════════════════
+// El nombre del restaurante estaba escrito a fuego en seis sitios que ve el
+// empleado: dos títulos de nivel, la bienvenida, la guía de emplatado y las
+// técnicas. Con M.B. de camino, eso significaba que su equipo iba a leer el
+// nombre del vecino en su propia formación. Sale del restaurante activo.
+//   casa   → como se lee dentro de una frase: «Leyenda Viviente de Txoko»
+//   rótulo → como se presenta: «Txoko by Martín Berasategui»
+function _venueCasa(){
+  try{ if(typeof ACTIVE_VENUE!=='undefined' && ACTIVE_VENUE)
+    return ACTIVE_VENUE.casa || ACTIVE_VENUE.name || 'Meseo'; }catch(e){}
+  return 'Meseo';
+}
+function _venueRotulo(){
+  try{ if(typeof ACTIVE_VENUE!=='undefined' && ACTIVE_VENUE){
+    const r = LANG==='en' ? (ACTIVE_VENUE.rotulo_en || ACTIVE_VENUE.rotulo)
+                          : (ACTIVE_VENUE.rotulo || ACTIVE_VENUE.rotulo_en);
+    if(r) return r;
+  } }catch(e){}
+  return _venueCasa();
+}
+
 const _VENUE_POR_DEFECTO = 'txoko';
 function _venueActual(){
   try{
@@ -1688,7 +1714,7 @@ const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><p
 const SRC = 'src';
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='7.420';  // sincronizada con sw.js VERSION (guard de CI)
+const APP_VERSION='7.426';  // sincronizada con sw.js VERSION (guard de CI)
 const APP_BUILD='Jul 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;
@@ -3799,7 +3825,7 @@ const XP_LEVELS = [
   {level:27, xp:7500,  title:'Titán del Room Service',          title_en:'Room Service Titan',               icon:'XXVII', color:'#ffc000'},
   {level:28, xp:8650,  title:'Magíster de Sala',                title_en:'Dining Hall Magister',             icon:'XXVIII', color:'#ffb400'},
   {level:29, xp:9950,  title:'Kraken de las Mesas Grandes',     title_en:'Kraken of the Large Tables',       icon:'XXIX', color:'#ffaa00'},
-  {level:30, xp:11400, title:'Leyenda Viviente de Txoko',       title_en:'Living Legend of Txoko',           icon:'XXX', color:'#ff9e00'},
+  {level:30, xp:11400, title:'Leyenda Viviente de {casa}',      title_en:'Living Legend of {casa}',           icon:'XXX', color:'#ff9e00'},
   // ── TIER 7: DIVINO (rojo fuego) — steep curve ──
   {level:31, xp:13100, title:'El que Susurra a los Chefs',      title_en:'The Chef Whisperer',               icon:'XXXI', color:'#ff9200'},
   {level:32, xp:15100, title:'Inmortal del Protocolo',          title_en:'Protocol Immortal',                icon:'XXXII', color:'#ff8600'},
@@ -3811,7 +3837,7 @@ const XP_LEVELS = [
   {level:37, xp:30500, title:'Guardián de la Excelencia',       title_en:'Guardian of Excellence',           icon:'XXXVII', color:'#ff4800'},
   {level:38, xp:35500, title:'Entidad Cósmica de Sala',         title_en:'Cosmic Entity of the Floor',       icon:'XXXVIII', color:'#ff3b00'},
   {level:39, xp:41500, title:'Gran Maestre Supremo',            title_en:'Supreme Grandmaster',              icon:'XXXIX', color:'#ff2200'},
-  {level:40, xp:50000, title:'TXOKO ASCENDIDO ∞',               title_en:'TXOKO ASCENDED ∞',                 icon:'XL', color:'#ff0000'},
+  {level:40, xp:50000, title:'{CASA} ASCENDIDO ∞',              title_en:'{CASA} ASCENDED ∞',                 icon:'XL', color:'#ff0000'},
 ];
 
 // Ensure a color has sufficient contrast on a given background (light or dark)
@@ -3865,9 +3891,13 @@ function getLevelInfo(xp){
   let info = XP_LEVELS[0];
   for(const l of XP_LEVELS){ if(xp >= l.xp) info=l; else break; }
   // Return localized title, include icon and color for UI
+  // {casa} / {CASA} → el restaurante de quien mira. Es el único sitio por el
+  // que pasan los títulos antes de pintarse, así que basta con sustituir aquí.
+  const casa = _venueCasa();
+  const t = (LANG==='en' ? info.title_en : info.title) || '';
   return {
     ...info,
-    title: LANG==='en' ? info.title_en : info.title};
+    title: t.replace(/\{casa\}/g, casa).replace(/\{CASA\}/g, casa.toUpperCase())};
 }
 function getNextLevel(xp){
   const cur = getLevelInfo(xp);
@@ -9398,7 +9428,7 @@ function renderLogin(){
   if(subtitleEl) subtitleEl.textContent = LANG==='en' ? 'Train the craft · meseo.es' : 'El oficio se entrena · meseo.es';
   // Venue dropdown follows the language too (label + "Próximamente" entries)
   if(typeof THEMES !== 'undefined' && THEMES && Array.isArray(THEMES.venues)){
-    const _all = THEMES.venues.filter(v => v && v.id && v.name);
+    const _all = THEMES.venues.filter(v => v && v.id && v.name && v.id !== 'plantilla');
     if(_all.length && ACTIVE_VENUE) renderVenuePicker(_all, ACTIVE_VENUE.id);
   }
   // Restore checkbox state
@@ -10260,7 +10290,7 @@ async function closePinAndEnter(){
 
 // ═══════ TUNIC ONBOARDING GUIDE ═══════
 const ONBOARDING_PAGES = [
-  {icon:`<svg width="28" height="28" viewBox="0 0 24 24"><polygon points="12,2 20,7 20,17 12,22 4,17 4,7" fill="none" stroke="#fff" stroke-width="1.5"/><circle cx="12" cy="11" r="3" fill="#fff" opacity=".8"/></svg>`,color:'#c49a3c',title_es:'¡Bienvenido a Meseo!',title_en:'Welcome to Meseo!',text_es:'Tu guía de formación para dominar la carta del restaurante Txoko by Martín Berasategui. Aprenderás cada plato, alérgeno, ingrediente, protocolo de servicio y maridaje de vinos.',text_en:'Your training guide to master the menu of Txoko by Martín Berasategui. You\'ll learn every dish, allergen, ingredient, service protocol and wine pairing.'},
+  {icon:`<svg width="28" height="28" viewBox="0 0 24 24"><polygon points="12,2 20,7 20,17 12,22 4,17 4,7" fill="none" stroke="#fff" stroke-width="1.5"/><circle cx="12" cy="11" r="3" fill="#fff" opacity=".8"/></svg>`,color:'#c49a3c',title_es:'¡Bienvenido a Meseo!',title_en:'Welcome to Meseo!',text_es:'Tu guía de formación para dominar la carta de '+_venueRotulo()+'. Aprenderás cada plato, alérgeno, ingrediente, protocolo de servicio y maridaje de vinos.',text_en:'Your training guide to master the menu of '+_venueRotulo()+'. You\'ll learn every dish, allergen, ingredient, service protocol and wine pairing.'},
   {icon:`<svg width="28" height="28" viewBox="0 0 24 24"><rect x="4" y="6" width="16" height="11" rx="2" fill="none" stroke="#fff" stroke-width="1.5"/><line x1="4" y1="10" x2="20" y2="10" stroke="#fff" stroke-width="1" opacity=".6"/></svg>`,color:'#d4aa4c',title_es:'Flashcards y Repaso SRS',title_en:'Flashcards & SRS Review',text_es:'Repasa cada plato con tarjetas interactivas: ingredientes, alérgenos e historia. El sistema de repetición espaciada (SRS) te muestra primero los platos que más necesitas repasar.',text_en:'Review each dish with interactive cards: ingredients, allergens and history. The spaced repetition system (SRS) shows you the dishes you need to review most first.'},
   {icon:`<svg width="28" height="28" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4" fill="none" stroke="#fff" stroke-width="1.5"/><path d="M12 11v2M10 13h4" stroke="#fff" stroke-width="1.5" stroke-linecap="round"/></svg>`,color:'#c47068',title_es:'Repaso inteligente',title_en:'Smart review',text_es:'Situaciones reales de servicio: un huésped te dice su alergia, te pide recomendaciones o pregunta cómo modificar un plato. La sesión elige justo los platos que estás a punto de olvidar. La encontrarás en Aprender → Repaso.',text_en:'Real service scenarios: a guest tells you their allergy, asks for recommendations or how to modify a dish. Each session picks exactly the dishes you are about to forget. You\'ll find it under Learn → Review.'},
   {icon:`<svg width="28" height="28" viewBox="0 0 24 24"><rect x="6" y="4" width="12" height="16" rx="2" fill="none" stroke="#fff" stroke-width="1.5"/><line x1="9" y1="10" x2="15" y2="10" stroke="#fff" stroke-width="1" opacity=".7"/><line x1="9" y1="13" x2="13" y2="13" stroke="#fff" stroke-width="1" opacity=".7"/></svg>`,color:'#4888a0',title_es:'Exámenes por Tema',title_en:'Topic-based Exams',text_es:'Pon a prueba tus conocimientos con exámenes de opción múltiple. Elige entre alérgenos, ingredientes o historia, filtra por categoría de plato y personaliza la cantidad de preguntas.',text_en:'Test your knowledge with multiple-choice exams. Choose between allergens, ingredients or history, filter by dish category and customise the number of questions.'},
@@ -11246,7 +11276,8 @@ function renderAprender(){
 // La definición general es conocimiento culinario; la lista de platos NO se
 // escribe a mano: se calcula en tiempo real buscando la técnica en las fichas
 // (nombre + ingredientes + historia), así nunca se desincroniza con la carta.
-// La nota "En el Txoko" resume cómo se aplica aquí (borrador para el chef).
+// La nota «En <casa>» resume cómo se aplica aquí, con el nombre del
+// restaurante activo (borrador para el chef).
 const TECNICA_FAMS = [
   {k:'prep',   es:'Preparación y despiece',      en:'Prep & butchery',        col:'#5a8a8a'},
   {k:'seco',   es:'Calor seco y brasa',        en:'Dry heat & grill',       col:'#c47838'},
@@ -12268,7 +12299,7 @@ function renderTecnicas(){
       <div class="tec-hero-ic">🍳</div>
       <div>
         <div class="tec-hero-t">${_en?'Cooking techniques':'Técnicas de cocina'}</div>
-        <div class="tec-hero-s">${_en?'The techniques of a high-level kitchen: what each one is and, when we use it, the Txoko dishes where it appears.':'Las técnicas de una cocina de alto nivel: qué es cada una y, cuando la usamos, los platos del Txoko donde aparece.'}</div>
+        <div class="tec-hero-s">${_en?`The techniques of a high-level kitchen: what each one is and, when we use it, the ${escapeHTML(_venueCasa())} dishes where it appears.`:`Las técnicas de una cocina de alto nivel: qué es cada una y, cuando la usamos, los platos de ${escapeHTML(_venueCasa())} donde aparece.`}</div>
         <div class="tec-hero-stat">${TECNICAS.length} ${_en?'techniques':'técnicas'} · ${nFam} ${_en?'families':'familias'}</div>
       </div>
     </div>`;
@@ -12288,7 +12319,7 @@ function renderTecnicas(){
           <div class="tec-card-h">${escapeHTML(_en?t.en:t.es)}</div>
         </div>
         <div class="tec-def">${escapeHTML(_en?t.defEn:t.def)}</div>
-        ${t.txoko?`<div class="tec-txoko"><span class="tec-txoko-lbl">${_en?'At Txoko':'En Txoko'}</span> ${escapeHTML(t.txoko)}</div>`:''}
+        ${t.txoko?`<div class="tec-txoko"><span class="tec-txoko-lbl">${_en?'At '+escapeHTML(_venueCasa()):'En '+escapeHTML(_venueCasa())}</span> ${escapeHTML(t.txoko)}</div>`:''}
         ${dishes.length?`<div class="tec-dishes"><span class="tec-dishes-lbl">${_en?'Dishes':'Platos'}</span>${chips}${more}</div>`:''}
         ${t.mas&&t.mas.length?`<details class="tec-mas"><summary>${(t.masT?(_en?(t.masT.en||t.masT.es):t.masT.es):(_en?'Types · learn more':'Tipos · saber más'))} <span class="tec-mas-n">${t.mas.length}</span></summary><div class="tec-mas-body">${t.mas.map(m=>`<div class="tec-mas-row"><b>${escapeHTML(m.t)}</b><span>${escapeHTML(m.d)}</span></div>`).join('')}</div></details>`:''}
       </div>`;
@@ -21787,13 +21818,13 @@ function renderVideos(){
           <div id="videoHeroShort" style="font-family:'Quicksand',sans-serif;font-size:.78rem;color:var(--parch3);line-height:1.7">
             ${LANG==='en'
               ? 'A visual guide to the plating and preparation of each dish...'
-              : 'Guía visual del emplatado y preparación de cada plato en Txoko by Martín Berasategui...'}
+              : `Guía visual del emplatado y preparación de cada plato en ${escapeHTML(_venueRotulo())}...`}
             <span onclick="toggleVideoDesc(true)" style="color:rgba(228,190,104,.85);cursor:pointer;font-weight:500"> ${LANG==='en'?'more':'más'}</span>
           </div>
           <div id="videoHeroFull" style="display:none;font-family:'Quicksand',sans-serif;font-size:.78rem;color:var(--parch3);line-height:1.7">
             ${LANG==='en'
-              ? 'A visual guide to the plating and preparation of each dish at Txoko by Martín Berasategui. Watch the technique, then study the allergens, ingredients and storytelling of each dish to be fully prepared for service.'
-              : 'Guía visual del emplatado y preparación de cada plato en Txoko by Martín Berasategui. Observa la técnica y después repasa los alérgenos, ingredientes y el storytelling de cada plato para llegar preparado al servicio.'}
+              ? `A visual guide to the plating and preparation of each dish at ${escapeHTML(_venueRotulo())}. Watch the technique, then study the allergens, ingredients and storytelling of each dish to be fully prepared for service.`
+              : `Guía visual del emplatado y preparación de cada plato en ${escapeHTML(_venueRotulo())}. Observa la técnica y después repasa los alérgenos, ingredientes y el storytelling de cada plato para llegar preparado al servicio.`}
             <span onclick="toggleVideoDesc(false)" style="color:rgba(228,190,104,.85);cursor:pointer;font-weight:500"> ${LANG==='en'?'Show less':'Mostrar menos'}</span>
           </div>
         </div>
