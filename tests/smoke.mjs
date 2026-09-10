@@ -6586,7 +6586,7 @@ test('Pase: la respuesta correcta gana en todos los platos jugables', () => {
         const rA=r.filter(i=>(i.a||[]).length).length, fA=f.filter(i=>(i.a||[]).length).length;
         if(r.length&&f.length&&((rA===r.length&&fA===0)||(rA===0&&fA===f.length))) sep++;
       }
-      if(sep>10) delata.push(d.id+':'+sep+'/20');
+      if(sep>15) delata.push(d.id+':'+sep+'/20');
       _paseState={dishId:d.id, fase:'montaje', sel:new Set(), piscina:null, veredicto:null};
       _paseState.piscina=P;
       P.forEach((it,i)=>{ if(!it.falso) _paseState.sel.add(i); });
@@ -6607,9 +6607,15 @@ test('Pase: la respuesta correcta gana en todos los platos jugables', () => {
   assert(R.pocos.length === 0, `menos de 3 señuelos en: ${R.pocos.join(', ')}`);
   assert(R.sinAl === 0,
     `${R.sinAl} platos se quedan con la piscina vacía y ya no hay botón para responder «no lleva ninguno»`);
-  // Medido con los señuelos saliendo de _paseFichas: el peor plato separa en el
-  // 32% de las rondas, por azar y porque tiene pocas fichas. Volver a sacarlos
-  // sólo de _paseComponentes lo dispara al 100% en decenas de platos.
+  // El umbral es 16 de 20, y sale de medir, no de elegirlo a ojo:
+  //   · con los señuelos saliendo de _paseFichas (como está), el peor plato
+  //     —Lomo bajo de Simmental— separa en el 30% de las rondas por puro azar,
+  //     porque tiene pocas fichas. Medido sobre 600 rondas por plato.
+  //   · volviendo a sacarlos sólo de _paseComponentes —la regresión que este
+  //     guard existe para cazar— hay 14 platos que separan el 100% de las veces.
+  // Entre 30% y 100% hay sitio de sobra. El umbral anterior estaba en 11 de 20
+  // y hacía fallar el CI sin que nada estuviera roto el 2% de las tiradas: pasó
+  // una vez en pleno trabajo. Con 16 la probabilidad baja a 6 de cada millón.
   assert(R.delata.length === 0,
     `la insignia de alérgeno delata cuál es el señuelo en: ${R.delata.slice(0,8).join(', ')}`);
 });
@@ -8646,6 +8652,48 @@ test('Acceso: ninguna consulta cruza de un restaurante a otro', () => {
     '_vSello({ employee: me, room: CHAT_ROOM })',
     '_vSello({ challenger: fromUser, challenged: toUser,',
   ]) assert(html.includes(marca), `falta el sello de restaurante en: ${marca.slice(0, 50)}`);
+});
+
+test('Pase: los nombres pegados se limpian al PINTAR, nunca en el dato', () => {
+  // La ficha dice «Migas de Ibérico (Ibéricos y miga de pan)» y, al trocearla
+  // quitando los paréntesis, queda «Migas de Ibérico Ibéricos y miga de pan».
+  // Esa forma pegada es la clave con la que la base encuentra el alérgeno: se
+  // intentó renombrarla en el dato y el plato 6 se quedó sin quien explicara su
+  // Gluten. Por eso se limpia SÓLO la etiqueta, y este guard existe para que a
+  // nadie —yo el primero— se le ocurra volver a tocar el dato.
+  assert(/const _PASE_PEGADOS = \{/.test(html), 'falta la tabla de nombres pegados');
+  const tabla = html.slice(html.indexOf('const _PASE_PEGADOS = {'), html.indexOf('function _paseEtiqueta('));
+  const claves = [...tabla.matchAll(/'([^']+)':\s*'([^']+)'/g)].map(m => [m[1], m[2]]);
+  assert(claves.length >= 10, `la tabla se ha quedado en ${claves.length} nombres`);
+
+  // Cada clave tiene que existir TAL CUAL como componente. Si no, es un typo
+  // que no limpia nada y nadie se entera.
+  const comps = html.slice(html.indexOf('const DISH_COMPONENTS = '), html.indexOf('\n};', html.indexOf('const DISH_COMPONENTS = ')));
+  for (const [pegado, limpio] of claves) {
+    assert(comps.includes(`n:'${pegado}'`), `«${pegado}» no existe como componente: la tabla no limpia nada`);
+    assert(limpio && limpio !== pegado && pegado.startsWith(limpio),
+      `«${limpio}» tiene que ser el principio de «${pegado}»: es recortar, no renombrar`);
+  }
+
+  // Cuatro quedan fuera A PROPÓSITO y no pueden colarse:
+  //  · Granadina — «Granadina» a secas NO lleva alérgeno en la base y los
+  //    Sulfitos vienen del vinagre: acortarla los borra del plato en silencio.
+  //  · Porto y Sake — son cebolla encurtida 24 h, no licores sueltos; su nombre
+  //    bueno es otro y está pendiente de que lo confirme el propietario.
+  //  · Bisque — «Bisque» a secas enseña menos: la palabra que avisa del
+  //    crustáceo es «Langostino».
+  for (const fuera of ['Granadina Vinagre de manzana', 'Porto Vinagre de jerez',
+                       'Sake Vinagre de cabernet', 'Bisque Caldo de Langostino'])
+    assert(!tabla.includes(`'${fuera}'`),
+      `«${fuera}» está fuera a propósito: léete el comentario antes de meterlo`);
+
+  // Y se usa SÓLO al pintar la ficha. Si apareciera en el armado, la clave
+  // cambiaría y con ella el emparejado contra la base de alérgenos.
+  const usos = (html.match(/_paseEtiqueta\(/g) || []).length;
+  assert(usos === 2, `_paseEtiqueta debe usarse una sola vez (su definición + el chip); hay ${usos}`);
+  const chip = html.slice(html.indexOf('function _paseChip('), html.indexOf('function _paseRender('));
+  assert(/pase-chip-t">\$\{escapeHTML\(_paseEtiqueta\(it\.t\)\)\}/.test(chip),
+    'la etiqueta limpia va en el chip');
 });
 
 test('Carta: cada restaurante carga la suya, y si no llega no se entra', () => {

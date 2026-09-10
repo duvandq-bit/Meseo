@@ -52,7 +52,7 @@
 <meta property="og:description" content="Formación de equipos de sala: carta, alérgenos, vinos, exámenes y juegos de repaso.">
 <meta property="og:url" content="https://meseo.es/">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"Meseo","url":"https://meseo.es/"}</script>
-<meta name="app-version" content="7.416">
+<meta name="app-version" content="7.417">
 <meta name="app-build" content="May 2026">
 <meta name="theme-color" content="#1c2a22">
 <!-- ═══ PWA ═══ -->
@@ -1688,7 +1688,7 @@ const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><p
 const SRC = 'src';
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='7.416';  // sincronizada con sw.js VERSION (guard de CI)
+const APP_VERSION='7.417';  // sincronizada con sw.js VERSION (guard de CI)
 const APP_BUILD='Jul 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;
@@ -20122,6 +20122,39 @@ function _paseEsSazonador(it){
 // «Espuma de tomate (Agua de tomate, claras de huevo y gelatina)». Como ficha de
 // móvil eso no cabe ni hace falta —lo del paréntesis ya va desglosado aparte—,
 // así que se quita la cantidad de delante y la composición del paréntesis.
+// ═══ NOMBRES QUE LA FICHA DEJA PEGADOS ═════════════════════════════════════
+// La ficha dice «Migas de Ibérico (Ibéricos y miga de pan)» y, al trocearla
+// quitando los paréntesis, queda «Migas de Ibérico Ibéricos y miga de pan».
+// Esa forma pegada NO es un descuido: es la clave con la que la base encuentra
+// el alérgeno. Renombrarla en el dato rompe la cadena — se probó, y el plato 6
+// se quedó sin quien explicara su Gluten. Así que se limpia SÓLO al pintar.
+//
+// Faltan cuatro a propósito, y cada una por su motivo:
+//   · «Granadina Vinagre de manzana» — «Granadina» a secas NO lleva alérgeno en
+//     la base; los Sulfitos vienen del vinagre. Acortarla los borraría del
+//     plato en silencio, que es la peor forma de romper esto.
+//   · «Porto Vinagre de jerez» y «Sake Vinagre de cabernet» — el propietario
+//     explicó que son cebolla encurtida 24 h, no licores sueltos. Su nombre
+//     bueno no es «Porto», es «Cebolla encurtida en oporto». Pendiente de que
+//     lo confirme para el Tataki.
+//   · «Bisque Caldo de Langostino» — «Bisque» a secas enseña menos: la palabra
+//     que avisa del crustáceo es «Langostino».
+const _PASE_PEGADOS = {
+  'Espuma de queso de cabra Nata': 'Espuma de queso de cabra',
+  'Migas de Ibérico Ibéricos y miga de pan': 'Migas de Ibérico',
+  'Vinagreta de mostaza Aceite de oliva': 'Vinagreta de mostaza',
+  'Mostaza savora apio': 'Mostaza savora',
+  'Espuma de tomate Agua de tomate': 'Espuma de tomate',
+  'Puré de apiobola mantequilla': 'Puré de apiobola',
+  'Fumet (caldo de pescado)': 'Fumet',
+  'Mostaza Savora Contiene Apio': 'Mostaza Savora',
+  'Demi de carne Contiene Apio': 'Demi de carne',
+  'Pasta linguini fresca harina': 'Pasta linguini fresca',
+  'Mayonesa Huevo': 'Mayonesa',
+  'Leche de Tigre Fumet': 'Leche de Tigre'
+};
+function _paseEtiqueta(t){ return _PASE_PEGADOS[t] || t; }
+
 function _paseLimpiar(t){
   const s=String(t||'').replace(/\s*\([^)]*\)/g,' ')
     .replace(/^\s*\d[\d.,]*\s*(grs?|kgs?|g|kg|ml|l|uds?|unidades?)?\s+(de\s+)?/i,'')
@@ -20741,7 +20774,7 @@ function _paseChip(it, i, on, onclick, extra, ocultarAl){
   // mirando la insignia.
   const al=ocultarAl ? '' : (it.a||[]).map(a=>`<span class="pase-al">${escapeHTML(allergenLocal(a))}</span>`).join('');
   return `<button type="button" class="pase-chip${on?' on':''}${extra||''}" data-i="${i}" onclick="${onclick}"
-    aria-pressed="${on?'true':'false'}"><span class="pase-chip-t">${escapeHTML(it.t)}</span>${al?`<span class="pase-chip-al">${al}</span>`:''}</button>`;
+    aria-pressed="${on?'true':'false'}"><span class="pase-chip-t">${escapeHTML(_paseEtiqueta(it.t))}</span>${al?`<span class="pase-chip-al">${al}</span>`:''}</button>`;
 }
 
 function _paseRender(){
