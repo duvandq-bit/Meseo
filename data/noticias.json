@@ -1,10 +1,20 @@
 {
- "updated": "2026-09-09T19:48:48.374Z",
+ "updated": "2026-09-10T01:07:22.454Z",
  "items": [
+  {
+   "t": "¿Crisis en la alta cocina? Bruno Verjus cierra A Table el mismo día que el barcelonés Slow & Low hace lo propio renunciando a su estrella",
+   "u": "https://www.7canibales.com/noticias/crisis-en-la-alta-cocina-bruno-verjus-cierra/",
+   "s": "7 Caníbales",
+   "d": "2026-09-09T19:43:48.000Z",
+   "tags": [
+    "ALTA COCINA"
+   ],
+   "img": "https://www.7canibales.com/wp-content/uploads/sites/2/2023/06/Bruno-Verjus-retrato.jpg"
+  },
   {
    "t": "Santa Cruz de Tenerife, capital gastronómica de España",
    "u": "https://www.canarias7.es/gastronomia-c7/santa-cruz-tenerife-capital-gastronomica-espana-20260909191740-nt.html",
-   "s": "Canarias7",
+   "s": "canarias7.es",
    "d": "2026-09-09T18:17:40.000Z",
    "tags": [
     "CANARIAS"
@@ -24,11 +34,11 @@
   {
    "t": "Los Realejos celebra la 9ª Fiesta de Vinos de Tenerife en la Playa de El Socorro",
    "u": "https://lavozcanaria.com/valle-de-la-orotava/general/los-realejos-celebra-la-9-fiesta-de-vinos-de-tenerife-en-la-playa-de-el-socorro",
-   "s": "La Voz Canaria",
+   "s": "lavozcanaria.com",
    "d": "2026-09-09T17:56:42.000Z",
    "tags": [
-    "VINO",
-    "CANARIAS"
+    "CANARIAS",
+    "VINO"
    ],
    "img": "https://lavozcanaria.com/media/2026/09/los-realejos-celebra-la-9-fiesta-de-vinos-de-tenerife-en-la-playa-de-el-socorro.webp"
   },
@@ -54,7 +64,7 @@
   {
    "t": "Martin Berasategui: “Cuando empecé en la cocina, mi reto era ser buen nieto, buen sobrino, buen hijo, buen hermano y estar por encima de las expectativas que tenían mis maestras”",
    "u": "https://www.lecturas.com/actualidad/martin-berasategui-cuando-empece-cocina-mi-reto-era-ser-buen-nieto-buen-sobrino-buen-hijo-buen-hermano-y-estar-por-encima-delas-expectativas-que-tenian-mis-maestras_198203",
-   "s": "lecturas.com",
+   "s": "Lecturas",
    "d": "2026-09-09T17:32:00.000Z",
    "tags": [
     "CHEF"
@@ -83,11 +93,21 @@
   {
    "t": "Santa Cruz de Tenerife celebra el Mojitos Vacilón Fest para despedir el verano con sabor cubano",
    "u": "https://eldigitalsur.com/vida-estilo/gastronomia-canaria/mojitos-vacilon-fest-santa-cruz-tenerife-despedida-verano/",
-   "s": "El Digital Sur",
+   "s": "eldigitalsur.com",
    "d": "2026-09-09T15:43:14.000Z",
    "tags": [
     "CANARIAS"
    ]
+  },
+  {
+   "t": "Fiesta del Carmen en el Puerto de la Cruz, en Tenerife: ¡toda la información!",
+   "u": "https://www.teneriffa-news.com/es/puerto-de-la-cruz-es/fiesta-del-carmen-puerto-de-es_1464907.html",
+   "s": "Teneriffa News",
+   "d": "2026-09-09T15:40:54.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://www.teneriffa-news.com/media/h/puerto-de-la-cruz-teneriffa-hafen-vorbereitung-feiern-scaled-2400x1350.jpg"
   },
   {
    "t": "Santa Cruz de Tenerife, elegida Capital Española de la Gastronomía 2027",
@@ -101,7 +121,7 @@
   {
    "t": "Marqués de Murrieta entra en el gran escaparate del lujo de la Fórmula 1",
    "u": "https://amp.expansion.com/estilo-vida/rincones-gastronomicos/2026/09/09/6aa177cfe5fdea04558b4570.html",
-   "s": "Expansión",
+   "s": "expansion.com",
    "d": "2026-09-09T15:18:46.000Z",
    "tags": [
     "MICHELIN"
@@ -109,13 +129,24 @@
    "img": "https://e01-phantom-expansion.uecdn.es/a142507b8f37d940fead7842ca4f19cd/crop/0x689/2048x2055/resize/1200/f/webp/assets/multimedia/imagenes/2026/09/09/17889668861159.jpg"
   },
   {
+   "t": "Andorra Taste pone la cocina de alta montaña en el centro de su quinta edición",
+   "u": "https://www.vinetur.com/amp/20260909106848/andorra-taste-pone-la-cocina-de-alta-montana-en-el-centro-de-su-quinta-edicion.html",
+   "s": "Vinetur",
+   "d": "2026-09-09T15:12:00.000Z",
+   "tags": [
+    "ALTA COCINA"
+   ],
+   "img": "https://www.vinetur.com/imagenes/2026/september/9/20260909-191257-4949.jpg"
+  },
+  {
    "t": "Andorra Taste situará la gastronomía ante el desafío de proteger el patrimonio natural y alimentario",
-   "u": "https://www.7canibales.com/?post_type",
+   "u": "https://www.7canibales.com/noticias/andorra-taste-2026/",
    "s": "7 Caníbales",
    "d": "2026-09-09T14:45:38.000Z",
    "tags": [
     "ALTA COCINA"
-   ]
+   ],
+   "img": "https://www.7canibales.com/wp-content/uploads/sites/2/2026/09/RUEDA-DE-PRENSA-ANDORRA-TASTE-2026.webp"
   },
   {
    "t": "Santa Cruz de Tenerife despide el verano con 11 horas de música, comida y baile: toda la programación",
@@ -125,12 +156,12 @@
    "tags": [
     "CANARIAS"
    ],
-   "img": "https://diariodeavisos.elespanol.com/wp-content/uploads/2026/09/mojito.jpg"
+   "img": "https://cdn.diariodeavisos.com/wp-content/uploads/2026/09/mojito.jpg"
   },
   {
    "t": "Bilbao desde la mesa: cocina vasca, producto local y alta gastronomía frente al Guggenheim",
    "u": "https://viajar.elperiodico.com/amp/planes/gastro/bilbao-cocina-vasca-the-artist-133815800",
-   "s": "Viajar",
+   "s": "viajar.elperiodico.com",
    "d": "2026-09-09T13:41:23.000Z",
    "tags": [
     "ALTA COCINA"
@@ -140,7 +171,7 @@
   {
    "t": "Más de la mitad de los canarios considera las papas arrugadas con mojo el plato más típico del archipiélago",
    "u": "https://www.canarias7.es/gastronomia-c7/mitad-canarios-considera-papas-arrugadas-mojo-plato-20260909143143-nt_amp.html",
-   "s": "Canarias7",
+   "s": "canarias7.es",
    "d": "2026-09-09T13:31:43.000Z",
    "tags": [
     "CANARIAS"
@@ -178,16 +209,6 @@
    "img": "https://estaticos-cdn.prensaiberica.es/clip/90f8bc4b-8d85-4415-ae82-e41412f0afd6_16-9-discover-aspect-ratio_default_1505219.jpg"
   },
   {
-   "t": "\"PuebloChico\": Recuerdos de una \"mini-Tenerife\" muy especial",
-   "u": "https://www.teneriffa-news.com/es/parques-de-atracciones-en-tenerife/pueblochico-el-parque-de-la-orotava-que-reprodujo-tenerife-a-escala-125_1464798.html",
-   "s": "Teneriffa News",
-   "d": "2026-09-09T12:18:25.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://www.teneriffa-news.com/media/p/pueblo-chico-miniatur-land-teneriffa-2272x1350.jpg"
-  },
-  {
    "t": "El viñedo más alto de Europa está en Tenerife: así es el pueblo que desafía a los Alpes",
    "u": "https://www.noticiasdelvino.com/escapadas/2026/09/09/el-vinedo-mas-alto-de-europa-esta-en-tenerife-asi-es-el-pueblo-que-desafia-a-los-alpes-66331/",
    "s": "Noticias del Vino",
@@ -211,7 +232,7 @@
   {
    "t": "Ocho vinos españoles, entre los de mejor calidad-precio del mundo según Wine Searcher",
    "u": "https://www.revistadelvino.es/2026/09/09/ocho-vinos-espanoles-entre-los-de-mejor-calidad-precio-del-mundo-segun-wine-searcher-2/",
-   "s": "Revista del Vino",
+   "s": "revistadelvino.es",
    "d": "2026-09-09T09:45:01.000Z",
    "tags": [
     "VINO",
@@ -222,7 +243,7 @@
   {
    "t": "Plátano de Canarias y Special K de Kellogg's se alían en el desayuno",
    "u": "https://www.canarias7.es/gastronomia-c7/platano-canarias-special-kelloggs-alian-desayuno-20260909104024-nt.html",
-   "s": "Canarias7",
+   "s": "canarias7.es",
    "d": "2026-09-09T09:40:24.000Z",
    "tags": [
     "CANARIAS"
@@ -278,26 +299,6 @@
     "CANARIAS"
    ],
    "img": "https://estaticos-cdn.prensaiberica.es/clip/55a404f1-be36-4f4e-8499-da44e35e98e3_16-9-discover-aspect-ratio_default_0_x506y596.jpg"
-  },
-  {
-   "t": "El guachinche de Tenerife donde la cocina canaria tradicional y las carnes a la brasa son protagonistas de su propuesta gastronómica",
-   "u": "https://www.eldia.es/tenerife/2026/09/09/guachinche-tenerife-cocina-canaria-tradicional-dv-130718842.amp.html",
-   "s": "Eldía",
-   "d": "2026-09-09T08:00:00.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://estaticos-cdn.prensaiberica.es/clip/31e935b3-6e57-4a29-bef8-ad5e231eb2ae_16-9-discover-aspect-ratio_default_0_x583y639.jpg"
-  },
-  {
-   "t": "¿La isla de los bienaventurados? Tenerife ha cambiado mucho",
-   "u": "https://www.teneriffa-news.com/es/los-lectores-escriben-para-los-lectores/tenerife-isla-afortunada-cambiada_1465136.html",
-   "s": "Teneriffa News",
-   "d": "2026-09-09T07:49:13.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://www.teneriffa-news.com/media/h/historisch/teneriffa-sued-frueher-hotel-bananen-2040x1350.jpg"
   }
  ]
 }
