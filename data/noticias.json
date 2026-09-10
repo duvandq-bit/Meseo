@@ -1,8 +1,148 @@
 {
- "updated": "2026-09-10T01:07:22.454Z",
+ "updated": "2026-09-10T09:48:10.841Z",
  "items": [
   {
-   "t": "¿Crisis en la alta cocina? Bruno Verjus cierra A Table el mismo día que el barcelonés Slow & Low hace lo propio renunciando a su estrella",
+   "t": "Grupo Kapital abre SEXTO, su nueva apuesta por la alta cocina de la mano del chef Juan Suárez de Lezo",
+   "u": "https://www.marca.com/tiramillas/gastronomia/2026/09/10/grupo-kapital-abre-sexto-nueva-apuesta-alta-cocina-mano-chef-juan-suarez-lezo.html",
+   "s": "MARCA",
+   "d": "2026-09-10T09:31:57.000Z",
+   "tags": [
+    "ALTA COCINA"
+   ],
+   "img": "https://objetos-xlk.estaticos-marca.com/files/article_main_microformat/uploads/2026/09/10/6aa277e52483f.jpeg"
+  },
+  {
+   "t": "Ferran Adrià, chef Michelin: \"Para un tomate frito de bote perfecto, no añadas azúcar; usa orégano fresco, nata, aceite de oliva y pimienta\"",
+   "u": "https://www.heraldo.es/noticias/gastronomia/2026/09/10/ferran-adria-chef-michelin-tomate-frito-bote-perfecto-no-anadas-azucar-usa-oregano-fresco-nata-aceite-oliva-pimienta-2049727.html",
+   "s": "heraldo.es",
+   "d": "2026-09-10T09:16:29.000Z",
+   "tags": [
+    "ALTA COCINA",
+    "MICHELIN"
+   ],
+   "img": "https://imagenes.heraldo.es/files/image_1920_1080/uploads/imagenes/2026/09/10/6aa27530065024-13269667.jpeg"
+  },
+  {
+   "t": "Así es el pan que representa a Galicia entre los 3 mejores de España: \"Necesitamos más de 5 horas de elaboración\"",
+   "u": "https://www.elespanol.com/quincemil/vivir/gastrogalicia/20260910/pan-representa-galicia-mejores-espana-necesitamos-horas-elaboracion-trt/1003744378661_0.html",
+   "s": "El Español",
+   "d": "2026-09-10T09:01:16.000Z",
+   "tags": [
+    "MICHELIN"
+   ],
+   "img": "https://s3.elespanol.com/k/imgp/cms/elespanol/11350849.jpg?p=f:jpeg/w:1706/h:960&h=HEUSqnPg"
+  },
+  {
+   "t": "La Guía Michelin se une a ‘Restaurantes contra el Hambre’",
+   "u": "https://www.hosteleriasalamanca.es/comer/comer-1/la-guia-michelin-se-une-a-restaurantes-contra-el-hambre",
+   "s": "hosteleriasalamanca.es",
+   "d": "2026-09-10T08:30:00.000Z",
+   "tags": [
+    "MICHELIN"
+   ],
+   "img": "https://www.hosteleriasalamanca.es/images/contents/704d08ca-d0e1-41ea-b1bd-b58532c27a37-1788957056.jpg"
+  },
+  {
+   "t": "El restaurante de este municipio que conquista con su gofio escaldado y carne a la parrilla: una parada obligatoria en Tenerife",
+   "u": "https://www.eldia.es/tenerife/2026/09/10/restaurante-municipio-tenerife-conquista-gofio-escaldado-dv-128201107.html",
+   "s": "Eldía",
+   "d": "2026-09-10T08:15:00.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://estaticos-cdn.prensaiberica.es/clip/e8638b35-6718-415a-adab-1cbc54d975de_16-9-discover-aspect-ratio_default_0_x555y349.jpg"
+  },
+  {
+   "t": "Andorra Taste convierte el territorio en ingrediente en su V edición con Francia como país invitado",
+   "u": "https://www.abc.es/espana/cataluna/andorra-taste-convierte-territorio-ingrediente-edicion-francia-20260910100648-nt.html",
+   "s": "ABC",
+   "d": "2026-09-10T08:06:48.000Z",
+   "tags": [
+    "ALTA COCINA"
+   ],
+   "img": "https://s1.abcstatics.com/abc/www/multimedia/espana/2026/09/10/Presentacion%20Andorra%20Taste%209%20septiembre-U60374182454auW-1200x630@diario_abc.jpg"
+  },
+  {
+   "t": "Los restaurantes MUNA y ZUARA harán un menú exclusivo en `Diálogos sobre Japón´",
+   "u": "https://majadahondamagazin.es/top/los-restaurantes-muna-y-zuara-haran-un-menu-exclusivo-en-dialogos-sobre-japon/",
+   "s": "Majadahonda Magazin",
+   "d": "2026-09-10T07:34:25.000Z",
+   "tags": [
+    "MICHELIN"
+   ]
+  },
+  {
+   "t": "Andorra Taste 2026 reivindica el producto y la cocina vinculada al territorio",
+   "u": "https://tusdestinos.net/andorra-taste-2026-chefs-cocina-montana/amp/",
+   "s": "Tusdestinos.net",
+   "d": "2026-09-10T06:55:50.000Z",
+   "tags": [
+    "ALTA COCINA"
+   ],
+   "img": "https://tusdestinos.net/wp-content/uploads/2026/09/andorra_taste1.jpg"
+  },
+  {
+   "t": "Iberostar Beachfront Resorts y el chef José Pizarro se estrenan en Tenerife",
+   "u": "https://www.revistahosteleria.com/texto-diario/mostrar/5990121/iberostar-beachfront-resorts-chef-jose-pizarro-estrenan-tenerife",
+   "s": "Revista HOSTELERÍA",
+   "d": "2026-09-10T06:40:42.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://www.revistahosteleria.com/images/showid/8108381"
+  },
+  {
+   "t": "Los mejores hoteles del mundo inaugurados en 2026",
+   "u": "https://guide.michelin.com/es/es/articulo/travel/mejores-hoteles-del-mundo-inaugurados-2026",
+   "s": "MICHELIN Guide",
+   "d": "2026-09-10T04:27:17.000Z",
+   "tags": [
+    "MICHELIN"
+   ]
+  },
+  {
+   "t": "Vuelve el Andorra Taste, el encuentro internacional de gastronomía de alta montaña",
+   "u": "https://www.lavanguardia.com/comer/al-dia/20260910/11630784/vuelve-andorra-taste-encuentro-internacional-gastronomia-alta-montana.amp.html",
+   "s": "lavanguardia.com",
+   "d": "2026-09-10T04:00:00.000Z",
+   "tags": [
+    "ALTA COCINA"
+   ],
+   "img": "https://www.lavanguardia.com/files/og_thumbnail/files/fp/uploads/2026/09/09/6aa176961b9b6.r_d.1178-326-5436.jpeg"
+  },
+  {
+   "t": "El enoturismo reserva finos viajes de sensaciones entre bodegas y paisajes",
+   "u": "https://diariodeavisos.elespanol.com/2026/09/enoturismo-viajes-sensaciones-bodegas-paisajes/",
+   "s": "diariodeavisos.elespanol.com",
+   "d": "2026-09-10T00:08:05.000Z",
+   "tags": [
+    "VINO",
+    "CANARIAS"
+   ],
+   "img": "https://cdn.diariodeavisos.com/wp-content/uploads/2026/09/vinedos.jpg"
+  },
+  {
+   "t": "Dónde se puede degustar la mejor pizza de Tenerife",
+   "u": "https://www.teneriffa-news.com/es/informacion-sobre-tenerife/las-cinco-pizzerias-mejor-valoradas-de-tenerife-segun-tripadvisor_1464396.html",
+   "s": "Teneriffa News",
+   "d": "2026-09-09T22:58:37.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://www.teneriffa-news.com/media/p/pizza-teneriffa-2400x1350.jpg"
+  },
+  {
+   "t": "Las Jornadas Colombinas llevan la gastronomía, el humor y la música a Agulo, San Sebastián y Valle Gran Rey",
+   "u": "https://www.canal4tenerife.tv/las-jornadas-colombinas-llevan-la-gastronomia-el-humor-y-la-musica-a-agulo-san-sebastian-y-valle-gran-rey/",
+   "s": "Canal 4 Tenerife",
+   "d": "2026-09-09T20:56:58.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://www.canal4tenerife.tv/wp-content/uploads/2026/09/090926-Kike-Perez-en-una-de-sus-ultimas-actuaciones-en-la-isla-de-La-Gomera-scaled-e1788987390220.jpg"
+  },
+  {
+   "t": "¿Crisis en la alta cocina? Bruno Verjus cierra Table y Slow & Low hace lo propio renunciando a su estrella",
    "u": "https://www.7canibales.com/noticias/crisis-en-la-alta-cocina-bruno-verjus-cierra/",
    "s": "7 Caníbales",
    "d": "2026-09-09T19:43:48.000Z",
@@ -12,9 +152,18 @@
    "img": "https://www.7canibales.com/wp-content/uploads/sites/2/2023/06/Bruno-Verjus-retrato.jpg"
   },
   {
+   "t": "Toni Romero homenajea al último tomate de la temporada en Bart Burger Gastronòmic",
+   "u": "https://www.catacultural.com/toni-romero-homenajea-al-ultimo-tomate-de-la-temporada-en-bart-burger-gastronomic/",
+   "s": "catacultural.com",
+   "d": "2026-09-09T19:00:11.000Z",
+   "tags": [
+    "ALTA COCINA"
+   ]
+  },
+  {
    "t": "Santa Cruz de Tenerife, capital gastronómica de España",
    "u": "https://www.canarias7.es/gastronomia-c7/santa-cruz-tenerife-capital-gastronomica-espana-20260909191740-nt.html",
-   "s": "canarias7.es",
+   "s": "Canarias7",
    "d": "2026-09-09T18:17:40.000Z",
    "tags": [
     "CANARIAS"
@@ -34,7 +183,7 @@
   {
    "t": "Los Realejos celebra la 9ª Fiesta de Vinos de Tenerife en la Playa de El Socorro",
    "u": "https://lavozcanaria.com/valle-de-la-orotava/general/los-realejos-celebra-la-9-fiesta-de-vinos-de-tenerife-en-la-playa-de-el-socorro",
-   "s": "lavozcanaria.com",
+   "s": "La Voz Canaria",
    "d": "2026-09-09T17:56:42.000Z",
    "tags": [
     "CANARIAS",
@@ -53,18 +202,20 @@
    "img": "https://www.teneriffa-news.com/media/fotostrecken/hotel-botanico/hotel-botanico-teneriffa-eingang-2400x1350.jpg"
   },
   {
-   "t": "Los restaurantes MUNA y ZUARA harán un menú exclusivo en `Diálogos sobre Japón´",
-   "u": "https://www.elconfidencialdigital.com/monarquia/articulo/an/restaurantes-muna-zuara-haran-menu-exclusivo-dialogos-japon/20260909173241153759.amp.html",
-   "s": "Confidencial Digital",
-   "d": "2026-09-09T17:32:41.000Z",
+   "t": "Los Realejos celebra este sábado 12 desde las 18:00 horas la 9ª Gran Fiesta de Vinos de Tenerife en la Playa de El Socorro",
+   "u": "https://losrealejos.es/ix-fiesta-vinos-tenerife-playa-socorro-2026/",
+   "s": "losrealejos.es",
+   "d": "2026-09-09T17:43:11.000Z",
    "tags": [
-    "MICHELIN"
-   ]
+    "VINO",
+    "CANARIAS"
+   ],
+   "img": "https://losrealejos.es/wp-content/uploads/2026/09/090926-Presentacion-IX-Gran-Fiesta-de-Vinos-de-Tenerife-2026-Playa-El-Socorro-scaled.jpeg"
   },
   {
    "t": "Martin Berasategui: “Cuando empecé en la cocina, mi reto era ser buen nieto, buen sobrino, buen hijo, buen hermano y estar por encima de las expectativas que tenían mis maestras”",
    "u": "https://www.lecturas.com/actualidad/martin-berasategui-cuando-empece-cocina-mi-reto-era-ser-buen-nieto-buen-sobrino-buen-hijo-buen-hermano-y-estar-por-encima-delas-expectativas-que-tenian-mis-maestras_198203",
-   "s": "Lecturas",
+   "s": "lecturas.com",
    "d": "2026-09-09T17:32:00.000Z",
    "tags": [
     "CHEF"
@@ -93,7 +244,7 @@
   {
    "t": "Santa Cruz de Tenerife celebra el Mojitos Vacilón Fest para despedir el verano con sabor cubano",
    "u": "https://eldigitalsur.com/vida-estilo/gastronomia-canaria/mojitos-vacilon-fest-santa-cruz-tenerife-despedida-verano/",
-   "s": "eldigitalsur.com",
+   "s": "El Digital Sur",
    "d": "2026-09-09T15:43:14.000Z",
    "tags": [
     "CANARIAS"
@@ -121,7 +272,7 @@
   {
    "t": "Marqués de Murrieta entra en el gran escaparate del lujo de la Fórmula 1",
    "u": "https://amp.expansion.com/estilo-vida/rincones-gastronomicos/2026/09/09/6aa177cfe5fdea04558b4570.html",
-   "s": "expansion.com",
+   "s": "Expansión",
    "d": "2026-09-09T15:18:46.000Z",
    "tags": [
     "MICHELIN"
@@ -147,158 +298,6 @@
     "ALTA COCINA"
    ],
    "img": "https://www.7canibales.com/wp-content/uploads/sites/2/2026/09/RUEDA-DE-PRENSA-ANDORRA-TASTE-2026.webp"
-  },
-  {
-   "t": "Santa Cruz de Tenerife despide el verano con 11 horas de música, comida y baile: toda la programación",
-   "u": "https://diariodeavisos.elespanol.com/2026/09/mojitos-vacilon-fest-santa-cruz/",
-   "s": "Diario de Avisos",
-   "d": "2026-09-09T13:51:16.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://cdn.diariodeavisos.com/wp-content/uploads/2026/09/mojito.jpg"
-  },
-  {
-   "t": "Bilbao desde la mesa: cocina vasca, producto local y alta gastronomía frente al Guggenheim",
-   "u": "https://viajar.elperiodico.com/amp/planes/gastro/bilbao-cocina-vasca-the-artist-133815800",
-   "s": "viajar.elperiodico.com",
-   "d": "2026-09-09T13:41:23.000Z",
-   "tags": [
-    "ALTA COCINA"
-   ],
-   "img": "https://estaticos-cdn.prensaiberica.es/clip/75d17866-69fd-46dd-a40e-83b5e739c539_16-9-discover-aspect-ratio_default_0_x750y350.jpg"
-  },
-  {
-   "t": "Más de la mitad de los canarios considera las papas arrugadas con mojo el plato más típico del archipiélago",
-   "u": "https://www.canarias7.es/gastronomia-c7/mitad-canarios-considera-papas-arrugadas-mojo-plato-20260909143143-nt_amp.html",
-   "s": "canarias7.es",
-   "d": "2026-09-09T13:31:43.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://s1.ppllstatics.com/canarias7/www/multimedia/gastronomia-c7/2026/09/09/papas-U82708624671wwC-1200x630@Canarias7.jpg"
-  },
-  {
-   "t": "El complejo de ocio de Tenerife con el sello de César Manrique que fue declarado Jardín Histórico",
-   "u": "https://www.abc.es/viajar/destinos/espana/complejo-ocio-tenerife-sello-cesar-manrique-declarado-20260909194424-nt.html",
-   "s": "ABC",
-   "d": "2026-09-09T12:30:26.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://s1.abcstatics.com/abc/www/multimedia/viajar/2026/09/07/aerea-U55367471010kRl-1200x630@diario_abc.jpg"
-  },
-  {
-   "t": "Las papas arrugadas mandan en Canarias: un 59,2 % de los canarios las elige como el emblema culinario regional",
-   "u": "https://www.eldia.es/canarias/2026/09/09/papas-arrugadas-mandan-canarias-59-134109669.amp.html",
-   "s": "Eldía",
-   "d": "2026-09-09T12:29:58.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://estaticos-cdn.prensaiberica.es/clip/54b76d9f-1446-45d4-9c64-637a3e03b8fc_16-9-discover-aspect-ratio_default_0.jpg"
-  },
-  {
-   "t": "48 horas en el Hotel César: un lujo silencioso con sensibilidad gastronómica",
-   "u": "https://www.eldia.es/ocio/gastronomia/2026/09/09/48-horas-hotel-cesar-lujo-134109030.html",
-   "s": "Eldía",
-   "d": "2026-09-09T12:26:12.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://estaticos-cdn.prensaiberica.es/clip/90f8bc4b-8d85-4415-ae82-e41412f0afd6_16-9-discover-aspect-ratio_default_1505219.jpg"
-  },
-  {
-   "t": "El viñedo más alto de Europa está en Tenerife: así es el pueblo que desafía a los Alpes",
-   "u": "https://www.noticiasdelvino.com/escapadas/2026/09/09/el-vinedo-mas-alto-de-europa-esta-en-tenerife-asi-es-el-pueblo-que-desafia-a-los-alpes-66331/",
-   "s": "Noticias del Vino",
-   "d": "2026-09-09T10:57:31.000Z",
-   "tags": [
-    "VINO",
-    "CANARIAS"
-   ],
-   "img": "https://www.noticiasdelvino.com/wp-content/uploads/El-vinedo-mas-alto-de-Europa-esta-en-Tenerife.jpg"
-  },
-  {
-   "t": "El chef Martín Berasategui revela cómo evitar que el pollo quede seco y hay un detalle clave",
-   "u": "https://www.lagacetadesalamanca.es/virales/chef-martin-berasategui-revela-evitar-pollo-quede-20260907121300-nt.html",
-   "s": "La Gaceta de Salamanca",
-   "d": "2026-09-09T10:13:00.000Z",
-   "tags": [
-    "CHEF"
-   ],
-   "img": "https://s2.ppllstatics.com/lagacetadesalamanca/www/multimedia/virales/2026/09/07/Dise%c3%b1o%20sin%20t%c3%adtulo%20(3)-RNAFwrRcqUEoKAQzkCGz9AO-1200x840@Gaceta%20Salamanca.jpg"
-  },
-  {
-   "t": "Ocho vinos españoles, entre los de mejor calidad-precio del mundo según Wine Searcher",
-   "u": "https://www.revistadelvino.es/2026/09/09/ocho-vinos-espanoles-entre-los-de-mejor-calidad-precio-del-mundo-segun-wine-searcher-2/",
-   "s": "revistadelvino.es",
-   "d": "2026-09-09T09:45:01.000Z",
-   "tags": [
-    "VINO",
-    "CANARIAS"
-   ],
-   "img": "https://www.revistadelvino.es/wp-content/uploads/2026/09/MONTE-YERGA-RAMON-BILBAO.jpg"
-  },
-  {
-   "t": "Plátano de Canarias y Special K de Kellogg's se alían en el desayuno",
-   "u": "https://www.canarias7.es/gastronomia-c7/platano-canarias-special-kelloggs-alian-desayuno-20260909104024-nt.html",
-   "s": "canarias7.es",
-   "d": "2026-09-09T09:40:24.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://s3.ppllstatics.com/canarias7/www/multimedia/gastronomia-c7/2026/09/09/kanari.jpg"
-  },
-  {
-   "t": "Santa Cruz de Tenerife, Capital Española de la Gastronomía 2027: el nuevo paraíso foodie de Canarias",
-   "u": "https://www.que.es/2026/09/09/capital-gastronomia-2027-santa-cruz/",
-   "s": "que.es",
-   "d": "2026-09-09T09:22:00.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://static.que.es/wp-content/uploads/2025/09/Vista-aerea-de-drones-de-Puerto-de-la-Cruz-en-Tenerife.-Freepik.webp"
-  },
-  {
-   "t": "Santa Cruz de Tenerife será la Capital Española de la Gastronomía en 2027",
-   "u": "https://www.hosteleriasalamanca.es/noticias-hosteleria/septiembre-2026/santa-cruz-tenerife-sera-capital-espanola-gastronomia-2027",
-   "s": "Hostelería Salamanca",
-   "d": "2026-09-09T09:08:00.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://www.hosteleriasalamanca.es/images/contents/951b81c6-ba0f-4d41-84d6-5c43f4547e79-1788945892.jpg"
-  },
-  {
-   "t": "Santa Cruz y Adeje estrenan descuentos en más de 1.000 productos para bares y restaurantes",
-   "u": "https://diariodeavisos.elespanol.com/2026/09/descuentos-bares-restaurantes-canarias-transgourmet/",
-   "s": "Diario de Avisos",
-   "d": "2026-09-09T09:05:07.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://cdn.diariodeavisos.com/wp-content/uploads/2026/09/GM.jpg"
-  },
-  {
-   "t": "Martín Berasategui",
-   "u": "https://www.latribunadeguadalajara.es/tags/63144/martin-berasategui?p",
-   "s": "La Tribuna de Guadalajara",
-   "d": "2026-09-09T08:51:57.000Z",
-   "tags": [
-    "CHEF"
-   ],
-   "img": "https://www.latribunadeguadalajara.es/entorno/TGU_ImagenFB.png"
-  },
-  {
-   "t": "Raciones gigantes y auténtica comida canaria: así es el restaurante de Las Palmas de Gran Canaria que no te puedes perder",
-   "u": "https://www.laprovincia.es/las-palmas/2026/09/09/restaurante-palmas-gran-canaria-precios-unicos-dv-122725090.amp.html",
-   "s": "La Provincia",
-   "d": "2026-09-09T08:30:00.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://estaticos-cdn.prensaiberica.es/clip/55a404f1-be36-4f4e-8499-da44e35e98e3_16-9-discover-aspect-ratio_default_0_x506y596.jpg"
   }
  ]
 }
