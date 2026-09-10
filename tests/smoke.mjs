@@ -8678,12 +8678,25 @@ test('Multi-restaurante: nadie lee el nombre del vecino en su propia formación'
   assert(/title:'Leyenda Viviente de \{casa\}'/.test(html) && /title:'\{CASA\} ASCENDIDO ∞'/.test(html),
     'los dos títulos con marca usan el marcador, no el nombre escrito a fuego');
 
-  // themes.json trae el nombre de cada restaurante en sus dos formas.
+  // themes.json trae el nombre de cada restaurante en sus dos formas, y los
+  // ocho colores de marca en el formato que applyTheme acepta.
   const th = JSON.parse(read('data/themes.json'));
+  const TOKENS = ['primary','secondary','accent','accentHi','accent2','accentDeep','ink','paper'];
   for (const v of th.venues) {
     assert(v.casa, `al restaurante «${v.id}» le falta «casa» (el nombre dentro de una frase)`);
     assert(v.rotulo, `al restaurante «${v.id}» le falta «rotulo» (el nombre con el que se presenta)`);
+    for (const k of TOKENS)
+      assert(/^#[0-9a-fA-F]{6}$/.test((v.brand || {})[k] || ''),
+        `«${v.id}» necesita el color ${k} en formato #rrggbb: applyTheme descarta cualquier otra cosa y el token se queda con el del restaurante anterior`);
   }
+  assert(th.venues.some(v => v.id === 'mb'), 'falta M.B. en el registro de restaurantes');
+
+  // La plantilla de copiar-pegar NO es un restaurante y no puede salir en el
+  // selector: aparecía como «NUEVO RESTAURANTE · Próximamente» al lado de los
+  // de verdad, anunciando algo que no existe.
+  assert(/v\.id !== 'plantilla'/.test(html), 'la plantilla no puede salir en el selector');
+  assert((html.match(/v\.id !== 'plantilla'/g) || []).length >= 2,
+    'hay dos sitios que listan restaurantes (el selector y el sincronizador de idioma): los dos la esconden');
 
   // Y el barrido: ningún texto NUEVO puede volver a nombrar Txoko a fuego. La
   // carta queda fuera —ahí el nombre es contenido del restaurante y se sustituye

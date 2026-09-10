@@ -26,6 +26,29 @@
    "rotulo_en": "Txoko by Martín Berasategui"
   },
   {
+   "id": "mb",
+   "enabled": false,
+   "name": "M.B.",
+   "logoSup": "MB",
+   "eyebrow": "Tenerife",
+   "casa": "M.B.",
+   "rotulo": "M.B. by Martín Berasategui",
+   "rotulo_en": "M.B. by Martín Berasategui",
+   "subtitle": "by Martín Berasategui · Formación de Equipo",
+   "subtitle_en": "by Martín Berasategui · Team Training",
+   "title": "Meseo · Formación de sala",
+   "brand": {
+    "primary": "#26364f",
+    "secondary": "#41597a",
+    "accent": "#b99055",
+    "accentHi": "#d9b478",
+    "accent2": "#c8a163",
+    "accentDeep": "#6d5330",
+    "ink": "#1a2029",
+    "paper": "#f2ece1"
+   }
+  },
+  {
    "id": "plantilla",
    "enabled": false,
    "name": "NUEVO RESTAURANTE",

@@ -52,7 +52,7 @@
 <meta property="og:description" content="Formación de equipos de sala: carta, alérgenos, vinos, exámenes y juegos de repaso.">
 <meta property="og:url" content="https://meseo.es/">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"Meseo","url":"https://meseo.es/"}</script>
-<meta name="app-version" content="7.421">
+<meta name="app-version" content="7.422">
 <meta name="app-build" content="May 2026">
 <meta name="theme-color" content="#1c2a22">
 <!-- ═══ PWA ═══ -->
@@ -1093,7 +1093,12 @@ async function initVenues(){
   // con el héroe del login ya en marca Meseo, el restaurante vive aquí —
   // «Txoko puede aparecer como uno de los restaurantes a escoger». Los
   // bloqueados (Próximamente) siguen visibles para enseñar lo que viene.
-  const all = (THEMES && Array.isArray(THEMES.venues)) ? THEMES.venues.filter(v => v && v.id && v.name) : [];
+  // La plantilla de copiar-pegar de themes.json NO es un restaurante: salía en
+  // el selector como «NUEVO RESTAURANTE · Próximamente», al lado de los de
+  // verdad. Con un solo venue pasaba por un adelanto; con M.B. dado de alta es
+  // ruido, y encima anuncia algo que no existe.
+  const all = (THEMES && Array.isArray(THEMES.venues))
+    ? THEMES.venues.filter(v => v && v.id && v.name && v.id !== 'plantilla') : [];
   if(all.length) renderVenuePicker(all, current.id);
 }
 
@@ -1709,7 +1714,7 @@ const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><p
 const SRC = 'src';
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='7.421';  // sincronizada con sw.js VERSION (guard de CI)
+const APP_VERSION='7.422';  // sincronizada con sw.js VERSION (guard de CI)
 const APP_BUILD='Jul 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;
@@ -9423,7 +9428,7 @@ function renderLogin(){
   if(subtitleEl) subtitleEl.textContent = LANG==='en' ? 'Train the craft · meseo.es' : 'El oficio se entrena · meseo.es';
   // Venue dropdown follows the language too (label + "Próximamente" entries)
   if(typeof THEMES !== 'undefined' && THEMES && Array.isArray(THEMES.venues)){
-    const _all = THEMES.venues.filter(v => v && v.id && v.name);
+    const _all = THEMES.venues.filter(v => v && v.id && v.name && v.id !== 'plantilla');
     if(_all.length && ACTIVE_VENUE) renderVenuePicker(_all, ACTIVE_VENUE.id);
   }
   // Restore checkbox state
