@@ -1,10 +1,99 @@
 {
- "updated": "2026-09-10T09:48:10.841Z",
+ "updated": "2026-09-10T15:00:07.341Z",
  "items": [
+  {
+   "t": "Ángel León, tres estrellas Michelin en Aponiente: «Nos hemos olvidado de caminar, de mirar el cielo»",
+   "u": "https://www.elmira.es/articulo/noticias-interesantes/angel-leon-tres-estrellas-michelin-aponiente-nos-hemos-olvidado-caminar-mirar-cielo/20260910153000615906.html",
+   "s": "El MIRA",
+   "d": "2026-09-10T13:30:00.000Z",
+   "tags": [
+    "ALTA COCINA",
+    "MICHELIN"
+   ],
+   "img": "https://www.elmira.es/media/elmira/images/2026/09/10/2026091003102021663.jpg"
+  },
+  {
+   "t": "Andorra Taste situará la gastronomía ante el desafío de proteger el patrimonio natural y alimentario",
+   "u": "https://www.revistagranhotel.com/andorra-taste-situara-la-gastronomia-ante-el-desafio-de-proteger-el-patrimonio-natural-y-alimentario/",
+   "s": "revistagranhotel.com",
+   "d": "2026-09-10T12:49:35.000Z",
+   "tags": [
+    "ALTA COCINA"
+   ]
+  },
+  {
+   "t": "Un cocinero de un restaurante de Candelaria competirá por la mejor paella del mundo",
+   "u": "https://www.eldia.es/tenerife/2026/09/10/cocinero-restaurante-candelaria-competira-mejor-134145882.html",
+   "s": "eldia.es",
+   "d": "2026-09-10T12:30:42.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://estaticos-cdn.prensaiberica.es/clip/eca7a1e3-a945-413e-ae0c-398e5e867417_16-9-discover-aspect-ratio_default_0_x758y242.jpg"
+  },
+  {
+   "t": "El rioja de Marqués de Murrieta, vino elegido para la zona VIP del GP de España en Madring",
+   "u": "https://www.teleprensa.com/articulo/deportes/rioja-marques-murrieta-vino-elegido-zona-vip-gp-espana-madring/202609101217212504150.html",
+   "s": "Teleprensa",
+   "d": "2026-09-10T12:17:21.000Z",
+   "tags": [
+    "MICHELIN",
+    "VINO"
+   ]
+  },
+  {
+   "t": "Zafir: un restaurante de alta cocina nacido del alma de Andalucía, en las alturas de Mijas",
+   "u": "https://www.diariosur.es/malagaenlamesa/restaurantes/zafir-restaurante-alta-cocina-nacido-alma-andalucia-20260910134134-nt.html",
+   "s": "Diario Sur",
+   "d": "2026-09-10T11:41:34.000Z",
+   "tags": [
+    "ALTA COCINA"
+   ],
+   "img": "https://s2.ppllstatics.com/diariosur/www/multimedia/malagaenlamesa/2026/09/10/Zafir-64-kulC-U3016570702457GI-1200x840@Diario%20Sur.jpg"
+  },
+  {
+   "t": "Cierra el restaurante Slow&Low y Barcelona pierde otra estrella Michelin: “La empresa seguirá adelante, pero sirviendo tapas tradicionales”",
+   "u": "https://www.infobae.com/espana/2026/09/10/cierra-el-restaurante-slowlow-y-barcelona-pierde-otra-estrella-michelin-la-empresa-seguira-adelante-pero-sirviendo-tapas-tradicionales/",
+   "s": "Infobae",
+   "d": "2026-09-10T11:21:00.000Z",
+   "tags": [
+    "MICHELIN"
+   ],
+   "img": "https://www.infobae.com/resizer/v2/TNRV6BNK5JEZBEVK5X44DYC45Q.jpg?auth=7c2138c88afe77498e82f1069633f8690908578614cdacf34a4c885e4809d691&smart=true&width=1200&height=630&quality=85"
+  },
+  {
+   "t": "Ferran Adrià desvela el truco para que el tomate frito de bote sepa a salsa casera",
+   "u": "https://www.larazon.es/gastronomia/ferran-adria-desvela-truco-que-tomate-frito-bote-sepa-salsa-casera-b50m_202609106aa287716e80d3110846dc76.html",
+   "s": "La Razón",
+   "d": "2026-09-10T10:33:21.000Z",
+   "tags": [
+    "ALTA COCINA"
+   ],
+   "img": "https://fotografias-2.larazon.es/clipping/cmsimages01/2026/09/10/6796DE76-288B-4C1F-A2EE-637DB45F5464/ferran-adria-desvela-truco-que-tomate-frito-bote-sepa-salsa-casera_98.jpg?crop=1077,606,x0,y138&width=1900&height=1069&optimize=low&format=webply"
+  },
+  {
+   "t": "Santa Cruz de Tenerife, nueva Capital Española de la Gastronomía 2027: un año de 137 eventos para conquistar el paladar",
+   "u": "https://lasgastrocronicas.com/santa-cruz-de-tenerife-nueva-capital-espanola-de-la-gastronomia-2027-un-ano-de-137-eventos-para-conquistar-el-paladar/",
+   "s": "Las Gastrocrónicas",
+   "d": "2026-09-10T10:15:27.000Z",
+   "tags": [
+    "CANARIAS"
+   ]
+  },
+  {
+   "t": "Cocituber, influencer gastronómico en España: \"Tajao acabó siendo el pueblo más famoso de Tenerife para",
+   "u": "https://diariodeavisos.elespanol.com/2026/09/cocituber-influencer-gastronomico-tajao-tenerife-historia-pescado/",
+   "s": "diariodeavisos.elespanol.com",
+   "d": "2026-09-10T10:04:36.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://cdn.diariodeavisos.com/wp-content/uploads/2026/09/cats-20.jpg"
+  },
   {
    "t": "Grupo Kapital abre SEXTO, su nueva apuesta por la alta cocina de la mano del chef Juan Suárez de Lezo",
    "u": "https://www.marca.com/tiramillas/gastronomia/2026/09/10/grupo-kapital-abre-sexto-nueva-apuesta-alta-cocina-mano-chef-juan-suarez-lezo.html",
-   "s": "MARCA",
+   "s": "marca.com",
    "d": "2026-09-10T09:31:57.000Z",
    "tags": [
     "ALTA COCINA"
@@ -35,7 +124,7 @@
   {
    "t": "La Guía Michelin se une a ‘Restaurantes contra el Hambre’",
    "u": "https://www.hosteleriasalamanca.es/comer/comer-1/la-guia-michelin-se-une-a-restaurantes-contra-el-hambre",
-   "s": "hosteleriasalamanca.es",
+   "s": "Hostelería Salamanca",
    "d": "2026-09-10T08:30:00.000Z",
    "tags": [
     "MICHELIN"
@@ -45,7 +134,7 @@
   {
    "t": "El restaurante de este municipio que conquista con su gofio escaldado y carne a la parrilla: una parada obligatoria en Tenerife",
    "u": "https://www.eldia.es/tenerife/2026/09/10/restaurante-municipio-tenerife-conquista-gofio-escaldado-dv-128201107.html",
-   "s": "Eldía",
+   "s": "eldia.es",
    "d": "2026-09-10T08:15:00.000Z",
    "tags": [
     "CANARIAS"
@@ -103,7 +192,7 @@
   {
    "t": "Vuelve el Andorra Taste, el encuentro internacional de gastronomía de alta montaña",
    "u": "https://www.lavanguardia.com/comer/al-dia/20260910/11630784/vuelve-andorra-taste-encuentro-internacional-gastronomia-alta-montana.amp.html",
-   "s": "lavanguardia.com",
+   "s": "La Vanguardia",
    "d": "2026-09-10T04:00:00.000Z",
    "tags": [
     "ALTA COCINA"
@@ -154,7 +243,7 @@
   {
    "t": "Toni Romero homenajea al último tomate de la temporada en Bart Burger Gastronòmic",
    "u": "https://www.catacultural.com/toni-romero-homenajea-al-ultimo-tomate-de-la-temporada-en-bart-burger-gastronomic/",
-   "s": "catacultural.com",
+   "s": "Catacultural",
    "d": "2026-09-09T19:00:11.000Z",
    "tags": [
     "ALTA COCINA"
@@ -173,12 +262,11 @@
   {
    "t": "La conexión desconocida de Dabiz Muñoz con un pueblo de Cuenca de solo 150 habitantes",
    "u": "https://www.noticiasdelvino.com/escapadas/2026/09/09/la-conexion-desconocida-de-dabiz-munoz-con-un-pueblo-de-cuenca-de-solo-150-habitantes-68966/",
-   "s": "Noticias del Vino",
+   "s": "noticiasdelvino.com",
    "d": "2026-09-09T18:03:10.000Z",
    "tags": [
     "ALTA COCINA"
-   ],
-   "img": "https://www.noticiasdelvino.com/wp-content/uploads/image-217.png"
+   ]
   },
   {
    "t": "Los Realejos celebra la 9ª Fiesta de Vinos de Tenerife en la Playa de El Socorro",
@@ -211,93 +299,6 @@
     "CANARIAS"
    ],
    "img": "https://losrealejos.es/wp-content/uploads/2026/09/090926-Presentacion-IX-Gran-Fiesta-de-Vinos-de-Tenerife-2026-Playa-El-Socorro-scaled.jpeg"
-  },
-  {
-   "t": "Martin Berasategui: “Cuando empecé en la cocina, mi reto era ser buen nieto, buen sobrino, buen hijo, buen hermano y estar por encima de las expectativas que tenían mis maestras”",
-   "u": "https://www.lecturas.com/actualidad/martin-berasategui-cuando-empece-cocina-mi-reto-era-ser-buen-nieto-buen-sobrino-buen-hijo-buen-hermano-y-estar-por-encima-delas-expectativas-que-tenian-mis-maestras_198203",
-   "s": "lecturas.com",
-   "d": "2026-09-09T17:32:00.000Z",
-   "tags": [
-    "CHEF"
-   ]
-  },
-  {
-   "t": "Llega la fiesta más divertida para despedir el verano: Santa Cruz de Tenerife celebra el Mojitos Vacilón Fest con una programación para todos los públicos",
-   "u": "https://www.eldia.es/santa-cruz-de-tenerife/2026/09/09/llega-fiesta-divertida-despedir-verano-santa-cruz-tenerife-dv-134116721.amp.html",
-   "s": "Eldía",
-   "d": "2026-09-09T16:34:24.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://estaticos-cdn.prensaiberica.es/clip/3b6228bc-bad3-4bb2-81ff-5810d7adfbf1_16-9-discover-aspect-ratio_default_0_x466y420.jpg"
-  },
-  {
-   "t": "Las Islas Canarias inauguran la \"Ruta de los selfies\" para conseguir la foto perfecta de las vacaciones",
-   "u": "https://www.teneriffa-news.com/es/guia-turistica-de-las-islas-canarias/canarias-instala-24-puntos-para-selfies-y-estrena-el-primero-en-arucas_1464805.html",
-   "s": "Teneriffa News",
-   "d": "2026-09-09T15:51:22.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://www.teneriffa-news.com/media/s/selfie-route-gran-canaria-2400x1350.jpg"
-  },
-  {
-   "t": "Santa Cruz de Tenerife celebra el Mojitos Vacilón Fest para despedir el verano con sabor cubano",
-   "u": "https://eldigitalsur.com/vida-estilo/gastronomia-canaria/mojitos-vacilon-fest-santa-cruz-tenerife-despedida-verano/",
-   "s": "El Digital Sur",
-   "d": "2026-09-09T15:43:14.000Z",
-   "tags": [
-    "CANARIAS"
-   ]
-  },
-  {
-   "t": "Fiesta del Carmen en el Puerto de la Cruz, en Tenerife: ¡toda la información!",
-   "u": "https://www.teneriffa-news.com/es/puerto-de-la-cruz-es/fiesta-del-carmen-puerto-de-es_1464907.html",
-   "s": "Teneriffa News",
-   "d": "2026-09-09T15:40:54.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://www.teneriffa-news.com/media/h/puerto-de-la-cruz-teneriffa-hafen-vorbereitung-feiern-scaled-2400x1350.jpg"
-  },
-  {
-   "t": "Santa Cruz de Tenerife, elegida Capital Española de la Gastronomía 2027",
-   "u": "https://elpais.com/gastronomia/2026-09-09/santa-cruz-de-tenerife-elegida-capital-espanola-de-la-gastronomia-2027.html",
-   "s": "EL PAÍS",
-   "d": "2026-09-09T15:36:32.000Z",
-   "tags": [
-    "CANARIAS"
-   ]
-  },
-  {
-   "t": "Marqués de Murrieta entra en el gran escaparate del lujo de la Fórmula 1",
-   "u": "https://amp.expansion.com/estilo-vida/rincones-gastronomicos/2026/09/09/6aa177cfe5fdea04558b4570.html",
-   "s": "Expansión",
-   "d": "2026-09-09T15:18:46.000Z",
-   "tags": [
-    "MICHELIN"
-   ],
-   "img": "https://e01-phantom-expansion.uecdn.es/a142507b8f37d940fead7842ca4f19cd/crop/0x689/2048x2055/resize/1200/f/webp/assets/multimedia/imagenes/2026/09/09/17889668861159.jpg"
-  },
-  {
-   "t": "Andorra Taste pone la cocina de alta montaña en el centro de su quinta edición",
-   "u": "https://www.vinetur.com/amp/20260909106848/andorra-taste-pone-la-cocina-de-alta-montana-en-el-centro-de-su-quinta-edicion.html",
-   "s": "Vinetur",
-   "d": "2026-09-09T15:12:00.000Z",
-   "tags": [
-    "ALTA COCINA"
-   ],
-   "img": "https://www.vinetur.com/imagenes/2026/september/9/20260909-191257-4949.jpg"
-  },
-  {
-   "t": "Andorra Taste situará la gastronomía ante el desafío de proteger el patrimonio natural y alimentario",
-   "u": "https://www.7canibales.com/noticias/andorra-taste-2026/",
-   "s": "7 Caníbales",
-   "d": "2026-09-09T14:45:38.000Z",
-   "tags": [
-    "ALTA COCINA"
-   ],
-   "img": "https://www.7canibales.com/wp-content/uploads/sites/2/2026/09/RUEDA-DE-PRENSA-ANDORRA-TASTE-2026.webp"
   }
  ]
 }
