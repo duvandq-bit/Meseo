@@ -52,7 +52,7 @@
 <meta property="og:description" content="Formación de equipos de sala: carta, alérgenos, vinos, exámenes y juegos de repaso.">
 <meta property="og:url" content="https://meseo.es/">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"Meseo","url":"https://meseo.es/"}</script>
-<meta name="app-version" content="7.438">
+<meta name="app-version" content="7.439">
 <meta name="app-build" content="May 2026">
 <meta name="theme-color" content="#1c2a22">
 <!-- ═══ PWA ═══ -->
@@ -1570,10 +1570,27 @@ const _VENUE_POR_DEFECTO = 'txoko';
 // cualquier restaurante —incluidos los que todavía están cerrados— y no escribe
 // ni aparece en ninguna puntuación. Si contara, el ranking del equipo mediría a
 // quien está revisando la carta, no a quien se la está aprendiendo.
+// La ficha de alguien, TOLERANTE CON LAS MAYÚSCULAS. El rol se guarda bajo el
+// nombre tal como viene de la nube (`r.name`), pero se entra con el que se
+// tecleó — o con el que quedó guardado en la sesión de hace noventa días. Si
+// difieren en una sola letra, el rol no se encuentra: la cuenta pierde el panel
+// y el selector de restaurante, y nada parece roto. Buscar exacto primero
+// (barato y lo normal) y sólo si falla recorrer comparando en minúsculas.
+function _ficha(nombre){
+  try{
+    if(!nombre) return null;
+    const d = DB.employees || {};
+    if(d[nombre]) return d[nombre];
+    const k = String(nombre).toLowerCase();
+    for(const n in d) if(n.toLowerCase() === k) return d[n];
+  }catch(_){}
+  return null;
+}
+
 function _esAdmin(nombre){
   try{
-    const n = nombre || (typeof currentUser!=='undefined' ? currentUser : null);
-    return !!(n && DB.employees[n] && DB.employees[n].role === 'admin');
+    const e = _ficha(nombre || (typeof currentUser!=='undefined' ? currentUser : null));
+    return !!(e && e.role === 'admin');
   }catch(_){ return false; }
 }
 
@@ -1606,14 +1623,15 @@ function _supSyncMando(){
 function _esMando(nombre){
   try{
     const n = nombre || (typeof currentUser!=='undefined' ? currentUser : null);
-    const r = n && DB.employees[n] && DB.employees[n].role;
+    const e = _ficha(n);
+    const r = e && e.role;
     return r === 'owner' || r === 'manager';
   }catch(_){ return false; }
 }
 
 function _venueActual(){
   try{
-    const e = (typeof currentUser!=='undefined' && currentUser) ? DB.employees[currentUser] : null;
+    const e = (typeof currentUser!=='undefined' && currentUser) ? _ficha(currentUser) : null;
     // Para el administrador manda el restaurante ELEGIDO, no el de su ficha:
     // ésa es toda la gracia de la cuenta. Para el resto manda el de la nube,
     // que lo fijó el código del manager y no se cambia tocando una tarjeta.
@@ -1855,7 +1873,7 @@ const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><p
 const SRC = 'src';
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='7.438';  // sincronizada con sw.js VERSION (guard de CI)
+const APP_VERSION='7.439';  // sincronizada con sw.js VERSION (guard de CI)
 const APP_BUILD='Jul 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;
@@ -3880,8 +3898,20 @@ function saveDB(){
   _saveDBTimer = setTimeout(()=>{ _saveDBTimer = null; _saveDBNow(); }, 1500);
   return true;
 }
+// LA FICHA SE BUSCA SIN MIRAR MAYÚSCULAS, y ésta es la razón:
+//
+// El rol y el restaurante los guarda la nube bajo el nombre TAL COMO está allí
+// («Administrador»). Se entra con el que se teclea, o con el que quedó en la
+// sesión de hace noventa días. Si no coinciden en la caja, este `getEmp`
+// creaba una ficha NUEVA, vacía y sin rol, bajo el nombre tecleado — y a
+// partir de ahí la app leía esa: la cuenta de administración perdía el panel y
+// el selector de restaurante a mitad de sesión, sin que nada pareciera roto.
+//
+// Se reprodujo así: `_esAdmin()` daba true, se abría Ajustes, y pasaba a false.
 function getEmp(name){
-  if(!DB.employees[name])DB.employees[name]={name,created:Date.now(),topicScores:{allergens:{correct:0,total:0},ingredients:{correct:0,total:0},history:{correct:0,total:0}},knownDishes:{},examCorrect:{},sessions:[],fcHistory:[]};
+  const ya = _ficha(name);
+  if(ya) return ya;
+  DB.employees[name]={name,created:Date.now(),topicScores:{allergens:{correct:0,total:0},ingredients:{correct:0,total:0},history:{correct:0,total:0}},knownDishes:{},examCorrect:{},sessions:[],fcHistory:[]};
   return DB.employees[name];
 }
 
@@ -10061,7 +10091,14 @@ function openAjustes(){
       </label>
       <div id="ajTmCount" style="font-family:'DM Mono',monospace;font-size:.68rem;color:#8a6a2c;margin-bottom:.4rem">${_en?'Loading…':'Cargando…'}</div>
       <button id="ajTmWipe" style="width:100%;background:transparent;border:1px solid rgba(200,60,60,.35);color:#b0432b;border-radius:10px;padding:.6rem;font-family:'Quicksand',sans-serif;font-weight:700;font-size:.78rem;cursor:pointer">${_en?'Delete my behavior data':'Borrar mis datos de comportamiento'}</button>
-      <button id="ajLogout" style="width:100%;margin-top:1.3rem;background:transparent;border:1px solid rgba(200,60,60,.4);color:#c0392b;border-radius:10px;padding:.7rem;font-family:'Quicksand',sans-serif;font-weight:700;font-size:.85rem;cursor:pointer">${_en?'Log out':'Cerrar sesión'}</button>
+      <!-- La versión, a la vista. Dos veces se ha perdido una tarde preguntando
+           «¿qué versión te corre?» sin forma de saberlo: la consola de un móvil
+           no se abre en un pase. Va también quién eres y en qué restaurante
+           estás, que es justo lo que hace falta para diagnosticar a distancia. -->
+      <div style="font-family:'DM Mono',monospace;font-size:.58rem;color:#8a7a5c;text-align:center;margin-top:1.3rem;line-height:1.7;letter-spacing:.04em">
+        v${APP_VERSION} · ${escapeHTML(currentUser||'—')}${_esAdmin()?' · admin':(_esMando()?' · '+(DB.employees[currentUser]&&DB.employees[currentUser].role||''):'')} · ${escapeHTML(_venueActual())}
+      </div>
+      <button id="ajLogout" style="width:100%;margin-top:.5rem;background:transparent;border:1px solid rgba(200,60,60,.4);color:#c0392b;border-radius:10px;padding:.7rem;font-family:'Quicksand',sans-serif;font-weight:700;font-size:.85rem;cursor:pointer">${_en?'Log out':'Cerrar sesión'}</button>
     </div>`;
   document.body.appendChild(overlay);
   overlay.addEventListener('click', e => { if(e.target===overlay) overlay.remove(); });

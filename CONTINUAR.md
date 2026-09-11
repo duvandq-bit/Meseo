@@ -1,6 +1,6 @@
 # Por dónde seguir
 
-Estado a **11 de septiembre de 2026** · versión **7.438** · 333 pruebas en verde ·
+Estado a **11 de septiembre de 2026** · versión **7.439** · 333 pruebas en verde ·
 auditoría de alérgenos 0/0.
 
 ---
@@ -58,6 +58,22 @@ nube es Supabase.
 
 Cada una costó una reversión o una vergüenza. Están aquí para que no vuelva a
 pasar.
+
+### `getEmp` creaba fichas duplicadas por las mayúsculas
+
+El rol y el restaurante los guarda la nube bajo el nombre **tal como está
+allí** (`r.name`). Se entra con el que se teclea, o con el que quedó en la
+sesión de hace noventa días. Si no coincidían en la caja, `getEmp` creaba una
+ficha NUEVA, vacía y sin rol, bajo el nombre tecleado — y desde ahí la app leía
+esa. La cuenta de administración perdía el panel y el selector de restaurante
+**a mitad de sesión**, sin que nada pareciera roto.
+
+Se reprodujo así: `_esAdmin()` daba `true`, se abría Ajustes, y pasaba a
+`false`. Ahora `getEmp` y `_ficha` buscan sin mirar mayúsculas. Si se añade
+algo que busque en `DB.employees` por clave exacta, vuelve el problema.
+
+**La versión, el usuario, el rol y el restaurante salen en Ajustes**, abajo del
+todo. Para no volver a perder una tarde preguntando «¿qué versión te corre?».
 
 ### La administración no puntúa: lo dice el SERVIDOR, no el móvil
 

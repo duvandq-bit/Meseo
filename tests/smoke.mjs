@@ -9333,7 +9333,7 @@ test('El panel sale por ROL, y la cuenta de administración no lo tiene', () => 
   const src = html.slice(html.indexOf('function _supSyncMando(){'), html.indexOf('function _venueActual(){'));
   assert(src.length > 200, 'no encuentro el resolutor de mando');
   const F = new Function('DB', 'currentUser', 'document', // eslint-disable-line no-new-func
-    html.slice(html.indexOf('function _esAdmin(nombre){'), html.indexOf('function _venueActual(){')) +
+    html.slice(html.indexOf('function _ficha(nombre){'), html.indexOf('function _venueActual(){')) +
     '; return {mando:_esMando, admin:_esAdmin, sync:_supSyncMando};');
   const caso = (rol) => {
     const boton = { style:{ display:'(sin tocar)' } };
@@ -9352,6 +9352,44 @@ test('El panel sale por ROL, y la cuenta de administración no lo tiene', () => 
   for (const rol of ['staff', undefined, null, 'cualquier_cosa'])
     assert(!caso(rol).visible, `un '${rol}' NO puede ver la pestaña del panel`);
   assert(caso('admin').admin === true, '_esAdmin tiene que seguir reconociendo a la cuenta de administración');
+
+  // El rol se guarda bajo el nombre TAL COMO viene de la nube, pero se entra
+  // con el que se tecleó — o con el que quedó en la sesión de hace noventa
+  // días. Si difieren en una letra y la búsqueda es exacta, el rol no aparece:
+  // la cuenta pierde el panel y el selector de restaurante, y nada parece roto.
+  {
+    const boton = { style:{ display:'(sin tocar)' } };
+    const doc = { getElementById: id => id === 'navSupervisor' ? boton : null };
+    // La nube guardó «Administrador»; se entra como «administrador».
+    const api = F({ employees: { 'Administrador': { name:'Administrador', role:'admin' } } }, 'administrador', doc);
+    assert(api.admin() === true,
+      'el rol tiene que encontrarse aunque el nombre venga con otra caja');
+    api.sync();
+    assert(boton.style.display === '',
+      'y con él, la pestaña del panel');
+  }
+
+  // Y la raíz: getEmp NO puede crear una ficha nueva cuando ya existe la misma
+  // con otra caja. Creaba una vacía y sin rol bajo el nombre tecleado, y a
+  // partir de ahí la app leía ESA: la cuenta de administración perdía el panel
+  // y el selector de restaurante A MITAD DE SESIÓN. Se reprodujo así —
+  // _esAdmin() daba true, se abría Ajustes, y pasaba a false.
+  {
+    const G = new Function('DB', // eslint-disable-line no-new-func
+      html.slice(html.indexOf('function _ficha(nombre){'), html.indexOf('function _esAdmin(nombre){')) +
+      html.slice(html.indexOf('function getEmp(name){'), html.indexOf('// ═══ LAZY-LOADED DATA ═══')) +
+      '; return {get:getEmp, db:()=>DB.employees};');
+    const db = { employees: { 'Administrador': { name:'Administrador', role:'admin' } } };
+    const api2 = G(db);
+    const e = api2.get('administrador');
+    assert(Object.keys(api2.db()).length === 1,
+      `getEmp ha creado una ficha duplicada: ${Object.keys(api2.db()).join(', ')}`);
+    assert(e.role === 'admin', 'getEmp tiene que devolver la ficha que YA tiene el rol');
+    // Y sigue creando la ficha cuando de verdad no existe.
+    api2.get('Nuevo');
+    assert(api2.db()['Nuevo'] && Object.keys(api2.db()).length === 2,
+      'getEmp tiene que seguir creando la ficha de quien no la tiene');
+  }
   // Pero enseñar el botón no concede nada: detrás va el PIN del servidor.
   assert(/if\(!supAuthenticated\)\{\s*\n\s*renderSupPinEntry\(\);/.test(html),
     'el panel sigue pidiendo PIN antes de pintar nada');
