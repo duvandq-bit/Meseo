@@ -9422,6 +9422,53 @@ test('Multi-restaurante: ninguna consulta se escapa del filtro de restaurante', 
     'send-push tiene que filtrar por restaurante cuando el aviso es para todos');
 });
 
+test('Vinos: la bodega es de un restaurante, y quien no tiene no ve la de otro', () => {
+  // M.B. probablemente no va a cargar sus vinos (propietario, sep 2026). Eso no
+  // quita trabajo: lo cambia. `data/wines.json` se cargaba SIEMPRE y sin
+  // restaurante, así que su equipo habría abierto Vinos y visto la bodega
+  // entera de Txoko —149 vinos— como si fuera la suya.
+  const src = html.slice(html.indexOf('let _vinosVenue = null;'), html.indexOf('// ═══ LA CARTA DE CADA RESTAURANTE'));
+  assert(src.length > 400, 'no encuentro el resolutor de bodega');
+  const F = new Function('_venueActual', '_VENUE_POR_DEFECTO', 'WINES', 'fetch', // eslint-disable-line no-new-func
+    src + '; return {ruta:_vinosRuta, vigilar:_vinosVigilar, venue:()=>_vinosVenue, set:(v)=>{_vinosVenue=v;}};');
+  const api = (v) => F(() => v, 'txoko', null, () => Promise.resolve({ ok:false }));
+  // Cada restaurante, su archivo. Txoko conserva el de siempre.
+  assert(api('txoko').ruta() === 'data/wines.json', 'Txoko mantiene data/wines.json');
+  assert(api('mb').ruta() === 'data/wines-mb.json', 'otro restaurante trae data/wines-<id>.json');
+  // Y la lista NO puede sobrevivir a un cambio de restaurante: los 71 usos de
+  // WINES preguntan «¿hay lista?», nunca «¿es de aquí?».
+  const a = api('mb'); a.set('txoko'); a.vigilar();
+  assert(a.venue() === null, 'al cambiar de restaurante hay que tirar la bodega del anterior');
+  const b2 = api('txoko'); b2.set('txoko'); b2.vigilar();
+  assert(b2.venue() === 'txoko', 'si la bodega ya es de este restaurante, no se tira');
+
+  // Ni un solo punto de carga puede apuntar al archivo a pelo.
+  const fuera = [];
+  html.split('\n').forEach((l, i) => {
+    if (/loadLazyData\('data\/wines\.json'/.test(l)) fuera.push(i + 1);
+  });
+  assert(fuera.length === 0,
+    `estas cargas de vinos no pasan por _vinosRuta(): líneas ${fuera.join(', ')}`);
+  assert((html.match(/loadLazyData\(_vinosRuta\(\)/g) || []).length >= 6,
+    'los seis puntos de carga de vinos tienen que ir por _vinosRuta()');
+
+  // El botón desaparece donde no hay bodega, igual que el del carro de quesos.
+  assert(/function _navVinosSync\(\)/.test(html) && /hayCartaDeVinos\(\)\.then\(hay => \{ b\.style\.display = hay \? '' : 'none'/.test(html),
+    'sin bodega no hay pestaña de Vinos');
+  assert(/_vinosVigilar\(\); _navQuesosSync\(\); _navVinosSync\(\);/.test(html),
+    'al entrar hay que tirar la bodega ajena y repintar el botón');
+  assert(/WINES = null; _vinosVenue = null;/.test(html),
+    'cambiar de restaurante desde Ajustes también tira la bodega');
+
+  // Y si alguien llega igualmente a la pestaña, se le dice la verdad: no es el
+  // wifi, es que este restaurante no tiene carta de vinos.
+  const rv = html.slice(html.indexOf('async function renderVinos(){'), html.indexOf('function renderVinosCarta('));
+  assert(/\/\^HTTP 4\/\.test\(e\.message/.test(rv),
+    'un 404 aquí significa «no hay bodega», no «no hay red»');
+  assert(/does not have a wine list in the app yet/.test(rv) && /todavía no tiene carta de vinos/.test(rv),
+    'hay que decirlo en los dos idiomas');
+});
+
 // ─── 7. No leftover git conflict markers ────────────────────────
 console.log('\nHygiene');
 test('no git conflict markers in tracked source', () => {

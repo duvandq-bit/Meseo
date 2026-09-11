@@ -52,7 +52,7 @@
 <meta property="og:description" content="Formación de equipos de sala: carta, alérgenos, vinos, exámenes y juegos de repaso.">
 <meta property="og:url" content="https://meseo.es/">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"Meseo","url":"https://meseo.es/"}</script>
-<meta name="app-version" content="7.435">
+<meta name="app-version" content="7.436">
 <meta name="app-build" content="May 2026">
 <meta name="theme-color" content="#1c2a22">
 <!-- ═══ PWA ═══ -->
@@ -1127,8 +1127,8 @@ document.addEventListener('DOMContentLoaded', () => {
   const _preloadWines = () => {
     if(typeof loadLazyData!=='function') return;
     if(!WINES){
-      loadLazyData('data/wines.json', LANG==='en'?'wine list':'lista de vinos', { silent: true })
-        .then(arr => { WINES = arr; })
+      loadLazyData(_vinosRuta(), LANG==='en'?'wine list':'lista de vinos', { silent: true })
+        .then(arr => { WINES = arr; _vinosVenue = _venueActual(); })
         .catch(() => { /* silent — feature degrades; user can retry via Vinos tab */ });
     }
     // Also warm the educational content so findSimilarWines (reachable from
@@ -1608,6 +1608,45 @@ function _venueActual(){
 function _vq(){ return 'venue=eq.' + encodeURIComponent(_venueActual()); }
 function _vSello(o){ o = o || {}; o.venue = _venueActual(); return o; }
 
+// ═══ LA BODEGA DE CADA RESTAURANTE ════════════════════════════════════════
+// `data/wines.json` es la bodega de TXOKO, igual que los cuatro bloques de la
+// carta. Otro restaurante trae la suya en `data/wines-<restaurante>.json`.
+//
+// Y si NO la trae, no se enseña ninguna: la pestaña de Vinos desaparece. Hasta
+// sep 2026 el archivo se cargaba siempre y sin restaurante, así que el equipo
+// de M.B. habría abierto Vinos y visto la bodega entera de Txoko como si fuera
+// la suya. Un restaurante sin carta de vinos no tiene sección de vinos —
+// exactamente igual que el carro de quesos, al revés.
+let _vinosVenue = null;          // de quién es la lista que hay cargada
+const _hayVinos = new Map();     // restaurante → ¿tiene bodega propia?
+function _vinosRuta(v){
+  v = v || _venueActual();
+  return v === _VENUE_POR_DEFECTO ? 'data/wines.json'
+                                  : 'data/wines-' + encodeURIComponent(v) + '.json';
+}
+// Tira la lista si es de otro restaurante. Sin esto, cambiar de restaurante
+// con los vinos ya cargados los dejaba puestos: los guardas de los 71 usos
+// preguntan «¿hay lista?», no «¿es de aquí?».
+function _vinosVigilar(){
+  const v = _venueActual();
+  if(_vinosVenue !== v){ WINES = null; _vinosVenue = null; }
+}
+async function hayCartaDeVinos(){
+  const v = _venueActual();
+  if(v === _VENUE_POR_DEFECTO) return true;   // la de Txoko va en el paquete
+  if(_hayVinos.has(v)) return _hayVinos.get(v);
+  let ok = false;
+  try{ const r = await fetch(_vinosRuta(v), {method:'HEAD'}); ok = r.ok; }
+  catch(e){ ok = false; }
+  _hayVinos.set(v, ok);
+  return ok;
+}
+function _navVinosSync(){
+  const b = document.getElementById('navVinos');
+  if(!b) return;
+  hayCartaDeVinos().then(hay => { b.style.display = hay ? '' : 'none'; });
+}
+
 // ═══ LA CARTA DE CADA RESTAURANTE ═════════════════════════════════════════
 // Los cuatro bloques de arriba —DISHES, DISHES_EN, DISH_COMPONENTS y
 // DISH_ACTIONS— son la carta de TXOKO y se quedan donde están. No se sacan a un
@@ -1795,7 +1834,7 @@ const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><p
 const SRC = 'src';
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='7.435';  // sincronizada con sw.js VERSION (guard de CI)
+const APP_VERSION='7.436';  // sincronizada con sw.js VERSION (guard de CI)
 const APP_BUILD='Jul 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;
@@ -8446,7 +8485,7 @@ function _pddAsyncFill(){
     }).catch(()=>{});
     const _wines = (typeof WINES!=='undefined' && Array.isArray(WINES))
       ? Promise.resolve(WINES)
-      : loadLazyData('data/wines.json', LANG==='en'?'wine list':'lista de vinos', {silent:true}).then(w=>{ if(typeof WINES!=='undefined' && !WINES) WINES=w; return w; });
+      : loadLazyData(_vinosRuta(), LANG==='en'?'wine list':'lista de vinos', {silent:true}).then(w=>{ if(typeof WINES!=='undefined' && !WINES){ WINES=w; _vinosVenue=_venueActual(); } return w; });
     _wines.then(()=>{
       const w=_pddWineFor(d);
       const el=document.getElementById('pddPair');
@@ -8558,7 +8597,7 @@ function _luClose(){
 async function _luWineOpen(){
   const en=LANG==='en';
   if(typeof WINES==='undefined' || !Array.isArray(WINES)){
-    try{ const w=await loadLazyData('data/wines.json', en?'wine list':'lista de vinos'); if(!WINES) WINES=w; }catch(e){ return; }
+    try{ const w=await loadLazyData(_vinosRuta(), en?'wine list':'lista de vinos'); if(!WINES){ WINES=w; _vinosVenue=_venueActual(); } }catch(e){ return; }
   }
   const w=_luWineOfWeek();
   if(!w) return;
@@ -10047,7 +10086,8 @@ function openAjustes(){
         if(tema) applyTheme(tema);
         overlay.remove();
         QUESOS = null; _quesosVenue = null;   // el carro es de cada restaurante
-        try{ _navQuesosSync(); }catch(_){}
+        WINES = null; _vinosVenue = null;      // y la bodega, también
+        try{ _navQuesosSync(); _navVinosSync(); }catch(_){}
         if(typeof showTab==='function') showTab(typeof currentTab!=='undefined' ? currentTab : 'dashboard');
         const _nom = (tema && tema.name) || id;
         // Sin carta el aviso tiene que decirlo, y decir cuánto rato: si no,
@@ -10419,8 +10459,9 @@ async function closePinAndEnter(){
   // que se está protegiendo; sin red no bloquea a nadie (ndaPendiente devuelve
   // false), que dejar a alguien fuera de su formación por el wifi sería peor.
   try{ ndaPendiente(pinTarget).then(hay => { if(hay) ndaMostrar(pinTarget); }); }catch(_){}
-  // El botón del carro de quesos sale sólo si este restaurante tiene uno.
-  try{ _navQuesosSync(); }catch(_){}
+  // Los botones del carro de quesos y de la bodega salen sólo si este
+  // restaurante tiene una. Y se tira lo que hubiera cargado de otro.
+  try{ _vinosVigilar(); _navQuesosSync(); _navVinosSync(); }catch(_){}
   // La pestaña del panel sale por ROL, no por nombre: hasta sep 2026 estaba
   // clavada a «Duvan», así que no había forma de dársela al manager de otro
   // restaurante. El rol llega con la ficha de la nube (_supSyncMando la
@@ -11223,7 +11264,7 @@ async function openGlobalSearch(){
   // their results can render. Dishes are always in memory.
   try{
     if((typeof WINES==='undefined' || !WINES) && typeof loadLazyData==='function'){
-      const w = await loadLazyData('data/wines.json', LANG==='en'?'wine list':'lista de vinos', { silent:true });
+      const w = await loadLazyData(_vinosRuta(), LANG==='en'?'wine list':'lista de vinos', { silent:true });
       if(w && (typeof WINES==='undefined' || !WINES)) WINES = w;
       _gsWineIdx = null; // rebuild now that data exists
     }
@@ -14325,12 +14366,24 @@ async function renderVinos(){
       + '<div style="margin:1.2rem auto 0;width:60%;height:4px;background:rgba(196,154,60,.1);border-radius:2px;overflow:hidden"><div style="height:100%;width:30%;background:linear-gradient(90deg,transparent,var(--gold),transparent);animation:wineLoaderSweep 1.2s ease-in-out infinite"></div></div></div>';
     try {
       const [w] = await Promise.all([
-        WINES ? Promise.resolve(WINES) : loadLazyData('data/wines.json', LANG==='en'?'wine list':'lista de vinos'),
+        WINES ? Promise.resolve(WINES) : loadLazyData(_vinosRuta(), LANG==='en'?'wine list':'lista de vinos'),
         loadVinosContent()
       ]);
       WINES = w;
-    } catch(_){
+      _vinosVenue = _venueActual();
+    } catch(e){
       if(currentTab !== _startTab) return; // user already moved on; don't paint
+      // «No hay bodega» y «no hay red» son cosas distintas y hay que decirlas
+      // distintas: un 404 aquí significa que ESTE restaurante no tiene carta de
+      // vinos, y echarle la culpa al wifi manda a alguien a mirar el router.
+      if(e && /^HTTP 4/.test(e.message || '')){
+        c.innerHTML = '<div style="padding:2.5rem 1.5rem;text-align:center;color:var(--parch3);font-size:.85rem;line-height:1.6">'
+          + (LANG==='en'
+              ? 'This restaurant does not have a wine list in the app yet.'
+              : 'Este restaurante todavía no tiene carta de vinos en la aplicación.')
+          + '</div>';
+        return;
+      }
       c.innerHTML = '<div style="padding:2rem;text-align:center;color:var(--parch3);font-size:.85rem">'+(LANG==='en'?'Could not load wine list. Check your connection.':'No se pudo cargar la lista de vinos. Comprueba tu conexión.')+'</div>';
       return;
     }
@@ -21867,7 +21920,7 @@ function renderRepasoDishDetail(dishId){
   // Si los vinos aún no habían cargado, tráelos y repinta el maridaje —
   // solo si el usuario sigue en esta misma ficha.
   if(_pairWines === null && typeof loadLazyData === 'function'){
-    loadLazyData('data/wines.json', LANG==='en'?'wine list':'lista de vinos', {silent:true})
+    loadLazyData(_vinosRuta(), LANG==='en'?'wine list':'lista de vinos', {silent:true})
       .then(w=>{ if(typeof WINES==='undefined' || !WINES) WINES = w;
         if(repasoView==='dish' && repasoDishId===dishId) renderRepasoDishDetail(dishId); })
       .catch(()=>{});
