@@ -1,6 +1,6 @@
 # Por dónde seguir
 
-Estado a **11 de septiembre de 2026** · versión **7.433** · 330 pruebas en verde ·
+Estado a **11 de septiembre de 2026** · versión **7.435** · 332 pruebas en verde ·
 auditoría de alérgenos 0/0.
 
 ---
@@ -53,6 +53,16 @@ nube es Supabase.
 
 Cada una costó una reversión o una vergüenza. Están aquí para que no vuelva a
 pasar.
+
+### Un campo que baja de la nube y no se guarda no existe
+
+`role` viajaba en `_EMP_COLS` desde que se creó la cuenta de administración,
+pero **ninguno de los dos sitios que convierten la fila en ficha local lo
+copiaba**. Resultado: `_esAdmin()` era siempre falso en el móvil, así que la
+cuenta que «no deja rastro» **estaba escribiendo XP como cualquiera** (50 XP
+encontrados en la nube) y su selector de restaurante no aparecía nunca en
+Ajustes. Se vio al ir a colgar el panel del rol. Si se añade una columna, hay
+que seguirla hasta el objeto que usa la app.
 
 ### `scores` guarda dos cosas distintas con la misma forma
 
@@ -146,6 +156,7 @@ vuelve a estar abierta.
 | El acuerdo de confidencialidad | `data/nda.json` — **apagado** (`"activo": false`) |
 | El acuerdo con el restaurante | `docs/acuerdo-restaurante-borrador.md` — no se enseña en la app |
 | El PIN por restaurante | `supabase/supervisor_pin_por_restaurante.sql` — aplicado el 11 sep |
+| Los avisos push | `supabase/functions/send-push/index.ts` — v4, filtra por restaurante |
 
 No se toca la carta sin dato del propietario. **Nunca se inventa un plato, un
 ingrediente, un vino ni un estándar.**
@@ -187,19 +198,15 @@ ingrediente, un vino ni un estándar.**
 
 ### Técnico
 
-- [ ] **La pestaña de supervisor sigue clavada a `Duvan`** (`currentUser==='Duvan'`).
-      Hasta que salga por rol, un manager no puede ver el panel aunque ya tenga
-      su PIN y su rol. Es el paso 3 de los cuatro.
-- [ ] **Cada manager ve sólo a su equipo** (paso 4). Las consultas ya llevan
-      filtro de restaurante; falta barrer que ninguna se escape.
 
-- [ ] **`custom_dishes` no tiene restaurante.** Encontrado el 11 de septiembre
-      mirando qué autoriza el PIN. La tabla de platos añadidos a mano no tiene
-      columna `venue`, y la consulta que los lee no lleva filtro: cuando M.B.
-      abra, sus platos y los de Txoko se mezclarían. Hoy es latente (la tabla
-      está prácticamente vacía). La Edge Function `manage-content` tampoco mira
-      el restaurante al comprobar el PIN, por lo mismo: no hay contra qué
-      compararlo hasta que la tabla lo tenga.
+- [ ] **`manage-content` no mira el restaurante al comprobar el PIN.** Es la
+      Edge Function del editor de carta. `custom_dishes` ya tiene columna
+      `venue` y su lectura ya filtra, así que ahora sí hay contra qué
+      compararlo: falta pasarle el restaurante y que lo exija, igual que hace
+      `send-push`.
+- [ ] **`ai_usage` es la única tabla sin restaurante.** Es contabilidad interna
+      de uso de IA, no datos de nadie; queda anotado para que no parezca un
+      olvido.
 
 - [ ] **Separar los vinos por restaurante.** M.B. tiene bodega propia y
       `wines.json` es común. Mismo patrón que la carta de platos.
@@ -215,7 +222,16 @@ ingrediente, un vino ni un estándar.**
 - [x] ~~**Managers desde el panel.**~~ Hecho (11 sep). Acciones → Cuentas: el
       propietario ve la plantilla de ese restaurante, nombra managers y pone su
       PIN. Sólo él: el servidor lo comprueba.
-- [ ] **Un manager por restaurante. EN MARCHA (falta el 3 y el 4)** — pedido por el propietario el
+- [x] ~~**El panel sale por ROL.**~~ Hecho (11 sep, paso 3). Nace el rol
+      `owner` (abre cualquier restaurante); `manager` abre sólo el suyo. La
+      cuenta de administración NO tiene panel, por diseño. Duvan ya es `owner`
+      en la nube. No se puede quitar el mando al último propietario.
+- [x] ~~**Cada manager ve sólo lo suyo.**~~ Hecho (11 sep, paso 4). Barridas
+      las 33 llamadas a Supabase: cuatro tablas no tenían restaurante. La peor,
+      `push_subscriptions` — «todo el equipo» hacía sonar TODOS los móviles de
+      la base. Hay un guard que recorre cada llamada y exige que filtre, selle,
+      vaya por clave única, o esté en una lista de excepciones con su motivo
+      escrito. **Los cuatro pasos del multi-restaurante están cerrados.** — pedido por el propietario el
       11 de septiembre. Hoy el supervisor está fijo en el código
       (`currentUser === 'Duvan'`) con un único PIN para toda la app; no hay
       forma de dar de alta a otro. La columna `role` está puesta para

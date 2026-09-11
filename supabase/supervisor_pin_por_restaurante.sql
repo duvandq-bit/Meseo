@@ -334,3 +334,73 @@ $$;
 -- venue_staff_list— la plantilla de UN restaurante, para repartir el mando.
 --                   Ésta sí la puede llamar su manager, pero sólo sobre el suyo.
 -- Están aplicadas en la migración `venue_pin_desde_el_panel`.
+
+-- ═══════════════════════════════════════════════════════════════
+-- AMPLIACIÓN (11 sep) · El panel sale por ROL, no por nombre
+-- ═══════════════════════════════════════════════════════════════
+-- Nace el rol 'owner': abre el panel de CUALQUIER restaurante. 'manager' abre
+-- sólo el suyo. Los dos —y 'admin'— los reparte únicamente el propietario.
+--
+-- Y no se puede quitar el mando al ÚLTIMO propietario: dejaría la casa sin
+-- nadie capaz de repartirlo, y habría que entrar por SQL a arreglarlo.
+--
+-- Aplicado en la migración `rol_owner_y_panel_por_rol`.
+
+create or replace function public.employee_set_role(p_pin text, p_name text, p_role text)
+returns json
+language plpgsql
+security definer
+set search_path = public, extensions
+as $$
+declare v_venue text;
+begin
+  -- Primero el verificador de siempre, que es quien lleva el limitador por IP;
+  -- si no, lo de abajo sería un oráculo para adivinar PINes sin coste.
+  if not public.verify_supervisor_pin(p_pin) then
+    return json_build_object('ok', false, 'error', 'denied');
+  end if;
+  if p_role not in ('staff','admin','manager','owner') then
+    return json_build_object('ok', false, 'error', 'rol_invalido');
+  end if;
+  -- Sólo el propietario reparte mando. Un manager que pudiera nombrar
+  -- administradores —o propietarios— se estaría dando a sí mismo la llave de
+  -- TODOS los restaurantes, que es justo lo que el PIN por restaurante cierra.
+  if p_role in ('admin','manager','owner') and public.sup_pin_scope(p_pin) <> '*' then
+    return json_build_object('ok', false, 'error', 'solo_propietario');
+  end if;
+  select e.venue into v_venue from public.employees e where e.name = p_name;
+  if not found then
+    return json_build_object('ok', false, 'error', 'unknown_employee');
+  end if;
+  -- Y nadie toca a alguien de otro restaurante.
+  if not public.sup_pin_ok(p_pin, v_venue) then
+    return json_build_object('ok', false, 'error', 'otro_restaurante');
+  end if;
+  -- Quitarle el mando al ÚLTIMO propietario dejaría la casa sin nadie que
+  -- pueda repartirlo: se impide aquí, que es donde se puede comprobar.
+  if p_role <> 'owner'
+     and (select role from public.employees where name = p_name) = 'owner'
+     and (select count(*) from public.employees where role = 'owner') <= 1 then
+    return json_build_object('ok', false, 'error', 'ultimo_propietario');
+  end if;
+  update public.employees set role = p_role where name = p_name;
+  return json_build_object('ok', true, 'name', p_name, 'role', p_role);
+end;
+$$;
+
+create or replace function public.venue_staff_list(p_pin text, p_venue text)
+returns json
+language plpgsql
+security definer
+set search_path = public, extensions
+as $$
+begin
+  if not public.verify_supervisor_pin(p_pin, p_venue) then
+    return json_build_object('ok', false, 'error', 'denied');
+  end if;
+  return json_build_object('ok', true, 'venue', p_venue, 'empleados', coalesce(
+    (select json_agg(json_build_object('name', e.name, 'display_name', e.display_name, 'role', e.role)
+            order by case e.role when 'owner' then 0 when 'manager' then 1 else 2 end, e.name)
+       from public.employees e where e.venue = p_venue and e.role <> 'admin'), '[]'::json));
+end;
+$$;

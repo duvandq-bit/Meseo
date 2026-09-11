@@ -1,15 +1,14 @@
-// TXOKO Formación — send-push v3 (fuente versionada; desplegar en Supabase)
+// TXOKO Formación — send-push v4 (fuente versionada; desplegar en Supabase)
 // v3 añade el passthrough de los extras visuales de la notificación hacia el
 // service worker: image (foto grande, p. ej. fotos del chat), renotify (las
 // menciones vuelven a sonar aunque el tag 'chat' ya esté coalescido) y data
-// (deep link, p. ej. {tab:'chat'}). El SW ya los consume desde v7.96; hasta
-// que esta versión se despliegue, la v2 sigue funcionando (el SW infiere el
-// deep link del tag).
+// (deep link, p. ej. {tab:'chat'}).
 //
-// SECRETO: la clave VAPID privada NO vive en este repo. Antes de desplegar:
-//   supabase secrets set VAPID_PRIVATE_KEY=<clave>
-// (la versión desplegada actualmente la lleva inline; al redesplegar desde
-// este archivo hay que definir el secreto o inyectar la clave en el deploy).
+// v4 (sep 2026) filtra por RESTAURANTE cuando el aviso es para «todo el
+// equipo»: sin eso se seleccionaban todas las suscripciones de la base.
+//
+// SECRETO: la clave VAPID privada NO vive en este repo, se lee de
+// VAPID_PRIVATE_KEY.
 import "jsr:@supabase/functions-js/edge-runtime.d.ts";
 import webpush from 'npm:web-push@3.6.7';
 
@@ -54,11 +53,17 @@ Deno.serve(async (req: Request) => {
   }
 
   try {
-    const { target, title, body, tag, image, renotify, data } = await req.json();
+    const { target, venue, title, body, tag, image, renotify, data } = await req.json();
 
     let url = `${SUPA_URL}/rest/v1/push_subscriptions?select=*`;
     if (target && target !== 'all') {
       url += `&employee_name=eq.${encodeURIComponent(target)}`;
+    } else if (typeof venue === 'string' && venue) {
+      // «Todo el equipo» significa TODO EL EQUIPO DE ESE RESTAURANTE. Sin este
+      // filtro se seleccionaban todas las suscripciones de la base: el manager
+      // de un restaurante mandaba un aviso y le sonaba el móvil al equipo del
+      // de al lado. (Barrido del multi-restaurante, sep 2026.)
+      url += `&venue=eq.${encodeURIComponent(venue)}`;
     }
 
     const subsRes = await fetch(url, {
