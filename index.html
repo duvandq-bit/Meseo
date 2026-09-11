@@ -52,7 +52,7 @@
 <meta property="og:description" content="Formación de equipos de sala: carta, alérgenos, vinos, exámenes y juegos de repaso.">
 <meta property="og:url" content="https://meseo.es/">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"Meseo","url":"https://meseo.es/"}</script>
-<meta name="app-version" content="7.431">
+<meta name="app-version" content="7.432">
 <meta name="app-build" content="May 2026">
 <meta name="theme-color" content="#1c2a22">
 <!-- ═══ PWA ═══ -->
@@ -1768,7 +1768,7 @@ const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><p
 const SRC = 'src';
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='7.431';  // sincronizada con sw.js VERSION (guard de CI)
+const APP_VERSION='7.432';  // sincronizada con sw.js VERSION (guard de CI)
 const APP_BUILD='Jul 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;
@@ -9941,6 +9941,8 @@ function openAjustes(){
         : 'Tu cuenta puede mirar cualquier restaurante, incluidos los que aún no están abiertos. Nada de lo que hagas se guarda: ni puntuaciones, ni ranking, ni panel de supervisor.'}</div>
       <div id="ajVenues" style="display:flex;flex-direction:column;gap:.4rem"></div>
       <div id="ajVenueMsg" role="status" aria-live="polite" style="font-size:.72rem;min-height:1rem;margin-top:.35rem"></div>
+      ${H(_en?'The admin role':'El rol de administración')}
+      ${renderSupAdminHTML()}
       ` : ''}
       ${H(_en?'Recovery email':'Correo de recuperación')}
       <div id="ajEmailStatus" style="font-family:'Quicksand',sans-serif;font-size:.78rem;color:#5a6a5e;margin-bottom:.5rem;line-height:1.4">${_en?'Loading…':'Cargando…'}</div>
@@ -22676,6 +22678,8 @@ function _supTool(k){
        aviso: ()=>renderSupNotifSender(window._supEmpNames),
        fotos: ()=>renderSupPhotoQueue(),
        horarios: ()=>renderSupHorarios(),
+       codigo: ()=>renderSupCodigo(),
+       cuentas: ()=>renderSupCuentas(),
        lqa: ()=>renderSupLqaStats(window._supAllEmps, window._supEmpNames) })[k]();
   }catch(e){
     if(typeof showToast==='function') showToast('Error: '+e.message, 'warning', 6000);
@@ -23042,6 +23046,19 @@ function renderSupDashboard(silent){
             <button onclick="_supTool('lqa')" style="display:flex;align-items:center;gap:.65rem;padding:.75rem .85rem;background:linear-gradient(155deg,rgba(140,200,150,.08),rgba(140,200,150,.02));border:1.5px solid rgba(140,200,150,.25);border-left:3px solid #8fc499;border-radius:12px;font-family:'Quicksand',sans-serif;cursor:pointer;transition:all .2s;position:relative;overflow:hidden">
               <span style="width:32px;height:32px;display:flex;align-items:center;justify-content:center;clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);background:linear-gradient(135deg,#8fc499,var(--sage));flex-shrink:0"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/><path d="M8 11l2 2 4-4"/></svg></span>
               <span style="font-size:.72rem;font-weight:700;color:var(--sage)">${LANG==='en'?'LQA Stats':'Stats LQA'}</span>
+            </button>
+            <!-- Código de acceso y Cuentas vivían dentro de la pantalla de
+                 Análisis. Análisis es para MIRAR y Acciones para HACER
+                 (petición del propietario, sep 2026): un botón que renueva un
+                 código y deja a un equipo sin poder registrarse no puede estar
+                 escondido entre las estadísticas. -->
+            <button onclick="_supTool('codigo')" style="display:flex;align-items:center;gap:.65rem;padding:.75rem .85rem;background:linear-gradient(155deg,#faf6ee,#f0e8d8);border:1.5px solid rgba(196,154,60,.12);border-left:3px solid #c49a3c;border-radius:12px;font-family:'Quicksand',sans-serif;cursor:pointer;transition:all .2s;position:relative;overflow:hidden">
+              <span style="font-size:1.05rem">🔑</span>
+              <span style="flex:1;text-align:left;font-size:.72rem;font-weight:600;color:var(--parchment)">${LANG==='en'?'Access code':'Código de acceso'}<br><span style="font-size:.58rem;font-weight:400;color:var(--parch3)">${LANG==='en'?'who can register':'quién puede registrarse'}</span></span>
+            </button>
+            <button onclick="_supTool('cuentas')" style="display:flex;align-items:center;gap:.65rem;padding:.75rem .85rem;background:linear-gradient(155deg,#faf6ee,#f0e8d8);border:1.5px solid rgba(196,154,60,.12);border-left:3px solid #7c6fa8;border-radius:12px;font-family:'Quicksand',sans-serif;cursor:pointer;transition:all .2s;position:relative;overflow:hidden">
+              <span style="font-size:1.05rem">🛠</span>
+              <span style="flex:1;text-align:left;font-size:.72rem;font-weight:600;color:var(--parchment)">${LANG==='en'?'Accounts':'Cuentas'}<br><span style="font-size:.58rem;font-weight:400;color:var(--parch3)">${LANG==='en'?'managers and PIN':'managers y PIN'}</span></span>
             </button>
             <button onclick="renderSupDeleteEmployee(_supEmpNames)" style="display:flex;align-items:center;gap:.65rem;padding:.75rem .85rem;background:linear-gradient(155deg,rgba(196,112,104,.04),rgba(196,112,104,.01));border:1.5px solid rgba(196,112,104,.2);border-left:3px solid #c47068;border-radius:12px;font-family:'Quicksand',sans-serif;cursor:pointer;transition:all .2s;position:relative;overflow:hidden">
               <span style="width:32px;height:32px;display:flex;align-items:center;justify-content:center;clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);background:linear-gradient(135deg,#c47068,#a85848);flex-shrink:0"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/><path d="M10 11v6M14 11v6"/></svg></span>
@@ -23845,10 +23862,12 @@ function renderSupAnalytics(allEmps, empNames){
     ${_acc('pase','◎',_en2?'Plating pass':'Pase de cocina', _psTot?`${_psTot} ${_en2?'passes':'pases'} · ${_psSeguro}% ${_en2?'safe':'seguros'}`:(_en2?'not played yet':'aún sin jugar'), paseSection)}
     ${_acc('perf','🎯',_en2?'Performance':'Rendimiento', exN?`${exN} ${_en2?'exams':'exámenes'} · ${exAcc}%`:(_en2?'no exams yet':'aún sin exámenes'), _perfBody)}
     ${_acc('dish','🧩',_en2?'Hardest dishes':'Platos difíciles', hardest.length?`${hardest.length} ${_en2?'to review':'a repasar'}`:'', _dishBody)}
-    ${_acc('acc','🔑',_en2?'Access code':'Código de acceso', _en2?'who can register':'quién puede registrarse', renderSupCodigoHTML())}
-    ${_acc('adm','🛠',_en2?'Admin account':'Cuenta de administración', _en2?'to review content':'para revisar contenido', renderSupAdminHTML())}
   </div>`;
 }
+// El código de acceso y las cuentas ya NO viven aquí: Análisis es para MIRAR y
+// Acciones para HACER (petición del propietario, sep 2026). Un botón que
+// renueva un código y deja a un equipo sin poder registrarse no puede estar
+// escondido en la pantalla de las estadísticas.
 
 // ═══ CÓDIGO DE ACCESO DEL RESTAURANTE ══════════════════════════════════════
 // Sin este código no se crea ninguna cuenta. Es lo que impide que alguien de
@@ -23872,22 +23891,211 @@ function renderSupCodigoHTML(){
     <div id="supCodigoMsg" role="status" aria-live="polite" style="font-family:'Quicksand',sans-serif;font-size:.74rem;min-height:1.1rem;margin-top:.45rem;color:var(--parch3)"></div>`;
 }
 
+// ═══ PANTALLA · CÓDIGO DE ACCESO (Acciones) ═══════════════════════════════
+function renderSupCodigo(){
+  const _en = LANG==='en';
+  const c = document.getElementById('appContent');
+  c.innerHTML = `<div class="sup-wrap">
+    ${_supCabecera(_en?'Access code':'Código de acceso', _en?'who can register in this restaurant':'quién puede registrarse en este restaurante')}
+    <div class="sup-card">${renderSupCodigoHTML()}</div>
+  </div>`;
+}
+
+// ═══ PANTALLA · CUENTAS Y PERMISOS (Acciones) ═════════════════════════════
+// Aquí se reparte el mando: quién es manager de este restaurante y cuál es su
+// PIN. Sólo el propietario — el servidor lo comprueba, no este código.
+//
+// La cuenta de ADMINISTRACIÓN ya no se toca desde aquí: por petición del
+// propietario sólo se ve desde la propia cuenta de administración, en Ajustes.
+function renderSupCuentas(){
+  const _en = LANG==='en';
+  const c = document.getElementById('appContent');
+  const v = _supVenueId();
+  const casa = (typeof _venueRotulo === 'function' ? _venueRotulo() : v) || v;
+  c.innerHTML = `<div class="sup-wrap">
+    ${_supCabecera(_en?'Accounts and permissions':'Cuentas y permisos', escapeHTML(casa))}
+    <div class="sup-card">
+      <div class="sup-card-t">${_en?'Who runs this restaurant':'Quién dirige este restaurante'}</div>
+      <div class="sup-card-d">${_en
+        ? 'A manager opens this panel and only this one: they see their own team, their rota and their access code. They can never see the restaurant next door, and they cannot appoint anybody.'
+        : 'Un manager abre este panel y sólo éste: ve su equipo, su cuadrante y su código de acceso. Nunca ve el restaurante de al lado, y no puede nombrar a nadie.'}</div>
+      <div id="supCuList" class="sup-list">${_en?'Loading…':'Cargando…'}</div>
+      <div id="supCuMsg" role="status" aria-live="polite" class="sup-msg"></div>
+    </div>
+    <div class="sup-card">
+      <div class="sup-card-t">${_en?'This restaurant’s PIN':'El PIN de este restaurante'}</div>
+      <div class="sup-card-d">${_en
+        ? 'The PIN its manager types to open the panel. Yours keeps opening every restaurant, always. Leave it empty and this restaurant goes back to opening only with yours.'
+        : 'El PIN que teclea su manager para abrir el panel. El tuyo sigue abriendo todos los restaurantes, siempre. Si lo dejas vacío, este restaurante vuelve a abrirse sólo con el tuyo.'}</div>
+      <div id="supPinEstado" class="sup-msg"></div>
+      <input id="supPinNuevo" type="text" inputmode="numeric" maxlength="12" autocomplete="off" spellcheck="false"
+        placeholder="${_en?'New PIN (4 digits or more)':'PIN nuevo (4 dígitos o más)'}" class="sup-inp">
+      <div class="sup-btns">
+        <button onclick="supGuardarPinVenue()" class="sup-b1">${_en?'Save PIN':'Guardar PIN'}</button>
+        <button onclick="supQuitarPinVenue()" class="sup-b2">${_en?'Remove':'Quitar'}</button>
+      </div>
+      <div id="supPinMsg" role="status" aria-live="polite" class="sup-msg"></div>
+    </div>
+  </div>`;
+  supCargarCuentas();
+}
+
+function _supCabecera(titulo, sub){
+  const _en = LANG==='en';
+  return `<div style="display:flex;align-items:center;gap:.75rem;margin-bottom:1rem">
+    <button onclick="renderSupDashboard()" aria-label="${_en?'Back':'Volver'}" style="background:transparent;border:1.5px solid rgba(196,154,60,.55);border-radius:var(--r2);padding:.4rem .8rem;font-size:.75rem;color:var(--gold-deep);font-weight:700;cursor:pointer;min-height:44px">←</button>
+    <div>
+      <div style="font-family:'Cinzel',serif;font-size:1.15rem;color:var(--parchment)">${titulo}</div>
+      <div style="font-family:'DM Mono',monospace;font-size:.58rem;color:var(--parch3);letter-spacing:.06em">${sub}</div>
+    </div>
+  </div>`;
+}
+
+async function supCargarCuentas(){
+  const _en = LANG==='en';
+  const caja = document.getElementById('supCuList');
+  const est  = document.getElementById('supPinEstado');
+  const v = _supVenueId();
+  try{
+    const r = await _supaRpc('venue_staff_list', {p_pin:_supPin||'', p_venue:v});
+    if(!r || r.ok !== true) throw new Error((r && r.error) || 'x');
+    const emps = r.empleados || [];
+    if(!caja) return;
+    caja.innerHTML = emps.length ? emps.map(e => {
+      const esM = e.role === 'manager';
+      return `<div class="sup-row">
+        <div class="sup-row-n">${escapeHTML(e.display_name || e.name)}
+          ${esM ? `<span class="sup-tag">${_en?'manager':'manager'}</span>` : ''}
+          ${(e.display_name && e.display_name !== e.name) ? `<span class="sup-row-u">${escapeHTML(e.name)}</span>` : ''}</div>
+        <button onclick="supPonerManager(${escapeHTML(JSON.stringify(e.name))}, ${esM?'false':'true'})"
+          class="${esM?'sup-b2':'sup-b1'}" style="flex:0 0 auto;padding:.45rem .7rem;font-size:.72rem">
+          ${esM ? (_en?'Remove':'Quitar') : (_en?'Make manager':'Hacer manager')}</button>
+      </div>`;
+    }).join('') : `<div class="sup-vacio">${_en?'Nobody registered here yet.':'Todavía no hay nadie registrado aquí.'}</div>`;
+  }catch(e){
+    if(caja) caja.innerHTML = `<div class="sup-vacio">${_en?'Could not load the team.':'No se ha podido cargar el equipo.'}</div>`;
+  }
+  // ¿Tiene este restaurante PIN propio? Sólo lo sabe el propietario.
+  try{
+    const l = await _supaRpc('venue_pin_list', {p_pin:_supPin||''});
+    if(!est) return;
+    if(!l || l.ok !== true){
+      est.textContent = _en ? 'Only the owner can change PINs.' : 'Sólo el propietario cambia los PINes.';
+      const inp = document.getElementById('supPinNuevo');
+      if(inp) inp.disabled = true;
+      document.querySelectorAll('#supPinNuevo ~ .sup-btns button').forEach(b => b.disabled = true);
+      return;
+    }
+    const tiene = (l.venues||[]).some(x => x.venue === v);
+    est.style.color = tiene ? '#2d6a3e' : 'var(--parch3)';
+    est.textContent = tiene
+      ? (_en ? 'This restaurant has its own PIN.' : 'Este restaurante tiene PIN propio.')
+      : (_en ? 'No PIN of its own yet — it only opens with yours.' : 'Todavía sin PIN propio: sólo se abre con el tuyo.');
+  }catch(_){}
+}
+
+async function supPonerManager(nombre, hacer){
+  const _en = LANG==='en';
+  const msg = document.getElementById('supCuMsg');
+  if(!msg) return;
+  if(hacer && !confirm(_en
+    ? `Make "${nombre}" manager? They will be able to open this panel.`
+    : `¿Hacer manager a «${nombre}»? Podrá abrir este panel.`)) return;
+  msg.style.color = 'var(--parch3)';
+  msg.textContent = _en ? 'Saving…' : 'Guardando…';
+  try{
+    const r = await _supaRpc('employee_set_role', {p_pin:_supPin||'', p_name:nombre, p_role: hacer?'manager':'staff'});
+    if(!r || r.ok !== true) throw new Error((r && r.error) || 'x');
+    msg.style.color = '#2d6a3e';
+    msg.textContent = hacer
+      ? (_en?`"${nombre}" is now a manager here.`:`«${nombre}» ya es manager aquí.`)
+      : (_en?`"${nombre}" is back to a normal account.`:`«${nombre}» vuelve a ser una cuenta normal.`);
+    supCargarCuentas();
+  }catch(e){
+    msg.style.color = '#c0392b';
+    msg.textContent = _supErrorRol(e && e.message);
+  }
+}
+
+function _supErrorRol(cod){
+  const _en = LANG==='en';
+  if(cod === 'solo_propietario') return _en
+    ? 'Only the owner can appoint managers.' : 'Sólo el propietario nombra managers.';
+  if(cod === 'otro_restaurante') return _en
+    ? 'That account belongs to another restaurant.' : 'Esa cuenta es de otro restaurante.';
+  if(cod === 'unknown_employee') return _en
+    ? 'There is no account with that username.' : 'No hay ninguna cuenta con ese usuario.';
+  return _en ? 'Could not save. Check your connection.' : 'No se ha podido guardar. Comprueba la conexión.';
+}
+
+async function supGuardarPinVenue(){
+  const _en = LANG==='en';
+  const inp = document.getElementById('supPinNuevo'), msg = document.getElementById('supPinMsg');
+  if(!inp || !msg) return;
+  const nuevo = (inp.value||'').trim();
+  if(nuevo.length < 4){ msg.style.color='#c0392b';
+    msg.textContent = _en?'At least 4 characters.':'Al menos 4 caracteres.'; return; }
+  msg.style.color='var(--parch3)'; msg.textContent = _en?'Saving…':'Guardando…';
+  try{
+    const r = await _supaRpc('venue_pin_set', {p_pin:_supPin||'', p_venue:_supVenueId(), p_new:nuevo,
+      p_by:(typeof currentUser!=='undefined'?currentUser:null)});
+    if(!r || r.ok !== true) throw new Error((r && r.error) || 'x');
+    inp.value = '';
+    msg.style.color = '#2d6a3e';
+    msg.textContent = _en ? 'Saved. Its manager opens the panel with this PIN.'
+                          : 'Guardado. Su manager abre el panel con este PIN.';
+    supCargarCuentas();
+  }catch(e){
+    msg.style.color='#c0392b';
+    const cod = e && e.message;
+    msg.textContent = cod === 'es_el_tuyo'
+      ? (_en?'That is your own PIN — pick another.':'Ése es tu propio PIN: elige otro.')
+      : cod === 'solo_propietario'
+      ? (_en?'Only the owner can change PINs.':'Sólo el propietario cambia los PINes.')
+      : (_en?'Could not save.':'No se ha podido guardar.');
+  }
+}
+
+async function supQuitarPinVenue(){
+  const _en = LANG==='en';
+  const msg = document.getElementById('supPinMsg');
+  if(!msg) return;
+  if(!confirm(_en
+    ? 'Remove this restaurant’s PIN? From now on it only opens with yours, and its manager loses access to the panel.'
+    : '¿Quitar el PIN de este restaurante? A partir de ahora sólo se abre con el tuyo, y su manager pierde el panel.')) return;
+  msg.style.color='var(--parch3)'; msg.textContent = _en?'Removing…':'Quitando…';
+  try{
+    const r = await _supaRpc('venue_pin_set', {p_pin:_supPin||'', p_venue:_supVenueId(), p_new:null,
+      p_by:(typeof currentUser!=='undefined'?currentUser:null)});
+    if(!r || r.ok !== true) throw new Error((r && r.error) || 'x');
+    msg.style.color = '#2d6a3e';
+    msg.textContent = _en ? 'Removed. It only opens with your PIN now.' : 'Quitado. Ya sólo se abre con tu PIN.';
+    supCargarCuentas();
+  }catch(e){
+    msg.style.color='#c0392b';
+    msg.textContent = _en?'Could not remove it.':'No se ha podido quitar.';
+  }
+}
+
 // La cuenta de administración: entra en cualquier restaurante, incluidos los
 // que aún no están abiertos, y NO deja rastro — ni puntuaciones, ni ranking, ni
 // panel. Es para revisar la carta antes de que la vea el equipo.
 //
-// Se pone desde aquí y no desde el móvil de cada uno, detrás del PIN de
-// supervisor. Ojo: con la policy actual de employees cualquiera con la clave
-// anónima podría escribir esa columna a mano, así que esto NO es una barrera de
-// seguridad; es el camino limpio, y lo que el rol concede —ver la carta de otro
-// restaurante— ya era alcanzable de todos modos.
+// Desde sep 2026 esta sección SÓLO la ve la propia cuenta de administración, en
+// Ajustes (petición del propietario: «ya no debería ser visible para nadie»).
+// Se conserva la salida —dar el rol a otra cuenta y devolverse a normal— porque
+// si desapareciera del todo no habría forma de deshacerlo sin tocar la base de
+// datos. Sigue exigiendo el PIN de supervisor: quien manda es el servidor.
 function renderSupAdminHTML(){
   const _en = LANG==='en';
   return `<div style="font-family:'Quicksand',sans-serif;font-size:.8rem;color:var(--parch2);line-height:1.5;margin-bottom:.7rem">
       ${_en
-        ? 'An admin account can look at any restaurant, including the ones not open yet, and nothing it does is recorded: no scores, no ranking, no supervisor panel. Give it to whoever reviews the content — not to someone who is also training.'
-        : 'Una cuenta de administración puede mirar cualquier restaurante, incluidos los que aún no están abiertos, y nada de lo que haga se guarda: ni puntuaciones, ni ranking, ni panel. Dásela a quien revisa el contenido, no a alguien que además se está formando.'}
+        ? 'This account can look at any restaurant, including the ones not open yet, and nothing it does is recorded: no scores, no ranking, no supervisor panel. Hand the role to another account, or give this one back to normal.'
+        : 'Esta cuenta puede mirar cualquier restaurante, incluidos los que aún no están abiertos, y nada de lo que haga se guarda: ni puntuaciones, ni ranking, ni panel. Puedes pasarle el rol a otra cuenta, o devolver ésta a normal.'}
     </div>
+    <input id="supAdmPin" type="password" inputmode="numeric" maxlength="12" autocomplete="off"
+      placeholder="${_en?'Supervisor PIN':'PIN de supervisor'}"
+      style="width:100%;box-sizing:border-box;padding:.7rem .85rem;border:1px solid var(--line2);border-radius:10px;font-size:16px;background:#fff;color:#2b2b2b;margin-bottom:.5rem">
     <input id="supAdmName" type="text" maxlength="30" autocomplete="off" spellcheck="false"
       placeholder="${_en?'Username of the account':'Usuario de la cuenta'}"
       style="width:100%;box-sizing:border-box;padding:.7rem .85rem;border:1px solid var(--line2);border-radius:10px;font-size:16px;background:#fff;color:#2b2b2b;margin-bottom:.5rem">
@@ -23905,10 +24113,16 @@ async function supPonerRol(rol){
   const nombre = (el.value||'').trim();
   if(!nombre){ msg.style.color='#c0392b';
     msg.textContent = _en?'Type the username first.':'Escribe primero el usuario.'; return; }
+  // Esta pantalla vive en Ajustes, donde no se ha pasado por el teclado del
+  // panel: el PIN se teclea aquí. Lo comprueba el servidor, como siempre.
+  const elPin = document.getElementById('supAdmPin');
+  const pin = elPin ? (elPin.value||'').trim() : (_supPin||'');
+  if(!pin){ msg.style.color='#c0392b';
+    msg.textContent = _en?'Type the supervisor PIN.':'Escribe el PIN de supervisor.'; return; }
   msg.style.color='var(--parch3)';
   msg.textContent = _en?'Saving…':'Guardando…';
   try{
-    const r = await _supaRpc('employee_set_role', {p_pin:_supPin||'', p_name:nombre, p_role:rol});
+    const r = await _supaRpc('employee_set_role', {p_pin:pin, p_name:nombre, p_role:rol});
     if(!r || r.ok !== true) throw new Error((r && r.error) || 'x');
     msg.style.color = '#2d6a3e';
     msg.textContent = rol==='admin'
@@ -23920,9 +24134,7 @@ async function supPonerRol(rol){
       : ' Su actividad de antes no se guardó, así que empieza de cero.';
   }catch(e){
     msg.style.color='#c0392b';
-    msg.textContent = (e && e.message==='unknown_employee')
-      ? (_en?'There is no account with that username.':'No hay ninguna cuenta con ese usuario.')
-      : (_en?'Could not save. Check the username and your connection.':'No se ha podido guardar. Comprueba el usuario y la conexión.');
+    msg.textContent = _supErrorRol(e && e.message);
   }
 }
 

@@ -9148,6 +9148,58 @@ test('El PIN de supervisor va atado a un restaurante', () => {
     'un PIN válido en otro restaurante no debe contar como intento fallido');
 });
 
+test('Panel: Análisis es para MIRAR, Acciones para HACER', () => {
+  // Petición del propietario (sep 2026). Un botón que renueva el código de
+  // acceso —y deja a veintiún empleados sin poder registrarse— no puede estar
+  // escondido dentro de la pantalla de las estadísticas.
+  const ana = html.slice(html.indexOf('function renderSupAnalytics'), html.indexOf('function renderSupCodigoHTML(){'));
+  for (const id of ['alg','res','act','pase','perf','dish'])
+    assert(new RegExp("_acc\\('"+id+"'").test(ana), `falta el acordeón de mirar '${id}'`);
+  for (const [id, qué] of [['acc','el código de acceso'], ['adm','la cuenta de administración']])
+    assert(!new RegExp("_acc\\('"+id+"'").test(ana), `${qué} sigue dentro de Análisis: va en Acciones`);
+  assert(!/renderSupCodigoHTML\(\)/.test(ana), 'Análisis no puede pintar el código de acceso');
+
+  // Y están en Acciones, cada una con su pantalla.
+  const acciones = html.slice(html.indexOf('data-sec="acciones"'), html.indexOf('function renderSupDeleteEmployee'));
+  for (const [k, qué] of [['codigo','el código de acceso'], ['cuentas','las cuentas']])
+    assert(new RegExp("_supTool\\('"+k+"'\\)").test(acciones), `${qué} debe tener su botón en Acciones`);
+  const tool = html.slice(html.indexOf('function _supTool(k){'), html.indexOf('function _supSetSection'));
+  for (const k of ['codigo','cuentas'])
+    assert(new RegExp('\\b'+k+': \\(\\)=>render').test(tool), `_supTool no sabe abrir '${k}'`);
+});
+
+test('Cuentas: sólo el propietario reparte mando, y la administración sólo se ve desde ella', () => {
+  // Paso 2 del multi-restaurante: dar de alta managers desde el panel.
+  const cu = html.slice(html.indexOf('function renderSupCuentas(){'), html.indexOf('async function supPonerManager('));
+  assert(/venue_staff_list/.test(cu) && /supPonerManager\(/.test(cu),
+    'la pantalla de cuentas tiene que listar el equipo y poder nombrar manager');
+  assert(/venue_pin_set/.test(html), 'tiene que poder poner el PIN de este restaurante');
+  const pone = html.slice(html.indexOf('async function supPonerManager('), html.indexOf('function _supErrorRol('));
+  assert(/p_venue:v\}\)/.test(html.slice(html.indexOf('async function supCargarCuentas('), html.indexOf('async function supPonerManager('))),
+    'el listado va SIEMPRE atado a un restaurante');
+  // Buscar sólo «confirm(» no vale: el texto sigue ahí aunque la condición sea
+  // `false &&` (mordió en la verificación). Se comprueba la condición entera.
+  assert(/if\(hacer && !confirm\(/.test(pone),
+    'nombrar manager da acceso al panel: se confirma antes, y la condición tiene que depender de `hacer`');
+  assert(/\breturn;\s*\n/.test(pone.slice(pone.indexOf('confirm('))),
+    'si se cancela la confirmación, no se llama al servidor');
+  // El error del servidor se traduce, no se traga: si un manager intenta
+  // nombrar a otro, tiene que leer por qué no puede.
+  const err = html.slice(html.indexOf('function _supErrorRol('), html.indexOf('async function supGuardarPinVenue('));
+  for (const cod of ['solo_propietario','otro_restaurante','unknown_employee'])
+    assert(new RegExp("'"+cod+"'").test(err), `falta el mensaje para '${cod}'`);
+
+  // La cuenta de administración salió del panel: sólo se ve desde ella misma.
+  assert(/\$\{_esAdmin\(\) \? `[\s\S]{0,2200}?renderSupAdminHTML\(\)/.test(html),
+    'la sección de administración debe pintarse SÓLO cuando quien mira es la cuenta de administración');
+  // Y desde Ajustes no hay PIN de panel en memoria: se teclea.
+  const adm = html.slice(html.indexOf('function renderSupAdminHTML(){'), html.indexOf('async function supPonerRol('));
+  assert(/id="supAdmPin"/.test(adm), 'en Ajustes el PIN de supervisor se teclea: allí no se ha pasado por el panel');
+  const rol = html.slice(html.indexOf('async function supPonerRol('), html.indexOf('// El restaurante sobre el que actúa'));
+  assert(/p_pin:pin\b/.test(rol), 'el rol se cambia con el PIN tecleado, no con uno vacío');
+  assert(/if\(!pin\)\{/.test(rol), 'sin PIN no se llama al servidor siquiera');
+});
+
 // ─── 7. No leftover git conflict markers ────────────────────────
 console.log('\nHygiene');
 test('no git conflict markers in tracked source', () => {

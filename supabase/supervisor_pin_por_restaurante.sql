@@ -325,3 +325,12 @@ $$;
 --   select public.verify_supervisor_pin('<el PIN del propietario>', 'txoko');
 --   select public.verify_supervisor_pin('<el PIN del propietario>', 'mb');
 -- ═══════════════════════════════════════════════════════════════
+
+-- ═══════════════════════════════════════════════════════════════
+-- AMPLIACIÓN (11 sep) · Dar de alta managers y PINes desde el panel
+-- ═══════════════════════════════════════════════════════════════
+-- venue_pin_set   — pone o quita el PIN de un restaurante. Sólo el propietario.
+-- venue_pin_list  — qué restaurantes tienen PIN propio (nunca el PIN). Sólo él.
+-- venue_staff_list— la plantilla de UN restaurante, para repartir el mando.
+--                   Ésta sí la puede llamar su manager, pero sólo sobre el suyo.
+-- Están aplicadas en la migración `venue_pin_desde_el_panel`.
