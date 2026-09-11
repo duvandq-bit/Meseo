@@ -1,6 +1,6 @@
 # Por dónde seguir
 
-Estado a **11 de septiembre de 2026** · versión **7.435** · 332 pruebas en verde ·
+Estado a **11 de septiembre de 2026** · versión **7.436** · 333 pruebas en verde ·
 auditoría de alérgenos 0/0.
 
 ---
@@ -53,6 +53,15 @@ nube es Supabase.
 
 Cada una costó una reversión o una vergüenza. Están aquí para que no vuelva a
 pasar.
+
+### Lo que se carga «siempre» se carga también en el restaurante equivocado
+
+`data/wines.json` se pedía en SIETE sitios, sin restaurante y sin condición. El
+día que M.B. entrara, su equipo habría abierto Vinos y visto los 149 vinos de
+Txoko como suyos. Y no bastaba con cambiar la ruta: los 71 usos de `WINES`
+preguntan «¿hay lista?», nunca «¿es de aquí?», así que la lista del anterior
+sobrevivía al cambio de restaurante. Hace falta las dos cosas: ruta por
+restaurante Y tirar lo cargado al cambiar (`_vinosVigilar`).
 
 ### Un campo que baja de la nube y no se guarda no existe
 
@@ -151,7 +160,7 @@ vuelve a estar abierta.
 | La carta de otro restaurante | `data/carta-<id>.json` — ver `docs/carta-nuevo-restaurante.md` |
 | Restaurantes, colores y nombres | `data/themes.json` |
 | Ingredientes → alérgenos | `data/ingredients.json` (468 entradas) |
-| Vinos | `data/wines.json` — **común a los dos restaurantes, todavía sin separar** |
+| Vinos | `data/wines.json` es la bodega de **Txoko**; otro restaurante trae `data/wines-<id>.json`. Sin archivo, no hay pestaña de Vinos |
 | La carta de M.B. | `docs/carta-mb-borrador.json` — borrador, fuera de `data/` a propósito |
 | El acuerdo de confidencialidad | `data/nda.json` — **apagado** (`"activo": false`) |
 | El acuerdo con el restaurante | `docs/acuerdo-restaurante-borrador.md` — no se enseña en la app |
@@ -208,8 +217,6 @@ ingrediente, un vino ni un estándar.**
       de uso de IA, no datos de nadie; queda anotado para que no parezca un
       olvido.
 
-- [ ] **Separar los vinos por restaurante.** M.B. tiene bodega propia y
-      `wines.json` es común. Mismo patrón que la carta de platos.
 - [x] ~~**PIN de supervisor por restaurante.**~~ Hecho (11 sep, v7.431). El PIN
       del propietario abre todos (ámbito `*`); el de un restaurante sólo el
       suyo. Comprobado contra el servidor: con el PIN de otro restaurante NO se
