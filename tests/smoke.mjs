@@ -1332,9 +1332,13 @@ test('Team chat: nav wired, realtime teardown, safe render, moderation', () => {
   const rc = html.slice(html.indexOf('function _chatRenderStream'), html.indexOf('function _chatRenderStream') + 8000);
   assert(/_chatEsc\(m\.message\)/.test(rc) && /_chatEsc\(m\.image_url\)/.test(rc) && /_chatEsc\(m\.employee\)/.test(rc),
     'chat message/photo/author must be HTML-escaped');
-  // Moderation: author deletes own; supervisor 'Duvan' deletes any.
-  assert(/m\.employee===currentUser \|\| currentUser==='Duvan'/.test(html),
+  // Moderación: cada uno borra lo suyo; quien MANDA borra cualquiera. Iba por
+  // nombre («Duvan» escrito en el código) y ahora por rol: con dos
+  // restaurantes, el manager del otro no podía moderar su propio chat.
+  assert(/m\.employee===currentUser \|\| _esMando\(\)/.test(html),
     'chat delete gate (author or supervisor) missing');
+  assert(!/currentUser\s*===?\s*'Duvan'/.test(html),
+    'no puede quedar ningún permiso atado al nombre del propietario');
   // Photos are downscaled client-side before upload (mobile bandwidth).
   assert(/function _chatDownscale\(/.test(html) && /\.toBlob\(/.test(html) && /'image\/webp'/.test(html),
     'chat photo downscale-to-webp missing');
@@ -9294,6 +9298,54 @@ test('Panel de dirección: la tabla no arrastra la página de lado', () => {
   const tabla = html.slice(html.indexOf('function renderSupTablaHTML'), html.indexOf('async function _supPintarHistorial'));
   assert(/p\.desde/.test(tabla) && !/e\.registeredAt/.test(tabla),
     'la antigüedad se cuenta desde su primera prueba');
+});
+
+test('El panel sale por ROL, y la cuenta de administración no lo tiene', () => {
+  // Paso 3 del multi-restaurante. Antes la pestaña se decidía comparando el
+  // usuario con el nombre del propietario, así que no había forma de dársela
+  // al manager de otro restaurante.
+  const src = html.slice(html.indexOf('function _supSyncMando(){'), html.indexOf('function _venueActual(){'));
+  assert(src.length > 200, 'no encuentro el resolutor de mando');
+  const F = new Function('DB', 'currentUser', 'document', // eslint-disable-line no-new-func
+    html.slice(html.indexOf('function _esAdmin(nombre){'), html.indexOf('function _venueActual(){')) +
+    '; return {mando:_esMando, admin:_esAdmin, sync:_supSyncMando};');
+  const caso = (rol) => {
+    const boton = { style:{ display:'(sin tocar)' } };
+    const doc = { getElementById: id => id === 'navSupervisor' ? boton : null };
+    const api = F({ employees: { Yo: { name:'Yo', role: rol } } }, 'Yo', doc);
+    api.sync();
+    return { visible: boton.style.display === '', mando: api.mando(), admin: api.admin() };
+  };
+  // Quien manda ve la puerta…
+  for (const rol of ['owner','manager'])
+    assert(caso(rol).visible, `un '${rol}' tiene que ver la pestaña del panel`);
+  // …y nadie más. La cuenta de administración TAMPOCO: no deja rastro, y eso
+  // incluye no tener panel.
+  for (const rol of ['staff','admin', undefined, null, 'cualquier_cosa'])
+    assert(!caso(rol).visible, `un '${rol}' NO puede ver la pestaña del panel`);
+  assert(caso('admin').admin === true, '_esAdmin tiene que seguir reconociendo a la cuenta de administración');
+
+  // El rol tiene que LLEGAR al dispositivo: bajaba en la consulta y se tiraba,
+  // así que _esAdmin era siempre falso en el móvil y la cuenta de
+  // administración escribía XP como cualquiera (50 XP encontrados en la nube).
+  const rest = html.slice(html.indexOf('emp.displayName = r.display_name || cloudName;'), html.indexOf('// Credenciales: el hash vive en el servidor'));
+  assert(/emp\.role = r\.role \|\| 'staff';/.test(rest),
+    'el rol tiene que guardarse en la ficha local: si no, quien manda no ve su panel y la administración deja rastro');
+  const bulk = html.slice(html.indexOf('displayName: r.display_name || r.name,'), html.indexOf('xp: r.xp || 0,'));
+  assert(/role: r\.role \|\| 'staff',/.test(bulk), 'el rol también tiene que llegar en la consulta del panel');
+
+  // Y se repinta cuando el rol llega de la nube: sin la segunda pasada, quien
+  // entra por primera vez en un móvil nuevo no vería su panel hasta reabrir.
+  assert((html.match(/_supSyncMando\(\);/g) || []).length >= 2,
+    'hay que repintar la pestaña cuando el rol termina de bajar');
+
+  // El servidor es quien manda de verdad: sólo el propietario reparte mando.
+  const sql = read('supabase/supervisor_pin_por_restaurante.sql');
+  assert(/'staff','admin','manager','owner'/.test(sql), 'el rol de propietario tiene que existir en el servidor');
+  assert(/p_role in \('admin','manager','owner'\) and public\.sup_pin_scope\(p_pin\) <> '\*'/.test(sql),
+    'sólo el propietario reparte admin, manager y owner');
+  assert(/ultimo_propietario/.test(sql),
+    'quitarle el mando al último propietario dejaría la casa sin nadie que pueda repartirlo');
 });
 
 // ─── 7. No leftover git conflict markers ────────────────────────

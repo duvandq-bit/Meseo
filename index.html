@@ -52,7 +52,7 @@
 <meta property="og:description" content="Formación de equipos de sala: carta, alérgenos, vinos, exámenes y juegos de repaso.">
 <meta property="og:url" content="https://meseo.es/">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"Meseo","url":"https://meseo.es/"}</script>
-<meta name="app-version" content="7.433">
+<meta name="app-version" content="7.434">
 <meta name="app-build" content="May 2026">
 <meta name="theme-color" content="#1c2a22">
 <!-- ═══ PWA ═══ -->
@@ -1563,6 +1563,33 @@ function _esAdmin(nombre){
   }catch(_){ return false; }
 }
 
+// ¿Esta persona manda? 'owner' abre el panel de cualquier restaurante;
+// 'manager', sólo el suyo. Hasta sep 2026 esto se resolvía comparando el
+// usuario con el nombre del propietario, escrito a fuego: con dos restaurantes
+// no había forma de dar el panel a nadie más, y ese nombre viajaba además en el
+// HTML que descarga todo el mundo.
+//
+// Ojo con lo que esto es y lo que no: enseñar el botón NO concede nada. Detrás
+// hay un PIN que valida el servidor, y por restaurante. Esto sólo decide quién
+// ve la puerta.
+// Enseña o esconde la pestaña del panel según el rol de quien está dentro.
+// Se llama dos veces al entrar: antes de que baje la ficha (con lo que haya en
+// el dispositivo) y en cuanto llega de la nube.
+function _supSyncMando(){
+  const b = document.getElementById('navSupervisor');
+  if(!b) return;
+  // La cuenta de administración NO tiene panel, por diseño: no deja rastro.
+  b.style.display = (_esMando() && !_esAdmin()) ? '' : 'none';
+}
+
+function _esMando(nombre){
+  try{
+    const n = nombre || (typeof currentUser!=='undefined' ? currentUser : null);
+    const r = n && DB.employees[n] && DB.employees[n].role;
+    return r === 'owner' || r === 'manager';
+  }catch(_){ return false; }
+}
+
 function _venueActual(){
   try{
     const e = (typeof currentUser!=='undefined' && currentUser) ? DB.employees[currentUser] : null;
@@ -1768,7 +1795,7 @@ const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><p
 const SRC = 'src';
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='7.433';  // sincronizada con sw.js VERSION (guard de CI)
+const APP_VERSION='7.434';  // sincronizada con sw.js VERSION (guard de CI)
 const APP_BUILD='Jul 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;
@@ -2717,6 +2744,12 @@ async function supaRestoreEmployee(name) {
     if(r.venue) emp.venue = r.venue;
     emp.displayName = r.display_name || cloudName;
     emp.ndaVersion = r.nda_version || null;
+    // EL ROL. Bajaba en _EMP_COLS y se tiraba: sin esta línea _esAdmin() era
+    // siempre falso en el móvil, así que la cuenta de administración —que no
+    // debe dejar rastro— estaba escribiendo XP igual que cualquiera (50 XP
+    // encontrados en la nube, sep 2026), y su selector de restaurante no
+    // aparecía nunca en Ajustes. Es el rol el que gobierna quién ve el panel.
+    emp.role = r.role || 'staff';
 
     // Credenciales: el hash vive en el servidor. Si hay PIN, marcamos el
     // centinela (el login lo verifica por RPC) SALVO que ya exista un hash local
@@ -2778,6 +2811,7 @@ async function supaFetchAllEmployees() {
       name: r.name,
       displayName: r.display_name || r.name,
       venue: r.venue || null,
+      role: r.role || 'staff',   // el panel reparte mando por rol: tiene que llegar
       xp: r.xp || 0,
       streak: r.streak || 0,
       lastStudyDay: r.last_study_day || '',
@@ -10387,13 +10421,19 @@ async function closePinAndEnter(){
   try{ ndaPendiente(pinTarget).then(hay => { if(hay) ndaMostrar(pinTarget); }); }catch(_){}
   // El botón del carro de quesos sale sólo si este restaurante tiene uno.
   try{ _navQuesosSync(); }catch(_){}
-  // Show supervisor tab for Duvan
-  const _supBtn=document.getElementById('navSupervisor');
-  if(_supBtn) _supBtn.style.display=currentUser==='Duvan'?'':'none';
+  // La pestaña del panel sale por ROL, no por nombre: hasta sep 2026 estaba
+  // clavada a «Duvan», así que no había forma de dársela al manager de otro
+  // restaurante. El rol llega con la ficha de la nube (_supSyncMando la
+  // repinta cuando termina de bajar, que es después de esto).
+  _supSyncMando();
   // Service Mode removed per owner request — the FAB is no longer shown
   // Restore from Supabase first, then show dashboard, then sync back
   supaRestoreEmployee(currentUser).then(() => {
     const emp = getEmp(currentUser);
+    // El rol acaba de llegar de la nube: ahora sí se sabe si esta persona
+    // manda. Sin esta segunda pasada, quien entra por primera vez en un móvil
+    // nuevo no vería su panel hasta volver a abrir la app.
+    _supSyncMando();
     // Show onboarding only if user has never earned XP; once they earn XP it stops
     // ── Always mark today as connected so push notifications stop nagging ──
     emp.lastStudyDay = todayStr();
@@ -31493,7 +31533,10 @@ function _chatRenderStream(forceScroll){
     // Group consecutive messages from the same author within 4 min
     const grouped = m.employee===lastName && (ts-lastTs) < 4*60*1000;
     lastName = m.employee; lastTs = ts;
-    const canDel = !m.deleted && (mine || currentUser==='Duvan');
+    // Borrar el mensaje de otro es cosa de quien manda, y se resuelve por ROL:
+    // estaba clavado al nombre del propietario, así que el manager de otro
+    // restaurante no podía moderar su propio chat.
+    const canDel = !m.deleted && (mine || _esMando());
     let mentions = [];
     try{ mentions = JSON.parse(m.mentions||'[]'); }catch(_){ mentions = []; }
     const mentionsMe = !m.deleted && mentions.includes(currentUser);
@@ -31652,7 +31695,7 @@ function _chatBroadcastPush(body){
 async function _chatDelete(id){
   const m = _chatMsgs.find(x=>x.id===id);
   if(!m) return;
-  if(!(m.employee===currentUser || currentUser==='Duvan')) return;
+  if(!(m.employee===currentUser || _esMando())) return;
   if(!confirm(LANG==='en'?'Delete this message?':'¿Eliminar este mensaje?')) return;
   // Soft delete: blank the content so it is truly gone from the DB, keep the row
   // for thread order. Optimistic; realtime UPDATE reconciles for everyone.
