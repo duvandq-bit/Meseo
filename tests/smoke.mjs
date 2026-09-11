@@ -9083,6 +9083,71 @@ test('Acceso: el código del restaurante no se pinta solo', () => {
     'renovar se confirma: deja fuera a quien tenga el código viejo');
 });
 
+// ─── El PIN de supervisor es DE UN RESTAURANTE ──────────────────
+// El del manager de M.B. no puede abrir el panel de Txoko: vería su equipo, su
+// cuadrante y sus notas, y podría renovarle el código de acceso dejando a
+// veintiún empleados sin poder registrarse. El del propietario abre todos.
+//
+// Se EJECUTA el verificador con un fetch de mentira, porque lo que hay que
+// demostrar es qué viaja en la petición.
+const _pinEnvio = await (async () => {
+  const i = html.indexOf('async function verifySupervisorPin(');
+  if (i < 0) return { roto: 'no encuentro verifySupervisorPin' };
+  const src = (() => { let d = 0;
+    for (let k = html.indexOf('{', i); k < html.length; k++) {
+      if (html[k] === '{') d++; else if (html[k] === '}') { d--; if (!d) return html.slice(i, k + 1); } } })();
+  const llamar = (venue, actual) => {
+    let cuerpo = null, ruta = null;
+    const fakeFetch = (u, o) => { ruta = u; cuerpo = JSON.parse(o.body);
+      return Promise.resolve({ ok: true, json: () => Promise.resolve(true) }); };
+    const F = new Function('USE_SERVER_PIN_VERIFY','SUPA_URL','SUPA_KEY','fetch', // eslint-disable-line no-new-func
+      '_venueActual','dbgw','hashPin','SUP_PIN_HASH',
+      src + '; return verifySupervisorPin;')(
+      true, 'https://x', 'k', fakeFetch, () => actual, () => {}, () => '', '');
+    return F('1234', venue).then(() => ({ cuerpo, ruta }));
+  };
+  return { explicito: await llamar('mb', 'txoko'), pordefecto: await llamar(undefined, 'txoko') };
+})();
+
+test('El PIN de supervisor va atado a un restaurante', () => {
+  const R = _pinEnvio;
+  assert(!R.roto, R.roto);
+  assert(/rpc\/verify_supervisor_pin/.test(R.explicito.ruta), 'el PIN se sigue verificando en el servidor');
+  // 1) Si se dice de qué restaurante se pregunta, se manda ése.
+  assert(R.explicito.cuerpo.p_venue === 'mb',
+    `la petición tiene que llevar el restaurante; llevaba ${JSON.stringify(R.explicito.cuerpo)}`);
+  // 2) Si no se dice, sale el del que ha entrado — nunca en blanco.
+  assert(R.pordefecto.cuerpo.p_venue === 'txoko',
+    `sin restaurante explícito debe ir el de quien entró; llevaba ${JSON.stringify(R.pordefecto.cuerpo)}`);
+  assert(R.explicito.cuerpo.pin_input === '1234', 'el PIN se sigue mandando');
+
+  // 3) El panel actúa sobre el restaurante de quien entró, no sobre la tarjeta
+  //    del login (que es estética): renovar el código del restaurante
+  //    equivocado deja a un equipo entero sin poder registrarse.
+  const sv = html.slice(html.indexOf('function _supVenueId(){'), html.indexOf('async function supVerCodigo('));
+  assert(/return _venueActual\(\);/.test(sv), '_supVenueId debe salir de _venueActual()');
+  assert(sv.indexOf('_venueActual()') < sv.indexOf('ACTIVE_VENUE'),
+    'ACTIVE_VENUE sólo vale de último recurso, nunca como primera opción');
+
+  // 4) Y el servidor, que es quien manda de verdad.
+  const sql = read('supabase/supervisor_pin_por_restaurante.sql');
+  assert(/create table if not exists public\.supervisor_pins/.test(sql), 'falta la tabla de PINes por restaurante');
+  assert(/revoke all on function public\.sup_pin_scope\(text\) from public, anon, authenticated/.test(sql),
+    'sup_pin_scope NO puede llamarse desde el navegador: sería un oráculo de fuerza bruta sin limitador');
+  for (const fn of ['venue_code_show', 'venue_code_rotate', 'save_rota'])
+    assert(new RegExp('function public\\.' + fn + '\\([\\s\\S]{0,1400}?verify_supervisor_pin\\([a-z_]+, ?[a-z_]*venue[a-z_]*\\)').test(sql),
+      `${fn} tiene que comprobar el PIN CONTRA SU RESTAURANTE, no sólo que el PIN valga`);
+  assert(/p_role in \('admin','manager'\) and public\.sup_pin_scope\(p_pin\) <> '\*'/.test(sql),
+    'sólo el propietario reparte administración y mando: si no, un manager se da la llave de todos los restaurantes');
+  assert(/sup_pin_ok\(p_pin, v_venue\)/.test(sql), 'nadie cambia el rol de alguien de otro restaurante');
+  // El limitador por IP sigue ahí, y un PIN bueno en el restaurante equivocado
+  // no cuenta como fallo (si contara, un manager despistado bloquearía por IP a
+  // todo el hotel, que sale por la misma línea).
+  assert(/locked_until = case when fails \+ 1 >= 10/.test(sql), 'el limitador por IP no puede desaparecer');
+  assert(/if v_scope is not null then\s*\n\s*return false;/.test(sql),
+    'un PIN válido en otro restaurante no debe contar como intento fallido');
+});
+
 // ─── 7. No leftover git conflict markers ────────────────────────
 console.log('\nHygiene');
 test('no git conflict markers in tracked source', () => {

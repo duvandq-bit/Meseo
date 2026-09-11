@@ -52,7 +52,7 @@
 <meta property="og:description" content="Formación de equipos de sala: carta, alérgenos, vinos, exámenes y juegos de repaso.">
 <meta property="og:url" content="https://meseo.es/">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"Meseo","url":"https://meseo.es/"}</script>
-<meta name="app-version" content="7.430">
+<meta name="app-version" content="7.431">
 <meta name="app-build" content="May 2026">
 <meta name="theme-color" content="#1c2a22">
 <!-- ═══ PWA ═══ -->
@@ -823,13 +823,22 @@ let _supPin = null;
 
 // Unified entry point — checks server-side if available, falls back to local hash compare.
 // Returns true/false (Promise).
-async function verifySupervisorPin(pin){
+// El PIN es DE UN RESTAURANTE. El del manager de M.B. no abre el panel de
+// Txoko: si lo abriera vería su equipo, su cuadrante y sus notas, y podría
+// renovarle el código de acceso dejando a su gente sin poder registrarse.
+// El del propietario abre todos (ámbito '*' en el servidor).
+//
+// Quien decide es el servidor: aquí sólo se dice desde qué restaurante se
+// pregunta. Y quien no lo diga —un móvil con la app vieja en caché— sigue
+// entrando, porque dejar a un supervisor fuera del panel porque su teléfono no
+// ha recargado sería peor que lo que esto viene a arreglar.
+async function verifySupervisorPin(pin, venue){
   if(USE_SERVER_PIN_VERIFY){
     try {
       const res = await fetch(`${SUPA_URL}/rest/v1/rpc/verify_supervisor_pin`, {
         method: 'POST',
         headers: { 'apikey': SUPA_KEY, 'Authorization': `Bearer ${SUPA_KEY}`, 'Content-Type': 'application/json' },
-        body: JSON.stringify({ pin_input: String(pin) })
+        body: JSON.stringify({ pin_input: String(pin), p_venue: venue || _venueActual() })
       });
       if(!res.ok){ dbgw('[supPin] RPC failed:', res.status); return false; }
       const ok = await res.json();
@@ -1759,7 +1768,7 @@ const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><p
 const SRC = 'src';
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='7.430';  // sincronizada con sw.js VERSION (guard de CI)
+const APP_VERSION='7.431';  // sincronizada con sw.js VERSION (guard de CI)
 const APP_BUILD='Jul 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;
@@ -23917,8 +23926,13 @@ async function supPonerRol(rol){
   }
 }
 
+// El restaurante sobre el que actúa el panel. Va por _venueActual() —la ficha
+// de quien entró— y NO por ACTIVE_VENUE, que es la tarjeta del login y es
+// estética: renovar el código de acceso del restaurante equivocado deja a un
+// equipo entero sin poder registrarse.
 function _supVenueId(){
-  return (typeof ACTIVE_VENUE!=='undefined' && ACTIVE_VENUE && ACTIVE_VENUE.id) || 'txoko';
+  try{ return _venueActual(); }
+  catch(_){ return (typeof ACTIVE_VENUE!=='undefined' && ACTIVE_VENUE && ACTIVE_VENUE.id) || _VENUE_POR_DEFECTO; }
 }
 
 async function supVerCodigo(){

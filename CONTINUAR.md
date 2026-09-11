@@ -1,6 +1,6 @@
 # Por dónde seguir
 
-Estado a **11 de septiembre de 2026** · versión **7.430** · 324 pruebas en verde ·
+Estado a **11 de septiembre de 2026** · versión **7.431** · 325 pruebas en verde ·
 auditoría de alérgenos 0/0.
 
 ---
@@ -129,6 +129,7 @@ vuelve a estar abierta.
 | La carta de M.B. | `docs/carta-mb-borrador.json` — borrador, fuera de `data/` a propósito |
 | El acuerdo de confidencialidad | `data/nda.json` — **apagado** (`"activo": false`) |
 | El acuerdo con el restaurante | `docs/acuerdo-restaurante-borrador.md` — no se enseña en la app |
+| El PIN por restaurante | `supabase/supervisor_pin_por_restaurante.sql` — aplicado el 11 sep |
 
 No se toca la carta sin dato del propietario. **Nunca se inventa un plato, un
 ingrediente, un vino ni un estándar.**
@@ -170,9 +171,26 @@ ingrediente, un vino ni un estándar.**
 
 ### Técnico
 
+- [ ] **`custom_dishes` no tiene restaurante.** Encontrado el 11 de septiembre
+      mirando qué autoriza el PIN. La tabla de platos añadidos a mano no tiene
+      columna `venue`, y la consulta que los lee no lleva filtro: cuando M.B.
+      abra, sus platos y los de Txoko se mezclarían. Hoy es latente (la tabla
+      está prácticamente vacía). La Edge Function `manage-content` tampoco mira
+      el restaurante al comprobar el PIN, por lo mismo: no hay contra qué
+      compararlo hasta que la tabla lo tenga.
+
 - [ ] **Separar los vinos por restaurante.** M.B. tiene bodega propia y
       `wines.json` es común. Mismo patrón que la carta de platos.
-- [ ] **Un manager por restaurante. EN MARCHA** — pedido por el propietario el
+- [x] ~~**PIN de supervisor por restaurante.**~~ Hecho (11 sep, v7.431). El PIN
+      del propietario abre todos (ámbito `*`); el de un restaurante sólo el
+      suyo. Comprobado contra el servidor: con el PIN de otro restaurante NO se
+      ve ni se renueva el código de acceso, NO se cambia el rol de nadie y NO
+      se escribe el cuadrante. Y sólo el propietario reparte `admin` y
+      `manager` — si no, un manager se daría a sí mismo la llave de todos.
+      **Para dar de alta el PIN de un restaurante**, desde el editor SQL:
+      `select set_supervisor_venue_pin('mb','<pin>','Duvan');`
+      Mientras no se dé ninguno de alta, nada cambia.
+- [ ] **Un manager por restaurante. EN MARCHA (falta el 2, 3 y 4)** — pedido por el propietario el
       11 de septiembre. Hoy el supervisor está fijo en el código
       (`currentUser === 'Duvan'`) con un único PIN para toda la app; no hay
       forma de dar de alta a otro. La columna `role` está puesta para
