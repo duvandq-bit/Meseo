@@ -1,10 +1,91 @@
 {
- "updated": "2026-09-11T01:08:56.349Z",
+ "updated": "2026-09-11T09:46:37.385Z",
  "items": [
+  {
+   "t": "Miguel Navarro, el chef canario afincado en Mallorca que 'cocina' un jardín desde uno de los hoteles más míticos de la isla",
+   "u": "https://www.elespanol.com/viajes/cocinillas-gastro/reportajes-gastronomicos/20260911/miguel-navarro-chef-canario-afincado-mallorca-cocina-jardin-hoteles-miticos-isla/1003744369652_0.html",
+   "s": "elespanol.com",
+   "d": "2026-09-11T09:37:17.000Z",
+   "tags": [
+    "ALTA COCINA",
+    "CANARIAS"
+   ],
+   "img": "https://s3.elespanol.com/k/imgp/cms/elespanol/11351575.jpg?p=f:jpeg/w:1706/h:960&h=9MdqWBYy"
+  },
+  {
+   "t": "«Queremos meter Lanzarote dentro de una botella»",
+   "u": "https://www.laprovincia.es/ocio/gastronomia/2026/09/11/entrevista-queremos-meter-lanzarote-botella-vinos-134177264.html",
+   "s": "La Provincia",
+   "d": "2026-09-11T08:41:15.000Z",
+   "tags": [
+    "VINO",
+    "CANARIAS"
+   ],
+   "img": "https://estaticos-cdn.prensaiberica.es/clip/7180e713-bd63-45fb-abc3-3f22dee1f666_16-9-discover-aspect-ratio_default_0_x1203y230.jpg"
+  },
+  {
+   "t": "Santa Cruz de Tenerife será Capital Española de la Gastronomía en 2027",
+   "u": "https://www.hosteleriadigital.es/2026/09/11/santa-cruz-de-tenerife-sera-capital-espanola-de-la-gastronomia-en-2027/",
+   "s": "Hosteleria Digital",
+   "d": "2026-09-11T08:15:27.000Z",
+   "tags": [
+    "CANARIAS"
+   ]
+  },
+  {
+   "t": "Una Estrella MICHELIN aterriza en Guayaquil: Casa Julián une Ecuador y Málaga en una cena irrepetible",
+   "u": "https://confirmado.net/%E2%AD%90-una-estrella-michelin-aterriza-en-guayaquil-casa-julian-une-ecuador-y-malaga-en-una-cena-irrepetible/",
+   "s": "confirmado.net",
+   "d": "2026-09-11T08:02:15.000Z",
+   "tags": [
+    "ALTA COCINA",
+    "MICHELIN"
+   ],
+   "img": "https://confirmado.net/wp-content/uploads/2026/09/casa_julian3.png"
+  },
+  {
+   "t": "\"Escapadas de fin de semana\" para atraer visitantes de otras Islas, entre las acciones que prepara Santa Cruz de Tenerife como Capital Española de la Gastronomía",
+   "u": "https://www.eldia.es/santa-cruz-de-tenerife/2026/09/11/escapadas-semana-atraer-visitantes-islas-134154374.html",
+   "s": "eldia.es",
+   "d": "2026-09-11T08:00:21.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://estaticos-cdn.prensaiberica.es/clip/a193e5e6-406a-4324-93ef-5d2bff48781a_16-9-discover-aspect-ratio_default_0_x722y321.jpg"
+  },
+  {
+   "t": "Dónde viajar en otoño en España: 7 destinos gastronómicos",
+   "u": "https://guide.michelin.com/es/es/articulo/travel/donde-viajar-otono-espana-pueblos-gastronomicos",
+   "s": "MICHELIN Guide",
+   "d": "2026-09-11T07:14:34.000Z",
+   "tags": [
+    "MICHELIN"
+   ]
+  },
+  {
+   "t": "Jordi Cruz, chef: \"Los espaguetis más ricos no llevan carne picada, los hace mi madre con cebolla y 800 g de tomate\"",
+   "u": "https://www.elespanol.com/cocinillas/recetas/20260910/jordi-cruz-chef-espaguetis-ricos-no-llevan-carne-picada-hace-madre-tomate-cebolla-rwt-kw/1003744378581_30.html",
+   "s": "elespanol.com",
+   "d": "2026-09-11T06:25:00.000Z",
+   "tags": [
+    "ALTA COCINA"
+   ],
+   "img": "https://s3.elespanol.com/k/imgp/cms/elespanol/11351623.jpg?p=f:jpeg&h=EIo65uCW"
+  },
+  {
+   "t": "Esta isla italiana es ya un referente de la alta gastronomía",
+   "u": "https://www.mundodeportivo.com/foodie/foodie-reportajes/20260911/1004225688/isla-italiana-referente-alta-gastronomia.html?facet",
+   "s": "Mundo Deportivo",
+   "d": "2026-09-11T06:00:00.000Z",
+   "tags": [
+    "ALTA COCINA"
+   ],
+   "img": "https://imagenes2.mundodeportivo.com/files/og_thumbnail/uploads/2026/09/10/6aa2ccb0cc4c9.jpeg"
+  },
   {
    "t": "¿Crisis? ¿Qué crisis?",
    "u": "https://www.7canibales.com/?post_type",
-   "s": "7 Caníbales",
+   "s": "7canibales.com",
    "d": "2026-09-10T22:07:50.000Z",
    "tags": [
     "MICHELIN"
@@ -13,7 +94,7 @@
   {
    "t": "Santa Cruz de Tenerife, nueva capital española de la gastronomía 2027",
    "u": "https://gironanoticies.com/noticia/303711-santa-cruz-de-tenerife-nueva-capital-espanola-de-la-gastronomia-2027.htm",
-   "s": "GIRONANOTICIES.COM",
+   "s": "gironanoticies.com",
    "d": "2026-09-10T20:02:12.000Z",
    "tags": [
     "CANARIAS"
@@ -21,9 +102,19 @@
    "img": "https://gironanoticies.com/notix/multimedia/imagenes/fotos/https://imagenesprensa.ams3.digitaloceanspaces.com/img_2633c3ef79bd78debddea1180962ab50.jpeg"
   },
   {
+   "t": "El restaurante de carretera definitivo está en este pueblo medieval de Madrid: Martín Berasategui confiesa su secreto mejor guardado",
+   "u": "https://www.noticiasdelvino.com/escapadas/2026/09/10/el-restaurante-de-carretera-definitivo-esta-en-este-pueblo-medieval-de-madrid-martin-berasategui-confiesa-su-secreto-mejor-guardado-74843/",
+   "s": "Noticias del Vino",
+   "d": "2026-09-10T19:18:13.000Z",
+   "tags": [
+    "CHEF"
+   ],
+   "img": "https://www.noticiasdelvino.com/wp-content/uploads/image-583.png"
+  },
+  {
    "t": "Los bares y restaurantes facturan un 7,6% más en agosto pese a que apenas reciben más clientes: el ticket sube un 6,2%",
    "u": "https://www.eldia.es/economia/2026/09/10/bares-restaurantes-facturan-mas-agosto-menos-clientes-134163590.amp.html",
-   "s": "Eldía",
+   "s": "eldia.es",
    "d": "2026-09-10T18:05:07.000Z",
    "tags": [
     "CANARIAS"
@@ -31,14 +122,14 @@
    "img": "https://estaticos-cdn.prensaiberica.es/clip/7933bd91-0a2b-4c9a-9df1-6ff81bfcdcc2_16-9-discover-aspect-ratio_default_0_x944y566.jpg"
   },
   {
-   "t": "Ángel León alegra la vuelta de las vacaciones a los dueños del bar de Granada donde alucina José Andrés",
-   "u": "https://www.lavozdelsur.es/vida/sabor-del-sur/angel-leon-alegra-la-vuelta-de-las-vacaciones-a-los-duenos-del-bar-de-granada-donde-alucina-jose-andres.html",
-   "s": "La Voz del Sur",
-   "d": "2026-09-10T17:39:12.000Z",
+   "t": "La mayoría de chefs coinciden: así es la regla de los 7 pilares del sabor, una técnica que usan cocineros con estrellas Michelin",
+   "u": "https://www.infobae.com/espana/2026/09/10/la-mayoria-de-chefs-coinciden-asi-es-la-regla-de-los-7-pilares-del-sabor-una-tecnica-que-usan-cocineros-con-estrellas-michelin/",
+   "s": "Infobae",
+   "d": "2026-09-10T17:58:00.000Z",
    "tags": [
-    "ALTA COCINA"
+    "MICHELIN"
    ],
-   "img": "https://d2mqpxndxh0mbq.cloudfront.net/articulos/articulos-178939.jpg?v=202609110308"
+   "img": "https://www.infobae.com/resizer/v2/C3OC4QHXAZAHVH6EOHDNGCJC24.jpg?auth=393a343bb0b5c226e933e6ee2e3fbb1b946b672b864f9fd823b51c9102945a7c&smart=true&width=1200&height=630&quality=85"
   },
   {
    "t": "Tajao: el pueblo de Tenerife que se hizo famoso gracias a un vídeo de Cocituber",
@@ -104,7 +195,7 @@
   {
    "t": "Un cocinero de un restaurante de Candelaria competirá por la mejor paella del mundo",
    "u": "https://www.eldia.es/tenerife/2026/09/10/cocinero-restaurante-candelaria-competira-mejor-134145882.html",
-   "s": "Eldía",
+   "s": "eldia.es",
    "d": "2026-09-10T12:30:42.000Z",
    "tags": [
     "CANARIAS"
@@ -124,7 +215,7 @@
   {
    "t": "Zafir: un restaurante de alta cocina nacido del alma de Andalucía, en las alturas de Mijas",
    "u": "https://www.diariosur.es/malagaenlamesa/restaurantes/zafir-restaurante-alta-cocina-nacido-alma-andalucia-20260910134134-nt.html",
-   "s": "diariosur.es",
+   "s": "Diario Sur",
    "d": "2026-09-10T11:41:34.000Z",
    "tags": [
     "ALTA COCINA"
@@ -171,9 +262,19 @@
    "img": "https://cdn.diariodeavisos.com/wp-content/uploads/2026/09/cats-20.jpg"
   },
   {
+   "t": "Las Islas Canarias aprueban dos proyectos para mejorar el suministro eléctrico en Gran Canaria",
+   "u": "https://www.teneriffa-news.com/es/actualidad/noticias-de-gran-canaria/las-islas-canarias-aprueban-dos-proyectos-para-mejorar-el-suministro-electrico-en-gran-canaria_1465746.html",
+   "s": "Teneriffa News",
+   "d": "2026-09-10T09:41:50.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://www.teneriffa-news.com/media/w/windkraft-kanaren-windrad-oekostrom-windpark-2400x1350.jpg"
+  },
+  {
    "t": "Grupo Kapital abre SEXTO, su nueva apuesta por la alta cocina de la mano del chef Juan Suárez de Lezo",
    "u": "https://www.marca.com/tiramillas/gastronomia/2026/09/10/grupo-kapital-abre-sexto-nueva-apuesta-alta-cocina-mano-chef-juan-suarez-lezo.html",
-   "s": "MARCA",
+   "s": "marca.com",
    "d": "2026-09-10T09:31:57.000Z",
    "tags": [
     "ALTA COCINA"
@@ -200,104 +301,6 @@
     "MICHELIN"
    ],
    "img": "https://imagenes.heraldo.es/files/image_1920_1080/uploads/imagenes/2026/09/10/6aa27530065024-13269667.jpeg"
-  },
-  {
-   "t": "Así es el pan que representa a Galicia entre los 3 mejores de España: \"Necesitamos más de 5 horas de elaboración\"",
-   "u": "https://www.elespanol.com/quincemil/vivir/gastrogalicia/20260910/pan-representa-galicia-mejores-espana-necesitamos-horas-elaboracion-trt/1003744378661_0.html",
-   "s": "El Español",
-   "d": "2026-09-10T09:01:16.000Z",
-   "tags": [
-    "MICHELIN"
-   ],
-   "img": "https://s3.elespanol.com/k/imgp/cms/elespanol/11350849.jpg?p=f:jpeg/w:1706/h:960&h=HEUSqnPg"
-  },
-  {
-   "t": "La Guía Michelin se une a ‘Restaurantes contra el Hambre’",
-   "u": "https://www.hosteleriasalamanca.es/comer/comer-1/la-guia-michelin-se-une-a-restaurantes-contra-el-hambre",
-   "s": "Hostelería Salamanca",
-   "d": "2026-09-10T08:30:00.000Z",
-   "tags": [
-    "MICHELIN"
-   ],
-   "img": "https://www.hosteleriasalamanca.es/images/contents/704d08ca-d0e1-41ea-b1bd-b58532c27a37-1788957056.jpg"
-  },
-  {
-   "t": "El restaurante de este municipio que conquista con su gofio escaldado y carne a la parrilla: una parada obligatoria en Tenerife",
-   "u": "https://www.eldia.es/tenerife/2026/09/10/restaurante-municipio-tenerife-conquista-gofio-escaldado-dv-128201107.html",
-   "s": "Eldía",
-   "d": "2026-09-10T08:15:00.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://estaticos-cdn.prensaiberica.es/clip/e8638b35-6718-415a-adab-1cbc54d975de_16-9-discover-aspect-ratio_default_0_x555y349.jpg"
-  },
-  {
-   "t": "Andorra Taste convierte el territorio en ingrediente en su V edición con Francia como país invitado",
-   "u": "https://www.abc.es/espana/cataluna/andorra-taste-convierte-territorio-ingrediente-edicion-francia-20260910100648-nt.html",
-   "s": "ABC",
-   "d": "2026-09-10T08:06:48.000Z",
-   "tags": [
-    "ALTA COCINA"
-   ],
-   "img": "https://s1.abcstatics.com/abc/www/multimedia/espana/2026/09/10/Presentacion%20Andorra%20Taste%209%20septiembre-U60374182454auW-1200x630@diario_abc.jpg"
-  },
-  {
-   "t": "¡Primero, a gritar! El problema fundamental de Canarias",
-   "u": "https://www.teneriffa-news.com/es/opinion-y-comentario/gritar-primero-problema-canarias_1464906.html",
-   "s": "Teneriffa News",
-   "d": "2026-09-10T07:59:20.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://www.teneriffa-news.com/media/w/warten-flughafen-teneriffa-sued-2400x1350.jpg"
-  },
-  {
-   "t": "Los restaurantes MUNA y ZUARA harán un menú exclusivo en `Diálogos sobre Japón´",
-   "u": "https://majadahondamagazin.es/top/los-restaurantes-muna-y-zuara-haran-un-menu-exclusivo-en-dialogos-sobre-japon/",
-   "s": "Majadahonda Magazin",
-   "d": "2026-09-10T07:34:25.000Z",
-   "tags": [
-    "MICHELIN"
-   ]
-  },
-  {
-   "t": "Andorra Taste 2026 reivindica el producto y la cocina vinculada al territorio",
-   "u": "https://tusdestinos.net/andorra-taste-2026-chefs-cocina-montana/amp/",
-   "s": "Tusdestinos.net",
-   "d": "2026-09-10T06:55:50.000Z",
-   "tags": [
-    "ALTA COCINA"
-   ],
-   "img": "https://tusdestinos.net/wp-content/uploads/2026/09/andorra_taste1.jpg"
-  },
-  {
-   "t": "Iberostar Beachfront Resorts y el chef José Pizarro se estrenan en Tenerife",
-   "u": "https://www.revistahosteleria.com/texto-diario/mostrar/5990121/iberostar-beachfront-resorts-chef-jose-pizarro-estrenan-tenerife",
-   "s": "Revista HOSTELERÍA",
-   "d": "2026-09-10T06:40:42.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://www.revistahosteleria.com/images/showid/8108381"
-  },
-  {
-   "t": "Los mejores hoteles del mundo inaugurados en 2026",
-   "u": "https://guide.michelin.com/es/es/articulo/travel/mejores-hoteles-del-mundo-inaugurados-2026",
-   "s": "MICHELIN Guide",
-   "d": "2026-09-10T04:27:17.000Z",
-   "tags": [
-    "MICHELIN"
-   ]
-  },
-  {
-   "t": "Vuelve el Andorra Taste, el encuentro internacional de gastronomía de alta montaña",
-   "u": "https://www.lavanguardia.com/comer/al-dia/20260910/11630784/vuelve-andorra-taste-encuentro-internacional-gastronomia-alta-montana.amp.html",
-   "s": "La Vanguardia",
-   "d": "2026-09-10T04:00:00.000Z",
-   "tags": [
-    "ALTA COCINA"
-   ],
-   "img": "https://www.lavanguardia.com/files/og_thumbnail/files/fp/uploads/2026/09/09/6aa176961b9b6.r_d.1178-326-5436.jpeg"
   }
  ]
 }
