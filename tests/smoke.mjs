@@ -8784,6 +8784,85 @@ test('Administración: mira cualquier restaurante y no deja rastro', () => {
     'si la carta no llega, se vuelve al restaurante anterior: enseñar la de otro es justo lo que no debe pasar');
 });
 
+// ─── El cargador de cartas, ejecutado de verdad ──────────────────
+// M.B. tiene su carro de quesos listo y su carta todavía no (espera a que
+// cocina diga de dónde salen diecisiete alérgenos). La cuenta que existe para
+// revisar contenido tiene que poder entrar a revisar lo que sí hay. Lo que NO
+// puede pasar bajo ningún concepto: que al entrar a M.B. se queden puestos los
+// platos de Txoko bajo el rótulo de M.B.
+//
+// Se EJECUTA cargarCarta con un fetch de mentira, porque lo que hay que
+// demostrar es qué queda en DISHES al terminar, y eso no se lee en el código.
+// El await va aquí fuera: test() es síncrono y una prueba async se tragaría
+// los fallos en silencio — la otra manera de escribir un guard que no muerde.
+const _cartaRes = await (async () => {
+  const src = html.slice(html.indexOf('let _cartaPuesta = _VENUE_POR_DEFECTO;'),
+                         html.indexOf('// Derivación automática:'));
+  if (src.length < 500) return { roto: 'no encuentro el cargador de cartas' };
+  const monta = (esAdmin, responder) => {
+    const D = [], DE = [], DC = {}, DA = {};
+    const BASE = { DISHES:[{id:1,name:'Croqueta de jamón'}], DISHES_EN:[{id:1,name:'Ham croquette'}],
+                   DISH_COMPONENTS:{1:['jamon']}, DISH_ACTIONS:{1:{}} };
+    const F = new Function('DISHES','DISHES_EN','DISH_COMPONENTS','DISH_ACTIONS', // eslint-disable-line no-new-func
+      '_CARTA_BASE','_VENUE_POR_DEFECTO','_esAdmin','loadLazyData','showToast','LANG',
+      src + '; return { cargarCarta, estado: () => ({ platos: DISHES.map(d=>d.name), en: DISHES_EN.length, comp: Object.keys(DISH_COMPONENTS).length }) };');
+    return F(D, DE, DC, DA, BASE, 'txoko', () => esAdmin, responder, () => {}, 'es');
+  };
+  const plato = (id,es,en) => ({ venue:null, DISHES:[{id,name:es}], DISHES_EN:[{id,name:en}],
+                                 DISH_COMPONENTS:{[id]:['x']}, DISH_ACTIONS:{} });
+  const carta = v => Object.assign(plato(9,'Chipirón','Baby squid'), { venue:v });
+  const falta404 = () => Promise.reject(new Error('HTTP 404'));
+  const sinRed   = () => Promise.reject(new Error('Failed to fetch'));
+  // El repartidor mira la RUTA: así un mismo montaje puede tener carta para un
+  // restaurante y no tenerla para otro, que es el caso que hay que probar.
+  const porRuta = mapa => ruta => {
+    const v = (ruta.match(/carta-([^.]+)\.json/) || [])[1];
+    return Object.prototype.hasOwnProperty.call(mapa, v) ? mapa[v]() : falta404();
+  };
+
+  // ── El escenario que importa ──
+  // Hay que llegar a M.B. con OTRA carta ya puesta. Ojo con 'txoko': cargarCarta
+  // sale por el atajo `venue === _cartaPuesta` sin aplicar nada, así que usarlo
+  // de punto de partida dejaba DISHES vacío y la comprobación no probaba nada
+  // (mordió en la verificación: la mutación «no vaciar» pasaba tan campante).
+  const admin = monta(true, porRuta({ otro: () => Promise.resolve(carta('otro')) }));
+  const rOtro = await admin.cargarCarta('otro');
+  const puestosAntes = admin.estado().platos.length;
+  const rVacia = await admin.cargarCarta('mb');
+  return {
+    rOtro, puestosAntes, vacia: rVacia, estado: admin.estado(),
+    sinRed: await monta(true,  sinRed).cargarCarta('mb'),
+    staff:  await monta(false, falta404).cargarCarta('mb'),
+    propia: await monta(true,  porRuta({ mb: () => Promise.resolve(carta('mb')) })).cargarCarta('mb'),
+    ajena:  await monta(true,  porRuta({ mb: () => Promise.resolve(carta('txoko')) })).cargarCarta('mb')
+  };
+})();
+
+test('Administración: un restaurante sin carta se abre VACÍO, nunca con la del vecino', () => {
+  const R = _cartaRes;
+  assert(!R.roto, R.roto);
+  // 0) El escenario tiene que partir de una carta REALMENTE puesta; si no,
+  //    comprobar que M.B. queda vacío no demuestra nada.
+  assert(R.rOtro === true && R.puestosAntes > 0,
+    'la prueba no arranca con otra carta puesta: no estaría probando nada');
+  // 1) Administrador + restaurante sin carta → entra, y entra vacío.
+  assert(R.vacia === 'vacia',
+    `el administrador debería entrar a un restaurante sin carta; devolvió ${JSON.stringify(R.vacia)}`);
+  assert(R.estado.platos.length === 0,
+    `PELIGRO: al entrar a M.B. se quedan puestos los platos del anterior: ${R.estado.platos.join(', ')}`);
+  assert(R.estado.en === 0 && R.estado.comp === 0,
+    'la carta en inglés y los componentes también tienen que quedar a cero');
+  // 2) Sin red NO es «no hay carta»: ahí no se entra ni siendo administrador.
+  assert(R.sinRed === false,
+    'un fallo de red no puede confundirse con «este restaurante no tiene carta»');
+  // 3) Quien NO es administrador sigue sin entrar a un restaurante sin carta.
+  assert(R.staff === false, 'sólo la cuenta de administración entra a un restaurante sin carta');
+  // 4) Con carta de verdad, se aplica la suya.
+  assert(R.propia === true, 'con carta propia se entra normal');
+  // 5) Y un archivo que dice ser de otro restaurante se sigue rechazando.
+  assert(R.ajena === false, 'un archivo que dice ser de otro restaurante no se aplica');
+});
+
 test('Multi-restaurante: nadie lee el nombre del vecino en su propia formación', () => {
   // El nombre del restaurante estaba escrito a fuego en seis sitios que ve el
   // empleado: dos títulos de nivel, la bienvenida, la guía de emplatado y las
@@ -8971,8 +9050,17 @@ test('Carta: cada restaurante carga la suya, y si no llega no se entra', () => {
   const cuerpo = (() => { let d = 0;
     for (let k = html.indexOf('{', i); k < html.length; k++) {
       if (html[k] === '{') d++; else if (html[k] === '}') { d--; if (!d) return html.slice(i, k + 1); } } })();
-  assert(/if\(!\(await cargarCarta\(\(_e && _e\.venue\) \|\| _VENUE_POR_DEFECTO\)\)\) return;/.test(cuerpo),
+  assert(/let _v = \(_e && _e\.venue\) \|\| _VENUE_POR_DEFECTO;/.test(cuerpo),
+    'el restaurante de quien entra sale de SU ficha, no del selector del login');
+  assert(/if\(!\(await cargarCarta\(_v\)\)\) return;/.test(cuerpo),
     'sin la carta de su restaurante no se entra');
+  // La cuenta de administración vuelve al restaurante que ELIGIÓ: todo lo demás
+  // ya se guía por _venueActual(), y cargar aquí el de su ficha la devolvía a
+  // Txoko con el resto de la app puesta en M.B.
+  assert(/_esAdmin\(pinTarget\)/.test(cuerpo) && /localStorage\.getItem\('txk_venue'\)/.test(cuerpo),
+    'el administrador vuelve al restaurante que dejó elegido');
+  assert(cuerpo.indexOf('_esAdmin(pinTarget)') < cuerpo.indexOf('await cargarCarta(_v)'),
+    'esa elección se resuelve ANTES de cargar la carta');
   const iCarta = cuerpo.indexOf('cargarCarta'), iApp = cuerpo.indexOf('screenApp');
   assert(iCarta > 0 && iApp > 0 && iCarta < iApp,
     'la carta se resuelve ANTES de pintar la app');

@@ -52,7 +52,7 @@
 <meta property="og:description" content="Formación de equipos de sala: carta, alérgenos, vinos, exámenes y juegos de repaso.">
 <meta property="og:url" content="https://meseo.es/">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"Meseo","url":"https://meseo.es/"}</script>
-<meta name="app-version" content="7.429">
+<meta name="app-version" content="7.430">
 <meta name="app-build" content="May 2026">
 <meta name="theme-color" content="#1c2a22">
 <!-- ═══ PWA ═══ -->
@@ -1606,9 +1606,26 @@ function _cartaAplicar(c){
   return true;
 }
 
+// Dejar la carta a CERO. Es lo que separa «este restaurante aún no tiene
+// carta» de «te estoy enseñando la del vecino»: si no se vacía, los platos
+// del anterior se quedan puestos bajo el nombre del nuevo.
+function _cartaVaciar(){
+  DISHES.length = 0;
+  DISHES_EN.length = 0;
+  for(const k of Object.keys(DISH_COMPONENTS)) delete DISH_COMPONENTS[k];
+  for(const k of Object.keys(DISH_ACTIONS)) delete DISH_ACTIONS[k];
+}
+
 // Devuelve false si NO se pudo dejar puesta la carta del restaurante que toca.
 // Quien llama no debe dejar entrar: enseñarle a alguien de M.B. la carta de
 // Txoko sería exactamente la fuga que todo esto viene a cerrar. Fallar cerrado.
+//
+// Con una excepción, y sólo para la cuenta de administración: un restaurante
+// que TODAVÍA no tiene carta se abre vacío ('vacia'), no se cierra. M.B. es
+// justo ese caso — su carro de quesos ya está listo y su carta espera a que
+// cocina conteste de dónde salen diecisiete alérgenos. Sin esto, la cuenta que
+// existe para revisar contenido no puede revisar el único contenido que hay.
+// Vacío nunca es la carta de otro: eso lo garantiza _cartaVaciar().
 async function cargarCarta(venue){
   venue = venue || _VENUE_POR_DEFECTO;
   if(venue === _cartaPuesta) return true;
@@ -1627,6 +1644,15 @@ async function cargarCarta(venue){
     _cartaPuesta = venue;
     return true;
   }catch(e){
+    // Sólo el 404 significa «aún no hay carta». Un fallo de red significa «no
+    // lo sé», y ahí no se entra ni siendo administrador: creerse que M.B. está
+    // vacío porque falló el wifi sería peor que no entrar.
+    const noExiste = !!(e && /^HTTP 4/.test(e.message || ''));
+    if(noExiste && _esAdmin()){
+      _cartaVaciar();
+      _cartaPuesta = venue;
+      return 'vacia';
+    }
     if(typeof showToast === 'function') showToast(LANG==='en'
       ? 'Could not load your restaurant’s menu. Check your connection and try again.'
       : 'No se ha podido cargar la carta de tu restaurante. Comprueba la conexión e inténtalo otra vez.',
@@ -1733,7 +1759,7 @@ const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><p
 const SRC = 'src';
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='7.429';  // sincronizada con sw.js VERSION (guard de CI)
+const APP_VERSION='7.430';  // sincronizada con sw.js VERSION (guard de CI)
 const APP_BUILD='Jul 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;
@@ -9978,8 +10004,15 @@ function openAjustes(){
         QUESOS = null; _quesosVenue = null;   // el carro es de cada restaurante
         try{ _navQuesosSync(); }catch(_){}
         if(typeof showTab==='function') showTab(typeof currentTab!=='undefined' ? currentTab : 'dashboard');
-        if(typeof showToast==='function') showToast(
-          (_en?'Now looking at ':'Ahora estás viendo ') + ((tema && tema.name) || id), 'info', 3500);
+        const _nom = (tema && tema.name) || id;
+        // Sin carta el aviso tiene que decirlo, y decir cuánto rato: si no,
+        // «M.B. está vacío» se lee como una app rota y no como una carta que
+        // todavía no ha entrado.
+        if(typeof showToast==='function') showToast(ok === 'vacia'
+          ? (_en ? _nom + ' has no menu yet — you can review everything else (the cheese trolley, for one).'
+                 : _nom + ' todavía no tiene carta — puedes revisar lo demás, como el carro de quesos.')
+          : (_en?'Now looking at ':'Ahora estás viendo ') + _nom,
+          ok === 'vacia' ? 'warning' : 'info', ok === 'vacia' ? 6500 : 3500);
       };
     });
   }
@@ -10296,7 +10329,16 @@ async function closePinAndEnter(){
   // carta de Txoko sería exactamente la fuga que todo esto viene a cerrar.
   try{
     const _e = (typeof DB!=='undefined' && DB.employees) ? DB.employees[pinTarget] : null;
-    if(!(await cargarCarta((_e && _e.venue) || _VENUE_POR_DEFECTO))) return;
+    // Para la cuenta de administración manda el restaurante que ELIGIÓ, no el
+    // de su ficha: todo lo demás ya se guía por _venueActual(), y cargar aquí
+    // el de la ficha la devolvía a Txoko con el resto de la app en M.B.
+    let _v = (_e && _e.venue) || _VENUE_POR_DEFECTO;
+    if(_esAdmin(pinTarget)){
+      // Aquí currentUser todavía no es quien entra, así que _venueActual() no
+      // sirve: se lee la elección guardada a pelo.
+      try{ const _g = localStorage.getItem('txk_venue'); if(_g) _v = _g; }catch(_){}
+    }
+    if(!(await cargarCarta(_v))) return;
   }catch(e){ return; }
   const overlay=document.getElementById('pinOverlay');
   if(overlay) overlay.remove();

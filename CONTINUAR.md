@@ -1,19 +1,24 @@
 # Por dónde seguir
 
-Estado a **10 de septiembre de 2026** · versión **7.429** · 323 pruebas en verde ·
+Estado a **11 de septiembre de 2026** · versión **7.430** · 324 pruebas en verde ·
 auditoría de alérgenos 0/0.
 
 ---
 
 ## 🔴 Lo único que bloquea algo ahora mismo
 
-**No hay ningún código de acceso creado, y sin él nadie puede registrarse.**
+**M.B. no puede abrir hasta que cocina conteste las diecisiete preguntas.**
 
-Desde que el alta pasa por el servidor, una cuenta nueva sólo se crea con el
-código del restaurante. Y todavía no existe ninguno: `venue_codes` está vacía.
+Su carta sigue en `docs/carta-mb-borrador.json`, fuera de `data/`, porque en
+diecisiete platos la ficha declara un alérgeno y no dice de dónde sale. La
+lista está en `docs/mb-preguntas-cocina.md`, lista para reenviar.
 
-Lo arregla el propietario en dos toques: **Panel de supervisor → Código de
-acceso → Renovar**. Los 21 empleados que ya están dentro no se ven afectados.
+Mientras tanto **la cuenta de administración sí entra a M.B.**, con la carta
+vacía, para poder revisar el carro de quesos (48, ya cargado). Un restaurante
+sin carta se abre a cero, nunca con los platos del anterior.
+
+El código de acceso de Txoko ya está generado (10 sep). Los nuevos pueden
+registrarse.
 
 ---
 
@@ -134,9 +139,9 @@ ingrediente, un vino ni un estándar.**
 
 ### Del propietario — datos
 
-- [ ] **M.B.: once preguntas para cocina.** La carta ya está transcrita en
-      `docs/carta-mb-borrador.json`, pero en once casos la ficha de cocina
-      declara un alérgeno y no dice de dónde sale. La lista, lista para
+- [ ] **M.B.: diecisiete preguntas para cocina.** La carta ya está transcrita
+      en `docs/carta-mb-borrador.json`, pero en diecisiete casos la ficha de
+      cocina declara un alérgeno y no dice de dónde sale. La lista, lista para
       reenviar, está en `docs/mb-preguntas-cocina.md`. **Hasta que se
       contesten, la carta no puede pasar a `data/` — el guard de CI lo
       impide, y hace bien.**
@@ -153,7 +158,6 @@ ingrediente, un vino ni un estándar.**
 
 ### Del propietario — fuera del repositorio
 
-- [ ] **Generar el código de acceso** (lo de arriba, lo urgente).
 - [ ] **La carta vegetariana impresa** sigue listando los «Tomates aliñados con
       granizado de gazpacho», que llevan pescado por el ponzu de la cebolla
       encurtida. En la app ya salieron de ahí.
@@ -168,9 +172,14 @@ ingrediente, un vino ni un estándar.**
 
 - [ ] **Separar los vinos por restaurante.** M.B. tiene bodega propia y
       `wines.json` es común. Mismo patrón que la carta de platos.
-- [ ] **Un manager por restaurante.** Hoy el supervisor está fijo en el código
-      (`currentUser === 'Duvan'`) con un único PIN. La columna `role` está
-      puesta para engancharlo.
+- [ ] **Un manager por restaurante. EN MARCHA** — pedido por el propietario el
+      11 de septiembre. Hoy el supervisor está fijo en el código
+      (`currentUser === 'Duvan'`) con un único PIN para toda la app; no hay
+      forma de dar de alta a otro. La columna `role` está puesta para
+      engancharlo. Va junto con esto: el propietario quiere que la sección
+      «Cuenta de administración» **sólo la vea la cuenta de administración**, y
+      hoy vive dentro del panel de supervisor, que esa cuenta no tiene — así
+      que la sección se mueve de sitio al reordenar los roles.
 - [ ] **Ver el acuerdo firmado** desde Ajustes: el propio texto lo promete y no
       existe.
 - [ ] Nombres pegados que **no** se limpian, a propósito y con motivo escrito:
