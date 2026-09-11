@@ -1,6 +1,35 @@
 {
- "updated": "2026-09-10T19:44:43.253Z",
+ "updated": "2026-09-11T01:08:56.349Z",
  "items": [
+  {
+   "t": "¿Crisis? ¿Qué crisis?",
+   "u": "https://www.7canibales.com/?post_type",
+   "s": "7 Caníbales",
+   "d": "2026-09-10T22:07:50.000Z",
+   "tags": [
+    "MICHELIN"
+   ]
+  },
+  {
+   "t": "Santa Cruz de Tenerife, nueva capital española de la gastronomía 2027",
+   "u": "https://gironanoticies.com/noticia/303711-santa-cruz-de-tenerife-nueva-capital-espanola-de-la-gastronomia-2027.htm",
+   "s": "GIRONANOTICIES.COM",
+   "d": "2026-09-10T20:02:12.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://gironanoticies.com/notix/multimedia/imagenes/fotos/https://imagenesprensa.ams3.digitaloceanspaces.com/img_2633c3ef79bd78debddea1180962ab50.jpeg"
+  },
+  {
+   "t": "Los bares y restaurantes facturan un 7,6% más en agosto pese a que apenas reciben más clientes: el ticket sube un 6,2%",
+   "u": "https://www.eldia.es/economia/2026/09/10/bares-restaurantes-facturan-mas-agosto-menos-clientes-134163590.amp.html",
+   "s": "Eldía",
+   "d": "2026-09-10T18:05:07.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://estaticos-cdn.prensaiberica.es/clip/7933bd91-0a2b-4c9a-9df1-6ff81bfcdcc2_16-9-discover-aspect-ratio_default_0_x944y566.jpg"
+  },
   {
    "t": "Ángel León alegra la vuelta de las vacaciones a los dueños del bar de Granada donde alucina José Andrés",
    "u": "https://www.lavozdelsur.es/vida/sabor-del-sur/angel-leon-alegra-la-vuelta-de-las-vacaciones-a-los-duenos-del-bar-de-granada-donde-alucina-jose-andres.html",
@@ -9,7 +38,7 @@
    "tags": [
     "ALTA COCINA"
    ],
-   "img": "https://d2mqpxndxh0mbq.cloudfront.net/articulos/articulos-178939.jpg?v=202609102144"
+   "img": "https://d2mqpxndxh0mbq.cloudfront.net/articulos/articulos-178939.jpg?v=202609110308"
   },
   {
    "t": "Tajao: el pueblo de Tenerife que se hizo famoso gracias a un vídeo de Cocituber",
@@ -34,7 +63,7 @@
   {
    "t": "‘Cebollas Verdes’ estrena temporada en La Radio Canaria con una entrega dedicada al vino",
    "u": "https://rtvc.es/cebollas-verdes-estrena-temporada-en-la-radio-canaria-con-una-entrega-dedicada-al-vino-prensa-11-septiembre-2026/",
-   "s": "Radio Televisión Canaria",
+   "s": "rtvc.es",
    "d": "2026-09-10T15:30:00.000Z",
    "tags": [
     "VINO",
@@ -85,7 +114,7 @@
   {
    "t": "El rioja de Marqués de Murrieta, vino elegido para la zona VIP del GP de España en Madring",
    "u": "https://www.teleprensa.com/articulo/deportes/rioja-marques-murrieta-vino-elegido-zona-vip-gp-espana-madring/202609101217212504150.html",
-   "s": "teleprensa.com",
+   "s": "Teleprensa",
    "d": "2026-09-10T12:17:21.000Z",
    "tags": [
     "MICHELIN",
@@ -115,7 +144,7 @@
   {
    "t": "Ferran Adrià desvela el truco para que el tomate frito de bote sepa a salsa casera",
    "u": "https://www.larazon.es/gastronomia/ferran-adria-desvela-truco-que-tomate-frito-bote-sepa-salsa-casera-b50m_202609106aa287716e80d3110846dc76.html",
-   "s": "La Razón",
+   "s": "larazon.es",
    "d": "2026-09-10T10:33:21.000Z",
    "tags": [
     "ALTA COCINA"
@@ -140,16 +169,6 @@
     "CANARIAS"
    ],
    "img": "https://cdn.diariodeavisos.com/wp-content/uploads/2026/09/cats-20.jpg"
-  },
-  {
-   "t": "Las Islas Canarias aprueban dos proyectos para mejorar el suministro eléctrico en Gran Canaria",
-   "u": "https://www.teneriffa-news.com/es/actualidad/noticias-de-gran-canaria/las-islas-canarias-aprueban-dos-proyectos-para-mejorar-el-suministro-electrico-en-gran-canaria_1465746.html",
-   "s": "Teneriffa News",
-   "d": "2026-09-10T09:41:50.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://www.teneriffa-news.com/media/w/windkraft-kanaren-windrad-oekostrom-windpark-2400x1350.jpg"
   },
   {
    "t": "Grupo Kapital abre SEXTO, su nueva apuesta por la alta cocina de la mano del chef Juan Suárez de Lezo",
@@ -279,27 +298,6 @@
     "ALTA COCINA"
    ],
    "img": "https://www.lavanguardia.com/files/og_thumbnail/files/fp/uploads/2026/09/09/6aa176961b9b6.r_d.1178-326-5436.jpeg"
-  },
-  {
-   "t": "El enoturismo reserva finos viajes de sensaciones entre bodegas y paisajes",
-   "u": "https://diariodeavisos.elespanol.com/2026/09/enoturismo-viajes-sensaciones-bodegas-paisajes/",
-   "s": "Diario de Avisos",
-   "d": "2026-09-10T00:08:05.000Z",
-   "tags": [
-    "VINO",
-    "CANARIAS"
-   ],
-   "img": "https://cdn.diariodeavisos.com/wp-content/uploads/2026/09/vinedos.jpg"
-  },
-  {
-   "t": "Dónde se puede degustar la mejor pizza de Tenerife",
-   "u": "https://www.teneriffa-news.com/es/informacion-sobre-tenerife/las-cinco-pizzerias-mejor-valoradas-de-tenerife-segun-tripadvisor_1464396.html",
-   "s": "Teneriffa News",
-   "d": "2026-09-09T22:58:37.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://www.teneriffa-news.com/media/p/pizza-teneriffa-2400x1350.jpg"
   }
  ]
 }
