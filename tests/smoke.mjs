@@ -520,8 +520,34 @@ test('multi-restaurant theming is wired (applyTheme + login picker)', () => {
   // only accepts enabled venues (registry is the gate, not just the styling).
   assert(/aria-disabled="true" tabindex="-1"/.test(html), 'locked venues must be aria-disabled');
   assert(/Próximamente/.test(html), 'locked venues must read Próximamente');
-  assert(/const v = _enabledVenues\(\)\.find\(x => x\.id === id\);\s*\n?\s*if\(!v\) return;/.test(html),
-    'selectVenue must reject venues that are not enabled');
+  // Se EJECUTA selectVenue en vez de mirar su forma: lo que hay que demostrar
+  // es que un restaurante cerrado NO se aplica, y eso no se lee en el código.
+  {
+    const src = html.slice(html.indexOf('function selectVenue(id){'), html.indexOf('async function initVenues('));
+    const THEMES = { venues: [ { id:'txoko', name:'TXOKO', enabled:true, brand:{} },
+                               { id:'mb',    name:'M.B.',  enabled:false, brand:{} } ] };
+    const correr = (id) => {
+      const puesto = [];
+      const avisos = [];
+      const doc = { querySelectorAll: () => [], getElementById: () => null };
+      const F = new Function('THEMES', '_enabledVenues', 'applyTheme', '_venueTriggerSync', // eslint-disable-line no-new-func
+        'document', 'showToast', 'LANG',
+        src + '; return selectVenue;');
+      F(THEMES, () => THEMES.venues.filter(v => v.enabled), v => puesto.push(v.id),
+        () => {}, doc, m => avisos.push(m), 'es')(id);
+      return { puesto, avisos };
+    };
+    const abierto = correr('txoko');
+    assert(abierto.puesto.join() === 'txoko', 'un restaurante abierto sí se aplica');
+    const cerrado = correr('mb');
+    assert(cerrado.puesto.length === 0,
+      'selectVenue must reject venues that are not enabled');
+    // Y rechazar EN SILENCIO era un toque muerto: el propietario intentó entrar
+    // a M.B. desde el login varias veces y la app no decía nada.
+    assert(cerrado.avisos.length === 1 && /M\.B\./.test(cerrado.avisos[0]) && /Ajustes/.test(cerrado.avisos[0]),
+      `tocar un restaurante cerrado tiene que explicar por qué y dónde ir; dijo: ${JSON.stringify(cerrado.avisos)}`);
+    assert(abierto.avisos.length === 0, 'un restaurante abierto no tiene nada que explicar');
+  }
   // El héroe del login ya no muestra nombres de venue (siempre «Meseo», jul
   // 2026, arreglo del parpadeo de marca) — el auto-ajuste .long del logo se
   // fue con esa responsabilidad y no debe volver.

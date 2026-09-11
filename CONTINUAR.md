@@ -1,6 +1,6 @@
 # Por dónde seguir
 
-Estado a **11 de septiembre de 2026** · versión **7.436** · 333 pruebas en verde ·
+Estado a **11 de septiembre de 2026** · versión **7.437** · 333 pruebas en verde ·
 auditoría de alérgenos 0/0.
 
 ---
@@ -16,6 +16,11 @@ lista está en `docs/mb-preguntas-cocina.md`, lista para reenviar.
 Mientras tanto **la cuenta de administración sí entra a M.B.**, con la carta
 vacía, para poder revisar el carro de quesos (48, ya cargado). Un restaurante
 sin carta se abre a cero, nunca con los platos del anterior.
+
+**Cómo se entra a M.B.: NO desde la tarjeta del login** —ahí sale bloqueado y
+seguirá bloqueado hasta que abra— sino entrando con la cuenta `Administrador`
+y cambiando en **Ajustes → Restaurante (admin)**. Tocar la tarjeta del login
+ahora lo explica en vez de no hacer nada.
 
 El código de acceso de Txoko ya está generado (10 sep). Los nuevos pueden
 registrarse.
@@ -53,6 +58,14 @@ nube es Supabase.
 
 Cada una costó una reversión o una vergüenza. Están aquí para que no vuelva a
 pasar.
+
+### Un control que rechaza en silencio parece roto
+
+La tarjeta de M.B. en el login rechazaba el toque sin decir nada: sólo una
+etiqueta diminuta de «Próximamente» que no parece un motivo. El propietario
+intentó entrar por ahí varias veces y reportó tres veces que «no se puede
+seleccionar M.B.». El código hacía exactamente lo que debía; lo que faltaba era
+decirlo. Un `return` mudo en algo que se toca es un fallo de producto.
 
 ### Lo que se carga «siempre» se carga también en el restaurante equivocado
 
