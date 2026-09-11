@@ -9597,6 +9597,70 @@ test('Vinos: la bodega es de un restaurante, y quien no tiene no ve la de otro',
     'hay que decirlo en los dos idiomas');
 });
 
+test('Marcaje: la cubertería del plato es un campo, no una frase escondida en las notas', () => {
+  // M.B. pidió que el marcaje se vea en la aplicación (propietario, sep 2026).
+  // Estaba metido dentro de `notes`, de donde nadie lo saca: las notas son un
+  // párrafo de avisos de alérgenos, y el marcaje es lo PRIMERO que hace el
+  // camarero, antes de que el plato salga de cocina.
+
+  // ── 1. Se pinta de verdad. La fase de Servicio del recorrido guiado es
+  //      código puro: se ejecuta, no se lee.
+  const src = html.slice(html.indexOf('function _djNotasHTML(notas){'),
+                         html.indexOf('// ── Phase 5: Quiz Generator ──'));
+  assert(src.includes('_djPhaseService'), 'no encuentro la fase de Servicio');
+  const F = new Function('catLocal', 'allergenLocal', 'escapeHtml', 'WINES', // eslint-disable-line no-new-func
+    src + '; return _djPhaseService;');
+  const esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  const fase = F(c => c, a => a, esc, []);
+
+  const conM = fase({ id: 1, cat: 'Postres', allergens: [], name: 'X' },
+                    { marcaje: 'Tenedor y cuchara dorados.' }, false);
+  assert(/MARCAJE/.test(conM), 'el plato que trae marcaje tiene que enseñarlo');
+  assert(conM.includes('Tenedor y cuchara dorados.'), 'y tiene que enseñar el marcaje que trae');
+
+  // La carta de Txoko NO tiene marcaje. No se inventa uno ni se pinta el
+  // hueco vacío.
+  const sinM = fase({ id: 1, cat: 'Postres', allergens: [], name: 'X' }, {}, false);
+  assert(!/MARCAJE|CUTLERY/.test(sinM), 'sin marcaje en la carta no se pinta nada');
+
+  // En inglés también: «cuchara negra principal» no le sirve a nadie.
+  const en = fase({ id: 1, cat: 'Postres', allergens: [], name: 'X' },
+                  { marcaje: 'Gold fork and spoon.' }, true);
+  assert(/CUTLERY MARKING/.test(en), 'el marcaje sale traducido');
+
+  // Y va escapado: es texto de una carta que se edita a mano.
+  const mal = fase({ id: 1, cat: 'Postres', allergens: [], name: 'X' },
+                   { marcaje: '<img src=x onerror=alert(1)>' }, false);
+  assert(!/<img/.test(mal), 'el marcaje se escapa antes de pintarlo');
+
+  // ── 2. Los otros tres sitios donde se mira un plato ──
+  const ficha = html.slice(html.indexOf('function renderRepasoDishDetail(dishId){'),
+                           html.indexOf('function changeRepasoTopic('));
+  assert(/const _marcaje = getDish\(dish\)\.marcaje/.test(ficha) &&
+         /Cutlery marking':'Marcaje'/.test(ficha) && /escapeHTML\(_marcaje\)/.test(ficha),
+    'la ficha completa del plato tiene que enseñar el marcaje');
+  assert(/const marcajeHtml = dd\.marcaje/.test(html) && /\$\{marcajeHtml\}/.test(html),
+    'el reverso de la tarjeta tiene que enseñar el marcaje');
+  assert(/class="empl-ov-marc">🍽️ \$\{escapeHtml\(dd\.marcaje\)\}/.test(html),
+    'la ficha rápida del panel tiene que enseñar el marcaje');
+  assert(/\.empl-ov-marc\{/.test(read('styles.css')), 'falta el estilo de .empl-ov-marc');
+
+  // ── 3. Y en la carta, el marcaje vive en su campo, no repetido en las
+  //      notas: si se queda en los dos sitios, el camarero lo lee dos veces y
+  //      uno de los dos se queda viejo.
+  const mb = JSON.parse(read('docs/carta-mb-borrador.json'));
+  const total = mb.DISHES.length;
+  assert(total >= 30, `la carta de M.B. tiene ${total} platos, esperaba 30 o más`);
+  for (const lista of [mb.DISHES, mb.DISHES_EN]) {
+    for (const d of lista) {
+      assert(typeof d.marcaje === 'string' && d.marcaje.length > 3,
+        `el plato ${d.id} (${d.name}) se ha quedado sin marcaje`);
+      assert(!String(d.notes || '').includes('🍴'),
+        `el plato ${d.id} (${d.name}) repite el marcaje dentro de las notas`);
+    }
+  }
+});
+
 // ─── 7. No leftover git conflict markers ────────────────────────
 console.log('\nHygiene');
 test('no git conflict markers in tracked source', () => {
