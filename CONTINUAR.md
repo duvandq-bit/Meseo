@@ -1,6 +1,6 @@
 # Por dónde seguir
 
-Estado a **11 de septiembre de 2026** · versión **7.439** · 333 pruebas en verde ·
+Estado a **11 de septiembre de 2026** · versión **7.440** · 333 pruebas en verde ·
 auditoría de alérgenos 0/0.
 
 ---
@@ -58,6 +58,24 @@ nube es Supabase.
 
 Cada una costó una reversión o una vergüenza. Están aquí para que no vuelva a
 pasar.
+
+### Una columna sin permiso tumba la consulta ENTERA
+
+El fallo más caro de septiembre y el más difícil de ver. `venue`,
+`display_name`, `role` y `nda_version` se crearon **sin concederle lectura a la
+clave anónima**. PostgREST no devuelve la fila con menos campos: rechaza la
+consulta entera con «permission denied». Como `supaRestoreEmployee` las pide
+todas en `_EMP_COLS`, fallaba SIEMPRE — y con ella se caían en silencio el rol,
+el restaurante, el nombre visible y la firma. Desde fuera sólo se veía «la
+cuenta de administración no tiene panel», reportado tres veces.
+
+**Si se añade una columna a `_EMP_COLS`, hay que concederla** en
+`supabase/permisos_columnas_empleados.sql`. Y comprobarlo como `anon`, no como
+propietario de la base: `set local role anon;` y lanzar la consulta exacta.
+
+Un `return false` en silencio ante un error de permisos es indistinguible de
+«no hay datos». Ahora queda anotado en `window._syncFallo` y **sale en
+Ajustes**, junto a la versión, el usuario, el rol y el restaurante.
 
 ### `getEmp` creaba fichas duplicadas por las mayúsculas
 
@@ -208,6 +226,7 @@ vuelve a estar abierta.
 | El acuerdo con el restaurante | `docs/acuerdo-restaurante-borrador.md` — no se enseña en la app |
 | El PIN por restaurante | `supabase/supervisor_pin_por_restaurante.sql` — aplicado el 11 sep |
 | Los avisos push | `supabase/functions/send-push/index.ts` — v4, filtra por restaurante |
+| Permisos de columna | `supabase/permisos_columnas_empleados.sql` — **si añades una columna a `_EMP_COLS`, concédela ahí** |
 
 No se toca la carta sin dato del propietario. **Nunca se inventa un plato, un
 ingrediente, un vino ni un estándar.**

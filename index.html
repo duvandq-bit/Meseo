@@ -52,7 +52,7 @@
 <meta property="og:description" content="Formación de equipos de sala: carta, alérgenos, vinos, exámenes y juegos de repaso.">
 <meta property="og:url" content="https://meseo.es/">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"Meseo","url":"https://meseo.es/"}</script>
-<meta name="app-version" content="7.439">
+<meta name="app-version" content="7.440">
 <meta name="app-build" content="May 2026">
 <meta name="theme-color" content="#1c2a22">
 <!-- ═══ PWA ═══ -->
@@ -1873,7 +1873,7 @@ const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><p
 const SRC = 'src';
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='7.439';  // sincronizada con sw.js VERSION (guard de CI)
+const APP_VERSION='7.440';  // sincronizada con sw.js VERSION (guard de CI)
 const APP_BUILD='Jul 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;
@@ -2794,7 +2794,19 @@ async function supaRestoreEmployee(name) {
       { headers: { 'apikey': SUPA_KEY, 'Authorization': `Bearer ${SUPA_KEY}` } },
       8000
     );
-    if(!res.ok) { dbgw('[Txoko] Supabase restore failed:', res.status); return false; }
+    if(!res.ok) {
+      // Un fallo aquí NO se nota: la app sigue con lo que tenga en el
+      // dispositivo y todo lo que viene de la nube —rol, restaurante, nombre
+      // visible, firma— se queda como si nunca hubiera existido. Así estuvo
+      // días: las cuatro columnas del multi-restaurante se crearon sin permiso
+      // de lectura para la clave anónima, PostgREST rechazaba la consulta
+      // ENTERA, y desde fuera sólo se veía «la cuenta no tiene panel».
+      // Ahora queda anotado y sale en Ajustes.
+      window._syncFallo = (res.status === 401 || res.status === 403)
+        ? 'permiso denegado' : ('HTTP ' + res.status);
+      dbgw('[Txoko] Supabase restore failed:', res.status);
+      return false;
+    }
     const rows = await res.json();
 
     if(!Array.isArray(rows) || !rows.length) { _restoreCache.set(cacheKey, {ts:Date.now(), result:false}); return false; }
@@ -2828,6 +2840,7 @@ async function supaRestoreEmployee(name) {
     // encontrados en la nube, sep 2026), y su selector de restaurante no
     // aparecía nunca en Ajustes. Es el rol el que gobierna quién ve el panel.
     emp.role = r.role || 'staff';
+    window._syncFallo = null;   // la nube contestó: lo de antes ya no vale
 
     // Credenciales: el hash vive en el servidor. Si hay PIN, marcamos el
     // centinela (el login lo verifica por RPC) SALVO que ya exista un hash local
@@ -10096,7 +10109,8 @@ function openAjustes(){
            no se abre en un pase. Va también quién eres y en qué restaurante
            estás, que es justo lo que hace falta para diagnosticar a distancia. -->
       <div style="font-family:'DM Mono',monospace;font-size:.58rem;color:#8a7a5c;text-align:center;margin-top:1.3rem;line-height:1.7;letter-spacing:.04em">
-        v${APP_VERSION} · ${escapeHTML(currentUser||'—')}${_esAdmin()?' · admin':(_esMando()?' · '+(DB.employees[currentUser]&&DB.employees[currentUser].role||''):'')} · ${escapeHTML(_venueActual())}
+        v${APP_VERSION} · ${escapeHTML(currentUser||'—')}${_esAdmin()?' · admin':(_esMando()?' · '+((_ficha(currentUser)||{}).role||''):'')} · ${escapeHTML(_venueActual())}
+        ${window._syncFallo ? `<br><span style="color:#b0432b">${_en?'cloud sync':'sincronización'}: ${escapeHTML(window._syncFallo)}</span>` : ''}
       </div>
       <button id="ajLogout" style="width:100%;margin-top:.5rem;background:transparent;border:1px solid rgba(200,60,60,.4);color:#c0392b;border-radius:10px;padding:.7rem;font-family:'Quicksand',sans-serif;font-weight:700;font-size:.85rem;cursor:pointer">${_en?'Log out':'Cerrar sesión'}</button>
     </div>`;

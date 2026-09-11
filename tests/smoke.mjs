@@ -9369,6 +9369,24 @@ test('El panel sale por ROL, y la cuenta de administración no lo tiene', () => 
       'y con él, la pestaña del panel');
   }
 
+  // Un fallo al bajar la ficha NO se nota: la app sigue con lo que tenga en el
+  // dispositivo y el rol, el restaurante, el nombre visible y la firma se
+  // quedan como si no existieran. Así estuvo días —las cuatro columnas del
+  // multi-restaurante se crearon sin permiso de lectura para la clave anónima
+  // y PostgREST rechazaba la consulta entera— y desde fuera sólo se veía «la
+  // cuenta no tiene panel». Tiene que quedar anotado y verse.
+  const _iRest = html.indexOf('async function supaRestoreEmployee');
+  const rest2 = html.slice(_iRest, html.indexOf('const rows = await res.json();', _iRest));
+  assert(/window\._syncFallo = \(res\.status === 401 \|\| res\.status === 403\)/.test(rest2),
+    'un rechazo de permisos al bajar la ficha tiene que anotarse, no morir en un dbgw');
+  assert(/window\._syncFallo = null;/.test(html),
+    'y borrarse cuando la nube sí contesta');
+  assert(/\$\{window\._syncFallo \? `<br>/.test(html),
+    'el fallo de sincronización tiene que salir en Ajustes, donde se puede leer sin consola');
+  // La línea de diagnóstico: versión, usuario, rol y restaurante.
+  assert(/v\$\{APP_VERSION\} · \$\{escapeHTML\(currentUser\|\|'—'\)\}/.test(html),
+    'Ajustes tiene que decir qué versión corre y quién es: preguntarlo a distancia costó dos rondas');
+
   // Y la raíz: getEmp NO puede crear una ficha nueva cuando ya existe la misma
   // con otra caja. Creaba una vacía y sin rol bajo el nombre tecleado, y a
   // partir de ahí la app leía ESA: la cuenta de administración perdía el panel
