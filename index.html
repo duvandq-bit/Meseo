@@ -52,7 +52,7 @@
 <meta property="og:description" content="Formación de equipos de sala: carta, alérgenos, vinos, exámenes y juegos de repaso.">
 <meta property="og:url" content="https://meseo.es/">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"Meseo","url":"https://meseo.es/"}</script>
-<meta name="app-version" content="7.434">
+<meta name="app-version" content="7.435">
 <meta name="app-build" content="May 2026">
 <meta name="theme-color" content="#1c2a22">
 <!-- ═══ PWA ═══ -->
@@ -1795,7 +1795,7 @@ const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><p
 const SRC = 'src';
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='7.434';  // sincronizada con sw.js VERSION (guard de CI)
+const APP_VERSION='7.435';  // sincronizada con sw.js VERSION (guard de CI)
 const APP_BUILD='Jul 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;
@@ -3131,12 +3131,12 @@ async function subscribeToPush(employeeName) {
         'Content-Type': 'application/json',
         'Prefer': 'resolution=merge-duplicates,return=minimal'
       },
-      body: JSON.stringify({
+      body: JSON.stringify(_vSello({
         employee_name: employeeName,
         endpoint: subJSON.endpoint,
         keys_p256dh: subJSON.keys.p256dh,
         keys_auth: subJSON.keys.auth
-      })
+      }))
     });
     dbg('[Txoko Push] Saved to Supabase:', saveRes.status, saveRes.ok ? 'OK' : 'FAIL');
 
@@ -3147,7 +3147,7 @@ async function subscribeToPush(employeeName) {
           method: 'POST',
           headers: { 'apikey':SUPA_KEY, 'Authorization':`Bearer ${SUPA_KEY}`, 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            target: employeeName,
+            target: employeeName, venue: _venueActual(),
             title: '◆ Notificaciones activadas',
             body: '¡Recibirás avisos aunque la app esté cerrada!',
             tag: 'push-welcome'
@@ -3372,7 +3372,7 @@ async function markNotifRead(id, el) {
 async function supaFetchCustomDishes() {
   try {
     const res = await fetch(
-      `${SUPA_URL}/rest/v1/custom_dishes?select=*&order=created_at.asc`,
+      `${SUPA_URL}/rest/v1/custom_dishes?select=*&${_vq()}&order=created_at.asc`,
       { headers: { 'apikey': SUPA_KEY, 'Authorization': `Bearer ${SUPA_KEY}` } }
     );
     if(!res.ok) return null;
@@ -11323,7 +11323,7 @@ async function loadDishPhotos(){
   // Fotos del EQUIPO (Supabase): las aprobadas pisan a las del repo (la más
   // reciente gana); las pendientes se marcan para mostrar "en revisión".
   try{
-    const r = await fetch(`${SUPA_URL}/rest/v1/dish_photo_submissions?status=in.(pending,approved)&select=dish_id,url,status,created_at&order=created_at.desc`,
+    const r = await fetch(`${SUPA_URL}/rest/v1/dish_photo_submissions?status=in.(pending,approved)&${_vq()}&select=dish_id,url,status,created_at&order=created_at.desc`,
       { headers:{ 'apikey':SUPA_KEY, 'Authorization':`Bearer ${SUPA_KEY}` } });
     if(r.ok){
       const rows = await r.json();
@@ -11361,7 +11361,7 @@ async function _dishPhotoUpload(dishId, inputEl){
     const ins=await fetch(`${SUPA_URL}/rest/v1/dish_photo_submissions`,{
       method:'POST',
       headers:{ 'apikey':SUPA_KEY, 'Authorization':`Bearer ${SUPA_KEY}`, 'Content-Type':'application/json', 'Prefer':'return=minimal' },
-      body:JSON.stringify({ dish_id:dishId, url, author:currentUser||null }) });
+      body:JSON.stringify(_vSello({ dish_id:dishId, url, author:currentUser||null })) });
     if(!ins.ok) throw new Error('insert');
     if(DISH_PHOTO_PENDING) DISH_PHOTO_PENDING.add(dishId);
     showToast(_en?'Photo sent — pending supervisor approval':'Foto enviada — pendiente de aprobación del supervisor','success',3200);
@@ -11492,7 +11492,7 @@ async function renderSupPhotoQueue(){
   </div>`;
   let rows=[];
   try{
-    const r=await fetch(`${SUPA_URL}/rest/v1/dish_photo_submissions?status=eq.pending&select=*&order=created_at.asc`,
+    const r=await fetch(`${SUPA_URL}/rest/v1/dish_photo_submissions?status=eq.pending&${_vq()}&select=*&order=created_at.asc`,
       { headers:{ 'apikey':SUPA_KEY, 'Authorization':`Bearer ${SUPA_KEY}` } });
     if(r.ok) rows=await r.json();
   }catch(_){}
@@ -24838,7 +24838,7 @@ async function sendAppUpdatePush(){
     await fetch(`${SUPA_URL}/functions/v1/send-push`, {
       method:'POST', headers:{ 'apikey':SUPA_KEY, 'Authorization':`Bearer ${SUPA_KEY}`, 'Content-Type':'application/json' },
       body: JSON.stringify({
-        target:'all',
+        target:'all', venue: _venueActual(),
         title:'📲 Meseo · v'+APP_VERSION,
         body: LANG==='en'
           ? 'New version ready — tap to open with the update installed.'
@@ -24867,7 +24867,7 @@ async function sendNotification(){
       method: 'POST',
       headers: { 'apikey':SUPA_KEY, 'Authorization':`Bearer ${SUPA_KEY}`, 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        target,
+        target, venue: _venueActual(),
         title: `${typeIcons[type]||'◆'} Meseo`,
         body: msg,
         tag: type
@@ -31630,7 +31630,7 @@ async function _chatSend(){
         method:'POST', headers:{ 'apikey':SUPA_KEY, 'Authorization':`Bearer ${SUPA_KEY}`, 'Content-Type':'application/json' },
         // renotify: a mention must ring even if a coalesced 'chat' notification
         // is already on screen. data.tab deep-links the tap into the Chat tab.
-        body: JSON.stringify({ target:n, title:`💬 ${currentUser} · Chat`, body:snippet, tag:'chat', renotify:true, data:{tab:'chat'} })
+        body: JSON.stringify({ target:n, venue:_venueActual(), title:`💬 ${currentUser} · Chat`, body:snippet, tag:'chat', renotify:true, data:{tab:'chat'} })
       }).catch(()=>{});
     });
   }
@@ -31686,7 +31686,7 @@ function _chatBroadcastPush(body){
     recipients.forEach(n=>{
       fetch(`${SUPA_URL}/functions/v1/send-push`, {
         method:'POST', headers:{ 'apikey':SUPA_KEY, 'Authorization':`Bearer ${SUPA_KEY}`, 'Content-Type':'application/json' },
-        body: JSON.stringify(Object.assign({ target:n, title:`💬 ${currentUser} · Chat`, body:snippet }, extra))
+        body: JSON.stringify(Object.assign({ target:n, venue:_venueActual(), title:`💬 ${currentUser} · Chat`, body:snippet }, extra))
       }).catch(()=>{});
     });
   }catch(_){}

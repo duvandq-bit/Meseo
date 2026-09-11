@@ -9348,6 +9348,80 @@ test('El panel sale por ROL, y la cuenta de administración no lo tiene', () => 
     'quitarle el mando al último propietario dejaría la casa sin nadie que pueda repartirlo');
 });
 
+test('Multi-restaurante: ninguna consulta se escapa del filtro de restaurante', () => {
+  // Paso 4. Barrido de TODAS las llamadas a Supabase, no de las que uno
+  // recuerda. Encontró cuatro tablas sin restaurante; la peor, las
+  // suscripciones push: «todo el equipo» seleccionaba todas las de la base, así
+  // que el manager de un restaurante hacía sonar el móvil del de al lado.
+  //
+  // Cada llamada tiene que caer en una de estas cajas:
+  //   · lleva _vq()      → lectura filtrada por restaurante
+  //   · lleva _vSello()  → escritura sellada con el restaurante
+  //   · va por clave     → id=eq. / name=eq. / name=ilike. / endpoint=eq.
+  //                        (la clave es única en toda la base)
+  //   · está en la lista de excepciones, con su motivo escrito
+  const PORCLAVE = /(\?|&)(id|name|endpoint|dish_id)=(eq|ilike)\./;
+  const EXCEPCIONES = new Map([
+    // La ficha propia se identifica por el usuario, que es único en toda la
+    // base; el restaurante lo fija el alta y el cliente no debe pisarlo.
+    ['employees?on_conflict=name', 'upsert de la ficha propia, por clave'],
+    ['employees', 'upsert de la ficha propia, por clave'],
+  ]);
+  const lineas = html.split('\n');
+  const sueltas = [];
+  for (let i = 0; i < lineas.length; i++) {
+    const m = lineas[i].match(/rest\/v1\/([a-z_]+)([^`'"]*)/);
+    if (!m) continue;
+    const tabla = m[1];
+    if (tabla === 'rpc') continue;                    // las RPC validan dentro
+    const url = m[1] + m[2];
+    // La ventana de una escritura: el cuerpo va unas líneas más abajo.
+    const bloque = lineas.slice(i, i + 12).join('\n');
+    // …salvo cuando el cuerpo se arma antes en una variable (el chat lo hace).
+    // Entonces se sigue la variable hasta su declaración en vez de ensanchar la
+    // ventana a ciegas, que dejaría pasar cosas de verdad sueltas.
+    let selladaFuera = false;
+    const via = bloque.match(/body: *JSON\.stringify\(([A-Za-z_$][\w$]*)\)/);
+    if (via) {
+      const decl = new RegExp('(const|let|var) *' + via[1] + ' *=');
+      for (let k = i; k >= Math.max(0, i - 60); k--)
+        if (decl.test(lineas[k])) { selladaFuera = /_vSello\(/.test(lineas.slice(k, k + 6).join('\n')); break; }
+    }
+    const ok = /_vq\(\)/.test(lineas[i])
+            || /_vSello\(/.test(bloque)
+            || selladaFuera
+            || PORCLAVE.test(lineas[i])
+            || /method: *'DELETE'/.test(bloque)
+            || [...EXCEPCIONES.keys()].some(k => url.startsWith(k) && !/select=/.test(url));
+    if (!ok) sueltas.push(`línea ${i + 1}: ${url.slice(0, 80)}`);
+  }
+  assert(sueltas.length === 0,
+    'consultas sin restaurante (o filtra, o sella, o va por clave, o se anota la excepción con su motivo):\n      ' + sueltas.join('\n      '));
+
+  // Y las cuatro que se arreglaron, nombradas, para que no se deshaga.
+  assert(/custom_dishes\?select=\*&\$\{_vq\(\)\}/.test(html), 'los platos añadidos a mano son de un restaurante');
+  assert((html.match(/dish_photo_submissions\?status=[^`]*\$\{_vq\(\)\}/g) || []).length >= 2,
+    'las dos lecturas de fotos tienen que filtrar');
+  assert(/_vSello\(\{ dish_id:dishId, url, author/.test(html), 'la foto que sube el equipo se sella');
+  assert(/_vSello\(\{\s*employee_name: employeeName/.test(html), 'la suscripción push se sella');
+
+  // El aviso a «todo el equipo» tiene que decir de qué equipo habla.
+  // Se cuentan por LÍNEA: una expresión que busque el cierre `})` se para en el
+  // primer paréntesis que encuentra y se deja llamadas fuera (vio 3 de 5).
+  const push = [];
+  for (let i = 0; i < lineas.length; i++)
+    if (/functions\/v1\/send-push/.test(lineas[i])) push.push({ n: i + 1, txt: lineas.slice(i, i + 12).join('\n') });
+  assert(push.length >= 5, `esperaba las 5 llamadas a send-push, veo ${push.length}`);
+  for (const p of push)
+    assert(/venue: *_venueActual\(\)/.test(p.txt),
+      `la llamada a send-push de la línea ${p.n} no lleva el restaurante: sin él, «todo el equipo» son TODOS los restaurantes`);
+  // Y la función del servidor tiene que usarlo.
+  const fn = read('supabase/functions/send-push/index.ts');
+  assert(/const \{ target, venue,/.test(fn), 'send-push tiene que recibir el restaurante');
+  assert(/venue=eq\.\$\{encodeURIComponent\(venue\)\}/.test(fn),
+    'send-push tiene que filtrar por restaurante cuando el aviso es para todos');
+});
+
 // ─── 7. No leftover git conflict markers ────────────────────────
 console.log('\nHygiene');
 test('no git conflict markers in tracked source', () => {
