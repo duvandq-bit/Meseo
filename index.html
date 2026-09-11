@@ -52,7 +52,7 @@
 <meta property="og:description" content="Formación de equipos de sala: carta, alérgenos, vinos, exámenes y juegos de repaso.">
 <meta property="og:url" content="https://meseo.es/">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"Meseo","url":"https://meseo.es/"}</script>
-<meta name="app-version" content="7.437">
+<meta name="app-version" content="7.438">
 <meta name="app-build" content="May 2026">
 <meta name="theme-color" content="#1c2a22">
 <!-- ═══ PWA ═══ -->
@@ -1592,8 +1592,15 @@ function _esAdmin(nombre){
 function _supSyncMando(){
   const b = document.getElementById('navSupervisor');
   if(!b) return;
-  // La cuenta de administración NO tiene panel, por diseño: no deja rastro.
-  b.style.display = (_esMando() && !_esAdmin()) ? '' : 'none';
+  // La cuenta de administración SÍ ve el panel. Estuvo fuera un día por una
+  // extrapolación mía: el propietario pidió que no apareciera «en las
+  // puntuaciones» y yo lo escribí como «no deja rastro», que no es lo mismo.
+  // Mirar el panel no deja rastro ninguno, y está para revisar contenido —
+  // también el de la casa.
+  //
+  // Y enseñar el botón no concede nada: detrás hay un PIN que valida el
+  // servidor, y por restaurante. Quien no lo tenga, no entra.
+  b.style.display = (_esMando() || _esAdmin()) ? '' : 'none';
 }
 
 function _esMando(nombre){
@@ -1848,7 +1855,7 @@ const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><p
 const SRC = 'src';
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='7.437';  // sincronizada con sw.js VERSION (guard de CI)
+const APP_VERSION='7.438';  // sincronizada con sw.js VERSION (guard de CI)
 const APP_BUILD='Jul 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;

@@ -1,6 +1,6 @@
 # Por dónde seguir
 
-Estado a **11 de septiembre de 2026** · versión **7.437** · 333 pruebas en verde ·
+Estado a **11 de septiembre de 2026** · versión **7.438** · 333 pruebas en verde ·
 auditoría de alérgenos 0/0.
 
 ---
@@ -58,6 +58,19 @@ nube es Supabase.
 
 Cada una costó una reversión o una vergüenza. Están aquí para que no vuelva a
 pasar.
+
+### La administración no puntúa: lo dice el SERVIDOR, no el móvil
+
+`getEmp()` crea la ficha local **sin rol**, así que entre entrar y que baje la
+ficha de la nube hay una ventana en la que `_esAdmin()` es falso y la escritura
+se cuela. Por ahí entraron 50 XP en septiembre y otros 90 **después** de
+«arreglarlo». Ahora lo recorta un trigger (`supabase/administracion_no_puntua.sql`)
+y no hay ventana. El corte del cliente se queda, pero sólo para ahorrar viajes.
+
+**La cuenta SÍ tiene panel de supervisor.** Estuvo un día sin él por una
+extrapolación: el propietario pidió que no apareciera «en las puntuaciones» y se
+escribió como «no deja rastro», que no es lo mismo. Mirar el panel no deja
+rastro, y detrás hay un PIN de todas formas.
 
 ### Un control que rechaza en silencio parece roto
 
