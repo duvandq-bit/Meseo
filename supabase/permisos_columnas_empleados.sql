@@ -1,0 +1,34 @@
+-- ═══════════════════════════════════════════════════════════════
+-- Meseo · Las columnas del multi-restaurante, legibles por la app
+-- ═══════════════════════════════════════════════════════════════
+--
+-- EL FALLO MÁS CARO DE SEPTIEMBRE, y el más difícil de ver.
+--
+-- `venue`, `display_name`, `role` y `nda_version` se crearon SIN concederle
+-- lectura a la clave anónima, que es la que usa la app. Y PostgREST no
+-- devuelve una fila con menos campos cuando falta un permiso: rechaza la
+-- consulta ENTERA con «permission denied». Como `supaRestoreEmployee` las pide
+-- todas en `_EMP_COLS`, fallaba SIEMPRE, y con ella se caían en silencio:
+--
+--   · el ROL            → la cuenta de administración perdía el panel y el
+--                          selector de restaurante (reportado TRES veces)
+--   · el RESTAURANTE    → todo el mundo caía al de por defecto
+--   · el NOMBRE VISIBLE → se enseñaba el usuario
+--   · la FIRMA          → el acuerdo se habría vuelto a pedir
+--
+-- Desde fuera sólo se veía «la cuenta no tiene panel». Y desde dentro, nada:
+-- el código de la app devolvía false y seguía con lo que tuviera el móvil.
+--
+-- Ninguna de las cuatro es un secreto: las cuatro se enseñan en la app y lo
+-- que el rol concede va detrás del PIN, que lo valida el servidor. El PIN sí
+-- es secreto y sigue cerrado. `nda_signed_at` y `registered_at` se quedan
+-- fuera porque la app no las pide.
+--
+-- Aplicado en la migración `anon_puede_leer_rol_restaurante_nombre_y_firma`.
+-- Comprobado como `anon` con la consulta exacta de `_EMP_COLS`: funciona; y
+-- el PIN sigue dando «permission denied».
+--
+-- SI SE AÑADE UNA COLUMNA NUEVA A `_EMP_COLS`, HAY QUE CONCEDERLA AQUÍ.
+-- ═══════════════════════════════════════════════════════════════
+
+grant select (venue, display_name, role, nda_version) on public.employees to anon, authenticated;
