@@ -10065,3 +10065,76 @@ body, .screen{ min-height: 100vh; min-height: 100dvh; }
   color: var(--parch2); margin: .45rem 0 0; opacity: .92;
 }
 .q-vacio{ text-align: center; padding: 2rem 1rem; color: var(--parch3); font-size: .82rem; }
+
+/* ── Pantallas de Acciones del panel (código de acceso, cuentas) ──────────
+   Acciones es para HACER: botones grandes, estado siempre visible y ninguna
+   fila estrecha — el panel se abre de pie, con el móvil en una mano. */
+.sup-card{ background: linear-gradient(155deg,#faf6ee,#f0e8d8); border: 1px solid var(--line);
+  border-radius: var(--r); padding: 1rem; margin-bottom: .75rem; }
+.sup-card-t{ font-family:'DM Mono',monospace; font-size:.6rem; color: var(--gold);
+  letter-spacing:.12em; text-transform: uppercase; margin-bottom:.5rem; }
+.sup-card-d{ font-family:'Quicksand',sans-serif; font-size:.78rem; color: var(--parch2);
+  line-height:1.5; margin-bottom:.7rem; }
+.sup-msg{ font-family:'Quicksand',sans-serif; font-size:.74rem; min-height:1.1rem;
+  margin-top:.45rem; color: var(--parch3); }
+.sup-inp{ width:100%; box-sizing:border-box; padding:.7rem .85rem; border:1px solid var(--line2);
+  border-radius:10px; font-size:16px; background:#fff; color:#2b2b2b; margin-bottom:.5rem; }
+.sup-btns{ display:flex; gap:.5rem; }
+.sup-b1{ flex:1; min-height:44px; background: var(--gold); color: var(--parchment); border:none;
+  border-radius:10px; font-family:'Quicksand',sans-serif; font-weight:700; font-size:.82rem; cursor:pointer; }
+.sup-b2{ flex:1; min-height:44px; background:transparent; border:1px solid var(--line2);
+  color: var(--parch2); border-radius:10px; font-family:'Quicksand',sans-serif; font-weight:700;
+  font-size:.82rem; cursor:pointer; }
+.sup-b1[disabled],.sup-b2[disabled]{ opacity:.45; cursor:default; }
+.sup-list{ display:flex; flex-direction:column; gap:.4rem; }
+.sup-row{ display:flex; align-items:center; gap:.6rem; padding:.5rem .65rem;
+  background: rgba(255,255,255,.5); border:1px solid var(--line); border-radius:10px; min-height:48px; }
+.sup-row-n{ flex:1; font-family:'Quicksand',sans-serif; font-size:.82rem; font-weight:600;
+  color: var(--parchment); min-width:0; }
+.sup-row-u{ display:block; font-family:'DM Mono',monospace; font-size:.55rem; color: var(--parch4); font-weight:400; }
+.sup-tag{ display:inline-block; margin-left:.35rem; padding:.1rem .4rem; border-radius:20px;
+  background: rgba(124,111,168,.15); border:1px solid rgba(124,111,168,.3);
+  font-family:'DM Mono',monospace; font-size:.5rem; color:#6b5f93; letter-spacing:.06em;
+  text-transform: uppercase; vertical-align: middle; }
+.sup-vacio{ font-size:.78rem; color: var(--parch4); font-style: italic; padding:.4rem 0; }
+
+/* ── «¿Quién necesita mi atención esta semana?» ───────────────────────────
+   Tres grupos con el motivo escrito al lado: un semáforo sin motivo no sirve
+   para hablar con nadie. Cada fila abre su perfil, así que 48px de alto. */
+.sup-at-g{ margin-bottom:.7rem; }
+.sup-at-g:last-of-type{ margin-bottom:0; }
+.sup-at-h{ font-family:'Quicksand',sans-serif; font-size:.78rem; color: var(--parch2);
+  margin-bottom:.35rem; }
+.sup-at-h b{ color: var(--parchment); }
+.sup-at-r{ display:flex; align-items:center; justify-content:space-between; gap:.6rem;
+  padding:.45rem .6rem; margin-bottom:.25rem; min-height:44px; cursor:pointer;
+  background: rgba(255,255,255,.5); border:1px solid var(--line); border-radius:10px;
+  -webkit-tap-highlight-color: transparent; }
+.sup-at-r:focus-visible{ outline:2px solid var(--gold); outline-offset:2px; }
+.sup-at-n{ font-family:'Quicksand',sans-serif; font-size:.8rem; font-weight:600;
+  color: var(--parchment); flex:0 1 auto; min-width:0; }
+.sup-at-m{ font-family:'DM Mono',monospace; font-size:.58rem; color: var(--parch3);
+  text-align:right; flex:1 1 auto; min-width:0; }
+.sup-at-mas{ font-family:'DM Mono',monospace; font-size:.58rem; color: var(--parch4);
+  padding-left:.6rem; }
+.sup-at-pie{ font-family:'Quicksand',sans-serif; font-size:.68rem; color: var(--parch4);
+  line-height:1.45; margin-top:.6rem; }
+
+/* ── La tabla del equipo ──────────────────────────────────────────────────
+   Ocho columnas no caben en un móvil: la tabla lleva SU propio scroll lateral
+   para que la página no se mueva de lado. */
+.sup-tabla-wrap{ overflow-x:auto; -webkit-overflow-scrolling:touch;
+  border:1px solid var(--line); border-radius: var(--r); background: rgba(255,255,255,.45); }
+.sup-tabla{ border-collapse: collapse; width:100%; min-width:560px;
+  font-family:'Quicksand',sans-serif; font-size:.76rem; }
+.sup-tabla th{ font-family:'DM Mono',monospace; font-size:.52rem; letter-spacing:.08em;
+  text-transform: uppercase; color: var(--gold); text-align:left; font-weight:400;
+  padding:.5rem .55rem; border-bottom:1px solid var(--line); white-space:nowrap; }
+.sup-tabla td{ padding:.5rem .55rem; border-bottom:1px solid var(--line);
+  color: var(--parch2); white-space:nowrap; }
+.sup-tabla tbody tr{ cursor:pointer; -webkit-tap-highlight-color: transparent; }
+.sup-tabla tbody tr:focus-visible{ outline:2px solid var(--gold); outline-offset:-2px; }
+.sup-tabla tbody tr:last-child td{ border-bottom:none; }
+.sup-td-n{ color: var(--parchment); font-weight:600; position:sticky; left:0;
+  background: linear-gradient(90deg,#f7f2e7 88%,rgba(247,242,231,0)); }
+.sup-td-d{ color: var(--parch4); font-size:.62rem; }

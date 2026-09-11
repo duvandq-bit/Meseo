@@ -52,7 +52,7 @@
 <meta property="og:description" content="Formación de equipos de sala: carta, alérgenos, vinos, exámenes y juegos de repaso.">
 <meta property="og:url" content="https://meseo.es/">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"Meseo","url":"https://meseo.es/"}</script>
-<meta name="app-version" content="7.429">
+<meta name="app-version" content="7.433">
 <meta name="app-build" content="May 2026">
 <meta name="theme-color" content="#1c2a22">
 <!-- ═══ PWA ═══ -->
@@ -823,13 +823,22 @@ let _supPin = null;
 
 // Unified entry point — checks server-side if available, falls back to local hash compare.
 // Returns true/false (Promise).
-async function verifySupervisorPin(pin){
+// El PIN es DE UN RESTAURANTE. El del manager de M.B. no abre el panel de
+// Txoko: si lo abriera vería su equipo, su cuadrante y sus notas, y podría
+// renovarle el código de acceso dejando a su gente sin poder registrarse.
+// El del propietario abre todos (ámbito '*' en el servidor).
+//
+// Quien decide es el servidor: aquí sólo se dice desde qué restaurante se
+// pregunta. Y quien no lo diga —un móvil con la app vieja en caché— sigue
+// entrando, porque dejar a un supervisor fuera del panel porque su teléfono no
+// ha recargado sería peor que lo que esto viene a arreglar.
+async function verifySupervisorPin(pin, venue){
   if(USE_SERVER_PIN_VERIFY){
     try {
       const res = await fetch(`${SUPA_URL}/rest/v1/rpc/verify_supervisor_pin`, {
         method: 'POST',
         headers: { 'apikey': SUPA_KEY, 'Authorization': `Bearer ${SUPA_KEY}`, 'Content-Type': 'application/json' },
-        body: JSON.stringify({ pin_input: String(pin) })
+        body: JSON.stringify({ pin_input: String(pin), p_venue: venue || _venueActual() })
       });
       if(!res.ok){ dbgw('[supPin] RPC failed:', res.status); return false; }
       const ok = await res.json();
@@ -1606,9 +1615,26 @@ function _cartaAplicar(c){
   return true;
 }
 
+// Dejar la carta a CERO. Es lo que separa «este restaurante aún no tiene
+// carta» de «te estoy enseñando la del vecino»: si no se vacía, los platos
+// del anterior se quedan puestos bajo el nombre del nuevo.
+function _cartaVaciar(){
+  DISHES.length = 0;
+  DISHES_EN.length = 0;
+  for(const k of Object.keys(DISH_COMPONENTS)) delete DISH_COMPONENTS[k];
+  for(const k of Object.keys(DISH_ACTIONS)) delete DISH_ACTIONS[k];
+}
+
 // Devuelve false si NO se pudo dejar puesta la carta del restaurante que toca.
 // Quien llama no debe dejar entrar: enseñarle a alguien de M.B. la carta de
 // Txoko sería exactamente la fuga que todo esto viene a cerrar. Fallar cerrado.
+//
+// Con una excepción, y sólo para la cuenta de administración: un restaurante
+// que TODAVÍA no tiene carta se abre vacío ('vacia'), no se cierra. M.B. es
+// justo ese caso — su carro de quesos ya está listo y su carta espera a que
+// cocina conteste de dónde salen diecisiete alérgenos. Sin esto, la cuenta que
+// existe para revisar contenido no puede revisar el único contenido que hay.
+// Vacío nunca es la carta de otro: eso lo garantiza _cartaVaciar().
 async function cargarCarta(venue){
   venue = venue || _VENUE_POR_DEFECTO;
   if(venue === _cartaPuesta) return true;
@@ -1627,6 +1653,15 @@ async function cargarCarta(venue){
     _cartaPuesta = venue;
     return true;
   }catch(e){
+    // Sólo el 404 significa «aún no hay carta». Un fallo de red significa «no
+    // lo sé», y ahí no se entra ni siendo administrador: creerse que M.B. está
+    // vacío porque falló el wifi sería peor que no entrar.
+    const noExiste = !!(e && /^HTTP 4/.test(e.message || ''));
+    if(noExiste && _esAdmin()){
+      _cartaVaciar();
+      _cartaPuesta = venue;
+      return 'vacia';
+    }
     if(typeof showToast === 'function') showToast(LANG==='en'
       ? 'Could not load your restaurant’s menu. Check your connection and try again.'
       : 'No se ha podido cargar la carta de tu restaurante. Comprueba la conexión e inténtalo otra vez.',
@@ -1733,7 +1768,7 @@ const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><p
 const SRC = 'src';
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='7.429';  // sincronizada con sw.js VERSION (guard de CI)
+const APP_VERSION='7.433';  // sincronizada con sw.js VERSION (guard de CI)
 const APP_BUILD='Jul 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;
@@ -9906,6 +9941,8 @@ function openAjustes(){
         : 'Tu cuenta puede mirar cualquier restaurante, incluidos los que aún no están abiertos. Nada de lo que hagas se guarda: ni puntuaciones, ni ranking, ni panel de supervisor.'}</div>
       <div id="ajVenues" style="display:flex;flex-direction:column;gap:.4rem"></div>
       <div id="ajVenueMsg" role="status" aria-live="polite" style="font-size:.72rem;min-height:1rem;margin-top:.35rem"></div>
+      ${H(_en?'The admin role':'El rol de administración')}
+      ${renderSupAdminHTML()}
       ` : ''}
       ${H(_en?'Recovery email':'Correo de recuperación')}
       <div id="ajEmailStatus" style="font-family:'Quicksand',sans-serif;font-size:.78rem;color:#5a6a5e;margin-bottom:.5rem;line-height:1.4">${_en?'Loading…':'Cargando…'}</div>
@@ -9978,8 +10015,15 @@ function openAjustes(){
         QUESOS = null; _quesosVenue = null;   // el carro es de cada restaurante
         try{ _navQuesosSync(); }catch(_){}
         if(typeof showTab==='function') showTab(typeof currentTab!=='undefined' ? currentTab : 'dashboard');
-        if(typeof showToast==='function') showToast(
-          (_en?'Now looking at ':'Ahora estás viendo ') + ((tema && tema.name) || id), 'info', 3500);
+        const _nom = (tema && tema.name) || id;
+        // Sin carta el aviso tiene que decirlo, y decir cuánto rato: si no,
+        // «M.B. está vacío» se lee como una app rota y no como una carta que
+        // todavía no ha entrado.
+        if(typeof showToast==='function') showToast(ok === 'vacia'
+          ? (_en ? _nom + ' has no menu yet — you can review everything else (the cheese trolley, for one).'
+                 : _nom + ' todavía no tiene carta — puedes revisar lo demás, como el carro de quesos.')
+          : (_en?'Now looking at ':'Ahora estás viendo ') + _nom,
+          ok === 'vacia' ? 'warning' : 'info', ok === 'vacia' ? 6500 : 3500);
       };
     });
   }
@@ -10296,7 +10340,16 @@ async function closePinAndEnter(){
   // carta de Txoko sería exactamente la fuga que todo esto viene a cerrar.
   try{
     const _e = (typeof DB!=='undefined' && DB.employees) ? DB.employees[pinTarget] : null;
-    if(!(await cargarCarta((_e && _e.venue) || _VENUE_POR_DEFECTO))) return;
+    // Para la cuenta de administración manda el restaurante que ELIGIÓ, no el
+    // de su ficha: todo lo demás ya se guía por _venueActual(), y cargar aquí
+    // el de la ficha la devolvía a Txoko con el resto de la app en M.B.
+    let _v = (_e && _e.venue) || _VENUE_POR_DEFECTO;
+    if(_esAdmin(pinTarget)){
+      // Aquí currentUser todavía no es quien entra, así que _venueActual() no
+      // sirve: se lee la elección guardada a pelo.
+      try{ const _g = localStorage.getItem('txk_venue'); if(_g) _v = _g; }catch(_){}
+    }
+    if(!(await cargarCarta(_v))) return;
   }catch(e){ return; }
   const overlay=document.getElementById('pinOverlay');
   if(overlay) overlay.remove();
@@ -22625,6 +22678,8 @@ function _supTool(k){
        aviso: ()=>renderSupNotifSender(window._supEmpNames),
        fotos: ()=>renderSupPhotoQueue(),
        horarios: ()=>renderSupHorarios(),
+       codigo: ()=>renderSupCodigo(),
+       cuentas: ()=>renderSupCuentas(),
        lqa: ()=>renderSupLqaStats(window._supAllEmps, window._supEmpNames) })[k]();
   }catch(e){
     if(typeof showToast==='function') showToast('Error: '+e.message, 'warning', 6000);
@@ -22894,6 +22949,11 @@ function renderSupDashboard(silent){
         </div>
         <div class="sup-sec" role="tabpanel" data-sec="hoy">
         ${_supKpiBand(allEmps, empNames)}
+        <!-- «¿Quién necesita mi atención esta semana?» (petición del
+             propietario, sep 2026): lo que convierte el panel en una
+             herramienta de gestión en vez de una pantalla de estadísticas.
+             Se rellena aparte porque lee el histórico de evaluaciones. -->
+        <div id="supAtencion"></div>
         ${(()=>{
           // Connected today section
           // "Conectados hoy" usaba SOLO lastLoginTs — pero ese campo depende de
@@ -22960,7 +23020,9 @@ function renderSupDashboard(silent){
              inactivos) vive ahora dentro de la pantalla Analítica: un solo
              sitio para todo el análisis (auditoría jul 2026). -->
         <div class="sup-sec" role="tabpanel" data-sec="equipo">
-        <div class="section-eyebrow">${LANG==='en'?'Individual progress':'Progreso individual'}</div>
+        <div class="section-eyebrow">${LANG==='en'?'The team, in one table':'El equipo, en una tabla'}</div>
+        <div id="supTabla"></div>
+        <div class="section-eyebrow" style="margin-top:1.2rem">${LANG==='en'?'Individual progress':'Progreso individual'}</div>
         ${cards}
         </div>
         <div class="sup-sec" role="tabpanel" data-sec="acciones">
@@ -22992,6 +23054,19 @@ function renderSupDashboard(silent){
               <span style="width:32px;height:32px;display:flex;align-items:center;justify-content:center;clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);background:linear-gradient(135deg,#8fc499,var(--sage));flex-shrink:0"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/><path d="M8 11l2 2 4-4"/></svg></span>
               <span style="font-size:.72rem;font-weight:700;color:var(--sage)">${LANG==='en'?'LQA Stats':'Stats LQA'}</span>
             </button>
+            <!-- Código de acceso y Cuentas vivían dentro de la pantalla de
+                 Análisis. Análisis es para MIRAR y Acciones para HACER
+                 (petición del propietario, sep 2026): un botón que renueva un
+                 código y deja a un equipo sin poder registrarse no puede estar
+                 escondido entre las estadísticas. -->
+            <button onclick="_supTool('codigo')" style="display:flex;align-items:center;gap:.65rem;padding:.75rem .85rem;background:linear-gradient(155deg,#faf6ee,#f0e8d8);border:1.5px solid rgba(196,154,60,.12);border-left:3px solid #c49a3c;border-radius:12px;font-family:'Quicksand',sans-serif;cursor:pointer;transition:all .2s;position:relative;overflow:hidden">
+              <span style="font-size:1.05rem">🔑</span>
+              <span style="flex:1;text-align:left;font-size:.72rem;font-weight:600;color:var(--parchment)">${LANG==='en'?'Access code':'Código de acceso'}<br><span style="font-size:.58rem;font-weight:400;color:var(--parch3)">${LANG==='en'?'who can register':'quién puede registrarse'}</span></span>
+            </button>
+            <button onclick="_supTool('cuentas')" style="display:flex;align-items:center;gap:.65rem;padding:.75rem .85rem;background:linear-gradient(155deg,#faf6ee,#f0e8d8);border:1.5px solid rgba(196,154,60,.12);border-left:3px solid #7c6fa8;border-radius:12px;font-family:'Quicksand',sans-serif;cursor:pointer;transition:all .2s;position:relative;overflow:hidden">
+              <span style="font-size:1.05rem">🛠</span>
+              <span style="flex:1;text-align:left;font-size:.72rem;font-weight:600;color:var(--parchment)">${LANG==='en'?'Accounts':'Cuentas'}<br><span style="font-size:.58rem;font-weight:400;color:var(--parch3)">${LANG==='en'?'managers and PIN':'managers y PIN'}</span></span>
+            </button>
             <button onclick="renderSupDeleteEmployee(_supEmpNames)" style="display:flex;align-items:center;gap:.65rem;padding:.75rem .85rem;background:linear-gradient(155deg,rgba(196,112,104,.04),rgba(196,112,104,.01));border:1.5px solid rgba(196,112,104,.2);border-left:3px solid #c47068;border-radius:12px;font-family:'Quicksand',sans-serif;cursor:pointer;transition:all .2s;position:relative;overflow:hidden">
               <span style="width:32px;height:32px;display:flex;align-items:center;justify-content:center;clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);background:linear-gradient(135deg,#c47068,#a85848);flex-shrink:0"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/><path d="M10 11v6M14 11v6"/></svg></span>
               <span style="font-size:.72rem;font-weight:600;color:var(--rose)">${LANG==='en'?'Delete profile':'Eliminar perfil'}</span>
@@ -23008,6 +23083,7 @@ function renderSupDashboard(silent){
     _supConnectLive();
     _supStampLive();
     _supApplySection();
+    _supPintarHistorial(allEmps, empNames);
   });
 }
 
@@ -23427,6 +23503,226 @@ function _supResumenTxt(allEmps, empNames, prev){
   L.push(`✅ ${en?'Trained':'Entrenaron'} (${podium.length}/${roster.length})`+(idle.length?` · 😴 ${en?'No activity':'Sin actividad'} (${idle.length}): ${idle.map(_dispName).join(', ')}`:''));
   return L.join('\n');
 }
+// ═══ HISTORIAL DE EVALUACIONES ════════════════════════════════════════════
+// La tabla `scores` guarda DOS cosas distintas con la misma forma:
+//
+//   · EVALUACIONES — examen, alérgenos, protocolo, cubertería…: `score` son
+//     aciertos sobre `total` preguntas. Eso sí es una nota.
+//   · MARCADORES DE JUEGO — récord Txoko (total=1, score hasta 41) y El Turno
+//     (total hasta 2042): `score` son puntos y `total` no es un denominador.
+//
+// Son el 56% de las filas. Mezclarlas daba medias del 243% (medido sep 2026),
+// así que el panel se queda SÓLO con las evaluaciones. Con eso, el histórico
+// real es de 170 pruebas de 19 personas desde marzo.
+const _SUP_JUEGOS = ['txoko', 'elturno'];
+const _SUP_APROBADO = 80;   // el mismo listón que ya usa el aviso de alérgenos
+const _SUP_DIAS_RIESGO = 14;
+
+async function _supCargarHistorial(){
+  try{
+    const r = await fetchT(`${SUPA_URL}/rest/v1/scores?select=employee,score,total,topic,cat,time_sec,created_at&limit=5000&${_vq()}`,
+      { headers:{ 'apikey':SUPA_KEY, 'Authorization':`Bearer ${SUPA_KEY}` } }, 8000);
+    if(!r.ok) return null;
+    const filas = await r.json();
+    if(!Array.isArray(filas)) return null;
+    return filas.filter(f => f && f.total > 0 && _SUP_JUEGOS.indexOf(f.topic) < 0);
+  }catch(_){ return null; }
+}
+
+// Lo que sabemos de una persona, a partir de SUS evaluaciones.
+function _supPerfil(nombre, hist){
+  // El filtro de juegos se repite AQUÍ a propósito, aunque la carga ya lo haga:
+  // ésta es la función que convierte filas en una nota, y si algún día se le
+  // pasan las filas en crudo el 243% vuelve sin que nadie se entere. Lo cazó
+  // el guard al ejecutarla con marcadores dentro.
+  const mias = (hist||[]).filter(f => f && f.employee === nombre
+      && f.total > 0 && _SUP_JUEGOS.indexOf(f.topic) < 0)
+    .sort((a,b) => String(a.created_at).localeCompare(String(b.created_at)));
+  const p = { pruebas: mias.length, nota: null, aprobadas: 0, minutos: 0,
+              desde: null, ultima: null, tendencia: null, filas: mias };
+  if(!mias.length) return p;
+  let ac = 0, tot = 0, seg = 0;
+  for(const f of mias){
+    ac += f.score || 0; tot += f.total || 0; seg += f.time_sec || 0;
+    if((f.score||0) * 100 / f.total >= _SUP_APROBADO) p.aprobadas++;
+  }
+  p.nota = tot ? Math.round(ac * 100 / tot) : null;
+  p.minutos = Math.round(seg / 60);
+  p.desde = String(mias[0].created_at).slice(0,10);
+  p.ultima = String(mias[mias.length-1].created_at).slice(0,10);
+  // Tendencia: la media de su último tercio contra la del primero. Con menos de
+  // seis pruebas no se dice nada — tres exámenes no son una tendencia.
+  if(mias.length >= 6){
+    const n = Math.floor(mias.length / 3);
+    const media = arr => { let a=0,t=0; for(const f of arr){ a+=f.score||0; t+=f.total||0; }
+      return t ? a*100/t : 0; };
+    p.tendencia = Math.round(media(mias.slice(-n)) - media(mias.slice(0, n)));
+  }
+  return p;
+}
+
+// El semáforo de una persona. UNA sola regla, porque la tabla y el bloque de
+// «quién necesita mi atención» tienen que decir lo mismo: que la tabla pinte a
+// alguien en verde y el aviso lo llame urgente destruye la confianza en las dos
+// pantallas a la vez (pasó en la verificación de sep 2026).
+//
+// «Sin avanzar» se mide por la última PRUEBA y no por la última vez que abrió
+// la app: entrar y no hacer nada no es avanzar.
+function _supEstado(p){
+  const dp = p.ultima ? Math.floor((Date.now() - Date.parse(p.ultima)) / 86400000) : null;
+  if(!p.pruebas || dp == null || dp >= _SUP_DIAS_RIESGO) return 'rojo';
+  if(p.nota != null && p.nota < _SUP_APROBADO) return 'ambar';
+  if(p.tendencia != null && p.tendencia <= -10) return 'ambar';
+  return 'verde';
+}
+
+// ═══ ¿QUIÉN NECESITA MI ATENCIÓN ESTA SEMANA? ═════════════════════════════
+// Petición del propietario: que el panel deje de ser una pantalla de
+// estadísticas y diga a quién hay que buscar. Tres grupos, y cada uno con el
+// motivo escrito — un semáforo sin motivo no sirve para hablar con nadie.
+function _supAtencion(allEmps, empNames, hist){
+  const hoy = Date.now();
+  const dias = iso => iso ? Math.floor((hoy - Date.parse(iso)) / 86400000) : null;
+  const rojo = [], ambar = [], verde = [];
+  const notas = [];
+  for(const n of empNames){
+    const p = _supPerfil(n, hist);
+    if(p.nota != null) notas.push(p.nota);
+  }
+  const mediaEquipo = notas.length ? Math.round(notas.reduce((a,b)=>a+b,0)/notas.length) : null;
+  for(const n of empNames){
+    const e = allEmps[n] || {};
+    const p = _supPerfil(n, hist);
+    const visto = e.lastActiveAt || e.lastLoginTs || null;
+    const d = dias(visto);
+    // «Sin avanzar» se mide por la última PRUEBA, no por la última vez que
+    // abrió la app: entrar y no hacer nada no es avanzar. Son dos señales
+    // distintas y decir «14 días sin entrenar» de alguien que entró ayer es
+    // mentira — así que cada motivo dice exactamente lo que mide.
+    const dp = dias(p.ultima);
+    const _en = LANG==='en';
+    const est = _supEstado(p);
+    if(est === 'rojo'){
+      if(!p.pruebas){
+        const cola = d == null ? (_en ? 'and has never opened the app' : 'y no ha abierto la app nunca')
+                   : d === 0  ? (_en ? 'and opened it today' : 'y hoy la ha abierto')
+                               : (_en ? `and last opened it ${d}d ago` : `y la abrió hace ${d}d`);
+        rojo.push({ n, p, motivo: (_en ? 'not a single test yet ' : 'ni una prueba todavía ') + cola });
+      } else {
+        rojo.push({ n, p, motivo: _en ? `${dp} days without a test` : `${dp} días sin hacer una prueba` });
+      }
+    } else if(est === 'ambar'){
+      ambar.push({ n, p, motivo: (p.nota != null && p.nota < _SUP_APROBADO)
+        ? (_en ? `average ${p.nota}% — below ${_SUP_APROBADO}%` : `media del ${p.nota}% — por debajo del ${_SUP_APROBADO}%`)
+        : (_en ? `dropping (${p.tendencia} points)` : `bajando (${p.tendencia} puntos)`) });
+    } else if(p.nota != null && mediaEquipo != null && p.nota > mediaEquipo){
+      verde.push({ n, p, motivo: _en ? `${p.nota}% — above the team average` : `${p.nota}% — por encima de la media` });
+    }
+  }
+  const orden = (a,b) => (a.p.nota??0) - (b.p.nota??0);
+  return { rojo: rojo.sort(orden), ambar: ambar.sort(orden),
+           verde: verde.sort((a,b)=>(b.p.nota??0)-(a.p.nota??0)), mediaEquipo };
+}
+
+function renderSupAtencionHTML(allEmps, empNames, hist){
+  const _en = LANG==='en';
+  if(!hist) return `<div class="sup-card"><div class="sup-card-t">${_en?'Who needs me this week':'Quién necesita mi atención'}</div>
+    <div class="sup-vacio">${_en?'Could not read the training history.':'No se ha podido leer el historial de formación.'}</div></div>`;
+  const a = _supAtencion(allEmps, empNames, hist);
+  const grupo = (lista, punto, titulo) => !lista.length ? '' : `
+    <div class="sup-at-g">
+      <div class="sup-at-h">${punto} <b>${lista.length}</b> ${titulo}</div>
+      ${lista.slice(0,6).map(x => `<div class="sup-at-r" role="button" tabindex="0"
+          onclick="renderSupEmployee(${escapeHTML(JSON.stringify(x.n))})"
+          onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click()}">
+        <span class="sup-at-n">${escapeHTML(_dispName(x.n))}</span>
+        <span class="sup-at-m">${escapeHTML(x.motivo)}</span>
+      </div>`).join('')}
+      ${lista.length>6?`<div class="sup-at-mas">+${lista.length-6} ${_en?'more':'más'}</div>`:''}
+    </div>`;
+  const nada = !a.rojo.length && !a.ambar.length && !a.verde.length;
+  return `<div class="sup-card">
+    <div class="sup-card-t">${_en?'Who needs me this week':'Quién necesita mi atención esta semana'}</div>
+    ${nada ? `<div class="sup-vacio">${_en?'Nothing to flag — the whole team is on track.':'Nada que señalar: todo el equipo va en hora.'}</div>` : `
+      ${grupo(a.rojo,  '🔴', _en?'need chasing'      :'hay que buscarles')}
+      ${grupo(a.ambar, '🟡', _en?'below where they should be':'por debajo de donde deberían')}
+      ${grupo(a.verde, '🟢', _en?'above the average'  :'por encima de la media')}
+      <div class="sup-at-pie">${_en
+        ? `Tap anyone to open their development profile. The bar is ${_SUP_APROBADO}%.`
+        : `Toca a cualquiera para abrir su perfil de desarrollo. El listón es el ${_SUP_APROBADO}%.`}</div>`}
+  </div>`;
+}
+
+// ═══ LA TABLA DEL EQUIPO ══════════════════════════════════════════════════
+// Todo el equipo en una fila por persona. Va dentro de su propio scroll
+// horizontal: en un móvil no caben ocho columnas, y el resto de la página no
+// puede moverse de lado por culpa de una tabla.
+function renderSupTablaHTML(allEmps, empNames, hist){
+  const _en = LANG==='en';
+  if(!hist) return `<div class="sup-vacio">${_en?'Could not read the training history.':'No se ha podido leer el historial de formación.'}</div>`;
+  const hoy = Date.now();
+  const filas = empNames.map(n => {
+    const e = allEmps[n] || {};
+    const p = _supPerfil(n, hist);
+    const visto = e.lastActiveAt || e.lastLoginTs || null;
+    const d = visto ? Math.floor((hoy - Date.parse(visto)) / 86400000) : null;
+    // Antigüedad: desde su PRIMERA prueba, no desde `registered_at` — esa
+    // columna se rellenó el día que se creó y da altas posteriores a la
+    // primera actividad (Dian figura de alta en septiembre y entrena desde
+    // marzo). Es antigüedad EN LA APP, y así se rotula.
+    const meses = p.desde ? Math.max(0, Math.round((hoy - Date.parse(p.desde)) / 2629800000)) : null;
+    const dom = Object.keys(e.knownDishes || {}).length;
+    const lqa = _lqaReady(e);
+    return { n, e, p, d, meses, dom, lqa, estado: _supEstado(p) };
+  }).sort((a,b) => ({rojo:0,ambar:1,verde:2})[a.estado] - ({rojo:0,ambar:1,verde:2})[b.estado]
+                || (a.p.nota ?? -1) - (b.p.nota ?? -1));
+  const punto = { rojo:'🔴', ambar:'🟡', verde:'🟢' };
+  const nd = v => v == null ? '—' : v;
+  const col = pct => pct == null ? 'var(--parch4)' : pct >= _SUP_APROBADO ? 'var(--sage)' : pct >= 50 ? 'var(--gold)' : 'var(--rose)';
+  const total = (typeof DISHES !== 'undefined' && DISHES.length) ? DISHES.length : 0;
+  return `<div class="sup-tabla-wrap"><table class="sup-tabla">
+    <thead><tr>
+      <th>${_en?'Name':'Nombre'}</th>
+      <th>${_en?'Menu':'Carta'}</th>
+      <th>LQA</th>
+      <th>${_en?'Mark':'Nota'}</th>
+      <th>${_en?'Tests':'Pruebas'}</th>
+      <th>${_en?'Trend':'Tend.'}</th>
+      <th>${_en?'Time':'Tiempo'}</th>
+      <th>${_en?'Last seen':'Visto'}</th>
+      <th>${_en?'In app':'En la app'}</th>
+    </tr></thead>
+    <tbody>${filas.map(f => `<tr role="button" tabindex="0"
+        onclick="renderSupEmployee(${escapeHTML(JSON.stringify(f.n))})"
+        onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click()}">
+      <td class="sup-td-n">${punto[f.estado]} ${escapeHTML(_dispName(f.n))}</td>
+      <td>${total ? `${f.dom}<span class="sup-td-d">/${total}</span>` : nd(f.dom)}</td>
+      <td style="color:${col(f.lqa.score > 0 ? f.lqa.score : null)}">${f.lqa.score > 0 ? f.lqa.score + '%' : '—'}</td>
+      <td style="color:${col(f.p.nota)};font-weight:700">${f.p.nota == null ? '—' : f.p.nota + '%'}</td>
+      <td>${f.p.pruebas || '—'}</td>
+      <td>${f.p.tendencia == null ? '—' : `<span style="color:${f.p.tendencia >= 0 ? 'var(--sage)' : 'var(--rose)'}">${f.p.tendencia > 0 ? '▲' : f.p.tendencia < 0 ? '▼' : '='} ${Math.abs(f.p.tendencia)}</span>`}</td>
+      <td>${f.p.minutos ? (f.p.minutos >= 60 ? Math.floor(f.p.minutos/60)+'h '+(f.p.minutos%60)+'m' : f.p.minutos+'m') : '—'}</td>
+      <td>${f.d == null ? (_en?'never':'nunca') : f.d === 0 ? (_en?'today':'hoy') : (_en?f.d+'d':'hace '+f.d+'d')}</td>
+      <td>${f.meses == null ? '—' : (f.meses < 1 ? (_en?'<1 mo':'<1 mes') : f.meses + (_en?' mo':' meses'))}</td>
+    </tr>`).join('')}</tbody>
+  </table></div>
+  <div class="sup-at-pie">${_en
+    ? `Tap a row for the development profile. "Menu" is dishes mastered, "LQA" audit readiness, "Mark" the average of ${filas.reduce((a,f)=>a+f.p.pruebas,0)} real tests. "In app" counts from their first test, not from their hire date — the app does not know that.`
+    : `Toca una fila para el perfil de desarrollo. «Carta» son platos dominados, «LQA» la preparación para auditoría y «Nota» la media de ${filas.reduce((a,f)=>a+f.p.pruebas,0)} pruebas reales. «En la app» cuenta desde su primera prueba, no desde que entró en la casa — eso la app no lo sabe.`}</div>`;
+}
+
+// El histórico se pide UNA vez por pintada del panel y rellena los dos huecos.
+// Aparte del render principal: son 170 filas de otra tabla y el panel no puede
+// quedarse en blanco esperándolas.
+async function _supPintarHistorial(allEmps, empNames){
+  const hist = await _supCargarHistorial();
+  window._supHist = hist;
+  const at = document.getElementById('supAtencion');
+  if(at) at.innerHTML = renderSupAtencionHTML(allEmps, empNames, hist);
+  const tb = document.getElementById('supTabla');
+  if(tb) tb.innerHTML = renderSupTablaHTML(allEmps, empNames, hist);
+}
+
 function renderSupAnalytics(allEmps, empNames){
   const c = document.getElementById('appContent');
 
@@ -23794,10 +24090,12 @@ function renderSupAnalytics(allEmps, empNames){
     ${_acc('pase','◎',_en2?'Plating pass':'Pase de cocina', _psTot?`${_psTot} ${_en2?'passes':'pases'} · ${_psSeguro}% ${_en2?'safe':'seguros'}`:(_en2?'not played yet':'aún sin jugar'), paseSection)}
     ${_acc('perf','🎯',_en2?'Performance':'Rendimiento', exN?`${exN} ${_en2?'exams':'exámenes'} · ${exAcc}%`:(_en2?'no exams yet':'aún sin exámenes'), _perfBody)}
     ${_acc('dish','🧩',_en2?'Hardest dishes':'Platos difíciles', hardest.length?`${hardest.length} ${_en2?'to review':'a repasar'}`:'', _dishBody)}
-    ${_acc('acc','🔑',_en2?'Access code':'Código de acceso', _en2?'who can register':'quién puede registrarse', renderSupCodigoHTML())}
-    ${_acc('adm','🛠',_en2?'Admin account':'Cuenta de administración', _en2?'to review content':'para revisar contenido', renderSupAdminHTML())}
   </div>`;
 }
+// El código de acceso y las cuentas ya NO viven aquí: Análisis es para MIRAR y
+// Acciones para HACER (petición del propietario, sep 2026). Un botón que
+// renueva un código y deja a un equipo sin poder registrarse no puede estar
+// escondido en la pantalla de las estadísticas.
 
 // ═══ CÓDIGO DE ACCESO DEL RESTAURANTE ══════════════════════════════════════
 // Sin este código no se crea ninguna cuenta. Es lo que impide que alguien de
@@ -23821,22 +24119,211 @@ function renderSupCodigoHTML(){
     <div id="supCodigoMsg" role="status" aria-live="polite" style="font-family:'Quicksand',sans-serif;font-size:.74rem;min-height:1.1rem;margin-top:.45rem;color:var(--parch3)"></div>`;
 }
 
+// ═══ PANTALLA · CÓDIGO DE ACCESO (Acciones) ═══════════════════════════════
+function renderSupCodigo(){
+  const _en = LANG==='en';
+  const c = document.getElementById('appContent');
+  c.innerHTML = `<div class="sup-wrap">
+    ${_supCabecera(_en?'Access code':'Código de acceso', _en?'who can register in this restaurant':'quién puede registrarse en este restaurante')}
+    <div class="sup-card">${renderSupCodigoHTML()}</div>
+  </div>`;
+}
+
+// ═══ PANTALLA · CUENTAS Y PERMISOS (Acciones) ═════════════════════════════
+// Aquí se reparte el mando: quién es manager de este restaurante y cuál es su
+// PIN. Sólo el propietario — el servidor lo comprueba, no este código.
+//
+// La cuenta de ADMINISTRACIÓN ya no se toca desde aquí: por petición del
+// propietario sólo se ve desde la propia cuenta de administración, en Ajustes.
+function renderSupCuentas(){
+  const _en = LANG==='en';
+  const c = document.getElementById('appContent');
+  const v = _supVenueId();
+  const casa = (typeof _venueRotulo === 'function' ? _venueRotulo() : v) || v;
+  c.innerHTML = `<div class="sup-wrap">
+    ${_supCabecera(_en?'Accounts and permissions':'Cuentas y permisos', escapeHTML(casa))}
+    <div class="sup-card">
+      <div class="sup-card-t">${_en?'Who runs this restaurant':'Quién dirige este restaurante'}</div>
+      <div class="sup-card-d">${_en
+        ? 'A manager opens this panel and only this one: they see their own team, their rota and their access code. They can never see the restaurant next door, and they cannot appoint anybody.'
+        : 'Un manager abre este panel y sólo éste: ve su equipo, su cuadrante y su código de acceso. Nunca ve el restaurante de al lado, y no puede nombrar a nadie.'}</div>
+      <div id="supCuList" class="sup-list">${_en?'Loading…':'Cargando…'}</div>
+      <div id="supCuMsg" role="status" aria-live="polite" class="sup-msg"></div>
+    </div>
+    <div class="sup-card">
+      <div class="sup-card-t">${_en?'This restaurant’s PIN':'El PIN de este restaurante'}</div>
+      <div class="sup-card-d">${_en
+        ? 'The PIN its manager types to open the panel. Yours keeps opening every restaurant, always. Leave it empty and this restaurant goes back to opening only with yours.'
+        : 'El PIN que teclea su manager para abrir el panel. El tuyo sigue abriendo todos los restaurantes, siempre. Si lo dejas vacío, este restaurante vuelve a abrirse sólo con el tuyo.'}</div>
+      <div id="supPinEstado" class="sup-msg"></div>
+      <input id="supPinNuevo" type="text" inputmode="numeric" maxlength="12" autocomplete="off" spellcheck="false"
+        placeholder="${_en?'New PIN (4 digits or more)':'PIN nuevo (4 dígitos o más)'}" class="sup-inp">
+      <div class="sup-btns">
+        <button onclick="supGuardarPinVenue()" class="sup-b1">${_en?'Save PIN':'Guardar PIN'}</button>
+        <button onclick="supQuitarPinVenue()" class="sup-b2">${_en?'Remove':'Quitar'}</button>
+      </div>
+      <div id="supPinMsg" role="status" aria-live="polite" class="sup-msg"></div>
+    </div>
+  </div>`;
+  supCargarCuentas();
+}
+
+function _supCabecera(titulo, sub){
+  const _en = LANG==='en';
+  return `<div style="display:flex;align-items:center;gap:.75rem;margin-bottom:1rem">
+    <button onclick="renderSupDashboard()" aria-label="${_en?'Back':'Volver'}" style="background:transparent;border:1.5px solid rgba(196,154,60,.55);border-radius:var(--r2);padding:.4rem .8rem;font-size:.75rem;color:var(--gold-deep);font-weight:700;cursor:pointer;min-height:44px">←</button>
+    <div>
+      <div style="font-family:'Cinzel',serif;font-size:1.15rem;color:var(--parchment)">${titulo}</div>
+      <div style="font-family:'DM Mono',monospace;font-size:.58rem;color:var(--parch3);letter-spacing:.06em">${sub}</div>
+    </div>
+  </div>`;
+}
+
+async function supCargarCuentas(){
+  const _en = LANG==='en';
+  const caja = document.getElementById('supCuList');
+  const est  = document.getElementById('supPinEstado');
+  const v = _supVenueId();
+  try{
+    const r = await _supaRpc('venue_staff_list', {p_pin:_supPin||'', p_venue:v});
+    if(!r || r.ok !== true) throw new Error((r && r.error) || 'x');
+    const emps = r.empleados || [];
+    if(!caja) return;
+    caja.innerHTML = emps.length ? emps.map(e => {
+      const esM = e.role === 'manager';
+      return `<div class="sup-row">
+        <div class="sup-row-n">${escapeHTML(e.display_name || e.name)}
+          ${esM ? `<span class="sup-tag">${_en?'manager':'manager'}</span>` : ''}
+          ${(e.display_name && e.display_name !== e.name) ? `<span class="sup-row-u">${escapeHTML(e.name)}</span>` : ''}</div>
+        <button onclick="supPonerManager(${escapeHTML(JSON.stringify(e.name))}, ${esM?'false':'true'})"
+          class="${esM?'sup-b2':'sup-b1'}" style="flex:0 0 auto;padding:.45rem .7rem;font-size:.72rem">
+          ${esM ? (_en?'Remove':'Quitar') : (_en?'Make manager':'Hacer manager')}</button>
+      </div>`;
+    }).join('') : `<div class="sup-vacio">${_en?'Nobody registered here yet.':'Todavía no hay nadie registrado aquí.'}</div>`;
+  }catch(e){
+    if(caja) caja.innerHTML = `<div class="sup-vacio">${_en?'Could not load the team.':'No se ha podido cargar el equipo.'}</div>`;
+  }
+  // ¿Tiene este restaurante PIN propio? Sólo lo sabe el propietario.
+  try{
+    const l = await _supaRpc('venue_pin_list', {p_pin:_supPin||''});
+    if(!est) return;
+    if(!l || l.ok !== true){
+      est.textContent = _en ? 'Only the owner can change PINs.' : 'Sólo el propietario cambia los PINes.';
+      const inp = document.getElementById('supPinNuevo');
+      if(inp) inp.disabled = true;
+      document.querySelectorAll('#supPinNuevo ~ .sup-btns button').forEach(b => b.disabled = true);
+      return;
+    }
+    const tiene = (l.venues||[]).some(x => x.venue === v);
+    est.style.color = tiene ? '#2d6a3e' : 'var(--parch3)';
+    est.textContent = tiene
+      ? (_en ? 'This restaurant has its own PIN.' : 'Este restaurante tiene PIN propio.')
+      : (_en ? 'No PIN of its own yet — it only opens with yours.' : 'Todavía sin PIN propio: sólo se abre con el tuyo.');
+  }catch(_){}
+}
+
+async function supPonerManager(nombre, hacer){
+  const _en = LANG==='en';
+  const msg = document.getElementById('supCuMsg');
+  if(!msg) return;
+  if(hacer && !confirm(_en
+    ? `Make "${nombre}" manager? They will be able to open this panel.`
+    : `¿Hacer manager a «${nombre}»? Podrá abrir este panel.`)) return;
+  msg.style.color = 'var(--parch3)';
+  msg.textContent = _en ? 'Saving…' : 'Guardando…';
+  try{
+    const r = await _supaRpc('employee_set_role', {p_pin:_supPin||'', p_name:nombre, p_role: hacer?'manager':'staff'});
+    if(!r || r.ok !== true) throw new Error((r && r.error) || 'x');
+    msg.style.color = '#2d6a3e';
+    msg.textContent = hacer
+      ? (_en?`"${nombre}" is now a manager here.`:`«${nombre}» ya es manager aquí.`)
+      : (_en?`"${nombre}" is back to a normal account.`:`«${nombre}» vuelve a ser una cuenta normal.`);
+    supCargarCuentas();
+  }catch(e){
+    msg.style.color = '#c0392b';
+    msg.textContent = _supErrorRol(e && e.message);
+  }
+}
+
+function _supErrorRol(cod){
+  const _en = LANG==='en';
+  if(cod === 'solo_propietario') return _en
+    ? 'Only the owner can appoint managers.' : 'Sólo el propietario nombra managers.';
+  if(cod === 'otro_restaurante') return _en
+    ? 'That account belongs to another restaurant.' : 'Esa cuenta es de otro restaurante.';
+  if(cod === 'unknown_employee') return _en
+    ? 'There is no account with that username.' : 'No hay ninguna cuenta con ese usuario.';
+  return _en ? 'Could not save. Check your connection.' : 'No se ha podido guardar. Comprueba la conexión.';
+}
+
+async function supGuardarPinVenue(){
+  const _en = LANG==='en';
+  const inp = document.getElementById('supPinNuevo'), msg = document.getElementById('supPinMsg');
+  if(!inp || !msg) return;
+  const nuevo = (inp.value||'').trim();
+  if(nuevo.length < 4){ msg.style.color='#c0392b';
+    msg.textContent = _en?'At least 4 characters.':'Al menos 4 caracteres.'; return; }
+  msg.style.color='var(--parch3)'; msg.textContent = _en?'Saving…':'Guardando…';
+  try{
+    const r = await _supaRpc('venue_pin_set', {p_pin:_supPin||'', p_venue:_supVenueId(), p_new:nuevo,
+      p_by:(typeof currentUser!=='undefined'?currentUser:null)});
+    if(!r || r.ok !== true) throw new Error((r && r.error) || 'x');
+    inp.value = '';
+    msg.style.color = '#2d6a3e';
+    msg.textContent = _en ? 'Saved. Its manager opens the panel with this PIN.'
+                          : 'Guardado. Su manager abre el panel con este PIN.';
+    supCargarCuentas();
+  }catch(e){
+    msg.style.color='#c0392b';
+    const cod = e && e.message;
+    msg.textContent = cod === 'es_el_tuyo'
+      ? (_en?'That is your own PIN — pick another.':'Ése es tu propio PIN: elige otro.')
+      : cod === 'solo_propietario'
+      ? (_en?'Only the owner can change PINs.':'Sólo el propietario cambia los PINes.')
+      : (_en?'Could not save.':'No se ha podido guardar.');
+  }
+}
+
+async function supQuitarPinVenue(){
+  const _en = LANG==='en';
+  const msg = document.getElementById('supPinMsg');
+  if(!msg) return;
+  if(!confirm(_en
+    ? 'Remove this restaurant’s PIN? From now on it only opens with yours, and its manager loses access to the panel.'
+    : '¿Quitar el PIN de este restaurante? A partir de ahora sólo se abre con el tuyo, y su manager pierde el panel.')) return;
+  msg.style.color='var(--parch3)'; msg.textContent = _en?'Removing…':'Quitando…';
+  try{
+    const r = await _supaRpc('venue_pin_set', {p_pin:_supPin||'', p_venue:_supVenueId(), p_new:null,
+      p_by:(typeof currentUser!=='undefined'?currentUser:null)});
+    if(!r || r.ok !== true) throw new Error((r && r.error) || 'x');
+    msg.style.color = '#2d6a3e';
+    msg.textContent = _en ? 'Removed. It only opens with your PIN now.' : 'Quitado. Ya sólo se abre con tu PIN.';
+    supCargarCuentas();
+  }catch(e){
+    msg.style.color='#c0392b';
+    msg.textContent = _en?'Could not remove it.':'No se ha podido quitar.';
+  }
+}
+
 // La cuenta de administración: entra en cualquier restaurante, incluidos los
 // que aún no están abiertos, y NO deja rastro — ni puntuaciones, ni ranking, ni
 // panel. Es para revisar la carta antes de que la vea el equipo.
 //
-// Se pone desde aquí y no desde el móvil de cada uno, detrás del PIN de
-// supervisor. Ojo: con la policy actual de employees cualquiera con la clave
-// anónima podría escribir esa columna a mano, así que esto NO es una barrera de
-// seguridad; es el camino limpio, y lo que el rol concede —ver la carta de otro
-// restaurante— ya era alcanzable de todos modos.
+// Desde sep 2026 esta sección SÓLO la ve la propia cuenta de administración, en
+// Ajustes (petición del propietario: «ya no debería ser visible para nadie»).
+// Se conserva la salida —dar el rol a otra cuenta y devolverse a normal— porque
+// si desapareciera del todo no habría forma de deshacerlo sin tocar la base de
+// datos. Sigue exigiendo el PIN de supervisor: quien manda es el servidor.
 function renderSupAdminHTML(){
   const _en = LANG==='en';
   return `<div style="font-family:'Quicksand',sans-serif;font-size:.8rem;color:var(--parch2);line-height:1.5;margin-bottom:.7rem">
       ${_en
-        ? 'An admin account can look at any restaurant, including the ones not open yet, and nothing it does is recorded: no scores, no ranking, no supervisor panel. Give it to whoever reviews the content — not to someone who is also training.'
-        : 'Una cuenta de administración puede mirar cualquier restaurante, incluidos los que aún no están abiertos, y nada de lo que haga se guarda: ni puntuaciones, ni ranking, ni panel. Dásela a quien revisa el contenido, no a alguien que además se está formando.'}
+        ? 'This account can look at any restaurant, including the ones not open yet, and nothing it does is recorded: no scores, no ranking, no supervisor panel. Hand the role to another account, or give this one back to normal.'
+        : 'Esta cuenta puede mirar cualquier restaurante, incluidos los que aún no están abiertos, y nada de lo que haga se guarda: ni puntuaciones, ni ranking, ni panel. Puedes pasarle el rol a otra cuenta, o devolver ésta a normal.'}
     </div>
+    <input id="supAdmPin" type="password" inputmode="numeric" maxlength="12" autocomplete="off"
+      placeholder="${_en?'Supervisor PIN':'PIN de supervisor'}"
+      style="width:100%;box-sizing:border-box;padding:.7rem .85rem;border:1px solid var(--line2);border-radius:10px;font-size:16px;background:#fff;color:#2b2b2b;margin-bottom:.5rem">
     <input id="supAdmName" type="text" maxlength="30" autocomplete="off" spellcheck="false"
       placeholder="${_en?'Username of the account':'Usuario de la cuenta'}"
       style="width:100%;box-sizing:border-box;padding:.7rem .85rem;border:1px solid var(--line2);border-radius:10px;font-size:16px;background:#fff;color:#2b2b2b;margin-bottom:.5rem">
@@ -23854,10 +24341,16 @@ async function supPonerRol(rol){
   const nombre = (el.value||'').trim();
   if(!nombre){ msg.style.color='#c0392b';
     msg.textContent = _en?'Type the username first.':'Escribe primero el usuario.'; return; }
+  // Esta pantalla vive en Ajustes, donde no se ha pasado por el teclado del
+  // panel: el PIN se teclea aquí. Lo comprueba el servidor, como siempre.
+  const elPin = document.getElementById('supAdmPin');
+  const pin = elPin ? (elPin.value||'').trim() : (_supPin||'');
+  if(!pin){ msg.style.color='#c0392b';
+    msg.textContent = _en?'Type the supervisor PIN.':'Escribe el PIN de supervisor.'; return; }
   msg.style.color='var(--parch3)';
   msg.textContent = _en?'Saving…':'Guardando…';
   try{
-    const r = await _supaRpc('employee_set_role', {p_pin:_supPin||'', p_name:nombre, p_role:rol});
+    const r = await _supaRpc('employee_set_role', {p_pin:pin, p_name:nombre, p_role:rol});
     if(!r || r.ok !== true) throw new Error((r && r.error) || 'x');
     msg.style.color = '#2d6a3e';
     msg.textContent = rol==='admin'
@@ -23869,14 +24362,17 @@ async function supPonerRol(rol){
       : ' Su actividad de antes no se guardó, así que empieza de cero.';
   }catch(e){
     msg.style.color='#c0392b';
-    msg.textContent = (e && e.message==='unknown_employee')
-      ? (_en?'There is no account with that username.':'No hay ninguna cuenta con ese usuario.')
-      : (_en?'Could not save. Check the username and your connection.':'No se ha podido guardar. Comprueba el usuario y la conexión.');
+    msg.textContent = _supErrorRol(e && e.message);
   }
 }
 
+// El restaurante sobre el que actúa el panel. Va por _venueActual() —la ficha
+// de quien entró— y NO por ACTIVE_VENUE, que es la tarjeta del login y es
+// estética: renovar el código de acceso del restaurante equivocado deja a un
+// equipo entero sin poder registrarse.
 function _supVenueId(){
-  return (typeof ACTIVE_VENUE!=='undefined' && ACTIVE_VENUE && ACTIVE_VENUE.id) || 'txoko';
+  try{ return _venueActual(); }
+  catch(_){ return (typeof ACTIVE_VENUE!=='undefined' && ACTIVE_VENUE && ACTIVE_VENUE.id) || _VENUE_POR_DEFECTO; }
 }
 
 async function supVerCodigo(){
@@ -24065,6 +24561,80 @@ function renderSupLqaStats(allEmps, empNames){
 // feedback uno a uno: alérgenos (seguridad), temas flojos, exámenes, platos
 // a repasar y preparación LQA. Se abre tocando su nombre en la analítica o
 // en el ranking LQA. Lee window._supAllEmps (poblado por renderSupDashboard).
+// ═══ EVOLUCIÓN INDIVIDUAL ═════════════════════════════════════════════════
+// La historia de una persona contada con SUS pruebas: cómo ha ido, en qué
+// falla y qué tocaría hacer. Todo sale del histórico real; si no hay histórico
+// —o si aún no ha hecho ninguna prueba— lo dice y no se inventa una curva.
+function _supEvolucionHTML(name, e, card){
+  const _en = LANG==='en';
+  const hist = window._supHist;
+  if(!hist) return '';
+  const p = _supPerfil(name, hist);
+  if(!p.pruebas) return card(_en?'Progress over time':'Evolución',
+    `<div class="sup-vacio">${_en?'No tests taken yet — there is nothing to plot.':'Todavía no ha hecho ninguna prueba: no hay nada que dibujar.'}</div>`);
+
+  // La curva: una nota por prueba, en orden. Sin ejes ni rejilla — en un móvil
+  // lo único legible es la forma, y el número exacto va al lado.
+  const pts = p.filas.map(f => Math.round((f.score||0) * 100 / f.total));
+  const W = 260, H = 46;
+  const x = i => pts.length > 1 ? (i * W / (pts.length - 1)) : W / 2;
+  const y = v => H - 3 - (v / 100) * (H - 6);
+  const linea = pts.map((v,i) => `${i?'L':'M'}${x(i).toFixed(1)},${y(v).toFixed(1)}`).join(' ');
+  const ult = pts[pts.length-1];
+  const colT = p.tendencia == null ? 'var(--parch3)' : p.tendencia >= 0 ? 'var(--sage)' : 'var(--rose)';
+
+  // Dónde falla: por categoría de la carta, con sus propias filas.
+  const porCat = {};
+  for(const f of p.filas){
+    const k = f.cat || f.topic || '—';
+    const o = porCat[k] || (porCat[k] = { ac:0, tot:0 });
+    o.ac += f.score||0; o.tot += f.total||0;
+  }
+  const flojas = Object.entries(porCat)
+    .filter(([,o]) => o.tot >= 5)
+    .map(([k,o]) => ({ k, pct: Math.round(o.ac*100/o.tot) }))
+    .sort((a,b) => a.pct - b.pct);
+  const peores = flojas.filter(f => f.pct < _SUP_APROBADO).slice(0,3);
+
+  // Qué tocaría hacer. Una sola cosa, la más urgente: un panel que sugiere
+  // cinco no sugiere ninguna.
+  const dias = p.ultima ? Math.floor((Date.now() - Date.parse(p.ultima)) / 86400000) : null;
+  const paso = (dias != null && dias >= _SUP_DIAS_RIESGO)
+      ? (_en ? `No test in ${dias} days. Start there.` : `Lleva ${dias} días sin hacer una prueba. Por ahí hay que empezar.`)
+    : (e.allergenBest || 0) < _SUP_APROBADO
+      ? (_en ? 'Allergens below the bar — that one is safety, it goes first.' : 'Alérgenos por debajo del listón: eso es seguridad, va primero.')
+    : peores.length
+      ? (_en ? `Weakest area: ${escapeHTML(peores[0].k)} (${peores[0].pct}%).` : `Lo más flojo: ${escapeHTML(peores[0].k)} (${peores[0].pct}%).`)
+    : p.tendencia != null && p.tendencia <= -10
+      ? (_en ? 'Dropping lately — worth asking what changed.' : 'Está bajando: merece preguntarle qué ha cambiado.')
+      : (_en ? 'On track. Nothing needed.' : 'Va en hora. No hace falta nada.');
+
+  const dato = (v, l) => `<div style="text-align:center"><div style="font-family:'Cinzel',serif;font-size:1.05rem;color:var(--parchment);line-height:1.1">${v}</div><div style="font-family:'DM Mono',monospace;font-size:.5rem;color:var(--parch4);letter-spacing:.06em;text-transform:uppercase">${l}</div></div>`;
+  const meses = p.desde ? Math.max(0, Math.round((Date.now() - Date.parse(p.desde)) / 2629800000)) : null;
+
+  return card(_en?'Progress over time':'Evolución',
+    `<svg viewBox="0 0 ${W} ${H}" width="100%" height="${H}" preserveAspectRatio="none" aria-hidden="true" style="display:block;margin-bottom:.5rem">
+      <line x1="0" y1="${y(_SUP_APROBADO).toFixed(1)}" x2="${W}" y2="${y(_SUP_APROBADO).toFixed(1)}" stroke="rgba(136,176,131,.45)" stroke-width="1" stroke-dasharray="3 3"/>
+      <path d="${linea}" fill="none" stroke="var(--gold)" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round"/>
+      <circle cx="${x(pts.length-1).toFixed(1)}" cy="${y(ult).toFixed(1)}" r="2.6" fill="var(--gold-deep)"/>
+    </svg>
+    <div style="display:flex;justify-content:space-between;gap:.4rem;margin-bottom:.6rem">
+      ${dato(p.nota + '%', _en?'average':'media')}
+      ${dato(`<span style="color:${colT}">${p.tendencia == null ? '—' : (p.tendencia > 0 ? '▲' : p.tendencia < 0 ? '▼' : '=') + Math.abs(p.tendencia)}</span>`, _en?'trend':'tendencia')}
+      ${dato(p.aprobadas + '/' + p.pruebas, _en?'passed':'aprobadas')}
+      ${dato(p.minutos >= 60 ? Math.floor(p.minutos/60)+'h '+(p.minutos%60)+'m' : p.minutos+'m', _en?'time':'tiempo')}
+      ${dato(meses == null ? '—' : (meses < 1 ? (_en?'<1':'<1') : meses), _en?'months':'meses')}
+    </div>
+    ${peores.length ? `<div style="border-top:1px solid var(--line);padding-top:.5rem;margin-bottom:.5rem">
+      <div style="font-family:'DM Mono',monospace;font-size:.52rem;color:var(--parch4);letter-spacing:.1em;text-transform:uppercase;margin-bottom:.3rem">${_en?'Where it goes wrong':'Dónde falla'}</div>
+      ${peores.map(f => `<div style="display:flex;justify-content:space-between;font-size:.75rem;color:var(--parch2);padding:.15rem 0"><span>${escapeHTML(f.k)}</span><span style="font-family:'DM Mono',monospace;color:var(--rose)">${f.pct}%</span></div>`).join('')}
+    </div>` : ''}
+    <div style="border-top:1px solid var(--line);padding-top:.5rem">
+      <div style="font-family:'DM Mono',monospace;font-size:.52rem;color:var(--parch4);letter-spacing:.1em;text-transform:uppercase;margin-bottom:.25rem">${_en?'Next step':'Siguiente paso'}</div>
+      <div style="font-size:.8rem;color:var(--parchment);line-height:1.45">${paso}</div>
+    </div>`);
+}
+
 function renderSupEmployee(name){
   const allEmps = window._supAllEmps || {};
   const e = allEmps[name];
@@ -24122,7 +24692,7 @@ function renderSupEmployee(name){
   c.innerHTML=`<div class="sup-wrap">
     <div style="display:flex;align-items:center;gap:.75rem;margin-bottom:1rem">
       <button onclick="renderSupAnalytics(window._supAllEmps, window._supEmpNames)" aria-label="${_en?'Back':'Volver'}" style="background:transparent;border:1.5px solid rgba(196,154,60,.55);border-radius:var(--r2);padding:.4rem .8rem;font-size:.75rem;color:var(--gold-deep);font-weight:700;cursor:pointer">←</button>
-      <div style="font-family:'Cinzel',serif;font-size:1.15rem;color:var(--parchment)">${_en?'Employee profile':'Ficha del empleado'}</div>
+      <div style="font-family:'Cinzel',serif;font-size:1.15rem;color:var(--parchment)">${_en?`${escapeHTML(_dispName(name))}’s development`:`Perfil de desarrollo de ${escapeHTML(_dispName(name))}`}</div>
     </div>
 
     <div style="display:flex;align-items:center;gap:.85rem;background:linear-gradient(155deg,#1a2a20,#0f1d15);border:1px solid rgba(196,154,60,.25);border-radius:var(--r);padding:1rem;margin-bottom:.75rem">
@@ -24132,6 +24702,8 @@ function renderSupEmployee(name){
         <div style="font-family:'DM Mono',monospace;font-size:.6rem;color:#a8c4b0;display:flex;align-items:center;gap:.3rem;margin-top:.15rem">${tunicLevelIcon(lvl.level,lvl.color,13)} ${_en?'Lv.':'Nv.'}${lvl.level} · ${(e.xp||0).toLocaleString()} XP · ${_en?'streak':'racha'} ${e.streak||0}</div>
       </div>
     </div>
+
+    ${_supEvolucionHTML(name, e, card)}
 
     ${aVal!=null ? card(`⚠ ${_en?'Allergens (safety)':'Alérgenos (seguridad)'}`,
       `<div style="display:flex;align-items:center;gap:.7rem">

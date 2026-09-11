@@ -2110,7 +2110,9 @@ test('supervisor panel: realtime employees channel + silent refresh + live pill'
   // Ficha individual del empleado (jul 2026): tocar un nombre abre su perfil.
   assert(/function renderSupEmployee\(name\)/.test(html), 'debe existir renderSupEmployee');
   const emp = html.slice(html.indexOf('function renderSupEmployee(name)'), html.indexOf('function renderSupNotifSender'));
-  assert(/Ficha del empleado/.test(emp) && /Alérgenos \(seguridad\)/.test(emp) && /Preparación LQA/.test(emp) && /a repasar/.test(emp),
+  assert(/Perfil de desarrollo de \$\{escapeHTML\(_dispName\(name\)\)\}/.test(emp),
+    'la ficha se titula con el nombre VISIBLE de la persona, no con una etiqueta genérica');
+  assert(/Alérgenos \(seguridad\)/.test(emp) && /Preparación LQA/.test(emp) && /a repasar/.test(emp),
     'la ficha debe reunir alérgenos, LQA y platos a repasar');
   // el nombre en la cabecera oscura debe ir en claro (no var(--parchment) invisible)
   assert(/font-family:'Cinzel',serif;font-size:1\.15rem;color:var\(--ink\)">\$\{escapeHTML\(name\)\}/.test(emp),
@@ -8784,6 +8786,85 @@ test('Administración: mira cualquier restaurante y no deja rastro', () => {
     'si la carta no llega, se vuelve al restaurante anterior: enseñar la de otro es justo lo que no debe pasar');
 });
 
+// ─── El cargador de cartas, ejecutado de verdad ──────────────────
+// M.B. tiene su carro de quesos listo y su carta todavía no (espera a que
+// cocina diga de dónde salen diecisiete alérgenos). La cuenta que existe para
+// revisar contenido tiene que poder entrar a revisar lo que sí hay. Lo que NO
+// puede pasar bajo ningún concepto: que al entrar a M.B. se queden puestos los
+// platos de Txoko bajo el rótulo de M.B.
+//
+// Se EJECUTA cargarCarta con un fetch de mentira, porque lo que hay que
+// demostrar es qué queda en DISHES al terminar, y eso no se lee en el código.
+// El await va aquí fuera: test() es síncrono y una prueba async se tragaría
+// los fallos en silencio — la otra manera de escribir un guard que no muerde.
+const _cartaRes = await (async () => {
+  const src = html.slice(html.indexOf('let _cartaPuesta = _VENUE_POR_DEFECTO;'),
+                         html.indexOf('// Derivación automática:'));
+  if (src.length < 500) return { roto: 'no encuentro el cargador de cartas' };
+  const monta = (esAdmin, responder) => {
+    const D = [], DE = [], DC = {}, DA = {};
+    const BASE = { DISHES:[{id:1,name:'Croqueta de jamón'}], DISHES_EN:[{id:1,name:'Ham croquette'}],
+                   DISH_COMPONENTS:{1:['jamon']}, DISH_ACTIONS:{1:{}} };
+    const F = new Function('DISHES','DISHES_EN','DISH_COMPONENTS','DISH_ACTIONS', // eslint-disable-line no-new-func
+      '_CARTA_BASE','_VENUE_POR_DEFECTO','_esAdmin','loadLazyData','showToast','LANG',
+      src + '; return { cargarCarta, estado: () => ({ platos: DISHES.map(d=>d.name), en: DISHES_EN.length, comp: Object.keys(DISH_COMPONENTS).length }) };');
+    return F(D, DE, DC, DA, BASE, 'txoko', () => esAdmin, responder, () => {}, 'es');
+  };
+  const plato = (id,es,en) => ({ venue:null, DISHES:[{id,name:es}], DISHES_EN:[{id,name:en}],
+                                 DISH_COMPONENTS:{[id]:['x']}, DISH_ACTIONS:{} });
+  const carta = v => Object.assign(plato(9,'Chipirón','Baby squid'), { venue:v });
+  const falta404 = () => Promise.reject(new Error('HTTP 404'));
+  const sinRed   = () => Promise.reject(new Error('Failed to fetch'));
+  // El repartidor mira la RUTA: así un mismo montaje puede tener carta para un
+  // restaurante y no tenerla para otro, que es el caso que hay que probar.
+  const porRuta = mapa => ruta => {
+    const v = (ruta.match(/carta-([^.]+)\.json/) || [])[1];
+    return Object.prototype.hasOwnProperty.call(mapa, v) ? mapa[v]() : falta404();
+  };
+
+  // ── El escenario que importa ──
+  // Hay que llegar a M.B. con OTRA carta ya puesta. Ojo con 'txoko': cargarCarta
+  // sale por el atajo `venue === _cartaPuesta` sin aplicar nada, así que usarlo
+  // de punto de partida dejaba DISHES vacío y la comprobación no probaba nada
+  // (mordió en la verificación: la mutación «no vaciar» pasaba tan campante).
+  const admin = monta(true, porRuta({ otro: () => Promise.resolve(carta('otro')) }));
+  const rOtro = await admin.cargarCarta('otro');
+  const puestosAntes = admin.estado().platos.length;
+  const rVacia = await admin.cargarCarta('mb');
+  return {
+    rOtro, puestosAntes, vacia: rVacia, estado: admin.estado(),
+    sinRed: await monta(true,  sinRed).cargarCarta('mb'),
+    staff:  await monta(false, falta404).cargarCarta('mb'),
+    propia: await monta(true,  porRuta({ mb: () => Promise.resolve(carta('mb')) })).cargarCarta('mb'),
+    ajena:  await monta(true,  porRuta({ mb: () => Promise.resolve(carta('txoko')) })).cargarCarta('mb')
+  };
+})();
+
+test('Administración: un restaurante sin carta se abre VACÍO, nunca con la del vecino', () => {
+  const R = _cartaRes;
+  assert(!R.roto, R.roto);
+  // 0) El escenario tiene que partir de una carta REALMENTE puesta; si no,
+  //    comprobar que M.B. queda vacío no demuestra nada.
+  assert(R.rOtro === true && R.puestosAntes > 0,
+    'la prueba no arranca con otra carta puesta: no estaría probando nada');
+  // 1) Administrador + restaurante sin carta → entra, y entra vacío.
+  assert(R.vacia === 'vacia',
+    `el administrador debería entrar a un restaurante sin carta; devolvió ${JSON.stringify(R.vacia)}`);
+  assert(R.estado.platos.length === 0,
+    `PELIGRO: al entrar a M.B. se quedan puestos los platos del anterior: ${R.estado.platos.join(', ')}`);
+  assert(R.estado.en === 0 && R.estado.comp === 0,
+    'la carta en inglés y los componentes también tienen que quedar a cero');
+  // 2) Sin red NO es «no hay carta»: ahí no se entra ni siendo administrador.
+  assert(R.sinRed === false,
+    'un fallo de red no puede confundirse con «este restaurante no tiene carta»');
+  // 3) Quien NO es administrador sigue sin entrar a un restaurante sin carta.
+  assert(R.staff === false, 'sólo la cuenta de administración entra a un restaurante sin carta');
+  // 4) Con carta de verdad, se aplica la suya.
+  assert(R.propia === true, 'con carta propia se entra normal');
+  // 5) Y un archivo que dice ser de otro restaurante se sigue rechazando.
+  assert(R.ajena === false, 'un archivo que dice ser de otro restaurante no se aplica');
+});
+
 test('Multi-restaurante: nadie lee el nombre del vecino en su propia formación', () => {
   // El nombre del restaurante estaba escrito a fuego en seis sitios que ve el
   // empleado: dos títulos de nivel, la bienvenida, la guía de emplatado y las
@@ -8971,8 +9052,17 @@ test('Carta: cada restaurante carga la suya, y si no llega no se entra', () => {
   const cuerpo = (() => { let d = 0;
     for (let k = html.indexOf('{', i); k < html.length; k++) {
       if (html[k] === '{') d++; else if (html[k] === '}') { d--; if (!d) return html.slice(i, k + 1); } } })();
-  assert(/if\(!\(await cargarCarta\(\(_e && _e\.venue\) \|\| _VENUE_POR_DEFECTO\)\)\) return;/.test(cuerpo),
+  assert(/let _v = \(_e && _e\.venue\) \|\| _VENUE_POR_DEFECTO;/.test(cuerpo),
+    'el restaurante de quien entra sale de SU ficha, no del selector del login');
+  assert(/if\(!\(await cargarCarta\(_v\)\)\) return;/.test(cuerpo),
     'sin la carta de su restaurante no se entra');
+  // La cuenta de administración vuelve al restaurante que ELIGIÓ: todo lo demás
+  // ya se guía por _venueActual(), y cargar aquí el de su ficha la devolvía a
+  // Txoko con el resto de la app puesta en M.B.
+  assert(/_esAdmin\(pinTarget\)/.test(cuerpo) && /localStorage\.getItem\('txk_venue'\)/.test(cuerpo),
+    'el administrador vuelve al restaurante que dejó elegido');
+  assert(cuerpo.indexOf('_esAdmin(pinTarget)') < cuerpo.indexOf('await cargarCarta(_v)'),
+    'esa elección se resuelve ANTES de cargar la carta');
   const iCarta = cuerpo.indexOf('cargarCarta'), iApp = cuerpo.indexOf('screenApp');
   assert(iCarta > 0 && iApp > 0 && iCarta < iApp,
     'la carta se resuelve ANTES de pintar la app');
@@ -8993,6 +9083,217 @@ test('Acceso: el código del restaurante no se pinta solo', () => {
   assert(/if\(!confirm\(_en[\s\S]{0,400}?\)\) return;/.test(
       html.slice(html.indexOf('async function supRenovarCodigo('))),
     'renovar se confirma: deja fuera a quien tenga el código viejo');
+});
+
+// ─── El PIN de supervisor es DE UN RESTAURANTE ──────────────────
+// El del manager de M.B. no puede abrir el panel de Txoko: vería su equipo, su
+// cuadrante y sus notas, y podría renovarle el código de acceso dejando a
+// veintiún empleados sin poder registrarse. El del propietario abre todos.
+//
+// Se EJECUTA el verificador con un fetch de mentira, porque lo que hay que
+// demostrar es qué viaja en la petición.
+const _pinEnvio = await (async () => {
+  const i = html.indexOf('async function verifySupervisorPin(');
+  if (i < 0) return { roto: 'no encuentro verifySupervisorPin' };
+  const src = (() => { let d = 0;
+    for (let k = html.indexOf('{', i); k < html.length; k++) {
+      if (html[k] === '{') d++; else if (html[k] === '}') { d--; if (!d) return html.slice(i, k + 1); } } })();
+  const llamar = (venue, actual) => {
+    let cuerpo = null, ruta = null;
+    const fakeFetch = (u, o) => { ruta = u; cuerpo = JSON.parse(o.body);
+      return Promise.resolve({ ok: true, json: () => Promise.resolve(true) }); };
+    const F = new Function('USE_SERVER_PIN_VERIFY','SUPA_URL','SUPA_KEY','fetch', // eslint-disable-line no-new-func
+      '_venueActual','dbgw','hashPin','SUP_PIN_HASH',
+      src + '; return verifySupervisorPin;')(
+      true, 'https://x', 'k', fakeFetch, () => actual, () => {}, () => '', '');
+    return F('1234', venue).then(() => ({ cuerpo, ruta }));
+  };
+  return { explicito: await llamar('mb', 'txoko'), pordefecto: await llamar(undefined, 'txoko') };
+})();
+
+test('El PIN de supervisor va atado a un restaurante', () => {
+  const R = _pinEnvio;
+  assert(!R.roto, R.roto);
+  assert(/rpc\/verify_supervisor_pin/.test(R.explicito.ruta), 'el PIN se sigue verificando en el servidor');
+  // 1) Si se dice de qué restaurante se pregunta, se manda ése.
+  assert(R.explicito.cuerpo.p_venue === 'mb',
+    `la petición tiene que llevar el restaurante; llevaba ${JSON.stringify(R.explicito.cuerpo)}`);
+  // 2) Si no se dice, sale el del que ha entrado — nunca en blanco.
+  assert(R.pordefecto.cuerpo.p_venue === 'txoko',
+    `sin restaurante explícito debe ir el de quien entró; llevaba ${JSON.stringify(R.pordefecto.cuerpo)}`);
+  assert(R.explicito.cuerpo.pin_input === '1234', 'el PIN se sigue mandando');
+
+  // 3) El panel actúa sobre el restaurante de quien entró, no sobre la tarjeta
+  //    del login (que es estética): renovar el código del restaurante
+  //    equivocado deja a un equipo entero sin poder registrarse.
+  const sv = html.slice(html.indexOf('function _supVenueId(){'), html.indexOf('async function supVerCodigo('));
+  assert(/return _venueActual\(\);/.test(sv), '_supVenueId debe salir de _venueActual()');
+  assert(sv.indexOf('_venueActual()') < sv.indexOf('ACTIVE_VENUE'),
+    'ACTIVE_VENUE sólo vale de último recurso, nunca como primera opción');
+
+  // 4) Y el servidor, que es quien manda de verdad.
+  const sql = read('supabase/supervisor_pin_por_restaurante.sql');
+  assert(/create table if not exists public\.supervisor_pins/.test(sql), 'falta la tabla de PINes por restaurante');
+  assert(/revoke all on function public\.sup_pin_scope\(text\) from public, anon, authenticated/.test(sql),
+    'sup_pin_scope NO puede llamarse desde el navegador: sería un oráculo de fuerza bruta sin limitador');
+  for (const fn of ['venue_code_show', 'venue_code_rotate', 'save_rota'])
+    assert(new RegExp('function public\\.' + fn + '\\([\\s\\S]{0,1400}?verify_supervisor_pin\\([a-z_]+, ?[a-z_]*venue[a-z_]*\\)').test(sql),
+      `${fn} tiene que comprobar el PIN CONTRA SU RESTAURANTE, no sólo que el PIN valga`);
+  assert(/p_role in \('admin','manager'\) and public\.sup_pin_scope\(p_pin\) <> '\*'/.test(sql),
+    'sólo el propietario reparte administración y mando: si no, un manager se da la llave de todos los restaurantes');
+  assert(/sup_pin_ok\(p_pin, v_venue\)/.test(sql), 'nadie cambia el rol de alguien de otro restaurante');
+  // El limitador por IP sigue ahí, y un PIN bueno en el restaurante equivocado
+  // no cuenta como fallo (si contara, un manager despistado bloquearía por IP a
+  // todo el hotel, que sale por la misma línea).
+  assert(/locked_until = case when fails \+ 1 >= 10/.test(sql), 'el limitador por IP no puede desaparecer');
+  assert(/if v_scope is not null then\s*\n\s*return false;/.test(sql),
+    'un PIN válido en otro restaurante no debe contar como intento fallido');
+});
+
+test('Panel: Análisis es para MIRAR, Acciones para HACER', () => {
+  // Petición del propietario (sep 2026). Un botón que renueva el código de
+  // acceso —y deja a veintiún empleados sin poder registrarse— no puede estar
+  // escondido dentro de la pantalla de las estadísticas.
+  const ana = html.slice(html.indexOf('function renderSupAnalytics'), html.indexOf('function renderSupCodigoHTML(){'));
+  for (const id of ['alg','res','act','pase','perf','dish'])
+    assert(new RegExp("_acc\\('"+id+"'").test(ana), `falta el acordeón de mirar '${id}'`);
+  for (const [id, qué] of [['acc','el código de acceso'], ['adm','la cuenta de administración']])
+    assert(!new RegExp("_acc\\('"+id+"'").test(ana), `${qué} sigue dentro de Análisis: va en Acciones`);
+  assert(!/renderSupCodigoHTML\(\)/.test(ana), 'Análisis no puede pintar el código de acceso');
+
+  // Y están en Acciones, cada una con su pantalla.
+  const acciones = html.slice(html.indexOf('data-sec="acciones"'), html.indexOf('function renderSupDeleteEmployee'));
+  for (const [k, qué] of [['codigo','el código de acceso'], ['cuentas','las cuentas']])
+    assert(new RegExp("_supTool\\('"+k+"'\\)").test(acciones), `${qué} debe tener su botón en Acciones`);
+  const tool = html.slice(html.indexOf('function _supTool(k){'), html.indexOf('function _supSetSection'));
+  for (const k of ['codigo','cuentas'])
+    assert(new RegExp('\\b'+k+': \\(\\)=>render').test(tool), `_supTool no sabe abrir '${k}'`);
+});
+
+test('Cuentas: sólo el propietario reparte mando, y la administración sólo se ve desde ella', () => {
+  // Paso 2 del multi-restaurante: dar de alta managers desde el panel.
+  const cu = html.slice(html.indexOf('function renderSupCuentas(){'), html.indexOf('async function supPonerManager('));
+  assert(/venue_staff_list/.test(cu) && /supPonerManager\(/.test(cu),
+    'la pantalla de cuentas tiene que listar el equipo y poder nombrar manager');
+  assert(/venue_pin_set/.test(html), 'tiene que poder poner el PIN de este restaurante');
+  const pone = html.slice(html.indexOf('async function supPonerManager('), html.indexOf('function _supErrorRol('));
+  assert(/p_venue:v\}\)/.test(html.slice(html.indexOf('async function supCargarCuentas('), html.indexOf('async function supPonerManager('))),
+    'el listado va SIEMPRE atado a un restaurante');
+  // Buscar sólo «confirm(» no vale: el texto sigue ahí aunque la condición sea
+  // `false &&` (mordió en la verificación). Se comprueba la condición entera.
+  assert(/if\(hacer && !confirm\(/.test(pone),
+    'nombrar manager da acceso al panel: se confirma antes, y la condición tiene que depender de `hacer`');
+  assert(/\breturn;\s*\n/.test(pone.slice(pone.indexOf('confirm('))),
+    'si se cancela la confirmación, no se llama al servidor');
+  // El error del servidor se traduce, no se traga: si un manager intenta
+  // nombrar a otro, tiene que leer por qué no puede.
+  const err = html.slice(html.indexOf('function _supErrorRol('), html.indexOf('async function supGuardarPinVenue('));
+  for (const cod of ['solo_propietario','otro_restaurante','unknown_employee'])
+    assert(new RegExp("'"+cod+"'").test(err), `falta el mensaje para '${cod}'`);
+
+  // La cuenta de administración salió del panel: sólo se ve desde ella misma.
+  assert(/\$\{_esAdmin\(\) \? `[\s\S]{0,2200}?renderSupAdminHTML\(\)/.test(html),
+    'la sección de administración debe pintarse SÓLO cuando quien mira es la cuenta de administración');
+  // Y desde Ajustes no hay PIN de panel en memoria: se teclea.
+  const adm = html.slice(html.indexOf('function renderSupAdminHTML(){'), html.indexOf('async function supPonerRol('));
+  assert(/id="supAdmPin"/.test(adm), 'en Ajustes el PIN de supervisor se teclea: allí no se ha pasado por el panel');
+  const rol = html.slice(html.indexOf('async function supPonerRol('), html.indexOf('// El restaurante sobre el que actúa'));
+  assert(/p_pin:pin\b/.test(rol), 'el rol se cambia con el PIN tecleado, no con uno vacío');
+  assert(/if\(!pin\)\{/.test(rol), 'sin PIN no se llama al servidor siquiera');
+});
+
+// ─── El panel de dirección: que los números sean de verdad ──────
+// `scores` guarda dos cosas con la misma forma: evaluaciones (score sobre
+// total de preguntas) y MARCADORES de juego — récord Txoko (total=1, score
+// hasta 41) y El Turno (total hasta 2042), donde `total` no es un
+// denominador. Son el 56% de las filas. Mezclarlas daba medias del 243%
+// (medido contra la base real, sep 2026). Aquí se ejecuta el cálculo.
+const _supNums = await (async () => {
+  const src = html.slice(html.indexOf('const _SUP_JUEGOS'), html.indexOf('function renderSupAtencionHTML'));
+  if (src.length < 500) return { roto: 'no encuentro el cálculo del panel' };
+  const F = new Function('LANG', src + // eslint-disable-line no-new-func
+    '; return {perfil:_supPerfil, estado:_supEstado, atencion:_supAtencion, APROB:_SUP_APROBADO, DIAS:_SUP_DIAS_RIESGO};')('es');
+  const hace = d => new Date(Date.now() - d * 86400000).toISOString();
+  // Ana: seis evaluaciones al 90% … y dos marcadores de juego disparatados.
+  const hist = [];
+  for (let i = 0; i < 6; i++) hist.push({ employee:'Ana', score:9, total:10, topic:'mixed', cat:'Entrantes', time_sec:60, created_at:hace(30 - i) });
+  const conJuegos = hist.concat([
+    { employee:'Ana', score:41, total:1,    topic:'txoko',    cat:null, time_sec:0,  created_at:hace(2) },
+    { employee:'Ana', score:340, total:2042, topic:'elturno', cat:null, time_sec:90, created_at:hace(1) }
+  ]);
+  return { F, hist, conJuegos,
+    limpio: F.perfil('Ana', hist),
+    sucio:  F.perfil('Ana', conJuegos) };
+})();
+
+test('Panel de dirección: los marcadores de juego NO cuentan como notas', () => {
+  const R = _supNums;
+  assert(!R.roto, R.roto);
+  assert(R.limpio.pruebas === 6, `esperaba 6 evaluaciones, contó ${R.limpio.pruebas}`);
+  assert(R.limpio.nota === 90, `la media de seis 9/10 es 90%, salió ${R.limpio.nota}`);
+  // Lo que importa: meter los marcadores de juego NO puede cambiar la nota.
+  assert(R.sucio.nota === 90,
+    `los marcadores de juego se han colado en la nota: ${R.sucio.nota}% en vez de 90%`);
+  assert(R.sucio.pruebas === 6,
+    `los marcadores de juego se han contado como pruebas: ${R.sucio.pruebas} en vez de 6`);
+  assert(R.sucio.nota <= 100, `una nota del ${R.sucio.nota}% es imposible: vuelve el bug del 243%`);
+  const sql = read('index.html');
+  assert(/_SUP_JUEGOS = \['txoko', 'elturno'\]/.test(sql), 'la lista de juegos a excluir no puede desaparecer');
+});
+
+test('Panel de dirección: la tabla y el aviso dicen lo MISMO', () => {
+  // Que la tabla pinte a alguien en verde y el aviso lo llame urgente destruye
+  // la confianza en las dos pantallas a la vez. Una sola regla: _supEstado.
+  const R = _supNums;
+  assert(!R.roto, R.roto);
+  const hace = d => new Date(Date.now() - d * 86400000).toISOString();
+  const ev = (n, pct, d) => ({ employee:n, score:Math.round(pct/10), total:10, topic:'mixed', cat:'Entrantes', time_sec:60, created_at:hace(d) });
+  // Cuatro casos que tienen que caer en tres cajas distintas.
+  const hist = [];
+  for (let i = 0; i < 6; i++) hist.push(ev('Alta', 95, 6 - i));      // al día y alto
+  for (let i = 0; i < 6; i++) hist.push(ev('Floja', 60, 6 - i));     // al día y por debajo
+  for (let i = 0; i < 6; i++) hist.push(ev('Perdida', 95, 60 - i));  // buena pero desaparecida
+  const emps = { Alta:{}, Floja:{}, Perdida:{}, Nueva:{} };
+  const nombres = Object.keys(emps);
+  const esperado = { Alta:'verde', Floja:'ambar', Perdida:'rojo', Nueva:'rojo' };
+  for (const n of nombres)
+    assert(R.F.estado(R.F.perfil(n, hist)) === esperado[n],
+      `${n} debería salir ${esperado[n]} y sale ${R.F.estado(R.F.perfil(n, hist))}`);
+  // Y el aviso tiene que clasificarlos igual, persona por persona.
+  const a = R.F.atencion(emps, nombres, hist);
+  const donde = {};
+  a.rojo.forEach(x => donde[x.n] = 'rojo');
+  a.ambar.forEach(x => donde[x.n] = 'ambar');
+  a.verde.forEach(x => donde[x.n] = 'verde');
+  for (const n of nombres){
+    const est = R.F.estado(R.F.perfil(n, hist));
+    if (donde[n] === undefined) { assert(est === 'verde', `${n} no sale en ningún grupo y no está en verde`); continue; }
+    assert(donde[n] === est, `${n}: la tabla dice ${est} y el aviso dice ${donde[n]}`);
+  }
+  // Y cada motivo tiene que decir QUÉ mide: «14 días sin entrenar» de alguien
+  // que entró ayer era mentira — se mide la última PRUEBA, y así se escribe.
+  const perdida = a.rojo.find(x => x.n === 'Perdida');
+  assert(perdida && /sin hacer una prueba/.test(perdida.motivo),
+    `el motivo debe decir que lo que falta es una PRUEBA: «${perdida && perdida.motivo}»`);
+});
+
+test('Panel de dirección: la tabla no arrastra la página de lado', () => {
+  // Nueve columnas no caben en un móvil. La tabla lleva SU propio scroll: el
+  // resto de la página no puede moverse de lado (medido a 390px: caja 321,
+  // tabla 560, la caja scrollea y el documento no).
+  const css = read('styles.css');
+  assert(/\.sup-tabla-wrap\{[^}]*overflow-x:auto/.test(css), 'la tabla necesita su propio scroll lateral');
+  assert(/\.sup-tabla\{[^}]*min-width:\s*\d+px/.test(css), 'sin min-width la tabla se estruja y no se lee');
+  assert(/\.sup-tabla tbody tr\{[^}]*cursor:pointer/.test(css), 'cada fila abre un perfil: tiene que parecer tocable');
+  assert(/\.sup-at-r\{[^}]*min-height:44px/.test(css), 'las filas del aviso se tocan con el dedo: 44px');
+  // La antigüedad sale de la primera PRUEBA y no de registered_at: esa columna
+  // se rellenó el día que se creó y da altas posteriores a la primera
+  // actividad (Dian figura de alta en septiembre y entrena desde marzo).
+  assert(/no desde `registered_at`/.test(html) || /registered_at/.test(html.slice(html.indexOf('function renderSupTablaHTML'), html.indexOf('async function _supPintarHistorial'))),
+    'hay que dejar escrito por qué la antigüedad no sale de registered_at');
+  const tabla = html.slice(html.indexOf('function renderSupTablaHTML'), html.indexOf('async function _supPintarHistorial'));
+  assert(/p\.desde/.test(tabla) && !/e\.registeredAt/.test(tabla),
+    'la antigüedad se cuenta desde su primera prueba');
 });
 
 // ─── 7. No leftover git conflict markers ────────────────────────
