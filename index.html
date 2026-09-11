@@ -52,7 +52,7 @@
 <meta property="og:description" content="Formación de equipos de sala: carta, alérgenos, vinos, exámenes y juegos de repaso.">
 <meta property="og:url" content="https://meseo.es/">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"Meseo","url":"https://meseo.es/"}</script>
-<meta name="app-version" content="7.432">
+<meta name="app-version" content="7.433">
 <meta name="app-build" content="May 2026">
 <meta name="theme-color" content="#1c2a22">
 <!-- ═══ PWA ═══ -->
@@ -1768,7 +1768,7 @@ const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><p
 const SRC = 'src';
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='7.432';  // sincronizada con sw.js VERSION (guard de CI)
+const APP_VERSION='7.433';  // sincronizada con sw.js VERSION (guard de CI)
 const APP_BUILD='Jul 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;
@@ -22949,6 +22949,11 @@ function renderSupDashboard(silent){
         </div>
         <div class="sup-sec" role="tabpanel" data-sec="hoy">
         ${_supKpiBand(allEmps, empNames)}
+        <!-- «¿Quién necesita mi atención esta semana?» (petición del
+             propietario, sep 2026): lo que convierte el panel en una
+             herramienta de gestión en vez de una pantalla de estadísticas.
+             Se rellena aparte porque lee el histórico de evaluaciones. -->
+        <div id="supAtencion"></div>
         ${(()=>{
           // Connected today section
           // "Conectados hoy" usaba SOLO lastLoginTs — pero ese campo depende de
@@ -23015,7 +23020,9 @@ function renderSupDashboard(silent){
              inactivos) vive ahora dentro de la pantalla Analítica: un solo
              sitio para todo el análisis (auditoría jul 2026). -->
         <div class="sup-sec" role="tabpanel" data-sec="equipo">
-        <div class="section-eyebrow">${LANG==='en'?'Individual progress':'Progreso individual'}</div>
+        <div class="section-eyebrow">${LANG==='en'?'The team, in one table':'El equipo, en una tabla'}</div>
+        <div id="supTabla"></div>
+        <div class="section-eyebrow" style="margin-top:1.2rem">${LANG==='en'?'Individual progress':'Progreso individual'}</div>
         ${cards}
         </div>
         <div class="sup-sec" role="tabpanel" data-sec="acciones">
@@ -23076,6 +23083,7 @@ function renderSupDashboard(silent){
     _supConnectLive();
     _supStampLive();
     _supApplySection();
+    _supPintarHistorial(allEmps, empNames);
   });
 }
 
@@ -23495,6 +23503,226 @@ function _supResumenTxt(allEmps, empNames, prev){
   L.push(`✅ ${en?'Trained':'Entrenaron'} (${podium.length}/${roster.length})`+(idle.length?` · 😴 ${en?'No activity':'Sin actividad'} (${idle.length}): ${idle.map(_dispName).join(', ')}`:''));
   return L.join('\n');
 }
+// ═══ HISTORIAL DE EVALUACIONES ════════════════════════════════════════════
+// La tabla `scores` guarda DOS cosas distintas con la misma forma:
+//
+//   · EVALUACIONES — examen, alérgenos, protocolo, cubertería…: `score` son
+//     aciertos sobre `total` preguntas. Eso sí es una nota.
+//   · MARCADORES DE JUEGO — récord Txoko (total=1, score hasta 41) y El Turno
+//     (total hasta 2042): `score` son puntos y `total` no es un denominador.
+//
+// Son el 56% de las filas. Mezclarlas daba medias del 243% (medido sep 2026),
+// así que el panel se queda SÓLO con las evaluaciones. Con eso, el histórico
+// real es de 170 pruebas de 19 personas desde marzo.
+const _SUP_JUEGOS = ['txoko', 'elturno'];
+const _SUP_APROBADO = 80;   // el mismo listón que ya usa el aviso de alérgenos
+const _SUP_DIAS_RIESGO = 14;
+
+async function _supCargarHistorial(){
+  try{
+    const r = await fetchT(`${SUPA_URL}/rest/v1/scores?select=employee,score,total,topic,cat,time_sec,created_at&limit=5000&${_vq()}`,
+      { headers:{ 'apikey':SUPA_KEY, 'Authorization':`Bearer ${SUPA_KEY}` } }, 8000);
+    if(!r.ok) return null;
+    const filas = await r.json();
+    if(!Array.isArray(filas)) return null;
+    return filas.filter(f => f && f.total > 0 && _SUP_JUEGOS.indexOf(f.topic) < 0);
+  }catch(_){ return null; }
+}
+
+// Lo que sabemos de una persona, a partir de SUS evaluaciones.
+function _supPerfil(nombre, hist){
+  // El filtro de juegos se repite AQUÍ a propósito, aunque la carga ya lo haga:
+  // ésta es la función que convierte filas en una nota, y si algún día se le
+  // pasan las filas en crudo el 243% vuelve sin que nadie se entere. Lo cazó
+  // el guard al ejecutarla con marcadores dentro.
+  const mias = (hist||[]).filter(f => f && f.employee === nombre
+      && f.total > 0 && _SUP_JUEGOS.indexOf(f.topic) < 0)
+    .sort((a,b) => String(a.created_at).localeCompare(String(b.created_at)));
+  const p = { pruebas: mias.length, nota: null, aprobadas: 0, minutos: 0,
+              desde: null, ultima: null, tendencia: null, filas: mias };
+  if(!mias.length) return p;
+  let ac = 0, tot = 0, seg = 0;
+  for(const f of mias){
+    ac += f.score || 0; tot += f.total || 0; seg += f.time_sec || 0;
+    if((f.score||0) * 100 / f.total >= _SUP_APROBADO) p.aprobadas++;
+  }
+  p.nota = tot ? Math.round(ac * 100 / tot) : null;
+  p.minutos = Math.round(seg / 60);
+  p.desde = String(mias[0].created_at).slice(0,10);
+  p.ultima = String(mias[mias.length-1].created_at).slice(0,10);
+  // Tendencia: la media de su último tercio contra la del primero. Con menos de
+  // seis pruebas no se dice nada — tres exámenes no son una tendencia.
+  if(mias.length >= 6){
+    const n = Math.floor(mias.length / 3);
+    const media = arr => { let a=0,t=0; for(const f of arr){ a+=f.score||0; t+=f.total||0; }
+      return t ? a*100/t : 0; };
+    p.tendencia = Math.round(media(mias.slice(-n)) - media(mias.slice(0, n)));
+  }
+  return p;
+}
+
+// El semáforo de una persona. UNA sola regla, porque la tabla y el bloque de
+// «quién necesita mi atención» tienen que decir lo mismo: que la tabla pinte a
+// alguien en verde y el aviso lo llame urgente destruye la confianza en las dos
+// pantallas a la vez (pasó en la verificación de sep 2026).
+//
+// «Sin avanzar» se mide por la última PRUEBA y no por la última vez que abrió
+// la app: entrar y no hacer nada no es avanzar.
+function _supEstado(p){
+  const dp = p.ultima ? Math.floor((Date.now() - Date.parse(p.ultima)) / 86400000) : null;
+  if(!p.pruebas || dp == null || dp >= _SUP_DIAS_RIESGO) return 'rojo';
+  if(p.nota != null && p.nota < _SUP_APROBADO) return 'ambar';
+  if(p.tendencia != null && p.tendencia <= -10) return 'ambar';
+  return 'verde';
+}
+
+// ═══ ¿QUIÉN NECESITA MI ATENCIÓN ESTA SEMANA? ═════════════════════════════
+// Petición del propietario: que el panel deje de ser una pantalla de
+// estadísticas y diga a quién hay que buscar. Tres grupos, y cada uno con el
+// motivo escrito — un semáforo sin motivo no sirve para hablar con nadie.
+function _supAtencion(allEmps, empNames, hist){
+  const hoy = Date.now();
+  const dias = iso => iso ? Math.floor((hoy - Date.parse(iso)) / 86400000) : null;
+  const rojo = [], ambar = [], verde = [];
+  const notas = [];
+  for(const n of empNames){
+    const p = _supPerfil(n, hist);
+    if(p.nota != null) notas.push(p.nota);
+  }
+  const mediaEquipo = notas.length ? Math.round(notas.reduce((a,b)=>a+b,0)/notas.length) : null;
+  for(const n of empNames){
+    const e = allEmps[n] || {};
+    const p = _supPerfil(n, hist);
+    const visto = e.lastActiveAt || e.lastLoginTs || null;
+    const d = dias(visto);
+    // «Sin avanzar» se mide por la última PRUEBA, no por la última vez que
+    // abrió la app: entrar y no hacer nada no es avanzar. Son dos señales
+    // distintas y decir «14 días sin entrenar» de alguien que entró ayer es
+    // mentira — así que cada motivo dice exactamente lo que mide.
+    const dp = dias(p.ultima);
+    const _en = LANG==='en';
+    const est = _supEstado(p);
+    if(est === 'rojo'){
+      if(!p.pruebas){
+        const cola = d == null ? (_en ? 'and has never opened the app' : 'y no ha abierto la app nunca')
+                   : d === 0  ? (_en ? 'and opened it today' : 'y hoy la ha abierto')
+                               : (_en ? `and last opened it ${d}d ago` : `y la abrió hace ${d}d`);
+        rojo.push({ n, p, motivo: (_en ? 'not a single test yet ' : 'ni una prueba todavía ') + cola });
+      } else {
+        rojo.push({ n, p, motivo: _en ? `${dp} days without a test` : `${dp} días sin hacer una prueba` });
+      }
+    } else if(est === 'ambar'){
+      ambar.push({ n, p, motivo: (p.nota != null && p.nota < _SUP_APROBADO)
+        ? (_en ? `average ${p.nota}% — below ${_SUP_APROBADO}%` : `media del ${p.nota}% — por debajo del ${_SUP_APROBADO}%`)
+        : (_en ? `dropping (${p.tendencia} points)` : `bajando (${p.tendencia} puntos)`) });
+    } else if(p.nota != null && mediaEquipo != null && p.nota > mediaEquipo){
+      verde.push({ n, p, motivo: _en ? `${p.nota}% — above the team average` : `${p.nota}% — por encima de la media` });
+    }
+  }
+  const orden = (a,b) => (a.p.nota??0) - (b.p.nota??0);
+  return { rojo: rojo.sort(orden), ambar: ambar.sort(orden),
+           verde: verde.sort((a,b)=>(b.p.nota??0)-(a.p.nota??0)), mediaEquipo };
+}
+
+function renderSupAtencionHTML(allEmps, empNames, hist){
+  const _en = LANG==='en';
+  if(!hist) return `<div class="sup-card"><div class="sup-card-t">${_en?'Who needs me this week':'Quién necesita mi atención'}</div>
+    <div class="sup-vacio">${_en?'Could not read the training history.':'No se ha podido leer el historial de formación.'}</div></div>`;
+  const a = _supAtencion(allEmps, empNames, hist);
+  const grupo = (lista, punto, titulo) => !lista.length ? '' : `
+    <div class="sup-at-g">
+      <div class="sup-at-h">${punto} <b>${lista.length}</b> ${titulo}</div>
+      ${lista.slice(0,6).map(x => `<div class="sup-at-r" role="button" tabindex="0"
+          onclick="renderSupEmployee(${escapeHTML(JSON.stringify(x.n))})"
+          onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click()}">
+        <span class="sup-at-n">${escapeHTML(_dispName(x.n))}</span>
+        <span class="sup-at-m">${escapeHTML(x.motivo)}</span>
+      </div>`).join('')}
+      ${lista.length>6?`<div class="sup-at-mas">+${lista.length-6} ${_en?'more':'más'}</div>`:''}
+    </div>`;
+  const nada = !a.rojo.length && !a.ambar.length && !a.verde.length;
+  return `<div class="sup-card">
+    <div class="sup-card-t">${_en?'Who needs me this week':'Quién necesita mi atención esta semana'}</div>
+    ${nada ? `<div class="sup-vacio">${_en?'Nothing to flag — the whole team is on track.':'Nada que señalar: todo el equipo va en hora.'}</div>` : `
+      ${grupo(a.rojo,  '🔴', _en?'need chasing'      :'hay que buscarles')}
+      ${grupo(a.ambar, '🟡', _en?'below where they should be':'por debajo de donde deberían')}
+      ${grupo(a.verde, '🟢', _en?'above the average'  :'por encima de la media')}
+      <div class="sup-at-pie">${_en
+        ? `Tap anyone to open their development profile. The bar is ${_SUP_APROBADO}%.`
+        : `Toca a cualquiera para abrir su perfil de desarrollo. El listón es el ${_SUP_APROBADO}%.`}</div>`}
+  </div>`;
+}
+
+// ═══ LA TABLA DEL EQUIPO ══════════════════════════════════════════════════
+// Todo el equipo en una fila por persona. Va dentro de su propio scroll
+// horizontal: en un móvil no caben ocho columnas, y el resto de la página no
+// puede moverse de lado por culpa de una tabla.
+function renderSupTablaHTML(allEmps, empNames, hist){
+  const _en = LANG==='en';
+  if(!hist) return `<div class="sup-vacio">${_en?'Could not read the training history.':'No se ha podido leer el historial de formación.'}</div>`;
+  const hoy = Date.now();
+  const filas = empNames.map(n => {
+    const e = allEmps[n] || {};
+    const p = _supPerfil(n, hist);
+    const visto = e.lastActiveAt || e.lastLoginTs || null;
+    const d = visto ? Math.floor((hoy - Date.parse(visto)) / 86400000) : null;
+    // Antigüedad: desde su PRIMERA prueba, no desde `registered_at` — esa
+    // columna se rellenó el día que se creó y da altas posteriores a la
+    // primera actividad (Dian figura de alta en septiembre y entrena desde
+    // marzo). Es antigüedad EN LA APP, y así se rotula.
+    const meses = p.desde ? Math.max(0, Math.round((hoy - Date.parse(p.desde)) / 2629800000)) : null;
+    const dom = Object.keys(e.knownDishes || {}).length;
+    const lqa = _lqaReady(e);
+    return { n, e, p, d, meses, dom, lqa, estado: _supEstado(p) };
+  }).sort((a,b) => ({rojo:0,ambar:1,verde:2})[a.estado] - ({rojo:0,ambar:1,verde:2})[b.estado]
+                || (a.p.nota ?? -1) - (b.p.nota ?? -1));
+  const punto = { rojo:'🔴', ambar:'🟡', verde:'🟢' };
+  const nd = v => v == null ? '—' : v;
+  const col = pct => pct == null ? 'var(--parch4)' : pct >= _SUP_APROBADO ? 'var(--sage)' : pct >= 50 ? 'var(--gold)' : 'var(--rose)';
+  const total = (typeof DISHES !== 'undefined' && DISHES.length) ? DISHES.length : 0;
+  return `<div class="sup-tabla-wrap"><table class="sup-tabla">
+    <thead><tr>
+      <th>${_en?'Name':'Nombre'}</th>
+      <th>${_en?'Menu':'Carta'}</th>
+      <th>LQA</th>
+      <th>${_en?'Mark':'Nota'}</th>
+      <th>${_en?'Tests':'Pruebas'}</th>
+      <th>${_en?'Trend':'Tend.'}</th>
+      <th>${_en?'Time':'Tiempo'}</th>
+      <th>${_en?'Last seen':'Visto'}</th>
+      <th>${_en?'In app':'En la app'}</th>
+    </tr></thead>
+    <tbody>${filas.map(f => `<tr role="button" tabindex="0"
+        onclick="renderSupEmployee(${escapeHTML(JSON.stringify(f.n))})"
+        onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click()}">
+      <td class="sup-td-n">${punto[f.estado]} ${escapeHTML(_dispName(f.n))}</td>
+      <td>${total ? `${f.dom}<span class="sup-td-d">/${total}</span>` : nd(f.dom)}</td>
+      <td style="color:${col(f.lqa.score > 0 ? f.lqa.score : null)}">${f.lqa.score > 0 ? f.lqa.score + '%' : '—'}</td>
+      <td style="color:${col(f.p.nota)};font-weight:700">${f.p.nota == null ? '—' : f.p.nota + '%'}</td>
+      <td>${f.p.pruebas || '—'}</td>
+      <td>${f.p.tendencia == null ? '—' : `<span style="color:${f.p.tendencia >= 0 ? 'var(--sage)' : 'var(--rose)'}">${f.p.tendencia > 0 ? '▲' : f.p.tendencia < 0 ? '▼' : '='} ${Math.abs(f.p.tendencia)}</span>`}</td>
+      <td>${f.p.minutos ? (f.p.minutos >= 60 ? Math.floor(f.p.minutos/60)+'h '+(f.p.minutos%60)+'m' : f.p.minutos+'m') : '—'}</td>
+      <td>${f.d == null ? (_en?'never':'nunca') : f.d === 0 ? (_en?'today':'hoy') : (_en?f.d+'d':'hace '+f.d+'d')}</td>
+      <td>${f.meses == null ? '—' : (f.meses < 1 ? (_en?'<1 mo':'<1 mes') : f.meses + (_en?' mo':' meses'))}</td>
+    </tr>`).join('')}</tbody>
+  </table></div>
+  <div class="sup-at-pie">${_en
+    ? `Tap a row for the development profile. "Menu" is dishes mastered, "LQA" audit readiness, "Mark" the average of ${filas.reduce((a,f)=>a+f.p.pruebas,0)} real tests. "In app" counts from their first test, not from their hire date — the app does not know that.`
+    : `Toca una fila para el perfil de desarrollo. «Carta» son platos dominados, «LQA» la preparación para auditoría y «Nota» la media de ${filas.reduce((a,f)=>a+f.p.pruebas,0)} pruebas reales. «En la app» cuenta desde su primera prueba, no desde que entró en la casa — eso la app no lo sabe.`}</div>`;
+}
+
+// El histórico se pide UNA vez por pintada del panel y rellena los dos huecos.
+// Aparte del render principal: son 170 filas de otra tabla y el panel no puede
+// quedarse en blanco esperándolas.
+async function _supPintarHistorial(allEmps, empNames){
+  const hist = await _supCargarHistorial();
+  window._supHist = hist;
+  const at = document.getElementById('supAtencion');
+  if(at) at.innerHTML = renderSupAtencionHTML(allEmps, empNames, hist);
+  const tb = document.getElementById('supTabla');
+  if(tb) tb.innerHTML = renderSupTablaHTML(allEmps, empNames, hist);
+}
+
 function renderSupAnalytics(allEmps, empNames){
   const c = document.getElementById('appContent');
 
@@ -24333,6 +24561,80 @@ function renderSupLqaStats(allEmps, empNames){
 // feedback uno a uno: alérgenos (seguridad), temas flojos, exámenes, platos
 // a repasar y preparación LQA. Se abre tocando su nombre en la analítica o
 // en el ranking LQA. Lee window._supAllEmps (poblado por renderSupDashboard).
+// ═══ EVOLUCIÓN INDIVIDUAL ═════════════════════════════════════════════════
+// La historia de una persona contada con SUS pruebas: cómo ha ido, en qué
+// falla y qué tocaría hacer. Todo sale del histórico real; si no hay histórico
+// —o si aún no ha hecho ninguna prueba— lo dice y no se inventa una curva.
+function _supEvolucionHTML(name, e, card){
+  const _en = LANG==='en';
+  const hist = window._supHist;
+  if(!hist) return '';
+  const p = _supPerfil(name, hist);
+  if(!p.pruebas) return card(_en?'Progress over time':'Evolución',
+    `<div class="sup-vacio">${_en?'No tests taken yet — there is nothing to plot.':'Todavía no ha hecho ninguna prueba: no hay nada que dibujar.'}</div>`);
+
+  // La curva: una nota por prueba, en orden. Sin ejes ni rejilla — en un móvil
+  // lo único legible es la forma, y el número exacto va al lado.
+  const pts = p.filas.map(f => Math.round((f.score||0) * 100 / f.total));
+  const W = 260, H = 46;
+  const x = i => pts.length > 1 ? (i * W / (pts.length - 1)) : W / 2;
+  const y = v => H - 3 - (v / 100) * (H - 6);
+  const linea = pts.map((v,i) => `${i?'L':'M'}${x(i).toFixed(1)},${y(v).toFixed(1)}`).join(' ');
+  const ult = pts[pts.length-1];
+  const colT = p.tendencia == null ? 'var(--parch3)' : p.tendencia >= 0 ? 'var(--sage)' : 'var(--rose)';
+
+  // Dónde falla: por categoría de la carta, con sus propias filas.
+  const porCat = {};
+  for(const f of p.filas){
+    const k = f.cat || f.topic || '—';
+    const o = porCat[k] || (porCat[k] = { ac:0, tot:0 });
+    o.ac += f.score||0; o.tot += f.total||0;
+  }
+  const flojas = Object.entries(porCat)
+    .filter(([,o]) => o.tot >= 5)
+    .map(([k,o]) => ({ k, pct: Math.round(o.ac*100/o.tot) }))
+    .sort((a,b) => a.pct - b.pct);
+  const peores = flojas.filter(f => f.pct < _SUP_APROBADO).slice(0,3);
+
+  // Qué tocaría hacer. Una sola cosa, la más urgente: un panel que sugiere
+  // cinco no sugiere ninguna.
+  const dias = p.ultima ? Math.floor((Date.now() - Date.parse(p.ultima)) / 86400000) : null;
+  const paso = (dias != null && dias >= _SUP_DIAS_RIESGO)
+      ? (_en ? `No test in ${dias} days. Start there.` : `Lleva ${dias} días sin hacer una prueba. Por ahí hay que empezar.`)
+    : (e.allergenBest || 0) < _SUP_APROBADO
+      ? (_en ? 'Allergens below the bar — that one is safety, it goes first.' : 'Alérgenos por debajo del listón: eso es seguridad, va primero.')
+    : peores.length
+      ? (_en ? `Weakest area: ${escapeHTML(peores[0].k)} (${peores[0].pct}%).` : `Lo más flojo: ${escapeHTML(peores[0].k)} (${peores[0].pct}%).`)
+    : p.tendencia != null && p.tendencia <= -10
+      ? (_en ? 'Dropping lately — worth asking what changed.' : 'Está bajando: merece preguntarle qué ha cambiado.')
+      : (_en ? 'On track. Nothing needed.' : 'Va en hora. No hace falta nada.');
+
+  const dato = (v, l) => `<div style="text-align:center"><div style="font-family:'Cinzel',serif;font-size:1.05rem;color:var(--parchment);line-height:1.1">${v}</div><div style="font-family:'DM Mono',monospace;font-size:.5rem;color:var(--parch4);letter-spacing:.06em;text-transform:uppercase">${l}</div></div>`;
+  const meses = p.desde ? Math.max(0, Math.round((Date.now() - Date.parse(p.desde)) / 2629800000)) : null;
+
+  return card(_en?'Progress over time':'Evolución',
+    `<svg viewBox="0 0 ${W} ${H}" width="100%" height="${H}" preserveAspectRatio="none" aria-hidden="true" style="display:block;margin-bottom:.5rem">
+      <line x1="0" y1="${y(_SUP_APROBADO).toFixed(1)}" x2="${W}" y2="${y(_SUP_APROBADO).toFixed(1)}" stroke="rgba(136,176,131,.45)" stroke-width="1" stroke-dasharray="3 3"/>
+      <path d="${linea}" fill="none" stroke="var(--gold)" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round"/>
+      <circle cx="${x(pts.length-1).toFixed(1)}" cy="${y(ult).toFixed(1)}" r="2.6" fill="var(--gold-deep)"/>
+    </svg>
+    <div style="display:flex;justify-content:space-between;gap:.4rem;margin-bottom:.6rem">
+      ${dato(p.nota + '%', _en?'average':'media')}
+      ${dato(`<span style="color:${colT}">${p.tendencia == null ? '—' : (p.tendencia > 0 ? '▲' : p.tendencia < 0 ? '▼' : '=') + Math.abs(p.tendencia)}</span>`, _en?'trend':'tendencia')}
+      ${dato(p.aprobadas + '/' + p.pruebas, _en?'passed':'aprobadas')}
+      ${dato(p.minutos >= 60 ? Math.floor(p.minutos/60)+'h '+(p.minutos%60)+'m' : p.minutos+'m', _en?'time':'tiempo')}
+      ${dato(meses == null ? '—' : (meses < 1 ? (_en?'<1':'<1') : meses), _en?'months':'meses')}
+    </div>
+    ${peores.length ? `<div style="border-top:1px solid var(--line);padding-top:.5rem;margin-bottom:.5rem">
+      <div style="font-family:'DM Mono',monospace;font-size:.52rem;color:var(--parch4);letter-spacing:.1em;text-transform:uppercase;margin-bottom:.3rem">${_en?'Where it goes wrong':'Dónde falla'}</div>
+      ${peores.map(f => `<div style="display:flex;justify-content:space-between;font-size:.75rem;color:var(--parch2);padding:.15rem 0"><span>${escapeHTML(f.k)}</span><span style="font-family:'DM Mono',monospace;color:var(--rose)">${f.pct}%</span></div>`).join('')}
+    </div>` : ''}
+    <div style="border-top:1px solid var(--line);padding-top:.5rem">
+      <div style="font-family:'DM Mono',monospace;font-size:.52rem;color:var(--parch4);letter-spacing:.1em;text-transform:uppercase;margin-bottom:.25rem">${_en?'Next step':'Siguiente paso'}</div>
+      <div style="font-size:.8rem;color:var(--parchment);line-height:1.45">${paso}</div>
+    </div>`);
+}
+
 function renderSupEmployee(name){
   const allEmps = window._supAllEmps || {};
   const e = allEmps[name];
@@ -24390,7 +24692,7 @@ function renderSupEmployee(name){
   c.innerHTML=`<div class="sup-wrap">
     <div style="display:flex;align-items:center;gap:.75rem;margin-bottom:1rem">
       <button onclick="renderSupAnalytics(window._supAllEmps, window._supEmpNames)" aria-label="${_en?'Back':'Volver'}" style="background:transparent;border:1.5px solid rgba(196,154,60,.55);border-radius:var(--r2);padding:.4rem .8rem;font-size:.75rem;color:var(--gold-deep);font-weight:700;cursor:pointer">←</button>
-      <div style="font-family:'Cinzel',serif;font-size:1.15rem;color:var(--parchment)">${_en?'Employee profile':'Ficha del empleado'}</div>
+      <div style="font-family:'Cinzel',serif;font-size:1.15rem;color:var(--parchment)">${_en?`${escapeHTML(_dispName(name))}’s development`:`Perfil de desarrollo de ${escapeHTML(_dispName(name))}`}</div>
     </div>
 
     <div style="display:flex;align-items:center;gap:.85rem;background:linear-gradient(155deg,#1a2a20,#0f1d15);border:1px solid rgba(196,154,60,.25);border-radius:var(--r);padding:1rem;margin-bottom:.75rem">
@@ -24400,6 +24702,8 @@ function renderSupEmployee(name){
         <div style="font-family:'DM Mono',monospace;font-size:.6rem;color:#a8c4b0;display:flex;align-items:center;gap:.3rem;margin-top:.15rem">${tunicLevelIcon(lvl.level,lvl.color,13)} ${_en?'Lv.':'Nv.'}${lvl.level} · ${(e.xp||0).toLocaleString()} XP · ${_en?'streak':'racha'} ${e.streak||0}</div>
       </div>
     </div>
+
+    ${_supEvolucionHTML(name, e, card)}
 
     ${aVal!=null ? card(`⚠ ${_en?'Allergens (safety)':'Alérgenos (seguridad)'}`,
       `<div style="display:flex;align-items:center;gap:.7rem">

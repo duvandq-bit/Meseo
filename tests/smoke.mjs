@@ -2110,7 +2110,9 @@ test('supervisor panel: realtime employees channel + silent refresh + live pill'
   // Ficha individual del empleado (jul 2026): tocar un nombre abre su perfil.
   assert(/function renderSupEmployee\(name\)/.test(html), 'debe existir renderSupEmployee');
   const emp = html.slice(html.indexOf('function renderSupEmployee(name)'), html.indexOf('function renderSupNotifSender'));
-  assert(/Ficha del empleado/.test(emp) && /Alérgenos \(seguridad\)/.test(emp) && /Preparación LQA/.test(emp) && /a repasar/.test(emp),
+  assert(/Perfil de desarrollo de \$\{escapeHTML\(_dispName\(name\)\)\}/.test(emp),
+    'la ficha se titula con el nombre VISIBLE de la persona, no con una etiqueta genérica');
+  assert(/Alérgenos \(seguridad\)/.test(emp) && /Preparación LQA/.test(emp) && /a repasar/.test(emp),
     'la ficha debe reunir alérgenos, LQA y platos a repasar');
   // el nombre en la cabecera oscura debe ir en claro (no var(--parchment) invisible)
   assert(/font-family:'Cinzel',serif;font-size:1\.15rem;color:var\(--ink\)">\$\{escapeHTML\(name\)\}/.test(emp),
@@ -9198,6 +9200,100 @@ test('Cuentas: sólo el propietario reparte mando, y la administración sólo se
   const rol = html.slice(html.indexOf('async function supPonerRol('), html.indexOf('// El restaurante sobre el que actúa'));
   assert(/p_pin:pin\b/.test(rol), 'el rol se cambia con el PIN tecleado, no con uno vacío');
   assert(/if\(!pin\)\{/.test(rol), 'sin PIN no se llama al servidor siquiera');
+});
+
+// ─── El panel de dirección: que los números sean de verdad ──────
+// `scores` guarda dos cosas con la misma forma: evaluaciones (score sobre
+// total de preguntas) y MARCADORES de juego — récord Txoko (total=1, score
+// hasta 41) y El Turno (total hasta 2042), donde `total` no es un
+// denominador. Son el 56% de las filas. Mezclarlas daba medias del 243%
+// (medido contra la base real, sep 2026). Aquí se ejecuta el cálculo.
+const _supNums = await (async () => {
+  const src = html.slice(html.indexOf('const _SUP_JUEGOS'), html.indexOf('function renderSupAtencionHTML'));
+  if (src.length < 500) return { roto: 'no encuentro el cálculo del panel' };
+  const F = new Function('LANG', src + // eslint-disable-line no-new-func
+    '; return {perfil:_supPerfil, estado:_supEstado, atencion:_supAtencion, APROB:_SUP_APROBADO, DIAS:_SUP_DIAS_RIESGO};')('es');
+  const hace = d => new Date(Date.now() - d * 86400000).toISOString();
+  // Ana: seis evaluaciones al 90% … y dos marcadores de juego disparatados.
+  const hist = [];
+  for (let i = 0; i < 6; i++) hist.push({ employee:'Ana', score:9, total:10, topic:'mixed', cat:'Entrantes', time_sec:60, created_at:hace(30 - i) });
+  const conJuegos = hist.concat([
+    { employee:'Ana', score:41, total:1,    topic:'txoko',    cat:null, time_sec:0,  created_at:hace(2) },
+    { employee:'Ana', score:340, total:2042, topic:'elturno', cat:null, time_sec:90, created_at:hace(1) }
+  ]);
+  return { F, hist, conJuegos,
+    limpio: F.perfil('Ana', hist),
+    sucio:  F.perfil('Ana', conJuegos) };
+})();
+
+test('Panel de dirección: los marcadores de juego NO cuentan como notas', () => {
+  const R = _supNums;
+  assert(!R.roto, R.roto);
+  assert(R.limpio.pruebas === 6, `esperaba 6 evaluaciones, contó ${R.limpio.pruebas}`);
+  assert(R.limpio.nota === 90, `la media de seis 9/10 es 90%, salió ${R.limpio.nota}`);
+  // Lo que importa: meter los marcadores de juego NO puede cambiar la nota.
+  assert(R.sucio.nota === 90,
+    `los marcadores de juego se han colado en la nota: ${R.sucio.nota}% en vez de 90%`);
+  assert(R.sucio.pruebas === 6,
+    `los marcadores de juego se han contado como pruebas: ${R.sucio.pruebas} en vez de 6`);
+  assert(R.sucio.nota <= 100, `una nota del ${R.sucio.nota}% es imposible: vuelve el bug del 243%`);
+  const sql = read('index.html');
+  assert(/_SUP_JUEGOS = \['txoko', 'elturno'\]/.test(sql), 'la lista de juegos a excluir no puede desaparecer');
+});
+
+test('Panel de dirección: la tabla y el aviso dicen lo MISMO', () => {
+  // Que la tabla pinte a alguien en verde y el aviso lo llame urgente destruye
+  // la confianza en las dos pantallas a la vez. Una sola regla: _supEstado.
+  const R = _supNums;
+  assert(!R.roto, R.roto);
+  const hace = d => new Date(Date.now() - d * 86400000).toISOString();
+  const ev = (n, pct, d) => ({ employee:n, score:Math.round(pct/10), total:10, topic:'mixed', cat:'Entrantes', time_sec:60, created_at:hace(d) });
+  // Cuatro casos que tienen que caer en tres cajas distintas.
+  const hist = [];
+  for (let i = 0; i < 6; i++) hist.push(ev('Alta', 95, 6 - i));      // al día y alto
+  for (let i = 0; i < 6; i++) hist.push(ev('Floja', 60, 6 - i));     // al día y por debajo
+  for (let i = 0; i < 6; i++) hist.push(ev('Perdida', 95, 60 - i));  // buena pero desaparecida
+  const emps = { Alta:{}, Floja:{}, Perdida:{}, Nueva:{} };
+  const nombres = Object.keys(emps);
+  const esperado = { Alta:'verde', Floja:'ambar', Perdida:'rojo', Nueva:'rojo' };
+  for (const n of nombres)
+    assert(R.F.estado(R.F.perfil(n, hist)) === esperado[n],
+      `${n} debería salir ${esperado[n]} y sale ${R.F.estado(R.F.perfil(n, hist))}`);
+  // Y el aviso tiene que clasificarlos igual, persona por persona.
+  const a = R.F.atencion(emps, nombres, hist);
+  const donde = {};
+  a.rojo.forEach(x => donde[x.n] = 'rojo');
+  a.ambar.forEach(x => donde[x.n] = 'ambar');
+  a.verde.forEach(x => donde[x.n] = 'verde');
+  for (const n of nombres){
+    const est = R.F.estado(R.F.perfil(n, hist));
+    if (donde[n] === undefined) { assert(est === 'verde', `${n} no sale en ningún grupo y no está en verde`); continue; }
+    assert(donde[n] === est, `${n}: la tabla dice ${est} y el aviso dice ${donde[n]}`);
+  }
+  // Y cada motivo tiene que decir QUÉ mide: «14 días sin entrenar» de alguien
+  // que entró ayer era mentira — se mide la última PRUEBA, y así se escribe.
+  const perdida = a.rojo.find(x => x.n === 'Perdida');
+  assert(perdida && /sin hacer una prueba/.test(perdida.motivo),
+    `el motivo debe decir que lo que falta es una PRUEBA: «${perdida && perdida.motivo}»`);
+});
+
+test('Panel de dirección: la tabla no arrastra la página de lado', () => {
+  // Nueve columnas no caben en un móvil. La tabla lleva SU propio scroll: el
+  // resto de la página no puede moverse de lado (medido a 390px: caja 321,
+  // tabla 560, la caja scrollea y el documento no).
+  const css = read('styles.css');
+  assert(/\.sup-tabla-wrap\{[^}]*overflow-x:auto/.test(css), 'la tabla necesita su propio scroll lateral');
+  assert(/\.sup-tabla\{[^}]*min-width:\s*\d+px/.test(css), 'sin min-width la tabla se estruja y no se lee');
+  assert(/\.sup-tabla tbody tr\{[^}]*cursor:pointer/.test(css), 'cada fila abre un perfil: tiene que parecer tocable');
+  assert(/\.sup-at-r\{[^}]*min-height:44px/.test(css), 'las filas del aviso se tocan con el dedo: 44px');
+  // La antigüedad sale de la primera PRUEBA y no de registered_at: esa columna
+  // se rellenó el día que se creó y da altas posteriores a la primera
+  // actividad (Dian figura de alta en septiembre y entrena desde marzo).
+  assert(/no desde `registered_at`/.test(html) || /registered_at/.test(html.slice(html.indexOf('function renderSupTablaHTML'), html.indexOf('async function _supPintarHistorial'))),
+    'hay que dejar escrito por qué la antigüedad no sale de registered_at');
+  const tabla = html.slice(html.indexOf('function renderSupTablaHTML'), html.indexOf('async function _supPintarHistorial'));
+  assert(/p\.desde/.test(tabla) && !/e\.registeredAt/.test(tabla),
+    'la antigüedad se cuenta desde su primera prueba');
 });
 
 // ─── 7. No leftover git conflict markers ────────────────────────

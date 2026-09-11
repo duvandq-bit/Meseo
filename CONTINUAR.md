@@ -1,6 +1,6 @@
 # Por dónde seguir
 
-Estado a **11 de septiembre de 2026** · versión **7.431** · 325 pruebas en verde ·
+Estado a **11 de septiembre de 2026** · versión **7.433** · 330 pruebas en verde ·
 auditoría de alérgenos 0/0.
 
 ---
@@ -53,6 +53,22 @@ nube es Supabase.
 
 Cada una costó una reversión o una vergüenza. Están aquí para que no vuelva a
 pasar.
+
+### `scores` guarda dos cosas distintas con la misma forma
+
+Evaluaciones (`score` sobre `total` preguntas) y MARCADORES de juego: récord
+Txoko (`total`=1, `score` hasta 41) y El Turno (`total` hasta 2042). Son el 56%
+de las filas. Mezclarlas daba **medias del 243%**. Cualquier cosa que calcule
+una nota tiene que filtrar `_SUP_JUEGOS` — y el filtro está repetido a
+propósito en la carga Y en `_supPerfil`, porque es la función que convierte
+filas en nota y si un día le llegan en crudo el 243% vuelve en silencio.
+
+### La fecha de alta no es la fecha de alta
+
+`employees.registered_at` se rellenó el día que se creó la columna: da altas
+POSTERIORES a la primera actividad (Dian figura de alta el 2 de septiembre y
+entrena desde el 11 de marzo). La antigüedad del panel sale de su primera
+prueba, y se rotula «en la app» — la antigüedad laboral la app no la sabe.
 
 ### Los alérgenos son una cadena, y se rompe por donde no se ve
 
@@ -171,6 +187,12 @@ ingrediente, un vino ni un estándar.**
 
 ### Técnico
 
+- [ ] **La pestaña de supervisor sigue clavada a `Duvan`** (`currentUser==='Duvan'`).
+      Hasta que salga por rol, un manager no puede ver el panel aunque ya tenga
+      su PIN y su rol. Es el paso 3 de los cuatro.
+- [ ] **Cada manager ve sólo a su equipo** (paso 4). Las consultas ya llevan
+      filtro de restaurante; falta barrer que ninguna se escape.
+
 - [ ] **`custom_dishes` no tiene restaurante.** Encontrado el 11 de septiembre
       mirando qué autoriza el PIN. La tabla de platos añadidos a mano no tiene
       columna `venue`, y la consulta que los lee no lleva filtro: cuando M.B.
@@ -190,7 +212,10 @@ ingrediente, un vino ni un estándar.**
       **Para dar de alta el PIN de un restaurante**, desde el editor SQL:
       `select set_supervisor_venue_pin('mb','<pin>','Duvan');`
       Mientras no se dé ninguno de alta, nada cambia.
-- [ ] **Un manager por restaurante. EN MARCHA (falta el 2, 3 y 4)** — pedido por el propietario el
+- [x] ~~**Managers desde el panel.**~~ Hecho (11 sep). Acciones → Cuentas: el
+      propietario ve la plantilla de ese restaurante, nombra managers y pone su
+      PIN. Sólo él: el servidor lo comprueba.
+- [ ] **Un manager por restaurante. EN MARCHA (falta el 3 y el 4)** — pedido por el propietario el
       11 de septiembre. Hoy el supervisor está fijo en el código
       (`currentUser === 'Duvan'`) con un único PIN para toda la app; no hay
       forma de dar de alta a otro. La columna `role` está puesta para

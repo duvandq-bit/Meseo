@@ -10097,3 +10097,44 @@ body, .screen{ min-height: 100vh; min-height: 100dvh; }
   font-family:'DM Mono',monospace; font-size:.5rem; color:#6b5f93; letter-spacing:.06em;
   text-transform: uppercase; vertical-align: middle; }
 .sup-vacio{ font-size:.78rem; color: var(--parch4); font-style: italic; padding:.4rem 0; }
+
+/* ── «¿Quién necesita mi atención esta semana?» ───────────────────────────
+   Tres grupos con el motivo escrito al lado: un semáforo sin motivo no sirve
+   para hablar con nadie. Cada fila abre su perfil, así que 48px de alto. */
+.sup-at-g{ margin-bottom:.7rem; }
+.sup-at-g:last-of-type{ margin-bottom:0; }
+.sup-at-h{ font-family:'Quicksand',sans-serif; font-size:.78rem; color: var(--parch2);
+  margin-bottom:.35rem; }
+.sup-at-h b{ color: var(--parchment); }
+.sup-at-r{ display:flex; align-items:center; justify-content:space-between; gap:.6rem;
+  padding:.45rem .6rem; margin-bottom:.25rem; min-height:44px; cursor:pointer;
+  background: rgba(255,255,255,.5); border:1px solid var(--line); border-radius:10px;
+  -webkit-tap-highlight-color: transparent; }
+.sup-at-r:focus-visible{ outline:2px solid var(--gold); outline-offset:2px; }
+.sup-at-n{ font-family:'Quicksand',sans-serif; font-size:.8rem; font-weight:600;
+  color: var(--parchment); flex:0 1 auto; min-width:0; }
+.sup-at-m{ font-family:'DM Mono',monospace; font-size:.58rem; color: var(--parch3);
+  text-align:right; flex:1 1 auto; min-width:0; }
+.sup-at-mas{ font-family:'DM Mono',monospace; font-size:.58rem; color: var(--parch4);
+  padding-left:.6rem; }
+.sup-at-pie{ font-family:'Quicksand',sans-serif; font-size:.68rem; color: var(--parch4);
+  line-height:1.45; margin-top:.6rem; }
+
+/* ── La tabla del equipo ──────────────────────────────────────────────────
+   Ocho columnas no caben en un móvil: la tabla lleva SU propio scroll lateral
+   para que la página no se mueva de lado. */
+.sup-tabla-wrap{ overflow-x:auto; -webkit-overflow-scrolling:touch;
+  border:1px solid var(--line); border-radius: var(--r); background: rgba(255,255,255,.45); }
+.sup-tabla{ border-collapse: collapse; width:100%; min-width:560px;
+  font-family:'Quicksand',sans-serif; font-size:.76rem; }
+.sup-tabla th{ font-family:'DM Mono',monospace; font-size:.52rem; letter-spacing:.08em;
+  text-transform: uppercase; color: var(--gold); text-align:left; font-weight:400;
+  padding:.5rem .55rem; border-bottom:1px solid var(--line); white-space:nowrap; }
+.sup-tabla td{ padding:.5rem .55rem; border-bottom:1px solid var(--line);
+  color: var(--parch2); white-space:nowrap; }
+.sup-tabla tbody tr{ cursor:pointer; -webkit-tap-highlight-color: transparent; }
+.sup-tabla tbody tr:focus-visible{ outline:2px solid var(--gold); outline-offset:-2px; }
+.sup-tabla tbody tr:last-child td{ border-bottom:none; }
+.sup-td-n{ color: var(--parchment); font-weight:600; position:sticky; left:0;
+  background: linear-gradient(90deg,#f7f2e7 88%,rgba(247,242,231,0)); }
+.sup-td-d{ color: var(--parch4); font-size:.62rem; }
