@@ -9342,14 +9342,41 @@ test('El panel sale por ROL, y la cuenta de administración no lo tiene', () => 
     api.sync();
     return { visible: boton.style.display === '', mando: api.mando(), admin: api.admin() };
   };
-  // Quien manda ve la puerta…
-  for (const rol of ['owner','manager'])
+  // Quien manda ve la puerta. Y la cuenta de administración TAMBIÉN: está para
+  // revisar contenido, y mirar el panel no deja rastro. Estuvo fuera un día por
+  // una extrapolación —«que no aparezca en las puntuaciones» se escribió como
+  // «no deja rastro»— y el propietario lo reportó.
+  for (const rol of ['owner','manager','admin'])
     assert(caso(rol).visible, `un '${rol}' tiene que ver la pestaña del panel`);
-  // …y nadie más. La cuenta de administración TAMPOCO: no deja rastro, y eso
-  // incluye no tener panel.
-  for (const rol of ['staff','admin', undefined, null, 'cualquier_cosa'])
+  // Un camarero no, y un rol que no existe tampoco: se falla CERRADO.
+  for (const rol of ['staff', undefined, null, 'cualquier_cosa'])
     assert(!caso(rol).visible, `un '${rol}' NO puede ver la pestaña del panel`);
   assert(caso('admin').admin === true, '_esAdmin tiene que seguir reconociendo a la cuenta de administración');
+  // Pero enseñar el botón no concede nada: detrás va el PIN del servidor.
+  assert(/if\(!supAuthenticated\)\{\s*\n\s*renderSupPinEntry\(\);/.test(html),
+    'el panel sigue pidiendo PIN antes de pintar nada');
+
+  // Que la administración no puntúe lo sostiene el SERVIDOR, no el móvil:
+  // getEmp() crea la ficha local sin rol, así que entre entrar y que baje la
+  // ficha hay una ventana en la que _esAdmin es falso. Por ahí se colaron 50 XP
+  // en septiembre y otros 90 después de «arreglarlo».
+  // Se quitan los comentarios ANTES de mirar: comentar una línea la deja en el
+  // archivo, y una expresión ingenua la encuentra igual (mordió al verificar —
+  // comentar `new.extras := null` pasaba tan tranquilo).
+  const trg = read('supabase/administracion_no_puntua.sql')
+    .split('\n').filter(l => !/^\s*--/.test(l)).join('\n');
+  assert(/create trigger trg_admin_no_puntua[\s\S]{0,120}before insert or update on public\.employees/.test(trg),
+    'el recorte tiene que ser un trigger sobre employees, no una comprobación del móvil');
+  for (const campo of ['xp', 'streak', 'sessions_count', 'txoko_record', 'duel_wins', 'extras'])
+    assert(new RegExp('new\\.' + campo + ' :=').test(trg), `el trigger no recorta ${campo}`);
+  assert(/new\.extras := null;/.test(trg),
+    'extras guarda la liga semanal: también es puntuación');
+  assert(/create trigger trg_admin_sin_marcas[\s\S]{0,120}before insert on public\.scores/.test(trg),
+    'ninguna marca suya puede entrar en la tabla de puntuaciones');
+  // Y lo que NO se toca: la cuenta tiene que poder usar la app.
+  for (const campo of ['venue', 'display_name', 'nda_version', 'last_active_at'])
+    assert(!new RegExp('new\\.' + campo + ' :=').test(trg),
+      `el trigger no puede tocar ${campo}: la cuenta tiene que poder usar la app`);
 
   // El rol tiene que LLEGAR al dispositivo: bajaba en la consulta y se tiraba,
   // así que _esAdmin era siempre falso en el móvil y la cuenta de
