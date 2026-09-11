@@ -52,7 +52,7 @@
 <meta property="og:description" content="Formación de equipos de sala: carta, alérgenos, vinos, exámenes y juegos de repaso.">
 <meta property="og:url" content="https://meseo.es/">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"Meseo","url":"https://meseo.es/"}</script>
-<meta name="app-version" content="7.440">
+<meta name="app-version" content="7.441">
 <meta name="app-build" content="May 2026">
 <meta name="theme-color" content="#1c2a22">
 <!-- ═══ PWA ═══ -->
@@ -1620,6 +1620,17 @@ function _supSyncMando(){
   b.style.display = (_esMando() || _esAdmin()) ? '' : 'none';
 }
 
+// Sólo el propietario reparte y RETIRA mando. Hasta sep 2026 la regla era
+// «sólo el propietario asciende», y dejaba una asimetría: un manager no podía
+// nombrar a nadie pero sí podía degradar a otro manager de su restaurante y
+// dejarlo sin panel. Lo comprobó el propietario al preguntar por el reparto.
+function _esPropietario(nombre){
+  try{
+    const e = _ficha(nombre || (typeof currentUser!=='undefined' ? currentUser : null));
+    return !!(e && e.role === 'owner');
+  }catch(_){ return false; }
+}
+
 function _esMando(nombre){
   try{
     const n = nombre || (typeof currentUser!=='undefined' ? currentUser : null);
@@ -1873,7 +1884,7 @@ const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><p
 const SRC = 'src';
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='7.440';  // sincronizada con sw.js VERSION (guard de CI)
+const APP_VERSION='7.441';  // sincronizada con sw.js VERSION (guard de CI)
 const APP_BUILD='Jul 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;
@@ -24313,6 +24324,9 @@ function renderSupCuentas(){
         ? 'A manager opens this panel and only this one: they see their own team, their rota and their access code. They can never see the restaurant next door, and they cannot appoint anybody.'
         : 'Un manager abre este panel y sólo éste: ve su equipo, su cuadrante y su código de acceso. Nunca ve el restaurante de al lado, y no puede nombrar a nadie.'}</div>
       <div id="supCuList" class="sup-list">${_en?'Loading…':'Cargando…'}</div>
+      ${_esPropietario() ? '' : `<div class="sup-at-pie">${_en
+        ? 'Only the owner hands out and takes back command. You run your team; you do not appoint.'
+        : 'Sólo el propietario reparte y retira el mando. Tú diriges a tu equipo; nombrar, no.'}</div>`}
       <div id="supCuMsg" role="status" aria-live="polite" class="sup-msg"></div>
     </div>
     <div class="sup-card">
@@ -24360,9 +24374,9 @@ async function supCargarCuentas(){
         <div class="sup-row-n">${escapeHTML(e.display_name || e.name)}
           ${esM ? `<span class="sup-tag">${_en?'manager':'manager'}</span>` : ''}
           ${(e.display_name && e.display_name !== e.name) ? `<span class="sup-row-u">${escapeHTML(e.name)}</span>` : ''}</div>
-        <button onclick="supPonerManager(${escapeHTML(JSON.stringify(e.name))}, ${esM?'false':'true'})"
+        ${_esPropietario() ? `<button onclick="supPonerManager(${escapeHTML(JSON.stringify(e.name))}, ${esM?'false':'true'})"
           class="${esM?'sup-b2':'sup-b1'}" style="flex:0 0 auto;padding:.45rem .7rem;font-size:.72rem">
-          ${esM ? (_en?'Remove':'Quitar') : (_en?'Make manager':'Hacer manager')}</button>
+          ${esM ? (_en?'Remove':'Quitar') : (_en?'Make manager':'Hacer manager')}</button>` : ''}
       </div>`;
     }).join('') : `<div class="sup-vacio">${_en?'Nobody registered here yet.':'Todavía no hay nadie registrado aquí.'}</div>`;
   }catch(e){

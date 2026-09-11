@@ -1,6 +1,6 @@
 # Por dónde seguir
 
-Estado a **11 de septiembre de 2026** · versión **7.440** · 333 pruebas en verde ·
+Estado a **11 de septiembre de 2026** · versión **7.441** · 333 pruebas en verde ·
 auditoría de alérgenos 0/0.
 
 ---
@@ -58,6 +58,14 @@ nube es Supabase.
 
 Cada una costó una reversión o una vergüenza. Están aquí para que no vuelva a
 pasar.
+
+### Proteger sólo los ascensos deja el mando por el otro lado
+
+La regla era «sólo el propietario ASCIENDE». Un manager no podía nombrar a
+nadie… pero **sí podía degradar a otro manager de su restaurante** y dejarlo sin
+panel. Comprobado contra la base: devolvía `ok` y el rol cambiaba. Ahora
+**cualquier** cambio de rol exige ser el propietario, y los botones ni se
+pintan para quien no lo es. Al escribir un permiso, mirar las dos direcciones.
 
 ### Una columna sin permiso tumba la consulta ENTERA
 

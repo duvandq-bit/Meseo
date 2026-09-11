@@ -362,10 +362,12 @@ begin
   if p_role not in ('staff','admin','manager','owner') then
     return json_build_object('ok', false, 'error', 'rol_invalido');
   end if;
-  -- Sólo el propietario reparte mando. Un manager que pudiera nombrar
-  -- administradores —o propietarios— se estaría dando a sí mismo la llave de
-  -- TODOS los restaurantes, que es justo lo que el PIN por restaurante cierra.
-  if p_role in ('admin','manager','owner') and public.sup_pin_scope(p_pin) <> '*' then
+  -- CUALQUIER cambio de rol es del propietario. La regla era «sólo el
+  -- propietario ASCIENDE», y dejaba una asimetría: un manager no podía nombrar
+  -- a nadie pero SÍ podía degradar a otro manager de su restaurante y dejarlo
+  -- sin panel. Comprobado contra la base en sep 2026: devolvía ok y el rol
+  -- cambiaba de verdad. Un manager dirige a su equipo; mando, ni dar ni quitar.
+  if public.sup_pin_scope(p_pin) <> '*' then
     return json_build_object('ok', false, 'error', 'solo_propietario');
   end if;
   select e.venue into v_venue from public.employees e where e.name = p_name;

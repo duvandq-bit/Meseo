@@ -9215,6 +9215,20 @@ test('Cuentas: sólo el propietario reparte mando, y la administración sólo se
     'nombrar manager da acceso al panel: se confirma antes, y la condición tiene que depender de `hacer`');
   assert(/\breturn;\s*\n/.test(pone.slice(pone.indexOf('confirm('))),
     'si se cancela la confirmación, no se llama al servidor');
+  // Sólo el PROPIETARIO reparte y RETIRA mando. La regla era «sólo el
+  // propietario asciende» y dejaba una asimetría: un manager no podía nombrar a
+  // nadie pero sí podía degradar a otro manager de su restaurante y dejarlo sin
+  // panel. Comprobado contra la base: devolvía ok y el rol cambiaba.
+  assert(/function _esPropietario\(nombre\)/.test(html), 'falta el resolutor de propietario');
+  const prop = html.slice(html.indexOf('function _esPropietario(nombre){'), html.indexOf('function _esMando(nombre){'));
+  assert(/e\.role === 'owner'/.test(prop), 'propietario es exactamente el rol owner');
+  assert(/\$\{_esPropietario\(\) \? `<button onclick="supPonerManager/.test(html),
+    'los botones de rol sólo se pintan para el propietario');
+  const sql2 = read('supabase/supervisor_pin_por_restaurante.sql');
+  assert(/-- CUALQUIER cambio de rol es del propietario/.test(sql2)
+      && /if public\.sup_pin_scope\(p_pin\) <> '\*' then\s*\n\s*return json_build_object\('ok', false, 'error', 'solo_propietario'\);/.test(sql2),
+    'el servidor tiene que exigir propietario para CUALQUIER cambio de rol, no sólo para los ascensos');
+
   // El error del servidor se traduce, no se traga: si un manager intenta
   // nombrar a otro, tiene que leer por qué no puede.
   const err = html.slice(html.indexOf('function _supErrorRol('), html.indexOf('async function supGuardarPinVenue('));
@@ -9451,8 +9465,13 @@ test('El panel sale por ROL, y la cuenta de administración no lo tiene', () => 
   // El servidor es quien manda de verdad: sólo el propietario reparte mando.
   const sql = read('supabase/supervisor_pin_por_restaurante.sql');
   assert(/'staff','admin','manager','owner'/.test(sql), 'el rol de propietario tiene que existir en el servidor');
-  assert(/p_role in \('admin','manager','owner'\) and public\.sup_pin_scope\(p_pin\) <> '\*'/.test(sql),
-    'sólo el propietario reparte admin, manager y owner');
+  // Regla endurecida en sep 2026: no es «sólo el propietario ASCIENDE» sino
+  // que CUALQUIER cambio de rol es suyo. Antes un manager podía degradar a otro
+  // manager de su restaurante y dejarlo sin panel.
+  assert(/if public\.sup_pin_scope\(p_pin\) <> '\*' then/.test(sql),
+    'cualquier cambio de rol exige ser el propietario');
+  assert(!/p_role in \('admin','manager','owner'\) and public\.sup_pin_scope/.test(sql),
+    'la regla vieja sólo protegía los ascensos: dejaba degradar a un compañero');
   assert(/ultimo_propietario/.test(sql),
     'quitarle el mando al último propietario dejaría la casa sin nadie que pueda repartirlo');
 });
