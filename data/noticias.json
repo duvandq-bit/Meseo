@@ -1,6 +1,27 @@
 {
- "updated": "2026-09-12T01:11:05.873Z",
+ "updated": "2026-09-12T09:25:03.233Z",
  "items": [
+  {
+   "t": "Dos Pedro Ximénez, un dulce canario y un vermut cordobés logran los máximos reconocimientos en Montemayor",
+   "u": "https://www.eldebate.com/espana/la-voz-de-cordoba/provincia/20260912/dos-pedro-ximenez-dulce-canario-vermut-cordobes-logran-maximos-reconocimientos-montemayor_458020.html",
+   "s": "El Debate",
+   "d": "2026-09-12T06:58:58.000Z",
+   "tags": [
+    "VINO",
+    "CANARIAS"
+   ],
+   "img": "https://www.eldebate.com/files/article_social/files/fp/uploads/2026/09/12/6aa4f770e6300.r_d.938-470-6250.jpeg"
+  },
+  {
+   "t": "Agua del grifo a precio gourmet: el negocio de las aguas filtradas",
+   "u": "https://www.canarias7.es/opinion/firmas/alfonso-lopez-torres-agua-grifo-precio-gourmet-negocio-aguas-filtradas-20260912081000-nt_amp.html",
+   "s": "canarias7.es",
+   "d": "2026-09-12T06:10:00.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://s3.ppllstatics.com/canarias7/www/multimedia/opinion/2026/09/11/agua-grifo.jpg"
+  },
   {
    "t": "Influencers gastronómicos: canjes, denuncias y prohibiciones en restaurantes de España, México y Argentina",
    "u": "https://www.lmneuquen.com/el-comedor/influencers-gastronomicos-canjes-denuncias-y-prohibiciones-restaurantes-espana-mexico-y-argentina-n1253335",
@@ -43,9 +64,19 @@
    "img": "https://static.grupojoly.com/clip/09ea009f-f5f8-4b00-a3a3-a7e55be2cbeb_facebook-aspect-ratio_default_0.jpg"
   },
   {
+   "t": "¿Qué hacer este fin de semana en Tenerife? Listado de planes",
+   "u": "https://www.eldia.es/tenerife/2026/09/11/semana-tenerife-listado-planes-81466634.html",
+   "s": "Eldía",
+   "d": "2026-09-11T16:15:50.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://estaticos-cdn.prensaiberica.es/clip/62782b6e-0a3a-4b1b-8035-e40052449d8c_16-9-aspect-ratio_default_0_x525y240.jpg"
+  },
+  {
    "t": "Lopesan renueva su coctelería con nuevas propuestas basadas en el producto canario",
    "u": "https://www.canarias7.es/gastronomia-c7/restaurantes/lopesan-renueva-cocteleria-nuevas-propuestas-basadas-producto-20260911165321-nt_amp.html",
-   "s": "Canarias7",
+   "s": "canarias7.es",
    "d": "2026-09-11T15:53:22.000Z",
    "tags": [
     "CANARIAS"
@@ -64,7 +95,7 @@
   {
    "t": "Turismo organiza un curso gratuito de cocina sostenible en Fuerteventura",
    "u": "https://canariastimes.com/fuerteventura/cultura-ocio/turismo-curso-gratuito-cocina-sostenible-fuerteventura/",
-   "s": "canariastimes.com",
+   "s": "Canarias Times",
    "d": "2026-09-11T15:02:14.000Z",
    "tags": [
     "CANARIAS"
@@ -80,6 +111,16 @@
     "CANARIAS"
    ],
    "img": "https://estaticos-cdn.prensaiberica.es/clip/ade5b419-b643-4dc4-9f87-407cbc0a56d8_16-9-discover-aspect-ratio_default_0_x903y601.jpg"
+  },
+  {
+   "t": "Turismo imparte en Fuerteventura un curso gratuito para cocinar con excedentes",
+   "u": "https://www.canal4tenerife.tv/turismo-imparte-en-fuerteventura-un-curso-gratuito-para-cocinar-con-excedentes/",
+   "s": "Canal 4 Tenerife",
+   "d": "2026-09-11T14:38:56.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://www.canal4tenerife.tv/wp-content/uploads/2026/09/Cartel-programa-Gastronomia-Local-y-Sostenible-en-Fuerteventura-e1789137519468.jpeg"
   },
   {
    "t": "Montilla-Moriles se impone en el concurso nacional de vinos dulces de Montemayor",
@@ -123,9 +164,19 @@
    ]
   },
   {
+   "t": "La edición más marinera y experiencial de Gastronomika celebra medio siglo de la Nueva Cocina Vasca",
+   "u": "https://www.7canibales.com/noticias/gastronomika-2026/",
+   "s": "7 Caníbales",
+   "d": "2026-09-11T12:12:25.000Z",
+   "tags": [
+    "ALTA COCINA"
+   ],
+   "img": "https://www.7canibales.com/wp-content/uploads/sites/2/2026/09/RUEDA-DE-PRENSA-GASTRONOMIKA.webp"
+  },
+  {
    "t": "Jordi Cruz, chef de alta cocina: \"La congelación es un método de conservación bestial y solo hay dos formas de hacerlo; no vale con meter el producto entre placas de acero\"",
    "u": "https://www.larazon.es/actualidad/jordi-cruz-chef-alta-cocina-congelacion-metodo-conservacion-bestial-solo-hay-dos-formas-hacerlo-vale-meter-producto-placas-acero_202609116aa3e89e250a3a7556f6a097.html?outputType",
-   "s": "larazon.es",
+   "s": "La Razón",
    "d": "2026-09-11T11:40:14.000Z",
    "tags": [
     "ALTA COCINA"
@@ -166,7 +217,7 @@
   {
    "t": "Santa Cruz de Tenerife será Capital Española de la Gastronomía en 2027",
    "u": "https://www.hosteleriadigital.es/2026/09/11/santa-cruz-de-tenerife-sera-capital-espanola-de-la-gastronomia-en-2027/",
-   "s": "hosteleriadigital.es",
+   "s": "Hosteleria Digital",
    "d": "2026-09-11T08:15:27.000Z",
    "tags": [
     "CANARIAS"
@@ -236,7 +287,7 @@
   {
    "t": "Dónde comprar pasta fresca en Las Palmas de Gran Canaria: cinco locales para llevarte pasta artesanal a casa",
    "u": "https://www.canarias7.es/gastronomia-c7/de-ruta/comprar-pasta-fresca-palmas-gran-canaria-cinco-20260911070000-nt.html",
-   "s": "Canarias7",
+   "s": "canarias7.es",
    "d": "2026-09-11T05:00:11.000Z",
    "tags": [
     "CANARIAS"
@@ -252,55 +303,6 @@
     "CANARIAS"
    ],
    "img": "https://estaticos-cdn.prensaiberica.es/clip/beceaed1-08b6-4df8-839e-61150b7ad1ff_16-9-aspect-ratio_default_0.jpg"
-  },
-  {
-   "t": "Santy (11/09/26)",
-   "u": "https://www.eldia.es/humor/2026/09/11/santy-11-09-26-134164924.html",
-   "s": "Eldía",
-   "d": "2026-09-10T22:59:03.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://estaticos-cdn.prensaiberica.es/clip/b1c2edcd-b06d-48bb-9b21-7072e93eecb0_16-9-aspect-ratio_default_0.jpg"
-  },
-  {
-   "t": "¿Crisis? ¿Qué crisis?",
-   "u": "https://www.7canibales.com/?post_type",
-   "s": "7 Caníbales",
-   "d": "2026-09-10T22:07:50.000Z",
-   "tags": [
-    "MICHELIN"
-   ]
-  },
-  {
-   "t": "Santa Cruz de Tenerife, nueva capital española de la gastronomía 2027",
-   "u": "https://gironanoticies.com/noticia/303711-santa-cruz-de-tenerife-nueva-capital-espanola-de-la-gastronomia-2027.htm",
-   "s": "gironanoticies.com",
-   "d": "2026-09-10T20:02:12.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://gironanoticies.com/notix/multimedia/imagenes/fotos/https://imagenesprensa.ams3.digitaloceanspaces.com/img_2633c3ef79bd78debddea1180962ab50.jpeg"
-  },
-  {
-   "t": "El restaurante de carretera definitivo está en este pueblo medieval de Madrid: Martín Berasategui confiesa su secreto mejor guardado",
-   "u": "https://www.noticiasdelvino.com/escapadas/2026/09/10/el-restaurante-de-carretera-definitivo-esta-en-este-pueblo-medieval-de-madrid-martin-berasategui-confiesa-su-secreto-mejor-guardado-74843/",
-   "s": "Noticias del Vino",
-   "d": "2026-09-10T19:18:13.000Z",
-   "tags": [
-    "CHEF"
-   ],
-   "img": "https://www.noticiasdelvino.com/wp-content/uploads/image-583.png"
-  },
-  {
-   "t": "Los bares y restaurantes facturan un 7,6% más en agosto pese a que apenas reciben más clientes: el ticket sube un 6,2%",
-   "u": "https://www.eldia.es/economia/2026/09/10/bares-restaurantes-facturan-mas-agosto-menos-clientes-134163590.amp.html",
-   "s": "Eldía",
-   "d": "2026-09-10T18:05:07.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://estaticos-cdn.prensaiberica.es/clip/7933bd91-0a2b-4c9a-9df1-6ff81bfcdcc2_16-9-discover-aspect-ratio_default_0_x944y566.jpg"
   }
  ]
 }
