@@ -1,15 +1,15 @@
 # M.B. — preguntas para cocina antes de que la carta entre en la app
 
-He pasado a la aplicación **treinta fichas**: los diez platos del Gran Menú
-Degustación, los tres que sólo están en la carta (Lubina, Cordero y Texturas de
-fresa), los **siete de panes y mantequillas**, y los **diez platos
-vegetarianos**. Las fichas de cocina están muy bien hechas: traen los alérgenos
+He pasado a la aplicación **treinta y cuatro fichas**: los diez platos del Gran
+Menú Degustación, los tres que sólo están en la carta (Lubina, Cordero y
+Texturas de fresa), los **siete de panes y mantequillas**, los **diez platos
+vegetarianos** y los **cuatro del menú infantil**. Las fichas de cocina están muy bien hechas: traen los alérgenos
 plato a plato, lo que se puede retirar, el marcaje de cubertería y las
 historias. El marcaje, además, ya se ve en la aplicación, como pediste.
 
 **Pero en veintinueve casos la ficha declara un alérgeno y no dice de dónde
-sale**, y en cuatro pasa lo contrario, que es peor: hay una elaboración que
-lleva un alérgeno y la ficha no lo declara. En total, treinta y una preguntas.
+sale**, y en ocho pasa lo contrario, que es peor: hay una elaboración que lleva
+un alérgeno y la ficha no lo declara. En total, treinta y cuatro preguntas.
 
 Eso no es un problema de la app: es lo que un camarero necesita para responder
 en mesa. Cuando un huésped pregunta «¿y por qué lleva sulfitos?», o pide que se
@@ -159,6 +159,30 @@ la UE.
 La ficha declara sulfitos, lactosa y soja. El apionabo es la raíz del apio, y el
 plato lleva además «crema de apio en forma de flor de loto».
 **¿Falta declarar Apio?**
+
+---
+
+# Cuarta tanda · Menú infantil
+
+Las cuatro fichas del menú de niños están bien, pero las tres primeras tienen
+un acompañamiento que lleva alérgeno y no está declarado. En un menú infantil
+eso pesa más que en ningún otro sitio.
+
+### 32 · Pasta — ¿la **pasta fresca** lleva huevo?
+La ficha declara sólo Gluten. La mayoría de las pastas frescas llevan huevo.
+**¿La vuestra lo lleva?**
+
+### 33 · Pasta — el **parmesano** va aparte, pero lleva lácteos
+La ficha dice «acompañamos con parmesano aparte» y no declara Lactosa.
+**¿Se declara, o se trata como acompañamiento que se puede no servir?** En la
+app lo he dejado marcado como que va aparte, para que el camarero sepa que el
+plato puede ir sin él.
+
+### 34 · Merluza y Solomillo — la **mayonesa** de las patatas lleva huevo
+Las dos fichas dicen «cuando se pide con papas fritas, ofrecemos ketchup o
+mayonesa», y ninguna de las dos declara Huevos.
+**¿Se declara el huevo de la mayonesa?** De momento la app avisa de que hay que
+preguntar por alergias antes de ofrecerla.
 
 ---
 

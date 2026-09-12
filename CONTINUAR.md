@@ -1,17 +1,17 @@
 # Por dónde seguir
 
-Estado a **11 de septiembre de 2026** · versión **7.442** · 334 pruebas en verde ·
+Estado a **11 de septiembre de 2026** · versión **7.443** · 335 pruebas en verde ·
 auditoría de alérgenos 0/0.
 
 ---
 
 ## 🔴 Lo único que bloquea algo ahora mismo
 
-**M.B. no puede abrir hasta que cocina conteste las treinta y una preguntas.**
+**M.B. no puede abrir hasta que cocina conteste las treinta y cuatro preguntas.**
 
-Su carta sigue en `docs/carta-mb-borrador.json`, fuera de `data/`. Ya son **30
+Su carta sigue en `docs/carta-mb-borrador.json`, fuera de `data/`. Ya son **34
 fichas**: los 13 platos del degustación y la carta, los 7 de panes y
-mantequillas y los 10 vegetarianos. En veintinueve casos la ficha declara un
+mantequillas, los 10 vegetarianos y los 4 del menú infantil. En veintinueve casos la ficha declara un
 alérgeno y no dice de dónde sale; en cuatro pasa lo contrario, y ésos son los
 que corren prisa:
 
@@ -19,7 +19,9 @@ que corren prisa:
   declara Pescado ni Soja — y está en la carta **vegetariana**;
 - las notas del **Puerro** dicen que el crujiente es de apio, y el plato no
   declara Apio;
-- el **Apionabo** es raíz de apio, con crema de apio, y tampoco lo declara.
+- el **Apionabo** es raíz de apio, con crema de apio, y tampoco lo declara;
+- en el **menú infantil**, la pasta fresca (huevo), el parmesano de la pasta
+  (lactosa) y la mayonesa que se ofrece con las patatas (huevo).
 
 La lista completa está en `docs/mb-preguntas-cocina.md`, y el documento para
 que cocina lo rellene, en `docs/MB-preguntas-cocina.docx`.
@@ -240,7 +242,9 @@ vuelve a estar abierta.
 | Restaurantes, colores y nombres | `data/themes.json` |
 | Ingredientes → alérgenos | `data/ingredients.json` (543 entradas) |
 | Vinos | `data/wines.json` es la bodega de **Txoko**; otro restaurante trae `data/wines-<id>.json`. Sin archivo, no hay pestaña de Vinos |
-| La carta de M.B. | `docs/carta-mb-borrador.json` — borrador, fuera de `data/` a propósito. 30 fichas |
+| La carta de M.B. | `docs/carta-mb-borrador.json` — borrador, fuera de `data/` a propósito. 34 fichas |
+| Sala y procedimientos de M.B. | `docs/mb-procedimientos-fuente.md` — texto tal cual de sus PDF, todavía sin sitio en la app |
+| El turno almuerzo/cena | tabla `DISH_SERVICE`, que **viaja con la carta**. Una carta sin turnos no enseña el selector |
 | El marcaje (cubertería) | campo `marcaje` de cada plato de la carta. Txoko no lo tiene y no se inventa: sin campo, no se pinta el bloque |
 | El acuerdo de confidencialidad | `data/nda.json` — **apagado** (`"activo": false`) |
 | El acuerdo con el restaurante | `docs/acuerdo-restaurante-borrador.md` — no se enseña en la app |
@@ -257,7 +261,7 @@ ingrediente, un vino ni un estándar.**
 
 ### Del propietario — datos
 
-- [ ] **M.B.: treinta y una preguntas para cocina.** Las 30 fichas están
+- [ ] **M.B.: treinta y cuatro preguntas para cocina.** Las 34 fichas están
       transcritas en `docs/carta-mb-borrador.json`, pero en 29 casos la ficha
       de cocina declara un alérgeno y no dice de dónde sale, y en 4 pasa lo
       contrario (ponzu con bonito en la Remolacha, apio sin declarar en el

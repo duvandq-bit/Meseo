@@ -426,6 +426,52 @@
    "history": "Ensalada de frutos rojos: sorbete, frescos, nitrogenados y liofilizados. La liofilización es un proceso de conservación que consiste en congelar el producto y luego eliminar el agua mediante sublimación en condiciones de vacío.",
    "marcaje": "Tenedor y cuchara dorados.",
    "notes": null
+  },
+  {
+   "id": 31,
+   "cat": "Menú infantil",
+   "name": "Pasta",
+   "allergens": [
+    "Gluten"
+   ],
+   "ingredients": "Pasta fresca, Elaborada en M.B., Salsa de tomate casera, Parmesano aparte.",
+   "history": "Pasta hecha en casa con tomate. La pasta es fresca y se elabora en M.B., y la salsa de tomate es casera. Se acompaña con parmesano aparte.",
+   "marcaje": "Tenedor y cuchara de plata.",
+   "notes": "⚠ Gluten (la pasta) — NO se puede retirar. · El parmesano va APARTE: se puede servir el plato sin él. · ⚠ PENDIENTE DE CONFIRMAR CON COCINA: el parmesano lleva lácteos y la ficha no declara Lácteos. · ⚠ PENDIENTE DE CONFIRMAR CON COCINA: ¿la pasta fresca lleva huevo? La mayoría lo lleva, y la ficha no declara Huevos."
+  },
+  {
+   "id": 32,
+   "cat": "Menú infantil",
+   "name": "Merluza",
+   "allergens": [
+    "Pescado"
+   ],
+   "ingredients": "Merluza, Merluza de pincho del Cantábrico, Verduras ecológicas, Brócoli, Zanahoria, Cebolla, Pimientos, Tomate, Patatas fritas.",
+   "history": "Merluza de pincho a la plancha con verduras ecológicas o patatas fritas. Es merluza del Cantábrico, grillada. Selección de vegetales ecológicos: brócoli, zanahoria, cebolla, pimientos y tomate.",
+   "marcaje": "Tenedor, cuchara y cuchillo de pescado.",
+   "notes": "⚠ Pescado (merluza) — NO se puede retirar. · Cuando se pide con patatas fritas se ofrece ketchup o mayonesa. · ⚠ PENDIENTE DE CONFIRMAR CON COCINA: la mayonesa lleva huevo y la ficha no declara Huevos. Mientras no esté confirmado, ofrecerla sólo después de preguntar por alergias."
+  },
+  {
+   "id": 33,
+   "cat": "Menú infantil",
+   "name": "Solomillo",
+   "allergens": [],
+   "ingredients": "Solomillo de vaca gallega, Verduras ecológicas, Brócoli, Zanahoria, Cebolla, Pimientos, Tomate, Patatas fritas.",
+   "history": "Solomillo con verduras ecológicas o patatas fritas. Es solomillo de vaca gallega. Selección de vegetales ecológicos: brócoli, zanahoria, cebolla, pimientos y tomate.",
+   "marcaje": "Tenedor de carne y cuchillo de carne blanco y negro.",
+   "notes": "Cuando se pide con patatas fritas se ofrece ketchup o mayonesa. · ⚠ PENDIENTE DE CONFIRMAR CON COCINA: la mayonesa lleva huevo y la ficha no declara Huevos. Mientras no esté confirmado, ofrecerla sólo después de preguntar por alergias."
+  },
+  {
+   "id": 34,
+   "cat": "Menú infantil",
+   "name": "Helado",
+   "allergens": [
+    "Lácteos"
+   ],
+   "ingredients": "Helado elaborado en casa, Leche, Nata.",
+   "history": "Helado hecho en casa. Puede ser de distintos sabores: chocolate, vainilla, fresa o coco. También hay sorbetes de manzana verde, frutos rojos, fresa y piña.",
+   "marcaje": "Cuchara dorada.",
+   "notes": "⚠ Lácteos (el helado) — SE PUEDEN RETIRAR cambiando el helado por uno de los sorbetes: manzana verde, frutos rojos, fresa o piña. Comandar CON SORBETE."
   }
  ],
  "DISHES_EN": [
@@ -824,6 +870,48 @@
    "history": "Wild berries salad: sorbet, fresh, nitrogen-frozen and freeze-dried. Freeze-drying preserves food by freezing the product and then removing the water by sublimation under vacuum.",
    "marcaje": "Gold fork and spoon.",
    "notes": null
+  },
+  {
+   "id": 31,
+   "name": "Pasta",
+   "allergens": [
+    "Gluten"
+   ],
+   "ingredients": "Fresh pasta, Made at M.B., Homemade tomato sauce, Parmesan on the side.",
+   "history": "Homemade pasta with tomato. The pasta is fresh and made at M.B., and the tomato sauce is homemade. Served with parmesan on the side.",
+   "marcaje": "Silver fork and spoon.",
+   "notes": "⚠ Gluten (the pasta) — CANNOT be removed. · The parmesan is served ON THE SIDE: the dish can go without it. · ⚠ TO BE CONFIRMED WITH THE KITCHEN: parmesan carries dairy and the sheet does not declare Dairy. · ⚠ TO BE CONFIRMED WITH THE KITCHEN: does the fresh pasta carry egg? Most does, and the sheet does not declare Eggs."
+  },
+  {
+   "id": 32,
+   "name": "Hake",
+   "allergens": [
+    "Fish"
+   ],
+   "ingredients": "Hake, Line-caught hake from the Cantabrian Sea, Organic vegetables, Broccoli, Carrot, Onion, Peppers, Tomato, French fries.",
+   "history": "Grilled line-caught hake with organic vegetables or french fries. Selection of organic vegetables: broccoli, carrot, onion, peppers and tomato.",
+   "marcaje": "Fish fork, spoon and knife.",
+   "notes": "⚠ Fish (hake) — CANNOT be removed. · When ordered with french fries, ketchup or mayonnaise is offered. · ⚠ TO BE CONFIRMED WITH THE KITCHEN: mayonnaise carries egg and the sheet does not declare Eggs. Until confirmed, offer it only after asking about allergies."
+  },
+  {
+   "id": 33,
+   "name": "Sirloin steak",
+   "allergens": [],
+   "ingredients": "Galician beef sirloin, Organic vegetables, Broccoli, Carrot, Onion, Peppers, Tomato, French fries.",
+   "history": "Sirloin steak with organic vegetables or french fries. It is Galician beef sirloin. Selection of organic vegetables: broccoli, carrot, onion, peppers and tomato.",
+   "marcaje": "Meat fork and black-and-white meat knife.",
+   "notes": "When ordered with french fries, ketchup or mayonnaise is offered. · ⚠ TO BE CONFIRMED WITH THE KITCHEN: mayonnaise carries egg and the sheet does not declare Eggs. Until confirmed, offer it only after asking about allergies."
+  },
+  {
+   "id": 34,
+   "name": "Ice cream",
+   "allergens": [
+    "Dairy"
+   ],
+   "ingredients": "Homemade ice cream, Milk, Cream.",
+   "history": "Homemade ice cream, in different flavours: chocolate, vanilla, strawberry or coconut. There are also sorbets: green apple, wild berries, strawberry and pineapple.",
+   "marcaje": "Gold spoon.",
+   "notes": "⚠ Dairy (the ice cream) — CAN BE REMOVED by swapping it for one of the sorbets: green apple, wild berries, strawberry or pineapple. Order WITH SORBET."
   }
  ],
  "DISH_COMPONENTS": {
@@ -1519,6 +1607,40 @@
     ],
     "m": 0
    }
+  ],
+  "31": [
+   {
+    "n": "Pasta fresca",
+    "a": [
+     "Gluten"
+    ],
+    "m": 0
+   }
+  ],
+  "32": [
+   {
+    "n": "Merluza",
+    "a": [
+     "Pescado"
+    ],
+    "m": 0
+   }
+  ],
+  "34": [
+   {
+    "n": "Leche",
+    "a": [
+     "Lácteos"
+    ],
+    "m": 1
+   },
+   {
+    "n": "Nata",
+    "a": [
+     "Lácteos"
+    ],
+    "m": 1
+   }
   ]
  },
  "DISH_ACTIONS": {
@@ -1943,6 +2065,24 @@
   },
   "28": {},
   "29": {},
-  "30": {}
+  "30": {},
+  "31": {
+   "Gluten": {
+    "r": 0
+   }
+  },
+  "32": {
+   "Pescado": {
+    "r": 0
+   }
+  },
+  "33": {},
+  "34": {
+   "Lácteos": {
+    "r": 1,
+    "c": "CON SORBETE",
+    "c_en": "WITH SORBET"
+   }
+  }
  }
 }

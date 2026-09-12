@@ -2532,8 +2532,8 @@ test('study shift filter: DISH_SERVICE complete + all generators route by shift'
   const sbIx = html.indexOf('id="shiftBar"');
   const sbTag = html.slice(html.lastIndexOf('<div', sbIx), html.indexOf('>', sbIx) + 1);
   assert(/display:none/.test(sbTag), 'shiftBar must start hidden (display:none inline)');
-  assert(/_sb\.style\.display = navTab==='aprender' \? 'flex' : 'none'/.test(html),
-    'showTab must show shiftBar only for the Aprender section');
+  assert(/_sb\.style\.display = \(navTab==='aprender' && _hayTurnos\(\)\) \? 'flex' : 'none'/.test(html),
+    'showTab must show shiftBar only for the Aprender section, and only where the menu has shifts');
 });
 
 test('study shift filter: subject AND distractor pools route by shift (no wrong-shift leaks)', () => {
@@ -8832,16 +8832,19 @@ const _cartaRes = await (async () => {
                          html.indexOf('// Derivación automática:'));
   if (src.length < 500) return { roto: 'no encuentro el cargador de cartas' };
   const monta = (esAdmin, responder) => {
-    const D = [], DE = [], DC = {}, DA = {};
+    const D = [], DE = [], DC = {}, DA = {}, DS = {};
     const BASE = { DISHES:[{id:1,name:'Croqueta de jamón'}], DISHES_EN:[{id:1,name:'Ham croquette'}],
-                   DISH_COMPONENTS:{1:['jamon']}, DISH_ACTIONS:{1:{}} };
-    const F = new Function('DISHES','DISHES_EN','DISH_COMPONENTS','DISH_ACTIONS', // eslint-disable-line no-new-func
+                   DISH_COMPONENTS:{1:['jamon']}, DISH_ACTIONS:{1:{}}, DISH_SERVICE:{1:'a'} };
+    const F = new Function('DISHES','DISHES_EN','DISH_COMPONENTS','DISH_ACTIONS','DISH_SERVICE', // eslint-disable-line no-new-func
       '_CARTA_BASE','_VENUE_POR_DEFECTO','_esAdmin','loadLazyData','showToast','LANG',
-      src + '; return { cargarCarta, estado: () => ({ platos: DISHES.map(d=>d.name), en: DISHES_EN.length, comp: Object.keys(DISH_COMPONENTS).length }) };');
-    return F(D, DE, DC, DA, BASE, 'txoko', () => esAdmin, responder, () => {}, 'es');
+      src + '; return { cargarCarta, estado: () => ({ platos: DISHES.map(d=>d.name), en: DISHES_EN.length, comp: Object.keys(DISH_COMPONENTS).length, turnos: Object.keys(DISH_SERVICE).length }) };');
+    return F(D, DE, DC, DA, DS, BASE, 'txoko', () => esAdmin, responder, () => {}, 'es');
   };
   const plato = (id,es,en) => ({ venue:null, DISHES:[{id,name:es}], DISHES_EN:[{id,name:en}],
                                  DISH_COMPONENTS:{[id]:['x']}, DISH_ACTIONS:{} });
+  // Una carta con turnos propios, para comprobar que la tabla se cambia y no
+  // se hereda: el id 9 es el mismo que usa el otro montaje.
+  const cartaConTurnos = v => Object.assign(carta(v), { DISH_SERVICE:{9:'c'} });
   const carta = v => Object.assign(plato(9,'Chipirón','Baby squid'), { venue:v });
   const falta404 = () => Promise.reject(new Error('HTTP 404'));
   const sinRed   = () => Promise.reject(new Error('Failed to fetch'));
@@ -8861,8 +8864,30 @@ const _cartaRes = await (async () => {
   const rOtro = await admin.cargarCarta('otro');
   const puestosAntes = admin.estado().platos.length;
   const rVacia = await admin.cargarCarta('mb');
+  // ── Los turnos son de la carta, no de la app ──
+  const turnos = await (async () => {
+    const out = {};
+    // Ojo: cargarCarta('txoko') sale por el atajo `venue === _cartaPuesta` si
+    // nadie ha movido la carta, así que siempre se empieza por OTRA.
+    const conT = monta(true, porRuta({ x: () => Promise.resolve(cartaConTurnos('x')) }));
+    await conT.cargarCarta('x');
+    out.conTurnos = conT.estado().turnos;      // pone los suyos, no los suma
+    await conT.cargarCarta('txoko');
+    out.txoko = conT.estado().turnos;          // y al volver, los de Txoko
+    const sinT = monta(true, porRuta({ x: () => Promise.resolve(cartaConTurnos('x')),
+                                       y: () => Promise.resolve(carta('y')) }));
+    await sinT.cargarCarta('x');
+    await sinT.cargarCarta('y');
+    out.sinTurnos = sinT.estado().turnos;      // una carta sin turnos deja cero
+    const vac = monta(true, porRuta({ x: () => Promise.resolve(cartaConTurnos('x')) }));
+    await vac.cargarCarta('x');
+    await vac.cargarCarta('mb');               // 404 + admin → carta vacía
+    out.vaciada = vac.estado().turnos;
+    return out;
+  })();
+
   return {
-    rOtro, puestosAntes, vacia: rVacia, estado: admin.estado(),
+    rOtro, puestosAntes, vacia: rVacia, estado: admin.estado(), turnos,
     sinRed: await monta(true,  sinRed).cargarCarta('mb'),
     staff:  await monta(false, falta404).cargarCarta('mb'),
     propia: await monta(true,  porRuta({ mb: () => Promise.resolve(carta('mb')) })).cargarCarta('mb'),
@@ -9659,6 +9684,48 @@ test('Marcaje: la cubertería del plato es un campo, no una frase escondida en l
         `el plato ${d.id} (${d.name}) repite el marcaje dentro de las notas`);
     }
   }
+});
+
+test('El turno almuerzo/cena es de la carta, y no se hereda del restaurante de al lado', () => {
+  // Medido con la carta de M.B. puesta: 29 de sus 30 platos tenían un id que
+  // también existe en la tabla de turnos de Txoko, así que heredaban el turno
+  // del plato ajeno con el mismo número. Con «Almuerzo» puesto, a un camarero
+  // de M.B. le quedaban 7 platos de 30, elegidos por la carta del vecino.
+  const e = _cartaRes.turnos;
+  assert(!e.roto, e.roto || '');
+  // Txoko trae los suyos, y son los de verdad: se ejecuta el código real que
+  // los mete en su carta, no una imitación. (Esta comprobación nació de una
+  // mutación que NO mordía: vaciar la tabla de Txoko pasaba desapercibida.)
+  const i0 = html.indexOf('const DISH_SERVICE = {');
+  const i1 = html.indexOf('// Turno de estudio activo', i0);
+  assert(i0 !== -1 && i1 !== -1, 'no encuentro la tabla de turnos');
+  const real = new Function('_CARTA_BASE', // eslint-disable-line no-new-func
+    html.slice(i0, i1) + '; return _CARTA_BASE.DISH_SERVICE || {};')({});
+  assert(Object.keys(real).length > 50,
+    `la carta de Txoko tiene que llevarse su tabla de turnos, se lleva ${Object.keys(real).length}`);
+  assert(e.txoko > 0, 'al volver a Txoko hay que reponer su tabla de turnos');
+  // Una carta SIN turnos deja la tabla vacía — no se queda la del anterior.
+  assert(e.sinTurnos === 0,
+    `una carta sin turnos tiene que dejar la tabla a cero, quedaron ${e.sinTurnos}`);
+  // Y una carta CON turnos propios pone los suyos, no los suma a los de antes.
+  assert(e.conTurnos === 1,
+    `una carta con turnos propios pone sólo los suyos, quedaron ${e.conTurnos}`);
+  // Vaciar la carta vacía también la tabla: si no, el restaurante sin carta
+  // arrastra los turnos del anterior.
+  assert(e.vaciada === 0, `vaciar la carta tiene que vaciar los turnos, quedaron ${e.vaciada}`);
+
+  // Sin tabla, todo plato es 'ambos': el filtro no puede esconder nada.
+  const helpers = html.slice(html.indexOf('let _studyShift'), html.indexOf('function computeDishAllergens'));
+  const stub = 'function _renderShiftBar(){} var currentTab=null; function showTab(){}; var localStorage={getItem:()=>null,setItem:()=>{}}; var DISH_SERVICE={};';
+  const M = new Function(stub + helpers + // eslint-disable-line no-new-func
+    'return {f:_shiftDishes, hay:_hayTurnos, set:(s)=>{_studyShift=s;}};')();
+  const mb = Array.from({ length: 30 }, (_, i) => ({ id: i + 1, name: 'Plato ' + (i + 1) }));
+  for (const turno of ['a', 'c', 'todo']) {
+    M.set(turno);
+    assert(M.f(mb).length === 30,
+      `sin tabla de turnos, «${turno}» tiene que dejar los 30 platos, dejó ${M.f(mb).length}`);
+  }
+  assert(M.hay() === false, 'sin tabla de turnos, _hayTurnos() es falso y la barra no se enseña');
 });
 
 // ─── 7. No leftover git conflict markers ────────────────────────
