@@ -10070,6 +10070,83 @@ body, .screen{ min-height: 100vh; min-height: 100dvh; }
 }
 .q-vacio{ text-align: center; padding: 2rem 1rem; color: var(--parch3); font-size: .82rem; }
 
+/* ── Sala: los procedimientos del restaurante ────────────────────────────
+   Se lee de pie y con prisa, en mitad del servicio. Por eso el número del
+   paso canta, las frases que hay que DECIR van resaltadas y separadas del
+   resto, y la lista de detalles queda por debajo del titular. */
+/* La introducción del manual está, pero plegada: quien abre Sala en mitad del
+   servicio busca un paso, no el texto de bienvenida. */
+.pr-intro{
+  border: 1px solid var(--line2); border-radius: var(--r2);
+  background: rgba(196,154,60,.05); margin-bottom: .6rem;
+}
+.pr-intro summary{
+  cursor: pointer; list-style: none; min-height: 40px;
+  display: flex; align-items: center; padding: .5rem .75rem;
+  font-family: 'DM Mono', monospace; font-size: .6rem; letter-spacing: .08em;
+  text-transform: uppercase; color: var(--gold-deep);
+}
+.pr-intro summary::-webkit-details-marker{ display: none; }
+.pr-intro summary::after{ content: '▾'; margin-left: auto; font-size: .8rem; }
+.pr-intro[open] summary::after{ content: '▴'; }
+.pr-intro p{
+  margin: 0; padding: 0 .75rem .75rem;
+  font-family: 'Quicksand', sans-serif; font-size: .76rem; line-height: 1.6; color: var(--parch2);
+}
+.pr-sec{
+  font-family: 'DM Mono', monospace; font-size: .55rem; letter-spacing: .12em;
+  text-transform: uppercase; color: var(--gold-deep);
+  margin: .9rem 0 .35rem; padding-bottom: .2rem; border-bottom: 1px solid var(--line2);
+}
+.pr-card{
+  border: 1px solid var(--line2); border-radius: var(--r);
+  padding: .8rem .9rem; margin-bottom: .5rem;
+  background: linear-gradient(155deg, #faf6ee, #f0e8d8);
+}
+.pr-card header{ display: flex; align-items: baseline; gap: .55rem; }
+.pr-card h3{ font-family: 'Cinzel', serif; font-size: .95rem; margin: 0; color: var(--parchment); line-height: 1.3; }
+.pr-n{
+  font-family: 'DM Mono', monospace; font-size: .68rem; font-weight: 700;
+  color: var(--gold-deep); background: rgba(196,154,60,.14);
+  border: 1px solid rgba(196,154,60,.3); border-radius: 7px;
+  min-width: 1.65rem; padding: .1rem .3rem; text-align: center; flex: none;
+}
+.pr-d{
+  font-family: 'Quicksand', sans-serif; font-size: .78rem; line-height: 1.6;
+  color: var(--parch2); margin: .45rem 0 0;
+}
+.pr-lista{ margin: .5rem 0 0; padding-left: 1.05rem; }
+.pr-lista li{
+  font-family: 'Quicksand', sans-serif; font-size: .76rem; line-height: 1.55;
+  color: var(--parch2); margin-bottom: .3rem;
+}
+.pr-frase{
+  margin-top: .55rem; padding: .5rem .7rem;
+  background: rgba(45,106,62,.07); border-left: 2px solid rgba(45,106,62,.45);
+  border-radius: 0 8px 8px 0;
+}
+.pr-fr-l{
+  font-family: 'Quicksand', sans-serif; font-size: .76rem; line-height: 1.5;
+  color: var(--parch2); display: flex; gap: .45rem; align-items: baseline;
+}
+.pr-fr-l + .pr-fr-l{ margin-top: .25rem; }
+.pr-fr-l span{
+  font-family: 'DM Mono', monospace; font-size: .52rem; letter-spacing: .08em;
+  color: #2d6a3e; flex: none; min-width: 1.3rem;
+}
+/* El idioma que viene con erratas en el manual: se enseña, pero no se da por
+   bueno. Corregirlo sería inventarle un guion al restaurante. */
+.pr-fr-l.rev{ color: var(--parch3); font-style: italic; }
+.pr-fr-l.rev span{ color: #b0432b; }
+.pr-fr-rev{
+  margin-top: .35rem; font-family: 'Quicksand', sans-serif; font-size: .66rem;
+  line-height: 1.45; color: #b0432b;
+}
+.pr-fuente{
+  font-family: 'DM Mono', monospace; font-size: .55rem; letter-spacing: .06em;
+  color: var(--parch4); text-align: center; margin: 1.2rem 0 .5rem;
+}
+
 /* ── Pantallas de Acciones del panel (código de acceso, cuentas) ──────────
    Acciones es para HACER: botones grandes, estado siempre visible y ninguna
    fila estrecha — el panel se abre de pie, con el móvil en una mano. */

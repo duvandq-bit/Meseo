@@ -8732,7 +8732,7 @@ test('Quesos: nunca se le dice a un vegetariano que sí sin saberlo', () => {
   // Sección de consulta, no de plato: 48 fichas no caben como uno. Lo que se
   // pregunta en mesa no es la maduración, es «¿puedo comerlo?».
   assert(/function renderQuesos\(\)/.test(html), 'falta la sección de quesos');
-  assert(/'lqa','vinos','quesos','chat'/.test(html), 'quesos tiene que ser una ruta válida');
+  assert(/'lqa','vinos','quesos','sala','chat'/.test(html), 'quesos tiene que ser una ruta válida');
   assert(/renderMap = \{quesos:renderQuesos,/.test(html), 'y tener quien la pinte');
   assert(/id="navQuesos"[^>]*style="display:none"/.test(html),
     'el botón sale sólo si el restaurante tiene carro, así que arranca escondido');
@@ -9726,6 +9726,119 @@ test('El turno almuerzo/cena es de la carta, y no se hereda del restaurante de a
       `sin tabla de turnos, «${turno}» tiene que dejar los 30 platos, dejó ${M.f(mb).length}`);
   }
   assert(M.hay() === false, 'sin tabla de turnos, _hayTurnos() es falso y la barra no se enseña');
+});
+
+// Igual que con las cartas: se EJECUTA el cargador con un fetch de mentira,
+// porque lo que hay que demostrar es qué archivo pide cada restaurante y qué
+// queda cargado al terminar. El await va aquí fuera, a propósito.
+const _salaRes = await (async () => {
+  const src = html.slice(html.indexOf('let SALA = null, _salaVenue = null;'),
+                         html.indexOf('function _salaCoincide(p){'));
+  if (src.length < 400) return { roto: 'no encuentro el cargador de procedimientos' };
+  const rutas = [];
+  const responder = (r) => { rutas.push(r); return r === 'data/procedimientos-mb.json'
+    ? Promise.resolve({ secciones: [{ id: 'x', t: 'X', pasos: [] }] })
+    : Promise.reject(new Error('HTTP 404')); };
+  const monta = (venue, cab) => {
+    const F = new Function('_venueActual', 'LANG', 'loadLazyData', 'fetch', 'document', // eslint-disable-line no-new-func
+      src + '; return { cargar: cargarSala, hay: hayProcedimientos };');
+    return F(() => venue, 'es', responder, cab, { getElementById: () => null });
+  };
+  const mb = monta('mb', () => Promise.resolve({ ok: true }));
+  const mbCarga = await mb.cargar();
+  const tx = monta('txoko', () => Promise.resolve({ ok: false }));
+  const txCarga = await tx.cargar();
+  // El caso de verdad: el MISMO montaje salta de M.B. a Txoko, como hace la
+  // cuenta de administración desde Ajustes. Si al fallar la carga no se
+  // vacía, el de Txoko se queda leyendo el manual de M.B.
+  let quien = 'mb';
+  const salto = (() => {
+    const F = new Function('_venueActual', 'LANG', 'loadLazyData', 'fetch', 'document', // eslint-disable-line no-new-func
+      src + '; return { cargar: cargarSala, dentro: () => SALA };');
+    return F(() => quien, 'es', responder, () => Promise.resolve({ ok: true }),
+             { getElementById: () => null });
+  })();
+  await salto.cargar();
+  const traeMB = !!salto.dentro();
+  quien = 'txoko';
+  await salto.cargar();
+  const arrastra = !!salto.dentro();
+  return { rutas, mbCarga: !!mbCarga, txCarga, txHay: await tx.hay(), mbHay: await mb.hay(),
+           traeMB, arrastra };
+})();
+
+test('Sala: los procedimientos son de un restaurante, y quien no los tiene no ve los del vecino', () => {
+  // M.B. mandó su manual de procedimientos y sus 36 pasos de servicio. Es cómo
+  // se trabaja en ESA casa: ni formación de producto ni estándar del hotel.
+  // Sale sola en cuanto existe data/procedimientos-<restaurante>.json, igual
+  // que el carro de quesos y la bodega — y Txoko, que no tiene el suyo, no ve
+  // la pestaña ni de lejos.
+  assert(/function renderSala\(\)/.test(html), 'falta la sección de sala');
+  assert(/'vinos','quesos','sala','chat'/.test(html), 'sala tiene que ser una ruta válida');
+  assert(/renderMap = \{quesos:renderQuesos,sala:renderSala,/.test(html), 'y tener quien la pinte');
+  assert(/id="navSala"[^>]*style="display:none"/.test(html),
+    'el botón sale sólo donde hay procedimientos, así que arranca escondido');
+  assert((html.match(/_navQuesosSync\(\); _navVinosSync\(\); _navSalaSync\(\);/g) || []).length === 2,
+    'hay que repintar el botón en los DOS sitios: al entrar y al cambiar de restaurante');
+  assert(/SALA = null; _salaVenue = null; _salaSec = null;/.test(html),
+    'cambiar de restaurante tiene que tirar los procedimientos del anterior');
+
+  // ── El cargador, ejecutado. El await va FUERA de test(), que es síncrono:
+  //    una prueba async se tragaría los fallos en silencio. ──
+  const e = _salaRes;
+  assert(!e.roto, e.roto || '');
+  assert(e.mbCarga, 'M.B. tiene que cargar los suyos');
+  assert(e.rutas[0] === 'data/procedimientos-mb.json',
+    `cada restaurante pide SU archivo, pidió ${e.rutas[0]}`);
+  assert(e.txCarga === null, 'sin archivo no hay procedimientos, y no se inventan');
+  assert(e.rutas[1] === 'data/procedimientos-txoko.json',
+    `Txoko tiene que pedir el suyo, pidió ${e.rutas[1]}`);
+  assert(e.txHay === false, 'sin archivo, el botón no se enseña');
+  assert(e.mbHay === true, 'con archivo, el botón se enseña');
+  assert(e.traeMB, 'el montaje que empieza en M.B. tiene que traer sus procedimientos');
+  assert(e.arrastra === false,
+    'al saltar de M.B. a un restaurante sin procedimientos NO se puede arrastrar el manual de M.B.');
+});
+
+test('Sala: el manual de M.B. está entero y las frases son las suyas', () => {
+  const d = JSON.parse(read('data/procedimientos-mb.json'));
+  assert(d.venue === 'mb', 'el archivo declara de quién es');
+  assert(Array.isArray(d.secciones) && d.secciones.length === 4,
+    `esperaba 4 secciones, hay ${(d.secciones || []).length}`);
+  const pasos = d.secciones.flatMap(s => s.pasos);
+  // Los 36 pasos del servicio, numerados y sin saltos: si falta uno, el
+  // camarero se salta un paso del servicio sin enterarse.
+  const serv = d.secciones.find(s => s.id === 'pasos');
+  assert(serv, 'falta la sección de pasos del servicio');
+  const nums = serv.pasos.map(p => p.n);
+  assert(nums.length === 36, `esperaba 36 pasos, hay ${nums.length}`);
+  for (let i = 0; i < 36; i++) assert(nums[i] === i + 1, `el paso ${i + 1} no está en su sitio`);
+  // Cada entrada dice algo: un título suelto no vale de nada.
+  for (const p of pasos) {
+    assert(p.t && p.t.length > 3, `una entrada se quedó sin título: ${JSON.stringify(p).slice(0, 60)}`);
+    assert(p.d || (p.lista || []).length || (p.frases || []).length || serv.pasos.includes(p),
+      `la entrada «${p.t}» no dice nada`);
+  }
+  // Las frases en tres idiomas son lo que el camarero DICE en mesa.
+  const frases = pasos.flatMap(p => p.frases || []);
+  assert(frases.length >= 12, `esperaba al menos 12 frases, hay ${frases.length}`);
+  for (const f of frases) assert(f.es && f.es.trim(), 'toda frase tiene que estar al menos en español');
+  // Las frases van tal cual las escribió M.B., erratas incluidas: corregirlas
+  // sería ponerle a su equipo un guion que ellos no han escrito. Lo que se
+  // hace es avisar de que ese idioma está sin revisar.
+  const conErrata = frases.filter(f => /changie le servillet|Peut etre|vous etes gaucher|droiute/.test(
+    [f.en, f.fr].join(' ')));
+  assert(conErrata.length === 5,
+    `el manual trae 5 frases con erratas de idioma; encontré ${conErrata.length}`);
+  for (const f of conErrata) assert(f.revisar,
+    `la frase «${(f.fr || f.en || '').slice(0, 40)}» viene con erratas y no está marcada para revisar`);
+  assert(/pendiente de revisar con M\.B\./.test(html) && /pending review with M\.B\./.test(html),
+    'el aviso de idioma sin revisar tiene que salir en los dos idiomas');
+  // Lo que de verdad hay que poder encontrar con prisa, en mitad del servicio.
+  const todo = JSON.stringify(d).toLowerCase();
+  for (const clave of ['zurdo', 'desmigar', 'oshibori', 'mignardises', 'carro de quesos',
+                       'servilletas naranjas', 'un momento por favor', 'nunca inventaremos'])
+    assert(todo.includes(clave), `el manual tendría que hablar de «${clave}»`);
 });
 
 // ─── 7. No leftover git conflict markers ────────────────────────

@@ -52,7 +52,7 @@
 <meta property="og:description" content="Formación de equipos de sala: carta, alérgenos, vinos, exámenes y juegos de repaso.">
 <meta property="og:url" content="https://meseo.es/">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"Meseo","url":"https://meseo.es/"}</script>
-<meta name="app-version" content="7.443">
+<meta name="app-version" content="7.444">
 <meta name="app-build" content="May 2026">
 <meta name="theme-color" content="#1c2a22">
 <!-- ═══ PWA ═══ -->
@@ -382,6 +382,8 @@
     <button class="nav-btn" id="navVinos" onclick="showTab('vinos')"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2h8l-2 9H10L8 2z"/><path d="M12 11v7"/><path d="M8 18h8"/></svg> Vinos</button>
     <!-- Sale sólo si el restaurante tiene data/quesos-<id>.json -->
     <button class="nav-btn" id="navQuesos" onclick="showTab('quesos')" style="display:none"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17V9l9-4 9 4v8a1 1 0 01-1 1H4a1 1 0 01-1-1z"/><circle cx="8" cy="13" r="1.1"/><circle cx="12.5" cy="15" r="1.1"/><circle cx="16" cy="12" r="1.1"/></svg><span data-i18n="nav.quesos">Quesos</span></button>
+    <!-- Sale sólo si el restaurante tiene data/procedimientos-<id>.json -->
+    <button class="nav-btn" id="navSala" onclick="showTab('sala')" style="display:none"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5a2 2 0 012-2h11a1 1 0 011 1v15a1 1 0 01-1 1H6a2 2 0 01-2-2V5z"/><path d="M4 17.5A2 2 0 016 16h12"/><path d="M8 7h7M8 10h5"/></svg><span data-i18n="nav.sala">Sala</span></button>
     <div class="nav-group-lbl" id="navGrpEquipo" aria-hidden="true">Equipo</div>
     <button class="nav-btn" id="navTxoko" onclick="showTab('txoko')"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 12h4l2 8 4-16 2 8h4"/></svg> Juegos</button>
     <button class="nav-btn" id="navRanking" onclick="showTab('ranking')"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg> Ranking</button>
@@ -1899,7 +1901,7 @@ const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><p
 const SRC = 'src';
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='7.443';  // sincronizada con sw.js VERSION (guard de CI)
+const APP_VERSION='7.444';  // sincronizada con sw.js VERSION (guard de CI)
 const APP_BUILD='Jul 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;
@@ -10191,8 +10193,9 @@ function openAjustes(){
         if(tema) applyTheme(tema);
         overlay.remove();
         QUESOS = null; _quesosVenue = null;   // el carro es de cada restaurante
+        SALA = null; _salaVenue = null; _salaSec = null;   // y los procedimientos también
         WINES = null; _vinosVenue = null;      // y la bodega, también
-        try{ _navQuesosSync(); _navVinosSync(); }catch(_){}
+        try{ _navQuesosSync(); _navVinosSync(); _navSalaSync(); }catch(_){}
         if(typeof showTab==='function') showTab(typeof currentTab!=='undefined' ? currentTab : 'dashboard');
         const _nom = (tema && tema.name) || id;
         // Sin carta el aviso tiene que decirlo, y decir cuánto rato: si no,
@@ -10566,7 +10569,7 @@ async function closePinAndEnter(){
   try{ ndaPendiente(pinTarget).then(hay => { if(hay) ndaMostrar(pinTarget); }); }catch(_){}
   // Los botones del carro de quesos y de la bodega salen sólo si este
   // restaurante tiene una. Y se tira lo que hubiera cargado de otro.
-  try{ _vinosVigilar(); _navQuesosSync(); _navVinosSync(); }catch(_){}
+  try{ _vinosVigilar(); _navQuesosSync(); _navVinosSync(); _navSalaSync(); }catch(_){}
   // La pestaña del panel sale por ROL, no por nombre: hasta sep 2026 estaba
   // clavada a «Duvan», así que no había forma de dársela al manager de otro
   // restaurante. El rol llega con la ficha de la nube (_supSyncMando la
@@ -10938,7 +10941,132 @@ function _qFicha(q){
   </article>`;
 }
 
-const TAB_ROUTES = ['dashboard','aprender','flashcards','exam','repaso','tecnicas','actualidad','smart','emplatado','stats','logros','txoko','ranking','supervisor','horarios','protocolo','videos','lqa','vinos','quesos','chat'];
+// ═══ SALA — PROCEDIMIENTOS DEL RESTAURANTE ═════════════════════════════════
+// Cómo se trabaja en ESTE restaurante: los pasos del servicio y los
+// procedimientos de sala. No es formación de producto (eso es la carta) ni
+// estándar del hotel (eso es Auditoría): es la casa.
+//
+// Sale sola en cuanto existe data/procedimientos-<restaurante>.json, igual que
+// el carro de quesos y la bodega. Txoko no tiene el suyo y por eso no ve la
+// pestaña: no se le enseña el manual del vecino ni un texto inventado.
+let SALA = null, _salaVenue = null;
+let _salaSec = null, _salaBusca = '';
+
+async function cargarSala(){
+  const v = _venueActual();
+  if(SALA && _salaVenue === v) return SALA;
+  try{
+    // La ruta se arma antes, por lo mismo que en el carro de quesos: el guard
+    // que comprueba que cada archivo cargado existe en disco tiene que seguir
+    // viendo literales en todas las demás llamadas.
+    const ruta = 'data/procedimientos-' + encodeURIComponent(v) + '.json';
+    const d = await loadLazyData(ruta,
+      LANG==='en' ? 'the floor procedures' : 'los procedimientos de sala', {silent:true});
+    SALA = (d && Array.isArray(d.secciones)) ? d : null;
+  }catch(e){ SALA = null; }
+  _salaVenue = v;
+  return SALA;
+}
+const _haySala = new Map();
+async function hayProcedimientos(){
+  const v = _venueActual();
+  if(_haySala.has(v)) return _haySala.get(v);
+  let ok = false;
+  try{ const r = await fetch('data/procedimientos-' + encodeURIComponent(v) + '.json', {method:'HEAD'}); ok = r.ok; }
+  catch(e){ ok = false; }
+  _haySala.set(v, ok);
+  return ok;
+}
+function _navSalaSync(){
+  const b = document.getElementById('navSala');
+  if(!b) return;
+  hayProcedimientos().then(hay => { b.style.display = hay ? '' : 'none'; });
+}
+
+function _salaCoincide(p){
+  if(!_salaBusca) return true;
+  const h = _djNorm([p.t, p.d, (p.lista||[]).join(' '),
+                     (p.frases||[]).map(f=>[f.es,f.en,f.fr].join(' ')).join(' ')].join(' '));
+  return _djNorm(_salaBusca).split(' ').filter(Boolean).every(w => h.includes(w));
+}
+
+// Las frases van TAL CUAL las escribió el restaurante. Son lo que el camarero
+// dice en mesa, así que se resaltan: es lo que se busca con prisa.
+//
+// Y no se corrigen. El manual trae erratas en el inglés y sobre todo en el
+// francés («On va changie le servillet pour le dessert»), y arreglarlas sería
+// ponerle en la boca a su equipo un guion que M.B. no ha escrito. Se enseña lo
+// suyo y se avisa de que ese idioma está pendiente de revisar con ellos.
+function _salaFrase(f){
+  const _en = LANG==='en';
+  const rev = String(f.revisar||'').split(',').filter(Boolean);
+  const linea = (lbl, txt) => txt
+    ? `<div class="pr-fr-l${rev.includes(lbl.toLowerCase())?' rev':''}"><span>${lbl}</span>${escapeHTML(txt)}</div>` : '';
+  const aviso = rev.length
+    ? `<div class="pr-fr-rev">${_en
+        ? `The ${rev.map(x=>x.toUpperCase()).join(' and ')} wording comes from the manual as written, with its typos — pending review with M.B.`
+        : `El ${rev.map(x=>x.toUpperCase()).join(' y el ')} está tal cual viene en el manual, con sus erratas — pendiente de revisar con M.B.`}</div>`
+    : '';
+  return `<div class="pr-frase">${linea('ES', f.es)}${linea('EN', f.en)}${linea('FR', f.fr)}${aviso}</div>`;
+}
+
+function _salaPaso(p){
+  return `<article class="pr-card">
+    <header>${p.n ? `<span class="pr-n">${p.n}</span>` : ''}<h3>${escapeHTML(p.t)}</h3></header>
+    ${p.d ? `<p class="pr-d">${escapeHTML(p.d)}</p>` : ''}
+    ${(p.lista||[]).length ? `<ul class="pr-lista">${p.lista.map(x=>`<li>${escapeHTML(x)}</li>`).join('')}</ul>` : ''}
+    ${(p.frases||[]).map(_salaFrase).join('')}
+  </article>`;
+}
+
+function renderSala(){
+  const c = document.getElementById('appContent');
+  const _en = LANG==='en';
+  if(!SALA){
+    c.innerHTML = `<div class="sup-wrap"><div style="text-align:center;padding:3rem 1rem;color:var(--parch3);font-family:'DM Mono',monospace;font-size:.72rem;letter-spacing:.1em">⏳ ${_en?'Loading the floor procedures…':'Cargando los procedimientos de sala…'}</div></div>`;
+    cargarSala().then(()=>{ if(currentTab==='sala') renderSala(); });
+    return;
+  }
+  const secs = SALA.secciones;
+  // Buscando no se filtra POR sección: se busca en todas, que es lo que hace
+  // falta cuando no recuerdas dónde estaba «zurdo» o «desmigar».
+  const activa = _salaBusca ? null : (_salaSec || secs[0].id);
+  const mostradas = secs
+    .map(s => ({ s, pasos: s.pasos.filter(_salaCoincide) }))
+    .filter(x => x.pasos.length && (_salaBusca || x.s.id === activa));
+  const total = mostradas.reduce((n,x)=>n+x.pasos.length, 0);
+  const chip = (on, txt, fn) => `<button type="button" onclick="${fn}" class="q-chip${on?' on':''}">${escapeHTML(txt)}</button>`;
+
+  c.innerHTML = `<div class="sup-wrap">
+    <div class="sup-hero">
+      <div class="sup-hero-icon">📖</div>
+      <div class="sup-hero-title">${escapeHTML(SALA.titulo || (_en?'Floor procedures':'Procedimientos de sala'))}</div>
+      <div class="sup-hero-sub">${escapeHTML(SALA.subtitulo||'')}${SALA.actualizado?` · ${escapeHTML(SALA.actualizado)}`:''}</div>
+    </div>
+
+    ${SALA.intro ? `<details class="pr-intro"><summary>${_en?'Why M.B. — the manual’s opening':'Por qué M.B. — la introducción del manual'}</summary><p>${escapeHTML(SALA.intro)}</p></details>` : ''}
+
+    <input type="search" class="q-busca" value="${escapeHTML(_salaBusca)}" oninput="_salaBusca=this.value;renderSala();this.focus()"
+      placeholder="${_en?'Search a step, a phrase, a procedure…':'Busca un paso, una frase, un procedimiento…'}">
+
+    ${_salaBusca ? '' : `<div class="q-chips">
+      ${secs.map(s => chip(activa===s.id, (s.icon?s.icon+' ':'')+(s.chip||s.t), `_salaSec=${JSON.stringify(s.id)};renderSala()`)).join('')}
+    </div>`}
+
+    <div class="q-cuenta">${_salaBusca
+      ? `${total} ${total===1?(_en?'result':'resultado'):(_en?'results':'resultados')}`
+      : escapeHTML((secs.find(s=>s.id===activa)||{}).sub || '')}</div>
+
+    ${total ? mostradas.map(x => `
+      ${_salaBusca ? `<div class="pr-sec">${escapeHTML(x.s.t)}</div>` : ''}
+      ${x.pasos.map(_salaPaso).join('')}`).join('')
+     : `<div class="q-vacio">${_en?'Nothing matches that search.':'Nada encaja con esa búsqueda.'}</div>`}
+
+    ${SALA.fuente ? `<div class="pr-fuente">${_en?'Source':'Fuente'}: ${escapeHTML(SALA.fuente)}</div>` : ''}
+  </div>`;
+}
+
+const TAB_ROUTES = ['dashboard','aprender','flashcards','exam','repaso','tecnicas','actualidad','smart','emplatado','stats','logros','txoko','ranking','supervisor','horarios','protocolo','videos','lqa','vinos','quesos','sala','chat'];
 
 function showTab(tab, instant){
   // ── Pestaña desconocida → INICIO ──────────────────────────────────────
@@ -11002,7 +11130,7 @@ function showTab(tab, instant){
   if(_activeNav && _navCur) _navCur.innerHTML = _activeNav.innerHTML;
   _navDDClose();
   const c=document.getElementById('appContent');
-  const renderMap = {quesos:renderQuesos,dashboard:renderDashboard,aprender:renderAprender,flashcards:renderAprender,exam:renderExam,repaso:renderAprender,tecnicas:renderAprender,actualidad:renderAprender,smart:renderAprender,emplatado:renderAprender,stats:renderRankingHub,logros:renderRankingHub,txoko:renderTxoko,ranking:renderRankingHub,supervisor:renderSupervisor,horarios:renderHorarios,protocolo:renderLqa,videos:renderAprender,lqa:renderLqa,vinos:renderVinos,chat:renderChat};
+  const renderMap = {quesos:renderQuesos,sala:renderSala,dashboard:renderDashboard,aprender:renderAprender,flashcards:renderAprender,exam:renderExam,repaso:renderAprender,tecnicas:renderAprender,actualidad:renderAprender,smart:renderAprender,emplatado:renderAprender,stats:renderRankingHub,logros:renderRankingHub,txoko:renderTxoko,ranking:renderRankingHub,supervisor:renderSupervisor,horarios:renderHorarios,protocolo:renderLqa,videos:renderAprender,lqa:renderLqa,vinos:renderVinos,chat:renderChat};
   const _doRender = ()=>{
     c.innerHTML='';
     c.style.transition='none';

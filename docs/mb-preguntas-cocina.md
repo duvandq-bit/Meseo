@@ -250,6 +250,15 @@ los otros dos lo he añadido a las notas.
 en las notas del plato, para que el camarero avise al tomar la comanda y no
 cuando ya es tarde.
 
+**El inglés y el francés del manual de sala tienen erratas.** Las frases que
+el camarero dice en mesa están ya en la app, pero **tal cual las escribisteis**,
+sin tocarlas: corregirlas sería ponerle a vuestro equipo un guion que vosotros
+no habéis escrito. Están marcadas en rojo como «pendiente de revisar». Son
+cinco: «Excuse moi, vous etes gaucher», «Peut etre un peu plus de pain», «Peut
+etre un peu plus de beurre/huile de olive», «On va changie le servillet pour le
+dessert» (y su inglés, «napkings») y la de los servicios, «Par ici sil vous
+plait — a gauche / a droiute». Si nos pasáis las correctas, las cambiamos.
+
 **Erratas menores en las fichas**: «Suflitos» por Sulfitos en el camarón,
 «Crústaceos» por Crustáceos en el cochino, «pretigiosas» por prestigiosas en la
 mantequilla y «ara el aceite» por «para el aceite» en el aceite de oliva. El

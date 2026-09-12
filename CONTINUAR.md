@@ -1,6 +1,6 @@
 # Por dónde seguir
 
-Estado a **11 de septiembre de 2026** · versión **7.443** · 335 pruebas en verde ·
+Estado a **11 de septiembre de 2026** · versión **7.444** · 337 pruebas en verde ·
 auditoría de alérgenos 0/0.
 
 ---
@@ -243,7 +243,7 @@ vuelve a estar abierta.
 | Ingredientes → alérgenos | `data/ingredients.json` (543 entradas) |
 | Vinos | `data/wines.json` es la bodega de **Txoko**; otro restaurante trae `data/wines-<id>.json`. Sin archivo, no hay pestaña de Vinos |
 | La carta de M.B. | `docs/carta-mb-borrador.json` — borrador, fuera de `data/` a propósito. 34 fichas |
-| Sala y procedimientos de M.B. | `docs/mb-procedimientos-fuente.md` — texto tal cual de sus PDF, todavía sin sitio en la app |
+| Sala y procedimientos de M.B. | `data/procedimientos-mb.json` — pestaña **Sala**, sale sólo donde existe el archivo. La fuente sin tocar, en `docs/mb-procedimientos-fuente.md` |
 | El turno almuerzo/cena | tabla `DISH_SERVICE`, que **viaja con la carta**. Una carta sin turnos no enseña el selector |
 | El marcaje (cubertería) | campo `marcaje` de cada plato de la carta. Txoko no lo tiene y no se inventa: sin campo, no se pinta el bloque |
 | El acuerdo de confidencialidad | `data/nda.json` — **apagado** (`"activo": false`) |
@@ -253,7 +253,10 @@ vuelve a estar abierta.
 | Permisos de columna | `supabase/permisos_columnas_empleados.sql` — **si añades una columna a `_EMP_COLS`, concédela ahí** |
 
 No se toca la carta sin dato del propietario. **Nunca se inventa un plato, un
-ingrediente, un vino ni un estándar.**
+ingrediente, un vino ni un estándar.** Eso incluye las frases que el camarero
+dice en mesa: el manual de M.B. trae erratas en su inglés y su francés, y se
+enseñan tal cual, marcadas como pendientes de revisar. Corregirlas sería
+ponerle a su equipo un guion que el restaurante no ha escrito.
 
 ---
 
