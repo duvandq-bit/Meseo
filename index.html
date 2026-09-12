@@ -52,7 +52,7 @@
 <meta property="og:description" content="Formación de equipos de sala: carta, alérgenos, vinos, exámenes y juegos de repaso.">
 <meta property="og:url" content="https://meseo.es/">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"Meseo","url":"https://meseo.es/"}</script>
-<meta name="app-version" content="7.447">
+<meta name="app-version" content="7.448">
 <meta name="app-build" content="May 2026">
 <meta name="theme-color" content="#1c2a22">
 <!-- ═══ PWA ═══ -->
@@ -1909,7 +1909,7 @@ const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><p
 const SRC = 'src';
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='7.447';  // sincronizada con sw.js VERSION (guard de CI)
+const APP_VERSION='7.448';  // sincronizada con sw.js VERSION (guard de CI)
 const APP_BUILD='Jul 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;
@@ -2182,6 +2182,11 @@ async function registrarActividad(a){
   const total = (a.total == null) ? null : Math.round(a.total);
   if(total != null && total <= 0) return false;
   const score = (a.score == null) ? null : Math.max(0, Math.min(Math.round(a.score), total == null ? Math.round(a.score) : total));
+  // El plan de hoy (fase 2) necesita saber qué se ha COMPLETADO, y necesita
+  // saberlo sin red. Se anota ANTES de salir a internet a propósito: la
+  // actividad ha ocurrido igual si el envío falla, y el móvil de un camarero en
+  // mitad de un servicio se queda sin cobertura a menudo.
+  _anotarEnDiario(a.activity, competency, kind, score, total, a.seconds);
   try{
     const r = await fetch(`${SUPA_URL}/rest/v1/actividad`, {
       method: 'POST',
@@ -2207,6 +2212,415 @@ async function registrarActividad(a){
     // Silencio a propósito: lo local ya está guardado y el empleado no puede
     // hacer nada con este error. Se reintentará cuando vuelva la conexión.
     return false;
+  }
+}
+
+// ═══ EL DIARIO ════════════════════════════════════════════════════════════
+// La misma señal que va a la nube, guardada también en el móvil. Es lo único
+// que permite decir «esto ya lo has hecho hoy» sin preguntárselo al servidor.
+//
+// Catorce días y se poda. El plan mira como mucho siete días atrás; guardar un
+// año serían miles de líneas en el mismo `localStorage` donde viven las fichas
+// de todo el equipo, y el histórico completo ya está en la nube.
+const DIARIO_DIAS = 14;
+function _diaMenos(dia, n){
+  const d = new Date(dia + 'T12:00:00Z');
+  d.setUTCDate(d.getUTCDate() - n);
+  return d.toISOString().slice(0, 10);
+}
+function _anotarEnDiario(activity, competency, kind, score, total, seconds){
+  try{
+    if(!currentUser) return;
+    const emp = getEmp(currentUser);
+    if(!emp) return;
+    const hoy = todayStr();
+    const dia = emp.diario = emp.diario || {};
+    (dia[hoy] = dia[hoy] || []).push({
+      a: activity, c: competency, k: kind,
+      s: (score == null ? null : score), t: (total == null ? null : total),
+      seg: (seconds == null ? null : Math.max(0, Math.round(seconds))),
+      ts: Date.now()
+    });
+    const corte = _diaMenos(hoy, DIARIO_DIAS);
+    for(const k of Object.keys(dia)) if(k < corte) delete dia[k];
+    saveDB();
+  }catch(e){ dbgw('[diario] no se pudo anotar:', e && e.message); }
+}
+
+// ═══ EL PLAN DE HOY ═══════════════════════════════════════════════════════
+// FASE 2 del rediseño. La aplicación tenía dieciocho sitios a los que ir y
+// ninguna respuesta a «¿qué hago hoy?». Esto la da: como mucho TRES tareas,
+// entre ocho y doce minutos en total, y cada una con el motivo exacto por el
+// que está ahí.
+//
+// El motor es determinista a propósito —ni aprendizaje automático, ni azar—:
+// si a alguien le sale un plan raro se puede señalar la regla que lo puso ahí.
+// Y `planDeHoy(datos)` es puro: no mira el DOM, no lee variables globales y no
+// escribe nada. Las pruebas lo ejecutan con datos inventados y comprueban el
+// plan que sale, sin navegador de por medio.
+//
+// El orden de prioridad, de arriba abajo, y por qué:
+//   1 · lo que ha mandado el supervisor  — HOY NO HAY FUENTE (ver abajo)
+//   2 · seguridad: alérgenos             — es lo único que puede hacer daño
+//   3 · repaso vencido                   — lo aprendido que se está perdiendo
+//   4 · contenido sin ver                — lo que aún no se sabe
+//   5 · la competencia más floja         — donde menos se acierta
+//   6 · proteger la racha                — lo barato, sólo si no queda otra
+const PLAN_MAX_TAREAS = 3;
+const PLAN_MINUTOS_MAX = 12;
+const PLAN_ALERGENOS_MINIMO = 90;   // el listón de seguridad, en %
+const PLAN_COMPETENCIA_MINIMO = 90; // por encima de esto no es una debilidad
+const PLAN_MUESTRA_MINIMA = 5;      // menos de 5 respuestas no es una nota
+
+// Cada tarea posible, con la actividad de fase 1 que la da por hecha.
+// `minutos` no es un adorno: es preguntas × lo que tarda quien se la sabe,
+// redondeado hacia arriba, y es lo que mantiene el plan dentro de la franja.
+const PLAN_CATALOGO = {
+  seguridad_alergenos: {actividad:'simulacro_alergenos', competencia:'alergenos', minutos:5, seguridad:true, es:'Simulacro de alérgenos', en:'Allergen drill'},
+  repaso_srs:          {actividad:'repaso',              competencia:'carta',     minutos:4, es:'Repaso inteligente', en:'Smart review'},
+  carta_sin_ver:       {actividad:'recorrido',           competencia:'carta',     minutos:4, es:'Recorrido guiado',   en:'Guided journey'},
+  comp_alergenos:      {actividad:'simulacro_alergenos', competencia:'alergenos', minutos:5, es:'Simulacro de alérgenos', en:'Allergen drill'},
+  comp_carta:          {actividad:'examen',              competencia:'carta',     minutos:5, es:'Examen de carta',    en:'Menu exam'},
+  comp_vinos:          {actividad:'quiz_vinos',          competencia:'vinos',     minutos:3, es:'Quiz de vinos',      en:'Wine quiz'},
+  comp_protocolo:      {actividad:'examen_lqa',          competencia:'protocolo', minutos:5, es:'Examen LQA',         en:'LQA exam'},
+  comp_sala:           {actividad:'examen_sala',         competencia:'sala',      minutos:4, es:'Examen de sala',     en:'Floor exam'},
+  racha_reto:          {actividad:'reto_dia',            competencia:'carta',     minutos:1, es:'Reto del día',       en:'Daily challenge'}
+};
+// `servicio` es la sexta competencia y NO tiene entrada aquí. No es un olvido:
+// su único tema, `cutlery`, está retirado desde hace meses (queda en datos
+// viejos y el propio código lo ignora al calcular medias). Mientras no exista
+// una actividad viva que entrene el servicio, el motor no puede mandar a nadie
+// a hacer nada sobre él, y ponerlo sería mandarlo a una pantalla que no existe.
+
+function _planSemilla(dia, empleado){
+  const s = String(dia || '') + '|' + String(empleado || '');
+  let h = 2166136261;
+  for(let i = 0; i < s.length; i++){ h ^= s.charCodeAt(i); h = Math.imul(h, 16777619); }
+  return (h >>> 0);
+}
+
+// La competencia con peor nota, de entre las que este restaurante puede
+// entrenar hoy. Con menos de cinco respuestas no hay nota que comparar: en ese
+// caso gana la que menos se haya tocado, que es un hueco igualmente.
+function _planCompetenciaFloja(d){
+  const comp = d.competencias || {};
+  const disp = d.disponibles || {};
+  const vivas = COMPETENCIAS.filter(c => disp[c] && PLAN_CATALOGO['comp_' + c]);
+  let mejor = null;
+  for(const c of vivas){
+    const x = comp[c] || {aciertos:0, total:0};
+    if(!(x.total >= PLAN_MUESTRA_MINIMA)) continue;
+    const pct = Math.round((x.aciertos / x.total) * 100);
+    if(!mejor || pct < mejor.pct) mejor = {competencia:c, pct, total:x.total, conNota:true};
+  }
+  if(mejor) return mejor;
+  for(const c of vivas){
+    const x = comp[c] || {aciertos:0, total:0};
+    if(!mejor || (x.total||0) < mejor.total) mejor = {competencia:c, pct:null, total:(x.total||0), conNota:false};
+  }
+  return mejor;
+}
+
+function planDeHoy(datos){
+  const d = datos || {};
+  const hechas = d.hechas || [];
+  const cand = [];
+  const usadas = new Set();
+  function proponer(id, motivo_es, motivo_en, extra){
+    const base = PLAN_CATALOGO[id];
+    if(!base) return;
+    // Nunca dos veces lo mismo en el mismo plan: ni la misma tarea, ni dos
+    // tareas distintas que acaben abriendo la misma actividad.
+    if(usadas.has(id) || usadas.has('act:' + base.actividad)) return;
+    usadas.add(id); usadas.add('act:' + base.actividad);
+    cand.push(Object.assign({}, base, {id, motivo_es, motivo_en}, extra || {}));
+  }
+
+  // 1 · Lo que haya mandado el supervisor.
+  //
+  //     HOY NO HAY FUENTE. Las asignaciones son fase 4: no existe tabla donde
+  //     se guarden ni pantalla donde se creen, así que esta lista llega
+  //     siempre vacía y la rama no se dispara nunca. Está escrita —y probada—
+  //     porque el orden importa: el día que existan, lo que manda una persona
+  //     tiene que entrar por delante de lo que decide el motor, no detrás.
+  //     Inventar ahora un origen falso sería peor que no tener ninguno.
+  for(const as of (d.asignaciones || [])){
+    if(!as || !PLAN_CATALOGO[as.tarea]) continue;
+    proponer(as.tarea,
+      as.motivo_es || 'Te lo ha asignado tu responsable',
+      as.motivo_en || 'Assigned by your manager',
+      {asignada:true, ref:as.ref});
+  }
+
+  // 2 · Seguridad. Es lo único de esta aplicación que puede mandar a alguien
+  //     al hospital, así que va por delante de todo lo que decide el motor.
+  const ab = Math.round(Number(d.alergenosMejor || 0));
+  const alFallos = Math.round(Number(d.alergenosFallosRecientes || 0));
+  if(ab < PLAN_ALERGENOS_MINIMO || alFallos > 0){
+    let m_es, m_en;
+    if(ab <= 0){
+      m_es = 'Aún no has hecho el simulacro de alérgenos';
+      m_en = 'You have not done the allergen drill yet';
+    } else if(ab < PLAN_ALERGENOS_MINIMO){
+      m_es = `Tu mejor marca en alérgenos es ${ab}%, por debajo del ${PLAN_ALERGENOS_MINIMO}% que se exige`;
+      m_en = `Your best allergen score is ${ab}%, below the required ${PLAN_ALERGENOS_MINIMO}%`;
+    } else {
+      m_es = `${alFallos} ${alFallos === 1 ? 'fallo' : 'fallos'} de alérgenos esta semana`;
+      m_en = `${alFallos} allergen ${alFallos === 1 ? 'miss' : 'misses'} this week`;
+    }
+    proponer('seguridad_alergenos', m_es, m_en);
+  }
+
+  // 3 · Repaso vencido. Lo que ya se aprendió y se está olvidando cuesta
+  //     mucho menos de recuperar que de aprender otra vez.
+  const venc = Math.round(Number(d.srsVencidos || 0));
+  if(venc > 0){
+    proponer('repaso_srs',
+      `${venc} ${venc === 1 ? 'ficha vencida' : 'fichas vencidas'} de repaso`,
+      `${venc} review ${venc === 1 ? 'card' : 'cards'} overdue`);
+  }
+
+  // 4 · Contenido sin ver, y si no queda ninguno, visto pero sin dominar.
+  const sinVer = Math.round(Number(d.platosSinVer || 0));
+  const sinDominar = Math.round(Number(d.platosSinDominar || 0));
+  if(sinVer > 0){
+    proponer('carta_sin_ver',
+      `${sinVer} ${sinVer === 1 ? 'plato que todavía no has estudiado' : 'platos que todavía no has estudiado'}`,
+      `${sinVer} ${sinVer === 1 ? 'dish you have not studied yet' : 'dishes you have not studied yet'}`,
+      {ref: d.platoSugerido});
+  } else if(sinDominar > 0){
+    proponer('carta_sin_ver',
+      `${sinDominar} ${sinDominar === 1 ? 'plato visto' : 'platos vistos'} pero todavía sin dominar`,
+      `${sinDominar} ${sinDominar === 1 ? 'dish seen' : 'dishes seen'} but not mastered yet`,
+      {ref: d.platoSugerido});
+  }
+
+  // 5 · Donde menos se acierta. Las seis competencias del vocabulario de la
+  //     fase 1; los juegos no entran, porque no son formación.
+  //     Y sólo si de verdad hay una debilidad: quien acierta por encima del
+  //     90% en todo no tiene ninguna competencia floja, y mandarle a practicar
+  //     la «menos buena» de sus seis sobresalientes es ruido, no formación.
+  const flojo = _planCompetenciaFloja(d);
+  if(flojo && !(flojo.conNota && flojo.pct >= PLAN_COMPETENCIA_MINIMO)){
+    const nom = PLAN_COMPETENCIA_NOMBRE[flojo.competencia] || {es:flojo.competencia, en:flojo.competencia};
+    proponer('comp_' + flojo.competencia,
+      flojo.conNota ? `${nom.es} es tu competencia más floja (${flojo.pct}%)` : `Casi no has practicado ${nom.es.toLowerCase()}`,
+      flojo.conNota ? `${nom.en} is your weakest competency (${flojo.pct}%)` : `You have barely practised ${nom.en.toLowerCase()}`);
+  }
+
+  // 6 · La racha. Va la última porque cualquier tarea de arriba ya la protege;
+  //     sólo tiene sentido cuando no hay ninguna otra cosa que pedir.
+  const racha = Math.round(Number(d.racha || 0));
+  if(!d.estudiadoHoy && racha > 0 && !d.retoHecho){
+    proponer('racha_reto',
+      `Llevas ${racha} ${racha === 1 ? 'día seguido' : 'días seguidos'}: una pregunta y no se rompe`,
+      `${racha} ${racha === 1 ? 'day' : 'days'} in a row: one question keeps it alive`);
+  }
+
+  // ── Elegir ──
+  // El plan se fija la primera vez que se mira y NO cambia en todo el día. Sin
+  // esto, terminar la primera tarea reordenaba las otras dos —el repaso deja
+  // de estar vencido justo por haberlo hecho— y el plan parecía otro cada vez
+  // que se volvía al inicio, que es exactamente lo contrario de un plan.
+  let elegidas;
+  const fijadas = d.fijadas;
+  if(fijadas && fijadas.length){
+    const porId = {};
+    cand.forEach(c => { porId[c.id] = c; });
+    elegidas = [];
+    for(const id of fijadas.slice(0, PLAN_MAX_TAREAS)){
+      const base = PLAN_CATALOGO[id];
+      if(!base) continue;
+      elegidas.push(porId[id] || Object.assign({}, base, {id,
+        motivo_es: 'Estaba en tu plan de hoy',
+        motivo_en: 'It was in today’s plan',
+        ref: (d.fijadasRef || {})[id]}));
+    }
+  } else {
+    elegidas = [];
+    let minutos = 0;
+    const porComp = {};
+    for(const c of cand){
+      if(elegidas.length >= PLAN_MAX_TAREAS) break;
+      if(minutos + c.minutos > PLAN_MINUTOS_MAX) continue;
+      // Tres tareas de la misma competencia sólo se justifican por seguridad.
+      if((porComp[c.competencia] || 0) >= 2 && !c.seguridad) continue;
+      elegidas.push(c);
+      minutos += c.minutos;
+      porComp[c.competencia] = (porComp[c.competencia] || 0) + 1;
+    }
+  }
+
+  const tareas = elegidas.map(c => Object.assign({}, c, {hecha: hechas.indexOf(c.actividad) >= 0}));
+  return {
+    dia: d.dia || '',
+    tareas,
+    minutos: tareas.reduce((a, c) => a + c.minutos, 0),
+    completadas: tareas.filter(t => t.hecha).length,
+    candidatas: cand.map(c => c.id)   // para las pruebas y para depurar
+  };
+}
+
+const PLAN_COMPETENCIA_NOMBRE = {
+  alergenos:{es:'Alérgenos', en:'Allergens'}, carta:{es:'La carta', en:'The menu'},
+  vinos:{es:'Vinos', en:'Wines'}, protocolo:{es:'Protocolo', en:'Protocol'},
+  sala:{es:'Sala', en:'Floor'}, servicio:{es:'Servicio', en:'Service'}
+};
+
+// ── De la ficha del empleado a lo que el motor necesita ──────────────────
+// Aquí sí se leen globales (DISHES, el restaurante activo, los catálogos que
+// se cargan al vuelo). Toda la suciedad del mundo real se queda en esta
+// función; el motor de arriba no la ve.
+function datosDeHoy(emp, dia){
+  const e = emp || {};
+  const hoy = dia || todayStr();
+  const ahora = Date.now();
+
+  // Lo vencido lo cuenta el SRS tal y como ya lo contaba el inicio: fichas
+  // empezadas cuya fecha de repaso ya pasó. No se toca nada del motor de
+  // repetición espaciada — sólo se lee.
+  const srs = e.srs || {};
+  const srsVencidos = Object.keys(srs).filter(k => srs[k] && srs[k].reps > 0 && ahora >= srs[k].nextReview).length;
+
+  const platos = (typeof DISHES !== 'undefined' && DISHES) ? DISHES : [];
+  const conocidos = e.knownDishes || {};
+  const dominados = e.journeyMastered || {};
+  const nuevos = platos.filter(p => !srs[p.id] && !conocidos[p.id] && !dominados[p.id]);
+  const sinDominar = platos.filter(p => (srs[p.id] || conocidos[p.id]) && !dominados[p.id]);
+  // Cuál de ellos, exactamente. Semilla de fecha + nombre: el mismo empleado
+  // ve el mismo plato todo el día, y dos compañeros no reciben el mismo.
+  const bolsa = nuevos.length ? nuevos : sinDominar;
+  const platoSugerido = bolsa.length
+    ? bolsa[_planSemilla(hoy, e.name || '') % bolsa.length].id
+    : null;
+
+  // Fallos de alérgenos de VERDAD recientes: los del diario de los últimos
+  // siete días. `adaptive.allergenMiss` es acumulado desde el primer día y no
+  // baja nunca, así que usarlo dejaría la tarea de seguridad clavada para
+  // siempre en el plan de cualquiera que fallara una vez en marzo.
+  const diario = e.diario || {};
+  const hace7 = _diaMenos(hoy, 7);
+  let alFallos = 0;
+  for(const k of Object.keys(diario)){
+    if(k < hace7 || k > hoy) continue;
+    for(const it of (diario[k] || [])){
+      if(it && it.c === 'alergenos' && it.t > 0) alFallos += Math.max(0, it.t - (it.s || 0));
+    }
+  }
+
+  // La nota por competencia. Dos orígenes, y NO se suman: el examen escribe
+  // en los dos (una línea por pregunta en `topicScores`, una por sesión en el
+  // diario), así que sumarlos contaría dos veces las mismas preguntas. Manda
+  // el diario cuando tiene muestra suficiente; si no, el histórico de antes.
+  const comp = {};
+  const hist = {};
+  COMPETENCIAS.forEach(c => { comp[c] = {aciertos:0, total:0}; hist[c] = {aciertos:0, total:0}; });
+  const ts = e.topicScores || {};
+  for(const tema of Object.keys(ts)){
+    const c = competenciaDeTema(tema);
+    if(!hist[c] || !ts[tema]) continue;
+    hist[c].aciertos += (ts[tema].correct || 0);
+    hist[c].total += (ts[tema].total || 0);
+  }
+  for(const k of Object.keys(diario)){
+    for(const it of (diario[k] || [])){
+      if(!it || !it.c || !comp[it.c] || !(it.t > 0)) continue;
+      comp[it.c].aciertos += (it.s || 0);
+      comp[it.c].total += it.t;
+    }
+  }
+  COMPETENCIAS.forEach(c => { if(comp[c].total < PLAN_MUESTRA_MINIMA) comp[c] = hist[c]; });
+
+  // Qué puede entrenar HOY este restaurante. `sala` y `vinos` dependen de que
+  // el restaurante tenga esos archivos; se leen de la misma caché que ya usa
+  // la navegación para enseñar u ocultar sus botones.
+  const venue = (typeof _venueActual === 'function') ? _venueActual() : '';
+  const salaResuelta = (typeof _haySala !== 'undefined') && _haySala.has(venue);
+  const vinosPorDefecto = (typeof _VENUE_POR_DEFECTO !== 'undefined') && venue === _VENUE_POR_DEFECTO;
+  const vinosResuelto = vinosPorDefecto || ((typeof _hayVinos !== 'undefined') && _hayVinos.has(venue));
+  const disponibles = {
+    alergenos: true, carta: platos.length > 0, protocolo: true,
+    sala: salaResuelta ? !!_haySala.get(venue) : false,
+    vinos: vinosPorDefecto ? true : (vinosResuelto ? !!_hayVinos.get(venue) : false),
+    servicio: false   // sin actividad viva; ver el comentario del catálogo
+  };
+
+  return {
+    dia: hoy,
+    empleado: e.name || '',
+    // Fase 4. No hay origen todavía y no se inventa uno.
+    asignaciones: [],
+    alergenosMejor: e.allergenBest || 0,
+    alergenosFallosRecientes: alFallos,
+    srsVencidos,
+    platosSinVer: nuevos.length,
+    platosSinDominar: sinDominar.length,
+    platoSugerido,
+    competencias: comp,
+    disponibles,
+    racha: e.streak || 0,
+    estudiadoHoy: (e.lastStudyDay || '') === hoy,
+    retoHecho: (e.dqLastDay || '') === hoy,
+    hechas: (diario[hoy] || []).map(it => it && it.a).filter(Boolean),
+    // Hasta que la sala y los vinos hayan contestado, el plan se puede pintar
+    // pero no se puede fijar: fijarlo antes dejaría a alguien sin vinos todo
+    // el día sólo porque la precarga aún no había terminado.
+    listo: salaResuelta && vinosResuelto
+  };
+}
+
+// El plan del empleado que está dentro, con su congelado del día.
+function planDeHoyDe(emp){
+  const hoy = todayStr();
+  const d = datosDeHoy(emp, hoy);
+  const guardado = (emp && emp.planHoy && emp.planHoy.dia === hoy) ? emp.planHoy : null;
+  const plan = planDeHoy(Object.assign({}, d, {
+    fijadas: guardado ? guardado.ids : null,
+    fijadasRef: guardado ? (guardado.refs || {}) : null
+  }));
+  if(!guardado && d.listo && plan.tareas.length && emp){
+    const refs = {};
+    plan.tareas.forEach(t => { if(t.ref != null) refs[t.id] = t.ref; });
+    emp.planHoy = {dia: hoy, ids: plan.tareas.map(t => t.id), refs};
+    saveDB();
+  }
+  plan.datos = d;
+  return plan;
+}
+
+// Abrir la tarea. Cada una lleva a la actividad que la da por hecha —la misma
+// que registra la fase 1—, no a un índice desde el que haya que buscarla.
+const PLAN_ACCIONES = {
+  seguridad_alergenos: function(){ startAllergenTest(null); },
+  comp_alergenos:      function(){ startAllergenTest(null); },
+  repaso_srs:          function(){ _startSmartSession(); },
+  carta_sin_ver:       function(ref){
+    if(ref == null){ _subTab.aprender = 'repaso'; showTab('repaso'); return; }
+    launchDishJourney(ref);
+  },
+  comp_carta:          function(){ examConfig = {count:10, topic:'mixed', cat:'all'}; showTab('exam'); startExam(); },
+  comp_protocolo:      function(){ showTab('protocolo'); startLqaExam(); },
+  comp_sala:           function(){ showTab('sala'); startSalaExam(); },
+  comp_vinos:          function(){
+    _vinoSubTab = 'practica'; _vinoPractica = 'quiz';
+    showTab('vinos');
+    // La bodega se carga al vuelo: si aún no está, se espera a que llegue en
+    // vez de dejar el toque sin efecto.
+    const ir = function(){
+      if(WINE_FLASHCARDS && WINE_FLASHCARDS.length) _startWineQuiz('all', Math.min(10, WINE_FLASHCARDS.length));
+    };
+    if(WINE_FLASHCARDS && WINE_FLASHCARDS.length) ir();
+    else loadVinosContent({silent:true}).then(ir).catch(function(){});
+  },
+  racha_reto:          function(){ openDailyReto(); }
+};
+function _planIr(id, ref){
+  const f = PLAN_ACCIONES[id];
+  if(!f){ dbgw('[plan] tarea sin acción:', id); return; }
+  try{ f(ref); }
+  catch(e){
+    dbgw('[plan] no se pudo abrir', id, e && e.message);
+    if(typeof showToast === 'function') showToast(LANG === 'en' ? 'Could not open that yet' : 'No se ha podido abrir', 'error');
   }
 }
 
@@ -20067,6 +20481,66 @@ function _renderWineService(c, bar){
 }
 
 // ═══════ DASHBOARD ═══════
+// ── El plan de hoy, pintado ──────────────────────────────────────────────
+// Tres filas como mucho, cada una con QUÉ, POR QUÉ, CUÁNTO dura y si está
+// hecha. Sin colores nuevos: los mismos tokens que el resto del inicio.
+//
+// Lo que NO lleva, a propósito: «seguir donde lo dejaste». Ninguna actividad
+// guarda su progreso al salir —el estado de examen, simulacro y repaso vive en
+// memoria y se pierde al recargar—, así que no hay fuente fiable de la que
+// sacarlo. Ponerlo significaría inventarse un estado, y una tarjeta que
+// promete continuar algo y empieza de cero es peor que no tenerla.
+function _hoyPlanHTML(emp, _en){
+  if(!emp) return '';
+  // La cuenta de administración no tiene plan: no deja rastro al registrar
+  // —igual que en `scores`—, así que sus tareas no se marcarían nunca por muy
+  // bien que las hiciera. Un plan que no se puede terminar no es un plan.
+  if(typeof _esAdmin === 'function' && _esAdmin(emp.name)) return '';
+  const plan = planDeHoyDe(emp);
+  const n = plan.tareas.length;
+  if(!n){
+    return `<div class="plan-hoy plan-hoy-vacio">
+      <div class="plan-hoy-eyebrow">◈ ${_en ? 'Your plan for today' : 'Tu plan de hoy'}</div>
+      <div class="plan-hoy-resumen">${_en ? 'All caught up — nothing pending today.' : 'Todo al día: hoy no tienes nada pendiente.'}</div>
+    </div>`;
+  }
+  const hechas = plan.completadas;
+  const pend = plan.tareas.filter(t => !t.hecha);
+  const minPend = pend.reduce((a, t) => a + t.minutos, 0);
+  const resumen = hechas >= n
+    ? (_en ? 'Plan complete. Well done.' : 'Plan terminado. Bien hecho.')
+    : (_en ? `${pend.length} ${pend.length === 1 ? 'task' : 'tasks'} left · about ${minPend} min`
+           : `${pend.length} ${pend.length === 1 ? 'tarea' : 'tareas'} · unos ${minPend} min`);
+  const filas = plan.tareas.map((t, i) => {
+    const titulo = _en ? t.en : t.es;
+    const motivo = _en ? t.motivo_en : t.motivo_es;
+    const marca = t.hecha ? '✓' : String(i + 1);
+    const etiq = `${titulo} — ${motivo} — ${t.minutos} min${t.hecha ? (_en ? ' — done' : ' — hecha') : ''}`;
+    return `<li><button type="button" class="plan-tarea${t.hecha ? ' hecha' : ''}"
+      onclick="_planIr('${t.id}',${t.ref == null ? 'null' : JSON.stringify(t.ref)})"
+      aria-label="${escapeHTML(etiq)}">
+      <span class="plan-tarea-marca" aria-hidden="true">${marca}</span>
+      <span class="plan-tarea-cuerpo">
+        <span class="plan-tarea-t">${escapeHTML(titulo)}</span>
+        <span class="plan-tarea-m">${escapeHTML(motivo)}</span>
+      </span>
+      <span class="plan-tarea-min" aria-hidden="true">${t.minutos} min</span>
+      <span class="plan-tarea-go" aria-hidden="true">›</span>
+    </button></li>`;
+  }).join('');
+  return `<div class="plan-hoy">
+    <div class="plan-hoy-cab">
+      <div class="plan-hoy-cab-tx">
+        <div class="plan-hoy-eyebrow">◈ ${_en ? 'Your plan for today' : 'Tu plan de hoy'}</div>
+        <div class="plan-hoy-resumen">${escapeHTML(resumen)}</div>
+      </div>
+      <div class="plan-hoy-prog" aria-label="${_en ? `${hechas} of ${n} done` : `${hechas} de ${n} hechas`}"><b>${hechas}</b><span>/${n}</span></div>
+    </div>
+    <div class="plan-hoy-barra" aria-hidden="true"><i style="width:${Math.round(hechas / n * 100)}%"></i></div>
+    <ol class="plan-hoy-lista">${filas}</ol>
+  </div>`;
+}
+
 function renderDashboard(){
   const emp=getEmp(currentUser);
   const sessions=emp.sessions||[];
@@ -20179,6 +20653,7 @@ function renderDashboard(){
       const _msDone=_m.done>=_m.total;
       return `
     <div class="tunic-divider"><span>${_en?'Today':'Hoy'}</span></div>
+    ${_hoyPlanHTML(emp,_en)}
     ${_pddHeroHTML(emp,_en)}
     <div class="hoy-stats" role="group" aria-label="${_en?'Your numbers: quiz streak, exam accuracy, league position':'Tus números: racha del reto, precisión de exámenes, posición en la liga'}">
       <div class="hoy-stat"><b>${_dqS}</b><span>${_en?'streak':'racha'}</span></div>

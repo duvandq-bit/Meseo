@@ -9757,6 +9757,42 @@ body.chat-open .sound-toggle{ display:none !important; }
 .hoy-numrow-meta{font-family:'DM Mono',monospace;font-size:.75rem;letter-spacing:.1em;color:var(--gold-deep);flex-shrink:0}
 .hoy-numrow-meta.ok{color:var(--parch4)}
 
+/* ═══ EL PLAN DE HOY — fase 2, sep 2026 ═══
+   Tres filas como mucho. Sin paleta nueva: los mismos tokens de oro y
+   pergamino que el resto del inicio, y el mismo alto de toque (52 px) que las
+   filas numeradas de debajo, para que no haya dos tamaños de fila en la misma
+   pantalla. */
+.plan-hoy{border:1px solid rgba(196,154,60,.28);border-radius:var(--r3);
+  background:rgba(196,154,60,.045);padding:.7rem .75rem .3rem;margin:0 0 .9rem}
+.plan-hoy-cab{display:flex;align-items:flex-start;gap:.6rem}
+.plan-hoy-cab-tx{flex:1;min-width:0}
+.plan-hoy-eyebrow{font-family:'DM Mono',monospace;font-size:.62rem;letter-spacing:.18em;
+  text-transform:uppercase;color:var(--gold);opacity:.85}
+.plan-hoy-resumen{font-family:'Quicksand',sans-serif;font-size:.8rem;color:var(--parch3);margin-top:.15rem}
+.plan-hoy-prog{flex-shrink:0;font-family:'Cinzel',serif;color:var(--gold-deep);line-height:1}
+.plan-hoy-prog b{font-size:1.4rem;font-weight:700}
+.plan-hoy-prog span{font-size:.8rem;opacity:.65}
+.plan-hoy-barra{height:3px;border-radius:2px;background:rgba(196,154,60,.16);margin:.55rem 0 .1rem;overflow:hidden}
+.plan-hoy-barra i{display:block;height:100%;background:var(--gold);transition:width .35s ease}
+.plan-hoy-lista{list-style:none;margin:0;padding:0}
+.plan-hoy-vacio .plan-hoy-resumen{margin-top:.3rem}
+.plan-tarea{display:flex;align-items:center;gap:.7rem;width:100%;min-height:52px;padding:.55rem .1rem;
+  background:transparent;border:none;border-bottom:1px solid rgba(196,154,60,.14);cursor:pointer;text-align:left}
+.plan-hoy-lista li:last-child .plan-tarea{border-bottom:none}
+.plan-tarea:active{background:rgba(196,154,60,.06)}
+.plan-tarea-marca{flex-shrink:0;width:22px;height:22px;border-radius:50%;display:flex;align-items:center;
+  justify-content:center;border:1px solid rgba(196,154,60,.45);font-family:'DM Mono',monospace;
+  font-size:.66rem;color:var(--gold)}
+.plan-tarea-cuerpo{flex:1;min-width:0}
+.plan-tarea-t{display:block;font-family:'Quicksand',sans-serif;font-size:.88rem;font-weight:700;
+  color:var(--parchment);line-height:1.25}
+.plan-tarea-m{display:block;font-size:.7rem;color:var(--parch4);line-height:1.3;margin-top:.1rem}
+.plan-tarea-min{flex-shrink:0;font-family:'DM Mono',monospace;font-size:.66rem;letter-spacing:.08em;color:var(--gold-deep)}
+.plan-tarea-go{flex-shrink:0;font-family:'Cinzel',serif;font-size:.95rem;color:rgba(196,154,60,.7)}
+.plan-tarea.hecha .plan-tarea-marca{border-color:var(--sage);color:var(--sage)}
+.plan-tarea.hecha .plan-tarea-t{text-decoration:line-through;opacity:.55}
+.plan-tarea.hecha .plan-tarea-m,.plan-tarea.hecha .plan-tarea-min{opacity:.5}
+
 /* ═══ LINE UP — ritual de antes del servicio (fase 2, jul 2026) ═══ */
 .lu-list{border-top:1px solid rgba(196,154,60,.14)}
 .lu-row{display:flex;align-items:center;gap:.75rem;width:100%;min-height:56px;padding:.6rem .35rem;

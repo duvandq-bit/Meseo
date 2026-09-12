@@ -10210,6 +10210,461 @@ test('Registro de actividad: las actividades reales lo llaman', () => {
     'la llamada a scores del simulacro, y su reintento, tienen que seguir ahí');
 });
 
+// ═══ EL PLAN DE HOY (fase 2) ══════════════════════════════════════════════
+// El motor se EJECUTA, no se lee. Es la lección del fallo de `dd`: aquel día
+// la pantalla más usada de la aplicación no pintaba nada y las 338 pruebas
+// pasaron en verde, porque ninguna llegaba a ejecutar la función.
+//
+// Por eso `planDeHoy` se escribió puro: se le dan datos inventados y se mira
+// el plan que devuelve. Sin navegador, sin DOM y sin red.
+const _planM = (() => {
+  const i0 = html.indexOf('const PLAN_MAX_TAREAS');
+  const i1 = html.indexOf('// ── De la ficha del empleado a lo que el motor necesita');
+  if (i0 === -1 || i1 <= i0) return { roto: 'no encuentro el motor del plan de hoy' };
+  try {
+    return new Function('COMPETENCIAS', // eslint-disable-line no-new-func
+      html.slice(i0, i1) +
+      '; return { planDeHoy, PLAN_CATALOGO, PLAN_MAX_TAREAS, PLAN_MINUTOS_MAX, _planSemilla, _planCompetenciaFloja };'
+    )(['alergenos', 'carta', 'vinos', 'protocolo', 'sala', 'servicio']);
+  } catch (e) { return { roto: 'el motor del plan no compila: ' + e.message }; }
+})();
+
+// Un empleado impecable: todo al día, todo dominado, sin nada que reprochar.
+// Cada prueba estropea UNA cosa y mira qué tarea aparece por eso.
+const _planBase = (x) => Object.assign({
+  dia: '2026-09-12', empleado: 'Ana', asignaciones: [],
+  alergenosMejor: 100, alergenosFallosRecientes: 0,
+  srsVencidos: 0, platosSinVer: 0, platosSinDominar: 0, platoSugerido: null,
+  competencias: {
+    alergenos: { aciertos: 20, total: 20 }, carta: { aciertos: 20, total: 20 },
+    vinos: { aciertos: 20, total: 20 }, protocolo: { aciertos: 20, total: 20 },
+    sala: { aciertos: 20, total: 20 }, servicio: { aciertos: 0, total: 0 }
+  },
+  disponibles: { alergenos: true, carta: true, protocolo: true, sala: true, vinos: true, servicio: false },
+  racha: 0, estudiadoHoy: true, retoHecho: true, hechas: [], fijadas: null
+}, x || {});
+
+// El eslabón entre la fase 1 y la fase 2: el diario. Se monta AQUÍ FUERA
+// porque `registrarActividad` es asíncrona y test() es síncrono. Se ejecuta el
+// registro de verdad —con la red interceptada— y se mira qué queda guardado.
+const _diarioRes = await (async () => {
+  const i0 = html.indexOf('const COMPETENCIAS = [');
+  const i1 = html.indexOf('// Abrir la tarea. Cada una lleva a la actividad');
+  if (i0 === -1 || i1 <= i0) return { roto: 'no encuentro el registro y el diario' };
+  const fichas = {};
+  let hoy = '2026-09-12', admin = false, red = () => Promise.resolve({ ok: true }), guardados = 0;
+  const getEmp = (n) => (fichas[n] = fichas[n] || { name: n });
+  let M;
+  try {
+    M = new Function('SUPA_URL', 'SUPA_KEY', '_esAdmin', 'currentUser', '_vSello', 'dbgw', 'fetch', // eslint-disable-line no-new-func
+      'getEmp', 'todayStr', 'saveDB', 'DISHES', '_venueActual', '_haySala', '_hayVinos', '_VENUE_POR_DEFECTO',
+      html.slice(i0, i1) +
+      '; return { registrar: registrarActividad, datosDeHoy, planDeHoyDe, planDeHoy };'
+    )('https://x', 'k', () => admin, 'Ana', o => Object.assign({ venue: 'txoko' }, o), () => {},
+      (...a) => red(...a), getEmp, () => hoy, () => { guardados++; return true; },
+      [{ id: 1 }, { id: 2 }, { id: 3 }], () => 'txoko',
+      new Map([['txoko', false]]), new Map([['txoko', true]]), 'txoko');
+  } catch (e) { return { roto: 'no compila: ' + e.message }; }
+
+  // Toda lectura va por aquí: si el diario deja de escribirse, la prueba tiene
+  // que fallar diciendo «no hay líneas», no reventar el arranque de la suite.
+  const lineas = (d) => (((fichas.Ana || {}).diario || {})[d || hoy] || []);
+  const o = {};
+  try {
+    await M.registrar({ activity: 'examen', competency: 'carta', kind: 'evaluacion', score: 8, total: 10, seconds: 240 });
+    await M.registrar({ activity: 'simulacro_alergenos', competency: 'alergenos', kind: 'evaluacion', score: 9, total: 10 });
+    o.diario = JSON.parse(JSON.stringify((fichas.Ana || {}).diario || {}));
+    o.guardados = guardados;
+
+    // Sin red: la actividad ha ocurrido igual, y el plan tiene que enterarse.
+    red = () => Promise.reject(new Error('sin conexión'));
+    o.sinRedDevuelve = await M.registrar({ activity: 'repaso', competency: 'carta', kind: 'practica', score: 12, total: 15 });
+    o.sinRedAnota = lineas().some(x => x.a === 'repaso');
+    red = () => Promise.resolve({ ok: true });
+
+    // Lo que el registro rechaza tampoco puede quedar anotado.
+    await M.registrar({ activity: 'inventada', competency: 'nosecual', kind: 'evaluacion', score: 1, total: 1 });
+    o.rechazadaAnota = lineas().some(x => x.a === 'inventada');
+
+    // La administración no deja rastro tampoco en el móvil.
+    admin = true;
+    await M.registrar({ activity: 'examen', competency: 'carta', kind: 'evaluacion', score: 1, total: 1 });
+    o.adminAnota = lineas().length;
+    admin = false;
+
+    // Poda: lo de hace tres semanas se va solo.
+    if (fichas.Ana && fichas.Ana.diario) fichas.Ana.diario['2026-08-01'] = [{ a: 'examen', c: 'carta', k: 'evaluacion', s: 1, t: 1 }];
+    await M.registrar({ activity: 'maridaje', competency: 'vinos', kind: 'evaluacion', score: 4, total: 5 });
+    o.dias = Object.keys((fichas.Ana || {}).diario || {}).sort();
+
+    // Y el plan lee de ahí lo que está hecho.
+    o.datos = M.datosDeHoy(fichas.Ana || { name: 'Ana' }, hoy);
+    const plan = M.planDeHoy(Object.assign({}, o.datos, { fijadas: ['seguridad_alergenos', 'repaso_srs'] }));
+    o.planHechas = plan.tareas.map(t => ({ id: t.id, hecha: t.hecha }));
+  } catch (e) { o.roto = 'el registro reventó: ' + e.message; }
+  return o;
+})();
+
+test('Plan de hoy: el diario es lo que une la fase 1 con la fase 2', () => {
+  const e = _diarioRes;
+  assert(!e.roto, e.roto || '');
+
+  // 1 · Cada actividad registrada deja su línea en el móvil, con su nota.
+  const hoy = (e.diario || {})['2026-09-12'] || [];
+  assert(hoy.length === 2, `esperaba dos líneas anotadas, hay ${hoy.length}`);
+  const ex = hoy.find(x => x.a === 'examen');
+  assert(ex && ex.c === 'carta' && ex.k === 'evaluacion' && ex.s === 8 && ex.t === 10 && ex.seg === 240,
+    'la línea del examen no lleva lo que hace falta: ' + JSON.stringify(ex));
+  assert(e.guardados > 0, 'el diario tiene que guardarse, no quedarse en memoria');
+
+  // 2 · Sin conexión, el registro a la nube falla pero la línea se anota
+  //     igual: la actividad ha ocurrido. Es lo que permite que el plan
+  //     funcione en un móvil sin cobertura en mitad de un servicio.
+  assert(e.sinRedDevuelve === false, 'sin red el envío a la nube falla, y se dice');
+  assert(e.sinRedAnota === true, 'pero la actividad ha ocurrido y tiene que quedar anotada');
+
+  // 3 · Lo que el registro rechaza no se anota, y la administración tampoco.
+  assert(e.rechazadaAnota === false, 'lo que no vale para la nube tampoco vale para el diario');
+  assert(e.adminAnota === 3, `la administración no puede dejar rastro; hay ${e.adminAnota} líneas`);
+
+  // 4 · Se poda: catorce días, no un año de historial en el mismo
+  //     localStorage donde viven las fichas de todo el equipo.
+  assert(!e.dias.includes('2026-08-01'), 'lo de hace tres semanas tiene que podarse: ' + e.dias.join(', '));
+  assert(e.dias.includes('2026-09-12'), 'y lo de hoy quedarse');
+
+  // 5 · Y el plan lo lee: `hechas` sale del diario, no de por dónde se navegó.
+  assert(e.datos.hechas.includes('examen') && e.datos.hechas.includes('simulacro_alergenos')
+         && e.datos.hechas.includes('repaso') && e.datos.hechas.includes('maridaje'),
+    'el plan tiene que ver lo hecho hoy: ' + JSON.stringify(e.datos.hechas));
+  const marc = e.planHechas.find(t => t.id === 'repaso_srs');
+  assert(marc && marc.hecha === true, 'la tarea de repaso tiene que salir marcada');
+  const seg = e.planHechas.find(t => t.id === 'seguridad_alergenos');
+  assert(seg && seg.hecha === true, 'y la de alérgenos también');
+
+  // 6 · La nota por competencia también sale de ahí: 9 de 10 en alérgenos.
+  assert(e.datos.competencias.alergenos.total === 10 && e.datos.competencias.alergenos.aciertos === 9,
+    'la nota de alérgenos sale del diario: ' + JSON.stringify(e.datos.competencias.alergenos));
+});
+
+test('Plan de hoy: el motor es determinista y respeta sus propios límites', () => {
+  assert(!_planM.roto, _planM.roto || '');
+  const { planDeHoy } = _planM;
+
+  // 1 · El mismo día con los mismos datos da el mismo plan. Sin azar, sin
+  //     aprendizaje automático, sin Date.now(): dos llamadas, un solo plan.
+  const d = _planBase({ alergenosMejor: 40, srsVencidos: 12, platosSinVer: 9, racha: 5, estudiadoHoy: false, retoHecho: false });
+  const a = planDeHoy(d), b = planDeHoy(d);
+  assert(JSON.stringify(a.tareas.map(t => t.id)) === JSON.stringify(b.tareas.map(t => t.id)),
+    'dos llamadas idénticas tienen que dar el mismo plan');
+
+  // 2 · Nunca más de tres tareas, aunque haya seis motivos para actuar.
+  assert(a.tareas.length <= _planM.PLAN_MAX_TAREAS,
+    `el plan no puede pasar de ${_planM.PLAN_MAX_TAREAS} tareas, trae ${a.tareas.length}`);
+  assert(a.tareas.length === 3, `con todo pendiente esperaba 3 tareas, hay ${a.tareas.length}`);
+
+  // 3 · Y nunca más de doce minutos: es un plan para un descanso, no un curso.
+  //     El 12 va aquí ESCRITO. Comparar contra la propia constante era una
+  //     comprobación circular: subirla a 30 pasaba en verde.
+  assert(a.minutos <= 12, `el plan no puede pasar de 12 min, suma ${a.minutos}`);
+  assert(_planM.PLAN_MINUTOS_MAX === 12, `la franja del plan tiene que seguir siendo 12 min, es ${_planM.PLAN_MINUTOS_MAX}`);
+  assert(a.minutos >= 8, `un plan lleno tiene que llenar la franja, suma ${a.minutos}`);
+
+  // 4 · Nunca dos veces la misma actividad. Hay un caso real en el que dos
+  //     reglas distintas piden lo mismo: quien va flojo en alérgenos dispara
+  //     la regla de seguridad Y la de competencia más floja, y las dos abren
+  //     el simulacro. Sin el filtro, el plan mandaba hacerlo dos veces.
+  const actos = a.tareas.map(t => t.actividad);
+  assert(new Set(actos).size === actos.length, 'el plan repite actividad: ' + actos.join(', '));
+  const doble = planDeHoy(_planBase({
+    alergenosMejor: 30, srsVencidos: 0,
+    competencias: Object.assign(_planBase().competencias, { alergenos: { aciertos: 2, total: 20 } })
+  }));
+  const dobleActos = doble.tareas.map(t => t.actividad);
+  assert(new Set(dobleActos).size === dobleActos.length,
+    'flojo en alérgenos dispara dos reglas, pero el simulacro sólo puede salir una vez: ' + dobleActos.join(', '));
+  assert(doble.tareas.some(t => t.id === 'seguridad_alergenos'), 'y la que gana es la de seguridad');
+
+  // 5 · Cada tarea sabe decir qué es, por qué está y cuánto dura, en los dos
+  //     idiomas. Una tarea sin motivo es una orden, no una recomendación.
+  for (const t of a.tareas) {
+    assert(t.es && t.en, `la tarea ${t.id} no tiene nombre en los dos idiomas`);
+    assert(t.motivo_es && t.motivo_en, `la tarea ${t.id} no explica por qué está ahí`);
+    assert(t.minutos > 0, `la tarea ${t.id} no dice cuánto dura`);
+    assert(typeof t.hecha === 'boolean', `la tarea ${t.id} no dice si está hecha`);
+  }
+});
+
+test('Plan de hoy: la seguridad va primero, y sólo cuando hay motivo', () => {
+  const { planDeHoy } = _planM;
+
+  // 6 · Por debajo del 90% en alérgenos, el simulacro es la tarea número uno.
+  //     Es lo único de esta aplicación que puede mandar a alguien al hospital.
+  const bajo = planDeHoy(_planBase({ alergenosMejor: 62, srsVencidos: 30, platosSinVer: 40 }));
+  assert(bajo.tareas[0].id === 'seguridad_alergenos',
+    'con la marca de alérgenos por debajo del 90%, la seguridad va primera, no ' + bajo.tareas[0].id);
+  assert(/62%/.test(bajo.tareas[0].motivo_es), 'el motivo tiene que decir la cifra: ' + bajo.tareas[0].motivo_es);
+
+  // 7 · Con la marca alta pero fallos esta semana, también salta.
+  const fallos = planDeHoy(_planBase({ alergenosMejor: 100, alergenosFallosRecientes: 3 }));
+  assert(fallos.tareas[0].id === 'seguridad_alergenos', 'los fallos recientes de alérgenos también disparan la seguridad');
+  assert(/3 fallos/.test(fallos.tareas[0].motivo_es), 'el motivo tiene que decir cuántos: ' + fallos.tareas[0].motivo_es);
+
+  // 8 · Y con todo en regla, NO aparece. Una alarma que suena siempre no es
+  //     una alarma.
+  const limpio = planDeHoy(_planBase({ srsVencidos: 5 }));
+  assert(!limpio.tareas.some(t => t.id === 'seguridad_alergenos'),
+    'sin motivo de seguridad no puede colarse el simulacro');
+  assert(limpio.tareas[0].id === 'repaso_srs', 'sin seguridad, manda lo vencido');
+});
+
+test('Plan de hoy: cada prioridad entra por su motivo y desaparece al cumplirse', () => {
+  const { planDeHoy } = _planM;
+
+  // 9 · Repaso vencido: entra con el número exacto y se va cuando llega a cero.
+  const venc = planDeHoy(_planBase({ srsVencidos: 12 }));
+  const r = venc.tareas.find(t => t.id === 'repaso_srs');
+  assert(r && /12 fichas vencidas/.test(r.motivo_es), 'el repaso tiene que decir cuántas fichas: ' + (r && r.motivo_es));
+  assert(!planDeHoy(_planBase({ srsVencidos: 0 })).tareas.some(t => t.id === 'repaso_srs'),
+    'sin fichas vencidas no puede pedirse repaso');
+
+  // 10 · Contenido sin ver, con el plato concreto ya elegido: el toque tiene
+  //      que abrir un plato, no un índice donde haya que buscarlo.
+  const nuevo = planDeHoy(_planBase({ platosSinVer: 7, platoSugerido: 31 }));
+  const c = nuevo.tareas.find(t => t.id === 'carta_sin_ver');
+  assert(c && c.ref === 31, 'la tarea de carta tiene que llevar el plato concreto');
+  assert(/7 platos/.test(c.motivo_es), 'y decir cuántos quedan: ' + c.motivo_es);
+
+  // 11 · Sin platos nuevos pero con platos a medias, cambia el motivo, no la
+  //      tarea: el recorrido sirve para las dos cosas.
+  const medias = planDeHoy(_planBase({ platosSinVer: 0, platosSinDominar: 4, platoSugerido: 8 }));
+  const m = medias.tareas.find(t => t.id === 'carta_sin_ver');
+  assert(m && /sin dominar/.test(m.motivo_es), 'con platos a medias el motivo tiene que ser otro: ' + (m && m.motivo_es));
+
+  // 12 · La competencia más floja, con su nota. Y se mide entre las SEIS del
+  //      vocabulario de la fase 1, no entre los juegos.
+  const flojo = planDeHoy(_planBase({
+    competencias: Object.assign(_planBase().competencias, { vinos: { aciertos: 5, total: 20 } })
+  }));
+  const v = flojo.tareas.find(t => t.competencia === 'vinos');
+  assert(v && v.id === 'comp_vinos', 'la competencia más floja tiene que entrar en el plan');
+  assert(/25%/.test(v.motivo_es), 'con su nota: ' + (v && v.motivo_es));
+
+  // 13 · Por encima del 90% en todo no hay debilidad que perseguir.
+  const bueno = planDeHoy(_planBase());
+  assert(!bueno.tareas.some(t => /^comp_/.test(t.id)),
+    'quien acierta más del 90% en todo no tiene competencia floja: ' + bueno.tareas.map(t => t.id).join(','));
+
+  // 14 · La racha va la última y sólo si hoy no se ha estudiado: cualquier
+  //      tarea de arriba ya la protege.
+  const racha = planDeHoy(_planBase({ racha: 9, estudiadoHoy: false, retoHecho: false }));
+  const rr = racha.tareas.find(t => t.id === 'racha_reto');
+  assert(rr && /9 días seguidos/.test(rr.motivo_es), 'la racha tiene que decir cuántos días: ' + (rr && rr.motivo_es));
+  assert(!planDeHoy(_planBase({ racha: 9, estudiadoHoy: true, retoHecho: false })).tareas.some(t => t.id === 'racha_reto'),
+    'quien ya ha estudiado hoy no necesita que le recuerden la racha');
+  assert(!planDeHoy(_planBase({ racha: 0, estudiadoHoy: false, retoHecho: false })).tareas.some(t => t.id === 'racha_reto'),
+    'sin racha que proteger, no hay nada que proteger');
+});
+
+test('Plan de hoy: sólo propone lo que este restaurante puede entrenar hoy', () => {
+  const { planDeHoy, PLAN_CATALOGO } = _planM;
+
+  // 15 · Un restaurante sin procedimientos de sala y sin bodega propia no
+  //      puede recibir un examen de sala ni un quiz de vinos, por flojo que
+  //      esté en ellos: son pantallas que allí no existen.
+  const sin = planDeHoy(_planBase({
+    disponibles: { alergenos: true, carta: true, protocolo: true, sala: false, vinos: false, servicio: false },
+    competencias: Object.assign(_planBase().competencias, {
+      sala: { aciertos: 0, total: 20 }, vinos: { aciertos: 0, total: 20 }, protocolo: { aciertos: 10, total: 20 }
+    })
+  }));
+  assert(!sin.tareas.some(t => t.competencia === 'sala' || t.competencia === 'vinos'),
+    'no se puede mandar a nadie a una pantalla que su restaurante no tiene: ' + sin.tareas.map(t => t.id).join(','));
+  assert(sin.tareas.some(t => t.id === 'comp_protocolo'),
+    'y sí a la más floja de las que sí existen');
+
+  // 16 · `servicio` es la sexta competencia y no tiene actividad viva: su
+  //      único tema, `cutlery`, está retirado. No puede proponerse nunca.
+  assert(!PLAN_CATALOGO.comp_servicio,
+    'no puede haber tarea de servicio mientras no exista una actividad que lo entrene');
+  const serv = planDeHoy(_planBase({
+    disponibles: { alergenos: true, carta: true, protocolo: true, sala: true, vinos: true, servicio: true },
+    competencias: Object.assign(_planBase().competencias, { servicio: { aciertos: 0, total: 40 } })
+  }));
+  assert(!serv.tareas.some(t => t.competencia === 'servicio'),
+    'aunque alguien marque servicio como disponible, no hay a dónde mandarlo');
+
+  // 17 · Los juegos no son formación y no entran en un plan de formación.
+  const ids = Object.keys(PLAN_CATALOGO);
+  for (const j of ['survivors', 'mr_shoesmith', 'duelo'])
+    assert(!ids.some(k => PLAN_CATALOGO[k].actividad === j), `el juego «${j}» no puede ser una tarea del plan`);
+});
+
+test('Plan de hoy: abrir una actividad no es completarla', () => {
+  const { planDeHoy } = _planM;
+
+  // 18 · Lo completado son los hechos de la fase 1, nada más. Un plan con
+  //      todo pendiente no tiene ni una tarea hecha, por mucho que se navegue.
+  const d = _planBase({ alergenosMejor: 40, srsVencidos: 12, platosSinVer: 9 });
+  const p = planDeHoy(d);
+  assert(p.completadas === 0, 'sin actividades registradas no hay nada hecho');
+  assert(p.tareas.every(t => t.hecha === false), 'ninguna tarea puede darse por hecha sola');
+
+  // 19 · Y se marca por ACTIVIDAD registrada, la misma que escribe la fase 1.
+  const hecho = planDeHoy(Object.assign({}, d, { hechas: ['simulacro_alergenos'] }));
+  assert(hecho.completadas === 1, 'la actividad registrada tiene que marcar su tarea');
+  assert(hecho.tareas.find(t => t.actividad === 'simulacro_alergenos').hecha === true,
+    'y tiene que ser la suya, no otra');
+  assert(hecho.tareas.filter(t => t.hecha).length === 1, 'y sólo la suya');
+
+  // 20 · Una actividad ajena al plan no marca nada.
+  const ajeno = planDeHoy(Object.assign({}, d, { hechas: ['mr_shoesmith', 'survivors'] }));
+  assert(ajeno.completadas === 0, 'jugar una partida no completa una tarea de formación');
+});
+
+test('Plan de hoy: el plan no cambia a mitad de día', () => {
+  const { planDeHoy } = _planM;
+
+  // 21 · Terminar el repaso deja de haber fichas vencidas —justo por haberlo
+  //      hecho—, y sin fijar el plan la tarea desaparecería y las otras se
+  //      recolocarían. El plan se fija y se mantiene: lo hecho se queda a la
+  //      vista, tachado, en su sitio.
+  const antes = planDeHoy(_planBase({ alergenosMejor: 40, srsVencidos: 12, platosSinVer: 9 }));
+  const fijadas = antes.tareas.map(t => t.id);
+  const despues = planDeHoy(_planBase({
+    alergenosMejor: 40, srsVencidos: 0, platosSinVer: 9,
+    hechas: ['repaso'], fijadas, fijadasRef: {}
+  }));
+  assert(JSON.stringify(despues.tareas.map(t => t.id)) === JSON.stringify(fijadas),
+    'el plan fijado no puede recolocarse al completar una tarea: ' + despues.tareas.map(t => t.id).join(','));
+  assert(despues.tareas.find(t => t.id === 'repaso_srs').hecha === true,
+    'la tarea completada se queda, marcada como hecha');
+
+  // 22 · Y un plan fijado nunca crece por encima del máximo.
+  const forzado = planDeHoy(_planBase({ fijadas: ['seguridad_alergenos', 'repaso_srs', 'carta_sin_ver', 'comp_vinos'] }));
+  assert(forzado.tareas.length === _planM.PLAN_MAX_TAREAS,
+    'ni fijando más de la cuenta puede el plan pasar del máximo');
+});
+
+test('Plan de hoy: lo que mande el supervisor irá por delante del motor', () => {
+  const { planDeHoy } = _planM;
+
+  // 23 · Hoy no hay fuente de asignaciones —son de la fase 4 y no existe ni
+  //      tabla ni pantalla—, así que la lista llega vacía y el plan lo decide
+  //      el motor. Esta prueba fija el ORDEN para cuando exista: lo que manda
+  //      una persona entra por delante incluso de la seguridad.
+  const sin = planDeHoy(_planBase({ alergenosMejor: 40 }));
+  assert(sin.tareas[0].id === 'seguridad_alergenos', 'sin asignaciones manda el motor');
+
+  const con = planDeHoy(_planBase({
+    alergenosMejor: 40,
+    asignaciones: [{ tarea: 'comp_protocolo', motivo_es: 'Te lo ha pedido Marta', motivo_en: 'Marta asked for it' }]
+  }));
+  assert(con.tareas[0].id === 'comp_protocolo', 'lo asignado va primero, delante del motor');
+  assert(con.tareas[0].motivo_es === 'Te lo ha pedido Marta', 'y con el motivo que dé quien lo asigna');
+  assert(con.tareas[1].id === 'seguridad_alergenos', 'y la seguridad justo detrás, no fuera');
+});
+
+test('Plan de hoy: nunca tres tareas de la misma competencia', () => {
+  const { planDeHoy } = _planM;
+
+  // 24 · Tres cosas de carta seguidas es una tarde de carta, no un plan. Se
+  //      deja sitio a algo distinto salvo que lo justifique la seguridad.
+  const p = planDeHoy(_planBase({
+    srsVencidos: 20, platosSinVer: 30, racha: 4, estudiadoHoy: false, retoHecho: false,
+    competencias: Object.assign(_planBase().competencias, { carta: { aciertos: 2, total: 20 } })
+  }));
+  const cuenta = {};
+  p.tareas.forEach(t => { cuenta[t.competencia] = (cuenta[t.competencia] || 0) + 1; });
+  for (const c of Object.keys(cuenta))
+    assert(cuenta[c] <= 2, `hay ${cuenta[c]} tareas de «${c}» en el mismo plan`);
+});
+
+test('Plan de hoy: la semilla es estable y reparte', () => {
+  // 25 · El plato que toca estudiar sale de fecha + nombre: el mismo empleado
+  //      ve el mismo todo el día, y dos compañeros no reciben el mismo.
+  const s = _planM._planSemilla;
+  assert(s('2026-09-12', 'Ana') === s('2026-09-12', 'Ana'), 'la semilla tiene que ser estable');
+  assert(s('2026-09-12', 'Ana') !== s('2026-09-12', 'Luis'), 'dos personas, dos semillas');
+  assert(s('2026-09-12', 'Ana') !== s('2026-09-13', 'Ana'), 'dos días, dos semillas');
+  const nombres = ['Ana', 'Luis', 'Marta', 'Iker', 'Nerea', 'Jon', 'Ane', 'Unai'];
+  const bolsa = new Set(nombres.map(n => s('2026-09-12', n) % 30));
+  assert(bolsa.size >= 6, `la semilla reparte mal: 8 personas caen en ${bolsa.size} platos`);
+});
+
+test('Plan de hoy: cada tarea del catálogo sabe a dónde va, y se pinta', () => {
+  // 26 · Una tarea sin acción es un toque sin efecto — el peor fallo posible
+  //      en una pantalla cuyo único propósito es que se toque.
+  const i0 = html.indexOf('const PLAN_ACCIONES = {');
+  const i1 = html.indexOf('function _planIr(');
+  assert(i0 !== -1 && i1 > i0, 'no encuentro las acciones del plan');
+  const acciones = html.slice(i0, i1);
+  for (const id of Object.keys(_planM.PLAN_CATALOGO))
+    assert(new RegExp('\\b' + id + ':\\s*function').test(acciones), `la tarea «${id}» no tiene a dónde ir`);
+
+  // 27 · Y la tarjeta se EJECUTA, no se lee: con tres tareas y una hecha,
+  //      tiene que salir su nombre, su motivo, su duración y el progreso.
+  const j0 = html.indexOf('function _hoyPlanHTML(');
+  const j1 = html.indexOf('function renderDashboard(');
+  assert(j0 !== -1 && j1 > j0, 'no encuentro la tarjeta del plan');
+  const plan = {
+    tareas: [
+      { id: 'seguridad_alergenos', actividad: 'simulacro_alergenos', competencia: 'alergenos', minutos: 5,
+        es: 'Simulacro de alérgenos', en: 'Allergen drill', motivo_es: 'Tu mejor marca es 62%', motivo_en: 'Your best is 62%', hecha: true, ref: null },
+      { id: 'repaso_srs', actividad: 'repaso', competencia: 'carta', minutos: 4,
+        es: 'Repaso inteligente', en: 'Smart review', motivo_es: '12 fichas vencidas', motivo_en: '12 cards overdue', hecha: false, ref: null },
+      { id: 'carta_sin_ver', actividad: 'recorrido', competencia: 'carta', minutos: 4,
+        es: 'Recorrido guiado', en: 'Guided journey', motivo_es: '7 platos sin estudiar', motivo_en: '7 dishes unstudied', hecha: false, ref: 31 }
+    ], minutos: 13, completadas: 1
+  };
+  const monta = (p, esAdmin) => new Function('planDeHoyDe', 'escapeHTML', '_esAdmin', // eslint-disable-line no-new-func
+    html.slice(j0, j1) + '; return _hoyPlanHTML;')(() => p, s => String(s), () => !!esAdmin);
+  const F = monta(plan, false);
+  const out = F({ name: 'Ana' }, false);
+  assert(/Simulacro de alérgenos/.test(out), 'la tarjeta no pinta el nombre de la tarea');
+  // El motivo, VISIBLE. Buscarlo por texto a secas no bastaba: también va en
+  // la etiqueta de accesibilidad, así que borrar la línea de la tarjeta pasaba
+  // en verde. Se cuentan los huecos de motivo, uno por tarea.
+  assert((out.match(/class="plan-tarea-m">/g) || []).length === 3,
+    'cada tarea tiene que decir a la vista por qué está ahí');
+  assert(/class="plan-tarea-m">12 fichas vencidas</.test(out), 'y el motivo tiene que ser el suyo');
+  assert(/4 min/.test(out) && /5 min/.test(out), 'la tarjeta no pinta la duración');
+  assert(/plan-tarea hecha/.test(out), 'la tarjeta no marca lo que ya está hecho');
+  assert((out.match(/_planIr\(/g) || []).length === 3, 'las tres tareas tienen que ser tocables');
+  assert(/_planIr\('carta_sin_ver',31\)/.test(out), 'la tarea de carta tiene que llevar su plato');
+  assert(/<b>1<\/b><span>\/3<\/span>/.test(out), 'la tarjeta no pinta el progreso de hoy');
+  assert(/2 tareas · unos 8 min/.test(out), 'la tarjeta no pinta lo que queda: ' + (out.match(/plan-hoy-resumen">[^<]*/) || [''])[0]);
+
+  // 28 · Y en inglés, lo mismo — el equipo lo usa en los dos idiomas.
+  const outEn = F({ name: 'Ana' }, true);
+  assert(/Allergen drill/.test(outEn) && /12 cards overdue/.test(outEn), 'la tarjeta no está traducida');
+
+  // 29 · Sin tareas, la tarjeta no desaparece: dice que está todo al día.
+  const vacio = monta({ tareas: [], minutos: 0, completadas: 0 }, false)({ name: 'Ana' }, false);
+  assert(/plan-hoy-vacio/.test(vacio) && /Todo al día/.test(vacio), 'sin tareas hay que decirlo, no dejar un hueco');
+
+  // 30 · La cuenta de administración no tiene plan: no deja rastro al
+  //      registrar, así que sus tareas no se marcarían nunca. Un plan que no
+  //      se puede terminar es peor que ninguno.
+  assert(monta(plan, true)({ name: 'Administrador' }, false) === '',
+    'la cuenta de administración no puede tener un plan que nunca se completa');
+});
+
+test('Plan de hoy: está en el inicio, y con estilo propio de toque cómodo', () => {
+  // 30 · La tarjeta tiene que estar PINTADA en el inicio. El motor puede ser
+  //      perfecto y no verse: es exactamente lo que pasó con el fallo de `dd`.
+  assert((html.match(/\$\{_hoyPlanHTML\(emp,_en\)\}/g) || []).length === 1,
+    'el plan tiene que pintarse en el inicio, una sola vez');
+  const i = html.indexOf('${_hoyPlanHTML(emp,_en)}');
+  const j = html.indexOf('${_pddHeroHTML(emp,_en)}');
+  assert(i > 0 && j > i, 'el plan va lo primero de la sección Hoy');
+
+  // 31 · Y cada fila tiene que poder tocarse con el pulgar en un móvil.
+  const css = read('styles.css');
+  const fila = (css.match(/\.plan-tarea\{[^}]*\}/) || [''])[0];
+  const alto = +(fila.match(/min-height:(\d+)px/) || [0, 0])[1];
+  assert(alto >= 44, `las filas del plan miden ${alto}px de alto; el mínimo para el pulgar son 44`);
+});
+
 // ─── 7. No leftover git conflict markers ────────────────────────
 console.log('\nHygiene');
 test('no git conflict markers in tracked source', () => {
