@@ -52,7 +52,7 @@
 <meta property="og:description" content="Formación de equipos de sala: carta, alérgenos, vinos, exámenes y juegos de repaso.">
 <meta property="og:url" content="https://meseo.es/">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"Meseo","url":"https://meseo.es/"}</script>
-<meta name="app-version" content="7.441">
+<meta name="app-version" content="7.448">
 <meta name="app-build" content="May 2026">
 <meta name="theme-color" content="#1c2a22">
 <!-- ═══ PWA ═══ -->
@@ -331,8 +331,8 @@
     <div class="header-user">
       <div class="header-avatar" id="headerAvatar"></div>
       <span class="header-uname" id="headerUsername"></span>
-      <button id="pushEnableBtn" onclick="enablePushManual()" aria-label="Activar notificaciones push" role="button" style="display:none;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.25);cursor:pointer;padding:6px 10px;border-radius:6px;font-family:'DM Mono',monospace;font-size:.6rem;color:rgba(255,255,255,.85);letter-spacing:.03em;min-height:32px;min-width:32px" title="Activar notificaciones push">◎</button>
-      <button id="notifBell" onclick="renderNotifPanel()" aria-label="Notificaciones" role="button" style="display:none;background:transparent;border:none;cursor:pointer;padding:8px;position:relative;font-size:1.2rem;line-height:1;min-height:40px;min-width:40px">
+      <button id="pushEnableBtn" onclick="enablePushManual()" aria-label="Activar notificaciones push" role="button" style="display:none;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.25);cursor:pointer;padding:6px 10px;border-radius:6px;font-family:'DM Mono',monospace;font-size:.6rem;color:rgba(255,255,255,.85);letter-spacing:.03em;min-height:44px;min-width:44px" title="Activar notificaciones push">◎</button>
+      <button id="notifBell" onclick="renderNotifPanel()" aria-label="Notificaciones" role="button" style="display:none;background:transparent;border:none;cursor:pointer;padding:8px;position:relative;font-size:1.2rem;line-height:1;min-height:44px;min-width:44px">
         ◉<span id="notifBadge" style="position:absolute;top:-2px;right:-2px;background:var(--rose);color:#fff;border-radius:50%;width:18px;height:18px;font-size:.55rem;font-family:Jost,sans-serif;font-weight:700;display:none;align-items:center;justify-content:center"></span>
       </button>
       <!-- Aviso SUTIL de versión nueva (el push masivo molestaba): solo un
@@ -340,14 +340,14 @@
            no saturar la cabecera. Solo aparece cuando hay build publicada más
            nueva que la instalada; el número va en el tooltip y en la
            confirmación. Tocarlo actualiza en limpio. -->
-      <button id="updChip" onclick="_updGo()" aria-label="Nueva versión disponible — actualizar" title="Nueva versión disponible — toca para actualizar" style="display:none;align-items:center;justify-content:center;background:rgba(28,42,34,.55);border:1px solid rgba(228,190,104,.5);cursor:pointer;padding:0;border-radius:50%;min-height:32px;min-width:32px;margin-right:.25rem"><span class="upd-dot" aria-hidden="true"></span></button>
-      <button id="helpBtn" onclick="showOnboarding()" aria-label="Ayuda — repetir tutorial" title="Ver tutorial / Show tutorial" style="background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.25);cursor:pointer;padding:6px 10px;border-radius:6px;font-family:'DM Mono',monospace;font-size:.7rem;color:rgba(255,255,255,.9);min-height:32px;min-width:32px;margin-right:.25rem">?</button>
+      <button id="updChip" onclick="_updGo()" aria-label="Nueva versión disponible — actualizar" title="Nueva versión disponible — toca para actualizar" style="display:none;align-items:center;justify-content:center;background:rgba(28,42,34,.55);border:1px solid rgba(228,190,104,.5);cursor:pointer;padding:0;border-radius:50%;min-height:44px;min-width:44px;margin-right:.25rem"><span class="upd-dot" aria-hidden="true"></span></button>
+      <button id="helpBtn" onclick="showOnboarding()" aria-label="Ayuda — repetir tutorial" title="Ver tutorial / Show tutorial" style="background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.25);cursor:pointer;padding:6px 10px;border-radius:6px;font-family:'DM Mono',monospace;font-size:.7rem;color:rgba(255,255,255,.9);min-height:44px;min-width:44px;flex:none;margin-right:.25rem">?</button>
       <!-- Language toggle in header -->
       <div style="display:flex;gap:.35rem;margin-right:.25rem">
-        <button id="appLangEs" onclick="setLangApp('es')" style="background:rgba(255,255,255,.15);border:none;cursor:pointer;padding:6px 10px;border-radius:6px;font-family:'DM Mono',monospace;font-size:.6rem;color:rgba(255,255,255,.9);letter-spacing:.05em;min-height:32px">ES</button>
-        <button id="appLangEn" onclick="setLangApp('en')" style="background:transparent;border:none;cursor:pointer;padding:6px 10px;border-radius:6px;font-family:'DM Mono',monospace;font-size:.6rem;color:rgba(255,255,255,.7);letter-spacing:.05em;min-height:32px">EN</button>
+        <button id="appLangEs" onclick="setLangApp('es')" style="background:rgba(255,255,255,.15);border:none;cursor:pointer;padding:6px 10px;border-radius:6px;font-family:'DM Mono',monospace;font-size:.6rem;color:rgba(255,255,255,.9);letter-spacing:.05em;min-height:44px;min-width:44px">ES</button>
+        <button id="appLangEn" onclick="setLangApp('en')" style="background:transparent;border:none;cursor:pointer;padding:6px 10px;border-radius:6px;font-family:'DM Mono',monospace;font-size:.6rem;color:rgba(255,255,255,.7);letter-spacing:.05em;min-height:44px;min-width:44px">EN</button>
       </div>
-      <button id="ajustesBtn" onclick="openAjustes()" aria-label="Ajustes" title="Ajustes" style="background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.25);cursor:pointer;padding:6px 10px;border-radius:6px;font-size:.9rem;color:rgba(255,255,255,.9);min-height:32px;min-width:32px;margin-right:.25rem">⚙</button>
+      <button id="ajustesBtn" onclick="openAjustes()" aria-label="Ajustes" title="Ajustes" style="background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.25);cursor:pointer;padding:6px 10px;border-radius:6px;font-size:.9rem;color:rgba(255,255,255,.9);min-height:44px;min-width:44px;margin-right:.25rem">⚙</button>
       <button class="btn-logout" id="logoutBtn" onclick="logout()" aria-label="Cerrar sesión">Salir</button>
     </div>
   </header>
@@ -382,6 +382,8 @@
     <button class="nav-btn" id="navVinos" onclick="showTab('vinos')"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2h8l-2 9H10L8 2z"/><path d="M12 11v7"/><path d="M8 18h8"/></svg> Vinos</button>
     <!-- Sale sólo si el restaurante tiene data/quesos-<id>.json -->
     <button class="nav-btn" id="navQuesos" onclick="showTab('quesos')" style="display:none"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17V9l9-4 9 4v8a1 1 0 01-1 1H4a1 1 0 01-1-1z"/><circle cx="8" cy="13" r="1.1"/><circle cx="12.5" cy="15" r="1.1"/><circle cx="16" cy="12" r="1.1"/></svg><span data-i18n="nav.quesos">Quesos</span></button>
+    <!-- Sale sólo si el restaurante tiene data/procedimientos-<id>.json -->
+    <button class="nav-btn" id="navSala" onclick="showTab('sala')" style="display:none"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5a2 2 0 012-2h11a1 1 0 011 1v15a1 1 0 01-1 1H6a2 2 0 01-2-2V5z"/><path d="M4 17.5A2 2 0 016 16h12"/><path d="M8 7h7M8 10h5"/></svg><span data-i18n="nav.sala">Sala</span></button>
     <div class="nav-group-lbl" id="navGrpEquipo" aria-hidden="true">Equipo</div>
     <button class="nav-btn" id="navTxoko" onclick="showTab('txoko')"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 12h4l2 8 4-16 2 8h4"/></svg> Juegos</button>
     <button class="nav-btn" id="navRanking" onclick="showTab('ranking')"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg> Ranking</button>
@@ -399,7 +401,7 @@
        únicamente cuando la sección activa es Aprender o una subpestaña suya. -->
   <div id="shiftBar" role="tablist" aria-label="Turno de estudio" style="display:none;gap:.3rem;width:calc(100% - 2rem);margin:.55rem 1rem .1rem;padding:.28rem;background:rgba(28,42,34,.05);border:1px solid rgba(196,154,60,.2);border-radius:12px"></div>
 
-  <button id="globalSearchPill" onclick="openGlobalSearch()" aria-label="Buscar plato, vino o alérgeno" style="display:flex;align-items:center;gap:.55rem;width:calc(100% - 2rem);margin:.45rem 1rem .1rem;padding:.55rem .9rem;background:rgba(255,255,255,.55);border:1px solid rgba(196,154,60,.3);border-radius:12px;cursor:pointer;min-height:40px;text-align:left;box-shadow:0 1px 3px rgba(28,42,34,.05)">
+  <button id="globalSearchPill" onclick="openGlobalSearch()" aria-label="Buscar plato, vino o alérgeno" style="display:flex;align-items:center;gap:.55rem;width:calc(100% - 2rem);margin:.45rem 1rem .1rem;padding:.55rem .9rem;background:rgba(255,255,255,.55);border:1px solid rgba(196,154,60,.3);border-radius:12px;cursor:pointer;min-height:44px;text-align:left;box-shadow:0 1px 3px rgba(28,42,34,.05)">
     <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="rgba(164,122,44,.85)" stroke-width="1.8" stroke-linecap="round" style="flex-shrink:0"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
     <span id="globalSearchPillLbl" style="font-family:'Quicksand',sans-serif;font-size:.78rem;color:rgba(74,64,42,.6);letter-spacing:.01em">Buscar plato, vino, alérgeno…</span>
   </button>
@@ -417,6 +419,14 @@
     <div class="gs-results" id="gsResults" role="listbox" aria-label="Resultados"></div>
   </div>
 
+  <!-- Un encabezado por pantalla. La auditoría midió que NINGUNA de las quince
+       tenía uno: quien navega con lector de pantalla no podía saltar de sección
+       y tenía que oírse la pantalla entera cada vez.
+       Va aquí, en el armazón, y no repartido por los quince renderizadores: así
+       hay exactamente uno, siempre, sin depender de que cada pantalla se acuerde.
+       No se pinta —los títulos que ya se ven se quedan como están, que era la
+       condición— pero sí se anuncia y sirve de ancla de navegación. -->
+  <h1 id="tituloPantalla" class="solo-lectores"></h1>
   <main class="app-content" id="appContent" aria-live="polite"></main>
   <div class="app-credit" style="color:rgba(28,42,34,.4)">© 2026 Meseo® · Marca registrada</div>
   <button class="sound-toggle" id="soundToggle" onclick="toggleSound()" title="Sonido" aria-label="Alternar sonido" role="button">◉</button>
@@ -1728,6 +1738,14 @@ function _cartaAplicar(c){
   Object.assign(DISH_COMPONENTS, c.DISH_COMPONENTS || {});
   for(const k of Object.keys(DISH_ACTIONS)) delete DISH_ACTIONS[k];
   Object.assign(DISH_ACTIONS, c.DISH_ACTIONS || {});
+  // El turno (almuerzo/cena) es de la carta, no de la app. Estaba en una tabla
+  // fija de Txoko indexada por id de plato, y los ids de otra carta chocan con
+  // los suyos: medido con la de M.B., 29 de sus 30 platos heredaban el turno
+  // del plato de Txoko con el mismo número, y poner «Almuerzo» le dejaba 7 de
+  // 30 elegidos por la carta del vecino. Una carta sin turnos deja la tabla
+  // vacía, y sin tabla todo es 'ambos': no se esconde nada.
+  for(const k of Object.keys(DISH_SERVICE)) delete DISH_SERVICE[k];
+  Object.assign(DISH_SERVICE, c.DISH_SERVICE || {});
   return true;
 }
 
@@ -1739,6 +1757,7 @@ function _cartaVaciar(){
   DISHES_EN.length = 0;
   for(const k of Object.keys(DISH_COMPONENTS)) delete DISH_COMPONENTS[k];
   for(const k of Object.keys(DISH_ACTIONS)) delete DISH_ACTIONS[k];
+  for(const k of Object.keys(DISH_SERVICE)) delete DISH_SERVICE[k];
 }
 
 // Devuelve false si NO se pudo dejar puesta la carta del restaurante que toca.
@@ -1805,10 +1824,16 @@ async function cargarCarta(venue){
 // 34 almuerzo · 40 cena · 29 ambos. Solo se aprieta 'ambos'→turno; nunca se
 // invierte a↔c.
 const DISH_SERVICE = {124:'ambos',125:'ambos',126:'ambos',127:'ambos',128:'ambos',2:'c',3:'c',4:'c',5:'c',6:'c',7:'c',8:'c',9:'c',10:'c',11:'ambos',12:'c',13:'ambos',14:'c',15:'ambos',16:'ambos',17:'c',18:'c',19:'c',20:'c',21:'c',22:'c',23:'c',24:'c',25:'c',26:'c',27:'ambos',28:'c',29:'c',30:'ambos',32:'ambos',33:'c',34:'c',35:'c',36:'ambos',38:'c',39:'ambos',40:'c',41:'c',42:'c',43:'c',44:'c',45:'c',46:'c',48:'c',50:'ambos',52:'c',53:'c',129:'c',54:'c',57:'ambos',66:'a',67:'a',68:'a',69:'a',71:'a',72:'a',73:'a',74:'a',75:'a',77:'a',78:'a',80:'a',81:'a',82:'a',84:'a',86:'a',87:'a',88:'a',89:'a',90:'a',91:'a',92:'a',93:'a',94:'a',95:'a',96:'a',97:'a',100:'a',102:'a',104:'a',105:'a',110:'ambos',111:'ambos',112:'c',113:'ambos',114:'ambos',115:'ambos',116:'ambos',117:'ambos',120:'a',121:'a',123:'ambos'};
+// La tabla de turnos viaja con la carta de Txoko, como sus platos.
+_CARTA_BASE.DISH_SERVICE = Object.assign({}, DISH_SERVICE);
 // Turno de estudio activo: 'a' | 'c' | 'todo'. Persistente en localStorage.
 let _studyShift = 'todo';
 try { const _ss = localStorage.getItem('txoko_shift'); if(_ss === 'a' || _ss === 'c' || _ss === 'todo') _studyShift = _ss; } catch(_){}
 function _shiftOf(d){ return (typeof DISH_SERVICE !== 'undefined' && DISH_SERVICE[d && d.id]) || 'ambos'; }
+// ¿Esta carta reparte sus platos por turno? La de M.B. es un menú degustación:
+// no hay almuerzo ni cena, así que el selector no tiene nada que elegir y no
+// se enseña. Un selector que no cambia nada es peor que no tenerlo.
+function _hayTurnos(){ return typeof DISH_SERVICE !== 'undefined' && Object.keys(DISH_SERVICE).length > 0; }
 function _shiftDishOk(d){
   if(_studyShift === 'todo') return true;
   const s = _shiftOf(d);
@@ -1884,7 +1909,7 @@ const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><p
 const SRC = 'src';
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='7.441';  // sincronizada con sw.js VERSION (guard de CI)
+const APP_VERSION='7.448';  // sincronizada con sw.js VERSION (guard de CI)
 const APP_BUILD='Jul 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;
@@ -2110,6 +2135,493 @@ function _wineImgHtml(wine, size){
       onload="_wineImgCache[${wine.id}]=true;this.nextElementSibling.style.display='none'">
     ${placeholder}
   </div>`;
+}
+
+// ═══ REGISTRO DE ACTIVIDAD ════════════════════════════════════════════════
+// FASE 1 del rediseño. Medido en septiembre de 2026: de las diecisiete
+// actividades, sólo DOS dejaban rastro en la nube —el Examen IA y el Simulacro
+// de alérgenos—. Las otras quince se guardaban sólo en el móvil, así que el
+// panel del supervisor enseñaba el 12% del trabajo de su equipo.
+//
+// Aquí escriben TODAS, por una sola puerta y con el mismo vocabulario. La
+// tabla `scores` no se toca: sigue recibiendo lo de siempre y el panel actual
+// sigue leyéndola. Las dos conviven hasta que el panel nuevo esté probado.
+//
+// El vocabulario está repetido a propósito aquí y en la base de datos: la base
+// rechaza lo que no conoce (es la red de seguridad) y el cliente avisa por
+// consola en desarrollo (es lo que lo caza al escribirlo). Justo esa
+// disciplina es la que faltaba, y por eso `alergenos` y `allergens` han
+// convivido seis meses siendo lo mismo.
+const COMPETENCIAS = ['alergenos','carta','vinos','protocolo','sala','servicio'];
+const TIPOS_ACTIVIDAD = ['evaluacion','practica','juego'];
+// De los nueve nombres de tema que hay hoy en `scores`, a las seis competencias.
+const _COMPETENCIA_DE_TEMA = {
+  mixed:'carta', ingredients:'carta', history:'carta', dishes:'carta',
+  alergenos:'alergenos', allergens:'alergenos',      // el duplicado por idioma
+  protocolo:'protocolo', lqa:'protocolo',
+  cutlery:'servicio', sala:'sala', vinos:'vinos', wines:'vinos'
+};
+function competenciaDeTema(tema){
+  return _COMPETENCIA_DE_TEMA[String(tema||'').toLowerCase()] || 'carta';
+}
+
+async function registrarActividad(a){
+  // La cuenta de administración no deja rastro, igual que en `scores`: está
+  // para revisar contenido, no para aparecer en las métricas de nadie.
+  if(_esAdmin(currentUser)) return false;
+  if(!currentUser) return false;
+  const kind = a.kind;
+  if(TIPOS_ACTIVIDAD.indexOf(kind) < 0){ dbgw('[actividad] tipo desconocido:', kind); return false; }
+  const competency = kind === 'juego' ? null : a.competency;
+  if(kind !== 'juego' && COMPETENCIAS.indexOf(competency) < 0){
+    dbgw('[actividad] competencia fuera del vocabulario:', competency, 'en', a.activity);
+    return false;
+  }
+  // Un total de cero rompe cualquier media: se descarta en la puerta, igual
+  // que lo hace la propia tabla.
+  const total = (a.total == null) ? null : Math.round(a.total);
+  if(total != null && total <= 0) return false;
+  const score = (a.score == null) ? null : Math.max(0, Math.min(Math.round(a.score), total == null ? Math.round(a.score) : total));
+  // El plan de hoy (fase 2) necesita saber qué se ha COMPLETADO, y necesita
+  // saberlo sin red. Se anota ANTES de salir a internet a propósito: la
+  // actividad ha ocurrido igual si el envío falla, y el móvil de un camarero en
+  // mitad de un servicio se queda sin cobertura a menudo.
+  _anotarEnDiario(a.activity, competency, kind, score, total, a.seconds);
+  try{
+    const r = await fetch(`${SUPA_URL}/rest/v1/actividad`, {
+      method: 'POST',
+      headers: {
+        'apikey': SUPA_KEY,
+        'Authorization': `Bearer ${SUPA_KEY}`,
+        'Content-Type': 'application/json',
+        'Prefer': 'return=minimal'
+      },
+      body: JSON.stringify(_vSello({
+        employee: currentUser,
+        activity: a.activity,
+        competency,
+        kind,
+        score,
+        total,
+        seconds: (a.seconds == null) ? null : Math.max(0, Math.round(a.seconds)),
+        meta: a.meta || null
+      }))
+    });
+    return !!(r && r.ok);
+  }catch(e){
+    // Silencio a propósito: lo local ya está guardado y el empleado no puede
+    // hacer nada con este error. Se reintentará cuando vuelva la conexión.
+    return false;
+  }
+}
+
+// ═══ EL DIARIO ════════════════════════════════════════════════════════════
+// La misma señal que va a la nube, guardada también en el móvil. Es lo único
+// que permite decir «esto ya lo has hecho hoy» sin preguntárselo al servidor.
+//
+// Catorce días y se poda. El plan mira como mucho siete días atrás; guardar un
+// año serían miles de líneas en el mismo `localStorage` donde viven las fichas
+// de todo el equipo, y el histórico completo ya está en la nube.
+const DIARIO_DIAS = 14;
+function _diaMenos(dia, n){
+  const d = new Date(dia + 'T12:00:00Z');
+  d.setUTCDate(d.getUTCDate() - n);
+  return d.toISOString().slice(0, 10);
+}
+function _anotarEnDiario(activity, competency, kind, score, total, seconds){
+  try{
+    if(!currentUser) return;
+    const emp = getEmp(currentUser);
+    if(!emp) return;
+    const hoy = todayStr();
+    const dia = emp.diario = emp.diario || {};
+    (dia[hoy] = dia[hoy] || []).push({
+      a: activity, c: competency, k: kind,
+      s: (score == null ? null : score), t: (total == null ? null : total),
+      seg: (seconds == null ? null : Math.max(0, Math.round(seconds))),
+      ts: Date.now()
+    });
+    const corte = _diaMenos(hoy, DIARIO_DIAS);
+    for(const k of Object.keys(dia)) if(k < corte) delete dia[k];
+    saveDB();
+  }catch(e){ dbgw('[diario] no se pudo anotar:', e && e.message); }
+}
+
+// ═══ EL PLAN DE HOY ═══════════════════════════════════════════════════════
+// FASE 2 del rediseño. La aplicación tenía dieciocho sitios a los que ir y
+// ninguna respuesta a «¿qué hago hoy?». Esto la da: como mucho TRES tareas,
+// entre ocho y doce minutos en total, y cada una con el motivo exacto por el
+// que está ahí.
+//
+// El motor es determinista a propósito —ni aprendizaje automático, ni azar—:
+// si a alguien le sale un plan raro se puede señalar la regla que lo puso ahí.
+// Y `planDeHoy(datos)` es puro: no mira el DOM, no lee variables globales y no
+// escribe nada. Las pruebas lo ejecutan con datos inventados y comprueban el
+// plan que sale, sin navegador de por medio.
+//
+// El orden de prioridad, de arriba abajo, y por qué:
+//   1 · lo que ha mandado el supervisor  — HOY NO HAY FUENTE (ver abajo)
+//   2 · seguridad: alérgenos             — es lo único que puede hacer daño
+//   3 · repaso vencido                   — lo aprendido que se está perdiendo
+//   4 · contenido sin ver                — lo que aún no se sabe
+//   5 · la competencia más floja         — donde menos se acierta
+//   6 · proteger la racha                — lo barato, sólo si no queda otra
+const PLAN_MAX_TAREAS = 3;
+const PLAN_MINUTOS_MAX = 12;
+const PLAN_ALERGENOS_MINIMO = 90;   // el listón de seguridad, en %
+const PLAN_COMPETENCIA_MINIMO = 90; // por encima de esto no es una debilidad
+const PLAN_MUESTRA_MINIMA = 5;      // menos de 5 respuestas no es una nota
+
+// Cada tarea posible, con la actividad de fase 1 que la da por hecha.
+// `minutos` no es un adorno: es preguntas × lo que tarda quien se la sabe,
+// redondeado hacia arriba, y es lo que mantiene el plan dentro de la franja.
+const PLAN_CATALOGO = {
+  seguridad_alergenos: {actividad:'simulacro_alergenos', competencia:'alergenos', minutos:5, seguridad:true, es:'Simulacro de alérgenos', en:'Allergen drill'},
+  repaso_srs:          {actividad:'repaso',              competencia:'carta',     minutos:4, es:'Repaso inteligente', en:'Smart review'},
+  carta_sin_ver:       {actividad:'recorrido',           competencia:'carta',     minutos:4, es:'Recorrido guiado',   en:'Guided journey'},
+  comp_alergenos:      {actividad:'simulacro_alergenos', competencia:'alergenos', minutos:5, es:'Simulacro de alérgenos', en:'Allergen drill'},
+  comp_carta:          {actividad:'examen',              competencia:'carta',     minutos:5, es:'Examen de carta',    en:'Menu exam'},
+  comp_vinos:          {actividad:'quiz_vinos',          competencia:'vinos',     minutos:3, es:'Quiz de vinos',      en:'Wine quiz'},
+  comp_protocolo:      {actividad:'examen_lqa',          competencia:'protocolo', minutos:5, es:'Examen LQA',         en:'LQA exam'},
+  comp_sala:           {actividad:'examen_sala',         competencia:'sala',      minutos:4, es:'Examen de sala',     en:'Floor exam'},
+  racha_reto:          {actividad:'reto_dia',            competencia:'carta',     minutos:1, es:'Reto del día',       en:'Daily challenge'}
+};
+// `servicio` es la sexta competencia y NO tiene entrada aquí. No es un olvido:
+// su único tema, `cutlery`, está retirado desde hace meses (queda en datos
+// viejos y el propio código lo ignora al calcular medias). Mientras no exista
+// una actividad viva que entrene el servicio, el motor no puede mandar a nadie
+// a hacer nada sobre él, y ponerlo sería mandarlo a una pantalla que no existe.
+
+function _planSemilla(dia, empleado){
+  const s = String(dia || '') + '|' + String(empleado || '');
+  let h = 2166136261;
+  for(let i = 0; i < s.length; i++){ h ^= s.charCodeAt(i); h = Math.imul(h, 16777619); }
+  return (h >>> 0);
+}
+
+// La competencia con peor nota, de entre las que este restaurante puede
+// entrenar hoy. Con menos de cinco respuestas no hay nota que comparar: en ese
+// caso gana la que menos se haya tocado, que es un hueco igualmente.
+function _planCompetenciaFloja(d){
+  const comp = d.competencias || {};
+  const disp = d.disponibles || {};
+  const vivas = COMPETENCIAS.filter(c => disp[c] && PLAN_CATALOGO['comp_' + c]);
+  let mejor = null;
+  for(const c of vivas){
+    const x = comp[c] || {aciertos:0, total:0};
+    if(!(x.total >= PLAN_MUESTRA_MINIMA)) continue;
+    const pct = Math.round((x.aciertos / x.total) * 100);
+    if(!mejor || pct < mejor.pct) mejor = {competencia:c, pct, total:x.total, conNota:true};
+  }
+  if(mejor) return mejor;
+  for(const c of vivas){
+    const x = comp[c] || {aciertos:0, total:0};
+    if(!mejor || (x.total||0) < mejor.total) mejor = {competencia:c, pct:null, total:(x.total||0), conNota:false};
+  }
+  return mejor;
+}
+
+function planDeHoy(datos){
+  const d = datos || {};
+  const hechas = d.hechas || [];
+  const cand = [];
+  const usadas = new Set();
+  function proponer(id, motivo_es, motivo_en, extra){
+    const base = PLAN_CATALOGO[id];
+    if(!base) return;
+    // Nunca dos veces lo mismo en el mismo plan: ni la misma tarea, ni dos
+    // tareas distintas que acaben abriendo la misma actividad.
+    if(usadas.has(id) || usadas.has('act:' + base.actividad)) return;
+    usadas.add(id); usadas.add('act:' + base.actividad);
+    cand.push(Object.assign({}, base, {id, motivo_es, motivo_en}, extra || {}));
+  }
+
+  // 1 · Lo que haya mandado el supervisor.
+  //
+  //     HOY NO HAY FUENTE. Las asignaciones son fase 4: no existe tabla donde
+  //     se guarden ni pantalla donde se creen, así que esta lista llega
+  //     siempre vacía y la rama no se dispara nunca. Está escrita —y probada—
+  //     porque el orden importa: el día que existan, lo que manda una persona
+  //     tiene que entrar por delante de lo que decide el motor, no detrás.
+  //     Inventar ahora un origen falso sería peor que no tener ninguno.
+  for(const as of (d.asignaciones || [])){
+    if(!as || !PLAN_CATALOGO[as.tarea]) continue;
+    proponer(as.tarea,
+      as.motivo_es || 'Te lo ha asignado tu responsable',
+      as.motivo_en || 'Assigned by your manager',
+      {asignada:true, ref:as.ref});
+  }
+
+  // 2 · Seguridad. Es lo único de esta aplicación que puede mandar a alguien
+  //     al hospital, así que va por delante de todo lo que decide el motor.
+  const ab = Math.round(Number(d.alergenosMejor || 0));
+  const alFallos = Math.round(Number(d.alergenosFallosRecientes || 0));
+  if(ab < PLAN_ALERGENOS_MINIMO || alFallos > 0){
+    let m_es, m_en;
+    if(ab <= 0){
+      m_es = 'Aún no has hecho el simulacro de alérgenos';
+      m_en = 'You have not done the allergen drill yet';
+    } else if(ab < PLAN_ALERGENOS_MINIMO){
+      m_es = `Tu mejor marca en alérgenos es ${ab}%, por debajo del ${PLAN_ALERGENOS_MINIMO}% que se exige`;
+      m_en = `Your best allergen score is ${ab}%, below the required ${PLAN_ALERGENOS_MINIMO}%`;
+    } else {
+      m_es = `${alFallos} ${alFallos === 1 ? 'fallo' : 'fallos'} de alérgenos esta semana`;
+      m_en = `${alFallos} allergen ${alFallos === 1 ? 'miss' : 'misses'} this week`;
+    }
+    proponer('seguridad_alergenos', m_es, m_en);
+  }
+
+  // 3 · Repaso vencido. Lo que ya se aprendió y se está olvidando cuesta
+  //     mucho menos de recuperar que de aprender otra vez.
+  const venc = Math.round(Number(d.srsVencidos || 0));
+  if(venc > 0){
+    proponer('repaso_srs',
+      `${venc} ${venc === 1 ? 'ficha vencida' : 'fichas vencidas'} de repaso`,
+      `${venc} review ${venc === 1 ? 'card' : 'cards'} overdue`);
+  }
+
+  // 4 · Contenido sin ver, y si no queda ninguno, visto pero sin dominar.
+  const sinVer = Math.round(Number(d.platosSinVer || 0));
+  const sinDominar = Math.round(Number(d.platosSinDominar || 0));
+  if(sinVer > 0){
+    proponer('carta_sin_ver',
+      `${sinVer} ${sinVer === 1 ? 'plato que todavía no has estudiado' : 'platos que todavía no has estudiado'}`,
+      `${sinVer} ${sinVer === 1 ? 'dish you have not studied yet' : 'dishes you have not studied yet'}`,
+      {ref: d.platoSugerido});
+  } else if(sinDominar > 0){
+    proponer('carta_sin_ver',
+      `${sinDominar} ${sinDominar === 1 ? 'plato visto' : 'platos vistos'} pero todavía sin dominar`,
+      `${sinDominar} ${sinDominar === 1 ? 'dish seen' : 'dishes seen'} but not mastered yet`,
+      {ref: d.platoSugerido});
+  }
+
+  // 5 · Donde menos se acierta. Las seis competencias del vocabulario de la
+  //     fase 1; los juegos no entran, porque no son formación.
+  //     Y sólo si de verdad hay una debilidad: quien acierta por encima del
+  //     90% en todo no tiene ninguna competencia floja, y mandarle a practicar
+  //     la «menos buena» de sus seis sobresalientes es ruido, no formación.
+  const flojo = _planCompetenciaFloja(d);
+  if(flojo && !(flojo.conNota && flojo.pct >= PLAN_COMPETENCIA_MINIMO)){
+    const nom = PLAN_COMPETENCIA_NOMBRE[flojo.competencia] || {es:flojo.competencia, en:flojo.competencia};
+    proponer('comp_' + flojo.competencia,
+      flojo.conNota ? `${nom.es} es tu competencia más floja (${flojo.pct}%)` : `Casi no has practicado ${nom.es.toLowerCase()}`,
+      flojo.conNota ? `${nom.en} is your weakest competency (${flojo.pct}%)` : `You have barely practised ${nom.en.toLowerCase()}`);
+  }
+
+  // 6 · La racha. Va la última porque cualquier tarea de arriba ya la protege;
+  //     sólo tiene sentido cuando no hay ninguna otra cosa que pedir.
+  const racha = Math.round(Number(d.racha || 0));
+  if(!d.estudiadoHoy && racha > 0 && !d.retoHecho){
+    proponer('racha_reto',
+      `Llevas ${racha} ${racha === 1 ? 'día seguido' : 'días seguidos'}: una pregunta y no se rompe`,
+      `${racha} ${racha === 1 ? 'day' : 'days'} in a row: one question keeps it alive`);
+  }
+
+  // ── Elegir ──
+  // El plan se fija la primera vez que se mira y NO cambia en todo el día. Sin
+  // esto, terminar la primera tarea reordenaba las otras dos —el repaso deja
+  // de estar vencido justo por haberlo hecho— y el plan parecía otro cada vez
+  // que se volvía al inicio, que es exactamente lo contrario de un plan.
+  let elegidas;
+  const fijadas = d.fijadas;
+  if(fijadas && fijadas.length){
+    const porId = {};
+    cand.forEach(c => { porId[c.id] = c; });
+    elegidas = [];
+    for(const id of fijadas.slice(0, PLAN_MAX_TAREAS)){
+      const base = PLAN_CATALOGO[id];
+      if(!base) continue;
+      elegidas.push(porId[id] || Object.assign({}, base, {id,
+        motivo_es: 'Estaba en tu plan de hoy',
+        motivo_en: 'It was in today’s plan',
+        ref: (d.fijadasRef || {})[id]}));
+    }
+  } else {
+    elegidas = [];
+    let minutos = 0;
+    const porComp = {};
+    for(const c of cand){
+      if(elegidas.length >= PLAN_MAX_TAREAS) break;
+      if(minutos + c.minutos > PLAN_MINUTOS_MAX) continue;
+      // Tres tareas de la misma competencia sólo se justifican por seguridad.
+      if((porComp[c.competencia] || 0) >= 2 && !c.seguridad) continue;
+      elegidas.push(c);
+      minutos += c.minutos;
+      porComp[c.competencia] = (porComp[c.competencia] || 0) + 1;
+    }
+  }
+
+  const tareas = elegidas.map(c => Object.assign({}, c, {hecha: hechas.indexOf(c.actividad) >= 0}));
+  return {
+    dia: d.dia || '',
+    tareas,
+    minutos: tareas.reduce((a, c) => a + c.minutos, 0),
+    completadas: tareas.filter(t => t.hecha).length,
+    candidatas: cand.map(c => c.id)   // para las pruebas y para depurar
+  };
+}
+
+const PLAN_COMPETENCIA_NOMBRE = {
+  alergenos:{es:'Alérgenos', en:'Allergens'}, carta:{es:'La carta', en:'The menu'},
+  vinos:{es:'Vinos', en:'Wines'}, protocolo:{es:'Protocolo', en:'Protocol'},
+  sala:{es:'Sala', en:'Floor'}, servicio:{es:'Servicio', en:'Service'}
+};
+
+// ── De la ficha del empleado a lo que el motor necesita ──────────────────
+// Aquí sí se leen globales (DISHES, el restaurante activo, los catálogos que
+// se cargan al vuelo). Toda la suciedad del mundo real se queda en esta
+// función; el motor de arriba no la ve.
+function datosDeHoy(emp, dia){
+  const e = emp || {};
+  const hoy = dia || todayStr();
+  const ahora = Date.now();
+
+  // Lo vencido lo cuenta el SRS tal y como ya lo contaba el inicio: fichas
+  // empezadas cuya fecha de repaso ya pasó. No se toca nada del motor de
+  // repetición espaciada — sólo se lee.
+  const srs = e.srs || {};
+  const srsVencidos = Object.keys(srs).filter(k => srs[k] && srs[k].reps > 0 && ahora >= srs[k].nextReview).length;
+
+  const platos = (typeof DISHES !== 'undefined' && DISHES) ? DISHES : [];
+  const conocidos = e.knownDishes || {};
+  const dominados = e.journeyMastered || {};
+  const nuevos = platos.filter(p => !srs[p.id] && !conocidos[p.id] && !dominados[p.id]);
+  const sinDominar = platos.filter(p => (srs[p.id] || conocidos[p.id]) && !dominados[p.id]);
+  // Cuál de ellos, exactamente. Semilla de fecha + nombre: el mismo empleado
+  // ve el mismo plato todo el día, y dos compañeros no reciben el mismo.
+  const bolsa = nuevos.length ? nuevos : sinDominar;
+  const platoSugerido = bolsa.length
+    ? bolsa[_planSemilla(hoy, e.name || '') % bolsa.length].id
+    : null;
+
+  // Fallos de alérgenos de VERDAD recientes: los del diario de los últimos
+  // siete días. `adaptive.allergenMiss` es acumulado desde el primer día y no
+  // baja nunca, así que usarlo dejaría la tarea de seguridad clavada para
+  // siempre en el plan de cualquiera que fallara una vez en marzo.
+  const diario = e.diario || {};
+  const hace7 = _diaMenos(hoy, 7);
+  let alFallos = 0;
+  for(const k of Object.keys(diario)){
+    if(k < hace7 || k > hoy) continue;
+    for(const it of (diario[k] || [])){
+      if(it && it.c === 'alergenos' && it.t > 0) alFallos += Math.max(0, it.t - (it.s || 0));
+    }
+  }
+
+  // La nota por competencia. Dos orígenes, y NO se suman: el examen escribe
+  // en los dos (una línea por pregunta en `topicScores`, una por sesión en el
+  // diario), así que sumarlos contaría dos veces las mismas preguntas. Manda
+  // el diario cuando tiene muestra suficiente; si no, el histórico de antes.
+  const comp = {};
+  const hist = {};
+  COMPETENCIAS.forEach(c => { comp[c] = {aciertos:0, total:0}; hist[c] = {aciertos:0, total:0}; });
+  const ts = e.topicScores || {};
+  for(const tema of Object.keys(ts)){
+    const c = competenciaDeTema(tema);
+    if(!hist[c] || !ts[tema]) continue;
+    hist[c].aciertos += (ts[tema].correct || 0);
+    hist[c].total += (ts[tema].total || 0);
+  }
+  for(const k of Object.keys(diario)){
+    for(const it of (diario[k] || [])){
+      if(!it || !it.c || !comp[it.c] || !(it.t > 0)) continue;
+      comp[it.c].aciertos += (it.s || 0);
+      comp[it.c].total += it.t;
+    }
+  }
+  COMPETENCIAS.forEach(c => { if(comp[c].total < PLAN_MUESTRA_MINIMA) comp[c] = hist[c]; });
+
+  // Qué puede entrenar HOY este restaurante. `sala` y `vinos` dependen de que
+  // el restaurante tenga esos archivos; se leen de la misma caché que ya usa
+  // la navegación para enseñar u ocultar sus botones.
+  const venue = (typeof _venueActual === 'function') ? _venueActual() : '';
+  const salaResuelta = (typeof _haySala !== 'undefined') && _haySala.has(venue);
+  const vinosPorDefecto = (typeof _VENUE_POR_DEFECTO !== 'undefined') && venue === _VENUE_POR_DEFECTO;
+  const vinosResuelto = vinosPorDefecto || ((typeof _hayVinos !== 'undefined') && _hayVinos.has(venue));
+  const disponibles = {
+    alergenos: true, carta: platos.length > 0, protocolo: true,
+    sala: salaResuelta ? !!_haySala.get(venue) : false,
+    vinos: vinosPorDefecto ? true : (vinosResuelto ? !!_hayVinos.get(venue) : false),
+    servicio: false   // sin actividad viva; ver el comentario del catálogo
+  };
+
+  return {
+    dia: hoy,
+    empleado: e.name || '',
+    // Fase 4. No hay origen todavía y no se inventa uno.
+    asignaciones: [],
+    alergenosMejor: e.allergenBest || 0,
+    alergenosFallosRecientes: alFallos,
+    srsVencidos,
+    platosSinVer: nuevos.length,
+    platosSinDominar: sinDominar.length,
+    platoSugerido,
+    competencias: comp,
+    disponibles,
+    racha: e.streak || 0,
+    estudiadoHoy: (e.lastStudyDay || '') === hoy,
+    retoHecho: (e.dqLastDay || '') === hoy,
+    hechas: (diario[hoy] || []).map(it => it && it.a).filter(Boolean),
+    // Hasta que la sala y los vinos hayan contestado, el plan se puede pintar
+    // pero no se puede fijar: fijarlo antes dejaría a alguien sin vinos todo
+    // el día sólo porque la precarga aún no había terminado.
+    listo: salaResuelta && vinosResuelto
+  };
+}
+
+// El plan del empleado que está dentro, con su congelado del día.
+function planDeHoyDe(emp){
+  const hoy = todayStr();
+  const d = datosDeHoy(emp, hoy);
+  const guardado = (emp && emp.planHoy && emp.planHoy.dia === hoy) ? emp.planHoy : null;
+  const plan = planDeHoy(Object.assign({}, d, {
+    fijadas: guardado ? guardado.ids : null,
+    fijadasRef: guardado ? (guardado.refs || {}) : null
+  }));
+  if(!guardado && d.listo && plan.tareas.length && emp){
+    const refs = {};
+    plan.tareas.forEach(t => { if(t.ref != null) refs[t.id] = t.ref; });
+    emp.planHoy = {dia: hoy, ids: plan.tareas.map(t => t.id), refs};
+    saveDB();
+  }
+  plan.datos = d;
+  return plan;
+}
+
+// Abrir la tarea. Cada una lleva a la actividad que la da por hecha —la misma
+// que registra la fase 1—, no a un índice desde el que haya que buscarla.
+const PLAN_ACCIONES = {
+  seguridad_alergenos: function(){ startAllergenTest(null); },
+  comp_alergenos:      function(){ startAllergenTest(null); },
+  repaso_srs:          function(){ _startSmartSession(); },
+  carta_sin_ver:       function(ref){
+    if(ref == null){ _subTab.aprender = 'repaso'; showTab('repaso'); return; }
+    launchDishJourney(ref);
+  },
+  comp_carta:          function(){ examConfig = {count:10, topic:'mixed', cat:'all'}; showTab('exam'); startExam(); },
+  comp_protocolo:      function(){ showTab('protocolo'); startLqaExam(); },
+  comp_sala:           function(){ showTab('sala'); startSalaExam(); },
+  comp_vinos:          function(){
+    _vinoSubTab = 'practica'; _vinoPractica = 'quiz';
+    showTab('vinos');
+    // La bodega se carga al vuelo: si aún no está, se espera a que llegue en
+    // vez de dejar el toque sin efecto.
+    const ir = function(){
+      if(WINE_FLASHCARDS && WINE_FLASHCARDS.length) _startWineQuiz('all', Math.min(10, WINE_FLASHCARDS.length));
+    };
+    if(WINE_FLASHCARDS && WINE_FLASHCARDS.length) ir();
+    else loadVinosContent({silent:true}).then(ir).catch(function(){});
+  },
+  racha_reto:          function(){ openDailyReto(); }
+};
+function _planIr(id, ref){
+  const f = PLAN_ACCIONES[id];
+  if(!f){ dbgw('[plan] tarea sin acción:', id); return; }
+  try{ f(ref); }
+  catch(e){
+    dbgw('[plan] no se pudo abrir', id, e && e.message);
+    if(typeof showToast === 'function') showToast(LANG === 'en' ? 'Could not open that yet' : 'No se ha podido abrir', 'error');
+  }
 }
 
 async function supaInsertScore(session, employee) {
@@ -3298,9 +3810,10 @@ async function enablePushManual() {
     pushBtn.title = LANG==='en' ? 'Notifications blocked — enable in browser settings' : 'Notificaciones bloqueadas — actívalas en ajustes del navegador';
     pushBtn.style.background = 'rgba(255,0,0,.2)';
     pushBtn.onclick = function() {
-      alert(LANG==='en' ?
-        'Notifications are blocked.\n\n1. Tap the lock icon ◎ in your browser address bar\n2. Find "Notifications"\n3. Change to "Allow"\n4. Reload the page' :
-        'Las notificaciones están bloqueadas.\n\n1. Toca el icono de candado ◎ en la barra de direcciones\n2. Busca "Notificaciones"\n3. Cambia a "Permitir"\n4. Recarga la página');
+      showToast(LANG==='en'
+        ? 'Notifications are blocked. Tap the lock icon in the address bar, find "Notifications" and allow them.'
+        : 'Las notificaciones están bloqueadas. Toca el candado de la barra de direcciones, busca "Notificaciones" y permítelas.',
+        'warning', 9000);
     };
   }
 }
@@ -3607,6 +4120,44 @@ function _translateDish(spanishName){
   return _DISH_EN_MAP[spanishName] || spanishName;
 }
 
+// ═══ DÓNDE EMPIEZAN LOS AVISOS FLOTANTES ══════════════════════════════════
+// Medido en la auditoría de sep 2026: el aviso de logro nacía a 72 px y la
+// barra de navegación ocupa de 56 a 120, así que mientras hubiera un aviso en
+// pantalla EL MENÚ NO SE PODÍA TOCAR. El de privacidad, que sale justo al
+// entrar, tapaba la cabecera entera con el botón de Salir dentro — y sale en
+// el momento en que alguien nuevo está buscando por dónde se va.
+//
+// Ahora los avisos se anclan por debajo de lo que haya fijo arriba: la
+// cabecera pegajosa siempre, y la barra de navegación cuando está a la vista.
+// Se mide en vez de escribir un número: si mañana la cabecera cambia de alto
+// —y cambia, porque crece con el notch del iPhone— los avisos la siguen.
+function _avisosAnclar(){
+  try{
+    let y = 12;
+    const cab = document.querySelector('.app-header');
+    if(cab) y = Math.max(y, cab.getBoundingClientRect().bottom);
+    // La barra de navegación no es fija: al bajar se va. Sólo aparta el aviso
+    // mientras esté en pantalla.
+    const nav = document.querySelector('.nav-dd');
+    if(nav) y = Math.max(y, nav.getBoundingClientRect().bottom);
+    document.documentElement.style.setProperty('--avisos-top', Math.round(y + 8) + 'px');
+  }catch(_){ }
+}
+// Al desplazar, la navegación se va y vuelve. Se recalcula sólo si hay algún
+// aviso puesto: sin nada en pantalla no hay nada que mover.
+let _avisosRaf = 0;
+function _avisosSeguir(){
+  if(_avisosRaf) return;
+  _avisosRaf = requestAnimationFrame(function(){
+    _avisosRaf = 0;
+    if(document.getElementById('txkToastContainer') || document.getElementById('achToastStack')) _avisosAnclar();
+  });
+}
+try{
+  window.addEventListener('scroll', _avisosSeguir, {passive:true});
+  window.addEventListener('resize', _avisosSeguir);
+}catch(_){ }
+
 // ═══ TOAST NOTIFICATION SYSTEM ═══
 const _toastContainer = (function(){
   const c = document.createElement('div');
@@ -3619,6 +4170,7 @@ const _toastContainer = (function(){
 })();
 
 function showToast(msg, type='info', duration=4000, action=null){
+  _avisosAnclar();
   const t = document.createElement('div');
   t.className = 'txk-toast toast-' + type;
   const icons = {success:'✓',error:'✗',warning:'⚠',info:'ℹ'};
@@ -3771,7 +4323,7 @@ function resetSessionTimer(){
   clearTimeout(_sessionTimer);
   if(!currentUser) return;
   _sessionTimer=setTimeout(()=>{
-    if(currentUser){ logout(); alert(LANG==='en'?'Session expired due to inactivity':'Sesión cerrada por inactividad'); }
+    if(currentUser){ logout(); showToast(LANG==='en'?'Session expired due to inactivity':'Sesión cerrada por inactividad','warning',6000); }
   }, 15*60*1000);
 }
 ['click','keydown','touchstart','scroll'].forEach(ev=>document.addEventListener(ev,()=>{ if(currentUser) resetSessionTimer(); },{passive:true}));
@@ -4215,7 +4767,7 @@ function showXPToast(amount, reason){
     padding:.5rem 1.1rem;border-radius:30px;
     font-family:'Quicksand',sans-serif;font-size:.82rem;font-weight:500;
     box-shadow:0 4px 20px rgba(0,0,0,.25);
-    z-index:9999;opacity:0;transition:all .3s ease;
+    z-index:9000;opacity:0;transition:all .3s ease;
     display:flex;align-items:center;gap:.5rem;white-space:nowrap;
   `;
   document.body.appendChild(toast);
@@ -4747,6 +5299,13 @@ function _djPhaseService(dish, dd, _en){
   const items = [];
   items.push({icon:'📂', label:_en?'CATEGORY':'CATEGORÍA', value:_en?catLocal(dish.cat):dish.cat});
 
+  // El marcaje — qué cubertería lleva el plato — es lo primero que hace el
+  // camarero, antes de que el plato salga de cocina. Venía escondido dentro
+  // de las notas; M.B. pidió que se vea como lo que es. Sólo se pinta si la
+  // carta lo trae: la de Txoko no lo tiene y no se inventa.
+  if(dd.marcaje) items.push({icon:'🍽️', label:_en?'CUTLERY MARKING':'MARCAJE',
+                             value:escapeHtml(dd.marcaje)});
+
   if(dish.allergens && dish.allergens.length){
     items.push({icon:'⚠️', label:_en?'ALLERGEN ALERT':'ALERTA ALÉRGENOS', value:(_en?'Always inform guest about: ':'Siempre informar sobre: ')+dish.allergens.map(a=>allergenLocal?allergenLocal(a):a).join(', ')});
   }
@@ -5206,6 +5765,8 @@ function _djPhaseMastery(dish, dd, _en){
   if(!_djState.xpAwarded){
     _djState.xpAwarded = true;
     if(xpEarned > 0) awardXP(xpEarned, _en ? 'Dish Journey: '+dd.name : 'Viaje: '+dd.name, 'journey');
+    if(total > 0) registrarActividad({ activity:'recorrido', competency:'carta', kind:'practica',
+      score, total, meta:{ plato: dish && dish.id } });
     const emp = getEmp(currentUser);
     // Update SRS with quiz quality
     const srsQuality = _srsQualityFromScore(score, total);
@@ -5803,7 +6364,7 @@ function _scenarioDeclaredAllergy(dish, dd, _en){
   const options = _djShuffle([optYes, optMod, optNo, _simPick(trapBank)]);
   const aLbl = _simAllergenLabel(p.allergen, _en);
   let explain;
-  if(modifiable) explain = _en ? `Contains ${aLbl} but can be modified. Notes: ${dish.notes}` : `Contiene ${aLbl} pero es modificable. Notas: ${dish.notes}`;
+  if(modifiable) explain = _en ? `Contains ${aLbl} but can be modified. Notes: ${dd.notes}` : `Contiene ${aLbl} pero es modificable. Notas: ${dd.notes}`;
   else if(hasIt) explain = _en ? `${dd.name} contains ${aLbl} — not suitable.` : `${dd.name} contiene ${aLbl} — no es apto.`;
   else explain = _en ? `${dd.name} is free of ${aLbl}.` : `${dd.name} no contiene ${aLbl}.`;
   return { q:_en?qEn:qEs, options, correctIdx: options.indexOf(correct), explain, type:'allergen' };
@@ -6164,7 +6725,7 @@ function _scenarioCrossContamination(dish, dd, _en){
   const correct = hasCross ? optRisk : optClean;
   const options = _djShuffle([optRisk, optClean, ...traps]);
   const explain = hasCross
-    ? (_en?`Notes indicate cross-contamination risk: ${dish.notes}`:`Las notas indican riesgo de contaminación cruzada: ${dish.notes}`)
+    ? (_en?`Notes indicate cross-contamination risk: ${dd.notes}`:`Las notas indican riesgo de contaminación cruzada: ${dd.notes}`)
     : (_en?`${dd.name} carries no gluten and no traces flag on its card.`:`${dd.name} no lleva gluten y su ficha no tiene aviso de trazas.`);
   return { q:_en?qEn:qEs, options, correctIdx: options.indexOf(correct), explain, type:'allergen' };
 }
@@ -7467,6 +8028,10 @@ function _renderSmartSummary(){
   const _isReviewHeavy = _queueMastered > 0 && (_queueMastered / _queueLen) >= 0.5;
 
   if(totalXP > 0) awardXP(totalXP, _en ? 'Smart review' : 'Repaso inteligente', 'smart');
+  if(state.sessionTotal > 0) registrarActividad({ activity:'repaso', competency:'carta',
+    kind:'practica', score:state.sessionScore, total:state.sessionTotal,
+    seconds:Math.round((Date.now() - (state.startTime||Date.now()))/1000),
+    meta:{ platos:(state.queue||[]).length } });
   // F-P1-5: SRS-related missions/achievements never unlocked because these checks were missing.
   if(typeof checkNewAchievements==='function') checkNewAchievements();
   if(typeof checkMissionCompletion==='function') checkMissionCompletion();
@@ -7889,7 +8454,7 @@ function _sfGenerateQuestions(count){
       q.feedback = LANG==='en' ? 'Perfect temperature! This shows professionalism.' : '¡Temperatura perfecta! Esto demuestra profesionalismo.';
 
     } else if(sc.type==='ingredientes'){
-      var realIngr = dish.ingredients || 'Ingredientes variados de temporada';
+      var realIngr = ((LANG==='en' && dishEN && dishEN.ingredients) ? dishEN.ingredients : dish.ingredients) || 'Ingredientes variados de temporada';
       var fakeIngr1 = 'Trufa negra, foie gras, salsa de Pedro Ximénez, reducción de oporto';
       var fakeIngr2 = 'Langosta, caviar de Beluga, espuma de champán, oro comestible';
       q.options = [realIngr.length>80?realIngr.substring(0,80)+'...':realIngr, fakeIngr1, fakeIngr2];
@@ -7897,7 +8462,7 @@ function _sfGenerateQuestions(count){
       q.feedback = LANG==='en' ? 'Excellent! Knowing ingredients is essential for allergen safety.' : '¡Excelente! Conocer los ingredientes es esencial para la seguridad de alérgenos.';
 
     } else if(sc.type==='protocolo'){
-      var realHistory = dish.history || (LANG==='en'?'A signature dish of the restaurant':'Un plato emblemático del restaurante');
+      var realHistory = ((LANG==='en' && dishEN && dishEN.history) ? dishEN.history : dish.history) || (LANG==='en'?'A signature dish of the restaurant':'Un plato emblemático del restaurante');
       q.options = [
         realHistory.length>90?realHistory.substring(0,90)+'...':realHistory,
         LANG==='en'?'I\'m not sure, let me check with the kitchen':'No estoy seguro, déjeme consultar con cocina',
@@ -8432,6 +8997,8 @@ function _dqPick(i){
   emp.dqTotal=(emp.dqTotal||0)+1; if(ok) emp.dqHits=(emp.dqHits||0)+1;
   saveDB();
   awardXP(_dqXpFor(emp.dqStreak,ok), LANG==='en'?'Daily quiz':'Reto del día');
+  registrarActividad({ activity:'reto_dia', competency:'carta', kind:'practica',
+    score: ok?1:0, total:1, meta:{ racha: emp.dqStreak||0 } });
   if(typeof supaUpsertEmployee==='function') supaUpsertEmployee(currentUser);
   _dqRender();
 }
@@ -10169,8 +10736,9 @@ function openAjustes(){
         if(tema) applyTheme(tema);
         overlay.remove();
         QUESOS = null; _quesosVenue = null;   // el carro es de cada restaurante
+        SALA = null; _salaVenue = null; _salaSec = null;   // y los procedimientos también
         WINES = null; _vinosVenue = null;      // y la bodega, también
-        try{ _navQuesosSync(); _navVinosSync(); }catch(_){}
+        try{ _navQuesosSync(); _navVinosSync(); _navSalaSync(); }catch(_){}
         if(typeof showTab==='function') showTab(typeof currentTab!=='undefined' ? currentTab : 'dashboard');
         const _nom = (tema && tema.name) || id;
         // Sin carta el aviso tiene que decirlo, y decir cuánto rato: si no,
@@ -10544,7 +11112,7 @@ async function closePinAndEnter(){
   try{ ndaPendiente(pinTarget).then(hay => { if(hay) ndaMostrar(pinTarget); }); }catch(_){}
   // Los botones del carro de quesos y de la bodega salen sólo si este
   // restaurante tiene una. Y se tira lo que hubiera cargado de otro.
-  try{ _vinosVigilar(); _navQuesosSync(); _navVinosSync(); }catch(_){}
+  try{ _vinosVigilar(); _navQuesosSync(); _navVinosSync(); _navSalaSync(); }catch(_){}
   // La pestaña del panel sale por ROL, no por nombre: hasta sep 2026 estaba
   // clavada a «Duvan», así que no había forma de dársela al manager de otro
   // restaurante. El rol llega con la ficha de la nube (_supSyncMando la
@@ -10916,7 +11484,421 @@ function _qFicha(q){
   </article>`;
 }
 
-const TAB_ROUTES = ['dashboard','aprender','flashcards','exam','repaso','tecnicas','actualidad','smart','emplatado','stats','logros','txoko','ranking','supervisor','horarios','protocolo','videos','lqa','vinos','quesos','chat'];
+// ═══ SALA — PROCEDIMIENTOS DEL RESTAURANTE ═════════════════════════════════
+// Cómo se trabaja en ESTE restaurante: los pasos del servicio y los
+// procedimientos de sala. No es formación de producto (eso es la carta) ni
+// estándar del hotel (eso es Auditoría): es la casa.
+//
+// Sale sola en cuanto existe data/procedimientos-<restaurante>.json, igual que
+// el carro de quesos y la bodega. Txoko no tiene el suyo y por eso no ve la
+// pestaña: no se le enseña el manual del vecino ni un texto inventado.
+let SALA = null, _salaVenue = null;
+let _salaSec = null, _salaBusca = '';
+
+async function cargarSala(){
+  const v = _venueActual();
+  if(SALA && _salaVenue === v) return SALA;
+  try{
+    // La ruta se arma antes, por lo mismo que en el carro de quesos: el guard
+    // que comprueba que cada archivo cargado existe en disco tiene que seguir
+    // viendo literales en todas las demás llamadas.
+    const ruta = 'data/procedimientos-' + encodeURIComponent(v) + '.json';
+    const d = await loadLazyData(ruta,
+      LANG==='en' ? 'the floor procedures' : 'los procedimientos de sala', {silent:true});
+    SALA = (d && Array.isArray(d.secciones)) ? d : null;
+  }catch(e){ SALA = null; }
+  _salaVenue = v;
+  return SALA;
+}
+const _haySala = new Map();
+async function hayProcedimientos(){
+  const v = _venueActual();
+  if(_haySala.has(v)) return _haySala.get(v);
+  let ok = false;
+  try{ const r = await fetch('data/procedimientos-' + encodeURIComponent(v) + '.json', {method:'HEAD'}); ok = r.ok; }
+  catch(e){ ok = false; }
+  _haySala.set(v, ok);
+  return ok;
+}
+function _navSalaSync(){
+  const b = document.getElementById('navSala');
+  if(!b) return;
+  hayProcedimientos().then(hay => { b.style.display = hay ? '' : 'none'; });
+}
+
+function _salaCoincide(p){
+  if(!_salaBusca) return true;
+  const h = _djNorm([p.t, p.d, (p.lista||[]).join(' '),
+                     (p.frases||[]).map(f=>[f.es,f.en,f.fr].join(' ')).join(' ')].join(' '));
+  return _djNorm(_salaBusca).split(' ').filter(Boolean).every(w => h.includes(w));
+}
+
+// Las frases van TAL CUAL las escribió el restaurante. Son lo que el camarero
+// dice en mesa, así que se resaltan: es lo que se busca con prisa.
+//
+// Y no se corrigen. El manual trae erratas en el inglés y sobre todo en el
+// francés («On va changie le servillet pour le dessert»), y arreglarlas sería
+// ponerle en la boca a su equipo un guion que M.B. no ha escrito. Se enseña lo
+// suyo y se avisa de que ese idioma está pendiente de revisar con ellos.
+function _salaFrase(f){
+  const _en = LANG==='en';
+  const rev = String(f.revisar||'').split(',').filter(Boolean);
+  const linea = (lbl, txt) => txt
+    ? `<div class="pr-fr-l${rev.includes(lbl.toLowerCase())?' rev':''}"><span>${lbl}</span>${escapeHTML(txt)}</div>` : '';
+  const aviso = rev.length
+    ? `<div class="pr-fr-rev">${_en
+        ? `The ${rev.map(x=>x.toUpperCase()).join(' and ')} wording comes from the manual as written, with its typos — pending review with M.B.`
+        : `El ${rev.map(x=>x.toUpperCase()).join(' y el ')} está tal cual viene en el manual, con sus erratas — pendiente de revisar con M.B.`}</div>`
+    : '';
+  return `<div class="pr-frase">${linea('ES', f.es)}${linea('EN', f.en)}${linea('FR', f.fr)}${aviso}</div>`;
+}
+
+function _salaPaso(p){
+  return `<article class="pr-card">
+    <header>${p.n ? `<span class="pr-n">${p.n}</span>` : ''}<h3>${escapeHTML(p.t)}</h3></header>
+    ${p.d ? `<p class="pr-d">${escapeHTML(p.d)}</p>` : ''}
+    ${(p.lista||[]).length ? `<ul class="pr-lista">${p.lista.map(x=>`<li>${escapeHTML(x)}</li>`).join('')}</ul>` : ''}
+    ${(p.frases||[]).map(_salaFrase).join('')}
+  </article>`;
+}
+
+function renderSala(){
+  const c = document.getElementById('appContent');
+  const _en = LANG==='en';
+  if(!SALA){
+    c.innerHTML = `<div class="sup-wrap"><div style="text-align:center;padding:3rem 1rem;color:var(--parch3);font-family:'DM Mono',monospace;font-size:.72rem;letter-spacing:.1em">⏳ ${_en?'Loading the floor procedures…':'Cargando los procedimientos de sala…'}</div></div>`;
+    cargarSala().then(()=>{ if(currentTab==='sala') renderSala(); });
+    return;
+  }
+  const secs = SALA.secciones;
+  // Buscando no se filtra POR sección: se busca en todas, que es lo que hace
+  // falta cuando no recuerdas dónde estaba «zurdo» o «desmigar».
+  const activa = _salaBusca ? null : (_salaSec || secs[0].id);
+  const mostradas = secs
+    .map(s => ({ s, pasos: s.pasos.filter(_salaCoincide) }))
+    .filter(x => x.pasos.length && (_salaBusca || x.s.id === activa));
+  const total = mostradas.reduce((n,x)=>n+x.pasos.length, 0);
+  const chip = (on, txt, fn) => `<button type="button" onclick="${fn}" class="q-chip${on?' on':''}">${escapeHTML(txt)}</button>`;
+
+  c.innerHTML = `<div class="sup-wrap">
+    <div class="sup-hero">
+      <div class="sup-hero-icon">📖</div>
+      <div class="sup-hero-title">${escapeHTML(SALA.titulo || (_en?'Floor procedures':'Procedimientos de sala'))}</div>
+      <div class="sup-hero-sub">${escapeHTML(SALA.subtitulo||'')}${SALA.actualizado?` · ${escapeHTML(SALA.actualizado)}`:''}</div>
+    </div>
+
+    <button type="button" class="pr-ex-lanza" onclick="startSalaExam()">
+      <span>📝</span><span>${_en?'Test yourself · 10 questions from this manual':'Ponte a prueba · 10 preguntas de este manual'}</span>
+      <span class="pr-ex-lanza-go">›</span>
+    </button>
+
+    ${SALA.intro ? `<details class="pr-intro"><summary>${_en?'Why M.B. — the manual’s opening':'Por qué M.B. — la introducción del manual'}</summary><p>${escapeHTML(SALA.intro)}</p></details>` : ''}
+
+    <input type="search" class="q-busca" value="${escapeHTML(_salaBusca)}" oninput="_salaBusca=this.value;renderSala();this.focus()"
+      placeholder="${_en?'Search a step, a phrase, a procedure…':'Busca un paso, una frase, un procedimiento…'}">
+
+    ${_salaBusca ? '' : `<div class="q-chips">
+      ${secs.map(s => chip(activa===s.id, (s.icon?s.icon+' ':'')+(s.chip||s.t), `_salaSec=${JSON.stringify(s.id)};renderSala()`)).join('')}
+    </div>`}
+
+    <div class="q-cuenta">${_salaBusca
+      ? `${total} ${total===1?(_en?'result':'resultado'):(_en?'results':'resultados')}`
+      : escapeHTML((secs.find(s=>s.id===activa)||{}).sub || '')}</div>
+
+    ${total ? mostradas.map(x => `
+      ${_salaBusca ? `<div class="pr-sec">${escapeHTML(x.s.t)}</div>` : ''}
+      ${x.pasos.map(_salaPaso).join('')}`).join('')
+     : `<div class="q-vacio">${_en?'Nothing matches that search.':'Nada encaja con esa búsqueda.'}</div>`}
+
+    ${SALA.fuente ? `<div class="pr-fuente">${_en?'Source':'Fuente'}: ${escapeHTML(SALA.fuente)}</div>` : ''}
+  </div>`;
+}
+
+// ═══ SALA — EXAMEN ════════════════════════════════════════════════════════
+// Las preguntas SALEN DEL MANUAL. No hay ni una escrita a mano: si el
+// restaurante cambia un paso, la pregunta cambia con él, y si no lo pone en su
+// manual, no se pregunta. Es la misma regla que protege la carta.
+//
+// Cuatro maneras de preguntar, todas derivadas:
+//   orden     · de estos cuatro pasos, ¿cuál va primero?
+//   siguiente · acabas de terminar el paso N, ¿qué toca ahora?
+//   detalle   · este detalle, ¿de qué paso o procedimiento es?
+//   frase     · esta frase, ¿en qué momento se dice?
+// En «detalle» y «frase» el enunciado va TAPADO: se enmascara cualquier
+// palabra del título de las cuatro opciones, o el propio texto delataría la
+// respuesta. Es lo mismo que se hace en el Examen de platos.
+const _SALA_STOP = new Set(['para','con','sin','una','uno','los','las','del','que','por',
+  'nuestro','nuestra','nuestros','nuestras','este','esta','estos','estas','como','cuando',
+  'segun','todo','toda','todos','todas','desde','hasta','antes','despues','sobre','entre']);
+function _salaTokens(txt){
+  return String(txt||'').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'')
+    .split(/[^a-z0-9]+/).filter(w => w.length > 3 && !_SALA_STOP.has(w));
+}
+function _salaTapar(texto, titulos){
+  const raiz = new Set();
+  titulos.forEach(t => _salaTokens(t).forEach(w => raiz.add(w.replace(/(es|s)$/,''))));
+  return String(texto).split(/(\s+|[.,;:()"«»¡!¿?])/).map(part => {
+    const w = part.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'');
+    if(!/^[a-z0-9]{4,}$/.test(w)) return part;
+    return raiz.has(w.replace(/(es|s)$/,'')) ? '···' : part;
+  }).join('');
+}
+
+// Todas las entradas del manual, con la sección de la que salen.
+function _salaEntradas(doc){
+  const out = [];
+  for(const s of (doc && doc.secciones) || [])
+    (s.pasos||[]).forEach((p, i) => out.push({ p, sec: s, k: s.id + '#' + i }));
+  return out;
+}
+
+function _salaGenerar(doc, cuantas){
+  const todas = _salaEntradas(doc);
+  if(todas.length < 6) return [];
+  const pasos = todas.filter(x => typeof x.p.n === 'number').sort((a,b)=>a.p.n-b.p.n);
+  const preguntas = [];
+  const vistas = new Set();
+  const _en = LANG==='en';
+  // Todo lo que no cambia entre intentos se calcula UNA vez. Antes se filtraba
+  // y se barajaba la lista entera en cada vuelta del bucle, y generar un
+  // examen de diez costaba casi medio segundo — en el móvil de un camarero,
+  // eso es un botón que parece no responder.
+  const porSeccion = {};
+  for(const x of todas) (porSeccion[x.sec.id] = porSeccion[x.sec.id] || []).push(x);
+  const conTexto  = todas.filter(x => (x.p.lista||[]).length || (x.p.d||'').length > 40);
+  const conFrases = todas.filter(x => (x.p.frases||[]).length);
+  const azar = a => a[Math.floor(Math.random()*a.length)];
+  const otros = (x, n) => _lqaShuffle(porSeccion[x.sec.id].filter(y => y.k !== x.k)).slice(0, n);
+
+  const tipos = [];
+  if(pasos.length >= 6) tipos.push('orden', 'siguiente');
+  if(conTexto.length) tipos.push('detalle');
+  if(conFrases.length) tipos.push('frase');
+  if(!tipos.length) return [];
+
+  for(let intento = 0; intento < cuantas * 40 && preguntas.length < cuantas; intento++){
+    const tipo = tipos[intento % tipos.length];
+    let q = null;
+
+    if(tipo === 'orden'){
+      const cuatro = _lqaShuffle(pasos).slice(0,4);
+      if(cuatro.length < 4) continue;
+      // Se pregunta por el primero Y por el último, a medias. No es adorno:
+      // medido, los títulos de los pasos se acortan según avanza el servicio,
+      // así que preguntando siempre por el primero, quien eligiera la opción
+      // más larga acertaba el 30% en vez del 25% del azar. Preguntando por los
+      // dos extremos, ese truco deja de servir — lo que premia a uno castiga
+      // al otro.
+      const alFinal = Math.random() < 0.5;
+      const busca = alFinal
+        ? cuatro.reduce((a,b) => a.p.n > b.p.n ? a : b)
+        : cuatro.reduce((a,b) => a.p.n < b.p.n ? a : b);
+      q = { key: 'orden:' + (alFinal?'z:':'a:') + cuatro.map(x=>x.p.n).sort((a,b)=>a-b).join('-'),
+            enun: alFinal
+              ? (_en ? 'Of these four steps, which one comes LAST?'
+                     : 'De estos cuatro pasos, ¿cuál va el ÚLTIMO?')
+              : (_en ? 'Of these four steps, which one comes FIRST?'
+                     : 'De estos cuatro pasos, ¿cuál va PRIMERO?'),
+            ctx: '', opts: cuatro.map(x=>x.p.t), corr: cuatro.indexOf(busca),
+            expl: _en ? `It is step ${busca.p.n} of the service.`
+                      : `Es el paso ${busca.p.n} del servicio.`,
+            sec: busca.sec.t };
+    }
+
+    if(tipo === 'siguiente'){
+      const i = Math.floor(Math.random() * (pasos.length - 1));
+      const actual = pasos[i], siguiente = pasos[i+1];
+      const distr = _lqaShuffle(pasos.filter(x => x.k !== actual.k && x.k !== siguiente.k)).slice(0,3);
+      if(distr.length < 3) continue;
+      const opts = _lqaShuffle([siguiente, ...distr]);
+      // Eco medido: 21% de estas preguntas se contestaban sin saber el orden,
+      // porque el título del paso anterior comparte palabra con el siguiente
+      // —el 27 «Si toman quesos» y el 28 «Retiramos los quesos»—. No se tapa
+      // el enunciado, que dejaría la pregunta sin sentido: se exige que el eco
+      // NO distinga, o sea, que al menos otra opción lo comparta también.
+      const _raiz = s => new Set(_salaTokens(s).map(w => w.replace(/(es|s)$/,'')));
+      const _eco = _raiz(actual.p.t);
+      const _comparten = opts.filter(o => [..._raiz(o.p.t)].some(w => _eco.has(w))).length;
+      if([..._raiz(siguiente.p.t)].some(w => _eco.has(w)) && _comparten < 2) continue;
+      q = { key: 'sig:' + actual.p.n,
+            enun: _en ? `You have just finished step ${actual.p.n}, «${actual.p.t}». What comes next?`
+                      : `Acabas de terminar el paso ${actual.p.n}, «${actual.p.t}». ¿Qué toca ahora?`,
+            ctx: '', opts: opts.map(x=>x.p.t), corr: opts.indexOf(siguiente),
+            expl: _en ? `Step ${siguiente.p.n}: ${siguiente.p.t}.`
+                      : `Paso ${siguiente.p.n}: ${siguiente.p.t}.`,
+            sec: siguiente.sec.t };
+    }
+
+    if(tipo === 'detalle'){
+      const x = azar(conTexto); if(!x) continue;
+      const trozos = (x.p.lista||[]).concat(x.p.d ? [x.p.d] : []);
+      const texto = azar(trozos);
+      const distr = otros(x, 3); if(distr.length < 3) continue;
+      const opts = _lqaShuffle([x, ...distr]);
+      const titulos = opts.map(o=>o.p.t);
+      q = { key: 'det:' + x.k + ':' + texto.slice(0,24),
+            enun: _en ? 'Which step or procedure does this belong to?'
+                      : '¿A qué paso o procedimiento pertenece esto?',
+            ctx: _salaTapar(texto, titulos), opts: titulos, corr: opts.indexOf(x),
+            expl: (x.p.n ? (_en?`Step ${x.p.n}: `:`Paso ${x.p.n}: `) : '') + x.p.t,
+            sec: x.sec.t };
+    }
+
+    if(tipo === 'frase'){
+      const x = azar(conFrases); if(!x) continue;
+      const f = azar(x.p.frases);
+      const distr = otros(x, 3); if(distr.length < 3) continue;
+      const opts = _lqaShuffle([x, ...distr]);
+      const titulos = opts.map(o=>o.p.t);
+      q = { key: 'fra:' + x.k + ':' + String(f.es).slice(0,24),
+            enun: _en ? 'When do we say this?' : '¿En qué momento se dice esto?',
+            ctx: '«' + _salaTapar(f.es, titulos) + '»', opts: titulos, corr: opts.indexOf(x),
+            expl: (x.p.n ? (_en?`Step ${x.p.n}: `:`Paso ${x.p.n}: `) : '') + x.p.t,
+            sec: x.sec.t };
+    }
+
+    if(!q || q.corr < 0 || vistas.has(q.key)) continue;
+    // Dos opciones con el mismo texto harían que hubiera dos correctas.
+    if(new Set(q.opts).size !== q.opts.length) continue;
+    vistas.add(q.key);
+    preguntas.push(q);
+  }
+  return preguntas;
+}
+
+let salaQuiz = { questions: [], index: 0, score: 0, startedAt: 0, answers: [], completed: false };
+
+async function startSalaExam(){
+  if(!SALA) await cargarSala();
+  if(!SALA){ if(typeof showToast==='function') showToast(LANG==='en'
+    ? 'No procedures to examine yet.' : 'Todavía no hay procedimientos que examinar.', 'error'); return; }
+  const qs = _salaGenerar(SALA, 10);
+  if(qs.length < 4){ if(typeof showToast==='function') showToast(LANG==='en'
+    ? 'Not enough material for an exam yet.' : 'Aún no hay material suficiente para un examen.', 'error'); return; }
+  salaQuiz = { questions: qs, index: 0, score: 0, startedAt: Date.now(), answers: [], completed: false };
+  renderSalaExamQuestion();
+}
+
+function renderSalaExamQuestion(){
+  const s = salaQuiz;
+  if(s.index >= s.questions.length){ _salaExamCompletar(); return; }
+  const q = s.questions[s.index];
+  const _en = LANG==='en';
+  document.getElementById('appContent').innerHTML = `<div class="sup-wrap">
+    <div class="pr-ex-top">
+      <span>${_en?'Question':'Pregunta'} ${s.index+1}/${s.questions.length}</span>
+      <span>${escapeHTML(q.sec)}</span>
+    </div>
+    <div class="pr-ex-barra"><div style="width:${Math.round(s.index/s.questions.length*100)}%"></div></div>
+    <div class="pr-ex-q">${escapeHTML(q.enun)}</div>
+    ${q.ctx ? `<div class="pr-ex-ctx">${escapeHTML(q.ctx)}</div>` : ''}
+    ${q.opts.map((o,i)=>`<button type="button" class="pr-ex-op" onclick="_salaResponder(${i})">
+      <span>${i+1}</span>${escapeHTML(o)}</button>`).join('')}
+    <button type="button" class="pr-ex-salir" onclick="showTab('sala')">${_en?'Leave the exam':'Salir del examen'}</button>
+  </div>`;
+}
+
+function _salaResponder(i){
+  const s = salaQuiz;
+  const q = s.questions[s.index];
+  if(!q || s.answers.some(a => a.qIdx === s.index)) return;
+  const bien = i === q.corr;
+  if(bien) s.score++;
+  s.answers.push({ qIdx: s.index, picked: i, isCorrect: bien });
+  const _en = LANG==='en';
+  document.getElementById('appContent').innerHTML = `<div class="sup-wrap">
+    <div class="pr-ex-top">
+      <span>${_en?'Question':'Pregunta'} ${s.index+1}/${s.questions.length}</span>
+      <span>${escapeHTML(q.sec)}</span>
+    </div>
+    <div class="pr-ex-q">${escapeHTML(q.enun)}</div>
+    ${q.ctx ? `<div class="pr-ex-ctx">${escapeHTML(q.ctx)}</div>` : ''}
+    ${_lqaOptionsFeedbackHtml(q.opts, q.opts, i, q.corr)}
+    <div class="pr-ex-expl">${bien?'✓ ':'✗ '}${escapeHTML(q.expl)}</div>
+    <button type="button" class="pr-ex-sig" onclick="salaQuiz.index++;renderSalaExamQuestion()">
+      ${s.index+1 >= s.questions.length ? (_en?'See result':'Ver resultado') : (_en?'Next':'Siguiente')}</button>
+  </div>`;
+}
+
+function _salaExamCompletar(){
+  const s = salaQuiz;
+  if(!s.completed){
+    s.completed = true;
+    const total = s.questions.length;
+    const pct = total ? Math.round(s.score/total*100) : 0;
+    const xp = Math.round(s.score*10 + (pct>=90?35:pct>=70?18:0));
+    const seg = Math.max(1, Math.round((Date.now()-s.startedAt)/1000));
+    const emp = getEmp(currentUser);
+    if(emp){
+      _lqaPushScore(emp, 'sala', s.score, total, seg);
+      registrarActividad({ activity:'examen_sala', competency:'sala', kind:'evaluacion',
+        score:s.score, total, seconds:seg });
+      if(!emp.salaBest || pct > emp.salaBest) emp.salaBest = pct;
+      emp.salaCompleted = (emp.salaCompleted||0) + 1;
+      saveDB();
+    }
+    s._pct = pct; s._xp = xp; s._seg = seg;
+    awardXP(xp, LANG==='en'?'Floor exam':'Examen de sala', 'lqa');
+    if(typeof checkNewAchievements==='function') checkNewAchievements();
+  }
+  const _en = LANG==='en';
+  const pct = s._pct, color = pct>=80?'#4d8a5e':pct>=60?'#c49a3c':'#c47068';
+  document.getElementById('appContent').innerHTML = `<div class="sup-wrap">
+    <div class="sup-hero">
+      <div class="sup-hero-icon">${pct>=80?'🏅':pct>=60?'📖':'📚'}</div>
+      <div class="sup-hero-title">${s.score}/${s.questions.length}</div>
+      <div class="sup-hero-sub">${pct}% · +${s._xp} XP · ${s._seg}s</div>
+    </div>
+    <div class="pr-ex-expl" style="border-color:${color};color:${color}">${
+      pct>=80 ? (_en?'You know the house.':'Te sabes la casa.')
+      : pct>=60 ? (_en?'Almost. Go back over the steps you missed.':'Casi. Repasa los pasos que fallaste.')
+      : (_en?'Read the procedures again and come back.':'Vuelve a leer los procedimientos y repite.')}</div>
+    ${s.answers.filter(a=>!a.isCorrect).map(a=>{
+      const q = s.questions[a.qIdx];
+      return `<div class="pr-card"><header><h3>${escapeHTML(q.enun)}</h3></header>
+        ${q.ctx?`<p class="pr-d">${escapeHTML(q.ctx)}</p>`:''}
+        <p class="pr-d"><b>${escapeHTML(q.opts[q.corr])}</b> — ${escapeHTML(q.expl)}</p></div>`;
+    }).join('')}
+    <button type="button" class="pr-ex-sig" onclick="startSalaExam()">${_en?'Another round':'Otra ronda'}</button>
+    <button type="button" class="pr-ex-salir" onclick="showTab('sala')">${_en?'Back to the procedures':'Volver a los procedimientos'}</button>
+  </div>`;
+}
+
+// La búsqueda global busca PLATOS, VINOS Y ALÉRGENOS. En el panel de
+// supervisor, en horarios, en el chat o en el ranking no hay nada de eso que
+// encontrar, y en Aprender, Vinos, Quesos y Sala la pantalla ya trae su propio
+// buscador: salían dos cajas de búsqueda, una encima de otra.
+// No se pierde nada: la misma búsqueda sigue a un toque desde el menú, en
+// todas las pantallas, con el botón #navSearchEntry.
+const _SIN_BUSCADOR = new Set(['supervisor','horarios','chat','ranking','stats','logros',
+                               'txoko','aprender','flashcards','emplatado','vinos','quesos','sala']);
+function _buscadorSync(tab){
+  const p = document.getElementById('globalSearchPill');
+  if(p) p.style.display = _SIN_BUSCADOR.has(tab) ? 'none' : 'flex';
+}
+
+// El nombre de cada pantalla, para el encabezado que anuncia el lector.
+const _TITULOS = {
+  dashboard:['Inicio','Home'], aprender:['Aprender','Learn'], flashcards:['Fichas','Flashcards'],
+  exam:['Examen','Exam'], repaso:['Repaso inteligente','Smart review'],
+  tecnicas:['Técnicas de cocina','Kitchen techniques'], actualidad:['Actualidad','News'],
+  smart:['Repaso inteligente','Smart review'], emplatado:['Plating guide','Plating guide'],
+  stats:['Estadísticas','Statistics'], logros:['Logros','Achievements'],
+  txoko:['Juegos','Games'], ranking:['Ranking del equipo','Team ranking'],
+  supervisor:['Panel de supervisor','Supervisor panel'], horarios:['Horarios','Schedule'],
+  protocolo:['Auditoría LQA','LQA audit'], videos:['Vídeos','Videos'],
+  lqa:['Auditoría LQA','LQA audit'], vinos:['Carta de vinos','Wine list'],
+  quesos:['Carro de quesos','Cheese trolley'], sala:['Sala y procedimientos','Floor procedures'],
+  chat:['La Terraza','The Terrace']
+};
+function _ponerTitulo(tab){
+  const h = document.getElementById('tituloPantalla');
+  if(!h) return;
+  const par = _TITULOS[tab];
+  h.textContent = par ? (LANG==='en' ? par[1] : par[0]) : 'Meseo';
+}
+
+const TAB_ROUTES = ['dashboard','aprender','flashcards','exam','repaso','tecnicas','actualidad','smart','emplatado','stats','logros','txoko','ranking','supervisor','horarios','protocolo','videos','lqa','vinos','quesos','sala','chat'];
 
 function showTab(tab, instant){
   // ── Pestaña desconocida → INICIO ──────────────────────────────────────
@@ -10969,7 +11951,9 @@ function showTab(tab, instant){
   // resto de secciones no filtra nada y solo mete ruido (petición del
   // propietario — «no tiene uso en inicio»).
   const _sb = document.getElementById('shiftBar');
-  if(_sb) _sb.style.display = navTab==='aprender' ? 'flex' : 'none';
+  if(_sb) _sb.style.display = (navTab==='aprender' && _hayTurnos()) ? 'flex' : 'none';
+  _ponerTitulo(tab);
+  _buscadorSync(tab);
   document.querySelectorAll('.nav-btn').forEach(b=>{
     const btnTab = b.id.replace('nav','').toLowerCase();
     b.classList.toggle('active', btnTab === navTab);
@@ -10980,7 +11964,7 @@ function showTab(tab, instant){
   if(_activeNav && _navCur) _navCur.innerHTML = _activeNav.innerHTML;
   _navDDClose();
   const c=document.getElementById('appContent');
-  const renderMap = {quesos:renderQuesos,dashboard:renderDashboard,aprender:renderAprender,flashcards:renderAprender,exam:renderExam,repaso:renderAprender,tecnicas:renderAprender,actualidad:renderAprender,smart:renderAprender,emplatado:renderAprender,stats:renderRankingHub,logros:renderRankingHub,txoko:renderTxoko,ranking:renderRankingHub,supervisor:renderSupervisor,horarios:renderHorarios,protocolo:renderLqa,videos:renderAprender,lqa:renderLqa,vinos:renderVinos,chat:renderChat};
+  const renderMap = {quesos:renderQuesos,sala:renderSala,dashboard:renderDashboard,aprender:renderAprender,flashcards:renderAprender,exam:renderExam,repaso:renderAprender,tecnicas:renderAprender,actualidad:renderAprender,smart:renderAprender,emplatado:renderAprender,stats:renderRankingHub,logros:renderRankingHub,txoko:renderTxoko,ranking:renderRankingHub,supervisor:renderSupervisor,horarios:renderHorarios,protocolo:renderLqa,videos:renderAprender,lqa:renderLqa,vinos:renderVinos,chat:renderChat};
   const _doRender = ()=>{
     c.innerHTML='';
     c.style.transition='none';
@@ -11589,6 +12573,7 @@ function _emplOpen(id){
         <div class="empl-ov-cat">${escapeHtml(dd.cat||'')}</div>
         <div class="empl-ov-name">${escapeHtml(dd.name)}</div>
         <div class="empl-ov-al">${al}</div>
+        ${dd.marcaje?`<div class="empl-ov-marc">🍽️ ${escapeHtml(dd.marcaje)}</div>`:''}
         ${dd.notes?`<div class="empl-ov-note">${escapeHtml(dd.notes)}</div>`:''}
         ${dd.ingredients?`<div class="empl-ov-ing">${escapeHtml(dd.ingredients)}</div>`:''}
         <button class="empl-ov-ficha" onclick="document.getElementById('emplOverlay').remove();repasoCat='${escapeHtml(dd.cat||'')}';repasoDishId=${d.id};repasoView='dish';_subTab.aprender='repaso';showTab('repaso')">📖 ${_en?'Full dish sheet':'Ficha completa del plato'}</button>
@@ -18813,6 +19798,8 @@ function _renderWineQuiz(c, bar){
       const bonusXP = pct >= 90 ? 30 : pct >= 70 ? 15 : pct >= 50 ? 5 : 0;
       const totalXP = baseXP + bonusXP;
       if(totalXP > 0) awardXP(totalXP, 'Quiz Vinos ' + pct + '%', 'wines');
+    registrarActividad({ activity:'quiz_vinos', competency:'vinos', kind:'evaluacion',
+      score:_wqState.score, total:_wqState.total });
     }
     const xpEarned = (_wqState.score * 10) + (pct >= 90 ? 30 : pct >= 70 ? 15 : pct >= 50 ? 5 : 0);
 
@@ -19348,6 +20335,8 @@ function _mqResults(){
     emp.maridajeScores.push({ score: s.score, total: s.questions.length, date: Date.now() });
     if(emp.maridajeScores.length > 50) emp.maridajeScores = emp.maridajeScores.slice(-50);
     if(!emp.maridajeBest || pct > emp.maridajeBest) emp.maridajeBest = pct;
+    registrarActividad({ activity:'maridaje', competency:'vinos', kind:'evaluacion',
+      score:s.score, total:s.questions.length });
     saveDB();
   }
   if(typeof checkNewAchievements === 'function') checkNewAchievements();
@@ -19358,7 +20347,7 @@ function _mqResults(){
     <div class="sup-wrap">
       <div style="text-align:center;padding:1.5rem 0">
         <div style="font-family:'Cinzel',serif;font-size:3rem;font-weight:700;color:${cls};margin-bottom:.5rem">${s.score}/${s.questions.length}</div>
-        <h1 tabindex="-1" style="font-size:1.1rem;color:var(--parchment);margin-bottom:.5rem;font-family:'Cinzel',serif;font-weight:600">${_en?'Pairing Quiz Complete':'Quiz Maridaje Completado'}</h1>
+        <h2 tabindex="-1" style="font-size:1.1rem;color:var(--parchment);margin-bottom:.5rem;font-family:'Cinzel',serif;font-weight:600">${_en?'Pairing Quiz Complete':'Quiz Maridaje Completado'}</h2>
         <div style="font-size:.9rem;color:var(--parch2);margin-bottom:1.5rem">${pct}%${bonus?` · +${bonus} XP`:''}</div>
         ${pct >= 80 ? `<div style="font-size:.78rem;color:var(--sage);margin-bottom:1rem">${_en?'Sommelier-level taste!':'¡Paladar de sommelier!'}</div>` : pct >= 60 ? `<div style="font-size:.78rem;color:var(--gold);margin-bottom:1rem">${_en?'Solid pairing instincts':'Buen instinto de maridaje'}</div>` : `<div style="font-size:.78rem;color:var(--rose);margin-bottom:1rem">${_en?'Review the pairing guide and try again':'Repasa la guía y prueba de nuevo'}</div>`}
       </div>
@@ -19492,6 +20481,66 @@ function _renderWineService(c, bar){
 }
 
 // ═══════ DASHBOARD ═══════
+// ── El plan de hoy, pintado ──────────────────────────────────────────────
+// Tres filas como mucho, cada una con QUÉ, POR QUÉ, CUÁNTO dura y si está
+// hecha. Sin colores nuevos: los mismos tokens que el resto del inicio.
+//
+// Lo que NO lleva, a propósito: «seguir donde lo dejaste». Ninguna actividad
+// guarda su progreso al salir —el estado de examen, simulacro y repaso vive en
+// memoria y se pierde al recargar—, así que no hay fuente fiable de la que
+// sacarlo. Ponerlo significaría inventarse un estado, y una tarjeta que
+// promete continuar algo y empieza de cero es peor que no tenerla.
+function _hoyPlanHTML(emp, _en){
+  if(!emp) return '';
+  // La cuenta de administración no tiene plan: no deja rastro al registrar
+  // —igual que en `scores`—, así que sus tareas no se marcarían nunca por muy
+  // bien que las hiciera. Un plan que no se puede terminar no es un plan.
+  if(typeof _esAdmin === 'function' && _esAdmin(emp.name)) return '';
+  const plan = planDeHoyDe(emp);
+  const n = plan.tareas.length;
+  if(!n){
+    return `<div class="plan-hoy plan-hoy-vacio">
+      <div class="plan-hoy-eyebrow">◈ ${_en ? 'Your plan for today' : 'Tu plan de hoy'}</div>
+      <div class="plan-hoy-resumen">${_en ? 'All caught up — nothing pending today.' : 'Todo al día: hoy no tienes nada pendiente.'}</div>
+    </div>`;
+  }
+  const hechas = plan.completadas;
+  const pend = plan.tareas.filter(t => !t.hecha);
+  const minPend = pend.reduce((a, t) => a + t.minutos, 0);
+  const resumen = hechas >= n
+    ? (_en ? 'Plan complete. Well done.' : 'Plan terminado. Bien hecho.')
+    : (_en ? `${pend.length} ${pend.length === 1 ? 'task' : 'tasks'} left · about ${minPend} min`
+           : `${pend.length} ${pend.length === 1 ? 'tarea' : 'tareas'} · unos ${minPend} min`);
+  const filas = plan.tareas.map((t, i) => {
+    const titulo = _en ? t.en : t.es;
+    const motivo = _en ? t.motivo_en : t.motivo_es;
+    const marca = t.hecha ? '✓' : String(i + 1);
+    const etiq = `${titulo} — ${motivo} — ${t.minutos} min${t.hecha ? (_en ? ' — done' : ' — hecha') : ''}`;
+    return `<li><button type="button" class="plan-tarea${t.hecha ? ' hecha' : ''}"
+      onclick="_planIr('${t.id}',${t.ref == null ? 'null' : JSON.stringify(t.ref)})"
+      aria-label="${escapeHTML(etiq)}">
+      <span class="plan-tarea-marca" aria-hidden="true">${marca}</span>
+      <span class="plan-tarea-cuerpo">
+        <span class="plan-tarea-t">${escapeHTML(titulo)}</span>
+        <span class="plan-tarea-m">${escapeHTML(motivo)}</span>
+      </span>
+      <span class="plan-tarea-min" aria-hidden="true">${t.minutos} min</span>
+      <span class="plan-tarea-go" aria-hidden="true">›</span>
+    </button></li>`;
+  }).join('');
+  return `<div class="plan-hoy">
+    <div class="plan-hoy-cab">
+      <div class="plan-hoy-cab-tx">
+        <div class="plan-hoy-eyebrow">◈ ${_en ? 'Your plan for today' : 'Tu plan de hoy'}</div>
+        <div class="plan-hoy-resumen">${escapeHTML(resumen)}</div>
+      </div>
+      <div class="plan-hoy-prog" aria-label="${_en ? `${hechas} of ${n} done` : `${hechas} de ${n} hechas`}"><b>${hechas}</b><span>/${n}</span></div>
+    </div>
+    <div class="plan-hoy-barra" aria-hidden="true"><i style="width:${Math.round(hechas / n * 100)}%"></i></div>
+    <ol class="plan-hoy-lista">${filas}</ol>
+  </div>`;
+}
+
 function renderDashboard(){
   const emp=getEmp(currentUser);
   const sessions=emp.sessions||[];
@@ -19604,6 +20653,7 @@ function renderDashboard(){
       const _msDone=_m.done>=_m.total;
       return `
     <div class="tunic-divider"><span>${_en?'Today':'Hoy'}</span></div>
+    ${_hoyPlanHTML(emp,_en)}
     ${_pddHeroHTML(emp,_en)}
     <div class="hoy-stats" role="group" aria-label="${_en?'Your numbers: quiz streak, exam accuracy, league position':'Tus números: racha del reto, precisión de exámenes, posición en la liga'}">
       <div class="hoy-stat"><b>${_dqS}</b><span>${_en?'streak':'racha'}</span></div>
@@ -19837,6 +20887,14 @@ function flipCard(){
     ? `<div style="display:flex;flex-wrap:wrap;gap:.4rem;justify-content:center;margin-top:.25rem">${dd.allergens.map(a=>`<span style="display:inline-flex;align-items:center;gap:.35rem;padding:.3rem .6rem;background:rgba(196,112,104,.1);border:1px solid rgba(196,112,104,.25);border-radius:999px;font-family:'Quicksand',sans-serif;font-size:.72rem;color:#9a4a42;font-weight:600"><span style="font-size:.95rem;line-height:1">${allergenEmoji(a)}</span><span>${escapeHTML(allergenLocal(a))}</span></span>`).join('')}</div>`
     : `<div style="display:inline-flex;align-items:center;gap:.35rem;padding:.3rem .6rem;background:rgba(77,138,94,.1);border:1px solid rgba(77,138,94,.25);border-radius:999px;font-family:'Quicksand',sans-serif;font-size:.72rem;color:var(--sage);font-weight:600"><span>✓</span><span>${_en?'No allergens':'Sin alérgenos'}</span></div>`;
 
+  // Marcaje: sólo aparece en las cartas que lo traen.
+  const marcajeHtml = dd.marcaje
+    ? `<div>
+          <div style="font-family:'DM Mono',monospace;font-size:.55rem;letter-spacing:.12em;color:var(--gold);text-transform:uppercase;margin-bottom:.4rem;text-align:center">🍽️ ${_en?'Cutlery marking':'Marcaje'}</div>
+          <div style="padding:.55rem .8rem;background:rgba(196,154,60,.05);border:1px solid rgba(196,154,60,.15);border-radius:var(--r2);font-family:'Quicksand',sans-serif;font-size:.75rem;color:var(--parch2);line-height:1.55;text-align:center">${escapeHTML(dd.marcaje)}</div>
+        </div>`
+    : '';
+
   // Phase 1: rotate out
   card.classList.add('fc-animating-out');
   setTimeout(()=>{
@@ -19860,6 +20918,7 @@ function flipCard(){
           <div style="font-family:'DM Mono',monospace;font-size:.55rem;letter-spacing:.12em;color:#c47068;text-transform:uppercase;margin-bottom:.4rem;text-align:center">⚠ ${_en?'Allergens':'Alérgenos'}</div>
           <div style="text-align:center">${allergensHtml}</div>
         </div>
+        ${marcajeHtml}
         ${dd.notes?`<div style="padding:.55rem .75rem;background:rgba(196,154,60,.05);border-left:2px solid var(--gold-a);border-radius:0 var(--r2) var(--r2) 0;font-size:.68rem;color:var(--parch2);line-height:1.5;text-align:left">${dd.notes}</div>`:''}
         <div style="text-align:center;font-family:'DM Mono',monospace;font-size:.56rem;letter-spacing:.1em;color:var(--parch4);padding:.3rem 0 .1rem">↩ ${_en?'tap the card to go back':'toca la tarjeta para volver'}</div>
       </div>
@@ -20392,6 +21451,9 @@ function nextExamQ(){
     // localStorage 5-10 MB quota on long-time users.
     if(emp.sessions.length > 50) emp.sessions = emp.sessions.slice(-50);
     saveDB();examResults=session;
+    registrarActividad({ activity:'examen', competency:competenciaDeTema(examConfig.topic),
+      kind:'evaluacion', score:examScore, total:examDishes.length, seconds:time,
+      meta:{ topic:examConfig.topic, cat:examConfig.cat } });
     supaInsertScore(session, currentUser).catch(function(){
       if(typeof showToast==='function') showToast(
         LANG==='en'?'Could not save score to cloud. Saved locally.':'No se pudo guardar la puntuación en la nube. Guardada localmente.',
@@ -21857,13 +22919,26 @@ function renderRepasoDishDetail(dishId){
   if(!dish){repasoView='topic';renderRepaso();return;}
   track('dish.view', { dishId: dish.id, from: 'repaso' });
 
+  // Medido en la auditoría: esta ficha —la más usada— leía nombre,
+  // ingredientes, historia y notas del plato SIN pasar por la traducción. Un
+  // camarero con la aplicación en inglés veía las etiquetas en inglés y el
+  // contenido en español.
+  // getDish() sólo sustituye los campos que el restaurante haya traducido; lo
+  // que no tenga traducción guardada se queda en español, que es lo correcto:
+  // no se inventa una traducción de un plato.
+  // OJO: dish.allergens se queda SIN traducir a propósito. Es la clave con la
+  // que se buscan el color, la adaptación y la procedencia; la etiqueta que se
+  // ve ya se traduce aparte con _aEn.
+  const dd = getDish(dish);
+
   const emp = getEmp(currentUser);
   const isKnown = emp && emp.knownDishes && emp.knownDishes[dish.id];
-  const ingredientList = dish.ingredients ? dish.ingredients.split(',').map(i=>i.trim()).filter(Boolean) : [];
-  if(ingredientList.length === 0 && dish.ingredients){
-    dish.ingredients.split('.').forEach(s => { if(s.trim()) ingredientList.push(s.trim()); });
+  const ingredientList = dd.ingredients ? dd.ingredients.split(',').map(i=>i.trim()).filter(Boolean) : [];
+  if(ingredientList.length === 0 && dd.ingredients){
+    dd.ingredients.split('.').forEach(s => { if(s.trim()) ingredientList.push(s.trim()); });
   }
   const allergenColors = {'Gluten':'#d4a017','Lácteos':'#4888a0','Huevos':'#f5a623','Pescado':'#2e86c1','Mariscos':'#e74c3c','Frutos secos':'#8b4513','Cacahuetes':'#cd853f','Soja':'#5a9a6e','Apio':'#228b22','Mostaza':'#daa520','Sésamo':'#d2691e','Sulfitos':'#7a6aaa','Moluscos':'#dc143c'};
+  const _marcaje = dd.marcaje || '';
   const plateSize = 220;
   const cx = plateSize/2, cy = plateSize/2;
 
@@ -21941,14 +23016,14 @@ function renderRepasoDishDetail(dishId){
     <button onclick="repasoView='topic';renderRepaso()" class="btn-back">${t('back')}</button>
 
     <div style="text-align:left;margin-bottom:1.2rem;padding-bottom:.65rem;border-bottom:1px solid rgba(28,42,34,.12)">
-      <div style="font-family:'DM Mono',monospace;font-size:.55rem;color:var(--gold-deep);letter-spacing:.15em;text-transform:uppercase;margin-bottom:.3rem">${escapeHTML(dish.cat)}${isKnown ? ` · <span style="color:var(--green-deep)">✓ ${LANG==='en'?'Mastered':'Dominado'}</span>` : ''}</div>
-      <div style="font-family:'Cinzel',serif;font-size:1.18rem;font-weight:600;color:var(--parchment);line-height:1.3">${escapeHTML(dish.name)}</div>
+      <div style="font-family:'DM Mono',monospace;font-size:.55rem;color:var(--gold-deep);letter-spacing:.15em;text-transform:uppercase;margin-bottom:.3rem">${escapeHTML(catLocal(dish.cat))}${isKnown ? ` · <span style="color:var(--green-deep)">✓ ${LANG==='en'?'Mastered':'Dominado'}</span>` : ''}</div>
+      <div style="font-family:'Cinzel',serif;font-size:1.18rem;font-weight:600;color:var(--parchment);line-height:1.3">${escapeHTML(dd.name)}</div>
       <button class="dj-launch-btn${(emp.journeyMastered||{})[dish.id]?' mastered':''}" onclick="launchDishJourney(${dish.id})" style="margin-top:.6rem;padding:.45rem .9rem;font-size:.6rem">${(emp.journeyMastered||{})[dish.id]?'✓ ':'🚀 '}${LANG==='en'?'Immersive Journey':'Viaje Inmersivo'}</button>
     </div>
 
     <div style="display:flex;justify-content:center;margin-bottom:1.2rem">
       ${(typeof dishPhotoSrc==='function'&&dishPhotoSrc(dish.id))?`
-      <div class="dish-hero-photo"><img ${SRC}="${dishPhotoSrc(dish.id)}" alt="${escapeHTML(dish.name)}"></div>
+      <div class="dish-hero-photo"><img ${SRC}="${dishPhotoSrc(dish.id)}" alt="${escapeHTML(dd.name)}"></div>
       `:`
       <svg width="${plateSize}" height="${plateSize}" viewBox="0 0 ${plateSize} ${plateSize}" style="filter:drop-shadow(0 4px 12px rgba(0,0,0,.1))">
         <circle cx="${cx}" cy="${cy}" r="${cx-5}" fill="none" stroke="var(--gold-a)" stroke-width="1"/>
@@ -21956,9 +23031,9 @@ function renderRepasoDishDetail(dishId){
         <circle cx="${cx}" cy="${cy}" r="${cx-20}" fill="none" stroke="rgba(196,154,60,.1)" stroke-width=".5" stroke-dasharray="4,3"/>
         <circle cx="${cx}" cy="${cy}" r="28" fill="rgba(200,169,110,.04)" stroke="rgba(200,169,110,.08)" stroke-width=".5"/>
         <text x="${cx}" y="${cy-6}" text-anchor="middle" font-family="'Cinzel',serif" font-size="10" fill="var(--parch2)" font-weight="500">
-          ${escapeHTML(dish.name.length > 24 ? dish.name.substring(0,22)+'…' : dish.name)}
+          ${escapeHTML(dd.name.length > 24 ? dd.name.substring(0,22)+'…' : dd.name)}
         </text>
-        <text x="${cx}" y="${cy+8}" text-anchor="middle" font-family="'DM Mono',monospace" font-size="6.5" fill="var(--parch4)" letter-spacing=".08em">${escapeHTML(dish.cat.toUpperCase())}</text>
+        <text x="${cx}" y="${cy+8}" text-anchor="middle" font-family="'DM Mono',monospace" font-size="6.5" fill="var(--parch4)" letter-spacing=".08em">${escapeHTML(catLocal(dish.cat).toUpperCase())}</text>
       </svg>`}
     </div>
 
@@ -21971,6 +23046,12 @@ function renderRepasoDishDetail(dishId){
       </div>
     </div>
 
+    ${_marcaje ? `
+    <div class="card" style="padding:.9rem;margin-bottom:.75rem">
+      <div style="font-family:'DM Mono',monospace;font-size:.5rem;color:var(--gold);letter-spacing:.12em;text-transform:uppercase;margin-bottom:.35rem">🍽️ ${LANG==='en'?'Cutlery marking':'Marcaje'}</div>
+      <div style="font-family:'Quicksand',sans-serif;font-size:.78rem;color:var(--parch2);line-height:1.6">${escapeHTML(_marcaje)}</div>
+    </div>` : ''}
+
     ${ingredientList.length ? `
     <div class="card" style="padding:.9rem;margin-bottom:.75rem">
       <div style="font-family:'DM Mono',monospace;font-size:.5rem;color:var(--gold);letter-spacing:.12em;text-transform:uppercase;margin-bottom:.5rem">◇ ${LANG==='en'?'Ingredients':'Ingredientes'}</div>
@@ -21979,18 +23060,18 @@ function renderRepasoDishDetail(dishId){
       </div>
     </div>` : ''}
 
-    ${dish.history ? `
+    ${dd.history ? `
     <div class="card" style="padding:.9rem;margin-bottom:.75rem">
       <div style="font-family:'DM Mono',monospace;font-size:.5rem;color:var(--gold);letter-spacing:.12em;text-transform:uppercase;margin-bottom:.5rem">◇ ${LANG==='en'?'Story':'Historia'}</div>
-      <div style="font-family:'Quicksand',sans-serif;font-size:.75rem;color:var(--parch2);line-height:1.6">${escapeHTML(dish.history)}</div>
+      <div style="font-family:'Quicksand',sans-serif;font-size:.75rem;color:var(--parch2);line-height:1.6">${escapeHTML(dd.history)}</div>
     </div>` : ''}
 
     ${maridajeHtml}
 
-    ${dish.notes ? `
+    ${dd.notes ? `
     <div class="card" style="padding:.9rem;margin-bottom:.75rem;border-color:rgba(196,112,104,.2);background:rgba(196,112,104,.02)">
       <div style="font-family:'DM Mono',monospace;font-size:.5rem;color:var(--rose);letter-spacing:.12em;text-transform:uppercase;margin-bottom:.5rem">! ${LANG==='en'?'Important Notes':'Notas Importantes'}</div>
-      <div style="font-family:'Quicksand',sans-serif;font-size:.75rem;color:var(--parch2);line-height:1.6">${escapeHTML(dish.notes)}</div>
+      <div style="font-family:'Quicksand',sans-serif;font-size:.75rem;color:var(--parch2);line-height:1.6">${escapeHTML(dd.notes)}</div>
     </div>` : ''}
 
     <div style="display:flex;gap:.5rem;margin-bottom:1rem">
@@ -23511,7 +24592,7 @@ function buildAllergenQuestions(cat) {
 
 function startAllergenTest(cat) {
   const questions = buildAllergenQuestions(cat);
-  if (!questions.length) { alert(LANG==='en'?'Not enough data':'Sin datos suficientes'); return; }
+  if (!questions.length) { showToast(LANG==='en'?'Not enough data':'Sin datos suficientes','error'); return; }
   // La pestaña de lanzamiento manda: el simulacro vive hoy en Aprender →
   // Repaso, pero la guarda anti-repintado comparaba contra 'exam' fijo y el
   // drill no llegaba a pintarse (toque sin efecto, reporte del propietario).
@@ -23599,6 +24680,8 @@ function renderAllergenResults() {
   const cls = pct>=80?'var(--sage)':pct>=50?'var(--gold)':'var(--rose)';
   const bonus = pct>=90?30:pct>=70?15:pct>=50?5:0;
   if (bonus) awardXP(bonus, `${LANG==='en'?'Allergen exam':'Examen alérgenos'} (${pct}%)`, 'allergens');
+  registrarActividad({ activity:'simulacro_alergenos', competency:'alergenos',
+    kind:'evaluacion', score, total:questions.length, seconds:time, meta:{ cat:cat||'all' } });
   const _payload = { score, total: questions.length, topic: 'alergenos', cat: cat||'all', time };
   supaInsertScore(_payload, currentUser).catch(function(){
     if(typeof showToast==='function') showToast(
@@ -25852,7 +26935,7 @@ async function startChallenge(rivalName) {
     const q = txBuildQuestion();
     if (q) questions.push(q);
   }
-  if (questions.length < 5) { alert(LANG==='en'?'Not enough questions. Try again.':'No hay suficientes preguntas.'); return; }
+  if (questions.length < 5) { showToast(LANG==='en'?'Not enough questions. Try again.':'No hay suficientes preguntas.','error'); return; }
 
   remoteDuelState = { questions, answers: [], rivalName, phase: 'answering', qIdx: 0, timings: [], _qStart: 0 };
   renderRemoteDuelQuestion();
@@ -25952,7 +27035,7 @@ async function submitChallenge() {
   const { questions, answers, rivalName } = remoteDuelState;
   document.getElementById('appContent').innerHTML = `<div class="sup-wrap"><div style="text-align:center;padding:2rem;color:var(--parch3);font-size:.8rem">⏳ ${LANG==='en'?'Sending challenge...':'Enviando reto...'}</div></div>`;
   const duel = await supaCreateChallenge(currentUser, rivalName, questions);
-  if (!duel) { alert(LANG==='en'?'Error sending challenge':'Error al enviar el reto'); renderDuel(); return; }
+  if (!duel) { showToast(LANG==='en'?'Error sending challenge':'Error al enviar el reto','error'); renderDuel(); return; }
   await supaSubmitChallengerAnswers(duel.id, answers, remoteDuelState.timings || []);
   // Send notification
   await fetch(`${SUPA_URL}/rest/v1/notifications`, {
@@ -25976,10 +27059,10 @@ async function submitChallenge() {
 
 async function startDefense(duel) {
   if (typeof duel === 'string') duel = jParse(duel, null);
-  if (!duel) { alert(LANG==='en'?'Duel data corrupted':'Datos del duelo corruptos'); renderDuel(); return; }
+  if (!duel) { showToast(LANG==='en'?'Duel data corrupted':'Datos del duelo corruptos','error'); renderDuel(); return; }
   const questions = jParse(duel.questions, []);
   const challengerAnswers = jParse(duel.challenger_answers, []);
-  if (!questions.length) { alert(LANG==='en'?'Duel data corrupted':'Datos del duelo corruptos'); renderDuel(); return; }
+  if (!questions.length) { showToast(LANG==='en'?'Duel data corrupted':'Datos del duelo corruptos','error'); renderDuel(); return; }
   remoteDuelState = { questions, answers: [], rivalName: duel.challenger, phase: 'defending', qIdx: 0, duelId: duel.id, challengerAnswers, timings: [], _qStart: 0, duelObj: duel };
   renderRemoteDefenseQuestion();
 }
@@ -26058,7 +27141,7 @@ async function submitDefense() {
   const duelObj = remoteDuelState.duelObj || {};
   const cTimings = jParse(duelObj.challenger_timings, []);
   const result = await supaSubmitDefenderAnswers(duelId, answers, challengerAnswers, questions, cTimings, remoteDuelState.timings || []);
-  if (!result) { alert(LANG==='en'?'Error submitting duel — try again':'Error al enviar duelo — inténtalo de nuevo'); renderDuel(); return; }
+  if (!result) { showToast(LANG==='en'?'Error submitting duel — try again':'Error al enviar duelo — inténtalo de nuevo','error'); renderDuel(); return; }
   const { cScore, dScore, cWins, dWins, tiebreak } = result;
   const iWon = dWins;
   const xpAmt = iWon ? 50 : cWins ? 10 : 25;
@@ -26116,7 +27199,7 @@ async function submitDefense() {
 function startDuel(){
   const p1=document.getElementById('duelP1').value;
   const p2=document.getElementById('duelP2').value;
-  if(p1===p2){ alert(LANG==='en'?'Choose different players!':'¡Elige jugadores distintos!'); return; }
+  if(p1===p2){ showToast(LANG==='en'?'Choose different players!':'¡Elige jugadores distintos!','warning'); return; }
   duelState={p1,p2,scores:{[p1]:0,[p2]:0},round:1,totalRounds:7,current:p1,question:null,answered:{[p1]:false,[p2]:false}};
   duelNextRound();
 }
@@ -27148,11 +28231,13 @@ function showAchievementToast(ach){
   // Toasts live in one fixed stack: several achievements unlocking together
   // used to render at the same fixed spot, painting text over text and
   // covering the nav. The stack sits below the header and lets taps through.
+  _avisosAnclar();
   let stack=document.getElementById('achToastStack');
   if(!stack){
     stack=document.createElement('div');
     stack.id='achToastStack';
-    stack.style.cssText='position:fixed;top:72px;left:50%;transform:translateX(-50%);z-index:10000;display:flex;flex-direction:column;gap:.5rem;pointer-events:none;width:min(340px,92vw);';
+    // Mismo ancla que los avisos normales: por debajo de la navegación.
+    stack.style.cssText='position:fixed;top:var(--avisos-top,120px);left:50%;transform:translateX(-50%);z-index:10000;display:flex;flex-direction:column;gap:.5rem;pointer-events:none;width:min(340px,92vw);';
     document.body.appendChild(stack);
   }
   const toast=document.createElement('div');
@@ -27959,6 +29044,8 @@ function _lqaCompleteExam(){
     const emp = getEmp(currentUser);
     if (emp) {
       _lqaPushScore(emp, 'exam', s.score, total, timeSec);
+      registrarActividad({ activity:'examen_lqa', competency:'protocolo', kind:'evaluacion',
+        score:s.score, total, seconds:timeSec });
       if (!emp.lqaExamBest || pct > emp.lqaExamBest) emp.lqaExamBest = pct;
       emp.lqaExamsCompleted = (emp.lqaExamsCompleted||0) + 1;
       saveDB();
@@ -27980,7 +29067,7 @@ function renderLqaExamResults(){
   c.innerHTML = `<div class="sup-wrap">
     <div style="text-align:center;margin:2rem 0">
       <div style="font-family:'Cinzel',serif;font-size:3rem;font-weight:700;color:var(--gold);margin-bottom:.5rem">${s.score}/${total}</div>
-      <h1 tabindex="-1" id="lqaResHdr" style="font-size:1.1rem;color:var(--parchment);margin-bottom:1.5rem;font-family:'Cinzel',serif;font-weight:600">${LANG==='en'?'LQA Exam Complete':'Examen LQA Completado'}</h1>
+      <h2 tabindex="-1" id="lqaResHdr" style="font-size:1.1rem;color:var(--parchment);margin-bottom:1.5rem;font-family:'Cinzel',serif;font-weight:600">${LANG==='en'?'LQA Exam Complete':'Examen LQA Completado'}</h2>
       <div style="background:linear-gradient(135deg,rgba(196,154,60,.08),rgba(196,154,60,.02));border:1px solid rgba(196,154,60,.2);border-radius:var(--r);padding:1rem;margin-bottom:1rem">
         <div style="font-size:.85rem;color:var(--parch3);text-transform:uppercase;margin-bottom:.3rem">${LANG==='en'?'Score':'Puntuación'}</div>
         <div style="font-size:2rem;font-weight:700;color:var(--gold)">${pct}%</div>
@@ -28157,6 +29244,10 @@ function _lqaCompleteSituations(){
     const emp = getEmp(currentUser);
     if (emp) {
       _lqaPushScore(emp, 'situations', s.score, total, timeSec);
+      registrarActividad({ activity:'situaciones_lqa', competency:'protocolo', kind:'evaluacion',
+        score:s.score, total, seconds:timeSec,
+        meta:{ cats: s.answers.reduce((m,x)=>{ const k=x.cat||'misc';
+          m[k]=m[k]||{ok:0,n:0}; m[k].n++; if(x.isCorrect) m[k].ok++; return m; }, {}) } });
       if (!emp.lqaSituationBest || pct > emp.lqaSituationBest) emp.lqaSituationBest = pct;
       emp.lqaSituationsCompleted = (emp.lqaSituationsCompleted||0) + 1;
       // A1: per-category aggregate — unlocks "weak areas" insight in the dashboard.
@@ -28267,7 +29358,7 @@ function renderLqaSituationResults(){
   c.innerHTML = `<div class="sup-wrap">
     <div style="text-align:center;margin:1.5rem 0 1rem">
       <div style="font-family:'Cinzel',serif;font-size:3rem;font-weight:700;color:#7a6aaa;margin-bottom:.5rem">${s.score}/${total}</div>
-      <h1 tabindex="-1" id="lqaResHdr" style="font-size:1.1rem;color:var(--parchment);margin-bottom:.5rem;font-family:'Cinzel',serif;font-weight:600">${LANG==='en'?'Situations Complete':'Situaciones Completadas'}</h1>
+      <h2 tabindex="-1" id="lqaResHdr" style="font-size:1.1rem;color:var(--parchment);margin-bottom:.5rem;font-family:'Cinzel',serif;font-weight:600">${LANG==='en'?'Situations Complete':'Situaciones Completadas'}</h2>
       <div style="font-size:.9rem;color:var(--parch2);margin-bottom:1rem">${pct}% · +${xp} XP · ${timeSec}s</div>
     </div>
     ${_lqaTrendBlock(getEmp(currentUser), 'situations')}
@@ -28413,6 +29504,8 @@ function _lqaCompleteAuditor(){
     const emp = getEmp(currentUser);
     if (emp) {
       _lqaPushScore(emp, 'audit', s.score, total, timeSec);
+      registrarActividad({ activity:'auditor_lqa', competency:'protocolo', kind:'evaluacion',
+        score:s.score, total, seconds:timeSec });
       if (!emp.lqaAuditBest || pct > emp.lqaAuditBest) emp.lqaAuditBest = pct;
       emp.lqaAuditsCompleted = (emp.lqaAuditsCompleted||0) + 1;
       saveDB();
@@ -28437,7 +29530,7 @@ function renderLqaAuditorResults(){
   c.innerHTML = `<div class="sup-wrap">
     <div style="text-align:center;margin:1.5rem 0 1rem">
       <div style="font-family:'Cinzel',serif;font-size:3rem;font-weight:700;color:var(--sage);margin-bottom:.5rem">${s.score}/${total}</div>
-      <h1 tabindex="-1" id="lqaResHdr" style="font-size:1.1rem;color:var(--parchment);margin-bottom:.5rem;font-family:'Cinzel',serif;font-weight:600">${LANG==='en'?'Are You Ready?':'¿Estás Preparado?'}</h1>
+      <h2 tabindex="-1" id="lqaResHdr" style="font-size:1.1rem;color:var(--parchment);margin-bottom:.5rem;font-family:'Cinzel',serif;font-weight:600">${LANG==='en'?'Are You Ready?':'¿Estás Preparado?'}</h2>
       <div style="font-size:.9rem;color:var(--parch2);margin-bottom:1rem">${LANG==='en'?'Evaluation accuracy':'Precisión de evaluación'}: <strong>${pct}%</strong> · +${xp} XP · ${timeSec}s</div>
       <div style="background:linear-gradient(135deg,rgba(77,138,94,.08),rgba(77,138,94,.02));border:1px solid rgba(77,138,94,.2);border-radius:var(--r);padding:1rem;margin-bottom:1rem">
         <div style="font-size:.85rem;color:var(--parch2);line-height:1.6">${tip}</div>
@@ -28727,6 +29820,8 @@ function renderGhostReport(){
     emp.ghostRuns = (emp.ghostRuns||0) + 1;
     if(!emp.lqaScores) emp.lqaScores=[];
     emp.lqaScores.push({type:'ghost',score:met,total,date:Date.now()});
+    registrarActividad({ activity:'fantasma', competency:'protocolo', kind:'evaluacion',
+      score:met, total, meta:{ escenario:ghostScenario.id, flojas:weakest.map(w=>w.cat.id) } });
     saveDB();
   }
   awardXP(xpEarned, LANG==='en'?'Full audit':'Auditor\u00eda completa', 'ghost');
@@ -30740,6 +31835,8 @@ function launchElTurno(){
           _emp.etRecord={secs:Math.floor(G.time),orders:G.score};
           saveDB();
           supaInsertEtRecord(currentUser,Math.floor(G.time),G.score);
+          registrarActividad({ activity:'survivors', kind:'juego',
+            seconds:Math.floor(G.time), meta:{ comandas:G.score } });
           _etRenderRank();   // el tablón de inicio ya refleja el récord al volver
           _txThroneCheck('elturno', Math.floor(G.time));   // ¿arrebaté el nº1? → corona sola
         }
@@ -31126,6 +32223,8 @@ function txAnswer(idx){
   if(txokoState.score>(emp.txokoRecord||0)){
     emp.txokoRecord=txokoState.score; saveDB();
     supaInsertTxokoRecord(currentUser, emp.txokoRecord);
+    registrarActividad({ activity:'mr_shoesmith', kind:'juego',
+      meta:{ record: emp.txokoRecord } });
     awardXP(30,LANG==='en'?'New record! ★':'¡Nuevo récord! ★');
     // F-P1-1: a_txoko5/15/30 fire on txokoRecord thresholds; was previously only triggered
     // when the user later visited an exam/LQA screen.
