@@ -1,6 +1,37 @@
 {
- "updated": "2026-09-12T14:11:34.202Z",
+ "updated": "2026-09-12T19:24:43.150Z",
  "items": [
+  {
+   "t": "La cara guarda la honra",
+   "u": "https://www.cronica.com.mx/jalisco/cronomicon/2026/09/12/la-cara-guarda-la-honra/",
+   "s": "La Crónica de Hoy",
+   "d": "2026-09-12T17:39:23.000Z",
+   "tags": [
+    "ALTA COCINA"
+   ],
+   "img": "https://lacronicadehoy-lacronicadehoy-prod.web.arc-cdn.net/resizer/v2/BVZK4Q5VRBCBTF3YNG47NU64QI.jpeg?auth=c40447dad0c7d0a075b4e36f4a6cb2dcf63c3ea7d87f87c19ee8aabd489054c2&width=1200"
+  },
+  {
+   "t": "Poemas, alta cocina y Mediterráneo: Así ha sido el menú de la boda de Ximo Puig y Gabriela Bravo",
+   "u": "https://www.levante-emv.com/safor/2026/09/12/poemas-alta-cocina-mediterraneo-sido-134218766.html",
+   "s": "Levante-EMV",
+   "d": "2026-09-12T16:17:25.000Z",
+   "tags": [
+    "ALTA COCINA"
+   ],
+   "img": "https://estaticos-cdn.prensaiberica.es/clip/2df26c61-a7de-42c5-98f0-1a2d558636e7_16-9-discover-aspect-ratio_default_0_x1000y426.jpg"
+  },
+  {
+   "t": "Bodegas La Aurora y Pérez Barquero, grandes triunfadoras del primer concurso nacional Paxera",
+   "u": "https://www.montilladigital.com/2026/09/concurso-vinos-paxera.html",
+   "s": "Montilla Digital",
+   "d": "2026-09-12T16:00:00.000Z",
+   "tags": [
+    "VINO",
+    "CANARIAS"
+   ],
+   "img": "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhxbFPQS0ufI9Zqpj4sHGlTpPE8U1E7f8_JQET8-xT-aZLhuFtiSaxwQT0PO6QiHotv_1CIm0_bKAIslnnPhnyeljuxbzf6Aef6C9jnzqBmNNKROSLkbMYta5Mp1Dn6uTFzL_SfFyUoTHFtNwtRt3Mb1dWxwejO3pHZI_oQRokywIzhfrdnmIf3TgklZoiE/w1200-h630-p-k-no-nu/20260912cvpx1.jpg"
+  },
   {
    "t": "El truco de Martín Berasategui, chef español: «Para evitar que los mejillones al vapor queden duros, el tru...",
    "u": "https://okdiario.com/curiosidades/truco-martin-berasategui-chef-evitar-que-mejillones-vapor-queden-duros-truco-no-echarles-agua-15815864/amp",
@@ -24,7 +55,7 @@
   {
    "t": "PAXERA 2026: el concurso que consagra al Pedro Ximénez con 50 muestras y Canarias presente",
    "u": "https://www.canariasenpleno.com/paxera-pedro-ximenez/",
-   "s": "Canarias en Pleno",
+   "s": "canariasenpleno.com",
    "d": "2026-09-12T12:01:26.000Z",
    "tags": [
     "VINO",
@@ -65,7 +96,7 @@
   {
    "t": "La chef privada argentina que cocina saludable para príncipes y millonarios en Europa",
    "u": "https://www.clarin.com/sociedad/chef-privada-argentina-cocina-saludable-principes-millonarios-europa_0_pdQlVL3ipD.html",
-   "s": "Clarin.com",
+   "s": "clarin.com",
    "d": "2026-09-12T09:00:49.000Z",
    "tags": [
     "ALTA COCINA"
@@ -75,7 +106,7 @@
   {
    "t": "Dos Pedro Ximénez, un dulce canario y un vermut cordobés logran los máximos reconocimientos en Montemayor",
    "u": "https://www.eldebate.com/espana/la-voz-de-cordoba/provincia/20260912/dos-pedro-ximenez-dulce-canario-vermut-cordobes-logran-maximos-reconocimientos-montemayor_458020.html",
-   "s": "El Debate",
+   "s": "eldebate.com",
    "d": "2026-09-12T06:58:58.000Z",
    "tags": [
     "VINO",
@@ -114,18 +145,28 @@
    "img": "https://media.lmneuquen.com/p/9e675b84b375a11e6ac18af7fb5f2498/adjuntos/195/imagenes/008/376/0008376183/1200x675/smart/portadas-influ.png"
   },
   {
+   "t": "Santy (12/09/26)",
+   "u": "https://www.eldia.es/humor/2026/09/12/santy-12-09-26-134204271.html",
+   "s": "Eldía",
+   "d": "2026-09-11T22:59:55.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://estaticos-cdn.prensaiberica.es/clip/8895b6c7-2c52-4854-88b6-6d719736c91d_16-9-aspect-ratio_default_0.jpg"
+  },
+  {
    "t": "Zuberoa fue 'Qué bello es vivir' y Donostia es 'La La Land', o así",
-   "u": "https://www.diariovasco.com/culturas/zuberoa-bello-vivir-donostia-land-20260912165442-nt.html",
+   "u": "https://www.diariovasco.com/culturas/zuberoa-bello-vivir-donostia-land-20260912165442-nt_amp.html",
    "s": "El Diario Vasco",
    "d": "2026-09-11T22:04:34.000Z",
    "tags": [
     "CHEF"
    ],
-   "img": "https://s1.ppllstatics.com/diariovasco/www/multimedia/culturas/2026/09/11/ap-RKvPhUhyLVDERsncjOp1r3K-1200x840@Diario%20Vasco.jpg"
+   "img": "https://s1.ppllstatics.com/diariovasco/www/multimedia/culturas/2026/09/11/ap-U67330387256voa-1200x630@Diario%20Vasco.jpg"
   },
   {
    "t": "Solera 1981 PX de la cooperativa La Aurora de Montilla, el gran vencedor en el I Concurso Nacional de Vinos Dulces Paxera de Montemayor",
-   "u": "https://www.eldiadecordoba.es/provincia/solera-1981-aurora-concurso-nacional-vinos-dulces_0_2007936089.html",
+   "u": "https://www.eldiadecordoba.es/provincia/solera-1981-aurora-concurso-nacional-vinos-dulces_0_2007936089.amp.html",
    "s": "El Día de Córdoba",
    "d": "2026-09-11T19:04:47.000Z",
    "tags": [
@@ -133,6 +174,16 @@
     "CANARIAS"
    ],
    "img": "https://static.grupojoly.com/clip/09ea009f-f5f8-4b00-a3a3-a7e55be2cbeb_facebook-aspect-ratio_default_0.jpg"
+  },
+  {
+   "t": "Éxito de la tercera edición del torneo Golf & Fun Tenerife 2026",
+   "u": "https://www.eldia.es/tenerife/2026/09/11/exito-tercera-edicion-torneo-golf-bc-134197632.html",
+   "s": "Eldía",
+   "d": "2026-09-11T16:23:20.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://estaticos-cdn.prensaiberica.es/clip/48958d9f-3cc9-4bfb-b52b-71f8826cbc91_16-9-discover-aspect-ratio_default_0_x443y665.jpg"
   },
   {
    "t": "¿Qué hacer este fin de semana en Tenerife? Listado de planes",
@@ -157,7 +208,7 @@
   {
    "t": "Gastronomía sostenible: curso gratuito en Fuerteventura el 17 de septiembre",
    "u": "https://www.canariasenpleno.com/curso-gastronomia-sostenible-fuerteventura/",
-   "s": "Canarias en Pleno",
+   "s": "canariasenpleno.com",
    "d": "2026-09-11T15:12:57.000Z",
    "tags": [
     "CANARIAS"
@@ -166,7 +217,7 @@
   {
    "t": "Turismo organiza un curso gratuito de cocina sostenible en Fuerteventura",
    "u": "https://canariastimes.com/fuerteventura/cultura-ocio/turismo-curso-gratuito-cocina-sostenible-fuerteventura/",
-   "s": "Canarias Times",
+   "s": "canariastimes.com",
    "d": "2026-09-11T15:02:14.000Z",
    "tags": [
     "CANARIAS"
@@ -246,64 +297,13 @@
   },
   {
    "t": "Jordi Cruz, chef de alta cocina: \"La congelación es un método de conservación bestial y solo hay dos formas de hacerlo; no vale con meter el producto entre placas de acero\"",
-   "u": "https://www.larazon.es/actualidad/jordi-cruz-chef-alta-cocina-congelacion-metodo-conservacion-bestial-solo-hay-dos-formas-hacerlo-vale-meter-producto-placas-acero_202609116aa3e89e250a3a7556f6a097.html?outputType",
+   "u": "https://www.larazon.es/actualidad/jordi-cruz-chef-alta-cocina-congelacion-metodo-conservacion-bestial-solo-hay-dos-formas-hacerlo-vale-meter-producto-placas-acero_202609116aa3e89e250a3a7556f6a097.html",
    "s": "La Razón",
    "d": "2026-09-11T11:40:14.000Z",
    "tags": [
     "ALTA COCINA"
    ],
    "img": "https://fotografias-2.larazon.es/clipping/cmsimages01/2026/09/11/CE98CC73-EE8B-42B4-8202-03953B87A257/jordi-cruz-chef-alta-cocina-congelacion-metodo-conservacion-bestial-solo-hay-dos-formas-hacerlo-vale-meter-producto-dos-placas-acero_98.jpg?crop=1900,1069,x0,y0&width=1900&height=1069&optimize=low&format=webply"
-  },
-  {
-   "t": "Un cocinero de Candelaria (Tenerife) competirá por el título de la mejor paella del mundo",
-   "u": "https://www.que.es/2026/09/11/cocinero-canario-mejor-paella-mundo/",
-   "s": "que.es",
-   "d": "2026-09-11T10:36:50.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://static.que.es/wp-content/uploads/2024/08/Valencia-Alicante…-El-New-York-Times-desvela-donde-se-come-la-mejor-paella-de-Espana.webp"
-  },
-  {
-   "t": "Santa Cruz despide el verano este sábado con música, gastronomía y ambiente caribeño en la Alameda",
-   "u": "https://www.libertaddigital.com/canarias/2026-09-11/santa-cruz-despide-el-verano-este-sabado-con-musica-gastronomia-y-ambiente-caribeno-en-la-alameda-7458450/",
-   "s": "Libertad Digital",
-   "d": "2026-09-11T09:29:16.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://s1.staticld.com/2026/09/11/1200/675/260909-mojitos-vacilon-fest-2.jpg"
-  },
-  {
-   "t": "David Hall: «Queremos meter Lanzarote dentro de una botella»",
-   "u": "https://www.laprovincia.es/ocio/gastronomia/2026/09/11/entrevista-queremos-meter-lanzarote-botella-vinos-134177264.html",
-   "s": "La Provincia",
-   "d": "2026-09-11T08:41:15.000Z",
-   "tags": [
-    "VINO",
-    "CANARIAS"
-   ],
-   "img": "https://estaticos-cdn.prensaiberica.es/clip/7180e713-bd63-45fb-abc3-3f22dee1f666_16-9-discover-aspect-ratio_default_0_x1203y230.jpg"
-  },
-  {
-   "t": "Santa Cruz de Tenerife será Capital Española de la Gastronomía en 2027",
-   "u": "https://www.hosteleriadigital.es/2026/09/11/santa-cruz-de-tenerife-sera-capital-espanola-de-la-gastronomia-en-2027/",
-   "s": "Hosteleria Digital",
-   "d": "2026-09-11T08:15:27.000Z",
-   "tags": [
-    "CANARIAS"
-   ]
-  },
-  {
-   "t": "Una Estrella MICHELIN aterriza en Guayaquil: Casa Julián une Ecuador y Málaga en una cena irrepetible",
-   "u": "https://confirmado.net/%E2%AD%90-una-estrella-michelin-aterriza-en-guayaquil-casa-julian-une-ecuador-y-malaga-en-una-cena-irrepetible/",
-   "s": "confirmado.net",
-   "d": "2026-09-11T08:04:44.000Z",
-   "tags": [
-    "ALTA COCINA",
-    "MICHELIN"
-   ],
-   "img": "https://confirmado.net/wp-content/uploads/2026/09/casa_julian3.png"
   }
  ]
 }
