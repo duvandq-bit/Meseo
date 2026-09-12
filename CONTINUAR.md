@@ -1,6 +1,6 @@
 # Por dónde seguir
 
-Estado a **12 de septiembre de 2026** · versión **7.445** · 338 pruebas en verde ·
+Estado a **12 de septiembre de 2026** · versión **7.446** · 340 pruebas en verde ·
 auditoría de alérgenos 0/0.
 
 ---
@@ -244,6 +244,9 @@ vuelve a estar abierta.
 | Vinos | `data/wines.json` es la bodega de **Txoko**; otro restaurante trae `data/wines-<id>.json`. Sin archivo, no hay pestaña de Vinos |
 | La carta de M.B. | `docs/carta-mb-borrador.json` — borrador, fuera de `data/` a propósito. 34 fichas |
 | Sala y procedimientos de M.B. | `data/procedimientos-mb.json` — pestaña **Sala**, sale sólo donde existe el archivo. La fuente sin tocar, en `docs/mb-procedimientos-fuente.md` |
+| Los avisos flotantes | se anclan MIDIENDO la cabecera y la navegación (`_avisosAnclar`). Nunca por encima del menú |
+| El encabezado de pantalla | un `h1` en el armazón, `#tituloPantalla`, que `showTab` rellena. No se pinta: nombra la pantalla para el lector |
+| Contraste de color | medido tres veces sin resultado fiable: ver `docs/contraste-fase0.md`. Se cierra con pares de color fijos en el sistema de diseño |
 | El examen de sala | no tiene preguntas escritas: `_salaGenerar()` las saca del manual. Si cambias el manual, cambia el examen. El guard MIDE que no se contesten por longitud, posición ni eco |
 | El turno almuerzo/cena | tabla `DISH_SERVICE`, que **viaja con la carta**. Una carta sin turnos no enseña el selector |
 | El marcaje (cubertería) | campo `marcaje` de cada plato de la carta. Txoko no lo tiene y no se inventa: sin campo, no se pinta el bloque |

@@ -2309,7 +2309,15 @@ test('logo taps home + persistent search pill under the nav', () => {
     'header logo must navigate home, accessibly');
   const pill = html.slice(html.indexOf('id="globalSearchPill"') - 40, html.indexOf('id="globalSearchPill"') + 700);
   assert(/onclick="openGlobalSearch\(\)"/.test(pill), 'search pill must open the global search');
-  assert(/min-height:40px/.test(pill), 'search pill needs a touch-friendly height');
+  assert(/min-height:44px/.test(pill), 'search pill needs a touch-friendly height');
+  // Y se esconde donde no busca nada: en el panel, en horarios, en el chat o
+  // en el ranking no hay platos ni vinos, y en Aprender, Vinos, Quesos y Sala
+  // la pantalla ya trae su propio buscador. La capacidad NO se pierde: sigue
+  // a un toque desde el menú.
+  assert(/const _SIN_BUSCADOR = new Set\(/.test(html) && /_buscadorSync\(tab\);/.test(html),
+    'la píldora tiene que esconderse donde no tiene función');
+  assert(/id="navSearchEntry"[^>]*onclick="openGlobalSearch\(\)"/.test(html),
+    'la búsqueda global tiene que seguir accesible desde el menú en todas las pantallas');
   assert(/globalSearchPillLbl/.test(html.slice(html.indexOf('const _gsLbl'), html.indexOf('const _gsLbl') + 600)),
     'pill label must be localized with the rest');
 });
@@ -9661,7 +9669,7 @@ test('Marcaje: la cubertería del plato es un campo, no una frase escondida en l
   // ── 2. Los otros tres sitios donde se mira un plato ──
   const ficha = html.slice(html.indexOf('function renderRepasoDishDetail(dishId){'),
                            html.indexOf('function changeRepasoTopic('));
-  assert(/const _marcaje = getDish\(dish\)\.marcaje/.test(ficha) &&
+  assert(/const dd = getDish\(dish\);/.test(ficha) && /const _marcaje = dd\.marcaje/.test(ficha) &&
          /Cutlery marking':'Marcaje'/.test(ficha) && /escapeHTML\(_marcaje\)/.test(ficha),
     'la ficha completa del plato tiene que enseñar el marcaje');
   assert(/const marcajeHtml = dd\.marcaje/.test(html) && /\$\{marcajeHtml\}/.test(html),
@@ -9855,8 +9863,16 @@ test('Examen de sala: las preguntas salen del manual y no se contestan con truco
   const i1 = html.indexOf('let salaQuiz = {');
   assert(i0 !== -1 && i1 > i0, 'no encuentro el generador del examen de sala');
   const j0 = html.indexOf('function _lqaShuffle(arr){');
-  const G = new Function('LANG', // eslint-disable-line no-new-func
-    html.slice(j0, html.indexOf('\n}', j0) + 2) + html.slice(i0, i1) + '; return _salaGenerar;')('es');
+  // La medida se hace con azar SEMBRADO. Con Math.random() de verdad, el mismo
+  // generador daba entre el 26% y el 35% en el sesgo de longitud de un tipo, y
+  // la prueba fallaba una de cada tantas sin que nada hubiera cambiado. Una
+  // prueba que falla sola enseña a ignorarla. Sembrado, mide siempre lo mismo:
+  // si un día se mueve, es que se ha movido el generador.
+  let _semilla = 20260912;
+  const _azar = () => { _semilla = (_semilla * 1103515245 + 12345) & 0x7fffffff; return _semilla / 0x7fffffff; };
+  const G = new Function('LANG', 'Math', // eslint-disable-line no-new-func
+    html.slice(j0, html.indexOf('\n}', j0) + 2) + html.slice(i0, i1) + '; return _salaGenerar;')(
+      'es', Object.assign(Object.create(Math), { random: _azar }));
 
   const doc = JSON.parse(read('data/procedimientos-mb.json'));
   const todas = [];
@@ -9954,6 +9970,124 @@ test('Examen de sala: las preguntas salen del manual y no se contestan con truco
     'el resultado tiene que quedar registrado como los demás exámenes');
   assert(/awardXP\(xp, LANG==='en'\?'Floor exam':'Examen de sala'/.test(html),
     'y dar XP, como los demás');
+});
+
+test('La ficha del plato se PINTA, y en el idioma elegido', () => {
+  // Esta prueba nace de un fallo propio. Al traducir la ficha dejé la variable
+  // declarada DESPUÉS de usarla: la pantalla reventaba entera y las 338
+  // pruebas seguían en verde, porque todas miraban el texto del archivo y
+  // ninguna ejecutaba la función. Es la pantalla más usada de la aplicación.
+  //
+  // Así que esta la EJECUTA, con un DOM de mentira, y comprueba dos cosas: que
+  // pinta sin reventar, y que el contenido sale en el idioma elegido.
+  const i0 = html.indexOf('function renderRepasoDishDetail(dishId){');
+  const i1 = html.indexOf('function changeRepasoTopic(');
+  assert(i0 !== -1 && i1 > i0, 'no encuentro la ficha del plato');
+
+  const PLATO_ES = { id: 1, cat: 'Entrantes', name: 'Croqueta de jamón',
+    ingredients: 'Jamón ibérico, Leche, Harina', history: 'La receta de la casa.',
+    notes: 'Servir muy caliente.', marcaje: 'Tenedor de plata.', allergens: ['Gluten'] };
+  const PLATO_EN = { id: 1, name: 'Ham croquette',
+    ingredients: 'Iberian ham, Milk, Flour', history: 'The house recipe.',
+    notes: 'Serve very hot.', marcaje: 'Silver fork.' };
+
+  const pintar = (lang) => {
+    let salida = '';
+    const nodo = () => ({ set innerHTML(v){ salida = v; }, get innerHTML(){ return salida; },
+                          style:{}, classList:{add(){},remove(){},toggle(){}}, addEventListener(){} });
+    const doc = { getElementById: () => nodo(), querySelector: () => null, querySelectorAll: () => [] };
+    const getDish = d => {
+      if(lang !== 'en') return d;
+      const en = PLATO_EN.id === d.id ? PLATO_EN : null;
+      if(!en) return d;
+      const m = Object.assign({}, d);
+      for(const k of Object.keys(en)) if(en[k] != null) m[k] = en[k];
+      return m;
+    };
+    const F = new Function( // eslint-disable-line no-new-func
+      'DISHES','getDish','getEmp','currentUser','track','escapeHTML','escapeHtml','catLocal',
+      'dishPhotoSrc','DISH_ACTIONS','DISH_COMPONENTS','_dishPairWines','WINES','t','LANG',
+      'document','repasoView','renderRepaso','loadLazyData','_vinosRuta','SRC','repasoDishId',
+      html.slice(i0, i1) + '; return renderRepasoDishDetail;');
+    const esc = s => String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    F([PLATO_ES], getDish, () => ({ knownDishes:{}, journeyMastered:{} }), 'Ana', () => {},
+      esc, esc, c => c, () => null, {}, {}, () => [], [], k => k, lang,
+      doc, 'dish', () => {}, () => Promise.resolve(null), () => 'data/wines.json', 'src', 1)(1);
+    return salida;
+  };
+
+  const es = pintar('es');
+  assert(es.length > 500, 'la ficha en español no ha pintado nada');
+  assert(es.includes('Croqueta de jamón'), 'falta el nombre del plato en español');
+  assert(es.includes('Jamón ibérico'), 'faltan los ingredientes en español');
+  assert(es.includes('La receta de la casa.'), 'falta la historia en español');
+
+  const en = pintar('en');
+  assert(en.length > 500, 'la ficha en inglés no ha pintado nada');
+  assert(en.includes('Ham croquette') && !en.includes('Croqueta de jamón'),
+    'en inglés tiene que salir el nombre traducido, no el español');
+  assert(en.includes('Iberian ham') && !en.includes('Jamón ibérico'),
+    'en inglés tienen que salir los ingredientes traducidos');
+  assert(en.includes('The house recipe.') && !en.includes('La receta de la casa.'),
+    'en inglés tiene que salir la historia traducida');
+  assert(en.includes('Silver fork.'), 'y el marcaje traducido');
+});
+
+test('Higiene: ni un alert() del navegador, y los avisos por debajo de la navegación', () => {
+  // Los nueve alert() del navegador —«Sesión caducada», «Error al enviar el
+  // reto»— salían en la ventanita gris del sistema, con el nombre del dominio
+  // arriba, dentro de una aplicación por lo demás cuidada. Ahora usan el mismo
+  // sistema de avisos que el resto.
+  const alerts = (html.match(/(?<![.\w])alert\(/g) || []).length;
+  assert(alerts === 0, `quedan ${alerts} alert() del navegador`);
+
+  // Los avisos se anclan MIDIENDO la cabecera y la navegación, no con un
+  // número escrito a mano: la cabecera crece con el notch del iPhone.
+  assert(/function _avisosAnclar\(\)/.test(html), 'falta el ancla de los avisos');
+  assert(/document\.querySelector\('\.app-header'\)/.test(html) &&
+         /document\.querySelector\('\.nav-dd'\)/.test(html),
+    'el ancla tiene que medir la cabecera Y la navegación');
+  assert(/--avisos-top/.test(read('styles.css')), 'la pila de avisos tiene que usar el ancla');
+  assert(/top:var\(--avisos-top,120px\)/.test(html), 'la pila de logros tiene que usar el mismo ancla');
+  assert(/_avisosAnclar\(\);\n  const t = document\.createElement/.test(html),
+    'showToast tiene que recalcular el ancla antes de pintar');
+
+  // El aviso de XP no puede pintarse por encima del menú desplegado (9991).
+  const xp = html.slice(html.indexOf("toast.id = 'xpToast'"), html.indexOf("toast.id = 'xpToast'") + 700);
+  const z = (xp.match(/z-index:(\d+)/) || [])[1];
+  assert(z && +z < 9991, `el aviso de XP tiene z-index ${z}: taparía el menú abierto`);
+
+  // Un h1 por pantalla, puesto en el armazón para que no dependa de que cada
+  // pantalla se acuerde. Los que se inyectaban en el contenido bajan a h2.
+  assert((html.match(/<h1/g) || []).length === 2,
+    'sólo puede haber dos h1 en el archivo: el del login y el de la pantalla');
+  assert(/id="tituloPantalla" class="solo-lectores"/.test(html), 'falta el encabezado de pantalla');
+  assert(/_ponerTitulo\(tab\);/.test(html), 'showTab tiene que nombrar la pantalla');
+  const rutas = (html.match(/const TAB_ROUTES = \[([^\]]*)\]/) || [])[1] || '';
+  const tabs = [...rutas.matchAll(/'([^']+)'/g)].map(m => m[1]);
+  const tit = html.slice(html.indexOf('const _TITULOS = {'), html.indexOf('function _ponerTitulo'));
+  for (const tb of tabs) assert(new RegExp('\\b' + tb + ':\\[').test(tit),
+    `la pantalla «${tb}» no tiene nombre para el encabezado`);
+
+  // Los cinco controles de cabecera que la auditoría midió por debajo de 44 px.
+  const cab = html.slice(html.indexOf('<header class="app-header"'), html.indexOf('</header>'));
+  const chicos = (cab.match(/min-height:(\d+)px/g) || []).filter(m => +m.replace(/\D/g,'') < 44);
+  assert(chicos.length === 0, `quedan controles de cabecera por debajo de 44 px: ${chicos.join(', ')}`);
+  const css = read('styles.css');
+  assert(/\.btn-logout\{[^}]*min-height:44px/.test(css), 'el botón de salir necesita 44 px');
+  assert(/\.header-logo\{[^}]*min-height:44px/.test(css), 'el logo es un botón: necesita 44 px');
+  // EXCEPCIÓN MEDIDA, y está aquí para que nadie la "arregle" sin volver a
+  // medir: ocho controles de 44 px de ancho suman 352 y un iPhone SE mide 320.
+  // Forzarlo dejaba «Salir» FUERA de pantalla con la campana de notificaciones
+  // visible (medido: 348/320), que es justo el fallo que estas media queries
+  // arreglaron en su día. Por debajo de 400 px el ANCHO se queda comprimido;
+  // el ALTO llega a 44 en todas partes. El arreglo de verdad es tener menos
+  // botones en la cabecera, y eso es de la fase de navegación.
+  for (const m of css.matchAll(/\.app-header #(\w+)\{([^}]*)\}/g)) {
+    const alto = (m[2].match(/min-height:(\d+)px/) || [])[1];
+    assert(!alto || +alto >= 44,
+      `en pantallas estrechas, #${m[1]} baja a ${alto}px de alto: el alto sí cabe siempre`);
+  }
 });
 
 // ─── 7. No leftover git conflict markers ────────────────────────

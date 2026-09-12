@@ -52,7 +52,7 @@
 <meta property="og:description" content="Formación de equipos de sala: carta, alérgenos, vinos, exámenes y juegos de repaso.">
 <meta property="og:url" content="https://meseo.es/">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"Meseo","url":"https://meseo.es/"}</script>
-<meta name="app-version" content="7.445">
+<meta name="app-version" content="7.446">
 <meta name="app-build" content="May 2026">
 <meta name="theme-color" content="#1c2a22">
 <!-- ═══ PWA ═══ -->
@@ -331,8 +331,8 @@
     <div class="header-user">
       <div class="header-avatar" id="headerAvatar"></div>
       <span class="header-uname" id="headerUsername"></span>
-      <button id="pushEnableBtn" onclick="enablePushManual()" aria-label="Activar notificaciones push" role="button" style="display:none;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.25);cursor:pointer;padding:6px 10px;border-radius:6px;font-family:'DM Mono',monospace;font-size:.6rem;color:rgba(255,255,255,.85);letter-spacing:.03em;min-height:32px;min-width:32px" title="Activar notificaciones push">◎</button>
-      <button id="notifBell" onclick="renderNotifPanel()" aria-label="Notificaciones" role="button" style="display:none;background:transparent;border:none;cursor:pointer;padding:8px;position:relative;font-size:1.2rem;line-height:1;min-height:40px;min-width:40px">
+      <button id="pushEnableBtn" onclick="enablePushManual()" aria-label="Activar notificaciones push" role="button" style="display:none;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.25);cursor:pointer;padding:6px 10px;border-radius:6px;font-family:'DM Mono',monospace;font-size:.6rem;color:rgba(255,255,255,.85);letter-spacing:.03em;min-height:44px;min-width:44px" title="Activar notificaciones push">◎</button>
+      <button id="notifBell" onclick="renderNotifPanel()" aria-label="Notificaciones" role="button" style="display:none;background:transparent;border:none;cursor:pointer;padding:8px;position:relative;font-size:1.2rem;line-height:1;min-height:44px;min-width:44px">
         ◉<span id="notifBadge" style="position:absolute;top:-2px;right:-2px;background:var(--rose);color:#fff;border-radius:50%;width:18px;height:18px;font-size:.55rem;font-family:Jost,sans-serif;font-weight:700;display:none;align-items:center;justify-content:center"></span>
       </button>
       <!-- Aviso SUTIL de versión nueva (el push masivo molestaba): solo un
@@ -340,14 +340,14 @@
            no saturar la cabecera. Solo aparece cuando hay build publicada más
            nueva que la instalada; el número va en el tooltip y en la
            confirmación. Tocarlo actualiza en limpio. -->
-      <button id="updChip" onclick="_updGo()" aria-label="Nueva versión disponible — actualizar" title="Nueva versión disponible — toca para actualizar" style="display:none;align-items:center;justify-content:center;background:rgba(28,42,34,.55);border:1px solid rgba(228,190,104,.5);cursor:pointer;padding:0;border-radius:50%;min-height:32px;min-width:32px;margin-right:.25rem"><span class="upd-dot" aria-hidden="true"></span></button>
-      <button id="helpBtn" onclick="showOnboarding()" aria-label="Ayuda — repetir tutorial" title="Ver tutorial / Show tutorial" style="background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.25);cursor:pointer;padding:6px 10px;border-radius:6px;font-family:'DM Mono',monospace;font-size:.7rem;color:rgba(255,255,255,.9);min-height:32px;min-width:32px;margin-right:.25rem">?</button>
+      <button id="updChip" onclick="_updGo()" aria-label="Nueva versión disponible — actualizar" title="Nueva versión disponible — toca para actualizar" style="display:none;align-items:center;justify-content:center;background:rgba(28,42,34,.55);border:1px solid rgba(228,190,104,.5);cursor:pointer;padding:0;border-radius:50%;min-height:44px;min-width:44px;margin-right:.25rem"><span class="upd-dot" aria-hidden="true"></span></button>
+      <button id="helpBtn" onclick="showOnboarding()" aria-label="Ayuda — repetir tutorial" title="Ver tutorial / Show tutorial" style="background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.25);cursor:pointer;padding:6px 10px;border-radius:6px;font-family:'DM Mono',monospace;font-size:.7rem;color:rgba(255,255,255,.9);min-height:44px;min-width:44px;flex:none;margin-right:.25rem">?</button>
       <!-- Language toggle in header -->
       <div style="display:flex;gap:.35rem;margin-right:.25rem">
-        <button id="appLangEs" onclick="setLangApp('es')" style="background:rgba(255,255,255,.15);border:none;cursor:pointer;padding:6px 10px;border-radius:6px;font-family:'DM Mono',monospace;font-size:.6rem;color:rgba(255,255,255,.9);letter-spacing:.05em;min-height:32px">ES</button>
-        <button id="appLangEn" onclick="setLangApp('en')" style="background:transparent;border:none;cursor:pointer;padding:6px 10px;border-radius:6px;font-family:'DM Mono',monospace;font-size:.6rem;color:rgba(255,255,255,.7);letter-spacing:.05em;min-height:32px">EN</button>
+        <button id="appLangEs" onclick="setLangApp('es')" style="background:rgba(255,255,255,.15);border:none;cursor:pointer;padding:6px 10px;border-radius:6px;font-family:'DM Mono',monospace;font-size:.6rem;color:rgba(255,255,255,.9);letter-spacing:.05em;min-height:44px;min-width:44px">ES</button>
+        <button id="appLangEn" onclick="setLangApp('en')" style="background:transparent;border:none;cursor:pointer;padding:6px 10px;border-radius:6px;font-family:'DM Mono',monospace;font-size:.6rem;color:rgba(255,255,255,.7);letter-spacing:.05em;min-height:44px;min-width:44px">EN</button>
       </div>
-      <button id="ajustesBtn" onclick="openAjustes()" aria-label="Ajustes" title="Ajustes" style="background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.25);cursor:pointer;padding:6px 10px;border-radius:6px;font-size:.9rem;color:rgba(255,255,255,.9);min-height:32px;min-width:32px;margin-right:.25rem">⚙</button>
+      <button id="ajustesBtn" onclick="openAjustes()" aria-label="Ajustes" title="Ajustes" style="background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.25);cursor:pointer;padding:6px 10px;border-radius:6px;font-size:.9rem;color:rgba(255,255,255,.9);min-height:44px;min-width:44px;margin-right:.25rem">⚙</button>
       <button class="btn-logout" id="logoutBtn" onclick="logout()" aria-label="Cerrar sesión">Salir</button>
     </div>
   </header>
@@ -401,7 +401,7 @@
        únicamente cuando la sección activa es Aprender o una subpestaña suya. -->
   <div id="shiftBar" role="tablist" aria-label="Turno de estudio" style="display:none;gap:.3rem;width:calc(100% - 2rem);margin:.55rem 1rem .1rem;padding:.28rem;background:rgba(28,42,34,.05);border:1px solid rgba(196,154,60,.2);border-radius:12px"></div>
 
-  <button id="globalSearchPill" onclick="openGlobalSearch()" aria-label="Buscar plato, vino o alérgeno" style="display:flex;align-items:center;gap:.55rem;width:calc(100% - 2rem);margin:.45rem 1rem .1rem;padding:.55rem .9rem;background:rgba(255,255,255,.55);border:1px solid rgba(196,154,60,.3);border-radius:12px;cursor:pointer;min-height:40px;text-align:left;box-shadow:0 1px 3px rgba(28,42,34,.05)">
+  <button id="globalSearchPill" onclick="openGlobalSearch()" aria-label="Buscar plato, vino o alérgeno" style="display:flex;align-items:center;gap:.55rem;width:calc(100% - 2rem);margin:.45rem 1rem .1rem;padding:.55rem .9rem;background:rgba(255,255,255,.55);border:1px solid rgba(196,154,60,.3);border-radius:12px;cursor:pointer;min-height:44px;text-align:left;box-shadow:0 1px 3px rgba(28,42,34,.05)">
     <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="rgba(164,122,44,.85)" stroke-width="1.8" stroke-linecap="round" style="flex-shrink:0"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
     <span id="globalSearchPillLbl" style="font-family:'Quicksand',sans-serif;font-size:.78rem;color:rgba(74,64,42,.6);letter-spacing:.01em">Buscar plato, vino, alérgeno…</span>
   </button>
@@ -419,6 +419,14 @@
     <div class="gs-results" id="gsResults" role="listbox" aria-label="Resultados"></div>
   </div>
 
+  <!-- Un encabezado por pantalla. La auditoría midió que NINGUNA de las quince
+       tenía uno: quien navega con lector de pantalla no podía saltar de sección
+       y tenía que oírse la pantalla entera cada vez.
+       Va aquí, en el armazón, y no repartido por los quince renderizadores: así
+       hay exactamente uno, siempre, sin depender de que cada pantalla se acuerde.
+       No se pinta —los títulos que ya se ven se quedan como están, que era la
+       condición— pero sí se anuncia y sirve de ancla de navegación. -->
+  <h1 id="tituloPantalla" class="solo-lectores"></h1>
   <main class="app-content" id="appContent" aria-live="polite"></main>
   <div class="app-credit" style="color:rgba(28,42,34,.4)">© 2026 Meseo® · Marca registrada</div>
   <button class="sound-toggle" id="soundToggle" onclick="toggleSound()" title="Sonido" aria-label="Alternar sonido" role="button">◉</button>
@@ -1901,7 +1909,7 @@ const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><p
 const SRC = 'src';
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='7.445';  // sincronizada con sw.js VERSION (guard de CI)
+const APP_VERSION='7.446';  // sincronizada con sw.js VERSION (guard de CI)
 const APP_BUILD='Jul 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;
@@ -3315,9 +3323,10 @@ async function enablePushManual() {
     pushBtn.title = LANG==='en' ? 'Notifications blocked — enable in browser settings' : 'Notificaciones bloqueadas — actívalas en ajustes del navegador';
     pushBtn.style.background = 'rgba(255,0,0,.2)';
     pushBtn.onclick = function() {
-      alert(LANG==='en' ?
-        'Notifications are blocked.\n\n1. Tap the lock icon ◎ in your browser address bar\n2. Find "Notifications"\n3. Change to "Allow"\n4. Reload the page' :
-        'Las notificaciones están bloqueadas.\n\n1. Toca el icono de candado ◎ en la barra de direcciones\n2. Busca "Notificaciones"\n3. Cambia a "Permitir"\n4. Recarga la página');
+      showToast(LANG==='en'
+        ? 'Notifications are blocked. Tap the lock icon in the address bar, find "Notifications" and allow them.'
+        : 'Las notificaciones están bloqueadas. Toca el candado de la barra de direcciones, busca "Notificaciones" y permítelas.',
+        'warning', 9000);
     };
   }
 }
@@ -3624,6 +3633,44 @@ function _translateDish(spanishName){
   return _DISH_EN_MAP[spanishName] || spanishName;
 }
 
+// ═══ DÓNDE EMPIEZAN LOS AVISOS FLOTANTES ══════════════════════════════════
+// Medido en la auditoría de sep 2026: el aviso de logro nacía a 72 px y la
+// barra de navegación ocupa de 56 a 120, así que mientras hubiera un aviso en
+// pantalla EL MENÚ NO SE PODÍA TOCAR. El de privacidad, que sale justo al
+// entrar, tapaba la cabecera entera con el botón de Salir dentro — y sale en
+// el momento en que alguien nuevo está buscando por dónde se va.
+//
+// Ahora los avisos se anclan por debajo de lo que haya fijo arriba: la
+// cabecera pegajosa siempre, y la barra de navegación cuando está a la vista.
+// Se mide en vez de escribir un número: si mañana la cabecera cambia de alto
+// —y cambia, porque crece con el notch del iPhone— los avisos la siguen.
+function _avisosAnclar(){
+  try{
+    let y = 12;
+    const cab = document.querySelector('.app-header');
+    if(cab) y = Math.max(y, cab.getBoundingClientRect().bottom);
+    // La barra de navegación no es fija: al bajar se va. Sólo aparta el aviso
+    // mientras esté en pantalla.
+    const nav = document.querySelector('.nav-dd');
+    if(nav) y = Math.max(y, nav.getBoundingClientRect().bottom);
+    document.documentElement.style.setProperty('--avisos-top', Math.round(y + 8) + 'px');
+  }catch(_){ }
+}
+// Al desplazar, la navegación se va y vuelve. Se recalcula sólo si hay algún
+// aviso puesto: sin nada en pantalla no hay nada que mover.
+let _avisosRaf = 0;
+function _avisosSeguir(){
+  if(_avisosRaf) return;
+  _avisosRaf = requestAnimationFrame(function(){
+    _avisosRaf = 0;
+    if(document.getElementById('txkToastContainer') || document.getElementById('achToastStack')) _avisosAnclar();
+  });
+}
+try{
+  window.addEventListener('scroll', _avisosSeguir, {passive:true});
+  window.addEventListener('resize', _avisosSeguir);
+}catch(_){ }
+
 // ═══ TOAST NOTIFICATION SYSTEM ═══
 const _toastContainer = (function(){
   const c = document.createElement('div');
@@ -3636,6 +3683,7 @@ const _toastContainer = (function(){
 })();
 
 function showToast(msg, type='info', duration=4000, action=null){
+  _avisosAnclar();
   const t = document.createElement('div');
   t.className = 'txk-toast toast-' + type;
   const icons = {success:'✓',error:'✗',warning:'⚠',info:'ℹ'};
@@ -3788,7 +3836,7 @@ function resetSessionTimer(){
   clearTimeout(_sessionTimer);
   if(!currentUser) return;
   _sessionTimer=setTimeout(()=>{
-    if(currentUser){ logout(); alert(LANG==='en'?'Session expired due to inactivity':'Sesión cerrada por inactividad'); }
+    if(currentUser){ logout(); showToast(LANG==='en'?'Session expired due to inactivity':'Sesión cerrada por inactividad','warning',6000); }
   }, 15*60*1000);
 }
 ['click','keydown','touchstart','scroll'].forEach(ev=>document.addEventListener(ev,()=>{ if(currentUser) resetSessionTimer(); },{passive:true}));
@@ -4232,7 +4280,7 @@ function showXPToast(amount, reason){
     padding:.5rem 1.1rem;border-radius:30px;
     font-family:'Quicksand',sans-serif;font-size:.82rem;font-weight:500;
     box-shadow:0 4px 20px rgba(0,0,0,.25);
-    z-index:9999;opacity:0;transition:all .3s ease;
+    z-index:9000;opacity:0;transition:all .3s ease;
     display:flex;align-items:center;gap:.5rem;white-space:nowrap;
   `;
   document.body.appendChild(toast);
@@ -5827,7 +5875,7 @@ function _scenarioDeclaredAllergy(dish, dd, _en){
   const options = _djShuffle([optYes, optMod, optNo, _simPick(trapBank)]);
   const aLbl = _simAllergenLabel(p.allergen, _en);
   let explain;
-  if(modifiable) explain = _en ? `Contains ${aLbl} but can be modified. Notes: ${dish.notes}` : `Contiene ${aLbl} pero es modificable. Notas: ${dish.notes}`;
+  if(modifiable) explain = _en ? `Contains ${aLbl} but can be modified. Notes: ${dd.notes}` : `Contiene ${aLbl} pero es modificable. Notas: ${dd.notes}`;
   else if(hasIt) explain = _en ? `${dd.name} contains ${aLbl} — not suitable.` : `${dd.name} contiene ${aLbl} — no es apto.`;
   else explain = _en ? `${dd.name} is free of ${aLbl}.` : `${dd.name} no contiene ${aLbl}.`;
   return { q:_en?qEn:qEs, options, correctIdx: options.indexOf(correct), explain, type:'allergen' };
@@ -6188,7 +6236,7 @@ function _scenarioCrossContamination(dish, dd, _en){
   const correct = hasCross ? optRisk : optClean;
   const options = _djShuffle([optRisk, optClean, ...traps]);
   const explain = hasCross
-    ? (_en?`Notes indicate cross-contamination risk: ${dish.notes}`:`Las notas indican riesgo de contaminación cruzada: ${dish.notes}`)
+    ? (_en?`Notes indicate cross-contamination risk: ${dd.notes}`:`Las notas indican riesgo de contaminación cruzada: ${dd.notes}`)
     : (_en?`${dd.name} carries no gluten and no traces flag on its card.`:`${dd.name} no lleva gluten y su ficha no tiene aviso de trazas.`);
   return { q:_en?qEn:qEs, options, correctIdx: options.indexOf(correct), explain, type:'allergen' };
 }
@@ -7913,7 +7961,7 @@ function _sfGenerateQuestions(count){
       q.feedback = LANG==='en' ? 'Perfect temperature! This shows professionalism.' : '¡Temperatura perfecta! Esto demuestra profesionalismo.';
 
     } else if(sc.type==='ingredientes'){
-      var realIngr = dish.ingredients || 'Ingredientes variados de temporada';
+      var realIngr = ((LANG==='en' && dishEN && dishEN.ingredients) ? dishEN.ingredients : dish.ingredients) || 'Ingredientes variados de temporada';
       var fakeIngr1 = 'Trufa negra, foie gras, salsa de Pedro Ximénez, reducción de oporto';
       var fakeIngr2 = 'Langosta, caviar de Beluga, espuma de champán, oro comestible';
       q.options = [realIngr.length>80?realIngr.substring(0,80)+'...':realIngr, fakeIngr1, fakeIngr2];
@@ -7921,7 +7969,7 @@ function _sfGenerateQuestions(count){
       q.feedback = LANG==='en' ? 'Excellent! Knowing ingredients is essential for allergen safety.' : '¡Excelente! Conocer los ingredientes es esencial para la seguridad de alérgenos.';
 
     } else if(sc.type==='protocolo'){
-      var realHistory = dish.history || (LANG==='en'?'A signature dish of the restaurant':'Un plato emblemático del restaurante');
+      var realHistory = ((LANG==='en' && dishEN && dishEN.history) ? dishEN.history : dish.history) || (LANG==='en'?'A signature dish of the restaurant':'Un plato emblemático del restaurante');
       q.options = [
         realHistory.length>90?realHistory.substring(0,90)+'...':realHistory,
         LANG==='en'?'I\'m not sure, let me check with the kitchen':'No estoy seguro, déjeme consultar con cocina',
@@ -11319,6 +11367,40 @@ function _salaExamCompletar(){
   </div>`;
 }
 
+// La búsqueda global busca PLATOS, VINOS Y ALÉRGENOS. En el panel de
+// supervisor, en horarios, en el chat o en el ranking no hay nada de eso que
+// encontrar, y en Aprender, Vinos, Quesos y Sala la pantalla ya trae su propio
+// buscador: salían dos cajas de búsqueda, una encima de otra.
+// No se pierde nada: la misma búsqueda sigue a un toque desde el menú, en
+// todas las pantallas, con el botón #navSearchEntry.
+const _SIN_BUSCADOR = new Set(['supervisor','horarios','chat','ranking','stats','logros',
+                               'txoko','aprender','flashcards','emplatado','vinos','quesos','sala']);
+function _buscadorSync(tab){
+  const p = document.getElementById('globalSearchPill');
+  if(p) p.style.display = _SIN_BUSCADOR.has(tab) ? 'none' : 'flex';
+}
+
+// El nombre de cada pantalla, para el encabezado que anuncia el lector.
+const _TITULOS = {
+  dashboard:['Inicio','Home'], aprender:['Aprender','Learn'], flashcards:['Fichas','Flashcards'],
+  exam:['Examen','Exam'], repaso:['Repaso inteligente','Smart review'],
+  tecnicas:['Técnicas de cocina','Kitchen techniques'], actualidad:['Actualidad','News'],
+  smart:['Repaso inteligente','Smart review'], emplatado:['Plating guide','Plating guide'],
+  stats:['Estadísticas','Statistics'], logros:['Logros','Achievements'],
+  txoko:['Juegos','Games'], ranking:['Ranking del equipo','Team ranking'],
+  supervisor:['Panel de supervisor','Supervisor panel'], horarios:['Horarios','Schedule'],
+  protocolo:['Auditoría LQA','LQA audit'], videos:['Vídeos','Videos'],
+  lqa:['Auditoría LQA','LQA audit'], vinos:['Carta de vinos','Wine list'],
+  quesos:['Carro de quesos','Cheese trolley'], sala:['Sala y procedimientos','Floor procedures'],
+  chat:['La Terraza','The Terrace']
+};
+function _ponerTitulo(tab){
+  const h = document.getElementById('tituloPantalla');
+  if(!h) return;
+  const par = _TITULOS[tab];
+  h.textContent = par ? (LANG==='en' ? par[1] : par[0]) : 'Meseo';
+}
+
 const TAB_ROUTES = ['dashboard','aprender','flashcards','exam','repaso','tecnicas','actualidad','smart','emplatado','stats','logros','txoko','ranking','supervisor','horarios','protocolo','videos','lqa','vinos','quesos','sala','chat'];
 
 function showTab(tab, instant){
@@ -11373,6 +11455,8 @@ function showTab(tab, instant){
   // propietario — «no tiene uso en inicio»).
   const _sb = document.getElementById('shiftBar');
   if(_sb) _sb.style.display = (navTab==='aprender' && _hayTurnos()) ? 'flex' : 'none';
+  _ponerTitulo(tab);
+  _buscadorSync(tab);
   document.querySelectorAll('.nav-btn').forEach(b=>{
     const btnTab = b.id.replace('nav','').toLowerCase();
     b.classList.toggle('active', btnTab === navTab);
@@ -19762,7 +19846,7 @@ function _mqResults(){
     <div class="sup-wrap">
       <div style="text-align:center;padding:1.5rem 0">
         <div style="font-family:'Cinzel',serif;font-size:3rem;font-weight:700;color:${cls};margin-bottom:.5rem">${s.score}/${s.questions.length}</div>
-        <h1 tabindex="-1" style="font-size:1.1rem;color:var(--parchment);margin-bottom:.5rem;font-family:'Cinzel',serif;font-weight:600">${_en?'Pairing Quiz Complete':'Quiz Maridaje Completado'}</h1>
+        <h2 tabindex="-1" style="font-size:1.1rem;color:var(--parchment);margin-bottom:.5rem;font-family:'Cinzel',serif;font-weight:600">${_en?'Pairing Quiz Complete':'Quiz Maridaje Completado'}</h2>
         <div style="font-size:.9rem;color:var(--parch2);margin-bottom:1.5rem">${pct}%${bonus?` · +${bonus} XP`:''}</div>
         ${pct >= 80 ? `<div style="font-size:.78rem;color:var(--sage);margin-bottom:1rem">${_en?'Sommelier-level taste!':'¡Paladar de sommelier!'}</div>` : pct >= 60 ? `<div style="font-size:.78rem;color:var(--gold);margin-bottom:1rem">${_en?'Solid pairing instincts':'Buen instinto de maridaje'}</div>` : `<div style="font-size:.78rem;color:var(--rose);margin-bottom:1rem">${_en?'Review the pairing guide and try again':'Repasa la guía y prueba de nuevo'}</div>`}
       </div>
@@ -22270,16 +22354,26 @@ function renderRepasoDishDetail(dishId){
   if(!dish){repasoView='topic';renderRepaso();return;}
   track('dish.view', { dishId: dish.id, from: 'repaso' });
 
+  // Medido en la auditoría: esta ficha —la más usada— leía nombre,
+  // ingredientes, historia y notas del plato SIN pasar por la traducción. Un
+  // camarero con la aplicación en inglés veía las etiquetas en inglés y el
+  // contenido en español.
+  // getDish() sólo sustituye los campos que el restaurante haya traducido; lo
+  // que no tenga traducción guardada se queda en español, que es lo correcto:
+  // no se inventa una traducción de un plato.
+  // OJO: dish.allergens se queda SIN traducir a propósito. Es la clave con la
+  // que se buscan el color, la adaptación y la procedencia; la etiqueta que se
+  // ve ya se traduce aparte con _aEn.
+  const dd = getDish(dish);
+
   const emp = getEmp(currentUser);
   const isKnown = emp && emp.knownDishes && emp.knownDishes[dish.id];
-  const ingredientList = dish.ingredients ? dish.ingredients.split(',').map(i=>i.trim()).filter(Boolean) : [];
-  if(ingredientList.length === 0 && dish.ingredients){
-    dish.ingredients.split('.').forEach(s => { if(s.trim()) ingredientList.push(s.trim()); });
+  const ingredientList = dd.ingredients ? dd.ingredients.split(',').map(i=>i.trim()).filter(Boolean) : [];
+  if(ingredientList.length === 0 && dd.ingredients){
+    dd.ingredients.split('.').forEach(s => { if(s.trim()) ingredientList.push(s.trim()); });
   }
   const allergenColors = {'Gluten':'#d4a017','Lácteos':'#4888a0','Huevos':'#f5a623','Pescado':'#2e86c1','Mariscos':'#e74c3c','Frutos secos':'#8b4513','Cacahuetes':'#cd853f','Soja':'#5a9a6e','Apio':'#228b22','Mostaza':'#daa520','Sésamo':'#d2691e','Sulfitos':'#7a6aaa','Moluscos':'#dc143c'};
-  // El marcaje sí sale traducido: es una instrucción de sala, y en inglés
-  // «cuchara negra principal» no vale de nada.
-  const _marcaje = getDish(dish).marcaje || '';
+  const _marcaje = dd.marcaje || '';
   const plateSize = 220;
   const cx = plateSize/2, cy = plateSize/2;
 
@@ -22357,14 +22451,14 @@ function renderRepasoDishDetail(dishId){
     <button onclick="repasoView='topic';renderRepaso()" class="btn-back">${t('back')}</button>
 
     <div style="text-align:left;margin-bottom:1.2rem;padding-bottom:.65rem;border-bottom:1px solid rgba(28,42,34,.12)">
-      <div style="font-family:'DM Mono',monospace;font-size:.55rem;color:var(--gold-deep);letter-spacing:.15em;text-transform:uppercase;margin-bottom:.3rem">${escapeHTML(dish.cat)}${isKnown ? ` · <span style="color:var(--green-deep)">✓ ${LANG==='en'?'Mastered':'Dominado'}</span>` : ''}</div>
-      <div style="font-family:'Cinzel',serif;font-size:1.18rem;font-weight:600;color:var(--parchment);line-height:1.3">${escapeHTML(dish.name)}</div>
+      <div style="font-family:'DM Mono',monospace;font-size:.55rem;color:var(--gold-deep);letter-spacing:.15em;text-transform:uppercase;margin-bottom:.3rem">${escapeHTML(catLocal(dish.cat))}${isKnown ? ` · <span style="color:var(--green-deep)">✓ ${LANG==='en'?'Mastered':'Dominado'}</span>` : ''}</div>
+      <div style="font-family:'Cinzel',serif;font-size:1.18rem;font-weight:600;color:var(--parchment);line-height:1.3">${escapeHTML(dd.name)}</div>
       <button class="dj-launch-btn${(emp.journeyMastered||{})[dish.id]?' mastered':''}" onclick="launchDishJourney(${dish.id})" style="margin-top:.6rem;padding:.45rem .9rem;font-size:.6rem">${(emp.journeyMastered||{})[dish.id]?'✓ ':'🚀 '}${LANG==='en'?'Immersive Journey':'Viaje Inmersivo'}</button>
     </div>
 
     <div style="display:flex;justify-content:center;margin-bottom:1.2rem">
       ${(typeof dishPhotoSrc==='function'&&dishPhotoSrc(dish.id))?`
-      <div class="dish-hero-photo"><img ${SRC}="${dishPhotoSrc(dish.id)}" alt="${escapeHTML(dish.name)}"></div>
+      <div class="dish-hero-photo"><img ${SRC}="${dishPhotoSrc(dish.id)}" alt="${escapeHTML(dd.name)}"></div>
       `:`
       <svg width="${plateSize}" height="${plateSize}" viewBox="0 0 ${plateSize} ${plateSize}" style="filter:drop-shadow(0 4px 12px rgba(0,0,0,.1))">
         <circle cx="${cx}" cy="${cy}" r="${cx-5}" fill="none" stroke="var(--gold-a)" stroke-width="1"/>
@@ -22372,9 +22466,9 @@ function renderRepasoDishDetail(dishId){
         <circle cx="${cx}" cy="${cy}" r="${cx-20}" fill="none" stroke="rgba(196,154,60,.1)" stroke-width=".5" stroke-dasharray="4,3"/>
         <circle cx="${cx}" cy="${cy}" r="28" fill="rgba(200,169,110,.04)" stroke="rgba(200,169,110,.08)" stroke-width=".5"/>
         <text x="${cx}" y="${cy-6}" text-anchor="middle" font-family="'Cinzel',serif" font-size="10" fill="var(--parch2)" font-weight="500">
-          ${escapeHTML(dish.name.length > 24 ? dish.name.substring(0,22)+'…' : dish.name)}
+          ${escapeHTML(dd.name.length > 24 ? dd.name.substring(0,22)+'…' : dd.name)}
         </text>
-        <text x="${cx}" y="${cy+8}" text-anchor="middle" font-family="'DM Mono',monospace" font-size="6.5" fill="var(--parch4)" letter-spacing=".08em">${escapeHTML(dish.cat.toUpperCase())}</text>
+        <text x="${cx}" y="${cy+8}" text-anchor="middle" font-family="'DM Mono',monospace" font-size="6.5" fill="var(--parch4)" letter-spacing=".08em">${escapeHTML(catLocal(dish.cat).toUpperCase())}</text>
       </svg>`}
     </div>
 
@@ -22401,18 +22495,18 @@ function renderRepasoDishDetail(dishId){
       </div>
     </div>` : ''}
 
-    ${dish.history ? `
+    ${dd.history ? `
     <div class="card" style="padding:.9rem;margin-bottom:.75rem">
       <div style="font-family:'DM Mono',monospace;font-size:.5rem;color:var(--gold);letter-spacing:.12em;text-transform:uppercase;margin-bottom:.5rem">◇ ${LANG==='en'?'Story':'Historia'}</div>
-      <div style="font-family:'Quicksand',sans-serif;font-size:.75rem;color:var(--parch2);line-height:1.6">${escapeHTML(dish.history)}</div>
+      <div style="font-family:'Quicksand',sans-serif;font-size:.75rem;color:var(--parch2);line-height:1.6">${escapeHTML(dd.history)}</div>
     </div>` : ''}
 
     ${maridajeHtml}
 
-    ${dish.notes ? `
+    ${dd.notes ? `
     <div class="card" style="padding:.9rem;margin-bottom:.75rem;border-color:rgba(196,112,104,.2);background:rgba(196,112,104,.02)">
       <div style="font-family:'DM Mono',monospace;font-size:.5rem;color:var(--rose);letter-spacing:.12em;text-transform:uppercase;margin-bottom:.5rem">! ${LANG==='en'?'Important Notes':'Notas Importantes'}</div>
-      <div style="font-family:'Quicksand',sans-serif;font-size:.75rem;color:var(--parch2);line-height:1.6">${escapeHTML(dish.notes)}</div>
+      <div style="font-family:'Quicksand',sans-serif;font-size:.75rem;color:var(--parch2);line-height:1.6">${escapeHTML(dd.notes)}</div>
     </div>` : ''}
 
     <div style="display:flex;gap:.5rem;margin-bottom:1rem">
@@ -23933,7 +24027,7 @@ function buildAllergenQuestions(cat) {
 
 function startAllergenTest(cat) {
   const questions = buildAllergenQuestions(cat);
-  if (!questions.length) { alert(LANG==='en'?'Not enough data':'Sin datos suficientes'); return; }
+  if (!questions.length) { showToast(LANG==='en'?'Not enough data':'Sin datos suficientes','error'); return; }
   // La pestaña de lanzamiento manda: el simulacro vive hoy en Aprender →
   // Repaso, pero la guarda anti-repintado comparaba contra 'exam' fijo y el
   // drill no llegaba a pintarse (toque sin efecto, reporte del propietario).
@@ -26274,7 +26368,7 @@ async function startChallenge(rivalName) {
     const q = txBuildQuestion();
     if (q) questions.push(q);
   }
-  if (questions.length < 5) { alert(LANG==='en'?'Not enough questions. Try again.':'No hay suficientes preguntas.'); return; }
+  if (questions.length < 5) { showToast(LANG==='en'?'Not enough questions. Try again.':'No hay suficientes preguntas.','error'); return; }
 
   remoteDuelState = { questions, answers: [], rivalName, phase: 'answering', qIdx: 0, timings: [], _qStart: 0 };
   renderRemoteDuelQuestion();
@@ -26374,7 +26468,7 @@ async function submitChallenge() {
   const { questions, answers, rivalName } = remoteDuelState;
   document.getElementById('appContent').innerHTML = `<div class="sup-wrap"><div style="text-align:center;padding:2rem;color:var(--parch3);font-size:.8rem">⏳ ${LANG==='en'?'Sending challenge...':'Enviando reto...'}</div></div>`;
   const duel = await supaCreateChallenge(currentUser, rivalName, questions);
-  if (!duel) { alert(LANG==='en'?'Error sending challenge':'Error al enviar el reto'); renderDuel(); return; }
+  if (!duel) { showToast(LANG==='en'?'Error sending challenge':'Error al enviar el reto','error'); renderDuel(); return; }
   await supaSubmitChallengerAnswers(duel.id, answers, remoteDuelState.timings || []);
   // Send notification
   await fetch(`${SUPA_URL}/rest/v1/notifications`, {
@@ -26398,10 +26492,10 @@ async function submitChallenge() {
 
 async function startDefense(duel) {
   if (typeof duel === 'string') duel = jParse(duel, null);
-  if (!duel) { alert(LANG==='en'?'Duel data corrupted':'Datos del duelo corruptos'); renderDuel(); return; }
+  if (!duel) { showToast(LANG==='en'?'Duel data corrupted':'Datos del duelo corruptos','error'); renderDuel(); return; }
   const questions = jParse(duel.questions, []);
   const challengerAnswers = jParse(duel.challenger_answers, []);
-  if (!questions.length) { alert(LANG==='en'?'Duel data corrupted':'Datos del duelo corruptos'); renderDuel(); return; }
+  if (!questions.length) { showToast(LANG==='en'?'Duel data corrupted':'Datos del duelo corruptos','error'); renderDuel(); return; }
   remoteDuelState = { questions, answers: [], rivalName: duel.challenger, phase: 'defending', qIdx: 0, duelId: duel.id, challengerAnswers, timings: [], _qStart: 0, duelObj: duel };
   renderRemoteDefenseQuestion();
 }
@@ -26480,7 +26574,7 @@ async function submitDefense() {
   const duelObj = remoteDuelState.duelObj || {};
   const cTimings = jParse(duelObj.challenger_timings, []);
   const result = await supaSubmitDefenderAnswers(duelId, answers, challengerAnswers, questions, cTimings, remoteDuelState.timings || []);
-  if (!result) { alert(LANG==='en'?'Error submitting duel — try again':'Error al enviar duelo — inténtalo de nuevo'); renderDuel(); return; }
+  if (!result) { showToast(LANG==='en'?'Error submitting duel — try again':'Error al enviar duelo — inténtalo de nuevo','error'); renderDuel(); return; }
   const { cScore, dScore, cWins, dWins, tiebreak } = result;
   const iWon = dWins;
   const xpAmt = iWon ? 50 : cWins ? 10 : 25;
@@ -26538,7 +26632,7 @@ async function submitDefense() {
 function startDuel(){
   const p1=document.getElementById('duelP1').value;
   const p2=document.getElementById('duelP2').value;
-  if(p1===p2){ alert(LANG==='en'?'Choose different players!':'¡Elige jugadores distintos!'); return; }
+  if(p1===p2){ showToast(LANG==='en'?'Choose different players!':'¡Elige jugadores distintos!','warning'); return; }
   duelState={p1,p2,scores:{[p1]:0,[p2]:0},round:1,totalRounds:7,current:p1,question:null,answered:{[p1]:false,[p2]:false}};
   duelNextRound();
 }
@@ -27570,11 +27664,13 @@ function showAchievementToast(ach){
   // Toasts live in one fixed stack: several achievements unlocking together
   // used to render at the same fixed spot, painting text over text and
   // covering the nav. The stack sits below the header and lets taps through.
+  _avisosAnclar();
   let stack=document.getElementById('achToastStack');
   if(!stack){
     stack=document.createElement('div');
     stack.id='achToastStack';
-    stack.style.cssText='position:fixed;top:72px;left:50%;transform:translateX(-50%);z-index:10000;display:flex;flex-direction:column;gap:.5rem;pointer-events:none;width:min(340px,92vw);';
+    // Mismo ancla que los avisos normales: por debajo de la navegación.
+    stack.style.cssText='position:fixed;top:var(--avisos-top,120px);left:50%;transform:translateX(-50%);z-index:10000;display:flex;flex-direction:column;gap:.5rem;pointer-events:none;width:min(340px,92vw);';
     document.body.appendChild(stack);
   }
   const toast=document.createElement('div');
@@ -28402,7 +28498,7 @@ function renderLqaExamResults(){
   c.innerHTML = `<div class="sup-wrap">
     <div style="text-align:center;margin:2rem 0">
       <div style="font-family:'Cinzel',serif;font-size:3rem;font-weight:700;color:var(--gold);margin-bottom:.5rem">${s.score}/${total}</div>
-      <h1 tabindex="-1" id="lqaResHdr" style="font-size:1.1rem;color:var(--parchment);margin-bottom:1.5rem;font-family:'Cinzel',serif;font-weight:600">${LANG==='en'?'LQA Exam Complete':'Examen LQA Completado'}</h1>
+      <h2 tabindex="-1" id="lqaResHdr" style="font-size:1.1rem;color:var(--parchment);margin-bottom:1.5rem;font-family:'Cinzel',serif;font-weight:600">${LANG==='en'?'LQA Exam Complete':'Examen LQA Completado'}</h2>
       <div style="background:linear-gradient(135deg,rgba(196,154,60,.08),rgba(196,154,60,.02));border:1px solid rgba(196,154,60,.2);border-radius:var(--r);padding:1rem;margin-bottom:1rem">
         <div style="font-size:.85rem;color:var(--parch3);text-transform:uppercase;margin-bottom:.3rem">${LANG==='en'?'Score':'Puntuación'}</div>
         <div style="font-size:2rem;font-weight:700;color:var(--gold)">${pct}%</div>
@@ -28689,7 +28785,7 @@ function renderLqaSituationResults(){
   c.innerHTML = `<div class="sup-wrap">
     <div style="text-align:center;margin:1.5rem 0 1rem">
       <div style="font-family:'Cinzel',serif;font-size:3rem;font-weight:700;color:#7a6aaa;margin-bottom:.5rem">${s.score}/${total}</div>
-      <h1 tabindex="-1" id="lqaResHdr" style="font-size:1.1rem;color:var(--parchment);margin-bottom:.5rem;font-family:'Cinzel',serif;font-weight:600">${LANG==='en'?'Situations Complete':'Situaciones Completadas'}</h1>
+      <h2 tabindex="-1" id="lqaResHdr" style="font-size:1.1rem;color:var(--parchment);margin-bottom:.5rem;font-family:'Cinzel',serif;font-weight:600">${LANG==='en'?'Situations Complete':'Situaciones Completadas'}</h2>
       <div style="font-size:.9rem;color:var(--parch2);margin-bottom:1rem">${pct}% · +${xp} XP · ${timeSec}s</div>
     </div>
     ${_lqaTrendBlock(getEmp(currentUser), 'situations')}
@@ -28859,7 +28955,7 @@ function renderLqaAuditorResults(){
   c.innerHTML = `<div class="sup-wrap">
     <div style="text-align:center;margin:1.5rem 0 1rem">
       <div style="font-family:'Cinzel',serif;font-size:3rem;font-weight:700;color:var(--sage);margin-bottom:.5rem">${s.score}/${total}</div>
-      <h1 tabindex="-1" id="lqaResHdr" style="font-size:1.1rem;color:var(--parchment);margin-bottom:.5rem;font-family:'Cinzel',serif;font-weight:600">${LANG==='en'?'Are You Ready?':'¿Estás Preparado?'}</h1>
+      <h2 tabindex="-1" id="lqaResHdr" style="font-size:1.1rem;color:var(--parchment);margin-bottom:.5rem;font-family:'Cinzel',serif;font-weight:600">${LANG==='en'?'Are You Ready?':'¿Estás Preparado?'}</h2>
       <div style="font-size:.9rem;color:var(--parch2);margin-bottom:1rem">${LANG==='en'?'Evaluation accuracy':'Precisión de evaluación'}: <strong>${pct}%</strong> · +${xp} XP · ${timeSec}s</div>
       <div style="background:linear-gradient(135deg,rgba(77,138,94,.08),rgba(77,138,94,.02));border:1px solid rgba(77,138,94,.2);border-radius:var(--r);padding:1rem;margin-bottom:1rem">
         <div style="font-size:.85rem;color:var(--parch2);line-height:1.6">${tip}</div>
