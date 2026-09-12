@@ -9841,6 +9841,121 @@ test('Sala: el manual de M.B. está entero y las frases son las suyas', () => {
     assert(todo.includes(clave), `el manual tendría que hablar de «${clave}»`);
 });
 
+test('Examen de sala: las preguntas salen del manual y no se contestan con trucos', () => {
+  // Ni una pregunta escrita a mano: todas se derivan del manual del
+  // restaurante. Si M.B. cambia un paso, la pregunta cambia con él; y lo que
+  // no está en su manual, no se pregunta.
+  //
+  // El guard EJECUTA el generador y MIDE, porque un examen se rompe en
+  // silencio: sigue dando preguntas, sólo que contestables sin saber nada.
+  // Las tres trampas que se miden son las que ya aparecieron en esta app:
+  // elegir la opción más larga, elegir siempre la misma posición, y el eco
+  // (una palabra de la respuesta asomando en el enunciado).
+  const i0 = html.indexOf('const _SALA_STOP = new Set(');
+  const i1 = html.indexOf('let salaQuiz = {');
+  assert(i0 !== -1 && i1 > i0, 'no encuentro el generador del examen de sala');
+  const j0 = html.indexOf('function _lqaShuffle(arr){');
+  const G = new Function('LANG', // eslint-disable-line no-new-func
+    html.slice(j0, html.indexOf('\n}', j0) + 2) + html.slice(i0, i1) + '; return _salaGenerar;')('es');
+
+  const doc = JSON.parse(read('data/procedimientos-mb.json'));
+  const todas = [];
+  for (let i = 0; i < 150; i++) for (const q of G(doc, 10)) todas.push(q);
+  assert(todas.length > 1000, `el generador se quedó en ${todas.length} preguntas`);
+
+  // Dos entradas con el mismo título en una sección harían que una pregunta
+  // tuviera dos respuestas correctas. Es la condición que hace válido el
+  // examen, así que se comprueba en el manual, no sólo en el generador.
+  for (const s of doc.secciones) {
+    const vistos = new Set();
+    for (const p of s.pasos) {
+      assert(!vistos.has(p.t), `«${p.t}» está dos veces en «${s.t}»: daría dos correctas`);
+      vistos.add(p.t);
+    }
+  }
+
+  // Los títulos que existen en el manual. Ninguna opción puede ser otra cosa.
+  const titulos = new Set();
+  for (const s of doc.secciones) for (const p of s.pasos) titulos.add(p.t);
+  const pal = s => String(s).toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '')
+    .split(/[^a-z0-9]+/).filter(w => w.length > 3);
+  // Se mide POR TIPO de pregunta, no sólo en el total: un tipo puede regalar
+  // la respuesta entera y quedar diluido por los otros tres. Pasó: el eco de
+  // «¿qué viene después?» llegaba al 21% y en el total no se notaba.
+  const M = {};
+  const claves = new Set();
+  for (const q of todas) {
+    claves.add(q.key);
+    const tipo = q.key.split(':')[0];
+    const m = M[tipo] || (M[tipo] = { n: 0, larga: 0, corta: 0, eco: 0, pos: [0, 0, 0, 0] });
+    m.n++;
+    assert(q.opts.length === 4, `una pregunta salió con ${q.opts.length} opciones`);
+    assert(new Set(q.opts).size === 4, `una pregunta repite opción: ${q.opts.join(' | ')}`);
+    assert(q.corr >= 0 && q.corr < 4, 'la correcta se salió del rango');
+    for (const o of q.opts) assert(titulos.has(o),
+      `la opción «${o}» no está en el manual: el examen no puede inventarse nada`);
+    m.pos[q.corr]++;
+    const lens = q.opts.map(o => o.length);
+    if (lens[q.corr] === Math.max(...lens)) m.larga++;
+    if (lens[q.corr] === Math.min(...lens)) m.corta++;
+    const enun = pal(q.enun + ' ' + (q.ctx || ''));
+    const conEco = q.opts.map(o => pal(o).some(w => enun.includes(w)));
+    if (conEco[q.corr] && conEco.filter(Boolean).length === 1) m.eco++;
+  }
+  assert(Object.keys(M).length === 4,
+    `esperaba las cuatro maneras de preguntar, salieron ${Object.keys(M).join(', ')}`);
+
+  // Con cuatro opciones el azar es el 25%. Los márgenes dejan sitio al ruido
+  // de muestreo (n≈350 por tipo, ±4,5 puntos) y ninguno al regalo.
+  for (const [tipo, m] of Object.entries(M)) {
+    const pc = a => 100 * a / m.n;
+    assert(pc(m.larga) < 34, `en «${tipo}», elegir la más larga acierta el ${pc(m.larga).toFixed(1)}% (azar 25%)`);
+    assert(pc(m.corta) < 34, `en «${tipo}», elegir la más corta acierta el ${pc(m.corta).toFixed(1)}% (azar 25%)`);
+    assert(pc(m.eco) < 8, `en «${tipo}», el enunciado delata la respuesta el ${pc(m.eco).toFixed(1)}% de las veces`);
+    for (let i = 0; i < 4; i++)
+      assert(pc(m.pos[i]) > 15 && pc(m.pos[i]) < 35,
+        `en «${tipo}», la correcta cae en la posición ${i + 1} el ${pc(m.pos[i]).toFixed(1)}% de las veces`);
+  }
+
+  // «De estos cuatro pasos, ¿cuál va PRIMERO?» pregunta también por el ÚLTIMO,
+  // a medias. No es variedad: los títulos de los pasos se acortan según avanza
+  // el servicio, así que preguntando siempre por el primero, elegir la opción
+  // más larga acertaba el 30%. Preguntar por los dos extremos lo cancela.
+  const nPri = todas.filter(q => q.key.startsWith('orden:a:')).length;
+  const nUlt = todas.filter(q => q.key.startsWith('orden:z:')).length;
+  assert(nPri > 0 && nUlt > 0 && Math.min(nPri, nUlt) / (nPri + nUlt) > 0.35,
+    `las preguntas de orden tienen que repartirse entre primero y último; salieron ${nPri} y ${nUlt}`);
+
+  // Y si algún día el manual llega con dos entradas del mismo título, el
+  // generador no puede sacar una pregunta con dos respuestas correctas. Se
+  // comprueba dándoselo de verdad, no confiando en que no pase.
+  const trucado = JSON.parse(JSON.stringify(doc));
+  for (const s of trucado.secciones) if (s.pasos.length > 3) s.pasos[1].t = s.pasos[0].t;
+  for (let i = 0; i < 40; i++)
+    for (const q of G(trucado, 10))
+      assert(new Set(q.opts).size === 4,
+        `con títulos repetidos en el manual salió una pregunta con dos correctas: ${q.opts.join(' | ')}`);
+
+  // Variedad: si sabe hacer cuatro preguntas, el examen es un trámite.
+  assert(claves.size > 300, `sólo sabe hacer ${claves.size} preguntas distintas`);
+  // Y dentro de un mismo examen no se repite ninguna.
+  for (let i = 0; i < 30; i++) {
+    const ex = G(doc, 10);
+    assert(ex.length === 10, `un examen salió con ${ex.length} preguntas`);
+    assert(new Set(ex.map(q => q.key)).size === 10, 'un examen repitió pregunta');
+  }
+
+  // Y la pantalla existe, se puede lanzar y guarda el resultado donde lo ve
+  // el panel del supervisor.
+  assert(/function startSalaExam\(\)/.test(html), 'falta el examen');
+  assert(/class="pr-ex-lanza" onclick="startSalaExam\(\)"/.test(html),
+    'falta el botón que lanza el examen desde la pantalla de Sala');
+  assert(/_lqaPushScore\(emp, 'sala', s\.score, total, seg\)/.test(html),
+    'el resultado tiene que quedar registrado como los demás exámenes');
+  assert(/awardXP\(xp, LANG==='en'\?'Floor exam':'Examen de sala'/.test(html),
+    'y dar XP, como los demás');
+});
+
 // ─── 7. No leftover git conflict markers ────────────────────────
 console.log('\nHygiene');
 test('no git conflict markers in tracked source', () => {

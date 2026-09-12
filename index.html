@@ -52,7 +52,7 @@
 <meta property="og:description" content="Formación de equipos de sala: carta, alérgenos, vinos, exámenes y juegos de repaso.">
 <meta property="og:url" content="https://meseo.es/">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"Meseo","url":"https://meseo.es/"}</script>
-<meta name="app-version" content="7.444">
+<meta name="app-version" content="7.445">
 <meta name="app-build" content="May 2026">
 <meta name="theme-color" content="#1c2a22">
 <!-- ═══ PWA ═══ -->
@@ -1901,7 +1901,7 @@ const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><p
 const SRC = 'src';
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='7.444';  // sincronizada con sw.js VERSION (guard de CI)
+const APP_VERSION='7.445';  // sincronizada con sw.js VERSION (guard de CI)
 const APP_BUILD='Jul 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;
@@ -11044,6 +11044,11 @@ function renderSala(){
       <div class="sup-hero-sub">${escapeHTML(SALA.subtitulo||'')}${SALA.actualizado?` · ${escapeHTML(SALA.actualizado)}`:''}</div>
     </div>
 
+    <button type="button" class="pr-ex-lanza" onclick="startSalaExam()">
+      <span>📝</span><span>${_en?'Test yourself · 10 questions from this manual':'Ponte a prueba · 10 preguntas de este manual'}</span>
+      <span class="pr-ex-lanza-go">›</span>
+    </button>
+
     ${SALA.intro ? `<details class="pr-intro"><summary>${_en?'Why M.B. — the manual’s opening':'Por qué M.B. — la introducción del manual'}</summary><p>${escapeHTML(SALA.intro)}</p></details>` : ''}
 
     <input type="search" class="q-busca" value="${escapeHTML(_salaBusca)}" oninput="_salaBusca=this.value;renderSala();this.focus()"
@@ -11063,6 +11068,254 @@ function renderSala(){
      : `<div class="q-vacio">${_en?'Nothing matches that search.':'Nada encaja con esa búsqueda.'}</div>`}
 
     ${SALA.fuente ? `<div class="pr-fuente">${_en?'Source':'Fuente'}: ${escapeHTML(SALA.fuente)}</div>` : ''}
+  </div>`;
+}
+
+// ═══ SALA — EXAMEN ════════════════════════════════════════════════════════
+// Las preguntas SALEN DEL MANUAL. No hay ni una escrita a mano: si el
+// restaurante cambia un paso, la pregunta cambia con él, y si no lo pone en su
+// manual, no se pregunta. Es la misma regla que protege la carta.
+//
+// Cuatro maneras de preguntar, todas derivadas:
+//   orden     · de estos cuatro pasos, ¿cuál va primero?
+//   siguiente · acabas de terminar el paso N, ¿qué toca ahora?
+//   detalle   · este detalle, ¿de qué paso o procedimiento es?
+//   frase     · esta frase, ¿en qué momento se dice?
+// En «detalle» y «frase» el enunciado va TAPADO: se enmascara cualquier
+// palabra del título de las cuatro opciones, o el propio texto delataría la
+// respuesta. Es lo mismo que se hace en el Examen de platos.
+const _SALA_STOP = new Set(['para','con','sin','una','uno','los','las','del','que','por',
+  'nuestro','nuestra','nuestros','nuestras','este','esta','estos','estas','como','cuando',
+  'segun','todo','toda','todos','todas','desde','hasta','antes','despues','sobre','entre']);
+function _salaTokens(txt){
+  return String(txt||'').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'')
+    .split(/[^a-z0-9]+/).filter(w => w.length > 3 && !_SALA_STOP.has(w));
+}
+function _salaTapar(texto, titulos){
+  const raiz = new Set();
+  titulos.forEach(t => _salaTokens(t).forEach(w => raiz.add(w.replace(/(es|s)$/,''))));
+  return String(texto).split(/(\s+|[.,;:()"«»¡!¿?])/).map(part => {
+    const w = part.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'');
+    if(!/^[a-z0-9]{4,}$/.test(w)) return part;
+    return raiz.has(w.replace(/(es|s)$/,'')) ? '···' : part;
+  }).join('');
+}
+
+// Todas las entradas del manual, con la sección de la que salen.
+function _salaEntradas(doc){
+  const out = [];
+  for(const s of (doc && doc.secciones) || [])
+    (s.pasos||[]).forEach((p, i) => out.push({ p, sec: s, k: s.id + '#' + i }));
+  return out;
+}
+
+function _salaGenerar(doc, cuantas){
+  const todas = _salaEntradas(doc);
+  if(todas.length < 6) return [];
+  const pasos = todas.filter(x => typeof x.p.n === 'number').sort((a,b)=>a.p.n-b.p.n);
+  const preguntas = [];
+  const vistas = new Set();
+  const _en = LANG==='en';
+  // Todo lo que no cambia entre intentos se calcula UNA vez. Antes se filtraba
+  // y se barajaba la lista entera en cada vuelta del bucle, y generar un
+  // examen de diez costaba casi medio segundo — en el móvil de un camarero,
+  // eso es un botón que parece no responder.
+  const porSeccion = {};
+  for(const x of todas) (porSeccion[x.sec.id] = porSeccion[x.sec.id] || []).push(x);
+  const conTexto  = todas.filter(x => (x.p.lista||[]).length || (x.p.d||'').length > 40);
+  const conFrases = todas.filter(x => (x.p.frases||[]).length);
+  const azar = a => a[Math.floor(Math.random()*a.length)];
+  const otros = (x, n) => _lqaShuffle(porSeccion[x.sec.id].filter(y => y.k !== x.k)).slice(0, n);
+
+  const tipos = [];
+  if(pasos.length >= 6) tipos.push('orden', 'siguiente');
+  if(conTexto.length) tipos.push('detalle');
+  if(conFrases.length) tipos.push('frase');
+  if(!tipos.length) return [];
+
+  for(let intento = 0; intento < cuantas * 40 && preguntas.length < cuantas; intento++){
+    const tipo = tipos[intento % tipos.length];
+    let q = null;
+
+    if(tipo === 'orden'){
+      const cuatro = _lqaShuffle(pasos).slice(0,4);
+      if(cuatro.length < 4) continue;
+      // Se pregunta por el primero Y por el último, a medias. No es adorno:
+      // medido, los títulos de los pasos se acortan según avanza el servicio,
+      // así que preguntando siempre por el primero, quien eligiera la opción
+      // más larga acertaba el 30% en vez del 25% del azar. Preguntando por los
+      // dos extremos, ese truco deja de servir — lo que premia a uno castiga
+      // al otro.
+      const alFinal = Math.random() < 0.5;
+      const busca = alFinal
+        ? cuatro.reduce((a,b) => a.p.n > b.p.n ? a : b)
+        : cuatro.reduce((a,b) => a.p.n < b.p.n ? a : b);
+      q = { key: 'orden:' + (alFinal?'z:':'a:') + cuatro.map(x=>x.p.n).sort((a,b)=>a-b).join('-'),
+            enun: alFinal
+              ? (_en ? 'Of these four steps, which one comes LAST?'
+                     : 'De estos cuatro pasos, ¿cuál va el ÚLTIMO?')
+              : (_en ? 'Of these four steps, which one comes FIRST?'
+                     : 'De estos cuatro pasos, ¿cuál va PRIMERO?'),
+            ctx: '', opts: cuatro.map(x=>x.p.t), corr: cuatro.indexOf(busca),
+            expl: _en ? `It is step ${busca.p.n} of the service.`
+                      : `Es el paso ${busca.p.n} del servicio.`,
+            sec: busca.sec.t };
+    }
+
+    if(tipo === 'siguiente'){
+      const i = Math.floor(Math.random() * (pasos.length - 1));
+      const actual = pasos[i], siguiente = pasos[i+1];
+      const distr = _lqaShuffle(pasos.filter(x => x.k !== actual.k && x.k !== siguiente.k)).slice(0,3);
+      if(distr.length < 3) continue;
+      const opts = _lqaShuffle([siguiente, ...distr]);
+      // Eco medido: 21% de estas preguntas se contestaban sin saber el orden,
+      // porque el título del paso anterior comparte palabra con el siguiente
+      // —el 27 «Si toman quesos» y el 28 «Retiramos los quesos»—. No se tapa
+      // el enunciado, que dejaría la pregunta sin sentido: se exige que el eco
+      // NO distinga, o sea, que al menos otra opción lo comparta también.
+      const _raiz = s => new Set(_salaTokens(s).map(w => w.replace(/(es|s)$/,'')));
+      const _eco = _raiz(actual.p.t);
+      const _comparten = opts.filter(o => [..._raiz(o.p.t)].some(w => _eco.has(w))).length;
+      if([..._raiz(siguiente.p.t)].some(w => _eco.has(w)) && _comparten < 2) continue;
+      q = { key: 'sig:' + actual.p.n,
+            enun: _en ? `You have just finished step ${actual.p.n}, «${actual.p.t}». What comes next?`
+                      : `Acabas de terminar el paso ${actual.p.n}, «${actual.p.t}». ¿Qué toca ahora?`,
+            ctx: '', opts: opts.map(x=>x.p.t), corr: opts.indexOf(siguiente),
+            expl: _en ? `Step ${siguiente.p.n}: ${siguiente.p.t}.`
+                      : `Paso ${siguiente.p.n}: ${siguiente.p.t}.`,
+            sec: siguiente.sec.t };
+    }
+
+    if(tipo === 'detalle'){
+      const x = azar(conTexto); if(!x) continue;
+      const trozos = (x.p.lista||[]).concat(x.p.d ? [x.p.d] : []);
+      const texto = azar(trozos);
+      const distr = otros(x, 3); if(distr.length < 3) continue;
+      const opts = _lqaShuffle([x, ...distr]);
+      const titulos = opts.map(o=>o.p.t);
+      q = { key: 'det:' + x.k + ':' + texto.slice(0,24),
+            enun: _en ? 'Which step or procedure does this belong to?'
+                      : '¿A qué paso o procedimiento pertenece esto?',
+            ctx: _salaTapar(texto, titulos), opts: titulos, corr: opts.indexOf(x),
+            expl: (x.p.n ? (_en?`Step ${x.p.n}: `:`Paso ${x.p.n}: `) : '') + x.p.t,
+            sec: x.sec.t };
+    }
+
+    if(tipo === 'frase'){
+      const x = azar(conFrases); if(!x) continue;
+      const f = azar(x.p.frases);
+      const distr = otros(x, 3); if(distr.length < 3) continue;
+      const opts = _lqaShuffle([x, ...distr]);
+      const titulos = opts.map(o=>o.p.t);
+      q = { key: 'fra:' + x.k + ':' + String(f.es).slice(0,24),
+            enun: _en ? 'When do we say this?' : '¿En qué momento se dice esto?',
+            ctx: '«' + _salaTapar(f.es, titulos) + '»', opts: titulos, corr: opts.indexOf(x),
+            expl: (x.p.n ? (_en?`Step ${x.p.n}: `:`Paso ${x.p.n}: `) : '') + x.p.t,
+            sec: x.sec.t };
+    }
+
+    if(!q || q.corr < 0 || vistas.has(q.key)) continue;
+    // Dos opciones con el mismo texto harían que hubiera dos correctas.
+    if(new Set(q.opts).size !== q.opts.length) continue;
+    vistas.add(q.key);
+    preguntas.push(q);
+  }
+  return preguntas;
+}
+
+let salaQuiz = { questions: [], index: 0, score: 0, startedAt: 0, answers: [], completed: false };
+
+async function startSalaExam(){
+  if(!SALA) await cargarSala();
+  if(!SALA){ if(typeof showToast==='function') showToast(LANG==='en'
+    ? 'No procedures to examine yet.' : 'Todavía no hay procedimientos que examinar.', 'error'); return; }
+  const qs = _salaGenerar(SALA, 10);
+  if(qs.length < 4){ if(typeof showToast==='function') showToast(LANG==='en'
+    ? 'Not enough material for an exam yet.' : 'Aún no hay material suficiente para un examen.', 'error'); return; }
+  salaQuiz = { questions: qs, index: 0, score: 0, startedAt: Date.now(), answers: [], completed: false };
+  renderSalaExamQuestion();
+}
+
+function renderSalaExamQuestion(){
+  const s = salaQuiz;
+  if(s.index >= s.questions.length){ _salaExamCompletar(); return; }
+  const q = s.questions[s.index];
+  const _en = LANG==='en';
+  document.getElementById('appContent').innerHTML = `<div class="sup-wrap">
+    <div class="pr-ex-top">
+      <span>${_en?'Question':'Pregunta'} ${s.index+1}/${s.questions.length}</span>
+      <span>${escapeHTML(q.sec)}</span>
+    </div>
+    <div class="pr-ex-barra"><div style="width:${Math.round(s.index/s.questions.length*100)}%"></div></div>
+    <div class="pr-ex-q">${escapeHTML(q.enun)}</div>
+    ${q.ctx ? `<div class="pr-ex-ctx">${escapeHTML(q.ctx)}</div>` : ''}
+    ${q.opts.map((o,i)=>`<button type="button" class="pr-ex-op" onclick="_salaResponder(${i})">
+      <span>${i+1}</span>${escapeHTML(o)}</button>`).join('')}
+    <button type="button" class="pr-ex-salir" onclick="showTab('sala')">${_en?'Leave the exam':'Salir del examen'}</button>
+  </div>`;
+}
+
+function _salaResponder(i){
+  const s = salaQuiz;
+  const q = s.questions[s.index];
+  if(!q || s.answers.some(a => a.qIdx === s.index)) return;
+  const bien = i === q.corr;
+  if(bien) s.score++;
+  s.answers.push({ qIdx: s.index, picked: i, isCorrect: bien });
+  const _en = LANG==='en';
+  document.getElementById('appContent').innerHTML = `<div class="sup-wrap">
+    <div class="pr-ex-top">
+      <span>${_en?'Question':'Pregunta'} ${s.index+1}/${s.questions.length}</span>
+      <span>${escapeHTML(q.sec)}</span>
+    </div>
+    <div class="pr-ex-q">${escapeHTML(q.enun)}</div>
+    ${q.ctx ? `<div class="pr-ex-ctx">${escapeHTML(q.ctx)}</div>` : ''}
+    ${_lqaOptionsFeedbackHtml(q.opts, q.opts, i, q.corr)}
+    <div class="pr-ex-expl">${bien?'✓ ':'✗ '}${escapeHTML(q.expl)}</div>
+    <button type="button" class="pr-ex-sig" onclick="salaQuiz.index++;renderSalaExamQuestion()">
+      ${s.index+1 >= s.questions.length ? (_en?'See result':'Ver resultado') : (_en?'Next':'Siguiente')}</button>
+  </div>`;
+}
+
+function _salaExamCompletar(){
+  const s = salaQuiz;
+  if(!s.completed){
+    s.completed = true;
+    const total = s.questions.length;
+    const pct = total ? Math.round(s.score/total*100) : 0;
+    const xp = Math.round(s.score*10 + (pct>=90?35:pct>=70?18:0));
+    const seg = Math.max(1, Math.round((Date.now()-s.startedAt)/1000));
+    const emp = getEmp(currentUser);
+    if(emp){
+      _lqaPushScore(emp, 'sala', s.score, total, seg);
+      if(!emp.salaBest || pct > emp.salaBest) emp.salaBest = pct;
+      emp.salaCompleted = (emp.salaCompleted||0) + 1;
+      saveDB();
+    }
+    s._pct = pct; s._xp = xp; s._seg = seg;
+    awardXP(xp, LANG==='en'?'Floor exam':'Examen de sala', 'lqa');
+    if(typeof checkNewAchievements==='function') checkNewAchievements();
+  }
+  const _en = LANG==='en';
+  const pct = s._pct, color = pct>=80?'#4d8a5e':pct>=60?'#c49a3c':'#c47068';
+  document.getElementById('appContent').innerHTML = `<div class="sup-wrap">
+    <div class="sup-hero">
+      <div class="sup-hero-icon">${pct>=80?'🏅':pct>=60?'📖':'📚'}</div>
+      <div class="sup-hero-title">${s.score}/${s.questions.length}</div>
+      <div class="sup-hero-sub">${pct}% · +${s._xp} XP · ${s._seg}s</div>
+    </div>
+    <div class="pr-ex-expl" style="border-color:${color};color:${color}">${
+      pct>=80 ? (_en?'You know the house.':'Te sabes la casa.')
+      : pct>=60 ? (_en?'Almost. Go back over the steps you missed.':'Casi. Repasa los pasos que fallaste.')
+      : (_en?'Read the procedures again and come back.':'Vuelve a leer los procedimientos y repite.')}</div>
+    ${s.answers.filter(a=>!a.isCorrect).map(a=>{
+      const q = s.questions[a.qIdx];
+      return `<div class="pr-card"><header><h3>${escapeHTML(q.enun)}</h3></header>
+        ${q.ctx?`<p class="pr-d">${escapeHTML(q.ctx)}</p>`:''}
+        <p class="pr-d"><b>${escapeHTML(q.opts[q.corr])}</b> — ${escapeHTML(q.expl)}</p></div>`;
+    }).join('')}
+    <button type="button" class="pr-ex-sig" onclick="startSalaExam()">${_en?'Another round':'Otra ronda'}</button>
+    <button type="button" class="pr-ex-salir" onclick="showTab('sala')">${_en?'Back to the procedures':'Volver a los procedimientos'}</button>
   </div>`;
 }
 
