@@ -1,6 +1,6 @@
 # Por dónde seguir
 
-Estado a **12 de septiembre de 2026** · versión **7.446** · 340 pruebas en verde ·
+Estado a **12 de septiembre de 2026** · versión **7.447** · 342 pruebas en verde ·
 auditoría de alérgenos 0/0.
 
 ---
@@ -244,6 +244,9 @@ vuelve a estar abierta.
 | Vinos | `data/wines.json` es la bodega de **Txoko**; otro restaurante trae `data/wines-<id>.json`. Sin archivo, no hay pestaña de Vinos |
 | La carta de M.B. | `docs/carta-mb-borrador.json` — borrador, fuera de `data/` a propósito. 34 fichas |
 | Sala y procedimientos de M.B. | `data/procedimientos-mb.json` — pestaña **Sala**, sale sólo donde existe el archivo. La fuente sin tocar, en `docs/mb-procedimientos-fuente.md` |
+| El registro de actividad | tabla `actividad` en Supabase + `registrarActividad()`. **Las 14 actividades con resultado escriben ahí.** Vocabulario CERRADO de 6 competencias, repetido en la base y en el cliente a propósito |
+| Qué NO cuenta como formación | `kind='juego'`. Los juegos van sin competencia: es lo que impide que entren en una nota. `scores` tenía 254 marcadores de partida de 427 filas |
+| `scores` | **sigue recibiendo**, y el panel actual sigue leyéndola. Las dos conviven hasta que el panel nuevo esté probado (fase 3) |
 | Los avisos flotantes | se anclan MIDIENDO la cabecera y la navegación (`_avisosAnclar`). Nunca por encima del menú |
 | El encabezado de pantalla | un `h1` en el armazón, `#tituloPantalla`, que `showTab` rellena. No se pinta: nombra la pantalla para el lector |
 | Contraste de color | medido tres veces sin resultado fiable: ver `docs/contraste-fase0.md`. Se cierra con pares de color fijos en el sistema de diseño |

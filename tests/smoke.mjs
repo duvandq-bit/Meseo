@@ -10090,6 +10090,126 @@ test('Higiene: ni un alert() del navegador, y los avisos por debajo de la navega
   }
 });
 
+// El montaje se ejecuta AQUÍ FUERA, y a propósito: test() es síncrono, así que
+// una prueba que devuelve una promesa se traga sus propios fallos. Lo comprobé:
+// con el guard escrito así, aceptar «allergens» otra vez pasaba en verde.
+const _actRes = await (async () => {
+  const i0 = html.indexOf('const COMPETENCIAS = [');
+  const i1 = html.indexOf('async function supaInsertScore');
+  if (i0 === -1 || i1 <= i0) return { roto: 'no encuentro el registro de actividad' };
+  const enviados = [];
+  const F = new Function('SUPA_URL','SUPA_KEY','_esAdmin','currentUser','_vSello','dbgw','fetch', // eslint-disable-line no-new-func
+    html.slice(i0, i1) + '; return { registrar: registrarActividad, deTema: competenciaDeTema };');
+  const api = (esAdmin) => F('https://x', 'k', () => esAdmin, 'Ana',
+    o => Object.assign({ venue: 'txoko' }, o), () => {},
+    (url, opts) => { enviados.push({ url, cuerpo: JSON.parse(opts.body) }); return Promise.resolve({ ok: true }); });
+  const a = api(false);
+  const o = { temas: {}, rechazadas: [] };
+
+  for (const tm of ['alergenos','allergens','mixed','ingredients','history','protocolo','cutlery','sala','vinos'])
+    o.temas[tm] = a.deTema(tm);
+
+  enviados.length = 0;
+  o.valida = await a.registrar({ activity:'examen', competency:'carta', kind:'evaluacion',
+    score:8, total:10, seconds:240 });
+  o.peticiones = enviados.length;
+  o.url = enviados[0] && enviados[0].url;
+  o.cuerpo = enviados[0] && enviados[0].cuerpo;
+
+  for (const [caso, arg] of [
+    ['competencia en otro idioma', { activity:'x', competency:'allergens', kind:'evaluacion', score:1, total:1 }],
+    ['competencia inventada',      { activity:'x', competency:'inventada', kind:'evaluacion', score:1, total:1 }],
+    ['tipo inventado',             { activity:'x', competency:'carta', kind:'otro', score:1, total:1 }],
+    ['evaluación sin competencia', { activity:'x', kind:'evaluacion', score:1, total:1 }],
+    ['total cero',                 { activity:'x', competency:'carta', kind:'practica', score:0, total:0 }],
+  ]) {
+    enviados.length = 0;
+    const ok = await a.registrar(arg);
+    o.rechazadas.push({ caso, ok, salio: enviados.length });
+  }
+
+  enviados.length = 0;
+  o.juego = await a.registrar({ activity:'mr_shoesmith', kind:'juego', meta:{ record: 31 } });
+  o.juegoCuerpo = enviados[0] && enviados[0].cuerpo;
+
+  enviados.length = 0;
+  o.admin = await api(true).registrar({ activity:'examen', competency:'carta', kind:'evaluacion', score:1, total:1 });
+  o.adminSalio = enviados.length;
+
+  enviados.length = 0;
+  await a.registrar({ activity:'x', competency:'carta', kind:'evaluacion', score:99, total:10 });
+  o.tope = enviados[0] && enviados[0].cuerpo;
+  return o;
+})();
+
+test('Registro de actividad: todas las actividades escriben, y con el mismo vocabulario', () => {
+  // FASE 1. Medido antes de empezar: de las diecisiete actividades sólo DOS
+  // llegaban a la nube, y de las 427 filas de `scores` 254 eran marcadores de
+  // partida, no evaluaciones. Las evaluaciones reales estaban repartidas en
+  // nueve nombres de tema, dos de ellos el mismo en dos idiomas.
+  const e = _actRes;
+  assert(!e.roto, e.roto || '');
+
+  // ── 1. Los nueve nombres de tema de hoy caen en las seis competencias ──
+  assert(e.temas.alergenos === 'alergenos' && e.temas.allergens === 'alergenos',
+    '«alergenos» y «allergens» son lo mismo y tienen que caer en la misma competencia');
+  for (const [tema, esperada] of [['mixed','carta'],['ingredients','carta'],['history','carta'],
+                                  ['protocolo','protocolo'],['cutlery','servicio'],['sala','sala'],
+                                  ['vinos','vinos']])
+    assert(e.temas[tema] === esperada, `el tema «${tema}» tiene que ser «${esperada}», es «${e.temas[tema]}»`);
+
+  // ── 2. Lo válido sale por el cable, con el restaurante estampado ──
+  assert(e.valida === true, 'una evaluación válida tiene que registrarse');
+  assert(e.peticiones === 1, `tiene que salir una petición, salieron ${e.peticiones}`);
+  assert(/\/rest\/v1\/actividad$/.test(e.url), 'tiene que escribir en la tabla actividad');
+  assert(e.cuerpo.venue === 'txoko', 'toda fila lleva su restaurante: es el aislamiento de siempre');
+  assert(e.cuerpo.employee === 'Ana' && e.cuerpo.activity === 'examen' && e.cuerpo.competency === 'carta'
+         && e.cuerpo.kind === 'evaluacion' && e.cuerpo.score === 8 && e.cuerpo.total === 10
+         && e.cuerpo.seconds === 240, 'el cuerpo no es el esperado: ' + JSON.stringify(e.cuerpo));
+
+  // ── 3. Lo que NO puede salir ──
+  for (const r of e.rechazadas) {
+    assert(r.ok === false, `«${r.caso}» no puede registrarse`);
+    assert(r.salio === 0, `«${r.caso}» ni siquiera puede salir por el cable`);
+  }
+
+  // ── 4. Un juego no lleva competencia y no puede ensuciar una media ──
+  assert(e.juego === true, 'un juego sí se registra, como juego');
+  assert(e.juegoCuerpo.competency === null && e.juegoCuerpo.kind === 'juego',
+    'un juego va sin competencia: es lo que impide que entre en una nota');
+
+  // ── 5. La administración no deja rastro, igual que en scores ──
+  assert(e.admin === false, 'la cuenta de administración no puede dejar rastro');
+  assert(e.adminSalio === 0, 'y no puede ni salir la petición');
+
+  // ── 6. El acierto nunca puede superar el total ──
+  assert(e.tope && e.tope.score <= e.tope.total,
+    'un acierto mayor que el total rompería cualquier media');
+});
+
+test('Registro de actividad: las actividades reales lo llaman', () => {
+  // Que el registrador funcione no sirve de nada si nadie lo llama. Se cuentan
+  // las llamadas y se comprueba que cada actividad con resultado tiene la suya.
+  const llamadas = [...html.matchAll(/registrarActividad\(\{\s*activity:'([a-z_]+)'/g)].map(m => m[1]);
+  const esperadas = ['examen','simulacro_alergenos','examen_lqa','situaciones_lqa','auditor_lqa',
+                     'examen_sala','fantasma','repaso','maridaje','reto_dia','quiz_vinos',
+                     'recorrido','survivors','mr_shoesmith'];
+  for (const e of esperadas)
+    assert(llamadas.includes(e), `la actividad «${e}» no registra nada`);
+  assert(llamadas.length >= esperadas.length,
+    `esperaba al menos ${esperadas.length} llamadas, hay ${llamadas.length}`);
+
+  // Y `scores` sigue recibiendo lo de siempre: el panel actual depende de ella
+  // hasta la fase 3. Quitarla ahora dejaría al supervisor a ciegas.
+  // Se CUENTAN: cada una aparece dos veces, la llamada y su botón de
+  // reintentar. Buscando el texto una sola vez, quitar la llamada de verdad
+  // pasaba en verde porque el reintento la seguía mencionando.
+  assert((html.match(/supaInsertScore\(session, currentUser\)/g) || []).length === 2,
+    'la llamada a scores del examen, y su reintento, tienen que seguir ahí');
+  assert((html.match(/supaInsertScore\(_payload, currentUser\)/g) || []).length === 2,
+    'la llamada a scores del simulacro, y su reintento, tienen que seguir ahí');
+});
+
 // ─── 7. No leftover git conflict markers ────────────────────────
 console.log('\nHygiene');
 test('no git conflict markers in tracked source', () => {

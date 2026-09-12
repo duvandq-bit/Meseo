@@ -52,7 +52,7 @@
 <meta property="og:description" content="Formación de equipos de sala: carta, alérgenos, vinos, exámenes y juegos de repaso.">
 <meta property="og:url" content="https://meseo.es/">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"Meseo","url":"https://meseo.es/"}</script>
-<meta name="app-version" content="7.446">
+<meta name="app-version" content="7.447">
 <meta name="app-build" content="May 2026">
 <meta name="theme-color" content="#1c2a22">
 <!-- ═══ PWA ═══ -->
@@ -1909,7 +1909,7 @@ const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><p
 const SRC = 'src';
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='7.446';  // sincronizada con sw.js VERSION (guard de CI)
+const APP_VERSION='7.447';  // sincronizada con sw.js VERSION (guard de CI)
 const APP_BUILD='Jul 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;
@@ -2135,6 +2135,79 @@ function _wineImgHtml(wine, size){
       onload="_wineImgCache[${wine.id}]=true;this.nextElementSibling.style.display='none'">
     ${placeholder}
   </div>`;
+}
+
+// ═══ REGISTRO DE ACTIVIDAD ════════════════════════════════════════════════
+// FASE 1 del rediseño. Medido en septiembre de 2026: de las diecisiete
+// actividades, sólo DOS dejaban rastro en la nube —el Examen IA y el Simulacro
+// de alérgenos—. Las otras quince se guardaban sólo en el móvil, así que el
+// panel del supervisor enseñaba el 12% del trabajo de su equipo.
+//
+// Aquí escriben TODAS, por una sola puerta y con el mismo vocabulario. La
+// tabla `scores` no se toca: sigue recibiendo lo de siempre y el panel actual
+// sigue leyéndola. Las dos conviven hasta que el panel nuevo esté probado.
+//
+// El vocabulario está repetido a propósito aquí y en la base de datos: la base
+// rechaza lo que no conoce (es la red de seguridad) y el cliente avisa por
+// consola en desarrollo (es lo que lo caza al escribirlo). Justo esa
+// disciplina es la que faltaba, y por eso `alergenos` y `allergens` han
+// convivido seis meses siendo lo mismo.
+const COMPETENCIAS = ['alergenos','carta','vinos','protocolo','sala','servicio'];
+const TIPOS_ACTIVIDAD = ['evaluacion','practica','juego'];
+// De los nueve nombres de tema que hay hoy en `scores`, a las seis competencias.
+const _COMPETENCIA_DE_TEMA = {
+  mixed:'carta', ingredients:'carta', history:'carta', dishes:'carta',
+  alergenos:'alergenos', allergens:'alergenos',      // el duplicado por idioma
+  protocolo:'protocolo', lqa:'protocolo',
+  cutlery:'servicio', sala:'sala', vinos:'vinos', wines:'vinos'
+};
+function competenciaDeTema(tema){
+  return _COMPETENCIA_DE_TEMA[String(tema||'').toLowerCase()] || 'carta';
+}
+
+async function registrarActividad(a){
+  // La cuenta de administración no deja rastro, igual que en `scores`: está
+  // para revisar contenido, no para aparecer en las métricas de nadie.
+  if(_esAdmin(currentUser)) return false;
+  if(!currentUser) return false;
+  const kind = a.kind;
+  if(TIPOS_ACTIVIDAD.indexOf(kind) < 0){ dbgw('[actividad] tipo desconocido:', kind); return false; }
+  const competency = kind === 'juego' ? null : a.competency;
+  if(kind !== 'juego' && COMPETENCIAS.indexOf(competency) < 0){
+    dbgw('[actividad] competencia fuera del vocabulario:', competency, 'en', a.activity);
+    return false;
+  }
+  // Un total de cero rompe cualquier media: se descarta en la puerta, igual
+  // que lo hace la propia tabla.
+  const total = (a.total == null) ? null : Math.round(a.total);
+  if(total != null && total <= 0) return false;
+  const score = (a.score == null) ? null : Math.max(0, Math.min(Math.round(a.score), total == null ? Math.round(a.score) : total));
+  try{
+    const r = await fetch(`${SUPA_URL}/rest/v1/actividad`, {
+      method: 'POST',
+      headers: {
+        'apikey': SUPA_KEY,
+        'Authorization': `Bearer ${SUPA_KEY}`,
+        'Content-Type': 'application/json',
+        'Prefer': 'return=minimal'
+      },
+      body: JSON.stringify(_vSello({
+        employee: currentUser,
+        activity: a.activity,
+        competency,
+        kind,
+        score,
+        total,
+        seconds: (a.seconds == null) ? null : Math.max(0, Math.round(a.seconds)),
+        meta: a.meta || null
+      }))
+    });
+    return !!(r && r.ok);
+  }catch(e){
+    // Silencio a propósito: lo local ya está guardado y el empleado no puede
+    // hacer nada con este error. Se reintentará cuando vuelva la conexión.
+    return false;
+  }
 }
 
 async function supaInsertScore(session, employee) {
@@ -5278,6 +5351,8 @@ function _djPhaseMastery(dish, dd, _en){
   if(!_djState.xpAwarded){
     _djState.xpAwarded = true;
     if(xpEarned > 0) awardXP(xpEarned, _en ? 'Dish Journey: '+dd.name : 'Viaje: '+dd.name, 'journey');
+    if(total > 0) registrarActividad({ activity:'recorrido', competency:'carta', kind:'practica',
+      score, total, meta:{ plato: dish && dish.id } });
     const emp = getEmp(currentUser);
     // Update SRS with quiz quality
     const srsQuality = _srsQualityFromScore(score, total);
@@ -7539,6 +7614,10 @@ function _renderSmartSummary(){
   const _isReviewHeavy = _queueMastered > 0 && (_queueMastered / _queueLen) >= 0.5;
 
   if(totalXP > 0) awardXP(totalXP, _en ? 'Smart review' : 'Repaso inteligente', 'smart');
+  if(state.sessionTotal > 0) registrarActividad({ activity:'repaso', competency:'carta',
+    kind:'practica', score:state.sessionScore, total:state.sessionTotal,
+    seconds:Math.round((Date.now() - (state.startTime||Date.now()))/1000),
+    meta:{ platos:(state.queue||[]).length } });
   // F-P1-5: SRS-related missions/achievements never unlocked because these checks were missing.
   if(typeof checkNewAchievements==='function') checkNewAchievements();
   if(typeof checkMissionCompletion==='function') checkMissionCompletion();
@@ -8504,6 +8583,8 @@ function _dqPick(i){
   emp.dqTotal=(emp.dqTotal||0)+1; if(ok) emp.dqHits=(emp.dqHits||0)+1;
   saveDB();
   awardXP(_dqXpFor(emp.dqStreak,ok), LANG==='en'?'Daily quiz':'Reto del día');
+  registrarActividad({ activity:'reto_dia', competency:'carta', kind:'practica',
+    score: ok?1:0, total:1, meta:{ racha: emp.dqStreak||0 } });
   if(typeof supaUpsertEmployee==='function') supaUpsertEmployee(currentUser);
   _dqRender();
 }
@@ -11336,6 +11417,8 @@ function _salaExamCompletar(){
     const emp = getEmp(currentUser);
     if(emp){
       _lqaPushScore(emp, 'sala', s.score, total, seg);
+      registrarActividad({ activity:'examen_sala', competency:'sala', kind:'evaluacion',
+        score:s.score, total, seconds:seg });
       if(!emp.salaBest || pct > emp.salaBest) emp.salaBest = pct;
       emp.salaCompleted = (emp.salaCompleted||0) + 1;
       saveDB();
@@ -19301,6 +19384,8 @@ function _renderWineQuiz(c, bar){
       const bonusXP = pct >= 90 ? 30 : pct >= 70 ? 15 : pct >= 50 ? 5 : 0;
       const totalXP = baseXP + bonusXP;
       if(totalXP > 0) awardXP(totalXP, 'Quiz Vinos ' + pct + '%', 'wines');
+    registrarActividad({ activity:'quiz_vinos', competency:'vinos', kind:'evaluacion',
+      score:_wqState.score, total:_wqState.total });
     }
     const xpEarned = (_wqState.score * 10) + (pct >= 90 ? 30 : pct >= 70 ? 15 : pct >= 50 ? 5 : 0);
 
@@ -19836,6 +19921,8 @@ function _mqResults(){
     emp.maridajeScores.push({ score: s.score, total: s.questions.length, date: Date.now() });
     if(emp.maridajeScores.length > 50) emp.maridajeScores = emp.maridajeScores.slice(-50);
     if(!emp.maridajeBest || pct > emp.maridajeBest) emp.maridajeBest = pct;
+    registrarActividad({ activity:'maridaje', competency:'vinos', kind:'evaluacion',
+      score:s.score, total:s.questions.length });
     saveDB();
   }
   if(typeof checkNewAchievements === 'function') checkNewAchievements();
@@ -20889,6 +20976,9 @@ function nextExamQ(){
     // localStorage 5-10 MB quota on long-time users.
     if(emp.sessions.length > 50) emp.sessions = emp.sessions.slice(-50);
     saveDB();examResults=session;
+    registrarActividad({ activity:'examen', competency:competenciaDeTema(examConfig.topic),
+      kind:'evaluacion', score:examScore, total:examDishes.length, seconds:time,
+      meta:{ topic:examConfig.topic, cat:examConfig.cat } });
     supaInsertScore(session, currentUser).catch(function(){
       if(typeof showToast==='function') showToast(
         LANG==='en'?'Could not save score to cloud. Saved locally.':'No se pudo guardar la puntuación en la nube. Guardada localmente.',
@@ -24115,6 +24205,8 @@ function renderAllergenResults() {
   const cls = pct>=80?'var(--sage)':pct>=50?'var(--gold)':'var(--rose)';
   const bonus = pct>=90?30:pct>=70?15:pct>=50?5:0;
   if (bonus) awardXP(bonus, `${LANG==='en'?'Allergen exam':'Examen alérgenos'} (${pct}%)`, 'allergens');
+  registrarActividad({ activity:'simulacro_alergenos', competency:'alergenos',
+    kind:'evaluacion', score, total:questions.length, seconds:time, meta:{ cat:cat||'all' } });
   const _payload = { score, total: questions.length, topic: 'alergenos', cat: cat||'all', time };
   supaInsertScore(_payload, currentUser).catch(function(){
     if(typeof showToast==='function') showToast(
@@ -28477,6 +28569,8 @@ function _lqaCompleteExam(){
     const emp = getEmp(currentUser);
     if (emp) {
       _lqaPushScore(emp, 'exam', s.score, total, timeSec);
+      registrarActividad({ activity:'examen_lqa', competency:'protocolo', kind:'evaluacion',
+        score:s.score, total, seconds:timeSec });
       if (!emp.lqaExamBest || pct > emp.lqaExamBest) emp.lqaExamBest = pct;
       emp.lqaExamsCompleted = (emp.lqaExamsCompleted||0) + 1;
       saveDB();
@@ -28675,6 +28769,10 @@ function _lqaCompleteSituations(){
     const emp = getEmp(currentUser);
     if (emp) {
       _lqaPushScore(emp, 'situations', s.score, total, timeSec);
+      registrarActividad({ activity:'situaciones_lqa', competency:'protocolo', kind:'evaluacion',
+        score:s.score, total, seconds:timeSec,
+        meta:{ cats: s.answers.reduce((m,x)=>{ const k=x.cat||'misc';
+          m[k]=m[k]||{ok:0,n:0}; m[k].n++; if(x.isCorrect) m[k].ok++; return m; }, {}) } });
       if (!emp.lqaSituationBest || pct > emp.lqaSituationBest) emp.lqaSituationBest = pct;
       emp.lqaSituationsCompleted = (emp.lqaSituationsCompleted||0) + 1;
       // A1: per-category aggregate — unlocks "weak areas" insight in the dashboard.
@@ -28931,6 +29029,8 @@ function _lqaCompleteAuditor(){
     const emp = getEmp(currentUser);
     if (emp) {
       _lqaPushScore(emp, 'audit', s.score, total, timeSec);
+      registrarActividad({ activity:'auditor_lqa', competency:'protocolo', kind:'evaluacion',
+        score:s.score, total, seconds:timeSec });
       if (!emp.lqaAuditBest || pct > emp.lqaAuditBest) emp.lqaAuditBest = pct;
       emp.lqaAuditsCompleted = (emp.lqaAuditsCompleted||0) + 1;
       saveDB();
@@ -29245,6 +29345,8 @@ function renderGhostReport(){
     emp.ghostRuns = (emp.ghostRuns||0) + 1;
     if(!emp.lqaScores) emp.lqaScores=[];
     emp.lqaScores.push({type:'ghost',score:met,total,date:Date.now()});
+    registrarActividad({ activity:'fantasma', competency:'protocolo', kind:'evaluacion',
+      score:met, total, meta:{ escenario:ghostScenario.id, flojas:weakest.map(w=>w.cat.id) } });
     saveDB();
   }
   awardXP(xpEarned, LANG==='en'?'Full audit':'Auditor\u00eda completa', 'ghost');
@@ -31258,6 +31360,8 @@ function launchElTurno(){
           _emp.etRecord={secs:Math.floor(G.time),orders:G.score};
           saveDB();
           supaInsertEtRecord(currentUser,Math.floor(G.time),G.score);
+          registrarActividad({ activity:'survivors', kind:'juego',
+            seconds:Math.floor(G.time), meta:{ comandas:G.score } });
           _etRenderRank();   // el tablón de inicio ya refleja el récord al volver
           _txThroneCheck('elturno', Math.floor(G.time));   // ¿arrebaté el nº1? → corona sola
         }
@@ -31644,6 +31748,8 @@ function txAnswer(idx){
   if(txokoState.score>(emp.txokoRecord||0)){
     emp.txokoRecord=txokoState.score; saveDB();
     supaInsertTxokoRecord(currentUser, emp.txokoRecord);
+    registrarActividad({ activity:'mr_shoesmith', kind:'juego',
+      meta:{ record: emp.txokoRecord } });
     awardXP(30,LANG==='en'?'New record! ★':'¡Nuevo récord! ★');
     // F-P1-1: a_txoko5/15/30 fire on txokoRecord thresholds; was previously only triggered
     // when the user later visited an exam/LQA screen.
