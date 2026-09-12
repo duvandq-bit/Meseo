@@ -1,9 +1,29 @@
 {
- "updated": "2026-09-11T19:46:04.655Z",
+ "updated": "2026-09-12T01:11:05.873Z",
  "items": [
   {
+   "t": "Influencers gastronómicos: canjes, denuncias y prohibiciones en restaurantes de España, México y Argentina",
+   "u": "https://www.lmneuquen.com/el-comedor/influencers-gastronomicos-canjes-denuncias-y-prohibiciones-restaurantes-espana-mexico-y-argentina-n1253335",
+   "s": "Lmneuquen.com",
+   "d": "2026-09-12T00:00:00.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://media.lmneuquen.com/p/9e675b84b375a11e6ac18af7fb5f2498/adjuntos/195/imagenes/008/376/0008376183/1200x675/smart/portadas-influ.png"
+  },
+  {
+   "t": "Zuberoa fue 'Qué bello es vivir' y Donostia es 'La La Land', o así",
+   "u": "https://www.diariovasco.com/culturas/zuberoa-bello-vivir-donostia-land-20260912165442-nt.html",
+   "s": "El Diario Vasco",
+   "d": "2026-09-11T22:04:34.000Z",
+   "tags": [
+    "CHEF"
+   ],
+   "img": "https://s1.ppllstatics.com/diariovasco/www/multimedia/culturas/2026/09/11/ap-RKvPhUhyLVDERsncjOp1r3K-1200x840@Diario%20Vasco.jpg"
+  },
+  {
    "t": "Dos Pedro Ximénez, un vino dulce canario y un vermut triunfan el I Concurso Nacional 'Paxera de Montemayor'",
-   "u": "https://www.teleprensa.com/articulo/cordoba/dos-pedro-ximenez-vino-dulce-canario-vermut-triunfan-i-concurso-nacional-paxera-montemayor/202609111927272505346.html",
+   "u": "https://www.teleprensa.com/articulo/cordoba/dos-pedro-ximenez-vino-dulce-canario-vermut-triunfan-i-concurso-nacional-paxera-montemayor/202609111927272505346.amp.html",
    "s": "Teleprensa",
    "d": "2026-09-11T19:27:27.000Z",
    "tags": [
@@ -42,9 +62,19 @@
    ]
   },
   {
+   "t": "Turismo organiza un curso gratuito de cocina sostenible en Fuerteventura",
+   "u": "https://canariastimes.com/fuerteventura/cultura-ocio/turismo-curso-gratuito-cocina-sostenible-fuerteventura/",
+   "s": "canariastimes.com",
+   "d": "2026-09-11T15:02:14.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://cdn.canariastimes.com/2026/09/Cartel-programa-Gastronomia-Local-y-Sostenible-en-Fuerteventura.jpeg"
+  },
+  {
    "t": "Noctámbula Tenerife: seis horas de música electrónica, gastronomía y ocio en el corazón de la Isla",
    "u": "https://www.eldia.es/canarias/2026/09/11/noctambula-tenerife-seis-horas-musica-134191331.html",
-   "s": "eldia.es",
+   "s": "Eldía",
    "d": "2026-09-11T14:49:05.000Z",
    "tags": [
     "CANARIAS"
@@ -52,9 +82,20 @@
    "img": "https://estaticos-cdn.prensaiberica.es/clip/ade5b419-b643-4dc4-9f87-407cbc0a56d8_16-9-discover-aspect-ratio_default_0_x903y601.jpg"
   },
   {
+   "t": "Montilla-Moriles se impone en el concurso nacional de vinos dulces de Montemayor",
+   "u": "https://www.vinetur.com/20260911106962/montilla-moriles-se-impone-en-el-concurso-nacional-de-vinos-dulces-de-montemayor.html",
+   "s": "Vinetur",
+   "d": "2026-09-11T14:06:00.000Z",
+   "tags": [
+    "VINO",
+    "CANARIAS"
+   ],
+   "img": "https://www.vinetur.com/imagenes/pube/2026-W37/image86.jpg"
+  },
+  {
    "t": "La Playa de El Socorro se llena de vino y gastronomía este sábado: horarios, guaguas y todo lo que hay que saber",
    "u": "https://www.eldia.es/tenerife/2026/09/11/playa-socorro-llena-vino-gastronomia-134192356.amp.html",
-   "s": "eldia.es",
+   "s": "Eldía",
    "d": "2026-09-11T14:05:50.000Z",
    "tags": [
     "CANARIAS",
@@ -65,7 +106,7 @@
   {
    "t": "Andorra Taste homenajeará a Virgilio Martínez",
    "u": "https://www.excelenciasgourmet.com/es/eventos/andorra-taste-2026",
-   "s": "excelenciasgourmet.com",
+   "s": "Excelencias Gourmet",
    "d": "2026-09-11T14:00:00.000Z",
    "tags": [
     "ALTA COCINA"
@@ -75,7 +116,7 @@
   {
    "t": "Gioia: el restaurante italiano de alta cocina estrena una divertida mesa con proyecciones, música e imágenes en movimiento",
    "u": "https://www.eleconomista.es/evasion/noticias/14013355/09/26/gioia-el-restaurante-italiano-de-alta-cocina-estrena-una-divertida-mesa-con-proyecciones-musica-e-imagenes-en-movimiento.html",
-   "s": "eleconomista.es",
+   "s": "El Economista",
    "d": "2026-09-11T13:39:54.000Z",
    "tags": [
     "ALTA COCINA"
@@ -125,7 +166,7 @@
   {
    "t": "Santa Cruz de Tenerife será Capital Española de la Gastronomía en 2027",
    "u": "https://www.hosteleriadigital.es/2026/09/11/santa-cruz-de-tenerife-sera-capital-espanola-de-la-gastronomia-en-2027/",
-   "s": "Hosteleria Digital",
+   "s": "hosteleriadigital.es",
    "d": "2026-09-11T08:15:27.000Z",
    "tags": [
     "CANARIAS"
@@ -145,7 +186,7 @@
   {
    "t": "\"Escapadas de fin de semana\" para atraer visitantes de otras Islas, entre las acciones que prepara Santa Cruz de Tenerife como Capital Española de la Gastronomía",
    "u": "https://www.eldia.es/santa-cruz-de-tenerife/2026/09/11/escapadas-semana-atraer-visitantes-islas-134154374.html",
-   "s": "eldia.es",
+   "s": "Eldía",
    "d": "2026-09-11T08:00:21.000Z",
    "tags": [
     "CANARIAS"
@@ -185,7 +226,7 @@
   {
    "t": "Esta isla italiana es ya un referente de la alta gastronomía",
    "u": "https://www.mundodeportivo.com/foodie/foodie-reportajes/20260911/1004225688/isla-italiana-referente-alta-gastronomia.html?facet",
-   "s": "mundodeportivo.com",
+   "s": "Mundo Deportivo",
    "d": "2026-09-11T06:00:00.000Z",
    "tags": [
     "ALTA COCINA"
@@ -193,9 +234,19 @@
    "img": "https://imagenes2.mundodeportivo.com/files/og_thumbnail/uploads/2026/09/10/6aa2ccb0cc4c9.jpeg"
   },
   {
+   "t": "Dónde comprar pasta fresca en Las Palmas de Gran Canaria: cinco locales para llevarte pasta artesanal a casa",
+   "u": "https://www.canarias7.es/gastronomia-c7/de-ruta/comprar-pasta-fresca-palmas-gran-canaria-cinco-20260911070000-nt.html",
+   "s": "Canarias7",
+   "d": "2026-09-11T05:00:11.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://s2.ppllstatics.com/canarias7/www/multimedia/gastronomia-c7/2026/09/10/conchita-kxJH-U301667361798FeE-1200x840@Canarias7.jpg"
+  },
+  {
    "t": "Padylla (11/09/26)",
    "u": "https://www.eldia.es/humor/2026/09/11/padylla-11-09-26-134167271.html",
-   "s": "eldia.es",
+   "s": "Eldía",
    "d": "2026-09-10T22:59:05.000Z",
    "tags": [
     "CANARIAS"
@@ -205,7 +256,7 @@
   {
    "t": "Santy (11/09/26)",
    "u": "https://www.eldia.es/humor/2026/09/11/santy-11-09-26-134164924.html",
-   "s": "eldia.es",
+   "s": "Eldía",
    "d": "2026-09-10T22:59:03.000Z",
    "tags": [
     "CANARIAS"
@@ -224,7 +275,7 @@
   {
    "t": "Santa Cruz de Tenerife, nueva capital española de la gastronomía 2027",
    "u": "https://gironanoticies.com/noticia/303711-santa-cruz-de-tenerife-nueva-capital-espanola-de-la-gastronomia-2027.htm",
-   "s": "GIRONANOTICIES.COM",
+   "s": "gironanoticies.com",
    "d": "2026-09-10T20:02:12.000Z",
    "tags": [
     "CANARIAS"
@@ -244,63 +295,12 @@
   {
    "t": "Los bares y restaurantes facturan un 7,6% más en agosto pese a que apenas reciben más clientes: el ticket sube un 6,2%",
    "u": "https://www.eldia.es/economia/2026/09/10/bares-restaurantes-facturan-mas-agosto-menos-clientes-134163590.amp.html",
-   "s": "eldia.es",
+   "s": "Eldía",
    "d": "2026-09-10T18:05:07.000Z",
    "tags": [
     "CANARIAS"
    ],
    "img": "https://estaticos-cdn.prensaiberica.es/clip/7933bd91-0a2b-4c9a-9df1-6ff81bfcdcc2_16-9-discover-aspect-ratio_default_0_x944y566.jpg"
-  },
-  {
-   "t": "Ángel León alegra la vuelta de las vacaciones a los dueños del bar de Granada donde alucina José Andrés",
-   "u": "https://www.lavozdelsur.es/vida/sabor-del-sur/angel-leon-alegra-la-vuelta-de-las-vacaciones-a-los-duenos-del-bar-de-granada-donde-alucina-jose-andres.html",
-   "s": "La Voz del Sur",
-   "d": "2026-09-10T17:39:12.000Z",
-   "tags": [
-    "ALTA COCINA"
-   ],
-   "img": "https://d2mqpxndxh0mbq.cloudfront.net/articulos/articulos-178939.jpg?v=202609112146"
-  },
-  {
-   "t": "Tajao: el pueblo de Tenerife que se hizo famoso gracias a un vídeo de Cocituber",
-   "u": "https://estenerife.com/tajao-el-pueblo-de-tenerife-que-se-hizo-famoso-gracias-a-un-video-de-cocituber/",
-   "s": "estenerife.com",
-   "d": "2026-09-10T17:07:59.000Z",
-   "tags": [
-    "CANARIAS"
-   ]
-  },
-  {
-   "t": "El chef Álvaro Sanz está de vuelta en Ibiza: “Dije 'voy a traer una estrella Michelin a esta isla'; la gente no se lo creía y ocho años después se trajo”",
-   "u": "https://www.directoalpaladar.com/viajes/chef-alvaro-sanz-esta-vuelta-ibiza-dije-voy-a-traer-estrella-michelin-a-esta-isla-gente-no-se-creia-ocho-anos-despues-se-trajo/amp",
-   "s": "Directo al Paladar",
-   "d": "2026-09-10T16:34:40.000Z",
-   "tags": [
-    "CHEF",
-    "MICHELIN"
-   ],
-   "img": "https://i.blogs.es/8116a3/alvaro/840_560.jpeg"
-  },
-  {
-   "t": "‘Cebollas Verdes’ estrena temporada en La Radio Canaria con una entrega dedicada al vino",
-   "u": "https://rtvc.es/cebollas-verdes-estrena-temporada-en-la-radio-canaria-con-una-entrega-dedicada-al-vino-prensa-11-septiembre-2026/",
-   "s": "Radio Televisión Canaria",
-   "d": "2026-09-10T15:30:00.000Z",
-   "tags": [
-    "VINO",
-    "CANARIAS"
-   ],
-   "img": "https://cdn.rtvc.es/archivos/2026/09/BOdegas-Teneguia-1.webp"
-  },
-  {
-   "t": "Primera edición del Mojitos Vacilón Fest",
-   "u": "https://lagenda.org/noticias/primera-edicion-del-mojitos-vacilon-fest-santa-cruz-de-tenerife-septiembre-2026-43658",
-   "s": "Lagenda",
-   "d": "2026-09-10T14:52:04.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://s3-eu-west-1.amazonaws.com/beta.lagenda/images/260909_mojitos_vacilon_fest.jpg"
   }
  ]
 }
