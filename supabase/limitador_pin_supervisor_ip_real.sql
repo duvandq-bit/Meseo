@@ -21,6 +21,20 @@
 --   sobrescribe lo que mande el cliente (medido: 85.31.131.142, un solo valor).
 --
 -- NO CAMBIA el umbral (10), ni la ventana (15 minutos), ni la semántica.
+--
+-- LAS SEIS PRUEBAS, PASADAS (13/09/2026)
+--   1 · nueve fallos desde nueve IPs de AWS → UNA fila, fallos=9
+--   1b· el décimo → BLOQUEADA
+--   2 · siguiente llamada → false, bloqueada
+--   3 · `anon` sobre la privilegiada → insufficient_privilege; y por la vía
+--       normal con IP falsificada → cuenta en su IP real, 0 filas en la falsa
+--   4 · PIN correcto por la Edge Function real → HTTP 200, autenticación
+--       correcta, `sup_pin_attempts` en 0 filas (el éxito borra), y ni una
+--       escritura en employees. Traza: POST /rest/v1/rpc/verify_supervisor_pin_srv
+--       a las 15:14:48 desde 13.39.24.235 (AWS) — el escenario que antes rompía
+--       el limitador, contando ahora la IP que le pasa la función.
+--   5 · bloqueada y PIN incorrecto devuelven lo mismo: false
+--   6 · cada IP su fila; el bloqueo no se contagia
 
 create or replace function public._sup_pin_evaluar(p_pin text, p_venue text, p_ip text)
 returns boolean language plpgsql security definer set search_path = ''
