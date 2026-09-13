@@ -121,10 +121,27 @@ Deno.serve(async (req: Request) => {
       });
       if (eNuevo || !creado?.user) return json({ error: 'alta', detalle: eNuevo?.message }, 502);
       uid = creado.user.id;
-      const { error: eLink } = await admin.from('employees')
-        .update({ auth_user_id: uid }).eq('name', emp.name);
+      // ATÓMICO. El `is(auth_user_id, null)` hace que la fila sólo se vincule
+      // si SIGUE libre: dos sesiones simultáneas del mismo empleado no pueden
+      // acabar las dos vinculadas. Quien pierde la carrera se queda con el
+      // vínculo del que ganó y retira su cuenta huérfana, para que no quede
+      // una identidad de Auth sin ficha.
+      const { data: vinculadas, error: eLink } = await admin.from('employees')
+        .update({ auth_user_id: uid })
+        .eq('name', emp.name)
+        .is('auth_user_id', null)
+        .select('auth_user_id');
       if (eLink) return json({ error: 'vinculo', detalle: eLink.message }, 502);
-      cuenta = 'creada';
+      if (!vinculadas || vinculadas.length === 0) {
+        const { data: rel } = await admin.from('employees')
+          .select('auth_user_id').eq('name', emp.name).limit(1);
+        const ganador = rel?.[0]?.auth_user_id as string | null;
+        if (!ganador) return json({ error: 'vinculo_perdido' }, 502);
+        if (ganador !== uid) { await admin.auth.admin.deleteUser(uid); uid = ganador; }
+        cuenta = 'existente';
+      } else {
+        cuenta = 'creada';
+      }
     }
 
     // ── 4 · Un token de un solo uso, emitido por el servidor ─────────────
