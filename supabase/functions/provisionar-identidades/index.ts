@@ -65,12 +65,28 @@ Deno.serve(async (req: Request) => {
   let body: any = {};
   try { body = await req.json(); } catch(_) { return json({ error: 'json' }, 400); }
 
-  // Lo ÚNICO que se lee del cuerpo. Cualquier otra cosa que venga se ignora sin
-  // más: no hay ninguna rama del código que la mire.
-  const pin      = String(body.pin || '');
-  const ejecutar = body.ejecutar === true;
+  // ── El cuerpo, con lista blanca ESTRICTA ────────────────────────────────
+  // No basta con ignorar lo que sobra: si alguien manda `employee`, `venue`,
+  // `role` o `auth_user_id`, lo manda porque espera que sirva para algo. Que
+  // falle a la cara es mejor que un silencio que parece obediencia — y deja
+  // rastro de que alguien lo intentó.
+  const PERMITIDOS = new Set(['pin', 'ejecutar']);
+  if (body === null || typeof body !== 'object' || Array.isArray(body)) {
+    return json({ error: 'cuerpo_invalido' }, 400);
+  }
+  const sobrantes = Object.keys(body).filter(k => !PERMITIDOS.has(k));
+  if (sobrantes.length) {
+    // Se devuelven los NOMBRES, nunca los valores.
+    return json({ error: 'campos_no_permitidos', campos: sobrantes.slice(0, 20),
+                  permitidos: ['pin', 'ejecutar'] }, 400);
+  }
+  if (typeof body.pin !== 'string' || !body.pin) return json({ error: 'sin_pin' }, 400);
+  if ('ejecutar' in body && typeof body.ejecutar !== 'boolean') {
+    return json({ error: 'ejecutar_no_booleano' }, 400);
+  }
 
-  if (!pin) return json({ error: 'sin_pin' }, 400);
+  const pin      = body.pin;
+  const ejecutar = body.ejecutar === true;
 
   const admin = createClient(SUPA_URL, SERVICE_KEY, { auth: { persistSession: false, autoRefreshToken: false } });
 
