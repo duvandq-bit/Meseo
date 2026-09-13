@@ -11,6 +11,15 @@
 //   saca el servidor de `employees`. Con un contrato así no se puede convertir
 //   en un «crea un usuario de Auth a la carta»: no hay dónde apuntarlo.
 //
+// QUIÉN SE QUEDA FUERA
+//   Las fichas sin PIN (`pin is null`) NO reciben identidad, ni en simulacro
+//   ni en ejecución real: se marcan `no_pin` y se pasa de largo. Una cuenta que
+//   nadie puede usar es superficie de ataque sin contrapartida.
+//
+// UN FALLO PARCIAL NO ES UN ÉXITO
+//   `ok` vale `true` sólo si `pending_error` es cero. El HTTP se queda en 200
+//   —el fallo es de negocio, no de transporte— y el desglose va en `resumen`.
+//
 // POR DEFECTO NO ESCRIBE NADA
 //   Sin `ejecutar: true` hace un SIMULACRO: recorre lo mismo, informa de lo que
 //   haría y no crea ni vincula nada. Es al revés de lo habitual a propósito —
@@ -46,8 +55,15 @@ const json = (obj: unknown, status = 200) =>
 // existe ni puede existir: nunca se le puede escribir a nadie por accidente.
 // NO es el correo de recuperación — ése vive en `employee_recovery`, es real y
 // verificado, y los dos sistemas no se tocan jamás.
+//
+// Los acentos se quitan con `\p{Diacritic}` y no con un rango `\uXXXX`: escrito
+// así, el fichero del repositorio y el desplegado son el mismo byte a byte
+// —un rango escapado se decodifica por el camino y deja de coincidir— y no hay
+// caracteres invisibles en el código. Comprobado sobre los 22 nombres reales y
+// sobre casos duros (María, Núñez, Çağla, André-Luís): produce exactamente los
+// mismos correos que el rango anterior.
 const correoDe = (nombre: string, venue: string) =>
-  `${nombre.trim().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'')
+  `${nombre.trim().toLowerCase().normalize('NFD').replace(/\p{Diacritic}/gu,'')
            .replace(/[^a-z0-9]+/g,'.').replace(/^\.|\.$/g,'')}@${venue}.meseo.invalid`;
 
 // Nada de lo que salga de aquí puede llevar secretos. Se recorta y se limpia.
@@ -113,7 +129,7 @@ Deno.serve(async (req: Request) => {
     if (eLista) return json({ error: 'lista', detalle: limpiar(eLista) }, 502);
 
     const filas: any[] = [];
-    let creadas = 0, yaEstaban = 0, carrerasPerdidas = 0, conError = 0, simuladas = 0;
+    let creadas = 0, yaEstaban = 0, carrerasPerdidas = 0, conError = 0, simuladas = 0, sinPin = 0;
 
     for (const e of (fichas || [])) {
       const correo = correoDe(e.name, e.venue);
@@ -124,6 +140,17 @@ Deno.serve(async (req: Request) => {
       if (e.auth_user_id) {
         yaEstaban++;
         filas.push({ ...base, resultado: 'already_linked', auth_user_id: e.auth_user_id });
+        continue;
+      }
+
+      // ── Sin PIN, sin identidad. Antes de mirar siquiera si se ejecuta ──
+      // Una cuenta de Auth sin PIN no la puede usar nadie: la ficha no tiene
+      // con qué demostrar quién es, así que la identidad no serviría para
+      // entrar, sólo para existir. Se queda fuera en simulacro y en ejecución
+      // real, y no se crea ni se vincula nada.
+      if (e.pin === null) {
+        sinPin++;
+        filas.push({ ...base, resultado: 'no_pin', auth_user_id: null });
         continue;
       }
 
@@ -187,14 +214,20 @@ Deno.serve(async (req: Request) => {
       filas.push({ ...base, resultado: 'created_linked', auth_user_id: uid });
     }
 
+    // ── El éxito no se declara, se comprueba ──────────────────────────────
+    // `ok` es cierto SÓLO si no ha quedado ni un `pending_error`. Un fallo
+    // parcial que responde `ok: true` es peor que un fallo entero: nadie lo
+    // mira. El HTTP se queda en 200 a propósito —el fallo es de negocio, no
+    // de transporte— y el desglose completo va siempre en `resumen`.
     return json({
-      ok: true,
+      ok: conError === 0,
       modo: ejecutar ? 'ejecutado' : 'SIMULACRO (no se ha creado ni vinculado nada)',
       ambito: ambito === '*' ? 'todos los restaurantes' : ambito,
       resumen: {
         fichas_revisadas: filas.length,
         created_linked: creadas,
         already_linked: yaEstaban,
+        no_pin: sinPin,
         race_lost: carrerasPerdidas,
         pending_error: conError,
         ...(ejecutar ? {} : { simulado_crearia: simuladas })
