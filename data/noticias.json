@@ -1,6 +1,86 @@
 {
- "updated": "2026-09-13T01:04:01.481Z",
+ "updated": "2026-09-13T10:19:57.035Z",
  "items": [
+  {
+   "t": "Ferran Adrià, cocinero catalán: \"Yo no cocino. No me gusta nada cocinar en casa. Pero este verano lo he hecho y me he cuestionado todo. Por ejemplo, el guiso. La mayoría le pone caldo, y yo lo encuentro ilógico\"",
+   "u": "https://www.mundodeportivo.com/foodie/20260913/1004226629/ferran-adria-cocinero-catalan-no-cocino-no-me-gusta-cocinar-casa-verano-he-hecho-me-he-cuestionado-ejemplo-guiso-mayoria-le-pone-caldo-encuentro-ilogico-xef-dct.html",
+   "s": "Mundo Deportivo",
+   "d": "2026-09-13T10:00:24.000Z",
+   "tags": [
+    "ALTA COCINA"
+   ],
+   "img": "https://imagenes2.mundodeportivo.com/files/og_thumbnail/files/fp/uploads/2026/02/23/699cb7a5d05f1.r_d.954-567-6253.jpeg"
+  },
+  {
+   "t": "Curso Gratuito de Cocina Sostenible en Fuerteventura",
+   "u": "https://www.canariasdiario.com/noticia/151532/gastronomia/curso-de-cocina-sostenible-en-fuerteventura-para-aprovechar-excedentes.html",
+   "s": "Canariasdiario.com",
+   "d": "2026-09-13T09:24:55.000Z",
+   "tags": [
+    "CANARIAS"
+   ]
+  },
+  {
+   "t": "El guachinche de Tenerife que conquista con sus platos tradicionales y la especialidad de la casa: abierto desde hace 20 años",
+   "u": "https://www.eldia.es/tenerife/2026/09/13/guachinche-tenerife-conquista-platos-tradicionales-dv-129316936.html",
+   "s": "Eldía",
+   "d": "2026-09-13T08:30:00.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://estaticos-cdn.prensaiberica.es/clip/7e7615a2-2124-4d19-a50e-268eb74ca1ca_16-9-discover-aspect-ratio_default_0_x515y472.jpg"
+  },
+  {
+   "t": "Todo para compartir y buenas barras: una ruta para saborear la vuelta a la rutina",
+   "u": "https://www.laprovincia.es/ocio/gastronomia/2026/09/13/compartir-buenas-barras-ruta-saborear-rutina-134233013.html",
+   "s": "La Provincia",
+   "d": "2026-09-13T08:10:14.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://estaticos-cdn.prensaiberica.es/clip/73489377-edbd-4a08-9592-ca881795a6f1_16-9-discover-aspect-ratio_default_1506406.jpg"
+  },
+  {
+   "t": "Lasarte sigue celebrando su 20 aniversario junto a Nacho Manzano, Eneko Atxa y Martín Berasategui",
+   "u": "https://www.mundodeportivo.com/foodie/eventos/20260913/1004226186/lasarte-sigue-celebrando-20-aniversario-nacho-manzano-eneko-atxa-martin-berasategui.html?facet",
+   "s": "Mundo Deportivo",
+   "d": "2026-09-13T07:30:00.000Z",
+   "tags": [
+    "MICHELIN",
+    "CHEF"
+   ],
+   "img": "https://imagenes2.mundodeportivo.com/files/og_thumbnail/uploads/2026/09/12/6aa480080308d.jpeg"
+  },
+  {
+   "t": "Dónde Saborear Gran Canaria según el comunicador y presentador de RTVE Canarias Roberto Herrera",
+   "u": "https://www.canarias7.es/gastronomia-c7/a-fuego-lento/saborear-gran-canaria-segun-comunicador-presentador-rtve-20260913070000-nt_amp.html",
+   "s": "Canarias7",
+   "d": "2026-09-13T06:08:19.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://s1.ppllstatics.com/canarias7/www/multimedia/gastronomia-c7/2026/09/11/roberto4.jpg"
+  },
+  {
+   "t": "La isla de Canarias que conquista a Xuso Jones (37 años): un café único en Europa y playas paradisíacas",
+   "u": "https://www.laprovincia.es/canarias/2026/09/13/isla-canarias-conquista-xuso-jones-dv-133746844.amp.html",
+   "s": "La Provincia",
+   "d": "2026-09-13T06:01:03.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://estaticos-cdn.prensaiberica.es/clip/9481c4c3-3c7a-4977-b224-f6d621710658_16-9-discover-aspect-ratio_default_0_x941y191.jpg"
+  },
+  {
+   "t": "De Canarias al plato: las claves de una identidad culinaria diversa",
+   "u": "https://www.elconfidencialdigital.com/articulo/gourmet/canarias-cocina-3-claves-identidad-sorprendentemente-diversa/202609111537341040348.html",
+   "s": "Confidencial Digital",
+   "d": "2026-09-13T04:05:00.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://www.elconfidencialdigital.com/media/elconfidencialdigital/images/2026/09/11/2026091113373460833.jpg"
+  },
   {
    "t": "Santa Cruz de Tenerife será capital gastronómica: 6 restaurantes que explican por qué",
    "u": "https://diariodeavisos.elespanol.com/2026/09/donde-comer-santa-cruz-de-tenerife-6-restaurantes/",
@@ -10,6 +90,26 @@
     "CANARIAS"
    ],
    "img": "https://cdn.diariodeavisos.com/wp-content/uploads/2026/09/cats-24.jpg"
+  },
+  {
+   "t": "Científicos que cambiaron la bata por el océano",
+   "u": "https://www.eldia.es/canarias/2026/09/12/cientificos-cambiaron-bata-oceano-134225335.html",
+   "s": "Eldía",
+   "d": "2026-09-12T19:31:29.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://estaticos-cdn.prensaiberica.es/clip/bd55aae6-cc67-4b75-aac2-6b8d2eea5df9_16-9-aspect-ratio_default_0_x432y253.jpg"
+  },
+  {
+   "t": "Un restaurante de Tenerife ayuda con la vuelta al cole: los niños comen gratis en septiembre",
+   "u": "https://diariodeavisos.elespanol.com/2026/09/restaurante-tenerife-ninos-comen-gratis-septiembre/",
+   "s": "Diario de Avisos",
+   "d": "2026-09-12T18:35:00.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://diariodeavisos.elespanol.com/wp-content/uploads/2026/09/Sin-titulo-1-2.jpg"
   },
   {
    "t": "PAXERA 2026: el concurso que consagra al Pedro Ximénez con 50 muestras y Canarias presente",
@@ -49,8 +149,7 @@
    "tags": [
     "VINO",
     "CANARIAS"
-   ],
-   "img": "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhxbFPQS0ufI9Zqpj4sHGlTpPE8U1E7f8_JQET8-xT-aZLhuFtiSaxwQT0PO6QiHotv_1CIm0_bKAIslnnPhnyeljuxbzf6Aef6C9jnzqBmNNKROSLkbMYta5Mp1Dn6uTFzL_SfFyUoTHFtNwtRt3Mb1dWxwejO3pHZI_oQRokywIzhfrdnmIf3TgklZoiE/w1200-h630-p-k-no-nu/20260912cvpx1.jpg"
+   ]
   },
   {
    "t": "La villa juguetera de Alicante que conquista por su cocina: así es el pueblo donde mejor se come de España",
@@ -147,7 +246,7 @@
   {
    "t": "Un campeón del mundo con España impulsó este beach club junto al océano, en \"un lugar privilegiado\": piscina infinita, sushi y camas balinesas",
    "u": "https://www.larazon.es/canarias/campeon-mundo-espana-impulso-este-beach-club-junto-oceano-lugar-privilegiado-piscina-infinita-sushi-camas-balinesas_202609126aa2926e6e80d3110846ed1d.html",
-   "s": "larazon.es",
+   "s": "La Razón",
    "d": "2026-09-12T05:00:24.000Z",
    "tags": [
     "CANARIAS"
@@ -165,16 +264,6 @@
    "img": "https://media.lmneuquen.com/p/9e675b84b375a11e6ac18af7fb5f2498/adjuntos/195/imagenes/008/376/0008376183/1200x675/smart/portadas-influ.png"
   },
   {
-   "t": "Santy (12/09/26)",
-   "u": "https://www.eldia.es/humor/2026/09/12/santy-12-09-26-134204271.html",
-   "s": "Eldía",
-   "d": "2026-09-11T22:59:55.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://estaticos-cdn.prensaiberica.es/clip/8895b6c7-2c52-4854-88b6-6d719736c91d_16-9-aspect-ratio_default_0.jpg"
-  },
-  {
    "t": "Zuberoa fue 'Qué bello es vivir' y Donostia es 'La La Land', o así",
    "u": "https://www.diariovasco.com/culturas/zuberoa-bello-vivir-donostia-land-20260912165442-nt_amp.html",
    "s": "El Diario Vasco",
@@ -186,7 +275,7 @@
   },
   {
    "t": "Solera 1981 PX de la cooperativa La Aurora de Montilla, el gran vencedor en el I Concurso Nacional de Vinos Dulces Paxera de Montemayor",
-   "u": "https://www.eldiadecordoba.es/provincia/solera-1981-aurora-concurso-nacional-vinos-dulces_0_2007936089.amp.html",
+   "u": "https://www.eldiadecordoba.es/provincia/solera-1981-aurora-concurso-nacional-vinos-dulces_0_2007936089.html",
    "s": "El Día de Córdoba",
    "d": "2026-09-11T19:04:47.000Z",
    "tags": [
@@ -194,16 +283,6 @@
     "CANARIAS"
    ],
    "img": "https://static.grupojoly.com/clip/09ea009f-f5f8-4b00-a3a3-a7e55be2cbeb_facebook-aspect-ratio_default_0.jpg"
-  },
-  {
-   "t": "¿Qué hacer este fin de semana en Tenerife? Listado de planes",
-   "u": "https://www.eldia.es/tenerife/2026/09/11/semana-tenerife-listado-planes-81466634.html",
-   "s": "Eldía",
-   "d": "2026-09-11T16:15:50.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://estaticos-cdn.prensaiberica.es/clip/62782b6e-0a3a-4b1b-8035-e40052449d8c_16-9-aspect-ratio_default_0_x525y240.jpg"
   },
   {
    "t": "Lopesan renueva su coctelería con nuevas propuestas basadas en el producto canario",
@@ -223,87 +302,6 @@
    "tags": [
     "CANARIAS"
    ]
-  },
-  {
-   "t": "Turismo organiza un curso gratuito de cocina sostenible en Fuerteventura",
-   "u": "https://canariastimes.com/fuerteventura/cultura-ocio/turismo-curso-gratuito-cocina-sostenible-fuerteventura/",
-   "s": "Canarias Times",
-   "d": "2026-09-11T15:02:14.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://cdn.canariastimes.com/2026/09/Cartel-programa-Gastronomia-Local-y-Sostenible-en-Fuerteventura.jpeg"
-  },
-  {
-   "t": "Noctámbula Tenerife: seis horas de música electrónica, gastronomía y ocio en el corazón de la Isla",
-   "u": "https://www.eldia.es/canarias/2026/09/11/noctambula-tenerife-seis-horas-musica-134191331.html",
-   "s": "Eldía",
-   "d": "2026-09-11T14:49:05.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://estaticos-cdn.prensaiberica.es/clip/ade5b419-b643-4dc4-9f87-407cbc0a56d8_16-9-discover-aspect-ratio_default_0_x903y601.jpg"
-  },
-  {
-   "t": "Turismo imparte en Fuerteventura un curso gratuito para cocinar con excedentes",
-   "u": "https://www.canal4tenerife.tv/turismo-imparte-en-fuerteventura-un-curso-gratuito-para-cocinar-con-excedentes/",
-   "s": "Canal 4 Tenerife",
-   "d": "2026-09-11T14:38:56.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://www.canal4tenerife.tv/wp-content/uploads/2026/09/Cartel-programa-Gastronomia-Local-y-Sostenible-en-Fuerteventura-e1789137519468.jpeg"
-  },
-  {
-   "t": "Montilla-Moriles se impone en el concurso nacional de vinos dulces de Montemayor",
-   "u": "https://www.vinetur.com/20260911106962/montilla-moriles-se-impone-en-el-concurso-nacional-de-vinos-dulces-de-montemayor.html",
-   "s": "Vinetur",
-   "d": "2026-09-11T14:06:00.000Z",
-   "tags": [
-    "VINO",
-    "CANARIAS"
-   ],
-   "img": "https://www.vinetur.com/imagenes/pube/2026-W37/image86.jpg"
-  },
-  {
-   "t": "La Playa de El Socorro se llena de vino y gastronomía este sábado: horarios, guaguas y todo lo que hay que saber",
-   "u": "https://www.eldia.es/tenerife/2026/09/11/playa-socorro-llena-vino-gastronomia-134192356.amp.html",
-   "s": "Eldía",
-   "d": "2026-09-11T14:05:50.000Z",
-   "tags": [
-    "CANARIAS",
-    "VINO"
-   ],
-   "img": "https://estaticos-cdn.prensaiberica.es/clip/976e490e-9cc8-4cb4-8f6b-9d5d61f9f359_16-9-discover-aspect-ratio_default_0_x512y226.jpg"
-  },
-  {
-   "t": "Andorra Taste homenajeará a Virgilio Martínez",
-   "u": "https://www.excelenciasgourmet.com/es/eventos/andorra-taste-2026",
-   "s": "excelenciasgourmet.com",
-   "d": "2026-09-11T14:00:00.000Z",
-   "tags": [
-    "ALTA COCINA"
-   ],
-   "img": "https://static.excelenciasgourmet.com/cdn/ff/jimyjiLxJYTBDAQxuvh0iVEcNi6b0fO54zqqojLowbY/1788964850/public/articulos/2026-09/participantes-andorra-taste.png"
-  },
-  {
-   "t": "Gioia: el restaurante italiano de alta cocina estrena una divertida mesa con proyecciones, música e imágenes en movimiento",
-   "u": "https://www.eleconomista.es/evasion/noticias/14013355/09/26/gioia-el-restaurante-italiano-de-alta-cocina-estrena-una-divertida-mesa-con-proyecciones-musica-e-imagenes-en-movimiento.html",
-   "s": "eleconomista.es",
-   "d": "2026-09-11T13:39:54.000Z",
-   "tags": [
-    "ALTA COCINA"
-   ]
-  },
-  {
-   "t": "La edición más marinera y experiencial de Gastronomika celebra medio siglo de la Nueva Cocina Vasca",
-   "u": "https://www.7canibales.com/noticias/gastronomika-2026/",
-   "s": "7 Caníbales",
-   "d": "2026-09-11T12:12:25.000Z",
-   "tags": [
-    "ALTA COCINA"
-   ],
-   "img": "https://www.7canibales.com/wp-content/uploads/sites/2/2026/09/RUEDA-DE-PRENSA-GASTRONOMIKA.webp"
   }
  ]
 }
