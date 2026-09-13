@@ -109,12 +109,18 @@ Deno.serve(async (req: Request) => {
     const emp = filas[0];
 
     // ── 3 · Su identidad de Auth. Se crea la primera vez, y vacía ────────
+    //
+    // LA IDENTIDAD CANÓNICA ES `auth_user_id`, NO EL NOMBRE. El correo técnico
+    // se calcula UNA sola vez, al crear la cuenta; a partir de ahí se le
+    // pregunta a Auth cuál es, y no se recalcula jamás. Si se recalculara, el
+    // día que a alguien se le cambiara el nombre —o el correo de su cuenta— el
+    // slug dejaría de casar con ninguna cuenta y esa persona no podría entrar.
+    // El nombre sólo sirve para encontrar la ficha la PRIMERA vez.
     let uid = emp.auth_user_id as string | null;
     let cuenta = 'existente';
-    const correo = correoDe(emp.name, emp.venue);
     if (!uid) {
       const { data: creado, error: eNuevo } = await admin.auth.admin.createUser({
-        email: correo,
+        email: correoDe(emp.name, emp.venue),   // el único momento en que se calcula
         email_confirm: true,      // la crea el servidor: no hay correo que confirmar
         user_metadata: {},        // VACÍOS. El rol vive en employees.role y sólo ahí.
         app_metadata: {}
@@ -144,7 +150,16 @@ Deno.serve(async (req: Request) => {
       }
     }
 
-    // ── 4 · Un token de un solo uso, emitido por el servidor ─────────────
+    // ── 4 · El correo lo dice Auth, no se recalcula ──────────────────────
+    // Es lo que hace que un renombrado no rompa el acceso de nadie ya
+    // vinculado: la ficha lleva al `uid`, y el `uid` lleva al correo.
+    const { data: cuentaAuth, error: eLeer } = await admin.auth.admin.getUserById(uid as string);
+    if (eLeer || !cuentaAuth?.user?.email) {
+      return json({ error: 'identidad', detalle: eLeer?.message || 'la cuenta no tiene correo' }, 502);
+    }
+    const correo = cuentaAuth.user.email;
+
+    // ── 5 · Un token de un solo uso, emitido por el servidor ─────────────
     const { data: enlace, error: eGen } = await admin.auth.admin.generateLink({
       type: 'magiclink', email: correo
     });
@@ -152,7 +167,7 @@ Deno.serve(async (req: Request) => {
     const hashed = (enlace as any)?.properties?.hashed_token;
     if (!hashed) return json({ error: 'sin_token' }, 502);
 
-    // ── 5 · Y se canjea por la sesión. Se prueban los dos tipos que la
+    // ── 6 · Y se canjea por la sesión. Se prueban los dos tipos que la
     //        documentación menciona, y se informa de cuál funcionó: es la
     //        única forma honesta de saberlo sin suponerlo.
     let sesion: any = null, via = '', ultimoFallo = '';
@@ -163,7 +178,7 @@ Deno.serve(async (req: Request) => {
     }
     if (!sesion) return json({ error: 'canje', detalle: ultimoFallo }, 502);
 
-    // ── 6 · La respuesta. NO lleva el token entero a propósito: basta para
+    // ── 7 · La respuesta. NO lleva el token entero a propósito: basta para
     //        comprobar que la sesión es real y de quien debe ser.
     const mirada = miradaAlToken(sesion.access_token);
     return json({
