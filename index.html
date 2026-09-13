@@ -52,7 +52,7 @@
 <meta property="og:description" content="Formación de equipos de sala: carta, alérgenos, vinos, exámenes y juegos de repaso.">
 <meta property="og:url" content="https://meseo.es/">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"Meseo","url":"https://meseo.es/"}</script>
-<meta name="app-version" content="7.448">
+<meta name="app-version" content="7.449">
 <meta name="app-build" content="May 2026">
 <meta name="theme-color" content="#1c2a22">
 <!-- ═══ PWA ═══ -->
@@ -911,6 +911,176 @@ async function setEmployeePinServer(name, pin){
       body: JSON.stringify({ emp_name:name, sha_hex:h })
     });
   } catch(e){ dbgw('[empPin] set RPC error:', e.message); }
+}
+
+// ═══ SESIÓN DE AUTH (fase 2.5C) ═══════════════════════════════════════════
+//
+// QUÉ AÑADE
+//   Después de que el PIN se valide como siempre, se pide ADEMÁS una sesión
+//   real de Supabase a la función `sesion`. A partir de ahí la base de datos
+//   puede saber quién pide cada cosa: `auth.uid()` deja de ser nulo. Es el
+//   paso previo a poder activar RLS, que todavía NO está activo.
+//
+// NO CAMBIA NADA DE LO QUE YA FUNCIONA
+//   El login sigue siendo el de siempre y decide él solo si se entra o no.
+//   Esto va DESPUÉS y aparte: si falla —sin red, Auth caído, la función
+//   devuelve un error— se anota el motivo y la aplicación sigue exactamente
+//   como antes. Nadie se queda fuera de Meseo porque Auth tenga un mal día.
+//   Las llamadas REST siguen yendo con la clave anónima; esta sesión todavía
+//   no se usa para leer ni escribir nada.
+//
+// QUIÉN DICE QUIÉN ERES
+//   Al servidor sólo se le manda el nombre y el MISMO hash del PIN que el
+//   login acaba de validar. Ni rol, ni restaurante, ni identidad: eso lo saca
+//   `sesion` de `employees`, que la clave pública no puede escribir. Un
+//   cliente no puede pedir la sesión de otro sin saber su PIN.
+let _authClient = null;
+let _authUid = null;        // uid de la sesión activa, sólo para diagnóstico
+let _authEmpleado = null;   // a nombre de quién está esa sesión
+let _authPeticion = null;   // la petición en curso; sirve de cerrojo (ver abajo)
+const _authMem = Object.create(null);
+const AUTH_STORAGE_KEY = 'meseo-auth';
+const AUTH_TIMEOUT_MS = 8000;
+
+// El token vive donde el usuario ha dicho que quiere vivir. Si no marcó
+// «recordarme» —el caso del móvil de barra, que usan cinco personas— la sesión
+// se queda en memoria y muere con la pestaña, igual que hace `txoko_session`.
+// Si lo marcó, persiste y se renueva sola. Borrar limpia SIEMPRE los dos sitios.
+function _authRecordar(){
+  try{ return !!localStorage.getItem('txoko_session'); }catch(_){ return false; }
+}
+const _authStorage = {
+  getItem(k){
+    try{ if(_authRecordar()) return localStorage.getItem(k); }catch(_){}
+    return (k in _authMem) ? _authMem[k] : null;
+  },
+  setItem(k, v){
+    try{ if(_authRecordar()){ localStorage.setItem(k, v); return; } }catch(_){}
+    _authMem[k] = v;
+  },
+  removeItem(k){
+    try{ localStorage.removeItem(k); }catch(_){}
+    delete _authMem[k];
+  }
+};
+
+// Cliente SEPARADO del que usa el chat a propósito. El del chat habla por
+// Realtime con la clave anónima y funciona; darle una identidad cambiaría con
+// qué rol se conecta, y esta fase no toca nada que ya funcione.
+function _getAuthClient(){
+  if(_authClient) return _authClient;
+  if(typeof supabase === 'undefined' || !supabase.createClient) return null;
+  try{
+    _authClient = supabase.createClient(SUPA_URL, SUPA_KEY, {
+      auth: {
+        storageKey: AUTH_STORAGE_KEY,
+        storage: _authStorage,
+        persistSession: true,
+        autoRefreshToken: true,
+        // La app usa el hash para sus propios enlaces (#reset=…). Que GoTrue
+        // no se ponga a interpretarlo.
+        detectSessionInUrl: false
+      }
+    });
+  }catch(e){ dbgw('[auth] cliente:', e && e.message); return null; }
+  return _authClient;
+}
+
+// Retira la sesión. Se llama al salir y ANTES de entrar como otra persona: en
+// un dispositivo compartido, el token del turno anterior no puede sobrevivir al
+// cambio de empleado. `scope:'local'` evita depender de la red para poder
+// cerrar sesión —salir sin cobertura tiene que funcionar— y el borrado manual
+// del almacén es el cinturón por si `signOut` no llega a hacerlo.
+// `marcaPropia` sólo lo pasa `_authSesionEntrar` al limpiar ANTES de poner su
+// propia sesión: en ese caso el cerrojo es suyo y no debe soltarlo. Cualquier
+// otra llamada —salir, cambiar de empleado— sí lo suelta, y con eso cancela la
+// petición que estuviera en vuelo.
+async function _authSesionSalir(marcaPropia){
+  if(!marcaPropia || _authPeticion === marcaPropia) _authPeticion = marcaPropia || null;
+  _authUid = null; _authEmpleado = null;
+  const cli = _getAuthClient();
+  if(cli){ try{ await cli.auth.signOut({ scope: 'local' }); }catch(e){ dbgw('[auth] signOut:', e && e.message); } }
+  try{
+    for(const k of Object.keys(localStorage)) if(k.indexOf(AUTH_STORAGE_KEY) === 0) localStorage.removeItem(k);
+  }catch(_){}
+  for(const k of Object.keys(_authMem)) delete _authMem[k];
+}
+
+// Pide la sesión y la establece por el camino oficial (`setSession`), que es
+// quien se encarga luego de renovarla sola antes de que caduque.
+// NUNCA lanza: devuelve un motivo corto, y ningún motivo lleva token ni PIN.
+async function _authSesionEntrar(nombre, sha, marca){
+  if(!nombre || !/^[0-9a-f]{64}$/.test(String(sha||''))) return 'sin-credencial';
+  const cli = _getAuthClient();
+  if(!cli) return 'sin-cliente';
+  // Lo primero, soltar la identidad anterior. Si lo que viene detrás falla, es
+  // preferible quedarse sin sesión que conservar la de otra persona.
+  await _authSesionSalir(marca);
+  let res;
+  try{
+    const ctrl = new AbortController();
+    const reloj = setTimeout(()=>{ try{ ctrl.abort(); }catch(_){} }, AUTH_TIMEOUT_MS);
+    try{
+      res = await fetch(`${SUPA_URL}/functions/v1/sesion`, {
+        method:'POST', signal: ctrl.signal,
+        headers:{ 'apikey':SUPA_KEY, 'Authorization':`Bearer ${SUPA_KEY}`, 'Content-Type':'application/json' },
+        body: JSON.stringify({ nombre: nombre, sha: sha })
+      });
+    } finally { clearTimeout(reloj); }
+  }catch(e){ dbgw('[auth] sin respuesta de sesion:', e && e.name); return 'sin-red'; }
+  if(!res.ok){ dbgw('[auth] sesion HTTP', res.status); return 'http-' + res.status; }
+  let j = null;
+  try{ j = await res.json(); }catch(_){ return 'respuesta-ilegible'; }
+  if(!j || j.ok !== true) return 'rechazada';
+  const s = j.sesion || {};
+  if(!s.access_token || !s.refresh_token) return 'sin-token';
+  // La sesión tiene que ser de quien acaba de entrar, no de otra ficha.
+  if(j.empleado !== nombre || s.coincide_con_la_ficha !== true) return 'identidad-no-coincide';
+  // Y que durante el viaje no haya salido nadie ni entrado otro: si esta
+  // petición ya no es la viva, su sesión no se establece.
+  if(marca && _authPeticion !== marca) return 'cancelada';
+  try{
+    const { error } = await cli.auth.setSession({ access_token: s.access_token, refresh_token: s.refresh_token });
+    if(error){ dbgw('[auth] setSession:', error.message); return 'set-fallo'; }
+  }catch(e){ dbgw('[auth] setSession:', e && e.message); return 'set-error'; }
+  _authUid = s.uid || null;
+  _authEmpleado = j.empleado || nombre;
+  return 'ok';
+}
+
+// El envoltorio que llama el login: nunca espera, nunca rompe. Si Auth tarda o
+// falla, el usuario ya está dentro por el camino de siempre y no se entera.
+//
+// EL REINTENTO, Y POR QUÉ EXISTE
+//   supabase-js viene de un CDN con `defer`. Medido en el navegador: si ese
+//   script no ha llegado cuando alguien entra —red lenta, CDN caído—, no hay
+//   cliente con el que establecer nada y la sesión no se pedía NUNCA para ese
+//   login, en silencio. Se reintenta tres veces, espaciándolo, y sólo en ese
+//   caso concreto: los demás fallos (PIN, red, rechazo) no se reintentan.
+//
+// EL CERROJO
+//   `_authPeticion` identifica la petición viva. Salir o entrar como otra
+//   persona lo cambia, y un reintento tardío se encuentra con que ya no es el
+//   suyo y se calla. Sin esto, alguien que sale mientras el CDN termina de
+//   cargar podría acabar con la sesión puesta después de haberse ido.
+function _authSesionEnSegundoPlano(nombre, sha){
+  const mia = { nombre: nombre };
+  _authPeticion = mia;
+  let intentos = 0;
+  const tirar = () => {
+    Promise.resolve(_authSesionEntrar(nombre, sha, mia))
+      .then(m => {
+        if(_authPeticion !== mia) return;                  // ya no somos nadie
+        if(m === 'sin-cliente' && ++intentos <= 3){
+          dbgw('[auth] supabase-js aún no está; reintento ' + intentos);
+          setTimeout(tirar, 2000 * intentos);
+          return;
+        }
+        if(m !== 'ok') dbgw('[auth] sin sesión (' + m + ') — se sigue con el login de siempre');
+      })
+      .catch(e => dbgw('[auth] inesperado:', e && e.message));
+  };
+  try{ tirar(); }catch(e){ dbgw('[auth] no se pudo pedir la sesión:', e && e.message); }
 }
 
 
@@ -1909,7 +2079,7 @@ const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><p
 const SRC = 'src';
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='7.448';  // sincronizada con sw.js VERSION (guard de CI)
+const APP_VERSION='7.449';  // sincronizada con sw.js VERSION (guard de CI)
 const APP_BUILD='Jul 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;
@@ -9779,6 +9949,9 @@ async function loginWithPassword(){
       empObj.pin = hashedPin;  // hash real en local (sustituye el centinela) → recordar sesión / auto-login
       saveDB();
       supaUpsertEmployee(userName);
+      // Y, aparte, la sesión de Auth. Va después de decidir «recordarme»
+      // porque de esa decisión depende dónde se guarda el token.
+      _authSesionEnSegundoPlano(userName, hashedPin);
       pinTarget = userName;
       closePinAndEnter();
       // Aviso para añadir correo de recuperación (usa el hash de la clave recién
@@ -11017,6 +11190,7 @@ function _showCloudPinLogin(name, emp) {
                   emp.lang = LANG;
                   saveDB();
                   supaUpsertEmployee(name);
+                  _authSesionEnSegundoPlano(name, h);
                   pinTarget = name;
                   closePinAndEnter();
                 };
@@ -11265,6 +11439,10 @@ function logout(){
   }
   currentUser=null;
   localStorage.removeItem('txoko_session');
+  // La identidad de Auth se va con el resto. Se hace DESPUÉS de quitar
+  // `txoko_session` porque el almacén del token mira esa llave para decidir
+  // dónde vivía; `_authSesionSalir` borra los dos sitios de todas formas.
+  _authSesionSalir();
   document.getElementById('screenLogin').classList.add('active');
   document.getElementById('screenApp').classList.remove('active');
 }
@@ -33168,6 +33346,10 @@ document.addEventListener('visibilitychange', ()=>{
           // Auto-login success — renueva el sello de tiempo (deslizante)
           localStorage.setItem('txoko_session', JSON.stringify({user, hash, ts: Date.now()}));
           localStorage.setItem('txoko_last_user', user);
+          // La sesión de Auth también se renueva al volver: el token dura una
+          // hora y la sesión recordada noventa días, así que al reabrir la app
+          // casi siempre estará caducado. Se pide una nueva con el mismo hash.
+          _authSesionEnSegundoPlano(user, hash);
           pinTarget = user;
           closePinAndEnter();
           return;

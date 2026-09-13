@@ -10665,6 +10665,321 @@ test('Plan de hoy: está en el inicio, y con estilo propio de toque cómodo', ()
   assert(alto >= 44, `las filas del plan miden ${alto}px de alto; el mínimo para el pulgar son 44`);
 });
 
+
+// ═══ SESIÓN DE AUTH (fase 2.5C) ═══════════════════════════════════════════
+// El módulo se EJECUTA. Se le intercepta la red, el almacenamiento y el
+// cliente de Supabase, y se mira qué hace de verdad: si establece la sesión,
+// si la retira, y —sobre todo— si al fallar deja la aplicación como estaba.
+const _authRes = await (async () => {
+  const i0 = html.indexOf('// ═══ SESIÓN DE AUTH (fase 2.5C)');
+  const i1 = html.indexOf('// ═══ MÓDULO PROTOCOLO');
+  if (i0 === -1 || i1 <= i0) return { roto: 'no encuentro el módulo de sesión de Auth' };
+
+  // Almacenamiento de mentira con la misma forma que localStorage: las claves
+  // de datos son enumerables y los métodos no, para que Object.keys() devuelva
+  // lo mismo que devuelve en un navegador.
+  const nuevoAlmacen = () => {
+    const o = {};
+    Object.defineProperties(o, {
+      getItem:    { value: (k) => (k in o ? o[k] : null) },
+      setItem:    { value: (k, v) => { o[k] = String(v); } },
+      removeItem: { value: (k) => { delete o[k]; } }
+    });
+    return o;
+  };
+
+  const esc = { modo: 'ok', empleado: 'Duvan', uid: 'uid-duvan', coincide: true };
+  const reg = { fetch: [], setSession: [], signOut: 0, logs: [] };
+  const TOKEN = 'eyJhbGciOiJIUzI1NiJ9.token-de-prueba.firma';
+  const REFRESH = 'refresco-de-prueba';
+
+  const fetchFalso = async (url, opciones) => {
+    reg.fetch.push({ url, cuerpo: JSON.parse(opciones.body) });
+    if (esc.modo === 'red') throw Object.assign(new Error('Failed to fetch'), { name: 'TypeError' });
+    if (esc.modo === 'abortada') throw Object.assign(new Error('aborted'), { name: 'AbortError' });
+    const resp = (estado, obj) => ({ ok: estado >= 200 && estado < 300, status: estado, json: async () => obj });
+    if (esc.modo === 'sin_pin')   return resp(409, { error: 'sin_pin' });
+    if (esc.modo === 'pin_malo')  return resp(401, { error: 'pin' });
+    if (esc.modo === 'ilegible')  return { ok: true, status: 200, json: async () => { throw new Error('no es json'); } };
+    if (esc.modo === 'sin_token') return resp(200, { ok: true, empleado: esc.empleado, sesion: { creada: true, uid: esc.uid, coincide_con_la_ficha: true } });
+    return resp(200, {
+      ok: true, empleado: esc.empleado, venue: 'txoko', role: 'staff',
+      sesion: { creada: true, uid: esc.uid, coincide_con_la_ficha: esc.coincide,
+                access_token: TOKEN, refresh_token: REFRESH, token_type: 'bearer',
+                expires_in: 3600, sin_reclamaciones_de_autoridad: true }
+    });
+  };
+
+  // El doble usa el almacén y la llave que se le pasan, igual que supabase-js:
+  // si no, «¿queda el token guardado?» no mediría nada y la prueba del quiosco
+  // pasaría sola.
+  const supabaseFalso = { createClient: (url, clave, opc) => {
+    const conf = (opc && opc.auth) || {};
+    const alm = conf.storage;
+    const llave = conf.storageKey || 'sb-auth-token';
+    return { auth: {
+      setSession: async (t) => {
+        reg.setSession.push(t);
+        if (alm) alm.setItem(llave, JSON.stringify({ access_token: t.access_token, refresh_token: t.refresh_token }));
+        return { data: { session: t }, error: null };
+      },
+      signOut: async () => { reg.signOut++; if (alm) alm.removeItem(llave); return { error: null }; }
+    } };
+  } };
+
+  // Un segundo montaje del módulo para el caso del CDN que llega tarde:
+  // `supabase.createClient` no existe hasta que `esc.cdn` se pone a true.
+  const supabaseTardio = { get createClient(){ return esc.cdn ? supabaseFalso.createClient : undefined; } };
+
+  try {
+    const almacen = nuevoAlmacen();
+    const almacenTardio = nuevoAlmacen();
+    const montar = (sb, alm) => new Function('supabase', 'SUPA_URL', 'SUPA_KEY', 'fetch', 'localStorage', 'dbgw', // eslint-disable-line no-new-func
+      html.slice(i0, i1) +
+      '; return { _authSesionEntrar, _authSesionSalir, _authSesionEnSegundoPlano,' +
+      '           uid: () => _authUid, empleado: () => _authEmpleado };'
+    )(sb, 'https://falso.test', 'clave-anon', fetchFalso, alm,
+      (...a) => reg.logs.push(a.map(String).join(' ')));
+    const M = new Function('supabase', 'SUPA_URL', 'SUPA_KEY', 'fetch', 'localStorage', 'dbgw', // eslint-disable-line no-new-func
+      html.slice(i0, i1) +
+      '; return { _authSesionEntrar, _authSesionSalir, _authSesionEnSegundoPlano,' +
+      '           uid: () => _authUid, empleado: () => _authEmpleado };'
+    )(supabaseFalso, 'https://falso.test', 'clave-anon', fetchFalso, almacen,
+      (...a) => reg.logs.push(a.map(String).join(' ')));
+    const MTardio = montar(supabaseTardio, almacenTardio);
+    return { M, MTardio, esc, reg, almacen, almacenTardio, TOKEN, REFRESH };
+  } catch (e) { return { roto: 'el módulo de sesión no compila: ' + e.message }; }
+})();
+
+console.log('\nSesión de Auth (fase 2.5C)');
+
+// Los escenarios se ejecutan AQUÍ FUERA porque test() es síncrono y todo esto
+// es asíncrono. Cada uno guarda su resultado y luego se juzga.
+const _authPruebas = await (async () => {
+  if (_authRes.roto) return { roto: _authRes.roto };
+  const { M, esc, reg, almacen } = _authRes;
+  const hash = 'a'.repeat(64);
+  const r = {};
+  const limpiar = () => { reg.setSession.length = 0; reg.fetch.length = 0; reg.signOut = 0; };
+  // «Recordarme» marcado: el token puede vivir en el almacenamiento.
+  almacen.setItem('txoko_session', JSON.stringify({ user: 'Duvan', hash, ts: Date.now() }));
+
+  esc.modo = 'ok'; esc.empleado = 'Duvan'; esc.uid = 'uid-duvan'; esc.coincide = true;
+  limpiar(); r.duvan = await M._authSesionEntrar('Duvan', hash);
+  r.duvanSet = reg.setSession.slice(); r.duvanUid = M.uid();
+  r.duvanCuerpo = reg.fetch.length ? reg.fetch[reg.fetch.length - 1].cuerpo : null;
+  r.trasEntrar = Object.keys(almacen).filter(k => k.indexOf('meseo-auth') === 0);
+
+  esc.empleado = 'Sol'; esc.uid = 'uid-sol';
+  limpiar(); r.sol = await M._authSesionEntrar('Sol', hash); r.solSet = reg.setSession.length; r.solUid = M.uid();
+
+  esc.modo = 'sin_pin';
+  limpiar(); r.sinPin = await M._authSesionEntrar('Gabriel', hash); r.sinPinSet = reg.setSession.length;
+
+  esc.modo = 'pin_malo';
+  limpiar(); r.pinMalo = await M._authSesionEntrar('Sol', hash); r.pinMaloSet = reg.setSession.length;
+
+  esc.modo = 'ok'; esc.empleado = 'Otro'; esc.uid = 'uid-otro'; esc.coincide = true;
+  limpiar(); r.otraFicha = await M._authSesionEntrar('Sol', hash); r.otraFichaSet = reg.setSession.length;
+
+  esc.empleado = 'Sol'; esc.coincide = false;
+  limpiar(); r.noCoincide = await M._authSesionEntrar('Sol', hash); r.noCoincideSet = reg.setSession.length;
+  esc.coincide = true;
+
+  esc.modo = 'sin_token';
+  limpiar(); r.sinToken = await M._authSesionEntrar('Sol', hash); r.sinTokenSet = reg.setSession.length;
+
+  esc.modo = 'red';
+  limpiar(); r.sinRed = await M._authSesionEntrar('Sol', hash); r.sinRedSet = reg.setSession.length;
+
+  esc.modo = 'ilegible';
+  limpiar(); r.ilegible = await M._authSesionEntrar('Sol', hash); r.ilegibleSet = reg.setSession.length;
+
+  // Cambio de empleado: entra Sol con éxito y después Ana, que falla.
+  esc.modo = 'ok'; esc.empleado = 'Sol'; esc.uid = 'uid-sol';
+  limpiar(); await M._authSesionEntrar('Sol', hash);
+  r.conSol = Object.keys(almacen).filter(k => k.indexOf('meseo-auth') === 0).length;
+  esc.modo = 'red';
+  limpiar(); r.anaFalla = await M._authSesionEntrar('Ana', hash);
+  r.trasCambio = Object.keys(almacen).filter(k => k.indexOf('meseo-auth') === 0);
+  r.uidTrasCambio = M.uid();
+
+  // Salir: la identidad se va entera.
+  esc.modo = 'ok'; esc.empleado = 'Sol';
+  limpiar(); await M._authSesionEntrar('Sol', hash);
+  limpiar(); await M._authSesionSalir();
+  r.trasSalir = Object.keys(almacen).filter(k => k.indexOf('meseo-auth') === 0);
+  r.signOutAlSalir = reg.signOut; r.uidTrasSalir = M.uid();
+
+  // Credenciales con mala pinta: ni se sale a la red.
+  limpiar(); r.shaMalo = await M._authSesionEntrar('Sol', 'no-es-un-sha'); r.shaMaloFetch = reg.fetch.length;
+  limpiar(); r.sinNombre = await M._authSesionEntrar('', hash);
+
+  // Quiosco: sin «recordarme», el token no puede tocar el almacenamiento.
+  await M._authSesionSalir();
+  almacen.removeItem('txoko_session');
+  esc.modo = 'ok'; esc.empleado = 'Sol';
+  limpiar(); r.quiosco = await M._authSesionEntrar('Sol', hash);
+  r.quioscoEnDisco = Object.keys(almacen).filter(k => k.indexOf('meseo-auth') === 0);
+  r.quioscoSet = reg.setSession.length;
+
+  // Y el envoltorio que usa el login: no puede lanzar ni devolver una promesa
+  // que nadie espera y que reviente la pantalla.
+  esc.modo = 'red';
+  let lanzo = false;
+  try { M._authSesionEnSegundoPlano('Sol', hash); } catch (_) { lanzo = true; }
+  await new Promise(res => setTimeout(res, 10));
+  r.segundoPlanoLanzo = lanzo;
+
+  // El CDN que llega tarde: al entrar no hay cliente todavía y la sesión no se
+  // pedía nunca. Ahora se reintenta hasta que el script aparece.
+  const { MTardio, almacenTardio } = _authRes;
+  esc.modo = 'ok'; esc.empleado = 'Sol'; esc.uid = 'uid-sol'; esc.cdn = false;
+  // Su almacén es otro: también hay que decirle que aquí se recuerda la sesión,
+  // o el token se iría a memoria por el camino del quiosco y la prueba mediría otra cosa.
+  almacenTardio.setItem('txoko_session', JSON.stringify({ user: 'Sol', hash, ts: Date.now() }));
+  limpiar();
+  r.tardioPrimera = await MTardio._authSesionEntrar('Sol', hash);
+  MTardio._authSesionEnSegundoPlano('Sol', hash);
+  await new Promise(res => setTimeout(res, 300));
+  r.tardioAntes = reg.setSession.length;          // el CDN sigue sin llegar
+  esc.cdn = true;                                  // …y ahora llega
+  await new Promise(res => setTimeout(res, 2600));
+  r.tardioDespues = reg.setSession.length;
+  r.tardioEnDisco = Object.keys(almacenTardio).filter(k => k.indexOf('meseo-auth') === 0).length;
+
+  // Salir mientras la petición está en vuelo: no puede acabar poniendo sesión.
+  esc.modo = 'ok'; esc.empleado = 'Sol';
+  limpiar();
+  const enVuelo = M._authSesionEnSegundoPlano('Sol', hash);
+  await M._authSesionSalir();
+  await new Promise(res => setTimeout(res, 60));
+  r.cancelada = reg.setSession.length;
+  r.canceladaEnDisco = Object.keys(almacen).filter(k => k.indexOf('meseo-auth') === 0).length;
+  void enVuelo;
+
+  r.logs = reg.logs.slice();
+  return r;
+})();
+
+test('el módulo de sesión de Auth compila y se puede ejecutar', () => {
+  assert(!_authRes.roto, _authRes.roto);
+  assert(!_authPruebas.roto, _authPruebas.roto);
+});
+
+test('Duvan entra y obtiene sesión', () => {
+  assert(_authPruebas.duvan === 'ok', `esperaba ok, llegó ${_authPruebas.duvan}`);
+  assert(_authPruebas.duvanSet.length === 1, `setSession se llamó ${_authPruebas.duvanSet.length} veces`);
+  assert(_authPruebas.duvanSet[0].access_token === _authRes.TOKEN, 'no se estableció el access_token que vino');
+  assert(_authPruebas.duvanSet[0].refresh_token === _authRes.REFRESH, 'no se estableció el refresh_token que vino');
+});
+
+test('la sesión queda establecida y apunta al empleado correcto', () => {
+  assert(_authPruebas.duvanUid === 'uid-duvan', `uid ${_authPruebas.duvanUid}`);
+  assert(_authPruebas.trasEntrar.length > 0, 'con «recordarme» el token tiene que quedar guardado');
+});
+
+test('uno de los 17 nuevos entra igual', () => {
+  assert(_authPruebas.sol === 'ok', `esperaba ok, llegó ${_authPruebas.sol}`);
+  assert(_authPruebas.solSet === 1, 'no se estableció la sesión');
+  assert(_authPruebas.solUid === 'uid-sol', `uid ${_authPruebas.solUid}`);
+});
+
+test('al servidor sólo se le manda nombre y hash — ni rol, ni restaurante, ni identidad', () => {
+  const c = _authPruebas.duvanCuerpo || {};
+  assert(JSON.stringify(Object.keys(c).sort()) === '["nombre","sha"]',
+    'el cuerpo lleva campos de más: ' + Object.keys(c).join(','));
+});
+
+test('un empleado sin PIN no obtiene sesión', () => {
+  assert(_authPruebas.sinPin === 'http-409', `llegó ${_authPruebas.sinPin}`);
+  assert(_authPruebas.sinPinSet === 0, 'se estableció una sesión que no debía existir');
+});
+
+test('un PIN incorrecto no crea sesión', () => {
+  assert(_authPruebas.pinMalo === 'http-401', `llegó ${_authPruebas.pinMalo}`);
+  assert(_authPruebas.pinMaloSet === 0, 'se estableció una sesión con un PIN incorrecto');
+});
+
+test('una sesión a nombre de otro se rechaza', () => {
+  assert(_authPruebas.otraFicha === 'identidad-no-coincide', `llegó ${_authPruebas.otraFicha}`);
+  assert(_authPruebas.otraFichaSet === 0, 'se aceptó la sesión de otra persona');
+  assert(_authPruebas.noCoincide === 'identidad-no-coincide', `llegó ${_authPruebas.noCoincide}`);
+  assert(_authPruebas.noCoincideSet === 0, 'se aceptó una sesión que no casa con la ficha');
+});
+
+test('sin tokens en la respuesta no se establece nada', () => {
+  assert(_authPruebas.sinToken === 'sin-token', `llegó ${_authPruebas.sinToken}`);
+  assert(_authPruebas.sinTokenSet === 0, 'se llamó a setSession sin tokens');
+});
+
+test('si `sesion` falla, el login de siempre sigue en pie', () => {
+  assert(_authPruebas.sinRed === 'sin-red', `llegó ${_authPruebas.sinRed}`);
+  assert(_authPruebas.sinRedSet === 0, 'no debería haberse establecido ninguna sesión');
+  assert(_authPruebas.ilegible === 'respuesta-ilegible', `llegó ${_authPruebas.ilegible}`);
+  assert(_authPruebas.segundoPlanoLanzo === false, 'el envoltorio del login lanzó una excepción');
+});
+
+test('sin credenciales con buena forma ni se sale a la red', () => {
+  assert(_authPruebas.shaMalo === 'sin-credencial', `llegó ${_authPruebas.shaMalo}`);
+  assert(_authPruebas.shaMaloFetch === 0, 'se llamó a la función con un hash inválido');
+  assert(_authPruebas.sinNombre === 'sin-credencial', `llegó ${_authPruebas.sinNombre}`);
+});
+
+test('cambiar de empleado no conserva la sesión del anterior', () => {
+  assert(_authPruebas.conSol > 0, 'Sol no llegó a tener sesión, la prueba no medía nada');
+  assert(_authPruebas.anaFalla === 'sin-red', `llegó ${_authPruebas.anaFalla}`);
+  assert(_authPruebas.trasCambio.length === 0,
+    'el token de Sol sobrevivió al intento de entrar como Ana: ' + _authPruebas.trasCambio.join(','));
+  assert(_authPruebas.uidTrasCambio === null, 'el uid del anterior sigue en memoria');
+});
+
+test('salir borra la sesión de Auth', () => {
+  assert(_authPruebas.signOutAlSalir === 1, `signOut se llamó ${_authPruebas.signOutAlSalir} veces`);
+  assert(_authPruebas.trasSalir.length === 0, 'quedó token guardado tras salir: ' + _authPruebas.trasSalir.join(','));
+  assert(_authPruebas.uidTrasSalir === null, 'el uid sigue en memoria tras salir');
+});
+
+test('en quiosco (sin «recordarme») el token no toca el almacenamiento', () => {
+  assert(_authPruebas.quiosco === 'ok', `llegó ${_authPruebas.quiosco}`);
+  assert(_authPruebas.quioscoSet === 1, 'la sesión sí debe establecerse, sólo que en memoria');
+  assert(_authPruebas.quioscoEnDisco.length === 0,
+    'el token quedó en disco en un dispositivo compartido: ' + _authPruebas.quioscoEnDisco.join(','));
+});
+
+test('si supabase-js llega tarde, la sesión se reintenta en vez de perderse', () => {
+  assert(_authPruebas.tardioPrimera === 'sin-cliente', `llegó ${_authPruebas.tardioPrimera}`);
+  assert(_authPruebas.tardioAntes === 0, 'no había cliente y aun así se estableció algo');
+  assert(_authPruebas.tardioDespues === 1,
+    `tras aparecer el CDN esperaba 1 sesión, hubo ${_authPruebas.tardioDespues}`);
+  assert(_authPruebas.tardioEnDisco > 0, 'la sesión del reintento no quedó establecida');
+});
+
+test('salir mientras la sesión está en vuelo la cancela', () => {
+  assert(_authPruebas.cancelada === 0,
+    `se estableció una sesión después de salir (${_authPruebas.cancelada} llamadas)`);
+  assert(_authPruebas.canceladaEnDisco === 0, 'quedó token guardado tras salir en mitad de la petición');
+});
+
+test('ni un token ni un PIN llegan a los registros', () => {
+  const todo = (_authPruebas.logs || []).join(' || ');
+  assert(!/eyJ[A-Za-z0-9_\-.]{10,}/.test(todo), 'hay un JWT en los registros: ' + todo);
+  assert(!/[0-9a-f]{64}/.test(todo), 'hay un hash de 64 hex en los registros: ' + todo);
+  assert(!/refresco-de-prueba/.test(todo), 'hay un refresh token en los registros: ' + todo);
+});
+
+test('el login pide la sesión en sus tres puertas, y salir la retira', () => {
+  const puertas = (html.match(/_authSesionEnSegundoPlano\(/g) || []).length;
+  assert(puertas === 4, `esperaba 3 llamadas + 1 definición, encontré ${puertas}`);
+  assert(/currentUser=null;[\s\S]{0,400}_authSesionSalir\(\)/.test(html),
+    'logout() no retira la sesión de Auth');
+  // Y la petición va DESPUÉS de decidir «recordarme»: de eso depende dónde
+  // se guarda el token.
+  const iRem = html.indexOf("localStorage.setItem('txoko_session', JSON.stringify({user:userName");
+  const iAuth = html.indexOf('_authSesionEnSegundoPlano(userName, hashedPin)');
+  assert(iRem > 0 && iAuth > iRem, 'la sesión se pide antes de decidir si se recuerda');
+});
+
 // ─── 7. No leftover git conflict markers ────────────────────────
 console.log('\nHygiene');
 test('no git conflict markers in tracked source', () => {

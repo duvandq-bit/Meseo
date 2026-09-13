@@ -14,7 +14,18 @@
 //     a propósito: en julio de 2026 alguien se registró en este proyecto
 //     plantando {"role":"admin","is_admin":true} en user_metadata, esperando a
 //     una aplicación que leyera el rol del token. Aquí no se lee jamás.
-//   • No devuelve el PIN, ni el enlace, ni el token de un solo uso.
+//   • No devuelve el PIN, ni el enlace de acceso, ni el token de un solo uso
+//     con el que se canjeó la sesión.
+//
+// LO QUE SÍ DEVUELVE, DESDE LA FASE 2.5C
+//   El `access_token` y el `refresh_token` de la sesión. Hasta ahora sólo
+//   devolvía un resumen para poder juzgarla desde fuera, y con eso el
+//   navegador no podía establecer nada. Son los mismos dos tokens que
+//   cualquier cliente de Supabase maneja al iniciar sesión —van al
+//   almacenamiento del navegador y los renueva la propia librería—, así que
+//   esto no abre una puerta nueva: pone la de siempre. Para llegar hasta aquí
+//   hay que traer el hash del PIN correcto, y ese camino ya lo cuenta el
+//   limitador de `verify_employee_pin_sha`.
 //
 // POR QUÉ ESTE CAMINO
 //   `admin.generateLink()` genera el enlace «without sending it» (doc oficial)
@@ -178,9 +189,25 @@ Deno.serve(async (req: Request) => {
     }
     if (!sesion) return json({ error: 'canje', detalle: ultimoFallo }, 502);
 
-    // ── 7 · La respuesta. NO lleva el token entero a propósito: basta para
-    //        comprobar que la sesión es real y de quien debe ser.
+    // ── 7 · Antes de entregar nada, comprobar que la sesión es de quien debe
+    //        ser. Si el `sub` del token no es el `uid` de la ficha, algo ha
+    //        salido mal arriba y lo último que se puede hacer es dárselo a
+    //        alguien: se tira y se devuelve error.
     const mirada = miradaAlToken(sesion.access_token);
+    if (!mirada || mirada.sub !== uid) {
+      return json({ error: 'identidad_no_coincide' }, 502);
+    }
+    // Y que no traiga reclamaciones de autoridad. Aquí nunca se leen —el rol
+    // sale de `employees`— pero una sesión que las lleve no sale de esta
+    // función: sería sembrar el problema de julio de 2026 para el día en que
+    // alguien, en otro sitio, decida leer el token.
+    if (mirada.sin_reclamaciones_de_autoridad !== true) {
+      return json({ error: 'token_con_reclamaciones' }, 502);
+    }
+
+    // ── 8 · La respuesta. Lleva los dos tokens porque el navegador los
+    //        necesita para establecer la sesión; no lleva el PIN, ni el
+    //        enlace, ni el token de un solo uso con el que se canjeó.
     return json({
       ok: true,
       empleado: emp.name,
@@ -191,13 +218,15 @@ Deno.serve(async (req: Request) => {
       sesion: {
         creada: true,
         uid,
-        coincide_con_la_ficha: mirada?.sub === uid,
-        rol_del_token: mirada?.role,
-        sin_reclamaciones_de_autoridad: mirada?.sin_reclamaciones_de_autoridad,
-        user_metadata: mirada?.user_metadata,
-        expira_en_segundos: sesion.expires_in,
-        access_token_empieza_por: String(sesion.access_token).slice(0, 12) + '…',
-        hay_refresh_token: !!sesion.refresh_token
+        coincide_con_la_ficha: true,
+        access_token: sesion.access_token,
+        refresh_token: sesion.refresh_token,
+        token_type: sesion.token_type || 'bearer',
+        expires_in: sesion.expires_in,
+        expires_at: sesion.expires_at,
+        rol_del_token: mirada.role,
+        sin_reclamaciones_de_autoridad: true,
+        user_metadata: mirada.user_metadata
       },
       ms: Date.now() - t0
     });
