@@ -92,7 +92,13 @@ Deno.serve(async (req: Request) => {
 
   try {
     // ── 1 · La autoridad, con su limitador ────────────────────────────────
-    const { data: pinOk, error: eVer } = await admin.rpc('verify_supervisor_pin', { pin_input: pin });
+    // La IP sale de `cf-connecting-ip`, que pone Cloudflare y sobrescribe lo
+    // que mande el cliente. NUNCA del cuerpo. Y va por la función privilegiada,
+    // que `anon` no puede ejecutar: así el limitador cuenta los fallos de una
+    // persona juntos, y no repartidos entre las IPs rotatorias de AWS.
+    const ipReal = req.headers.get('cf-connecting-ip');
+    const { data: pinOk, error: eVer } = await admin.rpc('verify_supervisor_pin_srv',
+      { pin_input: pin, p_venue: null, p_ip: ipReal });
     if (eVer)      return json({ error: 'verificacion', detalle: limpiar(eVer) }, 502);
     if (pinOk !== true) return json({ error: 'denegado' }, 401);   // o bloqueado por el limitador
 
