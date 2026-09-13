@@ -54,11 +54,23 @@ const correoDe = (nombre: string, venue: string) =>
            .replace(/[^a-z0-9]+/g,'.').replace(/^\.|\.$/g,'')}@${venue}.meseo.invalid`;
 
 // Lo justo para saber que la sesión es de quien debe ser, sin sacar el token.
+//
+// Sobre `user_metadata`: NO se puede exigir que esté vacío. GoTrue mete lo suyo
+// —`email_verified` y compañía— pase lo que pase, así que «vacío» daba falso
+// siempre y no significaba nada. Lo que de verdad importa es que no lleve
+// ninguna reclamación de AUTORIDAD, que es el campo que el que se registra
+// controla y por donde entró la sonda de julio de 2026.
+const RECLAMACIONES_DE_AUTORIDAD =
+  ['role','is_admin','isAdmin','admin','venue','employee','permissions','claims','scope'];
+
 function miradaAlToken(jwt: string){
   try{
     const p = JSON.parse(atob(jwt.split('.')[1].replace(/-/g,'+').replace(/_/g,'/')));
+    const um = p.user_metadata || {};
     return { sub: p.sub, role: p.role, exp: p.exp,
-             user_metadata_vacio: !p.user_metadata || Object.keys(p.user_metadata).length === 0 };
+             user_metadata: Object.keys(um),   // a la vista, para poder juzgarlo
+             sin_reclamaciones_de_autoridad:
+               !RECLAMACIONES_DE_AUTORIDAD.some(k => Object.prototype.hasOwnProperty.call(um, k)) };
   }catch(_){ return null; }
 }
 
@@ -149,7 +161,8 @@ Deno.serve(async (req: Request) => {
         uid,
         coincide_con_la_ficha: mirada?.sub === uid,
         rol_del_token: mirada?.role,
-        user_metadata_vacio: mirada?.user_metadata_vacio,
+        sin_reclamaciones_de_autoridad: mirada?.sin_reclamaciones_de_autoridad,
+        user_metadata: mirada?.user_metadata,
         expira_en_segundos: sesion.expires_in,
         access_token_empieza_por: String(sesion.access_token).slice(0, 12) + '…',
         hay_refresh_token: !!sesion.refresh_token
