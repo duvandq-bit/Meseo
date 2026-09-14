@@ -40,8 +40,10 @@
 //   por nombre (10 fallos en 15 minutos y bloquea). No se duplica ni se rodea:
 //   si esa función dice que no, aquí no se emite nada.
 //
-// ESTADO: aislada. El cliente NO la llama todavía. El login de la aplicación
-// sigue exactamente como estaba.
+// ESTADO: el login de la v7.449 la llama después de validar el PIN, sin esperar
+// la respuesta y con respaldo si falla. Esa versión todavía NO está publicada,
+// así que en producción nadie la llama aún. RLS sigue desactivado: la sesión que
+// entrega no se usa todavía para leer ni escribir nada.
 import "jsr:@supabase/functions-js/edge-runtime.d.ts";
 import { createClient } from "npm:@supabase/supabase-js@2";
 
@@ -60,8 +62,12 @@ const json = (obj: unknown, status = 200) =>
 // El correo es sintético y `.invalid` es un dominio RESERVADO que no existe ni
 // puede existir (RFC 2606): así nunca se le puede mandar un correo a nadie por
 // accidente. El empleado no lo ve, no lo teclea y no lo necesita.
+// Los acentos se quitan con `\p{Diacritic}` y no con un rango `\uXXXX`: así el
+// fichero del repositorio y el desplegado son el mismo byte a byte —un rango
+// escapado se decodifica por el camino— y no hay caracteres invisibles en el
+// código. Produce exactamente los mismos correos que el rango anterior.
 const correoDe = (nombre: string, venue: string) =>
-  `${nombre.trim().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'')
+  `${nombre.trim().toLowerCase().normalize('NFD').replace(/\p{Diacritic}/gu,'')
            .replace(/[^a-z0-9]+/g,'.').replace(/^\.|\.$/g,'')}@${venue}.meseo.invalid`;
 
 // Lo justo para saber que la sesión es de quien debe ser, sin sacar el token.
