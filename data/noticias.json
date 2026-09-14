@@ -1,6 +1,45 @@
 {
- "updated": "2026-09-14T16:58:16.330Z",
+ "updated": "2026-09-14T20:57:38.737Z",
  "items": [
+  {
+   "t": "Los aranceles de Donald Trump 'derrumban' las ventas de vino de Canarias a Estados Unidos",
+   "u": "https://www.laprovincia.es/canarias/2026/09/14/aranceles-donald-trump-derrumban-ventas-134287720.html",
+   "s": "La Provincia",
+   "d": "2026-09-14T20:00:43.000Z",
+   "tags": [
+    "VINO",
+    "CANARIAS"
+   ],
+   "img": "https://estaticos-cdn.prensaiberica.es/clip/87da30e3-75f5-4ccd-a4a2-73d32deb06b6_16-9-discover-aspect-ratio_default_0_x788y341.jpg"
+  },
+  {
+   "t": "Tenerife y Basque Culinary Center ofrecen 12 cursos de cocina",
+   "u": "https://www.canariasenpleno.com/cursos-cocina-tenerife/",
+   "s": "canariasenpleno.com",
+   "d": "2026-09-14T17:51:36.000Z",
+   "tags": [
+    "CANARIAS"
+   ]
+  },
+  {
+   "t": "México se rinde un año más ante el \"chile en nogada\" a pesar de la prisa y el bolsillo",
+   "u": "https://www.infobae.com/america/agencias/2026/09/14/mexico-se-rinde-un-ano-mas-ante-el-chile-en-nogada-a-pesar-de-la-prisa-y-el-bolsillo/?outputType",
+   "s": "infobae.com",
+   "d": "2026-09-14T17:42:11.000Z",
+   "tags": [
+    "ALTA COCINA"
+   ]
+  },
+  {
+   "t": "La villa juguetera de Alicante que conquista por su cocina: así es el pueblo donde mejor se come de España",
+   "u": "https://www.noticiasdelvino.com/restaurantes/2026/09/14/la-villa-juguetera-de-alicante-que-conquista-por-su-cocina-asi-es-el-pueblo-donde-mejor-se-come-de-espana-74836/",
+   "s": "Noticias del Vino",
+   "d": "2026-09-14T17:17:21.000Z",
+   "tags": [
+    "MICHELIN"
+   ],
+   "img": "https://www.noticiasdelvino.com/wp-content/uploads/restaurantes-5.jpg"
+  },
   {
    "t": "La alta gastronomía española se reúne en Aponiente en el Retiro de Chefs de Auténtica 2026",
    "u": "https://www.andaluciainformacion.es/articulo/gastronomia/alta-gastronomia-espanola-reune-aponiente-retiro-chefs-autentica-2026/202609141830533476998.html",
@@ -12,8 +51,18 @@
    "img": "https://www.andaluciainformacion.es/media/andaluciainformacion/images/2026/09/14/2026091418304691617.jpg"
   },
   {
+   "t": "El chile en nogada resiste al alza de precios y la comida rápida",
+   "u": "https://pulsoslp.com.mx/sabor/chile-en-nogada-resiste-pese-a-su-elevado-precio/2085958",
+   "s": "Pulso Diario San Luis",
+   "d": "2026-09-14T16:25:00.000Z",
+   "tags": [
+    "ALTA COCINA"
+   ],
+   "img": "https://blobcore.pulsoslp.com.mx/images/2024/08/16/festival-de-chiles-en-nogada-en-cdmx-focus-0-0-600-315.webp"
+  },
+  {
    "t": "Tajao no siempre fue famoso por su pescado: así se convirtió este pueblo de Tenerife en un referente gastronómico",
-   "u": "https://www.eldia.es/tenerife/2026/09/14/tajao-famoso-pescado-convirtio-pueblo-134280740.html",
+   "u": "https://www.eldia.es/tenerife/2026/09/14/tajao-famoso-pescado-convirtio-pueblo-134280740.amp.html",
    "s": "Eldía",
    "d": "2026-09-14T16:20:43.000Z",
    "tags": [
@@ -24,7 +73,7 @@
   {
    "t": "La cadena de comida saludable que triunfa en Europa abre su primer restaurante en Alicante",
    "u": "https://alicantextra.com/es/alicante/cadena-comida-saludable-triunfaeuropa-abre-primer-restaurante-alicante-honest-greens_597918_102.html",
-   "s": "Alacant Extra",
+   "s": "alicantextra.com",
    "d": "2026-09-14T15:45:00.000Z",
    "tags": [
     "ALTA COCINA"
@@ -34,21 +83,12 @@
   {
    "t": "La Guía Michelin vuelve a apoyar ‘Restaurantes contra el Hambre’: platos y menús solidarios",
    "u": "https://www.diaridetarragona.com/gastronomia/270622/guia-michelin-vuelve-apoyar-restaurantes-hambre-platos-menus-solidarios.html",
-   "s": "diaridetarragona.com",
+   "s": "Diari de Tarragona",
    "d": "2026-09-14T15:32:44.000Z",
    "tags": [
     "MICHELIN"
    ],
    "img": "https://imagenes.diaridetarragona.com/files/og_thumbnail/files/fp/uploads/2025/11/25/692617de7c4de.r_d.3446-2969-2023.jpeg"
-  },
-  {
-   "t": "Tenerife y Basque Culinary Center ofrecen 12 cursos de cocina",
-   "u": "https://www.canariasenpleno.com/cursos-cocina-tenerife/",
-   "s": "Canarias en Pleno",
-   "d": "2026-09-14T15:17:23.000Z",
-   "tags": [
-    "CANARIAS"
-   ]
   },
   {
    "t": "El Basque Culinary Center lanza una docena de cursos para impulsar la cocina tinerfeña",
@@ -92,7 +132,7 @@
   {
    "t": "El chef Nacho del Corral, el elegido para liderar la propuesta gastro de Faro Santander",
    "u": "https://www.elconfidencial.com/gastronomia/2026-09-14/lumen-restaurante-nuevo-centro-arte-cultura-santander_4423378/",
-   "s": "El Confidencial",
+   "s": "elconfidencial.com",
    "d": "2026-09-14T13:36:00.000Z",
    "tags": [
     "ALTA COCINA"
@@ -100,13 +140,14 @@
    "img": "https://images.ecestaticos.com/s_bXja4DqSuXQ_D0xfsCBLYFCz8=/0x0:2272x1514/600x315/filters:fill(white):format(jpg):quality(99):watermark(f.elconfidencial.com/file/65c/43d/0ca/65c43d0ca5dbd5ff8f19b44167343db9.png,0,275,1)/f.elconfidencial.com/original/52c/081/b22/52c081b226440277970c6fd9fd1091d9.jpg"
   },
   {
-   "t": "Turismo de Tenerife y Basque Culinary Center ofrecen una docena de cursos de cocina presenciales y online",
-   "u": "https://www.webtenerife.com/blogcorporativo/2026/09/turismo-de-tenerife-y-basque-culinary-center-ofrecen-una-docena-de-cursos-de-cocina-presenciales-y-online/",
-   "s": "Tenerife Turismo",
-   "d": "2026-09-14T12:25:55.000Z",
+   "t": "El Burger Fest Canarias 2026 en Lanzarote trae las mejores hamburguesas",
+   "u": "https://www.masscultura.com/burger-fest-canarias-2026-en-lanzarote-playa-honda-hamburguesas/",
+   "s": "Mass Cultura",
+   "d": "2026-09-14T12:09:07.000Z",
    "tags": [
     "CANARIAS"
-   ]
+   ],
+   "img": "https://www.masscultura.com/wp-content/uploads/2026/09/Las-Mellizas-Dj.jpg"
   },
   {
    "t": "Alicante promociona su gastronomía con 'La millor tapeta': un bizcocho 'verde' con pulpo para empezar",
@@ -119,24 +160,14 @@
    "img": "https://d31u1w5651ly23.cloudfront.net/articulos/articulos-1924762.jpg"
   },
   {
-   "t": "Llega el Burger Fest Canarias 2026",
-   "u": "https://www.masscultura.com/burger-fest-canarias-2026-en-lanzarote-playa-honda-hamburguesas/",
-   "s": "Mass Cultura",
-   "d": "2026-09-14T11:59:32.000Z",
+   "t": "Turismo de Tenerife y Basque Culinary Center ofrecen una docena de cursos de cocina presenciales y online",
+   "u": "https://www.diariodetenerife.info/turismo-de-tenerife-y-basque-culinary-center-ofrecen-docena-cursos-cocina/",
+   "s": "diariodetenerife.info",
+   "d": "2026-09-14T11:36:15.000Z",
    "tags": [
     "CANARIAS"
    ],
-   "img": "https://www.masscultura.com/wp-content/uploads/2026/09/Las-Mellizas-Dj.jpg"
-  },
-  {
-   "t": "Un restaurante de México gana el Concurso Internacional de Paellas de Sueca",
-   "u": "https://www.excelenciasgourmet.com/es/noticias/restaurante-mexico-concurso-paellas-de-sueca",
-   "s": "Excelencias Gourmet",
-   "d": "2026-09-14T11:47:37.000Z",
-   "tags": [
-    "ALTA COCINA"
-   ],
-   "img": "https://static.excelenciasgourmet.com/cdn/ff/9zBQALNnAwFsrdbEgRsI_GdWkYsZN8cm9tkjNGE4FG0/1789373285/public/articulos/2026-09/concurso-paellas-ganador.jpg"
+   "img": "https://www.diariodetenerife.info/wp-content/uploads/2026/09/Basque-Culinary-Center-3.jpg"
   },
   {
    "t": "Fonda Alcalá, el único restaurante de Teruel que entra en la Guía Michelin 2026",
@@ -147,6 +178,16 @@
     "MICHELIN"
    ],
    "img": "https://www.enjoyzaragoza.es/wp-content/uploads/2026/09/fonda.jpg"
+  },
+  {
+   "t": "Un restaurante de México gana el Concurso Internacional de Paellas de Sueca",
+   "u": "https://www.excelenciasgourmet.com/es/noticias/restaurante-mexico-concurso-paellas-de-sueca",
+   "s": "excelenciasgourmet.com",
+   "d": "2026-09-14T11:00:00.000Z",
+   "tags": [
+    "ALTA COCINA"
+   ],
+   "img": "https://static.excelenciasgourmet.com/cdn/ff/9zBQALNnAwFsrdbEgRsI_GdWkYsZN8cm9tkjNGE4FG0/1789373285/public/articulos/2026-09/concurso-paellas-ganador.jpg"
   },
   {
    "t": "Lanzarote reúne a los mejores sabores y sonidos de Canarias en el Burger Fest Canarias",
@@ -243,7 +284,7 @@
   {
    "t": "El restaurante en el pueblo más bonito de Teruel, premiado por Michelin por sus raciones desde 8,50 euros: “Una pequeña joya escondida”",
    "u": "https://www.infobae.com/espana/2026/09/14/el-restaurante-en-el-pueblo-mas-bonito-de-teruel-premiado-por-michelin-por-sus-raciones-desde-850-euros-una-pequena-joya-escondida/",
-   "s": "Infobae",
+   "s": "infobae.com",
    "d": "2026-09-14T04:00:00.000Z",
    "tags": [
     "MICHELIN"
@@ -257,46 +298,8 @@
    "d": "2026-09-13T18:15:03.000Z",
    "tags": [
     "CANARIAS"
-   ]
-  },
-  {
-   "t": "El restaurante Morralla de Palma cocina la mejor paella de España",
-   "u": "https://www.diariodemallorca.es/sociedad/2026/09/13/restaurante-morralla-palma-cocina-mejor-134247913.html",
-   "s": "Diario de Mallorca",
-   "d": "2026-09-13T18:06:47.000Z",
-   "tags": [
-    "ALTA COCINA"
    ],
-   "img": "https://estaticos-cdn.prensaiberica.es/clip/590b3690-3369-4c5c-b6b0-6b0ec9409eae_16-9-discover-aspect-ratio_default_0_x743y211.jpg"
-  },
-  {
-   "t": "Comen, se van sin pagar y hasta piden las sobras en este restaurante de Canarias",
-   "u": "https://www.laprovincia.es/canarias/2026/09/13/comen-pagar-piden-sobras-restaurante-134247916.html",
-   "s": "La Provincia",
-   "d": "2026-09-13T18:00:16.000Z",
-   "tags": [
-    "CANARIAS"
-   ]
-  },
-  {
-   "t": "El actor contó que sus excompañeros le advirtieron que nombrar técnicamente un plato ante los chefs era el error más común entre los participantes, y que esa sola decisión podía determinar el resultado de la evaluación",
-   "u": "https://www.facebook.com/infobaecolombia/posts/el-actor-cont%C3%B3-que-sus-excompa%C3%B1eros-le-advirtieron-que-nombrar-t%C3%A9cnicamente-un-p/1535780175231406/",
-   "s": "facebook.com",
-   "d": "2026-09-13T17:23:03.000Z",
-   "tags": [
-    "ALTA COCINA"
-   ]
-  },
-  {
-   "t": "El espectáculo de drones que unió las ocho islas de Canarias para formar Tenerife en Los Realejos",
-   "u": "https://www.eldia.es/tenerife/2026/09/13/ocho-islas-canarias-unen-cielo-134242705.html",
-   "s": "Eldía",
-   "d": "2026-09-13T15:58:53.000Z",
-   "tags": [
-    "VINO",
-    "CANARIAS"
-   ],
-   "img": "https://estaticos-cdn.prensaiberica.es/clip/b6d1afd3-e78d-4d3c-903e-c6d6bbd9f482_16-9-discover-aspect-ratio_default_0_x642y433.jpg"
+   "img": "https://estaticos-cdn.prensaiberica.es/clip/45106de1-006c-4008-96d7-d3cad25eb39b_16-9-aspect-ratio_default_1506545.jpg"
   }
  ]
 }
