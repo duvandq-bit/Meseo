@@ -1,0 +1,471 @@
+{
+ "venue": "mb",
+ "titulo": "Sala M.B.",
+ "subtitulo": "Manual de procedimientos y pasos del servicio",
+ "actualizado": "enero de 2026",
+ "fuente": "Manual de procedimientos M.B. 2026 · Pasos de servicio M.B. enero 2026",
+ "intro": "M.B. es un restaurante dentro del hotel Ritz-Carlton Abama, asesorado por Martín Berasategui y el chef Erlantz Gorostiza. Nuestro objetivo es representar con total excelencia la cocina de Martín Berasategui y transportar felicidad a nuestros clientes. Actualmente el restaurante tiene dos estrellas Michelin y una de nuestras principales metas es llegar a la tercera. Para ello necesitamos tu máxima implicación. Esto no quiere decir que siempre se deba actuar de esta manera, ya que dependemos de nuestra capacidad de empatizar con el cliente para adecuar el mejor servicio para él. Pero será de gran ayuda para saber actuar en las diferentes situaciones que se presentan.",
+ "secciones": [
+  {
+   "id": "antes",
+   "icon": "🕑",
+   "chip": "Antes",
+   "t": "Antes del servicio",
+   "sub": "llegada, sala y mise en place",
+   "pasos": [
+    {
+     "n": null,
+     "t": "Llegada al restaurante",
+     "d": "Llegamos a la planta número 2 accediendo por el aparcamiento al restaurante ya uniformados para la mise en place, con nuestro name tag, tarjeta de fichaje y herramientas de trabajo. Aproximadamente a las 14:00.",
+     "lista": [
+      "Herramientas: abridor, mechero, guantes blancos y limpios.",
+      "Buscamos nuestro checklist para hacer las tareas que nos tocan esta semana.",
+      "En caso de dudas recurrimos a un superior para que nos ayude."
+     ]
+    },
+    {
+     "n": null,
+     "t": "Distribución de la sala",
+     "d": "La sala está distribuida en cinco espacios: tres rangos, el sector de snacks y un reservado.",
+     "lista": [
+      "Rangos 1, 2 y 3: en el salón principal. Aquí están las 26 mesas y es donde se desarrolla la parte principal de la experiencia.",
+      "Sector de snacks: separado del resto y con sillones. Los clientes empiezan la experiencia aquí con los snacks y aperitivos, y la terminan aquí con los mignardises, café, infusiones y digestivos.",
+      "Reservado: sala separada para grupos especiales. Cuando se usa, forma parte del rango 3.",
+      "Según las reservas del día y el planning de servicio los rangos se modifican: en lugar de tres podemos tener dos o incluso uno."
+     ]
+    },
+    {
+     "n": null,
+     "t": "Mise en place",
+     "d": "La hacemos con la mayor eficacia y eficiencia posibles, de acuerdo con los checklist de apertura.",
+     "lista": [
+      "Al terminar nuestras tareas, repasamos que no quede nada por hacer y pasamos a ayudar a los compañeros con las suyas.",
+      "Terminada la MEP de todo el restaurante, revisamos que no quedara ninguna tarea sin hacer o mal hecha.",
+      "Después vamos a comer y, ya cambiados, hay line up pre-servicio. A las 18:00 hay que estar listos: arreglados y con el uniforme puesto.",
+      "Últimos detalles antes del servicio: cubitera con hielo y botellas de champagne, bebidas del sector de snacks, etc."
+     ]
+    }
+   ]
+  },
+  {
+   "id": "pasos",
+   "icon": "📋",
+   "chip": "Servicio",
+   "t": "Los 36 pasos del servicio",
+   "sub": "de abrir puertas a la despedida",
+   "pasos": [
+    {
+     "n": 1,
+     "t": "Se abren puertas a las 18:15",
+     "d": "Depende de la temporada. Una vez que toda la mise en place esté terminada y revisada."
+    },
+    {
+     "n": 2,
+     "t": "La hostess recibe al cliente",
+     "d": "Siempre tratando de utilizar su nombre y el idioma que corresponda: para eso tenemos la hoja de reservas. Confirmamos que los clientes son efectivamente los que tenemos marcados en esa franja horaria.",
+     "lista": [
+      "Ya sentados en su mesa, la hostess confirmará las alergias, intolerancias o preferencias, de las cuales ya tenemos información.",
+      "Si tienen decidido un menú también lo confirmará; si no, se les facilitará una copia del menú a cada persona en el idioma correspondiente.",
+      "Dará la información al camarero encargado del sector y al maître.",
+      "Completará su planilla: en qué mesa de aperitivos se sentó el cliente y a qué hora llegó al restaurante.",
+      "Completará el ticket de aperitivo —n.º de mesa, n.º de pax, alergias, intolerancias, preferencias— y lo enviará rápidamente a cocina para que comience el servicio."
+     ],
+     "frases": [
+      {
+       "es": "Señores X, bienvenidos a M.B., soy X, acompáñenme por favor."
+      },
+      {
+       "es": "Comenzaremos en nuestro salón de aperitivos tomando unos snacks a la vez que escogen el menú."
+      }
+     ]
+    },
+    {
+     "n": 3,
+     "t": "Entra el ayudante de sommelier",
+     "d": "Se presenta mientras entrega la carta de aperitivos y la de vino, y pregunta por el aperitivo. Si corresponde sirve aperitivos, o va a la barra a preparar un cóctel.",
+     "frases": [
+      {
+       "es": "¿Le/s apetece comenzar con un aperitivo? A mí particularmente me gusta comenzar con…"
+      }
+     ]
+    },
+    {
+     "n": 4,
+     "t": "Marcar la mesa para el primer aperitivo",
+     "d": "El jefe de este sector o su ayudante marcan la mesa con un posacuchara y una cuchara de bronce."
+    },
+    {
+     "n": 5,
+     "t": "Llega el primer snack",
+     "d": "Ofrecemos los snacks a los clientes y pasamos a servir la gelatina siguiendo el protocolo, explicando en qué consiste."
+    },
+    {
+     "n": 6,
+     "t": "ATENCIÓN: empezamos a descifrar si el cliente es zurdo",
+     "d": "Desde este momento podemos empezar a detectarlo. En caso de detectarlo debemos confirmarlo según el documento de procedimientos y apuntarlo en la comanda."
+    },
+    {
+     "n": 7,
+     "t": "Se recoge la gelatina",
+     "d": "En cuanto se termine."
+    },
+    {
+     "n": 8,
+     "t": "Segundo snack",
+     "d": "A los 3 minutos de salir la gelatina, cocina envía automáticamente el segundo snack. Lo colocamos y lo explicamos."
+    },
+    {
+     "n": 9,
+     "t": "El maître toma la comanda",
+     "d": "Haciendo las recomendaciones correspondientes. Informa al sommelier y reparte las copias, en las que se incluye el idioma en que habla la mesa y el número de mesa que ocupará en el salón principal."
+    },
+    {
+     "n": 10,
+     "t": "El camarero mete la comanda en el sistema",
+     "d": "Y prepara la muletilla para abrir la mesa. El ayudante buscará la bandeja con el servicio necesario para iniciar la mesa."
+    },
+    {
+     "n": 11,
+     "t": "El sommelier toma la orden de vino",
+     "d": "Luego informa a los jefes de rango de qué beberá la mesa."
+    },
+    {
+     "n": 12,
+     "t": "Últimos aperitivos",
+     "d": "A los 3 minutos salen automáticamente los últimos aperitivos, «Tartaleta» y «Tortilla». En este punto brindamos el oshibori a los clientes."
+    },
+    {
+     "n": 13,
+     "t": "Listos para pasar al salón principal",
+     "d": "El maître informa al camarero para que los busque."
+    },
+    {
+     "n": 14,
+     "t": "El camarero avisa al ayudante",
+     "d": "El ayudante buscará a los clientes, y el camarero tomará nota de la hora en su planilla."
+    },
+    {
+     "n": 15,
+     "t": "El camarero invita a los clientes al salón principal",
+     "d": "Acompañamos a los comensales a la mesa y, si corresponde, les ayudamos a sentarse. Mientras encendemos la vela para marcar que ya hemos comenzado la mesa, preguntamos por el agua. El ayudante busca las servilletas y se las da a los clientes mientras el camarero busca el agua.",
+     "frases": [
+      {
+       "es": "Buenas tardes/noches, mi nombre es X y junto a mi compañero/a X seremos sus camareros/as. Estoy aquí para invitarles a continuar con la cena en el comedor, si me acompañan, por favor. ¿Cómo estuvo el inicio de la experiencia?"
+      },
+      {
+       "es": "¿Les gustaron los aperitivos?"
+      },
+      {
+       "es": "¿Señores, beberán agua con gas o sin gas esta noche?"
+      }
+     ]
+    },
+    {
+     "n": 16,
+     "t": "El sommelier sirve el vino",
+     "d": "Si corresponde. De aquí en adelante debemos estar atentos a que no falte agua ni vino en ningún momento. Mientras, el ayudante prepara los panes y mantequillas."
+    },
+    {
+     "n": 17,
+     "t": "El ayudante sirve el pan y las mantequillas"
+    },
+    {
+     "n": 18,
+     "t": "Se marcha en cocina",
+     "d": "Por medio del sistema, y se marca la mesa para el plato que toque."
+    },
+    {
+     "n": 19,
+     "t": "Un camarero por cliente",
+     "d": "El servicio de mesa, tanto para servir como para recoger, se hace con un camarero por cliente: entrando a la vez y retirando también a la vez."
+    },
+    {
+     "n": 20,
+     "t": "El maître pregunta entre el primer y el segundo plato",
+     "d": "Cómo viene todo hasta el momento."
+    },
+    {
+     "n": 21,
+     "t": "Desmigado",
+     "d": "Durante el servicio desmigamos siempre que sea necesario, y un mínimo de tres veces durante el menú degustación."
+    },
+    {
+     "n": 22,
+     "t": "Seguimos marchando los platos",
+     "d": "Según lo que ordenó la mesa, con estas prioridades:",
+     "lista": [
+      "Antes de marchar debemos estar seguros de que la mesa no tiene maridaje y de que efectivamente terminó de comer.",
+      "Marchamos siempre antes de levantar.",
+      "Una vez marchada la mesa, la prioridad es levantar los platos sucios, desmigar y/o tapar manchas y marcar, a la vez que nos aseguramos de que no falta agua, vino ni pan.",
+      "Esto se repite hasta llegar a los postres.",
+      "En cuanto los clientes terminen con la mantequilla preguntamos si desean más; si no quieren más, la retiramos."
+     ]
+    },
+    {
+     "n": 23,
+     "t": "El último plato antes de los postres",
+     "d": "Al retirarlo quitamos también los platos de pan, las copas vacías y todo lo que sobre en la mesa para poder prepararla a postres. Siempre dejando los vasos de agua y las copas de vino que aún se utilicen."
+    },
+    {
+     "n": 24,
+     "t": "Preparamos a postres",
+     "lista": [
+      "Retiramos las servilletas.",
+      "Desmigamos.",
+      "Tapamos manchas.",
+      "Colocamos servilletas de color."
+     ]
+    },
+    {
+     "n": 25,
+     "t": "Se acerca el carro de quesos",
+     "d": "Para ofrecerlos antes de pasar a los postres, y aprovechamos para ofrecer una copa de vino tanto para los quesos como para los postres."
+    },
+    {
+     "n": 26,
+     "t": "Hablamos con el sommelier para servir el vino",
+     "d": "Si corresponde."
+    },
+    {
+     "n": 27,
+     "t": "Si toman quesos",
+     "d": "Marchamos quesos para que salga pan, marcamos y servimos."
+    },
+    {
+     "n": 28,
+     "t": "Retiramos los quesos",
+     "d": "En caso de haberlos tomado, y desmigamos."
+    },
+    {
+     "n": 29,
+     "t": "Marchamos pre-postre y postre",
+     "d": "Y marcamos."
+    },
+    {
+     "n": 30,
+     "t": "Servimos los postres"
+    },
+    {
+     "n": 31,
+     "t": "Volvemos al primer área",
+     "d": "Terminado el postre y retirados los platos, preguntamos a los clientes cómo fue la experiencia hasta el momento y les indicamos que debemos volver al primer área para terminar la experiencia. ATENCIÓN: todos los clientes tienen incluidos los mignardises.",
+     "frases": [
+      {
+       "es": "Señores, ¿cómo fue la experiencia hasta el momento? Si es de su agrado podemos volver a nuestro salón contiguo, donde podremos finalizar la experiencia con un snack dulce."
+      }
+     ]
+    },
+    {
+     "n": 32,
+     "t": "Todo cargado en el sistema",
+     "d": "Antes de que la mesa pase al sector de aperitivos, el camarero a su cargo se encarga de que todo esté cargado en el sistema para que la hostess pueda entregar la cuenta cuando el cliente lo requiera."
+    },
+    {
+     "n": 33,
+     "t": "La cuenta",
+     "d": "Cuando el cliente la solicite, la hostess verifica que se cargaron todos los ítems, aplica los descuentos correspondientes y procede a entregarla."
+    },
+    {
+     "n": 34,
+     "t": "Los acompañamos al sector de aperitivos",
+     "d": "Si corresponde, y marchamos."
+    },
+    {
+     "n": 35,
+     "t": "En el sector de aperitivos",
+     "d": "Los encargados de este sector intentarán vender todo lo posible —café, infusiones, licores y copa— en este orden:",
+     "lista": [
+      "Se acerca el camarero y ofrece café o infusiones. En caso positivo, los pide a un food runner o a alguien que pueda hacerlo.",
+      "Mientras esperan el café o la infusión, el camarero se acerca con el carro de bocados dulces y, si lo desean, los sirve.",
+      "Aquí se vuelve a acercar el ayudante de sommelier con el carro de digestivos y los ofrece.",
+      "Si lo creemos oportuno podemos ofrecer también una copa para terminar. Por ejemplo, un gin-tonic."
+     ]
+    },
+    {
+     "n": 36,
+     "t": "La despedida",
+     "d": "Cordial y sincera, utilizando el nombre del huésped, esperando que haya sido una experiencia memorable y que hayamos colmado sus deseos, expresados y no expresados."
+    }
+   ]
+  },
+  {
+   "id": "durante",
+   "icon": "🤲",
+   "chip": "En sala",
+   "t": "Procedimientos en sala",
+   "sub": "servilletas, marcaje, pan, desmigado, postres",
+   "pasos": [
+    {
+     "n": null,
+     "t": "Servilletas",
+     "lista": [
+      "Cuando los clientes toman asiento en el sector de snacks debemos darles sus servilletas, desde una bandeja y con unas pinzas. Prioridad a las mujeres y luego a los hombres.",
+      "También les colocamos servilletas blancas al pasar al rango 1, 2 o 3, para la segunda parte de la experiencia.",
+      "En el salón principal las colocamos con guantes blancos y pidiendo permiso a los clientes, entrando por la derecha y dando prioridad a las mujeres; las colocamos sobre sus piernas con la mano derecha.",
+      "Las cambiamos cada vez que un cliente se retira de la mesa, y si notamos que está muy sucia también ofrecemos cambiarla.",
+      "Para cambiarla: retiramos la servilleta sucia cogiéndola de una esquina con delicadeza, la llevamos al contenedor y colocamos una nueva como la primera vez.",
+      "Al volver al sector de snacks para los mignardises, colocamos otra vez servilleta.",
+      "Muchas veces las servilletas terminan en el suelo; otras, los clientes las dejan caer para probarnos. Debemos retirarlas lo antes posible y darles una nueva. Suelen ser clientes que vuelven a dejarlas caer, así que hay que estar atentos."
+     ]
+    },
+    {
+     "n": null,
+     "t": "Marcaje de cubiertos",
+     "d": "Marcamos los tenedores y las cucharas cara abajo. Nuestra explicación es que hace tiempo los nobles llevaban vestimentas ostentosas y grandes con las que enganchaban los cubiertos y los tiraban.",
+     "lista": [
+      "Debemos estar atentos desde que el cliente llega para descifrar si es zurdo.",
+      "Podemos empezar observando cómo cogen las copas de aperitivo, y la cuchara del primer snack.",
+      "En cuanto detectemos que la persona es zurda, lo confirmamos en el siguiente marcaje: nos acercamos con los cubiertos preparados y preguntamos educadamente.",
+      "Si lo confirma, marcamos como zurdo, pasamos la información a los compañeros y lo apuntamos en la comanda.",
+      "DIESTROS: cuchillo por la derecha y luego cuchara. Tenedor por la izquierda.",
+      "ZURDOS · cuchillo y tenedor: cuchillo izquierda, tenedor derecha.",
+      "ZURDOS · cuchara y tenedor: cuchara izquierda, tenedor derecha.",
+      "ZURDOS · cuchara, cuchillo y tenedor: cuchara y tenedor derecha, cuchillo izquierda."
+     ],
+     "frases": [
+      {
+       "es": "¿Perdone, es usted zurdo?",
+       "en": "Excuse me, are you left-handed?",
+       "fr": "Excuse moi, vous etes gaucher?",
+       "revisar": "fr"
+      }
+     ]
+    },
+    {
+     "n": null,
+     "t": "Servicio de pan y mantequillas",
+     "d": "Primero confirmamos que los clientes no tengan alergias o intolerancias; si las hay, hacemos las modificaciones correspondientes.",
+     "lista": [
+      "Preparamos el servicio: crujiente (1 por pax), mantequilla (1 plato por cada 2 pax) y botella de aceite.",
+      "En caso de alergia al gluten, frutos secos, etc.: 1 mantequilla por pax, botella de aceite y panera o paneras según el caso. Lo acercamos al apoyo más próximo a la mesa que corresponda.",
+      "En el carro de pan preparamos los platos de pan necesarios y nos acercamos a la mesa.",
+      "Presentamos el crujiente y las mantequillas primero y, mientras lo explicamos, buscamos el aceite para terminar la explicación sirviéndolo.",
+      "Explicamos los tipos de pan que tenemos y preguntamos cuáles desearía tomar cada persona; cortamos los trozos necesarios y los servimos en cada plato, aportando datos sobre la procedencia de las materias primas y la elaboración.",
+      "DATO: todos nuestros panes se elaboran en casa, con fermentaciones largas como antiguamente, de 20 a 72 horas. Las harinas son ecológicas, molturadas con el grano entero, y vienen del norte de la isla (trigo barbilla o barbillo) y de Zamora.",
+      "Cuando terminamos de preparar los platos llamamos a un compañero y los servimos, para terminar marcando las palas de mantequilla correspondientes.",
+      "REFILL: tendremos una panera preparada en nuestra estación, en la que cortaremos una selección de nuestros panes, y la usaremos exclusivamente para esto.",
+      "Al ofrecer el pan lo hacemos con la panera en la mano izquierda y la pinza en la derecha, acercando la panera al cliente por la izquierda para que vea mejor la variedad. Si es una pareja podemos mostrarla por el medio de ambos, para que la vean a la vez y ganar tiempo.",
+      "Si la persona no quiere más pan, retiramos el plato.",
+      "CAMBIAR PLATOS: cada vez que notemos que el plato está muy sucio lo cambiamos por uno limpio y servimos más pan. Retiramos el sucio con la mano izquierda por la izquierda, y colocamos el nuevo por la izquierda con la mano izquierda.",
+      "Con las mantequillas y el aceite igual. Si desean más aceite, volvemos a poner un poco con la botella. Si desean más mantequilla, retiramos el plato y hacemos otro quenelle con mantequilla y plato nuevos. Si no quieren más, retiramos el plato."
+     ],
+     "frases": [
+      {
+       "es": "¿Puede ser un poco más de pan?",
+       "en": "Would you like more bread?",
+       "fr": "Peut etre un peu plus de pain?",
+       "revisar": "fr"
+      },
+      {
+       "es": "¿Puede ser un poco más de mantequilla / aceite?",
+       "en": "Would you like more butter / olive oil?",
+       "fr": "Peut etre un peu plus de beurre / huile de olive?",
+       "revisar": "fr"
+      }
+     ]
+    },
+    {
+     "n": null,
+     "t": "Desmigado",
+     "d": "Usamos un guante en la mano derecha, por si necesitamos mover un plato, copa o vaso que incomode el desmigado. Con el plato y el desmigador nos acercamos a la mesa, pedimos permiso y desmigamos con delicadeza y agilidad.",
+     "lista": [
+      "IMPORTANTE: si el cliente escogió menú clásico o degustación, desmigamos al menos tres veces durante todo el menú."
+     ]
+    },
+    {
+     "n": null,
+     "t": "Acompañar a los clientes",
+     "d": "Siempre que acompañemos a un cliente —a la salida, a los servicios o a cualquier otra parte— lo acompañamos y luego esperamos a que el cliente nos pierda de vista para retomar nuestras tareas. Lo hacemos por si podemos asistirle con algún problema de último momento."
+    },
+    {
+     "n": null,
+     "t": "Colocar y recoger platos",
+     "d": "Cuando vamos a aproximarnos a una mesa debemos observar: si podemos entrar, por dónde entrar, si tenemos que esperar a nuestros compañeros. Hay que prever todo lo que puede suceder.",
+     "lista": [
+      "Dos personas tomadas de las manos, hablando muy cerca: entramos por la derecha de la primera y por la izquierda de la siguiente para no molestarles. En este caso es mejor saltarse el protocolo.",
+      "Una persona tiene los cubiertos bien colocados sobre el plato y la otra los tiene repartidos: creamos tiempo para nuestro compañero, acomodamos poco a poco los cubiertos, nos movemos con menos velocidad y terminamos a la vez que él.",
+      "Al colocar platos: podemos colocar directamente, pero nuestro compañero quizá tenga que mover antes una copa, un plato o pedir permiso. Ganamos tiempo: no nos abalanzamos a la mesa, esperamos un poco por detrás y colocamos el plato a la vez.",
+      "Mesa muy grande con las mujeres muy lejos una de otra: siempre habrá quien tenga que recorrer más distancia. Adecuamos nuestros movimientos para llegar todos al mismo tiempo. Llegar y quedarse esperando también se ve mal.",
+      "Vamos a retirar platos y de repente una persona vuelve a comer: no nos acercamos, y si ya estamos en camino desviamos la trayectoria disimuladamente para que el cliente no note el error.",
+      "Nos acercamos y el cliente decide beber: esperamos un momento, y si estamos en camino adecuamos la marcha para recoger a la vez."
+     ]
+    },
+    {
+     "n": null,
+     "t": "Cambio a postres",
+     "lista": [
+      "Nos aseguramos de que la mesa está recogida.",
+      "Retiramos las servilletas blancas.",
+      "Nos colocamos un guante en la mano menos hábil y con la otra usamos el desmigador, con cuidado, agilidad y elegancia.",
+      "Colocamos servilletas naranjas.",
+      "Aquí se acerca el carro de quesos, para preguntar si desean tomarlos o seguir con los postres.",
+      "Marcamos postres, o quesos si los toman."
+     ],
+     "frases": [
+      {
+       "es": "Perdón, vamos a cambiar las servilletas para los postres.",
+       "en": "Excuse me, we are going to change the napkings for the desserts.",
+       "fr": "On va changie le servillet pour le dessert.",
+       "revisar": "en,fr"
+      }
+     ]
+    },
+    {
+     "n": null,
+     "t": "Servicios",
+     "d": "Debemos observar cuándo se levanta un cliente y buscar su mirada para ofrecerle ayuda. Seguramente necesita que le indiquemos los servicios. Con delicadeza nos acercamos y preguntamos. Si desean ir al baño los acompañamos a la puerta, desde ella indicamos qué sentido deben tomar y esperamos a que el cliente entre.",
+     "frases": [
+      {
+       "es": "¿Desea pasar a los servicios? — Por aquí por favor. A la izquierda para las damas, a la derecha los caballeros.",
+       "en": "Would you like to go to the restroom? — This way please. On the left (damas), on the rigth (caballeros).",
+       "fr": "Voulez-vous aller aux toilettes? — Par ici sil vous plait. A gauche (damas), a droiute (caballeros).",
+       "revisar": "en,fr"
+      }
+     ]
+    },
+    {
+     "n": null,
+     "t": "Consejos",
+     "d": "Siempre que nos pregunten algo y no estemos seguros de la respuesta diremos «un momento por favor» y buscaremos a alguien que pueda resolver la duda del cliente. NUNCA INVENTAREMOS RESPUESTAS.",
+     "lista": [
+      "Un cliente pregunta si su plato lleva cierto alérgeno y no lo sabemos: le pedimos un momento para asegurarnos de que puede comer su plato sin problemas y vamos rápido a resolverlo con el jefe de ese rango; si no está, con el maître o directamente con cocina.",
+      "Nos preguntan un ingrediente o una técnica que desconocemos: pedimos por favor un momento y acudimos a un superior.",
+      "Nos preguntan sobre el vino y no sabemos lo que pide el cliente: le pedimos un momento y le decimos que llamaremos al sommelier, que podrá aclarar sus dudas mejor.",
+      "Nos preguntan el porqué de alguno de nuestros procedimientos —cómo entregamos las servilletas, cómo colocamos los cubiertos, cómo nos movemos por la sala— y no estamos seguros al cien por cien: pedimos un momento y buscamos a un superior.",
+      "Estar sonrientes, ágiles, inteligentes, y buscar la mirada de nuestros compañeros todo el tiempo para que la comunicación fluya y cada día nos entendamos mejor sin tener que hablar.",
+      "Nunca abandonamos bandejas con platos: siempre pasamos la información a quien corresponda y luego nos retiramos."
+     ],
+     "frases": [
+      {
+       "es": "Un momento, por favor."
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "cierre",
+   "icon": "🌙",
+   "chip": "Cierre",
+   "t": "Cierre y salida",
+   "sub": "lo que queda cuando se va el último cliente",
+   "pasos": [
+    {
+     "n": null,
+     "t": "Cierre del restaurante",
+     "d": "Seguimos los checklist de cierre y usamos el sentido común para las tareas que surgen y no están contempladas en ellos. El cierre es igual de importante que la apertura y el servicio: si no lo hacemos bien tendremos más trabajo al día siguiente y dejaremos de hacer tareas necesarias para que el servicio salga perfecto. Es importante no relajarse aquí y seguir concentrados: no sólo haremos un mejor cierre, sino que además será más rápido."
+    },
+    {
+     "n": null,
+     "t": "Salida",
+     "d": "Antes de irnos revisamos que todas nuestras tareas se hicieron correctamente y que no queda nada por hacer.",
+     "lista": [
+      "Revisado esto, pedimos autorización del maître para marcharnos.",
+      "Dejamos las partes del uniforme que se lavan en lavandería en los cubos destinados a ello.",
+      "Salimos del hotel por la puerta de personal, pasando por seguridad. Si llevamos bolsos, los mostramos al equipo de seguridad antes de salir."
+     ]
+    }
+   ]
+  }
+ ]
+}

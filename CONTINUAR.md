@@ -1,17 +1,30 @@
 # Por dónde seguir
 
-Estado a **11 de septiembre de 2026** · versión **7.441** · 333 pruebas en verde ·
+Estado a **12 de septiembre de 2026** · versión **7.447** · 342 pruebas en verde ·
 auditoría de alérgenos 0/0.
 
 ---
 
 ## 🔴 Lo único que bloquea algo ahora mismo
 
-**M.B. no puede abrir hasta que cocina conteste las diecisiete preguntas.**
+**M.B. no puede abrir hasta que cocina conteste las treinta y cuatro preguntas.**
 
-Su carta sigue en `docs/carta-mb-borrador.json`, fuera de `data/`, porque en
-diecisiete platos la ficha declara un alérgeno y no dice de dónde sale. La
-lista está en `docs/mb-preguntas-cocina.md`, lista para reenviar.
+Su carta sigue en `docs/carta-mb-borrador.json`, fuera de `data/`. Ya son **34
+fichas**: los 13 platos del degustación y la carta, los 7 de panes y
+mantequillas, los 10 vegetarianos y los 4 del menú infantil. En veintinueve casos la ficha declara un
+alérgeno y no dice de dónde sale; en cuatro pasa lo contrario, y ésos son los
+que corren prisa:
+
+- el **ponzu** de la Remolacha se hace con katsuobushi (bonito) y el plato no
+  declara Pescado ni Soja — y está en la carta **vegetariana**;
+- las notas del **Puerro** dicen que el crujiente es de apio, y el plato no
+  declara Apio;
+- el **Apionabo** es raíz de apio, con crema de apio, y tampoco lo declara;
+- en el **menú infantil**, la pasta fresca (huevo), el parmesano de la pasta
+  (lactosa) y la mayonesa que se ofrece con las patatas (huevo).
+
+La lista completa está en `docs/mb-preguntas-cocina.md`, y el documento para
+que cocina lo rellene, en `docs/MB-preguntas-cocina.docx`.
 
 Mientras tanto **la cuenta de administración sí entra a M.B.**, con la carta
 vacía, para poder revisar el carro de quesos (48, ya cargado). Un restaurante
@@ -227,9 +240,19 @@ vuelve a estar abierta.
 | La carta de Txoko | dentro de `index.html`: `DISHES`, `DISHES_EN`, `DISH_COMPONENTS`, `DISH_ACTIONS` (172 KB) |
 | La carta de otro restaurante | `data/carta-<id>.json` — ver `docs/carta-nuevo-restaurante.md` |
 | Restaurantes, colores y nombres | `data/themes.json` |
-| Ingredientes → alérgenos | `data/ingredients.json` (468 entradas) |
+| Ingredientes → alérgenos | `data/ingredients.json` (543 entradas) |
 | Vinos | `data/wines.json` es la bodega de **Txoko**; otro restaurante trae `data/wines-<id>.json`. Sin archivo, no hay pestaña de Vinos |
-| La carta de M.B. | `docs/carta-mb-borrador.json` — borrador, fuera de `data/` a propósito |
+| La carta de M.B. | `docs/carta-mb-borrador.json` — borrador, fuera de `data/` a propósito. 34 fichas |
+| Sala y procedimientos de M.B. | `data/procedimientos-mb.json` — pestaña **Sala**, sale sólo donde existe el archivo. La fuente sin tocar, en `docs/mb-procedimientos-fuente.md` |
+| El registro de actividad | tabla `actividad` en Supabase + `registrarActividad()`. **Las 14 actividades con resultado escriben ahí.** Vocabulario CERRADO de 6 competencias, repetido en la base y en el cliente a propósito |
+| Qué NO cuenta como formación | `kind='juego'`. Los juegos van sin competencia: es lo que impide que entren en una nota. `scores` tenía 254 marcadores de partida de 427 filas |
+| `scores` | **sigue recibiendo**, y el panel actual sigue leyéndola. Las dos conviven hasta que el panel nuevo esté probado (fase 3) |
+| Los avisos flotantes | se anclan MIDIENDO la cabecera y la navegación (`_avisosAnclar`). Nunca por encima del menú |
+| El encabezado de pantalla | un `h1` en el armazón, `#tituloPantalla`, que `showTab` rellena. No se pinta: nombra la pantalla para el lector |
+| Contraste de color | medido tres veces sin resultado fiable: ver `docs/contraste-fase0.md`. Se cierra con pares de color fijos en el sistema de diseño |
+| El examen de sala | no tiene preguntas escritas: `_salaGenerar()` las saca del manual. Si cambias el manual, cambia el examen. El guard MIDE que no se contesten por longitud, posición ni eco |
+| El turno almuerzo/cena | tabla `DISH_SERVICE`, que **viaja con la carta**. Una carta sin turnos no enseña el selector |
+| El marcaje (cubertería) | campo `marcaje` de cada plato de la carta. Txoko no lo tiene y no se inventa: sin campo, no se pinta el bloque |
 | El acuerdo de confidencialidad | `data/nda.json` — **apagado** (`"activo": false`) |
 | El acuerdo con el restaurante | `docs/acuerdo-restaurante-borrador.md` — no se enseña en la app |
 | El PIN por restaurante | `supabase/supervisor_pin_por_restaurante.sql` — aplicado el 11 sep |
@@ -237,7 +260,10 @@ vuelve a estar abierta.
 | Permisos de columna | `supabase/permisos_columnas_empleados.sql` — **si añades una columna a `_EMP_COLS`, concédela ahí** |
 
 No se toca la carta sin dato del propietario. **Nunca se inventa un plato, un
-ingrediente, un vino ni un estándar.**
+ingrediente, un vino ni un estándar.** Eso incluye las frases que el camarero
+dice en mesa: el manual de M.B. trae erratas en su inglés y su francés, y se
+enseñan tal cual, marcadas como pendientes de revisar. Corregirlas sería
+ponerle a su equipo un guion que el restaurante no ha escrito.
 
 ---
 
@@ -245,12 +271,14 @@ ingrediente, un vino ni un estándar.**
 
 ### Del propietario — datos
 
-- [ ] **M.B.: diecisiete preguntas para cocina.** La carta ya está transcrita
-      en `docs/carta-mb-borrador.json`, pero en diecisiete casos la ficha de
-      cocina declara un alérgeno y no dice de dónde sale. La lista, lista para
-      reenviar, está en `docs/mb-preguntas-cocina.md`. **Hasta que se
-      contesten, la carta no puede pasar a `data/` — el guard de CI lo
-      impide, y hace bien.**
+- [ ] **M.B.: treinta y cuatro preguntas para cocina.** Las 34 fichas están
+      transcritas en `docs/carta-mb-borrador.json`, pero en 29 casos la ficha
+      de cocina declara un alérgeno y no dice de dónde sale, y en 4 pasa lo
+      contrario (ponzu con bonito en la Remolacha, apio sin declarar en el
+      Puerro y en el Apionabo). La lista está en `docs/mb-preguntas-cocina.md`
+      y el documento para rellenar en `docs/MB-preguntas-cocina.docx`.
+      **Hasta que se contesten, la carta no puede pasar a `data/` — el guard
+      de CI lo impide, y hace bien.**
 - [ ] **[121] Ensalada vegetariana mixta** — su ficha entera es «Hojas verdes,
       Verduras de temporada, Vinagre, Aceite». No enseña nada.
 - [ ] **[46] la miel** — el plato promete «VEGAN adaptable» y la comanda no

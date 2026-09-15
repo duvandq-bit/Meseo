@@ -1258,6 +1258,9 @@ body::after{
   display:flex;align-items:center;padding:env(safe-area-inset-top,0px) 1.75rem 0;gap:1rem;
 }
 .header-logo{
+  /* Zona de toque de 44 px (auditoría sep 2026). El texto conserva su tamaño;
+     lo que crece es la caja, que cabe de sobra en los 56 px de cabecera. */
+  display:flex;align-items:center;min-height:44px;
   font-family:'Cinzel',serif;font-size:1.15rem;font-weight:700;
   letter-spacing:.18em;color:#fff;text-transform:uppercase;
   flex-shrink:0;text-shadow:0 1px 3px rgba(0,0,0,.15);
@@ -1282,6 +1285,7 @@ body::after{
 }
 .header-uname{font-size:.8rem;color:rgba(255,255,255,.9);font-weight:400;max-width:90px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .btn-logout{
+  display:inline-flex;align-items:center;justify-content:center;min-height:44px;min-width:44px;
   background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);border-radius:var(--r3);
   padding:.3rem .7rem;font-family:'Quicksand',sans-serif;font-size:.7rem;
   color:rgba(255,255,255,.9);cursor:pointer;transition:all .2s;letter-spacing:.04em;
@@ -1651,10 +1655,11 @@ body::after{
   .header-uname{display:none}
   .app-header #helpBtn{margin-right:0!important;padding:6px 7px!important}
   .app-header #appLangEs,.app-header #appLangEn{padding:6px 6px!important}
-  .app-header #notifBell{min-width:32px!important;min-height:32px!important;padding:4px!important}
+  .app-header #notifBell{min-width:32px!important;min-height:44px!important;padding:4px!important}
   .btn-logout{padding:.35rem .45rem;font-size:.6rem}
 }
 @media (max-width:400px){
+  .app-header #ajustesBtn{min-width:32px!important;min-height:44px!important}
   /* Android estrecho (Galaxy S20 = 360px CSS): la fila de botones desbordaba
      y "Salir" se cortaba. Compresión agresiva del clúster derecho para que
      TODO quepa con margen hasta 320px. */
@@ -1662,10 +1667,10 @@ body::after{
   .header-logo{font-size:.82rem;max-width:22vw;letter-spacing:.06em}
   .header-logo sup{display:none}
   .header-user{gap:.2rem}
-  .app-header #helpBtn{padding:5px 4px!important;min-width:26px!important}
-  .app-header #appLangEs,.app-header #appLangEn{padding:5px 4px!important}
-  .app-header #pushEnableBtn{padding:4px 4px!important;min-width:26px!important}
-  .app-header #notifBell{min-width:28px!important;min-height:28px!important;padding:3px!important}
+  .app-header #helpBtn{padding:5px 4px!important;min-width:26px!important;min-height:44px!important}
+  .app-header #appLangEs,.app-header #appLangEn{padding:5px 4px!important;min-width:36px!important;min-height:44px!important}
+  .app-header #pushEnableBtn{padding:4px 4px!important;min-width:26px!important;min-height:44px!important}
+  .app-header #notifBell{min-width:28px!important;min-height:44px!important;padding:3px!important}
   .header-avatar{width:26px!important;height:26px!important}
   .btn-logout{padding:.28rem .38rem;font-size:.55rem}
 }
@@ -1674,7 +1679,7 @@ body::after{
   .app-header{padding-left:.3rem;padding-right:.3rem;gap:.18rem}
   .header-logo{font-size:.76rem;max-width:20vw;letter-spacing:.04em}
   .header-user{gap:.15rem}
-  .app-header #helpBtn{padding:5px 3px!important;min-width:24px!important}
+  .app-header #helpBtn{padding:5px 3px!important;min-width:24px!important;min-height:44px!important}
   .app-header #appLangEs,.app-header #appLangEn{padding:5px 3px!important;font-size:.55rem!important}
   .btn-logout{padding:.26rem .32rem;font-size:.52rem}
 }
@@ -8410,7 +8415,7 @@ body:has(#gsOverlay.open) .txk-sync-pill{
 /* GPU badge */
 .ml-gpu-badge { position:absolute;bottom:6px;left:6px;z-index:10;font-family:'DM Mono',monospace;font-size:.45rem;color:rgba(196,154,60,.6);letter-spacing:.5px;pointer-events:none; }
 /* ═══ TOAST NOTIFICATIONS ═══ */
-.txk-toast-container{position:fixed;top:env(safe-area-inset-top,12px);left:50%;transform:translateX(-50%);z-index:10002;display:flex;flex-direction:column;gap:.5rem;pointer-events:none;width:min(380px,90vw)}
+.txk-toast-container{position:fixed;top:var(--avisos-top,calc(120px + env(safe-area-inset-top,0px)));left:50%;transform:translateX(-50%);z-index:10002;display:flex;flex-direction:column;gap:.5rem;pointer-events:none;width:min(380px,90vw)}
 .txk-toast{pointer-events:auto;display:flex;align-items:center;gap:.6rem;padding:.65rem 1rem;border-radius:10px;font-family:'Quicksand',sans-serif;font-size:.78rem;line-height:1.4;color:#fff;box-shadow:0 8px 32px rgba(0,0,0,.25);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);animation:toastIn .35s ease both;cursor:pointer;transition:opacity .2s}
 .txk-toast.out{animation:toastOut .3s ease forwards}
 .txk-toast-icon{font-size:1.1rem;flex-shrink:0}
@@ -9699,6 +9704,10 @@ body.chat-open .sound-toggle{ display:none !important; }
 .empl-ov-nophoto svg{width:64px;height:64px;opacity:.55}
 .empl-ov-note{margin-top:.55rem;padding:.5rem .7rem;background:rgba(196,154,60,.06);border-left:2px solid var(--gold-a);
   border-radius:0 8px 8px 0;font-size:.68rem;color:var(--parch2);line-height:1.5;text-align:left}
+/* Marcaje: la cubertería que lleva el plato. Sólo aparece en las cartas que
+   lo traen — la de Txoko no lo tiene. */
+.empl-ov-marc{margin-top:.55rem;padding:.5rem .7rem;background:rgba(77,138,94,.07);border-left:2px solid rgba(77,138,94,.45);
+  border-radius:0 8px 8px 0;font-size:.68rem;color:var(--parch2);line-height:1.5;text-align:left}
 .empl-ov-ficha{width:100%;margin-top:.7rem;min-height:42px;border-radius:11px;cursor:pointer;
   background:var(--gold);border:none;color:#1c1508;font-family:'Quicksand',sans-serif;font-weight:700;font-size:.78rem}
 /* Recorrido guiado = acción SECUNDARIA (outline): la ficha rápida es lo primario */
@@ -9747,6 +9756,42 @@ body.chat-open .sound-toggle{ display:none !important; }
   white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .hoy-numrow-meta{font-family:'DM Mono',monospace;font-size:.75rem;letter-spacing:.1em;color:var(--gold-deep);flex-shrink:0}
 .hoy-numrow-meta.ok{color:var(--parch4)}
+
+/* ═══ EL PLAN DE HOY — fase 2, sep 2026 ═══
+   Tres filas como mucho. Sin paleta nueva: los mismos tokens de oro y
+   pergamino que el resto del inicio, y el mismo alto de toque (52 px) que las
+   filas numeradas de debajo, para que no haya dos tamaños de fila en la misma
+   pantalla. */
+.plan-hoy{border:1px solid rgba(196,154,60,.28);border-radius:var(--r3);
+  background:rgba(196,154,60,.045);padding:.7rem .75rem .3rem;margin:0 0 .9rem}
+.plan-hoy-cab{display:flex;align-items:flex-start;gap:.6rem}
+.plan-hoy-cab-tx{flex:1;min-width:0}
+.plan-hoy-eyebrow{font-family:'DM Mono',monospace;font-size:.62rem;letter-spacing:.18em;
+  text-transform:uppercase;color:var(--gold);opacity:.85}
+.plan-hoy-resumen{font-family:'Quicksand',sans-serif;font-size:.8rem;color:var(--parch3);margin-top:.15rem}
+.plan-hoy-prog{flex-shrink:0;font-family:'Cinzel',serif;color:var(--gold-deep);line-height:1}
+.plan-hoy-prog b{font-size:1.4rem;font-weight:700}
+.plan-hoy-prog span{font-size:.8rem;opacity:.65}
+.plan-hoy-barra{height:3px;border-radius:2px;background:rgba(196,154,60,.16);margin:.55rem 0 .1rem;overflow:hidden}
+.plan-hoy-barra i{display:block;height:100%;background:var(--gold);transition:width .35s ease}
+.plan-hoy-lista{list-style:none;margin:0;padding:0}
+.plan-hoy-vacio .plan-hoy-resumen{margin-top:.3rem}
+.plan-tarea{display:flex;align-items:center;gap:.7rem;width:100%;min-height:52px;padding:.55rem .1rem;
+  background:transparent;border:none;border-bottom:1px solid rgba(196,154,60,.14);cursor:pointer;text-align:left}
+.plan-hoy-lista li:last-child .plan-tarea{border-bottom:none}
+.plan-tarea:active{background:rgba(196,154,60,.06)}
+.plan-tarea-marca{flex-shrink:0;width:22px;height:22px;border-radius:50%;display:flex;align-items:center;
+  justify-content:center;border:1px solid rgba(196,154,60,.45);font-family:'DM Mono',monospace;
+  font-size:.66rem;color:var(--gold)}
+.plan-tarea-cuerpo{flex:1;min-width:0}
+.plan-tarea-t{display:block;font-family:'Quicksand',sans-serif;font-size:.88rem;font-weight:700;
+  color:var(--parchment);line-height:1.25}
+.plan-tarea-m{display:block;font-size:.7rem;color:var(--parch4);line-height:1.3;margin-top:.1rem}
+.plan-tarea-min{flex-shrink:0;font-family:'DM Mono',monospace;font-size:.66rem;letter-spacing:.08em;color:var(--gold-deep)}
+.plan-tarea-go{flex-shrink:0;font-family:'Cinzel',serif;font-size:.95rem;color:rgba(196,154,60,.7)}
+.plan-tarea.hecha .plan-tarea-marca{border-color:var(--sage);color:var(--sage)}
+.plan-tarea.hecha .plan-tarea-t{text-decoration:line-through;opacity:.55}
+.plan-tarea.hecha .plan-tarea-m,.plan-tarea.hecha .plan-tarea-min{opacity:.5}
 
 /* ═══ LINE UP — ritual de antes del servicio (fase 2, jul 2026) ═══ */
 .lu-list{border-top:1px solid rgba(196,154,60,.14)}
@@ -10066,6 +10111,83 @@ body, .screen{ min-height: 100vh; min-height: 100dvh; }
 }
 .q-vacio{ text-align: center; padding: 2rem 1rem; color: var(--parch3); font-size: .82rem; }
 
+/* ── Sala: los procedimientos del restaurante ────────────────────────────
+   Se lee de pie y con prisa, en mitad del servicio. Por eso el número del
+   paso canta, las frases que hay que DECIR van resaltadas y separadas del
+   resto, y la lista de detalles queda por debajo del titular. */
+/* La introducción del manual está, pero plegada: quien abre Sala en mitad del
+   servicio busca un paso, no el texto de bienvenida. */
+.pr-intro{
+  border: 1px solid var(--line2); border-radius: var(--r2);
+  background: rgba(196,154,60,.05); margin-bottom: .6rem;
+}
+.pr-intro summary{
+  cursor: pointer; list-style: none; min-height: 40px;
+  display: flex; align-items: center; padding: .5rem .75rem;
+  font-family: 'DM Mono', monospace; font-size: .6rem; letter-spacing: .08em;
+  text-transform: uppercase; color: var(--gold-deep);
+}
+.pr-intro summary::-webkit-details-marker{ display: none; }
+.pr-intro summary::after{ content: '▾'; margin-left: auto; font-size: .8rem; }
+.pr-intro[open] summary::after{ content: '▴'; }
+.pr-intro p{
+  margin: 0; padding: 0 .75rem .75rem;
+  font-family: 'Quicksand', sans-serif; font-size: .76rem; line-height: 1.6; color: var(--parch2);
+}
+.pr-sec{
+  font-family: 'DM Mono', monospace; font-size: .55rem; letter-spacing: .12em;
+  text-transform: uppercase; color: var(--gold-deep);
+  margin: .9rem 0 .35rem; padding-bottom: .2rem; border-bottom: 1px solid var(--line2);
+}
+.pr-card{
+  border: 1px solid var(--line2); border-radius: var(--r);
+  padding: .8rem .9rem; margin-bottom: .5rem;
+  background: linear-gradient(155deg, #faf6ee, #f0e8d8);
+}
+.pr-card header{ display: flex; align-items: baseline; gap: .55rem; }
+.pr-card h3{ font-family: 'Cinzel', serif; font-size: .95rem; margin: 0; color: var(--parchment); line-height: 1.3; }
+.pr-n{
+  font-family: 'DM Mono', monospace; font-size: .68rem; font-weight: 700;
+  color: var(--gold-deep); background: rgba(196,154,60,.14);
+  border: 1px solid rgba(196,154,60,.3); border-radius: 7px;
+  min-width: 1.65rem; padding: .1rem .3rem; text-align: center; flex: none;
+}
+.pr-d{
+  font-family: 'Quicksand', sans-serif; font-size: .78rem; line-height: 1.6;
+  color: var(--parch2); margin: .45rem 0 0;
+}
+.pr-lista{ margin: .5rem 0 0; padding-left: 1.05rem; }
+.pr-lista li{
+  font-family: 'Quicksand', sans-serif; font-size: .76rem; line-height: 1.55;
+  color: var(--parch2); margin-bottom: .3rem;
+}
+.pr-frase{
+  margin-top: .55rem; padding: .5rem .7rem;
+  background: rgba(45,106,62,.07); border-left: 2px solid rgba(45,106,62,.45);
+  border-radius: 0 8px 8px 0;
+}
+.pr-fr-l{
+  font-family: 'Quicksand', sans-serif; font-size: .76rem; line-height: 1.5;
+  color: var(--parch2); display: flex; gap: .45rem; align-items: baseline;
+}
+.pr-fr-l + .pr-fr-l{ margin-top: .25rem; }
+.pr-fr-l span{
+  font-family: 'DM Mono', monospace; font-size: .52rem; letter-spacing: .08em;
+  color: #2d6a3e; flex: none; min-width: 1.3rem;
+}
+/* El idioma que viene con erratas en el manual: se enseña, pero no se da por
+   bueno. Corregirlo sería inventarle un guion al restaurante. */
+.pr-fr-l.rev{ color: var(--parch3); font-style: italic; }
+.pr-fr-l.rev span{ color: #b0432b; }
+.pr-fr-rev{
+  margin-top: .35rem; font-family: 'Quicksand', sans-serif; font-size: .66rem;
+  line-height: 1.45; color: #b0432b;
+}
+.pr-fuente{
+  font-family: 'DM Mono', monospace; font-size: .55rem; letter-spacing: .06em;
+  color: var(--parch4); text-align: center; margin: 1.2rem 0 .5rem;
+}
+
 /* ── Pantallas de Acciones del panel (código de acceso, cuentas) ──────────
    Acciones es para HACER: botones grandes, estado siempre visible y ninguna
    fila estrecha — el panel se abre de pie, con el móvil en una mano. */
@@ -10138,3 +10260,70 @@ body, .screen{ min-height: 100vh; min-height: 100dvh; }
 .sup-td-n{ color: var(--parchment); font-weight:600; position:sticky; left:0;
   background: linear-gradient(90deg,#f7f2e7 88%,rgba(247,242,231,0)); }
 .sup-td-d{ color: var(--parch4); font-size:.62rem; }
+
+/* ── Examen de sala ──────────────────────────────────────────────────────
+   Las preguntas salen del manual del restaurante, así que la pantalla vive
+   dentro de Sala y se lee igual: de pie y con el pulgar. */
+.pr-ex-lanza{
+  width: 100%; min-height: 52px; margin-bottom: .6rem;
+  display: flex; align-items: center; gap: .6rem; text-align: left;
+  padding: .7rem .9rem; cursor: pointer;
+  background: linear-gradient(155deg, #faf6ee, #f0e8d8);
+  border: 1px solid var(--gold-a); border-radius: var(--r);
+  font-family: 'Quicksand', sans-serif; font-size: .82rem; font-weight: 700; color: var(--gold-deep);
+}
+.pr-ex-lanza-go{ margin-left: auto; font-size: 1.2rem; opacity: .6; }
+.pr-ex-top{
+  display: flex; justify-content: space-between; gap: .5rem;
+  font-family: 'DM Mono', monospace; font-size: .55rem; letter-spacing: .1em;
+  text-transform: uppercase; color: var(--parch3); margin-bottom: .4rem;
+}
+.pr-ex-barra{ height: 4px; background: rgba(28,42,34,.08); border-radius: 3px; overflow: hidden; margin-bottom: .9rem; }
+.pr-ex-barra div{ height: 100%; background: var(--gold); transition: width .25s; }
+.pr-ex-q{
+  font-family: 'Cinzel', serif; font-size: 1rem; line-height: 1.35;
+  color: var(--parchment); margin-bottom: .6rem;
+}
+.pr-ex-ctx{
+  padding: .7rem .85rem; margin-bottom: .8rem;
+  background: rgba(196,154,60,.06); border-left: 2px solid var(--gold-a);
+  border-radius: 0 8px 8px 0;
+  font-family: 'Quicksand', sans-serif; font-size: .82rem; line-height: 1.6; color: var(--parch2);
+}
+.pr-ex-op{
+  width: 100%; min-height: 48px; margin-bottom: .45rem; cursor: pointer;
+  display: flex; align-items: center; gap: .7rem; text-align: left;
+  padding: .7rem .85rem; background: rgba(255,255,255,.6);
+  border: 1px solid var(--line2); border-radius: var(--r2);
+  font-family: 'Quicksand', sans-serif; font-size: .84rem; line-height: 1.45; color: var(--parch2);
+}
+.pr-ex-op:active{ background: rgba(196,154,60,.12); }
+.pr-ex-op span{
+  flex: none; width: 1.5rem; height: 1.5rem; border-radius: 50%;
+  display: grid; place-items: center;
+  background: rgba(196,154,60,.14); color: var(--gold-deep);
+  font-family: 'DM Mono', monospace; font-size: .65rem; font-weight: 700;
+}
+.pr-ex-expl{
+  margin: .6rem 0 .8rem; padding: .6rem .8rem;
+  border: 1px solid var(--line2); border-radius: var(--r2);
+  font-family: 'Quicksand', sans-serif; font-size: .8rem; line-height: 1.5; color: var(--parch2);
+}
+.pr-ex-sig{
+  width: 100%; min-height: 48px; margin-bottom: .5rem; cursor: pointer;
+  background: var(--gold); border: none; border-radius: var(--r2); color: #1c1508;
+  font-family: 'Quicksand', sans-serif; font-weight: 700; font-size: .84rem;
+}
+.pr-ex-salir{
+  width: 100%; min-height: 44px; cursor: pointer;
+  background: transparent; border: 1px solid var(--line2); border-radius: var(--r2);
+  font-family: 'DM Mono', monospace; font-size: .62rem; letter-spacing: .06em; color: var(--parch3);
+}
+
+/* Sólo para lectores de pantalla: ocupa su sitio en el árbol de accesibilidad
+   y ninguno en la pantalla. Se usa para el encabezado de cada pantalla, que no
+   se pinta porque los títulos visibles se quedan como estaban. */
+.solo-lectores{
+  position:absolute; width:1px; height:1px; padding:0; margin:-1px;
+  overflow:hidden; clip:rect(0 0 0 0); clip-path:inset(50%); white-space:nowrap; border:0;
+}
