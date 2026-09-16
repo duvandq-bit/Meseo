@@ -9165,10 +9165,10 @@ const _pinEnvio = await (async () => {
     let cuerpo = null, ruta = null;
     const fakeFetch = (u, o) => { ruta = u; cuerpo = JSON.parse(o.body);
       return Promise.resolve({ ok: true, json: () => Promise.resolve(true) }); };
-    const F = new Function('USE_SERVER_PIN_VERIFY','SUPA_URL','SUPA_KEY','fetch', // eslint-disable-line no-new-func
+    const F = new Function('USE_SERVER_PIN_VERIFY','SUPA_URL','SUPA_KEY','fetch','_bearer', // eslint-disable-line no-new-func
       '_venueActual','dbgw','hashPin','SUP_PIN_HASH',
       src + '; return verifySupervisorPin;')(
-      true, 'https://x', 'k', fakeFetch, () => actual, () => {}, () => '', '');
+      true, 'https://x', 'k', fakeFetch, () => 'k', () => actual, () => {}, () => '', '');
     return F('1234', venue).then(() => ({ cuerpo, ruta }));
   };
   return { explicito: await llamar('mb', 'txoko'), pordefecto: await llamar(undefined, 'txoko') };
@@ -10098,11 +10098,12 @@ const _actRes = await (async () => {
   const i1 = html.indexOf('async function supaInsertScore');
   if (i0 === -1 || i1 <= i0) return { roto: 'no encuentro el registro de actividad' };
   const enviados = [];
-  const F = new Function('SUPA_URL','SUPA_KEY','_esAdmin','currentUser','_vSello','dbgw','fetch', // eslint-disable-line no-new-func
+  const F = new Function('SUPA_URL','SUPA_KEY','_esAdmin','currentUser','_vSello','dbgw','fetch','_bearer', // eslint-disable-line no-new-func
     html.slice(i0, i1) + '; return { registrar: registrarActividad, deTema: competenciaDeTema };');
   const api = (esAdmin) => F('https://x', 'k', () => esAdmin, 'Ana',
     o => Object.assign({ venue: 'txoko' }, o), () => {},
-    (url, opts) => { enviados.push({ url, cuerpo: JSON.parse(opts.body) }); return Promise.resolve({ ok: true }); });
+    (url, opts) => { enviados.push({ url, cuerpo: JSON.parse(opts.body), auth: (opts.headers||{}).Authorization }); return Promise.resolve({ ok: true }); },
+    () => 'clave-anon');
   const a = api(false);
   const o = { temas: {}, rechazadas: [] };
 
@@ -10256,12 +10257,12 @@ const _diarioRes = await (async () => {
   const getEmp = (n) => (fichas[n] = fichas[n] || { name: n });
   let M;
   try {
-    M = new Function('SUPA_URL', 'SUPA_KEY', '_esAdmin', 'currentUser', '_vSello', 'dbgw', 'fetch', // eslint-disable-line no-new-func
+    M = new Function('SUPA_URL', 'SUPA_KEY', '_esAdmin', 'currentUser', '_vSello', 'dbgw', 'fetch', '_bearer', // eslint-disable-line no-new-func
       'getEmp', 'todayStr', 'saveDB', 'DISHES', '_venueActual', '_haySala', '_hayVinos', '_VENUE_POR_DEFECTO',
       html.slice(i0, i1) +
       '; return { registrar: registrarActividad, datosDeHoy, planDeHoyDe, planDeHoy };'
     )('https://x', 'k', () => admin, 'Ana', o => Object.assign({ venue: 'txoko' }, o), () => {},
-      (...a) => red(...a), getEmp, () => hoy, () => { guardados++; return true; },
+      (...a) => red(...a), () => 'clave-anon', getEmp, () => hoy, () => { guardados++; return true; },
       [{ id: 1 }, { id: 2 }, { id: 3 }], () => 'txoko',
       new Map([['txoko', false]]), new Map([['txoko', true]]), 'txoko');
   } catch (e) { return { roto: 'no compila: ' + e.message }; }
@@ -10736,13 +10737,13 @@ const _authRes = await (async () => {
     const almacenTardio = nuevoAlmacen();
     const montar = (sb, alm) => new Function('supabase', 'SUPA_URL', 'SUPA_KEY', 'fetch', 'localStorage', 'dbgw', // eslint-disable-line no-new-func
       html.slice(i0, i1) +
-      '; return { _authSesionEntrar, _authSesionSalir, _authSesionEnSegundoPlano,' +
+      '; return { _authSesionEntrar, _authSesionSalir, _authSesionEnSegundoPlano, _bearer,' +
       '           uid: () => _authUid, empleado: () => _authEmpleado };'
     )(sb, 'https://falso.test', 'clave-anon', fetchFalso, alm,
       (...a) => reg.logs.push(a.map(String).join(' ')));
     const M = new Function('supabase', 'SUPA_URL', 'SUPA_KEY', 'fetch', 'localStorage', 'dbgw', // eslint-disable-line no-new-func
       html.slice(i0, i1) +
-      '; return { _authSesionEntrar, _authSesionSalir, _authSesionEnSegundoPlano,' +
+      '; return { _authSesionEntrar, _authSesionSalir, _authSesionEnSegundoPlano, _bearer,' +
       '           uid: () => _authUid, empleado: () => _authEmpleado };'
     )(supabaseFalso, 'https://falso.test', 'clave-anon', fetchFalso, almacen,
       (...a) => reg.logs.push(a.map(String).join(' ')));
@@ -10858,6 +10859,16 @@ const _authPruebas = await (async () => {
   r.canceladaEnDisco = Object.keys(almacen).filter(k => k.indexOf('meseo-auth') === 0).length;
   void enVuelo;
 
+  // FASE A · la cabecera Authorization de las peticiones a la base de datos
+  await M._authSesionSalir();
+  r.bearerSinSesion = M._bearer();
+  almacen.setItem('txoko_session', JSON.stringify({ user: 'Sol', hash, ts: Date.now() }));
+  esc.modo = 'ok'; esc.empleado = 'Sol'; esc.uid = 'uid-sol';
+  limpiar(); await M._authSesionEntrar('Sol', hash);
+  r.bearerConSesion = M._bearer();
+  await M._authSesionSalir();
+  r.bearerTrasSalir = M._bearer();
+
   r.logs = reg.logs.slice();
   return r;
 })();
@@ -10959,6 +10970,61 @@ test('salir mientras la sesión está en vuelo la cancela', () => {
   assert(_authPruebas.cancelada === 0,
     `se estableció una sesión después de salir (${_authPruebas.cancelada} llamadas)`);
   assert(_authPruebas.canceladaEnDisco === 0, 'quedó token guardado tras salir en mitad de la petición');
+});
+
+test('sin sesión, las peticiones siguen yendo con la clave anónima', () => {
+  assert(_authPruebas.bearerSinSesion === 'clave-anon',
+    `esperaba la clave anónima, llegó ${String(_authPruebas.bearerSinSesion).slice(0,20)}`);
+});
+
+test('con sesión, las peticiones llevan el token de quien ha entrado', () => {
+  assert(_authPruebas.bearerConSesion === _authRes.TOKEN,
+    'la cabecera no lleva el access_token de la sesión');
+  assert(_authPruebas.bearerConSesion !== 'clave-anon', 'sigue yendo la clave anónima');
+});
+
+test('al salir, la cabecera vuelve a la clave anónima', () => {
+  assert(_authPruebas.bearerTrasSalir === 'clave-anon',
+    'el token del anterior sobrevive en la cabecera');
+});
+
+test('todas las llamadas a /rest/v1 mandan el token, y sólo ésas', () => {
+  // Para cada cabecera Authorization se mira a qué destino pertenece.
+  const L = html.split('\n');
+  let restConToken = 0, restSinToken = [], otrosConToken = [];
+  for (let i = 0; i < L.length; i++) {
+    const conToken = L[i].includes('Bearer ${_bearer()}');
+    const conAnon  = L[i].includes('Bearer ${SUPA_KEY}');
+    if (!conToken && !conAnon) continue;
+    // El destino es el de la URL MÁS CERCANA hacia arriba, no una cualquiera
+    // de la ventana: la subida de una foto de plato tiene un fetch a Storage
+    // tres líneas por encima de un fetch a REST, y mirar «la ventana entera»
+    // clasificaba el segundo como Storage.
+    let destino = '?';
+    for (let j = i; j >= Math.max(0, i - 14); j--) {
+      const m = L[j].match(/\/(rest|storage|functions)\/v1\//);
+      if (m) { destino = m[1]; break; }
+    }
+    const storage = destino === 'storage';
+    const rest    = destino === 'rest';
+    if (rest && conToken) restConToken++;
+    else if (rest && conAnon) restSinToken.push(i + 1);
+    else if (conToken) otrosConToken.push(i + 1);
+  }
+  assert(restConToken >= 50, `sólo ${restConToken} llamadas REST mandan el token`);
+  assert(restSinToken.length === 0,
+    'quedan llamadas REST con la clave anónima en las líneas ' + restSinToken.join(','));
+  // Storage tiene sus propias políticas y las Edge Functions no lo necesitan:
+  // mandarles un token de usuario sería un cambio de comportamiento gratis.
+  assert(otrosConToken.length === 0,
+    'Storage o Edge Functions han recibido el token sin hacer falta: ' + otrosConToken.join(','));
+});
+
+test('el token en memoria se mantiene al día por onAuthStateChange', () => {
+  assert(/onAuthStateChange\(\(_evento, sesion\) => \{[\s\S]{0,120}_authToken =/.test(html),
+    'nada actualiza _authToken cuando el cliente renueva el token solo');
+  assert(/_authSesionSalir\(marcaPropia\)\{[\s\S]{0,400}_authToken = null/.test(html),
+    'salir no limpia el token en memoria');
 });
 
 test('ni un token ni un PIN llegan a los registros', () => {
