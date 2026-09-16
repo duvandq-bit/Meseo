@@ -8773,9 +8773,13 @@ test('Acceso: ninguna consulta cruza de un restaurante a otro', () => {
   assert(fugas.length === 0,
     `consultas sin filtro de restaurante: ${fugas.slice(0, 6).join(' · ')}`);
   // Y lo que se escribe queda sellado, o el filtro de mañana no lo encuentra.
+  // FASE C-2: los dos de `scores` ya no lo sella el cliente — lo pone el
+  // servidor con `DEFAULT app.venue_actual()`. El invariante no cambia; cambia
+  // quién lo cumple, y `_cuerpoPropio` es el que garantiza que se cumple
+  // siempre: con sesión lo pone el servidor, sin sesión lo pone él.
   for (const marca of [
-    "_vSello({ employee, score: record, total: 1, topic: 'txoko'",
-    "_vSello({ employee, score: secs, total: orders, topic: 'elturno'",
+    "_cuerpoPropio({ score: record, total: 1, topic: 'txoko'",
+    "_cuerpoPropio({ score: secs, total: orders, topic: 'elturno'",
     '_vSello({ target, message, type, read: false })',
     '_vSello({ employee: me, room: CHAT_ROOM })',
     '_vSello({ challenger: fromUser, challenged: toUser,',
@@ -9596,6 +9600,10 @@ test('Multi-restaurante: ninguna consulta se escapa del filtro de restaurante', 
     }
     const ok = /_vq\(\)/.test(lineas[i])
             || /_vSello\(/.test(bloque)
+            // FASE C-2: `scores` y `actividad` sellan por `_cuerpoPropio`, que
+            // o manda el restaurante (sin sesión) o deja que lo ponga el
+            // servidor por DEFAULT (con sesión). Las dos ramas sellan.
+            || /_cuerpoPropio\(/.test(bloque)
             || selladaFuera
             || PORCLAVE.test(lineas[i])
             || /method: *'DELETE'/.test(bloque)
@@ -10148,13 +10156,17 @@ const _actRes = await (async () => {
   const i1 = html.indexOf('async function supaInsertScore');
   if (i0 === -1 || i1 <= i0) return { roto: 'no encuentro el registro de actividad' };
   const enviados = [];
-  const F = new Function('SUPA_URL','SUPA_KEY','_esAdmin','currentUser','_vSello','dbgw','fetch','_bearer', // eslint-disable-line no-new-func
-    html.slice(i0, i1) + '; return { registrar: registrarActividad, deTema: competenciaDeTema };');
-  const api = (esAdmin) => F('https://x', 'k', () => esAdmin, 'Ana',
-    o => Object.assign({ venue: 'txoko' }, o), () => {},
+  // FASE C-2: el registrador ya no sella el restaurante. Se inyecta el
+  // `_cuerpoPropio` REAL —no una imitación— junto con su `_authToken`, para
+  // poder medir las dos ramas: con sesión y sin ella.
+  const F = new Function('SUPA_URL','SUPA_KEY','_esAdmin','currentUser','_venueActual','dbgw','fetch','_bearer','_tok', // eslint-disable-line no-new-func
+    'let _authToken = _tok;\n' + _xFn('_cuerpoPropio') + '\n'
+    + html.slice(i0, i1) + '; return { registrar: registrarActividad, deTema: competenciaDeTema };');
+  const api = (esAdmin, tok) => F('https://x', 'k', () => esAdmin, 'Ana',
+    () => 'txoko', () => {},
     (url, opts) => { enviados.push({ url, cuerpo: JSON.parse(opts.body), auth: (opts.headers||{}).Authorization }); return Promise.resolve({ ok: true }); },
-    () => 'clave-anon');
-  const a = api(false);
+    () => tok || 'clave-anon', tok || null);
+  const a = api(false, 'jwt-de-ana');
   const o = { temas: {}, rechazadas: [] };
 
   for (const tm of ['alergenos','allergens','mixed','ingredients','history','protocolo','cutlery','sala','vinos'])
@@ -10166,6 +10178,13 @@ const _actRes = await (async () => {
   o.peticiones = enviados.length;
   o.url = enviados[0] && enviados[0].url;
   o.cuerpo = enviados[0] && enviados[0].cuerpo;
+
+  // La otra rama. Sin sesión el nombre y el restaurante SÍ viajan: el servidor
+  // no tiene identidad que poner, y perder la fila sería peor que mandarlos.
+  enviados.length = 0;
+  await api(false, null).registrar({ activity:'examen', competency:'carta', kind:'evaluacion',
+    score:8, total:10, seconds:240 });
+  o.cuerpoSinSesion = enviados[0] && enviados[0].cuerpo;
 
   for (const [caso, arg] of [
     ['competencia en otro idioma', { activity:'x', competency:'allergens', kind:'evaluacion', score:1, total:1 }],
@@ -10184,7 +10203,7 @@ const _actRes = await (async () => {
   o.juegoCuerpo = enviados[0] && enviados[0].cuerpo;
 
   enviados.length = 0;
-  o.admin = await api(true).registrar({ activity:'examen', competency:'carta', kind:'evaluacion', score:1, total:1 });
+  o.admin = await api(true, 'jwt-admin').registrar({ activity:'examen', competency:'carta', kind:'evaluacion', score:1, total:1 });
   o.adminSalio = enviados.length;
 
   enviados.length = 0;
@@ -10213,8 +10232,16 @@ test('Registro de actividad: todas las actividades escriben, y con el mismo voca
   assert(e.valida === true, 'una evaluación válida tiene que registrarse');
   assert(e.peticiones === 1, `tiene que salir una petición, salieron ${e.peticiones}`);
   assert(/\/rest\/v1\/actividad$/.test(e.url), 'tiene que escribir en la tabla actividad');
-  assert(e.cuerpo.venue === 'txoko', 'toda fila lleva su restaurante: es el aislamiento de siempre');
-  assert(e.cuerpo.employee === 'Ana' && e.cuerpo.activity === 'examen' && e.cuerpo.competency === 'carta'
+  // FASE C-2. El invariante «toda fila lleva su restaurante» sigue en pie; lo
+  // que cambia es quién lo cumple. Con sesión lo pone el servidor por DEFAULT,
+  // así que en el cuerpo NO puede viajar. Sin sesión lo sigue poniendo el
+  // cliente, porque el servidor no tiene de dónde sacarlo y la alternativa es
+  // perder la fila. Las dos ramas se miden.
+  assert(e.cuerpo.venue === undefined && e.cuerpo.employee === undefined,
+    'con sesión, la identidad la pone el servidor y no puede viajar en el cuerpo: ' + JSON.stringify(e.cuerpo));
+  assert(e.cuerpoSinSesion && e.cuerpoSinSesion.venue === 'txoko' && e.cuerpoSinSesion.employee === 'Ana',
+    'sin sesión el sello lo pone el cliente; quitarlo antes de que exista la cola de B2 perdería la fila');
+  assert(e.cuerpo.activity === 'examen' && e.cuerpo.competency === 'carta'
          && e.cuerpo.kind === 'evaluacion' && e.cuerpo.score === 8 && e.cuerpo.total === 10
          && e.cuerpo.seconds === 240, 'el cuerpo no es el esperado: ' + JSON.stringify(e.cuerpo));
 
@@ -11425,6 +11452,162 @@ test('el reset de PIN ya no escribe la ficha de otro', () => {
   const bloque = html.slice(i, i + 900);
   assert(!/supaUpsertEmployee\(name\)|_sincronizarFicha\(name\)/.test(bloque),
     'el reset no puede escribir la ficha de otro empleado');
+});
+
+// ─── FASE C-2 · el cliente no manda identidad semántica ─────────
+//
+// Se ejecutan los CUATRO escritores reales de `scores` y `actividad` con un
+// `fetch` de mentira que captura el cuerpo. No se comprueba el texto del
+// fichero: se comprueba el JSON que saldría por el cable. Si alguien vuelve a
+// meter `employee` en un objeto literal, estas pruebas caen.
+console.log('\nFase C-2 — identidad del servidor');
+const _c2 = await (async () => {
+  const cap = [];
+  const M = new Function('capturar', `  // eslint-disable-line no-new-func
+    let _authToken = null;
+    const SUPA_URL = 'https://ejemplo', SUPA_KEY = 'clave-anon';
+    let currentUser = 'Ana';
+    const TIPOS_ACTIVIDAD = ['evaluacion','practica','juego'];
+    const COMPETENCIAS = ['alergenos','carta','vinos','protocolo','sala','servicio'];
+    const dbgw = () => {};
+    const _esAdmin = (n) => n === 'Administrador';
+    const _venueActual = () => 'txoko';
+    const _bearer = () => _authToken || SUPA_KEY;
+    const _anotarEnDiario = () => {};
+    const fetch = (url, opt) => { capturar(url, JSON.parse(opt.body), opt.headers); return Promise.resolve({ ok: true }); };
+    ${_xFn('_cuerpoPropio')}
+    async ${_xFn('registrarActividad')}
+    async ${_xFn('supaInsertScore')}
+    async ${_xFn('supaInsertTxokoRecord')}
+    async ${_xFn('supaInsertEtRecord')}
+    return {
+      token(t){ _authToken = t; },
+      quien(n){ currentUser = n; },
+      registrarActividad, supaInsertScore, supaInsertTxokoRecord, supaInsertEtRecord
+    };
+  `)((url, body, headers) => cap.push({ url, body, headers }));
+
+  const correr = async () => {
+    await M.registrarActividad({ activity:'simulacro_alergenos', competency:'alergenos',
+      kind:'evaluacion', score:18, total:20, seconds:240, meta:{ cat:'all' } });
+    await M.supaInsertScore({ score:18, total:20, topic:'alergenos', cat:'all', time:240 }, 'Ana');
+    await M.supaInsertTxokoRecord('Ana', 900);
+    await M.supaInsertEtRecord('Ana', 120, 7);
+  };
+
+  M.token('jwt-de-ana'); cap.length = 0; await correr();
+  const conSesion = cap.slice();
+
+  M.token(null); cap.length = 0; await correr();
+  const sinSesion = cap.slice();
+
+  // La cuenta de administración no debe escribir en ningún caso.
+  M.token('jwt-admin'); M.quien('Administrador'); cap.length = 0;
+  await M.registrarActividad({ activity:'examen', competency:'carta', kind:'evaluacion', score:1, total:1 });
+  await M.supaInsertScore({ score:1, total:1, topic:'x', cat:'all', time:1 }, 'Administrador');
+  await M.supaInsertTxokoRecord('Administrador', 1);
+  await M.supaInsertEtRecord('Administrador', 1, 1);
+  const admin = cap.slice();
+
+  return { conSesion, sinSesion, admin };
+})();
+
+// Las columnas de negocio salen del esquema REAL, verificado contra producción.
+const _C2_NEGOCIO = {
+  scores:    ['score', 'total', 'topic', 'cat', 'time_sec'],
+  actividad: ['activity', 'competency', 'kind', 'score', 'total', 'seconds', 'meta'],
+};
+const _C2_PROHIBIDAS = ['employee', 'venue', 'auth_user_id', 'id', 'created_at'];
+
+test('C-2 · los cuatro escritores siguen enviando (nada se ha roto)', () => {
+  assert(_c2.conSesion.length === 4, `esperaba 4 peticiones, hubo ${_c2.conSesion.length}`);
+  assert(_c2.conSesion.filter((p) => /\/actividad$/.test(p.url)).length === 1, 'falta el POST a actividad');
+  assert(_c2.conSesion.filter((p) => /\/scores$/.test(p.url)).length === 3, 'faltan los 3 POST a scores');
+});
+
+for (const col of _C2_PROHIBIDAS) {
+  test(`C-2 · con sesión, ningún cuerpo lleva "${col}"`, () => {
+    for (const p of _c2.conSesion) {
+      assert(!(col in p.body),
+        `${p.url} manda ${col}=${JSON.stringify(p.body[col])} — la identidad la pone el servidor`);
+    }
+  });
+}
+
+test('C-2 · con sesión, el cuerpo lleva SÓLO columnas de negocio del esquema real', () => {
+  for (const p of _c2.conSesion) {
+    const permitidas = /\/actividad$/.test(p.url) ? _C2_NEGOCIO.actividad : _C2_NEGOCIO.scores;
+    for (const k of Object.keys(p.body)) {
+      assert(permitidas.includes(k), `${p.url} manda una columna inesperada: ${k}`);
+    }
+  }
+});
+
+test('C-2 · con sesión, los datos de negocio llegan intactos', () => {
+  const act = _c2.conSesion.find((p) => /\/actividad$/.test(p.url)).body;
+  assert(act.activity === 'simulacro_alergenos' && act.competency === 'alergenos'
+      && act.kind === 'evaluacion' && act.score === 18 && act.total === 20
+      && act.seconds === 240 && act.meta && act.meta.cat === 'all',
+    'la actividad perdió datos de negocio: ' + JSON.stringify(act));
+  const sc = _c2.conSesion.filter((p) => /\/scores$/.test(p.url)).map((p) => p.body);
+  assert(sc[0].score === 18 && sc[0].total === 20 && sc[0].topic === 'alergenos' && sc[0].time_sec === 240,
+    'el score perdió datos: ' + JSON.stringify(sc[0]));
+  assert(sc[1].topic === 'txoko' && sc[1].score === 900, 'el récord de Txoko perdió datos');
+  assert(sc[2].topic === 'elturno' && sc[2].score === 120 && sc[2].total === 7, 'el récord de El Turno perdió datos');
+});
+
+test('C-2 · con sesión, la petición viaja con el token, no con la clave anónima', () => {
+  for (const p of _c2.conSesion) {
+    assert(p.headers.Authorization === 'Bearer jwt-de-ana',
+      `${p.url} no lleva el token: ${p.headers.Authorization}`);
+  }
+});
+
+// LA RENDIJA, Y POR QUÉ TIENE PRUEBA PROPIA.
+// Sin token el servidor no tiene identidad que poner y `anon` no puede ejecutar
+// `app.emp_actual()`: la fila se perdería con 42501. Hasta que exista la cola de
+// B2, esa rama DEBE seguir mandando el nombre. Si alguien la quita antes de
+// tiempo, esta prueba cae y le dice por qué.
+test('C-2 · SIN sesión, se sigue mandando employee y venue (compatibilidad hasta B2)', () => {
+  assert(_c2.sinSesion.length === 4, 'sin sesión también deben salir las 4 peticiones');
+  for (const p of _c2.sinSesion) {
+    assert(p.body.employee === 'Ana', `${p.url} sin token debe seguir mandando employee`);
+    assert(p.body.venue === 'txoko', `${p.url} sin token debe seguir mandando venue`);
+  }
+});
+
+test('C-2 · SIN sesión tampoco se mandan auth_user_id, id ni created_at', () => {
+  for (const p of _c2.sinSesion) {
+    for (const col of ['auth_user_id', 'id', 'created_at']) {
+      assert(!(col in p.body), `${p.url} manda ${col}: los pone el servidor en cualquier caso`);
+    }
+  }
+});
+
+test('C-2 · la cuenta de administración sigue sin dejar rastro', () => {
+  assert(_c2.admin.length === 0, `la administración escribió ${_c2.admin.length} veces`);
+});
+
+// MUTACIÓN ESTÁTICA: si alguien reintroduce una columna de identidad en el
+// objeto literal de cualquiera de los cuatro escritores, cae aquí aunque el
+// cuerpo en ejecución se lo tragara por otra vía.
+test('C-2 · ningún escritor de scores/actividad usa _vSello ni nombra identidad', () => {
+  for (const fn of ['registrarActividad', 'supaInsertScore', 'supaInsertTxokoRecord', 'supaInsertEtRecord']) {
+    const src = _xFn(fn);
+    assert(!/_vSello\(/.test(src), `${fn} vuelve a usar _vSello, que añade venue del cliente`);
+    assert(/_cuerpoPropio\(/.test(src), `${fn} ya no usa _cuerpoPropio`);
+    for (const col of _C2_PROHIBIDAS) {
+      assert(!new RegExp('\\b' + col + '\\s*:').test(src),
+        `${fn} vuelve a poner "${col}:" en el cuerpo`);
+    }
+  }
+});
+
+test('C-2 · _vSello sigue intacto para las tablas que no son de esta fase', () => {
+  assert(/function _vSello\(o\)\{ o = o \|\| \{\}; o\.venue = _venueActual\(\); return o; \}/.test(html),
+    '_vSello ha cambiado: lo usan chat, notificaciones, duelos y fotos');
+  const otras = (html.match(/_vSello\(/g) || []).length;
+  assert(otras >= 8, `sólo quedan ${otras} usos de _vSello; ¿se ha tocado otra tabla?`);
 });
 
 // ─── 7. No leftover git conflict markers ────────────────────────

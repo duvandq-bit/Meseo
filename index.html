@@ -52,7 +52,7 @@
 <meta property="og:description" content="Formación de equipos de sala: carta, alérgenos, vinos, exámenes y juegos de repaso.">
 <meta property="og:url" content="https://meseo.es/">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"Meseo","url":"https://meseo.es/"}</script>
-<meta name="app-version" content="7.452">
+<meta name="app-version" content="7.453">
 <meta name="app-build" content="May 2026">
 <meta name="theme-color" content="#1c2a22">
 <!-- ═══ PWA ═══ -->
@@ -1870,6 +1870,33 @@ function _venueActual(){
 function _vq(){ return 'venue=eq.' + encodeURIComponent(_venueActual()); }
 function _vSello(o){ o = o || {}; o.venue = _venueActual(); return o; }
 
+// ═══ FASE C-2 · EL CLIENTE DEJA DE DECIR QUIÉN ES ═════════════════════════
+//
+// `employee`, `venue`, `auth_user_id`, `id` y `created_at` los pone el servidor
+// desde la fase C-1: los dos primeros por DEFAULT (`app.emp_actual()` y
+// `app.venue_actual()`), y los tres últimos por el disparador
+// `marca_del_servidor`. Mandarlos desde aquí sería dejar la identidad de una
+// evidencia —quién hizo el simulacro de alérgenos— en manos de quien puede
+// editar el cuerpo de la petición.
+//
+// SÓLO PARA `scores` Y `actividad`. `_vSello` sigue como estaba para el resto de
+// tablas (chat, notificaciones, duelos, fotos), que no son de esta fase.
+//
+// LA RENDIJA QUE QUEDA, Y POR QUÉ SIGUE ABIERTA
+//   Sin sesión de Auth, el servidor no tiene identidad que poner: `anon` no
+//   puede ejecutar `app.emp_actual()` y la petición muere con 42501 —medido
+//   contra producción, no supuesto—. Mientras no exista la cola de la fase B2
+//   que retenga esas escrituras, callarse el nombre en ese caso sería PERDER el
+//   examen de alguien en silencio. Así que cuando NO hay token —y sólo
+//   entonces— se manda como hasta ahora.
+//
+//   Esa rama muere en C-3, que es cuando el servidor deja de aceptarla. No es un
+//   descuido: es lo único que evita perder datos entre C-2 y B2.
+function _cuerpoPropio(datos, nombre){
+  if(_authToken) return datos;                  // hay identidad: la pone el servidor
+  return Object.assign({}, datos, { employee: nombre, venue: _venueActual() });
+}
+
 // ═══ LA BODEGA DE CADA RESTAURANTE ════════════════════════════════════════
 // `data/wines.json` es la bodega de TXOKO, igual que los cuatro bloques de la
 // carta. Otro restaurante trae la suya en `data/wines-<restaurante>.json`.
@@ -2111,7 +2138,7 @@ const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><p
 const SRC = 'src';
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='7.452';  // sincronizada con sw.js VERSION (guard de CI)
+const APP_VERSION='7.453';  // sincronizada con sw.js VERSION (guard de CI)
 const APP_BUILD='Jul 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;
@@ -2398,8 +2425,7 @@ async function registrarActividad(a){
         'Content-Type': 'application/json',
         'Prefer': 'return=minimal'
       },
-      body: JSON.stringify(_vSello({
-        employee: currentUser,
+      body: JSON.stringify(_cuerpoPropio({
         activity: a.activity,
         competency,
         kind,
@@ -2407,7 +2433,7 @@ async function registrarActividad(a){
         total,
         seconds: (a.seconds == null) ? null : Math.max(0, Math.round(a.seconds)),
         meta: a.meta || null
-      }))
+      }, currentUser))
     });
     return !!(r && r.ok);
   }catch(e){
@@ -2840,14 +2866,13 @@ async function supaInsertScore(session, employee) {
         'Content-Type': 'application/json',
         'Prefer': 'return=minimal'
       },
-      body: JSON.stringify(_vSello({
-        employee,
+      body: JSON.stringify(_cuerpoPropio({
         score: session.score,
         total: session.total,
         topic: session.topic,
         cat: session.cat,
         time_sec: session.time
-      }))
+      }, employee))
     });
   } catch(e) { /* silent fail - local data always saved */ }
 }
@@ -2890,7 +2915,7 @@ async function supaInsertTxokoRecord(employee, record) {
         'Content-Type': 'application/json',
         'Prefer': 'return=minimal'
       },
-      body: JSON.stringify(_vSello({ employee, score: record, total: 1, topic: 'txoko', cat: 'all', time_sec: 0 }))
+      body: JSON.stringify(_cuerpoPropio({ score: record, total: 1, topic: 'txoko', cat: 'all', time_sec: 0 }, employee))
     });
   } catch(e) {}
 }
@@ -2949,7 +2974,7 @@ async function supaInsertEtRecord(employee, secs, orders) {
         'Content-Type': 'application/json',
         'Prefer': 'return=minimal'
       },
-      body: JSON.stringify(_vSello({ employee, score: secs, total: orders, topic: 'elturno', cat: 'all', time_sec: secs }))
+      body: JSON.stringify(_cuerpoPropio({ score: secs, total: orders, topic: 'elturno', cat: 'all', time_sec: secs }, employee))
     });
   } catch(e) {}
 }
