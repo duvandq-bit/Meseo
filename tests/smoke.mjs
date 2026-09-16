@@ -11610,6 +11610,99 @@ test('C-2 · _vSello sigue intacto para las tablas que no son de esta fase', () 
   assert(otras >= 8, `sólo quedan ${otras} usos de _vSello; ¿se ha tocado otra tabla?`);
 });
 
+// ─── FASE C-3 · los grants del servidor, vigilados desde el repo ─────────
+//
+// La suite no habla con la base, así que lo que se vigila es el SQL aplicado
+// que queda en el repositorio. Protege contra la regresión más peligrosa de
+// esta fase: la que NO se ve, porque un `revoke` que no muerde devuelve 201
+// igual que un éxito.
+console.log('\nFase C-3 — cierre de la escritura de identidad');
+const _c3 = read('supabase/fase_c_identidad_servidor.sql');
+// El SQL VIVO: sin las líneas comentadas. El rollback vive comentado ahí dentro
+// a propósito, y confundirlo con SQL aplicado daría una alarma falsa.
+const _c3vivo = _c3.split('\n').filter((l) => !/^\s*--/.test(l)).join('\n');
+const _C3_SERVIDOR = ['employee', 'venue', 'auth_user_id', 'id', 'created_at'];
+const _C3_GRANTS = [...(_c3vivo.matchAll(/grant\s+insert\s*\(([^)]*)\)\s*\n?\s*on\s+public\.(\w+)\s+to\s+([\w, ]+);/gi))]
+  .map((m) => ({ tabla: m[2], rol: m[3].trim(), cols: m[1].split(',').map((s) => s.trim()).filter(Boolean) }));
+
+test('C-3 · se quita el INSERT DE TABLA, no columnas de un grant de tabla', () => {
+  // LA TRAMPA DE POSTGRESQL, con nombre y apellidos: `revoke insert (columna)`
+  // sobre quien tiene INSERT de tabla es un no-op silencioso. Si alguien
+  // reescribe el cierre con esa forma, parecerá aplicado y no protegerá nada.
+  for (const t of ['scores', 'actividad']) {
+    assert(new RegExp(`revoke\\s+insert\\s+on\\s+public\\.${t}\\s+from\\s+[^;]*anon`, 'i').test(_c3),
+      `falta el revoke de INSERT DE TABLA sobre ${t} a anon`);
+    assert(new RegExp(`revoke\\s+insert\\s+on\\s+public\\.${t}\\s+from\\s+[^;]*authenticated`, 'i').test(_c3),
+      `falta el revoke de INSERT DE TABLA sobre ${t} a authenticated`);
+    assert(!new RegExp(`revoke\\s+insert\\s*\\([^)]*\\)\\s*on\\s+public\\.${t}`, 'i').test(_c3),
+      `${t}: "revoke insert (columna)" NO resta columnas de un grant de tabla — es un no-op silencioso`);
+  }
+});
+
+test('C-3 · anon no recibe INSERT sobre ninguna de las dos tablas', () => {
+  for (const g of _C3_GRANTS) {
+    assert(!/\banon\b/.test(g.rol),
+      `se concede INSERT a anon sobre ${g.tabla}: la escritura anónima quedó cerrada en C-3`);
+  }
+  assert(!/grant\s+insert\s+on\s+public\.(scores|actividad)\s+to/i.test(_c3vivo),
+    'hay un grant de INSERT DE TABLA activo: eso devuelve todas las columnas, identidad incluida');
+});
+
+test('C-3 · las cinco columnas del servidor no se conceden a nadie', () => {
+  assert(_C3_GRANTS.length === 2, `esperaba 2 grants por columna, hay ${_C3_GRANTS.length}`);
+  for (const g of _C3_GRANTS) {
+    for (const col of _C3_SERVIDOR) {
+      assert(!g.cols.includes(col),
+        `${g.tabla}: se concede "${col}" a ${g.rol}, y esa columna es exclusiva del servidor`);
+    }
+  }
+});
+
+test('C-3 · lo concedido es exactamente el negocio del esquema real', () => {
+  const esperado = {
+    scores: ['score', 'total', 'topic', 'cat', 'time_sec'],
+    actividad: ['activity', 'competency', 'kind', 'score', 'total', 'seconds', 'meta'],
+  };
+  for (const g of _C3_GRANTS) {
+    const e = esperado[g.tabla];
+    assert(e, `grant sobre una tabla inesperada: ${g.tabla}`);
+    assert(g.cols.length === e.length && e.every((c) => g.cols.includes(c)),
+      `${g.tabla}: concedido [${g.cols.join(',')}], esperado [${e.join(',')}]`);
+  }
+});
+
+test('C-3 · la política ata las tres identidades, no sólo auth_user_id', () => {
+  // El fallo que encontró la auditoría: `with check (auth_user_id = auth.uid())`
+  // a secas deja pasar `employee:'Ana'`, porque auth_user_id sería legítimamente
+  // el del atacante y `employee` es una columna que la política no mira.
+  for (const t of ['scores', 'actividad']) {
+    const pol = _c3vivo.match(new RegExp(`create policy \\w+ on public\\.${t}[\\s\\S]{0,400}?\\);`, 'i'));
+    assert(pol, `falta la política de alta de ${t}`);
+    for (const cond of ['employee', 'venue', 'auth_user_id']) {
+      assert(new RegExp('\\b' + cond + '\\s*=').test(pol[0]),
+        `la política de ${t} no comprueba ${cond}`);
+    }
+    assert(/to authenticated/i.test(pol[0]), `la política de ${t} tiene que ser sólo para authenticated`);
+    assert(!/with check\s*\(\s*true\s*\)/i.test(pol[0]), `la política de ${t} volvió a ser permisiva`);
+  }
+});
+
+test('C-3 · la lectura no se toca: el ranking y el panel siguen vivos', () => {
+  assert(!/drop policy[^;]*read_scores/i.test(_c3), 'C-3 no puede tocar la política de lectura de scores');
+  assert(!/drop policy[^;]*actividad_select/i.test(_c3), 'C-3 no puede tocar la política de lectura de actividad');
+  assert(!/revoke\s+select/i.test(_c3), 'C-3 no retira ninguna lectura');
+});
+
+test('C-3 · el rollback avisa de que reabre el agujero', () => {
+  const i = _c3.toUpperCase().indexOf('ROLLBACK');
+  assert(i > 0, 'falta la sección de rollback');
+  const bloque = _c3.slice(i);
+  assert(/REABRE|vulnerabilidad/i.test(bloque),
+    'el rollback tiene que decir explícitamente que devuelve el sistema a la versión vulnerable');
+  assert(/^\s*--/m.test(bloque) && !/^\s*(grant|revoke|create policy)/mi.test(bloque),
+    'el SQL de rollback tiene que estar comentado: no puede ejecutarse por accidente');
+});
+
 // ─── 7. No leftover git conflict markers ────────────────────────
 console.log('\nHygiene');
 test('no git conflict markers in tracked source', () => {
