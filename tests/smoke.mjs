@@ -5623,7 +5623,7 @@ test('sync: el upsert de empleado es MONÓTONO — nunca pisa la nube con ceros 
   assert(/employees\?name=ilike\.\$\{encodeURIComponent\(name\)\}&select=\$\{_EMP_COLS\}/.test(fn),
     'the upsert must read the current cloud row before writing');
   // (2) aborta si no puede leer la nube y la ficha local está vacía
-  assert(/const _localEmpty =/.test(fn) && /if\(!cloudReadOk && _localEmpty\) \{[^}]*return true;/.test(fn),
+  assert(/const _localEmpty =/.test(fn) && /if\(!cloudReadOk && _localEmpty\) \{[^}]*return 'nada';/.test(fn),
     'the upsert must abort when the cloud is unreadable AND local is empty (never clobber with zeros)');
   // (3) fusión monótona: max en números, unión en mapas
   assert(/xp=Math\.max\(xp, cloud\.xp\|\|0\)/.test(fn) && /_etMergeMap\(JSON\.parse\(cloud\.known_dishes/.test(fn),
@@ -5635,28 +5635,69 @@ test('sync: el upsert de empleado es MONÓTONO — nunca pisa la nube con ceros 
   // (5) el helper de fusión de mapas existe y hace max por clave
   assert(/function _etMergeMap\(a, b\)\{/.test(html) && /Math\.max\(av, bv\)/.test(html),
     'the _etMergeMap helper must do per-key max');
-  // (6) el upsert señala éxito (para el outbox): true al confirmar, false si falla
-  assert(/return true;\s*\} catch\(e\) \{/.test(fn) && /return false;\s*\}\s*\}/.test(fn),
-    'supaUpsertEmployee debe devolver true al confirmar y false si queda pendiente');
+  // (6) el upsert señala QUÉ pasó, no un sí/no. Un booleano no distinguía
+  //     «escrito» de «el servidor no dejó escribir», y con RLS ésa es justo la
+  //     diferencia entre sincronizar y perder el progreso en silencio.
+  // OJO con el alcance: `fn` va hasta `supaFetchAllEmployees` y por el camino se
+  // cuela medio módulo. Para afirmar «aquí NO hay X» hace falta la función sola,
+  // que termina en el primer `}` a principio de línea.
+  const _iU = html.indexOf('async function supaUpsertEmployee');
+  const soloUpsert = html.slice(_iU, _iU + html.slice(_iU).indexOf('\n}\n') + 3);
+  assert(soloUpsert.length > 400 && soloUpsert.length < fn.length,
+    'no he sabido acotar supaUpsertEmployee: la prueba mediría otra cosa');
+  assert(/return 'confirmado';/.test(soloUpsert), 'debe existir el estado confirmado');
+  assert(/return 'reintentable';/.test(soloUpsert), 'debe existir el estado reintentable');
+  assert(/return 'permanente';/.test(soloUpsert), 'debe existir el estado permanente');
+  assert(/return 'nada';/.test(soloUpsert), 'debe existir el estado nada-que-hacer');
+  assert(!/return true;/.test(soloUpsert) && !/return false;/.test(soloUpsert),
+    'el upsert no puede volver al booleano: era lo que confundía rechazo con éxito');
+  // (7) CERO FILAS NO ES ÉXITO. Es la garantía que hace segura toda la fase.
+  assert(/Array\.isArray\(filas\) *&& *filas\.length *=== *0[\s\S]{0,160}return 'permanente'/.test(soloUpsert),
+    'un upsert que no afecta a ninguna fila tiene que ser un rechazo, nunca un éxito');
+  // (8) y para poder contarlas, la respuesta no puede ser `minimal`
+  // Se mira la CABECERA, no el texto: el comentario que explica el cambio
+  // menciona `return=minimal` a propósito y no debe hacer fallar la prueba.
+  const prefer = (soloUpsert.match(/'Prefer': *'[^']*'/g) || []).join(' ');
+  assert(/return=representation/.test(prefer) && !/return=minimal/.test(prefer),
+    'con return=minimal no se puede distinguir 1 fila de 0: ' + prefer);
+  assert(/rest\/v1\/employees\?select=name/.test(soloUpsert),
+    'basta con pedir una columna: la fila entera son varios KB en cada guardado');
 });
 
-test('resiliencia: outbox de sincronización (no se pierden datos con mal WiFi)', () => {
-  // Cola persistente de fichas con cambios locales sin confirmar en la nube.
-  // Se reintenta hasta que la nube confirme; sobrevive a cerrar la app.
-  assert(/const _OUTBOX_KEY = 'txk_sync_outbox';/.test(html), 'debe existir la clave persistente del outbox');
-  assert(/function _outboxFlush\(\)\{[\s\S]*?const ok = await supaUpsertEmployee\(name\);|let ok = false;[\s\S]*?ok = await supaUpsertEmployee\(name\)/.test(html) || /ok = await supaUpsertEmployee\(name\)/.test(html),
-    'el flush debe reintentar cada ficha vía supaUpsertEmployee');
-  assert(/if\(ok\) _outboxRemove\(name\);/.test(html), 'solo se desencola cuando la nube confirma');
-  // _saveDBNow encola SIEMPRE y desencola al confirmar
+test('resiliencia: la cola de sincronización lleva la identidad de quien la creó', () => {
+  // Cola persistente de fichas con cambios sin confirmar. Sobrevive a cerrar la
+  // app. Desde B1 cada entrada guarda el `uid` de la sesión que la creó: sin
+  // eso, el progreso de Ana pendiente en un iPad se intentaría con el token de
+  // Bruno y, bajo RLS, se perdería sin un solo error.
+  assert(/const _COLA_KEY\s*=\s*'txk_cola_v2';/.test(html), 'debe existir la cola con identidad');
+  assert(/const _OUTBOX_KEY\s*=\s*'txk_sync_outbox';/.test(html),
+    'la clave heredada se sigue leyendo: volver atrás no puede perder nada');
+  assert(/const _CUARENTENA\s*=\s*'txk_cola_cuarentena';/.test(html), 'debe existir la cuarentena');
+
+  const flush = html.slice(html.indexOf('async function _outboxFlush'), html.indexOf("window.addEventListener('online'"));
+  assert(/if\(e\.uid != null && e\.uid !== _authUid\) continue;/.test(flush),
+    'lo que no es de esta sesión no se intenta: se queda esperando a su dueño');
+  assert(/res === 'confirmado' \|\| res === 'nada'/.test(flush) && /_colaQuitar/.test(flush),
+    'sólo se desencola lo que el servidor confirmó');
+  assert(/res === 'permanente'[\s\S]{0,120}_cuarentenaPoner/.test(flush),
+    'un rechazo permanente va a cuarentena, no al olvido');
+
+  // El punto único de entrada captura la identidad AL LANZAR.
+  const ent = html.slice(html.indexOf('function _sincronizarFicha'), html.indexOf('let _outboxFlushing'));
+  assert(/const uid = _authUid;/.test(ent), 'la identidad se congela al lanzar, no al resolver');
+  assert(/_colaQuitar\(nombre, uid\)/.test(ent),
+    'al resolver se desencola la entrada de ESE uid, no la del usuario actual');
+  assert(!/currentUser/.test(ent), 'el punto de entrada no puede mirar quién hay dentro ahora');
+
+  // Y `_saveDBNow` ya no sincroniza por su cuenta: delega.
   const saveNow = html.slice(html.indexOf('function _saveDBNow'), html.indexOf('function _flushSaveDB'));
-  assert(/_outboxAdd\(currentUser\);/.test(saveNow) && /supaUpsertEmployee\(_u\)\.then\(ok => \{ if\(ok\) _outboxRemove\(_u\); \}\)/.test(saveNow),
-    '_saveDBNow debe encolar antes de subir y desencolar al confirmar');
+  assert(/_sincronizarFicha\(currentUser\)/.test(saveNow) && !/supaUpsertEmployee/.test(saveNow),
+    '_saveDBNow debe pasar por el punto único, no llamar al upsert directamente');
+
   // Disparadores del flush: online, volver a primer plano y temporizador
   assert(/window\.addEventListener\('online', \(\) => setTimeout\(_outboxFlush/.test(html), 'el outbox debe reintentar al volver la conexión');
   assert(/setInterval\(_outboxFlush, 120000\)/.test(html), 'el outbox debe reintentar periódicamente');
-  // El chip refleja "pendiente" sin pisar el estado offline
-  // El chip de sincronización es SILENCIOSO: solo se muestra 'offline'; los
-  // estados de sincronizando/guardando/sincronizado ya no molestan al usuario.
+  // El chip de sincronización sigue siendo SILENCIOSO: sólo se muestra 'offline'.
   const pill = html.slice(html.indexOf('function _setSyncPill'), html.indexOf('function _updateOnlineStatus'));
   assert(/if\(state==='offline'\)\{/.test(pill) && !/pill\.classList\.add\('synced','visible'\)/.test(pill) && !/'Sincronizando…'/.test(pill),
     'el chip solo debe mostrarse offline (sin avisos de sincronizando/guardado/sincronizado)');
@@ -8716,7 +8757,12 @@ test('Acceso: ninguna consulta cruza de un restaurante a otro', () => {
     // Ojo con la frontera: sin el [?&] delante, «season_id=eq.» contiene
     // «id=eq.» y dos consultas de duelos se colaban como si fueran de una fila.
     const unaFila = /[?&](id|name|endpoint|employee_name)=(eq|ilike)\./.test(resto);
-    const lee = /select=|order=|&or=|state=eq\.|expires_at=/.test(resto);
+    // `select=` ya no basta para decir «esto lee»: desde B1 una ESCRITURA pide
+    // una columna de vuelta para contar las filas que tocó. Se mira el método,
+    // que es lo único que de verdad distingue una lectura de una escritura.
+    const bloque = html.slice(m.index, m.index + 420);
+    const escribe = /method: *'(POST|PATCH|PUT|DELETE)'/.test(bloque);
+    const lee = !escribe && /select=|order=|&or=|state=eq\.|expires_at=/.test(resto);
     if (!lee || unaFila) continue;
     const linea = html.slice(0, m.index).split('\n').length;
     colecciones.push(linea);
@@ -9553,7 +9599,11 @@ test('Multi-restaurante: ninguna consulta se escapa del filtro de restaurante', 
             || selladaFuera
             || PORCLAVE.test(lineas[i])
             || /method: *'DELETE'/.test(bloque)
-            || [...EXCEPCIONES.keys()].some(k => url.startsWith(k) && !/select=/.test(url));
+            // `select=` dejó de significar «es una lectura»: desde B1 una
+            // ESCRITURA pide una columna de vuelta para saber cuántas filas
+            // tocó. Lo que distingue lectura de escritura es el método.
+            || [...EXCEPCIONES.keys()].some(k => url.startsWith(k) &&
+                 (/method: *'(POST|PATCH|PUT)'/.test(bloque) || !/select=/.test(url)));
     if (!ok) sueltas.push(`línea ${i + 1}: ${url.slice(0, 80)}`);
   }
   assert(sueltas.length === 0,
@@ -11167,6 +11217,214 @@ test('la historia del plato NO se parte por comas', () => {
   assert(/else\s*\{[\s\S]*passage=_examRedact\(/.test(seg), 'la historia debe seguir sin trocear');
   assert(/if\(!passage\) continue;/.test(seg),
     'sin pasaje, el plato tiene que saltarse: si no, la pregunta sale vacía');
+});
+
+
+// ═══ LA COLA DE SINCRONIZACIÓN (fase B1) ══════════════════════════════════
+// Se ejecuta el código REAL con la red, el almacenamiento y el usuario
+// interceptados, y con relojes de verdad: el bucle de sincronización sólo se ve
+// dejando pasar el tiempo, y era invisible para cualquier prueba estática.
+console.log('\nCola de sincronización (B1)');
+
+const _b1 = await (async () => {
+  const tramo = (a, b) => { const i = html.indexOf(a); return html.slice(i, html.indexOf(b, i)); };
+  const fnEntera = (firma) => { const i = html.indexOf(firma); return html.slice(i, i + html.slice(i).indexOf('\n}\n') + 3); };
+  let upsert, cola, guardar, beacon;
+  try {
+    upsert = html.slice(html.indexOf('const _fichaFusionada'),
+      html.indexOf('\n}\n', html.indexOf('async function supaUpsertEmployee')) + 3);
+    cola = tramo('const _OUTBOX_KEY', '// Disparadores del flush');
+    guardar = fnEntera('function _guardarLocal(){') + '\n' + fnEntera('function _saveDBNow(){') + '\n' +
+              fnEntera('function _flushSaveDB(){') + '\n' + fnEntera('function saveDB(){');
+    beacon = fnEntera('function _beaconSync(name){');
+  } catch (e) { return { roto: 'no encuentro las piezas de la cola: ' + e.message }; }
+  if (!upsert || !cola || !guardar || !beacon) return { roto: 'alguna pieza de la cola salió vacía' };
+
+  const almacen = () => { const o = {}; Object.defineProperties(o, {
+    getItem:{value:k=>(k in o? o[k]:null)}, setItem:{value:(k,v)=>{o[k]=String(v);}},
+    removeItem:{value:k=>{delete o[k];}} }); return o; };
+
+  const montar = ({ responde = () => ({ ok:true, filas:[{name:'Ana'}] }), uid = 'uid-ana', usuario = 'Ana' } = {}) => {
+    const reg = { fetch: [], logs: [] };
+    const ls = almacen();
+    const DB = { employees: { Ana:{ name:'Ana', xp:10, sessions:[], knownDishes:{}, examCorrect:{}, topicScores:{} },
+                              Bruno:{ name:'Bruno', xp:5, sessions:[], knownDishes:{}, examCorrect:{}, topicScores:{} } } };
+    const env = {
+      DB, STORAGE_KEY:'txoko_data_v4', localStorage: ls,
+      SUPA_URL:'https://x', SUPA_KEY:'anon', _EMP_COLS:'name,xp',
+      dbgw:(...a)=>reg.logs.push(a.map(String).join(' ')), showToast:()=>{}, LANG:'es', _saveDBErrorShown:0,
+      _bearer:()=>'tok', _esAdmin:(n)=>n==='Administrador',
+      _etMergeMap:(a,b)=>Object.assign({},a,b), _extrasCompose:()=>'{}', _extrasMergeInto:()=>{},
+      getEmp:(n)=>DB.employees[n], _setSyncPill:()=>{},
+      navigator:{ onLine:true }, window:{ addEventListener:()=>{} }, document:{ addEventListener:()=>{} },
+      setInterval:()=>0,
+      // La lectura de la nube DEVUELVE UNA FILA a propósito: si devolviera una
+      // lista vacía, `cloud` sería nulo, la rama de la fusión no se ejecutaría
+      // y la prueba del bucle no mediría nada (falso verde comprobado).
+      fetchT: async (url) => { reg.fetch.push({ url, m:'GET' });
+        return { ok:true, json: async () => [{ name:'Ana', xp:10, streak:0, topic_scores:'{}',
+          known_dishes:'{}', exam_correct:'{}', sessions_data:'[]', sessions_count:0,
+          txoko_record:0, duel_wins:0, achievements:'[]', extras:'{}', avatar:null,
+          last_study_day:null, last_login:null }] }; },
+      fetch: async (url, o) => {
+        const m = (o && o.method) || 'GET';
+        reg.fetch.push({ url, m, cuerpo: o && o.body ? JSON.parse(o.body) : null });
+        if (m === 'GET') return { ok:true, json: async () => [] };
+        const r = responde();
+        if (r.lanza) throw new TypeError('Failed to fetch');
+        return { ok: r.ok, status: r.status || (r.ok?201:500), text: async()=>'', json: async () => r.filas };
+      }
+    };
+    const nombres = Object.keys(env);
+    const cuerpo = `let currentUser = ${JSON.stringify(usuario)}; let _authUid = ${JSON.stringify(uid)};
+${upsert}
+${cola}
+${guardar}
+${beacon}
+let _saveDBTimer = null;
+return { saveDB, _sincronizarFicha, _outboxFlush, _beaconSync, _colaCargar, _cuarentenaContar,
+         _fichaFusionada, entra:(u,id)=>{ currentUser=u; _authUid=id; } };`;
+    return { M: new Function(...nombres, cuerpo)(...nombres.map(k => env[k])), reg, ls, DB }; // eslint-disable-line no-new-func
+  };
+
+  const esperar = ms => new Promise(r => setTimeout(r, ms));
+  const r = {};
+  try {
+    // 1 · un cambio real, y luego reposo
+    { const { M, reg } = montar();
+      M.saveDB();
+      await esperar(4500);
+      r.postsTrasCambio = reg.fetch.filter(f => f.m === 'POST').length;
+      const antes = reg.fetch.length;
+      await esperar(3500);
+      r.enReposo = reg.fetch.length - antes; }
+    // 2 · cero filas
+    { const { M } = montar({ responde: () => ({ ok:true, filas: [] }) });
+      r.ceroFilas = await M._sincronizarFicha('Ana');
+      r.ceroFilasCuarentena = M._cuarentenaContar(); }
+    // 3 · red caída
+    { const { M } = montar({ responde: () => ({ lanza:true }) });
+      r.sinRed = await M._sincronizarFicha('Ana');
+      r.sinRedCola = M._colaCargar();
+      r.sinRedCuarentena = M._cuarentenaContar(); }
+    // 4 · Bruno entra con la petición en vuelo
+    { const { M } = montar();
+      const p = M._sincronizarFicha('Ana');
+      M.entra('Bruno', 'uid-bruno');
+      r.enVuelo = await p;
+      r.enVueloCola = M._colaCargar(); }
+    // 5 · cola de Ana con Bruno dentro
+    { const { M, reg } = montar({ responde: () => ({ lanza:true }) });
+      await M._sincronizarFicha('Ana');
+      M.entra('Bruno', 'uid-bruno');
+      const antes = reg.fetch.length;
+      await M._outboxFlush();
+      r.ajenaIntentos = reg.fetch.length - antes;
+      r.ajenaSigue = M._colaCargar().some(e => e.uid === 'uid-ana'); }
+    // 6 · heredadas
+    { const { M, ls } = montar({ uid:'uid-bruno', usuario:'Bruno' });
+      ls.setItem('txk_sync_outbox', JSON.stringify(['Estefanía','Faride','Alessandra','Bruno']));
+      r.heredadas = M._colaCargar().filter(e => e.uid === null); }
+    // 7 · beacon
+    { const { M, reg } = montar();
+      M._beaconSync('Ana');
+      r.beaconSinFusion = (reg.fetch.filter(f => f.m==='POST').pop() || {}).cuerpo;
+      M._fichaFusionada['Ana'] = true;
+      M._beaconSync('Ana');
+      r.beaconConFusion = (reg.fetch.filter(f => f.m==='POST').pop() || {}).cuerpo;
+      const antes = reg.fetch.length;
+      M._beaconSync('Administrador');
+      r.beaconAdmin = reg.fetch.length - antes; }
+  } catch (e) { return { roto: 'el banco falló: ' + e.message }; }
+  return r;
+})();
+
+test('la cola de sincronización se puede ejecutar', () => {
+  assert(!_b1.roto, _b1.roto);
+});
+
+test('un cambio real produce UNA sincronización, no un ciclo', () => {
+  assert(_b1.postsTrasCambio === 1, `hubo ${_b1.postsTrasCambio} escrituras en 4,5 s`);
+});
+
+test('con la aplicación en reposo no se sincroniza sola', () => {
+  // El bucle medido en sep 2026: 60 peticiones en 45 s sin que nadie tocara
+  // nada, una cada 1500 ms. La causa era que la fusión persistía con saveDB(),
+  // que volvía a pedir la sincronización. Esta prueba es su guardia.
+  assert(_b1.enReposo === 0, `${_b1.enReposo} peticiones con la app quieta`);
+});
+
+test('un upsert de cero filas NO es un éxito', () => {
+  assert(_b1.ceroFilas === 'permanente', `llegó ${_b1.ceroFilas}`);
+  assert(_b1.ceroFilasCuarentena === 1, 'tiene que quedar en cuarentena, no desaparecer');
+});
+
+test('un fallo de red deja la entrada pendiente', () => {
+  assert(_b1.sinRed === 'reintentable', `llegó ${_b1.sinRed}`);
+  assert(_b1.sinRedCola.length === 1 && _b1.sinRedCola[0].nombre === 'Ana', JSON.stringify(_b1.sinRedCola));
+  assert(_b1.sinRedCuarentena === 0, 'un fallo de red no es permanente');
+});
+
+test('si Bruno entra mientras viaja la petición de Ana, el resultado sigue siendo de Ana', () => {
+  assert(_b1.enVuelo === 'confirmado', `llegó ${_b1.enVuelo}`);
+  assert(!_b1.enVueloCola.some(e => e.nombre === 'Ana' && e.uid === 'uid-ana'),
+    'debía desencolarse la entrada de Ana: ' + JSON.stringify(_b1.enVueloCola));
+});
+
+test('la entrada de Ana no se sincroniza con Bruno dentro', () => {
+  assert(_b1.ajenaIntentos === 0, `se intentaron ${_b1.ajenaIntentos} peticiones ajenas`);
+  assert(_b1.ajenaSigue === true, 'la entrada de Ana tiene que seguir esperándola');
+});
+
+test('una entrada heredada no se adopta por parecerse el nombre', () => {
+  // Los nombres de Meseo han derivado de hecho: en el histórico hay «Estefanía»
+  // frente a «Estefania», «Faride» frente a «Faride Navarro» y «Alessandra»
+  // frente a «Aless». Tilde, alargamiento y acortamiento: las tres direcciones
+  // que rompen cualquier comparación de texto.
+  assert(_b1.heredadas.length === 4, 'las cuatro heredadas deben leerse: ' + JSON.stringify(_b1.heredadas));
+  assert(_b1.heredadas.every(e => e.uid === null),
+    'ninguna puede quedar atribuida: ' + JSON.stringify(_b1.heredadas));
+});
+
+test('el hash del PIN no se usa jamás para atribuir una entrada', () => {
+  // Es una credencial al portador —`verify_employee_pin_sha` compara el hash
+  // guardado con el que llega—, así que no demuestra posesión de nada.
+  const i = html.indexOf('const _OUTBOX_KEY');
+  const j = html.indexOf('// Disparadores del flush', i);
+  const cola = html.slice(i, j);
+  assert(!/\.pin\b/.test(cola) && !/hashPin|sha_hex|hashed/.test(cola),
+    'la cola no puede tocar el hash del PIN');
+  const ent = html.slice(html.indexOf('function _sincronizarFicha'), html.indexOf('let _outboxFlushing'));
+  assert(!/\.pin\b/.test(ent), 'el punto de entrada tampoco');
+});
+
+test('el beacon no hace retroceder el progreso con una copia atrasada', () => {
+  assert(_b1.beaconSinFusion && !('xp' in _b1.beaconSinFusion),
+    'sin fusión previa no puede mandar contadores: ' + JSON.stringify(_b1.beaconSinFusion));
+  assert(_b1.beaconConFusion && ('xp' in _b1.beaconConFusion),
+    'tras fusionar sí debe mandarlos');
+  assert(_b1.beaconAdmin === 0, 'la cuenta de administración no escribe ni por el beacon');
+});
+
+test('el trofeo de temporada ya no escribe la ficha de otro', () => {
+  const f = html.slice(html.indexOf('async function supaAwardSeasonTrophy'),
+                       html.indexOf('\n}\n', html.indexOf('async function supaAwardSeasonTrophy')));
+  assert(f.length > 80, 'no encuentro supaAwardSeasonTrophy');
+  assert(!/supaUpsertEmployee|_sincronizarFicha/.test(f),
+    'no puede sincronizar la ficha del ganador: es de otra persona y además nunca subió el trofeo');
+});
+
+test('el reset de PIN ya no escribe la ficha de otro', () => {
+  // OJO con el ancla: hay DOS `delete emp.pin;` y el primero está en la
+  // restauración desde la nube. Anclar en el primero hacía que esta prueba
+  // midiera otro sitio y pasara en falso (comprobado con una mutación).
+  const marca = html.indexOf('¿Resetear el PIN de');
+  assert(marca > 0, 'no encuentro el reset de PIN del supervisor');
+  const i = html.indexOf('delete emp.pin;', marca);
+  assert(i > marca, 'no encuentro el borrado del PIN tras la confirmación');
+  const bloque = html.slice(i, i + 900);
+  assert(!/supaUpsertEmployee\(name\)|_sincronizarFicha\(name\)/.test(bloque),
+    'el reset no puede escribir la ficha de otro empleado');
 });
 
 // ─── 7. No leftover git conflict markers ────────────────────────
