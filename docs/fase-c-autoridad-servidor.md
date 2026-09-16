@@ -71,9 +71,18 @@ ninguna función `SECURITY DEFINER` nueva.**
 Lo pone PostgREST tras validar la firma. El cliente no lo escribe en ningún punto.
 
 **(c) Un disparador que ningún documento mencionaba:**
-`trg_employees_identidad_inmutable`, que para `anon` y `authenticated` impide
-cambiar `name` y `auth_user_id` con `errcode 42501`. **El caso «cambio de
-auth_user_id» de la matriz ya está cubierto**, y no por la fase C.
+`trg_employees_identidad_inmutable`, que *pretende* impedir a `anon` y
+`authenticated` cambiar `name` y `auth_user_id`.
+
+> **CORREGIDO el 2026-09-16 al aplicar C-1 — ver `docs/fase-c1-aplicada.md` §7.**
+> Ese disparador **no protege nada**: es `SECURITY DEFINER`, y dentro de una
+> función `SECURITY DEFINER` `current_user` es el **dueño** (`postgres`), no el rol
+> que llama, así que su guarda `current_user in ('anon','authenticated')` es
+> siempre falsa. Medido. Lo que de verdad protege `auth_user_id` son los **grants
+> por columna** de `employees`. Y `name` **sí** está en la lista de columnas
+> actualizables: es renombrable por cualquier cliente autenticado salvo que una
+> clave ajena lo impida por casualidad. Hallazgo abierto, fuera del alcance de la
+> fase C.
 
 **(d) `trg_admin_sin_marcas` está sólo en `scores`, no en `actividad`.** La
 exclusión de la cuenta de administración en `actividad` es **únicamente del
