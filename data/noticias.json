@@ -1,19 +1,58 @@
 {
- "updated": "2026-09-15T20:16:17.749Z",
+ "updated": "2026-09-16T01:28:00.916Z",
  "items": [
+  {
+   "t": "Tres restaurantes argentinos están en el top 10 de un ranking global de alta cocina",
+   "u": "https://www.infobae.com/tendencias/2026/09/15/tres-restaurantes-argentinos-estan-en-el-top-10-de-un-ranking-global-de-alta-cocina/",
+   "s": "Infobae",
+   "d": "2026-09-15T23:00:23.000Z",
+   "tags": [
+    "ALTA COCINA"
+   ],
+   "img": "https://www.infobae.com/resizer/v2/DU22BTRT3FCNJNXBNY6BQAKTSY.png?auth=39e5c4b6fef105d4f5cfea88a24fd596a327fdc54dd506e71c9f03b6954b490c&smart=true&width=1200&height=630&quality=85"
+  },
+  {
+   "t": "Juvé & Camps celebra en Canarias medio siglo de Reserva de la Familia, el espumoso pionero del brut nature de larga crianza",
+   "u": "https://www.canarias7.es/gastronomia-c7/juve-camps-celebra-canarias-medio-siglo-reserva-20260916010000-nt.html",
+   "s": "Canarias7",
+   "d": "2026-09-15T23:00:00.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://s2.ppllstatics.com/canarias7/www/multimedia/gastronomia-c7/2026/09/15/1-k85G-U301737460243iV-1200x840@Canarias7.jpg"
+  },
+  {
+   "t": "Onami lleva la alta cocina japonesa a la Costa Blanca",
+   "u": "https://www.7canibales.com/restaurantes/diego-laso-onami/",
+   "s": "7 Caníbales",
+   "d": "2026-09-15T22:01:40.000Z",
+   "tags": [
+    "ALTA COCINA"
+   ],
+   "img": "https://www.7canibales.com/wp-content/uploads/sites/2/2026/09/Diego-Laso-en-la-entrada-de-Onami-en-el-AR-Diamante-Beach-de-Calpe..webp"
+  },
   {
    "t": "Motril: La revista gastronómica «A Fuego Lento» descubre al chef motrileño Iván Mateo y la cocina de autor de Espacio IME",
    "u": "https://www.motrildigital.news/motril-la-revista-gastronomica-a-fuego-lento-descubre-al-chef-motrileno-ivan-mateo-y-la-cocina-de-autor-de-espacio-ime",
    "s": "Motril Digital",
-   "d": "2026-09-15T19:14:23.000Z",
+   "d": "2026-09-15T19:14:19.000Z",
    "tags": [
     "ALTA COCINA"
    ],
    "img": "https://motrildigital.info/wp-content/uploads/2026/09/WhatsApp-Image-2026-05-14-at-16.49.59-1.jpeg"
   },
   {
+   "t": "Lava, único restaurante canario nominado a los TheFork Awards 2025",
+   "u": "https://www.canariasenpleno.com/thefork-awards-2025-lava-canarias/",
+   "s": "Canarias en Pleno",
+   "d": "2026-09-15T17:49:58.000Z",
+   "tags": [
+    "CANARIAS"
+   ]
+  },
+  {
    "t": "Ni Santorini ni Cerdeña: Tenerife se corona como la mejor isla europea para viajar según este ranking internacional",
-   "u": "https://www.eldia.es/tenerife/2026/09/15/santorini-cerdena-tenerife-corona-mejor-dv-134317496.html",
+   "u": "https://www.eldia.es/tenerife/2026/09/15/santorini-cerdena-tenerife-corona-mejor-dv-134317496.amp.html",
    "s": "Eldía",
    "d": "2026-09-15T16:30:18.000Z",
    "tags": [
@@ -43,7 +82,7 @@
   },
   {
    "t": "Un restaurante de Tenerife opta a ser la mejor apertura de España de 2025",
-   "u": "https://www.eldiario.es/canariasahora/sociedad/restaurante-tenerife-opta-mejor-apertura-espana-2025_1_13512272.amp.html",
+   "u": "https://www.eldiario.es/canariasahora/sociedad/restaurante-tenerife-opta-mejor-apertura-espana-2025_1_13512272.html",
    "s": "elDiario.es",
    "d": "2026-09-15T15:47:11.000Z",
    "tags": [
@@ -63,18 +102,9 @@
    "img": "https://teldeactualidad.b-cdn.net/upload/images/06_2026/4352_diego-ojeda-ramos-opinion.jpg"
   },
   {
-   "t": "Lava, único restaurante canario nominado a los TheFork Awards 2025",
-   "u": "https://www.canariasenpleno.com/thefork-awards-2025-lava-canarias/",
-   "s": "Canarias en Pleno",
-   "d": "2026-09-15T15:33:07.000Z",
-   "tags": [
-    "CANARIAS"
-   ]
-  },
-  {
    "t": "Dos restaurantes de Santander, entre los nominados a mejor apertura de 2025 en España",
    "u": "https://eldiariocantabria.publico.es/articulo/sociedad/dos-restaurantes-santander-entre-nominados-mejor-apertura-2025-espana/20260915172336198608.html",
-   "s": "eldiariocantabria.es",
+   "s": "eldiariocantabria.publico.es",
    "d": "2026-09-15T15:23:36.000Z",
    "tags": [
     "CHEF"
@@ -133,6 +163,16 @@
    "img": "https://s3.elespanol.com/k/imgp/cms/elespanol/11354021.jpg?p=f:jpeg/w:1706/h:960&h=BNuRdq5H"
   },
   {
+   "t": "El restaurante en Huesca con sello Michelin que triunfa con su menú a 32 €: “No renuncies a probar la croqueta de huevo frito y torrezno”",
+   "u": "https://www.infobae.com/espana/2026/09/15/el-restaurante-en-huesca-con-sello-michelin-que-triunfa-con-su-menu-a-32-no-renuncies-a-probar-la-croqueta-de-huevo-frito-y-torrezno/",
+   "s": "Infobae",
+   "d": "2026-09-15T11:49:11.000Z",
+   "tags": [
+    "MICHELIN"
+   ],
+   "img": "https://www.infobae.com/resizer/v2/OUGH73BR3FAQ5LG2I4GMFZDUEE.png?auth=a4eebf49201384f8664255f005db2f379ff93bbc5dccd9e3aaa2c60455bdbea6&smart=true&width=1200&height=630&quality=85"
+  },
+  {
    "t": "Los dos nuevos restaurantes de Bilbao que conquistan a los chefs con Estrella Michelin",
    "u": "https://www.deia.eus/bilbao/2026/09/15/nuevos-restaurantes-bilbao-conquistan-chefs-11543747.amp.html",
    "s": "Deia",
@@ -141,16 +181,6 @@
     "CHEF",
     "MICHELIN"
    ]
-  },
-  {
-   "t": "El restaurante en Huesca con sello Michelin que triunfa con su menú a 32 €: “No renuncies a probar la croqueta de huevo frito y torrezno”",
-   "u": "https://www.infobae.com/espana/2026/09/15/el-restaurante-en-huesca-con-sello-michelin-que-triunfa-con-su-menu-a-32-no-renuncies-a-probar-la-croqueta-de-huevo-frito-y-torrezno/?outputType",
-   "s": "Infobae",
-   "d": "2026-09-15T11:30:22.000Z",
-   "tags": [
-    "MICHELIN"
-   ],
-   "img": "https://www.infobae.com/resizer/v2/OUGH73BR3FAQ5LG2I4GMFZDUEE.png?auth=a4eebf49201384f8664255f005db2f379ff93bbc5dccd9e3aaa2c60455bdbea6&smart=true&width=1200&height=630&quality=85"
   },
   {
    "t": "41 restaurantes de 14 comuninades autónomas han sido nominados como mejores aperturas de 2025 en España",
@@ -163,7 +193,7 @@
   },
   {
    "t": "Martié, nominado como mejor apertura de 2025 en España",
-   "u": "https://www.diariodejerez.es/gastronomia-jerez/martie-nominado-mejor-apertura-2025_0_2007971612.html",
+   "u": "https://www.diariodejerez.es/gastronomia-jerez/martie-nominado-mejor-apertura-2025_0_2007971612.amp.html",
    "s": "Diario de Jerez",
    "d": "2026-09-15T11:07:30.000Z",
    "tags": [
@@ -173,7 +203,7 @@
   },
   {
    "t": "Raúl Torres da forma a Alba, uno de los mejores secretos gastronómicos del sur",
-   "u": "https://www.eldia.es/ocio/gastronomia/2026/09/15/raul-torres-da-forma-alba-secreto-gastronomico-134301670.amp.html",
+   "u": "https://www.eldia.es/ocio/gastronomia/2026/09/15/raul-torres-da-forma-alba-secreto-gastronomico-134301670.html",
    "s": "Eldía",
    "d": "2026-09-15T10:22:49.000Z",
    "tags": [
@@ -269,35 +299,6 @@
     "MICHELIN"
    ],
    "img": "https://images.euronews.com/articles/stories/09/91/22/44/1200x675_cmsv2_d834a058-1d84-558f-93bd-7c026c9309a1-9912244.jpg"
-  },
-  {
-   "t": "Así es La Inquieta, uno de los rincones con más encanto de la capital grancanaria desde el desayuno hasta la cena",
-   "u": "https://www.canarias7.es/gastronomia-c7/restaurantes/inquieta-rincones-encanto-capital-grancanaria-desayuno-cena-20260915070000-nt_amp.html",
-   "s": "Canarias7",
-   "d": "2026-09-15T05:00:21.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://s3.ppllstatics.com/canarias7/www/multimedia/gastronomia-c7/2026/09/13/portada.jpg"
-  },
-  {
-   "t": "El \"reto\" de Jorge Cervantes, traer a Madrid un 'imperio' de 30 restaurantes de México: triunfa con su tercera apertura",
-   "u": "https://www.elespanol.com/madrid/ocio/20260915/reto-jorge-cervantes-traer-madrid-imperio-restaurantes-mexico-triunfa-tercera-apertura/1003744383250_0.amp.html",
-   "s": "El Español",
-   "d": "2026-09-15T04:30:00.000Z",
-   "tags": [
-    "MICHELIN"
-   ],
-   "img": "https://s3.elespanol.com/k/imgp/cms/elespanol/11353738.jpg?p=f:jpeg/c:1600:900:nowe:0:361/w:1706/h:960&h=tkGDlCsa"
-  },
-  {
-   "t": "4 restaurantes de Caldas, seleccionados para encuentro gastronómico en El Salvador: exaltan su alta cocina",
-   "u": "https://www.lapatria.com/cultura/4-restaurantes-de-caldas-seleccionados-para-encuentro-gastronomico-en-el-salvador-exaltan",
-   "s": "La Patria",
-   "d": "2026-09-15T03:56:40.000Z",
-   "tags": [
-    "ALTA COCINA"
-   ]
   }
  ]
 }
