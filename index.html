@@ -52,7 +52,7 @@
 <meta property="og:description" content="Formación de equipos de sala: carta, alérgenos, vinos, exámenes y juegos de repaso.">
 <meta property="og:url" content="https://meseo.es/">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"Meseo","url":"https://meseo.es/"}</script>
-<meta name="app-version" content="7.450">
+<meta name="app-version" content="7.451">
 <meta name="app-build" content="May 2026">
 <meta name="theme-color" content="#1c2a22">
 <!-- ═══ PWA ═══ -->
@@ -2111,7 +2111,7 @@ const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><p
 const SRC = 'src';
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='7.450';  // sincronizada con sw.js VERSION (guard de CI)
+const APP_VERSION='7.451';  // sincronizada con sw.js VERSION (guard de CI)
 const APP_BUILD='Jul 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;
@@ -21404,6 +21404,44 @@ function _examRedact(text, candidates){
   }).join('');
 }
 
+// ── El pasaje de INGREDIENTES, después de tachar (fix sep 2026) ────────────
+//
+// EL FALLO, TAL CUAL LO FOTOGRAFIÓ EL PROPIETARIO
+//   «¿De qué plato son estos ingredientes?» — "··· de ··· ···, Pan tostado,
+//   Vinagreta de tomate fresco". El primer ingrediente ERA el nombre del plato
+//   («Cecina de Wagyu Premium»), así que la tachadura se lo comió entero y dejó
+//   en pantalla una fila de puntos que no dice nada y encima parece rota.
+//
+// CUÁNTO PASABA, MEDIDO SOBRE LA CARTA ENTERA
+//   42 de los 97 platos enseñaban al menos un ingrediente tachado del todo. Y
+//   6 se quedaban directamente sin pregunta posible: «Coliflor frita» acababa
+//   en "···." —los cortes de carne son el mismo caso, porque sus ingredientes
+//   son «corte + peso + sal» y el corte es el nombre—.
+//
+// QUÉ HACE
+//   1 · Un ingrediente que queda tachado ENTERO se quita de la lista en vez de
+//       enseñarse como «··· de ··· ···». Quitar no delata nada: lo que se
+//       borra es información, nunca una pista.
+//   2 · Si quedan menos de DOS ingredientes con contenido, no hay pregunta que
+//       hacer: devuelve null y quien llama pasa a otro plato.
+//   Lo que sigue tachado DENTRO de un ingrediente que sobrevive se queda así
+//   —«Pimiento ···» esconde el «rojo» del «mojo rojo» y eso es justo lo que se
+//   quiere—.
+//
+// SÓLO PARA INGREDIENTES. La historia del plato es prosa y sobrevive bien a la
+// tachadura: «Nuestros ··· de ··· son ecológicos y provenientes de Granadilla»
+// sigue siendo una buena pregunta. Partirla por comas la destrozaría.
+const _EXAM_MIN_INGREDIENTES = 2;
+function _examPasajeIngredientes(texto, candidatos){
+  const red = _examRedact(texto, candidatos);
+  const conContenido = it => /[a-z0-9áéíóúüñ]{3,}/i.test(it.replace(/···/g, ' '));
+  const vivos = red.split(/\s*,\s*/).map(s => s.trim()).filter(s => s && conContenido(s));
+  if(vivos.length < _EXAM_MIN_INGREDIENTES) return null;
+  let out = vivos.join(', ');
+  if(/\.\s*$/.test(texto) && !/\.\s*$/.test(out)) out += '.';
+  return out;
+}
+
 // ── Gemelos de NOMBRE (fix legibilidad/ambigüedad jul 2026) ─────────────────
 // Reporte del propietario: en las preguntas invertidas (pasaje mostrado, las 4
 // opciones son NOMBRES de plato) se cuelan pares de nombres casi idénticos que
@@ -21480,10 +21518,23 @@ function startExam(){
       // opciones prefijo/variante del plato correcto o de otra ya aceptada
       // (tomates con/sin ventresca, Niçoise/Niçoise vegetariana, turnos…).
       const _acceptedNames=[getDish(d).name];
+      // Gemelos de PASAJE (fix sep 2026). La guarda de arriba compara el texto
+      // CRUDO, y eso deja pasar un caso real: «Cecina de Wagyu Premium» y
+      // «Paletilla Ibérica de bellota» tienen ingredientes distintos, pero en
+      // cuanto se tacha el nombre de cada uno las dos se quedan exactamente en
+      // «Pan tostado, Vinagreta de tomate fresco». Con las dos en la misma
+      // pregunta habría DOS respuestas correctas. Lo que hay que comparar es lo
+      // que el alumno va a LEER, no lo que hay guardado.
+      const _pasajeCorrecto = topic.key==='ingredients'
+        ? _twNorm(_examPasajeIngredientes(correct, [d]) || '') : '';
       const namePool=_lqaShuffle(_pickDistractorPool(d)).filter(o=>{
         const a=(topic.a(o)||'').trim();
         if(!a || a==='—' || a===noHist) return false;
         if(_twNorm(a.replace(/\.+$/,'')) === _correctAns) return false;
+        if(_pasajeCorrecto){
+          const pa = _examPasajeIngredientes(a, [o]);
+          if(pa && _twNorm(pa) === _pasajeCorrecto) return false;
+        }
         const onm = getDish(o).name;
         if(_acceptedNames.some(n=>_txNameTwin(n,onm))) return false;
         _acceptedNames.push(onm);
@@ -21491,7 +21542,16 @@ function startExam(){
       }).slice(0,3);
       if(namePool.length<3) continue;
       const candidates=[d,...namePool];
-      const passage=_examRedact(correct, candidates);
+      // Los ingredientes son una lista y se limpian; la historia es prosa y no.
+      // Si de la lista no queda bastante, este plato no da pregunta: se pasa al
+      // siguiente en vez de enseñar un pasaje ilegible o irresoluble.
+      let passage;
+      if(topic.key==='ingredients'){
+        passage=_examPasajeIngredientes(correct, candidates);
+        if(!passage) continue;
+      } else {
+        passage=_examRedact(correct, candidates);
+      }
       const nameOf=x=>getDish(x).name;
       const choices=_lqaShuffle(candidates.map(nameOf));
       validQuestions.push({dish:d,topic,correct:nameOf(d),choices,rev:true,passage});

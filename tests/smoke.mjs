@@ -11046,6 +11046,129 @@ test('el login pide la sesión en sus tres puertas, y salir la retira', () => {
   assert(iRem > 0 && iAuth > iRem, 'la sesión se pide antes de decidir si se recuerda');
 });
 
+
+// ═══ EL PASAJE DE INGREDIENTES DEL EXAMEN ═════════════════════════════════
+// Se ejecuta la función real contra la carta entera. El fallo que la motiva se
+// fotografió en producción: «··· de ··· ···, Pan tostado, Vinagreta de tomate
+// fresco» — el ingrediente que identificaba el plato era su propio nombre, y la
+// tachadura se lo comió.
+console.log('\nPasaje de ingredientes del examen');
+
+const _ingRes = (() => {
+  const iD = html.indexOf('const DISHES = ['), jD = html.indexOf('\n];', iD);
+  const i0 = html.indexOf('const _EXAM_STOP'), i1 = html.indexOf('function startExam(');
+  if (iD === -1 || i0 === -1 || i1 <= i0) return { roto: 'no encuentro el examen o la carta' };
+  try {
+    const DISHES = new Function(html.slice(iD, jD + 3) + '; return DISHES;')(); // eslint-disable-line no-new-func
+    const M = new Function('getDish', // eslint-disable-line no-new-func
+      html.slice(i0, i1) +
+      '; return { _examRedact, _examPasajeIngredientes, _EXAM_MIN_INGREDIENTES };')(x => x);
+    return { DISHES, M };
+  } catch (e) { return { roto: 'no compila: ' + e.message }; }
+})();
+
+test('el pasaje de ingredientes compila y se ejecuta', () => {
+  assert(!_ingRes.roto, _ingRes.roto);
+});
+
+test('ningún plato enseña un ingrediente tachado del todo', () => {
+  const { DISHES, M } = _ingRes;
+  const conIng = DISHES.filter(d => d.ingredients && d.ingredients !== '—');
+  assert(conIng.length > 50, `sólo ${conIng.length} platos con ingredientes`);
+  const feos = [];
+  for (const d of conIng) {
+    const otros = conIng.filter(x => x !== d).slice(0, 3);
+    const p = M._examPasajeIngredientes(d.ingredients, [d, ...otros]);
+    if (p === null) continue;                       // descartado, no se enseña
+    for (const it of p.split(/\s*,\s*/)) {
+      // Un trozo sin una sola palabra de contenido es el «··· de ··· ···».
+      if (!/[a-zá-úñ0-9]{3,}/i.test(it.replace(/···/g, ' '))) feos.push(d.name + ' → ' + it);
+    }
+  }
+  assert(feos.length === 0, 'quedan ingredientes ilegibles: ' + feos.slice(0, 4).join(' | '));
+});
+
+test('un plato cuyo pasaje se queda sin contenido no genera pregunta', () => {
+  const { DISHES, M } = _ingRes;
+  const conIng = DISHES.filter(d => d.ingredients && d.ingredients !== '—');
+  const descartados = conIng.filter(d => {
+    const otros = conIng.filter(x => x !== d).slice(0, 3);
+    return M._examPasajeIngredientes(d.ingredients, [d, ...otros]) === null;
+  });
+  // Medido sep 2026: los cortes de carne («corte + peso + sal»), la coliflor y
+  // las alcachofas. Si esto crece mucho, es que la regla se ha vuelto golosa.
+  assert(descartados.length >= 1, 'ningún plato se descarta: la regla no está actuando');
+  assert(descartados.length <= 12,
+    `se descartan ${descartados.length} platos, demasiados: ` + descartados.map(d => d.name).join(', '));
+  // Y el caso que lo destapó todo tiene que quedar fuera:
+  assert(descartados.some(d => /coliflor frita/i.test(d.name)),
+    '«Coliflor frita» se queda en «···.» y tiene que descartarse');
+});
+
+test('el plato de la foto ya no enseña puntos suspensivos sueltos', () => {
+  const { DISHES, M } = _ingRes;
+  const cecina = DISHES.find(d => /cecina de wagyu/i.test(d.name));
+  assert(cecina, 'no encuentro la Cecina de Wagyu en la carta');
+  const p = M._examPasajeIngredientes(cecina.ingredients, [cecina]);
+  assert(p !== null, 'la cecina sí tiene pregunta posible');
+  assert(!/^···/.test(p) && !/···\s+de\s+···/.test(p),
+    'sigue empezando por la tachadura: ' + p);
+  assert(/pan tostado/i.test(p), 'debería conservar los ingredientes que no son el nombre: ' + p);
+});
+
+test('lo tachado DENTRO de un ingrediente que sobrevive se mantiene', () => {
+  const { DISHES, M } = _ingRes;
+  const d = DISHES.find(x => /pámpano marinado/i.test(x.name));
+  if (!d) return;                       // la carta se mueve; no es un fallo
+  const p = M._examPasajeIngredientes(d.ingredients, [d]);
+  assert(p && p.includes('···'),
+    'una tachadura parcial es lo que esconde el «rojo» de «mojo rojo»: ' + p);
+});
+
+test('dos platos no pueden compartir el mismo pasaje enseñado', () => {
+  // El caso real: «Cecina de Wagyu Premium» y «Paletilla Ibérica de bellota»
+  // tienen ingredientes distintos, pero al tachar sus nombres las dos se quedan
+  // en «Pan tostado, Vinagreta de tomate fresco». Juntas darían dos respuestas
+  // correctas. La guarda que compara el texto crudo no las ve.
+  const { DISHES, M } = _ingRes;
+  const conIng = DISHES.filter(d => d.ingredients && d.ingredients !== '—');
+  const norm = x => String(x || '').toLowerCase().normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]+/g, ' ').trim();
+  const porPasaje = new Map();
+  for (const d of conIng) {
+    const p = M._examPasajeIngredientes(d.ingredients, [d]);
+    if (p === null) continue;
+    const k = norm(p);
+    if (!porPasaje.has(k)) porPasaje.set(k, []);
+    porPasaje.get(k).push(d.name);
+  }
+  const choques = [...porPasaje.values()].filter(v => v.length > 1);
+  // Que existan en la carta es un hecho; lo que NO puede pasar es que el
+  // generador los ponga juntos. Eso lo comprueba la guarda del código:
+  const i = html.indexOf('const _acceptedNames=[getDish(d).name];');
+  const j = html.indexOf('}).slice(0,3);', i);
+  assert(i > 0 && j > i, 'no encuentro el filtro de distractores');
+  const seg = html.slice(i, j);
+  assert(/_pasajeCorrecto/.test(seg) && /_examPasajeIngredientes\(a, \[o\]\)/.test(seg),
+    'el filtro no compara el pasaje que se enseña, sólo el texto crudo');
+  if (choques.length) {
+    console.log('      (en la carta hay ' + choques.length + ' par(es) con el mismo pasaje: ' +
+                choques.map(v => v.join(' ⟷ ')).join(' ; ') + ' — el filtro los separa)');
+  }
+});
+
+test('la historia del plato NO se parte por comas', () => {
+  // Es prosa: trocearla la destrozaría. Debe seguir usando _examRedact a secas.
+  const i = html.indexOf("if(topic.key==='ingredients'){");
+  const j = html.indexOf('const nameOf=x=>getDish(x).name;', i);
+  assert(i > 0 && j > i, 'no encuentro la bifurcación del pasaje');
+  const seg = html.slice(i, j);
+  assert(/passage=_examPasajeIngredientes\(/.test(seg), 'los ingredientes deben limpiarse');
+  assert(/else\s*\{[\s\S]*passage=_examRedact\(/.test(seg), 'la historia debe seguir sin trocear');
+  assert(/if\(!passage\) continue;/.test(seg),
+    'sin pasaje, el plato tiene que saltarse: si no, la pregunta sale vacía');
+});
+
 // ─── 7. No leftover git conflict markers ────────────────────────
 console.log('\nHygiene');
 test('no git conflict markers in tracked source', () => {
