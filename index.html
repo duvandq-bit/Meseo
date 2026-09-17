@@ -52,7 +52,7 @@
 <meta property="og:description" content="Formación de equipos de sala: carta, alérgenos, vinos, exámenes y juegos de repaso.">
 <meta property="og:url" content="https://meseo.es/">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"Meseo","url":"https://meseo.es/"}</script>
-<meta name="app-version" content="7.457">
+<meta name="app-version" content="7.458">
 <meta name="app-build" content="May 2026">
 <meta name="theme-color" content="#1c2a22">
 <!-- ═══ PWA ═══ -->
@@ -2187,7 +2187,7 @@ const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><p
 const SRC = 'src';
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='7.457';  // sincronizada con sw.js VERSION (guard de CI)
+const APP_VERSION='7.458';  // sincronizada con sw.js VERSION (guard de CI)
 const APP_BUILD='Jul 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;
@@ -2745,15 +2745,80 @@ async function _eventoClasificar(r, ev){
   return { estado:'revisar', motivo:'http-' + st };
 }
 
+// ═══ B2 · F5 · LA CUARENTENA NO PIERDE NADA, NI SIQUIERA SIN SITIO ════════
+//
 // CUARENTENA: lo que el servidor rechazó de forma permanente. Conserva el
 // evento entero —`evento_id` incluido—, el motivo y la fecha. No se trunca en
 // silencio y no se borra nada para que el contador quede bonito.
+//
+// EL AGUJERO QUE F5 CIERRA. Hasta ahora esto ignoraba lo que devolvía
+// `_evEscribir` y sacaba el evento de la cola igualmente: si la cuarentena no
+// cabía, el evento desaparecía de los dos sitios a la vez. Silenciosamente.
+//
+// Estructura: `{ v, entradas, colapsados }`. Los CONTADORES viven aparte, en
+// `txk_eventos_registro`, y ahí se quedan: mezclarlos con la cuarentena fue
+// descartado en F4 a propósito.
+function _cuarentenaLeer(){
+  let c = null;
+  try{ c = JSON.parse(localStorage.getItem(_EV_CUARENTENA) || 'null'); }catch(_){}
+  // Tolerante con el formato anterior —una lista pelada— para que una versión
+  // de la rama con la cuarentena ya escrita no pierda lo que tuviera dentro.
+  if(Array.isArray(c)) return { v:1, entradas:c, colapsados:[] };
+  if(c && typeof c === 'object' && Array.isArray(c.entradas))
+    return { v:1, entradas:c.entradas, colapsados: Array.isArray(c.colapsados) ? c.colapsados : [] };
+  return { v:1, entradas:[], colapsados:[] };
+}
+function _cuarentenaFundir(viejos, nuevos){
+  const idx = Object.create(null);
+  const sal = [];
+  for(const g of viejos.concat(nuevos)){
+    const k = (g.motivo || '?') + '\u0000' + (g.dia || '?');
+    if(idx[k] == null){ idx[k] = sal.length; sal.push({ motivo:g.motivo, dia:g.dia, n:0, tipos:[] }); }
+    const d = sal[idx[k]];
+    d.n += g.n || 0;
+    for(const t of (g.tipos || [])) if(d.tipos.indexOf(t) < 0) d.tipos.push(t);
+  }
+  return sal;
+}
+// Colapsa SÓLO prioridad 3. Se pierde el detalle individual de una práctica;
+// NUNCA el hecho ni la cuenta. Prioridad 1 y 2 no se colapsan jamás: una
+// evaluación conserva su entrada entera pase lo que pase.
+function _cuarentenaColapsar(c){
+  const quedan = [], grupos = Object.create(null);
+  for(const e of c.entradas){
+    if(e.prioridad >= 3){
+      const dia = new Date(e.cuando || Date.now()).toISOString().slice(0, 10);
+      const k = (e.motivo || '?') + '\u0000' + dia;
+      const g = grupos[k] = grupos[k] || { motivo: e.motivo, dia, n:0, tipos:[] };
+      g.n++;
+      const t = (e.datos && e.datos.activity) || e.destino;
+      if(t && g.tipos.indexOf(t) < 0) g.tipos.push(t);
+    } else quedan.push(e);
+  }
+  const nuevos = Object.keys(grupos).map(k => grupos[k]);
+  if(!nuevos.length) return null;                 // no había nada que colapsar
+  return { v:1, entradas: quedan, colapsados: _cuarentenaFundir(c.colapsados, nuevos) };
+}
+
+// Devuelve 'cuarentena' si la entrada quedó guardada, o 'desbordada' si no cupo
+// ni con el resumen. En ese caso NO se saca el evento de la cola: quien llama lo
+// deja ahí marcado para revisar, que no se reintenta y no se pierde.
 function _eventoACuarentena(ev, motivo){
-  const l = _evLeer(_EV_CUARENTENA);
-  l.push({ ...ev, motivo: motivo || 'desconocido', cuando: Date.now() });
-  _evEscribir(_EV_CUARENTENA, l);
+  const entrada = Object.assign({}, ev, { motivo: motivo || 'desconocido', cuando: Date.now() });
+  let c = _cuarentenaLeer();
+  c.entradas.push(entrada);
+  let r = _evEscribir(_EV_CUARENTENA, c);
+  if(r !== true){
+    const comp = _cuarentenaColapsar(c);
+    if(comp){ c = comp; r = _evEscribir(_EV_CUARENTENA, c); }
+  }
+  if(r !== true){
+    _evContar('cuarentena_desbordada', { motivo, destino: ev.destino, evento_id: ev.evento_id });
+    return 'desbordada';
+  }
   _evContar('cuarentena', { motivo, destino: ev.destino, evento_id: ev.evento_id });
   _eventoQuitarDeCola(ev);
+  return 'cuarentena';
 }
 function _eventoQuitarDeCola(ev){
   const q = _evLeer(_EV_KEY).filter(e => !(e.evento_id === ev.evento_id && e.uid === ev.uid));
@@ -2765,7 +2830,13 @@ function _eventoQuitarDeCola(ev){
 function _eventoResolver(ev, res){
   const e = (res && res.estado) || 'reintentable';
   if(e === 'confirmado' || e === 'duplicado'){ _eventoConfirmar(ev); return e; }
-  if(e === 'cuarentena'){ _eventoACuarentena(ev, res.motivo); return e; }
+  if(e === 'cuarentena'){
+    if(_eventoACuarentena(ev, res.motivo) === 'cuarentena') return e;
+    // No cupo ni colapsando: el evento SE QUEDA en la cola, marcado para
+    // revisar —que no se reintenta— en vez de desaparecer de los dos sitios.
+    _eventoMarcarRevisar(ev, 'cuarentena-desbordada');
+    return 'cuarentena-desbordada';
+  }
   if(e === 'retenido' || e === 'identidad-cambiada' || e === 'sin-token'
      || e === 'token-no-coincide' || e === 'no-intentado'){
     return e;   // ni siquiera se intentó: el evento se queda tal cual, sin gastar intentos
@@ -2781,6 +2852,16 @@ function _eventoResolver(ev, res){
   cola[i].motivo = res && res.motivo ? res.motivo : null;
   _evEscribir(_EV_KEY, cola);
   return e;
+}
+
+// Deja un evento en la cola, marcado para revisar: ni se reintenta ni se borra.
+function _eventoMarcarRevisar(ev, motivo){
+  const cola = _evLeer(_EV_KEY);
+  const i = cola.findIndex(x => x.evento_id === ev.evento_id && x.uid === ev.uid);
+  if(i < 0) return false;
+  cola[i].estado = 'revisar';
+  cola[i].motivo = motivo || cola[i].motivo || null;
+  return _evEscribir(_EV_KEY, cola) === true;
 }
 
 // La renovación NO es nueva: es la que ya trae supabase-js, y su

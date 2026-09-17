@@ -11588,7 +11588,9 @@ function _montarEscritores(opciones) {
       registro: _evRegistroLeer,
       memoria: () => _evMemoria,
       uuid: _uuid, enviar: _eventoEnviar, crear: _eventoCrear, resolver: _eventoResolver,
-      drenar: _eventosDrenar, cuarentena: () => _evLeer(_EV_CUARENTENA),
+      drenar: _eventosDrenar,
+      cuarentena: () => _cuarentenaLeer().entradas,      // las entradas con detalle
+      cuarentenaCruda: _cuarentenaLeer,                   // { v, entradas, colapsados }
       registrarActividad, supaInsertScore, supaInsertTxokoRecord, supaInsertEtRecord
     };
   `)((url, body, headers) => cap.push({ url, body, headers }), ls,
@@ -12673,6 +12675,173 @@ test('F3 · los criterios de eliminación están en UN solo sitio', () => {
     'sólo confirmado y duplicado pueden sacar un evento de la cola');
   assert((html.match(/_eventoConfirmar\(/g) || []).length === 2,
     'sólo _eventoResolver puede confirmar: hay otra vía de eliminación');
+});
+
+// ─── B2 · F5 · la cuarentena no pierde nada, ni sin sitio ───────
+const _CUAR = 'txk_eventos_cuarentena';
+
+const _f5 = await (async () => {
+  const o = {};
+  const evalua   = { activity:'simulacro_alergenos', competency:'alergenos',
+                     kind:'evaluacion', score:18, total:20, seconds:240, meta:{ cat:'all' } };
+  const examen   = { activity:'examen', competency:'carta', kind:'evaluacion', score:8, total:10, seconds:60 };
+  const practica = { activity:'repaso', competency:'carta', kind:'practica', score:1, total:1 };
+  const rechaza  = () => _errPg(409, '23503', 'violates foreign key constraint');
+
+  // ── 1 · Sin sitio para el detalle: se COLAPSA lo de prioridad 3 ──
+  { let tope = Infinity;
+    const { M } = _montarEscritores({ responder: rechaza,
+      setItemLanza: (k, v) => (k === _CUAR && v.length > tope)
+        ? Object.assign(new Error('lleno'), { name: 'QuotaExceededError' }) : null });
+    M.sesion(ANA, _jwtDe(ANA));
+    for (let i = 0; i < 12; i++) await M.registrarActividad(practica);
+    await M.registrarActividad(examen);                   // una P2, que no puede colapsarse
+    o.antesColapso = M.cuarentenaCruda();
+    tope = JSON.stringify(o.antesColapso).length + 60;    // no cabe una entrada más…
+    o.altaConColapso = await M.registrarActividad(evalua);
+    o.trasColapso = M.cuarentenaCruda();
+    o.contadoresColapso = M.registro().contadores; }
+
+  // ── 2 · Ni con el resumen cabe: el evento NO desaparece ──
+  { const { M, cap } = _montarEscritores({ responder: rechaza,
+      setItemLanza: (k) => (k === _CUAR ? Object.assign(new Error('lleno'), { name:'QuotaExceededError' }) : null) });
+    M.sesion(ANA, _jwtDe(ANA));
+    o.desbordada = await M.registrarActividad(evalua);
+    o.desbordadaCola = M.cola();
+    o.desbordadaCuar = M.cuarentena().length;
+    o.desbordadaContador = M.registro().contadores.cuarentena_desbordada;
+    const p1 = cap.length;
+    await M.drenar('x');                                   // no puede reintentarse
+    o.desbordadaPeticiones = [p1, cap.length]; }
+
+  // ── 3 · Prioridad 1 y 2 NO se colapsan jamás ──
+  { let tope = Infinity;
+    const { M } = _montarEscritores({ responder: rechaza,
+      setItemLanza: (k, v) => (k === _CUAR && v.length > tope)
+        ? Object.assign(new Error('lleno'), { name:'QuotaExceededError' }) : null });
+    M.sesion(ANA, _jwtDe(ANA));
+    for (let i = 0; i < 6; i++) await M.registrarActividad(examen);   // seis P2
+    await M.registrarActividad(evalua);                               // una P1
+    const antes = M.cuarentenaCruda();
+    o.p12Antes = antes.entradas.length;
+    tope = JSON.stringify(antes).length + 10;             // no cabe NADA más
+    o.p12Alta = await M.registrarActividad(examen);
+    const desp = M.cuarentenaCruda();
+    o.p12Despues = desp.entradas.length;
+    o.p12Colapsados = desp.colapsados.length;
+    o.p12SigueP1 = desp.entradas.some(e => e.prioridad === 1);
+    o.p12Cola = M.cola().length; }
+
+  // ── 4 · El contador de cuarentena sobrevive a una recarga ──
+  { const alm = Object.create(null);
+    { const { M } = _montarEscritores({ almacen: alm, responder: rechaza });
+      M.sesion(ANA, _jwtDe(ANA));
+      await M.registrarActividad(evalua);
+      await M.registrarActividad(examen);
+      o.cuarAntesRecarga = M.registro().contadores.cuarentena; }
+    { const { M } = _montarEscritores({ almacen: alm });
+      o.cuarTrasRecarga = M.registro().contadores.cuarentena;
+      o.entradasTrasRecarga = M.cuarentena().length; } }
+
+  // ── 5 · El formato anterior —lista pelada— se lee sin perder nada ──
+  { const alm = Object.create(null);
+    alm[_CUAR] = JSON.stringify([{ evento_id:'viejo-1', uid:ANA, prioridad:1,
+      destino:'actividad', motivo:'clave-ajena', cuando: 1, datos:{ activity:'simulacro_alergenos' } }]);
+    const { M } = _montarEscritores({ almacen: alm, responder: rechaza });
+    M.sesion(ANA, _jwtDe(ANA));
+    o.viejoAntes = M.cuarentena().length;
+    await M.registrarActividad(examen);
+    o.viejoDespues = M.cuarentenaCruda();
+    o.viejoConserva = o.viejoDespues.entradas.some(e => e.evento_id === 'viejo-1'); }
+
+  // ── 6 · La cuarentena de B1 no se toca ──
+  { const alm = Object.create(null);
+    alm['txk_cola_cuarentena'] = JSON.stringify([{ nombre:'Ana', uid:null, motivo:'permanente' }]);
+    const { M } = _montarEscritores({ almacen: alm, responder: rechaza });
+    M.sesion(ANA, _jwtDe(ANA));
+    await M.registrarActividad(evalua);
+    o.b1Intacta = alm['txk_cola_cuarentena'];
+    o.b1Claves = Object.keys(alm).sort(); }
+
+  return o;
+})();
+
+console.log('\nB2 — F5 · cuarentena sin pérdida');
+
+test('F5 · sin sitio, la prioridad 3 se COLAPSA: se pierde el detalle, no la cuenta', () => {
+  assert(_f5.antesColapso.entradas.length === 13, `esperaba 13 entradas, hay ${_f5.antesColapso.entradas.length}`);
+  assert(_f5.altaConColapso.envio === 'cuarentena',
+    `la evaluación tenía que acabar en cuarentena: ${JSON.stringify(_f5.altaConColapso)}`);
+  const t = _f5.trasColapso;
+  assert(t.colapsados.length >= 1, 'tenía que quedar al menos un resumen');
+  const total = t.colapsados.reduce((a, g) => a + g.n, 0);
+  assert(total === 12, `el resumen tiene que conservar las 12 prácticas, cuenta ${total}`);
+  assert(t.colapsados[0].tipos.includes('repaso'), 'el resumen guarda de qué eran');
+  assert(t.colapsados[0].dia && /^\d{4}-\d{2}-\d{2}$/.test(t.colapsados[0].dia), 'y de qué día');
+  assert(!t.entradas.some(e => e.prioridad === 3), 'ninguna práctica puede quedar con detalle');
+  assert(t.entradas.some(e => e.prioridad === 1), 'la evaluación nueva conserva su entrada entera');
+  assert(t.entradas.some(e => e.prioridad === 2), 'y la P2 anterior también');
+  assert(_f5.contadoresColapso.cuarentena === 14,
+    `el contador cuenta los 14, colapsados incluidos: ${_f5.contadoresColapso.cuarentena}`);
+});
+
+test('F5 · si ni el resumen cabe, el evento NO desaparece de los dos sitios', () => {
+  // Éste era el agujero: antes se sacaba de la cola aunque la cuarentena no se
+  // hubiera guardado, y el evento se esfumaba en silencio.
+  assert(_f5.desbordadaCuar === 0, 'la cuarentena no pudo guardarse, como pedía el caso');
+  assert(_f5.desbordadaCola.length === 1,
+    `el evento tiene que seguir en la cola: quedan ${_f5.desbordadaCola.length}`);
+  assert(_f5.desbordadaCola[0].estado === 'revisar',
+    `y marcado para revisar, no reintentándose: ${_f5.desbordadaCola[0].estado}`);
+  assert(_f5.desbordada.envio === 'cuarentena-desbordada',
+    `el resultado tiene que decirlo: ${JSON.stringify(_f5.desbordada)}`);
+  assert(_f5.desbordadaContador === 1, 'y quedar contado');
+  assert(_f5.desbordadaPeticiones[1] === _f5.desbordadaPeticiones[0],
+    'un evento en revisar no se vuelve a pedir');
+});
+
+test('F5 · prioridad 1 y 2 NUNCA se colapsan', () => {
+  assert(_f5.p12Antes === 7, `esperaba 7 entradas, hay ${_f5.p12Antes}`);
+  assert(_f5.p12Despues === 7, `no se puede tocar ninguna: quedan ${_f5.p12Despues}`);
+  assert(_f5.p12Colapsados === 0, 'no hay nada de prioridad 3 que colapsar, y no se inventa');
+  assert(_f5.p12SigueP1, 'la entrada de prioridad 1 sigue entera');
+  assert(_f5.p12Alta.envio === 'cuarentena-desbordada',
+    `sin nada que colapsar tiene que desbordar: ${JSON.stringify(_f5.p12Alta)}`);
+  assert(_f5.p12Cola === 1, 'y el evento nuevo se queda en la cola, no se pierde');
+});
+
+test('F5 · el contador de cuarentena sobrevive a una recarga', () => {
+  assert(_f5.cuarAntesRecarga === 2, `esperaba 2, hubo ${_f5.cuarAntesRecarga}`);
+  assert(_f5.cuarTrasRecarga === 2, `tras recargar quedó en ${_f5.cuarTrasRecarga}`);
+  assert(_f5.entradasTrasRecarga === 2, 'y las entradas también');
+});
+
+test('F5 · el formato anterior de la cuarentena se lee sin perder nada', () => {
+  assert(_f5.viejoAntes === 1, 'una lista pelada tiene que leerse igual');
+  assert(_f5.viejoConserva, 'y su contenido no puede perderse al cambiar de formato');
+  assert(_f5.viejoDespues.entradas.length === 2, 'con la entrada nueva encima');
+  assert(Array.isArray(_f5.viejoDespues.colapsados), 'y el formato nuevo completo');
+});
+
+test('F5 · la cuarentena de B1 no se toca', () => {
+  assert(_f5.b1Intacta === JSON.stringify([{ nombre:'Ana', uid:null, motivo:'permanente' }]),
+    'B2 ha escrito en la cuarentena de B1');
+  assert(_f5.b1Claves.includes('txk_cola_cuarentena') && _f5.b1Claves.includes(_CUAR),
+    'las dos cuarentenas tienen que convivir, separadas');
+});
+
+test('F5 · nada sale de la cola sin que la cuarentena lo haya aceptado', () => {
+  const fn = html.slice(html.indexOf('function _eventoACuarentena'),
+                        html.indexOf('function _eventoMarcarRevisar'));
+  assert(/if\(r !== true\)\{[\s\S]{0,200}return 'desbordada';/.test(fn),
+    'la cuarentena tiene que rendirse explícitamente cuando no cabe');
+  const i = fn.indexOf("_evContar('cuarentena'");
+  const j = fn.indexOf('_eventoQuitarDeCola');
+  assert(i > 0 && j > i, 'el evento sólo puede salir de la cola DESPUÉS de guardarse en cuarentena');
+  assert(/return 'desbordada';[\s\S]{0,80}\}/.test(fn),
+    'la rama de desbordamiento no puede caer en el borrado');
+  // Y los contadores siguen viviendo aparte, como decidió F4.
+  assert(!fn.includes('contadores'), 'los contadores no se mezclan con la cuarentena');
 });
 
 // ─── B2 · F1 · evento_id e idempotencia en el servidor ──────────
