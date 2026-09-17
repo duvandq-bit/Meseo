@@ -52,7 +52,7 @@
 <meta property="og:description" content="Formación de equipos de sala: carta, alérgenos, vinos, exámenes y juegos de repaso.">
 <meta property="og:url" content="https://meseo.es/">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"Meseo","url":"https://meseo.es/"}</script>
-<meta name="app-version" content="7.453">
+<meta name="app-version" content="7.454">
 <meta name="app-build" content="May 2026">
 <meta name="theme-color" content="#1c2a22">
 <!-- ═══ PWA ═══ -->
@@ -935,10 +935,49 @@ async function setEmployeePinServer(name, pin){
 //   `sesion` de `employees`, que la clave pública no puede escribir. Un
 //   cliente no puede pedir la sesión de otro sin saber su PIN.
 let _authClient = null;
-let _authUid = null;        // uid de la sesión activa, sólo para diagnóstico
-let _authEmpleado = null;   // a nombre de quién está esa sesión
-let _authPeticion = null;   // la petición en curso; sirve de cerrojo (ver abajo)
-let _authToken = null;      // el access_token vigente, o null si no hay sesión
+let _authPeticion = null;   // la petición en curso; sirve de cerrojo. NO es identidad
+
+// ═══ F0 · LA IDENTIDAD ES UN SOLO OBJETO, Y SE SUSTITUYE ENTERO ═══════════
+//
+// Antes esto eran dos variables sueltas, `_authUid` y `_authToken`, y ahí
+// estaba el fallo: una operación comprobaba de quién era una entrada con la
+// primera, esperaba una respuesta de red, y al volver construía la cabecera con
+// la segunda. Entre esos dos instantes puede entrar otra persona en un iPad
+// compartido, y el trabajo de una salía firmado por otra.
+//
+// Ahora hay UN objeto congelado. No se muta: se sustituye entero por
+// `_authPoner`. Eso permite que quien vaya a hacer algo largo se quede con una
+// referencia al principio y compruebe `_authCtx() !== mia` al volver: UNA sola
+// comparación detecta cualquier cambio de identidad ocurrido en cualquier
+// espera, sin tener que acertar con el orden en que cambian los campos.
+//
+//   uid       el `sub` del JWT. ETIQUETA local de propiedad, nunca autoridad
+//   token     el access_token vigente, o null
+//   exp       su caducidad (epoch en segundos). Quien decide si caducó es el
+//             cliente con esto, no el servidor: está medido que PGRST301 no
+//             significa «caducado», también lo devuelve un token ilegible
+//   empleado  a nombre de quién, según el servidor. Sólo diagnóstico
+//   estado    anonimo | identidad_sin_token | activa
+const _AUTH_VACIO = { uid:null, token:null, exp:0, empleado:null, estado:'anonimo' };
+let _auth = Object.freeze({ ..._AUTH_VACIO });
+function _authCtx(){ return _auth; }                       // síncrona, nunca lanza
+function _authPoner(next){ _auth = Object.freeze(next); }  // ÚNICA vía de cambio
+
+// Decodifica SÓLO la carga útil de un JWT. NO verifica la firma y no lo
+// pretende: el cliente no puede, y no le hace falta. El `sub` se usa como
+// etiqueta de propiedad local —de quién es una entrada de la cola—, mientras
+// que quien decide qué se escribe sigue siendo el servidor validando el token
+// firmado. Falsificarlo en el almacenamiento local no sirve para escribir nada
+// a nombre de nadie.
+function _jwtCarga(t){
+  try{
+    const p = String(t || '').split('.')[1];
+    if(!p) return null;
+    return JSON.parse(atob(p.replace(/-/g, '+').replace(/_/g, '/')));
+  }catch(_){ return null; }
+}
+function _jwtSub(t){ const c = _jwtCarga(t); return (c && typeof c.sub === 'string' && c.sub) ? c.sub : null; }
+function _jwtExp(t){ const c = _jwtCarga(t); return (c && typeof c.exp === 'number') ? c.exp : 0; }
 
 // LA CABECERA `Authorization` DE LAS PETICIONES A LA BASE DE DATOS (fase 2.5D-A)
 //
@@ -957,7 +996,7 @@ let _authToken = null;      // el access_token vigente, o null si no hay sesión
 // no da tiempo a esperar una promesa. Se mantiene una copia en memoria,
 // actualizada por `onAuthStateChange`, que también cubre las renovaciones
 // automáticas del token cada hora.
-function _bearer(){ return _authToken || SUPA_KEY; }
+function _bearer(){ return _authCtx().token || SUPA_KEY; }
 const _authMem = Object.create(null);
 const AUTH_STORAGE_KEY = 'meseo-auth';
 const AUTH_TIMEOUT_MS = 8000;
@@ -1006,7 +1045,14 @@ function _getAuthClient(){
     // al establecer sesión, al renovarla sola cada hora y al cerrarla.
     try{
       _authClient.auth.onAuthStateChange((_evento, sesion) => {
-        _authToken = (sesion && sesion.access_token) || null;
+        // Sustituye el contexto entero, conservando de quién es. Sin token pero
+        // con uid, el estado es `identidad_sin_token`: se sabe quién eres y
+        // todavía no se puede hablar por ti.
+        const t = (sesion && sesion.access_token) || null;
+        const a = _authCtx();
+        _authPoner({ uid: a.uid, empleado: a.empleado, token: t,
+                     exp: t ? _jwtExp(t) : 0,
+                     estado: t ? 'activa' : (a.uid ? 'identidad_sin_token' : 'anonimo') });
       });
     }catch(e){ dbgw('[auth] onAuthStateChange:', e && e.message); }
   }catch(e){ dbgw('[auth] cliente:', e && e.message); return null; }
@@ -1024,10 +1070,11 @@ function _getAuthClient(){
 // petición que estuviera en vuelo.
 async function _authSesionSalir(marcaPropia){
   if(!marcaPropia || _authPeticion === marcaPropia) _authPeticion = marcaPropia || null;
-  _authUid = null; _authEmpleado = null;
-  // Lo primero de todo: que ninguna petición posterior salga con el token del
-  // que se acaba de ir. Se pone a null ANTES de esperar nada.
-  _authToken = null;
+  // Lo primero de todo, y en UNA sola asignación: que ninguna petición
+  // posterior salga con la identidad del que se acaba de ir. Se vacía ANTES de
+  // esperar nada, y quien tuviera cogida la referencia anterior verá que ya no
+  // es la viva.
+  _authPoner({ ..._AUTH_VACIO });
   const cli = _getAuthClient();
   if(cli){ try{ await cli.auth.signOut({ scope: 'local' }); }catch(e){ dbgw('[auth] signOut:', e && e.message); } }
   try{
@@ -1072,11 +1119,13 @@ async function _authSesionEntrar(nombre, sha, marca){
   try{
     const { error } = await cli.auth.setSession({ access_token: s.access_token, refresh_token: s.refresh_token });
     if(error){ dbgw('[auth] setSession:', error.message); return 'set-fallo'; }
-    // Sin esperar al evento: la siguiente petición ya puede llevarlo.
-    _authToken = s.access_token;
   }catch(e){ dbgw('[auth] setSession:', e && e.message); return 'set-error'; }
-  _authUid = s.uid || null;
-  _authEmpleado = j.empleado || nombre;
+  // UNA SOLA asignación, con el uid y el token juntos. Antes eran dos líneas
+  // separadas y entre ellas el contexto quedaba a medias. Y sin esperar al
+  // evento de `onAuthStateChange`: la siguiente petición ya puede llevarlo.
+  _authPoner({ uid: s.uid || _jwtSub(s.access_token), token: s.access_token,
+               exp: _jwtExp(s.access_token), empleado: j.empleado || nombre,
+               estado: 'activa' });
   return 'ok';
 }
 
@@ -1893,7 +1942,7 @@ function _vSello(o){ o = o || {}; o.venue = _venueActual(); return o; }
 //   Esa rama muere en C-3, que es cuando el servidor deja de aceptarla. No es un
 //   descuido: es lo único que evita perder datos entre C-2 y B2.
 function _cuerpoPropio(datos, nombre){
-  if(_authToken) return datos;                  // hay identidad: la pone el servidor
+  if(_authCtx().token) return datos;            // hay identidad: la pone el servidor
   return Object.assign({}, datos, { employee: nombre, venue: _venueActual() });
 }
 
@@ -2138,7 +2187,7 @@ const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><p
 const SRC = 'src';
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='7.453';  // sincronizada con sw.js VERSION (guard de CI)
+const APP_VERSION='7.454';  // sincronizada con sw.js VERSION (guard de CI)
 const APP_BUILD='Jul 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;
@@ -3361,13 +3410,13 @@ function _cuarentenaContar(){
 }
 
 // Compatibilidad: quedan por el nombre viejo para no tocar otros sitios.
-function _outboxAdd(name){ _colaAnotar(name, _authUid); }
-function _outboxRemove(name){ _colaQuitar(name, _authUid); }
+function _outboxAdd(name){ _colaAnotar(name, _authCtx().uid); }
+function _outboxRemove(name){ _colaQuitar(name, _authCtx().uid); }
 function _outboxReflect(){
   // Refleja el estado en el chip de sincronización sin pisar el 'offline'.
   if(navigator.onLine === false) return;
   const l = _colaCargar();
-  const mias = l.filter(e => e.uid == null || e.uid === _authUid).length;
+  const mias = l.filter(e => e.uid == null || e.uid === _authCtx().uid).length;
   const ajenas = l.length - mias;
   if(typeof _setSyncPill==='function') _setSyncPill((mias || ajenas || _cuarentenaContar()) ? 'pending' : 'synced');
 }
@@ -3382,7 +3431,7 @@ function _outboxReflect(){
 let _sincronizando = Object.create(null);
 function _sincronizarFicha(nombre){
   if(!nombre) return Promise.resolve('nada');
-  const uid = _authUid;                    // ← la identidad, congelada aquí
+  const uid = _authCtx().uid;              // ← la identidad, congelada aquí
   const clave = (uid || '-') + '\u0000' + nombre;
   if(_sincronizando[clave]) return _sincronizando[clave];
   _colaAnotar(nombre, uid);
@@ -3417,7 +3466,7 @@ async function _outboxFlush(){
       // Lo que no es de esta sesión NO se intenta y NO se desencola: espera a
       // que esa persona vuelva a entrar en este dispositivo. Las heredadas
       // (uid nulo) sí se intentan mientras el camino anónimo siga abierto.
-      if(e.uid != null && e.uid !== _authUid) continue;
+      if(e.uid != null && e.uid !== _authCtx().uid) continue;
       const res = await supaUpsertEmployee(e.nombre).catch(()=>'reintentable');
       if(res === 'confirmado' || res === 'nada') _colaQuitar(e.nombre, e.uid);
       else if(res === 'permanente'){

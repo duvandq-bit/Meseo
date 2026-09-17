@@ -5675,7 +5675,7 @@ test('resiliencia: la cola de sincronización lleva la identidad de quien la cre
   assert(/const _CUARENTENA\s*=\s*'txk_cola_cuarentena';/.test(html), 'debe existir la cuarentena');
 
   const flush = html.slice(html.indexOf('async function _outboxFlush'), html.indexOf("window.addEventListener('online'"));
-  assert(/if\(e\.uid != null && e\.uid !== _authUid\) continue;/.test(flush),
+  assert(/if\(e\.uid != null && e\.uid !== _authCtx\(\)\.uid\) continue;/.test(flush),
     'lo que no es de esta sesión no se intenta: se queda esperando a su dueño');
   assert(/res === 'confirmado' \|\| res === 'nada'/.test(flush) && /_colaQuitar/.test(flush),
     'sólo se desencola lo que el servidor confirmó');
@@ -5684,7 +5684,7 @@ test('resiliencia: la cola de sincronización lleva la identidad de quien la cre
 
   // El punto único de entrada captura la identidad AL LANZAR.
   const ent = html.slice(html.indexOf('function _sincronizarFicha'), html.indexOf('let _outboxFlushing'));
-  assert(/const uid = _authUid;/.test(ent), 'la identidad se congela al lanzar, no al resolver');
+  assert(/const uid = _authCtx\(\)\.uid;/.test(ent), 'la identidad se congela al lanzar, no al resolver');
   assert(/_colaQuitar\(nombre, uid\)/.test(ent),
     'al resolver se desencola la entrada de ESE uid, no la del usuario actual');
   assert(!/currentUser/.test(ent), 'el punto de entrada no puede mirar quién hay dentro ahora');
@@ -10160,7 +10160,8 @@ const _actRes = await (async () => {
   // `_cuerpoPropio` REAL —no una imitación— junto con su `_authToken`, para
   // poder medir las dos ramas: con sesión y sin ella.
   const F = new Function('SUPA_URL','SUPA_KEY','_esAdmin','currentUser','_venueActual','dbgw','fetch','_bearer','_tok', // eslint-disable-line no-new-func
-    'let _authToken = _tok;\n' + _xFn('_cuerpoPropio') + '\n'
+    "let _auth = { uid:null, token:_tok, exp:0, empleado:null, estado:'activa' };\n"
+    + 'const _authCtx = () => _auth;\n' + _xFn('_cuerpoPropio') + '\n'
     + html.slice(i0, i1) + '; return { registrar: registrarActividad, deTema: competenciaDeTema };');
   const api = (esAdmin, tok) => F('https://x', 'k', () => esAdmin, 'Ana',
     () => 'txoko', () => {},
@@ -10815,13 +10816,15 @@ const _authRes = await (async () => {
     const montar = (sb, alm) => new Function('supabase', 'SUPA_URL', 'SUPA_KEY', 'fetch', 'localStorage', 'dbgw', // eslint-disable-line no-new-func
       html.slice(i0, i1) +
       '; return { _authSesionEntrar, _authSesionSalir, _authSesionEnSegundoPlano, _bearer,' +
-      '           uid: () => _authUid, empleado: () => _authEmpleado };'
+      '           uid: () => _authCtx().uid, empleado: () => _authCtx().empleado,' +
+      '           ctx: _authCtx, poner: _authPoner, jwtSub: _jwtSub, jwtExp: _jwtExp };'
     )(sb, 'https://falso.test', 'clave-anon', fetchFalso, alm,
       (...a) => reg.logs.push(a.map(String).join(' ')));
     const M = new Function('supabase', 'SUPA_URL', 'SUPA_KEY', 'fetch', 'localStorage', 'dbgw', // eslint-disable-line no-new-func
       html.slice(i0, i1) +
       '; return { _authSesionEntrar, _authSesionSalir, _authSesionEnSegundoPlano, _bearer,' +
-      '           uid: () => _authUid, empleado: () => _authEmpleado };'
+      '           uid: () => _authCtx().uid, empleado: () => _authCtx().empleado,' +
+      '           ctx: _authCtx, poner: _authPoner, jwtSub: _jwtSub, jwtExp: _jwtExp };'
     )(supabaseFalso, 'https://falso.test', 'clave-anon', fetchFalso, almacen,
       (...a) => reg.logs.push(a.map(String).join(' ')));
     const MTardio = montar(supabaseTardio, almacenTardio);
@@ -11098,10 +11101,10 @@ test('todas las llamadas a /rest/v1 mandan el token, y sólo ésas', () => {
 });
 
 test('el token en memoria se mantiene al día por onAuthStateChange', () => {
-  assert(/onAuthStateChange\(\(_evento, sesion\) => \{[\s\S]{0,120}_authToken =/.test(html),
-    'nada actualiza _authToken cuando el cliente renueva el token solo');
-  assert(/_authSesionSalir\(marcaPropia\)\{[\s\S]{0,400}_authToken = null/.test(html),
-    'salir no limpia el token en memoria');
+  assert(/onAuthStateChange\(\(_evento, sesion\) => \{[\s\S]{0,400}_authPoner\(\{/.test(html),
+    'nada actualiza el contexto cuando el cliente renueva el token solo');
+  assert(/_authSesionSalir\(marcaPropia\)\{[\s\S]{0,400}_authPoner\(\{ \.\.\._AUTH_VACIO \}\)/.test(html),
+    'salir no vacía el contexto de identidad');
 });
 
 test('ni un token ni un PIN llegan a los registros', () => {
@@ -11303,14 +11306,16 @@ const _b1 = await (async () => {
       }
     };
     const nombres = Object.keys(env);
-    const cuerpo = `let currentUser = ${JSON.stringify(usuario)}; let _authUid = ${JSON.stringify(uid)};
+    const cuerpo = `let currentUser = ${JSON.stringify(usuario)};
+let _auth = { uid: ${JSON.stringify(uid)}, token:null, exp:0, empleado:null, estado:'activa' };
+const _authCtx = () => _auth;
 ${upsert}
 ${cola}
 ${guardar}
 ${beacon}
 let _saveDBTimer = null;
 return { saveDB, _sincronizarFicha, _outboxFlush, _beaconSync, _colaCargar, _cuarentenaContar,
-         _fichaFusionada, entra:(u,id)=>{ currentUser=u; _authUid=id; } };`;
+         _fichaFusionada, entra:(u,id)=>{ currentUser=u; _auth={ ..._auth, uid:id }; } };`;
     return { M: new Function(...nombres, cuerpo)(...nombres.map(k => env[k])), reg, ls, DB }; // eslint-disable-line no-new-func
   };
 
@@ -11464,7 +11469,8 @@ console.log('\nFase C-2 — identidad del servidor');
 const _c2 = await (async () => {
   const cap = [];
   const M = new Function('capturar', `  // eslint-disable-line no-new-func
-    let _authToken = null;
+    let _auth = { uid:null, token:null, exp:0, empleado:null, estado:'anonimo' };
+    const _authCtx = () => _auth;
     const SUPA_URL = 'https://ejemplo', SUPA_KEY = 'clave-anon';
     let currentUser = 'Ana';
     const TIPOS_ACTIVIDAD = ['evaluacion','practica','juego'];
@@ -11472,7 +11478,7 @@ const _c2 = await (async () => {
     const dbgw = () => {};
     const _esAdmin = (n) => n === 'Administrador';
     const _venueActual = () => 'txoko';
-    const _bearer = () => _authToken || SUPA_KEY;
+    const _bearer = () => _authCtx().token || SUPA_KEY;
     const _anotarEnDiario = () => {};
     const fetch = (url, opt) => { capturar(url, JSON.parse(opt.body), opt.headers); return Promise.resolve({ ok: true }); };
     ${_xFn('_cuerpoPropio')}
@@ -11481,7 +11487,7 @@ const _c2 = await (async () => {
     async ${_xFn('supaInsertTxokoRecord')}
     async ${_xFn('supaInsertEtRecord')}
     return {
-      token(t){ _authToken = t; },
+      token(t){ _auth = { ..._auth, token:t }; },
       quien(n){ currentUser = n; },
       registrarActividad, supaInsertScore, supaInsertTxokoRecord, supaInsertEtRecord
     };
@@ -11701,6 +11707,94 @@ test('C-3 · el rollback avisa de que reabre el agujero', () => {
     'el rollback tiene que decir explícitamente que devuelve el sistema a la versión vulnerable');
   assert(/^\s*--/m.test(bloque) && !/^\s*(grant|revoke|create policy)/mi.test(bloque),
     'el SQL de rollback tiene que estar comentado: no puede ejecutarse por accidente');
+});
+
+// ─── B2 · F0 · la identidad es un solo objeto congelado ─────────
+console.log('\nB2 — F0 · identidad única e inmutable');
+
+test('F0 · _authCtx() devuelve el MISMO objeto mientras nadie entra ni sale', () => {
+  const M = _authRes.M; assert(M, 'el módulo de sesión no montó');
+  assert(M.ctx() === M.ctx(), 'dos llamadas seguidas dan objetos distintos: el contexto no es estable');
+});
+
+test('F0 · el contexto está CONGELADO: no se puede mutar por error', () => {
+  const M = _authRes.M;
+  const a = M.ctx();
+  assert(Object.isFrozen(a), 'el contexto no está congelado');
+  const antes = a.uid;
+  try { a.uid = 'otro'; } catch (_) { /* en modo estricto lanza; los dos valen */ }
+  assert(M.ctx().uid === antes, 'se ha podido mutar la identidad sin pasar por _authPoner');
+});
+
+test('F0 · tras _authPoner cambia la REFERENCIA — es lo que detecta la carrera', () => {
+  const M = _authRes.M;
+  const antes = M.ctx();
+  M.poner({ ...antes });                       // mismo contenido, objeto nuevo
+  const despues = M.ctx();
+  assert(antes !== despues, 'sustituir el contexto tiene que cambiar la referencia');
+  assert(despues.uid === antes.uid, 'y conservar lo que se le pasó');
+  M.poner({ ...antes });
+});
+
+test('F0 · _bearer() sale del contexto: token si lo hay, clave anónima si no', () => {
+  const M = _authRes.M;
+  const guardado = M.ctx();
+  M.poner({ uid: 'u', token: 'tok-de-prueba', exp: 0, empleado: null, estado: 'activa' });
+  assert(M._bearer() === 'tok-de-prueba', '_bearer no devuelve el token del contexto');
+  M.poner({ uid: 'u', token: null, exp: 0, empleado: null, estado: 'identidad_sin_token' });
+  assert(M._bearer() === 'clave-anon', '_bearer no cae a la clave anónima cuando no hay token');
+  M.poner({ ...guardado });
+});
+
+test('F0 · _jwtSub y _jwtExp leen la carga útil, y NUNCA lanzan', () => {
+  const M = _authRes.M;
+  const carga = { sub: '2369a651-86b0-45f3-b964-9a6d5a961da9', exp: 1789430000, role: 'authenticated' };
+  const b64 = (o) => Buffer.from(JSON.stringify(o)).toString('base64')
+    .replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+  const jwt = 'eyJhbGciOiJIUzI1NiJ9.' + b64(carga) + '.firma-que-nadie-verifica-aqui';
+  assert(M.jwtSub(jwt) === carga.sub, `no saca el sub: ${M.jwtSub(jwt)}`);
+  assert(M.jwtExp(jwt) === carga.exp, `no saca el exp: ${M.jwtExp(jwt)}`);
+  for (const basura of [null, undefined, '', 'no.es.un.jwt', 'a.b', 'x', '...', 123, {}, 'a.!!!.c']) {
+    assert(M.jwtSub(basura) === null, `jwtSub devolvió algo con ${JSON.stringify(basura)}`);
+    assert(M.jwtExp(basura) === 0, `jwtExp devolvió algo con ${JSON.stringify(basura)}`);
+  }
+});
+
+test('F0 · no quedan lecturas sueltas de identidad fuera del contexto', () => {
+  // LA GUARDA DE LA FASE, y la única que detecta el fallo que F0 existe para
+  // matar: si alguien vuelve a declarar `_authUid` o `_authToken` como global
+  // y lo lee desde otro sitio, vuelve la carrera de comprobar un uid, esperar,
+  // y acabar firmando con el token de otra persona.
+  const vivo = html.split('\n').filter((l) => !/^\s*\/\//.test(l)).join('\n');
+  for (const v of ['_authUid', '_authToken']) {
+    const n = (vivo.match(new RegExp('\\b' + v + '\\b', 'g')) || []).length;
+    assert(n === 0, `quedan ${n} usos de ${v}: la identidad se lee sólo por _authCtx()`);
+  }
+  assert(/function _authCtx\(\)\{ return _auth; \}/.test(html), 'falta _authCtx');
+  assert(/function _authPoner\(next\)\{ _auth = Object\.freeze\(next\); \}/.test(html), 'falta _authPoner');
+  // Y el contexto INICIAL también congelado. Esta línea existe porque una
+  // mutación la destapó: comprobar `Object.isFrozen` sobre el contexto vivo no
+  // basta —`_authPoner` lo congela en cada cambio, así que el fallo sólo se ve
+  // ANTES del primer login, que es justo cuando arranca un iPad compartido.
+  assert(/let _auth = Object\.freeze\(\{ \.\.\._AUTH_VACIO \}\);/.test(html),
+    'el contexto inicial no está congelado: antes del primer login se podría mutar la identidad');
+  // Una sola vía de cambio: la declaración y la de dentro de _authPoner.
+  const asigna = (html.match(/\b_auth\s*=/g) || []).length;
+  assert(asigna === 2, `hay ${asigna} asignaciones de _auth (esperaba 2: la declaración y _authPoner)`);
+});
+
+test('F0 · salir y entrar sustituyen el contexto ENTERO, de una vez', () => {
+  const bloque = html.slice(html.indexOf('async function _authSesionSalir'),
+                            html.indexOf('function _authSesionEnSegundoPlano'));
+  const salir  = bloque.slice(0, bloque.indexOf('async function _authSesionEntrar'));
+  const entrar = bloque.slice(bloque.indexOf('async function _authSesionEntrar'));
+  assert((salir.match(/_authPoner\(/g) || []).length === 1,
+    'salir tiene que vaciar la identidad en UNA sola asignación');
+  assert(/_authPoner\(\{ \.\.\._AUTH_VACIO \}\)/.test(salir), 'salir no vacía el contexto entero');
+  assert((entrar.match(/_authPoner\(/g) || []).length === 1,
+    'entrar tiene que poner uid y token JUNTOS, en UNA sola asignación');
+  assert(/_authPoner\(\{ uid:[\s\S]{0,200}token: s\.access_token/.test(entrar),
+    'entrar no pone el uid y el token en la misma asignación');
 });
 
 // ─── 7. No leftover git conflict markers ────────────────────────
