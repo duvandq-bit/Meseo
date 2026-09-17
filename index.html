@@ -52,7 +52,7 @@
 <meta property="og:description" content="Formación de equipos de sala: carta, alérgenos, vinos, exámenes y juegos de repaso.">
 <meta property="og:url" content="https://meseo.es/">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"Meseo","url":"https://meseo.es/"}</script>
-<meta name="app-version" content="7.458">
+<meta name="app-version" content="7.459">
 <meta name="app-build" content="May 2026">
 <meta name="theme-color" content="#1c2a22">
 <!-- ═══ PWA ═══ -->
@@ -2187,7 +2187,7 @@ const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><p
 const SRC = 'src';
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='7.458';  // sincronizada con sw.js VERSION (guard de CI)
+const APP_VERSION='7.459';  // sincronizada con sw.js VERSION (guard de CI)
 const APP_BUILD='Jul 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;
@@ -2520,6 +2520,25 @@ function _evEscribir(clave, lista){
 // acabar en la cola que drena por un descuido de la recuperación.
 let _evMemoria = [];   // [{ clave, ev }]
 
+// F5 · CUANDO LA COLA NO SE PUEDE REESCRIBIR.
+//
+// Con el disco lleno, `_evEscribir` falla y la decisión que se acaba de tomar
+// —el backoff de un 5xx, o el «revisar» de un rechazo permanente— NO llega a
+// disco. Medido: sin esto el evento vuelve a enviarse en CADA drenaje, sin
+// ningún espaciado, contra un servidor que puede haberlo rechazado para
+// siempre. No se perdía, pero entraba en el bucle que la clasificación existe
+// para evitar.
+//
+// El disco sigue siendo la verdad cuando se puede escribir. Esto sólo tapa el
+// hueco, y muere con la pestaña igual que el problema que tapa.
+const _evAplazado = new Map();          // clave -> epoch del próximo intento; Infinity = nunca
+function _evClave(ev){ return (ev.uid || '-') + '\u0000' + ev.evento_id; }
+function _evAplazar(ev, hasta, guardado){
+  if(guardado){ _evAplazado.delete(_evClave(ev)); return true; }
+  _evAplazado.set(_evClave(ev), hasta);
+  return false;
+}
+
 // F4 · LO QUE NO SE PUDO GUARDAR SE VUELVE A INTENTAR. Sin esto, un evento que
 // falla al persistir se queda en memoria para siempre: no está en la cola, no
 // se drena, y muere con la pestaña. Se reintenta en cada alta y en cada
@@ -2787,7 +2806,11 @@ function _cuarentenaColapsar(c){
   const quedan = [], grupos = Object.create(null);
   for(const e of c.entradas){
     if(e.prioridad >= 3){
-      const dia = new Date(e.cuando || Date.now()).toISOString().slice(0, 10);
+      // `cuando` viene de JSON que puede traer cualquier cosa —el formato
+      // anterior se lee a propósito—, y `new Date('ayer').toISOString()` LANZA.
+      // Una fecha ilegible no puede tumbar el drenaje entero.
+      const ts = Number(e.cuando);
+      const dia = (Number.isFinite(ts) && ts > 0) ? new Date(ts).toISOString().slice(0, 10) : 'desconocido';
       const k = (e.motivo || '?') + '\u0000' + dia;
       const g = grupos[k] = grupos[k] || { motivo: e.motivo, dia, n:0, tipos:[] };
       g.n++;
@@ -2850,7 +2873,10 @@ function _eventoResolver(ev, res){
   cola[i].estado = (e === 'revisar' || n >= EV_MAX_INTENTOS) ? 'revisar' : 'pendiente';
   cola[i].proximo = Date.now() + _evEspera(n);
   cola[i].motivo = res && res.motivo ? res.motivo : null;
-  _evEscribir(_EV_KEY, cola);
+  // Si no se puede persistir el aplazamiento, se recuerda en memoria: lo que no
+  // puede pasar es que la decisión se olvide y el evento vuelva sin espaciado.
+  _evAplazar(ev, cola[i].estado === 'revisar' ? Infinity : cola[i].proximo,
+             _evEscribir(_EV_KEY, cola) === true);
   return e;
 }
 
@@ -2861,7 +2887,9 @@ function _eventoMarcarRevisar(ev, motivo){
   if(i < 0) return false;
   cola[i].estado = 'revisar';
   cola[i].motivo = motivo || cola[i].motivo || null;
-  return _evEscribir(_EV_KEY, cola) === true;
+  // Si el disco está lleno —que es justo cuando se llega aquí— el marcado no se
+  // persiste, pero el evento NO puede volver a intentarse igualmente.
+  return _evAplazar(ev, Infinity, _evEscribir(_EV_KEY, cola) === true);
 }
 
 // La renovación NO es nueva: es la que ya trae supabase-js, y su
@@ -2903,7 +2931,8 @@ async function _eventosDrenar(motivo){
   _evReintentarPersistencia();                  // F4 · el sitio puede haberse liberado
   const ahora = Date.now();
   const mios = _evLeer(_EV_KEY)
-    .filter(e => e.uid === ctx.uid && e.estado !== 'revisar' && (e.proximo || 0) <= ahora)
+    .filter(e => e.uid === ctx.uid && e.estado !== 'revisar' && (e.proximo || 0) <= ahora
+                 && !((_evAplazado.get(_evClave(e)) || 0) > ahora))
     .sort((a, b) => (a.prioridad - b.prioridad) || (a.ts - b.ts));   // alérgenos primero
   if(!mios.length) return 'nada-que-enviar';
   if(!ctx.token) return 'sin-token';

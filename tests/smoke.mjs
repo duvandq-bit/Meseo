@@ -12702,7 +12702,7 @@ const _f5 = await (async () => {
     o.trasColapso = M.cuarentenaCruda();
     o.contadoresColapso = M.registro().contadores; }
 
-  // ── 2 · Ni con el resumen cabe: el evento NO desaparece ──
+  // ── 2 · Sólo la cuarentena sin sitio: el evento se queda y se MARCA ──
   { const { M, cap } = _montarEscritores({ responder: rechaza,
       setItemLanza: (k) => (k === _CUAR ? Object.assign(new Error('lleno'), { name:'QuotaExceededError' }) : null) });
     M.sesion(ANA, _jwtDe(ANA));
@@ -12713,6 +12713,66 @@ const _f5 = await (async () => {
     const p1 = cap.length;
     await M.drenar('x');                                   // no puede reintentarse
     o.desbordadaPeticiones = [p1, cap.length]; }
+
+  // ── 2b · EL DISCO ENTERO LLENO. La versión dura, y la que destapó el fallo:
+  //        con sólo la cuarentena fallando, el marcado SÍ se persistía y la
+  //        prueba pasaba en falso. Aquí no se puede escribir en ninguna clave.
+  { let lleno = false, permanente = false;
+    const { M, cap, almacen } = _montarEscritores({
+      responder: () => (permanente ? rechaza() : _resp(503)),
+      setItemLanza: () => (lleno ? Object.assign(new Error('lleno'), { name:'QuotaExceededError' }) : null) });
+    M.sesion(ANA, _jwtDe(ANA));
+    await M.registrarActividad(evalua);                    // 503 → se queda en la cola
+    const q = JSON.parse(almacen['txk_eventos_v1']);
+    q[0].proximo = 0; q[0].intentos = 0;                   // vencer el backoff a mano
+    almacen['txk_eventos_v1'] = JSON.stringify(q);
+    permanente = true; lleno = true;                       // rechazo permanente Y disco lleno
+    cap.length = 0;
+    await M.drenar('x');
+    o.duroCola = M.cola();
+    o.duroCuar = M.cuarentena().length;
+    o.duroContador = M.registro().contadores.cuarentena_desbordada;
+    const p1 = cap.length;
+    // Se vuelve a vencer el backoff en disco: si el aplazamiento sólo viviera
+    // ahí, esto bastaría para que volviera a intentarse.
+    const d = JSON.parse(almacen['txk_eventos_v1']); d[0].proximo = 0;
+    almacen['txk_eventos_v1'] = JSON.stringify(d);
+    await M.drenar('y');
+    o.duroPeticiones = [p1, cap.length]; }
+
+  // ── 2d · Disco lleno y un 5xx: el backoff se respeta igual. Es el caso MÁS
+  //        común de los dos, y tenía el mismo fallo: sin poder persistir
+  //        `proximo`, el evento volvía en el drenaje siguiente sin espaciado.
+  { let lleno = false;
+    const { M, cap, almacen } = _montarEscritores({ responder: () => _resp(503),
+      setItemLanza: () => (lleno ? Object.assign(new Error('lleno'), { name:'QuotaExceededError' }) : null) });
+    M.sesion(ANA, _jwtDe(ANA));
+    await M.registrarActividad(evalua);
+    const q = JSON.parse(almacen['txk_eventos_v1']); q[0].proximo = 0; q[0].intentos = 0;
+    almacen['txk_eventos_v1'] = JSON.stringify(q);
+    lleno = true; cap.length = 0;
+    await M.drenar('x');                                   // 5xx → backoff no persistible
+    const p1 = cap.length;
+    const d = JSON.parse(almacen['txk_eventos_v1']); d[0].proximo = 0;
+    almacen['txk_eventos_v1'] = JSON.stringify(d);         // el disco sigue diciendo «ya»
+    await M.drenar('y');
+    o.backoffDuro = [p1, cap.length, M.cola().length]; }
+
+  // ── 2c · Una fecha ilegible en la cuarentena no puede tumbar el drenaje ──
+  { const alm = Object.create(null);
+    // La entrada mala es GRANDE: al colapsarla se libera sitio de verdad, así
+    // que el colapso llega a ejecutarse y su fecha ilegible se evalúa.
+    alm[_CUAR] = JSON.stringify([{ evento_id:'malo', uid:ANA, prioridad:3, destino:'actividad',
+      motivo:'clave-ajena', cuando:'ayer', datos:{ activity:'repaso', relleno:'x'.repeat(5000) } }]);
+    let tope = Infinity;
+    const { M } = _montarEscritores({ almacen: alm, responder: rechaza,
+      setItemLanza: (k, v) => (k === _CUAR && v.length > tope)
+        ? Object.assign(new Error('lleno'), { name:'QuotaExceededError' }) : null });
+    M.sesion(ANA, _jwtDe(ANA));
+    tope = alm[_CUAR].length + 100;                        // no cabe una entrada más sin colapsar
+    try{ o.fechaMala = await M.registrarActividad(evalua); }
+    catch(e){ o.fechaMalaLanza = e.name + ': ' + e.message; }
+    o.fechaMalaCuar = M.cuarentenaCruda(); }
 
   // ── 3 · Prioridad 1 y 2 NO se colapsan jamás ──
   { let tope = Infinity;
@@ -12785,7 +12845,30 @@ test('F5 · sin sitio, la prioridad 3 se COLAPSA: se pierde el detalle, no la cu
     `el contador cuenta los 14, colapsados incluidos: ${_f5.contadoresColapso.cuarentena}`);
 });
 
-test('F5 · si ni el resumen cabe, el evento NO desaparece de los dos sitios', () => {
+test('F5 · con el DISCO ENTERO lleno, el evento no se pierde NI se reintenta', () => {
+  // Este es el caso real: la cuarentena no cabe porque no cabe NADA, así que
+  // el marcado de `revisar` tampoco se persiste. Antes eso dejaba el evento
+  // `pendiente` con el backoff perdido y se reenviaba en cada drenaje.
+  assert(_f5.duroCuar === 0, 'la cuarentena no pudo guardarse, como pedía el caso');
+  assert(_f5.duroCola.length === 1, `el evento no puede perderse: quedan ${_f5.duroCola.length}`);
+  assert(_f5.duroContador === 1, 'el desbordamiento queda contado aunque el disco esté lleno');
+  assert(_f5.duroPeticiones[1] === _f5.duroPeticiones[0],
+    `NO puede reintentarse: ${_f5.duroPeticiones[0]} → ${_f5.duroPeticiones[1]}`);
+});
+
+test('F5 · con el disco lleno, un 5xx tampoco pierde su backoff', () => {
+  assert(_f5.backoffDuro[1] === _f5.backoffDuro[0],
+    `el backoff tiene que respetarse aunque no se pueda escribir: ${_f5.backoffDuro[0]} → ${_f5.backoffDuro[1]}`);
+  assert(_f5.backoffDuro[2] === 1, 'y el evento se conserva');
+});
+
+test('F5 · una fecha ilegible en la cuarentena no tumba el drenaje', () => {
+  assert(!_f5.fechaMalaLanza, `el colapso ha lanzado: ${_f5.fechaMalaLanza}`);
+  assert(_f5.fechaMalaCuar.colapsados.some(g => g.dia === 'desconocido'),
+    'una fecha que no se puede leer se agrupa como desconocida, no revienta');
+});
+
+test('F5 · si sólo falta sitio en la cuarentena, el evento se queda y se marca', () => {
   // Éste era el agujero: antes se sacaba de la cola aunque la cuarentena no se
   // hubiera guardado, y el evento se esfumaba en silencio.
   assert(_f5.desbordadaCuar === 0, 'la cuarentena no pudo guardarse, como pedía el caso');
