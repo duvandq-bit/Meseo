@@ -1,6 +1,26 @@
 {
- "updated": "2026-09-16T20:11:51.720Z",
+ "updated": "2026-09-17T01:28:47.887Z",
  "items": [
+  {
+   "t": "El restaurante de una localidad navarra que entra en la Guía Michelin como restaurante recomendado",
+   "u": "https://pamplonaactual.com/pamplona-actual-comer-muy-bien/413541/el-restaurante-de-una-localidad-navarra-que-entra-en-la-guia-michelin-como-restaurante-recomendado",
+   "s": "pamplonaactual.com",
+   "d": "2026-09-16T23:34:03.000Z",
+   "tags": [
+    "MICHELIN"
+   ],
+   "img": "https://comunikazemedia.b-cdn.net/articulos/articulos-595132.jpg"
+  },
+  {
+   "t": "Turismo de Tenerife y Basque Culinary Center impulsan la excelencia gastronómica de la isla",
+   "u": "https://www.hosteltur.com/178668_turismo-de-tenerife-y-basque-culinary-center-impulsan-la-excelencia-gastronomica-de-la-isla.html",
+   "s": "Hosteltur",
+   "d": "2026-09-16T22:00:00.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://static.hosteltur.com/app/public/uploads/img/articles/2026/09/15/L_234931_turismo-de-tenerife-y-basque-culinary-center-impulsan-la-excelencia-gastron.jpg"
+  },
   {
    "t": "Alta cocina y talento gastronómico se reunirán en la Culinary Week 2026 de Barceló Bávaro Grand Resort",
    "u": "https://bavarodigital.net/alta-cocina-y-talento-gastronomico-se-reuniran-en-la-culinary-week-2026-de-barcelo-bavaro-grand-resort/",
@@ -32,19 +52,9 @@
    "img": "https://s3.ppllstatics.com/diariosur/www/multimedia/malagaenlamesa/2026/09/16/RobertoFabian-R1LJEy7PyO2OozJhBZ3ahNL-1200x840@Diario%20Sur.jpg"
   },
   {
-   "t": "El restaurante de una localidad navarra que entra en la Guía Michelin como restaurante recomendado",
-   "u": "https://pamplonaactual.com/pamplona-actual/413541/el-restaurante-de-una-localidad-navarra-que-entra-en-la-guia-michelin-como-restaurante-recomendado",
-   "s": "Pamplona Actual",
-   "d": "2026-09-16T17:13:42.000Z",
-   "tags": [
-    "MICHELIN"
-   ],
-   "img": "https://comunikazemedia.b-cdn.net/articulos/articulos-595132.jpg"
-  },
-  {
    "t": "Auténtica cierra con 12.489 profesionales y apostando por la alimentación de calidad y conectada con el origen",
    "u": "https://www.andaluciainformacion.es/articulo/sevilla/autentica-cierra-12489-profesionales-apostando-alimentacion-calidad-conectada-origen/202609161845333479477.amp.html",
-   "s": "andaluciainformacion.es",
+   "s": "Andalucía Información",
    "d": "2026-09-16T16:45:33.000Z",
    "tags": [
     "ALTA COCINA"
@@ -54,7 +64,7 @@
   {
    "t": "La Orotava llevará los saldos a la calle el 3 de octubre con descuentos, música y gastronomía",
    "u": "https://www.libertaddigital.com/canarias/2026-09-16/la-orotava-llevara-los-saldos-a-la-calle-el-3-de-octubre-con-descuentos-musica-y-gastronomia-7461055/amp.html",
-   "s": "Libertad Digital",
+   "s": "libertaddigital.com",
    "d": "2026-09-16T15:55:29.000Z",
    "tags": [
     "CANARIAS"
@@ -70,19 +80,9 @@
    ]
   },
   {
-   "t": "The ShowRoom Mag descubre la nueva etapa de Taste 1973 en una noche de gastronomía y encuentros",
-   "u": "https://theshowroommag.com/the-showroom-mag-descubre-la-nueva-etapa-de-taste-1973-en-una-noche-de-gastronomia-y-encuentros/",
-   "s": "The Showroom Mag",
-   "d": "2026-09-16T15:11:30.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://theshowroommag.com/wp-content/uploads/2026/09/2-2.jpg"
-  },
-  {
    "t": "Lava: así es el restaurante de Puerto de la Cruz que representa a Canarias en los TheFork Awards",
    "u": "https://www.eldia.es/tenerife/2026/09/16/lava-restaurante-puerto-cruz-representa-134356925.html",
-   "s": "Eldía",
+   "s": "eldia.es",
    "d": "2026-09-16T14:57:58.000Z",
    "tags": [
     "CANARIAS"
@@ -118,18 +118,19 @@
    ]
   },
   {
-   "t": "El restaurante de Tierra Estella que ha entrado en la Guía Michelin España",
+   "t": "Los dos restaurantes de Tierra Estella y Pamplona que entran en la Guía Michelin España",
    "u": "https://navarracapital.es/los-dos-restaurantes-navarros-que-acaban-de-entrar-en-la-guia-michelin-espana/",
    "s": "Navarra Capital",
    "d": "2026-09-16T14:45:00.000Z",
    "tags": [
     "MICHELIN"
-   ]
+   ],
+   "img": "https://navarracapital.es/wp-content/uploads/Mirador-de-Deyo-3.jpg"
   },
   {
    "t": "Mirador de Deyo entra en la Guía Michelin España como restaurante recomendado en Villamayor de Monjardín",
    "u": "https://navarra.okdiario.com/articulo/sociedad/michelin-incorpora-seleccion-restaurante-navarra-asesorado-chef-david-yarnoz/20260916162622660104.html",
-   "s": "navarra.okdiario.com",
+   "s": "Navarra.com",
    "d": "2026-09-16T14:26:22.000Z",
    "tags": [
     "MICHELIN"
@@ -148,7 +149,7 @@
   {
    "t": "El restaurante Taste 1973 estrena su renovada sala en el Hotel Villa Cortés de Playa de las Américas",
    "u": "https://www.eldia.es/tenerife/2026/09/16/restaurante-taste-1973-estrena-renovada-134354953.html",
-   "s": "Eldía",
+   "s": "eldia.es",
    "d": "2026-09-16T13:54:56.000Z",
    "tags": [
     "CANARIAS"
@@ -156,13 +157,23 @@
   },
   {
    "t": "Paco Roncero, cocinero: \"Aquí voy siempre a degustar sus arroces, que me parecen una auténtica maravilla\"",
-   "u": "https://www.elespanol.com/madrid/ocio/20260916/paco-roncero-cocinero-voy-siempre-degustar-arroces-parecen-autentica-maravilla/1003744384736_0.html",
+   "u": "https://www.elespanol.com/madrid/ocio/20260916/paco-roncero-cocinero-voy-siempre-degustar-arroces-parecen-autentica-maravilla/1003744384736_0.amp.html",
    "s": "El Español",
    "d": "2026-09-16T13:47:51.000Z",
    "tags": [
     "MICHELIN"
    ],
    "img": "https://s3.elespanol.com/k/imgp/cms/elespanol/10051239.jpg?p=f:jpeg/c:2046:1150:nowe:2:0/w:1706/h:960&h=63Nxqc9N"
+  },
+  {
+   "t": "Pepe Rodríguez, chef: “Los callos los hago como los hacía mi madre: con un buen hueso de jamón, una cebolla, dos zanahorias y clavos de olor”",
+   "u": "https://www.infobae.com/espana/2026/09/16/pepe-rodriguez-chef-los-callos-los-hago-como-los-hacia-mi-madre-con-un-buen-hueso-de-jamon-una-cebolla-dos-zanahorias-y-clavos-de-olor/",
+   "s": "Infobae",
+   "d": "2026-09-16T13:41:00.000Z",
+   "tags": [
+    "ALTA COCINA"
+   ],
+   "img": "https://www.infobae.com/resizer/v2/R5MYFKOIBVDZRH4SINIBF7MD6Q.jpg?auth=fe7650ee3489ff9e7711eede420aa896b1425a9ce2cdf0ab44528ca2e1958967&smart=true&width=1200&height=630&quality=85"
   },
   {
    "t": "The Site Ibiza celebra una noche de alta cocina junto a Jorge Lengua, Adri Paniagua y Gonzalo Cancelo",
@@ -195,6 +206,16 @@
    "img": "https://imagenes.diariodenavarra.es/files/og_thumbnail/uploads/2026/09/16/6aaa954b6bf38.jpeg"
   },
   {
+   "t": "The ShowRoom Mag descubre la nueva etapa de Taste 1973 en una noche de gastronomía y encuentros",
+   "u": "https://theshowroommag.com/the-showroom-mag-descubre-la-nueva-etapa-de-taste-1973-en-una-noche-de-gastronomia-y-encuentros/",
+   "s": "The Showroom Mag",
+   "d": "2026-09-16T13:11:30.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://theshowroommag.com/wp-content/uploads/2026/09/2-2.jpg"
+  },
+  {
    "t": "Auténtica 2026 cierra con 12.489 profesionales y una apuesta firme por una alimentación de calidad",
    "u": "https://www.65ymas.com/economia/empresas/autentica-2026-cierra-con-12489-profesionales-apuesta-firme-por-alimentacion-calidad_86062_102.html",
    "s": "65 y más",
@@ -203,16 +224,6 @@
     "ALTA COCINA"
    ],
    "img": "https://www.65ymas.com/uploads/s1/30/61/24/8/captura-de-pantalla-2026-09-16-a-las-15-03-58_19_1200x630.png"
-  },
-  {
-   "t": "Pepe Rodríguez, chef: “Los callos los hago como los hacía mi madre: con un buen hueso de jamón, una cebolla, dos zanahorias y clavos de olor”",
-   "u": "https://www.infobae.com/espana/2026/09/16/pepe-rodriguez-chef-los-callos-los-hago-como-los-hacia-mi-madre-con-un-buen-hueso-de-jamon-una-cebolla-dos-zanahorias-y-clavos-de-olor/",
-   "s": "Infobae",
-   "d": "2026-09-16T12:49:50.000Z",
-   "tags": [
-    "ALTA COCINA"
-   ],
-   "img": "https://www.infobae.com/resizer/v2/R5MYFKOIBVDZRH4SINIBF7MD6Q.jpg?auth=fe7650ee3489ff9e7711eede420aa896b1425a9ce2cdf0ab44528ca2e1958967&smart=true&width=1200&height=630&quality=85"
   },
   {
    "t": "El restaurante de Las Canteras que mezcla India, México y Maldivas",
@@ -261,16 +272,6 @@
     "VINO",
     "CANARIAS"
    ]
-  },
-  {
-   "t": "La conexión desconocida de Dabiz Muñoz con un pueblo de Cuenca de solo 150 habitantes",
-   "u": "https://www.noticiasdelvino.com/escapadas/2026/09/16/la-conexion-desconocida-de-dabiz-munoz-con-un-pueblo-de-cuenca-de-solo-150-habitantes-68966/",
-   "s": "Noticias del Vino",
-   "d": "2026-09-16T10:54:42.000Z",
-   "tags": [
-    "ALTA COCINA"
-   ],
-   "img": "https://www.noticiasdelvino.com/wp-content/uploads/image-217.png"
   },
   {
    "t": "El pueblo marinero donde comer gambas rojas a reventar: declarada ciudad creativa por la UNESCO",
