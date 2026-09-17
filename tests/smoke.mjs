@@ -11589,6 +11589,7 @@ function _montarEscritores(opciones) {
       memoria: () => _evMemoria,
       uuid: _uuid, enviar: _eventoEnviar, crear: _eventoCrear, resolver: _eventoResolver,
       drenar: _eventosDrenar,
+      aplazado: () => _evAplazado, clave: _evClave,
       cuarentena: () => _cuarentenaLeer().entradas,      // las entradas con detalle
       cuarentenaCruda: _cuarentenaLeer,                   // { v, entradas, colapsados }
       registrarActividad, supaInsertScore, supaInsertTxokoRecord, supaInsertEtRecord
@@ -12756,14 +12757,62 @@ const _f5 = await (async () => {
     const d = JSON.parse(almacen['txk_eventos_v1']); d[0].proximo = 0;
     almacen['txk_eventos_v1'] = JSON.stringify(d);         // el disco sigue diciendo «ya»
     await M.drenar('y');
-    o.backoffDuro = [p1, cap.length, M.cola().length]; }
+    o.backoffDuro = [p1, cap.length, M.cola().length];
+    // Paso 5 · el aplazamiento NO es permanente: cuando llega su hora, se envía.
+    o.backoffAplazadoA = M.aplazado().get(M.clave(M.cola()[0]));
+    M.aplazado().set(M.clave(M.cola()[0]), Date.now() - 1);   // vence el aplazamiento
+    await M.drenar('z');
+    o.backoffTrasVencer = cap.length; }
+
+  // ── 2f · El aplazamiento va atado a la IDENTIDAD, no sólo al evento_id ──
+  //        Bruno puede tener legítimamente el MISMO evento_id que Ana: la
+  //        unicidad del servidor es (auth_user_id, evento_id). Si la clave del
+  //        aplazamiento perdiera el uid, un fallo de Bruno saltaría el evento
+  //        de Ana. Eso es adopción de identidad por la puerta de atrás.
+  { let lleno = false;
+    const { M, cap, almacen } = _montarEscritores({ responder: () => _resp(503),
+      setItemLanza: () => (lleno ? Object.assign(new Error('lleno'), { name:'QuotaExceededError' }) : null) });
+    M.sesion(ANA, _jwtDe(ANA));
+    await M.registrarActividad(evalua);
+    const q = JSON.parse(almacen['txk_eventos_v1']);
+    q.push(Object.assign({}, q[0], { uid: BRUNO }));       // mismo evento_id, otro dueño
+    q.forEach(e => { e.proximo = 0; e.intentos = 0; });
+    almacen['txk_eventos_v1'] = JSON.stringify(q);
+    M.sesion(BRUNO, _jwtDe(BRUNO));
+    lleno = true; cap.length = 0;
+    await M.drenar('bruno');                               // el de Bruno queda aplazado
+    const trasBruno = cap.length;
+    lleno = false;
+    M.sesion(ANA, _jwtDe(ANA));
+    await M.drenar('ana');                                 // el de Ana NO puede quedar bloqueado
+    o.identidadAplazada = { trasBruno, trasAna: cap.length,
+                            autorAna: cap.slice(trasBruno).map(x => x.headers.Authorization) }; }
+
+  // ── 2e · ESCENA C · con el almacenamiento FUNCIONANDO, la memoria no entra ──
+  { const { M, cap } = _montarEscritores({ responder: () => _resp(503) });
+    M.sesion(ANA, _jwtDe(ANA));
+    await M.registrarActividad(evalua);                    // 5xx, disco sano
+    o.sanoAplazado = M.aplazado().size;
+    o.sanoCola = M.cola();
+    // …y un rechazo permanente que SÍ se puede guardar tampoco deja rastro
+    const { M: M2 } = _montarEscritores({ responder: rechaza });
+    M2.sesion(ANA, _jwtDe(ANA));
+    await M2.registrarActividad(evalua);
+    o.sanoAplazado2 = M2.aplazado().size;
+    o.sanoCuar = M2.cuarentena().length;
+    void cap; }
 
   // ── 2c · Una fecha ilegible en la cuarentena no puede tumbar el drenaje ──
   { const alm = Object.create(null);
     // La entrada mala es GRANDE: al colapsarla se libera sitio de verdad, así
     // que el colapso llega a ejecutarse y su fecha ilegible se evalúa.
-    alm[_CUAR] = JSON.stringify([{ evento_id:'malo', uid:ANA, prioridad:3, destino:'actividad',
-      motivo:'clave-ajena', cuando:'ayer', datos:{ activity:'repaso', relleno:'x'.repeat(5000) } }]);
+    alm[_CUAR] = JSON.stringify([
+      { evento_id:'malo', uid:ANA, prioridad:3, destino:'actividad',
+        motivo:'clave-ajena', cuando:'ayer', datos:{ activity:'repaso', relleno:'x'.repeat(5000) } },
+      // …y otra SIN fecha: la ausencia tiene que seguir agrupándose como antes,
+      // en el día de hoy. Sólo el valor ilegible cambia de trato.
+      { evento_id:'sinfecha', uid:ANA, prioridad:3, destino:'actividad',
+        motivo:'clave-ajena', datos:{ activity:'recorrido', relleno:'y'.repeat(5000) } }]);
     let tope = Infinity;
     const { M } = _montarEscritores({ almacen: alm, responder: rechaza,
       setItemLanza: (k, v) => (k === _CUAR && v.length > tope)
@@ -12772,7 +12821,8 @@ const _f5 = await (async () => {
     tope = alm[_CUAR].length + 100;                        // no cabe una entrada más sin colapsar
     try{ o.fechaMala = await M.registrarActividad(evalua); }
     catch(e){ o.fechaMalaLanza = e.name + ': ' + e.message; }
-    o.fechaMalaCuar = M.cuarentenaCruda(); }
+    o.fechaMalaCuar = M.cuarentenaCruda();
+    o.fechaMalaCola = M.cola().length; }
 
   // ── 3 · Prioridad 1 y 2 NO se colapsan jamás ──
   { let tope = Infinity;
@@ -12860,12 +12910,45 @@ test('F5 · con el disco lleno, un 5xx tampoco pierde su backoff', () => {
   assert(_f5.backoffDuro[1] === _f5.backoffDuro[0],
     `el backoff tiene que respetarse aunque no se pueda escribir: ${_f5.backoffDuro[0]} → ${_f5.backoffDuro[1]}`);
   assert(_f5.backoffDuro[2] === 1, 'y el evento se conserva');
+  // Y no es una condena: el aplazamiento tiene HORA, y al llegar se reintenta.
+  assert(typeof _f5.backoffAplazadoA === 'number' && _f5.backoffAplazadoA > Date.now(),
+    `el aplazamiento tiene que ser una hora futura, no un bloqueo: ${_f5.backoffAplazadoA}`);
+  assert(_f5.backoffTrasVencer === _f5.backoffDuro[1] + 1,
+    `al vencer el aplazamiento tiene que poder reintentarse: ${_f5.backoffTrasVencer}`);
+});
+
+test('F5 · el aplazamiento va atado a la identidad, no sólo al evento_id', () => {
+  const i = _f5.identidadAplazada;
+  assert(i.trasBruno === 1, `Bruno tenía que intentar el suyo una vez: ${i.trasBruno}`);
+  assert(i.trasAna === i.trasBruno + 1,
+    `el fallo de Bruno no puede bloquear el evento de Ana: ${i.trasBruno} → ${i.trasAna}`);
+  assert(i.autorAna.every(a => a === 'Bearer ' + _jwtDe(ANA)),
+    'y el de Ana sale con la credencial de Ana');
+});
+
+test('F5 · con el almacenamiento sano, la memoria NO interviene', () => {
+  // El aplazamiento es un RESPALDO, no una segunda fuente de verdad. Si el
+  // disco acepta la escritura, el mapa tiene que quedarse vacío.
+  assert(_f5.sanoAplazado === 0,
+    `con el disco sano no puede quedar nada aplazado en memoria: ${_f5.sanoAplazado}`);
+  assert(_f5.sanoCola.length === 1 && _f5.sanoCola[0].proximo > Date.now(),
+    'el backoff vive en disco, que es la fuente de verdad');
+  assert(_f5.sanoAplazado2 === 0, 'una cuarentena que sí cabe tampoco deja aplazamiento');
+  assert(_f5.sanoCuar === 1, 'y se guarda donde debe');
 });
 
 test('F5 · una fecha ilegible en la cuarentena no tumba el drenaje', () => {
   assert(!_f5.fechaMalaLanza, `el colapso ha lanzado: ${_f5.fechaMalaLanza}`);
-  assert(_f5.fechaMalaCuar.colapsados.some(g => g.dia === 'desconocido'),
-    'una fecha que no se puede leer se agrupa como desconocida, no revienta');
+  const g = _f5.fechaMalaCuar.colapsados.find(x => x.dia === 'desconocido');
+  assert(g, 'una fecha que no se puede leer se agrupa como desconocida, no revienta');
+  assert(g.n === 1, 'y la entrada NO se pierde: sigue contada');
+  assert(g.tipos.includes('repaso'), 'conservando de qué era');
+  const hoy = new Date().toISOString().slice(0, 10);
+  const h = _f5.fechaMalaCuar.colapsados.find(x => x.dia === hoy);
+  assert(h && h.n === 1 && h.tipos.includes('recorrido'),
+    'la AUSENCIA de fecha tiene que seguir agrupándose en el día de hoy, como antes: '
+    + JSON.stringify(_f5.fechaMalaCuar.colapsados));
+  assert(_f5.fechaMalaCola === 0, 'el drenaje continuó: la evaluación acabó en cuarentena');
 });
 
 test('F5 · si sólo falta sitio en la cuarentena, el evento se queda y se marca', () => {
