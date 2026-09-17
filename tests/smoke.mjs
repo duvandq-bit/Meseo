@@ -11630,6 +11630,11 @@ const _c3vivo = _c3.split('\n').filter((l) => !/^\s*--/.test(l)).join('\n');
 const _C3_SERVIDOR = ['employee', 'venue', 'auth_user_id', 'id', 'created_at'];
 const _C3_GRANTS = [...(_c3vivo.matchAll(/grant\s+insert\s*\(([^)]*)\)\s*\n?\s*on\s+public\.(\w+)\s+to\s+([\w, ]+);/gi))]
   .map((m) => ({ tabla: m[2], rol: m[3].trim(), cols: m[1].split(',').map((s) => s.trim()).filter(Boolean) }));
+// El fichero registra C-3 y F1 por separado —son dos migraciones distintas—, así
+// que lo concedido a una tabla es la UNIÓN de sus grants, no un único statement.
+const _C3_POR_TABLA = _C3_GRANTS.reduce((acc, g) => {
+  (acc[g.tabla] = acc[g.tabla] || []).push(...g.cols); return acc;
+}, {});
 
 test('C-3 · se quita el INSERT DE TABLA, no columnas de un grant de tabla', () => {
   // LA TRAMPA DE POSTGRESQL, con nombre y apellidos: `revoke insert (columna)`
@@ -11640,7 +11645,10 @@ test('C-3 · se quita el INSERT DE TABLA, no columnas de un grant de tabla', () 
       `falta el revoke de INSERT DE TABLA sobre ${t} a anon`);
     assert(new RegExp(`revoke\\s+insert\\s+on\\s+public\\.${t}\\s+from\\s+[^;]*authenticated`, 'i').test(_c3),
       `falta el revoke de INSERT DE TABLA sobre ${t} a authenticated`);
-    assert(!new RegExp(`revoke\\s+insert\\s*\\([^)]*\\)\\s*on\\s+public\\.${t}`, 'i').test(_c3),
+    // Sobre el SQL VIVO: el rollback de F1 sí usa `revoke insert (evento_id)`,
+    // y ahí es correcto porque ese grant es por columna y no de tabla. Lo que
+    // no puede existir es un `revoke insert (columna)` APLICADO como cierre.
+    assert(!new RegExp(`revoke\\s+insert\\s*\\([^)]*\\)\\s*on\\s+public\\.${t}`, 'i').test(_c3vivo),
       `${t}: "revoke insert (columna)" NO resta columnas de un grant de tabla — es un no-op silencioso`);
   }
 });
@@ -11655,7 +11663,8 @@ test('C-3 · anon no recibe INSERT sobre ninguna de las dos tablas', () => {
 });
 
 test('C-3 · las cinco columnas del servidor no se conceden a nadie', () => {
-  assert(_C3_GRANTS.length === 2, `esperaba 2 grants por columna, hay ${_C3_GRANTS.length}`);
+  assert(Object.keys(_C3_POR_TABLA).length === 2,
+    `esperaba grants sobre 2 tablas, hay ${Object.keys(_C3_POR_TABLA).join(', ')}`);
   for (const g of _C3_GRANTS) {
     for (const col of _C3_SERVIDOR) {
       assert(!g.cols.includes(col),
@@ -11665,15 +11674,17 @@ test('C-3 · las cinco columnas del servidor no se conceden a nadie', () => {
 });
 
 test('C-3 · lo concedido es exactamente el negocio del esquema real', () => {
+  // `evento_id` entra en F1: no es identidad ni dato de negocio, es la marca de
+  // idempotencia, y sin ella B2 recibiría 42501 en cada envío.
   const esperado = {
-    scores: ['score', 'total', 'topic', 'cat', 'time_sec'],
-    actividad: ['activity', 'competency', 'kind', 'score', 'total', 'seconds', 'meta'],
+    scores: ['score', 'total', 'topic', 'cat', 'time_sec', 'evento_id'],
+    actividad: ['activity', 'competency', 'kind', 'score', 'total', 'seconds', 'meta', 'evento_id'],
   };
-  for (const g of _C3_GRANTS) {
-    const e = esperado[g.tabla];
-    assert(e, `grant sobre una tabla inesperada: ${g.tabla}`);
-    assert(g.cols.length === e.length && e.every((c) => g.cols.includes(c)),
-      `${g.tabla}: concedido [${g.cols.join(',')}], esperado [${e.join(',')}]`);
+  for (const [tabla, cols] of Object.entries(_C3_POR_TABLA)) {
+    const e = esperado[tabla];
+    assert(e, `grant sobre una tabla inesperada: ${tabla}`);
+    assert(cols.length === e.length && e.every((c) => cols.includes(c)),
+      `${tabla}: concedido [${cols.join(',')}], esperado [${e.join(',')}]`);
   }
 });
 
@@ -11707,6 +11718,81 @@ test('C-3 · el rollback avisa de que reabre el agujero', () => {
     'el rollback tiene que decir explícitamente que devuelve el sistema a la versión vulnerable');
   assert(/^\s*--/m.test(bloque) && !/^\s*(grant|revoke|create policy)/mi.test(bloque),
     'el SQL de rollback tiene que estar comentado: no puede ejecutarse por accidente');
+});
+
+// ─── B2 · F1 · evento_id e idempotencia en el servidor ──────────
+console.log('\nB2 — F1 · evento_id e idempotencia');
+
+test('F1 · el índice es PARCIAL y COMPUESTO con la identidad', () => {
+  for (const [t, idx] of [['scores', 'scores_evt_uk'], ['actividad', 'actividad_evt_uk']]) {
+    const re = new RegExp(
+      `create unique index ${idx}\\s*\\n?\\s*on public\\.${t} \\(auth_user_id, evento_id\\) where evento_id is not null;`, 'i');
+    assert(re.test(_c3vivo), `falta el índice parcial compuesto de ${t}`);
+  }
+});
+
+test('F1 · NO existe un UNIQUE(evento_id) global', () => {
+  // LA INVARIANTE I1.1. Con un índice global, quien leyera la cola en un iPad
+  // compartido podría gastar los identificadores de un compañero y hacer que
+  // sus evaluaciones se rechazaran como duplicadas. Con el compuesto es
+  // imposible por construcción, y está medido contra el índice real.
+  const global = /create\s+unique\s+index\s+\w+\s*\n?\s*on\s+public\.(scores|actividad)\s*\(\s*evento_id\s*\)/i;
+  assert(!global.test(_c3vivo), 'hay un UNIQUE(evento_id) global: permite quemar el id de otro empleado');
+  for (const t of ['scores', 'actividad']) {
+    const idx = [..._c3vivo.matchAll(new RegExp(`on public\\.${t} \\(([^)]*)\\)`, 'gi'))].map((m) => m[1].trim());
+    for (const cols of idx) {
+      assert(cols.startsWith('auth_user_id,'),
+        `un índice de ${t} no empieza por auth_user_id: ${cols}`);
+    }
+  }
+});
+
+test('F1 · un evento siempre tiene dueño (el CHECK)', () => {
+  for (const t of ['scores', 'actividad']) {
+    const re = new RegExp(
+      `add constraint ${t}_evento_con_dueno\\s*\\n?\\s*check \\(evento_id is null or auth_user_id is not null\\)`, 'i');
+    assert(re.test(_c3vivo), `falta el CHECK de evento-con-dueño en ${t}`);
+    assert(new RegExp(`validate constraint ${t}_evento_con_dueno`, 'i').test(_c3vivo),
+      `el CHECK de ${t} se queda en NOT VALID: no protegería a las filas nuevas hasta validarlo`);
+  }
+});
+
+test('F1 · evento_id se concede a authenticated y NUNCA a anon', () => {
+  const grants = [..._c3vivo.matchAll(/grant insert \(evento_id\) *\n? *on public\.(\w+) +to +([\w, ]+);/gi)];
+  assert(grants.length === 2, `esperaba 2 grants de evento_id, hay ${grants.length}`);
+  for (const g of grants) {
+    assert(!/\banon\b/.test(g[2]), `se concede evento_id a anon sobre ${g[1]}: anon no escribe desde C-3`);
+    assert(/\bauthenticated\b/.test(g[2]), `evento_id no está concedido a authenticated en ${g[1]}`);
+  }
+});
+
+test('F1 · la columna es NULABLE: el histórico no se toca', () => {
+  assert(/add column evento_id uuid;/.test(_c3vivo), 'evento_id tiene que añadirse nulable y sin default');
+  assert(!/add column evento_id uuid[^;]*not null/i.test(_c3vivo),
+    'evento_id NOT NULL rompería las 427 puntuaciones y las 5 actividades históricas');
+  assert(!/add column evento_id uuid[^;]*default/i.test(_c3vivo),
+    'evento_id con DEFAULT lo generaría el servidor; lo genera el cliente cuando ocurre el hecho');
+});
+
+test('F1 · el rollback de F1 está comentado y se distingue del de C-3', () => {
+  const i = _c3.toUpperCase().indexOf('ROLLBACK');
+  const bloque = _c3.slice(i);
+  assert(/drop index if exists public\.scores_evt_uk/.test(bloque), 'falta el rollback de F1');
+  assert(/inocua|aditiva/i.test(bloque),
+    'el rollback de F1 debe decir que NO reabre nada, a diferencia del de C-3');
+  assert(!/^\s*(grant|revoke|create policy|drop index|alter table)/mi.test(bloque),
+    'el SQL de rollback tiene que estar comentado: no puede ejecutarse por accidente');
+});
+
+test('F1 · no se ha adelantado nada de F2', () => {
+  // F1 es sólo servidor. Si aparece cualquier pieza de la cola de eventos en el
+  // cliente, es trabajo de F2 colado en esta fase.
+  for (const marca of ['txk_eventos_v1', 'txk_eventos_sin_identidad', 'txk_eventos_registro',
+                       '_eventoCrear', '_eventosDrenar', '_eventosGuardar']) {
+    assert(!html.includes(marca), `"${marca}" pertenece a F2 y no puede estar en F1`);
+  }
+  assert(!/randomUUID/.test(html), 'la generación de UUID es de F2');
+  assert(!/evento_id/.test(html), 'el cliente no manda evento_id todavía: eso es F2');
 });
 
 // ─── B2 · F0 · la identidad es un solo objeto congelado ─────────

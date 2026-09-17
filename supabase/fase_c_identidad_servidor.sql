@@ -104,6 +104,44 @@ create policy actividad_alta_propia on public.actividad
 -- así que el ranking y el panel de Supervisor funcionan igual.
 
 
+-- ═══ B2 · F1 · LA IDEMPOTENCIA, ANTES DE QUE NADIE LA USE ══════════════════
+-- Migración `fase_b2_f1_evento_id_e_idempotencia` · 2026-09-17.
+-- Aditivo y sin efecto observable: ningún cliente manda `evento_id` todavía.
+-- El alta de eventos es F2 y no está implementada.
+
+alter table public.scores    add column evento_id uuid;
+alter table public.actividad add column evento_id uuid;
+
+-- UN EVENTO SIEMPRE TIENE DUEÑO. Sin esto, una fila con `evento_id` y
+-- `auth_user_id` nulo quedaría FUERA del índice parcial —es decir, sin
+-- idempotencia— y un timeout seguido de reintento crearía dos filas.
+alter table public.scores    add constraint scores_evento_con_dueno
+  check (evento_id is null or auth_user_id is not null) not valid;
+alter table public.actividad add constraint actividad_evento_con_dueno
+  check (evento_id is null or auth_user_id is not null) not valid;
+alter table public.scores    validate constraint scores_evento_con_dueno;
+alter table public.actividad validate constraint actividad_evento_con_dueno;
+
+-- LA IDEMPOTENCIA, ATADA A LA IDENTIDAD.
+--   PARCIAL   → `NULL` no colisiona consigo mismo: el histórico queda intacto.
+--   COMPUESTO → nadie puede quemar el identificador de otro. Con un
+--               `UNIQUE (evento_id)` global, quien leyera la cola en un iPad
+--               compartido podría gastar los ids de un compañero y hacer que
+--               sus evaluaciones se rechazaran como duplicadas. NO se crea.
+--   SIN `concurrently` → no puede ir dentro de una transacción, y con 427 y 5
+--               filas el bloqueo es de milisegundos.
+create unique index scores_evt_uk
+  on public.scores (auth_user_id, evento_id) where evento_id is not null;
+create unique index actividad_evt_uk
+  on public.actividad (auth_user_id, evento_id) where evento_id is not null;
+
+-- EL PERMISO QUE FALTA. Tras C-3 `authenticated` sólo puede insertar las
+-- columnas concedidas, y `evento_id` es una más: sin esto, cada envío de B2
+-- recibiría 42501. `anon` no recibe nada: sigue sin poder escribir.
+grant insert (evento_id) on public.scores    to authenticated;
+grant insert (evento_id) on public.actividad to authenticated;
+
+
 -- ═══ ROLLBACK ══════════════════════════════════════════════════════════════
 -- LEER ANTES DE EJECUTAR: revertir C-3 REABRE el agujero. A partir del primer
 -- `grant insert` de tabla, cualquiera con la clave anónima vuelve a poder
@@ -120,3 +158,17 @@ create policy actividad_alta_propia on public.actividad
 -- create policy actividad_insert on public.actividad for insert to anon, authenticated with check (true);
 --
 -- Revertir C-1 además descartaría la identidad ya escrita; ver docs/fase-c1-aplicada.md §6.
+--
+-- REVERSIÓN DE F1, que sí es inocua: es aditiva y no reabre nada. Mientras
+-- ninguna fila tenga `evento_id` no descarta nada; a partir de la primera,
+-- descarta esa marca de idempotencia. Aquí el `revoke` POR COLUMNA sí es
+-- correcto, porque el grant de `evento_id` es por columna y no de tabla.
+--
+-- drop index if exists public.scores_evt_uk;
+-- drop index if exists public.actividad_evt_uk;
+-- alter table public.scores    drop constraint if exists scores_evento_con_dueno;
+-- alter table public.actividad drop constraint if exists actividad_evento_con_dueno;
+-- revoke insert (evento_id) on public.scores    from authenticated;
+-- revoke insert (evento_id) on public.actividad from authenticated;
+-- alter table public.scores    drop column if exists evento_id;
+-- alter table public.actividad drop column if exists evento_id;
