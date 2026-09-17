@@ -12176,6 +12176,13 @@ const _f3 = await (async () => {
     await m.M.drenar('x'); o.check = { cola: m.M.cola().length, cuar: m.M.cuarentena() }; }
   { const m = await conUnPendiente({ responder: () => _errPg(400, 'PGRST204', "Could not find the 'x' column") });
     await m.M.drenar('x'); o.esquema = { cola: m.M.cola(), cuar: m.M.cuarentena().length }; }
+  { const m = await conUnPendiente({ responder: () => _errPg(400, '23502',
+      'null value in column "employee" of relation "actividad" violates not-null constraint') });
+    await m.M.drenar('x');
+    const p1 = m.cap.length;
+    await m.M.drenar('x');                       // no puede volver a intentarse
+    o.notNull = { cola: m.M.cola().length, cuar: m.M.cuarentena(), original: m.ev,
+                  peticiones1: p1, peticiones2: m.cap.length }; }
 
   // 10 · timeout (el fetch lanza) y 5xx → se conserva, no cuarentena
   { const m = await conUnPendiente({ responder: () => ({ lanza: true }) });
@@ -12322,12 +12329,34 @@ test('F3 · PGRST301 con exp vivo es credencial inválida, y NO hay bucle', () =
     'el segundo drenaje no puede volver a intentarlo');
 });
 
-test('F3 · 400 determinista: 23514 a cuarentena, PGRST204 a revisar', () => {
+test('F3 · 400 determinista: 23514 y 23502 a cuarentena, PGRST204 a revisar', () => {
   assert(_f3.check.cuar.length === 1 && _f3.check.cuar[0].motivo === 'datos-invalidos',
     'un CHECK violado es permanente');
+  // PGRST204 es un fallo de DESPLIEGUE, no del evento: el evento es correcto.
   assert(_f3.esquema.cuar === 0 && _f3.esquema.cola.length === 1,
     'una columna que no existe es un fallo de despliegue: se conserva y se revisa');
   assert(_f3.esquema.cola[0].estado === 'revisar', 'y queda marcado para revisar');
+});
+
+test('F3 · 23502 es determinista y del EVENTO: cuarentena, no reintento', () => {
+  const q = _f3.notNull;
+  // Un NOT NULL violado no puede aceptarse nunca tal como está: dejarlo en la
+  // cola activa sería reintentarlo cada dos minutos para siempre.
+  assert(q.cola === 0, `el evento tiene que salir de la cola activa, quedan ${q.cola}`);
+  assert(q.cuar.length === 1, `tiene que estar en cuarentena, hay ${q.cuar.length}`);
+  const c = q.cuar[0];
+  assert(c.motivo === 'falta-columna-obligatoria', `motivo equivocado: ${c.motivo}`);
+  // Y conserva TODO: el identificador, el dueño, cuándo ocurrió y los datos.
+  assert(c.evento_id === q.original.evento_id, 'la cuarentena perdió el evento_id');
+  assert(c.uid === q.original.uid && c.uid === ANA, 'la cuarentena perdió la identidad');
+  assert(c.ts === q.original.ts, 'la cuarentena perdió el momento del hecho');
+  assert(typeof c.cuando === 'number' && c.cuando > 0, 'falta la fecha de la cuarentena');
+  assert(c.datos && c.datos.activity === 'simulacro_alergenos' && c.datos.score === 18,
+    'la cuarentena tiene que conservar el evento entero: ' + JSON.stringify(c.datos));
+  assert(c.destino === 'actividad' && c.prioridad === 1, 'y su destino y su prioridad');
+  // Sin reintento automático posterior.
+  assert(q.peticiones2 === q.peticiones1,
+    `un segundo drenaje no puede volver a intentarlo: ${q.peticiones1} → ${q.peticiones2}`);
 });
 
 test('F3 · timeout y 5xx CONSERVAN el evento y no lo mandan a cuarentena', () => {

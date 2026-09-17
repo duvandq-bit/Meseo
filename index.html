@@ -2663,7 +2663,14 @@ async function _eventoClasificar(r, ev){
     return { estado:'revisar', motivo:'auth-' + (code || 'sin-codigo') };
   }
   if(st === 400){
-    if(code === 'PGRST204' || code === '23502') return { estado:'revisar', motivo:'esquema-' + code };
+    // PGRST204 = la columna no existe en la caché de esquema: es un fallo de
+    // DESPLIEGUE, no del evento. El evento es correcto y volverá a entrar en
+    // cuanto el servidor esté como debe, así que se conserva y se revisa.
+    if(code === 'PGRST204') return { estado:'revisar', motivo:'esquema-' + code };
+    // 23502 = NOT NULL. Determinista y del EVENTO: tal como está no puede
+    // aceptarse nunca, y dejarlo en la cola activa sería reintentarlo cada dos
+    // minutos para siempre. A cuarentena, entero y con su motivo.
+    if(code === '23502') return { estado:'cuarentena', motivo:'falta-columna-obligatoria' };
     if(code === '23514') return { estado:'cuarentena', motivo:'datos-invalidos' };
     return { estado:'cuarentena', motivo:'peticion-invalida-' + (code || 'sin-codigo') };
   }
