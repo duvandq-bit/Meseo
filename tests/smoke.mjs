@@ -11531,10 +11531,17 @@ const _jwtDe = (sub, exp) => 'eyJhbGciOiJIUzI1NiJ9.'
 function _montarEscritores(opciones) {
   const o = opciones || {};
   const cap = [];
-  const almacen = Object.create(null);
+  // Reutilizable a propósito: simular una RECARGA es montar de nuevo sobre el
+  // mismo almacenamiento, que es justo lo que hace el navegador.
+  const almacen = o.almacen || Object.create(null);
   const ls = {
     getItem: (k) => (k in almacen ? almacen[k] : null),
-    setItem: (k, v) => { if (o.setItemLanza) throw o.setItemLanza(k, v); almacen[k] = String(v); },
+    setItem: (k, v) => {
+      if (o.setItemLanza) { const e = o.setItemLanza(k, v); if (e) throw e; }
+      // Safari en modo privado: no lanza y tampoco guarda.
+      if (o.setItemNoGuarda) return;
+      almacen[k] = String(v);
+    },
     removeItem: (k) => { delete almacen[k]; },
   };
   const bloqueEventos = html.slice(html.indexOf('const _EV_KEY'),
@@ -12096,6 +12103,238 @@ test('F2 · B1 no se toca: sus tres claves siguen siendo suyas', () => {
   for (const k of ['txk_cola_v2', 'txk_sync_outbox', 'txk_cola_cuarentena', '_colaCargar', '_colaGuardar']) {
     assert(!bloque.includes(k), `el bloque de eventos toca ${k}, que es de B1`);
   }
+});
+
+// ─── B2 · F4 · capacidad, persistencia verificable y contadores ──────────
+//
+// La regla que no se rompe: una evaluación no se descarta ni se desaloja NUNCA
+// por capacidad lógica. Lo único que puede impedirla es el dispositivo, y
+// entonces se dice.
+const _PRESUP = 512 * 1024;
+
+const _f4 = await (async () => {
+  const o = {};
+  const evalua = { activity:'simulacro_alergenos', competency:'alergenos',
+                   kind:'evaluacion', score:18, total:20, seconds:240, meta:{ cat:'all' } };
+  const examen  = { activity:'examen', competency:'carta', kind:'evaluacion', score:8, total:10, seconds:60 };
+  const practica = { activity:'repaso', competency:'carta', kind:'practica', score:1, total:1 };
+  const llenar = async (M, n, cual) => { for (let i = 0; i < n; i++) await M.registrarActividad(cual); };
+
+  // ── 1 · Por debajo de 400 la práctica entra ──
+  { const { M } = _montarEscritores({ responder: () => _resp(503) });
+    M.sesion(ANA, _jwtDe(ANA));
+    await llenar(M, 399, practica);
+    o.en399 = { cola: M.cola().length, alta: await M.registrarActividad(practica) };
+    o.tras400 = M.cola().length;
+    // …y a partir de 400 deja de entrar
+    o.en400 = await M.registrarActividad(practica);
+    o.registro400 = M.registro(); }
+
+  // ── 2 · Cola llena de PRÁCTICAS: una evaluación entra y no destruye nada ──
+  { const { M } = _montarEscritores({ responder: () => _resp(503) });
+    M.sesion(ANA, _jwtDe(ANA));
+    await llenar(M, 400, practica);
+    const antes = M.cola().map(e => e.evento_id);
+    o.evalEnPracticas = await M.registrarActividad(evalua);
+    const desp = M.cola().map(e => e.evento_id);
+    o.practicasIntactas = antes.every(id => desp.includes(id));
+    o.creceUno = desp.length === antes.length + 1; }
+
+  // ── 3 · Cola llena de EVALUACIONES: ninguna se desaloja ──
+  { const { M } = _montarEscritores({ responder: () => _resp(503) });
+    M.sesion(ANA, _jwtDe(ANA));
+    await llenar(M, 500, examen);
+    const antes = M.cola().map(e => e.evento_id);
+    o.evalEn500 = await M.registrarActividad(evalua);
+    const desp = M.cola();
+    o.ningunaDesalojada = antes.every(id => desp.some(e => e.evento_id === id));
+    o.colaTras501 = desp.length;
+    o.p1Presente = desp.some(e => e.prioridad === 1);
+    // Y la práctica sigue sin poder entrar, que es la reserva funcionando
+    o.practicaEn500 = await M.registrarActividad(practica); }
+
+  // ── 4 · El guard mide la REPRESENTACIÓN PERSISTIDA, no una estimación ──
+  { const { M } = _montarEscritores({ responder: () => _resp(503) });
+    M.sesion(ANA, _jwtDe(ANA));
+    // Un solo evento, enorme, que deja la cola justo por debajo del presupuesto.
+    await M.registrarActividad({ ...examen, meta: { relleno: 'x' } });
+    const minimo = JSON.stringify(M.cola()).length;
+    const { M: M2, almacen: alm2 } = _montarEscritores({ responder: () => _resp(503) });
+    M2.sesion(ANA, _jwtDe(ANA));
+    await M2.registrarActividad({ ...examen, meta: { relleno: 'x'.repeat(_PRESUP - minimo - 40) } });
+    o.tamJusto = JSON.stringify(M2.cola()).length;
+    o.eventosGrandes = M2.cola().length;
+    // Con UN solo evento en la cola —lejos de 400— la práctica se descarta,
+    // porque lo que cuenta es el tamaño de lo que se va a persistir.
+    o.practicaPorTamano = await M2.registrarActividad(practica);
+    // …y una evaluación, no.
+    o.evalPorTamano = await M2.registrarActividad(evalua);
+    o.colaGrande = M2.cola().length;
+    void alm2; }
+
+  // ── 5 · QuotaExceededError: resultado explícito y NADA en la cola ──
+  { const { M, cap } = _montarEscritores({
+      setItemLanza: () => { const e = new Error('lleno'); e.name = 'QuotaExceededError'; return e; } });
+    M.sesion(ANA, _jwtDe(ANA));
+    o.cuota = await M.registrarActividad(evalua);
+    o.cuotaCola = M.cola().length;
+    o.cuotaPeticiones = cap.length;
+    o.cuotaMemoria = M.memoria().length; }
+
+  // ── 6 · `setItem` que NO lanza pero tampoco guarda (modo privado) ──
+  { const { M } = _montarEscritores({ setItemNoGuarda: true });
+    M.sesion(ANA, _jwtDe(ANA));
+    o.mentiroso = await M.registrarActividad(evalua);
+    o.mentirosoCola = M.cola().length; }
+
+  // ── 7 · Lo que no cupo se REINTENTA cuando hay sitio ──
+  { let lleno = true;
+    // Con 503 nada se confirma, así que lo que quede en la cola es exactamente
+    // lo que se consiguió persistir. Con un 201 el segundo saldría al confirmarse
+    // y la prueba mediría otra cosa.
+    const { M } = _montarEscritores({ responder: () => _resp(503),
+      setItemLanza: () => { if (!lleno) return null; const e = new Error('lleno'); e.name = 'QuotaExceededError'; return e; } });
+    M.sesion(ANA, _jwtDe(ANA));
+    o.antesDeLiberar = await M.registrarActividad(evalua);
+    lleno = false;                              // se libera espacio
+    await M.registrarActividad(examen);         // el alta siguiente reintenta lo pendiente
+    o.trasLiberar = M.cola().length;
+    o.memoriaVacia = M.memoria().length; }
+
+  // ── 8 · El contador sobrevive a una RECARGA ──
+  { const alm = Object.create(null);
+    { const { M } = _montarEscritores({ almacen: alm, responder: () => _resp(503) });
+      M.sesion(ANA, _jwtDe(ANA));
+      await llenar(M, 400, practica);
+      await M.registrarActividad(practica);
+      await M.registrarActividad(practica);
+      o.antesRecarga = M.registro().contadores.descartado_por_espacio; }
+    // Montaje NUEVO sobre el mismo almacenamiento: eso es una recarga.
+    { const { M } = _montarEscritores({ almacen: alm });
+      o.trasRecarga = M.registro().contadores.descartado_por_espacio;
+      o.colaTrasRecarga = M.cola().length; } }
+
+  // ── 9 · Un descartado no reaparece ──
+  { const alm = Object.create(null);
+    const { M } = _montarEscritores({ almacen: alm, responder: () => _resp(503) });
+    M.sesion(ANA, _jwtDe(ANA));
+    await llenar(M, 400, practica);
+    const ids = new Set(M.cola().map(e => e.evento_id));
+    const d = await M.registrarActividad(practica);
+    const { M: M2 } = _montarEscritores({ almacen: alm });
+    o.descartadoNoVuelve = M2.cola().every(e => ids.has(e.evento_id));
+    o.colaIgual = M2.cola().length === 400;
+    o.descarte = d; }
+
+  // ── 10 · F3 intacto: lo que está en cuarentena no vuelve a la cola ──
+  { const { M } = _montarEscritores({ responder: () => _resp(400,
+      { code:'23514', message:'violates check constraint', details:null, hint:null }) });
+    M.sesion(ANA, _jwtDe(ANA));
+    await M.registrarActividad(evalua);
+    const tras = { cola: M.cola().length, cuar: M.cuarentena().length };
+    await M.registrarActividad(examen);          // otra alta: no puede resucitar nada
+    await M.drenar('x');
+    o.cuarentenaF3 = { ...tras, colaFinal: M.cola().length, cuarFinal: M.cuarentena().length }; }
+
+  return o;
+})();
+
+console.log('\nB2 — F4 · capacidad y persistencia verificable');
+
+test('F4 · por debajo de 400 la práctica entra; a partir de 400 ya no', () => {
+  assert(_f4.en399.cola === 399, `esperaba 399 en cola, hay ${_f4.en399.cola}`);
+  assert(_f4.en399.alta.evento === 'persistido', 'con 399 en cola una práctica todavía entra');
+  assert(_f4.tras400 === 400, `la cola tenía que llegar a 400, está en ${_f4.tras400}`);
+  assert(_f4.en400.evento === 'descartado',
+    `a partir de 400 la práctica se descarta: ${JSON.stringify(_f4.en400)}`);
+  assert(_f4.registro400.contadores.descartado_por_espacio === 1,
+    'el descarte tiene que quedar contado, no ser silencioso');
+});
+
+test('F4 · con la cola llena de prácticas, una evaluación entra igual', () => {
+  assert(_f4.evalEnPracticas.evento === 'persistido',
+    `una evaluación no se rechaza por capacidad: ${JSON.stringify(_f4.evalEnPracticas)}`);
+  assert(_f4.practicasIntactas, 'no se ha podido desalojar ninguna práctica para hacerle sitio');
+  assert(_f4.creceUno, 'la cola tiene que crecer en uno, no sustituir');
+});
+
+test('F4 · cola llena de EVALUACIONES: ninguna se desaloja, ni por FIFO', () => {
+  assert(_f4.evalEn500.evento === 'persistido',
+    `con 500 evaluaciones una más sigue entrando: ${JSON.stringify(_f4.evalEn500)}`);
+  assert(_f4.ningunaDesalojada, 'se ha desalojado una evaluación para hacer sitio a otra');
+  assert(_f4.colaTras501 === 501, `la cola tenía que quedar en 501, está en ${_f4.colaTras501}`);
+  assert(_f4.p1Presente, 'un evento de prioridad 1 ha desaparecido de la cola');
+  assert(_f4.practicaEn500.evento === 'descartado',
+    'la reserva sigue en pie: la práctica no entra por encima de 400');
+});
+
+test('F4 · el guard usa el tamaño de lo que SE VA A PERSISTIR', () => {
+  assert(_f4.eventosGrandes === 1, 'el montaje tenía que tener un solo evento');
+  assert(_f4.tamJusto < _PRESUP && _f4.tamJusto > _PRESUP - 2000,
+    `la cola tenía que quedar justo por debajo del presupuesto: ${_f4.tamJusto}`);
+  // UN evento en cola —lejísimos de 400— y la práctica se descarta igual:
+  // lo que manda es el tamaño serializado, no el número de objetos.
+  assert(_f4.practicaPorTamano.evento === 'descartado',
+    `con la cola al límite de tamaño la práctica se descarta: ${JSON.stringify(_f4.practicaPorTamano)}`);
+  assert(_f4.evalPorTamano.evento === 'persistido',
+    'pero una evaluación entra igual: el tamaño no la rechaza');
+  assert(_f4.colaGrande === 2, 'sólo tenía que entrar la evaluación');
+});
+
+test('F4 · QuotaExceededError: resultado explícito y nada fingido', () => {
+  assert(_f4.cuota.evento === 'bloqueado_por_cuota',
+    `la cuota llena se dice: ${JSON.stringify(_f4.cuota)}`);
+  assert(_f4.cuota.envio === 'no-intentado', 'no se envía algo que no está guardado');
+  assert(_f4.cuotaCola === 0, 'y no puede aparecer en la cola: no se guardó');
+  assert(_f4.cuotaPeticiones === 0, 'ni salir por la red');
+  assert(_f4.cuotaMemoria === 1, 'el hecho sigue en memoria, contado y no evaporado');
+});
+
+test('F4 · un setItem que no lanza pero no guarda tampoco cuela', () => {
+  // Safari en modo privado hace exactamente esto. Sin verificar la escritura,
+  // el evento quedaría en memoria APARENTANDO estar en cola.
+  assert(_f4.mentiroso.evento === 'no_persistido',
+    `una escritura que miente tiene que detectarse: ${JSON.stringify(_f4.mentiroso)}`);
+  assert(_f4.mentirosoCola === 0, 'y no darse por encolada');
+});
+
+test('F4 · lo que no cupo se reintenta cuando hay sitio', () => {
+  assert(_f4.antesDeLiberar.evento === 'bloqueado_por_cuota', 'primero no cabe');
+  assert(_f4.trasLiberar === 2, `al liberar sitio tienen que entrar los dos: ${_f4.trasLiberar}`);
+  assert(_f4.memoriaVacia === 0, 'y la memoria queda vacía: ya están en disco');
+});
+
+test('F4 · el contador de descartados sobrevive a una recarga', () => {
+  assert(_f4.antesRecarga === 2, `esperaba 2 descartes, hubo ${_f4.antesRecarga}`);
+  assert(_f4.trasRecarga === 2,
+    `el contador tiene que sobrevivir a la recarga, quedó en ${_f4.trasRecarga}`);
+  assert(_f4.colaTrasRecarga === 400, 'y la cola también');
+});
+
+test('F4 · un evento descartado por espacio no reaparece', () => {
+  assert(_f4.descarte.evento === 'descartado', 'el caso tenía que ser un descarte');
+  assert(_f4.descartadoNoVuelve, 'ha aparecido en la cola un evento que se había descartado');
+  assert(_f4.colaIgual, 'la cola tiene que seguir en 400 tras recargar');
+});
+
+test('F4 · F3 intacto: lo que está en cuarentena no vuelve a la cola activa', () => {
+  const q = _f4.cuarentenaF3;
+  assert(q.cuar === 1, `el 23514 tenía que ir a cuarentena: ${JSON.stringify(q)}`);
+  assert(q.cola === 0, 'y salir de la cola activa');
+  assert(q.cuarFinal === 2, 'el segundo también acaba en cuarentena');
+  assert(q.colaFinal === 0, 'y ninguno de los dos vuelve a la cola activa');
+});
+
+test('F4 · no existe ninguna ruta de desalojo por capacidad', () => {
+  // La protección de prioridad 1 y 2 no es una comprobación: es que NO HAY
+  // código que borre para hacer sitio. Si alguien lo añade, esto lo dice.
+  const bloque = html.slice(html.indexOf('function _eventoCrear'), html.indexOf('function _evTamano'));
+  for (const marca of ['shift()', 'splice(', 'slice(1)', 'pop()', 'sort(']) {
+    assert(!bloque.includes(marca), `_eventoCrear usa "${marca}": ¿está desalojando eventos?`);
+  }
+  assert(/const EV_UMBRAL_P3\s*=\s*400;/.test(html), 'el umbral de presión es 400');
+  assert(/const EV_UMBRAL_AVISO\s*=\s*500;/.test(html), 'el umbral lógico es 500');
+  assert(/prioridad >= 3 &&/.test(html), 'sólo la prioridad 3 puede descartarse por capacidad');
 });
 
 // ─── B2 · F3 · drenaje, clasificación y cuarentena ──────────────

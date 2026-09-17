@@ -52,7 +52,7 @@
 <meta property="og:description" content="Formación de equipos de sala: carta, alérgenos, vinos, exámenes y juegos de repaso.">
 <meta property="og:url" content="https://meseo.es/">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"Meseo","url":"https://meseo.es/"}</script>
-<meta name="app-version" content="7.456">
+<meta name="app-version" content="7.457">
 <meta name="app-build" content="May 2026">
 <meta name="theme-color" content="#1c2a22">
 <!-- ═══ PWA ═══ -->
@@ -2187,7 +2187,7 @@ const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><p
 const SRC = 'src';
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='7.456';  // sincronizada con sw.js VERSION (guard de CI)
+const APP_VERSION='7.457';  // sincronizada con sw.js VERSION (guard de CI)
 const APP_BUILD='Jul 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;
@@ -2499,32 +2499,84 @@ function _evLeer(clave){
 // `setItem` falló.
 function _evEscribir(clave, lista){
   let s; try{ s = JSON.stringify(lista); }catch(_){ return false; }
-  try{ localStorage.setItem(clave, s); return true; }
-  catch(e){
+  try{
+    localStorage.setItem(clave, s);
+    // F4 · SE VERIFICA. `setItem` puede no lanzar y aun así no haber guardado
+    // nada —Safari en modo privado lo hace—, y entonces el evento estaría en
+    // memoria aparentando estar en cola. Se compara la LONGITUD y no el
+    // contenido entero: detecta ese caso sin pagar una comparación de 175 KB
+    // en cada encolado.
+    const leido = localStorage.getItem(clave);
+    if(leido == null || leido.length !== s.length) return false;
+    return true;
+  }catch(e){
     const cuota = e && (e.name === 'QuotaExceededError' || e.name === 'NS_ERROR_DOM_QUOTA_REACHED'
                         || e.code === 22 || e.code === 1014);
     return cuota ? 'cuota' : false;
   }
 }
-// Lo que no se pudo persistir vive aquí: en memoria, volátil, y el aviso de F6
-// lo dirá. Es la diferencia entre perder datos y perderlos en silencio.
-let _evMemoria = [];
+// Lo que no se pudo persistir vive aquí: en memoria, volátil, y su estado lo
+// dice. Cada entrada lleva a qué clave iba, porque un evento sin dueño no puede
+// acabar en la cola que drena por un descuido de la recuperación.
+let _evMemoria = [];   // [{ clave, ev }]
 
-function _evContar(motivo, detalle){
-  try{
-    let r = null;
-    try{ r = JSON.parse(localStorage.getItem(_EV_REGISTRO) || 'null'); }catch(_){}
-    if(!r || typeof r !== 'object') r = { v:1, contadores:{}, ultimos:[] };
-    r.contadores[motivo] = (r.contadores[motivo] || 0) + 1;
-    r.ultimos.push(Object.assign({ motivo, ts: Date.now() }, detalle || {}));
-    if(r.ultimos.length > 50) r.ultimos = r.ultimos.slice(-50);   // el detalle se acota; los contadores NO
-    localStorage.setItem(_EV_REGISTRO, JSON.stringify(r));
-  }catch(_){ /* si ni esto cabe, el estado del evento ya lo dice */ }
+// F4 · LO QUE NO SE PUDO GUARDAR SE VUELVE A INTENTAR. Sin esto, un evento que
+// falla al persistir se queda en memoria para siempre: no está en la cola, no
+// se drena, y muere con la pestaña. Se reintenta en cada alta y en cada
+// drenaje, que es cuando el sitio puede haberse liberado.
+function _evReintentarPersistencia(){
+  if(!_evMemoria.length) return true;
+  const porClave = Object.create(null);
+  for(const m of _evMemoria) (porClave[m.clave] = porClave[m.clave] || []).push(m.ev);
+  let todo = true;
+  for(const clave of Object.keys(porClave)){
+    const actual = _evLeer(clave);
+    const faltan = porClave[clave].filter(ev =>
+      !actual.some(e => e.evento_id === ev.evento_id && e.uid === ev.uid));
+    if(!faltan.length){ _evMemoria = _evMemoria.filter(m => m.clave !== clave); continue; }
+    if(_evEscribir(clave, actual.concat(faltan)) === true){
+      _evMemoria = _evMemoria.filter(m => m.clave !== clave);
+      _evContar('recuperado_de_memoria', { n: faltan.length, clave });
+    } else todo = false;
+  }
+  return todo;
 }
-function _evRegistroLeer(){
+
+// F4 · EL CONTADOR SOBREVIVE, y no depende sólo de memoria. Se persiste en
+// cuanto se puede; lo que todavía no cupo se guarda aparte y se vuelca en el
+// siguiente intento, así que ni se pierde ni se cuenta dos veces.
+let _evPendientes = Object.create(null);
+let _evUltimosMem = [];
+function _evRegistroCrudo(){
   try{ const r = JSON.parse(localStorage.getItem(_EV_REGISTRO) || 'null');
-       return (r && typeof r === 'object') ? r : { v:1, contadores:{}, ultimos:[] }; }
-  catch(_){ return { v:1, contadores:{}, ultimos:[] }; }
+       if(r && typeof r === 'object' && r.contadores) return r; }catch(_){}
+  return { v:1, contadores:{}, ultimos:[] };
+}
+function _evVolcarContadores(){
+  const claves = Object.keys(_evPendientes);
+  if(!claves.length && !_evUltimosMem.length) return true;
+  const r = _evRegistroCrudo();
+  for(const k of claves) r.contadores[k] = (r.contadores[k] || 0) + _evPendientes[k];
+  if(_evUltimosMem.length) r.ultimos = r.ultimos.concat(_evUltimosMem);
+  if(r.ultimos.length > 50) r.ultimos = r.ultimos.slice(-50);   // el DETALLE se acota; los contadores NO
+  if(_evEscribir(_EV_REGISTRO, r) === true){
+    _evPendientes = Object.create(null); _evUltimosMem = [];
+    return true;
+  }
+  return false;
+}
+function _evContar(motivo, detalle){
+  _evPendientes[motivo] = (_evPendientes[motivo] || 0) + 1;
+  _evUltimosMem.push(Object.assign({ motivo, ts: Date.now() }, detalle || {}));
+  _evVolcarContadores();
+}
+// Vista de lectura: lo persistido MÁS lo que todavía no cupo. Quien pregunta
+// cuántos descartes ha habido recibe el número verdadero, no el que cupo.
+function _evRegistroLeer(){
+  const r = _evRegistroCrudo();
+  const c = Object.assign({}, r.contadores);
+  for(const k of Object.keys(_evPendientes)) c[k] = (c[k] || 0) + _evPendientes[k];
+  return { v: r.v || 1, contadores: c, ultimos: r.ultimos.concat(_evUltimosMem).slice(-50) };
 }
 
 // EL ALTA. Síncrona y en el mismo tick del hecho: cuando devuelve, o el evento
@@ -2545,22 +2597,38 @@ function _eventoCrear(destino, prioridad, datos){
     ev.estado = 'sin_identidad';
     const r = _evEscribir(_EV_SIN_ID, _evLeer(_EV_SIN_ID).concat([ev]));
     _evContar('sin_identidad', { destino, actividad: datos && datos.activity });
-    if(r !== true){ _evMemoria.push(ev); return { estado: r === 'cuota' ? 'bloqueado_por_cuota' : 'no_persistido', evento: ev }; }
+    if(r !== true){
+      _evMemoria.push({ clave: _EV_SIN_ID, ev });
+      return { estado: r === 'cuota' ? 'bloqueado_por_cuota' : 'no_persistido', evento: ev };
+    }
     return { estado:'sin_identidad', evento: ev };
   }
 
+  // F4 · Antes de nada, lo que quedó en memoria vuelve a intentar su sitio.
+  _evReintentarPersistencia();
+
   const cola = _evLeer(_EV_KEY);
+  const prospectiva = cola.concat([ev]);
+  // EL GUARD MIDE LA REPRESENTACIÓN QUE SE VA A PERSISTIR, no una estimación de
+  // objetos de JavaScript: es lo único que se parece a lo que cuenta la cuota
+  // del navegador, y se mide CON el evento dentro, no sin él.
+  const tam = _evTamano(prospectiva);
   // La prioridad baja cede el sitio; la evaluación NUNCA. Al llenarse sólo de
   // evaluaciones siguen entrando: lo único que puede pararlas es el dispositivo.
-  if(prioridad >= 3 && (cola.length >= EV_UMBRAL_P3 || _evTamano(cola) > EV_PRESUPUESTO)){
-    _evContar('descartado_por_espacio', { destino, actividad: datos && datos.activity });
+  // Y NUNCA se elimina nada ya persistido para hacer hueco: no hay desalojo, ni
+  // por antigüedad ni por prioridad. Eso sería descarte silencioso con otro
+  // nombre, y aquí no existe esa ruta.
+  if(prioridad >= 3 && (cola.length >= EV_UMBRAL_P3 || tam > EV_PRESUPUESTO)){
+    _evContar('descartado_por_espacio', { destino, actividad: datos && datos.activity,
+                                          n: cola.length, bytes: tam });
     return { estado:'descartado', evento: null };
   }
-  if(cola.length >= EV_UMBRAL_AVISO) _evContar('cola_alta', { n: cola.length });
+  if(cola.length >= EV_LIMITE_DURO || tam > EV_PRESUPUESTO) _evContar('cola_saturada', { n: cola.length, bytes: tam });
+  else if(cola.length >= EV_UMBRAL_AVISO) _evContar('cola_alta', { n: cola.length });
 
-  const r = _evEscribir(_EV_KEY, cola.concat([ev]));
+  const r = _evEscribir(_EV_KEY, prospectiva);
   if(r !== true){
-    _evMemoria.push(ev);
+    _evMemoria.push({ clave: _EV_KEY, ev });
     _evContar(r === 'cuota' ? 'bloqueado_por_cuota' : 'no_persistido',
               { destino, actividad: datos && datos.activity });
     return { estado: r === 'cuota' ? 'bloqueado_por_cuota' : 'no_persistido', evento: ev };
@@ -2574,7 +2642,7 @@ function _eventoConfirmar(ev){
   if(!ev) return;
   const q = _evLeer(_EV_KEY).filter(e => !(e.evento_id === ev.evento_id && e.uid === ev.uid));
   _evEscribir(_EV_KEY, q);
-  _evMemoria = _evMemoria.filter(e => !(e.evento_id === ev.evento_id && e.uid === ev.uid));
+  _evMemoria = _evMemoria.filter(m => !(m.ev.evento_id === ev.evento_id && m.ev.uid === ev.uid));
 }
 
 // EL ENVÍO. Recibe el snapshot congelado y lo usa para TODO: decidir y firmar.
@@ -2690,7 +2758,7 @@ function _eventoACuarentena(ev, motivo){
 function _eventoQuitarDeCola(ev){
   const q = _evLeer(_EV_KEY).filter(e => !(e.evento_id === ev.evento_id && e.uid === ev.uid));
   _evEscribir(_EV_KEY, q);
-  _evMemoria = _evMemoria.filter(e => !(e.evento_id === ev.evento_id && e.uid === ev.uid));
+  _evMemoria = _evMemoria.filter(m => !(m.ev.evento_id === ev.evento_id && m.ev.uid === ev.uid));
 }
 
 // LOS CRITERIOS DE ELIMINACIÓN, en un solo sitio y sin excepciones.
@@ -2751,6 +2819,7 @@ async function _eventosDrenar(motivo){
   if(typeof navigator !== 'undefined' && navigator.onLine === false) return 'sin-red';
   const ctx = _authCtx();                       // UN snapshot para todo el ciclo
   if(!ctx.uid) return 'sin-identidad';
+  _evReintentarPersistencia();                  // F4 · el sitio puede haberse liberado
   const ahora = Date.now();
   const mios = _evLeer(_EV_KEY)
     .filter(e => e.uid === ctx.uid && e.estado !== 'revisar' && (e.proximo || 0) <= ahora)
