@@ -52,7 +52,7 @@
 <meta property="og:description" content="Formación de equipos de sala: carta, alérgenos, vinos, exámenes y juegos de repaso.">
 <meta property="og:url" content="https://meseo.es/">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"Meseo","url":"https://meseo.es/"}</script>
-<meta name="app-version" content="7.454">
+<meta name="app-version" content="7.455">
 <meta name="app-build" content="May 2026">
 <meta name="theme-color" content="#1c2a22">
 <!-- ═══ PWA ═══ -->
@@ -2187,7 +2187,7 @@ const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><p
 const SRC = 'src';
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='7.454';  // sincronizada con sw.js VERSION (guard de CI)
+const APP_VERSION='7.455';  // sincronizada con sw.js VERSION (guard de CI)
 const APP_BUILD='Jul 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;
@@ -2443,6 +2443,171 @@ function competenciaDeTema(tema){
   return _COMPETENCIA_DE_TEMA[String(tema||'').toLowerCase()] || 'carta';
 }
 
+// ═══ B2 · F2 · EL HECHO SE HACE DURABLE EN EL INSTANTE EN QUE OCURRE ══════
+//
+// LA VENTANA QUE ESTO CIERRA. Desde la fase C-3 una sesión sin token no puede
+// escribir, y aquí abajo el `catch` devolvía `false` con un comentario que
+// prometía un reintento «cuando vuelva la conexión». Ese reintento no existía:
+// la evaluación se perdía en silencio. A partir de ahora el hecho se escribe en
+// el dispositivo ANTES de depender de la red, y quien llama recibe un resultado
+// que distingue qué ha pasado.
+//
+// TRES ALMACENES, NINGUNO COMPARTIDO CON B1. Que la cola de eventos tenga clave
+// propia no es estética: el parser de B1 descarta toda entrada sin `nombre`, así
+// que compartir clave equivaldría a que B1 borrase los eventos. Y una versión
+// anterior de la aplicación no conoce estas claves, así que no puede tocarlas.
+const _EV_KEY      = 'txk_eventos_v1';            // eventos CON dueño
+const _EV_SIN_ID   = 'txk_eventos_sin_identidad'; // sin dueño — NUNCA se envían
+const _EV_REGISTRO = 'txk_eventos_registro';      // contadores, para F6
+
+// Capacidad. 500 es UMBRAL DE AVISO, no tope: una evaluación no se rechaza
+// jamás por capacidad lógica. Lo único que puede impedirla es el dispositivo.
+const EV_UMBRAL_P3    = 400;
+const EV_UMBRAL_AVISO = 500;
+const EV_LIMITE_DURO  = 1000;
+const EV_PRESUPUESTO  = 512 * 1024;   // unidades UTF-16, que es lo que cuenta la cuota
+
+// LAS DOCE CATEGORÍAS DEL INVENTARIO, con su prioridad. Lo que NO está aquí no
+// es un evento de B2: los dos juegos y los dos récords quedan fuera a propósito
+// —el máximo de Txoko ya vive en `employees.txoko_record`, que tiene la cola de
+// B1, y un récord duplicado no falsea nada mientras que un examen sí—.
+const _EV_PRIORIDAD = {
+  simulacro_alergenos: 1,
+  examen: 2, examen_sala: 2, examen_lqa: 2, situaciones_lqa: 2,
+  auditor_lqa: 2, fantasma: 2, quiz_vinos: 2, maridaje: 2,
+  repaso: 3, recorrido: 3, reto_dia: 3
+};
+
+// El identificador del hecho. CRIPTOGRÁFICO y estable durante toda la vida del
+// evento: es lo que convierte un reintento en un 409 idempotente en vez de en
+// una fila duplicada. NUNCA `Math.random`: con él la colisión deja de ser 2⁻¹²²
+// y la idempotencia se convierte en pérdida de datos.
+function _uuid(){
+  if(typeof crypto !== 'undefined' && crypto.randomUUID) return crypto.randomUUID();
+  const b = new Uint8Array(16); crypto.getRandomValues(b);
+  b[6] = (b[6] & 0x0f) | 0x40; b[8] = (b[8] & 0x3f) | 0x80;
+  const h = Array.from(b).map(x => x.toString(16).padStart(2, '0')).join('');
+  return `${h.slice(0,8)}-${h.slice(8,12)}-${h.slice(12,16)}-${h.slice(16,20)}-${h.slice(20)}`;
+}
+
+function _evLeer(clave){
+  try{ const a = JSON.parse(localStorage.getItem(clave) || '[]'); return Array.isArray(a) ? a : []; }
+  catch(_){ return []; }
+}
+// NO SE TRAGA NADA. Devuelve true, 'cuota' o false, y quien llama DEBE mirarlo:
+// no existe ninguna ruta que siga como si el evento estuviera guardado cuando
+// `setItem` falló.
+function _evEscribir(clave, lista){
+  let s; try{ s = JSON.stringify(lista); }catch(_){ return false; }
+  try{ localStorage.setItem(clave, s); return true; }
+  catch(e){
+    const cuota = e && (e.name === 'QuotaExceededError' || e.name === 'NS_ERROR_DOM_QUOTA_REACHED'
+                        || e.code === 22 || e.code === 1014);
+    return cuota ? 'cuota' : false;
+  }
+}
+// Lo que no se pudo persistir vive aquí: en memoria, volátil, y el aviso de F6
+// lo dirá. Es la diferencia entre perder datos y perderlos en silencio.
+let _evMemoria = [];
+
+function _evContar(motivo, detalle){
+  try{
+    let r = null;
+    try{ r = JSON.parse(localStorage.getItem(_EV_REGISTRO) || 'null'); }catch(_){}
+    if(!r || typeof r !== 'object') r = { v:1, contadores:{}, ultimos:[] };
+    r.contadores[motivo] = (r.contadores[motivo] || 0) + 1;
+    r.ultimos.push(Object.assign({ motivo, ts: Date.now() }, detalle || {}));
+    if(r.ultimos.length > 50) r.ultimos = r.ultimos.slice(-50);   // el detalle se acota; los contadores NO
+    localStorage.setItem(_EV_REGISTRO, JSON.stringify(r));
+  }catch(_){ /* si ni esto cabe, el estado del evento ya lo dice */ }
+}
+function _evRegistroLeer(){
+  try{ const r = JSON.parse(localStorage.getItem(_EV_REGISTRO) || 'null');
+       return (r && typeof r === 'object') ? r : { v:1, contadores:{}, ultimos:[] }; }
+  catch(_){ return { v:1, contadores:{}, ultimos:[] }; }
+}
+
+// EL ALTA. Síncrona y en el mismo tick del hecho: cuando devuelve, o el evento
+// está en disco, o quien llama sabe que no lo está.
+//   'persistido'          → en la cola, con dueño
+//   'sin_identidad'       → en OTRA clave; no se enviará nunca
+//   'descartado'          → práctica rechazada por capacidad, contada
+//   'bloqueado_por_cuota' → el dispositivo no tiene sitio. SÓLO en memoria
+//   'no_persistido'       → `setItem` falló por otra razón. SÓLO en memoria
+function _eventoCrear(destino, prioridad, datos){
+  const ctx = _authCtx();                       // la identidad, congelada aquí
+  const ev = { v:1, evento_id:_uuid(), destino, prioridad, uid: ctx.uid || null,
+               ts: Date.now(), datos, intentos:0, proximo:0, estado:'pendiente' };
+
+  // SIN IDENTIDAD DEMOSTRABLE: a otra clave, que el envío no abre. No es una
+  // comprobación que se pueda olvidar: es una ruta de código que no existe.
+  if(!ctx.uid){
+    ev.estado = 'sin_identidad';
+    const r = _evEscribir(_EV_SIN_ID, _evLeer(_EV_SIN_ID).concat([ev]));
+    _evContar('sin_identidad', { destino, actividad: datos && datos.activity });
+    if(r !== true){ _evMemoria.push(ev); return { estado: r === 'cuota' ? 'bloqueado_por_cuota' : 'no_persistido', evento: ev }; }
+    return { estado:'sin_identidad', evento: ev };
+  }
+
+  const cola = _evLeer(_EV_KEY);
+  // La prioridad baja cede el sitio; la evaluación NUNCA. Al llenarse sólo de
+  // evaluaciones siguen entrando: lo único que puede pararlas es el dispositivo.
+  if(prioridad >= 3 && (cola.length >= EV_UMBRAL_P3 || _evTamano(cola) > EV_PRESUPUESTO)){
+    _evContar('descartado_por_espacio', { destino, actividad: datos && datos.activity });
+    return { estado:'descartado', evento: null };
+  }
+  if(cola.length >= EV_UMBRAL_AVISO) _evContar('cola_alta', { n: cola.length });
+
+  const r = _evEscribir(_EV_KEY, cola.concat([ev]));
+  if(r !== true){
+    _evMemoria.push(ev);
+    _evContar(r === 'cuota' ? 'bloqueado_por_cuota' : 'no_persistido',
+              { destino, actividad: datos && datos.activity });
+    return { estado: r === 'cuota' ? 'bloqueado_por_cuota' : 'no_persistido', evento: ev };
+  }
+  return { estado:'persistido', evento: ev };
+}
+function _evTamano(lista){ try{ return JSON.stringify(lista).length; }catch(_){ return 0; } }
+
+// Saca de la cola el evento de ESE dueño. Nunca «el del usuario actual».
+function _eventoConfirmar(ev){
+  if(!ev) return;
+  const q = _evLeer(_EV_KEY).filter(e => !(e.evento_id === ev.evento_id && e.uid === ev.uid));
+  _evEscribir(_EV_KEY, q);
+  _evMemoria = _evMemoria.filter(e => !(e.evento_id === ev.evento_id && e.uid === ev.uid));
+}
+
+// EL ENVÍO. Recibe el snapshot congelado y lo usa para TODO: decidir y firmar.
+// No lee ninguna global de identidad, ni antes ni después del await.
+//
+// LAS CUATRO COMPROBACIONES, y por qué están las cuatro: cualquiera bastaría
+// casi siempre, pero cuestan una comparación y lo que protegen es la integridad
+// de una evidencia de seguridad alimentaria.
+async function _eventoEnviar(ev, ctx){
+  if(!ev || !ctx) return 'no-intentado';
+  if(!ctx.uid || ev.uid !== ctx.uid) return 'retenido';            // 1 · no es suyo
+  if(_authCtx() !== ctx)             return 'identidad-cambiada';  // 2 · entró otro
+  if(!ctx.token)                     return 'sin-token';           // 3 · no se puede hablar
+  if(_jwtSub(ctx.token) !== ctx.uid) return 'token-no-coincide';   // 4 · la credencial no cuadra
+  let r;
+  try{
+    r = await fetch(`${SUPA_URL}/rest/v1/${ev.destino}`, {
+      method: 'POST',
+      headers: {
+        'apikey': SUPA_KEY,
+        'Authorization': `Bearer ${ctx.token}`,   // el token CONGELADO, no `_bearer()`
+        'Content-Type': 'application/json',
+        'Prefer': 'return=minimal'
+      },
+      body: JSON.stringify(Object.assign({ evento_id: ev.evento_id }, ev.datos))
+    });
+  }catch(_){ return 'sin-red'; }
+  if(r && r.ok){ _eventoConfirmar(ev); return 'confirmado'; }
+  // La clasificación fina de la respuesta es de F4. Aquí sólo se constata que no
+  // entró, y el evento se queda en la cola con su `evento_id` intacto.
+  return 'rechazado-' + (r ? r.status : 'sin-respuesta');
+}
+
 async function registrarActividad(a){
   // La cuenta de administración no deja rastro, igual que en `scores`: está
   // para revisar contenido, no para aparecer en las métricas de nadie.
@@ -2465,31 +2630,46 @@ async function registrarActividad(a){
   // actividad ha ocurrido igual si el envío falla, y el móvil de un camarero en
   // mitad de un servicio se queda sin cobertura a menudo.
   _anotarEnDiario(a.activity, competency, kind, score, total, a.seconds);
-  try{
-    const r = await fetch(`${SUPA_URL}/rest/v1/actividad`, {
-      method: 'POST',
-      headers: {
-        'apikey': SUPA_KEY,
-        'Authorization': `Bearer ${_bearer()}`,
-        'Content-Type': 'application/json',
-        'Prefer': 'return=minimal'
-      },
-      body: JSON.stringify(_cuerpoPropio({
-        activity: a.activity,
-        competency,
-        kind,
-        score,
-        total,
-        seconds: (a.seconds == null) ? null : Math.max(0, Math.round(a.seconds)),
-        meta: a.meta || null
-      }, currentUser))
-    });
-    return !!(r && r.ok);
-  }catch(e){
-    // Silencio a propósito: lo local ya está guardado y el empleado no puede
-    // hacer nada con este error. Se reintentará cuando vuelva la conexión.
-    return false;
+
+  const datos = {
+    activity: a.activity,
+    competency,
+    kind,
+    score,
+    total,
+    seconds: (a.seconds == null) ? null : Math.max(0, Math.round(a.seconds)),
+    meta: a.meta || null
+  };
+
+  // ¿Es un evento de B2? Sólo las doce del inventario. Los dos juegos siguen
+  // por el camino de siempre, sin evento y sin cola: no son evidencia y un
+  // duplicado suyo no falsea nada.
+  const prio = _EV_PRIORIDAD[a.activity];
+  if(!prio){
+    try{
+      const r = await fetch(`${SUPA_URL}/rest/v1/actividad`, {
+        method: 'POST',
+        headers: {
+          'apikey': SUPA_KEY,
+          'Authorization': `Bearer ${_bearer()}`,
+          'Content-Type': 'application/json',
+          'Prefer': 'return=minimal'
+        },
+        body: JSON.stringify(_cuerpoPropio(datos, currentUser))
+      });
+      return { evento:'no-aplica', envio: (r && r.ok) ? 'confirmado' : 'rechazado' };
+    }catch(e){ return { evento:'no-aplica', envio:'sin-red' }; }
   }
+
+  // El momento del HECHO, que no es el de la escritura. `created_at` lo pone el
+  // servidor y es cuándo llegó; para una evidencia importa cuándo ocurrió.
+  datos.meta = Object.assign({}, datos.meta, { ts_hecho: Date.now() });
+
+  const alta = _eventoCrear('actividad', prio, datos);
+  if(alta.estado !== 'persistido') return { evento: alta.estado, envio:'no-intentado' };
+  const ctx = _authCtx();                      // el snapshot, para TODA la operación
+  const envio = await _eventoEnviar(alta.evento, ctx);
+  return { evento:'persistido', envio };
 }
 
 // ═══ EL DIARIO ════════════════════════════════════════════════════════════
@@ -2905,25 +3085,22 @@ async function supaInsertScore(session, employee) {
   // La cuenta de administración no deja rastro: está para revisar el
   // contenido, no para competir. Se corta ANTES de escribir, no se filtra
   // después: una fila que no existe no se puede colar en un ranking.
-  if(_esAdmin(employee)) return;
-  try {
-    await fetch(`${SUPA_URL}/rest/v1/scores`, {
-      method: 'POST',
-      headers: {
-        'apikey': SUPA_KEY,
-        'Authorization': `Bearer ${_bearer()}`,
-        'Content-Type': 'application/json',
-        'Prefer': 'return=minimal'
-      },
-      body: JSON.stringify(_cuerpoPropio({
-        score: session.score,
-        total: session.total,
-        topic: session.topic,
-        cat: session.cat,
-        time_sec: session.time
-      }, employee))
-    });
-  } catch(e) { /* silent fail - local data always saved */ }
+  if(_esAdmin(employee)) return { evento:'no-aplica', envio:'no-intentado' };
+  // Las dos únicas puertas a `scores` que son evidencia: el examen general y el
+  // simulacro de alérgenos. Los récords de juego tienen sus propias funciones y
+  // NO son eventos de B2.
+  const prio = (String(session.topic || '').toLowerCase() === 'alergenos') ? 1 : 2;
+  const alta = _eventoCrear('scores', prio, {
+    score: session.score,
+    total: session.total,
+    topic: session.topic,
+    cat: session.cat,
+    time_sec: session.time
+  });
+  if(alta.estado !== 'persistido') return { evento: alta.estado, envio:'no-intentado' };
+  const ctx = _authCtx();                      // el snapshot, para TODA la operación
+  const envio = await _eventoEnviar(alta.evento, ctx);
+  return { evento:'persistido', envio };
 }
 
 async function supaFetchLeaderboard() {

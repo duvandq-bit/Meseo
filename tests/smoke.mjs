@@ -8855,7 +8855,11 @@ test('Administración: mira cualquier restaurante y no deja rastro', () => {
     assert(cuerpo, `no encuentro ${nombre}`);
     assert(new RegExp(`if\\(_esAdmin\\(${arg}\\)\\) return`).test(cuerpo),
       `${nombre} tiene que cortar antes de escribir si es la cuenta de administración`);
-    assert(cuerpo.indexOf('_esAdmin') < cuerpo.indexOf('rest/v1/'),
+    // Desde B2-F2 `supaInsertScore` ya no hace el fetch: crea el evento y lo
+    // envía `_eventoEnviar`. El corte tiene que ir antes de LO QUE ESCRIBA.
+    const escribe = [cuerpo.indexOf('rest/v1/'), cuerpo.indexOf('_eventoCrear')].filter(i => i >= 0);
+    assert(escribe.length > 0, `${nombre} ya no escribe por ningún camino conocido`);
+    assert(cuerpo.indexOf('_esAdmin') < Math.min(...escribe),
       `en ${nombre} el corte va ANTES de la llamada, no después`);
   }
 
@@ -10159,15 +10163,23 @@ const _actRes = await (async () => {
   // FASE C-2: el registrador ya no sella el restaurante. Se inyecta el
   // `_cuerpoPropio` REAL —no una imitación— junto con su `_authToken`, para
   // poder medir las dos ramas: con sesión y sin ella.
-  const F = new Function('SUPA_URL','SUPA_KEY','_esAdmin','currentUser','_venueActual','dbgw','fetch','_bearer','_tok', // eslint-disable-line no-new-func
-    "let _auth = { uid:null, token:_tok, exp:0, empleado:null, estado:'activa' };\n"
-    + 'const _authCtx = () => _auth;\n' + _xFn('_cuerpoPropio') + '\n'
+  const UIDA = '2369a651-86b0-45f3-b964-9a6d5a961da9';
+  const jwtA = 'eyJhbGciOiJIUzI1NiJ9.' + Buffer.from(JSON.stringify({ sub: UIDA, exp: 2000000000 }))
+    .toString('base64').replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'') + '.firma';
+  const F = new Function('SUPA_URL','SUPA_KEY','_esAdmin','currentUser','_venueActual','dbgw','fetch','_bearer','_tok','_uid','localStorage', // eslint-disable-line no-new-func
+    "let _auth = Object.freeze({ uid:_uid, token:_tok, exp:2000000000, empleado:null, estado:_tok?'activa':'anonimo' });\n"
+    + 'const _authCtx = () => _auth;\n'
+    + _xFn('_jwtCarga') + '\n' + _xFn('_jwtSub') + '\n' + _xFn('_cuerpoPropio') + '\n'
     + html.slice(i0, i1) + '; return { registrar: registrarActividad, deTema: competenciaDeTema };');
-  const api = (esAdmin, tok) => F('https://x', 'k', () => esAdmin, 'Ana',
-    () => 'txoko', () => {},
-    (url, opts) => { enviados.push({ url, cuerpo: JSON.parse(opts.body), auth: (opts.headers||{}).Authorization }); return Promise.resolve({ ok: true }); },
-    () => tok || 'clave-anon', tok || null);
-  const a = api(false, 'jwt-de-ana');
+  const api = (esAdmin, tok) => {
+    const alm = Object.create(null);
+    return F('https://x', 'k', () => esAdmin, 'Ana',
+      () => 'txoko', () => {},
+      (url, opts) => { enviados.push({ url, cuerpo: JSON.parse(opts.body), auth: (opts.headers||{}).Authorization }); return Promise.resolve({ ok: true }); },
+      () => tok || 'clave-anon', tok || null, tok ? UIDA : null,
+      { getItem:(k)=> (k in alm ? alm[k] : null), setItem:(k,v)=>{ alm[k]=String(v); }, removeItem:(k)=>{ delete alm[k]; } });
+  };
+  const a = api(false, jwtA);
   const o = { temas: {}, rechazadas: [] };
 
   for (const tm of ['alergenos','allergens','mixed','ingredients','history','protocolo','cutlery','sala','vinos'])
@@ -10180,12 +10192,13 @@ const _actRes = await (async () => {
   o.url = enviados[0] && enviados[0].url;
   o.cuerpo = enviados[0] && enviados[0].cuerpo;
 
-  // La otra rama. Sin sesión el nombre y el restaurante SÍ viajan: el servidor
-  // no tiene identidad que poner, y perder la fila sería peor que mandarlos.
+  // La otra rama, la que F2 cierra: SIN identidad demostrable la evaluación no
+  // sale, va a `sin_identidad`, y el resultado lo dice en vez de callarse.
   enviados.length = 0;
-  await api(false, null).registrar({ activity:'examen', competency:'carta', kind:'evaluacion',
-    score:8, total:10, seconds:240 });
+  const sinSesionRes = await api(false, null).registrar({ activity:'examen', competency:'carta',
+    kind:'evaluacion', score:8, total:10, seconds:240 });
   o.cuerpoSinSesion = enviados[0] && enviados[0].cuerpo;
+  o.sinSesionResultado = sinSesionRes;
 
   for (const [caso, arg] of [
     ['competencia en otro idioma', { activity:'x', competency:'allergens', kind:'evaluacion', score:1, total:1 }],
@@ -10230,7 +10243,16 @@ test('Registro de actividad: todas las actividades escriben, y con el mismo voca
     assert(e.temas[tema] === esperada, `el tema «${tema}» tiene que ser «${esperada}», es «${e.temas[tema]}»`);
 
   // ── 2. Lo válido sale por el cable, con el restaurante estampado ──
-  assert(e.valida === true, 'una evaluación válida tiene que registrarse');
+  // FASE B2-F2. `registrarActividad` ya no devuelve un booleano: devuelve
+  // {evento, envio}, que es lo que permite a la capa de arriba distinguir
+  // «guardado y pendiente» de «no se pudo ni guardar». Ése es el cierre de la
+  // ventana que dejó C-3.
+  assert(e.valida && typeof e.valida === 'object',
+    'el registro tiene que devolver un resultado estructurado, no un booleano: ' + JSON.stringify(e.valida));
+  assert(e.valida.evento === 'persistido',
+    `la evaluación tiene que quedar persistida antes de la red, no «${e.valida.evento}»`);
+  assert(e.valida.envio === 'confirmado',
+    `con red y con identidad el envío tiene que confirmarse, no «${e.valida.envio}»`);
   assert(e.peticiones === 1, `tiene que salir una petición, salieron ${e.peticiones}`);
   assert(/\/rest\/v1\/actividad$/.test(e.url), 'tiene que escribir en la tabla actividad');
   // FASE C-2. El invariante «toda fila lleva su restaurante» sigue en pie; lo
@@ -10240,8 +10262,13 @@ test('Registro de actividad: todas las actividades escriben, y con el mismo voca
   // perder la fila. Las dos ramas se miden.
   assert(e.cuerpo.venue === undefined && e.cuerpo.employee === undefined,
     'con sesión, la identidad la pone el servidor y no puede viajar en el cuerpo: ' + JSON.stringify(e.cuerpo));
-  assert(e.cuerpoSinSesion && e.cuerpoSinSesion.venue === 'txoko' && e.cuerpoSinSesion.employee === 'Ana',
-    'sin sesión el sello lo pone el cliente; quitarlo antes de que exista la cola de B2 perdería la fila');
+  // FASE B2-F2: sin identidad demostrable la evaluación YA NO SALE. Va a
+  // `sin_identidad` y no se envía nunca, que es exactamente el cierre de la
+  // ventana que dejó C-3: antes se intentaba y se perdía en silencio.
+  assert(e.cuerpoSinSesion === undefined,
+    'sin identidad no puede salir ninguna petición de una evaluación: ' + JSON.stringify(e.cuerpoSinSesion));
+  assert(e.sinSesionResultado && e.sinSesionResultado.evento === 'sin_identidad',
+    `sin identidad el resultado tiene que decirlo, no callarse: ${JSON.stringify(e.sinSesionResultado)}`);
   assert(e.cuerpo.activity === 'examen' && e.cuerpo.competency === 'carta'
          && e.cuerpo.kind === 'evaluacion' && e.cuerpo.score === 8 && e.cuerpo.total === 10
          && e.cuerpo.seconds === 240, 'el cuerpo no es el esperado: ' + JSON.stringify(e.cuerpo));
@@ -10253,7 +10280,11 @@ test('Registro de actividad: todas las actividades escriben, y con el mismo voca
   }
 
   // ── 4. Un juego no lleva competencia y no puede ensuciar una media ──
-  assert(e.juego === true, 'un juego sí se registra, como juego');
+  // Un juego NO es evento de B2: sigue por el camino de siempre, y su resultado
+  // lo dice con `evento:'no-aplica'`.
+  assert(e.juego && e.juego.evento === 'no-aplica',
+    `un juego no puede convertirse en evento de B2: ${JSON.stringify(e.juego)}`);
+  assert(e.juego.envio === 'confirmado', 'un juego sí se registra, como juego');
   assert(e.juegoCuerpo.competency === null && e.juegoCuerpo.kind === 'juego',
     'un juego va sin competencia: es lo que impide que entre en una nota');
 
@@ -10335,14 +10366,20 @@ const _diarioRes = await (async () => {
   const getEmp = (n) => (fichas[n] = fichas[n] || { name: n });
   let M;
   try {
+    const alm = Object.create(null);
+    const lsFalso = { getItem:(k)=> (k in alm ? alm[k] : null),
+                      setItem:(k,v)=>{ alm[k]=String(v); }, removeItem:(k)=>{ delete alm[k]; } };
     M = new Function('SUPA_URL', 'SUPA_KEY', '_esAdmin', 'currentUser', '_vSello', 'dbgw', 'fetch', '_bearer', // eslint-disable-line no-new-func
       'getEmp', 'todayStr', 'saveDB', 'DISHES', '_venueActual', '_haySala', '_hayVinos', '_VENUE_POR_DEFECTO',
+      '_authCtx', '_cuerpoPropio', '_jwtSub', 'localStorage',
       html.slice(i0, i1) +
       '; return { registrar: registrarActividad, datosDeHoy, planDeHoyDe, planDeHoy };'
     )('https://x', 'k', () => admin, 'Ana', o => Object.assign({ venue: 'txoko' }, o), () => {},
       (...a) => red(...a), () => 'clave-anon', getEmp, () => hoy, () => { guardados++; return true; },
       [{ id: 1 }, { id: 2 }, { id: 3 }], () => 'txoko',
-      new Map([['txoko', false]]), new Map([['txoko', true]]), 'txoko');
+      new Map([['txoko', false]]), new Map([['txoko', true]]), 'txoko',
+      () => ({ uid:null, token:null, exp:0, empleado:null, estado:'anonimo' }),
+      (d) => d, () => null, lsFalso);
   } catch (e) { return { roto: 'no compila: ' + e.message }; }
 
   // Toda lectura va por aquí: si el diario deja de escribirse, la prueba tiene
@@ -10399,7 +10436,12 @@ test('Plan de hoy: el diario es lo que une la fase 1 con la fase 2', () => {
   // 2 · Sin conexión, el registro a la nube falla pero la línea se anota
   //     igual: la actividad ha ocurrido. Es lo que permite que el plan
   //     funcione en un móvil sin cobertura en mitad de un servicio.
-  assert(e.sinRedDevuelve === false, 'sin red el envío a la nube falla, y se dice');
+  // FASE B2-F2: ya no es `false` a secas. El resultado dice QUÉ pasó, y ésa es
+  // justo la diferencia entre perder una evaluación en silencio y no perderla.
+  assert(e.sinRedDevuelve && typeof e.sinRedDevuelve === 'object',
+    'sin red el registro tiene que devolver un resultado estructurado: ' + JSON.stringify(e.sinRedDevuelve));
+  assert(e.sinRedDevuelve.envio !== 'confirmado',
+    'sin red el envío no puede darse por confirmado');
   assert(e.sinRedAnota === true, 'pero la actividad ha ocurrido y tiene que quedar anotada');
 
   // 3 · Lo que el registro rechaza no se anota, y la administración tampoco.
@@ -11466,11 +11508,30 @@ test('el reset de PIN ya no escribe la ficha de otro', () => {
 // fichero: se comprueba el JSON que saldría por el cable. Si alguien vuelve a
 // meter `employee` en un objeto literal, estas pruebas caen.
 console.log('\nFase C-2 — identidad del servidor');
-const _c2 = await (async () => {
+// Arnés compartido por C-2 y F2: monta los CUATRO escritores reales junto con
+// el bloque de eventos REAL y un localStorage de mentira, y captura lo que
+// saldría por el cable. No se comprueba el texto del fichero: se comprueba el
+// JSON y las cabeceras de la petición.
+const _jwtDe = (sub, exp) => 'eyJhbGciOiJIUzI1NiJ9.'
+  + Buffer.from(JSON.stringify({ sub, exp: exp == null ? 2000000000 : exp })).toString('base64')
+      .replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '')
+  + '.firma-que-nadie-verifica-aqui';
+
+function _montarEscritores(opciones) {
+  const o = opciones || {};
   const cap = [];
-  const M = new Function('capturar', `  // eslint-disable-line no-new-func
-    let _auth = { uid:null, token:null, exp:0, empleado:null, estado:'anonimo' };
+  const almacen = Object.create(null);
+  const ls = {
+    getItem: (k) => (k in almacen ? almacen[k] : null),
+    setItem: (k, v) => { if (o.setItemLanza) throw o.setItemLanza(k, v); almacen[k] = String(v); },
+    removeItem: (k) => { delete almacen[k]; },
+  };
+  const bloqueEventos = html.slice(html.indexOf('const _EV_KEY'),
+                                   html.indexOf('async function registrarActividad'));
+  const M = new Function('capturar', 'localStorage', 'responder', ` // eslint-disable-line no-new-func
+    let _auth = Object.freeze({ uid:null, token:null, exp:0, empleado:null, estado:'anonimo' });
     const _authCtx = () => _auth;
+    const _authPoner = (n) => { _auth = Object.freeze(n); };
     const SUPA_URL = 'https://ejemplo', SUPA_KEY = 'clave-anon';
     let currentUser = 'Ana';
     const TIPOS_ACTIVIDAD = ['evaluacion','practica','juego'];
@@ -11480,18 +11541,40 @@ const _c2 = await (async () => {
     const _venueActual = () => 'txoko';
     const _bearer = () => _authCtx().token || SUPA_KEY;
     const _anotarEnDiario = () => {};
-    const fetch = (url, opt) => { capturar(url, JSON.parse(opt.body), opt.headers); return Promise.resolve({ ok: true }); };
+    const fetch = async (url, opt) => {
+      capturar(url, JSON.parse(opt.body), opt.headers);
+      return responder(url, opt);
+    };
+    ${_xFn('_jwtCarga')}
+    ${_xFn('_jwtSub')}
+    ${_xFn('_jwtExp')}
     ${_xFn('_cuerpoPropio')}
+    ${bloqueEventos}
     async ${_xFn('registrarActividad')}
     async ${_xFn('supaInsertScore')}
     async ${_xFn('supaInsertTxokoRecord')}
     async ${_xFn('supaInsertEtRecord')}
     return {
-      token(t){ _auth = { ..._auth, token:t }; },
+      ctx: _authCtx, poner: _authPoner,
+      sesion(uid, token){ _authPoner({ uid, token: token === undefined ? null : token,
+                                       exp: 2000000000, empleado: null,
+                                       estado: token ? 'activa' : (uid ? 'identidad_sin_token' : 'anonimo') }); },
       quien(n){ currentUser = n; },
+      cola: () => _evLeer(_EV_KEY),
+      sinIdentidad: () => _evLeer(_EV_SIN_ID),
+      registro: _evRegistroLeer,
+      memoria: () => _evMemoria,
+      uuid: _uuid, enviar: _eventoEnviar, crear: _eventoCrear,
       registrarActividad, supaInsertScore, supaInsertTxokoRecord, supaInsertEtRecord
     };
-  `)((url, body, headers) => cap.push({ url, body, headers }));
+  `)((url, body, headers) => cap.push({ url, body, headers }), ls,
+     (url, opt) => (o.responder ? o.responder(url, opt) : { ok: true }));
+  return { M, cap, almacen, ls };
+}
+
+const _c2 = await (async () => {
+  const { M, cap } = _montarEscritores();
+  const UID = '2369a651-86b0-45f3-b964-9a6d5a961da9';
 
   const correr = async () => {
     await M.registrarActividad({ activity:'simulacro_alergenos', competency:'alergenos',
@@ -11501,27 +11584,29 @@ const _c2 = await (async () => {
     await M.supaInsertEtRecord('Ana', 120, 7);
   };
 
-  M.token('jwt-de-ana'); cap.length = 0; await correr();
+  M.sesion(UID, _jwtDe(UID)); cap.length = 0; await correr();
   const conSesion = cap.slice();
 
-  M.token(null); cap.length = 0; await correr();
+  // Sin NINGUNA identidad: las dos rutas de B2 ya no salen —van a
+  // `sin_identidad`— y sólo viajan los dos récords, que no son eventos de B2.
+  M.sesion(null, null); cap.length = 0; await correr();
   const sinSesion = cap.slice();
 
   // La cuenta de administración no debe escribir en ningún caso.
-  M.token('jwt-admin'); M.quien('Administrador'); cap.length = 0;
+  M.sesion(UID, _jwtDe(UID)); M.quien('Administrador'); cap.length = 0;
   await M.registrarActividad({ activity:'examen', competency:'carta', kind:'evaluacion', score:1, total:1 });
   await M.supaInsertScore({ score:1, total:1, topic:'x', cat:'all', time:1 }, 'Administrador');
   await M.supaInsertTxokoRecord('Administrador', 1);
   await M.supaInsertEtRecord('Administrador', 1, 1);
   const admin = cap.slice();
 
-  return { conSesion, sinSesion, admin };
+  return { conSesion, sinSesion, admin, UID };
 })();
 
 // Las columnas de negocio salen del esquema REAL, verificado contra producción.
 const _C2_NEGOCIO = {
-  scores:    ['score', 'total', 'topic', 'cat', 'time_sec'],
-  actividad: ['activity', 'competency', 'kind', 'score', 'total', 'seconds', 'meta'],
+  scores:    ['score', 'total', 'topic', 'cat', 'time_sec', 'evento_id'],
+  actividad: ['activity', 'competency', 'kind', 'score', 'total', 'seconds', 'meta', 'evento_id'],
 };
 const _C2_PROHIBIDAS = ['employee', 'venue', 'auth_user_id', 'id', 'created_at'];
 
@@ -11564,8 +11649,10 @@ test('C-2 · con sesión, los datos de negocio llegan intactos', () => {
 
 test('C-2 · con sesión, la petición viaja con el token, no con la clave anónima', () => {
   for (const p of _c2.conSesion) {
-    assert(p.headers.Authorization === 'Bearer jwt-de-ana',
-      `${p.url} no lleva el token: ${p.headers.Authorization}`);
+    assert(/^Bearer eyJ/.test(p.headers.Authorization),
+      `${p.url} no lleva un token: ${p.headers.Authorization}`);
+    assert(p.headers.Authorization !== 'Bearer clave-anon',
+      `${p.url} sale con la clave anónima`);
   }
 });
 
@@ -11574,11 +11661,19 @@ test('C-2 · con sesión, la petición viaja con el token, no con la clave anón
 // `app.emp_actual()`: la fila se perdería con 42501. Hasta que exista la cola de
 // B2, esa rama DEBE seguir mandando el nombre. Si alguien la quita antes de
 // tiempo, esta prueba cae y le dice por qué.
-test('C-2 · SIN sesión, se sigue mandando employee y venue (compatibilidad hasta B2)', () => {
-  assert(_c2.sinSesion.length === 4, 'sin sesión también deben salir las 4 peticiones');
+// FASE B2-F2 CIERRA LA RENDIJA. Sin identidad, las DOS rutas de B2 ya no salen:
+// el evento va a `sin_identidad` y no se envía nunca. Sólo viajan los dos
+// récords de juego, que no son eventos de B2 y siguen por el camino de antes.
+test('C-2/F2 · SIN identidad, las rutas de B2 ya no salen; sólo los récords', () => {
+  assert(_c2.sinSesion.length === 2,
+    `sin identidad deben salir SÓLO los 2 récords, salieron ${_c2.sinSesion.length}`);
   for (const p of _c2.sinSesion) {
-    assert(p.body.employee === 'Ana', `${p.url} sin token debe seguir mandando employee`);
-    assert(p.body.venue === 'txoko', `${p.url} sin token debe seguir mandando venue`);
+    assert(/\/scores$/.test(p.url), `sin identidad no puede salir ${p.url}`);
+    assert(p.body.topic === 'txoko' || p.body.topic === 'elturno',
+      `sin identidad sólo pueden salir récords, salió ${JSON.stringify(p.body)}`);
+    assert(p.body.employee === 'Ana' && p.body.venue === 'txoko',
+      'los récords sin token siguen sellando como antes');
+    assert(!('evento_id' in p.body), 'un récord no es un evento de B2');
   }
 });
 
@@ -11601,7 +11696,11 @@ test('C-2 · ningún escritor de scores/actividad usa _vSello ni nombra identida
   for (const fn of ['registrarActividad', 'supaInsertScore', 'supaInsertTxokoRecord', 'supaInsertEtRecord']) {
     const src = _xFn(fn);
     assert(!/_vSello\(/.test(src), `${fn} vuelve a usar _vSello, que añade venue del cliente`);
-    assert(/_cuerpoPropio\(/.test(src), `${fn} ya no usa _cuerpoPropio`);
+    // Las dos rutas de B2 construyen el cuerpo ellas y no pasan por
+    // `_cuerpoPropio`; las otras dos —los récords— siguen usándolo.
+    const esB2 = fn === 'supaInsertScore';
+    if (!esB2) assert(/_cuerpoPropio\(/.test(src), `${fn} ya no usa _cuerpoPropio`);
+    else assert(!/_cuerpoPropio\(/.test(src), 'supaInsertScore ya no debe pasar por _cuerpoPropio');
     for (const col of _C2_PROHIBIDAS) {
       assert(!new RegExp('\\b' + col + '\\s*:').test(src),
         `${fn} vuelve a poner "${col}:" en el cuerpo`);
@@ -11720,6 +11819,266 @@ test('C-3 · el rollback avisa de que reabre el agujero', () => {
     'el SQL de rollback tiene que estar comentado: no puede ejecutarse por accidente');
 });
 
+// ─── B2 · F2 · el hecho se hace durable en el instante en que ocurre ──────
+//
+// Todo esto ejecuta el bloque de eventos REAL con un `localStorage` de mentira.
+// Se mide lo que sale por el cable y lo que queda en disco, no el texto.
+const ANA  = '2369a651-86b0-45f3-b964-9a6d5a961da9';
+const BRUNO = '8f14e45f-ceea-4e78-b1d2-9a6d5a961d00';
+
+const _f2 = await (async () => {
+  const o = {};
+  const prueba = { activity:'simulacro_alergenos', competency:'alergenos',
+                   kind:'evaluacion', score:18, total:20, seconds:240, meta:{ cat:'all' } };
+
+  // ── 1 · Ana con identidad: el evento nace, se persiste y sale ──
+  {
+    const { M, cap } = _montarEscritores();
+    M.sesion(ANA, _jwtDe(ANA));
+    o.conIdentidad = await M.registrarActividad(prueba);
+    o.peticion = cap[0] || null;
+    o.colaTrasConfirmar = M.cola();
+    o.dosIds = [M.uuid(), M.uuid()];
+  }
+
+  // ── 2 · El mismo evento enviado dos veces conserva su evento_id ──
+  {
+    let n = 0;
+    const { M, cap } = _montarEscritores({ responder: () => ({ ok: ++n > 1 }) });
+    M.sesion(ANA, _jwtDe(ANA));
+    await M.registrarActividad(prueba);       // 1.º intento: el servidor rechaza
+    o.trasFallo = M.cola();
+    await M.registrarActividad(prueba);       // 2.º hecho: otro evento distinto
+    o.idsCable = cap.map(p => p.body.evento_id);
+  }
+
+  // ── 3 · Ana SIN ningún JWT ──
+  {
+    const { M, cap } = _montarEscritores();
+    M.sesion(null, null);
+    o.sinIdentidad = await M.registrarActividad(prueba);
+    o.sinIdentidadPeticiones = cap.length;
+    o.sinIdentidadCola = M.cola();
+    o.sinIdentidadAparte = M.sinIdentidad();
+    o.sinIdentidadRegistro = M.registro();
+  }
+
+  // ── 4 · Ana con uid pero SIN token (JWT persistido y caducado) ──
+  {
+    const { M, cap } = _montarEscritores();
+    M.sesion(ANA, null);
+    o.sinToken = await M.registrarActividad(prueba);
+    o.sinTokenPeticiones = cap.length;
+    o.sinTokenCola = M.cola();
+  }
+
+  // ── 5 · Bruno no puede enviar el evento de Ana ──
+  {
+    const { M, cap } = _montarEscritores({ responder: () => ({ ok: false }) });
+    M.sesion(ANA, _jwtDe(ANA));
+    await M.registrarActividad(prueba);        // queda en la cola de Ana
+    const evAna = M.cola()[0];
+    cap.length = 0;
+    M.sesion(BRUNO, _jwtDe(BRUNO));            // entra Bruno
+    o.brunoIntenta = await M.registrarActividad(prueba);  // lo suyo sí sale
+    o.brunoNoTocaAAna = M.cola().some(e => e.uid === ANA && e.evento_id === evAna.evento_id);
+    o.brunoPeticiones = cap.map(p => ({ id: p.body.evento_id, auth: p.headers.Authorization }));
+    o.idDeAna = evAna.evento_id;
+  }
+
+  // ── 6 · Bruno entra DURANTE el await: el envío no puede saltar de identidad ──
+  {
+    let cambiar = null;
+    const { M, cap } = _montarEscritores({ responder: () => { if(cambiar) cambiar(); return { ok:false }; } });
+    M.sesion(ANA, _jwtDe(ANA));
+    cambiar = () => { M.sesion(BRUNO, _jwtDe(BRUNO)); cambiar = null; };
+    o.duranteAwait = await M.registrarActividad(prueba);   // Bruno entra a mitad
+    o.duranteAwaitAuth = cap[0] && cap[0].headers.Authorization;
+    cap.length = 0;
+    // El siguiente hecho lo crea BRUNO: el de Ana sigue en la cola, sin tocar.
+    o.trasCambio = M.cola().filter(e => e.uid === ANA).length;
+  }
+
+  // ── 7 · `setItem` que falla no se puede ocultar ──
+  {
+    const { M, cap } = _montarEscritores({
+      setItemLanza: () => { const e = new Error('lleno'); e.name = 'QuotaExceededError'; return e; } });
+    M.sesion(ANA, _jwtDe(ANA));
+    o.cuota = await M.registrarActividad(prueba);
+    o.cuotaPeticiones = cap.length;
+    o.cuotaMemoria = M.memoria().length;
+  }
+  {
+    const { M, cap } = _montarEscritores({ setItemLanza: () => new TypeError('modo privado') });
+    M.sesion(ANA, _jwtDe(ANA));
+    o.noPersistido = await M.registrarActividad(prueba);
+    o.noPersistidoPeticiones = cap.length;
+  }
+
+  // ── 8 · Capacidad: la práctica cede el sitio, la evaluación nunca ──
+  {
+    const { M } = _montarEscritores({ responder: () => ({ ok:false }) });
+    M.sesion(ANA, _jwtDe(ANA));
+    for (let i = 0; i < 400; i++) await M.registrarActividad({ activity:'repaso',
+      competency:'carta', kind:'practica', score:1, total:1 });
+    o.tras400 = M.cola().length;
+    o.practicaEn400 = await M.registrarActividad({ activity:'repaso', competency:'carta',
+      kind:'practica', score:1, total:1 });
+    o.alergenoEn400 = await M.registrarActividad(prueba);
+    o.colaFinal = M.cola().length;
+    o.registroFinal = M.registro();
+  }
+  // ── 9 · Las cuatro comprobaciones de `_eventoEnviar`, cada una aislada ──
+  {
+    const { M, cap } = _montarEscritores({ responder: () => ({ ok:false }) });
+    M.sesion(ANA, _jwtDe(ANA));
+    const ctxAna = M.ctx();
+    await M.registrarActividad(prueba);
+    const evAna = M.cola()[0];
+    M.sesion(BRUNO, _jwtDe(BRUNO));                 // entra Bruno
+    cap.length = 0;
+    o.ctxRancio  = await M.enviar(evAna, ctxAna);            // 2 · el contexto ya no es el vivo
+    o.deOtro     = await M.enviar(evAna, M.ctx());           // 1 · el evento no es suyo
+    o.uidNulo    = await M.enviar({ ...evAna, uid:null }, M.ctx());   // uid nulo jamás viaja
+    o.peticionesTrasCuatro = cap.length;
+    M.poner({ uid: BRUNO, token: null, exp: 2000000000, empleado: null, estado: 'identidad_sin_token' });
+    o.sinTokenEnvia = await M.enviar({ ...evAna, uid: BRUNO }, M.ctx());   // 3 · no hay token
+    M.poner({ uid: BRUNO, token: _jwtDe(ANA), exp: 2000000000, empleado: null, estado: 'activa' });
+    o.tokenAjeno = await M.enviar({ ...evAna, uid: BRUNO }, M.ctx());      // 4 · el sub no cuadra
+    o.peticionesTotales = cap.length;
+  }
+  return o;
+})();
+
+console.log('\nB2 — F2 · alta del evento y persistencia síncrona');
+
+test('F2 · el envío DIRECTO lleva evento_id', () => {
+  assert(_f2.peticion, 'con identidad tiene que salir la petición');
+  assert(_f2.peticion.body.evento_id, 'el cuerpo del envío directo no lleva evento_id');
+  assert(/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i
+    .test(_f2.peticion.body.evento_id), `evento_id no es un UUID v4: ${_f2.peticion.body.evento_id}`);
+});
+
+test('F2 · el evento se persiste ANTES de la red, y se confirma al entrar', () => {
+  assert(_f2.conIdentidad.evento === 'persistido',
+    `el alta tiene que persistir: ${JSON.stringify(_f2.conIdentidad)}`);
+  assert(_f2.conIdentidad.envio === 'confirmado', 'con red debería confirmarse');
+  assert(_f2.colaTrasConfirmar.length === 0, 'lo confirmado tiene que salir de la cola');
+});
+
+test('F2 · el evento rechazado SE QUEDA, con su evento_id intacto', () => {
+  assert(_f2.trasFallo.length === 1, `tras un rechazo el evento se queda: ${_f2.trasFallo.length}`);
+  assert(_f2.trasFallo[0].evento_id === _f2.idsCable[0],
+    'el evento guardado no conserva el id que se envió');
+});
+
+test('F2 · cada hecho nuevo genera OTRO evento_id', () => {
+  assert(_f2.idsCable.length === 2, 'tienen que salir dos peticiones');
+  assert(_f2.idsCable[0] !== _f2.idsCable[1], 'dos hechos distintos comparten evento_id');
+  assert(_f2.dosIds[0] !== _f2.dosIds[1], '_uuid() devuelve el mismo valor dos veces');
+});
+
+test('F2 · sin ningún JWT el evento NO se envía y va a sin_identidad', () => {
+  assert(_f2.sinIdentidadPeticiones === 0,
+    `sin identidad no puede salir ninguna petición, salieron ${_f2.sinIdentidadPeticiones}`);
+  assert(_f2.sinIdentidad.evento === 'sin_identidad',
+    `el resultado tiene que decirlo: ${JSON.stringify(_f2.sinIdentidad)}`);
+  assert(_f2.sinIdentidadCola.length === 0, 'la cola que drena no puede recibirlo');
+  assert(_f2.sinIdentidadAparte.length === 1, 'tiene que quedar en la clave separada');
+  assert(_f2.sinIdentidadAparte[0].uid === null, 'y con uid nulo, que es lo que es');
+  assert(_f2.sinIdentidadRegistro.contadores.sin_identidad === 1,
+    'tiene que quedar contado para que F6 pueda enseñarlo');
+});
+
+test('F2 · con uid pero sin token: el evento tiene DUEÑO y espera', () => {
+  assert(_f2.sinToken.evento === 'persistido', 'con uid el evento entra en la cola normal');
+  assert(_f2.sinToken.envio === 'sin-token', `no puede intentar enviarse: ${_f2.sinToken.envio}`);
+  assert(_f2.sinTokenPeticiones === 0, 'sin token no puede salir nada');
+  assert(_f2.sinTokenCola.length === 1 && _f2.sinTokenCola[0].uid === ANA,
+    'el evento conserva su dueño mientras espera');
+});
+
+test('F2 · uid:null NUNCA llega a una petición', () => {
+  for (const p of [..._c2.conSesion, ..._c2.sinSesion, ...(_f2.brunoPeticiones || [])]) {
+    const b = p.body || p;
+    assert(!('uid' in b) && !('auth_user_id' in b),
+      `una petición lleva identidad en el cuerpo: ${JSON.stringify(b)}`);
+  }
+  assert(_f2.sinIdentidadPeticiones === 0, 'un evento sin uid no puede viajar');
+});
+
+test('F2 · Bruno no puede enviar ni apropiarse del evento de Ana', () => {
+  assert(_f2.brunoNoTocaAAna, 'el evento de Ana tiene que seguir en la cola, intacto');
+  for (const p of _f2.brunoPeticiones) {
+    assert(p.id !== _f2.idDeAna, 'Bruno ha enviado el evento_id de Ana');
+  }
+});
+
+test('F2 · el token usado es el del uid CONGELADO, no el de quien entre después', () => {
+  const esperado = 'Bearer ' + _jwtDe(ANA);
+  assert(_f2.duranteAwaitAuth === esperado,
+    `la petición de Ana salió con otra credencial: ${_f2.duranteAwaitAuth}`);
+  assert(_f2.trasCambio === 1, 'el evento de Ana tiene que quedarse en la cola tras entrar Bruno');
+});
+
+test('F2 · QuotaExceededError no se oculta y NO se envía lo que no se guardó', () => {
+  assert(_f2.cuota.evento === 'bloqueado_por_cuota',
+    `la cuota llena tiene que decirse: ${JSON.stringify(_f2.cuota)}`);
+  assert(_f2.cuota.envio === 'no-intentado',
+    'no se puede enviar algo cuya existencia local no está garantizada');
+  assert(_f2.cuotaPeticiones === 0, 'con la cuota llena no puede salir nada');
+  assert(_f2.cuotaMemoria >= 1, 'el hecho tiene que seguir en memoria, no evaporarse');
+});
+
+test('F2 · otro fallo de setItem tampoco se oculta', () => {
+  assert(_f2.noPersistido.evento === 'no_persistido',
+    `un setItem roto tiene que decirse: ${JSON.stringify(_f2.noPersistido)}`);
+  assert(_f2.noPersistidoPeticiones === 0, 'tampoco se envía');
+});
+
+test('F2 · a 400 la práctica cede el sitio; el alérgeno NUNCA', () => {
+  assert(_f2.tras400 === 400, `esperaba 400 en cola, hay ${_f2.tras400}`);
+  assert(_f2.practicaEn400.evento === 'descartado',
+    `la práctica tiene que descartarse: ${JSON.stringify(_f2.practicaEn400)}`);
+  assert(_f2.alergenoEn400.evento === 'persistido',
+    `un simulacro de alérgenos NO se descarta por capacidad: ${JSON.stringify(_f2.alergenoEn400)}`);
+  assert(_f2.colaFinal === 401, `la cola tiene que crecer sólo con el alérgeno: ${_f2.colaFinal}`);
+  assert(_f2.registroFinal.contadores.descartado_por_espacio >= 1,
+    'el descarte tiene que quedar contado, no ser silencioso');
+});
+
+test('F2 · el resultado estructurado distingue los cinco casos', () => {
+  const vistos = new Set([_f2.conIdentidad.evento, _f2.sinIdentidad.evento, _f2.sinToken.evento,
+                          _f2.cuota.evento, _f2.noPersistido.evento, _f2.practicaEn400.evento]);
+  for (const e of ['persistido', 'sin_identidad', 'bloqueado_por_cuota', 'no_persistido', 'descartado']) {
+    assert(vistos.has(e), `el estado "${e}" no se produce en ningún camino medido`);
+  }
+  assert(_f2.sinToken.envio === 'sin-token' && _f2.conIdentidad.envio === 'confirmado',
+    'el envío también tiene que distinguirse');
+});
+
+test('F2 · las CUATRO comprobaciones de envío, cada una por separado', () => {
+  assert(_f2.ctxRancio === 'identidad-cambiada',
+    `un contexto rancio tiene que abortar: ${_f2.ctxRancio}`);
+  assert(_f2.deOtro === 'retenido', `el evento de otro no se envía: ${_f2.deOtro}`);
+  assert(_f2.uidNulo === 'retenido', `un uid nulo no puede viajar: ${_f2.uidNulo}`);
+  assert(_f2.sinTokenEnvia === 'sin-token', `sin token no se envía: ${_f2.sinTokenEnvia}`);
+  assert(_f2.tokenAjeno === 'token-no-coincide',
+    `un token cuyo sub no es el uid no puede usarse: ${_f2.tokenAjeno}`);
+  assert(_f2.peticionesTotales === 0,
+    `ninguna de las cinco puede llegar a la red, salieron ${_f2.peticionesTotales}`);
+});
+
+test('F2 · B1 no se toca: sus tres claves siguen siendo suyas', () => {
+  for (const k of ['txk_cola_v2', 'txk_sync_outbox', 'txk_cola_cuarentena']) {
+    assert(html.includes(k), `la clave de B1 ${k} ha desaparecido`);
+  }
+  const bloque = html.slice(html.indexOf('const _EV_KEY'), html.indexOf('async function registrarActividad'));
+  for (const k of ['txk_cola_v2', 'txk_sync_outbox', 'txk_cola_cuarentena', '_colaCargar', '_colaGuardar']) {
+    assert(!bloque.includes(k), `el bloque de eventos toca ${k}, que es de B1`);
+  }
+});
+
 // ─── B2 · F1 · evento_id e idempotencia en el servidor ──────────
 console.log('\nB2 — F1 · evento_id e idempotencia');
 
@@ -11784,15 +12143,21 @@ test('F1 · el rollback de F1 está comentado y se distingue del de C-3', () => 
     'el SQL de rollback tiene que estar comentado: no puede ejecutarse por accidente');
 });
 
-test('F1 · no se ha adelantado nada de F2', () => {
-  // F1 es sólo servidor. Si aparece cualquier pieza de la cola de eventos en el
-  // cliente, es trabajo de F2 colado en esta fase.
-  for (const marca of ['txk_eventos_v1', 'txk_eventos_sin_identidad', 'txk_eventos_registro',
-                       '_eventoCrear', '_eventosDrenar', '_eventosGuardar']) {
-    assert(!html.includes(marca), `"${marca}" pertenece a F2 y no puede estar en F1`);
+test('F2 · la frontera con F3 y F6 sigue cerrada', () => {
+  // F2 crea, persiste y envía una vez. El DRENAJE con reintentos es F3 y la
+  // superficie de incidencias es F6: si aparece cualquiera de las dos aquí, se
+  // ha adelantado trabajo de otra fase.
+  for (const marca of ['_eventosDrenar', '_conCerrojo', 'navigator.locks',
+                       '_eventoReintentar', '_cuarentenaEvento']) {
+    assert(!html.includes(marca), `"${marca}" pertenece a F3/F5 y no puede estar en F2`);
   }
-  assert(!/randomUUID/.test(html), 'la generación de UUID es de F2');
-  assert(!/evento_id/.test(html), 'el cliente no manda evento_id todavía: eso es F2');
+  // Sobre el código VIVO: el bloque de identidad menciona PGRST301 en un
+  // comentario a propósito, para explicar por qué el contexto guarda `exp`.
+  const vivoF2 = html.split('\n').filter((l) => !/^\s*\/\//.test(l)).join('\n');
+  assert(!/PGRST301|23505|42501/.test(vivoF2), 'la clasificación de errores es de F4');
+  // Y el toast antiguo sigue donde estaba: se retira en F6, no aquí.
+  assert(/No se pudo guardar la puntuación en la nube/.test(html),
+    'el toast se retira en F6, no en F2');
 });
 
 // ─── B2 · F0 · la identidad es un solo objeto congelado ─────────
