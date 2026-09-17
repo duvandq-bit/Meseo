@@ -1,15 +1,95 @@
 {
- "updated": "2026-09-17T01:28:47.887Z",
+ "updated": "2026-09-17T10:02:32.131Z",
  "items": [
   {
-   "t": "El restaurante de una localidad navarra que entra en la Guía Michelin como restaurante recomendado",
-   "u": "https://pamplonaactual.com/pamplona-actual-comer-muy-bien/413541/el-restaurante-de-una-localidad-navarra-que-entra-en-la-guia-michelin-como-restaurante-recomendado",
-   "s": "pamplonaactual.com",
-   "d": "2026-09-16T23:34:03.000Z",
+   "t": "Jesús Sánchez, chef con 3 estrellas Michelin, sobre la cocina francesa y del Cantábrico",
+   "u": "https://www.elle.com/es/gourmet/gastronomia/a73667996/jesus-sanchez-restaurantes-recomendados-cocina-francesa-cantabrico/",
+   "s": "ELLE",
+   "d": "2026-09-17T08:01:52.000Z",
+   "tags": [
+    "ALTA COCINA",
+    "MICHELIN"
+   ],
+   "img": "https://hips.hearstapps.com/hmg-prod/images/26002e46-088b-4777-a42d-8d87cd9482fd.jpg?crop=1.00xw:0.385xh;0,0.0537xh&resize=1200:*"
+  },
+  {
+   "t": "El Asador de la Concepción de Albacete alcanza la final del VII Concurso Internacional de Patatas Bravas",
+   "u": "https://alcazardesanjuan.com/el-asador-de-la-concepcion-de-albacete-alcanza-la-final-del-vii-concurso-internacional-de-patatas-bravas/",
+   "s": "alcazardesanjuan.com",
+   "d": "2026-09-17T07:58:13.000Z",
+   "tags": [
+    "ALTA COCINA"
+   ],
+   "img": "https://alcazardesanjuan.com/wp-content/uploads/2026/09/El-Asador-de-la-Concepcion-de-Albacete-alcanza-la-final-1200x675.webp"
+  },
+  {
+   "t": "Una de las mejores aperturas de las Rías Baixas en los últimos años se cuela en la Guía Michelin",
+   "u": "https://www.elespanol.com/treintayseis/vivir/gastropontevedra/20260917/mejores-aperturas-rias-baixas-ultimos-anos-cuela-guia-michelin/1003744386525_0.html",
+   "s": "El Español",
+   "d": "2026-09-17T07:35:55.000Z",
    "tags": [
     "MICHELIN"
    ],
-   "img": "https://comunikazemedia.b-cdn.net/articulos/articulos-595132.jpg"
+   "img": "https://s3.elespanol.com/k/imgp/cms/elespanol/11355741.jpg?p=f:jpeg/w:1706/h:960&h=__g6MCIf"
+  },
+  {
+   "t": "El patriarca de Juvé & Camps: \"Canarias siempre ha sido nuestra tierra de afecto y el reflejo de una familia que se sirve en copa\"",
+   "u": "https://www.eldiario.es/canariasahora/por-fogones/losjuernesdeporfogones/patriarca-juve-camps-canarias-sido-tierra-afecto-reflejo-familia-sirve-copa_1_13516554.amp.html",
+   "s": "elDiario.es",
+   "d": "2026-09-17T07:18:28.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://static.eldiario.es/clip/e628a8e1-af1b-43c2-bc19-570ec6283512_facebook-aspect-ratio-1200-675_default_0_x1015y698.jpg"
+  },
+  {
+   "t": "Álvaro Salazar, chef de Voro: \"Es una pena que a muchos nuevos cocineros les interese más la salsa ponzu que las patatas a la riojana\"",
+   "u": "https://www.expansion.com/fueradeserie/gastro/2026/09/17/6a98140ce5fdea0e328b4580.html",
+   "s": "Expansión",
+   "d": "2026-09-17T06:10:27.000Z",
+   "tags": [
+    "ALTA COCINA"
+   ],
+   "img": "https://e01-phantom-expansion.uecdn.es/6cc300f2f09b98e7278d707b99ed941e/crop/0x0/2048x1365/resize/1200/f/webp/assets/multimedia/imagenes/2026/09/08/17888991611632.jpg"
+  },
+  {
+   "t": "Andrea Selvaggini propone en Savage el lenguaje del futuro para la alta cocina",
+   "u": "https://www.mundodeportivo.com/foodie/foodie-reportajes/20260917/1004227064/andrea-selvaggini-propone-savage-lenguaje-futuro-alta-cocina.html",
+   "s": "mundodeportivo.com",
+   "d": "2026-09-17T06:00:00.000Z",
+   "tags": [
+    "ALTA COCINA"
+   ],
+   "img": "https://imagenes2.mundodeportivo.com/files/og_thumbnail/files/fp/uploads/2026/09/14/6aa7e24c842b2.r_d.803-545-7500.jpeg"
+  },
+  {
+   "t": "La Guía Michelin España suma 20 nuevos restaurantes: estos son los nombres a seguir",
+   "u": "https://www.que.es/2026/09/17/guia-michelin-espana-nuevos-restaurantes/",
+   "s": "que.es",
+   "d": "2026-09-17T04:20:00.000Z",
+   "tags": [
+    "MICHELIN"
+   ],
+   "img": "https://static.que.es/wp-content/uploads/2023/05/Martin-Berasategui-Su-reconocimiento-con-la-Guia-Michelin.jpg"
+  },
+  {
+   "t": "Cinco ciudades en España para comer muy bien más allá de Madrid y Barcelona",
+   "u": "https://elpais.com/elviajero/lonely-planet/2026-09-17/cinco-ciudades-en-espana-para-comer-muy-bien-mas-alla-de-madrid-y-barcelona.html",
+   "s": "EL PAÍS",
+   "d": "2026-09-17T03:30:00.000Z",
+   "tags": [
+    "MICHELIN"
+   ],
+   "img": "https://imagenes.elpais.com/resizer/v2/N32C7FDWMFBBNLLUEQU4CEABMU.jpg?auth=033cd3b062aec80ed2e1beb8d69882d4c39bc27a67e4d1c729017f5d9290e2b3&width=1200"
+  },
+  {
+   "t": "Paula Gutiérrez: la cocinera de 25 años que está reescribiendo el legado familiar de Tayta",
+   "u": "https://www.articulo14.es/estilo-vida/paula-gutierrez-la-cocinera-de-25-anos-que-esta-reescribiendo-el-legado-familiar-de-tayta-20260917.html",
+   "s": "Artículo 14",
+   "d": "2026-09-17T02:55:00.000Z",
+   "tags": [
+    "ALTA COCINA"
+   ]
   },
   {
    "t": "Turismo de Tenerife y Basque Culinary Center impulsan la excelencia gastronómica de la isla",
@@ -24,7 +104,7 @@
   {
    "t": "Alta cocina y talento gastronómico se reunirán en la Culinary Week 2026 de Barceló Bávaro Grand Resort",
    "u": "https://bavarodigital.net/alta-cocina-y-talento-gastronomico-se-reuniran-en-la-culinary-week-2026-de-barcelo-bavaro-grand-resort/",
-   "s": "Bavarodigital.net",
+   "s": "bavarodigital.net",
    "d": "2026-09-16T19:01:07.000Z",
    "tags": [
     "ALTA COCINA"
@@ -52,6 +132,27 @@
    "img": "https://s3.ppllstatics.com/diariosur/www/multimedia/malagaenlamesa/2026/09/16/RobertoFabian-R1LJEy7PyO2OozJhBZ3ahNL-1200x840@Diario%20Sur.jpg"
   },
   {
+   "t": "El restaurante de una localidad navarra que entra en la Guía Michelin como restaurante recomendado",
+   "u": "https://zizurardoi.com/zizur-ardoi/413541/el-restaurante-de-una-localidad-navarra-que-entra-en-la-guia-michelin-como-restaurante-recomendado/",
+   "s": "Zizur Ardoi",
+   "d": "2026-09-16T17:32:45.000Z",
+   "tags": [
+    "MICHELIN"
+   ],
+   "img": "https://comunikazemedia.b-cdn.net/articulos/articulos-595132.jpg"
+  },
+  {
+   "t": "Remírez de Ganuza agota en un día las 869 botellas de Iraila",
+   "u": "https://www.vinetur.com/20260916107179/remirez-de-ganuza-agota-en-un-dia-las-869-botellas-de-iraila.html",
+   "s": "Vinetur",
+   "d": "2026-09-16T17:19:05.000Z",
+   "tags": [
+    "VINO",
+    "CANARIAS"
+   ],
+   "img": "https://www.vinetur.com/visuals/2026/september/16/agent-20260916-111501-44718d48aa873929.jpg"
+  },
+  {
    "t": "Auténtica cierra con 12.489 profesionales y apostando por la alimentación de calidad y conectada con el origen",
    "u": "https://www.andaluciainformacion.es/articulo/sevilla/autentica-cierra-12489-profesionales-apostando-alimentacion-calidad-conectada-origen/202609161845333479477.amp.html",
    "s": "Andalucía Información",
@@ -64,25 +165,16 @@
   {
    "t": "La Orotava llevará los saldos a la calle el 3 de octubre con descuentos, música y gastronomía",
    "u": "https://www.libertaddigital.com/canarias/2026-09-16/la-orotava-llevara-los-saldos-a-la-calle-el-3-de-octubre-con-descuentos-musica-y-gastronomia-7461055/amp.html",
-   "s": "libertaddigital.com",
+   "s": "Libertad Digital",
    "d": "2026-09-16T15:55:29.000Z",
    "tags": [
     "CANARIAS"
    ]
   },
   {
-   "t": "Un cocinero alicantino, entre los finalistas que competirán por elaborar las mejores patatas bravas de España",
-   "u": "https://www.informacion.es/ocio/gastronomia/2026/09/16/cocinero-alicantino-finalistas-competiran-elaborar-134358440.html",
-   "s": "Información",
-   "d": "2026-09-16T15:22:15.000Z",
-   "tags": [
-    "MICHELIN"
-   ]
-  },
-  {
    "t": "Lava: así es el restaurante de Puerto de la Cruz que representa a Canarias en los TheFork Awards",
    "u": "https://www.eldia.es/tenerife/2026/09/16/lava-restaurante-puerto-cruz-representa-134356925.html",
-   "s": "eldia.es",
+   "s": "Eldía",
    "d": "2026-09-16T14:57:58.000Z",
    "tags": [
     "CANARIAS"
@@ -124,8 +216,7 @@
    "d": "2026-09-16T14:45:00.000Z",
    "tags": [
     "MICHELIN"
-   ],
-   "img": "https://navarracapital.es/wp-content/uploads/Mirador-de-Deyo-3.jpg"
+   ]
   },
   {
    "t": "Mirador de Deyo entra en la Guía Michelin España como restaurante recomendado en Villamayor de Monjardín",
@@ -136,6 +227,16 @@
     "MICHELIN"
    ],
    "img": "https://navarra.okdiario.com/media/navarra/images/2026/09/16/2026091616072881199.jpg"
+  },
+  {
+   "t": "Auténtica 2026 cierra con 12.489 profesionales",
+   "u": "https://www.latribunadeciudadreal.es/noticia/za28aefb2-2acc-442a-a0945986165433ff/202609/autentica-2026-cierra-con-12-489-profesionales",
+   "s": "La Tribuna de Ciudad Real",
+   "d": "2026-09-16T14:17:00.000Z",
+   "tags": [
+    "ALTA COCINA"
+   ],
+   "img": "https://www.latribunadeciudadreal.es/media/IMG/2026/08761E98-4F1A-4FC7-B08D0916E1E3C11A.JPG"
   },
   {
    "t": "Estos son los 20 restaurantes que entran en septiembre en la Guía Michelin España",
@@ -149,7 +250,7 @@
   {
    "t": "El restaurante Taste 1973 estrena su renovada sala en el Hotel Villa Cortés de Playa de las Américas",
    "u": "https://www.eldia.es/tenerife/2026/09/16/restaurante-taste-1973-estrena-renovada-134354953.html",
-   "s": "eldia.es",
+   "s": "Eldía",
    "d": "2026-09-16T13:54:56.000Z",
    "tags": [
     "CANARIAS"
@@ -157,7 +258,7 @@
   },
   {
    "t": "Paco Roncero, cocinero: \"Aquí voy siempre a degustar sus arroces, que me parecen una auténtica maravilla\"",
-   "u": "https://www.elespanol.com/madrid/ocio/20260916/paco-roncero-cocinero-voy-siempre-degustar-arroces-parecen-autentica-maravilla/1003744384736_0.amp.html",
+   "u": "https://www.elespanol.com/madrid/ocio/20260916/paco-roncero-cocinero-voy-siempre-degustar-arroces-parecen-autentica-maravilla/1003744384736_0.html",
    "s": "El Español",
    "d": "2026-09-16T13:47:51.000Z",
    "tags": [
@@ -174,16 +275,6 @@
     "ALTA COCINA"
    ],
    "img": "https://www.infobae.com/resizer/v2/R5MYFKOIBVDZRH4SINIBF7MD6Q.jpg?auth=fe7650ee3489ff9e7711eede420aa896b1425a9ce2cdf0ab44528ca2e1958967&smart=true&width=1200&height=630&quality=85"
-  },
-  {
-   "t": "The Site Ibiza celebra una noche de alta cocina junto a Jorge Lengua, Adri Paniagua y Gonzalo Cancelo",
-   "u": "https://www.noudiari.es/empresas/the-site-ibiza-celebra-una-noche-de-alta-cocina-junto-a-jorge-lengua-adri-paniagua-y-gonzalo-cancelo/",
-   "s": "Noudiari.es",
-   "d": "2026-09-16T13:39:50.000Z",
-   "tags": [
-    "ALTA COCINA"
-   ],
-   "img": "https://www.noudiari.es/wp-content/uploads/2026/09/DSC09015-2-1024x684.jpeg"
   },
   {
    "t": "Rafa Soler lleva la Gamba Blanca de Calp a la gala solidaria ‘Estrellas contra el Cáncer’ de Ibiza",
@@ -204,95 +295,6 @@
     "MICHELIN"
    ],
    "img": "https://imagenes.diariodenavarra.es/files/og_thumbnail/uploads/2026/09/16/6aaa954b6bf38.jpeg"
-  },
-  {
-   "t": "The ShowRoom Mag descubre la nueva etapa de Taste 1973 en una noche de gastronomía y encuentros",
-   "u": "https://theshowroommag.com/the-showroom-mag-descubre-la-nueva-etapa-de-taste-1973-en-una-noche-de-gastronomia-y-encuentros/",
-   "s": "The Showroom Mag",
-   "d": "2026-09-16T13:11:30.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://theshowroommag.com/wp-content/uploads/2026/09/2-2.jpg"
-  },
-  {
-   "t": "Auténtica 2026 cierra con 12.489 profesionales y una apuesta firme por una alimentación de calidad",
-   "u": "https://www.65ymas.com/economia/empresas/autentica-2026-cierra-con-12489-profesionales-apuesta-firme-por-alimentacion-calidad_86062_102.html",
-   "s": "65 y más",
-   "d": "2026-09-16T13:04:55.000Z",
-   "tags": [
-    "ALTA COCINA"
-   ],
-   "img": "https://www.65ymas.com/uploads/s1/30/61/24/8/captura-de-pantalla-2026-09-16-a-las-15-03-58_19_1200x630.png"
-  },
-  {
-   "t": "El restaurante de Las Canteras que mezcla India, México y Maldivas",
-   "u": "https://www.laprovincia.es/las-palmas/2026/09/16/restaurante-canteras-mezcla-india-mexico-134325307.amp.html",
-   "s": "La Provincia",
-   "d": "2026-09-16T12:15:05.000Z",
-   "tags": [
-    "CANARIAS"
-   ]
-  },
-  {
-   "t": "El restaurante aragonés que une los productos del Somontano con la tradición andaluza y los sabores del mundo: \"Solo para ovejas negras\"",
-   "u": "https://www.hoyaragon.es/gastronomia/restaurante-oveja-negra-barbastro-aragon/20260916133936146230.html",
-   "s": "Hoy Aragón",
-   "d": "2026-09-16T11:39:36.000Z",
-   "tags": [
-    "ALTA COCINA"
-   ],
-   "img": "https://www.hoyaragon.es/media/hoyaragon/images/2026/09/16/2026091613474595456.jpg"
-  },
-  {
-   "t": "Una de las cafeterías \"más bonitas de Gran Canaria\": café de especialidad, té matcha y cocina consciente",
-   "u": "https://www.laprovincia.es/gran-canaria/2026/09/16/cafeterias-bonitas-gran-canaria-cafe-especialidad-dv-134344989.amp.html",
-   "s": "La Provincia",
-   "d": "2026-09-16T11:15:08.000Z",
-   "tags": [
-    "CANARIAS"
-   ]
-  },
-  {
-   "t": "Cierra el restaurante Santerra y Madrid pierde una estrella Michelin: adiós a su cocina de caza y a la ‘mejor croqueta de España’",
-   "u": "https://www.infobae.com/espana/2026/09/16/cierra-el-restaurante-santerra-y-madrid-pierde-una-estrella-michelin-adios-a-su-cocina-de-caza-y-a-la-mejor-croqueta-de-espana/",
-   "s": "Infobae",
-   "d": "2026-09-16T11:09:58.000Z",
-   "tags": [
-    "MICHELIN"
-   ],
-   "img": "https://www.infobae.com/resizer/v2/QOIDWOVV7VAM3DXLDOQWVDLIJY.jpg?auth=e27bec57996d06769029082d350558c7d6cddc466f29f9225393a554a3fb3fc0&smart=true&width=1200&height=630&quality=85"
-  },
-  {
-   "t": "Juvé & Camps: medio siglo del espumoso que lo cambió todo",
-   "u": "https://www.laprovincia.es/ocio/gastronomia/2026/09/16/juve-camps-medio-siglo-espumoso-iconico-134339267.html",
-   "s": "La Provincia",
-   "d": "2026-09-16T11:00:12.000Z",
-   "tags": [
-    "VINO",
-    "CANARIAS"
-   ]
-  },
-  {
-   "t": "El pueblo marinero donde comer gambas rojas a reventar: declarada ciudad creativa por la UNESCO",
-   "u": "https://www.elespanol.com/alicante/vivir/gastronomia/20260916/pueblo-marinero-comer-gambas-rojas-reventar-declarada-ciudad-creativa-unesco-trt/1003744385384_0.amp.html",
-   "s": "El Español",
-   "d": "2026-09-16T10:53:52.000Z",
-   "tags": [
-    "ALTA COCINA"
-   ],
-   "img": "https://s3.elespanol.com/k/imgp/cms/elespanol/10748160.jpg?p=f:jpeg/w:1706/h:960&h=jo1fKpnk"
-  },
-  {
-   "t": "DC Mayca acerca a Canarias Iraila 2024, el vino de récord de Remírez de Ganuza",
-   "u": "https://www.canarias7.es/gastronomia-c7/mayca-acerca-canarias-iraila-2024-vino-record-20260916113529-nt_amp.html",
-   "s": "Canarias7",
-   "d": "2026-09-16T10:35:29.000Z",
-   "tags": [
-    "VINO",
-    "CANARIAS"
-   ],
-   "img": "https://s3.ppllstatics.com/canarias7/www/multimedia/gastronomia-c7/2026/09/16/vino-kNHE-U301745243517EFD-1200x840@Canarias7.jpg"
   }
  ]
 }
