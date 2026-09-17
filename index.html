@@ -52,7 +52,7 @@
 <meta property="og:description" content="Formación de equipos de sala: carta, alérgenos, vinos, exámenes y juegos de repaso.">
 <meta property="og:url" content="https://meseo.es/">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"Meseo","url":"https://meseo.es/"}</script>
-<meta name="app-version" content="7.455">
+<meta name="app-version" content="7.456">
 <meta name="app-build" content="May 2026">
 <meta name="theme-color" content="#1c2a22">
 <!-- ═══ PWA ═══ -->
@@ -2187,7 +2187,7 @@ const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><p
 const SRC = 'src';
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='7.455';  // sincronizada con sw.js VERSION (guard de CI)
+const APP_VERSION='7.456';  // sincronizada con sw.js VERSION (guard de CI)
 const APP_BUILD='Jul 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;
@@ -2584,28 +2584,208 @@ function _eventoConfirmar(ev){
 // casi siempre, pero cuestan una comparación y lo que protegen es la integridad
 // de una evidencia de seguridad alimentaria.
 async function _eventoEnviar(ev, ctx){
-  if(!ev || !ctx) return 'no-intentado';
-  if(!ctx.uid || ev.uid !== ctx.uid) return 'retenido';            // 1 · no es suyo
-  if(_authCtx() !== ctx)             return 'identidad-cambiada';  // 2 · entró otro
-  if(!ctx.token)                     return 'sin-token';           // 3 · no se puede hablar
-  if(_jwtSub(ctx.token) !== ctx.uid) return 'token-no-coincide';   // 4 · la credencial no cuadra
+  if(!ev || !ctx) return { estado:'no-intentado' };
+  if(!ctx.uid || ev.uid !== ctx.uid) return { estado:'retenido' };           // 1 · no es suyo
+  if(_authCtx() !== ctx)             return { estado:'identidad-cambiada' }; // 2 · entró otro
+  if(!ctx.token)                     return { estado:'sin-token' };          // 3 · no se puede hablar
+  if(_jwtSub(ctx.token) !== ctx.uid) return { estado:'token-no-coincide' };  // 4 · la credencial no cuadra
   let r;
   try{
-    r = await fetch(`${SUPA_URL}/rest/v1/${ev.destino}`, {
+    // `return=representation` a propósito: sin fila de vuelta no se puede
+    // DEMOSTRAR que el servidor aceptó, y un evento sólo sale de la cola cuando
+    // eso está demostrado.
+    r = await fetch(`${SUPA_URL}/rest/v1/${ev.destino}?select=evento_id`, {
       method: 'POST',
       headers: {
         'apikey': SUPA_KEY,
         'Authorization': `Bearer ${ctx.token}`,   // el token CONGELADO, no `_bearer()`
         'Content-Type': 'application/json',
-        'Prefer': 'return=minimal'
+        'Prefer': 'return=representation'
       },
       body: JSON.stringify(Object.assign({ evento_id: ev.evento_id }, ev.datos))
     });
-  }catch(_){ return 'sin-red'; }
-  if(r && r.ok){ _eventoConfirmar(ev); return 'confirmado'; }
-  // La clasificación fina de la respuesta es de F4. Aquí sólo se constata que no
-  // entró, y el evento se queda en la cola con su `evento_id` intacto.
-  return 'rechazado-' + (r ? r.status : 'sin-respuesta');
+  }catch(_){ return { estado:'reintentable', motivo:'sin-red' }; }
+  return await _eventoClasificar(r, ev);
+}
+
+// ═══ B2 · F3 · CLASIFICACIÓN, REINTENTO Y CUARENTENA ══════════════════════
+//
+// LA REGLA QUE GOBIERNA TODO: un evento sólo sale de la cola cuando el servidor
+// DEMUESTRA que lo aceptó, o que ya estaba registrado de forma idempotente.
+// Nada más lo saca: ni que la petición saliera, ni un 401, ni un 409 ambiguo.
+//
+// Los códigos de aquí abajo no salen de la documentación: están MEDIDOS contra
+// este servidor. Tres cosas que parecían ciertas y no lo son:
+//   · 409 no es sinónimo de duplicado — un 23503 también es 409;
+//   · 401 no es sinónimo de caducado — un 42501 también llega como 401;
+//   · PGRST301 no significa «caducado»: un JWT ilegible devuelve lo mismo.
+// Por eso la caducidad la decide el cliente con su propio `exp`.
+const _EV_CUARENTENA = 'txk_eventos_cuarentena';
+const _EV_INDICE = { scores: 'scores_evt_uk', actividad: 'actividad_evt_uk' };
+const EV_MAX_INTENTOS = 10;
+// 1.º inmediato, y a partir de ahí espaciado hasta un intento al día.
+const _EV_ESPERA = [0, 5*60e3, 15*60e3, 60*60e3, 4*60*60e3, 24*60*60e3];
+function _evEspera(intentos){ return _EV_ESPERA[Math.min(intentos, _EV_ESPERA.length - 1)]; }
+
+async function _eventoClasificar(r, ev){
+  if(!r) return { estado:'reintentable', motivo:'sin-respuesta' };
+  const st = r.status;
+  // Transitorio: la red o el servidor. El evento se conserva y se reintenta.
+  // Una desconexión NUNCA se convierte en cuarentena.
+  if(st === 408 || st === 429 || st >= 500) return { estado:'reintentable', motivo:'http-' + st };
+  let cuerpo = null;
+  try{ cuerpo = await r.json(); }catch(_){ cuerpo = null; }
+  if(st >= 200 && st < 300){
+    // Sin cuerpo legible no se puede demostrar nada: se reintenta, no se borra.
+    if(cuerpo == null) return { estado:'reintentable', motivo:'cuerpo-ilegible' };
+    const filas = Array.isArray(cuerpo) ? cuerpo.length : 1;
+    // «Cero filas» significa RECHAZO en toda la aplicación, no éxito.
+    return filas > 0 ? { estado:'confirmado' } : { estado:'cuarentena', motivo:'sin-fila' };
+  }
+  const code = (cuerpo && cuerpo.code) || null;
+  const msg  = (cuerpo && cuerpo.message) || '';
+  if(st === 409){
+    // SÓLO es idempotencia si es el índice de eventos. `details` viene NULL en
+    // un 23505 —medido—, así que el nombre se busca en `message`.
+    if(code === '23505' && msg.indexOf(_EV_INDICE[ev.destino] || ' ') >= 0) return { estado:'duplicado' };
+    if(code === '23505') return { estado:'cuarentena', motivo:'unico-inesperado' };
+    if(code === '23503') return { estado:'cuarentena', motivo:'clave-ajena' };
+    return { estado:'cuarentena', motivo:'conflicto-' + (code || 'sin-codigo') };
+  }
+  if(st === 401 || st === 403){
+    if(code === '42501') return { estado:'cuarentena', motivo:'sin-autorizacion' };
+    if(code === 'PGRST301'){
+      // La caducidad la decide el `exp` que el cliente ya tiene, no el servidor.
+      const ctx = _authCtx();
+      const caducado = !ctx.exp || ctx.exp * 1000 <= Date.now();
+      return caducado ? { estado:'renovar' } : { estado:'revisar', motivo:'credencial-invalida' };
+    }
+    return { estado:'revisar', motivo:'auth-' + (code || 'sin-codigo') };
+  }
+  if(st === 400){
+    if(code === 'PGRST204' || code === '23502') return { estado:'revisar', motivo:'esquema-' + code };
+    if(code === '23514') return { estado:'cuarentena', motivo:'datos-invalidos' };
+    return { estado:'cuarentena', motivo:'peticion-invalida-' + (code || 'sin-codigo') };
+  }
+  return { estado:'revisar', motivo:'http-' + st };
+}
+
+// CUARENTENA: lo que el servidor rechazó de forma permanente. Conserva el
+// evento entero —`evento_id` incluido—, el motivo y la fecha. No se trunca en
+// silencio y no se borra nada para que el contador quede bonito.
+function _eventoACuarentena(ev, motivo){
+  const l = _evLeer(_EV_CUARENTENA);
+  l.push({ ...ev, motivo: motivo || 'desconocido', cuando: Date.now() });
+  _evEscribir(_EV_CUARENTENA, l);
+  _evContar('cuarentena', { motivo, destino: ev.destino, evento_id: ev.evento_id });
+  _eventoQuitarDeCola(ev);
+}
+function _eventoQuitarDeCola(ev){
+  const q = _evLeer(_EV_KEY).filter(e => !(e.evento_id === ev.evento_id && e.uid === ev.uid));
+  _evEscribir(_EV_KEY, q);
+  _evMemoria = _evMemoria.filter(e => !(e.evento_id === ev.evento_id && e.uid === ev.uid));
+}
+
+// LOS CRITERIOS DE ELIMINACIÓN, en un solo sitio y sin excepciones.
+function _eventoResolver(ev, res){
+  const e = (res && res.estado) || 'reintentable';
+  if(e === 'confirmado' || e === 'duplicado'){ _eventoConfirmar(ev); return e; }
+  if(e === 'cuarentena'){ _eventoACuarentena(ev, res.motivo); return e; }
+  if(e === 'retenido' || e === 'identidad-cambiada' || e === 'sin-token'
+     || e === 'token-no-coincide' || e === 'no-intentado'){
+    return e;   // ni siquiera se intentó: el evento se queda tal cual, sin gastar intentos
+  }
+  // reintentable · renovar · revisar → SE QUEDA, con su evento_id y su dueño.
+  const cola = _evLeer(_EV_KEY);
+  const i = cola.findIndex(x => x.evento_id === ev.evento_id && x.uid === ev.uid);
+  if(i < 0) return e;
+  const n = (cola[i].intentos || 0) + 1;
+  cola[i].intentos = n;
+  cola[i].estado = (e === 'revisar' || n >= EV_MAX_INTENTOS) ? 'revisar' : 'pendiente';
+  cola[i].proximo = Date.now() + _evEspera(n);
+  cola[i].motivo = res && res.motivo ? res.motivo : null;
+  _evEscribir(_EV_KEY, cola);
+  return e;
+}
+
+// La renovación NO es nueva: es la que ya trae supabase-js, y su
+// `onAuthStateChange` es quien sustituye el contexto. Se intenta UNA vez por
+// ciclo de drenaje, nunca por evento, para que una credencial inválida no
+// pueda convertirse en un bucle.
+async function _eventoRenovar(){
+  const cli = _getAuthClient();
+  if(!cli || !cli.auth) return false;
+  try{
+    const p = cli.auth.refreshSession ? cli.auth.refreshSession() : cli.auth.getSession();
+    const r = await p;
+    return !(r && r.error);
+  }catch(_){ return false; }
+}
+
+// Como mucho un drenaje por pestaña, y como mucho uno por dispositivo si el
+// navegador tiene `navigator.locks`. Con `ifAvailable` la segunda pestaña no
+// espera: se retira, que es lo que hace falta. Sin cerrojo, el índice único del
+// servidor absorbe cualquier solape con un 409 idempotente.
+let _evDrenando = false;
+async function _conCerrojoDrenaje(fn){
+  if(typeof navigator !== 'undefined' && navigator.locks && navigator.locks.request){
+    try{
+      return await navigator.locks.request('txk_eventos_drenaje', { ifAvailable: true },
+        (cerrojo) => (cerrojo ? fn() : 'ya-en-curso'));
+    }catch(_){ /* si el cerrojo falla, se sigue: el UNIQUE protege igual */ }
+  }
+  return fn();
+}
+
+// EL DRENAJE. Barato cuando no hay nada, y jamás abre la clave de los eventos
+// sin identidad: ésa es una barrera deliberada, no un olvido.
+async function _eventosDrenar(motivo){
+  if(_evDrenando) return 'ya-en-curso';
+  if(typeof navigator !== 'undefined' && navigator.onLine === false) return 'sin-red';
+  const ctx = _authCtx();                       // UN snapshot para todo el ciclo
+  if(!ctx.uid) return 'sin-identidad';
+  const ahora = Date.now();
+  const mios = _evLeer(_EV_KEY)
+    .filter(e => e.uid === ctx.uid && e.estado !== 'revisar' && (e.proximo || 0) <= ahora)
+    .sort((a, b) => (a.prioridad - b.prioridad) || (a.ts - b.ts));   // alérgenos primero
+  if(!mios.length) return 'nada-que-enviar';
+  if(!ctx.token) return 'sin-token';
+  if(_jwtSub(ctx.token) !== ctx.uid) return 'token-no-coincide';
+
+  return _conCerrojoDrenaje(async () => {
+    if(_evDrenando) return 'ya-en-curso';
+    _evDrenando = true;
+    let renovado = false;
+    try{
+      for(const ev of mios){
+        // Si entró otra persona, se para el ciclo entero. Y aunque no se parara,
+        // la petición no podría llevar su token: el token va DENTRO del mismo
+        // objeto congelado que el uid, así que una pareja cruzada no existe.
+        if(_authCtx() !== ctx) return 'identidad-cambiada';
+        const res = await _eventoEnviar(ev, ctx);
+        _eventoResolver(ev, res);
+        if(res.estado === 'renovar' && !renovado){
+          renovado = true;                       // UNA sola vez por ciclo
+          await _eventoRenovar();
+          return 'renovada-sesion';              // el siguiente ciclo usará el contexto nuevo
+        }
+        if(res.estado === 'renovar') return 'credencial-no-renovable';
+      }
+      return 'hecho';
+    } finally { _evDrenando = false; }
+  });
+}
+
+// DISPARADORES. Los mismos que ya usaba la cola de fichas, para no inventar un
+// planificador: al volver la conexión, al reabrir la aplicación, cada dos
+// minutos y una vez al arrancar. El vaciado periódico ES el reintento.
+if(typeof window !== 'undefined' && window.addEventListener){
+  window.addEventListener('online', () => setTimeout(() => _eventosDrenar('online'), 800));
+  document.addEventListener('visibilitychange', () => {
+    if(document.visibilityState === 'visible') _eventosDrenar('visible');
+  });
+  setInterval(() => _eventosDrenar('intervalo'), 120000);
+  setTimeout(() => _eventosDrenar('arranque'), 4000);
 }
 
 async function registrarActividad(a){
@@ -2668,8 +2848,8 @@ async function registrarActividad(a){
   const alta = _eventoCrear('actividad', prio, datos);
   if(alta.estado !== 'persistido') return { evento: alta.estado, envio:'no-intentado' };
   const ctx = _authCtx();                      // el snapshot, para TODA la operación
-  const envio = await _eventoEnviar(alta.evento, ctx);
-  return { evento:'persistido', envio };
+  const res = await _eventoEnviar(alta.evento, ctx);
+  return { evento:'persistido', envio: _eventoResolver(alta.evento, res), motivo: res.motivo || null };
 }
 
 // ═══ EL DIARIO ════════════════════════════════════════════════════════════
@@ -3099,8 +3279,8 @@ async function supaInsertScore(session, employee) {
   });
   if(alta.estado !== 'persistido') return { evento: alta.estado, envio:'no-intentado' };
   const ctx = _authCtx();                      // el snapshot, para TODA la operación
-  const envio = await _eventoEnviar(alta.evento, ctx);
-  return { evento:'persistido', envio };
+  const res = await _eventoEnviar(alta.evento, ctx);
+  return { evento:'persistido', envio: _eventoResolver(alta.evento, res), motivo: res.motivo || null };
 }
 
 async function supaFetchLeaderboard() {

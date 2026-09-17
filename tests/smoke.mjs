@@ -5674,7 +5674,11 @@ test('resiliencia: la cola de sincronización lleva la identidad de quien la cre
     'la clave heredada se sigue leyendo: volver atrás no puede perder nada');
   assert(/const _CUARENTENA\s*=\s*'txk_cola_cuarentena';/.test(html), 'debe existir la cuarentena');
 
-  const flush = html.slice(html.indexOf('async function _outboxFlush'), html.indexOf("window.addEventListener('online'"));
+  // OJO con el marcador: hay que buscarlo DESPUÉS del inicio del corte. B2-F3
+  // añadió otro `addEventListener('online')` antes en el fichero, y buscándolo
+  // desde el principio el corte salía VACÍO y la prueba pasaba en falso.
+  const _iFlush = html.indexOf('async function _outboxFlush');
+  const flush = html.slice(_iFlush, html.indexOf("window.addEventListener('online'", _iFlush));
   assert(/if\(e\.uid != null && e\.uid !== _authCtx\(\)\.uid\) continue;/.test(flush),
     'lo que no es de esta sesión no se intenta: se queda esperando a su dueño');
   assert(/res === 'confirmado' \|\| res === 'nada'/.test(flush) && /_colaQuitar/.test(flush),
@@ -10175,7 +10179,8 @@ const _actRes = await (async () => {
     const alm = Object.create(null);
     return F('https://x', 'k', () => esAdmin, 'Ana',
       () => 'txoko', () => {},
-      (url, opts) => { enviados.push({ url, cuerpo: JSON.parse(opts.body), auth: (opts.headers||{}).Authorization }); return Promise.resolve({ ok: true }); },
+      (url, opts) => { enviados.push({ url, cuerpo: JSON.parse(opts.body), auth: (opts.headers||{}).Authorization });
+        return Promise.resolve({ ok: true, status: 201, json: async () => [{ evento_id: 'ok' }] }); },
       () => tok || 'clave-anon', tok || null, tok ? UIDA : null,
       { getItem:(k)=> (k in alm ? alm[k] : null), setItem:(k,v)=>{ alm[k]=String(v); }, removeItem:(k)=>{ delete alm[k]; } });
   };
@@ -10254,7 +10259,7 @@ test('Registro de actividad: todas las actividades escriben, y con el mismo voca
   assert(e.valida.envio === 'confirmado',
     `con red y con identidad el envío tiene que confirmarse, no «${e.valida.envio}»`);
   assert(e.peticiones === 1, `tiene que salir una petición, salieron ${e.peticiones}`);
-  assert(/\/rest\/v1\/actividad$/.test(e.url), 'tiene que escribir en la tabla actividad');
+  assert(/\/rest\/v1\/actividad(\?|$)/.test(e.url), 'tiene que escribir en la tabla actividad');
   // FASE C-2. El invariante «toda fila lleva su restaurante» sigue en pie; lo
   // que cambia es quién lo cumple. Con sesión lo pone el servidor por DEFAULT,
   // así que en el cuerpo NO puede viajar. Sin sesión lo sigue poniendo el
@@ -10362,7 +10367,8 @@ const _diarioRes = await (async () => {
   const i1 = html.indexOf('// Abrir la tarea. Cada una lleva a la actividad');
   if (i0 === -1 || i1 <= i0) return { roto: 'no encuentro el registro y el diario' };
   const fichas = {};
-  let hoy = '2026-09-12', admin = false, red = () => Promise.resolve({ ok: true }), guardados = 0;
+  let hoy = '2026-09-12', admin = false, guardados = 0;
+  let red = () => Promise.resolve({ ok: true, status: 201, json: async () => [{ evento_id: 'ok' }] });
   const getEmp = (n) => (fichas[n] = fichas[n] || { name: n });
   let M;
   try {
@@ -11512,6 +11518,11 @@ console.log('\nFase C-2 — identidad del servidor');
 // el bloque de eventos REAL y un localStorage de mentira, y captura lo que
 // saldría por el cable. No se comprueba el texto del fichero: se comprueba el
 // JSON y las cabeceras de la petición.
+// Una respuesta con la forma que el clasificador de F3 espera de verdad.
+const _resp = (status, cuerpo) => ({
+  ok: status >= 200 && status < 300, status,
+  json: async () => { if (cuerpo === undefined) throw new Error('sin cuerpo'); return cuerpo; },
+});
 const _jwtDe = (sub, exp) => 'eyJhbGciOiJIUzI1NiJ9.'
   + Buffer.from(JSON.stringify({ sub, exp: exp == null ? 2000000000 : exp })).toString('base64')
       .replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '')
@@ -11528,7 +11539,8 @@ function _montarEscritores(opciones) {
   };
   const bloqueEventos = html.slice(html.indexOf('const _EV_KEY'),
                                    html.indexOf('async function registrarActividad'));
-  const M = new Function('capturar', 'localStorage', 'responder', ` // eslint-disable-line no-new-func
+  const refrescos = { n: 0 };
+  const M = new Function('capturar', 'localStorage', 'responder', 'navigator', '_getAuthClient', ` // eslint-disable-line no-new-func
     let _auth = Object.freeze({ uid:null, token:null, exp:0, empleado:null, estado:'anonimo' });
     const _authCtx = () => _auth;
     const _authPoner = (n) => { _auth = Object.freeze(n); };
@@ -11543,8 +11555,12 @@ function _montarEscritores(opciones) {
     const _anotarEnDiario = () => {};
     const fetch = async (url, opt) => {
       capturar(url, JSON.parse(opt.body), opt.headers);
-      return responder(url, opt);
+      const r = responder(url, opt);
+      if (r && r.lanza) throw new TypeError('Failed to fetch');
+      return r;
     };
+    const setInterval = () => 0, setTimeout = (f) => 0;
+    const document = undefined, window = undefined;
     ${_xFn('_jwtCarga')}
     ${_xFn('_jwtSub')}
     ${_xFn('_jwtExp')}
@@ -11564,12 +11580,15 @@ function _montarEscritores(opciones) {
       sinIdentidad: () => _evLeer(_EV_SIN_ID),
       registro: _evRegistroLeer,
       memoria: () => _evMemoria,
-      uuid: _uuid, enviar: _eventoEnviar, crear: _eventoCrear,
+      uuid: _uuid, enviar: _eventoEnviar, crear: _eventoCrear, resolver: _eventoResolver,
+      drenar: _eventosDrenar, cuarentena: () => _evLeer(_EV_CUARENTENA),
       registrarActividad, supaInsertScore, supaInsertTxokoRecord, supaInsertEtRecord
     };
   `)((url, body, headers) => cap.push({ url, body, headers }), ls,
-     (url, opt) => (o.responder ? o.responder(url, opt) : { ok: true }));
-  return { M, cap, almacen, ls };
+     (url, opt) => (o.responder ? o.responder(url, opt) : _resp(201, [{ evento_id: 'ok' }])),
+     o.navigator || { onLine: true },
+     () => ({ auth: { refreshSession: async () => { refrescos.n++; return o.refrescoFalla ? { error: new Error('no') } : {}; } } }));
+  return { M, cap, almacen, ls, refrescos };
 }
 
 const _c2 = await (async () => {
@@ -11612,8 +11631,8 @@ const _C2_PROHIBIDAS = ['employee', 'venue', 'auth_user_id', 'id', 'created_at']
 
 test('C-2 · los cuatro escritores siguen enviando (nada se ha roto)', () => {
   assert(_c2.conSesion.length === 4, `esperaba 4 peticiones, hubo ${_c2.conSesion.length}`);
-  assert(_c2.conSesion.filter((p) => /\/actividad$/.test(p.url)).length === 1, 'falta el POST a actividad');
-  assert(_c2.conSesion.filter((p) => /\/scores$/.test(p.url)).length === 3, 'faltan los 3 POST a scores');
+  assert(_c2.conSesion.filter((p) => /\/actividad(\?|$)/.test(p.url)).length === 1, 'falta el POST a actividad');
+  assert(_c2.conSesion.filter((p) => /\/scores(\?|$)/.test(p.url)).length === 3, 'faltan los 3 POST a scores');
 });
 
 for (const col of _C2_PROHIBIDAS) {
@@ -11627,7 +11646,7 @@ for (const col of _C2_PROHIBIDAS) {
 
 test('C-2 · con sesión, el cuerpo lleva SÓLO columnas de negocio del esquema real', () => {
   for (const p of _c2.conSesion) {
-    const permitidas = /\/actividad$/.test(p.url) ? _C2_NEGOCIO.actividad : _C2_NEGOCIO.scores;
+    const permitidas = /\/actividad(\?|$)/.test(p.url) ? _C2_NEGOCIO.actividad : _C2_NEGOCIO.scores;
     for (const k of Object.keys(p.body)) {
       assert(permitidas.includes(k), `${p.url} manda una columna inesperada: ${k}`);
     }
@@ -11635,12 +11654,12 @@ test('C-2 · con sesión, el cuerpo lleva SÓLO columnas de negocio del esquema 
 });
 
 test('C-2 · con sesión, los datos de negocio llegan intactos', () => {
-  const act = _c2.conSesion.find((p) => /\/actividad$/.test(p.url)).body;
+  const act = _c2.conSesion.find((p) => /\/actividad(\?|$)/.test(p.url)).body;
   assert(act.activity === 'simulacro_alergenos' && act.competency === 'alergenos'
       && act.kind === 'evaluacion' && act.score === 18 && act.total === 20
       && act.seconds === 240 && act.meta && act.meta.cat === 'all',
     'la actividad perdió datos de negocio: ' + JSON.stringify(act));
-  const sc = _c2.conSesion.filter((p) => /\/scores$/.test(p.url)).map((p) => p.body);
+  const sc = _c2.conSesion.filter((p) => /\/scores(\?|$)/.test(p.url)).map((p) => p.body);
   assert(sc[0].score === 18 && sc[0].total === 20 && sc[0].topic === 'alergenos' && sc[0].time_sec === 240,
     'el score perdió datos: ' + JSON.stringify(sc[0]));
   assert(sc[1].topic === 'txoko' && sc[1].score === 900, 'el récord de Txoko perdió datos');
@@ -11668,7 +11687,7 @@ test('C-2/F2 · SIN identidad, las rutas de B2 ya no salen; sólo los récords',
   assert(_c2.sinSesion.length === 2,
     `sin identidad deben salir SÓLO los 2 récords, salieron ${_c2.sinSesion.length}`);
   for (const p of _c2.sinSesion) {
-    assert(/\/scores$/.test(p.url), `sin identidad no puede salir ${p.url}`);
+    assert(/\/scores(\?|$)/.test(p.url), `sin identidad no puede salir ${p.url}`);
     assert(p.body.topic === 'txoko' || p.body.topic === 'elturno',
       `sin identidad sólo pueden salir récords, salió ${JSON.stringify(p.body)}`);
     assert(p.body.employee === 'Ana' && p.body.venue === 'txoko',
@@ -11844,7 +11863,7 @@ const _f2 = await (async () => {
   // ── 2 · El mismo evento enviado dos veces conserva su evento_id ──
   {
     let n = 0;
-    const { M, cap } = _montarEscritores({ responder: () => ({ ok: ++n > 1 }) });
+    const { M, cap } = _montarEscritores({ responder: () => (++n > 1 ? _resp(201, [{ evento_id:'ok' }]) : _resp(503)) });
     M.sesion(ANA, _jwtDe(ANA));
     await M.registrarActividad(prueba);       // 1.º intento: el servidor rechaza
     o.trasFallo = M.cola();
@@ -11874,7 +11893,7 @@ const _f2 = await (async () => {
 
   // ── 5 · Bruno no puede enviar el evento de Ana ──
   {
-    const { M, cap } = _montarEscritores({ responder: () => ({ ok: false }) });
+    const { M, cap } = _montarEscritores({ responder: () => _resp(503) });
     M.sesion(ANA, _jwtDe(ANA));
     await M.registrarActividad(prueba);        // queda en la cola de Ana
     const evAna = M.cola()[0];
@@ -11889,7 +11908,7 @@ const _f2 = await (async () => {
   // ── 6 · Bruno entra DURANTE el await: el envío no puede saltar de identidad ──
   {
     let cambiar = null;
-    const { M, cap } = _montarEscritores({ responder: () => { if(cambiar) cambiar(); return { ok:false }; } });
+    const { M, cap } = _montarEscritores({ responder: () => { if(cambiar) cambiar(); return _resp(503); } });
     M.sesion(ANA, _jwtDe(ANA));
     cambiar = () => { M.sesion(BRUNO, _jwtDe(BRUNO)); cambiar = null; };
     o.duranteAwait = await M.registrarActividad(prueba);   // Bruno entra a mitad
@@ -11917,7 +11936,7 @@ const _f2 = await (async () => {
 
   // ── 8 · Capacidad: la práctica cede el sitio, la evaluación nunca ──
   {
-    const { M } = _montarEscritores({ responder: () => ({ ok:false }) });
+    const { M } = _montarEscritores({ responder: () => _resp(503) });
     M.sesion(ANA, _jwtDe(ANA));
     for (let i = 0; i < 400; i++) await M.registrarActividad({ activity:'repaso',
       competency:'carta', kind:'practica', score:1, total:1 });
@@ -11930,21 +11949,21 @@ const _f2 = await (async () => {
   }
   // ── 9 · Las cuatro comprobaciones de `_eventoEnviar`, cada una aislada ──
   {
-    const { M, cap } = _montarEscritores({ responder: () => ({ ok:false }) });
+    const { M, cap } = _montarEscritores({ responder: () => _resp(503) });
     M.sesion(ANA, _jwtDe(ANA));
     const ctxAna = M.ctx();
     await M.registrarActividad(prueba);
     const evAna = M.cola()[0];
     M.sesion(BRUNO, _jwtDe(BRUNO));                 // entra Bruno
     cap.length = 0;
-    o.ctxRancio  = await M.enviar(evAna, ctxAna);            // 2 · el contexto ya no es el vivo
-    o.deOtro     = await M.enviar(evAna, M.ctx());           // 1 · el evento no es suyo
-    o.uidNulo    = await M.enviar({ ...evAna, uid:null }, M.ctx());   // uid nulo jamás viaja
+    o.ctxRancio  = (await M.enviar(evAna, ctxAna)).estado;            // 2 · el contexto ya no es el vivo
+    o.deOtro     = (await M.enviar(evAna, M.ctx())).estado;           // 1 · el evento no es suyo
+    o.uidNulo    = (await M.enviar({ ...evAna, uid:null }, M.ctx())).estado;   // uid nulo jamás viaja
     o.peticionesTrasCuatro = cap.length;
     M.poner({ uid: BRUNO, token: null, exp: 2000000000, empleado: null, estado: 'identidad_sin_token' });
-    o.sinTokenEnvia = await M.enviar({ ...evAna, uid: BRUNO }, M.ctx());   // 3 · no hay token
+    o.sinTokenEnvia = (await M.enviar({ ...evAna, uid: BRUNO }, M.ctx())).estado;   // 3 · no hay token
     M.poner({ uid: BRUNO, token: _jwtDe(ANA), exp: 2000000000, empleado: null, estado: 'activa' });
-    o.tokenAjeno = await M.enviar({ ...evAna, uid: BRUNO }, M.ctx());      // 4 · el sub no cuadra
+    o.tokenAjeno = (await M.enviar({ ...evAna, uid: BRUNO }, M.ctx())).estado;      // 4 · el sub no cuadra
     o.peticionesTotales = cap.length;
   }
   return o;
@@ -12079,6 +12098,315 @@ test('F2 · B1 no se toca: sus tres claves siguen siendo suyas', () => {
   }
 });
 
+// ─── B2 · F3 · drenaje, clasificación y cuarentena ──────────────
+//
+// La regla que se mide aquí una y otra vez: un evento SÓLO sale de la cola
+// cuando el servidor demuestra que lo aceptó o que ya estaba. Nada más.
+const _IDX = { scores: 'scores_evt_uk', actividad: 'actividad_evt_uk' };
+const _errPg = (status, code, message) => _resp(status, { code, message, details: null, hint: null });
+
+const _f3 = await (async () => {
+  const o = {};
+  const evalua = { activity:'simulacro_alergenos', competency:'alergenos',
+                   kind:'evaluacion', score:18, total:20, seconds:240, meta:{ cat:'all' } };
+
+  // Deja un evento en la cola sin que se envíe (falla el directo con 503) y
+  // devuelve el montaje listo para drenar con la respuesta que se quiera.
+  const conUnPendiente = async (opts) => {
+    let fase = 0;
+    const m = _montarEscritores(Object.assign({}, opts, {
+      responder: (u, x) => (fase === 0 ? _resp(503) : (opts.responder || (() => _resp(201, [{ evento_id:'ok' }])))(u, x)),
+    }));
+    m.M.sesion(ANA, _jwtDe(ANA));
+    await m.M.registrarActividad(evalua);
+    const ev = m.M.cola()[0];
+    // El backoff de F3 pone `proximo` en el futuro: para poder drenar ya, se
+    // vence a mano, que es lo que haría el paso del tiempo.
+    const q = m.M.cola(); q[0].proximo = 0; q[0].intentos = 0;
+    m.almacen['txk_eventos_v1'] = JSON.stringify(q);
+    fase = 1; m.cap.length = 0;
+    return { ...m, ev };
+  };
+
+  // 1 · pendiente + red → se sincroniza y desaparece de la cola
+  { const m = await conUnPendiente({});
+    o.drenaOk = await m.M.drenar('prueba');
+    o.trasDrenar = m.M.cola(); o.peticionesDrenar = m.cap.length;
+    o.idEnviado = m.cap[0] && m.cap[0].body.evento_id; o.idOriginal = m.ev.evento_id; }
+
+  // 2 · 23505 del índice CORRECTO → éxito idempotente
+  { const m = await conUnPendiente({ responder: (u) => _errPg(409, '23505',
+      `duplicate key value violates unique constraint "${/actividad/.test(u) ? _IDX.actividad : _IDX.scores}"`) });
+    await m.M.drenar('x'); o.dup = { cola: m.M.cola().length, cuar: m.M.cuarentena().length }; }
+
+  // 3 · 23505 de OTRO índice → cuarentena, no éxito
+  { const m = await conUnPendiente({ responder: () => _errPg(409, '23505',
+      'duplicate key value violates unique constraint "otro_indice_uk"') });
+    await m.M.drenar('x'); o.dupAjeno = { cola: m.M.cola().length, cuar: m.M.cuarentena() }; }
+
+  // 4 · 23503 → cuarentena
+  { const m = await conUnPendiente({ responder: () => _errPg(409, '23503', 'violates foreign key constraint') });
+    await m.M.drenar('x'); o.fk = { cola: m.M.cola().length, cuar: m.M.cuarentena() }; }
+
+  // 5 · otro 409 → cuarentena, NO duplicado
+  { const m = await conUnPendiente({ responder: () => _errPg(409, '23P01', 'exclusion violation') });
+    await m.M.drenar('x'); o.otro409 = { cola: m.M.cola().length, cuar: m.M.cuarentena() }; }
+
+  // 6 · 42501 → cuarentena, y un segundo drenaje no vuelve a pedirlo
+  { const m = await conUnPendiente({ responder: () => _errPg(401, '42501', 'permission denied for table scores') });
+    await m.M.drenar('x'); const tras = m.cap.length;
+    await m.M.drenar('x');
+    o.priv = { cola: m.M.cola().length, cuar: m.M.cuarentena(), peticiones1: tras, peticiones2: m.cap.length }; }
+
+  // 7 · PGRST301 con el `exp` CADUCADO → renovación
+  { const m = await conUnPendiente({ responder: () => _errPg(401, 'PGRST301', 'JWT expired') });
+    m.M.poner({ uid: ANA, token: _jwtDe(ANA), exp: 1, empleado: null, estado:'activa' });
+    o.renov = await m.M.drenar('x');
+    o.renovaciones = m.refrescos.n; o.renovCola = m.M.cola().length; }
+
+  // 8 · PGRST301 con el `exp` VIVO → credencial inválida, y no hay bucle
+  { const m = await conUnPendiente({ responder: () => _errPg(401, 'PGRST301', 'JWSError') });
+    await m.M.drenar('x'); const p1 = m.cap.length;
+    await m.M.drenar('x');
+    o.credInvalida = { renovaciones: m.refrescos.n, cola: m.M.cola(),
+                       peticiones1: p1, peticiones2: m.cap.length }; }
+
+  // 9 · 400 determinista
+  { const m = await conUnPendiente({ responder: () => _errPg(400, '23514', 'violates check constraint') });
+    await m.M.drenar('x'); o.check = { cola: m.M.cola().length, cuar: m.M.cuarentena() }; }
+  { const m = await conUnPendiente({ responder: () => _errPg(400, 'PGRST204', "Could not find the 'x' column") });
+    await m.M.drenar('x'); o.esquema = { cola: m.M.cola(), cuar: m.M.cuarentena().length }; }
+
+  // 10 · timeout (el fetch lanza) y 5xx → se conserva, no cuarentena
+  { const m = await conUnPendiente({ responder: () => ({ lanza: true }) });
+    await m.M.drenar('x'); o.timeout = { cola: m.M.cola(), cuar: m.M.cuarentena().length }; }
+  { const m = await conUnPendiente({ responder: () => _resp(503) });
+    await m.M.drenar('x'); o.cincoXX = { cola: m.M.cola(), cuar: m.M.cuarentena().length }; }
+
+  // 11 · offline → ni una petición
+  { const m = await conUnPendiente({ navigator: { onLine: false } });
+    o.offline = await m.M.drenar('x'); o.offlinePeticiones = m.cap.length; o.offlineCola = m.M.cola().length; }
+
+  // 12 · sin token → ni una petición
+  { const m = await conUnPendiente({});
+    m.M.poner({ uid: ANA, token: null, exp: 0, empleado: null, estado:'identidad_sin_token' });
+    o.sinToken = await m.M.drenar('x'); o.sinTokenPeticiones = m.cap.length; }
+
+  // 13 · Bruno entra: el evento de Ana no se drena, y el suyo sí
+  { const m = await conUnPendiente({});
+    m.M.sesion(BRUNO, _jwtDe(BRUNO));
+    o.conBruno = await m.M.drenar('x'); o.conBrunoPeticiones = m.cap.length;
+    o.deAnaSigue = m.M.cola().filter(e => e.uid === ANA).length; }
+
+  // 14 · `sin_identidad` jamás se drena
+  { const m = _montarEscritores({});
+    m.M.sesion(null, null);
+    await m.M.registrarActividad(evalua);            // va a sin_identidad
+    m.M.sesion(BRUNO, _jwtDe(BRUNO));                // entra alguien
+    m.cap.length = 0;
+    o.sinIdDrenar = await m.M.drenar('x');
+    o.sinIdPeticiones = m.cap.length;
+    o.sinIdSigue = m.M.sinIdentidad().length; }
+
+  // 15 · dos drenajes a la vez no duplican el envío
+  { const m = await conUnPendiente({});
+    const [a, b] = await Promise.all([m.M.drenar('a'), m.M.drenar('b')]);
+    o.concurrente = { a, b, peticiones: m.cap.length, cola: m.M.cola().length }; }
+
+  // 16 · varios eventos: sólo se va el que el servidor acepta
+  { const m = _montarEscritores({ responder: () => _resp(503) });
+    m.M.sesion(ANA, _jwtDe(ANA));
+    await m.M.registrarActividad(evalua);
+    await m.M.registrarActividad({ ...evalua, activity:'examen', competency:'carta' });
+    await m.M.registrarActividad({ ...evalua, activity:'repaso', competency:'carta', kind:'practica' });
+    const q = m.M.cola().map(e => ({ ...e, proximo: 0, intentos: 0 }));
+    m.almacen['txk_eventos_v1'] = JSON.stringify(q);
+    o.antesDeSelectivo = q.map(e => e.evento_id);
+    // Sólo el simulacro de alérgenos entra; los otros dos siguen fallando.
+    m.cap.length = 0;
+    const objetivo = q.find(e => e.datos.activity === 'simulacro_alergenos').evento_id;
+    const { M } = _montarEscritores({});   // montaje nuevo, misma cola
+    void M;
+    const m2 = _montarEscritores({ responder: (u, x) => (JSON.parse(x.body).evento_id === objetivo
+      ? _resp(201, [{ evento_id: objetivo }]) : _resp(503)) });
+    m2.almacen['txk_eventos_v1'] = JSON.stringify(q);
+    m2.M.sesion(ANA, _jwtDe(ANA));
+    await m2.M.drenar('x');
+    o.selectivo = { quedan: m2.M.cola().map(e => e.evento_id), objetivo,
+                    orden: m2.cap.map(p => p.body.evento_id) };
+    o.idsIniciales = q.map(e => e.evento_id); }
+
+  // 17 · 2xx con CERO filas: el servidor no demostró nada → cuarentena
+  { const m = await conUnPendiente({ responder: () => _resp(201, []) });
+    await m.M.drenar('x'); o.ceroFilas = { cola: m.M.cola().length, cuar: m.M.cuarentena() }; }
+  // …y 2xx sin cuerpo legible: tampoco demuestra nada → se conserva
+  { const m = await conUnPendiente({ responder: () => _resp(201, undefined) });
+    await m.M.drenar('x'); o.sinCuerpo = { cola: m.M.cola().length, cuar: m.M.cuarentena().length }; }
+
+  // 18 · la identidad cambia A MITAD del bucle: el resto no sale
+  { const m = _montarEscritores({});
+    m.M.sesion(ANA, _jwtDe(ANA));
+    let n = 0;
+    const mm = _montarEscritores({ responder: () => { n++; return _resp(503); } });
+    mm.M.sesion(ANA, _jwtDe(ANA));
+    await mm.M.registrarActividad(evalua);
+    await mm.M.registrarActividad({ ...evalua, activity:'examen', competency:'carta' });
+    const q = mm.M.cola().map(e => ({ ...e, proximo: 0, intentos: 0 }));
+    mm.almacen['txk_eventos_v1'] = JSON.stringify(q);
+    mm.cap.length = 0; n = 0;
+    // El primer envío hace entrar a Bruno; el segundo ya no puede salir.
+    const m3 = _montarEscritores({ responder: () => { n++; if(n === 1) m3.M.sesion(BRUNO, _jwtDe(BRUNO)); return _resp(503); } });
+    m3.almacen['txk_eventos_v1'] = JSON.stringify(q);
+    m3.M.sesion(ANA, _jwtDe(ANA));
+    o.cambioAMitad = await m3.M.drenar('x');
+    o.cambioAMitadPeticiones = m3.cap.length;
+    o.cambioAMitadAuth = m3.cap.map(p => p.headers.Authorization); }
+
+  return o;
+})();
+
+console.log('\nB2 — F3 · drenaje, clasificación y cuarentena');
+
+test('F3 · pendiente + red → se sincroniza y sale de la cola', () => {
+  assert(_f3.drenaOk === 'hecho', `el drenaje tenía que completarse: ${_f3.drenaOk}`);
+  assert(_f3.peticionesDrenar === 1, `una petición, hubo ${_f3.peticionesDrenar}`);
+  assert(_f3.trasDrenar.length === 0, 'un éxito tiene que sacar el evento de la cola');
+});
+
+test('F3 · el reintento conserva el MISMO evento_id y su dueño', () => {
+  assert(_f3.idEnviado === _f3.idOriginal,
+    `el reintento generó otro id: ${_f3.idEnviado} ≠ ${_f3.idOriginal}`);
+  assert(_f3.cincoXX.cola[0].uid === ANA, 'el reintento tiene que conservar el dueño');
+  assert(_f3.cincoXX.cola[0].evento_id === _f3.cincoXX.cola[0].evento_id, 'id estable');
+});
+
+test('F3 · 23505 del índice esperado es ÉXITO idempotente', () => {
+  assert(_f3.dup.cola === 0, 'un duplicado del índice de eventos saca el evento de la cola');
+  assert(_f3.dup.cuar === 0, 'y no va a cuarentena: ya estaba registrado');
+});
+
+test('F3 · 23505 de OTRO índice NO es duplicado: va a cuarentena', () => {
+  assert(_f3.dupAjeno.cola === 0, 'sale de la cola activa');
+  assert(_f3.dupAjeno.cuar.length === 1, 'y va a cuarentena');
+  assert(_f3.dupAjeno.cuar[0].motivo === 'unico-inesperado',
+    `motivo equivocado: ${_f3.dupAjeno.cuar[0].motivo}`);
+});
+
+test('F3 · 23503 y cualquier otro 409 van a cuarentena, no a éxito', () => {
+  assert(_f3.fk.cuar.length === 1 && _f3.fk.cuar[0].motivo === 'clave-ajena',
+    `23503 tiene que ir a cuarentena: ${JSON.stringify(_f3.fk.cuar)}`);
+  assert(_f3.otro409.cuar.length === 1 && /conflicto/.test(_f3.otro409.cuar[0].motivo),
+    `un 409 desconocido no puede darse por duplicado: ${JSON.stringify(_f3.otro409.cuar)}`);
+});
+
+test('F3 · 42501 no entra en bucle: cuarentena y no se vuelve a pedir', () => {
+  assert(_f3.priv.cuar.length === 1 && _f3.priv.cuar[0].motivo === 'sin-autorizacion',
+    'un 42501 tiene que ir a cuarentena');
+  assert(_f3.priv.peticiones1 === 1, 'una sola petición en el primer drenaje');
+  assert(_f3.priv.peticiones2 === 1, 'el segundo drenaje NO puede volver a pedirlo');
+});
+
+test('F3 · PGRST301 con exp caducado → renovación por la vía existente', () => {
+  assert(_f3.renovaciones === 1, `tenía que renovar una vez, renovó ${_f3.renovaciones}`);
+  assert(_f3.renov === 'renovada-sesion', `el ciclo debe cortarse tras renovar: ${_f3.renov}`);
+  assert(_f3.renovCola === 1, 'el evento se conserva para el siguiente ciclo');
+});
+
+test('F3 · PGRST301 con exp vivo es credencial inválida, y NO hay bucle', () => {
+  assert(_f3.credInvalida.renovaciones === 0,
+    'con el token vigente no se puede intentar renovar: no es una caducidad');
+  assert(_f3.credInvalida.cola.length === 1, 'el evento se conserva');
+  assert(_f3.credInvalida.cola[0].estado === 'revisar',
+    `tiene que quedar en revisar, no reintentándose: ${_f3.credInvalida.cola[0].estado}`);
+  assert(_f3.credInvalida.peticiones2 === _f3.credInvalida.peticiones1,
+    'el segundo drenaje no puede volver a intentarlo');
+});
+
+test('F3 · 400 determinista: 23514 a cuarentena, PGRST204 a revisar', () => {
+  assert(_f3.check.cuar.length === 1 && _f3.check.cuar[0].motivo === 'datos-invalidos',
+    'un CHECK violado es permanente');
+  assert(_f3.esquema.cuar === 0 && _f3.esquema.cola.length === 1,
+    'una columna que no existe es un fallo de despliegue: se conserva y se revisa');
+  assert(_f3.esquema.cola[0].estado === 'revisar', 'y queda marcado para revisar');
+});
+
+test('F3 · timeout y 5xx CONSERVAN el evento y no lo mandan a cuarentena', () => {
+  assert(_f3.timeout.cola.length === 1 && _f3.timeout.cuar === 0,
+    'una red caída no puede convertirse en cuarentena');
+  assert(_f3.cincoXX.cola.length === 1 && _f3.cincoXX.cuar === 0, 'un 5xx tampoco');
+  assert(_f3.cincoXX.cola[0].proximo > Date.now(),
+    'tras un fallo transitorio el reintento tiene que espaciarse, no ser inmediato');
+  assert(_f3.cincoXX.cola[0].estado === 'pendiente', 'y seguir pendiente');
+});
+
+test('F3 · offline: ni una petición, y nada se pierde', () => {
+  assert(_f3.offline === 'sin-red', `el drenaje tiene que rendirse pronto: ${_f3.offline}`);
+  assert(_f3.offlinePeticiones === 0, 'sin red no puede salir nada');
+  assert(_f3.offlineCola === 1, 'y el evento se conserva');
+});
+
+test('F3 · sin token no se hace ningún POST', () => {
+  assert(_f3.sinToken === 'sin-token', `${_f3.sinToken}`);
+  assert(_f3.sinTokenPeticiones === 0, 'sin token no puede salir nada');
+});
+
+test('F3 · Bruno no drena lo de Ana', () => {
+  assert(_f3.conBrunoPeticiones === 0, 'Bruno no puede enviar el evento de Ana');
+  assert(_f3.conBruno === 'nada-que-enviar', `${_f3.conBruno}`);
+  assert(_f3.deAnaSigue === 1, 'el evento de Ana sigue en la cola, intacto');
+});
+
+test('F3 · la clave sin_identidad NUNCA se drena', () => {
+  assert(_f3.sinIdPeticiones === 0, 'un evento sin identidad no puede salir jamás');
+  assert(_f3.sinIdSigue === 1, 'y sigue donde estaba');
+  const dren = html.slice(html.indexOf('async function _eventosDrenar'), html.indexOf('// DISPARADORES'));
+  assert(!dren.includes('_EV_SIN_ID'), 'el drenaje no puede ni nombrar la clave sin identidad');
+});
+
+test('F3 · dos drenajes a la vez no duplican el envío', () => {
+  assert(_f3.concurrente.peticiones === 1,
+    `sólo puede salir una petición, salieron ${_f3.concurrente.peticiones}`);
+  assert([_f3.concurrente.a, _f3.concurrente.b].includes('ya-en-curso'),
+    'el segundo drenaje tiene que retirarse');
+  assert(_f3.concurrente.cola === 0, 'y el evento se sincroniza una vez');
+});
+
+test('F3 · un éxito elimina SÓLO su evento; los demás siguen intactos', () => {
+  assert(_f3.selectivo.quedan.length === 2, `tenían que quedar 2, quedan ${_f3.selectivo.quedan.length}`);
+  assert(!_f3.selectivo.quedan.includes(_f3.selectivo.objetivo), 'el confirmado tiene que salir');
+  for (const id of _f3.idsIniciales) {
+    if (id !== _f3.selectivo.objetivo) assert(_f3.selectivo.quedan.includes(id), `se perdió ${id}`);
+  }
+  assert(_f3.selectivo.orden[0] === _f3.selectivo.objetivo,
+    'los alérgenos tienen que salir primero: el orden es prioridad y luego antigüedad');
+});
+
+test('F3 · un 2xx que no demuestra nada NO saca el evento de la cola', () => {
+  // «Cero filas» significa RECHAZO en toda la aplicación, nunca éxito.
+  assert(_f3.ceroFilas.cuar.length === 1 && _f3.ceroFilas.cuar[0].motivo === 'sin-fila',
+    `un 201 con cero filas tiene que ir a cuarentena: ${JSON.stringify(_f3.ceroFilas)}`);
+  // Y si ni siquiera se puede leer el cuerpo, no se puede demostrar el éxito.
+  assert(_f3.sinCuerpo.cola === 1 && _f3.sinCuerpo.cuar === 0,
+    `sin cuerpo legible el evento se conserva: ${JSON.stringify(_f3.sinCuerpo)}`);
+});
+
+test('F3 · si la identidad cambia A MITAD del ciclo, el resto no sale', () => {
+  assert(_f3.cambioAMitad === 'identidad-cambiada',
+    `el ciclo tiene que abortar: ${_f3.cambioAMitad}`);
+  assert(_f3.cambioAMitadPeticiones === 1,
+    `sólo podía salir la primera, salieron ${_f3.cambioAMitadPeticiones}`);
+  assert(_f3.cambioAMitadAuth.every(a => a === 'Bearer ' + _jwtDe(ANA)),
+    'ninguna petición pudo salir con la credencial de Bruno');
+});
+
+test('F3 · los criterios de eliminación están en UN solo sitio', () => {
+  const res = html.slice(html.indexOf('function _eventoResolver'), html.indexOf('async function _eventoRenovar'));
+  assert(/e === 'confirmado' \|\| e === 'duplicado'/.test(res),
+    'sólo confirmado y duplicado pueden sacar un evento de la cola');
+  assert((html.match(/_eventoConfirmar\(/g) || []).length === 2,
+    'sólo _eventoResolver puede confirmar: hay otra vía de eliminación');
+});
+
 // ─── B2 · F1 · evento_id e idempotencia en el servidor ──────────
 console.log('\nB2 — F1 · evento_id e idempotencia');
 
@@ -12143,21 +12471,18 @@ test('F1 · el rollback de F1 está comentado y se distingue del de C-3', () => 
     'el SQL de rollback tiene que estar comentado: no puede ejecutarse por accidente');
 });
 
-test('F2 · la frontera con F3 y F6 sigue cerrada', () => {
-  // F2 crea, persiste y envía una vez. El DRENAJE con reintentos es F3 y la
-  // superficie de incidencias es F6: si aparece cualquiera de las dos aquí, se
-  // ha adelantado trabajo de otra fase.
-  for (const marca of ['_eventosDrenar', '_conCerrojo', 'navigator.locks',
-                       '_eventoReintentar', '_cuarentenaEvento']) {
-    assert(!html.includes(marca), `"${marca}" pertenece a F3/F5 y no puede estar en F2`);
+test('F3 · la frontera con F5 y F6 sigue cerrada', () => {
+  // F3 drena, clasifica, reintenta y pone en cuarentena. Lo que NO puede estar
+  // aquí es la política de capacidad de F5 ni la superficie de incidencias de
+  // F6, ni la retirada del toast antiguo.
+  for (const marca of ['_evLiberarEspacio', '_evAvisoPersistente', '_evPintarIncidencias']) {
+    assert(!html.includes(marca), `"${marca}" pertenece a F5/F6 y no puede estar en F3`);
   }
-  // Sobre el código VIVO: el bloque de identidad menciona PGRST301 en un
-  // comentario a propósito, para explicar por qué el contexto guarda `exp`.
-  const vivoF2 = html.split('\n').filter((l) => !/^\s*\/\//.test(l)).join('\n');
-  assert(!/PGRST301|23505|42501/.test(vivoF2), 'la clasificación de errores es de F4');
-  // Y el toast antiguo sigue donde estaba: se retira en F6, no aquí.
   assert(/No se pudo guardar la puntuación en la nube/.test(html),
-    'el toast se retira en F6, no en F2');
+    'el toast se retira en F6, no en F3');
+  // Y F3 no puede tocar los límites de capacidad que F2 dejó puestos.
+  assert(/const EV_UMBRAL_P3\s*=\s*400;/.test(html), 'F3 no puede cambiar los umbrales de F2');
+  assert(/const EV_UMBRAL_AVISO\s*=\s*500;/.test(html), 'F3 no puede cambiar los umbrales de F2');
 });
 
 // ─── B2 · F0 · la identidad es un solo objeto congelado ─────────
