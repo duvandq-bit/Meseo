@@ -10316,13 +10316,35 @@ test('Registro de actividad: las actividades reales lo llaman', () => {
 
   // Y `scores` sigue recibiendo lo de siempre: el panel actual depende de ella
   // hasta la fase 3. Quitarla ahora dejaría al supervisor a ciegas.
-  // Se CUENTAN: cada una aparece dos veces, la llamada y su botón de
-  // reintentar. Buscando el texto una sola vez, quitar la llamada de verdad
-  // pasaba en verde porque el reintento la seguía mencionando.
-  assert((html.match(/supaInsertScore\(session, currentUser\)/g) || []).length === 2,
-    'la llamada a scores del examen, y su reintento, tienen que seguir ahí');
-  assert((html.match(/supaInsertScore\(_payload, currentUser\)/g) || []).length === 2,
-    'la llamada a scores del simulacro, y su reintento, tienen que seguir ahí');
+  //
+  // Se CUENTAN, y ésa sigue siendo la parte importante de esta guarda. Antes
+  // de F6 cada una aparecía DOS veces —la llamada y el botón «reintentar» del
+  // aviso— y buscar el texto una sola vez dejaba pasar en verde el borrado de
+  // la llamada de verdad, porque el reintento la seguía mencionando. F6 retiró
+  // aquel aviso (era falso: la puntuación SÍ se había guardado, en la cola) y
+  // con él su botón, así que ahora la cuenta exacta es UNA. La cuenta exacta
+  // es lo que impide que vuelva a colarse un duplicado que enmascare el fallo.
+  // El reintento no ha desaparecido: lo hace el drenaje de la cola (F3).
+  assert((html.match(/supaInsertScore\(session, currentUser\)/g) || []).length === 1,
+    'la llamada a scores del examen tiene que seguir ahí, y una sola vez');
+  assert((html.match(/supaInsertScore\(_payload, currentUser\)/g) || []).length === 1,
+    'la llamada a scores del simulacro tiene que seguir ahí, y una sola vez');
+
+  // Y las dos terminan en la superficie de avisos: si el envío deja algo que
+  // contar, se repinta. Sin esto el empleado se queda sin ninguna señal.
+  for (const c of ['session', '_payload'])
+    assert(html.includes(`supaInsertScore(${c}, currentUser).catch(function(){}).then(_evPintarIncidencias)`),
+      `el envío de «${c}» tiene que repintar los avisos al terminar`);
+});
+
+test('F6 · el aviso antiguo de la nube ya no existe en ninguna parte', () => {
+  // Decía «No se pudo guardar la puntuación en la nube» y era MENTIRA desde
+  // F2: la puntuación queda guardada en la cola del dispositivo y se envía
+  // sola. Además era código muerto —`supaInsertScore` captura sus propios
+  // errores y nunca rechaza—, así que nadie llegó a verlo nunca.
+  for (const t of ['No se pudo guardar la puntuación en la nube',
+                   'Could not save score to cloud'])
+    assert(!html.includes(t), `sigue vivo el aviso antiguo: «${t}»`);
 });
 
 // ═══ EL PLAN DE HOY (fase 2) ══════════════════════════════════════════════
@@ -11547,7 +11569,7 @@ function _montarEscritores(opciones) {
   const bloqueEventos = html.slice(html.indexOf('const _EV_KEY'),
                                    html.indexOf('async function registrarActividad'));
   const refrescos = { n: 0 };
-  const M = new Function('capturar', 'localStorage', 'responder', 'navigator', '_getAuthClient', ` // eslint-disable-line no-new-func
+  const M = new Function('capturar', 'localStorage', 'responder', 'navigator', '_getAuthClient', 'documento', ` // eslint-disable-line no-new-func
     let _auth = Object.freeze({ uid:null, token:null, exp:0, empleado:null, estado:'anonimo' });
     const _authCtx = () => _auth;
     const _authPoner = (n) => { _auth = Object.freeze(n); };
@@ -11566,8 +11588,14 @@ function _montarEscritores(opciones) {
       if (r && r.lanza) throw new TypeError('Failed to fetch');
       return r;
     };
-    const setInterval = () => 0, setTimeout = (f) => 0;
-    const document = undefined, window = undefined;
+    const setInterval = () => 0, setTimeout = (f) => 0, clearTimeout = () => {};
+    let _syncPillTimer = null;
+    let LANG = 'es';
+    // Sin \`dom\` esto vale \`undefined\`, exactamente como antes: \`typeof document\`
+    // sigue siendo 'undefined' y el pintado de F6 se corta en la primera línea.
+    // Con \`dom\`, en cambio, la superficie de avisos se pinta DE VERDAD.
+    const document = documento, window = undefined;
+    ${_xFn('escapeHtml')}
     ${_xFn('_jwtCarga')}
     ${_xFn('_jwtSub')}
     ${_xFn('_jwtExp')}
@@ -11577,7 +11605,9 @@ function _montarEscritores(opciones) {
     async ${_xFn('supaInsertScore')}
     async ${_xFn('supaInsertTxokoRecord')}
     async ${_xFn('supaInsertEtRecord')}
+    ${_xFn('_setSyncPill')}
     return {
+      pildora: _setSyncPill, idioma(l){ LANG = l; },
       ctx: _authCtx, poner: _authPoner,
       sesion(uid, token){ _authPoner({ uid, token: token === undefined ? null : token,
                                        exp: 2000000000, empleado: null,
@@ -11592,13 +11622,51 @@ function _montarEscritores(opciones) {
       aplazado: () => _evAplazado, clave: _evClave,
       cuarentena: () => _cuarentenaLeer().entradas,      // las entradas con detalle
       cuarentenaCruda: _cuarentenaLeer,                   // { v, entradas, colapsados }
+      resumen: _evResumen, mensajes: _evMensajes,         // F6
+      pintar: _evPintarIncidencias, alternar: _evAlternarPanel,
       registrarActividad, supaInsertScore, supaInsertTxokoRecord, supaInsertEtRecord
     };
   `)((url, body, headers) => cap.push({ url, body, headers }), ls,
      (url, opt) => (o.responder ? o.responder(url, opt) : _resp(201, [{ evento_id: 'ok' }])),
      o.navigator || { onLine: true },
-     () => ({ auth: { refreshSession: async () => { refrescos.n++; return o.refrescoFalla ? { error: new Error('no') } : {}; } } }));
+     () => ({ auth: { refreshSession: async () => { refrescos.n++; return o.refrescoFalla ? { error: new Error('no') } : {}; } } }),
+     o.dom);
   return { M, cap, almacen, ls, refrescos };
+}
+
+// Un DOM mínimo, sólo con lo que la superficie de F6 usa de verdad. No imita
+// un navegador: imita las cuatro operaciones que el código hace, para que lo
+// que se comprueba sea el pintado real y no una lectura del fichero.
+function _domFalso() {
+  const nodo = (etq) => ({
+    etiqueta: etq, innerHTML: '', atributos: Object.create(null), dataset: Object.create(null),
+    clases: new Set(),
+    classList: {
+      add(...c){ c.forEach(x => nodo_clases(this).add(x)); },
+      remove(...c){ c.forEach(x => nodo_clases(this).delete(x)); },
+      toggle(c, on){ on ? nodo_clases(this).add(c) : nodo_clases(this).delete(c); },
+      contains(c){ return nodo_clases(this).has(c); },
+    },
+    setAttribute(k, v){ this.atributos[k] = String(v); },
+    getAttribute(k){ return k in this.atributos ? this.atributos[k] : null; },
+    querySelector(sel){
+      // Basta con reconocer el único selector que el código usa.
+      if(sel === '.ev-aviso-n') return this._n || (this._n = { textContent: '' });
+      return null;
+    },
+  });
+  const nodo_clases = (cl) => cl._duenno.clases;
+  const preparar = (n) => { n.classList._duenno = n; return n; };
+  const chip = preparar(nodo('button'));
+  const panel = preparar(nodo('div'));
+  const pill = preparar(nodo('div'));
+  const pillTxt = preparar(nodo('span')); pillTxt.textContent = '';
+  const porId = { evAvisoChip: chip, evAvisoPanel: panel,
+                  syncStatusPill: pill, syncStatusText: pillTxt };
+  return {
+    chip, panel, pill, pillTxt,
+    getElementById: (id) => (id in porId ? porId[id] : null),
+  };
 }
 
 const _c2 = await (async () => {
@@ -13074,18 +13142,476 @@ test('F1 · el rollback de F1 está comentado y se distingue del de C-3', () => 
     'el SQL de rollback tiene que estar comentado: no puede ejecutarse por accidente');
 });
 
-test('F3 · la frontera con F5 y F6 sigue cerrada', () => {
-  // F3 drena, clasifica, reintenta y pone en cuarentena. Lo que NO puede estar
-  // aquí es la política de capacidad de F5 ni la superficie de incidencias de
-  // F6, ni la retirada del toast antiguo.
-  for (const marca of ['_evLiberarEspacio', '_evAvisoPersistente', '_evPintarIncidencias']) {
-    assert(!html.includes(marca), `"${marca}" pertenece a F5/F6 y no puede estar en F3`);
+test('F6 · la frontera con F7 y F8 sigue cerrada', () => {
+  // F6 sólo LEE y pinta. No puede haber aparecido lógica de sincronización
+  // nueva, ni acciones que el sistema no sepa cumplir.
+  for (const marca of ['_evReintentarTodo', '_evVaciarCola', '_evBorrarErrores', '_evForzarSync']) {
+    assert(!html.includes(marca), `"${marca}" sería lógica nueva y F6 no la añade`);
   }
-  assert(/No se pudo guardar la puntuación en la nube/.test(html),
-    'el toast se retira en F6, no en F3');
-  // Y F3 no puede tocar los límites de capacidad que F2 dejó puestos.
-  assert(/const EV_UMBRAL_P3\s*=\s*400;/.test(html), 'F3 no puede cambiar los umbrales de F2');
-  assert(/const EV_UMBRAL_AVISO\s*=\s*500;/.test(html), 'F3 no puede cambiar los umbrales de F2');
+  // Los umbrales de F2/F4 y la clasificación de F3 siguen donde estaban.
+  assert(/const EV_UMBRAL_P3\s*=\s*400;/.test(html), 'F6 no puede cambiar los umbrales');
+  assert(/const EV_UMBRAL_AVISO\s*=\s*500;/.test(html), 'F6 no puede cambiar los umbrales');
+  assert(/const EV_LIMITE_DURO\s*=\s*1000;/.test(html), 'F6 no puede cambiar los umbrales');
+});
+
+// ─── B2 · F6 · la superficie de incidencias ──────────────────────
+//
+// Se EJECUTA la superficie real contra un DOM mínimo. Ninguna de estas pruebas
+// lee el fichero buscando un texto: todas montan el bloque de eventos de
+// verdad, le dan un estado y miran lo que el empleado vería.
+const _css6  = read('styles.css');
+const ANA6   = '11111111-1111-4111-8111-111111111111';
+const BRUNO6 = '22222222-2222-4222-8222-222222222222';
+const _evalua6 = { activity:'examen', competency:'carta', kind:'evaluacion',
+                   score:8, total:10, seconds:60, meta:{} };
+const _practica6 = { activity:'repaso', competency:'carta', kind:'practica',
+                     score:3, total:5, seconds:30, meta:{} };
+
+// Monta con DOM y devuelve además los dos nodos, para mirar el pintado.
+function _f6Montar(o) {
+  const dom = _domFalso();
+  const { M, cap, almacen } = _montarEscritores(Object.assign({ dom }, o || {}));
+  return { M, cap, almacen, dom, chip: dom.chip, panel: dom.panel };
+}
+// Todo el texto que el empleado llega a ver, en un solo string.
+const _f6Texto = (M) => M.mensajes(M.resumen()).map(x => x.texto + ' ' + x.nota).join(' | ');
+
+const _f6 = await (async () => {
+  const o = {};
+  const sin = () => ({ lanza: true });                    // la red nunca contesta
+
+  // (a) Todo en orden: una evaluación que se envía y se confirma.
+  { const c = _f6Montar();
+    c.M.sesion(ANA6, _jwtDe(ANA6));
+    await c.M.registrarActividad(_evalua6);
+    await c.M.drenar('prueba'); c.M.pintar();
+    o.ok = { r: c.M.resumen(), visible: c.chip.clases.has('visible'), cola: c.M.cola().length }; }
+
+  // (b) Sin red: la evaluación queda pendiente y NADA más.
+  { const c = _f6Montar({ responder: sin });
+    c.M.sesion(ANA6, _jwtDe(ANA6));
+    await c.M.registrarActividad(_evalua6);
+    await c.M.drenar('prueba'); c.M.pintar();
+    o.pendiente = { r: c.M.resumen(), visible: c.chip.clases.has('visible'),
+                    msgs: c.M.mensajes(c.M.resumen()) }; }
+
+  // (b2) Lo mismo pero con el navegador declarado OFFLINE.
+  { const c = _f6Montar({ responder: sin, navigator: { onLine: false } });
+    c.M.sesion(ANA6, _jwtDe(ANA6));
+    await c.M.registrarActividad(_evalua6);
+    await c.M.drenar('prueba'); c.M.pintar();
+    o.offline = { r: c.M.resumen(), visible: c.chip.clases.has('visible'),
+                  msgs: c.M.mensajes(c.M.resumen()) }; }
+
+  // (c) Credencial inválida por el camino CON código: PGRST301 y `exp` vigente.
+  { const c = _f6Montar({ responder: () => _resp(401, { code: 'PGRST301', message: 'no' }) });
+    c.M.sesion(ANA6, _jwtDe(ANA6));
+    await c.M.registrarActividad(_evalua6);
+    await c.M.drenar('prueba'); c.M.pintar();
+    o.credencial = { r: c.M.resumen(), msgs: c.M.mensajes(c.M.resumen()),
+                     html: c.panel.innerHTML, clases: [...c.chip.clases],
+                     cola: c.M.cola().map(e => ({ estado: e.estado, motivo: e.motivo })) }; }
+
+  // (c2) Y por el camino SIN código, que está medido y es el más probable.
+  { const c = _f6Montar({ responder: () => _resp(401, { message: 'no' }) });
+    c.M.sesion(ANA6, _jwtDe(ANA6));
+    await c.M.registrarActividad(_evalua6);
+    await c.M.drenar('prueba'); c.M.pintar();
+    o.credencialSinCodigo = { r: c.M.resumen(), html: c.panel.innerHTML,
+                              cola: c.M.cola().map(e => ({ estado: e.estado, motivo: e.motivo })) }; }
+
+  // (d) Cuarentena: un 23514 manda el evento a cuarentena en el acto.
+  { const c = _f6Montar({ responder: () => _resp(400, { code: '23514', message: 'x' }) });
+    c.M.sesion(ANA6, _jwtDe(ANA6));
+    await c.M.registrarActividad(_evalua6);
+    await c.M.drenar('prueba'); c.M.pintar();
+    o.cuarentena = { r: c.M.resumen(), visible: c.chip.clases.has('visible'),
+                     n: c.panel.innerHTML, texto: _f6Texto(c.M) }; }
+
+  // (e) Sin nadie identificado: la prueba no se puede atribuir.
+  { const c = _f6Montar();
+    await c.M.registrarActividad(_evalua6);          // sin sesión
+    c.M.pintar();
+    o.sinId = { r: c.M.resumen(), visible: c.chip.clases.has('visible'), texto: _f6Texto(c.M) }; }
+
+  // (f) Descartes por espacio: 400 prácticas llenan el umbral de P3.
+  { const alm = Object.create(null);
+    const c = _f6Montar({ almacen: alm, responder: sin });
+    c.M.sesion(ANA6, _jwtDe(ANA6));
+    const relleno = [];
+    for (let i = 0; i < 400; i++)
+      relleno.push({ v:1, evento_id:`e${i}`, destino:'actividad', prioridad:3, uid:ANA6,
+                     ts:1, datos:{}, intentos:0, proximo:0, estado:'pendiente' });
+    alm['txk_eventos_v1'] = JSON.stringify(relleno);
+    await c.M.registrarActividad(_practica6);        // ésta ya no cabe
+    c.M.pintar();
+    o.descartes = { r: c.M.resumen(), texto: _f6Texto(c.M), visible: c.chip.clases.has('visible') };
+    // Y el contador sobrevive a una RECARGA: se monta de nuevo sobre el mismo almacén.
+    const c2 = _f6Montar({ almacen: alm, responder: sin });
+    c2.M.sesion(ANA6, _jwtDe(ANA6));
+    o.descartesTrasRecarga = c2.M.resumen().descartados; }
+
+  // (f2) El mismo descarte, pero SIN RED declarada: tiene que contarse igual.
+  { const alm = Object.create(null);
+    const c = _f6Montar({ almacen: alm, responder: sin, navigator: { onLine: false } });
+    c.M.sesion(ANA6, _jwtDe(ANA6));
+    const relleno = [];
+    for (let i = 0; i < 400; i++)
+      relleno.push({ v:1, evento_id:`e${i}`, destino:'actividad', prioridad:3, uid:ANA6,
+                     ts:1, datos:{}, intentos:0, proximo:0, estado:'pendiente' });
+    alm['txk_eventos_v1'] = JSON.stringify(relleno);
+    await c.M.registrarActividad(_practica6);
+    c.M.pintar();
+    o.descartesSinRed = { r: c.M.resumen(), visible: c.chip.clases.has('visible') }; }
+
+  // (g) Disco lleno: `setItem` no lanza y tampoco guarda (Safari privado).
+  { const c = _f6Montar({ setItemNoGuarda: true });
+    c.M.sesion(ANA6, _jwtDe(ANA6));
+    await c.M.registrarActividad(_evalua6);
+    o.lleno = { r: c.M.resumen(), texto: _f6Texto(c.M),
+                clases: [...c.chip.clases], panelVisible: c.panel.clases.has('visible'),
+                fijo: c.M.mensajes(c.M.resumen()).some(x => x.fijo) };
+    // Y al cerrarlo a mano NO se reabre solo en el siguiente repintado.
+    c.M.alternar(); const cerrado = c.panel.clases.has('visible');
+    c.M.pintar();
+    o.llenoNoInsiste = !cerrado && !c.panel.clases.has('visible'); }
+
+  // (h) DISPOSITIVO COMPARTIDO. Ana deja de todo; entra Bruno.
+  { const alm = Object.create(null);
+    const a = _f6Montar({ almacen: alm, responder: () => _resp(400, { code:'23514', message:'x' }) });
+    a.M.sesion(ANA6, _jwtDe(ANA6));
+    await a.M.registrarActividad(_evalua6);          // → cuarentena de Ana
+    await a.M.drenar('prueba');
+    const b = _f6Montar({ almacen: alm, responder: () => _resp(401, { message:'no' }) });
+    b.M.sesion(ANA6, _jwtDe(ANA6));
+    await b.M.registrarActividad(_evalua6);          // → 'revisar' de Ana
+    await b.M.drenar('prueba');
+    o.deAna = b.M.resumen();
+    // Ahora entra Bruno, sobre el MISMO almacenamiento.
+    const c = _f6Montar({ almacen: alm, responder: sin });
+    c.M.sesion(BRUNO6, _jwtDe(BRUNO6));
+    c.M.pintar();
+    o.deBruno = c.M.resumen();
+    o.brunoVisible = c.chip.clases.has('visible');
+    o.brunoTexto = _f6Texto(c.M); }
+
+  // (h2) La píldora de offline, EJECUTADA. Dos pendientes de Ana y sin red.
+  { const c = _f6Montar({ responder: sin, navigator: { onLine: false } });
+    c.M.sesion(ANA6, _jwtDe(ANA6));
+    await c.M.registrarActividad(_evalua6);
+    await c.M.registrarActividad(_evalua6);
+    c.M.pildora('offline');
+    o.pildoraDos = { txt: c.dom.pillTxt.textContent, clases: [...c.dom.pill.clases] };
+    c.M.idioma('en'); c.M.pildora('offline');
+    o.pildoraEn = c.dom.pillTxt.textContent;
+    c.M.idioma('es');
+    // Y con uno solo, en singular.
+    const u = _f6Montar({ responder: sin, navigator: { onLine: false } });
+    u.M.sesion(ANA6, _jwtDe(ANA6));
+    await u.M.registrarActividad(_evalua6);
+    u.M.pildora('offline');
+    o.pildoraUno = u.dom.pillTxt.textContent;
+    // Sin nada pendiente, el texto de siempre.
+    const v = _f6Montar({ navigator: { onLine: false } });
+    v.M.pildora('offline');
+    o.pildoraCero = v.dom.pillTxt.textContent;
+    // Y con otra identidad dentro, lo de Ana no se cuenta.
+    const b = _f6Montar({ almacen: c.almacen, navigator: { onLine: false } });
+    b.M.sesion(BRUNO6, _jwtDe(BRUNO6));
+    b.M.pildora('offline');
+    o.pildoraBruno = b.dom.pillTxt.textContent; }
+
+  // (i) El pintado de verdad: cuenta, etiqueta y detalle.
+  { const c = _f6Montar({ responder: () => _resp(400, { code:'23514', message:'x' }) });
+    c.M.sesion(ANA6, _jwtDe(ANA6));
+    await c.M.registrarActividad(_evalua6);
+    await c.M.drenar('prueba'); c.M.pintar();
+    o.pintado = { visible: c.chip.clases.has('visible'),
+                  n: c.panel.querySelector ? c.chip.querySelector('.ev-aviso-n').textContent : null,
+                  aria: c.chip.getAttribute('aria-label'),
+                  panelCerrado: !c.panel.clases.has('visible'),
+                  html: c.panel.innerHTML };
+    c.M.alternar();
+    o.pintadoAbierto = { visible: c.panel.clases.has('visible'),
+                         aria: c.chip.getAttribute('aria-expanded') }; }
+
+  return o;
+})();
+
+console.log('\nB2 — F6 · superficie de incidencias');
+
+test('F6 · con todo en orden, la superficie NO existe', () => {
+  assert(_f6.ok.cola === 0, `la cola tenía que quedar vacía: ${_f6.ok.cola}`);
+  assert(_f6.ok.r.accionable === false, 'no hay nada que atender y aun así se considera accionable');
+  assert(_f6.ok.visible === false, 'el aviso aparece con todo bien: eso es exactamente el ruido que F6 evita');
+});
+
+test('F6 · estar pendiente de enviar NO es una incidencia', () => {
+  assert(_f6.pendiente.r.pendientes === 1, `esperaba 1 pendiente: ${JSON.stringify(_f6.pendiente.r)}`);
+  assert(_f6.pendiente.r.accionable === false,
+    'un envío pendiente no puede abrir la superficie: sin cobertura es lo NORMAL');
+  assert(_f6.pendiente.visible === false, 'y por tanto no se pinta nada');
+  const p = _f6.pendiente.msgs.find(x => x.clave === 'pendientes');
+  assert(p && p.info === true && p.tono === 'suave',
+    'lo pendiente sólo puede existir como contexto, nunca como alerta');
+});
+
+test('F6 · sin red, lo pendiente se explica y sigue sin ser un error', () => {
+  assert(_f6.offline.r.sinRed === true, 'el resumen no se entera de que no hay red');
+  assert(_f6.offline.r.accionable === false, 'estar sin cobertura no es un error que atender');
+  assert(_f6.offline.visible === false, 'y no puede encender el aviso');
+  const p = _f6.offline.msgs.find(x => x.clave === 'pendientes');
+  assert(p && /se enviarán solos|sent on their own/i.test(p.nota),
+    `sin red hay que decir que se enviarán solos: ${p && p.nota}`);
+  assert(!/error|fall|problema|failed/i.test(p.texto + p.nota),
+    `sin red NO se puede hablar de fallo: «${p.texto} ${p.nota}»`);
+});
+
+test('F6 · una credencial inválida se ve como grave y dice la verdad', () => {
+  assert(_f6.credencial.cola.some(e => e.estado === 'revisar' && e.motivo === 'credencial-invalida'),
+    `el evento tenía que quedar en revisión: ${JSON.stringify(_f6.credencial.cola)}`);
+  assert(_f6.credencial.r.credencial === true, 'el resumen no detecta la credencial inválida');
+  assert(_f6.credencial.clases.includes('grave'), 'una sesión no válida tiene que verse como grave');
+  const m = _f6.credencial.msgs.find(x => x.clave === 'credencial');
+  // LA PARTE IMPORTANTE: el primer borrador prometía «vuelve a entrar y se
+  // enviará», y es falso —`revisar` queda fuera del drenaje para siempre—.
+  assert(!/y se enviará|and it will be sent/i.test(m.nota),
+    `no se puede prometer un reenvío que no ocurre: «${m.nota}»`);
+  assert(/no se enviará solo|not be sent on its own/i.test(m.nota),
+    `hay que decir que eso NO se va solo: «${m.nota}»`);
+  // Y no se cuenta DOS veces. Un evento en revisión no está «pendiente de
+  // enviar»: el drenaje lo excluye para siempre. Contarlo en los dos sitios
+  // haría que un solo resultado apareciera como dos, y encima uno de ellos
+  // diciendo «se envían solos», que es falso.
+  assert(_f6.credencial.r.revisar === 1 && _f6.credencial.r.pendientes === 0,
+    `un evento en revisión NO es un pendiente: ${JSON.stringify(_f6.credencial.r)}`);
+  assert(!_f6.credencial.msgs.some(x => x.clave === 'pendientes'),
+    'y no puede aparecer además la línea de «pendientes de enviar»');
+});
+
+test('F6 · un 401 SIN código también cuenta como sesión no válida', () => {
+  // Medido en B2.2: PostgREST puede devolver 401 sin campo `code`. F3 lo
+  // clasifica `auth-sin-codigo`, y si F6 sólo mirara `credencial-invalida`, el
+  // caso más probable de los dos no le diría nunca al empleado que entre otra
+  // vez. No se cambia la clasificación: se lee entera.
+  assert(_f6.credencialSinCodigo.cola.some(e => e.motivo === 'auth-sin-codigo'),
+    `esperaba el motivo sin código: ${JSON.stringify(_f6.credencialSinCodigo.cola)}`);
+  assert(_f6.credencialSinCodigo.r.credencial === true,
+    'un 401 sin código deja al empleado sin saber que tiene que volver a entrar');
+  assert(_f6.credencialSinCodigo.html.includes('onclick="logout()"'),
+    'y sin la acción que lo resuelve');
+});
+
+test('F6 · la única acción ofrecida es una que ya existe', () => {
+  assert(_f6.credencial.html.includes('onclick="logout()"'),
+    'el aviso de sesión no válida tiene que llevar a la pantalla de entrada');
+  assert(/function logout\(\)/.test(html), 'logout() tiene que existir de verdad');
+  // Y NO puede haber aparecido ninguna de las tres que no existen.
+  assert(!/reintentar todo|vaciar cola|forzar sincroniz|retry all|force sync/i.test(_f6.credencial.html),
+    'F6 no puede ofrecer acciones que el sistema no sabe cumplir');
+  const botones = (_f6.credencial.html.match(/<button/g) || []).length;
+  assert(botones === 1, `esperaba una sola acción en toda la superficie, hay ${botones}`);
+});
+
+test('F6 · un evento en cuarentena se cuenta y se explica sin tecnicismos', () => {
+  assert(_f6.cuarentena.r.cuarentena === 1,
+    `esperaba 1 en cuarentena: ${JSON.stringify(_f6.cuarentena.r)}`);
+  assert(_f6.cuarentena.visible === true, 'la cuarentena tiene que verse');
+  assert(/no se ha? podido enviar|could not be sent/i.test(_f6.cuarentena.texto),
+    `el texto no dice lo que pasa: «${_f6.cuarentena.texto}»`);
+  assert(/responsable|supervisor/i.test(_f6.cuarentena.texto),
+    'hay que decirle a quién avisar, porque el empleado no puede resolverlo solo');
+});
+
+test('F6 · una prueba sin nadie identificado se avisa y no se atribuye', () => {
+  assert(_f6.sinId.r.sinIdentidad === 1, `esperaba 1 sin identidad: ${JSON.stringify(_f6.sinId.r)}`);
+  assert(_f6.sinId.visible === true, 'una prueba que no se va a enviar NUNCA tiene que verse');
+  assert(/este dispositivo|this device/i.test(_f6.sinId.texto),
+    'se atribuye al dispositivo, que es lo único que se sabe');
+  assert(/repetir|repeat/i.test(_f6.sinId.texto),
+    `hay que decir qué hacer —repetirla—: «${_f6.sinId.texto}»`);
+});
+
+test('F6 · los descartes por espacio se ven, y se dice qué NO se descarta', () => {
+  assert(_f6.descartes.r.descartados === 1,
+    `esperaba 1 descarte: ${JSON.stringify(_f6.descartes.r)}`);
+  assert(_f6.descartes.visible === true, 'un descarte silencioso dejaría de serlo sólo si se ve');
+  assert(/exámenes y los simulacros|Exams and allergen/i.test(_f6.descartes.texto),
+    `hay que tranquilizar sobre lo que nunca se descarta: «${_f6.descartes.texto}»`);
+  assert(_f6.descartesTrasRecarga === 1,
+    `el contador tiene que sobrevivir a una recarga: ${_f6.descartesTrasRecarga}`);
+});
+
+test('F6 · un descarte SIN RED se cuenta igual', () => {
+  // Es justo el momento en que ocurren: cola llena porque nada se ha podido
+  // enviar. Si el aviso dependiera de la red, no se vería nunca.
+  assert(_f6.descartesSinRed.r.descartados === 1,
+    `sin red el descarte también se cuenta: ${JSON.stringify(_f6.descartesSinRed.r)}`);
+  assert(_f6.descartesSinRed.visible === true, 'y también se ve');
+});
+
+test('F6 · quedarse sin espacio es grave, abre el panel una vez y luego no insiste', () => {
+  assert(_f6.lleno.r.sinGuardar === 1,
+    `esperaba 1 resultado sin guardar: ${JSON.stringify(_f6.lleno.r)}`);
+  assert(_f6.lleno.fijo === true, 'es el único aviso que exige algo del empleado');
+  assert(_f6.lleno.clases.includes('grave'), 'y tiene que verse como grave');
+  assert(_f6.lleno.panelVisible === true, 'un punto en una esquina no lo ve nadie: tiene que abrirse solo');
+  assert(/falta espacio|out of space/i.test(_f6.lleno.texto),
+    `y decir qué pasa: «${_f6.lleno.texto}»`);
+  assert(_f6.llenoNoInsiste === true,
+    'una vez cerrado a mano, el repintado no puede volver a abrirlo: sería inutilizable');
+});
+
+test('F6 · DISPOSITIVO COMPARTIDO: Bruno no ve una sola línea de Ana', () => {
+  // Primero, que el estado de Ana existía de verdad: si no, esta prueba sería
+  // de las que pasan en verde sin comprobar nada.
+  assert(_f6.deAna.cuarentena === 1 && _f6.deAna.revisar === 1,
+    `Ana tenía que dejar cuarentena y revisión: ${JSON.stringify(_f6.deAna)}`);
+  assert(_f6.deBruno.pendientes === 0, 'Bruno ve pendientes de Ana');
+  assert(_f6.deBruno.revisar === 0, 'Bruno ve la revisión de Ana');
+  assert(_f6.deBruno.credencial === false, 'Bruno ve el problema de sesión de Ana');
+  assert(_f6.deBruno.cuarentena === 0, 'Bruno ve la cuarentena de Ana');
+  assert(_f6.deBruno.sinGuardar === 0, 'Bruno ve lo que a Ana no le cupo');
+  assert(_f6.brunoVisible === false, 'a Bruno no le puede aparecer nada');
+  assert(_f6.brunoTexto === '', `y no puede leer ni un texto: «${_f6.brunoTexto}»`);
+});
+
+test('F6 · lo que es del dispositivo se redacta como del dispositivo', () => {
+  // Los contadores de `txk_eventos_registro` NO llevan uid —así se aprobó en
+  // F4, que exigía que sobrevivieran al cambio de sesión—, así que no se
+  // pueden atribuir a nadie y el texto no lo hace.
+  const i = html.indexOf('function _evContar');
+  const f = html.slice(i, html.indexOf('\n}', i));
+  assert(i > 0 && !/\buid\b/.test(f),
+    'si el contador guardara uid, este texto tendría que filtrarse por identidad');
+  for (const clave of ['descartados', 'sin-identidad'])
+    assert(/este dispositivo|this device/i.test(
+      _f6.descartes.texto + ' ' + _f6.sinId.texto), `«${clave}» tiene que hablar del dispositivo`);
+});
+
+test('F6 · ningún texto enseña una sola tripa del sistema', () => {
+  // Todos los textos posibles de la superficie, sacados del código real.
+  const i = html.indexOf('function _evMensajes');
+  const bloque = html.slice(i, html.indexOf('\nlet _evPanelAbierto', i));
+  assert(bloque.length > 500, 'no encuentro el bloque de textos');
+  const prohibido = [/\buid\b/i, /uuid/i, /token/i, /\bPIN\b/, /\bJWT\b/i, /\bRLS\b/i,
+                     /PostgREST/i, /SQLSTATE/i, /\bscores\b/, /\bactividad\b/,
+                     /\bevento_id\b/, /auth_user_id/, /supabase/i, /_ev[A-Z]/, /\b23\d{3}\b/,
+                     /PGRST/, /\b40[13]\b/, /\b409\b/];
+  // Se mira SÓLO lo que va entre comillas: los comentarios pueden decir lo que
+  // haga falta, el empleado no los lee.
+  const textos = (bloque.match(/(?:texto|nota|accion):\s*[\s\S]*?(?=\n\s{4}[a-z]+:|\}\);)/g) || []).join(' ');
+  assert(textos.length > 400, `no he sabido extraer los textos (${textos.length})`);
+  for (const p of prohibido)
+    assert(!p.test(textos.replace(/\ben\s*\?/g, '')), `los textos enseñan «${p}»`);
+});
+
+test('F6 · el pintado real: número, etiqueta accesible y detalle al tocar', () => {
+  assert(_f6.pintado.visible === true, 'el chip no aparece');
+  assert(_f6.pintado.n === '1', `el número no cuadra: «${_f6.pintado.n}»`);
+  assert(/Avisos de sincronizaci|Sync notices/.test(_f6.pintado.aria),
+    `la etiqueta accesible no dice qué es: «${_f6.pintado.aria}»`);
+  assert(!/[0-9a-f]{8}-[0-9a-f]{4}/.test(_f6.pintado.html),
+    'se ha colado un identificador técnico en el panel');
+  assert(_f6.pintado.panelCerrado === true, 'el detalle sólo se abre al tocarlo');
+  assert(_f6.pintadoAbierto.visible === true, 'y al tocarlo tiene que abrirse');
+  assert(_f6.pintadoAbierto.aria === 'true', 'aria-expanded no acompaña al panel');
+});
+
+test('F6 · la píldora de offline cuenta lo que espera, y sólo si hay algo', () => {
+  const i = html.indexOf('function _setSyncPill');
+  const f = html.slice(i, html.indexOf('\nfunction _updateOnlineStatus', i));
+  assert(/_evResumen\(\)\.pendientes/.test(f), 'la píldora no consulta lo pendiente');
+  assert(/try\{[^}]*_evResumen/.test(f),
+    'si _evResumen lanzara, la píldora de offline dejaría de pintarse: tiene que ir protegida');
+  assert(/Offline — solo local/.test(f), 'sin nada pendiente sigue diciendo lo de siempre');
+  // Y sigue sin narrar la rutina: el único estado que ENCIENDE la píldora es
+  // 'offline'. `syncing`/`synced` sólo aparecen en el `remove` de limpieza.
+  const enciende = f.match(/pill\.classList\.add\([^)]*\)/g) || [];
+  assert(enciende.length === 1 && /'offline'/.test(enciende[0]),
+    `sólo 'offline' puede encender la píldora: ${JSON.stringify(enciende)}`);
+
+  // Y se EJECUTA, que es lo que de verdad lo demuestra: leer el fichero dejaba
+  // pasar en verde un `textContent` que ignorara la cuenta (medido con una
+  // mutación).
+  assert(_f6.pildoraDos.txt === 'Offline — 2 pendientes',
+    `con dos esperando: «${_f6.pildoraDos.txt}»`);
+  assert(_f6.pildoraUno === 'Offline — 1 pendiente',
+    `con uno, en singular: «${_f6.pildoraUno}»`);
+  assert(_f6.pildoraEn === 'Offline — 2 waiting', `en inglés: «${_f6.pildoraEn}»`);
+  assert(_f6.pildoraCero === 'Offline — solo local',
+    `sin nada pendiente, el texto de siempre: «${_f6.pildoraCero}»`);
+  assert(_f6.pildoraDos.clases.includes('offline') && _f6.pildoraDos.clases.includes('visible'),
+    'la píldora tiene que verse');
+  // DISPOSITIVO COMPARTIDO, también aquí: Bruno no cuenta lo de Ana.
+  assert(_f6.pildoraBruno === 'Offline — solo local',
+    `Bruno no puede ver la cuenta de Ana en la píldora: «${_f6.pildoraBruno}»`);
+});
+
+test('F6 · sin red, el reflejo de la cola de fichas no pisa el aviso de offline', () => {
+  // `_outboxReflect` pinta 'pending'/'synced' en la MISMA píldora. Sin red eso
+  // borraría el «Offline — N pendientes», que es justo el momento en que hace
+  // falta. Sale antes de tocar nada.
+  const i = html.indexOf('function _outboxReflect');
+  const f = html.slice(i, html.indexOf('\n}', i));
+  assert(i > 0, 'no encuentro _outboxReflect');
+  const guarda = f.indexOf('navigator.onLine === false) return');
+  assert(guarda > 0, 'sin red, _outboxReflect tiene que salir sin pintar');
+  assert(guarda < f.indexOf('_setSyncPill'),
+    'la salida por falta de red tiene que ir ANTES de tocar la píldora');
+});
+
+test('F6 · el aviso vive DENTRO de la aplicación, no en la pantalla de entrada', () => {
+  // Al salir, `#screenApp` pierde `.active` y `display:none` se lleva por
+  // delante todo lo de dentro, aunque sea `position:fixed`. Si el chip
+  // estuviera fuera, el siguiente en coger el iPad vería la cuenta del
+  // anterior antes siquiera de identificarse.
+  const app = html.indexOf('<div id="screenApp"');
+  const chip = html.indexOf('id="evAvisoChip"');
+  const panel = html.indexOf('id="evAvisoPanel"');
+  const fin = html.indexOf('<script>', app);
+  assert(app > 0 && chip > app && chip < fin, 'el chip tiene que estar dentro de #screenApp');
+  assert(panel > app && panel < fin, 'y el panel también');
+  assert(/\.screen\{[^}]*display:none/.test(_css6), 'una pantalla inactiva tiene que ocultarse entera');
+  // Y se esconde con el menú abierto, como el resto de lo que flota abajo.
+  for (const s of ['.ev-aviso-chip', '.ev-aviso-panel'])
+    assert(_css6.includes(`body:has(#mainNavDD.open) ${s}`) && _css6.includes(`body:has(#gsOverlay.open) ${s}`),
+      `${s} taparía la última opción del menú`);
+});
+
+test('F6 · el objetivo táctil es de 44 px y el detalle no se sale de la pantalla', () => {
+  // Medido con Chromium a 320/390/430/768/1280 px: sin desbordamiento
+  // horizontal, chip 55x44 y acción 135x44 en el peor caso. Aquí se fija lo
+  // que lo garantiza, para que un retoque de estilos no lo deshaga en silencio.
+  const chip = _css6.slice(_css6.indexOf('\n.ev-aviso-chip{'), _css6.indexOf('}', _css6.indexOf('\n.ev-aviso-chip{')));
+  assert(/min-width:44px/.test(chip) && /min-height:44px/.test(chip),
+    'el chip tiene que ser tocable con el pulgar en mitad de un servicio');
+  const acc = _css6.slice(_css6.indexOf('.ev-aviso-accion{'), _css6.indexOf('}', _css6.indexOf('.ev-aviso-accion{')));
+  assert(/min-height:44px/.test(acc), 'la acción también');
+  const panel = _css6.slice(_css6.indexOf('\n.ev-aviso-panel{'), _css6.indexOf('}', _css6.indexOf('\n.ev-aviso-panel{')));
+  assert(/width:min\(340px,calc\(100vw - 28px\)\)/.test(panel),
+    'el panel no puede ser más ancho que la pantalla');
+  assert(/max-height:min\(46vh,340px\)/.test(panel) && /overflow-y:auto/.test(panel),
+    'con seis avisos a la vez el panel tiene que hacer scroll, no crecer sin fin');
+});
+
+test('F6 · el detalle se escapa: un dato con HTML no puede pintar etiquetas', () => {
+  const i = html.indexOf('panel.innerHTML = msgs.map');
+  const f = html.slice(i, i + 500);
+  assert(/escapeHtml\(x\.texto\)/.test(f) && /escapeHtml\(x\.nota\)/.test(f)
+      && /escapeHtml\(x\.accion\)/.test(f),
+    'todo lo que se pinta tiene que pasar por escapeHtml');
+});
+
+test('F6 · el aviso de disco lleno se pinta EN EL ACTO, no en la siguiente actividad', () => {
+  // El camino que no persiste era justo el que no repintaba nada. Se comprueba
+  // sobre el código real: los cuatro retornos de `_eventoCrear` repintan.
+  const i = html.indexOf('function _eventoCrear');
+  const f = html.slice(i, html.indexOf('\n}', html.indexOf('return { estado:\'persistido\'', i)));
+  const pintados = (f.match(/_evPintarIncidencias\(\)/g) || []).length;
+  assert(pintados >= 4, `esperaba un repintado por cada salida de _eventoCrear, hay ${pintados}`);
+  assert(_f6.lleno.clases.includes('visible'),
+    'sin salir de la propia actividad, el aviso ya tiene que estar en pantalla');
 });
 
 // ─── B2 · F0 · la identidad es un solo objeto congelado ─────────

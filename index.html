@@ -52,7 +52,7 @@
 <meta property="og:description" content="Formación de equipos de sala: carta, alérgenos, vinos, exámenes y juegos de repaso.">
 <meta property="og:url" content="https://meseo.es/">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"Meseo","url":"https://meseo.es/"}</script>
-<meta name="app-version" content="7.460">
+<meta name="app-version" content="7.461">
 <meta name="app-build" content="May 2026">
 <meta name="theme-color" content="#1c2a22">
 <!-- ═══ PWA ═══ -->
@@ -431,6 +431,12 @@
   <div class="app-credit" style="color:rgba(28,42,34,.4)">© 2026 Meseo® · Marca registrada</div>
   <button class="sound-toggle" id="soundToggle" onclick="toggleSound()" title="Sonido" aria-label="Alternar sonido" role="button">◉</button>
   <div class="txk-sync-pill" id="syncStatusPill" role="status" aria-live="polite" aria-atomic="true"><span class="dot"></span><span id="syncStatusText">Offline</span></div>
+  <!-- B2-F6 · Avisos de sincronización. Sólo aparece cuando hay algo que
+       atender; con todo bien no existe en pantalla. -->
+  <button class="ev-aviso-chip" id="evAvisoChip" type="button" aria-expanded="false"
+          aria-controls="evAvisoPanel" aria-label="Avisos de sincronización"
+          onclick="_evAlternarPanel()"><span class="ev-aviso-punto"></span><span class="ev-aviso-n">0</span></button>
+  <div class="ev-aviso-panel" id="evAvisoPanel" role="region" aria-label="Avisos de sincronización"></div>
 </div>
 
 <script>
@@ -2187,7 +2193,7 @@ const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><p
 const SRC = 'src';
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='7.460';  // sincronizada con sw.js VERSION (guard de CI)
+const APP_VERSION='7.461';  // sincronizada con sw.js VERSION (guard de CI)
 const APP_BUILD='Jul 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;
@@ -2618,8 +2624,10 @@ function _eventoCrear(destino, prioridad, datos){
     _evContar('sin_identidad', { destino, actividad: datos && datos.activity });
     if(r !== true){
       _evMemoria.push({ clave: _EV_SIN_ID, ev });
+      _evPintarIncidencias();
       return { estado: r === 'cuota' ? 'bloqueado_por_cuota' : 'no_persistido', evento: ev };
     }
+    _evPintarIncidencias();
     return { estado:'sin_identidad', evento: ev };
   }
 
@@ -2640,6 +2648,7 @@ function _eventoCrear(destino, prioridad, datos){
   if(prioridad >= 3 && (cola.length >= EV_UMBRAL_P3 || tam > EV_PRESUPUESTO)){
     _evContar('descartado_por_espacio', { destino, actividad: datos && datos.activity,
                                           n: cola.length, bytes: tam });
+    _evPintarIncidencias();
     return { estado:'descartado', evento: null };
   }
   if(cola.length >= EV_LIMITE_DURO || tam > EV_PRESUPUESTO) _evContar('cola_saturada', { n: cola.length, bytes: tam });
@@ -2650,8 +2659,14 @@ function _eventoCrear(destino, prioridad, datos){
     _evMemoria.push({ clave: _EV_KEY, ev });
     _evContar(r === 'cuota' ? 'bloqueado_por_cuota' : 'no_persistido',
               { destino, actividad: datos && datos.activity });
+    // F6 · EL REPINTADO VA TAMBIÉN AQUÍ, y sobre todo aquí: quedarse sin sitio
+    // es el único aviso que exige algo del empleado, y era justo el camino que
+    // no refrescaba nada. Con el repintado sólo en el camino bueno, el aviso
+    // más importante de los seis no aparecía hasta la siguiente actividad.
+    _evPintarIncidencias();
     return { estado: r === 'cuota' ? 'bloqueado_por_cuota' : 'no_persistido', evento: ev };
   }
+  _evPintarIncidencias();
   return { estado:'persistido', evento: ev };
 }
 function _evTamano(lista){ try{ return JSON.stringify(lista).length; }catch(_){ return 0; } }
@@ -2879,6 +2894,7 @@ function _eventoResolver(ev, res){
   // puede pasar es que la decisión se olvide y el evento vuelva sin espaciado.
   _evAplazar(ev, cola[i].estado === 'revisar' ? Infinity : cola[i].proximo,
              _evEscribir(_EV_KEY, cola) === true);
+  _evPintarIncidencias();
   return e;
 }
 
@@ -2968,13 +2984,174 @@ async function _eventosDrenar(motivo){
 // planificador: al volver la conexión, al reabrir la aplicación, cada dos
 // minutos y una vez al arrancar. El vaciado periódico ES el reintento.
 if(typeof window !== 'undefined' && window.addEventListener){
-  window.addEventListener('online', () => setTimeout(() => _eventosDrenar('online'), 800));
+  window.addEventListener('online', () => setTimeout(() => _eventosDrenar('online').then(_evPintarIncidencias), 800));
+  window.addEventListener('offline', () => _evPintarIncidencias());
   document.addEventListener('visibilitychange', () => {
-    if(document.visibilityState === 'visible') _eventosDrenar('visible');
+    if(document.visibilityState === 'visible') _eventosDrenar('visible').then(_evPintarIncidencias);
   });
-  setInterval(() => _eventosDrenar('intervalo'), 120000);
-  setTimeout(() => _eventosDrenar('arranque'), 4000);
+  setInterval(() => _eventosDrenar('intervalo').then(_evPintarIncidencias), 120000);
+  setTimeout(() => _eventosDrenar('arranque').then(_evPintarIncidencias), 4000);
+  setTimeout(() => _evPintarIncidencias(), 600);   // al arrancar, antes de tocar la red
 }
+
+// ═══ B2 · F6 · SE HABLA SÓLO CUANDO HAY ALGO QUE ATENDER ══════════════════
+//
+// Hasta aquí B2 sabía perfectamente qué le pasa a cada evento y no se lo decía
+// a nadie. F6 no cambia ni una regla: LEE los estados que ya existen y los
+// traduce a algo que un camarero entienda en mitad de un servicio.
+//
+// LO QUE SE FILTRA POR IDENTIDAD Y LO QUE NO, y por qué:
+//   · la cola, la cuarentena y lo que no cupo llevan `uid` → se filtran, y en
+//     un iPad compartido Bruno no ve una sola línea de Ana;
+//   · los CONTADORES de `txk_eventos_registro` no llevan `uid` —así se
+//     aprobaron en F4, que exigía que sobrevivieran al cambio de sesión— así
+//     que son del DISPOSITIVO, y se redactan como tales: «en este dispositivo»,
+//     sin decir de quién ni qué era;
+//   · los eventos sin identidad son del dispositivo por definición: no se sabe
+//     de quién son, y por eso mismo no se le atribuyen a nadie.
+function _evResumen(){
+  const ctx = _authCtx();
+  const mio = (e) => !!(e && e.uid && ctx.uid && e.uid === ctx.uid);
+  const cola = _evLeer(_EV_KEY);
+  const rev  = cola.filter(e => mio(e) && e.estado === 'revisar');
+  const c    = _evRegistroLeer().contadores || {};
+  const r = {
+    pendientes:   cola.filter(e => mio(e) && e.estado !== 'revisar').length,
+    revisar:      rev.length,
+    // TODO lo que el servidor rechazó por CREDENCIAL, no sólo el caso con
+    // código. Está medido en B2.2: un 401 puede llegar SIN campo `code`, y
+    // entonces F3 lo clasifica como `auth-sin-codigo`. Para el empleado los dos
+    // son lo mismo —su sesión no vale—, y si sólo mirásemos el primero, el caso
+    // más probable de los dos no le diría nunca que vuelva a entrar. Esto NO
+    // cambia la clasificación de F3: la lee entera.
+    credencial:   rev.some(e => e.motivo === 'credencial-invalida'
+                             || String(e.motivo || '').indexOf('auth-') === 0),
+    cuarentena:   _cuarentenaLeer().entradas.filter(mio).length,
+    sinIdentidad: _evLeer(_EV_SIN_ID).length,
+    sinGuardar:   _evMemoria.filter(m => mio(m.ev)).length,
+    descartados:  c.descartado_por_espacio || 0,
+    sinRed:       (typeof navigator !== 'undefined' && navigator.onLine === false)
+  };
+  // Lo ACCIONABLE es lo que requiere que alguien haga o sepa algo. Estar
+  // pendiente de enviar NO lo es: es lo normal sin cobertura, y convertirlo en
+  // aviso sería justo el ruido que esta superficie evita.
+  r.accionable = !!(r.revisar || r.cuarentena || r.sinIdentidad || r.sinGuardar || r.descartados);
+  return r;
+}
+
+// Los textos. Funcionales, nunca técnicos: ni códigos, ni tablas, ni identidad.
+function _evMensajes(r){
+  const en = (typeof LANG !== 'undefined' && LANG === 'en');
+  const n = (x, s, p) => x + ' ' + (x === 1 ? s : p);
+  const m = [];
+  if(r.sinGuardar) m.push({ clave:'sin-guardar', tono:'grave', fijo:true,
+    texto: en ? `${n(r.sinGuardar,'result','results')} could not be saved: this device is out of space.`
+              : `${n(r.sinGuardar,'resultado','resultados')} sin guardar: falta espacio en este dispositivo.`,
+    nota:  en ? 'Free up space on the device; they will be saved on their own as soon as there is room.'
+              : 'Libera espacio en el dispositivo: se guardarán solos en cuanto haya sitio.' });
+  // OJO CON ESTE TEXTO. El primer borrador decía «vuelve a entrar y se
+  // enviará», y es MENTIRA: un evento en `revisar` queda fuera del filtro del
+  // drenaje para siempre, así que volver a entrar NO lo reenvía. Arreglarlo
+  // con un reintento manual sería lógica de sincronización nueva, que F6 no
+  // toca. Se dice lo que de verdad pasa: lo hecho está a salvo, no se irá
+  // solo, y entrar de nuevo sirve para que lo SIGUIENTE sí llegue.
+  if(r.credencial) m.push({ clave:'credencial', tono:'grave',
+    texto: en ? 'You need to sign in again: your session is no longer valid.'
+              : 'Hay que volver a entrar: tu sesión ya no es válida.',
+    nota:  en ? 'What you have done is saved on this device, but it will not be sent on its own. Sign in again so that what comes next does, and tell your supervisor.'
+              : 'Lo hecho está guardado en este dispositivo, pero no se enviará solo. Vuelve a entrar para que lo siguiente sí llegue, y díselo a tu responsable.',
+    accion: en ? 'Sign in again' : 'Volver a entrar' });
+  if(r.revisar) m.push({ clave:'revisar', tono:'aviso',
+    texto: en ? `${n(r.revisar,'result needs','results need')} checking.`
+              : `${n(r.revisar,'resultado necesita','resultados necesitan')} revisión.`,
+    nota:  en ? 'They are saved and nothing was lost, but they are not being retried on their own.'
+              : 'Están guardados y no se ha perdido nada, pero no se reintentan solos.' });
+  if(r.cuarentena) m.push({ clave:'cuarentena', tono:'aviso',
+    texto: en ? `${n(r.cuarentena,'result could not be sent','results could not be sent')}.`
+              : `${n(r.cuarentena,'resultado no se ha podido enviar','resultados no se han podido enviar')}.`,
+    nota:  en ? 'They are kept on this device. Tell your supervisor so they can be recovered.'
+              : 'Se conservan en este dispositivo. Díselo a tu responsable para recuperarlos.' });
+  if(r.sinIdentidad) m.push({ clave:'sin-identidad', tono:'aviso',
+    texto: en ? `${n(r.sinIdentidad,'test was','tests were')} done on this device without anyone signed in.`
+              : `${n(r.sinIdentidad,'prueba hecha','pruebas hechas')} en este dispositivo sin nadie identificado.`,
+    nota:  en ? 'They cannot be assigned to anyone and will not be sent. They have to be repeated.'
+              : 'No se pueden asignar a nadie y no se enviarán. Hay que repetirlas.' });
+  if(r.descartados) m.push({ clave:'descartados', tono:'suave',
+    texto: en ? `${n(r.descartados,'practice session was not recorded','practice sessions were not recorded')} on this device for lack of space.`
+              : `${n(r.descartados,'práctica no se ha registrado','prácticas no se han registrado')} en este dispositivo por falta de espacio.`,
+    nota:  en ? 'Exams and allergen drills are never dropped for this reason.'
+              : 'Los exámenes y los simulacros de alérgenos nunca se descartan por este motivo.' });
+  // Lo pendiente se cuenta aquí como CONTEXTO, para decir que no hay que hacer
+  // nada. Nunca abre la superficie por sí solo.
+  if(r.pendientes) m.push({ clave:'pendientes', tono:'suave', info:true,
+    texto: en ? `${n(r.pendientes,'result is','results are')} waiting to be sent.`
+              : `${n(r.pendientes,'resultado pendiente','resultados pendientes')} de enviar.`,
+    nota:  r.sinRed
+      ? (en ? 'No connection. They will be sent on their own when it comes back.'
+            : 'Sin conexión. Se enviarán solos cuando vuelva.')
+      : (en ? 'They are sent on their own. You do not have to do anything.'
+            : 'Se envían solos. No tienes que hacer nada.') });
+  return m;
+}
+
+// El pintado. Discreto: un punto con un número, y al tocarlo el detalle. Si no
+// hay nada que atender, no existe. No hay botones de acción a propósito: F6 no
+// añade lógica de sincronización, así que no promete lo que no puede cumplir.
+let _evPanelAbierto = false;
+let _evFijoMostrado = false;
+function _evPintarIncidencias(){
+  if(typeof document === 'undefined' || !document.getElementById) return;
+  const chip = document.getElementById('evAvisoChip');
+  const panel = document.getElementById('evAvisoPanel');
+  if(!chip || !panel) return;
+  const r = _evResumen();
+  const msgs = _evMensajes(r);
+  if(!r.accionable){
+    chip.classList.remove('visible', 'grave');
+    panel.classList.remove('visible');
+    chip.setAttribute('aria-expanded', 'false');
+    _evPanelAbierto = false;
+    _evFijoMostrado = false;
+    return;
+  }
+  const grave = msgs.some(x => x.tono === 'grave');
+  const cuenta = r.sinGuardar + r.revisar + r.cuarentena + r.sinIdentidad + r.descartados;
+  chip.classList.toggle('grave', grave);
+  chip.classList.add('visible');
+  const en = (typeof LANG !== 'undefined' && LANG === 'en');
+  chip.setAttribute('aria-label', (en ? 'Sync notices: ' : 'Avisos de sincronización: ') + cuenta);
+  const num = chip.querySelector('.ev-aviso-n');
+  if(num) num.textContent = String(cuenta);
+  // LA ÚNICA ACCIÓN DE TODA LA SUPERFICIE, y existe de antes: `logout()` lleva
+  // a la pantalla de entrada. No hay «reintentar», ni «vaciar», ni «forzar
+  // envío»: ninguna de esas tres existe, y F6 no inventa lógica que no tiene.
+  panel.innerHTML = msgs.map(x =>
+    '<div class="ev-aviso-linea ev-' + x.tono + '">'
+    + '<strong>' + escapeHtml(x.texto) + '</strong>'
+    + '<span>' + escapeHtml(x.nota) + '</span>'
+    + (x.accion ? '<button class="ev-aviso-accion" type="button" onclick="logout()">'
+                  + escapeHtml(x.accion) + '</button>' : '')
+    + '</div>').join('');
+  // Quedarse sin espacio es lo ÚNICO que el empleado tiene que atender de
+  // verdad, y un punto en una esquina no lo ve nadie en mitad de un servicio.
+  // Así que ese aviso abre el panel solo la PRIMERA vez que aparece; después
+  // se cierra como cualquier otro, y no vuelve a insistir hasta que el problema
+  // desaparece y reaparece. Nada de esto toca la sincronización.
+  const fijo = msgs.some(x => x.fijo);
+  if(fijo && !_evFijoMostrado){ _evFijoMostrado = true; _evPanelAbierto = true; }
+  if(!fijo) _evFijoMostrado = false;
+  panel.classList.toggle('visible', _evPanelAbierto);
+  chip.setAttribute('aria-expanded', _evPanelAbierto ? 'true' : 'false');
+}
+function _evAlternarPanel(){
+  const panel = document.getElementById('evAvisoPanel');
+  if(!panel) return;
+  _evPanelAbierto = !_evPanelAbierto;
+  panel.classList.toggle('visible', _evPanelAbierto);
+  const chip = document.getElementById('evAvisoChip');
+  if(chip) chip.setAttribute('aria-expanded', _evPanelAbierto ? 'true' : 'false');
+}
+
 
 async function registrarActividad(a){
   // La cuenta de administración no deja rastro, igual que en `scores`: está
@@ -5358,7 +5535,14 @@ function _setSyncPill(state){
   // estados «Sincronizando / Guardando / Sincronizado» ya no se enseñan — el
   // guardado y el outbox trabajan en segundo plano sin molestar.
   if(state==='offline'){
-    txt.textContent = (typeof LANG!=='undefined' && LANG==='en') ? 'Offline — local only' : 'Offline — solo local';
+    const en = (typeof LANG!=='undefined' && LANG==='en');
+    // B2-F6: sin cobertura, decir cuántos resultados esperan es informar; con
+    // cobertura sería narrar una rutina, y eso sigue sin hacerse.
+    let n = 0;
+    try{ n = (typeof _evResumen === 'function') ? _evResumen().pendientes : 0; }catch(_){}
+    txt.textContent = n
+      ? (en ? `Offline — ${n} waiting` : `Offline — ${n} pendiente${n===1?'':'s'}`)
+      : (en ? 'Offline — local only' : 'Offline — solo local');
     pill.classList.add('offline','visible');
   }
   // cualquier otro estado → el chip queda oculto (ya sin la clase 'visible').
@@ -22513,13 +22697,12 @@ function nextExamQ(){
     registrarActividad({ activity:'examen', competency:competenciaDeTema(examConfig.topic),
       kind:'evaluacion', score:examScore, total:examDishes.length, seconds:time,
       meta:{ topic:examConfig.topic, cat:examConfig.cat } });
-    supaInsertScore(session, currentUser).catch(function(){
-      if(typeof showToast==='function') showToast(
-        LANG==='en'?'Could not save score to cloud. Saved locally.':'No se pudo guardar la puntuación en la nube. Guardada localmente.',
-        'warning', 6000,
-        { label: LANG==='en'?'Retry':'Reintentar', onClick: ()=>supaInsertScore(session, currentUser).catch(()=>{}) }
-      );
-    });
+    // B2-F6 · Aquí había un aviso de «no se pudo guardar en la nube». Con la
+    // cola es FALSO —sí se ha guardado, en el dispositivo, y se envía solo— y
+    // además nunca llegaba a verse: `supaInsertScore` capturaba sus propios
+    // errores y no rechazaba, así que este `.catch` era código muerto. Lo que
+    // de verdad haya pasado lo cuenta la superficie de avisos.
+    supaInsertScore(session, currentUser).catch(function(){}).then(_evPintarIncidencias);
     // Award XP for exam
     const pctExam=Math.round(examScore/examDishes.length*100);
     const baseXP=examDishes.length*3;
@@ -25747,13 +25930,9 @@ function renderAllergenResults() {
   registrarActividad({ activity:'simulacro_alergenos', competency:'alergenos',
     kind:'evaluacion', score, total:questions.length, seconds:time, meta:{ cat:cat||'all' } });
   const _payload = { score, total: questions.length, topic: 'alergenos', cat: cat||'all', time };
-  supaInsertScore(_payload, currentUser).catch(function(){
-    if(typeof showToast==='function') showToast(
-      LANG==='en'?'Could not save score to cloud. Saved locally.':'No se pudo guardar la puntuación en la nube. Guardada localmente.',
-      'warning', 6000,
-      { label: LANG==='en'?'Retry':'Reintentar', onClick: ()=>supaInsertScore(_payload, currentUser).catch(()=>{}) }
-    );
-  });
+  // B2-F6 · Ver el comentario del examen: el aviso antiguo era falso y además
+  // inalcanzable. El estado real lo cuenta la superficie de avisos.
+  supaInsertScore(_payload, currentUser).catch(function(){}).then(_evPintarIncidencias);
   // Save allergen best score
   const emp = getEmp(currentUser);
   if(emp) {

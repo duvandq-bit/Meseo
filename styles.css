@@ -7178,8 +7178,12 @@ button.et-big:active{transform:translateY(4px);box-shadow:0 2px 0 var(--et-ink)}
    search overlay — covering the last option. Hide them whenever either is open. */
 body:has(#mainNavDD.open) .sound-toggle,
 body:has(#mainNavDD.open) .txk-sync-pill,
+body:has(#mainNavDD.open) .ev-aviso-chip,
+body:has(#mainNavDD.open) .ev-aviso-panel,
 body:has(#gsOverlay.open) .sound-toggle,
-body:has(#gsOverlay.open) .txk-sync-pill{
+body:has(#gsOverlay.open) .txk-sync-pill,
+body:has(#gsOverlay.open) .ev-aviso-chip,
+body:has(#gsOverlay.open) .ev-aviso-panel{
   opacity:0;visibility:hidden;pointer-events:none;
   transition:opacity .2s ease,visibility .2s ease;
 }
@@ -8437,6 +8441,62 @@ body:has(#gsOverlay.open) .txk-sync-pill{
 .txk-sync-pill.syncing .dot{animation:txkPulse 1s ease-in-out infinite}
 @keyframes txkPulse{0%,100%{opacity:.35}50%{opacity:1}}
 @media (max-width:480px){ .txk-sync-pill{bottom:calc(58px + env(safe-area-inset-bottom,0px));right:10px;font-size:.58rem;padding:.4rem .65rem} }
+/* ═══ B2 · F6 · AVISOS DE SINCRONIZACIÓN ═══
+   Vive encima de la píldora de sincronización, en la misma esquina y con el
+   mismo apilado, para no abrir un tercer sitio donde mirar. Colores propios y
+   opacos —igual que la píldora y los toasts— para que no dependa del tema y
+   no pueda heredar un contraste malo. Con todo en orden NO se pinta: el chip
+   sólo recibe `visible` cuando hay algo accionable.
+   El objetivo táctil es de 44 px aunque el punto se vea pequeño. */
+.ev-aviso-chip{
+  position:fixed;bottom:calc(56px + env(safe-area-inset-bottom,0px));right:14px;z-index:10001;
+  display:none;align-items:center;justify-content:center;gap:.35rem;
+  min-width:44px;min-height:44px;padding:0 .7rem;border:0;border-radius:999px;
+  /* Medido: #8A6414 sobre blanco da 5,4:1. El primer tono (#966E19) se quedaba
+     en 4,67:1, que pasa AA por los pelos con una letra de 11,5 px. */
+  background:rgba(138,100,20,.96);color:#fff;cursor:pointer;
+  font-family:'DM Mono',monospace;font-size:.72rem;line-height:1;
+  box-shadow:0 4px 14px rgba(0,0,0,.22);
+  -webkit-tap-highlight-color:transparent;touch-action:manipulation;
+}
+.ev-aviso-chip.visible{display:inline-flex;animation:toastIn .3s ease both}
+.ev-aviso-chip.grave{background:rgba(168,58,44,.96)}
+.ev-aviso-chip:focus-visible{outline:2px solid #fff;outline-offset:2px}
+.ev-aviso-punto{width:8px;height:8px;border-radius:50%;background:#fff;opacity:.9;flex:0 0 auto}
+.ev-aviso-n{font-weight:600}
+.ev-aviso-panel{
+  position:fixed;bottom:calc(106px + env(safe-area-inset-bottom,0px));right:14px;z-index:10002;
+  display:none;width:min(340px,calc(100vw - 28px));max-height:min(46vh,340px);overflow-y:auto;
+  -webkit-overflow-scrolling:touch;
+  padding:.55rem;border-radius:14px;background:rgba(24,34,28,.97);color:#fff;
+  box-shadow:0 10px 30px rgba(0,0,0,.32);
+  backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+}
+.ev-aviso-panel.visible{display:block;animation:toastIn .25s ease both}
+.ev-aviso-linea{padding:.5rem .55rem;border-radius:10px;border-left:3px solid transparent}
+.ev-aviso-linea + .ev-aviso-linea{margin-top:.35rem}
+.ev-aviso-linea strong{display:block;font-size:.8rem;font-weight:600;line-height:1.35}
+.ev-aviso-linea span{display:block;margin-top:.2rem;font-size:.72rem;line-height:1.4;color:rgba(255,255,255,.82)}
+.ev-aviso-accion{
+  display:inline-flex;align-items:center;justify-content:center;
+  margin-top:.45rem;min-height:44px;padding:0 1rem;
+  border:1px solid rgba(255,255,255,.55);border-radius:999px;
+  background:rgba(255,255,255,.12);color:#fff;
+  font-family:inherit;font-size:.78rem;font-weight:600;cursor:pointer;
+  -webkit-tap-highlight-color:transparent;touch-action:manipulation;
+}
+.ev-aviso-accion:focus-visible{outline:2px solid #fff;outline-offset:2px}
+.ev-aviso-linea.ev-grave{background:rgba(168,58,44,.3);border-left-color:#e08878}
+.ev-aviso-linea.ev-aviso{background:rgba(150,110,25,.28);border-left-color:#e0bc6a}
+.ev-aviso-linea.ev-suave{background:rgba(255,255,255,.07);border-left-color:rgba(255,255,255,.35)}
+@media (max-width:480px){
+  /* La píldora baja a 58px en móvil: el chip y el panel suben con ella. */
+  .ev-aviso-chip{bottom:calc(100px + env(safe-area-inset-bottom,0px));right:10px}
+  .ev-aviso-panel{bottom:calc(150px + env(safe-area-inset-bottom,0px));right:10px;width:calc(100vw - 20px)}
+}
+@media (prefers-reduced-motion:reduce){
+  .ev-aviso-chip.visible,.ev-aviso-panel.visible{animation:none}
+}
 /* ═══ LOADING SKELETON ═══ */
 .txk-skeleton{background:linear-gradient(90deg,rgba(196,154,60,.06) 25%,rgba(196,154,60,.12) 50%,rgba(196,154,60,.06) 75%);background-size:200% 100%;animation:txkShimmer 1.5s infinite;border-radius:8px;min-height:2rem}
 @keyframes txkShimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
