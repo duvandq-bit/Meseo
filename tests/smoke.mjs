@@ -13321,6 +13321,70 @@ const _f6 = await (async () => {
     b.M.pildora('offline');
     o.pildoraBruno = b.dom.pillTxt.textContent; }
 
+  // (j) LOS TRES ESTADOS DE «PENDIENTE», pedidos uno a uno.
+  //     j1 · con red y recién creado → rutina, no se pinta nada.
+  { const c = _f6Montar({ responder: sin });
+    c.M.sesion(ANA6, _jwtDe(ANA6));
+    await c.M.registrarActividad(_evalua6);
+    await c.M.drenar('prueba'); c.M.pintar();
+    o.rutina = { r: c.M.resumen(), chip: c.chip.clases.has('visible'),
+                 pill: c.dom.pillTxt.textContent }; }
+
+  //     j2 · con red y atascado (el envío lleva más de cinco minutos).
+  { const alm = Object.create(null);
+    const c = _f6Montar({ almacen: alm, responder: sin });
+    c.M.sesion(ANA6, _jwtDe(ANA6));
+    await c.M.registrarActividad(_evalua6);
+    const cola = JSON.parse(alm['txk_eventos_v1']);
+    cola[0].ts = Date.now() - 6 * 60e3;            // seis minutos esperando
+    alm['txk_eventos_v1'] = JSON.stringify(cola);
+    c.M.pintar();
+    o.atasco = { r: c.M.resumen(), chip: c.chip.clases.has('visible'),
+                 grave: c.chip.clases.has('grave'),
+                 n: c.chip.querySelector('.ev-aviso-n').textContent,
+                 msgs: c.M.mensajes(c.M.resumen()), html: c.panel.innerHTML };
+    // Un `ts` ilegible cuenta como atasco: ante la duda se enseña.
+    cola[0].ts = 'roto'; alm['txk_eventos_v1'] = JSON.stringify(cola);
+    o.atascoTsRoto = c.M.resumen().demorados; }
+
+  //     j3 · sin red y pendiente → ya lo dice la píldora (medido en (h2)).
+  //     j4 · cola vacía → nada persistente, ni chip ni píldora.
+  { const c = _f6Montar();
+    c.M.sesion(ANA6, _jwtDe(ANA6));
+    c.M.pintar(); c.M.pildora('offline');
+    o.vacia = { r: c.M.resumen(), chip: c.chip.clases.has('visible'),
+                panel: c.panel.clases.has('visible'), pill: c.dom.pillTxt.textContent }; }
+
+  // (k) SIN IDENTIDAD · el ciclo de vida completo del evento huérfano.
+  { const alm = Object.create(null);
+    const c = _f6Montar({ almacen: alm });
+    await c.M.registrarActividad(_evalua6);             // nadie dentro
+    o.si_trasCrear = { huerfanos: c.M.sinIdentidad().length, cola: c.M.cola().length,
+                       peticiones: c.cap.length,
+                       llaves: Object.keys(alm).sort() };
+    const guardado = JSON.parse(JSON.stringify(c.M.sinIdentidad()));
+    // Entra ANA sobre el mismo dispositivo y se drena todo lo que se pueda.
+    const a = _f6Montar({ almacen: alm });
+    a.M.sesion(ANA6, _jwtDe(ANA6));
+    const res = await a.M.drenar('prueba');
+    o.si_trasAna = { drenaje: res, peticiones: a.cap.length,
+                     huerfanos: a.M.sinIdentidad().length, cola: a.M.cola().length,
+                     intacto: JSON.stringify(a.M.sinIdentidad()) === JSON.stringify(guardado),
+                     uids: a.M.sinIdentidad().map(e => e.uid),
+                     resumen: a.M.resumen() };
+    // Y ahora BRUNO, que tampoco puede adoptarlo ni hacerlo desaparecer.
+    const b = _f6Montar({ almacen: alm });
+    b.M.sesion(BRUNO6, _jwtDe(BRUNO6));
+    await b.M.registrarActividad(_evalua6);             // actividad suya, legítima
+    await b.M.drenar('prueba');
+    b.M.pintar();
+    o.si_trasBruno = { peticiones: b.cap.map(x => x.body.evento_id),
+                       huerfanos: b.M.sinIdentidad().length,
+                       intacto: JSON.stringify(b.M.sinIdentidad()) === JSON.stringify(guardado),
+                       texto: _f6Texto(b.M), html: b.panel.innerHTML,
+                       resumen: b.M.resumen() };
+    o.si_evento = guardado[0]; }
+
   // (i) El pintado de verdad: cuenta, etiqueta y detalle.
   { const c = _f6Montar({ responder: () => _resp(400, { code:'23514', message:'x' }) });
     c.M.sesion(ANA6, _jwtDe(ANA6));
@@ -13354,6 +13418,46 @@ test('F6 · estar pendiente de enviar NO es una incidencia', () => {
   const p = _f6.pendiente.msgs.find(x => x.clave === 'pendientes');
   assert(p && p.info === true && p.tono === 'suave',
     'lo pendiente sólo puede existir como contexto, nunca como alerta');
+});
+
+test('F6 · CON RED y recién enviado: es rutina y no se pinta nada', () => {
+  assert(_f6.rutina.r.pendientes === 1, `tiene que haber uno esperando: ${JSON.stringify(_f6.rutina.r)}`);
+  assert(_f6.rutina.r.demorados === 0, 'acaba de crearse: no puede estar demorado');
+  assert(_f6.rutina.r.visible === false, 'la rutina no abre la superficie');
+  assert(_f6.rutina.chip === false, 'y por tanto no se pinta el chip');
+  assert(_f6.rutina.pill === '', 'con red la píldora tampoco dice nada');
+});
+
+test('F6 · CON RED y atascado: sí hay indicación, discreta y sin alarma', () => {
+  // Éste es el hueco real: sin red ya lo decía la píldora, pero con red un
+  // servidor caído mantenía la espera en 5 min → 24 h sin enseñar nada.
+  assert(_f6.atasco.r.pendientes === 1 && _f6.atasco.r.demorados === 1,
+    `seis minutos esperando es un atasco: ${JSON.stringify(_f6.atasco.r)}`);
+  assert(_f6.atasco.r.accionable === false,
+    'un retraso NO es algo que el empleado tenga que resolver');
+  assert(_f6.atasco.r.visible === true, 'pero sí algo que tiene que poder ver');
+  assert(_f6.atasco.chip === true, 'el chip tiene que aparecer');
+  assert(_f6.atasco.grave === false, 'y NUNCA en tono de alarma: no se ha perdido nada');
+  assert(_f6.atasco.n === '1', `la cuenta tiene que ser la de lo atascado: «${_f6.atasco.n}»`);
+  const p = _f6.atasco.msgs.find(x => x.clave === 'pendientes');
+  assert(p && p.tono === 'suave', 'el tono tiene que ser el más discreto que hay');
+  assert(/tardando más de lo normal|taking longer than usual/i.test(p.nota),
+    `hay que decir que tarda: «${p.nota}»`);
+  assert(/siguen guardados|saved here/i.test(p.nota),
+    `y que no se ha perdido nada: «${p.nota}»`);
+  assert(!/<button/.test(_f6.atasco.html),
+    'no se ofrece ninguna acción: no hay nada que el empleado pueda hacer');
+  assert(_f6.atascoTsRoto === 1,
+    'con una marca de tiempo ilegible hay que enseñarlo, no esconderlo');
+});
+
+test('F6 · con la cola vacía no queda ninguna alerta persistente', () => {
+  assert(_f6.vacia.r.pendientes === 0 && _f6.vacia.r.demorados === 0
+      && _f6.vacia.r.visible === false, `nada que enseñar: ${JSON.stringify(_f6.vacia.r)}`);
+  assert(_f6.vacia.chip === false && _f6.vacia.panel === false,
+    'ni chip ni panel pueden quedarse encendidos');
+  assert(_f6.vacia.pill === 'Offline — solo local',
+    `sin cola, la píldora no puede inventarse una cuenta: «${_f6.vacia.pill}»`);
 });
 
 test('F6 · sin red, lo pendiente se explica y sigue sin ser un error', () => {
@@ -13430,6 +13534,84 @@ test('F6 · una prueba sin nadie identificado se avisa y no se atribuye', () => 
     'se atribuye al dispositivo, que es lo único que se sabe');
   assert(/repetir|repeat/i.test(_f6.sinId.texto),
     `hay que decir qué hacer —repetirla—: «${_f6.sinId.texto}»`);
+});
+
+test('SIN IDENTIDAD · el evento huérfano se guarda aparte y NO entra en la cola', () => {
+  assert(_f6.si_trasCrear.huerfanos === 1,
+    `tiene que quedar guardado: ${JSON.stringify(_f6.si_trasCrear)}`);
+  assert(_f6.si_trasCrear.cola === 0, 'y NO puede entrar en la cola de envío');
+  assert(_f6.si_trasCrear.peticiones === 0, 'ni salir por el cable en el momento');
+  assert(_f6.si_trasCrear.llaves.includes('txk_eventos_sin_identidad'),
+    `la llave aparte tiene que existir: ${JSON.stringify(_f6.si_trasCrear.llaves)}`);
+  assert(!_f6.si_trasCrear.llaves.includes('txk_eventos_v1'),
+    'no se crea siquiera la cola: es una ruta de código distinta, no un filtro');
+  assert(_f6.si_evento.uid === null, 'el evento huérfano no lleva dueño, y no se le inventa uno');
+  assert(_f6.si_evento.estado === 'sin_identidad', 'y lo dice su propio estado');
+});
+
+test('SIN IDENTIDAD · nadie lo borra: sólo hay una escritura y ningún removeItem', () => {
+  // Se comprueba sobre el código, porque «no se borra nunca» no se demuestra
+  // ejecutando un caso: se demuestra enseñando que no existe el camino.
+  // Cinco menciones en todo el fichero, y ninguna más: la constante, la
+  // lectura y la escritura del alta (misma línea), la vuelta desde memoria y
+  // la cuenta que lee F6. Ese número es la prueba de que no hay más caminos.
+  const usos = [...html.matchAll(/_EV_SIN_ID/g)].length;
+  assert(usos === 5, `esperaba 5 menciones de la llave, hay ${usos}`);
+  assert(!/removeItem\(\s*_EV_SIN_ID/.test(html), 'nadie puede borrar la llave de los huérfanos');
+  assert(!/_evEscribir\(_EV_SIN_ID,\s*\[\]/.test(html), 'ni vaciarla');
+  // Y el drenaje sólo mira la cola con dueño.
+  const dren = html.slice(html.indexOf('async function _eventosDrenar'), html.indexOf('// DISPARADORES'));
+  assert(!/_EV_SIN_ID/.test(dren), 'el drenaje no puede ni nombrar la llave de los huérfanos');
+  assert(/_evLeer\(_EV_KEY\)/.test(dren), 'el drenaje lee la cola con dueño, y sólo ésa');
+  // El reintento de persistencia devuelve cada evento a SU llave, nunca a otra.
+  const rp = html.slice(html.indexOf('function _evReintentarPersistencia'),
+                        html.indexOf('\n}', html.indexOf('function _evReintentarPersistencia')));
+  assert(/_evEscribir\(clave,/.test(rp) && !/_evEscribir\(_EV_KEY/.test(rp),
+    'lo que no cupo vuelve a la llave de la que vino: ahí no hay adopción posible');
+});
+
+test('SIN IDENTIDAD · entrar como Ana no lo adopta ni lo envía', () => {
+  assert(_f6.si_trasAna.drenaje === 'nada-que-enviar',
+    `Ana no tiene nada suyo que enviar: «${_f6.si_trasAna.drenaje}»`);
+  assert(_f6.si_trasAna.peticiones === 0, 'y no puede salir NINGUNA petición');
+  assert(_f6.si_trasAna.cola === 0, 'el huérfano no se ha mudado a la cola');
+  assert(_f6.si_trasAna.huerfanos === 1, 'sigue guardado, entero');
+  assert(_f6.si_trasAna.intacto === true, 'y byte a byte igual que antes');
+  assert(_f6.si_trasAna.uids.every(u => u === null),
+    `nadie le ha puesto dueño: ${JSON.stringify(_f6.si_trasAna.uids)}`);
+});
+
+test('SIN IDENTIDAD · Bruno tampoco lo adopta, y lo suyo sale con su propio id', () => {
+  assert(_f6.si_trasBruno.peticiones.length === 1,
+    `sólo puede salir la actividad de Bruno: ${JSON.stringify(_f6.si_trasBruno.peticiones)}`);
+  assert(_f6.si_trasBruno.peticiones[0] !== _f6.si_evento.evento_id,
+    'lo que sale NO puede ser el evento huérfano con el token de Bruno');
+  assert(_f6.si_trasBruno.huerfanos === 1 && _f6.si_trasBruno.intacto === true,
+    'el huérfano sigue ahí, intacto, después de que Bruno trabaje encima');
+  // Bruno SÍ ve la cuenta, y es correcto: el evento no es de nadie, así que no
+  // hay identidad que filtrar. Lo que no puede es enseñar nada de su contenido.
+  assert(_f6.si_trasBruno.resumen.sinIdentidad === 1, 'la cuenta es del dispositivo');
+  assert(/este dispositivo|this device/i.test(_f6.si_trasBruno.texto),
+    'y se redacta como del dispositivo, sin atribuirla a nadie');
+  const fuga = new RegExp([_f6.si_evento.evento_id, ANA6, BRUNO6, 'examen', 'carta'].join('|'), 'i');
+  assert(!fuga.test(_f6.si_trasBruno.html),
+    'del huérfano no puede verse ni el identificador ni de qué prueba era');
+});
+
+test('SIN IDENTIDAD · el texto dice exactamente lo que el sistema hace', () => {
+  const m = _f6.sinId.texto;
+  // Tres afirmaciones, y las tres están demostradas arriba con ejecución:
+  assert(/no se pueden asignar a nadie|cannot be assigned to anyone/i.test(m),
+    `«no se pueden asignar» ← uid null y nadie lo adopta: «${m}»`);
+  assert(/no se enviarán|will not be sent/i.test(m),
+    `«no se enviarán» ← el drenaje no lee esa llave: «${m}»`);
+  assert(/repetir|repeat/i.test(m),
+    `«hay que repetirlas» es la única recuperación que existe: «${m}»`);
+  // Y NO promete nada que B2 haya decidido no hacer.
+  assert(!/se recuperar|se asignar|recovered|assigned later|más tarde/i.test(m),
+    `no se puede insinuar una recuperación que B2 decidió no implementar: «${m}»`);
+  assert(!/se borrar|se perder|deleted|lost/i.test(m),
+    `tampoco que se pierdan, porque se conservan: «${m}»`);
 });
 
 test('F6 · los descartes por espacio se ven, y se dice qué NO se descarta', () => {

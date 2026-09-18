@@ -52,7 +52,7 @@
 <meta property="og:description" content="Formación de equipos de sala: carta, alérgenos, vinos, exámenes y juegos de repaso.">
 <meta property="og:url" content="https://meseo.es/">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"Meseo","url":"https://meseo.es/"}</script>
-<meta name="app-version" content="7.461">
+<meta name="app-version" content="7.462">
 <meta name="app-build" content="May 2026">
 <meta name="theme-color" content="#1c2a22">
 <!-- ═══ PWA ═══ -->
@@ -2193,7 +2193,7 @@ const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><p
 const SRC = 'src';
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='7.461';  // sincronizada con sw.js VERSION (guard de CI)
+const APP_VERSION='7.462';  // sincronizada con sw.js VERSION (guard de CI)
 const APP_BUILD='Jul 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;
@@ -2472,6 +2472,13 @@ const EV_UMBRAL_P3    = 400;
 const EV_UMBRAL_AVISO = 500;
 const EV_LIMITE_DURO  = 1000;
 const EV_PRESUPUESTO  = 512 * 1024;   // unidades UTF-16, que es lo que cuenta la cuota
+
+// F6 · Cuánto puede esperar un envío antes de que callarlo sea esconder un
+// problema. El drenaje pasa cada 120 s, así que uno sano se va mucho antes;
+// cinco minutos son dos ciclos y medio perdidos y coinciden con el primer
+// escalón de espera tras un fallo. Es un umbral de LECTURA: no cambia el
+// drenaje, ni los reintentos, ni `_EV_ESPERA`.
+const EV_DEMORA_VISIBLE = 5 * 60e3;
 
 // LAS DOCE CATEGORÍAS DEL INVENTARIO, con su prioridad. Lo que NO está aquí no
 // es un evento de B2: los dos juegos y los dos récords quedan fuera a propósito
@@ -3015,8 +3022,19 @@ function _evResumen(){
   const cola = _evLeer(_EV_KEY);
   const rev  = cola.filter(e => mio(e) && e.estado === 'revisar');
   const c    = _evRegistroLeer().contadores || {};
+  const pend = cola.filter(e => mio(e) && e.estado !== 'revisar');
+  // UN ENVÍO QUE TARDA DEMASIADO DEJA DE SER RUTINA. Sin red ya se dice en la
+  // píldora; CON red no se decía en ninguna parte, y un servidor caído mantiene
+  // la espera en 5 min, 15 min, 1 h, 4 h y 24 h sin que el empleado vea nada.
+  // El umbral es de LECTURA pura: no toca el drenaje, ni los reintentos, ni la
+  // espera. Un `ts` ilegible cuenta como demorado a propósito: ante la duda se
+  // enseña, nunca se esconde.
+  const ahora = Date.now();
+  const demorado = (e) => { const t = Number(e.ts);
+    return !(isFinite(t) && t > 0) || (ahora - t) >= EV_DEMORA_VISIBLE; };
   const r = {
-    pendientes:   cola.filter(e => mio(e) && e.estado !== 'revisar').length,
+    pendientes:   pend.length,
+    demorados:    pend.filter(demorado).length,
     revisar:      rev.length,
     // TODO lo que el servidor rechazó por CREDENCIAL, no sólo el caso con
     // código. Está medido en B2.2: un 401 puede llegar SIN campo `code`, y
@@ -3036,6 +3054,11 @@ function _evResumen(){
   // pendiente de enviar NO lo es: es lo normal sin cobertura, y convertirlo en
   // aviso sería justo el ruido que esta superficie evita.
   r.accionable = !!(r.revisar || r.cuarentena || r.sinIdentidad || r.sinGuardar || r.descartados);
+  // Y lo VISIBLE es una cosa distinta: un atasco se enseña aunque no haya nada
+  // que hacer. Se separan a propósito, porque de `accionable` depende el tono
+  // grave y un retraso NO es una alarma. El drenaje pasa cada 120 s: un envío
+  // sano se va mucho antes y no llega nunca a pintarse.
+  r.visible = !!(r.accionable || r.demorados);
   return r;
 }
 
@@ -3089,6 +3112,12 @@ function _evMensajes(r){
     nota:  r.sinRed
       ? (en ? 'No connection. They will be sent on their own when it comes back.'
             : 'Sin conexión. Se enviarán solos cuando vuelva.')
+      : r.demorados
+      // CON red y tardando: es lo único que hace que esta línea se vea sola.
+      // Se dice que tarda y que no se ha perdido nada; no se pide nada, porque
+      // no hay nada que el empleado pueda hacer y prometerlo sería mentir.
+      ? (en ? 'They are taking longer than usual. They are saved here and keep retrying on their own.'
+            : 'Están tardando más de lo normal. Siguen guardados aquí y se reintentan solos.')
       : (en ? 'They are sent on their own. You do not have to do anything.'
             : 'Se envían solos. No tienes que hacer nada.') });
   return m;
@@ -3106,7 +3135,7 @@ function _evPintarIncidencias(){
   if(!chip || !panel) return;
   const r = _evResumen();
   const msgs = _evMensajes(r);
-  if(!r.accionable){
+  if(!r.visible){
     chip.classList.remove('visible', 'grave');
     panel.classList.remove('visible');
     chip.setAttribute('aria-expanded', 'false');
@@ -3115,7 +3144,8 @@ function _evPintarIncidencias(){
     return;
   }
   const grave = msgs.some(x => x.tono === 'grave');
-  const cuenta = r.sinGuardar + r.revisar + r.cuarentena + r.sinIdentidad + r.descartados;
+  const cuenta = r.sinGuardar + r.revisar + r.cuarentena + r.sinIdentidad + r.descartados
+               + (r.accionable ? 0 : r.demorados);   // el atasco sólo cuenta si va solo
   chip.classList.toggle('grave', grave);
   chip.classList.add('visible');
   const en = (typeof LANG !== 'undefined' && LANG === 'en');
