@@ -1,6 +1,47 @@
 {
- "updated": "2026-09-17T20:22:08.959Z",
+ "updated": "2026-09-18T01:18:34.541Z",
  "items": [
+  {
+   "t": "Historias de lava y viento: 250 años en la bodega más antigua de Canarias",
+   "u": "https://www.larazon.es/viajes/historias-lava-viento-250-anos-bodega-mas-antigua-canarias_202609186aac0fa8842478155a3f72ec.html",
+   "s": "La Razón",
+   "d": "2026-09-17T23:25:33.000Z",
+   "tags": [
+    "VINO",
+    "CANARIAS"
+   ],
+   "img": "https://fotografias-2.larazon.es/clipping/cmsimages02/2026/09/16/1F7B1A6F-F92F-4ADB-B9D3-664B2D113B5D/grifo-lanzarote_98.jpg?crop=2592,1458,x0,y1619&width=1900&height=1069&optimize=low&format=webply"
+  },
+  {
+   "t": "Mikel López Iturriaga (El Comidista), sobre el futuro sin cocinas de Juan Roig: “Sería una auténtica tragedia”",
+   "u": "https://diariodeavisos.elespanol.com/2026/09/mikel-lopez-iturriaga-el-comidista/",
+   "s": "Diario de Avisos",
+   "d": "2026-09-17T23:10:18.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://cdn.diariodeavisos.com/wp-content/uploads/2026/09/mikel-lopez-iturriaga-foto-Becky-Lawton.jpg"
+  },
+  {
+   "t": "La villa juguetera de Alicante que conquista por su cocina: así es el pueblo donde mejor se come de España",
+   "u": "https://www.noticiasdelvino.com/restaurantes/2026/09/17/la-villa-juguetera-de-alicante-que-conquista-por-su-cocina-asi-es-el-pueblo-donde-mejor-se-come-de-espana-74836/",
+   "s": "Noticias del Vino",
+   "d": "2026-09-17T21:13:25.000Z",
+   "tags": [
+    "MICHELIN"
+   ],
+   "img": "https://www.noticiasdelvino.com/wp-content/uploads/restaurantes-5.jpg"
+  },
+  {
+   "t": "Ferran Adrià, cocinero catalán: \"Si no te lo crees, ¿cómo quieres que te hagan caso? Yo fui a un evento en Francia en el 1993 donde todos eran cocineros franceses. ¿Sabéis dónde me pusieron? En una mesa al lado del baño\"",
+   "u": "https://www.mundodeportivo.com/foodie/20260917/1004228502/ferran-adria-cocinero-catalan-haciamos-finales-90-rompedor-china-hay-gente-importante-alta-cocina-creativa-pais-arrasar-10-anos-xef-dct.html?facet",
+   "s": "Mundo Deportivo",
+   "d": "2026-09-17T20:35:20.000Z",
+   "tags": [
+    "ALTA COCINA"
+   ],
+   "img": "https://imagenes2.mundodeportivo.com/files/og_thumbnail/uploads/2026/01/27/69791ea81b0a1.jpeg"
+  },
   {
    "t": "La alta cocina inunda MotoGP",
    "u": "https://as.com/motor/motociclismo/la-alta-cocina-inunda-motogp-f202609-n/",
@@ -20,16 +61,6 @@
    ]
   },
   {
-   "t": "Ferran Adrià, cocinero catalán: \"Lo que hacíamos nosotros, a finales de los 90 era rompedor. Pero, ahora, en China ya hay gente importante de la alta cocina creativa. Es el país que va a arrasar de aquí a 10 años\"",
-   "u": "https://www.mundodeportivo.com/foodie/20260917/1004228502/ferran-adria-cocinero-catalan-haciamos-finales-90-rompedor-china-hay-gente-importante-alta-cocina-creativa-pais-arrasar-10-anos-xef-dct.html",
-   "s": "Mundo Deportivo",
-   "d": "2026-09-17T18:28:41.000Z",
-   "tags": [
-    "ALTA COCINA"
-   ],
-   "img": "https://imagenes2.mundodeportivo.com/files/og_thumbnail/uploads/2026/01/27/69791ea81b0a1.jpeg"
-  },
-  {
    "t": "Robaba restaurantes en Canarias disfrazado de monja y con un mazo",
    "u": "https://diariodeavisos.elespanol.com/2026/09/robaba-restaurantes-en-canarias-disfrazado-de-monja-y-con-un-mazo/",
    "s": "Diario de Avisos",
@@ -40,6 +71,15 @@
    "img": "https://cdn.diariodeavisos.com/wp-content/uploads/2026/09/detenido-fuerteventura-robo-disfraz-monja.jpg"
   },
   {
+   "t": "Qué se come en ‘Macondo Park’, la ‘ciudad’ de Shakira en Madrid: un homenaje a la gastronomía latina con tacos, tequeños y alta cocina",
+   "u": "https://www.infobae.com/espana/2026/09/17/que-se-come-en-macondo-park-la-ciudad-de-shakira-en-madrid-un-homenaje-a-la-gastronomia-latina-con-tacos-tequenos-y-alta-cocina/",
+   "s": "Infobae",
+   "d": "2026-09-17T18:07:29.000Z",
+   "tags": [
+    "ALTA COCINA"
+   ]
+  },
+  {
    "t": "Andorra Taste: Los cocineros de montaña quieren productores que innoven desde la raíz",
    "u": "https://www.7canibales.com/noticias/andorra-taste-8/",
    "s": "7 Caníbales",
@@ -48,6 +88,16 @@
     "ALTA COCINA"
    ],
    "img": "https://www.7canibales.com/wp-content/uploads/sites/2/2026/09/Javier-Torres-durante-su-ponencia-en-Andorra-Taste..webp"
+  },
+  {
+   "t": "Alta cocina y talento gastronómico se reunirán en la Culinary Week 2026 de Barceló Bávaro Grand Resort",
+   "u": "https://puntacana-bavaro.com/gastronomia/alta-cocina-y-talento-gastronomico-se-reuniran-en-la-culinary-week-2026-de-barcelo-bavaro-grand-resort/",
+   "s": "puntacana-bavaro.com",
+   "d": "2026-09-17T16:21:46.000Z",
+   "tags": [
+    "ALTA COCINA"
+   ],
+   "img": "https://puntacana-bavaro.com/wp-content/uploads/2026/09/culinary_week2026.jpg"
   },
   {
    "t": "CajaCanarias inicia su Otoño Cultural con un diálogo sobre gastronomía y medios",
@@ -70,13 +120,23 @@
   },
   {
    "t": "Telde pone en marcha la I Jornada del Bocadillo de Pata y del Cochino Canario",
-   "u": "https://www.canarias7.es/canarias/gran-canaria/telde/telde-pone-marcha-jornada-bocadillo-pata-cochino-20260917163412-nt_amp.html",
+   "u": "https://www.canarias7.es/canarias/gran-canaria/telde/telde-pone-marcha-jornada-bocadillo-pata-cochino-20260917163412-nt.html",
    "s": "Canarias7",
    "d": "2026-09-17T15:34:13.000Z",
    "tags": [
     "CANARIAS"
    ],
    "img": "https://s3.ppllstatics.com/canarias7/www/multimedia/local/2026/09/17/pata.jpg"
+  },
+  {
+   "t": "Jéssica de León destaca en Fuerteventura la apuesta de Hecansa por llevar la formación a todas las islas",
+   "u": "https://www.lavozdefuerteventura.com/turismo/jessica-leon-destaca-fuerteventura-apuesta-hecansa-llevar-formacion-todas-islas/20260917162936031383.amp.html",
+   "s": "la voz de fuerteventura",
+   "d": "2026-09-17T15:29:36.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://www.lavozdefuerteventura.com/media/lavozdefuerteventura/images/2026/09/17/2026091716381026147.jpg"
   },
   {
    "t": "Santa Cruz de Tenerife se convierte en Capital Española de la Gastronomía: las 5 recetas que hay que probar para saborear la isla",
@@ -109,7 +169,7 @@
   },
   {
    "t": "Qué bien la toca Diego",
-   "u": "https://www.eldia.es/ocio/gastronomia/2026/09/17/toca-diego-schattehofer-taste-1973-134387957.html",
+   "u": "https://www.eldia.es/ocio/gastronomia/2026/09/17/toca-diego-schattehofer-taste-1973-134387957.amp.html",
    "s": "Eldía",
    "d": "2026-09-17T11:17:43.000Z",
    "tags": [
@@ -166,6 +226,16 @@
    ]
   },
   {
+   "t": "Hecansa lleva su formación en gastronomía sostenible a Fuerteventura para reducir el desperdicio alimentario en los hoteles canarios",
+   "u": "https://radioinsular.es/hecansa-lleva-su-formacion-en-gastronomia-sostenible-a-fuerteventura-para-reducir-el-desperdicio-alimentario-en-los-hoteles-canarios",
+   "s": "radioinsular.es",
+   "d": "2026-09-17T09:44:00.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://radioinsular.es/wp-content/uploads/2026/09/INAUGURACION-CURSO-HECANSA-2.jpeg"
+  },
+  {
    "t": "Pepe Rodríguez (58 años), cocinero y juez de MasterChef, sobre su chocante receta de salchichón ibérico y 'panettone': \"Probamos y luego juzgamos\"",
    "u": "https://www.vozpopuli.com/amp/gastropoli/pepe-rodriguez-58-anos-cocinero-y-juez-de-masterchef-sobre-su-chocante-receta-de-salchichon-iberico-y-panettone-probamos-y-luego-juzgamos.html",
    "s": "Vozpopuli",
@@ -185,16 +255,6 @@
     "MICHELIN"
    ],
    "img": "https://hips.hearstapps.com/hmg-prod/images/26002e46-088b-4777-a42d-8d87cd9482fd.jpg?crop=1.00xw:0.385xh;0,0.0537xh&resize=1200:*"
-  },
-  {
-   "t": "El Asador de la Concepción de Albacete alcanza la final del VII Concurso Internacional de Patatas Bravas",
-   "u": "https://alcazardesanjuan.com/el-asador-de-la-concepcion-de-albacete-alcanza-la-final-del-vii-concurso-internacional-de-patatas-bravas/",
-   "s": "alcazardesanjuan.com",
-   "d": "2026-09-17T07:58:13.000Z",
-   "tags": [
-    "ALTA COCINA"
-   ],
-   "img": "https://alcazardesanjuan.com/wp-content/uploads/2026/09/El-Asador-de-la-Concepcion-de-Albacete-alcanza-la-final-1200x675.webp"
   },
   {
    "t": "Toño Rodríguez, chef de una estrella Michelin en un pueblo de 30 habitantes: «Nos tenemos que creer que, aunque vengamos de sitios pequeñitos, podemos hacer grandes cosas»",
@@ -218,6 +278,16 @@
    "img": "https://s3.elespanol.com/k/imgp/cms/elespanol/11355741.jpg?p=f:jpeg/w:1706/h:960&h=__g6MCIf"
   },
   {
+   "t": "Auténtica 2026 reúne a 12.489 profesionales y presenta más de 720 novedades alimentarias",
+   "u": "https://www.revistaaral.com/texto-diario/mostrar/6018128/autentica-2026-reune-12489-profesionales-presenta-720-novedades-alimentarias",
+   "s": "Revista ARAL",
+   "d": "2026-09-17T07:27:39.000Z",
+   "tags": [
+    "ALTA COCINA"
+   ],
+   "img": "https://www.revistaaral.com/images/showid/8142645"
+  },
+  {
    "t": "El patriarca de Juvé & Camps: \"Canarias siempre ha sido nuestra tierra de afecto y el reflejo de una familia que se sirve en copa\"",
    "u": "https://www.eldiario.es/canariasahora/por-fogones/losjuernesdeporfogones/patriarca-juve-camps-canarias-sido-tierra-afecto-reflejo-familia-sirve-copa_1_13516554.amp.html",
    "s": "elDiario.es",
@@ -226,76 +296,6 @@
     "CANARIAS"
    ],
    "img": "https://static.eldiario.es/clip/e628a8e1-af1b-43c2-bc19-570ec6283512_facebook-aspect-ratio-1200-675_default_0_x1015y698.jpg"
-  },
-  {
-   "t": "El restaurante de una localidad navarra que entra en la Guía Michelin como restaurante recomendado",
-   "u": "https://pamplonaactual.com/pamplona-actual-medio-ambiente/413541/el-restaurante-de-una-localidad-navarra-que-entra-en-la-guia-michelin-como-restaurante-recomendado/",
-   "s": "pamplonaactual.com",
-   "d": "2026-09-17T06:56:15.000Z",
-   "tags": [
-    "MICHELIN"
-   ],
-   "img": "https://comunikazemedia.b-cdn.net/articulos/articulos-595132.jpg"
-  },
-  {
-   "t": "Siam Park celebra el Thai Soul Fest con la histórica visita de Buakaw Banchamek a Canarias",
-   "u": "https://www.libertaddigital.com/canarias/2026-09-17/siam-park-celebra-el-thai-soul-fest-con-la-historica-visita-de-buakaw-banchamek-a-canarias-7461327/",
-   "s": "Libertad Digital",
-   "d": "2026-09-17T06:54:00.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://s1.staticld.com/2026/09/17/1200/675/siam-park-acerca-de-muay-thai.jpg"
-  },
-  {
-   "t": "El viticultor de La Gomera que convirtió su jubilación en vinos ecológicos con D.O.",
-   "u": "https://www.guiarepsol.com/es/comer/vinos-y-bodegas/bodega-manuel-sanchez-en-la-gomera/",
-   "s": "Guía Repsol",
-   "d": "2026-09-17T06:42:26.000Z",
-   "tags": [
-    "VINO",
-    "CANARIAS"
-   ],
-   "img": "https://www.guiarepsol.com/content/dam/repsol-guia/contenidos-imagenes/comer/vinos-y-bodegas/bodega-manuel-sanchez-la-gomera/BodegaManuelSanchez_09.jpg"
-  },
-  {
-   "t": "Álvaro Salazar, chef de Voro: \"Es una pena que a muchos nuevos cocineros les interese más la salsa ponzu que las patatas a la riojana\"",
-   "u": "https://www.expansion.com/fueradeserie/gastro/2026/09/17/6a98140ce5fdea0e328b4580.html",
-   "s": "Expansión",
-   "d": "2026-09-17T06:10:27.000Z",
-   "tags": [
-    "ALTA COCINA"
-   ],
-   "img": "https://e01-phantom-expansion.uecdn.es/6cc300f2f09b98e7278d707b99ed941e/crop/0x0/2048x1365/resize/1200/f/webp/assets/multimedia/imagenes/2026/09/08/17888991611632.jpg"
-  },
-  {
-   "t": "Andrea Selvaggini propone en Savage el lenguaje del futuro para la alta cocina",
-   "u": "https://www.mundodeportivo.com/foodie/foodie-reportajes/20260917/1004227064/andrea-selvaggini-propone-savage-lenguaje-futuro-alta-cocina.html",
-   "s": "Mundo Deportivo",
-   "d": "2026-09-17T06:00:00.000Z",
-   "tags": [
-    "ALTA COCINA"
-   ],
-   "img": "https://imagenes2.mundodeportivo.com/files/og_thumbnail/files/fp/uploads/2026/09/14/6aa7e24c842b2.r_d.803-545-7500.jpeg"
-  },
-  {
-   "t": "La Guía Michelin España suma 20 nuevos restaurantes: estos son los nombres a seguir",
-   "u": "https://www.que.es/2026/09/17/guia-michelin-espana-nuevos-restaurantes/",
-   "s": "que.es",
-   "d": "2026-09-17T04:20:00.000Z",
-   "tags": [
-    "MICHELIN"
-   ],
-   "img": "https://static.que.es/wp-content/uploads/2023/05/Martin-Berasategui-Su-reconocimiento-con-la-Guia-Michelin.jpg"
-  },
-  {
-   "t": "Paula Gutiérrez, la cocinera de 25 años que reescribe el legado familiar de Tayta",
-   "u": "https://www.articulo14.es/estilo-vida/paula-gutierrez-la-cocinera-de-25-anos-que-esta-reescribiendo-el-legado-familiar-de-tayta-20260917.html",
-   "s": "Artículo 14",
-   "d": "2026-09-17T04:11:14.000Z",
-   "tags": [
-    "ALTA COCINA"
-   ]
   }
  ]
 }
