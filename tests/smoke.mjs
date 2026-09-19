@@ -11975,12 +11975,21 @@ const _f2 = await (async () => {
     M.sesion(ANA, _jwtDe(ANA));
     await M.registrarActividad(prueba);        // queda en la cola de Ana
     const evAna = M.cola()[0];
+    // Sin esto, una mutación que vacíe la cola por otro camino hace que la
+    // fixture explote con un TypeError y la suite ENTERA muere a medias: todas
+    // las pruebas posteriores se quedan sin ejecutar y el verificador de
+    // mutaciones sólo ve «la suite no llegó a ejecutarse». Medido con la
+    // mutación F3-6. Una fixture rota tiene que fallar diciendo qué esperaba.
+    o.evAnaExiste = !!evAna;
+    if (!evAna) { o.brunoNoTocaAAna = false; o.brunoPeticiones = []; o.idDeAna = null; }
+    else {
     cap.length = 0;
     M.sesion(BRUNO, _jwtDe(BRUNO));            // entra Bruno
     o.brunoIntenta = await M.registrarActividad(prueba);  // lo suyo sí sale
     o.brunoNoTocaAAna = M.cola().some(e => e.uid === ANA && e.evento_id === evAna.evento_id);
     o.brunoPeticiones = cap.map(p => ({ id: p.body.evento_id, auth: p.headers.Authorization }));
     o.idDeAna = evAna.evento_id;
+    }
   }
 
   // ── 6 · Bruno entra DURANTE el await: el envío no puede saltar de identidad ──
@@ -12105,6 +12114,8 @@ test('F2 · uid:null NUNCA llega a una petición', () => {
 });
 
 test('F2 · Bruno no puede enviar ni apropiarse del evento de Ana', () => {
+  assert(_f2.evAnaExiste,
+    'un 503 tiene que dejar el evento de Ana EN LA COLA: si desapareció, esta prueba no está midiendo nada');
   assert(_f2.brunoNoTocaAAna, 'el evento de Ana tiene que seguir en la cola, intacto');
   for (const p of _f2.brunoPeticiones) {
     assert(p.id !== _f2.idDeAna, 'Bruno ha enviado el evento_id de Ana');
@@ -12415,8 +12426,13 @@ test('F4 · no existe ninguna ruta de desalojo por capacidad', () => {
 const _IDX = { scores: 'scores_evt_uk', actividad: 'actividad_evt_uk' };
 const _errPg = (status, code, message) => _resp(status, { code, message, details: null, hint: null });
 
-const _f3 = await (async () => {
-  const o = {};
+// UNA FIXTURA QUE EXPLOTA NO PUEDE LLEVARSE LA SUITE POR DELANTE. Al montar
+// los escenarios de F3 fuera de cualquier `test()`, un TypeError aquí mataba el
+// proceso entero y dejaba sin ejecutar F3, F5, F6, F7 y F0 — y el verificador
+// de mutaciones veía «la suite no llegó a ejecutarse» y lo daba por detección.
+// Ahora el fallo se guarda y lo denuncia una prueba, que es donde se ve.
+const _f3 = await (async () => { const o = {};
+  try { return await (async () => {
   const evalua = { activity:'simulacro_alergenos', competency:'alergenos',
                    kind:'evaluacion', score:18, total:20, seconds:240, meta:{ cat:'all' } };
 
@@ -12432,7 +12448,18 @@ const _f3 = await (async () => {
     const ev = m.M.cola()[0];
     // El backoff de F3 pone `proximo` en el futuro: para poder drenar ya, se
     // vence a mano, que es lo que haría el paso del tiempo.
-    const q = m.M.cola(); q[0].proximo = 0; q[0].intentos = 0;
+    //
+    // Y SI LA COLA ESTÁ VACÍA, SE DICE. Sin esta guarda, cualquier mutación que
+    // saque el evento de la cola por otro camino hacía explotar la fixture con
+    // un TypeError y MATABA la suite entera a mitad: todo lo que viene después
+    // —F3, F5, F6, F7, F0— se quedaba sin ejecutar y el verificador de
+    // mutaciones daba por «detectada» una mutación cuyo efecto real nadie había
+    // llegado a medir. Medido con F3-6.
+    const q = m.M.cola();
+    if (!q.length) throw new Error(
+      'conUnPendiente: la cola quedó VACÍA tras crear el evento. Un 503 tiene que '
+      + 'conservarlo; si no lo hace, arréglalo — no dejes que la fixture explote.');
+    q[0].proximo = 0; q[0].intentos = 0;
     m.almacen['txk_eventos_v1'] = JSON.stringify(q);
     fase = 1; m.cap.length = 0;
     return { ...m, ev };
@@ -12498,7 +12525,8 @@ const _f3 = await (async () => {
   { const m = await conUnPendiente({ responder: () => ({ lanza: true }) });
     await m.M.drenar('x'); o.timeout = { cola: m.M.cola(), cuar: m.M.cuarentena().length }; }
   { const m = await conUnPendiente({ responder: () => _resp(503) });
-    await m.M.drenar('x'); o.cincoXX = { cola: m.M.cola(), cuar: m.M.cuarentena().length }; }
+    const idAntes = m.ev.evento_id;
+    await m.M.drenar('x'); o.cincoXX = { cola: m.M.cola(), cuar: m.M.cuarentena().length, idAntes }; }
 
   // 11 · offline → ni una petición
   { const m = await conUnPendiente({ navigator: { onLine: false } });
@@ -12580,9 +12608,15 @@ const _f3 = await (async () => {
     o.cambioAMitadAuth = m3.cap.map(p => p.headers.Authorization); }
 
   return o;
+  })(); } catch (e) { o.explosion = (e && e.message) || String(e); return o; }
 })();
 
 console.log('\nB2 — F3 · drenaje, clasificación y cuarentena');
+
+test('F3 · el montaje de los escenarios no explota', () => {
+  assert(!_f3.explosion,
+    `una fixtura de F3 ha reventado y el resto de esta sección no mide nada: ${_f3.explosion}`);
+});
 
 test('F3 · pendiente + red → se sincroniza y sale de la cola', () => {
   assert(_f3.drenaOk === 'hecho', `el drenaje tenía que completarse: ${_f3.drenaOk}`);
@@ -12594,7 +12628,11 @@ test('F3 · el reintento conserva el MISMO evento_id y su dueño', () => {
   assert(_f3.idEnviado === _f3.idOriginal,
     `el reintento generó otro id: ${_f3.idEnviado} ≠ ${_f3.idOriginal}`);
   assert(_f3.cincoXX.cola[0].uid === ANA, 'el reintento tiene que conservar el dueño');
-  assert(_f3.cincoXX.cola[0].evento_id === _f3.cincoXX.cola[0].evento_id, 'id estable');
+  // Aquí había `assert(x.evento_id === x.evento_id, 'id estable')`, que compara
+  // un valor consigo mismo y por tanto no puede fallar nunca. La estabilidad
+  // del id a lo largo de VARIOS reintentos se demuestra en F7, fila 7.
+  assert(_f3.cincoXX.cola[0].evento_id === _f3.cincoXX.idAntes,
+    'el evento que se queda tras el 5xx tiene que conservar su id, no recibir uno nuevo');
 });
 
 test('F3 · 23505 del índice esperado es ÉXITO idempotente', () => {
@@ -13794,6 +13832,221 @@ test('F6 · el aviso de disco lleno se pinta EN EL ACTO, no en la siguiente acti
   assert(pintados >= 4, `esperaba un repintado por cada salida de _eventoCrear, hay ${pintados}`);
   assert(_f6.lleno.clases.includes('visible'),
     'sin salir de la propia actividad, el aviso ya tiene que estar en pantalla');
+});
+
+// ─── B2 · F7 · las filas de la MATRIZ DE ACEPTACIÓN que no tenían prueba ───
+//
+// F7 no añade comportamiento: cierra la red de seguridad. Cada prueba de aquí
+// lleva el número de la fila de `docs/fase-b2-matriz-aceptacion.md` que
+// demuestra, y ninguna existía antes de esta fase.
+const _f7 = await (async () => {
+  const o = {};
+  const ANA7 = '33333333-3333-4333-8333-333333333333';
+  const evalua = { activity:'examen', competency:'carta', kind:'evaluacion',
+                   score:8, total:10, seconds:60, meta:{} };
+  const practica = { activity:'repaso', competency:'carta', kind:'practica',
+                     score:3, total:5, seconds:30, meta:{} };
+
+  // FILA 7 · tres fallos y un éxito → el MISMO id las cuatro veces → una fila.
+  { let n = 0;
+    const c = _montarEscritores({ responder: () => (++n <= 3 ? _resp(503) : _resp(201, [{ ok:1 }])) });
+    c.M.sesion(ANA7, _jwtDe(ANA7));
+    await c.M.registrarActividad(evalua);
+    // Cuatro ciclos. Entre uno y otro se levanta el aplazamiento a mano: aquí
+    // se mide la ESTABILIDAD DEL ID, no el reloj del backoff (eso es la fila 15).
+    for (let i = 0; i < 4; i++) {
+      const cola = c.M.cola();
+      if (cola.length) { cola[0].proximo = 0; c.almacen['txk_eventos_v1'] = JSON.stringify(cola); }
+      c.M.aplazado().clear();
+      await c.M.drenar('f7');
+    }
+    o.fila7 = { ids: c.cap.map(x => x.body.evento_id), peticiones: c.cap.length,
+                cola: c.M.cola().length, cuarentena: c.M.cuarentena().length }; }
+
+  // FILA 15 · timeout / 5xx → pendiente con backoff CRECIENTE, no cuarentena.
+  { const c = _montarEscritores({ responder: () => _resp(503) });
+    c.M.sesion(ANA7, _jwtDe(ANA7));
+    await c.M.registrarActividad(evalua);
+    const ev = c.M.cola()[0];
+    // El alta ya intentó enviar y falló, así que arranca con un intento gastado.
+    const base = c.M.cola()[0].intentos || 0;
+    const esperas = [];
+    for (let i = 0; i < 6; i++) {
+      const t0 = Date.now();
+      c.M.resolver(ev, { estado:'reintentable', motivo:'http-503' });
+      const q = c.M.cola()[0];
+      esperas.push({ intentos: q.intentos, espera: q.proximo - t0, estado: q.estado });
+    }
+    o.fila15 = { base, esperas, cuarentena: c.M.cuarentena().length, cola: c.M.cola().length }; }
+
+  // FILA 19 · cola con 500 → aviso, y NADA se rechaza.
+  { const alm = Object.create(null);
+    const relleno = [];
+    for (let i = 0; i < 500; i++)
+      relleno.push({ v:1, evento_id:`r${i}`, destino:'scores', prioridad:2, uid:ANA7,
+                     ts:Date.now(), datos:{}, intentos:0, proximo:0, estado:'pendiente' });
+    alm['txk_eventos_v1'] = JSON.stringify(relleno);
+    const c = _montarEscritores({ almacen: alm, responder: () => ({ lanza:true }) });
+    c.M.sesion(ANA7, _jwtDe(ANA7));
+    const r = await c.M.registrarActividad(evalua);      // evaluación: NUNCA se rechaza
+    o.fila19 = { alta: r, cola: c.M.cola().length,
+                 contadores: c.M.registro().contadores || {} };
+    // Y una práctica con 500 en cola sí cede el sitio (umbral 400 de F4).
+    const c2 = _montarEscritores({ almacen: alm, responder: () => ({ lanza:true }) });
+    c2.M.sesion(ANA7, _jwtDe(ANA7));
+    await c2.M.registrarActividad(practica);
+    o.fila19practica = { cola: c2.M.cola().length,
+                         contadores: c2.M.registro().contadores || {} }; }
+
+  // FILA 26 · persistido y cierre inmediato: `setItem` YA devolvió.
+  { const orden = [];
+    const c = _montarEscritores({
+      responder: () => { orden.push('red'); return _resp(201, [{ ok:1 }]); },
+      setItemLanza: (k) => { if (k === 'txk_eventos_v1') orden.push('disco'); return null; } });
+    c.M.sesion(ANA7, _jwtDe(ANA7));
+    await c.M.registrarActividad(evalua);
+    o.fila26 = { orden, cola: c.M.cola().length }; }
+
+  return o;
+})();
+
+console.log('\nB2 — F7 · matriz de aceptación y cierre de la red de seguridad');
+
+test('F7 · fila 7 · tres fallos y un éxito: el MISMO evento_id las cuatro veces', () => {
+  assert(_f7.fila7.peticiones === 4,
+    `esperaba cuatro intentos, hubo ${_f7.fila7.peticiones}`);
+  const unicos = [...new Set(_f7.fila7.ids)];
+  assert(unicos.length === 1 && unicos[0],
+    `el id cambió entre reintentos: ${JSON.stringify(_f7.fila7.ids)}`);
+  // Y el servidor, con el índice parcial de F1, ve cuatro veces la misma clave:
+  // por eso el cuarto 201 deja UNA fila y no cuatro.
+  assert(_f7.fila7.cola === 0, 'tras el éxito el evento sale de la cola');
+  assert(_f7.fila7.cuarentena === 0, 'y no deja nada en cuarentena');
+});
+
+test('F7 · fila 15 · timeout y 5xx: backoff CRECIENTE, y nunca cuarentena', () => {
+  // La tabla de F3 es [0, 5 min, 15 min, 1 h, 4 h, 24 h] y se satura ahí.
+  const TABLA = [0, 5*60e3, 15*60e3, 60*60e3, 4*60*60e3, 24*60*60e3];
+  const esperada = (n) => TABLA[Math.min(n, TABLA.length - 1)];
+  _f7.fila15.esperas.forEach((e, i) => {
+    const n = _f7.fila15.base + i + 1;
+    assert(e.intentos === n, `el intento ${n} no se contó: ${JSON.stringify(e)}`);
+    assert(Math.abs(e.espera - esperada(n)) <= 1000,
+      `intento ${n}: esperaba ~${esperada(n)} ms, hubo ${e.espera}`);
+    assert(e.estado === 'pendiente' || n >= 10,
+      `un 5xx deja el evento pendiente hasta agotar los intentos: ${JSON.stringify(e)}`);
+  });
+  assert(_f7.fila15.esperas.some(e => e.espera === 24*60*60e3),
+    'la tabla tiene que llegar a saturarse en 24 h, no crecer sin fin');
+  for (let i = 1; i < _f7.fila15.esperas.length; i++)
+    assert(_f7.fila15.esperas[i].espera >= _f7.fila15.esperas[i - 1].espera,
+      'la espera NUNCA puede encogerse: eso es martillear el servidor caído');
+  assert(_f7.fila15.cuarentena === 0,
+    'un servidor caído no es culpa del evento: jamás va a cuarentena');
+  assert(_f7.fila15.cola === 1, 'y el evento se conserva entero');
+});
+
+test('F7 · fila 19 · con 500 en cola hay aviso, y NADA se rechaza', () => {
+  assert(_f7.fila19.alta && _f7.fila19.alta.evento === 'persistido',
+    `una evaluación con 500 en cola tiene que entrar igual: ${JSON.stringify(_f7.fila19.alta)}`);
+  assert(_f7.fila19.cola === 501, `la cola tiene que crecer a 501: ${_f7.fila19.cola}`);
+  assert((_f7.fila19.contadores.cola_alta || 0) >= 1,
+    `500 es UMBRAL DE AVISO y tiene que contarse: ${JSON.stringify(_f7.fila19.contadores)}`);
+  assert(!_f7.fila19.contadores.descartado_por_espacio,
+    'y a 500 no se descarta absolutamente nada');
+  // La práctica sí cede, porque el umbral de P3 es 400 (F4, sin tocar).
+  assert((_f7.fila19practica.contadores.descartado_por_espacio || 0) === 1,
+    'por encima de 400 la práctica cede el sitio, y se cuenta');
+});
+
+test('F7 · fila 26 · el evento está en disco ANTES de que salga la petición', () => {
+  assert(_f7.fila26.orden[0] === 'disco',
+    `primero el disco, luego la red: ${JSON.stringify(_f7.fila26.orden)}`);
+  assert(_f7.fila26.orden.includes('red'), 'y la petición sale después');
+  // Y no depende de nada que el navegador pueda no ejecutar al cerrar.
+  const bloque = html.slice(html.indexOf('const _EV_KEY'), html.indexOf('async function registrarActividad'));
+  for (const gancho of ['beforeunload', 'pagehide', 'unload', 'saveDB'])
+    assert(!bloque.includes(gancho),
+      `el alta no puede depender de «${gancho}»: iOS no lo garantiza al cerrar la pestaña`);
+});
+
+test('F7 · fila 24 · una versión antigua no conoce las claves de B2 y no las borra', () => {
+  // v7.451 es la que está en producción. No puede borrar lo que no nombra, así
+  // que se comprueba que NINGÚN código fuera del bloque de eventos toca esas
+  // tres claves, y que nadie las elimina desde ninguna parte.
+  const ini = html.indexOf('const _EV_KEY');
+  const fin = html.indexOf('async function registrarActividad');
+  const fuera = html.slice(0, ini) + html.slice(fin);
+  for (const k of ['txk_eventos_v1', 'txk_eventos_sin_identidad',
+                   'txk_eventos_cuarentena', 'txk_eventos_registro'])
+    assert(!fuera.includes(k), `la clave ${k} se toca fuera del bloque de eventos`);
+  assert(!/removeItem\(\s*['"]txk_eventos/.test(html), 'nadie puede borrar una clave de B2');
+  assert(!/localStorage\.clear\(\)/.test(html), 'un clear() se llevaría la cola entera por delante');
+});
+
+test('F7 · I7.1 · cada mutación del catálogo sigue teniendo su ancla viva', () => {
+  // Lo que se pudre de una mutación no es la mutación: es el TEXTO al que se
+  // agarra. Si alguien reescribe la línea, la mutación deja de aplicarse y la
+  // garantía queda sin demostrar, en silencio y para siempre. Esta prueba es
+  // barata —no ejecuta nada— y es la que impide ese silencio.
+  //
+  // Ya ha servido: destapó que el centinela de `_EV_INDICE[...] || '\u0000'`
+  // es un NUL literal y no un espacio, así que una mutación escrita de memoria
+  // nunca se habría llegado a aplicar.
+  // MIENTRAS UNA MUTACIÓN ESTÁ PUESTA, ESTA PRUEBA NO PUEDE OPINAR. Una
+  // mutación consiste precisamente en que el texto anclado deje de estar, así
+  // que esta guarda se pondría roja con TODAS ellas — y entonces el verificador
+  // vería la suite roja siempre y daría por «detectada» hasta una mutación que
+  // en realidad nadie protege. Se descubrió a mitad de la primera batería, con
+  // diez mutaciones ya dadas por buenas por este motivo y no por el suyo.
+  // `MUTANDO` lo pone `tests/mutaciones.mjs` al lanzar la suite hija.
+  if (process.env.MUTANDO) return;
+  const cat = read('tests/mutaciones.mjs');
+  const anclas = [...cat.matchAll(/\{ id:'([^']+)',[\s\S]*?archivo:'([^']+)',[\s\S]*?\n\s*de:("(?:[^"\\]|\\.)*"),/g)];
+  assert(anclas.length >= 45, `esperaba el catálogo entero, he leído ${anclas.length} mutaciones`);
+  const ficheros = new Map();
+  for (const [, id, archivo, deJson] of anclas) {
+    if (!ficheros.has(archivo)) ficheros.set(archivo, read(archivo));
+    const de = JSON.parse(deJson);
+    const veces = ficheros.get(archivo).split(de).length - 1;
+    assert(veces === 1,
+      `la mutación ${id} ya no prueba nada: su texto aparece ${veces} veces en ${archivo} (debe ser 1)`);
+  }
+  // Y las fases de B2 tienen que seguir cubiertas: si alguien borra el bloque
+  // de una fase entera, el recuento de arriba no se entera.
+  for (const f of ['F0', 'F1', 'F2', 'F3', 'F4', 'F5', 'F6', 'F7'])
+    assert(new RegExp(`fase:'${f}'`).test(cat), `no queda ninguna mutación de ${f}`);
+});
+
+test('F7 · el verificador de mutaciones no puede corromper lo que verifica', () => {
+  // Ocurrió: el contenedor murió a mitad de la batería y dejó `index.html`
+  // mutado en el árbol de trabajo, con un texto de interfaz alterado que
+  // habría pasado cualquier revisión. Un `finally` no para un SIGKILL.
+  const cat = read('tests/mutaciones.mjs');
+  assert(/function recuperarSiHizoFalta/.test(cat),
+    'tiene que poder recuperarse de una muerte súbita');
+  assert(cat.indexOf('const previo = recuperarSiHizoFalta();') < cat.indexOf('const malas = revisarAnclas();'),
+    'la recuperación tiene que ir ANTES de comprobar anclas: con un fichero corrupto el ancla no aparece y el verificador salía sin arreglar nada');
+  for (const s of ['SIGINT', 'SIGTERM', 'SIGHUP', 'uncaughtException'])
+    assert(cat.includes(s), `falta la restauración ante ${s}`);
+  assert(/\.mutaciones-en-curso/.test(read('.gitignore')),
+    'la sala de operaciones del verificador no puede acabar versionada');
+});
+
+test('F7 · la CI sigue siendo Node puro: ni Playwright ni dependencias', () => {
+  // El plan lo exige explícitamente. Las medidas con navegador son
+  // herramientas de esta sesión, no parte de la suite.
+  const ci = read('.github/workflows/ci.yml');
+  assert(/npm test/.test(ci), 'la CI tiene que seguir lanzando la suite');
+  for (const p of ['playwright', 'puppeteer', 'npm ci', 'npm install', 'npm i '])
+    assert(!new RegExp(p, 'i').test(ci), `la CI ha dejado de ser Node puro: aparece «${p}»`);
+  const pkg = JSON.parse(read('package.json'));
+  assert(!pkg.dependencies && !pkg.devDependencies,
+    'la suite no puede adquirir dependencias: se ejecuta con la stdlib');
+  const suite = read('tests/smoke.mjs');
+  const imports = [...suite.matchAll(/from\s+'([^']+)'/g)].map(m => m[1]);
+  for (const m of imports)
+    assert(m.startsWith('node:'), `la suite importa «${m}», que no es de la stdlib`);
 });
 
 // ─── B2 · F0 · la identidad es un solo objeto congelado ─────────

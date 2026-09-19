@@ -1,0 +1,3 @@
+# La sala de operaciones del verificador de mutaciones (tests/mutaciones.mjs):
+# copias intactas y centinela de reanudación. Se borra sola al terminar.
+.mutaciones-en-curso/
