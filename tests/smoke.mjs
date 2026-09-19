@@ -496,6 +496,37 @@ test('data/themes.json venue registry is well-formed', () => {
     'first enabled venue accent must match the CSS default (#c49a3c)');
 });
 
+test('el login sólo ofrece restaurantes ABIERTOS, y con el nombre del registro', () => {
+  // Decisión del propietario: M.B. queda EN ESPERA y no se anuncia. Antes los
+  // cerrados salían con la etiqueta «Próximamente» para enseñar lo que venía;
+  // ahora quien abre la aplicación ve únicamente donde puede entrar.
+  const i = html.indexOf('const all = (THEMES && Array.isArray(THEMES.venues))');
+  const filtro = html.slice(i, html.indexOf('\n', html.indexOf('THEMES.venues.filter', i)));
+  assert(i > 0, 'no encuentro el filtro del selector del login');
+  assert(/v\.id !== 'plantilla'/.test(filtro), 'la plantilla no es un restaurante');
+  assert(/&& v\.enabled/.test(filtro),
+    'un restaurante cerrado no puede aparecer en el selector del login');
+
+  // Y se ejecuta contra el registro REAL, que es lo que ve el empleado.
+  const reg = JSON.parse(read('data/themes.json'));
+  const visibles = reg.venues.filter(v => v && v.id && v.name && v.id !== 'plantilla' && v.enabled);
+  assert(visibles.length >= 1, 'tiene que quedar al menos un restaurante donde entrar');
+  for (const v of visibles)
+    assert(v.enabled === true, `${v.id} aparecería en el login estando cerrado`);
+  const mb = reg.venues.find(v => v.id === 'mb');
+  assert(mb && mb.enabled === false, 'M.B. tiene que seguir en espera');
+  assert(!visibles.some(v => v.id === 'mb'), 'M.B. no puede aparecer en el login');
+
+  // EL IDENTIFICADOR NO SE RENOMBRA NUNCA. `venue` es la columna que ata las
+  // 427 puntuaciones y las fichas del equipo: cambiarlo las dejaría huérfanas.
+  // El nombre visible se cambia; el id, jamás.
+  const casa = reg.venues.find(v => v.id === 'txoko');
+  assert(casa, 'el id del restaurante activo no puede cambiar: es la clave de los datos');
+  assert(casa.name && casa.casa && casa.rotulo,
+    'el restaurante activo necesita rótulo, nombre en frase y presentación');
+  assert(!/^TXOKO$/i.test(casa.name) || casa.casa, 'coherencia de nombres');
+});
+
 test('multi-restaurant theming is wired (applyTheme + login picker)', () => {
   for (const fn of ['applyTheme','initVenues','renderVenuePicker','selectVenue']) {
     assert(new RegExp(`function ${fn}\\(`).test(html), `${fn}() missing`);

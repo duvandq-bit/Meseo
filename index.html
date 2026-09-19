@@ -52,7 +52,7 @@
 <meta property="og:description" content="Formación de equipos de sala: carta, alérgenos, vinos, exámenes y juegos de repaso.">
 <meta property="og:url" content="https://meseo.es/">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"Meseo","url":"https://meseo.es/"}</script>
-<meta name="app-version" content="7.463">
+<meta name="app-version" content="7.464">
 <meta name="app-build" content="May 2026">
 <meta name="theme-color" content="#1c2a22">
 <!-- ═══ PWA ═══ -->
@@ -1515,14 +1515,19 @@ async function initVenues(){
   _venueTriggerSync(current);
   // El selector se muestra SIEMPRE que haya al menos un venue (jul 2026):
   // con el héroe del login ya en marca Meseo, el restaurante vive aquí —
-  // «Txoko puede aparecer como uno de los restaurantes a escoger». Los
-  // bloqueados (Próximamente) siguen visibles para enseñar lo que viene.
-  // La plantilla de copiar-pegar de themes.json NO es un restaurante: salía en
-  // el selector como «NUEVO RESTAURANTE · Próximamente», al lado de los de
-  // verdad. Con un solo venue pasaba por un adelanto; con M.B. dado de alta es
-  // ruido, y encima anuncia algo que no existe.
+  // EN EL LOGIN SÓLO SE ENSEÑA LO QUE ESTÁ ABIERTO.
+  //
+  // Antes los bloqueados salían con la etiqueta «Próximamente», para enseñar lo
+  // que venía. Por decisión del propietario, M.B. queda EN ESPERA y no se
+  // anuncia: quien abre la aplicación ve únicamente el restaurante en el que
+  // puede entrar. Los cerrados siguen existiendo en `themes.json` y la cuenta
+  // de administración los sigue alcanzando desde Ajustes, que es por donde se
+  // revisa su contenido antes de abrirlos.
+  //
+  // La plantilla de copiar-pegar de themes.json tampoco es un restaurante: ya
+  // estaba fuera, y el filtro de `enabled` la deja fuera igual.
   const all = (THEMES && Array.isArray(THEMES.venues))
-    ? THEMES.venues.filter(v => v && v.id && v.name && v.id !== 'plantilla') : [];
+    ? THEMES.venues.filter(v => v && v.id && v.name && v.id !== 'plantilla' && v.enabled) : [];
   if(all.length) renderVenuePicker(all, current.id);
 }
 
@@ -2325,7 +2330,7 @@ const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><p
 const SRC = 'src';
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='7.463';  // sincronizada con sw.js VERSION (guard de CI)
+const APP_VERSION='7.464';  // sincronizada con sw.js VERSION (guard de CI)
 const APP_BUILD='Jul 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;
@@ -26784,7 +26789,10 @@ function renderSupAnalytics(allEmps, empNames){
 // mesa y un código que se enseña sin querer deja de ser un código.
 function renderSupCodigoHTML(){
   const _en = LANG==='en';
-  const venue = (typeof ACTIVE_VENUE!=='undefined' && ACTIVE_VENUE && ACTIVE_VENUE.name) || 'TXOKO';
+  // El repuesto era el nombre de un restaurante escrito a fuego. Si el registro
+  // no ha cargado, escribir el nombre de OTRA casa en esta frase es peor que no
+  // decir ninguno: se cae a la marca del producto, igual que `_venueCasa()`.
+  const venue = (typeof ACTIVE_VENUE!=='undefined' && ACTIVE_VENUE && ACTIVE_VENUE.name) || 'Meseo';
   return `<div style="font-family:'Quicksand',sans-serif;font-size:.8rem;color:var(--parch2);line-height:1.5;margin-bottom:.7rem">
       ${_en
         ? `Nobody can create an account in <b>${escapeHTML(venue)}</b> without this code. Give it only to people who work here, and renew it when someone leaves.`
