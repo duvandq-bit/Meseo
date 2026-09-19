@@ -164,11 +164,20 @@ const MUTACIONES = [
   // pone roja ni una prueba. La garantía de «una sola renovación por ciclo» la
   // sostiene el `return 'renovada-sesion'`, que es lo que hay que mutar. La
   // línea muerta se deja donde está: quitarla sería modificar F3.
+  // ESTA MUTACIÓN SE HA MUDADO DOS VECES, y las dos por el mismo motivo: la
+  // garantía «una sola renovación, sin bucle» ha ido cambiando de sitio.
+  //   1ª · apuntaba a `return 'credencial-no-renovable'`, que resultó ser una
+  //        línea INALCANZABLE (F7 lo midió con un `throw`).
+  //   2ª · apuntaba al `return 'renovada-sesion'` del bucle. Con C+D la puerta
+  //        del drenaje detecta el token muerto ANTES de entrar al bucle, así
+  //        que esa rama dejó de ser el sitio donde vive la garantía.
+  // Ahora apunta donde de verdad está: si la puerta no renueva, un token
+  // caducado no se recupera nunca y la cola se queda parada para siempre.
   { id:'F3-7', fase:'F3', fila:10,
-    rompe:'la renovación deja de cortar el ciclo: se renovaría una vez por evento',
+    rompe:'un token caducado deja de renovarse: la cola se queda parada para siempre',
     archivo:'index.html',
-    de:"          return 'renovada-sesion';              // el siguiente ciclo usará el contexto nuevo",
-    a:"          continue;",
+    de:"  if(!(ctx.exp * 1000 > Date.now())){ await _eventoRenovar(); return 'credencial-caducada'; }",
+    a:"  if(!(ctx.exp * 1000 > Date.now())){ return 'credencial-caducada'; }",
     cae:'renovación por la vía existente' },
 
   { id:'F3-8', fase:'F3', fila:5,
@@ -390,6 +399,81 @@ const MUTACIONES = [
     a:"  margin-top:.45rem;padding:0 1rem;",
     cae:'44 px' },
 
+  // ═══ C+D · arranque en frío, filas 1 y 23 de la matriz ═══
+  { id:'AUTH-1', fase:'CD', fila:1,
+    rompe:'durante el arranque se deduce un uid a medias y el evento deja de ser huérfano',
+    archivo:'index.html',
+    // La primera versión de esta mutación NO cambiaba nada: durante el
+    // arranque no hay token, así que `_jwtSub(null)` es null y la condición
+    // seguía siendo la misma. Sobrevivía por inofensiva, no por desprotegida.
+    // Ahora se fabrica un dueño de verdad, que es el fallo que hay que impedir.
+    de:"function _eventoCrear(destino, prioridad, datos){\n  const ctx = _authCtx();",
+    a:"function _eventoCrear(destino, prioridad, datos){\n  const _c0 = _authCtx();\n  const ctx = _c0.uid ? _c0 : { ..._c0, uid: _jwtSub(_c0.token) || 'uid-supuesto' };",
+    cae:'una actividad durante el arranque va a los huérfanos' },
+
+  { id:'AUTH-2', fase:'CD', fila:23,
+    rompe:'el drenaje corre con la identidad todavía sin resolver',
+    archivo:'index.html',
+    de:"  if(ctx.estado !== 'authenticated'){\n    return ctx.estado === 'initializing'        ? 'arrancando'",
+    a:"  if(false){\n    return ctx.estado === 'initializing'        ? 'arrancando'",
+    cae:'el drenaje NO corre durante el bootstrap' },
+
+  { id:'AUTH-3', fase:'CD', fila:1,
+    rompe:'la identidad sale del `sub` del token sin comprobar que la sesión lo respalda',
+    archivo:'index.html',
+    de:"  if(_jwtSub(t) !== u) return null;",
+    a:"  if(false) return null;",
+    cae:'sujeto discordante' },
+
+  { id:'AUTH-4', fase:'CD', fila:null,
+    rompe:'se conserva el uid anterior con un token de otro sujeto',
+    archivo:'index.html',
+    de:"          _authPoner(nuevo);\n          _authTrasIdentidad(a);",
+    a:"          _authPoner({ ...nuevo, uid: a.uid || nuevo.uid });\n          _authTrasIdentidad(a);",
+    cae:'NO se mezcla con el uid anterior' },
+
+  { id:'AUTH-5', fase:'CD', fila:null,
+    rompe:'se conserva el token anterior al cambiar de identidad',
+    archivo:'index.html',
+    de:"  _authPoner({ ..._AUTH_VACIO });\n  // Salir RESUELVE el arranque",
+    a:"  _authPoner({ ..._AUTH_VACIO, token: _authCtx().token });\n  // Salir RESUELVE el arranque",
+    cae:'el contexto se vacía entero' },
+
+  { id:'AUTH-6', fase:'CD', fila:null,
+    rompe:'desaparece «initializing»: no se distingue «no sé quién eres» de «no hay nadie»',
+    archivo:'index.html',
+    de:"let _auth = Object.freeze({ ..._AUTH_INICIO });",
+    a:"let _auth = Object.freeze({ ..._AUTH_VACIO });",
+    cae:'initializing' },
+
+  { id:'AUTH-7', fase:'CD', fila:null,
+    rompe:'un JWT caducado se convierte en identidad activa',
+    archivo:'index.html',
+    de:"  if(!exp || exp * 1000 <= Date.now()) return null;",
+    a:"  if(false) return null;",
+    cae:'CADUCADA nunca llega a authenticated' },
+
+  { id:'AUTH-8', fase:'CD', fila:2,
+    rompe:'los eventos huérfanos se adoptan en cuanto hay identidad',
+    archivo:'index.html',
+    de:"function _authTrasIdentidad(anterior){\n  if(anterior && anterior.estado === 'authenticated') return;   // ya lo estaba",
+    a:"function _authTrasIdentidad(anterior){\n  try{ const h=_evLeer(_EV_SIN_ID); if(h.length){ const c=_authCtx();\n    _evEscribir(_EV_KEY, _evLeer(_EV_KEY).concat(h.map(e=>({...e, uid:c.uid, estado:'pendiente'}))));\n    _evEscribir(_EV_SIN_ID, []); } }catch(_){}\n  if(anterior && anterior.estado === 'authenticated') return;   // ya lo estaba",
+    cae:'huérfano' },
+
+  { id:'AUTH-9', fase:'CD', fila:12,
+    rompe:'el drenaje deja de filtrar por identidad tras una recarga',
+    archivo:'index.html',
+    de:"    .filter(e => e.uid === ctx.uid && e.estado !== 'revisar'",
+    a:"    .filter(e => e.estado !== 'revisar'",
+    cae:'Bruno' },
+
+  { id:'AUTH-10', fase:'CD', fila:null,
+    rompe:'se deja de comprobar que el token es del dueño del evento',
+    archivo:'index.html',
+    de:"  if(_jwtSub(ctx.token) !== ctx.uid) return { estado:'token-no-coincide' };",
+    a:"  if(false) return { estado:'token-no-coincide' };",
+    cae:'CUATRO comprobaciones' },
+
   // ═══ F7 · lo que esta fase acaba de cerrar ═══
   { id:'F7-1', fase:'F7', fila:15,
     rompe:'el backoff se aplana: un servidor caído recibe un martilleo constante',
@@ -411,7 +495,7 @@ const MUTACIONES = [
 
 const args = process.argv.slice(2);
 const soloLista = args.includes('--lista');
-const fase = args.find(a => /^F\d$/.test(a));
+const fase = args.find(a => /^(F\d|CD)$/i.test(a));
 const lista = MUTACIONES.filter(m => !fase || m.fase === fase);
 
 const SALA = join(ROOT, '.mutaciones-en-curso');

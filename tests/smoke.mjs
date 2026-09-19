@@ -7677,7 +7677,7 @@ test('Acceso en 1 toque: sesión deslizante 90d, banner de instalación, hoja iO
   // Fricción reportada por el propietario (jul 2026): el personal leía el PDF
   // porque abrir la app costaba. Este guard fija el paquete anti-fricción.
   // (1) sesión deslizante: 90 días y renovación del sello en cada apertura
-  const al = html.slice(html.indexOf('(function autoLogin('), html.indexOf('(function autoLogin(') + 1400);
+  const al = html.slice(html.indexOf('(function autoLogin('), html.indexOf('(function autoLogin(') + 2200);
   assert(/90\*24\*60\*60\*1000/.test(al), 'session must be valid for 90 days (was 30 — monthly re-login killed the habit)');
   assert(/txoko_session', JSON\.stringify\(\{user, hash, ts: Date\.now\(\)\}\)/.test(al),
     'auto-login must RENEW the session timestamp on each open (sliding session)');
@@ -10171,7 +10171,7 @@ const _actRes = await (async () => {
   const jwtA = 'eyJhbGciOiJIUzI1NiJ9.' + Buffer.from(JSON.stringify({ sub: UIDA, exp: 2000000000 }))
     .toString('base64').replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'') + '.firma';
   const F = new Function('SUPA_URL','SUPA_KEY','_esAdmin','currentUser','_venueActual','dbgw','fetch','_bearer','_tok','_uid','localStorage', // eslint-disable-line no-new-func
-    "let _auth = Object.freeze({ uid:_uid, token:_tok, exp:2000000000, empleado:null, estado:_tok?'activa':'anonimo' });\n"
+    "let _auth = Object.freeze({ uid:_uid, token:_tok, exp:2000000000, empleado:null, estado:_tok?'authenticated':'anonymous' });\n"
     + 'const _authCtx = () => _auth;\n'
     + _xFn('_jwtCarga') + '\n' + _xFn('_jwtSub') + '\n' + _xFn('_cuerpoPropio') + '\n'
     + html.slice(i0, i1) + '; return { registrar: registrarActividad, deTema: competenciaDeTema };');
@@ -10406,7 +10406,7 @@ const _diarioRes = await (async () => {
       (...a) => red(...a), () => 'clave-anon', getEmp, () => hoy, () => { guardados++; return true; },
       [{ id: 1 }, { id: 2 }, { id: 3 }], () => 'txoko',
       new Map([['txoko', false]]), new Map([['txoko', true]]), 'txoko',
-      () => ({ uid:null, token:null, exp:0, empleado:null, estado:'anonimo' }),
+      () => ({ uid:null, token:null, exp:0, empleado:null, estado:'anonymous' }),
       (d) => d, () => null, lsFalso);
   } catch (e) { return { roto: 'no compila: ' + e.message }; }
 
@@ -10839,7 +10839,16 @@ const _authRes = await (async () => {
 
   const esc = { modo: 'ok', empleado: 'Duvan', uid: 'uid-duvan', coincide: true };
   const reg = { fetch: [], setSession: [], signOut: 0, logs: [] };
-  const TOKEN = 'eyJhbGciOiJIUzI1NiJ9.token-de-prueba.firma';
+  // UN JWT DE VERDAD, con el `sub` del usuario que dice el servidor. Antes
+  // era una cadena con forma de token y carga ilegible, y bastaba porque el
+  // `uid` venía del cuerpo de la respuesta y nadie lo contrastaba con el
+  // token. Ahora `_authDeSesion` exige que el `sub` SEA el usuario, así que
+  // un token que no dice de quién es no puede convertirse en identidad —que
+  // es justo la garantía nueva—.
+  const _b64u = (o) => Buffer.from(JSON.stringify(o)).toString('base64')
+    .replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+  const tokenDe = (uid) => 'eyJhbGciOiJIUzI1NiJ9.' + _b64u({ sub: uid, exp: 2000000000 }) + '.firma';
+  const TOKEN = tokenDe('uid-duvan');
   const REFRESH = 'refresco-de-prueba';
 
   const fetchFalso = async (url, opciones) => {
@@ -10854,7 +10863,7 @@ const _authRes = await (async () => {
     return resp(200, {
       ok: true, empleado: esc.empleado, venue: 'txoko', role: 'staff',
       sesion: { creada: true, uid: esc.uid, coincide_con_la_ficha: esc.coincide,
-                access_token: TOKEN, refresh_token: REFRESH, token_type: 'bearer',
+                access_token: tokenDe(esc.uid), refresh_token: REFRESH, token_type: 'bearer',
                 expires_in: 3600, sin_reclamaciones_de_autoridad: true }
     });
   };
@@ -10898,7 +10907,7 @@ const _authRes = await (async () => {
     )(supabaseFalso, 'https://falso.test', 'clave-anon', fetchFalso, almacen,
       (...a) => reg.logs.push(a.map(String).join(' ')));
     const MTardio = montar(supabaseTardio, almacenTardio);
-    return { M, MTardio, esc, reg, almacen, almacenTardio, TOKEN, REFRESH };
+    return { M, MTardio, esc, reg, almacen, almacenTardio, TOKEN, REFRESH, tokenDe };
   } catch (e) { return { roto: 'el módulo de sesión no compila: ' + e.message }; }
 })();
 
@@ -11128,7 +11137,10 @@ test('sin sesión, las peticiones siguen yendo con la clave anónima', () => {
 });
 
 test('con sesión, las peticiones llevan el token de quien ha entrado', () => {
-  assert(_authPruebas.bearerConSesion === _authRes.TOKEN,
+  // El token es el de SOL, que es quien entra en ese escenario. Antes daba
+  // igual —había un único token de mentira para todos—; ahora cada sesión
+  // lleva el suyo, con su `sub`, porque esa correspondencia es la garantía.
+  assert(_authPruebas.bearerConSesion === _authRes.tokenDe('uid-sol'),
     'la cabecera no lleva el access_token de la sesión');
   assert(_authPruebas.bearerConSesion !== 'clave-anon', 'sigue yendo la clave anónima');
 });
@@ -11171,8 +11183,17 @@ test('todas las llamadas a /rest/v1 mandan el token, y sólo ésas', () => {
 });
 
 test('el token en memoria se mantiene al día por onAuthStateChange', () => {
-  assert(/onAuthStateChange\(\(_evento, sesion\) => \{[\s\S]{0,400}_authPoner\(\{/.test(html),
+  const i = html.indexOf('onAuthStateChange((evento, sesion)');
+  const man = html.slice(i, html.indexOf('\n      });', i));
+  assert(i > 0 && /_authPoner\(/.test(man),
     'nada actualiza el contexto cuando el cliente renueva el token solo');
+  // Y YA NO TRATA TODOS LOS EVENTOS IGUAL. `uid: a.uid` era correcto para
+  // TOKEN_REFRESHED y abría la fila 1 en INITIAL_SESSION, donde no hay «uid de
+  // antes». Ahora la identidad sale siempre de la sesión, verificada.
+  assert(/evento === 'SIGNED_OUT'/.test(man), 'salir tiene que vaciar el contexto entero');
+  assert(/_authDeSesion\(sesion/.test(man), 'la identidad tiene que salir de la sesión, no del contexto anterior');
+  assert(!/uid: a\.uid,[\s\S]{0,120}token: t/.test(man),
+    'ha vuelto el uid heredado con token nuevo: eso es la fila 1');
   assert(/_authSesionSalir\(marcaPropia\)\{[\s\S]{0,400}_authPoner\(\{ \.\.\._AUTH_VACIO \}\)/.test(html),
     'salir no vacía el contexto de identidad');
 });
@@ -11377,7 +11398,7 @@ const _b1 = await (async () => {
     };
     const nombres = Object.keys(env);
     const cuerpo = `let currentUser = ${JSON.stringify(usuario)};
-let _auth = { uid: ${JSON.stringify(uid)}, token:null, exp:0, empleado:null, estado:'activa' };
+let _auth = { uid: ${JSON.stringify(uid)}, token:null, exp:0, empleado:null, estado:'authenticated' };
 const _authCtx = () => _auth;
 ${upsert}
 ${cola}
@@ -11570,7 +11591,7 @@ function _montarEscritores(opciones) {
                                    html.indexOf('async function registrarActividad'));
   const refrescos = { n: 0 };
   const M = new Function('capturar', 'localStorage', 'responder', 'navigator', '_getAuthClient', 'documento', ` // eslint-disable-line no-new-func
-    let _auth = Object.freeze({ uid:null, token:null, exp:0, empleado:null, estado:'anonimo' });
+    let _auth = Object.freeze({ uid:null, token:null, exp:0, empleado:null, estado:'anonymous' });
     const _authCtx = () => _auth;
     const _authPoner = (n) => { _auth = Object.freeze(n); };
     const SUPA_URL = 'https://ejemplo', SUPA_KEY = 'clave-anon';
@@ -11611,7 +11632,7 @@ function _montarEscritores(opciones) {
       ctx: _authCtx, poner: _authPoner,
       sesion(uid, token){ _authPoner({ uid, token: token === undefined ? null : token,
                                        exp: 2000000000, empleado: null,
-                                       estado: token ? 'activa' : (uid ? 'identidad_sin_token' : 'anonimo') }); },
+                                       estado: token ? 'authenticated' : (uid ? 'identidad_sin_token' : 'anonymous') }); },
       quien(n){ currentUser = n; },
       cola: () => _evLeer(_EV_KEY),
       sinIdentidad: () => _evLeer(_EV_SIN_ID),
@@ -12049,7 +12070,7 @@ const _f2 = await (async () => {
     o.peticionesTrasCuatro = cap.length;
     M.poner({ uid: BRUNO, token: null, exp: 2000000000, empleado: null, estado: 'identidad_sin_token' });
     o.sinTokenEnvia = (await M.enviar({ ...evAna, uid: BRUNO }, M.ctx())).estado;   // 3 · no hay token
-    M.poner({ uid: BRUNO, token: _jwtDe(ANA), exp: 2000000000, empleado: null, estado: 'activa' });
+    M.poner({ uid: BRUNO, token: _jwtDe(ANA), exp: 2000000000, empleado: null, estado: 'authenticated' });
     o.tokenAjeno = (await M.enviar({ ...evAna, uid: BRUNO }, M.ctx())).estado;      // 4 · el sub no cuadra
     o.peticionesTotales = cap.length;
   }
@@ -12495,11 +12516,14 @@ const _f3 = await (async () => { const o = {};
     await m.M.drenar('x');
     o.priv = { cola: m.M.cola().length, cuar: m.M.cuarentena(), peticiones1: tras, peticiones2: m.cap.length }; }
 
-  // 7 · PGRST301 con el `exp` CADUCADO → renovación
+  // 7 · `exp` CADUCADO → renovación, y SIN gastar una petición
   { const m = await conUnPendiente({ responder: () => _errPg(401, 'PGRST301', 'JWT expired') });
-    m.M.poner({ uid: ANA, token: _jwtDe(ANA), exp: 1, empleado: null, estado:'activa' });
+    m.M.poner({ uid: ANA, token: _jwtDe(ANA), exp: 1, empleado: null, estado:'authenticated' });
+    m.cap.length = 0;
     o.renov = await m.M.drenar('x');
-    o.renovaciones = m.refrescos.n; o.renovCola = m.M.cola().length; }
+    o.renovaciones = m.refrescos.n; o.renovCola = m.M.cola().length;
+    o.renovPeticiones = m.cap.length; }
+
 
   // 8 · PGRST301 con el `exp` VIVO → credencial inválida, y no hay bucle
   { const m = await conUnPendiente({ responder: () => _errPg(401, 'PGRST301', 'JWSError') });
@@ -12661,10 +12685,31 @@ test('F3 · 42501 no entra en bucle: cuarentena y no se vuelve a pedir', () => {
   assert(_f3.priv.peticiones2 === 1, 'el segundo drenaje NO puede volver a pedirlo');
 });
 
-test('F3 · PGRST301 con exp caducado → renovación por la vía existente', () => {
+test('F3 · exp caducado → renovación por la vía existente, y sin gastar petición', () => {
+  // CAMBIO DE C+D, y es más fuerte que antes: si el token ya está muerto según
+  // el `exp` que el propio cliente tiene, no hace falta preguntárselo al
+  // servidor. Se renueva y se corta el ciclo SIN enviar nada. Antes se gastaba
+  // una petición con un token que no podía funcionar. La renovación sigue
+  // siendo la de siempre —`_eventoRenovar`—, una sola vez, y el evento se
+  // conserva entero para el siguiente ciclo.
   assert(_f3.renovaciones === 1, `tenía que renovar una vez, renovó ${_f3.renovaciones}`);
-  assert(_f3.renov === 'renovada-sesion', `el ciclo debe cortarse tras renovar: ${_f3.renov}`);
+  assert(_f3.renov === 'credencial-caducada', `el ciclo debe cortarse: ${_f3.renov}`);
   assert(_f3.renovCola === 1, 'el evento se conserva para el siguiente ciclo');
+  assert(_f3.renovPeticiones === 0,
+    'un token que el cliente sabe muerto NO puede salir por el cable');
+});
+
+test('F3 · la clasificación de PGRST301 NO se ha tocado', () => {
+  // C+D adelanta la renovación —el cliente ya sabe que su token murió, así que
+  // no gasta una petición en preguntarlo—, pero no reescribe la regla de F3.
+  // Con el `exp` VIVO un PGRST301 sigue siendo credencial inválida y no
+  // renovación, que es lo que impide el bucle. Eso lo demuestra la prueba de
+  // abajo; aquí se fija que la regla sigue escrita igual.
+  const f = html.slice(html.indexOf("if(code === 'PGRST301')"), html.indexOf("if(st === 400)"));
+  assert(/const caducado = !ctx\.exp \|\| ctx\.exp \* 1000 <= Date\.now\(\);/.test(f),
+    'la caducidad la sigue decidiendo el exp del cliente');
+  assert(/return caducado \? \{ estado:'renovar' \} : \{ estado:'revisar', motivo:'credencial-invalida' \};/.test(f),
+    'la clasificación de PGRST301 ha cambiado');
 });
 
 test('F3 · PGRST301 con exp vivo es credencial inválida, y NO hay bucle', () => {
@@ -13834,6 +13879,367 @@ test('F6 · el aviso de disco lleno se pinta EN EL ACTO, no en la siguiente acti
     'sin salir de la propia actividad, el aviso ya tiene que estar en pantalla');
 });
 
+// ─── C+D · ARRANQUE EN FRÍO: LAS FILAS 1 Y 23 ───────────────────────────────
+//
+// Se monta el MÓDULO DE AUTH REAL junto con el BLOQUE DE EVENTOS REAL y un
+// supabase-js de mentira que se comporta como el de verdad: guarda la sesión
+// en el almacén que se le pasa, la devuelve por `getSession()` y avisa por
+// `onAuthStateChange`. Nada de esto lee el fichero buscando texto: se ejecuta
+// el arranque y se mira quién acaba siendo el empleado y dónde acaba el evento.
+console.log('\nC+D — arranque en frío, identidad y cola');
+
+const _cdANA   = '44444444-4444-4444-8444-444444444444';
+const _cdBRUNO = '55555555-5555-4555-8555-555555555555';
+const _cdTok = (sub, segs) => 'eyJhbGciOiJIUzI1NiJ9.'
+  + Buffer.from(JSON.stringify({ sub, exp: Math.floor(Date.now() / 1000) + (segs === undefined ? 3600 : segs) }))
+      .toString('base64').replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '')
+  + '.firma';
+
+function _cdMontar(o) {
+  o = o || {};
+  const almacen = o.almacen || Object.create(null);
+  const cap = [];
+  const ls = {
+    getItem: (k) => (k in almacen ? almacen[k] : null),
+    setItem: (k, v) => { almacen[k] = String(v); },
+    removeItem: (k) => { delete almacen[k]; },
+  };
+  // supabase-js de mentira. `sesion` es lo que hay «en disco» al arrancar.
+  const oyentes = [];
+  const hecho = { getSession: 0, refresh: 0 };
+  let guardada = o.sesion === undefined ? null : o.sesion;
+  const cliente = { auth: {
+    onAuthStateChange: (f) => { oyentes.push(f); return { data: { subscription: {} } }; },
+    getSession: async () => { hecho.getSession++;
+      if (o.getSessionTarda) await new Promise(r => setTimeout(r, 0));
+      if (o.getSessionFalla) throw new Error('boom');
+      return { data: { session: guardada }, error: null }; },
+    setSession: async (t) => { guardada = t; return { data: { session: t }, error: null }; },
+    refreshSession: async () => { hecho.refresh++; return { data: { session: guardada }, error: null }; },
+    signOut: async () => { guardada = null; return { error: null }; },
+  } };
+  const supabaseFalso = { createClient: () => cliente };
+  const zona = html.slice(html.indexOf('// ═══ SESIÓN DE AUTH (fase 2.5C)'),
+                          html.indexOf('// ═══ MÓDULO PROTOCOLO'));
+  const eventos = html.slice(html.indexOf('const _EV_KEY'), html.indexOf('async function registrarActividad'));
+  const regAct = (() => { const i = html.indexOf('async function registrarActividad');
+    let d = 0, dn = false;
+    for (let k = i; k < html.length; k++) { if (html[k] === '{') { d++; dn = true; }
+      else if (html[k] === '}') { d--; if (dn && d === 0) return html.slice(i, k + 1); } } })();
+  const M = new Function('supabase', 'SUPA_URL', 'SUPA_KEY', 'fetch', 'localStorage', 'dbgw',
+                         'navigator', 'capturar', 'responder', ` // eslint-disable-line no-new-func
+    let _authClient = null, _authPeticion = null;
+    let currentUser = 'Ana';
+    const TIPOS_ACTIVIDAD = ['evaluacion','practica','juego'];
+    const COMPETENCIAS = ['alergenos','carta','vinos','protocolo','sala','servicio'];
+    const _esAdmin = (n) => n === 'Administrador';
+    const _venueActual = () => 'txoko';
+    const _anotarEnDiario = () => {};
+    const document = undefined, window = undefined;
+    const atob = (x) => Buffer.from(x, 'base64').toString('binary');
+    ${zona.replace(/^let _authClient = null;$/m, '').replace(/^let _authPeticion = null;.*$/m, '')}
+    ${eventos}
+    ${regAct}
+    return { ctx:_authCtx, poner:_authPoner, arrancar:_authArrancar, resolver:_authResolver,
+             deSesion:_authDeSesion, salir:_authSesionSalir, entrar:_authSesionEntrar,
+             cola:()=>_evLeer(_EV_KEY), sinIdentidad:()=>_evLeer(_EV_SIN_ID),
+             drenar:_eventosDrenar, registrarActividad,
+             vencer(){ const q=_evLeer(_EV_KEY); q.forEach(e=>e.proximo=0);
+                       localStorage.setItem(_EV_KEY, JSON.stringify(q)); _evAplazado.clear(); } };
+  `)(supabaseFalso, 'https://falso.test', 'clave-anon',
+     async (u, opt) => { capturarRed(u, JSON.parse(opt.body)); const r = responderRed(); 
+                         if (r && r.lanza) throw new TypeError('sin red'); return r; },
+     ls, () => {}, o.navigator || { onLine: true },
+     (u, b) => cap.push({ u, b }), () => o.respuesta || { ok:true, status:201, json: async () => [{ evento_id:'ok' }] });
+  function capturarRed(u, b){ cap.push({ u, b }); }
+  function responderRed(){ return o.respuesta || { ok:true, status:201, json: async () => [{ evento_id:'ok' }] }; }
+  // Disparar lo que supabase-js emitiría:
+  const emitir = (evento, sesion) => oyentes.forEach(f => f(evento, sesion === undefined ? guardada : sesion));
+  return { M, cap, almacen, emitir, hecho, cliente };
+}
+
+const _evalCD = { activity:'examen', competency:'carta', kind:'evaluacion',
+                  score:8, total:10, seconds:60, meta:{} };
+
+// Igual que en F3: si una fixtura explota fuera de un `test()`, se lleva la
+// suite ENTERA por delante y el verificador de mutaciones sólo ve «la suite no
+// llegó a ejecutarse». El fallo se guarda y lo denuncia una prueba.
+const _cd = await (async () => { const o = {};
+  try { return await (async () => {
+  const sinRed = { lanza: true };
+
+  // 1 · sesión persistida VÁLIDA → authenticated
+  { const h = _cdMontar({ sesion: { access_token: _cdTok(_cdANA), user: { id: _cdANA } } });
+    o.p1Inicial = h.M.ctx();
+    o.p1 = await h.M.arrancar(); o.p1Ctx = h.M.ctx(); }
+
+  // 2 · sin sesión → anonymous
+  { const h = _cdMontar({ sesion: null });
+    o.p2 = await h.M.arrancar(); o.p2Ctx = h.M.ctx(); }
+
+  // 3 · sesión CADUCADA → nunca authenticated
+  { const h = _cdMontar({ sesion: { access_token: _cdTok(_cdANA, -3600), user: { id: _cdANA } } });
+    o.p3 = await h.M.arrancar(); o.p3Ctx = h.M.ctx(); }
+
+  // 4 · token ausente → anonymous
+  { const h = _cdMontar({ sesion: { refresh_token: 'r', user: { id: _cdANA } } });
+    o.p4 = await h.M.arrancar(); o.p4Ctx = h.M.ctx(); }
+
+  // 4b · el `sub` del token NO es el usuario de la sesión → rechazo
+  { const h = _cdMontar({ sesion: { access_token: _cdTok(_cdBRUNO), user: { id: _cdANA } } });
+    o.p4b = await h.M.arrancar(); o.p4bCtx = h.M.ctx(); }
+
+  // 5 · Auth tarda → initializing mientras tanto
+  { const h = _cdMontar({ sesion: { access_token: _cdTok(_cdANA), user: { id: _cdANA } }, getSessionTarda: true });
+    const prom = h.M.arrancar();
+    o.p5Durante = h.M.ctx();
+    await prom; o.p5Despues = h.M.ctx(); }
+
+  // 6 · actividad DURANTE initializing → cola de huérfanos
+  { const h = _cdMontar({ sesion: { access_token: _cdTok(_cdANA), user: { id: _cdANA } }, respuesta: sinRed });
+    o.p6Estado = h.M.ctx().estado;
+    o.p6Alta = await h.M.registrarActividad(_evalCD);
+    o.p6 = { cola: h.M.cola().length, huerfanos: h.M.sinIdentidad().length, peticiones: h.cap.length };
+    await h.M.arrancar();
+    o.p6Tras = { estado: h.M.ctx().estado, cola: h.M.cola().length,
+                 huerfanos: h.M.sinIdentidad().length, peticiones: h.cap.length }; }
+
+  // 7 · actividad DESPUÉS de sesión válida → cola autenticada
+  { const h = _cdMontar({ sesion: { access_token: _cdTok(_cdANA), user: { id: _cdANA } }, respuesta: sinRed });
+    await h.M.arrancar();
+    await h.M.registrarActividad(_evalCD);
+    o.p7 = { estado: h.M.ctx().estado, cola: h.M.cola().length,
+             huerfanos: h.M.sinIdentidad().length,
+             uid: h.M.cola()[0] && h.M.cola()[0].uid }; }
+
+  // 8 · OFFLINE durante el arranque: la identidad se recupera igual
+  { const h = _cdMontar({ sesion: { access_token: _cdTok(_cdANA), user: { id: _cdANA } },
+                          navigator: { onLine: false }, respuesta: sinRed });
+    o.p8 = await h.M.arrancar(); o.p8Ctx = h.M.ctx(); o.p8Red = h.cap.length; }
+
+  // 9 · ONLINE durante el arranque
+  { const h = _cdMontar({ sesion: { access_token: _cdTok(_cdANA), user: { id: _cdANA } }, respuesta: sinRed });
+    o.p9 = await h.M.arrancar(); o.p9Ctx = h.M.ctx(); }
+
+  // 10 · pendiente + recarga + sesión válida → drena
+  { const alm = Object.create(null);
+    { const h = _cdMontar({ almacen: alm, sesion: { access_token: _cdTok(_cdANA), user:{id:_cdANA} }, respuesta: sinRed });
+      await h.M.arrancar(); await h.M.registrarActividad(_evalCD);
+      o.p10Antes = { cola: h.M.cola().length, id: h.M.cola()[0].evento_id, uid: h.M.cola()[0].uid }; }
+    const h = _cdMontar({ almacen: alm, sesion: { access_token: _cdTok(_cdANA), user:{id:_cdANA} } });
+    await h.M.arrancar(); h.M.vencer();
+    o.p10 = await h.M.drenar('recarga');
+    o.p10Tras = { cola: h.M.cola().length, peticiones: h.cap.length,
+                  idEnviado: h.cap[0] && h.cap[0].b.evento_id }; }
+
+  // 11 · pendiente + recarga + sesión CADUCADA → permanece
+  { const alm = Object.create(null);
+    { const h = _cdMontar({ almacen: alm, sesion: { access_token: _cdTok(_cdANA), user:{id:_cdANA} }, respuesta: sinRed });
+      await h.M.arrancar(); await h.M.registrarActividad(_evalCD); }
+    const h = _cdMontar({ almacen: alm, sesion: { access_token: _cdTok(_cdANA, -10), user:{id:_cdANA} } });
+    await h.M.arrancar(); h.M.vencer();
+    o.p11 = await h.M.drenar('caducada');
+    o.p11Ctx = h.M.ctx(); o.p11Cola = h.M.cola().length; o.p11Peticiones = h.cap.length; }
+
+  // 12 · pendiente de Ana + entra BRUNO → 0 peticiones
+  { const alm = Object.create(null);
+    { const h = _cdMontar({ almacen: alm, sesion: { access_token: _cdTok(_cdANA), user:{id:_cdANA} }, respuesta: sinRed });
+      await h.M.arrancar(); await h.M.registrarActividad(_evalCD);
+      o.p12Id = h.M.cola()[0].evento_id; }
+    const h = _cdMontar({ almacen: alm, sesion: { access_token: _cdTok(_cdBRUNO), user:{id:_cdBRUNO} } });
+    await h.M.arrancar(); h.M.vencer();
+    o.p12 = await h.M.drenar('bruno');
+    o.p12Ctx = h.M.ctx(); o.p12Peticiones = h.cap.length;
+    o.p12DeAna = h.M.cola().filter(e => e.uid === _cdANA);
+    // 13 · y después Ana vuelve. NO se drena a mano: se comprueba que el
+    //      disparador de §9 —«en cuanto hay identidad firme»— lo hace solo, sin
+    //      esperar al intervalo de 120 s. Por eso se vence el backoff ANTES.
+    const h2 = _cdMontar({ almacen: alm, sesion: { access_token: _cdTok(_cdANA), user:{id:_cdANA} } });
+    h2.M.vencer();
+    await h2.M.arrancar();
+    await new Promise(r => setTimeout(r, 0));     // el drenaje de la transición
+    await new Promise(r => setTimeout(r, 0));
+    o.p13Peticiones = h2.cap.length; o.p13Id = h2.cap[0] && h2.cap[0].b.evento_id;
+    o.p13Cola = h2.M.cola().length; }
+
+  // 15 · Ana → logout → Bruno
+  { const alm = Object.create(null);
+    const h = _cdMontar({ almacen: alm, sesion: { access_token: _cdTok(_cdANA), user:{id:_cdANA} }, respuesta: sinRed });
+    await h.M.arrancar();
+    o.p15Ana = h.M.ctx().uid;
+    await h.M.salir();
+    o.p15TrasSalir = h.M.ctx();
+    h.M.poner({ uid:_cdBRUNO, token:_cdTok(_cdBRUNO), exp: Math.floor(Date.now()/1000)+3600,
+                empleado:'Bruno', estado:'authenticated' });
+    o.p15Bruno = h.M.ctx().uid; }
+
+  // 16 · token de Ana con uid de Bruno → la validación lo rechaza
+  { const h = _cdMontar({});
+    o.p16 = h.M.deSesion({ access_token: _cdTok(_cdANA), user: { id: _cdBRUNO } }, null); }
+
+  // 17 · drenaje DURANTE el bootstrap → 0 peticiones
+  { const alm = Object.create(null);
+    { const h = _cdMontar({ almacen: alm, sesion: { access_token: _cdTok(_cdANA), user:{id:_cdANA} }, respuesta: sinRed });
+      await h.M.arrancar(); await h.M.registrarActividad(_evalCD); }
+    const h = _cdMontar({ almacen: alm, sesion: { access_token: _cdTok(_cdANA), user:{id:_cdANA} } });
+    h.M.vencer();
+    o.p17 = await h.M.drenar('bootstrap');       // sin arrancar todavía
+    o.p17Peticiones = h.cap.length; o.p17Cola = h.M.cola().length; }
+
+  // 18 · INITIAL_SESSION por el manejador real reconstruye la identidad
+  { const h = _cdMontar({ sesion: { access_token: _cdTok(_cdANA), user:{id:_cdANA} } });
+    h.M.arrancar();                                // crea el cliente y engancha
+    await new Promise(r => setTimeout(r, 0));
+    h.emitir('INITIAL_SESSION');
+    o.p18 = h.M.ctx();
+    h.emitir('SIGNED_OUT', null);
+    o.p18Salida = h.M.ctx(); }
+
+  // 19 · TOKEN_REFRESHED de OTRO sujeto no puede mezclarse con el uid anterior
+  { const h = _cdMontar({ sesion: { access_token: _cdTok(_cdANA), user:{id:_cdANA} } });
+    h.M.arrancar(); await new Promise(r => setTimeout(r, 0));
+    h.emitir('INITIAL_SESSION');
+    const antes = h.M.ctx().uid;
+    h.emitir('TOKEN_REFRESHED', { access_token: _cdTok(_cdBRUNO), user: { id: _cdBRUNO } });
+    o.p19 = { antes, despues: h.M.ctx() }; }
+
+  return o;
+  })(); } catch (e) { o.explosion = (e && e.message) || String(e); return o; }
+})();
+
+test('C+D · el montaje de los escenarios de arranque no explota', () => {
+  assert(!_cd.explosion,
+    `una fixtura de C+D ha reventado y el resto de la sección no mide nada: ${_cd.explosion}`);
+});
+
+const _cdEs = (c) => `uid=${c.uid ? 'sí' : 'null'} token=${c.token ? 'sí' : 'null'} estado=${c.estado}`;
+
+test('C+D · 1 · sesión persistida válida → authenticated con la terna coherente', () => {
+  assert(_cd.p1Inicial.estado === 'initializing',
+    `la pestaña tiene que arrancar en initializing: ${_cd.p1Inicial.estado}`);
+  assert(_cd.p1 === 'authenticated', `esperaba authenticated, llegó ${_cd.p1}`);
+  assert(_cd.p1Ctx.uid === _cdANA, 'el uid tiene que salir de la sesión, no de la nada');
+  assert(_cd.p1Ctx.token && _cd.p1Ctx.exp * 1000 > Date.now(), 'token y exp de la MISMA sesión');
+});
+
+test('C+D · 2 · sin sesión → anonymous, que NO es initializing', () => {
+  assert(_cd.p2 === 'anonymous', `${_cd.p2}`);
+  assert(_cd.p2Ctx.uid === null && _cd.p2Ctx.token === null, _cdEs(_cd.p2Ctx));
+});
+
+test('C+D · 3 · una sesión CADUCADA nunca llega a authenticated', () => {
+  assert(_cd.p3 !== 'authenticated', `un JWT muerto no puede ser identidad activa: ${_cd.p3}`);
+  assert(_cd.p3Ctx.token === null, 'y no puede quedarse el token muerto en el contexto');
+});
+
+test('C+D · 4 · sin token, y con el sujeto discordante, no hay identidad', () => {
+  assert(_cd.p4 === 'anonymous', `sin access_token: ${_cd.p4}`);
+  assert(_cd.p4b === 'anonymous',
+    `un token cuyo sub NO es el usuario de la sesión no puede identificar: ${_cd.p4b}`);
+  assert(_cd.p4bCtx.uid === null, 'ni dejar el uid puesto');
+});
+
+test('C+D · 5 · mientras Auth tarda, el estado es initializing', () => {
+  assert(_cd.p5Durante.estado === 'initializing', `durante: ${_cd.p5Durante.estado}`);
+  assert(_cd.p5Despues.estado === 'authenticated', `después: ${_cd.p5Despues.estado}`);
+});
+
+test('C+D · 6 · FILA 1 · una actividad durante el arranque va a los huérfanos', () => {
+  assert(_cd.p6Estado === 'initializing', 'el escenario tiene que empezar en initializing');
+  assert(_cd.p6Alta.evento === 'sin_identidad', `${JSON.stringify(_cd.p6Alta)}`);
+  assert(_cd.p6.huerfanos === 1 && _cd.p6.cola === 0, JSON.stringify(_cd.p6));
+  assert(_cd.p6.peticiones === 0, 'y no sale ninguna petición');
+  // Y NO SE ADOPTA aunque Auth se restaure justo después. Es la regla de B2.
+  assert(_cd.p6Tras.estado === 'authenticated', 'Auth termina de arrancar');
+  assert(_cd.p6Tras.huerfanos === 1 && _cd.p6Tras.cola === 0,
+    `el huérfano NO puede mudarse a la cola autenticada: ${JSON.stringify(_cd.p6Tras)}`);
+  assert(_cd.p6Tras.peticiones === 0, 'ni enviarse');
+});
+
+test('C+D · 7 · FILA 1 cerrada · tras el arranque, la actividad SÍ tiene dueño', () => {
+  assert(_cd.p7.estado === 'authenticated', _cd.p7.estado);
+  assert(_cd.p7.cola === 1 && _cd.p7.huerfanos === 0,
+    `antes de C+D esto iba a los huérfanos: ${JSON.stringify(_cd.p7)}`);
+  assert(_cd.p7.uid === _cdANA, 'y con el uid de Ana');
+});
+
+test('C+D · 8 · SIN RED la identidad se recupera igual', () => {
+  // Es el caso que fallaba para siempre: `_authSesionEntrar` pide la sesión por
+  // red y sin cobertura no vuelve nunca. `getSession()` lee del disco.
+  assert(_cd.p8 === 'authenticated', `sin red: ${_cd.p8}`);
+  assert(_cd.p8Ctx.uid === _cdANA, 'con el uid correcto');
+  assert(_cd.p8Red === 0, 'y sin una sola petición de red para conseguirlo');
+  assert(_cd.p9 === 'authenticated', `con red: ${_cd.p9}`);
+});
+
+test('C+D · 10 · FILA 23 cerrada · pendiente + recarga + sesión válida → drena', () => {
+  assert(_cd.p10Antes.cola === 1 && _cd.p10Antes.uid === _cdANA, JSON.stringify(_cd.p10Antes));
+  assert(_cd.p10 === 'hecho', `tras recargar tiene que drenar: ${_cd.p10}`);
+  assert(_cd.p10Tras.peticiones === 1, 'una petición');
+  assert(_cd.p10Tras.idEnviado === _cd.p10Antes.id, 'con el MISMO evento_id, sin duplicar');
+  assert(_cd.p10Tras.cola === 0, 'y sale de la cola');
+});
+
+test('C+D · 11 · pendiente + recarga + sesión caducada → permanece intacto', () => {
+  assert(_cd.p11Ctx.estado !== 'authenticated', `${_cd.p11Ctx.estado}`);
+  assert(_cd.p11Peticiones === 0, 'no puede salir nada con una sesión muerta');
+  assert(_cd.p11Cola === 1, 'y el evento se conserva entero');
+});
+
+test('C+D · 12 · Ana → recarga → BRUNO: cero peticiones del evento de Ana', () => {
+  assert(_cd.p12Ctx.uid === _cdBRUNO, 'Bruno es quien está dentro');
+  assert(_cd.p12Peticiones === 0, `Bruno NO puede enviar el evento de Ana: ${_cd.p12Peticiones}`);
+  assert(_cd.p12DeAna.length === 1, 'el evento de Ana sigue ahí');
+  assert(_cd.p12DeAna[0].uid === _cdANA, 'y no ha cambiado de dueño');
+  assert(_cd.p12DeAna[0].evento_id === _cd.p12Id, 'ni de identificador');
+});
+
+test('C+D · 13 · Ana → recarga → Ana: la cola sale SOLA al recuperar identidad', () => {
+  // Es el disparador nuevo de §9. Sin él, lo pendiente esperaba al intervalo de
+  // 120 s: el de arranque (+4 s) cae casi siempre ANTES de que haya identidad.
+  // Aquí NO se llama a drenar: se arranca y se mira si la cola sale sola.
+  assert(_cd.p13Peticiones === 1, `el drenaje tenía que dispararse solo: ${_cd.p13Peticiones}`);
+  assert(_cd.p13Id === _cd.p12Id, 'y sale SU evento, con su id');
+  assert(_cd.p13Cola === 0, 'y la cola queda vacía');
+});
+
+test('C+D · 15 · Ana → logout → Bruno: el contexto se vacía entero entre medias', () => {
+  assert(_cd.p15Ana === _cdANA, 'Ana estaba dentro');
+  assert(_cd.p15TrasSalir.uid === null && _cd.p15TrasSalir.token === null
+      && _cd.p15TrasSalir.estado === 'anonymous', _cdEs(_cd.p15TrasSalir));
+  assert(_cd.p15Bruno === _cdBRUNO, 'y después entra Bruno');
+});
+
+test('C+D · 16 · token de Ana con uid de Bruno: rechazado de plano', () => {
+  assert(_cd.p16 === null,
+    'una sesión cuyo token no es del usuario que dice NO puede volverse identidad');
+});
+
+test('C+D · 17 · el drenaje NO corre durante el bootstrap', () => {
+  assert(_cd.p17 === 'arrancando', `esperaba salir por arranque, llegó ${_cd.p17}`);
+  assert(_cd.p17Peticiones === 0, 'ni una petición con identidad ambigua');
+  assert(_cd.p17Cola === 1, 'y la cola intacta');
+});
+
+test('C+D · 18 · INITIAL_SESSION reconstruye, SIGNED_OUT vacía', () => {
+  assert(_cd.p18.uid === _cdANA && _cd.p18.estado === 'authenticated', _cdEs(_cd.p18));
+  assert(_cd.p18Salida.uid === null && _cd.p18Salida.token === null
+      && _cd.p18Salida.estado === 'anonymous', _cdEs(_cd.p18Salida));
+});
+
+test('C+D · 19 · un token de otro sujeto NO se mezcla con el uid anterior', () => {
+  assert(_cd.p19.antes === _cdANA, 'antes estaba Ana');
+  assert(_cd.p19.despues.uid === _cdBRUNO,
+    'si el sujeto del token cambia, cambia el contexto ENTERO con él');
+  assert(_jwtSubDePrueba(_cd.p19.despues.token) === _cd.p19.despues.uid,
+    'uid y token tienen que seguir siendo de la misma sesión');
+});
+
+function _jwtSubDePrueba(t) {
+  try { return JSON.parse(Buffer.from(String(t).split('.')[1], 'base64').toString()).sub; }
+  catch (_) { return null; }
+}
+
 // ─── B2 · F7 · las filas de la MATRIZ DE ACEPTACIÓN que no tenían prueba ───
 //
 // F7 no añade comportamiento: cierra la red de seguridad. Cada prueba de aquí
@@ -14079,7 +14485,7 @@ test('F0 · tras _authPoner cambia la REFERENCIA — es lo que detecta la carrer
 test('F0 · _bearer() sale del contexto: token si lo hay, clave anónima si no', () => {
   const M = _authRes.M;
   const guardado = M.ctx();
-  M.poner({ uid: 'u', token: 'tok-de-prueba', exp: 0, empleado: null, estado: 'activa' });
+  M.poner({ uid: 'u', token: 'tok-de-prueba', exp: 0, empleado: null, estado: 'authenticated' });
   assert(M._bearer() === 'tok-de-prueba', '_bearer no devuelve el token del contexto');
   M.poner({ uid: 'u', token: null, exp: 0, empleado: null, estado: 'identidad_sin_token' });
   assert(M._bearer() === 'clave-anon', '_bearer no cae a la clave anónima cuando no hay token');
@@ -14116,8 +14522,17 @@ test('F0 · no quedan lecturas sueltas de identidad fuera del contexto', () => {
   // mutación la destapó: comprobar `Object.isFrozen` sobre el contexto vivo no
   // basta —`_authPoner` lo congela en cada cambio, así que el fallo sólo se ve
   // ANTES del primer login, que es justo cuando arranca un iPad compartido.
-  assert(/let _auth = Object\.freeze\(\{ \.\.\._AUTH_VACIO \}\);/.test(html),
+  assert(/let _auth = Object\.freeze\(\{ \.\.\._AUTH_INICIO \}\);/.test(html),
     'el contexto inicial no está congelado: antes del primer login se podría mutar la identidad');
+  // Y arranca en `initializing`, que NO es `anonymous`. Distinguir «todavía no
+  // sé quién eres» de «sé que no hay nadie» es lo que cierra las filas 1 y 23:
+  // mientras fueron el mismo estado, los dos daban uid:null y el drenaje no
+  // podía saber si estaba ante un dispositivo sin sesión o ante uno que aún no
+  // había terminado de arrancar.
+  assert(/const _AUTH_INICIO = \{ uid:null, token:null, exp:0, empleado:null, estado:'initializing' \};/.test(html),
+    'el arranque tiene que empezar en initializing');
+  assert(/const _AUTH_VACIO  = \{ uid:null, token:null, exp:0, empleado:null, estado:'anonymous' \};/.test(html),
+    'y el vacío tiene que ser anonymous, distinto de initializing');
   // Una sola vía de cambio: la declaración y la de dentro de _authPoner.
   const asigna = (html.match(/\b_auth\s*=/g) || []).length;
   assert(asigna === 2, `hay ${asigna} asignaciones de _auth (esperaba 2: la declaración y _authPoner)`);
@@ -14133,8 +14548,15 @@ test('F0 · salir y entrar sustituyen el contexto ENTERO, de una vez', () => {
   assert(/_authPoner\(\{ \.\.\._AUTH_VACIO \}\)/.test(salir), 'salir no vacía el contexto entero');
   assert((entrar.match(/_authPoner\(/g) || []).length === 1,
     'entrar tiene que poner uid y token JUNTOS, en UNA sola asignación');
-  assert(/_authPoner\(\{ uid:[\s\S]{0,200}token: s\.access_token/.test(entrar),
-    'entrar no pone el uid y el token en la misma asignación');
+  // Ya no compone el objeto a mano: lo construye `_authDeSesion`, que es la
+  // ÚNICA puerta por la que una sesión se vuelve identidad. La garantía es la
+  // misma —uid, token y exp de una sola vez— y además ahora verificados.
+  assert(/_authPoner\(ctxNuevo\)/.test(entrar),
+    'entrar no pone el contexto de una sola vez');
+  assert(/const ctxNuevo = _authDeSesion\(/.test(entrar),
+    'entrar tiene que pasar por la misma validación que el arranque');
+  assert(/if\(!ctxNuevo\) return/.test(entrar),
+    'una sesión que no se puede verificar NO puede establecer identidad');
 });
 
 // ─── 7. No leftover git conflict markers ────────────────────────

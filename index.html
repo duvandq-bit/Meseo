@@ -52,7 +52,7 @@
 <meta property="og:description" content="Formación de equipos de sala: carta, alérgenos, vinos, exámenes y juegos de repaso.">
 <meta property="og:url" content="https://meseo.es/">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"Meseo","url":"https://meseo.es/"}</script>
-<meta name="app-version" content="7.462">
+<meta name="app-version" content="7.463">
 <meta name="app-build" content="May 2026">
 <meta name="theme-color" content="#1c2a22">
 <!-- ═══ PWA ═══ -->
@@ -963,9 +963,22 @@ let _authPeticion = null;   // la petición en curso; sirve de cerrojo. NO es id
 //             cliente con esto, no el servidor: está medido que PGRST301 no
 //             significa «caducado», también lo devuelve un token ilegible
 //   empleado  a nombre de quién, según el servidor. Sólo diagnóstico
-//   estado    anonimo | identidad_sin_token | activa
-const _AUTH_VACIO = { uid:null, token:null, exp:0, empleado:null, estado:'anonimo' };
-let _auth = Object.freeze({ ..._AUTH_VACIO });
+//   estado    initializing | authenticated | anonymous | identidad_sin_token
+//
+// LOS CUATRO ESTADOS, Y POR QUÉ «initializing» NO ES «anonymous»
+//   initializing         todavía NO SE SABE si hay sesión. Es el estado en el
+//                        que arranca la pestaña, y duró siempre indistinguible
+//                        de «no hay nadie»: los dos daban uid:null. Ésa era la
+//                        raíz de las filas 1 y 23 de la matriz de aceptación.
+//   authenticated        sesión COMPLETA y verificada: uid, token y exp salen
+//                        de la MISMA sesión, el `sub` del token coincide con
+//                        el usuario, y el token no ha caducado. Es lo único
+//                        que autoriza a drenar.
+//   anonymous            se SABE que no hay sesión.
+//   identidad_sin_token  se sabe quién eres y el token ya no está.
+const _AUTH_VACIO  = { uid:null, token:null, exp:0, empleado:null, estado:'anonymous' };
+const _AUTH_INICIO = { uid:null, token:null, exp:0, empleado:null, estado:'initializing' };
+let _auth = Object.freeze({ ..._AUTH_INICIO });
 function _authCtx(){ return _auth; }                       // síncrona, nunca lanza
 function _authPoner(next){ _auth = Object.freeze(next); }  // ÚNICA vía de cambio
 
@@ -984,6 +997,30 @@ function _jwtCarga(t){
 }
 function _jwtSub(t){ const c = _jwtCarga(t); return (c && typeof c.sub === 'string' && c.sub) ? c.sub : null; }
 function _jwtExp(t){ const c = _jwtCarga(t); return (c && typeof c.exp === 'number') ? c.exp : 0; }
+
+// LA ÚNICA PUERTA POR LA QUE UNA SESIÓN SE CONVIERTE EN IDENTIDAD.
+//
+// Devuelve el contexto ENTERO o `null`. Nunca a medias: o se sabe quién eres
+// con las tres cosas de la misma sesión, o no se sabe. Antes el contexto se
+// componía en dos sitios distintos y podía quedar con `token` de una sesión y
+// `uid` de otra —o de ninguna—, que es lo que abría las filas 1 y 23.
+//
+// Las cinco condiciones, y ninguna es decorativa:
+//   1 y 2 · sin token o sin usuario no hay nada que verificar;
+//   3 · el `sub` del token tiene que ser el usuario de la sesión: así no puede
+//       existir «uid de una sesión con el token de otra»;
+//   4 · `exp` tiene que estar en el futuro: un JWT muerto NO es identidad
+//       activa, por mucho que el almacén lo conserve;
+//   5 · los cuatro valores se devuelven juntos, para ponerlos de una sola vez.
+function _authDeSesion(sesion, empleado){
+  const t = (sesion && sesion.access_token) || null;
+  const u = (sesion && sesion.user && sesion.user.id) || null;
+  if(!t || !u) return null;
+  if(_jwtSub(t) !== u) return null;
+  const exp = _jwtExp(t);
+  if(!exp || exp * 1000 <= Date.now()) return null;
+  return { uid: u, token: t, exp, empleado: empleado || null, estado: 'authenticated' };
+}
 
 // LA CABECERA `Authorization` DE LAS PETICIONES A LA BASE DE DATOS (fase 2.5D-A)
 //
@@ -1050,19 +1087,100 @@ function _getAuthClient(){
     // La copia en memoria del token la mantiene el propio cliente al día:
     // al establecer sesión, al renovarla sola cada hora y al cerrarla.
     try{
-      _authClient.auth.onAuthStateChange((_evento, sesion) => {
-        // Sustituye el contexto entero, conservando de quién es. Sin token pero
-        // con uid, el estado es `identidad_sin_token`: se sabe quién eres y
-        // todavía no se puede hablar por ti.
-        const t = (sesion && sesion.access_token) || null;
+      _authClient.auth.onAuthStateChange((evento, sesion) => {
+        // YA NO SE TRATAN TODOS LOS EVENTOS POR IGUAL. El manejador anterior
+        // hacía `uid: a.uid` —conservar el de antes— para cualquier evento.
+        // Eso es CORRECTO en `TOKEN_REFRESHED`, que es para lo que se escribió,
+        // y es lo que abría la fila 1 en `INITIAL_SESSION`: al arrancar no hay
+        // «uid de antes», así que quedaba un contexto con token válido de Ana,
+        // `uid:null` y estado «activa». Ahora la identidad sale SIEMPRE de la
+        // sesión, verificada, y de una sola asignación.
         const a = _authCtx();
-        _authPoner({ uid: a.uid, empleado: a.empleado, token: t,
-                     exp: t ? _jwtExp(t) : 0,
-                     estado: t ? 'activa' : (a.uid ? 'identidad_sin_token' : 'anonimo') });
+        if(evento === 'SIGNED_OUT'){ _authPoner({ ..._AUTH_VACIO }); return; }
+        const nuevo = _authDeSesion(sesion, a.empleado);
+        if(nuevo){
+          // Cubre INITIAL_SESSION, SIGNED_IN y TOKEN_REFRESHED con la misma
+          // regla: el `uid` es el de ESTE token, nunca el que hubiera antes.
+          // Si el sujeto cambia, cambia el contexto entero con él.
+          _authPoner(nuevo);
+          _authTrasIdentidad(a);
+          return;
+        }
+        // Sesión ausente o no utilizable (sin usuario, sujeto discordante o
+        // caducada). Si ya sabíamos quién eres, se conserva SIN token; si no,
+        // queda resuelto que no hay nadie.
+        _authPoner({ uid: a.uid, empleado: a.empleado, token: null, exp: 0,
+                     estado: a.uid ? 'identidad_sin_token' : 'anonymous' });
       });
     }catch(e){ dbgw('[auth] onAuthStateChange:', e && e.message); }
   }catch(e){ dbgw('[auth] cliente:', e && e.message); return null; }
   return _authClient;
+}
+
+// ═══ C+D · EL ARRANQUE RECONSTRUYE LA IDENTIDAD DE LA SESIÓN YA PERSISTIDA ══
+//
+// EL PROBLEMA QUE CIERRA. Hasta aquí el arranque no leía la sesión guardada:
+// pedía una NUEVA por red (`_authSesionEntrar`). Sin cobertura eso no vuelve
+// nunca, así que el contexto se quedaba en `uid:null` para siempre y todo lo
+// que el empleado hiciera acababa en la cola de los huérfanos —la que no se
+// envía jamás— y su cola anterior tampoco se vaciaba. Son las filas 1 y 23.
+//
+// `getSession()` LEE DEL ALMACÉN LOCAL, no de la red. Es justo lo que hace
+// falta en sala: sin cobertura, la identidad se recupera igual. Y si el token
+// guardado ha caducado, supabase-js lo renueva solo por su cuenta cuando pueda
+// —`autoRefreshToken`—, y lo comunica por `TOKEN_REFRESHED`; aquí no se
+// inventa ninguna renovación paralela.
+let _authArrancado = false;
+
+// Aplica el resultado del arranque, y SÓLO si nadie ha puesto ya una identidad.
+// El login en segundo plano puede ganar la carrera, y su sesión —recién pedida
+// al servidor— es más reciente que la del disco: no se pisa.
+function _authResolver(sesion){
+  if(_authArrancado) return _authCtx().estado;
+  _authArrancado = true;
+  const a = _authCtx();
+  if(a.estado !== 'initializing') return a.estado;
+  const nuevo = _authDeSesion(sesion, a.empleado);
+  _authPoner(nuevo || { ..._AUTH_VACIO });
+  if(nuevo) _authTrasIdentidad(a);
+  return _authCtx().estado;
+}
+
+async function _authArrancar(intento){
+  if(_authArrancado) return _authCtx().estado;
+  const cli = _getAuthClient();
+  if(!cli){
+    // supabase-js llega del CDN con `defer` y puede no estar todavía. Se
+    // reintenta, y sólo si nunca llega se resuelve a `anonymous`: sin cliente
+    // no hay forma de saber si había sesión, y suponer que sí sería inventarse
+    // una identidad.
+    if((intento || 0) < 3){
+      setTimeout(() => { _authArrancar((intento || 0) + 1); }, 1500 * ((intento || 0) + 1));
+      return 'initializing';
+    }
+    return _authResolver(null);
+  }
+  let sesion = null;
+  try{
+    const r = await cli.auth.getSession();
+    sesion = (r && r.data && r.data.session) || null;
+  }catch(e){ dbgw('[auth] getSession:', e && e.name); }
+  return _authResolver(sesion);
+}
+
+// EN CUANTO HAY IDENTIDAD FIRME, LA COLA TIENE SU OPORTUNIDAD. Sin esto, tras
+// una recarga lo pendiente esperaba al intervalo de 120 s: el disparador de
+// arranque (+4 s) casi siempre cae ANTES de que la identidad esté lista. No es
+// un segundo sistema de sincronización —reutiliza `_eventosDrenar` y su
+// cerrojo— ni un temporizador nuevo: se dispara una vez, en la transición.
+function _authTrasIdentidad(anterior){
+  if(anterior && anterior.estado === 'authenticated') return;   // ya lo estaba
+  if(typeof _eventosDrenar !== 'function') return;
+  try{
+    Promise.resolve(_eventosDrenar('identidad'))
+      .then(() => { if(typeof _evPintarIncidencias === 'function') _evPintarIncidencias(); })
+      .catch(() => {});
+  }catch(_){}
 }
 
 // Retira la sesión. Se llama al salir y ANTES de entrar como otra persona: en
@@ -1081,6 +1199,9 @@ async function _authSesionSalir(marcaPropia){
   // esperar nada, y quien tuviera cogida la referencia anterior verá que ya no
   // es la viva.
   _authPoner({ ..._AUTH_VACIO });
+  // Salir RESUELVE el arranque: ya se sabe que no hay nadie, y un `getSession`
+  // tardío no puede resucitar la sesión del turno anterior.
+  _authArrancado = true;
   const cli = _getAuthClient();
   if(cli){ try{ await cli.auth.signOut({ scope: 'local' }); }catch(e){ dbgw('[auth] signOut:', e && e.message); } }
   try{
@@ -1129,9 +1250,20 @@ async function _authSesionEntrar(nombre, sha, marca){
   // UNA SOLA asignación, con el uid y el token juntos. Antes eran dos líneas
   // separadas y entre ellas el contexto quedaba a medias. Y sin esperar al
   // evento de `onAuthStateChange`: la siguiente petición ya puede llevarlo.
-  _authPoner({ uid: s.uid || _jwtSub(s.access_token), token: s.access_token,
-               exp: _jwtExp(s.access_token), empleado: j.empleado || nombre,
-               estado: 'activa' });
+  //
+  // Y POR LA MISMA PUERTA QUE EL ARRANQUE. Antes esta línea componía el
+  // contexto por su cuenta, así que era el único sitio del programa donde una
+  // sesión podía volverse identidad sin comprobar que el `sub` del token es el
+  // usuario ni que el token sigue vivo. Ahora las dos vías —login y arranque—
+  // validan lo mismo y construyen lo mismo.
+  const ctxNuevo = _authDeSesion({ access_token: s.access_token,
+                                   user: { id: s.uid || _jwtSub(s.access_token) } },
+                                 j.empleado || nombre);
+  if(!ctxNuevo) return 'sesion-no-verificable';
+  const antes = _authCtx();
+  _authPoner(ctxNuevo);
+  _authArrancado = true;            // el arranque ya no puede pisar esto
+  _authTrasIdentidad(antes);
   return 'ok';
 }
 
@@ -2193,7 +2325,7 @@ const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><p
 const SRC = 'src';
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='7.462';  // sincronizada con sw.js VERSION (guard de CI)
+const APP_VERSION='7.463';  // sincronizada con sw.js VERSION (guard de CI)
 const APP_BUILD='Jul 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;
@@ -2952,7 +3084,22 @@ async function _eventosDrenar(motivo){
   if(_evDrenando) return 'ya-en-curso';
   if(typeof navigator !== 'undefined' && navigator.onLine === false) return 'sin-red';
   const ctx = _authCtx();                       // UN snapshot para todo el ciclo
+  // C+D · IDENTIDAD INEQUÍVOCA ANTES DE ENVIAR NADA. `initializing` significa
+  // «todavía no sé quién eres», que NO es lo mismo que «no hay nadie»: durante
+  // el arranque el contexto podía tener un token bueno y `uid:null`, y drenar
+  // ahí era decidir con identidad ambigua. Se exige el estado resuelto.
+  // El motivo se conserva con el mismo detalle que antes: la puerta se ha
+  // adelantado, no se ha vuelto más torpe.
+  if(ctx.estado !== 'authenticated'){
+    return ctx.estado === 'initializing'        ? 'arrancando'
+         : ctx.estado === 'identidad_sin_token' ? 'sin-token'
+         : 'sin-identidad';
+  }
   if(!ctx.uid) return 'sin-identidad';
+  // Y con el token VIVO. `authenticated` ya lo garantizaba al construirse, pero
+  // la pestaña puede llevar horas abierta: si caducó mientras tanto, se pide la
+  // renovación por la vía de siempre y NO se envía nada con un token muerto.
+  if(!(ctx.exp * 1000 > Date.now())){ await _eventoRenovar(); return 'credencial-caducada'; }
   _evReintentarPersistencia();                  // F4 · el sitio puede haberse liberado
   const ahora = Date.now();
   const mios = _evLeer(_EV_KEY)
@@ -34448,6 +34595,12 @@ document.addEventListener('visibilitychange', ()=>{
 
 // Init — check for remembered session
 (function autoLogin(){
+  // C+D · LO PRIMERO, RESOLVER QUIÉN ERES CON LO QUE YA HAY EN EL DISPOSITIVO.
+  // No espera a nada ni bloquea: sólo saca el contexto de `initializing` en
+  // cuanto `getSession()` conteste. Va aquí y no dentro del `if` de sesión
+  // local porque el estado tiene que quedar resuelto también cuando NO hay
+  // sesión: `anonymous` es una respuesta, `initializing` no.
+  try{ _authArrancar(); }catch(e){ dbgw('[auth] arranque:', e && e.message); }
   // Enlace de recuperación (#reset=): siempre lleva al flujo de PIN nuevo, sin
   // auto-entrar. Tras poner el PIN, el usuario entra por el login normal.
   if(_pendingPinReset){

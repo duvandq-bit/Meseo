@@ -12,9 +12,9 @@ las 26 filas de la matriz, **qué prueba la demuestra** y **qué mutación la ma
 Se ejecuta con:
 
 ```
-node tests/smoke.mjs              # 528 pruebas · ~1 min · es lo que corre la CI
-node tests/mutaciones.mjs --lista # 47 anclas   · <1 s   · lo que se pudre
-node tests/mutaciones.mjs         # 47 mutaciones · ~45 min
+node tests/smoke.mjs              # 547 pruebas · ~1 min · es lo que corre la CI
+node tests/mutaciones.mjs --lista # 57 anclas   · <1 s   · lo que se pudre
+node tests/mutaciones.mjs         # 57 mutaciones · ~55 min
 node tests/allergen-audit.mjs     # 0 / 0
 ```
 
@@ -24,7 +24,7 @@ node tests/allergen-audit.mjs     # 0 / 0
 
 | # | Requisito | Prueba que lo demuestra | Mutación que la mata |
 |---|---|---|---|
-| 1 | Ana crea evento offline **con** JWT persistido | ⚠ **ver «La contradicción abierta»** | — |
+| 1 | Ana crea evento offline **con** JWT persistido | `C+D · 7 · FILA 1 cerrada · tras el arranque, la actividad SÍ tiene dueño` · `C+D · 6` | `AUTH-1`, `AUTH-3`, `AUTH-7` |
 | 2 | Ana crea evento offline **sin** JWT | `SIN IDENTIDAD · el evento huérfano se guarda aparte y NO entra en la cola` · `F2 · sin ningún JWT el evento NO se envía y va a sin_identidad` | `F2-2` |
 | 3 | Bruno entra después | `F3 · Bruno no drena lo de Ana` · `F2 · las CUATRO comprobaciones de envío` | `F3-1`, `F6-1` |
 | 4 | **Bruno no puede enviar ni apropiarse del evento de Ana** | `F2 · Bruno no puede enviar ni apropiarse del evento de Ana` · `SIN IDENTIDAD · Bruno tampoco lo adopta` | `F3-1`, `F3-3` |
@@ -32,8 +32,8 @@ node tests/allergen-audit.mjs     # 0 / 0
 | 6 | **Cambio Ana → Bruno durante un `await`** | `F3 · si la identidad cambia A MITAD del ciclo, el resto no sale` | `F3-2` |
 | 7 | Reintento del mismo `evento_id` | `F7 · fila 7 · tres fallos y un éxito: el MISMO evento_id las cuatro veces` | `F2-3` |
 | 8 | Mismo `evento_id` usado por otro usuario | `F1 · el índice es PARCIAL y COMPUESTO con la identidad` · `F1 · NO existe un UNIQUE(evento_id) global` | `F1-1` |
-| 9 | JWT **realmente** caducado | `F3 · PGRST301 con exp caducado → renovación por la vía existente` | `F3-7` |
-| 10 | JWT **no** caducado pero inválido | `F3 · PGRST301 con exp vivo es credencial inválida, y NO hay bucle` · `F3 · PGRST301 con exp caducado → renovación por la vía existente` | `F3-7` |
+| 9 | JWT **realmente** caducado | `F3 · exp caducado → renovación por la vía existente, y sin gastar petición` | `F3-7` |
+| 10 | JWT **no** caducado pero inválido | `F3 · PGRST301 con exp vivo es credencial inválida, y NO hay bucle` · `F3 · la clasificación de PGRST301 NO se ha tocado` | `F3-7` |
 | 11 | `23505` | `F3 · 23505 del índice esperado es ÉXITO idempotente` · `F3 · 23505 de OTRO índice NO es duplicado` | `F3-5` |
 | 12 | `23503` | `F3 · 23503 y cualquier otro 409 van a cuarentena, no a éxito` | `F3-4` |
 | 13 | `42501` | `F3 · 42501 no entra en bucle: cuarentena y no se vuelve a pedir` | `F3-4` |
@@ -46,20 +46,24 @@ node tests/allergen-audit.mjs     # 0 / 0
 | 20 | **Cola llena sólo de evaluaciones** | `F4 · cola llena de EVALUACIONES: ninguna se desaloja, ni por FIFO` · `F4 · no existe ninguna ruta de desalojo` | `F4-1` |
 | 21 | Cuarentena llena | `F5 · sin sitio, la prioridad 3 se COLAPSA` · `F5 · prioridad 1 y 2 NUNCA se colapsan` | `F5-1`, `F5-2` |
 | 22 | Logout durante el vaciado | `F3 · si la identidad cambia A MITAD del ciclo` · `F0 · salir y entrar sustituyen el contexto ENTERO` | `F3-2`, `F0-2` |
-| 23 | Recarga offline | ⚠ **ver «La contradicción abierta»** | — |
+| 23 | Recarga offline | `C+D · 10 · FILA 23 cerrada · pendiente + recarga + sesión válida → drena` · `C+D · 8` | `AUTH-2`, `AUTH-6` |
 | 24 | **Versión antigua cargando la cola B2** | `F7 · fila 24 · una versión antigua no conoce las claves de B2 y no las borra` | — *(ver «Deuda»)* |
 | 25 | Dos operaciones concurrentes | `F3 · dos drenajes a la vez no duplican el envío` · `F3 · un 2xx que no demuestra nada NO saca el evento` | `F3-9` |
 | 26 | **Evento persistido y cierre inmediato** | `F7 · fila 26 · el evento está en disco ANTES de que salga la petición` | `F2-3` |
 
-**24 de las 26 filas quedan demostradas por una prueba que se ejecuta.** Las dos
-que faltan son la misma cosa, y están abajo.
+**Las 26 filas quedan demostradas por una prueba que se ejecuta.** Las dos que
+faltaban —1 y 23— las cierra la corrección C+D; abajo queda el historial de lo
+que estaba roto y cómo se arregló.
 
 ---
 
-## La contradicción abierta · filas 1 y 23
+## Filas 1 y 23 · CERRADAS por la corrección C+D
 
-**No la he tocado.** Modificarla implicaría cambiar la identidad, que es un
-invariante absoluto de F7, y es una decisión de arquitectura.
+*(Lo que sigue documenta el defecto tal como estaba. La corrección se describe al
+final de esta sección.)*
+
+**Diagnóstico original**, hecho durante F7 y dejado sin tocar entonces porque
+arreglarlo significaba cambiar la identidad, que F7 tenía prohibido.
 
 ### Lo que dice la matriz
 
@@ -108,14 +112,24 @@ cuyo `sub` es Ana, y `uid:null`. El único sitio que sí deduce el `uid` del tok
 
 Es la fila 1 en negrita de la matriz: *«que nazca con `uid:null` teniendo JWT»*.
 
-### Por qué no lo arreglo aquí
+### Cómo se arregló (C+D)
 
-- F7 no puede modificar `authContext`, `uid`, `accessToken` ni `exp`.
-- El arreglo aparente —`uid: a.uid || _jwtSub(t)`— **no es trivialmente seguro**:
-  decide la identidad a partir de un token que el cliente no valida, en un iPad
-  compartido. Merece la misma discusión que tuvo la Fase C.
+- **`_authDeSesion(sesion, empleado)`** es ahora la única puerta por la que una
+  sesión se vuelve identidad: exige token, usuario, `sub(token) === user.id` y
+  `exp` en el futuro, y devuelve el contexto **entero o nada**.
+- **`_authArrancar()`** reconstruye la identidad al arrancar desde
+  `getSession()`, que **lee del disco y no de la red**: sin cobertura la
+  identidad se recupera igual. Era el caso que fallaba para siempre.
+- **Cuatro estados** en vez de dos: `initializing` ya no se confunde con
+  `anonymous`.
+- **`onAuthStateChange` distingue el evento**: `SIGNED_OUT` vacía; el resto
+  reconstruye desde la sesión. Ya no existe «uid de antes con token nuevo».
+- **El drenaje exige `authenticated`** y un token vivo; el **alta no se bloquea
+  nunca**, y lo creado durante el arranque sigue siendo huérfano para siempre.
+- **`_authTrasIdentidad`** da a la cola una oportunidad inmediata al pasar a
+  `authenticated`, reutilizando el drenaje y su cerrojo.
 
-Queda **pendiente de tu decisión**.
+Lo demuestran las 19 pruebas `C+D · …` y las mutaciones `AUTH-1` a `AUTH-10`.
 
 ---
 
@@ -174,6 +188,12 @@ Y una sola cosa en B2 — y no es un fallo de comportamiento:
   catálogo sólo sustituye texto. La prueba sí cae si alguien añade ese código.
 - **La línea muerta de F3** (punto 7 de arriba). Quitarla es trivial y seguro,
   pero es un cambio en F3 y necesita tu visto bueno.
+- **La rama `renovar` DENTRO del bucle de drenaje ha quedado casi inalcanzable**
+  tras C+D. La puerta detecta el token muerto antes de entrar, así que sólo se
+  llegaría ahí si el `exp` cruza durante el propio ciclo —milisegundos—. No es
+  un fallo: la renovación ocurre ahora antes y sin gastar una petición, y la
+  mutación `F3-7` se ha mudado a donde vive la garantía. Queda apuntado porque
+  es código que ya casi no corre.
 - **`colapsados` crece sin tope** en la cuarentena (documentado en F5, no
   cerrado a propósito).
 - **`_eventoQuitarDeCola` no comprueba el resultado de su escritura** (idem).
