@@ -1,6 +1,26 @@
 {
- "updated": "2026-09-19T01:13:44.673Z",
+ "updated": "2026-09-19T09:34:56.158Z",
  "items": [
+  {
+   "t": "Boccondivino, la historia del restaurante italiano que cerró con la crisis del 2008 y hoy entra en la Guía Michelin: “El chef trae a Madrid los sabores de su Cerdeña natal”",
+   "u": "https://www.infobae.com/espana/2026/09/19/boccondivino-la-historia-del-restaurante-italiano-que-cerro-con-la-crisis-del-2008-y-hoy-entra-en-la-guia-michelin-el-chef-trae-a-madrid-los-sabores-de-su-cerdena-natal/",
+   "s": "Infobae",
+   "d": "2026-09-19T06:33:00.000Z",
+   "tags": [
+    "MICHELIN",
+    "VINO"
+   ],
+   "img": "https://www.infobae.com/resizer/v2/JD56IWL6R5CDFPH6TD4RTA6U7I.jpg?auth=728950bd7fdf48424251f8ec617efd106ee824278b2c7e59181e5827dd325e1e&smart=true&width=1200&height=630&quality=85"
+  },
+  {
+   "t": "Los mejores hoteles de España: todas las Llaves MICHELIN",
+   "u": "https://guide.michelin.com/es/es/articulo/travel/los-primeros-hoteles-con-llave-michelin-todas-las-llaves-de-espana",
+   "s": "MICHELIN Guide",
+   "d": "2026-09-19T05:08:35.000Z",
+   "tags": [
+    "MICHELIN"
+   ]
+  },
   {
    "t": "Padylla (19/09/26)",
    "u": "https://www.eldia.es/humor/2026/09/19/padylla-19-09-26-134448088.html",
@@ -24,15 +44,6 @@
    "u": "https://guide.michelin.com/es/es/articulo/travel/los-hoteles-con-llave-michelin-una-guia-de-la-seleccion-global",
    "s": "MICHELIN Guide",
    "d": "2026-09-18T20:56:56.000Z",
-   "tags": [
-    "MICHELIN"
-   ]
-  },
-  {
-   "t": "Los mejores hoteles de España: todas las Llaves MICHELIN",
-   "u": "https://guide.michelin.com/es/es/articulo/travel/los-primeros-hoteles-con-llave-michelin-todas-las-llaves-de-espana",
-   "s": "MICHELIN Guide",
-   "d": "2026-09-18T20:50:54.000Z",
    "tags": [
     "MICHELIN"
    ]
@@ -99,7 +110,7 @@
   {
    "t": "Un restaurante navarro, incorporado a la selección de recomendados de la Guía Michelin España",
    "u": "https://www.diariodenavarra.es/noticias/vivir/gastronomia/2026/09/16/restaurante-navarro-incorporado-seleccion-recomendados-guia-michelin-espana-835306-109.html",
-   "s": "Diario de Navarra",
+   "s": "diariodenavarra.es",
    "d": "2026-09-18T15:18:00.000Z",
    "tags": [
     "MICHELIN"
@@ -148,16 +159,6 @@
    "img": "https://s3-eu-west-1.amazonaws.com/beta.lagenda/images/mikel-lopez-iturriaga-y-mariola-cubells.jpg"
   },
   {
-   "t": "Canarias Islas de Moda desfila en Madrid",
-   "u": "https://forbes.es/forbes-women/1023027/canarias-convierte-madrid-en-una-de-sus-islas-durante-una-tarde-de-moda/",
-   "s": "forbes.es",
-   "d": "2026-09-18T09:30:43.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://forbes.es/wp-content/uploads/2026/09/Texto-20.jpg"
-  },
-  {
    "t": "Los 20 restaurantes con estrella michelin con lista de espera más larga en españa",
    "u": "https://www.euribor.com.es/2026/09/18/los-20-restaurantes-con-estrella-michelin-con-lista-de-espera-mas-larga-en-espana/",
    "s": "El blog del Euríbor",
@@ -166,16 +167,6 @@
     "MICHELIN"
    ],
    "img": "https://www.euribor.com.es/wp-content/uploads/2026/09/acai-infografia-1789722989.png"
-  },
-  {
-   "t": "La conexión desconocida de Dabiz Muñoz con un pueblo de Cuenca de solo 150 habitantes",
-   "u": "https://www.noticiasdelvino.com/escapadas/2026/09/18/la-conexion-desconocida-de-dabiz-munoz-con-un-pueblo-de-cuenca-de-solo-150-habitantes-68966/",
-   "s": "Noticias del Vino",
-   "d": "2026-09-18T09:03:43.000Z",
-   "tags": [
-    "ALTA COCINA"
-   ],
-   "img": "https://www.noticiasdelvino.com/wp-content/uploads/image-217.png"
   },
   {
    "t": "El restaurante de Las Palmas de Gran Canaria junto a Las Canteras donde disfrutar de auténtica cocina canaria",
@@ -204,6 +195,16 @@
     "ALTA COCINA"
    ],
    "img": "https://s3.elespanol.com/k/imgp/cms/elespanol/11248284.jpg?p=f:jpeg/w:1706/h:960&h=jB9AtBPF"
+  },
+  {
+   "t": "Txóko, un espacio gastronómico único acaba de nacer en Las Palmas de Gran Canaria",
+   "u": "https://www.canarias7.es/gastronomia-c7/txoko-espacio-gastronomico-unico-acaba-nacer-palmas-20260918070000-nt.html",
+   "s": "canarias7.es",
+   "d": "2026-09-18T05:00:04.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://s1.ppllstatics.com/canarias7/www/multimedia/gastronomia-c7/2026/09/17/portada-kKHI-U3017683692155jG-1200x840@Canarias7.jpg"
   },
   {
    "t": "El restaurante favorito de Jordi Cruz en España está en Cataluña: «Son los herederos tranquilos de El Bulli»",
@@ -248,16 +249,6 @@
    "img": "https://www.vinetur.com/visuals/2026/september/17/agent-20260917-190552-c21e343c7efbd1b9.jpg"
   },
   {
-   "t": "La villa juguetera de Alicante que conquista por su cocina: así es el pueblo donde mejor se come de España",
-   "u": "https://www.noticiasdelvino.com/restaurantes/2026/09/17/la-villa-juguetera-de-alicante-que-conquista-por-su-cocina-asi-es-el-pueblo-donde-mejor-se-come-de-espana-74836/",
-   "s": "Noticias del Vino",
-   "d": "2026-09-17T21:13:25.000Z",
-   "tags": [
-    "MICHELIN"
-   ],
-   "img": "https://www.noticiasdelvino.com/wp-content/uploads/restaurantes-5.jpg"
-  },
-  {
    "t": "Ferran Adrià, cocinero catalán: \"Si no te lo crees, ¿cómo quieres que te hagan caso? Yo fui a un evento en Francia en el 1993 donde todos eran cocineros franceses. ¿Sabéis dónde me pusieron? En una mesa al lado del baño\"",
    "u": "https://www.mundodeportivo.com/foodie/20260917/1004228502/ferran-adria-cocinero-catalan-haciamos-finales-90-rompedor-china-hay-gente-importante-alta-cocina-creativa-pais-arrasar-10-anos-xef-dct.html?facet",
    "s": "Mundo Deportivo",
@@ -266,15 +257,6 @@
     "ALTA COCINA"
    ],
    "img": "https://imagenes2.mundodeportivo.com/files/og_thumbnail/uploads/2026/01/27/69791ea81b0a1.jpeg"
-  },
-  {
-   "t": "La alta cocina inunda MotoGP",
-   "u": "https://as.com/motor/motociclismo/la-alta-cocina-inunda-motogp-f202609-n/",
-   "s": "Diario AS",
-   "d": "2026-09-17T19:26:10.000Z",
-   "tags": [
-    "ALTA COCINA"
-   ]
   },
   {
    "t": "Mikel López Iturriaga (director de 'El Comidista', 58 años): «Relajémonos un poco con lo que comemos y recuperemos el disfrute»",
@@ -294,6 +276,25 @@
     "ALTA COCINA"
    ],
    "img": "https://www.infobae.com/resizer/v2/SMQJNAUPSZC3JIYA52TABEJRUY.jpg?auth=e0421d7a79aa4da2ff8642c7af75f274dcb1677aaa6a8005a27ccb0df8b88a7e&smart=true&width=1200&height=630&quality=85"
+  },
+  {
+   "t": "Ferran Adrià, cocinero catalán: \"Yo no cocino. No me gusta nada cocinar en casa. Pero este verano lo he hecho y me he cuestionado todo. Por ejemplo, el guiso. La mayoría le pone caldo, y yo lo encuentro ilógico\"",
+   "u": "https://www.mundodeportivo.com/foodie/20260913/1004226629/ferran-adria-cocinero-catalan-no-cocino-no-me-gusta-cocinar-casa-verano-he-hecho-me-he-cuestionado-ejemplo-guiso-mayoria-le-pone-caldo-encuentro-ilogico-xef-dct.html",
+   "s": "Mundo Deportivo",
+   "d": "2026-09-17T18:30:58.000Z",
+   "tags": [
+    "ALTA COCINA"
+   ],
+   "img": "https://imagenes2.mundodeportivo.com/files/og_thumbnail/files/fp/uploads/2026/02/23/699cb7a5d05f1.r_d.954-567-6253.jpeg"
+  },
+  {
+   "t": "Robaba restaurantes en Canarias disfrazado de monja y con un mazo",
+   "u": "https://diariodeavisos.elespanol.com/2026/09/robaba-restaurantes-en-canarias-disfrazado-de-monja-y-con-un-mazo/",
+   "s": "Diario de Avisos",
+   "d": "2026-09-17T18:23:06.000Z",
+   "tags": [
+    "CANARIAS"
+   ]
   }
  ]
 }
