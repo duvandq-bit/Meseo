@@ -1,6 +1,34 @@
 {
- "updated": "2026-09-19T19:20:49.026Z",
+ "updated": "2026-09-20T01:13:27.624Z",
  "items": [
+  {
+   "t": "Santy (20/09/26)",
+   "u": "https://www.eldia.es/humor/2026/09/20/santy-20-09-26-134476024.html",
+   "s": "Eldía",
+   "d": "2026-09-19T22:59:17.000Z",
+   "tags": [
+    "CANARIAS"
+   ]
+  },
+  {
+   "t": "Padylla (20/09/26)",
+   "u": "https://www.eldia.es/humor/2026/09/20/padylla-20-09-26-134474159.html",
+   "s": "Eldía",
+   "d": "2026-09-19T22:59:17.000Z",
+   "tags": [
+    "CANARIAS"
+   ]
+  },
+  {
+   "t": "Un total de 470 hoteles y 10 destinos se incorporan a la Guía Michelin en 2026",
+   "u": "https://www.hosteltur.com/178764_un-total-de-470-hoteles-y-10-destinos-se-incorporan-a-la-guia-michelin-en-2026.html",
+   "s": "Hosteltur",
+   "d": "2026-09-19T22:00:00.000Z",
+   "tags": [
+    "MICHELIN"
+   ],
+   "img": "https://static.hosteltur.com/app/public/uploads/img/articles/2026/09/18/L_175625_la-guia-michelin-suma-470-hoteles-y-estrena-llaves-en-10-destinos-en-2026.jpg"
+  },
   {
    "t": "Una isla para comérsela: así sabe Santa Cruz de Tenerife, Capital Gastronómica 2027",
    "u": "https://www.tapasmagazine.es/una-isla-para-comersela-asi-sabe-santa-cruz-de-tenerife-capital-gastronomica-2027/",
@@ -12,8 +40,18 @@
    "img": "https://www.tapasmagazine.es/wp-content/uploads/2026/09/1200x675-72.jpg"
   },
   {
+   "t": "La villa juguetera de Alicante que conquista por su cocina: así es el pueblo donde mejor se come de España",
+   "u": "https://www.noticiasdelvino.com/restaurantes/2026/09/19/la-villa-juguetera-de-alicante-que-conquista-por-su-cocina-asi-es-el-pueblo-donde-mejor-se-come-de-espana-74836/",
+   "s": "Noticias del Vino",
+   "d": "2026-09-19T13:53:34.000Z",
+   "tags": [
+    "MICHELIN"
+   ],
+   "img": "https://www.noticiasdelvino.com/wp-content/uploads/restaurantes-5.jpg"
+  },
+  {
    "t": "Una firma tinerfeña logra el tercer puesto en un concurso nacional de tartas de queso",
-   "u": "https://www.eldia.es/ocio/gastronomia/2026/09/19/firma-tinerfena-logra-tercer-puesto-134463642.amp.html",
+   "u": "https://www.eldia.es/ocio/gastronomia/2026/09/19/firma-tinerfena-logra-tercer-puesto-134463642.html",
    "s": "Eldía",
    "d": "2026-09-19T12:45:48.000Z",
    "tags": [
@@ -41,6 +79,25 @@
    "img": "https://s3.elespanol.com/k/imgp/cms/elespanol/11357724.jpg?p=f:jpeg/c:1364:767:nowe:0:502/w:1706/h:960&h=7jgzpjNC"
   },
   {
+   "t": "Doce sales canarias compiten en Lanzarote: así se elige la mejor sal de 2026",
+   "u": "https://estenerife.com/mejor-sal-canarias-doce-sales-compiten-lanzarote-2026/",
+   "s": "estenerife.com",
+   "d": "2026-09-19T09:42:59.000Z",
+   "tags": [
+    "CANARIAS"
+   ]
+  },
+  {
+   "t": "El chef de ‘El Pellizco’ convierte la cabra majorera en alta cocina con embutidos, helados y un ‘cabrabushi’ que fermenta durante meses",
+   "u": "https://radioinsular.es/el-chef-de-el-pellizco-convierte-la-cabra-majorera-en-alta-cocina-con-embutidos-helados-y-un-cabrabushi-que-fermenta-durante-meses",
+   "s": "radioinsular.es",
+   "d": "2026-09-19T09:00:00.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://radioinsular.es/wp-content/uploads/2026/09/RIGOBERTO-ALMEIDA-CHEF-EL-PELLIZCO.jpeg"
+  },
+  {
    "t": "Boccondivino, la historia del restaurante italiano que cerró con la crisis del 2008 y hoy entra en la Guía Michelin: “El chef trae a Madrid los sabores de su Cerdeña natal”",
    "u": "https://www.infobae.com/espana/2026/09/19/boccondivino-la-historia-del-restaurante-italiano-que-cerro-con-la-crisis-del-2008-y-hoy-entra-en-la-guia-michelin-el-chef-trae-a-madrid-los-sabores-de-su-cerdena-natal/",
    "s": "Infobae",
@@ -60,24 +117,6 @@
     "ALTA COCINA"
    ],
    "img": "https://s1.staticld.com/2026/09/18/1200/675/1095x823/puente-colgante-outside-0003.jpeg"
-  },
-  {
-   "t": "Padylla (19/09/26)",
-   "u": "https://www.eldia.es/humor/2026/09/19/padylla-19-09-26-134448088.html",
-   "s": "Eldía",
-   "d": "2026-09-18T22:59:14.000Z",
-   "tags": [
-    "CANARIAS"
-   ]
-  },
-  {
-   "t": "Santy (19/09/26)",
-   "u": "https://www.eldia.es/humor/2026/09/19/santy-19-09-26-134448382.html",
-   "s": "Eldía",
-   "d": "2026-09-18T22:59:13.000Z",
-   "tags": [
-    "CANARIAS"
-   ]
   },
   {
    "t": "Los hoteles con Llave MICHELIN 2026: una guía de la selección global",
@@ -131,7 +170,7 @@
   {
    "t": "Lanzarote celebra su primer Burger Fest en Playa Honda",
    "u": "https://lavozcanaria.com/este-lanzarote/general/lanzarote-celebra-su-primer-burger-fest-en-playa-honda",
-   "s": "lavozcanaria.com",
+   "s": "La Voz Canaria",
    "d": "2026-09-18T15:58:24.000Z",
    "tags": [
     "CANARIAS"
@@ -141,21 +180,11 @@
   {
    "t": "La guía Michelin desvela su elección de los mejores hoteles del mundo y hay uno asturiano",
    "u": "https://www.lne.es/asturias/2026/09/18/guia-michelin-desvela-eleccion-mejores-134438581.html",
-   "s": "lne.es",
+   "s": "LNE",
    "d": "2026-09-18T15:41:54.000Z",
    "tags": [
     "MICHELIN"
    ]
-  },
-  {
-   "t": "Un restaurante navarro, incorporado a la selección de recomendados de la Guía Michelin España",
-   "u": "https://www.diariodenavarra.es/noticias/vivir/gastronomia/2026/09/16/restaurante-navarro-incorporado-seleccion-recomendados-guia-michelin-espana-835306-109.html",
-   "s": "Diario de Navarra",
-   "d": "2026-09-18T15:18:00.000Z",
-   "tags": [
-    "MICHELIN"
-   ],
-   "img": "https://imagenes.diariodenavarra.es/files/og_thumbnail/uploads/2026/09/16/6aaa954b6bf38.jpeg"
   },
   {
    "t": "El restaurante con tres estrellas Michelin en el que Orlando Bloom ha cenado nada más aterrizar en San Sebastián: así es su menú de 395 €",
@@ -179,6 +208,25 @@
    "img": "https://eldia.com.do/wp-content/uploads/2026/09/culinary-week-2026-1200x675.webp"
   },
   {
+   "t": "Las mejores arrocerías de España para celebrar el Día Internacional de la Paella: deliciosas, con reconocimientos y las mejor valoradas por los usuarios",
+   "u": "https://woman.elperiodico.com/lifestyle/2026/09/18/mejores-arrocerias-espana-celebrar-dia-133545489",
+   "s": "Woman Madame Figaro",
+   "d": "2026-09-18T12:21:18.000Z",
+   "tags": [
+    "MICHELIN"
+   ],
+   "img": "https://estaticos-cdn.prensaiberica.es/clip/0642d2d7-aae1-4d35-b33c-8a23c5867398_16-9-discover-aspect-ratio_default_0.jpg"
+  },
+  {
+   "t": "Cuatro hoteles se alzan con los Premios Especiales MICHELIN 2026",
+   "u": "https://guide.michelin.com/es/es/articulo/travel/michelin-premios-especiales-hoteles-2026",
+   "s": "MICHELIN Guide",
+   "d": "2026-09-18T12:11:23.000Z",
+   "tags": [
+    "MICHELIN"
+   ]
+  },
+  {
    "t": "Martín Berasategui y los chefs expertos coinciden: para hacer el sándwich mixto perfecto no hay que poner j...",
    "u": "https://okdiario.com/recetas/martin-berasategui-coinciden-hacer-sandwich-mixto-perfecto-no-hay-que-poner-jamon-york-sino-mozzarella-iberico-18900628/amp",
    "s": "OkDiario",
@@ -199,36 +247,6 @@
    "img": "https://okdiario.com/img/2026/09/18/ferran-adrià-18.jpg"
   },
   {
-   "t": "Las mejores arrocerías de España para celebrar el Día Internacional de la Paella: deliciosas, con reconocimientos y las mejor valoradas por los usuarios",
-   "u": "https://woman.elperiodico.com/lifestyle/2026/09/18/mejores-arrocerias-espana-celebrar-dia-133545489",
-   "s": "woman.elperiodico.com",
-   "d": "2026-09-18T09:59:00.000Z",
-   "tags": [
-    "MICHELIN"
-   ],
-   "img": "https://estaticos-cdn.prensaiberica.es/clip/0642d2d7-aae1-4d35-b33c-8a23c5867398_16-9-discover-aspect-ratio_default_0.jpg"
-  },
-  {
-   "t": "'La risa, la comida, la televisión y las redes sociales'",
-   "u": "https://lagenda.org/noticias/la-risa-la-comida-la-television-y-las-redes-sociales-otono-cultural-tenerife-cajacanarias",
-   "s": "Lagenda",
-   "d": "2026-09-18T09:57:36.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://s3-eu-west-1.amazonaws.com/beta.lagenda/images/mikel-lopez-iturriaga-y-mariola-cubells.jpg"
-  },
-  {
-   "t": "Canarias convierte Madrid en una de sus islas durante una tarde de moda",
-   "u": "https://forbes.es/brandvoice/1023027/canarias-convierte-madrid-en-una-de-sus-islas-durante-una-tarde-de-moda/",
-   "s": "Forbes España",
-   "d": "2026-09-18T09:30:43.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://forbes.es/wp-content/uploads/2026/09/Texto-20.jpg"
-  },
-  {
    "t": "Los 20 restaurantes con estrella michelin con lista de espera más larga en españa",
    "u": "https://www.euribor.com.es/2026/09/18/los-20-restaurantes-con-estrella-michelin-con-lista-de-espera-mas-larga-en-espana/",
    "s": "El blog del Euríbor",
@@ -237,15 +255,6 @@
     "MICHELIN"
    ],
    "img": "https://www.euribor.com.es/wp-content/uploads/2026/09/acai-infografia-1789722989.png"
-  },
-  {
-   "t": "Canarias Islas de Moda revoluciona la pasarela de Madrid",
-   "u": "https://www.canariasenpleno.com/canarias-islas-moda-madrid/",
-   "s": "Canarias en Pleno",
-   "d": "2026-09-18T09:00:39.000Z",
-   "tags": [
-    "CANARIAS"
-   ]
   },
   {
    "t": "El restaurante de Las Palmas de Gran Canaria junto a Las Canteras donde disfrutar de auténtica cocina canaria",
@@ -275,24 +284,13 @@
    ]
   },
   {
-   "t": "El D*na Festival Gastronómic 2026 'ficha' a Ferran Adrià, Paco Roncero y otros chefs de renombre",
-   "u": "https://amp.expansion.com/fueradeserie/gastro/2026/09/18/6a9a8afce5fdea155d8b4598.html",
-   "s": "Expansión",
-   "d": "2026-09-18T06:05:02.000Z",
+   "t": "Los hoteles más asequibles del mundo con Llave MICHELIN",
+   "u": "https://guide.michelin.com/es/es/articulo/travel/los-hoteles-mas-asequibles-del-mundo-con-llave-michelin",
+   "s": "MICHELIN Guide",
+   "d": "2026-09-18T07:00:00.000Z",
    "tags": [
-    "ALTA COCINA"
-   ],
-   "img": "https://e01-phantom-expansion.uecdn.es/722d448c6d57a9c14ff5ee5adb442ae2/crop/27x36/1992x1141/resize/1200/f/webp/assets/multimedia/imagenes/2026/09/04/17885148027800.jpg"
-  },
-  {
-   "t": "Alberto Chicote, cocinero: \"Son dos restaurantes muy diferentes, pero son los que más visito al cabo del año\"",
-   "u": "https://www.elespanol.com/madrid/ocio/20260918/alberto-chicote-cocinero-restaurantes-diferentes-visito-cabo-ano/1003744387435_0.amp.html",
-   "s": "El Español",
-   "d": "2026-09-18T05:48:15.000Z",
-   "tags": [
-    "ALTA COCINA"
-   ],
-   "img": "https://s3.elespanol.com/k/imgp/cms/elespanol/11248284.jpg?p=f:jpeg/w:1706/h:960&h=jB9AtBPF"
+    "MICHELIN"
+   ]
   }
  ]
 }
