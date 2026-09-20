@@ -3334,8 +3334,8 @@
             "feedback_en": "Too slow and a curt greeting. The inspector: \"Six rings and a nameless greeting — the first impression is born cold\"."
           },
           {
-            "label": "Descuelgo antes del tercer tono: \"Txoko by Martín Berasategui, buenas tardes, le atiende Marta, ¿en qué puedo ayudarle?\"",
-            "label_en": "Answer before the third ring: \"Txoko by Martín Berasategui, good afternoon, this is Marta, how may I help you?\"",
+            "label": "Descuelgo antes del tercer tono: \"Jenfry, buenas tardes, le atiende Marta, ¿en qué puedo ayudarle?\"",
+            "label_en": "Answer before the third ring: \"Jenfry, good afternoon, this is Marta, how may I help you?\"",
             "effects": [
               {
                 "std": 1,

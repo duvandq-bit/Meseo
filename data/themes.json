@@ -6,10 +6,10 @@
    "id": "txoko",
    "enabled": true,
    "name": "JENFRY",
-   "logoSup": "MB",
+   "logoSup": "",
    "eyebrow": "Tenerife",
-   "subtitle": "by Martín Berasategui · Formación de Equipo",
-   "subtitle_en": "by Martín Berasategui · Team Training",
+   "subtitle": "Formación de Equipo",
+   "subtitle_en": "Team Training",
    "title": "Meseo · Formación de sala",
    "brand": {
     "primary": "#2d6a3e",
@@ -22,8 +22,8 @@
     "paper": "#f4ede2"
    },
    "casa": "Jenfry",
-   "rotulo": "Jenfry by Martín Berasategui",
-   "rotulo_en": "Jenfry by Martín Berasategui"
+   "rotulo": "Jenfry",
+   "rotulo_en": "Jenfry"
   },
   {
    "id": "mb",

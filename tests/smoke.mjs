@@ -905,12 +905,26 @@ test('La marca del producto es Meseo; TXOKO es el restaurante', () => {
   assert(/<title>[^<]*Meseo/.test(html), 'el <title> debe llevar Meseo');
   const mf = JSON.parse(read('manifest.json'));
   assert(/Meseo/.test(mf.name) && /Meseo/.test(mf.short_name), 'el manifiesto debe llevar Meseo');
-  // Y el aviso legal CONSERVA la protección de marcas de terceros: el nombre del
-  // restaurante y el del chef no son nuestros y deben seguir reconocidos.
-  assert(/incluidos TXOKO y Martín Berasategui\) son marcas/.test(html),
-    'el aviso legal debe seguir reconociendo las marcas del restaurante y del chef');
+  // Y EL AVISO LEGAL CONSERVA LA PROTECCIÓN, que es lo que de verdad protege.
+  // Antes nombraba dos marcas concretas; al dejar de presentarse el local con
+  // ellas, nombrarlas sobraba. El descargo se queda, redactado en general, para
+  // que siga valiendo sea cual sea el restaurante dado de alta —y para no tener
+  // que reescribir el aviso legal cada vez que entra uno nuevo—.
+  assert(/pertenecen a sus respectivos titulares/.test(html),
+    'el aviso legal debe seguir reconociendo las marcas de terceros');
+  assert(/únicamente en contexto formativo/.test(html),
+    'el aviso legal debe decir que la mención es formativa');
   assert(/no está afiliada, patrocinada ni respaldada/.test(html),
     'el aviso legal debe mantener el descargo de no afiliación');
+  assert(/belong to their respective owners/.test(html)
+      && /not affiliated with, sponsored by/.test(html),
+    'el aviso legal en inglés debe decir lo mismo');
+  // Y NINGÚN nombre de restaurante puede volver a estar escrito a fuego en él:
+  // eso es lo que obligaba a tocar texto legal en cada renombrado.
+  const legal = html.slice(html.indexOf('Los nombres, logotipos y denominaciones'),
+                           html.indexOf('Los nombres, logotipos y denominaciones') + 500);
+  assert(!/TXOKO|Txoko|Jenfry|Berasategui/.test(legal),
+    'el aviso legal no puede nombrar un restaurante concreto');
 });
 
 test('Suelo de 12px en texto y 44px en zonas táctiles', () => {
@@ -3972,9 +3986,15 @@ test('vinos hero is compact and venue-aware', () => {
     'storybook intro must be the left pull-quote');
   // The hero byline must come from the active venue (multi-restaurant), with
   // the exact Txoko copy preserved as the default.
-  assert(/ACTIVE_VENUE\.id!=='txoko'\) \? escapeHTML\(ACTIVE_VENUE\.name/.test(html)
-    && /: 'TXOKO by Martín Berasategui'\}/.test(html),
-    'vinos hero byline must be venue-aware with the Txoko copy as default');
+  // El rótulo sale SIEMPRE del registro. Antes había un caso especial por id
+  // de restaurante y, de repuesto, el nombre de una casa escrito a fuego: al
+  // renombrar la casa, la bodega seguía enseñando el nombre viejo. Ningún
+  // nombre de restaurante puede volver a estar en el código.
+  assert(/<div class="wine-section-sub">\$\{escapeHTML\(_venueRotulo\(\)\)\}<\/div>/.test(html),
+    'el rótulo de la bodega tiene que salir del registro, no del código');
+  const bodega = html.slice(html.indexOf('wine-section-sub') - 400, html.indexOf('wine-section-sub') + 200);
+  assert(!/Berasategui|TXOKO|Jenfry/.test(bodega),
+    'hay un nombre de restaurante escrito a fuego en el rótulo de la bodega');
 });
 
 test('dashboard polish: capitalized alert, collapsed achievements', () => {
@@ -4183,7 +4203,9 @@ test('smart review owner-reported fixes: header leak, agua), Txipiron≠ron', ()
   // The old "Ninguna — su ficha no indica espera especial" answer taught
   // something false and must stay removed.
   assert(/label\(40\)/.test(wt) && /SIN entrantes/.test(wt), 'WaitTime 40-min house rule (main without starters) missing');
-  assert(/Norma de Txoko/.test(wt) && /Forbes\/LQA/.test(wt), 'WaitTime explanation must cite the house norm and Forbes pacing');
+  // La norma es de LA CASA, sea cual sea: el nombre lo pone el registro.
+  assert(/Norma de \$\{_venueCasa\(\)\}/.test(wt) && /Forbes\/LQA/.test(wt),
+    'WaitTime explanation must cite the house norm and Forbes pacing');
   assert(!/no indica espera especial/.test(wt), 'false "no special wait" answer is back in WaitTime');
   // 2. Ingredient extraction must strip parentheses ("¿lleva agua)?" bug).
   assert(/replace\(\/\[\(\)\]\/g/.test(html.slice(html.indexOf('function _simExtractIngredients'), html.indexOf('function _simExtractIngredients') + 900)),

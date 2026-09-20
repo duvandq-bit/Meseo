@@ -608,13 +608,13 @@
     "q_en": "What is the most appropriate response?",
     "opts": [
       "\"¡Hola! Sí claro, ¿preferís dentro o en la terraza? Venid conmigo, os busco sitio.\" Les tuteo desde el primer momento.",
-      "\"Buenas tardes, bienvenidos a Txoko. Por supuesto, permítanme acompañarles a su mesa.\"",
+      "\"Buenas tardes, bienvenidos a Jenfry. Por supuesto, permítanme acompañarles a su mesa.\"",
       "\"Hola, buenas. Por aquí, síganme por favor.\"",
       "\"Buenas tardes. Síganme.\""
     ],
     "opts_en": [
       "\"Hi! Sure, do you prefer inside or on the terrace? Come with me, I'll find you a spot.\" I use first names from the outset.",
-      "\"Good afternoon, welcome to Txoko. Of course, please allow me to escort you to your table.\"",
+      "\"Good afternoon, welcome to Jenfry. Of course, please allow me to escort you to your table.\"",
       "\"Hi there. This way please, follow me.\"",
       "\"Good afternoon. Follow me.\""
     ],
@@ -975,8 +975,8 @@
     "opts_en": [
       "\"Hi! Welcome.\"",
       "\"Hi there. Do you have a reservation?\"",
-      "\"Good afternoon, welcome to Txoko.\"",
-      "\"Good morning, welcome to Txoko.\" And I walk him straight to the table that is next in rotation."
+      "\"Good afternoon, welcome to Jenfry.\"",
+      "\"Good morning, welcome to Jenfry.\" And I walk him straight to the table that is next in rotation."
     ],
     "corr": 2,
     "expl": "La auditoría señaló como negativo el uso de \"hola\" como saludo de bienvenida; debe sustituirse por \"buenas tardes/noches/días\" según hora. A las 13:45 corresponde \"buenas tardes\". La opción 2 cumple hora correcta + nombra el restaurante + tono formal. Las 0 y 1 usan \"hola\". La 3 usa el tramo horario incorrecto (los días terminan al mediodía).",
