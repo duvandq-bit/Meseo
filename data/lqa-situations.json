@@ -1090,13 +1090,13 @@
       "\"Voy a preguntar a cocina y vuelvo enseguida.\"",
       "\"Vienen muy ricos, le van a encantar.\"",
       "Explicar concretamente la técnica de cocción, los ingredientes que acompañan y el tipo de salsa, demostrando conocimiento profundo del plato.",
-      "\"Se preparan siguiendo fielmente la receta original del chef Martín Berasategui; son toda una especialidad de la casa desde hace años.\" Y les recomiendo que no se las pierdan hoy."
+      "\"Se preparan siguiendo fielmente la receta original del chef; son toda una especialidad de la casa desde hace años.\" Y les recomiendo que no se las pierdan hoy."
     ],
     "opts_en": [
       "\"Let me ask the kitchen and I'll be right back.\"",
       "\"They're delicious, you'll love them.\"",
       "Concretely explain the cooking technique, accompanying ingredients, and the type of sauce, demonstrating in-depth knowledge of the dish.",
-      "\"They are prepared faithfully following chef Martín Berasategui's original recipe; they have been a true house specialty for years.\" And I recommend they do not miss them today."
+      "\"They are prepared faithfully following the chef's original recipe; they have been a true house specialty for years.\" And I recommend they do not miss them today."
     ],
     "corr": 2,
     "expl": "El estándar #5 exige que el empleado pueda responder preguntas sobre el menú, ingredientes y alergias. La auditoría destacó positivamente este caso (\"Le pregunté a Alessandra cómo estaban hechos los espárragos y me supo responder\"). La opción 2 cumple el estándar y construye confianza. La 0 traslada el problema. La 1 es genérica/vacía. La 3 apela a autoridad sin contenido informativo.",

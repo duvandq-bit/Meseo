@@ -890,6 +890,39 @@ test('Cambiar de idioma repinta los diálogos abiertos', () => {
     'la guía no debe desmontarse: se repinta en su sitio');
 });
 
+test('el contenido del local abierto no nombra marcas ni al chef', () => {
+  // Decisión del propietario: la casa es Jenfry y no se apoya en ninguna marca
+  // ajena. Se quitó el NOMBRE, nunca la información: lo que era «de Martín»
+  // pasó a ser «de la casa» o «del chef», que dice lo mismo sin nombrar a
+  // nadie, y ninguna explicación de plato se ha acortado.
+  //
+  // Esto vigila el contenido que lee el empleado. NO vigila el local que sigue
+  // EN ESPERA —`procedimientos-mb.json`, `quesos-mb.json` y su ficha en el
+  // registro—, que es otra casa y se llama como se llama.
+  const fuentes = { 'index.html': html };
+  for (const f of ['data/eventos.json', 'data/lqa-situations.json', 'data/wines.json',
+                   'data/vinos-content.json', 'data/ghost-scenarios.json'])
+    fuentes[f] = read(f);
+
+  for (const [f, t] of Object.entries(fuentes)) {
+    for (const linea of t.split('\n')) {
+      if (linea.trimStart().startsWith('//')) continue;        // los comentarios no se leen
+      assert(!/Berasategui/.test(linea),
+        `${f}: el contenido del local abierto nombra al chef → ${linea.trim().slice(0, 90)}`);
+    }
+  }
+  // «Martín» a secas: es nombre de pila, y hay un CLIENTE que se apellida así
+  // en un escenario de Servicio Fantasma. Se vigila sólo donde era el chef.
+  for (const frag of ['de Martín', "Martín's", 'Martín has served', 'A Martín classic'])
+    assert(!html.includes(frag), `sigue nombrando al chef: «${frag}»`);
+
+  // Y el local EN ESPERA conserva el suyo: no se le ha tocado por el camino.
+  const reg = JSON.parse(read('data/themes.json'));
+  const mb = reg.venues.find(v => v.id === 'mb');
+  assert(mb && /Berasategui/.test(mb.rotulo),
+    'el local en espera es otra casa: su nombre no se toca');
+});
+
 test('La marca del producto es Meseo; TXOKO es el restaurante', () => {
   // Auditoría ago 2026: el título y el manifiesto ya decían Meseo, pero la
   // PRIMERA pantalla que ve un empleado nuevo seguía diciendo «¡Bienvenido a
