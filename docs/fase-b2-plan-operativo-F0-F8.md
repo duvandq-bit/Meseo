@@ -667,6 +667,8 @@ antes y después.
 | Pestaña de Safari **frente a** PWA instalada | decide si aplica el desalojo de WebKit |
 
 Instrumento ya publicado: **https://claude.ai/artifact/1JwUYr6qV7GkPqZNz595CH**
+Protocolo de ejecución, con la checklist de lo que hay que anotar en el
+aparato: `docs/fase-b2-f8b-protocolo-ipad.md`.
 
 **Invariante de cierre:** **I8.1 — si WebKit demuestra una limitación estructural
 que impida la retención offline prevista, B2 NO se declara cerrada y se abre
