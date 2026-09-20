@@ -1,6 +1,45 @@
 {
- "updated": "2026-09-20T09:50:29.635Z",
+ "updated": "2026-09-20T14:42:51.281Z",
  "items": [
+  {
+   "t": "El chef que pone a Trujillo en la alta cocina internacional con chorizo ibérico, mantequilla de oveja y brasas de encina",
+   "u": "https://www.elperiodicoextremadura.com/extremadura/2026/09/20/chef-pone-trujillo-alta-cocina-internacional-134489093.html",
+   "s": "El Periódico Extremadura",
+   "d": "2026-09-20T12:43:32.000Z",
+   "tags": [
+    "ALTA COCINA"
+   ]
+  },
+  {
+   "t": "El chef Quique Dacosta sobre el Festival D*na: \"Tenía que estar Ferran Adriá, el cocinero creativo más importante de todos los tiempos\"",
+   "u": "https://cadenaser.com/comunitat-valenciana/2026/09/20/el-chef-quique-dacosta-sobre-el-festival-dna-tenia-que-estar-ferran-adria-el-cocinero-creativo-mas-importante-de-todos-los-tiempos-radio-valencia/",
+   "s": "Cadena SER",
+   "d": "2026-09-20T12:10:40.000Z",
+   "tags": [
+    "ALTA COCINA"
+   ],
+   "img": "https://cadenaser.com/resizer/v2/QXC7UUJC5BHJ7NM66FDZJR372Y.jpg?auth=3a4d46bca293cffea8651479abca9021509520b63d0f05953fe65edbc6260bc8&quality=70&width=1200&height=675&focal=4351,2249"
+  },
+  {
+   "t": "El influencer gastronómico Cocituber, rendido ante La Laguna: “Aquí hay una sensación de pertenencia difícil",
+   "u": "https://diariodeavisos.elespanol.com/2026/09/cocituber-la-laguna/",
+   "s": "Diario de Avisos",
+   "d": "2026-09-20T11:52:46.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://cdn.diariodeavisos.com/wp-content/uploads/2026/09/cocituber-La-Laguna.jpg"
+  },
+  {
+   "t": "Extremadura lleva el sabor de la dehesa a uno de los principales eventos de alta cocina de Portugal",
+   "u": "https://www.hoy.es/ensalsa/actualidad/extremadura-lleva-sabor-dehesa-principales-eventos-alta-20260920114845-nt.html",
+   "s": "Hoy",
+   "d": "2026-09-20T09:49:11.000Z",
+   "tags": [
+    "ALTA COCINA"
+   ],
+   "img": "https://s1.ppllstatics.com/hoy/www/multimedia/ensalsa/2026/09/20/6e9a4a9f-e9f3-86b7-6324-384054f8-kd1D-U301806605794myF-1200x840@Hoy.jpg"
+  },
   {
    "t": "Envinate, una de las bodegas que ha liderado la revolución de los vinos canarios",
    "u": "https://www.elespanol.com/viajes/cocinillas-gastro/vinos/20260920/envinate-bodegas-liderado-revolucion-vinos-canarios/1003744381340_0.amp.html",
@@ -33,13 +72,13 @@
   },
   {
    "t": "Dónde saborear Gran Canaria, según la directora de marketing de la Unión Deportiva Las Palmas, Noelia Pérez",
-   "u": "https://www.canarias7.es/gastronomia-c7/a-fuego-lento/saborear-gran-canaria-segun-directora-marketing-union-20260920070000-nt_amp.html",
+   "u": "https://www.canarias7.es/gastronomia-c7/a-fuego-lento/saborear-gran-canaria-segun-directora-marketing-union-20260920070000-nt.html",
    "s": "Canarias7",
    "d": "2026-09-20T05:00:22.000Z",
    "tags": [
     "CANARIAS"
    ],
-   "img": "https://s1.ppllstatics.com/canarias7/www/multimedia/gastronomia-c7/2026/09/19/Noelia.jpg"
+   "img": "https://s1.ppllstatics.com/canarias7/www/multimedia/gastronomia-c7/2026/09/19/Noelia-k0eB-U301795839852hyF-1200x840@Canarias7.jpg"
   },
   {
    "t": "Santa Cruz de Tenerife, capital gastronómica de España",
@@ -63,7 +102,7 @@
   {
    "t": "Tres hoteles de Aragón brillan en la exclusiva selección de Llaves Michelin 2026",
    "u": "https://www.enjoyzaragoza.es/llaves-michelin-aragon/",
-   "s": "enjoyzaragoza.es",
+   "s": "Enjoy Zaragoza",
    "d": "2026-09-20T00:00:37.000Z",
    "tags": [
     "MICHELIN"
@@ -99,6 +138,26 @@
    "img": "https://static.hosteltur.com/app/public/uploads/img/articles/2026/09/18/L_175625_la-guia-michelin-suma-470-hoteles-y-estrena-llaves-en-10-destinos-en-2026.jpg"
   },
   {
+   "t": "Los domingos tienen sabor a jardín: así es el brunch del Hotel Botánico en Puerto de la Cruz",
+   "u": "https://gastrocanarias.com/art/22799/los-domingos-tienen-sabor-a-jardin-asi-es-el-brunch-del-hotel-botanico-en-puerto-de-la-cruz",
+   "s": "Gastrocanarias",
+   "d": "2026-09-19T18:27:03.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://gastrocanarias.com/upload/images/06_2026/1259_whatsapp-image-2026-06-01-at-213248-2.jpeg"
+  },
+  {
+   "t": "Ferran Adrià, cocinero catalán: \"Si no te lo crees, ¿cómo quieres que te hagan caso? Yo fui a un evento en Francia en el 1993 donde todos eran cocineros franceses. ¿Sabéis dónde me pusieron? En una mesa al lado del baño\"",
+   "u": "https://www.mundodeportivo.com/foodie/20260917/1004228502/ferran-adria-cocinero-catalan-haciamos-finales-90-rompedor-china-hay-gente-importante-alta-cocina-creativa-pais-arrasar-10-anos-xef-dct.html",
+   "s": "Mundo Deportivo",
+   "d": "2026-09-19T17:51:24.000Z",
+   "tags": [
+    "ALTA COCINA"
+   ],
+   "img": "https://imagenes2.mundodeportivo.com/files/og_thumbnail/uploads/2026/01/27/69791ea81b0a1.jpeg"
+  },
+  {
    "t": "Una isla para comérsela: así sabe Santa Cruz de Tenerife, Capital Gastronómica 2027",
    "u": "https://www.tapasmagazine.es/una-isla-para-comersela-asi-sabe-santa-cruz-de-tenerife-capital-gastronomica-2027/",
    "s": "Tapas Magazine",
@@ -120,7 +179,7 @@
   },
   {
    "t": "Una firma tinerfeña logra el tercer puesto en un concurso nacional de tartas de queso",
-   "u": "https://www.eldia.es/ocio/gastronomia/2026/09/19/firma-tinerfena-logra-tercer-puesto-134463642.amp.html",
+   "u": "https://www.eldia.es/ocio/gastronomia/2026/09/19/firma-tinerfena-logra-tercer-puesto-134463642.html",
    "s": "Eldía",
    "d": "2026-09-19T12:45:48.000Z",
    "tags": [
@@ -139,22 +198,13 @@
   },
   {
    "t": "CMM estrenará el lunes 'Ponle Peguitas', el programa de cocina del chef Sergio Fernández: \"Recetas sencillas y ricas\"",
-   "u": "https://www.elespanol.com/eldigitalcastillalamancha/vivir/ocio/20260919/cmm-estrenara-lunes-ponle-peguitas-programa-cocina-chef-sergio-fernandez-recetas-sencillas-ricas/1003744389574_0.html",
+   "u": "https://www.elespanol.com/eldigitalcastillalamancha/vivir/ocio/20260919/cmm-estrenara-lunes-ponle-peguitas-programa-cocina-chef-sergio-fernandez-recetas-sencillas-ricas/1003744389574_0.amp.html",
    "s": "El Español",
    "d": "2026-09-19T10:30:39.000Z",
    "tags": [
     "ALTA COCINA"
    ],
    "img": "https://s3.elespanol.com/k/imgp/cms/elespanol/11357724.jpg?p=f:jpeg/c:1364:767:nowe:0:502/w:1706/h:960&h=7jgzpjNC"
-  },
-  {
-   "t": "Doce sales canarias compiten en Lanzarote: así se elige la mejor sal de 2026",
-   "u": "https://estenerife.com/mejor-sal-canarias-doce-sales-compiten-lanzarote-2026/",
-   "s": "estenerife.com",
-   "d": "2026-09-19T09:42:59.000Z",
-   "tags": [
-    "CANARIAS"
-   ]
   },
   {
    "t": "El chef de ‘El Pellizco’ convierte la cabra majorera en alta cocina con embutidos, helados y un ‘cabrabushi’ que fermenta durante meses",
@@ -207,7 +257,7 @@
   },
   {
    "t": "Vallarta Nayarit Gastronómica 2026: fechas, chefs y programa",
-   "u": "https://www.eluniversal.com.mx/menu/vallarta-nayarit-gastronomica-2026-fechas-chefs-y-programa/?outputType",
+   "u": "https://www.eluniversal.com.mx/menu/vallarta-nayarit-gastronomica-2026-fechas-chefs-y-programa/",
    "s": "El Universal",
    "d": "2026-09-18T19:06:42.000Z",
    "tags": [
@@ -244,57 +294,6 @@
     "CANARIAS"
    ],
    "img": "https://images.ecestaticos.com/z92TEOTMAO1Hr87d63q8P-hKvFE=/0x0:2048x1365/600x315/filters:fill(white):format(jpg):quality(99):watermark(f.elconfidencial.com/file/a73/f85/d17/a73f85d17f0b2300eddff0d114d4ab10.png,0,275,1)/f.elconfidencial.com/original/fb8/08f/d0a/fb808fd0addc73b043ccb0c4d5b51427.jpg"
-  },
-  {
-   "t": "Lanzarote celebra su primer Burger Fest en Playa Honda",
-   "u": "https://lavozcanaria.com/este-lanzarote/general/lanzarote-celebra-su-primer-burger-fest-en-playa-honda",
-   "s": "La Voz Canaria",
-   "d": "2026-09-18T15:58:24.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://lavozcanaria.com/media/2026/09/lanzarote-celebra-su-primer-burger-fest-en-playa-honda.webp"
-  },
-  {
-   "t": "La guía Michelin desvela su elección de los mejores hoteles del mundo y hay uno asturiano",
-   "u": "https://www.lne.es/asturias/2026/09/18/guia-michelin-desvela-eleccion-mejores-134438581.html",
-   "s": "LNE",
-   "d": "2026-09-18T15:41:54.000Z",
-   "tags": [
-    "MICHELIN"
-   ]
-  },
-  {
-   "t": "El viñedo más alto de Europa está en Tenerife: así es el pueblo que desafía a los Alpes",
-   "u": "https://www.noticiasdelvino.com/escapadas/2026/09/18/el-vinedo-mas-alto-de-europa-esta-en-tenerife-asi-es-el-pueblo-que-desafia-a-los-alpes-66331/",
-   "s": "Noticias del Vino",
-   "d": "2026-09-18T13:21:15.000Z",
-   "tags": [
-    "VINO",
-    "CANARIAS"
-   ],
-   "img": "https://www.noticiasdelvino.com/wp-content/uploads/El-vinedo-mas-alto-de-Europa-esta-en-Tenerife.jpg"
-  },
-  {
-   "t": "El restaurante con tres estrellas Michelin en el que Orlando Bloom ha cenado nada más aterrizar en San Sebastián: así es su menú de 395 €",
-   "u": "https://www.infobae.com/espana/2026/09/18/el-restaurante-con-tres-estrellas-michelin-en-el-que-orlando-bloom-ha-cenado-nada-mas-aterrizar-en-san-sebastian-asi-es-su-menu-de-395/",
-   "s": "Infobae",
-   "d": "2026-09-18T13:00:00.000Z",
-   "tags": [
-    "ALTA COCINA",
-    "MICHELIN"
-   ],
-   "img": "https://www.infobae.com/resizer/v2/KMSDZKY3BVEFLNCSEU27MCFQMI.jpg?auth=66d5fbe4b4e964f29c5dbbaf32c38fac278691d8328528f917573c1368d66365&smart=true&width=1200&height=630&quality=85"
-  },
-  {
-   "t": "Diez chefs convertirán Punta Cana en una ruta de sabores durante Culinary Week 2026",
-   "u": "https://eldia.com.do/diez-chefs-convertiran-punta-cana-en-una-ruta-de-sabores-durante-culinary-week-2026/",
-   "s": "eldia.com.do",
-   "d": "2026-09-18T12:38:52.000Z",
-   "tags": [
-    "ALTA COCINA"
-   ],
-   "img": "https://eldia.com.do/wp-content/uploads/2026/09/culinary-week-2026-1200x675.webp"
   }
  ]
 }
