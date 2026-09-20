@@ -1,6 +1,16 @@
 {
- "updated": "2026-09-20T14:42:51.281Z",
+ "updated": "2026-09-20T19:29:55.270Z",
  "items": [
+  {
+   "t": "MESA ABIERTA: The Roots a la cabeza de los argentinos de Tenerife",
+   "u": "https://www.libertaddigital.com/canarias/2026-09-20/mesa-abierta-the-roots-a-la-cabeza-de-los-argentinos-de-tenerife-7463076/",
+   "s": "Libertad Digital",
+   "d": "2026-09-20T15:50:16.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://s1.staticld.com/2026/09/20/1200/675/439x2033/img-20260920-144728.jpg"
+  },
   {
    "t": "El chef que pone a Trujillo en la alta cocina internacional con chorizo ibérico, mantequilla de oveja y brasas de encina",
    "u": "https://www.elperiodicoextremadura.com/extremadura/2026/09/20/chef-pone-trujillo-alta-cocina-internacional-134489093.html",
@@ -28,7 +38,7 @@
    "tags": [
     "CANARIAS"
    ],
-   "img": "https://cdn.diariodeavisos.com/wp-content/uploads/2026/09/cocituber-La-Laguna.jpg"
+   "img": "https://diariodeavisos.elespanol.com/wp-content/uploads/2026/09/cocituber-La-Laguna.jpg"
   },
   {
    "t": "Extremadura lleva el sabor de la dehesa a uno de los principales eventos de alta cocina de Portugal",
@@ -130,7 +140,7 @@
   {
    "t": "Un total de 470 hoteles y 10 destinos se incorporan a la Guía Michelin en 2026",
    "u": "https://www.hosteltur.com/178764_un-total-de-470-hoteles-y-10-destinos-se-incorporan-a-la-guia-michelin-en-2026.html",
-   "s": "Hosteltur",
+   "s": "hosteltur.com",
    "d": "2026-09-19T22:00:00.000Z",
    "tags": [
     "MICHELIN"
@@ -140,7 +150,7 @@
   {
    "t": "Los domingos tienen sabor a jardín: así es el brunch del Hotel Botánico en Puerto de la Cruz",
    "u": "https://gastrocanarias.com/art/22799/los-domingos-tienen-sabor-a-jardin-asi-es-el-brunch-del-hotel-botanico-en-puerto-de-la-cruz",
-   "s": "Gastrocanarias",
+   "s": "gastrocanarias.com",
    "d": "2026-09-19T18:27:03.000Z",
    "tags": [
     "CANARIAS"
@@ -170,7 +180,7 @@
   {
    "t": "La villa juguetera de Alicante que conquista por su cocina: así es el pueblo donde mejor se come de España",
    "u": "https://www.noticiasdelvino.com/restaurantes/2026/09/19/la-villa-juguetera-de-alicante-que-conquista-por-su-cocina-asi-es-el-pueblo-donde-mejor-se-come-de-espana-74836/",
-   "s": "Noticias del Vino",
+   "s": "noticiasdelvino.com",
    "d": "2026-09-19T13:53:34.000Z",
    "tags": [
     "MICHELIN"
@@ -207,14 +217,13 @@
    "img": "https://s3.elespanol.com/k/imgp/cms/elespanol/11357724.jpg?p=f:jpeg/c:1364:767:nowe:0:502/w:1706/h:960&h=7jgzpjNC"
   },
   {
-   "t": "El chef de ‘El Pellizco’ convierte la cabra majorera en alta cocina con embutidos, helados y un ‘cabrabushi’ que fermenta durante meses",
-   "u": "https://radioinsular.es/el-chef-de-el-pellizco-convierte-la-cabra-majorera-en-alta-cocina-con-embutidos-helados-y-un-cabrabushi-que-fermenta-durante-meses",
-   "s": "radioinsular.es",
-   "d": "2026-09-19T09:00:00.000Z",
+   "t": "Doce sales canarias compiten en Lanzarote: así se elige la mejor sal de 2026",
+   "u": "https://estenerife.com/mejor-sal-canarias-doce-sales-compiten-lanzarote-2026/",
+   "s": "estenerife.com",
+   "d": "2026-09-19T09:42:59.000Z",
    "tags": [
     "CANARIAS"
-   ],
-   "img": "https://radioinsular.es/wp-content/uploads/2026/09/RIGOBERTO-ALMEIDA-CHEF-EL-PELLIZCO.jpeg"
+   ]
   },
   {
    "t": "Boccondivino, la historia del restaurante italiano que cerró con la crisis del 2008 y hoy entra en la Guía Michelin: “El chef trae a Madrid los sabores de su Cerdeña natal”",
@@ -283,17 +292,6 @@
    "tags": [
     "CANARIAS"
    ]
-  },
-  {
-   "t": "El único restaurante de España con el 95% de su carta libre de alérgenos está en La Palma: cocina con productos locales y ecológicos",
-   "u": "https://www.elconfidencial.com/viajes/2026-09-18/restaurante-la-palma-carta-libre-alergenos_4426896/",
-   "s": "El Confidencial",
-   "d": "2026-09-18T18:29:00.000Z",
-   "tags": [
-    "ALTA COCINA",
-    "CANARIAS"
-   ],
-   "img": "https://images.ecestaticos.com/z92TEOTMAO1Hr87d63q8P-hKvFE=/0x0:2048x1365/600x315/filters:fill(white):format(jpg):quality(99):watermark(f.elconfidencial.com/file/a73/f85/d17/a73f85d17f0b2300eddff0d114d4ab10.png,0,275,1)/f.elconfidencial.com/original/fb8/08f/d0a/fb808fd0addc73b043ccb0c4d5b51427.jpg"
   }
  ]
 }
