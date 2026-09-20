@@ -52,7 +52,7 @@
 <meta property="og:description" content="Formación de equipos de sala: carta, alérgenos, vinos, exámenes y juegos de repaso.">
 <meta property="og:url" content="https://meseo.es/">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"Meseo","url":"https://meseo.es/"}</script>
-<meta name="app-version" content="7.466">
+<meta name="app-version" content="7.467">
 <meta name="app-build" content="May 2026">
 <meta name="theme-color" content="#1c2a22">
 <!-- ═══ PWA ═══ -->
@@ -1970,6 +1970,38 @@ function _venueRotulo(){
 }
 
 const _VENUE_POR_DEFECTO = 'txoko';
+
+// ═══ SUSPENSIÓN TEMPORAL ═══════════════════════════════════════════════════
+//
+// TODO ESTO ES TEMPORAL Y SE REVIERTE DESDE AQUÍ. Mientras `SUSPENDIDA` sea
+// `true`, la aplicación está cerrada para el equipo: sólo entran los nombres de
+// `_PERMITIDOS`, no se puede crear ninguna cuenta nueva y el selector del login
+// no enseña ningún restaurante que no sea el activo.
+//
+// PARA LEVANTARLA: poner `SUSPENDIDA = false`. No hay que tocar nada más — ni
+// el login, ni el registro, ni el selector. Y para devolver el nombre del
+// restaurante, `data/themes.json` › venue `txoko` › `name`.
+//
+// DÓNDE ESTÁ EL LÍMITE, Y CONVIENE SABERLO: esto es el CLIENTE. Frena al
+// equipo de sala, que es de quien hablamos, pero quien sepa abrir el inspector
+// puede saltárselo, y el PIN sigue siendo válido contra el servidor. Cerrar esa
+// puerta de verdad es RLS, y no se toca sin decisión expresa.
+const SUSPENDIDA = true;
+const _PERMITIDOS = ['jenfry', 'duvan', 'dian', 'administrador'];
+
+// Tolerante con mayúsculas y espacios, igual que `_ficha`: se entra con el
+// nombre que se teclea, y una letra de diferencia no puede dejar fuera a quien
+// sí está en la lista.
+function _puedeEntrar(nombre){
+  if(!SUSPENDIDA) return true;
+  const n = String(nombre || '').trim().toLowerCase();
+  return _PERMITIDOS.indexOf(n) >= 0;
+}
+function _textoSuspendida(){
+  return (typeof LANG !== 'undefined' && LANG === 'en')
+    ? 'The app is temporarily suspended. Please try again later.'
+    : 'La aplicación está suspendida temporalmente. Vuelve a intentarlo más adelante.';
+}
 // La cuenta de ADMINISTRACIÓN existe para probar el contenido: entra en
 // cualquier restaurante —incluidos los que todavía están cerrados— y no escribe
 // ni aparece en ninguna puntuación. Si contara, el ranking del equipo mediría a
@@ -2330,7 +2362,7 @@ const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><p
 const SRC = 'src';
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='7.466';  // sincronizada con sw.js VERSION (guard de CI)
+const APP_VERSION='7.467';  // sincronizada con sw.js VERSION (guard de CI)
 const APP_BUILD='Jul 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;
@@ -11421,6 +11453,14 @@ function showLegalModal(){
 // ═══ LOGIN MODE TOGGLE (Sign in / Sign up) ═══
 let _loginMode = 'signin'; // 'signin' | 'signup'
 function setLoginMode(mode){
+  // Con la suspensión puesta no se crea ninguna cuenta. La pestaña y el enlace
+  // se esconden al pintar el login, y esto es el cerrojo por si alguien llega
+  // aquí por otra vía: el modo de registro simplemente no se puede poner.
+  if(SUSPENDIDA && mode === 'signup'){
+    const err = document.getElementById('loginError');
+    if(err) err.textContent = _textoSuspendida();
+    mode = 'signin';
+  }
   _loginMode = mode;
   const toggle = document.getElementById('loginModeToggle');
   const tabIn = document.getElementById('loginTabSignin');
@@ -11511,6 +11551,19 @@ function showLoginWelcomeToast(msg){
 }
 
 function renderLogin(){
+  // SUSPENSIÓN: fuera la pestaña de registro y el enlace de «Crear cuenta
+  // nueva». No se esconde sólo por estética — mientras esté visible, alguien
+  // rellena el formulario entero y se lleva el chasco al final.
+  if(SUSPENDIDA){
+    const tabUp = document.getElementById('loginTabSignup');
+    const hint  = document.getElementById('loginNewUserHint');
+    const tog   = document.getElementById('loginModeToggle');
+    if(tabUp) tabUp.style.display = 'none';
+    if(hint)  hint.style.display  = 'none';
+    // Con una sola pestaña, el conmutador no conmuta nada.
+    if(tog) tog.style.display = 'none';
+    if(_loginMode === 'signup') setLoginMode('signin');
+  }
   // sync lang UI for new login form
   const pillEs = document.getElementById('langPillEs');
   const pillEn = document.getElementById('langPillEn');
@@ -11573,7 +11626,9 @@ function renderLogin(){
   if(subtitleEl) subtitleEl.textContent = LANG==='en' ? 'Train the craft · meseo.es' : 'El oficio se entrena · meseo.es';
   // Venue dropdown follows the language too (label + "Próximamente" entries)
   if(typeof THEMES !== 'undefined' && THEMES && Array.isArray(THEMES.venues)){
-    const _all = THEMES.venues.filter(v => v && v.id && v.name && v.id !== 'plantilla');
+    // MISMO filtro que en `initVenues`: sin él, cambiar de idioma repintaba el
+    // selector con los restaurantes cerrados dentro y M.B. reaparecía.
+    const _all = THEMES.venues.filter(v => v && v.id && v.name && v.id !== 'plantilla' && v.enabled);
     if(_all.length && ACTIVE_VENUE) renderVenuePicker(_all, ACTIVE_VENUE.id);
   }
   // Restore checkbox state
@@ -12069,7 +12124,8 @@ function openAjustes(){
   if(_esAdmin()){
     const cajaV = $('ajVenues');
     const todos = (typeof THEMES!=='undefined' && THEMES && Array.isArray(THEMES.venues))
-      ? THEMES.venues.filter(v => v && v.id && v.name && v.id !== 'plantilla') : [];
+      ? THEMES.venues.filter(v => v && v.id && v.name && v.id !== 'plantilla'
+                                  && (v.enabled || !SUSPENDIDA)) : [];
     const ahora = _venueActual();
     if(cajaV) cajaV.innerHTML = todos.map(v => {
       const on = v.id === ahora;
@@ -12420,6 +12476,23 @@ function _showCloudPinLogin(name, emp) {
 }
 
 async function closePinAndEnter(){
+  // LA PUERTA DE LA SUSPENSIÓN, y va aquí por un motivo: éste es el ÚNICO
+  // sitio por el que se entra de verdad. Lo llaman el login con contraseña y
+  // también el auto-login de los 90 días, así que ponerlo sólo en el primero
+  // habría dejado pasar a todo el que ya tuviera la sesión guardada — que es
+  // precisamente el equipo entero.
+  if(!_puedeEntrar(pinTarget)){
+    const err = document.getElementById('loginError');
+    if(err) err.textContent = _textoSuspendida();
+    if(typeof showToast === 'function') showToast(_textoSuspendida(), 'info', 6000);
+    const ov = document.getElementById('pinOverlay');
+    if(ov) ov.remove();
+    // La sesión recordada también se retira: si no, cada apertura volvería a
+    // intentar entrar y a chocar con este mismo aviso.
+    try{ localStorage.removeItem('txoko_session'); }catch(_){}
+    if(typeof renderLogin === 'function') renderLogin();
+    return;
+  }
   // La carta ANTES de nada, y con el restaurante que trae la ficha del que
   // entra —no el del selector del login, que es estética—. Si no se puede
   // dejar puesta la que toca, no se entra: enseñarle a alguien de M.B. la

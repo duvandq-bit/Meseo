@@ -890,6 +890,90 @@ test('Cambiar de idioma repinta los diálogos abiertos', () => {
     'la guía no debe desmontarse: se repinta en su sitio');
 });
 
+// ─── SUSPENSIÓN TEMPORAL ────────────────────────────────────────────────────
+// Se ejecuta la puerta REAL recortada del fichero, no se lee el texto: lo que
+// importa es a quién deja pasar.
+const _susp = (() => {
+  const i = html.indexOf('const SUSPENDIDA =');
+  const j = html.indexOf('// La cuenta de ADMINISTRACIÓN', i);
+  if (i < 0 || j <= i) throw new Error('no encuentro el bloque de suspensión');
+  const bloque = html.slice(i, j);
+  const M = new Function('LANG', bloque + '; return { SUSPENDIDA, _PERMITIDOS, _puedeEntrar, _textoSuspendida };')('es');
+  return { M, bloque };
+})();
+
+test('suspensión · sólo entran los cuatro de la lista', () => {
+  const { M } = _susp;
+  assert(M.SUSPENDIDA === true, 'la suspensión tiene que estar puesta');
+  for (const n of ['Jenfry', 'Duvan', 'Dian', 'Administrador'])
+    assert(M._puedeEntrar(n), `${n} tiene que poder entrar`);
+  // Los otros 18 del equipo, fuera. Se nombran unos cuantos de verdad.
+  for (const n of ['Aless', 'Sol', 'Junior', 'Mariano', 'Anna', 'German', 'Faride Navarro'])
+    assert(!M._puedeEntrar(n), `${n} NO puede entrar durante la suspensión`);
+  assert(!M._puedeEntrar('') && !M._puedeEntrar(null) && !M._puedeEntrar(undefined),
+    'un nombre vacío no puede colarse');
+  // TOLERANTE CON MAYÚSCULAS Y ESPACIOS: se entra con el nombre que se teclea,
+  // y una letra de diferencia no puede dejar fuera a quien sí está.
+  for (const n of ['jenfry', 'JENFRY', '  Duvan  ', 'dIaN'])
+    assert(M._puedeEntrar(n), `«${n}» tiene que reconocerse`);
+  // Y NO por parecido: un nombre que sólo contiene a otro no vale.
+  for (const n of ['Duvanzzz', 'Dianita', 'Administradorcito'])
+    assert(!M._puedeEntrar(n), `«${n}» no puede pasar por uno de la lista`);
+});
+
+test('suspensión · al levantarla vuelve a entrar todo el mundo', () => {
+  // La reversión es UNA línea, y se comprueba ejecutándola: sin esto, «es
+  // temporal» sería una promesa sin respaldo.
+  const M = new Function('LANG', _susp.bloque.replace('const SUSPENDIDA = true;', 'const SUSPENDIDA = false;')
+    + '; return { _puedeEntrar };')('es');
+  for (const n of ['Aless', 'Sol', 'Junior', 'cualquiera'])
+    assert(M._puedeEntrar(n), `${n} tiene que volver a entrar al levantarla`);
+});
+
+test('suspensión · la puerta está en el ÚNICO sitio por el que se entra', () => {
+  // `closePinAndEnter` lo llaman el login con contraseña Y el auto-login de los
+  // 90 días. Poner la puerta sólo en el primero habría dejado pasar a todo el
+  // que ya tuviera sesión guardada, que es el equipo entero.
+  const i = html.indexOf('async function closePinAndEnter(');
+  const cuerpo = html.slice(i, html.indexOf('\n}', i));
+  assert(/_puedeEntrar\(pinTarget\)/.test(cuerpo), 'la puerta no está en closePinAndEnter');
+  assert(cuerpo.indexOf('_puedeEntrar') < cuerpo.indexOf('currentUser=pinTarget'),
+    'la comprobación tiene que ir ANTES de dar por entrado a nadie');
+  assert(/removeItem\('txoko_session'\)/.test(cuerpo),
+    'hay que retirar la sesión recordada, o cada apertura choca con el mismo aviso');
+  // Y el auto-login sigue pasando por ahí, que es lo que lo cubre.
+  const al = html.slice(html.indexOf('(function autoLogin('), html.indexOf('(function autoLogin(') + 2200);
+  assert(/closePinAndEnter\(\)/.test(al), 'el auto-login tiene que seguir entrando por la misma puerta');
+});
+
+test('suspensión · no se puede crear ninguna cuenta', () => {
+  const i = html.indexOf('function setLoginMode(mode){');
+  const f = html.slice(i, i + 700);
+  assert(/SUSPENDIDA && mode === 'signup'/.test(f),
+    'el modo de registro tiene que estar cerrado con la suspensión puesta');
+  assert(/mode = 'signin'/.test(f), 'y caer a iniciar sesión, no quedarse a medias');
+  const r = html.slice(html.indexOf('function renderLogin(){'), html.indexOf('function renderLogin(){') + 900);
+  assert(/loginTabSignup/.test(r) && /loginNewUserHint/.test(r),
+    'la pestaña y el enlace de crear cuenta tienen que esconderse');
+});
+
+test('suspensión · ningún restaurante cerrado se anuncia en ninguna lista', () => {
+  // Son TRES listas y las tres tienen que filtrar. La del cambio de idioma se
+  // había quedado sin filtro: cambiar a inglés devolvía M.B. al selector.
+  const listas = [...html.matchAll(/THEMES\.venues\.filter\(([^;]*?)\)\s*:/g)].map(m => m[1]);
+  assert(listas.length >= 3, `esperaba al menos 3 listas de restaurantes, hay ${listas.length}`);
+  const conIdioma = html.slice(html.indexOf('// MISMO filtro que en `initVenues`'), html.indexOf('// MISMO filtro que en `initVenues`') + 400);
+  assert(/&& v\.enabled/.test(conIdioma),
+    'el repintado por cambio de idioma volvía a enseñar los restaurantes cerrados');
+  const reg = JSON.parse(read('data/themes.json'));
+  const mb = reg.venues.find(v => v.id === 'mb');
+  assert(mb && mb.enabled === false, 'M.B. tiene que seguir cerrado');
+  const visibles = reg.venues.filter(v => v && v.id !== 'plantilla' && v.enabled);
+  assert(!visibles.some(v => /M\.?B\.?/i.test(v.name)), 'no puede anunciarse M.B.');
+  assert(visibles.length === 1 && /Suspendido temporalmente/.test(visibles[0].name),
+    `el único visible tiene que decir que está suspendido: ${JSON.stringify(visibles.map(v => v.name))}`);
+});
+
 test('el contenido del local abierto no nombra marcas ni al chef', () => {
   // Decisión del propietario: la casa es Jenfry y no se apoya en ninguna marca
   // ajena. Se quitó el NOMBRE, nunca la información: lo que era «de Martín»
@@ -7618,11 +7702,17 @@ test('Fotos en toda la app: helper precargado + Explorar + ficha + flashcard + a
   // CONSULTA. Nunca en exámenes/juegos donde el nombre del plato sea la
   // respuesta (chivarían la solución).
   assert(/function dishPhotoSrc\(id\)/.test(html), 'dishPhotoSrc helper missing');
-  // La ventana subió de 900 a 1800: la carga de la carta por restaurante entró
-  // por delante en closePinAndEnter y empujó esta línea. Sigue comprobando que
-  // la precarga va al principio de la función, que es lo que importa.
-  assert(/loadDishPhotos\(\);/.test(html.slice(html.indexOf('function closePinAndEnter('), html.indexOf('function closePinAndEnter(') + 1800)),
+  // ESTA GUARDA SE ATABA A UNA VENTANA DE BYTES, y ya se había ensanchado una
+  // vez (900 → 1800) porque algo entró por delante en `closePinAndEnter`. Volver
+  // a ensancharla es un trinquete: cada vez mide menos. Lo que de verdad importa
+  // no es dónde cae la línea, sino que la precarga ocurra ANTES de que se pinte
+  // nada — que es lo que dice el mensaje de error. Eso es lo que se comprueba.
+  const _cpe = html.indexOf('async function closePinAndEnter(');
+  const _cuerpo = html.slice(_cpe, html.indexOf('\n}', _cpe));
+  assert(_cpe > 0 && /loadDishPhotos\(\);/.test(_cuerpo),
     'the photo map must preload on login so sync renders can use it');
+  assert(_cuerpo.indexOf('loadDishPhotos();') < _cuerpo.indexOf('getTrophyBadge'),
+    'la precarga de fotos tiene que ir ANTES del primer pintado');
   // Explorar: la foto vive dentro del hexágono de la fila
   const topic = html.slice(html.indexOf('function renderRepasoTopic('), html.indexOf('function renderRepasoDishDetail('));
   assert(/repaso-row-icon">\$\{_ph\?`<img loading="lazy"/.test(topic), 'Explorar rows must show the dish photo in the hex icon');
