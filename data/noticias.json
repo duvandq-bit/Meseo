@@ -1,308 +1,300 @@
 {
- "updated": "2026-09-16T09:59:59.964Z",
+ "updated": "2026-09-20T09:50:29.635Z",
  "items": [
   {
-   "t": "El restaurante de Valladolid que ha sido nominado como una de las mejores aperturas de España en 2025",
-   "u": "https://www.elespanol.com/castilla-y-leon/region/valladolid/20260916/famoso-restaurante-valladolid-nominado-mejores-aperturas-espana/1003744385039_0.amp.html",
+   "t": "Envinate, una de las bodegas que ha liderado la revolución de los vinos canarios",
+   "u": "https://www.elespanol.com/viajes/cocinillas-gastro/vinos/20260920/envinate-bodegas-liderado-revolucion-vinos-canarios/1003744381340_0.amp.html",
    "s": "El Español",
-   "d": "2026-09-16T08:11:31.000Z",
+   "d": "2026-09-20T06:30:28.000Z",
    "tags": [
-    "ALTA COCINA"
+    "VINO",
+    "CANARIAS"
    ],
-   "img": "https://s3.elespanol.com/k/imgp/cms/elespanol/11192696.jpg?p=f:jpeg/w:1706/h:960&h=fKWwDcsp"
+   "img": "https://s3.elespanol.com/k/imgp/cms/elespanol/11357021.jpg?p=f:jpeg/w:1706/h:960&h=ZKLeucvW"
   },
   {
-   "t": "De 300 a solo 50: tres panaderías canarias logran el reconocimiento más importante del pan artesano en España",
-   "u": "https://www.larazon.es/canarias/300-solo-50-tres-panaderias-canarias-logran-reconocimiento-mas-importante-pan-artesano-espana_202609166aa91e4ad8ec24478baa00ad.html",
+   "t": "Extremadura lleva su gastronomía al Chefs on Fire de Portugal",
+   "u": "https://www.canalextremadura.es/noticias/extremadura/extremadura-lleva-su-gastronomia-al-chefs-fire-de-portugal",
+   "s": "Canal Extremadura",
+   "d": "2026-09-20T06:27:09.000Z",
+   "tags": [
+    "ALTA COCINA"
+   ]
+  },
+  {
+   "t": "Un patio del siglo XVIII, croissants recién hechos y el aire de París: así es una de las mejores cafeterías de España",
+   "u": "https://www.larazon.es/canarias/patio-siglo-xviii-croissants-recien-hechos-aire-paris-asi-mejores-cafeterias-espana_202609206aabc816f8dade401b109bb7.html",
    "s": "La Razón",
-   "d": "2026-09-16T08:00:24.000Z",
+   "d": "2026-09-20T05:00:26.000Z",
    "tags": [
     "CANARIAS"
    ],
-   "img": "https://fotografias-2.larazon.es/clipping/cmsimages01/2024/12/12/70D7DAE8-3D98-4B76-9DE1-BC1583C7C16D/pan-blanco-panaderia_98.jpg?crop=4024,2264,x0,y2198&width=1900&height=1069&optimize=low&format=webply"
+   "img": "https://fotografias-2.larazon.es/clipping/cmsimages01/2026/09/17/C07A0B39-CE9F-4C38-82C5-55F8433FE40C/patio-siglo-xviii-croissants-recien-hechos-aire-paris-asi-mejores-cafeterias-espana_98.jpg?crop=657,370,x0,y143&width=1900&height=1069&optimize=low&format=webply"
   },
   {
-   "t": "Mar y tierra en armonía",
-   "u": "https://www.canarias7.es/gastronomia-c7/bp-mar-tierra-armonia-20260916154626-nt.html",
+   "t": "Dónde saborear Gran Canaria, según la directora de marketing de la Unión Deportiva Las Palmas, Noelia Pérez",
+   "u": "https://www.canarias7.es/gastronomia-c7/a-fuego-lento/saborear-gran-canaria-segun-directora-marketing-union-20260920070000-nt_amp.html",
    "s": "Canarias7",
-   "d": "2026-09-16T06:26:39.000Z",
+   "d": "2026-09-20T05:00:22.000Z",
    "tags": [
     "CANARIAS"
    ],
-   "img": "https://s1.ppllstatics.com/canarias7/www/multimedia/gastronomia-c7/2026/09/14/rogelio1-k1P-U301714572585oTD-1200x840@Canarias7.jpg"
+   "img": "https://s1.ppllstatics.com/canarias7/www/multimedia/gastronomia-c7/2026/09/19/Noelia.jpg"
   },
   {
-   "t": "Adiós al estrella Michelin Santerra: uno de los templos consagrados de la caza en Madrid echa el cierre",
-   "u": "https://www.elespanol.com/viajes/cocinillas-gastro/actualidad-gastronomica/20260916/adios-estrella-michelin-santerra-templos-consagrados-caza-madrid-echa-cierre/1003744380305_0.amp.html",
-   "s": "El Español",
-   "d": "2026-09-16T06:01:50.000Z",
+   "t": "Santa Cruz de Tenerife, capital gastronómica de España",
+   "u": "https://www.tourinews.es/opinion/santa-cruz-tenerife-capital-gastronomica-espana_4494619_102_amp.html",
+   "s": "Tourinews",
+   "d": "2026-09-20T04:15:00.000Z",
    "tags": [
-    "ALTA COCINA",
-    "MICHELIN"
-   ],
-   "img": "https://s3.elespanol.com/k/imgp/cms/elespanol/11354414.jpg?p=f:jpeg/w:1706/h:960&h=gupmhSCC"
+    "CANARIAS"
+   ]
   },
   {
-   "t": "Los 'dos cuchillos' de Tenerife que quieren hacer historia en la Michelin con cocina atlántica (sin carne)",
-   "u": "https://www.elespanol.com/viajes/cocinillas-gastro/reportajes-gastronomicos/20260916/cuchillos-tenerife-quieren-hacer-historia-michelin-cocina-atlantica-sin-carne/1003744379864_0.html",
-   "s": "El Español",
-   "d": "2026-09-16T06:01:00.000Z",
-   "tags": [
-    "CANARIAS",
-    "MICHELIN"
-   ],
-   "img": "https://s3.elespanol.com/k/imgp/cms/elespanol/11354579.jpg?p=f:jpeg/w:1706/h:960&h=q2JK9uDk"
-  },
-  {
-   "t": "La cultura del vino en Fuerteventura se enriquece",
-   "u": "https://www.diariodefuerteventura.com/noticia/la-cultura-del-vino-en-fuerteventura-se-enriquece",
-   "s": "Diario de Fuerteventura",
-   "d": "2026-09-16T05:35:17.000Z",
+   "t": "Patricia Sánchez Moro (Bodegas Emilio Moro): \"Un fondo busca rentabilidad a corto plazo; nosotros podemos pensar a cien años\"",
+   "u": "https://www.eldia.es/economia/2026/09/20/fondo-busca-rentabilidad-corto-plazo-nosotros-podemos-pensar-cien-anos-134478415.amp.html",
+   "s": "Eldía",
+   "d": "2026-09-20T04:00:48.000Z",
    "tags": [
     "VINO",
     "CANARIAS"
-   ],
-   "img": "https://www.diariodefuerteventura.com/sites/default/files/archivos/2015/Septiembre%202015/160926-vendimia-2.jpg"
+   ]
   },
   {
-   "t": "Ferran Adrià, chef Michelin: \"Para un tomate frito de bote perfecto, no hay que añadir azúcar; usa orégano fresco, pimienta, aceite de oliva y nata\"",
-   "u": "https://www.heraldo.es/noticias/gastronomia/2026/09/16/ferran-adria-chef-michelin-tomate-frito-bote-perfecto-no-anadas-azucar-usa-oregano-fresco-nata-aceite-oliva-pimienta-2049727.amp.html",
-   "s": "heraldo.es",
-   "d": "2026-09-16T05:20:59.000Z",
+   "t": "Tres hoteles de Aragón brillan en la exclusiva selección de Llaves Michelin 2026",
+   "u": "https://www.enjoyzaragoza.es/llaves-michelin-aragon/",
+   "s": "enjoyzaragoza.es",
+   "d": "2026-09-20T00:00:37.000Z",
    "tags": [
-    "ALTA COCINA",
     "MICHELIN"
    ],
-   "img": "https://imagenes.heraldo.es/files/image_1920_1080/uploads/imagenes/2026/09/10/6aa27530065024-13269667.jpeg"
+   "img": "https://www.enjoyzaragoza.es/wp-content/uploads/2024/04/Hotel-Torre-Marques.jpg"
   },
   {
-   "t": "Hito: 12 años de cocina japonesa junto a Las Canteras",
-   "u": "https://www.canarias7.es/gastronomia-c7/restaurantes/hito-anos-cocina-japonesa-junto-canteras-20260916070000-nt_amp.html",
+   "t": "Santy (20/09/26)",
+   "u": "https://www.eldia.es/humor/2026/09/20/santy-20-09-26-134476024.html",
+   "s": "Eldía",
+   "d": "2026-09-19T22:59:17.000Z",
+   "tags": [
+    "CANARIAS"
+   ]
+  },
+  {
+   "t": "Padylla (20/09/26)",
+   "u": "https://www.eldia.es/humor/2026/09/20/padylla-20-09-26-134474159.html",
+   "s": "Eldía",
+   "d": "2026-09-19T22:59:17.000Z",
+   "tags": [
+    "CANARIAS"
+   ]
+  },
+  {
+   "t": "Un total de 470 hoteles y 10 destinos se incorporan a la Guía Michelin en 2026",
+   "u": "https://www.hosteltur.com/178764_un-total-de-470-hoteles-y-10-destinos-se-incorporan-a-la-guia-michelin-en-2026.html",
+   "s": "Hosteltur",
+   "d": "2026-09-19T22:00:00.000Z",
+   "tags": [
+    "MICHELIN"
+   ],
+   "img": "https://static.hosteltur.com/app/public/uploads/img/articles/2026/09/18/L_175625_la-guia-michelin-suma-470-hoteles-y-estrena-llaves-en-10-destinos-en-2026.jpg"
+  },
+  {
+   "t": "Una isla para comérsela: así sabe Santa Cruz de Tenerife, Capital Gastronómica 2027",
+   "u": "https://www.tapasmagazine.es/una-isla-para-comersela-asi-sabe-santa-cruz-de-tenerife-capital-gastronomica-2027/",
+   "s": "Tapas Magazine",
+   "d": "2026-09-19T16:19:46.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://www.tapasmagazine.es/wp-content/uploads/2026/09/1200x675-72.jpg"
+  },
+  {
+   "t": "La villa juguetera de Alicante que conquista por su cocina: así es el pueblo donde mejor se come de España",
+   "u": "https://www.noticiasdelvino.com/restaurantes/2026/09/19/la-villa-juguetera-de-alicante-que-conquista-por-su-cocina-asi-es-el-pueblo-donde-mejor-se-come-de-espana-74836/",
+   "s": "Noticias del Vino",
+   "d": "2026-09-19T13:53:34.000Z",
+   "tags": [
+    "MICHELIN"
+   ],
+   "img": "https://www.noticiasdelvino.com/wp-content/uploads/restaurantes-5.jpg"
+  },
+  {
+   "t": "Una firma tinerfeña logra el tercer puesto en un concurso nacional de tartas de queso",
+   "u": "https://www.eldia.es/ocio/gastronomia/2026/09/19/firma-tinerfena-logra-tercer-puesto-134463642.amp.html",
+   "s": "Eldía",
+   "d": "2026-09-19T12:45:48.000Z",
+   "tags": [
+    "CANARIAS"
+   ]
+  },
+  {
+   "t": "Zumaque: la cocina de Lucas Maes entre Bélgica y Tenerife",
+   "u": "https://www.canarias7.es/gastronomia-c7/restaurantes/zumaque-cocina-lucas-maes-belgica-tenerife-20260919140000-nt_amp.html",
    "s": "Canarias7",
-   "d": "2026-09-16T05:00:16.000Z",
+   "d": "2026-09-19T12:00:00.000Z",
    "tags": [
     "CANARIAS"
    ],
-   "img": "https://s2.ppllstatics.com/canarias7/www/multimedia/gastronomia-c7/2026/09/15/tartar.jpg"
+   "img": "https://s3.ppllstatics.com/canarias7/www/multimedia/gastronomia-c7/2026/09/17/image00002.jpg"
   },
   {
-   "t": "Playa Honda encara diez días de fiestas con música y gastronomía para despedir el verano",
-   "u": "https://www.coolturalanzarote.com/articles/playa-honda-encara-diez-dias-de-fiestas-con-musica-y-gastronomia-para-despedir-el-verano",
-   "s": "coolturalanzarote.com",
-   "d": "2026-09-16T04:11:00.000Z",
+   "t": "CMM estrenará el lunes 'Ponle Peguitas', el programa de cocina del chef Sergio Fernández: \"Recetas sencillas y ricas\"",
+   "u": "https://www.elespanol.com/eldigitalcastillalamancha/vivir/ocio/20260919/cmm-estrenara-lunes-ponle-peguitas-programa-cocina-chef-sergio-fernandez-recetas-sencillas-ricas/1003744389574_0.html",
+   "s": "El Español",
+   "d": "2026-09-19T10:30:39.000Z",
+   "tags": [
+    "ALTA COCINA"
+   ],
+   "img": "https://s3.elespanol.com/k/imgp/cms/elespanol/11357724.jpg?p=f:jpeg/c:1364:767:nowe:0:502/w:1706/h:960&h=7jgzpjNC"
+  },
+  {
+   "t": "Doce sales canarias compiten en Lanzarote: así se elige la mejor sal de 2026",
+   "u": "https://estenerife.com/mejor-sal-canarias-doce-sales-compiten-lanzarote-2026/",
+   "s": "estenerife.com",
+   "d": "2026-09-19T09:42:59.000Z",
+   "tags": [
+    "CANARIAS"
+   ]
+  },
+  {
+   "t": "El chef de ‘El Pellizco’ convierte la cabra majorera en alta cocina con embutidos, helados y un ‘cabrabushi’ que fermenta durante meses",
+   "u": "https://radioinsular.es/el-chef-de-el-pellizco-convierte-la-cabra-majorera-en-alta-cocina-con-embutidos-helados-y-un-cabrabushi-que-fermenta-durante-meses",
+   "s": "radioinsular.es",
+   "d": "2026-09-19T09:00:00.000Z",
    "tags": [
     "CANARIAS"
    ],
-   "img": "https://cdn.sanity.io/images/skgtgf6p/production/38f9ba3959bc4b5314808fb46a599240ed71cd81-800x545.jpg?rect=0,48,800,450&w=1200&h=675&fit=crop&auto=format"
+   "img": "https://radioinsular.es/wp-content/uploads/2026/09/RIGOBERTO-ALMEIDA-CHEF-EL-PELLIZCO.jpeg"
   },
   {
-   "t": "Tres restaurantes argentinos están en el top 10 de un ranking global de alta cocina",
-   "u": "https://www.infobae.com/tendencias/2026/09/15/tres-restaurantes-argentinos-estan-en-el-top-10-de-un-ranking-global-de-alta-cocina/",
+   "t": "Boccondivino, la historia del restaurante italiano que cerró con la crisis del 2008 y hoy entra en la Guía Michelin: “El chef trae a Madrid los sabores de su Cerdeña natal”",
+   "u": "https://www.infobae.com/espana/2026/09/19/boccondivino-la-historia-del-restaurante-italiano-que-cerro-con-la-crisis-del-2008-y-hoy-entra-en-la-guia-michelin-el-chef-trae-a-madrid-los-sabores-de-su-cerdena-natal/",
    "s": "Infobae",
-   "d": "2026-09-15T23:52:00.000Z",
+   "d": "2026-09-19T06:33:00.000Z",
+   "tags": [
+    "MICHELIN",
+    "VINO"
+   ],
+   "img": "https://www.infobae.com/resizer/v2/JD56IWL6R5CDFPH6TD4RTA6U7I.jpg?auth=728950bd7fdf48424251f8ec617efd106ee824278b2c7e59181e5827dd325e1e&smart=true&width=1200&height=630&quality=85"
+  },
+  {
+   "t": "Puente Colgante Boutique Hotel: historia Indiana, alta cocina vasca y vistas únicas",
+   "u": "https://www.libertaddigital.com/chic/viajar-comer/2026-09-19/el-puente-colgante-boutique-hotel-refugio-indiano-y-alta-cocina-a-orillas-de-la-ria-0e-7459557/",
+   "s": "Libertad Digital",
+   "d": "2026-09-19T05:00:21.000Z",
    "tags": [
     "ALTA COCINA"
    ],
-   "img": "https://www.infobae.com/resizer/v2/DU22BTRT3FCNJNXBNY6BQAKTSY.png?auth=39e5c4b6fef105d4f5cfea88a24fd596a327fdc54dd506e71c9f03b6954b490c&smart=true&width=1200&height=630&quality=85"
+   "img": "https://s1.staticld.com/2026/09/18/1200/675/1095x823/puente-colgante-outside-0003.jpeg"
   },
   {
-   "t": "Juvé & Camps celebra en Canarias medio siglo de Reserva de la Familia, el espumoso pionero del brut nature de larga crianza",
-   "u": "https://www.canarias7.es/gastronomia-c7/juve-camps-celebra-canarias-medio-siglo-reserva-20260916010000-nt.html",
-   "s": "Canarias7",
-   "d": "2026-09-15T23:00:00.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://s2.ppllstatics.com/canarias7/www/multimedia/gastronomia-c7/2026/09/15/1-k85G-U301737460243iV-1200x840@Canarias7.jpg"
-  },
-  {
-   "t": "Onami lleva la alta cocina japonesa a la Costa Blanca",
-   "u": "https://www.7canibales.com/restaurantes/diego-laso-onami/",
-   "s": "7 Caníbales",
-   "d": "2026-09-15T22:01:40.000Z",
-   "tags": [
-    "ALTA COCINA"
-   ],
-   "img": "https://www.7canibales.com/wp-content/uploads/sites/2/2026/09/Diego-Laso-en-la-entrada-de-Onami-en-el-AR-Diamante-Beach-de-Calpe..webp"
-  },
-  {
-   "t": "Motril: La revista gastronómica «A Fuego Lento» descubre al chef motrileño Iván Mateo y la cocina de autor de Espacio IME",
-   "u": "https://www.motrildigital.news/motril-la-revista-gastronomica-a-fuego-lento-descubre-al-chef-motrileno-ivan-mateo-y-la-cocina-de-autor-de-espacio-ime",
-   "s": "Motril Digital",
-   "d": "2026-09-15T21:08:41.000Z",
-   "tags": [
-    "ALTA COCINA"
-   ],
-   "img": "https://motrildigital.info/wp-content/uploads/2026/09/WhatsApp-Image-2026-05-14-at-16.49.59-1.jpeg"
-  },
-  {
-   "t": "El restaurante canario que conquistó a turistas y famosos cambia de manos: “Sin Las Lagunetas no se van a quedar”",
-   "u": "https://www.laprovincia.es/fotos/las-palmas-de-gran-canaria/2026/09/15/lagunetas-quedar-134311574.html",
-   "s": "La Provincia",
-   "d": "2026-09-15T18:00:55.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://estaticos-cdn.prensaiberica.es/clip/0adb0092-29ca-4b7b-b7ea-a918c64d2dc5_16-9-discover-aspect-ratio_default_0_x1208y417.jpg"
-  },
-  {
-   "t": "Lava, único restaurante canario nominado a los TheFork Awards 2025",
-   "u": "https://www.canariasenpleno.com/thefork-awards-2025-lava-canarias/",
-   "s": "canariasenpleno.com",
-   "d": "2026-09-15T17:49:58.000Z",
+   "t": "Padylla (19/09/26)",
+   "u": "https://www.eldia.es/humor/2026/09/19/padylla-19-09-26-134448088.html",
+   "s": "Eldía",
+   "d": "2026-09-18T22:59:14.000Z",
    "tags": [
     "CANARIAS"
    ]
   },
   {
-   "t": "Ni Santorini ni Cerdeña: Tenerife se corona como la mejor isla europea para viajar según este ranking internacional",
-   "u": "https://www.eldia.es/tenerife/2026/09/15/santorini-cerdena-tenerife-corona-mejor-dv-134317496.html",
+   "t": "Santy (19/09/26)",
+   "u": "https://www.eldia.es/humor/2026/09/19/santy-19-09-26-134448382.html",
    "s": "Eldía",
-   "d": "2026-09-15T16:30:18.000Z",
+   "d": "2026-09-18T22:59:13.000Z",
+   "tags": [
+    "CANARIAS"
+   ]
+  },
+  {
+   "t": "Vallarta Nayarit Gastronómica 2026: fechas, chefs y programa",
+   "u": "https://www.eluniversal.com.mx/menu/vallarta-nayarit-gastronomica-2026-fechas-chefs-y-programa/?outputType",
+   "s": "El Universal",
+   "d": "2026-09-18T19:06:42.000Z",
+   "tags": [
+    "MICHELIN"
+   ],
+   "img": "https://www.eluniversal.com.mx/resizer/v2/743JI7JB6ZFMXFJLOAPOKRYIIQ.png?auth=7f2d94b9fbe47074cb2b4461ba6e4520251cbb78aed99da0f204d8792171fb0f"
+  },
+  {
+   "t": "San Bartolomé da el pistoletazo de salida al primer Burger Fest Canarias en Lanzarote",
+   "u": "https://isladelanzarote.com/san-bartolome-da-el-pistoletazo-de-salida-al-primer-burger-fest-canarias-en-lanzarote/",
+   "s": "Isladelanzarote.com",
+   "d": "2026-09-18T19:05:06.000Z",
    "tags": [
     "CANARIAS"
    ],
-   "img": "https://estaticos-cdn.prensaiberica.es/clip/112eabab-16db-479e-a877-14e61a83660e_16-9-discover-aspect-ratio_default_0_x1000y444.jpg"
+   "img": "https://isladelanzarote.com/wp-content/uploads/2026/09/sb-burguer.jpg"
   },
   {
-   "t": "Chile en nogada: tradición que cuesta, pero conquista",
-   "u": "https://codigoqro.mx/nota/region-4/2026/09/15/chile-nogada-tradicion-cuesta-conquista",
-   "s": "CódigoQro",
-   "d": "2026-09-15T16:26:00.000Z",
+   "t": "Stands informativos, comida y una ‘bulla’ de idiomas: más de 700 alumnos de movilidad hacen escala este curso en la Universidad de La Laguna",
+   "u": "https://www.eldia.es/tenerife/2026/09/18/stands-informativos-comida-bulla-idiomas-134440759.amp.html",
+   "s": "Eldía",
+   "d": "2026-09-18T18:39:36.000Z",
    "tags": [
-    "ALTA COCINA"
-   ],
-   "img": "https://codigoqro.mx/uploads/mce/destacada_comp_20260915_103736_297514.png"
+    "CANARIAS"
+   ]
   },
   {
-   "t": "El restaurante ‘Lava’ de Tenerife, nominado como mejor apertura de 2025 en España",
-   "u": "https://rtvc.es/restaurante-lava-tenerife-nominado-mejor-apertura-2025-espana-15-septiembre-2026/",
-   "s": "Radio Televisión Canaria",
-   "d": "2026-09-15T16:16:45.000Z",
+   "t": "El único restaurante de España con el 95% de su carta libre de alérgenos está en La Palma: cocina con productos locales y ecológicos",
+   "u": "https://www.elconfidencial.com/viajes/2026-09-18/restaurante-la-palma-carta-libre-alergenos_4426896/",
+   "s": "El Confidencial",
+   "d": "2026-09-18T18:29:00.000Z",
+   "tags": [
+    "ALTA COCINA",
+    "CANARIAS"
+   ],
+   "img": "https://images.ecestaticos.com/z92TEOTMAO1Hr87d63q8P-hKvFE=/0x0:2048x1365/600x315/filters:fill(white):format(jpg):quality(99):watermark(f.elconfidencial.com/file/a73/f85/d17/a73f85d17f0b2300eddff0d114d4ab10.png,0,275,1)/f.elconfidencial.com/original/fb8/08f/d0a/fb808fd0addc73b043ccb0c4d5b51427.jpg"
+  },
+  {
+   "t": "Lanzarote celebra su primer Burger Fest en Playa Honda",
+   "u": "https://lavozcanaria.com/este-lanzarote/general/lanzarote-celebra-su-primer-burger-fest-en-playa-honda",
+   "s": "La Voz Canaria",
+   "d": "2026-09-18T15:58:24.000Z",
    "tags": [
     "CANARIAS"
    ],
-   "img": "https://cdn.rtvc.es/archivos/2026/09/restaurante-lava.webp"
+   "img": "https://lavozcanaria.com/media/2026/09/lanzarote-celebra-su-primer-burger-fest-en-playa-honda.webp"
   },
   {
-   "t": "El sabor de la memoria: los secretos del harees de Hisham Baeshen en Fi Glbak",
-   "u": "https://guide.michelin.com/es/es/articulo/features/el-sabor-de-la-memoria-los-secretos-del-harees-de-hisham-baeshen-en-fi-glbak",
-   "s": "MICHELIN Guide",
-   "d": "2026-09-15T16:04:20.000Z",
+   "t": "La guía Michelin desvela su elección de los mejores hoteles del mundo y hay uno asturiano",
+   "u": "https://www.lne.es/asturias/2026/09/18/guia-michelin-desvela-eleccion-mejores-134438581.html",
+   "s": "LNE",
+   "d": "2026-09-18T15:41:54.000Z",
    "tags": [
     "MICHELIN"
    ]
   },
   {
-   "t": "Un restaurante de Tenerife opta a ser la mejor apertura de España de 2025",
-   "u": "https://www.eldiario.es/canariasahora/sociedad/restaurante-tenerife-opta-mejor-apertura-espana-2025_1_13512272.html",
-   "s": "elDiario.es",
-   "d": "2026-09-15T15:47:11.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://static.eldiario.es/clip/f7ef979d-41a6-4924-b0d2-30a1390fd4ed_facebook-aspect-ratio-1200-675_default_0.jpg"
-  },
-  {
-   "t": "Una isla que se niega a dejar de creer en sí misma",
-   "u": "https://teldeactualidad.com/art/184240/una-isla-que-se-niega-a-dejar-de-creer-en-si-misma",
-   "s": "Telde Actualidad",
-   "d": "2026-09-15T15:35:58.000Z",
+   "t": "El viñedo más alto de Europa está en Tenerife: así es el pueblo que desafía a los Alpes",
+   "u": "https://www.noticiasdelvino.com/escapadas/2026/09/18/el-vinedo-mas-alto-de-europa-esta-en-tenerife-asi-es-el-pueblo-que-desafia-a-los-alpes-66331/",
+   "s": "Noticias del Vino",
+   "d": "2026-09-18T13:21:15.000Z",
    "tags": [
     "VINO",
     "CANARIAS"
    ],
-   "img": "https://teldeactualidad.b-cdn.net/upload/images/06_2026/4352_diego-ojeda-ramos-opinion.jpg"
+   "img": "https://www.noticiasdelvino.com/wp-content/uploads/El-vinedo-mas-alto-de-Europa-esta-en-Tenerife.jpg"
   },
   {
-   "t": "Dos restaurantes de Santander, entre los nominados a mejor apertura de 2025 en España",
-   "u": "https://eldiariocantabria.publico.es/articulo/sociedad/dos-restaurantes-santander-entre-nominados-mejor-apertura-2025-espana/20260915172336198608.html",
-   "s": "eldiariocantabria.es",
-   "d": "2026-09-15T15:23:36.000Z",
-   "tags": [
-    "CHEF"
-   ]
-  },
-  {
-   "t": "El renacer gastronómico de Murcia: Tres locales de la capital compiten por ser la Mejor Apertura de España en los TheFork Awards 2025",
-   "u": "https://lasgastrocronicas.com/el-renacer-gastronomico-de-murcia-tres-locales-de-la-capital-compiten-por-ser-la-mejor-apertura-de-espana-en-los-thefork-awards-2025/",
-   "s": "Las Gastrocrónicas",
-   "d": "2026-09-15T13:34:13.000Z",
-   "tags": [
-    "ALTA COCINA"
-   ]
-  },
-  {
-   "t": "Estrellas Michelin en La Manga Club: el evento gastronómico de alta cocina que no te puedes perder este otoño",
-   "u": "https://forbes.es/ultima-hora/1020376/estrellas-michelin-en-la-manga-club-el-evento-gastronomico-de-alta-cocina-que-no-te-puedes-perder-este-otono/",
-   "s": "Forbes España",
-   "d": "2026-09-15T12:46:09.000Z",
+   "t": "El restaurante con tres estrellas Michelin en el que Orlando Bloom ha cenado nada más aterrizar en San Sebastián: así es su menú de 395 €",
+   "u": "https://www.infobae.com/espana/2026/09/18/el-restaurante-con-tres-estrellas-michelin-en-el-que-orlando-bloom-ha-cenado-nada-mas-aterrizar-en-san-sebastian-asi-es-su-menu-de-395/",
+   "s": "Infobae",
+   "d": "2026-09-18T13:00:00.000Z",
    "tags": [
     "ALTA COCINA",
     "MICHELIN"
    ],
-   "img": "https://forbes.es/wp-content/uploads/2026/09/fotonoticia_20260915144609_1920-1200x675.jpg"
+   "img": "https://www.infobae.com/resizer/v2/KMSDZKY3BVEFLNCSEU27MCFQMI.jpg?auth=66d5fbe4b4e964f29c5dbbaf32c38fac278691d8328528f917573c1368d66365&smart=true&width=1200&height=630&quality=85"
   },
   {
-   "t": "Maipé de Taganana, el “Grand Cru” de Viñátigo",
-   "u": "https://www.eldia.es/ocio/gastronomia/2026/09/15/maipe-taganana-grand-cru-vinatigo-134308043.html",
-   "s": "Eldía",
-   "d": "2026-09-15T12:36:52.000Z",
+   "t": "Diez chefs convertirán Punta Cana en una ruta de sabores durante Culinary Week 2026",
+   "u": "https://eldia.com.do/diez-chefs-convertiran-punta-cana-en-una-ruta-de-sabores-durante-culinary-week-2026/",
+   "s": "eldia.com.do",
+   "d": "2026-09-18T12:38:52.000Z",
    "tags": [
-    "VINO",
-    "CANARIAS"
+    "ALTA COCINA"
    ],
-   "img": "https://estaticos-cdn.prensaiberica.es/clip/60f5812d-ff94-40f3-9d64-076ebc46d331_16-9-discover-aspect-ratio_default_0_x768y341.jpg"
-  },
-  {
-   "t": "El restaurante Lava del Puerto de la Cruz logra la única nominación de Canarias a las mejores aperturas de España",
-   "u": "https://www.eldia.es/tenerife/2026/09/15/restaurante-lava-puerto-cruz-logra-134309560.html",
-   "s": "Eldía",
-   "d": "2026-09-15T12:19:17.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://estaticos-cdn.prensaiberica.es/clip/84689d6b-cebc-4c4b-ad19-cdd140b7b955_16-9-discover-aspect-ratio_default_0_x618y275.jpg"
-  },
-  {
-   "t": "Ya fui: la obsesión por descubrir restaurantes y olvidarnos de volver",
-   "u": "https://www.canarias7.es/gastronomia-c7/obsesion-descubrir-restaurantes-olvidarnos-volver-20260915140000-nt.html",
-   "s": "Canarias7",
-   "d": "2026-09-15T12:00:00.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://s3.ppllstatics.com/canarias7/www/multimedia/gastronomia-c7/2026/09/14/restaurante11-k02H-U301710016704MdD-1200x840@Canarias7.jpg"
-  },
-  {
-   "t": "El restaurante donde comer genial frente al mar antes de que termine el verano: \"Me sorprendió multiplicado por 1000\"",
-   "u": "https://www.elespanol.com/treintayseis/vivir/gastrogalicia/20260915/restaurante-comer-genial-frente-mar-termine-verano-sorprendio-multiplicado-trt/1003744383051_0.amp.html",
-   "s": "El Español",
-   "d": "2026-09-15T12:00:00.000Z",
-   "tags": [
-    "MICHELIN"
-   ],
-   "img": "https://s3.elespanol.com/k/imgp/cms/elespanol/11354021.jpg?p=f:jpeg/w:1706/h:960&h=BNuRdq5H"
-  },
-  {
-   "t": "El restaurante en Huesca con sello Michelin que triunfa con su menú a 32 €: “No renuncies a probar la croqueta de huevo frito y torrezno”",
-   "u": "https://www.infobae.com/espana/2026/09/15/el-restaurante-en-huesca-con-sello-michelin-que-triunfa-con-su-menu-a-32-no-renuncies-a-probar-la-croqueta-de-huevo-frito-y-torrezno/",
-   "s": "Infobae",
-   "d": "2026-09-15T11:49:11.000Z",
-   "tags": [
-    "MICHELIN"
-   ],
-   "img": "https://www.infobae.com/resizer/v2/PECIZEPYGVA7XCKXWTUUNDGMAM.jpg?auth=12aa2145fecc7785a106b44ac42599ce7b2697bd751b4014b693dc14ae25e775&smart=true&width=1200&height=630&quality=85"
-  },
-  {
-   "t": "Los dos nuevos restaurantes de Bilbao que conquistan a los chefs con Estrella Michelin",
-   "u": "https://www.deia.eus/bilbao/2026/09/15/nuevos-restaurantes-bilbao-conquistan-chefs-11543747.html",
-   "s": "deia.eus",
-   "d": "2026-09-15T11:30:52.000Z",
-   "tags": [
-    "CHEF",
-    "MICHELIN"
-   ]
+   "img": "https://eldia.com.do/wp-content/uploads/2026/09/culinary-week-2026-1200x675.webp"
   }
  ]
 }
