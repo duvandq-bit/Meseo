@@ -527,6 +527,137 @@ test('el login sólo ofrece restaurantes ABIERTOS, y con el nombre del registro'
   assert(!/^TXOKO$/i.test(casa.name) || casa.casa, 'coherencia de nombres');
 });
 
+// ─── UX-02 · NAVEGACIÓN PRINCIPAL ───────────────────────────────────────────
+const _ux2 = (() => {
+  const i = html.indexOf('const UX2_DESTINO =');
+  const j = html.indexOf('const TAB_ROUTES =', i);
+  const rutas = JSON.parse(html.slice(html.indexOf('[', j), html.indexOf('];', j) + 1)
+    .replace(/'/g, '"'));
+  const M = new Function(html.slice(i, j) + '; return { UX2_DESTINO, UX2_SECCION };')();
+  return { ...M, rutas };
+})();
+
+test('UX-02 · cinco secciones, ni una más, y ninguna es Supervisor', () => {
+  const secciones = Object.keys(_ux2.UX2_DESTINO);
+  assert(secciones.length === 5, `esperaba 5 secciones, hay ${secciones.length}`);
+  for (const s of ['hoy', 'saber', 'practicar', 'equipo', 'yo'])
+    assert(secciones.includes(s), `falta la sección ${s}`);
+  assert(!secciones.includes('supervisor'),
+    'Supervisor no puede ser una sexta pestaña');
+  // Cinco botones en la barra, y sólo cinco.
+  const bar = html.slice(html.indexOf('<nav class="ux2-bar"'), html.indexOf('</nav>', html.indexOf('<nav class="ux2-bar"')));
+  assert((bar.match(/class="ux2-tab"/g) || []).length === 5,
+    'la barra tiene que llevar exactamente cinco pestañas');
+});
+
+test('UX-02 · NINGÚN destino existente queda inaccesible', () => {
+  // Es el criterio que impide que esto sea una pérdida de funcionalidad: cada
+  // una de las rutas de TAB_ROUTES tiene que seguir alcanzable, o por la barra
+  // nueva, o por el menú de antes, que a propósito NO se ha retirado.
+  const menu = html.slice(html.indexOf('id="appNav"'), html.indexOf('</nav>', html.indexOf('id="appNav"')));
+  const enMenu = new Set([...menu.matchAll(/showTab\('([a-z]+)'\)/g)].map(m => m[1]));
+  const porBarra = new Set(Object.values(_ux2.UX2_DESTINO));
+  // ESTAR CLASIFICADA NO ES SER ALCANZABLE, y la primera versión de esta
+  // prueba las confundía: daba por buena una ruta sólo porque UX2_SECCION
+  // dijera a qué sección pertenece. Se comprobó con una mutación —vaciar
+  // «Vinos» del menú— y pasaba en verde. Alcanzable es: la abre la barra, la
+  // abre el menú, o es una subpestaña cuyo PADRE es alcanzable.
+  const padres = {};
+  const pm = html.slice(html.indexOf('const parentMap = {'), html.indexOf('};', html.indexOf('const parentMap = {')));
+  for (const m of pm.matchAll(/(\w+):'(\w+)'/g)) padres[m[1]] = m[2];
+  padres.smart = 'aprender';          // showTab lo trata aparte, misma pantalla
+  const alcanzable = (r, visto) => {
+    if (porBarra.has(r) || enMenu.has(r)) return true;
+    if (!padres[r] || (visto && visto.has(r))) return false;
+    const v = new Set(visto || []); v.add(r);
+    return alcanzable(padres[r], v);
+  };
+  const huerfanas = _ux2.rutas.filter(r => !alcanzable(r));
+  assert(huerfanas.length === 0,
+    `estas rutas se quedarían sin ninguna puerta: ${huerfanas.join(', ')}`);
+  assert(enMenu.size >= 10,
+    'el menú de antes es la puerta a la cola larga: no puede vaciarse en UX-02');
+});
+
+test('UX-02 · cada ruta pertenece a UNA sola sección, y el activo es inequívoco', () => {
+  for (const r of _ux2.rutas) {
+    const sec = _ux2.UX2_SECCION[r];
+    assert(sec, `la ruta «${r}» no dice a qué sección pertenece: el activo quedaría apagado`);
+    assert(['hoy','saber','practicar','equipo','yo'].includes(sec),
+      `«${r}» apunta a una sección que no existe: ${sec}`);
+  }
+  // El caso que obligó a un mapa propio: `stats` y `logros` cuelgan de
+  // `ranking` en el parentMap de showTab, pero aquí ranking es Equipo y ellos
+  // son Yo. Si se reutilizara el parentMap, se encenderían dos pestañas.
+  assert(_ux2.UX2_SECCION.ranking === 'equipo', 'ranking es Equipo');
+  assert(_ux2.UX2_SECCION.stats === 'yo' && _ux2.UX2_SECCION.logros === 'yo',
+    'stats y logros son Yo, no Equipo');
+  // Y el sincronizador enciende uno y apaga el resto.
+  const f = html.slice(html.indexOf('function _ux2Sync('), html.indexOf('function _ux2Ir('));
+  assert(/b\.classList\.toggle\('on', on\)/.test(f), 'el activo se enciende y se apaga en el mismo paso');
+  assert(/aria-current/.test(f), 'el activo tiene que anunciarse también a un lector de pantalla');
+});
+
+test('UX-02 · el acceso al panel vive en Equipo y reutiliza el gating existente', () => {
+  const f = html.slice(html.indexOf('function _ux2Sync('), html.indexOf('function _ux2Ir('));
+  assert(/_esMando\(\)/.test(f) && /_esAdmin\(\)/.test(f),
+    'tiene que reutilizar el gating que ya existe, no inventar un rol');
+  assert(/sec === 'equipo' && puede/.test(f),
+    'el acceso sale SÓLO en Equipo y SÓLO a quien ya podía verlo');
+  // No se ha inventado ningún rol: el sistema real usa owner/manager + admin.
+  assert(!/'supervisor'\s*===|role === 'supervisor'/.test(html),
+    'no existe un rol «supervisor» en el sistema: no se puede inventar');
+  // Y el gating de la barra vieja sigue intacto.
+  assert(/b\.style\.display = \(_esMando\(\) \|\| _esAdmin\(\)\) \? '' : 'none'/.test(html),
+    '_supSyncMando no se ha tocado');
+});
+
+test('UX-02 · showTab sigue siendo quien navega; la barra sólo llama', () => {
+  // La capa no decide nada: delega. Si algún día `showTab` cambia, la barra
+  // cambia con él sin tocar nada.
+  const ir = html.slice(html.indexOf('function _ux2Ir('), html.indexOf('function _ux2Ir(') + 300);
+  assert(/showTab\(destino\)/.test(ir), 'la barra tiene que delegar en showTab');
+  assert(!/renderDashboard|renderAprender|renderExam|innerHTML/.test(ir),
+    'la barra no puede pintar ninguna pantalla por su cuenta');
+  // Y showTab sincroniza la barra, así que llegar por el menú, por un aviso
+  // push o desde dentro de una pantalla también enciende el botón correcto.
+  const iSt = html.indexOf('function showTab(tab, instant)');
+  const st = html.slice(iSt, html.indexOf('\n// UX-02 · Encender la sección', iSt));
+  assert(/_ux2Sync\(tab\)/.test(st), 'showTab tiene que sincronizar la barra');
+});
+
+test('UX-02 · planDeHoy y B2 siguen intactos', () => {
+  // La regla de la fase: navegar no puede cambiar la lógica de nada.
+  assert(/function planDeHoy\(datos\)\{/.test(html.replace(/\s+/g, '')) ||
+         /function planDeHoy\(datos\)\s*\{/.test(html), 'planDeHoy sigue donde estaba');
+  assert(/const PLAN_CATALOGO = \{/.test(html), 'el catálogo del plan no se ha tocado');
+  assert(/function _planSemilla\(dia, empleado\)\{/.test(html), 'la semilla no se ha tocado');
+  assert(/const EV_LIMITE_DURO  = 1000;/.test(html) && /const EV_PRESUPUESTO  = 512 \* 1024;/.test(html),
+    'los umbrales de B2 no se tocan en una fase de navegación');
+  assert(/const SUSPENDIDA = /.test(html), 'la suspensión sigue donde estaba');
+});
+
+test('UX-02 · la barra no tapa nada y cabe a 320 px', () => {
+  // Medido con Chromium a 320/360/390/430/1280 px, empleado y mando: sin
+  // desbordamiento, pestaña mínima 64×56 px, ninguna etiqueta cortada y nada
+  // flotante por debajo de la barra. Aquí se fija lo que lo sostiene.
+  const cssUx = read('styles.css');
+  const bar = cssUx.slice(cssUx.indexOf('.ux2-bar{'), cssUx.indexOf('.ux2-tab.on::before'));
+  assert(/flex:1 1 0/.test(bar),
+    'las pestañas tienen que repartirse a partes iguales: con flex auto, «Practicar» se comía a «Hoy» a 320 px');
+  assert(/min-height:56px/.test(bar), 'objetivo táctil de 56 px de alto');
+  assert(/text-overflow:ellipsis/.test(bar), 'una etiqueta larga se recorta, no desborda');
+  assert(/padding-bottom:env\(safe-area-inset-bottom,0px\)/.test(bar), 'la barra respeta el área segura');
+  // Y los huecos de lo que flota abajo están dimensionados para la barra ALTA.
+  for (const sel of ['.txk-sync-pill', '.sound-toggle'])
+    assert(new RegExp(sel.replace('.', '\\.') + '\\{bottom:calc\\(120px').test(cssUx),
+      `${sel} tiene que apartarse de la barra`);
+  assert(/#screenApp \.app-content\{padding-bottom:calc\(126px/.test(cssUx),
+    'el contenido necesita hueco al final o la barra tapa la última fila');
+  assert(/body:has\(#mainNavDD\.open\) \.ux2-bar/.test(cssUx),
+    'la barra tiene que retirarse cuando se abre la hoja del menú, como hacen el sonido y la píldora');
+});
+
 test('multi-restaurant theming is wired (applyTheme + login picker)', () => {
   for (const fn of ['applyTheme','initVenues','renderVenuePicker','selectVenue']) {
     assert(new RegExp(`function ${fn}\\(`).test(html), `${fn}() missing`);

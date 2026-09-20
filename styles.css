@@ -10387,3 +10387,91 @@ body, .screen{ min-height: 100vh; min-height: 100dvh; }
   position:absolute; width:1px; height:1px; padding:0; margin:-1px;
   overflow:hidden; clip:rect(0 0 0 0); clip-path:inset(50%); white-space:nowrap; border:0;
 }
+
+/* ═══ UX-02 · BARRA DE SECCIONES ═══════════════════════════════════════════
+   Cinco destinos fijos, abajo, donde llega el pulgar. Es una CAPA: no
+   sustituye al menú de antes, que sigue siendo la puerta a la cola larga
+   hasta que UX-07 la reorganice.
+   Sin colores nuevos: usa los tokens de marca que ya existen. */
+.ux2-bar{
+  position:fixed;left:0;right:0;bottom:0;z-index:9400;
+  background:var(--parchment);
+  border-top:1px solid var(--gold-a);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+  backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+}
+.ux2-tabs{display:flex;align-items:stretch}
+.ux2-tab{
+  flex:1 1 0;min-width:0;                 /* 1 1 0 reparte a partes iguales:
+                                             con `auto`, «Practicar» se comía
+                                             el sitio de «Hoy» a 320 px. */
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;
+  min-height:56px;padding:7px 2px 6px;
+  border:0;background:transparent;cursor:pointer;
+  color:var(--ink4);
+  font-family:'Quicksand',sans-serif;
+  -webkit-tap-highlight-color:transparent;touch-action:manipulation;
+}
+.ux2-tab svg{width:21px;height:21px;flex-shrink:0}
+.ux2-lbl{
+  font-size:.62rem;line-height:1;letter-spacing:.01em;font-weight:600;
+  max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+}
+.ux2-tab.on{color:var(--gold-deep)}
+.ux2-tab.on .ux2-lbl{font-weight:700}
+.ux2-tab.on svg{stroke-width:2}
+/* El activo lleva DOS señales, no sólo color: una barra arriba y el peso de
+   la etiqueta. Con una sola, a contraluz en sala no se distingue. */
+.ux2-tab.on::before{
+  content:'';position:absolute;top:0;width:26px;height:2.5px;border-radius:0 0 3px 3px;
+  background:var(--gold);
+}
+.ux2-tab{position:relative}
+.ux2-tab:focus-visible{outline:2px solid var(--gold);outline-offset:-3px}
+.ux2-tab:active{transform:translateY(1px)}
+
+/* El acceso al panel, dentro de Equipo y sólo para quien ya podía verlo. */
+.ux2-sup{border-bottom:1px solid var(--gold-a)}
+.ux2-sup[hidden]{display:none}
+.ux2-sup-btn{
+  display:flex;align-items:center;gap:.6rem;width:100%;min-height:46px;
+  padding:.55rem 1.1rem;border:0;background:transparent;cursor:pointer;
+  font-family:'Quicksand',sans-serif;font-size:.82rem;font-weight:600;
+  color:var(--gold-deep);text-align:left;
+}
+.ux2-sup-btn:focus-visible{outline:2px solid var(--gold);outline-offset:-2px}
+
+/* Que la barra NO tape el final de ninguna pantalla. */
+/* Los huecos son CONSTANTES y están medidos para la barra MÁS ALTA —la que
+   lleva la franja del panel, 102 px—, no para la normal. Se intentó atarlos a
+   la altura real con una variable puesta desde JavaScript y Chromium no la
+   resolvía dentro de `calc()` con `env()`: medido, devolvía siempre el valor
+   de respaldo. Un número fijo no se equivoca, no depende de que corra ningún
+   guión, y lo único que cuesta es que en las pantallas sin franja la píldora
+   flote 46 px más arriba de lo justo. Nadie lo nota; una píldora tapada, sí. */
+#screenApp .app-content{padding-bottom:calc(126px + env(safe-area-inset-bottom,0px))}
+
+/* Y que lo que ya flotaba abajo suba por encima de ella, en vez de quedar
+   debajo: la píldora de sincronización, el aviso de B2 y el sonido. */
+.txk-sync-pill{bottom:calc(120px + env(safe-area-inset-bottom,0px))}
+.ev-aviso-chip{bottom:calc(162px + env(safe-area-inset-bottom,0px))}
+.ev-aviso-panel{bottom:calc(212px + env(safe-area-inset-bottom,0px))}
+.sound-toggle{bottom:calc(120px + env(safe-area-inset-bottom,0px))}
+@media (max-width:480px){
+  .txk-sync-pill{bottom:calc(120px + env(safe-area-inset-bottom,0px))}
+  .ev-aviso-chip{bottom:calc(162px + env(safe-area-inset-bottom,0px))}
+  .ev-aviso-panel{bottom:calc(212px + env(safe-area-inset-bottom,0px))}
+  .sound-toggle{bottom:calc(120px + env(safe-area-inset-bottom,0px))}
+}
+/* A 320 px el texto se aprieta: se recorta la etiqueta antes que desbordar. */
+@media (max-width:359px){
+  .ux2-lbl{font-size:.56rem}
+  .ux2-tab svg{width:19px;height:19px}
+}
+/* La hoja del menú de antes se abre ENCIMA (z-index 9991): la barra se retira
+   para no competir con ella, igual que hacen el sonido y la píldora. */
+body:has(#mainNavDD.open) .ux2-bar,
+body:has(#gsOverlay.open) .ux2-bar{
+  opacity:0;visibility:hidden;pointer-events:none;
+  transition:opacity .2s ease,visibility .2s ease;
+}
