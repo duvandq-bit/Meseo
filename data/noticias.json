@@ -1,6 +1,34 @@
 {
- "updated": "2026-09-20T19:29:55.270Z",
+ "updated": "2026-09-21T01:10:02.354Z",
  "items": [
+  {
+   "t": "Padylla (21/09/26)",
+   "u": "https://www.eldia.es/humor/2026/09/21/padylla-21-09-26-134496689.html",
+   "s": "Eldía",
+   "d": "2026-09-20T22:59:09.000Z",
+   "tags": [
+    "CANARIAS"
+   ]
+  },
+  {
+   "t": "Santy (21/09/26)",
+   "u": "https://www.eldia.es/humor/2026/09/21/santy-21-09-26-134501728.html",
+   "s": "Eldía",
+   "d": "2026-09-20T22:59:08.000Z",
+   "tags": [
+    "CANARIAS"
+   ]
+  },
+  {
+   "t": "Cocituber se rinde ante La Laguna: el influencer gastronómico elogia su 'sensación de pertenencia'",
+   "u": "https://www.que.es/2026/09/20/cocituber-influencer-la-laguna/",
+   "s": "que.es",
+   "d": "2026-09-20T20:35:41.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://static.que.es/wp-content/uploads/2026/09/cocituber-influencer-la-laguna-portada-1024x768.webp"
+  },
   {
    "t": "MESA ABIERTA: The Roots a la cabeza de los argentinos de Tenerife",
    "u": "https://www.libertaddigital.com/canarias/2026-09-20/mesa-abierta-the-roots-a-la-cabeza-de-los-argentinos-de-tenerife-7463076/",
@@ -10,6 +38,16 @@
     "CANARIAS"
    ],
    "img": "https://s1.staticld.com/2026/09/20/1200/675/439x2033/img-20260920-144728.jpg"
+  },
+  {
+   "t": "El ‘Cocituber’ corona al Asador de La Camella como el templo de la carne con mejor calidad-precio del sur de Tenerife",
+   "u": "https://www.soldelsurtenerife.com/portada1/gastronomia/cocituber-corona-asador-camella-como-templo-carne-mejor-calidad-precio-sur-tenerife/20260920145251110098.html",
+   "s": "sol del sur tenerife",
+   "d": "2026-09-20T13:52:51.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://www.soldelsurtenerife.com/media/soldetenerifesur/images/2026/09/20/2026092014492466520.jpg"
   },
   {
    "t": "El chef que pone a Trujillo en la alta cocina internacional con chorizo ibérico, mantequilla de oveja y brasas de encina",
@@ -38,7 +76,7 @@
    "tags": [
     "CANARIAS"
    ],
-   "img": "https://diariodeavisos.elespanol.com/wp-content/uploads/2026/09/cocituber-La-Laguna.jpg"
+   "img": "https://cdn.diariodeavisos.com/wp-content/uploads/2026/09/cocituber-La-Laguna.jpg"
   },
   {
    "t": "Extremadura lleva el sabor de la dehesa a uno de los principales eventos de alta cocina de Portugal",
@@ -140,7 +178,7 @@
   {
    "t": "Un total de 470 hoteles y 10 destinos se incorporan a la Guía Michelin en 2026",
    "u": "https://www.hosteltur.com/178764_un-total-de-470-hoteles-y-10-destinos-se-incorporan-a-la-guia-michelin-en-2026.html",
-   "s": "hosteltur.com",
+   "s": "Hosteltur",
    "d": "2026-09-19T22:00:00.000Z",
    "tags": [
     "MICHELIN"
@@ -150,7 +188,7 @@
   {
    "t": "Los domingos tienen sabor a jardín: así es el brunch del Hotel Botánico en Puerto de la Cruz",
    "u": "https://gastrocanarias.com/art/22799/los-domingos-tienen-sabor-a-jardin-asi-es-el-brunch-del-hotel-botanico-en-puerto-de-la-cruz",
-   "s": "gastrocanarias.com",
+   "s": "Gastrocanarias",
    "d": "2026-09-19T18:27:03.000Z",
    "tags": [
     "CANARIAS"
@@ -180,7 +218,7 @@
   {
    "t": "La villa juguetera de Alicante que conquista por su cocina: así es el pueblo donde mejor se come de España",
    "u": "https://www.noticiasdelvino.com/restaurantes/2026/09/19/la-villa-juguetera-de-alicante-que-conquista-por-su-cocina-asi-es-el-pueblo-donde-mejor-se-come-de-espana-74836/",
-   "s": "noticiasdelvino.com",
+   "s": "Noticias del Vino",
    "d": "2026-09-19T13:53:34.000Z",
    "tags": [
     "MICHELIN"
@@ -198,13 +236,13 @@
   },
   {
    "t": "Zumaque: la cocina de Lucas Maes entre Bélgica y Tenerife",
-   "u": "https://www.canarias7.es/gastronomia-c7/restaurantes/zumaque-cocina-lucas-maes-belgica-tenerife-20260919140000-nt_amp.html",
+   "u": "https://www.canarias7.es/gastronomia-c7/restaurantes/zumaque-cocina-lucas-maes-belgica-tenerife-20260919140000-nt.html",
    "s": "Canarias7",
    "d": "2026-09-19T12:00:00.000Z",
    "tags": [
     "CANARIAS"
    ],
-   "img": "https://s3.ppllstatics.com/canarias7/www/multimedia/gastronomia-c7/2026/09/17/image00002.jpg"
+   "img": "https://s3.ppllstatics.com/canarias7/www/multimedia/gastronomia-c7/2026/09/17/image00002-k9xD-U301769866904FKH-1200x840@Canarias7.jpg"
   },
   {
    "t": "CMM estrenará el lunes 'Ponle Peguitas', el programa de cocina del chef Sergio Fernández: \"Recetas sencillas y ricas\"",
@@ -251,44 +289,6 @@
    "u": "https://www.eldia.es/humor/2026/09/19/padylla-19-09-26-134448088.html",
    "s": "Eldía",
    "d": "2026-09-18T22:59:14.000Z",
-   "tags": [
-    "CANARIAS"
-   ]
-  },
-  {
-   "t": "Santy (19/09/26)",
-   "u": "https://www.eldia.es/humor/2026/09/19/santy-19-09-26-134448382.html",
-   "s": "Eldía",
-   "d": "2026-09-18T22:59:13.000Z",
-   "tags": [
-    "CANARIAS"
-   ]
-  },
-  {
-   "t": "Vallarta Nayarit Gastronómica 2026: fechas, chefs y programa",
-   "u": "https://www.eluniversal.com.mx/menu/vallarta-nayarit-gastronomica-2026-fechas-chefs-y-programa/",
-   "s": "El Universal",
-   "d": "2026-09-18T19:06:42.000Z",
-   "tags": [
-    "MICHELIN"
-   ],
-   "img": "https://www.eluniversal.com.mx/resizer/v2/743JI7JB6ZFMXFJLOAPOKRYIIQ.png?auth=7f2d94b9fbe47074cb2b4461ba6e4520251cbb78aed99da0f204d8792171fb0f"
-  },
-  {
-   "t": "San Bartolomé da el pistoletazo de salida al primer Burger Fest Canarias en Lanzarote",
-   "u": "https://isladelanzarote.com/san-bartolome-da-el-pistoletazo-de-salida-al-primer-burger-fest-canarias-en-lanzarote/",
-   "s": "Isladelanzarote.com",
-   "d": "2026-09-18T19:05:06.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://isladelanzarote.com/wp-content/uploads/2026/09/sb-burguer.jpg"
-  },
-  {
-   "t": "Stands informativos, comida y una ‘bulla’ de idiomas: más de 700 alumnos de movilidad hacen escala este curso en la Universidad de La Laguna",
-   "u": "https://www.eldia.es/tenerife/2026/09/18/stands-informativos-comida-bulla-idiomas-134440759.amp.html",
-   "s": "Eldía",
-   "d": "2026-09-18T18:39:36.000Z",
    "tags": [
     "CANARIAS"
    ]
