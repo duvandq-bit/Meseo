@@ -1,6 +1,26 @@
 {
- "updated": "2026-09-21T17:05:52.546Z",
+ "updated": "2026-09-21T21:06:55.523Z",
  "items": [
+  {
+   "t": "MUSA México afronta su última semana con cine, música y gastronomía",
+   "u": "https://lagenda.org/noticias/musa-mexico-afronta-su-ultima-semana-con-cine-musica-y-gastronomia-muna-santa-cruz-tenerife",
+   "s": "Lagenda",
+   "d": "2026-09-21T18:25:03.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://s3-eu-west-1.amazonaws.com/beta.lagenda/images/mencey-romantico-2026.jpg"
+  },
+  {
+   "t": "Fred. Olsen rinde homenaje al sabor gomero con su nuevo espacio gastronómico La Zula, en el municipio de Agulo",
+   "u": "https://www.soldelsurtenerife.com/portada1/gastronomia/fred-olsen-rinde-homenaje-sabor-gomero-nuevo-espacio-gastronomico-zula-municipio-agulo/20260921190453110145.amp.html",
+   "s": "sol del sur tenerife",
+   "d": "2026-09-21T18:04:53.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://www.soldelsurtenerife.com/media/soldetenerifesur/images/2026/09/21/2026092119033552013.jpg"
+  },
   {
    "t": "La conexión desconocida de Dabiz Muñoz con un pueblo de Cuenca de solo 150 habitantes",
    "u": "https://www.noticiasdelvino.com/escapadas/2026/09/21/la-conexion-desconocida-de-dabiz-munoz-con-un-pueblo-de-cuenca-de-solo-150-habitantes-68966/",
@@ -21,10 +41,10 @@
    ]
   },
   {
-   "t": "Piscinas naturales, pescado fresco y acento venezolano: así es el chiringuito herreño premiado por la Guía Repsol",
+   "t": "Piscinas naturales, pescado fresco y acento venezolano: así es el chiringuito de El Hierro premiado por la Guía Repsol",
    "u": "https://www.larazon.es/canarias/piscinas-naturales-pescado-fresco-acento-venezolano-asi-chiringuito-herreno-premiado-guia-repsol_202609216ab11b33c90fae6e45ea84bd.html",
-   "s": "larazon.es",
-   "d": "2026-09-21T13:45:14.000Z",
+   "s": "La Razón",
+   "d": "2026-09-21T13:50:13.000Z",
    "tags": [
     "CANARIAS"
    ],
@@ -41,7 +61,7 @@
    "img": "https://images.ecestaticos.com/cgmVvz1C5EyPw3uxW-0sjta6i_Y=/0x0:2272x1278/600x315/filters:fill(white):format(jpg):quality(99):watermark(f.elconfidencial.com/file/0f2/6d9/13e/0f26d913e1b27ca111e62b656aa354da.png,0,275,1)/f.elconfidencial.com/original/ac9/178/672/ac9178672a80dbe9aaf854a4493ce1bb.jpg"
   },
   {
-   "t": "Curso de Sumiller en Canarias: nueva edición en octubre",
+   "t": "Canarias estrena en octubre su noveno Curso de Sumiller con 275 horas de formación",
    "u": "https://maspalomasnews.com/canarias-estrena-en-octubre-su-noveno-curso-de-sumiller-con-275-horas-de-formacion/",
    "s": "maspalomasnews.com",
    "d": "2026-09-21T11:24:55.000Z",
@@ -50,6 +70,15 @@
     "CANARIAS"
    ],
    "img": "https://maspalomasnews.com/wp-content/uploads/2026/09/Sumiller-38-100x100.jpg"
+  },
+  {
+   "t": "Varguita Cheesecake sitúa a Tenerife en el podio nacional de las mejores tartas de queso",
+   "u": "https://eldigitalsur.com/vida-estilo/gastronomia-canaria/varguita-cheesecake-tenerife-tercer-premio-tarta-queso/",
+   "s": "El Digital Sur",
+   "d": "2026-09-21T11:17:25.000Z",
+   "tags": [
+    "CANARIAS"
+   ]
   },
   {
    "t": "'Gènesi', la serie sobre los inicios de El Bulli que ha pasado el filtro riguroso de Adrià",
@@ -156,8 +185,7 @@
    "d": "2026-09-21T08:41:31.000Z",
    "tags": [
     "ALTA COCINA"
-   ],
-   "img": "https://imagenes.elpais.com/resizer/v2/3WE5K7B25FHLDEYL4FBMK3WDJU.jpg?auth=9ffd826ca6d9d2cbd4fb8f6c6f0e0675844c1bbe1a07787f585f10d32ccacdd2&width=1200"
+   ]
   },
   {
    "t": "Nico López, el chef que sirve bravas y jamón en el mercado de José Andrés en Nueva York: “Representamos España sin clichés; no es un sitio de flamenco y toros”",
@@ -210,7 +238,7 @@
   {
    "t": "MESA ABIERTA: The Roots a la cabeza de los argentinos de Tenerife",
    "u": "https://www.libertaddigital.com/canarias/2026-09-20/mesa-abierta-the-roots-a-la-cabeza-de-los-argentinos-de-tenerife-7463076/",
-   "s": "Libertad Digital",
+   "s": "libertaddigital.com",
    "d": "2026-09-20T15:50:16.000Z",
    "tags": [
     "CANARIAS"
@@ -265,36 +293,6 @@
     "CANARIAS"
    ],
    "img": "https://cdn.diariodeavisos.com/wp-content/uploads/2026/09/cocituber-La-Laguna.jpg"
-  },
-  {
-   "t": "Extremadura lleva el sabor de la dehesa a uno de los principales eventos de alta cocina de Portugal",
-   "u": "https://www.hoy.es/ensalsa/actualidad/extremadura-lleva-sabor-dehesa-principales-eventos-alta-20260920114845-nt.html",
-   "s": "Hoy",
-   "d": "2026-09-20T09:49:11.000Z",
-   "tags": [
-    "ALTA COCINA"
-   ],
-   "img": "https://s1.ppllstatics.com/hoy/www/multimedia/ensalsa/2026/09/20/6e9a4a9f-e9f3-86b7-6324-384054f8-kd1D-U301806605794myF-1200x840@Hoy.jpg"
-  },
-  {
-   "t": "Envinate, una de las bodegas que ha liderado la revolución de los vinos canarios",
-   "u": "https://www.elespanol.com/viajes/cocinillas-gastro/vinos/20260920/envinate-bodegas-liderado-revolucion-vinos-canarios/1003744381340_0.amp.html",
-   "s": "El Español",
-   "d": "2026-09-20T06:30:28.000Z",
-   "tags": [
-    "VINO",
-    "CANARIAS"
-   ],
-   "img": "https://s3.elespanol.com/k/imgp/cms/elespanol/11357021.jpg?p=f:jpeg/w:1706/h:960&h=ZKLeucvW"
-  },
-  {
-   "t": "Extremadura lleva su gastronomía al Chefs on Fire de Portugal",
-   "u": "http://www.canalextremadura.es/noticias/extremadura/extremadura-lleva-su-gastronomia-al-chefs-fire-de-portugal",
-   "s": "Canal Extremadura",
-   "d": "2026-09-20T06:27:09.000Z",
-   "tags": [
-    "ALTA COCINA"
-   ]
   }
  ]
 }
