@@ -52,7 +52,7 @@
 <meta property="og:description" content="Formación de equipos de sala: carta, alérgenos, vinos, exámenes y juegos de repaso.">
 <meta property="og:url" content="https://meseo.es/">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"Meseo","url":"https://meseo.es/"}</script>
-<meta name="app-version" content="7.467">
+<meta name="app-version" content="7.468">
 <meta name="app-build" content="May 2026">
 <meta name="theme-color" content="#1c2a22">
 <!-- ═══ PWA ═══ -->
@@ -437,6 +437,45 @@
           aria-controls="evAvisoPanel" aria-label="Avisos de sincronización"
           onclick="_evAlternarPanel()"><span class="ev-aviso-punto"></span><span class="ev-aviso-n">0</span></button>
   <div class="ev-aviso-panel" id="evAvisoPanel" role="region" aria-label="Avisos de sincronización"></div>
+
+  <!-- ══ UX-02 · NAVEGACIÓN PRINCIPAL ═══════════════════════════════════════
+       Cinco destinos, y ni uno más. Es una CAPA sobre los destinos que ya
+       existen: cada botón llama al mismo `showTab()` de siempre y ninguna
+       pantalla cambia. El menú de antes sigue donde estaba y es la puerta a
+       la cola larga (Vinos, Quesos, Sala, Auditoría, Horarios, Terraza,
+       Juegos) hasta que UX-07 la reorganice: sin él, esos destinos se
+       quedarían sin acceso, y eso sí sería perder funcionalidad. -->
+  <nav class="ux2-bar" id="ux2Bar" role="navigation" aria-label="Secciones principales">
+    <div class="ux2-sup" id="ux2Sup" hidden>
+      <button type="button" class="ux2-sup-btn" onclick="showTab('supervisor')">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+        <span id="ux2SupLbl">Panel de supervisor</span>
+        <span aria-hidden="true" style="margin-left:auto">›</span>
+      </button>
+    </div>
+    <div class="ux2-tabs">
+      <button type="button" class="ux2-tab" id="ux2Hoy" onclick="_ux2Ir('hoy')" aria-current="page">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/></svg>
+        <span class="ux2-lbl" id="ux2LblHoy">Hoy</span>
+      </button>
+      <button type="button" class="ux2-tab" id="ux2Saber" onclick="_ux2Ir('saber')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5.5A2.5 2.5 0 016.5 3H20v16H6.5A2.5 2.5 0 004 21.5z"/><path d="M8 7h8M8 11h6"/></svg>
+        <span class="ux2-lbl" id="ux2LblSaber">Saber</span>
+      </button>
+      <button type="button" class="ux2-tab" id="ux2Practicar" onclick="_ux2Ir('practicar')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="3"/></svg>
+        <span class="ux2-lbl" id="ux2LblPracticar">Practicar</span>
+      </button>
+      <button type="button" class="ux2-tab" id="ux2Equipo" onclick="_ux2Ir('equipo')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3.2"/><path d="M3 20c0-3.3 2.7-5.5 6-5.5s6 2.2 6 5.5"/><path d="M17 8.5a2.8 2.8 0 100 5.2"/><path d="M18 20c0-2.4-1-4-2.5-4.8"/></svg>
+        <span class="ux2-lbl" id="ux2LblEquipo">Equipo</span>
+      </button>
+      <button type="button" class="ux2-tab" id="ux2Yo" onclick="_ux2Ir('yo')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="3.6"/><path d="M5 20c0-3.6 3.1-6 7-6s7 2.4 7 6"/></svg>
+        <span class="ux2-lbl" id="ux2LblYo">Yo</span>
+      </button>
+    </div>
+  </nav>
 </div>
 
 <script>
@@ -2362,7 +2401,7 @@ const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><p
 const SRC = 'src';
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='7.467';  // sincronizada con sw.js VERSION (guard de CI)
+const APP_VERSION='7.468';  // sincronizada con sw.js VERSION (guard de CI)
 const APP_BUILD='Jul 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;
@@ -13336,6 +13375,32 @@ function _ponerTitulo(tab){
   h.textContent = par ? (LANG==='en' ? par[1] : par[0]) : 'Meseo';
 }
 
+// ═══ UX-02 · LAS CINCO SECCIONES ═══════════════════════════════════════════
+//
+// Una CAPA sobre los destinos que ya existen. Ni se crea ni se borra ninguno:
+// cada sección abre un destino de `TAB_ROUTES` con el `showTab()` de siempre.
+//
+// EL MAPA ES COMPLETO A PROPÓSITO: cada una de las 22 rutas dice a qué sección
+// pertenece, porque de eso depende qué botón se ve encendido. No se puede
+// reutilizar el `parentMap` de `showTab` —que existe para la barra vieja—
+// porque ahí `stats` y `logros` cuelgan de `ranking`, y aquí `ranking` es
+// Equipo mientras que `stats` y `logros` son Yo.
+const UX2_DESTINO = { hoy:'dashboard', saber:'aprender', practicar:'exam', equipo:'ranking', yo:'stats' };
+const UX2_SECCION = {
+  dashboard:'hoy',
+  // Saber · consulta. `aprender` aterriza en la guía de emplatado, que es lo
+  // más mirado en servicio; vinos, quesos, sala y la auditoría LQA son
+  // consulta igualmente y siguen alcanzándose por el menú hasta UX-07.
+  aprender:'saber', emplatado:'saber', tecnicas:'saber', videos:'saber',
+  actualidad:'saber', vinos:'saber', quesos:'saber', sala:'saber', protocolo:'saber', lqa:'saber',
+  // Practicar · entrenar. `exam` abre la PREPARACIÓN del examen, no un examen.
+  exam:'practicar', repaso:'practicar', smart:'practicar', flashcards:'practicar', txoko:'practicar',
+  // Equipo · hay otra persona dentro.
+  ranking:'equipo', chat:'equipo', horarios:'equipo', supervisor:'equipo',
+  // Yo · sólo tú.
+  stats:'yo', logros:'yo'
+};
+
 const TAB_ROUTES = ['dashboard','aprender','flashcards','exam','repaso','tecnicas','actualidad','smart','emplatado','stats','logros','txoko','ranking','supervisor','horarios','protocolo','videos','lqa','vinos','quesos','sala','chat'];
 
 function showTab(tab, instant){
@@ -13401,6 +13466,7 @@ function showTab(tab, instant){
   const _navCur = document.getElementById('navDDCur');
   if(_activeNav && _navCur) _navCur.innerHTML = _activeNav.innerHTML;
   _navDDClose();
+  _ux2Sync(tab);
   const c=document.getElementById('appContent');
   const renderMap = {quesos:renderQuesos,sala:renderSala,dashboard:renderDashboard,aprender:renderAprender,flashcards:renderAprender,exam:renderExam,repaso:renderAprender,tecnicas:renderAprender,actualidad:renderAprender,smart:renderAprender,emplatado:renderAprender,stats:renderRankingHub,logros:renderRankingHub,txoko:renderTxoko,ranking:renderRankingHub,supervisor:renderSupervisor,horarios:renderHorarios,protocolo:renderLqa,videos:renderAprender,lqa:renderLqa,vinos:renderVinos,chat:renderChat};
   const _doRender = ()=>{
@@ -13441,6 +13507,39 @@ function showTab(tab, instant){
   c.style.transform='translateY(-5px)';
   c.style.transition='opacity .12s ease, transform .12s ease';
   setTimeout(_doRender, 120);
+}
+
+// UX-02 · Encender la sección que toca, y sólo una. Se llama desde `showTab`
+// con la ruta real, así que también acierta cuando se llega por un enlace de
+// aviso, por el menú de antes o desde dentro de una pantalla.
+function _ux2Sync(tab){
+  const sec = UX2_SECCION[tab] || null;
+  const mapa = { hoy:'ux2Hoy', saber:'ux2Saber', practicar:'ux2Practicar', equipo:'ux2Equipo', yo:'ux2Yo' };
+  for(const k in mapa){
+    const b = document.getElementById(mapa[k]);
+    if(!b) continue;
+    const on = (k === sec);
+    b.classList.toggle('on', on);
+    if(on) b.setAttribute('aria-current', 'page'); else b.removeAttribute('aria-current');
+  }
+  // EL ACCESO AL PANEL VIVE DENTRO DE EQUIPO, y no es una sexta pestaña. Sale
+  // sólo en Equipo y sólo a quien ya podía verlo: se reutiliza el mismo gating
+  // de `_supSyncMando`, sin tocar roles ni permisos. Enseñar la puerta no
+  // concede nada — detrás sigue habiendo un PIN que valida el servidor.
+  const sup = document.getElementById('ux2Sup');
+  if(sup){
+    let puede = false;
+    try{ puede = (typeof _esMando === 'function' && _esMando()) || (typeof _esAdmin === 'function' && _esAdmin()); }catch(_){}
+    sup.hidden = !(sec === 'equipo' && puede);
+  }
+}
+
+
+// Abre el destino principal de una sección. No decide nada: delega en el
+// `showTab` de siempre, que es quien sabe pintar.
+function _ux2Ir(seccion){
+  const destino = UX2_DESTINO[seccion];
+  if(destino) showTab(destino);
 }
 
 // ═══ SUB-TAB HELPERS ═══
