@@ -489,6 +489,28 @@ const MUTACIONES = [
     a:"  _evPintarIncidencias();\n  return { estado:'persistido', evento: ev };   // sin tocar",
     cae:null,   // mutación de control: NO debe caer nada (sólo cambia un comentario)
     control:true },
+
+  // ═══ SONIDO · el botón contextual que sustituyó al flotante ═══
+  { id:'SND-1', fase:'SND', fila:null,
+    rompe:'una actividad con sonido se queda sin hueco y el botón no llega a ella',
+    archivo:'index.html',
+    de:'        <span class="exam-timer" id="examTimer">—</span>\n        <span class="snd-slot"></span>',
+    a:'        <span class="exam-timer" id="examTimer">—</span>',
+    cae:'Examen pinta exactamente un hueco' },
+
+  { id:'SND-2', fase:'SND', fila:null,
+    rompe:'el botón vuelve a flotar y puede sentarse encima del texto, que es el defecto de partida',
+    archivo:'styles.css',
+    de:'.sound-toggle{\n  width:36px;height:36px;border-radius:50%;',
+    a:'.sound-toggle{\n  position:fixed;bottom:120px;left:12px;\n  width:36px;height:36px;border-radius:50%;',
+    cae:'ya no flota' },
+
+  { id:'SND-3', fase:'SND', fila:null,
+    rompe:'se cae la guarda de idempotencia: cada mutación mueve el botón, y cada movimiento es otra mutación',
+    archivo:'index.html',
+    de:'  if(btn.parentNode === destino) return;\n  destino.appendChild(btn);',
+    a:'  destino.appendChild(btn);',
+    cae:'es idempotente' },
 ];
 
 // ─── EJECUCIÓN ─────────────────────────────────────────────────────────────

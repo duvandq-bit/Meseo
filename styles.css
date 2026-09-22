@@ -7161,26 +7161,39 @@ button.et-big:active{transform:translateY(4px);box-shadow:0 2px 0 var(--et-ink)}
 .dash-num svg{width:24px;height:24px}
 .dash-num .emoji{font-size:1.4rem;line-height:1}
 
+/* Ya no flota. Vive dentro del .snd-slot de la actividad que suena, en el
+   flujo, así que no hay `position`, ni `bottom`, ni `left`, ni z-index: sin
+   ellos no puede ponerse encima de ningún texto a ninguna altura del scroll,
+   que es justo el defecto que introdujo UX-02. El aspecto no cambia. */
 .sound-toggle{
-  position:fixed;bottom:14px;left:12px;
   width:36px;height:36px;border-radius:50%;
   background:linear-gradient(155deg,#faf6ee,#f0e8d8);border:1.5px solid rgba(196,154,60,.12);
   display:flex;align-items:center;justify-content:center;
-  font-size:1rem;cursor:pointer;z-index:9500;
+  font-size:1rem;cursor:pointer;
   box-shadow:0 3px 12px rgba(28,42,34,.1);transition:all .2s;
 }
 .sound-toggle:hover{border-color:var(--gold-a);transform:scale(1.1);}
 @media (max-width: 640px){
-  .sound-toggle{bottom:14px;left:10px;width:38px;height:38px}
+  .sound-toggle{width:38px;height:38px}
 }
-/* The floating bottom FABs (sound toggle, sync pill) sit in a higher stacking
-   context than #screenApp, so they float over the open nav bottom-sheet and the
-   search overlay — covering the last option. Hide them whenever either is open. */
-body:has(#mainNavDD.open) .sound-toggle,
+/* El hueco. Sin posicionamiento propio: se adapta a la fila de cada
+   actividad. El mínimo táctil de 44 px lo sigue poniendo la regla global de
+   @media(max-width:600px) sobre el propio <button>. */
+.snd-slot{display:inline-flex;align-items:center}
+/* Servicio Fantasma monta su hueco en el chasis del overlay, no dentro de
+   #sfContent, que se repinta en cada pregunta. En el flujo, alineado a la
+   derecha y con el mismo ancho máximo que el contenido: ni fijo, ni absoluto. */
+.sf-tools{position:relative;z-index:2;max-width:420px;margin:0 auto;padding:.9rem 1.2rem 0;display:flex;justify-content:flex-end}
+/* Los flotantes de abajo (píldora de sincronización y avisos) están en un
+   contexto de apilamiento por encima de #screenApp, así que se cuelan sobre
+   la hoja del menú y sobre el buscador, tapando la última opción. Se ocultan
+   mientras cualquiera de los dos esté abierto.
+   El botón de sonido ya NO entra aquí: al dejar de flotar no puede taparlos.
+   (#gsOverlay es el BUSCADOR global, no Servicio Fantasma — ese es
+   #sfOverlay, y sí tiene su propio hueco de sonido.) */
 body:has(#mainNavDD.open) .txk-sync-pill,
 body:has(#mainNavDD.open) .ev-aviso-chip,
 body:has(#mainNavDD.open) .ev-aviso-panel,
-body:has(#gsOverlay.open) .sound-toggle,
 body:has(#gsOverlay.open) .txk-sync-pill,
 body:has(#gsOverlay.open) .ev-aviso-chip,
 body:has(#gsOverlay.open) .ev-aviso-panel{
@@ -9455,8 +9468,10 @@ li.fail .dj-qrv-mark{color:#e8a0a0}
 .chat-deleted{ font-style:italic; color:var(--parch4); font-size:.82rem; }
 .chat-photo{ display:block; max-width:220px; width:100%; border-radius:10px; cursor:pointer; margin:-.1rem 0; }
 .chat-caption{ margin-top:.35rem; }
-/* Sound FAB (bottom-left) would sit under the composer's photo tool. */
-body.chat-open .sound-toggle{ display:none !important; }
+/* Aquí se escondía el botón de sonido porque, flotando abajo a la izquierda,
+   chocaba con la herramienta de foto del compositor. Ya no flota —vive en el
+   hueco de cada actividad, y el chat no tiene ninguno—, así que la regla
+   sobraba y se ha retirado. */
 
 /* ── Tap actions: quick reactions + reply + delete ── */
 .chat-actions{
@@ -10452,16 +10467,16 @@ body, .screen{ min-height: 100vh; min-height: 100dvh; }
 #screenApp .app-content{padding-bottom:calc(126px + env(safe-area-inset-bottom,0px))}
 
 /* Y que lo que ya flotaba abajo suba por encima de ella, en vez de quedar
-   debajo: la píldora de sincronización, el aviso de B2 y el sonido. */
+   debajo: la píldora de sincronización y el aviso de B2.
+   El botón de sonido salió de esta lista: dejó de flotar y ahora se monta en
+   el hueco de la actividad, así que no necesita apartarse de nada. */
 .txk-sync-pill{bottom:calc(120px + env(safe-area-inset-bottom,0px))}
 .ev-aviso-chip{bottom:calc(162px + env(safe-area-inset-bottom,0px))}
 .ev-aviso-panel{bottom:calc(212px + env(safe-area-inset-bottom,0px))}
-.sound-toggle{bottom:calc(120px + env(safe-area-inset-bottom,0px))}
 @media (max-width:480px){
   .txk-sync-pill{bottom:calc(120px + env(safe-area-inset-bottom,0px))}
   .ev-aviso-chip{bottom:calc(162px + env(safe-area-inset-bottom,0px))}
   .ev-aviso-panel{bottom:calc(212px + env(safe-area-inset-bottom,0px))}
-  .sound-toggle{bottom:calc(120px + env(safe-area-inset-bottom,0px))}
 }
 /* A 320 px el texto se aprieta: se recorta la etiqueta antes que desbordar. */
 @media (max-width:359px){

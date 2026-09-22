@@ -649,13 +649,279 @@ test('UX-02 · la barra no tapa nada y cabe a 320 px', () => {
   assert(/text-overflow:ellipsis/.test(bar), 'una etiqueta larga se recorta, no desborda');
   assert(/padding-bottom:env\(safe-area-inset-bottom,0px\)/.test(bar), 'la barra respeta el área segura');
   // Y los huecos de lo que flota abajo están dimensionados para la barra ALTA.
-  for (const sel of ['.txk-sync-pill', '.sound-toggle'])
-    assert(new RegExp(sel.replace('.', '\\.') + '\\{bottom:calc\\(120px').test(cssUx),
-      `${sel} tiene que apartarse de la barra`);
+  // El botón de sonido ya no está en esta lista: dejó de flotar.
+  assert(/\.txk-sync-pill\{bottom:calc\(120px/.test(cssUx),
+    '.txk-sync-pill tiene que apartarse de la barra');
   assert(/#screenApp \.app-content\{padding-bottom:calc\(126px/.test(cssUx),
     'el contenido necesita hueco al final o la barra tapa la última fila');
   assert(/body:has\(#mainNavDD\.open\) \.ux2-bar/.test(cssUx),
-    'la barra tiene que retirarse cuando se abre la hoja del menú, como hacen el sonido y la píldora');
+    'la barra tiene que retirarse cuando se abre la hoja del menú, como hace la píldora');
+});
+
+// ─── SONIDO CONTEXTUAL · el botón deja de flotar sobre el contenido ──────────
+// UX-02 subió el botón de sonido a 120 px del borde para esquivar la barra, y
+// ahí se sentó encima de las tarjetas: tapaba «2 tareas» en Hoy (medido en un
+// iPhone real, v7.468). La cura no es aritmética de márgenes —un elemento fijo
+// se superpone al contenido a CUALQUIER altura del scroll— sino sacarlo del
+// aire: el mismo botón se muda al hueco de la actividad que suena.
+const _snd = (() => {
+  // Cuerpo de una función de index.html, hasta la siguiente declaración.
+  const cuerpo = (nombre) => {
+    const i = html.indexOf(`function ${nombre}(`);
+    if (i < 0) throw new Error(`no encuentro function ${nombre}(`);
+    const j = html.indexOf('\nfunction ', i + 1);
+    return html.slice(i, j < 0 ? html.length : j);
+  };
+  const iM = html.indexOf('let _sndBtn = null;');
+  const jM = html.indexOf('let _sndPendiente', iM);
+  const iT = html.indexOf('function toggleSound()');
+  const jT = html.indexOf('\n}', iT) + 2;
+  const fuente = html.slice(iM, jM) + '\n' + html.slice(iT, jT);
+
+  // DOM de juguete: sólo lo que _sndMount() toca de verdad. Las búsquedas
+  // recorren el ÁRBOL VIVO desde la raíz, no un registro plano. La diferencia
+  // no es cosmética: un nodo desgajado deja de encontrarse, que es justo lo
+  // que le pasa al botón cuando una actividad hace `innerHTML = …` y borra el
+  // hueco con él dentro. Con un registro plano ese fallo era invisible.
+  const hacerDom = () => {
+    const nuevo = (id, cls) => ({
+      id: id || '', cls: cls || '', parentNode: null, hijos: [], innerHTML: '', checked: undefined,
+      appendChild(c) {
+        if (c.parentNode) c.parentNode.hijos = c.parentNode.hijos.filter(x => x !== c);
+        c.parentNode = this; this.hijos.push(c); return c;
+      },
+    });
+    const raiz = nuevo('', 'raiz');
+    const recorrer = function* (n) { for (const h of n.hijos) { yield h; yield* recorrer(h); } };
+    return {
+      raiz,
+      crear(id, cls) { const n = nuevo(id, cls); raiz.appendChild(n); return n; },
+      // Desgaja el nodo y, con él, todo lo que cuelgue: como `innerHTML = …`.
+      quitar(n) { if (n.parentNode) n.parentNode.hijos = n.parentNode.hijos.filter(x => x !== n); n.parentNode = null; },
+      getElementById(id) { for (const n of recorrer(raiz)) if (n.id === id) return n; return null; },
+      querySelector(sel) {
+        if (sel !== '.snd-slot') throw new Error('el doble sólo entiende .snd-slot, pedido: ' + sel);
+        for (const n of recorrer(raiz)) if (n.cls === 'snd-slot') return n;
+        return null;
+      },
+      cuantos(id) { let k = 0; for (const n of recorrer(raiz)) if (n.id === id) k++; return k; },
+    };
+  };
+
+  const montar = (doc, encendidoInicial) => {
+    const almacen = {};
+    const ls = { getItem: k => (k in almacen ? almacen[k] : null), setItem: (k, v) => { almacen[k] = String(v); } };
+    const M = new Function('document', 'localStorage', '_inicial', // eslint-disable-line no-new-func
+      'let soundEnabled = _inicial;\n' + fuente +
+      '\nreturn { _sndMount, _sndSyncAjustes, _sndBoton, toggleSound, encendido: () => soundEnabled };'
+    )(doc, ls, encendidoInicial);
+    return { ...M, almacen };
+  };
+
+  return { fuente, cuerpo, hacerDom, montar };
+})();
+
+// Las ocho superficies que llaman a playSound() de forma repetitiva, y la
+// función de index.html que pinta cada una.
+const _SND_SUPERFICIES = [
+  ['Examen', 'renderExamQuestion'],
+  ['Flashcards', 'renderFlashcards'],
+  ['Pase de Cocina', '_paseRender'],
+  ['Repaso inteligente', '_renderSmartCard'],
+  ['Simulacro de alérgenos', 'renderAllergenQuestion'],
+  ['Quiz de vinos', '_renderWineQuiz'],
+  ['Txoko', 'txRender'],
+  ['Servicio Fantasma', 'launchServicioFantasma'],
+];
+
+test('sonido · el botón es uno solo, y conserva id, onclick y aria-label', () => {
+  const n = (html.match(/id="soundToggle"/g) || []).length;
+  assert(n === 1, `tiene que haber exactamente un #soundToggle, hay ${n}`);
+  const i = html.indexOf('id="soundToggle"');
+  const tag = html.slice(html.lastIndexOf('<button', i), html.indexOf('>', i) + 1);
+  assert(/onclick="toggleSound\(\)"/.test(tag), 'el botón tiene que seguir llamando a toggleSound()');
+  assert(/aria-label="[^"]+"/.test(tag), 'el botón tiene que conservar su aria-label');
+  assert(/class="sound-toggle"/.test(tag), 'el botón conserva su clase, y con ella su aspecto');
+  assert(/<div id="sndPark" hidden>/.test(html), 'hace falta el aparcamiento oculto');
+});
+
+test('sonido · ya no flota: ni position:fixed ni los 120px de UX-02', () => {
+  const css = read('styles.css');
+  // Toda regla que declare .sound-toggle, con su cuerpo.
+  const reglas = css.match(/\.sound-toggle(?::[a-z-]+)?\s*\{[^}]*\}/g) || [];
+  assert(reglas.length > 0, 'esperaba encontrar reglas de .sound-toggle');
+  for (const r of reglas) {
+    assert(!/position\s*:\s*fixed/.test(r), `.sound-toggle no puede volver a ser fija: ${r.slice(0, 60)}`);
+    assert(!/(^|[;{])\s*(bottom|left|right|top)\s*:/.test(r), `.sound-toggle no puede anclarse al borde: ${r.slice(0, 60)}`);
+    assert(!/z-index/.test(r), `.sound-toggle ya no necesita apilarse sobre nada: ${r.slice(0, 60)}`);
+  }
+  assert(!/\.sound-toggle\{bottom:calc\(120px/.test(css),
+    'las reglas de UX-02 que subían el botón a 120px tienen que desaparecer');
+  assert(!/body\.chat-open \.sound-toggle/.test(css),
+    'esconder el botón en el chat sobraba en cuanto dejó de flotar');
+  assert(!/#gsOverlay\.open\) \.sound-toggle/.test(css),
+    'esconder el botón con el buscador abierto sobraba en cuanto dejó de flotar');
+  assert(/\.snd-slot\{display:inline-flex/.test(css), 'falta el CSS del hueco');
+});
+
+test('sonido · la píldora y los avisos de B2 siguen intactos', () => {
+  const css = read('styles.css');
+  // Este cambio no toca sync ni B2: se fija para que nadie los arrastre.
+  for (const sel of ['.txk-sync-pill', '.ev-aviso-chip', '.ev-aviso-panel'])
+    assert(new RegExp(sel.replace('.', '\\.') + '\\{bottom:calc\\(').test(css),
+      `${sel} tiene que conservar su anclaje al borde inferior`);
+  assert(/body:has\(#mainNavDD\.open\) \.txk-sync-pill/.test(css),
+    'la píldora sigue escondiéndose con la hoja del menú');
+});
+
+for (const [nombre, fn] of _SND_SUPERFICIES) {
+  test(`sonido · ${nombre} pinta exactamente un hueco`, () => {
+    const cuerpo = _snd.cuerpo(fn);
+    const n = (cuerpo.match(/class="snd-slot"/g) || []).length;
+    assert(n === 1, `${nombre} (${fn}) tiene que pintar 1 hueco, pinta ${n}`);
+  });
+}
+
+test('sonido · las pantallas de consulta NO pintan hueco', () => {
+  // Hoy, Equipo y Yo no llaman nunca a playSound(): un botón de sonido allí
+  // sería exactamente el adorno que acabamos de quitar.
+  for (const fn of ['renderDashboard', 'renderRanking', 'renderStats']) {
+    if (html.indexOf(`function ${fn}(`) < 0) continue;   // pantalla renombrada: no inventamos
+    const cuerpo = _snd.cuerpo(fn);
+    assert(!/class="snd-slot"/.test(cuerpo), `${fn} no debe pintar hueco de sonido`);
+  }
+  // Y en total no hay más huecos que superficies con sonido.
+  const total = (html.match(/class="snd-slot"/g) || []).length;
+  assert(total === _SND_SUPERFICIES.length,
+    `esperaba ${_SND_SUPERFICIES.length} huecos en todo el documento, hay ${total}`);
+});
+
+test('sonido · Camarero Survivors sigue por su cuenta', () => {
+  const i = html.indexOf('let AC=null, muted=false');
+  assert(i > 0, 'el juego tiene que conservar su propia variable muted');
+  const juego = html.slice(i, i + 4000);
+  assert(/if\(muted\) return;/.test(juego), 'sfx() se guía por muted, no por soundEnabled');
+  assert(!/soundEnabled/.test(juego), 'el juego no puede engancharse a soundEnabled');
+  assert(/muteBtn\.onclick/.test(html), 'el juego conserva su propio botón de silencio');
+});
+
+test('sonido · el botón se muda al hueco y vuelve al aparcamiento', () => {
+  const doc = _snd.hacerDom();
+  const park = doc.crear('sndPark', '');
+  const btn = doc.crear('soundToggle', 'sound-toggle');
+  park.appendChild(btn);
+  const M = _snd.montar(doc, true);
+
+  // Sin huecos: se queda aparcado.
+  M._sndMount();
+  assert(btn.parentNode === park, 'sin hueco, el botón vive en el aparcamiento');
+
+  // Aparece una actividad con hueco.
+  const slot = doc.crear('', 'snd-slot');
+  M._sndMount();
+  assert(btn.parentNode === slot, 'con hueco, el botón se muda a él');
+  assert(park.hijos.length === 0, 'y deja de colgar del aparcamiento');
+
+  // La actividad se cierra.
+  doc.quitar(slot);
+  M._sndMount();
+  assert(btn.parentNode === park, 'al desaparecer el hueco, el botón vuelve a aparcarse');
+
+  // Otra actividad distinta.
+  const slot2 = doc.crear('', 'snd-slot');
+  M._sndMount();
+  assert(btn.parentNode === slot2, 'se muda al hueco de la siguiente actividad');
+
+  // Y nunca se duplica: un solo nodo con ese id, montado una sola vez.
+  M._sndMount(); M._sndMount();
+  assert(slot2.hijos.length === 1, 'montar de más no puede duplicar el botón');
+  assert(doc.cuantos('soundToggle') === 1, 'sólo puede existir un #soundToggle');
+});
+
+test('sonido · el botón sobrevive a que la actividad repinte y borre su hueco', () => {
+  // Éste es el fallo que la primera versión tenía y que nadie habría visto en
+  // una revisión: al cerrarse, una actividad hace `appContent.innerHTML = …`
+  // y destruye el hueco CON EL BOTÓN DENTRO. Si se busca por id, a partir de
+  // ahí devuelve null y el control se pierde para el resto de la sesión.
+  const doc = _snd.hacerDom();
+  const park = doc.crear('sndPark', '');
+  const btn = doc.crear('soundToggle', 'sound-toggle');
+  park.appendChild(btn);
+  const M = _snd.montar(doc, true);
+
+  const slot = doc.crear('', 'snd-slot');
+  M._sndMount();
+  assert(btn.parentNode === slot, 'primero se muda al hueco');
+
+  // La actividad se cierra llevándose el hueco y todo lo que colgaba de él.
+  doc.quitar(slot);
+  assert(doc.getElementById('soundToggle') === null,
+    'el doble tiene que reproducir el borrado: el botón ya no está en el documento');
+
+  M._sndMount();
+  assert(btn.parentNode === park,
+    'el botón tiene que volver al aparcamiento, no evaporarse con el hueco');
+  assert(M._sndBoton() === btn, 'y sigue siendo el MISMO elemento, no uno nuevo');
+});
+
+test('sonido · _sndMount() es idempotente, o el observador se realimenta', () => {
+  const doc = _snd.hacerDom();
+  doc.crear('sndPark', '');
+  const btn = doc.crear('soundToggle', 'sound-toggle');
+  const slot = doc.crear('', 'snd-slot');
+  const M = _snd.montar(doc, true);
+  M._sndMount();
+  const antes = slot.hijos.length;
+  // Si la guarda no estuviera, cada llamada tocaría el DOM y el
+  // MutationObserver volvería a llamar: bucle infinito en producción.
+  let toques = 0;
+  const original = slot.appendChild.bind(slot);
+  slot.appendChild = (c) => { toques++; return original(c); };
+  M._sndMount(); M._sndMount(); M._sndMount();
+  assert(toques === 0, 'estando ya en su sitio, _sndMount() no debe tocar el DOM');
+  assert(slot.hijos.length === antes, 'ni cambiar el número de hijos');
+});
+
+test('sonido · el observador es uno, simple, y agrupa las ráfagas', () => {
+  const i = html.indexOf('function _sndMount()');
+  const bloque = html.slice(i, i + 2600);
+  assert((bloque.match(/new MutationObserver/g) || []).length === 1,
+    'un solo MutationObserver');
+  assert(/if\(window\._sndObs\) return;/.test(bloque), 'guarda contra un segundo observador');
+  assert(/childList:true, subtree:true/.test(bloque), 'childList + subtree');
+  assert(!/attributes\s*:\s*true/.test(bloque), 'no hace falta observar atributos');
+  assert(/requestAnimationFrame/.test(bloque),
+    'las ráfagas se agrupan en un fotograma, o preguntaríamos por el hueco en cada nodo');
+});
+
+test('sonido · la fila de Ajustes refleja y cambia el mismo estado', () => {
+  assert(/\$\{H\(_en\?'Sound':'Sonido'\)\}/.test(html), 'falta la sección Sonido en Ajustes');
+  assert(/<label for="ajSndToggle"/.test(html), 'la fila usa el mismo patrón de <label> que ajTmToggle');
+  assert(/<input id="ajSndToggle" type="checkbox"[^>]*\$\{soundEnabled\?'checked':''\}/.test(html),
+    'la casilla tiene que nacer reflejando soundEnabled');
+  assert(/snd\.onchange = \(\)=>\{ if\(snd\.checked !== soundEnabled\) toggleSound\(\); \}/.test(html),
+    'la casilla delega en toggleSound(): no puede duplicar la persistencia');
+  assert(!/ajSndToggle[\s\S]{0,400}localStorage\.setItem\('txoko_sound'/.test(html),
+    'la fila de Ajustes no debe escribir txoko_sound por su cuenta');
+});
+
+test('sonido · toggleSound() conserva su semántica y repinta ambas caras', () => {
+  const doc = _snd.hacerDom();
+  doc.crear('sndPark', '');
+  const btn = doc.crear('soundToggle', 'sound-toggle');
+  const cb = doc.crear('ajSndToggle', '');
+  cb.checked = true;
+  const M = _snd.montar(doc, true);
+
+  M.toggleSound();
+  assert(M.encendido() === false, 'toggleSound() invierte el estado');
+  assert(M.almacen['txoko_sound'] === 'off', 'y lo persiste en txoko_sound');
+  assert(/line x1="23"/.test(btn.innerHTML), 'el botón se repinta como silenciado');
+  assert(cb.checked === false, 'y la casilla de Ajustes lo acompaña');
+
+  M.toggleSound();
+  assert(M.encendido() === true && M.almacen['txoko_sound'] === 'on', 'y vuelve');
+  assert(cb.checked === true, 'la casilla también vuelve');
 });
 
 test('multi-restaurant theming is wired (applyTheme + login picker)', () => {
@@ -4583,13 +4849,18 @@ test('exam anti-echo: ingredients/history questions are reversed and redacted', 
 });
 
 test('floating FABs hide behind the open nav sheet / search', () => {
-  // The sound toggle + sync pill float above #screenApp and otherwise overlap
-  // the bottom-sheet options; they must hide while the nav or search is open.
+  // La píldora de sincronización flota por encima de #screenApp y si no tapa
+  // la última opción de la hoja: se esconde mientras el menú o el buscador
+  // estén abiertos.
+  // El botón de sonido SALIÓ de esta prueba a propósito. Ya no flota: vive en
+  // el hueco de la actividad que suena, y ni el menú ni el buscador tienen
+  // uno, así que no hay nada que esconder. Lo que hay que sostener ahora es
+  // justo lo contrario, y de eso se encarga «sonido · ya no flota».
   const css = read('styles.css');
-  assert(/body:has\(#mainNavDD\.open\)\s+\.sound-toggle/.test(css),
-    'sound toggle must hide when the nav sheet is open');
-  assert(/body:has\(#gsOverlay\.open\)\s+\.sound-toggle/.test(css),
-    'sound toggle must hide when global search is open');
+  assert(/body:has\(#mainNavDD\.open\)\s+\.txk-sync-pill/.test(css),
+    'sync pill must hide when the nav sheet is open');
+  assert(/body:has\(#gsOverlay\.open\)\s+\.txk-sync-pill/.test(css),
+    'sync pill must hide when global search is open');
 });
 
 test('global search phase 2: LQA situations searchable + read-only card', () => {
