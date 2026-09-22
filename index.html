@@ -429,7 +429,12 @@
   <h1 id="tituloPantalla" class="solo-lectores"></h1>
   <main class="app-content" id="appContent" aria-live="polite"></main>
   <div class="app-credit" style="color:rgba(28,42,34,.4)">© 2026 Meseo® · Marca registrada</div>
-  <button class="sound-toggle" id="soundToggle" onclick="toggleSound()" title="Sonido" aria-label="Alternar sonido" role="button">◉</button>
+  <!-- El control de sonido deja de flotar. Es SIEMPRE este mismo elemento:
+       _sndMount() lo muda al hueco (.snd-slot) de la actividad que suena y lo
+       devuelve aquí cuando no hay ninguna, pero nunca lo recrea. Por eso
+       toggleSound() sigue encontrándolo por id sin cambiar una línea, y por
+       eso hay exactamente un #soundToggle en el documento. -->
+  <div id="sndPark" hidden><button class="sound-toggle" id="soundToggle" onclick="toggleSound()" title="Sonido" aria-label="Alternar sonido" role="button">◉</button></div>
   <div class="txk-sync-pill" id="syncStatusPill" role="status" aria-live="polite" aria-atomic="true"><span class="dot"></span><span id="syncStatusText">Offline</span></div>
   <!-- B2-F6 · Avisos de sincronización. Sólo aparece cuando hay algo que
        atender; con todo bien no existe en pantalla. -->
@@ -9205,7 +9210,9 @@ function _renderSmartCard(){
           <div class="sr-diff-badge ${diff}">${_srDiffIcon(diff)} ${_srDiffLabel(diff,_en)}</div>
           <div style="font-family:'DM Mono',monospace;font-size:.5rem;color:rgba(196,154,60,.5);letter-spacing:.1em">${state.current+1}/${state.queue.length}</div>
         </div>
-        <div style="width:52px;height:52px"></div>
+        <!-- Este hueco ya existía como contrapeso del aspa: ahora además
+             aloja el control de sonido, así que no cambia el equilibrio. -->
+        <div class="snd-slot" style="width:52px;height:52px;justify-content:center"></div>
       </div>
       <div class="dj-body">
         <div class="dj-phase-label">🎭 ${_en?'CONTEXTUAL REVIEW':'REPASO EN CONTEXTO'}</div>
@@ -9968,7 +9975,9 @@ function launchServicioFantasma(emp){
   var overlay = document.createElement('div');
   overlay.id = 'sfOverlay';
   overlay.className = 'sf-overlay';
-  overlay.innerHTML = '<div class="sf-ambient"></div><div class="sf-content" id="sfContent"></div>';
+  // El hueco del sonido va en el chasis del overlay, no dentro de #sfContent:
+  // ése se repinta en cada pregunta y mudaría el botón una y otra vez.
+  overlay.innerHTML = '<div class="sf-ambient"></div><div class="sf-tools"><span class="snd-slot"></span></div><div class="sf-content" id="sfContent"></div>';
   document.body.appendChild(overlay);
 
   _sfRenderIntro();
@@ -12128,6 +12137,14 @@ function openAjustes(){
         <button id="ajLangEs" style="flex:1;padding:.6rem;border-radius:10px;border:1px solid rgba(196,154,60,.35);background:${LANG==='es'?'#8a5a2b':'#fff'};color:${LANG==='es'?'#fff':'#5a6a5e'};font-family:'Quicksand',sans-serif;font-weight:700;cursor:pointer">Español</button>
         <button id="ajLangEn" style="flex:1;padding:.6rem;border-radius:10px;border:1px solid rgba(196,154,60,.35);background:${LANG==='en'?'#8a5a2b':'#fff'};color:${LANG==='en'?'#fff':'#5a6a5e'};font-family:'Quicksand',sans-serif;font-weight:700;cursor:pointer">English</button>
       </div>
+      ${H(_en?'Sound':'Sonido')}
+      <div style="font-family:'Quicksand',sans-serif;font-size:.75rem;color:#5a6a5e;line-height:1.45;margin-bottom:.55rem">${_en
+        ? 'The beeps of exams, flashcards and drills, and the level-up chime. The game keeps its own mute inside the round.'
+        : 'Los pitidos del examen, las flashcards y los simulacros, y el aviso de subida de nivel. El juego mantiene su propio silencio dentro de la partida.'}</div>
+      <label for="ajSndToggle" style="display:flex;align-items:center;justify-content:space-between;gap:.75rem;padding:.65rem .75rem;border:1px solid rgba(196,154,60,.35);border-radius:10px;background:#fff;cursor:pointer;margin-bottom:.4rem">
+        <span style="font-family:'Quicksand',sans-serif;font-size:.82rem;font-weight:700;color:#2b2b2b">${_en?'Sound':'Sonido'}</span>
+        <input id="ajSndToggle" type="checkbox" style="width:20px;height:20px;accent-color:#8a5a2b;cursor:pointer" ${soundEnabled?'checked':''}>
+      </label>
       ${H(_en?'Privacy':'Privacidad')}
       <div style="font-family:'Quicksand',sans-serif;font-size:.75rem;color:#5a6a5e;line-height:1.45;margin-bottom:.55rem">${_en?'We record anonymous learning metrics (which exercises you do, how you progress) to improve your training. Never your messages or search text. Data stays on this device and is deleted after 30 days.':'Registramos métricas de aprendizaje anónimas (qué ejercicios haces, cómo progresas) para mejorar tu formación. Nunca tus mensajes ni el texto de búsqueda. Se guardan en este dispositivo y se borran a los 30 días.'}</div>
       <label for="ajTmToggle" style="display:flex;align-items:center;justify-content:space-between;gap:.75rem;padding:.65rem .75rem;border:1px solid rgba(196,154,60,.35);border-radius:10px;background:#fff;cursor:pointer;margin-bottom:.4rem">
@@ -12245,6 +12262,13 @@ function openAjustes(){
   // Privacidad — interruptor de telemetría, contador y borrado (RGPD)
   const _tmRefreshCount = ()=>{ const el=$('ajTmCount'); if(!el||typeof _tmCount!=='function') return;
     _tmCount().then(n=>{ el.textContent = _en?`${n} events stored on this device`:`${n} eventos guardados en este dispositivo`; }); };
+  // La casilla de sonido NO duplica la persistencia: delega en toggleSound(),
+  // que es quien invierte soundEnabled, escribe txoko_sound y repinta el
+  // botón contextual. Sólo se llama si la casilla y el estado discrepan, para
+  // que abrir Ajustes no pueda invertir nada por sí solo.
+  const snd=$('ajSndToggle');
+  if(snd) snd.onchange = ()=>{ if(snd.checked !== soundEnabled) toggleSound(); };
+
   if(typeof _telemetryOn==='function'){
     _tmRefreshCount();
     const tog=$('ajTmToggle'); if(tog) tog.onchange = ()=>{ _telemetrySetOptOut(!tog.checked); _tmRefreshCount(); };
@@ -21312,7 +21336,10 @@ function _renderWineQuiz(c, bar){
     }).join('');
 
     c.innerHTML = bar + `<div class="wq-container">
+      <!-- El hueco del sonido es del QUIZ, no de la pantalla de vinos:
+           consultar la carta no suena, responder sí. -->
       <div class="wq-progress-bar"><div class="wq-progress-fill" style="width:${progress}%"></div></div>
+      <span class="snd-slot" style="float:right"></span>
       <div class="wq-meta">${_wqState.idx + 1} / ${_wqState.total} · ${_en?({Principiante:'Beginner',Conceptos:'Concepts','Nuestra Carta':'Menu',Maridaje:'Pairings',Servicio:'Service'}[q.cat]||q.cat):q.cat} · ${_wqState.score} ${_en?'correct':'correctas'}</div>
       <div class="wq-question">${_en?(q.q_en||q.q):q.q}</div>
       ${q.hint ? `<div class="wq-hint">* ${_en?(q.hint_en||q.hint):q.hint}</div>` : ''}
@@ -22324,6 +22351,7 @@ function renderFlashcards(){
         ${getCats().map((c,i)=>`<option value="${CATS_ES[i]}">${c}</option>`).join('')}
       </select>
       <span class="fc-counter-badge" id="fcCounter"></span>
+      <span class="snd-slot"></span>
     </div>
     <div class="fc-ribbon"><div class="fc-ribbon-fill" id="fcRibbon"></div></div>
     <div role="button" tabindex="0" aria-label="${LANG==='en'?'Flip flashcard (Enter or Space)':'Voltear flashcard (Enter o Espacio)'}" class="fc-scene" onclick="flipCard()" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click()}" id="fcScene">
@@ -22957,6 +22985,7 @@ function renderExamQuestion(){
         <button type="button" class="exam-exit" onclick="abortExam()" aria-label="${LANG==='en'?'Exit exam':'Salir del examen'}">←</button>
         <span class="exam-meta">${t('question')} ${examIndex+1} / ${examDishes.length} &nbsp;·&nbsp; ${q.topic.label}</span>
         <span class="exam-timer" id="examTimer">—</span>
+        <span class="snd-slot"></span>
       </div>
       <div class="exam-track"><div class="exam-track-fill" style="width:${pct}%"></div></div>
       ${q.rev
@@ -23957,6 +23986,7 @@ function _paseRender(){
           :mem?(_en?'PASS · FROM MEMORY':'PASE · DE MEMORIA')
           :(_en?'PASS · ALLERGENS':'PASE · ALÉRGENOS')}</div>
         <div class="pase-steps">${pasos}</div>
+        <span class="snd-slot"></span>
         <button class="pase-x" onclick="_paseClose()" aria-label="${_en?'Close':'Cerrar'}">✕</button>
       </div>
       <h2 class="pase-dish">${escapeHTML(dd.name)}</h2>
@@ -26230,6 +26260,7 @@ function renderAllergenQuestion() {
         <button type="button" class="exam-exit" onclick="abortAllergenTest()" aria-label="${LANG==='en'?'Exit drill':'Salir del simulacro'}">←</button>
         <div style="flex:1"><div class="fc-ribbon"><div class="fc-ribbon-fill" style="width:${pct}%"></div></div></div>
         <div style="font-family:'DM Mono',monospace;font-size:.65rem;color:var(--parch3)">${index+1}/${questions.length}</div>
+        <span class="snd-slot"></span>
       </div>
       <div style="background:linear-gradient(155deg,#faf6ee,#f0e8d8);border:1px solid var(--line2);border-left:3px solid ${q.color};border-radius:var(--r2);padding:1rem;margin-bottom:.85rem">
         <div style="font-size:.65rem;font-family:'DM Mono',monospace;color:${q.color};letter-spacing:.1em;text-transform:uppercase;margin-bottom:.4rem">${q.icon} ${catLocal(q.catLabel)} · ${LANG==='en'?'Allergen test':'Test de alérgenos'}</div>
@@ -29233,9 +29264,77 @@ function playSound(type){
 function toggleSound(){
   soundEnabled=!soundEnabled;
   try{localStorage.setItem('txoko_sound',soundEnabled?'on':'off');}catch(e){}
-  const btn=document.getElementById('soundToggle');
+  const btn=_sndBoton();
   if(btn) btn.innerHTML=soundEnabled?`<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle"><path d="M11 5L6 9H2v6h4l5 4V5z"/><path d="M19.07 4.93a10 10 0 010 14.14M15.54 8.46a5 5 0 010 7.07"/></svg>`:`<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle"><path d="M11 5L6 9H2v6h4l5 4V5z"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/></svg>`;
+  // Si Ajustes está abierto, su casilla representa este mismo estado.
+  _sndSyncAjustes();
 }
+
+// ── El control de sonido, montado donde de verdad suena ──────────────────
+// Antes flotaba fijo a 120 px del borde y se sentaba encima del contenido a
+// cualquier altura del scroll. Ahora es el MISMO botón mudándose al hueco
+// (.snd-slot) de la actividad activa. Lo pintan las ocho superficies que
+// llaman a playSound() de forma repetitiva; las pantallas de consulta no,
+// porque ahí no suena nada.
+//
+// Las celebraciones —nivel, logro, certificación— pueden sonar en cualquier
+// pantalla, y hasta tres minutos más tarde por culpa de _uiWhenClear: ésas
+// NO llevan hueco a propósito. Siguen obedeciendo a soundEnabled, y quien
+// quiera cambiar la preferencia fuera de una actividad lo hace en Ajustes.
+// Se guarda la REFERENCIA, no el id, y no es un capricho: medido en Chromium,
+// una actividad que se cierra hace `appContent.innerHTML = …` y se lleva por
+// delante el hueco CON EL BOTÓN DENTRO. Buscándolo por id, a partir de ese
+// instante devuelve null y el control desaparece para el resto de la sesión.
+// El nodo desconectado sobrevive mientras alguien lo apunte, y _sndMount()
+// vuelve a colgarlo en el fotograma siguiente.
+let _sndBtn = null;
+function _sndBoton(){
+  if(!_sndBtn) _sndBtn = document.getElementById('soundToggle');
+  return _sndBtn;
+}
+
+function _sndMount(){
+  const btn = _sndBoton();
+  if(!btn) return;
+  // Sólo puede haber un hueco a la vez: las ocho superficies son
+  // excluyentes. Si no hay ninguno, el botón vuelve al aparcamiento oculto.
+  const destino = document.querySelector('.snd-slot') || document.getElementById('sndPark');
+  if(!destino) return;
+  // Guarda de idempotencia. Sin ella cada mutación movería el botón, y cada
+  // movimiento generaría otra mutación: el observador se realimentaría.
+  if(btn.parentNode === destino) return;
+  destino.appendChild(btn);
+}
+
+// La casilla de Ajustes y el botón contextual son dos caras del mismo
+// booleano. Asignar .checked por código NO dispara 'change', así que esto no
+// puede realimentar al toggle.
+function _sndSyncAjustes(){
+  const cb = document.getElementById('ajSndToggle');
+  if(cb && cb.checked !== soundEnabled) cb.checked = soundEnabled;
+}
+
+// Un solo observador, y a propósito tonto: childList + subtree, sin
+// atributos. Por aquí pasan los 29 `appContent.innerHTML = …` y los overlays
+// que se abren y se cierran. Las ráfagas se agrupan en un fotograma para no
+// preguntar por el hueco una vez por cada nodo tocado.
+let _sndPendiente = false;
+function _sndPedirMontaje(){
+  if(_sndPendiente) return;
+  _sndPendiente = true;
+  requestAnimationFrame(()=>{ _sndPendiente = false; _sndMount(); });
+}
+(function _sndObservar(){
+  if(window._sndObs) return;           // jamás dos observadores
+  const arranca = ()=>{
+    if(window._sndObs || !document.body) return;
+    _sndMount();
+    window._sndObs = new MutationObserver(_sndPedirMontaje);
+    window._sndObs.observe(document.body, { childList:true, subtree:true });
+  };
+  if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', arranca);
+  else arranca();
+})();
 
 
 // ═══ DISH ANIMATION ═══
@@ -33948,6 +34047,7 @@ function txRender(){
         <div class="tx-rh-mesa">${escapeHtml(_pMesa)}</div>
         <span class="txoko-streak" id="txokoStreak">${streak>1?(`<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle"><path d="M8.5 14.5A2.5 2.5 0 0011 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 01-7 7 7 7 0 01-7-7c0-1.153.433-2.294 1-3a2.5 2.5 0 002.5 2.5z"/></svg> `+(_en?'Streak':'Racha')+' x'+streak):''}</span>
         <div class="tx-rh-chip"><span class="txoko-diff ${lvl.cls}">${txLevelName(lvl)}</span> · ${score}</div>
+        <span class="snd-slot"></span>
       </div>
       <div class="tx-rh-gauge">
         <span class="tx-rh-gauge-lbl">${_en?'PATIENCE':'PACIENCIA'}</span>
