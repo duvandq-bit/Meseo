@@ -10466,6 +10466,23 @@ body, .screen{ min-height: 100vh; min-height: 100dvh; }
    flote 46 px más arriba de lo justo. Nadie lo nota; una píldora tapada, sí. */
 #screenApp .app-content{padding-bottom:calc(126px + env(safe-area-inset-bottom,0px))}
 
+/* Y una reserva EXTRA sólo mientras el aviso de B2 está en pantalla.
+   La cuenta, medida en Chromium a 320/360/390/430 (idéntica en los cuatro):
+     el chip llega a 206 px del borde inferior;
+     debajo de .app-content hay 53 px en flujo (.app-credit), que empujan el
+     contenido hacia arriba antes de que el relleno cuente;
+     206 − 53 = 153 px de reserva necesaria. 161 deja 8 px de margen.
+   La base de 126 NO se toca: con esos 53 px debajo, el contenido acaba 179 px
+   por encima del borde y la píldora de sincronización sólo llega a 152, así
+   que ya estaba cubierta. Subir la base sería vacío gratis.
+   El chip sólo existe cuando hay eventos atascados, de modo que estos 35 px
+   extra aparecen únicamente entonces. El PANEL queda fuera a propósito: llega
+   a 552 px y reservarle sitio costaría 499 px de vacío permanente — es un
+   desplegable que se abre al tocar el chip, y tapar es lo que hace. */
+body:has(.ev-aviso-chip.visible) #screenApp .app-content{
+  padding-bottom:calc(161px + env(safe-area-inset-bottom,0px));
+}
+
 /* Y que lo que ya flotaba abajo suba por encima de ella, en vez de quedar
    debajo: la píldora de sincronización y el aviso de B2.
    El botón de sonido salió de esta lista: dejó de flotar y ahora se monta en

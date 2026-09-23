@@ -924,6 +924,138 @@ test('sonido · toggleSound() conserva su semántica y repinta ambas caras', () 
   assert(cb.checked === true, 'la casilla también vuelve');
 });
 
+// ─── RESERVA INFERIOR · que los avisos de B2 no tapen la última fila ────────
+// Los números NO se escriben aquí: se derivan del propio CSS. Un test que
+// buscara el literal «161px» pasaría aunque el chip se moviera y la reserva
+// dejara de alcanzarle — demostraría que alguien escribió 161, no que el
+// contenido esté a salvo.
+const _reserva = (() => {
+  const css = read('styles.css');
+  // Se trocea en reglas de verdad: con una expresión suelta, «#screenApp
+  // .app-content» casaba también dentro de «body:has(…) #screenApp
+  // .app-content» y la base salía 161. Comparar el selector ENTERO lo evita.
+  const reglas = [...css.matchAll(/([^{}]+)\{([^{}]*)\}/g)].map(m => ({
+    sel: m[1].replace(/\/\*[\s\S]*?\*\//g, '').trim().replace(/\s+/g, ' '),
+    cuerpo: m[2],
+  }));
+  const declaraciones = (sel, prop) => reglas
+    .filter(r => r.sel.split(',').map(s => s.trim()).includes(sel))
+    .map(r => (r.cuerpo.match(new RegExp('(?:^|;)\\s*' + prop + '\\s*:\\s*([^;]+)')) || [])[1])
+    .filter(Boolean).map(v => v.trim());
+  // Última declaración gana: el bloque UX-02 repisa los anclajes base.
+  const ultimo = (sel, prop) => { const d = declaraciones(sel, prop); return d.length ? d[d.length - 1] : null; };
+  // «calc(162px + env(...))» → 162
+  const px = (v) => { if (v == null) return null; const m = String(v).match(/(-?\d+(?:\.\d+)?)px/); return m ? parseFloat(m[1]) : null; };
+
+  const chipBottom = px(ultimo('.ev-aviso-chip', 'bottom'));
+  const chipAlto   = px(ultimo('.ev-aviso-chip', 'min-height'));
+  const pillBottom = px(ultimo('.txk-sync-pill', 'bottom'));
+  const pillAlto   = px(ultimo('.txk-sync-pill', 'min-height'));
+  const base       = px(ultimo('#screenApp .app-content', 'padding-bottom'));
+  const conChip    = px(ultimo('body:has(.ev-aviso-chip.visible) #screenApp .app-content', 'padding-bottom'));
+
+  // La COLA EN FLUJO que va DEBAJO de .app-content: .app-credit. Su altura no
+  // está en el CSS como número (sale de la fuente y su relleno), así que se
+  // fija aquí el valor MEDIDO en Chromium a 320/360/390/430 —53 px, idéntico
+  // en los cuatro— y más abajo se guarda su caja para que no pueda cambiar
+  // sin que esta constante se entere.
+  const COLA_MEDIDA = 53;
+  return { css, reglas, declaraciones, px, chipBottom, chipAlto, pillBottom, pillAlto, base, conChip, COLA_MEDIDA,
+    chipTop: chipBottom + chipAlto, pillTop: pillBottom + pillAlto };
+})();
+
+test('reserva inferior · la cuenta sale del CSS, no de un número escrito a mano', () => {
+  const r = _reserva;
+  for (const [k, v] of Object.entries({ chipBottom: r.chipBottom, chipAlto: r.chipAlto,
+    pillBottom: r.pillBottom, pillAlto: r.pillAlto, base: r.base, conChip: r.conChip }))
+    assert(typeof v === 'number' && !Number.isNaN(v), `no consigo leer ${k} del CSS`);
+  // Si esto cambia, todo lo de abajo cambia con ello: es el punto de apoyo.
+  assert(r.chipTop === r.chipBottom + r.chipAlto, 'el borde superior del chip es anclaje + alto');
+});
+
+test('reserva inferior · la reserva condicional alcanza al aviso de B2', () => {
+  const r = _reserva;
+  const necesaria = r.chipTop - r.COLA_MEDIDA;
+  assert(r.conChip >= necesaria,
+    `con el chip visible hacen falta ${necesaria}px (chip llega a ${r.chipTop}, menos ${r.COLA_MEDIDA} de cola) y sólo se reservan ${r.conChip}`);
+  // Y que no sea desmesurada: más de 60px por encima de lo necesario es vacío.
+  assert(r.conChip - necesaria <= 60,
+    `${r.conChip}px es mucho más de los ${necesaria}px necesarios: sobra hueco`);
+});
+
+test('reserva inferior · la regla condicional hace falta de verdad', () => {
+  const r = _reserva;
+  const necesaria = r.chipTop - r.COLA_MEDIDA;
+  // Si la base ya bastara, la regla condicional sería decoración. Esto fija
+  // que el defecto existe y que la regla es lo que lo tapa.
+  assert(r.base < necesaria,
+    `la base (${r.base}) ya cubriría los ${necesaria}px del chip: la regla condicional sobraría`);
+});
+
+test('reserva inferior · la píldora de sincronización NO necesita reserva extra', () => {
+  const r = _reserva;
+  const necesaria = r.pillTop - r.COLA_MEDIDA;
+  assert(r.base >= necesaria,
+    `la píldora llega a ${r.pillTop}; con ${r.COLA_MEDIDA} de cola necesita ${necesaria} y la base es ${r.base}`);
+  // Y la base no se ha inflado «por si acaso».
+  assert(r.base - necesaria <= 60,
+    `la base (${r.base}) está ${r.base - necesaria}px por encima de lo que pide la píldora`);
+});
+
+test('reserva inferior · el panel de B2 NO se reserva', () => {
+  const r = _reserva;
+  const px = (v) => { const m = String(v).match(/(\d+(?:\.\d+)?)px/); return m ? parseFloat(m[1]) : null; };
+  const panelBottom = px((r.css.match(/\.ev-aviso-panel\{bottom:calc\((\d+)px[^}]*\}/g) || []).pop() || '');
+  assert(panelBottom !== null, 'no encuentro el anclaje del panel');
+  // El panel puede llegar a 552px (max-height min(46vh,340px)). Reservarle
+  // sitio dejaría medio móvil vacío: se comprueba que NADIE lo ha hecho.
+  assert(r.conChip < panelBottom,
+    `la reserva (${r.conChip}) alcanza al panel (${panelBottom}): eso es vacío permanente, no una corrección`);
+});
+
+test('reserva inferior · misma geometría a 320 y a 390 (un solo valor, sin ramas)', () => {
+  const r = _reserva;
+  // El bloque UX-02 repite el anclaje del chip dentro de @media(max-width:480)
+  // a propósito. Lo que NO puede pasar es que repita con OTRO valor: entonces
+  // la reserva sería correcta a 390 e insuficiente a 320. Se comprueba que
+  // todas las declaraciones coinciden, que es la invariante de verdad.
+  // El chip se declara tres veces (56 base, 100 en móvil, 162 en UX-02) y
+  // gana la última. Exigir un valor único sería falso. Lo que hay que fijar es
+  // que, una vez aparece el valor final, NINGUNA regla posterior lo cambie:
+  // ahí es donde se colaría un @media que deja 320 con otra geometría.
+  const unico = (sel, prop) => {
+    const vals = r.declaraciones(sel, prop).map(v => r.px(v));
+    assert(vals.length > 0, `${sel}{${prop}} no se declara en ninguna parte`);
+    const final = vals[vals.length - 1];
+    const desde = vals.indexOf(final);
+    for (let i = desde; i < vals.length; i++)
+      assert(vals[i] === final,
+        `${sel}{${prop}}: tras fijarse en ${final}px aparece ${vals[i]}px — la geometría cambiaría con el ancho`);
+    return final;
+  };
+  const chip = unico('.ev-aviso-chip', 'bottom');
+  const base = unico('#screenApp .app-content', 'padding-bottom');
+  const cond = unico('body:has(.ev-aviso-chip.visible) #screenApp .app-content', 'padding-bottom');
+  // Y que sean los mismos que usa la cuenta: si divergieran, los demás tests
+  // estarían midiendo una regla y el navegador aplicando otra.
+  assert(chip === r.chipBottom && base === r.base && cond === r.conChip,
+    'los valores únicos no coinciden con los que usa el cálculo');
+});
+
+test('reserva inferior · la cola en flujo sigue midiendo lo que se midió', () => {
+  const css = read('styles.css');
+  // La constante COLA_MEDIDA=53 sale de medir .app-credit en Chromium. Si
+  // alguien cambia su caja, la cuenta deja de valer y hay que volver a medir:
+  // esto lo denuncia en vez de dejarlo pasar en silencio.
+  const credito = (css.match(/\.app-credit\{[^}]*\}/g) || []).join('');
+  assert(/padding:\.8rem 1rem 1\.2rem/.test(credito),
+    '.app-credit ha cambiado de relleno: vuelve a medir la cola y ajusta COLA_MEDIDA');
+  assert(/font-size:\.58rem/.test(credito),
+    '.app-credit ha cambiado de tamaño de letra: vuelve a medir la cola');
+  assert(!/position\s*:\s*fixed/.test(credito),
+    '.app-credit ha dejado de estar en flujo: la cola ya no empuja y la cuenta cambia');
+});
+
 test('multi-restaurant theming is wired (applyTheme + login picker)', () => {
   for (const fn of ['applyTheme','initVenues','renderVenuePicker','selectVenue']) {
     assert(new RegExp(`function ${fn}\\(`).test(html), `${fn}() missing`);
