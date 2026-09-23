@@ -1,9 +1,97 @@
 {
- "updated": "2026-09-23T01:31:49.901Z",
+ "updated": "2026-09-23T10:02:52.189Z",
  "items": [
   {
+   "t": "El restaurante de Las Palmas de Gran Canaria donde comer una parrillada argentina con diferentes carnes y acompañamientos",
+   "u": "https://www.laprovincia.es/las-palmas/2026/09/23/restaurante-palmas-comer-parrillada-argentina-dv-134561679.amp.html",
+   "s": "laprovincia.es",
+   "d": "2026-09-23T07:49:26.000Z",
+   "tags": [
+    "CANARIAS"
+   ]
+  },
+  {
+   "t": "Baleària Canarias: una nueva forma de viajar donde el confort y la conectividad marcan el rumbo",
+   "u": "https://www.eldiario.es/canariasahora/brands/balearia-canarias-nueva-forma-viajar-confort-conectividad-marcan-rumbo_1_13528988.html",
+   "s": "eldiario.es",
+   "d": "2026-09-23T07:16:06.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://static.eldiario.es/clip/5ab943f3-14cf-42dd-a7aa-5b94dd7f7be9_facebook-aspect-ratio-1200-675_default_0.jpg"
+  },
+  {
+   "t": "El restaurante de Tenerife donde disfrutar de la cocina canaria tradicional con unas vistas espectaculares",
+   "u": "https://www.eldia.es/tenerife/2026/09/23/restaurante-tenerife-disfrutar-cocina-canaria-vistas-dv-134580610.html",
+   "s": "Eldía",
+   "d": "2026-09-23T07:11:37.000Z",
+   "tags": [
+    "CANARIAS"
+   ]
+  },
+  {
+   "t": "Albert Adrià organiza su particular Bikini Party en Jerez",
+   "u": "https://www.elespanol.com/viajes/planes/20260923/albert-adria-organiza-particular-bikini-party-jerez/1003744391369_0.html",
+   "s": "El Español",
+   "d": "2026-09-23T05:51:56.000Z",
+   "tags": [
+    "ALTA COCINA"
+   ],
+   "img": "https://s3.elespanol.com/k/imgp/cms/elespanol/11359321.jpg?p=f:jpeg/w:1706/h:960&h=61O0RmQ4"
+  },
+  {
+   "t": "Canarias Food Innovation Lab: así es la nueva formación universitaria en gastronomía que llega a Gran Canaria",
+   "u": "https://www.canarias7.es/gastronomia-c7/canarias-food-innovation-lab-nueva-formacion-universitaria-20260923070000-nt_amp.html",
+   "s": "Canarias7",
+   "d": "2026-09-23T05:00:25.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://s1.ppllstatics.com/canarias7/www/multimedia/gastronomia-c7/2026/09/21/2.jpg"
+  },
+  {
+   "t": "Las mejores pizzerías de Barcelona: sabores redondos",
+   "u": "https://www.laprovincia.es/ocio/gastronomia/2026/09/23/mejores-pizzerias-barcelona-pizzas-134077597.amp.html",
+   "s": "laprovincia.es",
+   "d": "2026-09-23T05:00:00.000Z",
+   "tags": [
+    "CANARIAS"
+   ]
+  },
+  {
+   "t": "Indignación en el valle de La Orotava por un restaurante que embotella vino Rioja etiquetado como de \"guachinche\"",
+   "u": "https://www.atlanticohoy.com/tenerife/indignacion-en-valle-orotava-por-restaurante-embotella-vino-rioja-etiquetado-como-guachinche_1567211_102.html",
+   "s": "atlanticohoy.com",
+   "d": "2026-09-23T04:00:00.000Z",
+   "tags": [
+    "CANARIAS",
+    "VINO"
+   ],
+   "img": "https://www.atlanticohoy.com/uploads/s1/37/96/73/2/diseno-sin-titulo-2026-09-21t104811-836.webp"
+  },
+  {
+   "t": "Berasategui vuelve a sorprender con Bera y convierte el paseo de Gràcia en una fiesta",
+   "u": "https://www.elnacional.cat/es/gourmeteria/opinion-criticas/berasategui-vuelve-sorprender-con-bera-convierte-paseo-gracia-en-fiesta_1698355_102.html",
+   "s": "El Nacional.cat",
+   "d": "2026-09-23T03:30:00.000Z",
+   "tags": [
+    "CHEF"
+   ],
+   "img": "https://www.elnacional.cat/uploads/s1/59/84/21/92/restaurant-bera-011_4_1258x630.jpeg"
+  },
+  {
+   "t": "Seis castillos y palacios españoles, entre los más espectaculares de Europa",
+   "u": "https://www.elmundo.es/viajes/europa/2026/09/23/6aacf69321efa05b188b45b0.html",
+   "s": "El Mundo",
+   "d": "2026-09-22T22:20:00.000Z",
+   "tags": [
+    "MICHELIN"
+   ],
+   "img": "https://e01-phantom-elmundo.uecdn.es/488440cc4a7ab43524569e0642ccf400/resize/1200/f/webp/assets/multimedia/imagenes/2026/09/18/17897210385668.jpg"
+  },
+  {
    "t": "José María Borrás, el chef de 27 años que podría lograr la primera estrella Michelin de Menorca: \"La tradición no es un lugar al que volver, sino un punto de partida para seguir creando\"",
-   "u": "https://amp.elmundo.es/metropoli/gastronomia/2026/09/23/6ab24711fc6c83a6348b459c.html",
+   "u": "https://www.elmundo.es/metropoli/gastronomia/2026/09/23/6ab24711fc6c83a6348b459c.html",
    "s": "El Mundo",
    "d": "2026-09-22T22:19:00.000Z",
    "tags": [
@@ -72,16 +160,6 @@
    ]
   },
   {
-   "t": "El tejido de la economía social y solidaria de Canarias crea alianzas con el Estado y el Gobierno autonómico",
-   "u": "https://www.eldiario.es/canariasahora/economia/tejido-economia-social-solidaria-canarias-crea-alianzas-gobierno-autonomico_1_13529684.html",
-   "s": "eldiario.es",
-   "d": "2026-09-22T15:34:38.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://static.eldiario.es/clip/5ee5a87d-440e-41d5-8938-fdbe9154f052_facebook-aspect-ratio-1200-675_default_0_x888y314.jpg"
-  },
-  {
    "t": "Tokio se apodera de Ibiza en una noche de alta cocina japonesa y champán de añada",
    "u": "https://www.diariodeibiza.es/ibiza/2026/09/22/tokio-apodera-ibiza-noche-alta-bc-134563462.html",
    "s": "Diario de Ibiza",
@@ -131,24 +209,13 @@
    "img": "https://e01-phantom-expansion.uecdn.es/f4b7966ca213559049e4d9dda560e3f5/resize/1200/f/webp/assets/multimedia/imagenes/2026/09/10/17890380025516.jpg"
   },
   {
-   "t": "Astrid Pérez borra un vídeo dirigido al PP desde su despacho en el Parlamento de Canarias",
-   "u": "https://www.eldiario.es/canariasahora/politica/astrid-perez-borra-video-dirigido-pp-despacho-parlamento-canarias_1_13529341.html",
-   "s": "eldiario.es",
-   "d": "2026-09-22T14:16:14.000Z",
+   "t": "De una casa familiar en Marín a ser recomendado en la Guía Michelin",
+   "u": "https://www.elcorreogallego.es/videos/galicia/2026/09/22/casa-familiar-marin-guia-michelin-134558699.html",
+   "s": "El Correo Gallego",
+   "d": "2026-09-22T12:33:46.000Z",
    "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://static.eldiario.es/clip/c19c8e64-be12-4780-87a1-5d7edc85701c_facebook-aspect-ratio-1200-675_default_0_x775y211.jpg"
-  },
-  {
-   "t": "El precio de los hoteles en Canarias casi se duplica en 18 años",
-   "u": "https://www.eldiario.es/canariasahora/turismo/precio-hoteles-canarias-duplica-18-anos_1_13528951.html",
-   "s": "eldiario.es",
-   "d": "2026-09-22T12:13:56.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://static.eldiario.es/clip/7e908503-0ecf-4ef2-984b-25d50f1d6dc3_facebook-aspect-ratio-1200-675_default_0.jpg"
+    "MICHELIN"
+   ]
   },
   {
    "t": "Entre papas, mojos y estrellas Michelin: ruta gourmet por la nueva Capital Española de la Gastronomía",
@@ -164,7 +231,7 @@
   {
    "t": "La feria de las hamburguesas ideal para visitar el último fin de semana de septiembre: tres días de música, comida y...",
    "u": "https://www.atlanticohoy.com/tenerife/feria-hamburguesas-ideal-visitar-ultimo-fin-semana-septiembre-tres-dias-musica-comida-entrada-gratis-en-tenerife_1567280_102_amp.html",
-   "s": "Atlántico Hoy",
+   "s": "atlanticohoy.com",
    "d": "2026-09-22T12:00:00.000Z",
    "tags": [
     "CANARIAS"
@@ -203,7 +270,7 @@
   {
    "t": "Tajao sufre por la falta de aparcamiento y los negocios alertan de pérdidas",
    "u": "https://www.atlanticohoy.com/tenerife/falta-aparcamiento-tajao-vecinos-dan-vueltas-dejar-coche-restaurantes-sin-clientes_1567299_102.html",
-   "s": "Atlántico Hoy",
+   "s": "atlanticohoy.com",
    "d": "2026-09-22T10:47:00.000Z",
    "tags": [
     "CANARIAS"
@@ -213,7 +280,7 @@
   {
    "t": "El restaurante de carretera definitivo está en este pueblo medieval de Madrid: Martín Berasategui confiesa su secreto mejor guardado",
    "u": "https://www.noticiasdelvino.com/escapadas/2026/09/22/el-restaurante-de-carretera-definitivo-esta-en-este-pueblo-medieval-de-madrid-martin-berasategui-confiesa-su-secreto-mejor-guardado-74843/",
-   "s": "noticiasdelvino.com",
+   "s": "Noticias del Vino",
    "d": "2026-09-22T10:23:27.000Z",
    "tags": [
     "CHEF"
@@ -229,76 +296,6 @@
     "CANARIAS"
    ],
    "img": "https://static.eldiario.es/clip/fd71bdf6-d67f-429e-b515-b7037109c4b7_facebook-aspect-ratio-1200-675_default_0.jpg"
-  },
-  {
-   "t": "Arico Somos Todos pide soluciones urgentes a la falta de aparcamientos en Tajao",
-   "u": "https://www.soldelsurtenerife.com/arico1/arico-somos-todos-pide-soluciones-urgentes-problema-que-ha-convertido-dia-dia-muchas-familias-empresas-pueblo/20260922102818110160.amp.html",
-   "s": "sol del sur tenerife",
-   "d": "2026-09-22T09:28:18.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://www.soldelsurtenerife.com/media/soldetenerifesur/images/2026/09/22/2026092210275611407.jpg"
-  },
-  {
-   "t": "DIRECTO | Sigue el pleno del Parlamento de Canarias",
-   "u": "https://www.eldiario.es/canariasahora/parlamento-canario/directo-sigue-pleno-parlamento-canarias_1_13528386.html",
-   "s": "eldiario.es",
-   "d": "2026-09-22T09:27:00.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://static.eldiario.es/clip/8c6b808a-5c4b-4381-ad38-122a72141774_facebook-aspect-ratio-1200-675_default_0_x418y340.jpg"
-  },
-  {
-   "t": "Una española entre las tres mejores ciudades del mundo para amantes de la gastronomía: “Hay una concentración extraordinaria de restaurantes en un área pequeña”",
-   "u": "https://www.infobae.com/espana/2026/09/22/una-espanola-entre-las-tres-mejores-ciudades-del-mundo-para-amantes-de-la-gastronomia-hay-una-concentracion-extraordinaria-de-restaurantes-en-un-area-pequena/?outputType",
-   "s": "Infobae",
-   "d": "2026-09-22T09:15:41.000Z",
-   "tags": [
-    "MICHELIN"
-   ],
-   "img": "https://www.infobae.com/resizer/v2/AAN52YOQG5AJPMYSHRA662X3CU.jpeg?auth=803a7c28fb747b92883dda17be4b74928e57769f7f5e1387421960ebddafca29&smart=true&width=1200&height=630&quality=85"
-  },
-  {
-   "t": "Los guachinces de Tenerife protagonizan una película documental producida por el CSIC",
-   "u": "https://www.eldiario.es/canariasahora/cultura/documental-guachinces-tenerife-csic_1_13528032.amp.html",
-   "s": "eldiario.es",
-   "d": "2026-09-22T09:10:22.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://static.eldiario.es/clip/7d0198bb-e175-4bc6-b7ec-dbb40240e81d_facebook-aspect-ratio-1200-675_default_0.jpg"
-  },
-  {
-   "t": "Los hoteles de Canarias siguen subiendo precios: se disparan en agosto más de un 6%",
-   "u": "https://www.eldiario.es/canariasahora/turismo/hoteles-canarias-siguen-subiendo-precios-disparan-agosto-6_1_13528000.html",
-   "s": "eldiario.es",
-   "d": "2026-09-22T09:01:05.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://static.eldiario.es/clip/44fddccb-68ce-4070-a1a9-023cc4923b2f_facebook-aspect-ratio-1200-675_default_0.jpg"
-  },
-  {
-   "t": "Canarias reafirma el potencial científico de La Palma pese al rechazo de instalar el TMT en el Roque por la falta de consenso en la financiación",
-   "u": "https://www.eldiario.es/canariasahora/lapalmaahora/politica/canarias-reafirma-potencial-cientifico-palma-pese-rechazo-instalar-tmt-roque-falta-consenso-financiacion_1_13527944.html",
-   "s": "eldiario.es",
-   "d": "2026-09-22T08:54:29.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://static.eldiario.es/clip/de107c7a-e8ca-494b-8bd3-23329b9af53a_facebook-aspect-ratio-1200-675_default_0.jpg"
-  },
-  {
-   "t": "Fuerteventura acoge por primera vez la gala de los Premios de Turismo de Canarias",
-   "u": "https://www.vivilecanarie.com/noticias/i/98111385/fuerteventura-acoge-por-primera-vez-la-gala-de-los-premios-de-turismo-de-canarias",
-   "s": "Vivi le Canarie",
-   "d": "2026-09-22T08:49:00.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://cmsphoto.ww-cdn.com/resizeapi/5f4082e55db8944219cfc46aadbb22d4d660156c/3200/-1/"
   }
  ]
 }
