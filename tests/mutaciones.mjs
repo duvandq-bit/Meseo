@@ -511,6 +511,14 @@ const MUTACIONES = [
     de:'  if(btn.parentNode === destino) return;\n  destino.appendChild(btn);',
     a:'  destino.appendChild(btn);',
     cae:'es idempotente' },
+
+  // ═══ RESERVA INFERIOR · que el aviso de B2 no tape la última fila ═══
+  { id:'RSV-1', fase:'RSV', fila:null,
+    rompe:'desaparece la reserva extra y el aviso de B2 vuelve a tapar los últimos 27 px de contenido',
+    archivo:'styles.css',
+    de:'body:has(.ev-aviso-chip.visible) #screenApp .app-content{\n  padding-bottom:calc(161px + env(safe-area-inset-bottom,0px));\n}',
+    a:'/* regla retirada por la mutación RSV-1 */',
+    cae:'la reserva condicional alcanza al aviso de B2' },
 ];
 
 // ─── EJECUCIÓN ─────────────────────────────────────────────────────────────
