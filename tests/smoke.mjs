@@ -9505,38 +9505,69 @@ test('compromiso · el correo de contacto es contacto@meseo.es en todas partes',
   assert(priv.includes(MAIL), 'privacidad.html usa el correo de empresa');
   assert(!priv.includes('duvandq@gmail.com'), 'privacidad.html no puede seguir con el correo personal');
   assert(!/duvandq@gmail\.com/.test(JSON.stringify(nda)), 'el compromiso no puede llevar el correo personal');
-  // El pie y el aviso legal, en los dos idiomas.
-  const pie = html.slice(html.indexOf('id="loginFoot"'), html.indexOf('</footer>', html.indexOf('id="loginFoot"')));
-  assert((pie.match(/mailto:contacto@meseo\.es/g) || []).length >= 2, 'el pie enlaza el correo');
+  // El pie (lo genera _pieHTML) y el aviso legal, en los dos idiomas.
+  const pie = html.slice(html.indexOf('function _pieHTML('), html.indexOf('function _pieRender('));
+  assert((pie.match(/mailto:contacto@meseo\.es/g) || []).length >= 3, 'el pie enlaza el correo');
   const legal = html.slice(html.indexOf('function showLegalModal('), html.indexOf('\n}', html.indexOf('function showLegalModal(')));
   assert((legal.match(/contacto@meseo\.es/g) || []).length >= 4, 'el aviso legal cita el correo en ES y en EN');
   assert(/privacidad\.html/.test(legal), 'el aviso legal enlaza la política completa');
 });
 
-test('compromiso · el pie del login existe, está en el login y enlaza cosas que existen', () => {
-  const iFoot = html.indexOf('id="loginFoot"');
-  assert(iFoot > 0, 'falta el pie del login');
-  const iLogin = html.indexOf('id="screenLogin"'), iApp = html.indexOf('id="screenApp"');
-  assert(iLogin < iFoot && iFoot < iApp, 'el pie tiene que vivir dentro de #screenLogin, no en la app');
-  const pie = html.slice(iFoot, html.indexOf('</footer>', iFoot));
+test('compromiso · el pie es uno solo, vive en el login y en Hoy, y enlaza cosas que existen', () => {
+  // Un generador, dos sitios.
+  const gen = html.slice(html.indexOf('function _pieHTML('), html.indexOf('function _pieRender('));
+  assert(gen.length > 200, 'falta el generador _pieHTML');
   // Cada enlace apunta a algo real.
   for (const fn of ['showLegalModal', 'ndaVerTexto', 'installApp', 'shareApp', 'forceAppUpdate'])
-    assert(new RegExp(`onclick="${fn}\\(\\)"`).test(pie) && new RegExp(`function ${fn}\\(`).test(html),
+    assert(new RegExp(`onclick="${fn}\\(\\)"`).test(gen) && new RegExp(`function ${fn}\\(`).test(html),
       `el pie llama a ${fn}() y esa función tiene que existir`);
-  assert(/href="privacidad\.html"/.test(pie), 'el pie enlaza privacidad.html');
+  assert(/href="privacidad\.html"/.test(gen), 'el pie enlaza privacidad.html');
   assert(existsSync(join(ROOT, 'privacidad.html')), 'y privacidad.html tiene que existir en el repositorio');
   // Los dos avisos que importan van a la vista, no detrás de un clic.
-  assert(/id="footN1"/.test(pie) && /id="footN2"/.test(pie), 'los avisos de formación y de marcas van en el pie');
-  // Y la tabla de traducciones cubre TODOS los ids del pie: ninguno se queda
-  // en español al cambiar a inglés.
-  const iT = html.indexOf('const FOOT = [');
-  const tabla = html.slice(iT, html.indexOf('];', iT));
-  const idsTabla = [...tabla.matchAll(/\['(foot[A-Za-z0-9]+)'/g)].map(m => m[1]);
-  const idsPie = [...pie.matchAll(/id="(foot[A-Za-z0-9]+)"/g)].map(m => m[1]);
-  for (const id of idsPie) assert(idsTabla.includes(id), `el id ${id} del pie no está en la tabla de traducciones`);
-  for (const id of idsTabla) assert(idsPie.includes(id), `la tabla traduce ${id}, que no existe en el pie`);
+  assert(/_pieT\('n1'\)/.test(gen) && /_pieT\('n2'\)/.test(gen), 'los avisos de formación y de marcas van en el pie');
+  // Cada clave que usa el generador existe en la tabla, con ES y EN, y la
+  // tabla no guarda claves que nadie pinta.
+  const iT = html.indexOf('const _PIE_TXT = {');
+  const tabla = html.slice(iT, html.indexOf('\n};', iT));
+  const claves = [...tabla.matchAll(/^\s+([a-z0-9]+):\s+\[/gm)].map(m => m[1]);
+  const usadas = [...new Set([...gen.matchAll(/_pieT\('([a-z0-9]+)'\)/g)].map(m => m[1]))];
+  for (const k of usadas) assert(claves.includes(k), `el pie usa la clave «${k}», que no está en _PIE_TXT`);
+  for (const k of claves) assert(usadas.includes(k), `_PIE_TXT guarda «${k}», que el pie nunca pinta`);
+  for (const k of claves) {
+    const fila = tabla.slice(tabla.indexOf(`\n  ${k}:`), tabla.indexOf('],', tabla.indexOf(`\n  ${k}:`)));
+    assert((fila.match(/'/g) || []).length >= 4, `la clave «${k}» no tiene los dos idiomas`);
+  }
   const css = read('styles.css');
   assert(/\.login-foot\{/.test(css) && /\.login-foot-grid\{/.test(css), 'falta el CSS del pie');
+});
+
+test('compromiso · el login va sin Plataforma y Hoy con ella', () => {
+  // Login: el <footer> está en #screenLogin, vacío, y renderLogin lo rellena
+  // SIN la columna Plataforma (en el login no hay a dónde ir).
+  const iFoot = html.indexOf('id="loginFoot"');
+  const iLogin = html.indexOf('id="screenLogin"'), iApp = html.indexOf('id="screenApp"');
+  assert(iLogin < iFoot && iFoot < iApp, 'el pie del login vive dentro de #screenLogin');
+  assert(/<footer class="login-foot sin-plataforma" id="loginFoot"><\/footer>/.test(html),
+    'el pie del login nace vacío, con la clase sin-plataforma, y lo rellena el generador');
+  const rl = html.slice(html.indexOf('function renderLogin('), html.indexOf('function renderLogin(') + 20000);
+  assert(/_pieRender\('loginFoot', \{ plataforma:false \}\)/.test(rl), 'renderLogin pinta el pie SIN Plataforma');
+  // Hoy: dentro del HTML de renderDashboard, CON Plataforma y en modo app.
+  const iD = html.indexOf('function renderDashboard(');
+  const dash = html.slice(iD, html.indexOf('\n}', iD));
+  assert(/<footer class="login-foot en-app">\$\{_pieHTML\(\{ plataforma:true, enApp:true \}\)\}<\/footer>/.test(dash),
+    'Hoy lleva el pie con Plataforma, en modo app');
+  // Con Plataforma, cada entrada navega a un destino que existe, y el panel
+  // sólo se ofrece a quien ya puede verlo.
+  const gen = html.slice(html.indexOf('function _pieHTML('), html.indexOf('function _pieRender('));
+  for (const tab of ['aprender', 'vinos', 'exam', 'txoko'])
+    assert(new RegExp(`showTab\\('${tab}'\\)`).test(gen), `Plataforma enlaza ${tab}`);
+  assert(/puedePanel \? `<li><button type="button" onclick="showTab\('supervisor'\)"/.test(gen),
+    'el panel del responsable sólo sale con el gating de mando/admin');
+  const css = read('styles.css');
+  assert(/\.login-foot\.sin-plataforma \.login-foot-grid\{grid-template-columns:1\.6fr 1fr 1fr\}/.test(css),
+    'sin Plataforma son tres columnas');
+  assert(/\.login-foot\.en-app\{[^}]*color:var\(--parch3\)/.test(css),
+    'en la app, tinta oscura sobre fondo claro');
 });
 
 test('compromiso · se puede leer sin cuenta y es el mismo texto que se firma', () => {

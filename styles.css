@@ -8022,10 +8022,31 @@ body:has(#gsOverlay.open) .ev-aviso-panel{
   margin-top:.9rem;font-family:'DM Mono',monospace;font-size:.58rem;
   letter-spacing:.04em;color:rgba(244,237,226,.35);
 }
+/* Sin la columna Plataforma (login): tres columnas, no cuatro. */
+.login-foot.sin-plataforma .login-foot-grid{grid-template-columns:1.6fr 1fr 1fr}
+/* Dentro de la app (Hoy) el fondo es claro: mismos huesos, tinta oscura.
+   Ojo a los nombres invertidos de los tokens: --parchment es la TINTA
+   oscura y --ink el PAPEL claro. */
+.login-foot.en-app{
+  color:var(--parch3);border-top-color:var(--gold-a);
+  margin-top:1.8rem;padding-bottom:.4rem;
+}
+.login-foot.en-app .login-foot-logo,
+.login-foot.en-app .login-foot-col h4{color:var(--gold-deep)}
+.login-foot.en-app .login-foot-mail,
+.login-foot.en-app .login-foot-col a,
+.login-foot.en-app .login-foot-col button{color:var(--parch2)}
+.login-foot.en-app .login-foot-mail:hover,
+.login-foot.en-app .login-foot-col a:hover,
+.login-foot.en-app .login-foot-col button:hover{color:var(--gold-deep)}
+.login-foot.en-app .login-foot-notes{border-top-color:var(--gold-a);color:var(--parch4)}
+.login-foot.en-app .login-foot-notes strong{color:var(--parch2)}
+.login-foot.en-app .login-foot-copy{color:var(--parch4)}
 @media (max-width:640px){
   .login-foot{padding-left:.5rem;padding-right:.5rem;margin-top:1.6rem}
-  .login-foot-grid{grid-template-columns:1fr 1fr;gap:1.1rem 1.2rem}
+  .login-foot-grid,.login-foot.sin-plataforma .login-foot-grid{grid-template-columns:1fr 1fr;gap:1.1rem 1.2rem}
   .login-foot-brand{grid-column:1 / -1}
+  .login-foot.en-app{padding-left:0;padding-right:0}
 }
 
 /* ═══ TUNIC LOGIN v2 — MODE TOGGLE + CORNERS + NEW-USER ═══ */
