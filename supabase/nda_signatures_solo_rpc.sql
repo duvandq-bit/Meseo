@@ -23,7 +23,11 @@
 -- Antes: 14 filas. Después: 0. Y una firma de prueba por la RPC sigue
 -- entrando.
 --
--- NO APLICADO todavía: toca Supabase y eso lo autoriza el propietario.
+-- APLICADO el 24-09-2026 con autorización del propietario. Medido:
+--   grants de anon/authenticated: 14 → 0.
+--   nda_sign sigue escribiendo (prueba con rollback: rpc_ok=true, fila
+--   insertada, employees.nda_version actualizado; todo revertido, 0 filas).
+--   set role anon; select … from nda_signatures → permission denied.
 
 revoke all privileges on table public.nda_signatures from anon, authenticated;
 

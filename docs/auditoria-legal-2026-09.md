@@ -56,8 +56,8 @@
 
 Severidad: **A** = arreglar antes de publicar · **M** = arreglar pronto · **B** = anotar.
 
-### H1 · **[M]** `nda_signatures` era tocable desde la API
-RLS activado **sin ninguna política**, y `anon`/`authenticated` con **todos** los privilegios (INSERT, SELECT, UPDATE, DELETE, **TRUNCATE**, REFERENCES, TRIGGER). Con RLS sin políticas, las operaciones por filas devuelven cero — pero `TRUNCATE` no pasa por RLS, y una tabla que es *prueba* no debería depender de que nadie le añada una política mal. **Preparado** `supabase/nda_signatures_solo_rpc.sql` (revoca todo; la RPC sigue escribiendo porque es `SECURITY DEFINER`). **No aplicado**: Supabase lo toca el propietario. Comprobación: los grants pasan de 14 filas a 0 y una firma de prueba por RPC sigue entrando.
+### H1 · **[corregido]** `nda_signatures` era tocable desde la API
+RLS activado **sin ninguna política**, y `anon`/`authenticated` con **todos** los privilegios (INSERT, SELECT, UPDATE, DELETE, **TRUNCATE**, REFERENCES, TRIGGER). Con RLS sin políticas, las operaciones por filas devuelven cero — pero `TRUNCATE` no pasa por RLS, y una tabla que es *prueba* no debería depender de que nadie le añada una política mal. **Aplicado** `supabase/nda_signatures_solo_rpc.sql` el 24-09-2026 con autorización del propietario. Medido: grants 14 → 0; la RPC sigue escribiendo (prueba con rollback: `rpc_ok=true`, fila insertada y `employees.nda_version` actualizado, todo revertido, 0 filas después); `set role anon` + `select` sobre la tabla → `permission denied`.
 
 ### H2 · **[M]** La firma guarda la *versión* del texto, no el texto
 `nda_signatures.nda_version = '2026-09-24-v1'`. Para reconstruir *qué* se firmó hay que ir al histórico de git de `data/nda.json`. Es reconstruible, pero la cadena de prueba sería más sólida guardando también un **hash SHA-256 de las cláusulas** en la firma. Cambio pequeño en `nda_sign` y en `supaNdaSign`; **no hecho** porque toca la RPC.
@@ -119,7 +119,7 @@ Si aun así se quiere un campo `full_name` en `employees`, hace falta migración
 
 ## 6 · Antes de publicar
 
-- Subir versión (7.469) en los tres sitios: hoy sigue en 7.468 a propósito, porque la rama lleva además el arreglo del sticky (`301b171`) sin decidir.
-- Aplicar `supabase/nda_signatures_solo_rpc.sql` (H1) y comprobar los grants.
+- ~~Subir versión (7.469) en los tres sitios.~~ Hecho: `meta`, `APP_VERSION` y `sw.js` en 7.469. El sticky (`301b171`) se separó a la rama `claude/sticky-menu-301b171`; esta rama parte directamente de producción (`861fd32`).
+- ~~Aplicar `supabase/nda_signatures_solo_rpc.sql` (H1) y comprobar los grants.~~ Hecho y medido (ver H1).
 - Decidir H4: el acuerdo con el restaurante es lo que de verdad falta.
 - Pasar los tres textos por un abogado (H5).
