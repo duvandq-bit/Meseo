@@ -487,7 +487,19 @@ body{
     radial-gradient(ellipse at 50% 50%, rgba(72,136,160,.02) 0%, transparent 60%);
   color:var(--ink);
   font-weight:400;
+  /* Las DOS declaraciones, y en este orden. `hidden` a secas convertía a body
+     en contenedor de scroll: por especificación, `overflow-x:hidden` con
+     `overflow-y:visible` no es pareja válida y el navegador computaba
+     `overflow-y:auto` (medido: body → hidden/auto). Esa caja de scroll nunca
+     se desplaza —body crece con el contenido, scrollHeight 3675 = clientHeight
+     3675— pero era el scrollport más cercano de la cabecera, así que su
+     `position:sticky` no se enganchaba a nada y se iba con la página.
+     `clip` recorta igual y NO crea contenedor de scroll. Es el mismo remedio
+     que <html> ya lleva veinte líneas más arriba; a body se le quedó sin
+     poner. `hidden` se conserva primero como respaldo para el WebKit anterior
+     a `clip`: ahí se queda como hasta hoy, sin regresión. */
   overflow-x:hidden;
+  overflow-x:clip;
   overscroll-behavior-x:none;
   line-height:1.6;
 }
@@ -1988,7 +2000,17 @@ body::after{
 /* (la sub-navegación vive en .subtab-chips — lenguaje único de la app) */
 
 /* ── Main nav as a dropdown (same Tenet pattern, always gold) ── */
-.nav-dd{position:relative;z-index:95;background:#25352b;padding:.4rem .8rem}
+/* La fila del MENÚ se queda pegada justo debajo de la cabecera. Era
+   `relative` y se marchaba con el scroll: como la puerta a Vinos, Sala,
+   Auditoría y Txoko vive aquí y no en la barra de cinco, perderla obligaba a
+   subir del todo para volver a abrirla.
+   El `top` NO es 56px sueltos: la cabecera mide `calc(56px + env(
+   safe-area-inset-top,0px))` porque crece con el notch, y si este desplazamiento
+   no la acompaña, la fila se mete debajo en un iPhone. Las dos expresiones
+   tienen que decir lo mismo, y hay una prueba que lo exige.
+   `sticky` (no `fixed`) a propósito: `fixed` sí crearía bloque contenedor para
+   descendientes fijos, y la hoja del menú es `position:fixed;bottom:0`. */
+.nav-dd{position:sticky;top:calc(56px + env(safe-area-inset-top,0px));z-index:95;background:#25352b;padding:.4rem .8rem}
 .nav-dd-trigger{display:flex;align-items:center;justify-content:space-between;gap:.6rem;width:100%;min-height:44px;
   border-radius:10px;padding:.5rem .95rem;cursor:pointer;border:1px solid rgba(196,154,60,.35);
   font-family:'Cinzel',serif;font-weight:600;font-size:.82rem;letter-spacing:.08em;text-transform:uppercase;

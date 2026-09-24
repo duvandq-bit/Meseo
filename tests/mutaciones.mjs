@@ -519,6 +519,28 @@ const MUTACIONES = [
     de:'body:has(.ev-aviso-chip.visible) #screenApp .app-content{\n  padding-bottom:calc(161px + env(safe-area-inset-bottom,0px));\n}',
     a:'/* regla retirada por la mutación RSV-1 */',
     cae:'la reserva condicional alcanza al aviso de B2' },
+
+  // ═══ STICKY · que la puerta del menú no desaparezca al hacer scroll ═══
+  { id:'STK-1', fase:'STK', fila:null,
+    rompe:'body vuelve a ser contenedor de scroll y la cabecera pierde el sticky: el menú desaparece al bajar',
+    archivo:'styles.css',
+    de:'  overflow-x:hidden;\n  overflow-x:clip;\n  overscroll-behavior-x:none;',
+    a:'  overflow-x:hidden;\n  overscroll-behavior-x:none;',
+    cae:'el overflow-x efectivo de body es clip' },
+
+  { id:'STK-2', fase:'STK', fila:null,
+    rompe:'la fila del MENÚ deja de quedarse pegada y se va con el scroll, como antes del arreglo',
+    archivo:'styles.css',
+    de:'.nav-dd{position:sticky;top:calc(56px + env(safe-area-inset-top,0px));z-index:95;',
+    a:'.nav-dd{position:relative;z-index:95;',
+    cae:'la fila del menú se queda pegada' },
+
+  { id:'STK-3', fase:'STK', fila:null,
+    rompe:'el desplazamiento pierde el área segura: en un iPhone con notch la fila del menú se mete bajo el reloj',
+    archivo:'styles.css',
+    de:'.nav-dd{position:sticky;top:calc(56px + env(safe-area-inset-top,0px));',
+    a:'.nav-dd{position:sticky;top:56px;',
+    cae:'coincide con la altura de la cabecera' },
 ];
 
 // ─── EJECUCIÓN ─────────────────────────────────────────────────────────────

@@ -1056,6 +1056,105 @@ test('reserva inferior · la cola en flujo sigue midiendo lo que se midió', () 
     '.app-credit ha dejado de estar en flujo: la cola ya no empuja y la cuenta cambia');
 });
 
+// ─── STICKY · que la puerta del menú no desaparezca al hacer scroll ─────────
+// La cabecera declaraba position:sticky desde siempre y NUNCA se enganchó:
+// `body{overflow-x:hidden}` con overflow-y visible hace que el navegador
+// compute overflow-y:auto, body pasa a ser contenedor de scroll, y como su
+// caja nunca se desplaza el sticky se ancla a algo inmóvil. Medido en
+// Chromium: body → hidden/auto, cabecera en top:-2831 al fondo.
+// Aquí no se fijan posiciones, se fijan las RELACIONES que sostienen el
+// arreglo: el overflow efectivo, y que el desplazamiento de la fila del menú
+// diga exactamente lo mismo que la altura de la cabecera.
+const _stk = (() => {
+  const css = read('styles.css');
+  // Los comentarios se quitan ANTES de trocear. Dejarlos dentro del cuerpo
+  // costaba una declaración: `overflow-x:hidden` iba justo detrás de un `*/`,
+  // y el patrón que exige `;` o principio delante no la veía. El test decía
+  // «solo hay una declaración» cuando había dos.
+  const limpio = css.replace(/\/\*[\s\S]*?\*\//g, '');
+  const reglas = [...limpio.matchAll(/([^{}]+)\{([^{}]*)\}/g)].map(m => ({
+    sel: m[1].trim().replace(/\s+/g, ' '),
+    cuerpo: m[2],
+  }));
+  const deSel = (sel) => reglas.filter(r => r.sel.split(',').map(s => s.trim()).includes(sel));
+  // Todas las declaraciones de una propiedad, EN ORDEN. La última gana.
+  const decls = (sel, prop) => {
+    const out = [];
+    for (const r of deSel(sel))
+      for (const m of r.cuerpo.matchAll(new RegExp('(?:^|;)\\s*' + prop + '\\s*:\\s*([^;]+)', 'g')))
+        out.push(m[1].trim());
+    return out;
+  };
+  const una = (sel, prop) => { const d = decls(sel, prop); return d.length ? d[d.length - 1] : null; };
+  return { css, reglas, deSel, decls, una };
+})();
+
+test('sticky · body declara overflow-x hidden y DESPUÉS clip', () => {
+  const d = _stk.decls('body', 'overflow-x');
+  assert(d.length >= 2,
+    `body declara overflow-x ${d.length} vez/veces (${d.join(', ')}): hacen falta las dos`);
+  const iH = d.indexOf('hidden'), iC = d.indexOf('clip');
+  assert(iH >= 0, 'falta el respaldo `hidden` para el WebKit anterior a clip');
+  assert(iC >= 0, 'falta `clip`: sin él body vuelve a ser contenedor de scroll');
+  assert(iH < iC, '`hidden` tiene que ir ANTES que `clip`, o el respaldo pisa al arreglo');
+});
+
+test('sticky · el overflow-x efectivo de body es clip, no hidden', () => {
+  // Ésta es la que protege la causa raíz: da igual cuántas reglas haya ni
+  // dónde estén, lo que importa es cuál gana.
+  const fin = _stk.una('body', 'overflow-x');
+  assert(fin === 'clip',
+    `el último overflow-x de body es «${fin}»: con hidden, overflow-y computa auto y el sticky muere`);
+});
+
+test('sticky · html conserva el mismo patrón', () => {
+  const d = _stk.decls('html', 'overflow-x');
+  assert(d[d.length - 1] === 'clip', 'html tiene que acabar en clip');
+  assert(d.includes('hidden'), 'html conserva su respaldo hidden');
+});
+
+test('sticky · la fila del menú se queda pegada', () => {
+  const pos = _stk.una('.nav-dd', 'position');
+  assert(pos === 'sticky',
+    `.nav-dd es «${pos}»: con relative la puerta del menú vuelve a irse con el scroll`);
+});
+
+test('sticky · el desplazamiento del menú coincide con la altura de la cabecera', () => {
+  // La relación, no el número: si la cabecera cambia de alto y el menú no,
+  // la fila se solapa o deja hueco — y en un iPhone se metería bajo el notch.
+  const norm = (v) => String(v).replace(/\s+/g, '');
+  const alto = _stk.una('.app-header', 'height');
+  const top = _stk.una('.nav-dd', 'top');
+  assert(alto, 'no encuentro la altura declarada de .app-header');
+  assert(top, '.nav-dd no declara top: sticky sin top no se engancha');
+  assert(norm(alto) === norm(top),
+    `la cabecera mide «${alto}» y el menú se desplaza «${top}»: tienen que decir lo mismo`);
+  // Y que ninguno de los dos pierda el área segura por el camino.
+  assert(/env\(safe-area-inset-top/.test(top),
+    'el desplazamiento tiene que incluir env(safe-area-inset-top) o la fila se mete bajo el notch');
+});
+
+test('sticky · .nav-dd conserva su apilado por debajo de la cabecera', () => {
+  const zNav = parseInt(_stk.una('.nav-dd', 'z-index'), 10);
+  const zCab = parseInt(_stk.una('.app-header', 'z-index'), 10);
+  assert(Number.isFinite(zNav) && Number.isFinite(zCab), 'falta algún z-index');
+  assert(zNav < zCab,
+    `.nav-dd (${zNav}) tiene que quedar por debajo de la cabecera (${zCab})`);
+});
+
+test('sticky · la hoja del menú sigue siendo fixed al borde inferior', () => {
+  // Es lo que garantiza que el sheet no quede atrapado por el nuevo sticky.
+  // (sticky no crea bloque contenedor para descendientes fixed; fixed sí, y
+  // por eso .nav-dd NO puede pasar a fixed.)
+  const r = _stk.deSel('.nav-dd .nav-dd-list');
+  assert(r.length > 0, 'no encuentro la regla de la hoja del menú');
+  const cuerpo = r.map(x => x.cuerpo).join(';');
+  assert(/position\s*:\s*fixed/.test(cuerpo), 'la hoja tiene que seguir siendo fixed');
+  assert(/(?:^|;)\s*bottom\s*:\s*0/.test(cuerpo), 'y seguir anclada al borde inferior');
+  assert(_stk.una('.nav-dd', 'position') !== 'fixed',
+    '.nav-dd no puede ser fixed: crearía bloque contenedor y se llevaría la hoja con él');
+});
+
 test('multi-restaurant theming is wired (applyTheme + login picker)', () => {
   for (const fn of ['applyTheme','initVenues','renderVenuePicker','selectVenue']) {
     assert(new RegExp(`function ${fn}\\(`).test(html), `${fn}() missing`);
