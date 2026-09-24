@@ -541,6 +541,13 @@ const MUTACIONES = [
     de:'<strong>Contacto:</strong> <a href="mailto:contacto@meseo.es">contacto@meseo.es</a>',
     a:'<strong>Contacto:</strong> <a href="mailto:duvandq@gmail.com">duvandq@gmail.com</a>',
     cae:'contacto@meseo.es en todas partes' },
+
+  { id:'PIE-1', fase:'NDA', fila:null,
+    rompe:'el login vuelve a enseñar la columna Plataforma, que ahí no lleva a ningún sitio',
+    archivo:'index.html',
+    de:"  _pieRender('loginFoot', { plataforma:false });",
+    a:"  _pieRender('loginFoot', { plataforma:true });",
+    cae:'el login va sin Plataforma' },
 ];
 
 // ─── EJECUCIÓN ─────────────────────────────────────────────────────────────

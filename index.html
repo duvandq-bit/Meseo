@@ -52,7 +52,7 @@
 <meta property="og:description" content="Formación de equipos de sala: carta, alérgenos, vinos, exámenes y juegos de repaso.">
 <meta property="og:url" content="https://meseo.es/">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"Meseo","url":"https://meseo.es/"}</script>
-<meta name="app-version" content="7.469">
+<meta name="app-version" content="7.470">
 <meta name="app-build" content="May 2026">
 <meta name="theme-color" content="#1c2a22">
 <!-- ═══ PWA ═══ -->
@@ -333,51 +333,10 @@
        que esto es formación y no la fuente oficial de alérgenos, y que las
        marcas que aparecen no son nuestras. Todo lo que se enlaza existe ya
        (aviso legal, privacidad.html, el compromiso que se firma). -->
-  <footer class="login-foot" id="loginFoot">
-    <div class="login-foot-grid">
-      <div class="login-foot-brand">
-        <div class="login-foot-logo">Meseo<sup>®</sup></div>
-        <p id="footTag">Formación de equipos de sala: carta, alérgenos, vinos, exámenes y juegos de repaso.</p>
-        <a class="login-foot-mail" href="mailto:contacto@meseo.es">contacto@meseo.es</a>
-      </div>
-      <div class="login-foot-col">
-        <h4 id="footH1">Plataforma</h4>
-        <ul>
-          <li id="footP1">Carta y alérgenos</li>
-          <li id="footP2">Vinos y maridaje</li>
-          <li id="footP3">Exámenes y repaso</li>
-          <li id="footP4">Juegos de sala</li>
-          <li id="footP5">Panel del responsable</li>
-        </ul>
-      </div>
-      <div class="login-foot-col">
-        <h4 id="footH2">Meseo</h4>
-        <ul>
-          <li><a href="mailto:contacto@meseo.es" id="footM1">Contacto</a></li>
-          <li><button type="button" onclick="installApp()" id="footM2">Instalar la app</button></li>
-          <li><button type="button" onclick="shareApp()" id="footM3">Compartir</button></li>
-          <li><button type="button" onclick="forceAppUpdate()" id="footM4">Actualizar</button></li>
-        </ul>
-      </div>
-      <div class="login-foot-col">
-        <h4 id="footH3">Legal</h4>
-        <ul>
-          <li><button type="button" onclick="showLegalModal()" id="footL1">Aviso legal</button></li>
-          <li><a href="privacidad.html" target="_blank" rel="noopener" id="footL2">Política de privacidad</a></li>
-          <li><button type="button" onclick="ndaVerTexto()" id="footL3">Compromiso de uso</button></li>
-          <li><a href="mailto:contacto@meseo.es?subject=Derechos%20RGPD" id="footL4">Derechos RGPD</a></li>
-        </ul>
-      </div>
-    </div>
-    <div class="login-foot-notes">
-      <p><strong id="footN1t">Herramienta de formación:</strong> <span id="footN1">Meseo entrena al equipo, no sustituye a la formación oficial en alérgenos ni a la información que el restaurante debe dar a sus clientes. El contenido puede tener errores o estar desactualizado: la fuente oficial es la del restaurante y la última palabra la tiene cocina.</span></p>
-      <p><strong id="footN2t">Marcas de terceros:</strong> <span id="footN2">Los nombres, logotipos y denominaciones de restaurantes, chefs, bodegas, proveedores o productos que aparecen pertenecen a sus titulares y se mencionan solo con fines formativos, para identificar el lugar de trabajo y lo que se sirve. Meseo no está afiliada, patrocinada ni respaldada por ninguno de ellos.</span></p>
-    </div>
-    <div class="login-foot-copy">
-      <span id="footCopy">© 2026 Duvan Stiven Ramírez Duque · Meseo® · Todos los derechos reservados</span>
-      <span>contacto@meseo.es</span>
-    </div>
-  </footer>
+  <!-- Lo rellena _pieRender('loginFoot', { plataforma:false }) desde renderLogin,
+       en el idioma activo. El mismo generador pinta el pie de Hoy, ése con
+       la columna Plataforma: una sola fuente para los dos. -->
+  <footer class="login-foot sin-plataforma" id="loginFoot"></footer>
 </div>
 
 <!-- ═══════ APP ═══════ -->
@@ -2463,7 +2422,7 @@ const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><p
 const SRC = 'src';
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='7.469';  // sincronizada con sw.js VERSION (guard de CI)
+const APP_VERSION='7.470';  // sincronizada con sw.js VERSION (guard de CI)
 const APP_BUILD='Jul 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;
@@ -11683,6 +11642,103 @@ function showLoginWelcomeToast(msg){
   setTimeout(() => t.classList.remove('show'), 3200);
 }
 
+// ═══ PIE DE PÁGINA COMPARTIDO ═══════════════════════════════════════════════
+// Un solo generador para dos sitios: el login (sin Plataforma, porque ahí no
+// hay a dónde ir) y Hoy (con Plataforma, y cada entrada navega). Los textos
+// viven en una tabla clave → [es, en]; un test exige que cada clave que usa
+// el generador exista en la tabla y que ninguna se quede sin traducir.
+const _PIE_TXT = {
+  tag:  ['Formación de equipos de sala: carta, alérgenos, vinos, exámenes y juegos de repaso.',
+         'Training for restaurant service teams: menu, allergens, wines, exams and review games.'],
+  h1:   ['Plataforma', 'Platform'],
+  p1:   ['Carta y alérgenos', 'Menu and allergens'],
+  p2:   ['Vinos y maridaje', 'Wines and pairing'],
+  p3:   ['Exámenes y repaso', 'Exams and review'],
+  p4:   ['Juegos de sala', 'Service games'],
+  p5:   ['Panel del responsable', 'Manager panel'],
+  h2:   ['Meseo', 'Meseo'],
+  m1:   ['Contacto', 'Contact'],
+  m2:   ['Instalar la app', 'Install the app'],
+  m3:   ['Compartir', 'Share'],
+  m4:   ['Actualizar', 'Update'],
+  h3:   ['Legal', 'Legal'],
+  l1:   ['Aviso legal', 'Legal notice'],
+  l2:   ['Política de privacidad', 'Privacy policy'],
+  l3:   ['Compromiso de uso', 'Terms of use'],
+  l4:   ['Derechos RGPD', 'GDPR rights'],
+  n1t:  ['Herramienta de formación:', 'Training tool:'],
+  n1:   ['Meseo entrena al equipo, no sustituye a la formación oficial en alérgenos ni a la información que el restaurante debe dar a sus clientes. El contenido puede tener errores o estar desactualizado: la fuente oficial es la del restaurante y la última palabra la tiene cocina.',
+         'Meseo trains the team; it does not replace official allergen training or the information the restaurant must give its customers. Content may contain errors or be out of date: the official source is the restaurant’s, and the kitchen has the last word.'],
+  n2t:  ['Marcas de terceros:', 'Third-party brands:'],
+  n2:   ['Los nombres, logotipos y denominaciones de restaurantes, chefs, bodegas, proveedores o productos que aparecen pertenecen a sus titulares y se mencionan solo con fines formativos, para identificar el lugar de trabajo y lo que se sirve. Meseo no está afiliada, patrocinada ni respaldada por ninguno de ellos.',
+         'The names, logos and designations of restaurants, chefs, wineries, suppliers or products that appear belong to their owners and are mentioned solely for training purposes, to identify the workplace and what is served. Meseo is not affiliated with, sponsored by or endorsed by any of them.'],
+  copy: ['© 2026 Duvan Stiven Ramírez Duque · Meseo® · Todos los derechos reservados',
+         '© 2026 Duvan Stiven Ramírez Duque · Meseo® · All rights reserved'],
+};
+function _pieT(k){
+  const v = _PIE_TXT[k] || ['', ''];
+  return escapeHTML(LANG==='en' ? v[1] : v[0]);
+}
+function _pieHTML(opts){
+  const o = opts || {};
+  const enApp = !!o.enApp;
+  const conPlataforma = o.plataforma !== false;
+  // En Hoy, Plataforma navega. El panel sólo se ofrece a quien ya puede verlo:
+  // mismo gating que la barra y que el menú, sin tocar ninguno de los dos.
+  let puedePanel = false;
+  try{ puedePanel = (typeof _esMando==='function' && _esMando()) || (typeof _esAdmin==='function' && _esAdmin()); }catch(_){}
+  const plataforma = !conPlataforma ? '' : `
+      <div class="login-foot-col">
+        <h4>${_pieT('h1')}</h4>
+        <ul>
+          <li><button type="button" onclick="showTab('aprender')">${_pieT('p1')}</button></li>
+          <li><button type="button" onclick="showTab('vinos')">${_pieT('p2')}</button></li>
+          <li><button type="button" onclick="showTab('exam')">${_pieT('p3')}</button></li>
+          <li><button type="button" onclick="showTab('txoko')">${_pieT('p4')}</button></li>
+          ${puedePanel ? `<li><button type="button" onclick="showTab('supervisor')">${_pieT('p5')}</button></li>` : ''}
+        </ul>
+      </div>`;
+  return `
+    <div class="login-foot-grid">
+      <div class="login-foot-brand">
+        <div class="login-foot-logo">Meseo<sup>®</sup></div>
+        <p>${_pieT('tag')}</p>
+        <a class="login-foot-mail" href="mailto:contacto@meseo.es">contacto@meseo.es</a>
+      </div>${plataforma}
+      <div class="login-foot-col">
+        <h4>${_pieT('h2')}</h4>
+        <ul>
+          <li><a href="mailto:contacto@meseo.es">${_pieT('m1')}</a></li>
+          <li><button type="button" onclick="installApp()">${_pieT('m2')}</button></li>
+          <li><button type="button" onclick="shareApp()">${_pieT('m3')}</button></li>
+          <li><button type="button" onclick="forceAppUpdate()">${_pieT('m4')}</button></li>
+        </ul>
+      </div>
+      <div class="login-foot-col">
+        <h4>${_pieT('h3')}</h4>
+        <ul>
+          <li><button type="button" onclick="showLegalModal()">${_pieT('l1')}</button></li>
+          <li><a href="privacidad.html" target="_blank" rel="noopener">${_pieT('l2')}</a></li>
+          <li><button type="button" onclick="ndaVerTexto()">${_pieT('l3')}</button></li>
+          <li><a href="mailto:contacto@meseo.es?subject=Derechos%20RGPD">${_pieT('l4')}</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="login-foot-notes">
+      <p><strong>${_pieT('n1t')}</strong> ${_pieT('n1')}</p>
+      <p><strong>${_pieT('n2t')}</strong> ${_pieT('n2')}</p>
+    </div>
+    <div class="login-foot-copy">
+      <span>${_pieT('copy')}</span>
+      <span>contacto@meseo.es</span>
+    </div>`;
+}
+// Para el pie que vive en el HTML (login): se repinta en cada cambio de idioma.
+function _pieRender(id, opts){
+  const el = document.getElementById(id);
+  if(el) el.innerHTML = _pieHTML(opts);
+}
+
 function renderLogin(){
   // SUSPENSIÓN: fuera la pestaña de registro y el enlace de «Crear cuenta
   // nueva». No se esconde sólo por estética — mientras esté visible, alguien
@@ -11755,40 +11811,8 @@ function renderLogin(){
   if(passInput) passInput.placeholder = LANG==='en' ? 'PIN or password' : 'PIN o contraseña';
   const disclaimerEl = document.getElementById('disclaimerText');
   if(disclaimerEl) disclaimerEl.textContent = LANG==='en' ? 'Application independently developed by Duvan Stiven Ramírez Duque. All rights reserved \u00A9 2026.' : 'Aplicaci\u00F3n desarrollada de forma independiente por Duvan Stiven Ram\u00EDrez Duque. Todos los derechos reservados \u00A9 2026.';
-  // Pie del login. Una tabla [id, es, en] y un bucle: añadir una línea es
-  // añadir una fila, y no puede quedarse un texto sin traducir sin que se vea.
-  const FOOT = [
-    ['footTag',  'Formación de equipos de sala: carta, alérgenos, vinos, exámenes y juegos de repaso.',
-                 'Training for restaurant service teams: menu, allergens, wines, exams and review games.'],
-    ['footH1',   'Plataforma', 'Platform'],
-    ['footP1',   'Carta y alérgenos', 'Menu and allergens'],
-    ['footP2',   'Vinos y maridaje', 'Wines and pairing'],
-    ['footP3',   'Exámenes y repaso', 'Exams and review'],
-    ['footP4',   'Juegos de sala', 'Service games'],
-    ['footP5',   'Panel del responsable', 'Manager panel'],
-    ['footH2',   'Meseo', 'Meseo'],
-    ['footM1',   'Contacto', 'Contact'],
-    ['footM2',   'Instalar la app', 'Install the app'],
-    ['footM3',   'Compartir', 'Share'],
-    ['footM4',   'Actualizar', 'Update'],
-    ['footH3',   'Legal', 'Legal'],
-    ['footL1',   'Aviso legal', 'Legal notice'],
-    ['footL2',   'Política de privacidad', 'Privacy policy'],
-    ['footL3',   'Compromiso de uso', 'Terms of use'],
-    ['footL4',   'Derechos RGPD', 'GDPR rights'],
-    ['footN1t',  'Herramienta de formación:', 'Training tool:'],
-    ['footN1',   'Meseo entrena al equipo, no sustituye a la formación oficial en alérgenos ni a la información que el restaurante debe dar a sus clientes. El contenido puede tener errores o estar desactualizado: la fuente oficial es la del restaurante y la última palabra la tiene cocina.',
-                 'Meseo trains the team; it does not replace official allergen training or the information the restaurant must give its customers. Content may contain errors or be out of date: the official source is the restaurant’s, and the kitchen has the last word.'],
-    ['footN2t',  'Marcas de terceros:', 'Third-party brands:'],
-    ['footN2',   'Los nombres, logotipos y denominaciones de restaurantes, chefs, bodegas, proveedores o productos que aparecen pertenecen a sus titulares y se mencionan solo con fines formativos, para identificar el lugar de trabajo y lo que se sirve. Meseo no está afiliada, patrocinada ni respaldada por ninguno de ellos.',
-                 'The names, logos and designations of restaurants, chefs, wineries, suppliers or products that appear belong to their owners and are mentioned solely for training purposes, to identify the workplace and what is served. Meseo is not affiliated with, sponsored by or endorsed by any of them.'],
-    ['footCopy', '© 2026 Duvan Stiven Ramírez Duque · Meseo® · Todos los derechos reservados',
-                 '© 2026 Duvan Stiven Ramírez Duque · Meseo® · All rights reserved'],
-  ];
-  for (const [id, es, en] of FOOT) {
-    const el = document.getElementById(id);
-    if(el) el.textContent = LANG==='en' ? en : es;
-  }
+  // Pie del login: sin la columna Plataforma (en el login no hay a dónde ir).
+  _pieRender('loginFoot', { plataforma:false });
   const subtitleEl = document.getElementById('loginSubtitle');
   // El héroe del login es SIEMPRE Meseo (rebranding jul 2026, segunda fuente
   // del reporte «meseo no pertenece a Martín Berasategui»): este sincronizador
@@ -22435,6 +22459,10 @@ function renderDashboard(){
       <span class="dash-row-go">›</span>
     </button>` })()}
 
+    <!-- Pie de página, el mismo que el del login pero CON la columna
+         Plataforma, que aquí sí navega. Va dentro de .app-content: la
+         reserva inferior de UX-02 ya le deja sitio sobre la barra. -->
+    <footer class="login-foot en-app">${_pieHTML({ plataforma:true, enApp:true })}</footer>
 
   `;
   animateCounters();
