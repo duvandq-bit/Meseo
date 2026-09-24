@@ -15298,15 +15298,27 @@ test('F7 · I7.1 · cada mutación del catálogo sigue teniendo su ancla viva', 
   // `MUTANDO` lo pone `tests/mutaciones.mjs` al lanzar la suite hija.
   if (process.env.MUTANDO) return;
   const cat = read('tests/mutaciones.mjs');
-  const anclas = [...cat.matchAll(/\{ id:'([^']+)',[\s\S]*?archivo:'([^']+)',[\s\S]*?\n\s*de:("(?:[^"\\]|\\.)*"),/g)];
-  assert(anclas.length >= 45, `esperaba el catálogo entero, he leído ${anclas.length} mutaciones`);
+  // El catálogo se EVALÚA, no se lee con una expresión regular. La versión
+  // anterior sólo reconocía anclas escritas con comillas dobles (`de:"…"`),
+  // así que todas las añadidas con comillas simples —veinte, desde SND-1—
+  // quedaron sin vigilar en silencio; y como el patrón saltaba de una entrada
+  // a la siguiente, atribuyó el ancla de PIE-1 a SND-1. Evaluar el array es lo
+  // que hace el runner (`--lista`), y por eso él sí las contaba todas.
+  const i0 = cat.indexOf('const MUTACIONES = [');
+  const i1 = cat.indexOf('\n];', i0);
+  assert(i0 > 0 && i1 > i0, 'no encuentro el array MUTACIONES en el catálogo');
+  const MUT = new Function('return ' + cat.slice(cat.indexOf('[', i0), i1 + 2))(); // eslint-disable-line no-new-func
+  // Y que evaluar no se haya dejado ninguna por el camino: tantas como `id:` hay escritas.
+  const declaradas = (cat.match(/\{ id:'/g) || []).length;
+  assert(MUT.length === declaradas, `el catálogo declara ${declaradas} mutaciones y se han leído ${MUT.length}`);
+  assert(MUT.length >= 45, `esperaba el catálogo entero, he leído ${MUT.length} mutaciones`);
   const ficheros = new Map();
-  for (const [, id, archivo, deJson] of anclas) {
-    if (!ficheros.has(archivo)) ficheros.set(archivo, read(archivo));
-    const de = JSON.parse(deJson);
-    const veces = ficheros.get(archivo).split(de).length - 1;
+  for (const m of MUT) {
+    assert(m.id && m.archivo && typeof m.de === 'string' && m.de.length > 0, `mutación incompleta: ${JSON.stringify(m).slice(0, 80)}`);
+    if (!ficheros.has(m.archivo)) ficheros.set(m.archivo, read(m.archivo));
+    const veces = ficheros.get(m.archivo).split(m.de).length - 1;
     assert(veces === 1,
-      `la mutación ${id} ya no prueba nada: su texto aparece ${veces} veces en ${archivo} (debe ser 1)`);
+      `la mutación ${m.id} ya no prueba nada: su texto aparece ${veces} veces en ${m.archivo} (debe ser 1)`);
   }
   // Y las fases de B2 tienen que seguir cubiertas: si alguien borra el bloque
   // de una fase entera, el recuento de arriba no se entera.
