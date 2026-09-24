@@ -9427,6 +9427,155 @@ test('Acceso: el acuerdo de confidencialidad se firma una vez y con su versión'
   assert(/\.nda-boton\{[^}]*min-height: 48px/.test(css), 'el botón se toca con el dedo');
 });
 
+// ─── COMPROMISO DE USO · encendido, ampliado y visible antes de entrar ────────
+// El mecanismo de firma existía y estaba apagado. Ahora se pide a todo el
+// mundo, una vez, y el texto cubre lo que el propietario quiere poder
+// acreditar: alérgenos, marcas ajenas, privacidad de terceros, uso correcto,
+// responsabilidad y datos. Aquí no se fija el texto palabra por palabra: se
+// fijan las RELACIONES (paridad ES/EN, temas presentes, mismo contacto en
+// todas partes, el pie enlaza a cosas que existen).
+const _cu = (() => {
+  const nda = JSON.parse(read('data/nda.json'));
+  const priv = read('privacidad.html');
+  const texto = (lang) => (nda[lang].clausulas || []).map(c => c.t + ' ' + c.p).join('\n');
+  return { nda, priv, texto };
+})();
+
+test('compromiso · está encendido y con versión nueva: todo el mundo firma una vez', () => {
+  const { nda } = _cu;
+  assert(nda.activo === true, 'el compromiso tiene que estar ENCENDIDO: con false no se le pide la firma a nadie');
+  assert(nda.version !== '2026-09-borrador-5-es',
+    'la versión tiene que cambiar respecto al borrador apagado, o quien ya tuviera nda_version no volvería a firmar');
+  assert(/^\d{4}-\d{2}-\d{2}-v\d+$/.test(nda.version),
+    `la versión lleva fecha y número (AAAA-MM-DD-vN), no «${nda.version}»`);
+  // Y el interruptor de emergencia sigue existiendo en el código.
+  assert(/if\(nda\.activo === false\) return false;/.test(html),
+    'el interruptor «activo» tiene que seguir funcionando por si hay que apagarlo');
+});
+
+test('compromiso · español e inglés van a la par', () => {
+  const { nda } = _cu;
+  const es = nda.es.clausulas, en = nda.en.clausulas;
+  assert(es.length === en.length, `ES tiene ${es.length} cláusulas y EN ${en.length}: una traducción se ha quedado atrás`);
+  assert(es.length >= 10, `el compromiso ampliado tiene al menos 10 cláusulas, hay ${es.length}`);
+  es.forEach((c, i) => {
+    assert(c.t && c.p && en[i].t && en[i].p, `cláusula ${i + 1} incompleta en algún idioma`);
+    assert(c.t !== en[i].t, `cláusula ${i + 1}: el título en inglés es el mismo que en español (sin traducir)`);
+  });
+  for (const k of ['lectura_titulo', 'lectura_intro', 'lectura_cerrar', 'firma_boton', 'firma_ayuda'])
+    assert(nda.es[k] && nda.en[k], `falta «${k}» en algún idioma`);
+});
+
+test('compromiso · cubre lo que hay que poder acreditar', () => {
+  const { texto } = _cu;
+  const es = texto('es');
+  const temas = [
+    [/al[ée]rgen/i,                          'alérgenos: la fuente oficial es la del restaurante'],
+    [/cocina/i,                               'la última palabra la tiene cocina'],
+    [/no sustituye/i,                         'no sustituye a la formación oficial'],
+    [/marca/i,                                'marcas'],
+    [/afiliad/i,                              'no afiliación con las marcas que aparecen'],
+    [/titulares/i,                            'los nombres pertenecen a sus titulares'],
+    [/fotograf|fotos/i,                       'fotos de compañeros y huéspedes'],
+    [/hu[ée]sped/i,                           'datos de huéspedes'],
+    [/hacerte pasar|hagas pasar/i,            'suplantación'],
+    [/tal cual/i,                             'sin garantías'],
+    [/dolo|negligencia grave/i,               'límite de responsabilidad que la ley permite'],
+    [/no competencia/i,                       'no es pacto de no competencia'],
+    [/direcci[oó]n IP/i,                      'se avisa de que se guarda la IP'],
+    [/cinco a[ñn]os/i,                        'plazo de conservación de la firma'],
+    [/Agencia Espa[ñn]ola de Protecci[oó]n/i, 'AEPD'],
+    [/firma electr[oó]nica/i,                 'valor de firma electrónica'],
+    [/ley espa[ñn]ola/i,                      'ley aplicable'],
+    [/privacidad\.html/i,                     'enlace a la política completa'],
+  ];
+  for (const [re, que] of temas)
+    assert(re.test(es), `al compromiso le falta: ${que}`);
+  // Ninguna cláusula es un muro: se lee en un móvil.
+  for (const c of _cu.nda.es.clausulas)
+    assert(c.p.length <= 700, `la cláusula «${c.t}» tiene ${c.p.length} caracteres: nadie lee eso en un pase`);
+});
+
+test('compromiso · el correo de contacto es contacto@meseo.es en todas partes', () => {
+  const { nda, priv, texto } = _cu;
+  const MAIL = 'contacto@meseo.es';
+  assert(nda.contacto === MAIL, 'data/nda.json declara el contacto');
+  assert((texto('es').match(/contacto@meseo\.es/g) || []).length >= 2, 'el compromiso ES cita el contacto en más de una cláusula');
+  assert((texto('en').match(/contacto@meseo\.es/g) || []).length >= 2, 'el compromiso EN también');
+  assert(priv.includes(MAIL), 'privacidad.html usa el correo de empresa');
+  assert(!priv.includes('duvandq@gmail.com'), 'privacidad.html no puede seguir con el correo personal');
+  assert(!/duvandq@gmail\.com/.test(JSON.stringify(nda)), 'el compromiso no puede llevar el correo personal');
+  // El pie y el aviso legal, en los dos idiomas.
+  const pie = html.slice(html.indexOf('id="loginFoot"'), html.indexOf('</footer>', html.indexOf('id="loginFoot"')));
+  assert((pie.match(/mailto:contacto@meseo\.es/g) || []).length >= 2, 'el pie enlaza el correo');
+  const legal = html.slice(html.indexOf('function showLegalModal('), html.indexOf('\n}', html.indexOf('function showLegalModal(')));
+  assert((legal.match(/contacto@meseo\.es/g) || []).length >= 4, 'el aviso legal cita el correo en ES y en EN');
+  assert(/privacidad\.html/.test(legal), 'el aviso legal enlaza la política completa');
+});
+
+test('compromiso · el pie del login existe, está en el login y enlaza cosas que existen', () => {
+  const iFoot = html.indexOf('id="loginFoot"');
+  assert(iFoot > 0, 'falta el pie del login');
+  const iLogin = html.indexOf('id="screenLogin"'), iApp = html.indexOf('id="screenApp"');
+  assert(iLogin < iFoot && iFoot < iApp, 'el pie tiene que vivir dentro de #screenLogin, no en la app');
+  const pie = html.slice(iFoot, html.indexOf('</footer>', iFoot));
+  // Cada enlace apunta a algo real.
+  for (const fn of ['showLegalModal', 'ndaVerTexto', 'installApp', 'shareApp', 'forceAppUpdate'])
+    assert(new RegExp(`onclick="${fn}\\(\\)"`).test(pie) && new RegExp(`function ${fn}\\(`).test(html),
+      `el pie llama a ${fn}() y esa función tiene que existir`);
+  assert(/href="privacidad\.html"/.test(pie), 'el pie enlaza privacidad.html');
+  assert(existsSync(join(ROOT, 'privacidad.html')), 'y privacidad.html tiene que existir en el repositorio');
+  // Los dos avisos que importan van a la vista, no detrás de un clic.
+  assert(/id="footN1"/.test(pie) && /id="footN2"/.test(pie), 'los avisos de formación y de marcas van en el pie');
+  // Y la tabla de traducciones cubre TODOS los ids del pie: ninguno se queda
+  // en español al cambiar a inglés.
+  const iT = html.indexOf('const FOOT = [');
+  const tabla = html.slice(iT, html.indexOf('];', iT));
+  const idsTabla = [...tabla.matchAll(/\['(foot[A-Za-z0-9]+)'/g)].map(m => m[1]);
+  const idsPie = [...pie.matchAll(/id="(foot[A-Za-z0-9]+)"/g)].map(m => m[1]);
+  for (const id of idsPie) assert(idsTabla.includes(id), `el id ${id} del pie no está en la tabla de traducciones`);
+  for (const id of idsTabla) assert(idsPie.includes(id), `la tabla traduce ${id}, que no existe en el pie`);
+  const css = read('styles.css');
+  assert(/\.login-foot\{/.test(css) && /\.login-foot-grid\{/.test(css), 'falta el CSS del pie');
+});
+
+test('compromiso · se puede leer sin cuenta y es el mismo texto que se firma', () => {
+  assert(/function ndaVerTexto\(\)/.test(html), 'falta ndaVerTexto()');
+  assert(/function ndaMostrar\(name, opts\)/.test(html), 'ndaMostrar tiene que aceptar opciones');
+  const fn = html.slice(html.indexOf('function ndaMostrar(name, opts)'), html.indexOf('function ndaVerTexto('));
+  assert(/const lectura = !!\(opts && opts\.lectura\)/.test(fn), 'modo lectura');
+  // En lectura NO hay caja de firma ni botón de firmar: nadie firma sin cuenta.
+  assert(/lectura\s*\?\s*`<div class="nda-firma">\s*<button[^`]*nda-cerrar/.test(fn), 'en lectura solo hay un botón de cerrar');
+  assert(/if\(lectura\)\{[\s\S]*?return;\s*\}/.test(fn), 'en lectura no se ata ndaFirmar');
+  // Y ambos modos pintan las cláusulas desde la misma fuente.
+  assert((fn.match(/t\.clausulas/g) || []).length === 1, 'las cláusulas se pintan una sola vez, para los dos modos');
+  assert(/ndaCargar\(\)\.then\(nda => \{ if\(nda\) ndaMostrar\(null, \{ lectura:true \}\)/.test(html),
+    'leer carga el mismo fichero que se firma');
+  assert(/\.nda-cerrar\{/.test(read('styles.css')), 'falta el estilo del botón de cerrar');
+});
+
+test('compromiso · quien crea cuenta sabe ANTES que va a firmar', () => {
+  const st = html.slice(html.indexOf('id="loginSignupIntroSub"'), html.indexOf('</div>', html.indexOf('id="loginSignupIntroSub"')));
+  assert(/firmar/i.test(st) && /nombre y apellidos/i.test(st), 'el texto estático del alta avisa de la firma');
+  const rl = html.slice(html.indexOf('function renderLogin('), html.indexOf('const FOOT = ['));
+  assert(/will read and sign the terms of use with your full name/.test(rl), 'y el aviso en inglés');
+  assert(/firmarás el compromiso de uso con tu nombre y apellidos/.test(rl), 'y el aviso en español al cambiar de idioma');
+});
+
+test('compromiso · privacidad.html cuenta lo que de verdad se guarda', () => {
+  const { priv } = _cu;
+  for (const [re, que] of [
+    [/Firma del compromiso de uso/,   'la firma como dato tratado'],
+    [/direcci[oó]n IP/,               'la IP de la firma'],
+    [/Mensajes del chat/,             'los mensajes del chat (existen en la tabla chat_messages)'],
+    [/Fotos de platos/,               'las fotos enviadas (existen en dish_photo_submissions)'],
+    [/cinco a[ñn]os/,                 'el plazo de conservación de la firma'],
+    [/art\. 1964/,                    'la base del plazo'],
+    [/6 bis\. Marcas/,                'la sección de marcas de terceros'],
+    [/24 de septiembre de 2026/,      'la fecha de actualización'],
+  ]) assert(re.test(priv), `a privacidad.html le falta: ${que}`);
+});
+
 test('Acceso: el nombre visible se cambia, el usuario no', () => {
   // Con dos restaurantes habrá dos Marías. El usuario es la clave primaria y de
   // ella cuelgan el chat, el marcador, los duelos y los avisos, así que no se

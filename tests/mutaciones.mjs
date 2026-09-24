@@ -519,6 +519,28 @@ const MUTACIONES = [
     de:'body:has(.ev-aviso-chip.visible) #screenApp .app-content{\n  padding-bottom:calc(161px + env(safe-area-inset-bottom,0px));\n}',
     a:'/* regla retirada por la mutación RSV-1 */',
     cae:'la reserva condicional alcanza al aviso de B2' },
+
+  // ═══ COMPROMISO DE USO · la firma que protege ═══
+  { id:'NDA-1', fase:'NDA', fila:null,
+    rompe:'el compromiso se apaga: nadie firma y no hay prueba de aceptación de nada',
+    archivo:'data/nda.json',
+    de:'  "activo": true,',
+    a:'  "activo": false,',
+    cae:'está encendido y con versión nueva' },
+
+  { id:'NDA-2', fase:'NDA', fila:null,
+    rompe:'la traducción inglesa pierde una cláusula y quien firma en inglés acepta menos que quien firma en español',
+    archivo:'data/nda.json',
+    de:'      {\n        "t": "Access and changes",\n        "p": "Access may be suspended if you breach this or when you stop working at the restaurant. If this text changes, you will be asked to sign the new version; the version you sign is shown below and you can read it from the footer of the sign-in screen."\n      },\n',
+    a:'',
+    cae:'español e inglés van a la par' },
+
+  { id:'NDA-3', fase:'NDA', fila:null,
+    rompe:'la política de privacidad vuelve al correo personal: los derechos RGPD se ejercen contra un buzón que ya no es el de la empresa',
+    archivo:'privacidad.html',
+    de:'<strong>Contacto:</strong> <a href="mailto:contacto@meseo.es">contacto@meseo.es</a>',
+    a:'<strong>Contacto:</strong> <a href="mailto:duvandq@gmail.com">duvandq@gmail.com</a>',
+    cae:'contacto@meseo.es en todas partes' },
 ];
 
 // ─── EJECUCIÓN ─────────────────────────────────────────────────────────────

@@ -1,85 +1,140 @@
 {
-  "_readme": "Compromiso que el EQUIPO firma una sola vez al entrar. DESACTIVADO por ahora ('activo': false): el texto y el mecanismo estan montados y probados, pero no se le pide la firma a nadie hasta que el propietario cierre el asunto legal. Para encenderlo, pon 'activo': true. Deliberadamente corto y amable: el camarero no es quien puede replicar la aplicacion, y una pantalla de catorce clausulas juridicas asusta a quien no hace falta. La proteccion comercial y de propiedad intelectual frente al RESTAURANTE va en documento aparte: docs/acuerdo-restaurante-borrador.md, que NO se ensena en la app. BORRADOR: revisar con abogado. Marco usado — Ley 1/2019 de Secretos Empresariales (el metodo se protege como secreto y exige medidas razonables: el codigo de acceso y esta firma lo son); RDLeg 1/1996 TRLPI; RDLeg 2/2015 Estatuto de los Trabajadores art. 21.2 (por eso se declara que NO es pacto de no competencia, que exigiria compensacion economica); RGPD 2016/679 y LO 3/2018; eIDAS 910/2014 art. 25.1. PENDIENTE: correo de contacto para ejercer derechos. Si cambias el texto SUBE LA VERSION: la app compara la firmada con esta y vuelve a pedirla si no coinciden.",
-  "activo": false,
-  "version": "2026-09-borrador-5-es",
+  "_readme": "Compromiso de uso que CADA persona firma una sola vez al entrar, escribiendo su nombre y apellidos. ENCENDIDO ('activo': true) desde la version 2026-09-24-v1: hasta entonces estuvo montado y probado pero apagado. Si cambias el texto SUBE LA VERSION: la app compara la firmada con esta y vuelve a pedirla a todo el mundo si no coinciden — asi es como se consigue que las cuentas que ya existian firmen tambien, una sola vez. Que se guarda de cada firma (lo hace la RPC nda_sign, en public.nda_signatures, y no se puede editar desde la app): usuario, restaurante, nombre y apellidos tecleados, version del texto, fecha y hora, IP y navegador. Deliberadamente en lenguaje llano: el camarero no es un abogado y una pantalla que asusta no se lee. La proteccion comercial y de propiedad intelectual frente al RESTAURANTE va en documento aparte: docs/acuerdo-restaurante-borrador.md, que NO se ensena en la app — una firma del empleado NO autoriza a Meseo a usar la marca del restaurante; eso lo firma el restaurante. BORRADOR: revisar con abogado antes de darlo por definitivo. Marco usado — Ley 1/2019 de Secretos Empresariales; RDLeg 1/1996 TRLPI; Ley 17/2001 de Marcas (uso meramente identificativo, art. 37); RDLeg 2/2015 Estatuto de los Trabajadores art. 21.2 (por eso se declara que NO es pacto de no competencia); RGPD 2016/679 y LO 3/2018; LSSI 34/2002; eIDAS 910/2014 art. 25.1; Codigo Civil art. 1964 (conservacion de la prueba de firma). Contacto para ejercer derechos: contacto@meseo.es.",
+  "activo": true,
+  "version": "2026-09-24-v1",
+  "contacto": "contacto@meseo.es",
   "es": {
     "titulo": "Antes de entrar",
-    "intro": "Es corto, y se hace una sola vez.",
+    "intro": "Léelo con calma: se firma una sola vez y te dice qué puedes hacer aquí, qué no, y qué hacemos con tus datos.",
     "clausulas": [
       {
         "t": "Lo que ves aquí es del restaurante",
-        "p": "Recetas, guías de emplatado, fichas de alérgenos, proveedores, estándares y los datos de tus compañeros. Se te confía para que hagas tu trabajo. No lo compartas fuera, no lo publiques en redes ni en grupos de mensajería, y no hagas capturas para usarlas fuera del trabajo."
+        "p": "Recetas, guías de emplatado, fichas de alérgenos, proveedores, estándares, procedimientos y los datos de tus compañeros. Se te confía para que hagas tu trabajo. No lo compartas fuera, no lo publiques en redes ni en grupos de mensajería, y no hagas capturas para usarlas fuera del trabajo."
       },
       {
         "t": "Tu cuenta es tuya",
-        "p": "No prestes tu usuario ni tu contraseña, y no des el código del restaurante a nadie que no trabaje aquí. Lo que se haga con tu cuenta se te atribuye a ti."
+        "p": "No prestes tu usuario ni tu contraseña, y no des el código del restaurante a nadie que no trabaje aquí. Lo que se haga con tu cuenta se te atribuye a ti. Si crees que alguien la está usando, avisa a tu responsable y cámbiala."
       },
       {
-        "t": "Pregunta siempre antes de responder a un huésped",
-        "p": "Aquí entrenas, pero la carta cambia y la última palabra la tiene cocina. Confirma con tu responsable lo que vayas a decirle a un huésped, sobre todo si hay un alérgeno de por medio. El contenido lo mantiene el restaurante; la aplicación sólo te lo enseña."
+        "t": "La última palabra la tiene cocina",
+        "p": "Aquí entrenas, pero la carta cambia y el contenido puede tener errores o estar desactualizado. La fuente oficial de alérgenos e ingredientes es la que mantiene el restaurante, no esta aplicación. Antes de decirle a un huésped que un plato es apto para su alergia o intolerancia, confírmalo con tu responsable o con cocina. Meseo es una herramienta de formación: no sustituye a la formación oficial en alérgenos ni a la información que el restaurante debe darle al cliente, y no responde de lo que se le diga a un huésped."
       },
       {
         "t": "La aplicación es de quien la hizo",
-        "p": "Meseo® la desarrolló Duvan Stiven Ramírez Duque por su cuenta, y sigue siendo suya: su programación, sus textos y su forma de enseñar. Úsala para formarte todo lo que quieras. Lo único que no cabe es copiarla, o llevarse sus ejercicios y su método para montar otra parecida."
+        "p": "Meseo® la desarrolló Duvan Stiven Ramírez Duque por su cuenta, y sigue siendo suya: su programación, sus textos, sus ejercicios y su forma de enseñar. Úsala para formarte todo lo que quieras. Lo único que no cabe es copiarla, descompilarla, extraer su contenido de forma masiva o llevarse sus ejercicios y su método para montar otra parecida."
+      },
+      {
+        "t": "Marcas y nombres de otros",
+        "p": "Los nombres, logotipos y denominaciones de restaurantes, chefs, bodegas, proveedores o productos que aparecen aquí pertenecen a sus titulares. Se mencionan solo para identificar dónde trabajas y qué se sirve, con fines formativos. Meseo no está afiliada, patrocinada ni respaldada por ninguno de ellos, y no dice lo contrario. Tú tampoco: no uses la marca Meseo® ni las del restaurante fuera de la aplicación, ni des a entender que te representan o te avalan."
+      },
+      {
+        "t": "La privacidad de los demás",
+        "p": "No grabes, fotografíes ni publiques a compañeros o huéspedes sin su permiso. Las fotos que subas (platos, emplatados) deben ser del trabajo, sin personas. En el chat y en cualquier campo de texto no escribas datos personales de huéspedes: ni nombres, ni mesas concretas, ni su alergia, ni su estado de salud. Lo que subas es responsabilidad tuya, y tienes que tener derecho a subirlo."
+      },
+      {
+        "t": "Uso correcto",
+        "p": "Nada de contenido ofensivo, discriminatorio o ilegal en el chat. No te hagas pasar por otra persona, no intentes entrar en cuentas ajenas ni en el panel del responsable, no uses programas automáticos ni intentes saltarte las protecciones. Si algo falla o ves algo raro, escríbenos a contacto@meseo.es."
+      },
+      {
+        "t": "Sin garantías, y hasta dónde llega la responsabilidad",
+        "p": "La aplicación se ofrece tal cual: puede tener errores, contenido incompleto o quedarse sin servicio. El contenido lo mantiene el restaurante; la aplicación solo te lo enseña. En la medida en que la ley española lo permite, ni Meseo ni su autor responden de daños indirectos ni de decisiones que tomes a partir de este contenido. Nada de esto limita la responsabilidad por dolo o negligencia grave, ni la que la ley no permite excluir."
       },
       {
         "t": "Esto no te ata a ningún sitio",
-        "p": "No es un pacto de no competencia. Puedes irte a otro restaurante y seguir tu carrera donde quieras, cuando quieras. Sólo se te pide que no te lleves lo que aquí es confidencial y que no reproduzcas la aplicación. Ese compromiso sigue después, mientras esa información no sea pública."
+        "p": "No es un pacto de no competencia. Puedes irte a otro restaurante y seguir tu carrera donde quieras, cuando quieras. Solo se te pide que no te lleves lo que aquí es confidencial y que no reproduzcas la aplicación. Ese compromiso sigue después, mientras esa información no sea pública."
+      },
+      {
+        "t": "Acceso y cambios",
+        "p": "El acceso puede suspenderse si incumples esto o cuando dejes de trabajar en el restaurante. Si este texto cambia, se te volverá a pedir la firma con la versión nueva; la versión que firmas aparece abajo y puedes consultarla desde el pie de la pantalla de acceso."
       },
       {
         "t": "Tus datos",
-        "p": "De esta firma se guarda tu usuario, el nombre y apellidos que escribas, la fecha y la versión de este texto. Sirve para acreditar que lo aceptaste y para nada más: no se cede a nadie ni se usa para publicidad. Responsable, Duvan Stiven Ramírez Duque, junto con el restaurante en lo que toca a su información. Puedes pedirle acceso, rectificación, supresión, limitación, oposición o portabilidad, y reclamar ante la Agencia Española de Protección de Datos."
+        "p": "De esta firma se guarda tu usuario, tu restaurante, el nombre y apellidos que escribas, la fecha y hora, la versión de este texto, y la dirección IP y el navegador desde los que firmas. Sirve para acreditar que lo aceptaste y para nada más: no se cede a nadie ni se usa para publicidad. Ese registro se conserva mientras pueda hacer falta como prueba, hasta cinco años después de que se borre tu cuenta."
+      },
+      {
+        "t": "Tus derechos",
+        "p": "Responsable: Duvan Stiven Ramírez Duque, junto con el restaurante en lo que toca a su información. Puedes pedir acceso, rectificación, supresión, limitación, oposición o portabilidad en contacto@meseo.es, y reclamar ante la Agencia Española de Protección de Datos. Todo lo demás que trata la aplicación, y durante cuánto tiempo, está en meseo.es/privacidad.html."
       },
       {
         "t": "La firma",
-        "p": "Escribir tu nombre y apellidos y pulsar el botón vale como firma electrónica; queda con su fecha y con la versión exacta del texto. Puedes pedir una copia cuando quieras. Se rige por la ley española y, si la traducción al inglés dice algo distinto, manda esta."
+        "p": "Escribir tu nombre y apellidos y pulsar el botón vale como firma electrónica; queda con su fecha y con la versión exacta del texto. Puedes pedir una copia cuando quieras a contacto@meseo.es. Se rige por la ley española y, si la traducción al inglés dice algo distinto, manda esta."
       }
     ],
     "firma_titulo": "Firma",
-    "firma_ayuda": "Escribe tu nombre y apellidos completos. Con eso queda firmado.",
+    "firma_ayuda": "Escribe tu nombre y apellidos completos, tal como aparecen en tu documento de identidad. Con eso queda firmado.",
     "firma_placeholder": "Nombre y apellidos",
-    "firma_boton": "Firmar y entrar",
+    "firma_boton": "He leído y firmo",
     "firma_error": "Escribe tu nombre y tus apellidos completos.",
-    "firma_error_servidor": "No se ha podido guardar la firma. Comprueba la conexión e inténtalo otra vez."
+    "firma_error_servidor": "No se ha podido guardar la firma. Comprueba la conexión e inténtalo otra vez.",
+    "lectura_titulo": "Compromiso de uso",
+    "lectura_intro": "Este es el texto que cada persona firma al entrar por primera vez.",
+    "lectura_cerrar": "Cerrar"
   },
   "en": {
     "titulo": "Before you go in",
-    "intro": "It is short, and you only do it once.",
+    "intro": "Take a minute: you sign it once, and it tells you what you can do here, what you cannot, and what we do with your data.",
     "clausulas": [
       {
         "t": "What you see here belongs to the restaurant",
-        "p": "Recipes, plating guides, allergen sheets, suppliers, standards and your colleagues' data. It is entrusted to you so you can do your job. Do not share it outside, do not post it on social media or messaging groups, and do not take screenshots to use away from work."
+        "p": "Recipes, plating guides, allergen sheets, suppliers, standards, procedures and your colleagues' data. It is entrusted to you so you can do your job. Do not share it outside, do not post it on social media or messaging groups, and do not take screenshots to use away from work."
       },
       {
         "t": "Your account is yours",
-        "p": "Do not lend your username or password, and do not give the restaurant code to anyone who does not work here. Whatever is done with your account is attributed to you."
+        "p": "Do not lend your username or password, and do not give the restaurant code to anyone who does not work here. Whatever is done with your account is attributed to you. If you think someone is using it, tell your manager and change it."
       },
       {
-        "t": "Always check before answering a guest",
-        "p": "You train here, but the menu changes and the kitchen has the last word. Confirm with your manager whatever you are about to tell a guest, above all where an allergen is involved. The content is maintained by the restaurant; the app only teaches it to you."
+        "t": "The kitchen has the last word",
+        "p": "You train here, but the menu changes and the content may contain errors or be out of date. The official source for allergens and ingredients is the one the restaurant maintains, not this app. Before telling a guest that a dish is safe for their allergy or intolerance, confirm it with your manager or the kitchen. Meseo is a training tool: it does not replace official allergen training or the information the restaurant must give its customers, and it is not responsible for what is said to a guest."
       },
       {
         "t": "The app belongs to the person who made it",
-        "p": "Meseo® was built by Duvan Stiven Ramírez Duque on his own, and remains his: its code, its texts and its way of teaching. Use it to train as much as you like. The only thing that is off limits is copying it, or taking its exercises and method to build something similar."
+        "p": "Meseo® was built by Duvan Stiven Ramírez Duque on his own, and remains his: its code, its texts, its exercises and its way of teaching. Use it to train as much as you like. The only things off limits are copying it, decompiling it, extracting its content in bulk, or taking its exercises and method to build something similar."
+      },
+      {
+        "t": "Other people's brands and names",
+        "p": "The names, logos and designations of restaurants, chefs, wineries, suppliers or products that appear here belong to their owners. They are mentioned only to identify where you work and what is served, for training purposes. Meseo is not affiliated with, sponsored by or endorsed by any of them, and does not claim to be. Neither should you: do not use the Meseo® mark or the restaurant's marks outside the app, or suggest that they represent or endorse you."
+      },
+      {
+        "t": "Other people's privacy",
+        "p": "Do not record, photograph or post colleagues or guests without their permission. Any photos you upload (dishes, plating) must be of the work, with no people in them. In the chat and in any text field, do not write guests' personal data: no names, no specific tables, no allergies, no health information. What you upload is your responsibility, and you must have the right to upload it."
+      },
+      {
+        "t": "Proper use",
+        "p": "No offensive, discriminatory or illegal content in the chat. Do not impersonate anyone, do not try to access other accounts or the manager's panel, do not use automated tools and do not try to bypass protections. If something breaks or looks wrong, write to contacto@meseo.es."
+      },
+      {
+        "t": "No warranties, and how far liability goes",
+        "p": "The app is provided as is: it may contain errors, incomplete content, or be unavailable. The content is maintained by the restaurant; the app only teaches it to you. To the extent Spanish law allows, neither Meseo nor its author is liable for indirect damages or for decisions you take based on this content. Nothing here limits liability for wilful misconduct or gross negligence, or any liability the law does not allow to be excluded."
       },
       {
         "t": "This ties you to nothing",
         "p": "It is not a non-compete. You can move to another restaurant and take your career wherever you like, whenever you like. All you are asked is not to take what is confidential here and not to reproduce the app. That commitment continues afterwards, for as long as the information is not public."
       },
       {
+        "t": "Access and changes",
+        "p": "Access may be suspended if you breach this or when you stop working at the restaurant. If this text changes, you will be asked to sign the new version; the version you sign is shown below and you can read it from the footer of the sign-in screen."
+      },
+      {
         "t": "Your data",
-        "p": "From this signature we keep your username, the full name you type, the date and the version of this text. It serves to evidence that you accepted it and nothing else: it is not passed to anyone and is not used for advertising. Controller: Duvan Stiven Ramírez Duque, together with the restaurant as regards its own information. You may request access, rectification, erasure, restriction, objection or portability from him, and lodge a complaint with the Spanish Data Protection Agency (AEPD)."
+        "p": "From this signature we keep your username, your restaurant, the full name you type, the date and time, the version of this text, and the IP address and browser you sign from. It serves to evidence that you accepted it and nothing else: it is not passed to anyone and is not used for advertising. That record is kept for as long as it may be needed as evidence, up to five years after your account is deleted."
+      },
+      {
+        "t": "Your rights",
+        "p": "Controller: Duvan Stiven Ramírez Duque, together with the restaurant as regards its own information. You may request access, rectification, erasure, restriction, objection or portability at contacto@meseo.es, and lodge a complaint with the Spanish Data Protection Agency (AEPD). Everything else the app processes, and for how long, is described at meseo.es/privacidad.html."
       },
       {
         "t": "The signature",
-        "p": "Typing your full name and pressing the button counts as an electronic signature; it is recorded with its date and the exact version of the text. You may request a copy at any time. Spanish law applies and, if this English translation says anything different, the Spanish version prevails."
+        "p": "Typing your full name and pressing the button counts as an electronic signature; it is recorded with its date and the exact version of the text. You may request a copy at any time at contacto@meseo.es. Spanish law applies and, if this English translation says anything different, the Spanish version prevails."
       }
     ],
     "firma_titulo": "Signature",
-    "firma_ayuda": "Type your full name and surnames. That signs it.",
+    "firma_ayuda": "Type your full name and surnames, as they appear on your ID. That signs it.",
     "firma_placeholder": "Full name and surnames",
-    "firma_boton": "Sign and enter",
+    "firma_boton": "I have read it and I sign",
     "firma_error": "Please type your full name and surnames.",
-    "firma_error_servidor": "The signature could not be saved. Check your connection and try again."
+    "firma_error_servidor": "The signature could not be saved. Check your connection and try again.",
+    "lectura_titulo": "Terms of use",
+    "lectura_intro": "This is the text every person signs the first time they enter.",
+    "lectura_cerrar": "Close"
   }
 }
