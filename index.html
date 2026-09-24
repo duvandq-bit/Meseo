@@ -11014,8 +11014,14 @@ function supaUsernameAvailable(name){ return _supaRpc('username_available', {p_n
 function supaRegisterEmployee(name, sha, code, display){
   return _supaRpc('employee_register', {p_name:name, p_sha:sha, p_code:code, p_display:display||null});
 }
-function supaNdaSign(name, fullName, version){
-  return _supaRpc('nda_sign', {p_name:name, p_full_name:fullName, p_version:version});
+// Ni empleado, ni restaurante, ni versión: el servidor los deduce de la
+// identidad autenticada y de public.nda_vigente. El cliente sólo aporta lo
+// que es de quien firma.
+function supaNdaSign(fullName, textoSha256){
+  return _supaRpc('nda_sign', {p_full_name:fullName, p_texto_sha256:textoSha256});
+}
+function supaNdaEstado(){
+  return _supaRpc('nda_estado', {});
 }
 // El servidor devuelve la causa; aquí sólo se traduce. Nunca se dice «el código
 // es correcto pero el usuario está cogido» al revés: cada fallo, su motivo.
@@ -11378,19 +11384,43 @@ async function loginWithPassword(){
 // La versión del texto viaja con la firma. Si algún día se cambia el acuerdo,
 // se sube la versión en data/nda.json y vuelve a pedirse a todo el mundo: una
 // firma sólo vale para el texto que se firmó.
-let _NDA = null, _ndaCargando = null;
+// _NDA_SHA es el SHA-256 de los BYTES exactos de data/nda.json, tal como
+// llegan. El servidor guarda el del texto vigente en public.nda_vigente y no
+// firma si el que manda el cliente no coincide: así la firma queda atada al
+// texto que de verdad se enseñó, no a una etiqueta de versión.
+let _NDA = null, _NDA_SHA = null, _ndaCargando = null;
 function ndaCargar(){
   if(_NDA) return Promise.resolve(_NDA);
   if(_ndaCargando) return _ndaCargando;
   _ndaCargando = fetch('data/nda.json')
-    .then(r => r.ok ? r.json() : null)
-    .then(j => { _NDA = j; return j; })
+    .then(r => r.ok ? r.arrayBuffer() : null)
+    .then(async buf => {
+      if(!buf) return null;
+      const dig = await crypto.subtle.digest('SHA-256', buf);
+      _NDA_SHA = [...new Uint8Array(dig)].map(b => b.toString(16).padStart(2,'0')).join('');
+      _NDA = JSON.parse(new TextDecoder().decode(buf));
+      return _NDA;
+    })
     .catch(() => null);
   return _ndaCargando;
 }
 
-// ¿Le toca firmar? Se pregunta al servidor, que es quien guarda la prueba: la
-// marca local no vale porque se borra con los datos del navegador.
+// La firma y la consulta van atadas a la identidad AUTENTICADA: el servidor
+// deduce el empleado de auth.uid(). La sesión llega en segundo plano tras el
+// login, así que se espera un poco; si no llega, no se finge nada.
+async function _ndaSesion(ms){
+  const hasta = Date.now() + (ms || 10000);
+  for(;;){
+    const c = _authCtx();
+    if(c && c.estado === 'authenticated' && c.token) return c;
+    if(Date.now() >= hasta) return null;
+    await new Promise(r => setTimeout(r, 250));
+  }
+}
+
+// ¿Le toca firmar? Lo decide el servidor (nda_estado): sólo cuenta una firma
+// AUTENTICADA de la versión vigente. La firma anterior a este cambio se
+// conserva como histórica, pero no cuenta: quien la tenga firma una vez más.
 async function ndaPendiente(name){
   const nda = await ndaCargar();
   if(!nda || !nda.version) return false;   // sin texto no se bloquea a nadie
@@ -11399,15 +11429,15 @@ async function ndaPendiente(name){
   // El texto y el mecanismo se quedan montados y probados; no se le pide la
   // firma a nadie hasta que ponga 'activo': true en data/nda.json.
   if(nda.activo === false) return false;
+  // Sin sesión o sin red no se puede preguntar. Se mantiene el criterio que ya
+  // había (H3 de la auditoría): no se deja a nadie fuera de su formación por el
+  // wifi; se le pedirá la firma en la siguiente entrada con conexión.
+  if(!(await _ndaSesion(10000))) return false;
   try{
-    const res = await fetchT(
-      `${SUPA_URL}/rest/v1/employees?name=eq.${encodeURIComponent(name)}&select=nda_version`,
-      { headers:{ 'apikey':SUPA_KEY, 'Authorization':`Bearer ${_bearer()}` } }, 8000);
-    if(!res.ok) return false;
-    const rows = await res.json();
-    const firmada = Array.isArray(rows) && rows[0] ? rows[0].nda_version : null;
-    return firmada !== nda.version;
-  }catch(e){ return false; }  // sin red no se deja a nadie fuera de su formación
+    const r = await supaNdaEstado();
+    if(!r || r.autenticado !== true) return false;
+    return r.firmada !== true;
+  }catch(e){ return false; }
 }
 
 function _ndaTextos(){
@@ -11502,16 +11532,31 @@ async function ndaFirmar(name){
   }
   btn.disabled = true;
   err.textContent = '';
+  // FAIL-CLOSED. Sólo cuenta como firmado lo que el servidor CONFIRMA. Sin
+  // sesión, sin red o con respuesta distinta de ok, la pantalla sigue puesta,
+  // no se marca nada en local y no se entra. No hay cola offline de firmas.
+  const en = LANG === 'en';
   try{
-    const r = await supaNdaSign(name, v, (_NDA||{}).version);
+    if(!_NDA_SHA) throw new Error('sin_texto');
+    if(!(await _ndaSesion(10000))) throw new Error('no_autenticado');
+    // Sólo viaja lo que es de quien firma: su nombre y el hash del texto que
+    // ha leído. Empleado, restaurante y versión los decide el servidor.
+    const r = await supaNdaSign(v, _NDA_SHA);
     if(!r || r.ok !== true) throw new Error((r && r.error) || 'nda');
     const emp = getEmp(name);
-    if(emp){ emp.ndaVersion = (_NDA||{}).version; emp.ndaFirma = v; saveDB(); }
+    if(emp){ emp.ndaVersion = r.version; emp.ndaFirma = v; saveDB(); }
     const ov = document.getElementById('ndaOverlay');
     if(ov) ov.remove();
     try{ if(typeof playSound==='function') playSound('correct'); }catch(_){}
   }catch(e){
-    err.textContent = t.firma_error_servidor || '';
+    const m = e && e.message;
+    err.textContent =
+        m === 'no_autenticado' ? (en ? 'Your identity could not be confirmed yet. Wait a few seconds, check your connection and try again.'
+                                     : 'Todavía no se ha podido confirmar tu identidad. Espera unos segundos, comprueba la conexión y vuelve a intentarlo.')
+      : m === 'texto_distinto' || m === 'sin_texto'
+                               ? (en ? 'This text has been updated. Close the app, open it again and read the new version.'
+                                     : 'Este texto se ha actualizado. Cierra la aplicación, vuelve a abrirla y lee la versión nueva.')
+      : (t.firma_error_servidor || '');
     btn.disabled = false;
   }
 }

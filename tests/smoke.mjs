@@ -23,6 +23,7 @@ import { readFileSync, existsSync, readdirSync } from 'node:fs';
 import { execSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
+import { createHash } from 'node:crypto';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const read = (p) => readFileSync(join(ROOT, p), 'utf8');
@@ -9411,8 +9412,10 @@ test('Acceso: el acuerdo de confidencialidad se firma una vez y con su versión'
     assert(t.firma_boton && t.firma_ayuda && t.firma_placeholder, `falta la firma en ${lang}`);
   }
   assert(/_supaRpc\('nda_sign'/.test(html), 'la firma la guarda el servidor');
-  assert(/supaNdaSign\(name, v, \(_NDA\|\|\{\}\)\.version\)/.test(html),
-    'la versión del texto viaja con la firma');
+  // La versión ya NO viaja desde el cliente: la decide el servidor. Lo que
+  // viaja es el hash del texto mostrado (ver «firma autenticada» más abajo).
+  assert(/supaNdaSign\(v, _NDA_SHA\)/.test(html),
+    'la firma envía el nombre y el hash del texto, nada más');
   // Nombre y apellidos: dos palabras de verdad. Se comprueba aquí Y en el
   // servidor; «asdf» no es firmar.
   const val = html.slice(html.indexOf('function _ndaNombreValido('),
@@ -9591,6 +9594,151 @@ test('compromiso · quien crea cuenta sabe ANTES que va a firmar', () => {
   const rl = html.slice(html.indexOf('function renderLogin('), html.indexOf('const FOOT = ['));
   assert(/will read and sign the terms of use with your full name/.test(rl), 'y el aviso en inglés');
   assert(/firmarás el compromiso de uso con tu nombre y apellidos/.test(rl), 'y el aviso en español al cambiar de idioma');
+});
+
+// ─── FIRMA AUTENTICADA · la evidencia es atribuible y no se puede falsificar ──
+// La auditoría demostró, llamando como `anon`, que nda_sign firmaba en nombre
+// de cualquiera y aceptaba cualquier versión. La corrección vive en
+// supabase/nda_firma_autenticada.sql. La CI no tiene base de datos: estas
+// pruebas fijan lo que el SQL DICE y lo que el cliente ENVÍA. El
+// comportamiento se ensayó contra la base real (NDA-1..12) en una
+// transacción revertida.
+const _fa = (() => {
+  const sql = read('supabase/nda_firma_autenticada.sql');
+  const sinComentarios = sql.replace(/--[^\n]*/g, '');
+  const i = sinComentarios.indexOf('create function public.nda_sign(');
+  const firma = sinComentarios.slice(i, sinComentarios.indexOf('$f$;', i));
+  return { sql, sin: sinComentarios, firma };
+})();
+
+test('firma autenticada · el empleado sale de auth.uid(), nunca del navegador', () => {
+  const { firma } = _fa;
+  assert(/create function public\.nda_sign\(p_full_name text, p_texto_sha256 text\)/.test(firma),
+    'nda_sign sólo recibe nombre y hash del texto: ni empleado, ni restaurante, ni versión');
+  assert(/v_uid\s+uuid := auth\.uid\(\);/.test(firma), 'la identidad es auth.uid()');
+  assert(/if v_uid is null then\s+return json_build_object\('ok', false, 'error', 'no_autenticado'\)/.test(firma),
+    'sin identidad no se firma');
+  assert(/from public\.employees e where e\.auth_user_id = v_uid;/.test(firma),
+    'el empleado se busca por auth_user_id');
+  assert(!/e\.name\s*=\s*p_/.test(firma), 'el empleado no puede salir de un parámetro');
+  assert(/security definer/.test(firma) && /set search_path = ''/.test(firma),
+    'security definer con search_path vacío y nombres cualificados');
+  assert(/drop function public\.nda_sign\(text, text, text\);/.test(_fa.sin),
+    'la firma antigua, la que se fiaba de p_name, desaparece');
+});
+
+test('firma autenticada · la versión la decide el servidor, atada al texto exacto', () => {
+  const { firma, sin } = _fa;
+  assert(/select \* into v_vig from public\.nda_vigente/.test(firma), 'la versión sale de nda_vigente');
+  assert(/if coalesce\(p_texto_sha256, ''\) <> v_vig\.texto_sha256 then/.test(firma),
+    'si el texto mostrado no es el vigente, no se firma');
+  assert(!/p_version/.test(firma), 'no existe ningún parámetro de versión');
+  // Y la fila de nda_vigente dice EXACTAMENTE lo mismo que data/nda.json.
+  const m = sin.match(/values \('([^']+)', '([0-9a-f]{64})'\);/);
+  assert(m, 'no encuentro la fila de nda_vigente en la migración');
+  const bytes = readFileSync(join(ROOT, 'data/nda.json'));
+  const sha = createHash('sha256').update(bytes).digest('hex');
+  const nda = JSON.parse(bytes.toString('utf8'));
+  assert(m[1] === nda.version,
+    `nda_vigente dice «${m[1]}» y data/nda.json «${nda.version}»: si cambia el texto, cambian las dos`);
+  assert(m[2] === sha,
+    `el hash de nda_vigente (${m[2].slice(0, 8)}…) no es el de data/nda.json (${sha.slice(0, 8)}…): el texto cambió sin migración`);
+});
+
+test('firma autenticada · la evidencia lleva auth_user_id y sobrevive a la ficha', () => {
+  const { firma, sin } = _fa;
+  assert(/values\s*\(v_uid, v_emp, v_venue, v_full, v_vig\.version, v_vig\.texto_sha256, 'auth', v_ip, v_ua\)/.test(firma),
+    'cada firma nueva guarda la identidad, las instantáneas, la versión y el hash del servidor');
+  assert(/on conflict \(auth_user_id, nda_version\) where auth_user_id is not null do nothing/.test(firma),
+    'idempotente por identidad y versión');
+  assert(/create unique index nda_signatures_uid_ver_idx\s+on public\.nda_signatures \(auth_user_id, nda_version\) where auth_user_id is not null;/.test(sin),
+    'el índice único es por identidad, no por nombre');
+  // Retención: nada que ate la evidencia a la ficha mutable.
+  assert(/alter table public\.nda_signatures drop constraint nda_signatures_employee_fkey;/.test(sin),
+    'la FK a employees(name) se retira');
+  assert(!/references\s+public\.employees/i.test(sin) && !/on delete cascade/i.test(sin),
+    'ninguna FK a employees ni ningún ON DELETE CASCADE: borrar o renombrar la ficha no toca la firma');
+  assert(!/references\s+auth\.users/i.test(sin),
+    'auth_user_id sin FK: un SET NULL borraría justo el dato que prueba quién firmó');
+  assert(/before update or delete on public\.nda_signatures/.test(sin), 'la evidencia es inmutable');
+});
+
+test('firma autenticada · la firma anterior se conserva sin atribuirle identidad', () => {
+  const { sin } = _fa;
+  assert(/update public\.nda_signatures set vinculo = 'legacy_sin_auth' where auth_user_id is null;/.test(sin),
+    'la firma previa se marca como histórica, sin inventar su auth_user_id');
+  assert(!/update public\.nda_signatures set auth_user_id/.test(sin), 'no se le asigna identidad a posteriori');
+  assert(!/delete from public\.nda_signatures/.test(sin), 'no se borra ninguna firma');
+  assert(/s\.vinculo = 'auth'/.test(sin), 'nda_estado sólo cuenta firmas autenticadas: quien tiene una histórica firma otra vez');
+});
+
+test('firma autenticada · permisos: sólo autenticados y sólo por las funciones', () => {
+  const { sin } = _fa;
+  assert(/revoke all on function public\.nda_sign\(text, text\) from public, anon;/.test(sin), 'anon no ejecuta nda_sign');
+  assert(/revoke all on function public\.nda_estado\(\) from public, anon;/.test(sin), 'anon no ejecuta nda_estado');
+  assert(/grant execute on function public\.nda_sign\(text, text\) to authenticated;/.test(sin), 'authenticated sí');
+  assert(/revoke all privileges on table public\.nda_signatures from anon, authenticated;/.test(sin), 'H1 se mantiene');
+  assert(/revoke all privileges on table public\.nda_vigente from anon, authenticated;/.test(sin), 'nda_vigente tampoco es accesible directamente');
+  assert(!/grant\s+(select|insert|update|delete|all)[^;]*on\s+(table\s+)?public\.nda_signatures/i.test(sin),
+    'ningún grant directo sobre la tabla de evidencia');
+});
+
+test('firma autenticada · el cliente sólo envía nombre y hash, y espera a la identidad', () => {
+  const f = html.slice(html.indexOf('function supaNdaSign('), html.indexOf('function supaNdaEstado('));
+  assert(/_supaRpc\('nda_sign', \{p_full_name:fullName, p_texto_sha256:textoSha256\}\)/.test(f),
+    'la llamada sólo lleva p_full_name y p_texto_sha256');
+  assert(!/p_name|p_version|p_venue|p_employee/.test(f), 'ni empleado, ni versión, ni restaurante');
+  const c = html.slice(html.indexOf('function ndaCargar('), html.indexOf('async function _ndaSesion('));
+  assert(/crypto\.subtle\.digest\('SHA-256', buf\)/.test(c), 'el hash se calcula sobre los bytes exactos del fichero');
+  const p = html.slice(html.indexOf('async function ndaPendiente('), html.indexOf('function _ndaTextos('));
+  assert(/supaNdaEstado\(\)/.test(p) && !/employees\?name=eq/.test(p), 'la pregunta «¿le toca firmar?» la responde el servidor');
+});
+
+// El harness es síncrono: un test async devolvería una promesa sin esperar y
+// sus fallos se perderían. Los escenarios se ejecutan aquí, con await de nivel
+// superior, y el test de abajo sólo mira los resultados.
+const _nda13 = await (async () => {
+  // Se ejecuta ndaFirmar DE VERDAD, con el DOM y la red simulados. En ninguno
+  // de los escenarios fallidos puede quedar marcado como firmado.
+  const src = html.slice(html.indexOf('async function ndaFirmar('), html.indexOf('\n}', html.indexOf('async function ndaFirmar(')) + 2);
+  const correr = async ({ sesion, respuesta }) => {
+    const els = {
+      ndaFirmaInput: { value: 'Ana Prueba Uno', style: {} },
+      ndaError: { textContent: '' }, ndaBoton: { disabled: false },
+      ndaOverlay: { quitada: false, remove(){ this.quitada = true; } },
+    };
+    const emp = {};
+    let guardado = false;
+    const f = new Function('document', 'LANG', '_NDA_SHA', '_ndaTextos', '_ndaNombreValido', '_ndaSesion',
+      'supaNdaSign', 'getEmp', 'saveDB', 'playSound', `${src}; return ndaFirmar;`)( // eslint-disable-line no-new-func
+      { getElementById: id => els[id] || null }, 'es', 'a'.repeat(64),
+      () => ({ firma_error_servidor: 'error servidor' }), () => true,
+      async () => sesion, async () => { if (respuesta instanceof Error) throw respuesta; return respuesta; },
+      () => emp, () => { guardado = true; }, () => {});
+    await f('ZZ');
+    return { emp, guardado, quitada: els.ndaOverlay.quitada, error: els.ndaError.textContent, boton: els.ndaBoton.disabled };
+  };
+  try {
+    return {
+      sinSesion: await correr({ sesion: null, respuesta: { ok: true, version: 'v' } }),
+      sinRed: await correr({ sesion: { token: 't' }, respuesta: new Error('rpc nda_sign 0') }),
+      rechazada: await correr({ sesion: { token: 't' }, respuesta: { ok: false, error: 'texto_distinto' } }),
+      ok: await correr({ sesion: { token: 't' }, respuesta: { ok: true, version: '2026-09-24-v1' } }),
+    };
+  } catch (e) { return { roto: String(e && e.message || e) }; }
+})();
+
+test('firma autenticada · NDA-13: sin confirmación del servidor no hay firma', () => {
+  assert(!_nda13.roto, `no se pudo ejecutar ndaFirmar: ${_nda13.roto}`);
+  const { sinSesion, sinRed, rechazada, ok } = _nda13;
+  assert(!sinSesion.quitada && !sinSesion.guardado && sinSesion.emp.ndaVersion === undefined && sinSesion.error,
+    'sin sesión: la pantalla sigue, no se guarda nada y se explica');
+  assert(!sinRed.quitada && !sinRed.guardado && sinRed.emp.ndaVersion === undefined && !sinRed.boton,
+    'sin red: la pantalla sigue, nada queda firmado y el botón vuelve a poder pulsarse');
+  assert(!rechazada.quitada && rechazada.emp.ndaVersion === undefined && /actualizado/.test(rechazada.error),
+    'si el servidor rechaza, no hay firma y se dice por qué');
+  assert(ok.quitada && ok.guardado && ok.emp.ndaVersion === '2026-09-24-v1',
+    'sólo con ok del servidor se cierra la pantalla, y con la versión que dice el servidor');
 });
 
 test('compromiso · privacidad.html cuenta lo que de verdad se guarda', () => {
@@ -12063,7 +12211,11 @@ test('todas las llamadas a /rest/v1 mandan el token, y sólo ésas', () => {
     else if (rest && conAnon) restSinToken.push(i + 1);
     else if (conToken) otrosConToken.push(i + 1);
   }
-  assert(restConToken >= 50, `sólo ${restConToken} llamadas REST mandan el token`);
+  // Suelo contra regresiones, no invariante: lo que protege son las dos
+  // aserciones de abajo. Bajó de 50 a 49 al retirar la lectura de
+  // `employees?name=…&select=nda_version` de ndaPendiente, que ahora pregunta
+  // a nda_estado por _supaRpc (una sola línea con token, ya contada).
+  assert(restConToken >= 49, `sólo ${restConToken} llamadas REST mandan el token`);
   assert(restSinToken.length === 0,
     'quedan llamadas REST con la clave anónima en las líneas ' + restSinToken.join(','));
   // Storage tiene sus propias políticas y las Edge Functions no lo necesitan:
