@@ -7975,6 +7975,59 @@ body:has(#gsOverlay.open) .ev-aviso-panel{
 }
 .login-legal-link:hover{color:rgba(244,237,226,.45)}
 
+/* ═══ PIE DEL LOGIN ═══
+   Queda POR DEBAJO del pliegue a propósito: el login compacto («todo a la
+   vista, sin scroll», petición del propietario) se mantiene intacto y el pie
+   aparece al bajar, como en cualquier plataforma. Colores del propio login,
+   sin tokens nuevos. Botones y enlaces comparten aspecto: al usuario le da
+   igual qué es cada uno. */
+.login-foot{
+  width:100%;max-width:56rem;margin:2.2rem auto 0;
+  padding:1.6rem 1.1rem calc(1.2rem + env(safe-area-inset-bottom,0px));
+  border-top:1px solid rgba(196,154,60,.22);
+  color:rgba(244,237,226,.55);
+  font-family:'Quicksand',sans-serif;font-size:.78rem;line-height:1.55;
+  text-align:left;
+}
+.login-foot-grid{
+  display:grid;grid-template-columns:1.6fr 1fr 1fr 1fr;gap:1.4rem 1.6rem;
+}
+.login-foot-brand p{margin:.35rem 0 .55rem;max-width:22rem}
+.login-foot-logo{
+  font-family:'Cinzel',serif;font-size:1.15rem;letter-spacing:.14em;
+  color:rgba(196,154,60,.9);
+}
+.login-foot-logo sup{font-size:.5em;letter-spacing:0;margin-left:.1em}
+.login-foot-mail,.login-foot-col a,.login-foot-col button{
+  background:none;border:0;padding:0;margin:0;cursor:pointer;
+  font:inherit;color:rgba(244,237,226,.62);text-decoration:none;
+  text-align:left;min-height:32px;display:inline-flex;align-items:center;
+  transition:color .2s;
+}
+.login-foot-mail{color:rgba(196,154,60,.85)}
+.login-foot-mail:hover,.login-foot-col a:hover,.login-foot-col button:hover{color:rgba(196,154,60,.95)}
+.login-foot-col h4{
+  margin:0 0 .5rem;font-family:'DM Mono',monospace;font-size:.6rem;
+  letter-spacing:.16em;text-transform:uppercase;color:rgba(196,154,60,.8);
+}
+.login-foot-col ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:.15rem}
+.login-foot-notes{
+  margin-top:1.4rem;padding-top:1rem;border-top:1px solid rgba(244,237,226,.08);
+  font-size:.66rem;line-height:1.5;color:rgba(244,237,226,.42);
+}
+.login-foot-notes p{margin:0 0 .55rem}
+.login-foot-notes strong{color:rgba(244,237,226,.6);font-weight:600}
+.login-foot-copy{
+  display:flex;justify-content:space-between;flex-wrap:wrap;gap:.4rem 1rem;
+  margin-top:.9rem;font-family:'DM Mono',monospace;font-size:.58rem;
+  letter-spacing:.04em;color:rgba(244,237,226,.35);
+}
+@media (max-width:640px){
+  .login-foot{padding-left:.5rem;padding-right:.5rem;margin-top:1.6rem}
+  .login-foot-grid{grid-template-columns:1fr 1fr;gap:1.1rem 1.2rem}
+  .login-foot-brand{grid-column:1 / -1}
+}
+
 /* ═══ TUNIC LOGIN v2 — MODE TOGGLE + CORNERS + NEW-USER ═══ */
 
 /* Corner serifs on the login card */
@@ -10117,6 +10170,11 @@ body, .screen{ min-height: 100vh; min-height: 100dvh; }
 }
 .nda-boton[disabled]{ opacity: .55; cursor: default; }
 .nda-version{ margin-top: .6rem; font-size: .7rem; opacity: .5; text-align: right; }
+/* Modo lectura (desde el pie del login): mismo texto, mismo sitio, sin caja
+   de firma. El botón de cerrar es de contorno para que nadie lo confunda
+   con «firmar». */
+.nda-cerrar{ background: transparent; color: var(--parchment);
+  border: 1px solid color-mix(in srgb, var(--parchment) 45%, transparent); }
 
 /* ═══════════════════════════════════════════════════════════════
    CARRO DE QUESOS
