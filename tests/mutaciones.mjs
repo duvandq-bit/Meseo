@@ -548,6 +548,67 @@ const MUTACIONES = [
     de:"  _pieRender('loginFoot', { plataforma:false });",
     a:"  _pieRender('loginFoot', { plataforma:true });",
     cae:'el login va sin Plataforma' },
+
+  // ═══ FIRMA AUTENTICADA · la evidencia es atribuible y no se falsifica ═══
+  // Mutan la MIGRACIÓN: la CI no tiene base de datos, así que lo que se
+  // demuestra aquí es que el test vigila lo que el SQL dice. El
+  // comportamiento real se ensayó contra la base (NDA-1..12, revertido).
+  { id:'NDA-SEC-1', fase:'NDA', fila:null,
+    rompe:'la RPC vuelve a buscar el empleado por un dato del navegador: se puede firmar en nombre de otro',
+    archivo:'supabase/nda_firma_autenticada.sql',
+    de:'    from public.employees e where e.auth_user_id = v_uid;',
+    a:'    from public.employees e where e.name = p_full_name;',
+    cae:'el empleado sale de auth.uid()' },
+
+  { id:'NDA-SEC-2', fase:'NDA', fila:null,
+    rompe:'la RPC vuelve a aceptar una versión del cliente: se puede firmar una versión inventada',
+    archivo:'supabase/nda_firma_autenticada.sql',
+    de:'create function public.nda_sign(p_full_name text, p_texto_sha256 text)\nreturns json',
+    a:'create function public.nda_sign(p_full_name text, p_texto_sha256 text, p_version text)\nreturns json',
+    cae:'el empleado sale de auth.uid()' },
+
+  { id:'NDA-SEC-3', fase:'NDA', fila:null,
+    rompe:'la firma deja de guardar la identidad autenticada: ya no prueba quién firmó',
+    archivo:'supabase/nda_firma_autenticada.sql',
+    de:'    (v_uid, v_emp, v_venue, v_full, v_vig.version, v_vig.texto_sha256, \'auth\', v_ip, v_ua)',
+    a:'    (null, v_emp, v_venue, v_full, v_vig.version, v_vig.texto_sha256, \'auth\', v_ip, v_ua)',
+    cae:'la evidencia lleva auth_user_id' },
+
+  { id:'NDA-SEC-4', fase:'NDA', fila:null,
+    rompe:'vuelve el ON DELETE CASCADE: borrar o renombrar la ficha destruye la evidencia',
+    archivo:'supabase/nda_firma_autenticada.sql',
+    de:'alter table public.nda_signatures drop constraint nda_signatures_employee_fkey;\n',
+    a:'alter table public.nda_signatures drop constraint nda_signatures_employee_fkey;\nalter table public.nda_signatures add constraint nda_signatures_employee_fkey foreign key (employee) references public.employees(name) on update cascade on delete cascade;\n',
+    cae:'sobrevive a la ficha' },
+
+  // ═══ H3 · LA PUERTA DEL COMPROMISO · sin confirmación del servidor no se entra ═══
+  { id:'H3-M1', fase:'H3', fila:null,
+    rompe:'si nda_estado falla, se deja pasar',
+    archivo:'index.html',
+    de:"  catch(e){ return { ok:false, motivo:'sin_red' }; }",
+    a:"  catch(e){ return { ok:true }; }",
+    cae:'H3-6 · nda_estado falla → NO entra' },
+
+  { id:'H3-M2', fase:'H3', fila:null,
+    rompe:'la puerta sólo rechaza al anónimo: la sesión de otro empleado abre',
+    archivo:'index.html',
+    de:"  if(ctx.estado !== 'authenticated' || !ctx.token || ctx.empleado !== nombre) return { ok:false, motivo:'sin_identidad' };",
+    a:"  if(ctx.estado === 'anonymous') return { ok:false, motivo:'sin_identidad' };",
+    cae:'H3-8 · sesión de OTRO empleado → NO entra' },
+
+  { id:'H3-M3', fase:'H3', fila:null,
+    rompe:'sin red al pedir la sesión, se deja pasar («ya lo comprobaremos»)',
+    archivo:'index.html',
+    de:"  if(_authPeticion !== peticion) return { ok:false, motivo:'cancelada' };\n  if(res !== 'ok'){",
+    a:"  if(_authPeticion !== peticion) return { ok:false, motivo:'cancelada' };\n  if(res === 'sin-red') return { ok:true };\n  if(res !== 'ok'){",
+    cae:'H3-5 · sin red al pedir la sesión → NO entra' },
+
+  { id:'H3-M4', fase:'H3', fila:null,
+    rompe:'la ficha local «firmada» abre la puerta sin preguntar al servidor',
+    archivo:'index.html',
+    de:"  const nda = await ndaCargar();   // puerta: el texto vigente",
+    a:"  const _loc = getEmp(nombre); if(_loc && _loc.ndaVersion) return { ok:true };\n  const nda = await ndaCargar();   // puerta: el texto vigente",
+    cae:'H3-10 · el estado LOCAL no cuenta' },
 ];
 
 // ─── EJECUCIÓN ─────────────────────────────────────────────────────────────

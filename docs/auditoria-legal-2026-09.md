@@ -62,8 +62,14 @@ RLS activado **sin ninguna política**, y `anon`/`authenticated` con **todos** l
 ### H2 · **[M]** La firma guarda la *versión* del texto, no el texto
 `nda_signatures.nda_version = '2026-09-24-v1'`. Para reconstruir *qué* se firmó hay que ir al histórico de git de `data/nda.json`. Es reconstruible, pero la cadena de prueba sería más sólida guardando también un **hash SHA-256 de las cláusulas** en la firma. Cambio pequeño en `nda_sign` y en `supaNdaSign`; **no hecho** porque toca la RPC.
 
-### H3 · **[B]** Sin red, no se firma
-`ndaPendiente` devuelve `false` si el servidor no responde: alguien que entre por primera vez sin cobertura entra sin firmar, y se le pide a la siguiente entrada con red. Es una decisión de diseño heredada («dejar a alguien fuera de su formación por el wifi sería peor»). Documentada; no cambiada.
+### H3 · **[corregido en cliente, sin publicar]** Se entraba sin firma confirmada por el servidor
+Antes: se entraba y *después* se preguntaba (`ndaPendiente`); sin red, sin sesión Auth o si la consulta fallaba, devolvía `false` y la persona se quedaba dentro. Ahora `closePinAndEnter` pasa por `_ndaPuerta` **antes** de cargar la carta, fijar `currentUser` y enseñar la app. Sólo entra si (1) la petición de sesión de *este* login acabó en `ok`, (2) el contexto Auth es de quien entra, (3) `nda_estado()` responde y (4) responde `autenticado:true, firmada:true`. Cualquier otra cosa —sin red, sesión de otro, estado que falla o tarda, texto que no carga— es «no», con mensaje y de vuelta al login. Ningún tiempo de espera se convierte en acceso. No se mira nada local. Si falta la firma, el compromiso sale **sobre el login, sin haber entrado**; al firmar se vuelve a pasar por la puerta, que pregunta otra vez al servidor. Todas las entradas (contraseña, alta, PIN en sus tres ramas, PIN de la nube, auto-login) piden ahora la sesión Auth. Pruebas H3-1..12 y mutaciones H3-M1..M4.
+
+**Consecuencia asumida:** con el compromiso activo, **sin conexión no entra nadie**, tampoco quien ya firmó.
+
+**Límite — clientes antiguos y caché.** La puerta vive en el cliente. Un navegador que siga ejecutando una versión anterior (PWA cacheada, pestaña abierta sin recargar) no la tiene y entra como antes. Y los datos que la app lee (carta, `employees`, etc.) siguen accesibles con la clave anónima: la puerta impide **entrar en la app**, no leer la API. Cerrarlo en el servidor exigiría que las lecturas dependan de una sesión autenticada con firma vigente (RLS / `sesion` / `app.emp_actual`), que queda fuera de H3.
+
+**Antes de publicar:** comprobar que `sesion` emite sesión para una cuenta recién creada (el alta y el PIN nuevo ahora la necesitan para poder firmar); si no, esas cuentas no podrán entrar.
 
 ### H4 · **[A — decisión del propietario]** La firma del empleado no protege el uso de la marca del restaurante
 Lo que firma el camarero acredita que **él** acepta cómo se usan los nombres. **No es una licencia del restaurante.** Si el titular de la marca objeta, lo que te cubre es (a) el uso meramente identificativo del art. 37 de la Ley de Marcas, reforzado por la no-afiliación que ahora está en tres sitios, y (b) el acuerdo con el restaurante de `docs/acuerdo-restaurante-borrador.md`, que **nadie ha firmado**. Con Txoko suspendido y M.B. en espera, hoy no hay ningún acuerdo firmado con ningún restaurante. Es el papel que falta.
@@ -106,14 +112,14 @@ Si aun así se quiere un campo `full_name` en `employees`, hace falta migración
 
 ## 5 · Lo que hay que probar en un iPhone antes de dar esto por bueno
 
-1. Entrar con una cuenta real. Tiene que aparecer «Antes de entrar» encima de la app, con 13 cláusulas y el texto desplazable.
+1. Entrar con una cuenta real. Tiene que aparecer «Antes de entrar» encima del login —la app no se ve detrás—, con 13 cláusulas y el texto desplazable.
 2. Escribir `asdf` y pulsar «He leído y firmo»: error, no entra.
 3. Escribir nombre y apellidos reales y firmar: la pantalla se cierra y aparece Hoy.
 4. En Supabase: `select employee, full_name, nda_version, ip from nda_signatures;` → una fila nueva.
 5. Cerrar sesión y volver a entrar: **no** vuelve a pedir la firma.
 6. En el login, bajar: el pie está debajo del formulario, en dos columnas, sin desplazamiento lateral. Tocar «Compromiso de uso»: se abre el mismo texto, con «Cerrar» y sin caja de firma. Tocar «Política de privacidad»: abre `privacidad.html`. Tocar «Aviso legal»: modal con el correo.
 7. Cambiar a EN: el pie, el aviso y el compromiso cambian de idioma.
-8. Modo avión + entrar con una cuenta que no haya firmado: entra sin firmar (H3). Volver a conectar y reentrar: pide la firma.
+8. Modo avión + entrar (haya firmado o no): **no entra**; «Comprobando tu acceso…» y después el aviso de que hace falta conexión (H3). Volver a conectar y entrar: si no ha firmado, pide la firma **antes** de ver la app.
 
 ---
 
