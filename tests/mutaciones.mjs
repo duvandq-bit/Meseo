@@ -580,6 +580,35 @@ const MUTACIONES = [
     de:'alter table public.nda_signatures drop constraint nda_signatures_employee_fkey;\n',
     a:'alter table public.nda_signatures drop constraint nda_signatures_employee_fkey;\nalter table public.nda_signatures add constraint nda_signatures_employee_fkey foreign key (employee) references public.employees(name) on update cascade on delete cascade;\n',
     cae:'sobrevive a la ficha' },
+
+  // ═══ H3 · LA PUERTA DEL COMPROMISO · sin confirmación del servidor no se entra ═══
+  { id:'H3-M1', fase:'H3', fila:null,
+    rompe:'si nda_estado falla, se deja pasar',
+    archivo:'index.html',
+    de:"  catch(e){ return { ok:false, motivo:'sin_red' }; }",
+    a:"  catch(e){ return { ok:true }; }",
+    cae:'H3-6 · nda_estado falla → NO entra' },
+
+  { id:'H3-M2', fase:'H3', fila:null,
+    rompe:'la puerta sólo rechaza al anónimo: la sesión de otro empleado abre',
+    archivo:'index.html',
+    de:"  if(ctx.estado !== 'authenticated' || !ctx.token || ctx.empleado !== nombre) return { ok:false, motivo:'sin_identidad' };",
+    a:"  if(ctx.estado === 'anonymous') return { ok:false, motivo:'sin_identidad' };",
+    cae:'H3-8 · sesión de OTRO empleado → NO entra' },
+
+  { id:'H3-M3', fase:'H3', fila:null,
+    rompe:'sin red al pedir la sesión, se deja pasar («ya lo comprobaremos»)',
+    archivo:'index.html',
+    de:"  if(_authPeticion !== peticion) return { ok:false, motivo:'cancelada' };\n  if(res !== 'ok'){",
+    a:"  if(_authPeticion !== peticion) return { ok:false, motivo:'cancelada' };\n  if(res === 'sin-red') return { ok:true };\n  if(res !== 'ok'){",
+    cae:'H3-5 · sin red al pedir la sesión → NO entra' },
+
+  { id:'H3-M4', fase:'H3', fila:null,
+    rompe:'la ficha local «firmada» abre la puerta sin preguntar al servidor',
+    archivo:'index.html',
+    de:"  const nda = await ndaCargar();   // puerta: el texto vigente",
+    a:"  const _loc = getEmp(nombre); if(_loc && _loc.ndaVersion) return { ok:true };\n  const nda = await ndaCargar();   // puerta: el texto vigente",
+    cae:'H3-10 · el estado LOCAL no cuenta' },
 ];
 
 // ─── EJECUCIÓN ─────────────────────────────────────────────────────────────

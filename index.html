@@ -1327,8 +1327,9 @@ async function _authSesionEntrar(nombre, sha, marca){
   return 'ok';
 }
 
-// El envoltorio que llama el login: nunca espera, nunca rompe. Si Auth tarda o
-// falla, el usuario ya está dentro por el camino de siempre y no se entera.
+// El envoltorio que llama el login: nunca espera, nunca rompe. Quien SÍ espera
+// su desenlace es la puerta de entrada (_ndaPuerta): sin sesión confirmada por
+// el servidor no se entra.
 //
 // EL REINTENTO, Y POR QUÉ EXISTE
 //   supabase-js viene de un CDN con `defer`. Medido en el navegador: si ese
@@ -1342,24 +1343,35 @@ async function _authSesionEntrar(nombre, sha, marca){
 //   persona lo cambia, y un reintento tardío se encuentra con que ya no es el
 //   suyo y se calla. Sin esto, alguien que sale mientras el CDN termina de
 //   cargar podría acabar con la sesión puesta después de haberse ido.
+//
+// EL DESENLACE (H3)
+//   El login sigue sin esperar, pero la PUERTA de entrada sí: necesita saber
+//   cómo acabó ESTA petición. `mia.fin` se resuelve una sola vez con el
+//   resultado final —'ok', el motivo del fallo, o 'cancelada' si salió o entró
+//   otro— y nunca se rechaza. Se devuelve `mia` para que quien la pida pueda
+//   comprobar después que sigue siendo la viva.
 function _authSesionEnSegundoPlano(nombre, sha){
   const mia = { nombre: nombre };
+  let acabar;
+  mia.fin = new Promise(r => { acabar = r; });
   _authPeticion = mia;
   let intentos = 0;
   const tirar = () => {
     Promise.resolve(_authSesionEntrar(nombre, sha, mia))
       .then(m => {
-        if(_authPeticion !== mia) return;                  // ya no somos nadie
+        if(_authPeticion !== mia){ acabar('cancelada'); return; }   // ya no somos nadie
         if(m === 'sin-cliente' && ++intentos <= 3){
           dbgw('[auth] supabase-js aún no está; reintento ' + intentos);
           setTimeout(tirar, 2000 * intentos);
           return;
         }
-        if(m !== 'ok') dbgw('[auth] sin sesión (' + m + ') — se sigue con el login de siempre');
+        if(m !== 'ok') dbgw('[auth] sin sesión (' + m + ')');
+        acabar(m);
       })
-      .catch(e => dbgw('[auth] inesperado:', e && e.message));
+      .catch(e => { dbgw('[auth] inesperado:', e && e.message); acabar('error'); });
   };
-  try{ tirar(); }catch(e){ dbgw('[auth] no se pudo pedir la sesión:', e && e.message); }
+  try{ tirar(); }catch(e){ dbgw('[auth] no se pudo pedir la sesión:', e && e.message); acabar('error'); }
+  return mia;
 }
 
 
@@ -11358,6 +11370,9 @@ async function loginWithPassword(){
         const welcome = LANG==='en' ? ('Welcome to the team, ' + resolvedName) : ('Bienvenido al equipo, ' + resolvedName);
         if(typeof showLoginWelcomeToast === 'function') showLoginWelcomeToast(welcome);
       } catch(e){}
+      // La sesión Auth de la cuenta recién creada: la puerta del compromiso
+      // (H3) la exige antes de dejarle firmar y entrar.
+      _authSesionEnSegundoPlano(resolvedName, hashed);
       pinTarget = resolvedName;
       closePinAndEnter();
       // Usuario nuevo (contraseña) → ofrecer correo de recuperación, con el
@@ -11418,26 +11433,47 @@ async function _ndaSesion(ms){
   }
 }
 
-// ¿Le toca firmar? Lo decide el servidor (nda_estado): sólo cuenta una firma
-// AUTENTICADA de la versión vigente. La firma anterior a este cambio se
-// conserva como histórica, pero no cuenta: quien la tenga firma una vez más.
-async function ndaPendiente(name){
-  const nda = await ndaCargar();
-  if(!nda || !nda.version) return false;   // sin texto no se bloquea a nadie
-  // Interruptor. El propietario paró el asunto de las firmas mientras cierra la
-  // parte legal: «vamos a parar lo de las cláusulas y las firmas por un tiempo».
-  // El texto y el mecanismo se quedan montados y probados; no se le pide la
-  // firma a nadie hasta que ponga 'activo': true en data/nda.json.
-  if(nda.activo === false) return false;
-  // Sin sesión o sin red no se puede preguntar. Se mantiene el criterio que ya
-  // había (H3 de la auditoría): no se deja a nadie fuera de su formación por el
-  // wifi; se le pedirá la firma en la siguiente entrada con conexión.
-  if(!(await _ndaSesion(10000))) return false;
-  try{
-    const r = await supaNdaEstado();
-    if(!r || r.autenticado !== true) return false;
-    return r.firmada !== true;
-  }catch(e){ return false; }
+// ═══ LA PUERTA DEL COMPROMISO (H3) ═══
+// Nadie entra en Meseo sin que el SERVIDOR haya confirmado que tiene firmada la
+// versión vigente. Fail-closed de principio a fin: se entra sólo si
+//   1 · hay una sesión Auth confirmada por el servidor (la petición de ESTE
+//       login acabó en 'ok'),
+//   2 · esa sesión es de quien entra (ctx.empleado === nombre),
+//   3 · nda_estado() responde, y
+//   4 · responde firmada:true.
+// Cualquier otra cosa —sin red, sin sesión, sesión de otro, estado que falla o
+// tarda, texto que no carga— devuelve ok:false. Ningún tiempo de espera se
+// convierte en acceso: al agotarse, la respuesta es «no». No se mira nada
+// local (ni employees.ndaVersion ni ninguna marca): sólo cuenta el servidor.
+// Consecuencia asumida: con el compromiso activo, sin conexión no entra nadie.
+const PUERTA_AUTH_MS = 25000, PUERTA_ESTADO_MS = 10000;
+function _ndaEspera(ms, valor){ return new Promise(r => setTimeout(() => r(valor), ms)); }
+async function _ndaPuerta(nombre){
+  const nda = await ndaCargar();   // puerta: el texto vigente
+  if(!nda || !_NDA_SHA) return { ok:false, motivo:'sin_texto' };
+  // Interruptor del propietario («vamos a parar lo de las cláusulas y las
+  // firmas por un tiempo»): con 'activo': false en data/nda.json no se le pide
+  // la firma a nadie. Es el fichero publicado, no un estado del usuario.
+  if(nda.activo === false) return { ok:true };
+  const peticion = _authPeticion;
+  if(!peticion || peticion.nombre !== nombre || !peticion.fin) return { ok:false, motivo:'sin_identidad' };
+  const res = await Promise.race([peticion.fin, _ndaEspera(PUERTA_AUTH_MS, 'tiempo')]);
+  if(_authPeticion !== peticion) return { ok:false, motivo:'cancelada' };
+  if(res !== 'ok'){
+    const sinRed = res === 'sin-red' || res === 'sin-cliente' || /^http-5/.test(String(res));
+    return { ok:false, motivo: res === 'tiempo' ? 'tiempo' : (sinRed ? 'sin_red' : 'sin_identidad') };
+  }
+  const ctx = _authCtx();
+  if(ctx.estado !== 'authenticated' || !ctx.token || ctx.empleado !== nombre) return { ok:false, motivo:'sin_identidad' };
+  let r;
+  try{ r = await Promise.race([supaNdaEstado(), _ndaEspera(PUERTA_ESTADO_MS, 'tiempo')]); }
+  catch(e){ return { ok:false, motivo:'sin_red' }; }
+  // Si durante la consulta salió o entró otro, esta respuesta ya no es de nadie.
+  if(_authPeticion !== peticion || _authCtx() !== ctx) return { ok:false, motivo:'cancelada' };
+  if(r === 'tiempo') return { ok:false, motivo:'tiempo' };
+  if(!r || r.autenticado !== true) return { ok:false, motivo:'sin_identidad' };
+  if(r.firmada === true) return { ok:true };
+  return { ok:false, motivo:'pendiente' };
 }
 
 function _ndaTextos(){
@@ -11450,6 +11486,10 @@ function _ndaTextos(){
 // es exactamente el que se firma: sale del mismo fichero y lleva la misma
 // versión, así que nadie puede alegar que lo que aceptó no era lo que se
 // publica.
+// `opts.alFirmar`: qué hacer cuando el servidor confirme la firma. La puerta
+// lo usa para volver a llamar a closePinAndEnter, que pregunta OTRA VEZ a
+// nda_estado: la firma recién hecha no abre la puerta por sí sola.
+let _ndaTrasFirmar = null;
 function ndaMostrar(name, opts){
   const lectura = !!(opts && opts.lectura);
   const t = _ndaTextos();
@@ -11487,6 +11527,7 @@ function ndaMostrar(name, opts){
       ${pie}
     </div>`;
   document.body.appendChild(el);
+  if(!lectura) _ndaTrasFirmar = (opts && typeof opts.alFirmar === 'function') ? opts.alFirmar : null;
   if(lectura){
     const cerrar = document.getElementById('ndaCerrar');
     if(cerrar) cerrar.addEventListener('click', () => { const ov = document.getElementById('ndaOverlay'); if(ov) ov.remove(); });
@@ -11548,6 +11589,9 @@ async function ndaFirmar(name){
     const ov = document.getElementById('ndaOverlay');
     if(ov) ov.remove();
     try{ if(typeof playSound==='function') playSound('correct'); }catch(_){}
+    const seguir = _ndaTrasFirmar;
+    _ndaTrasFirmar = null;
+    if(seguir){ try{ seguir(); }catch(_){} }
   }catch(e){
     const m = e && e.message;
     err.textContent =
@@ -12584,7 +12628,9 @@ async function pinSubmit(){
     };
     // Server-side verification (no-op unless USE_SERVER_EMP_PIN_VERIFY).
     const _srv = await verifyEmployeePinServer(pinTarget, pinBuffer);
-    if(_srv==='ok'){ try{ emp.pin=await hashPin(pinBuffer); saveDB(); }catch(_){} recordPinSuccess(); closePinAndEnter(); return; }
+    // La sesión Auth se pide en TODAS las ramas que entran: sin ella la
+    // puerta del compromiso (H3) no deja pasar.
+    if(_srv==='ok'){ try{ emp.pin=await hashPin(pinBuffer); saveDB(); }catch(_){} recordPinSuccess(); _authSesionEnSegundoPlano(pinTarget, emp.pin); closePinAndEnter(); return; }
     if(_srv==='fail'){ _pinWrong(); return; }
     // 'migrate' | 'fallback' → fall through to the legacy local compare.
     const inputHash=await hashPin(pinBuffer);
@@ -12600,6 +12646,7 @@ async function pinSubmit(){
     if(match){
       if(_srv==='migrate') setEmployeePinServer(pinTarget, pinBuffer); // lazy migrate to bcrypt
       recordPinSuccess();
+      _authSesionEnSegundoPlano(pinTarget, inputHash);
       closePinAndEnter();
     } else {
       _pinWrong();
@@ -12618,6 +12665,7 @@ async function pinSubmit(){
       saveDB();
       setEmployeePinServer(pinTarget, pinBuffer); // server bcrypt (no-op unless flag on)
       const _rpName=pinTarget, _rpHash=emp.pin; // usuario nuevo → ofrecer correo de recuperación
+      _authSesionEnSegundoPlano(pinTarget, emp.pin);
       closePinAndEnter();
       try{ promptRecoveryEmail(_rpName, _rpHash); }catch(_){}
     } else {
@@ -12730,6 +12778,43 @@ function _showCloudPinLogin(name, emp) {
   setupModalA11y(overlay, () => overlay.remove());
 }
 
+// La espera de la puerta y la salida por ella. Una generación por intento: si
+// mientras se comprueba empieza otra entrada, la respuesta vieja no hace nada.
+let _puertaGen = 0;
+function _puertaEsperaPoner(){
+  if(document.getElementById('puertaEspera')) return;
+  const ol = document.createElement('div');
+  ol.className = 'login-loading-overlay';
+  ol.id = 'puertaEspera';
+  ol.setAttribute('role','status');
+  ol.innerHTML = `
+    <div class="loading-logo">Meseo</div>
+    <div class="loading-bar-track"><div class="loading-bar"></div></div>
+    <div class="loading-text">${LANG==='en'?'Checking your access…':'Comprobando tu acceso…'}</div>
+  `;
+  document.body.appendChild(ol);
+}
+function _puertaEsperaQuitar(){
+  const ol = document.getElementById('puertaEspera');
+  if(ol) ol.remove();
+}
+function _puertaTexto(motivo){
+  const en = LANG === 'en';
+  if(motivo === 'sin_identidad')
+    return en ? 'Your session could not be confirmed. Sign in again; if it keeps happening, tell your manager.'
+              : 'No se ha podido confirmar tu sesión. Vuelve a entrar; si se repite, avisa a tu responsable.';
+  return en ? 'You need a connection to enter: Meseo checks your session and your terms of use with the server. Check your connection and try again.'
+            : 'Para entrar hace falta conexión: Meseo comprueba con el servidor tu sesión y tu compromiso de uso. Revisa la conexión y vuelve a intentarlo.';
+}
+function _puertaFuera(motivo){
+  if(motivo === 'cancelada') return;       // salió o entró otro: no hay nada que decir
+  const txt = _puertaTexto(motivo);
+  if(typeof renderLogin === 'function') renderLogin();
+  const err = document.getElementById('loginError');
+  if(err){ err.style.color = ''; err.textContent = txt; }
+  if(typeof showToast === 'function') showToast(txt, 'info', 6000);
+}
+
 async function closePinAndEnter(){
   // LA PUERTA DE LA SUSPENSIÓN, y va aquí por un motivo: éste es el ÚNICO
   // sitio por el que se entra de verdad. Lo llaman el login con contraseña y
@@ -12746,6 +12831,30 @@ async function closePinAndEnter(){
     // intentar entrar y a chocar con este mismo aviso.
     try{ localStorage.removeItem('txoko_session'); }catch(_){}
     if(typeof renderLogin === 'function') renderLogin();
+    return;
+  }
+  // LA PUERTA DEL COMPROMISO (H3). Antes se entraba y DESPUÉS se preguntaba si
+  // faltaba la firma; sin red, sin sesión o si la consulta fallaba, se quedaba
+  // dentro. Ahora se pregunta ANTES de cargar la carta y de enseñar la app, y
+  // sólo un «firmada» del servidor deja seguir. Mientras tanto, «Comprobando
+  // tu acceso…»; si falla, se explica y se queda fuera.
+  const _gen = ++_puertaGen;
+  const _quien = pinTarget;
+  _puertaEsperaPoner();
+  let _p;
+  try{ _p = await _ndaPuerta(_quien); }catch(e){ _p = { ok:false, motivo:'sin_red' }; }
+  if(_gen !== _puertaGen) return;          // otra entrada ha tomado el relevo
+  _puertaEsperaQuitar();
+  if(!_p || _p.ok !== true){
+    const ov = document.getElementById('pinOverlay');
+    if(ov) ov.remove();
+    if(_p && _p.motivo === 'pendiente'){
+      // Toca firmar: el compromiso sale sobre el login, SIN haber entrado.
+      // Al firmar, se vuelve a pasar por aquí y el servidor lo confirma.
+      ndaMostrar(_quien, { alFirmar: () => { pinTarget = _quien; closePinAndEnter(); } });
+      return;
+    }
+    _puertaFuera(_p && _p.motivo);
     return;
   }
   // La carta ANTES de nada, y con el restaurante que trae la ficha del que
@@ -12794,11 +12903,6 @@ async function closePinAndEnter(){
   document.getElementById('screenLogin').classList.remove('active');
   document.getElementById('screenApp').classList.add('active');
   applyLangToApp();
-  // El acuerdo de confidencialidad tapa la app hasta que se firma. Va después
-  // de entrar y no antes, para que se vea sobre la app y quede claro qué es lo
-  // que se está protegiendo; sin red no bloquea a nadie (ndaPendiente devuelve
-  // false), que dejar a alguien fuera de su formación por el wifi sería peor.
-  try{ ndaPendiente(pinTarget).then(hay => { if(hay) ndaMostrar(pinTarget); }); }catch(_){}
   // Los botones del carro de quesos y de la bodega salen sólo si este
   // restaurante tiene una. Y se tira lo que hubiera cargado de otro.
   try{ _vinosVigilar(); _navQuesosSync(); _navVinosSync(); _navSalaSync(); }catch(_){}

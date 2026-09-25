@@ -9401,7 +9401,7 @@ test('Acceso: el acuerdo de confidencialidad se firma una vez y con su versión'
   // asunto de las firmas mientras cierra la parte legal; el texto y el
   // mecanismo se quedan montados. Encenderlo es poner 'activo': true.
   assert(typeof nda.activo === 'boolean', 'el acuerdo necesita su interruptor «activo»');
-  assert(/if\(nda\.activo === false\) return false;/.test(html),
+  assert(/if\(nda\.activo === false\) return \{ ok:true \};/.test(html),
     'con el interruptor apagado no se le pide la firma a nadie');
   for (const lang of ['es', 'en']) {
     const t = nda[lang];
@@ -9421,8 +9421,8 @@ test('Acceso: el acuerdo de confidencialidad se firma una vez y con su versión'
   const val = html.slice(html.indexOf('function _ndaNombreValido('),
                          html.indexOf('async function ndaFirmar('));
   assert(/\{2,\}\( \[A-Za-z/.test(val), 'la firma exige al menos dos palabras');
-  assert(/try\{ ndaPendiente\(pinTarget\)\.then\(hay => \{ if\(hay\) ndaMostrar\(pinTarget\)/.test(html),
-    'el acuerdo se comprueba al entrar');
+  // H3: se comprueba ANTES de entrar, en la puerta (ver «H3 ·» más abajo).
+  assert(/_p = await _ndaPuerta\(_quien\)/.test(html), 'el acuerdo se comprueba al entrar');
   const css = read('styles.css');
   assert(/\.nda-overlay\{[^}]*position: fixed[^}]*inset: 0/.test(css), 'el acuerdo tapa la app entera');
   assert(/\.nda-firma-input\{[^}]*font-size: 16px/.test(css),
@@ -9452,7 +9452,7 @@ test('compromiso · está encendido y con versión nueva: todo el mundo firma un
   assert(/^\d{4}-\d{2}-\d{2}-v\d+$/.test(nda.version),
     `la versión lleva fecha y número (AAAA-MM-DD-vN), no «${nda.version}»`);
   // Y el interruptor de emergencia sigue existiendo en el código.
-  assert(/if\(nda\.activo === false\) return false;/.test(html),
+  assert(/if\(nda\.activo === false\) return \{ ok:true \};/.test(html),
     'el interruptor «activo» tiene que seguir funcionando por si hay que apagarlo');
 });
 
@@ -9690,7 +9690,7 @@ test('firma autenticada · el cliente sólo envía nombre y hash, y espera a la 
   assert(!/p_name|p_version|p_venue|p_employee/.test(f), 'ni empleado, ni versión, ni restaurante');
   const c = html.slice(html.indexOf('function ndaCargar('), html.indexOf('async function _ndaSesion('));
   assert(/crypto\.subtle\.digest\('SHA-256', buf\)/.test(c), 'el hash se calcula sobre los bytes exactos del fichero');
-  const p = html.slice(html.indexOf('async function ndaPendiente('), html.indexOf('function _ndaTextos('));
+  const p = html.slice(html.indexOf('async function _ndaPuerta('), html.indexOf('function _ndaTextos('));
   assert(/supaNdaEstado\(\)/.test(p) && !/employees\?name=eq/.test(p), 'la pregunta «¿le toca firmar?» la responde el servidor');
 });
 
@@ -9708,15 +9708,15 @@ const _nda13 = await (async () => {
       ndaOverlay: { quitada: false, remove(){ this.quitada = true; } },
     };
     const emp = {};
-    let guardado = false;
+    let guardado = false, siguio = false;
     const f = new Function('document', 'LANG', '_NDA_SHA', '_ndaTextos', '_ndaNombreValido', '_ndaSesion',
-      'supaNdaSign', 'getEmp', 'saveDB', 'playSound', `${src}; return ndaFirmar;`)( // eslint-disable-line no-new-func
+      'supaNdaSign', 'getEmp', 'saveDB', 'playSound', '_ndaTrasFirmar', `${src}; return ndaFirmar;`)( // eslint-disable-line no-new-func
       { getElementById: id => els[id] || null }, 'es', 'a'.repeat(64),
       () => ({ firma_error_servidor: 'error servidor' }), () => true,
       async () => sesion, async () => { if (respuesta instanceof Error) throw respuesta; return respuesta; },
-      () => emp, () => { guardado = true; }, () => {});
+      () => emp, () => { guardado = true; }, () => {}, () => { siguio = true; });
     await f('ZZ');
-    return { emp, guardado, quitada: els.ndaOverlay.quitada, error: els.ndaError.textContent, boton: els.ndaBoton.disabled };
+    return { emp, guardado, siguio, quitada: els.ndaOverlay.quitada, error: els.ndaError.textContent, boton: els.ndaBoton.disabled };
   };
   try {
     return {
@@ -9739,6 +9739,189 @@ test('firma autenticada · NDA-13: sin confirmación del servidor no hay firma',
     'si el servidor rechaza, no hay firma y se dice por qué');
   assert(ok.quitada && ok.guardado && ok.emp.ndaVersion === '2026-09-24-v1',
     'sólo con ok del servidor se cierra la pantalla, y con la versión que dice el servidor');
+});
+
+// ═══ H3 · LA PUERTA DEL COMPROMISO ═════════════════════════════════════════
+// «Una persona no puede entrar en Meseo sin que el servidor haya confirmado que
+// tiene firmada la versión vigente.» Se ejecuta _ndaPuerta DE VERDAD, con la
+// sesión, el texto y nda_estado simulados, y esperas cortas. En cada escenario
+// se anota si ENTRA (ok:true) y cuántas veces se preguntó al servidor.
+const _h3 = await (async () => {
+  const i0 = html.indexOf('const PUERTA_AUTH_MS');
+  const i1 = html.indexOf('\n}', html.indexOf('async function _ndaPuerta(')) + 2;
+  if (i0 < 0 || i1 < i0) return { roto: 'no encuentro _ndaPuerta' };
+  const src = html.slice(i0, i1).replace(/PUERTA_AUTH_MS = \d+, PUERTA_ESTADO_MS = \d+/,
+                                        'PUERTA_AUTH_MS = 80, PUERTA_ESTADO_MS = 80');
+  const nunca = new Promise(() => {});
+  const ctxDe = (empleado) => Object.freeze({ uid: 'u-' + empleado, token: 't', exp: 0, empleado, estado: 'authenticated' });
+  // o.fin: desenlace de la petición de sesión (valor, o una promesa); o.ctx: el
+  // contexto que habrá cuando acabe; o.estado: lo que responde nda_estado (un
+  // Error lanza, 'nunca' no responde); o.local: la ficha local del empleado.
+  const correr = async (o) => {
+    const env = { _NDA_SHA: o.sinTexto ? null : 'a'.repeat(64), _ctx: Object.freeze({ estado: 'initializing' }), preguntas: 0 };
+    // Al acabar en 'ok', la sesión queda puesta: como hace _authSesionEntrar.
+    const fin = Promise.resolve(o.fin).then(v => { if (v === 'ok') env._ctx = o.ctx || ctxDe('Ana'); return v; });
+    env._authPeticion = o.sinPeticion ? null : { nombre: o.peticionDe || 'Ana', fin };
+    env._authCtx = () => env._ctx;
+    env.ndaCargar = async () => (o.sinTexto ? null : { version: 'v', activo: o.activo === undefined ? true : o.activo });
+    env.getEmp = () => o.local || { ndaVersion: undefined };
+    env.supaNdaEstado = () => {
+      env.preguntas++;
+      if (o.alPreguntar) o.alPreguntar(env);
+      const r = o.estado;
+      if (r instanceof Error) return Promise.reject(r);
+      if (r === 'nunca') return nunca;
+      return Promise.resolve(r);
+    };
+    const puerta = new Function('env', `with(env){ ${src}; return _ndaPuerta; }`)(env); // eslint-disable-line no-new-func
+    const t0 = Date.now();
+    const res = await puerta('Ana');
+    return { entra: !!(res && res.ok === true), motivo: res && res.motivo, preguntas: env.preguntas, ms: Date.now() - t0 };
+  };
+  const FIRMADA = { autenticado: true, firmada: true }, PENDIENTE = { autenticado: true, firmada: false };
+  try {
+    const tarde = new Promise(r => setTimeout(() => r('ok'), 30));
+    return {
+      h1:  await correr({ fin: 'ok', estado: FIRMADA }),
+      h2:  await correr({ fin: 'ok', estado: PENDIENTE }),
+      h3a: await correr({ fin: tarde, estado: FIRMADA }),                           // initializing → llega tarde
+      h3b: await correr({ fin: nunca, estado: FIRMADA }),                           // initializing → nunca llega
+      h4:  await correr({ sinPeticion: true, estado: FIRMADA }),                     // anonymous
+      h5:  await correr({ fin: 'sin-red', estado: FIRMADA }),
+      h6:  await correr({ fin: 'ok', estado: new Error('rpc nda_estado 0') }),
+      h7:  await correr({ fin: 'ok', estado: 'nunca' }),
+      h8a: await correr({ fin: 'ok', ctx: ctxDe('Bruno'), estado: FIRMADA }),       // sesión de otro
+      h8b: await correr({ fin: 'ok', peticionDe: 'Bruno', estado: FIRMADA }),       // la petición es de otro
+      h9:  await correr({ fin: 'ok', estado: { autenticado: false, firmada: true } }),
+      h10a: await correr({ fin: 'ok', estado: PENDIENTE, local: { ndaVersion: '2026-09-24-v1' } }),
+      h10b: await correr({ fin: 'sin-red', estado: FIRMADA, local: { ndaVersion: '2026-09-24-v1' } }),
+      h11: await correr({ fin: 'ok', estado: FIRMADA, alPreguntar: env => { env._authPeticion = { nombre: 'Bruno', fin: nunca }; } }),
+      h12a: await correr({ sinTexto: true, fin: 'ok', estado: FIRMADA }),
+      h12b: await correr({ fin: 'rechazada', estado: FIRMADA }),
+      h12c: await correr({ fin: 'ok', estado: null }),
+      h12d: await correr({ fin: 'http-503', estado: FIRMADA }),
+      apagado: await correr({ sinPeticion: true, activo: false, estado: FIRMADA }),
+    };
+  } catch (e) { return { roto: String(e && e.message || e) }; }
+})();
+const _h3ok = (r) => r && r.entra === true;
+
+test('H3-1 · sesión confirmada + firma vigente en el servidor → entra', () => {
+  assert(!_h3.roto, `no se pudo ejecutar _ndaPuerta: ${_h3.roto}`);
+  assert(_h3ok(_h3.h1) && _h3.h1.preguntas === 1, 'con todo en orden tiene que entrar, tras preguntar UNA vez');
+});
+test('H3-2 · sesión confirmada + firma pendiente → NO entra: toca firmar', () => {
+  assert(!_h3ok(_h3.h2) && _h3.h2.motivo === 'pendiente', `esperaba «pendiente», no ${JSON.stringify(_h3.h2)}`);
+});
+test('H3-3 · auth aún inicializando: espera, y sólo entra si el servidor lo confirma', () => {
+  assert(_h3ok(_h3.h3a) && _h3.h3a.ms >= 25, 'con la sesión llegando tarde tiene que esperar y luego entrar');
+  assert(!_h3ok(_h3.h3b) && _h3.h3b.motivo === 'tiempo' && _h3.h3b.preguntas === 0,
+    'si la sesión no llega nunca, agotar la espera es un «no», no un «pasa»');
+});
+test('H3-4 · sin petición de sesión (anónimo) → NO entra', () => {
+  assert(!_h3ok(_h3.h4) && _h3.h4.preguntas === 0, 'sin identidad no se pregunta ni se entra');
+});
+test('H3-5 · sin red al pedir la sesión → NO entra', () => {
+  assert(!_h3ok(_h3.h5) && _h3.h5.motivo === 'sin_red', 'sin red no se deja pasar a nadie');
+  assert(!_h3ok(_h3.h12d) && _h3.h12d.motivo === 'sin_red', 'un 5xx de sesion tampoco abre');
+});
+test('H3-6 · nda_estado falla → NO entra', () => {
+  assert(!_h3ok(_h3.h6), 'un error de la consulta no es un permiso');
+});
+test('H3-7 · nda_estado no responde → NO entra al agotar la espera', () => {
+  assert(!_h3ok(_h3.h7) && _h3.h7.motivo === 'tiempo', 'la espera agotada se convierte en «no»');
+});
+test('H3-8 · sesión de OTRO empleado → NO entra', () => {
+  assert(!_h3ok(_h3.h8a), 'la sesión de Bruno no deja entrar a Ana');
+  assert(!_h3ok(_h3.h8b) && _h3.h8b.preguntas === 0, 'la petición de sesión en vuelo es de Bruno: Ana no entra');
+});
+test('H3-9 · el servidor no reconoce la sesión (autenticado:false) → NO entra', () => {
+  assert(!_h3ok(_h3.h9), 'firmada:true sin autenticado:true no vale nada');
+});
+test('H3-10 · el estado LOCAL no cuenta: ni la ficha firmada abre la puerta', () => {
+  assert(!_h3ok(_h3.h10a) && _h3.h10a.motivo === 'pendiente', 'el servidor dice pendiente: manda sobre la ficha local');
+  assert(!_h3ok(_h3.h10b), 'sin red, una ficha local «firmada» no deja pasar');
+});
+test('H3-11 · si sale o entra otro mientras se pregunta, la respuesta no abre', () => {
+  assert(!_h3ok(_h3.h11) && _h3.h11.motivo === 'cancelada', 'una respuesta de una petición que ya no es la viva no abre');
+});
+test('H3-12 · sin texto, sesión rechazada o respuesta vacía → NO entra', () => {
+  assert(!_h3ok(_h3.h12a) && _h3.h12a.motivo === 'sin_texto', 'sin el texto vigente no se sabe qué hay que tener firmado');
+  assert(!_h3ok(_h3.h12b) && _h3.h12b.motivo === 'sin_identidad', 'una sesión rechazada no abre');
+  assert(!_h3ok(_h3.h12c), 'una respuesta vacía de nda_estado no abre');
+  // Y el interruptor del propietario sigue siendo el único atajo.
+  assert(_h3ok(_h3.apagado), 'con el compromiso apagado en data/nda.json no se pide la firma');
+});
+
+test('H3 · la puerta va ANTES de la carta y de la app, y después de la suspensión', () => {
+  const i = html.indexOf('async function closePinAndEnter(');
+  const f = html.slice(i, html.indexOf('\n}', i));
+  const iSusp = f.indexOf('if(!_puedeEntrar(pinTarget))');
+  const iPuerta = f.indexOf('await _ndaPuerta(');
+  const iOk = f.indexOf("if(!_p || _p.ok !== true)");
+  const iCarta = f.indexOf('cargarCarta(');
+  const iUser = f.indexOf('currentUser=pinTarget');
+  const iApp = f.indexOf("getElementById('screenApp').classList.add('active')");
+  assert(iSusp >= 0 && iPuerta > iSusp, 'la puerta del compromiso va después de la de la suspensión');
+  assert(iOk > iPuerta && iCarta > iOk && iUser > iOk && iApp > iOk,
+    'la carta, currentUser y la app sólo pueden llegar DESPUÉS de que la puerta diga ok');
+  assert(/if\(_p && _p\.motivo === 'pendiente'\)\{[\s\S]{0,300}ndaMostrar\(_quien, \{ alFirmar:[\s\S]{0,200}return;[\s\S]{0,40}_puertaFuera\(_p && _p\.motivo\);\s*return;/.test(f),
+    'sin ok: o se enseña el compromiso SIN entrar, o se queda fuera; en ambos casos, return');
+  assert(/if\(_gen !== _puertaGen\) return;/.test(f), 'una comprobación vieja no puede abrir la puerta de otra entrada');
+  assert(!/ndaPendiente\(/.test(html), 'ha vuelto la comprobación DESPUÉS de entrar');
+});
+
+test('H3 · todas las entradas piden la sesión Auth antes de la puerta', () => {
+  let i = -1, n = 0;
+  while ((i = html.indexOf('closePinAndEnter();', i + 1)) >= 0) {
+    const antes = html.slice(Math.max(0, i - 700), i);
+    if (/pinTarget = _quien; $/.test(antes)) continue;     // la vuelta tras firmar: reutiliza la sesión
+    n++;
+    assert(/_authSesionEnSegundoPlano\(/.test(antes),
+      `una entrada llama a closePinAndEnter sin haber pedido la sesión (posición ${i})`);
+  }
+  assert(n === 7, `esperaba 7 entradas, encontré ${n}`);
+});
+
+// El desenlace de la petición de sesión: la puerta lo espera, así que tiene
+// que llegar SIEMPRE, y una sola vez.
+const _h3fin = await (async () => {
+  const i = html.indexOf('function _authSesionEnSegundoPlano(');
+  const src = html.slice(i, html.indexOf('\n}', i) + 2);
+  const correr = async (entrar, cancelar) => {
+    const env = { _authPeticion: null, dbgw: () => {} };
+    env._authSesionEntrar = async (n, s, mia) => { if (cancelar) env._authPeticion = { otro: true }; return entrar(); };
+    const f = new Function('env', `with(env){ ${src}; return _authSesionEnSegundoPlano; }`)(env); // eslint-disable-line no-new-func
+    const mia = f('Ana', 'a'.repeat(64));
+    const viva = env._authPeticion === mia;
+    return { viva, fin: await Promise.race([mia.fin, new Promise(r => setTimeout(() => r('SIN DESENLACE'), 200))]) };
+  };
+  try {
+    return {
+      ok: await correr(() => 'ok'),
+      sinRed: await correr(() => 'sin-red'),
+      lanza: await correr(() => { throw new Error('x'); }),
+      cancelada: await correr(() => 'ok', true),
+    };
+  } catch (e) { return { roto: String(e && e.message || e) }; }
+})();
+
+test('H3 · la petición de sesión expone su desenlace y nunca se queda colgada', () => {
+  assert(!_h3fin.roto, `no se pudo ejecutar: ${_h3fin.roto}`);
+  assert(_h3fin.ok.viva && _h3fin.ok.fin === 'ok', 'devuelve la petición viva y acaba en ok');
+  assert(_h3fin.sinRed.fin === 'sin-red', 'el fallo llega tal cual a la puerta');
+  assert(_h3fin.lanza.fin === 'error', 'si algo lanza, el desenlace es error, no silencio');
+  assert(_h3fin.cancelada.fin === 'cancelada', 'si entra otro, el desenlace es cancelada');
+});
+
+test('H3 · firmar no abre la puerta: vuelve a preguntar al servidor', () => {
+  const f = html.slice(html.indexOf('async function ndaFirmar('), html.indexOf('function showLegalModal('));
+  assert(/if\(!r \|\| r\.ok !== true\) throw[\s\S]{0,700}const seguir = _ndaTrasFirmar;/.test(f),
+    'la continuación sólo corre tras el ok del servidor');
+  assert(/alFirmar: \(\) => \{ pinTarget = _quien; closePinAndEnter\(\); \}/.test(html),
+    'tras firmar se vuelve a pasar por closePinAndEnter, que pregunta otra vez a nda_estado');
+  assert(_nda13.ok && _nda13.ok.siguio === true && _nda13.sinRed.siguio === false && _nda13.rechazada.siguio === false,
+    'NDA-13: la continuación corre con ok del servidor y SÓLO entonces');
 });
 
 test('compromiso · privacidad.html cuenta lo que de verdad se guarda', () => {
@@ -12247,9 +12430,12 @@ test('ni un token ni un PIN llegan a los registros', () => {
   assert(!/refresco-de-prueba/.test(todo), 'hay un refresh token en los registros: ' + todo);
 });
 
-test('el login pide la sesión en sus tres puertas, y salir la retira', () => {
+test('el login pide la sesión en sus siete puertas, y salir la retira', () => {
+  // H3: la puerta del compromiso exige la sesión Auth, así que ahora la piden
+  // TODAS las entradas: contraseña, alta, PIN (tres ramas), PIN de la nube y
+  // auto-login.
   const puertas = (html.match(/_authSesionEnSegundoPlano\(/g) || []).length;
-  assert(puertas === 4, `esperaba 3 llamadas + 1 definición, encontré ${puertas}`);
+  assert(puertas === 8, `esperaba 7 llamadas + 1 definición, encontré ${puertas}`);
   assert(/currentUser=null;[\s\S]{0,400}_authSesionSalir\(\)/.test(html),
     'logout() no retira la sesión de Auth');
   // Y la petición va DESPUÉS de decidir «recordarme»: de eso depende dónde
