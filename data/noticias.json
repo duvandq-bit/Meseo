@@ -1,9 +1,98 @@
 {
- "updated": "2026-09-25T01:34:17.424Z",
+ "updated": "2026-09-25T10:14:16.867Z",
  "items": [
   {
+   "t": "El municipio canario de Garachico cobrará la basura según sus residentes",
+   "u": "https://www.canariasenpleno.com/tasa-basura-garachico/",
+   "s": "Canarias en Pleno",
+   "d": "2026-09-25T08:54:52.000Z",
+   "tags": [
+    "CANARIAS"
+   ]
+  },
+  {
+   "t": "Premios Embajadores de Canarias: Galardones a Empresas Internacionales",
+   "u": "https://www.canariasdiario.com/noticia/151793/economia/siete-empresas-canarias-premiadas-en-madrid-por-su-internacionalizacion.html",
+   "s": "Canariasdiario.com",
+   "d": "2026-09-25T08:53:39.000Z",
+   "tags": [
+    "CANARIAS"
+   ]
+  },
+  {
+   "t": "Toño Rodríguez, chef Michelin aragonés: \"El error más frecuente para hacer las judías o acelgas es lavarlas antes de cocinarlas\"",
+   "u": "https://www.heraldo.es/noticias/gastronomia/2026/09/25/tono-rodriguez-chef-michelin-aragones-error-frecuente-hacer-judias-acelgas-lavarlas-antes-cocinarlas-2044816.amp.html",
+   "s": "heraldo.es",
+   "d": "2026-09-25T07:47:27.000Z",
+   "tags": [
+    "ALTA COCINA",
+    "MICHELIN"
+   ],
+   "img": "https://imagenes.heraldo.es/files/image_1920_1080/uploads/imagenes/2026/09/07/6a9ec999d4e949-26656203.jpeg"
+  },
+  {
+   "t": "El restaurante de Gran Canaria donde comer frente al mar: pescado fresco, marisco y una terraza a pie de playa",
+   "u": "https://www.laprovincia.es/gran-canaria/2026/09/25/restaurante-gran-canaria-comer-frente-mar-pescado-fresco-dv-134641197.html",
+   "s": "La Provincia",
+   "d": "2026-09-25T07:43:46.000Z",
+   "tags": [
+    "CANARIAS"
+   ]
+  },
+  {
+   "t": "El bodegón de Tenerife al que todos van por un plato: abierto desde 1957 y situado en una casa de más de 200 años",
+   "u": "https://www.eldia.es/tenerife/2026/09/25/bodegon-tenerife-plato-abierto-1957-dv-134662320.amp.html",
+   "s": "Eldía",
+   "d": "2026-09-25T07:06:08.000Z",
+   "tags": [
+    "CANARIAS"
+   ]
+  },
+  {
+   "t": "El Campus del Vino de Canarias abre las puertas a su IX Curso de Sumiller",
+   "u": "https://www.tecnovino.com/el-campus-del-vino-de-canarias-abre-las-puertas-a-su-ix-curso-de-sumiller/",
+   "s": "Tecnovino",
+   "d": "2026-09-25T07:03:59.000Z",
+   "tags": [
+    "VINO",
+    "CANARIAS"
+   ],
+   "img": "https://www.tecnovino.com/wp-content/uploads/2026/09/Tecnovino-Curso-de-Sumiller-Canarias-DO-Ycoden-Isora-e-Islas-Canarias.jpg"
+  },
+  {
+   "t": "Telde felicita a la Bodega Señorío de Cabrera por su medall…",
+   "u": "https://canariasnoticias.es/2026/09/24/telde-felicita-a-la-bodega-senorio-de-cabrera-por-su-medalla-de-bronce-en-el-concurso-oficial-de-vinos-de-gran-canaria",
+   "s": "canariasnoticias.es",
+   "d": "2026-09-25T06:43:08.000Z",
+   "tags": [
+    "VINO",
+    "CANARIAS"
+   ],
+   "img": "https://lon1.digitaloceanspaces.com/canarias-noticias/media/images/2026/09/telde_senorio-decabrera.jpg"
+  },
+  {
+   "t": "Siete bodegas hacen promoción en Alemania de sus mejores vinos",
+   "u": "https://www.canarias7.es/canarias/lanzarote/siete-bodegas-promocion-alemania-mejores-vinos-20260925072300-nt_amp.html",
+   "s": "Canarias7",
+   "d": "2026-09-25T05:23:03.000Z",
+   "tags": [
+    "VINO",
+    "CANARIAS"
+   ],
+   "img": "https://s2.ppllstatics.com/canarias7/www/multimedia/local/2026/09/24/ARMANDO%20SANTANA-k8CD--1200x630@Canarias7.jpeg"
+  },
+  {
+   "t": "Turespaña y Tenerife exponen en Milán la oferta de turismo experiencial y gastronómico de la isla",
+   "u": "https://nexotur.com/turespana-y-tenerife-exponen-en-milan-la-oferta-de-turismo-experiencial-y-gastronomico-de-la-isla/",
+   "s": "Nexotur.com",
+   "d": "2026-09-25T03:38:47.000Z",
+   "tags": [
+    "CANARIAS"
+   ]
+  },
+  {
    "t": "Así es dormir en Las Villas de Bahía del Duque, en Tenerife: piscina privada, golf y 8 restaurantes",
-   "u": "https://www.elespanol.com/vivir/20260925/dormir-villas-bahia-duque-tenerife-piscina-privada-golf-restaurantes/1003744395562_0.html",
+   "u": "https://www.elespanol.com/vivir/20260925/dormir-villas-bahia-duque-tenerife-piscina-privada-golf-restaurantes/1003744395562_0.amp.html",
    "s": "El Español",
    "d": "2026-09-25T00:20:00.000Z",
    "tags": [
@@ -31,20 +120,29 @@
    ]
   },
   {
-   "t": "Telde felicita a la Bodega Señorío de Cabrera por su medall…",
-   "u": "https://canariasnoticias.es/2026/09/24/telde-felicita-a-la-bodega-senorio-de-cabrera-por-su-medalla-de-bronce-en-el-concurso-oficial-de-vinos-de-gran-canaria",
-   "s": "CanariasNoticias.es",
-   "d": "2026-09-24T21:08:08.000Z",
+   "t": "Hijos de la Ruina: “Canarias nos encanta, tenemos el concierto de Tenerife entre ceja y ceja”",
+   "u": "https://www.eldiario.es/canariasahora/cultura/hijos-ruina-canarias-encanta-concierto-tenerife-ceja-ceja_1_13536638.html",
+   "s": "elDiario.es",
+   "d": "2026-09-24T19:35:17.000Z",
    "tags": [
-    "VINO",
     "CANARIAS"
    ],
-   "img": "https://lon1.digitaloceanspaces.com/canarias-noticias/media/images/2026/09/telde_senorio-decabrera.jpg"
+   "img": "https://static.eldiario.es/clip/950c1e97-2f16-474f-8232-4e67d281ed76_facebook-aspect-ratio-1200-675_default_0_x991y443.jpg"
+  },
+  {
+   "t": "Siete municipios de Canarias ya tienen más camas turísticas que habitantes",
+   "u": "https://www.eldiario.es/canariasahora/sociedad/siete-municipios-canarias-camas-turisticas-habitantes_1_13526658.html",
+   "s": "elDiario.es",
+   "d": "2026-09-24T19:26:18.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://static.eldiario.es/clip/84610831-6e3e-4b00-b318-1e072db87122_facebook-aspect-ratio-1200-675_default_0.jpg"
   },
   {
    "t": "Nueva Canarias propone expropiar viviendas vacías a fondos buitre y bancos para el alquiler asequible",
    "u": "https://www.eldiario.es/canariasahora/politica/nueva-canarias-propone-expropiar-viviendas-vacias-fondos-buitre-bancos-alquiler-asequible_1_13536620.html",
-   "s": "eldiario.es",
+   "s": "elDiario.es",
    "d": "2026-09-24T19:20:25.000Z",
    "tags": [
     "CANARIAS"
@@ -54,7 +152,7 @@
   {
    "t": "El Gobierno propone a María Neira como candidata para dirigir la OMS",
    "u": "https://www.infobae.com/espana/agencias/2026/09/24/el-gobierno-propone-a-maria-neira-como-candidata-para-dirigir-la-oms/",
-   "s": "infobae.com",
+   "s": "Infobae",
    "d": "2026-09-24T18:24:26.000Z",
    "tags": [
     "CHEF"
@@ -63,21 +161,21 @@
   {
    "t": "El Ingesa niega haber boicoteado la convocatoria de una huelga sanitaria en Ceuta",
    "u": "https://www.infobae.com/espana/agencias/2026/09/24/el-ingesa-niega-haber-boicoteado-la-convocatoria-de-una-huelga-sanitaria-en-ceuta/",
-   "s": "infobae.com",
+   "s": "Infobae",
    "d": "2026-09-24T18:18:29.000Z",
    "tags": [
     "CHEF"
    ]
   },
   {
-   "t": "Omar Montes deberá pagar 2.000 euros mensuales de pensión por su hijo mayor tras la revisión judicial de sus ingresos",
-   "u": "https://www.infobae.com/espana/2026/09/24/omar-montes-debera-pagar-2000-euros-mensuales-de-pension-tras-la-revision-judicial-de-sus-ingresos/",
-   "s": "infobae.com",
-   "d": "2026-09-24T18:18:00.000Z",
+   "t": "Las altas temperaturas se mantendrán este viernes en Canarias y con aviso amarillo",
+   "u": "https://www.eldiario.es/canariasahora/tiempo-canarias/tiempo-canarias-viernes-25-de-septiembre-manana-hoy-temperaturas-aviso-amarillo_1_13536450.html",
+   "s": "elDiario.es",
+   "d": "2026-09-24T18:08:21.000Z",
    "tags": [
-    "CHEF"
+    "CANARIAS"
    ],
-   "img": "https://www.infobae.com/resizer/v2/64364MWIRBCEFLYNO2J6SVHY54.jpg?auth=eea208b1a8e25d253deb8094b86cc7585cf1494621dec7b84185b6054d45f152&smart=true&width=1200&height=630&quality=85"
+   "img": "https://static.eldiario.es/clip/736f0bae-5cbb-498a-a47b-bb053f1c3594_facebook-aspect-ratio-1200-675_default_0.jpg"
   },
   {
    "t": "Una impresionante casa indiana a una hora de Vigo se cuela en la Guía Michelin de los mejores hoteles",
@@ -122,7 +220,7 @@
   {
    "t": "Adobo y vino de Tegueste 2026",
    "u": "https://lagenda.org/programacion/adobo-y-vino-de-tegueste-2026-tenerife-gastronomia-43841",
-   "s": "lagenda.org",
+   "s": "Lagenda",
    "d": "2026-09-24T15:52:03.000Z",
    "tags": [
     "CANARIAS",
@@ -131,19 +229,19 @@
    "img": "https://s3-eu-west-1.amazonaws.com/beta.lagenda/programacion/adobo-y-vino-de-tegueste-2026.jpg"
   },
   {
-   "t": "Endesa lanza la quinta edición de su FP Dual para cubrir la alta demanda de profesionales en redes con un aumento de centros adscritos en Canarias",
-   "u": "https://www.eldiario.es/canariasahora/lapalmaahora/sociedad/endesa-lanza-quinta-edicion-fp-dual-cubrir-alta-demanda-profesionales-redes-aumento-centros-adscritos-canarias_1_13535859.html",
-   "s": "eldiario.es",
-   "d": "2026-09-24T15:25:21.000Z",
+   "t": "Santa Cruz de Tenerife activa el carril bus a Las Teresitas este fin de semana",
+   "u": "https://www.eldiario.es/canariasahora/tenerifeahora/sociedad/santa-cruz-tenerife-carril-bus-las-teresitas_1_13535700.html",
+   "s": "elDiario.es",
+   "d": "2026-09-24T15:03:08.000Z",
    "tags": [
     "CANARIAS"
    ],
-   "img": "https://static.eldiario.es/clip/41ec34d7-63b2-4118-bc8e-6493f9b28b58_facebook-aspect-ratio-1200-675_default_0.jpg"
+   "img": "https://static.eldiario.es/clip/03d9b311-d949-4e49-9815-cc351fb05fe8_facebook-aspect-ratio-1200-675_default_0.jpg"
   },
   {
    "t": "McDonald's abre un nuevo restaurante en el Centro Comercial Yumbo de Maspalomas y reafirma su apuesta por el desarrollo local",
    "u": "https://www.canarias7.es/economia/empresas/mcdonalds-abre-nuevo-restaurante-centro-comercial-yumbo-20260924150523-nt_amp.html",
-   "s": "canarias7.es",
+   "s": "Canarias7",
    "d": "2026-09-24T14:05:24.000Z",
    "tags": [
     "CANARIAS"
@@ -151,13 +249,14 @@
    "img": "https://s1.ppllstatics.com/canarias7/www/multimedia/economia/2026/09/24/publi-macdonals.JPG"
   },
   {
-   "t": "Ayuso, sobre Maricarmen: \"La izquierda está pidiendo que se cumpla una ley franquista\"",
-   "u": "https://www.infobae.com/espana/agencias/2026/09/24/ayuso-sobre-maricarmen-la-izquierda-esta-pidiendo-que-se-cumpla-una-ley-franquista/",
-   "s": "infobae.com",
-   "d": "2026-09-24T13:03:00.000Z",
+   "t": "Se suspende el desahucio de la mujer con cáncer terminal previsto para este viernes en Tenerife",
+   "u": "https://www.eldiario.es/canariasahora/tenerifeahora/sociedad/suspende-desahucio-mujer-cancer-terminal-previsto-viernes-tenerife_1_13535269.html",
+   "s": "elDiario.es",
+   "d": "2026-09-24T13:06:46.000Z",
    "tags": [
-    "CHEF"
-   ]
+    "CANARIAS"
+   ],
+   "img": "https://static.eldiario.es/clip/4315e79e-7e8b-4673-b253-b249765fbda8_facebook-aspect-ratio-1200-675_default_0_x1099y515.jpg"
   },
   {
    "t": "Abadía Retuerta LeDomaine renueva por tercer año consecutivo las Tres Llaves Michelin, la máxima distinción de la guía roja para hoteles",
@@ -172,7 +271,7 @@
   {
    "t": "La Pasadilla: el templo de la cuchara que custodia la verdad del sabor en Gran Canaria",
    "u": "https://www.eldiario.es/canariasahora/por-fogones/losjuernesdeporfogones/pasadilla-templo-cuchara-custodia-sabor-gran-canaria_1_13535294.html",
-   "s": "eldiario.es",
+   "s": "elDiario.es",
    "d": "2026-09-24T12:57:14.000Z",
    "tags": [
     "CANARIAS"
@@ -196,109 +295,6 @@
    "tags": [
     "CANARIAS"
    ]
-  },
-  {
-   "t": "¿Cómo son las relaciones entre los cocineros? Nos lo explican Elena Arzak y Martín Berasategui",
-   "u": "https://www.eitb.eus/es/television/videos/detalle/10202244/como-son-relaciones-entre-cocineros-nos-lo-explican-elena-arzak-y-martin-berasategui/",
-   "s": "eitb.eus",
-   "d": "2026-09-24T12:29:20.000Z",
-   "tags": [
-    "CHEF"
-   ],
-   "img": "https://media.eitb.eus/multimedia/images/2026/09/24/3747176/20260924142306_ondarea-cocineros-documental_foto960.jpg"
-  },
-  {
-   "t": "El hotel de Tarragona escogido como uno de los mejores de España para hacer una escapada",
-   "u": "https://www.diarimes.com/es/ebre/baix-ebre/260924/hotel-tarragona-escogido-mejores-espana-escapada_235642.html",
-   "s": "diarimes.com",
-   "d": "2026-09-24T12:12:14.000Z",
-   "tags": [
-    "ALTA COCINA"
-   ],
-   "img": "https://imagenes.diarimes.com/files/og_thumbnail/uploads/2026/09/24/6ab50e681b06a.webp"
-  },
-  {
-   "t": "Telde celebra el bronce de Bodega Señorío de Cabrera en el Concurso de Vinos de Gran Canaria",
-   "u": "https://lavozcanaria.com/area-metropolitana-gran-canaria/telde/telde-celebra-el-bronce-de-bodega-senorio-de-cabrera-en-el-concurso-de-vinos-de-gran-canaria",
-   "s": "La Voz Canaria",
-   "d": "2026-09-24T11:58:17.000Z",
-   "tags": [
-    "VINO",
-    "CANARIAS"
-   ],
-   "img": "https://lavozcanaria.com/media/2026/09/telde-celebra-el-bronce-de-bodega-senorio-de-cabrera-en-el-concurso-de-vinos-de-gran-canaria.webp"
-  },
-  {
-   "t": "Señorío de Cabrera vuelve a poner el vino de Telde entre los mejores de la isla",
-   "u": "https://teldeactualidad.com/art/184500/senorio-de-cabrera-vino-telde-premiado-mejores-gran-canaria-2026",
-   "s": "Telde Actualidad",
-   "d": "2026-09-24T11:49:41.000Z",
-   "tags": [
-    "VINO",
-    "CANARIAS"
-   ],
-   "img": "https://teldeactualidad.b-cdn.net/upload/images/09_2026/4173_55545869697_f9ef7e0432_b.jpg"
-  },
-  {
-   "t": "Calor, calima y tormentas: esta es la previsión de Aemet para las próximas horas en Canarias",
-   "u": "https://www.eldiario.es/canariasahora/tiempo-canarias/calor-calima-tormentas-prevision-aemet-proximas-horas-canarias_1_13534955.html",
-   "s": "eldiario.es",
-   "d": "2026-09-24T11:43:36.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://static.eldiario.es/clip/57261b18-093b-4211-b0f8-a8fe9e393f14_facebook-aspect-ratio-1200-675_default_0.jpg"
-  },
-  {
-   "t": "El hotel de Galicia seleccionado entre los mejores de España para una escapada con cena: 430 € para 2 personas",
-   "u": "https://www.elespanol.com/treintayseis/vivir/escapadas/20260924/hotel-galicia-seleccionado-mejores-espana-hacer-escapada-cena-eur-personas-trt/1003744395280_0.amp.html",
-   "s": "El Español",
-   "d": "2026-09-24T11:30:00.000Z",
-   "tags": [
-    "MICHELIN"
-   ],
-   "img": "https://s3.elespanol.com/k/imgp/cms/elespanol/11361382.jpg?p=f:jpeg/w:1706/h:960&h=6oju9nNW"
-  },
-  {
-   "t": "Bodega Ventura de Santa Brígida logra dos oros en el Concurso de Vinos de Gran Canaria",
-   "u": "https://lavozcanaria.com/area-metropolitana-gran-canaria/gran-canaria/bodega-ventura-de-santa-brigida-logra-dos-oros-en-el-concurso-de-vinos-de-gran-canaria",
-   "s": "La Voz Canaria",
-   "d": "2026-09-24T11:03:27.000Z",
-   "tags": [
-    "VINO",
-    "CANARIAS"
-   ],
-   "img": "https://lavozcanaria.com/media/2026/09/bodega-ventura-de-santa-brigida-logra-dos-oros-en-el-concurso-de-vinos-de-gran-canaria.webp"
-  },
-  {
-   "t": "Abadía Retuerta LeDomaine renueva sus Tres Llaves Michelin",
-   "u": "https://www.eldiadevalladolid.com/noticia/z158e1ad5-9945-444b-910a53241feb330e/202609/abadia-retuerta-ledomaine-renueva-sus-tres-llaves-michelin",
-   "s": "El Día de Valladolid",
-   "d": "2026-09-24T10:36:09.000Z",
-   "tags": [
-    "MICHELIN"
-   ],
-   "img": "https://www.eldiadevalladolid.com/media/IMG/2026/B73345CB-740D-4CE8-B52A555BCD46E75A.JPG"
-  },
-  {
-   "t": "La Guía MICHELIN desvela su selección de Llaves MICHELIN 2026",
-   "u": "https://www.expreso.info/noticias/gastronomia/114618_la_guia_michelin_desvela_su_seleccion_de_llaves_michelin_2026",
-   "s": "Expreso - Diario de viajes y turismo",
-   "d": "2026-09-24T10:26:46.000Z",
-   "tags": [
-    "MICHELIN"
-   ],
-   "img": "https://www.expreso.info/files/styles/expreso_theme_teaser_secundario_desktop/public/2026-09/Michelin_Llave2.jpg?itok=0GCe1arw"
-  },
-  {
-   "t": "Un hotel de Tarragona, entre los mejores de España para hacer una escapada con cena",
-   "u": "https://www.diaridetarragona.com/gastronomia/271433/hotel-tarragona-mejores-espana-escapada-cena.html",
-   "s": "Diari de Tarragona",
-   "d": "2026-09-24T10:05:13.000Z",
-   "tags": [
-    "ALTA COCINA"
-   ],
-   "img": "https://imagenes.diaridetarragona.com/files/og_thumbnail/files/fp/uploads/2026/04/16/69e10fb2c638a.r_d.1198-633-0.jpeg"
   }
  ]
 }
