@@ -1,17 +1,123 @@
 {
- "updated": "2026-09-27T01:31:17.539Z",
+ "updated": "2026-09-27T10:35:30.581Z",
  "items": [
   {
-   "t": "Fiestas de El Toscal 2023: Música, Gastronomía y Tradición del 25 al 30 de Septiembre",
-   "u": "https://www.canariasdiario.com/noticia/151832/agenda/el-toscal-celebra-su-ix-edicion-de-fiestas.html",
-   "s": "Canariasdiario.com",
-   "d": "2026-09-26T22:51:06.000Z",
+   "t": "El viñedo más alto de Europa está en Tenerife: así es el pueblo que desafía a los Alpes",
+   "u": "https://www.noticiasdelvino.com/escapadas/2026/09/27/el-vinedo-mas-alto-de-europa-esta-en-tenerife-asi-es-el-pueblo-que-desafia-a-los-alpes-66331/",
+   "s": "Noticias del Vino",
+   "d": "2026-09-27T10:17:39.000Z",
+   "tags": [
+    "VINO",
+    "CANARIAS"
+   ],
+   "img": "https://www.noticiasdelvino.com/wp-content/uploads/El-vinedo-mas-alto-de-Europa-esta-en-Tenerife.jpg.webp"
+  },
+  {
+   "t": "¿Cuándo se van la calima y el calor en Canarias? Esto dice la previsión de Aemet",
+   "u": "https://www.eldiario.es/canariasahora/tiempo-canarias/cuando-ira-calima-calor-canarias-prevision-aemet_1_13541612.html",
+   "s": "eldiario.es",
+   "d": "2026-09-27T09:55:55.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://static.eldiario.es/clip/bc790f82-271b-4092-b684-a8e8ceb2fd61_facebook-aspect-ratio-1200-675_default_0.jpg"
+  },
+  {
+   "t": "La gastronomía también se estudia en Canarias",
+   "u": "https://www.laprovincia.es/ocio/gastronomia/2026/09/27/gastronomia-estudia-canarias-universidad-134727465.html",
+   "s": "laprovincia.es",
+   "d": "2026-09-27T09:33:51.000Z",
    "tags": [
     "CANARIAS"
    ]
   },
   {
-   "t": "La Laguna elige la mejor arepa en un festival celebra la unión entre Canarias y Venezuela",
+   "t": "La villa juguetera de Alicante que conquista por su cocina: así es el pueblo donde mejor se come de España",
+   "u": "https://www.noticiasdelvino.com/restaurantes/2026/09/27/la-villa-juguetera-de-alicante-que-conquista-por-su-cocina-asi-es-el-pueblo-donde-mejor-se-come-de-espana-74836/",
+   "s": "Noticias del Vino",
+   "d": "2026-09-27T09:24:05.000Z",
+   "tags": [
+    "MICHELIN"
+   ],
+   "img": "https://www.noticiasdelvino.com/wp-content/uploads/restaurantes-5.jpg.webp"
+  },
+  {
+   "t": "La Laguna adjudica el mayor proyecto de rehabilitación residencial de Canarias en El Cardonal",
+   "u": "https://www.eldiario.es/canariasahora/tenerifeahora/la_laguna/laguna-adjudica-mayor-proyecto-rehabilitacion-residencial-canarias-cardonal_1_13541529.html",
+   "s": "eldiario.es",
+   "d": "2026-09-27T09:16:22.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://static.eldiario.es/clip/59075ac5-aa9c-4ec9-8465-bb2c6838d766_facebook-aspect-ratio-1200-675_default_0.jpg"
+  },
+  {
+   "t": "Zaperoco Fest: Canarias y Venezuela se abrazan en La Cuesta",
+   "u": "https://www.canariasenpleno.com/zaperoco-fest-la-cuesta/",
+   "s": "Canarias en Pleno",
+   "d": "2026-09-27T09:05:44.000Z",
+   "tags": [
+    "CANARIAS"
+   ]
+  },
+  {
+   "t": "El chiringuito de Gran Canaria que conquista con pescado fresco y cocina canaria: un clásico frente al mar para disfrutar de una comida",
+   "u": "https://www.laprovincia.es/gran-canaria/2026/09/27/chiringuito-gran-canaria-triunfa-pescado-dv-131675636.html",
+   "s": "laprovincia.es",
+   "d": "2026-09-27T08:30:00.000Z",
+   "tags": [
+    "CANARIAS"
+   ]
+  },
+  {
+   "t": "Martín Berasategui, chef (66 años): “La tarta de manzana más fácil de hacer se prepara con mantequilla, azúcar",
+   "u": "https://as.com/tikitakas/gastronomia/martin-berasategui-chef-66-anos-la-tarta-de-manzana-mas-facil-de-hacer-se-prepara-con-mantequilla-azucar-avainillado-y-maicena-f202609-n/?outputType",
+   "s": "Diario AS",
+   "d": "2026-09-27T05:58:42.000Z",
+   "tags": [
+    "CHEF"
+   ]
+  },
+  {
+   "t": "Dónde saborear Gran Canaria según la abogada laboralista Elena Tejedor Jorge",
+   "u": "https://www.canarias7.es/gastronomia-c7/a-fuego-lento/saborear-gran-canaria-segun-abogada-laboralista-elena-20260927070000-nt.html",
+   "s": "Canarias7",
+   "d": "2026-09-27T05:00:14.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://s2.ppllstatics.com/canarias7/www/multimedia/gastronomia-c7/2026/09/26/elena-kWmB-U301909391916ZvC-1200x840@Canarias7.jpg"
+  },
+  {
+   "t": "GASTRONOMÍA | VÍDEO | Tivoli La Caleta Tenerife Resort acogió el primer Kaitai de atún rojo Balfegó celebrado en Canarias",
+   "u": "https://www.elblogoferoz.com/2026/09/27/gastronomia-tivoli-la-caleta-tenerife-resort-acogio-el-primer-kaitai-de-atun-rojo-balfego-celebrado-en-canarias/",
+   "s": "elblogoferoz.com",
+   "d": "2026-09-27T03:30:00.000Z",
+   "tags": [
+    "CANARIAS"
+   ]
+  },
+  {
+   "t": "Fiestas de El Toscal 2023: Música, Gastronomía y Tradición del 25 al 30 de Septiembre",
+   "u": "https://www.canariasdiario.com/noticia/151832/agenda/el-toscal-celebra-su-ix-edicion-de-fiestas.html",
+   "s": "Canariasdiario.com",
+   "d": "2026-09-27T03:23:05.000Z",
+   "tags": [
+    "CANARIAS"
+   ]
+  },
+  {
+   "t": "Elogios al gazpacho, la hamburguesa y el pollo frito",
+   "u": "https://www.canarias7.es/gastronomia-c7/de-ruta/elogios-gazpacho-hamburguesa-pollo-frito-20260927010000-nt_amp.html",
+   "s": "Canarias7",
+   "d": "2026-09-26T23:00:03.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://s3.ppllstatics.com/canarias7/www/multimedia/gastronomia-c7/2026/09/26/FOTO%201.jpg"
+  },
+  {
+   "t": "La Laguna elige la mejor arepa en un festival que celebra la unión entre Canarias y Venezuela",
    "u": "https://diariodeavisos.elespanol.com/2026/09/la-mejor-arepa-en-la-laguna/",
    "s": "Diario de Avisos",
    "d": "2026-09-26T18:21:26.000Z",
@@ -21,9 +127,19 @@
    "img": "https://cdn.diariodeavisos.com/wp-content/uploads/2026/09/1000731717.jpg"
   },
   {
+   "t": "El precio pagado al productor de plátano de Canarias remonta el 63% y ya se vislumbra la salida de la crisis",
+   "u": "https://www.eldiario.es/canariasahora/eldiario-agricola/agricultura/precio-pagado-productor-platano-canarias-remonta-63-vislumbra-salida-crisis_1_13540765.html",
+   "s": "eldiario.es",
+   "d": "2026-09-26T18:01:20.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://static.eldiario.es/clip/ce7e97c6-a4c4-4de1-95f7-552237862d0b_facebook-aspect-ratio-1200-675_default_0.jpg"
+  },
+  {
    "t": "Maricarmen, desde el hospital, pide a la gente que luche contra los desahucios",
    "u": "https://www.eldia.es/videos/sociedad/2026/09/26/maricarmen-hospital-pide-gente-luche-134715660.amp.html",
-   "s": "Eldía",
+   "s": "eldia.es",
    "d": "2026-09-26T17:45:21.000Z",
    "tags": [
     "VINO",
@@ -33,7 +149,7 @@
   {
    "t": "El baño de masas del papa León XIV a su paso por los Campos Elíseos parisinos",
    "u": "https://www.eldia.es/videos/internacional/2026/09/26/bano-masas-papa-leon-xiv-134714687.amp.html",
-   "s": "Eldía",
+   "s": "eldia.es",
    "d": "2026-09-26T17:04:00.000Z",
    "tags": [
     "VINO",
@@ -43,7 +159,7 @@
   {
    "t": "Vendimia y producción del vino en una finca de Bodegas Insulares de Tenerife",
    "u": "https://www.eldia.es/tenerife/2026/09/26/vendimia-produccion-vino-finca-bodegas-134643698.html",
-   "s": "Eldía",
+   "s": "eldia.es",
    "d": "2026-09-26T17:01:10.000Z",
    "tags": [
     "VINO",
@@ -53,7 +169,7 @@
   {
    "t": "El bocadillo de pata de Telde tiene mucho cuento detrás: así descubren los hosteleros del municipio el viaje del cochino canario hasta la mesa",
    "u": "https://www.laprovincia.es/telde/2026/09/26/bocadillo-pata-telde-cuento-detras-134672332.amp.html",
-   "s": "La Provincia",
+   "s": "laprovincia.es",
    "d": "2026-09-26T17:01:09.000Z",
    "tags": [
     "CANARIAS"
@@ -62,7 +178,7 @@
   {
    "t": "De la viña a la copa: el largo viaje que convierte a la uva de Tenerife en vino",
    "u": "https://www.eldia.es/tenerife/2026/09/26/copa-viaje-convierte-uva-vino-134630951.html",
-   "s": "Eldía",
+   "s": "eldia.es",
    "d": "2026-09-26T17:01:09.000Z",
    "tags": [
     "VINO",
@@ -72,7 +188,7 @@
   {
    "t": "Este es el proceso de producción del vino en una bodega de Tenerife",
    "u": "https://www.eldia.es/videos/tenerife/2026/09/26/proceso-produccion-vino-bodega-tenerife-134647194.html",
-   "s": "Eldía",
+   "s": "eldia.es",
    "d": "2026-09-26T17:01:09.000Z",
    "tags": [
     "VINO",
@@ -81,7 +197,7 @@
   },
   {
    "t": "El refugio de Fito Cabrales en un pueblo de 1.200 vecinos: una enorme casa de campo, club de golf y vistas increíbles a la montaña",
-   "u": "https://cronicavasca.elespanol.com/rutas/20260926/refugio-fito-cabrales-pueblo-vecinos-increibles-montana-trt/1003742797187_0.amp.html",
+   "u": "https://cronicavasca.elespanol.com/rutas/20260926/refugio-fito-cabrales-pueblo-vecinos-increibles-montana-trt/1003742797187_0.html",
    "s": "Crónica Vasca",
    "d": "2026-09-26T16:00:00.000Z",
    "tags": [
@@ -92,7 +208,7 @@
   {
    "t": "Ferran Adrià: “Tenéis que estar orgullosos de vuestra cocina”",
    "u": "https://marinaalta.es/2026/09/ferran-adria-teneis-que-estar-orgullosos-de-vuestra-cocina/",
-   "s": "marinaalta.es",
+   "s": "MarinaAlta.es",
    "d": "2026-09-26T15:49:00.000Z",
    "tags": [
     "ALTA COCINA"
@@ -100,14 +216,15 @@
    "img": "https://media.marinaalta.es/wp-content/uploads/2026/09/26172258/Dna-Denia-2026-26-septiembre-Tino-Calvo-10.jpg"
   },
   {
-   "t": "LOBA x Guachinches - Cañón Tigre + Duele",
-   "u": "https://lagenda.org/programacion/loba-x-guachinches-canon-tigre-duele-tenerife-gastro-concierto-2026-43919",
-   "s": "Lagenda",
-   "d": "2026-09-26T14:21:57.000Z",
+   "t": "Cierra esta noche El Espejo, referente de Sanlúcar y con un Bib Gourmand de Michelin, tras 11 años por 'desgaste' personal",
+   "u": "https://www.lavozdelsur.es/ediciones/provincia-cadiz/cierra-esta-noche-el-espejo-referente-de-sanlucar-y-con-un-bib-gourmand-de-michelin-tras-11-anos-por-desgaste-personal.html",
+   "s": "La Voz del Sur",
+   "d": "2026-09-26T15:20:37.000Z",
    "tags": [
-    "CANARIAS"
+    "ALTA COCINA",
+    "MICHELIN"
    ],
-   "img": "https://s3-eu-west-1.amazonaws.com/beta.lagenda/programacion/canon-tigre-duele.jpg"
+   "img": "https://d2mqpxndxh0mbq.cloudfront.net/articulos/articulos-183266.jpg?v=202609271235"
   },
   {
    "t": "Martín Berasategui, chef: \"La tarta de manzana más rica lleva 200 g de nata líquida, 50 g de azúcar moreno, 1 vaina de vainilla y 2 huevos enteros\"",
@@ -171,132 +288,12 @@
   {
    "t": "‘Para ti’ sube de nivel: Endesa incorpora nuevas ventajas para reconocer la fidelidad de sus clientes en Canarias",
    "u": "https://www.eldiario.es/canariasahora/lapalmaahora/economia/sube-nivel-endesa-incorpora-nuevas-ventajas-reconocer-fidelidad-clientes-canarias_1_13540125.html",
-   "s": "elDiario.es",
+   "s": "eldiario.es",
    "d": "2026-09-26T09:27:55.000Z",
    "tags": [
     "CANARIAS"
    ],
    "img": "https://static.eldiario.es/clip/b56158a1-cf6d-40a6-b167-5b6cb6f76216_facebook-aspect-ratio-1200-675_default_0_x1028y241.jpg"
-  },
-  {
-   "t": "La Nueva Cocina Vasca cumple 50 años",
-   "u": "https://www.ondavasca.com/la-nueva-cocina-vasca-cumple-50-anos/",
-   "s": "Onda Vasca",
-   "d": "2026-09-26T09:00:22.000Z",
-   "tags": [
-    "CHEF"
-   ],
-   "img": "https://cdn2.ondavasca.com/39deb219-d594-4083-bdbf-50f20122a1bb_16-9-discover_1200x630.jpg"
-  },
-  {
-   "t": "Santa Cruz de Tenerife, Capital Española de la Gastronomía 2027: guachinches, producto canario y cocina atlántica",
-   "u": "https://www.que.es/2026/09/26/capital-espanola-gastronomia-2027-tenerife-2/",
-   "s": "que.es",
-   "d": "2026-09-26T08:22:32.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://static.que.es/wp-content/uploads/2026/08/tacos-tenerife.webp"
-  },
-  {
-   "t": "Volver a los restaurantes de siempre tiene nombre: «regularmaxxing» y esta es su ruta en Gran Canaria",
-   "u": "https://www.canarias7.es/gastronomia-c7/restaurantes/volver-restaurantes-siempre-nombre-regularmaxxing-ruta-gran-20260926070000-nt_amp.html",
-   "s": "Canarias7",
-   "d": "2026-09-26T05:00:17.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://s2.ppllstatics.com/canarias7/www/multimedia/gastronomia-c7/2026/09/26/restaurante.jpg"
-  },
-  {
-   "t": "Paula Gutiérrez, la cocinera de raíces peruanas que conquistó España y tomó el relevo de su padre",
-   "u": "https://peru21.pe/gastronomia/paula-gutierrez-la-cocinera-de-raices-peruanas-que-conquisto-espana-y-tomo-el-relevo-de-su-padre/",
-   "s": "peru21.pe",
-   "d": "2026-09-26T02:42:02.000Z",
-   "tags": [
-    "ALTA COCINA"
-   ]
-  },
-  {
-   "t": "Berasategui y la influencia de Tenerife, en Gastronomika",
-   "u": "https://diariodeavisos.elespanol.com/2026/09/berasategui-gastronomika-influencia-tenerife/",
-   "s": "Diario de Avisos",
-   "d": "2026-09-25T23:00:00.000Z",
-   "tags": [
-    "CANARIAS",
-    "CHEF"
-   ],
-   "img": "https://cdn.diariodeavisos.com/wp-content/uploads/2026/09/Pagina-46-MARTIN-BERASATEGUI_SM_2.jpg"
-  },
-  {
-   "t": "Los cocineros coinciden: la acidez de la salsa de tomate no se corrige con azúcar, sino con cocción lenta, cebolla o miel",
-   "u": "https://radiomitre.cienradios.com/curiosidades/los-cocineros-coinciden-la-acidez-de-la-salsa-de-tomate-no-se-corrige-con-azucar-sino-con-coccion-lenta-cebolla-o-miel/",
-   "s": "Radio Mitre",
-   "d": "2026-09-25T22:22:42.000Z",
-   "tags": [
-    "CHEF"
-   ],
-   "img": "https://radiomitre.cienradios.com/resizer/v2/YKJXOSKK2ZD5XCAN32WAIA3ZX4.jpg?smart=true&auth=26e67df3f1166deb34945a1c9b5bab07ee90178b70b9ae86460b609522c493f2&width=1200&height=630"
-  },
-  {
-   "t": "Santa Cruz de Tenerife será la Capital Española de la Gastronomía 2027",
-   "u": "https://www.hosteltur.com/178872_santa-cruz-de-tenerife-sera-la-capital-espanola-de-la-gastronomia-2027.html",
-   "s": "hosteltur.com",
-   "d": "2026-09-25T22:00:00.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://static.hosteltur.com/app/public/uploads/img/articles/2026/09/25/L_191411_que-ciudad-ostentara-el-titiulo-de-capital-espanola-de-la-gastronomia-en-20.jpg"
-  },
-  {
-   "t": "La villa juguetera de Alicante que conquista por su cocina: así es el pueblo donde mejor se come de España",
-   "u": "https://www.noticiasdelvino.com/restaurantes/2026/09/25/la-villa-juguetera-de-alicante-que-conquista-por-su-cocina-asi-es-el-pueblo-donde-mejor-se-come-de-espana-74836/",
-   "s": "Noticias del Vino",
-   "d": "2026-09-25T17:46:53.000Z",
-   "tags": [
-    "MICHELIN"
-   ],
-   "img": "https://www.noticiasdelvino.com/wp-content/uploads/restaurantes-5.jpg.webp"
-  },
-  {
-   "t": "Guía Repsol presenta el Buensolete, la nueva distinción para Soletes comprometidos con hacerlo mejor",
-   "u": "https://www.canarias7.es/gastronomia-c7/guia-repsol-presenta-buensolete-nueva-distincion-soletes-20260925190000-nt_amp.html",
-   "s": "Canarias7",
-   "d": "2026-09-25T17:00:00.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://s1.ppllstatics.com/canarias7/www/multimedia/gastronomia-c7/2026/09/25/3.jpg"
-  },
-  {
-   "t": "Vino, queso, libros y música: los planes de Tenerife para este octubre",
-   "u": "https://www.eldia.es/tenerife/2026/09/25/vino-queso-libros-musica-planes-134685121.html",
-   "s": "Eldía",
-   "d": "2026-09-25T16:00:57.000Z",
-   "tags": [
-    "CANARIAS",
-    "VINO"
-   ]
-  },
-  {
-   "t": "‘La Caminera’ de Torrenueva se mantiene como único hotel de CLM distinguido con una Llave de la Guía Michelin",
-   "u": "https://www.lanzadigital.com/estilo-de-vida/la-caminera-de-torrenueva-se-mantiene-como-unico-hotel-de-clm-distinguido-con-una-llave-de-la-guia-michelin/",
-   "s": "Lanza Digital",
-   "d": "2026-09-25T15:58:23.000Z",
-   "tags": [
-    "MICHELIN"
-   ],
-   "img": "https://www.lanzadigital.com/wp-content/uploads/2025/09/Club-de-golf-Caminera-Valdepenas.jpg"
-  },
-  {
-   "t": "Día del Turismo en La Gomera: Jornada dedicada a la gastron…",
-   "u": "https://canariasnoticias.es/2026/09/25/dia-del-turismo-en-la-gomera-jornada-dedicada-a-la-gastronomia-y-el-patrimonio-cultural-de-la-isla",
-   "s": "CanariasNoticias.es",
-   "d": "2026-09-25T15:53:10.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://lon1.digitaloceanspaces.com/canarias-noticias/media/images/2026/09/la_gomera_oficina_de_Turismo_de_San_Sebasti%C3%A1n_de_La_Gomera.jpg"
   }
  ]
 }
