@@ -1,6 +1,15 @@
 {
- "updated": "2026-09-26T19:54:15.378Z",
+ "updated": "2026-09-27T01:31:17.539Z",
  "items": [
+  {
+   "t": "Fiestas de El Toscal 2023: Música, Gastronomía y Tradición del 25 al 30 de Septiembre",
+   "u": "https://www.canariasdiario.com/noticia/151832/agenda/el-toscal-celebra-su-ix-edicion-de-fiestas.html",
+   "s": "Canariasdiario.com",
+   "d": "2026-09-26T22:51:06.000Z",
+   "tags": [
+    "CANARIAS"
+   ]
+  },
   {
    "t": "La Laguna elige la mejor arepa en un festival celebra la unión entre Canarias y Venezuela",
    "u": "https://diariodeavisos.elespanol.com/2026/09/la-mejor-arepa-en-la-laguna/",
@@ -10,6 +19,16 @@
     "CANARIAS"
    ],
    "img": "https://cdn.diariodeavisos.com/wp-content/uploads/2026/09/1000731717.jpg"
+  },
+  {
+   "t": "Maricarmen, desde el hospital, pide a la gente que luche contra los desahucios",
+   "u": "https://www.eldia.es/videos/sociedad/2026/09/26/maricarmen-hospital-pide-gente-luche-134715660.amp.html",
+   "s": "Eldía",
+   "d": "2026-09-26T17:45:21.000Z",
+   "tags": [
+    "VINO",
+    "CANARIAS"
+   ]
   },
   {
    "t": "El baño de masas del papa León XIV a su paso por los Campos Elíseos parisinos",
@@ -34,14 +53,14 @@
   {
    "t": "El bocadillo de pata de Telde tiene mucho cuento detrás: así descubren los hosteleros del municipio el viaje del cochino canario hasta la mesa",
    "u": "https://www.laprovincia.es/telde/2026/09/26/bocadillo-pata-telde-cuento-detras-134672332.amp.html",
-   "s": "laprovincia.es",
+   "s": "La Provincia",
    "d": "2026-09-26T17:01:09.000Z",
    "tags": [
     "CANARIAS"
    ]
   },
   {
-   "t": "De la viña a la copa: el largo viaje que convierte la uva de Tenerife en vino",
+   "t": "De la viña a la copa: el largo viaje que convierte a la uva de Tenerife en vino",
    "u": "https://www.eldia.es/tenerife/2026/09/26/copa-viaje-convierte-uva-vino-134630951.html",
    "s": "Eldía",
    "d": "2026-09-26T17:01:09.000Z",
@@ -61,14 +80,34 @@
    ]
   },
   {
+   "t": "El refugio de Fito Cabrales en un pueblo de 1.200 vecinos: una enorme casa de campo, club de golf y vistas increíbles a la montaña",
+   "u": "https://cronicavasca.elespanol.com/rutas/20260926/refugio-fito-cabrales-pueblo-vecinos-increibles-montana-trt/1003742797187_0.amp.html",
+   "s": "Crónica Vasca",
+   "d": "2026-09-26T16:00:00.000Z",
+   "tags": [
+    "CHEF"
+   ],
+   "img": "https://a2.elespanol.com/k/imgp/cms/asociados/568419.jpg?p=f:jpeg/w:1706/h:960&h=k--pkwje"
+  },
+  {
    "t": "Ferran Adrià: “Tenéis que estar orgullosos de vuestra cocina”",
    "u": "https://marinaalta.es/2026/09/ferran-adria-teneis-que-estar-orgullosos-de-vuestra-cocina/",
-   "s": "MarinaAlta.es",
+   "s": "marinaalta.es",
    "d": "2026-09-26T15:49:00.000Z",
    "tags": [
     "ALTA COCINA"
    ],
    "img": "https://media.marinaalta.es/wp-content/uploads/2026/09/26172258/Dna-Denia-2026-26-septiembre-Tino-Calvo-10.jpg"
+  },
+  {
+   "t": "LOBA x Guachinches - Cañón Tigre + Duele",
+   "u": "https://lagenda.org/programacion/loba-x-guachinches-canon-tigre-duele-tenerife-gastro-concierto-2026-43919",
+   "s": "Lagenda",
+   "d": "2026-09-26T14:21:57.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://s3-eu-west-1.amazonaws.com/beta.lagenda/programacion/canon-tigre-duele.jpg"
   },
   {
    "t": "Martín Berasategui, chef: \"La tarta de manzana más rica lleva 200 g de nata líquida, 50 g de azúcar moreno, 1 vaina de vainilla y 2 huevos enteros\"",
@@ -172,7 +211,7 @@
   {
    "t": "Paula Gutiérrez, la cocinera de raíces peruanas que conquistó España y tomó el relevo de su padre",
    "u": "https://peru21.pe/gastronomia/paula-gutierrez-la-cocinera-de-raices-peruanas-que-conquisto-espana-y-tomo-el-relevo-de-su-padre/",
-   "s": "Perú 21",
+   "s": "peru21.pe",
    "d": "2026-09-26T02:42:02.000Z",
    "tags": [
     "ALTA COCINA"
@@ -202,7 +241,7 @@
   {
    "t": "Santa Cruz de Tenerife será la Capital Española de la Gastronomía 2027",
    "u": "https://www.hosteltur.com/178872_santa-cruz-de-tenerife-sera-la-capital-espanola-de-la-gastronomia-2027.html",
-   "s": "Hosteltur, noticias de turismo",
+   "s": "hosteltur.com",
    "d": "2026-09-25T22:00:00.000Z",
    "tags": [
     "CANARIAS"
@@ -230,16 +269,6 @@
    "img": "https://s1.ppllstatics.com/canarias7/www/multimedia/gastronomia-c7/2026/09/25/3.jpg"
   },
   {
-   "t": "El Tenerife recibe al equipo al que más se enfrentó en Segunda División",
-   "u": "https://www.eldiario.es/canariasahora/Deportes/futbol/tenerife-recibe-equipo-enfrento-segunda-division_1_13539243.html",
-   "s": "elDiario.es",
-   "d": "2026-09-25T16:12:45.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://static.eldiario.es/clip/87d174f2-1f16-43cc-9224-b148f5309a37_facebook-aspect-ratio-1200-675_default_0_x1379y400.jpg"
-  },
-  {
    "t": "Vino, queso, libros y música: los planes de Tenerife para este octubre",
    "u": "https://www.eldia.es/tenerife/2026/09/25/vino-queso-libros-musica-planes-134685121.html",
    "s": "Eldía",
@@ -262,42 +291,12 @@
   {
    "t": "Día del Turismo en La Gomera: Jornada dedicada a la gastron…",
    "u": "https://canariasnoticias.es/2026/09/25/dia-del-turismo-en-la-gomera-jornada-dedicada-a-la-gastronomia-y-el-patrimonio-cultural-de-la-isla",
-   "s": "canariasnoticias.es",
+   "s": "CanariasNoticias.es",
    "d": "2026-09-25T15:53:10.000Z",
    "tags": [
     "CANARIAS"
    ],
    "img": "https://lon1.digitaloceanspaces.com/canarias-noticias/media/images/2026/09/la_gomera_oficina_de_Turismo_de_San_Sebasti%C3%A1n_de_La_Gomera.jpg"
-  },
-  {
-   "t": "De almogrotes y berros",
-   "u": "https://www.elcorreo.com/jantour/opinion/carlos-maribona-almogrotes-berros-20260926175252-nt.html",
-   "s": "El Correo",
-   "d": "2026-09-25T15:52:53.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://s3.ppllstatics.com/elcorreo/www/multimedia/noticias/2026/09/21/maribona26-kzKI-U301819240083XHH-1200x840@El%20Correo.jpg"
-  },
-  {
-   "t": "'Gastro SER' se apunta al Miniature Pintxos Congress de Vitoria-Gasteiz",
-   "u": "https://cadenaser.com/nacional/2026/09/25/gastro-ser-se-sube-al-miniature-pintxos-congress-de-vitoria-gasteiz-cadena-ser/?outputType",
-   "s": "Cadena SER",
-   "d": "2026-09-25T15:23:21.000Z",
-   "tags": [
-    "ALTA COCINA"
-   ],
-   "img": "https://cadenaser.com/resizer/v2/T7TNAC4QTBCW7PUYY6VV5NVFLM.jpg?auth=0512f8f6812d90469a60351722d1acefa3635e5fd3aa69647748e049dafa0b51&quality=70&width=1200&height=675&smart=true"
-  },
-  {
-   "t": "Martín Berasategui, chef: “El caldo de pollo más rico lleva 2 kg de carcasas, 1 zanahoria, ajos y 1 puerro”",
-   "u": "https://radiomitre.cienradios.com/sociedad/martin-berasategui-chef-el-caldo-de-pollo-mas-rico-lleva-2-kg-de-carcasas-1-zanahoria-ajos-y-1-puerro/",
-   "s": "Radio Mitre",
-   "d": "2026-09-25T15:19:52.000Z",
-   "tags": [
-    "CHEF"
-   ],
-   "img": "https://radiomitre.cienradios.com/resizer/v2/KAOXZYYAD5FW3NEYK3SPHAZKNY.jpg?smart=true&auth=24ec6c12a0d87d8b4680a776779d1356a8c7bf3621543cd5fd8ec7dcbe5f5c9d&width=1200&height=630"
   }
  ]
 }
