@@ -15800,6 +15800,38 @@ test('F0 · salir y entrar sustituyen el contexto ENTERO, de una vez', () => {
 });
 
 // ─── 7. No leftover git conflict markers ────────────────────────
+// ═══ S3-A · check-inactive sólo para el cron ══════════════════════════════
+// Era pública: cualquiera disparaba avisos a todos los inactivos y recibía sus
+// nombres. Ahora exige la service key, que el cron lee de Vault.
+console.log('\nS3-A · check-inactive');
+test('S3-A · check-inactive exige la credencial antes de tocar nada', () => {
+  const f = read('supabase/functions/check-inactive/index.ts');
+  const iAuth = f.indexOf("if (!autorizado(req)) return json({ ok: false, error: 'auth' }, 401);");
+  const iFetch = f.indexOf('await fetch(');
+  assert(iAuth > 0 && iFetch > iAuth, 'la comprobación de la credencial tiene que ir antes del primer acceso a datos');
+  assert(/if \(!SUPA_SERVICE_KEY\) return false;/.test(f), 'sin clave configurada no puede entrar nadie');
+  assert(/function igual\(a: string, b: string\)/.test(f), 'la credencial se compara en tiempo constante');
+  assert(!/Access-Control-Allow-Origin/.test(f), 'es servidor a servidor: sin CORS');
+});
+test('S3-A · check-inactive no devuelve nombres ni errores internos', () => {
+  const f = read('supabase/functions/check-inactive/index.ts');
+  const respuestas = f.match(/return json\(\{[^)]*\}/g) || [];
+  assert(respuestas.length >= 4, 'no encuentro las respuestas');
+  for (const r of respuestas) assert(!/names\b(?!\.length)|notified\b|empName|String\(e/.test(r), 'una respuesta lleva datos de personas o del error: ' + r);
+});
+test('S3-A · cada aviso lleva el restaurante de la ficha', () => {
+  const f = read('supabase/functions/check-inactive/index.ts');
+  assert(/select=name,venue,last_active_at/.test(f), 'hay que leer el restaurante de la ficha');
+  assert(/target: empName,\s*venue,/.test(f), 'send-push tiene que recibir el restaurante');
+  assert(/target: empName,\s*venue,\s*message:/.test(f), 'la notificación tiene que ir al restaurante de la ficha, no al de por defecto');
+});
+test('S3-A · el cron se identifica con la clave de Vault, nunca escrita', () => {
+  const m = read('supabase/check_inactive_cron_autenticado.sql');
+  assert(/from vault\.decrypted_secrets where name = 'service_role_key'/.test(m), 'el cron tiene que leer la clave de Vault');
+  assert(/raise exception 'Falta el secreto service_role_key/.test(m), 'sin secreto la migración tiene que fallar, no dejar el cron con cabecera vacía');
+  assert(!/eyJ[A-Za-z0-9_-]{10,}|sb_secret_/.test(m), 'hay una clave escrita en la migración');
+});
+
 console.log('\nHygiene');
 test('no git conflict markers in tracked source', () => {
   for (const f of ['index.html', 'sw.js', 'data/wines.json', 'data/lqa-situations.json', 'data/ghost-scenarios.json']) {
