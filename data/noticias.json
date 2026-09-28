@@ -1,6 +1,15 @@
 {
- "updated": "2026-09-27T20:11:08.703Z",
+ "updated": "2026-09-28T01:42:39.038Z",
  "items": [
+  {
+   "t": "Baobab Suites apuesta por el bienestar activo en Tenerife",
+   "u": "https://www.eldia.es/tenerife/2026/09/28/baobab-suites-apuesta-bienestar-activo-bc-134739236.html",
+   "s": "Eldía",
+   "d": "2026-09-27T22:59:56.000Z",
+   "tags": [
+    "CANARIAS"
+   ]
+  },
   {
    "t": "El vino vuelve a abrir las puertas de una joya arquitectónica de Las Palmas de Gran Canaria",
    "u": "https://www.laprovincia.es/las-palmas/2026/09/27/vino-vuelve-abrir-puertas-joya-134719513.html",
@@ -9,6 +18,16 @@
    "tags": [
     "VINO",
     "CANARIAS"
+   ]
+  },
+  {
+   "t": "Gastronomía regenerativa: Orígenes Gran Canaria reúne a 24 chefs con 15 estrellas Michelin",
+   "u": "https://www.canariasenpleno.com/gastronomia-regenerativa-origenes-gran-canaria/",
+   "s": "Canarias en Pleno",
+   "d": "2026-09-27T19:38:04.000Z",
+   "tags": [
+    "CANARIAS",
+    "MICHELIN"
    ]
   },
   {
@@ -31,14 +50,14 @@
    "img": "https://static.eldiario.es/clip/b1b63025-71ef-4100-8b17-67bb0132cbb8_facebook-aspect-ratio-1200-675_default_0.jpg"
   },
   {
-   "t": "Gastronomía regenerativa: Orígenes Gran Canaria reúne a 24 chefs con 15 estrellas Michelin",
-   "u": "https://www.canariasenpleno.com/gastronomia-regenerativa-origenes-gran-canaria/",
-   "s": "Canarias en Pleno",
-   "d": "2026-09-27T15:51:57.000Z",
+   "t": "San Sebastian Gastronomika celebra 50 años de la Nueva Cocina Vasca",
+   "u": "https://www.excelenciasgourmet.com/es/eventos/san-sebastian-gastronomika-nueva-cocina-vasca",
+   "s": "Excelencias Gourmet",
+   "d": "2026-09-27T16:00:00.000Z",
    "tags": [
-    "CANARIAS",
-    "MICHELIN"
-   ]
+    "CHEF"
+   ],
+   "img": "https://static.excelenciasgourmet.com/cdn/ff/lPEwHsDswwOeB0ZhlU0kut4K3RHcnhU2kabn_wpH-F4/1790334612/public/articulos/2026-09/san-sebastian-gastronomika.png"
   },
   {
    "t": "MESA ABIERTA: San Sebastián 57, once años haciendo que queramos volver",
@@ -51,18 +70,9 @@
    "img": "https://s1.staticld.com/2026/09/27/1200/675/img-20260927-wa0121.jpg"
   },
   {
-   "t": "La delegación canaria que representa a España en las 'olimpiadas' de la FP se cuelga una medalla",
-   "u": "https://www.eldia.es/canarias/2026/09/27/delegacion-canaria-representa-espana-olimpiadas-134734858.html",
-   "s": "Eldía",
-   "d": "2026-09-27T15:08:44.000Z",
-   "tags": [
-    "CANARIAS"
-   ]
-  },
-  {
    "t": "El 'kaitai' de un atún rojo de dos metros y casi 200 kilos lleva la tradición japonesa a Tenerife",
    "u": "https://diariodeavisos.elespanol.com/2026/09/kaitai-atun-rojo-en-tenerife/",
-   "s": "Diario de Avisos",
+   "s": "diariodeavisos.elespanol.com",
    "d": "2026-09-27T14:12:52.000Z",
    "tags": [
     "CANARIAS"
@@ -90,6 +100,15 @@
    "img": "https://andaluciaeconomica.com/wp-content/uploads/2026/09/Vincci-Selecci¢n-Unuk2.jpg"
   },
   {
+   "t": "Zaperoco Fest: Canarias y Venezuela se abrazan en La Cuesta",
+   "u": "https://www.canariasenpleno.com/zaperoco-fest-la-cuesta/",
+   "s": "Canarias en Pleno",
+   "d": "2026-09-27T11:36:56.000Z",
+   "tags": [
+    "CANARIAS"
+   ]
+  },
+  {
    "t": "Los vinos de Javier Ventura vuelven a ser los mejores de Gran Canaria y ya miran al mercado inglés",
    "u": "https://www.laprovincia.es/gran-canaria/2026/09/27/vinos-javier-ventura-vuelven-mejores-134632763.html",
    "s": "La Provincia",
@@ -109,15 +128,6 @@
    ]
   },
   {
-   "t": "Zaperoco Fest: Canarias y Venezuela se abrazan en La Cuesta",
-   "u": "https://www.canariasenpleno.com/zaperoco-fest-la-cuesta/",
-   "s": "Canarias en Pleno",
-   "d": "2026-09-27T10:18:45.000Z",
-   "tags": [
-    "CANARIAS"
-   ]
-  },
-  {
    "t": "El viñedo más alto de Europa está en Tenerife: así es el pueblo que desafía a los Alpes",
    "u": "https://www.noticiasdelvino.com/escapadas/2026/09/27/el-vinedo-mas-alto-de-europa-esta-en-tenerife-asi-es-el-pueblo-que-desafia-a-los-alpes-66331/",
    "s": "Noticias del Vino",
@@ -125,7 +135,8 @@
    "tags": [
     "VINO",
     "CANARIAS"
-   ]
+   ],
+   "img": "https://www.noticiasdelvino.com/wp-content/uploads/El-vinedo-mas-alto-de-Europa-esta-en-Tenerife.jpg.webp"
   },
   {
    "t": "¿Cuándo se van la calima y el calor en Canarias? Esto dice la previsión de Aemet",
@@ -153,7 +164,8 @@
    "d": "2026-09-27T09:24:05.000Z",
    "tags": [
     "MICHELIN"
-   ]
+   ],
+   "img": "https://www.noticiasdelvino.com/wp-content/uploads/restaurantes-5.jpg.webp"
   },
   {
    "t": "La Laguna adjudica el mayor proyecto de rehabilitación residencial de Canarias en El Cardonal",
@@ -190,7 +202,8 @@
    "d": "2026-09-27T05:58:42.000Z",
    "tags": [
     "CHEF"
-   ]
+   ],
+   "img": "https://img.asmedia.epimg.net/resizer/v2/EEKBX7PD45H4ZBW2PNRAX6ZG4A.jpg?auth=a185ac25b7da1a77352f208d356481256532918c9c9a7c177834382af731ee76&width=1472&height=828&smart=true"
   },
   {
    "t": "Dónde saborear Gran Canaria según la abogada laboralista Elena Tejedor Jorge",
@@ -214,7 +227,7 @@
   {
    "t": "Fiestas de El Toscal 2023: Música, Gastronomía y Tradición del 25 al 30 de Septiembre",
    "u": "https://www.canariasdiario.com/noticia/151832/agenda/el-toscal-celebra-su-ix-edicion-de-fiestas.html",
-   "s": "canariasdiario.com",
+   "s": "Canariasdiario.com",
    "d": "2026-09-27T03:23:05.000Z",
    "tags": [
     "CANARIAS"
@@ -243,12 +256,22 @@
   {
    "t": "La Laguna elige la mejor arepa en un festival que celebra la unión entre Canarias y Venezuela",
    "u": "https://diariodeavisos.elespanol.com/2026/09/la-mejor-arepa-en-la-laguna/",
-   "s": "Diario de Avisos",
+   "s": "diariodeavisos.elespanol.com",
    "d": "2026-09-26T18:21:26.000Z",
    "tags": [
     "CANARIAS"
    ],
    "img": "https://cdn.diariodeavisos.com/wp-content/uploads/2026/09/1000731717.jpg"
+  },
+  {
+   "t": "El precio pagado al productor de plátano de Canarias remonta el 63% y ya se vislumbra la salida de la crisis",
+   "u": "https://www.eldiario.es/canariasahora/eldiario-agricola/agricultura/precio-pagado-productor-platano-canarias-remonta-63-vislumbra-salida-crisis_1_13540765.html",
+   "s": "elDiario.es",
+   "d": "2026-09-26T18:01:20.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://static.eldiario.es/clip/ce7e97c6-a4c4-4de1-95f7-552237862d0b_facebook-aspect-ratio-1200-675_default_0.jpg"
   },
   {
    "t": "Maricarmen, desde el hospital, pide a la gente que luche contra los desahucios",
@@ -267,25 +290,6 @@
    "d": "2026-09-26T17:04:00.000Z",
    "tags": [
     "VINO",
-    "CANARIAS"
-   ]
-  },
-  {
-   "t": "Vendimia y producción del vino en una finca de Bodegas Insulares de Tenerife",
-   "u": "https://www.eldia.es/tenerife/2026/09/26/vendimia-produccion-vino-finca-bodegas-134643698.html",
-   "s": "Eldía",
-   "d": "2026-09-26T17:01:10.000Z",
-   "tags": [
-    "VINO",
-    "CANARIAS"
-   ]
-  },
-  {
-   "t": "El bocadillo de pata de Telde tiene mucho cuento detrás: así descubren los hosteleros del municipio el viaje del cochino canario hasta la mesa",
-   "u": "https://www.laprovincia.es/telde/2026/09/26/bocadillo-pata-telde-cuento-detras-134672332.amp.html",
-   "s": "La Provincia",
-   "d": "2026-09-26T17:01:09.000Z",
-   "tags": [
     "CANARIAS"
    ]
   }
