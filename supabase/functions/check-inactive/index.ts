@@ -24,6 +24,10 @@
 //   posible —el nombre es la clave de `employees` y no hay suscripciones con
 //   restaurante distinto del de su ficha—, pero hasta que `send-push` lo
 //   respete no es una garantía de servidor.
+//
+// S3-C-01: la llamada a send-push lleva `Authorization: Bearer <service key>`
+//   (la misma variable de entorno). Hoy send-push la ignora; es el paso previo
+//   para que pueda exigir credencial sin romper este aviso semanal.
 import "jsr:@supabase/functions-js/edge-runtime.d.ts";
 
 const SUPA_URL = Deno.env.get('SUPABASE_URL') || '';
@@ -103,9 +107,12 @@ Deno.serve(async (req: Request) => {
       const lastActive = emp?.last_active_at ? new Date(emp.last_active_at) : null;
       const daysInactive = lastActive ? Math.floor((Date.now() - lastActive.getTime()) / 86400000) : '?';
 
+      // S3-C-01: se identifica ante send-push con la misma service key del
+      // entorno que ya usa para leer y escribir. Sólo en esta llamada de
+      // servidor a servidor; nunca en una respuesta ni en un registro.
       await fetch(SEND_PUSH_URL, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${SUPA_SERVICE_KEY}` },
         body: JSON.stringify({
           target: empName,
           venue,

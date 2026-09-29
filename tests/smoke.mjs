@@ -15825,6 +15825,17 @@ test('S3-A · cada aviso lleva el restaurante de la ficha', () => {
   assert(/target: empName,\s*venue,/.test(f), 'send-push tiene que recibir el restaurante');
   assert(/target: empName,\s*venue,\s*message:/.test(f), 'la notificación tiene que ir al restaurante de la ficha, no al de por defecto');
 });
+test('S3-C-01 · check-inactive se identifica ante send-push con la clave del entorno', () => {
+  const f = read('supabase/functions/check-inactive/index.ts');
+  const i = f.indexOf('await fetch(SEND_PUSH_URL, {');
+  const llamada = f.slice(i, f.indexOf('});', i));
+  assert(i > 0 && /'Authorization': `Bearer \$\{SUPA_SERVICE_KEY\}`/.test(llamada),
+    'la llamada a send-push tiene que llevar Authorization con la service key del entorno');
+  assert(!/eyJ[A-Za-z0-9_-]{10,}|sb_secret_/.test(f), 'hay una clave escrita en la función');
+  for (const r of f.match(/return json\(\{[^)]*\}/g) || [])
+    assert(!/SUPA_SERVICE_KEY|svc\b/.test(r), 'una respuesta podría llevar la credencial: ' + r);
+  assert(!/console\.[a-z]+\([^)]*SUPA_SERVICE_KEY/.test(f), 'la credencial no puede ir a un registro');
+});
 test('S3-A · el cron se identifica con la clave de Vault, nunca escrita', () => {
   const m = read('supabase/check_inactive_cron_autenticado.sql');
   assert(/from vault\.decrypted_secrets where name = 'service_role_key'/.test(m), 'el cron tiene que leer la clave de Vault');
