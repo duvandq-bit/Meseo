@@ -1,6 +1,17 @@
 {
- "updated": "2026-09-28T22:33:36.382Z",
+ "updated": "2026-09-29T02:35:37.840Z",
  "items": [
+  {
+   "t": "El Campus del Vino de Canarias abre las puertas a su IX Curso de Sumiller",
+   "u": "https://www.tecnovino.com/el-campus-del-vino-de-canarias-abre-las-puertas-a-su-ix-curso-de-sumiller/",
+   "s": "Tecnovino",
+   "d": "2026-09-29T00:10:54.000Z",
+   "tags": [
+    "VINO",
+    "CANARIAS"
+   ],
+   "img": "https://www.tecnovino.com/wp-content/uploads/2026/09/Tecnovino-Curso-de-Sumiller-Canarias-DO-Ycoden-Isora-e-Islas-Canarias.jpg"
+  },
   {
    "t": "El Congreso Gastronómico Orígenes explora la cocina regenerativa y el valor del territorio",
    "u": "https://www.laprovincia.es/gran-canaria/2026/09/28/congreso-gastronomico-origenes-explora-cocina-134779325.html",
@@ -11,6 +22,27 @@
    ]
   },
   {
+   "t": "Canarias impulsa un plan para modernizar los viñedos en pendiente con inteligencia artificial y drones",
+   "u": "https://www.vinetur.com/amp/20260928107872/canary-wine-joins-a-spanish-project-using-ai-to-modernize-steep-slope-vineyards.html",
+   "s": "Vinetur",
+   "d": "2026-09-28T21:26:40.000Z",
+   "tags": [
+    "VINO",
+    "CANARIAS"
+   ],
+   "img": "https://www.vinetur.com/imagenes/pube/2026-W39/image40.jpg"
+  },
+  {
+   "t": "Jordi Roca, chef y repostero: “Este soufflé de chocolate da respeto, pero con un par de trucos conseguiréis un postre aéreo y cremoso”",
+   "u": "https://www.infobae.com/espana/2026/09/28/jordi-roca-chef-y-repostero-este-souffle-de-chocolate-da-respeto-pero-con-un-par-de-trucos-conseguireis-un-postre-aereo-y-cremoso/",
+   "s": "Infobae",
+   "d": "2026-09-28T19:14:00.000Z",
+   "tags": [
+    "ALTA COCINA"
+   ],
+   "img": "https://www.infobae.com/resizer/v2/4JSO4X4KNZFJRPI347RJNWZG54.jpg?auth=b2395d7ca95868749d24ca945642fcd01efdc24a863916593fdb636d3d30243a&smart=true&width=1200&height=630&quality=85"
+  },
+  {
    "t": "La joya escondida de La Palma que parece sacada de otro mundo: casas blancas bajo una bóveda volcánica",
    "u": "https://www.eldia.es/la-palma/2026/09/28/joya-escondida-palma-parece-sacada-134767895.amp.html",
    "s": "Eldía",
@@ -18,16 +50,6 @@
    "tags": [
     "CANARIAS"
    ]
-  },
-  {
-   "t": "Jordi Roca, chef y repostero: “Este soufflé de chocolate da respeto, pero con un par de trucos conseguiréis un postre aéreo y cremoso”",
-   "u": "https://www.infobae.com/espana/2026/09/28/jordi-roca-chef-y-repostero-este-souffle-de-chocolate-da-respeto-pero-con-un-par-de-trucos-conseguireis-un-postre-aereo-y-cremoso/",
-   "s": "Infobae",
-   "d": "2026-09-28T18:18:02.000Z",
-   "tags": [
-    "ALTA COCINA"
-   ],
-   "img": "https://www.infobae.com/resizer/v2/4JSO4X4KNZFJRPI347RJNWZG54.jpg?auth=b2395d7ca95868749d24ca945642fcd01efdc24a863916593fdb636d3d30243a&smart=true&width=1200&height=630&quality=85"
   },
   {
    "t": "La Sociedad Filarmónica de Las Palmas de Gran Canaria consolida su proyecto con 16 conciertos y nuevas iniciativas culturales",
@@ -131,7 +153,7 @@
   {
    "t": "Hecansa organiza una jornada divulgativa sobre el café y sus múltiples aplicaciones gastronómicas",
    "u": "https://www.canal4tenerife.tv/hecansa-organiza-una-jornada-divulgativa-sobre-el-cafe-y-sus-multiples-aplicaciones-gastronomicas/",
-   "s": "Canal 4 Tenerife",
+   "s": "canal4tenerife.tv",
    "d": "2026-09-28T12:59:44.000Z",
    "tags": [
     "CANARIAS"
@@ -170,7 +192,7 @@
   {
    "t": "\"¿Estrellas del rock o bufones de la corte?\": las preguntas incómodas del chef Diego Guerrero",
    "u": "https://cadenaser.com/nacional/2026/09/28/estrellas-del-rock-o-bufones-de-la-corte-las-preguntas-incomodas-del-chef-diego-guerrero-cadena-ser/",
-   "s": "cadenaser.com",
+   "s": "Cadena SER",
    "d": "2026-09-28T12:12:43.000Z",
    "tags": [
     "ALTA COCINA"
@@ -200,7 +222,7 @@
   {
    "t": "La Orotava vuelve a buscar el mejor barraquito y zaperoco del municipio con la tercera edición de su ruta gastronómica",
    "u": "https://www.canal4tenerife.tv/la-orotava-vuelve-a-buscar-el-mejor-barraquito-y-zaperoco-del-municipio-con-la-tercera-edicion-de-su-ruta-gastronomica/",
-   "s": "Canal 4 Tenerife",
+   "s": "canal4tenerife.tv",
    "d": "2026-09-28T09:45:26.000Z",
    "tags": [
     "CANARIAS"
@@ -219,7 +241,7 @@
   {
    "t": "El ingrediente clave de la alta cocina para hacer un buen sofrito: «La cebolla se cocinará más rápido y que...",
    "u": "https://okdiario.com/gastronomia/ingrediente-clave-alta-cocina-hacer-buen-sofrito-cebolla-cocinara-mas-rapido-quedara-mas-blandita-20411319",
-   "s": "okdiario.com",
+   "s": "OkDiario",
    "d": "2026-09-28T09:04:56.000Z",
    "tags": [
     "ALTA COCINA"
@@ -247,7 +269,7 @@
   },
   {
    "t": "El vino vuelve a abrir las puertas de una joya arquitectónica de Las Palmas de Gran Canaria",
-   "u": "https://www.laprovincia.es/las-palmas/2026/09/27/vino-vuelve-abrir-puertas-joya-134719513.amp.html",
+   "u": "https://www.laprovincia.es/las-palmas/2026/09/27/vino-vuelve-abrir-puertas-joya-134719513.html",
    "s": "La Provincia",
    "d": "2026-09-27T19:44:49.000Z",
    "tags": [
@@ -273,26 +295,6 @@
    "tags": [
     "CANARIAS"
    ]
-  },
-  {
-   "t": "San Sebastian Gastronomika celebra 50 años de la Nueva Cocina Vasca",
-   "u": "https://www.excelenciasgourmet.com/es/eventos/san-sebastian-gastronomika-nueva-cocina-vasca",
-   "s": "Excelencias Gourmet",
-   "d": "2026-09-27T16:00:00.000Z",
-   "tags": [
-    "CHEF"
-   ],
-   "img": "https://static.excelenciasgourmet.com/cdn/ff/lPEwHsDswwOeB0ZhlU0kut4K3RHcnhU2kabn_wpH-F4/1790334612/public/articulos/2026-09/san-sebastian-gastronomika.png"
-  },
-  {
-   "t": "MESA ABIERTA: San Sebastián 57, once años haciendo que queramos volver",
-   "u": "https://www.libertaddigital.com/canarias/2026-09-27/mesa-abierta-san-sebastian-57-once-anos-haciendo-que-queramos-volver-7466586/",
-   "s": "Libertad Digital",
-   "d": "2026-09-27T15:51:57.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://s1.staticld.com/2026/09/27/1200/675/img-20260927-wa0121.jpg"
   }
  ]
 }
