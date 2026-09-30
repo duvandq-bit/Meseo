@@ -1,6 +1,7 @@
 -- ═══════════════════════════════════════════════════════════════════════════
 -- S3-C-02-F0 · push_autorizar: el servidor decide a quién puede avisar cada uno
 -- S3-C-02-F0.1 · con su propio limitador del PIN, por identidad y restaurante
+-- S3-C-02-F0.3 · un solo intento de PIN en curso por cuenta y por restaurante
 -- ═══════════════════════════════════════════════════════════════════════════
 --
 -- PARA QUÉ
@@ -31,6 +32,9 @@
 --   · 'restaurante': sólo manager/owner + PIN válido PARA SU restaurante
 --     (el del propietario, '*', también vale, pero sólo para el restaurante
 --     de quien llama: el venue nunca lo elige el cliente).
+--   · 'admin' NO difunde (F0.2): en el servidor sólo es una cuenta que no
+--     puntúa; no tiene ninguna capacidad propia. No se infiere autoridad del
+--     nombre del rol.
 --   · Difusión global (todos los restaurantes): NO existe. Decisión pendiente.
 --
 -- EL LIMITADOR (F0.1) — POR QUÉ NO verify_supervisor_pin
@@ -57,6 +61,15 @@
 --     global), para que no sirva para descubrir PINes ajenos.
 --   · PIN vacío, nulo o de más de 64: 'denegado' sin contar (no es un intento).
 --   · Rol sin permiso: 'denegado' antes de mirar el PIN; no cuenta.
+--
+-- CONCURRENCIA (F0.2 → F0.3)
+--   Sin serializar, N peticiones simultáneas pasaban todas la comprobación de
+--   bloqueo antes de que ninguna guardara su fallo: 20 de 20 evaluadas con
+--   límite 5 (medido con sesiones reales). Ahora cada intento toma, SIN
+--   esperar, un candado de transacción por cuenta y otro por restaurante
+--   (pg_try_advisory_xact_lock). Si alguno está ocupado → 'denegado' sin
+--   evaluar el PIN y sin contar. Coste asumido: dos difusiones del mismo
+--   restaurante en el mismo instante → una se deniega y se repite.
 --
 -- NO APLICADA.
 
@@ -96,6 +109,17 @@ begin
   if p_pin is null or length(p_pin) = 0 or length(p_pin) > 64 then return false; end if;
   v_cu := 'uid:' || v_uid::text;
   v_cv := 'venue:' || v_venue;
+  -- F0.2 · UN intento en curso por cuenta y por restaurante. Sin esto, N
+  -- peticiones simultáneas pasaban todas la comprobación de bloqueo antes de
+  -- que ninguna registrara su fallo (medido: 20 de 20 evaluadas con límite 5).
+  -- Candado de transacción, sin espera: si otro intento de la misma cuenta o
+  -- del mismo restaurante está evaluándose, éste se deniega SIN evaluar el PIN
+  -- y SIN contar. Se suelta solo al terminar la transacción, después de que su
+  -- fallo sea visible, así que el siguiente ve el contador ya actualizado.
+  if not pg_try_advisory_xact_lock(hashtext('push_pin_intentos'), hashtext(v_cu))
+     or not pg_try_advisory_xact_lock(hashtext('push_pin_intentos'), hashtext(v_cv)) then
+    return false;
+  end if;
   if exists (select 1 from public.push_pin_intentos
               where clave in (v_cu, v_cv) and locked_until > now()) then
     return false;                       -- bloqueado: misma respuesta que un PIN malo
@@ -138,7 +162,7 @@ begin
     return json_build_object('ok', true, 'alcance', 'persona', 'destino', v_dest, 'venue', v_venue);
 
   elsif p_tipo = 'restaurante' then
-    -- DECISIÓN PENDIENTE: el rol 'admin' (existe en employees) queda fuera.
+    -- 'admin' queda fuera a propósito (decidido en F0.2).
     if v_rol is null or v_rol not in ('manager', 'owner') then
       return json_build_object('ok', false, 'error', 'denegado');
     end if;
