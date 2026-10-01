@@ -1,10 +1,256 @@
 {
- "updated": "2026-10-01T11:39:11.891Z",
+ "updated": "2026-10-01T21:50:57.434Z",
  "items": [
+  {
+   "t": "La villa juguetera de Alicante que conquista por su cocina: así es el pueblo donde mejor se come de España",
+   "u": "https://www.noticiasdelvino.com/restaurantes/2026/10/01/la-villa-juguetera-de-alicante-que-conquista-por-su-cocina-asi-es-el-pueblo-donde-mejor-se-come-de-espana-74836/",
+   "s": "Noticias del Vino",
+   "d": "2026-10-01T20:58:11.000Z",
+   "tags": [
+    "MICHELIN"
+   ],
+   "img": "https://www.noticiasdelvino.com/wp-content/uploads/restaurantes-5.jpg.webp"
+  },
+  {
+   "t": "Barcelona pierde una estrella Michelin: cierra el restaurante que la logró en 2022",
+   "u": "https://www.que.es/2026/10/01/estrella-michelin-barcelona-cierra-restaurante/",
+   "s": "que.es",
+   "d": "2026-10-01T20:43:36.000Z",
+   "tags": [
+    "MICHELIN"
+   ],
+   "img": "https://static.que.es/wp-content/uploads/2023/05/Barcelona-ocupa-el-segundo-lugar.jpg"
+  },
+  {
+   "t": "‘Aulas con sabor rural’ acerca la cocina tradicional canaria a los colegios de San Juan de la Rambla",
+   "u": "https://eldigitalsur.com/vida-estilo/gastronomia-canaria/aulas-sabor-rural-cocina-tradicional-canaria-colegios-san-juan-rambla/",
+   "s": "El Digital Sur",
+   "d": "2026-10-01T19:40:19.000Z",
+   "tags": [
+    "CANARIAS"
+   ]
+  },
+  {
+   "t": "De la finca de Tejeda a Michelin: Borja Marrero entra en Mindful Voices",
+   "u": "https://www.laprovincia.es/gran-canaria/2026/10/01/finca-tejeda-michelin-borja-marrero-134901521.html",
+   "s": "La Provincia",
+   "d": "2026-10-01T18:35:10.000Z",
+   "tags": [
+    "CANARIAS",
+    "MICHELIN"
+   ]
+  },
+  {
+   "t": "LOBA vuelve al guachinche en su cuarta edición",
+   "u": "https://lagenda.org/noticias/loba-vuelve-al-guachinche-en-su-cuarta-edicion-tenerife-2026-octubre-43996",
+   "s": "Lagenda",
+   "d": "2026-10-01T17:00:25.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://s3-eu-west-1.amazonaws.com/beta.lagenda/images/duele.jpg"
+  },
+  {
+   "t": "Dani García y los chefs expertos coinciden: para que el filete a la plancha quede bien, «no untes la sartén...",
+   "u": "https://okdiario.com/curiosidades/dani-garcia-chefs-expertos-coinciden-filete-plancha-quede-bien-no-untes-sarten-aceite-mejor-usa-ajo-mantequilla-20358360/amp",
+   "s": "OkDiario",
+   "d": "2026-10-01T16:44:44.000Z",
+   "tags": [
+    "ALTA COCINA"
+   ],
+   "img": "https://okdiario.com/img/2026/09/22/diseno-sin-titulo-40.jpg"
+  },
+  {
+   "t": "Podemos Canarias reprocha que el segundo decreto de vivienda no tiene en cuenta la realidad de Canarias",
+   "u": "https://www.eldiario.es/canariasahora/politica/canarias-reprocha-segundo-decreto-vivienda-no-cuenta-realidad-canarias_1_13554677.html",
+   "s": "elDiario.es",
+   "d": "2026-10-01T15:49:29.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://static.eldiario.es/clip/5c923b3d-cd57-4af2-b74d-919bb1fab80c_facebook-aspect-ratio-1200-675_default_0_x428y413.jpg"
+  },
+  {
+   "t": "Tenerife y Euskadi se hermanan para crear un pincho conjunto para San Sebastián Gastronomika 2026",
+   "u": "https://www.eldia.es/tenerife/2026/10/01/tenerife-euskadi-hermanan-crear-pincho-134892660.amp.html",
+   "s": "El Día",
+   "d": "2026-10-01T15:16:04.000Z",
+   "tags": [
+    "CANARIAS"
+   ]
+  },
+  {
+   "t": "Llaves de la GUÍA MICHELIN 2026: los hoteles con la famosa estrella distinguidos en Canarias",
+   "u": "https://www.laprovincia.es/ocio/gastronomia/2026/10/01/llaves-guia-michelin-2026-hoteles-estrella-canarias-134891018.amp.html",
+   "s": "La Provincia",
+   "d": "2026-10-01T14:43:05.000Z",
+   "tags": [
+    "CANARIAS",
+    "MICHELIN"
+   ]
+  },
+  {
+   "t": "El Gobierno de Canarias eleva la situación a alerta por lluvias en el norte y este La Palma",
+   "u": "https://www.eldiario.es/canariasahora/lapalmaahora/sociedad/gobierno-canarias-eleva-situacion-alerta-lluvias-norte-palma_1_13554261.html",
+   "s": "elDiario.es",
+   "d": "2026-10-01T14:18:34.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://static.eldiario.es/clip/47333cc4-0d36-437c-b646-225e3267d741_facebook-aspect-ratio-1200-675_default_0.jpg"
+  },
+  {
+   "t": "Flor de Sal de Salinas del Carmen: Mejor Sal Marina de Canarias 2026",
+   "u": "https://www.canariasdiario.com/noticia/151912/gastronomia/la-flor-de-sal-de-salinas-del-carmen-en-fuerteventura-mejor-sal-marina-de-canarias.html",
+   "s": "Canariasdiario.com",
+   "d": "2026-10-01T14:03:12.000Z",
+   "tags": [
+    "CANARIAS"
+   ]
+  },
+  {
+   "t": "Teatro, música, exposiciones: todo, en la agenda cultural de La Laguna",
+   "u": "https://www.eldiario.es/canariasahora/tenerifeahora/la_laguna/teatro-musica-exposiciones-agenda-cultural-laguna_1_13554189.html",
+   "s": "elDiario.es",
+   "d": "2026-10-01T13:57:33.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://static.eldiario.es/clip/058de1ef-daa1-4e3d-b2ac-1cc5385b70d1_facebook-aspect-ratio-1200-675_default_0_x482y142.jpg"
+  },
+  {
+   "t": "LOBA vuelve: el guachinche de Tenerife que ofrece comida, bebida y dos conciertos desde 23 euros",
+   "u": "https://diariodeavisos.elespanol.com/2026/10/guachinche-tenerife-conciertos-comida-loba-orotava/",
+   "s": "Diario de Avisos",
+   "d": "2026-10-01T13:39:39.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://cdn.diariodeavisos.com/wp-content/uploads/2026/10/LOBA-guachinches.jpg"
+  },
+  {
+   "t": "Un bocadillo de 8kg y barra libre de cerveza por 20€: el reto gastronómico que arrasa en Tenerife",
+   "u": "https://estenerife.com/bocadillo-gigante-8kg-barra-libre-cerveza-reto-tenerife/",
+   "s": "estenerife.com",
+   "d": "2026-10-01T13:08:28.000Z",
+   "tags": [
+    "CANARIAS"
+   ]
+  },
+  {
+   "t": "Tenerife acude a 'San Sebastián Gastronomika' como patrocinador oficial con restaurante inmersivo y 'Túnel del Vino'",
+   "u": "https://www.europapress.es/islas-canarias/noticia-tenerife-acude-san-sebastian-gastronomika-patrocinador-oficial-restaurante-inmersivo-tunel-vino-20261001145903.html",
+   "s": "Europa Press",
+   "d": "2026-10-01T12:59:03.000Z",
+   "tags": [
+    "CANARIAS",
+    "VINO"
+   ],
+   "img": "https://img.europapress.es/fotoweb/fotonoticia_20261001145903_1200.jpg"
+  },
+  {
+   "t": "Arona en Tradiciones: este sábado, el casco histórico se llena de cultura canaria",
+   "u": "https://www.canariasenpleno.com/arona-en-tradiciones-cultura-canaria/",
+   "s": "Canarias en Pleno",
+   "d": "2026-10-01T12:51:59.000Z",
+   "tags": [
+    "CANARIAS"
+   ]
+  },
+  {
+   "t": "El Gobierno de Canarias mueve ficha en la solicitud de Las Palmas de ser declarada zona tensionada",
+   "u": "https://www.eldiario.es/canariasahora/politica/gobierno-canarias-mueve-ficha-solicitud-palmas-declarada-zona-tensionada_1_13553832.html",
+   "s": "elDiario.es",
+   "d": "2026-10-01T12:38:15.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://static.eldiario.es/clip/303ba488-1994-4711-a18b-d6c25fe08c2c_facebook-aspect-ratio-1200-675_default_0_x993y262.jpg"
+  },
+  {
+   "t": "San Sebastián Gastronomika: Tenerife presenta 48 bodegas y un pintxo",
+   "u": "https://www.canariasenpleno.com/tenerife-san-sebastian-gastronomika/",
+   "s": "Canarias en Pleno",
+   "d": "2026-10-01T12:21:20.000Z",
+   "tags": [
+    "CANARIAS",
+    "VINO"
+   ]
+  },
+  {
+   "t": "La productora de Los Javis rueda en Canarias y busca figurantes: qué perfiles demanda y cómo inscribirse",
+   "u": "https://www.eldiario.es/canariasahora/sociedad/casting-productora-javis-canarias-figurantes-perfiles-inscribirse-serie-lanzarote_1_13553674.html",
+   "s": "elDiario.es",
+   "d": "2026-10-01T12:19:26.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://static.eldiario.es/clip/c0426ae5-6da2-4ab5-ba5b-b6b48d3250e3_facebook-aspect-ratio-1200-675_default_0_x1565y645.jpg"
+  },
+  {
+   "t": "Viajes National Geographic recorre y recomienda los sabores y la diversidad gastronómica de Las Palmas de Gran Canaria con un nuevo eBook descargable en su página web",
+   "u": "https://www.canal4tenerife.tv/viajes-national-geographic-recorre-y-recomienda-los-sabores-y-la-diversidad-gastronomica-de-las-palmas-de-gran-canaria-con-un-nuevo-ebook-descargable-en-su-pagina-web/",
+   "s": "Canal 4 Tenerife",
+   "d": "2026-10-01T12:18:12.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://www.canal4tenerife.tv/wp-content/uploads/2026/10/Guia-Gastronomica-NG.webp"
+  },
+  {
+   "t": "Carlos Lafoz, director de Distribución de Endesa en Canarias, interviene en Tenerife en el II Congreso de Sistemas Eléctricos Aislados",
+   "u": "https://www.eldiario.es/canariasahora/lapalmaahora/economia/carlos-lafoz-director-distribucion-endesa-canarias-interviene-tenerife-ii-congreso-sistemas-electricos-aislados_1_13553729.html",
+   "s": "elDiario.es",
+   "d": "2026-10-01T12:09:28.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://static.eldiario.es/clip/e470ae94-8ac3-4539-801e-a2e718750764_facebook-aspect-ratio-1200-675_default_0.jpg"
+  },
+  {
+   "t": "Tenerife desvela su programa para San Sebastián Gastronomika 2026, un año más como patrocinador oficial y con un gran stand-restaurante de 200 m2 y Túnel del Vino",
+   "u": "https://www.diariodetenerife.info/tenerife-desvela-programa-san-sebastian-gastronomika-2026-ano-patrocinador-oficial-gran-stand-restaurante-200-m2-tunel-vino/",
+   "s": "diariodetenerife.info",
+   "d": "2026-10-01T12:02:55.000Z",
+   "tags": [
+    "CANARIAS",
+    "VINO"
+   ]
+  },
+  {
+   "t": "Talleres 'Aulas con sabor rural' acercan la cocina canaria a escolares",
+   "u": "https://lavozcanaria.com/icod/san-juan-de-la-rambla/talleres-aulas-con-sabor-rural-acercan-la-cocina-canaria-a-escolares",
+   "s": "La Voz Canaria",
+   "d": "2026-10-01T11:59:04.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://lavozcanaria.com/media/2026/10/talleres-aulas-con-sabor-rural-acercan-la-cocina-canaria-a-escolares.webp"
+  },
+  {
+   "t": "La Guía Michelin otorga una Llave al Hotel Palacio de los Ángeles de Haro",
+   "u": "https://www.larioja.com/degusta/guia-michelin-otorga-llave-hotel-palacio-angeles-20261001134727-nt_amp.html",
+   "s": "La Rioja",
+   "d": "2026-10-01T11:47:28.000Z",
+   "tags": [
+    "MICHELIN"
+   ],
+   "img": "https://s2.ppllstatics.com/larioja/www/multimedia/degusta/2026/10/01/260320PalacioDeLosAngeles_027.jpg"
+  },
+  {
+   "t": "Martín Berasategui, chef (66 años): “Una sopa de ajo debe tener pan sopako, pimentón dulce y un poco de cayena",
+   "u": "https://as.com/tikitakas/gastronomia/martin-berasategui-chef-66-anos-una-sopa-de-ajo-debe-tener-pan-sopako-pimenton-dulce-y-un-poco-de-cayena-f202610-n/",
+   "s": "Diario AS",
+   "d": "2026-10-01T11:36:43.000Z",
+   "tags": [
+    "CHEF"
+   ],
+   "img": "https://img.asmedia.epimg.net/resizer/v2/RWNHF645AVA6DB7DHHFM6PQLPM.jpg?auth=77d9f99b6196ba8095ab9d95d9ac5745f28a6b6cfeb50bf6eaf41843ce6fa2db&width=1472&height=828&smart=true"
+  },
   {
    "t": "Las plantas silvestres del Pirineo se convierten en un lujo gastronómico en un estrella Michelin",
    "u": "https://www.hoyaragon.es/gastronomia/plantas-silvestres-pirineo-lujo-pirineo-kike-gallardo-restaurante-ansils/20261001131723147904.html",
-   "s": "hoy aragón",
+   "s": "Hoy Aragón",
    "d": "2026-10-01T11:17:23.000Z",
    "tags": [
     "ALTA COCINA",
@@ -13,14 +259,14 @@
    "img": "https://www.hoyaragon.es/media/hoyaragon/images/2026/10/01/2026100113201943740.jpg"
   },
   {
-   "t": "El mal tiempo obliga al desvío de cuatro vuelos en el aeropuerto Tenerife Norte",
-   "u": "https://www.eldiario.es/canariasahora/tenerifeahora/sucesos/mal-tiempo-obliga-desvio-cuatro-vuelos-aeropuerto-tenerife-norte_1_13553223.html",
-   "s": "eldiario.es",
-   "d": "2026-10-01T10:31:25.000Z",
+   "t": "Menos de 2 tazas y en casa: así es el consumo de café de los canarios hasta los 2,9 millones al día",
+   "u": "https://www.canarias7.es/gastronomia-c7/tazas-casa-consumo-cafe-canarios-millones-dia-20261001112534-nt_amp.html",
+   "s": "Canarias7",
+   "d": "2026-10-01T10:25:35.000Z",
    "tags": [
     "CANARIAS"
    ],
-   "img": "https://static.eldiario.es/clip/67dda0d1-cf7b-44c0-a930-e00be487d578_facebook-aspect-ratio-1200-675_default_0.jpg"
+   "img": "https://s1.ppllstatics.com/canarias7/www/multimedia/gastronomia-c7/2026/10/01/cafe.jpg"
   },
   {
    "t": "Un restaurante obligado a devolver los 54 euros pagados por una reserva: la afectada tuvo que apelar al artículo 1.105 del Código Civil",
@@ -35,7 +281,7 @@
   {
    "t": "Las mejores patatas bravas del mundo están en Cádiz: Mauro Barreiro conquista Palencia con sus Bravas Colorás",
    "u": "https://www.europasur.es/vivir-el-sur/mejores-patatas-bravas-mundo-mauro-barreiro-cadiz-san-roque-2026_0_2008120440.html",
-   "s": "Europa Sur",
+   "s": "europasur.es",
    "d": "2026-10-01T09:23:16.000Z",
    "tags": [
     "ALTA COCINA"
@@ -45,260 +291,12 @@
   {
    "t": "La Laguna Tenerife se estrena en Europa con victoria",
    "u": "https://www.eldiario.es/canariasahora/deportes/baloncesto/laguna-tenerife-estrena-europa-victoria_1_13552820.html",
-   "s": "eldiario.es",
+   "s": "elDiario.es",
    "d": "2026-10-01T09:18:53.000Z",
    "tags": [
     "CANARIAS"
    ],
    "img": "https://static.eldiario.es/clip/c1a5c74d-72d5-4ec4-9a82-d487b0edf655_facebook-aspect-ratio-1200-675_default_0_x503y528.jpg"
-  },
-  {
-   "t": "El bodegón de Tenerife donde comer como toda la vida: cocina canaria, raciones abundantes y precios ajustados",
-   "u": "https://www.eldia.es/tenerife/2026/10/01/bodegon-tenerife-comer-vida-cocina-canaria-dv-134869756.html",
-   "s": "El Día",
-   "d": "2026-10-01T08:48:22.000Z",
-   "tags": [
-    "CANARIAS"
-   ]
-  },
-  {
-   "t": "Primer aviso amarillo en Canarias por las lluvias",
-   "u": "https://www.eldiario.es/canariasahora/tiempo-canarias/avisos-amarillos-canarias-lluvias-aemet_1_13552659.html",
-   "s": "eldiario.es",
-   "d": "2026-10-01T08:45:18.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://static.eldiario.es/clip/80b3a11a-1007-4adf-b5fe-302b2d3ec98e_facebook-aspect-ratio-1200-675_default_0.jpg"
-  },
-  {
-   "t": "Tenerife también se une a las acampadas por el derecho a la vivienda digna: ''Canarias será la tumba del rentismo''",
-   "u": "https://www.eldiario.es/canariasahora/tenerifeahora/tenerife-une-acampadas-derecho-vivienda-digna-canarias-sera-tumba-rentismo_1_13552540.html",
-   "s": "eldiario.es",
-   "d": "2026-10-01T08:31:24.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://static.eldiario.es/clip/44be0d74-876c-4a74-8edc-a8ae9cd34d93_facebook-aspect-ratio-1200-675_default_0.jpg"
-  },
-  {
-   "t": "Comienza Alicante Gastronómica 2026",
-   "u": "https://diariodegastronomia.com/comienza-alicante-gastronomica-2026/",
-   "s": "Diario de Gastronomía",
-   "d": "2026-10-01T08:28:19.000Z",
-   "tags": [
-    "CHEF"
-   ],
-   "img": "https://diariodegastronomia.com/wp-content/uploads/2026/10/Comienza-Alicante-Gastronómica-2026.png"
-  },
-  {
-   "t": "Casi 108.300 contratos de alquiler se podrán prorrogar en Canarias con el decreto, según Sumar",
-   "u": "https://www.eldiario.es/canariasahora/politica/108-300-contratos-alquiler-podran-prorrogar-canarias-decreto-sumar_1_13552375.html",
-   "s": "eldiario.es",
-   "d": "2026-10-01T07:28:28.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://static.eldiario.es/clip/c831c9e5-3e35-4992-a427-2b96e8641c70_facebook-aspect-ratio-1200-675_default_0.jpg"
-  },
-  {
-   "t": "Borja Marrero y Muxgo ponen voz a Canarias en el estreno de las ‘Mindful Voices’ de la Guía Michelin",
-   "u": "https://www.eldiario.es/canariasahora/por-fogones/losjuernesdeporfogones/borja-marrero-muxgo-ponen-voz-canarias-estreno-mindful-voices-guia-michelin_1_13552354.html",
-   "s": "eldiario.es",
-   "d": "2026-10-01T07:20:02.000Z",
-   "tags": [
-    "CANARIAS",
-    "MICHELIN"
-   ],
-   "img": "https://static.eldiario.es/clip/473d76d4-89e2-4176-a306-08c73f59a3d2_facebook-aspect-ratio-1200-675_default_0_x141y267.jpg"
-  },
-  {
-   "t": "¡Qué vivan las listas!",
-   "u": "https://www.canarias7.es/gastronomia-c7/vivan-listas-20261001140000-nt_amp.html",
-   "s": "Canarias7",
-   "d": "2026-10-01T06:39:19.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://s1.ppllstatics.com/canarias7/www/multimedia/gastronomia-c7/2026/09/30/restaurante.jpg"
-  },
-  {
-   "t": "El restaurante venezolano que suma tres locales en dos años en Las Palmas de Gran Canaria",
-   "u": "https://www.laprovincia.es/las-palmas/2026/10/01/restaurante-venezolano-arepas-las-palmas-dv-134863156.amp.html",
-   "s": "La Provincia",
-   "d": "2026-10-01T06:00:17.000Z",
-   "tags": [
-    "CANARIAS"
-   ]
-  },
-  {
-   "t": "La 'libertad' entendida por el chef estrella Michelín José Carlos García: ostras, chivo y bogavante",
-   "u": "https://www.elespanol.com/viajes/cocinillas-gastro/actualidad-gastronomica/20261001/libertad-entendida-chef-estrella-michelin-jose-carlos-garcia-ostras-chivo-bogavante/1003744401679_0.html",
-   "s": "El Español",
-   "d": "2026-10-01T05:38:45.000Z",
-   "tags": [
-    "ALTA COCINA"
-   ],
-   "img": "https://s3.elespanol.com/k/imgp/cms/elespanol/11366947.jpg?p=f:jpeg/w:1706/h:960&h=tXDJUWFW"
-  },
-  {
-   "t": "Regresa “A Taste of Hope”: alta cocina a favor de la niñez",
-   "u": "https://www.diariolibre.com/revista/buena-vida/2026/10/01/a-taste-of-hope-2026-alta-cocina-a-favor-de-la-ninez/3674934",
-   "s": "Diario Libre",
-   "d": "2026-10-01T04:01:00.000Z",
-   "tags": [
-    "ALTA COCINA"
-   ],
-   "img": "https://resources.diariolibre.com/images/2026/09/30/a-taste-of-hope-2026-alta-cocina-a-favor-de-la-ninez-60e89114-focus-min0.06-0.56-1200-675_wam.jpg"
-  },
-  {
-   "t": "Martín Berasategui, cocinero español: \"Si hoy fuera la última cena, comería en el Rekondo de San Sebastián, con mi mujer, mi hija y mis dos nietos. Es un templo gastronómico y la mejor bodega del mundo de la hostelería\"",
-   "u": "https://www.mundodeportivo.com/foodie/20261001/1004233166/martin-berasategui-cocinero-espanol-hoy-fuera-ultima-cena-comeria-rekondo-san-sebastian-mi-mujer-mi-hija-mis-dos-nietos-templo-gastronomico-mejor-bodega-mundo-hosteleria-xef-dct.html?facet",
-   "s": "Mundo Deportivo",
-   "d": "2026-09-30T22:12:00.000Z",
-   "tags": [
-    "CHEF",
-    "VINO"
-   ],
-   "img": "https://imagenes2.mundodeportivo.com/files/og_thumbnail/files/fp/uploads/2026/09/30/6abd79d87a392.r_d.947-528-6250.jpeg"
-  },
-  {
-   "t": "Gastronomía regenerativa en Gran Canaria: así se cocina para salvar el paisaje y la memoria rural",
-   "u": "https://estenerife.com/gastronomia-regenerativa-gran-canaria-salvar-paisaje-memoria/",
-   "s": "estenerife.com",
-   "d": "2026-09-30T21:24:25.000Z",
-   "tags": [
-    "CANARIAS"
-   ]
-  },
-  {
-   "t": "La parada de Gerard Martín en Tenerife: así es el guachinche donde comió el jugador del Barçe",
-   "u": "https://www.eldia.es/tenerife/2026/09/30/parada-gerard-martin-tenerife-guachinche-134862230.html",
-   "s": "El Día",
-   "d": "2026-09-30T20:45:55.000Z",
-   "tags": [
-    "CANARIAS"
-   ]
-  },
-  {
-   "t": "De Tenerife a Wembley: una noche difícil de olvidar",
-   "u": "https://www.eldiario.es/canariasahora/Deportes/futbol/tenerife-wembley-noche-dificil-olvidar_1_13551853.html",
-   "s": "eldiario.es",
-   "d": "2026-09-30T20:00:32.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://static.eldiario.es/clip/b0d44a2a-8a00-43f7-9ff8-079b8b97cd82_facebook-aspect-ratio-1200-675_default_0_x598y965.jpg"
-  },
-  {
-   "t": "Reina Letizia brilló con histórica diadema de diamantes en gran gala ofrecida a los Macron",
-   "u": "https://www.guioteca.com/realeza/reina-letizia-brillo-con-historica-diadema-de-diamantes-en-gran-gala-ofrecida-a-los-macron/",
-   "s": "Guioteca",
-   "d": "2026-09-30T19:50:48.000Z",
-   "tags": [
-    "ALTA COCINA"
-   ],
-   "img": "https://gcdn.emol.cl/realeza/files/2026/09/Reina-Letizia-diadema-308x199.jpg"
-  },
-  {
-   "t": "Canarias se empobrece dentro de la UE: su renta per cápita se sitúa ya un 35% por debajo de la media europea",
-   "u": "https://www.eldiario.es/canariasahora/economia/canarias-empobrece-ue-renta-per-capita-situa-35-debajo-media-europea_1_13551841.html",
-   "s": "eldiario.es",
-   "d": "2026-09-30T18:18:30.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://static.eldiario.es/clip/4c887461-4ad0-48ec-a148-66cedc75bde9_facebook-aspect-ratio-1200-675_default_0.jpg"
-  },
-  {
-   "t": "Bahía del Duque estrena villas de lujo en Tenerife: piscina privada y producto prime en Costa Adeje",
-   "u": "https://www.merca2.es/2026/09/30/bahia-del-duque-villas-lujo-tenerife-2464966/",
-   "s": "Merca2.es",
-   "d": "2026-09-30T16:41:00.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://static.merca2.es/wp-content/uploads/2026/09/Bahia-del-Duque.webp"
-  },
-  {
-   "t": "El cabrito de once meses, entre la investigación y la cocina en El Secreto de Chimiche",
-   "u": "https://www.canarias7.es/gastronomia-c7/cabrito-once-meses-investigacion-cocina-secreto-chimiche-20260930174025-nt.html",
-   "s": "Canarias7",
-   "d": "2026-09-30T16:40:26.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://s1.ppllstatics.com/canarias7/www/multimedia/gastronomia-c7/2026/09/30/5-kKAF-U3019777876064eE-1200x840@Canarias7.jpg"
-  },
-  {
-   "t": "Periko Ortega recorre el mundo con ReComiendo y su creatividad",
-   "u": "https://gironanoticies.com/noticia/305330-periko-ortega-recorre-el-mundo-con-recomiendo-y-su-creatividad.htm",
-   "s": "GIRONANOTICIES.COM",
-   "d": "2026-09-30T16:03:11.000Z",
-   "tags": [
-    "ALTA COCINA"
-   ],
-   "img": "https://gironanoticies.com/notix/multimedia/imagenes/fotos/https://imagenesprensa.ams3.digitaloceanspaces.com/img_eb2c68cb6196880e0fc7250670f7da9c.jpg"
-  },
-  {
-   "t": "Los 25 mejores hoteles gastro de España 2026",
-   "u": "https://www.tapasmagazine.es/25-mejores-hoteles-gastro-espana-2026/",
-   "s": "Tapas Magazine",
-   "d": "2026-09-30T15:32:41.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://www.tapasmagazine.es/wp-content/uploads/2026/09/Hoteles_Gastro_2026_APERTURA-1-1200x675.jpg"
-  },
-  {
-   "t": "Quintero anticipa una buena vendimia en Canarias con una cosecha que se duplicará",
-   "u": "https://www.democrata.es/canarias/quintero-anticipa-una-buena-vendimia-en-canarias-con-una-cosecha-que-se-duplicara/",
-   "s": "Demócrata",
-   "d": "2026-09-30T13:18:52.000Z",
-   "tags": [
-    "VINO",
-    "CANARIAS"
-   ]
-  },
-  {
-   "t": "El restaurante de carretera definitivo está en este pueblo medieval de Madrid: Martín Berasategui confiesa su secreto mejor guardado",
-   "u": "https://www.noticiasdelvino.com/escapadas/2026/09/30/el-restaurante-de-carretera-definitivo-esta-en-este-pueblo-medieval-de-madrid-martin-berasategui-confiesa-su-secreto-mejor-guardado-74843/",
-   "s": "Noticias del Vino",
-   "d": "2026-09-30T12:47:59.000Z",
-   "tags": [
-    "CHEF"
-   ],
-   "img": "https://www.noticiasdelvino.com/wp-content/uploads/image-583.png.webp"
-  },
-  {
-   "t": "Ignazio Deias resucita Boccondivino, el italiano que cerró en plena crisis y ahora entra en la Guía Micheli...",
-   "u": "https://okdiario.com/cool/lifestyle/ignazio-deias-resucita-boccondivino-italiano-que-cerro-plena-crisis-ahora-entra-guia-michelin-queria-recuperarlo-20351420/amp",
-   "s": "OkDiario",
-   "d": "2026-09-30T12:00:18.000Z",
-   "tags": [
-    "MICHELIN",
-    "VINO"
-   ],
-   "img": "https://okdiario.com/img/2026/09/21/horizontal-1-2.jpg"
-  },
-  {
-   "t": "Octubre vuelve a reunir a Canarias alrededor de la mesa",
-   "u": "https://www.eldia.es/ocio/gastronomia/2026/09/30/octubre-vuelve-reunir-canarias-alrededor-134838410.html",
-   "s": "El Día",
-   "d": "2026-09-30T11:44:50.000Z",
-   "tags": [
-    "CANARIAS"
-   ]
-  },
-  {
-   "t": "El festival de la auténtica comida mexicana: tacos, tostadas y cócteles de los mejores restaurantes de España",
-   "u": "https://www.elespanol.com/viajes/planes/20260930/festival-autentica-comida-mexicana-tacos-tostadas-cocteles-mejores-restaurantes-espana/1003744400888_0.amp.html",
-   "s": "El Español",
-   "d": "2026-09-30T11:37:57.000Z",
-   "tags": [
-    "MICHELIN"
-   ],
-   "img": "https://s3.elespanol.com/k/imgp/cms/elespanol/11365244.jpg?p=f:jpeg/c:1382:778:nowe:0:123/w:1706/h:960&h=PqZ0iYWt"
   }
  ]
 }
