@@ -1,6 +1,17 @@
 {
- "updated": "2026-10-02T16:40:11.458Z",
+ "updated": "2026-10-02T21:20:43.146Z",
  "items": [
+  {
+   "t": "Visita la bodega en Tenerife con el viñedo más alto de Europa",
+   "u": "https://dondeir.com/content/visita-la-bodega-en-tenerife-con-el-vinedo-mas-alto-de-europa/",
+   "s": "Dónde Ir",
+   "d": "2026-10-02T16:21:12.000Z",
+   "tags": [
+    "VINO",
+    "CANARIAS"
+   ],
+   "img": "https://media.dondeir.com/2026/10/bodega-en-tenerife.jpg"
+  },
   {
    "t": "La Laguna y la Fundación CB Canarias llevan la magia de la Eurocup a los mayores del municipio",
    "u": "https://www.eldiario.es/canariasahora/deportes/baloncesto/laguna-fundacion-cb-canarias-llevan-magia-eurocup-mayores-municipio_1_13557926.html",
@@ -12,19 +23,9 @@
    "img": "https://static.eldiario.es/clip/66c41e09-7cde-4a19-8162-547c890a36a5_facebook-aspect-ratio-1200-675_default_0_x649y326.jpg"
   },
   {
-   "t": "Tijarafe celebra el 20º aniversario de Expovida con la gastronomía como protagonista",
-   "u": "https://www.eldiario.es/canariasahora/lapalmaahora/municipios/tijarafe/tijarafe-celebra-20o-aniversario-expovida-gastronomia-protagonista_1_13557841.html",
-   "s": "elDiario.es",
-   "d": "2026-10-02T15:22:26.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://static.eldiario.es/clip/f6972370-9183-4367-8b52-6f40bbdfb015_facebook-aspect-ratio-1200-675_default_0_x379y93.jpg"
-  },
-  {
    "t": "Canal Cocina celebra los ocho platos más emblemáticos del país en Los grandes de España",
    "u": "https://www.culturaocio.com/tv/noticia-canal-cocina-celebra-ocho-platos-mas-emblematicos-pais-grandes-espana-20261002163135.html",
-   "s": "culturaocio.com",
+   "s": "CulturaOcio",
    "d": "2026-10-02T14:31:35.000Z",
    "tags": [
     "ALTA COCINA"
@@ -132,17 +133,6 @@
    "img": "https://img.editor80.com/hI9ezOwgspgSgYJ6TrboahUgE7B6ZucazU8obHp5qdM/rs:fill:1200:630:1/g:fp:0.5:0.5/f:jpg/aHR0cHM6Ly9tZWRpYS5lZGl0b3I4MC5jb20vYWRqdW50b3MvMzczL2ltYWdlbmVzLzAwMS8zODAvMDAwMTM4MDc2NC5qcGc"
   },
   {
-   "t": "Tenerife lleva a Euskadi Gastronómika un recorrido por la isla a través de su cocina y sus vinos",
-   "u": "https://www.elespejocanario.es/llamada-actualidad/tenerife-lleva-a-euskadi-gastronomika-un-recorrido-por-la-isla-a-traves-de-su-cocina-y-sus-vinos/",
-   "s": "El Espejo Canario",
-   "d": "2026-10-02T09:18:14.000Z",
-   "tags": [
-    "CANARIAS",
-    "VINO"
-   ],
-   "img": "https://www.elespejocanario.es/wp-content/uploads/2026/10/Tenerife-desvela-su-programa-para-San-Sebastian-Gastronomika-2026-FOTO-CABILDO-DE-TENERIFE.jpg"
-  },
-  {
    "t": "69 direcciones para comer bien en Las Palmas de Gran Canaria, según National Geographic",
    "u": "https://www.canarias7.es/gastronomia-c7/direcciones-comer-bien-palmas-gran-canaria-segun-20261002101710-nt.html",
    "s": "Canarias7",
@@ -172,6 +162,15 @@
    ]
   },
   {
+   "t": "Las papas fritas más populares de Canarias estrenan nuevo sabor: llegan los Munchitos de tomate",
+   "u": "https://www.eldia.es/ocio/gastronomia/2026/10/02/papas-fritas-populares-canarias-muchitos-tomate-dv-134914760.amp.html",
+   "s": "El Día",
+   "d": "2026-10-02T08:41:46.000Z",
+   "tags": [
+    "CANARIAS"
+   ]
+  },
+  {
    "t": "Canarias registró en septiembre 974.246 afiliados a la Seguridad, 10.454 más que en agosto",
    "u": "https://www.eldiario.es/canariasahora/economia/canarias-registro-septiembre-974-246-afiliados-seguridad-10-454-agosto_1_13555805.html",
    "s": "elDiario.es",
@@ -192,35 +191,15 @@
    ]
   },
   {
-   "t": "Canarias fue en septiembre la comunidad donde más bajó el paro: 4.156 desempleados menos",
-   "u": "https://www.eldiario.es/canariasahora/economia/canarias-septiembre-comunidad-paro-4-156-desempleados_1_13555743.html",
-   "s": "elDiario.es",
-   "d": "2026-10-02T07:34:32.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://static.eldiario.es/clip/28ebf94b-4e71-4b78-b4ea-21de5faac9a4_facebook-aspect-ratio-1200-675_default_0.jpg"
-  },
-  {
    "t": "El secreto del restaurante de Madrid donde cenó Shakira: la bronca de Frank Sinatra, un vino de 200 años y el único tablao con Estrella Michelin",
    "u": "https://www.vozpopuli.com/amp/gastropoli/el-secreto-del-restaurante-de-madrid-donde-ceno-shakira-la-bronca-de-frank-sinatra-un-vino-de-200-anos-y-el-unico-tablao-con-estrella-michelin.html",
-   "s": "Vozpopuli",
+   "s": "vozpopuli.com",
    "d": "2026-10-02T06:42:52.000Z",
    "tags": [
     "MICHELIN",
     "VINO"
    ],
    "img": "https://cdn.vozpopuli.com/cdn/posts/4237545/cantante-shakira-actua-durante-primer-concierto-su-residencia-espana-2895207-1200-700.jpg"
-  },
-  {
-   "t": "Santa Cruz de Tenerife, nueva capital española de la gastronomía 2027",
-   "u": "https://www.revistahosteleria.com/texto-diario/mostrar/6033003/santa-cruz-tenerife-nueva-capital-espanola-gastronomia-2027",
-   "s": "Revista HOSTELERÍA",
-   "d": "2026-10-02T06:03:54.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://www.revistahosteleria.com/images/showid/8159731"
   },
   {
    "t": "La isla de Canarias que un medio internacional define como \"continente en miniatura\": paisajes, clima y gastronomía",
@@ -273,6 +252,15 @@
    "img": "https://www.vinetur.com/visuals/2026/october/1/agent-20261001-092333-551d708fbccf64e6.jpg"
   },
   {
+   "t": "Canarias, una geografía para quedarse | Gentleman - El valor de la elegancia",
+   "u": "https://gentleman.elperiodico.com/placeres/canarias-una-geografia-para-quedarse/",
+   "s": "Gentleman - El valor de la elegancia",
+   "d": "2026-10-02T04:00:00.000Z",
+   "tags": [
+    "CANARIAS"
+   ]
+  },
+  {
    "t": "Eneko Atxa, chef vasco con tres estrellas Michelin, estrena restaurante en Madrid: «Buscamos más el placer ...",
    "u": "https://okdiario.com/cool/lifestyle/eneko-atxa-sobre-sociedad-gastronomika-madrid-platos-no-son-piezas-sueltas-son-capitulos-que-juntos-nos-ofrecen-relato-gastronomico-20255773/amp",
    "s": "OkDiario",
@@ -290,7 +278,8 @@
    "d": "2026-10-02T03:25:00.000Z",
    "tags": [
     "CANARIAS"
-   ]
+   ],
+   "img": "https://imagenes.elpais.com/resizer/v2/PWCKHBRJMFBBXN37ILQWSZUAM4.jpg?auth=7c1403a93d5ba68c741945781f19c6851cdff17304219d18e0634713c5b4cd8c&width=1200"
   },
   {
    "t": "Encuentro botánico entre el Ansils y el chef Kike Gallardo en una experiencia inmersiva",
@@ -301,6 +290,17 @@
     "ALTA COCINA"
    ],
    "img": "https://imagenes.diariodelaltoaragon.es/files/image_1920_1080/uploads/imagenes/2026/10/01/6abe7edf4f0e31-93339889.jpeg"
+  },
+  {
+   "t": "Canarias prevé una vendimia que duplicará la cosecha reciente en todas las islas",
+   "u": "https://www.vinetur.com/20261001108130/canarias-preve-una-vendimia-que-duplicara-la-cosecha-reciente-en-todas-las-islas.html",
+   "s": "Vinetur",
+   "d": "2026-10-02T02:46:16.000Z",
+   "tags": [
+    "VINO",
+    "CANARIAS"
+   ],
+   "img": "https://www.vinetur.com/imagenes/pube/2026-W37/image105.jpg"
   }
  ]
 }
