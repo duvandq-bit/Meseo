@@ -1,6 +1,49 @@
 {
- "updated": "2026-10-01T21:50:57.434Z",
+ "updated": "2026-10-02T02:18:23.067Z",
  "items": [
+  {
+   "t": "Así es La Trattoria de Andrea Bernardi en Bahía del Duque: cocina italiana, producto canario y técnica Michelin",
+   "u": "https://www.elespanol.com/vivir/20261002/trattoria-andrea-bernardi-bahia-duque-cocina-italiana-producto-canario-tecnica-michelin/1003744405479_0.amp.html",
+   "s": "El Español",
+   "d": "2026-10-02T00:00:00.000Z",
+   "tags": [
+    "CANARIAS",
+    "MICHELIN"
+   ],
+   "img": "https://s3.elespanol.com/k/imgp/cms/elespanol/11368149.jpg?p=f:jpeg/w:1706/h:960&h=RNOqfPsg"
+  },
+  {
+   "t": "Canarias prevé una vendimia que duplicará la cosecha reciente en todas las islas",
+   "u": "https://www.vinetur.com/20261001108130/canarias-preve-una-vendimia-que-duplicara-la-cosecha-reciente-en-todas-las-islas.html",
+   "s": "Vinetur",
+   "d": "2026-10-01T21:31:54.000Z",
+   "tags": [
+    "VINO",
+    "CANARIAS"
+   ],
+   "img": "https://www.vinetur.com/imagenes/pube/2026-W37/image105.jpg"
+  },
+  {
+   "t": "Tenerife será patrocinador oficial de San Sebastian Gastronomika con un gran espacio gastronómico propio",
+   "u": "https://www.vinetur.com/20261001108094/tenerife-sera-patrocinador-oficial-de-san-sebastian-gastronomika-con-un-gran-espacio-gastronomico-propio.html",
+   "s": "Vinetur",
+   "d": "2026-10-01T21:18:07.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://www.vinetur.com/visuals/2026/october/1/agent-20261001-142404-a6f83d73236f86aa.jpg"
+  },
+  {
+   "t": "El Seaside Grand Hotel Residencia logra una Llave MICHELIN en Gran Canaria",
+   "u": "https://www.vinetur.com/20261001108098/el-seaside-grand-hotel-residencia-logra-una-llave-michelin-en-gran-canaria.html",
+   "s": "Vinetur",
+   "d": "2026-10-01T21:14:58.000Z",
+   "tags": [
+    "MICHELIN",
+    "CANARIAS"
+   ],
+   "img": "https://www.vinetur.com/visuals/2026/october/1/agent-20261001-150123-003deb20513a72fe.jpg"
+  },
   {
    "t": "La villa juguetera de Alicante que conquista por su cocina: así es el pueblo donde mejor se come de España",
    "u": "https://www.noticiasdelvino.com/restaurantes/2026/10/01/la-villa-juguetera-de-alicante-que-conquista-por-su-cocina-asi-es-el-pueblo-donde-mejor-se-come-de-espana-74836/",
@@ -38,6 +81,25 @@
    "tags": [
     "CANARIAS",
     "MICHELIN"
+   ]
+  },
+  {
+   "t": "San Sebastián Gastronomika: Tenerife presenta 48 bodegas y un pintxo",
+   "u": "https://www.canariasenpleno.com/tenerife-san-sebastian-gastronomika/",
+   "s": "Canarias en Pleno",
+   "d": "2026-10-01T17:30:07.000Z",
+   "tags": [
+    "CANARIAS",
+    "VINO"
+   ]
+  },
+  {
+   "t": "Las Ku4tro descubren el guachinche de La Laguna que sorprende con sus croquetas de papas, piñas y costillas",
+   "u": "https://www.eldia.es/la-laguna/2026/10/01/ku4tro-descubren-guachinche-laguna-sorprende-134897329.amp.html",
+   "s": "El Día",
+   "d": "2026-10-01T17:23:25.000Z",
+   "tags": [
+    "CANARIAS"
    ]
   },
   {
@@ -109,16 +171,6 @@
    ]
   },
   {
-   "t": "Teatro, música, exposiciones: todo, en la agenda cultural de La Laguna",
-   "u": "https://www.eldiario.es/canariasahora/tenerifeahora/la_laguna/teatro-musica-exposiciones-agenda-cultural-laguna_1_13554189.html",
-   "s": "elDiario.es",
-   "d": "2026-10-01T13:57:33.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://static.eldiario.es/clip/058de1ef-daa1-4e3d-b2ac-1cc5385b70d1_facebook-aspect-ratio-1200-675_default_0_x482y142.jpg"
-  },
-  {
    "t": "LOBA vuelve: el guachinche de Tenerife que ofrece comida, bebida y dos conciertos desde 23 euros",
    "u": "https://diariodeavisos.elespanol.com/2026/10/guachinche-tenerife-conciertos-comida-loba-orotava/",
    "s": "Diario de Avisos",
@@ -168,16 +220,6 @@
    "img": "https://static.eldiario.es/clip/303ba488-1994-4711-a18b-d6c25fe08c2c_facebook-aspect-ratio-1200-675_default_0_x993y262.jpg"
   },
   {
-   "t": "San Sebastián Gastronomika: Tenerife presenta 48 bodegas y un pintxo",
-   "u": "https://www.canariasenpleno.com/tenerife-san-sebastian-gastronomika/",
-   "s": "Canarias en Pleno",
-   "d": "2026-10-01T12:21:20.000Z",
-   "tags": [
-    "CANARIAS",
-    "VINO"
-   ]
-  },
-  {
    "t": "La productora de Los Javis rueda en Canarias y busca figurantes: qué perfiles demanda y cómo inscribirse",
    "u": "https://www.eldiario.es/canariasahora/sociedad/casting-productora-javis-canarias-figurantes-perfiles-inscribirse-serie-lanzarote_1_13553674.html",
    "s": "elDiario.es",
@@ -215,7 +257,8 @@
    "tags": [
     "CANARIAS",
     "VINO"
-   ]
+   ],
+   "img": "https://www.diariodetenerife.info/wp-content/uploads/2026/10/San-Sebastian-Gastronomika-2026-1-scaled.jpg"
   },
   {
    "t": "Talleres 'Aulas con sabor rural' acercan la cocina canaria a escolares",
@@ -244,8 +287,7 @@
    "d": "2026-10-01T11:36:43.000Z",
    "tags": [
     "CHEF"
-   ],
-   "img": "https://img.asmedia.epimg.net/resizer/v2/RWNHF645AVA6DB7DHHFM6PQLPM.jpg?auth=77d9f99b6196ba8095ab9d95d9ac5745f28a6b6cfeb50bf6eaf41843ce6fa2db&width=1472&height=828&smart=true"
+   ]
   },
   {
    "t": "Las plantas silvestres del Pirineo se convierten en un lujo gastronómico en un estrella Michelin",
@@ -257,46 +299,6 @@
     "MICHELIN"
    ],
    "img": "https://www.hoyaragon.es/media/hoyaragon/images/2026/10/01/2026100113201943740.jpg"
-  },
-  {
-   "t": "Menos de 2 tazas y en casa: así es el consumo de café de los canarios hasta los 2,9 millones al día",
-   "u": "https://www.canarias7.es/gastronomia-c7/tazas-casa-consumo-cafe-canarios-millones-dia-20261001112534-nt_amp.html",
-   "s": "Canarias7",
-   "d": "2026-10-01T10:25:35.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://s1.ppllstatics.com/canarias7/www/multimedia/gastronomia-c7/2026/10/01/cafe.jpg"
-  },
-  {
-   "t": "Un restaurante obligado a devolver los 54 euros pagados por una reserva: la afectada tuvo que apelar al artículo 1.105 del Código Civil",
-   "u": "https://www.canarias7.es/economia/restaurante-obligado-devolver-euros-pagados-reserva-afectada-20261001105250-nt_amp.html",
-   "s": "Canarias7",
-   "d": "2026-10-01T09:53:01.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://s3.ppllstatics.com/canarias7/www/multimedia/economia/2026/10/01/casa-ozama.jpg"
-  },
-  {
-   "t": "Las mejores patatas bravas del mundo están en Cádiz: Mauro Barreiro conquista Palencia con sus Bravas Colorás",
-   "u": "https://www.europasur.es/vivir-el-sur/mejores-patatas-bravas-mundo-mauro-barreiro-cadiz-san-roque-2026_0_2008120440.html",
-   "s": "europasur.es",
-   "d": "2026-10-01T09:23:16.000Z",
-   "tags": [
-    "ALTA COCINA"
-   ],
-   "img": "https://static.grupojoly.com/clip/ee71b0c5-5c0e-4bd8-a913-03775e69fdfb_facebook-aspect-ratio_default_0.jpg"
-  },
-  {
-   "t": "La Laguna Tenerife se estrena en Europa con victoria",
-   "u": "https://www.eldiario.es/canariasahora/deportes/baloncesto/laguna-tenerife-estrena-europa-victoria_1_13552820.html",
-   "s": "elDiario.es",
-   "d": "2026-10-01T09:18:53.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://static.eldiario.es/clip/c1a5c74d-72d5-4ec4-9a82-d487b0edf655_facebook-aspect-ratio-1200-675_default_0_x503y528.jpg"
   }
  ]
 }
