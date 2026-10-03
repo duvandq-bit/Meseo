@@ -1,6 +1,103 @@
 {
- "updated": "2026-10-03T02:02:20.432Z",
+ "updated": "2026-10-03T10:26:59.782Z",
  "items": [
+  {
+   "t": "La Terraza de Kisko García: el bar de barrio donde el chef de Choco pone al día el terraceo cordobés",
+   "u": "https://www.abc.es/gurme/cordoba/terraza-kisko-garcia-bar-barrio-chef-choco-20261004121018-nts.html",
+   "s": "ABC",
+   "d": "2026-10-03T09:57:49.000Z",
+   "tags": [
+    "ALTA COCINA"
+   ],
+   "img": "https://s1.abcstatics.com/abc/www/multimedia/gurme/2026/10/04/bocadillo-terraza-choco-U81724586845bod-1200x630@diario_abc.jpeg"
+  },
+  {
+   "t": "La Guía MICHELIN se fija en un chef de Castellón por su forma de entender la cocina",
+   "u": "https://www.elperiodicomediterraneo.com/castello-provincia/2026/10/03/guia-michelin-fija-chef-restaurante-castellon-mindful-voices-gastronomia-134953192.html",
+   "s": "El Periódico Mediterráneo",
+   "d": "2026-10-03T09:43:07.000Z",
+   "tags": [
+    "MICHELIN"
+   ]
+  },
+  {
+   "t": "Alicante Gastronómica 2026: Murcia se corona en la apertura y el sábado despliega un maratón gastronómico",
+   "u": "https://lasgastrocronicas.com/alicante-gastronomica-2026-murcia-se-corona-en-la-apertura-y-el-sabado-despliega-un-maraton-gastronomico/",
+   "s": "lasgastrocronicas.com",
+   "d": "2026-10-03T09:00:20.000Z",
+   "tags": [
+    "ALTA COCINA"
+   ]
+  },
+  {
+   "t": "De la paella a la tortilla de patata: el viaje de Canal Cocina al origen de 8 recetas icónicas de la gastronomía española",
+   "u": "https://www.elespanol.com/corazon/bluper/20261003/paella-tortilla-patata-viaje-canal-cocina-origen-recetas-iconicas-gastronomia-espanola/1003744407006_0.amp.html",
+   "s": "El Español",
+   "d": "2026-10-03T09:00:00.000Z",
+   "tags": [
+    "ALTA COCINA"
+   ],
+   "img": "https://s3.elespanol.com/k/imgp/cms/elespanol/11369165.jpg?p=f:jpeg/c:1588:893:nowe:13:86/w:1706/h:960&h=AaIvOP89"
+  },
+  {
+   "t": "La villa juguetera de Alicante que conquista por su cocina: así es el pueblo donde mejor se come de España",
+   "u": "https://www.noticiasdelvino.com/restaurantes/2026/10/03/la-villa-juguetera-de-alicante-que-conquista-por-su-cocina-asi-es-el-pueblo-donde-mejor-se-come-de-espana-74836/",
+   "s": "Noticias del Vino",
+   "d": "2026-10-03T08:52:28.000Z",
+   "tags": [
+    "MICHELIN"
+   ],
+   "img": "https://www.noticiasdelvino.com/wp-content/uploads/restaurantes-5.jpg.webp"
+  },
+  {
+   "t": "El restaurante de Tenerife al que muchos van por un solo plato: lleva más de 40 años ofreciendo conejo",
+   "u": "https://www.eldia.es/tenerife/2026/10/03/restaurante-tenerife-plato-lleva-40-conejo-dv-134055152.html",
+   "s": "El Día",
+   "d": "2026-10-03T08:30:00.000Z",
+   "tags": [
+    "CANARIAS"
+   ]
+  },
+  {
+   "t": "El rincón de Gran Canaria con más de 100 años de historia donde disfrutar de un auténtico bocadillo de chorizo de Teror",
+   "u": "https://www.laprovincia.es/gran-canaria/2026/10/03/rincon-gran-canaria-100-anos-bocadillo-chorizo-teror-dv-133826164.html",
+   "s": "La Provincia",
+   "d": "2026-10-03T07:45:00.000Z",
+   "tags": [
+    "CANARIAS"
+   ]
+  },
+  {
+   "t": "El Arcángel, la barrera histórica del Tenerife que el Córdoba CF necesita mantener para relanzar el vuelo",
+   "u": "https://www.abc.es/espana/andalucia/cordoba/cordoba-cf/arcangel-barrera-historica-tenerife-cordoba-necesita-mantener-20261003090920-nts_amp.html",
+   "s": "ABC",
+   "d": "2026-10-03T07:09:21.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://s1.abcstatics.com/abc/www/multimedia/espana/2026/10/03/cordobacf-partido-tenerife-U62388058246OLm-1200x630@diario_abc.jpg"
+  },
+  {
+   "t": "Yakuza by Olivier: Japón desde La Caleta",
+   "u": "https://www.canarias7.es/gastronomia-c7/restaurantes/yakuza-olivier-japon-caleta-20261003140000-nt.html",
+   "s": "Canarias7",
+   "d": "2026-10-03T06:42:52.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://s3.ppllstatics.com/canarias7/www/multimedia/gastronomia-c7/2026/10/02/image00011-kSMD-U302018273116UNH-1200x840@Canarias7.jpg"
+  },
+  {
+   "t": "ATTIS amplía su bodega en Meaño para impulsar las visitas en su 25 aniversario",
+   "u": "https://www.vinetur.com/20261001108172/attis-amplia-su-bodega-en-meano-para-impulsar-las-visitas-en-su-25-aniversario.html",
+   "s": "Vinetur",
+   "d": "2026-10-02T21:28:19.000Z",
+   "tags": [
+    "VINO",
+    "CANARIAS"
+   ],
+   "img": "https://www.vinetur.com/imagenes/pube/2026-W39/image28.jpg"
+  },
   {
    "t": "Una fermentación mixta con levaduras nativas mejora el aroma y el color del vino",
    "u": "https://www.vinetur.com/amp/20261002108190/selected-native-yeasts-improved-wine-aroma-in-co-fermentation-trials.html",
@@ -35,6 +132,15 @@
    "img": "https://www.vinetur.com/visuals/2026/october/2/20261002-214610-editor-ca1b49522f33.jpg"
   },
   {
+   "t": "Mesa y López Market: 50 carpas llenan el bulevar de Las Palmas de Gran Canaria",
+   "u": "https://www.canariasenpleno.com/mesa-lopez-market-50-carpas/",
+   "s": "Canarias en Pleno",
+   "d": "2026-10-02T19:48:35.000Z",
+   "tags": [
+    "CANARIAS"
+   ]
+  },
+  {
    "t": "Visita la bodega en Tenerife con el viñedo más alto de Europa",
    "u": "https://dondeir.com/content/visita-la-bodega-en-tenerife-con-el-vinedo-mas-alto-de-europa/",
    "s": "Dónde Ir",
@@ -48,7 +154,7 @@
   {
    "t": "La Laguna y la Fundación CB Canarias llevan la magia de la Eurocup a los mayores del municipio",
    "u": "https://www.eldiario.es/canariasahora/deportes/baloncesto/laguna-fundacion-cb-canarias-llevan-magia-eurocup-mayores-municipio_1_13557926.html",
-   "s": "eldiario.es",
+   "s": "elDiario.es",
    "d": "2026-10-02T15:45:58.000Z",
    "tags": [
     "CANARIAS"
@@ -58,7 +164,7 @@
   {
    "t": "Tijarafe celebra el 20º aniversario de Expovida con la gastronomía como protagonista",
    "u": "https://www.eldiario.es/canariasahora/lapalmaahora/municipios/tijarafe/tijarafe-celebra-20o-aniversario-expovida-gastronomia-protagonista_1_13557841.html",
-   "s": "eldiario.es",
+   "s": "elDiario.es",
    "d": "2026-10-02T15:22:26.000Z",
    "tags": [
     "CANARIAS"
@@ -78,12 +184,22 @@
   {
    "t": "La Laguna Tenerife, con motivación extra en su reencuentro con Vidorreta",
    "u": "https://www.eldiario.es/canariasahora/deportes/baloncesto/laguna-tenerife-motivacion-extra-reencuentro-vidorreta_1_13557474.html",
-   "s": "eldiario.es",
+   "s": "elDiario.es",
    "d": "2026-10-02T13:49:24.000Z",
    "tags": [
     "CANARIAS"
    ],
    "img": "https://static.eldiario.es/clip/0da4474e-080d-45db-8fbd-7e2436ffae85_facebook-aspect-ratio-1200-675_default_0_x646y549.jpg"
+  },
+  {
+   "t": "El ‘I Congreso Canario de Carreteras’ abordará como obra singular la reconstrucción de la LP-2 tras la erupción del Tajogaite",
+   "u": "https://www.eldiario.es/canariasahora/lapalmaahora/politica/i-congreso-canario-carreteras-abordara-obra-singular-reconstruccion-lp-2-erupcion-tajogaite_1_13557266.html",
+   "s": "elDiario.es",
+   "d": "2026-10-02T13:03:33.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://static.eldiario.es/clip/8bf24242-8987-40d8-bbca-dd644d474cd3_facebook-aspect-ratio-1200-675_default_0.jpg"
   },
   {
    "t": "Cultura y tradición en Tenerife: vuelve 'Loba x Guachinches' con música en directo y gastronomía en La Orotava",
@@ -95,9 +211,19 @@
    ]
   },
   {
+   "t": "La Frontera acoge la Luchada Cósmica, una celebración de la cultura canaria entre música electrónica, naturaleza y tradición",
+   "u": "https://elhierrohoy.es/frontera-acoge-luchada-cosmica-celebracion-cultura-canaria-musica-electronica-naturaleza-tradicion-2-oct/",
+   "s": "El Hierro Hoy",
+   "d": "2026-10-02T12:14:56.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://elhierrohoy.es/wp-content/uploads/2026/10/luchada-cosmica-el-hierro-1024x576.webp"
+  },
+  {
    "t": "Dani García, chef: “Si haces boquerones fritos, secar el pescado antes de echarlo a la harina es un error”",
    "u": "https://www.infobae.com/espana/2026/10/02/dani-garcia-chef-si-haces-boquerones-fritos-secar-el-pescado-antes-de-echarlo-a-la-harina-es-un-error/?outputType",
-   "s": "infobae.com",
+   "s": "Infobae",
    "d": "2026-10-02T11:29:45.000Z",
    "tags": [
     "ALTA COCINA"
@@ -107,7 +233,7 @@
   {
    "t": "El Gobierno de Canarias da por finaliza la alerta por lluvias en el norte y este de La Palma",
    "u": "https://www.eldiario.es/canariasahora/lapalmaahora/sociedad/gobierno-canarias-da-finaliza-alerta-lluvias-norte-palma_1_13556700.html",
-   "s": "eldiario.es",
+   "s": "elDiario.es",
    "d": "2026-10-02T11:10:26.000Z",
    "tags": [
     "CANARIAS"
@@ -117,7 +243,7 @@
   {
    "t": "Tenerife concederá a Alberto Vázquez-Figueroa el máximo reconocimiento de la isla",
    "u": "https://www.eldiario.es/canariasahora/tenerifeahora/cabildo/tenerife-alberto-vazquez-figueroa-nivaria-reconocimiento-isla_1_13556684.html",
-   "s": "eldiario.es",
+   "s": "elDiario.es",
    "d": "2026-10-02T11:04:11.000Z",
    "tags": [
     "CANARIAS"
@@ -131,8 +257,7 @@
    "d": "2026-10-02T11:00:00.000Z",
    "tags": [
     "CHEF"
-   ],
-   "img": "https://static.excelenciasgourmet.com/cdn/ff/VX_WX3DRek6_CsRhoo41qW_VqfhpNTmMqNSLvQFrP1c/1790855123/public/articulos/2026-10/libro-recetas-de-inclusion-fundacion-prodis.png"
+   ]
   },
   {
    "t": "El restaurante de carretera definitivo está en este pueblo medieval de Madrid: Martín Berasategui confiesa su secreto mejor guardado",
@@ -147,7 +272,7 @@
   {
    "t": "El Gobierno canario sigue adelante con la planta de gas en Los Realejos pese al rechazo de vecinos y Ayuntamiento",
    "u": "https://www.eldiario.es/canariasahora/tenerifeahora/norte/gobierno-canario-sigue-adelante-planta-gas-realejos-pese-rechazo-vecinos-ayuntamiento_1_13556286.html",
-   "s": "eldiario.es",
+   "s": "elDiario.es",
    "d": "2026-10-02T09:58:15.000Z",
    "tags": [
     "CANARIAS"
@@ -175,135 +300,6 @@
     "VINO"
    ],
    "img": "https://www.elespejocanario.es/wp-content/uploads/2026/10/Tenerife-desvela-su-programa-para-San-Sebastian-Gastronomika-2026-FOTO-CABILDO-DE-TENERIFE.jpg"
-  },
-  {
-   "t": "69 direcciones para comer bien en Las Palmas de Gran Canaria, según National Geographic",
-   "u": "https://www.canarias7.es/gastronomia-c7/direcciones-comer-bien-palmas-gran-canaria-segun-20261002101710-nt.html",
-   "s": "Canarias7",
-   "d": "2026-10-02T09:17:10.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://s3.ppllstatics.com/canarias7/www/multimedia/gastronomia-c7/2026/10/02/1-k6J-U30200841928363-1200x840@Canarias7.jpg"
-  },
-  {
-   "t": "El número de turistas extranjeros llegados a Canarias volvió a subir en agosto",
-   "u": "https://www.eldiario.es/canariasahora/turismo/numero-turistas-extranjeros-llegado-canarias-volvio-subir-agosto_1_13556094.html",
-   "s": "eldiario.es",
-   "d": "2026-10-02T09:05:26.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://static.eldiario.es/clip/b7d0b882-8ee5-4091-b9bf-f0abc4933dbe_facebook-aspect-ratio-1200-675_default_0_x1231y553.jpg"
-  },
-  {
-   "t": "El restaurante escondido de Gran Canaria donde comer cocina canaria y una gran variedad de platos para elegir",
-   "u": "https://www.laprovincia.es/gran-canaria/2026/10/02/restaurante-escondido-gran-comer-cocina-canaria-dv-134912132.amp.html",
-   "s": "La Provincia",
-   "d": "2026-10-02T08:42:11.000Z",
-   "tags": [
-    "CANARIAS"
-   ]
-  },
-  {
-   "t": "Las papas fritas más populares de Canarias estrenan nuevo sabor: llegan los Munchitos de tomate",
-   "u": "https://www.eldia.es/ocio/gastronomia/2026/10/02/papas-fritas-populares-canarias-muchitos-tomate-dv-134914760.amp.html",
-   "s": "El Día",
-   "d": "2026-10-02T08:41:46.000Z",
-   "tags": [
-    "CANARIAS"
-   ]
-  },
-  {
-   "t": "Canarias registró en septiembre 974.246 afiliados a la Seguridad, 10.454 más que en agosto",
-   "u": "https://www.eldiario.es/canariasahora/economia/canarias-registro-septiembre-974-246-afiliados-seguridad-10-454-agosto_1_13555805.html",
-   "s": "eldiario.es",
-   "d": "2026-10-02T07:49:43.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://static.eldiario.es/clip/8fdde383-54c4-42db-88e5-01b9399b8056_facebook-aspect-ratio-1200-675_default_0.jpg"
-  },
-  {
-   "t": "Bodegas Montecillo transforma el maridaje en un taller sensorial para regalar en Navidad",
-   "u": "https://www.laprovincia.es/comunicacion-empresarial/2026/10/02/bodegas-montecillo-transforma-maridaje-taller-bc-134913314.amp.html",
-   "s": "La Provincia",
-   "d": "2026-10-02T07:38:47.000Z",
-   "tags": [
-    "VINO",
-    "CANARIAS"
-   ]
-  },
-  {
-   "t": "Canarias fue en septiembre la comunidad donde más bajó el paro: 4.156 desempleados menos",
-   "u": "https://www.eldiario.es/canariasahora/economia/canarias-septiembre-comunidad-paro-4-156-desempleados_1_13555743.html",
-   "s": "eldiario.es",
-   "d": "2026-10-02T07:34:32.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://static.eldiario.es/clip/28ebf94b-4e71-4b78-b4ea-21de5faac9a4_facebook-aspect-ratio-1200-675_default_0.jpg"
-  },
-  {
-   "t": "El secreto del restaurante de Madrid donde cenó Shakira: la bronca de Frank Sinatra, un vino de 200 años y el único tablao con Estrella Michelin",
-   "u": "https://www.vozpopuli.com/amp/gastropoli/el-secreto-del-restaurante-de-madrid-donde-ceno-shakira-la-bronca-de-frank-sinatra-un-vino-de-200-anos-y-el-unico-tablao-con-estrella-michelin.html",
-   "s": "Vozpopuli",
-   "d": "2026-10-02T06:42:52.000Z",
-   "tags": [
-    "MICHELIN",
-    "VINO"
-   ],
-   "img": "https://cdn.vozpopuli.com/cdn/posts/4237545/cantante-shakira-actua-durante-primer-concierto-su-residencia-espana-2895207-1200-700.jpg"
-  },
-  {
-   "t": "Santa Cruz de Tenerife, nueva capital española de la gastronomía 2027",
-   "u": "https://www.revistahosteleria.com/texto-diario/mostrar/6033003/santa-cruz-tenerife-nueva-capital-espanola-gastronomia-2027",
-   "s": "revistahosteleria.com",
-   "d": "2026-10-02T06:03:54.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://www.revistahosteleria.com/images/showid/8159731"
-  },
-  {
-   "t": "La isla de Canarias que un medio internacional define como \"continente en miniatura\": paisajes, clima y gastronomía",
-   "u": "https://www.laprovincia.es/canarias/2026/10/02/isla-canarias-medio-internacional-define-dv-134853071.html",
-   "s": "La Provincia",
-   "d": "2026-10-02T06:00:33.000Z",
-   "tags": [
-    "CANARIAS"
-   ]
-  },
-  {
-   "t": "Confirmado: nunca se han hecho vinos como los de hoy en día",
-   "u": "https://www.diariovasco.com/gastronomia/vinos/confirmado-nunca-vinos-hoy-dia-20261001075000-nt_amp.html",
-   "s": "El Diario Vasco",
-   "d": "2026-10-02T05:50:00.000Z",
-   "tags": [
-    "CHEF",
-    "VINO"
-   ],
-   "img": "https://s1.ppllstatics.com/diariovasco/www/multimedia/gastronomia/2026/10/01/Cata%20Martin%20Berasategui-86.jpg"
-  },
-  {
-   "t": "El Pellizco: el restaurante de Fuerteventura donde un chef recorre su vida desde la alta cocina",
-   "u": "https://www.canarias7.es/gastronomia-c7/restaurantes/pellizco-restaurante-fuerteventura-chef-recorre-vida-alta-20261002070000-nt.html",
-   "s": "Canarias7",
-   "d": "2026-10-02T05:00:03.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://s3.ppllstatics.com/canarias7/www/multimedia/gastronomia-c7/2026/09/30/chef-ka7C-U301980964180PPB-1200x840@Canarias7.jpg"
-  },
-  {
-   "t": "Virens, la cocina verde de Rodrigo de la Calle que se descubre en directo en Barcelona",
-   "u": "https://www.mundodeportivo.com/foodie/barcelona/restaurantes/20261002/1004233581/virens-cocina-verde-rodrigo-calle-descubre-directo-barcelona-dct.html?facet",
-   "s": "Mundo Deportivo",
-   "d": "2026-10-02T05:00:00.000Z",
-   "tags": [
-    "ALTA COCINA"
-   ],
-   "img": "https://imagenes2.mundodeportivo.com/files/og_thumbnail/uploads/2026/10/01/6abecf5fb8f62.jpeg"
   }
  ]
 }
