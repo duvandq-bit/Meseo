@@ -1,5 +1,5 @@
 {
- "updated": "2026-10-03T10:26:59.782Z",
+ "updated": "2026-10-03T15:09:16.016Z",
  "items": [
   {
    "t": "La Terraza de Kisko García: el bar de barrio donde el chef de Choco pone al día el terraceo cordobés",
@@ -23,7 +23,7 @@
   {
    "t": "Alicante Gastronómica 2026: Murcia se corona en la apertura y el sábado despliega un maratón gastronómico",
    "u": "https://lasgastrocronicas.com/alicante-gastronomica-2026-murcia-se-corona-en-la-apertura-y-el-sabado-despliega-un-maraton-gastronomico/",
-   "s": "lasgastrocronicas.com",
+   "s": "Las Gastrocrónicas",
    "d": "2026-10-03T09:00:20.000Z",
    "tags": [
     "ALTA COCINA"
@@ -52,7 +52,7 @@
   {
    "t": "El restaurante de Tenerife al que muchos van por un solo plato: lleva más de 40 años ofreciendo conejo",
    "u": "https://www.eldia.es/tenerife/2026/10/03/restaurante-tenerife-plato-lleva-40-conejo-dv-134055152.html",
-   "s": "El Día",
+   "s": "eldia.es",
    "d": "2026-10-03T08:30:00.000Z",
    "tags": [
     "CANARIAS"
@@ -121,17 +121,6 @@
    "img": "https://www.vinetur.com/visuals/2026/october/2/20261002-201028-editor-a2cb5a052897.jpg"
   },
   {
-   "t": "El precio del vino en Italia cae un 2,3% con las bodegas bajo fuerte presión",
-   "u": "https://www.vinetur.com/20261002108203/italian-wine-prices-fell-23-in-september-squeezing-producers.html",
-   "s": "Vinetur",
-   "d": "2026-10-02T20:32:49.000Z",
-   "tags": [
-    "VINO",
-    "CANARIAS"
-   ],
-   "img": "https://www.vinetur.com/visuals/2026/october/2/20261002-214610-editor-ca1b49522f33.jpg"
-  },
-  {
    "t": "Mesa y López Market: 50 carpas llenan el bulevar de Las Palmas de Gran Canaria",
    "u": "https://www.canariasenpleno.com/mesa-lopez-market-50-carpas/",
    "s": "Canarias en Pleno",
@@ -174,7 +163,7 @@
   {
    "t": "Canal Cocina celebra los ocho platos más emblemáticos del país en Los grandes de España",
    "u": "https://www.culturaocio.com/tv/noticia-canal-cocina-celebra-ocho-platos-mas-emblematicos-pais-grandes-espana-20261002163135.html",
-   "s": "CulturaOcio",
+   "s": "culturaocio.com",
    "d": "2026-10-02T14:31:35.000Z",
    "tags": [
     "ALTA COCINA"
@@ -204,7 +193,7 @@
   {
    "t": "Cultura y tradición en Tenerife: vuelve 'Loba x Guachinches' con música en directo y gastronomía en La Orotava",
    "u": "https://www.eldia.es/tenerife/2026/10/02/cultura-tradicion-tenerife-vuelve-loba-134929438.html",
-   "s": "El Día",
+   "s": "eldia.es",
    "d": "2026-10-02T12:31:04.000Z",
    "tags": [
     "CANARIAS"
@@ -231,7 +220,7 @@
    "img": "https://www.infobae.com/resizer/v2/WBYQFHICYFAIDFAHID555MVNKA.png?auth=5439829aae36a24f60f047c3a856865517f62fc026faf9c5617799f5ab76cf5d&smart=true&width=1200&height=630&quality=85"
   },
   {
-   "t": "El Gobierno de Canarias da por finaliza la alerta por lluvias en el norte y este de La Palma",
+   "t": "El Gobierno de Canarias da por finalizada la alerta por lluvias en el norte y este de La Palma",
    "u": "https://www.eldiario.es/canariasahora/lapalmaahora/sociedad/gobierno-canarias-da-finaliza-alerta-lluvias-norte-palma_1_13556700.html",
    "s": "elDiario.es",
    "d": "2026-10-02T11:10:26.000Z",
@@ -257,7 +246,8 @@
    "d": "2026-10-02T11:00:00.000Z",
    "tags": [
     "CHEF"
-   ]
+   ],
+   "img": "https://static.excelenciasgourmet.com/cdn/ff/VX_WX3DRek6_CsRhoo41qW_VqfhpNTmMqNSLvQFrP1c/1790855123/public/articulos/2026-10/libro-recetas-de-inclusion-fundacion-prodis.png"
   },
   {
    "t": "El restaurante de carretera definitivo está en este pueblo medieval de Madrid: Martín Berasategui confiesa su secreto mejor guardado",
@@ -300,6 +290,16 @@
     "VINO"
    ],
    "img": "https://www.elespejocanario.es/wp-content/uploads/2026/10/Tenerife-desvela-su-programa-para-San-Sebastian-Gastronomika-2026-FOTO-CABILDO-DE-TENERIFE.jpg"
+  },
+  {
+   "t": "69 direcciones para comer bien en Las Palmas de Gran Canaria, según National Geographic",
+   "u": "https://www.canarias7.es/gastronomia-c7/direcciones-comer-bien-palmas-gran-canaria-segun-20261002101710-nt.html",
+   "s": "Canarias7",
+   "d": "2026-10-02T09:17:10.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://s3.ppllstatics.com/canarias7/www/multimedia/gastronomia-c7/2026/10/02/1-k6J-U30200841928363-1200x840@Canarias7.jpg"
   }
  ]
 }
