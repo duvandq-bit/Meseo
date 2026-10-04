@@ -26,8 +26,12 @@ el service worker y `push_subscriptions`. No hay Edge Functions desplegadas.
 | Prueba funcional E1–E17 | `M7_funcional.sql`, SHA-256 `80cd5eb1d9bbe091d475adf38ac9844023360b72ed97282d35495fb51e769210` (versión con `uSenders` y E16 corregido) |
 | Prueba de concurrencia E18 | 9 scripts, SHA-256 en § 3.3 (paquete `E18_M7.zip`, SHA-256 `f0e2afca86147d3d8c1e05df948ac2338a6365b422acbda959f9f55fdeaeb206`) |
 
-Los scripts de prueba no están en el repositorio; se entregaron como ficheros
-al responsable y se identifican por su SHA-256.
+Rutas en Git, con los mismos SHA-256:
+- el SQL de la migración: `supabase/f2_m7_push_envios.sql`;
+- la prueba E1–E17: `supabase/tests/f2-m7/M7_funcional.sql`;
+- los 9 scripts de E18: `supabase/tests/f2-m7/E18_*.sql`.
+
+El ZIP queda fuera de Git, como artefacto entregado al responsable.
 
 ## 2 · Objetos creados
 
