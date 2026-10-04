@@ -1,9 +1,39 @@
 {
- "updated": "2026-10-04T11:08:23.321Z",
+ "updated": "2026-10-04T15:49:06.820Z",
  "items": [
   {
+   "t": "El Costa Adeje Tenerife consigue su segunda victoria consecutiva frente al Logroño",
+   "u": "https://www.eldiario.es/canariasahora/Deportes/futbol/costa-adeje-tenerife-segunda-victoria-consecutiva-frente-logrono_1_13561089.html",
+   "s": "elDiario.es",
+   "d": "2026-10-04T14:59:58.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://static.eldiario.es/clip/69902b17-3220-4130-aa4a-62a626e570c7_facebook-aspect-ratio-1200-675_default_0_x395y481.jpg"
+  },
+  {
+   "t": "La sal de Canarias: Salinas del Carmen logra el premio",
+   "u": "https://www.masscultura.com/la-sal-de-canarias-salinas-del-carmen-janubio-agrocanarias/",
+   "s": "Mass Cultura",
+   "d": "2026-10-04T13:44:05.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://www.masscultura.com/wp-content/uploads/2026/10/image_2026_10_4_561.png"
+  },
+  {
+   "t": "El restaurante de carretera definitivo está en este pueblo medieval de Madrid: Martín Berasategui confiesa su secreto mejor guardado",
+   "u": "https://www.noticiasdelvino.com/escapadas/2026/10/04/el-restaurante-de-carretera-definitivo-esta-en-este-pueblo-medieval-de-madrid-martin-berasategui-confiesa-su-secreto-mejor-guardado-74843/",
+   "s": "Noticias del Vino",
+   "d": "2026-10-04T11:29:25.000Z",
+   "tags": [
+    "CHEF"
+   ],
+   "img": "https://www.noticiasdelvino.com/wp-content/uploads/image-583.png.webp"
+  },
+  {
    "t": "El restaurante del sur de Tenerife que lleva años conquistando con sus carnes a la brasa y cocina canaria casera",
-   "u": "https://www.eldia.es/tenerife/2026/10/04/restaurante-sur-tenerife-lleva-anos-carnes-brasa-dv-133418586.html",
+   "u": "https://www.eldia.es/tenerife/2026/10/04/restaurante-sur-tenerife-lleva-anos-carnes-brasa-dv-133418586.amp.html",
    "s": "El Día",
    "d": "2026-10-04T09:30:00.000Z",
    "tags": [
@@ -11,14 +41,14 @@
    ]
   },
   {
-   "t": "La sal de Canarias: Salinas del Carmen logra el premio",
-   "u": "https://www.masscultura.com/la-sal-de-canarias-salinas-del-carmen-janubio-agrocanarias/",
-   "s": "Mass Cultura",
-   "d": "2026-10-04T08:14:59.000Z",
+   "t": "Un conductor de Argual atropella mortalmente a una vecina del barrio y se da a la fuga",
+   "u": "https://www.eldiario.es/canariasahora/lapalmaahora/sucesos/conductor-argual-atropella-mortalmente-vecina-barrio-da-fuga_1_13560407.html",
+   "s": "elDiario.es",
+   "d": "2026-10-04T08:31:04.000Z",
    "tags": [
     "CANARIAS"
    ],
-   "img": "https://www.masscultura.com/wp-content/uploads/2026/10/image_2026_10_4_561.png"
+   "img": "https://static.eldiario.es/clip/fc75992f-f10e-4916-8cf9-8810a7056ed2_facebook-aspect-ratio-1200-675_default_0_x211y189.jpg"
   },
   {
    "t": "Dabiz Muñoz, cocinero: \"Es el mejor que se ha abierto. Fresco, con sabor, moderno y se puede comer por 35 euros\"",
@@ -111,6 +141,26 @@
    "img": "https://static.eldiario.es/clip/da6aa43f-7e68-4086-ba9f-94b3b5755701_facebook-aspect-ratio-1200-675_default_0.jpg"
   },
   {
+   "t": "La mujer que dio voz a los migrantes ante el Papa en Canarias, bloqueada en Senegal: “Tengo residencia legal en España”",
+   "u": "https://www.eldiario.es/canariasahora/sociedad/mujer-dio-voz-migrantes-papa-canarias-bloqueada-senegal-residencia-legal-espana_1_13554370.html",
+   "s": "elDiario.es",
+   "d": "2026-10-03T20:47:49.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://static.eldiario.es/clip/ed604d14-cecf-441a-b74a-014a90d4026f_facebook-aspect-ratio-1200-675_default_0_x834y355.jpg"
+  },
+  {
+   "t": "Eduardo Morales: «Estamos trabajando de cara al año que viene con el Toyota, para que lo tenga un piloto puntero",
+   "u": "https://automovilismocanario.com/2026/10/03/eduardo-morales-estamos-trabajando-de-cara-al-ano-que-viene-con-el-toyota-para-que-lo-tenga-un-piloto-puntero/",
+   "s": "Automovilismo Canario",
+   "d": "2026-10-03T20:47:23.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://automovilismocanario.com/wp-content/uploads/2026/10/Captura-de-pantalla-2026-10-03-a-las-12.29.15.jpg"
+  },
+  {
    "t": "75-80 | Unicaja se estrena en el Carpena con la segunda derrota en liga",
    "u": "https://www.elespanol.com/malaga/deporte/unicaja/20261003/unicaja-estrena-carpena-segunda-derrota-liga/1003744407731_0.amp.html",
    "s": "El Español",
@@ -152,13 +202,13 @@
   },
   {
    "t": "Fallece tras atragantarse en la terraza de un restaurante de La Aldea cuando comía",
-   "u": "https://www.canarias7.es/sucesos/fallece-tras-atragantarse-terraza-restaurante-aldea-comia-20261003185723-nt_amp.html",
+   "u": "https://www.canarias7.es/sucesos/fallece-tras-atragantarse-terraza-restaurante-aldea-comia-20261003185723-nt.html",
    "s": "Canarias7",
    "d": "2026-10-03T17:57:23.000Z",
    "tags": [
     "CANARIAS"
    ],
-   "img": "https://s1.ppllstatics.com/canarias7/www/multimedia/sucesos/2026/10/03/Aldea-parque-proyecto-desarrollo-comunitario-oct-2026.jpg"
+   "img": "https://s2.ppllstatics.com/canarias7/www/multimedia/sucesos/2026/10/03/Aldea-parque-proyecto-desarrollo-comunitario-oct-2026-kjsE-U302035845967NOF-1200x840@Canarias7.jpg"
   },
   {
    "t": "Iván Ania no podrá contar finalmente con Iker Álvarez para el duelo ante el Tenerife",
@@ -179,6 +229,16 @@
     "ALTA COCINA"
    ],
    "img": "https://s3.elespanol.com/k/imgp/cms/elespanol/11369500.jpg?p=f:jpeg/w:1706/h:960&h=ztl4Vngu"
+  },
+  {
+   "t": "Miles de personas se manifiestan en Gran Canaria: \"El baifo está en la calle, no tenemos casa\"",
+   "u": "https://www.eldiario.es/canariasahora/sociedad/miles-personas-salen-calles-gran-canaria-baifo-calle-no-casa_1_13559811.html",
+   "s": "elDiario.es",
+   "d": "2026-10-03T17:03:27.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://static.eldiario.es/clip/ddea3cb4-4457-4478-a07a-465ee5ad87a2_facebook-aspect-ratio-1200-675_default_0_x1228y861.jpg"
   },
   {
    "t": "El sorprendente giro de Martín Berasategui que anima el paseo de Gràcia",
@@ -230,72 +290,14 @@
    "img": "https://www.lavozdefuerteventura.com/media/lavozdefuerteventura/images/2026/10/03/2026100310222362910.jpg"
   },
   {
-   "t": "Alicante Gastronómica 2026: Murcia se corona en la apertura y el sábado despliega un maratón gastronómico",
-   "u": "https://lasgastrocronicas.com/alicante-gastronomica-2026-murcia-se-corona-en-la-apertura-y-el-sabado-despliega-un-maraton-gastronomico/",
-   "s": "Las Gastrocrónicas",
-   "d": "2026-10-03T09:00:20.000Z",
-   "tags": [
-    "ALTA COCINA"
-   ]
-  },
-  {
    "t": "De la paella a la tortilla de patata: el viaje de Canal Cocina al origen de 8 recetas icónicas de la gastronomía española",
-   "u": "https://www.elespanol.com/corazon/bluper/20261003/paella-tortilla-patata-viaje-canal-cocina-origen-recetas-iconicas-gastronomia-espanola/1003744407006_0.amp.html",
+   "u": "https://www.elespanol.com/corazon/bluper/20261003/paella-tortilla-patata-viaje-canal-cocina-origen-recetas-iconicas-gastronomia-espanola/1003744407006_0.html",
    "s": "El Español",
    "d": "2026-10-03T09:00:00.000Z",
    "tags": [
     "ALTA COCINA"
    ],
    "img": "https://s3.elespanol.com/k/imgp/cms/elespanol/11369165.jpg?p=f:jpeg/c:1588:893:nowe:13:86/w:1706/h:960&h=AaIvOP89"
-  },
-  {
-   "t": "La villa juguetera de Alicante que conquista por su cocina: así es el pueblo donde mejor se come de España",
-   "u": "https://www.noticiasdelvino.com/restaurantes/2026/10/03/la-villa-juguetera-de-alicante-que-conquista-por-su-cocina-asi-es-el-pueblo-donde-mejor-se-come-de-espana-74836/",
-   "s": "Noticias del Vino",
-   "d": "2026-10-03T08:52:28.000Z",
-   "tags": [
-    "MICHELIN"
-   ],
-   "img": "https://www.noticiasdelvino.com/wp-content/uploads/restaurantes-5.jpg.webp"
-  },
-  {
-   "t": "La Verea, la microbodega artesanal de Lanzarote que agota sus botellas en restaurantes de la isla",
-   "u": "https://www.lavozdelanzarote.com/ekonomus/gourmet/verea-microbodega-artesanal-lanzarote-agota-sus-botellas-en-restaurantes-isla_246327_102.html",
-   "s": "La Voz de Lanzarote",
-   "d": "2026-10-03T08:48:07.000Z",
-   "tags": [
-    "VINO",
-    "CANARIAS"
-   ],
-   "img": "https://www.lavozdelanzarote.com/uploads/s1/56/88/09/5/whatsapp-image-2026-09-23-at-11-31-47_16_1200x630.jpeg"
-  },
-  {
-   "t": "El restaurante de Tenerife al que muchos van por un solo plato: lleva más de 40 años ofreciendo conejo",
-   "u": "https://www.eldia.es/tenerife/2026/10/03/restaurante-tenerife-plato-lleva-40-conejo-dv-134055152.html",
-   "s": "El Día",
-   "d": "2026-10-03T08:30:00.000Z",
-   "tags": [
-    "CANARIAS"
-   ]
-  },
-  {
-   "t": "El rincón de Gran Canaria con más de 100 años de historia donde disfrutar de un auténtico bocadillo de chorizo de Teror",
-   "u": "https://www.laprovincia.es/gran-canaria/2026/10/03/rincon-gran-canaria-100-anos-bocadillo-chorizo-teror-dv-133826164.html",
-   "s": "La Provincia",
-   "d": "2026-10-03T07:45:00.000Z",
-   "tags": [
-    "CANARIAS"
-   ]
-  },
-  {
-   "t": "El Arcángel, la barrera histórica del Tenerife que el Córdoba CF necesita mantener para relanzar el vuelo",
-   "u": "https://www.abc.es/espana/andalucia/cordoba/cordoba-cf/arcangel-barrera-historica-tenerife-cordoba-necesita-mantener-20261003090920-nts_amp.html",
-   "s": "ABC",
-   "d": "2026-10-03T07:09:21.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://s1.abcstatics.com/abc/www/multimedia/espana/2026/10/03/cordobacf-partido-tenerife-U62388058246OLm-1200x630@diario_abc.jpg"
   }
  ]
 }
