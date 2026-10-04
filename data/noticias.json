@@ -1,6 +1,56 @@
 {
- "updated": "2026-10-04T15:49:06.820Z",
+ "updated": "2026-10-04T20:12:45.394Z",
  "items": [
+  {
+   "t": "El Tenerife visita al Córdoba para recuperar la confianza con puntos",
+   "u": "https://www.eldiario.es/canariasahora/Deportes/futbol/tenerife-visita-cordoba-recuperar-confianza-puntos_1_13561428.html",
+   "s": "elDiario.es",
+   "d": "2026-10-04T19:38:55.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://static.eldiario.es/clip/784e5bd9-fb47-4299-ad25-4e3e8d594f27_facebook-aspect-ratio-1200-675_default_0_x590y214.jpg"
+  },
+  {
+   "t": "El Córdoba CF se encomienda a El Arcángel para enderezar el rumbo y alejar males mayores ante el Tenerife",
+   "u": "https://www.abc.es/espana/andalucia/cordoba/cordoba-cf/cordoba-encomienda-arcangel-enderezar-rumbo-alejar-males-20261004194930-nts_amp.html",
+   "s": "ABC",
+   "d": "2026-10-04T17:49:30.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://s1.abcstatics.com/abc/www/multimedia/espana/2026/10/04/cordobacf-kevin-entrenamiento-U11132785720gnh-1200x630@diario_abc.jpg"
+  },
+  {
+   "t": "'Martintxo' recibe el cariño de las sociedades en un tributo íntimo",
+   "u": "https://www.diariovasco.com/gastronomia/martintxo-recibe-carino-sociedades-tributo-intimo-20261004182857-nt_amp.html",
+   "s": "El Diario Vasco",
+   "d": "2026-10-04T16:28:57.000Z",
+   "tags": [
+    "CHEF"
+   ],
+   "img": "https://s3.ppllstatics.com/diariovasco/www/multimedia/gastronomia/2026/10/04/martin.jpg"
+  },
+  {
+   "t": "Santa Cruz de Tenerife formaliza el contrato de redacción del proyecto para dar sombra a la calle Castillo",
+   "u": "https://www.eldiario.es/canariasahora/tenerifeahora/santa-cruz-tenerife-formaliza-contrato-redaccion-proyecto-dar-sombra-calle-castillo_1_13561181.html",
+   "s": "elDiario.es",
+   "d": "2026-10-04T16:14:52.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://static.eldiario.es/clip/c33bf645-72e8-4f96-a963-84a6d458b377_facebook-aspect-ratio-1200-675_default_0_x130y323.jpg"
+  },
+  {
+   "t": "El IV Torneo Campeón de Campeones–Trofeo GMR Canarias reunirá a las 18 mejores yuntas de la temporada de arrastre de ganado de Tenerife",
+   "u": "https://www.eldiario.es/canariasahora/Deportes/otros_deportes/iv-torneo-campeon-campeones-trofeo-gmr-canarias-reunira-18-mejores-yuntas-temporada-arrastre-ganado-tenerife_1_13561168.html",
+   "s": "elDiario.es",
+   "d": "2026-10-04T16:14:51.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://static.eldiario.es/clip/83a58b64-47c9-4b78-8ba3-8d782dcf65aa_facebook-aspect-ratio-1200-675_default_0_x916y317.jpg"
+  },
   {
    "t": "El Costa Adeje Tenerife consigue su segunda victoria consecutiva frente al Logroño",
    "u": "https://www.eldiario.es/canariasahora/Deportes/futbol/costa-adeje-tenerife-segunda-victoria-consecutiva-frente-logrono_1_13561089.html",
@@ -10,6 +60,15 @@
     "CANARIAS"
    ],
    "img": "https://static.eldiario.es/clip/69902b17-3220-4130-aa4a-62a626e570c7_facebook-aspect-ratio-1200-675_default_0_x395y481.jpg"
+  },
+  {
+   "t": "«A mí la sala me envolvió»",
+   "u": "https://www.laprovincia.es/ocio/gastronomia/2026/10/04/mari-pino-jefa-sala-restaurante-134991061.amp.html",
+   "s": "La Provincia",
+   "d": "2026-10-04T14:46:16.000Z",
+   "tags": [
+    "CANARIAS"
+   ]
   },
   {
    "t": "La sal de Canarias: Salinas del Carmen logra el premio",
@@ -101,9 +160,19 @@
    "img": "https://imagenes2.mundodeportivo.com/files/og_thumbnail/files/fp/uploads/2026/10/02/6abfc0e0eac73.r_d.884-623-7813.jpeg"
   },
   {
+   "t": "Champanes con licencia para conquistar",
+   "u": "https://www.diariovasco.com/gastronomia/vinos/champanes-licencia-conquistar-20260929080000-nt.html",
+   "s": "El Diario Vasco",
+   "d": "2026-10-04T00:02:05.000Z",
+   "tags": [
+    "CHEF"
+   ],
+   "img": "https://s2.ppllstatics.com/diariovasco/www/multimedia/gastronomia/2026/09/29/Cata%20champan%20Martin%20Berasategui-kUPH-U301946662979hnG-1200x840@Diario%20Vasco.jpg"
+  },
+  {
    "t": "La alta cocina también nace en el pueblo: 7 chefs (casi todos con estrella Michelin) reinventan este otoño el cordero",
    "u": "https://www.elmundo.es/metropoli/gastronomia/2026/10/04/6abbab7dfdddff4a0c8b4589.html",
-   "s": "El Mundo",
+   "s": "elmundo.es",
    "d": "2026-10-03T23:49:00.000Z",
    "tags": [
     "ALTA COCINA",
@@ -120,15 +189,6 @@
     "CANARIAS"
    ],
    "img": "https://s2.ppllstatics.com/canarias7/www/multimedia/gastronomia-c7/2026/10/02/FOTO%206.jpg"
-  },
-  {
-   "t": "Fallece un hombre de 56 años tras sufrir un atragantamiento en un restaurante de Gran Canaria",
-   "u": "https://www.eldia.es/sucesos/sucesos-en-canarias/2026/10/04/fallece-hombre-56-anos-sufrir-134973837.amp.html",
-   "s": "El Día",
-   "d": "2026-10-03T22:16:35.000Z",
-   "tags": [
-    "CANARIAS"
-   ]
   },
   {
    "t": "El Cajasiete Gran Canaria impone su juego en Fuenlabrada",
@@ -231,73 +291,13 @@
    "img": "https://s3.elespanol.com/k/imgp/cms/elespanol/11369500.jpg?p=f:jpeg/w:1706/h:960&h=ztl4Vngu"
   },
   {
-   "t": "Miles de personas se manifiestan en Gran Canaria: \"El baifo está en la calle, no tenemos casa\"",
-   "u": "https://www.eldiario.es/canariasahora/sociedad/miles-personas-salen-calles-gran-canaria-baifo-calle-no-casa_1_13559811.html",
-   "s": "elDiario.es",
-   "d": "2026-10-03T17:03:27.000Z",
+   "t": "Fallece un hombre de 56 años tras sufrir un atragantamiento en un restaurante de Gran Canaria",
+   "u": "https://www.laprovincia.es/sucesos/sucesos-en-canarias/2026/10/03/fallece-hombre-56-anos-sufrir-134965559.html",
+   "s": "La Provincia",
+   "d": "2026-10-03T16:14:46.000Z",
    "tags": [
     "CANARIAS"
-   ],
-   "img": "https://static.eldiario.es/clip/ddea3cb4-4457-4478-a07a-465ee5ad87a2_facebook-aspect-ratio-1200-675_default_0_x1228y861.jpg"
-  },
-  {
-   "t": "El sorprendente giro de Martín Berasategui que anima el paseo de Gràcia",
-   "u": "https://www.elconfidencialdigital.com/articulo/gourmet/sorprendente-giro-martin-berasategui-que-anima-paseo-gracia/202610031752031490464.html",
-   "s": "Confidencial Digital",
-   "d": "2026-10-03T15:52:03.000Z",
-   "tags": [
-    "CHEF"
-   ],
-   "img": "https://www.elconfidencialdigital.com/media/elconfidencialdigital/images/2026/10/03/2026100315425186669.jpg"
-  },
-  {
-   "t": "Canarias logra su segundo mejor registro de la historia hasta agosto en llegada de turistas extranjeros",
-   "u": "https://www.eldiario.es/canariasahora/turismo/canarias-logra-segundo-mejor-registro-historia-agosto-llegada-turistas-extranjeros_1_13559273.html",
-   "s": "elDiario.es",
-   "d": "2026-10-03T11:18:34.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://static.eldiario.es/clip/f9f5d990-510b-456a-a396-ab78da26086b_facebook-aspect-ratio-1200-675_default_0.jpg"
-  },
-  {
-   "t": "La Terraza de Kisko García: el bar de barrio donde el chef de Choco pone al día el terraceo cordobés",
-   "u": "https://www.abc.es/gurme/cordoba/terraza-kisko-garcia-bar-barrio-chef-choco-20261004121018-nts.html",
-   "s": "ABC",
-   "d": "2026-10-03T09:57:49.000Z",
-   "tags": [
-    "ALTA COCINA"
-   ],
-   "img": "https://s1.abcstatics.com/abc/www/multimedia/gurme/2026/10/04/bocadillo-terraza-choco-U81724586845bod-1200x630@diario_abc.jpeg"
-  },
-  {
-   "t": "La Guía MICHELIN se fija en un chef de Castellón por su forma de entender la cocina",
-   "u": "https://www.elperiodicomediterraneo.com/castello-provincia/2026/10/03/guia-michelin-fija-chef-restaurante-castellon-mindful-voices-gastronomia-134953192.html",
-   "s": "El Periódico Mediterráneo",
-   "d": "2026-10-03T09:43:07.000Z",
-   "tags": [
-    "MICHELIN"
    ]
-  },
-  {
-   "t": "‘Sabor a Castillo’ regresa a Caleta de Fuste con tres días de gastronomía, música y actividades para todos los públicos",
-   "u": "https://www.lavozdefuerteventura.com/municipios/antigua/sabor-castillo-regresa-caleta-fuste-tres-dias-gastronomia-musica-actividades-todos-publicos/20261003102237031756.html",
-   "s": "la voz de fuerteventura",
-   "d": "2026-10-03T09:22:37.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://www.lavozdefuerteventura.com/media/lavozdefuerteventura/images/2026/10/03/2026100310222362910.jpg"
-  },
-  {
-   "t": "De la paella a la tortilla de patata: el viaje de Canal Cocina al origen de 8 recetas icónicas de la gastronomía española",
-   "u": "https://www.elespanol.com/corazon/bluper/20261003/paella-tortilla-patata-viaje-canal-cocina-origen-recetas-iconicas-gastronomia-espanola/1003744407006_0.html",
-   "s": "El Español",
-   "d": "2026-10-03T09:00:00.000Z",
-   "tags": [
-    "ALTA COCINA"
-   ],
-   "img": "https://s3.elespanol.com/k/imgp/cms/elespanol/11369165.jpg?p=f:jpeg/c:1588:893:nowe:13:86/w:1706/h:960&h=AaIvOP89"
   }
  ]
 }
