@@ -1,6 +1,75 @@
 {
- "updated": "2026-10-04T02:42:34.982Z",
+ "updated": "2026-10-04T11:08:23.321Z",
  "items": [
+  {
+   "t": "El restaurante del sur de Tenerife que lleva años conquistando con sus carnes a la brasa y cocina canaria casera",
+   "u": "https://www.eldia.es/tenerife/2026/10/04/restaurante-sur-tenerife-lleva-anos-carnes-brasa-dv-133418586.html",
+   "s": "El Día",
+   "d": "2026-10-04T09:30:00.000Z",
+   "tags": [
+    "CANARIAS"
+   ]
+  },
+  {
+   "t": "La sal de Canarias: Salinas del Carmen logra el premio",
+   "u": "https://www.masscultura.com/la-sal-de-canarias-salinas-del-carmen-janubio-agrocanarias/",
+   "s": "Mass Cultura",
+   "d": "2026-10-04T08:14:59.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://www.masscultura.com/wp-content/uploads/2026/10/image_2026_10_4_561.png"
+  },
+  {
+   "t": "Dabiz Muñoz, cocinero: \"Es el mejor que se ha abierto. Fresco, con sabor, moderno y se puede comer por 35 euros\"",
+   "u": "https://www.elespanol.com/madrid/ocio/20261004/dabiz-munoz-cocinero-mejor-abierto-fresco-sabor-moderno-puede-comer-euros/1003744400509_0.html",
+   "s": "El Español",
+   "d": "2026-10-04T06:29:47.000Z",
+   "tags": [
+    "CHEF"
+   ],
+   "img": "https://s3.elespanol.com/k/imgp/cms/elespanol/11181953.jpg?p=f:jpeg/c:1200:675:nowe:0:40/w:1706/h:960&h=PsCxI0pZ"
+  },
+  {
+   "t": "Jorge, chef: \"No hay gente que quiera trabajar en restaurantes ni aun pagándole bien\"",
+   "u": "https://www.elespanol.com/alicante/vivir/gastronomia/20261004/jorge-chef-no-gente-quiera-trabajar-restaurantes-pagandole-bien/1003744404909_0.amp.html",
+   "s": "El Español",
+   "d": "2026-10-04T05:30:00.000Z",
+   "tags": [
+    "MICHELIN"
+   ],
+   "img": "https://s3.elespanol.com/k/imgp/cms/elespanol/11369515.jpg?p=f:jpeg/w:1706/h:960&h=zQWzFydR"
+  },
+  {
+   "t": "Dónde comer un buen bocadillo de pollo en Canarias: el bar que no ha cambiado su receta desde 1988",
+   "u": "https://www.larazon.es/canarias/donde-comer-buen-bocadillo-pollo-canarias-bar-que-cambiado-receta-1988_202610046ac150d61c30184d44b4353f.html?outputType",
+   "s": "La Razón",
+   "d": "2026-10-04T05:00:33.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://fotografias-2.larazon.es/clipping/cmsimages02/2026/10/03/8371B9B9-4E90-4BAE-A7FA-C806BD1A5795/donde-comer-buen-bocadillo-pollo-canarias-bar-que-cambiado-receta-1988_98.jpg?crop=627,353,x0,y73&width=1900&height=1069&optimize=low&format=webply"
+  },
+  {
+   "t": "Dónde saborear Gran Canaria según el director de marketing y comunicación de Aperitivos Snack, Paul Perdomo",
+   "u": "https://www.canarias7.es/gastronomia-c7/a-fuego-lento/saborear-gran-canaria-segun-director-marketing-comunicacion-20261004070000-nt.html",
+   "s": "Canarias7",
+   "d": "2026-10-04T05:00:16.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://s1.ppllstatics.com/canarias7/www/multimedia/gastronomia-c7/2026/10/02/Paul-kp8E-U302019388203TwG-1200x840@Canarias7.jpg"
+  },
+  {
+   "t": "El chef Toni Romero reivindica la huerta en su nuevo menú 'Temps de samfaina'",
+   "u": "https://www.mundodeportivo.com/ocio/gastronomia/20261004/1004233810/chef-toni-romero-reivindica-huerta-nuevo-menu-temps-samfaina.html?facet",
+   "s": "Mundo Deportivo",
+   "d": "2026-10-04T05:00:00.000Z",
+   "tags": [
+    "ALTA COCINA"
+   ],
+   "img": "https://imagenes2.mundodeportivo.com/files/og_thumbnail/files/fp/uploads/2026/10/02/6abfc0e0eac73.r_d.884-623-7813.jpeg"
+  },
   {
    "t": "La alta cocina también nace en el pueblo: 7 chefs (casi todos con estrella Michelin) reinventan este otoño el cordero",
    "u": "https://www.elmundo.es/metropoli/gastronomia/2026/10/04/6abbab7dfdddff4a0c8b4589.html",
@@ -44,7 +113,7 @@
   {
    "t": "75-80 | Unicaja se estrena en el Carpena con la segunda derrota en liga",
    "u": "https://www.elespanol.com/malaga/deporte/unicaja/20261003/unicaja-estrena-carpena-segunda-derrota-liga/1003744407731_0.amp.html",
-   "s": "elespanol.com",
+   "s": "El Español",
    "d": "2026-10-03T19:53:41.000Z",
    "tags": [
     "CANARIAS"
@@ -64,7 +133,7 @@
   {
    "t": "Ferran Adrià, 64 años: \"Vivo de las rentas porque he ahorrado y no me he comprado ni un barco ni un Ferrari. Vengo de familia trabajadora\"",
    "u": "https://www.elespanol.com/corazon/20261003/ferran-adria-anos-vivo-rentas-ahorrado-no-comprado-barco-ferrari-vengo-familia-trabajadora-nc/1003744403180_0.amp.html",
-   "s": "elespanol.com",
+   "s": "El Español",
    "d": "2026-10-03T18:23:29.000Z",
    "tags": [
     "ALTA COCINA"
@@ -104,7 +173,7 @@
   {
    "t": "Ferran Adrià, chef: \"La tortilla más rica se hace con 80 gramos de patatas de bolsa y nadie nota la diferencia\"",
    "u": "https://www.elespanol.com/alicante/vivir/gastronomia/20261003/ferran-adria-chef-tortilla-rica-hace-gramos-patatas-bolsa-nadie-nota-diferencia/1003744401928_0.amp.html",
-   "s": "elespanol.com",
+   "s": "El Español",
    "d": "2026-10-03T17:31:00.000Z",
    "tags": [
     "ALTA COCINA"
@@ -172,7 +241,7 @@
   {
    "t": "De la paella a la tortilla de patata: el viaje de Canal Cocina al origen de 8 recetas icónicas de la gastronomía española",
    "u": "https://www.elespanol.com/corazon/bluper/20261003/paella-tortilla-patata-viaje-canal-cocina-origen-recetas-iconicas-gastronomia-espanola/1003744407006_0.amp.html",
-   "s": "elespanol.com",
+   "s": "El Español",
    "d": "2026-10-03T09:00:00.000Z",
    "tags": [
     "ALTA COCINA"
@@ -212,7 +281,7 @@
   {
    "t": "El rincón de Gran Canaria con más de 100 años de historia donde disfrutar de un auténtico bocadillo de chorizo de Teror",
    "u": "https://www.laprovincia.es/gran-canaria/2026/10/03/rincon-gran-canaria-100-anos-bocadillo-chorizo-teror-dv-133826164.html",
-   "s": "laprovincia.es",
+   "s": "La Provincia",
    "d": "2026-10-03T07:45:00.000Z",
    "tags": [
     "CANARIAS"
@@ -227,79 +296,6 @@
     "CANARIAS"
    ],
    "img": "https://s1.abcstatics.com/abc/www/multimedia/espana/2026/10/03/cordobacf-partido-tenerife-U62388058246OLm-1200x630@diario_abc.jpg"
-  },
-  {
-   "t": "Yakuza by Olivier: Japón desde La Caleta",
-   "u": "https://www.canarias7.es/gastronomia-c7/restaurantes/yakuza-olivier-japon-caleta-20261003140000-nt.html",
-   "s": "Canarias7",
-   "d": "2026-10-03T06:42:52.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://s3.ppllstatics.com/canarias7/www/multimedia/gastronomia-c7/2026/10/02/image00011-kSMD-U302018273116UNH-1200x840@Canarias7.jpg"
-  },
-  {
-   "t": "ATTIS amplía su bodega en Meaño para impulsar las visitas en su 25 aniversario",
-   "u": "https://www.vinetur.com/20261001108172/attis-amplia-su-bodega-en-meano-para-impulsar-las-visitas-en-su-25-aniversario.html",
-   "s": "Vinetur",
-   "d": "2026-10-02T21:28:19.000Z",
-   "tags": [
-    "VINO",
-    "CANARIAS"
-   ],
-   "img": "https://www.vinetur.com/imagenes/pube/2026-W39/image28.jpg"
-  },
-  {
-   "t": "Una fermentación mixta con levaduras nativas mejora el aroma y el color del vino",
-   "u": "https://www.vinetur.com/amp/20261002108190/selected-native-yeasts-improved-wine-aroma-in-co-fermentation-trials.html",
-   "s": "Vinetur",
-   "d": "2026-10-02T20:32:54.000Z",
-   "tags": [
-    "VINO",
-    "CANARIAS"
-   ],
-   "img": "https://www.vinetur.com/imagenes/pube/2026-W37/image94.jpg"
-  },
-  {
-   "t": "Eichbaum deja de fabricar cerveza tras casi 350 años de historia en Alemania",
-   "u": "https://www.vinetur.com/amp/20261002108149/eichbaum-brewery-ends-beer-production-in-mannheim-after-nearly-350-years.html",
-   "s": "Vinetur",
-   "d": "2026-10-02T20:32:53.000Z",
-   "tags": [
-    "VINO",
-    "CANARIAS"
-   ],
-   "img": "https://www.vinetur.com/visuals/2026/october/2/20261002-201028-editor-a2cb5a052897.jpg"
-  },
-  {
-   "t": "Mesa y López Market: 50 carpas llenan el bulevar de Las Palmas de Gran Canaria",
-   "u": "https://www.canariasenpleno.com/mesa-lopez-market-50-carpas/",
-   "s": "Canarias en Pleno",
-   "d": "2026-10-02T19:48:35.000Z",
-   "tags": [
-    "CANARIAS"
-   ]
-  },
-  {
-   "t": "Visita la bodega en Tenerife con el viñedo más alto de Europa",
-   "u": "https://dondeir.com/content/visita-la-bodega-en-tenerife-con-el-vinedo-mas-alto-de-europa/",
-   "s": "Dónde Ir",
-   "d": "2026-10-02T16:21:12.000Z",
-   "tags": [
-    "VINO",
-    "CANARIAS"
-   ],
-   "img": "https://media.dondeir.com/2026/10/bodega-en-tenerife.jpg"
-  },
-  {
-   "t": "La Laguna y la Fundación CB Canarias llevan la magia de la Eurocup a los mayores del municipio",
-   "u": "https://www.eldiario.es/canariasahora/deportes/baloncesto/laguna-fundacion-cb-canarias-llevan-magia-eurocup-mayores-municipio_1_13557926.html",
-   "s": "elDiario.es",
-   "d": "2026-10-02T15:45:58.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://static.eldiario.es/clip/66c41e09-7cde-4a19-8162-547c890a36a5_facebook-aspect-ratio-1200-675_default_0_x649y326.jpg"
   }
  ]
 }
