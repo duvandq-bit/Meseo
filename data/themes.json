@@ -49,6 +49,29 @@
    }
   },
   {
+   "id": "akiraback",
+   "enabled": false,
+   "name": "Akira Back",
+   "logoSup": "AB",
+   "eyebrow": "",
+   "casa": "Akira Back",
+   "rotulo": "Akira Back",
+   "rotulo_en": "Akira Back",
+   "subtitle": "Formación de Equipo",
+   "subtitle_en": "Team Training",
+   "title": "Meseo · Formación de sala",
+   "brand": {
+    "primary": "#5a2233",
+    "secondary": "#8a4a5e",
+    "accent": "#b0763c",
+    "accentHi": "#d9a05e",
+    "accent2": "#c08a4c",
+    "accentDeep": "#6e4a26",
+    "ink": "#221a1e",
+    "paper": "#f4ede6"
+   }
+  },
+  {
    "id": "plantilla",
    "enabled": false,
    "name": "NUEVO RESTAURANTE",
