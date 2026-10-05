@@ -4,8 +4,8 @@ Registro y reasignación de suscripciones push mediante una RPC, y retirada del
 alta directa (B+). Aplicado el **2026-10-04** en la rama aislada **`f2-push`**
 (`sslcgakpxiwhjxsgmngg`, proyecto de prueba `meseo-c5-test`).
 
-**Estado: M8-A PASS en una sola sesión, PENDIENTE de la prueba de concurrencia
-real** (§ 4), que necesita tres conexiones `psql` desde fuera.
+**Estado: M8-A = PASS** (pruebas T1–T23 y P1–P3 antes y después de B+, y
+concurrencia real C0–C10 con tres conexiones `psql`). Cerrada el 2026-10-05.
 
 **Lo que NO se ha tocado:** producción (`advkoujfgbrrjvqexrcu`), F1, M1–M7
 (incluida la migración histórica de M5), send-push, check-inactive, VAPID, el
@@ -95,11 +95,11 @@ lo ajeno (T18) y el aislamiento entre restaurantes (T16, T18). F1 y M7 no tocan
 - ACL de `push_envios` `{postgres=arwdDxtm}` y de `push_pin_intentos` `{postgres, service_role}`, sin cambios;
 - 0 filas en todas las tablas, 0 objetos `zz`, 0 candados.
 
-## 4 · Concurrencia real · PENDIENTE (ejecución externa)
+## 4 · Concurrencia real · PASS
 
-Igual que E18 de M7: tres conexiones `psql` reales a `f2-push`, directas o por
-el Session Pooler en el puerto 5432. El entorno de Claude no puede abrir
-conexiones TCP a la base. No se simula.
+Igual que E18 de M7: tres conexiones `psql` reales a `f2-push` por el Session
+Pooler. El entorno de Claude no puede abrir conexiones TCP a la base, así que
+la ejecutó el responsable, a mano. No se simuló.
 
 | Script | SHA-256 |
 |---|---|
@@ -133,6 +133,36 @@ salida.
 - **C9** da `filas_con_x = 1`, `endpoints_con_dos_duenos = 0`, `UN SOLO DUEÑO` y `claves_del_dueno = true`, y `dueno_sesion` es la sesión del pid **segundo** de O3, el último en conseguir el candado;
 - **C10** deja todo a 0 y sin candados advisory.
 
+**Resultado observado** (ejecución del responsable, 2026-10-05):
+
+| Paso | Observado | Resultado |
+|---|---|---|
+| C0 | `M8C PREP OK`: `auth.users` = 2, `employees` = 2, suscripciones con X = 0 | PASS |
+| C_O1 | Puertas de salida y de commit cerradas por O | PASS |
+| C_O2 | A y B esperando el mismo candado advisory (puerta de salida) | PASS |
+| C_O3 | `M8C CERROJO`: **B** obtuvo primero `e:X` y esperó en la puerta de commit; **A** quedó esperando `e:X`; 0 filas confirmadas con X | PASS |
+| C_O4 | Puerta de commit abierta; A y B terminan; sin candados suyos | PASS |
+| B | `{"ok":true}`; confirmó primero | PASS |
+| A | `{"ok":true}`; confirmó después | PASS |
+| C9 | `filas_con_x = 1`, `claves_del_dueno = true`, `endpoints_con_dos_duenos = 0`, `UN SOLO DUEÑO`, `dueno_sesion = A` | PASS |
+| C10 | `push_subscriptions`, `employees`, `auth_users`, `push_envios`, `push_pin_intentos` y `advisory` a 0 | PASS |
+
+**Criterios:**
+
+| Criterio | Observado | Resultado |
+|---|---|---|
+| Cerrojo real | El primero (B) tiene `e:X` y espera el commit mientras el segundo (A) espera `e:X`; 0 filas confirmadas | PASS |
+| Respuestas | Las dos `{"ok":true}`: la reasignación no se distingue de un alta | PASS |
+| Un solo dueño | 1 fila con X, 0 endpoints con dos dueños, y las claves son las del dueño | PASS |
+| Dueño final = último en conseguir el candado | O3 dice que el segundo fue A, y C9 da `dueno_sesion = A` | PASS |
+| Limpieza | Todo a 0, sin candados advisory | PASS |
+
+El informe no incluye los pids concretos ni la línea `aislamiento` de A y B.
+El orden se identifica por sesión: B primero, A segundo. El aislamiento
+`read committed` es el de la rama, comprobado en el catálogo para M7 E18. La
+reasignación bajo el candado se ve en el resultado: A borró la fila ya
+confirmada de B y dejó la suya.
+
 ## 5 · Compatibilidad y vuelta atrás
 
 - **Clientes que dejan de poder darse de alta con B+:** todos los que hacen `POST /rest/v1/push_subscriptions`, es decir, todas las versiones publicadas hasta hoy (`index.html:5191`). Reciben 42501. Sus filas existentes siguen recibiendo avisos, y el borrado propio sigue funcionando.
@@ -141,7 +171,21 @@ salida.
 - **Retirar la RPC:** `drop function public.push_suscripcion_registrar(text, text, text);`. Solo si ningún cliente depende de ella y B+ se ha revertido antes; si no, nadie podría darse de alta.
 - **send-push v9 y v10** no dependen de esto: leen y borran con `service_role`, que no cambia.
 
-## 6 · Siguiente
+## 6 · Deudas y fuera de alcance
 
-- Ejecutar la concurrencia (§ 4).
+- **Producción:** no se ha tocado. Ni M8-A ni B+ están aplicadas allí.
+- **Antes de aplicar M8-A en producción:** limpiar, con autorización, el endpoint compartido y la suscripción huérfana que ya existían.
+- **B+ en producción:** solo después de publicar y adoptar el cliente que usa la RPC (M8-E).
+- **Cliente** (M8-E, sin tocar):
+  - dejar de hacer `POST` directo y llamar a la RPC;
+  - capturar el bearer **antes** de `_authSesionSalir()` en el cierre de sesión. Hoy el `DELETE` sale probablemente con la clave `anon` (`index.html:13042`), según la lectura del código.
+- **UNIQUE `(endpoint)` como segunda barrera:** no se ha añadido. Se valora después de la limpieza de producción.
+- **Riesgo residual documentado:** quien conozca el endpoint de otra persona puede desalojarla de ese dispositivo con la RPC. No puede leer sus avisos.
+- **Fuera de M8-A:**
+  - el permiso `anon=rw` de `push_subscriptions_id_seq`;
+  - S1 (empleado desactivado, F2-22);
+  - C1 y el resto de deudas de endurecimiento ya documentadas.
+
+## 7 · Siguiente
+
 - **M8-B** (send-push v10 y check-inactive) **no está autorizado**.
