@@ -38,6 +38,19 @@ Al pasar el borrador por el mismo criterio que la auditoría:
 - **5 avisos en la dirección peligrosa** (la base de ingredientes de la app implica un alérgeno que la guía no declara): Haru sashimi y Local sakana selection (ponzu → sulfitos; en Local sakana también pescado), Claypot de setas (sake → sulfitos) y Perfect storm (mirin → sulfitos). Están en las dudas de cada plato.
 - **123 alérgenos declarados sin origen** y **203 ingredientes que aún no están en `data/ingredients.json`**. Es lo esperado en un borrador: se resuelve dando de alta esos ingredientes con su origen cuando cocina valide.
 
+## Criterio de revisión (fijado por el propietario, 2026-10-05)
+
+**La guía de Akira Back es la referencia.** La base de ingredientes de la app solo sirvió para detectar qué había que preguntar: por sí sola no autoriza a añadir ni a quitar ningún alérgeno. Tampoco el conocimiento general ni los «ingredientes habituales».
+
+- **Tipo 1 — la guía no indica un alérgeno que un ingrediente podría llevar:** Haru sashimi (sulfitos), Local sakana selection (pescado y sulfitos), Claypot de setas (sulfitos), Perfect storm (sulfitos), Cherne (sulfitos), Miso black cod (sulfitos), Cow-Wow roll (pescado), Sake futomaki (soja y sulfitos) y Vegan spider roll (si la tare permite llamarlo vegano).
+  - Si cocina confirma que está: se añade.
+  - Si cocina confirma que no: la ficha queda como la guía.
+  - Sin respuesta: sigue pendiente.
+- **Tipo 2 — la guía lo indica de forma genérica:** el «marisco» de Hotate kiwi, Miso de carabinero, Perfect storm, Carabinero, AB sashimi, AB sushi, Navajas y Hotate beurre blanc; además, el amaebi del gazpacho de melón, cómo presentar la Mystery box y de dónde salen los lácteos del Negi no miso. **El alérgeno genérico no se elimina por falta de detalle:** el objetivo es precisarlo.
+- **Tipo 3 — la guía no indica ninguno:** Chips de arroz. Se confirma con cocina.
+
+**Consecuencia para publicar:** si cocina confirma que un ingrediente de esta carta NO lleva un alérgeno que la base de la app sí le asigna (por ejemplo, un ponzu sin sulfitos), la auditoría lo marcaría como NO DECLARADO. Entonces ese ingrediente se registrará con un nombre propio de Akira Back y la confirmación de cocina como origen. Nunca se cambiará la etiqueta general, que usan también otras cartas, y nunca se rebajará la auditoría.
+
 ## Dudas por plato
 
 
