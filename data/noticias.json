@@ -1,10 +1,30 @@
 {
- "updated": "2026-10-05T23:10:54.737Z",
+ "updated": "2026-10-06T03:02:41.426Z",
  "items": [
+  {
+   "t": "Tenerife y Euskadi estrechan lazos en Gastronomika 2026",
+   "u": "https://www.eldia.es/tenerife/2026/10/06/tenerife-euskadi-estrechan-lazos-gastronomika-135041462.amp.html",
+   "s": "El Día",
+   "d": "2026-10-05T23:50:00.000Z",
+   "tags": [
+    "CANARIAS"
+   ]
+  },
+  {
+   "t": "Miguel Ángel Millán, mejor sommelier del mundo, explica por qué los vinos de Tenerife \"saben a",
+   "u": "https://diariodeavisos.elespanol.com/2026/10/miguel-angel-millan-vinos-de-tenerife-saben-volcan/amp/",
+   "s": "Diario de Avisos",
+   "d": "2026-10-05T23:00:00.000Z",
+   "tags": [
+    "CANARIAS",
+    "VINO"
+   ],
+   "img": "https://diariodeavisos.elespanol.com/wp-content/uploads/2026/10/Miguel-Angel-Millan.jpeg"
+  },
   {
    "t": "El Tenerife, desabrochado, se gana una derrota en Córdoba",
    "u": "https://www.eldiario.es/canariasahora/Deportes/futbol/tenerife-desabrochado-gana-derrota-cordoba_1_13564798.html",
-   "s": "eldiario.es",
+   "s": "elDiario.es",
    "d": "2026-10-05T22:47:53.000Z",
    "tags": [
     "CANARIAS"
@@ -18,13 +38,12 @@
    "d": "2026-10-05T22:20:45.000Z",
    "tags": [
     "CHEF"
-   ],
-   "img": "https://efe.com/wp-content/uploads/2026/10/GRAFCAV424-ESPANA-CONGRESO-GASTRONOMIA.webp"
+   ]
   },
   {
    "t": "El electrizante triunfo del Córdoba ante el Tenerife, en imágenes",
    "u": "https://www.abc.es/espana/andalucia/cordoba/electrizante-triunfo-cordoba-ante-tenerife-imagenes-20261005234828-gas.html",
-   "s": "ABC",
+   "s": "abc.es",
    "d": "2026-10-05T21:48:30.000Z",
    "tags": [
     "CANARIAS"
@@ -34,7 +53,7 @@
   {
    "t": "Las notas de los jugadores del Córdoba CF tras la victoria ante el Tenerife",
    "u": "https://www.abc.es/espana/andalucia/cordoba/cordoba-cf/notas-jugadores-cordoba-tras-victoria-ante-tenerife-20261005234257-nts.html",
-   "s": "ABC",
+   "s": "abc.es",
    "d": "2026-10-05T21:42:58.000Z",
    "tags": [
     "CANARIAS"
@@ -43,7 +62,7 @@
   },
   {
    "t": "DiverSaldo reunió a más de 15.000 personas en pleno centro de La Orotava",
-   "u": "https://www.soldelsurtenerife.com/tenerife-norte/diversaldo-reunio-mas-15000-personas-pleno-centro-orotava/20261005223033110620.html",
+   "u": "https://www.soldelsurtenerife.com/tenerife-norte/diversaldo-reunio-mas-15000-personas-pleno-centro-orotava/20261005223033110620.amp.html",
    "s": "sol del sur tenerife",
    "d": "2026-10-05T21:30:33.000Z",
    "tags": [
@@ -64,12 +83,22 @@
   {
    "t": "Así está el Córdoba CF en la clasificación tras la victoria ante el Tenerife",
    "u": "https://www.abc.es/espana/andalucia/cordoba/cordoba-cf/cordoba-clasificacion-tras-victoria-ante-tenerife-20261005230554-nts_amp.html",
-   "s": "ABC",
+   "s": "abc.es",
    "d": "2026-10-05T21:05:55.000Z",
    "tags": [
     "CANARIAS"
    ],
    "img": "https://s1.abcstatics.com/abc/www/multimedia/espana/2026/10/05/percan-gol-cordobacf_20261005225150-U58174642813vcB-1200x630@diario_abc.jpeg"
+  },
+  {
+   "t": "El Córdoba CF sobrevive a la locura y vuelve a sonreír tras un duelo eléctrico ante el Tenerife (3-2)",
+   "u": "https://www.abc.es/espana/andalucia/cordoba/cordoba-cf/cordoba-sobrevive-locura-vuelve-sonreir-tras-duelo-20261005230442-nts_amp.html",
+   "s": "abc.es",
+   "d": "2026-10-05T21:04:42.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://s1.abcstatics.com/abc/www/multimedia/espana/2026/10/05/cordobac-isma-celebraci%c3%b3n-U15300373867oQj-1200x630@diario_abc.jpeg"
   },
   {
    "t": "La Aldea de San Nicolás fusiona música y gastronomía para acercar los productos del sector primario a la ciudadanía",
@@ -78,17 +107,38 @@
    "d": "2026-10-05T20:48:37.000Z",
    "tags": [
     "CANARIAS"
-   ]
+   ],
+   "img": "https://nortegrancanaria.com/wp-content/uploads/2026/10/Concierto-Expresion-y-Cocteleria-Frutal-La-Aldea.webp"
   },
   {
    "t": "San Sebastián Gastronomika dedica su edición a los 50 años de la Nueva Cocina Vasca",
    "u": "https://www.vinetur.com/amp/20261005108251/san-sebastian-gastronomika-dedica-su-edicion-a-los-50-anos-de-la-nueva-cocina-vasca.html",
-   "s": "vinetur.com",
+   "s": "Vinetur",
    "d": "2026-10-05T20:44:42.000Z",
    "tags": [
     "CHEF"
    ],
    "img": "https://www.vinetur.com/visuals/2026/october/5/agent-20261005-095730-2dbdd9c051efcfaf.jpg"
+  },
+  {
+   "t": "Gran Canaria muestra en San Sebastián Gastronomika la diversidad de su cocina y el paisaje de sus vinos",
+   "u": "https://elsurdigitalgc.es/art/24168/gran-canaria-muestra-en-san-sebastian-gastronomika-la-diversidad-de-su-cocina-y-el-paisaje-de-sus-vinos",
+   "s": "El Sur Digital Gran Canaria",
+   "d": "2026-10-05T19:53:12.000Z",
+   "tags": [
+    "CANARIAS",
+    "VINO"
+   ],
+   "img": "https://elsurdigitalgc.es/upload/images/10_2026/5697_gcmg-en-san-sebastian-gastronomika-1.png"
+  },
+  {
+   "t": "Tenerife exige a Endesa auditorías por los retrasos que paralizan viviendas y comercios",
+   "u": "https://www.canariasenpleno.com/retrasos-acometidas-endesa-tenerife/",
+   "s": "Canarias en Pleno",
+   "d": "2026-10-05T19:50:35.000Z",
+   "tags": [
+    "CANARIAS"
+   ]
   },
   {
    "t": "El abrazo de Gastronomika a Martín Berasategui",
@@ -140,15 +190,6 @@
    "img": "https://www.noticiasdelvino.com/wp-content/uploads/restaurantes-5.jpg.webp"
   },
   {
-   "t": "Ocho provincias competirán en San Sebastián por el XXIII Premio de Cocina con AOVE de la Diputación de Jaén",
-   "u": "https://www.democrata.es/agricultura-alimentacion/ocho-provincias-competiran-en-san-sebastian-por-el-xxiii-premio-de-cocina-con-aove-de-la-diputacion-de-jaen/amp/",
-   "s": "Demócrata",
-   "d": "2026-10-05T15:52:37.000Z",
-   "tags": [
-    "MICHELIN"
-   ]
-  },
-  {
    "t": "Chefs de ocho provincias se disputarán el XXIII Premio de Cocina con AOVE de Diputación de Jaén",
    "u": "https://forbes.es/ultima-hora/1037565/chefs-de-ocho-provincias-se-disputaran-el-xxiii-premio-de-cocina-con-aove-de-diputacion-de-jaen/",
    "s": "Forbes España",
@@ -181,28 +222,26 @@
   {
    "t": "Samantha Vallejo-Nágera, chef (56 años): “Para preparar unas lentejas perfectas, añade agua caliente si el cal",
    "u": "https://as.com/tikitakas/gastronomia/samantha-vallejo-nagera-chef-56-anos-para-preparar-unas-lentejas-perfectas-anade-agua-caliente-si-el-caldo-se-reduce-demasiado-f202610-n/?outputType",
-   "s": "Diario AS",
+   "s": "as.com",
    "d": "2026-10-05T15:10:47.000Z",
    "tags": [
     "ALTA COCINA"
-   ],
-   "img": "https://img.asmedia.epimg.net/resizer/v2/4CTZMWZSVZCDLO4RV3SXBWM5KY.jpg?auth=5203d88faf61767bd478acc0832639cc6a49c6c470aab34071c57256ffe04042&width=1472&height=828&smart=true"
+   ]
   },
   {
-   "t": "Gran Canaria muestra en San Sebastián Gastronomika la diversidad de su cocina y el paisaje de sus vinos",
-   "u": "https://elsurdigitalgc.es/art/24168/gran-canaria-muestra-en-san-sebastian-gastronomika-la-diversidad-de-su-cocina-y-el-paisaje-de-sus-vinos",
-   "s": "El Sur Digital Gran Canaria",
-   "d": "2026-10-05T14:55:19.000Z",
+   "t": "Lluvias y tormentas en medio de un episodio de calima en Canarias",
+   "u": "https://www.eldiario.es/canariasahora/tiempo-canarias/lluvias-tormentas-medio-episodio-calima-canarias_1_13563735.html",
+   "s": "elDiario.es",
+   "d": "2026-10-05T15:01:58.000Z",
    "tags": [
-    "CANARIAS",
-    "VINO"
+    "CANARIAS"
    ],
-   "img": "https://elsurdigitalgc.es/upload/images/10_2026/5697_gcmg-en-san-sebastian-gastronomika-1.png"
+   "img": "https://static.eldiario.es/clip/67df7678-4806-46cb-aef0-8b4b742ea069_facebook-aspect-ratio-1200-675_default_0.jpg"
   },
   {
    "t": "Alcalá-Las Palmas, Badajoz-Tenerife y Atlético Paso-Córdoba, cruces de la Copa del Rey",
    "u": "https://www.eldiario.es/canariasahora/Deportes/futbol/alcala-palmas-badajoz-tenerife-atletico-paso-cordoba-cruces-copa-rey_1_13563611.html",
-   "s": "eldiario.es",
+   "s": "elDiario.es",
    "d": "2026-10-05T14:20:52.000Z",
    "tags": [
     "CANARIAS"
@@ -222,7 +261,7 @@
   {
    "t": "Podemos propone elegir en primarias la candidatura de una confluencia de izquierdas en Canarias",
    "u": "https://www.eldiario.es/canariasahora/politica/propone-elegir-primarias-candidatura-confluencia-izquierdas-canarias_1_13563202.html",
-   "s": "eldiario.es",
+   "s": "elDiario.es",
    "d": "2026-10-05T13:12:07.000Z",
    "tags": [
     "CANARIAS"
@@ -231,8 +270,8 @@
   },
   {
    "t": "El histórico bar de Tenerife en el que puedes comprar los mejores bocadillos de la isla: \"La mechada no todos los días sale igual porque les gusta innovar\"",
-   "u": "https://www.eldia.es/ocio/gastronomia/2026/10/05/historico-bar-tenerife-mejores-bocadillos-dv-135007122.html",
-   "s": "eldia.es",
+   "u": "https://www.eldia.es/ocio/gastronomia/2026/10/05/historico-bar-tenerife-mejores-bocadillos-dv-135007122.amp.html",
+   "s": "El Día",
    "d": "2026-10-05T13:04:35.000Z",
    "tags": [
     "CANARIAS"
@@ -241,7 +280,7 @@
   {
    "t": "El Gobierno de Canarias aprueba el Proyecto de Ley de Movilidad Sostenible",
    "u": "https://www.eldiario.es/canariasahora/politica/gobierno-canarias-aprueba-proyecto-ley-movilidad-sostenible_1_13563332.html",
-   "s": "eldiario.es",
+   "s": "elDiario.es",
    "d": "2026-10-05T13:02:37.000Z",
    "tags": [
     "CANARIAS"
@@ -257,46 +296,6 @@
     "ALTA COCINA",
     "MICHELIN"
    ]
-  },
-  {
-   "t": "El Córdoba CF viajará a Canarias para medirse al CD Atlético Paso en la primera ronda de la Copa del Rey",
-   "u": "https://www.abc.es/espana/andalucia/cordoba/cordoba-cf/cordoba-viajara-canarias-medirse-atletico-paso-primera-20261005144611-nts.html",
-   "s": "ABC",
-   "d": "2026-10-05T12:46:11.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://s1.abcstatics.com/abc/www/multimedia/espana/2026/10/05/cordoba-cieza-galeria(11)-U07161285066njX-1200x630@diario_abc.jpg"
-  },
-  {
-   "t": "El Kursaal vuelve a hervir con Gastronomika",
-   "u": "https://www.diariovasco.com/gastronomia/kursaal-vuelve-hervir-gastronomika-20261005144005-nt.html",
-   "s": "El Diario Vasco",
-   "d": "2026-10-05T12:40:06.000Z",
-   "tags": [
-    "CHEF"
-   ],
-   "img": "https://s3.ppllstatics.com/diariovasco/www/multimedia/gastronomia/2026/10/05/DV2gastronomika09-k0XG-U302046234065qkC-1200x840@Diario%20Vasco.jpg"
-  },
-  {
-   "t": "'Sabores Almería' acompaña a siete chefs y a ocho de sus empresas en 'San Sebastián Gastronomika'",
-   "u": "https://www.lavozdealmeria.com/provincia/667167/andalucia-almeria-diputacion-sabores-almeria-acompana-siete-chefs-ocho-empresas-san-sebastian-gastronomika.html",
-   "s": "La Voz de Almería",
-   "d": "2026-10-05T12:39:05.000Z",
-   "tags": [
-    "ALTA COCINA"
-   ],
-   "img": "https://imagenes.lavozdealmeria.com/files/og_thumbnail/uploads/2026/10/05/6ac38af53effa.jpeg"
-  },
-  {
-   "t": "El plato con rodaballo y legumbre que conquista a Martín Berasategui en San Sebastián Gastronomika",
-   "u": "https://www.diariovasco.com/gastronomia/plato-rodaballo-legumbre-conquista-martin-berasategui-san-sebastian-20261005141235-nt.html",
-   "s": "El Diario Vasco",
-   "d": "2026-10-05T12:33:06.000Z",
-   "tags": [
-    "CHEF"
-   ],
-   "img": "https://s1.ppllstatics.com/diariovasco/www/multimedia/gastronomia/2026/10/05/combo-lenguado-rodaballo-kIEC-U302047057427y1B-1200x840@Diario%20Vasco.jpg"
   }
  ]
 }
