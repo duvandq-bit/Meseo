@@ -20,6 +20,16 @@
 --   Nadie escribe desde la app: no hay política de escritura. La carta se
 --   carga por mantenimiento (service_role / SQL), con una persona detrás.
 --
+-- MIGRACIÓN OFICIAL
+--   Este archivo ES la migración: una sola, para aplicarse de una vez con el
+--   nombre `cartas_privadas` (la versión la pone Supabase al aplicarla).
+--   En f2-push está aplicada en dos pasos —cartas_privadas (20261005235326) y
+--   cartas_privadas_sin_service_role (20261006000652)— y el resultado es el
+--   mismo: el archivo entero, ejecutado de una vez sobre un esquema de prueba
+--   en f2-push, deja exactamente el mismo catálogo (ACL, RLS, política,
+--   restricciones). Antes y después: supabase/tests/cartas-privadas/
+--   V_antes_despues.sql (sólo lectura).
+--
 -- COMPATIBILIDAD
 --   Una versión antigua de la app no conoce esta tabla: sigue pidiendo
 --   data/carta-<venue>.json, no lo encuentra y se cierra (o abre vacía para la

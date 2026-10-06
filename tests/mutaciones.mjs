@@ -652,6 +652,77 @@ const MUTACIONES = [
     de:"  if(!token) return null;   // sin sesión real, RLS no puede dejar leer nada",
     a:"  if(!token) token = SUPA_KEY;",
     cae:'la carta privada llega del servidor' },
+
+  // ═══ R2 · modo revisión estrictamente local y flashcards ═══
+  { id:'R2-7', fase:'R2', fila:null,
+    rompe:'en modo revisión las escrituras vuelven a salir al servidor',
+    archivo:'index.html',
+    de:"    if(rev){\n      let bloquea = true;",
+    a:"    if(false){\n      let bloquea = true;",
+    cae:'el corte de red bloquea toda escritura' },
+
+  { id:'R2-8', fase:'R2', fila:null,
+    rompe:'el corte deja pasar los PATCH (last_active_at, avisos leídos, duelos)',
+    archivo:'index.html',
+    de:"  if(m === 'GET' || m === 'HEAD' || m === 'OPTIONS') return false;",
+    a:"  if(m === 'GET' || m === 'HEAD' || m === 'OPTIONS' || m === 'PATCH') return false;",
+    cae:'el corte de red bloquea toda escritura' },
+
+  { id:'R2-9', fase:'R2', fila:null,
+    rompe:'una tarjeta de alérgenos sin validar vuelve a puntuar tema, XP y plato conocido',
+    archivo:'index.html',
+    de:"  if(fcTopic==='allergens' && !(typeof _alergenosValidados!=='function'||_alergenosValidados())){\n    if(fcIndex<fcDishes.length-1){fcIndex++;renderFcCard();}\n    return;\n  }\n",
+    a:"",
+    cae:'fcRate no escribe topicScores.allergens' },
+
+  { id:'R2-10', fase:'R2', fila:null,
+    rompe:'las tarjetas se abren como actividad de alérgenos sin validar',
+    archivo:'index.html',
+    de:"  if(fcTopic==='allergens' && !(typeof _alergenosValidados!=='function'||_alergenosValidados())) fcTopic='ingredients';\n",
+    a:"",
+    cae:'no se abren como actividad de alérgenos' },
+
+  { id:'R2-11', fase:'R2', fila:null,
+    rompe:'el chat (y su presencia realtime) se abre en modo revisión',
+    archivo:'index.html',
+    de:"  if(typeof _revisionCerrado === 'function' && _revisionCerrado(c)) return;\n",
+    a:"",
+    cae:'no se ejecuta el chat' },
+
+  { id:'R2-12', fase:'R2', fila:null,
+    rompe:'el panel de supervisor se abre en modo revisión',
+    archivo:'index.html',
+    de:"  if(typeof _revisionCerrado === 'function' && _revisionCerrado(document.getElementById('appContent'))) return;\n",
+    a:"",
+    cae:'no se ejecuta supervisor' },
+
+  { id:'R2-13', fase:'R2', fila:null,
+    rompe:'en modo revisión se pide la suscripción push',
+    archivo:'index.html',
+    de:"  if(typeof _modoRevision === 'function' && _modoRevision()) return false;\n",
+    a:"",
+    cae:'no se ejecuta push' },
+
+  { id:'R2-14', fase:'R2', fila:null,
+    rompe:'en modo revisión se puede lanzar un reto a otro empleado',
+    archivo:'index.html',
+    de:"async function startChallenge(rivalName) {\n  if(typeof _revisionCerrado === 'function' && _revisionCerrado()) return;\n",
+    a:"async function startChallenge(rivalName) {\n",
+    cae:'no se ejecutan duelos' },
+
+  { id:'R2-15', fase:'R2', fila:null,
+    rompe:'el estudio en revisión cae en la ficha real de la administración',
+    archivo:'index.html',
+    de:"  if(name && typeof currentUser!=='undefined' && name === currentUser && typeof _modoRevision==='function' && _modoRevision()) return _perfilRevision(name);\n",
+    a:"",
+    cae:'volver de r2 a Txoko conserva' },
+
+  { id:'R2-16', fase:'R2', fila:null,
+    rompe:'durante el login (sin nadie dentro) el corte bloquea el NDA y la sesión',
+    archivo:'index.html',
+    de:"    if(typeof currentUser === 'undefined' || !currentUser) return false;\n    return _cartaPuesta !== _identidadVenue();",
+    a:"    return _cartaPuesta !== _identidadVenue();",
+    cae:'ninguna escritura sale por otro camino' },
 ];
 
 // ─── EJECUCIÓN ─────────────────────────────────────────────────────────────

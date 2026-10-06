@@ -501,6 +501,50 @@
 
 <script>
 
+// ═══ MODO REVISIÓN = LECTURA + ESTUDIO LOCAL ══════════════════════════════
+// Mientras la cuenta de administración revisa la carta de OTRO restaurante, no
+// sale al servidor ninguna escritura: ni progreso, ni chat, ni duelos, ni
+// avisos, ni push, ni supervisor, ni contenido, ni fotos, ni last_active_at.
+// Se corta aquí, en el único sitio por el que pasan todas —window.fetch—, y no
+// función por función, para que una que se añada mañana tampoco se escape.
+// Las lecturas (GET) siguen: hacen falta para estudiar. La sesión de siempre
+// (renovar el token, cerrar sesión) también: no es una escritura de datos.
+// Fuera del modo revisión esto no hace nada: Txoko va exactamente como antes.
+// Se instala lo primero, antes de que nadie guarde una referencia a fetch.
+function _revisionBloquea(url, method, supaUrl){
+  const m = String(method || 'GET').toUpperCase();
+  if(m === 'GET' || m === 'HEAD' || m === 'OPTIONS') return false;
+  const u = String(url || '');
+  if(!supaUrl || u.indexOf(supaUrl) !== 0) return false;   // sólo el servidor de la app
+  if(u.indexOf(supaUrl + '/auth/v1/token') === 0 || u.indexOf(supaUrl + '/auth/v1/logout') === 0) return false;
+  return true;
+}
+function _instalarRedRevision(win){
+  if(!win || typeof win.fetch !== 'function' || win.__redRevision) return;
+  const original = win.fetch.bind(win);
+  win.__redRevision = true;
+  win.fetch = function(input, init){
+    let rev = false;
+    try{ rev = (typeof _modoRevision === 'function') && _modoRevision(); }catch(e){ rev = false; }
+    if(rev){
+      let bloquea = true;   // en revisión, si no se sabe qué es, no sale
+      try{
+        const url = typeof input === 'string' ? input : ((input && input.url) || '');
+        const method = (init && init.method) || (input && typeof input === 'object' && input.method) || 'GET';
+        bloquea = _revisionBloquea(url, method, (typeof SUPA_URL !== 'undefined') ? SUPA_URL : '');
+      }catch(e){ bloquea = true; }
+      if(bloquea){
+        try{ if(typeof _revisionAviso === 'function') _revisionAviso(); }catch(e){}
+        return Promise.resolve(new Response(JSON.stringify({ code:'modo_revision',
+          message:'Modo revisión: sólo lectura y estudio local' }),
+          { status:403, headers:{ 'Content-Type':'application/json' } }));
+      }
+    }
+    return original(input, init);
+  };
+}
+_instalarRedRevision(typeof window !== 'undefined' ? window : null);
+
 // ═══════════════════════════════════════════════════════════════════
 // TXKO_ICONS — Centralized SVG micro-illustration icon system
 // Style: Detailed color micro-illustrations, tunic aesthetic
@@ -5337,6 +5381,8 @@ if ('serviceWorker' in navigator) {
 }
 
 async function subscribeToPush(employeeName) {
+  // Modo revisión: ni suscripción del navegador ni alta en el servidor.
+  if(typeof _modoRevision === 'function' && _modoRevision()) return false;
   try {
     // Step 1: Check if Notification API is available
     if (!('Notification' in window)) {
@@ -6153,8 +6199,38 @@ function _identidadVenue(){
     return (e && e.venue) || _VENUE_POR_DEFECTO;
   }catch(e){ return _VENUE_POR_DEFECTO; }
 }
+// Sólo con alguien dentro: durante el login (currentUser todavía vacío) la
+// puerta del NDA y la sesión tienen que poder hablar con el servidor aunque la
+// pestaña conserve la carta revisada de antes.
+// La identidad del servidor no cambia nunca: la cuenta sigue siendo admin de su
+// restaurante. «Restaurante 2» sólo es la carta que se está revisando.
 function _modoRevision(){
-  try{ return _cartaPuesta !== _identidadVenue(); }catch(e){ return false; }
+  try{
+    if(typeof currentUser === 'undefined' || !currentUser) return false;
+    return _cartaPuesta !== _identidadVenue();
+  }catch(e){ return false; }
+}
+let _revisionAvisoTs = 0;
+function _revisionAviso(){
+  const ahora = Date.now();
+  if(ahora - _revisionAvisoTs < 8000) return;
+  _revisionAvisoTs = ahora;
+  try{ showToast(LANG==='en'
+    ? 'Review mode: reading and local study only. Nothing is sent to the server.'
+    : 'Modo revisión: sólo lectura y estudio en este móvil. No se envía nada al servidor.', 'warning', 4500); }catch(e){}
+}
+// Pantallas que no son de estudio (chat, duelos, supervisor, push): en revisión
+// no se abren. Devuelve true si cierra.
+function _revisionCerrado(c){
+  if(!(typeof _modoRevision === 'function' && _modoRevision())) return false;
+  _revisionAviso();
+  if(c){
+    const _en = LANG==='en';
+    c.innerHTML = `<div style="padding:1.4rem 1rem;font-size:.85rem;line-height:1.5">${_en
+      ? 'Not available in review mode: while you review another restaurant’s menu, the app only lets you read and study, and sends nothing to the server.'
+      : 'No disponible en modo revisión: mientras revisas la carta de otro restaurante, la app sólo deja leer y estudiar, y no envía nada al servidor.'}</div>`;
+  }
+  return true;
 }
 function _perfilRevision(name){
   DB.revision = DB.revision || {};
@@ -22876,6 +22952,9 @@ function renderDashboard(){
 // ═══════ FLASHCARDS ═══════
 function initFlashcards(topic,cat){
   fcTopic=topic||'allergens';
+  // Con alérgenos sin validar por cocina, las tarjetas no son de alérgenos: se
+  // estudian como ingredientes, un tema que ya existe. En Txoko no cambia nada.
+  if(fcTopic==='allergens' && !(typeof _alergenosValidados!=='function'||_alergenosValidados())) fcTopic='ingredients';
   let pool=_shiftDishes(cat&&cat!=='all'?DISHES.filter(d=>d.cat===cat):[...DISHES]);
   // F-P1-2: Fisher-Yates instead of biased Math.random()-.5 sort.
   fcDishes=_lqaShuffle(pool);
@@ -23001,7 +23080,10 @@ function flipCard(){
     : `<div style="color:var(--parch4);font-size:.72rem;text-align:center;font-style:italic">${_en?'Not specified':'Sin especificar'}</div>`;
 
   // Build allergens with emojis
-  const allergensHtml = (dd.allergens && dd.allergens.length)
+  // Con alérgenos sin validar, el reverso no los enseña como algo que aprender:
+  // sólo el aviso. Siguen en la ficha del plato, marcados como borrador.
+  const allergensHtml = !(typeof _alergenosValidados!=='function'||_alergenosValidados()) ? (typeof _alergenosAvisoHTML==='function'?_alergenosAvisoHTML(_en):'')
+    : (dd.allergens && dd.allergens.length)
     ? `<div style="display:flex;flex-wrap:wrap;gap:.4rem;justify-content:center;margin-top:.25rem">${dd.allergens.map(a=>`<span style="display:inline-flex;align-items:center;gap:.35rem;padding:.3rem .6rem;background:rgba(196,112,104,.1);border:1px solid rgba(196,112,104,.25);border-radius:999px;font-family:'Quicksand',sans-serif;font-size:.72rem;color:#9a4a42;font-weight:600"><span style="font-size:.95rem;line-height:1">${allergenEmoji(a)}</span><span>${escapeHTML(allergenLocal(a))}</span></span>`).join('')}</div>`
     : `<div style="display:inline-flex;align-items:center;gap:.35rem;padding:.3rem .6rem;background:rgba(77,138,94,.1);border:1px solid rgba(77,138,94,.25);border-radius:999px;font-family:'Quicksand',sans-serif;font-size:.72rem;color:var(--sage);font-weight:600"><span>${(typeof _alergenosValidados!=='function'||_alergenosValidados())?'✓':'⚠'}</span><span>${((typeof _alergenosValidados!=='function'||_alergenosValidados())?(_en?'No allergens':'Sin alérgenos'):_sinAlergenosTxt(_en?'No allergens':'Sin alérgenos', _en))}</span></div>`;
 
@@ -23087,6 +23169,12 @@ function _fcRateFire(btn){
 function fcRate(score){
   const emp=getEmp(currentUser);
   const d=fcDishes[fcIndex];
+  // Una tarjeta de alérgenos sin validar no puntúa nada: ni tema, ni XP, ni
+  // plato conocido. Sólo pasa a la siguiente.
+  if(fcTopic==='allergens' && !(typeof _alergenosValidados!=='function'||_alergenosValidados())){
+    if(fcIndex<fcDishes.length-1){fcIndex++;renderFcCard();}
+    return;
+  }
   emp.topicScores[fcTopic]=emp.topicScores[fcTopic]||{correct:0,total:0};
   emp.topicScores[fcTopic].total++;
   if(score>=1)emp.topicScores[fcTopic].correct++;
@@ -25889,6 +25977,8 @@ function renderRanking(){
 
 
 function renderSupervisor(){
+  // Modo revisión: nada de supervisor (ni lecturas ni gestión ni su canal realtime).
+  if(typeof _revisionCerrado === 'function' && _revisionCerrado(document.getElementById('appContent'))) return;
   if(!supAuthenticated){
     renderSupPinEntry();
     return;
@@ -29145,6 +29235,7 @@ async function renderDuel() {
 }
 
 async function startChallenge(rivalName) {
+  if(typeof _revisionCerrado === 'function' && _revisionCerrado()) return;
   // Build 5 questions
   const questions = [];
   for (let i = 0; i < 30 && questions.length < 5; i++) {
@@ -29413,6 +29504,7 @@ async function submitDefense() {
 
 
 function startDuel(){
+  if(typeof _revisionCerrado === 'function' && _revisionCerrado()) return;
   const p1=document.getElementById('duelP1').value;
   const p2=document.getElementById('duelP2').value;
   if(p1===p2){ showToast(LANG==='en'?'Choose different players!':'¡Elige jugadores distintos!','warning'); return; }
@@ -34855,6 +34947,8 @@ function _chatDayLabel(iso){
 
 function renderChat(){
   const c = document.getElementById('appContent');
+  // Modo revisión: ni chat ni presencia (el realtime emite sin pasar por fetch).
+  if(typeof _revisionCerrado === 'function' && _revisionCerrado(c)) return;
   const _en = LANG==='en';
   c.innerHTML = `
     <div class="chat-wrap">
@@ -34921,6 +35015,7 @@ window.addEventListener('resize', ()=>{ if(currentTab==='chat') _chatFit(); });
 window.addEventListener('orientationchange', ()=>{ if(currentTab==='chat') setTimeout(_chatFit, 250); });
 
 async function _chatConnect(){
+  if(typeof _modoRevision === 'function' && _modoRevision()) return;
   const client = _getSupaClient();
   const stream = document.getElementById('chatStream');
   if(!client){

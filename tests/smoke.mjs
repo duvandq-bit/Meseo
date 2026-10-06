@@ -16035,6 +16035,217 @@ test('Restaurantes: el nombre del restaurante real no aparece en la app ni en su
   assert(r2 && r2.enabled === false && r2.name === 'Restaurante 2', 'Restaurante 2 sigue cerrado y con nombre neutro');
 });
 
+// ═══ MODO REVISIÓN = LECTURA + ESTUDIO LOCAL ═══
+// Mientras la administración revisa la carta de otro restaurante no sale al
+// servidor ninguna escritura. Se prueba con el corte REAL de index.html
+// (_instalarRedRevision) y con las funciones REALES que escriben.
+console.log('\nModo revisión estrictamente local');
+const _xFnA = (name) => {   // como _xFn, pero conserva «async»
+  const src = _xFn(name);
+  const i = html.indexOf('function ' + name + '(');
+  return html.slice(Math.max(0, i - 6), i) === 'async ' ? 'async ' + src : src;
+};
+const _revRes = await (async () => {
+  const SUPA = 'https://xx.supabase.co';
+  const monta = (rev) => {
+    const llegan = [];
+    const win = { fetch: (u, i) => { llegan.push([String(u), String((i && i.method) || 'GET').toUpperCase()]);
+      return Promise.resolve({ ok: true, status: 200, json: async () => [{ id: 1 }] }); } };
+    const estado = { rev, avisos: 0 };
+    const F = new Function('win', 'SUPA_URL', '_E', // eslint-disable-line no-new-func
+      'const _modoRevision = () => _E.rev; const _revisionAviso = () => { _E.avisos++; };\n' +
+      _xFn('_revisionBloquea') + '\n' + _xFn('_instalarRedRevision') + '\n_instalarRedRevision(win); return win.fetch;');
+    const fetch = F(win, SUPA, estado);
+    return { fetch, llegan, estado };
+  };
+  // Las escrituras que hace la app, con sus rutas de verdad.
+  const ESCRITURAS = [
+    ['chat', 'POST', '/rest/v1/chat_messages'], ['chat', 'PATCH', '/rest/v1/chat_messages?id=eq.1'],
+    ['duelos', 'POST', '/rest/v1/duels'], ['duelos', 'PATCH', '/rest/v1/duels?id=eq.1'],
+    ['avisos', 'POST', '/rest/v1/notifications'], ['avisos', 'PATCH', '/rest/v1/notifications?id=eq.1'],
+    ['push', 'POST', '/rest/v1/push_subscriptions'], ['push', 'DELETE', '/rest/v1/push_subscriptions?endpoint=eq.x'],
+    ['push', 'POST', '/functions/v1/send-push'],
+    ['supervisor', 'POST', '/rest/v1/rpc/venue_pin_set'], ['supervisor', 'POST', '/rest/v1/rpc/employee_set_role'],
+    ['supervisor', 'DELETE', '/rest/v1/employees?name=eq.x'], ['supervisor', 'PATCH', '/rest/v1/dish_photo_submissions?id=eq.1'],
+    ['last_active', 'PATCH', '/rest/v1/employees?name=eq.x'],
+    ['progreso', 'POST', '/rest/v1/scores'], ['progreso', 'POST', '/rest/v1/actividad'],
+    ['progreso', 'POST', '/rest/v1/employees?on_conflict=name'],
+    ['contenido', 'POST', '/functions/v1/manage-content'], ['fotos', 'POST', '/storage/v1/object/dish-photos/x.webp'],
+    ['fotos', 'POST', '/rest/v1/dish_photo_submissions'], ['sesion', 'POST', '/functions/v1/sesion'],
+  ];
+  const r = monta(true), n = monta(false);
+  const revBloqueadas = [], normalLlegan = [];
+  for (const [que, m, ruta] of ESCRITURAS) {
+    const res = await r.fetch(SUPA + ruta, { method: m });
+    if (res.status === 403 && (await res.json()).code === 'modo_revision') revBloqueadas.push(que + ' ' + m);
+    await n.fetch(SUPA + ruta, { method: m });
+  }
+  normalLlegan.push(...n.llegan);
+  // Lo que sí tiene que pasar en revisión: leer, y la sesión de siempre.
+  await r.fetch(SUPA + '/rest/v1/cartas?venue=eq.r2');                                   // GET
+  await r.fetch(SUPA + '/rest/v1/notifications?select=*', { method: 'get' });              // GET en minúsculas
+  await r.fetch(SUPA + '/auth/v1/token?grant_type=refresh_token', { method: 'POST' });     // renovar token
+  await r.fetch('https://otra.web/x', { method: 'POST' });                                // fuera del servidor
+  const reqObj = { url: SUPA + '/rest/v1/duels', method: 'POST' };                        // Request en vez de texto
+  const resReq = await r.fetch(reqObj);
+  // Funciones REALES detrás del corte
+  const reales = async (rev) => {
+    const m = monta(rev);
+    const F = new Function('fetch', 'SUPA_URL', 'SUPA_KEY', '_bearer', '_vSello', 'getDuelSeasonId', 'showToast', 'currentUser', // eslint-disable-line no-new-func
+      'AbortController', 'setTimeout', 'clearTimeout', 'dbgw',
+      'const _chatOnInsert = () => {}; const _chatBroadcastPush = () => {}; const CHAT_ROOM = "general"; const LANG = "es";\n' +
+      [_xFnA('supaUpdateLastActive'), _xFnA('supaCreateNotification'), _xFnA('supaCreateChallenge'),
+       _xFnA('_chatInsert'), _xFn('fetchT'), _xFnA('_supaRpc')].join('\n') +
+      '\nreturn { supaUpdateLastActive, supaCreateNotification, supaCreateChallenge, _chatInsert, _supaRpc };');
+    const api = F(m.fetch, SUPA, 'k', () => 't', o => Object.assign(o || {}, { venue: 'r2' }), () => 's1', () => {}, 'Administrador',
+      AbortController, setTimeout, clearTimeout, () => {});
+    const out = {};
+    const corre = async (k, fn) => { const antes = m.llegan.length; try { await fn(); } catch (e) {} out[k] = m.llegan.length - antes; };
+    await corre('last_active', () => api.supaUpdateLastActive('Administrador'));
+    await corre('avisos', () => api.supaCreateNotification('Ana', 'hola', 'info'));
+    await corre('duelos', () => api.supaCreateChallenge('Administrador', 'Ana', [{ q: 1 }]));
+    await corre('chat', () => api._chatInsert({ message: 'hola' }));
+    await corre('supervisor', () => api._supaRpc('venue_pin_set', { p_pin: '1', p_venue: 'r2' }));
+    return out;
+  };
+  // Push: en revisión sale sin tocar ni el navegador ni el servidor.
+  const push = await (async () => {
+    const F = new Function('_modoRevision', 'window', 'navigator', 'dbgw', _xFnA('subscribeToPush') + '; return subscribeToPush;'); // eslint-disable-line no-new-func
+    let tocado = false;
+    const trampa = new Proxy({}, { get: () => { tocado = true; return undefined; }, has: () => { tocado = true; return false; } });
+    let r1; try { r1 = await F(() => true, trampa, trampa, () => {})('Administrador'); } catch (e) { r1 = 'lanzó'; }
+    const rev = { r: r1, tocado };
+    tocado = false;
+    try { await F(() => false, trampa, trampa, () => {})('Administrador'); } catch (e) {}
+    return { rev, normalToca: tocado };
+  })();
+  return { revBloqueadas, total: ESCRITURAS.length, normalLlegan, revLlegan: r.llegan, resReq: resReq.status,
+           avisos: r.estado.avisos, realesRev: await reales(true), realesNormal: await reales(false), push };
+})();
+
+test('Revisión: el corte de red bloquea toda escritura al servidor, y fuera de revisión no toca nada', () => {
+  const R = _revRes;
+  assert(R.revBloqueadas.length === R.total, `en revisión salieron escrituras: ${R.total - R.revBloqueadas.length} de ${R.total}`);
+  assert(R.normalLlegan.length === R.total, 'fuera de revisión (Txoko) todas las peticiones tienen que salir como siempre');
+  assert(R.resReq === 403, 'una escritura pasada como objeto Request tampoco sale');
+  const pasan = R.revLlegan.map(x => x.join(' '));
+  assert(pasan.some(x => /cartas\?venue=eq\.r2 GET/.test(x)), 'en revisión se sigue pudiendo LEER (la carta)');
+  assert(pasan.some(x => /auth\/v1\/token/.test(x)), 'la sesión de siempre (renovar el token) no se corta');
+  assert(pasan.some(x => /otra\.web/.test(x)), 'sólo se corta el servidor de la app');
+  assert(!pasan.some(x => / (POST|PATCH|DELETE|PUT)$/.test(x) && /\/rest\/v1\/|\/functions\/v1\/|\/storage\/v1\//.test(x)),
+    'ninguna escritura a rest, functions o storage llegó a salir');
+  assert(R.avisos > 0, 'el usuario tiene que saber que está en modo revisión');
+});
+test('Revisión: no se ejecuta el chat (ni mensaje ni presencia)', () => {
+  assert(_revRes.realesRev.chat === 0 && _revRes.realesNormal.chat === 1, '_chatInsert en revisión no sale; en normal sí');
+  assert(/function renderChat\(\)\{\n  const c = document\.getElementById\('appContent'\);\n  \/\/[^\n]*\n  if\(typeof _revisionCerrado === 'function' && _revisionCerrado\(c\)\) return;/.test(html),
+    'la pantalla del chat no se abre en revisión');
+  assert(/async function _chatConnect\(\)\{\n  if\(typeof _modoRevision === 'function' && _modoRevision\(\)\) return;/.test(html),
+    'el realtime del chat (presencia) no se conecta en revisión');
+});
+test('Revisión: no se ejecutan duelos', () => {
+  assert(_revRes.realesRev.duelos === 0 && _revRes.realesNormal.duelos >= 1, 'supaCreateChallenge en revisión no sale');
+  assert(/async function startChallenge\(rivalName\) \{\n  if\(typeof _revisionCerrado === 'function' && _revisionCerrado\(\)\) return;/.test(html), 'el reto remoto no empieza');
+  assert(/function startDuel\(\)\{\n  if\(typeof _revisionCerrado === 'function' && _revisionCerrado\(\)\) return;/.test(html), 'el duelo local no empieza');
+});
+test('Revisión: no se ejecutan avisos (notifications)', () => {
+  assert(_revRes.realesRev.avisos === 0 && _revRes.realesNormal.avisos === 1, 'supaCreateNotification en revisión no sale');
+});
+test('Revisión: no se ejecuta push', () => {
+  const P = _revRes.push;
+  assert(P.rev.r === false && !P.rev.tocado, 'en revisión subscribeToPush tiene que salir sin tocar el navegador ni el servidor');
+  assert(P.normalToca, 'fuera de revisión subscribeToPush sigue mirando el navegador como siempre');
+});
+test('Revisión: no se ejecuta supervisor', () => {
+  assert(_revRes.realesRev.supervisor === 0 && _revRes.realesNormal.supervisor === 1, 'las RPC de supervisor en revisión no salen');
+  assert(/function renderSupervisor\(\)\{\n  \/\/[^\n]*\n  if\(typeof _revisionCerrado === 'function' && _revisionCerrado\(document\.getElementById\('appContent'\)\)\) return;/.test(html),
+    'el panel de supervisor no se abre en revisión');
+});
+test('Revisión: no se modifica last_active_at', () => {
+  assert(_revRes.realesRev.last_active === 0 && _revRes.realesNormal.last_active === 1, 'supaUpdateLastActive en revisión no sale');
+});
+test('Revisión: ninguna escritura sale por otro camino que fetch, y el corte se instala lo primero', () => {
+  const main = html.slice(html.indexOf('<script>\n\n// ═══ MODO REVISIÓN'));
+  assert(main.indexOf('_instalarRedRevision(typeof window') > 0, 'el corte de red se instala en el script principal');
+  const inst = main.indexOf('_instalarRedRevision(typeof window');
+  assert(inst < main.indexOf('fetch(`') && inst < main.indexOf('createClient('), 'se instala antes de cualquier petición y de crear el cliente de Supabase');
+  assert(!/sendBeacon\(|new XMLHttpRequest|new WebSocket\(/.test(html), 'no hay escrituras por sendBeacon, XMLHttpRequest ni WebSocket propio');
+  assert(/function _modoRevision\(\)\{\n  try\{\n    if\(typeof currentUser === 'undefined' \|\| !currentUser\) return false;/.test(html),
+    'sin nadie dentro (login) no hay modo revisión: la puerta del NDA y la sesión no se cortan');
+});
+
+// Volver de r2 a Txoko: la ficha real queda EXACTAMENTE como estaba.
+const _vueltaRes = (() => {
+  const S = { cartaPuesta: 'txoko', currentUser: 'Administrador' };
+  const DB = { employees: { Administrador: { name:'Administrador', role:'admin', venue:'txoko', xp:10,
+    srs:{ 12:{ reps:3 } }, topicScores:{ allergens:{ correct:5, total:6 } }, knownDishes:{ 12:true } } } };
+  const F = new Function('DB', 'S', '_VENUE_POR_DEFECTO', // eslint-disable-line no-new-func
+    'const _ficha = n => DB.employees[n] || null;\n' +
+    [_xFn('_identidadVenue'), _xFn('_modoRevision'), _xFn('_perfilRevision'), _xFn('getEmp')].join('\n')
+      .replace(/_cartaPuesta/g, 'S.cartaPuesta').replace(/\bcurrentUser\b/g, 'S.currentUser') +
+    '\nreturn { getEmp, _modoRevision };');
+  const api = F(DB, S, 'txoko');
+  const antes = JSON.stringify(DB.employees.Administrador);
+  S.cartaPuesta = 'r2';
+  const enRev = api._modoRevision();
+  const e = api.getEmp('Administrador');
+  e.xp = 999; e.srs = { 3012: { reps: 1 } }; e.topicScores.ingredients = { correct: 1, total: 1 };
+  S.cartaPuesta = 'txoko';
+  const real = api.getEmp('Administrador');
+  const despues = JSON.stringify(real);
+  S.cartaPuesta = 'r2';
+  const otraVez = api.getEmp('Administrador');
+  S.currentUser = null; const sinUsuario = api._modoRevision();
+  return { enRev, perfilEsOtro: e !== DB.employees.Administrador, igual: antes === despues,
+           real, conservado: otraVez === e && otraVez.srs[3012] && otraVez.xp === 999, sinUsuario, DB };
+})();
+test('Revisión: volver de r2 a Txoko conserva exactamente el estado anterior', () => {
+  const R = _vueltaRes;
+  assert(R.enRev === true && R.perfilEsOtro, 'con la carta r2 puesta, la administración estudia en un perfil aparte');
+  assert(R.igual, 'al volver a Txoko la ficha real es byte a byte la de antes');
+  assert(R.conservado, 'el progreso de revisión se conserva para la próxima vez');
+  assert(R.sinUsuario === false, 'sin nadie dentro no hay modo revisión');
+  assert(R.DB.revision && R.DB.revision['r2|Administrador'], 'el perfil vive en DB.revision, por carta y persona');
+});
+
+// ═══ FLASHCARDS con alérgenos sin validar ═══
+const _fcRes = (validados) => {
+  const S = { fcTopic: null, fcDishes: [], fcIndex: 0, fcFlipped: false, xp: 0, guardados: 0, pinta: 0 };
+  const emp = { topicScores: {}, knownDishes: {} };
+  const F = new Function('S', 'emp', '_val', // eslint-disable-line no-new-func
+    'const _alergenosValidados = () => _val; const DISHES = [{id:3001,cat:"Fríos"},{id:3002,cat:"Fríos"}];\n' +
+    'const _shiftDishes = a => a; const _lqaShuffle = a => a.slice(); const getEmp = () => emp; const currentUser = "A";\n' +
+    'const awardXP = () => { S.xp++; }; const saveDB = () => { S.guardados++; }; const checkNewCertifications = () => {};\n' +
+    'const renderFcCard = () => { S.pinta++; }; const checkMissionCompletion = () => {}; const checkNewAchievements = () => {};\n' +
+    'const LANG = "es"; const t = k => k; const document = { getElementById: () => ({}) };\n' +
+    [_xFn('initFlashcards'), _xFn('fcRate')].join('\n')
+      .replace(/\bfcTopic\b/g, 'S.fcTopic').replace(/\bfcDishes\b/g, 'S.fcDishes').replace(/\bfcIndex\b/g, 'S.fcIndex').replace(/\bfcFlipped\b/g, 'S.fcFlipped') +
+    '\nreturn { initFlashcards, fcRate };');
+  const api = F(S, emp, validados);
+  api.initFlashcards();               // como al abrir la pestaña
+  const tema = S.fcTopic;
+  S.fcTopic = 'allergens';            // aunque quedara puesto de antes
+  api.fcRate(2);
+  return { tema, emp, xp: S.xp, guardados: S.guardados, siguiente: S.fcIndex };
+};
+test('Flashcards: con alérgenos sin validar no se abren como actividad de alérgenos', () => {
+  const R = _fcRes(false);
+  assert(R.tema === 'ingredients', 'sin validar, las tarjetas se estudian como ingredientes, no como alérgenos: ' + R.tema);
+  assert(_fcRes(true).tema === 'allergens', 'con alérgenos validados (Txoko) siguen siendo de alérgenos');
+  assert(/const allergensHtml = !\(typeof _alergenosValidados!=='function'\|\|_alergenosValidados\(\)\) \? \(typeof _alergenosAvisoHTML/.test(html),
+    'el reverso no enseña alérgenos sin validar como algo que aprender');
+});
+test('Flashcards: fcRate no escribe topicScores.allergens, ni XP, ni plato conocido, con alérgenos sin validar', () => {
+  const R = _fcRes(false);
+  assert(!R.emp.topicScores.allergens, 'no se registra topicScores.allergens');
+  assert(R.xp === 0, 'no da XP por una tarjeta de alérgenos');
+  assert(!R.emp.knownDishes[3001], 'no marca el plato como conocido');
+  assert(R.siguiente === 1, 'sólo pasa a la siguiente tarjeta');
+  const T = _fcRes(true);
+  assert(T.emp.topicScores.allergens && T.emp.topicScores.allergens.total === 1 && T.xp === 1 && T.emp.knownDishes[3001],
+    'en Txoko fcRate sigue registrando como siempre');
+});
+
 console.log('\nHygiene');
 test('no git conflict markers in tracked source', () => {
   for (const f of ['index.html', 'sw.js', 'data/wines.json', 'data/lqa-situations.json', 'data/ghost-scenarios.json']) {
