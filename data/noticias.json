@@ -1,15 +1,260 @@
 {
- "updated": "2026-10-06T12:03:53.633Z",
+ "updated": "2026-10-06T21:40:04.274Z",
  "items": [
   {
-   "t": "Garachico acoge una muestra de gastronomía y artesanía ‘Oficios y Sabores’",
-   "u": "https://www.diariodetenerife.info/garachico-acoge-muestra-gastronomia-artesania-oficios-sabores/",
-   "s": "diariodetenerife.info",
-   "d": "2026-10-06T11:52:16.000Z",
+   "t": "De Denis Villeneuve a la cocina con estrella Michelin: así será la noche del umami en Gran Canaria",
+   "u": "https://www.laprovincia.es/cultura/2026/10/06/denis-villeneuve-cocina-estrella-michelin-135066222.html",
+   "s": "La Provincia",
+   "d": "2026-10-06T20:43:40.000Z",
+   "tags": [
+    "CANARIAS",
+    "MICHELIN"
+   ]
+  },
+  {
+   "t": "El restaurante de carretera definitivo está en este pueblo medieval de Madrid: Martín Berasategui confiesa su secreto mejor guardado",
+   "u": "https://www.noticiasdelvino.com/escapadas/2026/10/06/el-restaurante-de-carretera-definitivo-esta-en-este-pueblo-medieval-de-madrid-martin-berasategui-confiesa-su-secreto-mejor-guardado-74843/",
+   "s": "Noticias del Vino",
+   "d": "2026-10-06T19:04:51.000Z",
+   "tags": [
+    "CHEF"
+   ],
+   "img": "https://www.noticiasdelvino.com/wp-content/uploads/image-583.png.webp"
+  },
+  {
+   "t": "Jordi Cruz, chef Michelin: “No es lo mismo un horno tradicional que uno moderno . En los nuevos, el control de la temperatura suele ser bastante preciso”",
+   "u": "https://www.infobae.com/espana/2026/10/06/jordi-cruz-chef-michelin-no-es-lo-mismo-un-horno-tradicional-que-uno-moderno-en-los-nuevos-el-control-de-la-temperatura-suele-ser-bastante-preciso/",
+   "s": "Infobae",
+   "d": "2026-10-06T18:51:01.000Z",
+   "tags": [
+    "ALTA COCINA",
+    "MICHELIN"
+   ],
+   "img": "https://www.infobae.com/resizer/v2/TVI32HDRVRF6HLGJHEP7YWN45I.jpg?auth=e0638d26dd2280d5942767ebb49d6b8046ccef647e494b0d0954847175a4391d&smart=true&width=1200&height=630&quality=85"
+  },
+  {
+   "t": "Garachico acoge la muestra de artesanía y gastronomía",
+   "u": "https://www.canariasenpleno.com/muestra-artesania-garachico/",
+   "s": "Canarias en Pleno",
+   "d": "2026-10-06T17:48:45.000Z",
+   "tags": [
+    "CANARIAS"
+   ]
+  },
+  {
+   "t": "Rubén y Atteneri, la pareja canaria que empezó una nueva vida en Suiza entre tortillas, idiomas y encuentros inesperados",
+   "u": "https://www.laprovincia.es/gran-canaria/2026/10/06/ruben-atteneri-pareja-canaria-empezo-135073924.amp.html",
+   "s": "La Provincia",
+   "d": "2026-10-06T17:35:40.000Z",
+   "tags": [
+    "CANARIAS"
+   ]
+  },
+  {
+   "t": "Gastronomika 2026 rinde homenaje a Martín Berasategui por 50 años de trayectoria",
+   "u": "https://elcapitalino.mx/rincones-y-sabores/gastronomika-2026-rinde-homenaje-a-martin-berasategui-por-50-anos-de-trayectoria/",
+   "s": "El Capitalino",
+   "d": "2026-10-06T17:24:30.000Z",
+   "tags": [
+    "CHEF"
+   ]
+  },
+  {
+   "t": "El chef aragonés recomendado por la Guía Michelin que cocina de cine: cambia los fogones de su restaurante en Zaragoza por una película protagonizada por Natalia Huarte",
+   "u": "https://www.elconfidencial.com/viajes/2026-10-06/chef-aragon-guia-michelin-cine-fogones-pelicula-1qrt-1tna_4438347/",
+   "s": "El Confidencial",
+   "d": "2026-10-06T17:00:00.000Z",
+   "tags": [
+    "MICHELIN"
+   ],
+   "img": "https://images.ecestaticos.com/8wBNZ2Fofl7aY2uQOIL9WVRRt7o=/0x0:2272x1515/600x315/filters:fill(white):format(jpg):quality(99):watermark(f.elconfidencial.com/file/a73/f85/d17/a73f85d17f0b2300eddff0d114d4ab10.png,0,275,1)/f.elconfidencial.com/original/d98/e68/e81/d98e68e812f9f3d2febbd3694f4fa3e2.jpg"
+  },
+  {
+   "t": "Tragatá corona a Málaga como capital de la ensaladilla rusa: premiado en el certamen de Gastronomika",
+   "u": "https://www.malagahoy.es/la-farola/tragata-corona-ronda-capital-ensaladilla_0_2008168058.html",
+   "s": "Málaga Hoy",
+   "d": "2026-10-06T16:59:47.000Z",
+   "tags": [
+    "CHEF"
+   ],
+   "img": "https://static.grupojoly.com/clip/943908a4-323e-486d-88ec-9fefb87674e2_facebook-aspect-ratio_default_0.jpg"
+  },
+  {
+   "t": "Tenerife rindió homenaje a Martín Berasategui y desarrolló la jornada alrededor de los usos de la cabra, en la segunda jornada de Gastronomika",
+   "u": "https://www.canal4tenerife.tv/tenerife-rindio-homenaje-a-martin-berasategui-y-desarrollo-la-jornada-alrededor-de-los-usos-de-la-cabra-en-la-segunda-jornada-de-gastronomika/",
+   "s": "Canal 4 Tenerife",
+   "d": "2026-10-06T16:52:17.000Z",
+   "tags": [
+    "CANARIAS",
+    "CHEF"
+   ],
+   "img": "https://www.canal4tenerife.tv/wp-content/uploads/2026/10/SSG-2-scaled-e1791305519743.jpg"
+  },
+  {
+   "t": "El viñedo más alto de Europa está en Tenerife: así es el pueblo que desafía a los Alpes",
+   "u": "https://www.noticiasdelvino.com/escapadas/2026/10/06/el-vinedo-mas-alto-de-europa-esta-en-tenerife-asi-es-el-pueblo-que-desafia-a-los-alpes-66331/",
+   "s": "Noticias del Vino",
+   "d": "2026-10-06T16:38:27.000Z",
+   "tags": [
+    "VINO",
+    "CANARIAS"
+   ],
+   "img": "https://www.noticiasdelvino.com/wp-content/uploads/El-vinedo-mas-alto-de-Europa-esta-en-Tenerife.jpg.webp"
+  },
+  {
+   "t": "Tragatá, de Ronda, campeón de campeones en el certamen de ensaladilla rusa de Gastronomika",
+   "u": "https://www.infobae.com/espana/agencias/2026/10/06/tragata-de-ronda-campeon-de-campeones-en-el-certamen-de-ensaladilla-rusa-de-gastronomika/?outputType",
+   "s": "Infobae",
+   "d": "2026-10-06T16:30:38.000Z",
+   "tags": [
+    "ALTA COCINA"
+   ]
+  },
+  {
+   "t": "Canarias encara un miércoles de chubascos y descenso de las temperaturas",
+   "u": "https://www.eldiario.es/canariasahora/tiempo-canarias/tiempo-canarias-descenso-temperaturas-hoy-miercoles-7-octubre_1_13567240.html",
+   "s": "elDiario.es",
+   "d": "2026-10-06T16:26:05.000Z",
    "tags": [
     "CANARIAS"
    ],
-   "img": "https://www.diariodetenerife.info/wp-content/uploads/2026/10/MUESTRA-GARACHICO-001.jpg"
+   "img": "https://static.eldiario.es/clip/04fc13f7-c702-45d1-9458-980c4380c5df_facebook-aspect-ratio-1200-675_default_0_x1467y514.jpg"
+  },
+  {
+   "t": "Garachico (Tenerife) acoge este fin de semana la muestra de gastronomía y artesanía 'Oficios y Sabores'",
+   "u": "https://www.europapress.es/islas-canarias/noticia-garachico-tenerife-acoge-fin-semana-muestra-gastronomia-artesania-oficios-sabores-20261006173616.html",
+   "s": "Europa Press",
+   "d": "2026-10-06T15:36:16.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://img.europapress.es/fotoweb/fotonoticia_20261006173616_1200.jpg"
+  },
+  {
+   "t": "Muestra de gastronomía y artesanía «Oficios y Sabores» en Garachico",
+   "u": "https://www.puertodelacruz.com/evento/muestra-de-gastronomia-y-artesania-oficios-y-sabores-en-garachico/",
+   "s": "PUERTODELACRUZ.COM -",
+   "d": "2026-10-06T15:19:00.000Z",
+   "tags": [
+    "CANARIAS"
+   ]
+  },
+  {
+   "t": "Pedro Sánchez, chef Michelin en un restaurante de 40 m²: \"En España la gastronomía debería ser cuestión de Estado\"",
+   "u": "https://www.elespanol.com/cocinillas/20261006/pedro-sanchez-chef-michelin-restaurante-espana-gastronomia-deberia-cuestion/1003744410216_0.html",
+   "s": "El Español",
+   "d": "2026-10-06T15:04:32.000Z",
+   "tags": [
+    "ALTA COCINA",
+    "MICHELIN"
+   ],
+   "img": "https://s3.elespanol.com/k/imgp/cms/elespanol/10677486.jpg?p=f:jpeg/w:1706/h:960&h=KlLkkMOW"
+  },
+  {
+   "t": "Noruega prohibirá gafas inteligentes como las de Meta: estos países también lo estudian",
+   "u": "https://www.eldia.es/internacional/2026/10/06/noruega-prohibira-gafas-inteligentes-meta-camara-paises-veto-zuckerberg-privacidad-135068066.amp.html",
+   "s": "Eldía",
+   "d": "2026-10-06T14:52:46.000Z",
+   "tags": [
+    "CANARIAS"
+   ]
+  },
+  {
+   "t": "Turismo de Tenerife resalta en San Sebastián Gastronomika la fuerza de su gastronomía como pilar turístico",
+   "u": "https://www.cope.es/emisoras/canarias/noticias/turismo-tenerife-resalta-san-sebastian-gastronomika-fuerza-gastronomia-pilar-turistico-20261006_3450895.html",
+   "s": "COPE",
+   "d": "2026-10-06T14:51:45.000Z",
+   "tags": [
+    "CANARIAS"
+   ]
+  },
+  {
+   "t": "CaixaBank reconoce a la odontóloga Victoria Melián Artiles con el ‘Premio a Profesional Autónoma’ en Canarias",
+   "u": "https://www.eldiario.es/canariasahora/lapalmaahora/economia/caixabank-reconoce-odontologa-victoria-melian-artiles-premio-profesional-autonoma-canarias_1_13566860.html",
+   "s": "elDiario.es",
+   "d": "2026-10-06T14:45:00.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://static.eldiario.es/clip/982ac1a0-b1da-41f8-804d-6156ef8a9194_facebook-aspect-ratio-1200-675_default_1152818.jpg"
+  },
+  {
+   "t": "Tenerife roba el show en Gastronomika: homenaje a Berasategui y despiece de cabra en directo",
+   "u": "https://www.canariasenpleno.com/tenerife-homenaje-berasategui-gastronomika/",
+   "s": "Canarias en Pleno",
+   "d": "2026-10-06T14:17:00.000Z",
+   "tags": [
+    "CANARIAS",
+    "CHEF"
+   ]
+  },
+  {
+   "t": "El Córdoba CF encuentra pólvora donde había dudas: un arranque goleador entre los mejores de Segunda División",
+   "u": "https://www.abc.es/espana/andalucia/cordoba/cordoba-cf/cordoba-encuentra-polvora-dudas-arranque-goleador-mejores-20261006160828-nts.html",
+   "s": "ABC",
+   "d": "2026-10-06T14:08:28.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://s1.abcstatics.com/abc/www/multimedia/espana/2026/10/06/cordobacf-percan-tenerife-U73682370704RTs-1200x630@diario_abc.jpeg"
+  },
+  {
+   "t": "¿Cuántos diputados elige Canarias en las elecciones del 29-N? Así se reparten los escaños",
+   "u": "https://www.eldiario.es/canariasahora/politica/diputados-elige-canarias-elecciones-29-n-reparten-escanos_1_13565716.html",
+   "s": "elDiario.es",
+   "d": "2026-10-06T13:16:04.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://static.eldiario.es/clip/7b2a0516-86ac-432f-9115-2541507bf975_facebook-aspect-ratio-1200-675_default_0.jpg"
+  },
+  {
+   "t": "Críticos gastronómicos encumbran la papa canaria en San Sebastián Gastronomika como un tesoro gastronómico",
+   "u": "https://www.cope.es/emisoras/canarias/noticias/criticos-gastronomicos-encumbran-papa-canaria-san-sebastian-gastronomika-tesoro-gastronomico-20261006_3450596.amp.html",
+   "s": "COPE",
+   "d": "2026-10-06T13:02:29.000Z",
+   "tags": [
+    "CANARIAS"
+   ]
+  },
+  {
+   "t": "Tenerife rindió homenaje a Martín Berasategui y desarrolló la jornada alrededor de los usos de la cabra, en la segunda jornada de Gastronomika – El blog de Turismo de Tenerife",
+   "u": "https://www.webtenerife.com/blogcorporativo/2026/10/tenerife-rindio-homenaje-a-martin-berasategui-y-desarrollo-la-jornada-alrededor-de-los-usos-de-la-cabra-en-la-segunda-jornada-de-gastronomika/",
+   "s": "Turismo de Tenerife",
+   "d": "2026-10-06T12:54:55.000Z",
+   "tags": [
+    "CANARIAS",
+    "CHEF"
+   ]
+  },
+  {
+   "t": "Canarias se mantiene en los puestos de cabeza de la privatización sanitaria",
+   "u": "https://www.eldiario.es/canariasahora/sociedad/canarias-mantiene-puestos-cabeza-privatizacion-sanitaria_1_13566438.html",
+   "s": "elDiario.es",
+   "d": "2026-10-06T12:45:01.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://static.eldiario.es/clip/6bca52b1-9f65-4e6c-85f1-dd8f0a64a202_facebook-aspect-ratio-1200-675_default_0.jpg"
+  },
+  {
+   "t": "Cristina Pedroche preocupa por su estado de salud en pleno cambio profesional: \"Sí, esto es real\"",
+   "u": "https://www.eldia.es/ocio/tv/2026/10/06/cristina-pedroche-preocupa-salud-pleno-cambio-profesional-si-esto-es-real-135060553.amp.html",
+   "s": "Eldía",
+   "d": "2026-10-06T12:09:28.000Z",
+   "tags": [
+    "CANARIAS"
+   ]
+  },
+  {
+   "t": "Martín Berasategui: \"El ego es la mayor traición que hay en cualquier profesión\"",
+   "u": "https://www.elconfidencial.com/gastronomia/2026-10-06/martin-berasategui-el-ego-es-la-mayor-traicion-que-hay-en-cualquier-profesion_4436674/",
+   "s": "El Confidencial",
+   "d": "2026-10-06T11:56:00.000Z",
+   "tags": [
+    "CHEF"
+   ],
+   "img": "https://images.ecestaticos.com/hVyjXKn5msNGLk0G5yt9F5wgNuk=/0x0:1200x800/600x315/filters:fill(white):format(jpg):quality(99):watermark(f.elconfidencial.com/file/65c/43d/0ca/65c43d0ca5dbd5ff8f19b44167343db9.png,0,275,1)/f.elconfidencial.com/original/70c/c1a/67c/70cc1a67cac910504589fde906cf325f.jpg"
   },
   {
    "t": "Cinco islas de Canarias, en prealerta por fuertes lluvias",
@@ -32,6 +277,16 @@
    "img": "https://www.hoyaragon.es/media/hoyaragon/images/2026/10/06/2026100612483877934.jpg"
   },
   {
+   "t": "Fagor Professional busca al chef más creativo del mundo con World’s Creative Chef",
+   "u": "https://www.europapress.es/comunicados/empresas-00908/noticia-comunicado-fagor-professional-busca-chef-mas-creativo-mundo-worlds-creative-chef-20261006123814.html",
+   "s": "Europa Press",
+   "d": "2026-10-06T10:38:14.000Z",
+   "tags": [
+    "ALTA COCINA"
+   ],
+   "img": "https://img.europapress.es/fotoweb/fotonoticia_20261006123814_1200.jpg"
+  },
+  {
    "t": "La llegada de migrantes de forma irregular a Canarias cae un 44,5% hasta septiembre",
    "u": "https://www.eldiario.es/canariasahora/migraciones/llegada-migrantes-forma-irregular-canarias-cae-44-5-septiembre_1_13565706.html",
    "s": "elDiario.es",
@@ -40,260 +295,6 @@
     "CANARIAS"
    ],
    "img": "https://static.eldiario.es/clip/402385b7-ea2d-4baa-8c27-2e9e0b366389_facebook-aspect-ratio-1200-675_default_0.jpg"
-  },
-  {
-   "t": "Txinet, el pintxo con cochino negro, piña y piparra que hermana a Canarias con Euskadi",
-   "u": "https://diariodeavisos.elespanol.com/2026/10/txinet-pintxo-tenerife-donostia-gastronomika/",
-   "s": "Diario de Avisos",
-   "d": "2026-10-06T10:07:05.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://cdn.diariodeavisos.com/wp-content/uploads/2026/10/pINTXO-1.jpg"
-  },
-  {
-   "t": "«Queremos ser el espacio seguro y de referencia en cuanto a información de calidad sobre Gastronomía»",
-   "u": "https://rtvc.es/queremos-ser-el-espacio-seguro-y-de-referencia-en-cuanto-a-informacion-de-calidad-sobre-gastronomia-prensa-2026/",
-   "s": "Radio Televisión Canaria",
-   "d": "2026-10-06T10:00:30.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://cdn.rtvc.es/archivos/2026/10/88f90440-9333-427d-9c7e-5759ce4d69b9_source-aspect-ratio_320w_0.webp"
-  },
-  {
-   "t": "El hotel escondido de Costa da Morte que conquista a la Guía Repsol y tiene el mejor desayuno de España",
-   "u": "https://www.elcorreogallego.es/concellos/2026/10/06/hotel-costa-da-morte-guia-repsol-balares-mejor-desayuno-135048265.amp.html",
-   "s": "El Correo Gallego",
-   "d": "2026-10-06T09:57:56.000Z",
-   "tags": [
-    "MICHELIN"
-   ]
-  },
-  {
-   "t": "Primero Canarias y CC decidirán esta tarde ir juntos al 29-N",
-   "u": "https://www.eldiario.es/canariasahora/politica/canarias-cc-decidiran-tarde-29-n_1_13565530.html",
-   "s": "elDiario.es",
-   "d": "2026-10-06T09:47:15.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://static.eldiario.es/clip/e77925e5-3615-4b76-99c8-2e3ffc565521_facebook-aspect-ratio-1200-675_default_0_x982y204.jpg"
-  },
-  {
-   "t": "Relais & Châteaux Hotel Heritage Madrid recibe su primera Llave Michelin",
-   "u": "https://www.cruisesnews.es/2026/10/06/relais-chateaux-hotel-heritage-madrid-recibe-su-primera-llave-michelin/",
-   "s": "cruisesnews.es",
-   "d": "2026-10-06T09:45:23.000Z",
-   "tags": [
-    "MICHELIN"
-   ],
-   "img": "https://i0.wp.com/www.cruisesnews.es/wp-content/uploads/2026/10/hotel-1.jpg"
-  },
-  {
-   "t": "Un menú castizo, un local de barrio y un bocadillo de calamares de alta cocina: así es el restaurante del mejor chef de Madrid 2026",
-   "u": "https://www.infobae.com/espana/2026/10/06/un-menu-castizo-un-local-de-barrio-y-un-bocadillo-de-calamares-de-alta-cocina-asi-es-el-restaurante-del-mejor-chef-de-madrid-2026/",
-   "s": "Infobae",
-   "d": "2026-10-06T09:21:31.000Z",
-   "tags": [
-    "ALTA COCINA"
-   ],
-   "img": "https://www.infobae.com/resizer/v2/PFIYSFWK7FEETIVVH3BWM2OAPM.jpg?auth=bb5868b5cabed05e9eb71bfd6a84141eaeac37b795573229031cffe6fb2eb23a&smart=true&width=1200&height=630&quality=85"
-  },
-  {
-   "t": "Uno de los hoteles donde mejor se come de España está a una hora de Santiago: con una cocina oculta en un bosque y dos estrellas Michelin",
-   "u": "https://www.elcorreogallego.es/concellos/2026/10/06/pepe-vieira-hotel-mejor-come-espana-135029066.html",
-   "s": "El Correo Gallego",
-   "d": "2026-10-06T09:05:23.000Z",
-   "tags": [
-    "MICHELIN"
-   ]
-  },
-  {
-   "t": "Gran Canaria muestra en San Sebastián Gastronomika la diversidad de su cocina y el paisaje de sus vinos",
-   "u": "https://www.laprovincia.es/ocio/gastronomia/2026/10/06/gran-canaria-muestra-san-sebastian-135046457.amp.html",
-   "s": "La Provincia",
-   "d": "2026-10-06T08:05:38.000Z",
-   "tags": [
-    "CANARIAS",
-    "VINO"
-   ]
-  },
-  {
-   "t": "Vuelve Castes, con más días y más actividades",
-   "u": "https://laalacenaroja.es/vuelve-castes-con-mas-dias-y-mas-actividades/",
-   "s": "La Alacena Roja",
-   "d": "2026-10-06T08:04:10.000Z",
-   "tags": [
-    "VINO",
-    "CANARIAS"
-   ],
-   "img": "https://laalacenaroja.es/wp-content/uploads/2026/10/castes-scaled.jpg"
-  },
-  {
-   "t": "Gran Canaria, en San Sebastián Gastronomika",
-   "u": "https://www.laprovincia.es/fotos/sociedad/gastronomia/2026/10/06/gran-canaria-san-sebastian-gastronomika-135046638.html",
-   "s": "La Provincia",
-   "d": "2026-10-06T08:03:53.000Z",
-   "tags": [
-    "CANARIAS"
-   ]
-  },
-  {
-   "t": "El rincón de Gran Canaria que sorprende con sus platos: cocina casera y combinaciones diferentes",
-   "u": "https://www.laprovincia.es/gran-canaria/2026/10/06/rincon-gran-canaria-sorprende-platos-dv-135045745.html",
-   "s": "La Provincia",
-   "d": "2026-10-06T08:02:04.000Z",
-   "tags": [
-    "CANARIAS"
-   ]
-  },
-  {
-   "t": "Las lluvias se asientan en Canarias: esta es la previsión de Aemet para los próximos días",
-   "u": "https://www.eldiario.es/canariasahora/tiempo-canarias/lluvias-canarias-prevision-aemet-proximos-dias_1_13565054.html",
-   "s": "elDiario.es",
-   "d": "2026-10-06T07:31:10.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://static.eldiario.es/clip/0532ad62-4b0f-47de-ae13-685f681833b8_facebook-aspect-ratio-1200-675_default_0.jpg"
-  },
-  {
-   "t": "Los precursores, su alumno aventajado y el ilusionante futuro",
-   "u": "https://www.diariovasco.com/gastronomia/precursores-alumno-aventajado-ilusionante-futuro-20261006091631-nt.html",
-   "s": "El Diario Vasco",
-   "d": "2026-10-06T07:16:31.000Z",
-   "tags": [
-    "CHEF"
-   ],
-   "img": "https://s3.ppllstatics.com/diariovasco/www/multimedia/gastronomia/2026/10/05/martin-kIEF-U302079471529sb-1200x840@Diario%20Vasco.jpg"
-  },
-  {
-   "t": "El auténtico guachinche de Tenerife que solo abre unos meses al año: vino de cosecha propia y cocina canaria tradicional",
-   "u": "https://www.eldia.es/tenerife/2026/10/06/autentico-guachinche-tenerife-abre-meses-ano-dv-135044923.html",
-   "s": "El Día",
-   "d": "2026-10-06T07:12:47.000Z",
-   "tags": [
-    "CANARIAS",
-    "VINO"
-   ]
-  },
-  {
-   "t": "El bacalao español del siglo XV que triunfa entre los chefs de Ecuador",
-   "u": "https://www.elespanol.com/viajes/cocinillas-gastro/actualidad-gastronomica/20261006/bacalao-espanol-siglo-xv-triunfa-chefs-ecuador/1003744403842_0.html",
-   "s": "El Español",
-   "d": "2026-10-06T05:56:36.000Z",
-   "tags": [
-    "ALTA COCINA"
-   ],
-   "img": "https://s3.elespanol.com/k/imgp/cms/elespanol/11367021.jpg?p=f:jpeg/c:1024:727:nowe:0:299/w:1706/h:1211&h=DjbAozY8"
-  },
-  {
-   "t": "Martín Berasategui de niño: Imaginando ya su Milhojas caramelizado de foie, anguila y manzana y copiando mil veces la palabra «GARROTE",
-   "u": "https://www.diariovasco.com/san-sebastian/txispas/martin-berasategui-nino-imaginando-milhojas-caramelizado-foie-20261006072604-nt.html",
-   "s": "El Diario Vasco",
-   "d": "2026-10-06T05:26:04.000Z",
-   "tags": [
-    "CHEF"
-   ]
-  },
-  {
-   "t": "Berasategui y su gente cercana",
-   "u": "https://www.diariovasco.com/san-sebastian/berasategui-gente-cercana-20261006072431-nt_amp.html",
-   "s": "El Diario Vasco",
-   "d": "2026-10-06T05:24:31.000Z",
-   "tags": [
-    "CHEF"
-   ],
-   "img": "https://s3.ppllstatics.com/diariovasco/www/multimedia/local/2026/10/05/Imagen%20Homenaje%20a%20MARTIN039-U31844435803Ngs-1024x512@Diario%20Vasco.jpg"
-  },
-  {
-   "t": "Qué pasa cuando México y Gran Canaria se encuentran alrededor de una mesa",
-   "u": "https://www.canarias7.es/gastronomia-c7/pasa-mexico-gran-canaria-encuentran-alrededor-mesa-20261006070000-nt.html",
-   "s": "Canarias7",
-   "d": "2026-10-06T05:00:24.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://s1.ppllstatics.com/canarias7/www/multimedia/gastronomia-c7/2026/10/05/IMG_2038-k98F-U302069868114Jz-1200x840@Canarias7.jpg"
-  },
-  {
-   "t": "Gran Canaria lleva a Gastronomika el espíritu de sus bares de siempre",
-   "u": "https://www.canarias7.es/gastronomia-c7/gran-canaria-lleva-gastronomika-espiritu-bares-siempre-20261006070000-nt.html",
-   "s": "Canarias7",
-   "d": "2026-10-06T05:00:00.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://s3.ppllstatics.com/canarias7/www/multimedia/gastronomia-c7/2026/10/05/portada-kduE-U3020748384694FC-1200x840@Canarias7.jpg"
-  },
-  {
-   "t": "San Sebastián Gastronomika rinde homenaje a la Nueva Cocina Vasca",
-   "u": "https://www.lavanguardia.com/comer/al-dia/20261006/11651229/san-sebastian-gastronomika-rinde-homenaje-nueva-cocina-vasca.amp.html",
-   "s": "La Vanguardia",
-   "d": "2026-10-06T04:00:00.000Z",
-   "tags": [
-    "ALTA COCINA"
-   ],
-   "img": "https://www.lavanguardia.com/files/og_thumbnail/files/fp/uploads/2026/10/05/6ac3e78773bd5.r_d.3104-1916-1933.jpeg"
-  },
-  {
-   "t": "El restaurante Los Naranjos se incorpora a la Guía Macarfi",
-   "u": "https://www.eldiasegovia.es/noticia/zf2273906-0707-477a-b08f0fda00d5ce6f/202610/el-restaurante-los-naranjos-se-incorpora-a-la-guia-macarfi",
-   "s": "El Día de Segovia",
-   "d": "2026-10-06T03:00:00.000Z",
-   "tags": [
-    "MICHELIN"
-   ],
-   "img": "https://www.eldiasegovia.es/media/IMG/2026/9097EB3B-D829-4589-A98D258629774227.JPG"
-  },
-  {
-   "t": "El restaurante gallego que recupera una legumbre casi olvidada y conquista a la ‘Guía Michelin’",
-   "u": "https://www.eldebate.com/espana/galicia/20261006/restaurante-gallego-recupera-legumbre-casi-olvidada-conquista-guia-michelin_465959.html",
-   "s": "El Debate",
-   "d": "2026-10-06T02:30:00.000Z",
-   "tags": [
-    "MICHELIN"
-   ],
-   "img": "https://www.eldebate.com/files/article_social/files/fp/uploads/2024/11/04/6728e9565e1d0.r_d.652-1036-0.jpeg"
-  },
-  {
-   "t": "El nuevo restaurante del chef de Lasarte en Barcelona rebaja un 15 % sus menús a los menores de 30",
-   "u": "https://www.eldebate.com/espana/cataluna/20261006/nuevo-restaurante-chef-lasarte-barcelona-rebaja-15-menus-menores-30_466368_amp.html",
-   "s": "El Debate",
-   "d": "2026-10-06T02:30:00.000Z",
-   "tags": [
-    "ALTA COCINA"
-   ],
-   "img": "https://www.eldebate.com/files/article_social/uploads/2026/10/05/6ac404e4763fd.webp"
-  },
-  {
-   "t": "El Cabildo de Tenerife eleva a 333.000 Euros su participación en San Sebastián Gastronomika",
-   "u": "https://www.libertaddigital.com/canarias/2026-10-06/el-cabildo-de-tenerife-eleva-333-000-euros-su-participacion-en-san-sebastian-gastronomika-7470934/",
-   "s": "libertaddigital.com",
-   "d": "2026-10-06T02:23:06.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://s1.staticld.com/2026/10/06/1200/675/screenshot-20261006-031853-com-android-chrome-chrometabbedactivity-edit-8077050689679.jpg"
-  },
-  {
-   "t": "La chispa que encendió la nueva cocina vasca, ovacionada en San Sebastián Gastronomika",
-   "u": "https://efe.com/pais-vasco/2026-10-05/san-sebastian-gastronomika-2/",
-   "s": "EFE - Agencia de noticias",
-   "d": "2026-10-06T01:21:45.000Z",
-   "tags": [
-    "CHEF"
-   ]
-  },
-  {
-   "t": "Tenerife y Euskadi estrechan lazos en Gastronomika 2026",
-   "u": "https://www.eldia.es/tenerife/2026/10/06/tenerife-euskadi-estrechan-lazos-gastronomika-135041462.amp.html",
-   "s": "El Día",
-   "d": "2026-10-05T23:50:00.000Z",
-   "tags": [
-    "CANARIAS"
-   ]
   }
  ]
 }
