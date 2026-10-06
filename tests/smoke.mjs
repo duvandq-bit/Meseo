@@ -10806,6 +10806,10 @@ test('Multi-restaurante: ninguna consulta se escapa del filtro de restaurante', 
     // base; el restaurante lo fija el alta y el cliente no debe pisarlo.
     ['employees?on_conflict=name', 'upsert de la ficha propia, por clave'],
     ['employees', 'upsert de la ficha propia, por clave'],
+    // La carta privada de un restaurante: `venue` es su clave primaria y quién
+    // la lee lo decide RLS en public.cartas con la identidad del token (sin
+    // sesión no hay fila). El filtro del cliente no autoriza nada.
+    ['cartas', 'carta privada: por clave (venue) y autorizada por RLS en el servidor'],
   ]);
   const lineas = html.split('\n');
   const sueltas = [];
@@ -15841,6 +15845,194 @@ test('S3-A · el cron se identifica con la clave de Vault, nunca escrita', () =>
   assert(/from vault\.decrypted_secrets where name = 'service_role_key'/.test(m), 'el cron tiene que leer la clave de Vault');
   assert(/raise exception 'Falta el secreto service_role_key/.test(m), 'sin secreto la migración tiene que fallar, no dejar el cron con cabecera vacía');
   assert(!/eyJ[A-Za-z0-9_-]{10,}|sb_secret_/.test(m), 'hay una clave escrita en la migración');
+});
+
+// ═══ RESTAURANTES INDEPENDIENTES · el primero nuevo es «Restaurante 2» ═══
+// La carta de otro restaurante llega del servidor (public.cartas, con RLS),
+// sus números de plato viven en un bloque propio, y mientras cocina no valide
+// sus alérgenos sólo la abre la cuenta de administración, en modo revisión.
+// Txoko no pasa por nada de esto: su comportamiento es el contrato.
+console.log('\nRestaurantes independientes');
+const _r2Res = await (async () => {
+  const src = html.slice(html.indexOf('let _cartaPuesta = _VENUE_POR_DEFECTO;'),
+                         html.indexOf('// Derivación automática:'));
+  if (src.length < 500) return { roto: 'no encuentro el cargador de cartas' };
+  const THEMES = JSON.parse(read('data/themes.json'));
+  const monta = ({ esAdmin = false, token = 'tok', privada = null, estatica = null } = {}) => {
+    const D = [], DE = [], DC = {}, DA = {}, DS = {};
+    const BASE = { DISHES:[{id:12,name:'Jamón',cat:'Entrantes'}], DISHES_EN:[{id:12,name:'Ham'}],
+                   DISH_COMPONENTS:{12:[]}, DISH_ACTIONS:{12:{}}, DISH_SERVICE:{12:'c'}, allergensValidated:true };
+    const pedidas = [];
+    const cache = new Map([['12|es', ['de Txoko']]]);
+    const vistos = [12];
+    const estado = { gs: [{ id: 12 }], fotos: { 12: 'img/txoko.webp' }, pend: new Set([12]) };
+    const fetchT = async (url) => { pedidas.push(url);
+      if (privada === 'red') throw new Error('Failed to fetch');
+      return { ok: true, status: 200, json: async () => privada ? [{ venue: privada.venue, formato: 2, contenido: privada }] : [] }; };
+    const loadLazyData = () => estatica ? Promise.resolve(estatica) : Promise.reject(new Error('HTTP 404'));
+    const F = new Function('DISHES','DISHES_EN','DISH_COMPONENTS','DISH_ACTIONS','DISH_SERVICE', // eslint-disable-line no-new-func
+      '_CARTA_BASE','_VENUE_POR_DEFECTO','_esAdmin','loadLazyData','showToast','LANG','THEMES',
+      'fetchT','SUPA_URL','SUPA_KEY','_authCtx','_PASE_FICHAS_CACHE','_paseVistos','_E',
+      'var _gsDishIdx=_E.gs, DISH_PHOTOS=_E.fotos, DISH_PHOTO_PENDING=_E.pend;\n' + src +
+      '; return { cargarCarta, info: () => _cartaInfo(), validados: () => _alergenosValidados(),' +
+      ' ids: () => DISHES.map(d=>d.id), cachés: () => ({ gs:_gsDishIdx, fotos:DISH_PHOTOS, pend:DISH_PHOTO_PENDING }),' +
+      ' idsValidos: _cartaIdsValidos };');
+    const api = F(D, DE, DC, DA, DS, BASE, 'txoko', () => esAdmin, loadLazyData, () => {}, 'es', THEMES,
+      fetchT, 'https://x', 'k', () => ({ token }), cache, vistos, estado);
+    return Object.assign(api, { pedidas, cache, vistos });
+  };
+  const carta = (venue, ids, extra) => Object.assign({ venue, CATS:[{es:'Fríos',en:'Cold'}],
+    DISHES: ids.map(id => ({ id, name:'P' + id, cat:'Fríos', allergens:[] })),
+    DISHES_EN: ids.map(id => ({ id, name:'D' + id })), DISH_COMPONENTS:{}, DISH_ACTIONS:{} }, extra || {});
+  const out = {};
+  // Administración: la carta privada se abre en revisión, con sus categorías
+  const a = monta({ esAdmin:true, privada: carta('r2', [3001, 3002]) });
+  out.admin = await a.cargarCarta('r2');
+  out.adminIds = a.ids(); out.adminInfo = a.info(); out.adminValidados = a.validados();
+  out.adminPidio = a.pedidas.slice(); out.cachés = a.cachés(); out.cache = a.cache.size; out.vistos = a.vistos.length;
+  // …y al volver a Txoko, Txoko entera y validada
+  out.vuelta = await a.cargarCarta('txoko'); out.vueltaIds = a.ids(); out.vueltaValidados = a.validados();
+  out.vueltaInfoCats = (a.info().CATS || null);
+  // Personal: con alérgenos sin validar no se abre, aunque el servidor la diera
+  const s = monta({ esAdmin:false, privada: carta('r2', [3001]) });
+  out.staff = await s.cargarCarta('r2'); out.staffIds = s.ids();
+  // Personal con carta YA validada: sí se abre
+  const sv = monta({ esAdmin:false, privada: carta('r2', [3001], { allergensValidated:true }) });
+  out.staffValidada = await sv.cargarCarta('r2'); out.staffValidadaV = sv.validados();
+  // Números fuera de su bloque, o de Txoko: no entra
+  out.fueraBloque = await monta({ esAdmin:true, privada: carta('r2', [3001, 4001]) }).cargarCarta('r2');
+  out.deTxoko = await monta({ esAdmin:true, privada: carta('r2', [12]) }).cargarCarta('r2');
+  // La carta de otro restaurante servida para éste: no entra
+  out.ajena = await monta({ esAdmin:true, privada: carta('mb', [3001]) }).cargarCarta('r2');
+  // Sin sesión real no se pregunta al servidor (y una carta pública no existe)
+  const sin = monta({ esAdmin:true, token:null, privada: carta('r2', [3001]) });
+  out.sinSesion = await sin.cargarCarta('r2'); out.sinSesionPidio = sin.pedidas.length;
+  // Fallo de red: se falla cerrado, no se abre vacío
+  out.red = await monta({ esAdmin:true, privada:'red' }).cargarCarta('r2');
+  out.idsValidos = a.idsValidos;
+  return out;
+})();
+
+test('Restaurantes: cada bloque de números es de un restaurante, y no se reutiliza', () => {
+  const reg = JSON.parse(read('data/themes.json'));
+  const bloques = reg.venues.filter(v => v.id !== 'plantilla' && v.dishIds).map(v => [v.id, v.dishIds]);
+  for (const [id, b] of bloques)
+    assert(Number.isInteger(b.from) && Number.isInteger(b.to) && b.from <= b.to, `${id}: bloque mal formado`);
+  for (let i = 0; i < bloques.length; i++) for (let j = i + 1; j < bloques.length; j++) {
+    const [x, a] = bloques[i], [y, b] = bloques[j];
+    assert(a.to < b.from || b.to < a.from, `los bloques de ${x} y ${y} se solapan`);
+  }
+  // Los bloques ya asignados no se mueven ni desaparecen (un restaurante que
+  // se retira se queda en el registro con enabled:false).
+  const ASIGNADOS = { txoko:[1, 2999], r2:[3000, 3999] };
+  for (const [id, [f, t]] of Object.entries(ASIGNADOS)) {
+    const v = reg.venues.find(x => x.id === id);
+    assert(v && v.dishIds && v.dishIds.from === f && v.dishIds.to === t, `el bloque de ${id} (${f}–${t}) no puede cambiar`);
+  }
+  const pl = reg.venues.find(v => v.id === 'plantilla');
+  assert(pl && 'dishIds' in pl, 'la plantilla tiene que traer dishIds para el siguiente restaurante');
+  // Los platos de Txoko caen dentro de su bloque
+  const ids = [...html.matchAll(/\{id:(\d+),cat:'/g)].map(m => +m[1]);
+  assert(ids.length > 50 && ids.every(i => i >= 1 && i <= 2999), 'hay un plato de Txoko fuera de su bloque');
+});
+
+test('Restaurantes: la carta privada llega del servidor y entra en modo revisión', () => {
+  const R = _r2Res; assert(!R.roto, R.roto);
+  assert(R.admin === true && R.adminIds.join() === '3001,3002', 'la administración tiene que poder abrir la carta privada');
+  assert(R.adminPidio.length === 1 && /rest\/v1\/cartas\?venue=eq\.r2/.test(R.adminPidio[0]), 'la carta se pide a public.cartas');
+  assert(R.adminValidados === false && R.adminInfo.allergensValidated === false, 'sin declararlo, una carta no tiene los alérgenos validados');
+  assert(R.adminInfo.CATS && R.adminInfo.CATS[0].es === 'Fríos', 'las categorías son las de la carta');
+  assert(R.staff === false && R.staffIds.join() === '', 'el personal no abre una carta con alérgenos sin validar');
+  assert(R.staffValidada === true && R.staffValidadaV === true, 'una carta validada sí la abre su personal');
+  assert(R.fueraBloque === false, 'un número fuera del bloque del restaurante no entra');
+  assert(R.deTxoko === false, 'un número de Txoko no entra en la carta de otro restaurante');
+  assert(R.ajena === false, 'la carta de otro restaurante no se pone');
+  assert(R.sinSesion === 'vacia' && R.sinSesionPidio === 0, 'sin sesión real no se pregunta al servidor y no hay carta pública');
+  assert(R.red === false, 'un fallo de red falla cerrado');
+});
+
+test('Restaurantes: al cambiar de carta se tiran las cachés por número de plato', () => {
+  const R = _r2Res; assert(!R.roto, R.roto);
+  // Medido en oct 2026: El Pase servía al 12 nuevo las fichas del 12 de Txoko.
+  assert(R.cache === 0 && R.vistos === 0, 'la caché de El Pase y los platos vistos se vacían');
+  assert(R.cachés.gs === null && R.cachés.fotos === null && R.cachés.pend === null,
+    'el buscador y las fotos se recargan con la carta nueva');
+});
+
+test('Restaurantes: volver a Txoko deja Txoko exactamente como estaba', () => {
+  const R = _r2Res; assert(!R.roto, R.roto);
+  assert(R.vuelta === true && R.vueltaIds.join() === '12', 'al volver, la carta de Txoko');
+  assert(R.vueltaValidados === true, 'Txoko tiene sus alérgenos validados');
+  // _cartaInfo() de Txoko es la de siempre: sus categorías, en su orden
+  const m = html.match(/_CARTA_BASE\.CATS = CATS_ES\.map\(\(es, i\) => \(\{ es, en: CATS_EN\[i\] \}\)\);/);
+  assert(m, 'las categorías de Txoko salen de CATS_ES/CATS_EN, sin tocarlas');
+});
+
+test('Restaurantes: _cartaIdsValidos', () => {
+  const f = _r2Res.idsValidos; assert(typeof f === 'function', 'no encuentro _cartaIdsValidos');
+  const b = { from:3000, to:3999 }, tx = new Set([12]);
+  assert(f([3001, 3075], b, tx) === true, 'dentro del bloque');
+  assert(f([3001, 3001], b, tx) === false, 'números repetidos');
+  assert(f([2999], b, tx) === false && f([4000], b, tx) === false, 'fuera del bloque');
+  assert(f([3001, '3002'], b, tx) === false, 'un número que no es entero');
+  assert(f([], b, tx) === false, 'carta sin platos');
+  assert(f([9], null, tx) === true && f([12], null, tx) === false, 'sin bloque declarado, al menos no puede ser de Txoko');
+});
+
+test('Restaurantes: con alérgenos sin validar no se pregunta, puntúa ni registra nada de alérgenos', () => {
+  const G = "(typeof _alergenosValidados!=='function'||_alergenosValidados())";
+  const fn = n => { const i = html.indexOf('function ' + n + '('); return i < 0 ? '' : html.slice(i, html.indexOf('\n}', i)); };
+  const exige = (n, txt) => assert(fn(n).includes(txt), `${n} tiene que mirar si los alérgenos están validados`);
+  exige('_paseAlergiasPosibles', G); exige('_paseNivel', G); exige('_paseRailHTML', G);
+  exige('_paseRegistrarAlergia', G); exige('_isDishQuizableForTopic', G); exige('txBuildQuestion', G);
+  exige('_dqQuestion', G); exige('_djGenerateQuiz', G); exige('_adaptiveRecord', G);
+  exige('_startSmartSession', '_alergenosCerrados'); exige('startAllergenTest', '_alergenosCerrados');
+  exige('renderSmartReview', G); exige('_anotarEnDiario', "competency === 'alergenos'");
+  assert(/const al=ocultarAl \? '' : !\(typeof _alergenosValidados/.test(fn('_paseChip')), 'las fichas de El Pase sin insignias');
+  assert(/alergenos: \(typeof _alergenosValidados!=='function'\|\|_alergenosValidados\(\)\)/.test(html), 'el plan sabe si hay alérgenos que entrenar');
+  // Nunca se afirma una ausencia con el borrador
+  assert(/if\(key === 'noAllergens' && !\(typeof _alergenosValidados/.test(html), 't(noAllergens) no dice «sin alérgenos» con el borrador');
+});
+
+test('Restaurantes: el plan de hoy no manda a entrenar alérgenos que no están validados', () => {
+  const { planDeHoy } = _planM;
+  const sinAl = planDeHoy(_planBase({ alergenosMejor: 0, alergenosFallosRecientes: 3,
+    disponibles: { alergenos:false, carta:true, protocolo:true } }));
+  assert(!sinAl.tareas.some(t => /alergenos/.test(t.id)), 'con alergenos:false no puede salir ninguna tarea de alérgenos: ' + sinAl.tareas.map(t => t.id));
+  const conAl = planDeHoy(_planBase({ alergenosMejor: 0 }));
+  assert(conAl.tareas[0].id === 'seguridad_alergenos', 'en Txoko la seguridad sigue yendo primera');
+});
+
+test('Restaurantes: el modo revisión guarda aparte y no sale a la nube', () => {
+  const ge = html.slice(html.indexOf('function getEmp(name){'), html.indexOf('function getEmp(name){') + 400);
+  assert(/_modoRevision\(\)\) return _perfilRevision\(name\);/.test(ge), 'en revisión, getEmp da el perfil de revisión');
+  assert(/DB\.revision\[k\]/.test(html) && /const k = _cartaPuesta \+ '\|' \+ name;/.test(html), 'un perfil por carta y persona');
+  const ra = html.slice(html.indexOf('async function registrarActividad(a){'), html.indexOf('async function registrarActividad(a){') + 2200);
+  assert(/if\(_soloLocal\) return false;/.test(ra), 'en revisión no se envía actividad a la nube');
+  assert(/function _dishPhotoPick\(dishId\)\{[\s\S]{0,300}_modoRevision\(\)/.test(html), 'en revisión no se suben fotos');
+});
+
+test('Restaurantes: la carta privada vive en el servidor, nunca en data/', () => {
+  const m = read('supabase/cartas_privadas.sql');
+  assert(/enable row level security/.test(m), 'public.cartas con RLS');
+  assert(/revoke all on table public\.cartas from public, anon, authenticated;/.test(m), 'anon sin permisos');
+  assert(/revoke all on table public\.cartas from service_role;/.test(m), 'service_role sin permisos');
+  assert(/grant select on table public\.cartas to authenticated;/.test(m) && !/grant (insert|update|delete)/i.test(m), 'la app sólo lee');
+  assert(/using \( venue = \(select app\.venue_actual\(\)\)\s*or \(select app\.rol_actual\(\)\) = 'admin' \)/.test(m),
+    'la lee su restaurante o la administración, según el servidor');
+  assert(/contenido->>'venue' = venue/.test(m), 'la carta declara de quién es');
+  const datos = readdirSync(join(ROOT, 'data'));
+  assert(!datos.includes('carta-r2.json'), 'la carta de Restaurante 2 no puede ser un archivo público');
+});
+
+test('Restaurantes: el nombre del restaurante real no aparece en la app ni en sus datos', () => {
+  // Sin autorización todavía para usar su nombre: dentro de la app es
+  // «Restaurante 2». Se revisan los archivos que se publican.
+  const publicos = ['index.html', 'sw.js', 'data/themes.json', 'manifest.json'];
+  for (const f of publicos) assert(!/akira/i.test(read(f)), `${f} nombra al restaurante real`);
+  for (const f of readdirSync(join(ROOT, 'docs'))) assert(!/akira/i.test(f), `docs/${f} nombra al restaurante real`);
+  const r2 = JSON.parse(read('data/themes.json')).venues.find(v => v.id === 'r2');
+  assert(r2 && r2.enabled === false && r2.name === 'Restaurante 2', 'Restaurante 2 sigue cerrado y con nombre neutro');
 });
 
 console.log('\nHygiene');

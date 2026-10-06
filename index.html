@@ -52,7 +52,7 @@
 <meta property="og:description" content="Formación de equipos de sala: carta, alérgenos, vinos, exámenes y juegos de repaso.">
 <meta property="og:url" content="https://meseo.es/">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"Meseo","url":"https://meseo.es/"}</script>
-<meta name="app-version" content="7.471">
+<meta name="app-version" content="7.472">
 <meta name="app-build" content="May 2026">
 <meta name="theme-color" content="#1c2a22">
 <!-- ═══ PWA ═══ -->
@@ -838,6 +838,8 @@ const T = {
 };
 
 function t(key, ...args) {
+  // Con una carta en borrador nunca se afirma que un plato no lleva alérgenos.
+  if(key === 'noAllergens' && !(typeof _alergenosValidados!=='function'||_alergenosValidados())) return ((typeof _alergenosValidados!=='function'||_alergenosValidados())?(''):_sinAlergenosTxt('', LANG==='en')) + '.';
   const val = T[LANG][key];
   if (typeof val === 'function') return val(...args);
   return val || T['es'][key] || key;
@@ -2251,9 +2253,117 @@ const _CARTA_BASE = {
   DISHES: DISHES.slice(),
   DISHES_EN: DISHES_EN.slice(),
   DISH_COMPONENTS: Object.assign({}, DISH_COMPONENTS),
-  DISH_ACTIONS: Object.assign({}, DISH_ACTIONS)
+  DISH_ACTIONS: Object.assign({}, DISH_ACTIONS),
+  // La carta de Txoko es la única con los alérgenos validados por cocina desde
+  // el principio. Cualquier otra lo tiene que DECLARAR (allergensValidated:
+  // true); si no lo declara, vale false. Fallo cerrado.
+  allergensValidated: true
 };
 let _cartaPuesta = _VENUE_POR_DEFECTO;
+
+// ═══ LO QUE LA CARTA DICE DE SÍ MISMA ═══════════════════════════════════════
+// Mientras no se aplica ninguna carta (el caso de todo el equipo de Txoko, que
+// nunca cambia de carta) esto vale null y manda la de Txoko: `_cartaInfo()`
+// devuelve exactamente lo de siempre. Sólo existe para que otra carta pueda
+// traer sus propias categorías y su estado de alérgenos.
+// `var` y no `let`: t() puede preguntar por los alérgenos antes de que el
+// arranque llegue a esta línea, y con `let` eso sería un error de TDZ.
+var _cartaMeta = null;
+function _cartaInfo(){
+  if(_cartaMeta) return _cartaMeta;
+  let cats = null; try{ cats = _CARTA_BASE.CATS || null; }catch(e){ cats = null; }
+  return { venue:'txoko', allergensValidated:true, CATS:cats };
+}
+function _alergenosValidados(){ return _cartaInfo().allergensValidated === true; }
+// Con una carta cuyos alérgenos cocina NO ha validado (sólo la abre la cuenta de
+// administración, ver _cartaAceptar):
+//   · se ven, siempre con el aviso de borrador;
+//   · nunca se afirma una ausencia («sin alérgenos»): puede ser que falte el dato;
+//   · no se preguntan, no se puntúan y no se registran.
+// Con la de Txoko (validada) todo esto devuelve exactamente lo de siempre.
+function _alergenosAvisoHTML(_en){
+  if(_alergenosValidados()) return '';
+  return `<div role="note" style="margin:.4rem 0;padding:.45rem .6rem;border:1px solid #c0703a;border-radius:8px;background:rgba(192,112,58,.12);color:#8a4a1e;font-family:'DM Mono',monospace;font-size:.62rem;line-height:1.4">⚠ ${_en
+    ?'Allergens NOT validated by the kitchen yet — draft for review, never for a guest.'
+    :'Alérgenos SIN validar por cocina — borrador para revisar, nunca para un cliente.'}</div>`;
+}
+function _sinAlergenosTxt(original, _en){
+  if(_alergenosValidados()) return original;
+  return _en ? 'Allergens pending kitchen validation' : 'Alérgenos pendientes de validar por cocina';
+}
+// Para las actividades que SON de alérgenos (simulacro, repaso inteligente,
+// fase de la alergia de El Pase…): con el borrador no se abren.
+function _alergenosCerrados(){
+  if(_alergenosValidados()) return false;
+  try{
+    showToast(LANG==='en'
+      ? 'This menu’s allergens are not validated by the kitchen yet: there is nothing to practise or score.'
+      : 'Los alérgenos de esta carta aún no los ha validado cocina: no hay nada que practicar ni puntuar.',
+      'warning', 5000);
+  }catch(e){}
+  return true;
+}
+
+// Las cachés que cuelgan de un número de plato se tiran al cambiar de carta.
+// Medido en la auditoría de oct 2026: tras pasar de Txoko a otra carta en la
+// misma sesión, El Pase servía al plato 12 nuevo los ingredientes —y los
+// alérgenos— del 12 de Txoko, y el buscador seguía enseñando la carta vieja.
+function _cartaCachesFuera(){
+  try{ if(typeof _PASE_FICHAS_CACHE!=='undefined') _PASE_FICHAS_CACHE.clear(); }catch(e){}
+  try{ if(typeof _gsDishIdx!=='undefined') _gsDishIdx = null; }catch(e){}
+  try{ if(typeof DISH_PHOTOS!=='undefined') DISH_PHOTOS = null; }catch(e){}
+  try{ if(typeof DISH_PHOTO_PENDING!=='undefined') DISH_PHOTO_PENDING = null; }catch(e){}
+  try{ if(typeof _paseVistos!=='undefined') _paseVistos.length = 0; }catch(e){}
+}
+
+// Mientras la carta puesta tenga los alérgenos sin validar, toda la app lo
+// dice en una franja fija: nadie puede confundir el borrador con la carta real.
+function _cartaFranjaSync(){
+  try{
+    if(typeof document === 'undefined' || !document.body) return;
+    let el = document.getElementById('cartaBorradorFranja');
+    if(_alergenosValidados()){ if(el) el.remove(); return; }
+    if(!el){
+      el = document.createElement('div');
+      el.id = 'cartaBorradorFranja';
+      el.setAttribute('role','status');
+      el.style.cssText = 'position:fixed;left:0;right:0;top:0;z-index:99999;pointer-events:none;'
+        + 'padding:calc(env(safe-area-inset-top,0px) + 2px) 10px 2px;background:#8a4a1e;color:#fff;'
+        + "font:600 10px/1.4 'DM Mono',monospace;text-align:center;letter-spacing:.02em";
+      document.body.appendChild(el);
+    }
+    el.textContent = LANG==='en'
+      ? 'REVIEW · allergens not validated by the kitchen · not for guests'
+      : 'REVISIÓN · alérgenos sin validar por cocina · no usar con clientes';
+  }catch(e){}
+}
+
+// ═══ NÚMEROS DE PLATO: UN BLOQUE POR RESTAURANTE ════════════════════════════
+// Regla de negocio: un bloque asignado a un restaurante no se reutiliza nunca,
+// tampoco cuando el restaurante se retira. Así ningún dato guardado por número
+// de plato —SRS, fallos de El Pase, fotos, platos conocidos— puede caer en el
+// plato de otro restaurante. Los bloques viven en data/themes.json (dishIds).
+// Pura a propósito: se prueba sin navegador.
+// Si el restaurante declara bloque, todos sus números tienen que caer dentro.
+// Si todavía no lo declara (M.B. hoy), como mínimo ninguno puede ser de Txoko.
+function _cartaIdsValidos(ids, bloque, ajenos){
+  if(!Array.isArray(ids) || !ids.length) return false;
+  const conBloque = !!(bloque && Number.isInteger(bloque.from) && Number.isInteger(bloque.to));
+  const vistos = new Set();
+  for(const id of ids){
+    if(!Number.isInteger(id)) return false;
+    if(conBloque && (id < bloque.from || id > bloque.to)) return false;
+    if(vistos.has(id) || (ajenos && ajenos.has(id))) return false;
+    vistos.add(id);
+  }
+  return true;
+}
+function _bloqueDe(venue){
+  try{
+    const v = (THEMES && Array.isArray(THEMES.venues) ? THEMES.venues : []).find(x => x && x.id === venue);
+    return (v && v.dishIds) || null;
+  }catch(e){ return null; }
+}
 
 function _cartaAplicar(c){
   if(!c || !Array.isArray(c.DISHES) || !c.DISHES.length) return false;
@@ -2271,6 +2381,13 @@ function _cartaAplicar(c){
   // vacía, y sin tabla todo es 'ambos': no se esconde nada.
   for(const k of Object.keys(DISH_SERVICE)) delete DISH_SERVICE[k];
   Object.assign(DISH_SERVICE, c.DISH_SERVICE || {});
+  _cartaMeta = (c === _CARTA_BASE) ? null : {
+    venue: c.venue || null,
+    allergensValidated: c.allergensValidated === true,
+    CATS: (Array.isArray(c.CATS) && c.CATS.length) ? c.CATS : null
+  };
+  _cartaCachesFuera();
+  _cartaFranjaSync();
   return true;
 }
 
@@ -2283,6 +2400,42 @@ function _cartaVaciar(){
   for(const k of Object.keys(DISH_COMPONENTS)) delete DISH_COMPONENTS[k];
   for(const k of Object.keys(DISH_ACTIONS)) delete DISH_ACTIONS[k];
   for(const k of Object.keys(DISH_SERVICE)) delete DISH_SERVICE[k];
+  _cartaMeta = { venue:null, allergensValidated:false, CATS:[] };
+  _cartaCachesFuera();
+  _cartaFranjaSync();
+}
+
+// La carta de otro restaurante pasa estas comprobaciones antes de ponerse, venga
+// del servidor o de data/. Lanza si algo no cuadra: quien llama falla cerrado.
+function _cartaAceptar(carta, venue){
+  // El archivo declara de quién es. Si no coincide, se rechaza: soltar la
+  // carta equivocada en la carpeta no puede acabar en enseñarla.
+  if(!carta || carta.venue !== venue) throw new Error('carta ajena');
+  const ids = (Array.isArray(carta.DISHES) ? carta.DISHES : []).map(d => d && d.id);
+  const deTxoko = new Set(_CARTA_BASE.DISHES.map(d => d.id));
+  if(!_cartaIdsValidos(ids, _bloqueDe(venue), deTxoko)) throw new Error('numeros fuera de bloque');
+  // Unos alérgenos que cocina no ha validado no se le enseñan al equipo. Sólo
+  // la cuenta de administración —la que existe para revisar contenido— puede
+  // abrir una carta así, y la ve marcada como borrador en toda la app.
+  if(carta.allergensValidated !== true && !_esAdmin()) throw new Error('alergenos sin validar');
+  if(!_cartaAplicar(carta)) throw new Error('carta vacía');
+}
+
+// null = el servidor no tiene carta para este restaurante o no deja leerla (la
+// tabla aún no existe, o RLS no devuelve fila). Lanza si no se pudo preguntar.
+async function _cartaPrivada(venue){
+  let token = null;
+  try{ token = (typeof _authCtx === 'function') ? _authCtx().token : null; }catch(e){ token = null; }
+  if(!token) return null;   // sin sesión real, RLS no puede dejar leer nada
+  const res = await fetchT(`${SUPA_URL}/rest/v1/cartas?venue=eq.${encodeURIComponent(venue)}`,
+    { headers:{ 'apikey':SUPA_KEY, 'Authorization':`Bearer ${token}` } }, 9000);
+  if(res.status === 404) return null;
+  if(!res.ok) throw new Error('carta privada ' + res.status);
+  const filas = await res.json();
+  const f = Array.isArray(filas) ? filas[0] : null;
+  if(!f) return null;
+  if(!(Number(f.formato) >= 2)) throw new Error('formato de carta desconocido');
+  return f.contenido || null;
 }
 
 // Devuelve false si NO se pudo dejar puesta la carta del restaurante que toca.
@@ -2303,13 +2456,34 @@ async function cargarCarta(venue){
     _cartaPuesta = _VENUE_POR_DEFECTO;
     return true;
   }
+  // Primero la carta PRIVADA, que sirve el servidor. data/ es público —es la
+  // web— y una carta que todavía no se puede enseñar no puede vivir ahí. Quién
+  // la lee lo decide RLS en public.cartas, no este móvil: sin sesión real, o
+  // sin permiso, la respuesta es una lista vacía. Y una versión antigua de la
+  // app no la pide nunca: busca data/carta-<venue>.json, no lo encuentra y se
+  // cierra, así que no puede enseñar unos alérgenos cuyo estado no entiende.
+  try{
+    const privada = await _cartaPrivada(venue);
+    if(privada){
+      if(privada.venue !== venue) throw new Error('carta ajena');
+      _cartaAceptar(privada, venue);
+      _cartaPuesta = venue;
+      return true;
+    }
+  }catch(e){
+    if(typeof showToast === 'function') showToast(LANG==='en'
+      ? 'Could not load your restaurant’s menu. Check your connection and try again.'
+      : 'No se ha podido cargar la carta de tu restaurante. Comprueba la conexión e inténtalo otra vez.',
+      'error', 7000);
+    return false;
+  }
   const ruta = 'data/carta-' + encodeURIComponent(venue) + '.json';
   try{
     const carta = await loadLazyData(ruta, LANG==='en' ? 'the menu' : 'la carta', {silent:true});
     // El archivo declara de quién es. Si no coincide, se rechaza: soltar la
     // carta equivocada en la carpeta no puede acabar en enseñarla.
     if(!carta || carta.venue !== venue) throw new Error('carta ajena');
-    if(!_cartaAplicar(carta)) throw new Error('carta vacía');
+    _cartaAceptar(carta, venue);
     _cartaPuesta = venue;
     return true;
   }catch(e){
@@ -2407,12 +2581,17 @@ const ALLERGEN_MAP={
 function allergenLocal(a){return LANG==='en'?(ALLERGEN_MAP[a]||a):a;}
 
 
-const getCats=()=>{
-  const all=LANG==='en'?CATS_EN:CATS_ES;
-  return all.filter((_,i)=>DISHES.some(d=>d.cat===CATS_ES[i]));
-};
-const catEs=(c)=>{const i=CATS_EN.indexOf(c);return i>=0?CATS_ES[i]:c;};
-const catEn=(c)=>{const i=CATS_ES.indexOf(c);return i>=0?CATS_EN[i]:c;};
+// LAS CATEGORÍAS SON DE LA CARTA. CATS_ES/CATS_EN son las de Txoko y siguen
+// siendo exactamente eso; otra carta trae las suyas en `CATS` ([{es, en}], en
+// el orden en que se enseñan). Con ellas solo se reconocía «Postres» en una
+// carta ajena y el selector del examen mandaba «Entrantes» al pulsar «Postres».
+_CARTA_BASE.CATS = CATS_ES.map((es, i) => ({ es, en: CATS_EN[i] }));
+function _catsCarta(){ return _cartaInfo().CATS || _CARTA_BASE.CATS; }
+// Las que tienen algún plato, en el orden de la carta.
+function _catsActivas(){ return _catsCarta().filter(c => DISHES.some(d => d.cat === c.es)); }
+const getCats=()=>_catsActivas().map(c => LANG==='en' ? (c.en || c.es) : c.es);
+const catEs=(c)=>{const x=_catsCarta().find(k=>k.en===c);return x?x.es:c;};
+const catEn=(c)=>{const x=_catsCarta().find(k=>k.es===c);return x?(x.en||x.es):c;};
 const catLocal=(c)=>LANG==='en'?catEn(c):c;
 const CAT_COLORS={'Entrantes':'#c49a3c','Hamburguesas y Bocatas':'#b86050','Platos Principales':'#4888a0','Guarniciones y Salsas':'#4d8a5e','Postres':'#7a6aaa','Vegetariano':'#5a9a6e','Sugerencias':'#d4aa4c'};
 const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#c49a3c"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#a47a2c" opacity=".4"/><path d="M8 8v4a1 1 0 001 1h1v4M10 8v4" stroke="#fff" stroke-width="1.2" stroke-linecap="round" fill="none"/><path d="M15 8v8M14 8v3a1.5 1.5 0 003 0V8" stroke="#fff" stroke-width="1.2" stroke-linecap="round" fill="none"/></svg>`,'Hamburguesas y Bocatas':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#b86050"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#983838" opacity=".4"/><path d="M7 9h10M7 12h10M7 15h10" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/><path d="M8 9c0-2 2-3 4-3s4 1 4 3M8 15c0 2 2 3 4 3s4-1 4-3" fill="none" stroke="#fff" stroke-width="1" opacity=".7"/></svg>`,'Platos Principales':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#4888a0"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#2e6878" opacity=".4"/><path d="M5 15h14" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/><path d="M12 6a6 6 0 016 6H6a6 6 0 016-6z" fill="none" stroke="#fff" stroke-width="1.1"/><circle cx="10" cy="6" r=".7" fill="#fff" opacity=".7"/><circle cx="12" cy="5" r=".7" fill="#fff" opacity=".7"/><circle cx="14" cy="6" r=".7" fill="#fff" opacity=".7"/></svg>`,'Sugerencias':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#d4aa4c"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#a48a2c" opacity=".4"/><polygon points="12,5 14.5,10 20,10.5 16,14 17,20 12,17 7,20 8,14 4,10.5 9.5,10" fill="#fff" opacity=".9"/></svg>`,'Guarniciones y Salsas':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#4d8a5e"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#2d6a3e" opacity=".4"/><path d="M12 18V10M5 10c0-4 3-6 7-6s7 2 7 6c0 5-3 8-7 8s-7-3-7-8z" fill="none" stroke="#fff" stroke-width="1.1"/><path d="M5 10c3 0 5 1 7 2.5" fill="none" stroke="#fff" stroke-width=".8" opacity=".6"/></svg>`,'Postres':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#7a6aaa"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#5a4a8a" opacity=".4"/><path d="M9 19h6M12 12v7M7 6l2 4.5a3 3 0 006 0L17 6H7z" fill="none" stroke="#fff" stroke-width="1.1" stroke-linecap="round"/></svg>`,'Vegetariano':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#5a9a6e"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#3a7a4e" opacity=".4"/><path d="M9 18h6M12 18V10M12 10c0-3 2-5 5-5-.7 2.5-2.5 5-5 5zM12 10c0-3-2-5-5-5 .7 2.5 2.5 5 5 5z" fill="none" stroke="#fff" stroke-width="1.1" stroke-linecap="round"/></svg>`};
@@ -2434,7 +2613,7 @@ const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><p
 const SRC = 'src';
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='7.471';  // sincronizada con sw.js VERSION (guard de CI)
+const APP_VERSION='7.472';  // sincronizada con sw.js VERSION (guard de CI)
 const APP_BUILD='Jul 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;
@@ -3442,7 +3621,11 @@ function _evAlternarPanel(){
 async function registrarActividad(a){
   // La cuenta de administración no deja rastro, igual que en `scores`: está
   // para revisar contenido, no para aparecer en las métricas de nadie.
-  if(_esAdmin(currentUser)) return false;
+  // En modo revisión (la administración estudiando la carta de otro restaurante)
+  // se anota en el diario de su perfil de revisión —para que el plan de hoy
+  // funcione— y tampoco sale nada a la nube.
+  const _soloLocal = _esAdmin(currentUser);
+  if(_soloLocal && !(typeof _modoRevision === 'function' && _modoRevision())) return false;
   if(!currentUser) return false;
   const kind = a.kind;
   if(TIPOS_ACTIVIDAD.indexOf(kind) < 0){ dbgw('[actividad] tipo desconocido:', kind); return false; }
@@ -3461,6 +3644,7 @@ async function registrarActividad(a){
   // actividad ha ocurrido igual si el envío falla, y el móvil de un camarero en
   // mitad de un servicio se queda sin cobertura a menudo.
   _anotarEnDiario(a.activity, competency, kind, score, total, a.seconds);
+  if(_soloLocal) return false;
 
   const datos = {
     activity: a.activity,
@@ -3517,6 +3701,8 @@ function _diaMenos(dia, n){
   return d.toISOString().slice(0, 10);
 }
 function _anotarEnDiario(activity, competency, kind, score, total, seconds){
+  // Con alérgenos sin validar no se registra actividad de alérgenos.
+  if(competency === 'alergenos' && typeof _alergenosValidados === 'function' && !(typeof _alergenosValidados!=='function'||_alergenosValidados())) return;
   try{
     if(!currentUser) return;
     const emp = getEmp(currentUser);
@@ -3644,7 +3830,11 @@ function planDeHoy(datos){
   //     al hospital, así que va por delante de todo lo que decide el motor.
   const ab = Math.round(Number(d.alergenosMejor || 0));
   const alFallos = Math.round(Number(d.alergenosFallosRecientes || 0));
-  if(ab < PLAN_ALERGENOS_MINIMO || alFallos > 0){
+  // Una carta con alérgenos sin validar no tiene nada de alérgenos que
+  // entrenar: no se manda a nadie a un simulacro de datos que cocina no ha
+  // confirmado. Sólo cuando lo dice `disponibles`; sin el dato, como siempre.
+  const _alDisp = !(d.disponibles && d.disponibles.alergenos === false);
+  if(_alDisp && (ab < PLAN_ALERGENOS_MINIMO || alFallos > 0)){
     let m_es, m_en;
     if(ab <= 0){
       m_es = 'Aún no has hecho el simulacro de alérgenos';
@@ -3827,7 +4017,7 @@ function datosDeHoy(emp, dia){
   const vinosPorDefecto = (typeof _VENUE_POR_DEFECTO !== 'undefined') && venue === _VENUE_POR_DEFECTO;
   const vinosResuelto = vinosPorDefecto || ((typeof _hayVinos !== 'undefined') && _hayVinos.has(venue));
   const disponibles = {
-    alergenos: true, carta: platos.length > 0, protocolo: true,
+    alergenos: (typeof _alergenosValidados!=='function'||_alergenosValidados()), carta: platos.length > 0, protocolo: true,
     sala: salaResuelta ? !!_haySala.get(venue) : false,
     vinos: vinosPorDefecto ? true : (vinosResuelto ? !!_hayVinos.get(venue) : false),
     servicio: false   // sin actividad viva; ver el comentario del catálogo
@@ -5461,6 +5651,7 @@ async function supaFetchCustomDishes() {
 // para la anon key pública: así nadie puede inyectar/alterar platos ni sus
 // alérgenos. _supPin se guarda al autenticar el panel de supervisor.
 async function supaUpsertCustomDish(dish) {
+  if(typeof _cartaPuesta!=='undefined' && _cartaPuesta !== _VENUE_POR_DEFECTO) return false;
   try {
     const res = await fetch(`${SUPA_URL}/functions/v1/manage-content`, {
       method: 'POST',
@@ -5476,6 +5667,7 @@ async function supaUpsertCustomDish(dish) {
 }
 
 async function supaDeleteCustomDish(dishId) {
+  if(typeof _cartaPuesta!=='undefined' && _cartaPuesta !== _VENUE_POR_DEFECTO) return false;
   try {
     const res = await fetch(`${SUPA_URL}/functions/v1/manage-content`, {
       method: 'POST',
@@ -5945,7 +6137,35 @@ function saveDB(){
 // el selector de restaurante a mitad de sesión, sin que nada pareciera roto.
 //
 // Se reprodujo así: `_esAdmin()` daba true, se abría Ajustes, y pasaba a false.
+// ═══ MODO REVISIÓN ═════════════════════════════════════════════════════════
+// La cuenta de administración puede abrir la carta de otro restaurante para
+// revisarla (ver _cartaAceptar). Lo que haga ahí NO puede caer en su ficha: la
+// ficha es de su restaurante, y el servidor sella cada evidencia con ése. Así
+// que mientras la carta puesta no es la de su restaurante, getEmp() le da un
+// PERFIL DE REVISIÓN propio de esa carta: SRS, El Pase, recorridos, diario…
+// separados, guardados sólo en este móvil y nunca sincronizados (la
+// sincronización lee DB.employees, y el perfil no vive ahí).
+// Para cualquier empleado la carta puesta es siempre la de su restaurante: esto
+// nunca se activa y getEmp() devuelve exactamente lo de siempre.
+function _identidadVenue(){
+  try{
+    const e = (typeof currentUser!=='undefined' && currentUser) ? _ficha(currentUser) : null;
+    return (e && e.venue) || _VENUE_POR_DEFECTO;
+  }catch(e){ return _VENUE_POR_DEFECTO; }
+}
+function _modoRevision(){
+  try{ return _cartaPuesta !== _identidadVenue(); }catch(e){ return false; }
+}
+function _perfilRevision(name){
+  DB.revision = DB.revision || {};
+  const k = _cartaPuesta + '|' + name;
+  if(!DB.revision[k]) DB.revision[k] = { name, venue:_cartaPuesta, revision:true, created:Date.now(),
+    topicScores:{allergens:{correct:0,total:0},ingredients:{correct:0,total:0},history:{correct:0,total:0}},
+    knownDishes:{}, examCorrect:{}, sessions:[], fcHistory:[] };
+  return DB.revision[k];
+}
 function getEmp(name){
+  if(name && typeof currentUser!=='undefined' && name === currentUser && typeof _modoRevision==='function' && _modoRevision()) return _perfilRevision(name);
   const ya = _ficha(name);
   if(ya) return ya;
   DB.employees[name]={name,created:Date.now(),topicScores:{allergens:{correct:0,total:0},ingredients:{correct:0,total:0},history:{correct:0,total:0}},knownDishes:{},examCorrect:{},sessions:[],fcHistory:[]};
@@ -6700,6 +6920,9 @@ function _djPhaseAllergens(dish, dd, _en){
     'Cacahuete':{icon:'🥜',color:'#cd853f',en:'Peanuts',desc_en:'Peanuts and peanut oil. Also in spice mixes such as ras al hanout.',desc_es:'Cacahuete y aceite de cacahuete. También en mezclas de especias como el ras al hanout.'}
   };
 
+  if(allergens.length===0 && !(typeof _alergenosValidados!=='function'||_alergenosValidados())){
+    return (typeof _alergenosAvisoHTML==='function'?_alergenosAvisoHTML(_en):'') + `<div class="dj-safe-card"><div class="dj-safe-text">${escapeHtml(((typeof _alergenosValidados!=='function'||_alergenosValidados())?(''):_sinAlergenosTxt('', _en)))}</div></div>`;
+  }
   if(allergens.length===0){
     return `<div class="dj-safe-card"><div style="font-size:2.5rem;margin-bottom:.5rem">✅</div><div class="dj-safe-text">${_en?'This dish contains no declared allergens!':'¡Este plato no contiene alérgenos declarados!'}</div></div>`;
   }
@@ -6714,7 +6937,9 @@ function _djPhaseAllergens(dish, dd, _en){
     if(act && act.r === 1){
       const cmd = _en ? (act.c_en || act.c) : act.c;
       verdict = `<div style="margin-top:.3rem;font-family:'DM Mono',monospace;font-size:.7rem;color:#a8d8b4;background:rgba(77,138,94,.18);padding:.25rem .5rem;border-radius:6px;display:inline-block">✓ ${_en?'Adaptable':'Se adapta'}${cmd?` — ${_en?'order':'comandar'} <b>${escapeHTML(cmd)}</b>`:''}</div>`;
-    } else if(act && act.r === 0){
+    } else if(act && act.r === 0 && (typeof _alergenosValidados!=='function'||_alergenosValidados())){
+      // En un borrador, r:0 sólo significa «la guía no dice que se pueda retirar»:
+      // no se enseña como un «no se puede» que nadie ha confirmado.
       verdict = `<div style="margin-top:.3rem;font-family:'DM Mono',monospace;font-size:.7rem;color:#f0a8a8;background:rgba(160,72,72,.18);padding:.25rem .5rem;border-radius:6px;display:inline-block">■ ${_en?'Structural — not suitable for this allergy':'Estructural — no apto para esta alergia'}</div>`;
     }
     return `<div class="dj-allerg-card" style="--delay:${0.15+i*0.12}s;border-left:4px solid ${data.color}">
@@ -6724,7 +6949,7 @@ function _djPhaseAllergens(dish, dd, _en){
     </div>`;
   }).join('');
 
-  return `
+  return (typeof _alergenosAvisoHTML==='function'?_alergenosAvisoHTML(_en):'') + `
     <div style="text-align:center;margin-bottom:1rem;animation:djSlideUp .4s .1s both">
       <div style="display:inline-block;padding:.3rem .8rem;border-radius:20px;background:rgba(231,76,60,.08);border:1px solid rgba(231,76,60,.15);font-family:'DM Mono',monospace;font-size:.6rem;color:#e8a0a0">
         ${allergens.length} ${_en?'allergen'+(allergens.length!==1?'s':''):'alérgeno'+(allergens.length!==1?'s':'')} ${_en?'detected':'detectado'+(allergens.length!==1?'s':'')}
@@ -7098,6 +7323,13 @@ function _djGenerateQuiz(dish){
     .replace(/^granos de /,'').replace(/s$/,'').trim();
 
   // Q1: Allergen question
+  if(!(typeof _alergenosValidados!=='function'||_alergenosValidados())){
+    // Borrador: ninguna pregunta de alérgenos. Queda la de ingredientes, que es
+    // la única del recorrido que no los usa.
+    let q = null;
+    try{ q = _djQIngredienteAusente(dish, dd, _en, allDishes); }catch(e){ q = null; }
+    return q ? [q] : [];
+  }
   if(dish.allergens && dish.allergens.length > 0){
     const correctA = dish.allergens[Math.floor(Math.random()*dish.allergens.length)];
     const dishAllNorm = new Set(dish.allergens.map(_allNorm));
@@ -7208,7 +7440,7 @@ function _djAnswer(qIdx, optIdx){
 function _djPhaseMastery(dish, dd, _en){
   const score = _djState.quizScore;
   const total = _djState.quizTotal;
-  const pct = Math.round((score/total)*100);
+  const pct = total > 0 ? Math.round((score/total)*100) : 0;
   const baseXp = score * 15 + (pct===100 ? 25 : 0); // bonus for perfect
   const isPerfect = pct === 100;
   const isGood = pct >= 66;
@@ -7223,7 +7455,7 @@ function _djPhaseMastery(dish, dd, _en){
   const xpEarned = Math.round(baseXp * xpMultiplier);
 
   // Award XP, update SRS, record adaptive data, mark as mastered
-  if(!_djState.xpAwarded){
+  if(!_djState.xpAwarded && total > 0){
     _djState.xpAwarded = true;
     if(xpEarned > 0) awardXP(xpEarned, _en ? 'Dish Journey: '+dd.name : 'Viaje: '+dd.name, 'journey');
     if(total > 0) registrarActividad({ activity:'recorrido', competency:'carta', kind:'practica',
@@ -7237,7 +7469,7 @@ function _djPhaseMastery(dish, dd, _en){
     qs.forEach((q,qi) => {
       const userAns = _djState['q'+qi];
       if(userAns !== undefined){
-        const qType = qi===0?'allergen':qi===1?'category':'ingredient';
+        const qType = !(typeof _alergenosValidados!=='function'||_alergenosValidados()) ? 'ingredient' : qi===0?'allergen':qi===1?'category':'ingredient';
         _adaptiveRecord(emp, dish.id, qType, userAns===q.correctIdx, null);
       }
     });
@@ -7449,7 +7681,7 @@ function _adaptiveRecord(emp, dishId, questionType, wasCorrect, detail){
   else ad.streakCurrent = 0;
 
   if(!wasCorrect){
-    if(questionType === 'allergen'){
+    if(questionType === 'allergen' && (typeof _alergenosValidados!=='function'||_alergenosValidados())){
       const dish = DISHES.find(d=>d.id===dishId);
       if(dish && dish.allergens){
         dish.allergens.forEach(a => { ad.allergenMiss[a] = (ad.allergenMiss[a]||0) + 1; });
@@ -7670,6 +7902,8 @@ function _txIngredientsVacuous(d){
   return !!(en && en.ingredients && _informative(en.name, en.ingredients) <= 2);
 }
 function _isDishQuizableForTopic(d, topicKey){
+  // Alérgenos sin validar por cocina no se preguntan (ni en el modo mixto).
+  if(topicKey === 'allergens' && !(typeof _alergenosValidados!=='function'||_alergenosValidados())) return false;
   if(!_isQuizableDish(d)) return false;
   if(d.cat === 'Guarniciones y Salsas' && topicKey !== 'history') return false;
   if(topicKey === 'ingredients' && _txIngredientsVacuous(d)) return false;
@@ -8991,6 +9225,13 @@ function _srGenerateQuiz(dish, difficulty){
 function renderSmartReview(){
   const c = document.getElementById('appContent');
   const _en = LANG==='en';
+  if(!(typeof _alergenosValidados!=='function'||_alergenosValidados())){
+    // Todos sus casos son de alérgenos: con el borrador no hay nada que entrenar.
+    if(c) c.innerHTML = `<div style="padding:1.2rem 1rem">${(typeof _alergenosAvisoHTML==='function'?_alergenosAvisoHTML(_en):'')}<p style="font-size:.85rem;color:var(--ink,#221a1e)">${_en
+      ?'Smart review is built on allergen cases. It opens when the kitchen validates this menu.'
+      :'El repaso inteligente se basa en casos de alérgenos. Se abrirá cuando cocina valide esta carta.'}</p></div>`;
+    return;
+  }
   const emp = getEmp(currentUser);
   const ad = _adaptiveGetData(emp);
   const accuracy = ad.totalQuizzes > 0 ? Math.round((ad.totalCorrect/ad.totalQuizzes)*100) : 0;
@@ -9116,6 +9357,7 @@ function renderSmartReview(){
 
 // ── Session Start ──
 function _startSmartSession(){
+  if(typeof _alergenosCerrados==='function' && _alergenosCerrados()) return;   // todos sus casos son de alérgenos
   const emp = getEmp(currentUser);
   const diff = _srGetDifficulty(emp); // always auto — manual picker removed
   const dishes = _adaptiveSelectDishes(emp, 5);
@@ -10346,7 +10588,9 @@ function _dqQuestion(dayStr){
   const alCount={};
   dishes.forEach(d=>(d.allergens||[]).forEach(a=>alCount[a]=(alCount[a]||0)+1));
   const alPool=Object.keys(alCount).sort().filter(a=>alCount[a]>=2 && dishes.filter(d=>!(d.allergens||[]).includes(a)).length>=3);
-  if((type==='allergen'||type==='safe') && !alPool.length) type='service';
+  // Con alérgenos sin validar no hay pregunta de alérgenos: se cambia de tipo
+  // sin tocar el sorteo, así que en Txoko sale exactamente la misma pregunta.
+  if((type==='allergen'||type==='safe') && (!alPool.length || !(typeof _alergenosValidados!=='function'||_alergenosValidados()))) type='service';
 
   if(type==='allergen'){
     const al=pick(alPool);
@@ -14049,7 +14293,7 @@ function _gsAllergenAnswer(algs, en){
     return '<button type="button" class="gs-hit'+(peligro?' gs-hit-danger':'')+'" role="option" onclick="_gsGo(\'dish\','+it.id+')">'
       + '<span class="gs-hit-ic">'+(_ph?'<img class="gs-hit-ph" loading="lazy" '+SRC+'="'+_ph+'" alt="">':_GS_ICON_DISH)+'</span>'
       + '<span class="gs-hit-body"><span class="gs-hit-name">'+escapeHtml(nm)+'</span>'
-      + '<span class="gs-hit-sub">'+(marcados||(en?'no allergens declared':'sin alérgenos declarados'))+'</span></span>'
+      + '<span class="gs-hit-sub">'+(marcados||((typeof _alergenosValidados!=='function'||_alergenosValidados())?((en?'no allergens declared':'sin alérgenos declarados')):_sinAlergenosTxt((en?'no allergens declared':'sin alérgenos declarados'), en)))+'</span></span>'
       + '<span class="gs-hit-go">›</span></button>';
   };
   // El bloque de aptos se agrupa por categoría: es como se recorre una carta
@@ -14306,6 +14550,12 @@ async function loadDishPhotos(){
 
 // ── Subida de fotos por el equipo (con moderación del supervisor) ──────────
 function _dishPhotoPick(dishId){
+  // Las fotos del equipo se guardan en un sitio público. En modo revisión (una
+  // carta que aún no se puede enseñar) no se sube ninguna.
+  if(typeof _modoRevision==='function' && _modoRevision()){
+    showToast(LANG==='en'?'Photos cannot be uploaded while reviewing another restaurant’s menu.':'En modo revisión no se suben fotos.','warning',4000);
+    return;
+  }
   let inp=document.getElementById('dishPhotoInput');
   if(!inp){ inp=document.createElement('input'); inp.type='file'; inp.accept='image/*'; inp.id='dishPhotoInput'; inp.style.display='none'; document.body.appendChild(inp); }
   inp.value=''; inp.onchange=()=>_dishPhotoUpload(dishId,inp); inp.click();
@@ -14416,7 +14666,7 @@ function _emplOpen(id){
         }
         return `<div class="empl-ov-adapt unk"><b>${lbl}</b><span>? ${_en?'Check with the kitchen':'Consultar con cocina'}</span></div>`;
       }).join('')
-    : `<div class="empl-ov-adapt free">✓ ${_en?'No declared allergens':'Sin alérgenos declarados'}</div>`;
+    : `<div class="empl-ov-adapt free">${(typeof _alergenosValidados!=='function'||_alergenosValidados())?'✓ ':'⚠ '}${((typeof _alergenosValidados!=='function'||_alergenosValidados())?(_en?'No declared allergens':'Sin alérgenos declarados'):_sinAlergenosTxt(_en?'No declared allergens':'Sin alérgenos declarados', _en))}</div>`;
   const ov=document.createElement('div');
   ov.id='emplOverlay'; ov.setAttribute('role','dialog'); ov.setAttribute('aria-modal','true'); ov.setAttribute('aria-label',dd.name);
   ov.innerHTML=`
@@ -22488,11 +22738,11 @@ function renderDashboard(){
     <div class="dash-plating" role="button" tabindex="0" aria-label="${_en?'Open the plating guide':'Abrir la guía de emplatado'}"
       onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click()}"
       onclick="_subTab.aprender='emplatado';showTab('emplatado')">
-      <div class="dash-plating-strip" aria-hidden="true">
+      <div class="dash-plating-strip" aria-hidden="true">${(typeof _cartaPuesta==='undefined'||_cartaPuesta===_VENUE_POR_DEFECTO)?`
         <img src="img/platos/3-calamares-a-la-andaluza.webp" alt="" loading="lazy">
         <img src="img/platos/2-huevo-frito-con-chistorra.webp" alt="" loading="lazy">
         <img src="img/platos/15-tartar-de-tomate-y-queso.webp" alt="" loading="lazy">
-      </div>
+      `:''}</div>
       <div class="dash-plating-tx">
         <div class="dash-plating-eyebrow">◈ ${_en?'Quick reference':'Consulta rápida'}</div>
         <div class="dash-plating-title">Plating guide</div>
@@ -22648,7 +22898,7 @@ function renderFlashcards(){
     <div class="fc-toolbar">
       <select class="select-pill" onchange="changeFcCat(this.value)">
         <option value="all">${t('allDishes')}</option>
-        ${getCats().map((c,i)=>`<option value="${CATS_ES[i]}">${c}</option>`).join('')}
+        ${_catsActivas().map(k=>`<option value="${k.es}">${LANG==='en'?(k.en||k.es):k.es}</option>`).join('')}
       </select>
       <span class="fc-counter-badge" id="fcCounter"></span>
       <span class="snd-slot"></span>
@@ -22753,7 +23003,7 @@ function flipCard(){
   // Build allergens with emojis
   const allergensHtml = (dd.allergens && dd.allergens.length)
     ? `<div style="display:flex;flex-wrap:wrap;gap:.4rem;justify-content:center;margin-top:.25rem">${dd.allergens.map(a=>`<span style="display:inline-flex;align-items:center;gap:.35rem;padding:.3rem .6rem;background:rgba(196,112,104,.1);border:1px solid rgba(196,112,104,.25);border-radius:999px;font-family:'Quicksand',sans-serif;font-size:.72rem;color:#9a4a42;font-weight:600"><span style="font-size:.95rem;line-height:1">${allergenEmoji(a)}</span><span>${escapeHTML(allergenLocal(a))}</span></span>`).join('')}</div>`
-    : `<div style="display:inline-flex;align-items:center;gap:.35rem;padding:.3rem .6rem;background:rgba(77,138,94,.1);border:1px solid rgba(77,138,94,.25);border-radius:999px;font-family:'Quicksand',sans-serif;font-size:.72rem;color:var(--sage);font-weight:600"><span>✓</span><span>${_en?'No allergens':'Sin alérgenos'}</span></div>`;
+    : `<div style="display:inline-flex;align-items:center;gap:.35rem;padding:.3rem .6rem;background:rgba(77,138,94,.1);border:1px solid rgba(77,138,94,.25);border-radius:999px;font-family:'Quicksand',sans-serif;font-size:.72rem;color:var(--sage);font-weight:600"><span>${(typeof _alergenosValidados!=='function'||_alergenosValidados())?'✓':'⚠'}</span><span>${((typeof _alergenosValidados!=='function'||_alergenosValidados())?(_en?'No allergens':'Sin alérgenos'):_sinAlergenosTxt(_en?'No allergens':'Sin alérgenos', _en))}</span></div>`;
 
   // Marcaje: sólo aparece en las cartas que lo traen.
   const marcajeHtml = dd.marcaje
@@ -22949,13 +23199,13 @@ function renderExamSetup(){
       <div class="section-eyebrow">${t('topicTheme')}</div>
       <div class="opt-grid" id="topicOpts">
         <div class="opt-tile sel" data-topic="mixed" onclick="selTopic(this)">${shine}<div class="opt-tile-icon"><svg width="16" height="16" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#4d8a5e"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#2d6a3e" opacity=".4"/><path d="M7 7l10 10M17 7l-10 10" stroke="#fff" stroke-width="1.5" stroke-linecap="round" opacity=".8"/></svg></div><div class="opt-tile-name">${t('mixed')}</div><div class="opt-tile-sub">${t('mixedSub')}</div></div>
-        ${TOPICS.map(tp=>`<div class="opt-tile" data-topic="${tp.key}" onclick="selTopic(this)"><div class="opt-tile-icon">${TOPIC_ICONS[tp.key]||tp.key}</div><div class="opt-tile-name">${tp.label}</div></div>`).join('')}
+        ${TOPICS.filter(tp=>tp.key!=='allergens'||(typeof _alergenosValidados!=='function'||_alergenosValidados())).map(tp=>`<div class="opt-tile" data-topic="${tp.key}" onclick="selTopic(this)"><div class="opt-tile-icon">${TOPIC_ICONS[tp.key]||tp.key}</div><div class="opt-tile-name">${tp.label}</div></div>`).join('')}
       </div>
 
       <div class="section-eyebrow">${t('topicCategory')}</div>
       <div class="opt-grid" id="catOpts">
         <div class="opt-tile sel" data-cat="all" onclick="selCat(this)">${shine}<div class="opt-tile-icon"><svg width="16" height="16" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#c49a3c"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#a47a2c" opacity=".4"/><polygon points="12,6 16,12 12,18 8,12" fill="#fff" opacity=".7"/></svg></div><div class="opt-tile-name">${t('allCats')}</div><div class="opt-tile-sub">${DISHES.length} ${t('dishes')}</div></div>
-        ${getCats().map((c,i)=>`<div class="opt-tile" data-cat="${CATS_ES[i]}" style="--tile-cat-color:${getCatColor(CATS_ES[i])};border-top:2px solid ${getCatColor(CATS_ES[i])}" onclick="selCat(this)"><div class="opt-tile-icon">${CAT_ICONS[CATS_ES[i]]}</div><div class="opt-tile-name">${c}</div><div class="opt-tile-sub">${DISHES.filter(d=>d.cat===CATS_ES[i]).length} ${t('dishes')}</div></div>`).join('')}
+        ${_catsActivas().map(k=>{const c=LANG==='en'?(k.en||k.es):k.es;return `<div class="opt-tile" data-cat="${k.es}" style="--tile-cat-color:${getCatColor(k.es)};border-top:2px solid ${getCatColor(k.es)}" onclick="selCat(this)"><div class="opt-tile-icon">${CAT_ICONS[k.es]||''}</div><div class="opt-tile-name">${c}</div><div class="opt-tile-sub">${DISHES.filter(d=>d.cat===k.es).length} ${t('dishes')}</div></div>`;}).join('')}
       </div>
 
       <div class="section-eyebrow">${t('topicQuestions')}</div>
@@ -23509,7 +23759,7 @@ function _paseCtaHTML(_en){
       <span class="ri-cta-icon" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4.2"/></svg></span>
       <span class="ri-cta-text">
         <span class="ri-cta-top">${_en?'Plating pass':'Pase de cocina'} <span style="font-size:.6rem;background:rgba(122,178,132,.16);border:1px solid rgba(122,178,132,.5);border-radius:99px;padding:.05rem .45rem;vertical-align:2px">${_en?'NEW':'NUEVO'}</span></span>
-        <span class="ri-cta-sub">${_en?'Build the dish and take the allergen off · 30 seconds, no signal needed':'Monta el plato y retira el alérgeno · 30 segundos, sin necesidad de cobertura'}</span>
+        <span class="ri-cta-sub">${!(typeof _alergenosValidados!=='function'||_alergenosValidados())?(_en?'Build the dish · 30 seconds, no signal needed':'Monta el plato · 30 segundos, sin necesidad de cobertura'):_en?'Build the dish and take the allergen off · 30 seconds, no signal needed':'Monta el plato y retira el alérgeno · 30 segundos, sin necesidad de cobertura'}</span>
       </span>
     </button>`;
 }
@@ -24040,6 +24290,8 @@ function _paseAlergenosMontados(){
 // acabábamos de quitar.
 const _PASE_ASCENSO = 2;   // pases perfectos seguidos para que te quiten las fichas
 function _paseNivel(emp, dishId){
+  // El nivel de memoria es elegir alérgenos: con el borrador se queda en el montaje.
+  if(!(typeof _alergenosValidados!=='function'||_alergenosValidados())) return 1;
   const r=(emp && emp.paseStats && emp.paseStats.rachas) || {};
   return (r[dishId]||0) >= _PASE_ASCENSO ? 2 : 1;
 }
@@ -24099,7 +24351,7 @@ function _paseServir(ninguno){
   // olvidarse de uno deja el cuadro intacto.
   _paseState.veredicto = { faltan, sobran, montados, declarados,
     perfecto: !faltan.length && !sobran.length,
-    seguro: (faltan.length||sobran.length) && mismos };
+    seguro: (typeof _alergenosValidados!=='function'||_alergenosValidados()) && (faltan.length||sobran.length) && mismos };
   _paseRegistrar(dish, _paseState.veredicto);
   if(typeof playSound==='function') playSound(_paseState.veredicto.perfecto?'correct':'wrong');
   _paseRender();
@@ -24149,6 +24401,8 @@ function _paseReintentar(){
 // entrada en DISH_ACTIONS, que es lo que cocina validó. Si no hay ninguna,
 // el plato no da para esta fase y se cierra en la primera.
 function _paseAlergiasPosibles(dish){
+  // Sin alérgenos validados no hay fase de la alergia: el montaje acaba ahí.
+  if(!(typeof _alergenosValidados!=='function'||_alergenosValidados())) return [];
   const act=(typeof DISH_ACTIONS!=='undefined' && DISH_ACTIONS[dish.id])||{};
   return (dish.allergens||[]).filter(a=>act[a]);
 }
@@ -24204,6 +24458,7 @@ function _paseConfirmarRetirada(noSePuede){
 // que el supervisor vea las dos cosas: montar bien el cuadro y resolver la
 // alergia no son la misma destreza.
 function _paseRegistrarAlergia(dish, R){
+  if(!(typeof _alergenosValidados!=='function'||_alergenosValidados())) return;   // con el borrador no se registra nada de alérgenos
   const emp=getEmp(currentUser); if(!emp) return;
   const m = emp.paseStats = emp.paseStats || {n:0, perf:0, seg:0, mal:0, fallos:{}};
   m.al=(m.al||0)+1;
@@ -24262,7 +24517,8 @@ function _paseChip(it, i, on, onclick, extra, ocultarAl){
   // ficha lleva escrito «Sulfitos», «retira lo que aporta Sulfitos» se resuelve
   // leyendo, no sabiendo. Medido antes: el 100% de las retiradas se acertaba
   // mirando la insignia.
-  const al=ocultarAl ? '' : (it.a||[]).map(a=>`<span class="pase-al">${escapeHTML(allergenLocal(a))}</span>`).join('');
+  // Con alérgenos sin validar por cocina, ninguna ficha lleva insignia.
+  const al=ocultarAl ? '' : !(typeof _alergenosValidados!=='function'||_alergenosValidados()) ? '' : (it.a||[]).map(a=>`<span class="pase-al">${escapeHTML(allergenLocal(a))}</span>`).join('');
   return `<button type="button" class="pase-chip${on?' on':''}${extra||''}" data-i="${i}" onclick="${onclick}"
     aria-pressed="${on?'true':'false'}"><span class="pase-chip-t">${escapeHTML(_paseEtiqueta(it.t))}</span>${al?`<span class="pase-chip-al">${al}</span>`:''}</button>`;
 }
@@ -24284,6 +24540,7 @@ function _paseRender(){
       <div class="pase-head-top">
         <div class="pase-eyebrow">${f2?(_en?'PASS · ALLERGY':'PASE · ALERGIA')
           :mem?(_en?'PASS · FROM MEMORY':'PASE · DE MEMORIA')
+          :!(typeof _alergenosValidados!=='function'||_alergenosValidados())?(_en?'PASS · PLATING':'PASE · MONTAJE')
           :(_en?'PASS · ALLERGENS':'PASE · ALÉRGENOS')}</div>
         <div class="pase-steps">${pasos}</div>
         <span class="snd-slot"></span>
@@ -24512,6 +24769,8 @@ function _paseMontajeHTML(dish, dd, _en){
 }
 
 function _paseRailHTML(_en){
+  // Con el borrador no se dice nada de alérgenos, y menos «sin alérgenos».
+  if(!(typeof _alergenosValidados!=='function'||_alergenosValidados())) return '';
   const al=_paseAlergenosMontados();
   return al.length
     ? al.map(a=>`<span class="pase-al big">${escapeHTML(allergenLocal(a))}</span>`).join('')
@@ -24625,7 +24884,7 @@ function renderRepasoCats(){
   const emp=getEmp(currentUser);
   const known=emp.knownDishes||{};
   const _en=LANG==='en';
-  const activeCats=CATS_ES.filter(c=>DISHES.some(d=>d.cat===c));
+  const activeCats=_catsActivas().map(c=>c.es);
   // Sesión de repaso inteligente: tarjeta destacada estilo ri-cta ANTES del
   // separador de secciones. Como fila de la lista se camuflaba entre las
   // categorías y su subtítulo no explicaba nada («no se ve, no se sabe de
@@ -24692,7 +24951,7 @@ function renderRepasoCats(){
     <div id="repasoSearchResults" style="display:none;margin-bottom:1rem"></div>
     <!-- El Pase primero; después la sesión inteligente, fuera de la lista -->
     ${(typeof launchPase==="function" ? _paseCtaHTML(_en) : "")}
-    ${smartCard}
+    ${(typeof _alergenosValidados!=='function'||_alergenosValidados())?smartCard:''}
     <!-- Category grid -->
     <div id="repasoCatGrid">
       <div class="tunic-divider"><span>${t('selectSection')}</span></div>
@@ -24746,7 +25005,7 @@ function searchRepaso(query) {
         <div class="repaso-row-name">${escapeHTML(dd.name)}</div>
         <div class="repaso-row-chips">
           <span class="repaso-chip cat">${escapeHTML(catLocal(dd.cat))}</span>
-          <span class="repaso-chip allerg${allergenN===0?' none':''}">${allergenN===0?(LANG==='en'?'✓ No allergens':'✓ Sin alérgenos'):`⚠ ${allergenN} ${LANG==='en'?(allergenN===1?'allergen':'allergens'):(allergenN===1?'alérgeno':'alérgenos')}`}</span>
+          <span class="repaso-chip allerg${allergenN===0?' none':''}">${allergenN===0?((typeof _alergenosValidados!=='function'||_alergenosValidados())?((LANG==='en'?'✓ No allergens':'✓ Sin alérgenos')):_sinAlergenosTxt((LANG==='en'?'✓ No allergens':'✓ Sin alérgenos'), LANG==='en')):`⚠ ${allergenN} ${LANG==='en'?(allergenN===1?'allergen':'allergens'):(allergenN===1?'alérgeno':'alérgenos')}`}</span>
           <span class="repaso-chip srs srs-${srs.kind}">${escapeHTML(srs.label)}</span>
           ${isMastered?`<span class="repaso-chip" style="color:var(--gold);border-color:rgba(196,154,60,.4);background:rgba(196,154,60,.08)">✦ ${LANG==='en'?'MASTERED':'DOMINADO'}</span>`:''}
         </div>
@@ -24793,7 +25052,7 @@ function renderRepasoTopic(){
     const allergenN=(dd.allergens||[]).length;
     const catCol=CAT_COLORS[dd.cat]||'var(--gold)';
     const allergenHtml=topic.key==='allergens'
-      ?`<div class="repaso-allergen-row">${allergenN===0?`<span class="allergen-tag safe">✓ ${t('noAllergens').replace('.','')}</span>`:dd.allergens.map(a=>`<span class="allergen-tag">⚠ ${allergenLocal(a)}</span>`).join('')}</div>`:'';
+      ?`<div class="repaso-allergen-row">${allergenN===0?`<span class="allergen-tag safe">${(typeof _alergenosValidados!=='function'||_alergenosValidados())?'✓ ':'⚠ '}${t('noAllergens').replace('.','')}</span>`:dd.allergens.map(a=>`<span class="allergen-tag">⚠ ${allergenLocal(a)}</span>`).join('')}</div>`:'';
     const _ph=typeof dishPhotoSrc==='function'?dishPhotoSrc(d.id):null;
     return `<div class="repaso-row${isMastered?' mastered':''}" id="ritem${d.id}" style="--cat-color:${catCol}">
       <div class="repaso-row-icon">${_ph?`<img loading="lazy" ${SRC}="${_ph}" alt="">`:(CAT_ICONS[dd.cat]||'')}</div>
@@ -24801,7 +25060,7 @@ function renderRepasoTopic(){
         <div role="button" tabindex="0" aria-label="${escapeHTML(dd.name)}" class="repaso-row-name" onclick="repasoDishId=${d.id};repasoView='dish';renderRepaso()" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click()}" style="cursor:pointer">${escapeHTML(dd.name)}</div>
         <div class="repaso-row-chips">
           <span class="repaso-chip cat">${escapeHTML(catLocal(dd.cat))}</span>
-          <span class="repaso-chip allerg${allergenN===0?' none':''}">${allergenN===0?(LANG==='en'?'✓ No allergens':'✓ Sin alérgenos'):`⚠ ${allergenN} ${LANG==='en'?(allergenN===1?'allergen':'allergens'):(allergenN===1?'alérgeno':'alérgenos')}`}</span>
+          <span class="repaso-chip allerg${allergenN===0?' none':''}">${allergenN===0?((typeof _alergenosValidados!=='function'||_alergenosValidados())?((LANG==='en'?'✓ No allergens':'✓ Sin alérgenos')):_sinAlergenosTxt((LANG==='en'?'✓ No allergens':'✓ Sin alérgenos'), LANG==='en')):`⚠ ${allergenN} ${LANG==='en'?(allergenN===1?'allergen':'allergens'):(allergenN===1?'alérgeno':'alérgenos')}`}</span>
           <span class="repaso-chip srs srs-${srs.kind}">${escapeHTML(srs.label)}</span>
           ${isMastered?`<span class="repaso-chip" style="color:var(--gold);border-color:rgba(196,154,60,.4);background:rgba(196,154,60,.08)">✦ ${LANG==='en'?'MASTERED':'DOMINADO'}</span>`:''}
         </div>
@@ -24970,7 +25229,7 @@ function renderRepasoDishDetail(dishId){
       <div class="card" style="padding:.9rem">
         <div style="font-family:'DM Mono',monospace;font-size:.5rem;color:var(--gold);letter-spacing:.12em;text-transform:uppercase;margin-bottom:.35rem">⚠ ${LANG==='en'?'Allergens & adaptations':'Alérgenos y adaptaciones'}</div>
         <div>
-          ${allergenHtml || `<div style="font-family:'DM Mono',monospace;font-size:.6rem;color:var(--green-deep)">✓ ${LANG==='en'?'No declared allergens':'Sin alérgenos declarados'}</div>`}
+          ${allergenHtml || `<div style="font-family:'DM Mono',monospace;font-size:.6rem;color:var(--green-deep)">${(typeof _alergenosValidados!=='function'||_alergenosValidados())?'✓ ':'⚠ '}${((typeof _alergenosValidados!=='function'||_alergenosValidados())?(LANG==='en'?'No declared allergens':'Sin alérgenos declarados'):_sinAlergenosTxt(LANG==='en'?'No declared allergens':'Sin alérgenos declarados', LANG==='en'))}</div>`}
         </div>
       </div>
     </div>
@@ -25194,7 +25453,7 @@ function renderStats(){
 
 function getCertifications(emp){
   const known = emp.knownDishes || {};
-  return CATS_ES.filter(cat => {
+  return _catsCarta().map(c=>c.es).filter(cat => {
     const dishes = DISHES.filter(d => d.cat === cat);
     if(!dishes.length) return false;
     const knownCount = dishes.filter(d => known[d.id]).length;
@@ -26525,6 +26784,7 @@ function buildAllergenQuestions(cat) {
 
 
 function startAllergenTest(cat) {
+  if(typeof _alergenosCerrados==='function' && _alergenosCerrados()) return;
   const questions = buildAllergenQuestions(cat);
   if (!questions.length) { showToast(LANG==='en'?'Not enough data':'Sin datos suficientes','error'); return; }
   // La pestaña de lanzamiento manda: el simulacro vive hoy en Aprender →
@@ -28048,7 +28308,17 @@ async function sendNotification(){
 // Las puntuaciones históricas (scores topic='quizdia') quedan en la nube sin
 // que nadie las lea. Si algún día vuelve, que vuelva con otro nombre.
 
+// El editor de carta escribe en custom_dishes por manage-content, que hoy NO
+// sabe de restaurantes: la fila se guarda como de Txoko (DEFAULT 'txoko') y la
+// clave es sólo dish_id. Hasta que el servidor lo ate al restaurante, el editor
+// sólo funciona en la carta de Txoko.
+function _editorCartaCerrado(){
+  if(_cartaPuesta === _VENUE_POR_DEFECTO) return false;
+  try{ showToast(LANG==='en'?'The menu editor is only available for the main menu for now.':'Por ahora el editor de carta solo funciona en la carta principal.','warning',5000); }catch(e){}
+  return true;
+}
 function renderCartaEditor(){
+  if(typeof _editorCartaCerrado==='function' && _editorCartaCerrado()) return;
   const cats = [...new Set(DISHES.map(d=>d.cat))];
   const c = document.getElementById('appContent');
   c.innerHTML = `<div class="sup-wrap">
@@ -28088,6 +28358,7 @@ function renderCartaList(){
 }
 
 function renderCartaDishEdit(id){
+  if(typeof _editorCartaCerrado==='function' && _editorCartaCerrado()) return;
   const d = DISHES.find(x=>x.id===id);
   if(!d) return;
   const c = document.getElementById('appContent');
@@ -28118,6 +28389,7 @@ function renderCartaDishEdit(id){
 }
 
 function saveCartaDish(id){
+  if(typeof _editorCartaCerrado==='function' && _editorCartaCerrado()) return;
   const d = DISHES.find(x=>x.id===id);
   if(!d) return;
   d.allergens = document.getElementById('editAllergens').value.split(',').map(s=>s.trim()).filter(Boolean);
@@ -28187,6 +28459,7 @@ function renderCartaNewDish(){
 }
 
 function saveNewDish(){
+  if(typeof _editorCartaCerrado==='function' && _editorCartaCerrado()) return;
   const name = document.getElementById('newDishName')?.value.trim();
   const catSel = document.getElementById('newDishCat')?.value;
   const catCustom = document.getElementById('newDishCatCustom')?.value.trim();
@@ -28319,6 +28592,7 @@ function startPersonalErrorMode(){
       if(!fb) continue;
       correct=(fb.a(d)||'').trim().replace(/\.+$/,'');
     }
+    if(topic.key==='allergens' && !(typeof _alergenosValidados!=='function'||_alergenosValidados())) continue;   // borrador: no se pregunta
     const wrongPool=_lqaShuffle(_pickDistractorPool(d));
     const wrongs=[];
     const _normAns = v => v.split(' · ').map(s=>s.trim()).sort().join(' · ');
@@ -28381,6 +28655,7 @@ function startErrorMode(){
       if(!fb) continue;
       topic=fb;correct=(fb.a(d)||'').trim().replace(/\.+$/,'');
     }
+    if(topic.key==='allergens' && !(typeof _alergenosValidados!=='function'||_alergenosValidados())) continue;   // borrador: no se pregunta
     const wrongPool=_lqaShuffle(_pickDistractorPool(d));
     const wrongs=[];
     const _normAns = v => v.split(' · ').map(s=>s.trim()).sort().join(' · ');
@@ -32103,7 +32378,7 @@ function txTruncate(s, n){
 // voice==='shoesmith' → enunciados en primera persona de Mr. Shoesmith (su
 // juego); sin voz → enunciados neutros de sala (Duelos y Retos remotos).
 function txBuildQuestion(voice){
-  const topicKeys=['allergens','ingredients','history'];
+  const topicKeys=(typeof _alergenosValidados!=='function'||_alergenosValidados())?['allergens','ingredients','history']:['ingredients','history'];
 
   // Pre-compute all unique answers per topic so we know which are viable
   // A topic is viable for a dish if there are at least 3 OTHER unique answers
@@ -33149,7 +33424,7 @@ function launchElTurno(){
         G.cloche={x:cx,y:cy,life:840}; flash('¡PREGUNTA DE LA CARTA!','#e8c44c'); sfx('coin'); }
       if(G.cloche){ G.cloche.life-=dt;
         if(G.cloche.life<=0){ G.cloche=null; G.nextClo=G.time+50; }
-        else if(Math.hypot(G.px-G.cloche.x,G.py-G.cloche.y)<G.pr+20){ G.cloche=null; G.nextClo=G.time+50; showQuiz(); } }
+        else if(Math.hypot(G.px-G.cloche.x,G.py-G.cloche.y)<G.pr+20){ G.cloche=null; G.nextClo=G.time+50; if((typeof _alergenosValidados!=='function'||_alergenosValidados())) showQuiz(); } }
     }
     // LA MÁNAGER (aliada, jul 2026): cada ~28-40s cruza volando y, al llegar a
     // media pantalla, suelta una botella hacia un enemigo; la botella cae y

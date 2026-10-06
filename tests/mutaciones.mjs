@@ -609,6 +609,49 @@ const MUTACIONES = [
     de:"  const nda = await ndaCargar();   // puerta: el texto vigente",
     a:"  const _loc = getEmp(nombre); if(_loc && _loc.ndaVersion) return { ok:true };\n  const nda = await ndaCargar();   // puerta: el texto vigente",
     cae:'H3-10 · el estado LOCAL no cuenta' },
+
+  // ═══ R2 · restaurantes independientes ═══
+  { id:'R2-1', fase:'R2', fila:null,
+    rompe:'el personal abre una carta cuyos alérgenos cocina no ha validado',
+    archivo:'index.html',
+    de:"  if(carta.allergensValidated !== true && !_esAdmin()) throw new Error('alergenos sin validar');",
+    a:"",
+    cae:'la carta privada llega del servidor' },
+
+  { id:'R2-2', fase:'R2', fila:null,
+    rompe:'una carta entra con números fuera de su bloque o de Txoko',
+    archivo:'index.html',
+    de:"  if(!_cartaIdsValidos(ids, _bloqueDe(venue), deTxoko)) throw new Error('numeros fuera de bloque');",
+    a:"",
+    cae:'la carta privada llega del servidor' },
+
+  { id:'R2-3', fase:'R2', fila:null,
+    rompe:'al cambiar de carta, El Pase sigue sirviendo las fichas del plato con el mismo número',
+    archivo:'index.html',
+    de:"  try{ if(typeof _PASE_FICHAS_CACHE!=='undefined') _PASE_FICHAS_CACHE.clear(); }catch(e){}",
+    a:"",
+    cae:'se tiran las cachés' },
+
+  { id:'R2-4', fase:'R2', fila:null,
+    rompe:'el plan manda al simulacro de una carta con alérgenos sin validar',
+    archivo:'index.html',
+    de:"  if(_alDisp && (ab < PLAN_ALERGENOS_MINIMO || alFallos > 0)){",
+    a:"  if((ab < PLAN_ALERGENOS_MINIMO || alFallos > 0)){",
+    cae:'el plan de hoy no manda a entrenar' },
+
+  { id:'R2-5', fase:'R2', fila:null,
+    rompe:'cualquiera con sesión lee la carta privada de cualquier restaurante',
+    archivo:'supabase/cartas_privadas.sql',
+    de:"  using ( venue = (select app.venue_actual())\n          or (select app.rol_actual()) = 'admin' );",
+    a:"  using ( true );",
+    cae:'la carta privada vive en el servidor' },
+
+  { id:'R2-6', fase:'R2', fila:null,
+    rompe:'sin sesión se abre una carta de data/ en vez de cerrarse',
+    archivo:'index.html',
+    de:"  if(!token) return null;   // sin sesión real, RLS no puede dejar leer nada",
+    a:"  if(!token) token = SUPA_KEY;",
+    cae:'la carta privada llega del servidor' },
 ];
 
 // ─── EJECUCIÓN ─────────────────────────────────────────────────────────────
