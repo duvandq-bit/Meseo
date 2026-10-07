@@ -1,5 +1,5 @@
 {
- "updated": "2026-10-06T21:40:04.274Z",
+ "updated": "2026-10-07T02:26:36.535Z",
  "items": [
   {
    "t": "De Denis Villeneuve a la cocina con estrella Michelin: así será la noche del umami en Gran Canaria",
@@ -18,8 +18,7 @@
    "d": "2026-10-06T19:04:51.000Z",
    "tags": [
     "CHEF"
-   ],
-   "img": "https://www.noticiasdelvino.com/wp-content/uploads/image-583.png.webp"
+   ]
   },
   {
    "t": "Jordi Cruz, chef Michelin: “No es lo mismo un horno tradicional que uno moderno . En los nuevos, el control de la temperatura suele ser bastante preciso”",
@@ -80,17 +79,6 @@
    "img": "https://static.grupojoly.com/clip/943908a4-323e-486d-88ec-9fefb87674e2_facebook-aspect-ratio_default_0.jpg"
   },
   {
-   "t": "Tenerife rindió homenaje a Martín Berasategui y desarrolló la jornada alrededor de los usos de la cabra, en la segunda jornada de Gastronomika",
-   "u": "https://www.canal4tenerife.tv/tenerife-rindio-homenaje-a-martin-berasategui-y-desarrollo-la-jornada-alrededor-de-los-usos-de-la-cabra-en-la-segunda-jornada-de-gastronomika/",
-   "s": "Canal 4 Tenerife",
-   "d": "2026-10-06T16:52:17.000Z",
-   "tags": [
-    "CANARIAS",
-    "CHEF"
-   ],
-   "img": "https://www.canal4tenerife.tv/wp-content/uploads/2026/10/SSG-2-scaled-e1791305519743.jpg"
-  },
-  {
    "t": "El viñedo más alto de Europa está en Tenerife: así es el pueblo que desafía a los Alpes",
    "u": "https://www.noticiasdelvino.com/escapadas/2026/10/06/el-vinedo-mas-alto-de-europa-esta-en-tenerife-asi-es-el-pueblo-que-desafia-a-los-alpes-66331/",
    "s": "Noticias del Vino",
@@ -98,8 +86,7 @@
    "tags": [
     "VINO",
     "CANARIAS"
-   ],
-   "img": "https://www.noticiasdelvino.com/wp-content/uploads/El-vinedo-mas-alto-de-Europa-esta-en-Tenerife.jpg.webp"
+   ]
   },
   {
    "t": "Tragatá, de Ronda, campeón de campeones en el certamen de ensaladilla rusa de Gastronomika",
@@ -228,6 +215,17 @@
    ]
   },
   {
+   "t": "Tenerife rindió homenaje a Martín Berasategui y desarrolló la jornada alrededor de los usos de la cabra, en la segunda jornada de Gastronomika",
+   "u": "https://www.diariodetenerife.info/homenaje-martin-berasategui-y-jornada-usos-de-cabra-en-gastronomika/",
+   "s": "Diario de Tenerife",
+   "d": "2026-10-06T12:46:42.000Z",
+   "tags": [
+    "CHEF",
+    "CANARIAS"
+   ],
+   "img": "https://www.diariodetenerife.info/wp-content/uploads/2026/10/SSG-1-1.jpg"
+  },
+  {
    "t": "Canarias se mantiene en los puestos de cabeza de la privatización sanitaria",
    "u": "https://www.eldiario.es/canariasahora/sociedad/canarias-mantiene-puestos-cabeza-privatizacion-sanitaria_1_13566438.html",
    "s": "elDiario.es",
@@ -277,16 +275,6 @@
    "img": "https://www.hoyaragon.es/media/hoyaragon/images/2026/10/06/2026100612483877934.jpg"
   },
   {
-   "t": "Fagor Professional busca al chef más creativo del mundo con World’s Creative Chef",
-   "u": "https://www.europapress.es/comunicados/empresas-00908/noticia-comunicado-fagor-professional-busca-chef-mas-creativo-mundo-worlds-creative-chef-20261006123814.html",
-   "s": "Europa Press",
-   "d": "2026-10-06T10:38:14.000Z",
-   "tags": [
-    "ALTA COCINA"
-   ],
-   "img": "https://img.europapress.es/fotoweb/fotonoticia_20261006123814_1200.jpg"
-  },
-  {
    "t": "La llegada de migrantes de forma irregular a Canarias cae un 44,5% hasta septiembre",
    "u": "https://www.eldiario.es/canariasahora/migraciones/llegada-migrantes-forma-irregular-canarias-cae-44-5-septiembre_1_13565706.html",
    "s": "elDiario.es",
@@ -295,6 +283,15 @@
     "CANARIAS"
    ],
    "img": "https://static.eldiario.es/clip/402385b7-ea2d-4baa-8c27-2e9e0b366389_facebook-aspect-ratio-1200-675_default_0.jpg"
+  },
+  {
+   "t": "Txinet, el pintxo con cochino negro, piña y piparra que hermana a Canarias con Euskadi",
+   "u": "https://diariodeavisos.elespanol.com/2026/10/txinet-pintxo-tenerife-donostia-gastronomika/",
+   "s": "Diario de Avisos",
+   "d": "2026-10-06T10:07:05.000Z",
+   "tags": [
+    "CANARIAS"
+   ]
   }
  ]
 }
