@@ -2212,6 +2212,29 @@ function _venueActual(){
 function _vq(){ return 'venue=eq.' + encodeURIComponent(_venueActual()); }
 function _vSello(o){ o = o || {}; o.venue = _venueActual(); return o; }
 
+// ═══ AVISOS PUSH: SÓLO CON LA SESIÓN REAL (D1-M0c) ═════════════════════════
+// Todas las llamadas a send-push pasan por aquí. Quién envía y a qué
+// restaurante lo decide el servidor (push_autorizar) con el token de sesión;
+// la clave anónima NO autoriza nada, así que sin sesión real no sale ningún
+// aviso —ni siquiera con `_bearer()`, que cae en la clave anónima—.
+//   · `venue` viaja sólo como comprobación: send-push v10 lo rechaza si no es
+//     el de la identidad. Se sigue mandando porque v9 lo usa para que 'all'
+//     no sea «todos los restaurantes» mientras v10 no esté desplegada.
+//   · 'all' (todo el equipo) exige en el servidor rol manager/owner + PIN de
+//     supervisor: se manda `_supPin` sólo en ese caso.
+// Devuelve la respuesta, o null si no había sesión o falló la red.
+function _pushEnviar(cuerpo){
+  const t = _authCtx().token;
+  if(!t) return Promise.resolve(null);
+  const b = Object.assign({}, cuerpo, { venue: _venueActual() });
+  if(b.target === 'all') b.pin = _supPin || '';
+  return fetch(`${SUPA_URL}/functions/v1/send-push`, {
+    method:'POST',
+    headers:{ 'apikey':SUPA_KEY, 'Authorization':`Bearer ${t}`, 'Content-Type':'application/json' },
+    body: JSON.stringify(b)
+  }).catch(() => null);
+}
+
 // ═══ FASE C-2 · EL CLIENTE DEJA DE DECIR QUIÉN ES ═════════════════════════
 //
 // `employee`, `venue`, `auth_user_id`, `id` y `created_at` los pone el servidor
@@ -5444,15 +5467,11 @@ async function subscribeToPush(employeeName) {
     // Step 6: Send a silent self-test push to verify end-to-end
     if (isNew) {
       try {
-        await fetch(`${SUPA_URL}/functions/v1/send-push`, {
-          method: 'POST',
-          headers: { 'apikey':SUPA_KEY, 'Authorization':`Bearer ${SUPA_KEY}`, 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            target: employeeName, venue: _venueActual(),
-            title: '◆ Notificaciones activadas',
-            body: '¡Recibirás avisos aunque la app esté cerrada!',
-            tag: 'push-welcome'
-          })
+        await _pushEnviar({
+          target: employeeName,
+          title: '◆ Notificaciones activadas',
+          body: '¡Recibirás avisos aunque la app esté cerrada!',
+          tag: 'push-welcome'
         });
       } catch(e2) { /* non-critical */ }
     }
@@ -28341,17 +28360,19 @@ async function sendAppUpdatePush(){
     : '¿Enviar la actualización a todos los dispositivos del equipo?');
   if(!ok) return;
   try{
-    await fetch(`${SUPA_URL}/functions/v1/send-push`, {
-      method:'POST', headers:{ 'apikey':SUPA_KEY, 'Authorization':`Bearer ${SUPA_KEY}`, 'Content-Type':'application/json' },
-      body: JSON.stringify({
-        target:'all', venue: _venueActual(),
-        title:'📲 Meseo · v'+APP_VERSION,
-        body: LANG==='en'
-          ? 'New version ready — tap to open with the update installed.'
-          : 'Nueva versión lista — toca para abrir con la actualización ya instalada.',
-        tag:'app-update', renotify:false, data:{}
-      })
+    const r = await _pushEnviar({
+      target:'all',
+      title:'📲 Meseo · v'+APP_VERSION,
+      body: LANG==='en'
+        ? 'New version ready — tap to open with the update installed.'
+        : 'Nueva versión lista — toca para abrir con la actualización ya instalada.',
+      tag:'app-update', renotify:false, data:{}
     });
+    // Todo el equipo: sólo manager/owner con PIN y con sesión real.
+    if(!r || r.status === 401 || r.status === 403){
+      if(typeof showToast==='function') showToast(LANG==='en'?'Only a manager or owner with a live session can push to the whole team':'Sólo un manager o el propietario, con sesión iniciada, puede avisar a todo el equipo', 'warning', 4500);
+      return;
+    }
     const el = document.getElementById('updPushMsg');
     if(el){ el.style.display='block'; setTimeout(()=>el.style.display='none', 4000); }
   }catch(e){
@@ -28368,18 +28389,13 @@ async function sendNotification(){
   await supaCreateNotification(target, msg, type);
   // Push notification (lock screen)
   const typeIcons = { info:'i', warning:'⚠', success:'★', urgent:'!!' };
-  try {
-    await fetch(`${SUPA_URL}/functions/v1/send-push`, {
-      method: 'POST',
-      headers: { 'apikey':SUPA_KEY, 'Authorization':`Bearer ${SUPA_KEY}`, 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        target, venue: _venueActual(),
-        title: `${typeIcons[type]||'◆'} Meseo`,
-        body: msg,
-        tag: type
-      })
-    });
-  } catch(e) { dbgw('[Meseo] Push send error:', e); }
+  const r = await _pushEnviar({
+    target,
+    title: `${typeIcons[type]||'◆'} Meseo`,
+    body: msg,
+    tag: type
+  });
+  if(!r || r.status === 401 || r.status === 403) dbgw('[Meseo] Push no autorizado o sin sesión:', r && r.status);
   const el = document.getElementById('notifSendMsg');
   if(el){ el.style.display='block'; setTimeout(()=>el.style.display='none',2500); }
   document.getElementById('notifMsg').value = '';
@@ -35265,12 +35281,9 @@ async function _chatSend(){
     const snippet = text.length>90 ? text.slice(0,90)+'…' : text;
     mentions.forEach(n=>{
       supaCreateNotification(n, `💬 ${currentUser} te ha mencionado en el Chat: "${snippet}"`, 'info');
-      fetch(`${SUPA_URL}/functions/v1/send-push`, {
-        method:'POST', headers:{ 'apikey':SUPA_KEY, 'Authorization':`Bearer ${SUPA_KEY}`, 'Content-Type':'application/json' },
-        // renotify: a mention must ring even if a coalesced 'chat' notification
-        // is already on screen. data.tab deep-links the tap into the Chat tab.
-        body: JSON.stringify({ target:n, venue:_venueActual(), title:`💬 ${currentUser} · Chat`, body:snippet, tag:'chat', renotify:true, data:{tab:'chat'} })
-      }).catch(()=>{});
+      // renotify: a mention must ring even if a coalesced 'chat' notification
+      // is already on screen. data.tab deep-links the tap into the Chat tab.
+      _pushEnviar({ target:n, title:`💬 ${currentUser} · Chat`, body:snippet, tag:'chat', renotify:true, data:{tab:'chat'} });
     });
   }
 }
@@ -35323,10 +35336,7 @@ function _chatBroadcastPush(body){
     const extra = { tag:'chat', data:{tab:'chat'} };
     if(body.image_url) extra.image = body.image_url;
     recipients.forEach(n=>{
-      fetch(`${SUPA_URL}/functions/v1/send-push`, {
-        method:'POST', headers:{ 'apikey':SUPA_KEY, 'Authorization':`Bearer ${SUPA_KEY}`, 'Content-Type':'application/json' },
-        body: JSON.stringify(Object.assign({ target:n, venue:_venueActual(), title:`💬 ${currentUser} · Chat`, body:snippet }, extra))
-      }).catch(()=>{});
+      _pushEnviar(Object.assign({ target:n, title:`💬 ${currentUser} · Chat`, body:snippet }, extra));
     });
   }catch(_){}
 }
