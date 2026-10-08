@@ -2847,11 +2847,15 @@ test('supervisor panel: realtime employees channel + silent refresh + live pill'
 test('auditoría panel supervisor (jul 2026): datos reales, push, LQA, a11y, marca', () => {
   // ── Push: auth + marca Meseo (antes sin apikey → 401 silencioso; título TXOKO) ──
   assert(!/TXOKO Formación/.test(html), 'los títulos de push no deben usar la marca vieja «TXOKO Formación»');
+  // D1-M0c: una sola puerta (_pushEnviar), con apikey y el token de SESIÓN.
+  // La clave anónima no autoriza un aviso: send-push v10 la rechaza.
   const pushIdx = [...html.matchAll(/functions\/v1\/send-push/g)].map(m => m.index);
-  assert(pushIdx.length >= 2 && pushIdx.every(i => {
-    const seg = html.slice(i, i + 180);
-    return /'apikey':\s*SUPA_KEY/.test(seg) && /Authorization/.test(seg);
-  }), 'las llamadas a send-push deben mandar apikey + Authorization como el resto');
+  assert(pushIdx.length === 1 && pushIdx.every(i => {
+    const seg = html.slice(i, i + 220);
+    return /'apikey':\s*SUPA_KEY/.test(seg) && /'Authorization':`Bearer \$\{t\}`/.test(seg);
+  }), 'send-push se llama sólo desde _pushEnviar, con apikey + el token de sesión');
+  assert(/function _pushEnviar\(cuerpo\)\{\s*const t = _authCtx\(\)\.token;\s*if\(!t\) return Promise\.resolve\(null\);/.test(html),
+    'sin sesión real no sale ningún aviso (nunca con la clave anónima ni con _bearer())');
   assert(/title:'📲 Meseo · v'/.test(html) && /title: `\$\{typeIcons\[type\]\|\|'◆'\} Meseo`/.test(html),
     'los push deben titularse Meseo');
   // ── Sincronización de datos que el supervisor necesita ──
@@ -8933,9 +8937,15 @@ test('backend reset-pin existe y cubre las tres acciones', () => {
   const fn = read('supabase/functions/reset-pin/index.ts');
   for (const a of ["'set-email'", "'request'", "'confirm'"])
     assert(fn.includes(a), `la Edge Function debe manejar la acción ${a}`);
-  // set-email exige que el hash del PIN coincida (prueba de identidad)
-  assert(/emp\.pin\s*!==\s*pinHash/.test(fn) && /'auth'/.test(fn),
-    'set-email debe rechazar (auth) si el PIN no coincide');
+  // set-email exige que el hash del PIN coincida (prueba de identidad), y la
+  // comprobación es la del login, con su límite de intentos (D1-M0b): nada de
+  // comparar el hash a mano, que no cuenta fallos.
+  assert(/rpc\('verify_employee_pin_sha'/.test(fn) && /'auth'/.test(fn),
+    'set-email debe rechazar (auth) si el PIN no coincide, vía verify_employee_pin_sha');
+  assert(!/emp\.pin\s*!==\s*pinHash/.test(fn),
+    'reset-pin no debe comparar el PIN a mano: así no hay límite de intentos');
+  assert(/reset_pin_origen_bloqueado/.test(fn) && /reset_pin_origen_anotar/.test(fn),
+    'reset-pin debe limitar también por origen');
   // los tokens se guardan HASHEADOS, nunca en claro
   assert(/token_hash/.test(fn) && /sha256hex\(token\)/.test(fn),
     'los tokens deben guardarse como sha256(token)');
@@ -10856,13 +10866,15 @@ test('Multi-restaurante: ninguna consulta se escapa del filtro de restaurante', 
   // El aviso a «todo el equipo» tiene que decir de qué equipo habla.
   // Se cuentan por LÍNEA: una expresión que busque el cierre `})` se para en el
   // primer paréntesis que encuentra y se deja llamadas fuera (vio 3 de 5).
-  const push = [];
-  for (let i = 0; i < lineas.length; i++)
-    if (/functions\/v1\/send-push/.test(lineas[i])) push.push({ n: i + 1, txt: lineas.slice(i, i + 12).join('\n') });
-  assert(push.length >= 5, `esperaba las 5 llamadas a send-push, veo ${push.length}`);
-  for (const p of push)
-    assert(/venue: *_venueActual\(\)/.test(p.txt),
-      `la llamada a send-push de la línea ${p.n} no lleva el restaurante: sin él, «todo el equipo» son TODOS los restaurantes`);
+  // D1-M0c: las cinco llamadas pasan por _pushEnviar, y _pushEnviar pone el
+  // restaurante en todas (v9 lo necesita para que 'all' no sea global; v10 lo
+  // usa sólo para rechazar uno ajeno) y el PIN sólo cuando es 'all'.
+  const usos = (html.match(/_pushEnviar\(/g) || []).length - 1;   // menos la definición
+  assert(usos >= 5, `esperaba las 5 llamadas a send-push vía _pushEnviar, veo ${usos}`);
+  assert(/const b = Object\.assign\(\{\}, cuerpo, \{ venue: _venueActual\(\) \}\);/.test(html),
+    '_pushEnviar tiene que poner el restaurante: sin él, con v9, «todo el equipo» son TODOS los restaurantes');
+  assert(/if\(b\.target === 'all'\) b\.pin = _supPin \|\| '';/.test(html),
+    "'all' tiene que llevar el PIN de supervisor (v10 lo exige junto al rol)");
   // Y la función del servidor tiene que usarlo.
   const fn = read('supabase/functions/send-push/index.ts');
   assert(/const \{ target, venue,/.test(fn), 'send-push tiene que recibir el restaurante');
@@ -14055,6 +14067,123 @@ test('F3 · los criterios de eliminación están en UN solo sitio', () => {
     'sólo confirmado y duplicado pueden sacar un evento de la cola');
   assert((html.match(/_eventoConfirmar\(/g) || []).length === 2,
     'sólo _eventoResolver puede confirmar: hay otra vía de eliminación');
+});
+
+// ─── B2 · contrato del envío a `actividad` tras el cierre de lectura ───
+// El servidor ya sólo deja leer a `authenticated` las columnas `evento_id` e
+// `id` de SUS filas (medido en f2-push y aplicado en producción). PostgREST
+// 14.18 traduce `?select=evento_id` a `RETURNING evento_id, id`; cualquier otra
+// columna en el `select` —o `return=representation` sin `select`— devuelve
+// 403 · 42501 y el evento acabaría en cuarentena. Esto fija ese contrato con el
+// `_eventoEnviar` y el `registrarActividad` REALES, y las respuestas literales
+// que dio el servidor.
+const _contratoActividad = await (async () => { const o = {};
+  try {
+    const evalua = { activity:'simulacro_alergenos', competency:'alergenos',
+                     kind:'evaluacion', score:18, total:20, seconds:240, meta:{ cat:'all' } };
+    const conRespuesta = async (responder) => {
+      const m = _montarEscritores({ responder });
+      m.M.sesion(ANA, _jwtDe(ANA));
+      const envio = await m.M.registrarActividad(evalua);
+      return { m, envio };
+    };
+
+    // A + B · 201 con la fila → confirmado (y se captura la petición)
+    { let enviado = null;
+      const { m, envio } = await conRespuesta((u, x) => {
+        enviado = JSON.parse(x.body).evento_id;
+        return _resp(201, [{ evento_id: enviado }]);
+      });
+      o.peticion = m.cap[0] || null; o.nPeticiones = m.cap.length;
+      o.ok = { envio, enviado, cola: m.M.cola().length, cuar: m.M.cuarentena().length }; }
+
+    // B · 201 con [] → cuarentena «sin-fila»
+    { const { m, envio } = await conRespuesta(() => _resp(201, []));
+      o.vacio = { envio, cola: m.M.cola().length, cuar: m.M.cuarentena() }; }
+
+    // C · 409 · 23505 del índice de eventos → duplicado
+    { const { m, envio } = await conRespuesta(() => _errPg(409, '23505',
+        'duplicate key value violates unique constraint "actividad_evt_uk"'));
+      o.dup = { envio, cola: m.M.cola().length, cuar: m.M.cuarentena().length }; }
+
+    // D · 403 · 42501 → cuarentena, y el segundo drenaje no lo vuelve a pedir
+    { const { m, envio } = await conRespuesta(() => _errPg(403, '42501',
+        'permission denied for table actividad'));
+      const p1 = m.cap.length;
+      await m.M.drenar('segundo');
+      o.sinAuth = { envio, cola: m.M.cola().length, cuar: m.M.cuarentena(),
+                    peticiones1: p1, peticiones2: m.cap.length }; }
+
+    // D · 403 con otro código → revisar: se queda en la cola y no se reintenta
+    { const { m, envio } = await conRespuesta(() => _errPg(403, 'XX000', 'otro rechazo'));
+      const p1 = m.cap.length;
+      await m.M.drenar('segundo');
+      o.otro403 = { envio, cola: m.M.cola(), cuar: m.M.cuarentena(),
+                    peticiones1: p1, peticiones2: m.cap.length }; }
+  } catch (e) { o.explosion = (e && e.message) || String(e); }
+  return o;
+})();
+
+test('B2 · contrato del envío a actividad tras el cierre de lectura', () => {
+  const c = _contratoActividad;
+  assert(!c.explosion, `el montaje del contrato ha reventado: ${c.explosion}`);
+
+  // A · la petición, por igualdad EXACTA: ni `*`, ni comas, ni otros parámetros
+  const p = c.peticion;
+  assert(p && c.nPeticiones === 1, `tenía que salir exactamente una petición: ${c.nPeticiones}`);
+  assert(p.url === 'https://ejemplo/rest/v1/actividad?select=evento_id',
+    `la URL del envío cambió: ${p.url}`);
+  assert(p.headers.Prefer === 'return=representation',
+    `la cabecera Prefer cambió: ${p.headers.Prefer}`);
+  assert(p.headers.Authorization === 'Bearer ' + _jwtDe(ANA),
+    'el envío tiene que firmarse con el token de la sesión, y sólo con él');
+  assert(p.body.evento_id && p.body.evento_id === c.ok.enviado,
+    'el cuerpo tiene que llevar el evento_id del evento enviado');
+  assert(!('select' in p.body) && !('columns' in p.body),
+    'el cuerpo no puede pedir columnas: ' + Object.keys(p.body).join(','));
+
+  // B · 201 con la fila → confirmado; 201 con [] → cuarentena «sin-fila»
+  assert(c.ok.envio && c.ok.envio.envio === 'confirmado', `201 tenía que confirmar: ${JSON.stringify(c.ok.envio)}`);
+  assert(c.ok.cola === 0 && c.ok.cuar === 0, 'un 201 con su fila saca el evento de la cola y no lo pone en cuarentena');
+  assert(c.vacio.envio && c.vacio.envio.envio === 'cuarentena', `201 con [] no es éxito: ${JSON.stringify(c.vacio.envio)}`);
+  assert(c.vacio.cola === 0 && c.vacio.cuar.length === 1 && c.vacio.cuar[0].motivo === 'sin-fila',
+    `201 con [] tiene que ir a cuarentena con motivo sin-fila: ${JSON.stringify(c.vacio.cuar)}`);
+
+  // C · 409 · 23505 · actividad_evt_uk → duplicado
+  assert(c.dup.envio && c.dup.envio.envio === 'duplicado', `el 409 del índice de eventos es duplicado: ${JSON.stringify(c.dup.envio)}`);
+  assert(c.dup.cola === 0 && c.dup.cuar === 0, 'un duplicado sale de la cola y no va a cuarentena');
+
+  // D · 403 · 42501 → cuarentena «sin-autorizacion», sin bucle
+  assert(c.sinAuth.envio && c.sinAuth.envio.envio === 'cuarentena', `403 · 42501 va a cuarentena: ${JSON.stringify(c.sinAuth.envio)}`);
+  assert(c.sinAuth.cola === 0 && c.sinAuth.cuar.length === 1 && c.sinAuth.cuar[0].motivo === 'sin-autorizacion',
+    `403 · 42501 tiene que salir de la cola a cuarentena con motivo sin-autorizacion: ${JSON.stringify(c.sinAuth.cuar)}`);
+  assert(c.sinAuth.peticiones1 === 1 && c.sinAuth.peticiones2 === 1,
+    `el segundo drenaje no puede volver a pedirlo: ${c.sinAuth.peticiones1} → ${c.sinAuth.peticiones2}`);
+
+  // D · 403 con otro código → revisar: se queda en la cola, no es «sin-autorizacion»
+  assert(c.otro403.envio && c.otro403.envio.envio === 'revisar', `403 sin 42501 es revisar: ${JSON.stringify(c.otro403.envio)}`);
+  assert(c.otro403.cola.length === 1 && c.otro403.cola[0].estado === 'revisar',
+    'un 403 con otro código se queda en la cola, marcado para revisar');
+  assert(c.otro403.cuar.length === 0, 'y no se manda a cuarentena como sin-autorizacion');
+  assert(c.otro403.peticiones2 === c.otro403.peticiones1, 'lo marcado para revisar no se reintenta');
+
+  // E · guardas estáticas sobre el fuente
+  const env = _xFn('_eventoEnviar');
+  assert((env.match(/fetch\(/g) || []).length === 1, '_eventoEnviar tiene que hacer exactamente un fetch');
+  assert(env.includes('`${SUPA_URL}/rest/v1/${ev.destino}?select=evento_id`'),
+    'la URL literal de _eventoEnviar tiene que seguir siendo ?select=evento_id');
+  assert(env.includes("'Prefer': 'return=representation'"),
+    "_eventoEnviar tiene que seguir enviando 'Prefer': 'return=representation'");
+  const usos = html.split('/rest/v1/actividad').length - 1;
+  assert(usos === 1, `sólo el camino directo puede nombrar /rest/v1/actividad; hay ${usos}`);
+  const reg = _xFn('registrarActividad');
+  const iDir = reg.indexOf('`${SUPA_URL}/rest/v1/actividad`');
+  assert(iDir !== -1, 'el camino directo de los juegos tiene que seguir yendo a /rest/v1/actividad sin parámetros');
+  const tramo = reg.slice(iDir, reg.indexOf('});', iDir));
+  assert(tramo.includes("'Prefer': 'return=minimal'"),
+    "el camino directo de los juegos tiene que seguir con 'Prefer': 'return=minimal'");
+  assert(!/return=representation/.test(tramo), 'el camino directo no puede pedir la fila de vuelta');
+  assert(!/\.from\(\s*['"]actividad['"]\s*\)/.test(html), "no puede aparecer .from('actividad')");
 });
 
 // ─── B2 · F5 · la cuarentena no pierde nada, ni sin sitio ───────
