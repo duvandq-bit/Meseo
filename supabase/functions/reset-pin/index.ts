@@ -17,6 +17,21 @@
 //   • request SIEMPRE responde ok:true (no revela si un correo existe) y limita
 //     a 1 envío/60 s por empleado.
 //
+// v8 (D1-M0b, oct 2026) · LÍMITE DE INTENTOS. Hasta v7 set-email,
+// email-status y change-pin comparaban el hash a mano y sin contar: se podía
+// probar PIN tras PIN contra cualquier nombre. Ahora:
+//   • POR OBJETIVO: la comprobación es verify_employee_pin_sha, la misma del
+//     login (10 fallos en 15 min bloquean ese nombre 15 min). Los fallos de
+//     aquí y los del login cuentan juntos.
+//   • POR ORIGEN: reset_pin_origen (supabase/d1_m0b_reset_pin_origen.sql),
+//     por la IP del navegador guardada como HMAC: 20 fallos de PIN o 5
+//     peticiones de enlace en 15 min → 15 min de espera.
+//   • Las respuestas no distinguen: nombre inexistente, sin PIN, PIN malo y
+//     nombre bloqueado dan el mismo 401 'auth'. Origen bloqueado: 429
+//     'rate_limited' (habla de quien llama, no del nombre). En request, el
+//     origen bloqueado sigue respondiendo {ok:true} y no envía nada.
+//   El resto del flujo (correo, token, confirm) no cambia.
+//
 // SECRETO (definir antes de usar en producción):
 //   supabase secrets set RESEND_API_KEY=<clave de resend.com>
 //   supabase secrets set RESEND_FROM='Meseo <no-reply@meseo.es>'   (opcional)
@@ -67,6 +82,43 @@ const rest = (path: string, init: RequestInit = {}) =>
     }
   });
 
+const rpc = (fn: string, args: Record<string, unknown>) =>
+  rest(`rpc/${fn}`, { method: 'POST', body: JSON.stringify(args) });
+
+// La IP del navegador: cf-connecting-ip, medida por la sonda del 13/09/2026
+// (supabase/functions/sonda-ip/RETIRAR.md). Se guarda como HMAC con una clave
+// del servidor: la tabla nunca tiene la IP en claro.
+async function origen(req: Request): Promise<string> {
+  const ip = (req.headers.get('cf-connecting-ip')
+    || (req.headers.get('x-forwarded-for') || '').split(',')[0]
+    || 'sin-ip').trim();
+  const k = await crypto.subtle.importKey('raw', new TextEncoder().encode(SUPA_SERVICE_KEY),
+    { name: 'HMAC', hash: 'SHA-256' }, false, ['sign']);
+  const sig = await crypto.subtle.sign('HMAC', k, new TextEncoder().encode('reset-pin:' + ip));
+  return [...new Uint8Array(sig)].map(b => b.toString(16).padStart(2, '0')).join('');
+}
+
+// Prueba de identidad con límite por origen y por objetivo.
+//   'ok' | 'auth' (no existe, sin PIN, PIN malo o nombre bloqueado: no se
+//   distinguen) | 'limitado' (origen bloqueado) | 'error' (no se pudo
+//   comprobar: no se cuenta y no se deja pasar)
+async function probarPin(org: string, name: string, pinHash: string): Promise<string> {
+  const clave = 'pin:' + org;
+  const b = await rpc('reset_pin_origen_bloqueado', { p_clave: clave });
+  if (!b.ok) return 'error';
+  if ((await b.json()) === true) return 'limitado';
+  const v = await rpc('verify_employee_pin_sha', { emp_name: name, sha_hex: pinHash });
+  if (!v.ok) return 'error';
+  if ((await v.json()) === true) return 'ok';
+  const a = await rpc('reset_pin_origen_anotar', { p_clave: clave });
+  if (!a.ok) return 'error';
+  return 'auth';
+}
+const pinFallo = (p: string) =>
+  p === 'limitado' ? json({ error: 'rate_limited' }, 429)
+  : p === 'error' ? json({ error: 'server' }, 500)
+  : json({ error: 'auth' }, 401);
+
 function emailHTML(name: string, link: string): string {
   return `<!doctype html><html lang="es"><body style="margin:0;background:#f4f1ea;font-family:-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;color:#2b2b2b">
   <div style="max-width:460px;margin:0 auto;padding:32px 24px">
@@ -100,6 +152,7 @@ Deno.serve(async (req: Request) => {
   try {
     const body = await req.json().catch(() => ({}));
     const action = body.action;
+    const org = await origen(req);
 
     // ── Guardar/actualizar el correo de recuperación (requiere PIN) ──
     if (action === 'set-email') {
@@ -108,10 +161,8 @@ Deno.serve(async (req: Request) => {
       const email = String(body.email || '').trim().toLowerCase();
       if (!name || !/^[a-f0-9]{64}$/.test(pinHash) || !validEmail(email)) return json({ error: 'bad_request' }, 400);
       // prueba de identidad: el hash del PIN debe coincidir con el guardado
-      const r = await rest(`employees?select=name,pin&name=eq.${encodeURIComponent(name)}`);
-      const rows = await r.json();
-      const emp = Array.isArray(rows) && rows.length ? rows[0] : null;
-      if (!emp || emp.pin !== pinHash) return json({ error: 'auth' }, 401);
+      const p = await probarPin(org, name, pinHash);
+      if (p !== 'ok') return pinFallo(p);
       // el correo no puede estar ya asociado a OTRO empleado
       const ex = await rest(`employee_recovery?select=employee_name&email=eq.${encodeURIComponent(email)}`);
       const exRows = await ex.json();
@@ -130,10 +181,8 @@ Deno.serve(async (req: Request) => {
       const name = String(body.name || '').trim();
       const pinHash = String(body.pinHash || '');
       if (!name || !/^[a-f0-9]{64}$/.test(pinHash)) return json({ error: 'bad_request' }, 400);
-      const r = await rest(`employees?select=name,pin&name=eq.${encodeURIComponent(name)}`);
-      const rows = await r.json();
-      const emp = Array.isArray(rows) && rows.length ? rows[0] : null;
-      if (!emp || emp.pin !== pinHash) return json({ error: 'auth' }, 401);
+      const p = await probarPin(org, name, pinHash);
+      if (p !== 'ok') return pinFallo(p);
       const er = await rest(`employee_recovery?select=email&employee_name=eq.${encodeURIComponent(name)}`);
       const erRows = await er.json();
       const email = Array.isArray(erRows) && erRows.length ? erRows[0].email : null;
@@ -146,10 +195,8 @@ Deno.serve(async (req: Request) => {
       const pinHash = String(body.pinHash || '');
       const newPinHash = String(body.newPinHash || '');
       if (!name || !/^[a-f0-9]{64}$/.test(pinHash) || !/^[a-f0-9]{64}$/.test(newPinHash)) return json({ error: 'bad_request' }, 400);
-      const r = await rest(`employees?select=name,pin&name=eq.${encodeURIComponent(name)}`);
-      const rows = await r.json();
-      const emp = Array.isArray(rows) && rows.length ? rows[0] : null;
-      if (!emp || emp.pin !== pinHash) return json({ error: 'auth' }, 401);
+      const p = await probarPin(org, name, pinHash);
+      if (p !== 'ok') return pinFallo(p);
       const up = await rest(`employees?name=eq.${encodeURIComponent(name)}`, {
         method: 'PATCH', headers: { Prefer: 'return=minimal' }, body: JSON.stringify({ pin: newPinHash })
       });
@@ -161,6 +208,11 @@ Deno.serve(async (req: Request) => {
     if (action === 'request') {
       const email = String(body.email || '').trim().toLowerCase();
       if (!validEmail(email)) return json({ ok: true }); // no filtrar
+      // Límite por origen: bloqueado → misma respuesta, sin buscar ni enviar.
+      const cc = 'correo:' + org;
+      const b = await rpc('reset_pin_origen_bloqueado', { p_clave: cc });
+      if (!b.ok || (await b.json()) === true) return json({ ok: true });
+      await rpc('reset_pin_origen_anotar', { p_clave: cc });
       const r = await rest(`employee_recovery?select=employee_name,email&email=eq.${encodeURIComponent(email)}`);
       const rows = await r.json();
       const rec = Array.isArray(rows) && rows.length ? rows[0] : null;

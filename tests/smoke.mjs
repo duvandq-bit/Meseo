@@ -8933,9 +8933,15 @@ test('backend reset-pin existe y cubre las tres acciones', () => {
   const fn = read('supabase/functions/reset-pin/index.ts');
   for (const a of ["'set-email'", "'request'", "'confirm'"])
     assert(fn.includes(a), `la Edge Function debe manejar la acción ${a}`);
-  // set-email exige que el hash del PIN coincida (prueba de identidad)
-  assert(/emp\.pin\s*!==\s*pinHash/.test(fn) && /'auth'/.test(fn),
-    'set-email debe rechazar (auth) si el PIN no coincide');
+  // set-email exige que el hash del PIN coincida (prueba de identidad), y la
+  // comprobación es la del login, con su límite de intentos (D1-M0b): nada de
+  // comparar el hash a mano, que no cuenta fallos.
+  assert(/rpc\('verify_employee_pin_sha'/.test(fn) && /'auth'/.test(fn),
+    'set-email debe rechazar (auth) si el PIN no coincide, vía verify_employee_pin_sha');
+  assert(!/emp\.pin\s*!==\s*pinHash/.test(fn),
+    'reset-pin no debe comparar el PIN a mano: así no hay límite de intentos');
+  assert(/reset_pin_origen_bloqueado/.test(fn) && /reset_pin_origen_anotar/.test(fn),
+    'reset-pin debe limitar también por origen');
   // los tokens se guardan HASHEADOS, nunca en claro
   assert(/token_hash/.test(fn) && /sha256hex\(token\)/.test(fn),
     'los tokens deben guardarse como sha256(token)');
