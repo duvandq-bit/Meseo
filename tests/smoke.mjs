@@ -14061,6 +14061,123 @@ test('F3 · los criterios de eliminación están en UN solo sitio', () => {
     'sólo _eventoResolver puede confirmar: hay otra vía de eliminación');
 });
 
+// ─── B2 · contrato del envío a `actividad` tras el cierre de lectura ───
+// El servidor ya sólo deja leer a `authenticated` las columnas `evento_id` e
+// `id` de SUS filas (medido en f2-push y aplicado en producción). PostgREST
+// 14.18 traduce `?select=evento_id` a `RETURNING evento_id, id`; cualquier otra
+// columna en el `select` —o `return=representation` sin `select`— devuelve
+// 403 · 42501 y el evento acabaría en cuarentena. Esto fija ese contrato con el
+// `_eventoEnviar` y el `registrarActividad` REALES, y las respuestas literales
+// que dio el servidor.
+const _contratoActividad = await (async () => { const o = {};
+  try {
+    const evalua = { activity:'simulacro_alergenos', competency:'alergenos',
+                     kind:'evaluacion', score:18, total:20, seconds:240, meta:{ cat:'all' } };
+    const conRespuesta = async (responder) => {
+      const m = _montarEscritores({ responder });
+      m.M.sesion(ANA, _jwtDe(ANA));
+      const envio = await m.M.registrarActividad(evalua);
+      return { m, envio };
+    };
+
+    // A + B · 201 con la fila → confirmado (y se captura la petición)
+    { let enviado = null;
+      const { m, envio } = await conRespuesta((u, x) => {
+        enviado = JSON.parse(x.body).evento_id;
+        return _resp(201, [{ evento_id: enviado }]);
+      });
+      o.peticion = m.cap[0] || null; o.nPeticiones = m.cap.length;
+      o.ok = { envio, enviado, cola: m.M.cola().length, cuar: m.M.cuarentena().length }; }
+
+    // B · 201 con [] → cuarentena «sin-fila»
+    { const { m, envio } = await conRespuesta(() => _resp(201, []));
+      o.vacio = { envio, cola: m.M.cola().length, cuar: m.M.cuarentena() }; }
+
+    // C · 409 · 23505 del índice de eventos → duplicado
+    { const { m, envio } = await conRespuesta(() => _errPg(409, '23505',
+        'duplicate key value violates unique constraint "actividad_evt_uk"'));
+      o.dup = { envio, cola: m.M.cola().length, cuar: m.M.cuarentena().length }; }
+
+    // D · 403 · 42501 → cuarentena, y el segundo drenaje no lo vuelve a pedir
+    { const { m, envio } = await conRespuesta(() => _errPg(403, '42501',
+        'permission denied for table actividad'));
+      const p1 = m.cap.length;
+      await m.M.drenar('segundo');
+      o.sinAuth = { envio, cola: m.M.cola().length, cuar: m.M.cuarentena(),
+                    peticiones1: p1, peticiones2: m.cap.length }; }
+
+    // D · 403 con otro código → revisar: se queda en la cola y no se reintenta
+    { const { m, envio } = await conRespuesta(() => _errPg(403, 'XX000', 'otro rechazo'));
+      const p1 = m.cap.length;
+      await m.M.drenar('segundo');
+      o.otro403 = { envio, cola: m.M.cola(), cuar: m.M.cuarentena(),
+                    peticiones1: p1, peticiones2: m.cap.length }; }
+  } catch (e) { o.explosion = (e && e.message) || String(e); }
+  return o;
+})();
+
+test('B2 · contrato del envío a actividad tras el cierre de lectura', () => {
+  const c = _contratoActividad;
+  assert(!c.explosion, `el montaje del contrato ha reventado: ${c.explosion}`);
+
+  // A · la petición, por igualdad EXACTA: ni `*`, ni comas, ni otros parámetros
+  const p = c.peticion;
+  assert(p && c.nPeticiones === 1, `tenía que salir exactamente una petición: ${c.nPeticiones}`);
+  assert(p.url === 'https://ejemplo/rest/v1/actividad?select=evento_id',
+    `la URL del envío cambió: ${p.url}`);
+  assert(p.headers.Prefer === 'return=representation',
+    `la cabecera Prefer cambió: ${p.headers.Prefer}`);
+  assert(p.headers.Authorization === 'Bearer ' + _jwtDe(ANA),
+    'el envío tiene que firmarse con el token de la sesión, y sólo con él');
+  assert(p.body.evento_id && p.body.evento_id === c.ok.enviado,
+    'el cuerpo tiene que llevar el evento_id del evento enviado');
+  assert(!('select' in p.body) && !('columns' in p.body),
+    'el cuerpo no puede pedir columnas: ' + Object.keys(p.body).join(','));
+
+  // B · 201 con la fila → confirmado; 201 con [] → cuarentena «sin-fila»
+  assert(c.ok.envio && c.ok.envio.envio === 'confirmado', `201 tenía que confirmar: ${JSON.stringify(c.ok.envio)}`);
+  assert(c.ok.cola === 0 && c.ok.cuar === 0, 'un 201 con su fila saca el evento de la cola y no lo pone en cuarentena');
+  assert(c.vacio.envio && c.vacio.envio.envio === 'cuarentena', `201 con [] no es éxito: ${JSON.stringify(c.vacio.envio)}`);
+  assert(c.vacio.cola === 0 && c.vacio.cuar.length === 1 && c.vacio.cuar[0].motivo === 'sin-fila',
+    `201 con [] tiene que ir a cuarentena con motivo sin-fila: ${JSON.stringify(c.vacio.cuar)}`);
+
+  // C · 409 · 23505 · actividad_evt_uk → duplicado
+  assert(c.dup.envio && c.dup.envio.envio === 'duplicado', `el 409 del índice de eventos es duplicado: ${JSON.stringify(c.dup.envio)}`);
+  assert(c.dup.cola === 0 && c.dup.cuar === 0, 'un duplicado sale de la cola y no va a cuarentena');
+
+  // D · 403 · 42501 → cuarentena «sin-autorizacion», sin bucle
+  assert(c.sinAuth.envio && c.sinAuth.envio.envio === 'cuarentena', `403 · 42501 va a cuarentena: ${JSON.stringify(c.sinAuth.envio)}`);
+  assert(c.sinAuth.cola === 0 && c.sinAuth.cuar.length === 1 && c.sinAuth.cuar[0].motivo === 'sin-autorizacion',
+    `403 · 42501 tiene que salir de la cola a cuarentena con motivo sin-autorizacion: ${JSON.stringify(c.sinAuth.cuar)}`);
+  assert(c.sinAuth.peticiones1 === 1 && c.sinAuth.peticiones2 === 1,
+    `el segundo drenaje no puede volver a pedirlo: ${c.sinAuth.peticiones1} → ${c.sinAuth.peticiones2}`);
+
+  // D · 403 con otro código → revisar: se queda en la cola, no es «sin-autorizacion»
+  assert(c.otro403.envio && c.otro403.envio.envio === 'revisar', `403 sin 42501 es revisar: ${JSON.stringify(c.otro403.envio)}`);
+  assert(c.otro403.cola.length === 1 && c.otro403.cola[0].estado === 'revisar',
+    'un 403 con otro código se queda en la cola, marcado para revisar');
+  assert(c.otro403.cuar.length === 0, 'y no se manda a cuarentena como sin-autorizacion');
+  assert(c.otro403.peticiones2 === c.otro403.peticiones1, 'lo marcado para revisar no se reintenta');
+
+  // E · guardas estáticas sobre el fuente
+  const env = _xFn('_eventoEnviar');
+  assert((env.match(/fetch\(/g) || []).length === 1, '_eventoEnviar tiene que hacer exactamente un fetch');
+  assert(env.includes('`${SUPA_URL}/rest/v1/${ev.destino}?select=evento_id`'),
+    'la URL literal de _eventoEnviar tiene que seguir siendo ?select=evento_id');
+  assert(env.includes("'Prefer': 'return=representation'"),
+    "_eventoEnviar tiene que seguir enviando 'Prefer': 'return=representation'");
+  const usos = html.split('/rest/v1/actividad').length - 1;
+  assert(usos === 1, `sólo el camino directo puede nombrar /rest/v1/actividad; hay ${usos}`);
+  const reg = _xFn('registrarActividad');
+  const iDir = reg.indexOf('`${SUPA_URL}/rest/v1/actividad`');
+  assert(iDir !== -1, 'el camino directo de los juegos tiene que seguir yendo a /rest/v1/actividad sin parámetros');
+  const tramo = reg.slice(iDir, reg.indexOf('});', iDir));
+  assert(tramo.includes("'Prefer': 'return=minimal'"),
+    "el camino directo de los juegos tiene que seguir con 'Prefer': 'return=minimal'");
+  assert(!/return=representation/.test(tramo), 'el camino directo no puede pedir la fila de vuelta');
+  assert(!/\.from\(\s*['"]actividad['"]\s*\)/.test(html), "no puede aparecer .from('actividad')");
+});
+
 // ─── B2 · F5 · la cuarentena no pierde nada, ni sin sitio ───────
 const _CUAR = 'txk_eventos_cuarentena';
 
