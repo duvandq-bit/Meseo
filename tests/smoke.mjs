@@ -2847,11 +2847,15 @@ test('supervisor panel: realtime employees channel + silent refresh + live pill'
 test('auditoría panel supervisor (jul 2026): datos reales, push, LQA, a11y, marca', () => {
   // ── Push: auth + marca Meseo (antes sin apikey → 401 silencioso; título TXOKO) ──
   assert(!/TXOKO Formación/.test(html), 'los títulos de push no deben usar la marca vieja «TXOKO Formación»');
+  // D1-M0c: una sola puerta (_pushEnviar), con apikey y el token de SESIÓN.
+  // La clave anónima no autoriza un aviso: send-push v10 la rechaza.
   const pushIdx = [...html.matchAll(/functions\/v1\/send-push/g)].map(m => m.index);
-  assert(pushIdx.length >= 2 && pushIdx.every(i => {
-    const seg = html.slice(i, i + 180);
-    return /'apikey':\s*SUPA_KEY/.test(seg) && /Authorization/.test(seg);
-  }), 'las llamadas a send-push deben mandar apikey + Authorization como el resto');
+  assert(pushIdx.length === 1 && pushIdx.every(i => {
+    const seg = html.slice(i, i + 220);
+    return /'apikey':\s*SUPA_KEY/.test(seg) && /'Authorization':`Bearer \$\{t\}`/.test(seg);
+  }), 'send-push se llama sólo desde _pushEnviar, con apikey + el token de sesión');
+  assert(/function _pushEnviar\(cuerpo\)\{\s*const t = _authCtx\(\)\.token;\s*if\(!t\) return Promise\.resolve\(null\);/.test(html),
+    'sin sesión real no sale ningún aviso (nunca con la clave anónima ni con _bearer())');
   assert(/title:'📲 Meseo · v'/.test(html) && /title: `\$\{typeIcons\[type\]\|\|'◆'\} Meseo`/.test(html),
     'los push deben titularse Meseo');
   // ── Sincronización de datos que el supervisor necesita ──
@@ -10862,13 +10866,15 @@ test('Multi-restaurante: ninguna consulta se escapa del filtro de restaurante', 
   // El aviso a «todo el equipo» tiene que decir de qué equipo habla.
   // Se cuentan por LÍNEA: una expresión que busque el cierre `})` se para en el
   // primer paréntesis que encuentra y se deja llamadas fuera (vio 3 de 5).
-  const push = [];
-  for (let i = 0; i < lineas.length; i++)
-    if (/functions\/v1\/send-push/.test(lineas[i])) push.push({ n: i + 1, txt: lineas.slice(i, i + 12).join('\n') });
-  assert(push.length >= 5, `esperaba las 5 llamadas a send-push, veo ${push.length}`);
-  for (const p of push)
-    assert(/venue: *_venueActual\(\)/.test(p.txt),
-      `la llamada a send-push de la línea ${p.n} no lleva el restaurante: sin él, «todo el equipo» son TODOS los restaurantes`);
+  // D1-M0c: las cinco llamadas pasan por _pushEnviar, y _pushEnviar pone el
+  // restaurante en todas (v9 lo necesita para que 'all' no sea global; v10 lo
+  // usa sólo para rechazar uno ajeno) y el PIN sólo cuando es 'all'.
+  const usos = (html.match(/_pushEnviar\(/g) || []).length - 1;   // menos la definición
+  assert(usos >= 5, `esperaba las 5 llamadas a send-push vía _pushEnviar, veo ${usos}`);
+  assert(/const b = Object\.assign\(\{\}, cuerpo, \{ venue: _venueActual\(\) \}\);/.test(html),
+    '_pushEnviar tiene que poner el restaurante: sin él, con v9, «todo el equipo» son TODOS los restaurantes');
+  assert(/if\(b\.target === 'all'\) b\.pin = _supPin \|\| '';/.test(html),
+    "'all' tiene que llevar el PIN de supervisor (v10 lo exige junto al rol)");
   // Y la función del servidor tiene que usarlo.
   const fn = read('supabase/functions/send-push/index.ts');
   assert(/const \{ target, venue,/.test(fn), 'send-push tiene que recibir el restaurante');
