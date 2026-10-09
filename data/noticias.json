@@ -1,20 +1,225 @@
 {
- "updated": "2026-10-09T11:56:21.491Z",
+ "updated": "2026-10-09T21:43:19.035Z",
  "items": [
   {
-   "t": "Iván Ania pone el foco en el gran lastre del Córdoba CF: «Estamos concediendo más goles de lo que somos capaces de hacer»",
-   "u": "https://www.abc.es/espana/andalucia/cordoba/cordoba-cf/ivan-ania-pone-foco-gran-lastre-cordoba-20261009134052-nts.html",
+   "t": "Ferran Adrià reivindica la revolución del restaurante que marcó su trayectoria en la alta cocina: \"Aquí se cambió la historia de la gastronomía\"",
+   "u": "https://cadenaser.com/nacional/2026/10/09/ferran-adria-reivindica-la-revolucion-del-restaurante-que-marco-su-trayectoria-en-la-alta-cocina-aqui-se-cambio-la-historia-de-la-gastronomia-cadena-ser/",
+   "s": "Cadena SER",
+   "d": "2026-10-09T19:58:45.000Z",
+   "tags": [
+    "ALTA COCINA"
+   ],
+   "img": "https://cadenaser.com/resizer/v2/QVP3SPFZTJFULIK2AHCJPOCUT4.jpeg?auth=50b88860c0b35481d32224765c6912d7b6d5706f8859d74b57d082c1b315337d&quality=70&width=1200&height=675&smart=true"
+  },
+  {
+   "t": "Mikel López Iturriaga recibe en Albacete el Premio de Cultura Gastronómica",
+   "u": "https://www.abc.es/espana/castilla-la-mancha/mikel-lopez-iturriaga-recibe-albacete-premio-cultura-20261009185235-nt.html",
    "s": "ABC",
-   "d": "2026-10-09T11:40:52.000Z",
+   "d": "2026-10-09T16:52:36.000Z",
+   "tags": [
+    "MICHELIN"
+   ],
+   "img": "https://s1.abcstatics.com/abc/www/multimedia/espana/2026/10/09/1000084036-U04612304737FPv-1200x630@diario_abc.jpg"
+  },
+  {
+   "t": "Vidocq, Premio Nacional de Hostelería por su compromiso con la sostenibilidad",
+   "u": "https://cadenaser.com/aragon/2026/10/09/vidocq-premio-nacional-de-hosteleria-por-su-compromiso-con-la-sostenibilidad-radio-huesca/",
+   "s": "Cadena SER",
+   "d": "2026-10-09T16:35:08.000Z",
+   "tags": [
+    "MICHELIN"
+   ],
+   "img": "https://cadenaser.com/resizer/v2/IF6F5W75HZAL5MC754WUBLGLZM.jpg?auth=6aa5566b9d1a79cb29210a2f168b1ab5945034693d235c3aae14824de99c972f&quality=70&width=1200&height=675&smart=true"
+  },
+  {
+   "t": "Dani Carnero, el chef malagueño con estrella Michelin que defiende la cocina de siempre: \"Me preocupa que en los restaurantes se coma de quinta gama\"",
+   "u": "https://www.hola.com/cocina/noticias/20261009925898/chef-malagueno-estrella-michelin-defiende-la-cocina-de-siempre-dani-carnero/",
+   "s": "HOLA",
+   "d": "2026-10-09T16:16:00.000Z",
+   "tags": [
+    "ALTA COCINA",
+    "MICHELIN"
+   ],
+   "img": "https://www.hola.com/horizon/landscape/1200/0b7a73c695d0-dsc02160.jpg"
+  },
+  {
+   "t": "El Vidocq de Formigal, Premio Nacional de Hostelería por su modelo gastronómico sostenible",
+   "u": "https://www.eldiariodehuesca.com/sociedad/vidocq-formigal-premio-nacional-hosteleria-por-su-modelo-gastronomico-sostenible_47961_102.html",
+   "s": "El Diario de Huesca",
+   "d": "2026-10-09T15:58:27.000Z",
+   "tags": [
+    "MICHELIN"
+   ],
+   "img": "https://www.eldiariodehuesca.com/uploads/s1/46/28/17/0/diego-herrero-del-vidocq-de-formigal_23_1200x676.webp"
+  },
+  {
+   "t": "Seaside Collection, reconocido con el premio Travellers’ Choice 2026 de Tripadvisor en sus cuatro hoteles en Canarias",
+   "u": "https://www.elconfidencialdigital.com/articulo/viajes/seaside-collection-reconocido-premio-travellers-choice-2026-tripadvisor-cuatro-hoteles-canarias/202610091758001492434.amp.html",
+   "s": "Confidencial Digital",
+   "d": "2026-10-09T15:58:00.000Z",
+   "tags": [
+    "VINO",
+    "CANARIAS"
+   ],
+   "img": "https://www.elconfidencialdigital.com/media/elconfidencialdigital/images/2026/10/09/2026100917572214657.png"
+  },
+  {
+   "t": "Prealerta por lluvias en Canarias: islas afectadas y previsión",
+   "u": "https://www.eldiario.es/canariasahora/tiempo-canarias/prealerta-lluvias-canarias-islas-afectadas-prevision_1_13576224.html",
+   "s": "elDiario.es",
+   "d": "2026-10-09T15:45:12.000Z",
    "tags": [
     "CANARIAS"
    ],
-   "img": "https://s1.abcstatics.com/abc/www/multimedia/espana/2026/10/09/ania-valladolid-partido-U25488768652QFt-1200x630@diario_abc.jpeg"
+   "img": "https://static.eldiario.es/clip/4e502cab-c355-4aaf-93d9-4f47826c166f_facebook-aspect-ratio-1200-675_default_0.jpg"
+  },
+  {
+   "t": "El I Congreso de Marketing del Vino de Canarias se celebra en La Palma",
+   "u": "https://www.eldiario.es/canariasahora/lapalmaahora/sociedad/i-congreso-marketing-vino-canarias-celebra-palma_1_13576217.html",
+   "s": "elDiario.es",
+   "d": "2026-10-09T15:44:56.000Z",
+   "tags": [
+    "CANARIAS",
+    "VINO"
+   ],
+   "img": "https://static.eldiario.es/clip/e7dce0af-b81b-406b-ad17-63cd48a8a0b7_facebook-aspect-ratio-1200-675_default_0.jpg"
+  },
+  {
+   "t": "ADEIN Tenerife y Econy Gran Canaria lucharán por la III Copa Gobierno de Canarias BSR",
+   "u": "https://www.eldiario.es/canariasahora/deportes/baloncesto/adein-tenerife-econy-gran-canaria-lucharan-copa-gobierno-canarias_1_13576025.html",
+   "s": "elDiario.es",
+   "d": "2026-10-09T14:37:32.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://static.eldiario.es/clip/6782ebd4-637e-44ec-a3ad-450380a2b927_facebook-aspect-ratio-1200-675_default_0_x990y270.jpg"
+  },
+  {
+   "t": "El cocinero de un restaurante de Murcia competirá por el título de Maestro Parrillero 2026 de la Península Ibérica",
+   "u": "https://www.laverdad.es/gastronomia/cocinero-restaurante-murcia-competira-titulo-maestro-parrillero-20261009163618-nt_amp.html",
+   "s": "La Verdad",
+   "d": "2026-10-09T14:36:18.000Z",
+   "tags": [
+    "CHEF"
+   ],
+   "img": "https://s3.ppllstatics.com/laverdad/www/multimedia/gastronomia/2026/10/09/maestro-parrillero-kxuG-U302160342054ibG-1200x840@La%20Verdad.jpg"
+  },
+  {
+   "t": "El restaurante de carretera definitivo está en este pueblo medieval de Madrid: Martín Berasategui confiesa su secreto mejor guardado",
+   "u": "https://www.noticiasdelvino.com/escapadas/2026/10/09/el-restaurante-de-carretera-definitivo-esta-en-este-pueblo-medieval-de-madrid-martin-berasategui-confiesa-su-secreto-mejor-guardado-74843/",
+   "s": "Noticias del Vino",
+   "d": "2026-10-09T14:10:14.000Z",
+   "tags": [
+    "CHEF"
+   ],
+   "img": "https://www.noticiasdelvino.com/wp-content/uploads/image-583.png.webp"
+  },
+  {
+   "t": "Puntacana Resort anuncia quinta edición de Culinary Weekend con chef brasileña Tássia Magalhães",
+   "u": "https://acento.com.do/actualidad/puntacana-resort-anuncia-quinta-edicion-de-culinary-weekend-con-chef-brasilena-tassia-magalhaes-9766662.html",
+   "s": "Acento",
+   "d": "2026-10-09T14:00:11.000Z",
+   "tags": [
+    "ALTA COCINA"
+   ],
+   "img": "https://media.acento.com.do/media/storage02/uploads/2024/07/Tortuga-Bay-Puntacana-Resort-1-OG.jpg"
+  },
+  {
+   "t": "La Universidad de La Laguna analiza el papel del vino en la identidad atlántica de Canarias",
+   "u": "https://www.vinetur.com/20261009108665/la-universidad-de-la-laguna-analiza-el-papel-del-vino-en-la-identidad-atlantica-de-canarias.html",
+   "s": "Vinetur",
+   "d": "2026-10-09T13:19:05.000Z",
+   "tags": [
+    "VINO",
+    "CANARIAS"
+   ],
+   "img": "https://www.vinetur.com/visuals/2026/october/9/agent-20261009-144458-7fc31c71759ba38a.jpg"
+  },
+  {
+   "t": "Santa Lucía se llena de sabor latinoamericano con dos días de música, gastronomía y danza",
+   "u": "https://www.canarias7.es/canarias/gran-canaria/santa-lucia-llena-sabor-latinoamericano-20261009141605-nt.html",
+   "s": "Canarias7",
+   "d": "2026-10-09T13:16:05.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://s2.ppllstatics.com/canarias7/www/multimedia/local/2026/10/09/santalucia2-ka5B-U302159558690GxD-1200x840@Canarias7.jpg"
+  },
+  {
+   "t": "Jordi Cruz, chef de alta cocina, sobre preparar caldo de huesos: \"Un poquito de cebolla no, porque nos va a dar un sabor un poquito más extraño\"",
+   "u": "https://www.larazon.es/sociedad/jordi-cruz-chef-alta-cocina-preparar-caldo-huesos-poquito-cebolla-porque-dar-sabor-poquito-mas-extrano-b50m_202610096ac8e2f6bafd3d73635c346b.html",
+   "s": "La Razón",
+   "d": "2026-10-09T12:49:58.000Z",
+   "tags": [
+    "ALTA COCINA"
+   ],
+   "img": "https://fotografias-2.larazon.es/clipping/cmsimages01/2026/10/09/7980BEA1-C1A4-443E-AEFE-46F6107B1BE9/jordi-cruz-chef-alta-cocina-preparar-caldo-huesos-poquito-cebolla-porque-nos-dar-sabor-poquito-mas-extrano_98.jpg?crop=1900,1069,x0,y0&width=1900&height=1069&optimize=low&format=webply"
+  },
+  {
+   "t": "Dos chefs españoles se reencuentran en Filipinas para firmar un menú de estrella Michelin",
+   "u": "https://www.infobae.com/america/agencias/2026/10/09/dos-chefs-espanoles-se-reencuentran-en-filipinas-para-firmar-un-menu-de-estrella-michelin/?outputType",
+   "s": "Infobae",
+   "d": "2026-10-09T12:44:55.000Z",
+   "tags": [
+    "ALTA COCINA",
+    "MICHELIN"
+   ]
+  },
+  {
+   "t": "Darío Pérez Rodríguez, alumno del IES Cándido Marante, logra el Premio Extraordinario de Bachillerato de Canarias",
+   "u": "https://www.eldiario.es/canariasahora/lapalmaahora/sociedad/dario-perez-rodriguez-alumno-ies-candido-marante-logra-premio-extraordinario-bachillerato-canarias_1_13575376.html",
+   "s": "elDiario.es",
+   "d": "2026-10-09T11:59:34.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://static.eldiario.es/clip/1f0c8afd-5d3d-4993-a1d0-6fa5786bbe9b_facebook-aspect-ratio-1200-675_default_1153038.jpg"
+  },
+  {
+   "t": "Vinos de Gran Canaria brillan en San Sebastián Gastronomika",
+   "u": "https://lavozcanaria.com/area-metropolitana-gran-canaria/general/vinos-de-gran-canaria-brillan-en-san-sebastian-gastronomika",
+   "s": "La Voz Canaria",
+   "d": "2026-10-09T11:57:21.000Z",
+   "tags": [
+    "VINO",
+    "CANARIAS"
+   ]
+  },
+  {
+   "t": "Gran Canaria Wines Shine at San Sebastián Gastronomika",
+   "u": "https://lavozcanaria.com/en/area-metropolitana-gran-canaria/general/gran-canaria-wines-shine-at-san-sebastian-gastronomika",
+   "s": "La Voz Canaria",
+   "d": "2026-10-09T11:57:21.000Z",
+   "tags": [
+    "VINO",
+    "CANARIAS"
+   ]
+  },
+  {
+   "t": "Rías Bajas y Lanzarote Golf: un destino gastronómico único nace en Canarias",
+   "u": "https://www.canarias7.es/gastronomia-c7/restaurantes/rias-bajas-lanzarote-golf-destino-gastronomico-unico-20261009124143-nt.html",
+   "s": "Canarias7",
+   "d": "2026-10-09T11:41:44.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://s1.ppllstatics.com/canarias7/www/multimedia/gastronomia-c7/2026/10/09/portada-kN2C-U302156910418u5D-1200x840@Canarias7.jpg"
+  },
+  {
+   "t": "HiperDino abre HD Icod, su mayor proyecto en Tenerife Norte en 2026, con 25 millones de inversión",
+   "u": "https://www.biosferadigital.com/articulo/economia/hiperdino-abre-hd-icod-mayor-proyecto-tenerife-norte-2026-25-millones-inversion/20261009123808164752.html",
+   "s": "Biosferadigital",
+   "d": "2026-10-09T11:38:08.000Z",
+   "tags": [
+    "VINO",
+    "CANARIAS"
+   ],
+   "img": "https://www.biosferadigital.com/media/biosferadigital/images/2026/10/09/2026100912374334487.jpg"
   },
   {
    "t": "Santa Cruz de Tenerife, Capital Española de la Gastronomía 2027: Canarias conquista la mesa nacional",
    "u": "https://informaciongastronomica.com/santa-cruz-de-tenerife-capital-espanola-de-la-gastronomia-2027-canarias-conquista-la-mesa-nacional/",
-   "s": "informaciongastronomica.com",
+   "s": "Información Gastronómica",
    "d": "2026-10-09T09:55:22.000Z",
    "tags": [
     "CANARIAS"
@@ -53,7 +258,7 @@
    "t": "Tenerife conquista San Sebastián Gastronomika con sus sabores volcánicos",
    "u": "https://gastrocanarias.com/art/22840/tenerife-conquista-san-sebastian-gastronomika-con-sus-sabores-volcanicos",
    "s": "Gastrocanarias",
-   "d": "2026-10-09T09:06:54.000Z",
+   "d": "2026-10-09T09:16:47.000Z",
    "tags": [
     "CANARIAS"
    ],
@@ -79,6 +284,16 @@
    ]
   },
   {
+   "t": "RosaNegra eleva su apuesta por España con la compra de Tepic",
+   "u": "https://sivarious.com/operaciones/rosanegra-eleva-su-apuesta-por-espana-con-la-compra-de-tepic-20261009-0600/",
+   "s": "Sivarious",
+   "d": "2026-10-09T08:44:57.000Z",
+   "tags": [
+    "MICHELIN"
+   ],
+   "img": "https://sivarious.com/wp-content/uploads/2026/10/unnamed-1.png"
+  },
+  {
    "t": "Hoteles: ¡Que empiece la fiesta!",
    "u": "https://www.eldia.es/canarias/2026/10/09/hoteles-empiece-fiesta-135165767.html",
    "s": "Eldía",
@@ -86,209 +301,6 @@
    "tags": [
     "CANARIAS"
    ]
-  },
-  {
-   "t": "Los españoles adelantan la hora de la cena: la mitad de las reservas en los restaurantes son antes de las nueve de la noche",
-   "u": "https://www.eldia.es/sociedad/2026/10/09/espanoles-adelantan-hora-cena-ocho-tarde-135165796.amp.html",
-   "s": "Eldía",
-   "d": "2026-10-09T08:09:38.000Z",
-   "tags": [
-    "CANARIAS"
-   ]
-  },
-  {
-   "t": "“Lo que más me sigue moviendo es la curiosidad”, Paolo Casagrande, chef de Lasarte*** y director gastronómico de Osteria Condal",
-   "u": "https://caternewsdigital.com/principal/lo-que-mas-me-sigue-moviendo-es-la-curiosidad-paolo-casagrande-chef-de-lasarte-y-director-gastronomico-de-osteria-condal/",
-   "s": "CaterNews",
-   "d": "2026-10-09T07:48:46.000Z",
-   "tags": [
-    "ALTA COCINA"
-   ],
-   "img": "https://caternewsdigital.com/wp-content/uploads/2026/10/MG_6463-2-Paolo-Casagrande.jpg"
-  },
-  {
-   "t": "Tenerife arrasa en San Sebastián Gastronomika con 4.000 catas y un homenaje a Berasategui",
-   "u": "https://www.canariasenpleno.com/tenerife-gastronomika-2026/",
-   "s": "Canarias en Pleno",
-   "d": "2026-10-09T07:29:46.000Z",
-   "tags": [
-    "CANARIAS",
-    "CHEF"
-   ]
-  },
-  {
-   "t": "El brunch de Tenerife que se ha convertido en una parada obligatoria para desayunar: hasta 33 bocadillos gourmet para elegir",
-   "u": "https://www.eldia.es/tenerife/2026/10/09/brunch-tenerife-convertido-parada-obligatoria-desayunar-dv-133432026.html",
-   "s": "Eldía",
-   "d": "2026-10-09T07:00:00.000Z",
-   "tags": [
-    "CANARIAS"
-   ]
-  },
-  {
-   "t": "Restaurantes y ocio ganan peso en el gasto de los turistas internacionales, mientras el alojamiento se recupera",
-   "u": "https://www.laprovincia.es/economia/2026/10/09/restaurantes-ocio-ganan-peso-gasto-turistas-internacionales-135162311.amp.html",
-   "s": "La Provincia",
-   "d": "2026-10-09T05:19:19.000Z",
-   "tags": [
-    "CANARIAS"
-   ]
-  },
-  {
-   "t": "RosaNegra eleva su apuesta por España con la compra de Tepic",
-   "u": "https://sivarious.com/operaciones/rosanegra-eleva-su-apuesta-por-espana-con-la-compra-de-tepic-20261009-0600/amp/",
-   "s": "Sivarious",
-   "d": "2026-10-09T04:00:00.000Z",
-   "tags": [
-    "MICHELIN"
-   ]
-  },
-  {
-   "t": "SAN SEBASTIÁN GASTRONÓMICA | Los vinos volcánicos de Tenerife, su cabra autóctona y su Dieta Atlántica han copado todos los frentes",
-   "u": "https://www.elblogoferoz.com/2026/10/09/san-sebastian-gastronomica-los-vinos-volcanicos-de-tenerife-su-cabra-autoctona-y-su-dieta-atlantica-han-copado-todos-los-frentes/",
-   "s": "Elblogoferoz",
-   "d": "2026-10-09T03:30:00.000Z",
-   "tags": [
-    "CANARIAS",
-    "VINO"
-   ]
-  },
-  {
-   "t": "Cuatro meses de cocido en A Coruña: los restaurantes ya llenan la agenda para este invierno",
-   "u": "https://www.elespanol.com/quincemil/vivir/gastrocoruna/20261009/meses-cocido-coruna-restaurantes-llenan-agenda-invierno/1003744409984_0.amp.html",
-   "s": "El Español",
-   "d": "2026-10-09T03:00:00.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://s3.elespanol.com/k/imgp/cms/elespanol/11098216.jpg?p=f:jpeg/c:1781:1003:nowe:2151:557/w:1706/h:960&h=ihLDsAOh"
-  },
-  {
-   "t": "De Disfrutar a Azurmendi: así es la empresa encargada de diseñar manteles y servilletas a más de 70 restaurantes con Estrellas Michelin",
-   "u": "https://www.20minutos.es/gastronomia/restaurantes/disfrutar-azurmendi-empresa-encargada-disenar-manteles-servilletas-mas-70-restaurantes-estrellas-michelin_7041253_0.html",
-   "s": "20Minutos",
-   "d": "2026-10-09T03:00:00.000Z",
-   "tags": [
-    "MICHELIN"
-   ],
-   "img": "https://imagenes.20minutos.es/files/image_1920_1080/uploads/imagenes/2026/09/25/6ab631ba627670-90907143.png"
-  },
-  {
-   "t": "Padylla (09/10/26)",
-   "u": "https://www.eldia.es/humor/2026/10/09/padylla-09-10-26-135158108.html",
-   "s": "Eldía",
-   "d": "2026-10-08T23:06:44.000Z",
-   "tags": [
-    "CANARIAS"
-   ]
-  },
-  {
-   "t": "El restaurante de Las Palmas de Gran Canaria donde la carne se hace en un sombrero",
-   "u": "https://www.laprovincia.es/las-palmas/2026/10/08/restaurante-las-palmas-carne-sombrero-dv-135155103.amp.html",
-   "s": "La Provincia",
-   "d": "2026-10-08T19:59:32.000Z",
-   "tags": [
-    "CANARIAS"
-   ]
-  },
-  {
-   "t": "LATAM VIVE llega a Lanzarote: El Jeffrey y La K'onga encabezan el primer festival de culturas latinoamericanas en Arrecife",
-   "u": "https://www.canariasenpleno.com/latam-vive-arrecife/",
-   "s": "Canarias en Pleno",
-   "d": "2026-10-08T19:58:05.000Z",
-   "tags": [
-    "CANARIAS"
-   ]
-  },
-  {
-   "t": "Picoteo entre comidas: Claudia, nutricionista de Gran Canaria, explica cómo influye en la digestión",
-   "u": "https://www.laprovincia.es/videos/2026/10/08/picoteo-comidas-claudia-nutricionista-gran-135151947.html",
-   "s": "La Provincia",
-   "d": "2026-10-08T17:36:19.000Z",
-   "tags": [
-    "CANARIAS"
-   ]
-  },
-  {
-   "t": "Los chefs Ángel León e Israel Ramos se suman a Sabores Solidarios Jerez 2026 el 7 de noviembre",
-   "u": "https://www.elmira.es/articulo/jerez/chefs-angel-leon-israel-ramos-suman-sabores-solidarios-jerez-2026-7-noviembre/20261008184839620146.html",
-   "s": "El MIRA",
-   "d": "2026-10-08T16:48:39.000Z",
-   "tags": [
-    "ALTA COCINA"
-   ],
-   "img": "https://www.elmira.es/media/elmira/images/2026/10/08/2026100818474454155.jpg"
-  },
-  {
-   "t": "El restaurante familiar con el menú del día más barato del centro de Vigo: \"Se come bien y ligero\"",
-   "u": "https://www.elespanol.com/treintayseis/vivir/gastrovigo/20261008/restaurante-familiar-menu-dia-barato-centro-vigo-come-bien-ligero/1003744413620_0.amp.html",
-   "s": "El Español",
-   "d": "2026-10-08T15:34:34.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://s3.elespanol.com/k/imgp/cms/elespanol/11373275.jpg?p=f:jpeg/c:6000:3376:nowe:0:366/w:1706/h:960&h=-saNiL03"
-  },
-  {
-   "t": "La villa juguetera de Alicante que conquista por su cocina: así es el pueblo donde mejor se come de España",
-   "u": "https://www.noticiasdelvino.com/restaurantes/2026/10/08/la-villa-juguetera-de-alicante-que-conquista-por-su-cocina-asi-es-el-pueblo-donde-mejor-se-come-de-espana-74836/",
-   "s": "Noticias del Vino",
-   "d": "2026-10-08T14:53:44.000Z",
-   "tags": [
-    "MICHELIN"
-   ],
-   "img": "https://www.noticiasdelvino.com/wp-content/uploads/restaurantes-5.jpg.webp"
-  },
-  {
-   "t": "Abierta la preinscripción para la III Feria Gastronómica de Tapas y Vinos 2026 de Santa Cruz",
-   "u": "https://www.canal4tenerife.tv/abierta-la-preinscripcion-para-la-iii-feria-gastronomica-de-tapas-y-vinos-2026-de-santa-cruz/",
-   "s": "Canal 4 Tenerife",
-   "d": "2026-10-08T14:29:56.000Z",
-   "tags": [
-    "CANARIAS",
-    "VINO"
-   ],
-   "img": "https://www.canal4tenerife.tv/wp-content/uploads/2026/10/261008-Apertura-de-inscripciones-Feria-Tapas-y-Vinos-2-scaled-e1791469731757.jpg"
-  },
-  {
-   "t": "Anaga Biofest recorre Taborno, La Laguna y Tegueste con rutas, artesanía, gastronomía y biodiversidad",
-   "u": "https://eldigitalsur.com/vida-estilo/cultura-canaria/anaga-biofest-taborno-la-laguna-tegueste-rutas-artesania-gastronomia/",
-   "s": "El Digital Sur",
-   "d": "2026-10-08T14:24:32.000Z",
-   "tags": [
-    "CANARIAS"
-   ]
-  },
-  {
-   "t": "El consejo de cocineros con estrellas Michelin: “El puré de papas mejora al cocinarlas con cáscara”",
-   "u": "https://tn.com.ar/cocina/recetas/2026/10/08/el-consejo-de-cocineros-con-estrellas-michelin-el-pure-de-papas-mejora-al-cocinarlas-con-cascara/",
-   "s": "TN",
-   "d": "2026-10-08T14:22:05.000Z",
-   "tags": [
-    "CHEF",
-    "MICHELIN"
-   ],
-   "img": "https://tn.com.ar/resizer/v2/los-chefs-jordi-cruz-y-martin-berasategui-dieron-sus-trucos-para-un-pure-de-papa-cremoso-foto-tiktok-jordicruzof-youtube-robin-food-6HXALLLDH5A3LGZC6KN6JZPMEI.jpg?auth=a3f7112e198e112a7d22913a88bd1c9681efead4ec8c9692980cad179f31ce77&width=1023"
-  },
-  {
-   "t": "Canarias refuerza su apuesta por el turismo de invierno en Canadá con nuevas rutas directas",
-   "u": "https://www.atlanticohoy.com/economia/canarias-turismo-invierno-canada-nuevas-rutas-directas_1568189_102_amp.html",
-   "s": "Atlántico Hoy",
-   "d": "2026-10-08T14:05:00.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://www.atlanticohoy.com/uploads/s1/38/13/73/2/recursos-promocion-canada-3.webp"
-  },
-  {
-   "t": "Turismo presenta Canarias como destino de invierno en Canadá por su conectividad, clima e identidad",
-   "u": "https://elsurdigitalgc.es/art/24203/turismo-presenta-canarias-como-destino-de-invierno-en-canada-por-su-conectividad-clima-e-identidad",
-   "s": "El Sur Digital Gran Canaria",
-   "d": "2026-10-08T13:58:59.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://elsurdigitalgc.es/upload/images/10_2026/9994_recursos-promocion-canada-3.png"
   }
  ]
 }
