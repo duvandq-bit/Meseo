@@ -1,5 +1,5 @@
 {
- "updated": "2026-10-08T22:08:04.493Z",
+ "updated": "2026-10-09T02:57:28.201Z",
  "items": [
   {
    "t": "El restaurante de Las Palmas de Gran Canaria donde la carne se hace en un sombrero",
@@ -40,6 +40,26 @@
    "img": "https://www.noticiasdelvino.com/wp-content/uploads/restaurantes-5.jpg.webp"
   },
   {
+   "t": "Abierta la preinscripción para la III Feria Gastronómica de Tapas y Vinos 2026 de Santa Cruz",
+   "u": "https://www.canal4tenerife.tv/abierta-la-preinscripcion-para-la-iii-feria-gastronomica-de-tapas-y-vinos-2026-de-santa-cruz/",
+   "s": "Canal 4 Tenerife",
+   "d": "2026-10-08T14:29:56.000Z",
+   "tags": [
+    "CANARIAS",
+    "VINO"
+   ],
+   "img": "https://www.canal4tenerife.tv/wp-content/uploads/2026/10/261008-Apertura-de-inscripciones-Feria-Tapas-y-Vinos-2-scaled-e1791469731757.jpg"
+  },
+  {
+   "t": "Anaga Biofest recorre Taborno, La Laguna y Tegueste con rutas, artesanía, gastronomía y biodiversidad",
+   "u": "https://eldigitalsur.com/vida-estilo/cultura-canaria/anaga-biofest-taborno-la-laguna-tegueste-rutas-artesania-gastronomia/",
+   "s": "El Digital Sur",
+   "d": "2026-10-08T14:24:32.000Z",
+   "tags": [
+    "CANARIAS"
+   ]
+  },
+  {
    "t": "El consejo de cocineros con estrellas Michelin: “El puré de papas mejora al cocinarlas con cáscara”",
    "u": "https://tn.com.ar/cocina/recetas/2026/10/08/el-consejo-de-cocineros-con-estrellas-michelin-el-pure-de-papas-mejora-al-cocinarlas-con-cascara/",
    "s": "TN",
@@ -67,8 +87,7 @@
    "d": "2026-10-08T13:58:59.000Z",
    "tags": [
     "CANARIAS"
-   ],
-   "img": "https://elsurdigitalgc.es/upload/images/10_2026/9994_recursos-promocion-canada-3.png"
+   ]
   },
   {
    "t": "De los quesos de Moya a la carne Simmental: el restaurante del norte de Gran Canaria que sorprende",
@@ -263,15 +282,6 @@
    "img": "https://imagenes.heraldo.es/files/image_1920_1080/uploads/imagenes/2026/09/08/6a9fbce595e046-96476255.jpeg"
   },
   {
-   "t": "El bar de Gran Canaria que enamora con auténtica cocina canaria desde 1987: sus albóndigas de cochino conquistan en cada bocado",
-   "u": "https://www.laprovincia.es/gran-canaria/2026/10/08/bar-gran-enamora-autentica-cocina-canaria-dv-132626157.html",
-   "s": "La Provincia",
-   "d": "2026-10-08T07:31:05.000Z",
-   "tags": [
-    "CANARIAS"
-   ]
-  },
-  {
    "t": "El rincón de Tenerife que conquista con cocina canaria de siempre: recetas tradicionales y precios económicos",
    "u": "https://www.eldia.es/tenerife/2026/10/08/rincon-tenerife-comer-cocina-canaria-dv-133319285.html",
    "s": "Eldía",
@@ -288,16 +298,6 @@
    "tags": [
     "CHEF"
    ]
-  },
-  {
-   "t": "Viajar para comer: 10 destinos gastronómicos imprescindibles",
-   "u": "https://amp.expansion.com/fueradeserie/gastro/2026/10/08/6ab165b2468aeb491c8b458d.html",
-   "s": "Expansión",
-   "d": "2026-10-08T06:05:48.000Z",
-   "tags": [
-    "MICHELIN"
-   ],
-   "img": "https://e01-phantom-expansion.uecdn.es/d2b159d387a7cdd89d5a57af92b4e9f8/crop/0x26/1000x589/f/webp/assets/multimedia/imagenes/2026/09/21/17900107286341.jpg"
   }
  ]
 }
