@@ -1,6 +1,25 @@
 {
- "updated": "2026-10-09T21:43:19.035Z",
+ "updated": "2026-10-10T02:23:16.399Z",
  "items": [
+  {
+   "t": "Restaurante indio Vistara, en Las Palmas de Gran Canaria",
+   "u": "https://www.laprovincia.es/videos/las-palmas-de-gran-canaria/2026/10/10/restaurante-indio-vistara-palmas-gran-135195070.amp.html",
+   "s": "La Provincia",
+   "d": "2026-10-09T22:53:25.000Z",
+   "tags": [
+    "CANARIAS"
+   ]
+  },
+  {
+   "t": "Los vizcaínos cortan el bacalao en San Sebastián Gastronomika",
+   "u": "https://www.elcorreo.com/jantour/reportajes/vizcainos-cortan-bacalao-san-sebastian-gastronomika-20261010004707-nt.html",
+   "s": "El Correo",
+   "d": "2026-10-09T22:47:07.000Z",
+   "tags": [
+    "CHEF"
+   ],
+   "img": "https://s2.ppllstatics.com/elcorreo/www/multimedia/noticias/2026/10/09/portada5-kzOE-U302160167220iAG-1920x1080@El%20Correo.jpg"
+  },
   {
    "t": "Ferran Adrià reivindica la revolución del restaurante que marcó su trayectoria en la alta cocina: \"Aquí se cambió la historia de la gastronomía\"",
    "u": "https://cadenaser.com/nacional/2026/10/09/ferran-adria-reivindica-la-revolucion-del-restaurante-que-marco-su-trayectoria-en-la-alta-cocina-aqui-se-cambio-la-historia-de-la-gastronomia-cadena-ser/",
@@ -10,6 +29,16 @@
     "ALTA COCINA"
    ],
    "img": "https://cadenaser.com/resizer/v2/QVP3SPFZTJFULIK2AHCJPOCUT4.jpeg?auth=50b88860c0b35481d32224765c6912d7b6d5706f8859d74b57d082c1b315337d&quality=70&width=1200&height=675&smart=true"
+  },
+  {
+   "t": "Canarias arranca el puente de la Hispanidad con lluvias y chubascos fuertes",
+   "u": "https://www.eldiario.es/canariasahora/tiempo-canarias/canarias-arranca-puente-hispanidad-lluvias-chubascos-fuertes_1_13576558.html",
+   "s": "elDiario.es",
+   "d": "2026-10-09T17:23:29.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://static.eldiario.es/clip/2d734e4a-d450-48d9-9f39-f0710bf77682_facebook-aspect-ratio-1200-675_default_0_x823y427.jpg"
   },
   {
    "t": "Mikel López Iturriaga recibe en Albacete el Premio de Cultura Gastronómica",
@@ -41,6 +70,17 @@
     "MICHELIN"
    ],
    "img": "https://www.hola.com/horizon/landscape/1200/0b7a73c695d0-dsc02160.jpg"
+  },
+  {
+   "t": "Rioja refuerza su presencia en Estados Unidos y Canadá con misiones comerciales de 50 bodegas",
+   "u": "https://www.vinetur.com/20261009108683/rioja-refuerza-su-presencia-en-estados-unidos-y-canada-con-misiones-comerciales-de-50-bodegas.html",
+   "s": "Vinetur",
+   "d": "2026-10-09T16:03:53.000Z",
+   "tags": [
+    "VINO",
+    "CANARIAS"
+   ],
+   "img": "https://www.vinetur.com/visuals/2026/october/9/agent-20261009-171416-58436272055a62cc.jpg"
   },
   {
    "t": "El Vidocq de Formigal, Premio Nacional de Hostelería por su modelo gastronómico sostenible",
@@ -217,6 +257,27 @@
    "img": "https://www.biosferadigital.com/media/biosferadigital/images/2026/10/09/2026100912374334487.jpg"
   },
   {
+   "t": "Tempos Vega Sicilia se estrena en el golf con Mandolás y Macán Clásico como vinos oficiales del Open de España",
+   "u": "https://www.europapress.es/economia/noticia-tempos-vega-sicilia-estrena-golf-mandolas-macan-clasico-vinos-oficiales-open-espana-20261009132100.html",
+   "s": "Europa Press",
+   "d": "2026-10-09T11:21:00.000Z",
+   "tags": [
+    "VINO",
+    "CANARIAS"
+   ],
+   "img": "https://img.europapress.es/fotoweb/fotonoticia_20261009132100_1200.jpg"
+  },
+  {
+   "t": "Radiografía del censo electoral en Canarias: así se reparte el voto residente en el extranjero",
+   "u": "https://www.eldiario.es/canariasahora/politica/radiografia-censo-electoral-canarias-reparte-voto-residente-extranjero_1_13575154.html",
+   "s": "elDiario.es",
+   "d": "2026-10-09T11:13:57.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://static.eldiario.es/clip/8077c108-0531-44fe-b84a-883ddc61b324_facebook-aspect-ratio-1200-675_default_0.jpg"
+  },
+  {
    "t": "Santa Cruz de Tenerife, Capital Española de la Gastronomía 2027: Canarias conquista la mesa nacional",
    "u": "https://informaciongastronomica.com/santa-cruz-de-tenerife-capital-espanola-de-la-gastronomia-2027-canarias-conquista-la-mesa-nacional/",
    "s": "Información Gastronómica",
@@ -243,64 +304,6 @@
     "CANARIAS"
    ],
    "img": "https://static.eldiario.es/clip/6f33b0e6-7b4d-4859-8269-e5992993ecda_facebook-aspect-ratio-1200-675_default_0.jpg"
-  },
-  {
-   "t": "Gil Fernandes y Víctor Suárez se unen en un menú atlántico de altura",
-   "u": "https://gastrocanarias.com/art/22841/gil-fernandes-y-victor-suarez-se-unen-en-un-menu-atlantico-de-altura",
-   "s": "Gastrocanarias",
-   "d": "2026-10-09T09:16:47.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://gastrocanarias.com/upload/images/10_2026/9078_captura-de-pantalla-2026-10-09-a-las-101342.jpg"
-  },
-  {
-   "t": "Tenerife conquista San Sebastián Gastronomika con sus sabores volcánicos",
-   "u": "https://gastrocanarias.com/art/22840/tenerife-conquista-san-sebastian-gastronomika-con-sus-sabores-volcanicos",
-   "s": "Gastrocanarias",
-   "d": "2026-10-09T09:16:47.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://gastrocanarias.com/upload/images/10_2026/6713_ssg-4.jpg"
-  },
-  {
-   "t": "Chef españoles revelan el secreto para un puré de papas cremoso",
-   "u": "https://www.identidadcorrentina.com.ar/noticia/42614_chef-espaoles-revelan-el-secreto-para-un-pur-de-papas-cremoso.htm",
-   "s": "Identidad Correntina",
-   "d": "2026-10-09T09:05:13.000Z",
-   "tags": [
-    "CHEF"
-   ],
-   "img": "https://www.identidadcorrentina.com.ar/multimedia/imagenes/fotos/2026-10-09/682326_mediana.jpg"
-  },
-  {
-   "t": "Tenerife Peñón Fest: todo lo que debes saber sobre los dos días del festival",
-   "u": "https://www.eldia.es/tenerife/2026/10/09/tenerife-penon-fest-debes-dias-bc-135166751.html",
-   "s": "Eldía",
-   "d": "2026-10-09T08:54:41.000Z",
-   "tags": [
-    "CANARIAS"
-   ]
-  },
-  {
-   "t": "RosaNegra eleva su apuesta por España con la compra de Tepic",
-   "u": "https://sivarious.com/operaciones/rosanegra-eleva-su-apuesta-por-espana-con-la-compra-de-tepic-20261009-0600/",
-   "s": "Sivarious",
-   "d": "2026-10-09T08:44:57.000Z",
-   "tags": [
-    "MICHELIN"
-   ],
-   "img": "https://sivarious.com/wp-content/uploads/2026/10/unnamed-1.png"
-  },
-  {
-   "t": "Hoteles: ¡Que empiece la fiesta!",
-   "u": "https://www.eldia.es/canarias/2026/10/09/hoteles-empiece-fiesta-135165767.html",
-   "s": "Eldía",
-   "d": "2026-10-09T08:14:35.000Z",
-   "tags": [
-    "CANARIAS"
-   ]
   }
  ]
 }
