@@ -1,9 +1,58 @@
 {
- "updated": "2026-10-10T11:12:56.194Z",
+ "updated": "2026-10-10T16:15:23.082Z",
  "items": [
   {
+   "t": "Santo Stefano di Sessanio: el pueblo italiano que convirtió sus antiguas casas en habitaciones de hotel para conservar su identidad",
+   "u": "https://www.infobae.com/espana/viajes/2026/10/10/santo-stefano-di-sessanio-el-pueblo-italiano-que-convirtio-sus-antiguas-casas-en-habitaciones-de-hotel-para-conservar-su-identidad/",
+   "s": "Infobae",
+   "d": "2026-10-10T15:03:52.000Z",
+   "tags": [
+    "MICHELIN"
+   ],
+   "img": "https://www.infobae.com/resizer/v2/B4IDWF7IVFC4VB3AIYHW64EIRY.jpg?auth=6b2648e81202e9325222d956033bcf2157a85b60fc65d0c739d0718dde502f74&smart=true&width=1200&height=630&quality=85"
+  },
+  {
+   "t": "¿Residentes antes que turistas? El debate sobre si las guaguas canarias deberían dar prioridad a los vecinos",
+   "u": "https://www.eldiario.es/canariasahora/sociedad/residentes-turistas-debate-si-guaguas-canarias-deberian-dar-prioridad-vecinos_1_13532834.html",
+   "s": "elDiario.es",
+   "d": "2026-10-10T14:37:33.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://static.eldiario.es/clip/dcee783a-32bb-4970-99ee-135f564951ec_facebook-aspect-ratio-1200-675_default_0.jpg"
+  },
+  {
+   "t": "El Almacén convierte Ruzafa en un viaje gastronómico a través de sus tapas de autor",
+   "u": "https://cadenaser.com/comunitat-valenciana/2026/10/10/el-almacen-convierte-ruzafa-en-un-viaje-gastronomico-a-traves-de-sus-tapas-de-autor-radio-valencia/",
+   "s": "Cadena SER",
+   "d": "2026-10-10T12:02:00.000Z",
+   "tags": [
+    "ALTA COCINA"
+   ],
+   "img": "https://cadenaser.com/resizer/v2/3EWTP33CDBFLRJXDMSCG2EIZQ4.jpg?auth=f3f620b8c5d3275f0ffaa2d769a2373e546b9ff46ddd65afc213ca0e948beaec&quality=70&width=1200&height=675&focal=2929,1874"
+  },
+  {
+   "t": "Croquetas de tikka masala y canelones vindaloo: un sorprendente universo gastronómico en Las Palmas de Gran Canaria",
+   "u": "https://www.laprovincia.es/las-palmas/2026/10/10/croquetas-tikka-masala-135171760.amp.html",
+   "s": "La Provincia",
+   "d": "2026-10-10T12:00:15.000Z",
+   "tags": [
+    "CANARIAS"
+   ]
+  },
+  {
+   "t": "San Hô, el viaje de Adrián Bosch",
+   "u": "https://www.canarias7.es/gastronomia-c7/restaurantes/san-viaje-adrian-bosch-20261010140000-nt.html",
+   "s": "Canarias7",
+   "d": "2026-10-10T12:00:00.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://s1.ppllstatics.com/canarias7/www/multimedia/gastronomia-c7/2026/10/09/image00001-kYc-U302166139223U0H-1200x840@Canarias7.jpg"
+  },
+  {
    "t": "Ferran Adrià, cocinero catalán: \"En España ni siquiera sabemos que la mahonesa es nuestra. Es la salsa más consumida del mundo. Ni soja, ni tomate, ni puñetas. Y no lo vendemos. Nos falta creérnoslo\"",
-   "u": "https://www.mundodeportivo.com/foodie/20261010/1004236911/ferran-adria-cocinero-catalan-espana-siquiera-mahonesa-nuestra-salsa-mas-consumida-mundo-no-soja-tomate-punetas-no-vendemos-falta-creernoslo-xef-dct.html",
+   "u": "https://www.mundodeportivo.com/foodie/20261010/1004236911/ferran-adria-cocinero-catalan-espana-siquiera-mahonesa-nuestra-salsa-mas-consumida-mundo-no-soja-tomate-punetas-no-vendemos-falta-creernoslo-xef-dct.html?facet",
    "s": "Mundo Deportivo",
    "d": "2026-10-10T10:37:38.000Z",
    "tags": [
@@ -42,20 +91,19 @@
    ]
   },
   {
-   "t": "La conexión desconocida de Dabiz Muñoz con un pueblo de Cuenca de solo 150 habitantes",
-   "u": "https://www.noticiasdelvino.com/escapadas/2026/10/10/la-conexion-desconocida-de-dabiz-munoz-con-un-pueblo-de-cuenca-de-solo-150-habitantes-68966/",
-   "s": "Noticias del Vino",
-   "d": "2026-10-10T09:11:57.000Z",
+   "t": "El bar de Tenerife que conquista con cocina canaria casera y una ropa vieja que todos quieren repetir",
+   "u": "https://www.eldia.es/tenerife/2026/10/10/bar-tenerife-conquista-cocina-canaria-dv-133133223.amp.html",
+   "s": "Eldía",
+   "d": "2026-10-10T09:30:00.000Z",
    "tags": [
-    "ALTA COCINA"
-   ],
-   "img": "https://www.noticiasdelvino.com/wp-content/uploads/image-217.png.webp"
+    "CANARIAS"
+   ]
   },
   {
    "t": "Jordi Cruz abrirá un nuevo restaurante en Barcelona donde se podrá comer por 50 euros: cocina catalana en un palacete modernista",
-   "u": "https://www.directoalpaladar.com/viajes/jordi-cruz-abrira-nuevo-restaurante-barcelona-donde-se-podra-comer-50-euros-cocina-catalana-palacete-modernista/amp",
+   "u": "https://www.directoalpaladar.com/viajes/jordi-cruz-abrira-nuevo-restaurante-barcelona-donde-se-podra-comer-50-euros-cocina-catalana-palacete-modernista",
    "s": "Directo al Paladar",
-   "d": "2026-10-10T09:10:21.000Z",
+   "d": "2026-10-10T09:00:28.000Z",
    "tags": [
     "ALTA COCINA"
    ],
@@ -202,6 +250,16 @@
    "img": "https://static.eldiario.es/clip/2d734e4a-d450-48d9-9f39-f0710bf77682_facebook-aspect-ratio-1200-675_default_0_x823y427.jpg"
   },
   {
+   "t": "Michelin Texas 2026: estrellas de Houston y Spring",
+   "u": "https://prensadehouston.com/noticias/locales/michelin-houston-2026-rest/",
+   "s": "La Prensa de Houston",
+   "d": "2026-10-09T17:00:57.000Z",
+   "tags": [
+    "MICHELIN"
+   ],
+   "img": "https://prensadehouston.com/wp-content/uploads/2024/11/ESTRELLAS-MICHELLIN-HOUSTON-2024-TEATEMO-1024x819.jpg"
+  },
+  {
    "t": "Mikel López Iturriaga recibe en Albacete el Premio de Cultura Gastronómica",
    "u": "https://www.abc.es/espana/castilla-la-mancha/mikel-lopez-iturriaga-recibe-albacete-premio-cultura-20261009185235-nt.html",
    "s": "ABC",
@@ -233,16 +291,6 @@
    "img": "https://www.hola.com/horizon/landscape/1200/0b7a73c695d0-dsc02160.jpg"
   },
   {
-   "t": "El Vidocq de Formigal, Premio Nacional de Hostelería por su modelo gastronómico sostenible",
-   "u": "https://www.eldiariodehuesca.com/sociedad/vidocq-formigal-premio-nacional-hosteleria-por-su-modelo-gastronomico-sostenible_47961_102.html",
-   "s": "El Diario de Huesca",
-   "d": "2026-10-09T15:58:27.000Z",
-   "tags": [
-    "MICHELIN"
-   ],
-   "img": "https://www.eldiariodehuesca.com/uploads/s1/46/28/17/0/diego-herrero-del-vidocq-de-formigal_23_1200x676.webp"
-  },
-  {
    "t": "Seaside Collection, reconocido con el premio Travellers’ Choice 2026 de Tripadvisor en sus cuatro hoteles en Canarias",
    "u": "https://www.elconfidencialdigital.com/articulo/viajes/seaside-collection-reconocido-premio-travellers-choice-2026-tripadvisor-cuatro-hoteles-canarias/202610091758001492434.amp.html",
    "s": "Confidencial Digital",
@@ -252,57 +300,6 @@
     "CANARIAS"
    ],
    "img": "https://www.elconfidencialdigital.com/media/elconfidencialdigital/images/2026/10/09/2026100917572214657.png"
-  },
-  {
-   "t": "El I Congreso de Marketing del Vino de Canarias se celebra en La Palma",
-   "u": "https://www.eldiario.es/canariasahora/lapalmaahora/sociedad/i-congreso-marketing-vino-canarias-celebra-palma_1_13576217.html",
-   "s": "elDiario.es",
-   "d": "2026-10-09T15:44:56.000Z",
-   "tags": [
-    "CANARIAS",
-    "VINO"
-   ],
-   "img": "https://static.eldiario.es/clip/e7dce0af-b81b-406b-ad17-63cd48a8a0b7_facebook-aspect-ratio-1200-675_default_0.jpg"
-  },
-  {
-   "t": "ADEIN Tenerife y Econy Gran Canaria lucharán por la III Copa Gobierno de Canarias BSR",
-   "u": "https://www.eldiario.es/canariasahora/deportes/baloncesto/adein-tenerife-econy-gran-canaria-lucharan-copa-gobierno-canarias_1_13576025.html",
-   "s": "elDiario.es",
-   "d": "2026-10-09T14:37:32.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://static.eldiario.es/clip/6782ebd4-637e-44ec-a3ad-450380a2b927_facebook-aspect-ratio-1200-675_default_0_x990y270.jpg"
-  },
-  {
-   "t": "El cocinero de un restaurante de Murcia competirá por el título de Maestro Parrillero 2026 de la Península Ibérica",
-   "u": "https://www.laverdad.es/gastronomia/cocinero-restaurante-murcia-competira-titulo-maestro-parrillero-20261009163618-nt_amp.html",
-   "s": "La Verdad",
-   "d": "2026-10-09T14:36:18.000Z",
-   "tags": [
-    "CHEF"
-   ],
-   "img": "https://s3.ppllstatics.com/laverdad/www/multimedia/gastronomia/2026/10/09/maestro-parrillero-kxuG-U302160342054ibG-1200x840@La%20Verdad.jpg"
-  },
-  {
-   "t": "El restaurante de carretera definitivo está en este pueblo medieval de Madrid: Martín Berasategui confiesa su secreto mejor guardado",
-   "u": "https://www.noticiasdelvino.com/escapadas/2026/10/09/el-restaurante-de-carretera-definitivo-esta-en-este-pueblo-medieval-de-madrid-martin-berasategui-confiesa-su-secreto-mejor-guardado-74843/",
-   "s": "Noticias del Vino",
-   "d": "2026-10-09T14:10:14.000Z",
-   "tags": [
-    "CHEF"
-   ],
-   "img": "https://www.noticiasdelvino.com/wp-content/uploads/image-583.png.webp"
-  },
-  {
-   "t": "Puntacana Resort anuncia quinta edición de Culinary Weekend con chef brasileña Tássia Magalhães",
-   "u": "https://acento.com.do/actualidad/puntacana-resort-anuncia-quinta-edicion-de-culinary-weekend-con-chef-brasilena-tassia-magalhaes-9766662.html",
-   "s": "Acento",
-   "d": "2026-10-09T14:00:11.000Z",
-   "tags": [
-    "ALTA COCINA"
-   ],
-   "img": "https://media.acento.com.do/media/storage02/uploads/2024/07/Tortuga-Bay-Puntacana-Resort-1-OG.jpg"
   }
  ]
 }
