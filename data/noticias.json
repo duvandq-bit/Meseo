@@ -1,6 +1,36 @@
 {
- "updated": "2026-10-10T20:34:44.648Z",
+ "updated": "2026-10-11T01:57:30.833Z",
  "items": [
+  {
+   "t": "Tres homenajes",
+   "u": "https://www.abc.es/gastronomia/tres-homenajes-20261010011804-nt_amp.html",
+   "s": "ABC",
+   "d": "2026-10-10T23:18:04.000Z",
+   "tags": [
+    "CHEF"
+   ],
+   "img": "https://s1.abcstatics.com/abc/www/multimedia/gastronomia/2026/10/10/nuevacocinavasca_ssg26-U31410678822xHP-1200x630@diario_abc.jpg"
+  },
+  {
+   "t": "Mar & montaña, una comida con cine",
+   "u": "https://www.canarias7.es/gastronomia-c7/de-ruta/mar-montana-comida-cine-20261011010000-nt_amp.html",
+   "s": "Canarias7",
+   "d": "2026-10-10T23:00:03.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://s3.ppllstatics.com/canarias7/www/multimedia/gastronomia-c7/2026/10/10/FOTO%202-klxB-U302175412435vSH-1200x840@Canarias7.jpg"
+  },
+  {
+   "t": "Ángel Amaro, el agricultor de Tenerife que quiere llevar el higo pico a Alemania: \"Es mi mayor fuente",
+   "u": "https://diariodeavisos.elespanol.com/2026/10/agricultor-tenerife-higo-pico-a-alemania/",
+   "s": "Diario de Avisos",
+   "d": "2026-10-10T23:00:00.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://cdn.diariodeavisos.com/wp-content/uploads/2026/10/higos-pico.jpg"
+  },
   {
    "t": "El PSOE en Canarias propone un nuevo plan de vivienda a diez años vista",
    "u": "https://www.eldiario.es/canariasahora/politica/psoe-canarias-propone-nuevo-plan-vivienda-diez-anos-vista_1_13577971.html",
@@ -10,6 +40,16 @@
     "CANARIAS"
    ],
    "img": "https://static.eldiario.es/clip/f84109c3-b06d-4660-8d5f-f8c44e050db2_facebook-aspect-ratio-1200-675_default_0_x1043y610.jpg"
+  },
+  {
+   "t": "Ferran Adrià reivindica la tortilla francesa: 'no hay comida rara, hay gente rara'",
+   "u": "https://www.que.es/2026/10/10/ferran-adria-tortilla-francesa-rellena/",
+   "s": "Qué.es",
+   "d": "2026-10-10T19:23:41.000Z",
+   "tags": [
+    "ALTA COCINA"
+   ],
+   "img": "https://static.que.es/wp-content/uploads/2023/09/4-8.jpg"
   },
   {
    "t": "Mujeres de Telde descubren en Tejeda la historia y la tradición vitivinícola de Bentayga",
@@ -119,6 +159,16 @@
    "tags": [
     "CANARIAS"
    ]
+  },
+  {
+   "t": "La conexión desconocida de Dabiz Muñoz con un pueblo de Cuenca de solo 150 habitantes",
+   "u": "https://www.noticiasdelvino.com/escapadas/2026/10/10/la-conexion-desconocida-de-dabiz-munoz-con-un-pueblo-de-cuenca-de-solo-150-habitantes-68966/",
+   "s": "Noticias del Vino",
+   "d": "2026-10-10T09:11:57.000Z",
+   "tags": [
+    "ALTA COCINA"
+   ],
+   "img": "https://www.noticiasdelvino.com/wp-content/uploads/image-217.png.webp"
   },
   {
    "t": "Jordi Cruz abrirá un nuevo restaurante en Barcelona donde se podrá comer por 50 euros: cocina catalana en un palacete modernista",
@@ -249,58 +299,6 @@
     "CHEF"
    ],
    "img": "https://s2.ppllstatics.com/elcorreo/www/multimedia/noticias/2026/10/09/portada5-kzOE-U302160167220iAG-1920x1080@El%20Correo.jpg"
-  },
-  {
-   "t": "Seaside Collection firma un pleno en Canarias: sus cuatro hoteles, premiados por los viajeros de Tripadvisor",
-   "u": "https://www.gironanoticies.com/noticia/306058-seaside-collection-firma-un-pleno-en-canarias-sus-cuatro-hoteles-premiados-por-los-viajeros-de-tripadvisor.htm",
-   "s": "GIRONANOTICIES.COM",
-   "d": "2026-10-09T20:57:58.000Z",
-   "tags": [
-    "VINO",
-    "CANARIAS"
-   ],
-   "img": "https://www.gironanoticies.com/notix/multimedia/imagenes/fotos/2026-10-09/428257.jpg"
-  },
-  {
-   "t": "Ferran Adrià reivindica la revolución del restaurante que marcó su trayectoria en la alta cocina: \"Aquí se cambió la historia de la gastronomía\"",
-   "u": "https://cadenaser.com/nacional/2026/10/09/ferran-adria-reivindica-la-revolucion-del-restaurante-que-marco-su-trayectoria-en-la-alta-cocina-aqui-se-cambio-la-historia-de-la-gastronomia-cadena-ser/",
-   "s": "Cadena SER",
-   "d": "2026-10-09T19:58:45.000Z",
-   "tags": [
-    "ALTA COCINA"
-   ],
-   "img": "https://cadenaser.com/resizer/v2/QVP3SPFZTJFULIK2AHCJPOCUT4.jpeg?auth=50b88860c0b35481d32224765c6912d7b6d5706f8859d74b57d082c1b315337d&quality=70&width=1200&height=675&smart=true"
-  },
-  {
-   "t": "La Palma acoge el primer congreso de marketing del vino de Canarias los días 12 y 13 de noviembre",
-   "u": "https://tvlapalma.com/not/45259/palma-acoge-primer-congreso-marketing-vino-canarias-dias-12-13/",
-   "s": "tvlapalma.com",
-   "d": "2026-10-09T17:33:24.000Z",
-   "tags": [
-    "VINO",
-    "CANARIAS"
-   ],
-   "img": "https://tvlapalma.com/adjuntos/media/media_49829_20261009161218.jpg"
-  },
-  {
-   "t": "Michelin Texas 2026: estrellas de Houston y Spring",
-   "u": "https://prensadehouston.com/noticias/locales/michelin-houston-2026-rest/",
-   "s": "La Prensa de Houston",
-   "d": "2026-10-09T17:00:57.000Z",
-   "tags": [
-    "MICHELIN"
-   ],
-   "img": "https://prensadehouston.com/wp-content/uploads/2024/11/ESTRELLAS-MICHELLIN-HOUSTON-2024-TEATEMO-1024x819.jpg"
-  },
-  {
-   "t": "Mikel López Iturriaga recibe en Albacete el Premio de Cultura Gastronómica",
-   "u": "https://www.abc.es/espana/castilla-la-mancha/mikel-lopez-iturriaga-recibe-albacete-premio-cultura-20261009185235-nt.html",
-   "s": "ABC",
-   "d": "2026-10-09T16:52:36.000Z",
-   "tags": [
-    "MICHELIN"
-   ],
-   "img": "https://s1.abcstatics.com/abc/www/multimedia/espana/2026/10/09/1000084036-U04612304737FPv-1200x630@diario_abc.jpg"
   }
  ]
 }
