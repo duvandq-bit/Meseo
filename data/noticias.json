@@ -1,6 +1,55 @@
 {
- "updated": "2026-10-11T11:26:24.910Z",
+ "updated": "2026-10-11T20:58:40.978Z",
  "items": [
+  {
+   "t": "La vivienda centra ya la precampaña en Canarias y vuelve al Parlamento con fiscalización a CC-PP: “¿Qué resultados ofrecen 38 meses después?”",
+   "u": "https://www.eldiario.es/canariasahora/politica/vivienda-centra-precampana-canarias-vuelve-parlamento-fiscalizacion-cc-pp-resultados-ofrecen-38-meses-despues_1_13578967.html",
+   "s": "elDiario.es",
+   "d": "2026-10-11T17:22:51.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://static.eldiario.es/clip/0c091831-4c94-4de5-b233-b4b5e831277e_facebook-aspect-ratio-1200-675_default_0.jpg"
+  },
+  {
+   "t": "Dos Naifes: Jorge Peñate y Luis Martín se sumergen en la cocina de los océanos",
+   "u": "https://diariodeavisos.elespanol.com/2026/10/dos-naifes-jorge-penate-luis-martin/",
+   "s": "Diario de Avisos",
+   "d": "2026-10-11T16:47:06.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://cdn.diariodeavisos.com/wp-content/uploads/2026/10/DOS-NAIFES_LUIS-MARTIN_VANESA-AMATO_JORGE-PENATE.jpg"
+  },
+  {
+   "t": "Dos bares de Royal Hideaway Corales, en Tenerife, entre los mejores de España",
+   "u": "https://diariodeavisos.elespanol.com/2026/10/bares-royal-hideaway-corales-mejores-espana/",
+   "s": "Diario de Avisos",
+   "d": "2026-10-11T16:40:41.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://diariodeavisos.elespanol.com/wp-content/uploads/2026/10/Pagina-42-Yoni-Mesa.jpeg"
+  },
+  {
+   "t": "De los libros a los fogones: cuatro negocios que acercan la diversidad africana a Santa Cruz de Tenerife",
+   "u": "https://www.eldia.es/tenerife/2026/10/11/libros-fogones-cuatro-negocios-acercan-africa-135143673.amp.html",
+   "s": "Eldía",
+   "d": "2026-10-11T15:00:44.000Z",
+   "tags": [
+    "CANARIAS"
+   ]
+  },
+  {
+   "t": "Emergencias da por finalizada la prealerta por lluvias en Canarias",
+   "u": "https://www.eldiario.es/canariasahora/tiempo-canarias/emergencias-da-finalizada-prealerta-lluvias-canarias_1_13578688.html",
+   "s": "elDiario.es",
+   "d": "2026-10-11T11:46:58.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://static.eldiario.es/clip/75c66563-395a-4dff-a7f5-7d13b22f3d20_facebook-aspect-ratio-1200-675_default_0.jpg"
+  },
   {
    "t": "El restaurante de Tenerife con vistas al litoral que conquista con cocina canaria y carnes a la brasa",
    "u": "https://www.eldia.es/tenerife/2026/10/11/restaurante-tenerife-vistas-litoral-disfrutar-cocina-canaria-dv-133826836.html",
@@ -21,7 +70,7 @@
    "img": "https://s1.staticld.com/2026/10/11/579/579/192x91/screenshot-20261011-101205-com-android-chrome-chrometabbedactivity-edit-12966851055079.jpg"
   },
   {
-   "t": "El rincón de Gran Canaria donde disfrutar de cochino negro canario y uno de los bocadillos de pata más pupulares",
+   "t": "El rincón de Gran Canaria donde disfrutar de cochino negro canario y uno de los bocadillos de pata más populares",
    "u": "https://www.laprovincia.es/gran-canaria/2026/10/11/rincon-gran-canaria-disfrutar-cochino-negro-dv-133726918.html",
    "s": "La Provincia",
    "d": "2026-10-11T09:15:00.000Z",
@@ -37,8 +86,7 @@
    "tags": [
     "VINO",
     "CANARIAS"
-   ],
-   "img": "https://www.teneriffa-news.com/media/t/termine-veranstaltungen-kalender-teneriffa-kanaren-1920x1080.jpg"
+   ]
   },
   {
    "t": "La enfermería del Córdoba CF sigue sin dar un respiro: Kevin Medina, el último contratiempo",
@@ -100,6 +148,24 @@
    ]
   },
   {
+   "t": "Padylla (11/10/26)",
+   "u": "https://www.laprovincia.es/humor/2026/10/11/padylla-11-10-26-135217515.html",
+   "s": "La Provincia",
+   "d": "2026-10-11T00:15:01.000Z",
+   "tags": [
+    "CANARIAS"
+   ]
+  },
+  {
+   "t": "Montecruz (11/10/26)",
+   "u": "https://www.laprovincia.es/humor/2026/10/11/montecruz-11-10-26-135217496.html",
+   "s": "La Provincia",
+   "d": "2026-10-11T00:14:09.000Z",
+   "tags": [
+    "CANARIAS"
+   ]
+  },
+  {
    "t": "Tres homenajes",
    "u": "https://www.abc.es/gastronomia/tres-homenajes-20261010011804-nt_amp.html",
    "s": "ABC",
@@ -140,14 +206,14 @@
    "img": "https://www.noticiasdelvino.com/wp-content/uploads/restaurantes-5.jpg.webp"
   },
   {
-   "t": "El PSOE en Canarias propone un nuevo plan de vivienda a diez años vista",
-   "u": "https://www.eldiario.es/canariasahora/politica/psoe-canarias-propone-nuevo-plan-vivienda-diez-anos-vista_1_13577971.html",
-   "s": "elDiario.es",
-   "d": "2026-10-10T20:15:34.000Z",
+   "t": "Laszlo Badet, del atelier de Chanel a la cocina, conoce a la chef cuyas recetas se inspiran en las técnicas de la alta costura",
+   "u": "https://gerente.com/ve/new-rss/laszlo-badet-del-atelier-de-chanel-a-la-cocina-conoce-a-la-chef-cuyas-recetas-se-inspiran-en-las-tecnicas-de-la-alta-costura/",
+   "s": "Revista Gerente - Colombia",
+   "d": "2026-10-10T19:45:33.000Z",
    "tags": [
-    "CANARIAS"
+    "ALTA COCINA"
    ],
-   "img": "https://static.eldiario.es/clip/f84109c3-b06d-4660-8d5f-f8c44e050db2_facebook-aspect-ratio-1200-675_default_0_x1043y610.jpg"
+   "img": "https://gerente.com/ve/wp-content/uploads/sites/22/2026/10/17911932088367-scaled.jpg"
   },
   {
    "t": "Ferran Adrià reivindica la tortilla francesa: 'no hay comida rara, hay gente rara'",
@@ -168,7 +234,17 @@
     "VINO",
     "CANARIAS"
    ],
-   "img": "https://teldeactualidad.b-cdn.net/upload/images/10_2026/7995_bodega-bentayga-mujr-rural-091026-18.jpeg"
+   "img": "https://teldeactualidad.b-cdn.net/upload/images/10_2026/8608_7995_bodega-bentayga-mujr-rural-091026-18.jpeg"
+  },
+  {
+   "t": "IV. ¿Se combinan bien el adobo y el vino en Tegueste?",
+   "u": "https://www.teneriffa-news.com/es/agenda/agenda-tenerife/iv-se-combinan-bien-adobo",
+   "s": "Teneriffa News",
+   "d": "2026-10-10T17:24:35.000Z",
+   "tags": [
+    "CANARIAS",
+    "VINO"
+   ]
   },
   {
    "t": "Drago Canarias anuncia que concurrirá en solitario a las elecciones generales",
@@ -218,84 +294,6 @@
    "tags": [
     "CANARIAS"
    ]
-  },
-  {
-   "t": "San Hô, el viaje de Adrián Bosch",
-   "u": "https://www.canarias7.es/gastronomia-c7/restaurantes/san-viaje-adrian-bosch-20261010140000-nt.html",
-   "s": "Canarias7",
-   "d": "2026-10-10T12:00:00.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://s1.ppllstatics.com/canarias7/www/multimedia/gastronomia-c7/2026/10/09/image00001-kYc-U302166139223U0H-1200x840@Canarias7.jpg"
-  },
-  {
-   "t": "Ferran Adrià, cocinero catalán: \"En España ni siquiera sabemos que la mahonesa es nuestra. Es la salsa más consumida del mundo. Ni soja, ni tomate, ni puñetas. Y no lo vendemos. Nos falta creérnoslo\"",
-   "u": "https://www.mundodeportivo.com/foodie/20261010/1004236911/ferran-adria-cocinero-catalan-espana-siquiera-mahonesa-nuestra-salsa-mas-consumida-mundo-no-soja-tomate-punetas-no-vendemos-falta-creernoslo-xef-dct.html",
-   "s": "Mundo Deportivo",
-   "d": "2026-10-10T10:37:38.000Z",
-   "tags": [
-    "ALTA COCINA"
-   ],
-   "img": "https://imagenes2.mundodeportivo.com/files/og_thumbnail/uploads/2026/10/05/6ac412cd3e19b.jpeg"
-  },
-  {
-   "t": "El chef Martín Berasategui dicta sentencia: «Si mezclas una lata de sardinas con quesitos, perejil y aceite...",
-   "u": "https://okdiario.com/recetas/chef-martin-berasategui-dicta-sentencia-si-mezclas-lata-sardinas-quesitos-perejil-aceite-tienes-cena-alucinante-19156973",
-   "s": "OkDiario",
-   "d": "2026-10-10T10:30:08.000Z",
-   "tags": [
-    "CHEF"
-   ],
-   "img": "https://okdiario.com/img/2026/08/10/recreacion-de-la-receta-de-berasategui-con-sardinas.jpg"
-  },
-  {
-   "t": "La Noche de Tapas, Vino y Cultura reúne a miles de personas en Telde",
-   "u": "https://www.laprovincia.es/telde/2026/10/10/noche-tapas-vino-cultura-reune-135201147.html",
-   "s": "La Provincia",
-   "d": "2026-10-10T09:44:26.000Z",
-   "tags": [
-    "VINO",
-    "CANARIAS"
-   ]
-  },
-  {
-   "t": "La Noche de Tapas, Vino y Cultura se consolida como una de las grandes citas de Telde y Gran Canaria",
-   "u": "https://www.laprovincia.es/telde/2026/10/10/noche-tapas-vino-cultura-consolida-135201143.html",
-   "s": "La Provincia",
-   "d": "2026-10-10T09:43:01.000Z",
-   "tags": [
-    "VINO",
-    "CANARIAS"
-   ]
-  },
-  {
-   "t": "El bar de Tenerife que conquista con cocina canaria casera y una ropa vieja que todos quieren repetir",
-   "u": "https://www.eldia.es/tenerife/2026/10/10/bar-tenerife-conquista-cocina-canaria-dv-133133223.amp.html",
-   "s": "Eldía",
-   "d": "2026-10-10T09:30:00.000Z",
-   "tags": [
-    "CANARIAS"
-   ]
-  },
-  {
-   "t": "La conexión desconocida de Dabiz Muñoz con un pueblo de Cuenca de solo 150 habitantes",
-   "u": "https://www.noticiasdelvino.com/escapadas/2026/10/10/la-conexion-desconocida-de-dabiz-munoz-con-un-pueblo-de-cuenca-de-solo-150-habitantes-68966/",
-   "s": "Noticias del Vino",
-   "d": "2026-10-10T09:11:57.000Z",
-   "tags": [
-    "ALTA COCINA"
-   ]
-  },
-  {
-   "t": "Jordi Cruz abrirá un nuevo restaurante en Barcelona donde se podrá comer por 50 euros: cocina catalana en un palacete modernista",
-   "u": "https://www.directoalpaladar.com/viajes/jordi-cruz-abrira-nuevo-restaurante-barcelona-donde-se-podra-comer-50-euros-cocina-catalana-palacete-modernista",
-   "s": "Directo al Paladar",
-   "d": "2026-10-10T09:00:28.000Z",
-   "tags": [
-    "ALTA COCINA"
-   ],
-   "img": "https://i.blogs.es/bc47a0/fotojet-70-/840_560.jpeg"
   }
  ]
 }
