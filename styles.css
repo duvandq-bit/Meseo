@@ -10639,3 +10639,7 @@ body:has(#gsOverlay.open) .ux2-bar{
 .hsp-opt-fb{font-family:var(--font-read);font-size:var(--text-xs);line-height:1.5;color:var(--parch2)}
 .hsp-consigna{border:1.5px dashed var(--gold);border-radius:var(--radius-lg);padding:var(--space-4);margin-bottom:var(--space-4);background:rgba(212,170,76,.08)}
 .hsp-consigna p{font-family:var(--font-serif);font-size:var(--text-base);color:var(--parchment);line-height:1.5;margin:0}
+
+/* Pase: la foto del plato al completar */
+.pase-foto{margin:0 0 var(--space-4);border-radius:var(--radius-lg);overflow:hidden;background:var(--ink4);box-shadow:var(--elev-1);aspect-ratio:4/3;max-height:260px}
+.pase-foto img{display:block;width:100%;height:100%;object-fit:cover;animation:djFadeIn var(--motion-base) var(--ease-decelerate)}
