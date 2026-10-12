@@ -7954,8 +7954,12 @@ test('Pase: al acabar un plato el botón dorado sigue jugando, no sale', () => {
   // jugable, quitar primero dejaba al usuario en la pantalla de detrás — que
   // es literalmente el salto que se denunció.
   const otro = html.slice(html.indexOf('function _paseOtroPlato('), html.indexOf('function _paseClose('));
-  assert(otro.indexOf('launchPase(null)') < otro.indexOf('.remove()'),
-    'se pide el plato antes de retirar la partida anterior');
+  // Oct 2026: el plato nuevo se pinta DENTRO de la misma pantalla. Crear una
+  // nueva y borrar la vieja hacía un parpadeo de 360 ms (el fundido de entrada
+  // desde opacidad 0). Sin pantalla nueva no hay nada que retirar, y si no
+  // quedara plato jugable launchPase no toca nada: la partida sigue a la vista.
+  assert(/launchPase\(null\)/.test(otro) && !/\.remove\(\)|paseOverlayViejo|createElement/.test(otro),
+    'el siguiente plato se pinta en la misma pantalla, sin crear otra ni retirar la anterior');
   // La tanda se cuenta, para que seguir tenga un porqué y salir sea una
   // decisión en vez del gesto por defecto.
   assert(/function _paseRachaHTML\(/.test(html), 'falta el recuento de la tanda');
@@ -8104,10 +8108,15 @@ test('Pase de cocina: cableado, accesibilidad y sin foto', () => {
   // Se lanza desde las DOS listas de Repaso (la de categoría y la del buscador).
   assert((html.match(/onclick="event\.stopPropagation\(\);launchPase\(\$\{d\.id\}\)"/g) || []).length === 2,
     'el botón del pase debe estar en las dos listas de Repaso');
-  // El nombre del plato SE DA: la foto no añadiría nada y la regla de la casa
-  // es que las fotos no entran en los ejercicios. El juego no la pinta.
+  // La foto del plato se enseña SÓLO al completar (propietario, oct 2026): en
+  // el veredicto, nunca mientras se monta, porque ahí daría la respuesta.
   const juego = html.slice(html.indexOf('let _paseState = null;'), html.indexOf('function renderRepaso('));
-  assert(!/dishPhotoSrc|img\/platos/.test(juego), 'el juego del pase no debe pintar la foto del plato');
+  assert((juego.match(/dishPhotoSrc\(/g) || []).length === 1 && !/img\/platos/.test(juego), 'una sola vía a la foto: _paseFotoHTML');
+  const fnSrc = n => { const i = juego.indexOf('function ' + n + '('); return juego.slice(i, juego.indexOf('\nfunction ', i + 10)); };
+  const mon = fnSrc('_paseMontajeHTML'), mem = fnSrc('_paseMemoriaHTML');
+  assert(mon.indexOf('_paseFotoHTML(') > mon.indexOf('const marcado=') && mon.indexOf('const marcado=') > 0, 'montaje: la foto va en el veredicto');
+  assert(mem.indexOf('_paseFotoHTML(') > mem.indexOf("const t = V.perfecto") && mem.indexOf("const t = V.perfecto") > 0, 'memoria: la foto va en el veredicto');
+  assert((juego.match(/\$\{_paseFotoHTML\(dish, dd\)\}/g) || []).length === 2, 'sólo en los dos veredictos');
   // Accesibilidad y dedo: las fichas son botones con aria-pressed, y el overlay
   // es un diálogo modal que se cierra con ESC.
   assert(/aria-pressed="\$\{on\?'true':'false'\}"/.test(juego), 'las fichas deben exponer aria-pressed');

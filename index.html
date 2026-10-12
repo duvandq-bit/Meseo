@@ -52,7 +52,7 @@
 <meta property="og:description" content="Formación de equipos de sala: carta, alérgenos, vinos, exámenes y juegos de repaso.">
 <meta property="og:url" content="https://meseo.es/">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"Meseo","url":"https://meseo.es/"}</script>
-<meta name="app-version" content="7.482">
+<meta name="app-version" content="7.483">
 <meta name="app-build" content="May 2026">
 <meta name="theme-color" content="#1c2a22">
 <!-- ═══ PWA ═══ -->
@@ -2814,7 +2814,7 @@ const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><p
 const SRC = 'src';
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='7.482';  // sincronizada con sw.js VERSION (guard de CI)
+const APP_VERSION='7.483';  // sincronizada con sw.js VERSION (guard de CI)
 const APP_BUILD='Jul 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;
@@ -24223,6 +24223,13 @@ function launchPase(dishId){
   // la alergia trabaja sobre ella, y así el desmontaje no cambia.
   _paseArmar();
   _paseRender();
+  // La foto del plato se enseña al corregir. El mapa suele estar ya cargado;
+  // si no, se pide y, si llega con el veredicto en pantalla, se repinta.
+  if(typeof loadDishPhotos==='function' && typeof DISH_PHOTOS!=='undefined' && !DISH_PHOTOS){
+    loadDishPhotos().then(()=>{
+      if(_paseState && _paseState.dishId===dish.id && _paseState.veredicto && document.getElementById('paseOverlay')) _paseRender();
+    }).catch(()=>{});
+  }
   // La base de ingredientes llega en diferido; sin ella la piscina sigue
   // siendo correcta (DISH_COMPONENTS va en el propio fichero) pero con menos
   // detalle, así que se rearma cuando entra.
@@ -24963,12 +24970,16 @@ function _paseRachaHTML(_en){
 // Se pide el plato ANTES de quitar lo que hay en pantalla: si no quedara
 // ninguno jugable, borrar primero dejaba al usuario tirado en la pantalla de
 // detrás, que es justo el salto que no queremos.
+// El plato nuevo se pinta DENTRO de la misma pantalla. Antes se creaba una
+// pantalla nueva y se borraba la vieja: la nueva entraba con su fundido desde
+// opacidad 0 y durante 360 ms se veía lo que hay detrás (propietario, oct 2026:
+// «cuando le das a siguiente hay un parpadeo»; medido, opacidad 0 al pulsar).
+// Si no quedara ningún plato jugable, launchPase no toca nada y la pantalla
+// sigue donde estaba.
 function _paseOtroPlato(){
-  const o=document.getElementById('paseOverlay');
-  if(o) o.id='paseOverlayViejo';
   launchPase(null);
-  const v=document.getElementById('paseOverlayViejo');
-  if(v){ if(document.getElementById('paseOverlay')) v.remove(); else v.id='paseOverlay'; }
+  const b=document.querySelector('#paseOverlay .pase-body');
+  if(b) b.scrollTop=0;
 }
 
 function _paseClose(){
@@ -24997,6 +25008,14 @@ function _paseChip(it, i, on, onclick, extra, ocultarAl){
   const al=ocultarAl ? '' : !(typeof _alergenosValidados!=='function'||_alergenosValidados()) ? '' : (typeof _paseSoloMontaje==='function' && _paseSoloMontaje()) ? '' : (it.a||[]).map(a=>`<span class="pase-al">${escapeHTML(allergenLocal(a))}</span>`).join('');
   return `<button type="button" class="pase-chip${on?' on':''}${extra||''}" data-i="${i}" onclick="${onclick}"
     aria-pressed="${on?'true':'false'}"><span class="pase-chip-t">${escapeHTML(_paseEtiqueta(it.t))}</span>${al?`<span class="pase-chip-al">${al}</span>`:''}</button>`;
+}
+
+// La foto del plato, al completar el pase. Va en el veredicto y nunca antes:
+// mientras se monta, la foto daría la respuesta.
+function _paseFotoHTML(dish, dd){
+  const src = (typeof dishPhotoSrc==='function') ? dishPhotoSrc(dish.id) : null;
+  if(!src) return '';
+  return `<figure class="pase-foto"><img ${SRC}="${escapeHTML(src)}" alt="${escapeHTML(dd.name)}" decoding="async"></figure>`;
 }
 
 function _paseRender(){
@@ -25090,6 +25109,7 @@ function _paseMemoriaHTML(dish, dd, _en){
               :'El plato no lleva todos esos. Decir de más cuesta una venta sin motivo.');
   const puedeSeguir=_paseAlergiasPosibles(dish).length>0;
   return `
+    ${_paseFotoHTML(dish, dd)}
     <div class="pase-verdict${V.perfecto?' ok':' bad'}">
       <div class="pase-verdict-sello">${V.perfecto?'✓':'↩'}</div>
       <div class="pase-verdict-t">${t}</div>
@@ -25241,6 +25261,7 @@ function _paseMontajeHTML(dish, dd, _en){
 
   const puedeSeguir=_paseAlergiasPosibles(dish).length>0;
   return `
+    ${_paseFotoHTML(dish, dd)}
     <div class="pase-verdict${V.perfecto?' ok':V.seguro?' warn':' bad'}">
       <div class="pase-verdict-sello">${V.perfecto?'✓':V.seguro?'≈':'↩'}</div>
       <div class="pase-verdict-t">${titulo}</div>
