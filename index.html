@@ -1535,11 +1535,12 @@ let THEMES = null, ACTIVE_VENUE = null;
 function _enabledVenues(){
   return (THEMES && Array.isArray(THEMES.venues)) ? THEMES.venues.filter(v => v && v.enabled) : [];
 }
-// Los restaurantes que la cuenta de ADMINISTRACIÓN puede elegir en Ajustes (sólo
-// se pinta para ella). Los abiertos; con la app sin suspender, también los
-// cerrados; y siempre los marcados `revision:true` en themes.json, para revisar
-// su carta aunque estén cerrados y la app suspendida. No abre nada a nadie más:
-// el login y el registro siguen mirando sólo `enabled` (_enabledVenues).
+// Los restaurantes que una cuenta con permiso de revisión (_puedeRevisar:
+// admin o propietario) puede elegir en Ajustes — sólo se pinta para ellas. Los
+// abiertos; con la app sin suspender, también los cerrados; y siempre los
+// marcados `revision:true` en themes.json, para revisar su carta aunque estén
+// cerrados y la app suspendida. No abre nada a nadie más: el login y el
+// registro siguen mirando sólo `enabled` (_enabledVenues).
 function _venuesAdministracion(){
   return (THEMES && Array.isArray(THEMES.venues))
     ? THEMES.venues.filter(v => v && v.id && v.name && v.id !== 'plantilla'
@@ -2204,13 +2205,28 @@ function _esMando(nombre){
   }catch(_){ return false; }
 }
 
+// ¿Puede esta cuenta abrir la carta de OTRO restaurante para revisarla? La
+// cuenta de administración, sí (para eso existe); y también el propietario
+// ('owner'), porque es quien más necesita comprobar cómo queda un restaurante
+// nuevo antes de que su equipo lo vea — sin que eso le dé NADA del rol
+// 'admin': no entra en `_esAdmin()`, no ve "Hacer administrador" en Ajustes
+// (eso sigue detrás de `_esAdmin()` sin tocar), y sigue contando en su propio
+// ranking como siempre. Esto sólo decide quién ve la puerta del modo revisión;
+// detrás sigue mandando RLS en el servidor, igual que con cualquier otra carta.
+function _puedeRevisar(nombre){
+  try{
+    return _esAdmin(nombre) || _esPropietario(nombre);
+  }catch(_){ return false; }
+}
+
 function _venueActual(){
   try{
     const e = (typeof currentUser!=='undefined' && currentUser) ? _ficha(currentUser) : null;
-    // Para el administrador manda el restaurante ELEGIDO, no el de su ficha:
-    // ésa es toda la gracia de la cuenta. Para el resto manda el de la nube,
-    // que lo fijó el código del manager y no se cambia tocando una tarjeta.
-    if(e && e.role === 'admin'){
+    // Quien tiene permiso de revisión (_puedeRevisar: admin o propietario)
+    // manda el restaurante ELEGIDO, no el de su ficha: ésa es toda la gracia
+    // de revisar. Para el resto manda el de la nube, que lo fijó el código
+    // del manager y no se cambia tocando una tarjeta.
+    if(typeof _puedeRevisar === 'function' && _puedeRevisar()){
       try{ const v = localStorage.getItem('txk_venue'); if(v) return v; }catch(_){}
     }
     if(e && e.venue) return e.venue;
@@ -2221,6 +2237,18 @@ function _venueActual(){
 // Trozo de filtro para pegar en una consulta, y sello para pegar en un alta.
 function _vq(){ return 'venue=eq.' + encodeURIComponent(_venueActual()); }
 function _vSello(o){ o = o || {}; o.venue = _venueActual(); return o; }
+
+// Una ficha cacheada en este móvil (DB.employees) es del restaurante activo
+// si no declara venue (las que crea este mismo dispositivo para su propio
+// equipo nunca lo guardan, ver getEmp) o si su venue coincide con el actual.
+// Sin este filtro, una ficha que SÍ trae venue —las que bajan de
+// supaFetchAllEmployees, con su `venue: r.venue || null`— se quedaría en la
+// caché local y se arrastraría a cualquier otro restaurante que se revise
+// después en el mismo móvil: exactamente la fuga de datos de un restaurante
+// a otro que esto existe para cerrar (ranking, panel, liga, duelos, @menciones).
+function _esDeMiVenue(ficha){
+  return !ficha || !ficha.venue || ficha.venue === _venueActual();
+}
 
 // ═══ AVISOS PUSH: SÓLO CON LA SESIÓN REAL (D1-M0c) ═════════════════════════
 // Todas las llamadas a send-push pasan por aquí. Quién envía y a qué
@@ -2352,8 +2380,8 @@ function _cartaInfo(){
   return { venue:'txoko', allergensValidated:true, CATS:cats };
 }
 function _alergenosValidados(){ return _cartaInfo().allergensValidated === true; }
-// Con una carta cuyos alérgenos cocina NO ha validado (sólo la abre la cuenta de
-// administración, ver _cartaAceptar):
+// Con una carta cuyos alérgenos cocina NO ha validado (sólo la abre quien
+// tiene permiso de revisión, ver _cartaAceptar / _puedeRevisar):
 //   · se ven, siempre con el aviso de borrador;
 //   · nunca se afirma una ausencia («sin alérgenos»): puede ser que falte el dato;
 //   · no se preguntan, no se puntúan y no se registran.
@@ -2492,9 +2520,9 @@ function _cartaAceptar(carta, venue){
   const deTxoko = new Set(_CARTA_BASE.DISHES.map(d => d.id));
   if(!_cartaIdsValidos(ids, _bloqueDe(venue), deTxoko)) throw new Error('numeros fuera de bloque');
   // Unos alérgenos que cocina no ha validado no se le enseñan al equipo. Sólo
-  // la cuenta de administración —la que existe para revisar contenido— puede
-  // abrir una carta así, y la ve marcada como borrador en toda la app.
-  if(carta.allergensValidated !== true && !_esAdmin()) throw new Error('alergenos sin validar');
+  // quien tiene permiso de revisión (_puedeRevisar: admin o propietario)
+  // puede abrir una carta así, y la ve marcada como borrador en toda la app.
+  if(carta.allergensValidated !== true && !_puedeRevisar()) throw new Error('alergenos sin validar');
   if(!_cartaAplicar(carta)) throw new Error('carta vacía');
 }
 
@@ -2519,12 +2547,13 @@ async function _cartaPrivada(venue){
 // Quien llama no debe dejar entrar: enseñarle a alguien de M.B. la carta de
 // Txoko sería exactamente la fuga que todo esto viene a cerrar. Fallar cerrado.
 //
-// Con una excepción, y sólo para la cuenta de administración: un restaurante
-// que TODAVÍA no tiene carta se abre vacío ('vacia'), no se cierra. M.B. es
-// justo ese caso — su carro de quesos ya está listo y su carta espera a que
-// cocina conteste de dónde salen diecisiete alérgenos. Sin esto, la cuenta que
-// existe para revisar contenido no puede revisar el único contenido que hay.
-// Vacío nunca es la carta de otro: eso lo garantiza _cartaVaciar().
+// Con una excepción, y sólo para quien tiene permiso de revisión
+// (_puedeRevisar: admin o propietario): un restaurante que TODAVÍA no tiene
+// carta se abre vacío ('vacia'), no se cierra. M.B. es justo ese caso — su
+// carro de quesos ya está listo y su carta espera a que cocina conteste de
+// dónde salen diecisiete alérgenos. Sin esto, quien revisa no puede revisar
+// el único contenido que hay. Vacío nunca es la carta de otro: eso lo
+// garantiza _cartaVaciar().
 async function cargarCarta(venue){
   venue = venue || _VENUE_POR_DEFECTO;
   if(venue === _cartaPuesta) return true;
@@ -2568,7 +2597,7 @@ async function cargarCarta(venue){
     // lo sé», y ahí no se entra ni siendo administrador: creerse que M.B. está
     // vacío porque falló el wifi sería peor que no entrar.
     const noExiste = !!(e && /^HTTP 4/.test(e.message || ''));
-    if(noExiste && _esAdmin()){
+    if(noExiste && _puedeRevisar()){
       _cartaVaciar();
       _cartaPuesta = venue;
       return 'vacia';
@@ -5129,6 +5158,13 @@ async function supaRestoreEmployee(name) {
   } catch(e) { dbgw('[Txoko] Supabase restore error:', e.message); return false; }
 }
 
+// null SÓLO significa «no se pudo preguntar» (sin red, HTTP de error, JSON
+// roto): quien llama no sabe nada y puede, si quiere, mirar la caché local.
+// Un restaurante sin nadie todavía (Restaurante 2 recién abierto, por
+// ejemplo) es una respuesta VÁLIDA y vacía — [] — no null; confundirlas
+// hacía que el ranking, el panel, la liga, los duelos y las @menciones, al
+// ver null, cayeran en la caché local SIN filtrar por restaurante y
+// mezclaran ahí empleados de quien fuera que usó este móvil antes.
 async function supaFetchAllEmployees() {
   try {
     const res = await fetch(
@@ -5137,7 +5173,8 @@ async function supaFetchAllEmployees() {
     );
     if(!res.ok) return null;
     const rows = await res.json();
-    if(!Array.isArray(rows) || !rows.length) return null;
+    if(!Array.isArray(rows)) return null;
+    if(!rows.length) return [];
     _dispLearn(rows);   // el ranking ya baja display_name: se aprovecha
     return rows.map(r => ({
       name: r.name,
@@ -10977,8 +11014,10 @@ function _pddAsyncFill(){
     if(c && (Date.now()-c.ts)<300000){ el.textContent=c.v; }
     else if(typeof supaFetchAllEmployees==='function') supaFetchAllEmployees().then(rows=>{
       const wkNow=_wkKey(); const map={};
-      Object.keys(DB.employees).forEach(n=>{ const e=DB.employees[n]; if(e && e.wkKey===wkNow && (e.wkXP||0)>0) map[n]=e.wkXP||0; });
-      (rows||[]).forEach(e=>{ const wk=e.extras&&e.extras.wk; if(wk && wk.k===wkNow && (wk.xp||0)>0) map[e.name]=Math.max(map[e.name]||0, wk.xp||0); });
+      // Sólo fichas DEL RESTAURANTE ACTIVO: una ficha cacheada de otro
+      // restaurante (venue distinto) no puede competir en esta liga.
+      Object.keys(DB.employees).forEach(n=>{ const e=DB.employees[n]; if(e && _esDeMiVenue(e) && e.wkKey===wkNow && (e.wkXP||0)>0) map[n]=e.wkXP||0; });
+      (Array.isArray(rows) ? rows : []).forEach(e=>{ const wk=e.extras&&e.extras.wk; if(wk && wk.k===wkNow && (wk.xp||0)>0) map[e.name]=Math.max(map[e.name]||0, wk.xp||0); });
       const sorted=Object.keys(map).sort((a,b)=>map[b]-map[a]||a.localeCompare(b));
       const pos=sorted.indexOf(currentUser);
       const v=pos>=0?('Nº'+(pos+1)):'—';
@@ -12702,13 +12741,15 @@ function openAjustes(){
       <input id="ajDisp" type="text" maxlength="24" autocomplete="nickname" placeholder="${escapeHTML(currentUser)}" value="${escapeHTML(_dispName(currentUser))}" style="${inp}">
       <div id="ajDispMsg" role="status" aria-live="polite" style="font-size:.72rem;min-height:1rem;margin-bottom:.4rem"></div>
       <button id="ajDispSave" style="${btn}">${_en?'Save name':'Guardar nombre'}</button>
-      ${_esAdmin() ? `
-      ${H(_en?'Restaurant (admin)':'Restaurante (admin)')}
+      ${_puedeRevisar() ? `
+      ${H(_en?'Restaurant (review)':'Restaurante (revisión)')}
       <div style="font-family:'Quicksand',sans-serif;font-size:.75rem;color:#5a6a5e;line-height:1.45;margin-bottom:.5rem">${_en
         ? 'Your account can look at any restaurant, including the ones not open yet. Nothing you do is recorded: no scores, no ranking, no supervisor panel.'
         : 'Tu cuenta puede mirar cualquier restaurante, incluidos los que aún no están abiertos. Nada de lo que hagas se guarda: ni puntuaciones, ni ranking, ni panel de supervisor.'}</div>
       <div id="ajVenues" style="display:flex;flex-direction:column;gap:.4rem"></div>
       <div id="ajVenueMsg" role="status" aria-live="polite" style="font-size:.72rem;min-height:1rem;margin-top:.35rem"></div>
+      ` : ''}
+      ${_esAdmin() ? `
       ${H(_en?'The admin role':'El rol de administración')}
       ${renderSupAdminHTML()}
       ` : ''}
@@ -12767,7 +12808,7 @@ function openAjustes(){
   // tema y se vuelve a dibujar la pestaña actual. Si la carta no llega, no se
   // cambia nada — enseñar la carta de otro restaurante es justo lo que no debe
   // pasar, aunque quien mire sea el administrador.
-  if(_esAdmin()){
+  if(_puedeRevisar()){
     const cajaV = $('ajVenues');
     const todos = (typeof THEMES!=='undefined') ? _venuesAdministracion() : [];
     const ahora = _venueActual();
@@ -12798,6 +12839,12 @@ function openAjustes(){
         QUESOS = null; _quesosVenue = null;   // el carro es de cada restaurante
         SALA = null; _salaVenue = null; _salaSec = null;   // y los procedimientos también
         WINES = null; _vinosVenue = null;      // y la bodega, también
+        // Y las listas de personas también son de cada restaurante: ranking,
+        // panel, liga y @menciones no pueden arrastrar nombres de la carta
+        // que se estaba revisando antes.
+        window._supEmpNames = null; window._supAllEmps = null;
+        window._ligaPosCache = null;
+        _chatRoster = []; _chatRosterVenue = null;
         try{ _navQuesosSync(); _navVinosSync(); _navSalaSync(); }catch(_){}
         if(typeof showTab==='function') showTab(typeof currentTab!=='undefined' ? currentTab : 'dashboard');
         const _nom = (tema && tema.name) || id;
@@ -25897,10 +25944,13 @@ function renderRanking(){
   ]).then(([remoteEmps, supaScores]) => {
     // Build unified employee map — remote is source of truth, local fills gaps
     let allEmps = {};
-    // Start with local data
-    Object.keys(DB.employees).forEach(n => { if(n) allEmps[n] = {...DB.employees[n], name: n}; });
-    // Remote always wins (it aggregates all devices)
-    if(remoteEmps && remoteEmps.length) remoteEmps.forEach(e => {
+    // Start with local data — pero sólo la del restaurante activo: una ficha
+    // cacheada de otro restaurante no puede entrar en este ranking.
+    Object.keys(DB.employees).forEach(n => { const e = DB.employees[n]; if(n && _esDeMiVenue(e)) allEmps[n] = {...e, name: n}; });
+    // Remote always wins (it aggregates all devices). remoteEmps es un array
+    // SIEMPRE que la petición no haya fallado — [] es «sin nadie todavía»,
+    // una respuesta válida, no «no se sabe» (null, fallo de red).
+    if(Array.isArray(remoteEmps)) remoteEmps.forEach(e => {
       if(!e.name) return;
       // Use remote XP if higher OR if local doesn't have this user
       if(!allEmps[e.name]) { allEmps[e.name] = e; return; }
@@ -26363,10 +26413,13 @@ function renderSupDashboard(silent){
     </div>`;
   supaFetchAllEmployees().then(remoteEmps => {
     let allEmps = {};
-    // Start with local data
-    Object.keys(DB.employees).forEach(name => { if(name) allEmps[name] = {...DB.employees[name], name}; });
-    // Merge remote data — remote wins for knownDishes, sessions, xp
-    if(remoteEmps && remoteEmps.length) remoteEmps.forEach(e => {
+    // Start with local data — pero sólo la del restaurante activo: el panel
+    // de un restaurante no puede enseñar la ficha de otro.
+    Object.keys(DB.employees).forEach(name => { const e = DB.employees[name]; if(name && _esDeMiVenue(e)) allEmps[name] = {...e, name}; });
+    // Merge remote data — remote wins for knownDishes, sessions, xp.
+    // remoteEmps es un array siempre que la petición no haya fallado: []
+    // es «este restaurante todavía no tiene nadie», una respuesta válida.
+    if(Array.isArray(remoteEmps)) remoteEmps.forEach(e => {
       if(!e.name) return;
       const local = allEmps[e.name] || {};
       allEmps[e.name] = {
@@ -29164,9 +29217,14 @@ async function renderDuel() {
   c.innerHTML = `<div class="sup-wrap"><div style="text-align:center;padding:2rem;color:var(--parch3);font-family:'DM Mono',monospace;font-size:.72rem">⏳</div></div>`;
 
   await supaExpireOldDuels();
-  // Always fetch fresh employee list from Supabase
+  // Always fetch fresh employee list from Supabase. remoteEmps es un array
+  // SIEMPRE que la petición no haya fallado — [] es «nadie más todavía en
+  // este restaurante», una respuesta válida que SÍ debe sustituir cualquier
+  // lista de nombres que hubiera quedado de revisar otro restaurante antes
+  // en este móvil; null es «no se sabe» (fallo de red) y ahí se conserva lo
+  // que hubiera.
   const remoteEmps = await supaFetchAllEmployees();
-  if (remoteEmps && remoteEmps.length) {
+  if (Array.isArray(remoteEmps)) {
     remoteEmps.forEach(e => { if (e.name && !DB.employees[e.name]) DB.employees[e.name] = e; });
     window._supEmpNames = remoteEmps.map(e => e.name).filter(Boolean);
   }
@@ -29176,7 +29234,10 @@ async function renderDuel() {
   // If the user navigated to a different tab while we awaited Supabase, bail
   // out — otherwise the c.innerHTML below would overwrite the new view.
   if (currentTab !== _startTab) return;
-  const allNames = (window._supEmpNames || Object.keys(DB.employees)).filter(n => n && n !== currentUser);
+  // Si no hubo respuesta del servidor (null) y hay que caer en la caché
+  // local, que sea sólo la del restaurante activo: nunca la de otro.
+  const _nombresLocales = () => Object.keys(DB.employees).filter(n => _esDeMiVenue(DB.employees[n]));
+  const allNames = (window._supEmpNames || _nombresLocales()).filter(n => n && n !== currentUser);
   const emp = getEmp(currentUser);
 
   const sentToday = countDuelsSentToday(allDuels, currentUser);
@@ -34952,6 +35013,7 @@ let _chatPresence = {};   // name -> {avatar, at}
 let _chatSeenIds = new Set();
 let _chatEmojiOpen = false;
 let _chatRoster = [];          // employee names for @mention autocomplete
+let _chatRosterVenue = null;   // qué restaurante describe _chatRoster — para refrescarla al cambiar
 let _chatReplyTo = null;       // message being quoted in the composer
 let _chatTypers = {};          // name -> last typing ts (broadcast)
 let _chatTypingSentAt = 0;
@@ -35063,13 +35125,20 @@ async function _chatConnect(){
     if(stream) stream.innerHTML = `<div class="chat-loading">${LANG==='en'?'Chat unavailable offline':'Chat no disponible sin conexión'}</div>`;
     return;
   }
-  // Roster for @mention autocomplete (cloud first, local fallback)
-  if(!_chatRoster.length){
+  // Roster for @mention autocomplete (cloud first, local fallback). Se
+  // refresca en cuanto cambia el restaurante activo (revisión incluida):
+  // de lo contrario la lista de la carta revisada antes se quedaría
+  // mencionable en la de ahora.
+  if(_chatRosterVenue !== _venueActual()){
+    _chatRoster = [];
     try{
       const all = await supaFetchAllEmployees();
-      if(all && all.length) _chatRoster = all.map(e=>e.name);
+      // [] (restaurante sin nadie) es una respuesta válida: vacía la lista en
+      // vez de caer en la caché local de otro restaurante.
+      if(Array.isArray(all)) _chatRoster = all.map(e=>e.name).filter(Boolean);
     }catch(_){}
-    if(!_chatRoster.length) _chatRoster = Object.keys(DB.employees||{});
+    if(!_chatRoster.length) _chatRoster = Object.keys(DB.employees||{}).filter(n => _esDeMiVenue(DB.employees[n]));
+    _chatRosterVenue = _venueActual();
   }
   // 1) Load recent history over REST
   try{

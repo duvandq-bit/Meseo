@@ -614,7 +614,7 @@ const MUTACIONES = [
   { id:'R2-1', fase:'R2', fila:null,
     rompe:'el personal abre una carta cuyos alérgenos cocina no ha validado',
     archivo:'index.html',
-    de:"  if(carta.allergensValidated !== true && !_esAdmin()) throw new Error('alergenos sin validar');",
+    de:"  if(carta.allergensValidated !== true && !_puedeRevisar()) throw new Error('alergenos sin validar');",
     a:"",
     cae:'la carta privada llega del servidor' },
 

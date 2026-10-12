@@ -10070,16 +10070,21 @@ test('Administración: mira cualquier restaurante y no deja rastro', () => {
   // cualquier restaurante, incluidos los que aún no están abiertos, y no escribe
   // ni aparece en ninguna puntuación. Si contara, el ranking mediría a quien
   // está revisando la carta y no a quien se la está aprendiendo.
+  // El propietario ('owner') puede abrir la misma puerta de revisión
+  // (_puedeRevisar), pero NO queda exento de ranking: su actividad normal
+  // sigue contando como siempre, y sólo mientras reviste la carta de OTRO
+  // restaurante entra el perfil de revisión aparte (ver _modoRevision).
   assert(/function _esAdmin\(nombre\)/.test(html), 'falta el resolutor de administración');
   assert(/_EMP_COLS='[^']*,role'/.test(html), 'el rol tiene que bajar con la ficha');
 
-  // Para el administrador manda el restaurante ELEGIDO; para el resto, el de la
-  // nube, que lo fijó el código del manager y no se cambia tocando una tarjeta.
+  // Para quien puede revisar (administración o propietario) manda el
+  // restaurante ELEGIDO; para el resto, el de la nube, que lo fijó el código
+  // del manager y no se cambia tocando una tarjeta.
   const va = html.slice(html.indexOf('function _venueActual(){'), html.indexOf('function _vq()'));
-  assert(/if\(e && e\.role === 'admin'\)/.test(va) && /localStorage\.getItem\('txk_venue'\)/.test(va),
-    'el administrador elige restaurante; el resto no');
-  assert(va.indexOf("role === 'admin'") < va.indexOf('if(e && e.venue) return e.venue;'),
-    'la preferencia del administrador va ANTES del restaurante de su ficha');
+  assert(/if\(typeof _puedeRevisar === 'function' && _puedeRevisar\(\)\)/.test(va) && /localStorage\.getItem\('txk_venue'\)/.test(va),
+    'quien puede revisar elige restaurante; el resto no');
+  assert(va.indexOf('_puedeRevisar()') < va.indexOf('if(e && e.venue) return e.venue;'),
+    'la preferencia de quien revisa va ANTES del restaurante de su ficha');
 
   // Se corta ANTES de escribir. Una fila que no existe no se cuela en un ranking.
   const fn = n => { const i = html.indexOf('async function ' + n + '('); let d = 0;
@@ -10108,7 +10113,7 @@ test('Administración: mira cualquier restaurante y no deja rastro', () => {
       `este listado no excluye a la cuenta de administración: ${u.slice(0, 70)}`);
 
   // Y el cambio de restaurante desde dentro falla CERRADO.
-  const aj = html.slice(html.indexOf('if(_esAdmin()){'), html.indexOf('// Nombre visible.'));
+  const aj = html.slice(html.indexOf('if(_puedeRevisar()){'), html.indexOf('// Nombre visible.'));
   assert(/const ok = await cargarCarta\(id\);/.test(aj), 'cambiar de restaurante carga su carta');
   assert(/if\(!ok\)\{[\s\S]{0,400}?cargarCarta\(anterior\)/.test(aj),
     'si la carta no llega, se vuelve al restaurante anterior: enseñar la de otro es justo lo que no debe pasar');
@@ -10134,8 +10139,10 @@ const _cartaRes = await (async () => {
     const BASE = { DISHES:[{id:1,name:'Croqueta de jamón'}], DISHES_EN:[{id:1,name:'Ham croquette'}],
                    DISH_COMPONENTS:{1:['jamon']}, DISH_ACTIONS:{1:{}}, DISH_SERVICE:{1:'a'} };
     const F = new Function('DISHES','DISHES_EN','DISH_COMPONENTS','DISH_ACTIONS','DISH_SERVICE', // eslint-disable-line no-new-func
-      '_CARTA_BASE','_VENUE_POR_DEFECTO','_esAdmin','loadLazyData','showToast','LANG',
+      '_CARTA_BASE','_VENUE_POR_DEFECTO','_puedeRevisar','loadLazyData','showToast','LANG',
       src + '; return { cargarCarta, estado: () => ({ platos: DISHES.map(d=>d.name), en: DISHES_EN.length, comp: Object.keys(DISH_COMPONENTS).length, turnos: Object.keys(DISH_SERVICE).length }) };');
+    // `esAdmin` representa aquí a cualquier cuenta con permiso de revisión
+    // (_puedeRevisar: administración o propietario) — el cargador no distingue.
     return F(D, DE, DC, DA, DS, BASE, 'txoko', () => esAdmin, responder, () => {}, 'es');
   };
   const plato = (id,es,en) => ({ venue:null, DISHES:[{id,name:es}], DISHES_EN:[{id,name:en}],
@@ -10216,6 +10223,137 @@ test('Administración: un restaurante sin carta se abre VACÍO, nunca con la del
   assert(R.propia === true, 'con carta propia se entra normal');
   // 5) Y un archivo que dice ser de otro restaurante se sigue rechazando.
   assert(R.ajena === false, 'un archivo que dice ser de otro restaurante no se aplica');
+});
+
+// ═══ EL PROPIETARIO TAMBIÉN REVISA · sin volverse administración ═══
+const _revisionDueñoRes = await (async () => {
+  const srcRoles = html.slice(html.indexOf('function _ficha(nombre){'), html.indexOf('// ═══ AVISOS PUSH'));
+  const srcCarga = html.slice(html.indexOf('let _cartaPuesta = _VENUE_POR_DEFECTO;'),
+                              html.indexOf('// Derivación automática:'));
+  if (srcRoles.length < 200 || srcCarga.length < 500) return { roto: 'no encuentro las piezas a montar' };
+  const monta = (DBemp, nombre) => {
+    const D = [], DE = [], DC = {}, DA = {}, DS = {};
+    const BASE = { DISHES:[{id:1,name:'x'}], DISHES_EN:[{id:1,name:'x'}],
+                   DISH_COMPONENTS:{1:[]}, DISH_ACTIONS:{1:{}}, DISH_SERVICE:{} };
+    const LS = {};
+    const localStorage = { getItem: k => (k in LS ? LS[k] : null), setItem: (k,v) => { LS[k] = v; } };
+    const F = new Function('DISHES','DISHES_EN','DISH_COMPONENTS','DISH_ACTIONS','DISH_SERVICE', // eslint-disable-line no-new-func
+      'DB','currentUser','localStorage','ACTIVE_VENUE','_CARTA_BASE','_VENUE_POR_DEFECTO','loadLazyData','showToast','LANG',
+      srcRoles + '\n' + srcCarga +
+      '; return { cargarCarta, esAdmin:_esAdmin, esPropietario:_esPropietario, puedeRevisar:_puedeRevisar, venueActual:_venueActual };');
+    const api = F(D, DE, DC, DA, DS, DBemp, nombre, localStorage, null, BASE, 'txoko',
+      () => Promise.reject(new Error('HTTP 404')), () => {}, 'es');
+    return { api, localStorage };
+  };
+  const dueño = monta({ employees:{ Dueño:{ name:'Dueño', role:'owner', venue:'txoko' } } }, 'Dueño');
+  const manager = monta({ employees:{ Quien:{ name:'Quien', role:'manager', venue:'txoko' } } }, 'Quien');
+  const staff = monta({ employees:{ Quien:{ name:'Quien', role:'staff', venue:'txoko' } } }, 'Quien');
+
+  const antesDeElegir = { puede: dueño.api.puedeRevisar(), admin: dueño.api.esAdmin(),
+                          propietario: dueño.api.esPropietario(), venue: dueño.api.venueActual() };
+  // Lo que hace el picker de Ajustes: primero localStorage, luego cargarCarta.
+  dueño.localStorage.setItem('txk_venue', 'r2');
+  const r2Dueño = await dueño.api.cargarCarta('r2');
+  const venueTrasElegir = dueño.api.venueActual();
+
+  manager.localStorage.setItem('txk_venue', 'r2');
+  const r2Manager = await manager.api.cargarCarta('r2');
+
+  return { antesDeElegir, r2Dueño, venueTrasElegir, r2Manager,
+           puedeManager: manager.api.puedeRevisar(), puedeStaff: staff.api.puedeRevisar() };
+})();
+
+test('Revisión: el propietario entra a revisar restaurantes ajenos sin volverse administración', () => {
+  const R = _revisionDueñoRes;
+  assert(!R.roto, R.roto);
+  assert(R.antesDeElegir.puede === true, 'el propietario tiene que poder revisar (_puedeRevisar)');
+  assert(R.antesDeElegir.admin === false,
+    'revisar no lo vuelve la cuenta de administración: _esAdmin tiene que seguir dando false');
+  assert(R.antesDeElegir.propietario === true, 'sigue siendo propietario, nada más');
+  assert(R.antesDeElegir.venue === 'txoko', 'sin elegir nada en Ajustes, sigue viendo su propio restaurante');
+  assert(R.r2Dueño === 'vacia',
+    `al elegir r2 (sin carta en este montaje) el propietario debería entrar vacío, igual que la administración; dio ${JSON.stringify(R.r2Dueño)}`);
+  assert(R.venueTrasElegir === 'r2',
+    '_venueActual() tiene que reflejar r2 tras elegirlo: es lo que usan ranking, panel, liga, duelos y chat para no mezclar restaurantes');
+  assert(R.puedeManager === false && R.puedeStaff === false, 'un manager o un camarero no tienen la puerta de revisión');
+  assert(R.r2Manager === false,
+    'un manager, aunque alguien le toque el localStorage, sigue sin poder entrar a un restaurante sin carta');
+});
+
+// ═══ LAS LISTAS DE PERSONAL NUNCA MEZCLAN RESTAURANTES ═══
+const _listaPersonalRes = await (async () => {
+  const srcRoles = html.slice(html.indexOf('function _ficha(nombre){'), html.indexOf('// ═══ AVISOS PUSH'));
+  const srcFetch = html.slice(html.indexOf('// null SÓLO significa'), html.indexOf('// ═══ SUPABASE — NOTIFICACIONES'));
+  if (srcRoles.length < 200 || srcFetch.length < 300) return { roto: 'no encuentro supaFetchAllEmployees' };
+  const monta = (respuesta) => {
+    const F = new Function('DB','currentUser','localStorage','ACTIVE_VENUE','_VENUE_POR_DEFECTO', // eslint-disable-line no-new-func
+      '_EMP_COLS','SUPA_URL','SUPA_KEY','fetch','_bearer','_dispLearn',
+      srcRoles + '\n' + srcFetch + '; return { fetchAll: supaFetchAllEmployees, esDeMiVenue: _esDeMiVenue, venueActual: _venueActual };');
+    return F({ employees:{} }, 'Yo', { getItem:()=>null, setItem:()=>{} }, null, 'r2',
+      'name,venue,role', 'https://x', 'k', respuesta, () => 'tok', () => {});
+  };
+  const vacioOk   = await monta(async () => ({ ok:true,  json: async () => [] })).fetchAll();
+  const fallo      = await monta(async () => ({ ok:false })).fetchAll();
+  const excepcion  = await monta(() => Promise.reject(new Error('sin red'))).fetchAll();
+  const conDatos   = await monta(async () => ({ ok:true, json: async () => [{ name:'Ana', venue:'r2' }] })).fetchAll();
+  const api = monta(async () => ({ ok:true, json: async () => [] }));
+  return { vacioOk, fallo, excepcion, conDatos,
+    deOtro:  api.esDeMiVenue({ venue:'txoko' }),
+    delMio:  api.esDeMiVenue({ venue:'r2' }),
+    sinVenue: api.esDeMiVenue({ name:'ficha local sin venue' }),
+    sinFicha: api.esDeMiVenue(null) };
+})();
+
+test('Listas de personal: un restaurante sin nadie da [] (vacío válido), nunca null (fallo)', () => {
+  const R = _listaPersonalRes;
+  assert(!R.roto, R.roto);
+  assert(Array.isArray(R.vacioOk) && R.vacioOk.length === 0,
+    `una respuesta 200 con cero filas tiene que ser [] (vacío válido), no ${JSON.stringify(R.vacioOk)}`);
+  assert(R.fallo === null, 'un HTTP de error sigue siendo null: "no se sabe", no "no hay nadie"');
+  assert(R.excepcion === null, 'un fallo de red sigue siendo null: "no se sabe", no "no hay nadie"');
+  assert(Array.isArray(R.conDatos) && R.conDatos.length === 1 && R.conDatos[0].name === 'Ana',
+    'con filas de verdad, se siguen mapeando igual que siempre');
+});
+
+test('Listas de personal: una ficha cacheada de OTRO restaurante no cuenta como del activo', () => {
+  const R = _listaPersonalRes;
+  assert(!R.roto, R.roto);
+  assert(R.delMio === true, 'una ficha del restaurante activo sí cuenta');
+  assert(R.deOtro === false,
+    'PELIGRO: una ficha cacheada de Txoko no puede contar como de r2 — es justo la fuga que _esDeMiVenue cierra');
+  assert(R.sinVenue === true,
+    'una ficha local sin venue (la crea getEmp sin ese campo, para SU PROPIO equipo) es siempre del restaurante activo');
+  assert(R.sinFicha === true, 'sin ficha no hay nada que excluir');
+});
+
+test('Listas de personal: ranking, panel, liga, duelos y menciones filtran por restaurante activo', () => {
+  const ranking = html.slice(html.indexOf('function renderRanking(){'), html.indexOf('function renderSupervisor(){'));
+  assert(/Object\.keys\(DB\.employees\)\.forEach\(n => \{ const e = DB\.employees\[n\]; if\(n && _esDeMiVenue\(e\)\) allEmps\[n\] = /.test(ranking),
+    'renderRanking: la caché local se filtra por _esDeMiVenue antes de sembrar el ranking');
+  assert(/if\(Array\.isArray\(remoteEmps\)\) remoteEmps\.forEach/.test(ranking),
+    'renderRanking: [] del servidor (restaurante sin nadie) tiene que sustituir la caché local, no ignorarse');
+
+  const panel = html.slice(html.indexOf('function renderSupDashboard('), html.indexOf('function renderSupDashboard(') + 2500);
+  assert(/Object\.keys\(DB\.employees\)\.forEach\(name => \{ const e = DB\.employees\[name\]; if\(name && _esDeMiVenue\(e\)\) allEmps\[name\] = /.test(panel),
+    'renderSupDashboard: el panel tampoco puede sembrarse con fichas de otro restaurante');
+  assert(/if\(Array\.isArray\(remoteEmps\)\) remoteEmps\.forEach/.test(panel),
+    'renderSupDashboard: [] también sustituye aquí, no se queda con lo de antes');
+
+  const liga = html.slice(html.indexOf('// Posición en la liga semanal'), html.indexOf('// Posición en la liga semanal') + 900);
+  assert(/if\(e && _esDeMiVenue\(e\) && e\.wkKey===wkNow/.test(liga),
+    'la liga semanal: sólo cuentan fichas LOCALES del restaurante activo');
+
+  const duelo = html.slice(html.indexOf('async function renderDuel('), html.indexOf('async function renderDuel(') + 2100);
+  assert(/if \(Array\.isArray\(remoteEmps\)\) \{/.test(duelo),
+    'renderDuel: [] del servidor tiene que limpiar window._supEmpNames, no dejarlo con nombres de otro restaurante');
+  assert(/const _nombresLocales = \(\) => Object\.keys\(DB\.employees\)\.filter\(n => _esDeMiVenue\(DB\.employees\[n\]\)\);/.test(duelo),
+    'renderDuel: el repliegue a la caché local también se filtra por restaurante');
+
+  const chat = html.slice(html.indexOf('async function _chatConnect(){'), html.indexOf('// 1) Load recent history over REST'));
+  assert(/_chatRosterVenue !== _venueActual\(\)/.test(chat),
+    'el roster de @menciones se refresca al cambiar de restaurante, no se queda pegado al anterior');
+  assert(/Object\.keys\(DB\.employees\|\|\{\}\)\.filter\(n => _esDeMiVenue\(DB\.employees\[n\]\)\)/.test(chat),
+    'el repliegue local del roster de @menciones también se filtra por restaurante');
 });
 
 test('Multi-restaurante: nadie lee el nombre del vecino en su propia formación', () => {
@@ -15937,7 +16075,8 @@ test('F0 · salir y entrar sustituyen el contexto ENTERO, de una vez', () => {
 // ═══ RESTAURANTES INDEPENDIENTES · el primero nuevo es «Restaurante 2» ═══
 // La carta de otro restaurante llega del servidor (public.cartas, con RLS),
 // sus números de plato viven en un bloque propio, y mientras cocina no valide
-// sus alérgenos sólo la abre la cuenta de administración, en modo revisión.
+// sus alérgenos sólo la abre quien tiene permiso de revisión (_puedeRevisar:
+// administración o propietario), en modo revisión.
 // Txoko no pasa por nada de esto: su comportamiento es el contrato.
 console.log('\nRestaurantes independientes');
 const _r2Res = await (async () => {
@@ -15958,7 +16097,7 @@ const _r2Res = await (async () => {
       return { ok: true, status: 200, json: async () => privada ? [{ venue: privada.venue, formato: 2, contenido: privada }] : [] }; };
     const loadLazyData = () => estatica ? Promise.resolve(estatica) : Promise.reject(new Error('HTTP 404'));
     const F = new Function('DISHES','DISHES_EN','DISH_COMPONENTS','DISH_ACTIONS','DISH_SERVICE', // eslint-disable-line no-new-func
-      '_CARTA_BASE','_VENUE_POR_DEFECTO','_esAdmin','loadLazyData','showToast','LANG','THEMES',
+      '_CARTA_BASE','_VENUE_POR_DEFECTO','_puedeRevisar','loadLazyData','showToast','LANG','THEMES',
       'fetchT','SUPA_URL','SUPA_KEY','_authCtx','_PASE_FICHAS_CACHE','_paseVistos','_E',
       'var _gsDishIdx=_E.gs, DISH_PHOTOS=_E.fotos, DISH_PHOTO_PENDING=_E.pend;\n' + src +
       '; return { cargarCarta, info: () => _cartaInfo(), validados: () => _alergenosValidados(),' +
@@ -16209,10 +16348,11 @@ const _revRes = await (async () => {
 })();
 
 // ═══ REVISIÓN DE LA ADMINISTRACIÓN · r2 con revision:true ═══
-// La cuenta de administración puede elegir r2 en Ajustes para estudiar su carta
-// aunque r2 siga cerrado y la app suspendida. Nadie más lo ve: el login, el
-// registro y el selector público siguen mirando sólo `enabled`. Quién LEE la
-// carta lo decide el servidor (cartas_revisores): esto sólo enseña la opción.
+// La cuenta de administración —y, desde _puedeRevisar, también el
+// propietario— puede elegir r2 en Ajustes para estudiar su carta aunque r2
+// siga cerrado y la app suspendida. Nadie más lo ve: el login, el registro y
+// el selector público siguen mirando sólo `enabled`. Quién LEE la carta lo
+// decide el servidor (cartas_revisores): esto sólo enseña la opción.
 const _selVenues = (suspendida) => {
   const tro = (ini, fin) => { const i = html.indexOf(ini); const j = html.indexOf(fin, i); return (i >= 0 && j > i) ? html.slice(i, j) : null; };
   const src = tro('function _enabledVenues(){', '\nfunction applyTheme(');
@@ -16235,10 +16375,10 @@ test('Revisión de la administración: Ajustes ofrece r2 a la administración; e
   assert(JSON.stringify(sus.admin) === '["txoko","r2"]', 'suspendida: la administración ve Txoko y r2: ' + sus.admin.join(', '));
   assert(JSON.stringify(sus.login) === '["txoko"]' && JSON.stringify(libre.login) === '["txoko"]', 'el login sólo enseña lo abierto: nunca r2');
   assert(JSON.stringify(libre.admin) === '["txoko","mb","r2"]', 'sin suspensión, la administración ve lo de siempre: ' + libre.admin.join(', '));
-  const iAdm = html.indexOf("  if(_esAdmin()){\n    const cajaV = $('ajVenues');");
+  const iAdm = html.indexOf("  if(_puedeRevisar()){\n    const cajaV = $('ajVenues');");
   const iUso = html.indexOf('_venuesAdministracion()', iAdm);
-  assert(iAdm > 0 && iUso > iAdm && iUso - iAdm < 200, 'el selector de restaurantes de Ajustes está dentro de if(_esAdmin())');
-  assert((html.match(/(?<!function )_venuesAdministracion\(\)/g) || []).length === 1, '_venuesAdministracion sólo se llama en Ajustes de la administración');
+  assert(iAdm > 0 && iUso > iAdm && iUso - iAdm < 200, 'el selector de restaurantes de Ajustes está dentro de if(_puedeRevisar())');
+  assert((html.match(/(?<!function )_venuesAdministracion\(\)/g) || []).length === 1, '_venuesAdministracion sólo se llama en Ajustes de quien puede revisar');
   const sel = html.slice(html.indexOf('function selectVenue(id){'), html.indexOf('function selectVenue(id){') + 400);
   assert(/const v = _enabledVenues\(\)\.find\(x => x\.id === id\);/.test(sel), 'el selector del login sólo acepta restaurantes abiertos');
   assert(!/revision/.test(html.slice(html.indexOf('function _enabledVenues(){'), html.indexOf('function _enabledVenues(){') + 140)), '_enabledVenues no mira revision');
