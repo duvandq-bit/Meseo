@@ -16871,6 +16871,22 @@ test('Restaurante 2: colores de Akira Back (carbón, champán e índigo) y Txoko
     assert(css.includes(`html[data-venue="r2"] ${sel}{`), `r2 tiñe ${sel}`);
   assert(!/html\[data-venue="txoko"\]/.test(css), 'a Txoko no se le toca nada');
 });
+test('Login · El pase: la campana se levanta una vez y el resto está quieto', () => {
+  const lg = html.slice(html.indexOf('id="screenLogin"'), html.indexOf('id="screenApp"'));
+  assert(/class="login-stage"/.test(lg) && /class="login-cloche"/.test(lg) && /class="login-lamp"/.test(lg), 'escenario: lámpara y campana');
+  assert(/id="loginLogoName">Meseo</.test(lg) && /id="loginSubtitle"/.test(lg) && /id="loginEyebrow">Formación de sala</.test(lg), 'los ids del héroe siguen');
+  // Los adornos de antes se retiraron: cada uno era una capa animada sin fin.
+  for (const c of ['login-godrays', 'login-hex-pattern', 'login-medallion-glow', 'login-hex-seal', 'lp-firefly', 'lp-ember', 'lp-rune', 'lp-dust', 'login-card-corner', 'login-card-beam'])
+    assert(!lg.includes(c), `${c} ya no está en el login`);
+  const css = read('styles.css');
+  assert(/#screenLogin \.login-cloche\{[^}]*animation:lgLift[^}]*forwards/.test(css), 'la campana se levanta una sola vez (forwards, no infinite)');
+  const bloque = css.slice(css.indexOf('LOGIN · EL PASE'));
+  assert(!/infinite/.test(bloque), 'en el login nuevo nada se anima sin fin');
+  assert(/prefers-reduced-motion:reduce\)\{\s*#screenLogin \.login-lamp/.test(bloque), 'con reducir movimiento se ve el estado final');
+  assert(/#screenLogin \.login-submit-btn::before\{display:none\}/.test(bloque), 'fuera el brillo que barría el botón');
+  assert(/@media \(min-width:900px\)\{\s*#screenLogin\{\s*display:grid;grid-template-columns:1\.15fr 1fr/.test(bloque), 'en escritorio, escenario a la izquierda y formulario a la derecha');
+  assert(/'The craft is trained\.' : 'El oficio se entrena\.'/.test(html), 'la frase bajo el nombre es una frase, no una etiqueta');
+});
 test('Letras: la escala de siete tamaños existe y no baja de 11 px', () => {
   const css = read('styles.css');
   const toks = [...css.matchAll(/--fs-(\d):\s*([^;]+);/g)].map(m => [m[1], m[2].trim()]);
