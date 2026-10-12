@@ -5094,7 +5094,9 @@ test('Aprender → Técnicas: glosario de técnicas de cocina cableado y derivad
          /es:'Gratinar'/.test(html) && /es:'Desglasar'/.test(html) && /es:'Clarificar'/.test(html),
     'faltan las técnicas clásicas de escuela (bridar, saltear, gratinar, desglasar, clarificar)');
   // la nota "En el Txoko" es opcional (técnicas aspiracionales sin plato en carta)
-  assert(/\$\{t\.txoko\?`<div class="tec-txoko"/.test(html),
+  // (desde oct 2026 la nota sale de t.txoko en Txoko, o de la nota propia de la carta en r2)
+  assert(/const nota = src\.propia \? \(_en \? \(t\.notaEn\|\|t\.nota\) : t\.nota\) : t\.txoko;/.test(html)
+      && /return nota\?`<div class="tec-txoko"/.test(html),
     'la nota En el Txoko debe ser opcional (solo cuando hay plato real)');
   assert(/function renderTecnicas\(\)/.test(html), 'falta el renderer renderTecnicas');
   // subpestaña cableada en los 5 puntos del enrutado de Aprender
@@ -16664,6 +16666,73 @@ test('Fotos privadas: el bucket es privado y sólo tiene política de LECTURA', 
   const pols = sql.match(/create policy[^;]+;/g) || [];
   assert(pols.length === 1 && /for select to authenticated/.test(pols[0]), 'una sola política, de lectura, para sesiones reales');
   assert(/app\.venue_actual\(\)/.test(pols[0]) && /app\.puede_revisar_carta\(/.test(pols[0]), 'misma regla que public.cartas');
+});
+// ── Técnicas y glosario propios de una carta privada (r2) ──
+const _tecSrc = (() => {
+  const cut = (a, b) => { const i = html.indexOf(a); const j = html.indexOf(b, i + 1); return (i >= 0 && j > i) ? html.slice(i, j) : null; };
+  return {
+    valida: cut('function _cartaTecValidas(c){', '\nfunction _cartaInfo(){'),
+    vista: cut('function _tecFuente(){', '\n// Global quick search available from any Aprender subtab'),
+    dishes: cut('function _tecDishes(kw,kwx){', '\n// ═══ HORARIOS DEL EQUIPO'),
+    esc: cut('function escapeHtml(str){', '\nwindow.escapeHtml'),
+  };
+})();
+const _tecMuestra = () => ({
+  TECNICAS: { fams: [ { k:'corte', es:'Cortes', en:'Cuts', col:'#4888a0' }, { k:'malo', es:'X', en:'X', col:'red' } ],
+    lista: [
+      { fam:'corte', ic:'🔪', es:'Sashimi', en:'Sashimi', def:'Pescado crudo cortado.', defEn:'Sliced raw fish.', nota:'En el plato de prueba.', notaEn:'In the test dish.', kw:['sashimi'] },
+      { fam:'malo', es:'Fuera', en:'Out', def:'d', defEn:'d', kw:['x'] },
+      { fam:'corte', es:'Sin kw', en:'No kw', def:'d', defEn:'d', kw:[] },
+      { fam:'corte', es:{ x:1 }, en:'Obj', def:'d', defEn:'d', kw:['x'] },
+    ] },
+  GLOSARIO: [
+    { t:'Ponzu', jp:'ポン酢', o:'ja', es:'Salsa cítrica.', en:'Citrus sauce.', kw:['ponzu'] },
+    { t:'<img src=x onerror=alert(1)>', jp:'', o:'ja', es:'<b>malo</b>', en:'bad', kw:['sashimi'] },
+    { t:'Sin origen', o:'japones', es:'x', en:'x', kw:['x'] },
+  ],
+});
+const _tecRes = (() => {
+  if (!_tecSrc.valida || !_tecSrc.vista || !_tecSrc.dishes || !_tecSrc.esc) return null;
+  const valida = new Function(_tecSrc.valida + '\nreturn _cartaTecValidas;')(); // eslint-disable-line no-new-func
+  const pintar = (cartaMeta, vista) => {
+    const el = { innerHTML:'' };
+    const document = { getElementById: () => el, querySelectorAll: () => [] };
+    const DISHES = [ { id:3010, name:'Plato de prueba', ingredients:'cortes de sashimi con ponzu', history:'', notes:'' } ];
+    const TECNICA_FAMS = [ { k:'seco', es:'Calor seco', en:'Dry heat', col:'#c47838' } ];
+    const TECNICAS = [ { fam:'seco', ic:'🔥', es:'Brasa', en:'Grill', def:'Fuego.', defEn:'Fire.', txoko:'NOTA-DE-TXOKO', kw:['brasa'] } ];
+    const api = new Function('document','DISHES','TECNICA_FAMS','TECNICAS','_cartaMeta','LANG','_venueCasa', // eslint-disable-line no-new-func
+      _tecSrc.esc + '\nconst escapeHTML = escapeHtml;\n' + _tecSrc.dishes + '\n' + _tecSrc.vista + '\nreturn { renderTecnicas, _tecVer, _tecFuente };')(
+      document, DISHES, TECNICA_FAMS, TECNICAS, cartaMeta, 'es', () => 'Restaurante 2');
+    if (vista === 'glo') api._tecVer('glo'); else api.renderTecnicas();
+    return el.innerHTML;
+  };
+  const tec = valida(_tecMuestra());
+  return { valida, tec, txoko: pintar(null), r2: pintar({ TEC: tec }), r2glo: pintar({ TEC: tec }, 'glo') };
+})();
+test('Técnicas propias: la carta sólo aporta familias, técnicas y palabras bien formadas', () => {
+  assert(_tecRes, 'no encuentro _cartaTecValidas / _tecFuente / renderTecnicas');
+  const t = _tecRes.tec;
+  assert(t && t.fams.length === 1 && t.fams[0].k === 'corte', 'un color que no es #rrggbb descarta la familia');
+  assert(t.lista.length === 1 && t.lista[0].es === 'Sashimi', 'fuera las técnicas de familia desconocida, sin palabras clave o con campos que no son texto');
+  assert(t.glosario.length === 2, 'fuera las palabras con un origen que no es un código de dos letras');
+  assert(_tecRes.valida({}) === null && _tecRes.valida({ TECNICAS:'x', GLOSARIO:{} }) === null, 'una carta sin técnicas ni glosario no aporta nada');
+  assert(/TEC: _cartaTecValidas\(c\)/.test(html), 'la carta puesta guarda sus técnicas validadas');
+});
+test('Técnicas propias: en Txoko todo sigue igual; en r2 salen las suyas, sin notas de Txoko', () => {
+  const { txoko, r2 } = _tecRes;
+  assert(/Brasa/.test(txoko) && /NOTA-DE-TXOKO/.test(txoko) && !/tec-vista/.test(txoko), 'Txoko: sus técnicas, sus notas y sin pestaña de glosario');
+  assert(/Sashimi/.test(r2) && !/Brasa/.test(r2) && !/NOTA-DE-TXOKO/.test(r2), 'r2: sólo sus técnicas, nunca las notas de Txoko');
+  assert(/En Restaurante 2<\/span> En el plato de prueba\./.test(r2), 'la nota propia sale con el nombre del restaurante activo');
+  assert(/onclick="_aprenderOpenDish\(3010\)"/.test(r2), 'cada técnica enlaza los platos de la carta donde aparece');
+  assert(/class="tec-vista"/.test(r2) && /_tecVer\('glo'\)/.test(r2), 'con glosario, se puede cambiar a la vista de glosario');
+});
+test('Glosario: palabras con su escritura original, origen y platos; todo escapado', () => {
+  const g = _tecRes.r2glo;
+  assert(/Glosario de la carta/.test(g) && /<span class="glo-jp" lang="ja">ポン酢<\/span>/.test(g), 'escritura japonesa marcada como japonés');
+  assert(/<span class="glo-o">Japonés<\/span>/.test(g), 'origen legible');
+  assert(!/<img src=x/.test(g) && /&lt;img src=x onerror=alert\(1\)&gt;/.test(g) && !/<b>malo<\/b>/.test(g), 'el HTML que llegue en la carta se pinta como texto');
+  assert(/Para alérgenos, manda siempre la ficha del plato/.test(g), 'el glosario recuerda que los alérgenos están en la ficha');
+  assert(/oninput="_gloFiltrar\(this\.value\)"/.test(g) && /font-size:16px/.test(read('styles.css').slice(read('styles.css').indexOf('.glo-search{'), read('styles.css').indexOf('.glo-search{') + 400)), 'buscador sin zoom de iOS (16px)');
 });
 test('Login con r2: la tarjeta sale elegible, con candado y «Solo administración»; M.B. sigue fuera', () => {
   const src = html.slice(html.indexOf('function renderVenuePicker('), html.indexOf('function selectVenue('));

@@ -52,7 +52,7 @@
 <meta property="og:description" content="Formación de equipos de sala: carta, alérgenos, vinos, exámenes y juegos de repaso.">
 <meta property="og:url" content="https://meseo.es/">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"Meseo","url":"https://meseo.es/"}</script>
-<meta name="app-version" content="7.475">
+<meta name="app-version" content="7.476">
 <meta name="app-build" content="May 2026">
 <meta name="theme-color" content="#1c2a22">
 <!-- ═══ PWA ═══ -->
@@ -2423,6 +2423,37 @@ function _cartaFotosValidas(c){
   }
   return Object.keys(out).length ? out : null;
 }
+// Técnicas y glosario PROPIOS de la carta puesta (hoy, r2). Viajan dentro de la
+// carta privada, así que sólo los ve quien puede leerla, y sustituyen a las
+// técnicas de Txoko, cuyas notas hablan de platos de Txoko. Se validan campo a
+// campo: sólo texto, colores #rrggbb, familias conocidas. Lo que no cuadra se
+// descarta; nada de esto se pinta sin escapeHTML.
+function _cartaTecValidas(c){
+  if(!c) return null;
+  const txt = (v, max) => typeof v === 'string' && v.length > 0 && v.length <= (max || 1500);
+  const opt = (v, max) => v === undefined || v === null || v === '' || txt(v, max);
+  const kws = (k) => Array.isArray(k) && k.length > 0 && k.length <= 12 && k.every(x => txt(x, 60));
+  let fams = null, lista = null, glosario = null;
+  const T = c.TECNICAS;
+  if(T && typeof T === 'object' && Array.isArray(T.fams) && Array.isArray(T.lista)){
+    fams = T.fams.filter(f => f && /^[a-z]{1,16}$/.test(f.k) && txt(f.es, 80) && txt(f.en, 80)
+                              && typeof f.col === 'string' && /^#[0-9a-fA-F]{6}$/.test(f.col)).slice(0, 20)
+                 .map(f => ({ k:f.k, es:f.es, en:f.en, col:f.col }));
+    const ks = new Set(fams.map(f => f.k));
+    lista = T.lista.filter(t => t && ks.has(t.fam) && txt(t.es, 120) && txt(t.en, 120) && txt(t.def) && txt(t.defEn)
+                               && opt(t.nota) && opt(t.notaEn) && opt(t.ic, 8) && kws(t.kw)).slice(0, 80)
+                   .map(t => ({ fam:t.fam, ic:t.ic || '', es:t.es, en:t.en, def:t.def, defEn:t.defEn,
+                                nota:t.nota || '', notaEn:t.notaEn || '', kw:t.kw.map(k => k.toLowerCase()) }));
+    if(!lista.length){ fams = null; lista = null; }
+  }
+  if(Array.isArray(c.GLOSARIO)){
+    glosario = c.GLOSARIO.filter(g => g && txt(g.t, 60) && opt(g.jp, 40) && /^[a-z]{2}$/.test(g.o || '')
+                                     && txt(g.es, 600) && txt(g.en, 600) && kws(g.kw)).slice(0, 300)
+                         .map(g => ({ t:g.t, jp:g.jp || '', o:g.o, es:g.es, en:g.en, kw:g.kw.map(k => k.toLowerCase()) }));
+    if(!glosario.length) glosario = null;
+  }
+  return (lista || glosario) ? { fams, lista, glosario } : null;
+}
 function _cartaInfo(){
   if(_cartaMeta) return _cartaMeta;
   let cats = null; try{ cats = _CARTA_BASE.CATS || null; }catch(e){ cats = null; }
@@ -2539,7 +2570,8 @@ function _cartaAplicar(c){
   _cartaMeta = (c === _CARTA_BASE) ? null : {
     venue: c.venue || null,
     allergensValidated: c.allergensValidated === true,
-    CATS: (Array.isArray(c.CATS) && c.CATS.length) ? c.CATS : null
+    CATS: (Array.isArray(c.CATS) && c.CATS.length) ? c.CATS : null,
+    TEC: _cartaTecValidas(c)
   };
   _cartaFotos = (c === _CARTA_BASE) ? null : _cartaFotosValidas(c);
   _cartaCachesFuera();
@@ -2773,7 +2805,7 @@ const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><p
 const SRC = 'src';
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='7.475';  // sincronizada con sw.js VERSION (guard de CI)
+const APP_VERSION='7.476';  // sincronizada con sw.js VERSION (guard de CI)
 const APP_BUILD='Jul 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;
@@ -10984,7 +11016,8 @@ function _pddDishOfDay(dayStr){
 function _pddTecFor(dish){
   if(typeof TECNICAS==='undefined' || !Array.isArray(TECNICAS)) return null;
   const hay=((dish.name||'')+' '+(dish.ingredients||'')+' '+(dish.history||'')+' '+(dish.notes||'')).toLowerCase();
-  for(const t of TECNICAS){
+  const _lista = (typeof _tecFuente==='function') ? _tecFuente().lista : TECNICAS;
+  for(const t of _lista){
     if(!t.kw || !t.kw.length) continue;
     if(t.kwx && t.kwx.some(k=>hay.includes(k))) continue;
     if(t.kw.some(k=>hay.includes(k))) return t;
@@ -16142,22 +16175,80 @@ function renderActualidad(){
   _actLoad().then(()=>{ const el=document.getElementById('actWrap'); if(el) el.innerHTML=_actHTML(); });
 }
 
+// De dónde salen las técnicas: las propias de la carta puesta si las trae
+// (r2), o las de Txoko. Una carta con glosario lo enseña en una segunda vista.
+function _tecFuente(){
+  const m = (typeof _cartaMeta !== 'undefined' && _cartaMeta && _cartaMeta.TEC) || null;
+  if(m && m.lista) return { fams:m.fams, lista:m.lista, glosario:m.glosario || null, propia:true };
+  return { fams:TECNICA_FAMS, lista:TECNICAS, glosario:(m && m.glosario) || null, propia:false };
+}
+let _tecVista = 'tec';
+function _tecVer(v){ _tecVista = (v === 'glo') ? 'glo' : 'tec'; renderTecnicas(); }
+const _GLO_ORIGEN = { ja:['Japonés','Japanese'], ko:['Coreano','Korean'], zh:['Chino','Chinese'], ms:['Malayo','Malay'] };
+function _gloFiltrar(q){
+  const n = String(q || '').trim().toLowerCase();
+  let vis = 0;
+  document.querySelectorAll('.glo-card').forEach(el => {
+    const ok = !n || (el.getAttribute('data-q') || '').indexOf(n) >= 0;
+    el.style.display = ok ? '' : 'none'; if(ok) vis++;
+  });
+  const v = document.getElementById('gloVacio'); if(v) v.style.display = vis ? 'none' : '';
+}
+function _renderGlosario(src, _en){
+  const items = src.glosario.slice().sort((a,b) => a.t.localeCompare(b.t, 'es', {sensitivity:'base'}));
+  let h = `<div class="glo-aviso">${_en
+    ? 'The words that appear on our menu, what they mean and where you will find them. For allergens, the dish card always has the last word.'
+    : 'Las palabras que salen en nuestra carta, qué significan y en qué platos las vas a encontrar. Para alérgenos, manda siempre la ficha del plato.'}</div>
+    <input class="glo-search" type="search" inputmode="search" autocomplete="off" aria-label="${_en?'Search the glossary':'Buscar en el glosario'}"
+      placeholder="${_en?'Search a word…':'Busca una palabra…'}" oninput="_gloFiltrar(this.value)">`;
+  for(const g of items){
+    const dishes = _tecDishes(g.kw);
+    const chips = dishes.slice(0,8).map(d => `<button class="tec-dish" onclick="_aprenderOpenDish(${d.id})">${escapeHTML(d.name)}</button>`).join('');
+    const more = dishes.length > 8 ? `<span class="tec-more">+${dishes.length-8}</span>` : '';
+    const ori = _GLO_ORIGEN[g.o] ? _GLO_ORIGEN[g.o][_en?1:0] : g.o;
+    const lang = ({ja:'ja',ko:'ko',zh:'zh'})[g.o] || '';
+    const q = (g.t + ' ' + g.es + ' ' + g.en + ' ' + g.jp).toLowerCase();
+    h += `<div class="tec-card glo-card" data-q="${escapeHTML(q)}">
+      <div class="glo-top"><span class="glo-t">${escapeHTML(g.t)}</span>${g.jp?`<span class="glo-jp"${lang?` lang="${lang}"`:''}>${escapeHTML(g.jp)}</span>`:''}<span class="glo-o">${escapeHTML(ori)}</span></div>
+      <div class="tec-def">${escapeHTML(_en?g.en:g.es)}</div>
+      ${dishes.length?`<div class="tec-dishes"><span class="tec-dishes-lbl">${_en?'Dishes':'Platos'}</span>${chips}${more}</div>`:''}
+    </div>`;
+  }
+  h += `<div id="gloVacio" class="glo-vacio" style="display:none">${_en?'No words match.':'Ninguna palabra coincide.'}</div>`;
+  return h;
+}
 function renderTecnicas(){
   const c=document.getElementById('appContent');
   const _en = LANG==='en';
   const famName=f=>_en?f.en:f.es;
-  const nFam=TECNICA_FAMS.filter(f=>TECNICAS.some(t=>t.fam===f.k)).length;
+  const src=_tecFuente();
+  const FAMS=src.fams, LISTA=src.lista;
+  if(!src.glosario) _tecVista='tec';
+  const nFam=FAMS.filter(f=>LISTA.some(t=>t.fam===f.k)).length;
+  const vistaGlo = _tecVista==='glo' && !!src.glosario;
   let html=`<div class="tec-wrap">
     <div class="tec-hero">
-      <div class="tec-hero-ic">🍳</div>
+      <div class="tec-hero-ic">${vistaGlo?'📖':'🍳'}</div>
       <div>
-        <div class="tec-hero-t">${_en?'Cooking techniques':'Técnicas de cocina'}</div>
-        <div class="tec-hero-s">${_en?`The techniques of a high-level kitchen: what each one is and, when we use it, the ${escapeHTML(_venueCasa())} dishes where it appears.`:`Las técnicas de una cocina de alto nivel: qué es cada una y, cuando la usamos, los platos de ${escapeHTML(_venueCasa())} donde aparece.`}</div>
-        <div class="tec-hero-stat">${TECNICAS.length} ${_en?'techniques':'técnicas'} · ${nFam} ${_en?'families':'familias'}</div>
+        <div class="tec-hero-t">${vistaGlo?(_en?'Menu glossary':'Glosario de la carta'):(_en?'Cooking techniques':'Técnicas de cocina')}</div>
+        <div class="tec-hero-s">${vistaGlo
+          ?(_en?`The Japanese and Korean words on the ${escapeHTML(_venueCasa())} menu, explained.`:`Las palabras japonesas y coreanas de la carta de ${escapeHTML(_venueCasa())}, explicadas.`)
+          :(_en?`The techniques of a high-level kitchen: what each one is and, when we use it, the ${escapeHTML(_venueCasa())} dishes where it appears.`:`Las técnicas de una cocina de alto nivel: qué es cada una y, cuando la usamos, los platos de ${escapeHTML(_venueCasa())} donde aparece.`)}</div>
+        <div class="tec-hero-stat">${vistaGlo?`${src.glosario.length} ${_en?'words':'palabras'}`:`${LISTA.length} ${_en?'techniques':'técnicas'} · ${nFam} ${_en?'families':'familias'}`}</div>
       </div>
     </div>`;
-  for(const fam of TECNICA_FAMS){
-    const techs=TECNICAS.filter(t=>t.fam===fam.k);
+  if(src.glosario){
+    html+=`<div class="tec-vista" role="tablist">
+      <button role="tab" aria-selected="${!vistaGlo}" class="${vistaGlo?'':'on'}" onclick="_tecVer('tec')">${_en?'Techniques':'Técnicas'}</button>
+      <button role="tab" aria-selected="${vistaGlo}" class="${vistaGlo?'on':''}" onclick="_tecVer('glo')">${_en?'Glossary':'Glosario'}</button>
+    </div>`;
+  }
+  if(vistaGlo){
+    c.innerHTML = html + _renderGlosario(src, _en) + `</div>`;
+    return;
+  }
+  for(const fam of FAMS){
+    const techs=LISTA.filter(t=>t.fam===fam.k);
     if(!techs.length) continue;
     html+=`<div class="tec-fam" style="--tec-col:${fam.col}">
       <div class="tec-fam-h"><span class="tec-fam-dot"></span><span class="tec-fam-nm">${famName(fam)}</span><span class="tec-fam-n">${techs.length}</span></div>`;
@@ -16172,7 +16263,8 @@ function renderTecnicas(){
           <div class="tec-card-h">${escapeHTML(_en?t.en:t.es)}</div>
         </div>
         <div class="tec-def">${escapeHTML(_en?t.defEn:t.def)}</div>
-        ${t.txoko?`<div class="tec-txoko"><span class="tec-txoko-lbl">${_en?'At '+escapeHTML(_venueCasa()):'En '+escapeHTML(_venueCasa())}</span> ${escapeHTML(t.txoko)}</div>`:''}
+        ${(()=>{ const nota = src.propia ? (_en ? (t.notaEn||t.nota) : t.nota) : t.txoko;
+          return nota?`<div class="tec-txoko"><span class="tec-txoko-lbl">${_en?'At '+escapeHTML(_venueCasa()):'En '+escapeHTML(_venueCasa())}</span> ${escapeHTML(nota)}</div>`:''; })()}
         ${dishes.length?`<div class="tec-dishes"><span class="tec-dishes-lbl">${_en?'Dishes':'Platos'}</span>${chips}${more}</div>`:''}
         ${t.mas&&t.mas.length?`<details class="tec-mas"><summary>${(t.masT?(_en?(t.masT.en||t.masT.es):t.masT.es):(_en?'Types · learn more':'Tipos · saber más'))} <span class="tec-mas-n">${t.mas.length}</span></summary><div class="tec-mas-body">${t.mas.map(m=>`<div class="tec-mas-row"><b>${escapeHTML(m.t)}</b><span>${escapeHTML(m.d)}</span></div>`).join('')}</div></details>`:''}
       </div>`;
