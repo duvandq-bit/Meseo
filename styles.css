@@ -1619,46 +1619,22 @@ body::after{
 .ri-console > *{ position:relative;z-index:1 }
 .ri-pad{ padding:1.3rem 1.5rem 1.4rem }
 
-/* ── Cabecera en pantallas estrechas (iPhone 375-430px) ──
-   El propietario reportó (iOS de sala): "los botones de arriba no responden
-   y no pueden cambiar el idioma". Causa real: la fila desbordaba el ancho —
-   ES quedaba cortado en el borde y EN/Salir directamente FUERA de pantalla.
-   Compresión: paddings y huecos menores, nombre de usuario oculto (el
-   avatar identifica), logo contenido. Todo botón debe caber a 375px. */
-@media (max-width:520px){
-  .app-header{padding-left:.7rem;padding-right:.7rem;gap:.5rem}
-  .header-logo{font-size:.98rem;max-width:32vw;letter-spacing:.12em}
-  .header-user{gap:.3rem;min-width:0}
-  .header-uname{display:none}
-  .app-header #helpBtn{margin-right:0!important;padding:6px 7px!important}
-  .app-header #appLangEs,.app-header #appLangEn{padding:6px 6px!important}
-  .app-header #notifBell{min-width:32px!important;min-height:44px!important;padding:4px!important}
-  .btn-logout{padding:.35rem .45rem;font-size:.6rem}
-}
+/* ── Cabecera de tres piezas (oct 2026) ──
+   Nombre del restaurante, lupa y avatar. Antes eran hasta nueve controles
+   apretados con !important en cada ancho, y aun así tapaban el nombre.
+   Ahora el nombre ocupa todo lo que queda y se corta con puntos si no cabe. */
+.app-header .header-logo{flex:1 1 auto;min-width:0;max-width:none;display:block;line-height:44px;font-size:var(--fs-4);letter-spacing:.14em}
+.app-header .header-spacer{display:none}
+.app-header .header-user{gap:.35rem;flex-shrink:0}
+.app-header .header-uname{display:none}
+.hdr-btn{display:inline-flex;align-items:center;justify-content:center;width:44px;height:44px;flex:none;
+  background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.3);border-radius:12px;color:#fff;cursor:pointer;padding:0}
+.hdr-btn:active{transform:scale(.96)}
+.app-header .header-avatar{order:9;width:44px;height:44px;flex:none;cursor:pointer;font-size:var(--fs-4)}
 @media (max-width:400px){
-  .app-header #ajustesBtn{min-width:32px!important;min-height:44px!important}
-  /* Android estrecho (Galaxy S20 = 360px CSS): la fila de botones desbordaba
-     y "Salir" se cortaba. Compresión agresiva del clúster derecho para que
-     TODO quepa con margen hasta 320px. */
-  .app-header{padding-left:.4rem;padding-right:.4rem;gap:.25rem}
-  .header-logo{font-size:.82rem;max-width:22vw;letter-spacing:.06em}
-  .header-logo sup{display:none}
-  .header-user{gap:.2rem}
-  .app-header #helpBtn{padding:5px 4px!important;min-width:26px!important;min-height:44px!important}
-  .app-header #appLangEs,.app-header #appLangEn{padding:5px 4px!important;min-width:36px!important;min-height:44px!important}
-  .app-header #pushEnableBtn{padding:4px 4px!important;min-width:26px!important;min-height:44px!important}
-  .app-header #notifBell{min-width:28px!important;min-height:44px!important;padding:3px!important}
-  .header-avatar{width:26px!important;height:26px!important}
-  .btn-logout{padding:.28rem .38rem;font-size:.55rem}
-}
-@media (max-width:340px){
-  /* Móviles muy estrechos (320px): apretón final para que "Salir" no se corte. */
-  .app-header{padding-left:.3rem;padding-right:.3rem;gap:.18rem}
-  .header-logo{font-size:.76rem;max-width:20vw;letter-spacing:.04em}
-  .header-user{gap:.15rem}
-  .app-header #helpBtn{padding:5px 3px!important;min-width:24px!important;min-height:44px!important}
-  .app-header #appLangEs,.app-header #appLangEn{padding:5px 3px!important;font-size:.55rem!important}
-  .btn-logout{padding:.26rem .32rem;font-size:.52rem}
+  .app-header{padding-left:.75rem;padding-right:.75rem;gap:.5rem}
+  .app-header .header-logo{font-size:var(--fs-3);letter-spacing:.1em}
+  .app-header #notifBell,.app-header #pushEnableBtn{min-width:36px!important;padding:4px!important}
 }
 
 /* nota de la casa: qué es el repaso, en dos frases */
@@ -10698,3 +10674,18 @@ body:has(#gsOverlay.open) .ux2-bar{
 .xp-bar-sub span,.dash-hero-lvl-num,.plan-tarea-marca,.hoy-num,.plan-tarea-min{letter-spacing:.06em;text-transform:none}
 .login-foot-copy span,.app-credit{font-family:var(--font-mono);font-size:var(--fs-1);font-weight:400}
 .ux2-lbl{font-family:var(--font-sans);font-size:var(--fs-1)}
+
+/* ═══ PRACTICAR · la página de la pestaña ═══ */
+.prc{padding-bottom:1rem}
+.prc-cab{margin:.2rem 0 1.1rem}
+.prc-tit{font-family:var(--font-serif);font-size:var(--fs-6);font-weight:700;color:var(--parchment);margin:0;letter-spacing:.02em}
+.prc-sub{font-family:var(--font-read);font-size:var(--fs-4);font-style:italic;color:var(--ink3);margin:.15rem 0 0}
+.prc-lista{display:flex;flex-direction:column}
+.prc-fila{align-items:center;min-height:64px}
+.prc-ic{display:inline-flex;align-items:center;justify-content:center;width:40px;height:40px;flex:none;border-radius:12px;background:rgba(196,154,60,.1);color:var(--gold-deep);margin-right:.2rem}
+.prc-meta{font-family:var(--font-mono);font-size:var(--fs-1);font-weight:500;letter-spacing:.06em;color:var(--ink3);white-space:nowrap;margin-left:auto;padding-left:.5rem}
+.prc-volver{display:inline-flex;align-items:center;min-height:44px;padding:0 .2rem;margin:0 0 .6rem;background:none;border:none;cursor:pointer;
+  font-family:var(--font-sans);font-size:var(--fs-3);font-weight:700;color:var(--gold-deep)}
+.prc-fila .dash-row-body{display:flex;flex-direction:column;gap:.1rem;flex:1;min-width:0;text-align:left}
+.prc-sub{color:rgba(28,42,34,.62)}
+.prc-meta{color:rgba(28,42,34,.55)}
