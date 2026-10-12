@@ -8256,7 +8256,8 @@ test('Fotos en toda la app: helper precargado + Explorar + ficha + flashcard + a
   const topic = html.slice(html.indexOf('function renderRepasoTopic('), html.indexOf('function renderRepasoDishDetail('));
   assert(/repaso-row-icon">\$\{_ph\?`<img loading="lazy"/.test(topic), 'Explorar rows must show the dish photo in the hex icon');
   // Ficha: foto-plato circular con respaldo al plato SVG decorativo
-  const det = html.slice(html.indexOf('function renderRepasoDishDetail('), html.indexOf('function renderRepasoDishDetail(') + 9000);
+  const _iDet = html.indexOf('function renderRepasoDishDetail(');
+  const det = html.slice(_iDet, html.indexOf('\nfunction ', _iDet + 10));
   assert(/dish-hero-photo/.test(det) && /`:`[\s\S]{0,40}<svg width="\$\{plateSize\}"/.test(det),
     'dish detail must show the real photo with the SVG plate as fallback');
   // Flashcard: foto circular sobre el nombre
@@ -10816,6 +10817,10 @@ test('Multi-restaurante: ninguna consulta se escapa del filtro de restaurante', 
     // base; el restaurante lo fija el alta y el cliente no debe pisarlo.
     ['employees?on_conflict=name', 'upsert de la ficha propia, por clave'],
     ['employees', 'upsert de la ficha propia, por clave'],
+    // La carta privada de un restaurante: `venue` es su clave primaria y quién
+    // la lee lo decide RLS en public.cartas con la identidad del token (sin
+    // sesión no hay fila). El filtro del cliente no autoriza nada.
+    ['cartas', 'carta privada: por clave (venue) y autorizada por RLS en el servidor'],
   ]);
   const lineas = html.split('\n');
   const sueltas = [];
@@ -15929,6 +15934,466 @@ test('F0 · salir y entrar sustituyen el contexto ENTERO, de una vez', () => {
 });
 
 // ─── 7. No leftover git conflict markers ────────────────────────
+// ═══ RESTAURANTES INDEPENDIENTES · el primero nuevo es «Restaurante 2» ═══
+// La carta de otro restaurante llega del servidor (public.cartas, con RLS),
+// sus números de plato viven en un bloque propio, y mientras cocina no valide
+// sus alérgenos sólo la abre la cuenta de administración, en modo revisión.
+// Txoko no pasa por nada de esto: su comportamiento es el contrato.
+console.log('\nRestaurantes independientes');
+const _r2Res = await (async () => {
+  const src = html.slice(html.indexOf('let _cartaPuesta = _VENUE_POR_DEFECTO;'),
+                         html.indexOf('// Derivación automática:'));
+  if (src.length < 500) return { roto: 'no encuentro el cargador de cartas' };
+  const THEMES = JSON.parse(read('data/themes.json'));
+  const monta = ({ esAdmin = false, token = 'tok', privada = null, estatica = null } = {}) => {
+    const D = [], DE = [], DC = {}, DA = {}, DS = {};
+    const BASE = { DISHES:[{id:12,name:'Jamón',cat:'Entrantes'}], DISHES_EN:[{id:12,name:'Ham'}],
+                   DISH_COMPONENTS:{12:[]}, DISH_ACTIONS:{12:{}}, DISH_SERVICE:{12:'c'}, allergensValidated:true };
+    const pedidas = [];
+    const cache = new Map([['12|es', ['de Txoko']]]);
+    const vistos = [12];
+    const estado = { gs: [{ id: 12 }], fotos: { 12: 'img/txoko.webp' }, pend: new Set([12]) };
+    const fetchT = async (url) => { pedidas.push(url);
+      if (privada === 'red') throw new Error('Failed to fetch');
+      return { ok: true, status: 200, json: async () => privada ? [{ venue: privada.venue, formato: 2, contenido: privada }] : [] }; };
+    const loadLazyData = () => estatica ? Promise.resolve(estatica) : Promise.reject(new Error('HTTP 404'));
+    const F = new Function('DISHES','DISHES_EN','DISH_COMPONENTS','DISH_ACTIONS','DISH_SERVICE', // eslint-disable-line no-new-func
+      '_CARTA_BASE','_VENUE_POR_DEFECTO','_esAdmin','loadLazyData','showToast','LANG','THEMES',
+      'fetchT','SUPA_URL','SUPA_KEY','_authCtx','_PASE_FICHAS_CACHE','_paseVistos','_E',
+      'var _gsDishIdx=_E.gs, DISH_PHOTOS=_E.fotos, DISH_PHOTO_PENDING=_E.pend;\n' + src +
+      '; return { cargarCarta, info: () => _cartaInfo(), validados: () => _alergenosValidados(),' +
+      ' ids: () => DISHES.map(d=>d.id), cachés: () => ({ gs:_gsDishIdx, fotos:DISH_PHOTOS, pend:DISH_PHOTO_PENDING }),' +
+      ' idsValidos: _cartaIdsValidos };');
+    const api = F(D, DE, DC, DA, DS, BASE, 'txoko', () => esAdmin, loadLazyData, () => {}, 'es', THEMES,
+      fetchT, 'https://x', 'k', () => ({ token }), cache, vistos, estado);
+    return Object.assign(api, { pedidas, cache, vistos });
+  };
+  const carta = (venue, ids, extra) => Object.assign({ venue, CATS:[{es:'Fríos',en:'Cold'}],
+    DISHES: ids.map(id => ({ id, name:'P' + id, cat:'Fríos', allergens:[] })),
+    DISHES_EN: ids.map(id => ({ id, name:'D' + id })), DISH_COMPONENTS:{}, DISH_ACTIONS:{} }, extra || {});
+  const out = {};
+  // Administración: la carta privada se abre en revisión, con sus categorías
+  const a = monta({ esAdmin:true, privada: carta('r2', [3001, 3002]) });
+  out.admin = await a.cargarCarta('r2');
+  out.adminIds = a.ids(); out.adminInfo = a.info(); out.adminValidados = a.validados();
+  out.adminPidio = a.pedidas.slice(); out.cachés = a.cachés(); out.cache = a.cache.size; out.vistos = a.vistos.length;
+  // …y al volver a Txoko, Txoko entera y validada
+  out.vuelta = await a.cargarCarta('txoko'); out.vueltaIds = a.ids(); out.vueltaValidados = a.validados();
+  out.vueltaInfoCats = (a.info().CATS || null);
+  // Personal: con alérgenos sin validar no se abre, aunque el servidor la diera
+  const s = monta({ esAdmin:false, privada: carta('r2', [3001]) });
+  out.staff = await s.cargarCarta('r2'); out.staffIds = s.ids();
+  // Personal con carta YA validada: sí se abre
+  const sv = monta({ esAdmin:false, privada: carta('r2', [3001], { allergensValidated:true }) });
+  out.staffValidada = await sv.cargarCarta('r2'); out.staffValidadaV = sv.validados();
+  // Números fuera de su bloque, o de Txoko: no entra
+  out.fueraBloque = await monta({ esAdmin:true, privada: carta('r2', [3001, 4001]) }).cargarCarta('r2');
+  out.deTxoko = await monta({ esAdmin:true, privada: carta('r2', [12]) }).cargarCarta('r2');
+  // La carta de otro restaurante servida para éste: no entra
+  out.ajena = await monta({ esAdmin:true, privada: carta('mb', [3001]) }).cargarCarta('r2');
+  // Sin sesión real no se pregunta al servidor (y una carta pública no existe)
+  const sin = monta({ esAdmin:true, token:null, privada: carta('r2', [3001]) });
+  out.sinSesion = await sin.cargarCarta('r2'); out.sinSesionPidio = sin.pedidas.length;
+  // Fallo de red: se falla cerrado, no se abre vacío
+  out.red = await monta({ esAdmin:true, privada:'red' }).cargarCarta('r2');
+  out.idsValidos = a.idsValidos;
+  return out;
+})();
+
+test('Restaurantes: cada bloque de números es de un restaurante, y no se reutiliza', () => {
+  const reg = JSON.parse(read('data/themes.json'));
+  const bloques = reg.venues.filter(v => v.id !== 'plantilla' && v.dishIds).map(v => [v.id, v.dishIds]);
+  for (const [id, b] of bloques)
+    assert(Number.isInteger(b.from) && Number.isInteger(b.to) && b.from <= b.to, `${id}: bloque mal formado`);
+  for (let i = 0; i < bloques.length; i++) for (let j = i + 1; j < bloques.length; j++) {
+    const [x, a] = bloques[i], [y, b] = bloques[j];
+    assert(a.to < b.from || b.to < a.from, `los bloques de ${x} y ${y} se solapan`);
+  }
+  // Los bloques ya asignados no se mueven ni desaparecen (un restaurante que
+  // se retira se queda en el registro con enabled:false).
+  const ASIGNADOS = { txoko:[1, 2999], r2:[3000, 3999] };
+  for (const [id, [f, t]] of Object.entries(ASIGNADOS)) {
+    const v = reg.venues.find(x => x.id === id);
+    assert(v && v.dishIds && v.dishIds.from === f && v.dishIds.to === t, `el bloque de ${id} (${f}–${t}) no puede cambiar`);
+  }
+  const pl = reg.venues.find(v => v.id === 'plantilla');
+  assert(pl && 'dishIds' in pl, 'la plantilla tiene que traer dishIds para el siguiente restaurante');
+  // Los platos de Txoko caen dentro de su bloque
+  const ids = [...html.matchAll(/\{id:(\d+),cat:'/g)].map(m => +m[1]);
+  assert(ids.length > 50 && ids.every(i => i >= 1 && i <= 2999), 'hay un plato de Txoko fuera de su bloque');
+});
+
+test('Restaurantes: la carta privada llega del servidor y entra en modo revisión', () => {
+  const R = _r2Res; assert(!R.roto, R.roto);
+  assert(R.admin === true && R.adminIds.join() === '3001,3002', 'la administración tiene que poder abrir la carta privada');
+  assert(R.adminPidio.length === 1 && /rest\/v1\/cartas\?venue=eq\.r2/.test(R.adminPidio[0]), 'la carta se pide a public.cartas');
+  assert(R.adminValidados === false && R.adminInfo.allergensValidated === false, 'sin declararlo, una carta no tiene los alérgenos validados');
+  assert(R.adminInfo.CATS && R.adminInfo.CATS[0].es === 'Fríos', 'las categorías son las de la carta');
+  assert(R.staff === false && R.staffIds.join() === '', 'el personal no abre una carta con alérgenos sin validar');
+  assert(R.staffValidada === true && R.staffValidadaV === true, 'una carta validada sí la abre su personal');
+  assert(R.fueraBloque === false, 'un número fuera del bloque del restaurante no entra');
+  assert(R.deTxoko === false, 'un número de Txoko no entra en la carta de otro restaurante');
+  assert(R.ajena === false, 'la carta de otro restaurante no se pone');
+  assert(R.sinSesion === 'vacia' && R.sinSesionPidio === 0, 'sin sesión real no se pregunta al servidor y no hay carta pública');
+  assert(R.red === false, 'un fallo de red falla cerrado');
+});
+
+test('Restaurantes: al cambiar de carta se tiran las cachés por número de plato', () => {
+  const R = _r2Res; assert(!R.roto, R.roto);
+  // Medido en oct 2026: El Pase servía al 12 nuevo las fichas del 12 de Txoko.
+  assert(R.cache === 0 && R.vistos === 0, 'la caché de El Pase y los platos vistos se vacían');
+  assert(R.cachés.gs === null && R.cachés.fotos === null && R.cachés.pend === null,
+    'el buscador y las fotos se recargan con la carta nueva');
+});
+
+test('Restaurantes: volver a Txoko deja Txoko exactamente como estaba', () => {
+  const R = _r2Res; assert(!R.roto, R.roto);
+  assert(R.vuelta === true && R.vueltaIds.join() === '12', 'al volver, la carta de Txoko');
+  assert(R.vueltaValidados === true, 'Txoko tiene sus alérgenos validados');
+  // _cartaInfo() de Txoko es la de siempre: sus categorías, en su orden
+  const m = html.match(/_CARTA_BASE\.CATS = CATS_ES\.map\(\(es, i\) => \(\{ es, en: CATS_EN\[i\] \}\)\);/);
+  assert(m, 'las categorías de Txoko salen de CATS_ES/CATS_EN, sin tocarlas');
+});
+
+test('Restaurantes: _cartaIdsValidos', () => {
+  const f = _r2Res.idsValidos; assert(typeof f === 'function', 'no encuentro _cartaIdsValidos');
+  const b = { from:3000, to:3999 }, tx = new Set([12]);
+  assert(f([3001, 3075], b, tx) === true, 'dentro del bloque');
+  assert(f([3001, 3001], b, tx) === false, 'números repetidos');
+  assert(f([2999], b, tx) === false && f([4000], b, tx) === false, 'fuera del bloque');
+  assert(f([3001, '3002'], b, tx) === false, 'un número que no es entero');
+  assert(f([], b, tx) === false, 'carta sin platos');
+  assert(f([9], null, tx) === true && f([12], null, tx) === false, 'sin bloque declarado, al menos no puede ser de Txoko');
+});
+
+test('Restaurantes: con alérgenos sin validar no se pregunta, puntúa ni registra nada de alérgenos', () => {
+  const G = "(typeof _alergenosValidados!=='function'||_alergenosValidados())";
+  const fn = n => { const i = html.indexOf('function ' + n + '('); return i < 0 ? '' : html.slice(i, html.indexOf('\n}', i)); };
+  const exige = (n, txt) => assert(fn(n).includes(txt), `${n} tiene que mirar si los alérgenos están validados`);
+  exige('_paseAlergiasPosibles', G); exige('_paseNivel', G); exige('_paseRailHTML', G);
+  exige('_paseRegistrarAlergia', G); exige('_isDishQuizableForTopic', G); exige('txBuildQuestion', G);
+  exige('_dqQuestion', G); exige('_djGenerateQuiz', G); exige('_adaptiveRecord', G);
+  exige('_startSmartSession', '_alergenosCerrados'); exige('startAllergenTest', '_alergenosCerrados');
+  exige('renderSmartReview', G); exige('_anotarEnDiario', "competency === 'alergenos'");
+  assert(/const al=ocultarAl \? '' : !\(typeof _alergenosValidados/.test(fn('_paseChip')), 'las fichas de El Pase sin insignias');
+  assert(/alergenos: \(typeof _alergenosValidados!=='function'\|\|_alergenosValidados\(\)\)/.test(html), 'el plan sabe si hay alérgenos que entrenar');
+  // Nunca se afirma una ausencia con el borrador
+  assert(/if\(key === 'noAllergens' && !\(typeof _alergenosValidados/.test(html), 't(noAllergens) no dice «sin alérgenos» con el borrador');
+});
+
+test('Restaurantes: el plan de hoy no manda a entrenar alérgenos que no están validados', () => {
+  const { planDeHoy } = _planM;
+  const sinAl = planDeHoy(_planBase({ alergenosMejor: 0, alergenosFallosRecientes: 3,
+    disponibles: { alergenos:false, carta:true, protocolo:true } }));
+  assert(!sinAl.tareas.some(t => /alergenos/.test(t.id)), 'con alergenos:false no puede salir ninguna tarea de alérgenos: ' + sinAl.tareas.map(t => t.id));
+  const conAl = planDeHoy(_planBase({ alergenosMejor: 0 }));
+  assert(conAl.tareas[0].id === 'seguridad_alergenos', 'en Txoko la seguridad sigue yendo primera');
+});
+
+test('Restaurantes: el modo revisión guarda aparte y no sale a la nube', () => {
+  const ge = html.slice(html.indexOf('function getEmp(name){'), html.indexOf('function getEmp(name){') + 400);
+  assert(/_modoRevision\(\)\) return _perfilRevision\(name\);/.test(ge), 'en revisión, getEmp da el perfil de revisión');
+  assert(/DB\.revision\[k\]/.test(html) && /const k = _cartaPuesta \+ '\|' \+ name;/.test(html), 'un perfil por carta y persona');
+  const ra = html.slice(html.indexOf('async function registrarActividad(a){'), html.indexOf('async function registrarActividad(a){') + 2200);
+  assert(/if\(_soloLocal\) return false;/.test(ra), 'en revisión no se envía actividad a la nube');
+  assert(/function _dishPhotoPick\(dishId\)\{[\s\S]{0,300}_modoRevision\(\)/.test(html), 'en revisión no se suben fotos');
+});
+
+test('Restaurantes: la carta privada vive en el servidor, nunca en data/', () => {
+  const m = read('supabase/cartas_privadas.sql');
+  assert(/enable row level security/.test(m), 'public.cartas con RLS');
+  assert(/revoke all on table public\.cartas from public, anon, authenticated;/.test(m), 'anon sin permisos');
+  assert(/revoke all on table public\.cartas from service_role;/.test(m), 'service_role sin permisos');
+  assert(/grant select on table public\.cartas to authenticated;/.test(m) && !/grant (insert|update|delete)/i.test(m), 'la app sólo lee');
+  assert(/using \( venue = \(select app\.venue_actual\(\)\)\s*or \(select app\.rol_actual\(\)\) = 'admin' \)/.test(m),
+    'la lee su restaurante o la administración, según el servidor');
+  assert(/contenido->>'venue' = venue/.test(m), 'la carta declara de quién es');
+  const datos = readdirSync(join(ROOT, 'data'));
+  assert(!datos.includes('carta-r2.json'), 'la carta de Restaurante 2 no puede ser un archivo público');
+});
+
+test('Restaurantes: el nombre del restaurante real no aparece en la app ni en sus datos', () => {
+  // Sin autorización todavía para usar su nombre: dentro de la app es
+  // «Restaurante 2». El nombre real no se escribe en ningún archivo público, ni
+  // siquiera aquí: esa búsqueda la hace un escáner privado, fuera del repositorio.
+  const r2 = JSON.parse(read('data/themes.json')).venues.find(v => v.id === 'r2');
+  assert(r2 && r2.enabled === false && r2.name === 'Restaurante 2', 'Restaurante 2 sigue cerrado y con nombre neutro');
+});
+
+// ═══ MODO REVISIÓN = LECTURA + ESTUDIO LOCAL ═══
+// Mientras la administración revisa la carta de otro restaurante no sale al
+// servidor ninguna escritura. Se prueba con el corte REAL de index.html
+// (_instalarRedRevision) y con las funciones REALES que escriben.
+console.log('\nModo revisión estrictamente local');
+const _xFnA = (name) => {   // como _xFn, pero conserva «async»
+  const src = _xFn(name);
+  const i = html.indexOf('function ' + name + '(');
+  return html.slice(Math.max(0, i - 6), i) === 'async ' ? 'async ' + src : src;
+};
+const _revRes = await (async () => {
+  const SUPA = 'https://xx.supabase.co';
+  const monta = (rev) => {
+    const llegan = [];
+    const win = { fetch: (u, i) => { llegan.push([String(u), String((i && i.method) || 'GET').toUpperCase()]);
+      return Promise.resolve({ ok: true, status: 200, json: async () => [{ id: 1 }] }); } };
+    const estado = { rev, avisos: 0 };
+    const F = new Function('win', 'SUPA_URL', '_E', // eslint-disable-line no-new-func
+      'const _modoRevision = () => _E.rev; const _revisionAviso = () => { _E.avisos++; };\n' +
+      _xFn('_revisionBloquea') + '\n' + _xFn('_instalarRedRevision') + '\n_instalarRedRevision(win); return win.fetch;');
+    const fetch = F(win, SUPA, estado);
+    return { fetch, llegan, estado };
+  };
+  // Las escrituras que hace la app, con sus rutas de verdad.
+  const ESCRITURAS = [
+    ['chat', 'POST', '/rest/v1/chat_messages'], ['chat', 'PATCH', '/rest/v1/chat_messages?id=eq.1'],
+    ['duelos', 'POST', '/rest/v1/duels'], ['duelos', 'PATCH', '/rest/v1/duels?id=eq.1'],
+    ['avisos', 'POST', '/rest/v1/notifications'], ['avisos', 'PATCH', '/rest/v1/notifications?id=eq.1'],
+    ['push', 'POST', '/rest/v1/push_subscriptions'], ['push', 'DELETE', '/rest/v1/push_subscriptions?endpoint=eq.x'],
+    ['push', 'POST', '/functions/v1/send-push'],
+    ['supervisor', 'POST', '/rest/v1/rpc/venue_pin_set'], ['supervisor', 'POST', '/rest/v1/rpc/employee_set_role'],
+    ['supervisor', 'DELETE', '/rest/v1/employees?name=eq.x'], ['supervisor', 'PATCH', '/rest/v1/dish_photo_submissions?id=eq.1'],
+    ['last_active', 'PATCH', '/rest/v1/employees?name=eq.x'],
+    ['progreso', 'POST', '/rest/v1/scores'], ['progreso', 'POST', '/rest/v1/actividad'],
+    ['progreso', 'POST', '/rest/v1/employees?on_conflict=name'],
+    ['contenido', 'POST', '/functions/v1/manage-content'], ['fotos', 'POST', '/storage/v1/object/dish-photos/x.webp'],
+    ['fotos', 'POST', '/rest/v1/dish_photo_submissions'], ['sesion', 'POST', '/functions/v1/sesion'],
+  ];
+  const r = monta(true), n = monta(false);
+  const revBloqueadas = [], normalLlegan = [];
+  for (const [que, m, ruta] of ESCRITURAS) {
+    const res = await r.fetch(SUPA + ruta, { method: m });
+    if (res.status === 403 && (await res.json()).code === 'modo_revision') revBloqueadas.push(que + ' ' + m);
+    await n.fetch(SUPA + ruta, { method: m });
+  }
+  normalLlegan.push(...n.llegan);
+  // Lo que sí tiene que pasar en revisión: leer, y la sesión de siempre.
+  await r.fetch(SUPA + '/rest/v1/cartas?venue=eq.r2');                                   // GET
+  await r.fetch(SUPA + '/rest/v1/notifications?select=*', { method: 'get' });              // GET en minúsculas
+  await r.fetch(SUPA + '/auth/v1/token?grant_type=refresh_token', { method: 'POST' });     // renovar token
+  await r.fetch('https://otra.web/x', { method: 'POST' });                                // fuera del servidor
+  const reqObj = { url: SUPA + '/rest/v1/duels', method: 'POST' };                        // Request en vez de texto
+  const resReq = await r.fetch(reqObj);
+  // Funciones REALES detrás del corte
+  const reales = async (rev) => {
+    const m = monta(rev);
+    const F = new Function('fetch', 'SUPA_URL', 'SUPA_KEY', '_bearer', '_vSello', 'getDuelSeasonId', 'showToast', 'currentUser', // eslint-disable-line no-new-func
+      'AbortController', 'setTimeout', 'clearTimeout', 'dbgw',
+      'const _chatOnInsert = () => {}; const _chatBroadcastPush = () => {}; const CHAT_ROOM = "general"; const LANG = "es";\n' +
+      [_xFnA('supaUpdateLastActive'), _xFnA('supaCreateNotification'), _xFnA('supaCreateChallenge'),
+       _xFnA('_chatInsert'), _xFn('fetchT'), _xFnA('_supaRpc')].join('\n') +
+      '\nreturn { supaUpdateLastActive, supaCreateNotification, supaCreateChallenge, _chatInsert, _supaRpc };');
+    const api = F(m.fetch, SUPA, 'k', () => 't', o => Object.assign(o || {}, { venue: 'r2' }), () => 's1', () => {}, 'Administrador',
+      AbortController, setTimeout, clearTimeout, () => {});
+    const out = {};
+    const corre = async (k, fn) => { const antes = m.llegan.length; try { await fn(); } catch (e) {} out[k] = m.llegan.length - antes; };
+    await corre('last_active', () => api.supaUpdateLastActive('Administrador'));
+    await corre('avisos', () => api.supaCreateNotification('Ana', 'hola', 'info'));
+    await corre('duelos', () => api.supaCreateChallenge('Administrador', 'Ana', [{ q: 1 }]));
+    await corre('chat', () => api._chatInsert({ message: 'hola' }));
+    await corre('supervisor', () => api._supaRpc('venue_pin_set', { p_pin: '1', p_venue: 'r2' }));
+    return out;
+  };
+  // Push: en revisión sale sin tocar ni el navegador ni el servidor.
+  const push = await (async () => {
+    const F = new Function('_modoRevision', 'window', 'navigator', 'dbgw', _xFnA('subscribeToPush') + '; return subscribeToPush;'); // eslint-disable-line no-new-func
+    let tocado = false;
+    const trampa = new Proxy({}, { get: () => { tocado = true; return undefined; }, has: () => { tocado = true; return false; } });
+    let r1; try { r1 = await F(() => true, trampa, trampa, () => {})('Administrador'); } catch (e) { r1 = 'lanzó'; }
+    const rev = { r: r1, tocado };
+    tocado = false;
+    try { await F(() => false, trampa, trampa, () => {})('Administrador'); } catch (e) {}
+    return { rev, normalToca: tocado };
+  })();
+  return { revBloqueadas, total: ESCRITURAS.length, normalLlegan, revLlegan: r.llegan, resReq: resReq.status,
+           avisos: r.estado.avisos, realesRev: await reales(true), realesNormal: await reales(false), push };
+})();
+
+// ═══ REVISIÓN DE LA ADMINISTRACIÓN · r2 con revision:true ═══
+// La cuenta de administración puede elegir r2 en Ajustes para estudiar su carta
+// aunque r2 siga cerrado y la app suspendida. Nadie más lo ve: el login, el
+// registro y el selector público siguen mirando sólo `enabled`. Quién LEE la
+// carta lo decide el servidor (cartas_revisores): esto sólo enseña la opción.
+const _selVenues = (suspendida) => {
+  const tro = (ini, fin) => { const i = html.indexOf(ini); const j = html.indexOf(fin, i); return (i >= 0 && j > i) ? html.slice(i, j) : null; };
+  const src = tro('function _enabledVenues(){', '\nfunction applyTheme(');
+  if (!src) return null;
+  const THEMES = JSON.parse(read('data/themes.json'));
+  return new Function('THEMES', 'SUSPENDIDA', src + '\nreturn { admin: _venuesAdministracion().map(v => v.id), login: _enabledVenues().map(v => v.id) };')(THEMES, suspendida); // eslint-disable-line no-new-func
+};
+test('Revisión de la administración: sólo r2 lleva revision:true, y r2 sigue cerrado', () => {
+  const reg = JSON.parse(read('data/themes.json')).venues;
+  const marcados = reg.filter(v => v.revision === true).map(v => v.id);
+  assert(JSON.stringify(marcados) === '["r2"]', 'sólo r2 se puede revisar: ' + marcados.join(', '));
+  const por = id => reg.find(v => v.id === id);
+  assert(por('r2').enabled === false && por('mb').enabled === false, 'r2 y M.B. siguen cerrados');
+  assert(por('txoko').enabled === true && por('r2').name === 'Restaurante 2', 'Txoko abierto; r2 con nombre neutro');
+  assert(por('r2').dishIds.from === 3000 && por('r2').dishIds.to === 3999, 'el bloque de r2 no cambia');
+});
+test('Revisión de la administración: Ajustes ofrece r2 a la administración; el login y el registro, no', () => {
+  const sus = _selVenues(true), libre = _selVenues(false);
+  assert(sus && libre, 'no encuentro los selectores');
+  assert(JSON.stringify(sus.admin) === '["txoko","r2"]', 'suspendida: la administración ve Txoko y r2: ' + sus.admin.join(', '));
+  assert(JSON.stringify(sus.login) === '["txoko"]' && JSON.stringify(libre.login) === '["txoko"]', 'el login sólo enseña lo abierto: nunca r2');
+  assert(JSON.stringify(libre.admin) === '["txoko","mb","r2"]', 'sin suspensión, la administración ve lo de siempre: ' + libre.admin.join(', '));
+  const iAdm = html.indexOf("  if(_esAdmin()){\n    const cajaV = $('ajVenues');");
+  const iUso = html.indexOf('_venuesAdministracion()', iAdm);
+  assert(iAdm > 0 && iUso > iAdm && iUso - iAdm < 200, 'el selector de restaurantes de Ajustes está dentro de if(_esAdmin())');
+  assert((html.match(/(?<!function )_venuesAdministracion\(\)/g) || []).length === 1, '_venuesAdministracion sólo se llama en Ajustes de la administración');
+  const sel = html.slice(html.indexOf('function selectVenue(id){'), html.indexOf('function selectVenue(id){') + 400);
+  assert(/const v = _enabledVenues\(\)\.find\(x => x\.id === id\);/.test(sel), 'el selector del login sólo acepta restaurantes abiertos');
+  assert(!/revision/.test(html.slice(html.indexOf('function _enabledVenues(){'), html.indexOf('function _enabledVenues(){') + 140)), '_enabledVenues no mira revision');
+});
+test('Revisión de la administración: el registro sigue cerrado y la suspensión intacta', () => {
+  assert(/^const SUSPENDIDA = true;$/m.test(html), 'la suspensión global sigue puesta');
+  assert(/^const _PERMITIDOS = \['jenfry', 'duvan', 'dian', 'administrador'\];$/m.test(html), 'la lista de entrada no cambia');
+  assert(/if\(SUSPENDIDA && mode === 'signup'\)\{/.test(html), 'con la suspensión no se puede poner el modo registro');
+});
+test('Cartas: la revisión de una carta ajena va por auth.uid(), no por el rol admin', () => {
+  const sinCom = (sql) => sql.split('\n').filter(l => !/^\s*--/.test(l)).join('\n');
+  const m = sinCom(read('supabase/cartas_revisores.sql'));
+  assert(/create table public\.cartas_revisores \(/.test(m) && /auth_user_id\s+uuid not null references auth\.users\(id\)/.test(m), 'concesión por auth.uid()');
+  assert(/alter table public\.cartas_revisores enable row level security;/.test(m) && !/create policy[^;]*cartas_revisores/.test(m), 'RLS sin políticas');
+  assert(/revoke all on table public\.cartas_revisores from public, anon, authenticated, service_role;/.test(m), 'sin privilegios para la app');
+  const fn = m.slice(m.indexOf('create or replace function app.puede_revisar_carta'), m.indexOf('$$;', m.indexOf('create or replace function app.puede_revisar_carta')));
+  assert(/security definer/.test(fn) && /set search_path = ''/.test(fn) && /r\.auth_user_id = auth\.uid\(\)/.test(fn) && /r\.venue = p_venue/.test(fn), 'la función mira sólo la sesión y esa carta');
+  assert(/revoke all on function app\.puede_revisar_carta\(text\) from public, anon, service_role;/.test(m) && /grant execute on function app\.puede_revisar_carta\(text\) to authenticated;/.test(m), 'sólo authenticated la ejecuta');
+  const pol = m.slice(m.indexOf('create policy cartas_leer'));
+  assert(/venue = \(select app\.venue_actual\(\)\)/.test(pol) && /app\.puede_revisar_carta\(venue\)/.test(pol) && !/rol_actual/.test(pol), 'la política nueva NO deja leer por ser admin');
+  const c = read('supabase/cartas_revisores_concesion.sql');
+  assert(/v_txt\s+text := '__AUTH_UID__';/.test(c) && /v_venue text := '__VENUE__';/.test(c), 'la concesión trae marcadores, no una identidad');
+  const uuid = /[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/i;
+  for (const f of ['supabase/cartas_revisores.sql', 'supabase/cartas_revisores_concesion.sql', 'supabase/tests/cartas-privadas/D_revisores.sql'])
+    assert(!uuid.test(read(f)), `${f} no puede llevar ningún uuid real`);
+  const d = read('supabase/tests/cartas-privadas/D_revisores.sql');
+  assert(/"D4":0/.test(d) && /"D10":"denegado"/.test(d) && /if r <> esperado then raise exception 'ABORTA/.test(d), 'la prueba exige que otra cuenta admin y anon no lean');
+});
+test('Cartas: ninguna carta de r2 vive en data/ (sería pública)', () => {
+  assert(!existsSync(join(ROOT, 'data/carta-r2.json')), 'data/carta-r2.json no puede existir');
+});
+
+test('Revisión: el corte de red bloquea toda escritura al servidor, y fuera de revisión no toca nada', () => {
+  const R = _revRes;
+  assert(R.revBloqueadas.length === R.total, `en revisión salieron escrituras: ${R.total - R.revBloqueadas.length} de ${R.total}`);
+  assert(R.normalLlegan.length === R.total, 'fuera de revisión (Txoko) todas las peticiones tienen que salir como siempre');
+  assert(R.resReq === 403, 'una escritura pasada como objeto Request tampoco sale');
+  const pasan = R.revLlegan.map(x => x.join(' '));
+  assert(pasan.some(x => /cartas\?venue=eq\.r2 GET/.test(x)), 'en revisión se sigue pudiendo LEER (la carta)');
+  assert(pasan.some(x => /auth\/v1\/token/.test(x)), 'la sesión de siempre (renovar el token) no se corta');
+  assert(pasan.some(x => /otra\.web/.test(x)), 'sólo se corta el servidor de la app');
+  assert(!pasan.some(x => / (POST|PATCH|DELETE|PUT)$/.test(x) && /\/rest\/v1\/|\/functions\/v1\/|\/storage\/v1\//.test(x)),
+    'ninguna escritura a rest, functions o storage llegó a salir');
+  assert(R.avisos > 0, 'el usuario tiene que saber que está en modo revisión');
+});
+test('Revisión: no se ejecuta el chat (ni mensaje ni presencia)', () => {
+  assert(_revRes.realesRev.chat === 0 && _revRes.realesNormal.chat === 1, '_chatInsert en revisión no sale; en normal sí');
+  assert(/function renderChat\(\)\{\n  const c = document\.getElementById\('appContent'\);\n  \/\/[^\n]*\n  if\(typeof _revisionCerrado === 'function' && _revisionCerrado\(c\)\) return;/.test(html),
+    'la pantalla del chat no se abre en revisión');
+  assert(/async function _chatConnect\(\)\{\n  if\(typeof _modoRevision === 'function' && _modoRevision\(\)\) return;/.test(html),
+    'el realtime del chat (presencia) no se conecta en revisión');
+});
+test('Revisión: no se ejecutan duelos', () => {
+  assert(_revRes.realesRev.duelos === 0 && _revRes.realesNormal.duelos >= 1, 'supaCreateChallenge en revisión no sale');
+  assert(/async function startChallenge\(rivalName\) \{\n  if\(typeof _revisionCerrado === 'function' && _revisionCerrado\(\)\) return;/.test(html), 'el reto remoto no empieza');
+  assert(/function startDuel\(\)\{\n  if\(typeof _revisionCerrado === 'function' && _revisionCerrado\(\)\) return;/.test(html), 'el duelo local no empieza');
+});
+test('Revisión: no se ejecutan avisos (notifications)', () => {
+  assert(_revRes.realesRev.avisos === 0 && _revRes.realesNormal.avisos === 1, 'supaCreateNotification en revisión no sale');
+});
+test('Revisión: no se ejecuta push', () => {
+  const P = _revRes.push;
+  assert(P.rev.r === false && !P.rev.tocado, 'en revisión subscribeToPush tiene que salir sin tocar el navegador ni el servidor');
+  assert(P.normalToca, 'fuera de revisión subscribeToPush sigue mirando el navegador como siempre');
+});
+test('Revisión: no se ejecuta supervisor', () => {
+  assert(_revRes.realesRev.supervisor === 0 && _revRes.realesNormal.supervisor === 1, 'las RPC de supervisor en revisión no salen');
+  assert(/function renderSupervisor\(\)\{\n  \/\/[^\n]*\n  if\(typeof _revisionCerrado === 'function' && _revisionCerrado\(document\.getElementById\('appContent'\)\)\) return;/.test(html),
+    'el panel de supervisor no se abre en revisión');
+});
+test('Revisión: no se modifica last_active_at', () => {
+  assert(_revRes.realesRev.last_active === 0 && _revRes.realesNormal.last_active === 1, 'supaUpdateLastActive en revisión no sale');
+});
+test('Revisión: ninguna escritura sale por otro camino que fetch, y el corte se instala lo primero', () => {
+  const main = html.slice(html.indexOf('<script>\n\n// ═══ MODO REVISIÓN'));
+  assert(main.indexOf('_instalarRedRevision(typeof window') > 0, 'el corte de red se instala en el script principal');
+  const inst = main.indexOf('_instalarRedRevision(typeof window');
+  assert(inst < main.indexOf('fetch(`') && inst < main.indexOf('createClient('), 'se instala antes de cualquier petición y de crear el cliente de Supabase');
+  assert(!/sendBeacon\(|new XMLHttpRequest|new WebSocket\(/.test(html), 'no hay escrituras por sendBeacon, XMLHttpRequest ni WebSocket propio');
+  assert(/function _modoRevision\(\)\{\n  try\{\n    if\(typeof currentUser === 'undefined' \|\| !currentUser\) return false;/.test(html),
+    'sin nadie dentro (login) no hay modo revisión: la puerta del NDA y la sesión no se cortan');
+});
+
+// Volver de r2 a Txoko: la ficha real queda EXACTAMENTE como estaba.
+const _vueltaRes = (() => {
+  const S = { cartaPuesta: 'txoko', currentUser: 'Administrador' };
+  const DB = { employees: { Administrador: { name:'Administrador', role:'admin', venue:'txoko', xp:10,
+    srs:{ 12:{ reps:3 } }, topicScores:{ allergens:{ correct:5, total:6 } }, knownDishes:{ 12:true } } } };
+  const F = new Function('DB', 'S', '_VENUE_POR_DEFECTO', // eslint-disable-line no-new-func
+    'const _ficha = n => DB.employees[n] || null;\n' +
+    [_xFn('_identidadVenue'), _xFn('_modoRevision'), _xFn('_perfilRevision'), _xFn('getEmp')].join('\n')
+      .replace(/_cartaPuesta/g, 'S.cartaPuesta').replace(/\bcurrentUser\b/g, 'S.currentUser') +
+    '\nreturn { getEmp, _modoRevision };');
+  const api = F(DB, S, 'txoko');
+  const antes = JSON.stringify(DB.employees.Administrador);
+  S.cartaPuesta = 'r2';
+  const enRev = api._modoRevision();
+  const e = api.getEmp('Administrador');
+  e.xp = 999; e.srs = { 3012: { reps: 1 } }; e.topicScores.ingredients = { correct: 1, total: 1 };
+  S.cartaPuesta = 'txoko';
+  const real = api.getEmp('Administrador');
+  const despues = JSON.stringify(real);
+  S.cartaPuesta = 'r2';
+  const otraVez = api.getEmp('Administrador');
+  S.currentUser = null; const sinUsuario = api._modoRevision();
+  return { enRev, perfilEsOtro: e !== DB.employees.Administrador, igual: antes === despues,
+           real, conservado: otraVez === e && otraVez.srs[3012] && otraVez.xp === 999, sinUsuario, DB };
+})();
+test('Revisión: volver de r2 a Txoko conserva exactamente el estado anterior', () => {
+  const R = _vueltaRes;
+  assert(R.enRev === true && R.perfilEsOtro, 'con la carta r2 puesta, la administración estudia en un perfil aparte');
+  assert(R.igual, 'al volver a Txoko la ficha real es byte a byte la de antes');
+  assert(R.conservado, 'el progreso de revisión se conserva para la próxima vez');
+  assert(R.sinUsuario === false, 'sin nadie dentro no hay modo revisión');
+  assert(R.DB.revision && R.DB.revision['r2|Administrador'], 'el perfil vive en DB.revision, por carta y persona');
+});
+
+// ═══ FLASHCARDS con alérgenos sin validar ═══
+const _fcRes = (validados) => {
+  const S = { fcTopic: null, fcDishes: [], fcIndex: 0, fcFlipped: false, xp: 0, guardados: 0, pinta: 0 };
+  const emp = { topicScores: {}, knownDishes: {} };
+  const F = new Function('S', 'emp', '_val', // eslint-disable-line no-new-func
+    'const _alergenosValidados = () => _val; const DISHES = [{id:3001,cat:"Fríos"},{id:3002,cat:"Fríos"}];\n' +
+    'const _shiftDishes = a => a; const _lqaShuffle = a => a.slice(); const getEmp = () => emp; const currentUser = "A";\n' +
+    'const awardXP = () => { S.xp++; }; const saveDB = () => { S.guardados++; }; const checkNewCertifications = () => {};\n' +
+    'const renderFcCard = () => { S.pinta++; }; const checkMissionCompletion = () => {}; const checkNewAchievements = () => {};\n' +
+    'const LANG = "es"; const t = k => k; const document = { getElementById: () => ({}) };\n' +
+    [_xFn('initFlashcards'), _xFn('fcRate')].join('\n')
+      .replace(/\bfcTopic\b/g, 'S.fcTopic').replace(/\bfcDishes\b/g, 'S.fcDishes').replace(/\bfcIndex\b/g, 'S.fcIndex').replace(/\bfcFlipped\b/g, 'S.fcFlipped') +
+    '\nreturn { initFlashcards, fcRate };');
+  const api = F(S, emp, validados);
+  api.initFlashcards();               // como al abrir la pestaña
+  const tema = S.fcTopic;
+  S.fcTopic = 'allergens';            // aunque quedara puesto de antes
+  api.fcRate(2);
+  return { tema, emp, xp: S.xp, guardados: S.guardados, siguiente: S.fcIndex };
+};
+test('Flashcards: con alérgenos sin validar no se abren como actividad de alérgenos', () => {
+  const R = _fcRes(false);
+  assert(R.tema === 'ingredients', 'sin validar, las tarjetas se estudian como ingredientes, no como alérgenos: ' + R.tema);
+  assert(_fcRes(true).tema === 'allergens', 'con alérgenos validados (Txoko) siguen siendo de alérgenos');
+  assert(/const allergensHtml = !\(typeof _alergenosValidados!=='function'\|\|_alergenosValidados\(\)\) \? \(typeof _alergenosAvisoHTML/.test(html),
+    'el reverso no enseña alérgenos sin validar como algo que aprender');
+});
+test('Flashcards: fcRate no escribe topicScores.allergens, ni XP, ni plato conocido, con alérgenos sin validar', () => {
+  const R = _fcRes(false);
+  assert(!R.emp.topicScores.allergens, 'no se registra topicScores.allergens');
+  assert(R.xp === 0, 'no da XP por una tarjeta de alérgenos');
+  assert(!R.emp.knownDishes[3001], 'no marca el plato como conocido');
+  assert(R.siguiente === 1, 'sólo pasa a la siguiente tarjeta');
+  const T = _fcRes(true);
+  assert(T.emp.topicScores.allergens && T.emp.topicScores.allergens.total === 1 && T.xp === 1 && T.emp.knownDishes[3001],
+    'en Txoko fcRate sigue registrando como siempre');
+});
+
 console.log('\nHygiene');
 test('no git conflict markers in tracked source', () => {
   for (const f of ['index.html', 'sw.js', 'data/wines.json', 'data/lqa-situations.json', 'data/ghost-scenarios.json']) {
