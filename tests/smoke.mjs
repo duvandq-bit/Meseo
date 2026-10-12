@@ -3015,28 +3015,18 @@ test('wine detail: opaque overlay, dark hero band, SVG bottle by type', () => {
   assert(!/[\u{1F347}\u{1F6E2}]/u.test(chips), 'emoji found in similar-wine chips — banned');
 });
 
-test('logo taps home + persistent search pill under the nav', () => {
-  // Peticiones del propietario: el logo TXOKO vuelve al inicio (accesible:
-  // role button + Enter/Espacio) y la búsqueda global vive a UN toque bajo
-  // la barra de Inicio (antes estaba escondida dentro del desplegable).
+test('logo taps home + la lupa de la cabecera abre la búsqueda en todas las pantallas', () => {
   const logo = html.slice(html.indexOf('id="headerLogo"') - 40, html.indexOf('id="headerLogo"') + 400);
   assert(/onclick="showTab\('dashboard'\)"/.test(logo) && /role="button"/.test(logo) && /onkeydown/.test(logo),
     'header logo must navigate home, accessibly');
-  const pill = html.slice(html.indexOf('id="globalSearchPill"') - 40, html.indexOf('id="globalSearchPill"') + 700);
-  assert(/onclick="openGlobalSearch\(\)"/.test(pill), 'search pill must open the global search');
-  assert(/min-height:44px/.test(pill), 'search pill needs a touch-friendly height');
-  // Y se esconde donde no busca nada: en el panel, en horarios, en el chat o
-  // en el ranking no hay platos ni vinos, y en Aprender, Vinos, Quesos y Sala
-  // la pantalla ya trae su propio buscador. La capacidad NO se pierde: sigue
-  // a un toque desde el menú.
-  assert(/const _SIN_BUSCADOR = new Set\(/.test(html) && /_buscadorSync\(tab\);/.test(html),
-    'la píldora tiene que esconderse donde no tiene función');
-  assert(/id="navSearchEntry"[^>]*onclick="openGlobalSearch\(\)"/.test(html),
-    'la búsqueda global tiene que seguir accesible desde el menú en todas las pantallas');
-  assert(/globalSearchPillLbl/.test(html.slice(html.indexOf('const _gsLbl'), html.indexOf('const _gsLbl') + 600)),
-    'pill label must be localized with the rest');
+  // Oct 2026: la caja de búsqueda que salía en unas pantallas sí y en otras no
+  // pasa a ser una lupa fija en la cabecera.
+  assert(/id="hdrBuscar"[^>]*onclick="openGlobalSearch\(\)"/.test(html) && /aria-label="Buscar plato, vino o alérgeno"/.test(html),
+    'la lupa de la cabecera abre la búsqueda global y tiene nombre');
+  assert(!/id="globalSearchPill"/.test(html), 'la caja de búsqueda de debajo del menú ya no existe');
+  const css = read('styles.css');
+  assert(/\.hdr-btn\{[^}]*width:44px;height:44px/.test(css), 'la lupa mide 44 px');
 });
-
 test('update push: SW pre-installs new build on tag app-update', () => {
   // "¿Qué se necesita para enviar la actualización a los dispositivos?" —
   // el push despierta al SW aunque la app esté cerrada: con tag 'app-update'
@@ -3667,30 +3657,20 @@ test('avatar system: branded SVG medallions, no emojis, self-styled picker', () 
 });
 
 test('app header respects the iOS notch (safe-area inset)', () => {
-  // black-translucent + viewport-fit=cover extienden la página bajo la barra
-  // de estado de iOS: con height fija la cabecera quedaba DEBAJO del reloj y
-  // sus botones eran intocables (reporte del propietario, iPhone de sala).
   const css = read('styles.css');
   const hdr = css.slice(css.indexOf('.app-header{'), css.indexOf('.header-logo{'));
   assert(/height:calc\(56px \+ env\(safe-area-inset-top/.test(hdr), 'header height must grow with the notch');
   assert(/padding:env\(safe-area-inset-top/.test(hdr), 'header padding must push content below the status bar');
   assert(/viewport-fit=cover/.test(html) && /black-translucent/.test(html),
     'iOS viewport/status-bar metas changed — re-audit safe-area handling');
-
-  // Y debe CABER en un iPhone estrecho: el reporte "los botones no responden
-  // y no pueden cambiar el idioma" era la fila desbordando — EN y Salir
-  // quedaban fuera de pantalla a 375-390px. Compresión responsiva medida en
-  // headless a 375px: todos los controles (ES, EN, Salir) dentro del ancho.
-  assert(/@media \(max-width:520px\)\{\s*\n?\s*\.app-header\{padding-left:\.7rem/.test(css.replace(/\r/g,'')),
-    'narrow-screen header compression missing');
-  assert(/\.header-uname\{display:none\}/.test(css), 'username must hide on narrow screens (avatar identifies)');
-  // Android estrecho (Galaxy S20 = 360px CSS): "Salir" se cortaba por la
-  // derecha. Tiers de compresión extra a ≤400px y ≤340px; medido en headless:
-  // Salir dentro del ancho a 412/360/320px.
-  assert(/@media \(max-width:400px\)/.test(css) && /@media \(max-width:340px\)/.test(css),
-    'narrow-Android header compression tiers (400px/340px) missing');
+  // Cabecera de tres piezas (oct 2026): nombre, lupa y avatar. Ayuda, idioma y
+  // Salir viven en Ajustes; en la cabecera tapaban el nombre a 390 px y el ⚙ a 320.
+  const cab = html.slice(html.indexOf('<header'), html.indexOf('</header>'));
+  for (const id of ['helpBtn', 'appLangEs', 'appLangEn', 'ajustesBtn', 'logoutBtn'])
+    assert(!cab.includes(`id="${id}"`), `${id} ya no va en la cabecera`);
+  assert(/id="headerAvatar"[^>]*onclick="openAjustes\(\)"/.test(cab), 'el avatar abre Ajustes');
+  assert(/\.app-header \.header-logo\{flex:1 1 auto;min-width:0/.test(css), 'el nombre ocupa lo que queda y se corta con puntos');
 });
-
 test('force-update escape hatch + APP_VERSION synced to the SW', () => {
   // iOS PWAs se aferran a builds viejas (reporte del propietario: "en iPhone
   // sigue apareciendo la versión antigua"). El botón Actualizar del login
@@ -4402,31 +4382,19 @@ test('main nav is a dropdown, not a horizontal scroller', () => {
     'active nav item must show the gold accent bar');
 });
 
-test('el Repaso Inteligente vive dentro de La Carta, sin chip propio', () => {
-  // Fusión jul 2026: fuera el chip «Simulación» de la barra de Aprender
-  // (novia del propietario: «no aporta»; propietario: rompe la estética).
-  // La sesión entra por una tarjeta al frente de La Carta y sigue enlazada
-  // desde la fila «Repaso» del inicio.
+test('el Repaso Inteligente vive en Practicar, sin chip propio en Saber', () => {
   assert(!/\['smart',_en\?'Simulation':'Simulación'/.test(html),
     'el chip Simulación ha vuelto a la barra de Aprender');
   assert(/smart:renderSmartReview/.test(html),
     'la ruta smart debe seguir existiendo (el plan del día del inicio la usa)');
-  const rc = html.slice(html.indexOf('function renderRepasoCats()'), html.indexOf('function renderRepasoTopic()'));
-  assert(/Repaso inteligente/.test(rc) && /_subTab\.aprender='smart'/.test(rc),
-    'falta la tarjeta de entrada a la sesión al frente de La Carta');
-  // Refuerzo jul 2026 («no se ve, no se sabe de qué trata»): la entrada es
-  // una tarjeta ri-cta destacada con subtítulo explicativo, y su cuenta usa
-  // el MISMO criterio que la línea de resumen (solo repasos vencidos).
-  assert(/class="ri-cta"[^>]*onclick="_subTab\.aprender='smart'/.test(rc),
-    'la entrada debe ser la tarjeta destacada ri-cta');
-  assert(/la app elige los platos que más te conviene repasar/.test(rc),
-    'el subtítulo debe explicar qué es la sesión');
-  assert(/s\.reps > 0 && Date\.now\(\) >= s\.nextReview/.test(rc),
+  const f = html.slice(html.indexOf('function _smartCtaHTML('), html.indexOf('function renderPracticar('));
+  assert(/class="ri-cta"[^>]*onclick="showTab\('smart'\)"/.test(f), 'la entrada es la tarjeta destacada y abre la ruta smart');
+  assert(/la app elige los platos que más te conviene repasar/.test(f), 'el subtítulo debe explicar qué es la sesión');
+  assert(/s\.reps > 0 && Date\.now\(\) >= s\.nextReview/.test(f),
     'la cuenta de pendientes debe contar solo repasos vencidos, como el resumen');
-  assert(/REPASO INTELIGENTE/.test(html) && !/'SIMULACIÓN'/.test(html),
-    'la pantalla debe presentarse como Repaso Inteligente, no Simulación');
+  const pr = html.slice(html.indexOf('function renderPracticar('), html.indexOf('function _prcVolverHTML('));
+  assert(/_smartCtaHTML\(_en, emp\)/.test(pr), 'la tarjeta está en la página de Practicar');
 });
-
 test('nav opens as a thumb-zone bottom sheet with a dim scrim', () => {
   // The option list rises from the bottom (reachable one-handed) instead of
   // dropping from the top edge, and a scrim dims the page behind it.
@@ -8204,7 +8172,7 @@ test('Guía de emplatado: mapa de fotos íntegro, sección cableada, overlay y C
   // subcategorías»).
   const hubSrc = html.slice(html.indexOf('function _aprChipsBar('), html.indexOf('function _aprEnsureChips('));
   const subkeys = [...hubSrc.matchAll(/\['([a-z]+)',/g)].map(m => m[1]);
-  assert(subkeys.length >= 5, `expected ≥5 Aprender subtabs, found ${subkeys.length}`);
+  assert(subkeys.length >= 4, `expected ≥4 Aprender subtabs, found ${subkeys.length}`);
   const renderMapSrc = html.slice(html.indexOf('const renderMap = {'), html.indexOf('const renderMap = {') + 600);
   const parentMapSrc = html.slice(html.indexOf('const parentMap = {'), html.indexOf('const parentMap = {') + 300);
   for (const k of subkeys) {
@@ -9020,9 +8988,11 @@ test('filtro de turno (DISH_SERVICE) coherente con las cartas reales', () => {
   assert(cnt.a >= 30 && cnt.c >= 30, `reparto desequilibrado: ${JSON.stringify(cnt)}`);
 });
 test('zona de Ajustes: entrada, perfil, correo, cambio de clave', () => {
-  // botón de entrada en la cabecera
-  assert(/id="ajustesBtn"[^>]*onclick="openAjustes\(\)"/.test(html),
-    'la cabecera debe tener el botón ⚙ que abre openAjustes()');
+  // entrada: el avatar de la cabecera; y dentro, ayuda, idioma y salir
+  assert(/id="headerAvatar"[^>]*onclick="openAjustes\(\)"/.test(html),
+    'el avatar de la cabecera abre openAjustes()');
+  assert(/\$\('ajTutorial'\)\.onclick = \(\)=>\{ overlay\.remove\(\); showOnboarding\(\); \};/.test(html)
+    && /id="ajLangEs"/.test(html) && /\$\('ajLogout'\)/.test(html), 'Ajustes lleva tutorial, idioma y cerrar sesión');
   assert(html.includes('function openAjustes('), 'falta la función openAjustes');
   // helpers de red para estado de correo y cambio de clave
   assert(html.includes('function supaEmailStatus') && html.includes('function supaChangePin'),
@@ -10038,7 +10008,7 @@ test('Quesos: nunca se le dice a un vegetariano que sí sin saberlo', () => {
   // pregunta en mesa no es la maduración, es «¿puedo comerlo?».
   assert(/function renderQuesos\(\)/.test(html), 'falta la sección de quesos');
   assert(/'lqa','vinos','quesos','sala'\]/.test(html), 'quesos tiene que ser una ruta válida');
-  assert(/renderMap = \{quesos:renderQuesos,/.test(html), 'y tener quien la pinte');
+  assert(/renderMap = \{[^}]*quesos:renderQuesos,/.test(html), 'y tener quien la pinte');
   assert(/id="navQuesos"[^>]*style="display:none"/.test(html),
     'el botón sale sólo si el restaurante tiene carro, así que arranca escondido');
 
@@ -11439,7 +11409,7 @@ test('Sala: los procedimientos son de un restaurante, y quien no los tiene no ve
   // la pestaña ni de lejos.
   assert(/function renderSala\(\)/.test(html), 'falta la sección de sala');
   assert(/'vinos','quesos','sala'\]/.test(html), 'sala tiene que ser una ruta válida');
-  assert(/renderMap = \{quesos:renderQuesos,sala:renderSala,/.test(html), 'y tener quien la pinte');
+  assert(/renderMap = \{[^}]*quesos:renderQuesos,sala:renderSala,/.test(html), 'y tener quien la pinte');
   assert(/id="navSala"[^>]*style="display:none"/.test(html),
     'el botón sale sólo donde hay procedimientos, así que arranca escondido');
   assert((html.match(/_navQuesosSync\(\); _navVinosSync\(\); _navSalaSync\(\);/g) || []).length === 2,
@@ -16927,6 +16897,22 @@ test('Letras: sólo las cuatro que carga la app, y los botones las heredan', () 
   // Cormorant es variable (300-700): se declara el rango para que la negrita sea real.
   const corm = (css.match(/@font-face\s*\{[^}]*'Cormorant Garamond'[^}]*\}/g) || []);
   assert(corm.length === 4 && corm.every(b => /font-weight:\s*300 700/.test(b)), 'Cormorant declarado como variable 300-700');
+});
+test('Practicar: la pestaña tiene página propia y lleva a todo lo que se entrena', () => {
+  assert(_ux2.UX2_DESTINO.practicar === 'practicar' && _ux2.UX2_SECCION.practicar === 'practicar', 'la pestaña abre su página');
+  assert(/const TAB_ROUTES = \[[^\]]*'practicar'/.test(html) && /practicar:renderPracticar/.test(html), 'ruta y quien la pinta');
+  const pr = html.slice(html.indexOf('function renderPracticar('), html.indexOf('function _prcVolverHTML('));
+  for (const [que, re] of [['Pase', /_paseCtaHTML\(_en\)/], ['Hospitalidad', /_hspCtaHTML\(_en\)/], ['Repaso inteligente', /_smartCtaHTML\(/],
+    ['Examen', /showTab\('exam'\)/], ['Flashcards', /showTab\('flashcards'\)/], ['Juegos', /showTab\('txoko'\)/],
+    ['Auditoría completa', /startGhostInspection\(\)/], ['Repasar fallos', /startPersonalErrorMode\(\)/]])
+    assert(re.test(pr), `Practicar tiene que llevar a ${que}`);
+  // Repaso (explorar la carta) es consulta: va en Saber y ya no lleva las tarjetas de práctica.
+  assert(_ux2.UX2_SECCION.repaso === 'saber', 'Repaso es de Saber');
+  const rc = html.slice(html.indexOf('function renderRepasoCats()'), html.indexOf('function renderRepasoTopic()'));
+  assert(!/_paseCtaHTML|_hspCtaHTML|_smartCtaHTML/.test(rc), 'Repaso ya no repite las tarjetas de Practicar');
+  // Lo que cuelga de Practicar lleva la vuelta, y Flashcards ya no es pestaña de Saber.
+  assert(/UX2_SECCION\[tab\]==='practicar' && tab!=='practicar' && !c\.querySelector\('\.prc-volver'\)/.test(html), 'vuelta a Practicar');
+  assert(!/\['flashcards','Flashcards'/.test(html.slice(html.indexOf('function _aprChipsBar('), html.indexOf('function _aprEnsureChips('))), 'Flashcards fuera de las pestañas de Saber');
 });
 test('Letras: la escala de siete tamaños existe y no baja de 11 px', () => {
   const css = read('styles.css');

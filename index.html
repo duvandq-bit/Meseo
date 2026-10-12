@@ -52,7 +52,7 @@
 <meta property="og:description" content="Formación de equipos de sala: carta, alérgenos, vinos, exámenes y juegos de repaso.">
 <meta property="og:url" content="https://meseo.es/">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"Meseo","url":"https://meseo.es/"}</script>
-<meta name="app-version" content="7.486">
+<meta name="app-version" content="7.487">
 <meta name="app-build" content="May 2026">
 <meta name="theme-color" content="#1c2a22">
 <!-- ═══ PWA ═══ -->
@@ -345,7 +345,7 @@
     <div class="header-logo" id="headerLogo" role="button" tabindex="0" aria-label="Ir al inicio" title="Ir al inicio" style="cursor:pointer" onclick="showTab('dashboard')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();showTab('dashboard')}">Meseo</div>
     <div class="header-spacer"></div>
     <div class="header-user">
-      <div class="header-avatar" id="headerAvatar"></div>
+      <div class="header-avatar" id="headerAvatar" role="button" tabindex="0" aria-label="Ajustes y perfil" onclick="openAjustes()" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openAjustes()}"></div>
       <span class="header-uname" id="headerUsername"></span>
       <button id="pushEnableBtn" onclick="enablePushManual()" aria-label="Activar notificaciones push" role="button" style="display:none;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.25);cursor:pointer;padding:6px 10px;border-radius:6px;font-family:'DM Mono',monospace;font-size:.6rem;color:rgba(255,255,255,.85);letter-spacing:.03em;min-height:44px;min-width:44px" title="Activar notificaciones push">◎</button>
       <button id="notifBell" onclick="renderNotifPanel()" aria-label="Notificaciones" role="button" style="display:none;background:transparent;border:none;cursor:pointer;padding:8px;position:relative;font-size:1.2rem;line-height:1;min-height:44px;min-width:44px">
@@ -357,14 +357,10 @@
            nueva que la instalada; el número va en el tooltip y en la
            confirmación. Tocarlo actualiza en limpio. -->
       <button id="updChip" onclick="_updGo()" aria-label="Nueva versión disponible — actualizar" title="Nueva versión disponible — toca para actualizar" style="display:none;align-items:center;justify-content:center;background:rgba(28,42,34,.55);border:1px solid rgba(228,190,104,.5);cursor:pointer;padding:0;border-radius:50%;min-height:44px;min-width:44px;margin-right:.25rem"><span class="upd-dot" aria-hidden="true"></span></button>
-      <button id="helpBtn" onclick="showOnboarding()" aria-label="Ayuda — repetir tutorial" title="Ver tutorial / Show tutorial" style="background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.25);cursor:pointer;padding:6px 10px;border-radius:6px;font-family:var(--font-mono);font-size:var(--fs-3);color:rgba(255,255,255,.9);min-height:44px;min-width:44px;flex:none;margin-right:.25rem">?</button>
-      <!-- Language toggle in header -->
-      <div style="display:flex;gap:.35rem;margin-right:.25rem">
-        <button id="appLangEs" onclick="setLangApp('es')" style="background:rgba(255,255,255,.15);border:none;cursor:pointer;padding:6px 10px;border-radius:6px;font-family:var(--font-mono);font-size:var(--fs-2);color:rgba(255,255,255,.9);letter-spacing:.05em;min-height:44px;min-width:44px">ES</button>
-        <button id="appLangEn" onclick="setLangApp('en')" style="background:transparent;border:none;cursor:pointer;padding:6px 10px;border-radius:6px;font-family:var(--font-mono);font-size:var(--fs-2);color:rgba(255,255,255,.7);letter-spacing:.05em;min-height:44px;min-width:44px">EN</button>
-      </div>
-      <button id="ajustesBtn" onclick="openAjustes()" aria-label="Ajustes" title="Ajustes" style="background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.25);cursor:pointer;padding:6px 10px;border-radius:6px;font-size:.9rem;color:rgba(255,255,255,.9);min-height:44px;min-width:44px;margin-right:.25rem">⚙</button>
-      <button class="btn-logout" id="logoutBtn" onclick="logout()" aria-label="Cerrar sesión">Salir</button>
+      <!-- Cabecera de tres piezas (oct 2026): el nombre, la lupa y tu avatar.
+           Ayuda, idioma y Salir viven en Ajustes, que abre el avatar: en la
+           cabecera tapaban el nombre del restaurante y no cabían a 320 px. -->
+      <button type="button" id="hdrBuscar" class="hdr-btn" onclick="openGlobalSearch()" aria-label="Buscar plato, vino o alérgeno" title="Buscar"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.6-3.6"/></svg></button>
     </div>
   </header>
 
@@ -417,10 +413,7 @@
        únicamente cuando la sección activa es Aprender o una subpestaña suya. -->
   <div id="shiftBar" role="tablist" aria-label="Turno de estudio" style="display:none;gap:.3rem;width:calc(100% - 2rem);margin:.55rem 1rem .1rem;padding:.28rem;background:rgba(28,42,34,.05);border:1px solid rgba(196,154,60,.2);border-radius:12px"></div>
 
-  <button id="globalSearchPill" onclick="openGlobalSearch()" aria-label="Buscar plato, vino o alérgeno" style="display:flex;align-items:center;gap:.55rem;width:calc(100% - 2rem);margin:.45rem 1rem .1rem;padding:.55rem .9rem;background:rgba(255,255,255,.55);border:1px solid rgba(196,154,60,.3);border-radius:12px;cursor:pointer;min-height:44px;text-align:left;box-shadow:0 1px 3px rgba(28,42,34,.05)">
-    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="rgba(164,122,44,.85)" stroke-width="1.8" stroke-linecap="round" style="flex-shrink:0"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
-    <span id="globalSearchPillLbl" style="font-family:var(--font-sans);font-size:var(--fs-4);color:rgba(74,64,42,.6);letter-spacing:.01em">Buscar plato, vino, alérgeno…</span>
-  </button>
+  <!-- El buscador vive en la lupa de la cabecera, en todas las pantallas. -->
 
   <!-- Global search — instant lookup across dishes, wines and allergens.
        Hidden with an INLINE style so it stays hidden even if styles.css is
@@ -2814,7 +2807,7 @@ const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><p
 const SRC = 'src';
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='7.486';  // sincronizada con sw.js VERSION (guard de CI)
+const APP_VERSION='7.487';  // sincronizada con sw.js VERSION (guard de CI)
 const APP_BUILD='Jul 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;
@@ -12837,6 +12830,7 @@ function openAjustes(){
         v${APP_VERSION} · ${escapeHTML(currentUser||'—')}${_esAdmin()?' · admin':(_esMando()?' · '+((_ficha(currentUser)||{}).role||''):'')} · ${escapeHTML(_venueActual())}
         ${window._syncFallo ? `<br><span style="color:#b0432b">${_en?'cloud sync':'sincronización'}: ${escapeHTML(window._syncFallo)}</span>` : ''}
       </div>
+      <button id="ajTutorial" style="width:100%;margin-top:1rem;background:#fff;border:1px solid rgba(196,154,60,.35);color:#5a4a2c;border-radius:10px;padding:.7rem;font-family:var(--font-sans);font-weight:700;font-size:var(--fs-3);min-height:44px;cursor:pointer">${_en?'See the tutorial again':'Ver el tutorial otra vez'}</button>
       <button id="ajLogout" style="width:100%;margin-top:.5rem;background:transparent;border:1px solid rgba(200,60,60,.4);color:#c0392b;border-radius:10px;padding:.7rem;font-family:'Quicksand',sans-serif;font-weight:700;font-size:.85rem;cursor:pointer">${_en?'Log out':'Cerrar sesión'}</button>
     </div>`;
   document.body.appendChild(overlay);
@@ -12848,6 +12842,7 @@ function openAjustes(){
   $('ajLangEs').onclick = ()=>{ setLangApp('es'); overlay.remove(); openAjustes(); };
   $('ajLangEn').onclick = ()=>{ setLangApp('en'); overlay.remove(); openAjustes(); };
   $('ajLogout').onclick = ()=>{ overlay.remove(); logout(); };
+  $('ajTutorial').onclick = ()=>{ overlay.remove(); showOnboarding(); };
 
   // Cambiar de restaurante SIN cerrar sesión: se carga su carta, se repinta el
   // tema y se vuelve a dibujar la pestaña actual. Si la carta no llega, no se
@@ -13384,9 +13379,8 @@ async function closePinAndEnter(){
   const _av = getEmpAvatar(pinTarget);
   const _headerAv = document.getElementById('headerAvatar');
   _renderHeaderAvatar(_headerAv, _av, pinTarget);
-  _headerAv.onclick = openAvatarPicker;
   _headerAv.style.cursor = 'pointer';
-  _headerAv.title = LANG==='en'?'Change avatar':'Cambiar avatar';
+  _headerAv.title = LANG==='en'?'Settings':'Ajustes';
   document.getElementById('screenLogin').classList.remove('active');
   document.getElementById('screenApp').classList.add('active');
   applyLangToApp();
@@ -14148,22 +14142,15 @@ function _salaExamCompletar(){
   </div>`;
 }
 
-// La búsqueda global busca PLATOS, VINOS Y ALÉRGENOS. En el panel de
-// supervisor, en horarios, en el chat o en el ranking no hay nada de eso que
-// encontrar, y en Aprender, Vinos, Quesos y Sala la pantalla ya trae su propio
-// buscador: salían dos cajas de búsqueda, una encima de otra.
-// No se pierde nada: la misma búsqueda sigue a un toque desde el menú, en
-// todas las pantallas, con el botón #navSearchEntry.
-const _SIN_BUSCADOR = new Set(['supervisor','ranking','stats','logros',
-                               'txoko','aprender','flashcards','emplatado','vinos','quesos','sala']);
+// Antes había una caja de búsqueda bajo el menú que salía en unas pantallas sí
+// y en otras no. Desde oct 2026 la búsqueda es la lupa fija de la cabecera.
 function _buscadorSync(tab){
-  const p = document.getElementById('globalSearchPill');
-  if(p) p.style.display = _SIN_BUSCADOR.has(tab) ? 'none' : 'flex';
+  // La lupa de la cabecera está siempre: ya no hay caja de búsqueda que esconder.
 }
 
 // El nombre de cada pantalla, para el encabezado que anuncia el lector.
 const _TITULOS = {
-  dashboard:['Inicio','Home'], aprender:['Aprender','Learn'], flashcards:['Fichas','Flashcards'],
+  dashboard:['Inicio','Home'], practicar:['Practicar','Practise'], aprender:['Aprender','Learn'], flashcards:['Fichas','Flashcards'],
   exam:['Examen','Exam'], repaso:['Repaso inteligente','Smart review'],
   tecnicas:['Técnicas de cocina','Kitchen techniques'], actualidad:['Actualidad','News'],
   smart:['Repaso inteligente','Smart review'], emplatado:['Plating guide','Plating guide'],
@@ -14191,7 +14178,7 @@ function _ponerTitulo(tab){
 // reutilizar el `parentMap` de `showTab` —que existe para la barra vieja—
 // porque ahí `stats` y `logros` cuelgan de `ranking`, y aquí `ranking` es
 // Equipo mientras que `stats` y `logros` son Yo.
-const UX2_DESTINO = { hoy:'dashboard', saber:'aprender', practicar:'exam', equipo:'ranking', yo:'stats' };
+const UX2_DESTINO = { hoy:'dashboard', saber:'aprender', practicar:'practicar', equipo:'ranking', yo:'stats' };
 const UX2_SECCION = {
   dashboard:'hoy',
   // Saber · consulta. `aprender` aterriza en la guía de emplatado, que es lo
@@ -14200,7 +14187,9 @@ const UX2_SECCION = {
   aprender:'saber', emplatado:'saber', tecnicas:'saber',
   actualidad:'saber', vinos:'saber', quesos:'saber', sala:'saber', protocolo:'saber', lqa:'saber',
   // Practicar · entrenar. `exam` abre la PREPARACIÓN del examen, no un examen.
-  exam:'practicar', repaso:'practicar', smart:'practicar', flashcards:'practicar', txoko:'practicar',
+  // `repaso` es explorar la carta: es consulta, va en Saber.
+  repaso:'saber',
+  practicar:'practicar', exam:'practicar', smart:'practicar', flashcards:'practicar', txoko:'practicar',
   // Equipo · hay otra persona dentro.
   ranking:'equipo', supervisor:'equipo',
   // Yo · sólo tú.
@@ -14210,7 +14199,7 @@ const UX2_SECCION = {
 // Sin 'videos' ni 'chat' desde oct 2026, ni 'horarios' desde el 12 oct 2026
 // (retirados por el propietario). Un aviso antiguo que abra #tab=chat o
 // #tab=horarios cae en INICIO por la regla de abajo.
-const TAB_ROUTES = ['dashboard','aprender','flashcards','exam','repaso','tecnicas','actualidad','smart','emplatado','stats','logros','txoko','ranking','supervisor','protocolo','lqa','vinos','quesos','sala'];
+const TAB_ROUTES = ['dashboard','practicar','aprender','flashcards','exam','repaso','tecnicas','actualidad','smart','emplatado','stats','logros','txoko','ranking','supervisor','protocolo','lqa','vinos','quesos','sala'];
 
 function showTab(tab, instant){
   // ── Pestaña desconocida → INICIO ──────────────────────────────────────
@@ -14274,16 +14263,22 @@ function showTab(tab, instant){
   const _activeNav = document.querySelector('.nav-btn.active');
   const _navCur = document.getElementById('navDDCur');
   if(_activeNav && _navCur) _navCur.innerHTML = _activeNav.innerHTML;
+  else if(_navCur && _TITULOS[tab]) _navCur.textContent = LANG==='en' ? _TITULOS[tab][1] : _TITULOS[tab][0];
   _navDDClose();
   _ux2Sync(tab);
   const c=document.getElementById('appContent');
-  const renderMap = {quesos:renderQuesos,sala:renderSala,dashboard:renderDashboard,aprender:renderAprender,flashcards:renderAprender,exam:renderExam,repaso:renderAprender,tecnicas:renderAprender,actualidad:renderAprender,smart:renderAprender,emplatado:renderAprender,stats:renderRankingHub,logros:renderRankingHub,txoko:renderTxoko,ranking:renderRankingHub,supervisor:renderSupervisor,protocolo:renderLqa,lqa:renderLqa,vinos:renderVinos};
+  const renderMap = {practicar:renderPracticar,quesos:renderQuesos,sala:renderSala,dashboard:renderDashboard,aprender:renderAprender,flashcards:renderAprender,exam:renderExam,repaso:renderAprender,tecnicas:renderAprender,actualidad:renderAprender,smart:renderAprender,emplatado:renderAprender,stats:renderRankingHub,logros:renderRankingHub,txoko:renderTxoko,ranking:renderRankingHub,supervisor:renderSupervisor,protocolo:renderLqa,lqa:renderLqa,vinos:renderVinos};
   const _doRender = ()=>{
     c.innerHTML='';
     c.style.transition='none';
     c.style.opacity='1';
     c.style.transform='translateY(0)';
-    try { renderMap[tab](); }
+    try {
+      renderMap[tab]();
+      // Lo que cuelga de Practicar lleva la vuelta a su página.
+      if(UX2_SECCION[tab]==='practicar' && tab!=='practicar' && !c.querySelector('.prc-volver'))
+        c.insertAdjacentHTML('afterbegin', _prcVolverHTML());
+    }
     catch(e) {
       // Si una pantalla revienta, el usuario ve un mensaje en su idioma y una
       // salida — no la traza de JavaScript. El detalle técnico sigue estando
@@ -15069,14 +15064,17 @@ function _aprChipsBar(){
     ['emplatado','Plating guide','📷'],
     ['repaso',_en?'Review':'Repaso',''],
     ['tecnicas',_en?'Techniques':'Técnicas','🍳'],
-    ['actualidad',_en?'News':'Actualidad','📰'],
-    ['flashcards','Flashcards','']
+    ['actualidad',_en?'News':'Actualidad','📰']
   ], _subTab.aprender || 'emplatado', 'aprender');
 }
 function _aprEnsureChips(){
   const APR = ['aprender','repaso','tecnicas','actualidad','flashcards','smart','emplatado'];
   if(typeof currentTab!=='undefined' && !APR.includes(currentTab)) return;
   const c=document.getElementById('appContent'); if(!c) return;
+  if(_subTab.aprender==='smart' || _subTab.aprender==='flashcards'){
+    if(!c.querySelector('.prc-volver')) c.insertAdjacentHTML('afterbegin', _prcVolverHTML());
+    return;
+  }
   if(!c.querySelector('.subtab-chips')) c.insertAdjacentHTML('afterbegin', _aprChipsBar());
   // El chip activo siempre a la vista (la fila hace scroll horizontal y el
   // activo podía quedar cortado fuera de pantalla).
@@ -15112,7 +15110,7 @@ function renderAprender(){
   ` : '';
   _aprEnsureChips();   // idempotente: el sub-renderer puede haberla puesto ya
   if(searchBar){
-    const chips=c.querySelector('.subtab-chips');
+    const chips=c.querySelector('.subtab-chips, .prc-volver');
     if(chips) chips.insertAdjacentHTML('afterend', searchBar);
     else c.insertAdjacentHTML('afterbegin', searchBar);
   }
@@ -24206,6 +24204,75 @@ function _paseCtaHTML(_en){
     </button>`;
 }
 
+// La tarjeta del Repaso inteligente (vivía dentro de Repaso, en Saber).
+function _smartCtaHTML(_en, emp){
+  if(typeof _alergenosValidados==='function' && !_alergenosValidados()) return '';
+  // Misma cuenta que la línea de resumen del repaso: sólo repasos vencidos de
+  // platos ya vistos.
+  const _rpDue = DISHES.filter(d => {
+    const s = emp && emp.srs && emp.srs[d.id];
+    return s && s.reps > 0 && Date.now() >= s.nextReview;
+  }).length;
+  return `<button type="button" class="ri-cta" style="margin:0 0 1rem" aria-label="${_en?'Smart review session':'Sesión de repaso inteligente'}" onclick="showTab('smart')">
+      <span class="ri-cta-icon" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-3-6.7"/><path d="M21 4v5h-5"/></svg></span>
+      <span class="ri-cta-text">
+        <span class="ri-cta-top">${_en?'Smart review':'Repaso inteligente'}</span>
+        <span class="ri-cta-sub">${_en
+          ?`5 guest cases · the app picks the dishes you most need${_rpDue>0?` · ${_rpDue} due`:''}`
+          :`5 casos de huésped · la app elige los platos que más te conviene repasar${_rpDue>0?` · ${_rpDue} pendientes`:''}`}</span>
+      </span>
+    </button>`;
+}
+
+// ═══ PRACTICAR · la página de la pestaña ═══════════════════════════════════
+// Antes la pestaña Practicar abría Examen, que no llevaba a ningún otro
+// entrenamiento: Juegos sólo se abría desde el menú, y el Pase y Hospitalidad
+// vivían dentro de Repaso, en Saber. Aquí está todo lo que se entrena, arriba
+// lo de cada día y debajo el resto.
+function renderPracticar(){
+  const c = document.getElementById('appContent');
+  const _en = LANG==='en';
+  const emp = getEmp(currentUser) || {};
+  const sesiones = (emp.sessions||[]).length;
+  const fila = (onclick, icono, t, sub, meta) => `
+    <button type="button" class="dash-row prc-fila" onclick="${onclick}">
+      <span class="prc-ic" aria-hidden="true">${icono}</span>
+      <span class="dash-row-body"><span class="dash-row-title">${t}</span><span class="dash-row-sub">${sub}</span></span>
+      ${meta?`<span class="prc-meta">${meta}</span>`:''}
+      <span class="dash-row-go" aria-hidden="true">›</span>
+    </button>`;
+  const ic = d => `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">${d}</svg>`;
+  c.innerHTML = `<div class="prc">
+    <header class="prc-cab">
+      <h2 class="prc-tit">${_en?'Practise':'Practicar'}</h2>
+      <p class="prc-sub">${_en?'What you learn by doing it.':'Lo que se aprende haciéndolo.'}</p>
+    </header>
+    <div class="tunic-divider"><span>${_en?'Every day':'Cada día'}</span></div>
+    ${(typeof launchPase==='function') ? _paseCtaHTML(_en) : ''}
+    ${(typeof _hspCtaHTML==='function') ? _hspCtaHTML(_en) : ''}
+    ${_smartCtaHTML(_en, emp)}
+    <div class="tunic-divider"><span>${_en?'Train':'Entrenar'}</span></div>
+    <div class="prc-lista">
+      ${fila("showTab('exam')", ic('<path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/>'),
+        _en?'Exam':'Examen', _en?'10 questions on the whole menu':'10 preguntas de toda la carta', sesiones?(sesiones+' '+(_en?'done':'hechos')):'')}
+      ${fila("showTab('flashcards')", ic('<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 10h18"/>'),
+        'Flashcards', _en?'Dish by dish, at your pace':'Plato a plato, a tu ritmo', DISHES.length+' '+(_en?'dishes':'platos'))}
+      ${fila("showTab('txoko')", ic('<path d="M6 12h4M8 10v4"/><circle cx="15.5" cy="11" r="1"/><circle cx="17.5" cy="13.5" r="1"/><rect x="2" y="6" width="20" height="12" rx="5"/>'),
+        _en?'Games':'Juegos', _en?'Mr. Shoesmith, duels and survival':'Mr. Shoesmith, duelos y supervivencia', '')}
+      ${fila("startGhostInspection()", ic('<circle cx="12" cy="12" r="9"/><path d="M8 12l2.5 2.5L16 9"/>'),
+        _en?'Full audit':'Auditoría completa', _en?'A whole service with the auditor watching':'Un servicio entero bajo la mirada del auditor', '')}
+      ${fila("startPersonalErrorMode()", ic('<circle cx="12" cy="12" r="7"/><circle cx="12" cy="12" r="2.5"/>'),
+        _en?'Review misses':'Repasar fallos', _en?'Only the dishes you got wrong':'Sólo los platos que has fallado', '')}
+    </div>
+  </div>`;
+}
+
+// En Repaso inteligente y Flashcards (que son de Practicar) no van las
+// pestañas de Saber: va la vuelta a Practicar.
+function _prcVolverHTML(){
+  return `<button type="button" class="prc-volver" onclick="showTab('practicar')">‹ ${LANG==='en'?'Practise':'Practicar'}</button>`;
+}
+
 function launchPase(dishId){
   const jugables = _paseJugables();
   let dish = dishId ? DISHES.find(d=>d.id===dishId) : null;
@@ -25408,19 +25475,7 @@ function renderRepasoCats(){
   // qué trata», propietario jul 2026). La cuenta usa el MISMO criterio que
   // la línea de resumen (solo repasos vencidos de platos ya vistos) — antes
   // decía «99 fichas pendientes» junto a un «2 a repasar».
-  const _rpDue = DISHES.filter(d => {
-    const s = emp.srs && emp.srs[d.id];
-    return s && s.reps > 0 && Date.now() >= s.nextReview;
-  }).length;
-  const smartCard=`<button type="button" class="ri-cta" style="margin:0 0 1rem" aria-label="${_en?'Smart review session':'Sesión de repaso inteligente'}" onclick="_subTab.aprender='smart';showTab('aprender')">
-      <span class="ri-cta-icon" aria-hidden="true">🧠</span>
-      <span class="ri-cta-text">
-        <span class="ri-cta-top">${_en?'Smart review':'Repaso inteligente'}</span>
-        <span class="ri-cta-sub">${_en
-          ?`5 guest cases · the app picks the dishes you most need${_rpDue>0?` · ${_rpDue} due`:''}`
-          :`5 casos de huésped · la app elige los platos que más te conviene repasar${_rpDue>0?` · ${_rpDue} pendientes`:''}`}</span>
-      </span>
-    </button>`;
+
   const cards=activeCats.map(c=>{
     const dishes=DISHES.filter(d=>d.cat===c);
     const kn=dishes.filter(d=>known[d.id]).length;
@@ -25466,10 +25521,6 @@ function renderRepasoCats(){
     </div>
     <!-- Search results -->
     <div id="repasoSearchResults" style="display:none;margin-bottom:1rem"></div>
-    <!-- El Pase primero; después la sesión inteligente, fuera de la lista -->
-    ${(typeof launchPase==="function" ? _paseCtaHTML(_en) : "")}
-    ${(typeof _hspCtaHTML==='function' ? _hspCtaHTML(_en) : '')}
-    ${(typeof _alergenosValidados!=='function'||_alergenosValidados())?smartCard:''}
     <!-- Category grid -->
     <div id="repasoCatGrid">
       <div class="tunic-divider"><span>${t('selectSection')}</span></div>
