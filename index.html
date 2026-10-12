@@ -52,7 +52,7 @@
 <meta property="og:description" content="Formación de equipos de sala: carta, alérgenos, vinos, exámenes y juegos de repaso.">
 <meta property="og:url" content="https://meseo.es/">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"Meseo","url":"https://meseo.es/"}</script>
-<meta name="app-version" content="7.485">
+<meta name="app-version" content="7.486">
 <meta name="app-build" content="May 2026">
 <meta name="theme-color" content="#1c2a22">
 <!-- ═══ PWA ═══ -->
@@ -357,11 +357,11 @@
            nueva que la instalada; el número va en el tooltip y en la
            confirmación. Tocarlo actualiza en limpio. -->
       <button id="updChip" onclick="_updGo()" aria-label="Nueva versión disponible — actualizar" title="Nueva versión disponible — toca para actualizar" style="display:none;align-items:center;justify-content:center;background:rgba(28,42,34,.55);border:1px solid rgba(228,190,104,.5);cursor:pointer;padding:0;border-radius:50%;min-height:44px;min-width:44px;margin-right:.25rem"><span class="upd-dot" aria-hidden="true"></span></button>
-      <button id="helpBtn" onclick="showOnboarding()" aria-label="Ayuda — repetir tutorial" title="Ver tutorial / Show tutorial" style="background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.25);cursor:pointer;padding:6px 10px;border-radius:6px;font-family:'DM Mono',monospace;font-size:.7rem;color:rgba(255,255,255,.9);min-height:44px;min-width:44px;flex:none;margin-right:.25rem">?</button>
+      <button id="helpBtn" onclick="showOnboarding()" aria-label="Ayuda — repetir tutorial" title="Ver tutorial / Show tutorial" style="background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.25);cursor:pointer;padding:6px 10px;border-radius:6px;font-family:var(--font-mono);font-size:var(--fs-3);color:rgba(255,255,255,.9);min-height:44px;min-width:44px;flex:none;margin-right:.25rem">?</button>
       <!-- Language toggle in header -->
       <div style="display:flex;gap:.35rem;margin-right:.25rem">
-        <button id="appLangEs" onclick="setLangApp('es')" style="background:rgba(255,255,255,.15);border:none;cursor:pointer;padding:6px 10px;border-radius:6px;font-family:'DM Mono',monospace;font-size:.6rem;color:rgba(255,255,255,.9);letter-spacing:.05em;min-height:44px;min-width:44px">ES</button>
-        <button id="appLangEn" onclick="setLangApp('en')" style="background:transparent;border:none;cursor:pointer;padding:6px 10px;border-radius:6px;font-family:'DM Mono',monospace;font-size:.6rem;color:rgba(255,255,255,.7);letter-spacing:.05em;min-height:44px;min-width:44px">EN</button>
+        <button id="appLangEs" onclick="setLangApp('es')" style="background:rgba(255,255,255,.15);border:none;cursor:pointer;padding:6px 10px;border-radius:6px;font-family:var(--font-mono);font-size:var(--fs-2);color:rgba(255,255,255,.9);letter-spacing:.05em;min-height:44px;min-width:44px">ES</button>
+        <button id="appLangEn" onclick="setLangApp('en')" style="background:transparent;border:none;cursor:pointer;padding:6px 10px;border-radius:6px;font-family:var(--font-mono);font-size:var(--fs-2);color:rgba(255,255,255,.7);letter-spacing:.05em;min-height:44px;min-width:44px">EN</button>
       </div>
       <button id="ajustesBtn" onclick="openAjustes()" aria-label="Ajustes" title="Ajustes" style="background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.25);cursor:pointer;padding:6px 10px;border-radius:6px;font-size:.9rem;color:rgba(255,255,255,.9);min-height:44px;min-width:44px;margin-right:.25rem">⚙</button>
       <button class="btn-logout" id="logoutBtn" onclick="logout()" aria-label="Cerrar sesión">Salir</button>
@@ -419,7 +419,7 @@
 
   <button id="globalSearchPill" onclick="openGlobalSearch()" aria-label="Buscar plato, vino o alérgeno" style="display:flex;align-items:center;gap:.55rem;width:calc(100% - 2rem);margin:.45rem 1rem .1rem;padding:.55rem .9rem;background:rgba(255,255,255,.55);border:1px solid rgba(196,154,60,.3);border-radius:12px;cursor:pointer;min-height:44px;text-align:left;box-shadow:0 1px 3px rgba(28,42,34,.05)">
     <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="rgba(164,122,44,.85)" stroke-width="1.8" stroke-linecap="round" style="flex-shrink:0"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
-    <span id="globalSearchPillLbl" style="font-family:'Quicksand',sans-serif;font-size:.78rem;color:rgba(74,64,42,.6);letter-spacing:.01em">Buscar plato, vino, alérgeno…</span>
+    <span id="globalSearchPillLbl" style="font-family:var(--font-sans);font-size:var(--fs-4);color:rgba(74,64,42,.6);letter-spacing:.01em">Buscar plato, vino, alérgeno…</span>
   </button>
 
   <!-- Global search — instant lookup across dishes, wines and allergens.
@@ -2814,7 +2814,7 @@ const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><p
 const SRC = 'src';
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='7.485';  // sincronizada con sw.js VERSION (guard de CI)
+const APP_VERSION='7.486';  // sincronizada con sw.js VERSION (guard de CI)
 const APP_BUILD='Jul 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;
@@ -24200,7 +24200,7 @@ function _paseCtaHTML(_en){
   return `<button type="button" class="ri-cta ri-cta-pase" style="margin:0 0 1rem" aria-label="${_en?'Plating pass':'Pase de cocina'}" onclick="_paseGo()">
       <span class="ri-cta-icon" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4.2"/></svg></span>
       <span class="ri-cta-text">
-        <span class="ri-cta-top">${_en?'Plating pass':'Pase de cocina'} <span style="font-size:.6rem;background:rgba(122,178,132,.16);border:1px solid rgba(122,178,132,.5);border-radius:99px;padding:.05rem .45rem;vertical-align:2px">${_en?'NEW':'NUEVO'}</span></span>
+        <span class="ri-cta-top">${_en?'Plating pass':'Pase de cocina'} <span class="ri-cta-nuevo" style="background:rgba(122,178,132,.16);border:1px solid rgba(122,178,132,.5);border-radius:99px;padding:.05rem .45rem;vertical-align:2px">${_en?'NEW':'NUEVO'}</span></span>
         <span class="ri-cta-sub">${(typeof _paseSoloMontaje==='function' && _paseSoloMontaje())?(_en?'Build the dish · 30 seconds, no signal needed':'Monta el plato · 30 segundos, sin necesidad de cobertura'):_en?'Build the dish and take the allergen off · 30 seconds, no signal needed':'Monta el plato y retira el alérgeno · 30 segundos, sin necesidad de cobertura'}</span>
       </span>
     </button>`;

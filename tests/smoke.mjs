@@ -16928,6 +16928,18 @@ test('Letras: sólo las cuatro que carga la app, y los botones las heredan', () 
   const corm = (css.match(/@font-face\s*\{[^}]*'Cormorant Garamond'[^}]*\}/g) || []);
   assert(corm.length === 4 && corm.every(b => /font-weight:\s*300 700/.test(b)), 'Cormorant declarado como variable 300-700');
 });
+test('Letras: la escala de siete tamaños existe y no baja de 11 px', () => {
+  const css = read('styles.css');
+  const toks = [...css.matchAll(/--fs-(\d):\s*([^;]+);/g)].map(m => [m[1], m[2].trim()]);
+  assert(toks.length === 7 && toks.map(t => t[0]).join('') === '1234567', 'siete tamaños, --fs-1 a --fs-7');
+  assert(/max\(11px/.test(toks[0][1]), 'el más pequeño nunca baja de 11 px, tampoco en escritorio');
+  const px = toks.slice(1).map(t => parseFloat(t[1]) * 16);
+  assert(px.every(v => v >= 11), `ningún tamaño de la escala baja de 11 px en escritorio: ${px.join(', ')}`);
+  // DM Mono no tiene negrita real: en la escala sólo 400 o 500.
+  const bloque = css.slice(css.indexOf('ESCALA TIPOGRÁFICA'));
+  const mono = [...bloque.matchAll(/\{[^}]*font-family:var\(--font-mono\)[^}]*\}/g)].map(m => m[0]);
+  assert(mono.length && mono.every(r => !/font-weight:\s*[6-9]00/.test(r)), 'DM Mono sin negrita falsa');
+});
 test('Cartas: ninguna carta de r2 vive en data/ (sería pública)', () => {
   assert(!existsSync(join(ROOT, 'data/carta-r2.json')), 'data/carta-r2.json no puede existir');
 });
