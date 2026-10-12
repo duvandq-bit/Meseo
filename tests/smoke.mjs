@@ -5109,8 +5109,8 @@ test('video accordion tabs are tappable with legible labels', () => {
   const body = fn[0];
   assert(/min-height:44px/.test(body),
     'video accordion tab buttons must have a 44px tap target');
-  assert(/font-size:\.64rem/.test(body),
-    'video accordion labels must be .64rem (were .58rem ~9px)');
+  assert(/font-size:(\.64rem|var\(--fs-[1-3]\))/.test(body),
+    'video accordion labels must be legible (were .58rem ~9px; now the type scale)');
   assert(/#a04848/.test(body) && /#7d5c2f/.test(body),
     'video accordion label colours must use the dark WCAG palette');
 });
@@ -6646,9 +6646,10 @@ test('showTab fija la subpestaña de destino (Flashcards no cae en Emplatado)', 
   assert(st.indexOf('_subTab.aprender = tab') < st.indexOf('renderMap'),
     'la subpestaña debe fijarse antes de elegir el renderer');
   // Los atajos del índice del inicio siguen apuntando a sus subpestañas.
-  const dash = html.slice(html.indexOf('function renderDashboard()'), html.indexOf('// ═══════ FLASHCARDS'));
-  assert(/onclick="showTab\('flashcards'\)"/.test(dash), 'el atajo Flashcards debe seguir en el índice');
-  assert(/onclick="showTab\('repaso'\)"/.test(dash), 'el atajo Repaso debe seguir en el índice');
+  // El índice «Estudiar» del inicio se retiró (oct 2026); Flashcards se abre desde Practicar.
+  const prc = html.slice(html.indexOf('function renderPracticar('), html.indexOf('function _prcVolverHTML('));
+  assert(/showTab\('flashcards'\)/.test(prc), 'el atajo Flashcards debe seguir en Practicar');
+  assert(/\['repaso', _en\?'Review':'Repaso', apr\('repaso'\)\]/.test(html), 'Repaso sigue en las pestañas de Saber');
 });
 
 test('Actualidad: una pantalla que se lee de arriba abajo (ago 2026)', () => {
@@ -8612,7 +8613,7 @@ test('onboarding guide matches the real Juegos hub (no Modo Error promise)', () 
   const hub = html.slice(html.indexOf('function renderTxoko()'), html.indexOf('function renderTxTop10()'));
   assert(!/getFailedDishes|failedLabel/.test(hub), 'renderTxoko must not compute unused failed-dish counters');
   // The mode itself still exists from the dashboard shortcut.
-  assert(/onclick="startPersonalErrorMode\(\)"/.test(html), 'dashboard Débiles shortcut must survive');
+  assert(/startPersonalErrorMode\(\)/.test(html.slice(html.indexOf('function renderPracticar('), html.indexOf('function _prcVolverHTML('))), 'el atajo Repasar fallos sigue, en Practicar');
 });
 
 test('la actividad lleva UN solo nombre en todas partes: Repaso Inteligente', () => {
@@ -8739,7 +8740,7 @@ test('EN mode: stats known-by-category bars are localized', () => {
 test('EN mode: ranking chips and plating category dividers are localized', () => {
   // EN sweep (v7.198): the Ranking hub chip said "Estadísticas" and the
   // Emplatado guide grouped dishes under raw Spanish category keys.
-  assert(/\['stats',LANG==='en'\?'Stats':'Estadísticas','◇'\]/.test(html),
+  assert(/\['stats', _en\?'Stats':'Estadísticas'\]/.test(html),
     'ranking Stats chip must localize');
   const empl = html.slice(html.indexOf('function _emplRender'), html.indexOf('function _emplOpen'));
   assert(/catLocal\(cat\)/.test(empl),
@@ -8763,8 +8764,8 @@ test('renames: Terraza / Repaso / Repasar fallos (labels only)', () => {
 
 test('Logros live as a Ranking chip; Inicio keeps a one-row summary', () => {
   // The 42-gem gallery was buried at the bottom of the longest screen.
-  assert(/\['logros',LANG==='en'\?'Achievements':'Logros','◆'\]/.test(html),
-    'Logros chip missing from Ranking hub');
+  assert(/\['logros', _en\?'Achievements':'Logros'\]/.test(html),
+    'Logros chip missing from Yo');
   assert(/logros:renderLogros/.test(html) && /function renderLogros\(/.test(html), 'renderLogros not wired');
   assert(/logros:renderRankingHub/.test(html), 'logros route missing from renderMap');
   assert(/stats:'ranking', logros:'ranking'/.test(html), 'logros parent mapping missing (nav highlight breaks)');
@@ -9456,7 +9457,7 @@ test('compromiso · el pie es uno solo, vive en el login y en Hoy, y enlaza cosa
   assert(/\.login-foot\{/.test(css) && /\.login-foot-grid\{/.test(css), 'falta el CSS del pie');
 });
 
-test('compromiso · el login va sin Plataforma y Hoy con ella', () => {
+test('compromiso · el login y Hoy van sin Plataforma', () => {
   // Login: el <footer> está en #screenLogin, vacío, y renderLogin lo rellena
   // SIN la columna Plataforma (en el login no hay a dónde ir).
   const iFoot = html.indexOf('id="loginFoot"');
@@ -9469,8 +9470,9 @@ test('compromiso · el login va sin Plataforma y Hoy con ella', () => {
   // Hoy: dentro del HTML de renderDashboard, CON Plataforma y en modo app.
   const iD = html.indexOf('function renderDashboard(');
   const dash = html.slice(iD, html.indexOf('\n}', iD));
-  assert(/<footer class="login-foot en-app">\$\{_pieHTML\(\{ plataforma:true, enApp:true \}\)\}<\/footer>/.test(dash),
-    'Hoy lleva el pie con Plataforma, en modo app');
+  // Oct 2026: en Hoy tampoco va Plataforma; repetía la barra de abajo.
+  assert(/<footer class="login-foot en-app sin-plataforma">\$\{_pieHTML\(\{ plataforma:false, enApp:true \}\)\}<\/footer>/.test(dash),
+    'Hoy lleva el pie sin Plataforma, en modo app');
   // Con Plataforma, cada entrada navega a un destino que existe, y el panel
   // sólo se ofrece a quien ya puede verlo.
   const gen = html.slice(html.indexOf('function _pieHTML('), html.indexOf('function _pieRender('));
