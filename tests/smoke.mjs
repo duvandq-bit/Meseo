@@ -1393,7 +1393,6 @@ test('Los iconos de pantalla son SVG, no emoji a color', () => {
     ['diálogo de correo',        /text-align:center;margin-bottom:\.4rem;color:var\(--gold\)">(.{0,400}?)<\/div>/s],
     ['banner de instalar',       /class="install-banner-ic"[^>]*>(.{0,400}?)<\/div>/s],
     ['reto del día',             /<div class="pdd-eyebrow"><span>(.{0,400}?)\$\{en\?'Daily quiz'/s],
-    ['atajo de horarios',        /<span aria-hidden="true">(<svg.{0,400}?)<\/span>/s],
   ];
   for (const [nombre, re] of sitios) {
     const m = html.match(re);
@@ -6771,8 +6770,8 @@ test('Horarios del equipo: cuadrante desde Supabase, leyenda fiel y cambio asist
   // el login corporativo (que NUNCA se automatiza) y en capturas de WhatsApp.
   // Ahora: tabla horarios en Supabase, vistas Hoy/Mi semana/Cuadrante/Cambio,
   // editor en el panel de supervisor y acceso desde el inicio.
-  assert(/id="navHorarios"/.test(html) && /horarios:renderHorarios/.test(html),
-    'la sección Horarios debe estar en la navegación y el render map');
+  // Retirado de la app el 12 oct 2026 (ver el test «Horarios retirado»): el
+  // código queda sin acceso y estas guardas siguen cuidando que esté sano.
   assert(/rest\/v1\/horarios\?select=week_start,data/.test(html),
     'el cuadrante se lee de la tabla horarios de Supabase');
   assert(/txk_horarios_v1/.test(html) && /HORARIOS=\(cached&&cached\.weeks\)\|\|\[\]/.test(html),
@@ -6789,8 +6788,7 @@ test('Horarios del equipo: cuadrante desde Supabase, leyenda fiel y cambio asist
   assert(/wa\.me\/\?text=/.test(html) && /navigator\.clipboard/.test(html),
     'el mensaje del cambio sale por WhatsApp o portapapeles');
   // Editor del supervisor: herramienta en el panel + upsert a Supabase.
-  assert(/horarios: \(\)=>renderSupHorarios\(\),/.test(html) && /_supTool\('horarios'\)/.test(html),
-    'el editor de horarios debe colgar del panel de supervisor');
+
   // Ago 2026 — el cuadrante lleva datos de personal: la tabla `horarios`
   // quedó en SOLO LECTURA para la clave pública (RLS) y el guardado pasa por
   // la función save_rota, que verifica el PIN de supervisor en el servidor.
@@ -6853,20 +6851,6 @@ test('Horarios del equipo: cuadrante desde Supabase, leyenda fiel y cambio asist
     'el cuadrante abre en la semana actual, no en la más vieja cargada');
   assert(/\[:.\]\(\\d\{2\}\)/.test(html.slice(html.indexOf('function _horShiftMins'), html.indexOf('function _horRango'))),
     'las horas con punto (12:30-16.30, como el Excel real) deben parsearse');
-  // Tu turno de hoy y mañana en el inicio (fila Horarios, relleno diferido)
-  assert(/_horMyDayLbl/.test(html) && /id="hoyHorMeta"/.test(html),
-    'el inicio debe mostrar tu turno de hoy y el de mañana en la fila Horarios');
-  // El turno vive DENTRO de la tarjeta verde del Dashboard (dash-hero),
-  // bajo la barra de XP — petición explícita del propietario tras dos
-  // ubicaciones anteriores en la zona clara.
-  const _heroIx = html.indexOf('<div class="dash-hero">');
-  const heroCard = html.slice(_heroIx, html.indexOf('renderInstallBanner()', _heroIx));
-  assert(/id="hoyHorMeta"/.test(heroCard) && /dash-hero-hor/.test(heroCard),
-    'la línea de Horarios debe vivir dentro de la tarjeta dash-hero');
-  assert(/\.dash-hero-hor\{/.test(read('styles.css')), 'estilos de la línea de horario del héroe ausentes');
-  // Acceso desde el inicio.
-  const dash3 = html.slice(html.indexOf('function renderDashboard()'), html.indexOf('// ═══════ FLASHCARDS'));
-  assert(/showTab\('horarios'\)/.test(dash3), 'el inicio debe llevar la fila de acceso a Horarios');
   // Cuadrante usable en móvil: scroll propio y columna de nombres fija.
   const css = read('styles.css');
   assert(/\.hor-tblwrap\{[^}]*overflow-x:auto/.test(css) && /\.hor-table \.hor-name\{[^}]*position:sticky/.test(css),
@@ -8853,7 +8837,7 @@ test('nav sheet: grouped into Consulta/Formación/Equipo (labels only)', () => {
   assert(/id="navGrpConsulta"/.test(html) && /id="navGrpFormacion"/.test(html) && /id="navGrpEquipo"/.test(html),
     'the three nav group labels must exist');
   const nav = html.slice(html.indexOf('id="appNav"'), html.indexOf('</nav>'));
-  const order = ['navSearchEntry','navGrpConsulta','navDashboard','navGrpFormacion','navAprender','navExam','navProtocolo','navVinos','navGrpEquipo','navTxoko','navRanking','navHorarios'];
+  const order = ['navSearchEntry','navGrpConsulta','navDashboard','navGrpFormacion','navAprender','navExam','navProtocolo','navVinos','navGrpEquipo','navTxoko','navRanking'];
   let last = -1;
   for (const id of order) {
     const i = nav.indexOf('id="' + id + '"');
@@ -16832,6 +16816,24 @@ test('Cartas: la revisión de una carta ajena va por auth.uid(), no por el rol a
     assert(!uuid.test(read(f)), `${f} no puede llevar ningún uuid real`);
   const d = read('supabase/tests/cartas-privadas/D_revisores.sql');
   assert(/"D4":0/.test(d) && /"D10":"denegado"/.test(d) && /if r <> esperado then raise exception 'ABORTA/.test(d), 'la prueba exige que otra cuenta admin y anon no lean');
+});
+test('Horarios retirado (oct 2026): sin menú, ruta, fila del inicio ni herramienta del supervisor', () => {
+  assert(!/id="navHorarios"/.test(html), 'sin botón Horarios en el menú');
+  const rutas = html.slice(html.indexOf('const TAB_ROUTES = ['), html.indexOf('];', html.indexOf('const TAB_ROUTES = [')));
+  assert(!/'horarios'/.test(rutas), 'horarios fuera de las rutas: un enlace viejo cae en Inicio');
+  assert(!/horarios:renderHorarios/.test(html), 'sin entrada en el render map');
+  assert(!/showTab\('horarios'\)/.test(html), 'nada abre la pantalla de horarios');
+  assert(!/_supTool\('horarios'\)/.test(html) && !/horarios: \(\)=>renderSupHorarios/.test(html), 'sin herramienta en el panel de supervisor');
+  assert(!/id="hoyHorMeta"/.test(html) && !/class="dash-hero-hor"/.test(html), 'sin fila de turno en el inicio');
+  // Nadie descarga ya el cuadrante: la única llamada viva era la del inicio.
+  const sinDef = html.replace(/async function _horLoad\(force\)\{/, '');
+  const llamadas = (sinDef.match(/_horLoad\(/g) || []).length;
+  const muertas = ['function renderHorarios(){', 'function renderSupHorarios(){', 'async function _horSupSave(){']
+    .map(f => { const i = html.indexOf(f); return (html.slice(i, html.indexOf('\n}', i)).match(/_horLoad\(/g) || []).length; })
+    .reduce((a, b) => a + b, 0);
+  assert(llamadas === muertas, `_horLoad sólo puede quedar dentro del código sin acceso (${llamadas} llamadas, ${muertas} ahí)`);
+  // La copia local del cuadrante (nombres y turnos) se borra al abrir.
+  assert(/try\{ localStorage\.removeItem\('txk_horarios_v1'\); \}catch\(e\)\{\}\nlet HORARIOS=null;/.test(html), 'se borra la caché local del cuadrante');
 });
 test('Cartas: ninguna carta de r2 vive en data/ (sería pública)', () => {
   assert(!existsSync(join(ROOT, 'data/carta-r2.json')), 'data/carta-r2.json no puede existir');
