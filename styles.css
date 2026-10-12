@@ -7905,7 +7905,7 @@ body:has(#gsOverlay.open) .ev-aviso-panel{
 .login-foot-mail,.login-foot-col a,.login-foot-col button{
   background:none;border:0;padding:0;margin:0;cursor:pointer;
   font:inherit;color:rgba(244,237,226,.62);text-decoration:none;
-  text-align:left;min-height:32px;display:inline-flex;align-items:center;
+  text-align:left;min-height:44px;display:inline-flex;align-items:center;
   transition:color .2s;
 }
 .login-foot-mail{color:rgba(196,154,60,.85)}
@@ -10632,6 +10632,10 @@ body:has(#gsOverlay.open) .ux2-bar{
 .wc-region,.wc-price-sub,.wc-rec,.wine-section-sub,.hub-banner-sub,.sup-hero-sub,.act-foot,.wcms-stat-label,.tec-more{font-family:var(--font-mono);font-size:var(--fs-2);font-weight:400}
 .tec-fam-nm{font-family:var(--font-mono);font-size:var(--fs-1);font-weight:500}
 
+/* Examen: etiquetas de 9.4-10.8 px a la escala. */
+.ri-rank,.exam-stat-lbl,.exam-topic-bar-meta,.exam-orient,.exam-orient b,.exam-quick-sub,.exam-setup-crown span,.exam-setup-crown-orn,.btn-start span,.exam-custom-toggle span,.exam-gilded-divider span{font-size:var(--fs-1)}
+.exam-orient,.exam-orient b,.exam-quick-sub,.exam-stat-lbl,.exam-topic-bar-meta,.btn-start span,.exam-custom-toggle span{font-family:var(--font-mono);font-weight:500}
+
 /* ═══ PRACTICAR · la página de la pestaña ═══ */
 .prc{padding-bottom:1rem}
 .prc-cab{margin:.2rem 0 1.1rem}
@@ -10655,3 +10659,11 @@ body:has(#gsOverlay.open) .ux2-bar{
 .saber-bar .subtab-chips{margin:0;border-bottom:none}
 .saber-bar .subtab-chip{color:rgba(255,255,255,.7);font-family:var(--font-sans);font-size:var(--fs-3);font-weight:600;letter-spacing:.02em;text-transform:none;min-height:44px}
 .saber-bar .subtab-chip.on{color:#e4be68}
+
+/* Aviso de instalar: a 320 px el botón se comía el texto (una palabra por
+   línea). Ahora el botón va debajo del texto y la X mide 44 px. */
+.install-banner{display:grid;grid-template-columns:auto minmax(0,1fr) 44px;grid-template-areas:"ic tx x" ". btn btn";align-items:center;column-gap:.7rem;row-gap:.55rem}
+.install-banner-ic{grid-area:ic}
+.install-banner-tx{grid-area:tx}
+.install-banner-btn{grid-area:btn;justify-self:start}
+.install-banner-x{grid-area:x;width:44px;height:44px}
