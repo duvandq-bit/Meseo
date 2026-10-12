@@ -10404,19 +10404,24 @@ const _listaPersonalRes = await (async () => {
   const srcRoles = html.slice(html.indexOf('function _ficha(nombre){'), html.indexOf('// ═══ AVISOS PUSH'));
   const srcFetch = html.slice(html.indexOf('// null SÓLO significa'), html.indexOf('// ═══ SUPABASE — NOTIFICACIONES'));
   if (srcRoles.length < 200 || srcFetch.length < 300) return { roto: 'no encuentro supaFetchAllEmployees' };
-  const monta = (respuesta) => {
+  const monta = (respuesta, identidad) => {
     const F = new Function('DB','currentUser','localStorage','ACTIVE_VENUE','_VENUE_POR_DEFECTO', // eslint-disable-line no-new-func
-      '_EMP_COLS','SUPA_URL','SUPA_KEY','fetch','_bearer','_dispLearn',
-      srcRoles + '\n' + srcFetch + '; return { fetchAll: supaFetchAllEmployees, esDeMiVenue: _esDeMiVenue, venueActual: _venueActual };');
-    return F({ employees:{} }, 'Yo', { getItem:()=>null, setItem:()=>{} }, null, 'r2',
-      'name,venue,role', 'https://x', 'k', respuesta, () => 'tok', () => {});
+      '_EMP_COLS','SUPA_URL','SUPA_KEY','fetch','_bearer','_dispLearn','_identidadVenue',
+      srcRoles + '\n' + srcFetch + '; return { fetchAll: supaFetchAllEmployees, esDeMiVenue: _esDeMiVenue, venueActual: _venueActual, deMiVenue: _fichasDeMiVenue };');
+    return F({ employees:{ Ana:{ name:'Ana', venue:'txoko' }, Luis:{ name:'Luis' }, Eva:{ name:'Eva', venue:'r2' } } }, 'Yo', { getItem:()=>null, setItem:()=>{} }, null, 'r2',
+      'name,venue,role', 'https://x', 'k', respuesta, () => 'tok', () => {}, identidad || (() => 'r2'));
   };
   const vacioOk   = await monta(async () => ({ ok:true,  json: async () => [] })).fetchAll();
   const fallo      = await monta(async () => ({ ok:false })).fetchAll();
   const excepcion  = await monta(() => Promise.reject(new Error('sin red'))).fetchAll();
   const conDatos   = await monta(async () => ({ ok:true, json: async () => [{ name:'Ana', venue:'r2' }] })).fetchAll();
   const api = monta(async () => ({ ok:true, json: async () => [] }));
+  // Revisando r2 desde una cuenta de Txoko: la caché local es la de Txoko.
+  const rev = monta(async () => ({ ok:true, json: async () => [] }), () => 'txoko');
   return { vacioOk, fallo, excepcion, conDatos,
+    revSinVenue: rev.esDeMiVenue({ name:'ficha local sin venue' }),
+    revLista: rev.deMiVenue().map(e => e.name).join(','),
+    lista: api.deMiVenue().map(e => e.name).join(','),
     deOtro:  api.esDeMiVenue({ venue:'txoko' }),
     delMio:  api.esDeMiVenue({ venue:'r2' }),
     sinVenue: api.esDeMiVenue({ name:'ficha local sin venue' }),
@@ -10441,10 +10446,27 @@ test('Listas de personal: una ficha cacheada de OTRO restaurante no cuenta como 
   assert(R.deOtro === false,
     'PELIGRO: una ficha cacheada de Txoko no puede contar como de r2 — es justo la fuga que _esDeMiVenue cierra');
   assert(R.sinVenue === true,
-    'una ficha local sin venue (la crea getEmp sin ese campo, para SU PROPIO equipo) es siempre del restaurante activo');
+    'una ficha local sin venue (la crea getEmp sin ese campo) es del restaurante de la cuenta, que fuera de la revisión es el activo');
+  // Propietario, 12 oct 2026: revisando Restaurante 2, el ranking enseñaba al
+  // equipo de Txoko. Una ficha sin venue es del restaurante de la cuenta.
+  assert(R.revSinVenue === false, 'PELIGRO: revisando r2 desde Txoko, una ficha local sin venue es de Txoko y no cuenta');
+  assert(R.revLista === 'Eva', `revisando r2 sólo cuenta lo que es de r2: ${R.revLista}`);
+  assert(R.lista === 'Luis,Eva', `fuera de la revisión, igual que siempre: ${R.lista}`);
   assert(R.sinFicha === true, 'sin ficha no hay nada que excluir');
 });
 
+test('Listas de personal: los récords de juegos y el resto de listas del equipo también filtran por restaurante', () => {
+  const games = html.slice(html.indexOf('function _renderRankingGames(){'), html.indexOf('function renderRanking(){'));
+  assert(/const shoeLocal=_fichasDeMiVenue\(\)/.test(games) && /const etLocal=_fichasDeMiVenue\(\)/.test(games), 'récords del ranking');
+  assert((html.match(/_fichasDeMiVenue\(\)\s*\.filter\(e=>e\.txokoRecord/g) || []).length === 3, 'top 10 de Mr. Shoesmith (ranking, pantalla del juego y su refresco)');
+  assert(/return _fichasDeMiVenue\(\)\n\s*\.filter\(e=>e\.etRecord/.test(html), 'mejores turnos de Camarero Survivors');
+  assert(/function getLocalLeaderboard\(\)\{\n\s*const names=Object\.keys\(DB\.employees\)\.filter\(n=>_esDeMiVenue/.test(html), 'clasificación local');
+  // Ningún recorrido de DB.employees que pinte personas queda sin filtrar.
+  for (const m of html.matchAll(/Object\.values\(DB\.employees\)/g)) {
+    const linea = html.slice(html.lastIndexOf('\n', m.index), html.indexOf('\n', m.index));
+    assert(/_esDeMiVenue/.test(linea), `recorrido sin filtrar: ${linea.trim().slice(0, 90)}`);
+  }
+});
 test('Listas de personal: ranking, panel, liga, duelos y menciones filtran por restaurante activo', () => {
   const ranking = html.slice(html.indexOf('function renderRanking(){'), html.indexOf('function renderSupervisor(){'));
   assert(/Object\.keys\(DB\.employees\)\.forEach\(n => \{ const e = DB\.employees\[n\]; if\(n && _esDeMiVenue\(e\)\) allEmps\[n\] = /.test(ranking),
