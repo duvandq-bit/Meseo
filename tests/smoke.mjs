@@ -501,19 +501,23 @@ test('el login sólo ofrece restaurantes ABIERTOS, y con el nombre del registro'
   // Decisión del propietario: M.B. queda EN ESPERA y no se anuncia. Antes los
   // cerrados salían con la etiqueta «Próximamente» para enseñar lo que venía;
   // ahora quien abre la aplicación ve únicamente donde puede entrar.
-  const i = html.indexOf('const all = (THEMES && Array.isArray(THEMES.venues))');
-  const filtro = html.slice(i, html.indexOf('\n', html.indexOf('THEMES.venues.filter', i)));
-  assert(i > 0, 'no encuentro el filtro del selector del login');
+  // Desde el 12 oct 2026 también salen los de sólo revisión (r2), con candado
+  // y «Solo administración»: lo pidió el propietario. La puerta real está en
+  // closePinAndEnter() y en RLS. Un cerrado SIN revision:true sigue sin salir.
+  assert(/const all = _venuesLogin\(\);/.test(html), 'no encuentro el filtro del selector del login');
+  const i = html.indexOf('function _venuesLogin(){');
+  const filtro = html.slice(i, html.indexOf('\n}', i));
+  assert(i > 0, 'no encuentro _venuesLogin');
   assert(/v\.id !== 'plantilla'/.test(filtro), 'la plantilla no es un restaurante');
-  assert(/&& v\.enabled/.test(filtro),
-    'un restaurante cerrado no puede aparecer en el selector del login');
+  assert(/&& \(v\.enabled \|\| v\.revision === true\)/.test(filtro),
+    'un restaurante cerrado sólo puede salir en el login si es de revisión');
 
   // Y se ejecuta contra el registro REAL, que es lo que ve el empleado.
   const reg = JSON.parse(read('data/themes.json'));
-  const visibles = reg.venues.filter(v => v && v.id && v.name && v.id !== 'plantilla' && v.enabled);
-  assert(visibles.length >= 1, 'tiene que quedar al menos un restaurante donde entrar');
+  const visibles = reg.venues.filter(v => v && v.id && v.name && v.id !== 'plantilla' && (v.enabled || v.revision === true));
+  assert(visibles.some(v => v.enabled === true), 'tiene que quedar al menos un restaurante abierto donde entrar');
   for (const v of visibles)
-    assert(v.enabled === true, `${v.id} aparecería en el login estando cerrado`);
+    assert(v.enabled === true || v.revision === true, `${v.id} aparecería en el login estando cerrado`);
   const mb = reg.venues.find(v => v.id === 'mb');
   assert(mb && mb.enabled === false, 'M.B. tiene que seguir en espera');
   assert(!visibles.some(v => v.id === 'mb'), 'M.B. no puede aparecer en el login');
@@ -1086,15 +1090,16 @@ test('multi-restaurant theming is wired (applyTheme + login picker)', () => {
   {
     const src = html.slice(html.indexOf('function selectVenue(id){'), html.indexOf('async function initVenues('));
     const THEMES = { venues: [ { id:'txoko', name:'TXOKO', enabled:true, brand:{} },
-                               { id:'mb',    name:'M.B.',  enabled:false, brand:{} } ] };
+                               { id:'mb',    name:'M.B.',  enabled:false, brand:{} },
+                               { id:'r2',    name:'Restaurante 2', enabled:false, revision:true, brand:{} } ] };
     const correr = (id) => {
       const puesto = [];
       const avisos = [];
       const doc = { querySelectorAll: () => [], getElementById: () => null };
-      const F = new Function('THEMES', '_enabledVenues', 'applyTheme', '_venueTriggerSync', // eslint-disable-line no-new-func
+      const F = new Function('THEMES', '_venuesLogin', 'applyTheme', '_venueTriggerSync', // eslint-disable-line no-new-func
         'document', 'showToast', 'LANG',
         src + '; return selectVenue;');
-      F(THEMES, () => THEMES.venues.filter(v => v.enabled), v => puesto.push(v.id),
+      F(THEMES, () => THEMES.venues.filter(v => v.enabled || v.revision === true), v => puesto.push(v.id),
         () => {}, doc, m => avisos.push(m), 'es')(id);
       return { puesto, avisos };
     };
@@ -1108,6 +1113,10 @@ test('multi-restaurant theming is wired (applyTheme + login picker)', () => {
     assert(cerrado.avisos.length === 1 && /M\.B\./.test(cerrado.avisos[0]) && /Ajustes/.test(cerrado.avisos[0]),
       `tocar un restaurante cerrado tiene que explicar por qué y dónde ir; dijo: ${JSON.stringify(cerrado.avisos)}`);
     assert(abierto.avisos.length === 0, 'un restaurante abierto no tiene nada que explicar');
+    // r2 (sólo revisión) se puede ELEGIR en el login; quién entra lo decide
+    // closePinAndEnter(), no el selector.
+    const rev = correr('r2');
+    assert(rev.puesto.join() === 'r2' && rev.avisos.length === 0, 'r2 se elige en el login sin aviso');
   }
   // El héroe del login ya no muestra nombres de venue (siempre «Meseo», jul
   // 2026, arreglo del parpadeo de marca) — el auto-ajuste .long del logo se
@@ -16539,7 +16548,7 @@ const _selVenues = (suspendida) => {
   const src = tro('function _enabledVenues(){', '\nfunction applyTheme(');
   if (!src) return null;
   const THEMES = JSON.parse(read('data/themes.json'));
-  return new Function('THEMES', 'SUSPENDIDA', src + '\nreturn { admin: _venuesAdministracion().map(v => v.id), login: _enabledVenues().map(v => v.id) };')(THEMES, suspendida); // eslint-disable-line no-new-func
+  return new Function('THEMES', 'SUSPENDIDA', src + '\nreturn { admin: _venuesAdministracion().map(v => v.id), abiertos: _enabledVenues().map(v => v.id), login: _venuesLogin().map(v => v.id), revSolo: ["txoko","mb","r2","plantilla"].filter(_esRevisionSolo) };')(THEMES, suspendida); // eslint-disable-line no-new-func
 };
 test('Revisión de la administración: sólo r2 lleva revision:true, y r2 sigue cerrado', () => {
   const reg = JSON.parse(read('data/themes.json')).venues;
@@ -16550,19 +16559,48 @@ test('Revisión de la administración: sólo r2 lleva revision:true, y r2 sigue 
   assert(por('txoko').enabled === true && por('r2').name === 'Restaurante 2', 'Txoko abierto; r2 con nombre neutro');
   assert(por('r2').dishIds.from === 3000 && por('r2').dishIds.to === 3999, 'el bloque de r2 no cambia');
 });
-test('Revisión de la administración: Ajustes ofrece r2 a la administración; el login y el registro, no', () => {
+test('Revisión de la administración: Ajustes ofrece r2 a la administración; el login lo enseña como «Solo administración»', () => {
   const sus = _selVenues(true), libre = _selVenues(false);
   assert(sus && libre, 'no encuentro los selectores');
   assert(JSON.stringify(sus.admin) === '["txoko","r2"]', 'suspendida: la administración ve Txoko y r2: ' + sus.admin.join(', '));
-  assert(JSON.stringify(sus.login) === '["txoko"]' && JSON.stringify(libre.login) === '["txoko"]', 'el login sólo enseña lo abierto: nunca r2');
+  // Decisión del propietario (12 oct 2026): r2 sale en el login. M.B. no.
+  assert(JSON.stringify(sus.login) === '["txoko","r2"]' && JSON.stringify(libre.login) === '["txoko","r2"]', 'el login enseña lo abierto y r2, nunca M.B.: ' + sus.login.join(', '));
+  assert(JSON.stringify(sus.abiertos) === '["txoko"]', 'abiertos de verdad sigue siendo sólo Txoko');
+  assert(JSON.stringify(sus.revSolo) === '["r2"]', 'sólo r2 es «de sólo revisión»: ' + sus.revSolo.join(', '));
   assert(JSON.stringify(libre.admin) === '["txoko","mb","r2"]', 'sin suspensión, la administración ve lo de siempre: ' + libre.admin.join(', '));
   const iAdm = html.indexOf("  if(_puedeRevisar()){\n    const cajaV = $('ajVenues');");
   const iUso = html.indexOf('_venuesAdministracion()', iAdm);
   assert(iAdm > 0 && iUso > iAdm && iUso - iAdm < 200, 'el selector de restaurantes de Ajustes está dentro de if(_puedeRevisar())');
   assert((html.match(/(?<!function )_venuesAdministracion\(\)/g) || []).length === 1, '_venuesAdministracion sólo se llama en Ajustes de quien puede revisar');
   const sel = html.slice(html.indexOf('function selectVenue(id){'), html.indexOf('function selectVenue(id){') + 400);
-  assert(/const v = _enabledVenues\(\)\.find\(x => x\.id === id\);/.test(sel), 'el selector del login sólo acepta restaurantes abiertos');
+  assert(/const v = _venuesLogin\(\)\.find\(x => x\.id === id\);/.test(sel), 'el selector del login acepta lo abierto y lo de sólo revisión, nada más');
   assert(!/revision/.test(html.slice(html.indexOf('function _enabledVenues(){'), html.indexOf('function _enabledVenues(){') + 140)), '_enabledVenues no mira revision');
+});
+test('Login con r2: la puerta «Solo administración» está en closePinAndEnter, tras la suspensión y antes del compromiso', () => {
+  const ini = html.indexOf('async function closePinAndEnter(){');
+  const fn = html.slice(ini, html.indexOf('\nasync function ', ini + 10) > 0 ? html.indexOf('\nasync function ', ini + 10) : ini + 9000);
+  const iSus = fn.indexOf('if(!_puedeEntrar(pinTarget)){');
+  const iPuerta = fn.indexOf('if(_elegido && _esRevisionSolo(_elegido) && !_puedeRevisar(pinTarget)){');
+  const iNda = fn.indexOf('LA PUERTA DEL COMPROMISO');
+  const iCarta = fn.indexOf('await cargarCarta(');
+  assert(iSus > 0 && iPuerta > iSus && iNda > iPuerta && iCarta > iNda, 'orden: suspensión → solo administración → compromiso → carta');
+  const bloque = fn.slice(iPuerta, fn.indexOf('\n  }\n  // LA PUERTA DEL COMPROMISO'));
+  assert(/localStorage\.setItem\('txk_venue', _suyo\)/.test(bloque), 'a quien no puede, se le devuelve el selector a su restaurante');
+  assert(/return;\s*\}$/.test(bloque.trim()), 'y no entra');
+});
+test('Login con r2: la tarjeta sale elegible, con candado y «Solo administración»; M.B. sigue fuera', () => {
+  const src = html.slice(html.indexOf('function renderVenuePicker('), html.indexOf('function selectVenue('));
+  const escapeHtml = (x) => String(x);
+  const doc = { els:{}, getElementById(id){ return this.els[id] || (this.els[id] = { style:{}, innerHTML:'', textContent:'' }); } };
+  const pinta = new Function('document','escapeHtml','LANG', src + '\nreturn renderVenuePicker;')(doc, escapeHtml, 'es'); // eslint-disable-line no-new-func
+  const reg = JSON.parse(read('data/themes.json')).venues;
+  const login = reg.filter(v => v && v.id && v.name && v.id !== 'plantilla' && (v.enabled || v.revision === true));
+  pinta(login, 'txoko');
+  const out = doc.els.loginVenueCards.innerHTML;
+  const r2 = out.slice(out.indexOf('data-venue="r2"') - 200, out.indexOf('data-venue="r2"') + 900);
+  assert(/solo-admin/.test(r2) && /Solo administración/.test(r2) && /login-venue-lock/.test(r2), 'r2: clase solo-admin, etiqueta y candado');
+  assert(!/aria-disabled/.test(r2.slice(r2.indexOf('<button'))) || r2.indexOf('aria-disabled') < r2.indexOf('<button'), 'r2 se puede tocar (no va desactivado)');
+  assert(!/data-venue="mb"/.test(out), 'M.B. no sale en el login');
 });
 test('Revisión de la administración: el registro sigue cerrado y la suspensión intacta', () => {
   assert(/^const SUSPENDIDA = true;$/m.test(html), 'la suspensión global sigue puesta');

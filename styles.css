@@ -662,6 +662,7 @@ body::after{
 }
 .login-venue-dd.open .login-venue-cards{display:flex;animation:ddIn .18s ease both}
 .login-venue-card.locked{opacity:.55;cursor:default}
+.login-venue-card.solo-admin .login-venue-eyebrow{color:var(--vcard-accent,var(--gold))}
 .login-venue-card.locked:active{transform:none}
 .login-venue-lock{
   width:24px;height:24px;flex-shrink:0;display:flex;align-items:center;justify-content:center;

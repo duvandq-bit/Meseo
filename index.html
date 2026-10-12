@@ -52,7 +52,7 @@
 <meta property="og:description" content="Formación de equipos de sala: carta, alérgenos, vinos, exámenes y juegos de repaso.">
 <meta property="og:url" content="https://meseo.es/">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"Meseo","url":"https://meseo.es/"}</script>
-<meta name="app-version" content="7.473">
+<meta name="app-version" content="7.474">
 <meta name="app-build" content="May 2026">
 <meta name="theme-color" content="#1c2a22">
 <!-- ═══ PWA ═══ -->
@@ -1535,6 +1535,25 @@ let THEMES = null, ACTIVE_VENUE = null;
 function _enabledVenues(){
   return (THEMES && Array.isArray(THEMES.venues)) ? THEMES.venues.filter(v => v && v.enabled) : [];
 }
+// Lo que enseña el selector del LOGIN: los abiertos y, además, los marcados
+// `revision:true` (hoy sólo r2), que salen con candado y «Solo administración».
+// Por decisión del propietario (12 oct 2026): quiere ver Restaurante 2 en el
+// login y entrar desde ahí, sin pasar por Ajustes. Elegirlo NO abre nada a
+// nadie: closePinAndEnter() echa a quien no pueda revisar (_esRevisionSolo), y
+// la carta la sigue sirviendo RLS sólo a quien está en cartas_revisores. El
+// registro y el resto de la app siguen mirando _enabledVenues(), sin cambios.
+function _venuesLogin(){
+  return (THEMES && Array.isArray(THEMES.venues))
+    ? THEMES.venues.filter(v => v && v.id && v.name && v.id !== 'plantilla'
+                               && (v.enabled || v.revision === true)) : [];
+}
+// ¿Es un restaurante cerrado que sólo se abre para revisar?
+function _esRevisionSolo(id){
+  try{
+    const v = (THEMES && Array.isArray(THEMES.venues) ? THEMES.venues : []).find(x => x && x.id === id);
+    return !!(v && !v.enabled && v.revision === true);
+  }catch(e){ return false; }
+}
 // Los restaurantes que una cuenta con permiso de revisión (_puedeRevisar:
 // admin o propietario) puede elegir en Ajustes — sólo se pinta para ellas. Los
 // abiertos; con la app sin suspender, también los cerrados; y siempre los
@@ -1580,17 +1599,21 @@ function renderVenuePicker(venues, activeId){
   if(lbl) lbl.textContent = LANG==='en' ? 'Your restaurant' : 'Tu restaurante';
   cards.innerHTML = venues.map(v => {
     const accent = (v.brand && v.brand.accent) || '#c49a3c';
-    const locked = !v.enabled;
+    // Un restaurante de sólo revisión se puede elegir (no es «locked»), pero
+    // lleva candado y lo dice: la puerta está en closePinAndEnter().
+    const soloAdmin = !v.enabled && v.revision === true;
+    const locked = !v.enabled && !soloAdmin;
     const on = v.id === activeId;
     const soon = LANG==='en' ? 'Coming soon' : 'Próximamente';
+    const adm = LANG==='en' ? 'Admin only' : 'Solo administración';
     return '<button type="button" role="option" aria-selected="' + on + '"'
       + (locked ? ' aria-disabled="true" tabindex="-1"' : '')
-      + ' class="login-venue-card' + (on ? ' on' : '') + (locked ? ' locked' : '') + '"'
+      + ' class="login-venue-card' + (on ? ' on' : '') + (locked ? ' locked' : '') + (soloAdmin ? ' solo-admin' : '') + '"'
       + ' data-venue="' + escapeHtml(v.id) + '" onclick="selectVenue(this.dataset.venue)" style="--vcard-accent:' + escapeHtml(accent) + '">'
       + '<span class="login-venue-dot" aria-hidden="true"></span>'
       + '<span class="login-venue-info"><span class="login-venue-name">' + escapeHtml(v.name || v.id) + '</span>'
-      + '<span class="login-venue-eyebrow">' + (locked ? soon : escapeHtml(v.eyebrow || '')) + '</span></span>'
-      + (locked
+      + '<span class="login-venue-eyebrow">' + (locked ? soon : soloAdmin ? adm : escapeHtml(v.eyebrow || '')) + '</span></span>'
+      + ((locked || (soloAdmin && !on))
         ? '<span class="login-venue-lock" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 018 0v4"/></svg></span>'
         : '<span class="login-venue-check" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></span>')
       + '</button>';
@@ -1598,9 +1621,11 @@ function renderVenuePicker(venues, activeId){
   wrap.style.display = 'block';
 }
 function selectVenue(id){
-  // Only venues flagged enabled in the registry are selectable — locked
-  // ("Próximamente") entries are rejected here too, not just styled inert.
-  const v = _enabledVenues().find(x => x.id === id);
+  // Se pueden elegir los abiertos y los de sólo revisión (_venuesLogin). Los
+  // cerrados sin revisión («Próximamente») se rechazan aquí también, no sólo
+  // se pintan inertes. Elegir uno de revisión no da acceso: eso lo decide
+  // closePinAndEnter() con _puedeRevisar(), y la carta, RLS.
+  const v = _venuesLogin().find(x => x.id === id);
   if(!v){
     // …pero rechazar EN SILENCIO era un toque muerto. El propietario intentó
     // entrar a M.B. desde aquí tres veces y la app no dijo nada: sólo una
@@ -1639,7 +1664,9 @@ async function initVenues(){
   if(!enabled.length) return;
   let saved = null;
   try{ saved = localStorage.getItem('txk_venue'); }catch(e){}
-  const current = enabled.find(v => v.id === saved) || enabled[0];
+  // Si lo último elegido fue uno de sólo revisión, se respeta en el selector:
+  // es lo que la administración dejó puesto. Entrar sigue pasando la puerta.
+  const current = _venuesLogin().find(v => v.id === saved) || enabled[0];
   applyTheme(current);
   _venueTriggerSync(current);
   // El selector se muestra SIEMPRE que haya al menos un venue (jul 2026):
@@ -1655,8 +1682,10 @@ async function initVenues(){
   //
   // La plantilla de copiar-pegar de themes.json tampoco es un restaurante: ya
   // estaba fuera, y el filtro de `enabled` la deja fuera igual.
-  const all = (THEMES && Array.isArray(THEMES.venues))
-    ? THEMES.venues.filter(v => v && v.id && v.name && v.id !== 'plantilla' && v.enabled) : [];
+  //
+  // Desde el 12 oct 2026 se suman los de sólo revisión (r2), con candado y
+  // «Solo administración» (ver _venuesLogin). M.B. sigue sin salir.
+  const all = _venuesLogin();
   if(all.length) renderVenuePicker(all, current.id);
 }
 
@@ -2721,7 +2750,7 @@ const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><p
 const SRC = 'src';
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='7.473';  // sincronizada con sw.js VERSION (guard de CI)
+const APP_VERSION='7.474';  // sincronizada con sw.js VERSION (guard de CI)
 const APP_BUILD='Jul 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;
@@ -13233,6 +13262,36 @@ async function closePinAndEnter(){
     try{ localStorage.removeItem('txoko_session'); }catch(_){}
     if(typeof renderLogin === 'function') renderLogin();
     return;
+  }
+  // LA PUERTA DE «SOLO ADMINISTRACIÓN». Restaurante 2 sale en el login, pero
+  // sólo entra quien puede revisar (_puedeRevisar: admin o propietario). A
+  // cualquier otro se le explica, se le devuelve el selector a su restaurante
+  // y no entra. Va aquí, como la de la suspensión, porque por aquí pasan
+  // tanto el login como el auto-login. Aunque alguien se saltara esto, la
+  // carta no le llegaría: RLS sólo la sirve a quien está en cartas_revisores.
+  {
+    let _elegido = null;
+    try{ _elegido = localStorage.getItem('txk_venue'); }catch(_){}
+    if(_elegido && _esRevisionSolo(_elegido) && !_puedeRevisar(pinTarget)){
+      const _f = _ficha(pinTarget);
+      const _suyo = (_f && _f.venue) || _VENUE_POR_DEFECTO;
+      try{ localStorage.setItem('txk_venue', _suyo); }catch(_){}
+      try{
+        const _tv = _enabledVenues().find(x => x.id === _suyo) || _enabledVenues()[0];
+        if(_tv){ applyTheme(_tv); _venueTriggerSync(_tv); }
+      }catch(_){}
+      const _nom = ((THEMES && THEMES.venues) || []).find(x => x && x.id === _elegido);
+      const _txt = LANG==='en'
+        ? `${(_nom && _nom.name) || 'This restaurant'} is not open yet. Only the admin account can enter. Choose your restaurant and sign in again.`
+        : `${(_nom && _nom.name) || 'Este restaurante'} todavía no está abierto. Solo puede entrar la cuenta de administración. Elige tu restaurante y vuelve a entrar.`;
+      const err = document.getElementById('loginError');
+      if(err) err.textContent = _txt;
+      if(typeof showToast === 'function') showToast(_txt, 'info', 7000);
+      const ov = document.getElementById('pinOverlay');
+      if(ov) ov.remove();
+      if(typeof renderLogin === 'function') renderLogin();
+      return;
+    }
   }
   // LA PUERTA DEL COMPROMISO (H3). Antes se entraba y DESPUÉS se preguntaba si
   // faltaba la firma; sin red, sin sesión o si la consulta fallaba, se quedaba
