@@ -6846,8 +6846,13 @@ test('Rebranding Meseo: la app se llama Meseo; TXOKO queda solo como venue (jul 
   assert(themeTitles.every(t => /^Meseo/.test(t) && !/txoko|berasategui|ritz/i.test(t)),
     'venue tab titles must stay neutral Meseo — no restaurant brand leaks into document.title (SEO)');
   const icon = read('icon.svg');
-  assert(/>M<\/text>/.test(icon) && !/TXOKO/i.test(icon) && !/MESEO/.test(icon),
-    'the icon must be Meseo-branded (cloche + M monogram), never Txoko');
+  // Oct 2026: el icono es la campana del pase, grande y sola; sin letra ni marco.
+  assert(/<!-- campana -->/.test(icon) && /<!-- bandeja -->/.test(icon) && !/<text/.test(icon) && !/TXOKO/i.test(icon) && !/MESEO/.test(icon),
+    'the icon must be the Meseo cloche, never Txoko, and carry no lettering');
+  const man2 = JSON.parse(read('manifest.json'));
+  assert(man2.icons.some(i => i.purpose === 'maskable' && i.src === 'icon-maskable-512.png') && existsSync(join(ROOT, 'icon-maskable-512.png')),
+    'Android necesita un icono enmascarable a sangre');
+  assert(/<link rel="apple-touch-icon" href="icon-180\.png">/.test(html) && existsSync(join(ROOT, 'icon-180.png')), 'iOS necesita un PNG de 180 px');
   assert(/title: 'Meseo'/.test(read('sw.js')), 'the push fallback title must be Meseo');
   assert(/https:\/\/meseo\.es\//.test(html) && !/github\.io\/Txoko-Formacion/.test(html),
     'the share link must point at meseo.es, not the old repo URL');

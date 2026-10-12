@@ -1,31 +1,40 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <!-- Icono de Meseo (oct 2026): la campana del pase bajo la lámpara.
+       Una sola forma, grande, sin marco ni letra; cabe en la zona segura
+       de los iconos enmascarables (el 80 % central). -->
   <defs>
-    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#1c2a22"/>
-      <stop offset="1" stop-color="#0e1612"/>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#1b2d23"/>
+      <stop offset="1" stop-color="#0a110d"/>
     </linearGradient>
-    <linearGradient id="gold" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0" stop-color="#f0d68a"/>
-      <stop offset="0.5" stop-color="#d9b45c"/>
-      <stop offset="1" stop-color="#b8912f"/>
+    <radialGradient id="lamp" cx="256" cy="0" r="330" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#ffd98c" stop-opacity=".34"/>
+      <stop offset=".55" stop-color="#ffd98c" stop-opacity=".07"/>
+      <stop offset="1" stop-color="#ffd98c" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="dome" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#f6e2a4"/>
+      <stop offset=".45" stop-color="#dcb95f"/>
+      <stop offset="1" stop-color="#9a7430"/>
     </linearGradient>
+    <linearGradient id="rim" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#8d6a2a"/>
+      <stop offset=".5" stop-color="#f6e2a4"/>
+      <stop offset="1" stop-color="#8d6a2a"/>
+    </linearGradient>
+    <radialGradient id="sombra" cx="256" cy="330" r="190" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#000" stop-opacity=".55"/>
+      <stop offset="1" stop-color="#000" stop-opacity="0"/>
+    </radialGradient>
   </defs>
-  <rect width="512" height="512" rx="96" fill="url(#bg)"/>
-  <g fill="url(#gold)">
-    <!-- steam curl -->
-    <path d="M256 150 c 12 -10 -12 -20 0 -32 c 10 -10 -6 -20 2 -30"
-          fill="none" stroke="url(#gold)" stroke-width="7" stroke-linecap="round"/>
-    <!-- knob -->
-    <circle cx="256" cy="176" r="9"/>
-    <!-- cloche dome -->
-    <path d="M150 262 a106 96 0 0 1 212 0 Z"/>
-    <!-- dome highlight sweep -->
-    <path d="M212 196 a92 82 0 0 1 118 20" fill="none" stroke="#fff6df" stroke-width="4" stroke-linecap="round" opacity="0.5"/>
-    <!-- tray -->
-    <path d="M132 262 h248 a10 10 0 0 1 10 10 v3 a8 8 0 0 1 -8 8 H130 a8 8 0 0 1 -8 -8 v-3 a10 10 0 0 1 10 -10 Z"/>
-    <!-- serif M -->
-    <text x="256" y="392" font-family="Cinzel, Georgia, 'Times New Roman', serif" font-weight="700"
-          font-size="150" text-anchor="middle">M</text>
-  </g>
-  <rect x="52" y="52" width="408" height="408" rx="70" fill="none" stroke="#c49a3c" stroke-opacity="0.30" stroke-width="2.5"/>
+  <rect width="512" height="512" rx="118" fill="url(#bg)"/>
+  <rect width="512" height="512" rx="118" fill="url(#lamp)"/>
+  <ellipse cx="256" cy="336" rx="190" ry="36" fill="url(#sombra)"/>
+  <!-- campana -->
+  <path d="M112 300 A144 134 0 0 1 400 300 Z" fill="url(#dome)"/>
+  <path d="M166 258 A110 92 0 0 1 338 214" fill="none" stroke="#fff8e4" stroke-width="6" stroke-linecap="round" opacity=".55"/>
+  <circle cx="256" cy="156" r="13" fill="url(#dome)"/>
+  <rect x="251" y="162" width="10" height="16" rx="5" fill="#b8912f"/>
+  <!-- bandeja -->
+  <rect x="100" y="300" width="312" height="22" rx="11" fill="url(#rim)"/>
 </svg>
