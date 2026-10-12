@@ -16889,7 +16889,11 @@ test('Login · El pase: la campana se levanta una vez y el resto está quieto', 
   assert(!/infinite/.test(bloque), 'en el login nuevo nada se anima sin fin');
   assert(/prefers-reduced-motion:reduce\)\{\s*#screenLogin \.login-lamp/.test(bloque), 'con reducir movimiento se ve el estado final');
   assert(/#screenLogin \.login-submit-btn::before\{display:none\}/.test(bloque), 'fuera el brillo que barría el botón');
-  assert(/@media \(min-width:900px\)\{\s*#screenLogin\{\s*display:grid;grid-template-columns:1\.15fr 1fr/.test(bloque), 'en escritorio, escenario a la izquierda y formulario a la derecha');
+  assert(/@media \(min-width:900px\)\{\s*#screenLogin\.active\{\s*display:grid;grid-template-columns:1\.15fr 1fr/.test(bloque), 'en escritorio, escenario a la izquierda y formulario a la derecha');
+  // Al entrar, el login tiene que DESAPARECER: ninguna regla con #screenLogin
+  // puede fijar display sin la clase .active (el inicio salía debajo del login).
+  assert(/#screenLogin:not\(\.active\)\{display:none\}/.test(bloque), 'el login se esconde al dejar de ser la pantalla activa');
+  for (const m of bloque.matchAll(/#screenLogin\{[^}]*\}/g)) assert(!/display:(flex|grid|block)/.test(m[0]), 'display sin .active: ' + m[0].slice(0, 60));
   assert(/'The craft is trained\.' : 'El oficio se entrena\.'/.test(html), 'la frase bajo el nombre es una frase, no una etiqueta');
 });
 test('Entrada: la versión nueva no recarga la página mientras se está entrando', () => {

@@ -10731,12 +10731,17 @@ html[data-venue="r2"] .ri-cta-pase .ri-cta-icon{border-color:rgba(194,161,97,.4)
   --lg-lamp:#ffd98c;
   --lg-field:rgba(244,237,226,.055);
   --lg-line:rgba(201,162,78,.28);
-  display:flex;flex-direction:column;align-items:stretch;justify-content:flex-start;
+  flex-direction:column;align-items:stretch;justify-content:flex-start;
   padding:0;gap:0;overflow:hidden;
   background:
     radial-gradient(ellipse 80% 55% at 50% 0%, rgba(255,217,140,.10) 0%, transparent 60%),
     linear-gradient(180deg,#12201a 0%,var(--lg-stage) 45%,#0a100d 100%);
 }
+/* El login sólo se ve mientras es la pantalla activa. (Una versión de esta
+   regla ponía display:flex sin condición y, al entrar, el inicio aparecía
+   debajo del login.) */
+#screenLogin.active{display:flex}
+#screenLogin:not(.active){display:none}
 #screenLogin > *{z-index:1}
 
 /* ── El escenario ── */
@@ -10903,7 +10908,7 @@ html[data-venue="r2"] .ri-cta-pase .ri-cta-icon{border-color:rgba(194,161,97,.4)
 
 /* ── Escritorio: el escenario a la izquierda, el formulario a la derecha ── */
 @media (min-width:900px){
-  #screenLogin{
+  #screenLogin.active{
     display:grid;grid-template-columns:1.15fr 1fr;grid-template-areas:"stage side" "tools tools" "foot foot";
     align-items:center;column-gap:3vw;padding:0 5vw;
   }
