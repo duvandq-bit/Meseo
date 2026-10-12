@@ -2512,7 +2512,7 @@ function _cartaVaciar(){
 
 // La carta de otro restaurante pasa estas comprobaciones antes de ponerse, venga
 // del servidor o de data/. Lanza si algo no cuadra: quien llama falla cerrado.
-function _cartaAceptar(carta, venue){
+function _cartaAceptar(carta, venue, quien){
   // El archivo declara de quién es. Si no coincide, se rechaza: soltar la
   // carta equivocada en la carpeta no puede acabar en enseñarla.
   if(!carta || carta.venue !== venue) throw new Error('carta ajena');
@@ -2522,7 +2522,9 @@ function _cartaAceptar(carta, venue){
   // Unos alérgenos que cocina no ha validado no se le enseñan al equipo. Sólo
   // quien tiene permiso de revisión (_puedeRevisar: admin o propietario)
   // puede abrir una carta así, y la ve marcada como borrador en toda la app.
-  if(carta.allergensValidated !== true && !_puedeRevisar()) throw new Error('alergenos sin validar');
+  // `quien` es la persona que está entrando: durante el inicio de sesión
+  // currentUser todavía no es ella, y sin esto se le negaba su propia revisión.
+  if(carta.allergensValidated !== true && !_puedeRevisar(quien)) throw new Error('alergenos sin validar');
   if(!_cartaAplicar(carta)) throw new Error('carta vacía');
 }
 
@@ -2554,7 +2556,7 @@ async function _cartaPrivada(venue){
 // dónde salen diecisiete alérgenos. Sin esto, quien revisa no puede revisar
 // el único contenido que hay. Vacío nunca es la carta de otro: eso lo
 // garantiza _cartaVaciar().
-async function cargarCarta(venue){
+async function cargarCarta(venue, quien){
   venue = venue || _VENUE_POR_DEFECTO;
   if(venue === _cartaPuesta) return true;
   if(venue === _VENUE_POR_DEFECTO){
@@ -2572,7 +2574,7 @@ async function cargarCarta(venue){
     const privada = await _cartaPrivada(venue);
     if(privada){
       if(privada.venue !== venue) throw new Error('carta ajena');
-      _cartaAceptar(privada, venue);
+      _cartaAceptar(privada, venue, quien);
       _cartaPuesta = venue;
       return true;
     }
@@ -2589,7 +2591,7 @@ async function cargarCarta(venue){
     // El archivo declara de quién es. Si no coincide, se rechaza: soltar la
     // carta equivocada en la carpeta no puede acabar en enseñarla.
     if(!carta || carta.venue !== venue) throw new Error('carta ajena');
-    _cartaAceptar(carta, venue);
+    _cartaAceptar(carta, venue, quien);
     _cartaPuesta = venue;
     return true;
   }catch(e){
@@ -2597,7 +2599,7 @@ async function cargarCarta(venue){
     // lo sé», y ahí no se entra ni siendo administrador: creerse que M.B. está
     // vacío porque falló el wifi sería peor que no entrar.
     const noExiste = !!(e && /^HTTP 4/.test(e.message || ''));
-    if(noExiste && _puedeRevisar()){
+    if(noExiste && _puedeRevisar(quien)){
       _cartaVaciar();
       _cartaPuesta = venue;
       return 'vacia';
@@ -13262,16 +13264,29 @@ async function closePinAndEnter(){
   // carta de Txoko sería exactamente la fuga que todo esto viene a cerrar.
   try{
     const _e = (typeof DB!=='undefined' && DB.employees) ? DB.employees[pinTarget] : null;
-    // Para la cuenta de administración manda el restaurante que ELIGIÓ, no el
-    // de su ficha: todo lo demás ya se guía por _venueActual(), y cargar aquí
-    // el de la ficha la devolvía a Txoko con el resto de la app en M.B.
-    let _v = (_e && _e.venue) || _VENUE_POR_DEFECTO;
-    if(_esAdmin(pinTarget)){
+    // Para quien puede revisar (_puedeRevisar: admin o propietario) manda el
+    // restaurante que ELIGIÓ, no el de su ficha: es la misma regla que sigue
+    // _venueActual(), y tienen que coincidir. Si aquí se cargara la carta de la
+    // ficha mientras _venueActual() da el elegido, la app quedaría con la carta
+    // de Txoko y las listas, el chat y los duelos de r2, y _modoRevision() —que
+    // compara la carta puesta con el restaurante propio— no cortaría nada.
+    const _propio = (_e && _e.venue) || _VENUE_POR_DEFECTO;
+    let _v = _propio;
+    if(typeof _puedeRevisar === 'function' && _puedeRevisar(pinTarget)){
       // Aquí currentUser todavía no es quien entra, así que _venueActual() no
       // sirve: se lee la elección guardada a pelo.
       try{ const _g = localStorage.getItem('txk_venue'); if(_g) _v = _g; }catch(_){}
     }
-    if(!(await cargarCarta(_v))) return;
+    let _ok = await cargarCarta(_v, pinTarget);
+    // Si el restaurante que estaba revisando no se puede abrir ahora (sin red,
+    // sin permiso), se entra en el PROPIO y se olvida la elección: así carta y
+    // _venueActual() siguen coincidiendo, y nunca se queda nadie fuera de su
+    // restaurante por haber revisado otro. Jamás con la carta de un tercero.
+    if(!_ok && _v !== _propio){
+      try{ localStorage.setItem('txk_venue', _propio); }catch(_){}
+      _ok = await cargarCarta(_propio, pinTarget);
+    }
+    if(!_ok) return;
   }catch(e){ return; }
   const overlay=document.getElementById('pinOverlay');
   if(overlay) overlay.remove();
