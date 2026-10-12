@@ -16892,6 +16892,17 @@ test('Login · El pase: la campana se levanta una vez y el resto está quieto', 
   assert(/@media \(min-width:900px\)\{\s*#screenLogin\{\s*display:grid;grid-template-columns:1\.15fr 1fr/.test(bloque), 'en escritorio, escenario a la izquierda y formulario a la derecha');
   assert(/'The craft is trained\.' : 'El oficio se entrena\.'/.test(html), 'la frase bajo el nombre es una frase, no una etiqueta');
 });
+test('Entrada: la versión nueva no recarga la página mientras se está entrando', () => {
+  // Propietario (oct 2026): «se queda en la pantalla de carga, vuelve a cargar
+  // y te manda al login». El SW nuevo tomaba el control durante la puerta y
+  // recargaba; sin «mantener sesión», eso era volver a escribir la clave.
+  const h = html.slice(html.indexOf("addEventListener('controllerchange'"), html.indexOf("addEventListener('controllerchange'") + 500);
+  assert(/if \(_entrando\) return;/.test(h), 'con una entrada en curso no se recarga');
+  const i = html.indexOf('async function closePinAndEnter(){');
+  const f = html.slice(i, html.indexOf('\n}', i));
+  assert(/^async function closePinAndEnter\(\)\{\n  _entrando = true;/.test(f), 'la entrada marca que está en curso nada más empezar');
+  assert(/\} finally \{ _entrando = false; \}$/.test(f), 'y lo desmarca al salir, pase lo que pase');
+});
 test('Letras: la escala de siete tamaños existe y no baja de 11 px', () => {
   const css = read('styles.css');
   const toks = [...css.matchAll(/--fs-(\d):\s*([^;]+);/g)].map(m => [m[1], m[2].trim()]);
