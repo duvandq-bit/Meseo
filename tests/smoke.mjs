@@ -556,34 +556,34 @@ test('UX-02 · cinco secciones, ni una más, y ninguna es Supervisor', () => {
 });
 
 test('UX-02 · NINGÚN destino existente queda inaccesible', () => {
-  // Es el criterio que impide que esto sea una pérdida de funcionalidad: cada
-  // una de las rutas de TAB_ROUTES tiene que seguir alcanzable, o por la barra
-  // nueva, o por el menú de antes, que a propósito NO se ha retirado.
-  const menu = html.slice(html.indexOf('id="appNav"'), html.indexOf('</nav>', html.indexOf('id="appNav"')));
-  const enMenu = new Set([...menu.matchAll(/showTab\('([a-z]+)'\)/g)].map(m => m[1]));
+  // Es el criterio que impide que esto sea una pérdida de funcionalidad. Desde
+  // oct 2026 no hay menú desplegable: cada ruta se abre desde la barra de
+  // abajo, desde las pestañas de Saber, desde la página de Practicar, desde las
+  // pestañas de Ranking/Logros/Estadísticas o desde el acceso al panel; o es
+  // una subpestaña cuyo PADRE es alcanzable.
+  const trozo = (desde, hasta) => html.slice(html.indexOf(desde), html.indexOf(hasta, html.indexOf(desde)));
+  const puertas = [
+    trozo('<nav class="ux2-bar"', '</nav>'),
+    trozo('function _saberChipsBar(', 'function _saberSync('),
+    trozo('function renderPracticar(', 'function _prcVolverHTML('),
+    trozo('function renderRankingHub(', '\nfunction '),
+  ].join('\n');
+  assert(!/id="mainNavDD"/.test(html), 'el menú desplegable se retiró');
+  const abiertas = new Set([...puertas.matchAll(/showTab\(\\?'([a-z]+)\\?'\)/g)].map(m => m[1]));
   const porBarra = new Set(Object.values(_ux2.UX2_DESTINO));
-  // ESTAR CLASIFICADA NO ES SER ALCANZABLE, y la primera versión de esta
-  // prueba las confundía: daba por buena una ruta sólo porque UX2_SECCION
-  // dijera a qué sección pertenece. Se comprobó con una mutación —vaciar
-  // «Vinos» del menú— y pasaba en verde. Alcanzable es: la abre la barra, la
-  // abre el menú, o es una subpestaña cuyo PADRE es alcanzable.
   const padres = {};
   const pm = html.slice(html.indexOf('const parentMap = {'), html.indexOf('};', html.indexOf('const parentMap = {')));
   for (const m of pm.matchAll(/(\w+):'(\w+)'/g)) padres[m[1]] = m[2];
-  padres.smart = 'aprender';          // showTab lo trata aparte, misma pantalla
+  padres.smart = 'aprender';
   const alcanzable = (r, visto) => {
-    if (porBarra.has(r) || enMenu.has(r)) return true;
+    if (porBarra.has(r) || abiertas.has(r)) return true;
     if (!padres[r] || (visto && visto.has(r))) return false;
     const v = new Set(visto || []); v.add(r);
     return alcanzable(padres[r], v);
   };
   const huerfanas = _ux2.rutas.filter(r => !alcanzable(r));
-  assert(huerfanas.length === 0,
-    `estas rutas se quedarían sin ninguna puerta: ${huerfanas.join(', ')}`);
-  assert(enMenu.size >= 10,
-    'el menú de antes es la puerta a la cola larga: no puede vaciarse en UX-02');
+  assert(huerfanas.length === 0, `estas rutas se quedarían sin ninguna puerta: ${huerfanas.join(', ')}`);
 });
-
 test('UX-02 · cada ruta pertenece a UNA sola sección, y el activo es inequívoco', () => {
   for (const r of _ux2.rutas) {
     const sec = _ux2.UX2_SECCION[r];
@@ -659,8 +659,8 @@ test('UX-02 · la barra no tapa nada y cabe a 320 px', () => {
     '.txk-sync-pill tiene que apartarse de la barra');
   assert(/#screenApp \.app-content\{padding-bottom:calc\(126px/.test(cssUx),
     'el contenido necesita hueco al final o la barra tapa la última fila');
-  assert(/body:has\(#mainNavDD\.open\) \.ux2-bar/.test(cssUx),
-    'la barra tiene que retirarse cuando se abre la hoja del menú, como hace la píldora');
+  assert(/body:has\(#gsOverlay\.open\) \.ux2-bar/.test(cssUx),
+    'la barra tiene que retirarse cuando se abre el buscador');
 });
 
 // ─── SONIDO CONTEXTUAL · el botón deja de flotar sobre el contenido ──────────
@@ -776,8 +776,8 @@ test('sonido · la píldora y los avisos de B2 siguen intactos', () => {
   for (const sel of ['.txk-sync-pill', '.ev-aviso-chip', '.ev-aviso-panel'])
     assert(new RegExp(sel.replace('.', '\\.') + '\\{bottom:calc\\(').test(css),
       `${sel} tiene que conservar su anclaje al borde inferior`);
-  assert(/body:has\(#mainNavDD\.open\) \.txk-sync-pill/.test(css),
-    'la píldora sigue escondiéndose con la hoja del menú');
+  assert(/body:has\(#gsOverlay\.open\) \.txk-sync-pill/.test(css),
+    'la píldora sigue escondiéndose con el buscador');
 });
 
 for (const [nombre, fn] of _SND_SUPERFICIES) {
@@ -2049,7 +2049,7 @@ test('CSP does not break critical paths (Supabase, CDNs, fonts, map)', () => {
 
 test('Vídeos (retirado oct 2026): ni subpestaña ni ruta; una subpestaña inexistente cae en la guía', () => {
   assert(!/\['videos',/.test(html), 'Aprender no ofrece la subpestaña Vídeos');
-  assert(/const APR = \['aprender','repaso','tecnicas','actualidad','flashcards','smart','emplatado'\];/.test(html), 'Vídeos fuera de las subpestañas de Aprender');
+  assert(!/videos/i.test(html.slice(html.indexOf('function _saberChipsBar('), html.indexOf('function _saberSync('))), 'Vídeos fuera de las pestañas de Saber');
   assert(/if\(!_APR_RENDER\[_subTab\.aprender\]\) _subTab\.aprender = 'emplatado';/.test(html), 'una subpestaña que ya no existe aterriza en la guía de emplatado');
   assert(!/videos:renderVideos|videos:renderAprender|videos:'saber'|videos:\['Vídeos'/.test(html), 'ningún mapa conserva vídeos');
 });
@@ -4365,23 +4365,16 @@ test('la sesión de repaso usa el acabado cálido estándar, sin piel CRT', () =
     'el overlay de la sesión debe ser dj-overlay a secas');
 });
 
-test('main nav is a dropdown, not a horizontal scroller', () => {
-  // The 8-section top nav scrolled horizontally, hiding half the sections.
-  // It's now a Tenet-style dropdown: a trigger + the .nav-btn list.
-  assert(/id="mainNavDD"/.test(html) && /class="nav-dd-trigger"/.test(html),
-    'main nav dropdown trigger missing');
-  assert(/class="app-nav nav-dd-list"/.test(html),
-    'the nav list must carry the .nav-dd-list class');
-  // showTab must reflect the active section into the trigger + close it
-  assert(/_navCur\.innerHTML = _activeNav\.innerHTML/.test(html),
-    'showTab must update the nav trigger to the active section');
-  assert(/function showTab\(tab, instant\)\{[^]{0,4000}_navDDClose\(\)/.test(html),
-    'showTab must close the nav dropdown after navigating');
+test('menú desplegable retirado: cada pestaña de abajo tiene su página', () => {
+  // Oct 2026: el menú repetía la barra de abajo y era la única puerta de
+  // Vinos, LQA, Juegos, Quesos y Sala. Ahora esas puertas están en Saber y en
+  // Practicar, y el menú se fue entero: marcado, estilos y funciones.
+  assert(!/id="mainNavDD"|class="nav-dd-trigger"|id="appNav"|function _navDDClose/.test(html), 'no queda nada del menú en el HTML');
   const css = read('styles.css');
-  assert(/\.nav-dd-list \.nav-btn\.active\{[^}]*border-left-color:var\(--gold\)/.test(css),
-    'active nav item must show the gold accent bar');
+  assert(!/\.nav-dd|\.nav-scrim|#mainNavDD/.test(css), 'no queda nada del menú en los estilos');
+  assert(/<div class="saber-bar" id="saberBar" hidden><\/div>/.test(html), 'en su sitio, las pestañas de Saber');
+  assert(/_ux2Sync\(tab\);\n  _saberSync\(tab\);/.test(html), 'showTab sincroniza la barra de abajo y las pestañas de Saber');
 });
-
 test('el Repaso Inteligente vive en Practicar, sin chip propio en Saber', () => {
   assert(!/\['smart',_en\?'Simulation':'Simulación'/.test(html),
     'el chip Simulación ha vuelto a la barra de Aprender');
@@ -4395,21 +4388,6 @@ test('el Repaso Inteligente vive en Practicar, sin chip propio en Saber', () => 
   const pr = html.slice(html.indexOf('function renderPracticar('), html.indexOf('function _prcVolverHTML('));
   assert(/_smartCtaHTML\(_en, emp\)/.test(pr), 'la tarjeta está en la página de Practicar');
 });
-test('nav opens as a thumb-zone bottom sheet with a dim scrim', () => {
-  // The option list rises from the bottom (reachable one-handed) instead of
-  // dropping from the top edge, and a scrim dims the page behind it.
-  const css = read('styles.css');
-  assert(/\.nav-scrim\{[^}]*position:fixed[^}]*z-index:999\d/.test(css),
-    'nav scrim must be a fixed full-screen layer above the header');
-  assert(/\.nav-dd \.nav-dd-list\{[^}]*position:fixed[^}]*bottom:0[^}]*transform:translateY\(105%\)/.test(css),
-    'the nav list must be a bottom sheet that slides up (translateY)');
-  assert(/\.nav-dd\.open \.nav-dd-list\{transform:translateY\(0\)/.test(css),
-    'opening the nav must slide the sheet into view');
-  // markup: scrim element that closes the sheet on tap
-  assert(/class="nav-scrim"[^>]*onclick="_navDDClose\(\)"/.test(html) && /function _navDDClose\(\)/.test(html),
-    'a tappable scrim element that closes the nav must exist');
-});
-
 test('screen wrapper never animates transform (breaks fixed nav sheet)', () => {
   // The bottom-sheet nav + search overlay are position:fixed inside #screenApp.
   // If .screen.active animates transform, #screenApp becomes a containing block
@@ -4423,24 +4401,6 @@ test('screen wrapper never animates transform (breaks fixed nav sheet)', () => {
   const kf = css.match(/@keyframes\s+screenEnter\{([^]*?)\}\s*(?:@|\/\*|\.[a-z])/i);
   assert(kf && !/transform/.test(kf[1]),
     'screenEnter keyframes must not animate transform');
-});
-
-test('dropdown triggers use a clear chevron-chip (not a subtle glyph)', () => {
-  const css = read('styles.css');
-  assert(/\.nav-dd-chev\{[^}]*border:1px solid[^}]*\}/.test(css) && /\.nav-dd-chev svg\{/.test(css),
-    'nav chevron must be a bordered chip containing an SVG');
-  // Regresión (jul 2026): con solo el chevron nadie sabía que la barra era un
-  // menú desplegable. La píldora debe llevar la PALABRA «Menú» + hamburguesa
-  // + caret, y el disparador debe anunciar su estado (aria-expanded).
-  assert(/id="navDDMenuLbl"/.test(html) && /class="nav-dd-burger"/.test(html) && /class="nav-dd-caret"/.test(html),
-    'nav trigger pill must say «Menú» with burger + caret icons');
-  assert(/class="nav-dd-trigger" aria-haspopup="true" aria-expanded="false"/.test(html),
-    'nav trigger must expose aria-expanded');
-  assert(/_ddMenu\.textContent = LANG==='en' \? 'Menu' : 'Menú'/.test(html),
-    'menu pill label must be bilingual');
-  assert(/\.nav-dd-menu-lbl\{[^}]*text-transform:uppercase/.test(css),
-    'menu pill label style missing');
-  // (la sub-navegación pasó a chips visibles — solo el nav principal es desplegable)
 });
 
 test('achievement toasts stack and stay readable', () => {
@@ -4562,8 +4522,8 @@ test('editorial TUNIC DNA: left headers, pull-quotes, crisp radii, slim bars', (
     'sommelier hub title must be editorial');
   assert(/\.wine-hex-medallion\{display:none;/.test(css) && !/\.wine-hex-medallion\{display:none;[^}]*display:flex/.test(css),
     'hub medallion must be retired without a later display override');
-  assert(/\.nav-dd-trigger\{[^}]*min-height:44px/.test(css) && /\.subtab-chip\{[^}]*min-height:44px/.test(css),
-    'nav stays slim 44px and sub-nav chips stay tappable (44px)');
+  assert(/\.subtab-chip\{[^}]*min-height:44px/.test(css),
+    'sub-nav chips stay tappable (44px)');
 });
 
 test('vinos sweep 3: sommelier index, maridaje rows, frases rows', () => {
@@ -4981,8 +4941,6 @@ test('floating FABs hide behind the open nav sheet / search', () => {
   // uno, así que no hay nada que esconder. Lo que hay que sostener ahora es
   // justo lo contrario, y de eso se encarga «sonido · ya no flota».
   const css = read('styles.css');
-  assert(/body:has\(#mainNavDD\.open\)\s+\.txk-sync-pill/.test(css),
-    'sync pill must hide when the nav sheet is open');
   assert(/body:has\(#gsOverlay\.open\)\s+\.txk-sync-pill/.test(css),
     'sync pill must hide when global search is open');
 });
@@ -5007,8 +4965,8 @@ test('global search phase 2: LQA situations searchable + read-only card', () => 
 
 test('global search: entry, overlay and deep-link wiring', () => {
   const css = read('styles.css');
-  // one-tap entry lives at the top of the nav sheet
-  assert(/id="navSearchEntry"[^>]*onclick="openGlobalSearch\(\)"/.test(html),
+  // one-tap entry: la lupa de la cabecera, en todas las pantallas
+  assert(/id="hdrBuscar"[^>]*onclick="openGlobalSearch\(\)"/.test(html),
     'the search entry button must call openGlobalSearch()');
   // overlay + input exist and the input is >=16px (no iOS zoom) via .gs-input
   assert(/id="gsOverlay"/.test(html) && /id="gsInput"/.test(html),
@@ -5078,8 +5036,8 @@ test('Aprender → Técnicas: glosario de técnicas de cocina cableado y derivad
     'la nota En el Txoko debe ser opcional (solo cuando hay plato real)');
   assert(/function renderTecnicas\(\)/.test(html), 'falta el renderer renderTecnicas');
   // subpestaña cableada en los 5 puntos del enrutado de Aprender
-  assert(/\['tecnicas',_en\?'Techniques':'Técnicas'/.test(html), 'la subpestaña Técnicas no está en la barra de chips');
-  assert(/const APR = \['aprender','repaso','tecnicas'/.test(html), 'tecnicas no está en la lista APR');
+  assert(/\['tecnicas', _en\?'Techniques':'Técnicas'/.test(html), 'la subpestaña Técnicas no está en la barra de chips');
+  assert(_ux2.UX2_SECCION.tecnicas === 'saber', 'tecnicas es de Saber');
   assert(/tecnicas:'aprender'/.test(html), 'tecnicas no está en parentMap');
   assert(/tecnicas:renderAprender/.test(html), 'tecnicas no está en renderMap');
   assert(/tecnicas:renderTecnicas/.test(html), 'renderAprender no despacha a renderTecnicas');
@@ -5116,23 +5074,16 @@ test('Aprender → Técnicas: glosario de técnicas de cocina cableado y derivad
 });
 
 test('Aprender lands on Emplatado and lists it first (owner request, jul 2026)', () => {
-  // La guía visual es lo más consultado en servicio: primera opción y
-  // subtab por defecto.
-  const bar = html.match(/_subTabBar\(\[\s*([\s\S]*?)\]\s*,\s*_subTab\.aprender \|\| 'emplatado'\s*,\s*'aprender'\)/);
-  assert(bar, 'aprender _subTabBar call not found');
-  const empIdx = bar[1].indexOf("'emplatado'");
-  assert(empIdx !== -1, 'emplatado tab missing');
-  assert(bar[1].indexOf("'smart'") === -1,
-    'el chip Simulación/smart no debe volver a la barra (vive en La Carta)');
-  assert(bar[1].trim().startsWith("['emplatado'"), 'Emplatado must be the FIRST Aprender sub-tab');
-  assert(/_subTab\.aprender\s*\|\|\s*'emplatado'/.test(html),
-    "Aprender default sub-tab must be 'emplatado'");
-  // el inicializador manda: '|| emplatado' nunca dispara porque _subTab.aprender
-  // siempre es truthy una vez inicializado
+  // La guía visual es lo más consultado en servicio: primera pestaña de Saber
+  // y subpestaña por defecto.
+  const bar = html.slice(html.indexOf('function _saberChipsBar('), html.indexOf('function _saberSync('));
+  const lista = bar.slice(bar.indexOf('const items = ['));
+  assert(/const items = \[\s*\['emplatado',/.test(lista), 'Emplatado must be the FIRST Saber tab');
+  assert(!/'smart'/.test(lista), 'el Repaso inteligente no vuelve a Saber (vive en Practicar)');
+  assert(/_subTab\.aprender\s*\|\|\s*'emplatado'/.test(html), "Aprender default sub-tab must be 'emplatado'");
   assert(/let _subTab = \{ aprender:'emplatado'/.test(html),
     "_subTab must initialise aprender to 'emplatado', else the old default wins");
 });
-
 test('smart review leads with the simulation CTA, no live-case block', () => {
   // Owner request: the "ENTRAR EN SIMULACIÓN" CTA moves to the top of the
   // smart-review body, and the "EN VIVO · MESA AHORA" single-case block is
@@ -6615,7 +6566,7 @@ test('Actualidad: robot de noticias + calendario de eventos (jul 2026)', () => {
   // UI cableada como subpestaña de Aprender, con enlaces seguros.
   assert(/function renderActualidad\(/.test(html) && /actualidad:renderActualidad/.test(html),
     'renderActualidad debe existir y estar en el dispatch de Aprender');
-  assert(/\['actualidad',_en\?'News':'Actualidad'/.test(html), 'el chip Actualidad debe estar en la barra');
+  assert(/\['actualidad', _en\?'News':'Actualidad'/.test(html), 'el chip Actualidad debe estar en la barra');
   assert(/target="_blank" rel="noopener noreferrer"/.test(html.slice(html.indexOf('function _actHTML'), html.indexOf('function renderActualidad'))),
     'las noticias abren fuera con rel=noopener');
   assert(/\.act-card\{/.test(read('styles.css')), 'estilos del feed ausentes');
@@ -8170,8 +8121,8 @@ test('Guía de emplatado: mapa de fotos íntegro, sección cableada, overlay y C
   // La barra vive en _aprChipsBar (extraída de renderAprender para poder
   // re-inyectarla tras los re-renders internos — «se desaparecieron las
   // subcategorías»).
-  const hubSrc = html.slice(html.indexOf('function _aprChipsBar('), html.indexOf('function _aprEnsureChips('));
-  const subkeys = [...hubSrc.matchAll(/\['([a-z]+)',/g)].map(m => m[1]);
+  const hubSrc = html.slice(html.indexOf('function _saberChipsBar('), html.indexOf('function _saberSync('));
+  const subkeys = [...hubSrc.matchAll(/\['([a-z]+)',[^\]\n]*apr\('/g)].map(m => m[1]);
   assert(subkeys.length >= 4, `expected ≥4 Aprender subtabs, found ${subkeys.length}`);
   const renderMapSrc = html.slice(html.indexOf('const renderMap = {'), html.indexOf('const renderMap = {') + 600);
   const parentMapSrc = html.slice(html.indexOf('const parentMap = {'), html.indexOf('const parentMap = {') + 300);
@@ -8333,10 +8284,12 @@ test('Aprender: la barra de subcategorías sobrevive a la navegación interna (j
   // ENTERO al navegar dentro de su subpestaña y borraban la barra de chips.
   // Dos capas: _aprEnsureChips (re-inyección idempotente) + navegación interna
   // enrutada por el host (renderAprender).
-  assert(/function _aprChipsBar\(/.test(html) && /function _aprEnsureChips\(/.test(html),
-    'chips bar builder + idempotent re-injector must exist');
+  // Desde oct 2026 la barra vive FUERA de appContent (#saberBar): ningún
+  // re-render interno puede borrarla. _aprEnsureChips sólo la sincroniza.
+  assert(/<div class="saber-bar" id="saberBar" hidden><\/div>/.test(html) && !/id="saberBar"[^>]*>[^<]*<main/.test(html),
+    'las pestañas viven fuera de la pantalla');
   const ens = html.slice(html.indexOf('function _aprEnsureChips('), html.indexOf('function _aprEnsureChips(') + 600);
-  assert(/querySelector\('\.subtab-chips'\)/.test(ens), '_aprEnsureChips must be idempotent (skip if bar present)');
+  assert(/_saberSync\(\)/.test(ens), '_aprEnsureChips sincroniza las pestañas de Saber');
   // renderRepaso re-asegura la barra tras CUALQUIER re-render interno de Explorar
   const rr = html.slice(html.indexOf('function renderRepaso('), html.indexOf('function renderRepaso(') + 700);
   assert(/_aprEnsureChips\(\)/.test(rr), 'renderRepaso must re-ensure the chips bar');
@@ -8610,21 +8563,6 @@ test('vinos: Flash+Quiz merged into a single Práctica subtab with mode toggle',
     'practice toggle styles missing');
 });
 
-test('nav tab renamed LQA → Auditoría (labels only, ids/routes intact)', () => {
-  // "LQA" was internal jargon; the tab is named after what you do there.
-  assert(/<\/svg> Auditoría<\/button>/.test(html), 'nav button label must be Auditoría');
-  assert(!/<\/svg> LQA<\/button>/.test(html), 'nav button must not say LQA anymore');
-  assert(/navProtocolo: LANG==='en'\?'Audit':'Auditoría',/.test(html),
-    'applyLangToApp must localize the tab as Audit/Auditoría');
-  // Internal wiring unchanged — localStorage compat and deep links.
-  assert(/id="navProtocolo" onclick="showTab\('protocolo'\)"/.test(html),
-    'button id and protocolo route must not change');
-  assert(/'Practicar en Auditoría →'/.test(html),
-    'global-search LQA card must point at the renamed tab');
-  // LQA remains as the real standard name INSIDE the section.
-  assert(/Leading Quality Assurance/.test(html), 'the LQA hub hero keeps the standard name');
-});
-
 test('allergen drill moved from Examen to Aprender → Repaso Inteligente', () => {
   // Training belongs in Aprender; Examen stays pure evaluation.
   const exam = html.slice(html.indexOf('function renderExamSetup'), html.indexOf('function _examToggleCustom'));
@@ -8810,24 +8748,6 @@ test('EN mode: ranking chips and plating category dividers are localized', () =>
   assert(/CAT_ICONS\[dd\.cat\]/.test(empl), 'CAT_ICONS must keep using the canonical key');
 });
 
-test('nav sheet: grouped into Consulta/Formación/Equipo (labels only)', () => {
-  // UX audit: 8 flat root options read as 3 chunks — no added taps/depth.
-  assert(/id="navGrpConsulta"/.test(html) && /id="navGrpFormacion"/.test(html) && /id="navGrpEquipo"/.test(html),
-    'the three nav group labels must exist');
-  const nav = html.slice(html.indexOf('id="appNav"'), html.indexOf('</nav>'));
-  const order = ['navSearchEntry','navGrpConsulta','navDashboard','navGrpFormacion','navAprender','navExam','navProtocolo','navVinos','navGrpEquipo','navTxoko','navRanking'];
-  let last = -1;
-  for (const id of order) {
-    const i = nav.indexOf('id="' + id + '"');
-    assert(i > last, 'nav order broken at ' + id);
-    last = i;
-  }
-  assert(!/id="navChat"/.test(nav), 'la Terraza (chat) está retirada: no sale en el menú');
-  assert(/navGrpFormacion: LANG==='en'\?'Training':'Formación'/.test(html), 'group labels must localize');
-  const css = read('styles.css');
-  assert(/\.nav-group-lbl\{/.test(css), 'nav group label style missing');
-});
-
 test('renames: Terraza / Repaso / Repasar fallos (labels only)', () => {
   // One place, one name: the tab matches the screen (La Terraza); the dish
   // browser is "Repaso" («La Carta es muy confuso», propietario jul 2026);
@@ -8835,7 +8755,7 @@ test('renames: Terraza / Repaso / Repasar fallos (labels only)', () => {
   // La Terraza (chat) se retiró en oct 2026: ni con un nombre ni con el otro.
   assert(!/<\/svg> Terraza<\/button>/.test(html) && !/<\/svg> Chat<\/button>/.test(html),
     'el chat no puede volver al menú');
-  assert(/\['repaso',_en\?'Review':'Repaso',''\]/.test(html), 'Aprender chip must say Repaso');
+  assert(/\['repaso', _en\?'Review':'Repaso',/.test(html), 'Aprender chip must say Repaso');
   assert(!/'The Menu':'La Carta'/.test(html), 'no visible label may still say La Carta/The Menu');
   assert(/'Review misses':'Repasar fallos'/.test(html),
     'dashboard error-mode shortcut must say Repasar fallos');
@@ -10009,8 +9929,9 @@ test('Quesos: nunca se le dice a un vegetariano que sí sin saberlo', () => {
   assert(/function renderQuesos\(\)/.test(html), 'falta la sección de quesos');
   assert(/'lqa','vinos','quesos','sala'\]/.test(html), 'quesos tiene que ser una ruta válida');
   assert(/renderMap = \{[^}]*quesos:renderQuesos,/.test(html), 'y tener quien la pinte');
-  assert(/id="navQuesos"[^>]*style="display:none"/.test(html),
-    'el botón sale sólo si el restaurante tiene carro, así que arranca escondido');
+  assert(/const _SABER_HAY = \{ vinos:false, quesos:false, sala:false \};/.test(html)
+    && /_SABER_HAY\.quesos \? \['quesos'/.test(html),
+    'la pestaña sale sólo si el restaurante tiene carro, así que arranca escondida');
 
   // LA regla: sin cuajo anotado NO se afirma que valga. Decirle a un vegetariano
   // que un queso le vale cuando no se sabe es peor que no saberlo.
@@ -11240,7 +11161,8 @@ test('Vinos: la bodega es de un restaurante, y quien no tiene no ve la de otro',
     'los seis puntos de carga de vinos tienen que ir por _vinosRuta()');
 
   // El botón desaparece donde no hay bodega, igual que el del carro de quesos.
-  assert(/function _navVinosSync\(\)/.test(html) && /hayCartaDeVinos\(\)\.then\(hay => \{ b\.style\.display = hay \? '' : 'none'/.test(html),
+  assert(/function _navVinosSync\(\)/.test(html) && /hayCartaDeVinos\(\)\.then\(hay => \{ if\(_SABER_HAY\.vinos!==hay\)\{ _SABER_HAY\.vinos = hay; _saberSync\(\); \} \}\)/.test(html)
+    && /_SABER_HAY\.vinos \? \['vinos'/.test(html),
     'sin bodega no hay pestaña de Vinos');
   assert(/_vinosVigilar\(\); _navQuesosSync\(\); _navVinosSync\(\);/.test(html),
     'al entrar hay que tirar la bodega ajena y repintar el botón');
@@ -11410,8 +11332,8 @@ test('Sala: los procedimientos son de un restaurante, y quien no los tiene no ve
   assert(/function renderSala\(\)/.test(html), 'falta la sección de sala');
   assert(/'vinos','quesos','sala'\]/.test(html), 'sala tiene que ser una ruta válida');
   assert(/renderMap = \{[^}]*quesos:renderQuesos,sala:renderSala,/.test(html), 'y tener quien la pinte');
-  assert(/id="navSala"[^>]*style="display:none"/.test(html),
-    'el botón sale sólo donde hay procedimientos, así que arranca escondido');
+  assert(/_SABER_HAY\.sala \? \['sala'/.test(html) && /_SABER_HAY\.sala = hay; _saberSync\(\);/.test(html),
+    'la pestaña sale sólo donde hay procedimientos, así que arranca escondida');
   assert((html.match(/_navQuesosSync\(\); _navVinosSync\(\); _navSalaSync\(\);/g) || []).length === 2,
     'hay que repintar el botón en los DOS sitios: al entrar y al cambiar de restaurante');
   assert(/SALA = null; _salaVenue = null; _salaSec = null;/.test(html),
@@ -15523,10 +15445,10 @@ test('F6 · el aviso vive DENTRO de la aplicación, no en la pantalla de entrada
   assert(app > 0 && chip > app && chip < fin, 'el chip tiene que estar dentro de #screenApp');
   assert(panel > app && panel < fin, 'y el panel también');
   assert(/\.screen\{[^}]*display:none/.test(_css6), 'una pantalla inactiva tiene que ocultarse entera');
-  // Y se esconde con el menú abierto, como el resto de lo que flota abajo.
+  // Y se esconde con el buscador abierto, como el resto de lo que flota abajo.
   for (const s of ['.ev-aviso-chip', '.ev-aviso-panel'])
-    assert(_css6.includes(`body:has(#mainNavDD.open) ${s}`) && _css6.includes(`body:has(#gsOverlay.open) ${s}`),
-      `${s} taparía la última opción del menú`);
+    assert(_css6.includes(`body:has(#gsOverlay.open) ${s}`),
+      `${s} taparía el buscador`);
 });
 
 test('F6 · el objetivo táctil es de 44 px y el detalle no se sale de la pantalla', () => {
