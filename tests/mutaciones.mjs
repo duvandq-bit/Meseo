@@ -386,10 +386,10 @@ const MUTACIONES = [
     cae:'44 px' },
 
   { id:'F6-19', fase:'F6', fila:null,
-    rompe:'el panel tapa la última opción del menú cuando está abierto',
+    rompe:'el panel tapa el buscador cuando está abierto',
     archivo:'styles.css',
-    de:"body:has(#mainNavDD.open) .ev-aviso-panel,\n",
-    a:"",
+    de:"body:has(#gsOverlay.open) .ev-aviso-chip,\nbody:has(#gsOverlay.open) .ev-aviso-panel{",
+    a:"body:has(#gsOverlay.open) .ev-aviso-chip{",
     cae:'DENTRO de la aplicación' },
 
   { id:'F6-20', fase:'F6', fila:null,
