@@ -7375,7 +7375,7 @@ test('Pase: la respuesta correcta gana en todos los platos jugables', () => {
     + html.slice(html.indexOf('const _PASE_SAZONADOR'), html.indexOf('function _paseRecortar('))
     + fn('_paseRecortar') + fn('_pasePlegar') + fn('_paseFusionar') + fn('_paseComponentes')
     + fn('_paseVisibles') + fn('_paseMismoPrefijo') + fn('_paseFichas') + fn('_paseSenuelos') + fn('_paseArmar')
-    + fn('_paseJugables') + fn('_paseAlergenosMontados') + fn('_paseServir')
+    + fn('_paseJugables') + fn('_paseMontable') + fn('_paseAlergenosMontados') + fn('_paseServir')
     + `
     let ok=0, malos=[], dup=[], pocos=[], sinAl=0, delata=[];
     for(const d of _paseJugables()){
@@ -7572,7 +7572,7 @@ test('Pase: la fase 2 no se aprueba pulsando siempre «no se puede retirar»', (
     + fn('_djTrozos') + fn('_djSplitIngredients') + fn('_djSameThing') + fn('_djIngName') + fn('_lqaShuffle')
     + html.slice(html.indexOf('const _PASE_SAZONADOR'), html.indexOf('function _paseRecortar('))
     + fn('_paseRecortar') + fn('_pasePlegar') + fn('_paseFusionar') + fn('_paseComponentes') + fn('_paseSenuelos') + fn('_paseArmar')
-    + fn('_paseJugables') + fn('_paseAlergiasPosibles') + fn('_paseIrDesmontaje') + fn('_paseConfirmarRetirada')
+    + fn('_paseJugables') + fn('_paseMontable') + fn('_paseAlergiasPosibles') + fn('_paseIrDesmontaje') + fn('_paseConfirmarRetirada')
     + `
     let n=0, ciegoNo=0, ciegoSi=0, sabiendo=0, sinPortador=[];
     for(const d of _paseJugables()){
@@ -7800,7 +7800,7 @@ test('Pase: la piscina tiene techo y el cuadro de alérgenos sobrevive al recort
     + html.slice(html.indexOf('const _PASE_SAZONADOR'), html.indexOf('function _paseRecortar('))
     + fn('_paseRecortar') + fn('_pasePlegar') + fn('_paseFusionar') + fn('_paseComponentes')
     + fn('_paseVisibles') + fn('_paseMismoPrefijo') + fn('_paseFichas') + fn('_paseSenuelos')
-    + fn('_paseArmar') + fn('_paseJugables')
+    + fn('_paseArmar') + fn('_paseJugables') + fn('_paseMontable')
     + `
     let max=0, maxR=0, doce=0, peor='';
     for(const d of _paseJugables()){
@@ -16740,6 +16740,25 @@ test('Glosario: palabras con su escritura original, origen y platos; todo escapa
   assert(!/<img src=x/.test(g) && /&lt;img src=x onerror=alert\(1\)&gt;/.test(g) && !/<b>malo<\/b>/.test(g), 'el HTML que llegue en la carta se pinta como texto');
   assert(/Para alérgenos, manda siempre la ficha del plato/.test(g), 'el glosario recuerda que los alérgenos están en la ficha');
   assert(/oninput="_gloFiltrar\(this\.value\)"/.test(g) && /font-size:16px/.test(read('styles.css').slice(read('styles.css').indexOf('.glo-search{'), read('styles.css').indexOf('.glo-search{') + 400)), 'buscador sin zoom de iOS (16px)');
+});
+test('Pase: sin componentes validados que expliquen sus alérgenos, el plato se juega de memoria y sin fase de alergia', () => {
+  const a = html.indexOf('function _paseMontable(dish){'), b = html.indexOf('\n// A quién le toca.', a);
+  assert(a > 0 && b > a, 'no encuentro _paseMontable');
+  const mk = (comp, items) => new Function('DISH_COMPONENTS','_paseRecortar','_pasePlegar','_paseFichas', // eslint-disable-line no-new-func
+    html.slice(a, b) + '\nreturn _paseMontable;')(comp, (d, x) => x, (d, x) => x, () => items);
+  const plato = { id:1, allergens:['Soja','Pescado'] };
+  // Carta sin DISH_COMPONENTS (r2, oct 2026): nunca se monta, aunque la base de
+  // ingredientes adivine algún alérgeno.
+  assert(mk({}, [{ t:'Ponzu', a:['Soja','Pescado'] }])(plato) === false, 'sin componentes en la carta, no se monta');
+  // Con componentes, sólo si las fichas cubren TODO lo declarado.
+  assert(mk({ 1:[{}] }, [{ t:'Ponzu', a:['Soja'] }])(plato) === false, 'si falta quién aporta un alérgeno, no se monta');
+  assert(mk({ 1:[{}] }, [{ t:'Ponzu', a:['Soja'] }, { t:'Atún', a:['Pescado'] }])(plato) === true, 'si todo está cubierto, se monta');
+  assert(mk({ 1:[{}] }, [{ t:'Pepino', a:[] }])({ id:2, allergens:[] }) === true, 'un plato sin alérgenos se puede montar');
+  const nivel = html.slice(html.indexOf('function _paseNivel(emp, dishId){'), html.indexOf('function _paseRegistrar('));
+  assert(/if\(_d && !_paseMontable\(_d\)\) return 2;/.test(nivel), 'sin poder montarse, el plato va directo al nivel de memoria');
+  const posibles = html.slice(html.indexOf('function _paseAlergiasPosibles(dish){'), html.indexOf('function _paseIrDesmontaje('));
+  assert(/if\(!_paseMontable\(dish\)\) return \[\];/.test(posibles), 'sin componentes no se pide retirar el alérgeno');
+  assert(/const ok = d => \(validados && !_paseMontable\(d\)\)/.test(html), 'de memoria no hacen falta señuelos para que el plato sea jugable');
 });
 test('Login con r2: la tarjeta sale elegible, con candado y «Solo administración»; M.B. sigue fuera', () => {
   const src = html.slice(html.indexOf('function renderVenuePicker('), html.indexOf('function selectVenue('));
