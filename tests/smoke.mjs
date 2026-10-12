@@ -16867,51 +16867,54 @@ test('Horarios retirado (oct 2026): sin menú, ruta, fila del inicio ni herramie
   // La copia local del cuadrante (nombres y turnos) se borra al abrir.
   assert(/try\{ localStorage\.removeItem\('txk_horarios_v1'\); \}catch\(e\)\{\}\nlet HORARIOS=null;/.test(html), 'se borra la caché local del cuadrante');
 });
-test('Hospitalidad: contenido válido, motor puro y sin XP ni nube con puntuación', () => {
+test('Hospitalidad: una mesa al día, motor puro y sin XP ni nube con puntuación', () => {
   const data = JSON.parse(read('data/hospitalidad.json'));
   assert(data.revision === true, 'mientras se revisa, el archivo lo declara');
   assert(!/happea/i.test(read('data/hospitalidad.json')) && !/happea/i.test(html), 'la inspiración no se nombra en la app');
   const fn = n => { const i = html.indexOf('function ' + n + '('); return html.slice(i, html.indexOf('\n}', i) + 2); };
-  const motor = new Function('_mulberry32', fn('_hspModulosValidos') + fn('_hspSesion') + fn('_hspCorregirLeer') + fn('_hspCorregirDecidir') // eslint-disable-line no-new-func
-    + '\nreturn { validos:_hspModulosValidos, sesion:_hspSesion, leer:_hspCorregirLeer, decidir:_hspCorregirDecidir };')(a => { let t = a >>> 0; return () => { t += 0x6D2B79F5; let r = Math.imul(t ^ (t >>> 15), 1 | t); r ^= r + Math.imul(r ^ (r >>> 7), 61 | r); return ((r ^ (r >>> 14)) >>> 0) / 4294967296; }; });
+  const motor = new Function(fn('_hspModulosValidos') + fn('_hspDia') + fn('_hspCorregir') + fn('_hspPendiente') // eslint-disable-line no-new-func
+    + '\nreturn { validos:_hspModulosValidos, dia:_hspDia, corregir:_hspCorregir, pend:_hspPendiente };')();
   const mods = motor.validos(data);
-  assert(mods.length === 1 && mods[0].fichas.length === 6 && mods[0].leer.length === 5 && mods[0].decidir.length === 5 && mods[0].consignas.length === 6, 'módulo 1 entero');
-  for (const d of mods[0].decidir) {
-    assert(d.opts.filter(o => o.v === 'mejor').length === 1, `${d.id}: exactamente una mejor`);
-    assert(d.opts.every(o => o.fb && o.fb_en && o.t_en), `${d.id}: feedback y texto en los dos idiomas`);
+  assert(mods.length === 1 && mods[0].dias.length === 6, 'módulo 1: seis mesas');
+  for (const d of mods[0].dias) {
+    assert(d.opts.length === 4 && d.opts.filter(o => o.v === 'mejor').length === 1, `${d.id}: cuatro opciones y una mejor`);
+    assert(d.opts.every(o => o.t_en && o.fb_en) && d.nosabias_en && d.frase_en && d.consigna_en && d.pregunta_en, `${d.id}: en los dos idiomas`);
+    assert(d.tarea.length === d.persona.length && d.tarea_en.length === d.tarea.length, `${d.id}: contraste en paralelo`);
+    assert(d.resp.length === 3 && d.resp_en.length === 3, `${d.id}: tres respuestas de un toque`);
   }
-  assert(mods[0].decidir.some(d => d.opts.some(o => o.v === 'limite')), 'el módulo tiene una situación de límite');
-  // Contenido roto no se juega.
-  const roto = motor.validos({ modulos: [{ id:'x', t:'x', fichas:[{id:'a',t:'a',hace:'a',porque:'a'},{id:'b',t:'b',hace:'b',porque:'b'}], leer:[], decidir:[{ id:'d', esc:'e', opts:[{t:'1',fb:'f',v:'vale'},{t:'2',fb:'f',v:'no'},{t:'3',fb:'f',v:'no'}] }] }] });
-  assert(roto.length === 0, 'sin situación para leer ni opción mejor, el módulo no vale');
-  // Sesión: primera ficha no leída, las falladas repiten, misma semilla mismo resultado.
+  assert(mods[0].dias.some(d => d.opts.some(o => o.v === 'limite')), 'el módulo tiene una situación de límite');
+  // Un día incompleto no se juega.
+  const roto = JSON.parse(JSON.stringify(data)); delete roto.modulos[0].dias[0].nosabias;
+  assert(motor.validos(roto)[0].dias.length === 5, 'sin «lo que no sabías» la mesa no vale');
+  // Orden: primero las no jugadas, luego las falladas, luego la más antigua.
   const m = mods[0];
-  const s1 = motor.sesion(m, { leidas:{}, hechas:{}, falladas:{} }, 7);
-  assert(s1.ficha.id === 'm1f1' && s1.leer && s1.decidir && s1.consigna && s1.consigna.dia === 1, 'primera sesión');
-  const s2 = motor.sesion(m, { leidas:{m1f1:1}, hechas:{}, falladas:{m1d5:1} }, 7);
-  assert(s2.ficha.id === 'm1f2' && s2.decidir.id === 'm1d5', 'la ficha avanza y la fallada vuelve');
-  assert(motor.sesion(m, { leidas:{}, hechas:{}, falladas:{} }, 7).leer.id === s1.leer.id, 'misma semilla, misma sesión');
-  assert(motor.sesion(m, { leidas:{m1f1:1,m1f2:1,m1f3:1,m1f4:1,m1f5:1,m1f6:1}, hechas:{}, falladas:{} }, 7).ficha === null, 'sin fichas pendientes no hay ficha');
+  assert(motor.dia(m, { hechos:{}, fallados:{} }).id === 'm1d1', 'empieza por la primera mesa');
+  assert(motor.dia(m, { hechos:{ m1d1:'2026-10-12' }, fallados:{} }).id === 'm1d2', 'cada día una mesa distinta');
+  const todas = Object.fromEntries(m.dias.map((d, i) => [d.id, '2026-10-1' + i]));
+  assert(motor.dia(m, { hechos:todas, fallados:{ m1d4:'2026-10-14' } }).id === 'm1d4', 'con todas hechas vuelve la fallada');
+  assert(motor.dia(m, { hechos:todas, fallados:{} }).id === 'm1d1', 'sin falladas, la que hace más tiempo');
   // Corrección.
-  const L = m.leer[0];
-  const bien = motor.leer(L, Object.fromEntries(L.items.map((it, i) => [i, it.k])));
-  assert(bien.perfecto && bien.bien, 'todo bien marcado es perfecto');
-  const mal = motor.leer(L, {});
-  assert(!mal.bien && mal.aciertos === 0, 'en blanco no aprueba');
-  const D = m.decidir.find(d => d.opts.some(o => o.v === 'limite'));
-  const lim = motor.decidir(D, D.opts.findIndex(o => o.v === 'limite'));
-  assert(lim.limite && !lim.bien && lim.mejor === D.opts.findIndex(o => o.v === 'mejor'), 'la opción de límite se marca como tal');
-  assert(motor.decidir(D, lim.mejor).bien && motor.decidir(D, D.opts.findIndex(o => o.v === 'vale')).bien, 'mejor y vale aprueban');
-  // Sin XP, sin racha, sin SRS de platos, sin puntuación en la nube, y sólo para revisores.
+  const D = m.dias.find(d => d.opts.some(o => o.v === 'limite'));
+  const lim = motor.corregir(D, D.opts.findIndex(o => o.v === 'limite'));
+  assert(lim.limite && !lim.bien, 'la opción de límite se marca como tal');
+  assert(motor.corregir(D, lim.mejor).bien, 'la mejor aprueba');
+  // La pregunta de «¿cómo fue?» sólo para consignas de días anteriores sin contestar.
+  assert(motor.pend({ pend:{ id:'m1d1', fecha:'2026-10-12' }, resp:{} }, '2026-10-13').id === 'm1d1', 'al día siguiente pregunta');
+  assert(motor.pend({ pend:{ id:'m1d1', fecha:'2026-10-13' }, resp:{} }, '2026-10-13') === null, 'el mismo día no');
+  assert(motor.pend({ pend:{ id:'m1d1', fecha:'2026-10-12' }, resp:{ m1d1:0 } }, '2026-10-13') === null, 'contestada, no vuelve');
+  // Sin XP, sin racha, sin SRS, sin puntuación en la nube, sólo revisores.
   const i0 = html.indexOf('// ═══ HOSPITALIDAD'), i1 = html.indexOf('// ═══ EL CÓDIGO DEL CAMARERO');
   const src = html.slice(i0, i1);
   assert(i0 > 0 && i1 > i0, 'bloque de Hospitalidad en su sitio');
   assert(!/awardXP|lastStudyDay|_srsUpdate|emp\.streak|emp\.xp/.test(src), 'Hospitalidad no toca XP, racha ni SRS');
-  assert(/registrarActividad\(\{ activity:'hospitalidad', competency:'servicio', kind:'practica', seconds:/.test(src) && !/score:/.test(src.slice(src.indexOf('registrarActividad('))), 'sólo «hizo la sesión», sin puntuación');
+  assert(/registrarActividad\(\{ activity:'hospitalidad', competency:'servicio', kind:'practica', seconds:/.test(src) && !/score:/.test(src), 'sólo «hizo la sesión», sin puntuación');
   assert(/if\(HOSPITALIDAD && HOSPITALIDAD\.revision === false\) return true;/.test(fn('_hspVisible')) && /_puedeRevisar\(\)/.test(fn('_hspVisible')), 'en revisión sólo lo ven revisores');
   assert(/const _hspDashCard = \(typeof _hspCtaHTML==='function'\) \? _hspCtaHTML\(_en\) : '';/.test(html) && /\$\{_hspDashCard\}/.test(html)
     && (html.match(/_hspCtaHTML\(_en\)/g) || []).length === 3, 'tarjeta en el inicio y en Practicar');
-  assert(/\.ri-cta-hsp\{/.test(read('styles.css')) && /\.hsp-opt\{/.test(read('styles.css')), 'estilos propios');
+  // Letra grande: el texto de la escena y las opciones por encima de 1rem.
+  const css = read('styles.css');
+  const tam = sel => { const m = css.match(new RegExp('\\.' + sel + '\\{[^}]*font-size:([0-9.]+)rem')); return m ? +m[1] : 0; };
+  assert(tam('hsp2-esc') >= 1.1 && tam('hsp2-opt') >= 1 && tam('hsp2-reveal') >= 1.1 && tam('hsp2-t') >= 1.5, 'letra grande en Hospitalidad');
 });
 test('Cartas: ninguna carta de r2 vive en data/ (sería pública)', () => {
   assert(!existsSync(join(ROOT, 'data/carta-r2.json')), 'data/carta-r2.json no puede existir');
