@@ -1,0 +1,602 @@
+{
+ "version": 1,
+ "titulo": "Hospitalidad",
+ "titulo_en": "Hospitality",
+ "lema": "intención, atención y calidez",
+ "lema_en": "intention, attention and warmth",
+ "modulos": [
+  {
+   "id": "intencion",
+   "n": 1,
+   "t": "La intención",
+   "t_en": "Intention",
+   "sub": "elegir para qué vas antes de moverte",
+   "sub_en": "choose what you are going for before you move",
+   "intro": [
+    "Antes de acercarse a una mesa ya han decidido algo, aunque no lo sepan: para qué van. A tomar nota, a vender el postre, a quitarse una tarea de encima, o a que esa persona salga mejor de lo que entró.",
+    "El huésped lo nota en los primeros tres segundos. No por lo que dicen, sino por cómo llegan.",
+    "Este módulo trata de una sola cosa: elegir la intención antes de moverse. Cuando la intención es cuidar, la atención viene sola. Y cuando hay atención, el resto del oficio funciona."
+   ],
+   "intro_en": [
+    "Before you approach a table you have already decided something, even without knowing it: what you are going for. To take the order, to sell the dessert, to get a task out of the way, or so that this person leaves better than they came in.",
+    "The guest notices it in the first three seconds. Not from what you say, but from how you arrive.",
+    "This module is about one thing only: choosing your intention before you move. When the intention is to care, attention follows on its own. And with attention, the rest of the craft works."
+   ],
+   "fichas": [
+    {
+     "id": "m1f1",
+     "t": "Decide antes de moverte",
+     "t_en": "Decide before you move",
+     "hace": "Antes de ir a una mesa, un segundo de pausa y una pregunta: ¿para qué voy? Si la respuesta es «a tomar nota» o «a vender», se cambia por «a que esta persona esté bien». Después se va.",
+     "hace_en": "Before going to a table, one second of pause and one question: what am I going for? If the answer is \"to take the order\" or \"to sell\", swap it for \"so this person is well\". Then go.",
+     "porque": "La intención cambia la postura, el ritmo al llegar y la primera frase. El huésped no la oye, pero la ve. Y con la intención puesta en la persona, uno se fija en cosas que con la intención puesta en la tarea no ve: que está cansado, que celebra algo, que tiene prisa.",
+     "porque_en": "Intention changes your posture, your pace on arrival and your first sentence. The guest does not hear it, but sees it. And with your intention on the person, you notice things you miss when it is on the task: they are tired, they are celebrating, they are in a hurry.",
+     "sala": "El segundo de pausa se hace al salir del office o al cruzar la sala, nunca delante de la mesa. Con platos para compartir y un ritmo largo, la intención se pone en cada visita, no solo en la primera.",
+     "sala_en": "The second of pause happens leaving the pass or crossing the room, never in front of the table. With sharing plates and a long pace, the intention is set on every visit, not only the first.",
+     "nunca": "Ir a una mesa pensando en la siguiente.",
+     "nunca_en": "Going to a table while thinking about the next one."
+    },
+    {
+     "id": "m1f2",
+     "t": "La experiencia es el producto",
+     "t_en": "The experience is the product",
+     "hace": "Tratar cada contacto con el huésped como parte de lo que ha venido a comprar. La comida es una parte; cómo se sintió es lo que se lleva.",
+     "hace_en": "Treat every contact with the guest as part of what they came to buy. The food is one part; how they felt is what they take home.",
+     "porque": "El huésped puede comer bien en muchos sitios. Vuelve al sitio donde se sintió cuidado, y lo recomienda por eso. Un plato excelente con un trato frío se olvida. Un plato correcto con un trato cálido se cuenta.",
+     "porque_en": "The guest can eat well in many places. They return to the one where they felt cared for, and recommend it for that. An excellent dish with cold service is forgotten. A decent dish with warm service gets talked about.",
+     "sala": "El estándar dice qué hay que hacer en cada paso. Esta ficha dice cómo: con la cabeza en que la persona disfrute, no en que el paso se cumpla. Las dos cosas a la vez.",
+     "sala_en": "The standard says what to do at each step. This card says how: with your mind on the person enjoying it, not on the step being ticked. Both at once.",
+     "nunca": "Cumplir el protocolo sin mirar a la persona.",
+     "nunca_en": "Following the protocol without looking at the person."
+    },
+    {
+     "id": "m1f3",
+     "t": "No vendes, cuidas",
+     "t_en": "You are not selling, you are caring",
+     "hace": "Recomendar como se recomienda a alguien a quien se aprecia: lo que de verdad le va a gustar, con nombre, y sin insistir si dice que no.",
+     "hace_en": "Recommend the way you would to someone you care about: what they will truly enjoy, by name, and without insisting if they say no.",
+     "porque": "La gente nota cuando le venden y se cierra. Cuando nota que la cuidan, se abre y pregunta. Paradoja del oficio: el ticket sube más cuando no se persigue.",
+     "porque_en": "People notice when they are being sold to and close up. When they notice they are being cared for, they open up and ask. The paradox of the craft: the ticket rises more when you do not chase it.",
+     "sala": "Una recomendación por momento, dicha con convicción. Si el huésped elige otra cosa, se celebra su elección y se sigue. Sin segunda ronda.",
+     "sala_en": "One recommendation per moment, said with conviction. If the guest chooses something else, celebrate their choice and move on. No second round.",
+     "nunca": "Vender algo que no encaja con lo que el huésped ha dicho que quiere.",
+     "nunca_en": "Selling something that does not fit what the guest said they want."
+    },
+    {
+     "id": "m1f4",
+     "t": "El primer minuto",
+     "t_en": "The first minute",
+     "hace": "Reconocer al huésped en cuanto entra en su campo de visión: mirada, gesto o palabra. Aunque se esté ocupado, un «ahora mismo estoy con ustedes» vale.",
+     "hace_en": "Acknowledge the guest as soon as they come into view: a look, a gesture or a word. Even when busy, \"I will be right with you\" counts.",
+     "porque": "El primer minuto fija el tono de toda la comida. Un huésped que ha esperado sin ser visto llega a la mesa a la defensiva y todo cuesta el doble después.",
+     "porque_en": "The first minute sets the tone for the whole meal. A guest who waited unseen arrives at the table defensive, and everything costs twice as much afterwards.",
+     "sala": "El estándar fija el saludo en un minuto desde que se sienta. La intención va antes: que nadie, en ningún punto de la sala, se sienta invisible. Eso incluye a quien espera en la entrada mientras se atiende a otra mesa.",
+     "sala_en": "The standard sets the greeting within one minute of seating. Intention comes first: nobody, anywhere in the room, should feel invisible. That includes whoever waits at the entrance while another table is being served.",
+     "nunca": "Terminar una tarea con un huésped mirando sin un gesto que le diga que lo han visto.",
+     "nunca_en": "Finishing a task with a guest looking at you and no gesture to say they have been seen."
+    },
+    {
+     "id": "m1f5",
+     "t": "La despedida siembra la vuelta",
+     "t_en": "The farewell plants the return",
+     "hace": "Despedir con la misma intención con la que se recibió. Una frase personal, una referencia a algo de su comida, y acompañar con la mirada hasta la puerta.",
+     "hace_en": "Say goodbye with the same intention you welcomed them with. A personal sentence, a reference to something from their meal, and follow them with your eyes to the door.",
+     "porque": "Lo último que pasa es lo que más se recuerda. Una despedida apresurada borra una comida perfecta. Una despedida cálida redondea una comida normal.",
+     "porque_en": "The last thing that happens is what is remembered most. A rushed farewell erases a perfect meal. A warm farewell rounds off an ordinary one.",
+     "sala": "La cuenta no es el final del servicio. Después de la cuenta queda la despedida, y la despedida tiene su propio momento.",
+     "sala_en": "The bill is not the end of the service. After the bill comes the farewell, and the farewell has its own moment.",
+     "nunca": "Despedir desde lejos o de espaldas, ni dejar que la mesa se vaya sin que nadie la acompañe.",
+     "nunca_en": "Saying goodbye from afar or with your back turned, or letting a table leave with nobody seeing them off."
+    },
+    {
+     "id": "m1f6",
+     "t": "La energía se elige",
+     "t_en": "Energy is a choice",
+     "hace": "Antes del servicio, decidir con qué energía se va a trabajar hoy, y volver a ella cuando el servicio la desgaste. Calma, calidez, atención. Es una decisión, no un estado de ánimo.",
+     "hace_en": "Before service, decide what energy you will work with today, and return to it when service wears it down. Calm, warmth, attention. It is a decision, not a mood.",
+     "porque": "La energía se contagia. Un camarero tenso tensa la mesa; uno en calma la calma. El huésped no sabe cómo fue el día de quien le atiende, y no tiene por qué pagarlo.",
+     "porque_en": "Energy is contagious. A tense waiter tenses the table; a calm one calms it. The guest does not know what kind of day you had, and should not pay for it.",
+     "sala": "La puerta del office es la frontera: lo que hay detrás se queda detrás. Si un servicio se pone duro, un segundo de pausa y se vuelve a elegir la energía antes de la siguiente mesa.",
+     "sala_en": "The pass door is the border: what is behind it stays behind it. If a service gets hard, one second of pause and choose the energy again before the next table.",
+     "nunca": "Llevar a una mesa lo que pasó en la anterior o en la cocina.",
+     "nunca_en": "Carrying to a table what happened at the previous one or in the kitchen."
+    }
+   ],
+   "leer": [
+    {
+     "id": "m1l1",
+     "t": "La pareja que no habla",
+     "t_en": "The couple who are not talking",
+     "esc": "Mesa de dos, 21:10. Llevan diez minutos sentados. Tienen la carta cerrada delante. No se hablan. Él mira el móvil; ella mira la sala.",
+     "esc_en": "Table for two, 21:10. Seated ten minutes. Menus closed in front of them. Not talking. He looks at his phone; she looks around the room.",
+     "items": [
+      {
+       "t": "Llevan diez minutos sentados",
+       "t_en": "They have been seated ten minutes",
+       "k": "seguro"
+      },
+      {
+       "t": "Las cartas están cerradas",
+       "t_en": "The menus are closed",
+       "k": "seguro"
+      },
+      {
+       "t": "Han discutido",
+       "t_en": "They have argued",
+       "k": "hipotesis"
+      },
+      {
+       "t": "Ya han decidido y esperan a que alguien venga",
+       "t_en": "They have decided and are waiting for someone",
+       "k": "hipotesis"
+      },
+      {
+       "t": "Están cómodos en silencio",
+       "t_en": "They are comfortable in silence",
+       "k": "hipotesis"
+      },
+      {
+       "t": "Cómo entraron: juntos, sonriendo, callados",
+       "t_en": "How they came in: together, smiling, quiet",
+       "k": "falta"
+      },
+      {
+       "t": "Si ella busca a alguien o solo mira",
+       "t_en": "Whether she is looking for someone or just looking",
+       "k": "falta"
+      }
+     ],
+     "ens": "El silencio no es un dato sobre la relación; la carta cerrada sí es un dato sobre el pedido. Se actúa sobre lo seguro: ir a tomar nota. La intención al llegar es neutra y cálida, sin dar por hecho que algo va mal.",
+     "ens_en": "Silence is not data about the relationship; the closed menu is data about the order. Act on what is certain: go and take the order. Arrive neutral and warm, without assuming something is wrong."
+    },
+    {
+     "id": "m1l2",
+     "t": "El que entra mirando el reloj",
+     "t_en": "The one who walks in checking his watch",
+     "esc": "13:40. Un hombre solo entra, mira el reloj, pregunta a la hostess cuánto tardan los platos. Se sienta de lado, con el abrigo puesto.",
+     "esc_en": "13:40. A man alone walks in, checks his watch, asks the hostess how long the dishes take. He sits sideways, coat still on.",
+     "items": [
+      {
+       "t": "Ha preguntado por los tiempos",
+       "t_en": "He asked about timings",
+       "k": "seguro"
+      },
+      {
+       "t": "Tiene el abrigo puesto",
+       "t_en": "He has his coat on",
+       "k": "seguro"
+      },
+      {
+       "t": "Tiene una reunión después",
+       "t_en": "He has a meeting afterwards",
+       "k": "hipotesis"
+      },
+      {
+       "t": "Espera a alguien que llega tarde",
+       "t_en": "He is waiting for someone running late",
+       "k": "hipotesis"
+      },
+      {
+       "t": "Tiene frío",
+       "t_en": "He is cold",
+       "k": "hipotesis"
+      },
+      {
+       "t": "Si tiene una hora límite real",
+       "t_en": "Whether he has a real deadline",
+       "k": "falta"
+      },
+      {
+       "t": "Si va a comer solo",
+       "t_en": "Whether he is eating alone",
+       "k": "falta"
+      }
+     ],
+     "ens": "Preguntar por los tiempos es una señal fuerte; el abrigo, no. La intención correcta es facilitar: una sola pregunta («¿tiene alguna hora en mente?») convierte tres hipótesis en un dato.",
+     "ens_en": "Asking about timings is a strong signal; the coat is not. The right intention is to make it easy: one question (\"do you have a time in mind?\") turns three guesses into one fact."
+    },
+    {
+     "id": "m1l3",
+     "t": "La mesa de seis que sube de volumen",
+     "t_en": "The table of six getting louder",
+     "esc": "Cena, mesa de seis. En el segundo plato ríen fuerte. Dos mesas cercanas los miran de reojo. Uno de ellos acaba de pedir otra botella.",
+     "esc_en": "Dinner, table of six. On the second course they laugh loudly. Two nearby tables glance at them. One of them has just ordered another bottle.",
+     "items": [
+      {
+       "t": "Ríen alto",
+       "t_en": "They laugh loudly",
+       "k": "seguro"
+      },
+      {
+       "t": "Dos mesas los miran",
+       "t_en": "Two tables look at them",
+       "k": "seguro"
+      },
+      {
+       "t": "Han pedido otra botella",
+       "t_en": "They ordered another bottle",
+       "k": "seguro"
+      },
+      {
+       "t": "Celebran algo",
+       "t_en": "They are celebrating",
+       "k": "hipotesis"
+      },
+      {
+       "t": "Han bebido de más",
+       "t_en": "They have had too much",
+       "k": "hipotesis"
+      },
+      {
+       "t": "Las otras mesas están molestas",
+       "t_en": "The other tables are bothered",
+       "k": "hipotesis"
+      },
+      {
+       "t": "Si hay un motivo de celebración en la reserva",
+       "t_en": "Whether the booking mentions a celebration",
+       "k": "falta"
+      },
+      {
+       "t": "Si las mesas de al lado han hecho algún gesto de queja",
+       "t_en": "Whether the nearby tables have signalled a complaint",
+       "k": "falta"
+      }
+     ],
+     "ens": "Aquí hay dos grupos de personas y la intención es cuidar a los dos. No se sabe todavía si hay un problema. Lo que sí se sabe es que conviene estar cerca.",
+     "ens_en": "There are two groups of people here and the intention is to care for both. It is not yet known whether there is a problem. What is known is that it pays to stay close."
+    },
+    {
+     "id": "m1l4",
+     "t": "La mujer que devuelve el plato a medias",
+     "t_en": "The woman who sends back a half-eaten plate",
+     "esc": "Almuerzo. Una mujer ha comido la mitad del plato y ha dejado los cubiertos en paralelo. Cuando se retira, dice «estaba bien, gracias» sin mirar.",
+     "esc_en": "Lunch. A woman has eaten half her plate and laid the cutlery parallel. When it is cleared she says \"it was fine, thanks\" without looking up.",
+     "items": [
+      {
+       "t": "Dejó la mitad",
+       "t_en": "She left half",
+       "k": "seguro"
+      },
+      {
+       "t": "Dijo que estaba bien",
+       "t_en": "She said it was fine",
+       "k": "seguro"
+      },
+      {
+       "t": "No miró al decirlo",
+       "t_en": "She did not look up when saying it",
+       "k": "seguro"
+      },
+      {
+       "t": "No le gustó y no quiere quejarse",
+       "t_en": "She did not like it and does not want to complain",
+       "k": "hipotesis"
+      },
+      {
+       "t": "Come poco",
+       "t_en": "She eats little",
+       "k": "hipotesis"
+      },
+      {
+       "t": "Guarda sitio para el postre",
+       "t_en": "She is saving room for dessert",
+       "k": "hipotesis"
+      },
+      {
+       "t": "Si dejó un ingrediente concreto",
+       "t_en": "Whether she left one specific ingredient",
+       "k": "falta"
+      },
+      {
+       "t": "Si ha mirado el móvil o la puerta varias veces",
+       "t_en": "Whether she has checked her phone or the door repeatedly",
+       "k": "falta"
+      }
+     ],
+     "ens": "«Estaba bien» sin mirar es la frase más ambigua de la sala. Con la intención de cuidar, se abre una puerta sin forzarla: «si hay algo que podamos mejorar, me encantaría saberlo». Y se acepta la respuesta que dé.",
+     "ens_en": "\"It was fine\" without looking up is the most ambiguous sentence in the room. With the intention to care, open a door without forcing it: \"if there is anything we could do better, I would love to know\". And accept whatever answer she gives."
+    },
+    {
+     "id": "m1l5",
+     "t": "El habitual que hoy no saluda",
+     "t_en": "The regular who does not say hello today",
+     "esc": "Un huésped que viene cada semana y siempre charla. Hoy saluda con la cabeza, se sienta, abre el móvil y pide «lo de siempre» sin levantar la vista.",
+     "esc_en": "A guest who comes every week and always chats. Today he nods, sits down, opens his phone and orders \"the usual\" without looking up.",
+     "items": [
+      {
+       "t": "Es habitual",
+       "t_en": "He is a regular",
+       "k": "seguro"
+      },
+      {
+       "t": "Hoy habla menos",
+       "t_en": "He is talking less today",
+       "k": "seguro"
+      },
+      {
+       "t": "Ha pedido lo de siempre",
+       "t_en": "He ordered the usual",
+       "k": "seguro"
+      },
+      {
+       "t": "Tiene un mal día",
+       "t_en": "He is having a bad day",
+       "k": "hipotesis"
+      },
+      {
+       "t": "Está trabajando",
+       "t_en": "He is working",
+       "k": "hipotesis"
+      },
+      {
+       "t": "Está molesto con algo del restaurante",
+       "t_en": "He is upset about something at the restaurant",
+       "k": "hipotesis"
+      },
+      {
+       "t": "Si al traerle la bebida levanta la vista",
+       "t_en": "Whether he looks up when the drink arrives",
+       "k": "falta"
+      },
+      {
+       "t": "Si hubo algo la última vez",
+       "t_en": "Whether something happened last time",
+       "k": "falta"
+      }
+     ],
+     "ens": "Conocer a alguien no da derecho a saber cómo está hoy. La intención de cuidar aquí es darle espacio con calidez: servir como siempre, una frase corta, y dejarle la puerta abierta por si quiere hablar.",
+     "ens_en": "Knowing someone does not entitle you to know how they are today. Caring here means giving space with warmth: serve as always, one short sentence, and leave the door open in case he wants to talk."
+    }
+   ],
+   "decidir": [
+    {
+     "id": "m1d1",
+     "t": "Llegas a la mesa de la pareja en silencio",
+     "t_en": "You arrive at the silent couple's table",
+     "esc": "Mesa de dos, diez minutos sentados, cartas cerradas, no se hablan. Vas a tomar nota.",
+     "esc_en": "Table for two, seated ten minutes, menus closed, not talking. You are going to take the order.",
+     "q": "¿Cómo llegas?",
+     "q_en": "How do you arrive?",
+     "opts": [
+      {
+       "t": "«¿Todo bien por aquí? Los veo muy callados.»",
+       "t_en": "\"Everything alright here? You seem very quiet.\"",
+       "v": "no",
+       "fb": "Señala algo que no te han contado y los obliga a explicarse. Una hipótesis convertida en comentario.",
+       "fb_en": "You point at something they did not tell you and make them explain themselves. A guess turned into a remark."
+      },
+      {
+       "t": "«Buenas noches. ¿Ya han podido decidir o prefieren unos minutos más?»",
+       "t_en": "\"Good evening. Have you been able to decide, or would you like a few more minutes?\"",
+       "v": "mejor",
+       "fb": "Actúa sobre lo seguro (las cartas cerradas), ofrece las dos salidas y no interpreta el silencio.",
+       "fb_en": "Acts on what is certain (closed menus), offers both ways out and does not read into the silence."
+      },
+      {
+       "t": "Esperar cinco minutos más a que levanten la mano.",
+       "t_en": "Wait five more minutes for them to raise a hand.",
+       "v": "no",
+       "fb": "Llevan diez minutos con la carta cerrada. Esperar más es dejarlos invisibles.",
+       "fb_en": "They have had the menu closed for ten minutes. Waiting longer leaves them invisible."
+      },
+      {
+       "t": "«Buenas noches, ¿les tomo nota?»",
+       "t_en": "\"Good evening, may I take your order?\"",
+       "v": "vale",
+       "fb": "Correcta y directa. Pierde la salida de «unos minutos más», que a veces es lo que necesitan. Vale, pero la otra cuida más.",
+       "fb_en": "Correct and direct. It loses the \"a few more minutes\" exit, which is sometimes what they need. Fine, but the other one cares more."
+      }
+     ]
+    },
+    {
+     "id": "m1d2",
+     "t": "El hombre con prisa pide recomendación",
+     "t_en": "The man in a hurry asks for a recommendation",
+     "esc": "Te dice: «tengo cuarenta minutos, ¿qué me recomienda?». El plato que más te gusta tarda veinticinco minutos.",
+     "esc_en": "He says: \"I have forty minutes, what do you recommend?\". The dish you like best takes twenty-five minutes.",
+     "q": "¿Qué le dices?",
+     "q_en": "What do you tell him?",
+     "opts": [
+      {
+       "t": "Recomendar el que más te gusta y avisar de que tarda veinticinco minutos.",
+       "t_en": "Recommend your favourite and warn that it takes twenty-five minutes.",
+       "v": "no",
+       "fb": "Honesto, pero no has escuchado: te ha dicho su límite y le propones gastar más de la mitad esperando.",
+       "fb_en": "Honest, but you did not listen: he told you his limit and you propose spending over half of it waiting."
+      },
+      {
+       "t": "Recomendar dos platos que salen en menos de diez minutos, con nombre, y decirle por qué.",
+       "t_en": "Recommend two dishes that come out in under ten minutes, by name, and tell him why.",
+       "v": "mejor",
+       "fb": "La intención es que coma bien y llegue a tiempo. La recomendación sale de lo que él necesita, no de tu gusto.",
+       "fb_en": "The intention is that he eats well and arrives on time. The recommendation comes from what he needs, not your taste."
+      },
+      {
+       "t": "Decirle que con cuarenta minutos va justo y que quizá le convenga algo rápido en el bar.",
+       "t_en": "Tell him forty minutes is tight and he might be better off with something quick at the bar.",
+       "v": "no",
+       "fb": "Lo echas con educación. Cuidar no es quitarse al huésped de encima.",
+       "fb_en": "You politely turn him away. Caring is not getting the guest off your hands."
+      },
+      {
+       "t": "Preguntar si prefiere algo ligero o algo contundente, y recomendar según lo que diga.",
+       "t_en": "Ask whether he prefers something light or hearty, and recommend accordingly.",
+       "v": "vale",
+       "fb": "Buena pregunta, pero añade un paso a alguien con prisa. Si la respuesta lleva a un plato rápido, funciona.",
+       "fb_en": "Good question, but it adds a step for someone in a hurry. If the answer leads to a quick dish, it works."
+      }
+     ]
+    },
+    {
+     "id": "m1d3",
+     "t": "El postre que no quiere",
+     "t_en": "The dessert she does not want",
+     "esc": "Una mesa de dos termina el principal. Ofreces el postre de la casa. Ella dice «no, gracias, estamos llenos». Tú sabes que el postre es excelente.",
+     "esc_en": "A table for two finishes the main course. You offer the house dessert. She says \"no thanks, we are full\". You know the dessert is excellent.",
+     "q": "¿Qué haces?",
+     "q_en": "What do you do?",
+     "opts": [
+      {
+       "t": "«Es que este es de verdad especial, es pequeño, se lo pueden compartir.»",
+       "t_en": "\"This one is really special, it is small, you could share it.\"",
+       "v": "no",
+       "fb": "Segunda ronda. Ella ya dijo que no. Esto es vender, no cuidar.",
+       "fb_en": "Second round. She already said no. This is selling, not caring."
+      },
+      {
+       "t": "«Perfecto. ¿Les apetece un café o una infusión?»",
+       "t_en": "\"Of course. Would you like a coffee or a tea?\"",
+       "v": "mejor",
+       "fb": "Acepta el no sin discutirlo y ofrece lo que sí puede encajar. La relación sigue intacta.",
+       "fb_en": "Accepts the no without arguing and offers what might fit. The relationship stays intact."
+      },
+      {
+       "t": "«Perfecto, entonces les traigo la cuenta.»",
+       "t_en": "\"Of course, then I will bring the bill.\"",
+       "v": "no",
+       "fb": "Acepta el no, pero cierra la mesa demasiado rápido. No han pedido la cuenta.",
+       "fb_en": "Accepts the no but closes the table too fast. They did not ask for the bill."
+      },
+      {
+       "t": "«Perfecto. Si cambian de idea, estoy aquí.»",
+       "t_en": "\"Of course. If you change your mind, I am here.\"",
+       "v": "vale",
+       "fb": "Acepta el no y deja la puerta abierta sin insistir. Le falta ofrecer algo.",
+       "fb_en": "Accepts the no and leaves the door open without insisting. It misses offering something."
+      }
+     ]
+    },
+    {
+     "id": "m1d4",
+     "t": "Dos mesas a la vez",
+     "t_en": "Two tables at once",
+     "esc": "Estás terminando de explicar la carta a una mesa nueva. Por el rabillo del ojo ves que otra mesa, a tres metros, te busca con la mirada.",
+     "esc_en": "You are finishing explaining the menu to a new table. Out of the corner of your eye you see another table, three metres away, looking for you.",
+     "q": "¿Qué haces?",
+     "q_en": "What do you do?",
+     "opts": [
+      {
+       "t": "Terminar la explicación sin interrumpirla y después ir a la otra.",
+       "t_en": "Finish the explanation without interrupting it, then go to the other table.",
+       "v": "no",
+       "fb": "La otra mesa pasa un minuto entero sin saber si la han visto. Intención puesta en la tarea, no en las personas.",
+       "fb_en": "The other table spends a whole minute not knowing if they have been seen. Intention on the task, not the people."
+      },
+      {
+       "t": "Un gesto con la mirada a la otra mesa («les he visto, ahora voy») y terminar la explicación.",
+       "t_en": "A glance to the other table (\"seen you, coming\") and finish the explanation.",
+       "v": "mejor",
+       "fb": "Las dos mesas se sienten vistas. La primera no se interrumpe; la segunda sabe que va alguien.",
+       "fb_en": "Both tables feel seen. The first is not interrupted; the second knows someone is coming."
+      },
+      {
+       "t": "Disculparse con la mesa nueva, ir a la otra y volver.",
+       "t_en": "Excuse yourself from the new table, go to the other one and come back.",
+       "v": "no",
+       "fb": "Interrumpes a quien está contigo por alguien que aún no sabes qué necesita. Solo vale con urgencia clara.",
+       "fb_en": "You interrupt the people with you for someone whose need you do not know yet. Only valid with a clear emergency."
+      },
+      {
+       "t": "Hacer una seña a un compañero para que vaya a la otra mesa.",
+       "t_en": "Signal a colleague to go to the other table.",
+       "v": "vale",
+       "fb": "Buena si hay compañero libre. Con el gesto de la mirada añadido, es la mejor de todas.",
+       "fb_en": "Good if a colleague is free. With the glance added, it is the best of all."
+      }
+     ]
+    },
+    {
+     "id": "m1d5",
+     "t": "La celebración que querías hacer especial",
+     "t_en": "The celebration you wanted to make special",
+     "esc": "Una mesa celebra un cumpleaños. Quieres rematar con un detalle de cocina. Al preguntar, te dicen que el postre que pensabas lleva frutos secos, y una persona de la mesa declaró alergia a frutos secos al sentarse.",
+     "esc_en": "A table is celebrating a birthday. You want to finish with a treat from the kitchen. When you ask, they tell you the dessert you had in mind contains nuts, and one person at the table declared a nut allergy when seated.",
+     "q": "¿Qué haces?",
+     "q_en": "What do you do?",
+     "opts": [
+      {
+       "t": "Pedir a cocina que lo haga sin frutos secos y servirlo como sorpresa.",
+       "t_en": "Ask the kitchen to make it without nuts and serve it as a surprise.",
+       "v": "limite",
+       "fb": "Una alergia declarada no se gestiona con una sorpresa ni con un «sin» improvisado. La intención de hacer un momento bonito nunca pasa por encima de la seguridad.",
+       "fb_en": "A declared allergy is never handled with a surprise or an improvised \"without\". The intention to create a nice moment never overrides safety."
+      },
+      {
+       "t": "Elegir otro detalle que no lleve frutos secos, confirmarlo con cocina y servirlo.",
+       "t_en": "Choose a different treat with no nuts, confirm it with the kitchen and serve it.",
+       "v": "mejor",
+       "fb": "La intención se mantiene, el límite también. El detalle sigue siendo una sorpresa y nadie corre riesgo.",
+       "fb_en": "The intention stays, so does the limit. The treat is still a surprise and nobody is at risk."
+      },
+      {
+       "t": "Servir el detalle solo a las personas sin alergia.",
+       "t_en": "Serve the treat only to those without the allergy.",
+       "v": "no",
+       "fb": "Señalas a la persona con alergia delante de su mesa y la dejas fuera de la celebración.",
+       "fb_en": "You single out the person with the allergy in front of their table and leave them out of the celebration."
+      },
+      {
+       "t": "Preguntar discretamente a la persona con alergia si le parece bien un postre sin frutos secos.",
+       "t_en": "Discreetly ask the person with the allergy whether a nut-free dessert is alright.",
+       "v": "vale",
+       "fb": "Respeta el límite y la incluye, pero rompe la sorpresa y pone la decisión sobre ella.",
+       "fb_en": "Respects the limit and includes her, but breaks the surprise and puts the decision on her."
+      }
+     ]
+    }
+   ],
+   "consignas": [
+    {
+     "dia": 1,
+     "ficha": "m1f1",
+     "c": "Antes de tres mesas, párate un segundo y decide para qué vas.",
+     "c_en": "Before three tables, stop for a second and decide what you are going for.",
+     "p": "¿Notaste alguna diferencia al llegar?",
+     "p_en": "Did you notice any difference on arrival?"
+    },
+    {
+     "dia": 2,
+     "ficha": "m1f2",
+     "c": "En una mesa, fíjate en algo del huésped que no tenga que ver con el pedido.",
+     "c_en": "At one table, notice something about the guest unrelated to the order.",
+     "p": "¿Qué viste?",
+     "p_en": "What did you see?"
+    },
+    {
+     "dia": 3,
+     "ficha": "m1f3",
+     "c": "Haz una recomendación con nombre y acepta la respuesta sin segunda ronda.",
+     "c_en": "Make one recommendation by name and accept the answer with no second round.",
+     "p": "¿Qué eligieron?",
+     "p_en": "What did they choose?"
+    },
+    {
+     "dia": 4,
+     "ficha": "m1f4",
+     "c": "Que nadie en tu rango pase un minuto sin un gesto que le diga que lo has visto.",
+     "c_en": "Let nobody in your section go a minute without a gesture that says you have seen them.",
+     "p": "¿Se te escapó alguien?",
+     "p_en": "Did anyone slip past you?"
+    },
+    {
+     "dia": 5,
+     "ficha": "m1f5",
+     "c": "Despide a una mesa con una frase que solo valga para ellos.",
+     "c_en": "See off one table with a sentence that only fits them.",
+     "p": "¿Qué dijiste?",
+     "p_en": "What did you say?"
+    },
+    {
+     "dia": 6,
+     "ficha": "m1f6",
+     "c": "Al cruzar la puerta del office, deja fuera lo que pasó dentro.",
+     "c_en": "When you cross the pass door, leave behind what happened inside.",
+     "p": "¿Cuántas veces tuviste que volver a elegir la energía?",
+     "p_en": "How many times did you have to choose your energy again?"
+    }
+   ]
+  }
+ ],
+ "revision": true
+}
