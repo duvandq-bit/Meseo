@@ -52,7 +52,7 @@
 <meta property="og:description" content="Formación de equipos de sala: carta, alérgenos, vinos, exámenes y juegos de repaso.">
 <meta property="og:url" content="https://meseo.es/">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"Meseo","url":"https://meseo.es/"}</script>
-<meta name="app-version" content="7.481">
+<meta name="app-version" content="7.482">
 <meta name="app-build" content="May 2026">
 <meta name="theme-color" content="#1c2a22">
 <!-- ═══ PWA ═══ -->
@@ -2814,7 +2814,7 @@ const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><p
 const SRC = 'src';
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='7.481';  // sincronizada con sw.js VERSION (guard de CI)
+const APP_VERSION='7.482';  // sincronizada con sw.js VERSION (guard de CI)
 const APP_BUILD='Jul 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;
@@ -23073,6 +23073,7 @@ function renderDashboard(){
   // rápido», propietario sep 2026). Se calcula FUERA de la plantilla: un
   // template anidado dentro rompería el recorte de las guardas de CI.
   const _paseDashCard = (typeof launchPase==="function") ? _paseCtaHTML(_en) : "";
+  const _hspDashCard = (typeof _hspCtaHTML==='function') ? _hspCtaHTML(_en) : '';
 
   const _runeSvg = `<svg viewBox="0 0 16 16"><polygon points="8,0 16,8 8,16 0,8" fill="none" stroke="rgba(228,190,104,.55)" stroke-width=".7"/><polygon points="8,3 13,8 8,13 3,8" fill="none" stroke="rgba(228,190,104,.35)" stroke-width=".45"/><circle cx="8" cy="8" r="1" fill="rgba(228,190,104,.6)"/></svg>`;
 
@@ -23124,6 +23125,7 @@ function renderDashboard(){
 
     <!-- ── EL PASE: destacado en el inicio (tarjeta calculada arriba) ── -->
     ${_paseDashCard}
+    ${_hspDashCard}
 
     <!-- ── HOY: rediseño «una acción dominante» (exploración de diseño jul
          2026). UNA tarjeta pergamino (héroe) con dos estados — Reto del día
@@ -25445,6 +25447,7 @@ function renderRepasoCats(){
     <div id="repasoSearchResults" style="display:none;margin-bottom:1rem"></div>
     <!-- El Pase primero; después la sesión inteligente, fuera de la lista -->
     ${(typeof launchPase==="function" ? _paseCtaHTML(_en) : "")}
+    ${(typeof _hspCtaHTML==='function' ? _hspCtaHTML(_en) : '')}
     ${(typeof _alergenosValidados!=='function'||_alergenosValidados())?smartCard:''}
     <!-- Category grid -->
     <div id="repasoCatGrid">
@@ -31452,6 +31455,283 @@ function _lqaOptionsFeedbackHtml(options, optionsEn, picked, correct){
 }
 
 // LQA Render Functions
+// ═══ HOSPITALIDAD · la psicología de servicio ══════════════════════════════
+// Decisión del propietario (12 oct 2026): un curso corto de criterio de sala,
+// por módulos de una semana, que sustituye al Código del Camarero. Cada módulo
+// tiene fichas para leer, situaciones para LEER (separar lo seguro de las
+// hipótesis), situaciones para DECIDIR (varias válidas, alguna fuera de
+// límite) y una consigna por día para el servicio real.
+//
+// Lo que NO hace, a propósito: no da XP, no toca la racha, no tiene ranking ni
+// nota de hospitalidad. Registra sólo «hizo la sesión» por la vía de la fase 1
+// (actividad `hospitalidad`, competencia `servicio`, sin puntuación), y guarda
+// las respuestas únicamente en el móvil, en el diario de 14 días.
+//
+// Mientras esté en revisión (`hospitalidad.revision` en data/hospitalidad.json)
+// sólo lo ven las cuentas con permiso de revisión. Contenido en
+// data/hospitalidad.json (perezoso, sólo al entrar).
+//
+// El motor es puro: `_hspSesion` y `_hspCorregir` no miran el DOM ni escriben.
+// Las pruebas lo ejecutan en Node.
+let HOSPITALIDAD = null;
+let _hspState = null;
+
+// Quién puede verlo hoy. Con `revision:true` en el archivo, sólo revisores.
+function _hspVisible(){
+  try{
+    if(typeof _alergenosValidados === 'function' && !_alergenosValidados()) return false;
+    if(HOSPITALIDAD && HOSPITALIDAD.revision === false) return true;
+    return typeof _puedeRevisar === 'function' && _puedeRevisar();
+  }catch(e){ return false; }
+}
+
+// El contenido se valida antes de usarse: un módulo sin fichas o una situación
+// sin opción «mejor» no se juega. Devuelve los módulos sanos, en orden.
+function _hspModulosValidos(data){
+  const okTxt = s => typeof s === 'string' && s.trim().length > 0;
+  const out = [];
+  for(const m of ((data && data.modulos) || [])){
+    if(!m || !okTxt(m.id) || !okTxt(m.t)) continue;
+    const fichas = (m.fichas || []).filter(f => f && okTxt(f.id) && okTxt(f.t) && okTxt(f.hace) && okTxt(f.porque));
+    const leer = (m.leer || []).filter(l => l && okTxt(l.id) && okTxt(l.esc) && Array.isArray(l.items) && l.items.length >= 3
+      && l.items.every(i => i && okTxt(i.t) && ['seguro','hipotesis','falta'].includes(i.k)) && okTxt(l.ens));
+    const decidir = (m.decidir || []).filter(d => d && okTxt(d.id) && okTxt(d.esc) && Array.isArray(d.opts) && d.opts.length >= 3
+      && d.opts.every(o => o && okTxt(o.t) && okTxt(o.fb) && ['mejor','vale','no','limite'].includes(o.v))
+      && d.opts.filter(o => o.v === 'mejor').length === 1);
+    const consignas = (m.consignas || []).filter(c => c && okTxt(c.c) && okTxt(c.p) && Number.isInteger(c.dia));
+    if(fichas.length < 2 || leer.length < 1 || decidir.length < 1) continue;
+    out.push(Object.assign({}, m, { fichas, leer, decidir, consignas }));
+  }
+  return out;
+}
+
+// Progreso por persona, sólo en el móvil: qué fichas ha leído y qué situaciones
+// ha fallado (para repetirlas). Nada de esto viaja a la nube.
+function _hspProgreso(emp){
+  emp.hsp = emp.hsp || { leidas:{}, hechas:{}, falladas:{}, modulo:null };
+  return emp.hsp;
+}
+
+// Una sesión: la primera ficha no leída, una situación para leer y una para
+// decidir. Se eligen con semilla de día + nombre para que el mismo día salga
+// lo mismo, y las falladas tienen prioridad sobre las nunca vistas.
+function _hspSesion(modulo, prog, semilla){
+  const rng = (typeof _mulberry32 === 'function') ? _mulberry32(semilla >>> 0) : Math.random;
+  const ficha = modulo.fichas.find(f => !(prog.leidas || {})[f.id]) || null;
+  const elegir = (lista) => {
+    const falladas = lista.filter(x => (prog.falladas || {})[x.id]);
+    const nuevas = lista.filter(x => !(prog.hechas || {})[x.id]);
+    const pool = falladas.length ? falladas : (nuevas.length ? nuevas : lista);
+    return pool[Math.floor(rng() * pool.length)] || null;
+  };
+  const leer = elegir(modulo.leer);
+  const decidir = elegir(modulo.decidir.filter(d => !leer || d.id !== leer.id));
+  const consigna = ficha ? (modulo.consignas.find(c => c.ficha === ficha.id) || null) : null;
+  return { ficha, leer, decidir, consigna };
+}
+
+// Corrección de una situación para LEER: cada ítem tiene su clase verdadera.
+function _hspCorregirLeer(sit, marcado){
+  const filas = sit.items.map((it, i) => ({ i, k: it.k, dicho: marcado[i] || null, ok: (marcado[i] || null) === it.k }));
+  const aciertos = filas.filter(f => f.ok).length;
+  return { filas, aciertos, total: filas.length, perfecto: aciertos === filas.length, bien: aciertos >= Math.ceil(filas.length * 0.7) };
+}
+
+// Corrección de una situación para DECIDIR: la elegida y su veredicto. «mejor»
+// y «vale» cuentan como bien; «no» cuenta como fallo; «limite» es fallo grave y
+// se dice con todas las letras.
+function _hspCorregirDecidir(sit, idx){
+  const o = sit.opts[idx];
+  if(!o) return null;
+  const mejor = sit.opts.findIndex(x => x.v === 'mejor');
+  return { idx, v: o.v, bien: o.v === 'mejor' || o.v === 'vale', limite: o.v === 'limite', mejor };
+}
+
+async function _hspCargar(){
+  if(HOSPITALIDAD) return HOSPITALIDAD;
+  try{
+    HOSPITALIDAD = await loadLazyData('data/hospitalidad.json', LANG==='en'?'Hospitality':'Hospitalidad');
+  }catch(e){ return null; }
+  return HOSPITALIDAD;
+}
+
+function _hspT(o, k){ return (LANG==='en' && o && o[k+'_en']) ? o[k+'_en'] : (o ? o[k] : ''); }
+
+// La tarjeta destacada, en Practicar y en el inicio. Sólo se pinta si se puede ver.
+function _hspCtaHTML(_en){
+  if(!_hspVisible()) return '';
+  return `<button type="button" class="ri-cta ri-cta-hsp" style="margin:0 0 1rem" aria-label="${_en?'Hospitality':'Hospitalidad'}" onclick="launchHospitalidad()">
+      <span class="ri-cta-icon" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 11c0 5.6-7 10-7 10z"/></svg></span>
+      <span class="ri-cta-text">
+        <span class="ri-cta-top">${_en?'Hospitality':'Hospitalidad'}${(HOSPITALIDAD && HOSPITALIDAD.revision!==false)?` <span style="font-size:.6rem;background:rgba(192,112,58,.16);border:1px solid rgba(192,112,58,.5);border-radius:99px;padding:.05rem .45rem;vertical-align:2px">${_en?'REVIEW':'REVISIÓN'}</span>`:''}</span>
+        <span class="ri-cta-sub">${_en?'Service psychology · 5 minutes a day':'Psicología de servicio · 5 minutos al día'}</span>
+      </span>
+    </button>`;
+}
+
+async function launchHospitalidad(){
+  const data = await _hspCargar();
+  if(!data) return;
+  if(!_hspVisible()){ if(typeof showToast==='function') showToast(LANG==='en'?'Not available yet':'Todavía no está disponible','info',2500); return; }
+  const modulos = _hspModulosValidos(data);
+  if(!modulos.length){ if(typeof showToast==='function') showToast(LANG==='en'?'No content yet':'Aún no hay contenido','warning',3000); return; }
+  const emp = getEmp(currentUser);
+  const prog = _hspProgreso(emp);
+  const modulo = modulos.find(m => m.id === prog.modulo) || modulos[0];
+  prog.modulo = modulo.id;
+  const semilla = (typeof _planSemilla === 'function') ? _planSemilla(todayStr(), currentUser) : Date.now();
+  const ses = _hspSesion(modulo, prog, semilla);
+  _hspState = { modulo, ses, paso: ses.ficha ? 'ficha' : (ses.leer ? 'leer' : 'decidir'), marcado: {}, resLeer: null, resDecidir: null, t0: Date.now() };
+  _hspRender();
+  document.addEventListener('keydown', _hspKeydown);
+}
+function _hspKeydown(e){ if(e.key==='Escape' && document.getElementById('hspOverlay')){ e.preventDefault(); _hspClose(); } }
+function _hspClose(){
+  document.removeEventListener('keydown', _hspKeydown);
+  const o = document.getElementById('hspOverlay');
+  if(o){ o.style.opacity='0'; o.style.transition='opacity .3s'; setTimeout(()=>{ if(o.parentNode) o.remove(); },300); }
+  _hspState = null;
+}
+
+function _hspRender(){
+  const S = _hspState; if(!S) return;
+  const _en = LANG==='en';
+  const pasos = ['ficha','leer','decidir','fin'];
+  const idx = pasos.indexOf(S.paso);
+  const steps = [1,2,3].map(n => `<span class="pase-step${n-1===idx?' on':''}${n-1<idx?' done':''}">${['I','II','III'][n-1]}</span>`).join('');
+  const cuerpo = S.paso==='ficha' ? _hspFichaHTML(_en) : S.paso==='leer' ? _hspLeerHTML(_en) : S.paso==='decidir' ? _hspDecidirHTML(_en) : _hspFinHTML(_en);
+  const html = `<div class="pase-container">
+    <div class="pase-head">
+      <div class="pase-head-top">
+        <div class="pase-eyebrow">${_en?'HOSPITALITY':'HOSPITALIDAD'} · ${_en?'MODULE':'MÓDULO'} ${S.modulo.n||1}</div>
+        <div class="pase-steps">${steps}</div>
+        <span class="snd-slot"></span>
+        <button class="pase-x" onclick="_hspClose()" aria-label="${_en?'Close':'Cerrar'}">✕</button>
+      </div>
+      <h2 class="pase-dish">${escapeHTML(_hspT(S.modulo,'t'))}</h2>
+      <div class="pase-cat">${escapeHTML(_hspT(S.modulo,'sub'))}</div>
+    </div>
+    <div class="pase-body">${cuerpo}</div>
+  </div>`;
+  const ex = document.getElementById('hspOverlay');
+  if(ex){ const c = ex.querySelector('.pase-container'); if(c){ c.outerHTML = html; const b = ex.querySelector('.pase-body'); if(b) b.scrollTop = 0; return; } ex.remove(); }
+  const ov = document.createElement('div');
+  ov.id = 'hspOverlay'; ov.className = 'pase-overlay';
+  ov.setAttribute('role','dialog'); ov.setAttribute('aria-modal','true');
+  ov.setAttribute('aria-label', _en?'Hospitality':'Hospitalidad');
+  ov.innerHTML = html;
+  document.body.appendChild(ov);
+}
+
+function _hspSec(l, inner){ return `<div class="hsp-sec"><div class="pase-zone-lbl">${l}</div><div class="hsp-sec-in">${inner}</div></div>`; }
+
+function _hspFichaHTML(_en){
+  const S = _hspState, f = S.ses.ficha;
+  const intro = !(_hspProgreso(getEmp(currentUser)).leidas||{})[f.id] && f.id === S.modulo.fichas[0].id
+    ? `<div class="hsp-intro">${(_en && S.modulo.intro_en ? S.modulo.intro_en : S.modulo.intro || []).map(p=>`<p>${escapeHTML(p)}</p>`).join('')}</div>` : '';
+  return `${intro}
+    <div class="hsp-ficha-n">${_en?'Card':'Ficha'} ${S.modulo.fichas.indexOf(f)+1} ${_en?'of':'de'} ${S.modulo.fichas.length}</div>
+    <h3 class="hsp-ficha-t">${escapeHTML(_hspT(f,'t'))}</h3>
+    ${_hspSec(_en?'What you do':'Qué se hace', `<p>${escapeHTML(_hspT(f,'hace'))}</p>`)}
+    ${_hspSec(_en?'Why it works':'Por qué funciona', `<p>${escapeHTML(_hspT(f,'porque'))}</p>`)}
+    ${f.sala?_hspSec(_en?'In our room':'En nuestra sala', `<p>${escapeHTML(_hspT(f,'sala'))}</p>`):''}
+    ${f.nunca?`<div class="hsp-nunca"><span class="pase-fix-l sobra">${_en?'Never':'Nunca'}</span><span>${escapeHTML(_hspT(f,'nunca'))}</span></div>`:''}
+    <div class="pase-actions"><button class="pase-serve" onclick="_hspSiguiente()">${S.ses.leer?(_en?'Now a situation →':'Ahora una situación →'):(_en?'Done':'Hecho')}</button></div>`;
+}
+
+function _hspLeerHTML(_en){
+  const S = _hspState, L = S.ses.leer, R = S.resLeer;
+  const K = { seguro:[_en?'Certain':'Seguro','ok'], hipotesis:[_en?'Guess':'Hipótesis','falta'], falta:[_en?'Would need':'Faltaría saber','sobra'] };
+  const items = L.items.map((it,i)=>{
+    const dicho = S.marcado[i] || null;
+    if(!R) return `<div class="hsp-item"><div class="hsp-item-t">${escapeHTML(_hspT(it,'t'))}</div>
+      <div class="hsp-item-k">${Object.keys(K).map(k=>`<button type="button" class="pase-chip pase-chip-alg${dicho===k?' on':''}" aria-pressed="${dicho===k}" onclick="_hspMarcar(${i},'${k}')">${K[k][0]}</button>`).join('')}</div></div>`;
+    const f = R.filas[i];
+    return `<div class="hsp-item ${f.ok?'ok':'bad'}"><div class="hsp-item-t">${f.ok?'✓':'↩'} ${escapeHTML(_hspT(it,'t'))}</div>
+      <div class="hsp-item-k"><span class="pase-chip pase-chip-alg ${f.ok?'ok':'sobra'}">${K[f.dicho]?K[f.dicho][0]:(_en?'(blank)':'(en blanco)')}</span>${f.ok?'':`<span class="pase-chip pase-chip-alg ok">${K[f.k][0]}</span>`}</div></div>`;
+  }).join('');
+  const listo = Object.keys(S.marcado).length === L.items.length;
+  const verdict = R ? `<div class="pase-verdict${R.perfecto?' ok':R.bien?' warn':' bad'}"><div class="pase-verdict-sello">${R.perfecto?'✓':R.bien?'≈':'↩'}</div>
+      <div class="pase-verdict-t">${R.perfecto?(_en?'Clean reading':'Lectura limpia'):R.bien?(_en?'Almost':'Casi'):(_en?'Look again':'Vuelve a mirar')} · ${R.aciertos}/${R.total}</div>
+      <div class="pase-verdict-s">${escapeHTML(_hspT(L,'ens'))}</div></div>` : '';
+  return `<div class="hsp-ficha-n">${_en?'Reading the table':'Leer la mesa'}</div>
+    <h3 class="hsp-ficha-t">${escapeHTML(_hspT(L,'t'))}</h3>
+    <p class="pase-intro hsp-esc">${escapeHTML(_hspT(L,'esc'))}</p>
+    ${R?'':`<p class="pase-intro">${_en?'For each line: is it certain, a guess, or something you would still need to know?':'De cada línea: ¿es seguro, es una hipótesis o es algo que faltaría saber?'}</p>`}
+    ${verdict}
+    <div class="hsp-items">${items}</div>
+    <div class="pase-actions">${R
+      ? `<button class="pase-serve" onclick="_hspSiguiente()">${S.ses.decidir?(_en?'Now decide →':'Ahora decide →'):(_en?'Finish':'Terminar')}</button>`
+      : `<button class="pase-serve" onclick="_hspResponderLeer()"${listo?'':' disabled'}>${_en?'Check':'Comprobar'}</button>`}</div>`;
+}
+
+function _hspDecidirHTML(_en){
+  const S = _hspState, D = S.ses.decidir, R = S.resDecidir;
+  const opts = D.opts.map((o,i)=>{
+    if(!R) return `<button type="button" class="hsp-opt" onclick="_hspElegir(${i})"><span class="hsp-opt-l">${String.fromCharCode(65+i)}</span><span>${escapeHTML(_hspT(o,'t'))}</span></button>`;
+    const cls = i===R.idx ? (o.v==='mejor'?'ok':o.v==='vale'?'warn':'bad') : (o.v==='mejor'?'ok':o.v==='limite'?'limite':'mudo');
+    const tag = o.v==='mejor'?(_en?'Best':'La mejor'):o.v==='vale'?(_en?'Also valid':'También vale'):o.v==='limite'?(_en?'Out of bounds':'Fuera de límite'):(_en?'No':'No');
+    return `<div class="hsp-opt rev ${cls}"><div><span class="hsp-opt-l">${String.fromCharCode(65+i)}</span><span>${escapeHTML(_hspT(o,'t'))}</span>${i===R.idx?` <span class="pase-fix-l ${o.v==='mejor'||o.v==='vale'?'ok':'sobra'}">${_en?'your choice':'tu elección'}</span>`:''}</div>
+      <div class="hsp-opt-fb"><span class="pase-fix-l ${o.v==='mejor'||o.v==='vale'?'ok':o.v==='limite'?'sobra':'falta'}">${tag}</span> ${escapeHTML(_hspT(o,'fb'))}</div></div>`;
+  }).join('');
+  const verdict = R ? `<div class="pase-verdict${R.v==='mejor'?' ok':R.v==='vale'?' warn':' bad'}"><div class="pase-verdict-sello">${R.v==='mejor'?'✓':R.v==='vale'?'≈':'↩'}</div>
+      <div class="pase-verdict-t">${R.v==='mejor'?(_en?'That is caring':'Eso es cuidar'):R.v==='vale'?(_en?'Valid, and there was a better one':'Vale, y había una mejor'):R.limite?(_en?'Out of bounds':'Fuera de límite'):(_en?'Not like that':'Así no')}</div>
+      <div class="pase-verdict-s">${R.limite?(_en?'Safety, truth and privacy are never traded for a nice moment.':'La seguridad, la verdad y la privacidad nunca se cambian por un momento bonito.'):(_en?'Read why each option works or not.':'Lee por qué funciona o no cada opción.')}</div></div>` : '';
+  return `<div class="hsp-ficha-n">${_en?'Deciding':'Decidir'}</div>
+    <h3 class="hsp-ficha-t">${escapeHTML(_hspT(D,'t'))}</h3>
+    <p class="pase-intro hsp-esc">${escapeHTML(_hspT(D,'esc'))}</p>
+    <p class="hsp-q">${escapeHTML(_hspT(D,'q'))}</p>
+    ${verdict}
+    <div class="hsp-opts">${opts}</div>
+    ${R?`<div class="pase-actions"><button class="pase-serve" onclick="_hspSiguiente()">${_en?'Finish':'Terminar'}</button></div>`:''}`;
+}
+
+function _hspFinHTML(_en){
+  const S = _hspState, c = S.ses.consigna;
+  return `<div class="pase-verdict ok"><div class="pase-verdict-sello">✓</div>
+      <div class="pase-verdict-t">${_en?'Session done':'Sesión hecha'}</div>
+      <div class="pase-verdict-s">${_en?'Five minutes a day. Tomorrow, the next card.':'Cinco minutos al día. Mañana, la siguiente ficha.'}</div></div>
+    ${c?`<div class="hsp-consigna"><div class="pase-zone-lbl">${_en?'For today\'s service':'Para el servicio de hoy'}</div><p>${escapeHTML(_hspT(c,'c'))}</p></div>`:''}
+    <div class="pase-actions"><button class="pase-serve" onclick="_hspClose()">${_en?'Close':'Cerrar'}</button></div>`;
+}
+
+function _hspMarcar(i, k){ const S=_hspState; if(!S||S.resLeer) return; S.marcado[i]=k; _hspRender(); }
+function _hspResponderLeer(){
+  const S=_hspState; if(!S||S.resLeer) return;
+  S.resLeer = _hspCorregirLeer(S.ses.leer, S.marcado);
+  _hspAnotar(S.ses.leer.id, S.resLeer.bien);
+  if(typeof playSound==='function') playSound(S.resLeer.bien?'correct':'wrong');
+  _hspRender();
+}
+function _hspElegir(i){
+  const S=_hspState; if(!S||S.resDecidir) return;
+  S.resDecidir = _hspCorregirDecidir(S.ses.decidir, i);
+  _hspAnotar(S.ses.decidir.id, S.resDecidir.bien);
+  if(typeof playSound==='function') playSound(S.resDecidir.bien?'correct':'wrong');
+  _hspRender();
+}
+function _hspAnotar(id, bien){
+  try{
+    const prog = _hspProgreso(getEmp(currentUser));
+    prog.hechas[id] = todayStr();
+    if(bien) delete prog.falladas[id]; else prog.falladas[id] = todayStr();
+    saveDB();
+  }catch(e){}
+}
+function _hspSiguiente(){
+  const S=_hspState; if(!S) return;
+  if(S.paso==='ficha'){
+    try{ const prog=_hspProgreso(getEmp(currentUser)); prog.leidas[S.ses.ficha.id]=todayStr(); saveDB(); }catch(e){}
+    S.paso = S.ses.leer ? 'leer' : (S.ses.decidir ? 'decidir' : 'fin');
+  } else if(S.paso==='leer'){ S.paso = S.ses.decidir ? 'decidir' : 'fin'; }
+  else if(S.paso==='decidir'){ S.paso = 'fin'; }
+  if(S.paso==='fin'){
+    // Sólo «hizo la sesión»: sin puntuación. Es lo único que sale del móvil.
+    try{ if(typeof registrarActividad==='function') registrarActividad({ activity:'hospitalidad', competency:'servicio', kind:'practica', seconds:Math.round((Date.now()-S.t0)/1000) }); }catch(e){}
+  }
+  _hspRender();
+}
+
 // ═══ EL CÓDIGO DEL CAMARERO — lo que solo enseñan los años ═══
 // Manual de oficio consultable (no un examen): leer la mesa, el momento
 // justo, las frases exactas, los fuegos, las personas difíciles, los

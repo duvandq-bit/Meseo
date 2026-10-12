@@ -10605,3 +10605,37 @@ body:has(#gsOverlay.open) .ux2-bar{
   opacity:0;visibility:hidden;pointer-events:none;
   transition:opacity .2s ease,visibility .2s ease;
 }
+
+/* ── Hospitalidad · sobre los estilos del Pase ────────────────────────── */
+.ri-cta-hsp{background:linear-gradient(135deg,#6b8f71,#3d5c44)}
+.hsp-intro{background:linear-gradient(155deg,#faf6ee,#f0e8d8);border:1px solid var(--line2);border-left:3px solid var(--gold);border-radius:var(--radius-lg);padding:var(--space-4);margin-bottom:var(--space-4)}
+.hsp-intro p{font-family:var(--font-read);font-size:var(--text-sm);line-height:1.6;color:var(--parch2);margin:0 0 var(--space-3)}
+.hsp-intro p:last-child{margin-bottom:0}
+.hsp-ficha-n{font-family:var(--font-mono);font-size:var(--text-micro);letter-spacing:.18em;text-transform:uppercase;color:var(--gold-deep);margin-bottom:var(--space-1)}
+.hsp-ficha-t{font-family:var(--font-serif);font-size:var(--text-lg);font-weight:600;color:var(--parchment);line-height:1.25;margin:0 0 var(--space-4)}
+.hsp-sec{margin-bottom:var(--space-4)}
+.hsp-sec-in p{font-family:var(--font-read);font-size:var(--text-sm);line-height:1.6;color:var(--parch2);margin:0}
+.hsp-nunca{display:flex;flex-wrap:wrap;align-items:baseline;gap:var(--space-2);font-family:var(--font-sans);font-size:var(--text-xs);line-height:1.5;color:#8f3f38;background:rgba(193,74,58,.08);border:1px solid rgba(193,74,58,.25);border-radius:var(--radius-md);padding:var(--space-3);margin-bottom:var(--space-4)}
+.hsp-esc{font-style:italic}
+.hsp-q{font-family:var(--font-serif);font-size:var(--text-base);font-weight:600;color:var(--parchment);margin:0 0 var(--space-3)}
+.hsp-items{display:flex;flex-direction:column;gap:var(--space-3);margin-bottom:var(--space-4)}
+.hsp-item{border:1px solid var(--line2);border-radius:var(--radius-md);padding:var(--space-3);background:linear-gradient(155deg,#faf6ee,#f0e8d8)}
+.hsp-item.ok{border-color:var(--sage)}
+.hsp-item.bad{border-color:rgba(193,74,58,.5)}
+.hsp-item-t{font-family:var(--font-sans);font-size:var(--text-sm);color:var(--parchment);margin-bottom:var(--space-2);line-height:1.4}
+.hsp-item-k{display:flex;flex-wrap:wrap;gap:var(--space-2)}
+.hsp-item-k .pase-chip{min-height:38px}
+.hsp-opts{display:flex;flex-direction:column;gap:var(--space-2);margin-bottom:var(--space-4)}
+.hsp-opt{display:flex;gap:var(--space-2);align-items:flex-start;text-align:left;width:100%;padding:var(--space-3);border-radius:var(--radius-md);background:linear-gradient(155deg,#faf6ee,#f0e8d8);border:1.5px solid var(--line2);border-left:3px solid var(--gold);color:var(--parchment);font-family:var(--font-sans);font-size:var(--text-sm);line-height:1.45;cursor:pointer;min-height:48px;-webkit-tap-highlight-color:transparent}
+.hsp-opt:active{transform:scale(.985)}
+.hsp-opt-l{flex-shrink:0;font-family:var(--font-mono);font-size:var(--text-2xs);color:var(--gold-deep);font-weight:700;letter-spacing:.1em;padding-top:2px}
+.hsp-opt.rev{flex-direction:column;cursor:default;gap:var(--space-2)}
+.hsp-opt.rev>div:first-child{display:flex;gap:var(--space-2);align-items:flex-start;flex-wrap:wrap}
+.hsp-opt.rev.ok{border-color:var(--sage);border-left-color:var(--green-deep)}
+.hsp-opt.rev.warn{border-left-color:var(--gold)}
+.hsp-opt.rev.bad{border-color:rgba(193,74,58,.5);border-left-color:var(--rose)}
+.hsp-opt.rev.limite{border-color:rgba(193,74,58,.5);border-left-color:var(--rose);background:rgba(193,74,58,.06)}
+.hsp-opt.rev.mudo{opacity:.75}
+.hsp-opt-fb{font-family:var(--font-read);font-size:var(--text-xs);line-height:1.5;color:var(--parch2)}
+.hsp-consigna{border:1.5px dashed var(--gold);border-radius:var(--radius-lg);padding:var(--space-4);margin-bottom:var(--space-4);background:rgba(212,170,76,.08)}
+.hsp-consigna p{font-family:var(--font-serif);font-size:var(--text-base);color:var(--parchment);line-height:1.5;margin:0}
