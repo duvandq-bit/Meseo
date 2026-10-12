@@ -2088,7 +2088,7 @@ body::after{
   text-align:center;padding:.6rem;letter-spacing:.04em}
 .nav-dd-list .nav-btn{display:flex;align-items:center;gap:.85rem;width:100%;min-height:56px;padding:.9rem 1.1rem;
   border:none;border-left:4px solid transparent;border-radius:0;background:transparent;cursor:pointer;text-align:left;
-  font-family:'Cinzel',serif;font-weight:500;font-size:.9rem;letter-spacing:.02em;text-transform:none;
+  font-family:var(--font-serif);font-weight:500;font-size:var(--fs-4);letter-spacing:.02em;text-transform:none;
   color:rgba(28,42,34,.75);white-space:nowrap;flex:0 0 auto;margin:0}
 .nav-dd-list .nav-btn + .nav-btn{border-top:1px solid rgba(196,154,60,.14)}
 .nav-dd-list .nav-btn svg{width:19px;height:19px;flex-shrink:0}
@@ -10644,3 +10644,57 @@ body:has(#gsOverlay.open) .ux2-bar{
 .hsp2-btn:active,.hsp2-next:active{transform:scale(.985)}
 .hsp2-link{display:block;margin:0 auto;background:none;border:none;font-family:var(--font-mono);font-size:.8rem;letter-spacing:.1em;text-transform:uppercase;color:var(--parch3);padding:var(--space-3);cursor:pointer}
 @media (max-width:360px){.hsp2-row,.hsp2-cols{grid-template-columns:1fr}.hsp2-colh{display:none}.hsp2-cell.tarea::before{content:'✗ ';}.hsp2-cell.persona::before{content:'✓ ';}}
+
+/* ═════════════════════════════════════════════════
+   ESCALA TIPOGRÁFICA · siete tamaños y cuatro letras
+   Cada letra tiene un trabajo:
+     Cinzel     → títulos de pantalla, sección y tarjeta. Nada más.
+     Quicksand  → texto, filas, botones, cifras.
+     Cormorant  → párrafos para leer con calma.
+     DM Mono    → etiquetas cortas en mayúsculas. Sin negrita real: 400/500.
+   Ningún texto baja de 11 px. Las pantallas se van pasando aquí
+   una a una; de momento: Inicio, cabecera, menú, pestañas y pie.
+───────────────────────────────────────────────── */
+:root{
+  --fs-1: max(11px, .62rem);  /* 11   etiqueta              */
+  --fs-2: .7rem;              /* 12.6 nota pequeña          */
+  --fs-3: .78rem;             /* 14   texto                 */
+  --fs-4: .89rem;             /* 16   fila, botón           */
+  --fs-5: 1rem;               /* 18   título de tarjeta     */
+  --fs-6: 1.22rem;            /* 22   título de pantalla    */
+  --fs-7: 1.55rem;            /* 28   cifra grande          */
+}
+
+/* Título de pantalla */
+.dash-hero-greeting,.dash-hero-name,.pdd-title{font-family:var(--font-serif);font-size:var(--fs-6)}
+.dash-hero-greeting{font-weight:500}
+.dash-hero-name,.pdd-title{font-weight:700}
+
+/* Título de sección (y nombres de pantalla en el menú: son títulos) */
+.tunic-divider span,.nav-dd-cur{font-family:var(--font-serif);font-size:var(--fs-3);font-weight:600;letter-spacing:.14em;text-transform:uppercase}
+
+/* Título de tarjeta */
+.dash-plating-title,.ri-cta-top{font-family:var(--font-serif);font-size:var(--fs-5);font-weight:700;letter-spacing:.02em;text-transform:none}
+.xp-bar-title{font-family:var(--font-serif);font-size:var(--fs-3);font-weight:600}
+
+/* Fila: lo que se toca */
+.plan-tarea-t,.hoy-numrow-t,.dash-row-title,.dash-index-lbl,.install-banner-tx b{font-family:var(--font-sans);font-size:var(--fs-4);font-weight:700;letter-spacing:0;text-transform:none}
+
+/* Texto */
+.plan-hoy-resumen,.pdd-sub,.ri-cta-sub,.plan-tarea-m,.dash-row-sub,.dash-plating-sub,.install-banner-tx span,.login-foot-brand p,.login-foot-mail,.login-foot-col li>*{font-family:var(--font-sans);font-size:var(--fs-3);font-weight:500;letter-spacing:0;text-transform:none}
+.login-foot-notes p,.login-foot-notes strong,.btn-logout{font-family:var(--font-sans);font-size:var(--fs-2)}
+
+/* Botón */
+.pdd-cta,.install-banner-btn{font-family:var(--font-sans);font-size:var(--fs-4);font-weight:700;letter-spacing:.02em}
+
+/* Cifra */
+.hoy-stat b,.plan-hoy-prog b{font-family:var(--font-sans);font-size:var(--fs-7);font-weight:700;font-variant-numeric:tabular-nums;letter-spacing:0}
+.plan-hoy-prog span,.dash-row-num{font-family:var(--font-sans);font-size:var(--fs-5);font-weight:700;font-variant-numeric:tabular-nums}
+.dash-row-num{font-size:var(--fs-6)}
+.plan-tarea-go,.dash-row-go{font-family:var(--font-sans);font-weight:400}
+
+/* Etiqueta */
+.dash-hero-label,.plan-hoy-eyebrow,.dash-plating-eyebrow,.pdd-eyebrow span,.hoy-stat span,.dash-index-meta,.nav-group-lbl,.nav-dd-menu-lbl,.login-foot-col h4,.plan-tarea-min,.hoy-numrow-meta,.xp-bar-sub span,.dash-hero-lvl-num,.plan-tarea-marca,.hoy-num,.ri-cta-nuevo{font-family:var(--font-mono);font-size:var(--fs-1);font-weight:500;letter-spacing:.12em;text-transform:uppercase}
+.xp-bar-sub span,.dash-hero-lvl-num,.plan-tarea-marca,.hoy-num,.plan-tarea-min{letter-spacing:.06em;text-transform:none}
+.login-foot-copy span,.app-credit{font-family:var(--font-mono);font-size:var(--fs-1);font-weight:400}
+.ux2-lbl{font-family:var(--font-sans);font-size:var(--fs-1)}
