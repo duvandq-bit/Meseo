@@ -16860,6 +16860,17 @@ test('Sonido de error: suave, dos notas que bajan, sin zumbido', () => {
   assert(/\[\[330,0,0\.13\],\[233,0\.14,0\.22\]\]/.test(w) && /o\.type='triangle'/.test(w), 'dos notas triangulares que bajan');
   assert(/exponentialRampToValueAtTime\(0\.09,t0\+d\+0\.015\)/.test(w), 'ataque suave y por debajo del acierto');
 });
+test('Restaurante 2: colores de Akira Back (carbón, champán e índigo) y Txoko intacto', () => {
+  const T = JSON.parse(read('data/themes.json'));
+  const r2 = T.venues.find(v => v.id === 'r2'), tx = T.venues.find(v => v.id === 'txoko');
+  assert(r2.brand.ink === '#141416' && r2.brand.accent === '#c2a161' && r2.brand.primary === '#2a2d3a', 'r2 lleva la paleta de carbón y champán');
+  assert(tx.brand.primary === '#2d6a3e' && tx.brand.accent === '#c49a3c', 'Txoko conserva su verde y su dorado');
+  assert(/document\.documentElement\.setAttribute\('data-venue', v\.id\);/.test(html), 'el tema marca el restaurante en <html>');
+  const css = read('styles.css');
+  for (const sel of ['.app-header', '.dash-hero', '.dash-plating', '.ri-cta-pase', '.ri-cta-hsp', '.saber-bar'])
+    assert(css.includes(`html[data-venue="r2"] ${sel}{`), `r2 tiñe ${sel}`);
+  assert(!/html\[data-venue="txoko"\]/.test(css), 'a Txoko no se le toca nada');
+});
 test('Letras: la escala de siete tamaños existe y no baja de 11 px', () => {
   const css = read('styles.css');
   const toks = [...css.matchAll(/--fs-(\d):\s*([^;]+);/g)].map(m => [m[1], m[2].trim()]);

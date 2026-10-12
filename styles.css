@@ -10678,3 +10678,40 @@ body:has(#gsOverlay.open) .ux2-bar{
 .hdr-avisos.bloqueado{opacity:.6}
 .hdr-avisos.ocupado{opacity:.5;pointer-events:none}
 .hdr-btn[hidden]{display:none}
+
+/* ═══ RESTAURANTE 2 · Akira Back ═══
+   El local es oscuro: madera carbonizada (shou sugi ban), mármol negro,
+   pan de oro en la escalera y la barra, y pétalos índigo en el techo. Las
+   superficies oscuras que en Txoko son verde bosque aquí son carbón, el
+   dorado es champán y el toque de color es índigo. Txoko no cambia. */
+html[data-venue="r2"] .app-header{
+  background:linear-gradient(145deg,#26262b 0%,#17171a 55%,#0e0e10 100%);
+  border-bottom:1px solid rgba(194,161,97,.45);
+  box-shadow:0 3px 12px rgba(0,0,0,.35), inset 0 -1px 0 rgba(194,161,97,.18);
+}
+html[data-venue="r2"] .app-header .header-logo{color:#eadcbf}
+html[data-venue="r2"] .hdr-btn{background:rgba(194,161,97,.08);border-color:rgba(194,161,97,.38);color:#eadcbf}
+html[data-venue="r2"] .hdr-avisos.on{background:rgba(194,161,97,.22);border-color:rgba(194,161,97,.7)}
+html[data-venue="r2"] .dash-hero{
+  background:
+    radial-gradient(ellipse at 30% 10%,rgba(194,161,97,.16) 0%,transparent 55%),
+    radial-gradient(ellipse at 85% 95%,rgba(75,81,112,.28) 0%,transparent 60%),
+    linear-gradient(135deg,#121214 0%,#222227 50%,#121214 100%);
+  border-color:rgba(194,161,97,.38);
+}
+html[data-venue="r2"] .dash-plating{
+  background:linear-gradient(150deg,#222226 0%,#141416 55%,#1c1c21 100%);
+  border-color:rgba(194,161,97,.42);
+  box-shadow:0 6px 20px rgba(0,0,0,.3), inset 0 1px 0 rgba(194,161,97,.16);
+}
+html[data-venue="r2"] .ri-cta-pase{
+  background:linear-gradient(150deg,#141416 0%,#24242a 55%,#141416 100%);
+  border-color:rgba(194,161,97,.45);
+  box-shadow:0 4px 16px rgba(0,0,0,.3), inset 0 1px 0 rgba(194,161,97,.14);
+}
+html[data-venue="r2"] .ri-cta-hsp{background:linear-gradient(135deg,#565d82,#2a2d3a)}
+html[data-venue="r2"] .saber-bar{background:#17171a}
+html[data-venue="r2"] .saber-bar .subtab-chip.on{color:#e0c88f}
+html[data-venue="r2"] .xp-bar-wrap{background:linear-gradient(155deg,rgba(38,38,44,.6) 0%,rgba(20,20,22,.75) 50%,rgba(38,38,44,.6) 100%);border-color:rgba(194,161,97,.3)}
+html[data-venue="r2"] .ri-cta-pase .ri-cta-nuevo{background:rgba(194,161,97,.14)!important;border-color:rgba(194,161,97,.55)!important;color:#e0c88f}
+html[data-venue="r2"] .ri-cta-pase .ri-cta-icon{border-color:rgba(194,161,97,.4)}

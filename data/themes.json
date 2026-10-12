@@ -66,14 +66,14 @@
    "subtitle_en": "Team Training",
    "title": "Meseo · Formación de sala",
    "brand": {
-    "primary": "#5a2233",
-    "secondary": "#8a4a5e",
-    "accent": "#b0763c",
-    "accentHi": "#d9a05e",
-    "accent2": "#c08a4c",
-    "accentDeep": "#6e4a26",
-    "ink": "#221a1e",
-    "paper": "#f4ede6"
+    "primary": "#2a2d3a",
+    "secondary": "#4b5170",
+    "accent": "#c2a161",
+    "accentHi": "#e0c88f",
+    "accent2": "#cfb071",
+    "accentDeep": "#7c6331",
+    "ink": "#141416",
+    "paper": "#f2efe9"
    },
    "dishIds": {
     "from": 3000,
