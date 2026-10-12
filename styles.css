@@ -4944,6 +4944,24 @@ body::after{
 .tec-fam-n{font-family:'DM Mono',monospace;font-size:.58rem;color:#fff;background:var(--tec-col,#a3502a);
   min-width:1.15rem;text-align:center;padding:.05rem .32rem;border-radius:20px;line-height:1.4}
 .tec-fam::after{content:'';display:block;height:1px;background:linear-gradient(90deg,color-mix(in srgb,var(--tec-col,#a3502a) 30%,transparent),transparent);margin-top:-.35rem}
+/* Técnicas · Glosario (cartas con glosario propio, p. ej. r2) */
+.tec-vista{display:flex;gap:.4rem;margin:0 0 1rem;padding:.25rem;border-radius:12px;background:var(--ink2);border:1px solid var(--ink3)}
+.tec-vista button{flex:1;min-height:40px;border:none;border-radius:9px;background:transparent;cursor:pointer;
+  font-family:'DM Mono',monospace;font-size:.68rem;letter-spacing:.12em;text-transform:uppercase;color:var(--parch3);
+  -webkit-tap-highlight-color:transparent;touch-action:manipulation}
+.tec-vista button.on{background:linear-gradient(150deg,#2d6a3e,#22532f);color:#fbf7ee;box-shadow:0 2px 0 rgba(0,0,0,.15)}
+.glo-aviso{font-size:.76rem;line-height:1.5;color:var(--parch3);margin:0 0 .7rem}
+.glo-search{width:100%;box-sizing:border-box;min-height:44px;padding:.65rem .9rem;margin:0 0 .9rem;font-size:16px;
+  font-family:'Quicksand',sans-serif;color:var(--parchment);background:linear-gradient(155deg,#faf6ee,#f0e8d8);
+  border:1.5px solid var(--ink3);border-radius:var(--r2);outline:none;-webkit-appearance:none}
+.glo-search:focus{border-color:var(--gold)}
+.glo-card{--tec-col:#8a6d3b}
+.glo-top{display:flex;align-items:baseline;flex-wrap:wrap;gap:.25rem .55rem;margin-bottom:.35rem}
+.glo-t{font-family:'Cinzel',serif;font-size:1rem;font-weight:700;color:var(--parchment);line-height:1.15}
+.glo-jp{font-size:.95rem;color:var(--parch2);font-family:'Hiragino Sans','Noto Sans JP','Noto Sans KR','Noto Sans SC','Yu Gothic',sans-serif}
+.glo-o{margin-left:auto;font-family:'DM Mono',monospace;font-size:.55rem;letter-spacing:.1em;text-transform:uppercase;
+  color:#fff;background:var(--tec-col);padding:.1rem .42rem;border-radius:6px}
+.glo-vacio{text-align:center;font-family:'DM Mono',monospace;font-size:.7rem;color:var(--parch3);padding:1.2rem}
 .tec-card{position:relative;background:linear-gradient(155deg,#fdfaf3,#f4ecdc);border:1px solid var(--ink3);
   border-left:4px solid var(--tec-col,#a3502a);border-radius:var(--r2);
   padding:.8rem .9rem .85rem;margin-bottom:.6rem;box-shadow:0 2px 0 var(--ink4)}
