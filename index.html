@@ -52,7 +52,7 @@
 <meta property="og:description" content="Formación de equipos de sala: carta, alérgenos, vinos, exámenes y juegos de repaso.">
 <meta property="og:url" content="https://meseo.es/">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"Meseo","url":"https://meseo.es/"}</script>
-<meta name="app-version" content="7.489">
+<meta name="app-version" content="7.490">
 <meta name="app-build" content="May 2026">
 <meta name="theme-color" content="#1c2a22">
 <!-- ═══ PWA ═══ -->
@@ -345,9 +345,12 @@
     <div class="header-logo" id="headerLogo" role="button" tabindex="0" aria-label="Ir al inicio" title="Ir al inicio" style="cursor:pointer" onclick="showTab('dashboard')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();showTab('dashboard')}">Meseo</div>
     <div class="header-spacer"></div>
     <div class="header-user">
-      <div class="header-avatar" id="headerAvatar" role="button" tabindex="0" aria-label="Ajustes y perfil" onclick="openAjustes()" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openAjustes()}"></div>
+      <div class="header-avatar" id="headerAvatar" hidden></div>
       <span class="header-uname" id="headerUsername"></span>
-      <button id="pushEnableBtn" onclick="enablePushManual()" aria-label="Activar notificaciones push" role="button" style="display:none;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.25);cursor:pointer;padding:6px 10px;border-radius:6px;font-family:var(--font-mono);font-size:var(--fs-1);color:rgba(255,255,255,.85);letter-spacing:.03em;min-height:44px;min-width:44px" title="Activar notificaciones push">◎</button>
+<!-- Avisos: interruptor de un toque (oct 2026). Antes sólo salía cuando
+           estaban apagados y desaparecía al encenderlos: no había forma de
+           apagarlos ni de saber si estaban encendidos. -->
+      <button type="button" id="hdrAvisos" class="hdr-btn hdr-avisos" onclick="toggleAvisos()" aria-pressed="false" aria-label="Activar avisos" title="Activar avisos" hidden><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/><path class="hdr-avisos-tachado" d="M3 3l18 18"/></svg></button>
       <button id="notifBell" onclick="renderNotifPanel()" aria-label="Notificaciones" role="button" style="display:none;background:transparent;border:none;cursor:pointer;padding:8px;position:relative;font-size:1.2rem;line-height:1;min-height:44px;min-width:44px">
         ◉<span id="notifBadge" style="position:absolute;top:-2px;right:-2px;background:var(--rose);color:#fff;border-radius:50%;width:18px;height:18px;font-size:.55rem;font-family:var(--font-sans);font-weight:700;display:none;align-items:center;justify-content:center"></span>
       </button>
@@ -360,7 +363,13 @@
       <!-- Cabecera de tres piezas (oct 2026): el nombre, la lupa y tu avatar.
            Ayuda, idioma y Salir viven en Ajustes, que abre el avatar: en la
            cabecera tapaban el nombre del restaurante y no cabían a 320 px. -->
+      <!-- El idioma, a un toque y a la vista (oct 2026): dentro de Ajustes no
+           lo encontraba nadie. Enseña el idioma AL QUE cambia. -->
+      <button type="button" id="hdrIdioma" class="hdr-btn hdr-idioma" onclick="setLangApp(LANG==='en'?'es':'en')" aria-label="Switch to English" title="English">EN</button>
       <button type="button" id="hdrBuscar" class="hdr-btn" onclick="openGlobalSearch()" aria-label="Buscar plato, vino o alérgeno" title="Buscar"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.6-3.6"/></svg></button>
+      <!-- Ajustes: la tuerca de siempre (petición del propietario: el círculo
+           con la inicial no se reconocía como ajustes). -->
+      <button type="button" id="hdrAjustes" class="hdr-btn" onclick="openAjustes()" aria-label="Ajustes" title="Ajustes"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></button>
     </div>
   </header>
 
@@ -1735,6 +1744,18 @@ const CAT_EMOJIS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24" f
 
 
 function applyLangToApp() {
+  // La barra de abajo también cambia de idioma (antes se quedaba en español).
+  const _ux2L = { ux2LblHoy:['Hoy','Today'], ux2LblSaber:['Saber','Learn'], ux2LblPracticar:['Practicar','Practise'],
+                  ux2LblEquipo:['Equipo','Team'], ux2LblYo:['Yo','Me'], ux2SupLbl:['Panel de supervisor','Supervisor panel'] };
+  for (const id in _ux2L) { const e = document.getElementById(id); if (e) e.textContent = _ux2L[id][LANG==='en'?1:0]; }
+  const _ha = document.getElementById('hdrAjustes');
+  if (_ha) { _ha.setAttribute('aria-label', LANG==='en'?'Settings':'Ajustes'); _ha.title = LANG==='en'?'Settings':'Ajustes'; }
+  const _hi = document.getElementById('hdrIdioma');
+  if (_hi) {
+    _hi.textContent = LANG==='en' ? 'ES' : 'EN';
+    _hi.setAttribute('aria-label', LANG==='en' ? 'Cambiar a español' : 'Switch to English');
+    _hi.title = LANG==='en' ? 'Español' : 'English';
+  }
   const lb = document.getElementById('logoutBtn');
   if (lb) lb.textContent = LANG==='en'?'Log out':'Salir';
   // Nav labels — must match actual button IDs in the nav
@@ -2770,7 +2791,7 @@ const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><p
 const SRC = 'src';
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='7.489';  // sincronizada con sw.js VERSION (guard de CI)
+const APP_VERSION='7.490';  // sincronizada con sw.js VERSION (guard de CI)
 const APP_BUILD='Jul 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;
@@ -5537,54 +5558,77 @@ async function subscribeToPush(employeeName) {
         });
       } catch(e2) { /* non-critical */ }
     }
-    // Hide the enable button since push is now active
-    var pushBtn = document.getElementById('pushEnableBtn');
-    if(pushBtn) pushBtn.style.display = 'none';
   } catch(e) { dbgw('[Txoko Push] Subscribe error:', e); }
 }
 
-// Check push status and show enable button if needed
-async function checkPushStatus() {
-  var pushBtn = document.getElementById('pushEnableBtn');
-  if(!pushBtn) return;
-  try {
-    if(!('Notification' in window) || !('serviceWorker' in navigator) || !('PushManager' in window)) {
-      pushBtn.style.display = 'none'; // Device doesn't support push at all
-      return;
-    }
-    if(Notification.permission === 'granted') {
-      // Check if subscription actually exists
-      var reg = await navigator.serviceWorker.getRegistration();
-      if(reg) {
-        var sub = await reg.pushManager.getSubscription();
-        if(sub) { pushBtn.style.display = 'none'; return; } // All good
-      }
-    }
-    // Show button if permission not granted OR no subscription
-    pushBtn.style.display = 'inline-block';
-  } catch(e) { pushBtn.style.display = 'inline-block'; }
+// ═══ AVISOS · interruptor de un toque ═══════════════════════════════════
+// Estado real, no supuesto: lo que digan el navegador y la suscripción.
+//   'no'        el dispositivo no admite avisos (el botón no sale)
+//   'bloqueado' el usuario los bloqueó en el navegador: sólo él puede abrirlos
+//   'on'        hay permiso y suscripción
+//   'off'       todo lo demás
+// Apagar es una decisión del usuario y se recuerda (txk_avisos_off): sin eso,
+// el alta automática del siguiente inicio de sesión los volvía a encender.
+async function _avisosEstado(){
+  try{
+    if(!('Notification' in window) || !('serviceWorker' in navigator) || !('PushManager' in window)) return 'no';
+    if(Notification.permission === 'denied') return 'bloqueado';
+    if(Notification.permission !== 'granted') return 'off';
+    const reg = await navigator.serviceWorker.getRegistration();
+    const sub = reg ? await reg.pushManager.getSubscription() : null;
+    return sub ? 'on' : 'off';
+  }catch(_){ return 'off'; }
 }
-
-// Manual push enable button handler
-async function enablePushManual() {
-  var pushBtn = document.getElementById('pushEnableBtn');
-  if(pushBtn) { pushBtn.textContent = '⏳'; pushBtn.style.background = 'rgba(255,200,0,.25)'; }
-  if(currentUser) await subscribeToPush(currentUser);
-  // Re-check status
-  await checkPushStatus();
-  if(pushBtn && pushBtn.style.display !== 'none') {
-    // Still not working — permission likely blocked
-    pushBtn.textContent = '×';
-    pushBtn.title = LANG==='en' ? 'Notifications blocked — enable in browser settings' : 'Notificaciones bloqueadas — actívalas en ajustes del navegador';
-    pushBtn.style.background = 'rgba(255,0,0,.2)';
-    pushBtn.onclick = function() {
-      showToast(LANG==='en'
+function _avisosApagados(){ try{ return localStorage.getItem('txk_avisos_off')==='1'; }catch(_){ return false; } }
+async function checkPushStatus(){
+  const b = document.getElementById('hdrAvisos');
+  if(!b) return;
+  const e = await _avisosEstado();
+  const _en = LANG==='en';
+  b.hidden = (e === 'no');
+  const on = e === 'on';
+  b.classList.toggle('on', on);
+  b.classList.toggle('bloqueado', e === 'bloqueado');
+  b.setAttribute('aria-pressed', on ? 'true' : 'false');
+  const t = on ? (_en?'Notifications on · tap to turn off':'Avisos activados · toca para apagarlos')
+          : e === 'bloqueado' ? (_en?'Notifications blocked in the browser':'Avisos bloqueados en el navegador')
+          : (_en?'Notifications off · tap to turn on':'Avisos apagados · toca para activarlos');
+  b.setAttribute('aria-label', t); b.title = t;
+}
+let _avisosOcupado = false;
+async function toggleAvisos(){
+  if(_avisosOcupado || !currentUser) return;
+  _avisosOcupado = true;
+  const b = document.getElementById('hdrAvisos');
+  if(b) b.classList.add('ocupado');
+  const _en = LANG==='en';
+  try{
+    const e = await _avisosEstado();
+    if(e === 'on'){
+      try{ localStorage.setItem('txk_avisos_off','1'); }catch(_){}
+      await _cleanupPushOnLogout(currentUser);
+      if(typeof showToast==='function') showToast(_en?'Notifications off':'Avisos apagados','info',2500);
+    } else if(e === 'bloqueado'){
+      if(typeof showToast==='function') showToast(_en
         ? 'Notifications are blocked. Tap the lock icon in the address bar, find "Notifications" and allow them.'
-        : 'Las notificaciones están bloqueadas. Toca el candado de la barra de direcciones, busca "Notificaciones" y permítelas.',
+        : 'Las notificaciones están bloqueadas. Toca el candado de la barra de direcciones, busca «Notificaciones» y permítelas.',
         'warning', 9000);
-    };
+    } else if(e !== 'no'){
+      try{ localStorage.removeItem('txk_avisos_off'); }catch(_){}
+      await subscribeToPush(currentUser);
+      const ahora = await _avisosEstado();
+      if(typeof showToast==='function') showToast(ahora==='on'
+        ? (_en?'Notifications on':'Avisos activados')
+        : (_en?'Could not turn them on':'No se han podido activar'), ahora==='on'?'success':'warning', 3000);
+    }
+  } finally {
+    _avisosOcupado = false;
+    if(b) b.classList.remove('ocupado');
+    await checkPushStatus();
   }
 }
+// Se mantiene el nombre de antes por si queda algún enlace viejo.
+async function enablePushManual(){ return toggleAvisos(); }
 
 // Update last_active_at in Supabase
 async function supaUpdateLastActive(name) {
@@ -13334,7 +13378,8 @@ async function closePinAndEnter(){
   const _loginEmp = getEmp(pinTarget);
   if(_loginEmp){ _loginEmp.lastLoginTs = new Date().toISOString(); saveDB(); }
   // Push notifications + activity tracking
-  subscribeToPush(pinTarget).then(function() { checkPushStatus(); });
+  // Si el usuario apagó los avisos, el inicio de sesión no los vuelve a encender.
+  (_avisosApagados() ? Promise.resolve() : subscribeToPush(pinTarget)).then(function() { checkPushStatus(); });
   supaUpdateLastActive(pinTarget);
   const empH=getEmp(pinTarget);
   const trophyH=getTrophyBadge(empH?.trophies||0);
@@ -13342,8 +13387,7 @@ async function closePinAndEnter(){
   const _av = getEmpAvatar(pinTarget);
   const _headerAv = document.getElementById('headerAvatar');
   _renderHeaderAvatar(_headerAv, _av, pinTarget);
-  _headerAv.style.cursor = 'pointer';
-  _headerAv.title = LANG==='en'?'Settings':'Ajustes';
+
   document.getElementById('screenLogin').classList.remove('active');
   document.getElementById('screenApp').classList.add('active');
   applyLangToApp();

@@ -3668,7 +3668,12 @@ test('app header respects the iOS notch (safe-area inset)', () => {
   const cab = html.slice(html.indexOf('<header'), html.indexOf('</header>'));
   for (const id of ['helpBtn', 'appLangEs', 'appLangEn', 'ajustesBtn', 'logoutBtn'])
     assert(!cab.includes(`id="${id}"`), `${id} ya no va en la cabecera`);
-  assert(/id="headerAvatar"[^>]*onclick="openAjustes\(\)"/.test(cab), 'el avatar abre Ajustes');
+  assert(/id="hdrAjustes"[^>]*onclick="openAjustes\(\)"[^>]*aria-label="Ajustes"/.test(cab), 'la tuerca abre Ajustes');
+  // El idioma, a la vista: un botón que enseña el idioma al que cambia.
+  assert(/id="hdrIdioma"[^>]*onclick="setLangApp\(LANG==='en'\?'es':'en'\)"/.test(cab), 'el botón de idioma está en la cabecera');
+  assert(/_hi\.textContent = LANG==='en' \? 'ES' : 'EN';/.test(html), 'y enseña el otro idioma');
+  // La barra de abajo cambia de idioma con el resto.
+  assert(/ux2LblHoy:\['Hoy','Today'\]/.test(html), 'las pestañas de abajo se traducen');
   assert(/\.app-header \.header-logo\{flex:1 1 auto;min-width:0/.test(css), 'el nombre ocupa lo que queda y se corta con puntos');
 });
 test('force-update escape hatch + APP_VERSION synced to the SW', () => {
@@ -8910,8 +8915,8 @@ test('filtro de turno (DISH_SERVICE) coherente con las cartas reales', () => {
 });
 test('zona de Ajustes: entrada, perfil, correo, cambio de clave', () => {
   // entrada: el avatar de la cabecera; y dentro, ayuda, idioma y salir
-  assert(/id="headerAvatar"[^>]*onclick="openAjustes\(\)"/.test(html),
-    'el avatar de la cabecera abre openAjustes()');
+  assert(/id="hdrAjustes"[^>]*onclick="openAjustes\(\)"/.test(html),
+    'la tuerca de la cabecera abre openAjustes()');
   assert(/\$\('ajTutorial'\)\.onclick = \(\)=>\{ overlay\.remove\(\); showOnboarding\(\); \};/.test(html)
     && /id="ajLangEs"/.test(html) && /\$\('ajLogout'\)/.test(html), 'Ajustes lleva tutorial, idioma y cerrar sesión');
   assert(html.includes('function openAjustes('), 'falta la función openAjustes');
@@ -16837,6 +16842,16 @@ test('Practicar: la pestaña tiene página propia y lleva a todo lo que se entre
   // Lo que cuelga de Practicar lleva la vuelta, y Flashcards ya no es pestaña de Saber.
   assert(/UX2_SECCION\[tab\]==='practicar' && tab!=='practicar' && !c\.querySelector\('\.prc-volver'\)/.test(html), 'vuelta a Practicar');
   assert(!/\['flashcards','Flashcards'/.test(html.slice(html.indexOf('function _aprChipsBar('), html.indexOf('function _aprEnsureChips('))), 'Flashcards fuera de las pestañas de Saber');
+});
+test('Avisos: un toque los enciende y otro los apaga, y apagarlos se respeta', () => {
+  const cab = html.slice(html.indexOf('<header'), html.indexOf('</header>'));
+  assert(/id="hdrAvisos"[^>]*onclick="toggleAvisos\(\)"[^>]*aria-pressed=/.test(cab), 'el interruptor está en la cabecera y anuncia su estado');
+  const f = html.slice(html.indexOf('async function toggleAvisos('), html.indexOf('async function enablePushManual('));
+  assert(/if\(e === 'on'\)\{[^]*_cleanupPushOnLogout\(currentUser\)/.test(f), 'encendidos: un toque los apaga (baja del navegador y del servidor)');
+  assert(/subscribeToPush\(currentUser\)/.test(f) && /localStorage\.removeItem\('txk_avisos_off'\)/.test(f), 'apagados: un toque los enciende');
+  assert(/localStorage\.setItem\('txk_avisos_off','1'\)/.test(f), 'apagarlos se recuerda');
+  assert(/\(_avisosApagados\(\) \? Promise\.resolve\(\) : subscribeToPush\(pinTarget\)\)/.test(html), 'el inicio de sesión no los vuelve a encender');
+  assert(!/id="pushEnableBtn"/.test(html), 'el botón viejo, que sólo encendía, ya no existe');
 });
 test('Letras: la escala de siete tamaños existe y no baja de 11 px', () => {
   const css = read('styles.css');
