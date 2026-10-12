@@ -52,7 +52,7 @@
 <meta property="og:description" content="Formación de equipos de sala: carta, alérgenos, vinos, exámenes y juegos de repaso.">
 <meta property="og:url" content="https://meseo.es/">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"Meseo","url":"https://meseo.es/"}</script>
-<meta name="app-version" content="7.492">
+<meta name="app-version" content="7.493">
 <meta name="app-build" content="May 2026">
 <meta name="theme-color" content="#1c2a22">
 <!-- ═══ PWA ═══ -->
@@ -105,87 +105,48 @@
 
 <!-- ═══════ LOGIN ═══════ -->
 <div id="screenLogin" class="screen active">
-  <!-- Cinematic background layers -->
-  <div class="login-godrays" aria-hidden="true"></div>
-  <div class="login-hex-pattern" aria-hidden="true"></div>
-  <div class="login-medallion-glow" aria-hidden="true"></div>
-  <div class="login-hex-seal" aria-hidden="true">
-    <svg viewBox="0 0 280 280">
-      <polygon points="140,14 242,70 242,210 140,266 38,210 38,70" fill="none" stroke="rgba(228,190,104,0.18)" stroke-width="1"/>
-      <polygon points="140,42 218,84 218,196 140,238 62,196 62,84" fill="none" stroke="rgba(228,190,104,0.12)" stroke-width=".7"/>
-      <circle cx="140" cy="14" r="3" fill="rgba(228,190,104,.7)"/>
-      <circle cx="242" cy="70" r="3" fill="rgba(228,190,104,.5)"/>
-      <circle cx="242" cy="210" r="3" fill="rgba(228,190,104,.5)"/>
-      <circle cx="140" cy="266" r="3" fill="rgba(228,190,104,.7)"/>
-      <circle cx="38" cy="210" r="3" fill="rgba(228,190,104,.5)"/>
-      <circle cx="38" cy="70" r="3" fill="rgba(228,190,104,.5)"/>
-    </svg>
-  </div>
-  <div class="login-hex-seal-inner" aria-hidden="true">
-    <svg viewBox="0 0 200 200">
-      <polygon points="100,14 170,56 170,144 100,186 30,144 30,56" fill="none" stroke="rgba(228,190,104,0.1)" stroke-width=".6"/>
-      <circle cx="100" cy="100" r="35" fill="none" stroke="rgba(228,190,104,0.08)" stroke-width=".5"/>
-      <circle cx="100" cy="100" r="55" fill="none" stroke="rgba(228,190,104,0.06)" stroke-width=".4" stroke-dasharray="2 3"/>
-    </svg>
-  </div>
-
-  <!-- Particle system: fireflies + embers + runes + dust -->
-  <div class="login-particles">
-    <div class="login-particle lp-firefly"></div><div class="login-particle lp-firefly"></div>
-    <div class="login-particle lp-firefly"></div><div class="login-particle lp-firefly"></div>
-    <div class="login-particle lp-firefly"></div><div class="login-particle lp-firefly"></div>
-    <div class="login-particle lp-firefly"></div><div class="login-particle lp-firefly"></div>
-    <div class="lp-ember"></div><div class="lp-ember"></div><div class="lp-ember"></div>
-    <div class="lp-ember"></div><div class="lp-ember"></div><div class="lp-ember"></div>
-    <div class="lp-ember"></div><div class="lp-ember"></div><div class="lp-ember"></div>
-    <div class="lp-ember"></div>
-    <div class="lp-rune"><svg viewBox="0 0 14 14"><polygon points="7,1 13,7 7,13 1,7" fill="none" stroke="rgba(228,190,104,.7)" stroke-width="1"/><polygon points="7,4 10,7 7,10 4,7" fill="rgba(228,190,104,.4)"/></svg></div>
-    <div class="lp-rune"><svg viewBox="0 0 14 14"><polygon points="7,0 14,3.5 14,10.5 7,14 0,10.5 0,3.5" fill="none" stroke="rgba(228,190,104,.7)" stroke-width="1"/><circle cx="7" cy="7" r="2" fill="rgba(228,190,104,.4)"/></svg></div>
-    <div class="lp-rune"><svg viewBox="0 0 14 14"><path d="M2 7 L7 2 L12 7 L7 12 Z" fill="none" stroke="rgba(228,190,104,.7)" stroke-width="1"/><path d="M4 7 L7 4 L10 7 L7 10 Z" fill="rgba(228,190,104,.3)"/></svg></div>
-    <div class="lp-rune"><svg viewBox="0 0 14 14"><polygon points="7,1 13,7 7,13 1,7" fill="none" stroke="rgba(228,190,104,.6)" stroke-width=".8"/><line x1="7" y1="1" x2="7" y2="13" stroke="rgba(228,190,104,.4)" stroke-width=".6"/><line x1="1" y1="7" x2="13" y2="7" stroke="rgba(228,190,104,.4)" stroke-width=".6"/></svg></div>
-    <div class="lp-rune"><svg viewBox="0 0 14 14"><polygon points="7,0 14,7 7,14 0,7" fill="none" stroke="rgba(228,190,104,.7)" stroke-width="1"/></svg></div>
-    <div class="lp-dust"></div><div class="lp-dust"></div><div class="lp-dust"></div>
-    <div class="lp-dust"></div><div class="lp-dust"></div><div class="lp-dust"></div>
-    <div class="lp-dust"></div><div class="lp-dust"></div><div class="lp-dust"></div>
-    <div class="lp-dust"></div><div class="lp-dust"></div><div class="lp-dust"></div>
+  <!-- ═══ EL PASE (oct 2026) ═════════════════════════════════════════════
+       La pantalla de entrada es un pase de cocina: la lámpara del pase
+       arriba, la campana en el centro. Al cargar, la campana se levanta una
+       sola vez y debajo aparece el nombre. Es el único momento animado de la
+       pantalla; el resto está quieto. Con «reducir movimiento» no hay
+       animación: se ve el estado final. La identidad del restaurante sigue
+       llegando SOLO por el selector y data/themes.json; el héroe es Meseo. -->
+  <div class="login-stage" aria-hidden="false">
+    <div class="login-lamp" aria-hidden="true"></div>
+    <div class="login-pase">
+      <div class="login-bloom" aria-hidden="true"></div>
+      <div class="login-vapor" aria-hidden="true"><i></i><i></i><i></i></div>
+      <svg class="login-cloche" viewBox="0 0 240 150" aria-hidden="true">
+        <defs>
+          <linearGradient id="clocheG" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="#f3dc98"/><stop offset=".5" stop-color="#d9b45c"/><stop offset="1" stop-color="#9a7430"/>
+          </linearGradient>
+          <linearGradient id="clocheR" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0" stop-color="#8d6a2a"/><stop offset=".5" stop-color="#f3dc98"/><stop offset="1" stop-color="#8d6a2a"/>
+          </linearGradient>
+        </defs>
+        <path d="M22 118 A98 92 0 0 1 218 118 Z" fill="url(#clocheG)"/>
+        <path d="M60 86 A72 62 0 0 1 174 60" fill="none" stroke="#fff8e4" stroke-width="3" stroke-linecap="round" opacity=".55"/>
+        <circle cx="120" cy="24" r="8" fill="url(#clocheG)"/>
+        <rect x="117" y="28" width="6" height="12" rx="3" fill="#b8912f"/>
+        <rect x="10" y="118" width="220" height="11" rx="5.5" fill="url(#clocheR)"/>
+      </svg>
+      <div class="login-plato" aria-hidden="true"></div>
+    </div>
+    <div class="login-marca">
+      <h1 id="loginLogoName">Meseo</h1>
+      <p class="login-subtitle" id="loginSubtitle">El oficio se entrena.</p>
+      <p class="login-eyebrow"><span id="loginEyebrow">Formación de sala</span></p>
+    </div>
   </div>
 
-  <div class="login-vignette" aria-hidden="true"></div>
-
-  <!-- Marca neutra Meseo por defecto (rebranding jul 2026): la identidad del
-       restaurante —nombre, rótulo y colores— llega SOLO desde el venue
-       elegido en data/themes.json. La app no se presenta como ningún
-       restaurante ni se apoya en ninguna marca ajena. Si themes.json no carga
-       (primera visita offline), lo que se ve es Meseo. -->
-  <!-- Emblema: la cloche del icono de la app, coronando la marca -->
-  <div class="login-emblem" aria-hidden="true">
-    <svg viewBox="118 84 276 202" width="74">
-      <defs>
-        <linearGradient id="lemG" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stop-color="#f0d68a"/><stop offset=".55" stop-color="#d9b45c"/><stop offset="1" stop-color="#b8912f"/>
-        </linearGradient>
-      </defs>
-      <g fill="url(#lemG)">
-        <path d="M256 150 c 12 -10 -12 -20 0 -32 c 10 -10 -6 -20 2 -30" fill="none" stroke="url(#lemG)" stroke-width="7" stroke-linecap="round"/>
-        <circle cx="256" cy="176" r="9"/>
-        <path d="M150 262 a106 96 0 0 1 212 0 Z"/>
-        <path d="M212 196 a92 82 0 0 1 118 20" fill="none" stroke="#fff6df" stroke-width="4" stroke-linecap="round" opacity="0.5"/>
-        <path d="M132 262 h248 a10 10 0 0 1 10 10 v3 a8 8 0 0 1 -8 8 H130 a8 8 0 0 1 -8 -8 v-3 a10 10 0 0 1 10 -10 Z"/>
-      </g>
-    </svg>
-  </div>
-  <div class="login-eyebrow"><span id="loginEyebrow">Formación de sala</span></div>
-  <div class="login-logo">
-    <h1 id="loginLogoName">Meseo</h1>
-    <div class="login-logo-line"></div>
-    <em class="login-subtitle" id="loginSubtitle">El oficio se entrena · meseo.es</em>
-  </div>
-
+  <div class="login-side">
   <!-- Multi-restaurant selector (dropdown). Shown whenever the registry lists
        more than one venue; venues with enabled:false appear locked ("Próximamente")
        and cannot be selected. Picking an enabled one reskins via applyTheme(). -->
   <div class="login-venue" id="loginVenue" style="display:none">
-    <div class="login-venue-label" id="loginVenueLabel">Tu restaurante</div>
+    <div class="login-venue-label" id="loginVenueLabel">Restaurante</div>
     <div class="login-venue-dd" id="loginVenueDD">
       <button type="button" class="login-venue-trigger" id="loginVenueTrigger" aria-haspopup="listbox" aria-expanded="false"
         onclick="var d=this.closest('.login-venue-dd');d.classList.toggle('open');this.setAttribute('aria-expanded',d.classList.contains('open'))">
@@ -198,11 +159,6 @@
   </div>
 
   <div class="login-card" role="form" aria-label="Iniciar sesión">
-    <span class="login-card-corner tl" aria-hidden="true"></span>
-    <span class="login-card-corner tr" aria-hidden="true"></span>
-    <span class="login-card-corner bl" aria-hidden="true"></span>
-    <span class="login-card-corner br" aria-hidden="true"></span>
-    <div class="login-card-beam" aria-hidden="true"></div>
 
     <!-- Mode toggle: Sign in ←→ Sign up -->
     <div class="login-mode-toggle" id="loginModeToggle" role="tablist">
@@ -293,6 +249,8 @@
     </div>
     <button class="login-legal-link" id="legalLink" onclick="showLegalModal()">Aviso legal</button>
   </div>
+
+  </div><!-- /.login-side -->
 
   <!-- Legal modal -->
   <!-- data-nosnippet: Google usaba este texto (y su mención legal a TXOKO)
@@ -1565,7 +1523,7 @@ function renderVenuePicker(venues, activeId){
   const cards = document.getElementById('loginVenueCards');
   if(!wrap || !cards) return;
   const lbl = document.getElementById('loginVenueLabel');
-  if(lbl) lbl.textContent = LANG==='en' ? 'Your restaurant' : 'Tu restaurante';
+  if(lbl) lbl.textContent = LANG==='en' ? 'Restaurant' : 'Restaurante';
   cards.innerHTML = venues.map(v => {
     const accent = (v.brand && v.brand.accent) || '#c49a3c';
     // Un restaurante de sólo revisión se puede elegir (no es «locked»), pero
@@ -2793,7 +2751,7 @@ const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><p
 const SRC = 'src';
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='7.492';  // sincronizada con sw.js VERSION (guard de CI)
+const APP_VERSION='7.493';  // sincronizada con sw.js VERSION (guard de CI)
 const APP_BUILD='Jul 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;
@@ -12347,7 +12305,7 @@ function renderLogin(){
   // del reporte «meseo no pertenece a Martín Berasategui»): este sincronizador
   // de idioma re-inyectaba el subtítulo del venue en el héroe. La identidad
   // del restaurante vive en el selector de abajo, no aquí.
-  if(subtitleEl) subtitleEl.textContent = LANG==='en' ? 'Train the craft · meseo.es' : 'El oficio se entrena · meseo.es';
+  if(subtitleEl) subtitleEl.textContent = LANG==='en' ? 'The craft is trained.' : 'El oficio se entrena.';
   // Venue dropdown follows the language too (label + "Próximamente" entries)
   if(typeof THEMES !== 'undefined' && THEMES && Array.isArray(THEMES.venues)){
     // MISMO filtro que en `initVenues`: sin él, cambiar de idioma repintaba el
