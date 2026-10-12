@@ -16758,7 +16758,42 @@ test('Pase: sin componentes validados que expliquen sus alérgenos, el plato se 
   assert(/if\(_d && !_paseMontable\(_d\)\) return 2;/.test(nivel), 'sin poder montarse, el plato va directo al nivel de memoria');
   const posibles = html.slice(html.indexOf('function _paseAlergiasPosibles(dish){'), html.indexOf('function _paseIrDesmontaje('));
   assert(/if\(!_paseMontable\(dish\)\) return \[\];/.test(posibles), 'sin componentes no se pide retirar el alérgeno');
-  assert(/const ok = d => \(validados && !_paseMontable\(d\)\)/.test(html), 'de memoria no hacen falta señuelos para que el plato sea jugable');
+  assert(/: \(validados && !_paseMontable\(d\)\)/.test(html), 'de memoria no hacen falta señuelos para que el plato sea jugable');
+});
+test('Pase sólo de montaje (r2): sin componentes no se dice ni se pregunta nada de alérgenos', () => {
+  const fn = n => { const i = html.indexOf('function ' + n + '('); return i < 0 ? '' : html.slice(i, html.indexOf('\n}', i) + 2); };
+  // El modo se activa sin DISH_COMPONENTS o sin alérgenos validados; Txoko no entra.
+  const solo = new Function('_alergenosValidados','DISH_COMPONENTS', fn('_paseSoloMontaje') + '\nreturn _paseSoloMontaje;'); // eslint-disable-line no-new-func
+  assert(solo(() => true, {})() === true, 'carta validada sin componentes: sólo montaje');
+  assert(solo(() => false, { 1:[{}] })() === true, 'carta sin validar: sólo montaje');
+  assert(solo(() => true, { 1:[{}] })() === false, 'Txoko (validada y con componentes) sigue como siempre');
+  // El montaje de la carta se valida antes de usarlo.
+  const de = new Function('DISHES_EN', fn('_paseMontajeDe') + '\nreturn _paseMontajeDe;'); // eslint-disable-line no-new-func
+  const ES = { id:1, montaje:['Arroz','Atún picante','Kyuri'] };
+  const EN = [{ id:1, montaje:['Rice','Spicy tuna','Kyuri'] }];
+  assert(JSON.stringify(de(EN)(ES, false)) === '["Arroz","Atún picante","Kyuri"]', 'montaje en español');
+  assert(JSON.stringify(de(EN)(ES, true)) === '["Rice","Spicy tuna","Kyuri"]', 'montaje en inglés');
+  assert(de([{ id:1, montaje:['Rice'] }])(ES, true)[0] === 'Arroz', 'un inglés que no casa cae al español');
+  for (const malo of [null, 'Arroz', ['Arroz'], ['Arroz', 3], ['Arroz', ''], ['Arroz', 'x'.repeat(81)], Array(13).fill('A')])
+    assert(de([])({ id:2, montaje:malo }, false) === null, `montaje inválido aceptado: ${JSON.stringify(malo)}`);
+  // Nada de alérgenos en ese modo: ni nivel de memoria, ni comensal alérgico,
+  // ni insignias, ni cuadro, ni «pase seguro».
+  const S = "(typeof _paseSoloMontaje==='function' && _paseSoloMontaje())";
+  assert(fn('_paseNivel').includes('if' + S + ' return 1;'), 'sin nivel de memoria');
+  assert(fn('_paseAlergiasPosibles').includes('if' + S + ' return [];'), 'sin fase de la alergia');
+  assert(fn('_paseRailHTML').includes('if' + S + " return '';"), 'sin cuadro de alérgenos');
+  assert(fn('_paseChip').includes(S + " ? '' :"), 'fichas sin insignia');
+  assert(fn('_paseServir').includes('&& !' + S + ' &&'), 'sin «pase seguro», que habla del cuadro de alérgenos');
+  const mon = fn('_paseMontajeHTML');
+  assert(/const alergenos = solo \? '' :/.test(mon) && /if\(solo\) return _montaje;/.test(mon), 'la corrección no habla de alérgenos y enseña el montaje');
+  assert(/Monta el plato: ¿cuáles de estos van en él, tal como sale de cocina\?/.test(mon), 'enunciado de montaje');
+  const sub = mon.slice(mon.indexOf('const sub = solo'), mon.indexOf(': V.perfecto ?', mon.indexOf('const sub = solo')));
+  assert(sub && !/al[ée]rgen/i.test(sub), 'los textos del modo montaje no mencionan alérgenos');
+  assert(/:solo\?\(_en\?'PASS · PLATING':'PASE · MONTAJE'\)/.test(fn('_paseRender')) && /const pasos=solo\?'':/.test(fn('_paseRender')), 'cabecera de montaje y sin pasos I y II');
+  // Las fichas salen del montaje de la carta y no se pliegan ni recortan.
+  assert(/if\(items\.length && items\.every\(it=>it\.mon\)\) return items;/.test(fn('_pasePlegar')), 'el montaje no se pliega');
+  assert(/_paseMontajeDe\(dish,_en\)/.test(fn('_paseFichas')), 'las fichas son el montaje');
+  assert(/soloMon && _djWordIn\(_djNorm\(it\.t\), texto\)/.test(fn('_paseSenuelos')), 'un señuelo que nombre la ficha del chef no vale');
 });
 test('Login con r2: la tarjeta sale elegible, con candado y «Solo administración»; M.B. sigue fuera', () => {
   const src = html.slice(html.indexOf('function renderVenuePicker('), html.indexOf('function selectVenue('));
