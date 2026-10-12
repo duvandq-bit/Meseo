@@ -10474,6 +10474,66 @@ test('Listas de personal: ranking, panel, liga, duelos y menciones filtran por r
     'el repliegue local del roster de @menciones también se filtra por restaurante');
 });
 
+// ═══ LIGA SEMANAL DE renderRanking · tampoco mezcla restaurantes ═══
+// Se ejecuta el trozo REAL de renderRanking() que construye weekMap (no el
+// widget de _pddAsyncFill, que tiene su propia prueba), con el _esDeMiVenue y
+// el _venueActual REALES: el propietario revisa r2 con fichas de Txoko en la
+// caché del móvil, y luego vuelve a Txoko.
+const _ligaRankingRes = (() => {
+  const srcRoles = html.slice(html.indexOf('function _ficha(nombre){'), html.indexOf('// ═══ AVISOS PUSH'));
+  const rk = html.slice(html.indexOf('function renderRanking(){'), html.indexOf('function renderSupervisor(){'));
+  const ini = '    const _wkNow=_wkKey();', fin = '    const _wkSorted=';
+  const i = rk.indexOf(ini), j = rk.indexOf(fin, i);
+  if (srcRoles.length < 200 || i < 0 || j < 0) return { roto: 'no encuentro la liga semanal de renderRanking' };
+  const srcLiga = rk.slice(i, rk.indexOf('\n', j));
+  const WK = '2026-W42';
+  const monta = (elegido, remoteEmps) => {
+    const LS = {}; if (elegido) LS.txk_venue = elegido;
+    const DB = { employees: {
+      Dueño:   { name:'Dueño', role:'owner', venue:'txoko' },
+      Camarero1: { name:'Camarero1', role:'staff', venue:'txoko', wkKey:WK, wkXP:500 },
+      Camarera2: { name:'Camarera2', role:'staff', venue:'txoko', wkKey:WK, wkXP:300 },
+      Viejo:     { name:'Viejo', role:'staff', venue:'txoko', wkKey:'2026-W41', wkXP:900 },
+      SushiR2:   { name:'SushiR2', role:'staff', venue:'r2', wkKey:WK, wkXP:120 } } };
+    const F = new Function('DB','currentUser','localStorage','ACTIVE_VENUE','_VENUE_POR_DEFECTO','_wkKey','remoteEmps', // eslint-disable-line no-new-func
+      srcRoles + '\n' + srcLiga + '\nreturn { semana: weekMap, orden: _wkSorted, venue: _venueActual() };');
+    return F(DB, 'Dueño', { getItem: k => (k in LS ? LS[k] : null), setItem: (k, v) => { LS[k] = String(v); } },
+             null, 'txoko', () => WK, remoteEmps);
+  };
+  const remotoR2 = [{ name:'RemotaR2', venue:'r2', extras:{ wk:{ k:WK, xp:80 } } }];
+  return { srcLiga,
+    enR2: monta('r2', remotoR2),
+    enR2SinServidor: monta('r2', null),
+    enTxoko: monta('txoko', []),
+    sinElegir: monta(null, null) };
+})();
+
+test('Liga semanal (renderRanking): revisando r2 no salen los empleados de Txoko; en Txoko, sí', () => {
+  const R = _ligaRankingRes;
+  assert(!R.roto, R.roto);
+  assert(/_esDeMiVenue\(e\)/.test(R.srcLiga), 'el recorrido de DB.employees de la liga semanal tiene que pasar por _esDeMiVenue');
+  // 1) r2 activo: ni un solo nombre de Txoko, aunque tengan XP de esta semana.
+  for (const k of ['enR2', 'enR2SinServidor']) {
+    const S = R[k];
+    assert(S.venue === 'r2', `${k}: el escenario tiene que estar en r2 (está en ${S.venue})`);
+    const deTxoko = ['Camarero1', 'Camarera2', 'Dueño', 'Viejo'].filter(n => n in S.semana);
+    assert(deTxoko.length === 0,
+      `PELIGRO (${k}): la liga semanal de r2 enseña empleados de Txoko: ${deTxoko.join(', ')}`);
+    assert(S.semana.SushiR2 === 120, `${k}: una ficha local de r2 sí cuenta en la liga de r2`);
+  }
+  assert(JSON.stringify(R.enR2.orden) === '["SushiR2","RemotaR2"]',
+    `con el servidor, r2 enseña sólo lo de r2: ${JSON.stringify(R.enR2.orden)}`);
+  assert(JSON.stringify(R.enR2SinServidor.orden) === '["SushiR2"]',
+    `sin respuesta del servidor, la caché tampoco cuela a nadie de Txoko: ${JSON.stringify(R.enR2SinServidor.orden)}`);
+  // 2) Txoko activo: sus empleados siguen saliendo, como siempre.
+  for (const k of ['enTxoko', 'sinElegir']) {
+    const S = R[k];
+    assert(S.venue === 'txoko', `${k}: el escenario tiene que estar en Txoko`);
+    assert(JSON.stringify(S.orden) === '["Camarero1","Camarera2"]',
+      `${k}: en su propio restaurante los de Txoko siguen en la liga (y sólo con XP de esta semana): ${JSON.stringify(S.orden)}`);
+  }
+});
+
 test('Multi-restaurante: nadie lee el nombre del vecino en su propia formación', () => {
   // El nombre del restaurante estaba escrito a fuego en seis sitios que ve el
   // empleado: dos títulos de nivel, la bienvenida, la guía de emplatado y las

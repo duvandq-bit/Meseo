@@ -26052,7 +26052,10 @@ function renderRanking(){
     // ── LIGA SEMANAL: se reinicia cada lunes — cualquiera puede ganarla ──
     const _wkNow=_wkKey();
     const weekMap={};
-    Object.keys(DB.employees).forEach(n=>{ const e=DB.employees[n]; if(e && e.wkKey===_wkNow && (e.wkXP||0)>0) weekMap[n]=e.wkXP||0; });
+    // Sólo fichas LOCALES del restaurante activo (_esDeMiVenue), igual que la
+    // posición de liga de _pddAsyncFill: si no, revisando r2 salían en su liga
+    // los camareros de Txoko que este móvil tenía en caché.
+    Object.keys(DB.employees).forEach(n=>{ const e=DB.employees[n]; if(e && _esDeMiVenue(e) && e.wkKey===_wkNow && (e.wkXP||0)>0) weekMap[n]=e.wkXP||0; });
     (remoteEmps||[]).forEach(e=>{
       const wk=e.extras && e.extras.wk;
       if(wk && wk.k===_wkNow && (wk.xp||0)>0) weekMap[e.name]=Math.max(weekMap[e.name]||0, wk.xp||0);
