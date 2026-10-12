@@ -16588,6 +16588,83 @@ test('Login con r2: la puerta «Solo administración» está en closePinAndEnter
   assert(/localStorage\.setItem\('txk_venue', _suyo\)/.test(bloque), 'a quien no puede, se le devuelve el selector a su restaurante');
   assert(/return;\s*\}$/.test(bloque.trim()), 'y no entra');
 });
+// ── Fotos privadas de la carta (bucket cartas-fotos) ──
+const _fotosSrc = (() => {
+  const a = html.indexOf('function _cartaFotosValidas(c){');
+  const b = html.indexOf('\nfunction _cartaInfo(){', a);
+  const c = html.indexOf('let _fotosPrivadasUrls = [];');
+  const d = html.indexOf('let _dishPhotosProm = null;', c);
+  return (a > 0 && b > a && c > 0 && d > c) ? { valida: html.slice(a, b), privadas: html.slice(c, d) } : null;
+})();
+const _fotosRes = await (async () => {
+  if (!_fotosSrc) return null;
+  const valida = new Function(_fotosSrc.valida + '\nreturn _cartaFotosValidas;')(); // eslint-disable-line no-new-func
+  const correr = async ({ token = 'TOK', mapa, cambiarCarta = false, respuestas = {} } = {}) => {
+    const pedidas = [];
+    let n = 0, revocadas = [];
+    const URL_ = { createObjectURL: () => 'blob:x' + (++n), revokeObjectURL: (u) => revocadas.push(u) };
+    let api;
+    const fetchT = async (url, opts) => {
+      pedidas.push({ url, method: (opts && opts.method) || 'GET', auth: opts && opts.headers && opts.headers.Authorization });
+      if (cambiarCarta) api._fotosPrivadasSoltar();
+      const st = respuestas[url.split('/').pop()] || 200;
+      return { ok: st === 200, blob: async () => ({ type: 'image/webp' }) };
+    };
+    api = new Function('_cartaFotos', '_authCtx', 'fetchT', 'SUPA_URL', 'SUPA_KEY', 'URL', // eslint-disable-line no-new-func
+      _fotosSrc.privadas + '\nreturn { _fotosPrivadas, _fotosPrivadasSoltar };')(
+      mapa, () => ({ token }), fetchT, 'https://S', 'K', URL_);
+    const out = await api._fotosPrivadas();
+    return { out, pedidas, revocadas };
+  };
+  const mapa = { '3010': 'r2/3010.webp', '3012': 'r2/3012.webp' };
+  return {
+    valida,
+    normal: await correr({ mapa }),
+    sinToken: await correr({ mapa, token: null }),
+    cambia: await correr({ mapa, cambiarCarta: true }),
+    sinPermiso: await correr({ mapa, respuestas: { '3012.webp': 400 } }),
+    sinMapa: await correr({ mapa: null }),
+  };
+})();
+test('Fotos privadas: la carta sólo puede apuntar a fotos de SU carpeta y de SUS platos', () => {
+  assert(_fotosRes, 'no encuentro _cartaFotosValidas / _fotosPrivadas');
+  const v = _fotosRes.valida;
+  const carta = (FOTOS) => ({ venue: 'r2', DISHES: [{ id: 3010 }, { id: 3012 }], FOTOS });
+  assert(JSON.stringify(v(carta({ '3010': 'r2/3010.webp' }))) === '{"3010":"r2/3010.webp"}', 'una ruta buena se acepta');
+  assert(v(carta({ '3010': 'https://otra.web/x.webp' })) === null, 'una URL no se acepta');
+  assert(v(carta({ '3010': 'txoko/3010.webp' })) === null, 'una foto de otra carpeta no se acepta');
+  assert(v(carta({ '3010': 'r2/../txoko/1.webp' })) === null, 'una ruta que se sale de la carpeta no se acepta');
+  assert(v(carta({ '3010': 'r2/3012.webp' })) === null, 'la foto de un plato no puede ser la de otro');
+  assert(v(carta({ '9999': 'r2/9999.webp' })) === null, 'un plato que no está en la carta no tiene foto');
+  assert(v(carta(['r2/3010.webp'])) === null && v(carta(null)) === null, 'sin mapa, nada');
+});
+test('Fotos privadas: se piden sólo por GET, con la sesión real, y se pintan como blob: local', () => {
+  const R = _fotosRes;
+  assert(R.normal.pedidas.length === 2 && R.normal.pedidas.every(p => p.method === 'GET' && p.auth === 'Bearer TOK'), 'GET con Authorization de la sesión');
+  assert(R.normal.pedidas.every(p => /^https:\/\/S\/storage\/v1\/object\/authenticated\/cartas-fotos\/r2\/\d+\.webp$/.test(p.url)), 'ruta autenticada del bucket privado, nunca /object/public/');
+  assert(Object.values(R.normal.out).every(u => /^blob:/.test(u)) && Object.keys(R.normal.out).length === 2, 'se pintan como blob:');
+  assert(R.sinToken.pedidas.length === 0 && JSON.stringify(R.sinToken.out) === '{}', 'sin sesión no se pide nada');
+  assert(R.sinMapa.pedidas.length === 0, 'una carta sin fotos no pide nada');
+  assert(JSON.stringify(Object.keys(R.sinPermiso.out)) === '["3010"]', 'si el servidor niega una foto, ese plato se queda sin foto y el resto sigue');
+  assert(!/object\/public\/cartas-fotos/.test(html), 'la app no construye nunca una URL pública del bucket privado');
+});
+test('Fotos privadas: si cambia la carta mientras bajan, se descartan (nunca la foto de un restaurante en otro)', () => {
+  const R = _fotosRes.cambia;
+  assert(R.out === null, 'la descarga de la carta anterior no se usa');
+  assert(R.revocadas.length >= 2, 'y sus blobs se sueltan');
+  assert(/function _cartaCachesFuera\(\)\{[\s\S]{0,400}_fotosPrivadasSoltar\(\)/.test(html), 'cambiar de carta suelta las fotos privadas');
+  const vac = html.slice(html.indexOf('function _cartaVaciar(){'), html.indexOf('function _cartaVaciar(){') + 600);
+  assert(/_cartaFotos = null;/.test(vac), 'una carta vaciada no conserva fotos');
+  assert(/_cartaFotos = \(c === _CARTA_BASE\) \? null : _cartaFotosValidas\(c\);/.test(html), 'la carta de Txoko no usa fotos privadas');
+});
+test('Fotos privadas: el bucket es privado y sólo tiene política de LECTURA', () => {
+  const sql = read('supabase/cartas_fotos.sql').split('\n').filter(l => !/^\s*--/.test(l)).join('\n');
+  assert(/values \('cartas-fotos', 'cartas-fotos', false,/.test(sql), 'bucket privado');
+  assert(/array\['image\/webp'\]/.test(sql), 'sólo webp');
+  const pols = sql.match(/create policy[^;]+;/g) || [];
+  assert(pols.length === 1 && /for select to authenticated/.test(pols[0]), 'una sola política, de lectura, para sesiones reales');
+  assert(/app\.venue_actual\(\)/.test(pols[0]) && /app\.puede_revisar_carta\(/.test(pols[0]), 'misma regla que public.cartas');
+});
 test('Login con r2: la tarjeta sale elegible, con candado y «Solo administración»; M.B. sigue fuera', () => {
   const src = html.slice(html.indexOf('function renderVenuePicker('), html.indexOf('function selectVenue('));
   const escapeHtml = (x) => String(x);

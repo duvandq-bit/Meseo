@@ -52,7 +52,7 @@
 <meta property="og:description" content="Formación de equipos de sala: carta, alérgenos, vinos, exámenes y juegos de repaso.">
 <meta property="og:url" content="https://meseo.es/">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"Meseo","url":"https://meseo.es/"}</script>
-<meta name="app-version" content="7.474">
+<meta name="app-version" content="7.475">
 <meta name="app-build" content="May 2026">
 <meta name="theme-color" content="#1c2a22">
 <!-- ═══ PWA ═══ -->
@@ -2403,6 +2403,26 @@ let _cartaPuesta = _VENUE_POR_DEFECTO;
 // `var` y no `let`: t() puede preguntar por los alérgenos antes de que el
 // arranque llegue a esta línea, y con `let` eso sería un error de TDZ.
 var _cartaMeta = null;
+// Fotos PRIVADAS de la carta puesta: { idPlato: 'r2/3010.webp' }. Viven en el
+// bucket privado `cartas-fotos` de Supabase (no en img/platos/, que es público
+// y está en un repositorio público) y sólo las lee quien puede leer esa carta:
+// misma regla que public.cartas (su restaurante o cartas_revisores). La carta
+// trae sólo la lista; las fotos se piden con la sesión en loadDishPhotos().
+var _cartaFotos = null;
+function _cartaFotosValidas(c){
+  if(!c || !c.FOTOS || typeof c.FOTOS !== 'object' || Array.isArray(c.FOTOS)) return null;
+  const venue = String(c.venue || '');
+  if(!/^[a-z0-9][a-z0-9_-]{0,31}$/.test(venue)) return null;
+  const ids = new Set((Array.isArray(c.DISHES) ? c.DISHES : []).map(d => String(d && d.id)));
+  const out = {};
+  for(const k of Object.keys(c.FOTOS)){
+    const v = c.FOTOS[k];
+    // Sólo una ruta de SU carpeta, de un plato suyo: nada de URLs ni de rutas
+    // que salgan de la carpeta del restaurante.
+    if(ids.has(k) && typeof v === 'string' && v === venue + '/' + k + '.webp') out[k] = v;
+  }
+  return Object.keys(out).length ? out : null;
+}
 function _cartaInfo(){
   if(_cartaMeta) return _cartaMeta;
   let cats = null; try{ cats = _CARTA_BASE.CATS || null; }catch(e){ cats = null; }
@@ -2446,6 +2466,7 @@ function _cartaCachesFuera(){
   try{ if(typeof _PASE_FICHAS_CACHE!=='undefined') _PASE_FICHAS_CACHE.clear(); }catch(e){}
   try{ if(typeof _gsDishIdx!=='undefined') _gsDishIdx = null; }catch(e){}
   try{ if(typeof DISH_PHOTOS!=='undefined') DISH_PHOTOS = null; }catch(e){}
+  try{ if(typeof _fotosPrivadasSoltar==='function') _fotosPrivadasSoltar(); }catch(e){}
   try{ if(typeof DISH_PHOTO_PENDING!=='undefined') DISH_PHOTO_PENDING = null; }catch(e){}
   try{ if(typeof _paseVistos!=='undefined') _paseVistos.length = 0; }catch(e){}
 }
@@ -2520,6 +2541,7 @@ function _cartaAplicar(c){
     allergensValidated: c.allergensValidated === true,
     CATS: (Array.isArray(c.CATS) && c.CATS.length) ? c.CATS : null
   };
+  _cartaFotos = (c === _CARTA_BASE) ? null : _cartaFotosValidas(c);
   _cartaCachesFuera();
   _cartaFranjaSync();
   return true;
@@ -2535,6 +2557,7 @@ function _cartaVaciar(){
   for(const k of Object.keys(DISH_ACTIONS)) delete DISH_ACTIONS[k];
   for(const k of Object.keys(DISH_SERVICE)) delete DISH_SERVICE[k];
   _cartaMeta = { venue:null, allergensValidated:false, CATS:[] };
+  _cartaFotos = null;
   _cartaCachesFuera();
   _cartaFranjaSync();
 }
@@ -2750,7 +2773,7 @@ const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><p
 const SRC = 'src';
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='7.474';  // sincronizada con sw.js VERSION (guard de CI)
+const APP_VERSION='7.475';  // sincronizada con sw.js VERSION (guard de CI)
 const APP_BUILD='Jul 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;
@@ -14755,8 +14778,63 @@ function _isSupDevice(){
   catch(_){ return supAuthenticated; }
 }
 let DISH_PHOTO_PENDING=null;   // ids de plato con foto del equipo en revisión
+// ── Fotos privadas de la carta (bucket `cartas-fotos`) ──
+// Se piden con GET y la sesión real (Authorization: Bearer <token>): el modo
+// revisión deja pasar las lecturas, y RLS en storage.objects decide quién las
+// recibe. Cada foto se convierte en un blob: local, que es lo que pinta la app;
+// nunca se escribe una URL pública. Al cambiar de carta se sueltan (revoke) y
+// una descarga que llegue tarde de la carta anterior se descarta: la foto de un
+// restaurante no puede acabar bajo el nombre de otro.
+let _fotosPrivadasUrls = [];
+let _fotosPrivadasGen = 0;
+function _fotosPrivadasSoltar(){
+  _fotosPrivadasGen++;
+  for(const u of _fotosPrivadasUrls){ try{ URL.revokeObjectURL(u); }catch(e){} }
+  _fotosPrivadasUrls = [];
+}
+async function _fotosPrivadas(){
+  const mapa = _cartaFotos;
+  if(!mapa) return {};
+  let token = null;
+  try{ token = (typeof _authCtx === 'function') ? _authCtx().token : null; }catch(e){ token = null; }
+  if(!token) return {};
+  const gen = _fotosPrivadasGen;
+  const ids = Object.keys(mapa), out = {}, creadas = [];
+  let i = 0;
+  const una = async () => {
+    while(i < ids.length){
+      const id = ids[i++];
+      try{
+        const r = await fetchT(`${SUPA_URL}/storage/v1/object/authenticated/cartas-fotos/${mapa[id].split('/').map(encodeURIComponent).join('/')}`,
+          { headers:{ 'apikey':SUPA_KEY, 'Authorization':`Bearer ${token}` } }, 15000);
+        if(!r.ok) continue;
+        const b = await r.blob();
+        if(!/^image\/webp$/i.test(b.type || '')) continue;
+        const u = URL.createObjectURL(b);
+        creadas.push(u); out[id] = u;
+      }catch(e){ /* sin red o sin permiso: ese plato se queda sin foto */ }
+    }
+  };
+  await Promise.all([una(), una(), una(), una()]);
+  if(gen !== _fotosPrivadasGen){   // la carta cambió mientras bajaban
+    for(const u of creadas){ try{ URL.revokeObjectURL(u); }catch(e){} }
+    return null;
+  }
+  // Las de una carga anterior de ESTA misma carta (p. ej. al aprobar una foto
+  // del equipo se recarga el mapa) ya no las usa nadie: se sueltan.
+  for(const u of _fotosPrivadasUrls){ try{ URL.revokeObjectURL(u); }catch(e){} }
+  _fotosPrivadasUrls = creadas;
+  return out;
+}
+let _dishPhotosProm = null;
 async function loadDishPhotos(){
   if(DISH_PHOTOS) return DISH_PHOTOS;
+  if(_dishPhotosProm) return _dishPhotosProm;
+  _dishPhotosProm = _loadDishPhotos();
+  try{ return await _dishPhotosProm; } finally { _dishPhotosProm = null; }
+}
+async function _loadDishPhotos(){
+  const gen = _fotosPrivadasGen;
   const base = await loadLazyData('data/dish-photos.json', LANG==='en'?'plating photos':'fotos de emplatado', {silent:true}) || {};
   // Fotos del EQUIPO (Supabase): las aprobadas pisan a las del repo (la más
   // reciente gana); las pendientes se marcan para mostrar "en revisión".
@@ -14773,6 +14851,10 @@ async function loadDishPhotos(){
       }
     }
   }catch(_){ /* sin red: la guía funciona con las fotos del repo */ }
+  // Las de la carta privada, por encima: son las del chef de ese restaurante.
+  const privadas = await _fotosPrivadas();
+  if(privadas === null || gen !== _fotosPrivadasGen) return base;   // cambió la carta: no se fija nada viejo
+  Object.assign(base, privadas);
   DISH_PHOTOS = base;
   return DISH_PHOTOS;
 }
