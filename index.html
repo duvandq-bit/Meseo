@@ -52,7 +52,7 @@
 <meta property="og:description" content="Formación de equipos de sala: carta, alérgenos, vinos, exámenes y juegos de repaso.">
 <meta property="og:url" content="https://meseo.es/">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"Meseo","url":"https://meseo.es/"}</script>
-<meta name="app-version" content="7.494">
+<meta name="app-version" content="7.495">
 <meta name="app-build" content="May 2026">
 <meta name="theme-color" content="#1c2a22">
 <!-- ═══ PWA ═══ -->
@@ -2751,7 +2751,7 @@ const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><p
 const SRC = 'src';
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='7.494';  // sincronizada con sw.js VERSION (guard de CI)
+const APP_VERSION='7.495';  // sincronizada con sw.js VERSION (guard de CI)
 const APP_BUILD='Jul 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;
@@ -5289,11 +5289,19 @@ function urlBase64ToUint8Array(base64String) {
 // control justo después, este reload la mostraba OTRA VEZ. Ya no recargamos si
 // el usuario YA entró — la versión nueva se aplica al próximo abrir (el shell
 // es network-first, así que el HTML ya viene fresco; nada "a medias").
+// oct 2026 (propietario: «se queda en la pantalla de carga, vuelve a cargar y
+// te manda al login»): la versión nueva solía tomar el control justo mientras
+// la puerta de entrada estaba comprobando la sesión. Ahí currentUser todavía
+// no existe, así que se recargaba, y quien no tenía «mantener sesión» caía
+// en el login y tenía que volver a escribir su clave. Mientras se está
+// entrando (_entrando) tampoco se recarga: el HTML ya viene fresco de la red.
 let _swReloaded = false;
+let _entrando = false;
 if ('serviceWorker' in navigator) {
   navigator.serviceWorker.addEventListener('controllerchange', () => {
     if (_swReloaded) return;
     if (typeof currentUser !== 'undefined' && currentUser) return; // sesión en curso: no interrumpir
+    if (_entrando) return;                                          // entrando: no interrumpir
     _swReloaded = true;
     location.reload();
   });
@@ -13222,6 +13230,8 @@ function _puertaFuera(motivo){
 }
 
 async function closePinAndEnter(){
+  _entrando = true;   // mientras se entra, la versión nueva no recarga la página
+  try{
   // LA PUERTA DE LA SUSPENSIÓN, y va aquí por un motivo: éste es el ÚNICO
   // sitio por el que se entra de verdad. Lo llaman el login con contraseña y
   // también el auto-login de los 90 días, así que ponerlo sólo en el primero
@@ -13399,6 +13409,7 @@ async function closePinAndEnter(){
     // Hide loading screen once everything is ready (min 2s display)
     setTimeout(hideLoginLoading, 1200);
   }).catch(() => { setTimeout(hideLoginLoading, 800); });
+  } finally { _entrando = false; }
 }
 
 // ═══════ TUNIC ONBOARDING GUIDE ═══════
