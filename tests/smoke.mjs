@@ -10070,16 +10070,21 @@ test('Administración: mira cualquier restaurante y no deja rastro', () => {
   // cualquier restaurante, incluidos los que aún no están abiertos, y no escribe
   // ni aparece en ninguna puntuación. Si contara, el ranking mediría a quien
   // está revisando la carta y no a quien se la está aprendiendo.
+  // El propietario ('owner') puede abrir la misma puerta de revisión
+  // (_puedeRevisar), pero NO queda exento de ranking: su actividad normal
+  // sigue contando como siempre, y sólo mientras reviste la carta de OTRO
+  // restaurante entra el perfil de revisión aparte (ver _modoRevision).
   assert(/function _esAdmin\(nombre\)/.test(html), 'falta el resolutor de administración');
   assert(/_EMP_COLS='[^']*,role'/.test(html), 'el rol tiene que bajar con la ficha');
 
-  // Para el administrador manda el restaurante ELEGIDO; para el resto, el de la
-  // nube, que lo fijó el código del manager y no se cambia tocando una tarjeta.
+  // Para quien puede revisar (administración o propietario) manda el
+  // restaurante ELEGIDO; para el resto, el de la nube, que lo fijó el código
+  // del manager y no se cambia tocando una tarjeta.
   const va = html.slice(html.indexOf('function _venueActual(){'), html.indexOf('function _vq()'));
-  assert(/if\(e && e\.role === 'admin'\)/.test(va) && /localStorage\.getItem\('txk_venue'\)/.test(va),
-    'el administrador elige restaurante; el resto no');
-  assert(va.indexOf("role === 'admin'") < va.indexOf('if(e && e.venue) return e.venue;'),
-    'la preferencia del administrador va ANTES del restaurante de su ficha');
+  assert(/if\(typeof _puedeRevisar === 'function' && _puedeRevisar\(\)\)/.test(va) && /localStorage\.getItem\('txk_venue'\)/.test(va),
+    'quien puede revisar elige restaurante; el resto no');
+  assert(va.indexOf('_puedeRevisar()') < va.indexOf('if(e && e.venue) return e.venue;'),
+    'la preferencia de quien revisa va ANTES del restaurante de su ficha');
 
   // Se corta ANTES de escribir. Una fila que no existe no se cuela en un ranking.
   const fn = n => { const i = html.indexOf('async function ' + n + '('); let d = 0;
@@ -10108,7 +10113,7 @@ test('Administración: mira cualquier restaurante y no deja rastro', () => {
       `este listado no excluye a la cuenta de administración: ${u.slice(0, 70)}`);
 
   // Y el cambio de restaurante desde dentro falla CERRADO.
-  const aj = html.slice(html.indexOf('if(_esAdmin()){'), html.indexOf('// Nombre visible.'));
+  const aj = html.slice(html.indexOf('if(_puedeRevisar()){'), html.indexOf('// Nombre visible.'));
   assert(/const ok = await cargarCarta\(id\);/.test(aj), 'cambiar de restaurante carga su carta');
   assert(/if\(!ok\)\{[\s\S]{0,400}?cargarCarta\(anterior\)/.test(aj),
     'si la carta no llega, se vuelve al restaurante anterior: enseñar la de otro es justo lo que no debe pasar');
@@ -10134,8 +10139,10 @@ const _cartaRes = await (async () => {
     const BASE = { DISHES:[{id:1,name:'Croqueta de jamón'}], DISHES_EN:[{id:1,name:'Ham croquette'}],
                    DISH_COMPONENTS:{1:['jamon']}, DISH_ACTIONS:{1:{}}, DISH_SERVICE:{1:'a'} };
     const F = new Function('DISHES','DISHES_EN','DISH_COMPONENTS','DISH_ACTIONS','DISH_SERVICE', // eslint-disable-line no-new-func
-      '_CARTA_BASE','_VENUE_POR_DEFECTO','_esAdmin','loadLazyData','showToast','LANG',
+      '_CARTA_BASE','_VENUE_POR_DEFECTO','_puedeRevisar','loadLazyData','showToast','LANG',
       src + '; return { cargarCarta, estado: () => ({ platos: DISHES.map(d=>d.name), en: DISHES_EN.length, comp: Object.keys(DISH_COMPONENTS).length, turnos: Object.keys(DISH_SERVICE).length }) };');
+    // `esAdmin` representa aquí a cualquier cuenta con permiso de revisión
+    // (_puedeRevisar: administración o propietario) — el cargador no distingue.
     return F(D, DE, DC, DA, DS, BASE, 'txoko', () => esAdmin, responder, () => {}, 'es');
   };
   const plato = (id,es,en) => ({ venue:null, DISHES:[{id,name:es}], DISHES_EN:[{id,name:en}],
@@ -10216,6 +10223,315 @@ test('Administración: un restaurante sin carta se abre VACÍO, nunca con la del
   assert(R.propia === true, 'con carta propia se entra normal');
   // 5) Y un archivo que dice ser de otro restaurante se sigue rechazando.
   assert(R.ajena === false, 'un archivo que dice ser de otro restaurante no se aplica');
+});
+
+// ═══ EL PROPIETARIO TAMBIÉN REVISA · sin volverse administración ═══
+const _revisionDueñoRes = await (async () => {
+  const srcRoles = html.slice(html.indexOf('function _ficha(nombre){'), html.indexOf('// ═══ AVISOS PUSH'));
+  const srcCarga = html.slice(html.indexOf('let _cartaPuesta = _VENUE_POR_DEFECTO;'),
+                              html.indexOf('// Derivación automática:'));
+  if (srcRoles.length < 200 || srcCarga.length < 500) return { roto: 'no encuentro las piezas a montar' };
+  const monta = (DBemp, nombre) => {
+    const D = [], DE = [], DC = {}, DA = {}, DS = {};
+    const BASE = { DISHES:[{id:1,name:'x'}], DISHES_EN:[{id:1,name:'x'}],
+                   DISH_COMPONENTS:{1:[]}, DISH_ACTIONS:{1:{}}, DISH_SERVICE:{} };
+    const LS = {};
+    const localStorage = { getItem: k => (k in LS ? LS[k] : null), setItem: (k,v) => { LS[k] = v; } };
+    const F = new Function('DISHES','DISHES_EN','DISH_COMPONENTS','DISH_ACTIONS','DISH_SERVICE', // eslint-disable-line no-new-func
+      'DB','currentUser','localStorage','ACTIVE_VENUE','_CARTA_BASE','_VENUE_POR_DEFECTO','loadLazyData','showToast','LANG',
+      srcRoles + '\n' + srcCarga +
+      '; return { cargarCarta, esAdmin:_esAdmin, esPropietario:_esPropietario, puedeRevisar:_puedeRevisar, venueActual:_venueActual };');
+    const api = F(D, DE, DC, DA, DS, DBemp, nombre, localStorage, null, BASE, 'txoko',
+      () => Promise.reject(new Error('HTTP 404')), () => {}, 'es');
+    return { api, localStorage };
+  };
+  const dueño = monta({ employees:{ Dueño:{ name:'Dueño', role:'owner', venue:'txoko' } } }, 'Dueño');
+  const manager = monta({ employees:{ Quien:{ name:'Quien', role:'manager', venue:'txoko' } } }, 'Quien');
+  const staff = monta({ employees:{ Quien:{ name:'Quien', role:'staff', venue:'txoko' } } }, 'Quien');
+
+  const antesDeElegir = { puede: dueño.api.puedeRevisar(), admin: dueño.api.esAdmin(),
+                          propietario: dueño.api.esPropietario(), venue: dueño.api.venueActual() };
+  // Lo que hace el picker de Ajustes: primero localStorage, luego cargarCarta.
+  dueño.localStorage.setItem('txk_venue', 'r2');
+  const r2Dueño = await dueño.api.cargarCarta('r2');
+  const venueTrasElegir = dueño.api.venueActual();
+
+  manager.localStorage.setItem('txk_venue', 'r2');
+  const r2Manager = await manager.api.cargarCarta('r2');
+
+  return { antesDeElegir, r2Dueño, venueTrasElegir, r2Manager,
+           puedeManager: manager.api.puedeRevisar(), puedeStaff: staff.api.puedeRevisar() };
+})();
+
+test('Revisión: el propietario entra a revisar restaurantes ajenos sin volverse administración', () => {
+  const R = _revisionDueñoRes;
+  assert(!R.roto, R.roto);
+  assert(R.antesDeElegir.puede === true, 'el propietario tiene que poder revisar (_puedeRevisar)');
+  assert(R.antesDeElegir.admin === false,
+    'revisar no lo vuelve la cuenta de administración: _esAdmin tiene que seguir dando false');
+  assert(R.antesDeElegir.propietario === true, 'sigue siendo propietario, nada más');
+  assert(R.antesDeElegir.venue === 'txoko', 'sin elegir nada en Ajustes, sigue viendo su propio restaurante');
+  assert(R.r2Dueño === 'vacia',
+    `al elegir r2 (sin carta en este montaje) el propietario debería entrar vacío, igual que la administración; dio ${JSON.stringify(R.r2Dueño)}`);
+  assert(R.venueTrasElegir === 'r2',
+    '_venueActual() tiene que reflejar r2 tras elegirlo: es lo que usan ranking, panel, liga, duelos y chat para no mezclar restaurantes');
+  assert(R.puedeManager === false && R.puedeStaff === false, 'un manager o un camarero no tienen la puerta de revisión');
+  assert(R.r2Manager === false,
+    'un manager, aunque alguien le toque el localStorage, sigue sin poder entrar a un restaurante sin carta');
+});
+
+// ═══ VOLVER A ENTRAR CON r2 ELEGIDO: carta, restaurante y corte de red coinciden ═══
+// Se monta el inicio de sesión REAL (closePinAndEnter), el cargador REAL, el
+// _modoRevision REAL y el corte de red REAL: quien puede revisar y entra con r2
+// guardado en txk_venue tiene que quedar con la carta de r2, las listas de r2 y
+// TODA escritura cortada; al volver a Txoko, todo como siempre.
+const _reentradaRes = await (async () => {
+  const srcRoles = html.slice(html.indexOf('function _ficha(nombre){'), html.indexOf('// ═══ AVISOS PUSH'));
+  const srcCarga = html.slice(html.indexOf('let _cartaPuesta = _VENUE_POR_DEFECTO;'), html.indexOf('// Derivación automática:'));
+  const iE = html.indexOf("const _e = (typeof DB!=='undefined' && DB.employees) ? DB.employees[pinTarget] : null;");
+  const finE = 'if(!_ok) return;';
+  const jE = html.indexOf(finE, iE);
+  if (srcRoles.length < 200 || srcCarga.length < 500 || iE < 0 || jE < 0) return { roto: 'no encuentro las piezas a montar' };
+  const srcEntrar = 'async function _entrar(pinTarget){\n' + html.slice(iE, jE + finE.length) + '\n  return true;\n}';
+  const THEMES = JSON.parse(read('data/themes.json'));
+  const SUPA = 'https://xx.supabase.co';
+  const cartaR2 = { venue:'r2', allergensValidated:false,
+    CATS:[{es:'Sashimi',en:'Sashimi'}],
+    DISHES:[{id:3010, cat:'Sashimi', name:'Plato r2', allergens:['Pescado'], ingredients:'x', history:'x', notes:'x'}],
+    DISHES_EN:[{id:3010, name:'Dish r2', allergens:['Fish'], ingredients:'x', history:'x', notes:'x'}],
+    DISH_COMPONENTS:{}, DISH_ACTIONS:{'3010':{Pescado:{r:0}}} };
+  const monta = ({ ficha, elegido, servidor }) => {
+    const LS = {}; if (elegido) LS.txk_venue = elegido;
+    const localStorage = { getItem: k => (k in LS ? LS[k] : null), setItem: (k, v) => { LS[k] = String(v); } };
+    const cargas = [], salen = [];
+    const BASE = { DISHES:[{id:12,name:'Jamón',cat:'Entrantes'}], DISHES_EN:[{id:12,name:'Ham'}], DISH_COMPONENTS:{12:[]},
+                   DISH_ACTIONS:{12:{}}, DISH_SERVICE:{12:'c'}, allergensValidated:true };
+    const fetchT = async (url) => {
+      if (servidor === 'falla') throw new Error('sin red');
+      return { ok:true, status:200, json: async () => /venue=eq\.r2/.test(String(url)) ? [{ venue:'r2', formato:2, contenido: JSON.parse(JSON.stringify(cartaR2)) }] : [] };
+    };
+    const win = { fetch: (u, i) => { salen.push([String(u), String((i && i.method) || 'GET').toUpperCase()]);
+      return Promise.resolve({ ok:true, status:200, json: async () => [] }); } };
+    const F = new Function('DISHES','DISHES_EN','DISH_COMPONENTS','DISH_ACTIONS','DISH_SERVICE', // eslint-disable-line no-new-func
+      'DB','currentUser','localStorage','ACTIVE_VENUE','_CARTA_BASE','_VENUE_POR_DEFECTO','loadLazyData','showToast','LANG','THEMES',
+      'fetchT','SUPA_URL','SUPA_KEY','_authCtx','_PASE_FICHAS_CACHE','_paseVistos','_E','win','_cargas',
+      'var _gsDishIdx=_E.gs, DISH_PHOTOS=_E.fotos, DISH_PHOTO_PENDING=_E.pend;\n' +
+      srcRoles + '\n' + srcCarga + '\n' +
+      'const _cargaReal = cargarCarta; cargarCarta = async (v, q) => { _cargas.push(v); return _cargaReal(v, q); };\n' +
+      _xFn('_identidadVenue') + '\n' + _xFn('_modoRevision') + '\nconst _revisionAviso = () => {};\n' +
+      _xFn('_revisionBloquea') + '\n' + _xFn('_instalarRedRevision') + '\n_instalarRedRevision(win);\n' + srcEntrar +
+      '\nreturn { entrar: async (n) => { const ok = await _entrar(n); if (ok) currentUser = n; return ok; },' +
+      ' salir: () => { currentUser = null; }, elegir: async (v) => { localStorage.setItem("txk_venue", v); return cargarCarta(v); },' +
+      ' estado: () => ({ carta: _cartaPuesta, venue: _venueActual(), rev: _modoRevision(), ids: DISHES.map(d => d.id) }), fetch: win.fetch };');
+    const DB = { employees: { Quien: Object.assign({ name:'Quien' }, ficha) } };
+    const api = F([], [], {}, {}, {}, DB, null, localStorage, null, BASE, 'txoko',
+      () => Promise.reject(new Error('HTTP 404')), () => {}, 'es', THEMES, fetchT, SUPA, 'k', () => ({ token:'tok' }),
+      new Map(), [], { gs:[], fotos:{}, pend:new Set() }, win, cargas);
+    return { api, LS, cargas, salen };
+  };
+  const escribe = async (m) => {   // escrituras reales de la app, por el corte de red real
+    const antes = m.salen.length, cod = [];
+    for (const [met, ruta] of [['POST','/rest/v1/chat_messages'], ['POST','/rest/v1/scores'],
+                               ['POST','/rest/v1/employees?on_conflict=name'], ['PATCH','/rest/v1/employees?name=eq.Quien'],
+                               ['POST','/rest/v1/duels'], ['POST','/rest/v1/notifications']])
+      cod.push((await m.api.fetch(SUPA + ruta, { method: met })).status);
+    const lee = (await m.api.fetch(SUPA + '/rest/v1/cartas?venue=eq.r2', { method:'GET' })).status;
+    return { llegan: m.salen.length - antes - 1, cod, lee };
+  };
+  // 1) El propietario cierra sesión con r2 elegido y vuelve a entrar.
+  const dueño = monta({ ficha:{ role:'owner', venue:'txoko' }, elegido:'r2' });
+  const okDueño = await dueño.api.entrar('Quien');
+  const enR2 = dueño.api.estado();
+  const escR2 = await escribe(dueño);
+  // 2) Vuelve a Txoko desde Ajustes (txk_venue = txoko + cargarCarta, como el selector).
+  await dueño.api.elegir('txoko');
+  const enTxoko = dueño.api.estado();
+  const escTxoko = await escribe(dueño);
+  // 3) Cierra sesión y entra otra vez, ahora con Txoko elegido.
+  dueño.api.salir(); await dueño.api.entrar('Quien');
+  const reTxoko = dueño.api.estado();
+  // 4) Con r2 elegido pero sin red: entra en su restaurante, no se queda fuera ni a medias.
+  const sinRed = monta({ ficha:{ role:'owner', venue:'txoko' }, elegido:'r2', servidor:'falla' });
+  const okSinRed = await sinRed.api.entrar('Quien');
+  const enSinRed = sinRed.api.estado();
+  // 5) Un manager con txk_venue manipulado sigue en el suyo; 6) la administración, igual que antes.
+  const mgr = monta({ ficha:{ role:'manager', venue:'txoko' }, elegido:'r2' });
+  await mgr.api.entrar('Quien');
+  const adm = monta({ ficha:{ role:'admin', venue:'txoko' }, elegido:'r2' });
+  await adm.api.entrar('Quien');
+  return { okDueño, enR2, escR2, cargasDueño: dueño.cargas.slice(), enTxoko, escTxoko, reTxoko,
+           okSinRed, enSinRed, cargasSinRed: sinRed.cargas.slice(), lsSinRed: sinRed.LS.txk_venue,
+           mgr: mgr.api.estado(), cargasMgr: mgr.cargas.slice(), adm: adm.api.estado() };
+})();
+test('Revisión: volver a entrar con r2 elegido deja carta, restaurante y corte de red de r2', () => {
+  const R = _reentradaRes;
+  assert(!R.roto, R.roto);
+  assert(R.okDueño === true && R.cargasDueño[0] === 'r2', `el propietario con r2 guardado tiene que entrar cargando r2; cargó ${JSON.stringify(R.cargasDueño)}`);
+  assert(R.enR2.carta === 'r2' && R.enR2.venue === 'r2', `carta y _venueActual() tienen que coincidir en r2: ${JSON.stringify(R.enR2)}`);
+  assert(JSON.stringify(R.enR2.ids) === '[3010]', 'la carta puesta es la de r2, no la de Txoko');
+  assert(R.enR2.rev === true, '_modoRevision() tiene que estar activo al revisar r2');
+  assert(R.escR2.llegan === 0 && R.escR2.cod.every(c => c === 403), `en revisión no sale ninguna escritura: ${JSON.stringify(R.escR2)}`);
+  assert(R.escR2.lee === 200, 'en revisión se sigue pudiendo LEER la carta');
+});
+test('Revisión: al volver a Txoko, y al entrar otra vez con Txoko, todo es como siempre', () => {
+  const R = _reentradaRes;
+  assert(!R.roto, R.roto);
+  assert(R.enTxoko.carta === 'txoko' && R.enTxoko.venue === 'txoko' && R.enTxoko.rev === false, `vuelta a Txoko: ${JSON.stringify(R.enTxoko)}`);
+  assert(JSON.stringify(R.enTxoko.ids) === '[12]', 'vuelve la carta de Txoko');
+  assert(R.escTxoko.llegan === 6 && R.escTxoko.cod.every(c => c === 200), 'fuera de revisión las escrituras salen como siempre');
+  assert(R.reTxoko.carta === 'txoko' && R.reTxoko.venue === 'txoko' && R.reTxoko.rev === false, `reentrada con Txoko: ${JSON.stringify(R.reTxoko)}`);
+});
+test('Revisión: si r2 no se puede abrir al entrar, se entra en el propio restaurante (nunca a medias)', () => {
+  const R = _reentradaRes;
+  assert(!R.roto, R.roto);
+  assert(R.okSinRed === true, 'sin red para r2, el propietario no se queda fuera de su restaurante');
+  assert(JSON.stringify(R.cargasSinRed) === '["r2","txoko"]', `primero r2 y, al fallar, el propio: ${JSON.stringify(R.cargasSinRed)}`);
+  assert(R.lsSinRed === 'txoko', 'se olvida la elección de r2 para que carta y _venueActual() coincidan');
+  assert(R.enSinRed.carta === 'txoko' && R.enSinRed.venue === 'txoko' && R.enSinRed.rev === false, `sin red: ${JSON.stringify(R.enSinRed)}`);
+});
+test('Revisión: un manager con txk_venue manipulado sigue en el suyo; la administración entra como antes', () => {
+  const R = _reentradaRes;
+  assert(!R.roto, R.roto);
+  assert(JSON.stringify(R.cargasMgr) === '["txoko"]' && R.mgr.carta === 'txoko' && R.mgr.venue === 'txoko' && R.mgr.rev === false,
+    `el manager no puede revisar otro restaurante tocando localStorage: ${JSON.stringify(R.mgr)}`);
+  assert(R.adm.carta === 'r2' && R.adm.venue === 'r2' && R.adm.rev === true, `la administración entra en r2 en revisión: ${JSON.stringify(R.adm)}`);
+  assert(!/_esAdmin\(pinTarget\)/.test(html), 'el inicio de sesión ya no mira sólo _esAdmin');
+});
+
+// ═══ LAS LISTAS DE PERSONAL NUNCA MEZCLAN RESTAURANTES ═══
+const _listaPersonalRes = await (async () => {
+  const srcRoles = html.slice(html.indexOf('function _ficha(nombre){'), html.indexOf('// ═══ AVISOS PUSH'));
+  const srcFetch = html.slice(html.indexOf('// null SÓLO significa'), html.indexOf('// ═══ SUPABASE — NOTIFICACIONES'));
+  if (srcRoles.length < 200 || srcFetch.length < 300) return { roto: 'no encuentro supaFetchAllEmployees' };
+  const monta = (respuesta) => {
+    const F = new Function('DB','currentUser','localStorage','ACTIVE_VENUE','_VENUE_POR_DEFECTO', // eslint-disable-line no-new-func
+      '_EMP_COLS','SUPA_URL','SUPA_KEY','fetch','_bearer','_dispLearn',
+      srcRoles + '\n' + srcFetch + '; return { fetchAll: supaFetchAllEmployees, esDeMiVenue: _esDeMiVenue, venueActual: _venueActual };');
+    return F({ employees:{} }, 'Yo', { getItem:()=>null, setItem:()=>{} }, null, 'r2',
+      'name,venue,role', 'https://x', 'k', respuesta, () => 'tok', () => {});
+  };
+  const vacioOk   = await monta(async () => ({ ok:true,  json: async () => [] })).fetchAll();
+  const fallo      = await monta(async () => ({ ok:false })).fetchAll();
+  const excepcion  = await monta(() => Promise.reject(new Error('sin red'))).fetchAll();
+  const conDatos   = await monta(async () => ({ ok:true, json: async () => [{ name:'Ana', venue:'r2' }] })).fetchAll();
+  const api = monta(async () => ({ ok:true, json: async () => [] }));
+  return { vacioOk, fallo, excepcion, conDatos,
+    deOtro:  api.esDeMiVenue({ venue:'txoko' }),
+    delMio:  api.esDeMiVenue({ venue:'r2' }),
+    sinVenue: api.esDeMiVenue({ name:'ficha local sin venue' }),
+    sinFicha: api.esDeMiVenue(null) };
+})();
+
+test('Listas de personal: un restaurante sin nadie da [] (vacío válido), nunca null (fallo)', () => {
+  const R = _listaPersonalRes;
+  assert(!R.roto, R.roto);
+  assert(Array.isArray(R.vacioOk) && R.vacioOk.length === 0,
+    `una respuesta 200 con cero filas tiene que ser [] (vacío válido), no ${JSON.stringify(R.vacioOk)}`);
+  assert(R.fallo === null, 'un HTTP de error sigue siendo null: "no se sabe", no "no hay nadie"');
+  assert(R.excepcion === null, 'un fallo de red sigue siendo null: "no se sabe", no "no hay nadie"');
+  assert(Array.isArray(R.conDatos) && R.conDatos.length === 1 && R.conDatos[0].name === 'Ana',
+    'con filas de verdad, se siguen mapeando igual que siempre');
+});
+
+test('Listas de personal: una ficha cacheada de OTRO restaurante no cuenta como del activo', () => {
+  const R = _listaPersonalRes;
+  assert(!R.roto, R.roto);
+  assert(R.delMio === true, 'una ficha del restaurante activo sí cuenta');
+  assert(R.deOtro === false,
+    'PELIGRO: una ficha cacheada de Txoko no puede contar como de r2 — es justo la fuga que _esDeMiVenue cierra');
+  assert(R.sinVenue === true,
+    'una ficha local sin venue (la crea getEmp sin ese campo, para SU PROPIO equipo) es siempre del restaurante activo');
+  assert(R.sinFicha === true, 'sin ficha no hay nada que excluir');
+});
+
+test('Listas de personal: ranking, panel, liga, duelos y menciones filtran por restaurante activo', () => {
+  const ranking = html.slice(html.indexOf('function renderRanking(){'), html.indexOf('function renderSupervisor(){'));
+  assert(/Object\.keys\(DB\.employees\)\.forEach\(n => \{ const e = DB\.employees\[n\]; if\(n && _esDeMiVenue\(e\)\) allEmps\[n\] = /.test(ranking),
+    'renderRanking: la caché local se filtra por _esDeMiVenue antes de sembrar el ranking');
+  assert(/if\(Array\.isArray\(remoteEmps\)\) remoteEmps\.forEach/.test(ranking),
+    'renderRanking: [] del servidor (restaurante sin nadie) tiene que sustituir la caché local, no ignorarse');
+
+  const panel = html.slice(html.indexOf('function renderSupDashboard('), html.indexOf('function renderSupDashboard(') + 2500);
+  assert(/Object\.keys\(DB\.employees\)\.forEach\(name => \{ const e = DB\.employees\[name\]; if\(name && _esDeMiVenue\(e\)\) allEmps\[name\] = /.test(panel),
+    'renderSupDashboard: el panel tampoco puede sembrarse con fichas de otro restaurante');
+  assert(/if\(Array\.isArray\(remoteEmps\)\) remoteEmps\.forEach/.test(panel),
+    'renderSupDashboard: [] también sustituye aquí, no se queda con lo de antes');
+
+  const liga = html.slice(html.indexOf('// Posición en la liga semanal'), html.indexOf('// Posición en la liga semanal') + 900);
+  assert(/if\(e && _esDeMiVenue\(e\) && e\.wkKey===wkNow/.test(liga),
+    'la liga semanal: sólo cuentan fichas LOCALES del restaurante activo');
+
+  const duelo = html.slice(html.indexOf('async function renderDuel('), html.indexOf('async function renderDuel(') + 2100);
+  assert(/if \(Array\.isArray\(remoteEmps\)\) \{/.test(duelo),
+    'renderDuel: [] del servidor tiene que limpiar window._supEmpNames, no dejarlo con nombres de otro restaurante');
+  assert(/const _nombresLocales = \(\) => Object\.keys\(DB\.employees\)\.filter\(n => _esDeMiVenue\(DB\.employees\[n\]\)\);/.test(duelo),
+    'renderDuel: el repliegue a la caché local también se filtra por restaurante');
+
+  const chat = html.slice(html.indexOf('async function _chatConnect(){'), html.indexOf('// 1) Load recent history over REST'));
+  assert(/_chatRosterVenue !== _venueActual\(\)/.test(chat),
+    'el roster de @menciones se refresca al cambiar de restaurante, no se queda pegado al anterior');
+  assert(/Object\.keys\(DB\.employees\|\|\{\}\)\.filter\(n => _esDeMiVenue\(DB\.employees\[n\]\)\)/.test(chat),
+    'el repliegue local del roster de @menciones también se filtra por restaurante');
+});
+
+// ═══ LIGA SEMANAL DE renderRanking · tampoco mezcla restaurantes ═══
+// Se ejecuta el trozo REAL de renderRanking() que construye weekMap (no el
+// widget de _pddAsyncFill, que tiene su propia prueba), con el _esDeMiVenue y
+// el _venueActual REALES: el propietario revisa r2 con fichas de Txoko en la
+// caché del móvil, y luego vuelve a Txoko.
+const _ligaRankingRes = (() => {
+  const srcRoles = html.slice(html.indexOf('function _ficha(nombre){'), html.indexOf('// ═══ AVISOS PUSH'));
+  const rk = html.slice(html.indexOf('function renderRanking(){'), html.indexOf('function renderSupervisor(){'));
+  const ini = '    const _wkNow=_wkKey();', fin = '    const _wkSorted=';
+  const i = rk.indexOf(ini), j = rk.indexOf(fin, i);
+  if (srcRoles.length < 200 || i < 0 || j < 0) return { roto: 'no encuentro la liga semanal de renderRanking' };
+  const srcLiga = rk.slice(i, rk.indexOf('\n', j));
+  const WK = '2026-W42';
+  const monta = (elegido, remoteEmps) => {
+    const LS = {}; if (elegido) LS.txk_venue = elegido;
+    const DB = { employees: {
+      Dueño:   { name:'Dueño', role:'owner', venue:'txoko' },
+      Camarero1: { name:'Camarero1', role:'staff', venue:'txoko', wkKey:WK, wkXP:500 },
+      Camarera2: { name:'Camarera2', role:'staff', venue:'txoko', wkKey:WK, wkXP:300 },
+      Viejo:     { name:'Viejo', role:'staff', venue:'txoko', wkKey:'2026-W41', wkXP:900 },
+      SushiR2:   { name:'SushiR2', role:'staff', venue:'r2', wkKey:WK, wkXP:120 } } };
+    const F = new Function('DB','currentUser','localStorage','ACTIVE_VENUE','_VENUE_POR_DEFECTO','_wkKey','remoteEmps', // eslint-disable-line no-new-func
+      srcRoles + '\n' + srcLiga + '\nreturn { semana: weekMap, orden: _wkSorted, venue: _venueActual() };');
+    return F(DB, 'Dueño', { getItem: k => (k in LS ? LS[k] : null), setItem: (k, v) => { LS[k] = String(v); } },
+             null, 'txoko', () => WK, remoteEmps);
+  };
+  const remotoR2 = [{ name:'RemotaR2', venue:'r2', extras:{ wk:{ k:WK, xp:80 } } }];
+  return { srcLiga,
+    enR2: monta('r2', remotoR2),
+    enR2SinServidor: monta('r2', null),
+    enTxoko: monta('txoko', []),
+    sinElegir: monta(null, null) };
+})();
+
+test('Liga semanal (renderRanking): revisando r2 no salen los empleados de Txoko; en Txoko, sí', () => {
+  const R = _ligaRankingRes;
+  assert(!R.roto, R.roto);
+  assert(/_esDeMiVenue\(e\)/.test(R.srcLiga), 'el recorrido de DB.employees de la liga semanal tiene que pasar por _esDeMiVenue');
+  // 1) r2 activo: ni un solo nombre de Txoko, aunque tengan XP de esta semana.
+  for (const k of ['enR2', 'enR2SinServidor']) {
+    const S = R[k];
+    assert(S.venue === 'r2', `${k}: el escenario tiene que estar en r2 (está en ${S.venue})`);
+    const deTxoko = ['Camarero1', 'Camarera2', 'Dueño', 'Viejo'].filter(n => n in S.semana);
+    assert(deTxoko.length === 0,
+      `PELIGRO (${k}): la liga semanal de r2 enseña empleados de Txoko: ${deTxoko.join(', ')}`);
+    assert(S.semana.SushiR2 === 120, `${k}: una ficha local de r2 sí cuenta en la liga de r2`);
+  }
+  assert(JSON.stringify(R.enR2.orden) === '["SushiR2","RemotaR2"]',
+    `con el servidor, r2 enseña sólo lo de r2: ${JSON.stringify(R.enR2.orden)}`);
+  assert(JSON.stringify(R.enR2SinServidor.orden) === '["SushiR2"]',
+    `sin respuesta del servidor, la caché tampoco cuela a nadie de Txoko: ${JSON.stringify(R.enR2SinServidor.orden)}`);
+  // 2) Txoko activo: sus empleados siguen saliendo, como siempre.
+  for (const k of ['enTxoko', 'sinElegir']) {
+    const S = R[k];
+    assert(S.venue === 'txoko', `${k}: el escenario tiene que estar en Txoko`);
+    assert(JSON.stringify(S.orden) === '["Camarero1","Camarera2"]',
+      `${k}: en su propio restaurante los de Txoko siguen en la liga (y sólo con XP de esta semana): ${JSON.stringify(S.orden)}`);
+  }
 });
 
 test('Multi-restaurante: nadie lee el nombre del vecino en su propia formación', () => {
@@ -10405,17 +10721,20 @@ test('Carta: cada restaurante carga la suya, y si no llega no se entra', () => {
   const cuerpo = (() => { let d = 0;
     for (let k = html.indexOf('{', i); k < html.length; k++) {
       if (html[k] === '{') d++; else if (html[k] === '}') { d--; if (!d) return html.slice(i, k + 1); } } })();
-  assert(/let _v = \(_e && _e\.venue\) \|\| _VENUE_POR_DEFECTO;/.test(cuerpo),
+  assert(/const _propio = \(_e && _e\.venue\) \|\| _VENUE_POR_DEFECTO;/.test(cuerpo) && /let _v = _propio;/.test(cuerpo),
     'el restaurante de quien entra sale de SU ficha, no del selector del login');
-  assert(/if\(!\(await cargarCarta\(_v\)\)\) return;/.test(cuerpo),
+  assert(/let _ok = await cargarCarta\(_v, pinTarget\);/.test(cuerpo) && /if\(!_ok\) return;/.test(cuerpo),
     'sin la carta de su restaurante no se entra');
-  // La cuenta de administración vuelve al restaurante que ELIGIÓ: todo lo demás
-  // ya se guía por _venueActual(), y cargar aquí el de su ficha la devolvía a
-  // Txoko con el resto de la app puesta en M.B.
-  assert(/_esAdmin\(pinTarget\)/.test(cuerpo) && /localStorage\.getItem\('txk_venue'\)/.test(cuerpo),
-    'el administrador vuelve al restaurante que dejó elegido');
-  assert(cuerpo.indexOf('_esAdmin(pinTarget)') < cuerpo.indexOf('await cargarCarta(_v)'),
+  // Quien puede revisar (administración o propietario) vuelve al restaurante
+  // que ELIGIÓ: todo lo demás ya se guía por _venueActual(), y cargar aquí el
+  // de su ficha lo devolvía a Txoko con el resto de la app puesta en r2.
+  assert(/_puedeRevisar\(pinTarget\)/.test(cuerpo) && /localStorage\.getItem\('txk_venue'\)/.test(cuerpo),
+    'quien puede revisar vuelve al restaurante que dejó elegido');
+  assert(cuerpo.indexOf('_puedeRevisar(pinTarget)') < cuerpo.indexOf('await cargarCarta(_v, pinTarget)'),
     'esa elección se resuelve ANTES de cargar la carta');
+  // Si lo elegido no se abre, se entra en el PROPIO, nunca en el de un tercero.
+  assert(/if\(!_ok && _v !== _propio\)\{[\s\S]{0,200}?_ok = await cargarCarta\(_propio, pinTarget\);/.test(cuerpo),
+    'si el restaurante elegido no se abre, se vuelve al propio');
   const iCarta = cuerpo.indexOf('cargarCarta'), iApp = cuerpo.indexOf('screenApp');
   assert(iCarta > 0 && iApp > 0 && iCarta < iApp,
     'la carta se resuelve ANTES de pintar la app');
@@ -15937,7 +16256,8 @@ test('F0 · salir y entrar sustituyen el contexto ENTERO, de una vez', () => {
 // ═══ RESTAURANTES INDEPENDIENTES · el primero nuevo es «Restaurante 2» ═══
 // La carta de otro restaurante llega del servidor (public.cartas, con RLS),
 // sus números de plato viven en un bloque propio, y mientras cocina no valide
-// sus alérgenos sólo la abre la cuenta de administración, en modo revisión.
+// sus alérgenos sólo la abre quien tiene permiso de revisión (_puedeRevisar:
+// administración o propietario), en modo revisión.
 // Txoko no pasa por nada de esto: su comportamiento es el contrato.
 console.log('\nRestaurantes independientes');
 const _r2Res = await (async () => {
@@ -15958,7 +16278,7 @@ const _r2Res = await (async () => {
       return { ok: true, status: 200, json: async () => privada ? [{ venue: privada.venue, formato: 2, contenido: privada }] : [] }; };
     const loadLazyData = () => estatica ? Promise.resolve(estatica) : Promise.reject(new Error('HTTP 404'));
     const F = new Function('DISHES','DISHES_EN','DISH_COMPONENTS','DISH_ACTIONS','DISH_SERVICE', // eslint-disable-line no-new-func
-      '_CARTA_BASE','_VENUE_POR_DEFECTO','_esAdmin','loadLazyData','showToast','LANG','THEMES',
+      '_CARTA_BASE','_VENUE_POR_DEFECTO','_puedeRevisar','loadLazyData','showToast','LANG','THEMES',
       'fetchT','SUPA_URL','SUPA_KEY','_authCtx','_PASE_FICHAS_CACHE','_paseVistos','_E',
       'var _gsDishIdx=_E.gs, DISH_PHOTOS=_E.fotos, DISH_PHOTO_PENDING=_E.pend;\n' + src +
       '; return { cargarCarta, info: () => _cartaInfo(), validados: () => _alergenosValidados(),' +
@@ -16209,10 +16529,11 @@ const _revRes = await (async () => {
 })();
 
 // ═══ REVISIÓN DE LA ADMINISTRACIÓN · r2 con revision:true ═══
-// La cuenta de administración puede elegir r2 en Ajustes para estudiar su carta
-// aunque r2 siga cerrado y la app suspendida. Nadie más lo ve: el login, el
-// registro y el selector público siguen mirando sólo `enabled`. Quién LEE la
-// carta lo decide el servidor (cartas_revisores): esto sólo enseña la opción.
+// La cuenta de administración —y, desde _puedeRevisar, también el
+// propietario— puede elegir r2 en Ajustes para estudiar su carta aunque r2
+// siga cerrado y la app suspendida. Nadie más lo ve: el login, el registro y
+// el selector público siguen mirando sólo `enabled`. Quién LEE la carta lo
+// decide el servidor (cartas_revisores): esto sólo enseña la opción.
 const _selVenues = (suspendida) => {
   const tro = (ini, fin) => { const i = html.indexOf(ini); const j = html.indexOf(fin, i); return (i >= 0 && j > i) ? html.slice(i, j) : null; };
   const src = tro('function _enabledVenues(){', '\nfunction applyTheme(');
@@ -16235,10 +16556,10 @@ test('Revisión de la administración: Ajustes ofrece r2 a la administración; e
   assert(JSON.stringify(sus.admin) === '["txoko","r2"]', 'suspendida: la administración ve Txoko y r2: ' + sus.admin.join(', '));
   assert(JSON.stringify(sus.login) === '["txoko"]' && JSON.stringify(libre.login) === '["txoko"]', 'el login sólo enseña lo abierto: nunca r2');
   assert(JSON.stringify(libre.admin) === '["txoko","mb","r2"]', 'sin suspensión, la administración ve lo de siempre: ' + libre.admin.join(', '));
-  const iAdm = html.indexOf("  if(_esAdmin()){\n    const cajaV = $('ajVenues');");
+  const iAdm = html.indexOf("  if(_puedeRevisar()){\n    const cajaV = $('ajVenues');");
   const iUso = html.indexOf('_venuesAdministracion()', iAdm);
-  assert(iAdm > 0 && iUso > iAdm && iUso - iAdm < 200, 'el selector de restaurantes de Ajustes está dentro de if(_esAdmin())');
-  assert((html.match(/(?<!function )_venuesAdministracion\(\)/g) || []).length === 1, '_venuesAdministracion sólo se llama en Ajustes de la administración');
+  assert(iAdm > 0 && iUso > iAdm && iUso - iAdm < 200, 'el selector de restaurantes de Ajustes está dentro de if(_puedeRevisar())');
+  assert((html.match(/(?<!function )_venuesAdministracion\(\)/g) || []).length === 1, '_venuesAdministracion sólo se llama en Ajustes de quien puede revisar');
   const sel = html.slice(html.indexOf('function selectVenue(id){'), html.indexOf('function selectVenue(id){') + 400);
   assert(/const v = _enabledVenues\(\)\.find\(x => x\.id === id\);/.test(sel), 'el selector del login sólo acepta restaurantes abiertos');
   assert(!/revision/.test(html.slice(html.indexOf('function _enabledVenues(){'), html.indexOf('function _enabledVenues(){') + 140)), '_enabledVenues no mira revision');
