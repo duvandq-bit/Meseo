@@ -52,7 +52,7 @@
 <meta property="og:description" content="Formación de equipos de sala: carta, alérgenos, vinos, exámenes y juegos de repaso.">
 <meta property="og:url" content="https://meseo.es/">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"Meseo","url":"https://meseo.es/"}</script>
-<meta name="app-version" content="7.479">
+<meta name="app-version" content="7.480">
 <meta name="app-build" content="May 2026">
 <meta name="theme-color" content="#1c2a22">
 <!-- ═══ PWA ═══ -->
@@ -403,7 +403,7 @@
     <div class="nav-group-lbl" id="navGrpEquipo" aria-hidden="true">Equipo</div>
     <button class="nav-btn" id="navTxoko" onclick="showTab('txoko')"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 12h4l2 8 4-16 2 8h4"/></svg> Juegos</button>
     <button class="nav-btn" id="navRanking" onclick="showTab('ranking')"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg> Ranking</button>
-    <button class="nav-btn" id="navHorarios" onclick="showTab('horarios')"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg> Horarios</button>
+    <!-- Horarios retirado de la app (oct 2026, decisión del propietario). -->
     <!-- Terraza (chat) y Vídeos retirados de la app (oct 2026, decisión del propietario). -->
     <button class="nav-btn" id="navSupervisor" onclick="showTab('supervisor')" style="display:none"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg> Sup.</button>
   </nav>
@@ -2801,7 +2801,7 @@ const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><p
 const SRC = 'src';
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='7.479';  // sincronizada con sw.js VERSION (guard de CI)
+const APP_VERSION='7.480';  // sincronizada con sw.js VERSION (guard de CI)
 const APP_BUILD='Jul 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;
@@ -11039,21 +11039,6 @@ function _pddAsyncFill(){
   }
   // Teaser de Actualidad en el inicio: 3 titulares + Ver más (petición del
   // propietario). Solo se pinta si hay noticias (offline con caché incluida).
-  // Tu turno de hoy y de mañana en la fila Horarios del inicio (petición
-  // del propietario). Si tu nombre aún no casa con el cuadrante o no hay
-  // semana cargada, la fila conserva su texto genérico.
-  const hm=document.getElementById('hoyHorMeta');
-  if(hm){
-    _horLoad().then(()=>{
-      const t=todayStr(), tmw=_horDayISO(t,1);
-      const a=_horMyDayLbl(t), b=_horMyDayLbl(tmw);
-      const hm2=document.getElementById('hoyHorMeta');
-      if(hm2 && (a||b)){
-        const en2=LANG==='en';
-        hm2.textContent=`${en2?'Today':'Hoy'}: ${a||'—'} · ${en2?'Tomorrow':'Mañana'}: ${b||'—'}`;
-      }
-    }).catch(()=>{});
-  }
   // Posición en la liga semanal
   const el=document.getElementById('hoyLigaPos');
   if(el){
@@ -14156,7 +14141,7 @@ function _salaExamCompletar(){
 // buscador: salían dos cajas de búsqueda, una encima de otra.
 // No se pierde nada: la misma búsqueda sigue a un toque desde el menú, en
 // todas las pantallas, con el botón #navSearchEntry.
-const _SIN_BUSCADOR = new Set(['supervisor','horarios','ranking','stats','logros',
+const _SIN_BUSCADOR = new Set(['supervisor','ranking','stats','logros',
                                'txoko','aprender','flashcards','emplatado','vinos','quesos','sala']);
 function _buscadorSync(tab){
   const p = document.getElementById('globalSearchPill');
@@ -14171,7 +14156,7 @@ const _TITULOS = {
   smart:['Repaso inteligente','Smart review'], emplatado:['Plating guide','Plating guide'],
   stats:['Estadísticas','Statistics'], logros:['Logros','Achievements'],
   txoko:['Juegos','Games'], ranking:['Ranking del equipo','Team ranking'],
-  supervisor:['Panel de supervisor','Supervisor panel'], horarios:['Horarios','Schedule'],
+  supervisor:['Panel de supervisor','Supervisor panel'],
   protocolo:['Auditoría LQA','LQA audit'],
   lqa:['Auditoría LQA','LQA audit'], vinos:['Carta de vinos','Wine list'],
   quesos:['Carro de quesos','Cheese trolley'], sala:['Sala y procedimientos','Floor procedures']
@@ -14204,14 +14189,15 @@ const UX2_SECCION = {
   // Practicar · entrenar. `exam` abre la PREPARACIÓN del examen, no un examen.
   exam:'practicar', repaso:'practicar', smart:'practicar', flashcards:'practicar', txoko:'practicar',
   // Equipo · hay otra persona dentro.
-  ranking:'equipo', horarios:'equipo', supervisor:'equipo',
+  ranking:'equipo', supervisor:'equipo',
   // Yo · sólo tú.
   stats:'yo', logros:'yo'
 };
 
-// Sin 'videos' ni 'chat' desde oct 2026 (retirados por el propietario). Un
-// aviso antiguo que abra #tab=chat cae en INICIO por la regla de abajo.
-const TAB_ROUTES = ['dashboard','aprender','flashcards','exam','repaso','tecnicas','actualidad','smart','emplatado','stats','logros','txoko','ranking','supervisor','horarios','protocolo','lqa','vinos','quesos','sala'];
+// Sin 'videos' ni 'chat' desde oct 2026, ni 'horarios' desde el 12 oct 2026
+// (retirados por el propietario). Un aviso antiguo que abra #tab=chat o
+// #tab=horarios cae en INICIO por la regla de abajo.
+const TAB_ROUTES = ['dashboard','aprender','flashcards','exam','repaso','tecnicas','actualidad','smart','emplatado','stats','logros','txoko','ranking','supervisor','protocolo','lqa','vinos','quesos','sala'];
 
 function showTab(tab, instant){
   // ── Pestaña desconocida → INICIO ──────────────────────────────────────
@@ -14278,7 +14264,7 @@ function showTab(tab, instant){
   _navDDClose();
   _ux2Sync(tab);
   const c=document.getElementById('appContent');
-  const renderMap = {quesos:renderQuesos,sala:renderSala,dashboard:renderDashboard,aprender:renderAprender,flashcards:renderAprender,exam:renderExam,repaso:renderAprender,tecnicas:renderAprender,actualidad:renderAprender,smart:renderAprender,emplatado:renderAprender,stats:renderRankingHub,logros:renderRankingHub,txoko:renderTxoko,ranking:renderRankingHub,supervisor:renderSupervisor,horarios:renderHorarios,protocolo:renderLqa,lqa:renderLqa,vinos:renderVinos};
+  const renderMap = {quesos:renderQuesos,sala:renderSala,dashboard:renderDashboard,aprender:renderAprender,flashcards:renderAprender,exam:renderExam,repaso:renderAprender,tecnicas:renderAprender,actualidad:renderAprender,smart:renderAprender,emplatado:renderAprender,stats:renderRankingHub,logros:renderRankingHub,txoko:renderTxoko,ranking:renderRankingHub,supervisor:renderSupervisor,protocolo:renderLqa,lqa:renderLqa,vinos:renderVinos};
   const _doRender = ()=>{
     c.innerHTML='';
     c.style.transition='none';
@@ -15433,6 +15419,13 @@ function _tecDishes(kw,kwx){
 // Leyenda confirmada por el propietario:
 //   L = Libre · L REQ = Libre pedido · DP HRS = Devolución de horas ·
 //   BOLSA = Vacaciones (bolsa) · FD = Fijo discontinuo
+//
+// RETIRADO de la app el 12 oct 2026 (decisión del propietario): sin botón en
+// el menú, sin ruta, sin fila en el inicio y sin herramienta en el panel de
+// supervisor. Nada llama ya a _horLoad, así que no se descarga el cuadrante.
+// El código queda sin ningún acceso y la tabla no se toca. La copia local que
+// guardaba cada móvil lleva nombres y turnos del equipo: se borra al abrir.
+try{ localStorage.removeItem('txk_horarios_v1'); }catch(e){}
 let HORARIOS=null;
 let _horView='hoy';
 let _horWeekIdx=null;   // null = aún sin elegir: se abre en la semana actual
@@ -23093,14 +23086,6 @@ function renderDashboard(){
       </div>
       <!-- XP bar (also shows level title — no need to duplicate it in the badge above) -->
       ${renderXPBar()}
-      <!-- ── Tu turno, dentro de la tarjeta del Dashboard (petición del
-           propietario). Se rellena en diferido desde el cuadrante; si tu
-           nombre no casa aún, la línea lleva al cuadrante igualmente. ── -->
-      <button type="button" class="dash-hero-hor" onclick="showTab('horarios')" aria-label="${_en?'Rota — your shift today and tomorrow':'Horarios — tu turno de hoy y de mañana'}">
-        <span aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align:-.15em;flex:none"><rect x="3.5" y="5.5" width="17" height="15" rx="2"/><path d="M8 3.5v4M16 3.5v4M3.5 10.5h17"/></svg></span>
-        <span id="hoyHorMeta" style="flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;text-align:left">${_en?'Rota · your shift today and tomorrow':'Horarios · tu turno de hoy y mañana'}</span>
-        <span aria-hidden="true">›</span>
-      </button>
     </div>
 
     <!-- ── ACCESO EN 1 TOQUE: banner de instalación (solo si no está instalada) ── -->
@@ -26637,7 +26622,6 @@ function _supTool(k){
        analitica: ()=>renderSupAnalytics(window._supAllEmps, window._supEmpNames),
        aviso: ()=>renderSupNotifSender(window._supEmpNames),
        fotos: ()=>renderSupPhotoQueue(),
-       horarios: ()=>renderSupHorarios(),
        codigo: ()=>renderSupCodigo(),
        cuentas: ()=>renderSupCuentas(),
        lqa: ()=>renderSupLqaStats(window._supAllEmps, window._supEmpNames) })[k]();
@@ -27009,10 +26993,6 @@ function renderSupDashboard(silent){
             <!-- Quiz en vivo retirado del panel (propietario, jul 2026): el
                  Quiz del Día del dashboard lo sustituye — abierto 24/7, sin
                  anfitrión. -->
-            <button onclick="_supTool('horarios')" style="display:flex;align-items:center;gap:.65rem;padding:.75rem .85rem;background:linear-gradient(155deg,#faf6ee,#f0e8d8);border:1.5px solid rgba(196,154,60,.12);border-left:3px solid #6b8f71;border-radius:12px;font-family:'Quicksand',sans-serif;cursor:pointer;transition:all .2s;position:relative;overflow:hidden">
-              <span style="width:32px;height:32px;display:flex;align-items:center;justify-content:center;clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);background:linear-gradient(135deg,#6b8f71,#4a6b50);flex-shrink:0"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg></span>
-              <span style="font-size:.72rem;font-weight:600;color:var(--parchment)">${LANG==='en'?'Team rota':'Horarios'}</span>
-            </button>
             <button onclick="_supTool('lqa')" style="display:flex;align-items:center;gap:.65rem;padding:.75rem .85rem;background:linear-gradient(155deg,rgba(140,200,150,.08),rgba(140,200,150,.02));border:1.5px solid rgba(140,200,150,.25);border-left:3px solid #8fc499;border-radius:12px;font-family:'Quicksand',sans-serif;cursor:pointer;transition:all .2s;position:relative;overflow:hidden">
               <span style="width:32px;height:32px;display:flex;align-items:center;justify-content:center;clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);background:linear-gradient(135deg,#8fc499,var(--sage));flex-shrink:0"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/><path d="M8 11l2 2 4-4"/></svg></span>
               <span style="font-size:.72rem;font-weight:700;color:var(--sage)">${LANG==='en'?'LQA Stats':'Stats LQA'}</span>
