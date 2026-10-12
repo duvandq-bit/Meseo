@@ -52,7 +52,7 @@
 <meta property="og:description" content="Formación de equipos de sala: carta, alérgenos, vinos, exámenes y juegos de repaso.">
 <meta property="og:url" content="https://meseo.es/">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"Meseo","url":"https://meseo.es/"}</script>
-<meta name="app-version" content="7.480">
+<meta name="app-version" content="7.481">
 <meta name="app-build" content="May 2026">
 <meta name="theme-color" content="#1c2a22">
 <!-- ═══ PWA ═══ -->
@@ -2271,8 +2271,21 @@ function _vSello(o){ o = o || {}; o.venue = _venueActual(); return o; }
 // caché local y se arrastraría a cualquier otro restaurante que se revise
 // después en el mismo móvil: exactamente la fuga de datos de un restaurante
 // a otro que esto existe para cerrar (ranking, panel, liga, duelos, @menciones).
+//
+// Una ficha SIN venue no es de «cualquier» restaurante: es del de la cuenta que
+// usa el móvil (_identidadVenue), que es donde se creó. Antes contaba como del
+// restaurante activo, y al revisar Restaurante 2 desde un móvil de Txoko el
+// ranking, los récords de juegos y la liga enseñaban al equipo de Txoko
+// (propietario, 12 oct 2026). Fuera de la revisión los dos valen lo mismo y
+// nada cambia.
 function _esDeMiVenue(ficha){
-  return !ficha || !ficha.venue || ficha.venue === _venueActual();
+  if(!ficha) return true;
+  const suyo = ficha.venue || (typeof _identidadVenue==='function' ? _identidadVenue() : _VENUE_POR_DEFECTO);
+  return suyo === _venueActual();
+}
+// Las fichas locales del restaurante activo, para cualquier lista del equipo.
+function _fichasDeMiVenue(){
+  return Object.values(DB.employees || {}).filter(e => e && _esDeMiVenue(e));
 }
 
 // ═══ AVISOS PUSH: SÓLO CON LA SESIÓN REAL (D1-M0c) ═════════════════════════
@@ -2801,7 +2814,7 @@ const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><p
 const SRC = 'src';
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='7.480';  // sincronizada con sw.js VERSION (guard de CI)
+const APP_VERSION='7.481';  // sincronizada con sw.js VERSION (guard de CI)
 const APP_BUILD='Jul 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;
@@ -10712,7 +10725,7 @@ function getChallengeProgress(ch){
   const weekStart=new Date();
   weekStart.setHours(0,0,0,0);
   weekStart.setDate(weekStart.getDate()-weekStart.getDay());
-  const empNames=Object.keys(DB.employees);
+  const empNames=Object.keys(DB.employees).filter(n=>_esDeMiVenue(DB.employees[n]));
   let completed=0;
   for(const name of empNames){
     const emp=DB.employees[name];
@@ -11302,7 +11315,7 @@ function renderLeaderboard(){
 }
 
 function getLocalLeaderboard(){
-  const names=Object.keys(DB.employees);
+  const names=Object.keys(DB.employees).filter(n=>_esDeMiVenue(DB.employees[n]));
   return names.map(n=>{
     const s=(DB.employees[n].sessions||[]);
     if(!s.length) return null;
@@ -26215,9 +26228,9 @@ function _renderRankingGames(){
       + board('Mr. Shoesmith · '+(_en?'Best Services':'Mejores Servicios'), shoe, e=>e.record+' '+(_en?(e.record===1?'order':'orders'):(e.record===1?'comanda':'cmdas')))
       + board('Camarero Survivors · '+(_en?'Best Shifts':'Mejores Turnos'), et, e=>fmtT(e.secs)+' · '+e.orders+' cmd');
   };
-  const shoeLocal=Object.values(DB.employees).filter(e=>e.txokoRecord>0)
+  const shoeLocal=_fichasDeMiVenue().filter(e=>e.txokoRecord>0)
     .map(e=>({employee:e.name,record:e.txokoRecord})).sort((a,b)=>b.record-a.record);
-  const etLocal=Object.values(DB.employees).filter(e=>e.etRecord&&e.etRecord.secs>0)
+  const etLocal=_fichasDeMiVenue().filter(e=>e.etRecord&&e.etRecord.secs>0)
     .map(e=>({employee:e.name,secs:e.etRecord.secs,orders:e.etRecord.orders||0})).sort((a,b)=>b.secs-a.secs);
   paint(shoeLocal, etLocal);
   Promise.all([supaFetchTxokoTop10().catch(()=>null), supaFetchEtTop().catch(()=>null)]).then(([rShoe,rEt])=>{
@@ -33094,7 +33107,7 @@ function renderTxoko(){
 
 function renderTxTop10(){
   // Build top 10 from local data immediately, then refresh from Supabase
-  const localEntries = Object.values(DB.employees)
+  const localEntries = _fichasDeMiVenue()
     .filter(e=>e.txokoRecord&&e.txokoRecord>0)
     .sort((a,b)=>(b.txokoRecord||0)-(a.txokoRecord||0))
     .slice(0,10)
@@ -33139,7 +33152,7 @@ function refreshTxTop10(){
     if(spinner) spinner.remove();
     if(!remote||!remote.length) return;
     const merged={};
-    Object.values(DB.employees).filter(e=>e.txokoRecord>0).forEach(e=>{
+    _fichasDeMiVenue().filter(e=>e.txokoRecord>0).forEach(e=>{
       merged[e.name]={employee:e.name,record:e.txokoRecord};
     });
     remote.forEach(r=>{
@@ -33309,7 +33322,7 @@ function launchElTurno(){
       (rows||`<div class="et-rank-empty">Nadie ha sobrevivido aún. ¡Sé el primero!</div>`)+`</div>`;
   }
   function _etLocalRank(){
-    return Object.values(DB.employees)
+    return _fichasDeMiVenue()
       .filter(e=>e.etRecord&&e.etRecord.secs>0)
       .map(e=>({employee:e.name,secs:e.etRecord.secs,orders:e.etRecord.orders||0}));
   }
