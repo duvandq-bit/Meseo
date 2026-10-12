@@ -52,7 +52,7 @@
 <meta property="og:description" content="Formación de equipos de sala: carta, alérgenos, vinos, exámenes y juegos de repaso.">
 <meta property="og:url" content="https://meseo.es/">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"Meseo","url":"https://meseo.es/"}</script>
-<meta name="app-version" content="7.476">
+<meta name="app-version" content="7.477">
 <meta name="app-build" content="May 2026">
 <meta name="theme-color" content="#1c2a22">
 <!-- ═══ PWA ═══ -->
@@ -404,7 +404,7 @@
     <button class="nav-btn" id="navTxoko" onclick="showTab('txoko')"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 12h4l2 8 4-16 2 8h4"/></svg> Juegos</button>
     <button class="nav-btn" id="navRanking" onclick="showTab('ranking')"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg> Ranking</button>
     <button class="nav-btn" id="navHorarios" onclick="showTab('horarios')"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg> Horarios</button>
-    <button class="nav-btn" id="navChat" onclick="showTab('chat')"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"/></svg> Terraza</button>
+    <!-- Terraza (chat) y Vídeos retirados de la app (oct 2026, decisión del propietario). -->
     <button class="nav-btn" id="navSupervisor" onclick="showTab('supervisor')" style="display:none"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg> Sup.</button>
   </nav>
   </div>
@@ -1790,10 +1790,6 @@ function applyLangToApp() {
     navVinos: LANG==='en'?'Wines':'Vinos',
     navTxoko: LANG==='en'?'Games':'Juegos',
     navRanking: 'Ranking',
-    // «Terraza» en ambos idiomas: es el nombre propio de la pantalla
-    // (La Terraza) — la pestaña dejó de llamarse «Chat» para no tener dos
-    // nombres para el mismo sitio.
-    navChat: LANG==='en'?'Terrace':'Terraza',
     navSupervisor: 'Sup.'};
   Object.entries(navLabels).forEach(([id, label]) => {
     const el = document.getElementById(id);
@@ -2805,7 +2801,7 @@ const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><p
 const SRC = 'src';
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='7.476';  // sincronizada con sw.js VERSION (guard de CI)
+const APP_VERSION='7.477';  // sincronizada con sw.js VERSION (guard de CI)
 const APP_BUILD='Jul 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;
@@ -4471,39 +4467,9 @@ function _txCrownFor(name){
   return ` <span class="tx-crown" title="${LANG==='en'?'Reigning #1':'Nº1 vigente'}: ${t}">👑</span>`;
 }
 
-// Texto de la tarjeta de récord (se construye al hacer clic — los nombres
-// con comillas no viajan por atributos onclick).
-function _txRecordMsg(game, a, b){
-  const _en = LANG==='en';
-  if(game==='shoesmith') return _en?`${currentUser} beat their record with Mr. Shoesmith: ${a} orders!`:`¡${currentUser} batió su récord con Mr. Shoesmith: ${a} comandas!`;
-  if(game==='survivors'){ const m=Math.floor(a/60), s=a%60; return _en?`${currentUser} survived ${m}:${s<10?'0':''}${s} in Camarero Survivors (${b} orders)!`:`¡${currentUser} sobrevivió ${m}:${s<10?'0':''}${s} en Camarero Survivors (${b} comandas)!`; }
-  if(game==='duelo') return _en?`${currentUser} won a duel vs ${b}: ${a}!`:`¡${currentUser} ganó un duelo vs ${b}: ${a}!`;
-  return '';
-}
-
-// Publica una tarjeta [récord] en la Terraza. Sin push masivo — celebrar
-// no es spamear; quien esté en el chat la ve al momento vía realtime.
-async function _txShareRecord(text, btn){
-  if(!text || !currentUser) return;
-  if(btn){ btn.disabled = true; btn.textContent = LANG==='en'?'Posting…':'Publicando…'; }
-  try{
-    const res = await fetch(`${SUPA_URL}/rest/v1/chat_messages`, {
-      method:'POST',
-      headers:{ 'apikey':SUPA_KEY, 'Authorization':`Bearer ${_bearer()}`, 'Content-Type':'application/json', 'Prefer':'return=minimal' },
-      body: JSON.stringify(_vSello({ employee: currentUser, room: CHAT_ROOM, message: '[récord] '+text }))
-    });
-    if(!res.ok) throw 0;
-    if(btn) btn.textContent = LANG==='en'?'✓ Posted on the Terrace':'✓ Publicado en la Terraza';
-    if(typeof showToast==='function' && !btn) showToast(LANG==='en'?'👑 Posted on the Terrace':'👑 Publicado en la Terraza','success',3000);
-  }catch(_){
-    if(btn){ btn.disabled = false; btn.textContent = LANG==='en'?'🏆 Boast on the Terrace':'🏆 Presumir en la Terraza'; }
-    if(typeof showToast==='function') showToast(LANG==='en'?'Could not post — check your connection':'No se pudo publicar — revisa la conexión','warning',3500);
-  }
-}
-
-// Al arrebatar el nº1 a un compañero la tarjeta sale sola (evento raro y
-// de interés general). Compara contra el último trono VISTO (memoria
-// local) — sin fetch en caliente durante el fin de partida.
+// Al arrebatar el nº1 a un compañero se apunta el nuevo trono VISTO (memoria
+// local). Hasta oct 2026 además se publicaba una tarjeta en la Terraza; con el
+// chat retirado ya no se publica nada.
 function _txThroneCheck(game, score){
   try{
     const emp = getEmp(currentUser); if(!emp) return;
@@ -4511,12 +4477,6 @@ function _txThroneCheck(game, score){
     if(!seen || !seen.name || seen.name===currentUser) return;
     const beat = game==='txoko' ? score>(seen.record||0) : score>(seen.secs||0);
     if(!beat) return;
-    const lbl = game==='txoko' ? 'Mr. Shoesmith' : 'Camarero Survivors';
-    const val = game==='txoko' ? score+' '+(LANG==='en'?'orders':'comandas')
-                               : Math.floor(score/60)+':'+String(score%60).padStart(2,'0');
-    _txShareRecord(LANG==='en'
-      ? `👑 ${currentUser} takes the #1 spot in ${lbl} from ${seen.name}: ${val}!`
-      : `👑 ¡${currentUser} le arrebata el nº1 de ${lbl} a ${seen.name}: ${val}!`);
     emp._champSeen[game] = game==='txoko' ? {name:currentUser, record:score} : {name:currentUser, secs:score};
     saveDB();
   }catch(_){}
@@ -14196,7 +14156,7 @@ function _salaExamCompletar(){
 // buscador: salían dos cajas de búsqueda, una encima de otra.
 // No se pierde nada: la misma búsqueda sigue a un toque desde el menú, en
 // todas las pantallas, con el botón #navSearchEntry.
-const _SIN_BUSCADOR = new Set(['supervisor','horarios','chat','ranking','stats','logros',
+const _SIN_BUSCADOR = new Set(['supervisor','horarios','ranking','stats','logros',
                                'txoko','aprender','flashcards','emplatado','vinos','quesos','sala']);
 function _buscadorSync(tab){
   const p = document.getElementById('globalSearchPill');
@@ -14212,10 +14172,9 @@ const _TITULOS = {
   stats:['Estadísticas','Statistics'], logros:['Logros','Achievements'],
   txoko:['Juegos','Games'], ranking:['Ranking del equipo','Team ranking'],
   supervisor:['Panel de supervisor','Supervisor panel'], horarios:['Horarios','Schedule'],
-  protocolo:['Auditoría LQA','LQA audit'], videos:['Vídeos','Videos'],
+  protocolo:['Auditoría LQA','LQA audit'],
   lqa:['Auditoría LQA','LQA audit'], vinos:['Carta de vinos','Wine list'],
-  quesos:['Carro de quesos','Cheese trolley'], sala:['Sala y procedimientos','Floor procedures'],
-  chat:['La Terraza','The Terrace']
+  quesos:['Carro de quesos','Cheese trolley'], sala:['Sala y procedimientos','Floor procedures']
 };
 function _ponerTitulo(tab){
   const h = document.getElementById('tituloPantalla');
@@ -14240,17 +14199,19 @@ const UX2_SECCION = {
   // Saber · consulta. `aprender` aterriza en la guía de emplatado, que es lo
   // más mirado en servicio; vinos, quesos, sala y la auditoría LQA son
   // consulta igualmente y siguen alcanzándose por el menú hasta UX-07.
-  aprender:'saber', emplatado:'saber', tecnicas:'saber', videos:'saber',
+  aprender:'saber', emplatado:'saber', tecnicas:'saber',
   actualidad:'saber', vinos:'saber', quesos:'saber', sala:'saber', protocolo:'saber', lqa:'saber',
   // Practicar · entrenar. `exam` abre la PREPARACIÓN del examen, no un examen.
   exam:'practicar', repaso:'practicar', smart:'practicar', flashcards:'practicar', txoko:'practicar',
   // Equipo · hay otra persona dentro.
-  ranking:'equipo', chat:'equipo', horarios:'equipo', supervisor:'equipo',
+  ranking:'equipo', horarios:'equipo', supervisor:'equipo',
   // Yo · sólo tú.
   stats:'yo', logros:'yo'
 };
 
-const TAB_ROUTES = ['dashboard','aprender','flashcards','exam','repaso','tecnicas','actualidad','smart','emplatado','stats','logros','txoko','ranking','supervisor','horarios','protocolo','videos','lqa','vinos','quesos','sala','chat'];
+// Sin 'videos' ni 'chat' desde oct 2026 (retirados por el propietario). Un
+// aviso antiguo que abra #tab=chat cae en INICIO por la regla de abajo.
+const TAB_ROUTES = ['dashboard','aprender','flashcards','exam','repaso','tecnicas','actualidad','smart','emplatado','stats','logros','txoko','ranking','supervisor','horarios','protocolo','lqa','vinos','quesos','sala'];
 
 function showTab(tab, instant){
   // ── Pestaña desconocida → INICIO ──────────────────────────────────────
@@ -14289,7 +14250,7 @@ function showTab(tab, instant){
   // Both 'protocolo' and 'lqa' routes target the same nav button (the tab now
   // shows only LQA content after Protocolo deletion; the button id stayed
   // navProtocolo for localStorage compat).
-  const parentMap = { flashcards:'aprender', repaso:'aprender', tecnicas:'aprender', actualidad:'aprender', videos:'aprender', emplatado:'aprender', lqa:'protocolo', stats:'ranking', logros:'ranking' };
+  const parentMap = { flashcards:'aprender', repaso:'aprender', tecnicas:'aprender', actualidad:'aprender', emplatado:'aprender', lqa:'protocolo', stats:'ranking', logros:'ranking' };
   const navTab = parentMap[tab] || tab;
   // Entrar POR una subpestaña debe fijarla: renderAprender y renderRankingHub
   // pintan lo que dice _subTab, no el destino de showTab(). Sin esto, el
@@ -14317,7 +14278,7 @@ function showTab(tab, instant){
   _navDDClose();
   _ux2Sync(tab);
   const c=document.getElementById('appContent');
-  const renderMap = {quesos:renderQuesos,sala:renderSala,dashboard:renderDashboard,aprender:renderAprender,flashcards:renderAprender,exam:renderExam,repaso:renderAprender,tecnicas:renderAprender,actualidad:renderAprender,smart:renderAprender,emplatado:renderAprender,stats:renderRankingHub,logros:renderRankingHub,txoko:renderTxoko,ranking:renderRankingHub,supervisor:renderSupervisor,horarios:renderHorarios,protocolo:renderLqa,videos:renderAprender,lqa:renderLqa,vinos:renderVinos,chat:renderChat};
+  const renderMap = {quesos:renderQuesos,sala:renderSala,dashboard:renderDashboard,aprender:renderAprender,flashcards:renderAprender,exam:renderExam,repaso:renderAprender,tecnicas:renderAprender,actualidad:renderAprender,smart:renderAprender,emplatado:renderAprender,stats:renderRankingHub,logros:renderRankingHub,txoko:renderTxoko,ranking:renderRankingHub,supervisor:renderSupervisor,horarios:renderHorarios,protocolo:renderLqa,lqa:renderLqa,vinos:renderVinos};
   const _doRender = ()=>{
     c.innerHTML='';
     c.style.transition='none';
@@ -15110,12 +15071,11 @@ function _aprChipsBar(){
     ['repaso',_en?'Review':'Repaso',''],
     ['tecnicas',_en?'Techniques':'Técnicas','🍳'],
     ['actualidad',_en?'News':'Actualidad','📰'],
-    ['flashcards','Flashcards',''],
-    ['videos',_en?'Videos':'Videos','']
+    ['flashcards','Flashcards','']
   ], _subTab.aprender || 'emplatado', 'aprender');
 }
 function _aprEnsureChips(){
-  const APR = ['aprender','repaso','tecnicas','actualidad','flashcards','smart','videos','emplatado'];
+  const APR = ['aprender','repaso','tecnicas','actualidad','flashcards','smart','emplatado'];
   if(typeof currentTab!=='undefined' && !APR.includes(currentTab)) return;
   const c=document.getElementById('appContent'); if(!c) return;
   if(!c.querySelector('.subtab-chips')) c.insertAdjacentHTML('afterbegin', _aprChipsBar());
@@ -15126,9 +15086,12 @@ function _aprEnsureChips(){
 }
 function renderAprender(){
   const c=document.getElementById('appContent');
-  const sub = _subTab.aprender || 'emplatado';   // aterrizaje: la guía visual (lo más consultado en servicio)
+  const _APR_RENDER = {smart:renderSmartReview, flashcards:renderFlashcards, repaso:renderRepaso, tecnicas:renderTecnicas, actualidad:renderActualidad, emplatado:renderEmplatado};
+  // Una subpestaña que ya no existe (Vídeos, retirada en oct 2026) aterriza en la guía.
+  if(!_APR_RENDER[_subTab.aprender]) _subTab.aprender = 'emplatado';
+  const sub = _subTab.aprender;   // aterrizaje: la guía visual (lo más consultado en servicio)
   const _en = LANG==='en';
-  ({smart:renderSmartReview, flashcards:renderFlashcards, repaso:renderRepaso, tecnicas:renderTecnicas, actualidad:renderActualidad, videos:renderVideos, emplatado:renderEmplatado})[sub]();
+  _APR_RENDER[sub]();
   // Global quick search — only on Flashcards & Smart Review (Explore already has its own search, Videos doesn't need it)
   const _showSearch = (sub === 'flashcards');
   const searchBar = _showSearch ? `
@@ -29846,7 +29809,6 @@ async function submitDefense() {
       </div>
       <div style="font-size:.75rem;color:var(--gold);margin-bottom:${iWon&&_duelStreak>=2?'.4rem':'1.5rem'}">+${xpAmt} XP</div>
       ${iWon&&_duelStreak>=2?`<div class="duel-streak">🔥 ${LANG==='en'?`${_duelStreak}-duel win streak!`:`¡Racha de ${_duelStreak} duelos!`}</div>`:''}
-      ${iWon?`<button type="button" class="tx-share-btn" onclick="_txShareRecord(_txRecordMsg('duelo','${dScore}-${cScore}',remoteDuelState.rivalName),this)">🏆 ${LANG==='en'?'Boast on the Terrace':'Presumir en la Terraza'}</button>`:''}
       <button class="btn-primary" onclick="renderDuel()" style="width:100%">${LANG==='en'?'Back to duels':'Volver a duelos'}</button>
     </div>
   </div>`;
@@ -33194,7 +33156,6 @@ function launchElTurno(){
         <div class="et-sub" id="etOverSub">Fin del servicio</div>
         <div class="et-card"><div class="et-title" id="etOverTitle" style="font-size:44px">SE ACABÓ</div></div>
         <div class="et-statgrid" id="etOverStats"></div>
-        <button class="et-mini" id="etShareBtn" style="display:none">🏆 Presumir en la Terraza</button>
         <button class="et-big" id="etAgainBtn">Otra vez</button>
         <button class="et-mini" id="etShopBtn">💰 Mejoras del oficio</button>
       </div>
@@ -34571,15 +34532,6 @@ function launchElTurno(){
         }
       }
     }catch(_){}
-    // Hook F1: presumir del récord en la Terraza — 1 toque, opt-in.
-    const _shareBtn=document.getElementById('etShareBtn');
-    if(_shareBtn){
-      _shareBtn.style.display=_newEmpRec?'inline-block':'none';
-      _shareBtn.disabled=false;
-      _shareBtn.textContent='🏆 Presumir en la Terraza';
-      const _secs=Math.floor(G.time), _ord=G.score;
-      _shareBtn.onclick=()=>_txShareRecord(_txRecordMsg('survivors',_secs,_ord),_shareBtn);
-    }
     // propinas al bolsillo (meta-progresión, jul 2026): comandas + tiempo +
     // jefes; bonus gordo por llegar al cierre. Cada derrota sigue sumando.
     const _mm=_etMeta();
@@ -35121,7 +35073,6 @@ function txGameOver(){
           <div class="txoko-stat-card"><div class="txoko-stat-num">${timeStr}</div><div class="txoko-stat-lbl">Tiempo</div></div>
           <div class="txoko-stat-card"><div class="txoko-stat-num"><span class="txoko-diff ${lvl.cls}">${lvl.name}</span></div><div class="txoko-stat-lbl">Nivel alcanzado</div></div>
         </div>
-        ${isRecord?`<button type="button" class="tx-share-btn" onclick="_txShareRecord(_txRecordMsg('shoesmith',${txokoState.score}),this)">🏆 ${LANG==='en'?'Boast on the Terrace':'Presumir en la Terraza'}</button>`:''}
         <button class="btn-primary" onclick="txStart(true,'${txokoState.persona||'shoesmith'}')" style="width:100%;margin-bottom:.75rem">${LANG==='en'?'Try again →':'Volver a intentarlo →'}</button>
         <button onclick="renderTxoko()" style="width:100%;padding:.85rem;background:transparent;border:1.5px solid rgba(196,154,60,.55);border-radius:var(--r2);font-family:'Quicksand',sans-serif;font-size:.88rem;font-weight:600;color:var(--gold-deep);cursor:pointer;letter-spacing:.04em">${LANG==='en'?'← Main menu':'← Menú principal'}</button>
       </div>

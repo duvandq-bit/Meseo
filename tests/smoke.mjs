@@ -2047,10 +2047,20 @@ test('CSP does not break critical paths (Supabase, CDNs, fonts, map)', () => {
     'CSP img-src must allow Supabase storage so chat photos (and wine images) render');
 });
 
-test('Team chat: nav wired, realtime teardown, safe render, moderation', () => {
-  // Nav button + route so the tab is reachable and renders.
-  assert(/showTab\('chat'\)/.test(html) && html.includes('navChat'), 'chat nav entry missing');
-  assert(/chat:renderChat/.test(html), 'chat route not registered in renderMap');
+test('Vídeos (retirado oct 2026): ni subpestaña ni ruta; una subpestaña inexistente cae en la guía', () => {
+  assert(!/\['videos',/.test(html), 'Aprender no ofrece la subpestaña Vídeos');
+  assert(/const APR = \['aprender','repaso','tecnicas','actualidad','flashcards','smart','emplatado'\];/.test(html), 'Vídeos fuera de las subpestañas de Aprender');
+  assert(/if\(!_APR_RENDER\[_subTab\.aprender\]\) _subTab\.aprender = 'emplatado';/.test(html), 'una subpestaña que ya no existe aterriza en la guía de emplatado');
+  assert(!/videos:renderVideos|videos:renderAprender|videos:'saber'|videos:\['Vídeos'/.test(html), 'ningún mapa conserva vídeos');
+});
+test('Team chat (retirado oct 2026): sin acceso desde la app; el código que queda sigue siendo seguro', () => {
+  // El propietario retiró la Terraza: ni botón, ni ruta, ni renderMap. Un aviso
+  // viejo con #tab=chat cae en INICIO porque 'chat' ya no está en TAB_ROUTES.
+  assert(!/showTab\('chat'\)/.test(html) && !html.includes('id="navChat"'), 'el chat no puede tener entrada en el menú');
+  assert(!/chat:renderChat/.test(html), 'chat no puede estar en renderMap');
+  const rutas = html.slice(html.indexOf('const TAB_ROUTES = ['), html.indexOf('];', html.indexOf('const TAB_ROUTES = [')));
+  assert(!/'chat'/.test(rutas) && !/'videos'/.test(rutas), 'ni chat ni vídeos son rutas');
+  assert(/if\(!TAB_ROUTES\.includes\(tab\)\)\{/.test(html), 'una ruta desconocida sigue llevando a INICIO');
   assert(/function renderChat\(/.test(html), 'renderChat() missing');
   // Realtime must be torn down when leaving the tab (no socket/presence leak).
   assert(/currentTab==='chat' && tab!=='chat'/.test(html) && /function _chatDisconnect\(/.test(html),
@@ -8843,14 +8853,14 @@ test('nav sheet: grouped into Consulta/Formación/Equipo (labels only)', () => {
   assert(/id="navGrpConsulta"/.test(html) && /id="navGrpFormacion"/.test(html) && /id="navGrpEquipo"/.test(html),
     'the three nav group labels must exist');
   const nav = html.slice(html.indexOf('id="appNav"'), html.indexOf('</nav>'));
-  const order = ['navSearchEntry','navGrpConsulta','navDashboard','navGrpFormacion','navAprender','navExam','navProtocolo','navVinos','navGrpEquipo','navTxoko','navRanking','navChat'];
+  const order = ['navSearchEntry','navGrpConsulta','navDashboard','navGrpFormacion','navAprender','navExam','navProtocolo','navVinos','navGrpEquipo','navTxoko','navRanking','navHorarios'];
   let last = -1;
   for (const id of order) {
     const i = nav.indexOf('id="' + id + '"');
     assert(i > last, 'nav order broken at ' + id);
     last = i;
   }
-  assert(/id="navChat" onclick="showTab\('chat'\)"/.test(nav), 'chat route/id must not change');
+  assert(!/id="navChat"/.test(nav), 'la Terraza (chat) está retirada: no sale en el menú');
   assert(/navGrpFormacion: LANG==='en'\?'Training':'Formación'/.test(html), 'group labels must localize');
   const css = read('styles.css');
   assert(/\.nav-group-lbl\{/.test(css), 'nav group label style missing');
@@ -8860,14 +8870,13 @@ test('renames: Terraza / Repaso / Repasar fallos (labels only)', () => {
   // One place, one name: the tab matches the screen (La Terraza); the dish
   // browser is "Repaso" («La Carta es muy confuso», propietario jul 2026);
   // the error-mode shortcut says what it does.
-  assert(/<\/svg> Terraza<\/button>/.test(html) && !/<\/svg> Chat<\/button>/.test(html),
-    'nav tab must say Terraza');
-  assert(/navChat: LANG==='en'\?'Terrace':'Terraza'/.test(html), 'applyLangToApp must localize Terraza');
+  // La Terraza (chat) se retiró en oct 2026: ni con un nombre ni con el otro.
+  assert(!/<\/svg> Terraza<\/button>/.test(html) && !/<\/svg> Chat<\/button>/.test(html),
+    'el chat no puede volver al menú');
   assert(/\['repaso',_en\?'Review':'Repaso',''\]/.test(html), 'Aprender chip must say Repaso');
   assert(!/'The Menu':'La Carta'/.test(html), 'no visible label may still say La Carta/The Menu');
   assert(/'Review misses':'Repasar fallos'/.test(html),
     'dashboard error-mode shortcut must say Repasar fallos');
-  assert(/'Abrir Terraza'/.test(read('sw.js')), 'push action must match the tab name');
 });
 
 test('Logros live as a Ranking chip; Inicio keeps a one-row summary', () => {
@@ -8901,18 +8910,18 @@ test('Hook F1: record cards, crowns, duel juice and the overtaken trigger', () =
   // The social bridge Juegos → Ranking → Terraza: records stop dying on the
   // player's own screen. 1-tap opt-in sharing; auto-post ONLY when taking #1.
   assert(/function _refreshChampions\(/.test(html) && /function _txCrownFor\(/.test(html)
-      && /function _txShareRecord\(/.test(html) && /function _txRecordMsg\(/.test(html)
       && /function _txThroneCheck\(/.test(html) && /function _hoyCheckOvertaken\(/.test(html),
     'social-loop helpers missing');
-  assert(/_txShareRecord\(_txRecordMsg\('shoesmith',\$\{txokoState\.score\}\),this\)/.test(html),
-    'Mr. Shoesmith record screen must offer the share button');
-  assert(/id="etShareBtn"/.test(html) && /_txRecordMsg\('survivors',_secs,_ord\)/.test(html),
-    'Camarero Survivors game over must offer the share button');
-  assert(/_txRecordMsg\('duelo','\$\{dScore\}-\$\{cScore\}',remoteDuelState\.rivalName\)/.test(html),
-    'duel victory must offer the share button');
+  // Con la Terraza retirada (oct 2026) los juegos ya no publican nada en el
+  // chat: ni el botón «Presumir», ni la tarjeta automática al quitar el nº1.
+  assert(!/_txShareRecord|_txRecordMsg|etShareBtn|Presumir en la Terraza|Boast on the Terrace/.test(html),
+    'ningún juego puede publicar en el chat retirado');
+  const trono = html.slice(html.indexOf('function _txThroneCheck('), html.indexOf('function _hoyCheckOvertaken('));
+  assert(!/chat_messages|fetch\(/.test(trono) && /emp\._champSeen\[game\] =/.test(trono),
+    'quitar el nº1 sólo actualiza el trono visto, sin escribir en el servidor');
   assert(/if\(isRecord\) _txThroneCheck\('txoko', txokoState\.score\);/.test(html)
       && /_txThroneCheck\('elturno', Math\.floor\(G\.time\)\)/.test(html),
-    'taking the #1 must auto-post the crown card');
+    'the throne check still runs at the end of each game');
   // The Terrace dresses [récord] messages as cards and crowns the champions.
   assert(/chat-record-card/.test(html) && /\[récord\] /.test(html),
     'chat must style [récord] messages as cards');
@@ -8936,9 +8945,6 @@ test('Hook F1: record cards, crowns, duel juice and the overtaken trigger', () =
   assert(/\.chat-record-card\{/.test(css) && /\.tx-crown\{/.test(css) && /\.tx-share-btn\{/.test(css)
       && /\.hoy-overtaken\{/.test(css) && /\.duel-victory-ico\{/.test(css),
     'hook-loop styles missing');
-  // Anti-spam: record cards must NOT blast push notifications.
-  const share = html.slice(html.indexOf('async function _txShareRecord'), html.indexOf('function _txThroneCheck'));
-  assert(!/send-push/.test(share), 'record cards must not send mass push');
 });
 
 // ─── Recuperación de PIN por correo ─────────────────────────────
@@ -10037,7 +10043,7 @@ test('Quesos: nunca se le dice a un vegetariano que sí sin saberlo', () => {
   // Sección de consulta, no de plato: 48 fichas no caben como uno. Lo que se
   // pregunta en mesa no es la maduración, es «¿puedo comerlo?».
   assert(/function renderQuesos\(\)/.test(html), 'falta la sección de quesos');
-  assert(/'lqa','vinos','quesos','sala','chat'/.test(html), 'quesos tiene que ser una ruta válida');
+  assert(/'lqa','vinos','quesos','sala'\]/.test(html), 'quesos tiene que ser una ruta válida');
   assert(/renderMap = \{quesos:renderQuesos,/.test(html), 'y tener quien la pinte');
   assert(/id="navQuesos"[^>]*style="display:none"/.test(html),
     'el botón sale sólo si el restaurante tiene carro, así que arranca escondido');
@@ -11416,7 +11422,7 @@ test('Sala: los procedimientos son de un restaurante, y quien no los tiene no ve
   // que el carro de quesos y la bodega — y Txoko, que no tiene el suyo, no ve
   // la pestaña ni de lejos.
   assert(/function renderSala\(\)/.test(html), 'falta la sección de sala');
-  assert(/'vinos','quesos','sala','chat'/.test(html), 'sala tiene que ser una ruta válida');
+  assert(/'vinos','quesos','sala'\]/.test(html), 'sala tiene que ser una ruta válida');
   assert(/renderMap = \{quesos:renderQuesos,sala:renderSala,/.test(html), 'y tener quien la pinte');
   assert(/id="navSala"[^>]*style="display:none"/.test(html),
     'el botón sale sólo donde hay procedimientos, así que arranca escondido');
@@ -12745,7 +12751,8 @@ test('todas las llamadas a /rest/v1 mandan el token, y sólo ésas', () => {
   // aserciones de abajo. Bajó de 50 a 49 al retirar la lectura de
   // `employees?name=…&select=nda_version` de ndaPendiente, que ahora pregunta
   // a nda_estado por _supaRpc (una sola línea con token, ya contada).
-  assert(restConToken >= 49, `sólo ${restConToken} llamadas REST mandan el token`);
+  // Bajó a 48 en oct 2026 al retirar _txShareRecord (publicaba récords en el chat).
+  assert(restConToken >= 48, `sólo ${restConToken} llamadas REST mandan el token`);
   assert(restSinToken.length === 0,
     'quedan llamadas REST con la clave anónima en las líneas ' + restSinToken.join(','));
   // Storage tiene sus propias políticas y las Edge Functions no lo necesitan:
