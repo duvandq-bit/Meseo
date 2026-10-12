@@ -52,7 +52,7 @@
 <meta property="og:description" content="Formación de equipos de sala: carta, alérgenos, vinos, exámenes y juegos de repaso.">
 <meta property="og:url" content="https://meseo.es/">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"Meseo","url":"https://meseo.es/"}</script>
-<meta name="app-version" content="7.484">
+<meta name="app-version" content="7.485">
 <meta name="app-build" content="May 2026">
 <meta name="theme-color" content="#1c2a22">
 <!-- ═══ PWA ═══ -->
@@ -349,7 +349,7 @@
       <span class="header-uname" id="headerUsername"></span>
       <button id="pushEnableBtn" onclick="enablePushManual()" aria-label="Activar notificaciones push" role="button" style="display:none;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.25);cursor:pointer;padding:6px 10px;border-radius:6px;font-family:'DM Mono',monospace;font-size:.6rem;color:rgba(255,255,255,.85);letter-spacing:.03em;min-height:44px;min-width:44px" title="Activar notificaciones push">◎</button>
       <button id="notifBell" onclick="renderNotifPanel()" aria-label="Notificaciones" role="button" style="display:none;background:transparent;border:none;cursor:pointer;padding:8px;position:relative;font-size:1.2rem;line-height:1;min-height:44px;min-width:44px">
-        ◉<span id="notifBadge" style="position:absolute;top:-2px;right:-2px;background:var(--rose);color:#fff;border-radius:50%;width:18px;height:18px;font-size:.55rem;font-family:Jost,sans-serif;font-weight:700;display:none;align-items:center;justify-content:center"></span>
+        ◉<span id="notifBadge" style="position:absolute;top:-2px;right:-2px;background:var(--rose);color:#fff;border-radius:50%;width:18px;height:18px;font-size:.55rem;font-family:var(--font-sans);font-weight:700;display:none;align-items:center;justify-content:center"></span>
       </button>
       <!-- Aviso SUTIL de versión nueva (el push masivo molestaba): solo un
            punto dorado con pulso, mismo tamaño que el resto de iconos, para
@@ -2814,7 +2814,7 @@ const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><p
 const SRC = 'src';
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='7.484';  // sincronizada con sw.js VERSION (guard de CI)
+const APP_VERSION='7.485';  // sincronizada con sw.js VERSION (guard de CI)
 const APP_BUILD='Jul 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;
@@ -10965,7 +10965,7 @@ function _dqRender(){
         <div style="font-family:'DM Mono',monospace;font-size:.62rem;letter-spacing:.16em;text-transform:uppercase;color:var(--gold-deep)"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align:-.15em;flex:none"><path d="M12 3.5l2.6 5.6 6.1.8-4.5 4.2 1.2 6-5.4-3-5.4 3 1.2-6L3.3 9.9l6.1-.8L12 3.5z"/></svg> ${en?'Daily quiz':'Reto del día'}</div>
         <div style="font-family:'DM Mono',monospace;font-size:.6rem;color:var(--parch3)">${dateLbl}</div>
       </div>
-      <div style="font-family:Georgia,serif;font-size:1rem;font-weight:700;color:var(--parchment);margin:.6rem 0 .7rem;line-height:1.35">${escapeHTML(q.q)}</div>
+      <div style="font-family:var(--font-read);font-size:1rem;font-weight:700;color:var(--parchment);margin:.6rem 0 .7rem;line-height:1.35">${escapeHTML(q.q)}</div>
       ${optBtns}
       ${resultBlock}
       <div style="display:flex;justify-content:space-between;align-items:center;margin-top:.6rem">
@@ -11164,7 +11164,7 @@ function _luStdOpen(){
   _luOverlay(`
     <div style="font-family:'DM Mono',monospace;font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;color:var(--gold-deep);margin-bottom:.4rem">✓ ${en?'Forbes/LQA standard of the day':'Protocolo Forbes del día'} · Nº ${st.id}</div>
     ${cat?`<div style="font-size:.68rem;font-weight:700;color:var(--parch3);margin-bottom:.4rem">${en?cat.title_en:cat.title} · ${escapeHTML(st.cls||'')}</div>`:''}
-    <div style="font-family:Georgia,serif;font-size:.95rem;font-weight:600;color:var(--parchment);line-height:1.5;margin-bottom:.6rem">${escapeHTML(en?(st.std_en||st.std):st.std)}</div>
+    <div style="font-family:var(--font-read);font-size:.95rem;font-weight:600;color:var(--parchment);line-height:1.5;margin-bottom:.6rem">${escapeHTML(en?(st.std_en||st.std):st.std)}</div>
     <div style="font-size:.76rem;font-style:italic;color:var(--parch3)">${en?'The auditor checks exactly this. Today in service: make it happen at your tables.':'El auditor comprueba exactamente esto. Hoy en el servicio: que se cumpla en tus mesas.'}</div>
   `, en?'Standard of the day':'Protocolo del día');
 }
@@ -29018,7 +29018,7 @@ function saveNewDish(){
 
   // Confirm toast
   const toast = document.createElement('div');
-  toast.style.cssText = 'position:fixed;top:70px;left:50%;transform:translateX(-50%);background:var(--sage);color:#fff;padding:.55rem 1.3rem;border-radius:30px;font-family:Jost,sans-serif;font-size:.82rem;font-weight:600;z-index:9999;white-space:nowrap';
+  toast.style.cssText = 'position:fixed;top:70px;left:50%;transform:translateX(-50%);background:var(--sage);color:#fff;padding:.55rem 1.3rem;border-radius:30px;font-family:var(--font-sans);font-size:.82rem;font-weight:600;z-index:9999;white-space:nowrap';
   toast.textContent = '✓ ' + (LANG==='en'?`"${name}" added`:`"${name}" añadido`);
   document.body.appendChild(toast);
   setTimeout(()=>toast.remove(), 2500);
@@ -29095,7 +29095,7 @@ function startPersonalErrorMode(){
 
   if(!weakDishes.length){
     const toast=document.createElement('div');
-    toast.style.cssText='position:fixed;top:70px;left:50%;transform:translateX(-50%);background:var(--sage);color:#fff;padding:.5rem 1.2rem;border-radius:30px;font-family:Jost,sans-serif;font-size:.82rem;font-weight:600;z-index:9999';
+    toast.style.cssText='position:fixed;top:70px;left:50%;transform:translateX(-50%);background:var(--sage);color:#fff;padding:.5rem 1.2rem;border-radius:30px;font-family:var(--font-sans);font-size:.82rem;font-weight:600;z-index:9999';
     toast.textContent = LANG==='en'?'✦ You know all dishes!':'✦ ¡Dominas todos los platos!';
     document.body.appendChild(toast);
     setTimeout(()=>toast.remove(),2500);
@@ -31775,12 +31775,12 @@ function _cdgCardHTML(card){
   return `<details class="cdg-card" style="background:linear-gradient(155deg,#faf6ee,#f0e8d8);border:1.5px solid rgba(196,154,60,.18);border-radius:12px;margin-bottom:.55rem;overflow:hidden">
     <summary style="list-style:none;cursor:pointer;display:flex;align-items:center;gap:.6rem;padding:.75rem .9rem">
       <span style="font-size:1rem;flex-shrink:0" aria-hidden="true">${cat.icon||'◆'}</span>
-      <span style="flex:1;font-family:Georgia,serif;font-size:.9rem;font-weight:700;color:var(--parchment)">${en?card.t_en:card.t}</span>
+      <span style="flex:1;font-family:var(--font-read);font-size:.9rem;font-weight:700;color:var(--parchment)">${en?card.t_en:card.t}</span>
       <span style="color:var(--gold-deep);font-size:.8rem" aria-hidden="true">▾</span>
     </summary>
     <div style="padding:0 .9rem .9rem;border-top:1px dashed rgba(196,154,60,.25)">
       <div style="font-size:.8rem;color:var(--parch2);line-height:1.5;margin-top:.6rem">${en?card.read_en:card.read}</div>
-      ${card.say?sec('💬',en?'What to say':'Qué decir',`<div style="font-family:Georgia,serif;font-size:.85rem;font-style:italic;color:var(--parchment);background:rgba(196,154,60,.08);border-left:3px solid var(--gold);border-radius:0 8px 8px 0;padding:.5rem .7rem">${en?card.say_en:card.say}</div>`):''}
+      ${card.say?sec('💬',en?'What to say':'Qué decir',`<div style="font-family:var(--font-read);font-size:.85rem;font-style:italic;color:var(--parchment);background:rgba(196,154,60,.08);border-left:3px solid var(--gold);border-radius:0 8px 8px 0;padding:.5rem .7rem">${en?card.say_en:card.say}</div>`):''}
       ${sec('✅',en?'What to do':'Qué hacer',`<ul style="margin:0;padding-left:1.1rem;font-size:.78rem;color:var(--parch2);line-height:1.5">${steps.map(s=>`<li style="margin:.25rem 0">${s}</li>`).join('')}</ul>`)}
       ${never.length?sec('🚫',en?'Never':'Nunca',`<ul style="margin:0;padding-left:1.1rem;font-size:.78rem;color:#a04848;line-height:1.5">${never.map(s=>`<li style="margin:.25rem 0">${s}</li>`).join('')}</ul>`):''}
       ${sec('🧠',en?'Why it works':'El porqué',`<div style="font-size:.76rem;font-style:italic;color:var(--parch3);line-height:1.5">${en?card.why_en:card.why}</div>`)}
