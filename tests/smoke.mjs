@@ -16853,6 +16853,13 @@ test('Avisos: un toque los enciende y otro los apaga, y apagarlos se respeta', (
   assert(/\(_avisosApagados\(\) \? Promise\.resolve\(\) : subscribeToPush\(pinTarget\)\)/.test(html), 'el inicio de sesión no los vuelve a encender');
   assert(!/id="pushEnableBtn"/.test(html), 'el botón viejo, que sólo encendía, ya no existe');
 });
+test('Sonido de error: suave, dos notas que bajan, sin zumbido', () => {
+  const f = html.slice(html.indexOf('function playSound(type){'), html.indexOf("} else if(type==='review'){", html.indexOf('function playSound(type){')));
+  const w = f.slice(f.indexOf("type==='wrong'"));
+  assert(!/sawtooth|square/.test(w), 'el error no puede volver a ser un zumbido de sierra');
+  assert(/\[\[330,0,0\.13\],\[233,0\.14,0\.22\]\]/.test(w) && /o\.type='triangle'/.test(w), 'dos notas triangulares que bajan');
+  assert(/exponentialRampToValueAtTime\(0\.09,t0\+d\+0\.015\)/.test(w), 'ataque suave y por debajo del acierto');
+});
 test('Letras: la escala de siete tamaños existe y no baja de 11 px', () => {
   const css = read('styles.css');
   const toks = [...css.matchAll(/--fs-(\d):\s*([^;]+);/g)].map(m => [m[1], m[2].trim()]);

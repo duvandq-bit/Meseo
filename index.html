@@ -52,7 +52,7 @@
 <meta property="og:description" content="Formación de equipos de sala: carta, alérgenos, vinos, exámenes y juegos de repaso.">
 <meta property="og:url" content="https://meseo.es/">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"Meseo","url":"https://meseo.es/"}</script>
-<meta name="app-version" content="7.490">
+<meta name="app-version" content="7.491">
 <meta name="app-build" content="May 2026">
 <meta name="theme-color" content="#1c2a22">
 <!-- ═══ PWA ═══ -->
@@ -2791,7 +2791,7 @@ const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><p
 const SRC = 'src';
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='7.490';  // sincronizada con sw.js VERSION (guard de CI)
+const APP_VERSION='7.491';  // sincronizada con sw.js VERSION (guard de CI)
 const APP_BUILD='Jul 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;
@@ -30382,12 +30382,21 @@ function playSound(type){
       gain.gain.exponentialRampToValueAtTime(0.001,ctx.currentTime+0.4);
       osc.start(ctx.currentTime);osc.stop(ctx.currentTime+0.4);
     } else if(type==='wrong'){
-      osc.type='sawtooth';
-      osc.frequency.setValueAtTime(200,ctx.currentTime);
-      osc.frequency.setValueAtTime(150,ctx.currentTime+0.1);
-      gain.gain.setValueAtTime(0.1,ctx.currentTime);
-      gain.gain.exponentialRampToValueAtTime(0.001,ctx.currentTime+0.3);
-      osc.start(ctx.currentTime);osc.stop(ctx.currentTime+0.3);
+      // Error sin castigo (oct 2026, propietario: «molesto»). Antes era un
+      // zumbido de sierra a 200→150 Hz. Ahora son dos notas suaves que bajan
+      // un tritono (Mi → Si bemol): se entiende como «no» sin sonar a alarma.
+      // Onda triangular, ataque de 15 ms y volumen por debajo del acierto.
+      const t0=ctx.currentTime;
+      [[330,0,0.13],[233,0.14,0.22]].forEach(([f,d,len])=>{
+        const o=d?ctx.createOscillator():osc, g=d?ctx.createGain():gain;
+        if(d){ o.connect(g); g.connect(ctx.destination); }
+        o.type='triangle';
+        o.frequency.setValueAtTime(f,t0+d);
+        g.gain.setValueAtTime(0.0001,t0+d);
+        g.gain.exponentialRampToValueAtTime(0.09,t0+d+0.015);
+        g.gain.exponentialRampToValueAtTime(0.001,t0+d+len);
+        o.start(t0+d); o.stop(t0+d+len+0.02);
+      });
     } else if(type==='review'){
       // Suave "anotado" — neutro, sin connotacion de error.
       // Dos notas descendentes sine, cortas y cálidas.
