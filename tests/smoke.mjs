@@ -16916,6 +16916,18 @@ test('Hospitalidad: una mesa al día, motor puro y sin XP ni nube con puntuació
   const tam = sel => { const m = css.match(new RegExp('\\.' + sel + '\\{[^}]*font-size:([0-9.]+)rem')); return m ? +m[1] : 0; };
   assert(tam('hsp2-esc') >= 1.1 && tam('hsp2-opt') >= 1 && tam('hsp2-reveal') >= 1.1 && tam('hsp2-t') >= 1.5, 'letra grande en Hospitalidad');
 });
+test('Letras: sólo las cuatro que carga la app, y los botones las heredan', () => {
+  const css = read('styles.css');
+  // Ninguna letra que la app no carga: cada móvil la sustituía por otra distinta.
+  const decl = (css + '\n' + html).match(/font-family\s*:[^;"}\n]+/g) || [];
+  const ajenas = decl.filter(d => /georgia|jost|ui-monospace|menlo|arial|helvetica|--ff-display/i.test(d) && !/'Cormorant Garamond','Georgia'/.test(d));
+  assert(ajenas.length === 0, `letras que no se cargan: ${[...new Set(ajenas)].slice(0, 5).join(' | ')}`);
+  // Botones y campos heredan: sin esto el navegador les pone Arial.
+  assert(/button,input,select,textarea,optgroup\{font-family:inherit\}/.test(css), 'botones y campos heredan la letra');
+  // Cormorant es variable (300-700): se declara el rango para que la negrita sea real.
+  const corm = (css.match(/@font-face\s*\{[^}]*'Cormorant Garamond'[^}]*\}/g) || []);
+  assert(corm.length === 4 && corm.every(b => /font-weight:\s*300 700/.test(b)), 'Cormorant declarado como variable 300-700');
+});
 test('Cartas: ninguna carta de r2 vive en data/ (sería pública)', () => {
   assert(!existsSync(join(ROOT, 'data/carta-r2.json')), 'data/carta-r2.json no puede existir');
 });
