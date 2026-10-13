@@ -1,8 +1,116 @@
 {
- "updated": "2026-10-13T12:45:05.769Z",
+ "updated": "2026-10-13T21:52:19.425Z",
  "items": [
   {
-   "t": "El Gobierno regional considera que \"el rechazo al TMT en La Palma no frena apuesta de Canarias por grandes telescopios\"",
+   "t": "Francia ya no reina sola: cómo cambió el poder de la gastronomía que marcó las reglas durante más de 200 años",
+   "u": "https://www.forbesargentina.com/lifestyle/francia-ya-reina-sola-como-cambio-poder-gastronomia-marco-reglas-durante-mas-200-anos-n99952",
+   "s": "Forbes Argentina",
+   "d": "2026-10-13T20:00:41.000Z",
+   "tags": [
+    "ALTA COCINA"
+   ],
+   "img": "https://statics.forbesargentina.com/2026/10/6ac26b1a92525.jpg"
+  },
+  {
+   "t": "Trece personas intoxicadas por ingerir alimentos en un restaurante de Murcia",
+   "u": "https://www.eldia.es/sucesos/2026/10/13/trece-personas-intoxicadas-ingerir-alimentos-135301051.amp.html",
+   "s": "Eldía",
+   "d": "2026-10-13T18:43:55.000Z",
+   "tags": [
+    "CANARIAS"
+   ]
+  },
+  {
+   "t": "Quién es Ramón Freixa, invitado hoy a 'Pasapalabra', chef gallego ganador de dos estrellas Michelin",
+   "u": "https://www.marca.com/tiramillas/television/2026/10/13/ramon-freixa-invitado-hoy-pasapalabra-chef-gallego-ganador-dos-estrellas-michelin.html",
+   "s": "MARCA",
+   "d": "2026-10-13T18:05:32.000Z",
+   "tags": [
+    "ALTA COCINA",
+    "MICHELIN"
+   ],
+   "img": "https://objetos-xlk.estaticos-marca.com/files/article_main_microformat/uploads/2026/10/13/6ace71a38e05a.jpeg"
+  },
+  {
+   "t": "Canarias presenta un nuevo modelo de contratación para dar respuesta a más de 12.000 personas que esperan la ayuda a la dependencia",
+   "u": "https://www.eldiario.es/canariasahora/sociedad/canarias-presenta-nuevo-modelo-contratacion-dar-respuesta-12-000-personas-esperan-ayuda-dependencia_1_13583140.html",
+   "s": "elDiario.es",
+   "d": "2026-10-13T17:48:15.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://static.eldiario.es/clip/bcd8b639-64b1-41bb-a569-8fa6878a53a7_facebook-aspect-ratio-1200-675_default_0.jpg"
+  },
+  {
+   "t": "Condenan a los dueños de un guachinche de Santa Úrsula por defraudar a la Seguridad Social: con el cobro solo en metálico",
+   "u": "https://www.soldelsurtenerife.com/portada1/gastronomia/condenan-duenos-guachinche-santa-ursula-defraudar-seguridad-social-cobro-solo-metalico/20261013181129110861.amp.html",
+   "s": "sol del sur tenerife",
+   "d": "2026-10-13T17:11:29.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://www.soldelsurtenerife.com/media/soldetenerifesur/images/2026/10/13/2026101318101276158.webp"
+  },
+  {
+   "t": "La Junta de Gobierno de Santa Cruz de Tenerife aprueba el expediente para licitar de nuevo el restaurante del parque García Sanabria",
+   "u": "https://www.eldia.es/santa-cruz-de-tenerife/2026/10/13/licitacion-kiosco-restaurante-parque-sanabria-strasse-135292593.html",
+   "s": "Eldía",
+   "d": "2026-10-13T16:54:07.000Z",
+   "tags": [
+    "CANARIAS"
+   ]
+  },
+  {
+   "t": "Canarias busca atraer al turista canadiense con sus primeros vuelos directos con Canadá",
+   "u": "https://www.infobae.com/america/agencias/2026/10/13/canarias-busca-atraer-al-turista-canadiense-con-sus-primeros-vuelos-directos-con-canada/",
+   "s": "Infobae",
+   "d": "2026-10-13T16:29:19.000Z",
+   "tags": [
+    "CANARIAS"
+   ]
+  },
+  {
+   "t": "Octubre en Madrid: planes gastronómicos que puedes hacer en la capital de España",
+   "u": "https://www.20minutos.es/gastronomia/restaurantes/octubre-madrid-7-planes-gastronomicos-hacer-capital-espana_7042551_0.html",
+   "s": "20Minutos",
+   "d": "2026-10-13T16:00:00.000Z",
+   "tags": [
+    "MICHELIN"
+   ],
+   "img": "https://imagenes.20minutos.es/files/image_1920_1080/uploads/imagenes/2022/02/11/fotografia-del-cocido-madrileno-del-restaurante-la-gran-tasca.jpeg"
+  },
+  {
+   "t": "La mujer que habló ante el Papa en Canarias consigue regresar después de tres meses bloqueada en Senegal",
+   "u": "https://www.eldiario.es/canariasahora/sociedad/mujer-hablo-papa-canarias-regresar-despues-tres-meses-bloqueada-senegal_1_13582801.html",
+   "s": "elDiario.es",
+   "d": "2026-10-13T15:53:31.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://static.eldiario.es/clip/59845e99-c470-4470-bf30-56ad552af9ef_facebook-aspect-ratio-1200-675_default_0_x952y314.jpg"
+  },
+  {
+   "t": "La villa juguetera de Alicante que conquista por su cocina: así es el pueblo donde mejor se come de España",
+   "u": "https://www.noticiasdelvino.com/restaurantes/2026/10/13/la-villa-juguetera-de-alicante-que-conquista-por-su-cocina-asi-es-el-pueblo-donde-mejor-se-come-de-espana-74836/",
+   "s": "Noticias del Vino",
+   "d": "2026-10-13T14:53:04.000Z",
+   "tags": [
+    "MICHELIN"
+   ],
+   "img": "https://www.noticiasdelvino.com/wp-content/uploads/restaurantes-5.jpg.webp"
+  },
+  {
+   "t": "Percan, entre el gol y el perdón: la paradoja del máximo artillero del Córdoba CF",
+   "u": "https://www.abc.es/espana/andalucia/cordoba/cordoba-cf/percan-gol-perdon-paradoja-maximo-artillero-cordoba-20261013144835-nts.html",
+   "s": "ABC",
+   "d": "2026-10-13T12:48:36.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://s1.abcstatics.com/abc/www/multimedia/espana/2026/10/13/prmra-parte-cordoba%20(32)-U73845267181LPb-1200x630@diario_abc.jpg"
+  },
+  {
+   "t": "El Gobierno regional considera que el rechazo al TMT en La Palma no frena apuesta de Canarias por grandes telescopios",
    "u": "https://www.eldiario.es/canariasahora/lapalmaahora/politica/gobierno-regional-considera-rechazo-tmt-palma-no-frena-apuesta-canarias-grandes-telescopios_1_13582189.html",
    "s": "elDiario.es",
    "d": "2026-10-13T12:39:13.000Z",
@@ -10,6 +118,15 @@
     "CANARIAS"
    ],
    "img": "https://static.eldiario.es/clip/cb7eb1a9-ba38-447a-a9fb-467a897213a5_facebook-aspect-ratio-1200-675_default_0.jpg"
+  },
+  {
+   "t": "El asador de Gran Canaria que conquista a los amantes de la carne: parrilladas por 20 euros y casi cinco estrellas",
+   "u": "https://www.laprovincia.es/gran-canaria/2026/10/13/asador-gran-canaria-conquista-amantes-135177163.amp.html",
+   "s": "La Provincia",
+   "d": "2026-10-13T12:30:09.000Z",
+   "tags": [
+    "CANARIAS"
+   ]
   },
   {
    "t": "El PSOE reclama al Gobierno canario que “movilice de una vez los 100 millones de euros de la reconstrucción agrícola”",
@@ -53,6 +170,16 @@
    "img": "https://estenerife.com/wp-content/uploads/2026/10/e9d927e5-e57b-4629-96e0-1fe4fe790ec2_facebook-aspect-ratio-1200-675_default_0_x956y509.jpg"
   },
   {
+   "t": "Luis, el chef que recupera un bar valenciano de toda la vida para abrir una nueva taberna: “La idea no es atraer al turista, sino al cliente parroquiano”",
+   "u": "https://www.infobae.com/espana/2026/10/13/luis-el-chef-que-recupera-un-bar-valenciano-de-toda-la-vida-para-abrir-una-nueva-taberna-la-idea-no-es-atraer-al-turista-sino-al-cliente-parroquiano/",
+   "s": "Infobae",
+   "d": "2026-10-13T11:07:00.000Z",
+   "tags": [
+    "ALTA COCINA"
+   ],
+   "img": "https://www.infobae.com/resizer/v2/WLI5SF7S2NCXLPN6WM7XRQLSKE.png?auth=c1c976193718c4c4e26ffafa3c09f679c2d3d6201d580bebf6b6fafefa6d9a84&smart=true&width=1200&height=630&quality=85"
+  },
+  {
    "t": "La vendimia canaria desde dentro: cuando un año entero se decide en un día",
    "u": "https://www.laprovincia.es/canarias/2026/10/13/vendimia-vino-temporada-recogida-uva-135275312.html",
    "s": "La Provincia",
@@ -63,17 +190,7 @@
    ]
   },
   {
-   "t": "Luis, el chef que recupera un bar valenciano de toda la vida para abrir una nueva taberna: “La idea no es atraer al turista, sino al cliente parroquiano”",
-   "u": "https://www.infobae.com/espana/2026/10/13/luis-el-chef-que-recupera-un-bar-valenciano-de-toda-la-vida-para-abrir-una-nueva-taberna-la-idea-no-es-atraer-al-turista-sino-al-cliente-parroquiano/",
-   "s": "Infobae",
-   "d": "2026-10-13T10:23:33.000Z",
-   "tags": [
-    "ALTA COCINA"
-   ],
-   "img": "https://www.infobae.com/resizer/v2/WLI5SF7S2NCXLPN6WM7XRQLSKE.png?auth=c1c976193718c4c4e26ffafa3c09f679c2d3d6201d580bebf6b6fafefa6d9a84&smart=true&width=1200&height=630&quality=85"
-  },
-  {
-   "t": "Valladolid reunirá a 61 chefs para elegir las mejores tapas de España y del mundo",
+   "t": "61 chefs y un solo objetivo: cocinar las mejores tapas de España y del mundo",
    "u": "https://www.excelenciasgourmet.com/es/noticias/finalistas-campeonato-tapas-valladolid-2026",
    "s": "Excelencias Gourmet",
    "d": "2026-10-13T10:00:00.000Z",
@@ -102,6 +219,16 @@
    "img": "https://static.eldiario.es/clip/8c6b808a-5c4b-4381-ad38-122a72141774_facebook-aspect-ratio-1200-675_default_0_x418y340.jpg"
   },
   {
+   "t": "Quienes acudían al colegio en Tenerife recibían comida y ropa nueva",
+   "u": "https://www.teneriffa-news.com/es/actualidad/noticias-de-tenerife/cantina-y-ropero-maestras-daban-ropa-y-comida-para-escolarizar_1482936.html",
+   "s": "Teneriffa News",
+   "d": "2026-10-13T09:20:23.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://www.teneriffa-news.com/media/e/efe/cantina-y-ropero-cuando-las-maestras-daban-ropa-y-comida-para-asegurar-efe-55021665338-2400x1350.jpg"
+  },
+  {
    "t": "El restaurante de Las Palmas de Gran Canaria que lleva desde 1977 sirviendo cocina canaria: la carne de cabra es uno de sus platos estrella",
    "u": "https://www.laprovincia.es/las-palmas/2026/10/13/restaurante-palmas-gran-canaria-lleva-1977-cocina-dv-133254922.amp.html",
    "s": "La Provincia",
@@ -114,7 +241,7 @@
    "t": "Martín Berasategui (66), sobre su amigo de infancia Iñaki Gabilondo: \"Mi padre aprendió carnicería con sus padres y a mí me decían que a ver si se me pegaba algo de ellos\"",
    "u": "https://www.elle.com/es/gourmet/gastronomia/a74097683/martin-berasategui-infancia-familia-inaki-gabilondo/",
    "s": "ELLE",
-   "d": "2026-10-13T08:02:59.000Z",
+   "d": "2026-10-13T08:02:28.000Z",
    "tags": [
     "CHEF"
    ],
@@ -167,135 +294,6 @@
     "CANARIAS"
    ],
    "img": "https://s3.ppllstatics.com/canarias7/www/multimedia/gastronomia-c7/2026/10/12/bresaola-kwvF-U302198972355EFE-1200x840@Canarias7.jpg"
-  },
-  {
-   "t": "La coctelería asturiana con la máxima distinción de la «Guía Michelin» de las barras: «Lo difícil no es llegar a las tres estrellas»",
-   "u": "https://www.lavozdeasturias.es/noticia/gastronomia/2026/10/12/cocteleria-asturiana-maxima-distincion-guia-michelin-barras-dificil-llegar-tres-estrellas/00031791797555936321308.htm",
-   "s": "La Voz de Asturias",
-   "d": "2026-10-13T03:06:19.000Z",
-   "tags": [
-    "MICHELIN"
-   ],
-   "img": "https://cflvdg.avoz.es/sc/cTomvwyiD1UusU2ervJ3TA8cteU=/1280x/2026/10/12/00121791797832607542997/Foto/berto.png"
-  },
-  {
-   "t": "959 Ibérico y el chef Paco Morales sellan una alianza estratégica para impulsar el producto de Jabugo en la",
-   "u": "https://gentleman.elperiodico.com/placeres/959-iberico-y-el-chef-paco-morales-sellan-una-alianza-estrategica-para-impulsar-el-producto-de-jabugo-en-la-alta-cocina-internacional/",
-   "s": "Gentleman - El valor de la elegancia",
-   "d": "2026-10-13T02:00:00.000Z",
-   "tags": [
-    "ALTA COCINA"
-   ]
-  },
-  {
-   "t": "El gol de Gallego resucita el ánimo del Tenerife",
-   "u": "https://www.eldiario.es/canariasahora/Deportes/futbol/gol-gallego-resucita-animo-tenerife_1_13580616.html",
-   "s": "elDiario.es",
-   "d": "2026-10-13T00:10:45.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://static.eldiario.es/clip/cbdca4d5-7615-472a-b4fa-59c133c2fde4_facebook-aspect-ratio-1200-675_default_0_x499y206.jpg"
-  },
-  {
-   "t": "La villa juguetera de Alicante que conquista por su cocina: así es el pueblo donde mejor se come de España",
-   "u": "https://www.noticiasdelvino.com/restaurantes/2026/10/12/la-villa-juguetera-de-alicante-que-conquista-por-su-cocina-asi-es-el-pueblo-donde-mejor-se-come-de-espana-74836/",
-   "s": "Noticias del Vino",
-   "d": "2026-10-12T20:58:04.000Z",
-   "tags": [
-    "MICHELIN"
-   ],
-   "img": "https://www.noticiasdelvino.com/wp-content/uploads/restaurantes-5.jpg.webp"
-  },
-  {
-   "t": "La Laguna destina 60.000 euros a promocionar los vinos de Tacoronte-Acentejo",
-   "u": "https://www.eldia.es/la-laguna/2026/10/12/laguna-destina-60-000-euros-135255994.amp.html",
-   "s": "Eldía",
-   "d": "2026-10-12T18:00:50.000Z",
-   "tags": [
-    "VINO",
-    "CANARIAS"
-   ]
-  },
-  {
-   "t": "El viñedo más alto de Europa está en Tenerife: así es el pueblo que desafía a los Alpes",
-   "u": "https://www.noticiasdelvino.com/escapadas/2026/10/12/el-vinedo-mas-alto-de-europa-esta-en-tenerife-asi-es-el-pueblo-que-desafia-a-los-alpes-66331/",
-   "s": "Noticias del Vino",
-   "d": "2026-10-12T17:39:09.000Z",
-   "tags": [
-    "VINO",
-    "CANARIAS"
-   ],
-   "img": "https://www.noticiasdelvino.com/wp-content/uploads/El-vinedo-mas-alto-de-Europa-esta-en-Tenerife.jpg.webp"
-  },
-  {
-   "t": "La lluvia vuelve al norte de Canarias este martes mientras el viento del nordeste gana fuerza",
-   "u": "https://www.eldiario.es/canariasahora/tiempo-canarias/tiempo-canarias-manana-hoy-13-octubre_1_13580155.html",
-   "s": "elDiario.es",
-   "d": "2026-10-12T15:07:48.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://static.eldiario.es/clip/bffac978-7c15-4b42-9cae-ad1e51733a31_facebook-aspect-ratio-1200-675_default_0.jpg"
-  },
-  {
-   "t": "Paco Roncero, chef: \"Lo hace muy bien. Es una cocina muy cuidada, con mucho cariño y todo su empeño\"",
-   "u": "https://www.elespanol.com/madrid/sociedad/20261012/paco-roncero-chef-hace-bien-cocina-cuidada-carino-empeno/1003744414920_0.amp.html",
-   "s": "El Español",
-   "d": "2026-10-12T13:43:41.000Z",
-   "tags": [
-    "MICHELIN"
-   ],
-   "img": "https://s3.elespanol.com/k/imgp/cms/elespanol/10051239.jpg?p=f:jpeg/c:2046:1150:nowe:2:0/w:1706/h:960&h=63Nxqc9N"
-  },
-  {
-   "t": "Dos bares de Tenerife entran en el top de España: así son los cócteles que los han hecho únicos",
-   "u": "https://estenerife.com/dos-bares-de-tenerife-entran-en-el-top-de-espana-asi-son-los-cocteles-que-los-han-hecho-unicos/",
-   "s": "estenerife.com",
-   "d": "2026-10-12T12:34:44.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://estenerife.com/wp-content/uploads/2026/10/Pagina-42-Yoni-Mesa.jpeg"
-  },
-  {
-   "t": "La conexión desconocida de Dabiz Muñoz con un pueblo de Cuenca de solo 150 habitantes",
-   "u": "https://www.noticiasdelvino.com/escapadas/2026/10/12/la-conexion-desconocida-de-dabiz-munoz-con-un-pueblo-de-cuenca-de-solo-150-habitantes-68966/",
-   "s": "Noticias del Vino",
-   "d": "2026-10-12T12:34:19.000Z",
-   "tags": [
-    "ALTA COCINA"
-   ],
-   "img": "https://www.noticiasdelvino.com/wp-content/uploads/image-217.png.webp"
-  },
-  {
-   "t": "66 Oficinas de alquiler en Santa Cruz de Tenerife",
-   "u": "https://www.fotocasa.es/es/alquiler/oficinas/santa-cruz-de-tenerife-capital/todas-las-zonas/l",
-   "s": "Fotocasa",
-   "d": "2026-10-12T12:27:25.000Z",
-   "tags": [
-    "CANARIAS"
-   ]
-  },
-  {
-   "t": "El restaurante de carretera definitivo está en este pueblo medieval de Madrid: Martín Berasategui confiesa su secreto mejor guardado",
-   "u": "https://www.noticiasdelvino.com/escapadas/2026/10/12/el-restaurante-de-carretera-definitivo-esta-en-este-pueblo-medieval-de-madrid-martin-berasategui-confiesa-su-secreto-mejor-guardado-74843/",
-   "s": "Noticias del Vino",
-   "d": "2026-10-12T11:21:54.000Z",
-   "tags": [
-    "CHEF"
-   ],
-   "img": "https://www.noticiasdelvino.com/wp-content/uploads/image-583.png.webp"
-  },
-  {
-   "t": "Pinktober vuelve a Hard Rock Cafe Tenerife: gastronomía, música y solidaridad contra el cáncer de mama",
-   "u": "https://theshowroommag.com/pinktober-vuelve-a-hard-rock-cafe-tenerife-gastronomia-musica-y-solidaridad-contra-el-cancer-de-mama/",
-   "s": "The Showroom Mag",
-   "d": "2026-10-12T10:29:59.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://theshowroommag.com/wp-content/uploads/2026/10/1-2.jpg"
   }
  ]
 }
