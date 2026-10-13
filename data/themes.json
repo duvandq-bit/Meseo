@@ -1,5 +1,5 @@
 {
- "_readme": "Registro multi-restaurante. Cada 'venue' define identidad (nombre, logo, textos) y los 8 tokens de marca que pintan la app POR DENTRO tras elegirlo. El héroe del login es SIEMPRE la marca Meseo; el selector de restaurante se muestra en cuanto hay al menos un venue (los 'Próximamente' incluidos). Para estrenar un restaurante: duplica la plantilla, rellena los campos y pon enabled:true. · 'casa' es el nombre como se lee dentro de una frase («Leyenda Viviente de Txoko») y 'rotulo'/'rotulo_en' el nombre largo con el que se presenta el restaurante («Txoko by Martín Berasategui»). Los usa la app en los títulos de nivel, la bienvenida, la guía de emplatado y las técnicas, para que un empleado de otro restaurante no lea el nombre del vecino. · 'dishIds' es el bloque de números de plato del restaurante ({from,to}, ambos incluidos). Un bloque asignado no se reutiliza NUNCA, tampoco si el restaurante se retira: por eso un restaurante retirado se deja aquí con enabled:false y su bloque sigue reservado. Para estrenar uno, el siguiente bloque libre de mil.",
+ "_readme": "Registro multi-restaurante. Cada 'venue' define identidad (nombre, logo, textos) y los 8 tokens de marca que pintan la app POR DENTRO tras elegirlo. El héroe del login es SIEMPRE la marca Meseo; el selector de restaurante se muestra en cuanto hay al menos un venue (los 'Próximamente' incluidos). Para estrenar un restaurante: duplica la plantilla, rellena los campos y pon enabled:true. · 'casa' es el nombre como se lee dentro de una frase («Leyenda Viviente de Txoko») y 'rotulo'/'rotulo_en' el nombre largo con el que se presenta el restaurante («Txoko by Martín Berasategui»). Los usa la app en los títulos de nivel, la bienvenida, la guía de emplatado y las técnicas, para que un empleado de otro restaurante no lea el nombre del vecino. · 'dishIds' es el bloque de números de plato del restaurante ({from,to}, ambos incluidos). Un bloque asignado no se reutiliza NUNCA, tampoco si el restaurante se retira: por eso un restaurante retirado se deja aquí con enabled:false y su bloque sigue reservado. Para estrenar uno, el siguiente bloque libre de mil. · 'demo' es Orchilla, el restaurante inventado de «Probar la demo»: enabled:false y sin revision, así que no sale en el selector; sólo se entra por el botón del login, sin cuenta y sin hablar con el servidor.",
  "version": 1,
  "venues": [
   {
@@ -78,6 +78,34 @@
    "dishIds": {
     "from": 3000,
     "to": 3999
+   }
+  },
+  {
+   "id": "demo",
+   "enabled": false,
+   "demo": true,
+   "name": "Orchilla",
+   "logoSup": "DEMO",
+   "eyebrow": "Demo · restaurante ficticio",
+   "casa": "Orchilla",
+   "rotulo": "Orchilla",
+   "rotulo_en": "Orchilla",
+   "subtitle": "Demo de Meseo",
+   "subtitle_en": "Meseo demo",
+   "title": "Meseo · Demo",
+   "brand": {
+    "primary": "#33283a",
+    "secondary": "#5a4763",
+    "accent": "#c8a35a",
+    "accentHi": "#e6cc8f",
+    "accent2": "#d4b26a",
+    "accentDeep": "#7e6232",
+    "ink": "#17131a",
+    "paper": "#f3eee8"
+   },
+   "dishIds": {
+    "from": 4000,
+    "to": 4999
    }
   },
   {

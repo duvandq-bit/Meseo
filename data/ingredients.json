@@ -3860,6 +3860,276 @@
       "nombre_en": "Lemon juice",
       "alergenos": [],
       "fuente": "certeza culinaria"
+    },
+    "altramuz": {
+      "nombre": "Altramuz",
+      "nombre_en": "Lupin bean",
+      "alergenos": [
+        "Altramuces"
+      ],
+      "fuente": "certeza culinaria"
+    },
+    "vinagre de vino": {
+      "nombre": "Vinagre de vino",
+      "nombre_en": "Wine vinegar",
+      "alergenos": [
+        "Sulfitos"
+      ],
+      "fuente": "certeza culinaria"
+    },
+    "queso de cabra ahumado": {
+      "nombre": "Queso de cabra ahumado",
+      "nombre_en": "Smoked goat's cheese",
+      "alergenos": [
+        "Lácteos"
+      ],
+      "fuente": "certeza culinaria"
+    },
+    "tomillo limonero": {
+      "nombre": "Tomillo limonero",
+      "nombre_en": "Lemon thyme",
+      "alergenos": [],
+      "fuente": "certeza culinaria"
+    },
+    "cherne": {
+      "nombre": "Cherne",
+      "nombre_en": "Wreckfish",
+      "alergenos": [
+        "Pescado"
+      ],
+      "fuente": "certeza culinaria"
+    },
+    "lechuga de mar": {
+      "nombre": "Lechuga de mar",
+      "nombre_en": "Sea lettuce",
+      "alergenos": [],
+      "fuente": "certeza culinaria"
+    },
+    "ostra": {
+      "nombre": "Ostra",
+      "nombre_en": "Oyster",
+      "alergenos": [
+        "Moluscos"
+      ],
+      "fuente": "certeza culinaria"
+    },
+    "aceite de oliva virgen extra": {
+      "nombre": "Aceite de oliva virgen extra",
+      "nombre_en": "Extra virgin olive oil",
+      "alergenos": [],
+      "fuente": "certeza culinaria"
+    },
+    "bubango": {
+      "nombre": "Bubango",
+      "nombre_en": "Bubango (baby courgette)",
+      "alergenos": [],
+      "fuente": "certeza culinaria"
+    },
+    "requeson de cabra": {
+      "nombre": "Requesón de cabra",
+      "nombre_en": "Goat's ricotta",
+      "alergenos": [
+        "Lácteos"
+      ],
+      "fuente": "certeza culinaria"
+    },
+    "pipas de calabaza": {
+      "nombre": "Pipas de calabaza",
+      "nombre_en": "Pumpkin seeds",
+      "alergenos": [],
+      "fuente": "certeza culinaria"
+    },
+    "flor de calabacin": {
+      "nombre": "Flor de calabacín",
+      "nombre_en": "Courgette flower",
+      "alergenos": [],
+      "fuente": "certeza culinaria"
+    },
+    "huevo de corral": {
+      "nombre": "Huevo de corral",
+      "nombre_en": "Free-range egg",
+      "alergenos": [
+        "Huevos"
+      ],
+      "fuente": "certeza culinaria"
+    },
+    "berros": {
+      "nombre": "Berros",
+      "nombre_en": "Watercress",
+      "alergenos": [],
+      "fuente": "certeza culinaria"
+    },
+    "queso de flor": {
+      "nombre": "Queso de flor",
+      "nombre_en": "Flower cheese",
+      "alergenos": [
+        "Lácteos"
+      ],
+      "fuente": "certeza culinaria"
+    },
+    "gofio de trigo": {
+      "nombre": "Gofio de trigo",
+      "nombre_en": "Wheat gofio",
+      "alergenos": [
+        "Gluten"
+      ],
+      "fuente": "certeza culinaria"
+    },
+    "carabinero": {
+      "nombre": "Carabinero",
+      "nombre_en": "Carabinero prawn",
+      "alergenos": [
+        "Crustáceos"
+      ],
+      "fuente": "certeza culinaria"
+    },
+    "millo": {
+      "nombre": "Millo",
+      "nombre_en": "Corn",
+      "alergenos": [],
+      "fuente": "certeza culinaria"
+    },
+    "atun rojo": {
+      "nombre": "Atún rojo",
+      "nombre_en": "Bluefin tuna",
+      "alergenos": [
+        "Pescado"
+      ],
+      "fuente": "certeza culinaria"
+    },
+    "alga kombu": {
+      "nombre": "Alga kombu",
+      "nombre_en": "Kombu seaweed",
+      "alergenos": [],
+      "fuente": "certeza culinaria"
+    },
+    "almendra": {
+      "nombre": "Almendra",
+      "nombre_en": "Almond",
+      "alergenos": [
+        "Frutos secos"
+      ],
+      "fuente": "certeza culinaria"
+    },
+    "pan de trigo": {
+      "nombre": "Pan de trigo",
+      "nombre_en": "Wheat bread",
+      "alergenos": [
+        "Gluten"
+      ],
+      "fuente": "certeza culinaria"
+    },
+    "uva": {
+      "nombre": "Uva",
+      "nombre_en": "Grape",
+      "alergenos": [],
+      "fuente": "certeza culinaria"
+    },
+    "tinta de calamar": {
+      "nombre": "Tinta de calamar",
+      "nombre_en": "Squid ink",
+      "alergenos": [
+        "Moluscos"
+      ],
+      "fuente": "certeza culinaria"
+    },
+    "papada iberica": {
+      "nombre": "Papada ibérica",
+      "nombre_en": "Iberian pork jowl",
+      "alergenos": [],
+      "fuente": "certeza culinaria"
+    },
+    "vino malvasia": {
+      "nombre": "Vino malvasía",
+      "nombre_en": "Malvasía wine",
+      "alergenos": [
+        "Sulfitos"
+      ],
+      "fuente": "certeza culinaria"
+    },
+    "pichon": {
+      "nombre": "Pichón",
+      "nombre_en": "Pigeon",
+      "alergenos": [],
+      "fuente": "certeza culinaria"
+    },
+    "cabrito": {
+      "nombre": "Cabrito",
+      "nombre_en": "Kid goat",
+      "alergenos": [],
+      "fuente": "certeza culinaria"
+    },
+    "tahini": {
+      "nombre": "Tahini",
+      "nombre_en": "Tahini",
+      "alergenos": [
+        "Granos de sésamo"
+      ],
+      "fuente": "certeza culinaria"
+    },
+    "yogur de cabra": {
+      "nombre": "Yogur de cabra",
+      "nombre_en": "Goat's yogurt",
+      "alergenos": [
+        "Lácteos"
+      ],
+      "fuente": "certeza culinaria"
+    },
+    "parchita": {
+      "nombre": "Parchita",
+      "nombre_en": "Passion fruit",
+      "alergenos": [],
+      "fuente": "certeza culinaria"
+    },
+    "leche de cabra": {
+      "nombre": "Leche de cabra",
+      "nombre_en": "Goat's milk",
+      "alergenos": [
+        "Lácteos"
+      ],
+      "fuente": "certeza culinaria"
+    },
+    "lecitina de soja": {
+      "nombre": "Lecitina de soja",
+      "nombre_en": "Soy lecithin",
+      "alergenos": [
+        "Soja"
+      ],
+      "fuente": "certeza culinaria"
+    },
+    "platano de canarias": {
+      "nombre": "Plátano de Canarias",
+      "nombre_en": "Canary banana",
+      "alergenos": [],
+      "fuente": "certeza culinaria"
+    },
+    "cacahuete": {
+      "nombre": "Cacahuete",
+      "nombre_en": "Peanut",
+      "alergenos": [
+        "Cacahuete"
+      ],
+      "fuente": "certeza culinaria"
+    },
+    "mantequilla de cabra": {
+      "nombre": "Mantequilla de cabra",
+      "nombre_en": "Goat's butter",
+      "alergenos": [
+        "Lácteos"
+      ],
+      "fuente": "certeza culinaria"
+    },
+    "ron miel": {
+      "nombre": "Ron miel",
+      "nombre_en": "Honey rum",
+      "alergenos": [],
+      "fuente": "certeza culinaria"
+    },
+    "higo de tunera": {
+      "nombre": "Higo de tunera",
+      "nombre_en": "Prickly pear",
+      "alergenos": [],
+      "fuente": "certeza culinaria"
     }
   }
 }

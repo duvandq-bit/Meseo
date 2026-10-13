@@ -1,0 +1,102 @@
+{
+ "venue": "demo",
+ "_readme": "Carro de quesos de Orchilla, restaurante ficticio de la demo. Queserías y marcas inventadas; tipos de queso y zonas reales. Todos llevan Lácteos.",
+ "quesos": [
+  {
+   "grupo": "Canarios",
+   "nombre": "Flor del Cardo",
+   "productor": "Quesería Las Vegas Altas",
+   "region": "Santa María de Guía, Gran Canaria",
+   "leche": "Oveja y vaca cruda",
+   "cuajo": "Vegetal (flor de cardo)",
+   "maduracion": "3 meses",
+   "info": "Queso de flor: se cuaja con la flor del cardo. Pasta casi cremosa y amargor suave.",
+   "pasta": "Blanda",
+   "en_carro": true
+  },
+  {
+   "grupo": "Canarios",
+   "nombre": "Ahumado de Palo",
+   "productor": "Quesería El Lomito",
+   "region": "Valle de Arriba, Tenerife",
+   "leche": "Cabra pasteurizada",
+   "cuajo": "Animal",
+   "maduracion": "20 días",
+   "info": "Ahumado con madera de brezo y tunera seca. Es el queso de la tartaleta del menú.",
+   "pasta": "Semidura",
+   "en_carro": true
+  },
+  {
+   "grupo": "Canarios",
+   "nombre": "Majorero de Pimentón",
+   "productor": "Granja Tindaya Norte",
+   "region": "Fuerteventura",
+   "leche": "Cabra cruda",
+   "cuajo": "Animal",
+   "maduracion": "4 meses",
+   "info": "Corteza untada con pimentón y aceite, como se hace tradicionalmente en Fuerteventura.",
+   "pasta": "Dura",
+   "en_carro": true
+  },
+  {
+   "grupo": "Canarios",
+   "nombre": "Palmero Tierno",
+   "productor": "Quesería Barlovento",
+   "region": "La Palma",
+   "leche": "Cabra cruda",
+   "cuajo": "Animal",
+   "maduracion": "15 días",
+   "info": "Queso palmero ahumado con cáscara de almendra y pino.",
+   "pasta": "Semiblanda",
+   "en_carro": true
+  },
+  {
+   "grupo": "Canarios",
+   "nombre": "Herreño Curado",
+   "productor": "Cooperativa Las Lajas",
+   "region": "El Hierro",
+   "leche": "Mezcla de cabra, oveja y vaca",
+   "cuajo": "Animal",
+   "maduracion": "5 meses",
+   "info": "Curado en cuevas frescas. Sabor intenso y algo picante.",
+   "pasta": "Dura",
+   "en_carro": true
+  },
+  {
+   "grupo": "Península",
+   "nombre": "Torta de la Dehesa",
+   "productor": "Quesería Los Zarzales",
+   "region": "Extremadura",
+   "leche": "Oveja cruda",
+   "cuajo": "Vegetal (cardo)",
+   "maduracion": "60 días",
+   "info": "Torta: se abre la tapa y se come a cucharadas. Pasta líquida.",
+   "pasta": "Cremosa",
+   "en_carro": true
+  },
+  {
+   "grupo": "Península",
+   "nombre": "Azul de Cueva",
+   "productor": "Quesería Monte Bres",
+   "region": "Asturias",
+   "leche": "Vaca, oveja y cabra cruda",
+   "cuajo": "Animal",
+   "maduracion": "3 meses",
+   "info": "Queso azul madurado en cueva natural. Muy intenso: se sirve el último.",
+   "pasta": "Azul",
+   "en_carro": true
+  },
+  {
+   "grupo": "Península",
+   "nombre": "Viejo de Oveja",
+   "productor": "Quesería Campo Rubio",
+   "region": "Castilla-La Mancha",
+   "leche": "Oveja pasteurizada",
+   "cuajo": "Animal",
+   "maduracion": "12 meses",
+   "info": "Curado un año. Cristales de proteína que crujen al morder.",
+   "pasta": "Dura",
+   "en_carro": true
+  }
+ ]
+}

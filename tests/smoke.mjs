@@ -11346,8 +11346,8 @@ test('Sala: los procedimientos son de un restaurante, y quien no los tiene no ve
   assert(/renderMap = \{[^}]*quesos:renderQuesos,sala:renderSala,/.test(html), 'y tener quien la pinte');
   assert(/_SABER_HAY\.sala \? \['sala'/.test(html) && /_SABER_HAY\.sala = hay; _saberSync\(\);/.test(html),
     'la pestaña sale sólo donde hay procedimientos, así que arranca escondida');
-  assert((html.match(/_navQuesosSync\(\); _navVinosSync\(\); _navSalaSync\(\);/g) || []).length === 2,
-    'hay que repintar el botón en los DOS sitios: al entrar y al cambiar de restaurante');
+  assert((html.match(/_navQuesosSync\(\); _navVinosSync\(\); _navSalaSync\(\);/g) || []).length === 3,
+    'hay que repintar el botón en los TRES sitios: al entrar, al cambiar de restaurante y al entrar en la demo');
   assert(/SALA = null; _salaVenue = null; _salaSec = null;/.test(html),
     'cambiar de restaurante tiene que tirar los procedimientos del anterior');
 
@@ -17044,6 +17044,56 @@ test('Flashcards: fcRate no escribe topicScores.allergens, ni XP, ni plato conoc
   const T = _fcRes(true);
   assert(T.emp.topicScores.allergens && T.emp.topicScores.allergens.total === 1 && T.xp === 1 && T.emp.knownDishes[3001],
     'en Txoko fcRate sigue registrando como siempre');
+});
+
+console.log('\nDemo (Orchilla)');
+test('Demo: no sale nada al servidor, ni lecturas ni escrituras', () => {
+  // La demo es un restaurante inventado para quien quiera probar la app sin
+  // cuenta. Tiene su propia base y no puede ni ver ni tocar a los restaurantes
+  // de verdad: se corta en fetch, todo lo que vaya al servidor de la app.
+  const i0 = html.indexOf('function _demoBloquea(');
+  const i1 = html.indexOf('\n}', i0) + 2;
+  const _demoBloquea = new Function(html.slice(i0, i1) + '; return _demoBloquea;')();
+  const S = 'https://x.supabase.co';
+  assert(_demoBloquea(S + '/rest/v1/employees?select=*', S), 'una lectura de la base sale de la demo');
+  assert(_demoBloquea(S + '/rest/v1/scores', S), 'una escritura sale de la demo');
+  assert(_demoBloquea(S + '/auth/v1/token', S), 'la sesión de quien usa el móvil no se puede tocar desde la demo');
+  assert(_demoBloquea(S + '/storage/v1/object/public/wine-images/a.webp', S), 'ni los ficheros del servidor');
+  assert(!_demoBloquea('data/carta-demo.json', S), 'los datos de la propia demo sí se leen');
+  assert(/if\(typeof _esDemo === 'function' && _esDemo\(\)\)\{[\s\S]{0,900}?new Response\('\[\]'[\s\S]{0,300}?status:403/.test(html),
+    'en la demo una lectura devuelve [] y una escritura 403, antes de llegar a la red');
+});
+test('Demo: su propia base, sin sincronizar, sin cola y sin tocar la sesión real', () => {
+  assert(/localStorage\.setItem\(\(typeof _esDemo==='function' && _esDemo\(\)\) \? DEMO_STORAGE_KEY : STORAGE_KEY/.test(html),
+    'la demo guarda en su llave, nunca en la base de quien usa el móvil');
+  assert(/function _sincronizarFicha\(nombre\)\{\n  if\(!nombre\) return Promise\.resolve\('nada'\);\n  if\(typeof _esDemo==='function' && _esDemo\(\)\) return/.test(html),
+    'la demo no encola sincronizaciones');
+  assert(/async function supaUpsertEmployee\(name, retries=2\) \{\n  if\(typeof _esDemo==='function' && _esDemo\(\)\) return 'nada';/.test(html),
+    'la demo no sube fichas');
+  assert(/function logout\(\)\{\n  if\(typeof _esDemo==='function' && _esDemo\(\)\)\{ salirDemo\(\); return; \}/.test(html),
+    'salir de la demo no cierra la sesión guardada de nadie');
+  assert(/if\(v\.id !== DEMO_VENUE\)\{ try\{ localStorage\.setItem\('txk_venue'/.test(html),
+    'la demo no deja su restaurante elegido para la próxima vez');
+  const i0 = html.indexOf('async function entrarDemo(');
+  const cuerpo = html.slice(i0, html.indexOf('\nfunction salirDemo(', i0));
+  assert(i0 > 0 && !/closePinAndEnter|subscribeToPush|_ndaPuerta|supaRestoreEmployee|supaUpdateLastActive/.test(cuerpo),
+    'entrar en la demo no pasa por la puerta de los equipos reales (NDA, push, nube)');
+  assert(cuerpo.indexOf('_DEMO = true') < cuerpo.indexOf('cargarCarta('), 'se corta la red ANTES de cargar nada');
+});
+test('Demo: Orchilla no sale en el selector ni en Ajustes, y su carta es válida', () => {
+  const T = JSON.parse(read('data/themes.json'));
+  const v = T.venues.find(x => x.id === 'demo');
+  assert(v && v.enabled === false && !v.revision && v.demo === true, 'la demo no es un restaurante que se elija');
+  assert(v.dishIds.from === 4000 && v.dishIds.to === 4999, 'la demo tiene su bloque de platos');
+  assert(/v\.id !== 'plantilla' && !v\.demo/.test(html), 'Ajustes no ofrece la demo a la administración');
+  const C = JSON.parse(read('data/carta-demo.json'));
+  assert(C.venue === 'demo' && C.allergensValidated === true, 'carta de la demo');
+  assert(C.DISHES.length === 20 && C.DISHES.every(d => d.id >= 4000 && d.id <= 4999), 'los platos en su bloque');
+  const todos = new Set(C.DISHES.flatMap(d => d.allergens));
+  assert(todos.size === 14, 'la demo enseña los 14 alérgenos: ' + todos.size);
+  for (const f of ['wines-demo.json', 'quesos-demo.json', 'procedimientos-demo.json'])
+    assert(existsSync(join(ROOT, 'data', f)), 'falta data/' + f);
+  assert(/id="loginDemoBtn"[^>]*onclick="entrarDemo\(\)"/.test(html), 'el botón del login');
 });
 
 console.log('\nHygiene');

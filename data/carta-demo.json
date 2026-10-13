@@ -1,0 +1,1352 @@
+{
+ "venue": "demo",
+ "allergensValidated": true,
+ "CATS": [
+  {
+   "es": "Aperitivos",
+   "en": "Snacks"
+  },
+  {
+   "es": "Huerta",
+   "en": "Garden"
+  },
+  {
+   "es": "Del mar",
+   "en": "From the sea"
+  },
+  {
+   "es": "De la tierra",
+   "en": "From the land"
+  },
+  {
+   "es": "Postres",
+   "en": "Desserts"
+  },
+  {
+   "es": "Pan y mignardises",
+   "en": "Bread and petits fours"
+  }
+ ],
+ "DISHES": [
+  {
+   "id": 4001,
+   "cat": "Aperitivos",
+   "name": "Chochos encurtidos, naranja y comino",
+   "allergens": [
+    "Altramuces",
+    "Sulfitos"
+   ],
+   "ingredients": "Altramuz, piel de naranja, comino, vinagre de vino.",
+   "history": "En Canarias el altramuz se llama chocho y se come en cualquier bar. Es uno de los 14 alérgenos y casi nadie lo sabe: hay que avisarlo siempre, sobre todo a quien tiene alergia al cacahuete, porque a menudo reaccionan a los dos.",
+   "notes": "⚠ No se puede retirar: Altramuces, Sulfitos.",
+   "montaje": [
+    "Cuenco pequeño de piedra",
+    "Chochos con su aliño",
+    "Ralladura de naranja al pase"
+   ],
+   "marcaje": "Sin cubiertos: se comen con la mano. Cuenco para las pieles."
+  },
+  {
+   "id": 4002,
+   "cat": "Aperitivos",
+   "name": "Tartaleta de queso de cabra ahumado y miel de palma",
+   "allergens": [
+    "Gluten",
+    "Lácteos",
+    "Huevos"
+   ],
+   "ingredients": "Harina de trigo, mantequilla, huevo, queso de cabra ahumado, miel de palma, tomillo limonero.",
+   "history": "La miel de palma no es miel: es la savia de la palmera canaria, el guarapo, reducida al fuego durante horas. Se hace en La Gomera desde hace siglos.",
+   "notes": "⚠ No se puede retirar: Gluten, Lácteos, Huevos.",
+   "montaje": [
+    "Una tartaleta por persona sobre piedra volcánica",
+    "Crema de queso a manga",
+    "Tres gotas de miel de palma",
+    "Hojas de tomillo limonero"
+   ],
+   "marcaje": "Sin cubiertos: un bocado, con la mano."
+  },
+  {
+   "id": 4003,
+   "cat": "Aperitivos",
+   "name": "Buñuelo de cherne y mayonesa de algas",
+   "allergens": [
+    "Gluten",
+    "Huevos",
+    "Pescado"
+   ],
+   "ingredients": "Cherne, harina de trigo, huevo, mayonesa, lechuga de mar.",
+   "history": "El cherne salado era la despensa de los pescadores canarios cuando no había neveras. Aquí se desala dos días y se monta en buñuelo, como hacían las abuelas.",
+   "notes": "⚠ No se puede retirar: Gluten, Huevos, Pescado.",
+   "montaje": [
+    "Dos buñuelos en servilleta de lino",
+    "Mayonesa en cuchara aparte",
+    "Polvo de algas por encima"
+   ],
+   "marcaje": "Sin cubiertos: con la mano."
+  },
+  {
+   "id": 4004,
+   "cat": "Aperitivos",
+   "name": "Ostra, agua de tomate y aceite de cilantro",
+   "allergens": [
+    "Moluscos"
+   ],
+   "ingredients": "Ostra, tomate, aceite de oliva, cilantro.",
+   "history": "La ostra se abre en el pase, nunca antes: si se abre y espera, pierde su agua y el sabor a mar. El agua de tomate se filtra toda la noche hasta quedar transparente.",
+   "notes": "⚠ No se puede retirar: Moluscos.",
+   "montaje": [
+    "Ostra en su concha sobre hielo picado",
+    "Agua de tomate por encima en sala",
+    "Tres gotas de aceite de cilantro"
+   ],
+   "marcaje": "Tenedor de ostra a la derecha. Se avisa: se puede beber de la concha."
+  },
+  {
+   "id": 4005,
+   "cat": "Huerta",
+   "name": "Tomate, fresa y albahaca",
+   "allergens": [],
+   "ingredients": "Tomate, fresa, albahaca, aceite de oliva virgen extra.",
+   "history": "Es el plato al que llevar a una mesa con alergias: no tiene ninguno de los 14 alérgenos. Tomate y fresa tienen compuestos aromáticos parecidos, por eso funcionan juntos.",
+   "notes": "No lleva ninguno de los 14 alérgenos.",
+   "montaje": [
+    "Tomates en gajos y láminas en círculo",
+    "Fresa entre el tomate",
+    "Granizado de albahaca al centro al pase",
+    "Aceite en sala"
+   ],
+   "marcaje": "Tenedor y cuchillo de entrante."
+  },
+  {
+   "id": 4006,
+   "cat": "Huerta",
+   "name": "Bubango a la brasa, requesón y pipas de calabaza",
+   "allergens": [
+    "Lácteos"
+   ],
+   "ingredients": "Bubango, requesón de cabra, pipas de calabaza, flor de calabacín.",
+   "history": "Bubango es como se llama en Canarias al calabacín tierno, cogido pequeño. Las pipas de calabaza no son fruto seco: no cuentan como alérgeno.",
+   "notes": "Lácteos: SIN REQUESÓN.",
+   "montaje": [
+    "Requesón en la base",
+    "Bubango abierto encima",
+    "Pipas por encima",
+    "Flor de calabacín al lado"
+   ],
+   "marcaje": "Tenedor y cuchillo de entrante."
+  },
+  {
+   "id": 4007,
+   "cat": "Huerta",
+   "name": "Huevo de corral, berros y queso de flor",
+   "allergens": [
+    "Huevos",
+    "Lácteos",
+    "Gluten"
+   ],
+   "ingredients": "Huevo de corral, berros, queso de flor, gofio de trigo.",
+   "history": "El queso de flor se cuaja con la flor del cardo en lugar de cuajo animal. El gofio es harina de cereal tostado: el de trigo lleva gluten, el de millo no.",
+   "notes": "⚠ No se puede retirar: Huevos. Lácteos: SIN QUESO. Gluten: SIN GOFIO.",
+   "montaje": [
+    "Crema de berros en plato hondo",
+    "Yema en el centro",
+    "Queso rallado por encima",
+    "Gofio a un lado"
+   ],
+   "marcaje": "Cuchara de entrante."
+  },
+  {
+   "id": 4008,
+   "cat": "Del mar",
+   "name": "Carabinero, su coral y caldo de millo",
+   "allergens": [
+    "Crustáceos",
+    "Lácteos"
+   ],
+   "ingredients": "Carabinero, millo, mantequilla.",
+   "history": "En la cabeza del carabinero está lo mejor: el coral. Se anima al cliente a chuparla. Millo es como se dice maíz en Canarias.",
+   "notes": "⚠ No se puede retirar: Crustáceos, Lácteos.",
+   "montaje": [
+    "Carabinero pelado con la cabeza",
+    "Punto de coral al lado",
+    "Caldo de millo en sala, desde jarra"
+   ],
+   "marcaje": "Pala y tenedor de pescado. Lavafrutas con limón."
+  },
+  {
+   "id": 4009,
+   "cat": "Del mar",
+   "name": "Atún rojo curado en kombu y ajoblanco",
+   "allergens": [
+    "Pescado",
+    "Soja",
+    "Gluten",
+    "Frutos secos",
+    "Sulfitos"
+   ],
+   "ingredients": "Atún rojo, alga kombu, salsa de soja, almendra, pan de trigo, ajo, vinagre de Jerez, uva.",
+   "history": "El kombu le da al atún umami y lo firma por fuera sin cocinarlo. Aviso para sala: el ajoblanco lleva pan y almendra, y la cura lleva soja con trigo. Nada de eso se puede quitar.",
+   "notes": "⚠ No se puede retirar: Pescado, Soja, Gluten, Frutos secos, Sulfitos.",
+   "montaje": [
+    "Ajoblanco en la base",
+    "Láminas de atún encima",
+    "Uvas en mitades",
+    "Aceite al pase"
+   ],
+   "marcaje": "Pala y tenedor de pescado."
+  },
+  {
+   "id": 4010,
+   "cat": "Del mar",
+   "name": "Calamar de potera, cebolla tostada y su tinta",
+   "allergens": [
+    "Moluscos",
+    "Gluten"
+   ],
+   "ingredients": "Calamar, tinta de calamar, cebolla, pan de trigo.",
+   "history": "De potera quiere decir pescado con anzuelo, uno a uno, y no con red. El calamar sale entero, sin arena y sin golpes.",
+   "notes": "⚠ No se puede retirar: Moluscos. Gluten: SIN CRUJIENTE.",
+   "montaje": [
+    "Salsa de tinta en espejo",
+    "Cebolla en el centro",
+    "Tallarines de calamar encima",
+    "Crujiente clavado"
+   ],
+   "marcaje": "Pala y tenedor de pescado."
+  },
+  {
+   "id": 4011,
+   "cat": "Del mar",
+   "name": "Cherne a la brasa, papada ibérica y beurre blanc de malvasía",
+   "allergens": [
+    "Pescado",
+    "Lácteos",
+    "Sulfitos"
+   ],
+   "ingredients": "Cherne, papada ibérica, mantequilla, vino malvasía, chalota.",
+   "history": "La papada se pone fina encima del pescado caliente y se funde sola. Ojo con pescetarianos: el plato lleva cerdo y se puede servir sin él.",
+   "notes": "⚠ No se puede retirar: Pescado. Lácteos: SIN SALSA. Sulfitos: SIN SALSA.",
+   "montaje": [
+    "Lomo de cherne en el centro",
+    "Papada fundida por encima",
+    "Beurre blanc en sala, en salsera"
+   ],
+   "marcaje": "Pala y tenedor de pescado."
+  },
+  {
+   "id": 4012,
+   "cat": "De la tierra",
+   "name": "Cochino negro, miel de palma y mostaza, puré de batata",
+   "allergens": [
+    "Mostaza",
+    "Lácteos",
+    "Apio"
+   ],
+   "ingredients": "Cochino negro, miel de palma, mostaza, batata, mantequilla, apio.",
+   "history": "El cochino negro es una raza autóctona que estuvo a punto de desaparecer. La mostaza va en el lacado, pegada a la carne: no se puede quitar.",
+   "notes": "⚠ No se puede retirar: Mostaza. Lácteos: SIN PURÉ. Apio: SIN JUGO.",
+   "montaje": [
+    "Puré de batata en lágrima",
+    "Presa cortada en dos encima",
+    "Jugo en sala"
+   ],
+   "marcaje": "Cuchillo de carne."
+  },
+  {
+   "id": 4013,
+   "cat": "De la tierra",
+   "name": "Pichón madurado, remolacha y jugo de cacao",
+   "allergens": [
+    "Sulfitos",
+    "Apio"
+   ],
+   "ingredients": "Pichón, remolacha, cacao, vino tinto, apio.",
+   "history": "El pichón se sirve rosado, como una carne roja. Se pregunta el punto solo si el cliente lo pide: el de la casa es el recomendado.",
+   "notes": "Sulfitos: SIN JUGO. Apio: SIN JUGO.",
+   "montaje": [
+    "Remolacha en la base",
+    "Pechuga y muslo encima",
+    "Jugo en sala"
+   ],
+   "marcaje": "Cuchillo de carne."
+  },
+  {
+   "id": 4014,
+   "cat": "De la tierra",
+   "name": "Cabrito asado, berenjena ahumada y yogur de cabra",
+   "allergens": [
+    "Granos de sésamo",
+    "Lácteos"
+   ],
+   "ingredients": "Cabrito, berenjena, tahini, yogur de cabra.",
+   "history": "El tahini es pasta de sésamo y va dentro de la crema de berenjena: no se ve, pero está. Es la pregunta trampa de este plato.",
+   "notes": "⚠ No se puede retirar: Granos de sésamo. Lácteos: SIN YOGUR.",
+   "montaje": [
+    "Crema de berenjena en la base",
+    "Cabrito desmigado encima",
+    "Puntos de yogur alrededor"
+   ],
+   "marcaje": "Cuchillo de carne."
+  },
+  {
+   "id": 4015,
+   "cat": "Postres",
+   "name": "Parchita y coco",
+   "allergens": [],
+   "ingredients": "Parchita, leche de coco, azúcar.",
+   "history": "Parchita es como se llama en Canarias a la fruta de la pasión. El coco no es fruto seco: este prepostre no tiene ninguno de los 14 alérgenos.",
+   "notes": "No lleva ninguno de los 14 alérgenos.",
+   "montaje": [
+    "Copa pequeña fría",
+    "Sorbete en quenelle",
+    "Espuma de coco por encima"
+   ],
+   "marcaje": "Cucharilla de postre."
+  },
+  {
+   "id": 4016,
+   "cat": "Postres",
+   "name": "Quesillo de cabra, café y gofio",
+   "allergens": [
+    "Lácteos",
+    "Huevos",
+    "Gluten"
+   ],
+   "ingredients": "Leche de cabra, leche condensada, huevo, café, gofio de trigo.",
+   "history": "El quesillo no lleva queso: es el flan canario, hecho con leche condensada. El nombre confunde a muchos clientes.",
+   "notes": "⚠ No se puede retirar: Lácteos, Huevos. Gluten: SIN GOFIO.",
+   "montaje": [
+    "Quesillo en el centro",
+    "Caramelo de café por encima",
+    "Gofio a un lado"
+   ],
+   "marcaje": "Cucharilla de postre."
+  },
+  {
+   "id": 4017,
+   "cat": "Postres",
+   "name": "Plátano, chocolate y cacahuete",
+   "allergens": [
+    "Soja",
+    "Lácteos",
+    "Huevos",
+    "Cacahuete"
+   ],
+   "ingredients": "Chocolate negro, lecitina de soja, nata, plátano de Canarias, leche, huevo, cacahuete.",
+   "history": "El plátano de Canarias tiene motitas negras en la piel cuando está en su punto. El cacahuete es legumbre, no fruto seco: son alérgenos distintos.",
+   "notes": "⚠ No se puede retirar: Soja, Lácteos. Huevos: SIN HELADO. Cacahuete: SIN CACAHUETE.",
+   "montaje": [
+    "Cremoso en la base",
+    "Plátano asado encima",
+    "Helado en quenelle",
+    "Crujiente de cacahuete por encima"
+   ],
+   "marcaje": "Cuchara y tenedor de postre."
+  },
+  {
+   "id": 4018,
+   "cat": "Postres",
+   "name": "Almendra, bienmesabe y helado de leche de cabra",
+   "allergens": [
+    "Frutos secos",
+    "Huevos",
+    "Lácteos"
+   ],
+   "ingredients": "Almendra, yema de huevo, azúcar, limón, leche de cabra.",
+   "history": "Bienmesabe quiere decir «me sabe bien». La almendra es el postre entero: con alergia a frutos secos no hay versión posible, hay que ofrecer otro.",
+   "notes": "⚠ No se puede retirar: Frutos secos, Huevos. Lácteos: SIN HELADO.",
+   "montaje": [
+    "Bienmesabe en la base",
+    "Almendra tostada por encima",
+    "Helado en quenelle"
+   ],
+   "marcaje": "Cucharilla de postre."
+  },
+  {
+   "id": 4019,
+   "cat": "Pan y mignardises",
+   "name": "Pan de trigo y millo, mantequilla de cabra ahumada",
+   "allergens": [
+    "Gluten",
+    "Lácteos"
+   ],
+   "ingredients": "Harina de trigo, millo, masa madre, mantequilla de cabra.",
+   "history": "El pan se sirve templado después de los aperitivos y se repone sin preguntar. Si el cliente no toma lácteos, aceite de oliva en lugar de mantequilla.",
+   "notes": "⚠ No se puede retirar: Gluten. Lácteos: SIN MANTEQUILLA (aceite de oliva).",
+   "montaje": [
+    "Pan en el plato de pan a la izquierda",
+    "Mantequilla en piedra pequeña"
+   ],
+   "marcaje": "Plato de pan y cuchillo de mantequilla a la izquierda."
+  },
+  {
+   "id": 4020,
+   "cat": "Pan y mignardises",
+   "name": "Mignardises",
+   "allergens": [
+    "Soja",
+    "Lácteos",
+    "Frutos secos",
+    "Gluten",
+    "Huevos"
+   ],
+   "ingredients": "Chocolate negro, lecitina de soja, nata, ron miel, higo de tunera, almendra, harina de trigo, huevo, mantequilla.",
+   "history": "Se sirven con el café. La tunera es el higo chumbo: la pâte de fruit no tiene ningún alérgeno y siempre se puede dejar aunque se retire lo demás.",
+   "notes": "Soja: SIN TRUFA. Lácteos: SIN TRUFA · SIN TEJA. Frutos secos: SIN TEJA. Gluten: SIN TEJA. Huevos: SIN TEJA.",
+   "montaje": [
+    "Tres piezas por persona en piedra volcánica",
+    "Trufa a la izquierda, pâte de fruit al centro, teja a la derecha"
+   ],
+   "marcaje": "Sin cubiertos: con la mano."
+  }
+ ],
+ "DISHES_EN": [
+  {
+   "id": 4001,
+   "name": "Pickled lupins, orange and cumin",
+   "allergens": [
+    "Lupins",
+    "Sulphites"
+   ],
+   "ingredients": "Lupin bean, orange zest, cumin, wine vinegar.",
+   "history": "In the Canaries lupin beans are called chochos and are eaten in any bar. They are one of the 14 allergens and hardly anyone knows: always mention them, especially to guests allergic to peanut, as they often react to both.",
+   "notes": "⚠ Cannot be removed: Lupins, Sulphites.",
+   "montaje": [
+    "Small stone bowl",
+    "Lupins with their dressing",
+    "Orange zest at the pass"
+   ],
+   "marcaje": "No cutlery: eaten by hand. Small bowl for the skins."
+  },
+  {
+   "id": 4002,
+   "name": "Smoked goat's cheese tartlet with palm honey",
+   "allergens": [
+    "Gluten",
+    "Dairy",
+    "Eggs"
+   ],
+   "ingredients": "Wheat flour, butter, egg, smoked goat's cheese, palm honey, lemon thyme.",
+   "history": "Palm honey is not honey: it is the sap of the Canary palm, called guarapo, reduced over the fire for hours. It has been made on La Gomera for centuries.",
+   "notes": "⚠ Cannot be removed: Gluten, Dairy, Eggs.",
+   "montaje": [
+    "One tartlet per guest on volcanic stone",
+    "Cheese cream piped",
+    "Three drops of palm honey",
+    "Lemon thyme leaves"
+   ],
+   "marcaje": "No cutlery: one bite, by hand."
+  },
+  {
+   "id": 4003,
+   "name": "Wreckfish fritter with seaweed mayonnaise",
+   "allergens": [
+    "Gluten",
+    "Eggs",
+    "Fish"
+   ],
+   "ingredients": "Wreckfish, wheat flour, egg, mayonnaise, sea lettuce.",
+   "history": "Salted wreckfish was the larder of Canarian fishermen before fridges. Here it is desalted for two days and turned into fritters, the way grandmothers did.",
+   "notes": "⚠ Cannot be removed: Gluten, Eggs, Fish.",
+   "montaje": [
+    "Two fritters on a linen napkin",
+    "Mayonnaise on a separate spoon",
+    "Seaweed powder on top"
+   ],
+   "marcaje": "No cutlery: by hand."
+  },
+  {
+   "id": 4004,
+   "name": "Oyster, tomato water and coriander oil",
+   "allergens": [
+    "Molluscs"
+   ],
+   "ingredients": "Oyster, tomato, olive oil, coriander.",
+   "history": "The oyster is opened at the pass, never before: once open and waiting it loses its water and its taste of the sea. The tomato water drips through a cloth overnight until it runs clear.",
+   "notes": "⚠ Cannot be removed: Molluscs.",
+   "montaje": [
+    "Oyster in its shell on crushed ice",
+    "Tomato water poured at the table",
+    "Three drops of coriander oil"
+   ],
+   "marcaje": "Oyster fork on the right. Tell the guest it can be drunk from the shell."
+  },
+  {
+   "id": 4005,
+   "name": "Tomato, strawberry and basil",
+   "allergens": [],
+   "ingredients": "Tomato, strawberry, basil, extra virgin olive oil.",
+   "history": "This is the dish for a table with allergies: it contains none of the 14 allergens. Tomato and strawberry share aromatic compounds, which is why they work together.",
+   "notes": "Contains none of the 14 allergens.",
+   "montaje": [
+    "Tomato wedges and slices in a circle",
+    "Strawberry among the tomato",
+    "Basil granita in the centre at the pass",
+    "Oil at the table"
+   ],
+   "marcaje": "Starter knife and fork."
+  },
+  {
+   "id": 4006,
+   "name": "Grilled baby courgette, ricotta and pumpkin seeds",
+   "allergens": [
+    "Dairy"
+   ],
+   "ingredients": "Bubango, goat's ricotta, pumpkin seeds, courgette flower.",
+   "history": "Bubango is the Canarian name for baby courgette, picked small. Pumpkin seeds are not tree nuts: they do not count as an allergen.",
+   "notes": "Dairy: WITHOUT RICOTTA.",
+   "montaje": [
+    "Ricotta at the base",
+    "Bubango opened on top",
+    "Seeds on top",
+    "Courgette flower on the side"
+   ],
+   "marcaje": "Starter knife and fork."
+  },
+  {
+   "id": 4007,
+   "name": "Free-range egg, watercress and flower cheese",
+   "allergens": [
+    "Eggs",
+    "Dairy",
+    "Gluten"
+   ],
+   "ingredients": "Free-range egg, watercress, flower cheese, wheat gofio.",
+   "history": "Flower cheese is curdled with thistle flowers instead of animal rennet. Gofio is toasted cereal flour: wheat gofio contains gluten, maize gofio does not.",
+   "notes": "⚠ Cannot be removed: Eggs. Dairy: WITHOUT CHEESE. Gluten: WITHOUT GOFIO.",
+   "montaje": [
+    "Watercress cream in a deep plate",
+    "Yolk in the centre",
+    "Grated cheese on top",
+    "Gofio on one side"
+   ],
+   "marcaje": "Starter spoon."
+  },
+  {
+   "id": 4008,
+   "name": "Carabinero prawn, its coral and toasted corn broth",
+   "allergens": [
+    "Crustaceans",
+    "Dairy"
+   ],
+   "ingredients": "Carabinero prawn, corn, butter.",
+   "history": "The best part of the carabinero is in the head: the coral. Guests are encouraged to suck it. Millo is the Canarian word for corn.",
+   "notes": "⚠ Cannot be removed: Crustaceans, Dairy.",
+   "montaje": [
+    "Peeled carabinero with its head on",
+    "Dot of coral beside it",
+    "Corn broth poured at the table from a jug"
+   ],
+   "marcaje": "Fish knife and fork. Finger bowl with lemon."
+  },
+  {
+   "id": 4009,
+   "name": "Kombu-cured bluefin tuna with ajoblanco",
+   "allergens": [
+    "Fish",
+    "Soy",
+    "Gluten",
+    "Tree nuts",
+    "Sulphites"
+   ],
+   "ingredients": "Bluefin tuna, kombu seaweed, soy sauce, almond, wheat bread, garlic, sherry vinegar, grape.",
+   "history": "Kombu gives the tuna umami and firms the outside without cooking it. Note for the floor: the ajoblanco contains bread and almond, and the cure contains soy with wheat. None of it can be removed.",
+   "notes": "⚠ Cannot be removed: Fish, Soy, Gluten, Tree nuts, Sulphites.",
+   "montaje": [
+    "Ajoblanco at the base",
+    "Tuna slices on top",
+    "Halved grapes",
+    "Oil at the pass"
+   ],
+   "marcaje": "Fish knife and fork."
+  },
+  {
+   "id": 4010,
+   "name": "Jig-caught squid, roasted onion and its ink",
+   "allergens": [
+    "Molluscs",
+    "Gluten"
+   ],
+   "ingredients": "Squid, squid ink, onion, wheat bread.",
+   "history": "Jig-caught means fished one by one on a line, not with a net. The squid comes out whole, without sand or bruising.",
+   "notes": "⚠ Cannot be removed: Molluscs. Gluten: WITHOUT CRISP.",
+   "montaje": [
+    "Ink sauce as a mirror",
+    "Onion in the centre",
+    "Squid ribbons on top",
+    "Crisp standing up"
+   ],
+   "marcaje": "Fish knife and fork."
+  },
+  {
+   "id": 4011,
+   "name": "Grilled wreckfish, Iberian pork jowl and malvasía beurre blanc",
+   "allergens": [
+    "Fish",
+    "Dairy",
+    "Sulphites"
+   ],
+   "ingredients": "Wreckfish, Iberian pork jowl, butter, malvasía wine, shallot.",
+   "history": "The jowl is laid thin on the hot fish and melts by itself. Careful with pescatarians: the dish contains pork and can be served without it.",
+   "notes": "⚠ Cannot be removed: Fish. Dairy: WITHOUT SAUCE. Sulphites: WITHOUT SAUCE.",
+   "montaje": [
+    "Wreckfish loin in the centre",
+    "Jowl melted on top",
+    "Beurre blanc at the table, from a sauce boat"
+   ],
+   "marcaje": "Fish knife and fork."
+  },
+  {
+   "id": 4012,
+   "name": "Canarian black pig, palm honey and mustard, sweet potato purée",
+   "allergens": [
+    "Mustard",
+    "Dairy",
+    "Celery"
+   ],
+   "ingredients": "Canarian black pig, palm honey, mustard, sweet potato, butter, celery.",
+   "history": "The Canarian black pig is a native breed that nearly disappeared. The mustard is in the glaze, stuck to the meat: it cannot be removed.",
+   "notes": "⚠ Cannot be removed: Mustard. Dairy: WITHOUT PURÉE. Celery: WITHOUT JUS.",
+   "montaje": [
+    "Sweet potato purée swiped",
+    "Presa cut in two on top",
+    "Jus poured at the table"
+   ],
+   "marcaje": "Meat knife."
+  },
+  {
+   "id": 4013,
+   "name": "Aged pigeon, beetroot and cocoa jus",
+   "allergens": [
+    "Sulphites",
+    "Celery"
+   ],
+   "ingredients": "Pigeon, beetroot, cocoa, red wine, celery.",
+   "history": "Pigeon is served pink, like red meat. Only ask about cooking if the guest raises it: the house cooking is the one recommended.",
+   "notes": "Sulphites: WITHOUT JUS. Celery: WITHOUT JUS.",
+   "montaje": [
+    "Beetroot at the base",
+    "Breast and leg on top",
+    "Jus poured at the table"
+   ],
+   "marcaje": "Meat knife."
+  },
+  {
+   "id": 4014,
+   "name": "Roast kid, smoked aubergine and goat's yogurt",
+   "allergens": [
+    "Sesame seeds",
+    "Dairy"
+   ],
+   "ingredients": "Kid goat, aubergine, tahini, goat's yogurt.",
+   "history": "Tahini is sesame paste and it is inside the aubergine cream: it cannot be seen, but it is there. That is the trick question for this dish.",
+   "notes": "⚠ Cannot be removed: Sesame seeds. Dairy: WITHOUT YOGURT.",
+   "montaje": [
+    "Aubergine cream at the base",
+    "Pulled kid on top",
+    "Dots of yogurt around"
+   ],
+   "marcaje": "Meat knife."
+  },
+  {
+   "id": 4015,
+   "name": "Passion fruit and coconut",
+   "allergens": [],
+   "ingredients": "Passion fruit, coconut milk, sugar.",
+   "history": "Parchita is the Canarian name for passion fruit. Coconut is not a tree nut: this pre-dessert contains none of the 14 allergens.",
+   "notes": "Contains none of the 14 allergens.",
+   "montaje": [
+    "Small chilled glass",
+    "Sorbet in a quenelle",
+    "Coconut foam on top"
+   ],
+   "marcaje": "Dessert spoon."
+  },
+  {
+   "id": 4016,
+   "name": "Goat's milk quesillo, coffee and gofio",
+   "allergens": [
+    "Dairy",
+    "Eggs",
+    "Gluten"
+   ],
+   "ingredients": "Goat's milk, condensed milk, egg, coffee, wheat gofio.",
+   "history": "Quesillo contains no cheese: it is the Canarian flan, made with condensed milk. The name confuses many guests.",
+   "notes": "⚠ Cannot be removed: Dairy, Eggs. Gluten: WITHOUT GOFIO.",
+   "montaje": [
+    "Quesillo in the centre",
+    "Coffee caramel on top",
+    "Gofio on one side"
+   ],
+   "marcaje": "Dessert spoon."
+  },
+  {
+   "id": 4017,
+   "name": "Banana, chocolate and peanut",
+   "allergens": [
+    "Soy",
+    "Dairy",
+    "Eggs",
+    "Peanut"
+   ],
+   "ingredients": "Dark chocolate, soy lecithin, cream, Canary banana, milk, egg, peanut.",
+   "history": "Canary bananas have little black spots on the skin when ripe. Peanut is a legume, not a tree nut: they are different allergens.",
+   "notes": "⚠ Cannot be removed: Soy, Dairy. Eggs: WITHOUT ICE CREAM. Peanut: WITHOUT PEANUT.",
+   "montaje": [
+    "Cremeux at the base",
+    "Roasted banana on top",
+    "Ice cream quenelle",
+    "Peanut crunch on top"
+   ],
+   "marcaje": "Dessert spoon and fork."
+  },
+  {
+   "id": 4018,
+   "name": "Almond, bienmesabe and goat's milk ice cream",
+   "allergens": [
+    "Tree nuts",
+    "Eggs",
+    "Dairy"
+   ],
+   "ingredients": "Almond, egg yolk, sugar, lemon, goat's milk.",
+   "history": "Bienmesabe means \"it tastes good to me\". Almond is the whole dessert: with a tree-nut allergy there is no possible version, offer another one.",
+   "notes": "⚠ Cannot be removed: Tree nuts, Eggs. Dairy: WITHOUT ICE CREAM.",
+   "montaje": [
+    "Bienmesabe at the base",
+    "Toasted almond on top",
+    "Ice cream quenelle"
+   ],
+   "marcaje": "Dessert spoon."
+  },
+  {
+   "id": 4019,
+   "name": "Wheat and corn bread, smoked goat's butter",
+   "allergens": [
+    "Gluten",
+    "Dairy"
+   ],
+   "ingredients": "Wheat flour, corn, sourdough starter, goat's butter.",
+   "history": "Bread is served warm after the snacks and refilled without asking. If the guest takes no dairy, olive oil instead of butter.",
+   "notes": "⚠ Cannot be removed: Gluten. Dairy: WITHOUT BUTTER (olive oil).",
+   "montaje": [
+    "Bread on the bread plate on the left",
+    "Butter on a small stone"
+   ],
+   "marcaje": "Bread plate and butter knife on the left."
+  },
+  {
+   "id": 4020,
+   "name": "Petits fours",
+   "allergens": [
+    "Soy",
+    "Dairy",
+    "Tree nuts",
+    "Gluten",
+    "Eggs"
+   ],
+   "ingredients": "Dark chocolate, soy lecithin, cream, honey rum, prickly pear, almond, wheat flour, egg, butter.",
+   "history": "Served with coffee. Tunera is the prickly pear: the pâte de fruit has no allergens and can always stay even when the rest is removed.",
+   "notes": "Soy: WITHOUT TRUFFLE. Dairy: WITHOUT TRUFFLE · WITHOUT TUILE. Tree nuts: WITHOUT TUILE. Gluten: WITHOUT TUILE. Eggs: WITHOUT TUILE.",
+   "montaje": [
+    "Three pieces per guest on volcanic stone",
+    "Truffle on the left, pâte de fruit in the centre, tuile on the right"
+   ],
+   "marcaje": "No cutlery: by hand."
+  }
+ ],
+ "DISH_COMPONENTS": {
+  "4001": [
+   {
+    "n": "Altramuz (chocho) encurtido",
+    "a": [
+     "Altramuces"
+    ],
+    "m": 0
+   },
+   {
+    "n": "Aliño de naranja, comino y vinagre de vino",
+    "a": [
+     "Sulfitos"
+    ],
+    "m": 0
+   }
+  ],
+  "4002": [
+   {
+    "n": "Masa de tartaleta (harina, mantequilla, huevo)",
+    "a": [
+     "Gluten",
+     "Lácteos",
+     "Huevos"
+    ],
+    "m": 0
+   },
+   {
+    "n": "Crema de queso de cabra ahumado",
+    "a": [
+     "Lácteos"
+    ],
+    "m": 0
+   }
+  ],
+  "4003": [
+   {
+    "n": "Masa de buñuelo (harina, huevo)",
+    "a": [
+     "Gluten",
+     "Huevos"
+    ],
+    "m": 0
+   },
+   {
+    "n": "Cherne desalado",
+    "a": [
+     "Pescado"
+    ],
+    "m": 0
+   },
+   {
+    "n": "Mayonesa de algas",
+    "a": [
+     "Huevos"
+    ],
+    "m": 1
+   }
+  ],
+  "4004": [
+   {
+    "n": "Ostra",
+    "a": [
+     "Moluscos"
+    ],
+    "m": 0
+   }
+  ],
+  "4005": [],
+  "4006": [
+   {
+    "n": "Requesón de cabra",
+    "a": [
+     "Lácteos"
+    ],
+    "m": 1
+   }
+  ],
+  "4007": [
+   {
+    "n": "Yema de huevo a baja temperatura",
+    "a": [
+     "Huevos"
+    ],
+    "m": 0
+   },
+   {
+    "n": "Queso de flor rallado",
+    "a": [
+     "Lácteos"
+    ],
+    "m": 1
+   },
+   {
+    "n": "Tierra de gofio",
+    "a": [
+     "Gluten"
+    ],
+    "m": 1
+   }
+  ],
+  "4008": [
+   {
+    "n": "Carabinero",
+    "a": [
+     "Crustáceos"
+    ],
+    "m": 0
+   },
+   {
+    "n": "Coral del carabinero",
+    "a": [
+     "Crustáceos"
+    ],
+    "m": 0
+   },
+   {
+    "n": "Caldo de millo tostado con mantequilla",
+    "a": [
+     "Lácteos"
+    ],
+    "m": 0
+   }
+  ],
+  "4009": [
+   {
+    "n": "Atún rojo",
+    "a": [
+     "Pescado"
+    ],
+    "m": 0
+   },
+   {
+    "n": "Cura de alga kombu y soja",
+    "a": [
+     "Soja",
+     "Gluten"
+    ],
+    "m": 0
+   },
+   {
+    "n": "Ajoblanco (almendra, pan, ajo, vinagre de Jerez)",
+    "a": [
+     "Frutos secos",
+     "Gluten",
+     "Sulfitos"
+    ],
+    "m": 0
+   }
+  ],
+  "4010": [
+   {
+    "n": "Calamar de potera",
+    "a": [
+     "Moluscos"
+    ],
+    "m": 0
+   },
+   {
+    "n": "Salsa de su tinta",
+    "a": [
+     "Moluscos"
+    ],
+    "m": 0
+   },
+   {
+    "n": "Crujiente de pan de tinta",
+    "a": [
+     "Gluten"
+    ],
+    "m": 1
+   }
+  ],
+  "4011": [
+   {
+    "n": "Lomo de cherne",
+    "a": [
+     "Pescado"
+    ],
+    "m": 0
+   },
+   {
+    "n": "Beurre blanc de malvasía (mantequilla, vino, chalota)",
+    "a": [
+     "Lácteos",
+     "Sulfitos"
+    ],
+    "m": 1
+   }
+  ],
+  "4012": [
+   {
+    "n": "Glaseado de miel de palma y mostaza",
+    "a": [
+     "Mostaza"
+    ],
+    "m": 0
+   },
+   {
+    "n": "Puré de batata con mantequilla",
+    "a": [
+     "Lácteos"
+    ],
+    "m": 1
+   },
+   {
+    "n": "Jugo de asado (con apio)",
+    "a": [
+     "Apio"
+    ],
+    "m": 1
+   }
+  ],
+  "4013": [
+   {
+    "n": "Jugo de pichón con cacao (vino tinto, apio)",
+    "a": [
+     "Sulfitos",
+     "Apio"
+    ],
+    "m": 1
+   }
+  ],
+  "4014": [
+   {
+    "n": "Berenjena ahumada con tahini",
+    "a": [
+     "Granos de sésamo"
+    ],
+    "m": 0
+   },
+   {
+    "n": "Yogur de cabra",
+    "a": [
+     "Lácteos"
+    ],
+    "m": 1
+   }
+  ],
+  "4015": [],
+  "4016": [
+   {
+    "n": "Quesillo (leche de cabra, leche condensada, huevo)",
+    "a": [
+     "Lácteos",
+     "Huevos"
+    ],
+    "m": 0
+   },
+   {
+    "n": "Tierra de gofio",
+    "a": [
+     "Gluten"
+    ],
+    "m": 1
+   }
+  ],
+  "4017": [
+   {
+    "n": "Cremoso de chocolate negro (con lecitina de soja y nata)",
+    "a": [
+     "Soja",
+     "Lácteos"
+    ],
+    "m": 0
+   },
+   {
+    "n": "Helado de plátano",
+    "a": [
+     "Lácteos",
+     "Huevos"
+    ],
+    "m": 1
+   },
+   {
+    "n": "Crujiente de cacahuete",
+    "a": [
+     "Cacahuete"
+    ],
+    "m": 1
+   }
+  ],
+  "4018": [
+   {
+    "n": "Bienmesabe (almendra, yema, azúcar, limón)",
+    "a": [
+     "Frutos secos",
+     "Huevos"
+    ],
+    "m": 0
+   },
+   {
+    "n": "Almendra tostada",
+    "a": [
+     "Frutos secos"
+    ],
+    "m": 0
+   },
+   {
+    "n": "Helado de leche de cabra",
+    "a": [
+     "Lácteos"
+    ],
+    "m": 1
+   }
+  ],
+  "4019": [
+   {
+    "n": "Pan de masa madre de trigo y millo",
+    "a": [
+     "Gluten"
+    ],
+    "m": 0
+   },
+   {
+    "n": "Mantequilla de cabra ahumada",
+    "a": [
+     "Lácteos"
+    ],
+    "m": 1
+   }
+  ],
+  "4020": [
+   {
+    "n": "Trufa de ron miel (chocolate y nata)",
+    "a": [
+     "Soja",
+     "Lácteos"
+    ],
+    "m": 1
+   },
+   {
+    "n": "Teja de almendra (harina, huevo, mantequilla)",
+    "a": [
+     "Frutos secos",
+     "Gluten",
+     "Huevos",
+     "Lácteos"
+    ],
+    "m": 1
+   }
+  ]
+ },
+ "DISH_ACTIONS": {
+  "4001": {
+   "Altramuces": {
+    "r": 0
+   },
+   "Sulfitos": {
+    "r": 0
+   }
+  },
+  "4002": {
+   "Gluten": {
+    "r": 0
+   },
+   "Lácteos": {
+    "r": 0
+   },
+   "Huevos": {
+    "r": 0
+   }
+  },
+  "4003": {
+   "Gluten": {
+    "r": 0
+   },
+   "Huevos": {
+    "r": 0
+   },
+   "Pescado": {
+    "r": 0
+   }
+  },
+  "4004": {
+   "Moluscos": {
+    "r": 0
+   }
+  },
+  "4005": {},
+  "4006": {
+   "Lácteos": {
+    "c": "SIN REQUESÓN",
+    "c_en": "WITHOUT RICOTTA",
+    "r": 1
+   }
+  },
+  "4007": {
+   "Huevos": {
+    "r": 0
+   },
+   "Lácteos": {
+    "c": "SIN QUESO",
+    "c_en": "WITHOUT CHEESE",
+    "r": 1
+   },
+   "Gluten": {
+    "c": "SIN GOFIO",
+    "c_en": "WITHOUT GOFIO",
+    "r": 1
+   }
+  },
+  "4008": {
+   "Crustáceos": {
+    "r": 0
+   },
+   "Lácteos": {
+    "r": 0
+   }
+  },
+  "4009": {
+   "Pescado": {
+    "r": 0
+   },
+   "Soja": {
+    "r": 0
+   },
+   "Gluten": {
+    "r": 0
+   },
+   "Frutos secos": {
+    "r": 0
+   },
+   "Sulfitos": {
+    "r": 0
+   }
+  },
+  "4010": {
+   "Moluscos": {
+    "r": 0
+   },
+   "Gluten": {
+    "c": "SIN CRUJIENTE",
+    "c_en": "WITHOUT CRISP",
+    "r": 1
+   }
+  },
+  "4011": {
+   "Pescado": {
+    "r": 0
+   },
+   "Lácteos": {
+    "c": "SIN SALSA",
+    "c_en": "WITHOUT SAUCE",
+    "r": 1
+   },
+   "Sulfitos": {
+    "c": "SIN SALSA",
+    "c_en": "WITHOUT SAUCE",
+    "r": 1
+   }
+  },
+  "4012": {
+   "Mostaza": {
+    "r": 0
+   },
+   "Lácteos": {
+    "c": "SIN PURÉ",
+    "c_en": "WITHOUT PURÉE",
+    "r": 1
+   },
+   "Apio": {
+    "c": "SIN JUGO",
+    "c_en": "WITHOUT JUS",
+    "r": 1
+   }
+  },
+  "4013": {
+   "Sulfitos": {
+    "c": "SIN JUGO",
+    "c_en": "WITHOUT JUS",
+    "r": 1
+   },
+   "Apio": {
+    "c": "SIN JUGO",
+    "c_en": "WITHOUT JUS",
+    "r": 1
+   }
+  },
+  "4014": {
+   "Granos de sésamo": {
+    "r": 0
+   },
+   "Lácteos": {
+    "c": "SIN YOGUR",
+    "c_en": "WITHOUT YOGURT",
+    "r": 1
+   }
+  },
+  "4015": {},
+  "4016": {
+   "Lácteos": {
+    "r": 0
+   },
+   "Huevos": {
+    "r": 0
+   },
+   "Gluten": {
+    "c": "SIN GOFIO",
+    "c_en": "WITHOUT GOFIO",
+    "r": 1
+   }
+  },
+  "4017": {
+   "Soja": {
+    "r": 0
+   },
+   "Lácteos": {
+    "r": 0
+   },
+   "Huevos": {
+    "c": "SIN HELADO",
+    "c_en": "WITHOUT ICE CREAM",
+    "r": 1
+   },
+   "Cacahuete": {
+    "c": "SIN CACAHUETE",
+    "c_en": "WITHOUT PEANUT",
+    "r": 1
+   }
+  },
+  "4018": {
+   "Frutos secos": {
+    "r": 0
+   },
+   "Huevos": {
+    "r": 0
+   },
+   "Lácteos": {
+    "c": "SIN HELADO",
+    "c_en": "WITHOUT ICE CREAM",
+    "r": 1
+   }
+  },
+  "4019": {
+   "Gluten": {
+    "r": 0
+   },
+   "Lácteos": {
+    "c": "SIN MANTEQUILLA (aceite de oliva)",
+    "c_en": "WITHOUT BUTTER (olive oil)",
+    "r": 1
+   }
+  },
+  "4020": {
+   "Soja": {
+    "c": "SIN TRUFA",
+    "c_en": "WITHOUT TRUFFLE",
+    "r": 1
+   },
+   "Lácteos": {
+    "c": "SIN TRUFA · SIN TEJA",
+    "c_en": "WITHOUT TRUFFLE · WITHOUT TUILE",
+    "r": 1
+   },
+   "Frutos secos": {
+    "c": "SIN TEJA",
+    "c_en": "WITHOUT TUILE",
+    "r": 1
+   },
+   "Gluten": {
+    "c": "SIN TEJA",
+    "c_en": "WITHOUT TUILE",
+    "r": 1
+   },
+   "Huevos": {
+    "c": "SIN TEJA",
+    "c_en": "WITHOUT TUILE",
+    "r": 1
+   }
+  }
+ },
+ "DISH_SERVICE": {
+  "4001": "ambos",
+  "4002": "ambos",
+  "4003": "ambos",
+  "4004": "ambos",
+  "4005": "ambos",
+  "4006": "ambos",
+  "4007": "ambos",
+  "4008": "c",
+  "4009": "ambos",
+  "4010": "ambos",
+  "4011": "ambos",
+  "4012": "c",
+  "4013": "ambos",
+  "4014": "c",
+  "4015": "ambos",
+  "4016": "ambos",
+  "4017": "ambos",
+  "4018": "ambos",
+  "4019": "ambos",
+  "4020": "ambos"
+ }
+}
