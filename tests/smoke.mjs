@@ -17092,6 +17092,8 @@ test('Demo: Orchilla no sale en el selector ni en Ajustes, y su carta es válida
   const C = JSON.parse(read('data/carta-demo.json'));
   assert(C.venue === 'demo' && C.allergensValidated === true, 'carta de la demo');
   assert(C.DISHES.length === 20 && C.DISHES.every(d => d.id >= 4000 && d.id <= 4999), 'los platos en su bloque');
+  assert(!C.DISH_SERVICE || Object.keys(C.DISH_SERVICE).length === 0,
+    'Orchilla sólo abre de noche: sin turnos, así que no sale el selector de almuerzo y cena');
   const todos = new Set(C.DISHES.flatMap(d => d.allergens));
   assert(todos.size === 14, 'la demo enseña los 14 alérgenos: ' + todos.size);
   for (const f of ['wines-demo.json', 'quesos-demo.json', 'procedimientos-demo.json'])
