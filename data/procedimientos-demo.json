@@ -1,0 +1,154 @@
+{
+ "venue": "demo",
+ "titulo": "Sala Orchilla",
+ "subtitulo": "Manual de sala y pasos del servicio",
+ "actualizado": "octubre de 2026",
+ "fuente": "Manual ficticio para la demo de Meseo",
+ "intro": "Orchilla es un restaurante de cocina canaria de producto con una estrella. Tiene 9 mesas, un solo servicio de cena y un menú degustación de 14 pases. El objetivo de la sala es que cada cliente sienta que la noche se ha hecho para él: precisión en lo técnico y calidez en el trato.",
+ "secciones": [
+  {
+   "id": "antes",
+   "icon": "🕑",
+   "chip": "Antes",
+   "t": "Antes del servicio",
+   "sub": "llegada, mise en place y briefing",
+   "pasos": [
+    {
+     "n": null,
+     "t": "Llegada",
+     "d": "Llegamos uniformados a las 17:30, con abridor, mechero y paño limpio.",
+     "lista": [
+      "Fichamos y revisamos el plano de mesas del día.",
+      "Leemos las notas de cada reserva: alergias, celebraciones y clientes que repiten."
+     ]
+    },
+    {
+     "n": null,
+     "t": "Mise en place",
+     "d": "Cada mesa se monta igual, con el centro de la silla alineado con el centro del plato de presentación.",
+     "lista": [
+      "Plato de pan a la izquierda, a dos dedos del borde.",
+      "Copa de agua sobre la punta del cuchillo y copa de vino a su derecha.",
+      "Repasamos cubiertos y copas al trasluz."
+     ]
+    },
+    {
+     "n": null,
+     "t": "Briefing",
+     "d": "A las 19:15 cocina y sala se reúnen en el pase.",
+     "lista": [
+      "Cocina explica los cambios del menú y el producto del día.",
+      "Sala repasa alergias mesa por mesa en voz alta.",
+      "Se reparte quién lleva cada mesa y quién sirve el vino."
+     ]
+    }
+   ]
+  },
+  {
+   "id": "pasos",
+   "icon": "🍽️",
+   "chip": "Pasos",
+   "t": "Pasos del servicio",
+   "sub": "de la llegada al café",
+   "pasos": [
+    {
+     "n": 1,
+     "t": "Bienvenida",
+     "d": "Recibimos en la puerta por el nombre de la reserva y acompañamos a la mesa."
+    },
+    {
+     "n": 2,
+     "t": "Agua y espumoso",
+     "d": "Ofrecemos agua con o sin gas y la copa de bienvenida de Brumas de Orchilla."
+    },
+    {
+     "n": 3,
+     "t": "Alergias",
+     "d": "Confirmamos alergias e intolerancias de cada comensal aunque ya estén en la reserva, y lo anotamos en la comanda."
+    },
+    {
+     "n": 4,
+     "t": "Aperitivos",
+     "d": "Los cuatro aperitivos salen juntos. Se explican de izquierda a derecha."
+    },
+    {
+     "n": 5,
+     "t": "Pan",
+     "d": "El pan sale templado después de los aperitivos y se repone sin preguntar."
+    },
+    {
+     "n": 6,
+     "t": "Menú",
+     "d": "Cada pase se explica en menos de 20 segundos: producto, técnica y un detalle. Las salsas se terminan en la mesa."
+    },
+    {
+     "n": 7,
+     "t": "Maridaje",
+     "d": "El vino se sirve antes que el plato, para que el cliente lo pruebe primero."
+    },
+    {
+     "n": 8,
+     "t": "Quesos",
+     "d": "El carro de quesos se ofrece antes del prepostre, de suave a intenso."
+    },
+    {
+     "n": 9,
+     "t": "Postres y café",
+     "d": "Prepostre, postres y después café o infusión con las mignardises."
+    },
+    {
+     "n": 10,
+     "t": "Despedida",
+     "d": "Acompañamos a la puerta y entregamos el menú impreso de la noche."
+    }
+   ]
+  },
+  {
+   "id": "durante",
+   "icon": "⚡",
+   "chip": "Durante",
+   "t": "Durante el servicio",
+   "sub": "ritmo y detalles",
+   "pasos": [
+    {
+     "n": null,
+     "t": "Ritmo",
+     "d": "Entre pase y pase no deben pasar más de 12 minutos. Si una mesa va lenta se avisa al pase."
+    },
+    {
+     "n": null,
+     "t": "Desbarasado",
+     "d": "Solo se retira cuando todos los comensales han terminado, por la derecha."
+    },
+    {
+     "n": null,
+     "t": "Alergias",
+     "d": "Un plato modificado sale con una marca en el borde y lo lleva siempre la misma persona que tomó la comanda."
+    }
+   ]
+  },
+  {
+   "id": "cierre",
+   "icon": "🌙",
+   "chip": "Cierre",
+   "t": "Cierre",
+   "sub": "después del último cliente",
+   "pasos": [
+    {
+     "n": null,
+     "t": "Cierre de sala",
+     "d": "Recogemos, limpiamos y dejamos la sala montada para el día siguiente.",
+     "lista": [
+      "Copas pulidas y guardadas por tipo.",
+      "Vinos abiertos tapados y anotados."
+     ]
+    },
+    {
+     "n": null,
+     "t": "Notas del servicio",
+     "d": "Apuntamos en el libro de clientes lo aprendido de cada mesa: gustos, celebraciones y cualquier incidencia."
+    }
+   ]
+  }
+ ]
+}

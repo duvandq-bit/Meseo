@@ -52,7 +52,7 @@
 <meta property="og:description" content="Formación de equipos de sala: carta, alérgenos, vinos, exámenes y juegos de repaso.">
 <meta property="og:url" content="https://meseo.es/">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"Meseo","url":"https://meseo.es/"}</script>
-<meta name="app-version" content="7.496">
+<meta name="app-version" content="7.497">
 <meta name="app-build" content="May 2026">
 <meta name="theme-color" content="#1c2a22">
 <!-- ═══ PWA ═══ -->
@@ -229,6 +229,12 @@
     <div class="login-newuser-hint" id="loginForgotRow" style="margin-top:.15rem">
       <button type="button" class="login-newuser-hint-link" onclick="openPinRecovery()" id="loginForgotLink">¿Olvidaste tu PIN o contraseña?</button>
     </div>
+  </div>
+
+  <!-- La demo: un restaurante inventado, sin cuenta y sin tocar el servidor. -->
+  <div class="login-demo" id="loginDemo">
+    <span class="login-demo-txt" id="loginDemoTxt">¿Tienes un restaurante?</span>
+    <button type="button" class="login-demo-btn" id="loginDemoBtn" onclick="entrarDemo()">Probar la demo</button>
   </div>
 
   <!-- Welcome toast -->
@@ -444,11 +450,44 @@ function _revisionBloquea(url, method, supaUrl){
   if(u.indexOf(supaUrl + '/auth/v1/token') === 0 || u.indexOf(supaUrl + '/auth/v1/logout') === 0) return false;
   return true;
 }
+// ═══ LA DEMO ═══════════════════════════════════════════════════════════════
+// «Probar la demo» del login abre Orchilla, un restaurante inventado, sin
+// cuenta. La demo es un mundo aparte: su propia base (DEMO_STORAGE_KEY, en
+// el navegador de quien la prueba) y CERO tráfico con el servidor de la app,
+// ni para leer ni para escribir. Así no puede ver nada de los restaurantes de
+// verdad ni dejar nada en ellos. Se corta aquí, en fetch, igual que la revisión.
+let _DEMO = false;
+const DEMO_VENUE = 'demo';
+const DEMO_STORAGE_KEY = 'meseo_demo_v1';
+function _esDemo(){ return _DEMO === true; }
+function _demoBloquea(url, supaUrl){
+  const u = String(url || '');
+  return !!supaUrl && u.indexOf(supaUrl) === 0;   // todo el servidor de la app, GET incluido
+}
 function _instalarRedRevision(win){
   if(!win || typeof win.fetch !== 'function' || win.__redRevision) return;
   const original = win.fetch.bind(win);
   win.__redRevision = true;
   win.fetch = function(input, init){
+    if(typeof _esDemo === 'function' && _esDemo()){
+      let corta = true;
+      let lee = true;
+      try{
+        const url = typeof input === 'string' ? input : ((input && input.url) || '');
+        const method = String((init && init.method) || (input && typeof input === 'object' && input.method) || 'GET').toUpperCase();
+        corta = _demoBloquea(url, (typeof SUPA_URL !== 'undefined') ? SUPA_URL : '');
+        lee = method === 'GET' || method === 'HEAD';
+      }catch(e){ corta = true; }
+      if(corta){
+        // Una lectura devuelve «nada todavía», que es la verdad en un
+        // restaurante recién abierto; una escritura se rechaza.
+        return Promise.resolve(lee
+          ? new Response('[]', { status:200, headers:{ 'Content-Type':'application/json' } })
+          : new Response(JSON.stringify({ code:'modo_demo', message:'Demo: nada sale de este navegador' }),
+              { status:403, headers:{ 'Content-Type':'application/json' } }));
+      }
+      return original(input, init);
+    }
     let rev = false;
     try{ rev = (typeof _modoRevision === 'function') && _modoRevision(); }catch(e){ rev = false; }
     if(rev){
@@ -1487,13 +1526,13 @@ function _esRevisionSolo(id){
 // registro siguen mirando sólo `enabled` (_enabledVenues).
 function _venuesAdministracion(){
   return (THEMES && Array.isArray(THEMES.venues))
-    ? THEMES.venues.filter(v => v && v.id && v.name && v.id !== 'plantilla'
+    ? THEMES.venues.filter(v => v && v.id && v.name && v.id !== 'plantilla' && !v.demo   // la demo se abre con su botón
                                && (v.enabled || !SUSPENDIDA || v.revision === true)) : [];
 }
 function applyTheme(v){
   if(!v) return;
   ACTIVE_VENUE = v;
-  try{ localStorage.setItem('txk_venue', v.id); }catch(e){}
+  if(v.id !== DEMO_VENUE){ try{ localStorage.setItem('txk_venue', v.id); }catch(e){} }
   // Cada restaurante puede afinar sus superficies en CSS con html[data-venue="…"].
   document.documentElement.setAttribute('data-venue', v.id);
   const tokenMap = { primary:'--brand-primary', secondary:'--brand-secondary',
@@ -2751,7 +2790,7 @@ const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><p
 const SRC = 'src';
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='7.496';  // sincronizada con sw.js VERSION (guard de CI)
+const APP_VERSION='7.497';  // sincronizada con sw.js VERSION (guard de CI)
 const APP_BUILD='Jul 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;
@@ -2967,7 +3006,9 @@ function _wineImgHtml(wine, size){
   // El wrap heredaba una caja pálida del CSS — sobre la banda hero oscura
   // parecía un marco vacío. Transparente inline en ambos tamaños.
   const _wrapStyle = 'style="background:transparent;border:none;box-shadow:none;height:auto;padding:.4rem 0"';
-  if(_wineImgCache[wine.id] === false){
+  // En la demo no se pide nada al servidor, tampoco la foto de la botella:
+  // sus vinos son inventados y salen siempre con la botella dibujada.
+  if(_wineImgCache[wine.id] === false || (typeof _esDemo==='function' && _esDemo())){
     return `<div class="wine-bottle-wrap ${cls}" ${_wrapStyle}>${placeholder}</div>`;
   }
   return `<div class="wine-bottle-wrap ${cls}" ${_wrapStyle}>
@@ -4494,6 +4535,7 @@ const _fichaFusionada = Object.create(null);
 const _RES_OK = new Set(['confirmado', 'nada']);
 
 async function supaUpsertEmployee(name, retries=2) {
+  if(typeof _esDemo==='function' && _esDemo()) return 'nada';   // la demo no escribe en el servidor
   // La cuenta de administración no deja rastro: está para revisar el
   // contenido, no para competir. Se corta ANTES de escribir, no se filtra
   // después: una fila que no existe no se puede colar en un ranking.
@@ -4731,6 +4773,7 @@ function _outboxReflect(){
 let _sincronizando = Object.create(null);
 function _sincronizarFicha(nombre){
   if(!nombre) return Promise.resolve('nada');
+  if(typeof _esDemo==='function' && _esDemo()) return Promise.resolve('nada');   // la demo no se sincroniza ni encola nada
   const uid = _authCtx().uid;              // ← la identidad, congelada aquí
   const clave = (uid || '-') + '\u0000' + nombre;
   if(_sincronizando[clave]) return _sincronizando[clave];
@@ -4758,6 +4801,7 @@ function _sincronizarFicha(nombre){
 let _outboxFlushing = false;
 async function _outboxFlush(){
   if(_outboxFlushing || navigator.onLine === false) return;
+  if(typeof _esDemo==='function' && _esDemo()) return;
   const l = _colaCargar();
   if(!l.length) return;
   _outboxFlushing = true;
@@ -4806,6 +4850,7 @@ let _tmDBFailed = false;
 // ¿Telemetría activa? Modelo opt-OUT: activa por defecto (interés legítimo de
 // formación + aviso), la desactiva solo un '1' explícito guardado por el usuario.
 function _telemetryOn(){
+  if(typeof _esDemo==='function' && _esDemo()) return false;   // la demo no deja telemetría
   try{ return localStorage.getItem(_TM_OPTOUT_KEY) !== '1'; }catch(_){ return true; }
 }
 function _telemetrySetOptOut(off){
@@ -4818,6 +4863,7 @@ function _telemetrySetOptOut(off){
 function _tmOpenDB(){
   return new Promise((resolve)=>{
     if(_tmDB) return resolve(_tmDB);
+    if(typeof _esDemo==='function' && _esDemo()) return resolve(null);   // la demo no deja telemetría en el móvil
     if(_tmDBFailed || typeof indexedDB==='undefined' || !indexedDB) return resolve(null);
     let req;
     try{ req = indexedDB.open(_TM_DB_NAME, 1); }catch(_){ _tmDBFailed=true; return resolve(null); }
@@ -4970,6 +5016,7 @@ function _uiWhenClear(fn, timeoutMs){
 // Aviso de privacidad único (RGPD): la primera vez informa de forma discreta
 // (no bloquea) y explica dónde desactivarlo. Se muestra una sola vez.
 function _tmMaybePrivacyNotice(){
+  if(typeof _esDemo==='function' && _esDemo()) return;   // en la demo no hay telemetría que avisar
   try{
     if(localStorage.getItem(_TM_NOTICE_KEY)==='1') return;
     if(typeof showToast!=='function') return;
@@ -6231,7 +6278,8 @@ let _saveDBTimer = null;
 function _guardarLocal(){
   let localOk = true;
   try{
-    localStorage.setItem(STORAGE_KEY,JSON.stringify(DB));
+    // La demo guarda en su propia llave: nunca toca la base de quien usa este móvil.
+    localStorage.setItem((typeof _esDemo==='function' && _esDemo()) ? DEMO_STORAGE_KEY : STORAGE_KEY, JSON.stringify(DB));
   }catch(e){
     localOk = false;
     // QuotaExceededError (DOM 22 / code 1014 in FF) or SecurityError (private mode)
@@ -6315,6 +6363,18 @@ function _revisionAviso(){
 // Pantallas que no son de estudio (chat, duelos, supervisor, push): en revisión
 // no se abren. Devuelve true si cierra.
 function _revisionCerrado(c){
+  if(typeof _esDemo==='function' && _esDemo()){
+    if(c){
+      const _en = LANG==='en';
+      c.innerHTML = `<div style="padding:1.4rem 1rem;font-size:var(--fs-4);line-height:1.5">${_en
+        ? 'Not available in the demo. Chat, duels, notifications and the supervisor panel work with a real team, so they are switched on when your restaurant joins Meseo.'
+        : 'No disponible en la demo. El chat, los duelos, los avisos y el panel de supervisor funcionan con un equipo de verdad, así que se activan cuando tu restaurante entra en Meseo.'}</div>
+        ${typeof _demoContactoHTML === 'function' ? _demoContactoHTML() : ''}`;
+    } else if(typeof showToast === 'function'){
+      showToast(LANG==='en' ? 'Not available in the demo.' : 'No disponible en la demo.', 'info', 3500);
+    }
+    return true;
+  }
   if(!(typeof _modoRevision === 'function' && _modoRevision())) return false;
   _revisionAviso();
   if(c){
@@ -11369,6 +11429,7 @@ function dismissInstallBanner(){
 }
 function renderInstallBanner(){
   if(_isStandalone() || _installSnoozed()) return '';
+  if(typeof _esDemo==='function' && _esDemo()) return '';   // en la demo se prueba, no se instala
   const _en=LANG==='en';
   return `<div class="install-banner" id="installBanner" role="region" aria-label="${_en?'Install the app':'Instalar la app'}">
     <div class="install-banner-ic" style="color:var(--gold)"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align:-.15em;flex:none"><path d="M13 2.5L4.5 13.5H11l-1 8 8.5-11H12l1-8z"/></svg></div>
@@ -12299,6 +12360,10 @@ function renderLogin(){
   if(hintLnk) hintLnk.textContent = LANG==='en' ? 'Create new account' : 'Crear cuenta nueva';
   const forgotLnk = document.getElementById('loginForgotLink');
   if(forgotLnk) forgotLnk.textContent = LANG==='en' ? 'Forgot your PIN or password?' : '¿Olvidaste tu PIN o contraseña?';
+  const demoTxt = document.getElementById('loginDemoTxt');
+  if(demoTxt) demoTxt.textContent = LANG==='en' ? 'Own a restaurant?' : '¿Tienes un restaurante?';
+  const demoBtn = document.getElementById('loginDemoBtn');
+  if(demoBtn) demoBtn.textContent = LANG==='en' ? 'Try the demo' : 'Probar la demo';
   // Input placeholders
   const userInput = document.getElementById('loginUser');
   if(userInput) userInput.placeholder = LANG==='en' ? 'Your name...' : 'Tu nombre...';
@@ -13412,6 +13477,113 @@ async function closePinAndEnter(){
   } finally { _entrando = false; }
 }
 
+// ═══ ENTRAR EN LA DEMO ═════════════════════════════════════════════════════
+// Sin cuenta, sin PIN, sin compromiso que firmar y sin avisos: quien prueba la
+// demo entra como «Invitado» en Orchilla. Nada de esto pasa por
+// closePinAndEnter, que es la puerta de los equipos de verdad (suspensión,
+// NDA, push, sincronización). La base de la demo vive en DEMO_STORAGE_KEY y
+// la de este móvil se queda como estaba: al salir se recarga la página.
+const DEMO_USUARIO = 'Invitado';
+// El equipo inventado de Orchilla, para que el ranking no salga vacío.
+// [nombre, puesto ES, puesto EN, XP, racha, duelos ganados]
+const DEMO_EQUIPO = [
+  ['Nayra',  'Jefa de sala',          'Head of floor',  2480, 12, 6],
+  ['Yeray',  'Sumiller',              'Sommelier',      2110,  9, 4],
+  ['Carla',  'Camarera',              'Server',         1630,  7, 3],
+  ['Iker',   'Camarero',              'Server',         1240,  5, 2],
+  ['Aitana', 'Ayudante de camarero',  'Commis',          780,  3, 1],
+  ['Mateo',  'Ayudante de camarero',  'Commis',          420,  2, 0],
+];
+function _demoFichaVacia(nombre){
+  return { name:nombre, venue:DEMO_VENUE, created:Date.now(),
+    topicScores:{allergens:{correct:0,total:0},ingredients:{correct:0,total:0},history:{correct:0,total:0}},
+    knownDishes:{}, examCorrect:{}, sessions:[], fcHistory:[] };
+}
+function _demoSemilla(){
+  let db = null;
+  try{ db = JSON.parse(localStorage.getItem(DEMO_STORAGE_KEY) || 'null'); }catch(_){ db = null; }
+  if(!db || typeof db !== 'object' || !db.employees || typeof db.employees !== 'object') db = { employees:{} };
+  // Sólo fichas de la demo: si algo raro se hubiera colado, fuera.
+  for(const n of Object.keys(db.employees)){
+    const e = db.employees[n];
+    if(!e || e.venue !== DEMO_VENUE) delete db.employees[n];
+  }
+  if(!db.employees[DEMO_USUARIO]) db.employees[DEMO_USUARIO] = _demoFichaVacia(DEMO_USUARIO);
+  DEMO_EQUIPO.forEach(([n, puesto, puestoEn, xp, racha, duelos]) => {
+    const e = db.employees[n] || _demoFichaVacia(n);
+    db.employees[n] = Object.assign(e, { venue:DEMO_VENUE, demo:true, puesto, puesto_en:puestoEn,
+      xp, streak:racha, duelWins:duelos });
+  });
+  return db;
+}
+let _demoEntrando = false;
+async function entrarDemo(){
+  if(_DEMO || _demoEntrando || currentUser) return;
+  const v = ((typeof THEMES!=='undefined' && THEMES && THEMES.venues) || []).find(x => x && x.id === DEMO_VENUE);
+  if(!v){
+    if(typeof showToast === 'function') showToast(LANG==='en' ? 'The demo is not available right now.' : 'La demo no está disponible ahora mismo.', 'info', 4000);
+    return;
+  }
+  _demoEntrando = true;
+  _entrando = true;
+  try{
+    _DEMO = true;                 // desde aquí, nada sale al servidor
+    DB = _demoSemilla();
+    ACTIVE_VENUE = v;
+    applyTheme(v);
+    const ok = await cargarCarta(DEMO_VENUE, DEMO_USUARIO);
+    if(!ok){ salirDemo(); return; }
+    showLoginLoading();
+    currentUser = DEMO_USUARIO;
+    pinTarget = DEMO_USUARIO;
+    resetSessionTimer();
+    if(typeof loadDishPhotos === 'function') loadDishPhotos();
+    _guardarLocal();
+    const hu = document.getElementById('headerUsername');
+    if(hu) hu.innerHTML = escapeHTML(_dispName(DEMO_USUARIO));
+    try{ _renderHeaderAvatar(document.getElementById('headerAvatar'), getEmpAvatar(DEMO_USUARIO), DEMO_USUARIO); }catch(_){}
+    const av = document.getElementById('hdrAvisos');
+    if(av) av.hidden = true;     // sin avisos en la demo
+    document.getElementById('screenLogin').classList.remove('active');
+    document.getElementById('screenApp').classList.add('active');
+    applyLangToApp();
+    try{ _vinosVigilar(); _navQuesosSync(); _navVinosSync(); _navSalaSync(); }catch(_){}
+    try{ _supSyncMando(); }catch(_){}
+    showTab('dashboard');
+    setTimeout(hideLoginLoading, 900);
+  } catch(e){
+    dbgw('[demo] no se pudo entrar:', e && e.message);
+    salirDemo();
+  } finally { _demoEntrando = false; _entrando = false; }
+}
+// Al salir se recarga: base, carta y tema vuelven a ser los de este móvil, y
+// no queda nada de la demo en memoria.
+function salirDemo(){
+  try{ if(typeof _esDemo==='function' && _esDemo()) _flushSaveDB(); }catch(_){}
+  try{ location.reload(); }catch(_){}
+}
+function _demoBandaHTML(){
+  const en = LANG==='en';
+  return `<div class="demo-banda" role="note">
+    <span class="demo-banda-txt">${en
+      ? '<b>Demo</b> · Orchilla is a made-up restaurant. Your progress stays in this browser only.'
+      : '<b>Demo</b> · Orchilla es un restaurante inventado. Tu progreso se queda solo en este navegador.'}</span>
+    <button type="button" class="demo-banda-salir" onclick="salirDemo()">${en ? 'Exit' : 'Salir'}</button>
+  </div>`;
+}
+function _demoContactoHTML(){
+  const en = LANG==='en';
+  const asunto = encodeURIComponent(en ? 'Meseo for my restaurant' : 'Meseo para mi restaurante');
+  return `<div class="demo-contacto">
+    <div class="demo-contacto-t">${en ? 'Want Meseo for your team?' : '¿Quieres Meseo para tu equipo?'}</div>
+    <p class="demo-contacto-p">${en
+      ? 'We load your menu, allergens, wines and service manual, and your team trains with them from day one.'
+      : 'Cargamos tu carta, tus alérgenos, tu bodega y tu manual de sala, y tu equipo entrena con ellos desde el primer día.'}</p>
+    <a class="demo-contacto-btn" href="mailto:contacto@meseo.es?subject=${asunto}">${en ? 'Write to us' : 'Escríbenos'}</a>
+    <div class="demo-contacto-mail">contacto@meseo.es</div>
+  </div>`;
+}
+
 // ═══════ TUNIC ONBOARDING GUIDE ═══════
 const ONBOARDING_PAGES = [
   {icon:`<svg width="28" height="28" viewBox="0 0 24 24"><polygon points="12,2 20,7 20,17 12,22 4,17 4,7" fill="none" stroke="#fff" stroke-width="1.5"/><circle cx="12" cy="11" r="3" fill="#fff" opacity=".8"/></svg>`,color:'#c49a3c',title_es:'¡Bienvenido a Meseo!',title_en:'Welcome to Meseo!',text_es:'Tu guía de formación para dominar la carta de '+_venueRotulo()+'. Aprenderás cada plato, alérgeno, ingrediente, protocolo de servicio y maridaje de vinos.',text_en:'Your training guide to master the menu of '+_venueRotulo()+'. You\'ll learn every dish, allergen, ingredient, service protocol and wine pairing.'},
@@ -13499,6 +13671,7 @@ async function _cleanupPushOnLogout(employeeName){
 }
 
 function logout(){
+  if(typeof _esDemo==='function' && _esDemo()){ salirDemo(); return; }   // la demo no toca la sesión de nadie
   if(currentUser){
     supaUpsertEmployee(currentUser);
     _cleanupPushOnLogout(currentUser); // fire-and-forget
@@ -13805,6 +13978,11 @@ function _salaPaso(p){
   </article>`;
 }
 
+// El título del desplegable de la introducción, con el nombre de la casa.
+function _salaIntroTitulo(en){
+  const n = escapeHTML((typeof ACTIVE_VENUE!=='undefined' && ACTIVE_VENUE && ACTIVE_VENUE.casa) || 'M.B.');
+  return en ? 'Why ' + n + ': the manual’s opening' : 'Por qué ' + n + ': la introducción del manual';
+}
 function renderSala(){
   const c = document.getElementById('appContent');
   const _en = LANG==='en';
@@ -13835,7 +14013,7 @@ function renderSala(){
       <span class="pr-ex-lanza-go">›</span>
     </button>
 
-    ${SALA.intro ? `<details class="pr-intro"><summary>${_en?'Why M.B. — the manual’s opening':'Por qué M.B. — la introducción del manual'}</summary><p>${escapeHTML(SALA.intro)}</p></details>` : ''}
+    ${SALA.intro ? `<details class="pr-intro"><summary>${_salaIntroTitulo(_en)}</summary><p>${escapeHTML(SALA.intro)}</p></details>` : ''}
 
     <input type="search" class="q-busca" value="${escapeHTML(_salaBusca)}" oninput="_salaBusca=this.value;renderSala();this.focus()"
       placeholder="${_en?'Search a step, a phrase, a procedure…':'Busca un paso, una frase, un procedimiento…'}">
@@ -23062,8 +23240,11 @@ function renderDashboard(){
   const _runeSvg = `<svg viewBox="0 0 16 16"><polygon points="8,0 16,8 8,16 0,8" fill="none" stroke="rgba(228,190,104,.55)" stroke-width=".7"/><polygon points="8,3 13,8 8,13 3,8" fill="none" stroke="rgba(228,190,104,.35)" stroke-width=".45"/><circle cx="8" cy="8" r="1" fill="rgba(228,190,104,.6)"/></svg>`;
 
 
-  document.getElementById('appContent').innerHTML=`
+  const _demoBanda = (typeof _esDemo==='function' && _esDemo()) ? _demoBandaHTML() : '';
+  const _demoContacto = (typeof _esDemo==='function' && _esDemo()) ? _demoContactoHTML() : '';
 
+  document.getElementById('appContent').innerHTML=`
+    ${_demoBanda}
     <!-- ── HERO ── -->
     <div class="dash-hero">
       <div class="dash-hero-shine"></div>
@@ -23199,6 +23380,7 @@ function renderDashboard(){
 
     <!-- Pie de página, el mismo que el del login. Sin la columna Plataforma
          desde oct 2026: repetía la barra de abajo. -->
+    ${_demoContacto}
     <footer class="login-foot en-app sin-plataforma">${_pieHTML({ plataforma:false, enApp:true })}</footer>
 
   `;
