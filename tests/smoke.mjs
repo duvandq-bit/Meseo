@@ -8121,6 +8121,9 @@ test('Guía de emplatado: mapa de fotos íntegro, sección cableada, overlay y C
   }
   // cada clave debe ser un plato real de DISHES
   const ids = new Set([...html.matchAll(/\{id:(\d+),cat:'/g)].map(m => m[1]));
+  // y también los de las cartas que viven en data/ (la demo, Orchilla, es pública)
+  for (const f of readdirSync(join(ROOT, 'data')).filter(f => /^carta-.+\.json$/.test(f)))
+    for (const d of (JSON.parse(read('data/' + f)).DISHES || [])) ids.add(String(d.id));
   for (const id of keys) assert(ids.has(id), `dish-photos.json maps unknown dish id ${id}`);
   // sección cableada como subtab de Aprender + overlay + búsqueda
   assert(/\['emplatado','Plating guide'/.test(html), 'Plating guide subtab missing from Aprender hub');
