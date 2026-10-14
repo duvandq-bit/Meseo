@@ -52,7 +52,7 @@
 <meta property="og:description" content="Formación de equipos de sala: carta, alérgenos, vinos, exámenes y juegos de repaso.">
 <meta property="og:url" content="https://meseo.es/">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"Meseo","url":"https://meseo.es/"}</script>
-<meta name="app-version" content="7.499">
+<meta name="app-version" content="7.500">
 <meta name="app-build" content="May 2026">
 <meta name="theme-color" content="#1c2a22">
 <!-- ═══ PWA ═══ -->
@@ -2790,7 +2790,7 @@ const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><p
 const SRC = 'src';
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='7.499';  // sincronizada con sw.js VERSION (guard de CI)
+const APP_VERSION='7.500';  // sincronizada con sw.js VERSION (guard de CI)
 const APP_BUILD='Jul 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;
@@ -25821,6 +25821,22 @@ function _dishPairWines(dish, limit){
   return matched.slice().sort((a,b)=>(a.price||0)-(b.price||0)).slice(0, limit||3);
 }
 
+// Ingredientes escritos un bocado por línea → [{n, d}] (nombre y descripción),
+// con la primera línea como introducción si no lleva «:». Con una sola línea
+// devuelve null y la ficha sigue con sus fichas de siempre.
+function _ingPorLineas(txt){
+  const lineas = String(txt || '').split(/\n+/).map(l => l.trim()).filter(Boolean);
+  if(lineas.length < 2) return null;
+  return lineas.map(l => {
+    const i = l.indexOf(':');
+    return (i > 0 && i < 40) ? { n: l.slice(0, i).trim(), d: l.slice(i + 1).trim() } : { n: '', d: l };
+  });
+}
+function _bocadosHTML(bocados){
+  return '<div class="ing-bocados">' + bocados.map(b => b.n
+    ? `<div class="ing-bocado"><b>${escapeHTML(b.n)}</b><span>${escapeHTML(b.d)}</span></div>`
+    : `<div class="ing-bocado-intro">${escapeHTML(b.d)}</div>`).join('') + '</div>';
+}
 function renderRepasoDishDetail(dishId){
   const dish = DISHES.find(d=>d.id===dishId);
   if(!dish){repasoView='topic';renderRepaso();return;}
@@ -25890,6 +25906,10 @@ function renderRepasoDishDetail(dishId){
   }).join('');
 
   const ingredientHtml = ingredientList.map(ing => `<span style="padding:.2rem .5rem;background:rgba(0,0,0,.03);border-radius:20px;font-family:var(--font-sans);font-size:var(--fs-2);color:var(--parch2)">${escapeHTML(ing)}</span>`).join('');
+  // Platos de varios bocados (el Mistery box de Akira Back): si la ficha trae
+  // un bocado por línea, se enseña así, uno debajo de otro con su nombre en
+  // negrita, en vez de trocear por comas cada descripción en fichas sueltas.
+  const _bocados = (typeof _ingPorLineas==='function') ? _ingPorLineas(dd.ingredients) : null;
 
   // ── Maridaje ──
   const _wineTypeCol = {blanco:'#c8a84e',tinto:'#8b2252',rosado:'#e8a0bf',espumoso:'#d4af37',dulce:'#daa520'};
@@ -25968,9 +25988,9 @@ function renderRepasoDishDetail(dishId){
     ${ingredientList.length ? `
     <div class="card" style="padding:.9rem;margin-bottom:.75rem">
       <div style="font-family:var(--font-mono);font-size:var(--fs-1);color:var(--gold);letter-spacing:.12em;text-transform:uppercase;margin-bottom:.5rem">◇ ${LANG==='en'?'Ingredients':'Ingredientes'}</div>
-      <div style="display:flex;flex-wrap:wrap;gap:.3rem">
+      ${_bocados ? _bocadosHTML(_bocados) : `<div style="display:flex;flex-wrap:wrap;gap:.3rem">
         ${ingredientHtml}
-      </div>
+      </div>`}
     </div>` : ''}
 
     ${dd.history ? `

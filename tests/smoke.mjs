@@ -17101,6 +17101,20 @@ test('Demo: Orchilla no sale en el selector ni en Ajustes, y su carta es válida
   assert(/id="loginDemoBtn"[^>]*onclick="entrarDemo\(\)"/.test(html), 'el botón del login');
 });
 
+test('Ficha: un plato de varios bocados se lee uno por línea', () => {
+  // El Mistery box de Akira Back son seis bocados con su descripción. Troceado
+  // por comas salía como un montón de fichas sueltas sin saber qué iba con qué.
+  const i0 = html.indexOf('function _ingPorLineas(');
+  const i1 = html.indexOf('function _bocadosHTML(', i0);
+  const f = new Function(html.slice(i0, i1) + '; return _ingPorLineas;')();
+  const r = f('Selección de 6 aperitivos.\nTuna tartar: galleta de plátano, atún.\nAmaebi: camarón dulce.');
+  assert(r && r.length === 3, 'tres líneas, tres filas');
+  assert(r[0].n === '' && /Selección/.test(r[0].d), 'la primera línea sin «:» es la introducción');
+  assert(r[1].n === 'Tuna tartar' && r[1].d === 'galleta de plátano, atún.', 'nombre y descripción, sin trocear por comas');
+  assert(f('Atún, sésamo, soja.') === null, 'un plato normal sigue con sus fichas de siempre');
+  assert(/\$\{_bocados \? _bocadosHTML\(_bocados\)/.test(html), 'la ficha usa la lista cuando hay bocados');
+});
+
 console.log('\nHygiene');
 test('no git conflict markers in tracked source', () => {
   for (const f of ['index.html', 'sw.js', 'data/wines.json', 'data/lqa-situations.json', 'data/ghost-scenarios.json']) {

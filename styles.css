@@ -11001,3 +11001,10 @@ html[data-venue="demo"] .saber-bar .subtab-chip.on{color:#e6cc8f}
 html[data-venue="demo"] .xp-bar-wrap{background:linear-gradient(155deg,rgba(48,36,54,.6) 0%,rgba(23,18,26,.75) 50%,rgba(48,36,54,.6) 100%);border-color:rgba(200,163,90,.3)}
 html[data-venue="demo"] .ri-cta-pase .ri-cta-nuevo{background:rgba(200,163,90,.14)!important;border-color:rgba(200,163,90,.55)!important;color:#e6cc8f}
 html[data-venue="demo"] .ri-cta-pase .ri-cta-icon{border-color:rgba(200,163,90,.4)}
+
+/* Platos de varios bocados: uno por línea, con su nombre en negrita. */
+.ing-bocados{display:flex;flex-direction:column;gap:.55rem}
+.ing-bocado-intro{font-family:var(--font-sans);font-size:var(--fs-3);color:var(--parch2);line-height:1.5}
+.ing-bocado{display:flex;flex-direction:column;gap:.1rem;padding:.55rem .7rem;border-radius:10px;background:rgba(0,0,0,.03);border-left:2px solid var(--brand-accent)}
+.ing-bocado b{font-family:var(--font-sans);font-size:var(--fs-3);font-weight:700;color:var(--brand-ink,#1c2a22)}
+.ing-bocado span{font-family:var(--font-sans);font-size:var(--fs-3);color:var(--parch2);line-height:1.5}
