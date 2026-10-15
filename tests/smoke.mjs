@@ -1441,10 +1441,11 @@ const _susp = (() => {
   return { M, bloque };
 })();
 
-test('suspensión · sólo entran los cuatro de la lista', () => {
+test('suspensión · sólo entran los de la lista', () => {
   const { M } = _susp;
   assert(M.SUSPENDIDA === true, 'la suspensión tiene que estar puesta');
-  for (const n of ['Jenfry', 'Duvan', 'Dian', 'Administrador'])
+  // Madalenaddinis: cuenta de Txoko dada de alta por el propietario (oct 2026).
+  for (const n of ['Jenfry', 'Duvan', 'Dian', 'Administrador', 'Madalenaddinis'])
     assert(M._puedeEntrar(n), `${n} tiene que poder entrar`);
   // Los otros 18 del equipo, fuera. Se nombran unos cuantos de verdad.
   for (const n of ['Aless', 'Sol', 'Junior', 'Mariano', 'Anna', 'German', 'Faride Navarro'])
@@ -16734,7 +16735,7 @@ test('Login con r2: la tarjeta sale elegible, con candado y «Solo administraci�
 });
 test('Revisión de la administración: el registro sigue cerrado y la suspensión intacta', () => {
   assert(/^const SUSPENDIDA = true;$/m.test(html), 'la suspensión global sigue puesta');
-  assert(/^const _PERMITIDOS = \['jenfry', 'duvan', 'dian', 'administrador'\];$/m.test(html), 'la lista de entrada no cambia');
+  assert(/^const _PERMITIDOS = \['jenfry', 'duvan', 'dian', 'administrador', 'madalenaddinis'\];$/m.test(html), 'la lista de entrada no cambia');
   assert(/if\(SUSPENDIDA && mode === 'signup'\)\{/.test(html), 'con la suspensión no se puede poner el modo registro');
 });
 test('Cartas: la revisión de una carta ajena va por auth.uid(), no por el rol admin', () => {
