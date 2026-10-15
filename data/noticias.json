@@ -1,6 +1,26 @@
 {
- "updated": "2026-10-14T20:44:00.191Z",
+ "updated": "2026-10-15T01:31:17.201Z",
  "items": [
+  {
+   "t": "España avanza en Les Grandes Tables",
+   "u": "https://www.expansion.com/estilo-vida/rincones-gastronomicos/2026/10/15/espana-avanza-les-grandes-tables.html",
+   "s": "Expansión",
+   "d": "2026-10-15T00:05:41.000Z",
+   "tags": [
+    "CHEF"
+   ],
+   "img": "https://e00-xlk-ue-expansion.uecdn.es/files/article_main_microformat/uploads/2026/10/15/6ad01830e7cfa.jpeg"
+  },
+  {
+   "t": "Un encuentro a seis manos para saborear la alta cocina",
+   "u": "https://www.diariolibre.com/revista/buena-vida/2026/10/14/macarfi-reune-a-tres-chefs-en-una-cena-especial-en-santo-domingo/3689246",
+   "s": "Diario Libre",
+   "d": "2026-10-14T20:55:00.000Z",
+   "tags": [
+    "ALTA COCINA"
+   ],
+   "img": "https://resources.diariolibre.com/images/2026/10/14/macarfi-reune-a-tres-chefs-en-una-cena-especial-en-santo-domingo-851e4557-focus-min0.05-0.5-1200-675.png"
+  },
   {
    "t": "La alianza Primero Canarias-CC confirma que Teodoro Sosa y María Fernández encabezarán su lista al Congreso por Las Palmas",
    "u": "https://www.eldiario.es/canariasahora/politica/alianza-canarias-cc-confirma-teodoro-sosa-maria-fernandez-encabezaran-lista-congreso-palmas_1_13586485.html",
@@ -143,16 +163,6 @@
    ]
   },
   {
-   "t": "Tenerife Peñón Fest prepara dos días de conciertos, gastronomía y buena música",
-   "u": "https://theshowroommag.com/tenerife-penon-fest-prepara-dos-dias-de-conciertos-gastronomia-y-buena-musica/",
-   "s": "The Showroom Mag",
-   "d": "2026-10-14T10:10:58.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://theshowroommag.com/wp-content/uploads/2026/10/Fotos-web-2026-10-13T103919.134.jpg"
-  },
-  {
    "t": "Gáldar celebra el primer aniversario de su Mercado Agrícola con gastronomía y música",
    "u": "https://www.laprovincia.es/gran-canaria/ayuntamiento-galdar/2026/10/14/galdar-celebra-primer-aniversario-mercado-135318519.amp.html",
    "s": "La Provincia",
@@ -191,6 +201,16 @@
    "img": "https://andaluciaeconomica.com/wp-content/uploads/2026/10/20261001-Firma959Noor-15.jpeg"
   },
   {
+   "t": "Tenerife Peñón Fest prepara dos días de conciertos, gastronomía y buena música",
+   "u": "https://theshowroommag.com/tenerife-penon-fest-prepara-dos-dias-de-conciertos-gastronomia-y-buena-musica/",
+   "s": "The Showroom Mag",
+   "d": "2026-10-14T09:10:58.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://theshowroommag.com/wp-content/uploads/2026/10/Fotos-web-2026-10-13T103919.134.jpg"
+  },
+  {
    "t": "El IPC sube al 4,4% en Canarias en septiembre: el transporte se encarece un 10%",
    "u": "https://diariodeavisos.elespanol.com/2026/10/precios-canarias-septiembre-2026-ipc/",
    "s": "Diario de Avisos",
@@ -209,16 +229,6 @@
     "MICHELIN"
    ],
    "img": "https://s1.ppllstatics.com/laverdad/www/multimedia/gastronomia/2026/10/14/IMG_0141-k7aG-U3022248912933MG-1200x840@La%20Verdad.jpg"
-  },
-  {
-   "t": "DIRECTO | Sigue el pleno del Parlamento de Canarias",
-   "u": "https://www.eldiario.es/canariasahora/parlamento-canario/directo-sigue-pleno-parlamento-canarias_1_13583797.html",
-   "s": "elDiario.es",
-   "d": "2026-10-14T08:09:33.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://static.eldiario.es/clip/d677f4ae-70b7-4b20-98ab-68a9c5126157_facebook-aspect-ratio-1200-675_default_0.jpg"
   },
   {
    "t": "El restaurante de carretera definitivo está en este pueblo medieval de Madrid: Martín Berasategui confiesa su secreto mejor guardado",
@@ -287,15 +297,6 @@
     "ALTA COCINA"
    ],
    "img": "https://theobjective.com/wp-content/uploads/2026/10/samy-paellas-redes.png"
-  },
-  {
-   "t": "El rincón de Gran Canaria donde comer cocina canaria entre plantas y antigüedades: un lugar perfecto para disfrutar de platos tradicionales",
-   "u": "https://www.laprovincia.es/gran-canaria/2026/10/14/rincon-gran-comer-cocina-canaria-plantas-antiguedades-dv-135310617.html",
-   "s": "La Provincia",
-   "d": "2026-10-14T07:04:07.000Z",
-   "tags": [
-    "CANARIAS"
-   ]
   }
  ]
 }
