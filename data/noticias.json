@@ -1,6 +1,87 @@
 {
- "updated": "2026-10-15T20:21:50.226Z",
+ "updated": "2026-10-16T01:25:23.928Z",
  "items": [
+  {
+   "t": "Martín Berasategui reivindica la cocina de microtemporada para aprovechar la transición entre verano y otoño",
+   "u": "https://www.infohoreca.com/noticias/20261016/cocina-microtemporada-martin-berasategi-beko",
+   "s": "InfoHoreca",
+   "d": "2026-10-16T00:00:13.000Z",
+   "tags": [
+    "CHEF"
+   ],
+   "img": "https://www.infohoreca.com/media/uploads/noticias/rrss/Setas_y_pimientos.jpg"
+  },
+  {
+   "t": "La nueva vida del chef Patiño: «Mi madre me decía que incluso preparando un bocadillo de tortilla, fuera el mejor»",
+   "u": "https://www.lasprovincias.es/gastronomia/nueva-vida-chef-patino-madre-decia-incluso-20261015011419-nt.html",
+   "s": "Las Provincias",
+   "d": "2026-10-15T23:14:19.000Z",
+   "tags": [
+    "ALTA COCINA"
+   ],
+   "img": "https://s3.ppllstatics.com/lasprovincias/www/multimedia/gastronomia/2026/10/15/1518753017-RoFW0jNrDrpGy1Jcu4pU2iN-1200x840@Las%20Provincias.jpg"
+  },
+  {
+   "t": "La Feria Gastronómica de Tapas y Vinos de Salud-La Salle reunirá en noviembre a más de 20 estands en el parque La Granja",
+   "u": "https://elburgado.com/la-feria-gastronomica-de-tapas-y-vinos-de-salud-la-salle-reunira-en-noviembre-a-mas-de-20-estands-en-el-parque-la-granja/",
+   "s": "El Burgado Digital",
+   "d": "2026-10-15T23:02:41.000Z",
+   "tags": [
+    "CANARIAS",
+    "VINO"
+   ],
+   "img": "https://elburgado.com/wp-content/uploads/2026/10/Bodega.webp"
+  },
+  {
+   "t": "Colmado 1917, en el hotel Mencey, un refugio para los amantes de la gastronomía",
+   "u": "https://diariodeavisos.elespanol.com/2026/10/colmado-1917-hotel-mencey/",
+   "s": "Diario de Avisos",
+   "d": "2026-10-15T23:00:00.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://cdn.diariodeavisos.com/wp-content/uploads/2026/10/Pagina-46-COLMADO_TARTAR-Y-KIMCHI-DE-PIMIENTA-PALMERA.jpg"
+  },
+  {
+   "t": "Quique Dacosta, embajador",
+   "u": "https://www.lasprovincias.es/planes/quique-dacosta-embajador-20261017005837-nt.html",
+   "s": "Las Provincias",
+   "d": "2026-10-15T22:58:37.000Z",
+   "tags": [
+    "ALTA COCINA"
+   ],
+   "img": "https://s1.ppllstatics.com/lasprovincias/www/multimedia/2026/10/17/224911821--1200x840.jpg"
+  },
+  {
+   "t": "The World’s 50 Best Restaurants: Chefs de restaurantes de la India, Ecuador, Australia, España y Reino Unido cocinarán con peruanos en experiencias exclusivas",
+   "u": "https://elcomercio.pe/somos/gastronomia/lima-the-worlds-50-best-restaurants-chefs-de-la-india-ecuador-australia-espana-y-reino-unido-cocinaran-con-chefs-peruanos-en-experiencias-exclusivas-noticia/",
+   "s": "El Comercio Perú",
+   "d": "2026-10-15T22:15:17.000Z",
+   "tags": [
+    "ALTA COCINA"
+   ],
+   "img": "https://elcomercio.pe/resizer/v2/365B5LGL35B65MZGSS7OQMWEUY.jpg?auth=5ba3e6a6a0ed346762521b5aa2b57d3af9a2d11f81845a53106cc2ea5dfa211e&width=980&height=528&quality=75&smart=true"
+  },
+  {
+   "t": "La villa juguetera de Alicante que conquista por su cocina: así es el pueblo donde mejor se come de España",
+   "u": "https://www.noticiasdelvino.com/restaurantes/2026/10/15/la-villa-juguetera-de-alicante-que-conquista-por-su-cocina-asi-es-el-pueblo-donde-mejor-se-come-de-espana-74836/",
+   "s": "Noticias del Vino",
+   "d": "2026-10-15T21:50:03.000Z",
+   "tags": [
+    "MICHELIN"
+   ],
+   "img": "https://www.noticiasdelvino.com/wp-content/uploads/restaurantes-5.jpg.webp"
+  },
+  {
+   "t": "El PSOE Canarias cierra sus listas para el 29N con las candidaturas al Congreso y al Senado",
+   "u": "https://www.eldiario.es/canariasahora/politica/valbuena-arocha-lideraran-lista-psoe-congreso-tenerife-corujo-dioh-repetiran-palmas_1_13589501.html",
+   "s": "elDiario.es",
+   "d": "2026-10-15T19:02:01.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://static.eldiario.es/clip/5d38724c-508e-4dcb-b887-368c7c099cc9_facebook-aspect-ratio-1200-675_default_0_x865y978.jpg"
+  },
   {
    "t": "Acuerdo histórico en la izquierda canaria: Podemos se une a la candidatura de Nueva Canarias, IU y Sumar en las generales",
    "u": "https://www.eldiario.es/canariasahora/politica/acuerdo-historico-izquierda-canaria-suma-confluencia-llamara-unidad-pueblo-canario_1_13589265.html",
@@ -32,25 +113,25 @@
    "img": "https://www.teneriffa-news.com/media/t/termine-veranstaltungen-kalender-teneriffa-kanaren-1920x1080.jpg"
   },
   {
-   "t": "Los nueve puntos de la propuesta del Gobierno de Canarias para limitar la compra de vivienda a no residentes",
-   "u": "https://www.eldiario.es/canariasahora/sociedad/propuesta-gobierno-canarias-limitar-compra-vivienda-no-residentes-diez-anos-empadronamiento_1_13588728.html",
-   "s": "elDiario.es",
-   "d": "2026-10-15T15:36:45.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://static.eldiario.es/clip/cef25145-783d-465f-9ebf-894bf2d66742_facebook-aspect-ratio-1200-675_default_0_x1903y1010.jpg"
-  },
-  {
    "t": "La Manuela, el 'resort' de alta cocina viajera en la playa de Las Tres Piedras que guía Alejandro Sánchez Soto: \"¿Estrella Michelin? Todo es proponérselo\"",
    "u": "https://www.lavozdelsur.es/el-gusto-es-suyo/la-manuela-el-resort-de-alta-cocina-viajera-en-la-playa-de-las-tres-piedras-que-guia-alejandro-sanchez-soto-estrella-michelin-todo-es-proponerselo.html",
-   "s": "La Voz del Sur",
+   "s": "lavozdelsur.es",
    "d": "2026-10-15T14:33:40.000Z",
    "tags": [
     "ALTA COCINA",
     "MICHELIN"
    ],
-   "img": "https://d2mqpxndxh0mbq.cloudfront.net/articulos/articulos-187841.jpg?v=202610152221"
+   "img": "https://d2mqpxndxh0mbq.cloudfront.net/articulos/articulos-187841.jpg?v=202610160325"
+  },
+  {
+   "t": "Chefs de la alta cocina coinciden: 'No refrigere plátanos: el frío frena su maduración, ennegrece la cáscara y afecta a estos otros cinco alimentos'",
+   "u": "https://www.eltiempo.com/cultura/gente/chefs-de-la-alta-cocina-coinciden-no-refrigere-platanos-el-frio-frena-su-maduracion-ennegrece-la-cascara-y-afecta-a-estos-otros-cinco-alimentos-3593706",
+   "s": "El Tiempo",
+   "d": "2026-10-15T13:00:23.000Z",
+   "tags": [
+    "ALTA COCINA"
+   ],
+   "img": "https://imagenes2.eltiempo.com/files/og_thumbnail/files/fp/uploads/2026/10/15/6ad0ccfcabcfc.r_d.929-366-0.png"
   },
   {
    "t": "El restaurante de carretera definitivo está en este pueblo medieval de Madrid: Martín Berasategui confiesa su secreto mejor guardado",
@@ -61,17 +142,6 @@
     "CHEF"
    ],
    "img": "https://www.noticiasdelvino.com/wp-content/uploads/image-583.png.webp"
-  },
-  {
-   "t": "Telde celebra el Día Internacional de la Mujer Rural con un homenaje a tres referentes del sector primario",
-   "u": "https://www.teldeojeando.com/2026/10/telde-celebra-el-dia-internacional-de_01645754221.html",
-   "s": "TELDE OJEANDO",
-   "d": "2026-10-15T12:50:50.000Z",
-   "tags": [
-    "VINO",
-    "CANARIAS"
-   ],
-   "img": "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhY9cF7iBTgjL2QjjOozjqwGttkbsClsirWjyTmJr2d2avPJTl6BAq5MSLQ_OCsCrGgDsUmiS3B85BQHENwJV4_Oq3pxFudqqb8sG-IoWya81g0sNvKaK5Hw2TY-ytW-SUFIAndi7b-WdsJvJhW7Quko_g4wsvpmH0k8AKiewzIg32S_xfuoHO9IrTSfx0/w1200-h630-p-k-no-nu/1000427072.png"
   },
   {
    "t": "Canarias habilita una web para incorporar casas vacías al alquiler, con seguro a tres años y asesoramiento para propietarios e inquilinos",
@@ -134,39 +204,6 @@
    ]
   },
   {
-   "t": "El II Gastromar de La Fajana de Barlovento está dedicado al camarón",
-   "u": "https://www.eldiario.es/canariasahora/lapalmaahora/municipios/barlovento/ii-gastromar-fajana-barlovento-dedicado-camaron_1_13587890.amp.html",
-   "s": "elDiario.es",
-   "d": "2026-10-15T11:21:55.000Z",
-   "tags": [
-    "VINO",
-    "CANARIAS"
-   ],
-   "img": "https://static.eldiario.es/clip/f22a84ea-f251-4600-a665-bb3d2b5e3889_facebook-aspect-ratio-1200-675_default_0_x1265y1273.jpg"
-  },
-  {
-   "t": "Telde homenajea a tres mujeres del sector primario en el Día Internacional de la Mujer Rural",
-   "u": "https://lavozcanaria.com/area-metropolitana-gran-canaria/telde/telde-homenajea-a-tres-mujeres-del-sector-primario-en-el-dia-internacional-de-la-mujer-rural",
-   "s": "La Voz Canaria",
-   "d": "2026-10-15T11:02:49.000Z",
-   "tags": [
-    "VINO",
-    "CANARIAS"
-   ],
-   "img": "https://lavozcanaria.com/media/2026/10/telde-homenajea-a-tres-mujeres-del-sector-primario-en-el-dia-internacional-de-la-mujer-rural.webp"
-  },
-  {
-   "t": "Barlovento celebra la segunda edición de Gastromar este sábado",
-   "u": "https://lavozcanaria.com/noreste-la-palma/barlovento/barlovento-celebra-la-segunda-edicion-de-gastromar-este-sabado",
-   "s": "La Voz Canaria",
-   "d": "2026-10-15T11:00:34.000Z",
-   "tags": [
-    "VINO",
-    "CANARIAS"
-   ],
-   "img": "https://lavozcanaria.com/media/2026/10/barlovento-celebra-la-segunda-edicion-de-gastromar-este-sabado.webp"
-  },
-  {
    "t": "El III Encuentro para Personas con Diabetes de Canarias se celebra en La Palma",
    "u": "https://www.eldiario.es/canariasahora/lapalmaahora/sociedad/iii-encuentro-personas-diabetes-canarias-celebra-palma_1_13587653.html",
    "s": "elDiario.es",
@@ -185,16 +222,6 @@
     "CANARIAS"
    ],
    "img": "https://static.eldiario.es/clip/4b62af32-caa9-4a46-a008-9f181b2984d8_facebook-aspect-ratio-1200-675_default_0_x1020y339.jpg"
-  },
-  {
-   "t": "Telde corona a las tres mujeres que sostienen el campo canario",
-   "u": "https://www.canariasenpleno.com/telde-mujer-rural-canaria/",
-   "s": "Canarias en Pleno",
-   "d": "2026-10-15T10:25:18.000Z",
-   "tags": [
-    "VINO",
-    "CANARIAS"
-   ]
   },
   {
    "t": "Los hermanos Roca se mojan y confiesan qué chef elegirían para que les cocinara la última cena antes de morir",
@@ -273,35 +300,6 @@
     "CANARIAS"
    ],
    "img": "https://s3.ppllstatics.com/canarias7/www/multimedia/gastronomia-c7/2026/10/15/munchitos-k8eH-U302245774807HIH-1200x840@Canarias7.jpg"
-  },
-  {
-   "t": "La compra de vivienda por parte de extranjeros se desploma en Canarias en el primer semestre",
-   "u": "https://www.eldiario.es/canariasahora/economia/compra-vivienda-parte-extranjeros-desploma-canarias-primer-semestre_1_13586950.html",
-   "s": "elDiario.es",
-   "d": "2026-10-15T07:54:17.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://static.eldiario.es/clip/9771ccf6-5dc4-464b-b5a9-ac43ecdfc176_facebook-aspect-ratio-1200-675_default_0_x759y498.jpg"
-  },
-  {
-   "t": "El bar de Gran Canaria donde disfrutar de la cocina canaria a precios económicos: raciones generosas y platos tradicionales",
-   "u": "https://www.laprovincia.es/gran-canaria/2026/10/15/bar-gran-disfrutar-cocina-canaria-precios-dv-135353676.html",
-   "s": "La Provincia",
-   "d": "2026-10-15T07:39:31.000Z",
-   "tags": [
-    "CANARIAS"
-   ]
-  },
-  {
-   "t": "Qué hoteles españoles tienen Llave Michelin en 2026: listado completo",
-   "u": "https://www.hosteltur.com/179236_que-hoteles-espanoles-tienen-llave-michelin-en-2026-listado-completo.html",
-   "s": "Hosteltur",
-   "d": "2026-10-15T06:49:37.000Z",
-   "tags": [
-    "MICHELIN"
-   ],
-   "img": "https://static.hosteltur.com/app/public/uploads/img/articles/2026/10/14/M_152709_hoteles-con-michelin-key-en-2026-todos-los-premiados-en-espana.jpg"
   }
  ]
 }
