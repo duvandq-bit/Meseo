@@ -6513,33 +6513,10 @@ test('reto del día + liga semanal: pregunta compartida determinista y XP semana
     'el inicio debe ofrecer el Reto del día');
 });
 
-test('El Código del Camarero: manual de oficio consultable (jul 2026)', () => {
-  // Petición del propietario: «crear el mejor camarero del mundo… eso que solo
-  // te enseñan los años y la experiencia». No es un examen: es un manual de
-  // campo — la lectura de la mesa, qué decir, qué hacer, nunca, y el porqué.
-  const raw = read('data/codigo-camarero.json');
-  let data;
-  try { data = JSON.parse(raw); } catch(e){ assert(false, 'codigo-camarero.json debe ser JSON válido: '+e.message); }
-  assert(Array.isArray(data.cats) && data.cats.length >= 8, 'debe haber al menos 8 categorías del código');
-  assert(Array.isArray(data.cards) && data.cards.length >= 50, 'debe haber al menos 50 códigos (hay '+(data.cards||[]).length+')');
-  const catIds = new Set(data.cats.map(c=>c.id));
-  for(const card of data.cards){
-    for(const k of ['t','t_en','read','read_en','steps','steps_en','why','why_en']){
-      assert(card[k] && (!Array.isArray(card[k]) || card[k].length), `código #${card.id} («${card.t}») sin campo ${k} — cada ficha va completa y bilingüe`);
-    }
-    assert(catIds.has(card.cat), `código #${card.id} con categoría desconocida: ${card.cat}`);
-  }
-  assert(/function startCodigo\(/.test(html) && /codigo-camarero\.json/.test(html),
-    'la app debe cargar el Código (lazy) con startCodigo()');
-  assert(/El Código del Camarero/.test(html) && /startCodigo\(\)/.test(html),
-    'el hub de Protocolo debe tener la entrada al Código del Camarero');
-  // Regla del propietario: «que ningún código actúe en contra del estándar de
-  // Forbes». La vista lo declara y los códigos sensibles lo respetan (p. ej.
-  // la cuenta se OFRECE con prisa, nunca se planta sin pedirla).
-  assert(/ante la duda, manda el estándar/.test(html),
-    'la vista del Código debe declarar que ante la duda manda el estándar Forbes/LQA');
-  assert(/la cuenta está lista/.test(raw) && !/Lleva la cuenta preparada con el último pase, sin que la pidan/.test(raw),
-    'con prisa la cuenta se OFRECE (estándar: se presenta al pedirla) — no se lleva sin pedirla');
+test('El Código del Camarero ya no existe (oct 2026, contenido antiguo)', () => {
+  // El propietario lo retira: lo sustituye el módulo de Hospitalidad.
+  assert(!existsSync(join(ROOT, 'data/codigo-camarero.json')), 'el contenido del Código se ha borrado');
+  assert(!/CODIGO_CAMARERO|startCodigo|_luCodeOfDay|luCdgDay/.test(html), 'ni pantalla, ni entrada, ni «Código del día» en el Line Up');
 });
 
 test('Actualidad: robot de noticias + calendario de eventos (jul 2026)', () => {
@@ -8696,22 +8673,23 @@ test('dashboard «Hoy»: héroe pergamino de dos estados + stats + filas numerad
     'estilos del héroe/stats/filas numeradas ausentes');
 });
 
-test('Line Up: ritual de antes del servicio — 5 pasos reales, rotación determinista (fase 2, jul 2026)', () => {
+test('Line Up: ritual de antes del servicio — 4 pasos reales, rotación determinista (fase 2, jul 2026)', () => {
   // Fase 2 del rediseño aprobado. El propietario llama «Line Up» a la reunión
-  // de antes del servicio (no «briefing»). 5 pasos con contenido REAL que rota
+  // de antes del servicio (no «briefing»). 4 pasos con contenido REAL que rota
   // determinista (mismo día ⇒ mismo contenido para todo el equipo): Reto ·
-  // Plato del día · Vino de la semana · Protocolo Forbes · Código del día.
+  // Plato del día · Vino de la semana · Protocolo Forbes. (El Código del día
+  // se retiró con el Código del Camarero, oct 2026.)
   assert(/function renderLineUp\(/.test(html) && /id="lineupWrap"/.test(html),
     'la pantalla Line Up debe existir');
   const lu = html.slice(html.indexOf('// ═══ LINE UP'), html.indexOf('// ═══ LIGA SEMANAL'));
   assert(lu.length>500 && !/Math\.random\(/.test(lu),
     'los contenidos del Line Up deben rotar con semilla determinista, sin Math.random()');
-  assert(/_luWineOfWeek/.test(lu) && /_luStdOfDay/.test(lu) && /_luCodeOfDay/.test(lu),
-    'vino de la semana, protocolo del día y código del día deben existir');
+  assert(/_luWineOfWeek/.test(lu) && /_luStdOfDay/.test(lu),
+    'vino de la semana y protocolo del día deben existir');
   assert(/_wkKey\(\)\.replace/.test(lu), 'el vino rota por SEMANA (clave del lunes), no por día');
-  assert(/LQA_STANDARDS\[/.test(lu) && /CODIGO_CAMARERO\.cards\[/.test(lu),
-    'protocolo y código del día deben salir del contenido real (LQA_STANDARDS / codigo-camarero.json)');
-  assert(/emp\.luPddDay/.test(lu) && /emp\.luWineWk/.test(lu) && /emp\.luStdDay/.test(lu) && /emp\.luCdgDay/.test(lu),
+  assert(/LQA_STANDARDS\[/.test(lu),
+    'el protocolo del día debe salir del contenido real (LQA_STANDARDS)');
+  assert(/emp\.luPddDay/.test(lu) && /emp\.luWineWk/.test(lu) && /emp\.luStdDay/.test(lu),
     'cada paso debe marcar su estado hecho');
   assert(/SIGUIENTE/.test(lu) || /'NEXT'/.test(lu), 'la tarjeta SIGUIENTE del mockup debe existir');
   assert(/renderLineUp\(\)/.test(html.slice(html.indexOf('function renderDashboard()'), html.indexOf('// ═══════ FLASHCARDS'))),
@@ -16811,7 +16789,7 @@ test('Hospitalidad: una mesa al día, motor puro y sin XP ni nube con puntuació
   assert(motor.pend({ pend:{ id:'m1d1', fecha:'2026-10-13' }, resp:{} }, '2026-10-13') === null, 'el mismo día no');
   assert(motor.pend({ pend:{ id:'m1d1', fecha:'2026-10-12' }, resp:{ m1d1:0 } }, '2026-10-13') === null, 'contestada, no vuelve');
   // Sin XP, sin racha, sin SRS, sin puntuación en la nube, sólo revisores.
-  const i0 = html.indexOf('// ═══ HOSPITALIDAD'), i1 = html.indexOf('// ═══ EL CÓDIGO DEL CAMARERO');
+  const i0 = html.indexOf('// ═══ HOSPITALIDAD'), i1 = html.indexOf('\nfunction renderLqa(){', i0);
   const src = html.slice(i0, i1);
   assert(i0 > 0 && i1 > i0, 'bloque de Hospitalidad en su sitio');
   assert(!/awardXP|lastStudyDay|_srsUpdate|emp\.streak|emp\.xp/.test(src), 'Hospitalidad no toca XP, racha ni SRS');
