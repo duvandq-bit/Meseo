@@ -52,7 +52,7 @@
 <meta property="og:description" content="Formación de equipos de sala: carta, alérgenos, vinos, exámenes y juegos de repaso.">
 <meta property="og:url" content="https://meseo.es/">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"Meseo","url":"https://meseo.es/"}</script>
-<meta name="app-version" content="7.502">
+<meta name="app-version" content="7.503">
 <meta name="app-build" content="May 2026">
 <meta name="theme-color" content="#1c2a22">
 <!-- ═══ PWA ═══ -->
@@ -2790,7 +2790,7 @@ const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><p
 const SRC = 'src';
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='7.502';  // sincronizada con sw.js VERSION (guard de CI)
+const APP_VERSION='7.503';  // sincronizada con sw.js VERSION (guard de CI)
 const APP_BUILD='Jul 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;
@@ -15099,7 +15099,7 @@ function _emplOpen(id){
         <div class="empl-ov-al">${al}</div>
         ${dd.marcaje?`<div class="empl-ov-marc">🍽️ ${escapeHtml(dd.marcaje)}</div>`:''}
         ${dd.notes?`<div class="empl-ov-note">${escapeHtml(dd.notes)}</div>`:''}
-        ${dd.ingredients?`<div class="empl-ov-ing">${escapeHtml(dd.ingredients)}</div>`:''}
+        ${dd.ingredients?`<div class="empl-ov-ing">${(typeof _ingPorLineas==='function'&&_ingPorLineas(dd.ingredients))?_bocadosHTML(_ingPorLineas(dd.ingredients)):escapeHtml(dd.ingredients)}</div>`:''}
         <button class="empl-ov-ficha" onclick="document.getElementById('emplOverlay').remove();repasoCat='${escapeHtml(dd.cat||'')}';repasoDishId=${d.id};repasoView='dish';_subTab.aprender='repaso';showTab('repaso')">📖 ${_en?'Full dish sheet':'Ficha completa del plato'}</button>
         <button class="empl-ov-journey" onclick="document.getElementById('emplOverlay').remove();launchDishJourney(${d.id})">🗺️ ${_en?'Guided journey (optional)':'Recorrido guiado (opcional)'}</button>
         ${(DISH_PHOTO_PENDING&&DISH_PHOTO_PENDING.has(d.id))
