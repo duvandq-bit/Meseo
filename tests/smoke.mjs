@@ -6513,6 +6513,12 @@ test('reto del día + liga semanal: pregunta compartida determinista y XP semana
     'el inicio debe ofrecer el Reto del día');
 });
 
+test('Emplatado: la vista rápida separa los bocados igual que la ficha (oct 2026)', () => {
+  // El Mistery Box se leía como un párrafo corrido en la vista rápida del
+  // emplatado: los saltos de línea se perdían. Ahora usa el mismo render.
+  assert(/empl-ov-ing[^\n]*_ingPorLineas\(dd\.ingredients\)[^\n]*_bocadosHTML/.test(html), 'la vista rápida pinta un bocado por línea');
+});
+
 test('El Código del Camarero ya no existe (oct 2026, contenido antiguo)', () => {
   // El propietario lo retira: lo sustituye el módulo de Hospitalidad.
   assert(!existsSync(join(ROOT, 'data/codigo-camarero.json')), 'el contenido del Código se ha borrado');
