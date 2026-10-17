@@ -52,7 +52,7 @@
 <meta property="og:description" content="Formación de equipos de sala: carta, alérgenos, vinos, exámenes y juegos de repaso.">
 <meta property="og:url" content="https://meseo.es/">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"Meseo","url":"https://meseo.es/"}</script>
-<meta name="app-version" content="7.501">
+<meta name="app-version" content="7.502">
 <meta name="app-build" content="May 2026">
 <meta name="theme-color" content="#1c2a22">
 <!-- ═══ PWA ═══ -->
@@ -2790,7 +2790,7 @@ const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><p
 const SRC = 'src';
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='7.501';  // sincronizada con sw.js VERSION (guard de CI)
+const APP_VERSION='7.502';  // sincronizada con sw.js VERSION (guard de CI)
 const APP_BUILD='Jul 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;
@@ -11102,10 +11102,11 @@ function _pddAsyncFill(){
 }
 
 // ═══ LINE UP — el ritual de antes del servicio (fase 2 del rediseño) ═══
-// 5 pasos de ~30-60 s con contenido REAL que rota a diario de forma
+// 4 pasos de ~30-60 s con contenido REAL que rota a diario de forma
 // determinista (mismo día ⇒ mismos contenidos para todo el equipo, como el
 // reto): Reto del día · Plato del día · Vino de la semana · Protocolo
-// Forbes del día · Código del día. Pensado para hacerse en el Line Up de
+// Forbes del día. El «Código del día» se fue con el Código del Camarero
+// (oct 2026, contenido antiguo). Pensado para hacerse en el Line Up de
 // antes del servicio — en el trabajo, no en el sofá.
 function _luWineOfWeek(){
   if(typeof WINES==='undefined' || !Array.isArray(WINES) || !WINES.length) return null;
@@ -11116,19 +11117,13 @@ function _luStdOfDay(){
   const rng=_mulberry32((parseInt(todayStr().replace(/-/g,''),10)^0x10A57D)>>>0);
   return LQA_STANDARDS[Math.floor(rng()*LQA_STANDARDS.length)];
 }
-function _luCodeOfDay(){
-  if(!CODIGO_CAMARERO || !Array.isArray(CODIGO_CAMARERO.cards) || !CODIGO_CAMARERO.cards.length) return null;
-  const rng=_mulberry32((parseInt(todayStr().replace(/-/g,''),10)^0xC0D160)>>>0);
-  return CODIGO_CAMARERO.cards[Math.floor(rng()*CODIGO_CAMARERO.cards.length)];
-}
 function _luItems(emp){
   const day=todayStr(), wk=_wkKey();
   return [
     { key:'reto',  secs:30, done:_dqIsDone(emp) },
     { key:'plato', secs:60, done:(emp.luPddDay||'')===day },
     { key:'vino',  secs:60, done:(emp.luWineWk||'')===wk },
-    { key:'std',   secs:60, done:(emp.luStdDay||'')===day },
-    { key:'codigo',secs:30, done:(emp.luCdgDay||'')===day }
+    { key:'std',   secs:60, done:(emp.luStdDay||'')===day }
   ];
 }
 function _luTitle(key, en){
@@ -11136,8 +11131,7 @@ function _luTitle(key, en){
   if(key==='reto')  return { t:en?'Daily quiz':'Reto del día', s:en?'same question for everyone':'la misma pregunta para todos' };
   if(key==='plato'){ const d=_pddDishOfDay(todayStr()); return { t:en?'Dish of the day':'Plato del día', s:d?d.name:'' }; }
   if(key==='vino'){ const w=_luWineOfWeek(); return { t:en?'Wine of the week':'Vino de la semana', s:w?w.name:(en?'from the wine list':'de la carta de vinos') }; }
-  if(key==='std'){ const st=_luStdOfDay(); return { t:(en?'Forbes standard #':'Protocolo Forbes nº ')+st.id, s:en?'today, watch for it in service':'hoy, fíjate en cumplirlo en sala' }; }
-  const c=_luCodeOfDay(); return { t:en?'Code of the day':'Código del día', s:c?(en?c.t_en:c.t):(en?'the waiter’s craft':'el oficio del camarero') };
+  const st=_luStdOfDay(); return { t:(en?'Forbes standard #':'Protocolo Forbes nº ')+st.id, s:en?'today, watch for it in service':'hoy, fíjate en cumplirlo en sala' };
 }
 function _luGo(key){
   const emp=getEmp(currentUser);
@@ -11146,7 +11140,6 @@ function _luGo(key){
   if(key==='plato'){ emp.luPddDay=day; saveDB(); const d=_pddDishOfDay(day); if(d) _emplOpen(d.id); setTimeout(()=>{ if(document.getElementById('lineupWrap')) renderLineUp(); }, 300); return; }
   if(key==='vino'){ _luWineOpen(); return; }
   if(key==='std'){ _luStdOpen(); return; }
-  if(key==='codigo'){ _luCodeOpen(); return; }
 }
 function _luOverlay(inner, label){
   let ov=document.getElementById('luOverlay');
@@ -11195,20 +11188,6 @@ function _luStdOpen(){
     <div style="font-family:var(--font-read);font-size:.95rem;font-weight:600;color:var(--parchment);line-height:1.5;margin-bottom:.6rem">${escapeHTML(en?(st.std_en||st.std):st.std)}</div>
     <div style="font-size:.76rem;font-style:italic;color:var(--parch3)">${en?'The auditor checks exactly this. Today in service: make it happen at your tables.':'El auditor comprueba exactamente esto. Hoy en el servicio: que se cumpla en tus mesas.'}</div>
   `, en?'Standard of the day':'Protocolo del día');
-}
-async function _luCodeOpen(){
-  const en=LANG==='en';
-  if(!CODIGO_CAMARERO){
-    try{ CODIGO_CAMARERO=await loadLazyData('data/codigo-camarero.json', en?'the Waiter’s Code':'el Código del Camarero'); }catch(e){ return; }
-  }
-  const c=_luCodeOfDay();
-  if(!c) return;
-  const emp=getEmp(currentUser); emp.luCdgDay=todayStr(); saveDB();
-  const card=_cdgCardHTML(c).replace('<details class="cdg-card"','<details class="cdg-card" open');
-  _luOverlay(`
-    <div style="font-family:var(--font-mono);font-size:var(--fs-1);letter-spacing:.14em;text-transform:uppercase;color:var(--gold-deep);margin-bottom:.5rem"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align:-.15em;flex:none"><circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2 5-5 2 2-5 5-2z"/></svg> ${en?'Code of the day':'Código del día'}</div>
-    ${card}
-  `, en?'Code of the day':'Código del día');
 }
 function renderLineUp(){
   const en=LANG==='en';
@@ -31968,95 +31947,6 @@ function _hspPaso(p){
   const b=document.querySelector('#hspOverlay .pase-body'); if(b) b.scrollTop=0;
 }
 
-// ═══ EL CÓDIGO DEL CAMARERO — lo que solo enseñan los años ═══
-// Manual de oficio consultable (no un examen): leer la mesa, el momento
-// justo, las frases exactas, los fuegos, las personas difíciles, los
-// momentos delicados, la venta con clase y los trucos del oficio.
-// Contenido en data/codigo-camarero.json (lazy, ~90 KB solo al entrar).
-let CODIGO_CAMARERO=null;
-let _cdgCat='all', _cdgQ='';
-async function startCodigo(){
-  lqaView='codigo';
-  const c=document.getElementById('appContent');
-  if(!CODIGO_CAMARERO){
-    c.innerHTML=`<div class="sup-wrap" style="text-align:center;padding:3rem 1rem;color:var(--parch3);font-family:var(--font-mono);font-size:var(--fs-2)">…</div>`;
-    try{ CODIGO_CAMARERO=await loadLazyData('data/codigo-camarero.json', LANG==='en'?'the Waiter’s Code':'el Código del Camarero'); }
-    catch(e){ renderLqa(); return; }
-  }
-  _cdgCat='all'; _cdgQ='';
-  renderCodigo();
-}
-function _cdgSetCat(id){ _cdgCat=id; renderCodigo(); }
-function _cdgSearch(v){
-  _cdgQ=(v||'').toLowerCase();
-  const list=document.getElementById('cdgList');
-  if(list) list.innerHTML=_cdgListHTML();
-}
-function _cdgCardHTML(card){
-  const en=LANG==='en';
-  const cat=CODIGO_CAMARERO.cats.find(x=>x.id===card.cat)||{};
-  const steps=(en?card.steps_en:card.steps)||[];
-  const never=(en?card.never_en:card.never)||[];
-  const sec=(icon,label,inner)=>`
-    <div style="margin-top:.7rem">
-      <div style="font-family:var(--font-mono);font-size:var(--fs-1);letter-spacing:.14em;text-transform:uppercase;color:var(--gold-deep);margin-bottom:.3rem">${icon} ${label}</div>
-      ${inner}
-    </div>`;
-  return `<details class="cdg-card" style="background:linear-gradient(155deg,#faf6ee,#f0e8d8);border:1.5px solid rgba(196,154,60,.18);border-radius:12px;margin-bottom:.55rem;overflow:hidden">
-    <summary style="list-style:none;cursor:pointer;display:flex;align-items:center;gap:.6rem;padding:.75rem .9rem">
-      <span style="font-size:1rem;flex-shrink:0" aria-hidden="true">${cat.icon||'◆'}</span>
-      <span style="flex:1;font-family:var(--font-read);font-size:.9rem;font-weight:700;color:var(--parchment)">${en?card.t_en:card.t}</span>
-      <span style="color:var(--gold-deep);font-size:.8rem" aria-hidden="true">▾</span>
-    </summary>
-    <div style="padding:0 .9rem .9rem;border-top:1px dashed rgba(196,154,60,.25)">
-      <div style="font-size:.8rem;color:var(--parch2);line-height:1.5;margin-top:.6rem">${en?card.read_en:card.read}</div>
-      ${card.say?sec('💬',en?'What to say':'Qué decir',`<div style="font-family:var(--font-read);font-size:.85rem;font-style:italic;color:var(--parchment);background:rgba(196,154,60,.08);border-left:3px solid var(--gold);border-radius:0 8px 8px 0;padding:.5rem .7rem">${en?card.say_en:card.say}</div>`):''}
-      ${sec('✅',en?'What to do':'Qué hacer',`<ul style="margin:0;padding-left:1.1rem;font-size:.78rem;color:var(--parch2);line-height:1.5">${steps.map(s=>`<li style="margin:.25rem 0">${s}</li>`).join('')}</ul>`)}
-      ${never.length?sec('🚫',en?'Never':'Nunca',`<ul style="margin:0;padding-left:1.1rem;font-size:.78rem;color:#a04848;line-height:1.5">${never.map(s=>`<li style="margin:.25rem 0">${s}</li>`).join('')}</ul>`):''}
-      ${sec('🧠',en?'Why it works':'El porqué',`<div style="font-size:.76rem;font-style:italic;color:var(--parch3);line-height:1.5">${en?card.why_en:card.why}</div>`)}
-    </div>
-  </details>`;
-}
-function _cdgListHTML(){
-  const en=LANG==='en';
-  const q=_cdgQ;
-  let cards=CODIGO_CAMARERO.cards;
-  if(_cdgCat!=='all') cards=cards.filter(c=>c.cat===_cdgCat);
-  if(q) cards=cards.filter(c=>{
-    const hay=(c.t+' '+c.t_en+' '+c.read+' '+(c.say||'')+' '+(c.steps||[]).join(' ')+' '+(c.never||[]).join(' ')+' '+c.why).toLowerCase();
-    return hay.includes(q);
-  });
-  if(!cards.length) return `<div style="text-align:center;padding:1.5rem;color:var(--parch3);font-size:.8rem">${en?'Nothing found':'No hay resultados'}</div>`;
-  // agrupado por categoría (en el orden del manual)
-  return CODIGO_CAMARERO.cats.map(cat=>{
-    const cc=cards.filter(c=>c.cat===cat.id);
-    if(!cc.length) return '';
-    return `<div class="tunic-divider" style="margin-top:1rem"><span>${cat.icon} ${en?cat.t_en:cat.t}</span></div>
-      <div style="font-family:var(--font-mono);font-size:var(--fs-1);color:var(--parch3);text-align:center;margin:-.3rem 0 .6rem">${en?cat.sub_en:cat.sub}</div>
-      ${cc.map(_cdgCardHTML).join('')}`;
-  }).join('');
-}
-function renderCodigo(){
-  const en=LANG==='en';
-  const c=document.getElementById('appContent');
-  const chips=[{id:'all',t:en?'All':'Todos',icon:'◆'}].concat(CODIGO_CAMARERO.cats.map(x=>({id:x.id,t:en?x.t_en:x.t,icon:x.icon})));
-  c.innerHTML=`<div class="sup-wrap">
-    <button onclick="renderLqa()" aria-label="${LANG==='en'?'Back':'Volver'}" style="background:transparent;border:1.5px solid rgba(196,154,60,.55);border-radius:var(--r2);padding:.4rem .8rem;font-size:.75rem;color:var(--gold-deep);font-weight:700;cursor:pointer;margin-bottom:.6rem">←</button>
-    <div class="sup-hero">
-      <div class="sup-hero-icon" style="font-size:1.6rem">🧭</div>
-      <div class="sup-hero-title">${en?'The Waiter’s Code':'El Código del Camarero'}</div>
-      <div class="sup-hero-sub">${en?'What only years and experience teach':'Lo que solo enseñan los años y la experiencia'}</div>
-    </div>
-    <div style="font-family:var(--font-mono);font-size:var(--fs-1);color:var(--parch3);text-align:center;margin:-.2rem 0 .7rem;line-height:1.5">${en?'The Code complements the Forbes/LQA standards — when in doubt, the standard rules':'El Código complementa los estándares Forbes/LQA — ante la duda, manda el estándar'}</div>
-    <input type="search" placeholder="${en?'Search a situation… (spill, hurry, allergy)':'Busca una situación… (derrame, prisa, alergia)'}" oninput="_cdgSearch(this.value)" value="${_cdgQ.replace(/"/g,'&quot;')}"
-      style="width:100%;padding:.65rem .9rem;border:1.5px solid rgba(196,154,60,.3);border-radius:12px;background:#faf6ee;color:var(--parchment);font-family:Quicksand,sans-serif;font-size:16px;margin-bottom:.6rem" aria-label="${en?'Search the code':'Buscar en el código'}">
-    <div style="display:flex;gap:.35rem;flex-wrap:wrap;margin-bottom:.4rem">
-      ${chips.map(ch=>`<button onclick="_cdgSetCat('${ch.id}')" style="border-radius:20px;padding:.32rem .7rem;font-family:Quicksand,sans-serif;font-size:.68rem;font-weight:700;cursor:pointer;border:1.5px solid ${_cdgCat===ch.id?'var(--gold-deep)':'rgba(196,154,60,.4)'};background:${_cdgCat===ch.id?'rgba(196,154,60,.15)':'transparent'};color:${_cdgCat===ch.id?'var(--gold-deep)':'var(--parch2)'}">${ch.icon} ${ch.t}</button>`).join('')}
-    </div>
-    <div id="cdgList">${_cdgListHTML()}</div>
-  </div>`;
-}
-
 function renderLqa(){
   lqaView='menu';
   const c=document.getElementById('appContent');
@@ -32083,17 +31973,6 @@ function renderLqa(){
         <div class="hub-banner-body">
           <div class="hub-banner-title">${LANG==='en'?'Full audit':'Auditoría completa'}</div>
           <div class="hub-banner-sub">${LANG==='en'?'Under the auditor\'s eye · Full-service simulation':'Bajo la mirada del auditor · Simulación completa'}</div>
-        </div>
-        <div class="hub-banner-arrow">›</div>
-      </div>
-
-      <!-- 🧭 EL CÓDIGO DEL CAMARERO: manual de oficio consultable -->
-      <div class="hub-banner" style="--hb-bg:linear-gradient(135deg,#1d1508 0%,#3a2c14 50%,#1d1508 100%);--hb-b:rgba(212,170,76,.45);--hb-glow:rgba(212,170,76,.5);position:relative;overflow:hidden;margin-bottom:.9rem" onclick="startCodigo()">
-        <span class="hub-banner-shine"></span>
-        <div class="hub-banner-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align:-.15em;flex:none"><circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2 5-5 2 2-5 5-2z"/></svg></div>
-        <div class="hub-banner-body">
-          <div class="hub-banner-title">${LANG==='en'?'The Waiter’s Code':'El Código del Camarero'}</div>
-          <div class="hub-banner-sub">${LANG==='en'?'What only years teach · 51 codes of the trade':'Lo que solo enseñan los años · 51 códigos del oficio'}</div>
         </div>
         <div class="hub-banner-arrow">›</div>
       </div>
