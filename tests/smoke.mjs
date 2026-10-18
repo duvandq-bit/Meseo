@@ -4436,7 +4436,8 @@ test('el Repaso Inteligente vive en Practicar, sin chip propio en Saber', () => 
     'la ruta smart debe seguir existiendo (el plan del día del inicio la usa)');
   const f = html.slice(html.indexOf('function _smartCtaHTML('), html.indexOf('function renderPracticar('));
   assert(/class="ri-cta"[^>]*onclick="showTab\('smart'\)"/.test(f), 'la entrada es la tarjeta destacada y abre la ruta smart');
-  assert(/la app elige los platos que más te conviene repasar/.test(f), 'el subtítulo debe explicar qué es la sesión');
+  // Oct 2026: «Repasar fallos» se fundió aquí; el subtítulo dice el orden de la sesión.
+  assert(/primero tus fallos, luego lo que estás a punto de olvidar/.test(f), 'el subtítulo debe explicar qué es la sesión');
   assert(/s\.reps > 0 && Date\.now\(\) >= s\.nextReview/.test(f),
     'la cuenta de pendientes debe contar solo repasos vencidos, como el resumen');
   const pr = html.slice(html.indexOf('function renderPracticar('), html.indexOf('function _prcVolverHTML('));
@@ -5083,7 +5084,10 @@ test('Aprender → Técnicas: glosario de técnicas de cocina cableado y derivad
     'la nota En el Txoko debe ser opcional (solo cuando hay plato real)');
   assert(/function renderTecnicas\(\)/.test(html), 'falta el renderer renderTecnicas');
   // subpestaña cableada en los 5 puntos del enrutado de Aprender
-  assert(/\['tecnicas', _en\?'Techniques':'Técnicas'/.test(html), 'la subpestaña Técnicas no está en la barra de chips');
+  // Oct 2026 (fusión de pantallas): Técnicas ya no es chip de Saber; la ruta
+  // sigue (búsqueda global) y cada plato enseña las suyas en «Cómo se cocina».
+  assert(!/\['tecnicas', _en\?'Techniques':'Técnicas'/.test(html), 'Técnicas no debe volver a la barra de chips');
+  assert(/function _dishTecnicas\(d\)/.test(html) && /function _dishTecHTML\(d, compacto\)/.test(html), 'faltan las técnicas por plato');
   assert(_ux2.UX2_SECCION.tecnicas === 'saber', 'tecnicas es de Saber');
   assert(/tecnicas:'aprender'/.test(html), 'tecnicas no está en parentMap');
   assert(/tecnicas:renderAprender/.test(html), 'tecnicas no está en renderMap');
@@ -5128,7 +5132,8 @@ test('Aprender lands on Emplatado and lists it first (owner request, jul 2026)',
   // Oct 2026: la Mesa con alergias (consulta con el cliente delante) pasa a
   // ser el primer chip; Emplatado sigue justo detrás y sigue siendo el
   // aterrizaje de Aprender.
-  assert(/const items = \[\s*(\/\/[^\n]*\n\s*)*\['mesa',[^\n]*\n\s*\['emplatado',/.test(lista), 'Mesa must be the FIRST Saber tab, Emplatado right after');
+  // Oct 2026: Plating guide y Repaso son un solo chip «Carta», justo detrás de Mesa.
+  assert(/const items = \[\s*(\/\/[^\n]*\n\s*)*\['mesa',[^\n]*\n\s*\['carta',/.test(lista), 'Mesa must be the FIRST Saber tab, Carta right after');
   assert(!/'smart'/.test(lista), 'el Repaso inteligente no vuelve a Saber (vive en Practicar)');
   assert(/_subTab\.aprender\s*\|\|\s*'emplatado'/.test(html), "Aprender default sub-tab must be 'emplatado'");
   assert(/let _subTab = \{ aprender:'emplatado'/.test(html),
@@ -6440,7 +6445,7 @@ test('telemetría Fase 1: captura local-first (track + opt-out + IndexedDB + ret
   assert(/track\('dish\.view', \{ dishId: dish\.id, from: 'repaso' \}\);/.test(html), 'falta dish.view');
   assert(/track\('duel\.finish', \{ won: iWon\?1:0 \}\);/.test(html), 'falta duel.finish');
   assert(/track\('session\.start',/.test(html) && /track\('session\.end',/.test(html), 'faltan session.start/end');
-  assert(/_tmTrackSearch\(query\.length, dishes\.length \+ wines\.length \+ lqas\.length\);/.test(html), 'falta search.query');
+  assert(/_tmTrackSearch\(query\.length, dishes\.length \+ wines\.length \+ lqas\.length \+ screens\.length\);/.test(html), 'falta search.query');
 
   // PRIVACIDAD: la búsqueda NUNCA guarda el texto tecleado (solo longitud/hits).
   const searchTrk = html.slice(html.indexOf('function _tmTrackSearch'), html.indexOf('function _tmMaybePrivacyNotice'));
@@ -6647,7 +6652,11 @@ test('Actualidad: robot de noticias + calendario de eventos (jul 2026)', () => {
   // UI cableada como subpestaña de Aprender, con enlaces seguros.
   assert(/function renderActualidad\(/.test(html) && /actualidad:renderActualidad/.test(html),
     'renderActualidad debe existir y estar en el dispatch de Aprender');
-  assert(/\['actualidad', _en\?'News':'Actualidad'/.test(html), 'el chip Actualidad debe estar en la barra');
+  // Oct 2026: Actualidad ya no ocupa chip (en el móvil caben 4-5); se abre
+  // desde el pie de la Carta («Qué se cuece fuera») y desde la búsqueda.
+  assert(!/\['actualidad', _en\?'News':'Actualidad'/.test(html), 'Actualidad no debe volver a la barra');
+  assert(/function _cartaPieHTML\(\)/.test(html) && /_subTab\.aprender='actualidad';showTab\('actualidad'\)/.test(html.slice(html.indexOf('function _cartaPieHTML('), html.indexOf('function renderEmplatado('))), 'el pie de la Carta lleva a Actualidad');
+  assert(/id:'actualidad', name:en\?'News':'Actualidad'/.test(html), 'la búsqueda global encuentra Actualidad');
   assert(/target="_blank" rel="noopener noreferrer"/.test(html.slice(html.indexOf('function _actHTML'), html.indexOf('function renderActualidad'))),
     'las noticias abren fuera con rel=noopener');
   assert(/\.act-card\{/.test(read('styles.css')), 'estilos del feed ausentes');
@@ -6730,7 +6739,8 @@ test('showTab fija la subpestaña de destino (Flashcards no cae en Emplatado)', 
   // El índice «Estudiar» del inicio se retiró (oct 2026); Flashcards se abre desde Practicar.
   const prc = html.slice(html.indexOf('function renderPracticar('), html.indexOf('function _prcVolverHTML('));
   assert(/showTab\('flashcards'\)/.test(prc), 'el atajo Flashcards debe seguir en Practicar');
-  assert(/\['repaso', _en\?'Review':'Repaso', apr\('repaso'\)\]/.test(html), 'Repaso sigue en las pestañas de Saber');
+  // Oct 2026: la carta (ruta repaso) se abre desde el chip «Carta», que recuerda fotos o lista.
+  assert(/\['carta', _en\?'Menu':'Carta', "_cartaAbrir\(\)"\]/.test(html) && /_cartaRuta\(_cartaVistaPref\(\)\)/.test(html), 'la Carta sigue en las pestañas de Saber');
 });
 
 test('Actualidad: una pantalla que se lee de arriba abajo (ago 2026)', () => {
@@ -8204,7 +8214,10 @@ test('Guía de emplatado: mapa de fotos íntegro, sección cableada, overlay y C
     for (const d of (JSON.parse(read('data/' + f)).DISHES || [])) ids.add(String(d.id));
   for (const id of keys) assert(ids.has(id), `dish-photos.json maps unknown dish id ${id}`);
   // sección cableada como subtab de Aprender + overlay + búsqueda
-  assert(/\['emplatado','Plating guide'/.test(html), 'Plating guide subtab missing from Aprender hub');
+  // Oct 2026: el chip se llama «Carta» y abre fotos o lista según la última
+  // elección; la ruta emplatado sigue siendo la de las fotos.
+  assert(/\['carta', _en\?'Menu':'Carta', "_cartaAbrir\(\)"\]/.test(html), 'Carta subtab missing from Aprender hub');
+  assert(!/'Plating guide', apr\(/.test(html) && !/\['repaso', _en\?'Review':'Repaso', apr\(/.test(html), 'Plating guide y Repaso ya no son chips separados');
   assert(/emplatado:renderEmplatado/.test(html), 'renderEmplatado not wired into the Aprender dispatch');
   // CADA subtab de Aprender debe existir en el enrutador global: _subTabBar
   // conmuta con showTab('<subkey>'), así que renderMap y parentMap deben
@@ -8213,8 +8226,10 @@ test('Guía de emplatado: mapa de fotos íntegro, sección cableada, overlay y C
   // La barra vive en _aprChipsBar (extraída de renderAprender para poder
   // re-inyectarla tras los re-renders internos — «se desaparecieron las
   // subcategorías»).
-  const hubSrc = html.slice(html.indexOf('function _saberChipsBar('), html.indexOf('function _saberSync('));
-  const subkeys = [...hubSrc.matchAll(/\['([a-z]+)',[^\]\n]*apr\('/g)].map(m => m[1]);
+  // Las subrutas de Aprender son las que despacha renderAprender (_APR_RENDER);
+  // desde oct 2026 la barra ya no las lista una a una.
+  const aprSrc = html.slice(html.indexOf('const _APR_RENDER = {'), html.indexOf('};', html.indexOf('const _APR_RENDER = {')));
+  const subkeys = [...aprSrc.matchAll(/(\w+):render/g)].map(m => m[1]);
   assert(subkeys.length >= 4, `expected ≥4 Aprender subtabs, found ${subkeys.length}`);
   const renderMapSrc = html.slice(html.indexOf('const renderMap = {'), html.indexOf('const renderMap = {') + 600);
   const parentMapSrc = html.slice(html.indexOf('const parentMap = {'), html.indexOf('const parentMap = {') + 300);
@@ -8420,7 +8435,8 @@ test('Inicio · Consulta rápida: dos accesos en una fila, Mesa con alergias y C
     assert(css.includes(sel), `styles.css must style ${sel}`);
   }
   assert(!/dash-plating-strip/.test(css) && !/dash-plating-strip/.test(html), 'el abanico de fotos se retiró del todo');
-  assert(/"Plating guide"/.test(read('manifest.json')), 'the icon shortcut must be renamed to match its landing');
+  // Oct 2026: la pestaña se llama «Carta» (fotos y lista en una); el atajo del icono va igual.
+  assert(/"name": "Carta"/.test(read('manifest.json')) && !/"Plating guide"/.test(read('manifest.json')), 'the icon shortcut must be renamed to match its landing');
 });
 
 test('Acceso en 1 toque: sesión deslizante 90d, banner de instalación, hoja iOS, atajos del manifest', () => {
@@ -8710,25 +8726,31 @@ test('onboarding guide matches the real Juegos hub (no Modo Error promise)', () 
   const hub = html.slice(html.indexOf('function renderTxoko()'), html.indexOf('function renderTxTop10()'));
   assert(!/getFailedDishes|failedLabel/.test(hub), 'renderTxoko must not compute unused failed-dish counters');
   // The mode itself still exists from the dashboard shortcut.
-  assert(/startPersonalErrorMode\(\)/.test(html.slice(html.indexOf('function renderPracticar('), html.indexOf('function _prcVolverHTML('))), 'el atajo Repasar fallos sigue, en Practicar');
+  // Oct 2026: «Repasar fallos» se fundió en Repaso: la sesión pone primero
+  // los fallos y hay un filtro «Solo fallos». La función vieja queda sin atajo.
+  assert(!/startPersonalErrorMode\(\)/.test(html.slice(html.indexOf('function renderPracticar('), html.indexOf('function _prcVolverHTML('))), 'Repasar fallos ya no es entrada de Practicar');
+  assert(/_startSmartSession\(true\)/.test(html) && /function _smartFallos\(emp\)/.test(html), 'el filtro Solo fallos vive en Repaso');
 });
 
-test('la actividad lleva UN solo nombre en todas partes: Repaso Inteligente', () => {
+test('la actividad lleva UN solo nombre en todas partes: Repaso', () => {
   // Auditoría A1 + rediseño jul 2026: mismo criterio de siempre (un nombre
-  // único), nombre nuevo — «Simulación» murió con el disfraz de terminal.
-  assert(/title_es:'Repaso inteligente',title_en:'Smart review'/.test(html),
+  // único). Oct 2026: tres cosas se llamaban «repaso»; la carta pasó a ser
+  // «Carta» y «Repasar fallos» se fundió aquí, así que esta es, a secas, Repaso.
+  assert(/title_es:'Repaso',title_en:'Review'/.test(html),
     'la guía de onboarding debe usar el nombre nuevo');
-  assert(/Aprender → Repaso/.test(html) && /Learn → Review/.test(html),
-    'la guía debe decir DÓNDE vive ahora la sesión (renombrada a Repaso, jul 2026)');
+  assert(/Practicar → Repaso/.test(html) && /Practise → Review/.test(html),
+    'la guía debe decir DÓNDE vive ahora la sesión (Practicar)');
   // El titular de la pantalla, sea cual sea la caja: lo que se comprueba es
   // que la actividad se llame igual aquí que en la guía, no que vaya en
   // mayúsculas (sept 2026 dejó de ir en versalitas forzadas).
   const tit = html.match(/class="ri-title">\$\{_en\?'([^']+)':'([^']+)'\}/);
   assert(tit, 'no encuentro el titular de la pantalla de Repaso');
-  assert(/^smart review$/i.test(tit[1]) && /^repaso inteligente$/i.test(tit[2]),
-    `la cabecera de la pantalla debe decir Repaso Inteligente, dice «${tit[2]}»`);
-  assert(/'Smart review' : 'Repaso inteligente'/.test(html),
+  assert(/^review$/i.test(tit[1]) && /^repaso$/i.test(tit[2]),
+    `la cabecera de la pantalla debe decir Repaso, dice «${tit[2]}»`);
+  assert(/'Review' : 'Repaso'/.test(html),
     'el historial de XP debe usar el nombre nuevo');
+  assert(/es:'Repaso',\s+en:'Review'\}/.test(html), 'el plan de hoy la llama igual');
+  assert(!/'Repaso inteligente'/.test(html.replace(/\/\/[^\n]*/g, '')), 'ningún texto visible dice ya Repaso inteligente');
 });
 
 test('dashboard «Hoy»: héroe pergamino de dos estados (Reto del día ⇄ Plato del día)', () => {
@@ -8874,10 +8896,12 @@ test('renames: Terraza / Repaso / Repasar fallos (labels only)', () => {
   // La Terraza (chat) se retiró en oct 2026: ni con un nombre ni con el otro.
   assert(!/<\/svg> Terraza<\/button>/.test(html) && !/<\/svg> Chat<\/button>/.test(html),
     'el chat no puede volver al menú');
-  assert(/\['repaso', _en\?'Review':'Repaso',/.test(html), 'Aprender chip must say Repaso');
+  // Oct 2026: el chip volvió a llamarse «Carta» (ya no «La Carta»): es una
+  // sola pestaña con fotos y lista, y «Repaso» quedó para la sesión de casos.
+  assert(/\['carta', _en\?'Menu':'Carta',/.test(html), 'Saber chip must say Carta');
   assert(!/'The Menu':'La Carta'/.test(html), 'no visible label may still say La Carta/The Menu');
-  assert(/'Review misses':'Repasar fallos'/.test(html),
-    'dashboard error-mode shortcut must say Repasar fallos');
+  assert(!/'Review misses':'Repasar fallos'/.test(html),
+    'Repasar fallos ya no es un atajo: es el filtro Solo fallos dentro de Repaso');
 });
 
 test('Logros live as a Ranking chip; Inicio keeps a one-row summary', () => {
@@ -16934,10 +16958,16 @@ test('Practicar: la pestaña tiene página propia y lleva a todo lo que se entre
   assert(_ux2.UX2_DESTINO.practicar === 'practicar' && _ux2.UX2_SECCION.practicar === 'practicar', 'la pestaña abre su página');
   assert(/const TAB_ROUTES = \[[^\]]*'practicar'/.test(html) && /practicar:renderPracticar/.test(html), 'ruta y quien la pinta');
   const pr = html.slice(html.indexOf('function renderPracticar('), html.indexOf('function _prcVolverHTML('));
-  for (const [que, re] of [['Pase', /_paseCtaHTML\(_en\)/], ['Hospitalidad', /_hspCtaHTML\(_en\)/], ['Repaso inteligente', /_smartCtaHTML\(/],
-    ['Examen', /showTab\('exam'\)/], ['Flashcards', /showTab\('flashcards'\)/], ['Juegos', /showTab\('txoko'\)/],
-    ['Auditoría completa', /startGhostInspection\(\)/], ['Repasar fallos', /startPersonalErrorMode\(\)/]])
+  // Oct 2026: una sola entrada de Examen (abre el selector) y una de Repaso.
+  for (const [que, re] of [['Pase', /_paseCtaHTML\(_en\)/], ['Hospitalidad', /_hspCtaHTML\(_en\)/], ['Repaso', /_smartCtaHTML\(/],
+    ['Examen', /_examSelectorAbrir\(\)/], ['Flashcards', /showTab\('flashcards'\)/], ['Juegos', /showTab\('txoko'\)/]])
     assert(re.test(pr), `Practicar tiene que llevar a ${que}`);
+  for (const re of [/startGhostInspection\(\)/, /startPersonalErrorMode\(\)/, /showTab\('exam'\)/])
+    assert(!re.test(pr.slice(0, pr.indexOf('function _examSelectorAbrir('))), `Practicar no lleva entradas sueltas de examen ni de fallos: ${re}`);
+  const sel = pr.slice(pr.indexOf('function _examSelectorAbrir('));
+  for (const [que, re] of [['Carta', /showTab\('exam'\)/], ['Servicio completo', /startGhostInspection\(\)/],
+    ['LQA', /showTab\('protocolo',true\);startLqaExam\(\)/], ['Sala', /_SABER_HAY\.sala && typeof startSalaExam==='function'/]])
+    assert(re.test(sel), `el selector de Examen ofrece ${que}`);
   // Repaso (explorar la carta) es consulta: va en Saber y ya no lleva las tarjetas de práctica.
   assert(_ux2.UX2_SECCION.repaso === 'saber', 'Repaso es de Saber');
   const rc = html.slice(html.indexOf('function renderRepasoCats()'), html.indexOf('function renderRepasoTopic()'));
@@ -17439,6 +17469,89 @@ test('Parte: la demo no sale a la red y el Visto no da XP', () => {
   for (const c of ['.parte-card{', '.parte-visto-btn{', '.parte-form{', '.parte-res-it{']) assert(css.includes(c), `falta ${c} en styles.css`);
   // Comentarios de las tablas: sin datos personales de clientes (texto de ayuda en el campo).
   assert(/Sin nombres ni datos personales de clientes/.test(html), 'ayuda del campo de reservas');
+});
+
+console.log('\nFusión de pantallas: Carta, Repaso y Examen (oct 2026)');
+test('Saber: como mucho 7 chips; Carta sí, Repaso/Plating guide/Actualidad/Técnicas no', () => {
+  const bar = html.slice(html.indexOf('function _saberChipsBar('), html.indexOf('function _saberSync('));
+  const lista = bar.slice(bar.indexOf('const items = ['), bar.indexOf('].filter(Boolean)'));
+  const ids = [...lista.matchAll(/\['([a-z]+)',/g)].map(m => m[1]);
+  assert(ids.length <= 7, `la barra de Saber tiene ${ids.length} chips; en el móvil caben 4-5 y el tope es 7`);
+  assert(ids.join(',') === 'mesa,carta,vinos,quesos,sala,protocolo', `orden de la barra: ${ids.join(',')}`);
+  for (const no of ['repaso', 'emplatado', 'actualidad', 'tecnicas', 'smart', 'flashcards']) assert(!ids.includes(no), `el chip ${no} no va en la barra`);
+  assert(!/Plating guide/.test(lista) && !/'Review':'Repaso'/.test(lista) && !/Actualidad/.test(lista) && !/Técnicas/.test(lista), 'ninguna etiqueta vieja en la barra');
+  // Un solo chip encendido para fotos y lista.
+  const act = html.slice(html.indexOf('function _saberActivo('), html.indexOf('function _saberChipsBar('));
+  assert(/tab==='emplatado' \|\| tab==='repaso'\) return 'carta'/.test(act), 'emplatado y repaso encienden el chip Carta');
+  // Las rutas siguen existiendo (enlaces internos y búsqueda).
+  for (const r of ['emplatado', 'repaso', 'tecnicas', 'actualidad']) assert(_ux2.rutas.includes(r), `la ruta ${r} sigue en TAB_ROUTES`);
+  assert(/repaso:\['Carta','Menu'\]/.test(html) && /emplatado:\['Carta','Menu'\]/.test(html), 'las dos rutas se titulan Carta');
+});
+test('Carta: conmutador fotos | lista con memoria por persona y pie a Actualidad', () => {
+  const c = html.slice(html.indexOf('const _CARTA_VISTA_KEY'), html.indexOf('function renderEmplatado('));
+  assert(/localStorage\.getItem\(_CARTA_VISTA_KEY\)/.test(c) && /localStorage\.setItem\(_CARTA_VISTA_KEY, v\)/.test(c), 'la última vista se recuerda en localStorage');
+  assert(/try\{[^}]*getItem/.test(c) && /try\{[^}]*setItem/.test(c), 'lecturas y escrituras protegidas con try');
+  assert(/return 'fotos';/.test(c), 'sin memoria aterriza en fotos (lo más consultado en servicio)');
+  assert(/b\('fotos', /.test(c) && /b\('lista', /.test(c) && /onclick="_cartaVer\('\$\{v\}'\)"/.test(c) && /role="tablist"/.test(c), 'el conmutador tiene las dos posiciones');
+  assert(/'Photos':'Fotos'/.test(c) && /'List':'Lista'/.test(c), 'etiquetas ES/EN');
+  const emp = html.slice(html.indexOf('function renderEmplatado('), html.indexOf('function _emplRender('));
+  assert(/\$\{_cartaToggleHTML\('fotos'\)\}/.test(emp) && /\$\{_cartaPieHTML\(\)\}/.test(emp), 'las fotos llevan el conmutador arriba y el pie abajo');
+  const rc = html.slice(html.indexOf('function renderRepasoCats()'), html.indexOf('function searchRepaso('));
+  assert(/\$\{_cartaToggleHTML\('lista'\)\}/.test(rc) && /\$\{_cartaPieHTML\(\)\}/.test(rc), 'la lista lleva el conmutador arriba y el pie abajo');
+  assert(/Qué se cuece fuera/.test(c), 'el pie se llama «Qué se cuece fuera»');
+  const css = read('styles.css');
+  assert(/\.carta-vista\{/.test(css) && /\.carta-pie\{[^}]*min-height:44px/.test(css), 'estilos del conmutador y del pie (toque de 44 px)');
+});
+test('ficha del plato: «Cómo se cocina» cuando el plato tiene técnica', () => {
+  const t = html.slice(html.indexOf('function _dishTecnicas('), html.indexOf('// ═══ HORARIOS DEL EQUIPO'));
+  // Mismo emparejamiento que la pantalla Técnicas (nombre+ingredientes+historia+notas, con exclusiones kwx).
+  assert(/\(d\.name\|\|''\)\+' '\+\(d\.ingredients\|\|''\)\+' '\+\(d\.history\|\|''\)\+' '\+\(d\.notes\|\|''\)/.test(t), 'misma búsqueda que _tecDishes');
+  assert(/t\.kwx && t\.kwx\.some\(k=>hay\.includes\(k\)\)/.test(t), 'respeta las exclusiones kwx');
+  assert(/if\(!tecs\.length\) return '';/.test(t), 'sin técnica no pinta nada');
+  assert(/'How it is cooked':'Cómo se cocina'/.test(t) && /<details class="dish-tec/.test(t), 'sección plegable con su nombre ES/EN');
+  assert(/esTxoko \? t\.txoko : ''/.test(t), 'la nota «En el Txoko» sólo en Txoko');
+  const ficha = html.slice(html.indexOf('function renderRepasoDishDetail('), html.indexOf('function changeRepasoTopic('));
+  assert(/_dishTecHTML\(dish, false\)/.test(ficha), 'la ficha completa la pinta');
+  const rapida = html.slice(html.indexOf('function _emplOpen('), html.indexOf('// ── Moderación'));
+  assert(/\$\{_dishTecHTML\(d, true\)\}/.test(rapida), 'la vista rápida la pinta');
+  // Y de verdad hay técnica para platos de la demo con las técnicas de la casa.
+  const demo = JSON.parse(read('data/carta-demo.json'));
+  const k = html.indexOf('const TECNICAS = [');
+  const TEC = new Function(html.slice(k, html.indexOf('\n];', k) + 3) + '; return TECNICAS;')(); // eslint-disable-line no-new-func
+  const con = demo.DISHES.filter(d => { const hay = ((d.name||'')+' '+(d.ingredients||'')+' '+(d.history||'')+' '+(d.notes||'')).toLowerCase();
+    return TEC.some(t => !(t.kwx && t.kwx.some(x => hay.includes(x))) && t.kw.some(x => hay.includes(x))); });
+  assert(con.length >= 3, `al menos 3 platos de la demo tienen técnica (hay ${con.length})`);
+  assert(/\.dish-tec\{/.test(read('styles.css')) && /\.dish-tec\.compacto\{/.test(read('styles.css')), 'estilos de la sección');
+});
+test('Practicar: una entrada de Examen (selector de cuatro) y una de Repaso', () => {
+  const pr = html.slice(html.indexOf('function renderPracticar('), html.indexOf('function _examSelectorAbrir('));
+  assert((pr.match(/_smartCtaHTML\(/g) || []).length === 1, 'una sola tarjeta de Repaso');
+  assert((pr.match(/_examSelectorAbrir\(\)/g) || []).length === 1, 'una sola entrada de Examen');
+  assert(!/showTab\('exam'\)|startGhostInspection|startPersonalErrorMode|startLqaExam|startSalaExam|'Full audit'|'Review misses'/.test(pr), 'nada de exámenes sueltos ni Repasar fallos');
+  const orden = ['_paseCtaHTML(_en)', '_smartCtaHTML(_en, emp)', "'Train':'Entrenar'", "'Line Up'", '_examSelectorAbrir()', "showTab('flashcards')", "showTab('txoko')"];
+  let pos = -1; for (const m of orden) { const i = pr.indexOf(m); assert(i > pos, `fuera de orden o ausente en Practicar: ${m}`); pos = i; }
+  const sel = html.slice(html.indexOf('function _examSelectorAbrir('), html.indexOf('function launchPase('));
+  assert(/id='exselOverlay'/.test(sel) && /role','dialog'/.test(sel) && /_examSelectorCerrar\(\)/.test(sel), 'el selector es un diálogo que se cierra');
+  for (const [que, re] of [['Carta', /'Menu':'Carta'/], ['Servicio completo', /'Full service':'Servicio completo'/], ['LQA', /'LQA', _en\?/], ['Sala', /'Floor':'Sala'/]])
+    assert(re.test(sel), `el selector ofrece ${que}`);
+  assert(/\(_SABER_HAY\.sala && typeof startSalaExam==='function'\) \?/.test(sel), 'Sala sólo si el restaurante la tiene');
+  assert(/showTab\('protocolo',true\);startLqaExam\(\)/.test(sel) && /showTab\('sala',true\);startSalaExam\(\)/.test(sel), 'LQA y Sala se abren sobre su pestaña, en el acto');
+  assert(/#exselOverlay\{/.test(read('styles.css')) && /\.exsel-card\{/.test(read('styles.css')), 'estilos del selector');
+  // Repaso: los fallos primero, y el filtro «Solo fallos».
+  const sel2 = html.slice(html.indexOf('function _adaptiveSelectDishes('), html.indexOf('// SMART REVIEW v2'));
+  assert(/for\(const d of _smartFallos\(emp\)\)/.test(sel2) && sel2.indexOf('_smartFallos(emp)') < sel2.indexOf('Priority 1'), 'los fallados entran antes que el resto');
+  const sm = html.slice(html.indexOf('function renderSmartReview('), html.indexOf('function _startSmartSession('));
+  assert(/_startSmartSession\(true\)/.test(sm) && /'Only misses':'Solo fallos'/.test(sm) && /\$\{_nFallos\?`/.test(sm), 'el chip Solo fallos sale cuando hay fallos');
+  const ss = html.slice(html.indexOf('function _startSmartSession('), html.indexOf('function _srStartTimer('));
+  assert(/soloFallos \? _smartFallos\(emp\)\.slice\(0,5\) : _adaptiveSelectDishes\(emp, 5\)/.test(ss), 'con el filtro la sesión sale sólo de los fallos');
+});
+test('búsqueda global: Técnicas y Actualidad se encuentran por la lupa', () => {
+  const gs = html.slice(html.indexOf('function _gsScreenIndex('), html.indexOf('function _gsGo('));
+  assert(/id:'actualidad'/.test(gs) && /id:'tecnicas'/.test(gs) && /for\(const t of \(\(src && src\.lista\) \|\| \[\]\)\)/.test(gs), 'índice de pantallas con las técnicas por nombre');
+  const go = html.slice(html.indexOf('function _gsGo('), html.indexOf('function _gsShowLqaSituation('));
+  assert(/type==='screen'/.test(go) && /TAB_ROUTES\.includes\(id\)/.test(go), 'la lupa abre la pantalla por su ruta');
+  const r = html.slice(html.indexOf('function _gsRender('), html.indexOf('async function openGlobalSearch('));
+  assert(/const screens = _gsScreenIndex\(\)/.test(r) && /'Screens':'Pantallas'/.test(r), 'grupo Pantallas en los resultados');
 });
 
 console.log('\nHygiene');

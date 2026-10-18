@@ -52,7 +52,7 @@
 <meta property="og:description" content="Formación de equipos de sala: carta, alérgenos, vinos, exámenes y juegos de repaso.">
 <meta property="og:url" content="https://meseo.es/">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"Meseo","url":"https://meseo.es/"}</script>
-<meta name="app-version" content="7.511">
+<meta name="app-version" content="7.512">
 <meta name="app-build" content="May 2026">
 <meta name="theme-color" content="#1c2a22">
 <!-- ═══ PWA ═══ -->
@@ -2803,7 +2803,7 @@ const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><p
 const SRC = 'src';
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='7.511';  // sincronizada con sw.js VERSION (guard de CI)
+const APP_VERSION='7.512';  // sincronizada con sw.js VERSION (guard de CI)
 const APP_BUILD='Jul 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;
@@ -3943,7 +3943,7 @@ const PLAN_MUESTRA_MINIMA = 5;      // menos de 5 respuestas no es una nota
 // redondeado hacia arriba, y es lo que mantiene el plan dentro de la franja.
 const PLAN_CATALOGO = {
   seguridad_alergenos: {actividad:'simulacro_alergenos', competencia:'alergenos', minutos:5, seguridad:true, es:'Simulacro de alérgenos', en:'Allergen drill'},
-  repaso_srs:          {actividad:'repaso',              competencia:'carta',     minutos:4, es:'Repaso inteligente', en:'Smart review'},
+  repaso_srs:          {actividad:'repaso',              competencia:'carta',     minutos:4, es:'Repaso',             en:'Review'},
   carta_sin_ver:       {actividad:'recorrido',           competencia:'carta',     minutos:4, es:'Recorrido guiado',   en:'Guided journey'},
   comp_alergenos:      {actividad:'simulacro_alergenos', competencia:'alergenos', minutos:5, es:'Simulacro de alérgenos', en:'Allergen drill'},
   comp_carta:          {actividad:'examen',              competencia:'carta',     minutos:5, es:'Examen de carta',    en:'Menu exam'},
@@ -7998,11 +7998,28 @@ function _adaptiveWeaknesses(emp){
   return weaknesses.sort((a,b) => b.priority - a.priority);
 }
 
+// Platos fallados en exámenes: intentados en sesiones y acertados menos del
+// 60 % de las veces. Es la misma cuenta que usaba «Repasar fallos», que en oct
+// 2026 se fundió en el Repaso: aquí van primero.
+function _smartFallos(emp){
+  const ec = (emp && emp.examCorrect) || {};
+  const intentos = {};
+  ((emp && emp.sessions) || []).forEach(s => { (s.dishResults||[]).forEach(r => { intentos[r.id] = (intentos[r.id]||0) + 1; }); });
+  const out = DISHES.filter(d => intentos[d.id] > 0 && (ec[d.id]||0) < intentos[d.id]*0.6 && _isQuizableDish(d) && _shiftDishOk(d));
+  return _lqaShuffle(out);
+}
 function _adaptiveSelectDishes(emp, count){
   const ad = _adaptiveGetData(emp);
   const weaknesses = _adaptiveWeaknesses(emp);
   const selected = [];
   const used = new Set();
+
+  // Priority 0: lo fallado en exámenes. Como mucho tres de cinco, para que la
+  // sesión no sea sólo castigo y sigan entrando los repasos vencidos.
+  for(const d of _smartFallos(emp)){
+    if(selected.length >= Math.ceil(count*0.6)) break;
+    selected.push(d); used.add(d.id);
+  }
 
   // Priority 1: Dishes from weak allergen categories
   weaknesses.filter(w=>w.type==='allergen').forEach(w => {
@@ -9509,6 +9526,7 @@ function renderSmartReview(){
   const pickedDiff = autoDiff;
   const rank = _srGetRank(emp);
   const sessionSize = 5;
+  const _nFallos = _smartFallos(emp).length;   // «Repasar fallos» vive aquí como filtro
 
   // ── Platos dominados (barra de progreso de la cabecera) ──
   const mastered = DISHES.filter(d => { const s = (emp.srs||{})[d.id]; return s && s.reps >= 4 && s.ef >= 2.2; }).length;
@@ -9553,7 +9571,7 @@ function renderSmartReview(){
             <span class="ri-rank-icon" aria-hidden="true">${rank.icon}</span>${_en?rank.label_en:rank.label_es}
           </span>
         </div>
-        <h2 class="ri-title">${_en?'Smart Review':'Repaso Inteligente'}</h2>
+        <h2 class="ri-title">${_en?'Review':'Repaso'}</h2>
         <!-- Barra y cifra en la MISMA fila: así la barra se lee como barra
              aunque esté a cero, y la cabecera no gana otra línea. -->
         <div class="ri-mast">
@@ -9578,8 +9596,8 @@ function renderSmartReview(){
              escaneable con las familias — sigue distinguiéndose del Simulacro
              («solo alérgenos»), pero se lee de un vistazo y no en prosa. -->
         <p class="ri-brief">${_en
-          ? 'The dishes you are about to forget. Get it wrong here — not in front of the guest.'
-          : 'Los platos que estás a punto de olvidar. Aquí puedes equivocarte — delante del huésped, no.'}</p>
+          ? 'Your misses first, then what you are about to forget. Get it wrong here, not in front of the guest.'
+          : 'Primero tus fallos, luego lo que estás a punto de olvidar. Aquí puedes equivocarte; delante del huésped, no.'}</p>
         <!-- Las familias iban en una tirada monoespaciada que a 360 px salía
              en TRES líneas. DM Mono es la voz de los metadatos (§3), no la de
              una lista de contenido: en etiquetas se leen de un vistazo y son
@@ -9605,6 +9623,7 @@ function renderSmartReview(){
             </span>
           </button>
           <button onclick="renderAprender()" class="ri-secondary">↻ ${_en?'Reshuffle selection':'Regenerar selección'}</button>
+          ${_nFallos?`<button onclick="_startSmartSession(true)" class="ri-secondary ri-solo-fallos" aria-label="${_en?'Review only the dishes you got wrong':'Repasar sólo los platos que has fallado'}">⚑ ${_en?'Only misses':'Solo fallos'} · ${_nFallos}</button>`:''}
         </div>
 
         <div class="ri-stats-row">${statsHTML}</div>
@@ -9625,11 +9644,16 @@ function renderSmartReview(){
 }
 
 // ── Session Start ──
-function _startSmartSession(){
+function _startSmartSession(soloFallos){
   if(typeof _alergenosCerrados==='function' && _alergenosCerrados()) return;   // todos sus casos son de alérgenos
   const emp = getEmp(currentUser);
   const diff = _srGetDifficulty(emp); // always auto — manual picker removed
-  const dishes = _adaptiveSelectDishes(emp, 5);
+  // «Solo fallos»: la sesión sale únicamente de los platos fallados en exámenes.
+  const dishes = soloFallos ? _smartFallos(emp).slice(0,5) : _adaptiveSelectDishes(emp, 5);
+  if(soloFallos && dishes.length === 0){
+    if(typeof showToast === 'function') showToast(LANG==='en' ? 'No missed dishes to review' : 'No tienes platos fallados que repasar', 'info', 2400);
+    return;
+  }
   if(dishes.length === 0){
     // F-P0-2: previously a silent click-and-nothing-happens dead-end. Surface
     // an empty-state toast so the user understands they're caught up.
@@ -10001,7 +10025,7 @@ function _renderSmartSummary(){
   const totalXP = Math.round(rawXP * _practiceMult);
   const _isReviewHeavy = _queueMastered > 0 && (_queueMastered / _queueLen) >= 0.5;
 
-  if(totalXP > 0) awardXP(totalXP, _en ? 'Smart review' : 'Repaso inteligente', 'smart');
+  if(totalXP > 0) awardXP(totalXP, _en ? 'Review' : 'Repaso', 'smart');
   if(state.sessionTotal > 0) registrarActividad({ activity:'repaso', competency:'carta',
     kind:'practica', score:state.sessionScore, total:state.sessionTotal,
     seconds:Math.round((Date.now() - (state.startTime||Date.now()))/1000),
@@ -13594,7 +13618,7 @@ function _demoContactoHTML(){
 const ONBOARDING_PAGES = [
   {icon:`<svg width="28" height="28" viewBox="0 0 24 24"><polygon points="12,2 20,7 20,17 12,22 4,17 4,7" fill="none" stroke="#fff" stroke-width="1.5"/><circle cx="12" cy="11" r="3" fill="#fff" opacity=".8"/></svg>`,color:'#c49a3c',title_es:'¡Bienvenido a Meseo!',title_en:'Welcome to Meseo!',text_es:'Tu guía de formación para dominar la carta de '+_venueRotulo()+'. Aprenderás cada plato, alérgeno, ingrediente, protocolo de servicio y maridaje de vinos.',text_en:'Your training guide to master the menu of '+_venueRotulo()+'. You\'ll learn every dish, allergen, ingredient, service protocol and wine pairing.'},
   {icon:`<svg width="28" height="28" viewBox="0 0 24 24"><rect x="4" y="6" width="16" height="11" rx="2" fill="none" stroke="#fff" stroke-width="1.5"/><line x1="4" y1="10" x2="20" y2="10" stroke="#fff" stroke-width="1" opacity=".6"/></svg>`,color:'#d4aa4c',title_es:'Flashcards y Repaso SRS',title_en:'Flashcards & SRS Review',text_es:'Repasa cada plato con tarjetas interactivas: ingredientes, alérgenos e historia. El sistema de repetición espaciada (SRS) te muestra primero los platos que más necesitas repasar.',text_en:'Review each dish with interactive cards: ingredients, allergens and history. The spaced repetition system (SRS) shows you the dishes you need to review most first.'},
-  {icon:`<svg width="28" height="28" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4" fill="none" stroke="#fff" stroke-width="1.5"/><path d="M12 11v2M10 13h4" stroke="#fff" stroke-width="1.5" stroke-linecap="round"/></svg>`,color:'#c47068',title_es:'Repaso inteligente',title_en:'Smart review',text_es:'Situaciones reales de servicio: un huésped te dice su alergia, te pide recomendaciones o pregunta cómo modificar un plato. La sesión elige justo los platos que estás a punto de olvidar. La encontrarás en Aprender → Repaso.',text_en:'Real service scenarios: a guest tells you their allergy, asks for recommendations or how to modify a dish. Each session picks exactly the dishes you are about to forget. You\'ll find it under Learn → Review.'},
+  {icon:`<svg width="28" height="28" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4" fill="none" stroke="#fff" stroke-width="1.5"/><path d="M12 11v2M10 13h4" stroke="#fff" stroke-width="1.5" stroke-linecap="round"/></svg>`,color:'#c47068',title_es:'Repaso',title_en:'Review',text_es:'Situaciones reales de servicio: un huésped te dice su alergia, te pide recomendaciones o pregunta cómo modificar un plato. La sesión empieza por los platos que has fallado y sigue con los que estás a punto de olvidar. La encontrarás en Practicar → Repaso.',text_en:'Real service scenarios: a guest tells you their allergy, asks for recommendations or how to modify a dish. Each session starts with the dishes you got wrong and goes on with the ones you are about to forget. You\'ll find it under Practise → Review.'},
   {icon:`<svg width="28" height="28" viewBox="0 0 24 24"><rect x="6" y="4" width="12" height="16" rx="2" fill="none" stroke="#fff" stroke-width="1.5"/><line x1="9" y1="10" x2="15" y2="10" stroke="#fff" stroke-width="1" opacity=".7"/><line x1="9" y1="13" x2="13" y2="13" stroke="#fff" stroke-width="1" opacity=".7"/></svg>`,color:'#4888a0',title_es:'Exámenes por Tema',title_en:'Topic-based Exams',text_es:'Pon a prueba tus conocimientos con exámenes de opción múltiple. Elige entre alérgenos, ingredientes o historia, filtra por categoría de plato y personaliza la cantidad de preguntas.',text_en:'Test your knowledge with multiple-choice exams. Choose between allergens, ingredients or history, filter by dish category and customise the number of questions.'},
   {icon:`<svg width="28" height="28" viewBox="0 0 24 24"><path d="M8 2h8l-2 9H10L8 2z" fill="none" stroke="#fff" stroke-width="1.5"/><path d="M12 11v7" stroke="#fff" stroke-width="1.5"/><path d="M8 18h8" stroke="#fff" stroke-width="1.5"/></svg>`,color:'#722f37',title_es:'Vinos y Maridaje',title_en:'Wines & Pairing',text_es:'Explora la carta de vinos completa con fichas detalladas: tipo, temperatura, maridajes y notas de cata. Incluye un flash quiz para entrenar tu conocimiento de vinos.',text_en:'Explore the full wine list with detailed cards: type, temperature, pairings and tasting notes. Includes a flash quiz to train your wine knowledge.'},
   {icon:`<svg width="28" height="28" viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5z" fill="none" stroke="#fff" stroke-width="1.5"/><path d="M2 17l10 5 10-5" stroke="#fff" stroke-width="1.5"/><path d="M2 12l10 5 10-5" stroke="#fff" stroke-width="1.5"/></svg>`,color:'#4d8a5e',title_es:'Auditoría de Servicio',title_en:'Service Audit',text_es:'Prepárate para la auditoría con los estándares LQA (Leading Quality Assurance): examen, situaciones reales, el simulador «¿Pasaría?» y la Auditoría. También puedes consultar todos los estándares de servicio por categoría.',text_en:'Prepare for the audit with the LQA (Leading Quality Assurance) standards: exam, real situations, the "Would It Pass?" simulator and the Audit. You can also browse every service standard by category.'},
@@ -14517,9 +14541,9 @@ function _buscadorSync(tab){
 // El nombre de cada pantalla, para el encabezado que anuncia el lector.
 const _TITULOS = {
   dashboard:['Inicio','Home'], practicar:['Practicar','Practise'], aprender:['Aprender','Learn'], flashcards:['Fichas','Flashcards'],
-  exam:['Examen','Exam'], repaso:['Repaso inteligente','Smart review'],
+  exam:['Examen','Exam'], repaso:['Carta','Menu'],
   tecnicas:['Técnicas de cocina','Kitchen techniques'], actualidad:['Actualidad','News'],
-  smart:['Repaso inteligente','Smart review'], emplatado:['Plating guide','Plating guide'],
+  smart:['Repaso','Review'], emplatado:['Carta','Menu'],
   stats:['Estadísticas','Statistics'], logros:['Logros','Achievements'],
   txoko:['Juegos','Games'], ranking:['Ranking del equipo','Team ranking'],
   supervisor:['Panel de supervisor','Supervisor panel'],
@@ -14974,8 +14998,9 @@ function _gsRender(raw){
     .sort((a,b)=>_gsRank(a.name,first)-_gsRank(b.name,first) || (a.name>b.name?1:-1)).slice(0,40);
   const lqas = _gsLqaIndex().filter(it=>match(it.search))
     .sort((a,b)=>_gsRank(a.name,first)-_gsRank(b.name,first)).slice(0,25);
-  _tmTrackSearch(query.length, dishes.length + wines.length + lqas.length);
-  if(!dishes.length && !wines.length && !lqas.length){
+  const screens = _gsScreenIndex().filter(it=>match(it.search)).slice(0,6);
+  _tmTrackSearch(query.length, dishes.length + wines.length + lqas.length + screens.length);
+  if(!dishes.length && !wines.length && !lqas.length && !screens.length){
     box.innerHTML = '<div class="gs-empty"><svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg><div>'
       + (en?'No matches for':'Sin resultados para') + ' “' + escapeHtml(raw.trim()) + '”</div></div>';
     return;
@@ -15014,6 +15039,13 @@ function _gsRender(raw){
         + '<span class="gs-hit-go">›</span></button>';
     }).join('');
   }
+  if(screens.length){
+    html += '<div class="gs-group-lbl">'+(en?'Screens':'Pantallas')+' · '+screens.length+'</div>';
+    html += screens.map(it=>'<button type="button" class="gs-hit" role="option" onclick="_gsGo(\'screen\',\''+it.id+'\')">'
+        + '<span class="gs-hit-ic">'+(it.id==='tecnicas'?'🍳':'📰')+'</span>'
+        + '<span class="gs-hit-body"><span class="gs-hit-name">'+_gsMark(it.name,tokens)+'</span><span class="gs-hit-sub">'+escapeHtml(it.sub)+'</span></span>'
+        + '<span class="gs-hit-go">›</span></button>').join('');
+  }
   box.innerHTML = html;
 }
 async function openGlobalSearch(){
@@ -15050,10 +15082,29 @@ function closeGlobalSearch(){
   const inp = document.getElementById('gsInput');
   if(inp){ try{ inp.blur(); }catch(e){} }
 }
+// Pantallas que desde oct 2026 no tienen chip en Saber pero siguen existiendo:
+// se encuentran escribiendo su nombre, o el de una técnica, en la lupa.
+function _gsScreenIndex(){
+  const en = LANG==='en';
+  const out = [
+    { id:'actualidad', name:en?'News':'Actualidad', sub:en?"What's going on out there":'Qué se cuece fuera',
+      search:_gsNorm('actualidad noticias eventos news what is going on out there que se cuece fuera') },
+    { id:'tecnicas', name:en?'Cooking techniques':'Técnicas de cocina', sub:en?'What each one is and where it appears':'Qué es cada una y en qué platos aparece',
+      search:_gsNorm('tecnicas de cocina techniques glosario glossary cocina kitchen') }
+  ];
+  try{
+    const src = (typeof _tecFuente==='function') ? _tecFuente() : null;
+    for(const t of ((src && src.lista) || [])){
+      out.push({ id:'tecnicas', name:en?t.en:t.es, sub:en?'Cooking technique':'Técnica de cocina', search:_gsNorm(t.es+' '+t.en+' tecnica technique') });
+    }
+  }catch(_){}
+  return out;
+}
 function _gsGo(type, id){
   closeGlobalSearch();
   setTimeout(()=>{
     try{
+      if(type==='screen'){ if(TAB_ROUTES.includes(id)){ _subTab.aprender = id; showTab(id); } return; }
       // Al tocar un plato en el buscador: abrir la FICHA RÁPIDA (foto + info de
       // adaptaciones) — decisión del propietario. El "viaje" (recorrido guiado)
       // queda como botón opcional dentro de la ficha, no como pantalla forzada.
@@ -15244,16 +15295,53 @@ async function _dishPhotoUpload(dishId, inputEl){
 // El mapa (~2KB) se precarga al entrar, así los renders síncronos la tienen.
 // OJO: no usar en exámenes/juegos donde el nombre del plato sea la respuesta.
 function dishPhotoSrc(id){ return (DISH_PHOTOS && DISH_PHOTOS[String(id)]) || null; }
+
+// ═══ CARTA · fotos | lista ═══════════════════════════════════════════════
+// Plating guide (fotos) y Repaso (lista por secciones) eran la misma carta
+// enseñada dos veces y con dos nombres. Desde oct 2026 son UNA pestaña,
+// «Carta», con un conmutador arriba. Las rutas emplatado y repaso siguen
+// vivas por dentro (Plan de hoy, Consulta rápida y la búsqueda las usan); lo
+// que se unifica es el chip de Saber y la memoria de la última vista elegida,
+// que se guarda por persona en este dispositivo.
+const _CARTA_VISTA_KEY = 'meseo_carta_vista';
+function _cartaVistaPref(){
+  try{ const v = localStorage.getItem(_CARTA_VISTA_KEY); if(v==='lista' || v==='fotos') return v; }catch(_){}
+  return 'fotos';
+}
+function _cartaRuta(v){ return v==='lista' ? 'repaso' : 'emplatado'; }
+function _cartaAbrir(){
+  const r = _cartaRuta(_cartaVistaPref());
+  if(r==='repaso') repasoView = 'cats';
+  _subTab.aprender = r; showTab(r);
+}
+function _cartaVer(v){
+  try{ localStorage.setItem(_CARTA_VISTA_KEY, v); }catch(_){}
+  const r = _cartaRuta(v);
+  if(r==='repaso') repasoView = 'cats';
+  _subTab.aprender = r; showTab(r, true);
+}
+function _cartaToggleHTML(activa){
+  const _en = LANG==='en';
+  const b = (v, l) => `<button type="button" role="tab" aria-selected="${activa===v}" class="${activa===v?'on':''}" onclick="_cartaVer('${v}')">${l}</button>`;
+  return `<div class="carta-vista tec-vista" role="tablist" aria-label="${_en?'Menu view':'Vista de la carta'}">${b('fotos', _en?'Photos':'Fotos')}${b('lista', _en?'List':'Lista')}</div>`;
+}
+// Pie de la Carta: el enlace discreto a Actualidad, que ya no tiene chip.
+function _cartaPieHTML(){
+  const _en = LANG==='en';
+  return `<button type="button" class="carta-pie" onclick="_subTab.aprender='actualidad';showTab('actualidad')">${_en?'What\'s going on out there':'Qué se cuece fuera'} ›</button>`;
+}
 function renderEmplatado(){
   const c=document.getElementById('appContent');
   const _en=LANG==='en';
   c.innerHTML=`<div class="empl-wrap">
+    ${_cartaToggleHTML('fotos')}
     <div class="empl-search">
       <input id="emplSearch" type="search" autocomplete="off"
         placeholder="${_en?'Search a dish…':'Buscar un plato…'}"
         oninput="_emplRender(this.value)">
     </div>
     <div id="emplBody"><div style="text-align:center;padding:2rem;font-family:var(--font-mono);font-size:var(--fs-2);color:var(--parch3)">⏳</div></div>
+    ${_cartaPieHTML()}
   </div>`;
   loadDishPhotos().then(()=>{ const s=document.getElementById('emplSearch'); if(s) _emplRender(s.value||''); });
 }
@@ -15345,6 +15433,7 @@ function _emplOpen(id){
         ${dd.marcaje?`<div class="empl-ov-marc">🍽️ ${escapeHtml(dd.marcaje)}</div>`:''}
         ${dd.notes?`<div class="empl-ov-note">${escapeHtml(dd.notes)}</div>`:''}
         ${dd.ingredients?`<div class="empl-ov-ing">${(typeof _ingPorLineas==='function'&&_ingPorLineas(dd.ingredients))?_bocadosHTML(_ingPorLineas(dd.ingredients)):escapeHtml(dd.ingredients)}</div>`:''}
+        ${_dishTecHTML(d, true)}
         <button class="empl-ov-ficha" onclick="document.getElementById('emplOverlay').remove();repasoCat='${escapeHtml(dd.cat||'')}';repasoDishId=${d.id};repasoView='dish';_subTab.aprender='repaso';showTab('repaso')">📖 ${_en?'Full dish sheet':'Ficha completa del plato'}</button>
         <button class="empl-ov-journey" onclick="document.getElementById('emplOverlay').remove();launchDishJourney(${d.id})">🗺️ ${_en?'Guided journey (optional)':'Recorrido guiado (opcional)'}</button>
         ${(DISH_PHOTO_PENDING&&DISH_PHOTO_PENDING.has(d.id))
@@ -15418,24 +15507,27 @@ async function _supPhotoModerate(id,status){
 const _SABER_HAY = { vinos:false, quesos:false, sala:false };
 function _saberActivo(tab){
   if(tab==='lqa') return 'protocolo';
-  if(tab==='aprender') return _subTab.aprender || 'emplatado';
+  if(tab==='aprender') tab = _subTab.aprender || 'emplatado';
+  // Fotos (emplatado) y lista (repaso) son la misma Carta: un solo chip
+  // encendido para las dos vistas.
+  if(tab==='emplatado' || tab==='repaso') return 'carta';
   return tab;
 }
 function _saberChipsBar(tab){
   const _en = LANG==='en';
-  const apr = id => `_subTab.aprender='${id}';showTab('${id}')`;
+  // En el móvil caben cuatro o cinco pestañas. Desde oct 2026 la barra es
+  // Mesa · Carta · Vinos · Quesos · Sala · LQA (vinos, quesos y sala sólo en
+  // el restaurante que los tiene). Plating guide y Repaso se fundieron en
+  // Carta; Técnicas vive dentro de la ficha de cada plato y Actualidad se abre
+  // desde el pie de la Carta y desde la búsqueda. Sus rutas siguen existiendo.
   const items = [
     // Mesa primero: es lo que más se consulta con el cliente delante.
     ['mesa', _en?'Table':'Mesa', "showTab('mesa')"],
-    ['emplatado','Plating guide', apr('emplatado')],
-    // «La Carta es muy confuso» (propietario, jul 2026): se llama Repaso.
-    ['repaso', _en?'Review':'Repaso', apr('repaso')],
+    ['carta', _en?'Menu':'Carta', "_cartaAbrir()"],
     _SABER_HAY.vinos ? ['vinos', _en?'Wines':'Vinos', "showTab('vinos')"] : null,
-    ['tecnicas', _en?'Techniques':'Técnicas', apr('tecnicas')],
-    ['protocolo', 'LQA', "showTab('protocolo')"],
     _SABER_HAY.quesos ? ['quesos', _en?'Cheese':'Quesos', "showTab('quesos')"] : null,
     _SABER_HAY.sala ? ['sala', _en?'Floor':'Sala', "showTab('sala')"] : null,
-    ['actualidad', _en?'News':'Actualidad', apr('actualidad')]
+    ['protocolo', 'LQA', "showTab('protocolo')"]
   ].filter(Boolean);
   const activo = _saberActivo(tab);
   return _chipsBar(items.map(([id,l])=>[id,l]), activo, id => items.find(x=>x[0]===id)[2]);
@@ -15801,6 +15893,39 @@ function _tecDishes(kw,kwx){
   const seen=new Set(), uniq=[];
   for(const o of out){ if(seen.has(o.name)) continue; seen.add(o.name); uniq.push(o); }
   return uniq;
+}
+
+// Técnicas de UN plato: las que la pantalla Técnicas le atribuye, con la misma
+// búsqueda por palabra clave que _tecDishes sobre la ficha en español. Desde
+// oct 2026 Técnicas no tiene chip en Saber: en servicio se mira desde el plato.
+function _dishTecnicas(d){
+  if(!d || typeof _tecFuente!=='function') return [];
+  const src=_tecFuente(); if(!src.lista) return [];
+  const hay=((d.name||'')+' '+(d.ingredients||'')+' '+(d.history||'')+' '+(d.notes||'')).toLowerCase();
+  return src.lista.filter(t => !(t.kwx && t.kwx.some(k=>hay.includes(k))) && t.kw.some(k=>hay.includes(k)));
+}
+// Sección plegable «Cómo se cocina»: nombre de la técnica y su explicación
+// corta. La misma para la ficha completa y para la vista rápida (compacto).
+function _dishTecHTML(d, compacto){
+  const tecs=_dishTecnicas(d); if(!tecs.length) return '';
+  const _en=LANG==='en'; const src=_tecFuente();
+  // La nota «En el Txoko» habla de platos de Txoko: sólo allí tiene sentido.
+  const esTxoko=(typeof _venueActual==='function' && _venueActual()==='txoko');
+  const filas=tecs.map(t=>{
+    const nota=src.propia ? (_en ? (t.notaEn||t.nota) : t.nota) : (esTxoko ? t.txoko : '');
+    return `<div class="dish-tec-row">
+      <div class="dish-tec-h"><span aria-hidden="true">${t.ic||'🍳'}</span> ${escapeHTML(_en?t.en:t.es)}</div>
+      <div class="dish-tec-def">${escapeHTML(_en?t.defEn:t.def)}</div>
+      ${nota?`<div class="dish-tec-nota">${escapeHTML(nota)}</div>`:''}
+    </div>`;
+  }).join('');
+  const ir=(compacto?"document.getElementById('emplOverlay').remove();":'')+"_subTab.aprender='tecnicas';showTab('tecnicas')";
+  return `<details class="dish-tec${compacto?' compacto':''}">
+    <summary>🍳 ${_en?'How it is cooked':'Cómo se cocina'} <span class="dish-tec-n">${tecs.length}</span></summary>
+    <div class="dish-tec-body">${filas}
+      <button type="button" class="dish-tec-mas" onclick="${ir}">${_en?'All the techniques ›':'Todas las técnicas ›'}</button>
+    </div>
+  </details>`;
 }
 
 // ═══ HORARIOS DEL EQUIPO ═══════════════════════════════════════════
@@ -22687,9 +22812,9 @@ function renderExamSetup(){
       <button class="btn-start" onclick="startExam()">${t('startExam')}</button>
       </div><!-- /examCustom -->
 
-      <!-- El Simulacro de Alérgenos vive ahora en Aprender → Repaso
-           Inteligente: es entrenamiento, no evaluación. Examen queda solo
-           como pantalla de evaluación. -->
+      <!-- El Simulacro de Alérgenos vive ahora en Practicar → Repaso: es
+           entrenamiento, no evaluación. Examen queda solo como pantalla de
+           evaluación. -->
       <div class="exam-gilded-divider"><span>${_en?'YOUR MASTERY':'TU DOMINIO'}</span></div>
 
       <!-- Mastery: stats trio + topic bars merged in the dark rune panel -->
@@ -23292,7 +23417,9 @@ function _paseCtaHTML(_en){
     </button>`;
 }
 
-// La tarjeta del Repaso inteligente (vivía dentro de Repaso, en Saber).
+// La tarjeta del Repaso (antes «Repaso inteligente»; vivía dentro de Repaso,
+// en Saber). Desde oct 2026 es el único repaso de Practicar: la sesión empieza
+// por los platos fallados en exámenes y sigue con los que tocan por memoria.
 function _smartCtaHTML(_en, emp){
   if(typeof _alergenosValidados==='function' && !_alergenosValidados()) return '';
   // Misma cuenta que la línea de resumen del repaso: sólo repasos vencidos de
@@ -23301,13 +23428,14 @@ function _smartCtaHTML(_en, emp){
     const s = emp && emp.srs && emp.srs[d.id];
     return s && s.reps > 0 && Date.now() >= s.nextReview;
   }).length;
-  return `<button type="button" class="ri-cta" style="margin:0 0 1rem" aria-label="${_en?'Smart review session':'Sesión de repaso inteligente'}" onclick="showTab('smart')">
+  const _nFallos = (typeof _smartFallos==='function') ? _smartFallos(emp).length : 0;
+  return `<button type="button" class="ri-cta" style="margin:0 0 1rem" aria-label="${_en?'Review session':'Sesión de repaso'}" onclick="showTab('smart')">
       <span class="ri-cta-icon" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-3-6.7"/><path d="M21 4v5h-5"/></svg></span>
       <span class="ri-cta-text">
-        <span class="ri-cta-top">${_en?'Smart review':'Repaso inteligente'}</span>
+        <span class="ri-cta-top">${_en?'Review':'Repaso'}</span>
         <span class="ri-cta-sub">${_en
-          ?`5 guest cases · the app picks the dishes you most need${_rpDue>0?` · ${_rpDue} due`:''}`
-          :`5 casos de huésped · la app elige los platos que más te conviene repasar${_rpDue>0?` · ${_rpDue} pendientes`:''}`}</span>
+          ?`5 guest cases · your misses first, then what you are about to forget${_nFallos>0?` · ${_nFallos} missed`:(_rpDue>0?` · ${_rpDue} due`:'')}`
+          :`5 casos de huésped · primero tus fallos, luego lo que estás a punto de olvidar${_nFallos>0?` · ${_nFallos} fallados`:(_rpDue>0?` · ${_rpDue} pendientes`:'')}`}</span>
       </span>
     </button>`;
 }
@@ -23346,18 +23474,61 @@ function renderPracticar(){
         return fila("renderLineUp()", ic('<path d="M5 4l14 8-14 8z"/>'),
           'Line Up', _en?'Pre-service ritual: quiz, dish, wine, protocol':'El ritual de antes del servicio: reto, plato, vino, protocolo',
           `${_luD}/${_lu.length}`); })()}
-      ${fila("showTab('exam')", ic('<path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/>'),
-        _en?'Exam':'Examen', _en?'10 questions on the whole menu':'10 preguntas de toda la carta', sesiones?(sesiones+' '+(_en?'done':'hechos')):'')}
+      ${fila("_examSelectorAbrir()", ic('<path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/>'),
+        _en?'Exam':'Examen', _en?'Menu, full service, LQA'+(_SABER_HAY.sala?' or floor':''):'Carta, servicio completo, LQA'+(_SABER_HAY.sala?' o sala':''), sesiones?(sesiones+' '+(_en?'done':'hechos')):'')}
       ${fila("showTab('flashcards')", ic('<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 10h18"/>'),
         'Flashcards', _en?'Dish by dish, at your pace':'Plato a plato, a tu ritmo', DISHES.length+' '+(_en?'dishes':'platos'))}
       ${fila("showTab('txoko')", ic('<path d="M6 12h4M8 10v4"/><circle cx="15.5" cy="11" r="1"/><circle cx="17.5" cy="13.5" r="1"/><rect x="2" y="6" width="20" height="12" rx="5"/>'),
         _en?'Games':'Juegos', _en?'Mr. Shoesmith, duels and survival':'Mr. Shoesmith, duelos y supervivencia', '')}
-      ${fila("startGhostInspection()", ic('<circle cx="12" cy="12" r="9"/><path d="M8 12l2.5 2.5L16 9"/>'),
-        _en?'Full audit':'Auditoría completa', _en?'A whole service with the auditor watching':'Un servicio entero bajo la mirada del auditor', '')}
-      ${fila("startPersonalErrorMode()", ic('<circle cx="12" cy="12" r="7"/><circle cx="12" cy="12" r="2.5"/>'),
-        _en?'Review misses':'Repasar fallos', _en?'Only the dishes you got wrong':'Sólo los platos que has fallado', '')}
     </div>
   </div>`;
+}
+
+// ═══ EXAMEN · el selector ══════════════════════════════════════════════════
+// Había cuatro exámenes repartidos por la app: el de la carta, la Auditoría
+// completa, el Examen LQA (dentro de LQA) y el Examen de Sala (dentro de
+// Sala). Desde oct 2026 Practicar tiene UNA entrada «Examen» que abre este
+// selector. Las pantallas de origen y sus accesos desde LQA y Sala siguen.
+function _examSelectorCerrar(){ const o=document.getElementById('exselOverlay'); if(o) o.remove(); }
+function _examSelectorAbrir(){
+  _examSelectorCerrar();
+  const _en = LANG==='en';
+  const emp = getEmp(currentUser) || {};
+  const sesiones = (emp.sessions||[]).length;
+  const ic = d => `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">${d}</svg>`;
+  const fila = (onclick, icono, t, sub, meta) => `
+    <button type="button" class="dash-row prc-fila" onclick="_examSelectorCerrar();${onclick}">
+      <span class="prc-ic" aria-hidden="true">${icono}</span>
+      <span class="dash-row-body"><span class="dash-row-title">${t}</span><span class="dash-row-sub">${sub}</span></span>
+      ${meta?`<span class="prc-meta">${meta}</span>`:''}
+      <span class="dash-row-go" aria-hidden="true">›</span>
+    </button>`;
+  // LQA y Sala se abren sobre su pestaña de Saber (instantáneo, sin fundido):
+  // así la vuelta del examen cae donde siempre ha caído.
+  const filas = [
+    fila("showTab('exam')", ic('<rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="10" r="2"/><path d="M21 16l-5-5-8 8"/>'),
+      _en?'Menu':'Carta', _en?'10 questions on the whole menu':'10 preguntas de toda la carta', sesiones?(sesiones+' '+(_en?'done':'hechos')):''),
+    fila("startGhostInspection()", ic('<circle cx="12" cy="12" r="9"/><path d="M8 12l2.5 2.5L16 9"/>'),
+      _en?'Full service':'Servicio completo', _en?'A whole service with the auditor watching':'Un servicio entero bajo la mirada del auditor', ''),
+    (typeof startLqaExam==='function') ? fila("showTab('protocolo',true);startLqaExam()", ic('<path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.1 2.1 0 013 3L12 15l-4 1 1-4z"/>'),
+      'LQA', _en?'The standards, 10 questions':'Los estándares, 10 preguntas', '') : '',
+    (_SABER_HAY.sala && typeof startSalaExam==='function') ? fila("showTab('sala',true);startSalaExam()", ic('<path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/><path d="M10 20v-6h4v6"/>'),
+      _en?'Floor':'Sala', _en?'Our procedures, 10 questions':'Nuestros procedimientos, 10 preguntas', '') : ''
+  ].join('');
+  const ov=document.createElement('div');
+  ov.id='exselOverlay'; ov.setAttribute('role','dialog'); ov.setAttribute('aria-modal','true'); ov.setAttribute('aria-label',_en?'Choose an exam':'Elige un examen');
+  ov.innerHTML=`
+    <div class="empl-ov-scrim" onclick="_examSelectorCerrar()"></div>
+    <div class="exsel-card">
+      <button class="empl-ov-x" onclick="_examSelectorCerrar()" aria-label="${_en?'Close':'Cerrar'}">✕</button>
+      <div class="exsel-head">
+        <div class="exsel-eyebrow">${_en?'Evaluation':'Evaluación'}</div>
+        <div class="exsel-title">${_en?'Which exam?':'¿Qué examen?'}</div>
+        <div class="exsel-sub">${_en?'The exam proves what you already master.':'El examen comprueba lo que ya dominas.'}</div>
+      </div>
+      <div class="prc-lista">${filas}</div>
+    </div>`;
+  document.body.appendChild(ov);
 }
 
 // En Repaso inteligente y Flashcards (que son de Practicar) no van las
@@ -24593,6 +24764,7 @@ function renderRepasoCats(){
   }).length;
 
   document.getElementById('appContent').innerHTML=`
+    ${_cartaToggleHTML('lista')}
     <!-- Orientation: one mono line, no box -->
     <div class="repaso-statline" role="status" aria-label="${_en?'Overview':'Resumen'}">
       <span><b>${totalRecipes}</b> ${_en?'recipes':'recetas'}</span><i>·</i>
@@ -24619,6 +24791,7 @@ function renderRepasoCats(){
       <div class="tunic-divider"><span>${t('selectSection')}</span></div>
       <div>${cards}</div>
     </div>
+    ${_cartaPieHTML()}
   `;
 }
 
@@ -24943,6 +25116,8 @@ function renderRepasoDishDetail(dishId){
         ${ingredientHtml}
       </div>`}
     </div>` : ''}
+
+    ${(typeof _dishTecHTML==='function') ? _dishTecHTML(dish, false) : ''}
 
     ${dd.history ? `
     <div class="card" style="padding:.9rem;margin-bottom:.75rem">
