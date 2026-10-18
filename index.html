@@ -52,7 +52,7 @@
 <meta property="og:description" content="Formación de equipos de sala: carta, alérgenos, vinos, exámenes y juegos de repaso.">
 <meta property="og:url" content="https://meseo.es/">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"Meseo","url":"https://meseo.es/"}</script>
-<meta name="app-version" content="7.513">
+<meta name="app-version" content="7.514">
 <meta name="app-build" content="May 2026">
 <meta name="theme-color" content="#1c2a22">
 <!-- ═══ PWA ═══ -->
@@ -2393,6 +2393,36 @@ const _CARTA_BASE = {
 };
 let _cartaPuesta = _VENUE_POR_DEFECTO;
 
+// ═══ IDIOMAS PARA LA MESA ═══════════════════════════════════════════════
+// Lo que el camarero lee (o le hace escuchar al cliente) en el idioma de la
+// mesa: nombre, descripción corta y alérgenos del plato. Hoy sólo hay datos
+// en inglés (DISHES_EN); la lista deja el hueco para los demás sin inventar
+// nada: un idioma sólo aparece si la carta trae sus platos traducidos.
+//
+// Formato para añadir un idioma a la carta de un restaurante
+// (data/carta-<restaurante>.json), con XX el código en mayúsculas (DE, FR):
+//   "DISHES_XX": [ { "id": 4001, "name": "…", "history": "…" }, … ]
+//       — mismo id que en DISHES; `history` es la descripción que se lee en
+//         la mesa (bastan una o dos frases); el resto de campos es opcional.
+//   "ALLERGEN_MAP_XX": { "Huevos": "Eier", "Gluten": "Gluten", … }
+//       — alérgeno canónico en español → nombre en ese idioma. Si falta una
+//         entrada se enseña el nombre en español, nunca uno inventado.
+// Y en _MESA_FRASES (más abajo) tienen que existir las plantillas del idioma.
+// [código, nombre en su idioma, voz de speechSynthesis]
+const IDIOMAS_MESA = [['en','English','en-GB'],['de','Deutsch','de-DE'],['fr','Français','fr-FR']];
+// Traducciones distintas del inglés de la carta puesta: { de:{dishes, alergenos} }.
+const _CARTA_IDIOMAS = {};
+function _cartaIdiomasAplicar(c){
+  for(const k of Object.keys(_CARTA_IDIOMAS)) delete _CARTA_IDIOMAS[k];
+  if(!c) return;
+  for(const [code] of IDIOMAS_MESA){
+    if(code==='en') continue;   // el inglés va en DISHES_EN, como siempre
+    const XX = code.toUpperCase();
+    const arr = c['DISHES_'+XX];
+    if(Array.isArray(arr) && arr.length) _CARTA_IDIOMAS[code] = { dishes: arr, alergenos: c['ALLERGEN_MAP_'+XX] || {} };
+  }
+}
+
 // ═══ LO QUE LA CARTA DICE DE SÍ MISMA ═══════════════════════════════════════
 // Mientras no se aplica ninguna carta (el caso de todo el equipo de Txoko, que
 // nunca cambia de carta) esto vale null y manda la de Txoko: `_cartaInfo()`
@@ -2553,6 +2583,7 @@ function _cartaAplicar(c){
   if(!c || !Array.isArray(c.DISHES) || !c.DISHES.length) return false;
   DISHES.length = 0;    for(const d of c.DISHES)    DISHES.push(d);
   DISHES_EN.length = 0; for(const d of (c.DISHES_EN || [])) DISHES_EN.push(d);
+  _cartaIdiomasAplicar(c);
   for(const k of Object.keys(DISH_COMPONENTS)) delete DISH_COMPONENTS[k];
   Object.assign(DISH_COMPONENTS, c.DISH_COMPONENTS || {});
   for(const k of Object.keys(DISH_ACTIONS)) delete DISH_ACTIONS[k];
@@ -2583,6 +2614,7 @@ function _cartaAplicar(c){
 function _cartaVaciar(){
   DISHES.length = 0;
   DISHES_EN.length = 0;
+  _cartaIdiomasAplicar(null);
   for(const k of Object.keys(DISH_COMPONENTS)) delete DISH_COMPONENTS[k];
   for(const k of Object.keys(DISH_ACTIONS)) delete DISH_ACTIONS[k];
   for(const k of Object.keys(DISH_SERVICE)) delete DISH_SERVICE[k];
@@ -2803,7 +2835,7 @@ const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><p
 const SRC = 'src';
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='7.513';  // sincronizada con sw.js VERSION (guard de CI)
+const APP_VERSION='7.514';  // sincronizada con sw.js VERSION (guard de CI)
 const APP_BUILD='Jul 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;
@@ -15490,6 +15522,7 @@ function _emplOpen(id){
         <div class="empl-ov-al">${al}</div>
         ${dd.marcaje?`<div class="empl-ov-marc">🍽️ ${escapeHtml(dd.marcaje)}</div>`:''}
         ${dd.notes?`<div class="empl-ov-note">${escapeHtml(dd.notes)}</div>`:''}
+        ${(typeof _mesaIdiomaHTML==='function') ? _mesaIdiomaHTML(d, true, _mesaLang) : ''}
         ${dd.ingredients?`<div class="empl-ov-ing">${(typeof _ingPorLineas==='function'&&_ingPorLineas(dd.ingredients))?_bocadosHTML(_ingPorLineas(dd.ingredients)):escapeHtml(dd.ingredients)}</div>`:''}
         ${_dishTecHTML(d, true)}
         <button class="empl-ov-ficha" onclick="document.getElementById('emplOverlay').remove();repasoCat='${escapeHtml(dd.cat||'')}';repasoDishId=${d.id};repasoView='dish';_subTab.aprender='repaso';showTab('repaso')">📖 ${_en?'Full dish sheet':'Ficha completa del plato'}</button>
@@ -15984,6 +16017,155 @@ function _dishTecHTML(d, compacto){
       <button type="button" class="dish-tec-mas" onclick="${ir}">${_en?'All the techniques ›':'Todas las técnicas ›'}</button>
     </div>
   </details>`;
+}
+
+// ═══ PARA LA MESA · el plato en el idioma del cliente ═══════════════════
+// En Tenerife la mitad de las mesas no hablan español. Esta sección da al
+// camarero, dentro de la ficha del plato, el texto que puede leer o poner a
+// sonar en inglés (y en los idiomas que la carta traiga): nombre, descripción
+// corta y «Contiene: …», más «se puede hacer sin X» cuando cocina lo tiene
+// validado. Sin red, sin IA en tiempo real y sin inventar: lo que no esté
+// traducido en la carta se dice que no está.
+const _MESA_FRASES = {
+  en: { contiene:'Contains', sinAl:'No declared allergens', sinX:'Can be made without', pend:'Allergen information pending kitchen validation', sinTrad:'No translation loaded', y:'and' },
+  de: { contiene:'Enthält', sinAl:'Keine deklarierten Allergene', sinX:'Kann zubereitet werden ohne', pend:'Allergenangaben noch nicht von der Küche bestätigt', sinTrad:'Keine Übersetzung geladen', y:'und' },
+  fr: { contiene:'Contient', sinAl:'Aucun allergène déclaré', sinX:'Peut être préparé sans', pend:'Allergènes en attente de validation par la cuisine', sinTrad:'Aucune traduction chargée', y:'et' }
+};
+// Idiomas con datos en la carta puesta. El inglés siempre está en la lista:
+// es el idioma de la mesa por defecto y, si la carta no lo trae, la sección
+// lo dice en vez de esconderse.
+function _mesaIdiomas(){
+  return IDIOMAS_MESA.filter(([code]) => code==='en' || !!_CARTA_IDIOMAS[code]);
+}
+// La ficha traducida de un plato en un idioma, o null si la carta no la trae.
+// No pasa por getDish: ése depende del idioma de la APP y aquí el idioma es
+// el de la mesa, sin cambiar el de la pantalla.
+function _mesaTraduccion(dish, lang){
+  if(!dish) return null;
+  const lista = lang==='en' ? ((typeof DISHES_EN!=='undefined' && DISHES_EN) || []) : ((_CARTA_IDIOMAS[lang]||{}).dishes || []);
+  const t = lista.find(x => x && x.id===dish.id);
+  return (t && t.name) ? t : null;
+}
+function _mesaAlergeno(a, lang){
+  const mapa = lang==='en' ? ALLERGEN_MAP : ((_CARTA_IDIOMAS[lang]||{}).alergenos || {});
+  return mapa[a] || a;
+}
+// Descripción corta: las dos primeras frases de la historia del plato, que es
+// lo que cabe en una explicación de mesa. Devuelve '' si no hay historia.
+function _mesaResumen(txt){
+  const t = String(txt||'').replace(/\s+/g,' ').trim();
+  if(!t) return '';
+  const frases = t.match(/[^.!?]+[.!?]+(\s|$)/g);
+  if(!frases) return t;
+  let out = frases[0].trim();
+  if(frases[1] && (out.length + frases[1].length) <= 260) out += ' ' + frases[1].trim();
+  return out;
+}
+// Función PURA que compone el texto para la mesa. `ctx` permite probarla sin
+// globales: { trad, acts, validada }. Sin ctx, los toma de la carta puesta.
+// Devuelve { lang, ok, name, desc, alergenos:[…], adaptables:[…], lineas:[…], texto }
+function _mesaTextoIdioma(dish, lang, ctx){
+  lang = lang || 'en';
+  const F = _MESA_FRASES[lang] || _MESA_FRASES.en;
+  ctx = ctx || {};
+  const trad = ('trad' in ctx) ? ctx.trad : _mesaTraduccion(dish, lang);
+  const acts = ('acts' in ctx) ? (ctx.acts||{}) : ((typeof DISH_ACTIONS!=='undefined' && DISH_ACTIONS[dish.id]) || {});
+  const validada = ('validada' in ctx) ? !!ctx.validada : (typeof _alergenosValidados!=='function' || _alergenosValidados());
+  const alMapa = ctx.alergeno || (a => _mesaAlergeno(a, lang));
+  if(!trad || !trad.name){
+    return { lang, ok:false, name:'', desc:'', alergenos:[], adaptables:[], lineas:[F.sinTrad], texto:F.sinTrad };
+  }
+  const alES = Array.isArray(dish.allergens) ? dish.allergens : [];
+  const alergenos = alES.map(alMapa);
+  // «Se puede hacer sin X» sólo con la carta validada por cocina: antes de
+  // eso una comanda provisional no se le promete a un cliente.
+  const adaptables = validada ? alES.filter(a => acts[a] && acts[a].r===1).map(alMapa) : [];
+  const desc = _mesaResumen(trad.history);
+  const lineas = [trad.name + '.'];
+  if(desc) lineas.push(desc);
+  if(alergenos.length) lineas.push(F.contiene + ': ' + alergenos.join(', ').toLowerCase() + '.');
+  else if(validada) lineas.push(F.sinAl + '.');
+  if(!validada) lineas.push(F.pend + '.');
+  if(adaptables.length){
+    const lista = adaptables.length>1 ? adaptables.slice(0,-1).join(', ') + ' ' + F.y + ' ' + adaptables[adaptables.length-1] : adaptables[0];
+    lineas.push(F.sinX + ' ' + lista.toLowerCase() + '.');
+  }
+  return { lang, ok:true, name:trad.name, desc, alergenos, adaptables, lineas, texto:lineas.join(' ') };
+}
+let _mesaLang = 'en';
+function _mesaIdiomaHTML(d, compacto, lang){
+  const _en = LANG==='en';
+  const idiomas = _mesaIdiomas();
+  lang = idiomas.some(x=>x[0]===lang) ? lang : idiomas[0][0];
+  const r = _mesaTextoIdioma(d, lang);
+  const hayVoz = (typeof speechSynthesis!=='undefined' && typeof SpeechSynthesisUtterance!=='undefined');
+  const chips = idiomas.length>1 ? `<div class="mesa-idioma-tabs" role="tablist">${idiomas.map(([c,n])=>
+    `<button type="button" role="tab" aria-selected="${c===lang}" class="mesa-idioma-tab${c===lang?' on':''}" onclick="_mesaCambiarIdioma(${d.id},'${c}')">${escapeHTML(n)}</button>`).join('')}</div>` : '';
+  const cuerpo = r.ok
+    ? `<div class="mesa-idioma-nombre" lang="${lang}">${escapeHTML(r.name)}</div>
+       ${r.desc?`<div class="mesa-idioma-desc" lang="${lang}">${escapeHTML(r.desc)}</div>`:''}
+       <div class="mesa-idioma-al" lang="${lang}">${r.lineas.slice(r.desc?2:1).map(l=>`<div>${escapeHTML(l)}</div>`).join('')}</div>
+       <div class="mesa-idioma-acciones">
+         ${hayVoz?`<button type="button" class="mesa-idioma-btn" onclick="_mesaHablar(${d.id},'${lang}')">🔊 ${_en?'Listen':'Escuchar'}</button>`:''}
+         <button type="button" class="mesa-idioma-btn" onclick="_mesaCopiar(${d.id},'${lang}')">⧉ ${_en?'Copy':'Copiar'}</button>
+       </div>`
+    : `<div class="mesa-idioma-sin">${_en?'No translation loaded':'Sin traducción cargada'}</div>`;
+  const titulo = `🗣 ${_en?'For the table':'Para la mesa'}`;
+  if(compacto){
+    return `<details class="dish-tec compacto mesa-idioma" data-dish="${d.id}">
+      <summary>${titulo}</summary>
+      <div class="dish-tec-body">${chips}${cuerpo}</div>
+    </details>`;
+  }
+  return `<div class="card mesa-idioma" data-dish="${d.id}" style="padding:.9rem;margin-bottom:.75rem">
+    <div style="font-family:var(--font-mono);font-size:var(--fs-1);color:var(--gold);letter-spacing:.12em;text-transform:uppercase;margin-bottom:.5rem">${titulo}</div>
+    ${chips}${cuerpo}
+  </div>`;
+}
+function _mesaCambiarIdioma(id, lang){
+  _mesaLang = lang;
+  const d = DISHES.find(x=>x.id===id); if(!d) return;
+  document.querySelectorAll(`.mesa-idioma[data-dish="${id}"]`).forEach(el=>{
+    const compacto = el.tagName==='DETAILS';
+    const tmp = document.createElement('div');
+    tmp.innerHTML = _mesaIdiomaHTML(d, compacto, lang);
+    const nuevo = tmp.firstElementChild;
+    if(compacto) nuevo.open = true;
+    el.replaceWith(nuevo);
+  });
+}
+function _mesaVoz(code){
+  try{
+    const voces = speechSynthesis.getVoices() || [];
+    const base = code.split('-')[0];
+    return voces.find(v=>v.lang===code) || voces.find(v=>v.lang && v.lang.replace('_','-').toLowerCase().startsWith(base+'-')) || voces.find(v=>v.lang && v.lang.toLowerCase().startsWith(base)) || null;
+  }catch(e){ return null; }
+}
+function _mesaHablar(id, lang){
+  const d = DISHES.find(x=>x.id===id); if(!d) return;
+  const r = _mesaTextoIdioma(d, lang); if(!r.ok) return;
+  if(typeof speechSynthesis==='undefined' || typeof SpeechSynthesisUtterance==='undefined') return;
+  try{
+    const code = (IDIOMAS_MESA.find(x=>x[0]===lang)||[])[2] || 'en-GB';
+    speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(r.texto);
+    u.lang = code; u.rate = 0.95;
+    const v = _mesaVoz(code); if(v) u.voice = v;
+    speechSynthesis.speak(u);
+    if(typeof registrarActividad==='function') try{ registrarActividad({ tipo:'mesa_escuchar', dishId:id, lang }); }catch(e){}
+  }catch(e){ if(typeof showToast==='function') showToast(LANG==='en'?'This device cannot read aloud':'Este dispositivo no puede leer en voz alta','warning',2600); }
+}
+function _mesaCopiar(id, lang){
+  const d = DISHES.find(x=>x.id===id); if(!d) return;
+  const r = _mesaTextoIdioma(d, lang); if(!r.ok) return;
+  const ok = ()=>{ if(typeof showToast==='function') showToast(LANG==='en'?'Copied':'Copiado','success',1800); };
+  const ko = ()=>{ if(typeof showToast==='function') showToast(LANG==='en'?'Could not copy':'No se pudo copiar','warning',2400); };
+  try{
+    if(navigator.clipboard && navigator.clipboard.writeText){ navigator.clipboard.writeText(r.texto).then(ok, ko); return; }
+    const ta = document.createElement('textarea'); ta.value = r.texto; ta.setAttribute('readonly',''); ta.style.position='fixed'; ta.style.opacity='0';
+    document.body.appendChild(ta); ta.select(); const hecho = document.execCommand && document.execCommand('copy'); ta.remove();
+    hecho ? ok() : ko();
+  }catch(e){ ko(); }
 }
 
 // ═══ HORARIOS DEL EQUIPO ═══════════════════════════════════════════
@@ -22471,7 +22653,7 @@ function renderDashboard(){
         <div class="dash-cr-ic" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="10" r="2"/><path d="M21 16l-5-5-8 8"/></svg></div>
         <div class="dash-plating-tx">
           <div class="dash-plating-title">${_en?'Menu':'Carta'}</div>
-          <div class="dash-plating-sub">Plating guide · ${_en?'photos, always current':'fotos, siempre al día'}</div>
+          <div class="dash-plating-sub">${_en?'The menu in photos, always up to date':'La carta en fotos, siempre al día'}</div>
         </div>
         <span class="dash-plating-shine" aria-hidden="true"></span>
       </div>
@@ -25109,8 +25291,13 @@ function renderRepasoDishDetail(dishId){
     ? {blanco:'White',tinto:'Red',rosado:'Rosé',espumoso:'Sparkling',dulce:'Sweet'}
     : {blanco:'Blanco',tinto:'Tinto',rosado:'Rosado',espumoso:'Espumoso',dulce:'Dulce'};
   const _pairWines = _dishPairWines(dish, 3);
+  // Sin bodega (restaurante sin lista de vinos, o lista vacía) no hay sección
+  // de maridaje: antes se quedaba en «Cargando maridaje…» para siempre.
+  const _sinBodega = _pairWines === null && (!_SABER_HAY.vinos || (Array.isArray(WINES) && !WINES.length));
   let maridajeHtml = '';
-  if(_pairWines === null){
+  if(_sinBodega){
+    maridajeHtml = '';
+  } else if(_pairWines === null){
     // Los vinos aún no han cargado — placeholder; se repinta al terminar.
     maridajeHtml = `
     <div class="card" style="padding:.9rem;margin-bottom:.75rem">
@@ -25179,6 +25366,8 @@ function renderRepasoDishDetail(dishId){
       </div>
     </div>
 
+    ${(typeof _mesaIdiomaHTML==='function') ? _mesaIdiomaHTML(dish, false, _mesaLang) : ''}
+
     ${_marcaje ? `
     <div class="card" style="padding:.9rem;margin-bottom:.75rem">
       <div style="font-family:var(--font-mono);font-size:var(--fs-1);color:var(--gold);letter-spacing:.12em;text-transform:uppercase;margin-bottom:.35rem">🍽️ ${LANG==='en'?'Cutlery marking':'Marcaje'}</div>
@@ -25218,11 +25407,17 @@ function renderRepasoDishDetail(dishId){
 
   // Si los vinos aún no habían cargado, tráelos y repinta el maridaje —
   // solo si el usuario sigue en esta misma ficha.
-  if(_pairWines === null && typeof loadLazyData === 'function'){
-    loadLazyData(_vinosRuta(), LANG==='en'?'wine list':'lista de vinos', {silent:true})
-      .then(w=>{ if(typeof WINES==='undefined' || !WINES) WINES = w;
-        if(repasoView==='dish' && repasoDishId===dishId) renderRepasoDishDetail(dishId); })
-      .catch(()=>{});
+  // Si el restaurante tiene bodega pero la pestaña aún no lo sabía (la
+  // comprobación es asíncrona), se entera aquí y repinta igual.
+  if(_pairWines === null && !(Array.isArray(WINES) && !WINES.length) && typeof loadLazyData === 'function'){
+    const _p = (typeof hayCartaDeVinos === 'function') ? hayCartaDeVinos() : Promise.resolve(true);
+    _p.then(hay => {
+      if(!hay) return;
+      if(_SABER_HAY.vinos !== true){ _SABER_HAY.vinos = true; if(typeof _saberSync==='function') _saberSync(); }
+      return loadLazyData(_vinosRuta(), LANG==='en'?'wine list':'lista de vinos', {silent:true})
+        .then(w=>{ if(typeof WINES==='undefined' || !WINES) WINES = Array.isArray(w) ? w : [];
+          if(repasoView==='dish' && repasoDishId===dishId) renderRepasoDishDetail(dishId); });
+    }).catch(()=>{});
   }
 }
 
