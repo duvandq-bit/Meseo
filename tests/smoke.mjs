@@ -17554,6 +17554,74 @@ test('búsqueda global: Técnicas y Actualidad se encuentran por la lupa', () =>
   assert(/const screens = _gsScreenIndex\(\)/.test(r) && /'Screens':'Pantallas'/.test(r), 'grupo Pantallas en los resultados');
 });
 
+console.log('\nModo tranquilo y certificado imprimible (oct 2026)');
+test('modoTranquilo: ajuste por persona, guardado en la ficha y sincronizado en extras', () => {
+  assert(/function _modoTranquilo\(emp\)/.test(html) && /function _setModoTranquilo\(on\)/.test(html), 'helpers');
+  assert(/emp\.modoTranquilo = !!on;\s*emp\.modoTranquiloTs = new Date\(\)\.toISOString\(\);\s*saveDB\(\);/.test(html), 'se guarda en la ficha con fecha');
+  // Ajustes: casilla y texto de ayuda exacto del brief
+  const aj = html.slice(html.indexOf('function openAjustes()'));
+  assert(aj.indexOf('id="ajMtToggle"') > 0 && aj.indexOf('_setModoTranquilo(mt.checked)') > 0, 'casilla en Ajustes');
+  assert(aj.includes('Sin puntos, rachas ni ranking. Solo lo que sabes y lo que te falta.'), 'texto de ayuda');
+  // Sincronización por extras (sin columnas nuevas): gana el cambio más reciente
+  assert(/mt:\{ v: emp\.modoTranquilo \? 1 : 0, t: emp\.modoTranquiloTs \}/.test(html), 'extras.mt al componer');
+  assert(/if\(x\.mt && x\.mt\.t && String\(x\.mt\.t\) > String\(emp\.modoTranquiloTs\|\|''\)\)/.test(html), 'extras.mt al fusionar');
+});
+test('modoTranquilo: renderStats y renderDashboard consultan el flag', () => {
+  const fn = (name) => { const i = html.indexOf('function ' + name + '('); assert(i > 0, 'falta ' + name); return html.slice(i, i + 16000); };
+  const st = fn('renderStats');
+  assert(/const _tranquilo = _modoTranquilo\(emp\);/.test(st), 'renderStats consulta el flag');
+  assert(st.includes("${_tranquilo ? '' : `<div style=\"margin-left:auto;text-align:right\">"), 'Yo: XP total oculto');
+  assert(st.includes('${_tranquilo ? \'\' : `\n    <!-- Racha del reto · precisión · liga'), 'Yo: racha, liga y logros ocultos');
+  assert(st.includes('${_certSeccionHTML(emp)}'), 'Yo: sección de certificados');
+  assert(/\.\.\.\(_modoTranquilo\(\) \? \[\] : \[\['logros'/.test(html), 'Yo: chip de Logros oculto');
+  const dash = fn('renderDashboard');
+  assert(/const _tranquilo = _modoTranquilo\(emp\);/.test(dash), 'renderDashboard consulta el flag');
+  assert(dash.includes("${_tranquilo ? _heroTranquiloHTML(emp,_en) : renderXPBar()}"), 'Hoy: barra de XP sustituida');
+  assert(dash.includes("${_tranquilo ? '' : `<div class=\"dash-hero-lvl-badge\">"), 'Hoy: nivel oculto en la cabecera');
+  // Equipo: aviso de una línea y mi fila sin XP; los demás siguen igual
+  const rk = fn('renderRanking');
+  assert(rk.includes('Tienes el modo tranquilo activado.'), 'Equipo: aviso');
+  assert(rk.includes('${isMe && _soyTranquilo ?'), 'Equipo: solo mi fila cambia');
+  // Reto del día: sin racha en la tarjeta ni XP en el resultado
+  assert(/const s=_modoTranquilo\(emp\) \? 0 : \(emp\.dqStreak\|\|0\);/.test(html), 'Reto: racha oculta');
+  assert(/const _mtReto=_modoTranquilo\(emp\);/.test(html), 'Reto: resultado sin XP');
+});
+test('modoTranquilo: awardXP suma la XP pero no enseña toast ni subida de nivel; los logros no saltan', () => {
+  const i = html.indexOf('function awardXP(amount, reason, mode){');
+  const ax = html.slice(i, html.indexOf('function showXPToast', i));
+  // La guarda va DESPUÉS de sumar y guardar y ANTES del toast
+  const g = ax.indexOf('if(_modoTranquilo(emp)) return;');
+  assert(g > 0, 'guarda en awardXP');
+  assert(ax.indexOf('emp.xp = oldXP + granted;') < g && ax.indexOf('saveDB();') < g, 'la XP se suma y se guarda antes de la guarda');
+  assert(ax.indexOf('showXPToast(granted, reason);') > g && ax.indexOf('showLevelUpModal(newLevel)') > g, 'toast y nivel detrás de la guarda');
+  const j = html.indexOf('function checkNewAchievements(){');
+  const ca = html.slice(j, j + 1200);
+  assert(/if\(!_tranquilo\) setTimeout\(\(\)=>showAchievementToast\(ach\)/.test(ca), 'pop-up de logro guardado por el flag');
+  assert(ca.includes('emp.achievements=now;'), 'el logro se registra igual');
+});
+test('certificado: _certificadoHTML es pura e incluye nombre, restaurante, categoría, fecha y pie', () => {
+  const i = html.indexOf('function _certificadoHTML(emp, cat, venueNombre){');
+  assert(i > 0, 'falta _certificadoHTML');
+  const fn = html.slice(i, html.indexOf('function _abrirCertificado', i));
+  assert(!/document\.|innerHTML|saveDB/.test(fn), 'no toca el DOM ni guarda nada');
+  assert(fn.includes('_dispName(') && fn.includes('class="cert-nombre"'), 'nombre de la persona');
+  assert(fn.includes('escapeHTML(venueNombre') && fn.includes('class="cert-casa"'), 'restaurante');
+  assert(fn.includes('catLocal(cat)') && fn.includes('class="cert-cat"'), 'categoría');
+  assert(fn.includes('_certFechaTexto(') && fn.includes('class="cert-fecha"'), 'fecha de obtención');
+  assert(fn.includes("DISHES.filter(d => d.cat===cat).length"), 'número de platos de la categoría');
+  assert(fn.includes('Meseo · ${en?\'front of house training\':\'formación de sala\'} · meseo.es'), 'pie');
+  // Fecha: se guarda desde ahora; las antiguas, «obtenido antes de oct 2026»
+  assert(html.includes("'obtenido antes de oct 2026'"), 'texto de las antiguas');
+  assert(/emp\.certFechas\[c\] = todayStr\(\)/.test(html), 'fecha nueva al conseguirlo');
+  assert(/_certFechasSync\(emp\);\s*fresh\.forEach\(cat => showCertModal\(cat\)\);/.test(html), 'se anota al detectar el certificado');
+  assert(/cf: emp\.certFechas/.test(html) && /_certFechaMin\(emp\.certFechas\[c\], x\.cf\[c\]\)/.test(html), 'fechas sincronizadas en extras');
+  // Botón en Yo y página imprimible
+  assert(html.includes('onclick="_abrirCertificado(this.dataset.cat)"'), 'botón Ver certificado');
+  assert(html.includes("ov.querySelector('#certImprimir').onclick = ()=>{ try{ window.print(); }catch(_){} };"), 'imprimir');
+  const css = read('styles.css');
+  for (const c of ['#certOverlay{', '.cert-hoja{', '.cert-marco{', 'body.cert-abierto > :not(#certOverlay){display:none !important}']) assert(css.includes(c), `falta ${c} en styles.css`);
+});
+
 console.log('\nHygiene');
 test('no git conflict markers in tracked source', () => {
   for (const f of ['index.html', 'sw.js', 'data/wines.json', 'data/lqa-situations.json', 'data/ghost-scenarios.json']) {
