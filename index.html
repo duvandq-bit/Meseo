@@ -84,7 +84,19 @@
 </head>
 <body>
 
-<!-- Splash removed -->
+<!-- Pantalla de carga desde el primer byte (oct 2026). El programa pesa 2,3 MB y
+     va al final del archivo: tras publicar una versión, en un móvil con poca
+     señal el login se veía durante 10-20 s sin responder a nada («no carga la
+     pantalla», propietario). Esta pantalla existe antes de que llegue el
+     programa; la puerta de entrada la reutiliza y, si no se entra, el login
+     la quita. El temporizador de abajo es el cinturón por si el programa no
+     llegara nunca: el login se queda a la vista. -->
+<div class="login-loading-overlay" id="bootEspera" role="status">
+  <div class="loading-logo">Meseo</div>
+  <div class="loading-bar-track"><div class="loading-bar"></div></div>
+  <div class="loading-text">Cargando…</div>
+</div>
+<script>setTimeout(function(){ var b=document.getElementById('bootEspera'); if(b) b.remove(); }, 45000);</script>
 
 
 
@@ -13278,6 +13290,14 @@ function _showCloudPinLogin(name, emp) {
 let _puertaGen = 0;
 function _puertaEsperaPoner(){
   if(document.getElementById('puertaEspera')) return;
+  // La pantalla de arranque, si sigue puesta, pasa a ser ésta: sin parpadeo.
+  const boot = document.getElementById('bootEspera');
+  if(boot){
+    boot.id = 'puertaEspera';
+    const t = boot.querySelector('.loading-text');
+    if(t) t.textContent = LANG==='en'?'Checking your access…':'Comprobando tu acceso…';
+    return;
+  }
   const ol = document.createElement('div');
   ol.className = 'login-loading-overlay';
   ol.id = 'puertaEspera';
@@ -34671,6 +34691,9 @@ document.addEventListener('visibilitychange', ()=>{
   } catch(e){ localStorage.removeItem('txoko_session'); }
   renderLogin();
 })();
+// La pantalla de arranque sólo sobrevive si la puerta de entrada la ha hecho
+// suya (cambia de id). Si sigue con su nombre, es que se va al login: fuera.
+try{ const _b = document.getElementById('bootEspera'); if(_b) _b.remove(); }catch(_){}
 
 </script>
 

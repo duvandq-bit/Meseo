@@ -6583,6 +6583,13 @@ test('Entrada: una sola pantalla de carga, sin parpadeo (oct 2026)', () => {
   const g = html.slice(html.indexOf('async function closePinAndEnter('), html.indexOf('function showLoginLoading(') > 0 ? html.indexOf('// Show loading screen during transition') : 0);
   assert(!/_puertaGen\) return;[^\n]*\n\s*_puertaEsperaQuitar\(\);/.test(g), 'la puerta ya no se quita al pasar');
   assert(/if\(!_ok && typeof _puertaEsperaQuitar==='function'\) _puertaEsperaQuitar\(\);/.test(g), 'si la carta no carga, la pantalla se quita');
+  // Y desde el primer byte: la pantalla de arranque existe en el HTML, antes del
+  // programa, y la puerta la hace suya en vez de pintar otra.
+  assert(/<div class="login-loading-overlay" id="bootEspera"/.test(html), 'pantalla de arranque en el HTML, antes del programa');
+  assert(html.indexOf('id="bootEspera"') < html.indexOf('const DISH_COMPONENTS'), 'la pantalla de arranque va antes de los datos');
+  const pe = html.slice(html.indexOf('function _puertaEsperaPoner('), html.indexOf('function _puertaEsperaQuitar('));
+  assert(/getElementById\('bootEspera'\)/.test(pe) && /boot\.id = 'puertaEspera'/.test(pe), 'la puerta reutiliza la pantalla de arranque');
+  assert(/const _b = document\.getElementById\('bootEspera'\); if\(_b\) _b\.remove\(\);/.test(html), 'si se va al login, la pantalla de arranque se quita');
 });
 
 test('Emplatado: la vista rápida separa los bocados igual que la ficha (oct 2026)', () => {
