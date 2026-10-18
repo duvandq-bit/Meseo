@@ -1692,7 +1692,7 @@ body::after{
    no se entiende a primera vista». Era literal: la cabecera llevaba un
    anillo SVG de 72 px con el trazo en degradado y el porcentaje en Cinzel
    recortado a degradado — una pieza que no existe en ninguna otra pantalla
-   (la casa tiene su anillo, .hoy-ring: 64 px, aro de oro plano, cifra en
+   (la casa tenía su anillo en el inicio: 64 px, aro de oro plano, cifra en
    Cinzel lisa). Ese anillo dejaba al título 222 px de los 300 útiles de un
    móvil de 375, así que «Repaso Inteligente» partía en dos líneas, y lo
    primero que veía un usuario nuevo era un «0 %» del tamaño de un titular.
@@ -7174,40 +7174,6 @@ body:has(#gsOverlay.open) .ev-aviso-panel{
 .dash-row-mark svg{width:13px;height:13px}
 .dash-row.done .dash-row-title{text-decoration:line-through;opacity:.6}
 .dash-row.done .dash-row-mark{color:var(--sage)}
-/* ── HOY: anillo + siguiente + pips (auditoría de retención, jul 2026).
-   El detalle completo (las filas de siempre) vive en #hoyDetail y se abre
-   con los pips — lectura obligatoria mínima, información bajo demanda. ── */
-.hoy-card{display:flex;align-items:center;gap:.95rem;padding:.85rem .9rem;margin-bottom:.55rem;
-  background:linear-gradient(155deg,#faf6ee,#f0e8d8);border:1px solid rgba(196,154,60,.25);
-  border-radius:14px;box-shadow:0 2px 0 rgba(196,154,60,.12),0 2px 10px rgba(28,42,34,.05)}
-.hoy-ring{position:relative;width:64px;height:64px;flex-shrink:0}
-.hoy-ring svg{width:64px;height:64px;transform:rotate(-90deg)}
-.hoy-ring-track{fill:none;stroke:rgba(196,154,60,.15);stroke-width:5}
-.hoy-ring-fill{fill:none;stroke:var(--gold);stroke-width:5;stroke-linecap:round;
-  stroke-dasharray:163.4;transition:stroke-dashoffset .6s cubic-bezier(.2,.8,.3,1)}
-.hoy-ring-txt{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1.1}
-.hoy-ring-txt b{font-family:'Cinzel',serif;font-size:.95rem;color:var(--parchment)}
-.hoy-ring-txt span{font-family:'DM Mono',monospace;font-size:.48rem;letter-spacing:.14em;text-transform:uppercase;color:var(--parch3)}
-.hoy-main{flex:1;min-width:0}
-.hoy-next-lbl{font-family:'DM Mono',monospace;font-size:.52rem;letter-spacing:.18em;color:var(--gold-deep);margin-bottom:.3rem}
-.hoy-next{display:flex;align-items:center;gap:.6rem;width:100%;min-height:54px;padding:.55rem .7rem;
-  cursor:pointer;text-align:left;border:1px solid rgba(196,154,60,.4);border-radius:11px;
-  background:linear-gradient(145deg,#d4aa4c,var(--gold));
-  box-shadow:0 2px 8px rgba(196,154,60,.35);transition:transform .15s}
-.hoy-next:active{transform:scale(.98)}
-.hoy-next[disabled]{cursor:default;opacity:.85}
-.hoy-next-ic{font-size:1.15rem;flex-shrink:0;line-height:1}
-.hoy-next-tx{flex:1;min-width:0;display:flex;flex-direction:column;gap:.12rem}
-.hoy-next-tx b{font-family:'Quicksand',sans-serif;font-size:.85rem;font-weight:700;color:#1a0f05;
-  line-height:1.25;overflow:hidden;text-overflow:ellipsis;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
-.hoy-next-tx span{font-family:'DM Mono',monospace;font-size:.55rem;letter-spacing:.06em;color:rgba(26,15,5,.65)}
-.hoy-pips{display:flex;flex-wrap:wrap;gap:.35rem;margin-bottom:1rem}
-.hoy-pip{min-height:40px;padding:.35rem .7rem;cursor:pointer;border-radius:999px;
-  font-family:'DM Mono',monospace;font-size:.6rem;letter-spacing:.06em;
-  background:#faf6ee;border:1px solid rgba(196,154,60,.2);color:rgba(28,42,34,.6);transition:all .2s}
-.hoy-pip.done{background:rgba(77,138,94,.1);border-color:rgba(77,138,94,.3);color:var(--green-deep)}
-.hoy-pip:active{transform:scale(.96)}
-
 /* ── Hook F1 (jul 2026): el bucle Juegos → Ranking → Terraza ── */
 /* Tarjeta [récord] en la Terraza — el hito se viste de gala */
 .chat-record-card{display:flex;align-items:center;gap:.6rem;padding:.6rem .75rem;
@@ -9557,30 +9523,30 @@ li.fail .dj-qrv-mark{color:#e8a0a0}
 .subtab-chip:active{color:var(--gold-deep)}
 .subtab-chip.on{color:var(--gold-deep);border-bottom-color:var(--gold);font-weight:700}
 
-/* ── Tarjeta "Guía de Emplatado" del dashboard: abanico de fotos reales ── */
+/* ── Tarjeta de acceso del inicio (Consulta rápida): vestido oscuro con brillo ── */
 .dash-plating{position:relative;display:flex;align-items:center;gap:.95rem;margin-bottom:1.6rem;padding:.95rem 1rem;
   background:linear-gradient(150deg,#26332c 0%,#1c2a22 55%,#233029 100%);
   border:1px solid rgba(196,154,60,.38);border-radius:var(--r);overflow:hidden;cursor:pointer;
   box-shadow:0 6px 20px rgba(28,42,34,.28), inset 0 1px 0 rgba(196,154,60,.18);
   animation:slideUp .4s ease both;-webkit-tap-highlight-color:transparent;transition:transform .12s}
 .dash-plating:active{transform:scale(.985)}
-.dash-plating-strip{display:flex;flex-shrink:0;padding:.15rem .1rem}
-.dash-plating-strip img{width:50px;height:62px;object-fit:cover;border-radius:9px;
-  border:1.5px solid rgba(196,154,60,.55);box-shadow:0 4px 10px rgba(0,0,0,.45);background:#2c241a}
-.dash-plating-strip img:nth-child(1){transform:rotate(-7deg) translateX(7px) translateY(2px);z-index:1}
-.dash-plating-strip img:nth-child(2){transform:rotate(1deg) translateY(-3px);z-index:3}
-.dash-plating-strip img:nth-child(3){transform:rotate(7deg) translateX(-7px) translateY(2px);z-index:2}
 .dash-plating-tx{flex:1;min-width:0}
-.dash-plating-eyebrow{font-family:'DM Mono',monospace;font-size:.75rem;letter-spacing:.22em;
-  color:rgba(196,154,60,.8);text-transform:uppercase}
 .dash-plating-title{font-family:'Cinzel',serif;font-weight:700;font-size:1.02rem;color:#f2eae0;margin:.16rem 0 .18rem}
 .dash-plating-sub{font-size:.67rem;color:rgba(242,234,224,.55);line-height:1.35}
-.dash-plating-arrow{flex-shrink:0;display:grid;place-items:center}
 .dash-plating-shine{position:absolute;inset:0;pointer-events:none;
   background:linear-gradient(115deg,transparent 35%,rgba(196,154,60,.10) 48%,transparent 60%);
   transform:translateX(-120%);animation:dashPlatingShine 6.5s ease-in-out infinite}
 @keyframes dashPlatingShine{0%,64%{transform:translateX(-120%)}84%,100%{transform:translateX(120%)}}
 @media (prefers-reduced-motion:reduce){.dash-plating-shine{animation:none}}
+/* Consulta rápida (oct 2026): dos accesos en una fila, Mesa con alergias y Carta.
+   Heredan el vestido de .dash-plating; aquí sólo cambia la forma (vertical, a medias). */
+.dash-cr{display:grid;grid-template-columns:1fr 1fr;gap:.6rem;margin-bottom:1.4rem}
+.dash-cr .dash-plating.dash-cr-item{flex-direction:column;align-items:flex-start;gap:.55rem;margin:0;padding:.85rem .9rem;min-height:116px}
+.dash-cr-ic{display:grid;place-items:center;width:34px;height:34px;border-radius:10px;color:var(--gold);
+  background:rgba(196,154,60,.12);border:1px solid rgba(196,154,60,.3)}
+.dash-cr .dash-plating-tx{width:100%}
+.dash-cr .dash-plating-title{font-size:.98rem;margin:0 0 .15rem}
+.dash-cr .dash-plating-sub{font-size:.72rem}
 
 /* ── Fotos de platos en toda la app (superficies de consulta) ──
    Las fotos son platos blancos sobre fondos claros: los recortes circulares
@@ -9678,16 +9644,6 @@ li.fail .dj-qrv-mark{color:#e8a0a0}
 .hoy-stat b{display:block;font-family:'Cinzel',serif;font-size:1.35rem;line-height:1.15;color:var(--gold-deep);font-weight:700}
 .hoy-stat b i{font-style:normal;font-size:.7rem}
 .hoy-stat span{font-family:'DM Mono',monospace;font-size:.75rem;letter-spacing:.16em;text-transform:uppercase;color:var(--parch3)}
-.hoy-rows{margin-bottom:1rem}
-.hoy-numrow{display:flex;align-items:center;gap:.7rem;width:100%;min-height:52px;padding:.55rem .35rem;
-  background:transparent;border:none;border-bottom:1px solid rgba(196,154,60,.14);cursor:pointer;text-align:left}
-.hoy-numrow:first-child{border-top:1px solid rgba(196,154,60,.14)}
-.hoy-numrow:active{background:rgba(196,154,60,.06)}
-.hoy-num{font-family:'DM Mono',monospace;font-size:.66rem;color:var(--gold);opacity:.75;flex-shrink:0}
-.hoy-numrow-t{flex:1;min-width:0;font-family:'Quicksand',sans-serif;font-size:.88rem;font-weight:700;color:var(--parchment);
-  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.hoy-numrow-meta{font-family:'DM Mono',monospace;font-size:.75rem;letter-spacing:.1em;color:var(--gold-deep);flex-shrink:0}
-.hoy-numrow-meta.ok{color:var(--parch4)}
 
 /* ═══ EL PLAN DE HOY — fase 2, sep 2026 ═══
    Tres filas como mucho. Sin paleta nueva: los mismos tokens de oro y
@@ -10495,7 +10451,7 @@ body:has(#gsOverlay.open) .ux2-bar{
 .xp-bar-title{font-family:var(--font-serif);font-size:var(--fs-3);font-weight:600}
 
 /* Fila: lo que se toca */
-.plan-tarea-t,.hoy-numrow-t,.dash-row-title,.dash-index-lbl,.install-banner-tx b{font-family:var(--font-sans);font-size:var(--fs-4);font-weight:700;letter-spacing:0;text-transform:none}
+.plan-tarea-t,.dash-row-title,.dash-index-lbl,.install-banner-tx b{font-family:var(--font-sans);font-size:var(--fs-4);font-weight:700;letter-spacing:0;text-transform:none}
 
 /* Texto */
 .plan-hoy-resumen,.pdd-sub,.ri-cta-sub,.plan-tarea-m,.dash-row-sub,.dash-plating-sub,.install-banner-tx span,.login-foot-brand p,.login-foot-mail,.login-foot-col li>*{font-family:var(--font-sans);font-size:var(--fs-3);font-weight:500;letter-spacing:0;text-transform:none}
@@ -10511,8 +10467,8 @@ body:has(#gsOverlay.open) .ux2-bar{
 .plan-tarea-go,.dash-row-go{font-family:var(--font-sans);font-weight:400}
 
 /* Etiqueta */
-.dash-hero-label,.plan-hoy-eyebrow,.dash-plating-eyebrow,.pdd-eyebrow span,.hoy-stat span,.dash-index-meta,.login-foot-col h4,.plan-tarea-min,.hoy-numrow-meta,.xp-bar-sub span,.dash-hero-lvl-num,.plan-tarea-marca,.hoy-num,.ri-cta-nuevo{font-family:var(--font-mono);font-size:var(--fs-1);font-weight:500;letter-spacing:.12em;text-transform:uppercase}
-.xp-bar-sub span,.dash-hero-lvl-num,.plan-tarea-marca,.hoy-num,.plan-tarea-min{letter-spacing:.06em;text-transform:none}
+.dash-hero-label,.plan-hoy-eyebrow,.pdd-eyebrow span,.hoy-stat span,.dash-index-meta,.login-foot-col h4,.plan-tarea-min,.xp-bar-sub span,.dash-hero-lvl-num,.plan-tarea-marca,.ri-cta-nuevo{font-family:var(--font-mono);font-size:var(--fs-1);font-weight:500;letter-spacing:.12em;text-transform:uppercase}
+.xp-bar-sub span,.dash-hero-lvl-num,.plan-tarea-marca,.plan-tarea-min{letter-spacing:.06em;text-transform:none}
 .login-foot-copy span,.app-credit{font-family:var(--font-mono);font-size:var(--fs-1);font-weight:400}
 .ux2-lbl{font-family:var(--font-sans);font-size:var(--fs-1)}
 

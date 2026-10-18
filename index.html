@@ -52,7 +52,7 @@
 <meta property="og:description" content="Formación de equipos de sala: carta, alérgenos, vinos, exámenes y juegos de repaso.">
 <meta property="og:url" content="https://meseo.es/">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"Meseo","url":"https://meseo.es/"}</script>
-<meta name="app-version" content="7.509">
+<meta name="app-version" content="7.510">
 <meta name="app-build" content="May 2026">
 <meta name="theme-color" content="#1c2a22">
 <!-- ═══ PWA ═══ -->
@@ -2803,7 +2803,7 @@ const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><p
 const SRC = 'src';
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='7.509';  // sincronizada con sw.js VERSION (guard de CI)
+const APP_VERSION='7.510';  // sincronizada con sw.js VERSION (guard de CI)
 const APP_BUILD='Jul 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;
@@ -10006,9 +10006,8 @@ function _renderSmartSummary(){
     kind:'practica', score:state.sessionScore, total:state.sessionTotal,
     seconds:Math.round((Date.now() - (state.startTime||Date.now()))/1000),
     meta:{ platos:(state.queue||[]).length } });
-  // F-P1-5: SRS-related missions/achievements never unlocked because these checks were missing.
+  // F-P1-5: SRS-related achievements never unlocked because this check was missing.
   if(typeof checkNewAchievements==='function') checkNewAchievements();
-  if(typeof checkMissionCompletion==='function') checkMissionCompletion();
 
   const avgTime = state.totalTime > 0 && state.sessionTotal > 0 ? (state.totalTime / state.sessionTotal) : 0;
   const totalSec = Math.round((Date.now() - (state.startTime||Date.now())) / 1000);
@@ -10764,67 +10763,6 @@ function showStreakToast(days){
 }
 
 
-// ═══ RETO SEMANAL ═══
-const WEEKLY_CHALLENGES=[
-  {key:'allergens_postres',  topic:'allergens',   cat:'Postres',              es:'Domina los alérgenos de los Postres',          en:'Master allergens in Desserts'},
-  {key:'allergens_entrantes',topic:'allergens',   cat:'Entrantes',            es:'Alérgenos de todos los Entrantes',              en:'Allergens of all Starters'},
-  {key:'ingredients_main',   topic:'ingredients', cat:'Platos Principales',   es:'Ingredientes de los Platos Principales',        en:'Ingredients of Main Courses'},
-  {key:'history_all',        topic:'history',     cat:'all',                  es:'Storytelling de toda la carta',                 en:'Storytelling of the full menu'},
-  {key:'allergens_hambur',   topic:'allergens',   cat:'Hamburguesas y Bocatas',es:'Alérgenos de Hamburguesas y Bocatas',          en:'Allergens of Burgers & Sandwiches'},
-  {key:'ingredients_guarn',  topic:'ingredients', cat:'Guarniciones y Salsas', es:'Ingredientes de Guarniciones y Salsas',        en:'Ingredients of Sides & Sauces'},
-  {key:'allergens_veg',      topic:'allergens',   cat:'Vegetariano',          es:'Alérgenos de los platos Vegetarianos',          en:'Allergens of Vegetarian dishes'},
-  {key:'ingredients_entrantes',topic:'ingredients',cat:'Entrantes',           es:'Ingredientes de todos los Entrantes',           en:'Ingredients of all Starters'},
-  {key:'history_principales',topic:'history',     cat:'Platos Principales',   es:'Historia de los Platos Principales',            en:'History of Main Courses'},
-];
-function getCurrentChallenge(){
-  // Week number since a fixed epoch — rotates automatically
-  const epoch=new Date('2025-01-06'); // Monday
-  const now=new Date();
-  const weekNum=Math.floor((now-epoch)/(7*24*3600*1000));
-  return WEEKLY_CHALLENGES[weekNum%WEEKLY_CHALLENGES.length];
-}
-function getChallengeProgress(ch){
-  // Check all employees' exam sessions this week matching topic+cat
-  const weekStart=new Date();
-  weekStart.setHours(0,0,0,0);
-  weekStart.setDate(weekStart.getDate()-weekStart.getDay());
-  const empNames=Object.keys(DB.employees).filter(n=>_esDeMiVenue(DB.employees[n]));
-  let completed=0;
-  for(const name of empNames){
-    const emp=DB.employees[name];
-    const sessions=(emp.sessions||[]).filter(s=>{
-      const sDate=new Date(s.ts);
-      return sDate>=weekStart &&
-        (ch.topic==='mixed'||s.topic===ch.topic||s.topic==='mixed') &&
-        (ch.cat==='all'||s.cat===ch.cat||s.cat==='all') &&
-        Math.round(s.score/s.total*100)>=70;
-    });
-    if(sessions.length>0) completed++;
-  }
-  return {total:empNames.length||1, completed};
-}
-function renderWeeklyChallenge(){
-  const ch=getCurrentChallenge();
-  const {total,completed}=getChallengeProgress(ch);
-  const label=LANG==='en'?ch.en:ch.es;
-  const daysLeft=7-new Date().getDay()||7;
-  return `
-    <button class="dash-row" style="margin-bottom:.4rem" onclick="startChallengeExam('${ch.topic}','${ch.cat}')" aria-label="${LANG==='en'?'Weekly challenge':'Reto semanal'}: ${label}">
-      <span class="dash-row-num" style="font-size:.8rem;color:#5a4a8a" aria-hidden="true">${daysLeft}d</span>
-      <span class="dash-row-body">
-        <span class="dash-row-title">${LANG==='en'?'Weekly challenge':'Reto semanal'}: ${label}</span>
-        <span class="dash-row-sub" style="display:block">${completed}/${total} ${LANG==='en'?'passed (≥70%)':'superado (≥70%)'}</span>
-      </span>
-      <span class="dash-row-go">›</span>
-    </button>`;
-}
-
-function startChallengeExam(topic,cat){
-  examConfig={count:15,topic,cat};
-  showTab('exam');
-}
-
-
 // ═══ RETO DEL DÍA — la misma pregunta para todo el equipo ═══
 // Una pregunta al día, idéntica para todo el equipo (generador determinista
 // sembrado con la fecha canaria), una sola oportunidad. Es el motivo para
@@ -11138,9 +11076,11 @@ function _pddAsyncFill(){
       if(el && w) el.textContent=(LANG==='en'?'Pairing: ':'Maridaje: ')+w.name;
     }).catch(()=>{});
   }
-  // Teaser de Actualidad en el inicio: 3 titulares + Ver más (petición del
-  // propietario). Solo se pinta si hay noticias (offline con caché incluida).
-  // Posición en la liga semanal
+  _ligaPosFill();
+}
+// Posición en la liga semanal (nube, con caché de 5 min para no machacar
+// Supabase). Se pinta en #hoyLigaPos, que desde oct 2026 vive en Yo.
+function _ligaPosFill(){
   const el=document.getElementById('hoyLigaPos');
   if(el){
     const c=window._ligaPosCache;
@@ -21671,7 +21611,6 @@ function _mqResults(){
     saveDB();
   }
   if(typeof checkNewAchievements === 'function') checkNewAchievements();
-  if(typeof checkMissionCompletion === 'function') checkMissionCompletion();
   const cls = pct >= 80 ? 'var(--sage)' : pct >= 60 ? 'var(--gold)' : 'var(--rose)';
   const c = document.getElementById('appContent');
   c.innerHTML = `
@@ -21874,8 +21813,6 @@ function _hoyPlanHTML(emp, _en){
 
 function renderDashboard(){
   const emp=getEmp(currentUser);
-  const sessions=emp.sessions||[];
-  const avg=sessions.length?Math.round(sessions.reduce((a,s)=>a+(s.score/s.total*100),0)/sessions.length):0;
   const streak=emp.streak||0;
   const lvl=getLevelInfo(emp.xp||0);
 
@@ -21888,32 +21825,17 @@ function renderDashboard(){
   const _canaryH=(_now.getUTCHours()+(_isDST?1:0))%24;
   const greeting=_canaryH<12?t('greetingMorning'):_canaryH<20?t('greetingAfternoon'):t('greetingEvening');
 
-  // ── Plan de hoy: repaso SRS pendiente + punto débil más urgente ──
   const _en = LANG==='en';
-  const _srsDue = _srsDueCount(emp);
-  const _srsOverdue = (emp.srs ? Object.values(emp.srs).filter(s => s.reps>0 && Date.now() >= s.nextReview) : []).length;
-  // Top adaptive weakness (single most-pressing item)
-  const _weak = _adaptiveWeaknesses(emp);
-  const _topWeak = _weak && _weak.length > 0 ? _weak[0] : null;
-  let _weakDisplay = null;
-  if(_topWeak){
-    if(_topWeak.type === 'allergen'){
-      const lbl = _en && typeof allergenData_en!=='undefined' ? (allergenData_en[_topWeak.key] || _topWeak.key) : _topWeak.key;
-      _weakDisplay = { label: lbl, type_es:'alérgeno', type_en:'allergen', count:_topWeak.count, icon:'⚠️' };
-    } else if(_topWeak.type === 'category'){
-      _weakDisplay = { label: _topWeak.key, type_es:'categoría', type_en:'category', count:_topWeak.count, icon:'📂' };
-    } else if(_topWeak.type === 'ingredient'){
-      const d = DISHES.find(x => x.id === parseInt(_topWeak.key));
-      const nm = d ? getDish(d).name : _topWeak.key;
-      _weakDisplay = { label: nm, type_es:'plato', type_en:'dish', count:_topWeak.count, icon:'🎯' };
-    }
-  }
 
-  // El Pase, destacado en el inicio («que esté a la vista, un acceso más
-  // rápido», propietario sep 2026). Se calcula FUERA de la plantilla: un
-  // template anidado dentro rompería el recorte de las guardas de CI.
-  const _paseDashCard = (typeof launchPase==="function") ? _paseCtaHTML(_en) : "";
-  const _hspDashCard = (typeof _hspCtaHTML==='function') ? _hspCtaHTML(_en) : '';
+  // Consulta rápida: dos accesos en una fila, del mismo tamaño y forma.
+  // «Mesa con alergias» es una tarjeta propia de media anchura (la .ri-cta
+  // ancha de la pestaña Mesa no cabe a medias): lleva a Mesa si hay ruta y,
+  // mientras tanto, a la carta. Se calcula FUERA de la plantilla: un template
+  // anidado rompería las guardas de CI.
+  const _crMesa = _crMesaTileHTML(_en);
+  // Gancho para el parte del día (llegará después): si la función existe, se
+  // pinta justo debajo del saludo; si no, nada.
+  const _parteCard = (typeof _parteCardHTML==='function') ? _parteCardHTML() : '';
 
   const _runeSvg = `<svg viewBox="0 0 16 16"><polygon points="8,0 16,8 8,16 0,8" fill="none" stroke="rgba(228,190,104,.55)" stroke-width=".7"/><polygon points="8,3 13,8 8,13 3,8" fill="none" stroke="rgba(228,190,104,.35)" stroke-width=".45"/><circle cx="8" cy="8" r="1" fill="rgba(228,190,104,.6)"/></svg>`;
 
@@ -21945,116 +21867,36 @@ function renderDashboard(){
       ${renderXPBar()}
     </div>
 
+    ${_parteCard}
+
     <!-- ── ACCESO EN 1 TOQUE: banner de instalación (solo si no está instalada) ── -->
     ${renderInstallBanner()}
 
-    <!-- ── GUÍA DE EMPLATADO: acceso directo desde el inicio (1 toque) ── -->
-    <div class="dash-plating" role="button" tabindex="0" aria-label="${_en?'Open the plating guide':'Abrir la guía de emplatado'}"
-      onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click()}"
-      onclick="_subTab.aprender='emplatado';showTab('emplatado')">
-      <div class="dash-plating-strip" aria-hidden="true">${(typeof _cartaPuesta==='undefined'||_cartaPuesta===_VENUE_POR_DEFECTO)?`
-        <img src="img/platos/3-calamares-a-la-andaluza.webp" alt="" loading="lazy">
-        <img src="img/platos/2-huevo-frito-con-chistorra.webp" alt="" loading="lazy">
-        <img src="img/platos/15-tartar-de-tomate-y-queso.webp" alt="" loading="lazy">
-      `:''}</div>
-      <div class="dash-plating-tx">
-        <div class="dash-plating-eyebrow">◈ ${_en?'Quick reference':'Consulta rápida'}</div>
-        <div class="dash-plating-title">Plating guide</div>
-        <div class="dash-plating-sub">${_en?'The menu in photos · always current':'La carta en fotos · siempre al día'}</div>
+    <!-- ── CONSULTA RÁPIDA: dos accesos en una fila (Mesa con alergias · Carta).
+         Lo que se mira en mitad del servicio, a un toque. ── -->
+    <div class="tunic-divider"><span>${_en?'Quick reference':'Consulta rápida'}</span></div>
+    <div class="dash-cr" role="group" aria-label="${_en?'Quick reference':'Consulta rápida'}">
+      ${_crMesa}
+      <div class="dash-plating dash-cr-item" role="button" tabindex="0" aria-label="${_en?'Open the menu: the plating guide':'Abrir la carta: la guía de emplatado'}"
+        onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click()}"
+        onclick="_subTab.aprender='emplatado';showTab('emplatado')">
+        <div class="dash-cr-ic" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="10" r="2"/><path d="M21 16l-5-5-8 8"/></svg></div>
+        <div class="dash-plating-tx">
+          <div class="dash-plating-title">${_en?'Menu':'Carta'}</div>
+          <div class="dash-plating-sub">Plating guide · ${_en?'photos, always current':'fotos, siempre al día'}</div>
+        </div>
+        <span class="dash-plating-shine" aria-hidden="true"></span>
       </div>
-      <div class="dash-plating-arrow" aria-hidden="true"><svg width="26" height="26" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="var(--gold)" opacity=".85"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#a47a2c" opacity=".4"/><polyline points="9 12 14 12 11 8 14 12 11 16" fill="none" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-      <span class="dash-plating-shine" aria-hidden="true"></span>
     </div>
 
-    <!-- ── EL PASE: destacado en el inicio (tarjeta calculada arriba) ── -->
-    ${_paseDashCard}
-    ${_hspDashCard}
-
-    <!-- ── HOY: rediseño «una acción dominante» (exploración de diseño jul
-         2026). UNA tarjeta pergamino (héroe) con dos estados — Reto del día
-         pendiente ⇄ Plato del día al terminarlo —, tira de stats (racha ·
-         precisión · liga) y filas numeradas compactas. El detalle completo
-         sigue viviendo en el acordeón #hoyDetail (fila 03). ── -->
-    ${(()=>{ const _m=renderDailyMissions();
-      const _ch=getCurrentChallenge(); const _chP=getChallengeProgress(_ch); const _chDone=_chP.completed>=_chP.total;
-      const _dqD=_dqIsDone(emp); const _dqS=emp.dqStreak||0;
-      const _msDone=_m.done>=_m.total;
-      return `
+    <!-- ── HOY: el plan manda la atención (dentro ya salen Pase, Repaso y
+         Hospitalidad cuando toca) y, debajo, la tarjeta del Reto del día.
+         Line Up vive en Practicar; racha, precisión, liga y logros, en Yo.
+         El reto semanal y las misiones se retiraron (oct 2026). ── -->
     <div class="tunic-divider"><span>${_en?'Today':'Hoy'}</span></div>
     ${_hoyPlanHTML(emp,_en)}
     ${_pddHeroHTML(emp,_en)}
-    <div class="hoy-stats" role="group" aria-label="${_en?'Your numbers: quiz streak, exam accuracy, league position':'Tus números: racha del reto, precisión de exámenes, posición en la liga'}">
-      <div class="hoy-stat"><b>${_dqS}</b><span>${_en?'streak':'racha'}</span></div>
-      <div class="hoy-stat"><b>${sessions.length?avg+'<i>%</i>':'—'}</b><span>${_en?'accuracy':'precisión'}</span></div>
-      <div class="hoy-stat"><b id="hoyLigaPos">—</b><span>${_en?'league':'liga'}</span></div>
-    </div>
-    <div class="hoy-rows">
-      ${(()=>{ const _lu=_luItems(emp); const _luD=_lu.filter(x=>x.done).length;
-        return `<button type="button" class="hoy-numrow" onclick="renderLineUp()" aria-label="${_en?`Line Up — pre-service ritual, ${_luD} of ${_lu.length} done`:`Line Up — ritual de antes del servicio, ${_luD} de ${_lu.length} hechos`}">
-        <span class="hoy-num" aria-hidden="true">▶</span><span class="hoy-numrow-t">Line Up</span>
-        <span class="hoy-numrow-meta${_luD===_lu.length?' ok':''}">${_luD}/${_lu.length}</span>
-      </button>` })()}
-      <button type="button" class="hoy-numrow" onclick="showTab('smart')" aria-label="${_en?`Smart review — ${_srsDue} cards pending`:`Repaso inteligente — ${_srsDue} fichas pendientes`}">
-        <span class="hoy-num" aria-hidden="true">01</span><span class="hoy-numrow-t">${_en?'Smart review':'Repaso inteligente'}</span>
-        <span class="hoy-numrow-meta${_srsDue===0?' ok':''}">${_srsDue>0?(_srsDue+' '+(_en?'CARDS':'FICHAS')):(_en?'DONE ✓':'HECHO ✓')}</span>
-      </button>
-      <button type="button" class="hoy-numrow" onclick="startChallengeExam('${_ch.topic}','${_ch.cat}')" aria-label="${_en?'Weekly challenge':'Reto semanal'}: ${_en?_ch.en:_ch.es}">
-        <span class="hoy-num" aria-hidden="true">02</span><span class="hoy-numrow-t">${_en?'Weekly challenge':'Reto semanal'}</span>
-        <span class="hoy-numrow-meta${_chDone?' ok':''}">${_chP.completed}/${_chP.total}</span>
-      </button>
-      <button type="button" class="hoy-numrow" onclick="_hoyToggle()" aria-expanded="false" aria-label="${_en?`Missions ${_m.done} of ${_m.total} — expand detail`:`Misiones ${_m.done} de ${_m.total} — desplegar detalle`}">
-        <span class="hoy-num" aria-hidden="true">03</span><span class="hoy-numrow-t">${_en?'Missions':'Misiones'}</span>
-        <span class="hoy-numrow-meta${_msDone?' ok':''}">${_m.done}/${_m.total} ▾</span>
-      </button>
-      ${_weakDisplay?`<button type="button" class="hoy-numrow" onclick="_startSmartSession()" aria-label="${_en?`Focus practice: ${_weakDisplay.label}`:`Práctica enfocada: ${_weakDisplay.label}`}">
-        <span class="hoy-num" aria-hidden="true">04</span><span class="hoy-numrow-t">${_en?'Practice':'Práctica'}: ${escapeHTML(_weakDisplay.label)}</span>
-        <span class="hoy-numrow-meta">${_weakDisplay.count} ${_en?(_weakDisplay.count===1?'MISS':'MISSES'):(_weakDisplay.count===1?'FALLO':'FALLOS')}</span>
-      </button>`:''}
-    </div>
     <div id="hoyOvertaken"></div>
-    <div id="hoyDetail" style="display:none;margin-bottom:1rem">
-      ${_srsDue>0 ? `
-      <button class="dash-row" onclick="showTab('aprender')" aria-label="${_en?`${_srsDue} dishes due for review — open learning`:`${_srsDue} platos para repasar — abrir aprendizaje`}">
-        <span class="dash-row-num" aria-hidden="true">${_srsDue}</span>
-        <span class="dash-row-body">
-          <span class="dash-row-title">${_en?(_srsDue===1?'Dish to review':'Dishes to review'):(_srsDue===1?'Plato para repasar':'Platos para repasar')}</span>
-          <span class="dash-row-sub" style="display:block">${_srsOverdue>0?`${_srsOverdue} ${_en?'overdue · ':'atrasados · '}`:''}${_en?'spaced repetition':'repetición espaciada'}</span>
-        </span>
-        <span class="dash-row-go">›</span>
-      </button>` : ''}
-      ${_weakDisplay ? `
-      <button class="dash-row" onclick="_startSmartSession()" aria-label="${_en?`Practice weak ${_weakDisplay.type_en}: ${_weakDisplay.label} — ${_weakDisplay.count} ${_weakDisplay.count===1?'miss':'misses'}`:`Practicar ${_weakDisplay.type_es} débil: ${_weakDisplay.label} — ${_weakDisplay.count} ${_weakDisplay.count===1?'fallo':'fallos'}`}">
-        <span class="dash-row-num" style="color:#a04848" aria-hidden="true">${_weakDisplay.count}</span>
-        <span class="dash-row-body">
-          <span class="dash-row-title">${_en?'Focus practice':'Práctica enfocada'}: ${escapeHTML(_weakDisplay.label)}</span>
-          <span class="dash-row-sub" style="display:block">${_en?'start the simulation':'inicia la simulación'}</span>
-        </span>
-        <span class="dash-row-go">›</span>
-      </button>` : ''}
-      ${renderWeeklyChallenge()}
-      ${_m.rows}
-    </div>` })()}
-
-    <!-- ── ACTUALIDAD (teaser): 2 titulares + Ver más. Se rellena en
-         diferido desde data/noticias.json (3 titulares); sin noticias u
-         offline sin caché, la sección entera queda oculta. ── -->
-
-    <!-- El índice «Estudiar» (Flashcards, Examen, Repaso, Repasar fallos)
-         se retiró en oct 2026: repetía la página de Practicar y la pestaña
-         Repaso de Saber, y su «Repaso» no era el «Repaso» del plan de Hoy. -->
-
-    <!-- Logros: resumen de una fila — la galería completa vive en
-         Ranking → Logros (los 42 estaban enterrados al fondo del scroll). -->
-    ${(()=>{ const _u=getUnlockedAchievements(emp).length; return `
-    <div class="tunic-divider"><span>${LANG==='en'?'Achievements':'Logros'}</span></div>
-    <button class="dash-row" style="margin-bottom:1rem" onclick="_subTab.ranking='logros';showTab('logros')" aria-label="${LANG==='en'?`${_u} of ${ACHIEVEMENTS.length} achievements unlocked — view all`:`${_u} de ${ACHIEVEMENTS.length} logros desbloqueados — ver todos`}">
-      <span class="dash-row-num" style="color:var(--gold-deep)" aria-hidden="true">${_u}</span>
-      <span class="dash-row-body">
-        <span class="dash-row-title">${LANG==='en'?'Achievements unlocked':'Logros desbloqueados'}</span>
-        <span class="dash-row-sub" style="display:block">${LANG==='en'?`of ${ACHIEVEMENTS.length} · gem gallery`:`de ${ACHIEVEMENTS.length} · galería de gemas`}</span>
-      </span>
-      <span class="dash-row-go">›</span>
-    </button>` })()}
 
     <!-- Pie de página, el mismo que el del login. Sin la columna Plataforma
          desde oct 2026: repetía la barra de abajo. -->
@@ -22063,10 +21905,29 @@ function renderDashboard(){
 
   `;
   animateCounters();
-  checkMissionCompletion();
   checkNewAchievements();
   _hoyCheckOvertaken();   // trigger rojo si alguien me quitó un nº1 de juego
-  _pddAsyncFill();        // foto/maridaje del plato del día + posición en la liga
+  _pddAsyncFill();        // foto/maridaje del plato del día
+}
+
+// Acceso «Mesa con alergias» de Consulta rápida, a media anchura. Lleva a
+// Mesa si la ruta existe; si todavía no, a la carta, que es donde se
+// consultan los alérgenos plato a plato.
+function _crMesaTileHTML(_en){
+  return `<div class="dash-plating dash-cr-item dash-cr-mesa" role="button" tabindex="0" aria-label="${_en?'Table with allergies: what they can eat, dish by dish':'Mesa con alergias: qué pueden comer, plato a plato'}"
+        onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click()}"
+        onclick="_crIrMesa()">
+        <div class="dash-cr-ic" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l9.5 17h-19z"/><path d="M12 10v4"/><circle cx="12" cy="17" r=".6" fill="currentColor"/></svg></div>
+        <div class="dash-plating-tx">
+          <div class="dash-plating-title">${_en?'Table with allergies':'Mesa con alergias'}</div>
+          <div class="dash-plating-sub">${_en?'What they can eat, dish by dish':'Qué pueden comer, plato a plato'}</div>
+        </div>
+        <span class="dash-plating-shine" aria-hidden="true"></span>
+      </div>`;
+}
+function _crIrMesa(){
+  if(typeof showTab==='function' && typeof TAB_ROUTES!=='undefined' && TAB_ROUTES.includes('mesa')){ showTab('mesa'); return; }
+  _subTab.aprender='emplatado'; showTab('emplatado');
 }
 
 
@@ -22321,7 +22182,6 @@ function fcRate(score){
         <div style="font-size:.8rem;color:var(--parch3);margin-bottom:2rem">${fcDishes.length} ${t('cardsReviewed')}</div>
         <button class="btn-primary" onclick="initFlashcards(fcTopic,'all');renderAprender()">${t('newDeck')}</button>
       </div>`;
-    checkMissionCompletion();
     checkNewAchievements();
   }
 }
@@ -22886,7 +22746,6 @@ function renderExamResults(){
     </div>
   `;
   if(pct>=80){launchConfetti();}
-  checkMissionCompletion();
   checkNewAchievements();
 }
 
@@ -23081,6 +22940,11 @@ function renderPracticar(){
     ${_smartCtaHTML(_en, emp)}
     <div class="tunic-divider"><span>${_en?'Train':'Entrenar'}</span></div>
     <div class="prc-lista">
+      ${(()=>{ if(typeof renderLineUp!=='function' || typeof _luItems!=='function') return '';
+        const _lu=_luItems(emp); const _luD=_lu.filter(x=>x.done).length;
+        return fila("renderLineUp()", ic('<path d="M5 4l14 8-14 8z"/>'),
+          'Line Up', _en?'Pre-service ritual: quiz, dish, wine, protocol':'El ritual de antes del servicio: reto, plato, vino, protocolo',
+          `${_luD}/${_lu.length}`); })()}
       ${fila("showTab('exam')", ic('<path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/>'),
         _en?'Exam':'Examen', _en?'10 questions on the whole menu':'10 preguntas de toda la carta', sesiones?(sesiones+' '+(_en?'done':'hechos')):'')}
       ${fila("showTab('flashcards')", ic('<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 10h18"/>'),
@@ -24716,12 +24580,8 @@ function toggleKnown(id){
   const emp=getEmp(currentUser);
   emp.knownDishes=emp.knownDishes||{};
   emp.knownDishes[id]=!emp.knownDishes[id];
-  // Track daily known count
-  if(emp.knownDishes[id]){
-    const today = todayStr();
-    if(!emp._lastKnownDate || emp._lastKnownDate !== today){ emp.knownToday = 0; emp._lastKnownDate = today; }
-    emp.knownToday = (emp.knownToday||0) + 1;
-  }
+  // (knownToday y _lastKnownDate ya no se escriben: solo los leían las
+  // misiones diarias, retiradas en oct 2026.)
   saveDB();
   const el=document.getElementById(`ritem${id}`);
   if(el){
@@ -24730,7 +24590,6 @@ function toggleKnown(id){
     btn.className=`known-btn${ok?' yes':''}`;
     btn.textContent=ok?'✓':'○';
   }
-  checkMissionCompletion();
   checkNewAchievements();
 }
 
@@ -24769,6 +24628,9 @@ function renderStats(){
 
   // Duel wins
   const duelWins = emp.duelWins||0;
+
+  // Logros desbloqueados (la fila con enlace a la galería venía del inicio)
+  const logrosN = (typeof getUnlockedAchievements==='function') ? getUnlockedAchievements(emp).length : 0;
 
   // Known by category
   const knownByCat = {};
@@ -24823,6 +24685,22 @@ function renderStats(){
       </div>
     </div>
 
+    <!-- Racha del reto · precisión · liga (venían del inicio, oct 2026) -->
+    <div class="hoy-stats" role="group" aria-label="${LANG==='en'?'Your numbers: quiz streak, exam accuracy, league position':'Tus números: racha del reto, precisión de exámenes, posición en la liga'}">
+      <div class="hoy-stat"><b>${emp.dqStreak||0}</b><span>${LANG==='en'?'quiz streak':'racha reto'}</span></div>
+      <div class="hoy-stat"><b>${totalQ?overall+'<i>%</i>':'—'}</b><span>${LANG==='en'?'accuracy':'precisión'}</span></div>
+      <div class="hoy-stat"><b id="hoyLigaPos">—</b><span>${LANG==='en'?'league':'liga'}</span></div>
+    </div>
+    <!-- Logros: resumen de una fila; la galería completa vive en Ranking → Logros -->
+    <button class="dash-row" style="margin-bottom:1rem" onclick="_subTab.ranking='logros';showTab('logros')" aria-label="${LANG==='en'?`${logrosN} of ${ACHIEVEMENTS.length} achievements unlocked — view all`:`${logrosN} de ${ACHIEVEMENTS.length} logros desbloqueados — ver todos`}">
+      <span class="dash-row-num" style="color:var(--gold-deep)" aria-hidden="true">${logrosN}</span>
+      <span class="dash-row-body">
+        <span class="dash-row-title">${LANG==='en'?'Achievements unlocked':'Logros desbloqueados'}</span>
+        <span class="dash-row-sub" style="display:block">${LANG==='en'?`of ${ACHIEVEMENTS.length} · gem gallery`:`de ${ACHIEVEMENTS.length} · galería de gemas`}</span>
+      </span>
+      <span class="dash-row-go">›</span>
+    </button>
+
     <!-- Key stats grid -->
     <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:.4rem;margin-bottom:1rem">
       <div style="background:linear-gradient(155deg,#faf6ee,var(--ink));border:1.5px solid rgba(196,154,60,.15);border-radius:var(--r2);padding:.65rem;text-align:center">
@@ -24831,11 +24709,11 @@ function renderStats(){
       </div>
       <div style="background:linear-gradient(155deg,#faf6ee,var(--ink));border:1.5px solid rgba(196,154,60,.15);border-radius:var(--r2);padding:.65rem;text-align:center">
         <div style="font-family:'Cinzel',serif;font-size:1.2rem;color:var(--parchment)">${streak>0?'●':''} ${streak}</div>
-        <div style="font-family:var(--font-mono);font-size:var(--fs-1);color:var(--parch4)">${LANG==='en'?'STREAK':'RACHA'}</div>
+        <div style="font-family:var(--font-mono);font-size:var(--fs-1);color:var(--parch4)">${LANG==='en'?'DAYS IN A ROW':'DÍAS SEGUIDOS'}</div>
       </div>
       <div style="background:linear-gradient(155deg,#faf6ee,var(--ink));border:1.5px solid rgba(196,154,60,.15);border-radius:var(--r2);padding:.65rem;text-align:center">
-        <div style="font-family:'Cinzel',serif;font-size:1.2rem;color:var(--parchment)">${overall}%</div>
-        <div style="font-family:var(--font-mono);font-size:var(--fs-1);color:var(--parch4)">${LANG==='en'?'ACCURACY':'PRECISIÓN'}</div>
+        <div style="font-family:'Cinzel',serif;font-size:1.2rem;color:var(--parchment)">${knownCount}<span style="font-size:.7rem;color:var(--parch4)">/${totalDishes}</span></div>
+        <div style="font-family:var(--font-mono);font-size:var(--fs-1);color:var(--parch4)">${LANG==='en'?'MASTERED':'DOMINADOS'}</div>
       </div>
       <div style="background:linear-gradient(155deg,#faf6ee,var(--ink));border:1.5px solid rgba(196,154,60,.15);border-radius:var(--r2);padding:.65rem;text-align:center">
         <div style="font-family:'Cinzel',serif;font-size:1.2rem;color:var(--parchment)">${totalTimeStr}</div>
@@ -24880,6 +24758,7 @@ function renderStats(){
     </div>`:''}
 
   </div>`;
+  if(typeof _ligaPosFill==='function') _ligaPosFill();
 }
 
 function getCertifications(emp){
@@ -26360,7 +26239,6 @@ function renderAllergenResults() {
       <button onclick="_subTab.aprender='smart';showTab('aprender')" style="width:100%;padding:.65rem;background:transparent;border:1.5px solid rgba(196,154,60,.55);border-radius:var(--r2);font-family:var(--font-sans);font-size:var(--fs-3);color:var(--gold-deep);cursor:pointer">← ${LANG==='en'?'Back to Learn':'Volver a Aprender'}</button>
     </div>
   </div>`;
-  checkMissionCompletion();
   checkNewAchievements();
 }
 
@@ -29064,7 +28942,6 @@ async function submitDefense() {
   awardXP(xpAmt, iWon ? (LANG==='en'?'Duel victory! VS':'¡Victoria en duelo! VS') : cWins ? (LANG==='en'?'Duel lost':'Duelo perdido') : (LANG==='en'?'Duel draw':'Empate en duelo'));
   // F-P1-1: a_duel_win/3/10 fire on duelWins thresholds; was previously delayed.
   if(typeof checkNewAchievements==='function') checkNewAchievements();
-  if(typeof checkMissionCompletion==='function') checkMissionCompletion();
 
   // Notify challenger
   await fetch(`${SUPA_URL}/rest/v1/notifications`, {
@@ -29518,103 +29395,6 @@ function animateCounters(){
       tick();
     },i*100);
   });
-}
-
-// ═══════ DAILY MISSIONS ═══════
-// Helper: count today's fcHistory entries (handles both old ts-only and new date entries)
-function _fcTodayCount(emp){
-  const today=todayStr();
-  const todayStart=new Date(today+'T00:00:00').getTime();
-  const todayEnd=todayStart+86400000;
-  return (emp.fcHistory||[]).filter(f=>f.date===today||(f.ts>=todayStart&&f.ts<todayEnd)).length;
-}
-const DAILY_MISSIONS = [
-  {id:'m_fc5', icon:'<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#d4aa4c"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#a47a2c" opacity=".35"/><rect x="8" y="8" width="8" height="7" rx="1" fill="none" stroke="#fff" stroke-width="1.2"/><line x1="8" y1="11" x2="16" y2="11" stroke="#fff" stroke-width=".8" opacity=".5"/></svg>', title:'Repasa 5 flashcards', title_en:'Review 5 flashcards', check:emp=>_fcTodayCount(emp)>=5, target:5, getCurrent:emp=>_fcTodayCount(emp), xp:15},
-  {id:'m_exam1', icon:'<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#4888a0"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#36687a" opacity=".35"/><rect x="8" y="7" width="8" height="10" rx="1" fill="none" stroke="#fff" stroke-width="1.2"/><line x1="10" y1="10" x2="14" y2="10" stroke="#fff" stroke-width=".8"/><line x1="10" y1="12.5" x2="14" y2="12.5" stroke="#fff" stroke-width=".8"/><polyline points="10 15 11 16 14 13" fill="none" stroke="#fff" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/></svg>', title:'Completa 1 examen', title_en:'Complete 1 exam', check:emp=>(emp.sessions||[]).filter(s=>s.date===todayStr()).length>=1, target:1, getCurrent:emp=>(emp.sessions||[]).filter(s=>s.date===todayStr()).length, xp:20},
-  {id:'m_exam80', icon:'<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#c49a3c"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#a47a2c" opacity=".35"/><polygon points="12,6 14,10.5 19,11 15.5,14 16.5,18 12,15.5 7.5,18 8.5,14 5,11 10,10.5" fill="#fff" opacity=".85"/></svg>', title:'Saca 80%+ en un examen', title_en:'Score 80%+ on an exam', check:emp=>(emp.sessions||[]).some(s=>s.date===todayStr()&&(s.score/s.total*100)>=80), target:1, getCurrent:emp=>(emp.sessions||[]).some(s=>s.date===todayStr()&&(s.score/s.total*100)>=80)?1:0, xp:30},
-  {id:'m_know3', icon:'<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#4d8a5e"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#2d6a3e" opacity=".35"/><polyline points="8 12 11 15 16 9" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>', title:'Domina 3 platos nuevos', title_en:'Master 3 new dishes', check:emp=>(emp._lastKnownDate===todayStr())&&(emp.knownToday||0)>=3, target:3, getCurrent:emp=>(emp._lastKnownDate===todayStr())?(emp.knownToday||0):0, xp:25},
-  {id:'m_streak3', icon:'<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#d4944c"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#b47430" opacity=".35"/><path d="M10,17 Q10,10 12,7 Q14,10 14,17 Q13,15 12,15 Q11,15 10,17Z" fill="#fff" opacity=".85"/><path d="M11,17 Q11,14 12,12 Q13,14 13,17 Q12.5,16 12,16 Q11.5,16 11,17Z" fill="#f8d040" opacity=".6"/></svg>', title:'Racha de 3 días', title_en:'3-day streak', check:emp=>(emp.streak||0)>=3, target:3, getCurrent:emp=>Math.min(emp.streak||0,3), xp:40},
-];
-
-function getTodayMissions(){
-  // Pick 3 missions based on day seed for variety
-  const seed=Math.floor(Date.now()/86400000);
-  const shuffled=[...DAILY_MISSIONS].sort((a,b)=>{
-    const ha=(seed*31+a.id.charCodeAt(2))%100;
-    const hb=(seed*31+b.id.charCodeAt(2))%100;
-    return ha-hb;
-  });
-  return shuffled.slice(0,3);
-}
-
-function checkMissionCompletion(){
-  const emp=getEmp(currentUser);
-  if(!emp) return;
-  const missions=getTodayMissions();
-  const claimed=emp.missionsClaimed||{};
-  const today=todayStr();
-  missions.forEach(m=>{
-    const key=m.id+'_'+today;
-    if(!claimed[key]&&m.check(emp)){
-      claimed[key]=true;
-      awardXP(m.xp, LANG==='en'?'Mission: '+m.title_en:'Misión: '+m.title);
-      if(typeof launchConfetti==='function')launchConfetti(1500);
-      playSound('correct');
-    }
-  });
-  emp.missionsClaimed=claimed;
-  saveDB();
-}
-
-// Devuelve las filas de misiones SIN divisor propio: viven dentro de la
-// sección única «Hoy» del inicio (antes eran 4 bloques consecutivos de
-// "qué hacer hoy" con marcos distintos — Plan de hoy, alerta de tema,
-// reto semanal y misiones — ahora un solo ledger).
-function renderDailyMissions(){
-  const emp=getEmp(currentUser);
-  const missions=getTodayMissions();
-  const claimed=emp.missionsClaimed||{};
-  const today=todayStr();
-  const doneCount=missions.filter(m=>claimed[m.id+'_'+today]||m.check(emp)).length;
-
-  // `go`: adónde lleva cada misión cuando es la «siguiente» acción del día.
-  // La racha no tiene destino (es pasiva) — nunca se ofrece como siguiente.
-  const MISSION_GO = {
-    m_fc5: "showTab('flashcards')",
-    m_exam1: "showTab('exam')",
-    m_exam80: "showTab('exam')",
-    m_know3: "_subTab.aprender='repaso';showTab('repaso')"
-  };
-  const list = missions.map(m=>({
-    id: m.id,
-    title: LANG==='en'?m.title_en:m.title,
-    done: !!(claimed[m.id+'_'+today]||m.check(emp)),
-    current: Math.min(m.getCurrent(emp),m.target),
-    target: m.target, xp: m.xp,
-    go: MISSION_GO[m.id]||null
-  }));
-  const rows = `${missions.map(m=>{
-      const done=claimed[m.id+'_'+today]||m.check(emp);
-      const current=Math.min(m.getCurrent(emp),m.target);
-      return `<div class="dash-row ${done?'done':''}" data-static style="min-height:46px">
-        <span class="dash-row-mark" aria-hidden="true">${done
-          ?'<svg viewBox="0 0 24 24" fill="none"><path d="M12 3l9 9-9 9-9-9z" fill="currentColor" opacity=".25"/><polyline points="8.5 12 11 14.5 15.5 9.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>'
-          :'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M12 3l9 9-9 9-9-9z"/></svg>'}</span>
-        <span class="dash-row-title" style="font-weight:500;font-size:.82rem">${LANG==='en'?m.title_en:m.title}${!done&&current>0?` <span style="font-family:var(--font-mono);font-size:var(--fs-1);color:rgba(28,42,34,.45)">${current}/${m.target}</span>`:''}</span>
-        <span class="dash-row-meta">+${m.xp} XP</span>
-      </div>`;
-    }).join('')}`;
-  return { rows, done: doneCount, total: missions.length, list };
-}
-
-// Acordeón de la sección «Hoy»: los pips muestran estado; el detalle
-// completo (las filas de siempre) se abre bajo demanda.
-function _hoyToggle(){
-  const d=document.getElementById('hoyDetail');
-  if(!d) return;
-  const open = d.style.display==='none';
-  d.style.display = open ? 'block' : 'none';
-  document.querySelectorAll('.hoy-pip').forEach(p=>p.setAttribute('aria-expanded', String(open)));
 }
 
 // ═══════ GEM SVG GENERATOR — CINEMATIC PRECIOUS STONES ═══════
@@ -34192,8 +33972,7 @@ function txAnswer(idx){
     // F-P1-1: a_txoko5/15/30 fire on txokoRecord thresholds; was previously only triggered
     // when the user later visited an exam/LQA screen.
     if(typeof checkNewAchievements==='function') checkNewAchievements();
-    if(typeof checkMissionCompletion==='function') checkMissionCompletion();
-  }
+    }
 
   if(txokoState.lives<=0) setTimeout(txGameOver,1200);
   else setTimeout(txNext, ok?900:1400);
@@ -34362,7 +34141,6 @@ function txGameOver(){
     </div>`;
   // F-P1-1: belt-and-braces — also fire here in case the run ended without a record bump.
   if(typeof checkNewAchievements==='function') checkNewAchievements();
-  if(typeof checkMissionCompletion==='function') checkMissionCompletion();
   // Hook F1: si además le arrebaté el nº1 a un compañero, la corona sale sola.
   if(isRecord) _txThroneCheck('txoko', txokoState.score);
 }
