@@ -1,6 +1,87 @@
 {
- "updated": "2026-10-18T14:37:56.406Z",
+ "updated": "2026-10-18T19:27:04.186Z",
  "items": [
+  {
+   "t": "Tenerife, vinos de origen volcánico y una tradición singular en Canarias",
+   "u": "https://www.diariolasamericas.com/cultura/tenerife-vinos-origen-volcanico-y-una-tradicion-singular-canarias-n5403850",
+   "s": "Diario Las Américas",
+   "d": "2026-10-18T18:40:00.000Z",
+   "tags": [
+    "VINO",
+    "CANARIAS"
+   ],
+   "img": "https://media.diariolasamericas.com/p/3ba7399aa29c9134443eea87aa563063/adjuntos/216/imagenes/100/284/0100284061/1200x675/smart/vinos-tenerife.jpg"
+  },
+  {
+   "t": "Jorge, chef sobre resistir 40 años en la zona Rambla de Alicante: \"Sin local propio, sería inviable\"",
+   "u": "https://www.elespanol.com/alicante/vivir/gastronomia/20261018/jorge-chef-resistir-anos-zona-rambla-alicante-sin-local-propio-inviable/1003744423469_0.amp.html",
+   "s": "El Español",
+   "d": "2026-10-18T17:00:00.000Z",
+   "tags": [
+    "MICHELIN"
+   ],
+   "img": "https://s3.elespanol.com/k/imgp/cms/elespanol/11379871.jpg?p=f:jpeg/c:3199:1796:nowe:446:0/w:1706/h:960&h=SWgvkDus"
+  },
+  {
+   "t": "Agosto regala otra mala noticia al plátano de Canarias: la ‘banana’ alcanza el 53% de cuota de mercado en la Península",
+   "u": "https://www.eldiario.es/canariasahora/eldiario-agricola/agricultura/noticia-platano-canarias-banana-cuota-mercado-peninsula_1_13594638.html",
+   "s": "elDiario.es",
+   "d": "2026-10-18T16:45:40.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://static.eldiario.es/clip/1a424fbe-d2a6-464e-9619-0d932ed9446c_facebook-aspect-ratio-1200-675_default_0.jpg"
+  },
+  {
+   "t": "La asociación ANIR Canarias difunde el sistema de reparación para víctimas de abusos sexuales en la Iglesia",
+   "u": "https://www.eldiario.es/canariasahora/sociedad/asociacion-anir-canarias-difunde-sistema-reparacion-victimas-abusos-sexuales-iglesia_1_13595619.html",
+   "s": "elDiario.es",
+   "d": "2026-10-18T16:35:27.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://static.eldiario.es/clip/4b2dff80-5034-49d6-ad59-afd216f928ab_facebook-aspect-ratio-1200-675_default_0_x866y598.jpg"
+  },
+  {
+   "t": "El Santa Cruz ADEIN Tenerife Fundación CB Canarias debuta con victoria",
+   "u": "https://www.eldiario.es/canariasahora/deportes/baloncesto/santa-cruz-adein-tenerife-fundacion-cb-canarias-debuta-victoria_1_13595605.html",
+   "s": "elDiario.es",
+   "d": "2026-10-18T16:10:52.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://static.eldiario.es/clip/4bc5d954-bde9-4e01-8000-c2cd27702317_facebook-aspect-ratio-1200-675_default_0_x984y553.jpg"
+  },
+  {
+   "t": "La memoria de cuatro fusilados por el franquismo centra una petición de honores al Cabildo de Tenerife",
+   "u": "https://www.eldiario.es/canariasahora/tenerifeahora/sociedad/fusilados-franquismo-tenerife_1_13595570.html",
+   "s": "elDiario.es",
+   "d": "2026-10-18T15:52:18.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://static.eldiario.es/clip/1cb42640-8b1f-4e89-9414-a3209bcad922_facebook-aspect-ratio-1200-675_default_0_x559y431.jpg"
+  },
+  {
+   "t": "Celta Fortuna y Tenerife se reencuentran en Balaídos",
+   "u": "https://www.eldiario.es/canariasahora/Deportes/futbol/celta-fortuna-tenerife-reencuentran-balaidos_1_13595545.html",
+   "s": "elDiario.es",
+   "d": "2026-10-18T15:07:05.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://static.eldiario.es/clip/4f394f93-09d0-423b-baeb-9a160a50667f_facebook-aspect-ratio-1200-675_default_0_x830y165.jpg"
+  },
+  {
+   "t": "De las lluvias débiles a los \"goterones\" por la tarde: el tiempo en Canarias este lunes",
+   "u": "https://www.eldiario.es/canariasahora/tiempo-canarias/lluvias-tiempo-canarias-lunes-19-de-octubre-manana_1_13595534.html",
+   "s": "elDiario.es",
+   "d": "2026-10-18T14:59:12.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://static.eldiario.es/clip/59ab2243-a139-4c37-a40d-c61e3a5622fe_facebook-aspect-ratio-1200-675_default_0.jpg"
+  },
   {
    "t": "Entre estrellas: cuando la alta cocina brinda con cerveza",
    "u": "https://www.larazon.es/comunidad-valenciana/estrellas-cuando-alta-cocina-brinda-cerveza_202610186ad4d4e7fb06971aad0746fd.html",
@@ -149,26 +230,6 @@
    "img": "https://static.eldiario.es/clip/6149dbfa-135f-468d-8216-f5fc2c97a954_facebook-aspect-ratio-1200-675_default_0.jpg"
   },
   {
-   "t": "Sueldos médicos: Canarias, a la cola para el veterano que solo ejerce en la pública y en el podio para el joven que puede ir a la privada",
-   "u": "https://www.eldiario.es/canariasahora/sociedad/sueldos-medicos-canarias-cola-veterano-ejerce-publica-podio-joven-privada_1_13591465.html",
-   "s": "elDiario.es",
-   "d": "2026-10-18T03:30:30.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://static.eldiario.es/clip/64d9ea83-69d3-41f4-9f5d-ea48263f3ce1_facebook-aspect-ratio-1200-675_default_0.jpg"
-  },
-  {
-   "t": "El queso, rey por un día en Telde",
-   "u": "https://teldeactualidad.com/art/185196/el-queso-rey-por-un-dia-en-telde",
-   "s": "Telde Actualidad",
-   "d": "2026-10-17T20:24:41.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://teldeactualidad.b-cdn.net/upload/images/10_2026/258_whatsapp-image-2026-10-17-at-113021.jpeg"
-  },
-  {
    "t": "Canarias lleva casi cuatro años sin terminar una sola vivienda protegida",
    "u": "https://www.eldiario.es/canariasahora/politica/construccion-vivienda-protegida-canarias_1_13594531.html",
    "s": "elDiario.es",
@@ -187,16 +248,6 @@
     "CANARIAS"
    ],
    "img": "https://static.eldiario.es/clip/44d9d0b7-7021-4d7d-b329-a1c422af116d_facebook-aspect-ratio-1200-675_default_0_x848y242.jpg"
-  },
-  {
-   "t": "Un proyecto común para Canarias",
-   "u": "https://www.eldiario.es/canariasahora/opinion/proyecto-comun-canarias_132_13594367.html",
-   "s": "elDiario.es",
-   "d": "2026-10-17T16:47:52.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://static.eldiario.es/clip/681326e8-ba98-4fa0-810d-0dbfe0c8b2dc_facebook-aspect-ratio-1200-675_default_0.jpg"
   },
   {
    "t": "El restaurante de carretera donde Martín Berasategui es cliente habitual: 30 años de historia y comida casera por 16 euros",
@@ -246,54 +297,6 @@
    "tags": [
     "CANARIAS"
    ]
-  },
-  {
-   "t": "Evacuada en helicóptero a Tenerife por razones médicas una pasajera estadounidense que viajaba en un crucero",
-   "u": "https://www.eldiario.es/canariasahora/tenerifeahora/sucesos/evacuada-helicoptero-tenerife-crucero-pasajera-estadounidense_1_13593597.html",
-   "s": "elDiario.es",
-   "d": "2026-10-17T09:36:40.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://static.eldiario.es/clip/388a1750-4156-4904-b5b6-25dc49c0ccf1_facebook-aspect-ratio-1200-675_default_1153505.jpg"
-  },
-  {
-   "t": "Torres advierte que los menores que migran solos se quedarán en Canarias tras desvelar el PP sus planes si gobierna tras el 29N",
-   "u": "https://www.eldiario.es/canariasahora/politica/29n-gobierno-pp-espana-canarias-menores-migrantes_1_13593554.html",
-   "s": "elDiario.es",
-   "d": "2026-10-17T09:17:37.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://static.eldiario.es/clip/d00f551f-63cf-4c36-9ea8-0a0150654f2c_facebook-aspect-ratio-1200-675_default_0.jpg"
-  },
-  {
-   "t": "La joya escondida de este municipio de Gran Canaria que conquista con por su carne a la brasa: ofrece cocina canaria tradicional a precios económicos",
-   "u": "https://www.laprovincia.es/gran-canaria/2026/10/17/joya-escondida-gran-canaria-comer-carne-brasa-dv-125989279.html",
-   "s": "La Provincia",
-   "d": "2026-10-17T09:00:00.000Z",
-   "tags": [
-    "CANARIAS"
-   ]
-  },
-  {
-   "t": "El restaurante de Tenerife donde disfrutar de la cocina canaria tradicional con unas vistas espectaculares",
-   "u": "https://www.eldia.es/tenerife/2026/10/17/restaurante-tenerife-disfrutar-cocina-canaria-vistas-dv-134580610.html",
-   "s": "Eldía",
-   "d": "2026-10-17T08:00:00.000Z",
-   "tags": [
-    "CANARIAS"
-   ]
-  },
-  {
-   "t": "El pueblo en pleno corazón de La Mancha que resulta ideal para una escapada gastronómica: molinos, migas manchegas y un restaurante Michelin por 17,50 €",
-   "u": "https://www.infobae.com/espana/2026/10/17/el-pueblo-en-pleno-corazon-de-la-mancha-que-resulta-ideal-para-una-escapada-gastronomica-molinos-migas-manchegas-y-un-restaurante-michelin-por-1750/",
-   "s": "Infobae",
-   "d": "2026-10-17T06:00:00.000Z",
-   "tags": [
-    "MICHELIN"
-   ],
-   "img": "https://www.infobae.com/resizer/v2/JRSRJDFXHZFGLDLN6J2YDUYSZM.jpeg?auth=b92c677ef0ec6bbf8749af778da0c0630d0422f42c31d39aff5ac5d6cbc320f7&smart=true&width=1200&height=630&quality=85"
   }
  ]
 }
