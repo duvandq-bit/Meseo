@@ -10983,3 +10983,42 @@ html[data-venue="demo"] .ri-cta-mesa{
   box-shadow:0 4px 16px rgba(0,0,0,.3), inset 0 1px 0 rgba(200,163,90,.14);
 }
 html[data-venue="demo"] .ri-cta-mesa .ri-cta-icon{border-color:rgba(200,163,90,.4)}
+
+/* ═══ EL PARTE DEL DÍA (Inicio, overlay del Line Up y editor del supervisor) ═══ */
+.parte-card{position:relative;background:linear-gradient(155deg,#fdf9f0,#f3ebdb);border:1.5px solid var(--line2);border-left:4px solid var(--gold);border-radius:16px;padding:1rem 1.05rem .85rem;margin:0 0 1.2rem;box-shadow:var(--elev-2);overflow:hidden}
+.parte-card-ov{margin:0;box-shadow:none;border-left-width:4px}
+.parte-head{display:flex;align-items:flex-start;justify-content:space-between;gap:.6rem;margin-bottom:.6rem}
+.parte-eyebrow{font-family:var(--font-mono);font-size:var(--fs-1);letter-spacing:.16em;text-transform:uppercase;color:var(--gold-deep);font-weight:500}
+.parte-meta{font-family:var(--font-sans);font-size:var(--fs-1);color:var(--parch3);margin-top:.15rem}
+.parte-edit{flex-shrink:0;background:transparent;border:1.5px solid var(--line2);border-radius:var(--radius-sm);padding:.3rem .7rem;font-family:var(--font-sans);font-size:var(--fs-2);font-weight:700;color:var(--gold-deep);cursor:pointer;min-height:32px}
+.parte-sec{padding:.5rem 0;border-top:1px dashed var(--line2)}
+.parte-sec:first-of-type{border-top:none}
+.parte-sec-t{font-family:var(--font-mono);font-size:var(--fs-1);letter-spacing:.12em;text-transform:uppercase;color:var(--parch3);margin-bottom:.25rem}
+.parte-sec-86 .parte-sec-t{color:var(--rose)}
+.parte-txt{font-family:var(--font-read);font-size:var(--fs-3);line-height:1.5;color:var(--parchment);overflow-wrap:anywhere}
+.parte-chips{display:flex;flex-wrap:wrap;gap:.35rem;margin-bottom:.3rem}
+.parte-chip{display:inline-flex;align-items:center;gap:.3rem;padding:.28rem .6rem;border-radius:999px;background:#fff;border:1px solid var(--line2);font-family:var(--font-sans);font-size:var(--fs-2);font-weight:600;color:var(--parchment);max-width:100%}
+.parte-sec-86 .parte-chip{border-color:rgba(196,112,104,.45);color:var(--rose);text-decoration:line-through;text-decoration-thickness:1px}
+.parte-chip-x{cursor:pointer;min-height:32px}
+.parte-chip-ok{border-color:rgba(77,138,94,.4);color:var(--green-deep)}
+.parte-chip small{font-family:var(--font-mono);font-size:var(--fs-1);color:var(--parch3);font-weight:400}
+.parte-foot{display:flex;justify-content:flex-end;align-items:center;margin-top:.6rem;padding-top:.6rem;border-top:1px solid var(--line2)}
+.parte-visto-btn{min-height:40px;padding:.45rem 1.3rem;border-radius:999px;border:none;background:var(--parchment);color:#f0d68a;font-family:var(--font-sans);font-size:var(--fs-3);font-weight:700;cursor:pointer;box-shadow:var(--elev-1)}
+.parte-visto-ok{font-family:var(--font-mono);font-size:var(--fs-2);color:var(--green-deep);font-weight:500;letter-spacing:.04em}
+/* Editor */
+.parte-overlay .pase-body{padding-bottom:4rem}
+.parte-form{display:flex;flex-direction:column;gap:.9rem;max-width:560px;margin:0 auto}
+.parte-f{display:flex;flex-direction:column;gap:.35rem}
+.parte-l{font-family:var(--font-mono);font-size:var(--fs-1);letter-spacing:.14em;text-transform:uppercase;color:var(--gold-deep);font-weight:500}
+.parte-in{width:100%;box-sizing:border-box;padding:.6rem .8rem;border:1px solid var(--line2);border-radius:var(--radius-md);font-family:var(--font-sans);font-size:var(--fs-3);color:var(--parchment);background:#fff;resize:vertical;min-height:44px}
+.parte-in:focus{outline:2px solid var(--gold);outline-offset:1px}
+.parte-ayuda{font-family:var(--font-sans);font-size:var(--fs-2);color:var(--parch3);line-height:1.4}
+.parte-res{display:flex;flex-direction:column;gap:.25rem}
+.parte-res:empty{display:none}
+.parte-res-it{display:flex;justify-content:space-between;align-items:center;gap:.6rem;width:100%;text-align:left;padding:.55rem .8rem;border:1px solid var(--line2);border-radius:var(--radius-md);background:#fff;font-family:var(--font-sans);font-size:var(--fs-3);color:var(--parchment);cursor:pointer;min-height:44px}
+.parte-res-cat{font-family:var(--font-mono);font-size:var(--fs-1);color:var(--parch3);flex-shrink:0}
+.parte-turnos{display:flex;gap:.4rem;flex-wrap:wrap}
+.parte-turno{display:inline-flex;align-items:center;gap:.35rem;padding:.4rem .8rem;border:1px solid var(--line2);border-radius:999px;background:#fff;font-family:var(--font-sans);font-size:var(--fs-2);color:var(--parchment);cursor:pointer;min-height:40px}
+.parte-guardar{width:100%;margin-top:.3rem}
+.parte-vistos{max-width:560px;margin:1.4rem auto 0;padding-top:1rem;border-top:1px dashed var(--line2);display:flex;flex-direction:column;gap:.5rem}
+.parte-vistos-l{display:flex;flex-wrap:wrap;gap:.35rem}

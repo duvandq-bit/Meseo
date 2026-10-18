@@ -52,7 +52,7 @@
 <meta property="og:description" content="Formación de equipos de sala: carta, alérgenos, vinos, exámenes y juegos de repaso.">
 <meta property="og:url" content="https://meseo.es/">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"Meseo","url":"https://meseo.es/"}</script>
-<meta name="app-version" content="7.510">
+<meta name="app-version" content="7.511">
 <meta name="app-build" content="May 2026">
 <meta name="theme-color" content="#1c2a22">
 <!-- ═══ PWA ═══ -->
@@ -2803,7 +2803,7 @@ const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><p
 const SRC = 'src';
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='7.510';  // sincronizada con sw.js VERSION (guard de CI)
+const APP_VERSION='7.511';  // sincronizada con sw.js VERSION (guard de CI)
 const APP_BUILD='Jul 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;
@@ -11119,15 +11119,20 @@ function _luStdOfDay(){
 }
 function _luItems(emp){
   const day=todayStr(), wk=_wkKey();
-  return [
+  const items=[
     { key:'reto',  secs:30, done:_dqIsDone(emp) },
     { key:'plato', secs:60, done:(emp.luPddDay||'')===day },
     { key:'vino',  secs:60, done:(emp.luWineWk||'')===wk },
     { key:'std',   secs:60, done:(emp.luStdDay||'')===day }
   ];
+  // El parte del día, si lo hay, va el primero: es lo que hay que saber
+  // antes de salir a sala. «Hecho» = marcado como visto.
+  if(typeof _parteGet==='function' && _parteGet()) items.unshift({ key:'parte', secs:30, done:_parteVistoAt()!==null });
+  return items;
 }
 function _luTitle(key, en){
   const emp=getEmp(currentUser);
+  if(key==='parte') return { t:en?'Service notes':'El parte de hoy', s:en?'sold out, specials and bookings':'agotados, sugerencias y reservas' };
   if(key==='reto')  return { t:en?'Daily quiz':'Reto del día', s:en?'same question for everyone':'la misma pregunta para todos' };
   if(key==='plato'){ const d=_pddDishOfDay(todayStr()); return { t:en?'Dish of the day':'Plato del día', s:d?d.name:'' }; }
   if(key==='vino'){ const w=_luWineOfWeek(); return { t:en?'Wine of the week':'Vino de la semana', s:w?w.name:(en?'from the wine list':'de la carta de vinos') }; }
@@ -11136,6 +11141,7 @@ function _luTitle(key, en){
 function _luGo(key){
   const emp=getEmp(currentUser);
   const day=todayStr();
+  if(key==='parte'){ _parteAbrir(); return; }
   if(key==='reto'){ openDailyReto(); return; }
   if(key==='plato'){ emp.luPddDay=day; saveDB(); const d=_pddDishOfDay(day); if(d) _emplOpen(d.id); setTimeout(()=>{ if(document.getElementById('lineupWrap')) renderLineUp(); }, 300); return; }
   if(key==='vino'){ _luWineOpen(); return; }
@@ -21811,6 +21817,401 @@ function _hoyPlanHTML(emp, _en){
   </div>`;
 }
 
+// ═══ EL PARTE DEL DÍA ═══
+// La razón diaria para abrir Meseo: el encargado publica en un minuto lo que
+// el equipo necesita saber ESTA noche (agotados, sugerencias, qué empujar,
+// reservas especiales y una nota) y cada camarero lo ve al abrir la app, con
+// un «Visto». Vive en dos tablas: `partes` (una fila por restaurante y día,
+// todo el contenido en `data`) y `partes_vistos` (quién lo ha visto). Sin XP
+// ni puntos por marcarlo: es información de servicio, no un juego.
+// La demo no habla con el servidor: enseña un parte fijo de Orchilla y guarda
+// el «visto» en su propia base local. Push: pendiente (siguiente paso).
+let _parteHoy = null;            // la fila de hoy en memoria, o null
+let _parteCargadoTs = 0;         // última carga desde la nube
+let _parteCargando = null;       // promesa en curso
+const _PARTE_REFRESCO_MS = 60000;
+const _PARTE_CAMPOS = ['agotadosTxt','sugerencias','empujar','reservas','nota'];
+
+// El parte de ejemplo de la demo (Orchilla, restaurante inventado). Ids de su
+// carta: 4008 carabinero, 4013 pichón. Sin nombres de clientes.
+function _parteDemoEjemplo(){
+  return { venue: DEMO_VENUE, fecha: todayStr(), autor: 'Nayra',
+    updated_at: todayStr() + 'T17:30:00.000Z',
+    data: {
+      agotados: [4008, 4013],
+      agotadosTxt: '',
+      sugerencias: 'Pescado del día: sama roquera a la brasa con mojo de cilantro.',
+      empujar: 'Cráter Listán Negro por copas: quedan seis botellas.',
+      reservas: 'Mesa 12, aniversario a las 21:00 · Grupo de 10 a las 20:30, menú cerrado.',
+      nota: 'Hoy cerramos cocina a las 23:00. El postre de parchita sale sin coco si lo piden.',
+      turno: '' } };
+}
+function _parteLsKey(){ return 'meseo_parte_' + _venueActual(); }
+function _parteLeerLocal(){
+  try{
+    const p = JSON.parse(localStorage.getItem(_parteLsKey()) || 'null');
+    if(p && p.fecha === todayStr() && p.data) return p;
+  }catch(_){}
+  return null;
+}
+function _parteGuardarLocal(p){
+  try{
+    if(p) localStorage.setItem(_parteLsKey(), JSON.stringify(p));
+    else localStorage.removeItem(_parteLsKey());
+  }catch(_){}
+}
+// ¿Tiene algo que enseñar? Un parte con todos los campos vacíos no se pinta.
+function _parteTieneContenido(d){
+  if(!d || typeof d !== 'object') return false;
+  if(Array.isArray(d.agotados) && d.agotados.length) return true;
+  return _PARTE_CAMPOS.some(k => typeof d[k] === 'string' && d[k].trim());
+}
+// El parte de hoy, sin red: memoria → caché local. En la demo, lo que haya
+// guardado su editor local hoy o, si no, el ejemplo fijo.
+function _parteGet(){
+  if(typeof _esDemo === 'function' && _esDemo()){
+    try{ if(DB && DB.parte && DB.parte.fecha === todayStr()) return _parteTieneContenido(DB.parte.data) ? DB.parte : null; }catch(_){}
+    return _parteDemoEjemplo();
+  }
+  if(_parteHoy && _parteHoy.fecha === todayStr()) return _parteTieneContenido(_parteHoy.data) ? _parteHoy : null;
+  const p = _parteLeerLocal();
+  return (p && _parteTieneContenido(p.data)) ? p : null;
+}
+// Carga desde la nube: la fila de hoy y si yo ya lo he visto (otro móvil).
+// Devuelve true si algo cambió respecto a lo que había en memoria.
+async function _parteCargar(forzar){
+  if(typeof _esDemo === 'function' && _esDemo()) return false;   // la demo no sale a la red
+  if(_parteCargando) return _parteCargando;
+  if(!forzar && Date.now() - _parteCargadoTs < _PARTE_REFRESCO_MS) return false;
+  const hoy = todayStr();
+  const antes = JSON.stringify([_parteHoy, _parteVistoAt()]);
+  _parteCargando = (async () => {
+    try{
+      const url = `${SUPA_URL}/rest/v1/partes?select=venue,fecha,data,autor,updated_at&fecha=eq.${hoy}&${_vq()}&limit=1`;
+      const h = { 'apikey': SUPA_KEY, 'Authorization': `Bearer ${_bearer()}` };
+      const r = await fetch(url, { headers: h });
+      if(!r.ok) return false;
+      const rows = await r.json();
+      _parteHoy = (Array.isArray(rows) && rows[0]) ? rows[0] : null;
+      _parteGuardarLocal(_parteHoy);
+      _parteCargadoTs = Date.now();
+      if(_parteHoy && currentUser){
+        const emp = getEmp(currentUser);
+        if(!(emp.parteVisto && emp.parteVisto.d === hoy)){
+          const rv = await fetch(`${SUPA_URL}/rest/v1/partes_vistos?select=visto_at&fecha=eq.${hoy}&empleado=eq.${encodeURIComponent(currentUser)}&${_vq()}&limit=1`, { headers: h });
+          if(rv.ok){
+            const v = await rv.json();
+            if(Array.isArray(v) && v[0]){ emp.parteVisto = { d: hoy, at: v[0].visto_at }; saveDB(); }
+          }
+        }
+      }
+      return JSON.stringify([_parteHoy, _parteVistoAt()]) !== antes;
+    }catch(_){ return false; }
+    finally{ _parteCargando = null; }
+  })();
+  return _parteCargando;
+}
+// Hora (ISO) a la que marqué visto el parte de hoy, o null.
+function _parteVistoAt(){
+  try{
+    const emp = currentUser ? getEmp(currentUser) : null;
+    return (emp && emp.parteVisto && emp.parteVisto.d === todayStr()) ? (emp.parteVisto.at || '') : null;
+  }catch(_){ return null; }
+}
+function _parteHora(iso){
+  try{
+    return new Intl.DateTimeFormat(LANG==='en'?'en-GB':'es-ES', { timeZone:'Atlantic/Canary', hour:'2-digit', minute:'2-digit' }).format(new Date(iso));
+  }catch(_){ return ''; }
+}
+async function _parteMarcarVisto(){
+  const p = _parteGet();
+  if(!p || !currentUser) return;
+  const hoy = todayStr(), ahora = new Date().toISOString();
+  const emp = getEmp(currentUser);
+  emp.parteVisto = { d: hoy, at: ahora };
+  saveDB();
+  _parteRepintar();
+  if(typeof _esDemo === 'function' && _esDemo()) return;      // en la demo, solo local
+  try{
+    await fetch(`${SUPA_URL}/rest/v1/partes_vistos?on_conflict=venue,fecha,empleado`, {
+      method: 'POST',
+      headers: { 'apikey': SUPA_KEY, 'Authorization': `Bearer ${_bearer()}`, 'Content-Type': 'application/json',
+        'Prefer': 'resolution=ignore-duplicates,return=minimal' },
+      body: JSON.stringify(_vSello({ fecha: hoy, empleado: currentUser, visto_at: ahora }))
+    });
+  }catch(_){}
+}
+// Vuelve a pintar las tarjetas del parte que haya en pantalla (Inicio y el
+// overlay del Line Up) sin tocar el resto de la página.
+function _parteRepintar(){
+  document.querySelectorAll('.parte-card').forEach(el => {
+    const html = _parteCardHTML(null, { overlay: el.classList.contains('parte-card-ov') });
+    if(html) el.outerHTML = html; else el.remove();
+  });
+  if(document.getElementById('lineupWrap') && typeof renderLineUp === 'function') renderLineUp();
+}
+function _parteNombrePlato(id){
+  try{
+    const d = (typeof DISHES !== 'undefined' ? DISHES : []).find(x => x && x.id === id);
+    if(d) return getDish(d).name;
+  }catch(_){}
+  return '';
+}
+function _parteTurnoTxt(t, _en){
+  if(t === 'a') return _en ? 'Lunch' : 'Almuerzo';
+  if(t === 'c') return _en ? 'Dinner' : 'Cena';
+  if(t === 'todo') return _en ? 'Lunch and dinner' : 'Almuerzo y cena';
+  return '';
+}
+// Las secciones con contenido, como lista. Texto libre escapado y con saltos.
+function _parteSeccionesHTML(d, _en){
+  const txt = s => escapeHTML(String(s || '').trim()).replace(/\n+/g, '<br>');
+  const out = [];
+  const ag = Array.isArray(d.agotados) ? d.agotados.map(_parteNombrePlato).filter(Boolean) : [];
+  const agTxt = (d.agotadosTxt || '').trim();
+  if(ag.length || agTxt){
+    out.push(`<div class="parte-sec parte-sec-86"><div class="parte-sec-t">${_en?'Sold out (86)':'Agotados (86)'}</div>`
+      + (ag.length ? `<div class="parte-chips">${ag.map(n => `<span class="parte-chip">${escapeHTML(n)}</span>`).join('')}</div>` : '')
+      + (agTxt ? `<div class="parte-txt">${txt(agTxt)}</div>` : '') + '</div>');
+  }
+  const secs = [
+    ['sugerencias', _en?'Specials and off menu':'Sugerencias y fuera de carta'],
+    ['empujar',     _en?'Push tonight':'A empujar'],
+    ['reservas',    _en?'Special bookings':'Reservas especiales'],
+    ['nota',        _en?'Manager\'s note':'Nota del encargado']
+  ];
+  for(const [k, t] of secs){
+    if(typeof d[k] === 'string' && d[k].trim())
+      out.push(`<div class="parte-sec parte-sec-${k}"><div class="parte-sec-t">${t}</div><div class="parte-txt">${txt(d[k])}</div></div>`);
+  }
+  return out.join('');
+}
+// La tarjeta de Inicio. Sin parte de hoy devuelve '' (ni tarjeta vacía).
+// `parte` es opcional (los tests pasan un objeto); `opts.overlay` quita el
+// botón Editar (el overlay del Line Up solo lee).
+function _parteCardHTML(parte, opts){
+  opts = opts || {};
+  const p = parte || _parteGet();
+  if(!parte && !opts.overlay && typeof _esDemo === 'function' && !_esDemo()){
+    // Refresco en segundo plano: si llega algo distinto y seguimos en Inicio,
+    // se repinta. Autolimitado a una petición por minuto.
+    try{ Promise.resolve(_parteCargar()).then(c => { if(c && typeof currentTab !== 'undefined' && currentTab === 'dashboard') renderDashboard(); }); }catch(_){}
+  }
+  if(!p || !_parteTieneContenido(p.data)) return '';
+  const _en = (typeof LANG !== 'undefined' && LANG === 'en');
+  const d = p.data;
+  const visto = opts.vistoAt !== undefined ? opts.vistoAt : _parteVistoAt();
+  const turno = _parteTurnoTxt(d.turno, _en);
+  const puedeEditar = !opts.overlay && !parte && (typeof _esMando === 'function') && (_esMando() || _esAdmin());
+  const autor = p.autor ? `${_en?'by':'por'} ${escapeHTML(p.autor)}` : '';
+  const hora = p.updated_at ? _parteHora(p.updated_at) : '';
+  const meta = [autor, hora].filter(Boolean).join(' · ');
+  return `<section class="parte-card${opts.overlay?' parte-card-ov':''}" aria-label="${_en?'Service notes':'El parte de hoy'}">
+    <div class="parte-head">
+      <div>
+        <div class="parte-eyebrow">${_en?'Service notes':'El parte de hoy'}${turno?` · ${turno}`:''}</div>
+        ${meta?`<div class="parte-meta">${meta}</div>`:''}
+      </div>
+      ${puedeEditar?`<button type="button" class="parte-edit" onclick="_parteEditarDesdeHoy()">${_en?'Edit':'Editar'}</button>`:''}
+    </div>
+    ${_parteSeccionesHTML(d, _en)}
+    <div class="parte-foot">
+      ${visto!==null && visto!==undefined
+        ? `<span class="parte-visto-ok">${_en?'Seen at':'Visto a las'} ${_parteHora(visto)||'--:--'}</span>`
+        : `<button type="button" class="parte-visto-btn" onclick="_parteMarcarVisto()">${_en?'Seen':'Visto'}</button>`}
+    </div>
+  </section>`;
+}
+// Lectura en overlay (paso del Line Up).
+function _parteAbrir(){
+  const _en = LANG==='en';
+  const html = _parteCardHTML(null, { overlay: true });
+  if(!html) return;
+  _luOverlay(html, _en?'Service notes':'El parte de hoy');
+}
+// Editar desde la tarjeta de Inicio: en la demo abre directo; en producción
+// pasa por el PIN del panel si no está puesto, y el panel abre el editor.
+function _parteEditarDesdeHoy(){
+  if((typeof _esDemo === 'function' && _esDemo()) || (typeof supAuthenticated !== 'undefined' && supAuthenticated)){ _parteEditarAbrir(); return; }
+  window._parteAbrirTrasPin = true;
+  showTab('supervisor');
+}
+
+// ─── Editor (supervisor) ───
+let _parteEd = null;   // estado del formulario: { agotados:[ids], q:'' }
+function _parteEditarAbrir(){
+  const _en = LANG==='en';
+  const p = _parteGet();
+  const base = (p && p.fecha === todayStr() && p.data) ? p.data : {};
+  _parteEd = { agotados: Array.isArray(base.agotados) ? base.agotados.slice() : [], q: '' };
+  const v = k => escapeHTML(String(base[k] || ''));
+  const hayVinos = (typeof WINES !== 'undefined' && Array.isArray(WINES) && WINES.length);
+  const vinos = hayVinos ? `<datalist id="parteVinos">${WINES.slice(0, 200).map(w => `<option value="${escapeHTML(w.name || '')}"></option>`).join('')}</datalist>` : '';
+  const turnos = (typeof _hayTurnos === 'function' && _hayTurnos()) ? `
+      <div class="parte-f">
+        <label class="parte-l">${_en?'Shift':'Turno'}</label>
+        <div class="parte-turnos">${[['a',_en?'Lunch':'Almuerzo'],['c',_en?'Dinner':'Cena'],['todo',_en?'Both':'Ambos']].map(([k,t]) =>
+          `<label class="parte-turno"><input type="radio" name="parteTurno" value="${k}"${(base.turno||'todo')===k?' checked':''}> ${t}</label>`).join('')}</div>
+      </div>` : '';
+  const cuerpo = `
+    <form id="parteForm" class="parte-form" onsubmit="event.preventDefault();_parteEditarGuardar()">
+      <div class="parte-f">
+        <label class="parte-l" for="parteBuscar">${_en?'Sold out (86)':'Agotados (86)'}</label>
+        <div id="parteAgChips" class="parte-chips"></div>
+        <input id="parteBuscar" class="parte-in" type="search" autocomplete="off" placeholder="${_en?'Search a dish on the menu':'Busca un plato de la carta'}" oninput="_parteEdBuscar(this.value)">
+        <div id="parteAgRes" class="parte-res"></div>
+        <input id="parteAgTxt" class="parte-in" type="text" maxlength="200" value="${v('agotadosTxt')}" placeholder="${_en?'Off-menu items sold out (free text)':'Fuera de carta agotado (texto libre)'}">
+      </div>
+      <div class="parte-f">
+        <label class="parte-l" for="parteSug">${_en?'Specials and off menu':'Sugerencias y fuera de carta'}</label>
+        <textarea id="parteSug" class="parte-in" rows="2" maxlength="400" placeholder="${_en?'E.g. Fish of the day: grilled wreckfish':'P. ej. Pescado del día: cherne a la brasa'}">${v('sugerencias')}</textarea>
+      </div>
+      <div class="parte-f">
+        <label class="parte-l" for="parteEmp">${_en?'Dish or wine to push':'Plato o vino a empujar'}</label>
+        <input id="parteEmp" class="parte-in" type="text" maxlength="200" value="${v('empujar')}"${hayVinos?' list="parteVinos"':''} placeholder="${_en?'E.g. the Listán Negro by the glass':'P. ej. el Listán Negro por copas'}">
+        ${vinos}
+      </div>
+      <div class="parte-f">
+        <label class="parte-l" for="parteRes">${_en?'Special bookings':'Reservas especiales'}</label>
+        <textarea id="parteRes" class="parte-in" rows="2" maxlength="400" placeholder="${_en?'Table 12, anniversary, 9pm · Group of 10 at 8:30pm, set menu':'Mesa 12, aniversario, 21:00 · Grupo de 10 a las 20:30, menú cerrado'}">${v('reservas')}</textarea>
+        <div class="parte-ayuda">${_en?'No guest names or personal details.':'Sin nombres ni datos personales de clientes.'}</div>
+      </div>
+      <div class="parte-f">
+        <label class="parte-l" for="parteNota">${_en?'Manager\'s note':'Nota del encargado'}</label>
+        <textarea id="parteNota" class="parte-in" rows="2" maxlength="400">${v('nota')}</textarea>
+      </div>
+      ${turnos}
+      <button type="submit" class="btn-primary parte-guardar">${_en?'Publish the service notes':'Publicar el parte de hoy'}</button>
+      <div id="parteGuardadoMsg" class="parte-ayuda" aria-live="polite"></div>
+    </form>
+    <div id="parteVistos" class="parte-vistos"><div class="parte-ayuda">${_en?'Loading who has seen it...':'Cargando quién lo ha visto...'}</div></div>`;
+  const head = `<div class="pase-head">
+      <div class="pase-head-top">
+        <div class="pase-eyebrow">${_en?'SUPERVISOR · SERVICE NOTES':'SUPERVISOR · PARTE'}</div>
+        <button class="pase-x" type="button" onclick="_parteEditarCerrar()" aria-label="${_en?'Close':'Cerrar'}">✕</button>
+      </div>
+      <h2 class="pase-dish">${_en?'Service notes':'El parte de hoy'}</h2>
+      <div class="pase-cat">${new Intl.DateTimeFormat(_en?'en-GB':'es-ES',{timeZone:'Atlantic/Canary',weekday:'long',day:'numeric',month:'long'}).format(new Date())}</div>
+    </div>`;
+  let ov = document.getElementById('parteOverlay');
+  if(!ov){
+    ov = document.createElement('div');
+    ov.id = 'parteOverlay'; ov.className = 'pase-overlay parte-overlay';
+    ov.setAttribute('role','dialog'); ov.setAttribute('aria-modal','true');
+    document.body.appendChild(ov);
+  }
+  ov.setAttribute('aria-label', _en?'Edit the service notes':'Editar el parte de hoy');
+  ov.innerHTML = `<div class="pase-container">${head}<div class="pase-body">${cuerpo}</div></div>`;
+  _parteEdPintarChips();
+  _parteVistosCargar();
+}
+function _parteEditarCerrar(){
+  const ov = document.getElementById('parteOverlay');
+  if(ov) ov.remove();
+  _parteEd = null;
+  if(typeof currentTab !== 'undefined' && currentTab === 'dashboard') renderDashboard();
+}
+function _parteEdPintarChips(){
+  const c = document.getElementById('parteAgChips');
+  if(!c || !_parteEd) return;
+  const _en = LANG==='en';
+  c.innerHTML = _parteEd.agotados.map(id => `<button type="button" class="parte-chip parte-chip-x" onclick="_parteEdQuitar(${id})" aria-label="${_en?'Remove':'Quitar'} ${escapeHTML(_parteNombrePlato(id))}">${escapeHTML(_parteNombrePlato(id))} <span aria-hidden="true">✕</span></button>`).join('');
+}
+function _parteEdBuscar(q){
+  if(!_parteEd) return;
+  _parteEd.q = String(q || '').trim().toLowerCase();
+  const r = document.getElementById('parteAgRes');
+  if(!r) return;
+  if(_parteEd.q.length < 2){ r.innerHTML = ''; return; }
+  const norm = s => String(s || '').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
+  const qn = norm(_parteEd.q);
+  const res = (typeof DISHES !== 'undefined' ? DISHES : [])
+    .filter(d => d && !_parteEd.agotados.includes(d.id) && norm(getDish(d).name).includes(qn))
+    .slice(0, 8);
+  r.innerHTML = res.map(d => `<button type="button" class="parte-res-it" onclick="_parteEdAnadir(${d.id})">${escapeHTML(getDish(d).name)}<span class="parte-res-cat">${escapeHTML(catLocal(d.cat))}</span></button>`).join('');
+}
+function _parteEdAnadir(id){
+  if(!_parteEd || _parteEd.agotados.includes(id)) return;
+  _parteEd.agotados.push(id);
+  _parteEdPintarChips();
+  const i = document.getElementById('parteBuscar'); if(i) i.value = '';
+  const r = document.getElementById('parteAgRes'); if(r) r.innerHTML = '';
+}
+function _parteEdQuitar(id){
+  if(!_parteEd) return;
+  _parteEd.agotados = _parteEd.agotados.filter(x => x !== id);
+  _parteEdPintarChips();
+}
+function _parteEdLeer(){
+  const g = id => { const el = document.getElementById(id); return el ? String(el.value || '').trim() : ''; };
+  const t = document.querySelector('input[name="parteTurno"]:checked');
+  return { agotados: (_parteEd ? _parteEd.agotados.slice() : []), agotadosTxt: g('parteAgTxt'),
+    sugerencias: g('parteSug'), empujar: g('parteEmp'), reservas: g('parteRes'), nota: g('parteNota'),
+    turno: t ? t.value : '' };
+}
+async function _parteEditarGuardar(){
+  const _en = LANG==='en';
+  const data = _parteEdLeer();
+  const fila = _vSello({ fecha: todayStr(), data, autor: currentUser || '', updated_at: new Date().toISOString() });
+  const msg = document.getElementById('parteGuardadoMsg');
+  if(typeof _esDemo === 'function' && _esDemo()){
+    DB.parte = fila; saveDB();
+  } else {
+    try{
+      const r = await fetch(`${SUPA_URL}/rest/v1/partes?on_conflict=venue,fecha`, {
+        method: 'POST',
+        headers: { 'apikey': SUPA_KEY, 'Authorization': `Bearer ${_bearer()}`, 'Content-Type': 'application/json',
+          'Prefer': 'resolution=merge-duplicates,return=minimal' },
+        body: JSON.stringify(fila)
+      });
+      if(!r.ok) throw new Error('HTTP ' + r.status);
+    }catch(e){
+      if(msg) msg.textContent = _en ? 'Could not save. Check the connection and try again.' : 'No se ha podido guardar. Revisa la conexión y vuelve a intentarlo.';
+      showToast(_en ? 'Could not save the service notes' : 'No se ha podido guardar el parte', 'warning', 4000);
+      return;
+    }
+    _parteHoy = fila; _parteCargadoTs = Date.now(); _parteGuardarLocal(fila);
+  }
+  if(msg) msg.textContent = _parteTieneContenido(data)
+    ? (_en ? 'Published. The team will see it when they open the app.' : 'Publicado. El equipo lo verá al abrir la app.')
+    : (_en ? 'Saved empty: nothing will be shown today.' : 'Guardado vacío: hoy no se enseña nada.');
+  showToast(_en ? 'Service notes published' : 'Parte publicado', 'success', 2500);
+}
+// Quién lo ha visto: nombres y «7 de 12 lo han visto». El total es el equipo
+// activo del restaurante, con la misma puerta que el Panel de supervisor
+// (_supEquipo: sin administración ni cuentas de pruebas).
+async function _parteVistosCargar(){
+  const c = document.getElementById('parteVistos');
+  if(!c) return;
+  const _en = LANG==='en';
+  const hoy = todayStr();
+  let vistos = [];
+  let all = {};
+  try{
+    Object.keys(DB.employees || {}).forEach(n => { const e = DB.employees[n]; if(n && _esDeMiVenue(e)) all[n] = Object.assign({}, e, { name: n }); });
+    if(typeof _esDemo === 'function' && _esDemo()){
+      vistos = Object.keys(all).filter(n => all[n].parteVisto && all[n].parteVisto.d === hoy).map(n => ({ empleado: n, visto_at: all[n].parteVisto.at }));
+    } else {
+      const remote = await supaFetchAllEmployees();
+      if(Array.isArray(remote)) remote.forEach(e => { if(e && e.name) all[e.name] = Object.assign({}, all[e.name] || {}, e); });
+      const url = `${SUPA_URL}/rest/v1/partes_vistos?select=empleado,visto_at&fecha=eq.${hoy}&${_vq()}&order=visto_at.asc`;
+      const r = await fetch(url, { headers: { 'apikey': SUPA_KEY, 'Authorization': `Bearer ${_bearer()}` } });
+      if(r.ok){ const v = await r.json(); if(Array.isArray(v)) vistos = v; }
+    }
+  }catch(_){}
+  if(!document.getElementById('parteVistos')) return;
+  const nombres = Object.keys(all);
+  const equipo = _supEquipo(all, nombres);
+  const activos = _supDividir(all, equipo).activos;
+  const total = activos.length ? activos.length : equipo.length;
+  const n = vistos.length;
+  const vistoNombres = new Set(vistos.map(v => v.empleado));
+  const faltan = (activos.length ? activos : equipo).filter(x => !vistoNombres.has(x));
+  c.innerHTML = `<div class="parte-l">${_en ? `${n} of ${total} have seen it` : `${n} de ${total} lo han visto`}</div>
+    ${n ? `<div class="parte-vistos-l">${vistos.map(v => `<span class="parte-chip parte-chip-ok">${escapeHTML(v.empleado)} <small>${_parteHora(v.visto_at)}</small></span>`).join('')}</div>` : `<div class="parte-ayuda">${_en?'Nobody yet.':'Todavía nadie.'}</div>`}
+    ${faltan.length ? `<div class="parte-ayuda">${_en?'Pending':'Pendientes'}: ${faltan.map(escapeHTML).join(', ')}</div>` : ''}`;
+}
+
 function renderDashboard(){
   const emp=getEmp(currentUser);
   const streak=emp.streak||0;
@@ -25447,6 +25848,7 @@ function _supQueueRefresh(){
 function _supTool(k){
   try{
     ({ carta: ()=>renderCartaEditor(),
+       parte: ()=>_parteEditarAbrir(),
        analitica: ()=>renderSupAnalytics(window._supAllEmps, window._supEmpNames),
        aviso: ()=>renderSupNotifSender(window._supEmpNames),
        fotos: ()=>renderSupPhotoQueue(),
@@ -25540,6 +25942,8 @@ function _supKpiBand(allEmps, activos, inactivos){
 }
 
 function renderSupDashboard(silent){
+  // «Editar» desde la tarjeta del parte en Inicio: tras el PIN, se abre el editor.
+  if(window._parteAbrirTrasPin && !silent){ window._parteAbrirTrasPin = false; setTimeout(()=>{ try{ _parteEditarAbrir(); }catch(_){} }, 50); }
   if(!silent) document.getElementById('appContent').innerHTML=`
     <div class="sup-wrap">
       <div class="sup-hero">
@@ -25826,6 +26230,10 @@ function renderSupDashboard(silent){
               <span style="font-size:.72rem;font-weight:600;color:var(--parchment)">${LANG==='en'?'Edit menu':'Editar carta'}</span>
             </button>
             <!-- Botón Analítica retirado: duplicaba la pestaña Análisis -->
+            <button onclick="_supTool('parte')" style="display:flex;align-items:center;gap:.65rem;padding:.75rem .85rem;background:linear-gradient(155deg,#faf6ee,#f0e8d8);border:1.5px solid rgba(196,154,60,.12);border-left:3px solid var(--sage);border-radius:12px;font-family:'Quicksand',sans-serif;cursor:pointer;transition:all .2s;position:relative;overflow:hidden">
+              <span style="width:32px;height:32px;display:flex;align-items:center;justify-content:center;clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);background:linear-gradient(135deg,var(--sage),var(--green-deep));flex-shrink:0"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6"/><path d="M8 13h8M8 17h5"/></svg></span>
+              <span style="flex:1;text-align:left;font-size:.72rem;font-weight:600;color:var(--parchment)">${LANG==='en'?'Service notes':'Parte del día'}<br><span style="font-size:.58rem;font-weight:400;color:var(--parch3)">${LANG==='en'?'sold out, specials, bookings':'agotados, sugerencias, reservas'}</span></span>
+            </button>
             <button onclick="_supTool('aviso')" style="display:flex;align-items:center;gap:.65rem;padding:.75rem .85rem;background:linear-gradient(155deg,#faf6ee,#f0e8d8);border:1.5px solid rgba(196,154,60,.12);border-left:3px solid #d4944c;border-radius:12px;font-family:'Quicksand',sans-serif;cursor:pointer;transition:all .2s;position:relative;overflow:hidden">
               <span style="width:32px;height:32px;display:flex;align-items:center;justify-content:center;clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);background:linear-gradient(135deg,#d4944c,#b47430);flex-shrink:0"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg></span>
               <span style="font-size:.72rem;font-weight:600;color:var(--parchment)">${LANG==='en'?'Send alert':'Enviar aviso'}</span>
