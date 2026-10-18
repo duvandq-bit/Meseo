@@ -1,6 +1,54 @@
 {
- "updated": "2026-10-18T01:07:39.293Z",
+ "updated": "2026-10-18T09:40:27.335Z",
  "items": [
+  {
+   "t": "El restaurante de Gran Canaria donde la cocina canaria se combina con platos sorprendentes: una parada obligatoria en la isla",
+   "u": "https://www.laprovincia.es/gran-canaria/2026/10/18/restaurante-gran-canaria-cocina-canaria-sorprendente-dv-134019485.html",
+   "s": "La Provincia",
+   "d": "2026-10-18T07:15:00.000Z",
+   "tags": [
+    "CANARIAS"
+   ]
+  },
+  {
+   "t": "Dónde saborear Gran Canaria, según el consultor, formador y conferenciante Juan Ferrer",
+   "u": "https://www.canarias7.es/gastronomia-c7/a-fuego-lento/saborear-gran-canaria-segun-consultor-formador-conferenciante-20261016070000-nt_amp.html",
+   "s": "Canarias7",
+   "d": "2026-10-18T05:00:03.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://s3.ppllstatics.com/canarias7/www/multimedia/gastronomia-c7/2026/10/16/juan1-k3kC-U302267042472NNB-1200x840@Canarias7.jpg"
+  },
+  {
+   "t": "Casa Borrego de Bullas, galardonado como Mejor Oferta Gastronómica de España en los Premios de Enoturismo 2026",
+   "u": "https://lasgastrocronicas.com/casa-borrego-de-bullas-galardonado-como-mejor-oferta-gastronomica-de-espana-en-los-premios-de-enoturismo-2026/",
+   "s": "Las Gastrocrónicas",
+   "d": "2026-10-18T04:40:59.000Z",
+   "tags": [
+    "MICHELIN"
+   ]
+  },
+  {
+   "t": "El mar de Canarias es un hervidero: “Si seguimos así, especies desaparecerán y los ecosistemas cambiarán por completo”",
+   "u": "https://www.eldiario.es/canariasahora/ciencia_y_medio_ambiente/mar-canarias-hervidero-si-seguimos-especies-desapareceran-ecosistemas-cambiaran-completo_1_13591042.html",
+   "s": "elDiario.es",
+   "d": "2026-10-18T03:30:31.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://static.eldiario.es/clip/6149dbfa-135f-468d-8216-f5fc2c97a954_facebook-aspect-ratio-1200-675_default_0.jpg"
+  },
+  {
+   "t": "Sueldos médicos: Canarias, a la cola para el veterano que solo ejerce en la pública y en el podio para el joven que puede ir a la privada",
+   "u": "https://www.eldiario.es/canariasahora/sociedad/sueldos-medicos-canarias-cola-veterano-ejerce-publica-podio-joven-privada_1_13591465.html",
+   "s": "elDiario.es",
+   "d": "2026-10-18T03:30:30.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://static.eldiario.es/clip/64d9ea83-69d3-41f4-9f5d-ea48263f3ce1_facebook-aspect-ratio-1200-675_default_0.jpg"
+  },
   {
    "t": "El Molín de Mingo, el restaurante perdido en el monte asturiano que siempre está lleno",
    "u": "https://www.consumidorglobal.com/alimentacion/molin-mingo-restaurante-perdido-en-monte-asturiano-siempre-esta-lleno_20679_102.html",
@@ -40,16 +88,6 @@
     "CANARIAS"
    ],
    "img": "https://static.eldiario.es/clip/44d9d0b7-7021-4d7d-b329-a1c422af116d_facebook-aspect-ratio-1200-675_default_0_x848y242.jpg"
-  },
-  {
-   "t": "Un proyecto común para Canarias",
-   "u": "https://www.eldiario.es/canariasahora/opinion/proyecto-comun-canarias_132_13594367.html",
-   "s": "elDiario.es",
-   "d": "2026-10-17T16:47:52.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://static.eldiario.es/clip/681326e8-ba98-4fa0-810d-0dbfe0c8b2dc_facebook-aspect-ratio-1200-675_default_0.jpg"
   },
   {
    "t": "La Aemet anuncia lluvias persistentes este domingo en algunas zonas de las islas occidentales y Gran Canaria",
@@ -103,7 +141,7 @@
   },
   {
    "t": "El restaurante de Gran Canaria donde comer como un auténtico cazador",
-   "u": "https://www.laprovincia.es/gran-canaria/2026/10/17/restaurante-gran-canaria-comer-autentico-dv-135431444.html",
+   "u": "https://www.laprovincia.es/gran-canaria/2026/10/17/restaurante-gran-canaria-comer-autentico-dv-135431444.amp.html",
    "s": "La Provincia",
    "d": "2026-10-17T10:30:45.000Z",
    "tags": [
@@ -200,6 +238,16 @@
    "img": "https://www.eldebate.com/files/article_social/files/fp/uploads/2026/10/15/6ad1014101a29.r_d.1014-1021-0.jpeg"
   },
   {
+   "t": "BurgerFest Canarias en Santa Cruz de Tenerife",
+   "u": "https://www.teneriffa-news.com/es/agenda/agenda-tenerife/burgerfest-canarias-santa-cruz-tenerife-2",
+   "s": "Teneriffa News",
+   "d": "2026-10-17T02:28:48.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://www.teneriffa-news.com/media/t/termine-veranstaltungen-kalender-teneriffa-kanaren-1920x1080.jpg"
+  },
+  {
    "t": "Cielo, el restaurante de Tenerife donde disfrutar de sushi y cócteles frente al mar",
    "u": "https://diariodeavisos.elespanol.com/2026/10/cielo-restaurante-monkey-beach-tenerife-sushi-cocteles/",
    "s": "Diario de Avisos",
@@ -230,34 +278,15 @@
    "img": "https://www.tribunavalladolid.com/uploads/imagenes/images/2026/10/16/462830/20261016111233_caratula.jpg"
   },
   {
-   "t": "Canarias tendrá un sábado con calima en medianías y zonas altas y unas temperaturas en moderado descenso",
-   "u": "https://www.eldiario.es/canariasahora/tiempo-canarias/tiempo-canarias-sabado-17-de-octubre-manana-hoy-calima_1_13592749.html",
-   "s": "elDiario.es",
-   "d": "2026-10-16T17:46:05.000Z",
+   "t": "El viñedo más alto de Europa está en Tenerife: así es el pueblo que desafía a los Alpes",
+   "u": "https://www.noticiasdelvino.com/escapadas/2026/10/16/el-vinedo-mas-alto-de-europa-esta-en-tenerife-asi-es-el-pueblo-que-desafia-a-los-alpes-66331/",
+   "s": "Noticias del Vino",
+   "d": "2026-10-16T18:06:03.000Z",
    "tags": [
+    "VINO",
     "CANARIAS"
    ],
-   "img": "https://static.eldiario.es/clip/3807cb4d-edbf-4cf4-8e06-d8b935155379_facebook-aspect-ratio-1200-675_default_0.jpg"
-  },
-  {
-   "t": "Rescatada una mujer de 81 años con síntomas de ahogamiento en una playa de Tenerife",
-   "u": "https://www.eldiario.es/canariasahora/tenerifeahora/sucesos/rescatada-mujer-81-anos-sintomas-ahogamiento-playa-tenerife_1_13592334.html",
-   "s": "elDiario.es",
-   "d": "2026-10-16T15:30:57.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://static.eldiario.es/clip/8360a566-6261-44b2-b217-08ad40ee33b8_facebook-aspect-ratio-1200-675_default_0.jpg"
-  },
-  {
-   "t": "Baleària Canarias reforma tres buques para ofrecer mayor confort y mejores servicios a bordo",
-   "u": "https://www.eldiario.es/canariasahora/lapalmaahora/economia/balearia-canarias-reforma-tres-buques-ofrecer-mayor-confort-mejores-servicios-bordo_1_13592201.html",
-   "s": "elDiario.es",
-   "d": "2026-10-16T15:03:42.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://static.eldiario.es/clip/d2f13776-1619-4acd-bc22-24a59f2c7adb_facebook-aspect-ratio-1200-675_default_0.jpg"
+   "img": "https://www.noticiasdelvino.com/wp-content/uploads/El-vinedo-mas-alto-de-Europa-esta-en-Tenerife.jpg.webp"
   },
   {
    "t": "Las 9 mujeres de Castilla y León en la lista Forbes Women",
@@ -268,36 +297,6 @@
     "ALTA COCINA"
    ],
    "img": "https://www.tribunasalamanca.com/uploads/imagenes/images/2026/10/16/462822/20261016105400_caratula.jpg"
-  },
-  {
-   "t": "Tapas Interview | Martín Berasategui: «Mi vida son 23 escalones»",
-   "u": "https://www.tapasmagazine.es/tapas-interview-martin-berasategui-mi-vida-son-23-escalones/",
-   "s": "Tapas Magazine",
-   "d": "2026-10-16T13:16:11.000Z",
-   "tags": [
-    "CHEF"
-   ],
-   "img": "https://www.tapasmagazine.es/wp-content/uploads/2026/10/garrote.jpg"
-  },
-  {
-   "t": "Día 'Elaborado en Canarias' 2026",
-   "u": "https://lagenda.org/programacion/dia-elaborado-en-canarias-2026-santa-cruz-tenerife-recova-mercado-octubre-2026-44160",
-   "s": "Lagenda",
-   "d": "2026-10-16T13:00:27.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://s3-eu-west-1.amazonaws.com/beta.lagenda/programacion/mercado-nuestra-senora-de-africa-la-recova-santa-cruz-de-tenerife.jpg"
-  },
-  {
-   "t": "Arminda García: “Necesitamos producir más y de forma más eficiente”",
-   "u": "https://tribunadecanarias.es/directivos/40818/arminda-garcia-necesitamos-producir-mas-y-de-forma-mas-eficiente/",
-   "s": "Tribuna de Canarias",
-   "d": "2026-10-16T12:42:42.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://tribunadecanarias.es/cms-media/2026/10/arminda-garcia-necesitamos-producir-mas-y-de-forma-mas-eficiente-af8388.jpg"
   }
  ]
 }
