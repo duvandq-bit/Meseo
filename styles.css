@@ -463,7 +463,11 @@ body{
     radial-gradient(ellipse at 50% 50%, rgba(72,136,160,.02) 0%, transparent 60%);
   color:var(--ink);
   font-weight:400;
+  /* clip, no hidden (auditoría oct 2026): con hidden el body pasaba a ser un
+     contenedor de scroll y la cabecera «sticky» se iba con la página en el
+     móvil. hidden queda sólo para WebKit antiguo sin clip. */
   overflow-x:hidden;
+  overflow-x:clip;
   overscroll-behavior-x:none;
   line-height:1.6;
 }
@@ -10656,7 +10660,9 @@ body:has(#gsOverlay.open) .ux2-bar{
 /* ═══ SABER · pestañas ═══
    Ocupan el sitio del menú desplegable de antes: una fila de pestañas que se
    desliza, con el activo siempre a la vista. */
-.saber-bar{background:#25352b;padding:.15rem .4rem .1rem}
+/* Pegada bajo la cabecera (auditoría oct 2026): en el Plating guide, con
+   decenas de fotos, había que volver arriba del todo para cambiar de pestaña. */
+.saber-bar{background:#25352b;padding:.15rem .4rem .1rem;position:sticky;top:calc(56px + env(safe-area-inset-top,0px));z-index:99}
 .saber-bar[hidden]{display:none}
 .saber-bar .subtab-chips{margin:0;border-bottom:none}
 .saber-bar .subtab-chip{color:rgba(255,255,255,.7);font-family:var(--font-sans);font-size:var(--fs-3);font-weight:600;letter-spacing:.02em;text-transform:none;min-height:44px}
@@ -11008,3 +11014,17 @@ html[data-venue="demo"] .ri-cta-pase .ri-cta-icon{border-color:rgba(200,163,90,.
 .ing-bocado{display:flex;flex-direction:column;gap:.1rem;padding:.55rem .7rem;border-radius:10px;background:rgba(0,0,0,.03);border-left:2px solid var(--brand-accent)}
 .ing-bocado b{font-family:var(--font-sans);font-size:var(--fs-3);font-weight:700;color:var(--brand-ink,#1c2a22)}
 .ing-bocado span{font-family:var(--font-sans);font-size:var(--fs-3);color:var(--parch2);line-height:1.5}
+
+/* Contraste del Repaso inteligente (auditoría oct 2026): texto blanco sobre
+   dorado daba ~2,3:1, ilegible al sol de una terraza. Sobre el dorado va
+   tinta oscura; las variantes oscuras (Pase, Hospitalidad) siguen en blanco. */
+.ri-cta:not(.ri-cta-pase):not(.ri-cta-hsp){color:#1d160a}
+.ri-cta:not(.ri-cta-pase):not(.ri-cta-hsp) .ri-cta-top{color:#1d160a;text-shadow:none}
+.ri-cta:not(.ri-cta-pase):not(.ri-cta-hsp) .ri-cta-sub{color:rgba(29,22,10,.78)}
+.ri-cta:not(.ri-cta-pase):not(.ri-cta-hsp) .ri-cta-icon{color:#1d160a;border-color:rgba(29,22,10,.3)}
+
+/* Zona de toque de 44 px (auditoría oct 2026): los filtros de Quesos y Sala
+   (.q-chip, 36 px) y el selector de Flashcards (.select-pill, 34 px) se
+   quedaban por debajo del mínimo; con guantes o prisa se fallaba el toque. */
+.q-chip,.select-pill{min-height:44px}
+.q-chip{display:inline-flex;align-items:center}

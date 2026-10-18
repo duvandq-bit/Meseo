@@ -6513,6 +6513,29 @@ test('reto del día + liga semanal: pregunta compartida determinista y XP semana
     'el inicio debe ofrecer el Reto del día');
 });
 
+test('Auditoría oct 2026: cabecera y pestañas de Saber pegadas, contraste del Repaso', () => {
+  const css = read('styles.css');
+  // overflow-x:hidden en <body> lo convertía en contenedor de scroll y la
+  // cabecera sticky se iba con la página en el móvil.
+  const body = css.match(/\nbody\{[\s\S]*?\n\}/)[0];
+  assert(/overflow-x:clip/.test(body), 'el body recorta con clip, no crea contenedor de scroll');
+  assert(/\.saber-bar\{[^}]*position:sticky/.test(css), 'las pestañas de Saber se quedan pegadas bajo la cabecera');
+  assert(/\.ri-cta:not\(\.ri-cta-pase\):not\(\.ri-cta-hsp\) \.ri-cta-top\{color:#1d160a/.test(css), 'tinta oscura sobre el dorado del Repaso inteligente');
+});
+
+test('Auditoría oct 2026: Reto del día sin turnos, ordinales, miniaturas y toques de 44 px', () => {
+  const i0 = html.indexOf('function _dqQuestion('), i1 = html.indexOf('function _dqIsDone(');
+  const dq = html.slice(i0, i1);
+  // Sin turnos, pick([]) daba undefined y el Reto salía en blanco ~3 de cada 4 días.
+  assert(/if\(!svcDishes\.length\)\{[\s\S]*type:'cat'/.test(dq), 'carta sin turnos: pregunta de apartado');
+  assert(/cats\.length<2[^\n]*return null/.test(dq), 'sin pregunta posible devuelve null');
+  assert(/if\(!window\._dqCurrent\)\{/.test(html), 'openDailyReto no abre un reto vacío');
+  assert(!/'1st':i===1\?'2nd'/.test(html.replace(/LANG==='en'\?\(i===0\?'1st'/g,'')), 'ordinales en español en la temporada de duelos');
+  assert(/img-src 'self' data: blob: https:/.test(html), 'las miniaturas de Actualidad pueden cargar');
+  const css = read('styles.css');
+  assert(/\.q-chip,\.select-pill\{min-height:44px\}/.test(css), 'filtros con zona de toque de 44 px');
+});
+
 test('Emplatado: la vista rápida separa los bocados igual que la ficha (oct 2026)', () => {
   // El Mistery Box se leía como un párrafo corrido en la vista rápida del
   // emplatado: los saltos de línea se perdían. Ahora usa el mismo render.
