@@ -11052,6 +11052,27 @@ html[data-venue="demo"] .ri-cta-mesa .ri-cta-icon{border-color:rgba(200,163,90,.
 .dish-tec-mas{align-self:flex-start;min-height:36px;padding:.3rem .2rem;background:transparent;border:none;cursor:pointer;
   font-family:var(--font-mono);font-size:var(--fs-1);letter-spacing:.06em;color:var(--gold-deep)}
 
+/* ═══ PARA LA MESA (oct 2026) ═══
+   El plato en el idioma del cliente, dentro de la ficha completa (tarjeta) y
+   de la vista rápida (plegable, reutiliza .dish-tec.compacto). */
+.mesa-idioma-tabs{display:flex;gap:.35rem;flex-wrap:wrap;margin-bottom:.55rem}
+.mesa-idioma-tab{min-height:30px;padding:.2rem .7rem;border-radius:20px;border:1px solid var(--gold-a);background:transparent;cursor:pointer;
+  font-family:var(--font-mono);font-size:var(--fs-1);letter-spacing:.06em;color:var(--parch2)}
+.mesa-idioma-tab.on{background:var(--gold);color:#fff;border-color:var(--gold)}
+.mesa-idioma-nombre{font-family:var(--font-sans);font-size:var(--fs-4);font-weight:700;color:var(--parchment);line-height:1.3}
+.mesa-idioma-desc{font-family:var(--font-sans);font-size:var(--fs-3);line-height:1.55;color:var(--parch2);margin-top:.3rem}
+.mesa-idioma-al{font-family:var(--font-sans);font-size:var(--fs-3);line-height:1.5;color:var(--parchment);margin-top:.45rem;
+  padding:.45rem .6rem;background:rgba(196,154,60,.08);border-left:2px solid var(--gold);border-radius:0 8px 8px 0}
+.mesa-idioma-al>div+div{margin-top:.15rem}
+.mesa-idioma-sin{font-family:var(--font-sans);font-size:var(--fs-2);color:var(--parch3);font-style:italic}
+.mesa-idioma-acciones{display:flex;gap:.5rem;margin-top:.6rem}
+.mesa-idioma-btn{flex:1;min-height:40px;padding:.45rem .6rem;border-radius:var(--r2);border:1px solid var(--gold-a);background:var(--gold-b);cursor:pointer;
+  font-family:var(--font-mono);font-size:var(--fs-1);letter-spacing:.06em;color:var(--gold-deep)}
+.mesa-idioma-btn:active{transform:scale(.98)}
+.dish-tec.compacto.mesa-idioma{margin-bottom:.7rem}
+.dish-tec.compacto.mesa-idioma .mesa-idioma-nombre{font-size:var(--fs-3)}
+.dish-tec.compacto.mesa-idioma .mesa-idioma-desc,.dish-tec.compacto.mesa-idioma .mesa-idioma-al{font-size:var(--fs-2)}
+
 /* ═══ PRACTICAR · selector de Examen (oct 2026) ═══
    Una sola entrada «Examen» abre esta hoja con los cuatro exámenes. */
 #exselOverlay{position:fixed;inset:0;z-index:100001;display:flex;align-items:flex-end;justify-content:center}

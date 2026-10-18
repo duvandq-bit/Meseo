@@ -8423,7 +8423,10 @@ test('Inicio · Consulta rápida: dos accesos en una fila, Mesa con alergias y C
     'Mesa con alergias: tarjeta propia de media anchura (la .ri-cta ancha de Mesa no cabe a medias)');
   assert(/dash-cr-item"[^>]*onclick="_subTab\.aprender='emplatado';showTab\('emplatado'\)"/.test(dash.replace(/\s+/g,' ')),
     'Carta debe navegar por la ruta enrutada (_subTab + showTab emplatado)');
-  assert(/dash-plating-sub">Plating guide · /.test(dash), 'la tarjeta Carta nombra la guía por su nombre oficial (Plating guide)');
+  // Oct 2026: el subtítulo dice lo que es, no el nombre interno de la guía.
+  assert(/dash-plating-sub">\$\{_en\?'The menu in photos, always up to date':'La carta en fotos, siempre al día'\}<\/div>/.test(dash)
+      && !/dash-plating-sub">Plating guide/.test(dash),
+    'la tarjeta Carta se explica sola: «La carta en fotos, siempre al día»');
   // El acceso propio a Mesa: si la ruta existe va a Mesa; si no, a la carta.
   const ir = html.slice(html.indexOf('function _crIrMesa()'), html.indexOf('function _crIrMesa()') + 300);
   assert(/TAB_ROUTES\.includes\('mesa'\)/.test(ir) && /showTab\('mesa'\)/.test(ir) && /showTab\('emplatado'\)/.test(ir),
@@ -9228,7 +9231,8 @@ test('ficha técnica del plato: muestra el maridaje ordenado por precio', () => 
     'la ficha debe pintar una tarjeta de Maridaje');
   assert(/\$\{maridajeHtml\}/.test(ficha),
     'la tarjeta de maridaje debe insertarse en el cuerpo de la ficha');
-  assert(/if\(_pairWines === null && typeof loadLazyData/.test(ficha) && /repasoView==='dish' && repasoDishId===dishId\) renderRepasoDishDetail\(dishId\)/.test(ficha),
+  // Oct 2026: antes de pedir los vinos se comprueba que el restaurante tenga bodega.
+  assert(/if\(_pairWines === null && !\(Array\.isArray\(WINES\) && !WINES\.length\) && typeof loadLazyData/.test(ficha) && /repasoView==='dish' && repasoDishId===dishId\) renderRepasoDishDetail\(dishId\)/.test(ficha),
     'si los vinos no habían cargado, la ficha debe recargarse al recibirlos (solo si sigue abierta)');
 });
 
@@ -17620,6 +17624,102 @@ test('certificado: _certificadoHTML es pura e incluye nombre, restaurante, categ
   assert(html.includes("ov.querySelector('#certImprimir').onclick = ()=>{ try{ window.print(); }catch(_){} };"), 'imprimir');
   const css = read('styles.css');
   for (const c of ['#certOverlay{', '.cert-hoja{', '.cert-marco{', 'body.cert-abierto > :not(#certOverlay){display:none !important}']) assert(css.includes(c), `falta ${c} en styles.css`);
+});
+
+console.log('\nPara la mesa · el plato en el idioma del cliente (oct 2026)');
+// La función pura se extrae y se ejecuta con un contexto controlado: con
+// traducción, sin ella, con alérgeno adaptable y con la carta sin validar.
+const _mesaSrc = (() => {
+  const a = html.indexOf('const _MESA_FRASES = {');
+  const b = html.indexOf('let _mesaLang = ');
+  const c = html.indexOf('const IDIOMAS_MESA = [');
+  const d = html.indexOf('function _cartaIdiomasAplicar(');
+  const im = html.indexOf('const ALLERGEN_MAP={');
+  const fm = html.indexOf('};', im) + 2;
+  return html.slice(im, fm) + '\n' + html.slice(c, d) + '\nconst DISHES_EN=[];const DISH_ACTIONS={};function _alergenosValidados(){return true;}\n' + html.slice(a, b)
+    + '\nreturn { _mesaTextoIdioma, _mesaResumen, _mesaIdiomas, _MESA_FRASES, IDIOMAS_MESA };';
+})();
+const M = new Function(_mesaSrc)(); // eslint-disable-line no-new-func
+const _platoMesa = { id: 4007, name: 'Huevo de corral, berros y queso de flor', allergens: ['Huevos', 'Lácteos', 'Gluten'] };
+const _tradMesa = { id: 4007, name: 'Free-range egg, watercress and flower cheese', history: 'Flower cheese is curdled with thistle flowers. Gofio is toasted corn flour. Third sentence that should not be read.' };
+test('_mesaTextoIdioma: con traducción compone nombre, descripción corta y «Contains»', () => {
+  const r = M._mesaTextoIdioma(_platoMesa, 'en', { trad: _tradMesa, acts: {}, validada: true });
+  assert(r.ok === true && r.name === _tradMesa.name, 'usa el nombre traducido');
+  assert(r.desc === 'Flower cheese is curdled with thistle flowers. Gofio is toasted corn flour.', `descripción: dos frases como mucho, tengo «${r.desc}»`);
+  assert(r.alergenos.join(',') === 'Eggs,Dairy,Gluten', `alérgenos en inglés por ALLERGEN_MAP: ${r.alergenos.join(',')}`);
+  assert(/Contains: eggs, dairy, gluten\./.test(r.texto), `frase de alérgenos: ${r.texto}`);
+  assert(!/Can be made without/.test(r.texto), 'sin adaptaciones no promete nada');
+  assert(r.texto.startsWith(_tradMesa.name + '. '), 'el texto empieza por el nombre');
+});
+test('_mesaTextoIdioma: sin traducción no inventa nada', () => {
+  const r = M._mesaTextoIdioma(_platoMesa, 'en', { trad: null, acts: { 'Huevos': { r: 1, c: 'SIN HUEVO' } }, validada: true });
+  assert(r.ok === false && r.texto === 'No translation loaded' && r.lineas.length === 1, `sólo «No translation loaded»: ${r.texto}`);
+  assert(r.alergenos.length === 0 && r.adaptables.length === 0, 'ni alérgenos ni adaptaciones sin traducción');
+  // Y lo mismo si la carta de verdad no trae DISHES_EN (contexto por defecto, DISHES_EN vacío)
+  const r2 = M._mesaTextoIdioma(_platoMesa, 'en');
+  assert(r2.ok === false, 'sin DISHES_EN la ficha dice que no hay traducción');
+});
+test('_mesaTextoIdioma: alérgeno adaptable (r=1) → «Can be made without», estructural (r=0) no', () => {
+  const r = M._mesaTextoIdioma(_platoMesa, 'en', { trad: _tradMesa, acts: { 'Lácteos': { r: 1, c: 'SIN QUESO' }, 'Gluten': { r: 1, c: 'SIN GOFIO' }, 'Huevos': { r: 0 } }, validada: true });
+  assert(r.adaptables.join(',') === 'Dairy,Gluten', `adaptables: ${r.adaptables.join(',')}`);
+  assert(/Can be made without dairy and gluten\./.test(r.texto), `frase: ${r.texto}`);
+  assert(!/without eggs/.test(r.texto), 'el estructural no se promete');
+});
+test('_mesaTextoIdioma: carta sin validar → sin «Can be made without» y aviso de pendiente', () => {
+  const r = M._mesaTextoIdioma(_platoMesa, 'en', { trad: _tradMesa, acts: { 'Lácteos': { r: 1, c: 'SIN QUESO' } }, validada: false });
+  assert(r.adaptables.length === 0 && !/Can be made without/.test(r.texto), 'sin validar no hay adaptaciones prometidas');
+  assert(/Contains: eggs, dairy, gluten\./.test(r.texto) && /pending kitchen validation/.test(r.texto), `aviso: ${r.texto}`);
+});
+test('_mesaTextoIdioma: plato sin alérgenos → «No declared allergens» sólo con carta validada', () => {
+  const p = { id: 4005, name: 'Tomate, fresa y albahaca', allergens: [] };
+  const t = { id: 4005, name: 'Tomato, strawberry and basil', history: 'No allergens at all.' };
+  assert(/No declared allergens\./.test(M._mesaTextoIdioma(p, 'en', { trad: t, acts: {}, validada: true }).texto), 'validada: lo dice');
+  const r = M._mesaTextoIdioma(p, 'en', { trad: t, acts: {}, validada: false });
+  assert(!/No declared allergens/.test(r.texto) && /pending kitchen validation/.test(r.texto), 'sin validar: pendiente, no «sin alérgenos»');
+});
+test('IDIOMAS_MESA: inglés siempre; DE/FR sólo con datos en la carta; frases para los tres', () => {
+  assert(JSON.stringify(M.IDIOMAS_MESA) === JSON.stringify([['en','English','en-GB'],['de','Deutsch','de-DE'],['fr','Français','fr-FR']]), 'lista de idiomas preparada');
+  assert(M._mesaIdiomas().map(x=>x[0]).join(',') === 'en', 'sin DISHES_DE/FR sólo hay inglés');
+  for (const c of ['en','de','fr']) for (const k of ['contiene','sinAl','sinX','pend','sinTrad','y']) assert(M._MESA_FRASES[c] && M._MESA_FRASES[c][k], `frase ${k} en ${c}`);
+  assert(/DISHES_XX/.test(html) && /ALLERGEN_MAP_XX/.test(html), 'el formato para añadir un idioma está documentado');
+  const ap = html.slice(html.indexOf('function _cartaAplicar('), html.indexOf('function _cartaVaciar('));
+  assert(/_cartaIdiomasAplicar\(c\)/.test(ap), 'la carta de cada restaurante carga sus idiomas extra');
+  assert(/_cartaIdiomasAplicar\(null\)/.test(html.slice(html.indexOf('function _cartaVaciar('), html.indexOf('function _cartaAceptar('))), 'vaciar la carta vacía los idiomas');
+});
+test('Para la mesa: sección en la ficha completa (tras alérgenos, antes de ingredientes) y plegable en la vista rápida', () => {
+  const f = html.slice(html.indexOf('function renderRepasoDishDetail('), html.indexOf('function changeRepasoTopic('));
+  const iAl = f.indexOf("'Allergens & adaptations':'Alérgenos y adaptaciones'");
+  const iMesa = f.indexOf('_mesaIdiomaHTML(dish, false, _mesaLang)');
+  const iIng = f.indexOf("'Ingredients':'Ingredientes'");
+  assert(iAl > 0 && iMesa > iAl && iIng > iMesa, 'orden: alérgenos → Para la mesa → ingredientes');
+  const q = html.slice(html.indexOf('function _emplOpen('), html.indexOf('async function renderSupPhotoQueue('));
+  const iNote = q.indexOf('class="empl-ov-note"'), iM = q.indexOf('_mesaIdiomaHTML(d, true, _mesaLang)'), iI = q.indexOf('class="empl-ov-ing"');
+  assert(iNote > 0 && iM > iNote && iI > iM, 'vista rápida: debajo de la nota, antes de ingredientes');
+  const h = html.slice(html.indexOf('function _mesaIdiomaHTML('), html.indexOf('function _mesaCambiarIdioma('));
+  assert(/<details class="dish-tec compacto mesa-idioma"/.test(h) && /'For the table':'Para la mesa'/.test(h), 'plegable con el mismo estilo que «Cómo se cocina»');
+  assert(/typeof speechSynthesis!=='undefined'/.test(h) && /\$\{hayVoz\?`<button/.test(h), 'el botón Escuchar sólo sale si hay speechSynthesis');
+  assert(/_mesaCopiar\(/.test(h) && /'Copy':'Copiar'/.test(h), 'botón Copiar');
+  assert(/'No translation loaded':'Sin traducción cargada'/.test(h), 'sin traducción se dice y nada más');
+  const hb = html.slice(html.indexOf('function _mesaHablar('), html.indexOf('function _mesaCopiar('));
+  assert(/speechSynthesis\.cancel\(\)/.test(hb) && /new SpeechSynthesisUtterance\(r\.texto\)/.test(hb) && /u\.lang = code/.test(hb), 'habla el texto compuesto en la voz del idioma');
+  assert(!/fetch\(/.test(html.slice(html.indexOf('const _MESA_FRASES = {'), html.indexOf('// ═══ HORARIOS DEL EQUIPO'))), 'nada de red en la sección');
+  const css = read('styles.css');
+  for (const sel of ['.mesa-idioma-tabs{', '.mesa-idioma-tab.on{', '.mesa-idioma-al{', '.mesa-idioma-btn{', '.mesa-idioma-sin{']) assert(css.includes(sel), `styles.css debe tener ${sel}`);
+});
+test('Demo: DISHES_EN cubre los 20 platos de Orchilla con nombre e historia', () => {
+  const c = JSON.parse(read('data/carta-demo.json'));
+  const en = new Map(c.DISHES_EN.map(x => [x.id, x]));
+  for (const d of c.DISHES) {
+    const t = en.get(d.id);
+    assert(t && t.name && t.history && t.history.length > 40, `plato ${d.id} sin traducción completa`);
+    assert(/^[A-Z]/.test(t.name) && /[.!?]\s*$/.test(t.history.trim()), `plato ${d.id}: la descripción en inglés debe ser una frase completa`);
+  }
+});
+test('Ficha completa: sin bodega no hay sección de maridaje (ni «Cargando maridaje…» eterno)', () => {
+  const f = html.slice(html.indexOf('function renderRepasoDishDetail('), html.indexOf('function changeRepasoTopic('));
+  assert(/const _sinBodega = _pairWines === null && \(!_SABER_HAY\.vinos \|\| \(Array\.isArray\(WINES\) && !WINES\.length\)\)/.test(f), 'detecta restaurante sin bodega o lista vacía');
+  assert(/if\(_sinBodega\)\{\s*maridajeHtml = '';/.test(f), 'sin bodega, sin sección');
+  assert(/hayCartaDeVinos\(\)/.test(f) && /if\(!hay\) return;/.test(f), 'sólo pide los vinos si el restaurante tiene bodega');
 });
 
 console.log('\nHygiene');
