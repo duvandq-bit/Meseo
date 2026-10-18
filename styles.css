@@ -10921,13 +10921,109 @@ html[data-venue="demo"] .ri-cta-pase .ri-cta-icon{border-color:rgba(200,163,90,.
 /* Contraste del Repaso inteligente (auditoría oct 2026): texto blanco sobre
    dorado daba ~2,3:1, ilegible al sol de una terraza. Sobre el dorado va
    tinta oscura; las variantes oscuras (Pase, Hospitalidad) siguen en blanco. */
-.ri-cta:not(.ri-cta-pase):not(.ri-cta-hsp){color:#1d160a}
-.ri-cta:not(.ri-cta-pase):not(.ri-cta-hsp) .ri-cta-top{color:#1d160a;text-shadow:none}
-.ri-cta:not(.ri-cta-pase):not(.ri-cta-hsp) .ri-cta-sub{color:rgba(29,22,10,.78)}
-.ri-cta:not(.ri-cta-pase):not(.ri-cta-hsp) .ri-cta-icon{color:#1d160a;border-color:rgba(29,22,10,.3)}
+.ri-cta:not(.ri-cta-pase):not(.ri-cta-hsp):not(.ri-cta-mesa){color:#1d160a}
+.ri-cta:not(.ri-cta-pase):not(.ri-cta-hsp):not(.ri-cta-mesa) .ri-cta-top{color:#1d160a;text-shadow:none}
+.ri-cta:not(.ri-cta-pase):not(.ri-cta-hsp):not(.ri-cta-mesa) .ri-cta-sub{color:rgba(29,22,10,.78)}
+.ri-cta:not(.ri-cta-pase):not(.ri-cta-hsp):not(.ri-cta-mesa) .ri-cta-icon{color:#1d160a;border-color:rgba(29,22,10,.3)}
 
 /* Zona de toque de 44 px (auditoría oct 2026): los filtros de Quesos y Sala
    (.q-chip, 36 px) y el selector de Flashcards (.select-pill, 34 px) se
    quedaban por debajo del mínimo; con guantes o prisa se fallaba el toque. */
 .q-chip,.select-pill{min-height:44px}
 .q-chip{display:inline-flex;align-items:center}
+
+
+/* ═══ MESA · mesa con alergias (oct 2026) ═══════════════════════════════
+   Pantalla de servicio: chips de los 14 alérgenos arriba y la carta debajo
+   repartida en apto / con cambio / consultar / no apto. Colores de estado:
+   verde, ámbar, gris, rojo; pendiente de validación comparte el ámbar con
+   un borde discontinuo. Todo con el mínimo de toque de 44 px. */
+.mesa-wrap{padding-bottom:2rem}
+.mesa-head{margin:.2rem 0 .8rem}
+.mesa-eyebrow{font-family:var(--font-mono);font-size:var(--fs-1);letter-spacing:.12em;text-transform:uppercase;color:var(--parch3)}
+.mesa-titulo{margin:.1rem 0 0;font-family:var(--font-serif);font-size:var(--fs-6);font-weight:700;color:var(--parchment);line-height:1.15}
+.mesa-comensales{display:flex;flex-wrap:wrap;gap:.35rem;margin-bottom:.6rem}
+.mesa-com{flex:none;display:inline-flex;align-items:center;gap:.35rem;min-height:44px;padding:0 .85rem;border-radius:99px;
+  border:1.5px solid var(--ink4);background:transparent;color:var(--parch2);font-family:var(--font-sans);font-size:var(--fs-3);font-weight:600;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.mesa-com.on{background:var(--parchment);color:var(--ink);border-color:var(--parchment)}
+.mesa-com-n{display:inline-flex;align-items:center;justify-content:center;min-width:1.25rem;height:1.25rem;padding:0 .3rem;border-radius:99px;background:var(--gold);color:#fff;font-family:var(--font-mono);font-size:var(--fs-1);font-weight:500}
+.mesa-com.on .mesa-com-n{background:var(--gold3);color:var(--parchment)}
+.mesa-com-add{border-style:dashed}
+.mesa-com-del{border-color:transparent;color:var(--parch3);font-weight:500}
+.mesa-chips{display:flex;flex-wrap:wrap;gap:.35rem}
+.mesa-chip{position:relative;gap:.3rem}
+.mesa-chip.otro{border-style:dashed;border-color:var(--gold);color:var(--parch2)}
+.mesa-chip-quien{font-family:var(--font-mono);font-size:var(--fs-1);letter-spacing:.04em;color:var(--gold-deep)}
+.mesa-acciones{display:flex;align-items:center;gap:.6rem;margin:.55rem 0 .8rem;min-height:44px}
+.mesa-limpiar{flex:none;min-height:44px;padding:0 1rem;border-radius:10px;border:1.5px solid var(--parchment);background:transparent;color:var(--parchment);
+  font-family:var(--font-sans);font-size:var(--fs-3);font-weight:700;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.mesa-limpiar:disabled{opacity:.35;cursor:default}
+.mesa-sel{font-family:var(--font-sans);font-size:var(--fs-2);color:var(--parch3);line-height:1.35;min-width:0}
+.mesa-aviso{margin:0 0 .7rem;padding:.6rem .75rem;border-radius:10px;border:1.5px solid #c0703a;background:rgba(192,112,58,.12);color:#7a3f16;
+  font-family:var(--font-sans);font-size:var(--fs-3);font-weight:700;line-height:1.4}
+.mesa-ayuda{margin:0 0 .8rem;font-family:var(--font-sans);font-size:var(--fs-3);color:var(--parch2);line-height:1.5}
+.mesa-contadores{display:flex;flex-wrap:wrap;align-items:center;gap:.25rem .45rem;margin-bottom:1rem;font-family:var(--font-mono);font-size:var(--fs-2);letter-spacing:.04em;color:var(--parch3)}
+.mesa-contadores i{font-style:normal;opacity:.5}
+.mesa-cnt{font-weight:700}
+.mesa-cnt.apto{color:var(--green-deep)}
+.mesa-cnt.cambio,.mesa-cnt.pendiente{color:#8a6420}
+.mesa-cnt.consultar{color:var(--parch3)}
+.mesa-cnt.noapto{color:#a04848}
+.mesa-grupo{margin-bottom:1.1rem}
+.mesa-grupo-t{display:flex;align-items:center;gap:.4rem;margin:0 0 .5rem;padding-bottom:.35rem;border-bottom:1px solid var(--ink3);
+  font-family:var(--font-sans);font-size:var(--fs-3);font-weight:700;letter-spacing:.02em;color:var(--parchment)}
+.mesa-grupo-t span{margin-left:auto;font-family:var(--font-mono);font-size:var(--fs-1);font-weight:500;color:var(--parch3)}
+.mesa-grupo.apto .mesa-grupo-t{color:var(--green-deep)}
+.mesa-grupo.cambio .mesa-grupo-t,.mesa-grupo.pendiente .mesa-grupo-t{color:#8a6420}
+.mesa-grupo.consultar .mesa-grupo-t{color:var(--parch3)}
+.mesa-grupo.noapto .mesa-grupo-t{color:#a04848}
+.mesa-cat{margin:.5rem 0 .3rem;font-family:var(--font-mono);font-size:var(--fs-1);letter-spacing:.1em;text-transform:uppercase;color:var(--parch3)}
+.mesa-plato{display:flex;align-items:flex-start;gap:.65rem;width:100%;margin:0 0 .4rem;padding:.55rem .65rem;text-align:left;
+  border:1.5px solid var(--ink3);border-left-width:4px;border-radius:var(--r2);background:rgba(255,255,255,.35);color:var(--parchment);cursor:pointer;-webkit-tap-highlight-color:transparent}
+.mesa-plato img,.mesa-plato-nofoto{flex:none;width:44px;height:44px;border-radius:8px;object-fit:cover;background:var(--ink3)}
+.mesa-plato-nofoto{background:linear-gradient(135deg,var(--ink3),var(--ink2))}
+.mesa-plato-txt{display:flex;flex-direction:column;gap:.15rem;min-width:0;flex:1}
+.mesa-plato-nombre{font-family:var(--font-sans);font-size:var(--fs-3);font-weight:700;line-height:1.3;color:var(--parchment)}
+.mesa-plato-estado{display:inline-flex;align-items:center;gap:.3rem;font-family:var(--font-mono);font-size:var(--fs-1);letter-spacing:.06em;text-transform:uppercase;font-weight:500}
+.mesa-plato.apto{border-left-color:var(--green-deep)}
+.mesa-plato.apto .mesa-plato-estado{color:var(--green-deep)}
+.mesa-plato.cambio{border-left-color:var(--gold)}
+.mesa-plato.cambio .mesa-plato-estado{color:#8a6420}
+.mesa-plato.pendiente{border-left-color:var(--gold);border-left-style:dashed}
+.mesa-plato.pendiente .mesa-plato-estado{color:#8a6420}
+.mesa-plato.consultar{border-left-color:var(--ink5)}
+.mesa-plato.consultar .mesa-plato-estado{color:var(--parch3)}
+.mesa-plato.noapto{border-left-color:#a04848;opacity:.72}
+.mesa-plato.noapto .mesa-plato-estado{color:#a04848}
+.mesa-plato.noapto .mesa-plato-nombre{color:var(--parch3)}
+.mesa-al{display:flex;flex-wrap:wrap;align-items:baseline;gap:0 .5rem;margin-top:.2rem;padding-top:.2rem;border-top:1px solid rgba(28,42,34,.08)}
+.mesa-al b{font-family:var(--font-sans);font-size:var(--fs-2);font-weight:700;color:var(--parch2)}
+.mesa-al b small{margin-left:.4rem;font-family:var(--font-mono);font-size:var(--fs-1);font-weight:500;letter-spacing:.04em;color:var(--parch3)}
+.mesa-al span{font-family:var(--font-mono);font-size:var(--fs-1);line-height:1.5;color:var(--parch3)}
+.mesa-al em{font-style:normal;font-weight:700;color:var(--parchment)}
+.mesa-al.cambio span{color:#8a6420}
+.mesa-al.pendiente span{color:#8a6420}
+.mesa-al.noapto span{color:#a04848}
+.mesa-ver{width:100%;min-height:44px;border-radius:10px;border:1.5px dashed var(--ink4);background:transparent;color:var(--parch3);
+  font-family:var(--font-sans);font-size:var(--fs-3);font-weight:600;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.mesa-pie{margin:1.2rem 0 0;text-align:center;font-family:var(--font-mono);font-size:var(--fs-1);letter-spacing:.08em;text-transform:uppercase;color:var(--parch3)}
+
+/* La tarjeta de acceso desde Hoy: variante oscura del CTA, como la del Pase. */
+.ri-cta-mesa{
+  background:linear-gradient(150deg,#1c2b22 0%,#2a3d31 55%,#1c2b22 100%);
+  border:1.5px solid rgba(196,154,60,.5);
+  box-shadow:0 4px 16px rgba(0,0,0,.28), inset 0 1px 0 rgba(196,154,60,.16);
+}
+.ri-cta-mesa .ri-cta-icon{border-color:rgba(196,154,60,.45);color:#fff}
+html[data-venue="r2"] .ri-cta-mesa{
+  background:linear-gradient(150deg,#141416 0%,#24242a 55%,#141416 100%);
+  border-color:rgba(194,161,97,.45);
+  box-shadow:0 4px 16px rgba(0,0,0,.3), inset 0 1px 0 rgba(194,161,97,.14);
+}
+html[data-venue="r2"] .ri-cta-mesa .ri-cta-icon{border-color:rgba(194,161,97,.4)}
+html[data-venue="demo"] .ri-cta-mesa{
+  background:linear-gradient(150deg,#17121a 0%,#2a2030 55%,#17121a 100%);
+  border-color:rgba(200,163,90,.45);
+  box-shadow:0 4px 16px rgba(0,0,0,.3), inset 0 1px 0 rgba(200,163,90,.14);
+}
+html[data-venue="demo"] .ri-cta-mesa .ri-cta-icon{border-color:rgba(200,163,90,.4)}
