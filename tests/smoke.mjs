@@ -6573,6 +6573,25 @@ test('Auditoría oct 2026: Reto del día sin turnos, ordinales, miniaturas y toq
   assert(/\.q-chip,\.select-pill\{min-height:44px\}/.test(css), 'filtros con zona de toque de 44 px');
 });
 
+test('Entrada: una sola pantalla de carga, sin parpadeo (oct 2026)', () => {
+  // «La pantalla de carga carga dos veces» (propietario): la puerta quitaba su
+  // pantalla al pasar, el login asomaba mientras cargaba la carta y luego
+  // salía otra pantalla de carga. Ahora la puerta se queda puesta y
+  // showLoginLoading la reutiliza.
+  const f = html.slice(html.indexOf('function showLoginLoading('), html.indexOf('function hideLoginLoading('));
+  assert(/getElementById\('puertaEspera'\)/.test(f) && /previa\.id = 'loginLoadingOverlay'/.test(f), 'showLoginLoading reutiliza la pantalla de la puerta');
+  const g = html.slice(html.indexOf('async function closePinAndEnter('), html.indexOf('function showLoginLoading(') > 0 ? html.indexOf('// Show loading screen during transition') : 0);
+  assert(!/_puertaGen\) return;[^\n]*\n\s*_puertaEsperaQuitar\(\);/.test(g), 'la puerta ya no se quita al pasar');
+  assert(/if\(!_ok && typeof _puertaEsperaQuitar==='function'\) _puertaEsperaQuitar\(\);/.test(g), 'si la carta no carga, la pantalla se quita');
+  // Y desde el primer byte: la pantalla de arranque existe en el HTML, antes del
+  // programa, y la puerta la hace suya en vez de pintar otra.
+  assert(/<div class="login-loading-overlay" id="bootEspera"/.test(html), 'pantalla de arranque en el HTML, antes del programa');
+  assert(html.indexOf('id="bootEspera"') < html.indexOf('const DISH_COMPONENTS'), 'la pantalla de arranque va antes de los datos');
+  const pe = html.slice(html.indexOf('function _puertaEsperaPoner('), html.indexOf('function _puertaEsperaQuitar('));
+  assert(/getElementById\('bootEspera'\)/.test(pe) && /boot\.id = 'puertaEspera'/.test(pe), 'la puerta reutiliza la pantalla de arranque');
+  assert(/const _b = document\.getElementById\('bootEspera'\); if\(_b\) _b\.remove\(\);/.test(html), 'si se va al login, la pantalla de arranque se quita');
+});
+
 test('Emplatado: la vista rápida separa los bocados igual que la ficha (oct 2026)', () => {
   // El Mistery Box se leía como un párrafo corrido en la vista rápida del
   // emplatado: los saltos de línea se perdían. Ahora usa el mismo render.

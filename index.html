@@ -52,7 +52,7 @@
 <meta property="og:description" content="Formación de equipos de sala: carta, alérgenos, vinos, exámenes y juegos de repaso.">
 <meta property="og:url" content="https://meseo.es/">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"Meseo","url":"https://meseo.es/"}</script>
-<meta name="app-version" content="7.505">
+<meta name="app-version" content="7.506">
 <meta name="app-build" content="May 2026">
 <meta name="theme-color" content="#1c2a22">
 <!-- ═══ PWA ═══ -->
@@ -84,7 +84,19 @@
 </head>
 <body>
 
-<!-- Splash removed -->
+<!-- Pantalla de carga desde el primer byte (oct 2026). El programa pesa 2,3 MB y
+     va al final del archivo: tras publicar una versión, en un móvil con poca
+     señal el login se veía durante 10-20 s sin responder a nada («no carga la
+     pantalla», propietario). Esta pantalla existe antes de que llegue el
+     programa; la puerta de entrada la reutiliza y, si no se entra, el login
+     la quita. El temporizador de abajo es el cinturón por si el programa no
+     llegara nunca: el login se queda a la vista. -->
+<div class="login-loading-overlay" id="bootEspera" role="status">
+  <div class="loading-logo">Meseo</div>
+  <div class="loading-bar-track"><div class="loading-bar"></div></div>
+  <div class="loading-text">Cargando…</div>
+</div>
+<script>setTimeout(function(){ var b=document.getElementById('bootEspera'); if(b) b.remove(); }, 45000);</script>
 
 
 
@@ -578,6 +590,16 @@ function txIcon(key, size) {
 
 // ═══ LOGIN LOADING SCREEN ═══
 function showLoginLoading(){
+  // Si la puerta de entrada ya tiene su pantalla puesta, se convierte en esta:
+  // una sola pantalla de carga de principio a fin, sin parpadeo.
+  const previa = document.getElementById('puertaEspera');
+  if(previa){
+    previa.id = 'loginLoadingOverlay';
+    const t = previa.querySelector('.loading-text');
+    if(t) t.textContent = LANG==='en'?'Preparing your session...':'Preparando tu sesión...';
+    return;
+  }
+  if(document.getElementById('loginLoadingOverlay')) return;
   const ol = document.createElement('div');
   ol.className = 'login-loading-overlay';
   ol.id = 'loginLoadingOverlay';
@@ -2781,7 +2803,7 @@ const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><p
 const SRC = 'src';
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='7.505';  // sincronizada con sw.js VERSION (guard de CI)
+const APP_VERSION='7.506';  // sincronizada con sw.js VERSION (guard de CI)
 const APP_BUILD='Jul 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;
@@ -13268,6 +13290,14 @@ function _showCloudPinLogin(name, emp) {
 let _puertaGen = 0;
 function _puertaEsperaPoner(){
   if(document.getElementById('puertaEspera')) return;
+  // La pantalla de arranque, si sigue puesta, pasa a ser ésta: sin parpadeo.
+  const boot = document.getElementById('bootEspera');
+  if(boot){
+    boot.id = 'puertaEspera';
+    const t = boot.querySelector('.loading-text');
+    if(t) t.textContent = LANG==='en'?'Checking your access…':'Comprobando tu acceso…';
+    return;
+  }
   const ol = document.createElement('div');
   ol.className = 'login-loading-overlay';
   ol.id = 'puertaEspera';
@@ -13361,8 +13391,12 @@ async function closePinAndEnter(){
   let _p;
   try{ _p = await _ndaPuerta(_quien); }catch(e){ _p = { ok:false, motivo:'sin_red' }; }
   if(_gen !== _puertaGen) return;          // otra entrada ha tomado el relevo
-  _puertaEsperaQuitar();
+  // La pantalla de espera se queda puesta si se va a entrar: cargar la carta
+  // tarda un segundo o dos y, si se quitaba aquí, el login asomaba un instante
+  // y luego salía OTRA pantalla de carga («carga dos veces», propietario, oct
+  // 2026). showLoginLoading la reutiliza; sólo se quita si no se entra.
   if(!_p || _p.ok !== true){
+    _puertaEsperaQuitar();
     const ov = document.getElementById('pinOverlay');
     if(ov) ov.remove();
     if(_p && _p.motivo === 'pendiente'){
@@ -13402,8 +13436,9 @@ async function closePinAndEnter(){
       try{ localStorage.setItem('txk_venue', _propio); }catch(_){}
       _ok = await cargarCarta(_propio, pinTarget);
     }
+    if(!_ok && typeof _puertaEsperaQuitar==='function') _puertaEsperaQuitar();
     if(!_ok) return;
-  }catch(e){ return; }
+  }catch(e){ _puertaEsperaQuitar(); return; }
   const overlay=document.getElementById('pinOverlay');
   if(overlay) overlay.remove();
 
@@ -34656,6 +34691,9 @@ document.addEventListener('visibilitychange', ()=>{
   } catch(e){ localStorage.removeItem('txoko_session'); }
   renderLogin();
 })();
+// La pantalla de arranque sólo sobrevive si la puerta de entrada la ha hecho
+// suya (cambia de id). Si sigue con su nombre, es que se va al login: fuera.
+try{ const _b = document.getElementById('bootEspera'); if(_b) _b.remove(); }catch(_){}
 
 </script>
 
