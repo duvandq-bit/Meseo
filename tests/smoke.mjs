@@ -5128,7 +5128,10 @@ test('Aprender lands on Emplatado and lists it first (owner request, jul 2026)',
   // y subpestaña por defecto.
   const bar = html.slice(html.indexOf('function _saberChipsBar('), html.indexOf('function _saberSync('));
   const lista = bar.slice(bar.indexOf('const items = ['));
-  assert(/const items = \[\s*\['emplatado',/.test(lista), 'Emplatado must be the FIRST Saber tab');
+  // Oct 2026: la Mesa con alergias (consulta con el cliente delante) pasa a
+  // ser el primer chip; Emplatado sigue justo detrás y sigue siendo el
+  // aterrizaje de Aprender.
+  assert(/const items = \[\s*(\/\/[^\n]*\n\s*)*\['mesa',[^\n]*\n\s*\['emplatado',/.test(lista), 'Mesa must be the FIRST Saber tab, Emplatado right after');
   assert(!/'smart'/.test(lista), 'el Repaso inteligente no vuelve a Saber (vive en Practicar)');
   assert(/_subTab\.aprender\s*\|\|\s*'emplatado'/.test(html), "Aprender default sub-tab must be 'emplatado'");
   assert(/let _subTab = \{ aprender:'emplatado'/.test(html),
@@ -6564,7 +6567,7 @@ test('Auditoría oct 2026: cabecera y pestañas de Saber pegadas, contraste del 
   const body = css.match(/\nbody\{[\s\S]*?\n\}/)[0];
   assert(/overflow-x:clip/.test(body), 'el body recorta con clip, no crea contenedor de scroll');
   assert(/\.saber-bar\{[^}]*position:sticky/.test(css), 'las pestañas de Saber se quedan pegadas bajo la cabecera');
-  assert(/\.ri-cta:not\(\.ri-cta-pase\):not\(\.ri-cta-hsp\) \.ri-cta-top\{color:#1d160a/.test(css), 'tinta oscura sobre el dorado del Repaso inteligente');
+  assert(/\.ri-cta:not\(\.ri-cta-pase\):not\(\.ri-cta-hsp\):not\(\.ri-cta-mesa\) \.ri-cta-top\{color:#1d160a/.test(css), 'tinta oscura sobre el dorado del Repaso inteligente');
 });
 
 test('Auditoría oct 2026: Reto del día sin turnos, ordinales, miniaturas y toques de 44 px', () => {
@@ -7058,7 +7061,7 @@ test('el Cliente IA se eliminó y no puede volver (sep 2026)', () => {
   // la única afirmación sobre alérgenos de toda la app que no se comprobaba.
   const css = read('styles.css');
   for (const [f, t] of [[html, 'index.html'], [css, 'styles.css']]) {
-    const restos = [...f.matchAll(/_mi[A-Za-z]+|_MI_[A-Z_]+|renderMesaLobby|Mesa Infinita|miStats|mesa-infinita|ri-cta-mesa/g)].map(m => m[0]);
+    const restos = [...f.matchAll(/_mi[A-Za-z]+|_MI_[A-Z_]+|renderMesaLobby|Mesa Infinita|miStats|mesa-infinita/g)].map(m => m[0]);
     assert(restos.length === 0, `${t} conserva restos del Cliente IA: ${[...new Set(restos)].join(', ')}`);
   }
   assert(!/Cliente IA|AI Guest/.test(html), 'el nombre no puede reaparecer en la app');
@@ -17295,6 +17298,68 @@ test('Panel: todas las secciones pasan por _supEquipo y los inactivos van aparte
   const pp = html.slice(html.indexOf('async function supPonerPruebas('), html.indexOf('async function _supPatchExtras('));
   assert(/saveDB\(\);\s*const r = await supaUpsertEmployee\(nombre\);/.test(pp), 'se guarda como el resto de la ficha: saveDB + supaUpsertEmployee');
   assert(/_supPatchExtras\(nombre/.test(pp), 'si la ficha sólo está en la nube, se toca su columna extras');
+});
+
+console.log('\nMesa con alergias (oct 2026)');
+test('Mesa: la pestaña existe, es de Saber, es el primer chip y Hoy tiene su tarjeta', () => {
+  assert(_ux2.rutas.includes('mesa'), "'mesa' tiene que estar en TAB_ROUTES");
+  assert(_ux2.UX2_SECCION.mesa === 'saber', 'la Mesa es consulta: sección Saber');
+  assert(/mesa:renderMesa/.test(html.slice(html.indexOf('const renderMap = {'), html.indexOf('};', html.indexOf('const renderMap = {')))), 'showTab enruta mesa → renderMesa');
+  const bar = html.slice(html.indexOf('function _saberChipsBar('), html.indexOf('function _saberSync('));
+  const items = bar.slice(bar.indexOf('const items = ['));
+  assert(/const items = \[\s*(\/\/[^\n]*\n\s*)*\['mesa', _en\?'Table':'Mesa', "showTab\('mesa'\)"\]/.test(items), 'Mesa es el PRIMER chip de la barra de Saber, con etiqueta Mesa / Table');
+  assert(/mesa:\['Mesa con alergias','Table with allergies'\]/.test(html), 'título de pantalla ES/EN');
+  const cta = html.slice(html.indexOf('function _mesaCtaHTML('), html.indexOf('function _mesaIcono('));
+  assert(/class="ri-cta ri-cta-mesa"/.test(cta) && /onclick="showTab\('mesa'\)"/.test(cta), 'la tarjeta de acceso usa .ri-cta con la variante oscura y abre la pestaña');
+  const css = read('styles.css');
+  assert(/\.ri-cta-mesa\{/.test(css) && /html\[data-venue="demo"\] \.ri-cta-mesa\{/.test(css) && /html\[data-venue="r2"\] \.ri-cta-mesa\{/.test(css), 'la variante oscura existe y tiene tema por venue');
+  assert(/\.mesa-com\{[^}]*min-height:44px/.test(css) && /\.mesa-limpiar\{[^}]*min-height:44px/.test(css), 'toques de 44 px');
+  // Nada de la mesa se guarda ni se manda: sólo memoria.
+  const bloque = html.slice(html.indexOf('const _MESA_ALERGENOS'), html.indexOf('function renderQuesos('));
+  assert(!/localStorage|supa[A-Z]|fetch\(|saveDB\(/.test(bloque), 'la selección de la mesa vive sólo en memoria');
+  assert(/La última palabra la tiene cocina\./.test(bloque), 'el pie');
+  assert(/Carta pendiente de validación por cocina: confirma todo antes de comandar\./.test(bloque), 'aviso con la carta sin validar');
+  assert(/_emplOpen\(\$\{d\.id\}\)/.test(bloque), 'tocar un plato abre la vista rápida');
+});
+test('Mesa: el clasificador puro reparte los cuatro estados y respeta la validación', () => {
+  const i = html.indexOf('function _mesaEstado('), j = html.indexOf('function _mesaUnion(');
+  const f = new Function(html.slice(i, j) + '; return _mesaEstado;')(); // eslint-disable-line no-new-func
+  const acts = { 1: { Gluten:{r:1,c:'sin pan',c_en:'no bread'}, 'Lácteos':{r:0}, Huevos:{r:1,c:'sin mayonesa'} } };
+  const d = { id:1, allergens:['Gluten','Lácteos','Huevos','Apio'] };
+  assert(f(d, [], acts, true) === 'apto', 'sin alérgenos elegidos: apto');
+  assert(f(d, ['Pescado'], acts, true) === 'apto', 'alérgeno que no está en el plato: apto');
+  assert(f(d, ['Gluten'], acts, true) === 'cambio', 'r:1 → apto con cambio');
+  assert(f(d, ['Gluten','Huevos'], acts, true) === 'cambio', 'varios r:1 → con cambio');
+  assert(f(d, ['Lácteos'], acts, true) === 'noapto', 'r:0 → no apto');
+  assert(f(d, ['Gluten','Lácteos'], acts, true) === 'noapto', 'un r:0 manda sobre un r:1');
+  assert(f(d, ['Apio'], acts, true) === 'consultar', 'sin entrada en la matriz → consultar');
+  assert(f(d, ['Gluten','Apio'], acts, true) === 'consultar', 'r:1 más uno sin dato → consultar');
+  assert(f(d, ['Lácteos','Apio'], acts, true) === 'noapto', 'r:0 más uno sin dato → no apto');
+  assert(f(d, ['Gluten'], acts, false) === 'pendiente', 'con cambio sin validar → pendiente');
+  assert(f(d, ['Lácteos'], acts, false) === 'pendiente', 'no apto sin validar → pendiente');
+  assert(f(d, ['Apio'], acts, false) === 'consultar', 'consultar sigue siendo consultar sin validar');
+  assert(f(d, ['Pescado'], acts, false) === 'apto', 'apto sigue siendo apto sin validar');
+  assert(f({ id:2, allergens:[] }, ['Gluten'], acts, true) === 'apto', 'plato sin alérgenos: apto');
+  assert(f({ id:3, allergens:['Gluten'] }, ['Gluten'], {}, true) === 'consultar', 'plato sin fila en la matriz → consultar');
+  assert(f({ id:4 }, ['Gluten'], null, true) === 'apto', 'datos a medias no revientan');
+  // Los 14 alérgenos de la UE, ni uno más ni uno menos, y todos con etiqueta EN.
+  const k = html.indexOf('const _MESA_ALERGENOS = ');
+  const lista = JSON.parse(html.slice(html.indexOf('[', k), html.indexOf('];', k) + 1).replace(/'/g, '"'));
+  assert(lista.length === 14 && new Set(lista).size === 14, 'los 14 alérgenos');
+  const im = html.indexOf('const ALLERGEN_MAP={');
+  const mapa = html.slice(im, html.indexOf('};', im));
+  for (const a of lista) assert(mapa.includes(`'${a}':`), `${a} sin traducción en ALLERGEN_MAP`);
+});
+test('Mesa: la demo enseña los cuatro estados', () => {
+  const C = JSON.parse(read('data/carta-demo.json'));
+  const i = html.indexOf('function _mesaEstado('), j = html.indexOf('function _mesaUnion(');
+  const f = new Function(html.slice(i, j) + '; return _mesaEstado;')(); // eslint-disable-line no-new-func
+  const vistos = new Set();
+  for (const a of ['Gluten','Lácteos','Sulfitos']) for (const d of C.DISHES) vistos.add(f(d, [a], C.DISH_ACTIONS, true));
+  for (const e of ['apto','cambio','consultar','noapto']) assert(vistos.has(e), `la demo no enseña el estado ${e}`);
+  let r1 = 0;
+  for (const m of Object.values(C.DISH_ACTIONS)) for (const a of Object.values(m)) if (a.r === 1) { r1++; assert(a.c && a.c_en, 'toda comanda r:1 va en ES y EN'); }
+  assert(r1 >= 6, 'al menos 6 comandas de cambio en la demo');
 });
 
 console.log('\nHygiene');

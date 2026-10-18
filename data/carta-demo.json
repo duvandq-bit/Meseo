@@ -1102,9 +1102,6 @@
   "4001": {
    "Altramuces": {
     "r": 0
-   },
-   "Sulfitos": {
-    "r": 0
    }
   },
   "4002": {
@@ -1162,7 +1159,9 @@
     "r": 0
    },
    "Lácteos": {
-    "r": 0
+    "c": "SIN MANTEQUILLA EN EL CALDO",
+    "c_en": "NO BUTTER IN THE BROTH",
+    "r": 1
    }
   },
   "4009": {
@@ -1176,9 +1175,6 @@
     "r": 0
    },
    "Frutos secos": {
-    "r": 0
-   },
-   "Sulfitos": {
     "r": 0
    }
   },
@@ -1236,7 +1232,9 @@
   },
   "4014": {
    "Granos de sésamo": {
-    "r": 0
+    "c": "SIN SÉSAMO",
+    "c_en": "WITHOUT SESAME",
+    "r": 1
    },
    "Lácteos": {
     "c": "SIN YOGUR",
@@ -1291,7 +1289,9 @@
   },
   "4019": {
    "Gluten": {
-    "r": 0
+    "c": "PAN SIN GLUTEN",
+    "c_en": "GLUTEN-FREE BREAD",
+    "r": 1
    },
    "Lácteos": {
     "c": "SIN MANTEQUILLA (aceite de oliva)",

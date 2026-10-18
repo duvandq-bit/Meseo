@@ -52,7 +52,7 @@
 <meta property="og:description" content="Formación de equipos de sala: carta, alérgenos, vinos, exámenes y juegos de repaso.">
 <meta property="og:url" content="https://meseo.es/">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"Meseo","url":"https://meseo.es/"}</script>
-<meta name="app-version" content="7.508">
+<meta name="app-version" content="7.509">
 <meta name="app-build" content="May 2026">
 <meta name="theme-color" content="#1c2a22">
 <!-- ═══ PWA ═══ -->
@@ -2803,7 +2803,7 @@ const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><p
 const SRC = 'src';
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='7.508';  // sincronizada con sw.js VERSION (guard de CI)
+const APP_VERSION='7.509';  // sincronizada con sw.js VERSION (guard de CI)
 const APP_BUILD='Jul 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;
@@ -13892,6 +13892,223 @@ function _qCoincide(q){
   return true;
 }
 
+// ═══ MESA · «mesa 6, uno celíaco y otro sin lactosa: ¿qué pueden comer?» ═══
+//
+// La consulta más valiosa durante el servicio. Se eligen los alérgenos de la
+// mesa (por comensal si hace falta) y la carta entera se reparte en cuatro
+// estados calculados con la matriz validada DISH_ACTIONS:
+//   apto       · ningún alérgeno elegido está en el plato
+//   cambio     · todos los que están se retiran (r:1); se enseña la comanda exacta
+//   consultar  · hay alérgeno en el plato pero la matriz no dice nada de él
+//   noapto     · alguno es estructural (r:0)
+//   pendiente  · cambio o noapto con la carta aún sin validar por cocina
+// La selección vive sólo en memoria: nada se guarda ni se manda a ningún sitio.
+// Los 14 alérgenos de la UE, en el orden del Reglamento 1169/2011.
+const _MESA_ALERGENOS = ['Gluten','Crustáceos','Huevos','Pescado','Cacahuete','Soja','Lácteos','Frutos secos','Apio','Mostaza','Granos de sésamo','Sulfitos','Altramuces','Moluscos'];
+const _MESA_ESTADOS = ['apto','cambio','consultar','pendiente','noapto'];
+const _MESA_MAX_COMENSALES = 8;
+let _mesa = { comensales:[[]], activo:0, noaptosAbiertos:false };
+
+// Clasificador puro: no toca el DOM ni ninguna variable global, para poder
+// probarlo con casos. `validado` es lo que diga _alergenosValidados().
+function _mesaEstado(dish, alergenos, actions, validado){
+  const al = (dish && Array.isArray(dish.allergens)) ? dish.allergens : [];
+  const presentes = (Array.isArray(alergenos) ? alergenos : []).filter(a => al.includes(a));
+  if(!presentes.length) return 'apto';
+  const acts = (actions && dish && actions[dish.id]) || {};
+  let consultar = false;
+  for(const a of presentes){
+    const act = acts[a];
+    if(!act || (act.r !== 0 && act.r !== 1)){ consultar = true; continue; }
+    // Lo estructural manda: con un solo r:0 el plato no vale para esa mesa.
+    if(act.r === 0) return validado ? 'noapto' : 'pendiente';
+  }
+  if(consultar) return 'consultar';
+  return validado ? 'cambio' : 'pendiente';
+}
+function _mesaUnion(){
+  const u = [];
+  for(const c of _mesa.comensales) for(const a of c) if(!u.includes(a)) u.push(a);
+  return u;
+}
+function _mesaQuien(a){
+  // A qué comensales afecta un alérgeno (sólo se enseña con más de uno).
+  if(_mesa.comensales.length < 2) return '';
+  const idx = []; _mesa.comensales.forEach((c, i) => { if(c.includes(a)) idx.push(i + 1); });
+  return idx.length ? 'C' + idx.join(', C') : '';
+}
+function _mesaToggle(a){
+  const c = _mesa.comensales[_mesa.activo];
+  const i = c.indexOf(a);
+  if(i === -1) c.push(a); else c.splice(i, 1);
+  _mesaPintar();
+}
+function _mesaComensal(i){ _mesa.activo = i; _mesaPintar(); }
+function _mesaAnadirComensal(){
+  if(_mesa.comensales.length >= _MESA_MAX_COMENSALES) return;
+  _mesa.comensales.push([]); _mesa.activo = _mesa.comensales.length - 1; _mesaPintar();
+}
+function _mesaQuitarComensal(i){
+  if(_mesa.comensales.length < 2) return;
+  _mesa.comensales.splice(i, 1);
+  if(_mesa.activo >= _mesa.comensales.length) _mesa.activo = _mesa.comensales.length - 1;
+  _mesaPintar();
+}
+function _mesaLimpiar(){ _mesa = { comensales:[[]], activo:0, noaptosAbiertos:false }; _mesaPintar(); }
+function _mesaPintar(){ if(typeof currentTab === 'undefined' || currentTab === 'mesa') renderMesa(); }
+
+// La tarjeta para abrir la Mesa desde otras pantallas (Hoy la usa).
+function _mesaCtaHTML(_en){
+  return `<button type="button" class="ri-cta ri-cta-mesa" style="margin:0 0 1rem" aria-label="${_en?'Table with allergies':'Mesa con alergias'}" onclick="showTab('mesa')">
+      <span class="ri-cta-icon" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9h18"/><path d="M5 9v10M19 9v10"/><path d="M7 14h10"/><path d="M12 4v5"/></svg></span>
+      <span class="ri-cta-text">
+        <span class="ri-cta-top">${_en?'Table with allergies':'Mesa con alergias'}</span>
+        <span class="ri-cta-sub">${_en?'Pick the allergens and see what they can eat, dish by dish':'Elige los alérgenos y mira qué pueden comer, plato a plato'}</span>
+      </span>
+    </button>`;
+}
+
+function _mesaIcono(estado){
+  const s = 'width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"';
+  if(estado === 'apto')      return `<svg ${s}><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>`;
+  if(estado === 'cambio')    return `<svg ${s}><path d="M4 7h13l-3-3M20 17H7l3 3"/></svg>`;
+  if(estado === 'noapto')    return `<svg ${s}><path d="M6 6l12 12M18 6L6 18"/></svg>`;
+  return `<svg ${s}><path d="M9.5 9a2.5 2.5 0 015 0c0 1.8-2.5 2.2-2.5 4"/><path d="M12 17.2v.1"/></svg>`;
+}
+function _mesaEstadoTxt(estado, _en){
+  return ({
+    apto:      _en ? 'Suitable' : 'Apto',
+    cambio:    _en ? 'Suitable with a change' : 'Apto con cambio',
+    consultar: _en ? 'Check with the kitchen' : 'Consultar con cocina',
+    pendiente: _en ? 'Pending menu validation' : 'Pendiente de validación',
+    noapto:    _en ? 'Not suitable' : 'No apto'
+  })[estado] || estado;
+}
+
+function renderMesa(){
+  const c = document.getElementById('appContent'); if(!c) return;
+  const _en = LANG === 'en';
+  const validado = (typeof _alergenosValidados !== 'function') || _alergenosValidados();
+  const acts = (typeof DISH_ACTIONS !== 'undefined' && DISH_ACTIONS) || {};
+  const union = _mesaUnion();
+  const varios = _mesa.comensales.length > 1;
+  const esc = s => (typeof escapeHtml === 'function' ? escapeHtml(String(s ?? '')) : String(s ?? ''));
+  const cat = x => (typeof catLocal === 'function' ? catLocal(x) : x);
+  const alLbl = a => (typeof allergenLocal === 'function' ? allergenLocal(a) : a);
+
+  // ── Clasificación ──
+  const porEstado = {}; _MESA_ESTADOS.forEach(e => porEstado[e] = []);
+  const ordenCat = [];
+  (DISHES || []).forEach(d => {
+    if(!ordenCat.includes(d.cat)) ordenCat.push(d.cat);
+    porEstado[_mesaEstado(d, union, acts, validado)].push(d);
+  });
+  const n = {}; _MESA_ESTADOS.forEach(e => n[e] = porEstado[e].length);
+
+  // ── Cabecera: comensales y chips ──
+  const comensalesHTML = `<div class="mesa-comensales" role="tablist" aria-label="${_en?'Guests':'Comensales'}">
+    ${_mesa.comensales.map((com, i) => `<button type="button" role="tab" aria-selected="${i===_mesa.activo}" class="mesa-com${i===_mesa.activo?' on':''}" onclick="_mesaComensal(${i})">
+        ${_en?'Guest':'Comensal'} ${i+1}${com.length?` <span class="mesa-com-n">${com.length}</span>`:''}
+      </button>`).join('')}
+    ${_mesa.comensales.length < _MESA_MAX_COMENSALES ? `<button type="button" class="mesa-com mesa-com-add" onclick="_mesaAnadirComensal()" aria-label="${_en?'Add guest':'Añadir comensal'}">+ ${_en?'Guest':'Comensal'}</button>` : ''}
+    ${varios ? `<button type="button" class="mesa-com mesa-com-del" onclick="_mesaQuitarComensal(${_mesa.activo})" aria-label="${_en?'Remove this guest':'Quitar este comensal'}">${_en?'Remove':'Quitar'}</button>` : ''}
+  </div>`;
+  const activoSel = _mesa.comensales[_mesa.activo] || [];
+  const chipsHTML = `<div class="mesa-chips" role="group" aria-label="${_en?'Allergens':'Alérgenos'}">
+    ${_MESA_ALERGENOS.map((a, i) => {
+      const on = activoSel.includes(a);
+      const otro = !on && union.includes(a);
+      return `<button type="button" class="q-chip mesa-chip${on?' on':''}${otro?' otro':''}" aria-pressed="${on}" onclick="_mesaToggle(_MESA_ALERGENOS[${i}])">${esc(alLbl(a))}${(otro && varios)?`<span class="mesa-chip-quien">${_mesaQuien(a)}</span>`:''}</button>`;
+    }).join('')}
+  </div>
+  <div class="mesa-acciones">
+    <button type="button" class="mesa-limpiar" onclick="_mesaLimpiar()" ${union.length?'':'disabled'}>${_en?'Clear':'Limpiar'}</button>
+    <span class="mesa-sel">${union.length
+      ? (varios ? `${_en?'Table':'Mesa'}: ${esc(union.map(alLbl).join(' · '))}` : esc(union.map(alLbl).join(' · ')))
+      : (_en ? 'Nothing selected yet' : 'Sin alérgenos elegidos')}</span>
+  </div>`;
+
+  // ── Aviso de carta sin validar (dato de seguridad) ──
+  const avisoHTML = validado ? '' : `<div class="mesa-aviso" role="alert">${_en
+    ? 'Menu pending kitchen validation: confirm everything with the kitchen before ordering.'
+    : 'Carta pendiente de validación por cocina: confirma todo antes de comandar.'}</div>`;
+
+  // ── Contadores ──
+  const cnt = [];
+  cnt.push(`<span class="mesa-cnt apto">${n.apto} ${_en?'suitable':(n.apto===1?'apto':'aptos')}</span>`);
+  if(n.cambio)    cnt.push(`<span class="mesa-cnt cambio">${n.cambio} ${_en?'with a change':'con cambio'}</span>`);
+  if(n.consultar) cnt.push(`<span class="mesa-cnt consultar">${n.consultar} ${_en?'to check':'consultar'}</span>`);
+  if(n.pendiente) cnt.push(`<span class="mesa-cnt pendiente">${n.pendiente} ${_en?'pending':'pendientes'}</span>`);
+  if(n.noapto)    cnt.push(`<span class="mesa-cnt noapto">${n.noapto} ${_en?'not suitable':(n.noapto===1?'no apto':'no aptos')}</span>`);
+  const contadoresHTML = `<div class="mesa-contadores" aria-live="polite">${cnt.join('<i>·</i>')}</div>`;
+
+  // ── Tarjetas ──
+  const detalleAl = (d, estado) => {
+    if(!union.length) return '';
+    const dacts = acts[d.id] || {};
+    return union.filter(a => (d.allergens||[]).includes(a)).map(a => {
+      const act = dacts[a];
+      const quien = varios ? _mesaQuien(a) : '';
+      const who = quien ? `<small>${quien}</small>` : '';
+      let cls = 'consultar', txt = _en ? 'check with the kitchen' : 'consultar con cocina';
+      if(act && (act.r === 1 || act.r === 0) && !validado){
+        const cmd = act.r === 1 ? (_en ? (act.c_en || act.c) : act.c) : '';
+        cls = 'pendiente';
+        txt = (_en ? 'pending menu validation' : 'pendiente de validación de la carta') + (cmd ? ` · ${_en?'provisional order, not validated':'comanda provisional, sin validar'}: <em>${esc(cmd)}</em>` : '');
+      } else if(act && act.r === 1){
+        const cmd = _en ? (act.c_en || act.c) : act.c;
+        cls = 'cambio';
+        txt = cmd ? `${_en?'order':'comandar'}: <em>${esc(cmd)}</em>` : (_en ? 'adaptable' : 'se adapta');
+      } else if(act && act.r === 0){
+        cls = 'noapto'; txt = _en ? 'structural, not suitable' : 'estructural, no apto';
+      }
+      return `<div class="mesa-al ${cls}"><b>${esc(alLbl(a))}${who}</b><span>${txt}</span></div>`;
+    }).join('');
+  };
+  const tarjeta = (d, estado) => {
+    const dd = getDish(d);
+    const foto = (typeof dishPhotoSrc === 'function') ? dishPhotoSrc(d.id) : null;
+    return `<button type="button" class="mesa-plato ${estado}" onclick="_emplOpen(${d.id})" aria-label="${esc(dd.name)} · ${_mesaEstadoTxt(estado,_en)}">
+      ${foto ? `<img ${typeof SRC!=='undefined'?SRC:'src'}="${foto}" alt="" loading="lazy">` : `<span class="mesa-plato-nofoto" aria-hidden="true"></span>`}
+      <span class="mesa-plato-txt">
+        <span class="mesa-plato-nombre">${esc(dd.name)}</span>
+        <span class="mesa-plato-estado">${_mesaIcono(estado)} ${_mesaEstadoTxt(estado,_en)}</span>
+        ${detalleAl(d, estado)}
+      </span>
+    </button>`;
+  };
+  const grupo = (estado) => {
+    const lista = porEstado[estado]; if(!lista.length) return '';
+    const porCat = ordenCat.map(k => [k, lista.filter(d => d.cat === k)]).filter(x => x[1].length);
+    const cuerpo = porCat.map(([k, ds]) => `<div class="mesa-cat">${esc(cat(k))}</div>${ds.map(d => tarjeta(d, estado)).join('')}`).join('');
+    const plegable = estado === 'noapto' && lista.length > 5 && !_mesa.noaptosAbiertos;
+    return `<section class="mesa-grupo ${estado}">
+      <h3 class="mesa-grupo-t">${_mesaIcono(estado)} ${_mesaEstadoTxt(estado,_en)} <span>${lista.length}</span></h3>
+      ${plegable
+        ? `<button type="button" class="mesa-ver" onclick="_mesa.noaptosAbiertos=true;_mesaPintar()">${_en?`Show the ${lista.length} unsuitable dishes`:`Ver los ${lista.length} platos no aptos`}</button>`
+        : cuerpo}
+    </section>`;
+  };
+
+  const ayudaHTML = union.length ? '' : `<p class="mesa-ayuda">${_en
+    ? 'Tap the allergens of the table. With more than one guest, add a guest and pick theirs: the list below takes everyone into account.'
+    : 'Toca los alérgenos de la mesa. Si hay más de un comensal, añade uno y marca los suyos: la lista de abajo tiene en cuenta a todos.'}</p>`;
+
+  c.innerHTML = `<div class="sup-wrap mesa-wrap">
+    <div class="mesa-head">
+      <div class="mesa-eyebrow">${_en?'Service':'Servicio'}</div>
+      <h2 class="mesa-titulo">${_en?'Table with allergies':'Mesa con alergias'}</h2>
+    </div>
+    ${comensalesHTML}
+    ${chipsHTML}
+    ${avisoHTML}
+    ${ayudaHTML}
+    ${contadoresHTML}
+    ${_MESA_ESTADOS.map(grupo).join('')}
+    <p class="mesa-pie">${_en?'The kitchen always has the last word.':'La última palabra la tiene cocina.'}</p>
+  </div>`;
+}
+
 function renderQuesos(){
   const c = document.getElementById('appContent');
   const _en = LANG==='en';
@@ -14362,7 +14579,8 @@ const _TITULOS = {
   supervisor:['Panel de supervisor','Supervisor panel'],
   protocolo:['Auditoría LQA','LQA audit'],
   lqa:['Auditoría LQA','LQA audit'], vinos:['Carta de vinos','Wine list'],
-  quesos:['Carro de quesos','Cheese trolley'], sala:['Sala y procedimientos','Floor procedures']
+  quesos:['Carro de quesos','Cheese trolley'], sala:['Sala y procedimientos','Floor procedures'],
+  mesa:['Mesa con alergias','Table with allergies']
 };
 function _ponerTitulo(tab){
   const h = document.getElementById('tituloPantalla');
@@ -14387,7 +14605,7 @@ const UX2_SECCION = {
   // Saber · consulta. `aprender` aterriza en la guía de emplatado, que es lo
   // más mirado en servicio; vinos, quesos, sala y la auditoría LQA son
   // consulta igualmente y siguen alcanzándose por el menú hasta UX-07.
-  aprender:'saber', emplatado:'saber', tecnicas:'saber',
+  mesa:'saber', aprender:'saber', emplatado:'saber', tecnicas:'saber',
   actualidad:'saber', vinos:'saber', quesos:'saber', sala:'saber', protocolo:'saber', lqa:'saber',
   // Practicar · entrenar. `exam` abre la PREPARACIÓN del examen, no un examen.
   // `repaso` es explorar la carta: es consulta, va en Saber.
@@ -14402,7 +14620,7 @@ const UX2_SECCION = {
 // Sin 'videos' ni 'chat' desde oct 2026, ni 'horarios' desde el 12 oct 2026
 // (retirados por el propietario). Un aviso antiguo que abra #tab=chat o
 // #tab=horarios cae en INICIO por la regla de abajo.
-const TAB_ROUTES = ['dashboard','practicar','aprender','flashcards','exam','repaso','tecnicas','actualidad','smart','emplatado','stats','logros','txoko','ranking','supervisor','protocolo','lqa','vinos','quesos','sala'];
+const TAB_ROUTES = ['dashboard','mesa','practicar','aprender','flashcards','exam','repaso','tecnicas','actualidad','smart','emplatado','stats','logros','txoko','ranking','supervisor','protocolo','lqa','vinos','quesos','sala'];
 
 function showTab(tab, instant){
   // ── Pestaña desconocida → INICIO ──────────────────────────────────────
@@ -14461,7 +14679,7 @@ function showTab(tab, instant){
   _ux2Sync(tab);
   _saberSync(tab);
   const c=document.getElementById('appContent');
-  const renderMap = {practicar:renderPracticar,quesos:renderQuesos,sala:renderSala,dashboard:renderDashboard,aprender:renderAprender,flashcards:renderAprender,exam:renderExam,repaso:renderAprender,tecnicas:renderAprender,actualidad:renderAprender,smart:renderAprender,emplatado:renderAprender,stats:renderRankingHub,logros:renderRankingHub,txoko:renderTxoko,ranking:renderRankingHub,supervisor:renderSupervisor,protocolo:renderLqa,lqa:renderLqa,vinos:renderVinos};
+  const renderMap = {practicar:renderPracticar,mesa:renderMesa,quesos:renderQuesos,sala:renderSala,dashboard:renderDashboard,aprender:renderAprender,flashcards:renderAprender,exam:renderExam,repaso:renderAprender,tecnicas:renderAprender,actualidad:renderAprender,smart:renderAprender,emplatado:renderAprender,stats:renderRankingHub,logros:renderRankingHub,txoko:renderTxoko,ranking:renderRankingHub,supervisor:renderSupervisor,protocolo:renderLqa,lqa:renderLqa,vinos:renderVinos};
   const _doRender = ()=>{
     c.innerHTML='';
     c.style.transition='none';
@@ -15261,6 +15479,8 @@ function _saberChipsBar(tab){
   const _en = LANG==='en';
   const apr = id => `_subTab.aprender='${id}';showTab('${id}')`;
   const items = [
+    // Mesa primero: es lo que más se consulta con el cliente delante.
+    ['mesa', _en?'Table':'Mesa', "showTab('mesa')"],
     ['emplatado','Plating guide', apr('emplatado')],
     // «La Carta es muy confuso» (propietario, jul 2026): se llama Repaso.
     ['repaso', _en?'Review':'Repaso', apr('repaso')],
