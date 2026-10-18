@@ -10197,6 +10197,36 @@ body, .screen{ min-height: 100vh; min-height: 100dvh; }
 .sup-td-n{ color: var(--parchment); font-weight:600; position:sticky; left:0;
   background: linear-gradient(90deg,#f7f2e7 88%,rgba(247,242,231,0)); }
 .sup-td-d{ color: var(--parch4); font-size:.62rem; }
+/* Inactivos (60+ días sin entrar): al final, en gris, tras una fila de corte. */
+.sup-tabla tr.sup-tr-sep td{ font-family:'DM Mono',monospace; font-size:.55rem; letter-spacing:.08em;
+  text-transform: uppercase; color: var(--parch4); background: rgba(28,42,34,.04);
+  border-top:2px solid var(--line2); padding:.4rem .55rem; cursor:default; }
+.sup-tabla tr.sup-tr-inact td{ color: var(--parch4); }
+.sup-tabla tr.sup-tr-inact td.sup-td-n{ color: var(--parch3); font-weight:500; }
+.sup-emp-card.sup-emp-inactivo{ opacity:.6; }
+.sup-emp-card.sup-emp-inactivo[open]{ opacity:1; }
+/* Bloque plegado de inactivos: nombres y «hace Xd». */
+.sup-inactivos summary .sup-acc-t{ flex:1; color: var(--parch3); font-weight:600; }
+.sup-inact-l{ display:flex; flex-wrap:wrap; gap:.3rem; padding:.2rem 0 .1rem; }
+.sup-inact-p{ font-family:'Quicksand',sans-serif; font-size:.74rem; color: var(--parch3);
+  padding:.25rem .55rem; background: rgba(28,42,34,.04); border:1px solid var(--line); border-radius:20px; }
+.sup-inact-d{ font-family:'DM Mono',monospace; font-size:.58rem; opacity:.75; }
+/* Media-titular sin muestra suficiente. */
+.sup-kpi-sd{ font-family:'Quicksand',sans-serif; font-size:.78rem; font-weight:700; line-height:1.15; display:block; color: var(--parch3); }
+.sup-hl-pill.sup-hl-sd b{ font-size:.72rem; line-height:1.15; text-align:center; }
+/* Interruptor «cuenta de pruebas» (Cuentas). */
+.sup-sw{ display:inline-flex; align-items:center; gap:.35rem; flex:0 0 auto; cursor:pointer; min-height:44px; }
+.sup-sw input{ position:absolute; opacity:0; width:1px; height:1px; }
+.sup-sw-t{ width:34px; height:20px; border-radius:20px; background: rgba(28,42,34,.18); position:relative; transition: background .2s; flex-shrink:0; }
+.sup-sw-t::after{ content:''; position:absolute; top:2px; left:2px; width:16px; height:16px; border-radius:50%; background:#fff; box-shadow:0 1px 3px rgba(0,0,0,.25); transition: transform .2s; }
+.sup-sw input:checked + .sup-sw-t{ background:#7c6fa8; }
+.sup-sw input:checked + .sup-sw-t::after{ transform: translateX(14px); }
+.sup-sw input:focus-visible + .sup-sw-t{ outline:2px solid var(--gold); outline-offset:2px; }
+.sup-sw input:disabled + .sup-sw-t{ opacity:.5; }
+.sup-sw-l{ font-family:'DM Mono',monospace; font-size:.55rem; letter-spacing:.06em; text-transform: uppercase; color: var(--parch3); }
+.sup-row-pruebas{ background: rgba(124,111,168,.06); }
+.sup-tag-p{ background: rgba(124,111,168,.1); border-color: rgba(124,111,168,.25); }
+@media (prefers-reduced-motion:reduce){ .sup-sw-t, .sup-sw-t::after{ transition:none } }
 
 /* ── Examen de sala ──────────────────────────────────────────────────────
    Las preguntas salen del manual del restaurante, así que la pantalla vive

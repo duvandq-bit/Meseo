@@ -52,7 +52,7 @@
 <meta property="og:description" content="Formación de equipos de sala: carta, alérgenos, vinos, exámenes y juegos de repaso.">
 <meta property="og:url" content="https://meseo.es/">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"Meseo","url":"https://meseo.es/"}</script>
-<meta name="app-version" content="7.506">
+<meta name="app-version" content="7.507">
 <meta name="app-build" content="May 2026">
 <meta name="theme-color" content="#1c2a22">
 <!-- ═══ PWA ═══ -->
@@ -2803,7 +2803,7 @@ const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><p
 const SRC = 'src';
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='7.506';  // sincronizada con sw.js VERSION (guard de CI)
+const APP_VERSION='7.507';  // sincronizada con sw.js VERSION (guard de CI)
 const APP_BUILD='Jul 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;
@@ -5256,6 +5256,8 @@ async function supaFetchAllEmployees() {
       achievements: (() => { try { const a=JSON.parse(r.achievements||'[]'); return Array.isArray(a)?a:[]; } catch(e){ return []; } })(),
       extras: (() => { try { const x=JSON.parse(r.extras||'{}'); return (x&&typeof x==='object')?x:{}; } catch(e){ return {}; } })(),
       lastLoginTs: r.last_login || null,
+      // Cuenta de pruebas (extras.pb): fuera de las vistas del panel y del ranking.
+      pruebas: (() => { try { const x=JSON.parse(r.extras||'{}'); return !!(x&&x.pb&&x.pb.v); } catch(e){ return false; } })(),
       // last_active_at se escribe SIEMPRE al entrar (PATCH ligero, sin el gate
       // de XP ni el payload pesado de supaUpsertEmployee) → es la señal más
       // fiable de "hoy ha usado la app". last_login puede quedarse atrás si el
@@ -11308,6 +11310,10 @@ function _extrasCompose(emp){
     es: emp.examSeen||{},   // intentos por plato → tasa de fallo real del supervisor
     ab: emp.allergenBest||0, // mejor % del Simulacro de alérgenos → seguridad del equipo
     ps: emp.paseStats||0,   // Pase de cocina → quién acierta, quién falla y en qué platos
+    // Cuenta de pruebas (la marca el propietario en el panel): interruptor
+    // con fecha, para que gane el último cambio y no el máximo. Sin fecha no
+    // se manda nada: esta ficha no opina.
+    ...(emp.pruebasTs ? { pb:{ v: emp.pruebas ? 1 : 0, t: emp.pruebasTs } } : {}),
   });
 }
 function _extrasMergeInto(emp, extrasStr){
@@ -11339,6 +11345,10 @@ function _extrasMergeInto(emp, extrasStr){
   }
   // Mejor % del Simulacro de alérgenos: el máximo entre local y nube.
   if(typeof x.ab==='number') emp.allergenBest=Math.max(emp.allergenBest||0, x.ab||0);
+  // Cuenta de pruebas: manda el cambio más reciente, venga de donde venga.
+  if(x.pb && x.pb.t && String(x.pb.t) > String(emp.pruebasTs||'')){
+    emp.pruebas = !!x.pb.v; emp.pruebasTs = String(x.pb.t);
+  }
   // Pase de cocina: contadores al máximo (son monótonos) y los fallos por
   // plato sumados al mayor de los dos lados, que es lo que el supervisor mira.
   if(x.ps && typeof x.ps==='object'){
@@ -24990,8 +25000,11 @@ function renderRanking(){
       });
     }
 
+    // Las cuentas de pruebas no compiten (las marca el propietario en el
+    // panel). Quien la lleva lo ve en una nota; el resto no nota nada.
+    const _soyPruebas = _supEsPruebas(allEmps[currentUser]);
     const sorted = Object.values(allEmps)
-      .filter(e => e.name)
+      .filter(e => e.name && !_supEsPruebas(e))
       .sort((a,b) => (b.xp||0) - (a.xp||0) || a.name.localeCompare(b.name));
 
     if(!sorted.length){
@@ -25053,9 +25066,10 @@ function renderRanking(){
     // Sólo fichas LOCALES del restaurante activo (_esDeMiVenue), igual que la
     // posición de liga de _pddAsyncFill: si no, revisando r2 salían en su liga
     // los camareros de Txoko que este móvil tenía en caché.
-    Object.keys(DB.employees).forEach(n=>{ const e=DB.employees[n]; if(e && _esDeMiVenue(e) && e.wkKey===_wkNow && (e.wkXP||0)>0) weekMap[n]=e.wkXP||0; });
+    Object.keys(DB.employees).forEach(n=>{ const e=DB.employees[n]; if(e && _esDeMiVenue(e) && !_supEsPruebas(e) && e.wkKey===_wkNow && (e.wkXP||0)>0) weekMap[n]=e.wkXP||0; });
     (remoteEmps||[]).forEach(e=>{
       const wk=e.extras && e.extras.wk;
+      if(_supEsPruebas(e)) return;
       if(wk && wk.k===_wkNow && (wk.xp||0)>0) weekMap[e.name]=Math.max(weekMap[e.name]||0, wk.xp||0);
     });
     const _wkSorted=Object.keys(weekMap).sort((a,b)=>weekMap[b]-weekMap[a]||a.localeCompare(b));
@@ -25076,6 +25090,7 @@ function renderRanking(){
     const _rc = document.getElementById('rankingContent');
     _rc.removeAttribute('style');
     _rc.innerHTML = `
+      ${_soyPruebas ? `<div class="sup-at-pie" style="text-align:center;margin:0 0 .8rem">${LANG==='en'?'Your account is a test account: it does not appear in the rankings.':'Tu cuenta es de pruebas: no sale en los rankings.'}</div>` : ''}
       ${leagueHTML}
       <div class="tunic-divider"><span>${LANG==='en'?'By total XP':'Por XP total'}</span></div>
       ${rows}`;
@@ -25375,20 +25390,22 @@ function _supLocalDay(iso){
 }
 // Cabecera de KPIs del panel: cuatro métricas de un vistazo con color por
 // estado. Usa datos ya sincronizados (Fase 1): precisión de temas y allergenBest.
-function _supKpiBand(allEmps, empNames){
+function _supKpiBand(allEmps, activos, inactivos){
   const _en = LANG==='en';
-  const total = empNames.length;
+  activos = activos || []; inactivos = inactivos || [];
+  const total = activos.length + inactivos.length;
   // Conectados hoy (misma señal fiable que el listado: login o actividad).
-  const _seen = n => { const a=allEmps[n].lastLoginTs, b=allEmps[n].lastActiveAt; return (a&&b)?(a>b?a:b):(a||b||''); };
+  const _seen = n => _supVisto(allEmps[n]);
   const today = todayStr();
-  const connected = empNames.filter(n => { const lt=_seen(n); return lt && _supLocalDay(lt)===today; }).length;
-  // Precisión media del equipo: aciertos/total sobre todos los topicScores.
-  let corr=0, tot=0;
-  empNames.forEach(n => Object.values(allEmps[n].topicScores||{}).forEach(v => { corr+=v.correct||0; tot+=v.total||0; }));
-  const acc = tot ? Math.round(corr/tot*100) : null;
-  // Alertas de seguridad: cuántos NO están seguros con alérgenos (<80% en el
-  // Simulacro, incluidos los que no lo han hecho). Es la métrica crítica.
-  const risk = empNames.filter(n => (allEmps[n].allergenBest||0) < 80).length;
+  const connected = activos.filter(n => { const lt=_seen(n); return lt && _supLocalDay(lt)===today; }).length;
+  // Precisión media del equipo: la media de las precisiones individuales de
+  // los ACTIVOS con respuestas. Con menos de 3 personas con dato no hay media.
+  const precs = activos.map(n => { let c=0,t=0; Object.values(allEmps[n].topicScores||{}).forEach(v => { c+=v.correct||0; t+=v.total||0; }); return t ? Math.round(c/t*100) : null; });
+  const accM = _supMedia(precs);
+  const acc = accM.ok ? accM.media : null;
+  // Alertas de seguridad: cuántos ACTIVOS no están seguros con alérgenos (<80%
+  // en el Simulacro, incluidos los que no lo han hecho). Es la métrica crítica.
+  const risk = activos.filter(n => (allEmps[n].allergenBest||0) < 80).length;
 
   const accCls = acc===null?'info':acc>=80?'good':acc>=50?'warn':'bad';
   const conCls = total===0?'info':connected>0?'good':'bad';
@@ -25407,9 +25424,9 @@ function _supKpiBand(allEmps, empNames){
   </div>`;
 
   return `<div class="sup-kpis">
-    ${card('info', IC.team, total, _en?'Team':'Equipo', _en?'total staff':'personas en total')}
-    ${card(conCls, IC.live, `${connected}<small>/${total}</small>`, _en?'Connected today':'Conectados hoy', connected>0?(_en?'active right now':'activos hoy'):(_en?'nobody yet':'nadie aún'))}
-    ${card(accCls, IC.acc, acc===null?'—':`${acc}<small>%</small>`, _en?'Avg accuracy':'Precisión media', acc===null?(_en?'no exams yet':'sin exámenes'):(_en?'team knowledge':'conocimiento del equipo'))}
+    ${card('info', IC.team, total, _en?'Team':'Equipo', inactivos.length ? (_en?`${activos.length} active · ${inactivos.length} inactive`:`${activos.length} activos · ${inactivos.length} inactivos`) : (_en?'total staff':'personas en total'))}
+    ${card(conCls, IC.live, `${connected}<small>/${activos.length}</small>`, _en?'Connected today':'Conectados hoy', connected>0?(_en?'of the active team':'del equipo activo'):(_en?'nobody yet':'nadie aún'))}
+    ${card(accCls, IC.acc, acc===null?`<span class="sup-kpi-sd">${_en?'Not enough data':'Sin datos suficientes'}</span>`:`${acc}<small>%</small>`, _en?'Avg accuracy':'Precisión media', acc===null?_supSinDatosTxt(accM.n):(_en?'team knowledge':'conocimiento del equipo'))}
     ${card(riskCls, IC.shield, risk, _en?'Safety alerts':'Alertas seguridad', risk===0?(_en?'all allergen-safe':'todos seguros'):(_en?'allergens < 80%':'alérgenos < 80%'))}
   </div>`;
 }
@@ -25448,10 +25465,16 @@ function renderSupDashboard(silent){
         sessions: (e.sessions||[]).length >= (local.sessions||[]).length
           ? e.sessions : (local.sessions||[])};
     });
-    const empNames = Object.keys(allEmps).filter(n => n !== '');
+    // Todos los nombres del restaurante (para borrar o avisar) y el EQUIPO
+    // que cuenta en el panel: sin administración ni cuentas de pruebas. Lo
+    // decide _supEquipo, que es la única puerta; cada sección la usa.
+    const todosNombres = Object.keys(allEmps).filter(n => n !== '');
+    const empNames = _supEquipo(allEmps, todosNombres);
+    const { activos, inactivos } = _supDividir(allEmps, empNames);
     // Expose globally so supervisor action buttons can access them
     window._supAllEmps = allEmps;
     window._supEmpNames = empNames;
+    window._supTodos = todosNombres;
     // El refresco EN VIVO destruía y recreaba TODO el DOM aunque nada
     // hubiera cambiado — en iOS eso se comía los toques (reporte del
     // propietario: "los botones no funcionan" con el equipo activo, un
@@ -25461,16 +25484,23 @@ function renderSupDashboard(silent){
       const e = allEmps[n];
       return [n, e.xp||0, e.streak||0, e.lastStudyDay||'', (e.sessions||[]).length, e.lastLoginTs||'', e.lastActiveAt||'',
         Object.keys(e.knownDishes||{}).length, JSON.stringify(e.topicScores||{})];
-    }));
+    }).concat([todosNombres.map(n => _supEsPruebas(allEmps[n]) ? n : '').filter(Boolean)]));
     if(silent && window._supLastHash === _hash){ _supStampLive(); return; }
     window._supLastHash = _hash;
     if(empNames.length === 0){
-      document.getElementById('appContent').innerHTML=`<div class="sup-wrap"><div style="text-align:center;padding:2rem;color:var(--parch3)">${LANG==='en'?'No employees yet.':'Sin empleados todavía.'}</div></div>`;
+      // Sin equipo que cuente. Si hay cuentas de pruebas o de administración,
+      // se dice: «sin empleados» con cinco fichas en la base desconcierta.
+      const ocultas = todosNombres.length;
+      document.getElementById('appContent').innerHTML=`<div class="sup-wrap"><div style="text-align:center;padding:2rem;color:var(--parch3)">${LANG==='en'?'No employees yet.':'Sin empleados todavía.'}${ocultas?`<div style="font-size:.72rem;margin-top:.5rem">${LANG==='en'?`${ocultas} admin or test ${ocultas===1?'account':'accounts'} not counted.`:`${ocultas} ${ocultas===1?'cuenta':'cuentas'} de administración o de pruebas, que no cuentan.`}</div>`:''}
+        <button onclick="_supTool('cuentas')" class="btn-secondary" style="margin-top:1rem">${LANG==='en'?'Accounts':'Cuentas'}</button></div></div>`;
       return;
     }
     const TOPIC_LABELS={allergens:LANG==='en'?'Allergens':'Alérgenos',ingredients:LANG==='en'?'Ingredients':'Ingredientes',history:LANG==='en'?'Story':'Historia'};
-    const cards=empNames.sort((a,b)=>(allEmps[b].xp||0)-(allEmps[a].xp||0)).map(name=>{
+    const _porXp=(a,b)=>(allEmps[b].xp||0)-(allEmps[a].xp||0);
+    const _ordenFichas=activos.slice().sort(_porXp).concat(inactivos.slice().sort(_porXp));
+    const cards=_ordenFichas.map(name=>{
       const emp=allEmps[name];
+      const _inactivo=!_supActivo(emp);
       const sessions=(emp.sessions||[]);
       const xp=emp.xp||0;
       const lvl=getLevelInfo(xp);
@@ -25501,7 +25531,7 @@ function renderSupDashboard(silent){
           ? `${Math.floor(totalTimeSec/60)}m`
           : totalTimeSec > 0 ? `${totalTimeSec}s` : '—';
       const isCloud = !DB.employees[name];
-      return `<details class="sup-emp-card"${(window._supOpenEmps&&window._supOpenEmps.has(name))?' open':''} data-emp="${escapeHTML(name)}" ontoggle="_supEmpToggle(this)">
+      return `<details class="sup-emp-card${_inactivo?' sup-emp-inactivo':''}"${(window._supOpenEmps&&window._supOpenEmps.has(name))?' open':''} data-emp="${escapeHTML(name)}" ontoggle="_supEmpToggle(this)">
         <summary class="sup-emp-header">
           <div class="sup-emp-avatar">${renderSmallAvatar(name, 36)}</div>
           <div style="flex:1;min-width:0">
@@ -25600,7 +25630,7 @@ function renderSupDashboard(silent){
           <button role="tab" aria-selected="false" data-sec="acciones" onclick="_supSetSection('acciones')">${LANG==='en'?'Actions':'Acciones'}</button>
         </div>
         <div class="sup-sec" role="tabpanel" data-sec="hoy">
-        ${_supKpiBand(allEmps, empNames)}
+        ${_supKpiBand(allEmps, activos, inactivos)}
         <!-- «¿Quién necesita mi atención esta semana?» (petición del
              propietario, sep 2026): lo que convierte el panel en una
              herramienta de gestión en vez de una pantalla de estadísticas.
@@ -25618,19 +25648,21 @@ function renderSupDashboard(silent){
           const _supSeen = n => { const a=allEmps[n].lastLoginTs, b=allEmps[n].lastActiveAt;
             return (a && b) ? (a>b?a:b) : (a||b||''); };
           const todayDate = todayStr();
-          const connectedToday = empNames.filter(n => {
+          // Sólo los ACTIVOS: los que llevan más de 60 días sin entrar van en
+          // su propio bloque, debajo, no en la lista de «sin conectarse hoy».
+          const connectedToday = activos.filter(n => {
             const lt = _supSeen(n);
             if(!lt) return false;
             return _supLocalDay(lt) === todayDate;
           }).sort((a,b) => _supSeen(b).localeCompare(_supSeen(a)));
-          const notConnected = empNames.filter(n => {
+          const notConnected = activos.filter(n => {
             const lt = _supSeen(n);
             return !lt || _supLocalDay(lt) !== todayDate;
           });
           return `<div style="background:linear-gradient(155deg,#faf6ee,#f0e8d8);border:1px solid var(--line2);border-radius:var(--r);padding:1rem;margin-bottom:.75rem">
             <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.7rem">
               <div style="font-family:var(--font-mono);font-size:var(--fs-1);color:var(--gold);letter-spacing:.12em;text-transform:uppercase">${LANG==='en'?'Connected Today':'Conectados Hoy'}</div>
-              <div style="font-family:var(--font-mono);font-size:var(--fs-2);font-weight:700;color:${connectedToday.length>0?'var(--sage)':'var(--rose)'}">${connectedToday.length} / ${empNames.length}</div>
+              <div style="font-family:var(--font-mono);font-size:var(--fs-2);font-weight:700;color:${connectedToday.length>0?'var(--sage)':'var(--rose)'}">${connectedToday.length} / ${activos.length}</div>
             </div>
             ${connectedToday.length > 0 ? `<div style="display:flex;flex-direction:column;gap:.4rem;margin-bottom:.6rem">
               ${connectedToday.map(n => {
@@ -25665,7 +25697,7 @@ function renderSupDashboard(silent){
                 }).join('')}
               </div>
             </div>` : ''}
-          </div>`;
+          </div>` + _supInactivosHTML(allEmps, inactivos);
         })()}
         </div>
         <!-- La antigua sección Análisis (actividad 14 días, tendencia,
@@ -25715,7 +25747,7 @@ function renderSupDashboard(silent){
               <span style="font-size:1.05rem">🛠</span>
               <span style="flex:1;text-align:left;font-size:.72rem;font-weight:600;color:var(--parchment)">${LANG==='en'?'Accounts':'Cuentas'}<br><span style="font-size:.58rem;font-weight:400;color:var(--parch3)">${LANG==='en'?'managers and PIN':'managers y PIN'}</span></span>
             </button>
-            <button onclick="renderSupDeleteEmployee(_supEmpNames)" style="display:flex;align-items:center;gap:.65rem;padding:.75rem .85rem;background:linear-gradient(155deg,rgba(196,112,104,.04),rgba(196,112,104,.01));border:1.5px solid rgba(196,112,104,.2);border-left:3px solid #c47068;border-radius:12px;font-family:'Quicksand',sans-serif;cursor:pointer;transition:all .2s;position:relative;overflow:hidden">
+            <button onclick="renderSupDeleteEmployee(window._supTodos||_supEmpNames)" style="display:flex;align-items:center;gap:.65rem;padding:.75rem .85rem;background:linear-gradient(155deg,rgba(196,112,104,.04),rgba(196,112,104,.01));border:1.5px solid rgba(196,112,104,.2);border-left:3px solid #c47068;border-radius:12px;font-family:'Quicksand',sans-serif;cursor:pointer;transition:all .2s;position:relative;overflow:hidden">
               <span style="width:32px;height:32px;display:flex;align-items:center;justify-content:center;clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);background:linear-gradient(135deg,#c47068,#a85848);flex-shrink:0"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/><path d="M10 11v6M14 11v6"/></svg></span>
               <span style="font-size:.72rem;font-weight:600;color:var(--rose)">${LANG==='en'?'Delete profile':'Eliminar perfil'}</span>
             </button>
@@ -25731,7 +25763,7 @@ function renderSupDashboard(silent){
     _supConnectLive();
     _supStampLive();
     _supApplySection();
-    _supPintarHistorial(allEmps, empNames);
+    _supPintarHistorial(allEmps, activos, inactivos);
   });
 }
 
@@ -26166,6 +26198,108 @@ const _SUP_JUEGOS = ['txoko', 'elturno'];
 const _SUP_APROBADO = 80;   // el mismo listón que ya usa el aviso de alérgenos
 const _SUP_DIAS_RIESGO = 14;
 
+// ═══ QUIÉN CUENTA EN EL PANEL ══════════════════════════════════════════════
+// Revisado con la cuenta real de Txoko (28 fichas, oct 2026): «27 de 28
+// necesitan atención», cuentas de administración en las listas y un índice
+// LQA del 90 % calculado sobre una sola persona. El panel daba mala señal
+// porque contaba a todo el mundo. UNA función decide quién cuenta y todas las
+// secciones pasan por ella: filtrando a mano en cada sitio, un día una lista
+// enseña a la cuenta de administración y la de al lado no.
+//
+//   · Administración (role 'admin') → fuera de todo.
+//   · Cuenta de pruebas (la marca el propietario en Cuentas) → fuera de todo,
+//     pero usa la app con normalidad.
+//   · Inactivo = más de 60 días sin abrir la app, o nunca. No se guarda: se
+//     deriva de la fecha cada vez, así que en cuanto entra vuelve a ser activo.
+//   · Una media-titular con menos de 3 personas no es una media: «sin datos
+//     suficientes».
+const _SUP_DIAS_INACTIVO = 60;
+const _SUP_MIN_MEDIA = 3;
+// La marca de pruebas viaja en extras.pb {v, t}: con fecha, para que en
+// cualquier fusión gane quien la cambió más tarde (es un interruptor, no un
+// contador que se pueda llevar al máximo).
+function _supEsPruebas(e){
+  if(!e) return false;
+  if(typeof e.pruebas === 'boolean') return e.pruebas;
+  const pb = e.extras && e.extras.pb;
+  return !!(pb && pb.v);
+}
+function _supCuenta(e, nombre){
+  if(!e) return false;
+  if(e.role === 'admin') return false;
+  if(nombre && typeof _esAdmin === 'function' && _esAdmin(nombre)) return false;
+  if(_supEsPruebas(e)) return false;
+  return true;
+}
+// Las fichas del restaurante que cuentan en el panel (sin administración ni
+// pruebas). Nombres, en el mismo orden en que llegan.
+function _supEquipo(allEmps, empNames){
+  const names = empNames || Object.keys(allEmps || {});
+  return names.filter(n => n && _supCuenta(allEmps[n], n));
+}
+// Última señal de vida: login o actividad, la más reciente de las dos.
+function _supVisto(e){
+  if(!e) return '';
+  const a = e.lastLoginTs || '', b = e.lastActiveAt || '';
+  return a > b ? a : b;
+}
+function _supActivo(e, ahora){
+  const v = _supVisto(e);
+  const t = v ? Date.parse(v) : NaN;
+  if(isNaN(t)) return false;
+  return ((ahora == null ? Date.now() : ahora) - t) < _SUP_DIAS_INACTIVO * 86400000;
+}
+function _supDividir(allEmps, empNames, ahora){
+  const activos = [], inactivos = [];
+  for(const n of _supEquipo(allEmps, empNames)) (_supActivo(allEmps[n], ahora) ? activos : inactivos).push(n);
+  return { activos, inactivos };
+}
+function _supMedia(valores){
+  const v = (valores || []).filter(x => typeof x === 'number' && !isNaN(x));
+  const n = v.length;
+  if(n < _SUP_MIN_MEDIA) return { ok:false, n, falta:_SUP_MIN_MEDIA, media:null };
+  return { ok:true, n, falta:0, media:Math.round(v.reduce((a,b)=>a+b,0)/n) };
+}
+// Índice LQA del equipo: la media de las notas de preparación, o «sin datos»
+// con menos de 3 personas evaluadas.
+function _supLqaIndice(notas){ return _supMedia(notas); }
+function _supSinDatosTxt(n){
+  const _en = (typeof LANG !== 'undefined' && LANG === 'en');
+  return _en
+    ? `${n} ${n===1?'person':'people'} evaluated · ${_SUP_MIN_MEDIA} needed`
+    : `${n} persona${n===1?'':'s'} evaluada${n===1?'':'s'} · hacen falta ${_SUP_MIN_MEDIA}`;
+}
+function _supDiasSin(e, ahora){
+  const v = _supVisto(e);
+  const t = v ? Date.parse(v) : NaN;
+  if(isNaN(t)) return null;
+  return Math.max(0, Math.floor(((ahora == null ? Date.now() : ahora) - t) / 86400000));
+}
+// Bloque plegado con los inactivos: nombres y «hace Xd». Va al final de cada
+// vista, nunca mezclado con los activos.
+function _supInactivosHTML(allEmps, inactivos){
+  const _en = LANG==='en';
+  if(!inactivos || !inactivos.length) return '';
+  const n = inactivos.length;
+  // Los que llevan menos tiempo fuera primero; «nunca», al final.
+  const filas = inactivos.slice().sort((a,b) => (_supDiasSin(allEmps[a]) ?? 1e9) - (_supDiasSin(allEmps[b]) ?? 1e9));
+  return `<details class="sup-acc sup-inactivos" data-acc="inact"${window._supAccOpen && window._supAccOpen.has('inact') ? ' open' : ''} ontoggle="if(!window._supAccOpen)window._supAccOpen=new Set();if(this.open)window._supAccOpen.add('inact');else window._supAccOpen.delete('inact')">
+    <summary><span class="sup-acc-t">${n} ${_en
+      ? `${n===1?'has':'have'} not used the app for more than ${_SUP_DIAS_INACTIVO} days`
+      : `sin usar la app desde hace más de ${_SUP_DIAS_INACTIVO} días`}</span><span class="sup-acc-ch" aria-hidden="true">›</span></summary>
+    <div class="sup-acc-body">
+      <div class="sup-inact-l">${filas.map(x => {
+        const d = _supDiasSin(allEmps[x]);
+        const ago = d == null ? (_en?'never':'nunca') : (_en ? `${d}d ago` : `hace ${d}d`);
+        return `<span class="sup-inact-p">${escapeHTML(_dispName(x))} <span class="sup-inact-d">${ago}</span></span>`;
+      }).join('')}</div>
+      <div class="sup-at-pie">${_en
+        ? 'They are not in the lists or the averages. The moment they open the app again they count as active.'
+        : 'No entran en las listas ni en las medias. En cuanto vuelvan a abrir la app, cuentan como activos.'}</div>
+    </div>
+  </details>`;
+}
+
 async function _supCargarHistorial(){
   try{
     const r = await fetchT(`${SUPA_URL}/rest/v1/scores?select=employee,score,total,topic,cat,time_sec,created_at&limit=5000&${_vq()}`,
@@ -26305,11 +26439,12 @@ function renderSupAtencionHTML(allEmps, empNames, hist){
 // Todo el equipo en una fila por persona. Va dentro de su propio scroll
 // horizontal: en un móvil no caben ocho columnas, y el resto de la página no
 // puede moverse de lado por culpa de una tabla.
-function renderSupTablaHTML(allEmps, empNames, hist){
+function renderSupTablaHTML(allEmps, empNames, hist, inactivos){
   const _en = LANG==='en';
   if(!hist) return `<div class="sup-vacio">${_en?'Could not read the training history.':'No se ha podido leer el historial de formación.'}</div>`;
   const hoy = Date.now();
-  const filas = empNames.map(n => {
+  inactivos = inactivos || [];
+  const _fila = n => {
     const e = allEmps[n] || {};
     const p = _supPerfil(n, hist);
     const visto = e.lastActiveAt || e.lastLoginTs || null;
@@ -26322,8 +26457,13 @@ function renderSupTablaHTML(allEmps, empNames, hist){
     const dom = Object.keys(e.knownDishes || {}).length;
     const lqa = _lqaReady(e);
     return { n, e, p, d, meses, dom, lqa, estado: _supEstado(p) };
-  }).sort((a,b) => ({rojo:0,ambar:1,verde:2})[a.estado] - ({rojo:0,ambar:1,verde:2})[b.estado]
-                || (a.p.nota ?? -1) - (b.p.nota ?? -1));
+  };
+  const _orden = (a,b) => ({rojo:0,ambar:1,verde:2})[a.estado] - ({rojo:0,ambar:1,verde:2})[b.estado]
+                || (a.p.nota ?? -1) - (b.p.nota ?? -1);
+  const filas = empNames.map(_fila).sort(_orden);
+  // Los inactivos (más de 60 días sin entrar) van al final, en gris y tras
+  // una fila de separación: siguen en la tabla, pero no se mezclan.
+  const filasInact = inactivos.map(_fila).sort((a,b) => (a.d ?? 1e9) - (b.d ?? 1e9));
   const punto = { rojo:'🔴', ambar:'🟡', verde:'🟢' };
   const nd = v => v == null ? '—' : v;
   const col = pct => pct == null ? 'var(--parch4)' : pct >= _SUP_APROBADO ? 'var(--sage)' : pct >= 50 ? 'var(--gold)' : 'var(--rose)';
@@ -26340,10 +26480,16 @@ function renderSupTablaHTML(allEmps, empNames, hist){
       <th>${_en?'Last seen':'Visto'}</th>
       <th>${_en?'In app':'En la app'}</th>
     </tr></thead>
-    <tbody>${filas.map(f => `<tr role="button" tabindex="0"
+    <tbody>${filas.map(f => _tr(f, false)).join('')}${filasInact.length ? `<tr class="sup-tr-sep"><td colspan="9">${filasInact.length} ${_en?`not using the app for more than ${_SUP_DIAS_INACTIVO} days`:`sin usar la app desde hace más de ${_SUP_DIAS_INACTIVO} días`}</td></tr>` : ''}${filasInact.map(f => _tr(f, true)).join('')}</tbody>
+  </table></div>
+  <div class="sup-at-pie">${_en
+    ? `Tap a row for the development profile. "Menu" is dishes mastered, "LQA" audit readiness, "Mark" the average of ${filas.reduce((a,f)=>a+f.p.pruebas,0)} real tests. "In app" counts from their first test, not from their hire date — the app does not know that.`
+    : `Toca una fila para el perfil de desarrollo. «Carta» son platos dominados, «LQA» la preparación para auditoría y «Nota» la media de ${filas.reduce((a,f)=>a+f.p.pruebas,0)} pruebas reales. «En la app» cuenta desde su primera prueba, no desde que entró en la casa — eso la app no lo sabe.`}</div>`;
+  function _tr(f, inact){
+    return `<tr role="button" tabindex="0"${inact?' class="sup-tr-inact"':''}
         onclick="renderSupEmployee(${escapeHTML(JSON.stringify(f.n))})"
         onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click()}">
-      <td class="sup-td-n">${punto[f.estado]} ${escapeHTML(_dispName(f.n))}</td>
+      <td class="sup-td-n">${inact?'':punto[f.estado]+' '}${escapeHTML(_dispName(f.n))}</td>
       <td>${total ? `${f.dom}<span class="sup-td-d">/${total}</span>` : nd(f.dom)}</td>
       <td style="color:${col(f.lqa.score > 0 ? f.lqa.score : null)}">${f.lqa.score > 0 ? f.lqa.score + '%' : '—'}</td>
       <td style="color:${col(f.p.nota)};font-weight:700">${f.p.nota == null ? '—' : f.p.nota + '%'}</td>
@@ -26352,27 +26498,33 @@ function renderSupTablaHTML(allEmps, empNames, hist){
       <td>${f.p.minutos ? (f.p.minutos >= 60 ? Math.floor(f.p.minutos/60)+'h '+(f.p.minutos%60)+'m' : f.p.minutos+'m') : '—'}</td>
       <td>${f.d == null ? (_en?'never':'nunca') : f.d === 0 ? (_en?'today':'hoy') : (_en?f.d+'d':'hace '+f.d+'d')}</td>
       <td>${f.meses == null ? '—' : (f.meses < 1 ? (_en?'<1 mo':'<1 mes') : f.meses + (_en?' mo':' meses'))}</td>
-    </tr>`).join('')}</tbody>
-  </table></div>
-  <div class="sup-at-pie">${_en
-    ? `Tap a row for the development profile. "Menu" is dishes mastered, "LQA" audit readiness, "Mark" the average of ${filas.reduce((a,f)=>a+f.p.pruebas,0)} real tests. "In app" counts from their first test, not from their hire date — the app does not know that.`
-    : `Toca una fila para el perfil de desarrollo. «Carta» son platos dominados, «LQA» la preparación para auditoría y «Nota» la media de ${filas.reduce((a,f)=>a+f.p.pruebas,0)} pruebas reales. «En la app» cuenta desde su primera prueba, no desde que entró en la casa — eso la app no lo sabe.`}</div>`;
+    </tr>`;
+  }
 }
 
 // El histórico se pide UNA vez por pintada del panel y rellena los dos huecos.
 // Aparte del render principal: son 170 filas de otra tabla y el panel no puede
 // quedarse en blanco esperándolas.
-async function _supPintarHistorial(allEmps, empNames){
+async function _supPintarHistorial(allEmps, activos, inactivos){
   const hist = await _supCargarHistorial();
   window._supHist = hist;
+  // «Quién necesita mi atención» y las medias, SÓLO con los activos: alguien
+  // que lleva tres meses sin abrir la app no «necesita que le busquen», se
+  // fue o está de baja, y meterlo inflaba la lista (27 de 28, oct 2026).
   const at = document.getElementById('supAtencion');
-  if(at) at.innerHTML = renderSupAtencionHTML(allEmps, empNames, hist);
+  if(at) at.innerHTML = renderSupAtencionHTML(allEmps, activos, hist);
   const tb = document.getElementById('supTabla');
-  if(tb) tb.innerHTML = renderSupTablaHTML(allEmps, empNames, hist);
+  if(tb) tb.innerHTML = renderSupTablaHTML(allEmps, activos, hist, inactivos);
 }
 
 function renderSupAnalytics(allEmps, empNames){
   const c = document.getElementById('appContent');
+  // Misma puerta que el panel: sin administración ni pruebas, y las medias
+  // sólo con los activos. Los inactivos (60+ días sin entrar) van aparte.
+  allEmps = allEmps || {};
+  const _div = _supDividir(allEmps, _supEquipo(allEmps, empNames));
+  empNames = _div.activos;
+  const _inactivos60 = _div.inactivos;
 
   // Compute team-wide stats. Las sesiones sin datos reales (rellenos {} cuando
   // sessions_data no viaja) inflaban el total → se cuentan solo las reales.
@@ -26632,6 +26784,10 @@ function renderSupAnalytics(allEmps, empNames){
   }));
   const exAcc = exT?Math.round(exC/exT*100):0;
   const exAvgTime = exTimeN?Math.round(exTime/exTimeN):0;
+  // Precisión de exámenes como media-titular: personas con exámenes reales.
+  const _exPers = empNames.map(n => { let c=0,t=0; (allEmps[n].sessions||[]).forEach(s=>{ c+=s.score||0; t+=s.total||0; }); return t ? Math.round(c/t*100) : null; });
+  const _exM = _supMedia(_exPers);
+
   const examCatRows = Object.entries(examCatAgg).filter(([,v])=>v.total>0)
     .map(([k,v])=>({label:k, pct:Math.round(v.correct/v.total*100), wrong:v.total-v.correct, total:v.total}))
     .sort((a,b)=>a.pct-b.pct);
@@ -26697,7 +26853,7 @@ function renderSupAnalytics(allEmps, empNames){
       <div style="font-family:var(--font-mono);font-size:var(--fs-1);color:var(--gold);letter-spacing:.12em;text-transform:uppercase;margin-bottom:.6rem">${LANG==='en'?'Exams — team overview':'Exámenes — resumen del equipo'}</div>
       <div class="stats-row" style="margin-bottom:${examCatRows.length?'.75rem':'0'}">
         <div class="stat-tile"><div class="stat-num">${exN}</div><div class="stat-lbl">${LANG==='en'?'Exams taken':'Exámenes'}</div></div>
-        <div class="stat-tile"><div class="stat-num" style="color:${exAcc>=80?'var(--sage)':exAcc>=50?'var(--gold)':'var(--rose)'}">${exAcc}%</div><div class="stat-lbl">${LANG==='en'?'Avg accuracy':'Precisión media'}</div></div>
+        <div class="stat-tile"><div class="stat-num" style="color:${!_exM.ok?'var(--parch4)':exAcc>=80?'var(--sage)':exAcc>=50?'var(--gold)':'var(--rose)'};${!_exM.ok?'font-size:.7rem;line-height:1.2':''}">${_exM.ok?exAcc+'%':(LANG==='en'?'Not enough data':'Sin datos suficientes')}</div><div class="stat-lbl">${_exM.ok?(LANG==='en'?'Avg accuracy':'Precisión media'):_supSinDatosTxt(_exM.n)}</div></div>
         <div class="stat-tile"><div class="stat-num">${exAvgTime?Math.floor(exAvgTime/60)+'m '+(exAvgTime%60)+'s':'—'}</div><div class="stat-lbl">${LANG==='en'?'Avg time':'Tiempo medio'}</div></div>
       </div>
       ${examCatRows.length ? `<div style="font-family:var(--font-mono);font-size:var(--fs-1);color:var(--parch3);letter-spacing:.1em;text-transform:uppercase;margin:.2rem 0 .4rem">${LANG==='en'?'Accuracy by menu category':'Precisión por categoría de carta'}</div>${examCatHTML}` : ''}
@@ -26718,8 +26874,10 @@ function renderSupAnalytics(allEmps, empNames){
   // por la que se mide un hotel de esta categoría. Solo cuentan quienes han
   // hecho al menos una prueba (si no, la media saldría falseada a la baja).
   const _rdyAll = empNames.map(n=>allEmps[n]).filter(Boolean).map(_lqaReady).filter(r=>r.runs>0);
-  const _rdyN = _rdyAll.length;
-  const _rdy = _rdyN ? Math.round(_rdyAll.reduce((a,r)=>a+r.score,0)/_rdyN) : 0;
+  const _rdyM = _supMedia(_rdyAll.map(r=>r.score));
+  const _rdyN = _rdyM.n;
+  const _rdy = _rdyM.ok ? _rdyM.media : 0;
+  const _sdPill = (n, lbl) => `<div class="sup-hl-pill info sup-hl-sd"><b>${_en2?'Not enough data':'Sin datos suficientes'}</b><span>${lbl} · ${_supSinDatosTxt(n)}</span></div>`;
   c.innerHTML = `<div class="sup-wrap">
     <div style="display:flex;align-items:center;gap:.75rem;margin-bottom:1rem">
       <button onclick="renderSupDashboard()" aria-label="${_en2?'Back':'Volver'}" style="background:transparent;border:1.5px solid rgba(196,154,60,.55);border-radius:var(--r2);padding:.4rem .8rem;font-size:.75rem;color:var(--gold-deep);font-weight:700;cursor:pointer">←</button>
@@ -26729,12 +26887,12 @@ function renderSupAnalytics(allEmps, empNames){
     <div class="sup-hl" role="group" aria-label="${_en2?'Key figures':'Lo esencial'}">
       <div class="sup-hl-pill ${_riskN?'bad':'good'}"><b>${_riskN}</b><span>${_en2?'allergen risk':'riesgo alérgenos'}</span></div>
       <div class="sup-hl-pill ${_inact.length?'warn':'good'}"><b>${_inact.length}</b><span>${_en2?'inactive 3+d':'sin actividad 3+d'}</span></div>
-      <div class="sup-hl-pill ${!exN?'info':exAcc>=80?'good':exAcc>=50?'warn':'bad'}"><b>${exN?exAcc+'%':'—'}</b><span>${_en2?'exam accuracy':'precisión exámenes'}</span></div>
-      <div class="sup-hl-pill ${!_rdyN?'info':_rdy>=75?'good':_rdy>=55?'warn':'bad'}"><b>${_rdyN?_rdy+'%':'—'}</b><span>${_en2?'LQA readiness':'preparación LQA'}</span></div>
+      ${_exM.ok ? `<div class="sup-hl-pill ${exAcc>=80?'good':exAcc>=50?'warn':'bad'}"><b>${exAcc}%</b><span>${_en2?'exam accuracy':'precisión exámenes'}</span></div>` : _sdPill(_exM.n, _en2?'exam accuracy':'precisión exámenes')}
+      ${_rdyM.ok ? `<div class="sup-hl-pill ${_rdy>=75?'good':_rdy>=55?'warn':'bad'}"><b>${_rdy}%</b><span>${_en2?'LQA readiness':'preparación LQA'}</span></div>` : _sdPill(_rdyN, _en2?'LQA readiness':'preparación LQA')}
     </div>
     ${_acc('alg','⚠️',_en2?'Allergens — safety':'Alérgenos — seguridad', `${_riskN} ${_en2?'at risk':'en riesgo'}${allergenUntrained.length?` · ${allergenUntrained.length} ${_en2?'untrained':'sin entrenar'}`:''}`, _algBody)}
     ${_acc('res','📣',_en2?'Weekly summary':'Resumen semanal', _en2?'ready for WhatsApp':'listo para WhatsApp', resumenSection)}
-    ${_acc('act','📈',_en2?'Activity':'Actividad', `${_inact.length} ${_en2?'inactive':'sin actividad'}`, renderSupActivityHeatmap(Object.values(allEmps))+renderSupScoreTrend(Object.values(allEmps))+_inactHTML)}
+    ${_acc('act','📈',_en2?'Activity':'Actividad', `${_inact.length} ${_en2?'inactive':'sin actividad'}${_inactivos60.length?` · ${_inactivos60.length} ${_en2?'60+d':'60+d'}`:''}`, renderSupActivityHeatmap(empNames.map(n=>allEmps[n]))+renderSupScoreTrend(empNames.map(n=>allEmps[n]))+_inactHTML+_supInactivosHTML(allEmps, _inactivos60))}
     ${_acc('pase','◎',_en2?'Plating pass':'Pase de cocina', _psTot?`${_psTot} ${_en2?'passes':'pases'} · ${_psSeguro}% ${_en2?'safe':'seguros'}`:(_en2?'not played yet':'aún sin jugar'), paseSection)}
     ${_acc('perf','🎯',_en2?'Performance':'Rendimiento', exN?`${exN} ${_en2?'exams':'exámenes'} · ${exAcc}%`:(_en2?'no exams yet':'aún sin exámenes'), _perfBody)}
     ${_acc('dish','🧩',_en2?'Hardest dishes':'Platos difíciles', hardest.length?`${hardest.length} ${_en2?'to review':'a repasar'}`:'', _dishBody)}
@@ -26802,6 +26960,9 @@ function renderSupCuentas(){
       ${_esPropietario() ? '' : `<div class="sup-at-pie">${_en
         ? 'Only the owner hands out and takes back command. You run your team; you do not appoint.'
         : 'Sólo el propietario reparte y retira el mando. Tú diriges a tu equipo; nombrar, no.'}</div>`}
+      <div class="sup-at-pie">${_en
+        ? 'Test account: it does not count in averages or lists. It keeps using the app as usual (ranking, XP, everything), but the panel ignores it.'
+        : 'Cuenta de pruebas: no cuenta en medias ni listas. Sigue usando la app con normalidad (ranking, XP, todo), pero el panel no la tiene en cuenta.'}</div>
       <div id="supCuMsg" role="status" aria-live="polite" class="sup-msg"></div>
     </div>
     <div class="sup-card">
@@ -26839,17 +27000,39 @@ async function supCargarCuentas(){
   const est  = document.getElementById('supPinEstado');
   const v = _supVenueId();
   try{
-    const r = await _supaRpc('venue_staff_list', {p_pin:_supPin||'', p_venue:v});
-    if(!r || r.ok !== true) throw new Error((r && r.error) || 'x');
-    const emps = r.empleados || [];
+    let emps;
+    if(typeof _esDemo === 'function' && _esDemo()){
+      // La demo no habla con el servidor: la lista sale de las fichas locales.
+      emps = Object.entries(DB.employees || {})
+        .filter(([n, e]) => n && e && _esDeMiVenue(e))
+        .map(([n, e]) => ({ name: n, display_name: e.displayName || null, role: e.role || 'staff' }));
+    } else {
+      const r = await _supaRpc('venue_staff_list', {p_pin:_supPin||'', p_venue:v});
+      if(!r || r.ok !== true) throw new Error((r && r.error) || 'x');
+      emps = r.empleados || [];
+    }
     if(!caja) return;
+    const _fichaDe = n => (window._supAllEmps && window._supAllEmps[n]) || (DB.employees && DB.employees[n]) || null;
     caja.innerHTML = emps.length ? emps.map(e => {
       const esM = e.role === 'manager';
-      return `<div class="sup-row">
+      const esAdm = e.role === 'admin';
+      const esP = _supEsPruebas(_fichaDe(e.name));
+      // Interruptor «cuenta de pruebas»: por persona, menos para administración
+      // (ya está fuera de todo) y sólo lo toca quien manda en el panel.
+      const sw = esAdm ? '' : `<label class="sup-sw" title="${_en?'Test account: does not count in averages or lists':'Cuenta de pruebas: no cuenta en medias ni listas'}">
+          <input type="checkbox" role="switch" ${esP?'checked':''} aria-label="${_en?'Test account':'Cuenta de pruebas'} · ${escapeHTML(e.display_name || e.name)}"
+            onchange="supPonerPruebas(${escapeHTML(JSON.stringify(e.name))}, this.checked, this)">
+          <span class="sup-sw-t" aria-hidden="true"></span>
+          <span class="sup-sw-l">${_en?'Test':'Pruebas'}</span>
+        </label>`;
+      return `<div class="sup-row${esP?' sup-row-pruebas':''}">
         <div class="sup-row-n">${escapeHTML(e.display_name || e.name)}
           ${esM ? `<span class="sup-tag">${_en?'manager':'manager'}</span>` : ''}
+          ${esAdm ? `<span class="sup-tag">${_en?'admin':'administración'}</span>` : ''}
+          ${esP ? `<span class="sup-tag sup-tag-p">${_en?'test':'pruebas'}</span>` : ''}
           ${(e.display_name && e.display_name !== e.name) ? `<span class="sup-row-u">${escapeHTML(e.name)}</span>` : ''}</div>
-        ${_esPropietario() ? `<button onclick="supPonerManager(${escapeHTML(JSON.stringify(e.name))}, ${esM?'false':'true'})"
+        ${sw}
+        ${_esPropietario() && !esAdm ? `<button onclick="supPonerManager(${escapeHTML(JSON.stringify(e.name))}, ${esM?'false':'true'})"
           class="${esM?'sup-b2':'sup-b1'}" style="flex:0 0 auto;padding:.45rem .7rem;font-size:.72rem">
           ${esM ? (_en?'Remove':'Quitar') : (_en?'Make manager':'Hacer manager')}</button>` : ''}
       </div>`;
@@ -26874,6 +27057,68 @@ async function supCargarCuentas(){
       ? (_en ? 'This restaurant has its own PIN.' : 'Este restaurante tiene PIN propio.')
       : (_en ? 'No PIN of its own yet — it only opens with yours.' : 'Todavía sin PIN propio: sólo se abre con el tuyo.');
   }catch(_){}
+}
+
+// Marcar o quitar «cuenta de pruebas». Se guarda como el resto de la ficha:
+// en local (saveDB) y en la nube con supaUpsertEmployee, que fusiona con lo
+// que haya arriba y escribe extras.pb con fecha. Si este dispositivo no tiene
+// la ficha (sólo está en la nube), se toca únicamente la columna extras,
+// leyendo antes para no pisar la liga ni el reto del día.
+async function supPonerPruebas(nombre, on, el){
+  const _en = LANG==='en';
+  const msg = document.getElementById('supCuMsg');
+  const ts = new Date().toISOString();
+  if(msg){ msg.style.color = 'var(--parch3)'; msg.textContent = _en ? 'Saving…' : 'Guardando…'; }
+  if(el) el.disabled = true;
+  // Lo que ve el panel, ya: no hace falta esperar a la nube.
+  if(window._supAllEmps && window._supAllEmps[nombre]){ window._supAllEmps[nombre].pruebas = !!on; window._supAllEmps[nombre].pruebasTs = ts; }
+  window._supLastHash = null;
+  let ok = false;
+  try{
+    const local = DB.employees && DB.employees[nombre];
+    if(local){
+      local.pruebas = !!on; local.pruebasTs = ts;
+      saveDB();
+      const r = await supaUpsertEmployee(nombre);
+      ok = (r === 'confirmado') || (typeof _esDemo === 'function' && _esDemo());
+    } else {
+      ok = await _supPatchExtras(nombre, x => { x.pb = { v: on ? 1 : 0, t: ts }; return x; });
+    }
+  }catch(_){ ok = false; }
+  if(el) el.disabled = false;
+  if(!msg) return;
+  if(ok){
+    msg.style.color = '#2d6a3e';
+    msg.textContent = on
+      ? (_en ? `"${nombre}" is now a test account: out of averages and lists.` : `«${nombre}» ya es cuenta de pruebas: fuera de medias y listas.`)
+      : (_en ? `"${nombre}" counts again in the panel.` : `«${nombre}» vuelve a contar en el panel.`);
+  } else {
+    msg.style.color = '#c0392b';
+    msg.textContent = _en ? 'Saved on this device; could not reach the cloud. It will retry on the next sync.'
+                          : 'Guardado en este dispositivo; no se ha podido subir. Se reintentará en la próxima sincronización.';
+  }
+  supCargarCuentas();
+}
+// Lee `extras` de una ficha en la nube, la transforma y la vuelve a escribir.
+async function _supPatchExtras(nombre, fn){
+  try{
+    const gr = await fetchT(`${SUPA_URL}/rest/v1/employees?name=ilike.${encodeURIComponent(nombre)}&select=name,extras`,
+      { headers:{ 'apikey':SUPA_KEY, 'Authorization':`Bearer ${_bearer()}` } }, 8000);
+    if(!gr.ok) return false;
+    const rows = await gr.json();
+    if(!Array.isArray(rows) || !rows.length) return false;
+    let x = {};
+    try{ x = JSON.parse(rows[0].extras || '{}'); }catch(_){ x = {}; }
+    if(!x || typeof x !== 'object') x = {};
+    x = fn(x) || x;
+    const pr = await fetchT(`${SUPA_URL}/rest/v1/employees?name=eq.${encodeURIComponent(rows[0].name)}&select=name`, {
+      method:'PATCH', headers:{ 'apikey':SUPA_KEY, 'Authorization':`Bearer ${_bearer()}`, 'Content-Type':'application/json', 'Prefer':'return=representation' },
+      body: JSON.stringify({ extras: JSON.stringify(x) })
+    }, 8000);
+    if(!pr.ok) return false;
+    const w = await pr.json().catch(()=>null);
+    return Array.isArray(w) ? w.length > 0 : true;
+  }catch(_){ return false; }
 }
 
 async function supPonerManager(nombre, hacer){
@@ -27094,16 +27339,22 @@ function _lqaReady(e){
 function renderSupLqaStats(allEmps, empNames){
   allEmps = allEmps || window._supAllEmps || {};
   empNames = empNames || window._supEmpNames || Object.keys(allEmps);
+  // Misma puerta que el panel: sin administración ni pruebas; las medias,
+  // sólo con los activos. Los inactivos van en su bloque, al final.
+  const _div = _supDividir(allEmps, _supEquipo(allEmps, empNames));
+  empNames = _div.activos;
+  const _inactivos60 = _div.inactivos;
   const emps = empNames.map(n=>allEmps[n]).filter(Boolean);
 
   const readiness = emps.map(_lqaReady).filter(r=>r.runs>0).sort((a,b)=>b.score-a.score);
 
   const noData=emps.filter(e=>{const r=(e.lqaExamsCompleted||0)+(e.lqaSituationsCompleted||0)+(e.lqaAuditsCompleted||0)+(e.ghostRuns||0);return r===0;});
 
-  // Team averages per mode
+  // Team averages per mode. Con menos de 3 personas con marca, no hay media
+  // (sale «—»): la de una sola persona es su nota, no la del equipo.
   const modeAvg=(field)=>{
-    const vals=emps.map(e=>e[field]).filter(v=>v>0);
-    return vals.length?Math.round(vals.reduce((a,v)=>a+v,0)/vals.length):0;
+    const m=_supMedia(emps.map(e=>e[field]).filter(v=>v>0));
+    return m.ok?m.media:0;
   };
   const avgExam=modeAvg('lqaExamBest');
   const avgSit=modeAvg('lqaSituationBest');
@@ -27132,7 +27383,10 @@ function renderSupLqaStats(allEmps, empNames){
 
   // Team total runs
   const teamRuns=emps.reduce((a,e)=>a+(e.lqaExamsCompleted||0)+(e.lqaSituationsCompleted||0)+(e.lqaAuditsCompleted||0)+(e.ghostRuns||0),0);
-  const teamReadyAvg=readiness.length?Math.round(readiness.reduce((a,r)=>a+r.score,0)/readiness.length):0;
+  // El índice del equipo: con menos de 3 personas evaluadas no se enseña un
+  // porcentaje (un «90 %» calculado sobre una persona, oct 2026).
+  const _idx = _supLqaIndice(readiness.map(r=>r.score));
+  const teamReadyAvg=_idx.ok?_idx.media:0;
 
   // ÚNICA fuente de verdad para los umbrales de preparación (antes el hero
   // usaba 75/55 y el ranking 80/60 → un 78% salía verde arriba y ámbar abajo).
@@ -27140,7 +27394,7 @@ function renderSupLqaStats(allEmps, empNames){
   const _lqaCut = s => s>=75?'ok':s>=55?'mid':'low';
   const _lqaHero = {ok:'#8fc499', mid:'#e4c07c', low:'#e4a090'};   // sobre fondo oscuro
   const _lqaRank = {ok:'var(--sage)', mid:'var(--gold)', low:'var(--rose)'}; // sobre pergamino
-  const _hasReady = readiness.length > 0;
+  const _hasReady = _idx.ok;
 
   const c=document.getElementById('appContent');
   c.innerHTML=`<div class="sup-wrap">
@@ -27151,8 +27405,11 @@ function renderSupLqaStats(allEmps, empNames){
 
     <div style="background:linear-gradient(155deg,#1a2a20,#0f1d15);border:1px solid rgba(140,200,150,.25);border-radius:var(--r);padding:1.3rem;margin-bottom:1rem;text-align:center">
       <div style="font-family:var(--font-mono);font-size:var(--fs-1);color:#8fc499;letter-spacing:.2em;text-transform:uppercase;margin-bottom:.7rem">${LANG==='en'?'Team LQA Readiness Index':'Índice de Preparación LQA del Equipo'}</div>
-      <div style="font-family:'Cinzel',serif;font-size:3.5rem;font-weight:700;color:${_hasReady?_lqaHero[_lqaCut(teamReadyAvg)]:'#a8c4b0'};line-height:1;margin-bottom:.3rem">${_hasReady?teamReadyAvg+'%':'—'}</div>
-      <div style="font-size:.78rem;color:#a8c4b0">${_hasReady?`${readiness.length} ${LANG==='en'?'employees evaluated':'empleados evaluados'} · ${teamRuns} ${LANG==='en'?'total runs':'intentos totales'}`:(LANG==='en'?'No LQA training yet':'Nadie ha entrenado LQA todavía')}</div>
+      ${_hasReady
+        ? `<div style="font-family:'Cinzel',serif;font-size:3.5rem;font-weight:700;color:${_lqaHero[_lqaCut(teamReadyAvg)]};line-height:1;margin-bottom:.3rem">${teamReadyAvg}%</div>
+      <div style="font-size:.78rem;color:#a8c4b0">${readiness.length} ${LANG==='en'?'employees evaluated':'empleados evaluados'} · ${teamRuns} ${LANG==='en'?'total runs':'intentos totales'}</div>`
+        : `<div style="font-family:'Cinzel',serif;font-size:1.35rem;font-weight:700;color:#a8c4b0;line-height:1.2;margin-bottom:.3rem">${LANG==='en'?'Not enough data':'Sin datos suficientes'}</div>
+      <div style="font-size:.78rem;color:#a8c4b0">${readiness.length ? _supSinDatosTxt(readiness.length) : (LANG==='en'?'No LQA training yet':'Nadie ha entrenado LQA todavía')}</div>`}
     </div>
 
     <div class="stats-row" style="margin-bottom:1rem">
@@ -27173,7 +27430,7 @@ function renderSupLqaStats(allEmps, empNames){
 
     <div style="background:linear-gradient(155deg,#faf6ee,#f0e8d8);border:1px solid var(--line2);border-radius:var(--r);padding:1rem;margin-bottom:1rem">
       <div style="font-family:var(--font-mono);font-size:var(--fs-1);color:var(--parch3);letter-spacing:.12em;text-transform:uppercase;margin-bottom:.35rem">🏆 ${LANG==='en'?'Readiness Ranking':'Ranking de Preparación'}</div>
-      ${_hasReady?`<div style="font-family:var(--font-mono);font-size:var(--fs-1);color:var(--parch4);margin-bottom:.6rem">${LANG==='en'?'E=Exam · S=Situations · P=Would pass? · A=Audit':'E=Examen · S=Situaciones · P=¿Pasaría? · A=Auditoría'}</div>`:''}
+      ${readiness.length?`<div style="font-family:var(--font-mono);font-size:var(--fs-1);color:var(--parch4);margin-bottom:.6rem">${LANG==='en'?'E=Exam · S=Situations · P=Would pass? · A=Audit':'E=Examen · S=Situaciones · P=¿Pasaría? · A=Auditoría'}</div>`:''}
       ${readiness.length===0
         ? `<div style="font-size:.8rem;color:var(--parch4);font-style:italic;text-align:center;padding:1rem 0">${LANG==='en'?'No LQA activity yet.':'Sin actividad LQA aún.'}</div>`
         : readiness.map((r,i)=>{
@@ -27199,9 +27456,10 @@ function renderSupLqaStats(allEmps, empNames){
     ${noData.length ? `<div style="background:rgba(196,154,60,.06);border:1px solid rgba(196,154,60,.18);border-radius:var(--r);padding:.9rem 1rem;margin-bottom:1rem">
       <div style="font-family:var(--font-mono);font-size:var(--fs-1);color:var(--gold);letter-spacing:.12em;text-transform:uppercase;margin-bottom:.5rem">⚠ ${LANG==='en'?'No LQA activity yet':'Sin actividad LQA aún'}</div>
       <div style="display:flex;flex-wrap:wrap;gap:.35rem">
-        ${noData.map(e=>`<span style="font-family:var(--font-sans);font-size:var(--fs-2);color:var(--parch3);padding:.25rem .6rem;background:rgba(196,154,60,.06);border:1px solid rgba(196,154,60,.15);border-radius:20px">${e.name}</span>`).join('')}
+        ${noData.map(e=>`<span style="font-family:var(--font-sans);font-size:var(--fs-2);color:var(--parch3);padding:.25rem .6rem;background:rgba(196,154,60,.06);border:1px solid rgba(196,154,60,.15);border-radius:20px">${escapeHTML(e.name)}</span>`).join('')}
       </div>
     </div>` : ''}
+    ${_supInactivosHTML(allEmps, _inactivos60)}
 
     <div style="background:linear-gradient(155deg,#faf6ee,#f0e8d8);border:1px solid var(--line2);border-radius:var(--r);padding:1rem;margin-bottom:1rem">
       <div style="font-family:var(--font-mono);font-size:var(--fs-1);color:var(--parch3);letter-spacing:.12em;text-transform:uppercase;margin-bottom:.6rem">📊 ${LANG==='en'?'What the Readiness Index means':'Qué significa el Índice'}</div>

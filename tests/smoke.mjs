@@ -2824,7 +2824,7 @@ test('supervisor panel: realtime employees channel + silent refresh + live pill'
   for (const sec of ['hoy', 'equipo', 'analisis', 'acciones']) {
     assert(html.includes(`data-sec="${sec}"`), `section ${sec} missing`);
   }
-  assert(/<details class="sup-emp-card"/.test(html) && /<summary class="sup-emp-header">/.test(html),
+  assert(/<details class="sup-emp-card\$\{_inactivo\?' sup-emp-inactivo':''\}"/.test(html) && /<summary class="sup-emp-header">/.test(html),
     'employee cards must be collapsible details/summary');
   assert(/_supOpenEmps/.test(html) && /_supApplySection\(\)/.test(html),
     'section + open-cards state must survive silent refreshes');
@@ -2943,7 +2943,11 @@ test('auditoría panel supervisor (jul 2026): datos reales, push, LQA, a11y, mar
   assert(/const _lqaCut = s => s>=75\?'ok':s>=55\?'mid':'low';/.test(lqa),
     'los umbrales LQA deben venir de una única fuente (75/55)');
   assert(!/r\.score>=80\?'#4d8a5e':r\.score>=60/.test(lqa), 'el ranking LQA no debe usar los umbrales viejos 80/60');
-  assert(/_hasReady\?teamReadyAvg\+'%':'—'/.test(lqa), 'el hero LQA debe mostrar «—» cuando no hay datos, no 0% rojo');
+  // Oct 2026: con menos de 3 personas evaluadas el hero dice «Sin datos
+  // suficientes» (un 90 % calculado sobre una persona no es un índice).
+  assert(/const _idx = _supLqaIndice\(readiness\.map\(r=>r\.score\)\);/.test(lqa) && /const _hasReady = _idx\.ok;/.test(lqa)
+    && /Not enough data':'Sin datos suficientes'/.test(lqa) && /_supSinDatosTxt\(readiness\.length\)/.test(lqa),
+    'el hero LQA debe decir «Sin datos suficientes» con menos de 3 evaluados, no un porcentaje');
   // ── Borrado: nube primero, ilike, comprueba respuesta ──
   const del = html.slice(html.indexOf('function supDeleteExecute'), html.indexOf('function supDeleteExecute')+900);
   assert(/name=ilike\./.test(del) && /cloudOk = res\.ok/.test(del) && /if \(cloudOk\)/.test(del),
@@ -2980,15 +2984,18 @@ test('panel supervisor Fase 2b: cabecera de KPIs con impacto', () => {
   assert(/\.sup-kpi\.good\{--kpi-accent:var\(--sage\)\}/.test(css) && /\.sup-kpi\.bad\{--kpi-accent:var\(--rose\)\}/.test(css),
     'las KPIs deben tener color semántico (good/warn/bad/info) por variable');
   const band = html.slice(html.indexOf('function _supKpiBand'), html.indexOf('function renderSupDashboard'));
-  assert(/const acc = tot \? Math\.round\(corr\/tot\*100\) : null;/.test(band),
-    'la KPI de precisión media debe calcularse de topicScores (aciertos/total)');
-  assert(/const risk = empNames\.filter\(n => \(allEmps\[n\]\.allergenBest\|\|0\) < 80\)\.length;/.test(band),
+  // Oct 2026: media de las precisiones individuales de los ACTIVOS
+  // (topicScores), y «sin datos suficientes» con menos de 3 personas.
+  assert(/const precs = activos\.map\(n => \{ let c=0,t=0; Object\.values\(allEmps\[n\]\.topicScores\|\|\{\}\)/.test(band)
+    && /const accM = _supMedia\(precs\);/.test(band),
+    'la KPI de precisión media debe calcularse de topicScores de los activos, con mínimo de 3 personas');
+  assert(/const risk = activos\.filter\(n => \(allEmps\[n\]\.allergenBest\|\|0\) < 80\)\.length;/.test(band),
     'la KPI de alertas de seguridad debe contar allergenBest < 80');
   assert(/Alertas seguridad/.test(band) && /Safety alerts/.test(band) && /Precisión media/.test(band),
     'las etiquetas de KPI deben ser bilingües');
   // La sección Hoy debe usar el band, no las stat-tiles viejas.
   const dash = html.slice(html.indexOf('data-sec="hoy">'), html.indexOf('data-sec="equipo">'));
-  assert(/\$\{_supKpiBand\(allEmps, empNames\)\}/.test(dash) && !/class="stats-row"/.test(dash),
+  assert(/\$\{_supKpiBand\(allEmps, activos, inactivos\)\}/.test(dash) && !/class="stats-row"/.test(dash),
     'la sección Hoy debe pintar la cabecera de KPIs en lugar de las stat-tiles pequeñas');
 });
 
@@ -2999,8 +3006,8 @@ test('panel supervisor Fase 2c: analytics KPI, tarjeta con dominio, heatmap visu
   // Auditoría jul 2026: la cabecera de KPIs duplicaba la banda de «Hoy» y se
   // retiró; la analítica abre con la actividad (heatmap + tendencia +
   // inactivos, antes en la sección Análisis del panel).
-  assert(!/class="sup-kpis"/.test(ana) && /renderSupActivityHeatmap\(Object\.values\(allEmps\)\)/.test(ana)
-    && /renderSupScoreTrend\(Object\.values\(allEmps\)\)/.test(ana) && /Inactive 3\+ days/.test(ana),
+  assert(!/class="sup-kpis"/.test(ana) && /renderSupActivityHeatmap\(empNames\.map\(n=>allEmps\[n\]\)\)/.test(ana)
+    && /renderSupScoreTrend\(empNames\.map\(n=>allEmps\[n\]\)\)/.test(ana) && /Inactive 3\+ days/.test(ana),
     'la analítica abre con la actividad del equipo, sin KPIs duplicados');
   assert(!/Ranking XP/.test(ana), 'el Ranking XP duplicado (pestaña Ranking) no puede volver a la analítica');
   assert((html.match(/_supTool\('analitica'\)/g)||[]).length===1,
@@ -6499,7 +6506,7 @@ test('supervisor: "Conectados Hoy" usa lastActiveAt (además de lastLoginTs) y e
   const sup = html.slice(html.indexOf('function renderSupervisor('), html.indexOf('function renderSupDeleteEmployee'));
   assert(/const _supSeen = n => \{ const a=allEmps\[n\]\.lastLoginTs, b=allEmps\[n\]\.lastActiveAt;/.test(sup),
     'falta el helper _supSeen (la marca más reciente de login/actividad)');
-  assert(/connectedToday = empNames\.filter\(n => \{\s*const lt = _supSeen\(n\);/.test(sup),
+  assert(/connectedToday = activos\.filter\(n => \{\s*const lt = _supSeen\(n\);/.test(sup),
     '"Conectados Hoy" debe filtrar con _supSeen, no solo lastLoginTs');
   assert(!/if\(emp\.xp && emp\.xp > 0\) supaUpsertEmployee\(currentUser\);/.test(html),
     'el login ya no debe saltarse la sincronización para empleados con 0 XP');
@@ -10469,6 +10476,8 @@ const _ligaRankingRes = (() => {
   const i = rk.indexOf(ini), j = rk.indexOf(fin, i);
   if (srcRoles.length < 200 || i < 0 || j < 0) return { roto: 'no encuentro la liga semanal de renderRanking' };
   const srcLiga = rk.slice(i, rk.indexOf('\n', j));
+  // La liga deja fuera las cuentas de pruebas (_supEsPruebas, oct 2026).
+  const srcPruebas = html.slice(html.indexOf('function _supEsPruebas(e){'), html.indexOf('function _supCuenta(e, nombre){'));
   const WK = '2026-W42';
   const monta = (elegido, remoteEmps) => {
     const LS = {}; if (elegido) LS.txk_venue = elegido;
@@ -10479,7 +10488,7 @@ const _ligaRankingRes = (() => {
       Viejo:     { name:'Viejo', role:'staff', venue:'txoko', wkKey:'2026-W41', wkXP:900 },
       SushiR2:   { name:'SushiR2', role:'staff', venue:'r2', wkKey:WK, wkXP:120 } } };
     const F = new Function('DB','currentUser','localStorage','ACTIVE_VENUE','_VENUE_POR_DEFECTO','_wkKey','remoteEmps', // eslint-disable-line no-new-func
-      srcRoles + '\n' + srcLiga + '\nreturn { semana: weekMap, orden: _wkSorted, venue: _venueActual() };');
+      srcRoles + '\n' + srcPruebas + '\n' + srcLiga + '\nreturn { semana: weekMap, orden: _wkSorted, venue: _venueActual() };');
     return F(DB, 'Dueño', { getItem: k => (k in LS ? LS[k] : null), setItem: (k, v) => { LS[k] = String(v); } },
              null, 'txoko', () => WK, remoteEmps);
   };
@@ -10847,7 +10856,7 @@ test('Cuentas: sólo el propietario reparte mando, y la administración sólo se
   assert(/function _esPropietario\(nombre\)/.test(html), 'falta el resolutor de propietario');
   const prop = html.slice(html.indexOf('function _esPropietario(nombre){'), html.indexOf('function _esMando(nombre){'));
   assert(/e\.role === 'owner'/.test(prop), 'propietario es exactamente el rol owner');
-  assert(/\$\{_esPropietario\(\) \? `<button onclick="supPonerManager/.test(html),
+  assert(/\$\{_esPropietario\(\) && !esAdm \? `<button onclick="supPonerManager/.test(html),
     'los botones de rol sólo se pintan para el propietario');
   const sql2 = read('supabase/supervisor_pin_por_restaurante.sql');
   assert(/-- CUALQUIER cambio de rol es del propietario/.test(sql2)
@@ -17156,6 +17165,130 @@ test('Ficha: un plato de varios bocados se lee uno por línea', () => {
   assert(r[1].n === 'Tuna tartar' && r[1].d === 'galleta de plátano, atún.', 'nombre y descripción, sin trocear por comas');
   assert(f('Atún, sésamo, soja.') === null, 'un plato normal sigue con sus fichas de siempre');
   assert(/\$\{_bocados \? _bocadosHTML\(_bocados\)/.test(html), 'la ficha usa la lista cuando hay bocados');
+});
+
+// ═══ PANEL DE SUPERVISOR · QUIÉN CUENTA (oct 2026) ════════════════════════
+// Revisado con la cuenta real de Txoko: «27 de 28 necesitan atención», cuentas
+// de administración en las listas y un índice LQA del 90 % sobre una persona.
+// Las reglas viven en funciones puras y aquí se ejecutan de verdad.
+const _supQuien = (() => {
+  const src = html.slice(html.indexOf('const _SUP_DIAS_INACTIVO = 60;'), html.indexOf('function _supInactivosHTML('));
+  const F = new Function('LANG', '_esAdmin', // eslint-disable-line no-new-func
+    src + '; return { equipo:_supEquipo, cuenta:_supCuenta, pruebas:_supEsPruebas, activo:_supActivo, dividir:_supDividir, media:_supMedia, lqa:_supLqaIndice, sinDatos:_supSinDatosTxt, DIAS:_SUP_DIAS_INACTIVO, MIN:_SUP_MIN_MEDIA };');
+  return (lang, esAdmin) => F(lang || 'es', esAdmin || (() => false));
+})();
+
+test('Panel: la administración y las cuentas de pruebas no cuentan; Madalenaddinis sí', () => {
+  const M = _supQuien('es', n => n === 'AdminPorFicha');
+  const emps = {
+    Administrador: { role:'admin', xp: 900 },
+    AdminPorFicha: { role:'staff' },                    // _esAdmin lo resuelve por la ficha local
+    Pruebas1: { role:'staff', pruebas:true },
+    Pruebas2: { role:'staff', extras:{ pb:{ v:1, t:'2026-10-01T00:00:00Z' } } },   // tal como baja de la nube
+    Desmarcada: { role:'staff', pruebas:false, extras:{ pb:{ v:1, t:'2026-10-01T00:00:00Z' } } },
+    Madalenaddinis: { role:'staff', xp: 10 },
+    Ana: { role:'manager' },
+  };
+  const eq = M.equipo(emps);
+  assert(!eq.includes('Administrador'), 'la cuenta de administración no cuenta');
+  assert(!eq.includes('AdminPorFicha'), '_esAdmin(nombre) también la deja fuera');
+  assert(!eq.includes('Pruebas1') && !eq.includes('Pruebas2'), 'las cuentas de pruebas no cuentan, vengan de local o de la nube');
+  assert(eq.includes('Desmarcada'), 'un `pruebas:false` explícito manda sobre extras.pb viejo');
+  assert(eq.includes('Madalenaddinis') && eq.includes('Ana'), 'Madalenaddinis y los managers son equipo');
+  assert(M.equipo(emps, ['Ana', 'Administrador', 'Nadie']).join() === 'Ana', 'con lista de nombres, filtra esa lista y respeta su orden');
+  assert(M.pruebas(null) === false && M.cuenta(null) === false, 'sin ficha no se cuenta nada');
+  // La marca sigue permitiendo usar la app: _supEsPruebas no toca la ficha.
+  const f = { role:'staff', pruebas:true, xp:500 };
+  M.pruebas(f);
+  assert(f.xp === 500 && f.pruebas === true, 'leer la marca no modifica la ficha');
+});
+
+test('Panel: inactivo = más de 60 días sin entrar o nunca; activo en cuanto entra hoy', () => {
+  const M = _supQuien();
+  const ahora = Date.parse('2026-10-18T12:00:00Z');
+  const d = n => new Date(ahora - n * 86400000).toISOString();
+  const emps = {
+    Hoy: { lastLoginTs: d(0) },
+    Reciente: { lastLoginTs: d(5) },
+    Justo: { lastLoginTs: d(59) },
+    Limite: { lastLoginTs: d(60) },
+    Viejo: { lastLoginTs: d(90) },
+    SoloActividad: { lastActiveAt: d(3) },                 // sin last_login, pero sí last_active_at
+    LoginViejoActividadNueva: { lastLoginTs: d(120), lastActiveAt: d(2) },
+    Nunca: {},
+    Rota: { lastLoginTs: 'no es fecha' },
+    Admin: { role:'admin', lastLoginTs: d(0) },
+    Pruebas: { pruebas:true, lastLoginTs: d(0) },
+  };
+  assert(M.activo(emps.Hoy, ahora) && M.activo(emps.Reciente, ahora) && M.activo(emps.Justo, ahora), 'con menos de 60 días es activo');
+  assert(!M.activo(emps.Limite, ahora) && !M.activo(emps.Viejo, ahora), 'a los 60 días o más, inactivo');
+  assert(!M.activo(emps.Nunca, ahora) && !M.activo(emps.Rota, ahora), 'sin fecha (o con una fecha rota) es inactivo');
+  assert(M.activo(emps.SoloActividad, ahora) && M.activo(emps.LoginViejoActividadNueva, ahora), 'vale la señal más reciente de login o actividad');
+  const r = M.dividir(emps, null, ahora);
+  assert(r.activos.join() === 'Hoy,Reciente,Justo,SoloActividad,LoginViejoActividadNueva', 'activos: ' + r.activos.join());
+  assert(r.inactivos.join() === 'Limite,Viejo,Nunca,Rota', 'inactivos: ' + r.inactivos.join());
+  assert(!r.activos.includes('Admin') && !r.inactivos.includes('Admin') && !r.activos.includes('Pruebas'),
+    'administración y pruebas no están en ninguna de las dos listas');
+  // No hay estado guardado: el mismo «Viejo» vuelve a ser activo en cuanto entra hoy.
+  emps.Viejo.lastLoginTs = d(0);
+  assert(M.activo(emps.Viejo, ahora), 'en cuanto entra, activo de inmediato');
+  assert(M.DIAS === 60, 'el corte son 60 días');
+});
+
+test('Panel: una media-titular con menos de 3 personas es «sin datos suficientes»', () => {
+  const M = _supQuien();
+  assert(M.lqa([90]).ok === false && M.lqa([90]).n === 1, 'una persona evaluada no es un índice');
+  assert(M.lqa([90, 70]).ok === false, 'dos tampoco');
+  const tres = M.lqa([90, 70, 80]);
+  assert(tres.ok === true && tres.media === 80 && tres.n === 3, 'con tres ya hay media');
+  assert(M.lqa([]).ok === false && M.lqa([]).n === 0, 'sin nadie, sin datos');
+  assert(M.media([50, null, undefined, NaN, 70, 90]).ok === true, 'los huecos (sin dato) no cuentan como persona');
+  assert(M.media([50, null, 70]).ok === false, '…ni suman para llegar a tres');
+  assert(M.sinDatos(1) === '1 persona evaluada · hacen falta 3', 'detalle en singular: ' + M.sinDatos(1));
+  assert(M.sinDatos(2) === '2 personas evaluadas · hacen falta 3', 'detalle en plural');
+  assert(_supQuien('en').sinDatos(1) === '1 person evaluated · 3 needed', 'y en inglés');
+  assert(M.MIN === 3, 'el mínimo son 3 personas');
+  // Las pantallas la usan: LQA, KPI de precisión y titulares del análisis.
+  assert(/const _idx = _supLqaIndice\(readiness\.map\(r=>r\.score\)\)/.test(html), 'el índice LQA pasa por _supLqaIndice');
+  assert(/const accM = _supMedia\(precs\);/.test(html), 'la KPI de precisión media pasa por _supMedia');
+  assert(/const _rdyM = _supMedia\(_rdyAll\.map\(r=>r\.score\)\);/.test(html) && /const _exM = _supMedia\(_exPers\);/.test(html),
+    'los titulares del análisis (precisión exámenes, preparación LQA) pasan por _supMedia');
+});
+
+test('Panel: todas las secciones pasan por _supEquipo y los inactivos van aparte', () => {
+  const dash = html.slice(html.indexOf('function renderSupDashboard(silent){'), html.indexOf('function renderSupDeleteEmployee('));
+  assert(/const empNames = _supEquipo\(allEmps, todosNombres\);/.test(dash), 'el panel calcula el equipo con _supEquipo');
+  assert(/const \{ activos, inactivos \} = _supDividir\(allEmps, empNames\);/.test(dash), 'y lo divide en activos e inactivos');
+  assert(/_supPintarHistorial\(allEmps, activos, inactivos\)/.test(dash), 'atención y tabla reciben activos e inactivos por separado');
+  assert(/_supInactivosHTML\(allEmps, inactivos\)/.test(dash), 'Hoy termina con el bloque plegado de inactivos');
+  assert(/renderSupDeleteEmployee\(window\._supTodos\|\|_supEmpNames\)/.test(dash), 'borrar sigue viendo TODAS las cuentas (una de pruebas también se borra)');
+  const hist = html.slice(html.indexOf('async function _supPintarHistorial('), html.indexOf('function renderSupAnalytics('));
+  assert(/renderSupAtencionHTML\(allEmps, activos, hist\)/.test(hist) && /renderSupTablaHTML\(allEmps, activos, hist, inactivos\)/.test(hist),
+    '«quién necesita mi atención» sólo con activos; la tabla recibe los inactivos aparte');
+  const tabla = html.slice(html.indexOf('function renderSupTablaHTML('), html.indexOf('async function _supPintarHistorial('));
+  assert(/class="sup-tr-sep"/.test(tabla) && /sup-tr-inact/.test(tabla), 'la tabla separa a los inactivos con una fila y los pinta en gris');
+  const ana = html.slice(html.indexOf('function renderSupAnalytics('), html.indexOf('function renderSupCodigoHTML('));
+  assert(/const _div = _supDividir\(allEmps, _supEquipo\(allEmps, empNames\)\);\s*empNames = _div\.activos;/.test(ana),
+    'el análisis calcula con los activos');
+  assert(/_supInactivosHTML\(allEmps, _inactivos60\)/.test(ana), 'y enseña a los inactivos aparte');
+  const lqa = html.slice(html.indexOf('function renderSupLqaStats('), html.indexOf('function renderSupEmployee'));
+  assert(/const _div = _supDividir\(allEmps, _supEquipo\(allEmps, empNames\)\);/.test(lqa) && /_supInactivosHTML\(allEmps, _inactivos60\)/.test(lqa),
+    'LQA: misma puerta, inactivos aparte');
+  // Ranking: la cuenta de pruebas no compite y lo sabe por una nota discreta.
+  const rk = html.slice(html.indexOf('function renderRanking(){'), html.indexOf('function renderSupervisor(){'));
+  assert(/\.filter\(e => e\.name && !_supEsPruebas\(e\)\)/.test(rk), 'el ranking deja fuera las cuentas de pruebas');
+  assert(/Tu cuenta es de pruebas: no sale en los rankings\./.test(rk), 'con nota para ella misma');
+  // La marca viaja en extras.pb con fecha y gana el cambio más reciente.
+  assert(/\.\.\.\(emp\.pruebasTs \? \{ pb:\{ v: emp\.pruebas \? 1 : 0, t: emp\.pruebasTs \} \} : \{\}\)/.test(html), 'extras lleva pb sólo si la ficha opina');
+  const merge = html.slice(html.indexOf('function _extrasMergeInto('), html.indexOf('function _extrasMergeInto(') + 2600);
+  assert(/if\(x\.pb && x\.pb\.t && String\(x\.pb\.t\) > String\(emp\.pruebasTs\|\|''\)\)/.test(merge), 'al fusionar gana la marca más reciente, no el máximo');
+  assert(/pruebas: \(\(\) => \{ try \{ const x=JSON\.parse\(r\.extras\|\|'\{\}'\); return !!\(x&&x\.pb&&x\.pb\.v\); \}/.test(html), 'supaFetchAllEmployees baja la marca');
+  // Cuentas: un interruptor por persona con el texto acordado.
+  assert(/onchange="supPonerPruebas\(\$\{escapeHTML\(JSON\.stringify\(e\.name\)\)\}, this\.checked, this\)"/.test(html), 'el interruptor en Cuentas');
+  assert(/Cuenta de pruebas: no cuenta en medias ni listas/.test(html) && /Test account: it does not count in averages or lists/.test(html), 'texto ES/EN');
+  const pp = html.slice(html.indexOf('async function supPonerPruebas('), html.indexOf('async function _supPatchExtras('));
+  assert(/saveDB\(\);\s*const r = await supaUpsertEmployee\(nombre\);/.test(pp), 'se guarda como el resto de la ficha: saveDB + supaUpsertEmployee');
+  assert(/_supPatchExtras\(nombre/.test(pp), 'si la ficha sólo está en la nube, se toca su columna extras');
 });
 
 console.log('\nHygiene');
