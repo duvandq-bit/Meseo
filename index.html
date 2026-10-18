@@ -39,7 +39,7 @@
      frame-src: YouTube embeds.  worker-src blob: for MapLibre's workers.
    • Rollback: delete this tag and bump the service-worker VERSION.
 -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://unpkg.com https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://unpkg.com; font-src 'self'; img-src 'self' data: blob: https://advkoujfgbrrjvqexrcu.supabase.co https://*.basemaps.cartocdn.com https://unpkg.com; connect-src 'self' https://advkoujfgbrrjvqexrcu.supabase.co wss://advkoujfgbrrjvqexrcu.supabase.co https://unpkg.com https://*.basemaps.cartocdn.com; worker-src 'self' blob:; frame-src https://www.youtube.com; object-src 'none'; base-uri 'self'; form-action 'self'; manifest-src 'self'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://unpkg.com https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://unpkg.com; font-src 'self'; img-src 'self' data: blob: https: https://advkoujfgbrrjvqexrcu.supabase.co https://*.basemaps.cartocdn.com https://unpkg.com; connect-src 'self' https://advkoujfgbrrjvqexrcu.supabase.co wss://advkoujfgbrrjvqexrcu.supabase.co https://unpkg.com https://*.basemaps.cartocdn.com; worker-src 'self' blob:; frame-src https://www.youtube.com; object-src 'none'; base-uri 'self'; form-action 'self'; manifest-src 'self'">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Meseo · Formación de sala</title>
@@ -52,7 +52,7 @@
 <meta property="og:description" content="Formación de equipos de sala: carta, alérgenos, vinos, exámenes y juegos de repaso.">
 <meta property="og:url" content="https://meseo.es/">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"Meseo","url":"https://meseo.es/"}</script>
-<meta name="app-version" content="7.503">
+<meta name="app-version" content="7.504">
 <meta name="app-build" content="May 2026">
 <meta name="theme-color" content="#1c2a22">
 <!-- ═══ PWA ═══ -->
@@ -2790,7 +2790,7 @@ const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><p
 const SRC = 'src';
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='7.503';  // sincronizada con sw.js VERSION (guard de CI)
+const APP_VERSION='7.504';  // sincronizada con sw.js VERSION (guard de CI)
 const APP_BUILD='Jul 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;
@@ -10911,6 +10911,24 @@ function _dqQuestion(dayStr){
   // ofrecen es regalar la respuesta en el enunciado. El propietario lo cazó el
   // 9 de septiembre; medido sobre un año, salía 6 días.
   const svcDishes=dishes.filter(d=>DISH_SERVICE[d.id] && !/\((almuerzo|cena|lunch|dinner)\)/i.test(d.name));
+  // Carta sin turnos (la demo, Akira, cualquier restaurante nuevo): no hay
+  // pregunta de servicio que hacer. Antes pick([]) devolvía undefined y el
+  // Reto se abría en blanco ~3 de cada 4 días (auditoría oct 2026). Se
+  // pregunta el apartado de la carta. En Txoko no cambia nada: sólo entra
+  // aquí cuando no hay turnos.
+  if(!svcDishes.length){
+    const cats=[...new Set(dishes.map(x=>x.cat).filter(Boolean))].sort();
+    const conCat=dishes.filter(x=>x.cat);
+    if(cats.length<2 || !conCat.length) return null;
+    const dc=pick(conCat);
+    const otras=_dqSample(cats.filter(c=>c!==dc.cat),Math.min(3,cats.length-1),rng);
+    const copts=_dqSample([dc.cat].concat(otras),otras.length+1,rng);
+    const catLbl=c=>(typeof catLocal==='function'?catLocal(c):c);
+    return { day:dayStr, type:'cat',
+      q: en?`In which section of the menu is “${dc.name}”?`:`¿En qué apartado de la carta está «${dc.name}»?`,
+      opts: copts.map(catLbl), correctIdx: copts.indexOf(dc.cat),
+      info: en?`“${dc.name}” is in ${catLbl(dc.cat)}.`:`«${dc.name}» está en ${catLbl(dc.cat)}.` };
+  }
   const d=pick(svcDishes);
   const svc=DISH_SERVICE[d.id];
   const opts=en?['Lunch only','Dinner only','Lunch and dinner']:['Solo almuerzo','Solo cena','Almuerzo y cena'];
@@ -10924,6 +10942,11 @@ function _dqXpFor(streak, ok){ return ok ? 40+Math.min((Math.max(streak,1)-1)*5,
 function openDailyReto(){
   if(!currentUser) return;
   window._dqCurrent=_dqQuestion(todayStr());
+  // Sin pregunta posible (carta de un solo apartado), no se abre en blanco.
+  if(!window._dqCurrent){
+    if(typeof showToast==='function') showToast(LANG==='en'?'No daily challenge for this menu yet.':'Todavía no hay reto del día para esta carta.','info',3500);
+    return;
+  }
   _dqRender();
 }
 function _dqPick(i){
@@ -10931,6 +10954,7 @@ function _dqPick(i){
   const day=todayStr();
   if(!emp || emp.dqLastDay===day) return; // una sola oportunidad al día
   const q=window._dqCurrent||_dqQuestion(day);
+  if(!q) return;
   const ok=(i===q.correctIdx);
   // La racha premia JUGAR a diario (el acierto paga más XP): así el hábito
   // no se rompe por fallar una pregunta difícil.
@@ -10958,6 +10982,7 @@ function _dqRender(){
   const emp=getEmp(currentUser);
   const day=todayStr();
   const q=window._dqCurrent||_dqQuestion(day);
+  if(!q) return;
   const done=_dqIsDone(emp);
   const streak=emp.dqStreak||0;
   let ov=document.getElementById('dqOverlay');
@@ -26531,7 +26556,7 @@ function renderRanking(){
       return;
     }
 
-    const medals = [`<div style="width:28px;height:28px;clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);background:linear-gradient(135deg,var(--gold),#9a7340);display:flex;align-items:center;justify-content:center;color:var(--parchment);font-weight:800;font-size:.75rem;font-family:'Cinzel',serif;box-shadow:0 2px 6px rgba(196,154,60,.3);text-shadow:none">1st</div>`,`<div style="width:28px;height:28px;clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);background:linear-gradient(135deg,#e8e8e8,#d0d0d0);display:flex;align-items:center;justify-content:center;color:#2a2a2a;font-weight:800;font-size:.75rem;font-family:'Cinzel',serif;box-shadow:0 2px 6px rgba(200,200,200,.4);text-shadow:none">2nd</div>`,`<div style="width:28px;height:28px;clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);background:linear-gradient(135deg,#d4a574,#b8865c);display:flex;align-items:center;justify-content:center;color:#2a2a2a;font-weight:800;font-size:.75rem;font-family:'Cinzel',serif;box-shadow:0 2px 6px rgba(180,140,100,.4);text-shadow:none">3rd</div>`];
+    const medals = [`<div style="width:28px;height:28px;clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);background:linear-gradient(135deg,var(--gold),#9a7340);display:flex;align-items:center;justify-content:center;color:var(--parchment);font-weight:800;font-size:.75rem;font-family:'Cinzel',serif;box-shadow:0 2px 6px rgba(196,154,60,.3);text-shadow:none">${LANG==='en'?'1st':'1.º'}</div>`,`<div style="width:28px;height:28px;clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);background:linear-gradient(135deg,#e8e8e8,#d0d0d0);display:flex;align-items:center;justify-content:center;color:#2a2a2a;font-weight:800;font-size:.75rem;font-family:'Cinzel',serif;box-shadow:0 2px 6px rgba(200,200,200,.4);text-shadow:none">${LANG==='en'?'2nd':'2.º'}</div>`,`<div style="width:28px;height:28px;clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);background:linear-gradient(135deg,#d4a574,#b8865c);display:flex;align-items:center;justify-content:center;color:#2a2a2a;font-weight:800;font-size:.75rem;font-family:'Cinzel',serif;box-shadow:0 2px 6px rgba(180,140,100,.4);text-shadow:none">${LANG==='en'?'3rd':'3.º'}</div>`];
 
     const rows = sorted.map((emp, i) => {
       const lvl = getLevelInfo(emp.xp||0);
@@ -29826,7 +29851,7 @@ async function renderDuel() {
         const isMe = p.name === currentUser;
         const empR = getEmp(p.name);
         return `<div class="duel-season-row" style="${isMe?'background:var(--gold-b);border-radius:var(--r2);padding:.4rem .5rem;':''}">
-          <div class="duel-season-pos">${i===0?'1st':i===1?'2nd':i===2?'3rd':i+1}</div>
+          <div class="duel-season-pos">${LANG==='en'?(i===0?'1st':i===1?'2nd':i===2?'3rd':i+1):(i<3?(i+1)+'.º':i+1)}</div>
           <div class="duel-season-name">${escapeHTML(p.name)}${getTrophyBadge(empR?.trophies)}${isMe?' <span style="color:var(--gold);font-size:.65rem">← tú</span>':''}</div>
           <div style="font-size:.65rem;color:var(--parch3);margin-right:.5rem">${p.wins}V ${p.losses}D${p.draws?' '+p.draws+(LANG==='en'?'D':'E'):''}</div>
           <div class="duel-season-pts">${p.wins*3+p.draws}</div>
