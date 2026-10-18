@@ -11022,3 +11022,47 @@ html[data-venue="demo"] .ri-cta-mesa .ri-cta-icon{border-color:rgba(200,163,90,.
 .parte-guardar{width:100%;margin-top:.3rem}
 .parte-vistos{max-width:560px;margin:1.4rem auto 0;padding-top:1rem;border-top:1px dashed var(--line2);display:flex;flex-direction:column;gap:.5rem}
 .parte-vistos-l{display:flex;flex-wrap:wrap;gap:.35rem}
+
+/* ═══ CARTA · fotos | lista (oct 2026) ═══
+   Plating guide y Repaso eran la misma carta dos veces. Ahora una pestaña con
+   un conmutador arriba (reutiliza .tec-vista) y, al pie, el enlace discreto a
+   Actualidad, que ya no tiene chip. */
+.carta-vista{margin:.1rem 0 .9rem}
+.carta-pie{display:block;width:100%;min-height:44px;margin:1.2rem 0 .4rem;padding:.6rem .8rem;background:transparent;border:none;cursor:pointer;
+  font-family:var(--font-mono);font-size:var(--fs-1);letter-spacing:.09em;text-transform:uppercase;color:var(--parch4);text-align:center}
+.carta-pie:active{color:var(--gold-deep)}
+
+/* ═══ FICHA DEL PLATO · «Cómo se cocina» ═══
+   Las técnicas ya no son pestaña: se pliegan dentro de la ficha completa y de
+   la vista rápida, sólo cuando el plato tiene alguna. */
+.dish-tec{margin:0 0 .75rem;padding:.75rem .9rem;background:#faf6ee;border:1.5px solid var(--ink3);border-radius:var(--r)}
+.dish-tec.compacto{margin:.7rem 0 0;padding:.6rem .75rem;background:rgba(28,42,34,.03)}
+.dish-tec>summary{cursor:pointer;list-style:none;display:flex;align-items:center;gap:.4rem;min-height:28px;
+  font-family:var(--font-mono);font-size:var(--fs-1);letter-spacing:.12em;text-transform:uppercase;color:var(--gold)}
+.dish-tec>summary::-webkit-details-marker{display:none}
+.dish-tec>summary::after{content:'▸';margin-left:auto;color:var(--parch3);transition:transform .15s}
+.dish-tec[open]>summary::after{transform:rotate(90deg)}
+.dish-tec-n{font-family:var(--font-mono);font-size:.56rem;color:#fff;background:var(--gold);padding:.08rem .4rem;border-radius:8px;letter-spacing:0}
+.dish-tec-body{margin-top:.6rem;display:flex;flex-direction:column;gap:.6rem}
+.dish-tec-row{border-top:1px dashed var(--ink3);padding-top:.55rem}
+.dish-tec-row:first-child{border-top:none;padding-top:0}
+.dish-tec-h{font-family:var(--font-sans);font-size:var(--fs-3);font-weight:700;color:var(--parchment)}
+.dish-tec-def{font-size:var(--fs-3);line-height:1.5;color:var(--parch2);margin-top:.15rem}
+.dish-tec-nota{font-size:var(--fs-2);line-height:1.45;color:var(--parch3);margin-top:.25rem;font-style:italic}
+.dish-tec-mas{align-self:flex-start;min-height:36px;padding:.3rem .2rem;background:transparent;border:none;cursor:pointer;
+  font-family:var(--font-mono);font-size:var(--fs-1);letter-spacing:.06em;color:var(--gold-deep)}
+
+/* ═══ PRACTICAR · selector de Examen (oct 2026) ═══
+   Una sola entrada «Examen» abre esta hoja con los cuatro exámenes. */
+#exselOverlay{position:fixed;inset:0;z-index:100001;display:flex;align-items:flex-end;justify-content:center}
+.exsel-card{position:relative;width:100%;max-width:480px;max-height:88vh;overflow-y:auto;background:#faf6ee;
+  border-radius:var(--r) var(--r) 0 0;border:1.5px solid var(--ink3);border-bottom:none;box-shadow:0 -14px 40px rgba(0,0,0,.4);
+  padding:1rem 1rem calc(1rem + env(safe-area-inset-bottom,0px));animation:slideUp .22s ease both}
+.exsel-head{margin:0 2.4rem .6rem 0}
+.exsel-eyebrow{font-family:var(--font-mono);font-size:var(--fs-1);letter-spacing:.15em;text-transform:uppercase;color:var(--gold-deep)}
+.exsel-title{font-family:var(--font-serif);font-size:var(--fs-6);font-weight:700;color:var(--parchment);line-height:1.2;margin-top:.15rem}
+.exsel-sub{font-family:var(--font-read);font-size:var(--fs-3);font-style:italic;color:var(--ink3);margin-top:.15rem}
+@media (min-width:520px){#exselOverlay{align-items:center;padding:1rem}.exsel-card{border-radius:var(--r);border-bottom:1.5px solid var(--ink3)}}
+
+/* Repaso: el filtro «Solo fallos» (lo que era Repasar fallos). */
+.ri-solo-fallos{border-color:rgba(176,86,60,.55);color:#9a4a30}
