@@ -17395,6 +17395,52 @@ test('Mesa: la demo enseña los cuatro estados', () => {
   assert(r1 >= 6, 'al menos 6 comandas de cambio en la demo');
 });
 
+console.log('\nEl parte del día (oct 2026)');
+test('Parte: _parteCardHTML no pinta nada sin parte y pinta las secciones con contenido', () => {
+  const i = html.indexOf('function _parteTieneContenido('), j = html.indexOf('function _parteAbrir(');
+  assert(i > 0 && j > i, 'bloque del parte no encontrado');
+  const src = html.slice(i, j)
+    // _parteGet y la carga en segundo plano se sustituyen por los stubs
+    .replace(/function _parteGet\(\)\{[\s\S]*?\n\}\n/, '')
+    .replace(/async function _parteCargar\([\s\S]*?\n\}\n/, '');
+  const campos = html.slice(html.indexOf('const _PARTE_CAMPOS'), html.indexOf(';', html.indexOf('const _PARTE_CAMPOS')) + 1);
+  const F = new Function('LANG','DISHES','getDish','escapeHTML','currentUser','getEmp','todayStr','_esDemo','_esMando','_esAdmin','_parteGet','_parteCargar', // eslint-disable-line no-new-func
+    campos + src + '; return { _parteCardHTML, _parteTieneContenido };');
+  const dishes = [{ id: 4008, name: 'Carabinero' }, { id: 4013, name: 'Pichón' }];
+  const M = F('es', dishes, d => d, s => String(s), 'Ana', () => ({}), () => '2026-10-19', () => true, () => false, () => false, () => null, () => false);
+  assert(M._parteCardHTML() === '', 'sin parte no se pinta nada');
+  assert(M._parteCardHTML({ fecha: '2026-10-19', data: { agotados: [], sugerencias: '  ' } }) === '', 'un parte vacío tampoco');
+  assert(M._parteTieneContenido({ nota: 'x' }) && !M._parteTieneContenido({}), '_parteTieneContenido');
+  const out = M._parteCardHTML({ fecha: '2026-10-19', autor: 'Nayra', data: { agotados: [4008], sugerencias: 'Cherne a la brasa', reservas: 'Mesa 12 a las 21:00', nota: '', empujar: '' } }, { vistoAt: null });
+  assert(/parte-card/.test(out) && /Carabinero/.test(out) && /Cherne a la brasa/.test(out) && /Mesa 12/.test(out), 'pinta las secciones con contenido');
+  assert(!/parte-sec-nota/.test(out) && !/parte-sec-empujar/.test(out), 'las secciones vacías no se pintan');
+  assert(/parte-visto-btn/.test(out) && /_parteMarcarVisto/.test(out), 'botón Visto cuando no está visto');
+  const ok = M._parteCardHTML({ fecha: '2026-10-19', data: { nota: 'Hola' } }, { vistoAt: '2026-10-19T19:42:00Z' });
+  assert(/parte-visto-ok/.test(ok) && !/parte-visto-btn/.test(ok), 'visto: sello en vez de botón');
+  assert(!/parte-edit/.test(ok), 'sin mando no hay botón Editar');
+});
+test('Parte: la demo no sale a la red y el Visto no da XP', () => {
+  const i = html.indexOf('async function _parteCargar('), j = html.indexOf('function _parteVistoAt(');
+  const carga = html.slice(i, j);
+  assert(/^\s*if\(typeof _esDemo === 'function' && _esDemo\(\)\) return false;/m.test(carga), 'la guarda _esDemo va antes de cualquier fetch de partes');
+  const mv = html.slice(html.indexOf('async function _parteMarcarVisto('), html.indexOf('function _parteRepintar('));
+  assert(/_esDemo\(\)\) return;/.test(mv) && mv.indexOf('_esDemo') < mv.indexOf('fetch('), 'en demo el visto se queda en local');
+  assert(!/xp|addXP|ganarXP/i.test(mv), 'marcar visto no da XP');
+  const guardar = html.slice(html.indexOf('async function _parteEditarGuardar('), html.indexOf('async function _parteVistosCargar('));
+  assert(/resolution=merge-duplicates/.test(guardar) && /on_conflict=venue,fecha/.test(guardar), 'el parte se guarda con upsert');
+  assert(/DB\.parte = fila; saveDB\(\)/.test(guardar), 'en demo se guarda en la base local');
+  // La tarjeta cuelga del gancho de Inicio, el Line Up la lleva de primer paso
+  // y el panel de supervisor tiene su entrada.
+  assert(/_parteCardHTML\(\)/.test(html.slice(html.indexOf('function renderDashboard('), html.indexOf('function renderDashboard(') + 3000)), 'Inicio llama al gancho');
+  assert(/items\.unshift\(\{ key:'parte'/.test(html.slice(html.indexOf('function _luItems('), html.indexOf('function _luTitle('))), 'el parte es el primer paso del Line Up');
+  assert(/parte: \(\)=>_parteEditarAbrir\(\)/.test(html) && /_supTool\('parte'\)/.test(html), 'entrada en el panel de supervisor');
+  assert(/_supEquipo\(all, nombres\)/.test(html) && /_supDividir\(all, equipo\)\.activos/.test(html), 'el total «de 12» sale del equipo activo del panel');
+  const css = read('styles.css');
+  for (const c of ['.parte-card{', '.parte-visto-btn{', '.parte-form{', '.parte-res-it{']) assert(css.includes(c), `falta ${c} en styles.css`);
+  // Comentarios de las tablas: sin datos personales de clientes (texto de ayuda en el campo).
+  assert(/Sin nombres ni datos personales de clientes/.test(html), 'ayuda del campo de reservas');
+});
+
 console.log('\nHygiene');
 test('no git conflict markers in tracked source', () => {
   for (const f of ['index.html', 'sw.js', 'data/wines.json', 'data/lqa-situations.json', 'data/ghost-scenarios.json']) {
