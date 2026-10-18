@@ -52,7 +52,7 @@
 <meta property="og:description" content="Formación de equipos de sala: carta, alérgenos, vinos, exámenes y juegos de repaso.">
 <meta property="og:url" content="https://meseo.es/">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"Meseo","url":"https://meseo.es/"}</script>
-<meta name="app-version" content="7.512">
+<meta name="app-version" content="7.513">
 <meta name="app-build" content="May 2026">
 <meta name="theme-color" content="#1c2a22">
 <!-- ═══ PWA ═══ -->
@@ -2803,7 +2803,7 @@ const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><p
 const SRC = 'src';
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='7.512';  // sincronizada con sw.js VERSION (guard de CI)
+const APP_VERSION='7.513';  // sincronizada con sw.js VERSION (guard de CI)
 const APP_BUILD='Jul 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;
@@ -6664,6 +6664,27 @@ function _xpGateway(mode, amount){
   return granted;
 }
 
+// ═══ MODO TRANQUILO ═══
+// Por persona. Con él activo no se enseñan puntos, rachas, liga ni logros:
+// solo lo que sabe y lo que le falta. La XP se sigue contando por debajo,
+// así que al desactivarlo no se pierde nada. Se guarda en la ficha
+// (emp.modoTranquilo) con fecha, y viaja en extras.mt como la cuenta de
+// pruebas: manda el cambio más reciente, venga del móvil que venga.
+function _modoTranquilo(emp){
+  try{
+    const e = emp || (typeof currentUser!=='undefined' && currentUser ? getEmp(currentUser) : null);
+    return !!(e && e.modoTranquilo);
+  }catch(_){ return false; }
+}
+function _setModoTranquilo(on){
+  if(typeof currentUser==='undefined' || !currentUser) return;
+  const emp = getEmp(currentUser);
+  if(!emp) return;
+  emp.modoTranquilo = !!on;
+  emp.modoTranquiloTs = new Date().toISOString();
+  saveDB();
+}
+
 // Award XP and show toast (mode optional — passes through throttle if given)
 function awardXP(amount, reason, mode){
   if(!currentUser||amount<=0) return;
@@ -6679,6 +6700,8 @@ function awardXP(amount, reason, mode){
   if(!emp.onboardingSeen){ emp.onboardingSeen = true; }
   const newLevel = getLevelInfo(emp.xp);
   saveDB();
+  // Modo tranquilo: la XP ya está sumada; ni aviso ni subida de nivel en pantalla.
+  if(_modoTranquilo(emp)) return;
   // Show XP toast (with the actual granted amount, so user sees diminishing effect)
   showXPToast(granted, reason);
   // Level up?
@@ -11002,12 +11025,14 @@ function _dqRender(){
     }
     return `<button type="button" style="${st}" ${attr}>${mark}<span>${escapeHTML(o)}</span></button>`;
   }).join('');
+  // Modo tranquilo: ni XP ni racha en el reto; la respuesta y su explicación, sí.
+  const _mtReto=_modoTranquilo(emp);
   const resultBlock = done ? `
     <div style="margin:.6rem 0 .2rem;padding:.7rem .9rem;border-radius:10px;background:${emp.dqLastOk?'rgba(77,138,94,.1)':'rgba(160,72,72,.07)'};border:1px solid ${emp.dqLastOk?'rgba(77,138,94,.3)':'rgba(160,72,72,.25)'}">
-      <div style="font-weight:800;font-size:.88rem;color:${emp.dqLastOk?'#3a6a4a':'#a04848'}">${emp.dqLastOk?(en?'Correct! ':'¡Correcto! ')+'+'+_dqXpFor(streak,true)+' XP':(en?'Not this time':'Esta vez no')+' · +'+_dqXpFor(streak,false)+' XP'}</div>
+      <div style="font-weight:800;font-size:.88rem;color:${emp.dqLastOk?'#3a6a4a':'#a04848'}">${_mtReto?(emp.dqLastOk?(en?'Correct!':'¡Correcto!'):(en?'Not this time':'Esta vez no')):(emp.dqLastOk?(en?'Correct! ':'¡Correcto! ')+'+'+_dqXpFor(streak,true)+' XP':(en?'Not this time':'Esta vez no')+' · +'+_dqXpFor(streak,false)+' XP')}</div>
       <div style="font-size:.78rem;color:var(--parch2);margin-top:.25rem">${escapeHTML(q.info||'')}</div>
-      <div style="font-size:.74rem;color:var(--parch3);margin-top:.4rem"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align:-.15em;flex:none"><path d="M12 3s4 3.5 4 7.5a4 4 0 01-8 0c0-1.5.6-2.6 1.2-3.4C9.8 6.3 12 5 12 3z"/><path d="M12 21a5 5 0 005-5c0-2-1.2-3.6-2.4-4.8"/><path d="M12 21a5 5 0 01-5-5c0-1.2.4-2.2 1-3"/></svg> ${en?'Streak':'Racha'}: <b>${streak}</b> ${en?(streak===1?'day':'days'):(streak===1?'día':'días')} · ${en?'come back tomorrow':'mañana hay otra'}</div>
-    </div>` : `
+      ${_mtReto?`<div style="font-size:.74rem;color:var(--parch3);margin-top:.4rem">${en?'Come back tomorrow':'Mañana hay otra'}</div>`:`<div style="font-size:.74rem;color:var(--parch3);margin-top:.4rem"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align:-.15em;flex:none"><path d="M12 3s4 3.5 4 7.5a4 4 0 01-8 0c0-1.5.6-2.6 1.2-3.4C9.8 6.3 12 5 12 3z"/><path d="M12 21a5 5 0 005-5c0-2-1.2-3.6-2.4-4.8"/><path d="M12 21a5 5 0 01-5-5c0-1.2.4-2.2 1-3"/></svg> ${en?'Streak':'Racha'}: <b>${streak}</b> ${en?(streak===1?'day':'days'):(streak===1?'día':'días')} · ${en?'come back tomorrow':'mañana hay otra'}</div>`}
+    </div>` : _mtReto ? '' : `
     <div style="font-size:.72rem;color:var(--parch3);margin:.2rem 0 .4rem"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align:-.15em;flex:none"><path d="M12 3s4 3.5 4 7.5a4 4 0 01-8 0c0-1.5.6-2.6 1.2-3.4C9.8 6.3 12 5 12 3z"/><path d="M12 21a5 5 0 005-5c0-2-1.2-3.6-2.4-4.8"/><path d="M12 21a5 5 0 01-5-5c0-1.2.4-2.2 1-3"/></svg> ${en?'Streak':'Racha'}: <b>${streak}</b> · ${en?'answering daily raises the bonus':'responder a diario sube el bonus'}</div>`;
   ov.innerHTML=`
     <div role="dialog" aria-modal="true" aria-label="${en?'Daily quiz':'Reto del día'}" style="background:linear-gradient(155deg,#faf6ee,#f0e8d8);border:1.5px solid rgba(196,154,60,.4);border-radius:16px;max-width:460px;width:100%;padding:1.3rem 1.3rem 1rem;box-shadow:0 18px 60px rgba(0,0,0,.45)">
@@ -11057,7 +11082,8 @@ function _pddWineFor(dish){
 }
 function _pddHeroHTML(emp,en){
   if(!_dqIsDone(emp)){
-    const s=emp.dqStreak||0;
+    // Modo tranquilo: la racha del reto no se enseña.
+    const s=_modoTranquilo(emp) ? 0 : (emp.dqStreak||0);
     return `<div class="pdd-hero">
       <div class="pdd-eyebrow"><span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align:-.15em;flex:none"><path d="M12 3.5l2.6 5.6 6.1.8-4.5 4.2 1.2 6-5.4-3-5.4 3 1.2-6L3.3 9.9l6.1-.8L12 3.5z"/></svg> ${en?'Daily quiz':'Reto del día'}</span><span>≈ 30 s</span></div>
       <div class="pdd-title">${en?'Today’s question':'La pregunta de hoy'}</div>
@@ -11293,6 +11319,10 @@ function _extrasCompose(emp){
     // con fecha, para que gane el último cambio y no el máximo. Sin fecha no
     // se manda nada: esta ficha no opina.
     ...(emp.pruebasTs ? { pb:{ v: emp.pruebas ? 1 : 0, t: emp.pruebasTs } } : {}),
+    // Modo tranquilo: mismo criterio que la cuenta de pruebas (gana el último cambio).
+    ...(emp.modoTranquiloTs ? { mt:{ v: emp.modoTranquilo ? 1 : 0, t: emp.modoTranquiloTs } } : {}),
+    // Fechas de los certificados por categoría (se queda la más antigua).
+    ...(emp.certFechas && Object.keys(emp.certFechas).length ? { cf: emp.certFechas } : {}),
   });
 }
 function _extrasMergeInto(emp, extrasStr){
@@ -11327,6 +11357,15 @@ function _extrasMergeInto(emp, extrasStr){
   // Cuenta de pruebas: manda el cambio más reciente, venga de donde venga.
   if(x.pb && x.pb.t && String(x.pb.t) > String(emp.pruebasTs||'')){
     emp.pruebas = !!x.pb.v; emp.pruebasTs = String(x.pb.t);
+  }
+  // Modo tranquilo: manda el cambio más reciente, venga de donde venga.
+  if(x.mt && x.mt.t && String(x.mt.t) > String(emp.modoTranquiloTs||'')){
+    emp.modoTranquilo = !!x.mt.v; emp.modoTranquiloTs = String(x.mt.t);
+  }
+  // Fechas de certificado: por categoría, la más antigua de las dos.
+  if(x.cf && typeof x.cf==='object'){
+    emp.certFechas = emp.certFechas || {};
+    for(const c in x.cf){ emp.certFechas[c] = _certFechaMin(emp.certFechas[c], x.cf[c]); }
   }
   // Pase de cocina: contadores al máximo (son monótonos) y los fallos por
   // plato sumados al mayor de los dos lados, que es lo que el supervisor mira.
@@ -12871,6 +12910,14 @@ function openAjustes(){
         <span style="font-family:var(--font-sans);font-size:var(--fs-3);font-weight:700;color:#2b2b2b">${_en?'Sound':'Sonido'}</span>
         <input id="ajSndToggle" type="checkbox" style="width:20px;height:20px;accent-color:#8a5a2b;cursor:pointer" ${soundEnabled?'checked':''}>
       </label>
+      ${H(_en?'Quiet mode':'Modo tranquilo')}
+      <div style="font-family:var(--font-sans);font-size:var(--fs-3);color:#5a6a5e;line-height:1.45;margin-bottom:.55rem">${_en
+        ? 'No points, streaks or ranking. Only what you know and what you still have to learn.'
+        : 'Sin puntos, rachas ni ranking. Solo lo que sabes y lo que te falta.'}</div>
+      <label for="ajMtToggle" style="display:flex;align-items:center;justify-content:space-between;gap:.75rem;padding:.65rem .75rem;border:1px solid rgba(196,154,60,.35);border-radius:10px;background:#fff;cursor:pointer;margin-bottom:.4rem">
+        <span style="font-family:var(--font-sans);font-size:var(--fs-3);font-weight:700;color:#2b2b2b">${_en?'Quiet mode':'Modo tranquilo'}</span>
+        <input id="ajMtToggle" type="checkbox" style="width:20px;height:20px;accent-color:#8a5a2b;cursor:pointer" ${_modoTranquilo(emp)?'checked':''}>
+      </label>
       ${H(_en?'Privacy':'Privacidad')}
       <div style="font-family:var(--font-sans);font-size:var(--fs-3);color:#5a6a5e;line-height:1.45;margin-bottom:.55rem">${_en?'We record anonymous learning metrics (which exercises you do, how you progress) to improve your training. Never your messages or search text. Data stays on this device and is deleted after 30 days.':'Registramos métricas de aprendizaje anónimas (qué ejercicios haces, cómo progresas) para mejorar tu formación. Nunca tus mensajes ni el texto de búsqueda. Se guardan en este dispositivo y se borran a los 30 días.'}</div>
       <label for="ajTmToggle" style="display:flex;align-items:center;justify-content:space-between;gap:.75rem;padding:.65rem .75rem;border:1px solid rgba(196,154,60,.35);border-radius:10px;background:#fff;cursor:pointer;margin-bottom:.4rem">
@@ -13000,6 +13047,17 @@ function openAjustes(){
   // que abrir Ajustes no pueda invertir nada por sí solo.
   const snd=$('ajSndToggle');
   if(snd) snd.onchange = ()=>{ if(snd.checked !== soundEnabled) toggleSound(); };
+
+  // Modo tranquilo: se guarda en la ficha y se repinta la pestaña que haya
+  // debajo, que es donde se nota (Hoy, Yo o Equipo).
+  const mt=$('ajMtToggle');
+  if(mt) mt.onchange = ()=>{
+    _setModoTranquilo(mt.checked);
+    if(typeof showToast==='function') showToast(mt.checked
+      ? (_en?'Quiet mode on. Your progress keeps counting underneath.':'Modo tranquilo activado. Tu progreso se sigue contando por debajo.')
+      : (_en?'Quiet mode off.':'Modo tranquilo desactivado.'), 'info', 3000);
+    try{ if(typeof showTab==='function') showTab(typeof currentTab!=='undefined' ? currentTab : 'dashboard', true); }catch(_){}
+  };
 
   if(typeof _telemetryOn==='function'){
     _tmRefreshCount();
@@ -16818,9 +16876,10 @@ function renderRankingHub(){
   // estadísticas, tus logros y tus ajustes: sus pestañas sólo salen ahí.
   if(sub === 'ranking') return;
   const _en = LANG==='en';
+  // Modo tranquilo: el chip de Logros no sale (la galería sigue existiendo).
   const bar = _chipsBar([
     ['stats', _en?'Stats':'Estadísticas'],
-    ['logros', _en?'Achievements':'Logros']
+    ...(_modoTranquilo() ? [] : [['logros', _en?'Achievements':'Logros']])
   ], sub, id => `_subTab.ranking='${id}';showTab('${id}')`)
     .replace('</div>', `<button type="button" class="subtab-chip yo-ajustes" onclick="openAjustes()">${_en?'Settings':'Ajustes'}</button></div>`);
   c.insertAdjacentHTML('afterbegin', bar);
@@ -22368,6 +22427,8 @@ function renderDashboard(){
 
   const _demoBanda = (typeof _esDemo==='function' && _esDemo()) ? _demoBandaHTML() : '';
   const _demoContacto = (typeof _esDemo==='function' && _esDemo()) ? _demoContactoHTML() : '';
+  // Modo tranquilo: la cabecera no enseña nivel, XP ni racha.
+  const _tranquilo = _modoTranquilo(emp);
 
   document.getElementById('appContent').innerHTML=`
     ${_demoBanda}
@@ -22384,13 +22445,14 @@ function renderDashboard(){
           <div class="dash-hero-label">${(typeof ACTIVE_VENUE!=='undefined' && ACTIVE_VENUE && ACTIVE_VENUE.eyebrow) ? escapeHtml(ACTIVE_VENUE.eyebrow.split(' · ')[0]) : 'Tenerife'}</div>
           <div class="dash-hero-saludo"><span class="dash-hero-greeting">${greeting},</span> <span class="dash-hero-name">${escapeHTML(currentUser)}</span></div>
         </div>
-        <div class="dash-hero-lvl-badge">
+        ${_tranquilo ? '' : `<div class="dash-hero-lvl-badge">
           <div class="dash-hero-lvl-num">${tunicLevelIcon(lvl.level,lvl.color,14)} Lv.${lvl.level}</div>
           ${streak>1?`<div class="dash-hero-streak"><svg width="8" height="8" viewBox="0 0 8 8"><polygon points="4,0 8,4 4,8 0,4" fill="#e4be68" opacity=".8"/></svg>${streak}d</div>`:''}
-        </div>
+        </div>`}
       </div>
-      <!-- XP bar (also shows level title — no need to duplicate it in the badge above) -->
-      ${renderXPBar()}
+      <!-- XP bar (also shows level title — no need to duplicate it in the badge above).
+           Modo tranquilo: en su lugar, cuántos platos domina. -->
+      ${_tranquilo ? _heroTranquiloHTML(emp,_en) : renderXPBar()}
     </div>
 
     ${_parteCard}
@@ -22434,6 +22496,20 @@ function renderDashboard(){
   checkNewAchievements();
   _hoyCheckOvertaken();   // trigger rojo si alguien me quitó un nº1 de juego
   _pddAsyncFill();        // foto/maridaje del plato del día
+}
+
+// Cabecera de Hoy con el modo tranquilo: en vez de la barra de XP, cuántos
+// platos domina y de cuántos. Un toque lleva a Yo, como la barra.
+function _heroTranquiloHTML(emp,_en){
+  const known=emp.knownDishes||{};
+  const n=Object.values(known).filter(Boolean).length;
+  const total=(typeof DISHES!=='undefined' && DISHES) ? DISHES.length : 0;
+  return `<div class="xp-bar-wrap hero-tranquilo" onclick="showTab('stats')" title="${_en?'See what you know':'Ver lo que sabes'}">
+      <div class="xp-bar-sub" style="display:flex;align-items:center;gap:.3rem;flex-wrap:wrap">
+        <span>${_en?`${n} of ${total} dishes mastered`:`${n} de ${total} platos dominados`}</span>
+        <span style="opacity:.5">·</span><span>${_en?'quiet mode':'modo tranquilo'}</span>
+      </div>
+    </div>`;
 }
 
 // Acceso «Mesa con alergias» de Consulta rápida, a media anchura. Lleva a
@@ -25207,6 +25283,10 @@ function renderStats(){
 
   // Logros desbloqueados (la fila con enlace a la galería venía del inicio)
   const logrosN = (typeof getUnlockedAchievements==='function') ? getUnlockedAchievements(emp).length : 0;
+  // Modo tranquilo: sin XP, nivel, racha, liga, logros ni duelos. Quedan los
+  // platos dominados, la precisión por tema, los exámenes y los certificados.
+  const _tranquilo = _modoTranquilo(emp);
+  const _en = LANG==='en';
 
   // Known by category
   const knownByCat = {};
@@ -25253,14 +25333,17 @@ function renderStats(){
       <div style="width:44px;height:44px;clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);background:linear-gradient(135deg,var(--gold),var(--gold2));border:1.5px solid var(--gold-a);display:flex;align-items:center;justify-content:center;font-size:1.2rem;overflow:hidden">${renderSmallAvatar(currentUser, 44)}</div>
       <div>
         <div style="font-family:'Cinzel',serif;font-size:1.1rem;color:var(--parchment)">${escapeHTML(currentUser)}</div>
-        <div style="font-family:var(--font-mono);font-size:var(--fs-1);color:var(--gold);display:flex;align-items:center;gap:.2rem">${tunicLevelIcon(lvl.level,lvl.color,14)} ${lvl.title} · Nv.${lvl.level}</div>
+        ${_tranquilo
+          ? `<div style="font-family:var(--font-mono);font-size:var(--fs-1);color:var(--parch3)">${_en?'quiet mode':'modo tranquilo'}</div>`
+          : `<div style="font-family:var(--font-mono);font-size:var(--fs-1);color:var(--gold);display:flex;align-items:center;gap:.2rem">${tunicLevelIcon(lvl.level,lvl.color,14)} ${lvl.title} · Nv.${lvl.level}</div>`}
       </div>
-      <div style="margin-left:auto;text-align:right">
+      ${_tranquilo ? '' : `<div style="margin-left:auto;text-align:right">
         <div style="font-family:'Cinzel',serif;font-size:1.3rem;color:var(--gold)">${xp.toLocaleString()}</div>
         <div style="font-family:var(--font-mono);font-size:var(--fs-1);color:var(--parch4)">XP TOTAL</div>
-      </div>
+      </div>`}
     </div>
 
+    ${_tranquilo ? '' : `
     <!-- Racha del reto · precisión · liga (venían del inicio, oct 2026) -->
     <div class="hoy-stats" role="group" aria-label="${LANG==='en'?'Your numbers: quiz streak, exam accuracy, league position':'Tus números: racha del reto, precisión de exámenes, posición en la liga'}">
       <div class="hoy-stat"><b>${emp.dqStreak||0}</b><span>${LANG==='en'?'quiz streak':'racha reto'}</span></div>
@@ -25275,7 +25358,7 @@ function renderStats(){
         <span class="dash-row-sub" style="display:block">${LANG==='en'?`of ${ACHIEVEMENTS.length} · gem gallery`:`de ${ACHIEVEMENTS.length} · galería de gemas`}</span>
       </span>
       <span class="dash-row-go">›</span>
-    </button>
+    </button>`}
 
     <!-- Key stats grid -->
     <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:.4rem;margin-bottom:1rem">
@@ -25283,14 +25366,18 @@ function renderStats(){
         <div style="font-family:'Cinzel',serif;font-size:1.2rem;color:var(--parchment)">${sessions.length}</div>
         <div style="font-family:var(--font-mono);font-size:var(--fs-1);color:var(--parch4)">${LANG==='en'?'EXAMS':'EXÁMENES'}</div>
       </div>
-      <div style="background:linear-gradient(155deg,#faf6ee,var(--ink));border:1.5px solid rgba(196,154,60,.15);border-radius:var(--r2);padding:.65rem;text-align:center">
+      ${_tranquilo ? `<div style="background:linear-gradient(155deg,#faf6ee,var(--ink));border:1.5px solid rgba(196,154,60,.15);border-radius:var(--r2);padding:.65rem;text-align:center">
+        <div style="font-family:'Cinzel',serif;font-size:1.2rem;color:var(--parchment)">${totalQ?overall+'%':'—'}</div>
+        <div style="font-family:var(--font-mono);font-size:var(--fs-1);color:var(--parch4)">${LANG==='en'?'ACCURACY':'PRECISIÓN'}</div>
+      </div>` : `<div style="background:linear-gradient(155deg,#faf6ee,var(--ink));border:1.5px solid rgba(196,154,60,.15);border-radius:var(--r2);padding:.65rem;text-align:center">
         <div style="font-family:'Cinzel',serif;font-size:1.2rem;color:var(--parchment)">${streak>0?'●':''} ${streak}</div>
         <div style="font-family:var(--font-mono);font-size:var(--fs-1);color:var(--parch4)">${LANG==='en'?'DAYS IN A ROW':'DÍAS SEGUIDOS'}</div>
-      </div>
+      </div>`}
       <div style="background:linear-gradient(155deg,#faf6ee,var(--ink));border:1.5px solid rgba(196,154,60,.15);border-radius:var(--r2);padding:.65rem;text-align:center">
         <div style="font-family:'Cinzel',serif;font-size:1.2rem;color:var(--parchment)">${knownCount}<span style="font-size:.7rem;color:var(--parch4)">/${totalDishes}</span></div>
         <div style="font-family:var(--font-mono);font-size:var(--fs-1);color:var(--parch4)">${LANG==='en'?'MASTERED':'DOMINADOS'}</div>
       </div>
+      ${_tranquilo ? '' : `
       <div style="background:linear-gradient(155deg,#faf6ee,var(--ink));border:1.5px solid rgba(196,154,60,.15);border-radius:var(--r2);padding:.65rem;text-align:center">
         <div style="font-family:'Cinzel',serif;font-size:1.2rem;color:var(--parchment)">${totalTimeStr}</div>
         <div style="font-family:var(--font-mono);font-size:var(--fs-1);color:var(--parch4)">${LANG==='en'?'TIME':'TIEMPO'}</div>
@@ -25302,7 +25389,7 @@ function renderStats(){
       <div style="background:linear-gradient(155deg,#faf6ee,var(--ink));border:1.5px solid rgba(196,154,60,.15);border-radius:var(--r2);padding:.65rem;text-align:center">
         <div style="font-family:'Cinzel',serif;font-size:1.2rem;color:var(--parchment)">${duelWins}</div>
         <div style="font-family:var(--font-mono);font-size:var(--fs-1);color:var(--parch4)">${LANG==='en'?'DUELS WON':'DUELOS'}</div>
-      </div>
+      </div>`}
     </div>
 
     <!-- This week -->
@@ -25325,6 +25412,9 @@ function renderStats(){
       <div style="font-family:var(--font-mono);font-size:var(--fs-1);color:var(--gold);letter-spacing:.1em;margin-bottom:.6rem">${LANG==='en'?'ACCURACY BY TOPIC':'PRECISIÓN POR TEMA'}</div>
       ${topicBars}
     </div>
+
+    <!-- Certificados por categoría, con «Ver certificado» (imprimible) -->
+    ${_certSeccionHTML(emp)}
 
     <!-- Recent sessions -->
     ${sessions.length>0?`
@@ -25351,7 +25441,122 @@ function checkNewCertifications(emp, oldKnown){
   const oldCerts = getCertifications({knownDishes: oldKnown});
   const newCerts = getCertifications(emp);
   const fresh = newCerts.filter(c => !oldCerts.includes(c));
+  _certFechasSync(emp);
   fresh.forEach(cat => showCertModal(cat));
+}
+
+// ═══ CERTIFICADOS: FECHA Y PÁGINA IMPRIMIBLE ═══
+// La fecha de obtención se guarda en emp.certFechas[cat] (AAAA-MM-DD) desde
+// oct 2026. Los certificados anteriores no tienen fecha: se marcan con
+// 'antes' y se enseñan como «obtenido antes de oct 2026».
+const CERT_SIN_FECHA = 'antes';
+function _certFechaMin(a, b){
+  if(!a) return b; if(!b) return a;
+  if(a===CERT_SIN_FECHA || b===CERT_SIN_FECHA) return CERT_SIN_FECHA;
+  return a < b ? a : b;
+}
+function _certFechasSync(emp){
+  if(!emp) return;
+  const certs = getCertifications(emp);
+  let cambio = false;
+  if(!emp.certFechas){
+    // Primera vez con este dato: lo que ya estaba conseguido es anterior.
+    emp.certFechas = {};
+    certs.forEach(c => { emp.certFechas[c] = CERT_SIN_FECHA; });
+    cambio = true;
+  } else {
+    certs.forEach(c => { if(!emp.certFechas[c]){ emp.certFechas[c] = todayStr(); cambio = true; } });
+  }
+  if(cambio) saveDB();
+  return emp.certFechas;
+}
+function _certFechaTexto(f, en){
+  if(!f || f===CERT_SIN_FECHA) return en ? 'earned before Oct 2026' : 'obtenido antes de oct 2026';
+  const d = new Date(f + 'T12:00:00Z');
+  if(isNaN(d)) return f;
+  return d.toLocaleDateString(en ? 'en-GB' : 'es-ES', { day:'numeric', month:'long', year:'numeric' });
+}
+// Sección «Certificados» de Yo: una fila por categoría conseguida, con la
+// fecha y el botón que abre la página imprimible.
+function _certSeccionHTML(emp){
+  const en = LANG==='en';
+  const certs = getCertifications(emp);
+  const fechas = _certFechasSync(emp) || {};
+  const cab = `<div style="font-family:var(--font-mono);font-size:var(--fs-1);color:var(--gold);letter-spacing:.1em;margin-bottom:.6rem">${en?'CERTIFICATES':'CERTIFICADOS'}</div>`;
+  if(!certs.length){
+    return `<div style="background:linear-gradient(155deg,#faf6ee,var(--ink));border:1.5px solid rgba(196,154,60,.15);border-radius:var(--r2);padding:.8rem;margin-bottom:.75rem">
+      ${cab}
+      <div style="font-size:.78rem;color:var(--parch3);line-height:1.5">${en
+        ? 'Master 80% of the dishes in a category and you earn its certificate, ready to print.'
+        : 'Domina el 80% de los platos de una categoría y tendrás su certificado, listo para imprimir.'}</div>
+    </div>`;
+  }
+  const filas = certs.map(cat => {
+    const n = DISHES.filter(d => d.cat===cat).length;
+    return `<div style="display:flex;align-items:center;gap:.6rem;padding:.5rem 0;border-bottom:1px solid var(--line2)">
+      <span aria-hidden="true" style="flex:none;display:inline-flex">${CAT_ICONS[cat]||''}</span>
+      <span style="flex:1;min-width:0">
+        <span style="display:block;font-size:.85rem;font-weight:700;color:var(--parchment)">${escapeHTML(catLocal(cat))}</span>
+        <span style="display:block;font-size:.7rem;color:var(--parch3)">${n} ${en?(n===1?'dish':'dishes'):(n===1?'plato':'platos')} · ${_certFechaTexto(fechas[cat], en)}</span>
+      </span>
+      <button type="button" class="cert-ver-btn" data-cat="${escapeHTML(cat)}" onclick="_abrirCertificado(this.dataset.cat)">${en?'View certificate':'Ver certificado'}</button>
+    </div>`;
+  }).join('');
+  return `<div style="background:linear-gradient(155deg,#faf6ee,var(--ink));border:1.5px solid rgba(196,154,60,.15);border-radius:var(--r2);padding:.8rem;margin-bottom:.75rem">
+    ${cab}
+    ${filas}
+  </div>`;
+}
+// HTML del certificado (función pura: no toca el DOM). Sin datos de clientes.
+function _certificadoHTML(emp, cat, venueNombre){
+  const en = LANG==='en';
+  const nombre = _dispName((emp && emp.name) || currentUser || '');
+  const n = DISHES.filter(d => d.cat===cat).length;
+  const fecha = _certFechaTexto((emp && emp.certFechas && emp.certFechas[cat]) || '', en);
+  return `<div class="cert-hoja">
+    <div class="cert-marco">
+      <div class="cert-eyebrow">${en?'Certificate':'Certificado'}</div>
+      <div class="cert-casa">${escapeHTML(venueNombre||'')}</div>
+      <div class="cert-texto">${en?'certifies that':'certifica que'}</div>
+      <div class="cert-nombre">${escapeHTML(nombre)}</div>
+      <div class="cert-texto">${en
+        ? 'knows the dishes of the category'
+        : 'conoce los platos de la categoría'}</div>
+      <div class="cert-cat">${escapeHTML(catLocal(cat))}</div>
+      <div class="cert-detalle">${en
+        ? `${n} ${n===1?'dish':'dishes'} · allergens, ingredients and history · ${Math.round(CERT_THRESHOLD*100)}% or more mastered`
+        : `${n} ${n===1?'plato':'platos'} · alérgenos, ingredientes e historia · ${Math.round(CERT_THRESHOLD*100)}% o más dominado`}</div>
+      <div class="cert-fecha">${escapeHTML(fecha)}</div>
+      <div class="cert-pie">Meseo · ${en?'front of house training':'formación de sala'} · meseo.es</div>
+    </div>
+  </div>`;
+}
+// Abre el certificado a pantalla completa, con «Imprimir / Guardar como PDF».
+function _abrirCertificado(cat){
+  if(typeof currentUser==='undefined' || !currentUser) return;
+  const emp = getEmp(currentUser);
+  if(!getCertifications(emp).includes(cat)) return;
+  const en = LANG==='en';
+  _cerrarCertificado();
+  const venue = (typeof _venueRotulo==='function') ? _venueRotulo() : ((typeof ACTIVE_VENUE!=='undefined' && ACTIVE_VENUE && ACTIVE_VENUE.name) || 'Meseo');
+  const ov = document.createElement('div');
+  ov.id = 'certOverlay';
+  ov.setAttribute('role','dialog'); ov.setAttribute('aria-modal','true');
+  ov.setAttribute('aria-label', en?'Certificate':'Certificado');
+  ov.innerHTML = `
+    <div class="cert-barra">
+      <button type="button" id="certCerrar" class="cert-btn ghost">${en?'Close':'Cerrar'}</button>
+      <button type="button" id="certImprimir" class="cert-btn">${en?'Print / Save as PDF':'Imprimir / Guardar como PDF'}</button>
+    </div>
+    ${_certificadoHTML(emp, cat, venue)}`;
+  document.body.appendChild(ov);
+  document.body.classList.add('cert-abierto');
+  ov.querySelector('#certCerrar').onclick = _cerrarCertificado;
+  ov.querySelector('#certImprimir').onclick = ()=>{ try{ window.print(); }catch(_){} };
+}
+function _cerrarCertificado(){
+  const ex = document.getElementById('certOverlay'); if(ex) ex.remove();
+  document.body.classList.remove('cert-abierto');
 }
 
 function showCertModal(cat){
@@ -25687,6 +25892,9 @@ function renderRanking(){
     // Las cuentas de pruebas no compiten (las marca el propietario en el
     // panel). Quien la lleva lo ve en una nota; el resto no nota nada.
     const _soyPruebas = _supEsPruebas(allEmps[currentUser]);
+    // Modo tranquilo (ajuste propio): la pestaña es del equipo y sigue igual
+    // para todos; solo mi fila sale sin XP y arriba un aviso de una línea.
+    const _soyTranquilo = _modoTranquilo();
     const sorted = Object.values(allEmps)
       .filter(e => e.name && !_supEsPruebas(e))
       .sort((a,b) => (b.xp||0) - (a.xp||0) || a.name.localeCompare(b.name));
@@ -25731,13 +25939,13 @@ function renderRanking(){
         <div style="width:36px;height:36px;clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);background:${isMe?'linear-gradient(135deg,var(--gold),#9a7340)':i===0?'linear-gradient(135deg,var(--gold),#9a7340)':i===1?'linear-gradient(135deg,#e8e8e8,#d0d0d0)':i===2?'linear-gradient(135deg,#d4a574,#b8865c)':'rgba(196,154,60,.15)'};border:none;display:flex;align-items:center;justify-content:center;font-size:.85rem;color:${i<3||isMe?'#1c2a22':'var(--parch2)'};font-weight:700;flex-shrink:0;overflow:hidden">${renderSmallAvatar(emp.name, 36)}</div>
         <div style="flex:1;min-width:0">
           <div style="font-size:.9rem;font-weight:700;${isMe?'color:var(--gold)':'color:var(--parchment)'}">${escapeHTML(emp.name)}${_txCrownFor(emp.name)}${isMe?` <span style="font-size:.6rem;opacity:.6;font-weight:500">${LANG==='en'?'(you)':'(tú)'}</span>`:''}</div>
-          <div style="font-family:var(--font-sans);font-size:var(--fs-2);font-weight:500;color:var(--parch3);margin-top:.1rem">${lvl.title} · ${LANG==='en'?'Lvl':'Nv'}.${lvl.level}${streak>1?` · ●${streak}${LANG==='en'?'d':'d'}`:''}</div>
+          ${isMe && _soyTranquilo ? '' : `<div style="font-family:var(--font-sans);font-size:var(--fs-2);font-weight:500;color:var(--parch3);margin-top:.1rem">${lvl.title} · ${LANG==='en'?'Lvl':'Nv'}.${lvl.level}${streak>1?` · ●${streak}${LANG==='en'?'d':'d'}`:''}</div>`}
           ${tags.length ? `<div style="font-family:var(--font-sans);font-size:var(--fs-2);font-weight:500;color:var(--parch4);margin-top:.15rem">${tags.join(' · ')}</div>` : ''}
         </div>
-        <div style="text-align:right;flex-shrink:0">
+        ${isMe && _soyTranquilo ? `<div style="text-align:right;flex-shrink:0;font-family:var(--font-sans);font-size:var(--fs-2);color:var(--parch3)">${_rkEn?'quiet mode':'modo tranquilo'}</div>` : `<div style="text-align:right;flex-shrink:0">
           <div style="font-family:'Quicksand',sans-serif;font-size:1.2rem;font-weight:800;color:var(--gold-deep)">${(emp.xp||0).toLocaleString()}</div>
           <div style="font-family:var(--font-sans);font-size:var(--fs-2);font-weight:700;color:var(--gold-deep);opacity:.6">XP</div>
-        </div>
+        </div>`}
       </div>`;
     }).join('');
 
@@ -25763,7 +25971,7 @@ function renderRanking(){
       return `<div style="display:flex;align-items:center;gap:.8rem;padding:.65rem .9rem;background:${isMe?'linear-gradient(155deg,rgba(196,154,60,.08),rgba(196,154,60,.03))':'linear-gradient(155deg,#faf6ee,#f0e8d8)'};border:1.5px solid ${isMe?'rgba(196,154,60,.3)':'rgba(196,154,60,.12)'};border-radius:10px;margin-bottom:.45rem">
         <div style="width:24px;text-align:center;flex-shrink:0">${i<3?medals[i]:`<span style="font-family:var(--font-serif);font-size:var(--fs-3);font-weight:700;color:var(--parch3)">${i+1}</span>`}</div>
         <div style="flex:1;min-width:0;font-size:.85rem;font-weight:700;color:${isMe?'var(--gold)':'var(--parchment)'}">${escapeHTML(n)}${isMe?` <span style="font-size:.6rem;opacity:.6;font-weight:500">${LANG==='en'?'(you)':'(tú)'}</span>`:''}</div>
-        <div style="font-family:var(--font-sans);font-size:var(--fs-4);font-weight:800;color:var(--gold-deep);flex-shrink:0">+${weekMap[n].toLocaleString()} <span style="font-size:.55rem;opacity:.6">XP</span></div>
+        ${isMe && _soyTranquilo ? '' : `<div style="font-family:var(--font-sans);font-size:var(--fs-4);font-weight:800;color:var(--gold-deep);flex-shrink:0">+${weekMap[n].toLocaleString()} <span style="font-size:.55rem;opacity:.6">XP</span></div>`}
       </div>`;
     }).join('');
     const leagueHTML=`
@@ -25775,6 +25983,7 @@ function renderRanking(){
     _rc.removeAttribute('style');
     _rc.innerHTML = `
       ${_soyPruebas ? `<div class="sup-at-pie" style="text-align:center;margin:0 0 .8rem">${LANG==='en'?'Your account is a test account: it does not appear in the rankings.':'Tu cuenta es de pruebas: no sale en los rankings.'}</div>` : ''}
+      ${_soyTranquilo ? `<div class="sup-at-pie" style="text-align:center;margin:0 0 .8rem">${LANG==='en'?'You have quiet mode on.':'Tienes el modo tranquilo activado.'}</div>` : ''}
       ${leagueHTML}
       <div class="tunic-divider"><span>${LANG==='en'?'By total XP':'Por XP total'}</span></div>
       ${rows}`;
@@ -30346,10 +30555,12 @@ function checkNewAchievements(){
   if(newOnes.length>0){
     emp.achievements=now;
     saveDB();
+    const _tranquilo=_modoTranquilo(emp);
     newOnes.forEach((id,i)=>{
       const ach=ACHIEVEMENTS.find(a=>a.id===id);
       if(ach){
-        setTimeout(()=>showAchievementToast(ach),i*1200);
+        // Modo tranquilo: el logro queda guardado, pero no salta el pop-up.
+        if(!_tranquilo) setTimeout(()=>showAchievementToast(ach),i*1200);
         awardXP(50, LANG==='en'?'Achievement: '+ach.title_en:'Logro: '+ach.title);
       }
     });
