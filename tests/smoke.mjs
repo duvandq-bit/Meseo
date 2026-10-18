@@ -432,7 +432,7 @@ test('vinos EN: enciclopedia bilingüe, copa recomendada resucitada, origen trad
 test('data/vinos-content.json keys match what loadVinosContent() assigns', () => {
   const content = JSON.parse(read('data/vinos-content.json'));
   const jsonKeys = Object.keys(content).sort();
-  assert(jsonKeys.length === 10, `expected 10 constants, got ${jsonKeys.length}`);
+  assert(jsonKeys.length === 12, `expected 12 constants, got ${jsonKeys.length}`);
   // Each value must be a non-empty object/array (no accidental nulls)
   for (const k of jsonKeys) {
     const v = content[k];
@@ -444,9 +444,28 @@ test('data/vinos-content.json keys match what loadVinosContent() assigns', () =>
   // the loader can't drift apart (key added to one but not the other).
   const loader = html.match(/async function loadVinosContent\([^)]*\)\s*\{[\s\S]*?\n\}/);
   assert(loader, 'could not find loadVinosContent()');
-  const assigned = [...loader[0].matchAll(/^\s*([A-Za-z_][A-Za-z0-9_]*)\s*=\s*data\.\1\s*;/gm)].map(m => m[1]).sort();
+  const assigned = [...loader[0].matchAll(/^\s*([A-Za-z_][A-Za-z0-9_]*)\s*=\s*data\.\1\s*;/gm)].map(m => m[1]);
+  // WINE_SNS y DISH_SNS se eligen por venue: la demo (Orchilla) tiene sus
+  // propios perfiles en *_DEMO y los de producción no se mezclan con ella.
+  assert(/_snsRaw = data;\n  _snsPorVenue\(\);/.test(loader[0])
+      && /WINE_SNS = \(demo && _snsRaw\.WINE_SNS_DEMO\) \|\| _snsRaw\.WINE_SNS;/.test(html)
+      && /DISH_SNS = \(demo && _snsRaw\.DISH_SNS_DEMO\) \|\| _snsRaw\.DISH_SNS;/.test(html),
+    'loadVinosContent debe guardar el crudo y _snsPorVenue elegir los perfiles de la demo');
+  // Se reelige al usar el mapa: el contenido se precalienta antes de entrar en la demo.
+  assert(/function _renderSensoryMap\(c, bar\)\{\n  const _en = LANG==='en';\n  _snsPorVenue\(\);/.test(html),
+    '_renderSensoryMap debe pasar por _snsPorVenue');
+  assigned.push('WINE_SNS', 'DISH_SNS', 'WINE_SNS_DEMO', 'DISH_SNS_DEMO');
+  assigned.sort();
   assert(JSON.stringify(assigned) === JSON.stringify(jsonKeys),
     `loader assigns [${assigned}] but JSON has [${jsonKeys}]`);
+  // Y la demo cubre su carta entera: los 12 vinos y los 20 platos de Orchilla.
+  const demoWines = JSON.parse(read('data/wines-demo.json'));
+  const demoCarta = JSON.parse(read('data/carta-demo.json'));
+  for (const w of demoWines) assert(content.WINE_SNS_DEMO[String(w.id)], `WINE_SNS_DEMO sin el vino ${w.id}`);
+  for (const d of demoCarta.DISHES) assert(content.DISH_SNS_DEMO[d.name], `DISH_SNS_DEMO sin el plato ${d.name}`);
+  const notas = ['citrico','floral','frutal','herbal','mineral','especiado','ahumado','tostado','dulce','salino','umami','balsamico'];
+  for (const prof of [...Object.values(content.WINE_SNS_DEMO), ...Object.values(content.DISH_SNS_DEMO)])
+    for (const [k, i] of prof) assert(notas.includes(k) && i >= 1 && i <= 3, `perfil demo con nota rara: ${k} ${i}`);
 });
 
 test('data/lqa-situations.json is valid JSON (non-empty array)', () => {
@@ -2026,19 +2045,19 @@ test('Arranque: nada externo puede bloquear el primer pintado', () => {
     'Quicksand y Cinzel deben precargarse (crossorigin es obligatorio en preload de fuentes)');
 });
 
-test('CSP does not break critical paths (Supabase, CDNs, fonts, map)', () => {
-  // A too-narrow CSP would silently break login/sync or the map. Assert the
-  // origins the app genuinely loads from are still allow-listed, so a future
-  // CSP edit can't quietly cut them off.
+test('CSP does not break critical paths (Supabase, CDNs, fonts)', () => {
+  // A too-narrow CSP would silently break login/sync. Assert the origins the
+  // app genuinely loads from are still allow-listed, so a future CSP edit
+  // can't quietly cut them off.
   const csp = html.match(/Content-Security-Policy"\s+content="([^"]+)"/i)[1];
   const required = [
     'advkoujfgbrrjvqexrcu.supabase.co', // login + all data sync (connect-src)
     'cdn.jsdelivr.net',                 // supabase-js (script-src)
-    'unpkg.com',                        // maplibre + topojson (script/style)
-    'basemaps.cartocdn.com',            // wine map tiles — CARTO Voyager (img/connect)
     'www.youtube.com'                   // video embeds (frame-src)
   ];
   for (const o of required) assert(csp.includes(o), `CSP no longer allows ${o} — would break a feature`);
+  // El mapa WebGL de vinos se retiró (oct 2026): sus orígenes no vuelven.
+  for (const o of ['unpkg.com', 'cartocdn.com', 'blob:;']) assert(!csp.includes(o) || o === 'blob:;' && !/worker-src[^;]*blob:/.test(csp), `CSP arrastra un origen del mapa retirado: ${o}`);
   // Las tipografías son propias desde v7.345: font-src no necesita terceros.
   assert(/font-src 'self';/.test(csp), "font-src debe ser 'self' — las fuentes se sirven del propio dominio");
   // The team chat needs the realtime WebSocket + storage images.
@@ -2158,25 +2177,49 @@ test('push notifications: raster icons, deep links, rich payload', () => {
   assert(manifest.icons.some(i => i.src === 'icon-192.png' && i.type === 'image/png'), 'manifest missing the PNG icon');
 });
 
-test('wine map is real cartography (Voyager basemap, no fake 3D or DO shapes)', () => {
-  // Basemap must be CARTO Voyager retina raster served untouched — no hue/
-  // saturation filters that make real cartography look artificial.
-  assert(html.includes('basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}@2x.png'),
-    'CARTO Voyager retina tiles missing from map init');
-  assert(!/raster-hue-rotate|raster-saturation/.test(html),
-    'raster color filters are back — the basemap should render untouched');
-  // The old "3D terrain" pointed at a DEM endpoint that does not exist
-  // (demotiles.maplibre.org/terrain-tiles) — it must stay removed.
-  assert(!html.includes('demotiles.maplibre.org'), 'dead demotiles DEM endpoint is back in the map');
-  assert(!/setTerrain\(/.test(html), 'fake 3D terrain is back in the wine map');
-  // Hand-approximated DO rings must not render as filled areas over real
-  // cartography: each DO is a precise centroid point + label instead.
-  assert(html.includes("id: 'do-points', type: 'circle'"), 'do-points circle layer missing');
-  assert(!html.includes("id: 'do-fill'"), 'hand-drawn DO polygon fill layer is back');
-  assert(/function _mlDOCentroid\(/.test(html), '_mlDOCentroid centroid helper missing');
-  // OSM/CARTO tile usage requires visible attribution on the map.
-  assert(/new maplibregl\.AttributionControl\(\{ compact: true \}\)/.test(html),
-    'map attribution control missing (required by OSM/CARTO tile terms)');
+test('Mapa WebGL de vinos y duelo local (retirados oct 2026): sin rastro; el duelo remoto y el mapa sensorial siguen', () => {
+  // El propietario retiró el mapa MapLibre (WebGL, dos CDNs externas) y el
+  // duelo 1v1 local, que ya no tenía entrada en Juegos. Mr. Shoesmith,
+  // Camarero Survivors y el duelo remoto no se tocan.
+  for (const t of ['maplibre', 'MapLibre', 'maplibregl', '_renderWineMap', '_initWineLeafletMap', '_wineDOPolygons', '_mlEnsureCss', 'topojson', 'unpkg.com', 'cartocdn'])
+    assert(!html.replace(/<!--[\s\S]*?-->/g, '').includes(t), `queda «${t}» en index.html`);
+  const csp = html.match(/Content-Security-Policy"\s+content="([^"]+)"/i)[1];
+  assert(!/unpkg|cartocdn|maplibre/i.test(csp), 'la CSP sigue abriendo los orígenes del mapa');
+  const css = read('styles.css');
+  assert(!/maplibre|wine-map-|wine-leaflet|\.ml-do|\.duel-wrap|\.duel-player\b|\.wp3/.test(css), 'queda CSS del mapa, del conmutador de 3 vistas o del duelo local');
+  for (const t of ['function startDuel()', 'function duelRender()', 'function abortLocalDuel()', 'let duelState', 'duelP1'])
+    assert(!html.includes(t), `queda el duelo local: ${t}`);
+  // Lo que se queda.
+  assert(html.includes('// ═══ DUELO REMOTO ═══') && /async function renderDuel\(\)/.test(html) && /onclick="renderDuel\(\)"/.test(html),
+    'el duelo remoto debe seguir con su entrada en Juegos');
+  assert(/onclick="txStart\(\)"/.test(html) && /onclick="launchElTurno\(\)"/.test(html), 'Mr. Shoesmith y Camarero Survivors siguen en Juegos');
+  assert(/function duelClearTimer\(\)/.test(html) && /emp\.duelWins=\(emp\.duelWins\|\|0\)\+1/.test(html), 'el temporizador y los duelWins del duelo remoto siguen');
+  assert(/function _renderSensoryMap\(c, bar\)/.test(html) && /function _buildRadarSVG\(/.test(html), 'el mapa sensorial se queda');
+});
+
+test('Mapa sensorial: se abre desde la ficha del vino y del plato, no desde una pestaña de Vinos', () => {
+  // Overlay propio con cierre; repinta donde viva.
+  assert(/async function _openSensoryMap\(detail\)/.test(html) && /function _closeSensoryMap\(\)/.test(html) && /function _snsRefresh\(\)/.test(html),
+    'faltan _openSensoryMap/_closeSensoryMap/_snsRefresh');
+  const sns = html.slice(html.indexOf('// ═══ SENSORY MAP FUNCTIONS ═══'), html.indexOf('function _buildRadarSVG('));
+  assert(!/renderVinos\(\)/.test(sns.slice(sns.indexOf('function _renderSensoryMap'))),
+    'dentro del mapa sensorial todo repinta con _snsRefresh(), no con renderVinos()');
+  assert(/id="sensoryOverlayBody"/.test(sns) && /onclick="_closeSensoryMap\(\)"/.test(sns), 'el overlay necesita cuerpo y botón de cierre');
+  // Sin perfil propio, cae en la rueda en vez de pintar un radar vacío.
+  assert(/if\(d && d\.type==='wine' && !\(WINE_SNS && WINE_SNS\[d\.id\]\)\) d = null;/.test(sns), 'un vino sin perfil abre la rueda');
+  // Botón en las dos fichas, bilingüe.
+  assert(/_en\?'Pairing':'Maridaje'/.test(sns), 'el botón debe decir Maridaje / Pairing');
+  const wd = html.slice(html.indexOf('function _showWineDetail('), html.indexOf('function _showWineDetail(') + 12000);
+  assert(/_snsBtnHtml\(\{type:'wine',id:w\.id\}\)/.test(wd), 'la ficha del vino no lleva el botón Maridaje');
+  const dd = html.slice(html.indexOf('function renderRepasoDishDetail('), html.indexOf('function changeRepasoTopic('));
+  assert((dd.match(/_snsBtnHtml\(\{type:'dish',name:dish\.name\}\)/g) || []).length >= 2, 'la ficha del plato no lleva el botón Maridaje (con y sin vinos emparejados)');
+  // Ya no hay vista Sensorial ni Mapa dentro de Estudio.
+  const ws = html.slice(html.indexOf('function _renderWineStudy'), html.indexOf('function _renderWinePractica'));
+  assert(/_renderWineLearn\(c, bar\)/.test(ws) && !/_renderSensoryMap|wp3|_vinoAprendeView/.test(ws), 'Estudio debe ir directo a Conceptos');
+  assert(!html.includes('_vinoAprendeView'), 'la variable _vinoAprendeView sobra');
+  assert(/if\(sub==='sensorial' \|\| sub==='mapa'\)\{ sub = _vinoSubTab = 'aprende'; \}/.test(html), 'un acceso antiguo a sensorial/mapa cae en Estudio');
+  const css = read('styles.css');
+  assert(/\.sensory-overlay\{position:fixed;inset:0;z-index:9999/.test(css) && /\.sensory-open-btn\{/.test(css), 'faltan los estilos del overlay o del botón');
 });
 
 test('recorrido guiado: nada por debajo de 12 px ni fuera de contraste', () => {
@@ -4545,9 +4588,10 @@ test('vinos sweep 3: sommelier index, maridaje rows, frases rows', () => {
   assert(/\.wine-service-card\.wc-row,/.test(css), 'wc-row must cover service cards');
 });
 
-test('vinos sweep 2: quiz rows, concept rows, no paren counts on map pills', () => {
+test('vinos sweep 2: quiz rows, concept rows', () => {
   // Re-audit with the TUNIC bar: quiz category tiles and concept accordion
-  // cards become hairline rows; map origin pills drop spreadsheet parens.
+  // cards become hairline rows. (The map origin pills went with the WebGL
+  // map, oct 2026.)
   assert(/dash-row" onclick="_startWineQuiz\('all',15\)/.test(html),
     'wine quiz must lead with the all-questions ledger row');
   assert(!/wq-cat-grid/.test(html), 'boxed quiz category grid must be gone');
@@ -4555,9 +4599,6 @@ test('vinos sweep 2: quiz rows, concept rows, no paren counts on map pills', () 
   const css = read('styles.css');
   assert(/\.wine-concept-card\.wc-row\{[^}]*border-bottom:1px solid rgba\(28,42,34,\.1\)/.test(css),
     'wc-row must be a hairline row');
-  assert(/wfp-count\" > \' \+ r\.wines\.length|wfp-count\">' \+ r\.wines\.length/.test(html),
-    'map origin pills must use the fine mono count');
-  assert(!/\(' \+ r\.wines\.length \+ '\)/.test(html), 'paren counts must be gone from map pills');
 });
 
 test('vinos sub-screens finished in the premium language', () => {
@@ -4663,7 +4704,7 @@ test('exam setup: one-tap start, folded customize, drill role, dark mastery pane
 
 test('auditoría de botones: toda sesión interactiva tiene salida y no repinta tras abandonar', () => {
   // Auditoría jul 2026 tras el «←» del examen: el Simulacro de Alérgenos,
-  // los duelos remotos (reto y defensa) y el duelo local eran callejones sin
+  // los duelos remotos (reto y defensa) y el duelo local (retirado oct 2026) eran callejones sin
   // salida — y sus setTimeout/temporizadores recuperaban la pantalla aunque
   // el usuario hubiera navegado a otra pestaña.
   assert(/function abortAllergenTest\(\)/.test(html) && /onclick="abortAllergenTest\(\)"/.test(html),
@@ -4683,10 +4724,6 @@ test('auditoría de botones: toda sesión interactiva tiene salida y no repinta 
   const ard = html.slice(html.indexOf('function abortRemoteDuel()'), html.indexOf('function abortRemoteDuel()') + 700);
   assert(/confirm\(/.test(ard) && /duelClearTimer\(\)/.test(ard) && /renderDuel\(\)/.test(ard),
     'abortRemoteDuel debe confirmar, parar el temporizador y volver al lobby');
-  assert(/function abortLocalDuel\(\)/.test(html) && /onclick="abortLocalDuel\(\)"/.test(html),
-    'el duelo local debe tener botón de fin anticipado');
-  assert(/setTimeout\(\(\)=>\{ if\(!duelState\) return; if\(duelState\.round<=duelState\.totalRounds\)/.test(html),
-    'el paso de ronda del duelo local debe tolerar el abandono');
 });
 
 test('allergen drill: three action-frames per question, no fixed traps', () => {
@@ -8731,24 +8768,16 @@ test('Line Up: ritual de antes del servicio — 4 pasos reales, rotación determ
     'estilos de las filas del Line Up ausentes (incluido el tachado de hechas)');
 });
 
-test('vinos: Sensorial+Mapa merged under Estudio — the bar holds 5 chips', () => {
+test('vinos: la barra tiene 5 chips y Estudio va directo a Conceptos', () => {
   // IA audit (C2+A2): 7 chips overflowed on a phone and "Aprende" clashed
-  // with the main "Aprender" tab. Estudio = Conceptos · Sensorial · Mapa.
+  // with the main "Aprender" tab. Desde oct 2026 Estudio ya no tiene
+  // conmutador: el mapa sensorial vive en las fichas y el mapa WebGL se retiró.
   assert(!/\['sensorial',_en\?'Sensory':'Sensorial',''\]/.test(html) && !/\['mapa',_en\?'Map':'Mapa',''\]/.test(html),
     'sensorial/mapa chips must be gone from the Vinos bar');
   assert(/\['aprende',_en\?'Study':'Estudio',''\]/.test(html),
     'the Estudio chip must exist (no more Aprende/Aprender clash)');
   assert(/function _renderWineStudy\(/.test(html) && /sub === 'aprende'\)\{ _renderWineStudy\(c, bar\); \}/.test(html),
     'renderVinos must dispatch aprende to _renderWineStudy');
-  assert(/sub==='sensorial' \|\| sub==='mapa'/.test(html) && /_vinoAprendeView = sub/.test(html),
-    'legacy sensorial/mapa values must normalize into Estudio');
-  const ws = html.slice(html.indexOf('function _renderWineStudy'), html.indexOf('function _renderWinePractica'));
-  assert(/wine-practice-toggle wp3/.test(ws) && /_renderSensoryMap\(c, bar \+ seg\)/.test(ws)
-      && /_renderWineMap\(c, bar \+ seg\)/.test(ws) && /_renderWineLearn\(c, bar \+ seg\)/.test(ws),
-    'Estudio must delegate to the three views with the toggle in the bar');
-  const css = read('styles.css');
-  assert(/\.wine-practice-toggle\.wp3\{grid-template-columns:1fr 1fr 1fr\}/.test(css),
-    'wp3 three-column toggle style missing');
 });
 
 test('EN mode: stats known-by-category bars are localized', () => {
@@ -8796,18 +8825,6 @@ test('Logros live as a Ranking chip; Inicio keeps a one-row summary', () => {
     'dashboard summary row must deep-link to Ranking → Logros');
   assert(/function renderAchievementsSection\(/.test(html) && /function _toggleAchievements\(/.test(html),
     'gallery renderer and its toggle must survive (they render inside renderLogros now)');
-});
-
-test('wine map degrades gracefully without maplibre (offline)', () => {
-  // P2: with the CDN unreachable the map died silently; now a note replaces
-  // the frame and the D.O.s render as a static list grouped by region.
-  const idx = html.indexOf('async function _initWineLeafletMap');
-  const init = html.slice(idx, idx + 4500);
-  assert(/typeof maplibregl === 'undefined'/.test(init), 'offline guard missing');
-  assert(/wineDOList/.test(init) && /regionDots\.filter/.test(init),
-    'offline fallback must render the region/D.O. list');
-  assert(init.indexOf("typeof maplibregl === 'undefined'") < init.indexOf('_webglOk'),
-    'offline guard must run before the WebGL check');
 });
 
 test('Hook F1: record cards, crowns, duel juice and the overtaken trigger', () => {
@@ -11578,12 +11595,12 @@ test('La ficha del plato se PINTA, y en el idioma elegido', () => {
     const F = new Function( // eslint-disable-line no-new-func
       'DISHES','getDish','getEmp','currentUser','track','escapeHTML','escapeHtml','catLocal',
       'dishPhotoSrc','DISH_ACTIONS','DISH_COMPONENTS','_dishPairWines','WINES','t','LANG',
-      'document','repasoView','renderRepaso','loadLazyData','_vinosRuta','SRC','repasoDishId',
+      'document','repasoView','renderRepaso','loadLazyData','_vinosRuta','SRC','repasoDishId','_snsBtnHtml',
       html.slice(i0, i1) + '; return renderRepasoDishDetail;');
     const esc = s => String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
     F([PLATO_ES], getDish, () => ({ knownDishes:{}, journeyMastered:{} }), 'Ana', () => {},
       esc, esc, c => c, () => null, {}, {}, () => [], [], k => k, lang,
-      doc, 'dish', () => {}, () => Promise.resolve(null), () => 'data/wines.json', 'src', 1)(1);
+      doc, 'dish', () => {}, () => Promise.resolve(null), () => 'data/wines.json', 'src', 1, () => '<button>Maridaje</button>')(1);
     return salida;
   };
 
@@ -16957,7 +16974,6 @@ test('Revisión: no se ejecuta el chat (ni mensaje ni presencia)', () => {
 test('Revisión: no se ejecutan duelos', () => {
   assert(_revRes.realesRev.duelos === 0 && _revRes.realesNormal.duelos >= 1, 'supaCreateChallenge en revisión no sale');
   assert(/async function startChallenge\(rivalName\) \{\n  if\(typeof _revisionCerrado === 'function' && _revisionCerrado\(\)\) return;/.test(html), 'el reto remoto no empieza');
-  assert(/function startDuel\(\)\{\n  if\(typeof _revisionCerrado === 'function' && _revisionCerrado\(\)\) return;/.test(html), 'el duelo local no empieza');
 });
 test('Revisión: no se ejecutan avisos (notifications)', () => {
   assert(_revRes.realesRev.avisos === 0 && _revRes.realesNormal.avisos === 1, 'supaCreateNotification en revisión no sale');
