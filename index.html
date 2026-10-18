@@ -52,7 +52,7 @@
 <meta property="og:description" content="Formación de equipos de sala: carta, alérgenos, vinos, exámenes y juegos de repaso.">
 <meta property="og:url" content="https://meseo.es/">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"Meseo","url":"https://meseo.es/"}</script>
-<meta name="app-version" content="7.507">
+<meta name="app-version" content="7.508">
 <meta name="app-build" content="May 2026">
 <meta name="theme-color" content="#1c2a22">
 <!-- ═══ PWA ═══ -->
@@ -2803,7 +2803,7 @@ const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><p
 const SRC = 'src';
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='7.507';  // sincronizada con sw.js VERSION (guard de CI)
+const APP_VERSION='7.508';  // sincronizada con sw.js VERSION (guard de CI)
 const APP_BUILD='Jul 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;
@@ -6167,7 +6167,16 @@ function resetSessionTimer(){
   clearTimeout(_sessionTimer);
   if(!currentUser) return;
   _sessionTimer=setTimeout(()=>{
-    if(currentUser){ logout(); showToast(LANG==='en'?'Session expired due to inactivity':'Sesión cerrada por inactividad','warning',6000); }
+    if(!currentUser) return;
+    // Con «mantener sesión iniciada» el móvil es de esa persona: cerrarle la
+    // sesión a los 15 minutos de no tocar la pantalla (y borrarle de paso la
+    // sesión recordada, que es lo que hace logout) la obligaba a volver a
+    // escribir la clave varias veces por turno. Es la fricción que el
+    // propietario ya vio en el equipo («acababan leyendo el PDF»). En un
+    // dispositivo compartido, sin recordar, se sigue cerrando: el siguiente
+    // turno no debe ver la ficha del anterior. (auditoría oct 2026)
+    if(typeof _authRecordar==='function' && _authRecordar()){ resetSessionTimer(); return; }
+    logout(); showToast(LANG==='en'?'Session expired due to inactivity':'Sesión cerrada por inactividad','warning',6000);
   }, 15*60*1000);
 }
 ['click','keydown','touchstart','scroll'].forEach(ev=>document.addEventListener(ev,()=>{ if(currentUser) resetSessionTimer(); },{passive:true}));

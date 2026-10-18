@@ -6599,6 +6599,12 @@ test('Entrada: una sola pantalla de carga, sin parpadeo (oct 2026)', () => {
   assert(/const _b = document\.getElementById\('bootEspera'\); if\(_b\) _b\.remove\(\);/.test(html), 'si se va al login, la pantalla de arranque se quita');
 });
 
+test('Inactividad: con sesión recordada no se cierra la sesión (oct 2026)', () => {
+  const f = html.slice(html.indexOf('function resetSessionTimer('), html.indexOf('function resetSessionTimer(') + 1400);
+  assert(/_authRecordar\(\)\)\{ resetSessionTimer\(\); return; \}/.test(f), 'con «mantener sesión» el temporizador se rearma en vez de cerrar');
+  assert(/logout\(\); showToast\(LANG==='en'\?'Session expired due to inactivity'/.test(f), 'sin recordar, el dispositivo compartido se sigue cerrando');
+});
+
 test('Emplatado: la vista rápida separa los bocados igual que la ficha (oct 2026)', () => {
   // El Mistery Box se leía como un párrafo corrido en la vista rápida del
   // emplatado: los saltos de línea se perdían. Ahora usa el mismo render.
