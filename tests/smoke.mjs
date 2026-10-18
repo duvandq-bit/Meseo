@@ -1628,7 +1628,7 @@ test('Suelo de 12px en texto y 44px en zonas táctiles', () => {
   };
   for (const sel of ['.wcms-stat', '.wc-region', '.wc-price-sub', '.wc-rec', '.dash-index-meta',
                      '.game-card-label', '.game-card-badge', '.tunic-divider span', '.xp-bar-sub',
-                     '.hoy-numrow-meta', '.sup-hero-sub', '.hub-banner-sub', '.chat-eyebrow',
+                     '.sup-hero-sub', '.hub-banner-sub', '.chat-eyebrow',
                      '.dash-row-meta', '.ri-cta-sub', '.act-foot']) {
     const px = sizeOf(sel);
     assert(px >= 11.5, `${sel} se lee a ${px.toFixed(1)}px — el suelo es 12px`);
@@ -1992,10 +1992,8 @@ test('El escáner de precarga no puede pedir plantillas sin evaluar', () => {
       `Escribe el atributo con \${SRC} (plantilla) o '+SRC+' (concatenación). Ej: ${hits[0]}`);
   }
 
-  // Y las rutas ESTÁTICAS de verdad siguen literales: esas SÍ deben precargarse.
-  const literales = (html.match(/<img src="img\//g) || []).length;
-  assert(literales >= 3,
-    `las rutas estáticas del carrusel deben seguir con src= literal para que se precarguen (hay ${literales})`);
+  // (El abanico de fotos del inicio, que era la única ruta estática literal,
+  // se retiró con la Consulta rápida de dos accesos en oct 2026.)
 });
 
 test('Arranque: nada externo puede bloquear el primer pintado', () => {
@@ -4655,9 +4653,8 @@ test('dashboard polish: capitalized alert, collapsed achievements', () => {
   // legibilidad ya no aplica — aquí solo se comprueba que no vuelvan.
   assert(!/TOPIC_RING_COLORS|topicRings/.test(html),
     'los hexágonos de progreso por tema deben seguir retirados');
-  // The SRS alert title is capitalized like its sibling alerts.
-  assert(/'Plato para repasar':'Platos para repasar'/.test(html),
-    'SRS alert title must be capitalized');
+  // (La alerta «Platos para repasar» del acordeón del inicio se fue con el
+  // acordeón en oct 2026: el repaso pendiente lo lleva el Plan de hoy.)
   // Achievements collapse to a showcase with a view-all toggle; the toggle is
   // presentational only (unlock logic untouched).
   assert(/function _toggleAchievements\(/.test(html) && /id="achSection"/.test(html),
@@ -7077,8 +7074,10 @@ test('el Pase tiene su acceso destacado, con un handler que de verdad dispara', 
   // sep 2026): tarjeta propia en el inicio y en Repaso, al lado de la del
   // para no tener que entrar en una categoría y buscar un plato. Ocupa el sitio
   // que tenía el Cliente IA, retirado por el propietario en sep 2026.
-  assert((html.match(/_paseCtaHTML\(_en\)/g) || []).length === 3,
-    'la tarjeta del Pase debe pintarse en el inicio Y en Repaso desde su helper');
+  // Desde oct 2026 la tarjeta vive en Practicar (y el Pase entra en el Plan de
+  // hoy cuando toca); del inicio se retiró para dejarlo en tres bloques.
+  assert((html.match(/_paseCtaHTML\(_en\)/g) || []).length === 2,
+    'la tarjeta del Pase debe pintarse en Practicar desde su helper, y sólo ahí');
   assert(/function _paseGo\(\)\{ launchPase\(null\); \}/.test(html),
     'el atajo debe abrir el juego eligiendo plato del turno, sin pedir uno');
   // La primera versión salió con el marcador sin sustituir: el atributo se
@@ -8399,23 +8398,29 @@ test('Aprender: la barra de subcategorías sobrevive a la navegación interna (j
     'the reshuffle button must not call renderSmartReview() directly');
 });
 
-test('Dashboard: tarjeta de acceso directo a la Guía de Emplatado (1 toque desde el inicio)', () => {
-  // La guía es consulta, no formación: debe estar a 1 toque de abrir la app.
-  // Tarjeta premium con abanico de fotos reales, cableada por la ruta enrutada.
-  assert(/class="dash-plating"/.test(html), 'dashboard must render the plating quick-access card');
-  assert(/dash-plating"[^>]*onclick="_subTab\.aprender='emplatado';showTab\('emplatado'\)"/.test(html.replace(/\s+/g,' ')),
-    'the card must navigate via the ROUTED path (_subTab + showTab emplatado)');
-  // las 3 fotos del abanico deben existir físicamente
-  const strip = [...html.matchAll(/dash-plating-strip[\s\S]{0,400}?<\/div>/g)][0][0];
-  const photos = [...strip.matchAll(/src="(img\/platos\/[^"]+)"/g)].map(m => m[1]);
-  assert(photos.length === 3, `the fan must show 3 photos, found ${photos.length}`);
-  for (const p of photos) assert(existsSync(join(ROOT, p)), `fan photo missing on disk: ${p}`);
+test('Inicio · Consulta rápida: dos accesos en una fila, Mesa con alergias y Carta (oct 2026)', () => {
+  // La guía es consulta, no formación: a 1 toque de abrir la app. Desde oct
+  // 2026 comparte fila con «Mesa con alergias»; la tarjeta ancha con abanico
+  // de fotos se retiró para que Hoy quepa en pantalla y media.
+  const dash = html.slice(html.indexOf('function renderDashboard()'), html.indexOf('// ═══════ FLASHCARDS'));
+  assert(/class="dash-cr" role="group"/.test(dash), 'la fila de Consulta rápida debe existir');
+  assert(/\$\{_crMesa\}/.test(dash) && /const _crMesa = _crMesaTileHTML\(_en\);/.test(dash) && !/_mesaCtaHTML/.test(dash),
+    'Mesa con alergias: tarjeta propia de media anchura (la .ri-cta ancha de Mesa no cabe a medias)');
+  assert(/dash-cr-item"[^>]*onclick="_subTab\.aprender='emplatado';showTab\('emplatado'\)"/.test(dash.replace(/\s+/g,' ')),
+    'Carta debe navegar por la ruta enrutada (_subTab + showTab emplatado)');
+  assert(/dash-plating-sub">Plating guide · /.test(dash), 'la tarjeta Carta nombra la guía por su nombre oficial (Plating guide)');
+  // El acceso propio a Mesa: si la ruta existe va a Mesa; si no, a la carta.
+  const ir = html.slice(html.indexOf('function _crIrMesa()'), html.indexOf('function _crIrMesa()') + 300);
+  assert(/TAB_ROUTES\.includes\('mesa'\)/.test(ir) && /showTab\('mesa'\)/.test(ir) && /showTab\('emplatado'\)/.test(ir),
+    '_crIrMesa debe abrir Mesa si hay ruta y la carta si todavía no');
+  assert(/Mesa con alergias/.test(html.slice(html.indexOf('function _crMesaTileHTML('), html.indexOf('function _crIrMesa()'))),
+    'el acceso propio se llama «Mesa con alergias»');
   const css = read('styles.css');
-  for (const sel of ['.dash-plating{', '.dash-plating-strip img{', '.dash-plating-shine{']) {
+  for (const sel of ['.dash-plating{', '.dash-cr{', '.dash-cr .dash-plating.dash-cr-item{', '.dash-plating-shine{']) {
     assert(css.includes(sel), `styles.css must style ${sel}`);
   }
+  assert(!/dash-plating-strip/.test(css) && !/dash-plating-strip/.test(html), 'el abanico de fotos se retiró del todo');
   assert(/"Plating guide"/.test(read('manifest.json')), 'the icon shortcut must be renamed to match its landing');
-  assert(/dash-plating-title">Plating guide</.test(html), 'the dashboard card must use the official name (Plating guide)');
 });
 
 test('Acceso en 1 toque: sesión deslizante 90d, banner de instalación, hoja iOS, atajos del manifest', () => {
@@ -8726,11 +8731,11 @@ test('la actividad lleva UN solo nombre en todas partes: Repaso Inteligente', ()
     'el historial de XP debe usar el nombre nuevo');
 });
 
-test('dashboard «Hoy»: héroe pergamino de dos estados + stats + filas numeradas (rediseño jul 2026)', () => {
+test('dashboard «Hoy»: héroe pergamino de dos estados (Reto del día ⇄ Plato del día)', () => {
   // Exploración de diseño aprobada por el propietario: UNA tarjeta pergamino
   // dominante con dos estados (Reto del día pendiente ⇄ Plato del día al
-  // terminarlo), tira de stats (racha · precisión · liga) y filas numeradas
-  // compactas; el detalle sigue en el acordeón #hoyDetail (fila 03).
+  // terminarlo). La tira de stats y las filas numeradas se fueron del inicio
+  // en oct 2026 (ver el guard «Inicio en tres bloques»).
   const dash = html.slice(html.indexOf('function renderDashboard()'), html.indexOf('// ═══════ FLASHCARDS'));
   assert(/\$\{_en\?'Today':'Hoy'\}/.test(dash), 'the Hoy divider must exist');
   assert(/_pddHeroHTML\(emp,_en\)/.test(dash), 'el héroe de dos estados debe renderizarse en Hoy');
@@ -8747,31 +8752,59 @@ test('dashboard «Hoy»: héroe pergamino de dos estados + stats + filas numerad
     '_pddDishOfDay debe ser determinista (semilla por fecha, sin Math.random)');
   // Chips honestos: SIN GLUTEN ✓ solo si el plato NO declara gluten.
   assert(/!al\.includes\('Gluten'\)/.test(hero), 'el chip SIN GLUTEN solo sale si no hay gluten declarado');
-  // Tira de stats + filas numeradas + acordeón.
-  assert(/class="hoy-stats"/.test(dash) && /id="hoyLigaPos"/.test(dash),
-    'la tira de stats (racha · precisión · liga) debe existir');
-  assert(/class="hoy-numrow"/.test(dash) && /_hoyToggle\(\)/.test(dash),
-    'las filas numeradas deben existir y la 03 abre el acordeón');
-  assert(/id="hoyDetail" style="display:none/.test(dash), 'detail must start collapsed');
-  assert(/\$\{renderWeeklyChallenge\(\)\}\s*\$\{_m\.rows\}/.test(dash),
-    'challenge and mission rows must live inside #hoyDetail');
   assert(!/'Needs practice':'Necesita práctica'/.test(dash),
     'the redundant weak-topic alert row must stay removed');
   // «Próximo rango» se retiró del Inicio entero (ago 2026): duplicaba la
   // barra de XP con otra escalera distinta y confundía (0% junto a Lv.7).
   assert(!/_rankProg/.test(dash), 'la fila «Próximo rango» debe seguir fuera del Inicio');
-  // renderDailyMissions exposes per-mission state for the rows/detail.
-  assert(/return \{ rows, done: doneCount, total: missions\.length, list \};/.test(html),
-    'renderDailyMissions must return the per-mission list');
-  assert(/function _hoyToggle\(\)/.test(html), '_hoyToggle accordion missing');
-  // Rellenos asíncronos: foto (dish-photos), maridaje (wines) y liga (nube).
+  // Rellenos asíncronos: foto (dish-photos) y maridaje (wines). La liga se
+  // rellena aparte (_ligaPosFill), porque su hueco vive ahora en Yo.
   assert(/_pddAsyncFill\(\);/.test(dash), 'renderDashboard debe disparar _pddAsyncFill tras pintar');
-  const fill = html.slice(html.indexOf('function _pddAsyncFill('), html.indexOf('// ═══ LIGA SEMANAL'));
-  assert(/loadDishPhotos/.test(fill) && /_pddWineFor/.test(fill) && /_ligaPosCache/.test(fill),
-    '_pddAsyncFill debe rellenar foto, maridaje y posición de liga (con caché)');
+  const fill = html.slice(html.indexOf('function _pddAsyncFill('), html.indexOf('// ═══ LINE UP'));
+  assert(/loadDishPhotos/.test(fill) && /_pddWineFor/.test(fill) && /function _ligaPosFill\(\)/.test(fill) && /_ligaPosCache/.test(fill),
+    '_pddAsyncFill debe rellenar foto y maridaje, y _ligaPosFill la posición de liga (con caché)');
   const css = read('styles.css');
-  assert(/\.pdd-hero\{/.test(css) && /\.hoy-stats\{/.test(css) && /\.hoy-numrow\{/.test(css),
-    'estilos del héroe/stats/filas numeradas ausentes');
+  assert(/\.pdd-hero\{/.test(css), 'estilos del héroe ausentes');
+});
+
+test('Inicio en tres bloques: saludo, Consulta rápida, Plan de hoy + Reto del día; nada más (oct 2026)', () => {
+  // Hoy medía 3,5 pantallas con ocho bloques apilados. Se queda con tres:
+  // la cabecera, la Consulta rápida (Mesa con alergias · Carta) y el Plan de
+  // hoy con la tarjeta del Reto. Lo demás tiene su sitio: Line Up en
+  // Practicar; racha, precisión, liga y logros en Yo; Pase, Hospitalidad y
+  // Repaso inteligente en Practicar y dentro del Plan. Reto semanal y
+  // misiones se retiraron del todo.
+  const dash = html.slice(html.indexOf('function renderDashboard()'), html.indexOf('// ═══════ FLASHCARDS'));
+  const orden = ['class="dash-hero"', '${_parteCard}', 'class="dash-cr"', '${_hoyPlanHTML(emp,_en)}', '${_pddHeroHTML(emp,_en)}', '${_demoContacto}'];
+  let pos = -1;
+  for (const marca of orden) { const i = dash.indexOf(marca); assert(i > pos, `falta o está fuera de orden: ${marca}`); pos = i; }
+  // El gancho del parte del día va justo debajo del saludo y es defensivo.
+  assert(/const _parteCard = \(typeof _parteCardHTML==='function'\) \? _parteCardHTML\(\) : '';/.test(dash), 'gancho _parteCardHTML defensivo');
+  // Lo que NO pinta el inicio.
+  for (const [que, re] of [['Line Up', /renderLineUp\(\)|_luItems\(/], ['Repaso inteligente', /showTab\('smart'\)|_smartCtaHTML/],
+    ['Pase', /_paseCtaHTML|_paseDashCard/], ['Hospitalidad', /_hspCtaHTML|_hspDashCard/], ['Misiones', /renderDailyMissions|Misiones|Missions/],
+    ['Reto semanal', /renderWeeklyChallenge|Reto semanal|Weekly challenge/], ['tira de stats', /class="hoy-stats"/], ['Logros', /getUnlockedAchievements|showTab\('logros'\)/],
+    ['acordeón', /hoyDetail|_hoyToggle/], ['filas numeradas', /hoy-numrow/]])
+    assert(!re.test(dash), `el inicio ya no pinta ${que}`);
+  // Practicar sí tiene el Line Up, en la lista «Entrenar», con la misma función.
+  const pr = html.slice(html.indexOf('function renderPracticar('), html.indexOf('function _prcVolverHTML('));
+  assert(/fila\("renderLineUp\(\)"/.test(pr) && /_luItems\(emp\)/.test(pr) && /'Line Up'/.test(pr), 'Practicar lleva al Line Up con su cuenta de pasos');
+  assert(pr.indexOf("'Line Up'") > pr.indexOf("'Train':'Entrenar'") && pr.indexOf("'Line Up'") < pr.indexOf("showTab('exam')"), 'Line Up es la primera entrada de Entrenar');
+  // Yo tiene la tira racha · precisión · liga y la fila de Logros, arriba.
+  const yo = html.slice(html.indexOf('function renderStats()'), html.indexOf('function getCertifications('));
+  assert(/class="hoy-stats"/.test(yo) && /id="hoyLigaPos"/.test(yo) && /emp\.dqStreak\|\|0/.test(yo) && /'quiz streak':'racha reto'/.test(yo), 'Yo lleva la tira racha · precisión · liga');
+  assert(/getUnlockedAchievements\(emp\)/.test(yo) && /showTab\('logros'\)/.test(yo), 'Yo lleva Logros con su enlace a la galería');
+  assert(yo.indexOf('class="hoy-stats"') < yo.indexOf('Key stats grid'), 'la tira va arriba, antes de la rejilla de cifras');
+  assert(/_ligaPosFill\(\)/.test(yo), 'Yo rellena la posición de liga');
+  // Reto semanal y misiones: ni funciones, ni textos, ni estilos, ni datos.
+  const restos = [...(html + read('styles.css')).matchAll(/WEEKLY_CHALLENGES|getCurrentChallenge|getChallengeProgress|startChallengeExam|renderWeeklyChallenge|DAILY_MISSIONS|getTodayMissions|checkMissionCompletion|renderDailyMissions|missionsClaimed|_fcTodayCount|_hoyToggle|hoyDetail|hoy-numrow|hoy-pip|Reto semanal|Weekly challenge|'Misiones'|'Missions'/g)].map(m => m[0]);
+  assert(restos.length === 0, `quedan restos de Reto semanal o Misiones: ${[...new Set(restos)].join(', ')}`);
+  // Y el Plan de hoy y el Reto del día no dependían de nada de eso.
+  const plan = html.slice(html.indexOf('function datosDeHoy('), html.indexOf('async function supaInsertScore('));
+  const reto = html.slice(html.indexOf('// ═══ RETO DEL DÍA'), html.indexOf('function _pddHeroHTML('));
+  assert(!/Mission|mission|Challenge|_luItems/.test(plan) && !/Mission|mission|WEEKLY|getCurrentChallenge/.test(reto), 'Plan de hoy y Reto del día siguen enteros sin misiones ni reto semanal');
+  const css = read('styles.css');
+  assert(/\.hoy-stats\{/.test(css) && !/\.hoy-rows\{/.test(css), 'la tira de stats conserva su estilo; las filas numeradas se fueron');
 });
 
 test('Line Up: ritual de antes del servicio — 4 pasos reales, rotación determinista (fase 2, jul 2026)', () => {
@@ -8793,8 +8826,8 @@ test('Line Up: ritual de antes del servicio — 4 pasos reales, rotación determ
   assert(/emp\.luPddDay/.test(lu) && /emp\.luWineWk/.test(lu) && /emp\.luStdDay/.test(lu),
     'cada paso debe marcar su estado hecho');
   assert(/SIGUIENTE/.test(lu) || /'NEXT'/.test(lu), 'la tarjeta SIGUIENTE del mockup debe existir');
-  assert(/renderLineUp\(\)/.test(html.slice(html.indexOf('function renderDashboard()'), html.indexOf('// ═══════ FLASHCARDS'))),
-    'el inicio debe tener la entrada al Line Up');
+  assert(/renderLineUp\(\)/.test(html.slice(html.indexOf('function renderPracticar('), html.indexOf('function _prcVolverHTML('))),
+    'Practicar debe tener la entrada al Line Up (desde oct 2026 ya no está en el inicio)');
   // El término de la casa es «Line Up», no «briefing», en el texto de la app.
   assert(!/briefing/i.test(html.slice(html.indexOf('// ═══ LINE UP'), html.indexOf('// ═══ LIGA SEMANAL'))),
     'en la pantalla se dice Line Up, no briefing');
@@ -16878,8 +16911,8 @@ test('Hospitalidad: una mesa al día, motor puro y sin XP ni nube con puntuació
   assert(!/awardXP|lastStudyDay|_srsUpdate|emp\.streak|emp\.xp/.test(src), 'Hospitalidad no toca XP, racha ni SRS');
   assert(/registrarActividad\(\{ activity:'hospitalidad', competency:'servicio', kind:'practica', seconds:/.test(src) && !/score:/.test(src), 'sólo «hizo la sesión», sin puntuación');
   assert(/if\(HOSPITALIDAD && HOSPITALIDAD\.revision === false\) return true;/.test(fn('_hspVisible')) && /_puedeRevisar\(\)/.test(fn('_hspVisible')), 'en revisión sólo lo ven revisores');
-  assert(/const _hspDashCard = \(typeof _hspCtaHTML==='function'\) \? _hspCtaHTML\(_en\) : '';/.test(html) && /\$\{_hspDashCard\}/.test(html)
-    && (html.match(/_hspCtaHTML\(_en\)/g) || []).length === 3, 'tarjeta en el inicio y en Practicar');
+  assert(/\$\{\(typeof _hspCtaHTML==='function'\) \? _hspCtaHTML\(_en\) : ''\}/.test(html)
+    && (html.match(/_hspCtaHTML\(_en\)/g) || []).length === 2, 'tarjeta en Practicar (del inicio se retiró en oct 2026)');
   // Letra grande: el texto de la escena y las opciones por encima de 1rem.
   const css = read('styles.css');
   const tam = sel => { const m = css.match(new RegExp('\\.' + sel + '\\{[^}]*font-size:([0-9.]+)rem')); return m ? +m[1] : 0; };
