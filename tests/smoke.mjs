@@ -17957,6 +17957,34 @@ console.log('\nTest gratuito de alérgenos (test/)');
       assert(larga / BQ.length <= 0.3, `${l}: la correcta es la más larga en ${larga}`);
     }
   });
+  test('test: sin pista por longitud: la correcta nunca saca más de un 40 % a la siguiente (QA oct 2026)', () => {
+    // La regla del 30 % sola deja pasar una correcta que dobla a las demás.
+    // Se mide en los dos idiomas: en EN una opción recortada volvía a delatarla.
+    for (const l of ['es', 'en']) {
+      for (const p of BQ) {
+        const L = p.o[l].map(x => x.length), lc = L[p.c];
+        const otra = Math.max(...L.filter((_, i) => i !== p.c));
+        assert(lc <= otra * 1.4, `${l} ${p.id}: la correcta mide ${lc} y la siguiente ${otra}`);
+      }
+      const larga = BQ.filter(p => { const L = p.o[l].map(x => x.length); return L[p.c] > Math.max(...L.filter((_, i) => i !== p.c)); }).length;
+      assert(larga / BQ.length <= 0.3, `${l}: la correcta es la más larga en ${larga} de ${BQ.length}`);
+    }
+  });
+  test('test: sulfitos «por encima de» 10 mg, como dice el anexo II (QA oct 2026)', () => {
+    const p = BQ.find(x => x.id === 'c6');
+    assert(/^Por encima de 10 mg/.test(p.o.es[p.c]) && /^Above 10 mg/.test(p.o.en[p.c]), 'el umbral es «más de 10», no «a partir de 10»');
+  });
+  test('test: zonas de toque de 44 px, contraste y foco en la pregunta (QA oct 2026)', () => {
+    const css = read('test/test.css'), app = read('test/app.js');
+    assert(/\.idioma button \{[^}]*min-width: 44px;[^}]*min-height: 44px/.test(css), 'botones ES/EN de 36x26');
+    assert(/\.marca \{[^}]*min-height: 44px/.test(css) && /\.pie a \{[^}]*min-height: 44px/.test(css), 'marca o privacidad sin 44 px');
+    // Texto blanco sobre el verde de WhatsApp: #1faa55 daba 3,0:1; #15803d da 5,0:1.
+    assert(/--wa: #15803d;/.test(css), 'verde de WhatsApp sin contraste');
+    assert(/\.pie \{[^}]*rgba\(244,237,226,\.62\)/.test(css), 'pie con contraste 3,8:1');
+    assert(/\.ok-nota \{[^}]*#7cc092/.test(css) && /\.tarjeta \.ok-nota \{ color: var\(--bosque\)/.test(css), '«Nota enviada» con contraste 3,6:1');
+    assert(/id="pregunta" tabindex="-1"/.test(app) && /getElementById\('pregunta'\)\.focus/.test(app), 'el foco se pierde al pasar de pregunta');
+    assert(/setAttribute\('aria-label', t\('Idioma', 'Language'\)\)/.test(app), 'aria-label del selector sin traducir');
+  });
   test('test: elegirPreguntas saca 10 distintas, dos por tema, barajadas', () => {
     let seed = 7; const rnd = () => ((seed = (seed * 16807) % 2147483647) / 2147483647);
     const vistos = new Set();
@@ -18017,6 +18045,18 @@ console.log('\nTest gratuito de alérgenos (test/)');
     assert(/enable row level security/i.test(sql) && /security definer/i.test(sql) && /token_resultados = p_token/.test(sql), 'RLS/RPC');
   });
 }
+
+console.log('\nQA 19 oct 2026');
+test('pie de la app traducido en EN', () => {
+  assert(/id="appCredit"/.test(html), 'pie sin id');
+  // En applyLangToApp, no en setLang: setLang corre al arrancar, antes de que exista el pie.
+  const f = _fnSrc('applyLangToApp');
+  assert(/appCredit/.test(f) && /Registered trademark/.test(f), 'applyLangToApp no traduce el pie');
+});
+test('degustación: la introducción no promete «de frío a caliente» (el sushi de r2 va frío tras un caliente)', () => {
+  assert(!/de frío a caliente|cold to hot/.test(html), 'la regla general contradice la carta real');
+  assert(/va de lo ligero a lo intenso y termina con lo dulce/.test(html) && /builds from light to intense/.test(html), 'falta la introducción nueva');
+});
 
 console.log('\nHygiene');
 test('no git conflict markers in tracked source', () => {

@@ -96,6 +96,7 @@ function setLang(l, guardar = true) {
   document.querySelectorAll('.idioma button').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.lang === LANG)));
   const pie = document.querySelector('.pie span'); if (pie) pie.textContent = t('Meseo · el oficio se entrena', 'Meseo · the craft is trained');
   const priv = document.querySelector('.pie a'); if (priv) priv.textContent = t('Privacidad', 'Privacy');
+  const grupo = document.querySelector('.idioma'); if (grupo) grupo.setAttribute('aria-label', t('Idioma', 'Language'));
 }
 function anchos(root = $app) { root.querySelectorAll('[data-w]').forEach(el => { el.style.width = el.dataset.w + '%'; }); }
 function arriba() { try { window.scrollTo({ top: 0 }); } catch (_) { /* nada */ } }
@@ -246,11 +247,14 @@ function vistaPregunta() {
   const n = T.preguntas.length;
   $app.innerHTML = `
     <div class="progreso"><span>${T.i + 1} / ${n}</span><div class="barra"><i data-w="${Math.round((T.i / n) * 100)}"></i></div><span>${esc(TEMA_NOMBRE[p.tema][LANG])}</span></div>
-    <p class="pregunta">${esc(p.q[LANG])}</p>
+    <p class="pregunta" id="pregunta" tabindex="-1">${esc(p.q[LANG])}</p>
     <div class="opciones" id="ops">
       ${o.map((txt, k) => `<button type="button" class="opcion" data-k="${k}">${esc(txt)}</button>`).join('')}
     </div>`;
   anchos();
+  // Al pasar de pregunta el foco se iba con los botones borrados: se lleva al
+  // enunciado para que el lector de pantalla y el teclado sigan donde toca.
+  if (T.i > 0) { try { document.getElementById('pregunta').focus({ preventScroll: true }); } catch (_) { /* nada */ } }
   const ops = document.getElementById('ops');
   ops.addEventListener('click', ev => {
     const b = ev.target.closest('.opcion'); if (!b || ops.classList.contains('bloqueado')) return;
