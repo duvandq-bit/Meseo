@@ -52,7 +52,7 @@
 <meta property="og:description" content="Formación de equipos de sala: carta, alérgenos, vinos, exámenes y juegos de repaso.">
 <meta property="og:url" content="https://meseo.es/">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"Meseo","url":"https://meseo.es/"}</script>
-<meta name="app-version" content="7.519">
+<meta name="app-version" content="7.520">
 <meta name="app-build" content="May 2026">
 <meta name="theme-color" content="#1c2a22">
 <!-- ═══ PWA ═══ -->
@@ -2882,7 +2882,7 @@ const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><p
 const SRC = 'src';
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='7.519';  // sincronizada con sw.js VERSION (guard de CI)
+const APP_VERSION='7.520';  // sincronizada con sw.js VERSION (guard de CI)
 const APP_BUILD='Jul 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;
@@ -11267,7 +11267,7 @@ function _luItems(emp){
 }
 function _luTitle(key, en){
   const emp=getEmp(currentUser);
-  if(key==='parte') return { t:en?'Service notes':'El parte de hoy', s:en?'sold out, specials and bookings':'agotados, sugerencias y reservas' };
+  if(key==='parte') return { t:en?'Service notes':'Hoy en sala', s:en?'sold out, specials and bookings':'agotados, sugerencias y reservas' };
   if(key==='reto')  return { t:en?'Daily quiz':'Reto del día', s:en?'same question for everyone':'la misma pregunta para todos' };
   if(key==='plato'){ const d=_pddDishOfDay(todayStr()); return { t:en?'Dish of the day':'Plato del día', s:d?d.name:'' }; }
   if(key==='vino'){ const w=_luWineOfWeek(); return { t:en?'Wine of the week':'Vino de la semana', s:w?w.name:(en?'from the wine list':'de la carta de vinos') }; }
@@ -23220,10 +23220,10 @@ function _parteCardHTML(parte, opts){
   const autor = p.autor ? `${_en?'by':'por'} ${escapeHTML(p.autor)}` : '';
   const hora = p.updated_at ? _parteHora(p.updated_at) : '';
   const meta = [autor, hora].filter(Boolean).join(' · ');
-  return `<section class="parte-card${opts.overlay?' parte-card-ov':''}" aria-label="${_en?'Service notes':'El parte de hoy'}">
+  return `<section class="parte-card${opts.overlay?' parte-card-ov':''}" aria-label="${_en?'Service notes':'Hoy en sala'}">
     <div class="parte-head">
       <div>
-        <div class="parte-eyebrow">${_en?'Service notes':'El parte de hoy'}${turno?` · ${turno}`:''}</div>
+        <div class="parte-eyebrow">${_en?'Service notes':'Hoy en sala'}${turno?` · ${turno}`:''}</div>
         ${meta?`<div class="parte-meta">${meta}</div>`:''}
       </div>
       ${puedeEditar?`<button type="button" class="parte-edit" onclick="_parteEditarDesdeHoy()">${_en?'Edit':'Editar'}</button>`:''}
@@ -23231,8 +23231,8 @@ function _parteCardHTML(parte, opts){
     ${_parteSeccionesHTML(d, _en)}
     <div class="parte-foot">
       ${visto!==null && visto!==undefined
-        ? `<span class="parte-visto-ok">${_en?'Seen at':'Visto a las'} ${_parteHora(visto)||'--:--'}</span>`
-        : `<button type="button" class="parte-visto-btn" onclick="_parteMarcarVisto()">${_en?'Seen':'Visto'}</button>`}
+        ? `<span class="parte-visto-ok">${_en?'Read at':'Leído a las'} ${_parteHora(visto)||'--:--'}</span>`
+        : `<button type="button" class="parte-visto-btn" onclick="_parteMarcarVisto()">${_en?'Got it':'Leído'}</button>`}
     </div>
   </section>`;
 }
@@ -23241,7 +23241,7 @@ function _parteAbrir(){
   const _en = LANG==='en';
   const html = _parteCardHTML(null, { overlay: true });
   if(!html) return;
-  _luOverlay(html, _en?'Service notes':'El parte de hoy');
+  _luOverlay(html, _en?'Service notes':'Hoy en sala');
 }
 // Editar desde la tarjeta de Inicio: en la demo abre directo; en producción
 // pasa por el PIN del panel si no está puesto, y el panel abre el editor.
@@ -23295,16 +23295,16 @@ function _parteEditarAbrir(){
         <textarea id="parteNota" class="parte-in" rows="2" maxlength="400">${v('nota')}</textarea>
       </div>
       ${turnos}
-      <button type="submit" class="btn-primary parte-guardar">${_en?'Publish the service notes':'Publicar el parte de hoy'}</button>
+      <button type="submit" class="btn-primary parte-guardar">${_en?'Publish the service notes':'Publicar'}</button>
       <div id="parteGuardadoMsg" class="parte-ayuda" aria-live="polite"></div>
     </form>
     <div id="parteVistos" class="parte-vistos"><div class="parte-ayuda">${_en?'Loading who has seen it...':'Cargando quién lo ha visto...'}</div></div>`;
   const head = `<div class="pase-head">
       <div class="pase-head-top">
-        <div class="pase-eyebrow">${_en?'SUPERVISOR · SERVICE NOTES':'SUPERVISOR · PARTE'}</div>
+        <div class="pase-eyebrow">${_en?'SUPERVISOR · SERVICE NOTES':'SUPERVISOR · HOY EN SALA'}</div>
         <button class="pase-x" type="button" onclick="_parteEditarCerrar()" aria-label="${_en?'Close':'Cerrar'}">✕</button>
       </div>
-      <h2 class="pase-dish">${_en?'Service notes':'El parte de hoy'}</h2>
+      <h2 class="pase-dish">${_en?'Service notes':'Hoy en sala'}</h2>
       <div class="pase-cat">${new Intl.DateTimeFormat(_en?'en-GB':'es-ES',{timeZone:'Atlantic/Canary',weekday:'long',day:'numeric',month:'long'}).format(new Date())}</div>
     </div>`;
   let ov = document.getElementById('parteOverlay');
@@ -23314,7 +23314,7 @@ function _parteEditarAbrir(){
     ov.setAttribute('role','dialog'); ov.setAttribute('aria-modal','true');
     document.body.appendChild(ov);
   }
-  ov.setAttribute('aria-label', _en?'Edit the service notes':'Editar el parte de hoy');
+  ov.setAttribute('aria-label', _en?'Edit the service notes':'Editar Hoy en sala');
   ov.innerHTML = `<div class="pase-container">${head}<div class="pase-body">${cuerpo}</div></div>`;
   _parteEdPintarChips();
   _parteVistosCargar();
@@ -23381,7 +23381,7 @@ async function _parteEditarGuardar(){
       if(!r.ok) throw new Error('HTTP ' + r.status);
     }catch(e){
       if(msg) msg.textContent = _en ? 'Could not save. Check the connection and try again.' : 'No se ha podido guardar. Revisa la conexión y vuelve a intentarlo.';
-      showToast(_en ? 'Could not save the service notes' : 'No se ha podido guardar el parte', 'warning', 4000);
+      showToast(_en ? 'Could not save the service notes' : 'No se ha podido publicar', 'warning', 4000);
       return;
     }
     _parteHoy = fila; _parteCargadoTs = Date.now(); _parteGuardarLocal(fila);
@@ -23389,7 +23389,7 @@ async function _parteEditarGuardar(){
   if(msg) msg.textContent = _parteTieneContenido(data)
     ? (_en ? 'Published. The team will see it when they open the app.' : 'Publicado. El equipo lo verá al abrir la app.')
     : (_en ? 'Saved empty: nothing will be shown today.' : 'Guardado vacío: hoy no se enseña nada.');
-  showToast(_en ? 'Service notes published' : 'Parte publicado', 'success', 2500);
+  showToast(_en ? 'Service notes published' : 'Hoy en sala publicado', 'success', 2500);
 }
 // Quién lo ha visto: nombres y «7 de 12 lo han visto». El total es el equipo
 // activo del restaurante, con la misma puerta que el Panel de supervisor
@@ -27658,7 +27658,7 @@ function renderSupDashboard(silent){
             <!-- Botón Analítica retirado: duplicaba la pestaña Análisis -->
             <button onclick="_supTool('parte')" style="display:flex;align-items:center;gap:.65rem;padding:.75rem .85rem;background:linear-gradient(155deg,#faf6ee,#f0e8d8);border:1.5px solid rgba(196,154,60,.12);border-left:3px solid var(--sage);border-radius:12px;font-family:'Quicksand',sans-serif;cursor:pointer;transition:all .2s;position:relative;overflow:hidden">
               <span style="width:32px;height:32px;display:flex;align-items:center;justify-content:center;clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);background:linear-gradient(135deg,var(--sage),var(--green-deep));flex-shrink:0"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6"/><path d="M8 13h8M8 17h5"/></svg></span>
-              <span style="flex:1;text-align:left;font-size:.72rem;font-weight:600;color:var(--parchment)">${LANG==='en'?'Service notes':'Parte del día'}<br><span style="font-size:.58rem;font-weight:400;color:var(--parch3)">${LANG==='en'?'sold out, specials, bookings':'agotados, sugerencias, reservas'}</span></span>
+              <span style="flex:1;text-align:left;font-size:.72rem;font-weight:600;color:var(--parchment)">${LANG==='en'?'Service notes':'Hoy en sala'}<br><span style="font-size:.58rem;font-weight:400;color:var(--parch3)">${LANG==='en'?'sold out, specials, bookings':'agotados, sugerencias, reservas'}</span></span>
             </button>
             <button onclick="_supTool('aviso')" style="display:flex;align-items:center;gap:.65rem;padding:.75rem .85rem;background:linear-gradient(155deg,#faf6ee,#f0e8d8);border:1.5px solid rgba(196,154,60,.12);border-left:3px solid #d4944c;border-radius:12px;font-family:'Quicksand',sans-serif;cursor:pointer;transition:all .2s;position:relative;overflow:hidden">
               <span style="width:32px;height:32px;display:flex;align-items:center;justify-content:center;clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);background:linear-gradient(135deg,#d4944c,#b47430);flex-shrink:0"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg></span>
