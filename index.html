@@ -52,7 +52,7 @@
 <meta property="og:description" content="Formación de equipos de sala: carta, alérgenos, vinos, exámenes y juegos de repaso.">
 <meta property="og:url" content="https://meseo.es/">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"Meseo","url":"https://meseo.es/"}</script>
-<meta name="app-version" content="7.514">
+<meta name="app-version" content="7.515">
 <meta name="app-build" content="May 2026">
 <meta name="theme-color" content="#1c2a22">
 <!-- ═══ PWA ═══ -->
@@ -2835,7 +2835,7 @@ const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><p
 const SRC = 'src';
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='7.514';  // sincronizada con sw.js VERSION (guard de CI)
+const APP_VERSION='7.515';  // sincronizada con sw.js VERSION (guard de CI)
 const APP_BUILD='Jul 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;
@@ -9700,6 +9700,7 @@ function renderSmartReview(){
 
 // ── Session Start ──
 function _startSmartSession(soloFallos){
+  _marcarEstudioNocturno();
   if(typeof _alergenosCerrados==='function' && _alergenosCerrados()) return;   // todos sus casos son de alérgenos
   const emp = getEmp(currentUser);
   const diff = _srGetDifficulty(emp); // always auto — manual picker removed
@@ -10238,6 +10239,17 @@ function isCanaryDST(){
   function lastSun(y,m){const d=new Date(y,m+1,0);d.setDate(d.getDate()-d.getDay());return d;}
   return n>=lastSun(n.getFullYear(),2)&&n<lastSun(n.getFullYear(),9);
 }
+// «Búho nocturno»: se marca al EMPEZAR a estudiar (examen, repaso), entre las
+// 23h y las 5h hora canaria. Antes lo marcaban también el login y cualquier
+// cambio de pestaña, y el logro caía con solo abrir la app de noche.
+function _marcarEstudioNocturno(){
+  if(!currentUser) return;
+  const _nh = new Date();
+  const _nDstS = (function(y){const d=new Date(y,3,0);d.setDate(d.getDate()-d.getDay());return d;})(_nh.getFullYear());
+  const _nDstE = (function(y){const d=new Date(y,10,0);d.setDate(d.getDate()-d.getDay());return d;})(_nh.getFullYear());
+  const _nH = (_nh.getUTCHours()+((_nh>=_nDstS&&_nh<_nDstE)?1:0))%24;
+  if(_nH >= 23 || _nH < 5){ const _e=getEmp(currentUser); if(_e && !_e.nightStudy){ _e.nightStudy=true; saveDB(); } }
+}
 function checkStreak(){
   if(!currentUser) return;
   const emp=getEmp(currentUser);
@@ -10252,12 +10264,6 @@ function checkStreak(){
     emp.streak=1;
   }
   emp.lastStudyDay=today;
-  // Night study tracking
-  const _nh = new Date();
-  const _nDstS = (function(y){const d=new Date(y,3,0);d.setDate(d.getDate()-d.getDay());return d;})(_nh.getFullYear());
-  const _nDstE = (function(y){const d=new Date(y,10,0);d.setDate(d.getDate()-d.getDay());return d;})(_nh.getFullYear());
-  const _nH = (_nh.getUTCHours()+((_nh>=_nDstS&&_nh<_nDstE)?1:0))%24;
-  if(_nH >= 23 || _nH < 5){ emp.nightStudy = true; }
   saveDB();
   // XP bonus for streak milestones — uses claimedMilestones map so users who
   // jump past a milestone via cloud sync (Math.max(local, remote)) still get
@@ -14709,12 +14715,10 @@ function showTab(tab, instant){
   // Chip de actualización: comprobación silenciosa al navegar (autolimitada a
   // 1 petición cada 10 min por _updCheckInApp, así que es gratis).
   if(typeof _updCheckInApp==='function' && typeof currentUser!=='undefined' && currentUser) _updCheckInApp();
-  // Track night study for achievement
-  const _h = new Date().getHours();
-  if(_h >= 23 || _h < 5){
-    const _emp = getEmp(currentUser);
-    if(_emp){ _emp.nightStudy = true; saveDB(); }
-  }
+  // El logro «Búho nocturno» (estudiar después de las 23h) se concedía aquí
+  // con sólo cambiar de pestaña: entrar a las 23:30 ya lo daba, con su XP y su
+  // subida de nivel encima del saludo (visto en la demo, oct 2026). Lo marcan
+  // el examen y la sesión de repaso al empezar, que es estudiar de verdad.
   // Map sub-tabs to their parent for nav highlighting
   // Both 'protocolo' and 'lqa' routes target the same nav button (the tab now
   // shows only LQA content after Protocolo deletion; the button id stayed
@@ -23364,12 +23368,7 @@ function startExam(){
   examDishes=validQuestions;
   examIndex=0;examScore=0;examAnswered=false;examActive=true;examResults=null;
   examStartTime=Date.now();
-  // Night study tracking
-  const _nh = new Date();
-  const _nDstS = (function(y){const d=new Date(y,3,0);d.setDate(d.getDate()-d.getDay());return d;})(_nh.getFullYear());
-  const _nDstE = (function(y){const d=new Date(y,10,0);d.setDate(d.getDate()-d.getDay());return d;})(_nh.getFullYear());
-  const _nH = (_nh.getUTCHours()+((_nh>=_nDstS&&_nh<_nDstE)?1:0))%24;
-  if(_nH >= 23 || _nH < 5){ const _e=getEmp(currentUser); if(_e){_e.nightStudy=true; saveDB();} }
+  _marcarEstudioNocturno();
   renderExamQuestion();
 }
 
