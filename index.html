@@ -52,7 +52,7 @@
 <meta property="og:description" content="Formación de equipos de sala: carta, alérgenos, vinos, exámenes y juegos de repaso.">
 <meta property="og:url" content="https://meseo.es/">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"Meseo","url":"https://meseo.es/"}</script>
-<meta name="app-version" content="7.521">
+<meta name="app-version" content="7.522">
 <meta name="app-build" content="May 2026">
 <meta name="theme-color" content="#1c2a22">
 <!-- ═══ PWA ═══ -->
@@ -2638,10 +2638,11 @@ function _cartaAplicar(c){
   // vacía, y sin tabla todo es 'ambos': no se esconde nada.
   for(const k of Object.keys(DISH_SERVICE)) delete DISH_SERVICE[k];
   Object.assign(DISH_SERVICE, c.DISH_SERVICE || {});
-  // La demo se edita en el editor de carta (ficha de servicio incluida) y sus
-  // cambios viven en el mismo sitio que los de Txoko: txoko_carta_overrides,
-  // en este navegador. Su carta se carga del archivo cada vez, así que las
-  // ediciones se reponen aquí. Los números de la demo (4001-4020) no chocan
+  // La demo se edita en el editor de carta y sus cambios viven en el mismo
+  // sitio que los de Txoko: txoko_carta_overrides, en este navegador (la
+  // ficha de servicio no: va a la base local de la demo, _fsvGuardarFicha).
+  // Su carta se carga del archivo cada vez, así que las ediciones se reponen
+  // aquí. Los números de la demo (4001-4020) no chocan
   // con los de ninguna otra carta.
   if(c && c.venue === 'demo' && typeof _cartaEdicionesLocales === 'function') _cartaEdicionesLocales();
   _cartaMeta = (c === _CARTA_BASE) ? null : {
@@ -2654,6 +2655,9 @@ function _cartaAplicar(c){
   DEGUSTACION = (c === _CARTA_BASE || typeof _degValida !== 'function') ? null : _degValida(c.DEGUSTACION, DISHES);
   _cartaCachesFuera();
   _cartaFranjaSync();
+  // La ficha de servicio confirmada por el restaurante va encima (servidor,
+  // o la base local en la demo). Ver _fsvAlPonerCarta.
+  try{ if(typeof _fsvAlPonerCarta === 'function') _fsvAlPonerCarta(c === _CARTA_BASE ? _VENUE_POR_DEFECTO : (c.venue || null)); }catch(e){}
   return true;
 }
 
@@ -2885,7 +2889,7 @@ const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><p
 const SRC = 'src';
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='7.521';  // sincronizada con sw.js VERSION (guard de CI)
+const APP_VERSION='7.522';  // sincronizada con sw.js VERSION (guard de CI)
 const APP_BUILD='Jul 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;
@@ -6117,10 +6121,11 @@ function showToast(msg, type='info', duration=4000, action=null){
   };
   _toastContainer.appendChild(t);
   if(duration > 0) setTimeout(function(){ dismissToast(t); }, duration);
-  // Max 3 visible
-  while(_toastContainer.children.length > 3){
-    dismissToast(_toastContainer.firstChild);
-  }
+  // Max 3 visible. dismissToast tarda 300 ms en quitarlo del DOM: el bucle
+  // viejo (while children > 3) no terminaba nunca con un cuarto aviso en
+  // pantalla y congelaba la app. Se cuentan sólo los que no se están yendo.
+  const vivos = Array.from(_toastContainer.children).filter(x => !x.classList.contains('out'));
+  for(let i = 0; i < vivos.length - 3; i++) dismissToast(vivos[i]);
   return t;
 }
 function dismissToast(t){
@@ -14753,6 +14758,8 @@ function showTab(tab, instant){
     console.warn('showTab: pestaña desconocida «'+tab+'» → dashboard');
     tab = 'dashboard';
   }
+  // Ficha de servicio: lo que confirme el encargado llega sin recargar.
+  try{ if(typeof _fsvSrvRefrescar==='function') _fsvSrvRefrescar(); }catch(_){}
   // Tear down the chat realtime channel + presence when navigating away, so we
   // don't leak the socket or leave a stale "online" marker for this user.
   if(currentTab==='chat' && tab!=='chat'){
@@ -15216,6 +15223,66 @@ function _fsvFiltrar(dishes, consulta, en){
     if(pasa) out.push({ d, sug, motivo: motivos.join(', ') });
   }
   return out;
+}
+// ── Ficha de servicio compartida: funciones puras (se prueban sin navegador) ──
+// Lo que confirma el encargado vive en public.fichas_servicio, una fila por
+// restaurante y plato: { venue, dish_id, svc, svc_en, autor, updated_at }. La
+// fila es la ficha ENTERA tal como quedó en el formulario, así que sustituye a
+// la `svc` que traiga la carta (no se mezcla campo a campo: si el encargado
+// deja un campo «sin dato», se queda sin dato). Una fila con `svc` vacío no
+// cambia nada, y una de otro restaurante no se aplica. La sugerencia nunca
+// entra aquí: _fsvInfo sólo la usa donde el dato falta.
+// `dishes` son los platos con la `svc` de la carta; devuelve otra lista (el
+// mismo objeto donde no hay fila) y no toca nada global.
+function _fsvConDato(o){ return !!(o && typeof o === 'object' && !Array.isArray(o) && Object.keys(o).length); }
+function _fsvFusionar(dishes, filas, venue){
+  const lista = Array.isArray(dishes) ? dishes : [];
+  const por = {};
+  for(const f of (Array.isArray(filas) ? filas : [])){
+    if(!f || f.venue !== venue || !_fsvConDato(f.svc)) continue;
+    const id = Number(f.dish_id);
+    if(!Number.isInteger(id)) continue;
+    por[id] = f;
+  }
+  return lista.map(d => {
+    const f = d && por[d.id];
+    if(!f) return d;
+    const n = Object.assign({}, d, { svc: Object.assign({}, f.svc) });
+    if(_fsvConDato(f.svc_en)) n.svc_en = Object.assign({}, f.svc_en); else delete n.svc_en;
+    return n;
+  });
+}
+function _fsvTs(f){ const t = Date.parse(f && f.updated_at); return Number.isFinite(t) ? t : 0; }
+// Las filas que valen para un restaurante: las del servidor y las que este
+// móvil aún no ha podido enviar (la cola). Por plato gana la más reciente, así
+// que lo que confirmé sin red se ve ya, y si otro encargado lo cambió después
+// en el servidor, se ve lo suyo.
+function _fsvFilasEfectivas(srv, cola, venue){
+  const por = {};
+  for(const f of [].concat(Array.isArray(srv) ? srv : [], Array.isArray(cola) ? cola : [])){
+    if(!f || f.venue !== venue) continue;
+    const id = Number(f.dish_id);
+    if(!Number.isInteger(id)) continue;
+    if(!por[id] || _fsvTs(f) >= _fsvTs(por[id])) por[id] = f;
+  }
+  return Object.keys(por).map(k => por[k]);
+}
+// Mete una fila en la cola de envío: una sola pendiente por restaurante y
+// plato (la última). Devuelve otra lista.
+function _fsvColaPoner(cola, fila){
+  const fuera = (Array.isArray(cola) ? cola : []).filter(f => !(f && f.venue === fila.venue && Number(f.dish_id) === Number(fila.dish_id)));
+  return fuera.concat([fila]);
+}
+// ¿Merece la pena reintentar? Sin red (0), tiempo agotado, demasiadas
+// peticiones o fallo del servidor, sí. Un «no» del servidor (permiso, datos),
+// no: reintentarlo para siempre escondería que no se ha guardado.
+function _fsvReintentable(status){
+  return !status || status === 408 || status === 429 || status >= 500;
+}
+// Cuántos platos tienen la ficha confirmada (svc.ok) en una lista ya fusionada.
+function _fsvContar(dishes){
+  const lista = Array.isArray(dishes) ? dishes : [];
+  return { ok: lista.filter(d => d && d.svc && d.svc.ok === true).length, total: lista.length };
 }
 // ═══ FIN FICHA DE SERVICIO ═══════════════════════════════════════════════
 
@@ -27276,7 +27343,7 @@ function _supQueueRefresh(){
 // toast (un botón que "no hace nada" sin pista era indepurable en sala).
 function _supTool(k){
   try{
-    ({ carta: ()=>renderCartaEditor(),
+    ({ carta: ()=>{ window._fsvFiltro = null; return _fsvSoloFicha() ? renderFsvEditor() : renderCartaEditor(); },
        parte: ()=>_parteEditarAbrir(),
        analitica: ()=>renderSupAnalytics(window._supAllEmps, window._supEmpNames),
        aviso: ()=>renderSupNotifSender(window._supEmpNames),
@@ -27656,7 +27723,7 @@ function renderSupDashboard(silent){
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:.65rem;margin-bottom:.75rem">
             <button onclick="_supTool('carta')" style="display:flex;align-items:center;gap:.65rem;padding:.75rem .85rem;background:linear-gradient(155deg,#faf6ee,#f0e8d8);border:1.5px solid rgba(196,154,60,.12);border-left:3px solid #c49a3c;border-radius:12px;font-family:'Quicksand',sans-serif;cursor:pointer;transition:all .2s;position:relative;overflow:hidden">
               <span style="width:32px;height:32px;display:flex;align-items:center;justify-content:center;clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);background:linear-gradient(135deg,var(--gold),#a47a2c);flex-shrink:0"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.1 2.1 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></span>
-              <span style="font-size:.72rem;font-weight:600;color:var(--parchment)">${LANG==='en'?'Edit menu':'Editar carta'}</span>
+              <span style="font-size:.72rem;font-weight:600;color:var(--parchment)">${_fsvSoloFicha() ? (LANG==='en'?'Service sheet':'Ficha de servicio') : (LANG==='en'?'Edit menu':'Editar carta')}</span>
             </button>
             <!-- Botón Analítica retirado: duplicaba la pestaña Análisis -->
             <button onclick="_supTool('parte')" style="display:flex;align-items:center;gap:.65rem;padding:.75rem .85rem;background:linear-gradient(155deg,#faf6ee,#f0e8d8);border:1.5px solid rgba(196,154,60,.12);border-left:3px solid var(--sage);border-radius:12px;font-family:'Quicksand',sans-serif;cursor:pointer;transition:all .2s;position:relative;overflow:hidden">
@@ -29705,6 +29772,367 @@ async function sendNotification(){
 // Las puntuaciones históricas (scores topic='quizdia') quedan en la nube sin
 // que nadie las lea. Si algún día vuelve, que vuelva con otro nombre.
 
+// ═══ FICHA DE SERVICIO COMPARTIDA ═══════════════════════════════════════
+// Lo que confirma el encargado lo ve todo el equipo del restaurante: se guarda
+// en public.fichas_servicio (venue + dish_id) y cada móvil lo pone sobre su
+// carta al cargarla (_fsvFusionar, más arriba). Caché en localStorage por
+// restaurante para verse sin red y refresco silencioso, como el de «Hoy en
+// sala». Si al guardar no hay red, la fila espera en una cola de este móvil
+// (se ve ya aquí) y se reenvía sola. La demo no sale a la red: guarda en su
+// base local (DB.fichasServicio).
+const _FSV_SRV_REFRESCO_MS = 120000;   // como mucho una lectura cada 2 min
+const _FSV_COLA_PAUSA_MS = 20000;      // y un reintento de la cola cada 20 s
+const _FSV_COLA_KEY = 'meseo_fsv_cola';
+let _fsvVenue = null;                  // restaurante de la carta puesta
+const _fsvSrvFilas = {};               // venue → filas del servidor
+const _fsvSrvTs = {};                  // venue → última lectura buena
+let _fsvSrvCargando = null;
+let _fsvColaEnviando = null, _fsvColaTs = 0;
+// La `svc` con la que vino cada plato en su carta, antes de poner encima las
+// filas. Por objeto: la carta de Txoko reutiliza sus objetos al volver a ella.
+const _fsvBase = new WeakMap();
+function _fsvSrvLsKey(v){ return 'meseo_fsv_' + v; }
+function _fsvSrvLeer(v){
+  if(Array.isArray(_fsvSrvFilas[v])) return _fsvSrvFilas[v];
+  try{
+    const f = JSON.parse(localStorage.getItem(_fsvSrvLsKey(v)) || 'null');
+    if(Array.isArray(f)) return (_fsvSrvFilas[v] = f);
+  }catch(_){}
+  return [];
+}
+function _fsvSrvGuardarLocal(v, filas){
+  _fsvSrvFilas[v] = filas;
+  try{ localStorage.setItem(_fsvSrvLsKey(v), JSON.stringify(filas)); }catch(_){}
+}
+function _fsvColaLeer(){
+  try{ const c = JSON.parse(localStorage.getItem(_FSV_COLA_KEY) || '[]'); return Array.isArray(c) ? c : []; }
+  catch(_){ return []; }
+}
+function _fsvColaEscribir(c){
+  try{ if(c.length) localStorage.setItem(_FSV_COLA_KEY, JSON.stringify(c)); else localStorage.removeItem(_FSV_COLA_KEY); }catch(_){}
+}
+function _fsvDemoFilas(){
+  try{
+    const o = (DB && DB.fichasServicio) || {};
+    return Object.keys(o).map(id => Object.assign({}, o[id], { venue: _fsvVenue, dish_id: Number(id) }));
+  }catch(_){ return []; }
+}
+function _fsvEsDemo(){ return typeof _esDemo === 'function' && _esDemo(); }
+// Las filas que valen ahora para la carta puesta.
+function _fsvFilasAhora(){
+  if(!_fsvVenue) return [];
+  if(_fsvEsDemo()) return _fsvDemoFilas();
+  return _fsvFilasEfectivas(_fsvSrvLeer(_fsvVenue), _fsvColaLeer(), _fsvVenue);
+}
+// Pone las filas sobre DISHES, en su sitio (DISHES es const): cada plato
+// parte de la `svc` de su carta y recibe encima la fila que tenga. Así una
+// fila que desaparece deja el plato como venía. true si cambió algo.
+function _fsvAplicar(){
+  if(!_fsvVenue) return false;
+  const base = DISHES.map(d => {
+    if(!d || typeof d !== 'object') return d;
+    if(!_fsvBase.has(d)) _fsvBase.set(d, { svc: d.svc, svc_en: d.svc_en });
+    const b = _fsvBase.get(d);
+    return { id: d.id, svc: b.svc, svc_en: b.svc_en };
+  });
+  const out = _fsvFusionar(base, _fsvFilasAhora(), _fsvVenue);
+  let cambio = false;
+  for(let i = 0; i < DISHES.length; i++){
+    const d = DISHES[i], n = out[i];
+    if(!d || !n) continue;
+    if(JSON.stringify([d.svc, d.svc_en]) === JSON.stringify([n.svc, n.svc_en])) continue;
+    if(n.svc === undefined) delete d.svc; else d.svc = n.svc;
+    if(n.svc_en === undefined) delete d.svc_en; else d.svc_en = n.svc_en;
+    cambio = true;
+  }
+  if(cambio){
+    try{ _gsDishIdx = null; }catch(_){}
+    try{ if(typeof _PASE_FICHAS_CACHE !== 'undefined') _PASE_FICHAS_CACHE.clear(); }catch(_){}
+  }
+  return cambio;
+}
+// La llama _cartaAplicar cada vez que se pone una carta.
+function _fsvAlPonerCarta(v){
+  _fsvVenue = v || null;
+  _fsvSrvCargando = null;
+  if(!_fsvVenue) return;
+  _fsvAplicar();
+  if(_fsvEsDemo()) return;
+  try{ Promise.resolve(_fsvSrvCargar(true)).then(c => { if(c) _fsvRepintar(); }); }catch(_){}
+  try{ _fsvColaEnviar(true); }catch(_){}
+}
+// Una lectura por restaurante como mucho cada _FSV_SRV_REFRESCO_MS (salvo
+// forzar). Devuelve true si cambió algo en la carta.
+async function _fsvSrvCargar(forzar){
+  if(_fsvEsDemo()) return false;   // la demo no sale a la red
+  const v = _fsvVenue;
+  if(!v) return false;
+  if(_fsvSrvCargando) return _fsvSrvCargando;
+  if(!forzar && Date.now() - (_fsvSrvTs[v] || 0) < _FSV_SRV_REFRESCO_MS) return false;
+  _fsvSrvTs[v] = Date.now();       // también si falla: no se insiste en cada pestaña
+  const p = (async () => {
+    try{
+      const r = await fetchT(`${SUPA_URL}/rest/v1/fichas_servicio?select=venue,dish_id,svc,svc_en,autor,updated_at&venue=eq.${encodeURIComponent(v)}`,
+        { headers: { 'apikey': SUPA_KEY, 'Authorization': `Bearer ${_bearer()}` } }, 9000);
+      if(!r.ok) return false;
+      const filas = await r.json();
+      if(!Array.isArray(filas)) return false;
+      _fsvSrvGuardarLocal(v, filas);
+      if(v !== _fsvVenue) return false;   // cambió la carta mientras tanto
+      return _fsvAplicar();
+    }catch(_){ return false; }
+    finally{ if(_fsvSrvCargando === p) _fsvSrvCargando = null; }
+  })();
+  _fsvSrvCargando = p;
+  return p;
+}
+// Refresco silencioso: al cambiar de pestaña, al volver a la app y con red.
+function _fsvSrvRefrescar(){
+  try{
+    // Txoko arranca con su carta ya puesta, sin pasar por _cartaAplicar.
+    if(!_fsvVenue && typeof currentUser !== 'undefined' && currentUser && typeof _cartaPuesta !== 'undefined'){ _fsvAlPonerCarta(_cartaPuesta); return; }
+    Promise.resolve(_fsvSrvCargar()).then(c => { if(c) _fsvRepintar(); });
+    _fsvColaEnviar();
+  }catch(_){}
+}
+try{ document.addEventListener('visibilitychange', () => { if(document.visibilityState === 'visible') _fsvSrvRefrescar(); }); }catch(_){}
+try{ window.addEventListener('online', () => setTimeout(() => _fsvColaEnviar(true), 800)); }catch(_){}
+// Envía una fila. Devuelve el status HTTP (0 = sin red).
+async function _fsvEnviarFila(fila){
+  try{
+    const r = await fetchT(`${SUPA_URL}/rest/v1/fichas_servicio?on_conflict=venue,dish_id`, {
+      method: 'POST',
+      headers: { 'apikey': SUPA_KEY, 'Authorization': `Bearer ${_bearer()}`, 'Content-Type': 'application/json',
+        'Prefer': 'resolution=merge-duplicates,return=minimal' },
+      body: JSON.stringify(fila)
+    }, 9000);
+    return r.status || 0;
+  }catch(_){ return 0; }
+}
+// Reenvía lo que esperaba en la cola. Una fila más vieja que la que ya tiene
+// el servidor para ese plato no se envía: pisaría lo de otro encargado.
+function _fsvColaEnviar(forzar){
+  if(_fsvEsDemo() || _fsvColaEnviando) return _fsvColaEnviando;
+  if(!_fsvColaLeer().length) return null;
+  if(!forzar && Date.now() - _fsvColaTs < _FSV_COLA_PAUSA_MS) return null;
+  _fsvColaTs = Date.now();
+  _fsvColaEnviando = (async () => {
+    let enviadas = 0, rechazadas = 0;
+    try{
+      for(const fila of _fsvColaLeer()){
+        const srv = _fsvSrvLeer(fila.venue).find(f => f && Number(f.dish_id) === Number(fila.dish_id));
+        let st;
+        if(srv && _fsvTs(srv) > _fsvTs(fila)) st = 'vieja';
+        else st = await _fsvEnviarFila(fila);
+        if(st !== 'vieja' && _fsvReintentable(st)) break;   // sigue sin red: luego
+        // Fuera de la cola (enviada, vieja o rechazada). Sólo esta fila: si el
+        // encargado la volvió a editar mientras, la nueva se queda.
+        _fsvColaEscribir(_fsvColaLeer().filter(f => !(f.venue === fila.venue && Number(f.dish_id) === Number(fila.dish_id) && f.updated_at === fila.updated_at)));
+        if(st === 'vieja') continue;
+        if(st >= 200 && st < 300){
+          enviadas++;
+          _fsvSrvGuardarLocal(fila.venue, _fsvSrvLeer(fila.venue).filter(f => !(f && Number(f.dish_id) === Number(fila.dish_id))).concat([fila]));
+        } else rechazadas++;
+      }
+    }finally{ _fsvColaEnviando = null; }
+    if(enviadas || rechazadas){ if(_fsvAplicar()) _fsvRepintar(); }
+    if(rechazadas){
+      try{ showToast(LANG==='en'
+        ? 'The server did not accept a service sheet saved without connection (no permission). It has not been saved for the team.'
+        : 'El servidor no ha aceptado una ficha de servicio que guardaste sin conexión (sin permiso). No se ha guardado para el equipo.', 'error', 7000); }catch(_){}
+    } else if(enviadas){
+      try{ showToast(LANG==='en'
+        ? (enviadas === 1 ? 'Service sheet sent. The team can see it now.' : `${enviadas} service sheets sent. The team can see them now.`)
+        : (enviadas === 1 ? 'Ficha de servicio enviada. El equipo ya la ve.' : `${enviadas} fichas de servicio enviadas. El equipo ya las ve.`), 'success', 3000); }catch(_){}
+    }
+    return enviadas;
+  })();
+  return _fsvColaEnviando;
+}
+// Guarda la ficha de un plato para todo el equipo:
+//   'ok'   guardada (en el servidor, o en la base local de la demo)
+//   'cola' sin red: guardada en este móvil, se enviará sola
+//   'no'   el servidor ha dicho que no (permiso o datos): no se ha guardado
+async function _fsvGuardarFicha(id, svc, svcEn){
+  const v = _fsvVenue || (typeof _cartaPuesta !== 'undefined' ? _cartaPuesta : _VENUE_POR_DEFECTO);
+  if(!_fsvVenue) _fsvVenue = v;
+  const fila = { venue: v, dish_id: id, svc: svc || {}, svc_en: svcEn || {},
+    autor: (typeof currentUser !== 'undefined' && currentUser) || '', updated_at: new Date().toISOString() };
+  if(_fsvEsDemo()){
+    try{
+      if(!DB.fichasServicio || typeof DB.fichasServicio !== 'object') DB.fichasServicio = {};
+      DB.fichasServicio[id] = { svc: fila.svc, svc_en: fila.svc_en, autor: fila.autor, updated_at: fila.updated_at };
+      saveDB();
+    }catch(_){ return 'no'; }
+    _fsvAplicar();
+    return 'ok';
+  }
+  const st = await _fsvEnviarFila(fila);
+  let res;
+  if(st >= 200 && st < 300){
+    _fsvSrvGuardarLocal(v, _fsvSrvLeer(v).filter(f => !(f && Number(f.dish_id) === id)).concat([fila]));
+    // Lo de antes en la cola para este plato ya no vale.
+    _fsvColaEscribir(_fsvColaLeer().filter(f => !(f.venue === v && Number(f.dish_id) === id)));
+    res = 'ok';
+  } else if(_fsvReintentable(st)){
+    _fsvColaEscribir(_fsvColaPoner(_fsvColaLeer(), fila));
+    _fsvColaTs = Date.now();
+    res = 'cola';
+  } else return 'no';
+  _fsvAplicar();
+  return res;
+}
+// Quién la edita: quien ha entrado en el Panel de supervisor (rol de mando o
+// administración y el PIN del panel, que valida el servidor), la misma puerta
+// que el resto del editor y que «Hoy en sala». En la demo, como «Hoy en sala»,
+// se edita sin PIN: nada sale de este navegador.
+function _fsvPuedeEditar(){
+  try{
+    if(_fsvEsDemo()) return true;
+    return (_esMando() || _esAdmin()) && typeof supAuthenticated !== 'undefined' && supAuthenticated === true;
+  }catch(_){ return false; }
+}
+// Lee el formulario abierto y lo guarda. Lo usan el editor de carta y el
+// editor sólo de ficha. Devuelve 'ok', 'cola', 'nada' (no había nada que
+// guardar) o 'no' (no se ha guardado; ya se ha avisado).
+async function _fsvEdGuardar(id, confirmar){
+  const d = DISHES.find(x => x.id === id);
+  const sv = _fsvEdLeer(confirmar);
+  if(!d || !sv) return 'nada';
+  if(!_fsvPuedeEditar()){
+    try{ showToast(LANG==='en'?'Only managers can edit the service sheet.':'Solo los responsables pueden editar la ficha de servicio.','warning',4000); }catch(_){}
+    return 'no';
+  }
+  const ok = confirmar || (d.svc && d.svc.ok === true);
+  if(!ok && !Object.keys(sv.svc).length && !Object.keys(sv.svcEn).length) return 'nada';
+  const svc = Object.assign(sv.svc, ok ? { ok: true } : {});
+  const btns = Array.from(document.querySelectorAll('#svcEd button'));
+  btns.forEach(b => { b.disabled = true; });
+  const res = await _fsvGuardarFicha(id, svc, sv.svcEn);
+  btns.forEach(b => { b.disabled = false; });
+  if(res === 'cola'){
+    try{ showToast(LANG==='en'
+      ? 'No connection: the service sheet is saved on this phone only. It will be sent to the team when the connection is back.'
+      : 'Sin conexión: la ficha de servicio queda guardada solo en este móvil. Se enviará al equipo en cuanto vuelva la red.', 'warning', 6000); }catch(_){}
+  } else if(res === 'no'){
+    try{ showToast(LANG==='en'
+      ? 'The server did not accept the service sheet. It has not been saved.'
+      : 'El servidor no ha aceptado la ficha de servicio. No se ha guardado.', 'error', 6000); }catch(_){}
+  }
+  return res;
+}
+// Fuera de Txoko el editor de carta completo sigue cerrado (ver
+// _editorCartaCerrado). Ahí se abre sólo la ficha de servicio.
+function _fsvSoloFicha(){
+  return _cartaPuesta !== _VENUE_POR_DEFECTO && !_fsvEsDemo();
+}
+// Filtro de la lista: «sin confirmar» primero, para ir pasando platos.
+function _fsvFiltroIni(){
+  if(window._fsvFiltro === 'pend' || window._fsvFiltro === 'todos') return;
+  const n = _fsvContador();
+  window._fsvFiltro = n.ok < n.total ? 'pend' : 'todos';
+}
+function _fsvFiltrosHTML(){
+  const en = LANG==='en', n = _fsvContador(), f = window._fsvFiltro;
+  return `<button type="button" class="q-chip${f==='pend'?' on':''}" aria-pressed="${f==='pend'}" onclick="_fsvVerFiltro('pend')">${en?'Not confirmed':'Sin confirmar'} · ${n.total - n.ok}</button>
+    <button type="button" class="q-chip${f==='todos'?' on':''}" aria-pressed="${f==='todos'}" onclick="_fsvVerFiltro('todos')">${en?'All':'Todos'} · ${n.total}</button>`;
+}
+function _fsvContadorTxt(){
+  const n = _fsvContador();
+  return LANG==='en' ? `${n.ok} of ${n.total} dishes with a confirmed service sheet` : `${n.ok} de ${n.total} platos con ficha de servicio confirmada`;
+}
+function _fsvVerFiltro(f){
+  window._fsvFiltro = f === 'todos' ? 'todos' : 'pend';
+  _fsvRepintar();
+}
+function _fsvListaFiltrar(dishes){
+  return window._fsvFiltro === 'pend' ? dishes.filter(d => !(d && d.svc && d.svc.ok === true)) : dishes;
+}
+function _fsvItemHTML(d, abrir){
+  const ok = d.svc && d.svc.ok === true, en = LANG==='en';
+  return `<div style="background:linear-gradient(155deg,#faf6ee,#f0e8d8);border:1px solid var(--line);border-radius:var(--r2);padding:.85rem 1rem;margin-bottom:.45rem;cursor:pointer;transition:all .2s" onclick="${abrir}(${d.id})" class="card-hover">
+      <div style="display:flex;align-items:center;justify-content:space-between">
+        <div>
+          <div style="font-size:.85rem;font-weight:500;color:var(--parchment)">${escapeHtml(getDish(d).name || '')}</div>
+          <div style="font-family:var(--font-mono);font-size:var(--fs-1);color:var(--parch4);margin-top:.1rem">${escapeHtml(d.cat || '')}</div>
+          <div class="fsv-lista-estado${ok?' ok':''}">${ok?(en?'✓ Service sheet':'✓ Ficha de servicio'):(en?'Service sheet to confirm':'Ficha de servicio por confirmar')}</div>
+        </div>
+        <span style="color:var(--parch4);font-size:.8rem">›</span>
+      </div>
+    </div>`;
+}
+function _fsvListaVaciaHTML(){
+  return `<div class="fsv-vacio">${LANG==='en'?'All dishes have a confirmed service sheet.':'Todos los platos tienen la ficha de servicio confirmada.'}</div>`;
+}
+// Repinta la lista abierta (editor de carta o sólo ficha) tras un cambio de
+// filtro o una confirmación que llega del servidor. El formulario abierto de
+// un plato no se toca: se perdería lo escrito.
+function _fsvRepintar(){
+  try{
+    const cont = document.getElementById('fsvContador'); if(cont) cont.textContent = _fsvContadorTxt();
+    const fil = document.getElementById('fsvFiltros'); if(fil) fil.innerHTML = _fsvFiltrosHTML();
+    if(document.getElementById('fsvSoloLista')) _fsvSoloPintarLista();
+    else if(document.getElementById('cartaDishList')) renderCartaList();
+  }catch(_){}
+}
+// ── Editor sólo de ficha de servicio (restaurantes sin editor de carta) ──
+function renderFsvEditor(){
+  if(!_fsvPuedeEditar()){
+    try{ showToast(LANG==='en'?'Only managers can edit the service sheet.':'Solo los responsables pueden editar la ficha de servicio.','warning',4000); }catch(_){}
+    return;
+  }
+  _fsvFiltroIni();
+  const en = LANG==='en';
+  const c = document.getElementById('appContent');
+  c.innerHTML = `<div class="sup-wrap">
+    <div class="sup-hero">
+      <div class="sup-hero-icon"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg></div>
+      <div class="sup-hero-title">${en?'Service sheet':'Ficha de servicio'}</div>
+      <div class="sup-hero-sub">${en?'What guests ask about each dish. What you confirm here, the whole team sees.':'Lo que pregunta el cliente de cada plato. Lo que confirmes aquí lo ve todo el equipo.'}</div>
+      <div class="fsv-contador" id="fsvContador">${_fsvContadorTxt()}</div>
+    </div>
+    <div class="fsv-filtros" id="fsvFiltros">${_fsvFiltrosHTML()}</div>
+    <div id="fsvSoloLista"></div>
+    <button class="btn-secondary" onclick="renderSupDashboard()" style="width:100%;margin-top:.25rem">← ${en?'Back to panel':'Volver al panel'}</button>
+  </div>`;
+  _fsvSoloPintarLista();
+}
+function _fsvSoloPintarLista(){
+  const el = document.getElementById('fsvSoloLista'); if(!el) return;
+  const lista = _fsvListaFiltrar(DISHES);
+  el.innerHTML = lista.length ? lista.map(d => _fsvItemHTML(d, 'renderFsvPlato')).join('') : _fsvListaVaciaHTML();
+}
+function renderFsvPlato(id){
+  if(!_fsvPuedeEditar()) return;
+  const d = DISHES.find(x => x.id === id);
+  if(!d) return;
+  const en = LANG==='en', g = getDish(d);
+  const sig = _fsvSiguientePendiente(id);
+  const al = Array.isArray(g.allergens) && g.allergens.length ? g.allergens.map(a => (typeof allergenLocal === 'function' ? allergenLocal(a) : a)).join(', ') : '';
+  const c = document.getElementById('appContent');
+  c.innerHTML = `<div class="sup-wrap">
+    <div style="display:flex;align-items:center;gap:.75rem;margin-bottom:1rem">
+      <button onclick="renderFsvEditor()" aria-label="${en?'Back':'Volver'}" style="background:transparent;border:1.5px solid rgba(196,154,60,.55);border-radius:var(--r2);padding:.4rem .8rem;font-size:.75rem;color:var(--gold-deep);font-weight:700;cursor:pointer">←</button>
+      <div style="font-family:'Cinzel',serif;font-size:1.2rem;color:var(--parchment)">${escapeHtml(g.name || '')}</div>
+    </div>
+    ${g.ingredients ? `<p class="fsv-solo-ing"><b>${en?'Ingredients':'Ingredientes'}:</b> ${escapeHtml(g.ingredients)}${al ? `<br><b>${en?'Allergens':'Alérgenos'}:</b> ${escapeHtml(al)}` : ''}</p>` : ''}
+    ${_fsvFormHTML(d, true)}
+    ${sig != null && d.svc && d.svc.ok === true
+      ? `<button type="button" class="fsv-ed-siguiente" onclick="renderFsvPlato(${sig})">${en?'Next dish to confirm →':'Siguiente plato por confirmar →'}</button>` : ''}
+  </div>`;
+}
+async function _fsvSoloGuardar(id, confirmar){
+  if(!_fsvPuedeEditar()) return;
+  const res = await _fsvEdGuardar(id, confirmar);
+  if(res === 'no') return;   // el formulario se queda como está
+  if(res === 'ok' || res === 'nada'){
+    try{ showToast(confirmar
+      ? (LANG==='en'?'Dish confirmed. The team will see it.':'Plato confirmado. Lo verá todo el equipo.')
+      : (LANG==='en'?'Saved':'Guardado'),'success',2200); }catch(_){}
+  }
+  renderFsvPlato(id);
+}
+
 // El editor de carta escribe en custom_dishes por manage-content, que hoy NO
 // sabe de restaurantes: la fila se guarda como de Txoko (DEFAULT 'txoko') y la
 // clave es sólo dish_id. Hasta que el servidor lo ate al restaurante, el editor
@@ -29723,12 +30151,8 @@ function _editorCartaCerrado(nuevo){
 }
 // Ficha de servicio en el editor: cuántos platos tiene confirmados el
 // restaurante (cabecera) y el formulario rápido de cada plato.
-function _fsvContador(){
-  const total = DISHES.length;
-  const ok = DISHES.filter(d => d && d.svc && d.svc.ok === true).length;
-  return { ok, total };
-}
-function _fsvFormHTML(d){
+function _fsvContador(){ return _fsvContar(DISHES); }
+function _fsvFormHTML(d, solo){
   const en = LANG==='en';
   const s = (d.svc && typeof d.svc==='object') ? d.svc : {};
   const se = (d.svc_en && typeof d.svc_en==='object') ? d.svc_en : {};
@@ -29781,7 +30205,8 @@ function _fsvFormHTML(d){
     </details>
     <div class="fsv-ed-botones">
       ${haySug ? `<button type="button" class="fsv-ed-aceptar" onclick="_fsvEdAceptar()">${en?'Accept suggestions':'Aceptar sugerencias'}</button>` : ''}
-      <button type="button" class="fsv-ed-confirmar" onclick="saveCartaDish(${d.id},'confirmar')">${en?'Confirm dish':'Confirmar plato'}</button>
+      ${solo ? `<button type="button" class="fsv-ed-guardar" onclick="_fsvSoloGuardar(${d.id},false)">${en?'Save without confirming':'Guardar sin confirmar'}</button>` : ''}
+      <button type="button" class="fsv-ed-confirmar" onclick="${solo ? `_fsvSoloGuardar(${d.id},true)` : `saveCartaDish(${d.id},'confirmar')`}">${en?'Confirm dish':'Confirmar plato'}</button>
     </div>
   </div>`;
 }
@@ -29827,6 +30252,7 @@ function _fsvSiguientePendiente(desde){
 }
 function renderCartaEditor(){
   if(typeof _editorCartaCerrado==='function' && _editorCartaCerrado()) return;
+  _fsvFiltroIni();
   const cats = [...new Set(DISHES.map(d=>d.cat))];
   const c = document.getElementById('appContent');
   c.innerHTML = `<div class="sup-wrap">
@@ -29834,10 +30260,9 @@ function renderCartaEditor(){
       <div class="sup-hero-icon"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></div>
       <div class="sup-hero-title">${LANG==='en'?'Menu Editor':'Editor de Carta'}</div>
       <div class="sup-hero-sub">${LANG==='en'?'Edit dish details':'Edita los detalles de los platos'}</div>
-      <div class="fsv-contador">${(()=>{ const n=_fsvContador(); return LANG==='en'
-        ? `${n.ok} of ${n.total} dishes with a confirmed service sheet`
-        : `${n.ok} de ${n.total} platos con ficha de servicio confirmada`; })()}</div>
+      <div class="fsv-contador" id="fsvContador">${_fsvContadorTxt()}</div>
     </div>
+    <div class="fsv-filtros" id="fsvFiltros">${_fsvFiltrosHTML()}</div>
     <div style="margin-bottom:1rem">
       <select id="cartaCatFilter" onchange="renderCartaList()" style="width:100%;padding:.6rem 1rem;border:1px solid var(--line);border-radius:var(--r2);background:#faf6ee;font-family:var(--font-sans);font-size:var(--fs-3);color:var(--parchment)">
         <option value="all">${LANG==='en'?'All categories':'Todas las categorías'}</option>
@@ -29853,20 +30278,10 @@ function renderCartaEditor(){
 
 function renderCartaList(){
   const cat = document.getElementById('cartaCatFilter')?.value||'all';
-  const dishes = cat==='all'?DISHES:DISHES.filter(d=>d.cat===cat);
+  const dishes = _fsvListaFiltrar(cat==='all'?DISHES:DISHES.filter(d=>d.cat===cat));
   const container = document.getElementById('cartaDishList');
   if(!container) return;
-  container.innerHTML = dishes.map(d=>`
-    <div style="background:linear-gradient(155deg,#faf6ee,#f0e8d8);border:1px solid var(--line);border-radius:var(--r2);padding:.85rem 1rem;margin-bottom:.45rem;cursor:pointer;transition:all .2s" onclick="renderCartaDishEdit(${d.id})" class="card-hover">
-      <div style="display:flex;align-items:center;justify-content:space-between">
-        <div>
-          <div style="font-size:.85rem;font-weight:500;color:var(--parchment)">${d.name}</div>
-          <div style="font-family:var(--font-mono);font-size:var(--fs-1);color:var(--parch4);margin-top:.1rem">${d.cat}</div>
-          <div class="fsv-lista-estado${d.svc&&d.svc.ok===true?' ok':''}">${d.svc&&d.svc.ok===true?(LANG==='en'?'✓ Service sheet':'✓ Ficha de servicio'):(LANG==='en'?'Service sheet to confirm':'Ficha de servicio por confirmar')}</div>
-        </div>
-        <span style="color:var(--parch4);font-size:.8rem">›</span>
-      </div>
-    </div>`).join('');
+  container.innerHTML = dishes.length ? dishes.map(d => _fsvItemHTML(d, 'renderCartaDishEdit')).join('') : _fsvListaVaciaHTML();
 }
 
 function renderCartaDishEdit(id){
@@ -29908,7 +30323,7 @@ function renderCartaDishEdit(id){
 
 // modo 'confirmar' = botón «Confirmar plato»: guarda todo y marca la ficha de
 // servicio como confirmada (svc.ok). Guardar a secas conserva el ok que hubiera.
-function saveCartaDish(id, modo){
+async function saveCartaDish(id, modo){
   if(typeof _editorCartaCerrado==='function' && _editorCartaCerrado()) return;
   const d = DISHES.find(x=>x.id===id);
   if(!d) return;
@@ -29917,19 +30332,10 @@ function saveCartaDish(id, modo){
   d.ingredients = document.getElementById('editIngredients').value.trim();
   d.history = document.getElementById('editHistory').value.trim();
   d.notes = document.getElementById('editNotes').value.trim()||null;
-  // Ficha de servicio: mismo camino que el resto de la edición (este
-  // navegador). manage-content / custom_dishes no saben de ella.
-  const _sv = (typeof _fsvEdLeer==='function') ? _fsvEdLeer(confirmar) : null;
-  if(_sv){
-    const ok = confirmar || (d.svc && d.svc.ok === true);
-    d.svc = (Object.keys(_sv.svc).length || ok) ? Object.assign(_sv.svc, ok ? { ok:true } : {}) : null;
-    d.svc_en = Object.keys(_sv.svcEn).length ? _sv.svcEn : null;
-    try{ _gsDishIdx = null; }catch(e){}
-  }
-  // Save overrides to localStorage
+  // Save overrides to localStorage (la ficha de servicio NO va aquí).
   try {
     const overrides = JSON.parse(localStorage.getItem('txoko_carta_overrides')||'{}');
-    overrides[id] = {allergens:d.allergens,ingredients:d.ingredients,history:d.history,notes:d.notes,svc:d.svc||null,svc_en:d.svc_en||null};
+    overrides[id] = {allergens:d.allergens,ingredients:d.ingredients,history:d.history,notes:d.notes};
     localStorage.setItem('txoko_carta_overrides', JSON.stringify(overrides));
   } catch(e){}
   // If it's a custom dish (added by supervisor), sync to Supabase
@@ -29937,8 +30343,13 @@ function saveCartaDish(id, modo){
     const newIds = JSON.parse(localStorage.getItem('txoko_new_dishes')||'[]');
     if(newIds.find(x=>x.id===id)) supaUpsertCustomDish(d);
   } catch(e){}
+  // Ficha de servicio: al servidor, para todo el equipo (en la demo, a su
+  // base local). Si no se puede, se avisa y el formulario se queda como está.
+  // Sin red se guarda en este móvil y se reenvía sola (_fsvEdGuardar avisa).
+  const _fsv = await _fsvEdGuardar(id, confirmar);
+  if(_fsv === 'no') return;
   if(confirmar){
-    try{ showToast(LANG==='en'?'Dish confirmed':'Plato confirmado','success',2200); }catch(e){}
+    if(_fsv !== 'cola'){ try{ showToast(LANG==='en'?'Dish confirmed':'Plato confirmado','success',2200); }catch(e){} }
     renderCartaDishEdit(id);
     return;
   }
@@ -30035,12 +30446,18 @@ function saveNewDish(){
   renderCartaEditor();
 }
 
+// La v7.517 guardaba la ficha de servicio en txoko_carta_overrides, sólo en
+// este navegador. Ya vive en el servidor: lo que quede aquí no se aplica.
+function _sinFichaServicio(x){
+  if(!x || typeof x !== 'object') return {};
+  const o = Object.assign({}, x); delete o.svc; delete o.svc_en; return o;
+}
 // Repone las ediciones guardadas en este navegador sobre la carta puesta. Sólo
 // la llama _cartaAplicar para la demo; Txoko las recibe al arrancar (abajo).
 function _cartaEdicionesLocales(){
   try{
     const o = JSON.parse(localStorage.getItem('txoko_carta_overrides')||'{}');
-    for(const d of DISHES){ const x = o[d.id]; if(x && typeof x==='object') Object.assign(d, x); }
+    for(const d of DISHES){ const x = o[d.id]; if(x && typeof x==='object') Object.assign(d, _sinFichaServicio(x)); }
   }catch(e){}
 }
 // Load carta overrides on startup
@@ -30056,7 +30473,7 @@ function loadCartaOverrides(){
     Object.entries(overrides).forEach(([id,data])=>{
       if(id.startsWith('new_')) return; // already loaded above
       const d = DISHES.find(x=>x.id===parseInt(id));
-      if(d){ Object.assign(d,data); }
+      if(d){ Object.assign(d,_sinFichaServicio(data)); }
     });
   } catch(e){}
 }
