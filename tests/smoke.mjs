@@ -6630,6 +6630,71 @@ test('Hospitalidad: no repite la misma mesa y avanza de módulo (oct 2026)', () 
   assert(f._hspDia(M[0], {hechos:{a1:'x'}, fallados:{}}).id==='a2', 'la siguiente mesa es la que no se ha jugado');
 });
 
+test('Hospitalidad: siete módulos nuevos, todos válidos y sin delatar la mejor (oct 2026)', () => {
+  // «Siempre me sale la misma escena» (propietario): 42 mesas más, una por principio.
+  const raw = read('data/hospitalidad.json');
+  const data = JSON.parse(raw);
+  const fn = n => { const i = html.indexOf('function ' + n + '('); return html.slice(i, html.indexOf('\n}', i) + 2); };
+  const validos = new Function(fn('_hspModulosValidos') + '\nreturn _hspModulosValidos;')(); // eslint-disable-line no-new-func
+  const mods = validos(data);
+  assert(data.revision === true, 'sigue en revisión hasta que el propietario lo apruebe');
+  assert(mods.length === data.modulos.length, 'ningún módulo se descarta');
+  for (const m of data.modulos) {
+    const v = mods.find(x => x.id === m.id);
+    assert(v && v.dias.length === m.dias.length, `${m.id}: todas sus mesas pasan la validación`);
+    assert(m.t_en && m.intro && m.intro_en, `${m.id}: título e intro en los dos idiomas`);
+  }
+  assert(data.modulos.map(m => m.n).join() === '1,2,3,4,5,6,7,8', 'módulos numerados del 1 al 8');
+  const dias = [].concat(...data.modulos.map(m => m.dias));
+  assert(dias.length === 48, `48 mesas (hay ${dias.length})`);
+  const ids = dias.map(d => d.id);
+  assert(new Set(ids).size === ids.length, 'ids únicos');
+  for (const m of data.modulos.slice(1)) m.dias.forEach((d, i) => {
+    assert(d.id === `m${m.n}d${i + 1}` && d.n === i + 1, `${d.id}: id y n correlativos`);
+    assert(d.opts.filter(o => o.v === 'mejor').length === 1, `${d.id}: exactamente una mejor`);
+    assert(d.opts.every(o => o.t_en && o.fb_en) && d.t_en && d.esc_en && d.nosabias_en && d.frase_en && d.consigna_en && d.pregunta_en && d.idea_en, `${d.id}: en los dos idiomas`);
+    assert(d.tarea_en.length === d.tarea.length && d.persona_en.length === d.persona.length && d.resp_en.length === 3, `${d.id}: listas en paralelo`);
+  });
+  // La mejor no siempre en el mismo sitio: ninguna posición con más del 40 %.
+  const pos = [0, 0, 0, 0, 0, 0];
+  for (const d of dias) pos[d.opts.findIndex(o => o.v === 'mejor')]++;
+  assert(Math.max(...pos) <= dias.length * 0.4, `posición de la mejor repartida (${pos.join('/')})`);
+  // Ni por larga: la mejor no es la más larga en más de un tercio de las mesas.
+  for (const k of ['t', 't_en']) {
+    const larga = dias.filter(d => { const L = d.opts.map(o => o[k].length), b = d.opts.findIndex(o => o.v === 'mejor'); return L[b] === Math.max(...L) && L.filter(x => x === L[b]).length === 1; }).length;
+    assert(larga <= dias.length / 3, `la mejor no se delata por larga (${k}: ${larga})`);
+  }
+  assert(!raw.includes('—'), 'ningún texto con raya');
+  // Lo que protege va primero: al menos cuatro mesas, de módulos distintos, con un límite.
+  const conLimite = new Set(data.modulos.slice(1).filter(m => m.dias.some(d => d.opts.some(o => o.v === 'limite'))).map(m => m.id));
+  assert(conLimite.size >= 4, `límites repartidos en varios módulos (${[...conLimite]})`);
+  // El insulto: su propio texto de límite.
+  assert(dias.some(d => d.lim && d.lim_en && d.opts.some(o => o.v === 'limite')), 'la mesa del insulto explica su límite');
+});
+
+test('Hospitalidad: intro del módulo, «ya has hecho la de hoy», sin repetir la fallada y «sobre ayer» entre módulos (oct 2026)', () => {
+  const fn = n => { const i = html.indexOf('function ' + n + '('); return html.slice(i, html.indexOf('\n}', i) + 2); };
+  const f = new Function(fn('_hspDia') + fn('_hspHechaHoy') + '\nreturn { dia:_hspDia, hecha:_hspHechaHoy };')(); // eslint-disable-line no-new-func
+  const M = { id:'a', dias:[{ id:'a1' }, { id:'a2' }, { id:'a3' }] };
+  const todas = { a1:'2026-10-10', a2:'2026-10-11', a3:'2026-10-12' };
+  // La fallada no sale dos veces seguidas si hay otra.
+  assert(f.dia(M, { hechos:todas, fallados:{ a3:'2026-10-12' }, ultima:'a3' }).id === 'a1', 'tras fallar, al día siguiente otra mesa');
+  assert(f.dia(M, { hechos:todas, fallados:{ a3:'2026-10-12' }, ultima:'a1' }).id === 'a3', 'luego vuelve la fallada');
+  assert(f.dia(M, { hechos:todas, fallados:{} }).id === 'a1', 'sin falladas, la más antigua');
+  assert(f.dia({ id:'b', dias:[{ id:'b1' }] }, { hechos:{ b1:'x' }, fallados:{ b1:'x' }, ultima:'b1' }).id === 'b1', 'con una sola mesa, repite');
+  // Mesa hecha hoy, en cualquier módulo.
+  const mods = [M, { id:'b', dias:[{ id:'b1' }] }];
+  assert(f.hecha(mods, { hechos:{ b1:'2026-10-19' }, ultima:'b1' }, '2026-10-19').id === 'b1', 'reconoce la mesa de hoy');
+  assert(f.hecha(mods, { hechos:{ b1:'2026-10-18' } }, '2026-10-19') === null, 'la de ayer no cuenta como hoy');
+  const L = fn('launchHospitalidad');
+  assert(/\[\]\.concat\(\.\.\.modulos\.map\(m => m\.dias\)\)\.find\(d => d\.id === pend\.id\)/.test(L), '«sobre ayer» busca la mesa en todos los módulos');
+  assert(/hechaHoy \? 'hecha' : pendDia \? 'ayer' : introMod \? 'modulo' : 'escena'/.test(L), 'orden: hecha hoy, ayer, intro del módulo, escena');
+  assert(/Ya has hecho la mesa de hoy/.test(fn('_hspHechaHTML')) && /_hspOtraMesa\(\)/.test(fn('_hspHechaHTML')) && /'consigna'/.test(fn('_hspHechaHTML')), 'pantalla de hecha con consigna y «Otra mesa»');
+  assert(/Empieza/.test(fn('_hspModuloHTML')) && /'intro'/.test(fn('_hspModuloHTML')), 'la intro del módulo dice de qué va la semana');
+  assert(/prog\.ultima=S\.dia\.id;/.test(fn('_hspElegir')), 'se recuerda la última mesa contestada');
+  assert(/_hspT\(D,'lim'\)/.test(fn('_hspEscenaHTML')), 'el límite puede tener texto propio');
+});
+
 test('Emplatado: la vista rápida separa los bocados igual que la ficha (oct 2026)', () => {
   // El Mistery Box se leía como un párrafo corrido en la vista rápida del
   // emplatado: los saltos de línea se perdían. Ahora usa el mismo render.
@@ -16932,8 +16997,8 @@ test('Hospitalidad: una mesa al día, motor puro y sin XP ni nube con puntuació
   const motor = new Function(fn('_hspModulosValidos') + fn('_hspDia') + fn('_hspCorregir') + fn('_hspPendiente') // eslint-disable-line no-new-func
     + '\nreturn { validos:_hspModulosValidos, dia:_hspDia, corregir:_hspCorregir, pend:_hspPendiente };')();
   const mods = motor.validos(data);
-  assert(mods.length === 1 && mods[0].dias.length === 6, 'módulo 1: seis mesas');
-  for (const d of mods[0].dias) {
+  assert(mods.length === 8 && mods.every(m => m.dias.length === 6), 'ocho módulos de seis mesas');
+  for (const d of [].concat(...mods.map(m => m.dias))) {
     assert(d.opts.length === 4 && d.opts.filter(o => o.v === 'mejor').length === 1, `${d.id}: cuatro opciones y una mejor`);
     assert(d.opts.every(o => o.t_en && o.fb_en) && d.nosabias_en && d.frase_en && d.consigna_en && d.pregunta_en, `${d.id}: en los dos idiomas`);
     assert(d.tarea.length === d.persona.length && d.tarea_en.length === d.tarea.length, `${d.id}: contraste en paralelo`);

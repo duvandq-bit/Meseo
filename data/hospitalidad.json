@@ -483,6 +483,3368 @@
      ]
     }
    ]
+  },
+  {
+   "id": "mira",
+   "n": 2,
+   "t": "Mira antes de actuar",
+   "t_en": "Look before you act",
+   "sub": "leer la mesa antes de abrir la boca",
+   "sub_en": "read the table before you speak",
+   "intro": "Esta semana va de mirar. Antes de hablar, la mesa ya te está diciendo cosas: a qué ritmo comen, quién decide, si están hablando, qué miran. Seis mesas para aprender a leerlas antes de moverte.",
+   "intro_en": "This week is about looking. Before you speak, the table is already telling you things: how fast they eat, who decides, whether they are talking, what they are looking at. Six tables to learn to read them before you move.",
+   "dias": [
+    {
+     "id": "m2d1",
+     "n": 1,
+     "idea": "El ritmo lo marca la mesa",
+     "idea_en": "The table sets the pace",
+     "t": "La barra a su ritmo",
+     "t_en": "The counter at his pace",
+     "esc": "Barra de un japonés, 22:15. Un hombre solo, sentado frente al cocinero. Cada pieza le dura dos segundos: la coge con los dedos, la come de un bocado y deja los palillos en el reposa palillos. Luego vuelve a mirar las manos del cocinero. Te toca servirle la siguiente y en la formación te enseñaron a explicar cada pieza: pescado, origen, corte y salsa.",
+     "esc_en": "Japanese counter, 22:15. A man alone, sitting facing the chef. Each piece lasts him two seconds: he picks it up with his fingers, eats it in one bite and rests his chopsticks. Then he goes back to watching the chef's hands. You are serving the next piece, and in training you learnt to explain each one: fish, origin, cut and sauce.",
+     "opts": [
+      {
+       "t": "Le explico la pieza entera, como me enseñaron. Es parte de la experiencia.",
+       "t_en": "I explain the whole piece, as I was taught. It is part of the experience.",
+       "v": "no",
+       "fb": "Le pones una charla entre él y lo que ha venido a ver. La pieza se enfría mientras hablas.",
+       "fb_en": "You put a talk between him and what he came to watch. The piece goes cold while you speak."
+      },
+      {
+       "t": "Le pregunto si quiere que le explique cada pieza o prefiere comer tranquilo.",
+       "t_en": "I ask whether he wants each piece explained or would rather eat in peace.",
+       "v": "vale",
+       "fb": "Preguntar está bien, pero lo que hace ya te contesta. Le interrumpes para confirmar lo que se ve.",
+       "fb_en": "Asking is fine, but what he is doing already answers it. You interrupt him to confirm what is visible."
+      },
+      {
+       "t": "Le pido al cocinero que acelere el ritmo de las piezas, que este señor va rápido.",
+       "t_en": "I ask the chef to speed up the pieces, since this man is eating fast.",
+       "v": "no",
+       "fb": "Ves el ritmo y lo lees al revés. No tiene prisa: come en cuanto llega porque así se come aquí.",
+       "fb_en": "You see the pace and read it backwards. He is not in a hurry: he eats as it lands because that is how it is done here."
+      },
+      {
+       "t": "Le digo sólo el nombre del pescado, en voz baja, y me aparto.",
+       "t_en": "I tell him only the name of the fish, quietly, and step back.",
+       "v": "mejor",
+       "fb": "Le das lo justo para saber qué come y le devuelves la barra. Si quiere más, te lo pedirá.",
+       "fb_en": "You give him just enough to know what he is eating and hand the counter back to him. If he wants more, he will ask."
+      }
+     ],
+     "nosabias": "Es cocinero. Ha cogido un avión para cenar en esta barra en su único día libre del mes. Come al momento porque sabe que la pieza está en su punto los primeros segundos. Lo que ha venido a ver son las manos del cocinero, no a escuchar.",
+     "nosabias_en": "He is a chef. He flew in to eat at this counter on his only day off this month. He eats at once because he knows the piece is at its best in the first seconds. He came to watch the chef's hands, not to listen.",
+     "tarea": [
+      "Ve una pieza que servir: toca explicarla.",
+      "Pescado, origen, corte y salsa. Un minuto.",
+      "Él asiente por educación y mira de reojo al cocinero."
+     ],
+     "tarea_en": [
+      "Sees a piece to serve: time to explain it.",
+      "Fish, origin, cut and sauce. One minute.",
+      "He nods politely and glances at the chef."
+     ],
+     "persona": [
+      "Ve cómo come: rápido, en silencio, mirando la tabla.",
+      "El nombre del pescado, en voz baja. Tres segundos.",
+      "Él sigue a lo suyo. Al final pregunta por el arroz, y ahí sí le cuentas."
+     ],
+     "persona_en": [
+      "Sees how he eats: fast, silent, watching the board.",
+      "The name of the fish, quietly. Three seconds.",
+      "He carries on. At the end he asks about the rice, and then you do tell him."
+     ],
+     "frase": "Antes de servir, mira cómo come la mesa. El ritmo te dice cuánto hablar mejor que cualquier protocolo.",
+     "frase_en": "Before serving, watch how the table eats. The pace tells you how much to say better than any protocol.",
+     "consigna": "En tres mesas, mira diez segundos cómo comen antes de acercarte, y ajusta cuánto hablas.",
+     "consigna_en": "At three tables, watch for ten seconds how they eat before approaching, and adjust how much you say.",
+     "pregunta": "¿Cambiaste cuánto hablabas en alguna mesa?",
+     "pregunta_en": "Did you change how much you said at any table?",
+     "resp": [
+      "Sí, en varias",
+      "En una",
+      "No me fijé"
+     ],
+     "resp_en": [
+      "Yes, at several",
+      "At one",
+      "I did not notice"
+     ]
+    },
+    {
+     "id": "m2d2",
+     "n": 2,
+     "idea": "Mira quién decide",
+     "idea_en": "See who decides",
+     "t": "El tinto que nadie pidió",
+     "t_en": "The red nobody ordered",
+     "esc": "Bar de vinos, 20:00. Una pareja de unos cuarenta años. Él te pide «un tinto que esté bien, el que usted diga». Mientras habla, ella tiene la carta de vinos abierta y lleva un rato con el dedo parado en la página de blancos. Cuando él dice «tinto», ella cierra la carta.",
+     "esc_en": "Wine bar, 20:00. A couple in their forties. He asks you for \"a good red, whatever you suggest\". While he speaks, she has the wine list open and her finger has been resting on the whites page for a while. When he says \"red\", she closes the list.",
+     "opts": [
+      {
+       "t": "«¿Tinto para los dos, o les apetece ver también algún blanco?»",
+       "t_en": "\"Red for both of you, or would you also like to see a white?\"",
+       "v": "mejor",
+       "fb": "No corriges a nadie y abres la puerta que ella acaba de cerrar. Si quiere blanco, ahora puede decirlo.",
+       "fb_en": "You correct nobody and reopen the door she just closed. If she wants white, she can now say so."
+      },
+      {
+       "t": "Le recomiendo a él un tinto de la zona, con nombre, y le digo por qué ese.",
+       "t_en": "I recommend him a local red, by name, and tell him why.",
+       "v": "vale",
+       "fb": "Una buena recomendación para lo que te han pedido. Pero lo que pidieron no era lo que se veía en la mesa.",
+       "fb_en": "A good recommendation for what was asked. But what was asked was not what you could see at the table."
+      },
+      {
+       "t": "Le digo a ella que he visto que miraba los blancos y le recomiendo uno.",
+       "t_en": "I tell her I saw her looking at the whites and recommend one.",
+       "v": "no",
+       "fb": "Aciertas en lo que viste y fallas en cómo lo dices. La dejas en evidencia delante de él.",
+       "fb_en": "You are right about what you saw and wrong about how you say it. You expose her in front of him."
+      },
+      {
+       "t": "Les dejo la carta otra vez y les digo que vuelvo cuando lo tengan claro.",
+       "t_en": "I leave them the list again and say I will come back when they have decided.",
+       "v": "no",
+       "fb": "Él ya decidió y te pidió ayuda. Te vas sin dársela y ella sigue igual.",
+       "fb_en": "He had already decided and asked for help. You leave without giving it, and she is no better off."
+      }
+     ],
+     "nosabias": "Él pidió tinto porque cree que a ella le gusta el tinto. Ella lleva años bebiendo tinto por él. Con la pregunta a los dos, ella dijo «yo me tomaría un blanco». Él se rió: «¿y por qué no lo has dicho nunca?».",
+     "nosabias_en": "He ordered red because he thinks she likes red. She has been drinking red for years because of him. With the question to both, she said \"I'd have a white\". He laughed: \"why have you never said?\".",
+     "tarea": [
+      "Oye «un tinto» y piensa en tintos.",
+      "Recomienda uno bueno a quien lo ha pedido.",
+      "Ella se bebe un tinto que no quería."
+     ],
+     "tarea_en": [
+      "Hears \"a red\" and thinks of reds.",
+      "Recommends a good one to whoever asked.",
+      "She drinks a red she did not want."
+     ],
+     "persona": [
+      "Oye «un tinto» y ve un dedo en los blancos.",
+      "Responde a él y pregunta a los dos, sin señalar a nadie.",
+      "Cada uno se bebe lo suyo."
+     ],
+     "persona_en": [
+      "Hears \"a red\" and sees a finger on the whites.",
+      "Answers him and asks both, singling out nobody.",
+      "Each one drinks their own."
+     ],
+     "frase": "Quien habla no siempre es quien decide. Mira las manos y los ojos de toda la mesa antes de contestar.",
+     "frase_en": "Whoever speaks is not always whoever decides. Watch the hands and eyes of the whole table before you answer.",
+     "consigna": "En dos mesas, fíjate en quién decide de verdad antes de recomendar nada.",
+     "consigna_en": "At two tables, notice who really decides before you recommend anything.",
+     "pregunta": "¿Decidía quien hablaba?",
+     "pregunta_en": "Was the one speaking the one deciding?",
+     "resp": [
+      "Sí",
+      "No, era otro",
+      "No me fijé"
+     ],
+     "resp_en": [
+      "Yes",
+      "No, it was someone else",
+      "I did not notice"
+     ]
+    },
+    {
+     "id": "m2d3",
+     "n": 3,
+     "idea": "Mira lo que miran",
+     "idea_en": "Look at what they look at",
+     "t": "La cola de los huevos",
+     "t_en": "The egg station queue",
+     "esc": "Desayuno del hotel, 8:20. Una señora de unos ochenta años, sola, en una mesa junto a la ventana. Tiene un bastón apoyado en la silla y delante sólo un café y una tostada. Mira cada poco hacia la estación de huevos, donde hay una cola de seis personas. Ya ha mirado cuatro veces.",
+     "esc_en": "Hotel breakfast, 8:20. A woman of about eighty, alone, at a window table. A walking stick leans against her chair, and in front of her only a coffee and a slice of toast. Every so often she looks over at the egg station, where six people are queuing. She has looked four times already.",
+     "opts": [
+      {
+       "t": "Le traigo unos huevos revueltos de la estación, que es lo que más sale.",
+       "t_en": "I bring her scrambled eggs from the station, which is what most people have.",
+       "v": "no",
+       "fb": "Bien visto y mal resuelto. Decides por ella cómo le gustan los huevos.",
+       "fb_en": "Well spotted, badly solved. You decide for her how she likes her eggs."
+      },
+      {
+       "t": "Me acerco y le pregunto si le puedo ayudar con algo.",
+       "t_en": "I go over and ask if I can help her with anything.",
+       "v": "vale",
+       "fb": "Correcto, pero es una pregunta abierta. Muchos mayores contestan «no, gracias» aunque sí.",
+       "fb_en": "Correct, but it is an open question. Many older guests answer \"no, thank you\" even when they mean yes."
+      },
+      {
+       "t": "Me acerco y le ofrezco tomarle nota de los huevos para traérselos a la mesa.",
+       "t_en": "I go over and offer to take her egg order and bring them to the table.",
+       "v": "mejor",
+       "fb": "Le ofreces algo concreto que puede aceptar sin pedirlo. Ella sólo elige cómo los quiere.",
+       "fb_en": "You offer something concrete she can accept without asking. She only chooses how she wants them."
+      },
+      {
+       "t": "Le digo que la cola va rápido y que en cinco minutos estará mucho más tranquila.",
+       "t_en": "I tell her the queue moves fast and in five minutes it will be quieter.",
+       "v": "no",
+       "fb": "Contestas a la cola, no a ella. El bastón ya te decía que el problema no era esperar.",
+       "fb_en": "You answer the queue, not her. The stick already told you waiting was not the problem."
+      }
+     ],
+     "nosabias": "La operaron de la cadera hace un mes. Puede andar, pero no con un plato en una mano y el bastón en la otra. Llevaba tres días desayunando tostada porque le daba vergüenza pedir que le trajeran nada. Esa mañana pidió dos huevos pasados por agua.",
+     "nosabias_en": "She had hip surgery a month ago. She can walk, but not with a plate in one hand and the stick in the other. She had been having toast for three days because she was embarrassed to ask anyone to bring her anything. That morning she ordered two soft boiled eggs.",
+     "tarea": [
+      "Ve una mesa servida: café y tostada. Todo bien.",
+      "Pasa por delante y pregunta «¿todo bien?».",
+      "Ella dice que sí. Cuarto día de tostada."
+     ],
+     "tarea_en": [
+      "Sees a table served: coffee and toast. All fine.",
+      "Walks past and asks \"everything alright?\".",
+      "She says yes. Fourth day of toast."
+     ],
+     "persona": [
+      "Ve adónde mira, y el bastón.",
+      "Le ofrece algo concreto: «¿Le traigo yo los huevos? ¿Cómo los quiere?».",
+      "Ella elige. Mañana ya pide sin que le pregunten."
+     ],
+     "persona_en": [
+      "Sees where she is looking, and the stick.",
+      "Offers something concrete: \"Shall I bring the eggs? How would you like them?\".",
+      "She chooses. Tomorrow she orders without being asked."
+     ],
+     "frase": "Lo que alguien mira y no pide es lo que más necesita. Ofrécelo en concreto, para que sólo tenga que decir sí.",
+     "frase_en": "What someone looks at and does not ask for is often what they need most. Offer it concretely, so they only have to say yes.",
+     "consigna": "Busca a alguien que mire algo que no pide y ofrécele eso en concreto.",
+     "consigna_en": "Find someone looking at something they do not ask for, and offer them exactly that.",
+     "pregunta": "¿Encontraste a alguien así?",
+     "pregunta_en": "Did you find someone like that?",
+     "resp": [
+      "Sí, y lo aceptó",
+      "Sí, pero dijo que no",
+      "No vi a nadie"
+     ],
+     "resp_en": [
+      "Yes, and they accepted",
+      "Yes, but they said no",
+      "I did not see anyone"
+     ]
+    },
+    {
+     "id": "m2d4",
+     "n": 4,
+     "idea": "Si hablan, espera",
+     "idea_en": "If they are talking, wait",
+     "t": "La mesa que no se separa",
+     "t_en": "The table that will not lean back",
+     "esc": "Alta cocina, menú largo, 22:05. Mesa de dos, quinto pase de once. Llevan unos minutos inclinados hacia el centro de la mesa, con las manos juntas. Él habla bajo; ella escucha sin moverse. Los platos anteriores están retirados. Cocina te pregunta por el auricular: «¿la 3 marcha?».",
+     "esc_en": "Fine dining, long menu, 22:05. Table for two, fifth course of eleven. For a few minutes they have been leaning in towards the middle of the table, hands together. He speaks quietly; she listens without moving. The previous plates are cleared. The kitchen asks in your earpiece: \"table 3, fire?\".",
+     "opts": [
+      {
+       "t": "«Marcha.» Sirvo el plato y lo explico entero, que es lo que toca en este menú.",
+       "t_en": "\"Fire.\" I serve the dish and explain it fully, as this menu requires.",
+       "v": "no",
+       "fb": "El plato llega a tiempo y el momento se rompe. Él no termina la frase.",
+       "fb_en": "The dish arrives on time and the moment breaks. He does not finish his sentence."
+      },
+      {
+       "t": "«Espera un minuto.» Miro la mesa y doy la marcha cuando se echen hacia atrás.",
+       "t_en": "\"Hold one minute.\" I watch the table and fire when they lean back.",
+       "v": "mejor",
+       "fb": "Cocina pierde un minuto y la mesa no pierde nada. El cuerpo de ellos te dice cuándo entrar.",
+       "fb_en": "The kitchen loses a minute and the table loses nothing. Their bodies tell you when to step in."
+      },
+      {
+       "t": "Me acerco y les pregunto en voz baja si les saco ya el siguiente plato.",
+       "t_en": "I go over and quietly ask whether to bring the next course now.",
+       "v": "no",
+       "fb": "Preguntar en el peor momento es lo mismo que interrumpir. La respuesta estaba en cómo estaban sentados.",
+       "fb_en": "Asking at the worst moment is the same as interrupting. The answer was in how they were sitting."
+      },
+      {
+       "t": "«Marcha.» Sirvo sin decir nada y les explico el plato cuando terminen de hablar.",
+       "t_en": "\"Fire.\" I serve without a word and explain the dish once they finish talking.",
+       "v": "vale",
+       "fb": "Cuidas la conversación, pero el plato se queda esperando en la mesa y ellos tienen que elegir entre hablar o comer.",
+       "fb_en": "You protect the conversation, but the dish sits waiting and they must choose between talking and eating."
+      }
+     ],
+     "nosabias": "Él le estaba contando que le han ofrecido un trabajo en otro país y que no quiere aceptarlo sin ella. Ella le dijo que sí a mitad de frase. Un minuto después se echaron hacia atrás, riéndose, y él pidió dos copas de cava.",
+     "nosabias_en": "He was telling her he had been offered a job abroad and would not take it without her. She said yes halfway through his sentence. A minute later they leaned back laughing and he ordered two glasses of cava.",
+     "tarea": [
+      "Cocina pregunta: el menú tiene un ritmo y hay que cumplirlo.",
+      "Marcha, sirve, explica. Pase cinco de once.",
+      "La conversación se corta a la mitad."
+     ],
+     "tarea_en": [
+      "The kitchen asks: the menu has a rhythm to keep.",
+      "Fire, serve, explain. Course five of eleven.",
+      "The conversation is cut in half."
+     ],
+     "persona": [
+      "Cocina pregunta: antes de contestar, mira la mesa.",
+      "Un minuto de espera. Marcha cuando se separan.",
+      "El plato llega a la mesa justo cuando hay sitio para él."
+     ],
+     "persona_en": [
+      "The kitchen asks: before answering, look at the table.",
+      "One minute's hold. Fire when they lean back.",
+      "The dish arrives just as there is room for it."
+     ],
+     "frase": "Si una mesa está inclinada hacia dentro, espera. Cuando se echen hacia atrás, es tu momento.",
+     "frase_en": "If a table is leaning in, wait. When they lean back, it is your moment.",
+     "consigna": "Antes de entrar en una mesa, mira si están hablando. Si lo están, espera a la pausa.",
+     "consigna_en": "Before stepping into a table, see whether they are talking. If they are, wait for the pause.",
+     "pregunta": "¿Esperaste a la pausa alguna vez?",
+     "pregunta_en": "Did you wait for the pause at some point?",
+     "resp": [
+      "Sí, varias",
+      "Una vez",
+      "No tuve ocasión"
+     ],
+     "resp_en": [
+      "Yes, several times",
+      "Once",
+      "I had no chance"
+     ]
+    },
+    {
+     "id": "m2d5",
+     "n": 5,
+     "idea": "A veces lo mejor es hacer menos",
+     "idea_en": "Sometimes the best is to do less",
+     "t": "El niño dormido",
+     "t_en": "The sleeping child",
+     "esc": "Terraza de playa, 16:30. Familia de cuatro: padres y dos niños. El pequeño, de unos tres años, se ha dormido en el hombro del padre, que come con una mano. La mesa está llena de platos vacíos, vasos y la cesta del pan. Tú vienes con la bandeja a recoger, como siempre: apilar y llevar.",
+     "esc_en": "Beach terrace, 16:30. A family of four: parents and two children. The little one, about three, has fallen asleep on his father's shoulder, and the father is eating one handed. The table is full of empty plates, glasses and the bread basket. You come with your tray to clear, as always: stack and carry.",
+     "opts": [
+      {
+       "t": "Recojo todo rápido, apilando, para que tengan la mesa despejada.",
+       "t_en": "I clear everything quickly, stacking, so their table is free.",
+       "v": "no",
+       "fb": "Platos y cubiertos chocando a medio metro de un niño dormido. Despiertas al niño y la tarde de los padres.",
+       "fb_en": "Plates and cutlery clinking half a metre from a sleeping child. You wake the child and end the parents' afternoon."
+      },
+      {
+       "t": "Les pregunto si les puedo retirar los platos.",
+       "t_en": "I ask whether I can clear their plates.",
+       "v": "vale",
+       "fb": "Educado, pero haces hablar en alto a una mesa que está susurrando.",
+       "fb_en": "Polite, but you make a whispering table speak out loud."
+      },
+      {
+       "t": "Retiro sólo lo del lado de la madre, plato a plato, sin apilar.",
+       "t_en": "I clear only the mother's side, plate by plate, without stacking.",
+       "v": "mejor",
+       "fb": "Haces menos, más despacio y por el lado que no molesta. El resto puede esperar.",
+       "fb_en": "You do less, more slowly and from the side that disturbs nobody. The rest can wait."
+      },
+      {
+       "t": "No toco la mesa hasta que se vayan. Ya recogeré después.",
+       "t_en": "I do not touch the table until they leave. I will clear afterwards.",
+       "v": "no",
+       "fb": "Proteges el sueño, pero los dejas una hora entre platos sucios. Hacer menos no es no hacer nada.",
+       "fb_en": "You protect the nap, but leave them an hour among dirty plates. Doing less is not doing nothing."
+      }
+     ],
+     "nosabias": "Llegaron en un vuelo de madrugada y el niño no había dormido en todo el viaje. Era el primer rato tranquilo de las vacaciones. Se quedaron otra hora y media; pidieron dos cafés y un helado para el mayor, por gestos.",
+     "nosabias_en": "They came in on an early morning flight and the child had not slept the whole trip. It was the first quiet moment of the holiday. They stayed another hour and a half and ordered two coffees and an ice cream for the older one, by gestures.",
+     "tarea": [
+      "Ve una mesa sucia: hay que recoger.",
+      "Apila, rápido, como siempre.",
+      "El niño se despierta llorando y piden la cuenta."
+     ],
+     "tarea_en": [
+      "Sees a dirty table: it needs clearing.",
+      "Stacks, fast, as always.",
+      "The child wakes up crying and they ask for the bill."
+     ],
+     "persona": [
+      "Ve a un niño dormido: hay que no despertarlo.",
+      "Retira dos platos, sin ruido, por el otro lado.",
+      "Se quedan. Lo que piden después lo piden con gestos."
+     ],
+     "persona_en": [
+      "Sees a sleeping child: better not wake him.",
+      "Takes two plates, silently, from the other side.",
+      "They stay. What they order next, they order by gestures."
+     ],
+     "frase": "No todo lo que toca hacer toca hacerlo ya. Mira qué se rompe si lo haces ahora.",
+     "frase_en": "Not everything that needs doing needs doing now. Look at what breaks if you do it this minute.",
+     "consigna": "Una vez en el servicio, antes de una tarea de rutina, pregúntate si es el momento. Si no, déjala para luego.",
+     "consigna_en": "Once during service, before a routine task, ask yourself whether it is the moment. If not, leave it for later.",
+     "pregunta": "¿Dejaste algo para luego a propósito?",
+     "pregunta_en": "Did you leave something for later on purpose?",
+     "resp": [
+      "Sí",
+      "Lo pensé, pero no",
+      "No se dio"
+     ],
+     "resp_en": [
+      "Yes",
+      "I thought about it, but no",
+      "It did not come up"
+     ]
+    },
+    {
+     "id": "m2d6",
+     "n": 6,
+     "idea": "Lo que miran te dice lo que quieren",
+     "idea_en": "What they look at tells you what they want",
+     "t": "El cuenco de la mesa de al lado",
+     "t_en": "The bowl at the next table",
+     "esc": "Local de comida rápida de calidad, mostrador, 13:15. Tres turistas jóvenes llevan un minuto delante de la pantalla del menú. No hablan español y poco inglés. Uno tiene el traductor abierto en el móvil. Los tres miran cada poco el cuenco que se está comiendo una chica en la mesa de al lado. Detrás de ellos hay cinco personas esperando.",
+     "esc_en": "Quality fast food place, counter, 13:15. Three young tourists have spent a minute in front of the menu screen. They speak no Spanish and little English. One has a translator open on his phone. All three keep glancing at the bowl a girl at the next table is eating. Five people are waiting behind them.",
+     "opts": [
+      {
+       "t": "Les explico el menú en inglés, despacio, de arriba abajo.",
+       "t_en": "I explain the menu in English, slowly, from top to bottom.",
+       "v": "vale",
+       "fb": "Bien intencionado, pero les das más palabras a quien le faltan palabras. Lo que buscaban ya lo estaban mirando.",
+       "fb_en": "Well meant, but you give more words to people who are short of words. What they wanted, they were already looking at."
+      },
+      {
+       "t": "Señalo el cuenco de la mesa de al lado y digo cómo se llama.",
+       "t_en": "I point at the bowl at the next table and say its name.",
+       "v": "mejor",
+       "fb": "Contestas en el idioma que ya estaban usando: mirar y señalar. En diez segundos tienen pedido.",
+       "fb_en": "You answer in the language they were already using: looking and pointing. In ten seconds they have ordered."
+      },
+      {
+       "t": "Les pido con un gesto que se aparten un momento y atiendo a los de detrás.",
+       "t_en": "I gesture for them to step aside a moment and serve the people behind.",
+       "v": "no",
+       "fb": "La cola avanza y ellos se quedan a un lado, más perdidos que antes y delante de todos.",
+       "fb_en": "The queue moves and they are left to one side, more lost than before and in front of everyone."
+      },
+      {
+       "t": "Les enseño el código QR de la carta para que la traduzcan en el móvil.",
+       "t_en": "I show them the menu QR code so they can translate it on the phone.",
+       "v": "no",
+       "fb": "Les mandas otra vez a la pantalla, que es justo de donde no salían.",
+       "fb_en": "You send them back to a screen, which is exactly where they were stuck."
+      }
+     ],
+     "nosabias": "Eran coreanos, en su segundo día. El que tenía el traductor llevaba un minuto intentando escribir «lo que come esa chica» sin parecer maleducado. Pidieron tres iguales y volvieron al día siguiente a probar otro, señalando la foto.",
+     "nosabias_en": "They were Korean, on their second day. The one with the translator had spent a minute trying to type \"what that girl is eating\" without seeming rude. They ordered three of the same and came back the next day to try another, pointing at the photo.",
+     "tarea": [
+      "Ve una cola parada.",
+      "Explica el menú, más palabras, más rápido.",
+      "Piden lo primero que entienden."
+     ],
+     "tarea_en": [
+      "Sees a stuck queue.",
+      "Explains the menu, more words, faster.",
+      "They order the first thing they understand."
+     ],
+     "persona": [
+      "Ve tres miradas que van al mismo sitio.",
+      "Señala el cuenco, la foto, y dice el nombre.",
+      "Piden lo que querían desde el principio."
+     ],
+     "persona_en": [
+      "Sees three glances going to the same place.",
+      "Points to the bowl, the photo, and says the name.",
+      "They order what they wanted from the start."
+     ],
+     "frase": "Cuando no hay idioma común, la mirada del huésped es el idioma. Síguela.",
+     "frase_en": "When there is no shared language, the guest's gaze is the language. Follow it.",
+     "consigna": "Con una mesa que dude, sigue su mirada antes de explicar nada.",
+     "consigna_en": "With one undecided table, follow their gaze before you explain anything.",
+     "pregunta": "¿Te sirvió su mirada para algo?",
+     "pregunta_en": "Did their gaze help you at all?",
+     "resp": [
+      "Sí, mucho",
+      "Un poco",
+      "No hubo ocasión"
+     ],
+     "resp_en": [
+      "Yes, a lot",
+      "A little",
+      "No occasion"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "pregunta",
+   "n": 3,
+   "t": "Pregunta antes de suponer",
+   "t_en": "Ask before you assume",
+   "sub": "ofrecer salidas en vez de diagnosticar",
+   "sub_en": "offer options instead of diagnosing",
+   "intro": "Esta semana va de no adivinar. Lo que ves en una mesa es una pista, no un diagnóstico. En vez de decirle al huésped lo que le pasa, dale dos o tres salidas y deja que elija él.",
+   "intro_en": "This week is about not guessing. What you see at a table is a clue, not a diagnosis. Instead of telling the guest what is going on with them, give them two or three options and let them choose.",
+   "dias": [
+    {
+     "id": "m3d1",
+     "n": 1,
+     "idea": "Ofrece salidas, no diagnósticos",
+     "idea_en": "Offer options, not diagnoses",
+     "t": "Medio plato",
+     "t_en": "Half a plate",
+     "esc": "Bistró, 14:40. Una mujer sola, con un libro. Ha dejado los cubiertos juntos sobre el plato. Queda más de la mitad del guiso. No ha llamado a nadie ni ha puesto ninguna cara. Vas a retirar.",
+     "esc_en": "Bistro, 14:40. A woman alone, with a book. She has put her cutlery together on the plate. More than half of the stew is left. She has not called anyone or made any face. You are going to clear.",
+     "opts": [
+      {
+       "t": "«¿Se lo retiro, o prefiere que se lo prepare para llevar?»",
+       "t_en": "\"Shall I take it away, or would you like it boxed to take home?\"",
+       "v": "mejor",
+       "fb": "Dos salidas y ninguna suposición. Si algo no le gustó, tiene sitio para decirlo.",
+       "fb_en": "Two options and no assumption. If something was wrong, there is room for her to say so."
+      },
+      {
+       "t": "«¿No le ha gustado?»",
+       "t_en": "\"Did you not like it?\"",
+       "v": "no",
+       "fb": "Le das un diagnóstico y la obligas a defenderse o a quejarse. Quizá sólo estaba llena.",
+       "fb_en": "You hand her a diagnosis and make her either defend herself or complain. Maybe she was just full."
+      },
+      {
+       "t": "«¿Qué tal estaba?», y retiro según lo que me diga.",
+       "t_en": "\"How was it?\", and I clear depending on her answer.",
+       "v": "vale",
+       "fb": "Pregunta abierta y sin juicio. Le falta darle una salida concreta, y casi todo el mundo contesta «bien».",
+       "fb_en": "Open and without judgement. It lacks a concrete option, and almost everyone answers \"fine\"."
+      },
+      {
+       "t": "Le ofrezco cambiárselo por cualquier otro plato de la carta, sin coste.",
+       "t_en": "I offer to swap it for any other dish on the menu, free of charge.",
+       "v": "no",
+       "fb": "Resuelves una queja que nadie ha hecho y pagas por adivinar.",
+       "fb_en": "You fix a complaint nobody made, and pay for guessing."
+      }
+     ],
+     "nosabias": "Había desayunado tarde y fuerte. El guiso le encantó y quería llevárselo a su hija, que cena sola los martes, pero le daba apuro pedirlo en un sitio así. Con la primera pregunta se le iluminó la cara.",
+     "nosabias_en": "She had had a late, big breakfast. She loved the stew and wanted to take it to her daughter, who eats alone on Tuesdays, but felt awkward asking in a place like this. At the first question her face lit up.",
+     "tarea": [
+      "Ve medio plato: algo ha fallado.",
+      "Pregunta «¿no le ha gustado?».",
+      "Ella dice «sí, sí, estaba bien» y se queda sin el táper."
+     ],
+     "tarea_en": [
+      "Sees half a plate: something went wrong.",
+      "Asks \"did you not like it?\".",
+      "She says \"yes, yes, it was fine\" and goes without the box."
+     ],
+     "persona": [
+      "Ve medio plato: puede ser cualquier cosa.",
+      "Ofrece retirar o preparar para llevar.",
+      "Ella elige llevárselo. Lo que pensaba, lo dice sola."
+     ],
+     "persona_en": [
+      "Sees half a plate: it could be anything.",
+      "Offers to clear it or box it.",
+      "She chooses to take it. What she thought, she says herself."
+     ],
+     "frase": "No le digas al huésped lo que le pasa. Dale dos salidas y que elija.",
+     "frase_en": "Do not tell the guest what is going on with them. Give them two options and let them choose.",
+     "consigna": "Cuando algo te haga suponer, cambia la suposición por una pregunta con dos salidas.",
+     "consigna_en": "When something makes you assume, swap the assumption for a question with two options.",
+     "pregunta": "¿Cambiaste alguna suposición por una pregunta?",
+     "pregunta_en": "Did you swap an assumption for a question?",
+     "resp": [
+      "Sí, y acerté al preguntar",
+      "Me di cuenta tarde",
+      "No"
+     ],
+     "resp_en": [
+      "Yes, and asking paid off",
+      "I noticed too late",
+      "No"
+     ]
+    },
+    {
+     "id": "m3d2",
+     "n": 2,
+     "idea": "Pregunta para quién es",
+     "idea_en": "Ask who it is for",
+     "t": "Leche caliente a las dos",
+     "t_en": "Warm milk at two",
+     "esc": "Servicio de habitaciones, 2:10 de la madrugada. Llama un hombre en voz baja desde una suite. De fondo se oye a un bebé. Pide «un vaso de leche caliente, por favor». Al apuntarlo piensas en subirla como la preparas otras noches: con una cucharada de miel y un poco de canela, que calma.",
+     "esc_en": "Room service, 2:10 a.m. A man calls quietly from a suite. A baby can be heard in the background. He asks for \"a glass of warm milk, please\". As you note it down, you think of sending it up the way you do other nights: with a spoonful of honey and a little cinnamon, which is soothing.",
+     "opts": [
+      {
+       "t": "La preparo con miel y un poco de canela, como otras noches, y la subo rápido.",
+       "t_en": "I make it with honey and a little cinnamon, as on other nights, and send it up fast.",
+       "v": "limite",
+       "fb": "Si es para el bebé, la miel no se da antes del año. Un detalle que nadie ha pedido no se añade a lo que puede tomar un niño.",
+       "fb_en": "If it is for the baby, honey is not given before age one. A touch nobody asked for is never added to something a child may drink."
+      },
+      {
+       "t": "Le pregunto para quién es y cómo la quiere: temperatura y tipo de leche.",
+       "t_en": "I ask who it is for and how they want it: temperature and type of milk.",
+       "v": "mejor",
+       "fb": "Dos preguntas cortas y sabes lo que importa. Con un bebé en la habitación, lo crítico se comprueba antes de ser amable.",
+       "fb_en": "Two short questions and you know what matters. With a baby in the room, the critical part is checked before being kind."
+      },
+      {
+       "t": "Subo la leche sola, templada, sin añadir nada.",
+       "t_en": "I send up the milk plain, warm, with nothing added.",
+       "v": "vale",
+       "fb": "Segura, y bien por no improvisar. Pero quizá era para otra persona o la necesitaban de otra manera.",
+       "fb_en": "Safe, and good for not improvising. But it may have been for someone else, or needed another way."
+      },
+      {
+       "t": "Subo una jarra de leche bien caliente, que así les dura un rato.",
+       "t_en": "I send up a jug of milk, very hot, so it lasts them a while.",
+       "v": "no",
+       "fb": "Piensas en ahorrar viajes, no en quién se la va a tomar. Muy caliente no le sirve a nadie de madrugada.",
+       "fb_en": "You are thinking of saving trips, not of who will drink it. Very hot is no use to anyone at this hour."
+      }
+     ],
+     "nosabias": "La leche era para el biberón de una niña de ocho meses. Necesitaban leche entera templada, a la temperatura del cuerpo, porque la que traían se había cortado en el viaje. Si hubiera subido con miel, a las dos de la mañana quizá nadie lo habría notado.",
+     "nosabias_en": "The milk was for an eight month old girl's bottle. They needed whole milk, lukewarm, at body temperature, because the one they had brought had gone off on the journey. Had it gone up with honey, at two in the morning nobody might have noticed.",
+     "tarea": [
+      "Oye «leche caliente» y piensa en la de siempre.",
+      "Le pone el toque de la casa: miel y canela.",
+      "Sube rápido. Nadie sabe lo que había en el vaso."
+     ],
+     "tarea_en": [
+      "Hears \"warm milk\" and thinks of the usual.",
+      "Adds the house touch: honey and cinnamon.",
+      "Goes up fast. Nobody knows what was in the glass."
+     ],
+     "persona": [
+      "Oye un bebé de fondo y piensa en para quién es.",
+      "Pregunta dos cosas: para quién y cómo.",
+      "Sube leche entera templada. El padre dice «justo esto»."
+     ],
+     "persona_en": [
+      "Hears a baby in the background and thinks of who it is for.",
+      "Asks two things: who for and how.",
+      "Sends up whole milk, lukewarm. The father says \"exactly this\"."
+     ],
+     "frase": "Antes del detalle, lo que protege. Si algo puede tomarlo un niño o alguien con alergia, se pregunta antes de añadir nada.",
+     "frase_en": "Before the extra touch, what protects. If a child or someone with an allergy might take it, you ask before adding anything.",
+     "consigna": "Antes de añadir cualquier detalle a un plato o bebida, pregúntate para quién es.",
+     "consigna_en": "Before adding any extra touch to a dish or drink, ask yourself who it is for.",
+     "pregunta": "¿Te paraste a comprobar algo antes de un detalle?",
+     "pregunta_en": "Did you stop to check something before an extra touch?",
+     "resp": [
+      "Sí",
+      "No hizo falta",
+      "No lo pensé"
+     ],
+     "resp_en": [
+      "Yes",
+      "It was not needed",
+      "I did not think of it"
+     ]
+    },
+    {
+     "id": "m3d3",
+     "n": 3,
+     "idea": "No decidas cuánto saben",
+     "idea_en": "Do not decide how much they know",
+     "t": "¿Y esto qué es?",
+     "t_en": "And what is this?",
+     "esc": "Alta cocina, 20:45. Primera visita. Una pareja de unos setenta años, ropa de domingo. Tienen el menú degustación abierto y él señala una palabra: «¿y esto qué es?». Es el nombre de una técnica. Ella mira la carta de vinos con las gafas en la mano.",
+     "esc_en": "Fine dining, 20:45. First visit. A couple in their seventies, in their Sunday best. They have the tasting menu open and he points at a word: \"and what is this?\". It is the name of a technique. She looks at the wine list holding her glasses.",
+     "opts": [
+      {
+       "t": "Les recomiendo el menú corto, que es más ligero y para empezar está muy bien.",
+       "t_en": "I recommend the short menu, which is lighter and a good way to start.",
+       "v": "no",
+       "fb": "Decides por ellos que el largo les viene grande. Una pregunta no es una señal de que no sepan.",
+       "fb_en": "You decide for them that the long menu is too much. One question is not a sign they do not know."
+      },
+      {
+       "t": "Les explico todo el menú con palabras sencillas, para que no se pierdan.",
+       "t_en": "I explain the whole menu in simple words, so they do not get lost.",
+       "v": "no",
+       "fb": "Bien intencionado y condescendiente. Contestas a una pregunta que no hicieron.",
+       "fb_en": "Well meant and patronising. You answer a question they did not ask."
+      },
+      {
+       "t": "Le explico esa palabra, bien y en dos frases, y espero a ver si preguntan algo más.",
+       "t_en": "I explain that word, properly and in two sentences, and wait to see if they ask more.",
+       "v": "vale",
+       "fb": "Respondes a lo que preguntó, sin más. Bien. Te falta darles a elegir cómo quieren el resto.",
+       "fb_en": "You answer what he asked, nothing more. Good. It lacks letting them choose how they want the rest."
+      },
+      {
+       "t": "Contesto a la palabra y les pregunto: «¿Les cuento el menú ahora, o plato a plato?»",
+       "t_en": "I answer the word and ask: \"Shall I walk you through the menu now, or dish by dish?\"",
+       "v": "mejor",
+       "fb": "Respondes lo que preguntó y les das el mando del resto. Ellos deciden cuánto quieren saber.",
+       "fb_en": "You answer what he asked and hand them control of the rest. They decide how much they want to know."
+      }
+     ],
+     "nosabias": "Él fue jefe de partida cuarenta años en un hotel de la costa. La técnica la conocía; lo que no conocía era ese nombre nuevo. Llevaban un año ahorrando para esta cena por sus bodas de oro. Si le hubieras explicado el menú como a un niño, no habría vuelto a abrir la boca.",
+     "nosabias_en": "He was a section chef for forty years in a coastal hotel. He knew the technique; what he did not know was that new name. They had saved for a year for this dinner, their golden anniversary. Had you explained the menu to him like a child, he would not have said another word.",
+     "tarea": [
+      "Oye una pregunta y supone que no saben.",
+      "Simplifica todo el menú, por si acaso.",
+      "Él asiente. No pregunta nada más en toda la noche."
+     ],
+     "tarea_en": [
+      "Hears a question and assumes they do not know.",
+      "Simplifies the whole menu, just in case.",
+      "He nods. He asks nothing more all night."
+     ],
+     "persona": [
+      "Oye una pregunta y contesta esa.",
+      "Les deja elegir cuánto quieren saber.",
+      "Él pregunta por las brasas en el tercer pase. Hablan de cocina diez minutos."
+     ],
+     "persona_en": [
+      "Hears a question and answers that one.",
+      "Lets them choose how much they want to know.",
+      "He asks about the grill on the third course. They talk cooking for ten minutes."
+     ],
+     "frase": "No decidas cuánto sabe alguien por su ropa, su edad o una pregunta. Contesta lo que pregunta y deja que pida más.",
+     "frase_en": "Do not decide how much someone knows from their clothes, their age or one question. Answer what they ask and let them ask for more.",
+     "consigna": "Cuando te pregunten algo, contesta sólo eso y deja que te pidan más.",
+     "consigna_en": "When asked something, answer only that and let them ask for more.",
+     "pregunta": "¿Te pidieron más después?",
+     "pregunta_en": "Did they ask for more afterwards?",
+     "resp": [
+      "Sí",
+      "No",
+      "No hubo preguntas"
+     ],
+     "resp_en": [
+      "Yes",
+      "No",
+      "There were no questions"
+     ]
+    },
+    {
+     "id": "m3d4",
+     "n": 4,
+     "idea": "La mejor mesa la elige él",
+     "idea_en": "He chooses the best table",
+     "t": "La mesa junto a la cocina",
+     "t_en": "The table by the kitchen",
+     "esc": "Bistró, martes, 21:00. Sala a medias. Un hombre de unos sesenta años, solo, primera visita. La hostess lo ha sentado en la mesa pequeña junto a la puerta de la cocina. Las cuatro mesas de la ventana están libres hasta las 22:15. Él mira hacia la ventana un momento y abre la carta.",
+     "esc_en": "Bistro, Tuesday, 21:00. Room half full. A man in his sixties, alone, first visit. The hostess has seated him at the small table by the kitchen door. The four window tables are free until 22:15. He glances towards the window and opens the menu.",
+     "opts": [
+      {
+       "t": "Le cambio a la ventana sin más: le digo que tengo una mesa mejor y le acompaño.",
+       "t_en": "I move him to the window: I tell him I have a better table and walk him over.",
+       "v": "no",
+       "fb": "Decides por él cuál es la mejor mesa. Y a las 22:15 tendrás que moverlo otra vez.",
+       "fb_en": "You decide for him which table is best. And at 22:15 you will have to move him again."
+      },
+      {
+       "t": "Le pregunto si le molesta el ruido de la cocina.",
+       "t_en": "I ask him whether the kitchen noise bothers him.",
+       "v": "vale",
+       "fb": "Abres la puerta, pero con un problema dentro. Le haces fijarse en el ruido.",
+       "fb_en": "You open the door, but with a problem inside it. You make him notice the noise."
+      },
+      {
+       "t": "«¿Está bien aquí o prefiere la ventana? Esa la tengo libre hasta las 22:15.»",
+       "t_en": "\"Happy here, or would you prefer the window? It's free until 22:15.\"",
+       "v": "mejor",
+       "fb": "Le das las dos opciones con la verdad del horario. Él elige sabiendo todo.",
+       "fb_en": "You give him both options with the truth about the time. He chooses knowing everything."
+      },
+      {
+       "t": "No digo nada. Si quiere cambiarse, ya lo pedirá.",
+       "t_en": "I say nothing. If he wants to move, he will ask.",
+       "v": "no",
+       "fb": "Mucha gente que cena sola no pide nada. La mirada a la ventana era su forma de preguntar.",
+       "fb_en": "Many people dining alone ask for nothing. The glance at the window was his way of asking."
+      }
+     ],
+     "nosabias": "Enviudó hace cinco meses. Es la primera vez que cena fuera solo. Prefirió quedarse en el rincón: en la ventana se habría sentido expuesto, solo delante de todo el mundo. Le gustó que se lo preguntaran. Volvió el martes siguiente y pidió «la misma mesa».",
+     "nosabias_en": "He was widowed five months ago. It is the first time he has eaten out alone. He chose to stay in the corner: at the window he would have felt exposed, alone in front of everyone. He liked being asked. He came back the following Tuesday and asked for \"the same table\".",
+     "tarea": [
+      "Ve una mesa peor y otra mejor.",
+      "Lo cambia a la ventana porque es lo correcto.",
+      "Él cena solo, a la vista de toda la sala."
+     ],
+     "tarea_en": [
+      "Sees a worse table and a better one.",
+      "Moves him to the window because it is the right thing.",
+      "He eats alone, in full view of the room."
+     ],
+     "persona": [
+      "Ve una mirada a la ventana: puede significar cualquier cosa.",
+      "Le ofrece las dos y le dice la verdad del horario.",
+      "Él se queda en su rincón, y ha sido decisión suya."
+     ],
+     "persona_en": [
+      "Sees a glance at the window: it could mean anything.",
+      "Offers both and tells him the truth about the time.",
+      "He stays in his corner, and it was his decision."
+     ],
+     "frase": "La mejor mesa no es la que tú crees: es la que él elige cuando le das a elegir.",
+     "frase_en": "The best table is not the one you think: it is the one he picks when you let him choose.",
+     "consigna": "Una vez hoy, en vez de mejorar algo por tu cuenta, ofrécelo como opción.",
+     "consigna_en": "Once today, instead of improving something on your own, offer it as an option.",
+     "pregunta": "¿Qué eligieron?",
+     "pregunta_en": "What did they choose?",
+     "resp": [
+      "Lo que yo habría hecho",
+      "Otra cosa",
+      "No se dio"
+     ],
+     "resp_en": [
+      "What I would have done",
+      "Something else",
+      "It did not come up"
+     ]
+    },
+    {
+     "id": "m3d5",
+     "n": 5,
+     "idea": "Los niños también son huéspedes",
+     "idea_en": "Children are guests too",
+     "t": "La carta de los niños",
+     "t_en": "The children's menu",
+     "esc": "Restaurante del hotel, domingo, 13:30. Una familia: padres y dos niños de seis y nueve años. Les das las cartas a los padres. Llevas bajo el brazo la carta infantil de siempre: pasta, croquetas, nuggets y helado. El de nueve años intenta leer la carta de su padre por encima del hombro.",
+     "esc_en": "Hotel restaurant, Sunday, 13:30. A family: parents and two children aged six and nine. You hand the menus to the parents. Under your arm you have the usual children's menu: pasta, croquettes, nuggets and ice cream. The nine year old is trying to read his father's menu over his shoulder.",
+     "opts": [
+      {
+       "t": "Dejo la carta infantil delante de cada niño, que es para lo que está.",
+       "t_en": "I put the children's menu in front of each child, which is what it is for.",
+       "v": "no",
+       "fb": "Decides que comen de la infantil. El de nueve ya te estaba diciendo otra cosa.",
+       "fb_en": "You decide they eat from the kids' menu. The nine year old was already telling you otherwise."
+      },
+      {
+       "t": "Pregunto a los padres si los niños comen de la carta infantil o de la normal.",
+       "t_en": "I ask the parents: kids' menu, or the regular one for the children?",
+       "v": "mejor",
+       "fb": "Les das las dos salidas a quien decide. Y si el mayor quiere la normal, lo dirá él.",
+       "fb_en": "You give both options to whoever decides. And if the older one wants the regular menu, he will say so."
+      },
+      {
+       "t": "Le pregunto directamente al de nueve años qué le apetece comer.",
+       "t_en": "I ask the nine year old directly what he fancies.",
+       "v": "vale",
+       "fb": "Le tratas como huésped, y eso está bien. Pero te saltas a los padres, que quizá tienen sus motivos.",
+       "fb_en": "You treat him as a guest, and that is good. But you skip the parents, who may have their reasons."
+      },
+      {
+       "t": "Les recomiendo a los padres medias raciones de la carta normal para los niños.",
+       "t_en": "I recommend half portions from the regular menu for the children.",
+       "v": "vale",
+       "fb": "Buena idea si la quieren. La propones antes de saber si la necesitan.",
+       "fb_en": "A good idea if they want it. You suggest it before knowing whether they need it."
+      }
+     ],
+     "nosabias": "El de nueve años lleva todo el viaje pidiendo probar el pulpo. Los padres le habían prometido que en este restaurante podría pedir lo que quisiera de la carta grande. El pequeño sí quería croquetas.",
+     "nosabias_en": "The nine year old has been asking all trip to try octopus. His parents had promised him that at this restaurant he could order whatever he liked from the main menu. The little one did want croquettes.",
+     "tarea": [
+      "Ve dos niños: carta infantil.",
+      "La deja delante de cada uno.",
+      "El mayor la aparta con cara larga."
+     ],
+     "tarea_en": [
+      "Sees two children: children's menu.",
+      "Puts it in front of each one.",
+      "The older one pushes it away, sulking."
+     ],
+     "persona": [
+      "Ve a uno que lee la carta de su padre.",
+      "Pregunta a los padres qué carta prefieren para cada uno.",
+      "El mayor pide pulpo. El pequeño, croquetas. Los dos contentos."
+     ],
+     "persona_en": [
+      "Sees one reading his father's menu.",
+      "Asks the parents which menu they want for each child.",
+      "The older one orders octopus. The little one, croquettes. Both happy."
+     ],
+     "frase": "Los niños son huéspedes, no una categoría. Pregunta como preguntarías a cualquiera.",
+     "frase_en": "Children are guests, not a category. Ask as you would ask anyone.",
+     "consigna": "En una mesa con niños o mayores, pregunta en vez de dar por hecho lo que quieren.",
+     "consigna_en": "At a table with children or older guests, ask instead of taking for granted what they want.",
+     "pregunta": "¿Te sorprendió la respuesta?",
+     "pregunta_en": "Did the answer surprise you?",
+     "resp": [
+      "Sí",
+      "No, era lo que pensaba",
+      "No tuve mesa así"
+     ],
+     "resp_en": [
+      "Yes",
+      "No, it was what I thought",
+      "I had no table like that"
+     ]
+    },
+    {
+     "id": "m3d6",
+     "n": 6,
+     "idea": "Sin discutir el gusto",
+     "idea_en": "Without arguing about taste",
+     "t": "«Está raro»",
+     "t_en": "\"It tastes odd\"",
+     "esc": "Bar de vinos, 19:30. Un hombre de unos cincuenta años, con un amigo. Ha pedido una copa de un tinto que tú conoces bien y que esta semana está perfecto. Lo prueba, arruga un poco la nariz y te dice: «está raro, ¿no?».",
+     "esc_en": "Wine bar, 19:30. A man in his fifties, with a friend. He ordered a glass of a red you know well and that is perfect this week. He tastes it, wrinkles his nose slightly and says: \"it tastes odd, doesn't it?\".",
+     "opts": [
+      {
+       "t": "Le explico que es un vino de crianza larga y que esas notas son normales en él.",
+       "t_en": "I explain it is a long aged wine and those notes are normal for it.",
+       "v": "no",
+       "fb": "Tienes razón sobre el vino y le quitas la razón a él delante de su amigo. Pierdes la copa y la mesa.",
+       "fb_en": "You are right about the wine and prove him wrong in front of his friend. You lose the glass and the table."
+      },
+      {
+       "t": "Me lo llevo y le sirvo otra copa del mismo, de una botella nueva.",
+       "t_en": "I take it away and pour another glass of the same from a fresh bottle.",
+       "v": "vale",
+       "fb": "Resuelves sin discutir. Pero si lo que no le gustaba era el vino, le traes lo mismo.",
+       "fb_en": "You solve it without arguing. But if he did not like the wine, you bring him the same thing."
+      },
+      {
+       "t": "Lo pruebo yo delante de él y le digo con sinceridad si tiene algún defecto.",
+       "t_en": "I taste it myself in front of him and tell him honestly whether it has a fault.",
+       "v": "no",
+       "fb": "Conviertes su gusto en un examen. Si no tiene defecto, le estás diciendo que se equivoca.",
+       "fb_en": "You turn his taste into an exam. If there is no fault, you are telling him he is wrong."
+      },
+      {
+       "t": "«¿Le abro otra botella o prefiere probar otro vino? Le pongo dos para elegir.»",
+       "t_en": "\"Fresh bottle, or would you rather try another? I'll pour two to choose from.\"",
+       "v": "mejor",
+       "fb": "No discutes si está raro. Le das dos salidas y él decide qué le apetece.",
+       "fb_en": "You do not argue whether it is odd. You give him two ways out and he decides what he fancies."
+      }
+     ],
+     "nosabias": "El vino estaba bien. Él esperaba algo parecido a uno que bebió en un viaje con su mujer, más ligero. No sabía cómo decir «no es lo que esperaba» sin parecer que no entendía. De las dos pruebas eligió la más fresca y pidió la botella.",
+     "nosabias_en": "The wine was fine. He was expecting something like one he drank on a trip with his wife, lighter. He did not know how to say \"it is not what I expected\" without seeming to know nothing. Of the two tasters he chose the fresher one and ordered the bottle.",
+     "tarea": [
+      "Oye «está raro» y piensa en el vino.",
+      "Defiende el vino, que está perfecto.",
+      "Él se lo bebe por no discutir y no pide otra."
+     ],
+     "tarea_en": [
+      "Hears \"it tastes odd\" and thinks of the wine.",
+      "Defends the wine, which is perfect.",
+      "He drinks it to avoid an argument and orders no more."
+     ],
+     "persona": [
+      "Oye «está raro» y piensa en él.",
+      "Le ofrece dos salidas sin juzgar a nadie.",
+      "Él elige otro y pide la botella."
+     ],
+     "persona_en": [
+      "Hears \"it tastes odd\" and thinks of him.",
+      "Offers two ways out without judging anyone.",
+      "He picks another and orders the bottle."
+     ],
+     "frase": "El gusto del huésped no se corrige. Se le ofrecen salidas.",
+     "frase_en": "A guest's taste is not corrected. You offer them ways out.",
+     "consigna": "Si alguien pone pegas a algo, ofrece dos salidas antes de explicar nada.",
+     "consigna_en": "If someone objects to something, offer two ways out before explaining anything.",
+     "pregunta": "¿Alguien puso pegas a algo?",
+     "pregunta_en": "Did anyone object to something?",
+     "resp": [
+      "Sí, y lo resolví así",
+      "Sí, y acabé explicando",
+      "No"
+     ],
+     "resp_en": [
+      "Yes, and I solved it that way",
+      "Yes, and I ended up explaining",
+      "No"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "ritmo",
+   "n": 4,
+   "t": "A cada mesa su ritmo",
+   "t_en": "Every table its own pace",
+   "sub": "la misma calidad, nunca el mismo servicio",
+   "sub_en": "the same quality, never the same service",
+   "intro": "Esta semana va de ajustar. El estándar es el mismo para todos; el servicio no. Volumen, cuánto explicar, cuánta cercanía y a qué velocidad: cada mesa pide lo suyo, y casi nunca lo dice en voz alta.",
+   "intro_en": "This week is about adjusting. The standard is the same for everyone; the service is not. Volume, how much to explain, how close to be and how fast: each table asks for its own, and almost never out loud.",
+   "dias": [
+    {
+     "id": "m4d1",
+     "n": 1,
+     "idea": "Hay quien viene a hablar",
+     "idea_en": "Some come to talk",
+     "t": "El de las seis",
+     "t_en": "The six o'clock regular",
+     "esc": "Bar de vinos, 18:00, la hora tranquila. Un hombre de unos setenta años, habitual, solo en la barra. Pide su copa de siempre y te pregunta por la bodega, por la añada, por si has estado allí. Cada respuesta tuya le lleva a otra pregunta. Sólo hay otra mesa ocupada, ya servida.",
+     "esc_en": "Wine bar, 18:00, the quiet hour. A man in his seventies, a regular, alone at the bar. He orders his usual glass and asks you about the winery, the vintage, whether you have been there. Every answer leads to another question. Only one other table is occupied, already served.",
+     "opts": [
+      {
+       "t": "Le contesto breve y amable, y me pongo a preparar la barra para la noche.",
+       "t_en": "I answer briefly and kindly, and get on with setting up the bar for the evening.",
+       "v": "no",
+       "fb": "Correcto y frío. Te ha dicho de cinco maneras que ha venido a hablar.",
+       "fb_en": "Correct and cold. He has told you five ways that he came to talk."
+      },
+      {
+       "t": "Le comento que los jueves hay cata guiada, que ahí podrá hablar de vinos a gusto.",
+       "t_en": "I mention there is a guided tasting on Thursdays, where he can talk wine to his heart's content.",
+       "v": "no",
+       "fb": "Le mandas la conversación a otro día. Él la quería hoy, contigo.",
+       "fb_en": "You send the conversation to another day. He wanted it today, with you."
+      },
+      {
+       "t": "Me quedo hablando con él mientras esté tranquilo, sin perder de vista la puerta.",
+       "t_en": "I stay and talk with him while it is quiet, keeping an eye on the door.",
+       "v": "mejor",
+       "fb": "Le das lo que ha venido a buscar, cuando se puede. Si entra alguien, se lo dices con naturalidad y vuelves.",
+       "fb_en": "You give him what he came for, while you can. If someone comes in, you tell him naturally and come back."
+      },
+      {
+       "t": "Me quedo hablando con él todo lo que haga falta. Lo primero es el cliente que tengo delante.",
+       "t_en": "I stay talking with him as long as it takes. The guest in front of me comes first.",
+       "v": "vale",
+       "fb": "Bien por él, pero el bar no es sólo suyo. Cuando entre gente, alguien se quedará esperando.",
+       "fb_en": "Good for him, but the bar is not only his. When people come in, someone will be left waiting."
+      }
+     ],
+     "nosabias": "Enviudó en primavera. Su mujer y él venían juntos los viernes. Desde entonces viene solo, a las seis, cuando no hay nadie. Es la única conversación de su día.",
+     "nosabias_en": "He was widowed in spring. He and his wife used to come together on Fridays. Since then he comes alone, at six, when nobody is around. It is the only conversation of his day.",
+     "tarea": [
+      "Sirve la copa: cliente atendido.",
+      "Contesta, educado, y vuelve a sus cosas.",
+      "Él se termina la copa mirando el móvil."
+     ],
+     "tarea_en": [
+      "Pours the glass: guest served.",
+      "Answers politely and gets back to his jobs.",
+      "He finishes the glass looking at his phone."
+     ],
+     "persona": [
+      "Sirve la copa y oye la tercera pregunta.",
+      "Se queda, con un ojo en la puerta.",
+      "Él pide otra copa. «¿Y tú de dónde eres?»"
+     ],
+     "persona_en": [
+      "Pours the glass and hears the third question.",
+      "Stays, with an eye on the door.",
+      "He orders another glass. \"And where are you from?\""
+     ],
+     "frase": "Para algunos, la conversación es el plato. Si la sala te deja, sírvela.",
+     "frase_en": "For some, the conversation is the dish. If the room allows, serve it.",
+     "consigna": "Busca a alguien que quiera hablar y dale dos minutos más de los que darías.",
+     "consigna_en": "Find someone who wants to talk and give them two minutes more than you would.",
+     "pregunta": "¿Encontraste a alguien que quería hablar?",
+     "pregunta_en": "Did you find someone who wanted to talk?",
+     "resp": [
+      "Sí, y me quedé",
+      "Sí, pero no pude",
+      "No"
+     ],
+     "resp_en": [
+      "Yes, and I stayed",
+      "Yes, but I could not",
+      "No"
+     ]
+    },
+    {
+     "id": "m4d2",
+     "n": 2,
+     "idea": "Y hay quien viene a estar en paz",
+     "idea_en": "And some come for peace",
+     "t": "La mujer del libro",
+     "t_en": "The woman with the book",
+     "esc": "Alta cocina, 21:30. Una mujer sola, con un libro abierto junto al plato. Ha pedido el menú largo, nueve pases. En el primero hiciste la explicación completa, como manda la casa: un minuto. Ella te escuchó con el dedo dentro del libro y dijo «gracias» en cuanto paraste. Llevas el segundo pase.",
+     "esc_en": "Fine dining, 21:30. A woman alone, with a book open beside her plate. She ordered the long menu, nine courses. At the first you gave the full explanation, as the house requires: one minute. She listened with her finger in the book and said \"thank you\" the moment you stopped. You are bringing the second course.",
+     "opts": [
+      {
+       "t": "Nombre del plato y una frase. Le dejo el menú impreso por si quiere más.",
+       "t_en": "Name and one sentence, and I leave the printed menu in case she wants more.",
+       "v": "mejor",
+       "fb": "Cumples con lo esencial y le devuelves su noche. Si quiere más, lo tiene en la mesa.",
+       "fb_en": "You cover the essentials and give her back her evening. If she wants more, it is on the table."
+      },
+      {
+       "t": "Le hago la explicación completa otra vez. El estándar es el mismo para todos.",
+       "t_en": "I give the full explanation again. The house standard is the same for everyone.",
+       "v": "no",
+       "fb": "El estándar es la calidad, no el guion. Nueve minutos de charla a quien vino a leer.",
+       "fb_en": "The standard is quality, not the script. Nine minutes of talk to someone who came to read."
+      },
+      {
+       "t": "Dejo el plato sin decir nada, para no interrumpirla.",
+       "t_en": "I set down the dish without a word, so as not to interrupt her.",
+       "v": "vale",
+       "fb": "Respetas su silencio, pero se queda sin saber qué come. El nombre del plato no molesta a nadie.",
+       "fb_en": "You respect her silence, but she is left not knowing what she is eating. The name of the dish disturbs nobody."
+      },
+      {
+       "t": "Le pregunto en cada pase si quiere que se lo explique.",
+       "t_en": "I ask at every course whether she wants it explained.",
+       "v": "no",
+       "fb": "Nueve preguntas en lugar de nueve explicaciones. La interrumpes igual.",
+       "fb_en": "Nine questions instead of nine explanations. You interrupt her all the same."
+      }
+     ],
+     "nosabias": "Es médica. Salía de una guardia de veinticuatro horas. La cena era su regalo de cumpleaños para ella misma: comer muy bien, sin hablar con nadie. En el séptimo pase cerró el libro y preguntó por el vino. Ahí sí le contaste todo.",
+     "nosabias_en": "She is a doctor. She had just come off a twenty four hour shift. The dinner was her own birthday present to herself: to eat very well without talking to anyone. At the seventh course she closed the book and asked about the wine. That is when you told her everything.",
+     "tarea": [
+      "Tiene un guion de un minuto por plato.",
+      "Lo cumple nueve veces.",
+      "Ella lee lo mismo nueve veces, sin avanzar."
+     ],
+     "tarea_en": [
+      "Has a one minute script per dish.",
+      "Delivers it nine times.",
+      "She reads the same line nine times, going nowhere."
+     ],
+     "persona": [
+      "Ve un dedo dentro de un libro.",
+      "Nombre y una frase. El resto, en papel.",
+      "Ella lee, come y, cuando quiere, pregunta."
+     ],
+     "persona_en": [
+      "Sees a finger inside a book.",
+      "Name and one sentence. The rest, on paper.",
+      "She reads, eats and asks when she wants to."
+     ],
+     "frase": "El estándar es lo que el huésped recibe, no lo que tú dices. A veces la mejor explicación es la más corta.",
+     "frase_en": "The standard is what the guest receives, not what you say. Sometimes the best explanation is the shortest.",
+     "consigna": "En una mesa que no quiera charla, quédate en lo esencial y deja la puerta abierta.",
+     "consigna_en": "At a table that does not want chat, stick to the essentials and leave the door open.",
+     "pregunta": "¿Acortaste en alguna mesa?",
+     "pregunta_en": "Did you cut it short at any table?",
+     "resp": [
+      "Sí, y lo agradecieron",
+      "Sí, sin saber si acerté",
+      "No hizo falta"
+     ],
+     "resp_en": [
+      "Yes, and they appreciated it",
+      "Yes, not sure if I got it right",
+      "It was not needed"
+     ]
+    },
+    {
+     "id": "m4d3",
+     "n": 3,
+     "idea": "La velocidad también es servicio",
+     "idea_en": "Speed is service too",
+     "t": "Catorce y una hora",
+     "t_en": "Fourteen and one hour",
+     "esc": "Comida de empresa, 14:00. Catorce personas, menú cerrado de tres pases y postre. El que organiza, un chico joven con una carpeta, te dice al sentarse: «a las tres tenemos que estar arriba en la sala, sin falta». Al ritmo normal de este menú, terminan a las tres y veinte.",
+     "esc_en": "Company lunch, 14:00. Fourteen people, set menu of three courses and dessert. The organiser, a young man with a folder, tells you as they sit: \"we have to be upstairs in the meeting room at three, no matter what\". At this menu's normal pace, they finish at twenty past three.",
+     "opts": [
+      {
+       "t": "Sigo el ritmo del menú. Está pensado así y la cocina tiene sus tiempos.",
+       "t_en": "I keep the menu's pace. It is designed that way and the kitchen has its timings.",
+       "v": "no",
+       "fb": "Te ha dado su límite y lo ignoras. A las tres menos diez se levantan con el plato a medias.",
+       "fb_en": "He gave you his limit and you ignore it. At ten to three they get up with plates half eaten."
+      },
+      {
+       "t": "Pido a cocina que acorte tiempos, sirvo café con el postre y le cuento el plan.",
+       "t_en": "I talk to the kitchen to tighten the timings, serve coffee with dessert and tell him the plan.",
+       "v": "mejor",
+       "fb": "Cambias el ritmo con la cocina, no a costa del menú. Y él deja de mirar el reloj porque sabe el plan.",
+       "fb_en": "You change the pace with the kitchen, not at the menu's expense. And he stops watching the clock because he knows the plan."
+      },
+      {
+       "t": "Le propongo quitar el postre, que así llegan seguro.",
+       "t_en": "I suggest dropping dessert, so they make it for sure.",
+       "v": "no",
+       "fb": "Recortas lo que han pagado para no cambiar tu forma de trabajar.",
+       "fb_en": "You cut what they paid for so as not to change the way you work."
+      },
+      {
+       "t": "Acelero yo en sala: retiro en cuanto terminan y marcho el siguiente sin esperar.",
+       "t_en": "I speed up on the floor: clear as soon as they finish and fire the next course without waiting.",
+       "v": "vale",
+       "fb": "Ayuda, pero sin cocina no basta. Y él sigue sin saber si llegan.",
+       "fb_en": "It helps, but without the kitchen it is not enough. And he still does not know whether they will make it."
+      }
+     ],
+     "nosabias": "Era su primera comida organizada desde que lo ascendieron. Su jefa estaba en la mesa. A las tres menos cinco subían con el café tomado. En la puerta te dio las gracias dos veces.",
+     "nosabias_en": "It was the first lunch he had organised since his promotion. His boss was at the table. At five to three they went up, coffee finished. At the door he thanked you twice.",
+     "tarea": [
+      "Ve un menú cerrado con sus tiempos.",
+      "Lo sirve como siempre.",
+      "El organizador se pasa la comida mirando el reloj."
+     ],
+     "tarea_en": [
+      "Sees a set menu with its timings.",
+      "Serves it as always.",
+      "The organiser spends the meal watching the clock."
+     ],
+     "persona": [
+      "Oye «a las tres sin falta».",
+      "Habla con cocina y le dice a él el plan.",
+      "El organizador se come el postre tranquilo."
+     ],
+     "persona_en": [
+      "Hears \"at three, no matter what\".",
+      "Talks to the kitchen and tells him the plan.",
+      "The organiser eats his dessert in peace."
+     ],
+     "frase": "Si te dan un límite de tiempo, el servicio es llegar. Cuéntale el plan a quien tiene el reloj.",
+     "frase_en": "If you are given a time limit, the service is making it. Tell the plan to whoever is holding the clock.",
+     "consigna": "Si una mesa tiene prisa, dile cuánto va a tardar cada cosa antes de que lo pregunte.",
+     "consigna_en": "If a table is in a hurry, tell them how long each thing will take before they ask.",
+     "pregunta": "¿Tuviste alguna mesa con prisa?",
+     "pregunta_en": "Did you have a table in a hurry?",
+     "resp": [
+      "Sí, y llegaron",
+      "Sí, y fue justo",
+      "No"
+     ],
+     "resp_en": [
+      "Yes, and they made it",
+      "Yes, and it was tight",
+      "No"
+     ]
+    },
+    {
+     "id": "m4d4",
+     "n": 4,
+     "idea": "Más claro, no más alto",
+     "idea_en": "Clearer, not louder",
+     "t": "La carta en otro idioma",
+     "t_en": "The menu in another language",
+     "esc": "Terraza de playa, 13:10. Una pareja alemana de unos setenta y cinco años. Les has dicho los platos del día en inglés y se han mirado entre ellos. Él dice «sorry» y se toca la oreja. Ella tiene la carta abierta y pasa el dedo por las líneas.",
+     "esc_en": "Beach terrace, 13:10. A German couple of about seventy five. You told them the daily specials in English and they looked at each other. He says \"sorry\" and touches his ear. She has the menu open and runs her finger along the lines.",
+     "opts": [
+      {
+       "t": "Lo repito en inglés, más alto y más despacio.",
+       "t_en": "I repeat it in English, louder and slower.",
+       "v": "no",
+       "fb": "Más alto no es más claro, y media terraza se entera. El problema no era sólo el volumen.",
+       "fb_en": "Louder is not clearer, and half the terrace hears. Volume was not the only problem."
+      },
+      {
+       "t": "Llamo a la compañera que habla alemán, aunque está con otra mesa.",
+       "t_en": "I call over the colleague who speaks German, even though she is with another table.",
+       "v": "vale",
+       "fb": "Buena idea si está libre. Si no, dejas a otra mesa a medias por lo que podías resolver tú.",
+       "fb_en": "A good idea if she is free. If not, you leave another table hanging for something you could have solved."
+      },
+      {
+       "t": "Les digo que no se preocupen, que vuelvo en cuanto lo hayan mirado con calma.",
+       "t_en": "I tell them not to worry and that I will come back once they have looked calmly.",
+       "v": "no",
+       "fb": "Los dejas solos con lo que no entendían. Se quedarán con lo que puedan leer.",
+       "fb_en": "You leave them alone with what they did not understand. They will settle for whatever they can read."
+      },
+      {
+       "t": "Me pongo a su lado, señalo cada plato del día en la carta y digo el nombre.",
+       "t_en": "I stand beside them, point to each special on the menu and say only its name.",
+       "v": "mejor",
+       "fb": "Pasas de oír a ver. Ella ya estaba leyendo: le das algo que leer.",
+       "fb_en": "You switch from hearing to seeing. She was already reading: you give her something to read."
+      }
+     ],
+     "nosabias": "Él oye poco con el ruido del mar. Ella entiende bien el inglés escrito, pero no hablado y deprisa. En la carta encontraron el pescado del día y lo pidieron los dos. A ella le hizo gracia que señalaras «como en el colegio».",
+     "nosabias_en": "He hears little over the noise of the sea. She understands written English well, but not spoken and fast. On the menu they found the fish of the day and both ordered it. She was amused that you pointed \"like at school\".",
+     "tarea": [
+      "No le entienden: lo repite.",
+      "Más alto, más despacio, las mismas palabras.",
+      "Piden lo único que han entendido."
+     ],
+     "tarea_en": [
+      "They do not understand: he repeats.",
+      "Louder, slower, same words.",
+      "They order the only thing they understood."
+     ],
+     "persona": [
+      "No le entienden: cambia la forma.",
+      "Se pone a su lado y señala en la carta.",
+      "Piden lo que querían."
+     ],
+     "persona_en": [
+      "They do not understand: he changes the method.",
+      "Stands beside them and points on the menu.",
+      "They order what they wanted."
+     ],
+     "frase": "Si no te entienden, no subas la voz: cambia de canal. Señala, enseña, escribe.",
+     "frase_en": "If they do not understand, do not raise your voice: change channel. Point, show, write.",
+     "consigna": "Con quien no te entienda a la primera, cambia de forma, no de volumen.",
+     "consigna_en": "With anyone who does not understand you first time, change the method, not the volume.",
+     "pregunta": "¿Tuviste que cambiar de forma con alguien?",
+     "pregunta_en": "Did you have to change your method with anyone?",
+     "resp": [
+      "Sí, y funcionó",
+      "Sí, y costó",
+      "No hizo falta"
+     ],
+     "resp_en": [
+      "Yes, and it worked",
+      "Yes, and it was hard",
+      "It was not needed"
+     ]
+    },
+    {
+     "id": "m4d5",
+     "n": 5,
+     "idea": "La cercanía también se ajusta",
+     "idea_en": "Closeness is adjusted too",
+     "t": "El habitual de traje",
+     "t_en": "The regular in a suit",
+     "esc": "Desayuno del hotel, 7:50. Un huésped de larga estancia, doce días ya. Cada mañana entra, te dice «¡hombre!», bromeáis sobre el fútbol y le llevas su café solo sin preguntar. Hoy entra de traje, con otro hombre al que trata de usted. Te mira y dice: «buenos días».",
+     "esc_en": "Hotel breakfast, 7:50. A long stay guest, twelve days so far. Every morning he walks in, says \"hey, you!\", you joke about football and you bring his black coffee without asking. Today he walks in wearing a suit, with another man he addresses formally. He looks at you and says: \"good morning\".",
+     "opts": [
+      {
+       "t": "Saludo de usted a los dos y le traigo su café solo, sin preguntar.",
+       "t_en": "I greet both formally and bring his black coffee unasked.",
+       "v": "mejor",
+       "fb": "Le guardas lo bueno de ser habitual y le das la distancia que hoy necesita. Él lo nota.",
+       "fb_en": "You keep what is good about being a regular and give him the distance he needs today. He notices."
+      },
+      {
+       "t": "Le saludo como siempre, con la broma del fútbol, que sé que le gusta.",
+       "t_en": "I greet him as always, with the football joke, which I know he likes.",
+       "v": "no",
+       "fb": "Lo que le gusta a solas puede no gustarle delante de otro. Hoy te lo ha dicho con un «buenos días».",
+       "fb_en": "What he likes alone he may not like in front of someone else. Today he told you so with a \"good morning\"."
+      },
+      {
+       "t": "Le pregunto, sonriendo: «¿lo de siempre?».",
+       "t_en": "I ask him, smiling: \"the usual?\".",
+       "v": "vale",
+       "fb": "Cercano sin pasarte. Aun así, ese «lo de siempre» le cuenta su rutina a su acompañante.",
+       "fb_en": "Warm without overdoing it. Even so, \"the usual\" tells his companion about his routine."
+      },
+      {
+       "t": "Le trato como a un huésped nuevo y le pregunto qué desean tomar.",
+       "t_en": "I treat him like a new guest and ask what they would like.",
+       "v": "no",
+       "fb": "Ajustas la distancia y pierdes la memoria. Doce días de café solo, y hoy tiene que pedirlo.",
+       "fb_en": "You adjust the distance and lose the memory. Twelve days of black coffee, and today he has to ask for it."
+      }
+     ],
+     "nosabias": "El otro hombre era el cliente con el que firmaba un contrato esa mañana. Al llegar el café sin pedirlo, el cliente le dijo «se nota que aquí le cuidan». Al día siguiente volvió el «¡hombre!» y la broma del fútbol.",
+     "nosabias_en": "The other man was the client he was signing a contract with that morning. When the coffee arrived unasked, the client said \"they clearly look after you here\". The next day the \"hey, you!\" and the football joke were back.",
+     "tarea": [
+      "Ve al habitual: toca la rutina de siempre.",
+      "La broma, el tuteo, el «¿lo de siempre?».",
+      "El huésped sonríe por compromiso delante de su cliente."
+     ],
+     "tarea_en": [
+      "Sees the regular: time for the usual routine.",
+      "The joke, the first names, \"the usual?\".",
+      "The guest smiles awkwardly in front of his client."
+     ],
+     "persona": [
+      "Ve al habitual y ve el traje.",
+      "Usted para los dos, y el café sin preguntar.",
+      "El cliente se fija en el café. El huésped, en ti."
+     ],
+     "persona_en": [
+      "Sees the regular and sees the suit.",
+      "Formal for both, and the coffee unasked.",
+      "The client notices the coffee. The guest notices you."
+     ],
+     "frase": "Recordar a alguien no es tratarlo siempre igual. Guarda lo que sabes y ajusta la distancia a cómo viene hoy.",
+     "frase_en": "Remembering someone is not treating them the same every time. Keep what you know and adjust the distance to how they arrive today.",
+     "consigna": "Con un habitual, fíjate en cómo viene hoy antes de saludarle como siempre.",
+     "consigna_en": "With a regular, notice how they arrive today before greeting them as usual.",
+     "pregunta": "¿Venía distinto algún habitual?",
+     "pregunta_en": "Did any regular arrive differently?",
+     "resp": [
+      "Sí, y me ajusté",
+      "Sí, y no me di cuenta a tiempo",
+      "No"
+     ],
+     "resp_en": [
+      "Yes, and I adjusted",
+      "Yes, and I noticed too late",
+      "No"
+     ]
+    },
+    {
+     "id": "m4d6",
+     "n": 6,
+     "idea": "Veinte segundos también es servicio",
+     "idea_en": "Twenty seconds is service too",
+     "t": "La puerta entreabierta",
+     "t_en": "The door ajar",
+     "esc": "Servicio de habitaciones, 23:30. Llamas a la puerta con la bandeja: una cena y una botella de agua. Abre una mujer en albornoz con el móvil en la oreja. Habla en voz baja, en otro idioma. Te hace un gesto hacia dentro y susurra: «aquí, aquí». El protocolo dice montar la mesa, presentar los platos y explicar cómo recoger la bandeja.",
+     "esc_en": "Room service, 23:30. You knock with the tray: a dinner and a bottle of water. A woman opens the door in a bathrobe, phone to her ear. She speaks quietly, in another language. She gestures you in and whispers: \"here, here\". The protocol says set the table, present the dishes and explain how to return the tray.",
+     "opts": [
+      {
+       "t": "Hago el protocolo completo, en voz baja, para no molestar su llamada.",
+       "t_en": "I do the full protocol, quietly, so as not to disturb her call.",
+       "v": "no",
+       "fb": "En voz baja sigue siendo un minuto de alguien hablando en su habitación mientras ella habla por teléfono.",
+       "fb_en": "Quietly is still a minute of someone talking in her room while she is on the phone."
+      },
+      {
+       "t": "Le doy la bandeja en la puerta, le señalo dónde firmar y me voy.",
+       "t_en": "I hand her the tray at the door, point to where to sign and leave.",
+       "v": "vale",
+       "fb": "Rápido y discreto. Pero la dejas con una bandeja en una mano y el móvil en la otra.",
+       "fb_en": "Fast and discreet. But you leave her with a tray in one hand and the phone in the other."
+      },
+      {
+       "t": "Espero fuera un momento a que cuelgue, para hacer bien el servicio.",
+       "t_en": "I wait outside for a moment until she hangs up, to do the service properly.",
+       "v": "no",
+       "fb": "Ella te ha dicho que entres. Esperar en la puerta la obliga a cortar la llamada.",
+       "fb_en": "She told you to come in. Waiting at the door forces her to cut the call short."
+      },
+      {
+       "t": "Dejo la bandeja en la mesa, destapo, gesto para firmar y salgo.",
+       "t_en": "I set the tray on the table, uncover it, gesture to sign and go.",
+       "v": "mejor",
+       "fb": "Lo esencial en veinte segundos, sin una palabra. La cena queda lista y su llamada sigue.",
+       "fb_en": "The essentials in twenty seconds, without a word. Dinner is ready and her call goes on."
+      }
+     ],
+     "nosabias": "Hablaba con su hija de seis años, que estaba a punto de dormirse a ocho mil kilómetros. Era el único rato del día en que coincidían despiertas. Al recoger la bandeja por la mañana había una nota: «gracias por el silencio».",
+     "nosabias_en": "She was talking to her six year old daughter, who was about to fall asleep eight thousand kilometres away. It was the only moment of the day they were both awake. When the tray was collected in the morning there was a note: \"thank you for the silence\".",
+     "tarea": [
+      "Tiene un protocolo de entrega.",
+      "Monta, presenta, explica. Un minuto.",
+      "La niña oye a un desconocido hablando de fondo."
+     ],
+     "tarea_en": [
+      "Has a delivery protocol.",
+      "Sets up, presents, explains. One minute.",
+      "The girl hears a stranger talking in the background."
+     ],
+     "persona": [
+      "Ve una llamada que importa.",
+      "Deja, destapa, gesto para firmar. Veinte segundos.",
+      "La llamada no se entera de que ha pasado nadie."
+     ],
+     "persona_en": [
+      "Sees a call that matters.",
+      "Sets down, uncovers, gestures to sign. Twenty seconds.",
+      "The call never knows anyone came in."
+     ],
+     "frase": "El protocolo es para que el huésped esté bien. Si el protocolo estorba, quédate con lo esencial.",
+     "frase_en": "The protocol exists so the guest is well. If the protocol gets in the way, keep only the essentials.",
+     "consigna": "Una vez hoy, recorta un paso de rutina porque la mesa lo pide, sin saltarte lo esencial.",
+     "consigna_en": "Once today, cut a routine step because the table asks for it, without skipping the essentials.",
+     "pregunta": "¿Recortaste algo a propósito?",
+     "pregunta_en": "Did you cut something on purpose?",
+     "resp": [
+      "Sí, y fue mejor",
+      "Sí, y no estoy seguro",
+      "No"
+     ],
+     "resp_en": [
+      "Yes, and it was better",
+      "Yes, and I am not sure",
+      "No"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "escucha",
+   "n": 5,
+   "t": "Escucha lo que no te piden",
+   "t_en": "Hear what they do not ask for",
+   "sub": "el dato dicho de pasada, convertido en algo a su medida",
+   "sub_en": "the passing remark, turned into something that fits",
+   "intro": "Esta semana va de oír. Los huéspedes dicen cosas que no son para ti: un comentario a su pareja, una queja al aire, una broma. Ahí está casi todo. La clave es responder con algo proporcionado: ni hacer como que no lo oíste, ni montar un número.",
+   "intro_en": "This week is about hearing. Guests say things that are not meant for you: a remark to their partner, a complaint into the air, a joke. Almost everything is there. The key is to respond with something proportionate: neither pretending you did not hear, nor making a show of it.",
+   "dias": [
+    {
+     "id": "m5d1",
+     "n": 1,
+     "idea": "Lo que se dice de pasada",
+     "idea_en": "What is said in passing",
+     "t": "La habitación que da a la carretera",
+     "t_en": "The room facing the road",
+     "esc": "Desayuno del hotel, 8:40. Una pareja de unos cuarenta años. Cuando les sirves el café, él le dice a ella, sin mirarte: «otra noche igual, los camiones a las cinco». Ella contesta: «quedan cuatro noches». Te dan las gracias por el café.",
+     "esc_en": "Hotel breakfast, 8:40. A couple in their forties. As you pour the coffee, he says to her, without looking at you: \"another night like that, the lorries at five\". She replies: \"four nights to go\". They thank you for the coffee.",
+     "opts": [
+      {
+       "t": "Nada. No me lo han dicho a mí, y las habitaciones no son cosa mía.",
+       "t_en": "Nothing. They did not say it to me, and the rooms are not my area.",
+       "v": "no",
+       "fb": "Lo oíste y te lo quedas. Cuatro noches más de camiones.",
+       "fb_en": "You heard it and keep it to yourself. Four more nights of lorries."
+      },
+      {
+       "t": "Le traigo a cada uno un café doble de cortesía y les digo que lo siento.",
+       "t_en": "I bring each of them a complimentary double coffee and say I am sorry.",
+       "v": "no",
+       "fb": "Un detalle simpático que no arregla nada. El problema es la habitación, no el sueño de esta mañana.",
+       "fb_en": "A nice touch that fixes nothing. The problem is the room, not this morning's tiredness."
+      },
+      {
+       "t": "«Perdonen, he oído lo de la habitación. ¿Quieren que hable con recepción?»",
+       "t_en": "\"Sorry, I overheard about the room. Shall I speak to reception?\"",
+       "v": "mejor",
+       "fb": "Reconoces que lo oíste, les ofreces lo que sí lo arregla, y deciden ellos.",
+       "fb_en": "You admit you heard, you offer what actually fixes it, and they decide."
+      },
+      {
+       "t": "Se lo comento a recepción al terminar el desayuno, sin decirles nada a ellos.",
+       "t_en": "I mention it to reception after breakfast, without saying anything to them.",
+       "v": "vale",
+       "fb": "El dato llega a quien puede arreglarlo. Pero ellos no saben que alguien lo ha oído, y quizá no quieren cambiarse.",
+       "fb_en": "The information reaches whoever can fix it. But they do not know anyone heard, and perhaps they do not want to move."
+      }
+     ],
+     "nosabias": "No se habían quejado porque «ya está todo lleno, para qué». Recepción tenía una habitación interior libre desde esa misma tarde. Al despedirse, el último día, preguntaron por ti.",
+     "nosabias_en": "They had not complained because \"it's all full anyway, what's the point\". Reception had an inner room free from that very afternoon. On the last day, as they left, they asked for you.",
+     "tarea": [
+      "Sirve el café. Lo que hablen no es suyo.",
+      "Sigue con la siguiente mesa.",
+      "Cuatro noches más de camiones a las cinco."
+     ],
+     "tarea_en": [
+      "Pours the coffee. What they talk about is not his business.",
+      "Moves on to the next table.",
+      "Four more nights of lorries at five."
+     ],
+     "persona": [
+      "Sirve el café y oye «los camiones».",
+      "Ofrece hablar con recepción.",
+      "Esa noche duermen en una habitación interior."
+     ],
+     "persona_en": [
+      "Pours the coffee and hears \"the lorries\".",
+      "Offers to speak to reception.",
+      "That night they sleep in an inner room."
+     ],
+     "frase": "Lo que el huésped dice de pasada suele ser lo más sincero que vas a oír. Si puedes hacer algo, ofrécelo.",
+     "frase_en": "What a guest says in passing is often the most honest thing you will hear. If you can do something, offer it.",
+     "consigna": "Escucha lo que se dice entre ellos en tres mesas y busca algo que puedas ofrecer.",
+     "consigna_en": "Listen to what is said among them at three tables and look for something you can offer.",
+     "pregunta": "¿Oíste algo que te sirviera?",
+     "pregunta_en": "Did you hear something useful?",
+     "resp": [
+      "Sí, y lo usé",
+      "Sí, pero no supe qué hacer",
+      "No"
+     ],
+     "resp_en": [
+      "Yes, and I used it",
+      "Yes, but I did not know what to do",
+      "No"
+     ]
+    },
+    {
+     "id": "m5d2",
+     "n": 2,
+     "idea": "Proporcionado, no espectacular",
+     "idea_en": "Proportionate, not spectacular",
+     "t": "El cumpleaños que no se cuenta",
+     "t_en": "The birthday nobody mentions",
+     "esc": "Barra de un japonés, 21:20. Dos amigas de unos treinta años. Al servirles el té, una le dice a la otra en voz baja: «ni se te ocurra decir que es mi cumpleaños, que me muero». La otra se ríe y levanta las manos.",
+     "esc_en": "Japanese counter, 21:20. Two friends around thirty. As you pour their tea, one says quietly to the other: \"don't you dare tell them it's my birthday, I'd die\". The other laughs and raises her hands.",
+     "opts": [
+      {
+       "t": "Le pido al cocinero una pieza especial con una vela al final, que siempre gusta.",
+       "t_en": "I ask the chef for a special piece with a candle at the end, which always goes down well.",
+       "v": "no",
+       "fb": "Ella acaba de decir que no, y tú lo has oído. Haces justo lo que temía.",
+       "fb_en": "She has just said no, and you heard it. You do exactly what she dreaded."
+      },
+      {
+       "t": "Nada. Ha pedido que no se diga, y lo respeto.",
+       "t_en": "Nothing. She asked for it not to be mentioned, and I respect that.",
+       "v": "vale",
+       "fb": "Respetas lo que pidió. Se puede hacer algo pequeño sin romperlo.",
+       "fb_en": "You respect what she asked. Something small can be done without breaking it."
+      },
+      {
+       "t": "Le pido al cocinero una pieza más para cada una, de la casa, sin decir por qué.",
+       "t_en": "I ask the chef for one extra piece each, on the house, without saying why.",
+       "v": "vale",
+       "fb": "Discreto y generoso. Pero ellas no saben por qué, y la amiga puede pensar que fue ella quien lo contó.",
+       "fb_en": "Discreet and generous. But they do not know why, and the friend may think she is being blamed for telling."
+      },
+      {
+       "t": "Al despedirlas, sólo a ella y en voz baja: «y felicidades».",
+       "t_en": "As they leave, just to her and quietly: \"and happy birthday\".",
+       "v": "mejor",
+       "fb": "Nadie más lo oye, nada se para. Se lleva que alguien estuvo atento sin ponerla en el centro.",
+       "fb_en": "Nobody else hears, nothing stops. She leaves knowing someone was paying attention without putting her in the spotlight."
+      }
+     ],
+     "nosabias": "El año anterior, en otro restaurante, le cantaron el cumpleaños con toda la sala mirando, y lo pasó fatal. Esta vez eligió una barra para que nadie se enterara. Con el «y felicidades» se rió y le dijo a su amiga: «¿ves? así sí».",
+     "nosabias_en": "The year before, at another restaurant, they sang happy birthday with the whole room watching, and she had an awful time. This time she chose a counter so nobody would know. At the \"and happy birthday\" she laughed and told her friend: \"see? that's how\".",
+     "tarea": [
+      "Oye «cumpleaños» y piensa en la vela.",
+      "Vela, cocinero, toda la barra mirando.",
+      "Ella sonríe con la cara roja y no vuelve."
+     ],
+     "tarea_en": [
+      "Hears \"birthday\" and thinks of the candle.",
+      "Candle, chef, the whole counter watching.",
+      "She smiles, red faced, and does not come back."
+     ],
+     "persona": [
+      "Oye «cumpleaños» y también «ni se te ocurra».",
+      "Dos palabras en voz baja, en la puerta.",
+      "Ella se va riéndose."
+     ],
+     "persona_en": [
+      "Hears \"birthday\" and also \"don't you dare\".",
+      "Two quiet words, at the door.",
+      "She leaves laughing."
+     ],
+     "frase": "Responde al dato entero, no sólo a la palabra que te gusta. A veces lo proporcionado son dos palabras en voz baja.",
+     "frase_en": "Respond to the whole remark, not just the word you like. Sometimes proportionate means two quiet words.",
+     "consigna": "Si oyes algo personal, piensa cuál es el gesto más pequeño que lo reconoce.",
+     "consigna_en": "If you hear something personal, think of the smallest gesture that acknowledges it.",
+     "pregunta": "¿Hiciste algún gesto pequeño?",
+     "pregunta_en": "Did you make any small gesture?",
+     "resp": [
+      "Sí",
+      "Me pasé",
+      "No hubo ocasión"
+     ],
+     "resp_en": [
+      "Yes",
+      "I overdid it",
+      "No occasion"
+     ]
+    },
+    {
+     "id": "m5d3",
+     "n": 3,
+     "idea": "Arréglalo sin decirlo",
+     "idea_en": "Fix it without saying so",
+     "t": "La zurda",
+     "t_en": "The left hander",
+     "esc": "Alta cocina, 20:40. Mesa de cuatro amigos. Al retirar el primer pase, una de ellas se ríe y le dice al de al lado: «como soy zurda, siempre acabo bebiendo de tu copa». Su copa y sus cubiertos están montados a la derecha, como en toda la sala. Quedan seis pases.",
+     "esc_en": "Fine dining, 20:40. A table of four friends. As you clear the first course, one of them laughs and tells the man beside her: \"being left handed, I always end up drinking from your glass\". Her glass and cutlery are set on the right, like the rest of the room. Six courses to go.",
+     "opts": [
+      {
+       "t": "En el siguiente pase, copa y cubiertos a su izquierda, sin decir nada.",
+       "t_en": "At the next course I move her glass and cutlery to the left, without saying anything.",
+       "v": "mejor",
+       "fb": "Lo oíste, lo arreglas, y no hace falta que nadie lo sepa. Ella lo notará en el segundo sorbo.",
+       "fb_en": "You heard it, you fix it, and nobody needs to know. She will notice on the second sip."
+      },
+      {
+       "t": "«He oído que es zurda. Ahora mismo le cambio todo al otro lado, no se preocupe.»",
+       "t_en": "\"I heard you are left handed. I will switch everything to the other side right away.\"",
+       "v": "vale",
+       "fb": "Bien resuelto, pero lo conviertes en tema de mesa. No hacía falta anunciarlo.",
+       "fb_en": "Well solved, but you make it a talking point. There was no need to announce it."
+      },
+      {
+       "t": "Nada. Era una broma, y el montaje de la sala es el que es.",
+       "t_en": "Nothing. It was a joke, and the room's setting is what it is.",
+       "v": "no",
+       "fb": "Detrás de la broma había un problema de verdad. Seis pases más chocando con su vecino.",
+       "fb_en": "Behind the joke was a real problem. Six more courses bumping into her neighbour."
+      },
+      {
+       "t": "Les propongo que se cambien de sitio para que ella tenga la esquina.",
+       "t_en": "I suggest they swap seats so she gets the corner.",
+       "v": "no",
+       "fb": "Mueves a toda la mesa por algo que se arregla con una copa. Desproporcionado.",
+       "fb_en": "You move the whole table for something fixed with one glass. Out of proportion."
+      }
+     ],
+     "nosabias": "Lleva toda la vida pidiendo perdón en las cenas por tirar copas. Esa noche no tiró ninguna. En la sobremesa le dijo a su amigo: «¿te has fijado en que me han puesto la copa a la izquierda?». Él no se había fijado.",
+     "nosabias_en": "She has spent her whole life apologising at dinners for knocking over glasses. That night she knocked over none. Over coffee she told her friend: \"did you notice they put my glass on the left?\". He had not.",
+     "tarea": [
+      "Oye una broma y se ríe.",
+      "Monta el siguiente pase igual que toda la sala.",
+      "Ella sigue cruzando el brazo para beber."
+     ],
+     "tarea_en": [
+      "Hears a joke and laughs.",
+      "Sets the next course like the rest of the room.",
+      "She keeps reaching across to drink."
+     ],
+     "persona": [
+      "Oye una broma y un dato.",
+      "Copa a la izquierda, sin decir nada.",
+      "Ella bebe tranquila. Lo nota sola."
+     ],
+     "persona_en": [
+      "Hears a joke and a fact.",
+      "Glass on the left, without a word.",
+      "She drinks easily. She notices on her own."
+     ],
+     "frase": "Lo mejor que haces con lo que oyes a veces no se nota. Arréglalo y que lo descubran ellos.",
+     "frase_en": "Sometimes the best thing you do with what you hear goes unnoticed. Fix it and let them discover it.",
+     "consigna": "Arregla una cosa pequeña que hayas oído, sin anunciarla.",
+     "consigna_en": "Fix one small thing you overheard, without announcing it.",
+     "pregunta": "¿Lo notaron?",
+     "pregunta_en": "Did they notice?",
+     "resp": [
+      "Sí, solos",
+      "No, pero estaba arreglado",
+      "No hubo ocasión"
+     ],
+     "resp_en": [
+      "Yes, on their own",
+      "No, but it was fixed",
+      "No occasion"
+     ]
+    },
+    {
+     "id": "m5d4",
+     "n": 4,
+     "idea": "Lo que protege va primero",
+     "idea_en": "What protects comes first",
+     "t": "El aperitivo del aniversario",
+     "t_en": "The anniversary appetiser",
+     "esc": "Bistró de cocina marinera, 21:05. Una pareja celebra su aniversario; lo pusieron en la reserva. Al pedir, él dice riéndose a su mujer: «el marisco ni lo miro, ya sabes, que luego me pica la boca», y pide pescado. No ha declarado ninguna alergia. Cocina te avisa: para la mesa del aniversario sale ahora un aperitivo de la casa, tartar de gamba.",
+     "esc_en": "Seafood bistro, 21:05. A couple celebrating their anniversary; they put it on the booking. As he orders, he laughs to his wife: \"I won't even look at shellfish, you know, my mouth itches afterwards\", and orders fish. He has declared no allergy. The kitchen tells you: a house appetiser is going out now for the anniversary table, prawn tartare.",
+     "opts": [
+      {
+       "t": "Lo sirvo tal cual. No ha declarado alergia y el pescado lo ha pedido sin problema.",
+       "t_en": "I serve it as it is. He declared no allergy and ordered fish with no problem.",
+       "v": "limite",
+       "fb": "Que le pique la boca con el marisco es una reacción. Que no lo haya declarado no hace que no exista.",
+       "fb_en": "An itchy mouth after shellfish is a reaction. Not having declared it does not make it go away."
+      },
+      {
+       "t": "Paro el aperitivo, pido otro sin marisco para él y le pregunto en voz baja.",
+       "t_en": "I hold the appetiser, get a shellfish free one for him and ask him quietly.",
+       "v": "mejor",
+       "fb": "El detalle sigue en pie y lo crítico queda comprobado. Y cocina sabe para el resto de la cena.",
+       "fb_en": "The gesture stands and the critical part is checked. And the kitchen knows for the rest of the meal."
+      },
+      {
+       "t": "Sirvo el tartar sólo a ella y a él no le pongo nada.",
+       "t_en": "I serve the tartare to her only and give him nothing.",
+       "v": "no",
+       "fb": "Evitas el riesgo y lo dejas fuera de su propio aniversario.",
+       "fb_en": "You avoid the risk and leave him out of his own anniversary."
+      },
+      {
+       "t": "Le pregunto delante de los dos: «¿es usted alérgico al marisco?».",
+       "t_en": "I ask in front of both: \"are you allergic to shellfish?\".",
+       "v": "vale",
+       "fb": "Comprobar es lo correcto. Pero el aperitivo ya iba a salir: primero se para, luego se pregunta.",
+       "fb_en": "Checking is right. But the appetiser was about to go out: first you hold it, then you ask."
+      }
+     ],
+     "nosabias": "Le pasa desde niño y nunca se ha hecho pruebas: «es una tontería». El año anterior, en otro sitio, acabó con los labios hinchados después de un arroz. Su mujer te dio las gracias con la mirada cuando le preguntaste.",
+     "nosabias_en": "It has happened since he was a child and he has never been tested: \"it's nothing\". The year before, somewhere else, he ended up with swollen lips after a rice dish. His wife thanked you with a look when you asked.",
+     "tarea": [
+      "Oye una broma sobre el marisco.",
+      "Sirve el aperitivo de la casa: no había alergia apuntada.",
+      "Lo que pase después ya no es cosa suya."
+     ],
+     "tarea_en": [
+      "Hears a joke about shellfish.",
+      "Serves the house appetiser: no allergy was noted.",
+      "Whatever happens next is not his concern."
+     ],
+     "persona": [
+      "Oye «me pica la boca» y deja de ser una broma.",
+      "Para el aperitivo, cambia el suyo y pregunta en voz baja.",
+      "Los dos brindan con su aperitivo. Él, con uno sin marisco."
+     ],
+     "persona_en": [
+      "Hears \"my mouth itches\" and it stops being a joke.",
+      "Holds the appetiser, swaps his and asks quietly.",
+      "They both toast with their appetiser. His, without shellfish."
+     ],
+     "frase": "Si oyes de pasada algo que suena a alergia, trátalo como alergia hasta que te digan lo contrario. Primero lo que protege, después el detalle.",
+     "frase_en": "If you overhear something that sounds like an allergy, treat it as one until told otherwise. First what protects, then the gesture.",
+     "consigna": "Si oyes algo sobre lo que alguien no puede comer, compruébalo con él y avisa a cocina, aunque no lo haya declarado.",
+     "consigna_en": "If you hear something about what someone cannot eat, check it with them and tell the kitchen, even if they did not declare it.",
+     "pregunta": "¿Oíste algo así?",
+     "pregunta_en": "Did you hear anything like that?",
+     "resp": [
+      "Sí, y lo comprobé",
+      "Sí, y no hice nada",
+      "No"
+     ],
+     "resp_en": [
+      "Yes, and I checked",
+      "Yes, and I did nothing",
+      "No"
+     ]
+    },
+    {
+     "id": "m5d5",
+     "n": 5,
+     "idea": "Algo pequeño, y que sea suyo",
+     "idea_en": "Something small, and theirs",
+     "t": "La de queso azul",
+     "t_en": "The blue cheese one",
+     "esc": "Hamburguesería de calidad, domingo, 13:20. Dos hermanos de unos cuarenta años. Mientras miran la carta, uno le dice al otro: «hoy hace un año. Papá siempre pedía la de queso azul». El otro asiente. La de queso azul salió de carta el mes pasado; en cocina todavía queda queso.",
+     "esc_en": "Quality burger place, Sunday, 13:20. Two brothers in their forties. Looking at the menu, one tells the other: \"a year ago today. Dad always ordered the blue cheese one\". The other nods. The blue cheese burger came off the menu last month; the kitchen still has cheese.",
+     "opts": [
+      {
+       "t": "Les doy el pésame y les invito a la primera ronda, en su memoria.",
+       "t_en": "I offer my condolences and buy them the first round, in his memory.",
+       "v": "no",
+       "fb": "Entras en algo que no te han contado a ti. Y lo conviertes en un momento que no han pedido.",
+       "fb_en": "You step into something they did not tell you. And turn it into a moment they did not ask for."
+      },
+      {
+       "t": "Les atiendo como siempre, sin bromas ni prisas, y no toco el tema.",
+       "t_en": "I serve them as usual, without jokes or rush, and do not bring it up.",
+       "v": "vale",
+       "fb": "Discreto y respetuoso. Te quedas con un dato que les podía dar justo lo que buscaban.",
+       "fb_en": "Discreet and respectful. You keep to yourself a fact that could give them exactly what they came for."
+      },
+      {
+       "t": "Pregunto en cocina si aún pueden hacer la de queso azul y se la ofrezco, sin más.",
+       "t_en": "I ask the kitchen if they can still make the blue cheese one, and offer it simply.",
+       "v": "mejor",
+       "fb": "Algo pequeño, que sólo tiene sentido para ellos, y sin entrar en lo que no te toca.",
+       "fb_en": "Something small, that only makes sense for them, without stepping into what is not yours."
+      },
+      {
+       "t": "Cuando pregunten por ella, les digo que ya no está y les recomiendo la nueva, que se parece.",
+       "t_en": "If they ask for it, I tell them it is gone and recommend the new one, which is similar.",
+       "v": "no",
+       "fb": "Correcto según la carta. Pero no buscaban una parecida.",
+       "fb_en": "Correct by the menu. But they were not looking for a similar one."
+      }
+     ],
+     "nosabias": "Venían aquí con su padre cada domingo de fútbol. Habían quedado ese día para pedir la de queso azul y brindar con ella. Cuando les dijiste «si les apetece la de queso azul, cocina se la hace», se miraron y uno dijo: «dos».",
+     "nosabias_en": "They used to come here with their father every football Sunday. They had met that day to order the blue cheese one and toast with it. When you said \"if you fancy the blue cheese one, the kitchen will make it\", they looked at each other and one said: \"two\".",
+     "tarea": [
+      "Oye algo triste y lo deja estar.",
+      "Toma nota de la carta que hay.",
+      "Piden la nueva. Está buena. No es la de su padre."
+     ],
+     "tarea_en": [
+      "Hears something sad and lets it be.",
+      "Takes the order from the menu as it stands.",
+      "They order the new one. It is good. It is not their father's."
+     ],
+     "persona": [
+      "Oye «hoy hace un año» y «la de queso azul».",
+      "Pregunta en cocina. Ofrece sin explicar.",
+      "Dos de queso azul. Nadie dice nada más, y no hace falta."
+     ],
+     "persona_en": [
+      "Hears \"a year ago today\" and \"the blue cheese one\".",
+      "Asks the kitchen. Offers without explaining.",
+      "Two blue cheese. Nobody says anything more, and nobody needs to."
+     ],
+     "frase": "Con lo que oyes, busca el gesto que sólo valga para esa mesa. Y no hace falta que sepan que lo oíste.",
+     "frase_en": "With what you hear, look for the gesture that fits only that table. And they do not need to know you heard.",
+     "consigna": "Si oyes algo importante para una mesa, busca un gesto pequeño que sólo tenga sentido para ellos.",
+     "consigna_en": "If you hear something important to a table, find a small gesture that only makes sense to them.",
+     "pregunta": "¿Encontraste ese gesto?",
+     "pregunta_en": "Did you find that gesture?",
+     "resp": [
+      "Sí",
+      "Lo pensé tarde",
+      "No se dio"
+     ],
+     "resp_en": [
+      "Yes",
+      "I thought of it too late",
+      "It did not come up"
+     ]
+    },
+    {
+     "id": "m5d6",
+     "n": 6,
+     "idea": "Lo que no es tuyo, pero puedes arreglar",
+     "idea_en": "Not your problem, but you can fix it",
+     "t": "El móvil al tres por ciento",
+     "t_en": "The phone at three percent",
+     "esc": "Terraza de playa, 18:10. Una pareja de turistas ingleses termina unas cervezas. Ella mira el móvil y le dice a él, en inglés: «tres por ciento, y las tarjetas de embarque están aquí». Él contesta que el vuelo sale a las diez. No te piden nada.",
+     "esc_en": "Beach terrace, 18:10. A British couple are finishing a couple of beers. She looks at her phone and tells him: \"three percent, and the boarding passes are on here\". He answers that the flight is at ten. They do not ask you for anything.",
+     "opts": [
+      {
+       "t": "Les ofrezco cargar el móvil detrás de la barra mientras terminan.",
+       "t_en": "I offer to charge the phone behind the bar while they finish.",
+       "v": "mejor",
+       "fb": "Lo que oíste, convertido en algo que puedes hacer ahora mismo y que no cuesta nada.",
+       "fb_en": "What you heard, turned into something you can do right now that costs nothing."
+      },
+      {
+       "t": "Les digo que en el paseo hay una tienda de móviles que vende cargadores.",
+       "t_en": "I tell them there is a phone shop on the promenade that sells chargers.",
+       "v": "vale",
+       "fb": "Les ayudas, pero les mandas a comprar algo que tú podías prestarles.",
+       "fb_en": "You help, but send them to buy something you could have lent them."
+      },
+      {
+       "t": "Nada. No me lo han pedido y no quiero parecer que escucho.",
+       "t_en": "Nothing. They did not ask, and I do not want to look like I am listening.",
+       "v": "no",
+       "fb": "Por no parecer que escuchas, dejas a dos personas camino del aeropuerto sin sus tarjetas.",
+       "fb_en": "So as not to look like you are listening, you leave two people heading to the airport without their boarding passes."
+      },
+      {
+       "t": "Les comento que en el aeropuerto pueden imprimirlas en el mostrador.",
+       "t_en": "I tell them they can print them at the airport desk.",
+       "v": "vale",
+       "fb": "Un dato útil. Pero el problema lo puedes resolver tú en veinte minutos de enchufe.",
+       "fb_en": "Useful information. But you can solve the problem yourself with twenty minutes on a plug."
+      }
+     ],
+     "nosabias": "Su compañía cobra por imprimir la tarjeta en el mostrador, y no llevaban cargador: se había quedado en el apartamento ya entregado. Pidieron dos cervezas más mientras se cargaba. Al irse, dejaron una reseña con tu descripción: «el chico del enchufe».",
+     "nosabias_en": "Their airline charges for printing passes at the desk, and they had no charger: it had been left in the apartment they had already handed back. They ordered two more beers while it charged. When they left, they wrote a review describing you: \"the guy with the plug\".",
+     "tarea": [
+      "Oye un problema que no es del restaurante.",
+      "No se mete. No le han preguntado.",
+      "Se van con el móvil al tres por ciento."
+     ],
+     "tarea_en": [
+      "Hears a problem that is not the restaurant's.",
+      "Stays out of it. Nobody asked.",
+      "They leave with the phone at three percent."
+     ],
+     "persona": [
+      "Oye un problema que él puede arreglar.",
+      "Ofrece el enchufe de la barra.",
+      "Se van con batería y con dos cervezas más."
+     ],
+     "persona_en": [
+      "Hears a problem he can fix.",
+      "Offers the plug behind the bar.",
+      "They leave with battery and two more beers."
+     ],
+     "frase": "Hospitalidad no es sólo lo que pasa en el plato. Si oyes un problema que puedes arreglar, ofrécelo.",
+     "frase_en": "Hospitality is not only what happens on the plate. If you hear a problem you can fix, offer to fix it.",
+     "consigna": "Ofrece una ayuda que no tenga que ver con la comida.",
+     "consigna_en": "Offer one bit of help that has nothing to do with the food.",
+     "pregunta": "¿Qué ofreciste?",
+     "pregunta_en": "What did you offer?",
+     "resp": [
+      "Algo que usaron",
+      "Algo que no necesitaron",
+      "Nada"
+     ],
+     "resp_en": [
+      "Something they used",
+      "Something they did not need",
+      "Nothing"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "cargo",
+   "n": 6,
+   "t": "Si falla, hazte cargo",
+   "t_en": "If it fails, own it",
+   "sub": "darse cuenta, escuchar, reconocer, resolver, comprobar, cerrar",
+   "sub_en": "notice, listen, acknowledge, solve, check, close",
+   "intro": "Esta semana va de cuando algo sale mal, que siempre pasa. Lo que el huésped recuerda no es el fallo: es qué hiciste tú. Darte cuenta antes de que te lo digan, escuchar entero, reconocer sin excusas, resolver con opciones, comprobar y cerrar bien. Y saber dónde está el límite.",
+   "intro_en": "This week is about when something goes wrong, which it always does. What the guest remembers is not the mistake: it is what you did. Noticing before they tell you, listening fully, acknowledging without excuses, solving with options, checking and closing well. And knowing where the limit is.",
+   "dias": [
+    {
+     "id": "m6d1",
+     "n": 1,
+     "idea": "Date cuenta antes de que te lo digan",
+     "idea_en": "Notice before they tell you",
+     "t": "El punto que nadie reclama",
+     "t_en": "The steak nobody complains about",
+     "esc": "Bistró, 21:15. Un hombre de unos cincuenta años cena con un amigo. Pidió el entrecot poco hecho. Al pasar ves el corte: está hecho del todo. Él no ha dicho nada. Come despacio, deja trozos a un lado y bebe más agua que antes.",
+     "esc_en": "Bistro, 21:15. A man in his fifties dining with a friend. He ordered the entrecôte rare. Walking past, you see the cut: it is well done. He has said nothing. He eats slowly, pushes pieces to one side and drinks more water than before.",
+     "opts": [
+      {
+       "t": "Espero. Si no le gusta, ya lo dirá; no quiero molestar.",
+       "t_en": "I wait. If he does not like it, he will say so; I do not want to bother him.",
+       "v": "no",
+       "fb": "Muchos no lo dicen nunca. Se van, no vuelven y se lo cuentan a otros.",
+       "fb_en": "Many never say it. They leave, do not return and tell others."
+      },
+      {
+       "t": "Me acerco: «¿El punto es como lo pidió? Si no, se lo hacemos de nuevo».",
+       "t_en": "I go over: \"Is it cooked how you asked? If not, we'll redo it\".",
+       "v": "mejor",
+       "fb": "Preguntas por lo concreto que viste y le das la salida hecha. No tiene que quejarse.",
+       "fb_en": "You ask about the specific thing you saw and hand him the solution. He does not have to complain."
+      },
+      {
+       "t": "Paso por la mesa y pregunto «¿todo bien por aquí?».",
+       "t_en": "I pass by and ask \"everything alright here?\".",
+       "v": "vale",
+       "fb": "La pregunta de siempre recibe la respuesta de siempre: «sí, gracias». Sabías algo más concreto.",
+       "fb_en": "The usual question gets the usual answer: \"yes, thanks\". You knew something more specific."
+      },
+      {
+       "t": "Retiro el plato y le pido otro a cocina, sin preguntarle, para no hacerle esperar.",
+       "t_en": "I take the plate away and order another from the kitchen without asking him.",
+       "v": "no",
+       "fb": "Bien visto y mal hecho. Le quitas la cena de delante sin saber si prefiere seguir con ella.",
+       "fb_en": "Well spotted, badly done. You take his dinner away without knowing whether he would rather keep it."
+      }
+     ],
+     "nosabias": "No se queja nunca en los restaurantes: «para qué, si ya está hecho». Había decidido no volver. Dijo que sí al nuevo, y su amigo le esperó con la conversación. Al salir le dijo: «aquí se fijan».",
+     "nosabias_en": "He never complains in restaurants: \"what for, it's already done\". He had decided not to come back. He said yes to the new one, and his friend waited with the conversation. Leaving, he said: \"they pay attention here\".",
+     "tarea": [
+      "Pasa por la mesa: nadie ha llamado.",
+      "Sigue su ruta.",
+      "El hombre se va sin quejarse y no vuelve."
+     ],
+     "tarea_en": [
+      "Passes the table: nobody has called.",
+      "Carries on.",
+      "The man leaves without complaining and never returns."
+     ],
+     "persona": [
+      "Pasa por la mesa y ve el corte.",
+      "Pregunta por el punto y ofrece rehacerlo.",
+      "El hombre se come el nuevo y vuelve."
+     ],
+     "persona_en": [
+      "Passes the table and sees the cut.",
+      "Asks about the cooking and offers to redo it.",
+      "The man eats the new one and comes back."
+     ],
+     "frase": "El mejor momento para arreglar un fallo es antes de que el huésped tenga que decirlo.",
+     "frase_en": "The best moment to fix a mistake is before the guest has to say it.",
+     "consigna": "Al pasar por cada mesa, mira los platos, no sólo las caras.",
+     "consigna_en": "As you pass each table, look at the plates, not just the faces.",
+     "pregunta": "¿Viste algo antes de que te lo dijeran?",
+     "pregunta_en": "Did you see something before they told you?",
+     "resp": [
+      "Sí, y lo arreglé",
+      "Sí, pero tarde",
+      "No"
+     ],
+     "resp_en": [
+      "Yes, and I fixed it",
+      "Yes, but late",
+      "No"
+     ]
+    },
+    {
+     "id": "m6d2",
+     "n": 2,
+     "idea": "Escucha entero, sin excusas",
+     "idea_en": "Listen fully, no excuses",
+     "t": "Cuarenta minutos",
+     "t_en": "Forty minutes",
+     "esc": "Alta cocina, 22:10. Mesa de cuatro, ejecutivos. Entre el segundo y el tercer pase han pasado cuarenta minutos: cocina tuvo un problema con el horno. Te llama la mujer que preside la mesa. Empieza: «Mire, llevamos cuarenta minutos sin…». Tú ya sabes lo del horno.",
+     "esc_en": "Fine dining, 22:10. Table of four, executives. Forty minutes have passed between the second and third courses: the kitchen had an oven problem. The woman at the head of the table calls you over. She starts: \"Look, we've been forty minutes without...\". You already know about the oven.",
+     "opts": [
+      {
+       "t": "La dejo terminar, le digo que tiene razón y cuándo sale el siguiente pase.",
+       "t_en": "I let her finish, tell her she is right and when the next course comes.",
+       "v": "mejor",
+       "fb": "Escuchas entero, reconoces sin excusas y le das un dato que puede creer. Lo del horno no es su problema.",
+       "fb_en": "You listen fully, acknowledge without excuses and give her a fact she can believe. The oven is not her problem."
+      },
+      {
+       "t": "En cuanto puedo, le explico lo del horno para que entienda que no es dejadez.",
+       "t_en": "As soon as I can, I explain about the oven so she understands it is not carelessness.",
+       "v": "no",
+       "fb": "La cortas para defenderte. Ella quería que la escucharan y recibe una excusa.",
+       "fb_en": "You cut her off to defend yourself. She wanted to be heard and gets an excuse."
+      },
+      {
+       "t": "Le pido disculpas y les ofrezco una copa de cava de la casa mientras esperan.",
+       "t_en": "I apologise and offer them a glass of house cava while they wait.",
+       "v": "no",
+       "fb": "El regalo llega antes que la escucha. Parece que quieres taparle la boca.",
+       "fb_en": "The gift arrives before the listening. It looks like you want to shut her up."
+      },
+      {
+       "t": "La escucho, le pido disculpas y voy a buscar al encargado para que hable con ella.",
+       "t_en": "I listen, apologise and fetch the manager to speak to her.",
+       "v": "vale",
+       "fb": "Escuchas y subes el problema, y eso está bien. Pero lo primero que quería saber, cuándo comen, se lo podías decir tú.",
+       "fb_en": "You listen and escalate, which is fine. But the first thing she wanted to know, when they eat, you could have told her yourself."
+      }
+     ],
+     "nosabias": "Era una cena con un posible inversor y llevaba media hora cubriendo silencios. Lo único que necesitaba era saber cuánto faltaba para poder decirlo en la mesa. «Seis minutos», le dijiste. Salió a los cinco.",
+     "nosabias_en": "It was a dinner with a potential investor and she had spent half an hour filling silences. All she needed was to know how long it would be, so she could say it at the table. \"Six minutes\", you told her. It came out in five.",
+     "tarea": [
+      "Oye una queja y prepara la defensa.",
+      "«Es que el horno…»",
+      "Ella deja de hablar contigo y llama al encargado."
+     ],
+     "tarea_en": [
+      "Hears a complaint and prepares a defence.",
+      "\"It's just that the oven...\"",
+      "She stops talking to you and asks for the manager."
+     ],
+     "persona": [
+      "Oye una queja y la deja terminar.",
+      "«Tiene razón. Sale en seis minutos.»",
+      "Ella se lo dice a la mesa y vuelve a la conversación."
+     ],
+     "persona_en": [
+      "Hears a complaint and lets her finish.",
+      "\"You're right. It's out in six minutes.\"",
+      "She tells the table and returns to the conversation."
+     ],
+     "frase": "Cuando alguien se queja, la primera frase es suya entera. La tuya empieza con «tiene razón», no con «es que».",
+     "frase_en": "When someone complains, the first sentence is entirely theirs. Yours starts with \"you're right\", not \"it's just that\".",
+     "consigna": "Si alguien se queja hoy, no digas «es que» ni una vez.",
+     "consigna_en": "If anyone complains today, do not say \"it's just that\" even once.",
+     "pregunta": "¿Se te escapó algún «es que»?",
+     "pregunta_en": "Did an \"it's just that\" slip out?",
+     "resp": [
+      "Ninguno",
+      "Alguno",
+      "No hubo quejas"
+     ],
+     "resp_en": [
+      "None",
+      "One or two",
+      "There were no complaints"
+     ]
+    },
+    {
+     "id": "m6d3",
+     "n": 3,
+     "idea": "Arreglar no es regalar",
+     "idea_en": "Fixing is not giving away",
+     "t": "Los huevos que no llegaban",
+     "t_en": "The eggs that never came",
+     "esc": "Desayuno del hotel, 7:25. Un hombre de traje pidió huevos a la carta a las siete. Te dice, sin levantar la voz: «tengo un taxi a las 7:40». Vas a cocina: la comanda nunca llegó. Se perdió en la impresora. Nadie ha empezado sus huevos.",
+     "esc_en": "Hotel breakfast, 7:25. A man in a suit ordered eggs from the menu at seven. He tells you, without raising his voice: \"I have a taxi at 7:40\". You go to the kitchen: the ticket never arrived. It got lost in the printer. Nobody has started his eggs.",
+     "opts": [
+      {
+       "t": "Le pido disculpas y le digo que el desayuno de hoy corre a cuenta de la casa.",
+       "t_en": "I apologise and tell him today's breakfast is on the house.",
+       "v": "no",
+       "fb": "No le arreglas nada. Tiene quince minutos y ningún huevo; lo que le faltaba no era dinero.",
+       "fb_en": "You fix nothing. He has fifteen minutes and no eggs; money was never what he was missing."
+      },
+      {
+       "t": "Le explico lo de la impresora para que sepa que no ha sido culpa nuestra.",
+       "t_en": "I explain about the printer so he knows it was not really our fault.",
+       "v": "no",
+       "fb": "A él le da igual de quién sea la culpa. Pierdes dos minutos de los quince que tiene.",
+       "fb_en": "He does not care whose fault it is. You waste two of his fifteen minutes."
+      },
+      {
+       "t": "Pido los huevos con urgencia y le traigo un zumo de cortesía mientras espera.",
+       "t_en": "I order the eggs urgently and bring him a complimentary juice while he waits.",
+       "v": "vale",
+       "fb": "Bien por la urgencia. El zumo no hace falta, y él sigue sin saber si le da tiempo.",
+       "fb_en": "Good on the urgency. The juice is unnecessary, and he still does not know whether he will make it."
+      },
+      {
+       "t": "«Error nuestro. Se lo tengo aquí en cuatro minutos, o para llevar al taxi.»",
+       "t_en": "\"Our mistake. I can have it here in four minutes, or packed for the taxi.\"",
+       "v": "mejor",
+       "fb": "Reconoces sin excusas y le das dos salidas que caben en su tiempo. Él elige.",
+       "fb_en": "You acknowledge without excuses and give him two options that fit his time. He chooses."
+      }
+     ],
+     "nosabias": "Viaja con dietas de empresa: el desayuno invitado no le cambiaba nada. Eligió llevárselo. Se fue a las 7:38 con una tortilla francesa en pan y un café para llevar. Esa misma semana repitió hotel.",
+     "nosabias_en": "He travels on a company allowance: a free breakfast changed nothing for him. He chose to take it with him. He left at 7:38 with an omelette in a roll and a coffee to go. He booked the same hotel again that week.",
+     "tarea": [
+      "Ve un fallo: hay que compensar.",
+      "Invita al desayuno.",
+      "Él sale corriendo sin desayunar. Gratis."
+     ],
+     "tarea_en": [
+      "Sees a failure: it must be compensated.",
+      "Comps the breakfast.",
+      "He rushes off without eating. For free."
+     ],
+     "persona": [
+      "Ve un fallo: hay que arreglarlo.",
+      "Reconoce y ofrece dos salidas que caben en quince minutos.",
+      "Él se va desayunado y a tiempo."
+     ],
+     "persona_en": [
+      "Sees a failure: it must be fixed.",
+      "Acknowledges and offers two options that fit in fifteen minutes.",
+      "He leaves fed and on time."
+     ],
+     "frase": "Un regalo no arregla un fallo. Primero resuelve lo que el huésped necesita; si después hace falta un detalle, ya se verá.",
+     "frase_en": "A gift does not fix a mistake. First solve what the guest needs; if a gesture is needed afterwards, that comes later.",
+     "consigna": "Si algo falla hoy, ofrece una solución antes de pensar en compensar.",
+     "consigna_en": "If something fails today, offer a solution before you think of compensating.",
+     "pregunta": "¿Resolviste algo sin regalar nada?",
+     "pregunta_en": "Did you solve something without giving anything away?",
+     "resp": [
+      "Sí",
+      "Acabé regalando",
+      "No falló nada"
+     ],
+     "resp_en": [
+      "Yes",
+      "I ended up giving something",
+      "Nothing went wrong"
+     ]
+    },
+    {
+     "id": "m6d4",
+     "n": 4,
+     "idea": "Con una alergia no hay atajos",
+     "idea_en": "No shortcuts with an allergy",
+     "t": "Las semillas",
+     "t_en": "The seeds",
+     "esc": "Restaurante japonés, sala, 21:40. Una mujer declaró alergia al sésamo al sentarse y está apuntado en la comanda. Le sirves un plato de verduras. Antes de probarlo, señala unas semillas por encima y te pregunta: «esto es sésamo, ¿no?». Lo es.",
+     "esc_en": "Japanese restaurant, dining room, 21:40. A woman declared a sesame allergy when seated and it is on the ticket. You serve her a vegetable dish. Before tasting it, she points at some seeds on top and asks: \"this is sesame, isn't it?\". It is.",
+     "opts": [
+      {
+       "t": "«Perdone, tiene razón.» Retiro las semillas con cuidado en el office y se lo devuelvo.",
+       "t_en": "\"Sorry, you're right.\" I carefully remove the seeds in the back and bring it back.",
+       "v": "limite",
+       "fb": "Quitar lo de encima no quita lo que ya ha tocado el plato. Con una alergia no se arregla un plato: se hace otro.",
+       "fb_en": "Removing what is on top does not remove what has touched the plate. With an allergy you do not fix a dish: you make another."
+      },
+      {
+       "t": "Pido disculpas, me llevo el plato y pido a cocina que lo repitan sin sésamo.",
+       "t_en": "I apologise, take the plate and ask the kitchen to remake it without sesame.",
+       "v": "vale",
+       "fb": "El plato nuevo es lo correcto. Te falta lo primero: preguntarle si ha llegado a probar algo, y avisar al encargado.",
+       "fb_en": "A new plate is right. You miss the first step: asking whether she tasted anything, and telling the manager."
+      },
+      {
+       "t": "Retiro el plato, pregunto si ha comido algo, aviso a cocina y al encargado.",
+       "t_en": "I take the plate, ask if she ate any, and tell the kitchen and manager.",
+       "v": "mejor",
+       "fb": "Primero ella, luego el plato. Y al volver le dices qué lleva y quién lo ha comprobado.",
+       "fb_en": "First her, then the plate. And when you return you tell her what is in it and who checked it."
+      },
+      {
+       "t": "Le pido disculpas, retiro el plato y le ofrezco el postre invitado por las molestias.",
+       "t_en": "I apologise, take the plate and offer a free dessert for the trouble.",
+       "v": "no",
+       "fb": "Un postre no responde a lo que importa: si ha comido algo, y si el siguiente plato será seguro.",
+       "fb_en": "A dessert does not answer what matters: whether she ate any, and whether the next plate will be safe."
+      }
+     ],
+     "nosabias": "No había probado nada. Lleva siempre su medicación encima, y aun así ha estado en urgencias dos veces por platos «arreglados». Cuando volviste y le dijiste «este lo ha hecho el jefe de cocina desde cero, sin sésamo», se lo comió entero. Pidió postre, y lo pagó.",
+     "nosabias_en": "She had not tasted anything. She always carries her medication, and even so she has been to A&E twice because of \"fixed\" dishes. When you came back and said \"the head chef made this one from scratch, without sesame\", she ate all of it. She ordered dessert, and paid for it.",
+     "tarea": [
+      "Ve unas semillas que sobran.",
+      "Las quita y devuelve el plato rápido.",
+      "Nadie sabe lo que quedaba en el plato."
+     ],
+     "tarea_en": [
+      "Sees some seeds that should not be there.",
+      "Removes them and sends the plate back fast.",
+      "Nobody knows what was left on it."
+     ],
+     "persona": [
+      "Ve un riesgo, no un plato mal emplatado.",
+      "Pregunta por ella, avisa, pide uno nuevo.",
+      "Vuelve con el plato y le dice quién lo ha comprobado."
+     ],
+     "persona_en": [
+      "Sees a risk, not a badly plated dish.",
+      "Asks about her, alerts, orders a new one.",
+      "Returns with the plate and tells her who checked it."
+     ],
+     "frase": "Cuando el fallo toca una alergia, lo primero es la persona, después el plato. Y el plato nuevo se hace de cero, nunca se arregla.",
+     "frase_en": "When the mistake involves an allergy, the person comes first, then the dish. And the new dish is made from scratch, never fixed.",
+     "consigna": "Con cada alergia de hoy, confirma con cocina antes de servir, aunque ya esté en la comanda.",
+     "consigna_en": "With every allergy today, confirm with the kitchen before serving, even if it is already on the ticket.",
+     "pregunta": "¿Confirmaste las alergias antes de servir?",
+     "pregunta_en": "Did you confirm the allergies before serving?",
+     "resp": [
+      "Todas",
+      "Algunas",
+      "No tuve ninguna"
+     ],
+     "resp_en": [
+      "All of them",
+      "Some",
+      "I had none"
+     ]
+    },
+    {
+     "id": "m6d5",
+     "n": 5,
+     "idea": "Escuchar no es aguantar",
+     "idea_en": "Listening is not putting up with it",
+     "t": "El que insulta",
+     "t_en": "The man who insults",
+     "esc": "Terraza de un bar de playa, 23:40. Mesa de cuatro. Uno de ellos pidió un gin tonic con una tónica concreta y le llegó con otra: el error es tuyo. Se lo cambias y te disculpas. Él levanta la voz delante de sus amigos: «¿Pero tú eres tonto? Inútiles, no sabéis hacer nada». Las mesas de al lado se callan.",
+     "esc_en": "Beach bar terrace, 23:40. Table of four. One of them ordered a gin and tonic with a particular tonic and got another: the mistake is yours. You replace it and apologise. He raises his voice in front of his friends: \"Are you stupid or what? Useless, the lot of you\". The tables nearby fall silent.",
+     "opts": [
+      {
+       "t": "Le pido perdón otra vez y aguanto hasta que se calme. Es el cliente.",
+       "t_en": "I apologise again and put up with it until he calms down. He is the customer.",
+       "v": "limite",
+       "fb": "La queja por la tónica se escucha. Los insultos, no. Callarte no le calma, y a ti te rompe el resto del servicio.",
+       "fb_en": "The complaint about the tonic gets heard. The insults do not. Staying quiet does not calm him, and it breaks the rest of your service."
+      },
+      {
+       "t": "Le contesto en el mismo tono: a mí no me llama tonto nadie.",
+       "t_en": "I answer in the same tone: nobody calls me stupid.",
+       "v": "no",
+       "fb": "Tienes razón en el fondo y la pierdes en la forma. Ahora son dos gritando en la terraza.",
+       "fb_en": "You are right in substance and lose it in the delivery. Now there are two people shouting on the terrace."
+      },
+      {
+       "t": "Le cambio la copa sin decir nada y le pido a un compañero que lleve él esa mesa.",
+       "t_en": "I replace the glass without a word and ask a colleague to take over that table.",
+       "v": "vale",
+       "fb": "Te apartas y no echas leña. Pero nadie le ha puesto el límite, y tu compañero hereda el problema.",
+       "fb_en": "You step away and add no fuel. But nobody has set the limit, and your colleague inherits the problem."
+      },
+      {
+       "t": "Le digo con calma que así no puedo seguir, y aviso al encargado.",
+       "t_en": "I calmly tell him I can't carry on like this, and call the manager.",
+       "v": "mejor",
+       "fb": "Separas el error, que es tuyo, del insulto, que no lo es. Y llamas a quien está para respaldarte.",
+       "fb_en": "You separate the mistake, which is yours, from the insult, which is not. And you call the person who is there to back you."
+      }
+     ],
+     "lim": "Escuchar una queja es tu trabajo. Aguantar insultos, no. Pon el límite con calma y llama al encargado: está para respaldarte.",
+     "lim_en": "Listening to a complaint is your job. Putting up with insults is not. Set the limit calmly and call the manager: they are there to back you.",
+     "nosabias": "El encargado lo había visto desde la barra y ya venía. Le dijo al hombre, sin subir la voz: «el error de la tónica lo arreglamos; que le falten a mi equipo, no». El hombre pagó y se fue. Uno de sus amigos volvió a la barra a pedirte perdón.",
+     "nosabias_en": "The manager had seen it from the bar and was already on his way. He told the man, without raising his voice: \"the tonic mistake we fix; disrespecting my team, we don't\". The man paid and left. One of his friends came back to the bar to apologise to you.",
+     "tarea": [
+      "Ha fallado: hay que aguantar lo que venga.",
+      "Pide perdón una y otra vez.",
+      "Termina el turno con la frase en la cabeza."
+     ],
+     "tarea_en": [
+      "He made a mistake: he must take whatever comes.",
+      "Apologises again and again.",
+      "Ends the shift with the words in his head."
+     ],
+     "persona": [
+      "Ha fallado: el error es suyo, el insulto no.",
+      "Pone el límite con calma y llama al encargado.",
+      "El encargado da la cara. Él sigue con sus mesas."
+     ],
+     "persona_en": [
+      "He made a mistake: the error is his, the insult is not.",
+      "Sets the limit calmly and calls the manager.",
+      "The manager steps in. He carries on with his tables."
+     ],
+     "frase": "Hacerte cargo del error no te obliga a cargar con insultos. Pon el límite con calma y pide respaldo.",
+     "frase_en": "Owning the mistake does not mean carrying insults. Set the limit calmly and ask for backup.",
+     "consigna": "Si alguien cruza la línea hoy, no la discutas: llama al encargado.",
+     "consigna_en": "If anyone crosses the line today, do not argue it: call the manager.",
+     "pregunta": "¿Tuviste que poner algún límite?",
+     "pregunta_en": "Did you have to set a limit?",
+     "resp": [
+      "Sí, y me respaldaron",
+      "Sí, y lo pasé mal",
+      "No"
+     ],
+     "resp_en": [
+      "Yes, and I was backed",
+      "Yes, and it was hard",
+      "No"
+     ]
+    },
+    {
+     "id": "m6d6",
+     "n": 6,
+     "idea": "Comprueba y cierra bien",
+     "idea_en": "Check and close well",
+     "t": "La mesa del principal frío",
+     "t_en": "The table with the cold main",
+     "esc": "Cena de empresa, sesenta personas, 23:15. En la mesa 6, el principal llegó frío. Lo cambiaste en diez minutos y pediste disculpas. Ahora es el café y el organizador, que estaba en esa mesa, se acerca a la barra a cerrar la cuenta del evento contigo.",
+     "esc_en": "Company dinner, sixty guests, 23:15. At table 6, the main course arrived cold. You replaced it within ten minutes and apologised. Now it is coffee time and the organiser, who was at that table, comes to the bar to settle the event bill with you.",
+     "opts": [
+      {
+       "t": "Le doy las gracias por avisar y le pregunto si el segundo llegó como debía.",
+       "t_en": "I thank him for telling us and ask if the replacement came out right.",
+       "v": "mejor",
+       "fb": "Compruebas que el arreglo funcionó y cierras el tema con una frase. Él se va con la última impresión buena.",
+       "fb_en": "You check the fix worked and close the subject in one sentence. He leaves with a good last impression."
+      },
+      {
+       "t": "No lo menciono. Ya está arreglado y no quiero recordarle lo malo.",
+       "t_en": "I do not mention it. It is fixed and I do not want to remind him of the bad part.",
+       "v": "vale",
+       "fb": "No es un error, pero lo dejas abierto. No sabes si el cambio le convenció.",
+       "fb_en": "Not a mistake, but you leave it open. You do not know whether the replacement satisfied him."
+      },
+      {
+       "t": "Le pido disculpas de nuevo, largo, y le ofrezco una ronda de chupitos para su mesa.",
+       "t_en": "I apologise again at length and offer a round of shots for his table.",
+       "v": "no",
+       "fb": "Reabres algo que estaba cerrado y lo haces más grande. Y la ronda no la ha pedido nadie.",
+       "fb_en": "You reopen something that was closed and make it bigger. And nobody asked for the round."
+      },
+      {
+       "t": "Le descuento los diez principales de la mesa 6 de la factura sin consultarlo.",
+       "t_en": "I take the ten mains for table 6 off the bill without checking with anyone.",
+       "v": "no",
+       "fb": "Regalas lo que no es tuyo y sin saber si hacía falta. El fallo ya estaba resuelto.",
+       "fb_en": "You give away what is not yours without knowing if it was needed. The mistake was already solved."
+      }
+     ],
+     "nosabias": "Al organizador le había preocupado toda la noche que su director estuviera en esa mesa. Cuando le preguntaste, dijo: «el segundo estaba buenísimo, mi director repitió pan». Reservó la cena de Navidad antes de irse.",
+     "nosabias_en": "The organiser had worried all night because his director was at that table. When you asked, he said: \"the second one was excellent, my director had more bread\". He booked the Christmas dinner before leaving.",
+     "tarea": [
+      "El fallo se arregló: tema cerrado.",
+      "Cobra sin mencionarlo.",
+      "No sabe si el organizador se fue contento."
+     ],
+     "tarea_en": [
+      "The mistake was fixed: subject closed.",
+      "Takes payment without mentioning it.",
+      "Does not know whether the organiser left happy."
+     ],
+     "persona": [
+      "El fallo se arregló: falta comprobarlo.",
+      "Una frase: gracias y «¿llegó bien?».",
+      "Sabe que sí. Y él también sabe que alguien se acordó."
+     ],
+     "persona_en": [
+      "The mistake was fixed: it still needs checking.",
+      "One sentence: thanks, and \"did it come out right?\".",
+      "He knows it did. And the guest knows someone remembered."
+     ],
+     "frase": "Un fallo no está resuelto hasta que compruebas que el arreglo funcionó. Ciérralo con una frase, sin hacerlo más grande.",
+     "frase_en": "A mistake is not solved until you check the fix worked. Close it with one sentence, without making it bigger.",
+     "consigna": "Si arreglas algo hoy, vuelve después a comprobar que quedó bien.",
+     "consigna_en": "If you fix something today, go back afterwards to check it turned out well.",
+     "pregunta": "¿Volviste a comprobar?",
+     "pregunta_en": "Did you go back to check?",
+     "resp": [
+      "Sí",
+      "Se me olvidó",
+      "No hubo nada que arreglar"
+     ],
+     "resp_en": [
+      "Yes",
+      "I forgot",
+      "There was nothing to fix"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "generosidad",
+   "n": 7,
+   "t": "Generosidad a medida",
+   "t_en": "Tailored generosity",
+   "sub": "el gesto pequeño que sólo tiene sentido para esa persona",
+   "sub_en": "the small gesture that only makes sense for that person",
+   "intro": "Esta semana va de dar. No de invitar a todo el mundo a lo mismo, sino del gesto pequeño que sólo encaja con una persona. Un chupito para todos no lo recuerda nadie; algo pensado para uno, sí. Y a veces el mejor gesto es no hacer ninguno.",
+   "intro_en": "This week is about giving. Not treating everyone to the same thing, but the small gesture that fits only one person. A round of shots for everyone, nobody remembers; something meant for one, they do. And sometimes the best gesture is none at all.",
+   "dias": [
+    {
+     "id": "m7d1",
+     "n": 1,
+     "idea": "Lo que le gusta a él",
+     "idea_en": "What he likes",
+     "t": "El pan",
+     "t_en": "The bread",
+     "esc": "Bistró, 14:20. Un hombre de unos sesenta y cinco años, solo. Ha pedido más pan dos veces. La segunda vez parte un trozo, mira la miga, lo huele y te pregunta: «¿esto lo hacéis aquí? ¿qué harina lleva?». El pan viene de una panadería del barrio.",
+     "esc_en": "Bistro, 14:20. A man of about sixty five, alone. He has asked for more bread twice. The second time he breaks a piece, looks at the crumb, smells it and asks: \"do you make this here? what flour is it?\". The bread comes from a local bakery.",
+     "opts": [
+      {
+       "t": "Le digo que es de una panadería de fuera y le traigo otra cesta.",
+       "t_en": "I tell him it is from an outside bakery and bring him another basket.",
+       "v": "vale",
+       "fb": "Contestas y le das más. Pero su pregunta no era cuánto pan, era de dónde.",
+       "fb_en": "You answer and give him more. But his question was not how much bread, it was where from."
+      },
+      {
+       "t": "Le invito al postre, que se nota que está disfrutando.",
+       "t_en": "I treat him to dessert, since he is clearly enjoying himself.",
+       "v": "no",
+       "fb": "Un regalo que le daría a cualquiera. No tiene nada que ver con lo que te ha preguntado.",
+       "fb_en": "A gift you could give anyone. It has nothing to do with what he asked."
+      },
+      {
+       "t": "Le apunto en una tarjeta la panadería y la harina, para que se la lleve.",
+       "t_en": "I note the bakery and the flour on a card for him to take.",
+       "v": "mejor",
+       "fb": "No cuesta nada y sólo le sirve a él. Responde a lo que de verdad quería saber.",
+       "fb_en": "It costs nothing and only makes sense for him. It answers what he really wanted to know."
+      },
+      {
+       "t": "Le pido a cocina una barra entera para que se la lleve a casa de regalo.",
+       "t_en": "I ask the kitchen for a whole loaf for him to take home as a gift.",
+       "v": "vale",
+       "fb": "Generoso y bien encaminado, pero más grande de lo que hace falta. Y se come el pan, no aprende de dónde sale.",
+       "fb_en": "Generous and on the right track, but bigger than needed. And he eats the bread instead of learning where it comes from."
+      }
+     ],
+     "nosabias": "Se jubiló en marzo y lleva meses intentando hacer pan de masa madre en casa; no le sube. El sábado siguiente fue a la panadería con la tarjeta en la mano. El panadero le regaló un poco de su masa madre.",
+     "nosabias_en": "He retired in March and has spent months trying to make sourdough at home; it will not rise. The following Saturday he went to the bakery with the card in his hand. The baker gave him some of his starter.",
+     "tarea": [
+      "Oye «más pan» y trae más pan.",
+      "Contesta la pregunta de pasada.",
+      "Él se lleva una buena comida."
+     ],
+     "tarea_en": [
+      "Hears \"more bread\" and brings more bread.",
+      "Answers the question in passing.",
+      "He leaves with a good meal."
+     ],
+     "persona": [
+      "Oye «¿qué harina lleva?» y entiende que le interesa.",
+      "Le apunta la panadería y la harina.",
+      "Él se lleva la comida y una dirección."
+     ],
+     "persona_en": [
+      "Hears \"what flour is it?\" and understands it matters to him.",
+      "Writes down the bakery and the flour.",
+      "He leaves with the meal and an address."
+     ],
+     "frase": "El mejor regalo responde a lo que la persona ya ha mostrado que le importa. Suele costar poco.",
+     "frase_en": "The best gift answers what the person has already shown they care about. It usually costs little.",
+     "consigna": "Busca qué le interesa de verdad a un huésped y dale algo pequeño que tenga que ver con eso.",
+     "consigna_en": "Find what really interests one guest and give them something small connected to it.",
+     "pregunta": "¿Qué le diste?",
+     "pregunta_en": "What did you give them?",
+     "resp": [
+      "Algo pensado para él",
+      "Algo general",
+      "Nada"
+     ],
+     "resp_en": [
+      "Something meant for them",
+      "Something general",
+      "Nothing"
+     ]
+    },
+    {
+     "id": "m7d2",
+     "n": 2,
+     "idea": "El gesto que no se nota",
+     "idea_en": "The gesture nobody sees",
+     "t": "La primera cita",
+     "t_en": "The first date",
+     "esc": "Bar de vinos, jueves, 21:00. Dos personas de unos treinta años. Al sentarse se han dado la mano. Se preguntan a qué se dedican y de dónde son. Cada uno mira el móvil un segundo al recibir la carta. Él te pregunta qué vino les recomiendas.",
+     "esc_en": "Wine bar, Thursday, 21:00. Two people in their thirties. They shook hands when they sat down. They ask each other what they do and where they are from. Each glances at their phone for a second when handed the list. He asks what wine you recommend.",
+     "opts": [
+      {
+       "t": "Les invito a dos copas de cava de bienvenida. Una ocasión así se celebra.",
+       "t_en": "I offer them two welcome glasses of cava. An occasion like this deserves it.",
+       "v": "no",
+       "fb": "Le pones nombre a lo que es. A ellos les incomoda que se note, y aún no saben si hay algo que celebrar.",
+       "fb_en": "You name what it is. They are uncomfortable that it shows, and they do not yet know if there is anything to celebrate."
+      },
+      {
+       "t": "Les recomiendo vino por copas en vez de botella, para que vayan probando.",
+       "t_en": "I suggest wine by the glass rather than a bottle, to try as they go.",
+       "v": "mejor",
+       "fb": "Nadie se ata a una botella entera con alguien que acaba de conocer. Y si va bien, siempre hay otra copa.",
+       "fb_en": "Nobody gets tied to a whole bottle with someone they just met. And if it goes well, there is always another glass."
+      },
+      {
+       "t": "Les recomiendo un buen vino y les dejo espacio. Ningún gesto más.",
+       "t_en": "I recommend a good wine and give them space. No other gesture.",
+       "v": "vale",
+       "fb": "Discreto, y eso está bien. Se te escapa un detalle que les quitaba presión sin que se notara.",
+       "fb_en": "Discreet, and that is good. You miss a detail that would have eased the pressure without anyone noticing."
+      },
+      {
+       "t": "Al final, les saco un postre para compartir con dos cucharas, de la casa.",
+       "t_en": "At the end, I bring them a dessert to share with two spoons, on the house.",
+       "v": "no",
+       "fb": "Un gesto pensado para una pareja que todavía no lo es. Los obliga a reírse por compromiso.",
+       "fb_en": "A gesture meant for a couple who are not one yet. It forces them to laugh it off."
+      }
+     ],
+     "nosabias": "Él le había dicho a un amigo que, si no iba bien, se iba después de la primera copa. Ella había dicho lo mismo a su hermana. Se quedaron tres copas cada uno. Al irse, él preguntó cómo se llamaba el tercer vino.",
+     "nosabias_en": "He had told a friend that if it went badly he would leave after the first glass. She had told her sister the same. They stayed for three glasses each. On the way out he asked the name of the third wine.",
+     "tarea": [
+      "Ve una primera cita y quiere hacerla especial.",
+      "Cava invitado y un comentario.",
+      "Ellos se ríen por educación, y se tensan."
+     ],
+     "tarea_en": [
+      "Sees a first date and wants to make it special.",
+      "Free cava and a comment.",
+      "They laugh politely, and tense up."
+     ],
+     "persona": [
+      "Ve una primera cita y piensa en qué les quita presión.",
+      "Vino por copas. Nada más.",
+      "Cada copa es una decisión libre. Deciden tres veces quedarse."
+     ],
+     "persona_en": [
+      "Sees a first date and thinks about what eases the pressure.",
+      "Wine by the glass. Nothing else.",
+      "Each glass is a free decision. Three times, they choose to stay."
+     ],
+     "frase": "La generosidad a medida a veces no parece un regalo. Es quitarle a alguien un peso que no ha dicho que lleva.",
+     "frase_en": "Tailored generosity sometimes does not look like a gift. It is lifting a weight someone has not said they carry.",
+     "consigna": "Busca una mesa a la que puedas ponerle las cosas más fáciles sin que se note.",
+     "consigna_en": "Find one table you can make things easier for without it showing.",
+     "pregunta": "¿Lo notaron?",
+     "pregunta_en": "Did they notice?",
+     "resp": [
+      "No, y funcionó",
+      "Sí, y les gustó",
+      "No encontré la mesa"
+     ],
+     "resp_en": [
+      "No, and it worked",
+      "Yes, and they liked it",
+      "I did not find the table"
+     ]
+    },
+    {
+     "id": "m7d3",
+     "n": 3,
+     "idea": "No regales por simpatía",
+     "idea_en": "Do not give because you like them",
+     "t": "La mesa simpática",
+     "t_en": "The fun table",
+     "esc": "Terraza frente al mar, sábado, 22:30. La mesa 2: cuatro amigos que bromean contigo desde que se sentaron, te preguntan el nombre y piden otra botella. Te apetece invitarles a una ronda. La mesa 3: una pareja de unos setenta y cinco años, callados, que no te han pedido nada. En la nota de su reserva pone «50 aniversario».",
+     "esc_en": "Seafront terrace, Saturday, 22:30. Table 2: four friends who have joked with you since they sat down, asked your name and ordered another bottle. You feel like treating them to a round. Table 3: a couple of about seventy five, quiet, who have asked you for nothing. Their booking note says \"50th anniversary\".",
+     "opts": [
+      {
+       "t": "Lo consulto con el encargado: el gesto, para la mesa 3 y su aniversario.",
+       "t_en": "I check with the manager: the gesture goes to table 3, for the anniversary.",
+       "v": "mejor",
+       "fb": "El gesto va a quien tiene un motivo, no a quien te cae bien. Y lo consultas, porque no es tuyo.",
+       "fb_en": "The gesture goes to whoever has a reason, not whoever you like. And you check, because it is not yours to give."
+      },
+      {
+       "t": "Invito a la mesa 2. Se lo han ganado y van a volver.",
+       "t_en": "I treat table 2. They have earned it and they will come back.",
+       "v": "no",
+       "fb": "Regalas por simpatía con lo que no es tuyo. La mesa 3 ve la ronda llegar a la de al lado.",
+       "fb_en": "You give because you like them, with what is not yours. Table 3 watches the round arrive next door."
+      },
+      {
+       "t": "Invito a las dos mesas, para que nadie se sienta menos.",
+       "t_en": "I treat both tables, so nobody feels left out.",
+       "v": "no",
+       "fb": "Un gesto para todos no es para nadie. Y las bodas de oro se quedan en una ronda más.",
+       "fb_en": "A gesture for everyone is for nobody. And the golden anniversary becomes just another round."
+      },
+      {
+       "t": "No invito a nadie. Atiendo a las dos mesas igual de bien, y con eso basta.",
+       "t_en": "I treat nobody, and serve both tables equally well. That is enough tonight.",
+       "v": "vale",
+       "fb": "Justo y correcto. Pero tenías en la nota un motivo de verdad para un gesto.",
+       "fb_en": "Fair and correct. But the booking note gave you a real reason for a gesture."
+      }
+     ],
+     "nosabias": "Habían celebrado allí su boda, cuando la terraza era un merendero. No lo habían dicho al llegar porque «no queremos molestar». El encargado les llevó dos copas de moscatel y les dijo que la casa se alegraba de tenerlos. Ella lloró un poco. La mesa 2 aplaudió.",
+     "nosabias_en": "They had held their wedding there, when the terrace was a picnic spot. They had not said so on arrival because \"we don't want to be a bother\". The manager brought them two glasses of moscatel and said the house was glad to have them. She cried a little. Table 2 applauded.",
+     "tarea": [
+      "Ve una mesa que le hace reír.",
+      "Les invita a una ronda.",
+      "La pareja de la mesa 3 pide la cuenta pronto."
+     ],
+     "tarea_en": [
+      "Sees a table that makes him laugh.",
+      "Treats them to a round.",
+      "The couple at table 3 ask for the bill early."
+     ],
+     "persona": [
+      "Ve una mesa simpática y lee una nota.",
+      "El gesto, consultado, para la mesa 3.",
+      "Toda la terraza celebra unas bodas de oro."
+     ],
+     "persona_en": [
+      "Sees a fun table and reads a note.",
+      "The gesture, approved, goes to table 3.",
+      "The whole terrace celebrates a golden anniversary."
+     ],
+     "frase": "Que una mesa te caiga bien no es motivo para regalar. Regala cuando hay un motivo que sea suyo, y consúltalo.",
+     "frase_en": "Liking a table is no reason to give things away. Give when there is a reason that belongs to them, and check first.",
+     "consigna": "Lee las notas de las reservas de hoy antes del servicio.",
+     "consigna_en": "Read today's booking notes before service.",
+     "pregunta": "¿Había algo en las notas?",
+     "pregunta_en": "Was there anything in the notes?",
+     "resp": [
+      "Sí, y lo usé",
+      "Sí, pero no hice nada",
+      "No había notas"
+     ],
+     "resp_en": [
+      "Yes, and I used it",
+      "Yes, but I did nothing",
+      "There were no notes"
+     ]
+    },
+    {
+     "id": "m7d4",
+     "n": 4,
+     "idea": "Un detalle no vale un riesgo",
+     "idea_en": "No gesture is worth a risk",
+     "t": "La ronda de la casa",
+     "t_en": "The round on the house",
+     "esc": "Bistró, viernes, 16:50. Comida de despedida de un grupo de trabajo: ocho personas, larga sobremesa. Uno ha bebido agua toda la comida porque conduce. Otra dijo al pedir que está tomando antibiótico. Piden la cuenta. El encargado te dice que puedes invitarles a algo para cerrar.",
+     "esc_en": "Bistro, Friday, 16:50. A work farewell lunch: eight people, long afternoon. One has drunk water the whole meal because he is driving. Another said when ordering that she is on antibiotics. They ask for the bill. The manager tells you that you can treat them to something to finish.",
+     "opts": [
+      {
+       "t": "Saco ocho chupitos de la casa. Es una despedida, y el que no quiera que no beba.",
+       "t_en": "I bring out eight house shots. It is a farewell, and whoever does not want one can leave it.",
+       "v": "no",
+       "fb": "Un chupito delante de quien conduce y de quien toma antibiótico les obliga a decir que no delante de todos.",
+       "fb_en": "A shot in front of someone driving and someone on antibiotics forces them to refuse in front of everyone."
+      },
+      {
+       "t": "Saco chupitos para seis. A los dos que no pueden beber, no les pongo nada.",
+       "t_en": "I bring shots for six. For the two who cannot drink, I put nothing.",
+       "v": "no",
+       "fb": "Evitas el riesgo y los dejas fuera del brindis de su propia despedida.",
+       "fb_en": "You avoid the risk and leave them out of the toast at their own farewell."
+      },
+      {
+       "t": "Con dos que no pueden beber, mejor no invito a nada. Así nadie queda mal.",
+       "t_en": "With two who cannot drink, I would rather treat nobody. That way nobody is left out.",
+       "v": "vale",
+       "fb": "Nadie corre riesgo ni queda fuera. Pero el gesto tenía forma de hacerse bien.",
+       "fb_en": "Nobody is at risk or left out. But there was a way to do the gesture well."
+      },
+      {
+       "t": "Ofrezco a cada uno elegir lo suyo: chupito, café o algo sin alcohol.",
+       "t_en": "I let each one choose: a shot, a coffee or something non alcoholic.",
+       "v": "mejor",
+       "fb": "El mismo gesto para todos, a la medida de cada uno. Nadie tiene que dar explicaciones.",
+       "fb_en": "The same gesture for everyone, fitted to each person. Nobody has to explain themselves."
+      }
+     ],
+     "nosabias": "El que conducía era quien se despedía: se jubilaba ese día. Le habían preguntado diez veces si de verdad no quería una copa. Pidió un café con hielo y brindó con él. Fue el único brindis de la comida en el que no tuvo que decir «no, que conduzco».",
+     "nosabias_en": "The driver was the one leaving: he retired that day. He had been asked ten times whether he really did not want a drink. He ordered an iced coffee and toasted with it. It was the only toast of the meal where he did not have to say \"no, I'm driving\".",
+     "tarea": [
+      "Tiene permiso para invitar: ronda para todos.",
+      "Ocho chupitos iguales en la bandeja.",
+      "Dos se quedan sin tocar, y todos lo ven."
+     ],
+     "tarea_en": [
+      "Has permission to treat them: a round for all.",
+      "Eight identical shots on the tray.",
+      "Two stay untouched, and everyone sees."
+     ],
+     "persona": [
+      "Tiene permiso para invitar y recuerda el agua y el antibiótico.",
+      "Cada uno elige lo suyo.",
+      "Brindan los ocho, cada uno con lo que puede tomar."
+     ],
+     "persona_en": [
+      "Has permission to treat them and remembers the water and the antibiotics.",
+      "Each chooses their own.",
+      "All eight toast, each with what they can have."
+     ],
+     "frase": "Un detalle para todos sólo es generoso si cada uno puede aceptarlo. Antes del gesto, recuerda quién no puede.",
+     "frase_en": "A gesture for everyone is only generous if each person can accept it. Before the gesture, remember who cannot.",
+     "consigna": "Antes de invitar a algo, piensa en quién de la mesa no podría tomarlo.",
+     "consigna_en": "Before treating a table, think of who at it could not have it.",
+     "pregunta": "¿Invitaste a algo?",
+     "pregunta_en": "Did you treat anyone?",
+     "resp": [
+      "Sí, a la medida de cada uno",
+      "Sí, lo mismo para todos",
+      "No"
+     ],
+     "resp_en": [
+      "Yes, fitted to each one",
+      "Yes, the same for all",
+      "No"
+     ]
+    },
+    {
+     "id": "m7d5",
+     "n": 5,
+     "idea": "Generosidad es tiempo, no sólo cosas",
+     "idea_en": "Generosity is time, not just things",
+     "t": "La puesta de sol",
+     "t_en": "The sunset",
+     "esc": "Local de comida rápida de calidad, 19:10. Una mujer de unos treinta años, sola, con mochila, acaba de pedir para tomar aquí. Mientras pagas el ticket te pregunta: «es mi última noche, ¿dónde se ve bien la puesta de sol?». El sol se pone en cuarenta minutos. Hay un mirador a diez minutos andando.",
+     "esc_en": "Quality fast food place, 19:10. A woman of about thirty, alone, with a backpack, has just ordered to eat in. As you ring it up she asks: \"it's my last night, where's a good place to watch the sunset?\". The sun sets in forty minutes. There is a viewpoint ten minutes' walk away.",
+     "opts": [
+      {
+       "t": "Le digo el nombre del mirador y por dónde se va.",
+       "t_en": "I tell her the name of the viewpoint and the way there.",
+       "v": "vale",
+       "fb": "Contestas bien. Pero se va a comer aquí y le quedan cuarenta minutos.",
+       "fb_en": "A good answer. But she is about to eat here and has forty minutes left."
+      },
+      {
+       "t": "Le pongo el pedido para llevar y le explico cómo llegar al mirador.",
+       "t_en": "I switch her order to takeaway and tell her how to reach the viewpoint.",
+       "v": "mejor",
+       "fb": "Juntas las dos cosas que quería: cenar y ver el sol. Le das su última noche entera.",
+       "fb_en": "You put together the two things she wanted: dinner and the sun. You give her the whole of her last night."
+      },
+      {
+       "t": "Le invito al postre. Viaja sola y es su última noche.",
+       "t_en": "I treat her to dessert. She is travelling alone and it is her last night.",
+       "v": "no",
+       "fb": "Un regalo por pena. Ella no te ha pedido compañía ni consuelo: te ha pedido un sitio.",
+       "fb_en": "A gift out of pity. She did not ask for company or comfort: she asked for a place."
+      },
+      {
+       "t": "Le digo que con lo que tarda la comida no llega, que lo mire otro día.",
+       "t_en": "I tell her that with the time the food takes, she will not make it, so another day.",
+       "v": "no",
+       "fb": "Es su última noche. «Otro día» no existe.",
+       "fb_en": "It is her last night. \"Another day\" does not exist."
+      }
+     ],
+     "nosabias": "Llevaba tres semanas viajando y no había visto ni una puesta de sol: siempre estaba en algún autobús. Se comió la cena sentada en el muro del mirador. Te mandó una foto por la reseña del local.",
+     "nosabias_en": "She had been travelling for three weeks without seeing a single sunset: she was always on some bus. She ate her dinner sitting on the viewpoint wall. She sent you a photo through the place's review page.",
+     "tarea": [
+      "Oye una pregunta de turista.",
+      "Da la dirección del mirador.",
+      "Ella cena aquí y llega cuando ya es de noche."
+     ],
+     "tarea_en": [
+      "Hears a tourist question.",
+      "Gives directions to the viewpoint.",
+      "She eats here and arrives after dark."
+     ],
+     "persona": [
+      "Oye «mi última noche» y mira el reloj.",
+      "Cambia el pedido a llevar y le dice cómo llegar.",
+      "Ella cena viendo el sol."
+     ],
+     "persona_en": [
+      "Hears \"my last night\" and checks the clock.",
+      "Switches the order to takeaway and gives directions.",
+      "She eats watching the sun."
+     ],
+     "frase": "A veces lo más generoso no es dar algo, sino reorganizar lo que ya tiene para que le quepa lo que quiere.",
+     "frase_en": "Sometimes the most generous thing is not to give something, but to rearrange what they already have so that what they want fits.",
+     "consigna": "Ayuda a alguien con algo que no esté en la carta.",
+     "consigna_en": "Help someone with something that is not on the menu.",
+     "pregunta": "¿Con qué ayudaste?",
+     "pregunta_en": "What did you help with?",
+     "resp": [
+      "Algo que le cambió el día",
+      "Algo pequeño",
+      "No se dio"
+     ],
+     "resp_en": [
+      "Something that changed their day",
+      "Something small",
+      "It did not come up"
+     ]
+    },
+    {
+     "id": "m7d6",
+     "n": 6,
+     "idea": "El gesto que sólo es suyo",
+     "idea_en": "The gesture that is only theirs",
+     "t": "El que trabajó aquí",
+     "t_en": "The man who worked here",
+     "esc": "Restaurante gastronómico de un hotel, 14:30. Un hombre de unos ochenta años almuerza con su hija. Al servirle el vino te dice: «yo serví en este hotel, en el setenta y nueve. Entonces el comedor estaba donde ahora está la piscina». En el pasillo que lleva a la sala hay fotos antiguas del hotel y de su personal.",
+     "esc_en": "A hotel's fine dining restaurant, 14:30. A man of about eighty is having lunch with his daughter. As you pour his wine he says: \"I waited tables in this hotel in seventy nine. Back then the dining room was where the pool is now\". In the corridor leading to the room there are old photos of the hotel and its staff.",
+     "opts": [
+      {
+       "t": "Le invito al café y al postre, por los viejos tiempos.",
+       "t_en": "I treat him to coffee and dessert, for old times' sake.",
+       "v": "no",
+       "fb": "Un regalo amable que le harías a cualquiera. Lo que te ha contado pedía otra cosa.",
+       "fb_en": "A kind gift you would give anyone. What he told you asked for something else."
+      },
+      {
+       "t": "Le digo que qué bonito, y le pregunto cómo era trabajar aquí en aquellos años.",
+       "t_en": "I say how lovely, and ask him what it was like working here back then.",
+       "v": "vale",
+       "fb": "Le escuchas, y eso ya es mucho. Tenías a veinte metros algo que sólo tiene sentido para él.",
+       "fb_en": "You listen, which is already a lot. Twenty metres away you had something that only makes sense for him."
+      },
+      {
+       "t": "Aviso al maître para que pase a saludarle y le haga un poco de caso.",
+       "t_en": "I let the maître d' know, so he can come by and make a bit of a fuss of him.",
+       "v": "vale",
+       "fb": "Bien pensado. Pero el saludo del maître se lo hace a muchos; lo que buscaba era su propia historia.",
+       "fb_en": "Well thought. But the maître d' greets many guests; what he was after was his own story."
+      },
+      {
+       "t": "Cuando haya calma, le ofrezco ir a ver las fotos antiguas del pasillo.",
+       "t_en": "When it's quiet, I offer to take him to see the old photos in the corridor.",
+       "v": "mejor",
+       "fb": "Un gesto que no cuesta nada y que no le puedes hacer a nadie más. Su historia, en la pared.",
+       "fb_en": "A gesture that costs nothing and that you could do for nobody else. His story, on the wall."
+      }
+     ],
+     "nosabias": "Él sale en una de las fotos: el tercero por la izquierda, con chaquetilla blanca, en la inauguración de la terraza. No lo sabía. Su hija le hizo una foto señalándose a sí mismo. Él te dijo: «¿ves? las bandejas eran de plata».",
+     "nosabias_en": "He is in one of the photos: third from the left, in a white jacket, at the opening of the terrace. He did not know. His daughter took a photo of him pointing at himself. He told you: \"see? the trays were silver\".",
+     "tarea": [
+      "Oye una anécdota y sonríe.",
+      "Invita al café, por amabilidad.",
+      "Él agradece el café. Uno más."
+     ],
+     "tarea_en": [
+      "Hears an anecdote and smiles.",
+      "Offers the coffee, out of kindness.",
+      "He thanks you for the coffee. One more."
+     ],
+     "persona": [
+      "Oye «yo serví aquí» y recuerda las fotos.",
+      "Le acompaña al pasillo cuando hay calma.",
+      "Él se encuentra en la pared."
+     ],
+     "persona_en": [
+      "Hears \"I waited tables here\" and remembers the photos.",
+      "Walks him to the corridor when it is quiet.",
+      "He finds himself on the wall."
+     ],
+     "frase": "El mejor gesto conecta lo que el huésped te ha contado con algo que tú tienes a mano. No suele estar en la carta.",
+     "frase_en": "The best gesture connects what the guest told you with something you have at hand. It is rarely on the menu.",
+     "consigna": "Cuando un huésped te cuente algo suyo, piensa qué tienes a mano que tenga que ver con eso.",
+     "consigna_en": "When a guest tells you something personal, think what you have at hand that connects to it.",
+     "pregunta": "¿Encontraste algo a mano?",
+     "pregunta_en": "Did you find something at hand?",
+     "resp": [
+      "Sí",
+      "Lo pensé después",
+      "No me contaron nada"
+     ],
+     "resp_en": [
+      "Yes",
+      "I thought of it afterwards",
+      "Nobody told me anything"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "equipo",
+   "n": 8,
+   "t": "El compañero también es tu mesa",
+   "t_en": "Your colleague is your table too",
+   "sub": "la hospitalidad que no ve el huésped",
+   "sub_en": "the hospitality the guest never sees",
+   "intro": "Esta semana va de dentro. Todo lo que has practicado con los huéspedes vale con tu equipo: mirar, preguntar, ajustar, escuchar, hacerte cargo. El huésped no ve el office, pero nota en la sala cómo os tratáis dentro.",
+   "intro_en": "This week is about the inside. Everything you have practised with guests applies to your team: looking, asking, adjusting, listening, owning it. The guest never sees the back of house, but feels in the room how the team treats each other.",
+   "dias": [
+    {
+     "id": "m8d1",
+     "n": 1,
+     "idea": "Ayuda sin que te lo pidan",
+     "idea_en": "Help without being asked",
+     "t": "Cuatro mesas a la vez",
+     "t_en": "Four tables at once",
+     "esc": "Restaurante del hotel, cena, 21:30. A tu compañero le acaban de sentar cuatro mesas a la vez en su rango. Está tomando nota en la primera, con las otras tres mirando hacia él. Tus mesas están servidas: todas entre el principal y el postre.",
+     "esc_en": "Hotel restaurant, dinner, 21:30. Your colleague has just had four tables seated at once in his section. He is taking the order at the first, with the other three looking towards him. Your tables are served: all between mains and dessert.",
+     "opts": [
+      {
+       "t": "Llevo agua y pan a sus tres mesas y luego se lo digo a él.",
+       "t_en": "I take water and bread to his three tables, then tell him.",
+       "v": "mejor",
+       "fb": "Las mesas se sienten atendidas, él gana cinco minutos y sabe lo que has hecho. No pisas su rango.",
+       "fb_en": "The tables feel looked after, he gains five minutes and knows what you did. You do not take over his section."
+      },
+      {
+       "t": "Al pasar por su lado le digo: «si necesitas algo, dímelo».",
+       "t_en": "Walking past, I tell him: \"if you need anything, just say\".",
+       "v": "vale",
+       "fb": "Buena intención, pero le das una tarea más: pensar qué pedirte. Ahora mismo no tiene ni un segundo.",
+       "fb_en": "Good intention, but you give him another task: working out what to ask you. Right now he has no time at all."
+      },
+      {
+       "t": "Voy a sus mesas y les tomo nota yo, para que vaya más rápido.",
+       "t_en": "I go to his tables and take their orders myself, to speed things up.",
+       "v": "no",
+       "fb": "Ayudas a la sala y le desordenas el rango. Quizá alguna mesa tenía algo que sólo él sabía.",
+       "fb_en": "You help the room and scramble his section. One of those tables may have had something only he knew."
+      },
+      {
+       "t": "Aprovecho para repasar copas y preparar mis postres. Cada uno con su rango.",
+       "t_en": "I use the time to polish glasses and prepare my desserts. Each to their own section.",
+       "v": "no",
+       "fb": "Tus mesas no necesitan nada ahora mismo. Las suyas, sí.",
+       "fb_en": "Your tables need nothing right now. His do."
+      }
+     ],
+     "nosabias": "Una de sus mesas era un cliente que había escrito una queja el mes anterior por la espera. Esta vez tuvo agua y pan en un minuto. Tu compañero te devolvió el favor dos horas después, sin decir nada, con tu mesa de seis.",
+     "nosabias_en": "One of his tables was a guest who had written a complaint the month before about waiting. This time he had water and bread within a minute. Your colleague returned the favour two hours later, without a word, with your table of six.",
+     "tarea": [
+      "Sus mesas están servidas: rango cubierto.",
+      "Aprovecha para adelantar lo suyo.",
+      "El compañero va desbordado y tres mesas esperan."
+     ],
+     "tarea_en": [
+      "His tables are served: section covered.",
+      "Uses the time to get ahead on his own work.",
+      "His colleague is swamped and three tables wait."
+     ],
+     "persona": [
+      "Sus mesas están servidas; las del compañero, no.",
+      "Agua, pan y «enseguida les atiende».",
+      "Las mesas esperan tranquilas. El compañero respira."
+     ],
+     "persona_en": [
+      "His tables are served; his colleague's are not.",
+      "Water, bread and \"he'll be right with you\".",
+      "The tables wait calmly. His colleague breathes."
+     ],
+     "frase": "Si tienes un minuto libre y un compañero no, ese minuto es suyo. Ayuda en lo que no le quite el control, y cuéntaselo.",
+     "frase_en": "If you have a free minute and a colleague does not, that minute is theirs. Help where it does not take control away from them, and tell them.",
+     "consigna": "Una vez hoy, ayuda a un compañero sin que te lo pida, y díselo después.",
+     "consigna_en": "Once today, help a colleague without being asked, and tell them afterwards.",
+     "pregunta": "¿Ayudaste a alguien sin que te lo pidiera?",
+     "pregunta_en": "Did you help someone without being asked?",
+     "resp": [
+      "Sí",
+      "Quise, pero no pude",
+      "No hizo falta"
+     ],
+     "resp_en": [
+      "Yes",
+      "I wanted to, but could not",
+      "It was not needed"
+     ]
+    },
+    {
+     "id": "m8d2",
+     "n": 2,
+     "idea": "Lo que protege, lo primero del relevo",
+     "idea_en": "What protects comes first in the handover",
+     "t": "El relevo",
+     "t_en": "The handover",
+     "esc": "Terraza de playa, 16:00, cambio de turno. Te vas y te queda la mesa 9: tres amigas en la sobremesa. Una es celíaca; lo dijo al sentarse y está en la comanda. Han pedido cafés y la cuenta dividida en tres. Con el café la casa sirve unas pastas, que llevan harina de trigo. Llega tu compañera del turno de tarde.",
+     "esc_en": "Beach terrace, 16:00, shift change. You are leaving and table 9 is still yours: three friends lingering after lunch. One is coeliac; she said so when seated and it is on the ticket. They have ordered coffees and the bill split three ways. With coffee the house serves small biscuits, made with wheat flour. Your colleague from the afternoon shift arrives.",
+     "opts": [
+      {
+       "t": "«La 9 está en el café y quieren la cuenta en tres.» Lo demás está en la comanda.",
+       "t_en": "\"Table 9 is on coffee and wants the bill split three ways.\" The rest is on the ticket.",
+       "v": "limite",
+       "fb": "Pasas lo cómodo y dejas lo crítico en un papel. Las pastas salen con el café, antes de que nadie relea la comanda.",
+       "fb_en": "You hand over the easy part and leave the critical part on a ticket. The biscuits go out with the coffee before anyone rereads it."
+      },
+      {
+       "t": "Me quedo yo hasta que se vaya la 9, aunque salga más tarde.",
+       "t_en": "I stay until table 9 leaves, even if I finish late.",
+       "v": "vale",
+       "fb": "La mesa está segura contigo. Pero no siempre podrás quedarte, y un buen relevo vale lo mismo.",
+       "fb_en": "The table is safe with you. But you will not always be able to stay, and a good handover is worth the same."
+      },
+      {
+       "t": "Le digo primero lo de la celíaca y las pastas, luego lo demás, y se la presento.",
+       "t_en": "Coeliac and biscuits first, then the rest, and I introduce her to the table.",
+       "v": "mejor",
+       "fb": "Lo que puede hacer daño va primero y en voz alta. Y la mesa sabe quién las atiende ahora.",
+       "fb_en": "What can cause harm goes first and out loud. And the table knows who is looking after them now."
+      },
+      {
+       "t": "Me despido de la mesa y les digo que ahora les atiende mi compañera.",
+       "t_en": "I say goodbye to the table and tell them my colleague will look after them now.",
+       "v": "no",
+       "fb": "La mesa sabe del cambio y tu compañera no sabe nada de la mesa.",
+       "fb_en": "The table knows about the change and your colleague knows nothing about the table."
+      }
+     ],
+     "nosabias": "La pasta de la casa estaba en el plato de los cafés cuando tu compañera iba a salir. Por lo que le dijiste, la cambió por un bombón sin gluten antes de llegar a la mesa. La amiga celíaca dijo: «aquí da gusto, no hay que repetir las cosas».",
+     "nosabias_en": "The house biscuit was on the coffee saucer as your colleague was heading out. Because of what you told her, she swapped it for a gluten free chocolate before reaching the table. The coeliac friend said: \"it's a pleasure here, you never have to repeat yourself\".",
+     "tarea": [
+      "Se va: pasa lo que tiene pendiente.",
+      "Café y cuenta. Lo otro está en la comanda.",
+      "La pasta sale con el café, como siempre."
+     ],
+     "tarea_en": [
+      "He is leaving: hands over what is pending.",
+      "Coffee and bill. The rest is on the ticket.",
+      "The biscuit goes out with the coffee, as always."
+     ],
+     "persona": [
+      "Se va: pasa primero lo que puede hacer daño.",
+      "Celíaca y pastas; luego café y cuenta; y la presenta.",
+      "La mesa no nota el cambio de turno."
+     ],
+     "persona_en": [
+      "He is leaving: hands over first what can do harm.",
+      "Coeliac and biscuits; then coffee and bill; and introduces her.",
+      "The table does not notice the shift change."
+     ],
+     "frase": "En un relevo, lo primero que se dice es lo que puede hacer daño. Lo demás puede ir en la comanda; eso, nunca sólo en la comanda.",
+     "frase_en": "In a handover, the first thing said is what can cause harm. The rest can go on the ticket; that, never only on the ticket.",
+     "consigna": "En cada relevo de hoy, empieza por las alergias y lo crítico, en voz alta.",
+     "consigna_en": "In every handover today, start with allergies and critical points, out loud.",
+     "pregunta": "¿Empezaste los relevos por lo crítico?",
+     "pregunta_en": "Did you start handovers with the critical points?",
+     "resp": [
+      "Siempre",
+      "A veces",
+      "No hubo relevos"
+     ],
+     "resp_en": [
+      "Always",
+      "Sometimes",
+      "No handovers"
+     ]
+    },
+    {
+     "id": "m8d3",
+     "n": 3,
+     "idea": "El nuevo también es un huésped",
+     "idea_en": "The new colleague is a guest too",
+     "t": "Su primer servicio",
+     "t_en": "His first service",
+     "esc": "Boda, doscientos invitados, 22:00, pase del principal. Un camarero nuevo, primer servicio en la casa, sale con dos platos hacia la mesa 14. La 14 ya está servida: los platos son de la 12, que está esperando. Tú estás a tres metros, con las manos vacías.",
+     "esc_en": "Wedding, two hundred guests, 22:00, main course service. A new waiter, his first shift in the house, heads out with two plates towards table 14. Table 14 is already served: the plates are for table 12, which is waiting. You are three metres away, hands empty.",
+     "opts": [
+      {
+       "t": "Me acerco y le digo en voz baja «son de la 12», y me quedo cerca un pase más.",
+       "t_en": "I quietly tell him \"they're for 12\" and stay close for one more round.",
+       "v": "mejor",
+       "fb": "Corriges sin que nadie lo note y le acompañas un pase más. Así se aprende una sala.",
+       "fb_en": "You correct him without anyone noticing and stay with him for one more round. That is how you learn a room."
+      },
+      {
+       "t": "Le digo desde donde estoy: «¡esa no, la 12!».",
+       "t_en": "I call out from where I am: \"not that one, 12!\".",
+       "v": "no",
+       "fb": "Rápido y eficaz, y la mitad de la boda se entera de que es nuevo.",
+       "fb_en": "Fast and effective, and half the wedding finds out he is new."
+      },
+      {
+       "t": "Le cojo los platos y los llevo yo a la 12, que vamos con prisa.",
+       "t_en": "I take the plates from him and carry them to 12 myself, since we are rushed.",
+       "v": "vale",
+       "fb": "La 12 come a tiempo. Él se queda con las manos vacías sin saber dónde estaba la 12.",
+       "fb_en": "Table 12 eats on time. He is left empty handed without learning where 12 is."
+      },
+      {
+       "t": "Al acabar el pase le comento al maître que el nuevo todavía va bastante perdido.",
+       "t_en": "After the round I tell the maître d' that the new waiter is still lost.",
+       "v": "no",
+       "fb": "Informas de un problema que podías haber resuelto en cinco segundos a su lado.",
+       "fb_en": "You report a problem you could have solved in five seconds beside him."
+      }
+     ],
+     "nosabias": "Venía de trabajar en una cafetería y era su primer banquete. No había entendido el plano de mesas de la reunión de antes del servicio, y le daba vergüenza preguntar otra vez. Al final de la noche te preguntó a ti dónde estaba la 22. A ti, no al maître.",
+     "nosabias_en": "He came from working in a café and it was his first banquet. He had not understood the table plan at the pre service briefing and was embarrassed to ask again. Later that night he asked you where table 22 was. You, not the maître d'.",
+     "tarea": [
+      "Ve un error y lo corrige rápido.",
+      "En voz alta, o quitándole los platos.",
+      "El nuevo pasa el resto de la noche con miedo a moverse."
+     ],
+     "tarea_en": [
+      "Sees a mistake and corrects it fast.",
+      "Out loud, or by taking the plates.",
+      "The new waiter spends the rest of the night afraid to move."
+     ],
+     "persona": [
+      "Ve a alguien perdido en su primer servicio.",
+      "En voz baja, y se queda cerca un pase más.",
+      "El nuevo sabe a quién preguntar."
+     ],
+     "persona_en": [
+      "Sees someone lost on their first shift.",
+      "Quietly, and stays close for one more round.",
+      "The new waiter knows who to ask."
+     ],
+     "frase": "Al nuevo trátalo como a un huésped en su primera visita: que no se sienta perdido, y que nadie más lo note.",
+     "frase_en": "Treat the new colleague like a guest on their first visit: do not let them feel lost, and do not let anyone else notice.",
+     "consigna": "Si hay alguien nuevo hoy, dile una cosa útil que no venga en ninguna formación.",
+     "consigna_en": "If someone is new today, tell them one useful thing no training covers.",
+     "pregunta": "¿Había alguien nuevo?",
+     "pregunta_en": "Was there anyone new?",
+     "resp": [
+      "Sí, y le ayudé",
+      "Sí, pero no tuve ocasión",
+      "No"
+     ],
+     "resp_en": [
+      "Yes, and I helped",
+      "Yes, but I had no chance",
+      "No"
+     ]
+    },
+    {
+     "id": "m8d4",
+     "n": 4,
+     "idea": "El error del compañero, delante del cliente",
+     "idea_en": "A colleague's mistake, in front of the guest",
+     "t": "El pescado que no se había acabado",
+     "t_en": "The fish that had not run out",
+     "esc": "Bistró, 21:45. Estás en una mesa de dos de tu compañero, sirviendo el vino, mientras él toma nota. Ella pide el pescado del día y él le dice: «lo siento, se nos ha terminado». Hace dos minutos, en el pase, cocina te ha dicho que quedan dos raciones.",
+     "esc_en": "Bistro, 21:45. You are at a table for two in your colleague's section, pouring wine, while he takes the order. She asks for the fish of the day and he tells her: \"sorry, we've run out\". Two minutes ago at the pass, the kitchen told you there are two portions left.",
+     "opts": [
+      {
+       "t": "Le corrijo ahí mismo: «No, perdona, quedan dos».",
+       "t_en": "I correct him right there: \"No, sorry, there are two left\".",
+       "v": "no",
+       "fb": "La clienta tiene su pescado y tu compañero queda en evidencia delante de su mesa.",
+       "fb_en": "The guest gets her fish and your colleague is shown up in front of his own table."
+      },
+      {
+       "t": "No digo nada en la mesa y, al salir, le aviso a él en privado.",
+       "t_en": "I say nothing at the table and, once we're away, tell him privately.",
+       "v": "vale",
+       "fb": "Cuidas a tu compañero. Pero si ella ya ha pedido otra cosa, se queda sin lo que quería.",
+       "fb_en": "You look after your colleague. But if she has already ordered something else, she misses what she wanted."
+      },
+      {
+       "t": "Termino el vino y me voy. Es su mesa y su nota.",
+       "t_en": "I finish pouring and leave. It is his table and his order.",
+       "v": "no",
+       "fb": "Sabías algo que la clienta quería y tu compañero no. Te lo guardas.",
+       "fb_en": "You knew something the guest wanted and your colleague did not. You keep it to yourself."
+      },
+      {
+       "t": "«Lo confirmo un segundo en cocina.» Y vuelvo: «quedan dos».",
+       "t_en": "\"Let me check with the kitchen.\" I come back: \"there are two left\".",
+       "v": "mejor",
+       "fb": "La clienta tiene su pescado y nadie ha quedado mal. Lo de la información, se habla luego en el office.",
+       "fb_en": "The guest gets her fish and nobody looks bad. The information gap gets talked about later, in the back."
+      }
+     ],
+     "nosabias": "A tu compañero se lo dijeron al empezar el turno, cuando de verdad parecía que no quedaba. Cocina encontró dos raciones más en la cámara y sólo te lo dijo a ti. Él te dio las gracias en el office: «me has salvado la mesa».",
+     "nosabias_en": "Your colleague was told at the start of the shift, when it really did seem there was none left. The kitchen found two more portions in the cold room and only told you. He thanked you in the back: \"you saved my table\".",
+     "tarea": [
+      "Ve un error y lo corrige en el acto.",
+      "«No, quedan dos.»",
+      "La clienta come pescado. El compañero, mal rato."
+     ],
+     "tarea_en": [
+      "Sees a mistake and corrects it on the spot.",
+      "\"No, there are two left.\"",
+      "The guest gets fish. The colleague, a bad moment."
+     ],
+     "persona": [
+      "Ve un error y piensa en las dos personas.",
+      "Lo convierte en una buena noticia sin culpables.",
+      "La clienta come pescado y el compañero sigue con su mesa."
+     ],
+     "persona_en": [
+      "Sees a mistake and thinks of both people.",
+      "Turns it into good news without blame.",
+      "The guest gets fish and the colleague keeps his table."
+     ],
+     "frase": "Delante del cliente, el error de un compañero se arregla sin culpables. Lo que haya que hablar, se habla dentro.",
+     "frase_en": "In front of the guest, a colleague's mistake is fixed without blame. Whatever needs saying is said inside.",
+     "consigna": "Si ves un error de un compañero en sala, arréglalo sin señalarle.",
+     "consigna_en": "If you see a colleague's mistake on the floor, fix it without pointing at them.",
+     "pregunta": "¿Tuviste que hacerlo?",
+     "pregunta_en": "Did you have to?",
+     "resp": [
+      "Sí, y salió bien",
+      "Sí, y se notó",
+      "No"
+     ],
+     "resp_en": [
+      "Yes, and it went well",
+      "Yes, and it showed",
+      "No"
+     ]
+    },
+    {
+     "id": "m8d5",
+     "n": 5,
+     "idea": "Mira también a tu equipo",
+     "idea_en": "Watch your team too",
+     "t": "La compañera del café",
+     "t_en": "The colleague at the coffee station",
+     "esc": "Desayuno del hotel, 7:40, sala llena. Tu compañera de la cafetera no ha dicho una palabra desde que llegó. Se le ha caído una taza, ha servido dos cafés cambiados y ahora tiene los ojos rojos. Hay cola de comandas de café y tus mesas van bien.",
+     "esc_en": "Hotel breakfast, 7:40, full room. Your colleague on the coffee machine has not said a word since she arrived. She has dropped a cup, served two coffees to the wrong tables and her eyes are red. Coffee orders are piling up and your tables are fine.",
+     "opts": [
+      {
+       "t": "Le pregunto en la cafetera qué le pasa, que se le nota.",
+       "t_en": "I ask her at the machine what is wrong, since it shows.",
+       "v": "vale",
+       "fb": "Te importa, y eso está bien. Pero en mitad de la cola la obligas a explicarse o a llorar delante de todos.",
+       "fb_en": "You care, and that is good. But in the middle of the queue you make her explain herself or cry in front of everyone."
+      },
+      {
+       "t": "Le digo que hoy se le está yendo, que tenga cuidado con los cafés.",
+       "t_en": "I tell her she is all over the place today and to be careful with the coffees.",
+       "v": "no",
+       "fb": "Ella ya sabe lo de los cafés. Le añades un peso al que ya trae.",
+       "fb_en": "She already knows about the coffees. You add weight to what she is already carrying."
+      },
+      {
+       "t": "Le cubro la cafetera diez minutos para que salga un momento.",
+       "t_en": "I cover the machine for ten minutes so she can step out.",
+       "v": "mejor",
+       "fb": "No le pides explicaciones: le das aire. La sala sigue y ella vuelve cuando puede.",
+       "fb_en": "You do not ask for explanations: you give her air. The room carries on and she comes back when she can."
+      },
+      {
+       "t": "No me meto. Todos tenemos días malos, y cada uno los lleva como puede.",
+       "t_en": "I stay out of it. We all have bad days, and everyone handles them their own way.",
+       "v": "no",
+       "fb": "Respetas su espacio y la dejas sola en la peor hora del desayuno.",
+       "fb_en": "You respect her space and leave her alone at the worst hour of breakfast."
+      }
+     ],
+     "nosabias": "Esa mañana le habían llamado del hospital por su padre. No quería irse a mitad de turno para no dejar a nadie colgado. En los diez minutos llamó a su hermano. Volvió más tranquila, y el encargado la mandó a casa a las nueve.",
+     "nosabias_en": "That morning the hospital had called her about her father. She did not want to leave mid shift and let anyone down. In those ten minutes she called her brother. She came back calmer, and the manager sent her home at nine.",
+     "tarea": [
+      "Ve cafés cambiados: un problema en la cafetera.",
+      "Se lo dice para que lo arregle.",
+      "Ella sigue, peor, hasta el final del turno."
+     ],
+     "tarea_en": [
+      "Sees wrong coffees: a problem at the machine.",
+      "Tells her so she fixes it.",
+      "She carries on, worse, until the end of the shift."
+     ],
+     "persona": [
+      "Ve ojos rojos: un problema de la persona.",
+      "Le cubre el puesto sin preguntar nada.",
+      "Ella sale diez minutos. La sala no se entera."
+     ],
+     "persona_en": [
+      "Sees red eyes: a problem with the person.",
+      "Covers her station without asking anything.",
+      "She steps out for ten minutes. The room never knows."
+     ],
+     "frase": "Lo que miras en las mesas, míralo también en tu equipo. A un compañero que está mal no le hacen falta preguntas: le hace falta aire.",
+     "frase_en": "What you look for at tables, look for in your team too. A colleague who is struggling does not need questions: they need air.",
+     "consigna": "Fíjate hoy en cómo está cada compañero, igual que te fijas en las mesas.",
+     "consigna_en": "Today, notice how each colleague is doing, just as you notice the tables.",
+     "pregunta": "¿Viste a alguien mal?",
+     "pregunta_en": "Did you see anyone struggling?",
+     "resp": [
+      "Sí, y le eché una mano",
+      "Sí, y no supe qué hacer",
+      "No"
+     ],
+     "resp_en": [
+      "Yes, and I helped",
+      "Yes, and I did not know what to do",
+      "No"
+     ]
+    },
+    {
+     "id": "m8d6",
+     "n": 6,
+     "idea": "Cocina también es tu equipo",
+     "idea_en": "The kitchen is your team too",
+     "t": "La hamburguesa que vuelve",
+     "t_en": "The burger that comes back",
+     "esc": "Hamburguesería de calidad, sábado, 14:15, cocina a tope. Un cliente te devuelve la hamburguesa: el pan está quemado por abajo y él tiene que volver al trabajo en veinte minutos. Llegas al pase. El cocinero lleva doce comandas colgadas.",
+     "esc_en": "Quality burger place, Saturday, 14:15, kitchen slammed. A customer sends his burger back: the bun is burnt underneath and he has to be back at work in twenty minutes. You reach the pass. The cook has twelve tickets hanging.",
+     "opts": [
+      {
+       "t": "Dejo el plato en el pase: «esto ha vuelto, está quemado, otra».",
+       "t_en": "I put the plate on the pass: \"this came back, it's burnt, another one\".",
+       "v": "no",
+       "fb": "Le das una queja sin datos a alguien que va desbordado. No sabe qué arreglar ni con qué prisa.",
+       "fb_en": "You hand a complaint with no details to someone who is swamped. He does not know what to fix or how urgently."
+      },
+      {
+       "t": "Le pido al encargado que hable él con cocina, que yo tengo todas mis mesas llenas.",
+       "t_en": "I ask the manager to talk to the kitchen, since I have tables.",
+       "v": "vale",
+       "fb": "Se acaba arreglando, con un paso más y unos minutos que el cliente no tiene.",
+       "fb_en": "It gets fixed in the end, with one extra step and minutes the customer does not have."
+      },
+      {
+       "t": "No digo nada en cocina. Le ofrezco al cliente otra cosa que ya esté hecha.",
+       "t_en": "I say nothing to the kitchen and offer the customer something already made.",
+       "v": "no",
+       "fb": "Esquivas a cocina y cocina no se entera de que la plancha está quemando panes.",
+       "fb_en": "You avoid the kitchen and the kitchen never finds out the grill is burning buns."
+      },
+      {
+       "t": "«Vuelve: pan quemado, carne bien, y tiene veinte minutos. ¿Me la adelantas?»",
+       "t_en": "\"Coming back: bun burnt, meat fine, he has twenty minutes. Put it first?\"",
+       "v": "mejor",
+       "fb": "Le das a cocina lo que necesita para arreglarlo: qué falló, qué no, y la prisa. Y se lo pides, no se lo exiges.",
+       "fb_en": "You give the kitchen what it needs to fix it: what failed, what did not, and the hurry. And you ask, you do not demand."
+      }
+     ],
+     "nosabias": "La plancha de abajo se había desajustado y ya iban tres panes. Con tu dato, el cocinero bajó el fuego y no volvió a pasar en todo el servicio. La hamburguesa salió en cuatro minutos. Al cerrar, el cocinero te invitó a una cerveza.",
+     "nosabias_en": "The bottom grill had gone out of adjustment and it was the third bun already. With your information, the cook turned the heat down and it did not happen again all service. The burger came out in four minutes. At closing, the cook bought you a beer.",
+     "tarea": [
+      "Un plato vuelve: se lo devuelve a cocina.",
+      "«Está quemado, otra.»",
+      "Cocina repite la hamburguesa con la plancha igual."
+     ],
+     "tarea_en": [
+      "A plate comes back: hands it back to the kitchen.",
+      "\"It's burnt, another one.\"",
+      "The kitchen redoes it on the same grill."
+     ],
+     "persona": [
+      "Un plato vuelve: piensa en el cliente y en el cocinero.",
+      "Qué falló, qué no, cuánta prisa. Y un «¿me la pasas?».",
+      "Cocina arregla la plancha. El cliente llega a trabajar."
+     ],
+     "persona_en": [
+      "A plate comes back: thinks of the customer and the cook.",
+      "What failed, what did not, how urgent. And a \"can you?\".",
+      "The kitchen fixes the grill. The customer gets back to work."
+     ],
+     "frase": "A cocina háblale como a una mesa: claro, con lo que necesita saber, y pidiendo, no exigiendo.",
+     "frase_en": "Speak to the kitchen as you would to a table: clearly, with what it needs to know, and asking, not demanding.",
+     "consigna": "Cuando algo vuelva a cocina hoy, di qué falló, qué no y cuánta prisa hay.",
+     "consigna_en": "When something goes back to the kitchen today, say what failed, what did not and how urgent it is.",
+     "pregunta": "¿Cómo lo recibió cocina?",
+     "pregunta_en": "How did the kitchen take it?",
+     "resp": [
+      "Bien",
+      "Regular",
+      "No volvió nada"
+     ],
+     "resp_en": [
+      "Well",
+      "So so",
+      "Nothing came back"
+     ]
+    }
+   ]
   }
  ]
 }
