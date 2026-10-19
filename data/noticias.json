@@ -1,16 +1,64 @@
 {
- "updated": "2026-10-18T19:27:04.186Z",
+ "updated": "2026-10-19T01:19:58.907Z",
  "items": [
+  {
+   "t": "Fairmont La Hacienda apuesta por una Navidad de lujo con gas",
+   "u": "http://diariodelsur.com.co/noticias/fairmont-la-hacienda-apuesta-por-una-navidad-de-lujo-con-gastronomia-y-bienestar",
+   "s": "Diario del Sur",
+   "d": "2026-10-18T22:26:53.000Z",
+   "tags": [
+    "ALTA COCINA"
+   ],
+   "img": "https://www.diariodelsur.com.co/uploads/articles/c6f907af-02f0-4dab-9bc8-6c14e547605e.webp"
+  },
+  {
+   "t": "Manila, Los Ángeles, El Bullí: el triángulo que une a dos cocineros españoles que triunfan muy lejos de casa",
+   "u": "https://www.7canibales.com/?post_type",
+   "s": "7 Caníbales",
+   "d": "2026-10-18T22:01:55.000Z",
+   "tags": [
+    "ALTA COCINA"
+   ]
+  },
+  {
+   "t": "El día que Udine homenajeó a Arguinzoniz",
+   "u": "https://www.expansion.com/estilo-vida/rincones-gastronomicos/2026/10/18/dia-udine-homenajeo-arguinzoniz.html",
+   "s": "Expansión",
+   "d": "2026-10-18T21:34:15.000Z",
+   "tags": [
+    "ALTA COCINA"
+   ],
+   "img": "https://e00-xlk-ue-expansion.uecdn.es/files/article_main_microformat/uploads/2026/10/18/6ad4c4e8e700d.jpeg"
+  },
   {
    "t": "Tenerife, vinos de origen volcánico y una tradición singular en Canarias",
    "u": "https://www.diariolasamericas.com/cultura/tenerife-vinos-origen-volcanico-y-una-tradicion-singular-canarias-n5403850",
    "s": "Diario Las Américas",
-   "d": "2026-10-18T18:40:00.000Z",
+   "d": "2026-10-18T19:55:00.000Z",
    "tags": [
     "VINO",
     "CANARIAS"
    ],
    "img": "https://media.diariolasamericas.com/p/3ba7399aa29c9134443eea87aa563063/adjuntos/216/imagenes/100/284/0100284061/1200x675/smart/vinos-tenerife.jpg"
+  },
+  {
+   "t": "Trabajada victoria de La Laguna Tenerife sobre Kosner Baskonia",
+   "u": "https://www.eldiario.es/canariasahora/deportes/baloncesto/trabajada-victoria-laguna-tenerife-kosner-baskonia_1_13595753.html",
+   "s": "elDiario.es",
+   "d": "2026-10-18T19:42:55.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://static.eldiario.es/clip/a8b9ff97-56ea-498f-9cc0-95a7c9ee059e_facebook-aspect-ratio-1200-675_default_0_x927y416.jpg"
+  },
+  {
+   "t": "Toño Pérez comparte su pasión por la despensa extremeña con nuevos talentos de la alta cocina: \"Es la fortaleza de nuestra gastronomía\"",
+   "u": "https://www.lacronicabadajoz.com/badajoz/2026/10/18/tono-perez-comparte-pasion-despensa-135477500.html",
+   "s": "La Crónica de Badajoz",
+   "d": "2026-10-18T19:13:08.000Z",
+   "tags": [
+    "ALTA COCINA"
+   ]
   },
   {
    "t": "Jorge, chef sobre resistir 40 años en la zona Rambla de Alicante: \"Sin local propio, sería inviable\"",
@@ -123,6 +171,16 @@
    "img": "https://cdn.diariodeavisos.com/wp-content/uploads/2025/04/AdobeStock_488537772.jpeg"
   },
   {
+   "t": "El Molín de Mingo, el restaurante perdido en el monte asturiano que siempre está lleno",
+   "u": "https://www.consumidorglobal.com/alimentacion/molin-mingo-restaurante-perdido-en-monte-asturiano-siempre-esta-lleno_20679_102.html",
+   "s": "Consumidor Global",
+   "d": "2026-10-18T10:47:26.000Z",
+   "tags": [
+    "MICHELIN"
+   ],
+   "img": "https://www.consumidorglobal.com/uploads/s1/73/24/93/httpsmail-google-commailu0dajbog-phvbprlbnpo4sjsqukslmulmozkpxy7kq45jtkvhpn5mra-inboxfmfcgzqhwblggbvbzkbvgxbxprnbhpsz-60_5_550x347.webp"
+  },
+  {
    "t": "Pinktober vuelve a Hard Rock Cafe Tenerife: gastronomía, música y solidaridad contra el cáncer de mama",
    "u": "https://theshowroommag.com/pinktober-vuelve-a-hard-rock-cafe-tenerife-gastronomia-musica-y-solidaridad-contra-el-cancer-de-mama/",
    "s": "The Showroom Mag",
@@ -136,7 +194,7 @@
    "t": "El histórico bar de Tenerife donde disfrutar de la cocina canaria tradicional: casi 40 años de historia y una tortilla muy popular",
    "u": "https://www.eldia.es/tenerife/2026/10/18/historico-bar-tenerife-disfrutar-cocina-canaria-tradicional-dv-133917852.html",
    "s": "Eldía",
-   "d": "2026-10-18T10:30:00.000Z",
+   "d": "2026-10-18T10:30:23.000Z",
    "tags": [
     "CANARIAS"
    ]
@@ -185,24 +243,14 @@
    "t": "El restaurante de Gran Canaria donde la cocina canaria se combina con platos sorprendentes: una parada obligatoria en la isla",
    "u": "https://www.laprovincia.es/gran-canaria/2026/10/18/restaurante-gran-canaria-cocina-canaria-sorprendente-dv-134019485.html",
    "s": "La Provincia",
-   "d": "2026-10-18T07:15:00.000Z",
+   "d": "2026-10-18T07:16:00.000Z",
    "tags": [
     "CANARIAS"
    ]
   },
   {
-   "t": "El Molín de Mingo, el restaurante perdido en el monte asturiano que siempre está lleno",
-   "u": "https://www.consumidorglobal.com/alimentacion/molin-mingo-restaurante-perdido-en-monte-asturiano-siempre-esta-lleno_20679_102.html",
-   "s": "Consumidor Global",
-   "d": "2026-10-18T05:37:30.000Z",
-   "tags": [
-    "MICHELIN"
-   ],
-   "img": "https://www.consumidorglobal.com/uploads/s1/73/24/93/httpsmail-google-commailu0dajbog-phvbprlbnpo4sjsqukslmulmozkpxy7kq45jtkvhpn5mra-inboxfmfcgzqhwblggbvbzkbvgxbxprnbhpsz-60_5_550x347.webp"
-  },
-  {
    "t": "Dónde saborear Gran Canaria, según el consultor, formador y conferenciante Juan Ferrer",
-   "u": "https://www.canarias7.es/gastronomia-c7/a-fuego-lento/saborear-gran-canaria-segun-consultor-formador-conferenciante-20261016070000-nt_amp.html",
+   "u": "https://www.canarias7.es/gastronomia-c7/a-fuego-lento/saborear-gran-canaria-segun-consultor-formador-conferenciante-20261016070000-nt.html",
    "s": "Canarias7",
    "d": "2026-10-18T05:00:03.000Z",
    "tags": [
@@ -248,55 +296,6 @@
     "CANARIAS"
    ],
    "img": "https://static.eldiario.es/clip/44d9d0b7-7021-4d7d-b329-a1c422af116d_facebook-aspect-ratio-1200-675_default_0_x848y242.jpg"
-  },
-  {
-   "t": "El restaurante de carretera donde Martín Berasategui es cliente habitual: 30 años de historia y comida casera por 16 euros",
-   "u": "https://cronicavasca.elespanol.com/gastronomia/20261017/restaurante-carretera-martin-berasategui-cliente-habitual-historia-trt/1003742803378_0.html",
-   "s": "Crónica Vasca",
-   "d": "2026-10-17T16:00:00.000Z",
-   "tags": [
-    "CHEF"
-   ],
-   "img": "https://a2.elespanol.com/k/imgp/cms/asociados/572047.jpg?p=f:jpeg/w:1706/h:960&h=4PUikhGN"
-  },
-  {
-   "t": "Martín Berasategui, chef de Estrella Michelin, sobre los huevos rellenos: \"Este es el truco para que parezcan de un restaurante de lujo\"",
-   "u": "https://www.eleconomista.es/salud-bienestar/nutricion/amp/14021731/martin-berasategui-chef-de-estrella-michelin-sobre-los-huevos-rellenos-este-es-el-truco-para-que-parezcan-de-un-restaurante-de-lujo",
-   "s": "El Economista",
-   "d": "2026-10-17T15:33:15.000Z",
-   "tags": [
-    "CHEF",
-    "MICHELIN"
-   ]
-  },
-  {
-   "t": "Una asociación medioambiental pedirá a la Justicia el cese inmediato de la tala de árboles en una parcela en Santa Cruz de Tenerife",
-   "u": "https://www.eldiario.es/canariasahora/tenerifeahora/sociedad/asociacion-medioambiental-justicia-cese-inmediato-tala-arboles-santa-cruz-tenerife_1_13594005.html",
-   "s": "elDiario.es",
-   "d": "2026-10-17T13:11:55.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://static.eldiario.es/clip/2f836a78-4c62-4989-9978-39cf23150f41_facebook-aspect-ratio-1200-675_default_0.jpg"
-  },
-  {
-   "t": "El Cenador, una mirada contemporánea a la despensa canaria",
-   "u": "https://www.canarias7.es/gastronomia-c7/restaurantes/cenador-mirada-contemporanea-despensa-canaria-20261017140000-nt.html",
-   "s": "Canarias7",
-   "d": "2026-10-17T12:00:00.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://s1.ppllstatics.com/canarias7/www/multimedia/gastronomia-c7/2026/10/17/image00001-k4n-U302283935005h7-1200x840@Canarias7.jpg"
-  },
-  {
-   "t": "El restaurante de Gran Canaria donde comer como un auténtico cazador",
-   "u": "https://www.laprovincia.es/gran-canaria/2026/10/17/restaurante-gran-canaria-comer-autentico-dv-135431444.html",
-   "s": "La Provincia",
-   "d": "2026-10-17T10:30:45.000Z",
-   "tags": [
-    "CANARIAS"
-   ]
   }
  ]
 }
