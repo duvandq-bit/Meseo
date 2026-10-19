@@ -11222,6 +11222,10 @@ test('Multi-restaurante: ninguna consulta se escapa del filtro de restaurante', 
     // la lee lo decide RLS en public.cartas con la identidad del token (sin
     // sesión no hay fila). El filtro del cliente no autoriza nada.
     ['cartas', 'carta privada: por clave (venue) y autorizada por RLS en el servidor'],
+    // La ficha de servicio va con el restaurante de la CARTA puesta (el
+    // propietario confirma la de Akira desde su cuenta de Txoko): filtra por
+    // venue=eq. en la lectura, la fila lleva su venue y RLS decide.
+    ['fichas_servicio', 'ficha de servicio: venue de la carta puesta, autorizada por RLS'],
   ]);
   const lineas = html.split('\n');
   const sueltas = [];
@@ -11244,6 +11248,9 @@ test('Multi-restaurante: ninguna consulta se escapa del filtro de restaurante', 
         if (decl.test(lineas[k])) { selladaFuera = /_vSello\(/.test(lineas.slice(k, k + 6).join('\n')); break; }
     }
     const ok = /_vq\(\)/.test(lineas[i])
+            // Filtra por un restaurante explícito (la ficha de servicio va con
+            // el de la carta puesta, que no siempre es el de la cuenta).
+            || /[?&]venue=eq\./.test(lineas[i])
             || /_vSello\(/.test(bloque)
             // FASE C-2: `scores` y `actividad` sellan por `_cuerpoPropio`, que
             // o manda el restaurante (sin sesión) o deja que lo ponga el
@@ -17744,7 +17751,7 @@ test('Ficha completa: sin bodega no hay sección de maridaje (ni «Cargando mari
 
 // ─── Ficha de servicio (oct 2026) ───────────────────────────────
 const _fsvSrc = html.slice(html.indexOf('const _FSV_CAMPOS'), html.indexOf('// ═══ FIN FICHA DE SERVICIO'));
-const _fsv = new Function(_fsvSrc + '; return { _fsvSugerido, _fsvTiraHTML, _fsvMiniHTML, _fsvConsulta, _fsvFiltrar, _fsvInfo };')(); // eslint-disable-line no-new-func
+const _fsv = new Function(_fsvSrc + '; return { _fsvSugerido, _fsvTiraHTML, _fsvMiniHTML, _fsvConsulta, _fsvFiltrar, _fsvInfo, _fsvFusionar, _fsvFilasEfectivas, _fsvColaPoner, _fsvReintentable, _fsvContar };')(); // eslint-disable-line no-new-func
 test('Ficha de servicio: _fsvSugerido deduce con motivo y sin inventar', () => {
   const S = _fsv._fsvSugerido;
   const tab = S({ name: 'Tartar de solomillo', ingredients: 'Solomillo, Tabasco, alcaparra' });
@@ -17810,13 +17817,70 @@ test('Ficha de servicio: está en la ficha, la vista rápida, Mesa, la lupa y el
   assert(gs.indexOf('_fsvConsulta(tokens)') > gs.indexOf('_gsAllergenIntent(tokens)') && gs.indexOf('_fsvConsulta(tokens)') < gs.indexOf('const dishes = _gsDishIndex()'), 'la lupa pregunta por marcas antes de la búsqueda normal');
   assert(/d\.history, e\.history, d\.notes, e\.notes/.test(html), 'el índice de la lupa lee historia y notas');
   const ed = html.slice(html.indexOf('function _editorCartaCerrado('), html.indexOf('function renderCartaNewDish('));
-  assert(ed.includes("'Aceptar sugerencias'") && ed.includes("'Confirmar plato'") && ed.includes('platos con ficha de servicio confirmada'), 'editor: botones y contador');
-  assert(/overrides\[id\] = \{[^}]*svc:d\.svc\|\|null,svc_en:d\.svc_en\|\|null\}/.test(ed), 'se guarda donde el resto de la edición');
+  assert(ed.includes("'Aceptar sugerencias'") && ed.includes("'Confirmar plato'") && ed.includes('_fsvContadorTxt()') && html.includes('platos con ficha de servicio confirmada'), 'editor: botones y contador');
+  assert(/overrides\[id\] = \{allergens:d\.allergens,ingredients:d\.ingredients,history:d\.history,notes:d\.notes\};/.test(ed), 'la ficha de servicio ya no va a los overrides locales');
+  assert(/await _fsvEdGuardar\(id, confirmar\)/.test(ed), 'el editor guarda la ficha para todo el equipo');
   assert(/if\(st === 'sug' && !confirmar\) return;/.test(ed), 'lo sugerido no se guarda solo');
   assert(!/supaUpsertCustomDish\([^)]*svc/.test(html) && !/rest\/v1\/cartas[^`]*method/.test(html), 'ni custom_dishes ni cartas reciben la ficha de servicio');
   assert(/function _editorCartaCerrado\(nuevo\)/.test(html) && /_editorCartaCerrado\(true\)\) return;\s*const cats/.test(html), 'la demo se edita, pero sin platos nuevos');
   const css = read('styles.css');
   for (const sel of ['.fsv-tira{', '.fsv-chip.sug{', '.fsv-venta{', '.fsv-mini{', '.fsv-ed-campo[data-st="sug"]{']) assert(css.includes(sel), `styles.css debe tener ${sel}`);
+});
+test('Ficha compartida: la fila del restaurante gana a la carta y la sugerencia nunca pisa lo confirmado', () => {
+  const F = _fsv._fsvFusionar;
+  const D = [
+    { id: 1, name: 'Pámpano', ingredients: 'Pámpano, Tabasco' },
+    { id: 2, name: 'Tartar', ingredients: 'Atún, Tabasco', svc: { pica: 1, crudo: true }, svc_en: { venta: 'old' } },
+    { id: 3, name: 'Pan', svc: { veg: 'vegano', ok: true } },
+  ];
+  const filas = [
+    { venue: 'r2', dish_id: 1, svc: { pica: 0, alcohol: false, ok: true }, svc_en: { venta: 'Mild' } },
+    { venue: 'r2', dish_id: '2', svc: { crudo: true, ok: true }, svc_en: {} },
+    { venue: 'txoko', dish_id: 3, svc: { veg: 'no', ok: true } },
+    { venue: 'r2', dish_id: 3, svc: {} },
+  ];
+  const out = F(D, filas, 'r2');
+  assert(out !== D && D[0].svc === undefined && D[1].svc.pica === 1, 'no toca la lista de entrada');
+  assert(out[0].svc.ok === true && out[0].svc.pica === 0 && out[0].svc_en.venta === 'Mild', 'fila aplicada');
+  assert(out[1].svc.pica === undefined && out[1].svc.crudo === true && out[1].svc_en === undefined, 'la fila sustituye la ficha entera (campo quitado = sin dato)');
+  assert(out[2] === D[2], 'fila de otro restaurante o vacía: el plato queda igual');
+  // Lo confirmado (pica 0) gana a la sugerencia (Tabasco → pica 1).
+  const info = _fsv._fsvInfo(out[0], false);
+  assert(info.ok === true && info.v.pica === 0 && !info.sug.pica && !info.deduce.pica, 'pica confirmada 0, no sugerida 1');
+  const tira = _fsv._fsvTiraHTML(out[0], false);
+  assert(!tira.includes('sugerido, por confirmar'), 'la tira no lo marca como sugerido');
+  assert(_fsv._fsvInfo(D[0], false).v.pica === 1 && _fsv._fsvInfo(D[0], false).sug.pica, 'sin fila sigue la sugerencia por confirmar');
+  assert(F(null, filas, 'r2').length === 0 && F(D, null, 'r2')[0] === D[0], 'entradas raras');
+});
+test('Ficha compartida: el contador cuenta lo confirmado en la tabla', () => {
+  const D = [{ id: 1 }, { id: 2, svc: { pica: 1 } }, { id: 3, svc: { ok: true } }];
+  assert(JSON.stringify(_fsv._fsvContar(D)) === '{"ok":1,"total":3}', 'antes de la tabla');
+  const out = _fsv._fsvFusionar(D, [{ venue: 'r2', dish_id: 1, svc: { ok: true } }, { venue: 'r2', dish_id: 2, svc: { pica: 1, ok: true } }], 'r2');
+  assert(JSON.stringify(_fsv._fsvContar(out)) === '{"ok":3,"total":3}', 'con la tabla: ' + JSON.stringify(_fsv._fsvContar(out)));
+  assert(/function _fsvContador\(\)\{ return _fsvContar\(DISHES\); \}/.test(html), 'el editor cuenta sobre DISHES ya fusionado');
+});
+test('Ficha compartida: cola de reintento', () => {
+  const P = _fsv._fsvColaPoner, E = _fsv._fsvFilasEfectivas, R = _fsv._fsvReintentable;
+  let c = P([], { venue: 'r2', dish_id: 1, svc: { ok: true }, updated_at: '2026-10-19T10:00:00Z' });
+  c = P(c, { venue: 'r2', dish_id: 1, svc: { pica: 2, ok: true }, updated_at: '2026-10-19T10:05:00Z' });
+  c = P(c, { venue: 'txoko', dish_id: 1, svc: { ok: true }, updated_at: '2026-10-19T10:06:00Z' });
+  assert(c.length === 2 && c.find(f => f.venue === 'r2').svc.pica === 2, 'una pendiente por restaurante y plato, la última');
+  const srvViejo = [{ venue: 'r2', dish_id: 1, svc: { pica: 0, ok: true }, updated_at: '2026-10-19T09:00:00Z' }];
+  assert(E(srvViejo, c, 'r2')[0].svc.pica === 2, 'lo pendiente de este móvil se ve ya');
+  const srvNuevo = [{ venue: 'r2', dish_id: 1, svc: { pica: 0, ok: true }, updated_at: '2026-10-19T11:00:00Z' }];
+  assert(E(srvNuevo, c, 'r2')[0].svc.pica === 0, 'si otro encargado lo cambió después, gana lo del servidor');
+  assert(E(srvNuevo, c, 'r2').length === 1, 'un plato, una fila');
+  assert(R(0) && R(500) && R(503) && R(408) && R(429), 'sin red y fallos del servidor: se reintenta');
+  assert(!R(401) && !R(403) && !R(400) && !R(201), 'un «no» del servidor no se reintenta');
+  const rt = html.slice(html.indexOf('// ═══ FICHA DE SERVICIO COMPARTIDA'), html.indexOf('// Filtro de la lista: «sin confirmar»'));
+  assert(/_fsvColaEscribir\(_fsvColaPoner\(_fsvColaLeer\(\), fila\)\)/.test(rt) && /'Sin conexión: la ficha de servicio queda guardada solo en este móvil/.test(rt), 'sin red: a la cola y aviso honesto');
+  assert(/addEventListener\('online', \(\) => setTimeout\(\(\) => _fsvColaEnviar\(true\)/.test(rt), 'se reenvía al volver la red');
+  assert(/_FSV_SRV_REFRESCO_MS = 120000/.test(rt) && /_FSV_COLA_PAUSA_MS = 20000/.test(rt), 'refresco autolimitado');
+  assert(/on_conflict=venue,dish_id/.test(rt) && /resolution=merge-duplicates/.test(rt), 'upsert por restaurante y plato');
+  assert(/if\(_fsvEsDemo\(\)\) return false;   \/\/ la demo no sale a la red/.test(rt), 'la demo no sale a la red');
+  assert(/supAuthenticated === true/.test(rt) && /_esMando\(\) \|\| _esAdmin\(\)/.test(rt), 'escribe sólo quien ha entrado en el panel');
+  const ca = html.slice(html.indexOf('function _cartaAplicar('), html.indexOf('function _cartaVaciar('));
+  assert(/_fsvAlPonerCarta\(/.test(ca), '_cartaAplicar pone la ficha del restaurante');
 });
 test('Demo: los 20 platos de Orchilla tienen ficha de servicio confirmada y coherente', () => {
   const c = JSON.parse(read('data/carta-demo.json'));
