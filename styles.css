@@ -11118,3 +11118,63 @@ html[data-venue="demo"] .ri-cta-mesa .ri-cta-icon{border-color:rgba(200,163,90,.
   .cert-marco{color:#000}
   @page{margin:14mm}
 }
+
+/* ── Ficha de servicio (oct 2026) ──
+   «De un vistazo»: lo que preguntan en sala (pica, alcohol, cerdo, crudo,
+   vegano, raciones, minutos). Lo sugerido por la app, sin confirmar, va
+   atenuado y con borde de puntos: nunca se confunde con un dato de cocina. */
+.fsv-tira{margin:0 0 .8rem;padding:.7rem .8rem;border:1px solid var(--gold-a);border-radius:var(--r2);background:rgba(196,154,60,.06)}
+.fsv-tira.sug{border-style:dashed;background:transparent}
+.fsv-cab{display:flex;align-items:center;flex-wrap:wrap;gap:.4rem;margin-bottom:.45rem}
+.fsv-tit{font-family:var(--font-mono);font-size:var(--fs-1);letter-spacing:.12em;text-transform:uppercase;color:var(--gold-deep)}
+.fsv-tag{font-family:var(--font-mono);font-size:var(--fs-1);letter-spacing:.04em;color:var(--parch3);border:1px dashed var(--parch3);border-radius:999px;padding:.05rem .45rem}
+.fsv-chips{display:flex;flex-wrap:wrap;gap:.35rem}
+.fsv-chip{display:inline-flex;align-items:flex-start;gap:.3rem;padding:.3rem .55rem;border-radius:10px;border:1px solid rgba(28,42,34,.18);background:rgba(255,255,255,.55);color:var(--parchment);font-family:var(--font-sans);font-size:var(--fs-2);font-weight:600;line-height:1.25}
+.fsv-chip .fsv-ic{flex:none;margin-top:.05rem;color:var(--gold-deep)}
+.fsv-chip-t{display:flex;flex-direction:column}
+.fsv-chip-t small{font-family:var(--font-mono);font-size:var(--fs-1);font-weight:400;color:var(--parch3);letter-spacing:.02em}
+.fsv-chip.sug{border-style:dashed;background:transparent;color:var(--parch2);font-weight:500}
+.fsv-chip.sug .fsv-ic{color:var(--parch3)}
+.fsv-no{margin-top:.4rem;font-family:var(--font-mono);font-size:var(--fs-1);color:var(--green-deep);letter-spacing:.03em}
+.fsv-venta{margin:.55rem 0 .2rem;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.05rem;line-height:1.4;color:var(--parchment)}
+.fsv-linea{margin-top:.3rem;font-family:var(--font-sans);font-size:var(--fs-2);line-height:1.45;color:var(--parch2)}
+.fsv-linea b{font-family:var(--font-mono);font-size:var(--fs-1);font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:var(--gold-deep);margin-right:.25rem}
+.empl-ov-body .fsv-tira{margin:.1rem 0 .65rem}
+/* Mesa con alergias: versión mínima */
+.fsv-mini{display:flex;flex-wrap:wrap;gap:.25rem .5rem;margin-top:.1rem}
+.fsv-mini-i{display:inline-flex;align-items:center;gap:.2rem;font-family:var(--font-mono);font-size:var(--fs-1);letter-spacing:.03em;color:var(--parch2)}
+.fsv-mini-i .fsv-ic{width:13px;height:13px;color:var(--gold-deep)}
+.fsv-mini-i.sug{opacity:.7}
+.fsv-mini-i i{font-style:normal;color:var(--parch3)}
+/* Búsqueda */
+.fsv-gs-sug{font-style:italic;color:var(--parch3)}
+.fsv-gs-nota{text-align:left;padding:.2rem .9rem .5rem;font-size:var(--fs-1)}
+/* Editor de carta */
+.fsv-contador{margin-top:.45rem;font-family:var(--font-mono);font-size:var(--fs-1);letter-spacing:.06em;color:var(--gold-deep)}
+.fsv-lista-estado{margin-top:.15rem;font-family:var(--font-mono);font-size:var(--fs-1);color:var(--parch3)}
+.fsv-lista-estado.ok{color:var(--green-deep)}
+.fsv-ed{margin-bottom:.9rem;padding:1rem;border:1px solid var(--gold-a);border-radius:var(--r);background:linear-gradient(155deg,#faf6ee,#f0e8d8)}
+.fsv-ed-cab{display:flex;align-items:center;justify-content:space-between;gap:.5rem}
+.fsv-ed-tit{font-family:var(--font-mono);font-size:var(--fs-1);letter-spacing:.12em;text-transform:uppercase;color:var(--gold)}
+.fsv-ed-estado{font-family:var(--font-mono);font-size:var(--fs-1);color:var(--parch3)}
+.fsv-ed-estado.ok{color:var(--green-deep);font-weight:700}
+.fsv-ed-ayuda{margin:.35rem 0 .7rem;font-family:var(--font-sans);font-size:var(--fs-2);line-height:1.45;color:var(--parch3)}
+.fsv-ed-grid{display:grid;grid-template-columns:1fr 1fr;gap:.5rem}
+.fsv-ed-campo{display:flex;flex-direction:column;gap:.2rem;min-width:0;padding:.4rem .5rem;border:1px solid transparent;border-radius:var(--r2)}
+.fsv-ed-campo[data-st="sug"]{border:1.5px dotted var(--gold);background:rgba(196,154,60,.05)}
+.fsv-ed-campo>span{font-family:var(--font-mono);font-size:var(--fs-1);letter-spacing:.06em;text-transform:uppercase;color:var(--parch3)}
+.fsv-ed-campo select,.fsv-ed-campo input[type=number],.fsv-ed-campo input[type=text],.fsv-ed-campo textarea{width:100%;box-sizing:border-box;min-height:42px;padding:.45rem .6rem;border:1px solid var(--line);border-radius:var(--r2);background:#fffdf8;font-family:var(--font-sans);font-size:16px;color:var(--parchment)}
+.fsv-ed-campo textarea{resize:vertical}
+.fsv-ed-chk{flex-direction:row;flex-wrap:wrap;align-items:center;gap:.45rem;min-height:42px}
+.fsv-ed-chk input{width:22px;height:22px;accent-color:var(--gold-deep)}
+.fsv-ed-chk>span{text-transform:none;letter-spacing:0;font-family:var(--font-sans);font-size:var(--fs-3);color:var(--parchment)}
+.fsv-ed-chk .fsv-ed-pista{flex-basis:100%}
+.fsv-ed-pista{font-family:var(--font-mono);font-size:var(--fs-1);color:#8a6420}
+.fsv-ed-txt{margin-top:.45rem}
+.fsv-ed-en{margin-top:.5rem}
+.fsv-ed-en summary{cursor:pointer;min-height:40px;display:flex;align-items:center;font-family:var(--font-mono);font-size:var(--fs-1);letter-spacing:.06em;color:var(--gold-deep)}
+.fsv-ed-botones{display:flex;gap:.5rem;margin-top:.8rem}
+.fsv-ed-botones button{flex:1;min-height:48px;border-radius:var(--r2);cursor:pointer;font-family:var(--font-sans);font-size:var(--fs-3);font-weight:700}
+.fsv-ed-aceptar{background:transparent;border:1.5px dotted var(--gold);color:var(--gold-deep)}
+.fsv-ed-confirmar{background:var(--green-deep);border:1px solid var(--green-deep);color:#fff}
+.fsv-ed-siguiente{display:block;width:100%;min-height:46px;margin:-.4rem 0 .9rem;border:1px solid var(--gold-a);border-radius:var(--r2);background:transparent;color:var(--gold-deep);font-family:var(--font-mono);font-size:var(--fs-1);letter-spacing:.08em;cursor:pointer}
