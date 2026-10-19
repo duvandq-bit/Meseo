@@ -52,7 +52,7 @@
 <meta property="og:description" content="Formación de equipos de sala: carta, alérgenos, vinos, exámenes y juegos de repaso.">
 <meta property="og:url" content="https://meseo.es/">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"Meseo","url":"https://meseo.es/"}</script>
-<meta name="app-version" content="7.516">
+<meta name="app-version" content="7.517">
 <meta name="app-build" content="May 2026">
 <meta name="theme-color" content="#1c2a22">
 <!-- ═══ PWA ═══ -->
@@ -2393,6 +2393,26 @@ const _CARTA_BASE = {
 };
 let _cartaPuesta = _VENUE_POR_DEFECTO;
 
+// ═══ FICHA DE SERVICIO: formato del campo `svc` de cada plato ══════════════
+// Lo que preguntan en sala y no está en la ficha de formación. Va en el plato
+// de DISHES (data/carta-<restaurante>.json o el editor de carta). Todo es
+// opcional; un campo que falta se deduce como «sugerido, por confirmar»
+// (_fsvSugerido) y nunca pisa al que está:
+//   "svc": {
+//     "pica": 0|1|2,              — nada / un poco / mucho
+//     "alcohol": true|false, "cerdo": true|false,
+//     "crudo": true|false|"parcial",   — "parcial": crudo por dentro (tataki)
+//     "veg": "no"|"vegetariano"|"vegano",
+//     "raciones": "individual"|"compartir"|"2"|"3"…,
+//     "minutos": 20,              — tiempo de salida aproximado
+//     "comer": "…",               — cómo se come / qué cubiertos
+//     "cambios": "…",             — cambios que admite cocina (gustos, NO alérgenos)
+//     "venta": "…",               — la frase para contarlo en diez segundos
+//     "ok": true                  — confirmado por el restaurante
+//   },
+//   "svc_en": { "comer": "…", "cambios": "…", "venta": "…" }   — sólo los textos
+// Sin "ok": true, lo escrito se enseña como «por confirmar».
+
 // ═══ IDIOMAS PARA LA MESA ═══════════════════════════════════════════════
 // Lo que el camarero lee (o le hace escuchar al cliente) en el idioma de la
 // mesa: nombre, descripción corta y alérgenos del plato. Hoy sólo hay datos
@@ -2596,6 +2616,12 @@ function _cartaAplicar(c){
   // vacía, y sin tabla todo es 'ambos': no se esconde nada.
   for(const k of Object.keys(DISH_SERVICE)) delete DISH_SERVICE[k];
   Object.assign(DISH_SERVICE, c.DISH_SERVICE || {});
+  // La demo se edita en el editor de carta (ficha de servicio incluida) y sus
+  // cambios viven en el mismo sitio que los de Txoko: txoko_carta_overrides,
+  // en este navegador. Su carta se carga del archivo cada vez, así que las
+  // ediciones se reponen aquí. Los números de la demo (4001-4020) no chocan
+  // con los de ninguna otra carta.
+  if(c && c.venue === 'demo' && typeof _cartaEdicionesLocales === 'function') _cartaEdicionesLocales();
   _cartaMeta = (c === _CARTA_BASE) ? null : {
     venue: c.venue || null,
     allergensValidated: c.allergensValidated === true,
@@ -2835,7 +2861,7 @@ const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><p
 const SRC = 'src';
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='7.516';  // sincronizada con sw.js VERSION (guard de CI)
+const APP_VERSION='7.517';  // sincronizada con sw.js VERSION (guard de CI)
 const APP_BUILD='Jul 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;
@@ -14139,6 +14165,7 @@ function renderMesa(){
       <span class="mesa-plato-txt">
         <span class="mesa-plato-nombre">${esc(dd.name)}</span>
         <span class="mesa-plato-estado">${_mesaIcono(estado)} ${_mesaEstadoTxt(estado,_en)}</span>
+        ${typeof _fsvMiniHTML==='function' ? _fsvMiniHTML(d, _en) : ''}
         ${detalleAl(d, estado)}
       </span>
     </button>`;
@@ -14865,6 +14892,307 @@ const _GS_ICON_LQA = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none
 let _gsDishIdx = null, _gsWineIdx = null;
 function _gsNorm(s){ return (s==null?'':String(s)).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,''); }
 
+// ═══ FICHA DE SERVICIO ═══════════════════════════════════════════════════
+// La ficha del plato enseña a estudiar; en sala preguntan otra cosa: ¿pica?,
+// ¿lleva alcohol?, ¿cerdo?, ¿es vegano?, ¿va crudo?, ¿para cuántos?, ¿cuánto
+// tarda?, ¿cómo se come? Eso vive en `svc` (formato junto a `_cartaPuesta`).
+// Lo que el restaurante no ha confirmado se DEDUCE de nombre, ingredientes,
+// historia, notas y categoría y se enseña siempre como «sugerido, por
+// confirmar», con el motivo a la vista. Nunca pisa un dato del restaurante y
+// nunca se guarda solo: es una pista, no un dato.
+// Todo este bloque es puro (sin DOM): las pruebas lo cargan tal cual.
+const _FSV_CAMPOS = ['pica','alcohol','cerdo','crudo','veg','raciones','minutos'];
+// Términos ya normalizados (minúsculas, sin tildes). Un término acabado en *
+// es una raíz («iberic*» casa ibérico, ibérica, iberian). Sin *, casa la
+// palabra entera y su plural (s/es): «ron» no casa dentro de «macarrones».
+const _FSV_PALABRAS = {
+  pica2: ['muy picante','extra picante','habanero','extra spicy','very spicy'],
+  pica: ['picante','chile','chili','chilli','chipotle','tabasco','jalapeno','kimchi','tobanjan',
+    'gochugaru','gochujang','sriracha','spicy','wasabi','guindilla','cayena','pimienta palmera',
+    'picon','harissa','togarashi','rocoto','aji amarillo','nduja'],
+  alcohol: ['vino','wine','sake','mirin','brandy','conac','cognac','ron','rum','cerveza','beer',
+    'licor*','liqueur','flambe*','vermut','vermouth','whisky','whiskey','ginebra','vodka','tequila',
+    'oporto','sidra','cider','cava','champan','champagne','jerez','sherry','marsala',
+    'pedro ximenez','txakoli','orujo','pacharan','calvados','armagnac','grand marnier','cointreau'],
+  cerdo: ['cerdo','jamon','panceta','pancetta','bacon','chorizo','cochinillo','cochino','papada',
+    'lardo','pork','iberic*','chistorra','sobrasada','morcilla','guanciale','prosciutto','ham',
+    'salchichon','butifarra','lacon','torrezno*','tocineta','porchetta','txistorra','mortadela','mortadella'],
+  crudo: ['tartar','tartare','carpaccio','sashimi','ceviche','cebiche','crudo','cruda','tiradito',
+    'usuzukuri','ostra','oyster','raw','nigiri','poke'],
+  crudoParcial: ['tataki'],
+  // Carne, pescado y marisco: si sale alguno, el plato no es vegetariano.
+  animal: ['carne','ternera','vaca','buey','pollo','gallina','pularda','pato','cordero','cabrito',
+    'conejo','pichon','codorniz','perdiz','foie','wagyu','angus','solomillo','entrecot','chuleta',
+    'txuleta','brisket','rabo','carrillera','cecina','gelatina','demi glace','perrins','caldo de pollo',
+    'pescado','atun','bonito','bacalao','lubina','merluza','mero','cherne','pampano','salmon',
+    'sardina','anchoa','boqueron','caballa','dorada','rodaballo','rape','caviar','hueva*','dashi',
+    'katsuobushi','simmental','hereford','holstein','rubia gallega','tomahawk','t-bone','chateaubriand',
+    'lomo bajo','lomo alto','marisco','gamba','langostino','carabinero','bogavante','langosta','cangrejo',
+    'centolla','pulpo','calamar','txipiron','chipiron','sepia','mejillon','almeja','berberecho',
+    'vieira','erizo','ostra','beef','chicken','duck','lamb','meat','fish','tuna','anchovy','prawn',
+    'shrimp','lobster','crab','octopus','squid','mussel','clam','scallop','oyster','gelatin'],
+  // Lácteos, huevo y miel: con ellos puede ser vegetariano, no vegano.
+  noVegano: ['leche','nata','mantequilla','queso','quesillo','requeson','yogur','mozzarella',
+    'parmesano','burrata','ricotta','mascarpone','ghee','huevo','yema','miel','butter','cream',
+    'cheese','milk','egg','yolk','honey','yogurt']
+};
+// Frases que contienen una palabra de la lista pero dicen lo contrario: el
+// vinagre de vino no lleva alcohol, la miel de palma es vegetal, la leche de
+// coco no es leche. Se quitan del texto antes de buscar.
+const _FSV_FUERA = {
+  pica: [/\b(sin|nada|no|not|non)\s+(picante|pica|spicy)\b/g],
+  alcohol: [/\bvinagre\s+de\s+[a-z]+(\s+(tinto|blanco|dulce))?\b/g, /\b(wine|sherry|cider|rice)\s+vinegar\b/g,
+    /\b(sin|no)\s+alcohol\b/g, /\balcohol[\s-]free\b/g],
+  animal: [/\b(sin|no lleva|without|no)\s+(carne|pescado|meat|fish)\b/g, /\bcarne\s+(vegetal|de\s+membrillo)\b/g,
+    /\b(leche|queso|quesos|nata|mantequilla|yogur|requeson)\s+de\s+(vaca|cabra|oveja|bufala)(\s+y\s+(vaca|cabra|oveja|bufala))?\b/g],
+  noVegano: [/\bmiel\s+de\s+(palma|cana)\b/g, /\barroz\s+con\s+leche\b/g, /\bleche\s+de\s+(coco|almendras?|avena|soja|arroz)\b/g,
+    /\b(coconut|almond|oat|soy|rice)\s+milk\b/g, /\bmantequilla\s+de\s+(cacahuete|cacao|almendra)\b/g]
+};
+function _fsvNorm(s){
+  return (s == null ? '' : String(s)).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+}
+function _fsvRe(term){
+  const raiz = term.endsWith('*');
+  const t = (raiz ? term.slice(0, -1) : term).replace(/[.*+?^${}()|[\]\\]/g, '\\$&').replace(/ /g, '\\s+');
+  return new RegExp('(^|[^a-z0-9])(' + t + (raiz ? '[a-z]*' : '(s|es)?') + ')(?![a-z0-9])');
+}
+// Primera palabra de la lista que sale en el texto, con la grafía original
+// («Tabasco», «jamón») para enseñar de dónde sale la sugerencia.
+function _fsvBusca(norm, orig, lista){
+  for(const term of lista){
+    const m = _fsvRe(term).exec(norm);
+    if(!m) continue;
+    const i = m.index + m[1].length;
+    let w = (orig.length === norm.length) ? orig.substr(i, m[2].length) : m[2];
+    return w.charAt(0).toUpperCase() + w.slice(1);
+  }
+  return null;
+}
+function _fsvSinFrases(norm, campo){
+  let s = norm;
+  for(const re of (_FSV_FUERA[campo] || [])) s = s.replace(re, m => ' '.repeat(m.length));
+  return s;
+}
+// Deduce lo que pueda del plato. Devuelve sólo los campos con señal y, si hay
+// alguno, `motivo` con la palabra que lo delata. Sin señales: {}.
+function _fsvSugerido(dish){
+  if(!dish || typeof dish !== 'object') return {};
+  // Nombre e ingredientes mandan. La historia sólo cuenta para pica,
+  // alcohol y cerdo («el punto picante»): para crudo y vegetariano mete ruido
+  // («se sirve en crudo» en una salsa, «comer sin carne» en la hamburguesa
+  // vegana). Las notas no se leen: están llenas de «comandar SIN…».
+  const prim = [dish.name, dish.ingredients].filter(Boolean).join(' · ').normalize('NFC');
+  const hist = String(dish.history || '').normalize('NFC');
+  const out = {}, motivo = {};
+  const ver = (campo, lista, conHistoria) => {
+    for(const orig of (conHistoria ? [prim, hist] : [prim])){
+      const w = _fsvBusca(_fsvSinFrases(_fsvNorm(orig), campo), orig, lista);
+      if(w) return w;
+    }
+    return null;
+  };
+  let w;
+  if((w = ver('pica', _FSV_PALABRAS.pica2, true))){ out.pica = 2; motivo.pica = w; }
+  else if((w = ver('pica', _FSV_PALABRAS.pica, true))){ out.pica = 1; motivo.pica = w; }
+  if((w = ver('alcohol', _FSV_PALABRAS.alcohol, true))){ out.alcohol = true; motivo.alcohol = w; }
+  if((w = ver('cerdo', _FSV_PALABRAS.cerdo, true))){ out.cerdo = true; motivo.cerdo = w; }
+  if((w = ver('crudo', _FSV_PALABRAS.crudo))){ out.crudo = true; motivo.crudo = w; }
+  else if((w = ver('crudo', _FSV_PALABRAS.crudoParcial))){ out.crudo = 'parcial'; motivo.crudo = w; }
+  // Vegetariano / vegano. Hace falta saber qué lleva: sin ingredientes no se
+  // sugiere nada. Los alérgenos de pescado y marisco también cuentan.
+  const al = Array.isArray(dish.allergens) ? dish.allergens : [];
+  const deMar = al.find(a => a === 'Pescado' || a === 'Crustáceos' || a === 'Moluscos' || a === 'Mariscos');
+  const animal = out.cerdo ? motivo.cerdo : (ver('animal', _FSV_PALABRAS.animal) || deMar || null);
+  const catVeg = /vegetarian|vegano|vegan/.test(_fsvNorm(dish.cat));
+  const conIngredientes = String(dish.ingredients || '').trim().length > 0;
+  if(animal){
+    out.veg = 'no'; motivo.veg = animal;
+  } else if(catVeg || conIngredientes){
+    const lacteo = al.find(a => a === 'Lácteos' || a === 'Huevos') || ver('noVegano', _FSV_PALABRAS.noVegano);
+    if(lacteo){ out.veg = 'vegetariano'; motivo.veg = catVeg ? 'cat:' + dish.cat : 'sin-carne'; }
+    else { out.veg = 'vegano'; motivo.veg = 'sin-animal'; }
+  }
+  if(Object.keys(out).length) out.motivo = motivo;
+  return out;
+}
+// Lo que se enseña de un plato: el dato del restaurante y, donde falte, la
+// sugerencia. `sug[k]` dice que ese campo NO está confirmado (sugerencia o
+// borrador del editor sin «Confirmar plato»); `deduce[k]`, que sale de la
+// sugerencia (y entonces `motivo[k]` dice por qué).
+function _fsvInfo(dish, en){
+  const s = (dish && dish.svc && typeof dish.svc === 'object') ? dish.svc : {};
+  const ok = s.ok === true;
+  const sugerido = _fsvSugerido(dish);
+  const v = {}, sug = {}, deduce = {};
+  let hayDato = false;
+  for(const k of _FSV_CAMPOS){
+    if(s[k] !== undefined && s[k] !== null && s[k] !== ''){ v[k] = s[k]; sug[k] = !ok; hayDato = true; }
+    else if(sugerido[k] !== undefined){ v[k] = sugerido[k]; sug[k] = true; deduce[k] = true; }
+  }
+  // Un plato que el restaurante dice que lleva cerdo no se sugiere vegetariano
+  // aunque sus ingredientes no lo nombren («Presa»).
+  if(deduce.veg && v.veg !== 'no' && v.cerdo === true && !deduce.cerdo){ v.veg = 'no'; }
+  const t = (en && dish && dish.svc_en && typeof dish.svc_en === 'object') ? dish.svc_en : {};
+  const txt = k => String(t[k] || s[k] || '').trim();
+  return { ok, v, sug, deduce, motivo: sugerido.motivo || {}, hayDato,
+    comer: txt('comer'), cambios: txt('cambios'), venta: txt('venta') };
+}
+function _fsvMotivoTxt(m, en){
+  if(!m) return '';
+  if(m === 'sin-carne') return en ? 'no meat or fish in the ingredients' : 'sin carne ni pescado en ingredientes';
+  if(m === 'sin-animal') return en ? 'no animal products in the ingredients' : 'nada de origen animal en ingredientes';
+  if(m.indexOf('cat:') === 0) return (en ? 'category ' : 'categoría ') + m.slice(4);
+  return m;
+}
+// Las marcas que se pintan, en orden de lo que más preguntan en sala.
+function _fsvMarcas(info, en){
+  const v = info.v, out = [];
+  const m = (k, txt) => out.push({ k, txt, sug: !!info.sug[k], motivo: info.deduce[k] ? _fsvMotivoTxt(info.motivo[k], en) : '' });
+  if(v.pica > 0) m('pica', v.pica >= 2 ? (en ? 'Very spicy' : 'Pica mucho') : (en ? 'Spicy' : 'Pica'));
+  if(v.alcohol === true) m('alcohol', en ? 'Contains alcohol' : 'Con alcohol');
+  if(v.cerdo === true) m('cerdo', en ? 'Contains pork' : 'Lleva cerdo');
+  if(v.crudo === true) m('crudo', en ? 'Raw' : 'Crudo');
+  else if(v.crudo === 'parcial') m('crudo', en ? 'Raw inside' : 'Crudo por dentro');
+  if(v.veg === 'vegano') m('veg', en ? 'Vegan' : 'Vegano');
+  else if(v.veg === 'vegetariano') m('veg', en ? 'Vegetarian' : 'Vegetariano');
+  const r = v.raciones;
+  if(r === 'compartir') m('raciones', en ? 'To share' : 'Para compartir');
+  else if(r === 'individual') m('raciones', en ? 'Single portion' : 'Individual');
+  else if(r !== undefined && /^\d+$/.test(String(r))) m('raciones', (en ? 'For ' : 'Para ') + r);
+  else if(r) m('raciones', String(r));
+  const min = Number(v.minutos);
+  if(v.minutos !== undefined && isFinite(min) && min > 0) m('minutos', Math.round(min) + ' min');
+  return out;
+}
+// Lo que el restaurante ha CONFIRMADO que no lleva: también responde en sala.
+function _fsvNegativas(info, en){
+  if(!info.ok) return [];
+  const v = info.v, out = [];
+  if(v.pica === 0 || v.pica === '0') out.push(en ? 'Not spicy' : 'No pica');
+  if(v.alcohol === false) out.push(en ? 'No alcohol' : 'Sin alcohol');
+  if(v.cerdo === false) out.push(en ? 'No pork' : 'Sin cerdo');
+  return out;
+}
+const _FSV_IC = {
+  pica: '<path d="M5 19c6-.5 11-5 12.5-11.5-1.8-1-3.8-.3-4.6 1.6C11.6 12.6 9 15.6 5 19z"/><path d="M17.5 7.5c.2-1.8 1-3 2.5-3.8"/>',
+  alcohol: '<path d="M8 3h8l-1 7a3 3 0 01-6 0L8 3z"/><path d="M12 13v6"/><path d="M8.5 21h7"/>',
+  cerdo: '<circle cx="12" cy="13" r="7"/><ellipse cx="12" cy="15" rx="2.8" ry="1.9"/><path d="M6.6 8.4L5.2 4.6l3.9 1.8M17.4 8.4l1.4-3.8-3.9 1.8"/>',
+  crudo: '<path d="M3 12c3-4 8-5 12-3l4-3v12l-4-3c-4 2-9 1-12-3z"/><circle cx="8" cy="11" r=".6"/>',
+  veg: '<path d="M5 19C5 10 11 5 20 4c0 9-5 15-15 15z"/><path d="M5 19l8-8"/>',
+  raciones: '<circle cx="8" cy="12" r="4.5"/><circle cx="16" cy="12" r="4.5"/>',
+  minutos: '<circle cx="12" cy="12" r="8"/><path d="M12 8v4l3 2"/>'
+};
+function _fsvIcono(k){
+  return '<svg class="fsv-ic" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + (_FSV_IC[k] || '') + '</svg>';
+}
+function _fsvEsc(s){
+  return String(s == null ? '' : s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}
+// Tira «De un vistazo» de la ficha (completa y rápida). Sin datos ni
+// sugerencias devuelve '' y no se pinta nada.
+function _fsvTiraHTML(dish, en){
+  const info = _fsvInfo(dish, en);
+  const marcas = _fsvMarcas(info, en);
+  const neg = _fsvNegativas(info, en);
+  if(!marcas.length && !neg.length && !info.venta && !info.comer && !info.cambios) return '';
+  const todoSug = !info.ok && marcas.length > 0 && marcas.every(x => x.sug);
+  const tag = info.ok ? '' : (info.hayDato
+    ? (en ? 'to be confirmed' : 'por confirmar')
+    : (en ? 'suggested, to be confirmed' : 'sugerido, por confirmar'));
+  const chips = marcas.map(x => '<span class="fsv-chip' + (x.sug ? ' sug' : '') + '"' + (x.motivo ? ' title="' + _fsvEsc((en ? 'from: ' : 'por: ') + x.motivo) + '"' : '') + '>'
+    + _fsvIcono(x.k) + '<span class="fsv-chip-t">' + _fsvEsc(x.txt)
+    + (x.motivo ? '<small>' + _fsvEsc((en ? 'from: ' : 'por: ') + x.motivo) + '</small>' : '')
+    + '</span></span>').join('');
+  return '<div class="fsv-tira' + (todoSug ? ' sug' : '') + '">'
+    + '<div class="fsv-cab"><span class="fsv-tit">' + (en ? 'At a glance' : 'De un vistazo') + '</span>'
+    + (tag && marcas.some(x => x.sug) ? '<span class="fsv-tag">' + tag + '</span>' : '') + '</div>'
+    + (chips ? '<div class="fsv-chips">' + chips + '</div>' : '')
+    + (neg.length ? '<div class="fsv-no">' + _fsvEsc(neg.join(' · ')) + '</div>' : '')
+    + (info.venta ? '<p class="fsv-venta">' + _fsvEsc(info.venta) + '</p>' : '')
+    + (info.comer ? '<div class="fsv-linea"><b>' + (en ? 'How to eat it' : 'Cómo se come') + '</b> ' + _fsvEsc(info.comer) + '</div>' : '')
+    + (info.cambios ? '<div class="fsv-linea"><b>' + (en ? 'Changes' : 'Cambios') + '</b> ' + _fsvEsc(info.cambios) + '</div>' : '')
+    + '</div>';
+}
+// Versión mínima para las tarjetas de «Mesa con alergias»: sólo pica, cerdo,
+// alcohol y vegetariano/vegano, con icono y una palabra.
+function _fsvMiniHTML(dish, en){
+  const info = _fsvInfo(dish, en);
+  const marcas = _fsvMarcas(info, en).filter(x => x.k === 'pica' || x.k === 'cerdo' || x.k === 'alcohol' || x.k === 'veg');
+  if(!marcas.length) return '';
+  const corto = { pica: en ? 'Spicy' : 'Pica', cerdo: en ? 'Pork' : 'Cerdo', alcohol: en ? 'Alcohol' : 'Alcohol' };
+  return '<span class="fsv-mini">' + marcas.map(x => '<span class="fsv-mini-i' + (x.sug ? ' sug' : '') + '"'
+    + (x.sug ? ' title="' + (en ? 'suggested, to be confirmed' : 'sugerido, por confirmar') + '"' : '') + '>'
+    + _fsvIcono(x.k) + _fsvEsc(corto[x.k] || x.txt) + (x.sug ? '<i aria-hidden="true">?</i>' : '') + '</span>').join('') + '</span>';
+}
+// ── Búsqueda por marcas ── «picante», «sin cerdo», «vegano sin alcohol»…
+const _FSV_TERMINOS = {
+  picante:'pica', picantes:'pica', pica:'pica', pican:'pica', picoso:'pica', spicy:'pica',
+  alcohol:'alcohol', alcoholico:'alcohol', alcoholica:'alcohol', alcoholic:'alcohol',
+  cerdo:'cerdo', pork:'cerdo', porcino:'cerdo',
+  crudo:'crudo', cruda:'crudo', crudos:'crudo', crudas:'crudo', raw:'crudo',
+  vegano:'vegano', vegana:'vegano', veganos:'vegano', veganas:'vegano', vegan:'vegano',
+  vegetariano:'vegetariano', vegetariana:'vegetariano', vegetarianos:'vegetariano', vegetarianas:'vegetariano',
+  vegetarian:'vegetariano', veggie:'vegetariano',
+  compartir:'compartir', share:'compartir', sharing:'compartir',
+  rapido:'rapido', rapida:'rapido', rapidos:'rapido', rapidas:'rapido', quick:'rapido', fast:'rapido'
+};
+const _FSV_NIEGA = new Set(['sin','no','nada','without','not','non']);
+const _FSV_RELLENO = new Set(['con','que','para','de','el','la','los','las','plato','platos','lleva','llevan',
+  'algo','es','son','with','dish','dishes','for','to','the','a','y','and']);
+// null si la consulta no va de marcas (manda la búsqueda normal). Si no,
+// [{marca, no}] — todas se cumplen a la vez.
+function _fsvConsulta(tokens){
+  if(!Array.isArray(tokens) || !tokens.length) return null;
+  const out = [];
+  let niega = false;
+  for(const t of tokens){
+    if(_FSV_NIEGA.has(t)){ niega = true; continue; }
+    if(t === 'free' && out.length){ out[out.length - 1].no = true; continue; }   // «pork free»
+    const m = _FSV_TERMINOS[t];
+    if(m){ out.push({ marca: m, no: niega }); niega = false; continue; }
+    if(_FSV_RELLENO.has(t)) continue;
+    return null;
+  }
+  return out.length ? out : null;
+}
+function _fsvCumple(info, marca){
+  const v = info.v;
+  switch(marca){
+    case 'pica': return Number(v.pica) > 0;
+    case 'alcohol': return v.alcohol === true;
+    case 'cerdo': return v.cerdo === true;
+    case 'crudo': return v.crudo === true || v.crudo === 'parcial';
+    case 'vegano': return v.veg === 'vegano';
+    case 'vegetariano': return v.veg === 'vegetariano' || v.veg === 'vegano';
+    case 'compartir': return v.raciones !== undefined && v.raciones !== 'individual' && String(v.raciones) !== '1';
+    case 'rapido': return v.minutos !== undefined && Number(v.minutos) > 0 && Number(v.minutos) <= 10;
+  }
+  return false;
+}
+const _FSV_CAMPO_DE = { pica:'pica', alcohol:'alcohol', cerdo:'cerdo', crudo:'crudo', vegano:'veg',
+  vegetariano:'veg', compartir:'raciones', rapido:'minutos' };
+// Platos que cumplen la consulta. `sug` = alguna de las marcas usadas no está
+// confirmada (o, en «sin X», el restaurante no ha dicho que no lo lleve).
+function _fsvFiltrar(dishes, consulta, en){
+  const out = [];
+  for(const d of (dishes || [])){
+    const info = _fsvInfo(d, en);
+    let pasa = true, sug = false;
+    const motivos = [];
+    for(const c of consulta){
+      const si = _fsvCumple(info, c.marca);
+      if(c.no ? si : !si){ pasa = false; break; }
+      const k = _FSV_CAMPO_DE[c.marca];
+      if(c.no){ if(!(info.ok && info.v[k] !== undefined && !info.sug[k])) sug = true; }
+      else if(info.sug[k]){ sug = true; if(info.deduce[k] && info.motivo[k]) motivos.push(_fsvMotivoTxt(info.motivo[k], en)); }
+    }
+    if(pasa) out.push({ d, sug, motivo: motivos.join(', ') });
+  }
+  return out;
+}
+// ═══ FIN FICHA DE SERVICIO ═══════════════════════════════════════════════
+
+
 // \u2550\u2550 BUSCADOR DE AL\u00c9RGENOS EN SALA \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550
 // El propietario (ago 2026) reporta que la plantilla usa el buscador sobre todo
 // con el cliente delante, para responder por al\u00e9rgenos e ingredientes, y que ha
@@ -14952,7 +15280,12 @@ function _gsDishIndex(){
     // puede buscar «sides» ni «desserts» (medido: 0 resultados) mientras que en
     // español «postres» devolvía los 12 platos.
     const catIng = typeof catEn==='function' ? catEn(d.cat) : d.cat;
-    const search = _gsNorm([d.name, e.name, d.aka||'', d.cat, catIng, (d.allergens||[]).join(' '), (e.allergens||[]).join(' '), d.ingredients, e.ingredients].join(' '));
+    // Historia, notas y textos de la ficha de servicio también: en sala se
+    // busca por lo que se recuerda del plato («el del Tabasco»), no sólo por
+    // su nombre. El nombre sigue mandando en el orden (_gsRank).
+    const sv = (d.svc && typeof d.svc==='object') ? d.svc : {}, sve = (d.svc_en && typeof d.svc_en==='object') ? d.svc_en : {};
+    const search = _gsNorm([d.name, e.name, d.aka||'', d.cat, catIng, (d.allergens||[]).join(' '), (e.allergens||[]).join(' '), d.ingredients, e.ingredients,
+      d.history, e.history, d.notes, e.notes, sv.comer, sv.cambios, sv.venta, sve.comer, sve.cambios, sve.venta].filter(Boolean).join(' '));
     return { type:'dish', id:d.id, name:d.name, nameEn:e.name||d.name, cat:d.cat||'', catEn:catIng||'', allergens:d.allergens||[], search };
   });
   return _gsDishIdx;
@@ -15052,6 +15385,36 @@ function _gsAllergenAnswer(algs, en){
   return html + '</div>';
 }
 
+// Respuesta a una consulta por marcas de servicio. Cuenta lo confirmado por el
+// restaurante y, si no hay, lo sugerido: cada fila sugerida lo dice, con el
+// motivo, para que nadie lo lea como un dato de cocina.
+function _gsSvcAnswer(consulta, raw, en){
+  const enMap = {};
+  if(typeof DISHES_EN!=='undefined' && Array.isArray(DISHES_EN)) DISHES_EN.forEach(x=>{ enMap[x.id]=x; });
+  const nombre = d => en ? ((enMap[d.id]&&enMap[d.id].name)||d.name) : d.name;
+  const lista = _fsvFiltrar(DISHES, consulta, en)
+    .sort((a,b)=>(a.sug?1:0)-(b.sug?1:0) || String(nombre(a.d)).localeCompare(String(nombre(b.d))));
+  let html = '<div class="gs-group-lbl">'+(en?'Dishes':'Platos')+' · '+escapeHtml(raw.trim())+' · '+lista.length+'</div>';
+  if(!lista.length){
+    return { n:0, html: html + '<div class="gs-hint">'+(en?'No dish matches.':'Ningún plato encaja.')+'</div>' };
+  }
+  if(lista.some(x=>x.sug)) html += '<div class="gs-hint fsv-gs-nota">'+(en
+    ? 'Rows marked “suggested” come from the ingredients, not from the restaurant: confirm with the kitchen.'
+    : 'Lo marcado «sugerido» sale de los ingredientes, no del restaurante: confírmalo con cocina.')+'</div>';
+  html += lista.map(({d, sug, motivo})=>{
+    const nm = nombre(d);
+    const catTxt = typeof catLocal==='function' ? catLocal(d.cat) : d.cat;
+    const marca = sug ? (motivo ? (en?'suggested, from: ':'sugerido, por: ')+motivo : (en?'to be confirmed':'por confirmar')) : '';
+    const _ph = typeof dishPhotoSrc==='function' ? dishPhotoSrc(d.id) : null;
+    return '<button type="button" class="gs-hit" role="option" onclick="_gsGo(\'dish\','+d.id+')">'
+      + '<span class="gs-hit-ic">'+(_ph?'<img class="gs-hit-ph" loading="lazy" '+SRC+'="'+_ph+'" alt="">':_GS_ICON_DISH)+'</span>'
+      + '<span class="gs-hit-body"><span class="gs-hit-name">'+escapeHtml(nm)+'</span>'
+      + '<span class="gs-hit-sub">'+escapeHtml(catTxt||'')+(marca?' · <span class="fsv-gs-sug">'+escapeHtml(marca)+'</span>':'')+'</span></span>'
+      + '<span class="gs-hit-go">›</span></button>';
+  }).join('');
+  return { n: lista.length, html };
+}
+
 // Con el buscador abierto hay un cliente delante esperando una respuesta sobre
 // alérgenos. Las celebraciones (subida de nivel, confeti, aviso de XP) tapaban
 // justo la lista que hay que leer en voz alta — visto en captura sobre la
@@ -15084,6 +15447,9 @@ function _gsRender(raw){
   // Consulta de alérgeno → respuesta de sala, no una lista de coincidencias.
   const _alg = _gsAllergenIntent(tokens);
   if(_alg){ _tmTrackSearch(query.length, 0); box.innerHTML = _gsAllergenAnswer(_alg, en); return; }
+  // Consulta por marcas de servicio («picante», «sin cerdo», «vegano»…).
+  const _fsvQ = typeof _fsvConsulta==='function' ? _fsvConsulta(tokens) : null;
+  if(_fsvQ){ const h = _gsSvcAnswer(_fsvQ, raw, en); _tmTrackSearch(query.length, h.n); box.innerHTML = h.html; return; }
   const first = tokens[0];
   const match = s => tokens.every(t=>s.indexOf(t)>=0);
   const dishes = _gsDishIndex().filter(it=>match(it.search))
@@ -15523,6 +15889,7 @@ function _emplOpen(id){
       <div class="empl-ov-body">
         <div class="empl-ov-cat">${escapeHtml(dd.cat||'')}</div>
         <div class="empl-ov-name">${escapeHtml(dd.name)}</div>
+        ${typeof _fsvTiraHTML==='function' ? _fsvTiraHTML(d, _en) : ''}
         <div class="empl-ov-al">${al}</div>
         ${dd.marcaje?`<div class="empl-ov-marc">🍽️ ${escapeHtml(dd.marcaje)}</div>`:''}
         ${dd.notes?`<div class="empl-ov-note">${escapeHtml(dd.notes)}</div>`:''}
@@ -25356,6 +25723,8 @@ function renderRepasoDishDetail(dishId){
       </svg>`}
     </div>
 
+    ${typeof _fsvTiraHTML==='function' ? _fsvTiraHTML(dish, LANG==='en') : ''}
+
     <div style="margin-bottom:.75rem">
       <div class="card" style="padding:.9rem">
         <div style="font-family:var(--font-mono);font-size:var(--fs-1);color:var(--gold);letter-spacing:.12em;text-transform:uppercase;margin-bottom:.35rem">⚠ ${LANG==='en'?'Allergens & adaptations':'Alérgenos y adaptaciones'}</div>
@@ -28858,10 +29227,121 @@ async function sendNotification(){
 // sabe de restaurantes: la fila se guarda como de Txoko (DEFAULT 'txoko') y la
 // clave es sólo dish_id. Hasta que el servidor lo ate al restaurante, el editor
 // sólo funciona en la carta de Txoko.
-function _editorCartaCerrado(){
+// La demo sí se edita (nada sale de este navegador: ver _cartaAplicar), pero
+// sin platos nuevos: esos se guardan en txoko_new_dishes y se colarían en la
+// carta de Txoko al volver a entrar con una cuenta real en este dispositivo.
+function _editorCartaCerrado(nuevo){
   if(_cartaPuesta === _VENUE_POR_DEFECTO) return false;
-  try{ showToast(LANG==='en'?'The menu editor is only available for the main menu for now.':'Por ahora el editor de carta solo funciona en la carta principal.','warning',5000); }catch(e){}
+  const demo = typeof _esDemo === 'function' && _esDemo();
+  if(demo && !nuevo) return false;
+  try{ showToast(demo
+    ? (LANG==='en'?'New dishes cannot be added in the demo.':'En la demo no se pueden añadir platos.')
+    : (LANG==='en'?'The menu editor is only available for the main menu for now.':'Por ahora el editor de carta solo funciona en la carta principal.'),'warning',5000); }catch(e){}
   return true;
+}
+// Ficha de servicio en el editor: cuántos platos tiene confirmados el
+// restaurante (cabecera) y el formulario rápido de cada plato.
+function _fsvContador(){
+  const total = DISHES.length;
+  const ok = DISHES.filter(d => d && d.svc && d.svc.ok === true).length;
+  return { ok, total };
+}
+function _fsvFormHTML(d){
+  const en = LANG==='en';
+  const s = (d.svc && typeof d.svc==='object') ? d.svc : {};
+  const se = (d.svc_en && typeof d.svc_en==='object') ? d.svc_en : {};
+  const sug = _fsvSugerido(d), mot = sug.motivo || {};
+  const tiene = k => s[k]!==undefined && s[k]!==null && s[k]!=='';
+  const val = k => tiene(k) ? s[k] : sug[k];
+  const st = k => tiene(k) ? 'dato' : (sug[k]!==undefined ? 'sug' : 'vacio');
+  const pista = k => st(k)==='sug'
+    ? `<small class="fsv-ed-pista">${en?'suggested':'sugerido'}${mot[k]?' · '+(en?'from: ':'por: ')+escapeHtml(_fsvMotivoTxt(mot[k],en)):''}</small>` : '';
+  const sel = (k, label, opts) => {
+    const v = val(k) === undefined ? '' : String(val(k) === true ? '1' : val(k) === false ? '0' : val(k));
+    if(v && !opts.some(o => o[0] === v)) opts = opts.concat([[v, v]]);
+    return `<label class="fsv-ed-campo" data-st="${st(k)}"><span>${label}</span>
+      <select data-fsv="${k}" onchange="_fsvEdTocado(this)">${opts.map(([o,t])=>`<option value="${escapeHtml(o)}"${o===v?' selected':''}>${t}</option>`).join('')}</select>${pista(k)}</label>`;
+  };
+  const chk = (k, label) => `<label class="fsv-ed-campo fsv-ed-chk" data-st="${st(k)}"><input type="checkbox" data-fsv="${k}"${val(k)===true?' checked':''} onchange="_fsvEdTocado(this)"><span>${label}</span>${pista(k)}</label>`;
+  const txt = (k, label, ph, ingles, largo) => {
+    const v = ingles ? (se[k]||'') : (s[k]||'');
+    const attr = ingles ? `data-fsv-en="${k}"` : `data-fsv="${k}"`;
+    return `<label class="fsv-ed-campo fsv-ed-txt" data-st="${v?'dato':'vacio'}"><span>${label}</span>${largo
+      ? `<textarea ${attr} rows="2" placeholder="${escapeHtml(ph)}" oninput="_fsvEdTocado(this)">${escapeHtml(v)}</textarea>`
+      : `<input type="text" ${attr} value="${escapeHtml(v)}" placeholder="${escapeHtml(ph)}" oninput="_fsvEdTocado(this)">`}</label>`;
+  };
+  const haySug = _FSV_CAMPOS.some(k => st(k)==='sug');
+  return `<div id="svcEd" class="fsv-ed" data-id="${d.id}">
+    <div class="fsv-ed-cab">
+      <div class="fsv-ed-tit">${en?'Service sheet':'Ficha de servicio'}</div>
+      <div class="fsv-ed-estado${s.ok===true?' ok':''}">${s.ok===true?(en?'✓ Confirmed':'✓ Confirmado'):(en?'Not confirmed':'Sin confirmar')}</div>
+    </div>
+    <p class="fsv-ed-ayuda">${en
+      ? 'What guests ask about. Fields in dotted lines are suggested from the ingredients: check them and confirm the dish.'
+      : 'Lo que pregunta el cliente. Lo que va con borde de puntos lo sugiere la app por los ingredientes: revísalo y confirma el plato.'}</p>
+    <div class="fsv-ed-grid">
+      ${sel('pica', en?'Spicy':'Pica', [['',en?'Not set':'Sin dato'],['0',en?'Not at all':'Nada'],['1',en?'A little':'Un poco'],['2',en?'A lot':'Mucho']])}
+      ${sel('veg', en?'Vegetarian':'Vegetariano', [['',en?'Not set':'Sin dato'],['no',en?'No':'No'],['vegetariano',en?'Vegetarian':'Vegetariano'],['vegano',en?'Vegan':'Vegano']])}
+      ${sel('crudo', en?'Raw':'Crudo', [['',en?'Not set':'Sin dato'],['0',en?'No':'No'],['1',en?'Yes':'Sí'],['parcial',en?'Raw inside':'Por dentro']])}
+      ${sel('raciones', en?'Portion':'Ración', [['',en?'Not set':'Sin dato'],['individual',en?'Single':'Individual'],['compartir',en?'To share':'Para compartir'],['2',en?'For 2':'Para 2'],['3',en?'For 3':'Para 3'],['4',en?'For 4':'Para 4']])}
+      ${chk('alcohol', en?'Contains alcohol':'Lleva alcohol')}
+      ${chk('cerdo', en?'Contains pork':'Lleva cerdo')}
+      <label class="fsv-ed-campo" data-st="${st('minutos')}"><span>${en?'Minutes to serve':'Minutos de salida'}</span>
+        <input type="number" inputmode="numeric" min="0" max="240" data-fsv="minutos" value="${val('minutos')===undefined?'':escapeHtml(String(val('minutos')))}" oninput="_fsvEdTocado(this)"></label>
+    </div>
+    ${txt('venta', en?'Sales line':'Frase de venta', en?'Two lines to tell it in ten seconds':'Dos líneas para contarlo en diez segundos', false, true)}
+    ${txt('comer', en?'How to eat it':'Cómo se come', en?'Cutlery, by hand, in one bite…':'Cubiertos, con la mano, de un bocado…', false)}
+    ${txt('cambios', en?'Changes':'Cambios', en?'What the kitchen can change (tastes, not allergens)':'Qué cambia cocina (gustos, no alérgenos)', false)}
+    <details class="fsv-ed-en"><summary>${en?'Texts in English':'Textos en inglés'}</summary>
+      ${txt('venta', 'Sales line', 'Two lines to tell it in ten seconds', true, true)}
+      ${txt('comer', 'How to eat it', 'Cutlery, by hand…', true)}
+      ${txt('cambios', 'Changes', 'Tastes, not allergens', true)}
+    </details>
+    <div class="fsv-ed-botones">
+      ${haySug ? `<button type="button" class="fsv-ed-aceptar" onclick="_fsvEdAceptar()">${en?'Accept suggestions':'Aceptar sugerencias'}</button>` : ''}
+      <button type="button" class="fsv-ed-confirmar" onclick="saveCartaDish(${d.id},'confirmar')">${en?'Confirm dish':'Confirmar plato'}</button>
+    </div>
+  </div>`;
+}
+function _fsvEdTocado(el){
+  const c = el && el.closest('[data-st]');
+  if(c) c.dataset.st = 'dato';
+}
+// Las sugerencias pasan a ser lo que hay en el formulario: se guardan con
+// «Guardar cambios» o «Confirmar plato». Aquí no se guarda nada.
+function _fsvEdAceptar(){
+  const box = document.getElementById('svcEd'); if(!box) return;
+  box.querySelectorAll('[data-st="sug"]').forEach(c => { c.dataset.st = 'dato'; });
+  const b = box.querySelector('.fsv-ed-aceptar'); if(b) b.remove();
+  try{ showToast(LANG==='en'?'Suggestions accepted. Check them and confirm the dish.':'Sugerencias aceptadas. Revísalas y confirma el plato.','success',2600); }catch(e){}
+}
+// Lee el formulario. Al guardar, lo que sigue «sugerido» (nadie lo ha tocado
+// ni aceptado) NO se guarda; al confirmar, sí: el encargado lo ha visto.
+function _fsvEdLeer(confirmar){
+  const box = document.getElementById('svcEd'); if(!box) return null;
+  const svc = {}, svcEn = {};
+  box.querySelectorAll('[data-fsv]').forEach(el => {
+    const k = el.dataset.fsv;
+    const c = el.closest('[data-st]'), st = c ? c.dataset.st : 'dato';
+    if(st === 'sug' && !confirmar) return;
+    if(st === 'vacio' && el.type === 'checkbox' && !confirmar) return;
+    let v;
+    if(el.type === 'checkbox') v = el.checked;
+    else if(el.value === '') v = undefined;
+    else if(k === 'pica') v = Math.min(2, Math.max(0, parseInt(el.value, 10) || 0));
+    else if(k === 'minutos'){ v = Math.round(Number(el.value)); if(!isFinite(v) || v <= 0) v = undefined; }
+    else if(k === 'crudo') v = el.value === 'parcial' ? 'parcial' : el.value === '1';
+    else v = String(el.value).trim() || undefined;
+    if(v !== undefined) svc[k] = v;
+  });
+  box.querySelectorAll('[data-fsv-en]').forEach(el => { const v = String(el.value).trim(); if(v) svcEn[el.dataset.fsvEn] = v; });
+  return { svc, svcEn };
+}
+function _fsvSiguientePendiente(desde){
+  const i = DISHES.findIndex(x => x.id === desde);
+  const orden = DISHES.slice(i + 1).concat(DISHES.slice(0, Math.max(0, i)));
+  const d = orden.find(x => !(x.svc && x.svc.ok === true));
+  return d ? d.id : null;
 }
 function renderCartaEditor(){
   if(typeof _editorCartaCerrado==='function' && _editorCartaCerrado()) return;
@@ -28872,6 +29352,9 @@ function renderCartaEditor(){
       <div class="sup-hero-icon"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></div>
       <div class="sup-hero-title">${LANG==='en'?'Menu Editor':'Editor de Carta'}</div>
       <div class="sup-hero-sub">${LANG==='en'?'Edit dish details':'Edita los detalles de los platos'}</div>
+      <div class="fsv-contador">${(()=>{ const n=_fsvContador(); return LANG==='en'
+        ? `${n.ok} of ${n.total} dishes with a confirmed service sheet`
+        : `${n.ok} de ${n.total} platos con ficha de servicio confirmada`; })()}</div>
     </div>
     <div style="margin-bottom:1rem">
       <select id="cartaCatFilter" onchange="renderCartaList()" style="width:100%;padding:.6rem 1rem;border:1px solid var(--line);border-radius:var(--r2);background:#faf6ee;font-family:var(--font-sans);font-size:var(--fs-3);color:var(--parchment)">
@@ -28880,7 +29363,7 @@ function renderCartaEditor(){
       </select>
     </div>
     <div id="cartaDishList"></div>
-    <button onclick="renderCartaNewDish()" style="width:100%;padding:.8rem;background:var(--gold-b);border:1px solid var(--gold-a);border-radius:var(--r2);font-family:var(--font-sans);font-size:var(--fs-4);font-weight:600;color:var(--gold);cursor:pointer;margin-bottom:.5rem">+ ${LANG==='en'?'Add new dish':'Añadir nuevo plato'}</button>
+    ${(typeof _esDemo==='function' && _esDemo()) ? '' : `<button onclick="renderCartaNewDish()" style="width:100%;padding:.8rem;background:var(--gold-b);border:1px solid var(--gold-a);border-radius:var(--r2);font-family:var(--font-sans);font-size:var(--fs-4);font-weight:600;color:var(--gold);cursor:pointer;margin-bottom:.5rem">+ ${LANG==='en'?'Add new dish':'Añadir nuevo plato'}</button>`}
     <button class="btn-secondary" onclick="renderSupDashboard()" style="width:100%;margin-top:.25rem">← ${LANG==='en'?'Back to panel':'Volver al panel'}</button>
   </div>`;
   renderCartaList();
@@ -28897,6 +29380,7 @@ function renderCartaList(){
         <div>
           <div style="font-size:.85rem;font-weight:500;color:var(--parchment)">${d.name}</div>
           <div style="font-family:var(--font-mono);font-size:var(--fs-1);color:var(--parch4);margin-top:.1rem">${d.cat}</div>
+          <div class="fsv-lista-estado${d.svc&&d.svc.ok===true?' ok':''}">${d.svc&&d.svc.ok===true?(LANG==='en'?'✓ Service sheet':'✓ Ficha de servicio'):(LANG==='en'?'Service sheet to confirm':'Ficha de servicio por confirmar')}</div>
         </div>
         <span style="color:var(--parch4);font-size:.8rem">›</span>
       </div>
@@ -28932,20 +29416,38 @@ function renderCartaDishEdit(id){
     <button onclick="saveCartaDish(${id})" class="btn-primary" style="width:100%;padding:.85rem"> ${LANG==='en'?'Save changes':'Guardar cambios'}</button>
     <div id="cartaSaveMsg" style="text-align:center;margin-top:.5rem;font-size:.75rem;color:var(--sage);font-family:'DM Mono',monospace;display:none">✓ ${LANG==='en'?'Saved':'Guardado'}</div>
   </div>`;
+  // La ficha de servicio va ARRIBA, justo bajo el nombre: es lo que se viene
+  // a rellenar en dos minutos por plato desde el móvil.
+  const cab = c.querySelector('.sup-wrap > div');
+  if(cab) cab.insertAdjacentHTML('afterend', _fsvFormHTML(d)
+    + (()=>{ const sig = _fsvSiguientePendiente(id); return sig!=null && d.svc && d.svc.ok===true
+      ? `<button type="button" class="fsv-ed-siguiente" onclick="renderCartaDishEdit(${sig})">${LANG==='en'?'Next dish to confirm →':'Siguiente plato por confirmar →'}</button>` : ''; })());
 }
 
-function saveCartaDish(id){
+// modo 'confirmar' = botón «Confirmar plato»: guarda todo y marca la ficha de
+// servicio como confirmada (svc.ok). Guardar a secas conserva el ok que hubiera.
+function saveCartaDish(id, modo){
   if(typeof _editorCartaCerrado==='function' && _editorCartaCerrado()) return;
   const d = DISHES.find(x=>x.id===id);
   if(!d) return;
+  const confirmar = modo === 'confirmar';
   d.allergens = document.getElementById('editAllergens').value.split(',').map(s=>s.trim()).filter(Boolean);
   d.ingredients = document.getElementById('editIngredients').value.trim();
   d.history = document.getElementById('editHistory').value.trim();
   d.notes = document.getElementById('editNotes').value.trim()||null;
+  // Ficha de servicio: mismo camino que el resto de la edición (este
+  // navegador). manage-content / custom_dishes no saben de ella.
+  const _sv = (typeof _fsvEdLeer==='function') ? _fsvEdLeer(confirmar) : null;
+  if(_sv){
+    const ok = confirmar || (d.svc && d.svc.ok === true);
+    d.svc = (Object.keys(_sv.svc).length || ok) ? Object.assign(_sv.svc, ok ? { ok:true } : {}) : null;
+    d.svc_en = Object.keys(_sv.svcEn).length ? _sv.svcEn : null;
+    try{ _gsDishIdx = null; }catch(e){}
+  }
   // Save overrides to localStorage
   try {
     const overrides = JSON.parse(localStorage.getItem('txoko_carta_overrides')||'{}');
-    overrides[id] = {allergens:d.allergens,ingredients:d.ingredients,history:d.history,notes:d.notes};
+    overrides[id] = {allergens:d.allergens,ingredients:d.ingredients,history:d.history,notes:d.notes,svc:d.svc||null,svc_en:d.svc_en||null};
     localStorage.setItem('txoko_carta_overrides', JSON.stringify(overrides));
   } catch(e){}
   // If it's a custom dish (added by supervisor), sync to Supabase
@@ -28953,12 +29455,18 @@ function saveCartaDish(id){
     const newIds = JSON.parse(localStorage.getItem('txoko_new_dishes')||'[]');
     if(newIds.find(x=>x.id===id)) supaUpsertCustomDish(d);
   } catch(e){}
+  if(confirmar){
+    try{ showToast(LANG==='en'?'Dish confirmed':'Plato confirmado','success',2200); }catch(e){}
+    renderCartaDishEdit(id);
+    return;
+  }
   const msg = document.getElementById('cartaSaveMsg');
   if(msg){ msg.style.display='block'; setTimeout(()=>msg.style.display='none',2000); }
 }
 
 // ═══ NUEVO PLATO ═══
 function renderCartaNewDish(){
+  if(typeof _editorCartaCerrado==='function' && _editorCartaCerrado(true)) return;
   const cats = [...new Set(DISHES.map(d=>d.cat))];
   const c = document.getElementById('appContent');
   c.innerHTML = `<div class="sup-wrap">
@@ -29005,7 +29513,7 @@ function renderCartaNewDish(){
 }
 
 function saveNewDish(){
-  if(typeof _editorCartaCerrado==='function' && _editorCartaCerrado()) return;
+  if(typeof _editorCartaCerrado==='function' && _editorCartaCerrado(true)) return;
   const name = document.getElementById('newDishName')?.value.trim();
   const catSel = document.getElementById('newDishCat')?.value;
   const catCustom = document.getElementById('newDishCatCustom')?.value.trim();
@@ -29045,6 +29553,14 @@ function saveNewDish(){
   renderCartaEditor();
 }
 
+// Repone las ediciones guardadas en este navegador sobre la carta puesta. Sólo
+// la llama _cartaAplicar para la demo; Txoko las recibe al arrancar (abajo).
+function _cartaEdicionesLocales(){
+  try{
+    const o = JSON.parse(localStorage.getItem('txoko_carta_overrides')||'{}');
+    for(const d of DISHES){ const x = o[d.id]; if(x && typeof x==='object') Object.assign(d, x); }
+  }catch(e){}
+}
 // Load carta overrides on startup
 function loadCartaOverrides(){
   try {

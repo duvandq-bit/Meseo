@@ -36,7 +36,7 @@
     "Altramuces",
     "Sulfitos"
    ],
-   "ingredients": "Altramuz, piel de naranja, comino, vinagre de vino.",
+   "ingredients": "Altramuz, piel de naranja, comino, pimienta palmera, vinagre de vino.",
    "history": "En Canarias el altramuz se llama chocho y se come en cualquier bar. Es uno de los 14 alérgenos y casi nadie lo sabe: hay que avisarlo siempre, sobre todo a quien tiene alergia al cacahuete, porque a menudo reaccionan a los dos.",
    "notes": "⚠ No se puede retirar: Altramuces, Sulfitos.",
    "montaje": [
@@ -44,7 +44,25 @@
     "Chochos con su aliño",
     "Ralladura de naranja al pase"
    ],
-   "marcaje": "Sin cubiertos: se comen con la mano. Cuenco para las pieles."
+   "marcaje": "Sin cubiertos: se comen con la mano. Cuenco para las pieles.",
+   "svc": {
+    "pica": 1,
+    "alcohol": false,
+    "cerdo": false,
+    "crudo": false,
+    "veg": "vegano",
+    "raciones": "individual",
+    "minutos": 3,
+    "comer": "Con la mano; las pieles, al cuenco.",
+    "cambios": "Sin pimienta palmera si no quiere picante.",
+    "venta": "El aperitivo de cualquier bar canario, con naranja, comino y un punto de pimienta palmera.",
+    "ok": true
+   },
+   "svc_en": {
+    "comer": "By hand; skins go in the small bowl.",
+    "cambios": "Without the palmera chilli if they want no heat.",
+    "venta": "The snack of every Canarian bar, with orange, cumin and a touch of palmera chilli."
+   }
   },
   {
    "id": 4002,
@@ -64,7 +82,25 @@
     "Tres gotas de miel de palma",
     "Hojas de tomillo limonero"
    ],
-   "marcaje": "Sin cubiertos: un bocado, con la mano."
+   "marcaje": "Sin cubiertos: un bocado, con la mano.",
+   "svc": {
+    "pica": 0,
+    "alcohol": false,
+    "cerdo": false,
+    "crudo": false,
+    "veg": "vegetariano",
+    "raciones": "individual",
+    "minutos": 4,
+    "comer": "De un bocado, con la mano.",
+    "cambios": "Sin tomillo limonero.",
+    "venta": "Queso de cabra ahumado de la isla con miel de palma de La Gomera. Un bocado dulce y salado.",
+    "ok": true
+   },
+   "svc_en": {
+    "comer": "One bite, by hand.",
+    "cambios": "Without the lemon thyme.",
+    "venta": "Smoked island goat cheese with palm honey from La Gomera. A sweet and salty bite."
+   }
   },
   {
    "id": 4003,
@@ -83,7 +119,25 @@
     "Mayonesa en cuchara aparte",
     "Polvo de algas por encima"
    ],
-   "marcaje": "Sin cubiertos: con la mano."
+   "marcaje": "Sin cubiertos: con la mano.",
+   "svc": {
+    "pica": 0,
+    "alcohol": false,
+    "cerdo": false,
+    "crudo": false,
+    "veg": "no",
+    "raciones": "individual",
+    "minutos": 6,
+    "comer": "Con la mano, mojando en la mayonesa.",
+    "cambios": "Mayonesa aparte.",
+    "venta": "Cherne de la lonja en buñuelo, con una mayonesa que sabe a mar por la lechuga de mar.",
+    "ok": true
+   },
+   "svc_en": {
+    "comer": "By hand, dipped in the mayonnaise.",
+    "cambios": "Mayonnaise on the side.",
+    "venta": "Market wreckfish in a fritter, with a mayonnaise that tastes of the sea thanks to sea lettuce."
+   }
   },
   {
    "id": 4004,
@@ -100,7 +154,25 @@
     "Agua de tomate por encima en sala",
     "Tres gotas de aceite de cilantro"
    ],
-   "marcaje": "Tenedor de ostra a la derecha. Se avisa: se puede beber de la concha."
+   "marcaje": "Tenedor de ostra a la derecha. Se avisa: se puede beber de la concha.",
+   "svc": {
+    "pica": 0,
+    "alcohol": false,
+    "cerdo": false,
+    "crudo": true,
+    "veg": "no",
+    "raciones": "individual",
+    "minutos": 5,
+    "comer": "Con el tenedor de ostra y luego se bebe el agua de la concha.",
+    "cambios": "Sin aceite de cilantro.",
+    "venta": "Ostra cruda con agua de tomate y aceite de cilantro. Fresca, salina y se acaba bebiendo de la concha.",
+    "ok": true
+   },
+   "svc_en": {
+    "comer": "With the oyster fork, then sip the water from the shell.",
+    "cambios": "Without the coriander oil.",
+    "venta": "Raw oyster with tomato water and coriander oil. Fresh, saline, and you finish by sipping from the shell."
+   }
   },
   {
    "id": 4005,
@@ -116,7 +188,25 @@
     "Granizado de albahaca al centro al pase",
     "Aceite en sala"
    ],
-   "marcaje": "Tenedor y cuchillo de entrante."
+   "marcaje": "Tenedor y cuchillo de entrante.",
+   "svc": {
+    "pica": 0,
+    "alcohol": false,
+    "cerdo": false,
+    "crudo": false,
+    "veg": "vegano",
+    "raciones": "individual",
+    "minutos": 8,
+    "comer": "Tenedor y cuchillo de entrante.",
+    "cambios": "Sin albahaca o sin fresa.",
+    "venta": "Tomate de temporada con fresa y albahaca: dulce, ácido y muy fresco para empezar.",
+    "ok": true
+   },
+   "svc_en": {
+    "comer": "Starter knife and fork.",
+    "cambios": "Without basil or without strawberry.",
+    "venta": "Seasonal tomato with strawberry and basil: sweet, sharp and very fresh to start."
+   }
   },
   {
    "id": 4006,
@@ -134,7 +224,25 @@
     "Pipas por encima",
     "Flor de calabacín al lado"
    ],
-   "marcaje": "Tenedor y cuchillo de entrante."
+   "marcaje": "Tenedor y cuchillo de entrante.",
+   "svc": {
+    "pica": 0,
+    "alcohol": false,
+    "cerdo": false,
+    "crudo": false,
+    "veg": "vegetariano",
+    "raciones": "individual",
+    "minutos": 12,
+    "comer": "Tenedor y cuchillo de entrante.",
+    "cambios": "Sin pipas de calabaza.",
+    "venta": "Bubango, el calabacín canario, hecho a la brasa con requesón de cabra y la flor del propio calabacín.",
+    "ok": true
+   },
+   "svc_en": {
+    "comer": "Starter knife and fork.",
+    "cambios": "Without the pumpkin seeds.",
+    "venta": "Bubango, the Canarian courgette, cooked over the grill with goat curd and its own flower."
+   }
   },
   {
    "id": 4007,
@@ -154,7 +262,25 @@
     "Queso rallado por encima",
     "Gofio a un lado"
    ],
-   "marcaje": "Cuchara de entrante."
+   "marcaje": "Cuchara de entrante.",
+   "svc": {
+    "pica": 0,
+    "alcohol": false,
+    "cerdo": false,
+    "crudo": false,
+    "veg": "vegetariano",
+    "raciones": "individual",
+    "minutos": 10,
+    "comer": "Con cuchara: se rompe la yema y se mezcla todo.",
+    "cambios": "Sin gofio.",
+    "venta": "Huevo de corral con berros y queso de flor, terminado con gofio. Se rompe la yema y se come con cuchara.",
+    "ok": true
+   },
+   "svc_en": {
+    "comer": "With a spoon: break the yolk and mix it all.",
+    "cambios": "Without gofio.",
+    "venta": "Free range egg with watercress and flower cheese, finished with gofio. Break the yolk and eat with a spoon."
+   }
   },
   {
    "id": 4008,
@@ -172,7 +298,25 @@
     "Punto de coral al lado",
     "Caldo de millo en sala, desde jarra"
    ],
-   "marcaje": "Pala y tenedor de pescado. Lavafrutas con limón."
+   "marcaje": "Pala y tenedor de pescado. Lavafrutas con limón.",
+   "svc": {
+    "pica": 0,
+    "alcohol": false,
+    "cerdo": false,
+    "crudo": false,
+    "veg": "no",
+    "raciones": "individual",
+    "minutos": 15,
+    "comer": "Pala y tenedor de pescado; la cabeza se chupa.",
+    "cambios": "Caldo de millo aparte.",
+    "venta": "Carabinero a la plancha con su coral y un caldo de millo dulce. Se anima a chupar la cabeza.",
+    "ok": true
+   },
+   "svc_en": {
+    "comer": "Fish knife and fork; suck the head.",
+    "cambios": "Corn broth on the side.",
+    "venta": "Seared scarlet prawn with its coral and a sweet corn broth. Guests are encouraged to suck the head."
+   }
   },
   {
    "id": 4009,
@@ -194,7 +338,25 @@
     "Uvas en mitades",
     "Aceite al pase"
    ],
-   "marcaje": "Pala y tenedor de pescado."
+   "marcaje": "Pala y tenedor de pescado.",
+   "svc": {
+    "pica": 0,
+    "alcohol": false,
+    "cerdo": false,
+    "crudo": true,
+    "veg": "no",
+    "raciones": "individual",
+    "minutos": 10,
+    "comer": "Pala y tenedor de pescado.",
+    "cambios": "Sin uva.",
+    "venta": "Atún rojo curado en alga kombu, crudo, con un ajoblanco frío de almendra.",
+    "ok": true
+   },
+   "svc_en": {
+    "comer": "Fish knife and fork.",
+    "cambios": "Without the grapes.",
+    "venta": "Bluefin tuna cured in kombu, served raw, with a cold almond ajoblanco."
+   }
   },
   {
    "id": 4010,
@@ -213,7 +375,25 @@
     "Tallarines de calamar encima",
     "Crujiente clavado"
    ],
-   "marcaje": "Pala y tenedor de pescado."
+   "marcaje": "Pala y tenedor de pescado.",
+   "svc": {
+    "pica": 0,
+    "alcohol": false,
+    "cerdo": false,
+    "crudo": false,
+    "veg": "no",
+    "raciones": "individual",
+    "minutos": 14,
+    "comer": "Pala y tenedor de pescado; se moja el pan en la tinta.",
+    "cambios": "Sin cebolla tostada.",
+    "venta": "Calamar pescado a potera, con cebolla tostada y su propia tinta. Puro sabor a mar.",
+    "ok": true
+   },
+   "svc_en": {
+    "comer": "Fish knife and fork; dip the bread in the ink.",
+    "cambios": "Without the toasted onion.",
+    "venta": "Jig caught squid with toasted onion and its own ink. Pure taste of the sea."
+   }
   },
   {
    "id": 4011,
@@ -232,7 +412,25 @@
     "Papada fundida por encima",
     "Beurre blanc en sala, en salsera"
    ],
-   "marcaje": "Pala y tenedor de pescado."
+   "marcaje": "Pala y tenedor de pescado.",
+   "svc": {
+    "pica": 0,
+    "alcohol": true,
+    "cerdo": true,
+    "crudo": false,
+    "veg": "no",
+    "raciones": "individual",
+    "minutos": 18,
+    "comer": "Pala y tenedor de pescado.",
+    "cambios": "Sin papada.",
+    "venta": "Cherne a la brasa con papada ibérica y una mantequilla de vino malvasía de Lanzarote.",
+    "ok": true
+   },
+   "svc_en": {
+    "comer": "Fish knife and fork.",
+    "cambios": "Without the pork jowl.",
+    "venta": "Grilled wreckfish with Ibérico pork jowl and a Lanzarote malvasía wine butter sauce."
+   }
   },
   {
    "id": 4012,
@@ -251,7 +449,25 @@
     "Presa cortada en dos encima",
     "Jugo en sala"
    ],
-   "marcaje": "Cuchillo de carne."
+   "marcaje": "Cuchillo de carne.",
+   "svc": {
+    "pica": 0,
+    "alcohol": false,
+    "cerdo": true,
+    "crudo": false,
+    "veg": "no",
+    "raciones": "individual",
+    "minutos": 22,
+    "comer": "Cuchillo de carne.",
+    "cambios": "Puré aparte.",
+    "venta": "Cochino negro canario glaseado con miel de palma y mostaza, sobre puré de batata.",
+    "ok": true
+   },
+   "svc_en": {
+    "comer": "Meat knife.",
+    "cambios": "Purée on the side.",
+    "venta": "Canarian black pig glazed with palm honey and mustard, on sweet potato purée."
+   }
   },
   {
    "id": 4013,
@@ -269,7 +485,25 @@
     "Pechuga y muslo encima",
     "Jugo en sala"
    ],
-   "marcaje": "Cuchillo de carne."
+   "marcaje": "Cuchillo de carne.",
+   "svc": {
+    "pica": 0,
+    "alcohol": true,
+    "cerdo": false,
+    "crudo": false,
+    "veg": "no",
+    "raciones": "individual",
+    "minutos": 22,
+    "comer": "Cuchillo de carne; se sirve rosado.",
+    "cambios": "Más hecho, avisando al comandar.",
+    "venta": "Pichón madurado, rosado, con remolacha y un jugo de vino tinto y cacao.",
+    "ok": true
+   },
+   "svc_en": {
+    "comer": "Meat knife; served pink.",
+    "cambios": "More cooked if asked when ordering.",
+    "venta": "Aged pigeon, served pink, with beetroot and a red wine and cocoa jus."
+   }
   },
   {
    "id": 4014,
@@ -287,7 +521,25 @@
     "Cabrito desmigado encima",
     "Puntos de yogur alrededor"
    ],
-   "marcaje": "Cuchillo de carne."
+   "marcaje": "Cuchillo de carne.",
+   "svc": {
+    "pica": 0,
+    "alcohol": false,
+    "cerdo": false,
+    "crudo": false,
+    "veg": "no",
+    "raciones": "compartir",
+    "minutos": 25,
+    "comer": "Cuchillo de carne; al centro para compartir.",
+    "cambios": "Yogur aparte.",
+    "venta": "Cabrito asado lento con berenjena ahumada y yogur de cabra. Pensado para el centro de la mesa.",
+    "ok": true
+   },
+   "svc_en": {
+    "comer": "Meat knife; in the middle to share.",
+    "cambios": "Yoghurt on the side.",
+    "venta": "Slow roast kid with smoked aubergine and goat yoghurt. Made for the middle of the table."
+   }
   },
   {
    "id": 4015,
@@ -302,7 +554,25 @@
     "Sorbete en quenelle",
     "Espuma de coco por encima"
    ],
-   "marcaje": "Cucharilla de postre."
+   "marcaje": "Cucharilla de postre.",
+   "svc": {
+    "pica": 0,
+    "alcohol": false,
+    "cerdo": false,
+    "crudo": false,
+    "veg": "vegano",
+    "raciones": "individual",
+    "minutos": 6,
+    "comer": "Cucharilla de postre.",
+    "cambios": "Ninguno.",
+    "venta": "Parchita, la fruta de la pasión canaria, con coco. Ácido y fresco para cerrar.",
+    "ok": true
+   },
+   "svc_en": {
+    "comer": "Dessert spoon.",
+    "cambios": "None.",
+    "venta": "Parchita, Canarian passion fruit, with coconut. Sharp and fresh to finish."
+   }
   },
   {
    "id": 4016,
@@ -321,7 +591,25 @@
     "Caramelo de café por encima",
     "Gofio a un lado"
    ],
-   "marcaje": "Cucharilla de postre."
+   "marcaje": "Cucharilla de postre.",
+   "svc": {
+    "pica": 0,
+    "alcohol": false,
+    "cerdo": false,
+    "crudo": false,
+    "veg": "vegetariano",
+    "raciones": "individual",
+    "minutos": 6,
+    "comer": "Cucharilla de postre.",
+    "cambios": "Sin gofio.",
+    "venta": "El quesillo canario de toda la vida, con leche de cabra, café y gofio.",
+    "ok": true
+   },
+   "svc_en": {
+    "comer": "Dessert spoon.",
+    "cambios": "Without gofio.",
+    "venta": "The classic Canarian quesillo, with goat milk, coffee and gofio."
+   }
   },
   {
    "id": 4017,
@@ -342,7 +630,25 @@
     "Helado en quenelle",
     "Crujiente de cacahuete por encima"
    ],
-   "marcaje": "Cuchara y tenedor de postre."
+   "marcaje": "Cuchara y tenedor de postre.",
+   "svc": {
+    "pica": 0,
+    "alcohol": false,
+    "cerdo": false,
+    "crudo": false,
+    "veg": "vegetariano",
+    "raciones": "individual",
+    "minutos": 8,
+    "comer": "Cuchara y tenedor de postre.",
+    "cambios": "Ninguno.",
+    "venta": "Plátano de Canarias con chocolate negro y cacahuete. El postre más goloso de la carta.",
+    "ok": true
+   },
+   "svc_en": {
+    "comer": "Dessert spoon and fork.",
+    "cambios": "None.",
+    "venta": "Canarian banana with dark chocolate and peanut. The most indulgent dessert on the menu."
+   }
   },
   {
    "id": 4018,
@@ -361,7 +667,25 @@
     "Almendra tostada por encima",
     "Helado en quenelle"
    ],
-   "marcaje": "Cucharilla de postre."
+   "marcaje": "Cucharilla de postre.",
+   "svc": {
+    "pica": 0,
+    "alcohol": false,
+    "cerdo": false,
+    "crudo": false,
+    "veg": "vegetariano",
+    "raciones": "individual",
+    "minutos": 7,
+    "comer": "Cucharilla de postre.",
+    "cambios": "Ninguno.",
+    "venta": "Bienmesabe de almendra, el dulce de Tejeda, con helado de leche de cabra.",
+    "ok": true
+   },
+   "svc_en": {
+    "comer": "Dessert spoon.",
+    "cambios": "None.",
+    "venta": "Almond bienmesabe, the sweet from Tejeda, with goat milk ice cream."
+   }
   },
   {
    "id": 4019,
@@ -378,7 +702,25 @@
     "Pan en el plato de pan a la izquierda",
     "Mantequilla en piedra pequeña"
    ],
-   "marcaje": "Plato de pan y cuchillo de mantequilla a la izquierda."
+   "marcaje": "Plato de pan y cuchillo de mantequilla a la izquierda.",
+   "svc": {
+    "pica": 0,
+    "alcohol": false,
+    "cerdo": false,
+    "crudo": false,
+    "veg": "vegetariano",
+    "raciones": "compartir",
+    "minutos": 3,
+    "comer": "Con la mano; mantequilla con su cuchillo.",
+    "cambios": "Aceite de oliva en lugar de mantequilla.",
+    "venta": "Pan de masa madre de trigo y millo, con mantequilla de cabra ahumada.",
+    "ok": true
+   },
+   "svc_en": {
+    "comer": "By hand; butter with its own knife.",
+    "cambios": "Olive oil instead of butter.",
+    "venta": "Wheat and corn sourdough bread, with smoked goat butter."
+   }
   },
   {
    "id": 4020,
@@ -398,7 +740,25 @@
     "Tres piezas por persona en piedra volcánica",
     "Trufa a la izquierda, pâte de fruit al centro, teja a la derecha"
    ],
-   "marcaje": "Sin cubiertos: con la mano."
+   "marcaje": "Sin cubiertos: con la mano.",
+   "svc": {
+    "pica": 0,
+    "alcohol": true,
+    "cerdo": false,
+    "crudo": false,
+    "veg": "vegetariano",
+    "raciones": "compartir",
+    "minutos": 4,
+    "comer": "Con la mano, uno a uno.",
+    "cambios": "Ninguno.",
+    "venta": "Pequeños dulces para el café; uno lleva ron miel canario.",
+    "ok": true
+   },
+   "svc_en": {
+    "comer": "By hand, one at a time.",
+    "cambios": "None.",
+    "venta": "Little sweets with coffee; one has Canarian honey rum."
+   }
   }
  ],
  "DISHES_EN": [
@@ -409,7 +769,7 @@
     "Lupins",
     "Sulphites"
    ],
-   "ingredients": "Lupin bean, orange zest, cumin, wine vinegar.",
+   "ingredients": "Lupin bean, orange zest, cumin, palmera chilli, wine vinegar.",
    "history": "In the Canaries lupin beans are called chochos and are eaten in any bar. They are one of the 14 allergens and hardly anyone knows: always mention them, especially to guests allergic to peanut, as they often react to both.",
    "notes": "⚠ Cannot be removed: Lupins, Sulphites.",
    "montaje": [
@@ -765,7 +1125,7 @@
     "m": 0
    },
    {
-    "n": "Aliño de naranja, comino y vinagre de vino",
+    "n": "Aliño de naranja, comino, pimienta palmera y vinagre de vino",
     "a": [
      "Sulfitos"
     ],

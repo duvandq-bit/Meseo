@@ -17742,6 +17742,99 @@ test('Ficha completa: sin bodega no hay sección de maridaje (ni «Cargando mari
   assert(/hayCartaDeVinos\(\)/.test(f) && /if\(!hay\) return;/.test(f), 'sólo pide los vinos si el restaurante tiene bodega');
 });
 
+// ─── Ficha de servicio (oct 2026) ───────────────────────────────
+const _fsvSrc = html.slice(html.indexOf('const _FSV_CAMPOS'), html.indexOf('// ═══ FIN FICHA DE SERVICIO'));
+const _fsv = new Function(_fsvSrc + '; return { _fsvSugerido, _fsvTiraHTML, _fsvMiniHTML, _fsvConsulta, _fsvFiltrar, _fsvInfo };')(); // eslint-disable-line no-new-func
+test('Ficha de servicio: _fsvSugerido deduce con motivo y sin inventar', () => {
+  const S = _fsv._fsvSugerido;
+  const tab = S({ name: 'Tartar de solomillo', ingredients: 'Solomillo, Tabasco, alcaparra' });
+  assert(tab.pica === 1 && tab.motivo.pica === 'Tabasco', 'Tabasco → pica 1, por: Tabasco');
+  assert(tab.crudo === true && tab.motivo.crudo === 'Tartar', 'tartar → crudo');
+  assert(S({ name: 'Sashimi de atún', ingredients: 'Atún rojo' }).crudo === true, 'sashimi → crudo');
+  assert(S({ name: 'Tataki de atún', ingredients: 'Atún' }).crudo === 'parcial', 'tataki → crudo por dentro');
+  const jam = S({ name: 'Croqueta', ingredients: 'Leche, harina, jamón ibérico' });
+  assert(jam.cerdo === true && jam.motivo.cerdo === 'Jamón' && jam.veg === 'no', 'jamón → cerdo y no vegetariano');
+  assert(S({ name: 'Tortilla', ingredients: 'Huevo, papa, cebolla', allergens: ['Huevos'] }).veg === 'vegetariano', 'con huevo: vegetariano');
+  assert(S({ name: 'Ensalada', ingredients: 'Tomate, aceite de oliva, albahaca', allergens: [] }).veg === 'vegano', 'sin nada animal: vegano');
+  assert(S({ name: 'Raviolis', cat: 'Vegetariano', ingredients: 'Pasta, queso parmesano' }).veg === 'vegetariano', 'categoría Vegetariano con queso: vegetariano');
+  assert(S({ name: 'Arroz con leche', ingredients: 'Arroz, leche de almendras, canela' }).veg === 'vegano', 'leche de almendras no es leche');
+  const vin = S({ name: 'Chochos', ingredients: 'Altramuz, vinagre de vino', allergens: ['Sulfitos'] });
+  assert(vin.alcohol === undefined, 'el vinagre de vino no lleva alcohol');
+  assert(S({ name: 'Macarrones', ingredients: 'Pasta, tomate, carne picada' }).alcohol === undefined, '«ron» no casa dentro de «macarrones»');
+  const nada = S({ name: 'Agua de la casa' });
+  assert(Object.keys(nada).length === 0, 'sin señales (ni ingredientes) → objeto vacío, sin motivo');
+});
+test('Ficha de servicio: la tira no se pinta sin datos y lo sugerido se dice', () => {
+  assert(_fsv._fsvTiraHTML({ id: 1, name: 'Agua de la casa' }, false) === '', 'sin datos ni sugerencias: nada');
+  assert(_fsv._fsvMiniHTML({ id: 1, name: 'Agua de la casa' }, false) === '', 'mesa: nada');
+  const sug = _fsv._fsvTiraHTML({ id: 2, name: 'Pámpano', ingredients: 'Pámpano, Tabasco' }, false);
+  assert(sug.includes('sugerido, por confirmar') && sug.includes('por: Tabasco') && /class="fsv-chip sug"/.test(sug), 'todo sugerido: marcado y con motivo');
+  const ok = _fsv._fsvTiraHTML({ id: 3, name: 'Pámpano', ingredients: 'Pámpano, Tabasco',
+    svc: { pica: 2, cerdo: false, raciones: 'compartir', minutos: 20, venta: 'Marinado 24 horas.', comer: 'Pala de pescado', ok: true },
+    svc_en: { venta: 'Marinated for 24 hours.' } }, true);
+  assert(!ok.includes('to be confirmed') && ok.includes('Very spicy') && ok.includes('To share') && ok.includes('20 min'), 'confirmado: sin aviso, con sus marcas');
+  assert(ok.includes('Marinated for 24 hours.') && ok.includes('No pork'), 'textos en inglés y lo que confirma que no lleva');
+  const borr = _fsv._fsvTiraHTML({ id: 4, name: 'X', svc: { alcohol: true } }, false);
+  assert(borr.includes('por confirmar') && !borr.includes('sugerido,'), 'borrador sin confirmar: «por confirmar»');
+  // El dato del restaurante manda sobre la sugerencia.
+  const info = _fsv._fsvInfo({ id: 5, name: 'Tartar', ingredients: 'Tabasco', svc: { pica: 0, ok: true } }, false);
+  assert(info.v.pica === 0 && !info.sug.pica, 'lo confirmado no lo pisa la sugerencia');
+});
+test('Ficha de servicio: la búsqueda encuentra por «picante» y «sin cerdo»', () => {
+  const D = [
+    { id: 1, cat: 'Entrantes', name: 'Pámpano', ingredients: 'Pámpano, Tabasco, cilantro' },
+    { id: 2, cat: 'Entrantes', name: 'Croqueta de jamón', ingredients: 'Leche, harina, jamón' },
+    { id: 3, cat: 'Postres', name: 'Flan', ingredients: 'Huevo, leche, azúcar', svc: { minutos: 5, cerdo: false, ok: true } },
+    { id: 4, cat: 'Principales', name: 'Presa', ingredients: 'Presa', svc: { cerdo: true, raciones: 'compartir', ok: true } }
+  ];
+  const Q = _fsv._fsvConsulta, F = (q) => _fsv._fsvFiltrar(D, Q(q.split(' ')), false);
+  assert(Q(['croqueta']) === null && Q(['sin', 'gluten']) === null, 'lo que no son marcas va a la búsqueda normal');
+  const pic = F('picante');
+  assert(pic.length === 1 && pic[0].d.id === 1 && pic[0].sug && pic[0].motivo === 'Tabasco', '«picante» → el del Tabasco, marcado sugerido');
+  assert(F('pica').length === 1, '«pica» también');
+  const sinC = F('sin cerdo').map(x => x.d.id);
+  assert(sinC.join() === '1,3', `«sin cerdo» → los que no lo llevan: ${sinC}`);
+  assert(F('sin cerdo').find(x => x.d.id === 3).sug === false, 'confirmado sin cerdo: no se marca sugerido');
+  assert(F('cerdo').map(x => x.d.id).join() === '2,4', '«cerdo» → sugerido y confirmado');
+  assert(F('rapido').map(x => x.d.id).join() === '3' && F('compartir').map(x => x.d.id).join() === '4', 'rápido (≤10 min) y compartir');
+  assert(F('vegetariano').map(x => x.d.id).join() === '3', 'vegetariano por ingredientes');
+});
+test('Ficha de servicio: está en la ficha, la vista rápida, Mesa, la lupa y el editor', () => {
+  const rd = html.slice(html.indexOf('function renderRepasoDishDetail('), html.indexOf('function changeRepasoTopic('));
+  const iT = rd.indexOf('_fsvTiraHTML(dish'), iA = rd.indexOf("'Allergens & adaptations'");
+  assert(iT > 0 && iT < iA && rd.indexOf('dish-hero-photo') < iT, 'ficha completa: tras la foto, antes de alérgenos');
+  const eo = html.slice(html.indexOf('function _emplOpen('), html.indexOf('async function renderSupPhotoQueue('));
+  assert(eo.indexOf('_fsvTiraHTML(d') > eo.indexOf('empl-ov-name') && eo.indexOf('_fsvTiraHTML(d') < eo.indexOf('empl-ov-al">'), 'vista rápida: tras el nombre, antes de alérgenos');
+  assert(/_fsvMiniHTML\(d, _en\)/.test(html.slice(html.indexOf('function renderMesa('), html.indexOf('function renderQuesos('))), 'Mesa con alergias: iconos compactos');
+  const gs = html.slice(html.indexOf('function _gsRender('), html.indexOf('function openGlobalSearch('));
+  assert(gs.indexOf('_fsvConsulta(tokens)') > gs.indexOf('_gsAllergenIntent(tokens)') && gs.indexOf('_fsvConsulta(tokens)') < gs.indexOf('const dishes = _gsDishIndex()'), 'la lupa pregunta por marcas antes de la búsqueda normal');
+  assert(/d\.history, e\.history, d\.notes, e\.notes/.test(html), 'el índice de la lupa lee historia y notas');
+  const ed = html.slice(html.indexOf('function _editorCartaCerrado('), html.indexOf('function renderCartaNewDish('));
+  assert(ed.includes("'Aceptar sugerencias'") && ed.includes("'Confirmar plato'") && ed.includes('platos con ficha de servicio confirmada'), 'editor: botones y contador');
+  assert(/overrides\[id\] = \{[^}]*svc:d\.svc\|\|null,svc_en:d\.svc_en\|\|null\}/.test(ed), 'se guarda donde el resto de la edición');
+  assert(/if\(st === 'sug' && !confirmar\) return;/.test(ed), 'lo sugerido no se guarda solo');
+  assert(!/supaUpsertCustomDish\([^)]*svc/.test(html) && !/rest\/v1\/cartas[^`]*method/.test(html), 'ni custom_dishes ni cartas reciben la ficha de servicio');
+  assert(/function _editorCartaCerrado\(nuevo\)/.test(html) && /_editorCartaCerrado\(true\)\) return;\s*const cats/.test(html), 'la demo se edita, pero sin platos nuevos');
+  const css = read('styles.css');
+  for (const sel of ['.fsv-tira{', '.fsv-chip.sug{', '.fsv-venta{', '.fsv-mini{', '.fsv-ed-campo[data-st="sug"]{']) assert(css.includes(sel), `styles.css debe tener ${sel}`);
+});
+test('Demo: los 20 platos de Orchilla tienen ficha de servicio confirmada y coherente', () => {
+  const c = JSON.parse(read('data/carta-demo.json'));
+  assert(c.DISHES.length === 20, 'veinte platos');
+  for (const d of c.DISHES) {
+    const s = d.svc, e = d.svc_en;
+    assert(s && s.ok === true, `${d.id}: ficha confirmada`);
+    for (const k of ['pica', 'alcohol', 'cerdo', 'crudo', 'veg', 'raciones', 'minutos', 'comer', 'cambios', 'venta']) assert(s[k] !== undefined && s[k] !== '', `${d.id}: falta ${k}`);
+    assert(e && e.comer && e.cambios && e.venta, `${d.id}: textos en inglés`);
+    assert(![s.comer, s.cambios, s.venta, e.comer, e.cambios, e.venta].some(x => x.includes('—')), `${d.id}: sin rayas`);
+    const sug = _fsv._fsvSugerido(d);
+    for (const k of ['alcohol', 'cerdo']) if (sug[k] === true) assert(s[k] === true, `${d.id}: la carta dice ${k} (${sug.motivo[k]}) y la ficha no`);
+    if (sug.pica) assert(s.pica > 0, `${d.id}: lleva ${sug.motivo.pica} y no pica`);
+    if (sug.veg === 'no') assert(s.veg === 'no', `${d.id}: lleva ${sug.motivo.veg} y se marca ${s.veg}`);
+  }
+  assert(c.DISHES.some(d => d.svc.pica > 0) && c.DISHES.some(d => d.svc.cerdo) && c.DISHES.some(d => d.svc.veg === 'vegano'), 'hay de todo para probar la lupa');
+});
+
 console.log('\nHygiene');
 test('no git conflict markers in tracked source', () => {
   for (const f of ['index.html', 'sw.js', 'data/wines.json', 'data/lqa-situations.json', 'data/ghost-scenarios.json']) {
