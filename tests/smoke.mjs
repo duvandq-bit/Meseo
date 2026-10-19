@@ -6610,6 +6610,13 @@ test('Inactividad: con sesión recordada no se cierra la sesión (oct 2026)', ()
   assert(/logout\(\); showToast\(LANG==='en'\?'Session expired due to inactivity'/.test(f), 'sin recordar, el dispositivo compartido se sigue cerrando');
 });
 
+test('Búho nocturno: sólo estudiando, no por cambiar de pestaña (oct 2026)', () => {
+  const st = html.slice(html.indexOf('function showTab('), html.indexOf('function showTab(') + 9000);
+  assert(!/nightStudy\s*=\s*true/.test(st), 'showTab no concede el logro nocturno');
+  assert(!/nightStudy\s*=\s*true/.test(html.slice(html.indexOf('function checkStreak('), html.indexOf('function checkStreak(')+1200)), 'entrar en la app tampoco lo concede');
+  assert((html.match(/_marcarEstudioNocturno\(\);/g)||[]).length >= 2, 'el examen y el repaso lo marcan al empezar');
+});
+
 test('Emplatado: la vista rápida separa los bocados igual que la ficha (oct 2026)', () => {
   // El Mistery Box se leía como un párrafo corrido en la vista rápida del
   // emplatado: los saltos de línea se perdían. Ahora usa el mismo render.
