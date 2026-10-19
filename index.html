@@ -52,7 +52,7 @@
 <meta property="og:description" content="Formación de equipos de sala: carta, alérgenos, vinos, exámenes y juegos de repaso.">
 <meta property="og:url" content="https://meseo.es/">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"Meseo","url":"https://meseo.es/"}</script>
-<meta name="app-version" content="7.515">
+<meta name="app-version" content="7.516">
 <meta name="app-build" content="May 2026">
 <meta name="theme-color" content="#1c2a22">
 <!-- ═══ PWA ═══ -->
@@ -2835,7 +2835,7 @@ const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><p
 const SRC = 'src';
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='7.515';  // sincronizada con sw.js VERSION (guard de CI)
+const APP_VERSION='7.516';  // sincronizada con sw.js VERSION (guard de CI)
 const APP_BUILD='Jul 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;
@@ -31305,6 +31305,20 @@ function _hspProgreso(emp){
 
 // La mesa de hoy: la primera que no se ha jugado; con todas jugadas, las
 // falladas; y si no queda ninguna, la que hace más tiempo que se jugó.
+// El módulo en curso: el guardado mientras le queden mesas sin jugar; cuando
+// se han jugado todas, el siguiente que tenga alguna nueva. Antes se quedaba
+// siempre en el primero y, con seis mesas, a la semana todo eran repeticiones.
+// Si no queda ninguno con mesas nuevas, se repasa el guardado (falladas y
+// las que hace más tiempo).
+function _hspModuloActual(modulos, prog){
+  const hechos = (prog && prog.hechos) || {};
+  const quedan = m => m.dias.some(d => !hechos[d.id]);
+  const actual = modulos.find(m => m.id === (prog && prog.modulo)) || modulos[0];
+  if(quedan(actual)) return actual;
+  const i = modulos.indexOf(actual);
+  const sig = modulos.slice(i + 1).concat(modulos.slice(0, i)).find(quedan);
+  return sig || actual;
+}
 function _hspDia(modulo, prog){
   const dias = modulo.dias;
   const nueva = dias.find(d => !prog.hechos[d.id]);
@@ -31353,7 +31367,7 @@ async function launchHospitalidad(){
   const modulos = _hspModulosValidos(data);
   if(!modulos.length){ if(typeof showToast==='function') showToast(LANG==='en'?'No content yet':'Aún no hay contenido','warning',3000); return; }
   const prog = _hspProgreso(getEmp(currentUser));
-  const modulo = modulos.find(m => m.id === prog.modulo) || modulos[0];
+  const modulo = _hspModuloActual(modulos, prog);
   prog.modulo = modulo.id;
   const dia = _hspDia(modulo, prog);
   if(!dia) return;
@@ -31471,6 +31485,11 @@ function _hspElegir(i){
   try{
     const prog=_hspProgreso(getEmp(currentUser));
     if(S.res.bien) delete prog.fallados[S.dia.id]; else prog.fallados[S.dia.id]=todayStr();
+    // La mesa cuenta como jugada en cuanto se contesta. Antes sólo se marcaba
+    // al llegar al último paso («Para hoy»), y quien cerraba después de ver la
+    // respuesta volvía a encontrarse la misma escena cada vez que entraba
+    // (propietario, oct 2026). La consigna se sigue guardando en «Para hoy».
+    prog.hechos[S.dia.id]=todayStr();
     saveDB();
   }catch(e){}
   if(typeof playSound==='function') playSound(S.res.bien?'correct':'wrong');

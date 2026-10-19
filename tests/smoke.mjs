@@ -6617,6 +6617,19 @@ test('Búho nocturno: sólo estudiando, no por cambiar de pestaña (oct 2026)', 
   assert((html.match(/_marcarEstudioNocturno\(\);/g)||[]).length >= 2, 'el examen y el repaso lo marcan al empezar');
 });
 
+test('Hospitalidad: no repite la misma mesa y avanza de módulo (oct 2026)', () => {
+  // «Siempre que entro me sale la misma escena» (propietario).
+  const el = html.slice(html.indexOf('function _hspElegir('), html.indexOf('function _hspResponderAyer('));
+  assert(/prog\.hechos\[S\.dia\.id\]=todayStr\(\);/.test(el), 'la mesa cuenta como jugada al contestar');
+  const src = html.slice(html.indexOf('function _hspModuloActual('), html.indexOf('function _hspCorregir('));
+  const f = new Function(src + '; return { _hspModuloActual, _hspDia };')();
+  const M = [{id:'a',dias:[{id:'a1'},{id:'a2'}]},{id:'b',dias:[{id:'b1'}]}];
+  assert(f._hspModuloActual(M, {modulo:'a', hechos:{a1:'x'}}).id==='a', 'sigue en el módulo mientras le queden mesas');
+  assert(f._hspModuloActual(M, {modulo:'a', hechos:{a1:'x',a2:'y'}}).id==='b', 'con todo jugado pasa al siguiente');
+  assert(f._hspModuloActual(M, {modulo:'b', hechos:{a1:'x',a2:'y',b1:'z'}}).id==='b', 'sin mesas nuevas, repasa el actual');
+  assert(f._hspDia(M[0], {hechos:{a1:'x'}, fallados:{}}).id==='a2', 'la siguiente mesa es la que no se ha jugado');
+});
+
 test('Emplatado: la vista rápida separa los bocados igual que la ficha (oct 2026)', () => {
   // El Mistery Box se leía como un párrafo corrido en la vista rápida del
   // emplatado: los saltos de línea se perdían. Ahora usa el mismo render.
