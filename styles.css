@@ -11178,3 +11178,95 @@ html[data-venue="demo"] .ri-cta-mesa .ri-cta-icon{border-color:rgba(200,163,90,.
 .fsv-ed-aceptar{background:transparent;border:1.5px dotted var(--gold);color:var(--gold-deep)}
 .fsv-ed-confirmar{background:var(--green-deep);border:1px solid var(--green-deep);color:#fff}
 .fsv-ed-siguiente{display:block;width:100%;min-height:46px;margin:-.4rem 0 .9rem;border:1px solid var(--gold-a);border-radius:var(--r2);background:transparent;color:var(--gold-deep);font-family:var(--font-mono);font-size:var(--fs-1);letter-spacing:.08em;cursor:pointer}
+
+/* ═══ MENÚ DEGUSTACIÓN (oct 2026) ═══════════════════════════════════════
+   El viaje (línea vertical de pases), la ficha de un pase en tres frases,
+   las tres prácticas y el bloque «Cómo contarlo» de la ficha del plato.
+   Todo con las variables de marca: r2 y demo lo tiñen solos. */
+.deg{display:flex;flex-direction:column;gap:.85rem;padding-bottom:1.5rem}
+.deg-cab{display:flex;flex-direction:column;gap:.35rem}
+.deg-eyebrow,.deg-mom{font-family:var(--font-mono);font-size:var(--fs-1);letter-spacing:.12em;text-transform:uppercase;color:var(--gold-ink)}
+.deg-tit{font-family:var(--font-serif);font-size:var(--fs-5);font-weight:600;color:var(--parchment);line-height:1.25;margin:0}
+.deg-tit.grande{font-size:var(--fs-6);text-align:center;margin:.6rem 0 .3rem}
+.deg-intro{font-family:var(--font-sans);font-size:var(--fs-3);color:var(--parch2);line-height:1.55;margin:0}
+.deg-revisar{align-self:flex-start;font-family:var(--font-sans);font-size:var(--fs-2);color:var(--parch3);border:1px dashed var(--line2);border-radius:999px;padding:.2rem .65rem}
+.deg-vacio{font-family:var(--font-sans);font-size:var(--fs-3);color:var(--parch2);text-align:center;padding:2rem 1rem .5rem}
+.deg-h3{font-family:var(--font-serif);font-size:var(--fs-4);color:var(--parchment);margin:.4rem 0 .1rem}
+
+/* El viaje: una línea que une los números */
+.deg-linea{list-style:none;margin:0;padding:0;position:relative;display:flex;flex-direction:column;gap:.55rem}
+.deg-linea::before{content:"";position:absolute;left:15px;top:18px;bottom:18px;width:2px;background:var(--line2);border-radius:2px}
+.deg-paso>button{display:flex;align-items:flex-start;gap:.7rem;width:100%;text-align:left;background:none;border:0;padding:0;cursor:pointer;color:inherit;font:inherit}
+.deg-num{position:relative;z-index:1;flex:none;width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:var(--gold);color:#fff;font-family:var(--font-mono);font-size:var(--fs-2);font-weight:500;margin-top:.9rem;box-shadow:0 0 0 4px var(--bg,#f4ede2)}
+.deg-paso>button>.deg-foto{flex:none}
+.deg-foto,.deg-ficha-foto,.deg-hero{display:block;overflow:hidden;background:var(--gold-a);border:1px solid var(--line2)}
+.deg-foto{width:64px;height:64px;border-radius:12px}
+.deg-foto img,.deg-ficha-foto img,.deg-hero img{width:100%;height:100%;object-fit:cover;display:block}
+.deg-txt{flex:1;min-width:0;display:flex;flex-direction:column;gap:.15rem;padding:.55rem .7rem;border-radius:var(--r);background:linear-gradient(155deg,#faf6ee,#f0e8d8);border:1px solid var(--line2)}
+.deg-nom{font-family:var(--font-serif);font-size:var(--fs-4);font-weight:600;color:var(--parchment);line-height:1.25}
+.deg-frase{font-family:var(--font-sans);font-size:var(--fs-2);color:var(--parch2);line-height:1.45}
+.deg-paso>button:active .deg-txt{border-color:var(--gold)}
+
+/* Practica */
+.deg-prac{display:flex;flex-direction:column;gap:.5rem}
+.deg-prac-btn{display:flex;flex-direction:column;align-items:flex-start;gap:.15rem;text-align:left;width:100%;padding:.85rem 1rem;border-radius:var(--r);border:1px solid var(--line2);background:var(--gold-b);cursor:pointer;min-height:56px;color:var(--parchment)}
+.deg-prac-btn b{font-family:var(--font-serif);font-size:var(--fs-4);font-weight:600}
+.deg-prac-btn span{font-family:var(--font-sans);font-size:var(--fs-2);color:var(--parch3)}
+
+/* Un pase en tres frases */
+.deg-volver{align-self:flex-start;background:none;border:0;padding:.3rem 0;font-family:var(--font-mono);font-size:var(--fs-2);color:var(--gold-ink);cursor:pointer;min-height:44px}
+.deg-hero{width:100%;aspect-ratio:16/9;border-radius:var(--r)}
+.deg-hero.sin{display:none}
+.deg-sig,.deg-guino,.deg-story{border-radius:var(--r);padding:.7rem .85rem;font-family:var(--font-sans);font-size:var(--fs-3);line-height:1.5;color:var(--parch2)}
+.deg-sig span,.deg-guino span,.deg-story>span{display:block;font-family:var(--font-mono);font-size:var(--fs-1);letter-spacing:.12em;text-transform:uppercase;color:var(--gold-ink);margin-bottom:.25rem}
+.deg-sig{background:var(--gold-b);border:1px solid var(--line)}
+.deg-guino{background:var(--sage-a);border-left:3px solid var(--sage)}
+.deg-story{background:#fff;border:1px solid var(--line2)}
+.deg-story p{margin:0;font-family:var(--font-sans);font-style:italic;font-size:var(--fs-4);line-height:1.5;color:var(--parchment)}
+.deg-tres{margin:0;padding:0;list-style:none;counter-reset:deg;display:flex;flex-direction:column;gap:.45rem}
+.deg-tres li{counter-increment:deg;position:relative;padding-left:1.9rem;font-family:var(--font-sans);font-size:var(--fs-3);color:var(--parchment);line-height:1.4}
+.deg-tres li::before{content:counter(deg);position:absolute;left:0;top:.05rem;width:1.35rem;height:1.35rem;border-radius:50%;border:1px solid var(--gold);color:var(--gold-ink);font-family:var(--font-mono);font-size:var(--fs-1);display:flex;align-items:center;justify-content:center}
+.deg-tres.grande li{font-size:var(--fs-4);font-weight:600;padding-left:2.1rem}
+.deg-escuchar{margin-top:.55rem;background:transparent;border:1px solid var(--gold);border-radius:999px;padding:.35rem .9rem;min-height:36px;font-family:var(--font-mono);font-size:var(--fs-1);letter-spacing:.08em;text-transform:uppercase;color:var(--gold-ink);cursor:pointer}
+.deg-apoyo{border:1px solid var(--line2);border-radius:var(--r);background:rgba(0,0,0,.02)}
+.deg-apoyo summary{cursor:pointer;padding:.75rem .9rem;font-family:var(--font-mono);font-size:var(--fs-1);letter-spacing:.1em;text-transform:uppercase;color:var(--parch3);min-height:44px;display:flex;align-items:center}
+.deg-apoyo-body{padding:0 .9rem .85rem;display:flex;flex-direction:column;gap:.6rem;font-family:var(--font-sans);font-size:var(--fs-2);color:var(--parch2)}
+.deg-apoyo-body p{margin:0;line-height:1.5}
+.deg-al-fila{display:flex;flex-direction:column;gap:.1rem;padding:.4rem 0;border-bottom:1px solid var(--line)}
+.deg-al-fila b{color:var(--parchment);font-size:var(--fs-3)}
+.deg-al-fila .ok{color:var(--green-deep)}
+.deg-al-fila .no{color:#a04848}
+.deg-al-fila .unk,.deg-al-fila small{color:var(--parch3)}
+.deg-btn{width:100%;min-height:48px;border-radius:var(--r2);border:0;background:var(--gold);color:#fff;font-family:var(--font-sans);font-size:var(--fs-3);font-weight:600;cursor:pointer}
+.deg-btn.sec{background:transparent;border:1px solid var(--gold);color:var(--gold-ink)}
+.deg-nav{display:flex;justify-content:space-between;gap:.5rem}
+.deg-nav button{background:none;border:0;min-height:44px;font-family:var(--font-mono);font-size:var(--fs-2);color:var(--gold-ink);cursor:pointer;padding:0 .2rem}
+
+/* Prácticas */
+.deg-rejilla{display:grid;grid-template-columns:1fr 1fr;gap:.55rem}
+.deg-ficha{position:relative;display:flex;flex-direction:column;gap:.3rem;padding:.4rem;border-radius:var(--r);border:2px solid var(--line2);background:#fff;cursor:pointer;text-align:left;color:var(--parchment)}
+.deg-ficha-foto{width:100%;aspect-ratio:4/3;border-radius:8px}
+.deg-ficha-nom{font-family:var(--font-sans);font-size:var(--fs-2);font-weight:600;line-height:1.3}
+.deg-ficha.hecho{opacity:.55;border-color:var(--sage)}
+.deg-ficha.mal{border-color:#a04848;animation:degMal .35s ease}
+.deg-ficha-n{position:absolute;top:.6rem;left:.6rem;width:30px;height:30px;border-radius:50%;background:var(--sage);color:#fff;font-family:var(--font-mono);font-weight:500;display:flex;align-items:center;justify-content:center}
+@keyframes degMal{0%,100%{transform:translateX(0)}25%{transform:translateX(-4px)}75%{transform:translateX(4px)}}
+@media (prefers-reduced-motion:reduce){.deg-ficha.mal{animation:none}}
+.deg-aviso{padding:.6rem .8rem;border-radius:var(--r2);background:var(--rose-a);color:var(--parchment);font-family:var(--font-sans);font-size:var(--fs-3);line-height:1.45}
+.deg-opciones{display:flex;flex-direction:column;gap:.5rem}
+.deg-opcion{text-align:left;padding:.75rem .9rem;min-height:52px;border-radius:var(--r2);border:1px solid var(--line2);background:#fff;font-family:var(--font-sans);font-size:var(--fs-3);line-height:1.4;color:var(--parchment);cursor:pointer}
+.deg-opcion.ok{border-color:var(--sage);background:var(--sage-a)}
+.deg-opcion.no{border-color:#a04848;background:var(--rose-a)}
+.deg-opcion:disabled{cursor:default}
+.deg-auto{display:grid;grid-template-columns:repeat(3,1fr);gap:.45rem}
+.deg-auto button{min-height:48px;border-radius:var(--r2);border:1px solid var(--line2);background:#fff;font-family:var(--font-sans);font-size:var(--fs-3);font-weight:600;color:var(--parchment);cursor:pointer}
+.deg-auto button:first-child{border-color:var(--sage);color:var(--green-deep)}
+.deg-auto button:last-child{border-color:#a04848;color:#a04848}
+.deg-fin{display:flex;flex-direction:column;gap:.6rem;text-align:center;padding:1rem 0}
+.deg-fin-tit{font-family:var(--font-serif);font-size:2rem;font-weight:700;color:var(--gold-ink)}
+.deg-fin p{margin:0;font-family:var(--font-sans);font-size:var(--fs-3);color:var(--parch2)}
+
+/* «Cómo contarlo» en la ficha completa y en la vista rápida */
+.deg-contar{padding:.9rem;margin-bottom:.75rem;display:flex;flex-direction:column;gap:.6rem}
+.deg-contar-tit{font-family:var(--font-mono);font-size:var(--fs-1);color:var(--gold);letter-spacing:.12em;text-transform:uppercase}
+.deg-contar.compacto{margin:.6rem 0;padding:.75rem;box-shadow:none;border-width:1px}

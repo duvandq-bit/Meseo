@@ -17501,7 +17501,7 @@ test('Saber: como mucho 7 chips; Carta sí, Repaso/Plating guide/Actualidad/Téc
   const lista = bar.slice(bar.indexOf('const items = ['), bar.indexOf('].filter(Boolean)'));
   const ids = [...lista.matchAll(/\['([a-z]+)',/g)].map(m => m[1]);
   assert(ids.length <= 7, `la barra de Saber tiene ${ids.length} chips; en el móvil caben 4-5 y el tope es 7`);
-  assert(ids.join(',') === 'mesa,carta,vinos,quesos,sala,protocolo', `orden de la barra: ${ids.join(',')}`);
+  assert(ids.join(',') === 'mesa,carta,degustacion,vinos,quesos,sala,protocolo', `orden de la barra: ${ids.join(',')}`);
   for (const no of ['repaso', 'emplatado', 'actualidad', 'tecnicas', 'smart', 'flashcards']) assert(!ids.includes(no), `el chip ${no} no va en la barra`);
   assert(!/Plating guide/.test(lista) && !/'Review':'Repaso'/.test(lista) && !/Actualidad/.test(lista) && !/Técnicas/.test(lista), 'ninguna etiqueta vieja en la barra');
   // Un solo chip encendido para fotos y lista.
@@ -17833,6 +17833,90 @@ test('Demo: los 20 platos de Orchilla tienen ficha de servicio confirmada y cohe
     if (sug.veg === 'no') assert(s.veg === 'no', `${d.id}: lleva ${sug.motivo.veg} y se marca ${s.veg}`);
   }
   assert(c.DISHES.some(d => d.svc.pica > 0) && c.DISHES.some(d => d.svc.cerdo) && c.DISHES.some(d => d.svc.veg === 'vegano'), 'hay de todo para probar la lupa');
+});
+
+console.log('\nMenú degustación');
+const _deg = (() => {
+  const i = html.indexOf('function _degValida(');
+  const j = html.indexOf('// Semilla de la SESIÓN', i);
+  return new Function('LANG', 'DISHES', 'getDish', 'DEGUSTACION', // eslint-disable-line no-new-func
+    html.slice(i, j) + '; return { _degValida, _degBarajar, _degRondaOrdenar, _degOpciones, _degTapar, _degCuentaCola };')('es', [], d => d, null);
+})();
+const _fnSrc = (nombre) => {
+  const i = html.indexOf('function ' + nombre + '(');
+  const j = html.indexOf('\n}\n', i);
+  return (i >= 0 && j > i) ? html.slice(i, j + 2) : '';
+};
+test('degustación: _cartaAplicar guarda DEGUSTACION validada y _cartaVaciar la vacía', () => {
+  assert(/let DEGUSTACION = null;/.test(html), 'falta la global DEGUSTACION');
+  assert(/DEGUSTACION = \(c === _CARTA_BASE \|\| typeof _degValida !== 'function'\) \? null : _degValida\(c\.DEGUSTACION, DISHES\);/.test(_fnSrc('_cartaAplicar')), '_cartaAplicar no guarda DEGUSTACION');
+  assert(/DEGUSTACION = null;/.test(_fnSrc('_cartaVaciar')), '_cartaVaciar no vacía DEGUSTACION');
+});
+test('degustación: _degValida se queda con los pases de la carta, en orden y sin repetir', () => {
+  const dishes = [{ id: 1 }, { id: 2 }, { id: 3 }];
+  const r = _deg._degValida({ nombre: 'M', pases: [{ id: 3, momento: 'a' }, { id: 9 }, { id: 1 }, { id: 3 }] }, dishes);
+  assert(r && r.pases.map(p => p.id).join() === '3,1', 'pases: ' + (r && r.pases.map(p => p.id)));
+  assert(r.revisar === false && r.pases[0].momento_en === 'a', 'revisar y momento_en por defecto');
+  assert(_deg._degValida(undefined, dishes) === null && _deg._degValida({ pases: [{ id: 9 }] }, dishes) === null, 'sin pases válidos es null');
+});
+test('degustación: la ruta existe, va en Saber y el chip sale tras Carta sólo con DEGUSTACION', () => {
+  assert(/const TAB_ROUTES = \[[^\]]*'degustacion'/.test(html), 'falta en TAB_ROUTES');
+  assert(/degustacion:renderDegustacion/.test(html) && /function renderDegustacion\(/.test(html), 'falta el render');
+  assert(/degustacion:'saber'/.test(html), 'no va en Saber');
+  const bar = _fnSrc('_saberChipsBar');
+  const iC = bar.indexOf("['carta'"), iD = bar.indexOf("['degustacion'"), iV = bar.indexOf("['vinos'");
+  assert(iC > 0 && iD > iC && iV > iD, 'el chip no va justo tras Carta');
+  assert(/DEGUSTACION\) \? \['degustacion'/.test(bar) && /showTab\('degustacion'\)/.test(bar), 'el chip no depende de DEGUSTACION o no abre la ruta');
+});
+test('degustación: la ronda de ordenar es determinista por semilla y nunca sale ordenada', () => {
+  const ids = [10, 11, 12, 13, 14, 15, 16, 17];
+  for (let s = 0; s < 200; s++) {
+    const a = _deg._degRondaOrdenar(ids, s);
+    assert(a.length === ids.length && [...a].sort().join() === [...ids].sort().join(), 'no es una permutación');
+    assert(a.join() !== ids.join(), 'salió en orden con semilla ' + s);
+    assert(_deg._degRondaOrdenar(ids, s).join() === a.join(), 'no es determinista');
+  }
+  assert(_deg._degRondaOrdenar([5, 6], 1).join() === '6,5', 'con dos pases también se desordena');
+});
+test('degustación: «¿Qué significa?» da la buena y distractores sin repetir', () => {
+  for (let s = 0; s < 100; s++) {
+    const o = _deg._degOpciones('B', ['x', 'B', 'y', 'x', 'z', 'w', ''], s, 4);
+    assert(o.length === 4 && new Set(o).size === 4, 'opciones repetidas: ' + o);
+    assert(o.filter(v => v === 'B').length === 1 && !o.includes(''), 'la buena una vez y ninguna vacía');
+  }
+  assert(_deg._degOpciones('B', ['x'], 3, 4).length === 2, 'con pocos pases, menos opciones');
+});
+test('degustación: el significado tapa la palabra del propio nombre', () => {
+  assert(_deg._degTapar('Hotate es vieira en japonés.', 'Hotate beurre blanc') === '… es vieira en japonés.', 'hotate');
+  assert(_deg._degTapar('AB son las iniciales de Akira Back.', 'AB sushi').startsWith('… son'), 'siglas');
+  assert(_deg._degTapar('Chocho es como se llama en Canarias al altramuz.', 'Chochos encurtidos, naranja y comino').startsWith('… es'), 'plural');
+});
+test('degustación: en «Cuéntalo» lo que sale «no» vuelve al final', () => {
+  assert(_deg._degCuentaCola([1, 2, 3], 0, 'no').join() === '1,2,3,1', 'no');
+  assert(_deg._degCuentaCola([1, 2, 3], 1, 'casi').join() === '1,2,3', 'casi');
+});
+test('degustación: la demo trae un menú con ids de su carta y el método completo', () => {
+  const c = JSON.parse(read('data/carta-demo.json'));
+  const D = c.DEGUSTACION;
+  assert(D && Array.isArray(D.pases) && D.pases.length >= 8 && D.pases.length <= 10, 'demo sin DEGUSTACION de 8 a 10 pases');
+  assert(D.revisar !== true, 'la demo no va marcada para revisar');
+  const ids = new Set(c.DISHES.map(d => d.id));
+  const en = new Map(c.DISHES_EN.map(d => [d.id, d]));
+  for (const p of D.pases) {
+    assert(ids.has(p.id), 'pase ' + p.id + ' no está en la carta');
+    assert(p.momento && p.momento_en, 'pase ' + p.id + ' sin momento');
+    const d = c.DISHES.find(x => x.id === p.id);
+    assert(Array.isArray(d.tres) && d.tres.length === 3 && d.story, 'pase ' + p.id + ' sin tres/story');
+    assert(en.get(p.id) && Array.isArray(en.get(p.id).tres) && en.get(p.id).story, 'pase ' + p.id + ' sin inglés');
+  }
+  assert(D.pases.filter(p => c.DISHES.find(x => x.id === p.id).significa).length >= 4, 'pocos significados para practicar');
+});
+test('degustación: «Cómo contarlo» va encima de ingredientes en la ficha y en la vista rápida', () => {
+  const f = _fnSrc('renderRepasoDishDetail');
+  assert(f.indexOf('_degContarHTML(dish, false)') > 0 && f.indexOf('_degContarHTML(dish, false)') < f.indexOf("'Ingredients':'Ingredientes'"), 'ficha completa');
+  const e = _fnSrc('_emplOpen');
+  assert(e.indexOf('_degContarHTML(d, true)') > 0 && e.indexOf('_degContarHTML(d, true)') < e.indexOf('empl-ov-ing'), 'vista rápida');
+  assert(/Pendiente de validar por el chef/.test(html), 'falta el aviso de revisión');
 });
 
 console.log('\nHygiene');
