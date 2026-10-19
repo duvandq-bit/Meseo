@@ -17919,6 +17919,105 @@ test('degustación: «Cómo contarlo» va encima de ingredientes en la ficha y e
   assert(/Pendiente de validar por el chef/.test(html), 'falta el aviso de revisión');
 });
 
+console.log('\nTest gratuito de alérgenos (test/)');
+{
+  const banco = await import(join(ROOT, 'test/banco.js'));
+  const logica = await import(join(ROOT, 'test/logica.js'));
+  const { PREGUNTAS: BQ, TEMAS: BT, TEMA_NOMBRE: BN } = banco;
+  test('test: banco de al menos 30 preguntas, ids únicos y los cinco temas', () => {
+    assert(BQ.length >= 30, `hay ${BQ.length}`);
+    assert(new Set(BQ.map(p => p.id)).size === BQ.length, 'ids repetidos');
+    for (const t of BT) {
+      assert(BN[t] && BN[t].es && BN[t].en, 'tema sin nombre ' + t);
+      assert(BQ.filter(p => p.tema === t).length >= 4, 'pocas preguntas de ' + t);
+    }
+    assert(BQ.every(p => BT.includes(p.tema)), 'tema desconocido');
+  });
+  test('test: cada pregunta en ES y EN, 4 opciones, exactamente una correcta y explicación', () => {
+    for (const p of BQ) {
+      for (const l of ['es', 'en']) {
+        assert(p.q[l] && p.x[l], p.id + ' sin texto ' + l);
+        assert(Array.isArray(p.o[l]) && p.o[l].length === 4, p.id + ' opciones ' + l);
+        assert(new Set(p.o[l]).size === 4, p.id + ' opciones repetidas ' + l);
+      }
+      assert(Number.isInteger(p.c) && p.c >= 0 && p.c < 4, p.id + ' índice de correcta');
+    }
+  });
+  test('test: ningún texto con raya (—) ni emojis', () => {
+    const txt = [read('test/banco.js'), read('test/app.js'), read('test/index.html')].join('\n');
+    assert(!txt.includes('—'), 'hay una raya');
+    assert(!/[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}]/u.test(txt), 'hay un emoji');
+  });
+  test('test: la correcta está repartida (ninguna posición > 40 %) y casi nunca es la más larga', () => {
+    const pos = [0, 0, 0, 0];
+    for (const p of BQ) pos[p.c]++;
+    assert(Math.max(...pos) / BQ.length <= 0.4, 'posiciones ' + pos.join(','));
+    for (const l of ['es', 'en']) {
+      const larga = BQ.filter(p => { const L = p.o[l].map(x => x.length), m = Math.max(...L); return L.filter(x => x === m).length === 1 && L[p.c] === m; }).length;
+      assert(larga / BQ.length <= 0.3, `${l}: la correcta es la más larga en ${larga}`);
+    }
+  });
+  test('test: elegirPreguntas saca 10 distintas, dos por tema, barajadas', () => {
+    let seed = 7; const rnd = () => ((seed = (seed * 16807) % 2147483647) / 2147483647);
+    const vistos = new Set();
+    for (let k = 0; k < 50; k++) {
+      const sel = logica.elegirPreguntas(BQ, 10, rnd);
+      assert(sel.length === 10 && new Set(sel.map(p => p.id)).size === 10, 'no son 10 distintas');
+      for (const t of BT) assert(sel.filter(p => p.tema === t).length === 2, 'tema desequilibrado ' + t);
+      vistos.add(sel.map(p => p.id).join());
+    }
+    assert(vistos.size > 40, 'no baraja');
+  });
+  test('test: prepararPregunta conserva la correcta al barajar opciones', () => {
+    for (const p of BQ) {
+      const q = logica.prepararPregunta(p, 'en');
+      assert(q.o[q.c] === p.o.en[p.c], p.id);
+    }
+  });
+  test('test: nota por tema, nota media y más falladas (caso a mano)', () => {
+    const rs = [
+      { aciertos: 1, total: 2, detalle: [{ id: 'c1', tema: 'catorce', ok: true }, { id: 'e1', tema: 'escondidos', ok: false }] },
+      { aciertos: 0, total: 2, detalle: [{ id: 'c1', tema: 'catorce', ok: false }, { id: 'e1', tema: 'escondidos', ok: false }] },
+    ];
+    const pt = logica.notaPorTema(rs);
+    assert(pt.catorce.aciertos === 1 && pt.catorce.total === 2 && pt.catorce.nota === 5, 'catorce ' + JSON.stringify(pt.catorce));
+    assert(pt.escondidos.nota === 0 && pt.cruzada.nota === null, 'escondidos/cruzada');
+    assert(logica.notaMedia(rs) === 2.5, 'media ' + logica.notaMedia(rs));
+    const mf = logica.masFalladas(rs, 3);
+    assert(mf.length === 2 && mf[0].id === 'e1' && mf[0].fallos === 2 && mf[1].id === 'c1', JSON.stringify(mf));
+    assert(logica.nota(7, 10) === 7 && logica.nota(0, 0) === 0, 'nota');
+  });
+  test('test: calculadora, caso a mano', () => {
+    // 2 nuevos × 2.000 € × (13 sem = 3 meses) × 50 % = 6.000 €
+    // 2 × 13 sem × 5 servicios × 4 mesas × 50 € × 10 % = 2.600 €
+    const r = logica.calcularCoste({ costeMes: 2000, nuevos: 2, semanas: 13, rendimiento: 50, ticket: 50, mesas: 4, servicios: 5, perdida: 10 });
+    assert(r.curva === 6000 && r.ventas === 2600 && r.total === 8600, JSON.stringify(r));
+    const z = logica.calcularCoste({ costeMes: 'x', nuevos: -3, semanas: 99, rendimiento: 150 });
+    assert(z.total === 0 && z.valores.semanas === 52 && z.valores.rendimiento === 100, 'límites');
+    const d = logica.CALC_DEFECTO;
+    assert(d.costeMes === Math.round(1320.04 * 14 / 12 * 1.3215), 'coste por defecto desalineado con la fuente');
+  });
+  test('test: la página no carga index.html, la app ni la sesión', () => {
+    const page = read('test/index.html'), app = read('test/app.js');
+    assert(!/index\.html|styles\.css|supabase-js|cdn\.jsdelivr/.test(page.replace(/<!--[\s\S]*?-->/g, '')), 'carga recursos de la app');
+    assert(/<script type="module" src="app\.js"><\/script>/.test(page), 'sin app.js');
+    assert(!/currentUser|_authCtx|_bearer|sessionStorage|meseo_session|txoko_/.test(app), 'depende de la sesión de la app');
+    assert(/og:title/.test(page) && /og:description/.test(page), 'sin Open Graph');
+    assert(/Content-Security-Policy/.test(page) && /connect-src https:\/\/advkoujfgbrrjvqexrcu\.supabase\.co/.test(page), 'CSP');
+    assert(/wa\.me\/\?text=/.test(app), 'sin enlace de WhatsApp');
+    assert(/const CONTACTO = '[^']+@[^']+'/.test(app), 'sin contacto');
+  });
+  test('test: el service worker no intercepta /test/', () => {
+    const sw = read('sw.js');
+    assert(/url\.pathname\.startsWith\('\/test\/'\)\) return;/.test(sw), 'sw.js no deja pasar /test/');
+  });
+  test('test: el SQL del test no da SELECT a anon y lee por RPC con token', () => {
+    const sql = read('supabase/test_equipo_alergenos.sql');
+    assert(!/grant\s+select[^;]*test_(equipos|respuestas)/i.test(sql), 'grant select');
+    assert(/enable row level security/i.test(sql) && /security definer/i.test(sql) && /token_resultados = p_token/.test(sql), 'RLS/RPC');
+  });
+}
+
 console.log('\nHygiene');
 test('no git conflict markers in tracked source', () => {
   for (const f of ['index.html', 'sw.js', 'data/wines.json', 'data/lqa-situations.json', 'data/ghost-scenarios.json']) {
