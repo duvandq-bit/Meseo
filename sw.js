@@ -4,7 +4,7 @@
 //   • Web Push notifications
 //   • Notification click → focus existing window in scope, or open one
 
-const VERSION = 'v7.518';
+const VERSION = 'v7.519';
 const CACHE_NAME = `txoko-shell-${VERSION}`;
 // Caché ESTABLE para assets perezosos (sprites de img/, data/*.json). A
 // diferencia del shell (versionado), NO se borra al cambiar de versión: así
@@ -80,6 +80,9 @@ self.addEventListener('fetch', (e) => {
   const url = new URL(req.url);
   if (url.origin !== self.location.origin) return; // CDN, Supabase, fonts → bypass
   if (url.pathname.startsWith('/rest/') || url.pathname.startsWith('/functions/')) return;
+  // El test público de alérgenos (/test/) es una página aparte: ni se cachea en
+  // el shell ni, sin conexión, debe caer en index.html. Va siempre a la red.
+  if (url.pathname === '/test' || url.pathname.startsWith('/test/')) return;
 
   // ── Shell → network-first (fresh deploy wins; cache only if offline) ──
   if (isShellRequest(req, url)) {

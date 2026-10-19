@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<!-- Página propia y ligera: NO carga index.html, ni styles.css de la app, ni
+     supabase-js, ni depende de la sesión. Tiene que abrir rápido desde WhatsApp. -->
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; font-src 'self'; img-src 'self' data:; connect-src https://advkoujfgbrrjvqexrcu.supabase.co; object-src 'none'; base-uri 'self'; form-action 'none'">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="referrer" content="no-referrer">
+<title>¿Cuánto sabe tu equipo de alérgenos? · Meseo</title>
+<meta name="description" content="Test gratuito de alérgenos para equipos de sala. Diez preguntas, dos minutos, desde el móvil. Tú recibes la nota de tu equipo.">
+<meta property="og:site_name" content="Meseo">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="es_ES">
+<meta property="og:title" content="¿Cuánto sabe tu equipo de alérgenos?">
+<meta property="og:description" content="Diez preguntas de sala, dos minutos, desde el móvil. Gratis y sin cuenta.">
+<meta property="og:url" content="https://meseo.es/test/">
+<meta property="og:image" content="https://meseo.es/icon-512.png">
+<meta property="og:image:width" content="512">
+<meta property="og:image:height" content="512">
+<meta name="twitter:card" content="summary">
+<meta name="theme-color" content="#1c2a22">
+<link rel="icon" type="image/svg+xml" href="../icon.svg">
+<link rel="apple-touch-icon" href="../icon-180.png">
+<link rel="preload" as="font" type="font/woff2" href="../fonts/Quicksand-300-latin.woff2" crossorigin>
+<link rel="preload" as="font" type="font/woff2" href="../fonts/Cinzel-400-latin.woff2" crossorigin>
+<link rel="preconnect" href="https://advkoujfgbrrjvqexrcu.supabase.co" crossorigin>
+<link rel="stylesheet" href="test.css">
+<script type="module" src="app.js"></script>
+</head>
+<body>
+<header class="top">
+  <a class="marca" href="./">Meseo</a>
+  <div class="idioma" role="group" aria-label="Idioma">
+    <button type="button" data-lang="es" aria-pressed="true">ES</button>
+    <button type="button" data-lang="en" aria-pressed="false">EN</button>
+  </div>
+</header>
+<main id="app" aria-live="polite">
+  <section class="hero">
+    <p class="ceja">Test gratuito para equipos de sala</p>
+    <h1>En dos minutos sabrás si tu equipo de sala sabe lo que tiene que saber de alérgenos.</h1>
+  </section>
+  <noscript><p class="aviso">Esta página necesita JavaScript activado.</p></noscript>
+</main>
+<footer class="pie">
+  <span>Meseo · el oficio se entrena</span>
+  <a href="../privacidad.html">Privacidad</a>
+</footer>
+</body>
+</html>
