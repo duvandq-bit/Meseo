@@ -52,7 +52,7 @@
 <meta property="og:description" content="Formación de equipos de sala: carta, alérgenos, vinos, exámenes y juegos de repaso.">
 <meta property="og:url" content="https://meseo.es/">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"Meseo","url":"https://meseo.es/"}</script>
-<meta name="app-version" content="7.517">
+<meta name="app-version" content="7.518">
 <meta name="app-build" content="May 2026">
 <meta name="theme-color" content="#1c2a22">
 <!-- ═══ PWA ═══ -->
@@ -2378,6 +2378,25 @@ function _navVinosSync(){
 // reponer las mismas claves— porque son const y de ellas cuelgan treinta mil
 // líneas. const impide reasignar, no modificar.
 //
+// ═══ MENÚ DEGUSTACIÓN: formato en la carta ══════════════════════════════
+// Opcional. Una carta (data/carta-<restaurante>.json o la fila de public.cartas)
+// puede traer un menú degustación; sin él no hay pantalla ni chip.
+//   DEGUSTACION: {
+//     nombre: "Menú degustación", nombre_en: "Tasting menu",
+//     revisar: true,            // opcional: enseña «Pendiente de validar por el chef»
+//     nota: "…",                // opcional, para quien revisa (no se enseña)
+//     pases: [ { id: 3070, momento: "Abrir el apetito: crudos fríos",
+//                momento_en: "Opening the appetite: cold and raw" }, … ]  // EN ORDEN
+//   }
+// Y en cada plato del menú (DISHES y, traducido, DISHES_EN), todo opcional:
+//   significa: "Negi es el puerro japonés…"   // qué quiere decir el nombre
+//   guino: "Miel de palma de La Gomera"        // el guiño canario (o coreano)
+//   tres: ["protagonista", "viaje", "guiño"]   // el plato en tres frases
+//   story: "frase de diez segundos para la mesa"
+// _cartaAplicar la guarda ya validada (_degValida: sólo ids de la carta, sin
+// repetir) y _cartaVaciar la quita. La carta de Txoko no tiene.
+let DEGUSTACION = null;
+
 // Copia intacta de la carta de Txoko, tomada antes de que nadie la toque. Sin
 // ella, cerrar sesión desde M.B. y volver a entrar con una cuenta de Txoko
 // dejaría puesta la carta de M.B.: la misma fuga, por la puerta de atrás.
@@ -2629,6 +2648,7 @@ function _cartaAplicar(c){
     TEC: _cartaTecValidas(c)
   };
   _cartaFotos = (c === _CARTA_BASE) ? null : _cartaFotosValidas(c);
+  DEGUSTACION = (c === _CARTA_BASE || typeof _degValida !== 'function') ? null : _degValida(c.DEGUSTACION, DISHES);
   _cartaCachesFuera();
   _cartaFranjaSync();
   return true;
@@ -2646,6 +2666,7 @@ function _cartaVaciar(){
   for(const k of Object.keys(DISH_SERVICE)) delete DISH_SERVICE[k];
   _cartaMeta = { venue:null, allergensValidated:false, CATS:[] };
   _cartaFotos = null;
+  DEGUSTACION = null;
   _cartaCachesFuera();
   _cartaFranjaSync();
 }
@@ -2861,7 +2882,7 @@ const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><p
 const SRC = 'src';
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='7.517';  // sincronizada con sw.js VERSION (guard de CI)
+const APP_VERSION='7.518';  // sincronizada con sw.js VERSION (guard de CI)
 const APP_BUILD='Jul 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;
@@ -14673,7 +14694,8 @@ const _TITULOS = {
   protocolo:['Auditoría LQA','LQA audit'],
   lqa:['Auditoría LQA','LQA audit'], vinos:['Carta de vinos','Wine list'],
   quesos:['Carro de quesos','Cheese trolley'], sala:['Sala y procedimientos','Floor procedures'],
-  mesa:['Mesa con alergias','Table with allergies']
+  mesa:['Mesa con alergias','Table with allergies'],
+  degustacion:['Menú degustación','Tasting menu']
 };
 function _ponerTitulo(tab){
   const h = document.getElementById('tituloPantalla');
@@ -14703,6 +14725,8 @@ const UX2_SECCION = {
   // Practicar · entrenar. `exam` abre la PREPARACIÓN del examen, no un examen.
   // `repaso` es explorar la carta: es consulta, va en Saber.
   repaso:'saber',
+  // El menú degustación se consulta y se practica en su propia pantalla, en Saber.
+  degustacion:'saber',
   practicar:'practicar', exam:'practicar', smart:'practicar', flashcards:'practicar', txoko:'practicar',
   // Equipo · hay otra persona dentro.
   ranking:'equipo', supervisor:'equipo',
@@ -14713,7 +14737,7 @@ const UX2_SECCION = {
 // Sin 'videos' ni 'chat' desde oct 2026, ni 'horarios' desde el 12 oct 2026
 // (retirados por el propietario). Un aviso antiguo que abra #tab=chat o
 // #tab=horarios cae en INICIO por la regla de abajo.
-const TAB_ROUTES = ['dashboard','mesa','practicar','aprender','flashcards','exam','repaso','tecnicas','actualidad','smart','emplatado','stats','logros','txoko','ranking','supervisor','protocolo','lqa','vinos','quesos','sala'];
+const TAB_ROUTES = ['dashboard','mesa','degustacion','practicar','aprender','flashcards','exam','repaso','tecnicas','actualidad','smart','emplatado','stats','logros','txoko','ranking','supervisor','protocolo','lqa','vinos','quesos','sala'];
 
 function showTab(tab, instant){
   // ── Pestaña desconocida → INICIO ──────────────────────────────────────
@@ -14770,7 +14794,7 @@ function showTab(tab, instant){
   _ux2Sync(tab);
   _saberSync(tab);
   const c=document.getElementById('appContent');
-  const renderMap = {practicar:renderPracticar,mesa:renderMesa,quesos:renderQuesos,sala:renderSala,dashboard:renderDashboard,aprender:renderAprender,flashcards:renderAprender,exam:renderExam,repaso:renderAprender,tecnicas:renderAprender,actualidad:renderAprender,smart:renderAprender,emplatado:renderAprender,stats:renderRankingHub,logros:renderRankingHub,txoko:renderTxoko,ranking:renderRankingHub,supervisor:renderSupervisor,protocolo:renderLqa,lqa:renderLqa,vinos:renderVinos};
+  const renderMap = {practicar:renderPracticar,mesa:renderMesa,quesos:renderQuesos,sala:renderSala,dashboard:renderDashboard,aprender:renderAprender,flashcards:renderAprender,exam:renderExam,repaso:renderAprender,tecnicas:renderAprender,actualidad:renderAprender,smart:renderAprender,emplatado:renderAprender,stats:renderRankingHub,logros:renderRankingHub,txoko:renderTxoko,ranking:renderRankingHub,supervisor:renderSupervisor,protocolo:renderLqa,lqa:renderLqa,vinos:renderVinos,degustacion:renderDegustacion};
   const _doRender = ()=>{
     c.innerHTML='';
     c.style.transition='none';
@@ -15890,6 +15914,7 @@ function _emplOpen(id){
         <div class="empl-ov-cat">${escapeHtml(dd.cat||'')}</div>
         <div class="empl-ov-name">${escapeHtml(dd.name)}</div>
         ${typeof _fsvTiraHTML==='function' ? _fsvTiraHTML(d, _en) : ''}
+        ${(typeof _degContarHTML==='function') ? _degContarHTML(d, true) : ''}
         <div class="empl-ov-al">${al}</div>
         ${dd.marcaje?`<div class="empl-ov-marc">🍽️ ${escapeHtml(dd.marcaje)}</div>`:''}
         ${dd.notes?`<div class="empl-ov-note">${escapeHtml(dd.notes)}</div>`:''}
@@ -15961,6 +15986,456 @@ async function _supPhotoModerate(id,status){
   }catch(_){ showToast(_en?'Moderation failed':'Error al moderar','warning',3000); }
 }
 
+// ═══ MENÚ DEGUSTACIÓN · aprenderlo fácil ════════════════════════════════
+// Método aprobado por el propietario (Akira Back, oct 2026): repetir
+// ingredientes no enseña un menú. El orden se entiende como un viaje (frío a
+// caliente, mar a tierra, ligero a intenso, y al final lo dulce), el nombre ya
+// dice el plato, cada pase tiene su guiño de la casa y se cuenta en tres frases
+// y una historia de diez segundos. Ingredientes y alérgenos van debajo, como
+// apoyo. Los datos son de la carta (bloque DEGUSTACION y campos significa,
+// guino, tres y story de cada plato; formato junto a `let DEGUSTACION`).
+//
+// Las prácticas no dan XP ni registran actividad: el registro tiene un
+// vocabulario cerrado y la única actividad de carta parecida («repaso») marcaría
+// hecha la tarea de repaso del plan de hoy sin haberla hecho.
+
+// La que guarda _cartaAplicar: sólo pases que existen en la carta, sin repetir
+// y en el orden en que vienen. Sin pases válidos no hay menú (null).
+function _degValida(raw, dishes){
+  if(!raw || typeof raw !== 'object' || !Array.isArray(raw.pases)) return null;
+  const ids = new Set((dishes || []).map(d => d && d.id));
+  const vistos = new Set();
+  const pases = [];
+  for(const p of raw.pases){
+    const id = p ? Number(p.id) : NaN;
+    if(!ids.has(id) || vistos.has(id)) continue;
+    vistos.add(id);
+    pases.push({ id, momento: String(p.momento || ''), momento_en: String(p.momento_en || p.momento || '') });
+  }
+  if(!pases.length) return null;
+  return {
+    nombre: String(raw.nombre || 'Menú degustación'),
+    nombre_en: String(raw.nombre_en || raw.nombre || 'Tasting menu'),
+    revisar: raw.revisar === true,
+    nota: raw.nota ? String(raw.nota) : '',
+    pases
+  };
+}
+function _degNombre(){
+  if(!DEGUSTACION) return '';
+  return LANG==='en' ? (DEGUSTACION.nombre_en || DEGUSTACION.nombre) : DEGUSTACION.nombre;
+}
+function _degMomento(p){ return p ? (LANG==='en' ? (p.momento_en || p.momento) : p.momento) : ''; }
+function _degPlato(id){
+  const d = DISHES.find(x => x.id === id);
+  return d ? { d, dd: getDish(d) } : null;
+}
+function _degTres(dd){ return (dd && Array.isArray(dd.tres)) ? dd.tres.filter(x => typeof x === 'string' && x.trim()) : []; }
+
+// ── Funciones puras de las prácticas ──
+// Azar con semilla (mulberry32): la misma semilla da la misma ronda.
+function _degAzar(seed){
+  let a = (seed >>> 0) || 1;
+  return function(){
+    a = (a + 0x6D2B79F5) | 0;
+    let t = Math.imul(a ^ (a >>> 15), 1 | a);
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+function _degBarajar(arr, seed){
+  const r = _degAzar(seed);
+  const a = (arr || []).slice();
+  for(let i = a.length - 1; i > 0; i--){
+    const j = Math.floor(r() * (i + 1));
+    const t = a[i]; a[i] = a[j]; a[j] = t;
+  }
+  return a;
+}
+// «Ordena el viaje»: los pases desordenados, nunca en el orden bueno.
+function _degRondaOrdenar(ids, seed){
+  ids = (ids || []).slice();
+  let a = _degBarajar(ids, seed);
+  if(a.length > 1 && a.every((x, i) => x === ids[i])) a = a.slice(1).concat(a[0]);
+  return a;
+}
+// «¿Qué significa?»: la buena y hasta n-1 distractores de otros pases, sin
+// repetir ninguno y sin repetir la buena.
+function _degOpciones(correcta, otras, seed, n){
+  n = n || 4;
+  const vistos = new Set([correcta]);
+  const dis = [];
+  for(const o of _degBarajar(otras || [], seed)){
+    if(!o || vistos.has(o)) continue;
+    vistos.add(o); dis.push(o);
+    if(dis.length >= n - 1) break;
+  }
+  return _degBarajar([correcta].concat(dis), seed + 7);
+}
+// Tapa en un significado las palabras del nombre de su plato: «Hotate es
+// vieira» delante de «Hotate beurre blanc» regalaría la respuesta.
+const _DEG_VACIAS = new Set(['con','del','las','los','sus','una','uno','and','the','with']);
+function _degTapar(texto, nombre){
+  // Palabras de tres letras o más, o siglas («AB»); sin las vacías.
+  const pal = String(nombre || '').match(/[\p{L}]+/gu) || [];
+  const claves = pal.filter(w => (w.length >= 3 && !_DEG_VACIAS.has(w.toLowerCase())) || /^[A-Z]{2,}$/.test(w)).map(w => w.toLowerCase());
+  if(!claves.length) return String(texto || '');
+  const out = String(texto || '').replace(/[\p{L}]+/gu, t => {
+    const w = t.toLowerCase();
+    const tapa = claves.some(k => k === w || (k.length >= 4 && w.length >= 4 && (k.startsWith(w) || w.startsWith(k))));
+    return tapa ? '…' : t;
+  });
+  return out.replace(/…(\s+…)+/g, '…');
+}
+// «Cuéntalo»: lo que sale «no» vuelve al final de la ronda.
+function _degCuentaCola(cola, i, nota){
+  const c = (cola || []).slice();
+  if(nota === 'no' && i >= 0 && i < c.length) c.push(c[i]);
+  return c;
+}
+
+// Semilla de la SESIÓN, no del día: cambia al volver a abrir la app y cada
+// ronda suma uno, así que dos rondas seguidas no salen iguales.
+const _degS = { vista:'viaje', pase:null, rondas:0, ord:null, sig:null, cue:null };
+let _degSemillaBase = null;
+function _degSemilla(){
+  if(_degSemillaBase === null){
+    try{ const s = sessionStorage.getItem('meseo_deg_semilla'); if(s) _degSemillaBase = Number(s) || 0; }catch(e){}
+    if(_degSemillaBase === null){
+      _degSemillaBase = Math.floor(Math.random() * 1e9);
+      try{ sessionStorage.setItem('meseo_deg_semilla', String(_degSemillaBase)); }catch(e){}
+    }
+  }
+  return _degSemillaBase + (_degS.rondas++);
+}
+
+// ── Piezas comunes ──
+function _degFotoHTML(id, nombre, cls){
+  const src = (typeof dishPhotoSrc === 'function') ? dishPhotoSrc(id) : null;
+  return src
+    ? `<span class="${cls}"><img ${SRC}="${escapeHTML(src)}" alt="${escapeHTML(nombre || '')}" loading="lazy"></span>`
+    : `<span class="${cls} sin" aria-hidden="true"></span>`;
+}
+function _degRevisarHTML(){
+  if(!DEGUSTACION || !DEGUSTACION.revisar) return '';
+  return `<div class="deg-revisar">${LANG==='en' ? 'Pending validation by the chef' : 'Pendiente de validar por el chef'}</div>`;
+}
+function _degHayVoz(){ return typeof speechSynthesis !== 'undefined' && typeof SpeechSynthesisUtterance !== 'undefined'; }
+function _degHablar(id){
+  const p = _degPlato(id); if(!p || !p.dd.story || !_degHayVoz()) return;
+  try{
+    const code = LANG==='en' ? 'en-GB' : 'es-ES';
+    speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(p.dd.story);
+    u.lang = code; u.rate = 0.95;
+    const v = (typeof _mesaVoz === 'function') ? _mesaVoz(code) : null; if(v) u.voice = v;
+    speechSynthesis.speak(u);
+  }catch(e){ if(typeof showToast === 'function') showToast(LANG==='en' ? 'This device cannot read aloud' : 'Este dispositivo no puede leer en voz alta', 'warning', 2600); }
+}
+function _degBtnEscuchar(id){
+  if(!_degHayVoz()) return '';
+  return `<button type="button" class="deg-escuchar" onclick="event.stopPropagation();_degHablar(${id})">${LANG==='en' ? 'Listen' : 'Escuchar'}</button>`;
+}
+
+// Bloque «Cómo contarlo» de la ficha completa y de la vista rápida. Va ARRIBA
+// de ingredientes y alérgenos: es el método aprobado. Sin datos, nada.
+function _degContarHTML(d, compacto){
+  if(!d) return '';
+  const dd = getDish(d);
+  const tres = _degTres(dd);
+  if(!tres.length && !dd.story && !dd.significa && !dd.guino) return '';
+  const _en = LANG==='en';
+  return `<div class="card deg-contar${compacto ? ' compacto' : ''}">
+    <div class="deg-contar-tit">${_en ? 'How to tell it' : 'Cómo contarlo'}</div>
+    ${tres.length ? `<ol class="deg-tres">${tres.map(f => `<li>${escapeHTML(f)}</li>`).join('')}</ol>` : ''}
+    ${dd.story ? `<div class="deg-story"><p>${escapeHTML(dd.story)}</p>${_degBtnEscuchar(d.id)}</div>` : ''}
+    ${dd.guino ? `<div class="deg-guino"><span>${_en ? 'The house touch' : 'El guiño de la casa'}</span>${escapeHTML(dd.guino)}</div>` : ''}
+    ${dd.significa ? `<div class="deg-sig"><span>${_en ? 'What the name means' : 'Qué significa el nombre'}</span>${escapeHTML(dd.significa)}</div>` : ''}
+  </div>`;
+}
+
+// Alérgenos del pase con su veredicto y de dónde vienen, con la misma regla de
+// la ficha: sin carta validada no hay veredicto, y sin dato se consulta a cocina.
+function _degAlergenosHTML(d){
+  const _en = LANG==='en';
+  const val = (typeof _alergenosValidados !== 'function' || _alergenosValidados());
+  const acts = (typeof DISH_ACTIONS !== 'undefined' && DISH_ACTIONS[d.id]) || {};
+  const comps = (typeof DISH_COMPONENTS !== 'undefined' && DISH_COMPONENTS[d.id]) || [];
+  const al = Array.isArray(d.allergens) ? d.allergens : [];
+  if(!al.length){
+    const t = _en ? 'No declared allergens' : 'Sin alérgenos declarados';
+    return `<div class="deg-al-fila">${val ? escapeHTML(t) : escapeHTML(_sinAlergenosTxt(t, _en))}</div>`;
+  }
+  return al.map(a => {
+    const lbl = escapeHTML(typeof allergenLocal === 'function' ? allergenLocal(a) : a);
+    const de = (Array.isArray(comps) ? comps : []).filter(c => c && Array.isArray(c.a) && c.a.includes(a)).map(c => c.v ? (_en ? 'depends on chosen variant' : c.n) : c.n);
+    const act = acts[a];
+    let v;
+    if(!val) v = `<span class="unk">${_en ? 'Pending menu validation' : 'Pendiente de validación de la carta'}</span>`;
+    else if(act && act.r === 1){
+      const cmd = _en ? (act.c_en || act.c) : act.c;
+      v = `<span class="ok">${_en ? 'Adaptable' : 'Se adapta'}${cmd ? ` · ${_en ? 'order' : 'comandar'}: <em>${escapeHTML(cmd)}</em>` : ''}</span>`;
+    } else if(act && act.r === 0) v = `<span class="no">${_en ? 'Structural, not suitable' : 'Estructural, no apto'}</span>`;
+    else v = `<span class="unk">${_en ? 'Check with the kitchen' : 'Consultar con cocina'}</span>`;
+    return `<div class="deg-al-fila"><b>${lbl}</b>${v}${de.length ? `<small>${_en ? 'From' : 'Por'}: ${de.map(escapeHTML).join(' · ')}</small>` : ''}</div>`;
+  }).join('');
+}
+
+// ── Pantalla ──
+function _degIr(vista, extra){
+  _degS.vista = vista;
+  if(extra) Object.assign(_degS, extra);
+  if(typeof currentTab !== 'undefined' && currentTab === 'degustacion'){ renderDegustacion(); try{ window.scrollTo(0, 0); }catch(e){} }
+  else showTab('degustacion');
+}
+function renderDegustacion(){
+  const c = document.getElementById('appContent'); if(!c) return;
+  const _en = LANG==='en';
+  if(!DEGUSTACION){
+    c.innerHTML = `<div class="deg"><div class="deg-vacio">${_en ? 'This restaurant has no tasting menu yet.' : 'Este restaurante aún no tiene menú degustación.'}</div>
+      <button type="button" class="deg-btn" onclick="_cartaAbrir()">${_en ? 'Go to the menu' : 'Ir a la carta'}</button></div>`;
+    return;
+  }
+  const v = _degS.vista;
+  if(v === 'pase') return _degPintarPase(c);
+  if(v === 'ordenar') return _degPintarOrdenar(c);
+  if(v === 'significa') return _degPintarSignifica(c);
+  if(v === 'cuenta') return _degPintarCuenta(c);
+  _degPintarViaje(c);
+}
+function _degVolverHTML(){
+  return `<button type="button" class="deg-volver" onclick="_degIr('viaje')">← ${LANG==='en' ? 'The journey' : 'El viaje'}</button>`;
+}
+function _degConSignifica(){ return DEGUSTACION ? DEGUSTACION.pases.filter(p => { const x = _degPlato(p.id); return x && x.dd.significa; }) : []; }
+function _degConStory(){ return DEGUSTACION ? DEGUSTACION.pases.filter(p => { const x = _degPlato(p.id); return x && x.dd.story; }) : []; }
+
+function _degPintarViaje(c){
+  const _en = LANG==='en';
+  const pases = DEGUSTACION.pases;
+  const filas = pases.map((p, i) => {
+    const x = _degPlato(p.id); if(!x) return '';
+    return `<li class="deg-paso"><button type="button" onclick="_degIr('pase',{pase:${p.id}})">
+      <span class="deg-num">${i + 1}</span>
+      ${_degFotoHTML(p.id, x.dd.name, 'deg-foto')}
+      <span class="deg-txt">
+        <span class="deg-mom">${escapeHTML(_degMomento(p))}</span>
+        <span class="deg-nom">${escapeHTML(x.dd.name)}</span>
+        ${x.dd.story ? `<span class="deg-frase">${escapeHTML(x.dd.story)}</span>` : ''}
+      </span>
+    </button></li>`;
+  }).join('');
+  const nSig = _degConSignifica().length, nSto = _degConStory().length;
+  const prac = [
+    ['ordenar', _en ? 'Put the journey in order' : 'Ordena el viaje', _en ? 'Tap the courses in the order they go out' : 'Toca los pases en el orden en que salen', pases.length > 1],
+    ['significa', _en ? 'What does it mean?' : '¿Qué significa?', _en ? 'The name and four meanings' : 'El nombre y cuatro significados', nSig > 1],
+    ['cuenta', _en ? 'Tell it' : 'Cuéntalo', _en ? 'Say your line, then see the good one' : 'Di tu frase y mira la buena', nSto > 0]
+  ].filter(x => x[3]);
+  c.innerHTML = `<div class="deg">
+    <header class="deg-cab">
+      <div class="deg-eyebrow">${_en ? 'The journey' : 'El viaje'} · ${pases.length} ${_en ? 'courses' : 'pases'}</div>
+      <h2 class="deg-tit">${escapeHTML(_degNombre())}</h2>
+      <p class="deg-intro">${_en ? 'The order makes sense: cold to hot, sea to land, light to intense, and sweet at the end. Understand it and you will not need to memorise it.' : 'El orden tiene sentido: de frío a caliente, del mar a la tierra, de ligero a intenso, y al final lo dulce. Si lo entiendes, no tienes que memorizarlo.'}</p>
+      ${_degRevisarHTML()}
+    </header>
+    <ol class="deg-linea">${filas}</ol>
+    ${prac.length ? `<section class="deg-prac">
+      <h3 class="deg-h3">${_en ? 'Practise' : 'Practica'}</h3>
+      ${prac.map(([id, t, s]) => `<button type="button" class="deg-prac-btn" onclick="_degEmpezar('${id}')"><b>${t}</b><span>${s}</span></button>`).join('')}
+    </section>` : ''}
+  </div>`;
+}
+
+function _degPintarPase(c){
+  const _en = LANG==='en';
+  const pases = DEGUSTACION.pases;
+  let i = pases.findIndex(p => p.id === _degS.pase);
+  if(i < 0) i = 0;
+  const p = pases[i];
+  const x = _degPlato(p.id);
+  if(!x){ _degS.vista = 'viaje'; return _degPintarViaje(c); }
+  const d = x.d, dd = x.dd;
+  const tres = _degTres(dd);
+  const ant = pases[i - 1], sig = pases[i + 1];
+  const ing = dd.ingredients ? ((typeof _ingPorLineas === 'function' && _ingPorLineas(dd.ingredients)) ? _bocadosHTML(_ingPorLineas(dd.ingredients)) : `<p>${escapeHTML(dd.ingredients)}</p>`) : '';
+  c.innerHTML = `<div class="deg deg-pase">
+    ${_degVolverHTML()}
+    <div class="deg-eyebrow">${_en ? 'Course' : 'Pase'} ${i + 1} ${_en ? 'of' : 'de'} ${pases.length} · ${escapeHTML(_degMomento(p))}</div>
+    <h2 class="deg-tit">${escapeHTML(dd.name)}</h2>
+    ${_degRevisarHTML()}
+    ${_degFotoHTML(d.id, dd.name, 'deg-hero')}
+    ${dd.significa ? `<div class="deg-sig"><span>${_en ? 'What the name means' : 'Qué significa el nombre'}</span>${escapeHTML(dd.significa)}</div>` : ''}
+    ${tres.length ? `<ol class="deg-tres grande">${tres.map(f => `<li>${escapeHTML(f)}</li>`).join('')}</ol>` : ''}
+    ${dd.guino ? `<div class="deg-guino"><span>${_en ? 'The house touch' : 'El guiño de la casa'}</span>${escapeHTML(dd.guino)}</div>` : ''}
+    ${dd.story ? `<div class="deg-story"><span>${_en ? 'At the table, in ten seconds' : 'En la mesa, en diez segundos'}</span><p>${escapeHTML(dd.story)}</p>${_degBtnEscuchar(d.id)}</div>` : ''}
+    <details class="deg-apoyo">
+      <summary>${_en ? 'Ingredients and allergens' : 'Ingredientes y alérgenos'}</summary>
+      <div class="deg-apoyo-body">
+        ${ing ? `<div class="deg-apoyo-ing">${ing}</div>` : ''}
+        <div class="deg-apoyo-al">${_degAlergenosHTML(d)}</div>
+      </div>
+    </details>
+    <button type="button" class="deg-btn" onclick="repasoCat='${escapeHTML(String(d.cat || '')).replace(/'/g, '&#39;')}';repasoDishId=${d.id};repasoView='dish';_subTab.aprender='repaso';showTab('repaso')">${_en ? 'Full dish sheet' : 'Ficha completa'}</button>
+    <div class="deg-nav">
+      ${ant ? `<button type="button" onclick="_degIr('pase',{pase:${ant.id}})">← ${_en ? 'Previous' : 'Anterior'}</button>` : '<span></span>'}
+      ${sig ? `<button type="button" onclick="_degIr('pase',{pase:${sig.id}})">${_en ? 'Next' : 'Siguiente'} →</button>` : '<span></span>'}
+    </div>
+  </div>`;
+}
+
+// ── Prácticas ──
+function _degEmpezar(tipo){
+  if(!DEGUSTACION) return;
+  const seed = _degSemilla();
+  if(tipo === 'ordenar'){
+    const ids = DEGUSTACION.pases.map(p => p.id);
+    _degS.ord = { orden: ids, mezcla: _degRondaOrdenar(ids, seed), hechos: [], aciertos: 0, fallos: 0, errEnPaso: false, mal: null, msg: '' };
+  } else if(tipo === 'significa'){
+    const con = _degConSignifica();
+    _degS.sig = { cola: _degBarajar(con.map(p => p.id), seed), i: 0, aciertos: 0, elegido: null, opciones: null, seed };
+  } else if(tipo === 'cuenta'){
+    const con = _degConStory();
+    _degS.cue = { cola: _degBarajar(con.map(p => p.id), seed), i: 0, ver: false, si: 0, casi: 0, no: 0, base: con.length };
+  } else return;
+  _degIr(tipo);
+}
+function _degFinHTML(titulo, detalle, tipo){
+  const _en = LANG==='en';
+  return `<div class="deg-fin">
+    <div class="deg-fin-tit">${titulo}</div>
+    <p>${detalle}</p>
+    <button type="button" class="deg-btn" onclick="_degEmpezar('${tipo}')">${_en ? 'Another round' : 'Otra ronda'}</button>
+    <button type="button" class="deg-btn sec" onclick="_degIr('viaje')">${_en ? 'Back to the journey' : 'Volver al viaje'}</button>
+  </div>`;
+}
+
+function _degPintarOrdenar(c){
+  const _en = LANG==='en';
+  const o = _degS.ord;
+  if(!o){ return _degEmpezar('ordenar'); }
+  const total = o.orden.length;
+  if(o.hechos.length >= total){
+    c.innerHTML = `<div class="deg">${_degVolverHTML()}<h2 class="deg-tit">${_en ? 'Put the journey in order' : 'Ordena el viaje'}</h2>
+      ${_degFinHTML(`${o.aciertos} / ${total}`, _en ? `${o.aciertos} courses placed at the first try, ${o.fallos} mistakes.` : `${o.aciertos} pases a la primera, ${o.fallos} fallos.`, 'ordenar')}</div>`;
+    return;
+  }
+  const toca = o.hechos.length;
+  const tiles = o.mezcla.map(id => {
+    const x = _degPlato(id); if(!x) return '';
+    const n = o.hechos.indexOf(id);
+    const hecho = n >= 0;
+    return `<button type="button" class="deg-ficha${hecho ? ' hecho' : ''}${o.mal === id ? ' mal' : ''}" ${hecho ? 'disabled' : ''} onclick="_degTocarOrden(${id})">
+      ${_degFotoHTML(id, x.dd.name, 'deg-ficha-foto')}
+      ${hecho ? `<span class="deg-ficha-n">${n + 1}</span>` : ''}
+      <span class="deg-ficha-nom">${escapeHTML(x.dd.name)}</span>
+    </button>`;
+  }).join('');
+  c.innerHTML = `<div class="deg">
+    ${_degVolverHTML()}
+    <h2 class="deg-tit">${_en ? 'Put the journey in order' : 'Ordena el viaje'}</h2>
+    <p class="deg-intro">${_en ? `Tap course ${toca + 1} of ${total}.` : `Toca el pase ${toca + 1} de ${total}.`}</p>
+    ${o.msg ? `<div class="deg-aviso" role="status">${o.msg}</div>` : ''}
+    <div class="deg-rejilla">${tiles}</div>
+  </div>`;
+}
+function _degTocarOrden(id){
+  const o = _degS.ord; if(!o) return;
+  const _en = LANG==='en';
+  const toca = o.orden[o.hechos.length];
+  if(id === toca){
+    o.hechos.push(id);
+    if(!o.errEnPaso) o.aciertos++;
+    o.errEnPaso = false; o.mal = null; o.msg = '';
+  } else {
+    o.fallos++; o.errEnPaso = true; o.mal = id;
+    const p = DEGUSTACION.pases.find(q => q.id === toca);
+    o.msg = (_en ? `Not yet. Course ${o.hechos.length + 1} is: ` : `Todavía no. El pase ${o.hechos.length + 1} es: `) + '«' + escapeHTML(_degMomento(p)) + '»';
+  }
+  renderDegustacion();
+}
+
+function _degPintarSignifica(c){
+  const _en = LANG==='en';
+  const s = _degS.sig;
+  if(!s){ return _degEmpezar('significa'); }
+  const total = s.cola.length;
+  if(s.i >= total){
+    c.innerHTML = `<div class="deg">${_degVolverHTML()}<h2 class="deg-tit">${_en ? 'What does it mean?' : '¿Qué significa?'}</h2>
+      ${_degFinHTML(`${s.aciertos} / ${total}`, _en ? 'Each name already tells you the dish.' : 'Cada nombre ya te dice el plato.', 'significa')}</div>`;
+    return;
+  }
+  const id = s.cola[s.i];
+  const x = _degPlato(id);
+  if(!s.opciones){
+    const otras = s.cola.filter(o => o !== id).map(o => { const y = _degPlato(o); return y ? _degTapar(y.dd.significa, y.d.name) : ''; });
+    s.opciones = _degOpciones(_degTapar(x.dd.significa, x.d.name), otras, s.seed + s.i * 13, 4);
+  }
+  // Se pregunta por el nombre ORIGINAL (el de la carta, sin traducir): es el
+  // que lleva la palabra japonesa o canaria, y el que se tapa en las opciones.
+  const buena = _degTapar(x.dd.significa, x.d.name);
+  const resp = s.elegido !== null;
+  c.innerHTML = `<div class="deg">
+    ${_degVolverHTML()}
+    <div class="deg-eyebrow">${_en ? 'What does it mean?' : '¿Qué significa?'} · ${s.i + 1} / ${total}</div>
+    <h2 class="deg-tit grande">${escapeHTML(x.d.name)}</h2>
+    <div class="deg-opciones">${s.opciones.map((o, k) => {
+      let cls = '';
+      if(resp){ if(o === buena) cls = ' ok'; else if(k === s.elegido) cls = ' no'; }
+      return `<button type="button" class="deg-opcion${cls}" ${resp ? 'disabled' : ''} onclick="_degElegir(${k})">${escapeHTML(o)}</button>`;
+    }).join('')}</div>
+    ${resp ? `<div class="deg-sig"><span>${s.opciones[s.elegido] === buena ? (_en ? 'Right' : 'Eso es') : (_en ? 'Not this one' : 'Esta no')}</span>${escapeHTML(x.dd.significa)}</div>
+      <button type="button" class="deg-btn" onclick="_degSiguienteSig()">${_en ? 'Next' : 'Siguiente'}</button>` : ''}
+  </div>`;
+}
+function _degElegir(k){
+  const s = _degS.sig; if(!s || s.elegido !== null) return;
+  s.elegido = k;
+  const x = _degPlato(s.cola[s.i]);
+  if(x && s.opciones[k] === _degTapar(x.dd.significa, x.d.name)) s.aciertos++;
+  renderDegustacion();
+}
+function _degSiguienteSig(){
+  const s = _degS.sig; if(!s) return;
+  s.i++; s.elegido = null; s.opciones = null;
+  renderDegustacion();
+}
+
+function _degPintarCuenta(c){
+  const _en = LANG==='en';
+  const q = _degS.cue;
+  if(!q){ return _degEmpezar('cuenta'); }
+  if(q.i >= q.cola.length){
+    c.innerHTML = `<div class="deg">${_degVolverHTML()}<h2 class="deg-tit">${_en ? 'Tell it' : 'Cuéntalo'}</h2>
+      ${_degFinHTML(`${q.si} / ${q.base}`, _en ? `Had it: ${q.si} · Almost: ${q.casi} · Not yet: ${q.no}` : `La tenía: ${q.si} · Casi: ${q.casi} · No: ${q.no}`, 'cuenta')}</div>`;
+    return;
+  }
+  const id = q.cola[q.i];
+  const x = _degPlato(id);
+  const p = DEGUSTACION.pases.find(r => r.id === id);
+  c.innerHTML = `<div class="deg">
+    ${_degVolverHTML()}
+    <div class="deg-eyebrow">${_en ? 'Tell it' : 'Cuéntalo'} · ${Math.min(q.i + 1, q.cola.length)} / ${q.cola.length}</div>
+    ${_degFotoHTML(id, x.dd.name, 'deg-hero')}
+    <div class="deg-mom">${escapeHTML(_degMomento(p))}</div>
+    <h2 class="deg-tit">${escapeHTML(x.dd.name)}</h2>
+    ${q.ver
+      ? `<div class="deg-story"><span>${_en ? 'The good one' : 'La buena'}</span><p>${escapeHTML(x.dd.story)}</p>${_degBtnEscuchar(id)}</div>
+         <div class="deg-auto">
+           <button type="button" onclick="_degNota('si')">${_en ? 'Had it' : 'La tenía'}</button>
+           <button type="button" onclick="_degNota('casi')">${_en ? 'Almost' : 'Casi'}</button>
+           <button type="button" onclick="_degNota('no')">${_en ? 'No' : 'No'}</button>
+         </div>`
+      : `<p class="deg-intro">${_en ? 'Say out loud how you would tell it at the table.' : 'Di en voz alta cómo lo contarías en la mesa.'}</p>
+         <button type="button" class="deg-btn" onclick="_degS.cue.ver=true;renderDegustacion()">${_en ? 'See the good one' : 'Ver la buena'}</button>`}
+  </div>`;
+}
+function _degNota(n){
+  const q = _degS.cue; if(!q) return;
+  if(n === 'si') q.si++; else if(n === 'casi') q.casi++; else q.no++;
+  q.cola = _degCuentaCola(q.cola, q.i, n);
+  q.i++; q.ver = false;
+  renderDegustacion();
+}
+
 // ═══ SABER · sus pestañas ═══════════════════════════════════════════════
 // Todo lo que se consulta: la guía, la carta, los vinos, las técnicas, los
 // estándares LQA y la actualidad; el carro de quesos y la sala, sólo en el
@@ -15986,6 +16461,8 @@ function _saberChipsBar(tab){
     // Mesa primero: es lo que más se consulta con el cliente delante.
     ['mesa', _en?'Table':'Mesa', "showTab('mesa')"],
     ['carta', _en?'Menu':'Carta', "_cartaAbrir()"],
+    // El menú degustación, justo detrás de la Carta y sólo si la carta lo trae.
+    (typeof DEGUSTACION!=='undefined' && DEGUSTACION) ? ['degustacion', escapeHTML(_degNombre()), "_degS.vista='viaje';showTab('degustacion')"] : null,
     _SABER_HAY.vinos ? ['vinos', _en?'Wines':'Vinos', "showTab('vinos')"] : null,
     _SABER_HAY.quesos ? ['quesos', _en?'Cheese':'Quesos', "showTab('quesos')"] : null,
     _SABER_HAY.sala ? ['sala', _en?'Floor':'Sala', "showTab('sala')"] : null,
@@ -25724,6 +26201,8 @@ function renderRepasoDishDetail(dishId){
     </div>
 
     ${typeof _fsvTiraHTML==='function' ? _fsvTiraHTML(dish, LANG==='en') : ''}
+
+    ${(typeof _degContarHTML==='function') ? _degContarHTML(dish, false) : ''}
 
     <div style="margin-bottom:.75rem">
       <div class="card" style="padding:.9rem">

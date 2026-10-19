@@ -27,6 +27,62 @@
    "en": "Bread and petits fours"
   }
  ],
+ "DEGUSTACION": {
+  "nombre": "Menú degustación",
+  "nombre_en": "Tasting menu",
+  "pases": [
+   {
+    "id": 4001,
+    "momento": "La bienvenida: algo para picar",
+    "momento_en": "The welcome: something to nibble"
+   },
+   {
+    "id": 4004,
+    "momento": "Frío y del mar: abrir el apetito",
+    "momento_en": "Cold and from the sea: opening the appetite"
+   },
+   {
+    "id": 4005,
+    "momento": "La huerta, fresca y cruda",
+    "momento_en": "The garden, fresh and raw"
+   },
+   {
+    "id": 4006,
+    "momento": "La huerta pasa por el fuego",
+    "momento_en": "The garden meets the fire"
+   },
+   {
+    "id": 4008,
+    "momento": "Primer caliente, del mar",
+    "momento_en": "First hot dish, from the sea"
+   },
+   {
+    "id": 4011,
+    "momento": "El pescado principal",
+    "momento_en": "The main fish"
+   },
+   {
+    "id": 4012,
+    "momento": "Lo más intenso: la carne",
+    "momento_en": "The most intense: the meat"
+   },
+   {
+    "id": 4015,
+    "momento": "Frescor para limpiar",
+    "momento_en": "Freshness to cleanse"
+   },
+   {
+    "id": 4016,
+    "momento": "El postre de casa",
+    "momento_en": "The house dessert"
+   },
+   {
+    "id": 4020,
+    "momento": "El cierre, con el café",
+    "momento_en": "The finish, with coffee"
+   }
+  ]
+ },
  "DISHES": [
   {
    "id": 4001,
@@ -62,7 +118,15 @@
     "comer": "By hand; skins go in the small bowl.",
     "cambios": "Without the palmera chilli if they want no heat.",
     "venta": "The snack of every Canarian bar, with orange, cumin and a touch of palmera chilli."
-   }
+   },
+   "significa": "Chocho es como se llama en Canarias al altramuz.",
+   "guino": "Pimienta palmera de La Palma en el aliño.",
+   "tres": [
+    "Chochos encurtidos, el altramuz canario",
+    "Aliñados con naranja, comino y pimienta palmera",
+    "Se comen con la mano, como en cualquier bar de las islas"
+   ],
+   "story": "Empezamos con chochos, que es como llamamos en Canarias al altramuz, encurtidos con naranja y comino. Se comen con la mano, como en cualquier bar de las islas."
   },
   {
    "id": 4002,
@@ -172,7 +236,14 @@
     "comer": "With the oyster fork, then sip the water from the shell.",
     "cambios": "Without the coriander oil.",
     "venta": "Raw oyster with tomato water and coriander oil. Fresh, saline, and you finish by sipping from the shell."
-   }
+   },
+   "guino": "El agua de tomate, de tomate canario filtrado toda la noche.",
+   "tres": [
+    "Ostra abierta al momento",
+    "Agua de tomate transparente por encima",
+    "Tres gotas de aceite de cilantro"
+   ],
+   "story": "Una ostra recién abierta con agua de tomate, filtrada toda la noche hasta quedar transparente, y unas gotas de aceite de cilantro. Se puede beber de la concha."
   },
   {
    "id": 4005,
@@ -206,7 +277,14 @@
     "comer": "Starter knife and fork.",
     "cambios": "Without basil or without strawberry.",
     "venta": "Seasonal tomato with strawberry and basil: sweet, sharp and very fresh to start."
-   }
+   },
+   "guino": "Tomate de temporada de la huerta de la isla.",
+   "tres": [
+    "Tomate de temporada y fresa",
+    "Granizado de albahaca al centro",
+    "Sin ninguno de los 14 alérgenos"
+   ],
+   "story": "Tomate de temporada con fresa y albahaca. Dulce, ácido y muy fresco, y sin ninguno de los catorce alérgenos."
   },
   {
    "id": 4006,
@@ -242,7 +320,15 @@
     "comer": "Starter knife and fork.",
     "cambios": "Without the pumpkin seeds.",
     "venta": "Bubango, the Canarian courgette, cooked over the grill with goat curd and its own flower."
-   }
+   },
+   "significa": "Bubango es como se llama en Canarias al calabacín tierno, cogido pequeño.",
+   "guino": "Requesón de cabra canario.",
+   "tres": [
+    "Bubango, el calabacín canario, a la brasa",
+    "Sobre requesón de cabra",
+    "Pipas de calabaza y su propia flor"
+   ],
+   "story": "El bubango es el calabacín tierno de aquí. Lo hacemos a la brasa y lo servimos sobre requesón de cabra, con pipas de calabaza y su flor."
   },
   {
    "id": 4007,
@@ -316,7 +402,15 @@
     "comer": "Fish knife and fork; suck the head.",
     "cambios": "Corn broth on the side.",
     "venta": "Seared scarlet prawn with its coral and a sweet corn broth. Guests are encouraged to suck the head."
-   }
+   },
+   "significa": "Millo es como se dice maíz en Canarias.",
+   "guino": "El caldo de millo, el maíz canario.",
+   "tres": [
+    "Carabinero con su cabeza",
+    "Su coral al lado",
+    "Caldo de millo servido en la mesa"
+   ],
+   "story": "Carabinero con su coral y un caldo de millo, el maíz canario, que servimos en la mesa. Lo mejor está en la cabeza: les animo a chuparla."
   },
   {
    "id": 4009,
@@ -430,7 +524,15 @@
     "comer": "Fish knife and fork.",
     "cambios": "Without the pork jowl.",
     "venta": "Grilled wreckfish with Ibérico pork jowl and a Lanzarote malvasía wine butter sauce."
-   }
+   },
+   "significa": "El cherne es un pescado de roca de aguas canarias, de carne blanca y firme.",
+   "guino": "Malvasía de Lanzarote en el beurre blanc.",
+   "tres": [
+    "Cherne a la brasa",
+    "Papada ibérica fundida por encima",
+    "Beurre blanc de malvasía en salsera"
+   ],
+   "story": "Cherne, pescado de roca de nuestras aguas, a la brasa. Encima, una lámina de papada ibérica que se funde sola, y una mantequilla de malvasía de Lanzarote."
   },
   {
    "id": 4012,
@@ -467,7 +569,15 @@
     "comer": "Meat knife.",
     "cambios": "Purée on the side.",
     "venta": "Canarian black pig glazed with palm honey and mustard, on sweet potato purée."
-   }
+   },
+   "significa": "El cochino negro es la raza de cerdo autóctona de Canarias.",
+   "guino": "Miel de palma de La Gomera en el lacado.",
+   "tres": [
+    "Cochino negro canario",
+    "Lacado con miel de palma y mostaza",
+    "Sobre puré de batata"
+   ],
+   "story": "Cochino negro, una raza canaria que casi desaparece, lacado con miel de palma y mostaza, sobre un puré de batata."
   },
   {
    "id": 4013,
@@ -572,7 +682,15 @@
     "comer": "Dessert spoon.",
     "cambios": "None.",
     "venta": "Parchita, Canarian passion fruit, with coconut. Sharp and fresh to finish."
-   }
+   },
+   "significa": "Parchita es como se llama en Canarias a la fruta de la pasión.",
+   "guino": "Parchita, la fruta de la pasión de las islas.",
+   "tres": [
+    "Sorbete de parchita",
+    "Espuma de coco por encima",
+    "Ácido y frío, para limpiar"
+   ],
+   "story": "Para limpiar, parchita, que es como llamamos aquí a la fruta de la pasión, con espuma de coco. Ácido y muy fresco."
   },
   {
    "id": 4016,
@@ -609,7 +727,15 @@
     "comer": "Dessert spoon.",
     "cambios": "Without gofio.",
     "venta": "The classic Canarian quesillo, with goat milk, coffee and gofio."
-   }
+   },
+   "significa": "El quesillo no lleva queso: es el flan canario, con leche condensada.",
+   "guino": "Gofio, la harina tostada canaria.",
+   "tres": [
+    "Quesillo de leche de cabra",
+    "Caramelo de café por encima",
+    "Gofio a un lado"
+   ],
+   "story": "El quesillo es nuestro flan, y no lleva queso. Este es de leche de cabra, con caramelo de café y un poco de gofio."
   },
   {
    "id": 4017,
@@ -758,7 +884,15 @@
     "comer": "By hand, one at a time.",
     "cambios": "None.",
     "venta": "Little sweets with coffee; one has Canarian honey rum."
-   }
+   },
+   "significa": "La tunera es el higo chumbo, el fruto del cactus.",
+   "guino": "Ron miel canario en la trufa e higo de tunera.",
+   "tres": [
+    "Trufa de chocolate con ron miel",
+    "Pâte de fruit de higo de tunera",
+    "Teja de almendra"
+   ],
+   "story": "Con el café, tres bocados: una trufa con ron miel, una pâte de fruit de higo de tunera y una teja de almendra."
   }
  ],
  "DISHES_EN": [
@@ -777,7 +911,15 @@
     "Lupins with their dressing",
     "Orange zest at the pass"
    ],
-   "marcaje": "No cutlery: eaten by hand. Small bowl for the skins."
+   "marcaje": "No cutlery: eaten by hand. Small bowl for the skins.",
+   "significa": "Chocho is the Canarian name for the lupin bean.",
+   "guino": "Palm pepper from La Palma in the dressing.",
+   "tres": [
+    "Pickled chochos, the Canarian lupin bean",
+    "Dressed with orange, cumin and palm pepper",
+    "Eaten by hand, as in any bar on the islands"
+   ],
+   "story": "We begin with chochos, the Canarian name for lupin beans, pickled with orange and cumin. They are eaten by hand, as in any bar on the islands."
   },
   {
    "id": 4002,
@@ -830,7 +972,14 @@
     "Tomato water poured at the table",
     "Three drops of coriander oil"
    ],
-   "marcaje": "Oyster fork on the right. Tell the guest it can be drunk from the shell."
+   "marcaje": "Oyster fork on the right. Tell the guest it can be drunk from the shell.",
+   "guino": "The tomato water, from Canarian tomatoes filtered overnight.",
+   "tres": [
+    "Oyster opened to order",
+    "Clear tomato water on top",
+    "Three drops of coriander oil"
+   ],
+   "story": "A freshly opened oyster with tomato water, filtered overnight until it runs clear, and a few drops of coriander oil. You may drink it from the shell."
   },
   {
    "id": 4005,
@@ -845,7 +994,14 @@
     "Basil granita in the centre at the pass",
     "Oil at the table"
    ],
-   "marcaje": "Starter knife and fork."
+   "marcaje": "Starter knife and fork.",
+   "guino": "Seasonal tomatoes from the island's gardens.",
+   "tres": [
+    "Seasonal tomato and strawberry",
+    "Basil granita in the centre",
+    "None of the 14 allergens"
+   ],
+   "story": "Seasonal tomato with strawberry and basil. Sweet, sharp and very fresh, and free of all fourteen allergens."
   },
   {
    "id": 4006,
@@ -862,7 +1018,15 @@
     "Seeds on top",
     "Courgette flower on the side"
    ],
-   "marcaje": "Starter knife and fork."
+   "marcaje": "Starter knife and fork.",
+   "significa": "Bubango is the Canarian name for baby courgette, picked small.",
+   "guino": "Canarian goat's milk ricotta.",
+   "tres": [
+    "Bubango, the Canarian courgette, grilled",
+    "On goat's milk ricotta",
+    "Pumpkin seeds and its own flower"
+   ],
+   "story": "Bubango is our local baby courgette. We grill it and serve it on goat's milk ricotta, with pumpkin seeds and its flower."
   },
   {
    "id": 4007,
@@ -898,7 +1062,15 @@
     "Dot of coral beside it",
     "Corn broth poured at the table from a jug"
    ],
-   "marcaje": "Fish knife and fork. Finger bowl with lemon."
+   "marcaje": "Fish knife and fork. Finger bowl with lemon.",
+   "significa": "Millo is the Canarian word for corn.",
+   "guino": "The millo broth, made with Canarian corn.",
+   "tres": [
+    "Carabinero prawn with its head",
+    "Its coral on the side",
+    "Corn broth poured at the table"
+   ],
+   "story": "Carabinero prawn with its coral and a millo broth, Canarian corn, poured at the table. The best part is in the head: do suck it."
   },
   {
    "id": 4009,
@@ -955,7 +1127,15 @@
     "Jowl melted on top",
     "Beurre blanc at the table, from a sauce boat"
    ],
-   "marcaje": "Fish knife and fork."
+   "marcaje": "Fish knife and fork.",
+   "significa": "Cherne is a rock fish from Canarian waters, with firm white flesh.",
+   "guino": "Malvasía from Lanzarote in the beurre blanc.",
+   "tres": [
+    "Grilled cherne",
+    "Iberian pork jowl melted on top",
+    "Malvasía beurre blanc in a sauceboat"
+   ],
+   "story": "Cherne, a rock fish from our waters, cooked on the grill. On top, a slice of Iberian pork jowl that melts by itself, and a malvasía butter sauce from Lanzarote."
   },
   {
    "id": 4012,
@@ -973,7 +1153,15 @@
     "Presa cut in two on top",
     "Jus poured at the table"
    ],
-   "marcaje": "Meat knife."
+   "marcaje": "Meat knife.",
+   "significa": "Cochino negro is the native Canarian black pig.",
+   "guino": "Palm honey from La Gomera in the glaze.",
+   "tres": [
+    "Canarian black pig",
+    "Glazed with palm honey and mustard",
+    "On sweet potato purée"
+   ],
+   "story": "Black pig, a Canarian breed that nearly disappeared, glazed with palm honey and mustard, on a sweet potato purée."
   },
   {
    "id": 4013,
@@ -1021,7 +1209,15 @@
     "Sorbet in a quenelle",
     "Coconut foam on top"
    ],
-   "marcaje": "Dessert spoon."
+   "marcaje": "Dessert spoon.",
+   "significa": "Parchita is the Canarian name for passion fruit.",
+   "guino": "Parchita, the island passion fruit.",
+   "tres": [
+    "Passion fruit sorbet",
+    "Coconut foam on top",
+    "Sharp and cold, to cleanse"
+   ],
+   "story": "To cleanse the palate, parchita, our name for passion fruit, with coconut foam. Sharp and very fresh."
   },
   {
    "id": 4016,
@@ -1039,7 +1235,15 @@
     "Coffee caramel on top",
     "Gofio on one side"
    ],
-   "marcaje": "Dessert spoon."
+   "marcaje": "Dessert spoon.",
+   "significa": "Quesillo has no cheese: it is the Canarian flan, made with condensed milk.",
+   "guino": "Gofio, the Canarian toasted flour.",
+   "tres": [
+    "Goat's milk quesillo",
+    "Coffee caramel on top",
+    "Gofio on the side"
+   ],
+   "story": "Quesillo is our flan, and it has no cheese. This one is made with goat's milk, with coffee caramel and a little gofio."
   },
   {
    "id": 4017,
@@ -1112,7 +1316,15 @@
     "Three pieces per guest on volcanic stone",
     "Truffle on the left, pâte de fruit in the centre, tuile on the right"
    ],
-   "marcaje": "No cutlery: by hand."
+   "marcaje": "No cutlery: by hand.",
+   "significa": "Tunera is the prickly pear, the fruit of the cactus.",
+   "guino": "Canarian honey rum and prickly pear.",
+   "tres": [
+    "Chocolate truffle with honey rum",
+    "Prickly pear pâte de fruit",
+    "Almond tuile"
+   ],
+   "story": "With your coffee, three bites: a truffle with honey rum, a prickly pear pâte de fruit and an almond tuile."
   }
  ],
  "DISH_COMPONENTS": {
