@@ -32734,13 +32734,29 @@ function _hspModuloActual(modulos, prog){
   const sig = modulos.slice(i + 1).concat(modulos.slice(0, i)).find(quedan);
   return sig || actual;
 }
+// Con todas jugadas, nunca la misma que la última vez si hay otra: antes la
+// fallada salía dos días seguidos (revisión, oct 2026). La última es la que se
+// contestó la última vez (`prog.ultima`) o, sin ese dato, la de fecha más reciente.
 function _hspDia(modulo, prog){
   const dias = modulo.dias;
   const nueva = dias.find(d => !prog.hechos[d.id]);
   if(nueva) return nueva;
-  const fallada = dias.find(d => prog.fallados[d.id]);
+  const porFecha = dias.slice().sort((a,b) => String(prog.hechos[a.id]).localeCompare(String(prog.hechos[b.id])));
+  const ultima = (prog.ultima && dias.some(d => d.id === prog.ultima)) ? prog.ultima : (porFecha[porFecha.length-1] || {}).id;
+  const otras = dias.length > 1 ? dias.filter(d => d.id !== ultima) : dias;
+  const fallada = otras.find(d => prog.fallados[d.id]);
   if(fallada) return fallada;
-  return dias.slice().sort((a,b) => String(prog.hechos[a.id]).localeCompare(String(prog.hechos[b.id])))[0] || null;
+  return porFecha.find(d => otras.includes(d)) || null;
+}
+
+// ¿Ya se jugó una mesa HOY? Devuelve esa mesa (de cualquier módulo) para
+// enseñar su consigna en vez de otra mesa nueva: una al día es el ritmo.
+function _hspHechaHoy(modulos, prog, hoy){
+  const todas = [].concat(...modulos.map(m => m.dias));
+  const hechos = (prog && prog.hechos) || {};
+  const pref = [prog && prog.pend && prog.pend.fecha === hoy ? prog.pend.id : null, prog && prog.ultima].filter(Boolean);
+  for(const id of pref){ const d = todas.find(x => x.id === id); if(d && hechos[id] === hoy) return d; }
+  return todas.find(d => hechos[d.id] === hoy) || null;
 }
 
 function _hspCorregir(dia, idx){
@@ -32786,9 +32802,16 @@ async function launchHospitalidad(){
   prog.modulo = modulo.id;
   const dia = _hspDia(modulo, prog);
   if(!dia) return;
-  const pend = _hspPendiente(prog, todayStr());
-  const pendDia = pend ? modulo.dias.find(d => d.id === pend.id) : null;
-  _hspState = { modulo, dia, pendDia, paso: pendDia ? 'ayer' : 'escena', res: null, t0: Date.now() };
+  const hoy = todayStr();
+  // La mesa de ayer se busca en todos los módulos: al cambiar de módulo se
+  // perdía el «Sobre ayer» de la última mesa del anterior.
+  const pend = _hspPendiente(prog, hoy);
+  const pendDia = pend ? [].concat(...modulos.map(m => m.dias)).find(d => d.id === pend.id) : null;
+  // Primera vez en un módulo: antes de la primera mesa, de qué va la semana.
+  const introMod = !modulo.dias.some(d => prog.hechos[d.id]);
+  const hechaHoy = _hspHechaHoy(modulos, prog, hoy);
+  const paso = hechaHoy ? 'hecha' : pendDia ? 'ayer' : introMod ? 'modulo' : 'escena';
+  _hspState = { modulo, dia, pendDia, hechaHoy, introMod, paso, res: null, t0: Date.now() };
   _hspRender();
   document.addEventListener('keydown', _hspKeydown);
 }
@@ -32807,6 +32830,8 @@ function _hspRender(){
   const idx = _HSP_PASOS.indexOf(S.paso);
   const puntos = _HSP_PASOS.map((p,i)=>`<span class="hsp2-dot${i===idx?' on':''}${i<idx?' done':''}"></span>`).join('');
   const cuerpo = S.paso==='ayer' ? _hspAyerHTML(_en)
+    : S.paso==='hecha' ? _hspHechaHTML(_en)
+    : S.paso==='modulo' ? _hspModuloHTML(_en)
     : S.paso==='escena' ? _hspEscenaHTML(_en)
     : S.paso==='nosabias' ? _hspNoSabiasHTML(_en)
     : S.paso==='contraste' ? _hspContrasteHTML(_en)
@@ -32818,7 +32843,7 @@ function _hspRender(){
         <span class="snd-slot"></span>
         <button class="pase-x" onclick="_hspClose()" aria-label="${_en?'Close':'Cerrar'}">✕</button>
       </div>
-      ${S.paso==='ayer'?'':`<div class="hsp2-dots" aria-hidden="true">${puntos}</div>`}
+      ${_HSP_PASOS.includes(S.paso)?`<div class="hsp2-dots" aria-hidden="true">${puntos}</div>`:''}
     </div>
     <div class="pase-body hsp2-body">${cuerpo}</div>
   </div>`;
@@ -32842,6 +32867,33 @@ function _hspAyerHTML(_en){
     <button type="button" class="hsp2-link" onclick="_hspResponderAyer(-1)">${_en?'Skip':'Saltar'}</button>`;
 }
 
+// Ya se jugó la mesa de hoy: su consigna, y seguir es opcional.
+function _hspHechaHTML(_en){
+  const d = _hspState.hechaHoy;
+  return `<div class="hsp2-kicker">${_en?'Today':'Hoy'}</div>
+    <h2 class="hsp2-t">${_en?'You have done today\'s table':'Ya has hecho la mesa de hoy'}</h2>
+    <p class="hsp2-aside">${escapeHTML(_hspT(d,'t'))}</p>
+    <p class="hsp2-consigna">${escapeHTML(_hspT(d,'consigna'))}</p>
+    <p class="hsp2-aside">${_en?'One table a day is the pace. If you want to keep going, you can.':'Una mesa al día es el ritmo. Si quieres seguir, puedes.'}</p>
+    <button type="button" class="hsp2-next" onclick="_hspClose()">${_en?'Done':'Hecho'}</button>
+    <button type="button" class="hsp2-link" onclick="_hspOtraMesa()">${_en?'Another table':'Otra mesa'}</button>`;
+}
+function _hspOtraMesa(){
+  const S=_hspState; if(!S) return;
+  S.paso = S.pendDia ? 'ayer' : S.introMod ? 'modulo' : 'escena';
+  _hspRender();
+}
+
+// Primera vez en un módulo: de qué va la semana, antes de la primera mesa.
+function _hspModuloHTML(_en){
+  const M = _hspState.modulo;
+  return `<div class="hsp2-kicker">${_en?'Module':'Módulo'} ${M.n||''} · ${_en?'new week':'semana nueva'}</div>
+    <h2 class="hsp2-t">${_en?'Starting':'Empieza'}: ${escapeHTML(_hspT(M,'t'))}</h2>
+    ${_hspT(M,'sub')?`<p class="hsp2-aside">${escapeHTML(_hspT(M,'sub'))}</p>`:''}
+    <p class="hsp2-reveal">${escapeHTML(_hspT(M,'intro'))}</p>
+    <button type="button" class="hsp2-next" onclick="_hspPaso('escena')">${_en?'First table →':'Primera mesa →'}</button>`;
+}
+
 function _hspEscenaHTML(_en){
   const S = _hspState, D = S.dia, R = S.res;
   const head = `<div class="hsp2-kicker">${_en?'Table':'Mesa'} ${D.n||''} · ${escapeHTML(_hspT(D,'idea'))}</div>
@@ -32860,7 +32912,7 @@ function _hspEscenaHTML(_en){
       <div class="hsp2-fb"><span class="hsp2-tag v-${o.v}">${tag(o.v)}${mia?(_en?' · your choice':' · tu elección'):''}</span>${escapeHTML(_hspT(o,'fb'))}</div>
     </div>`;
   }).join('');
-  return head + `<div class="hsp2-verdict v-${R.v}">${tit}</div>${R.limite?`<p class="hsp2-limite">${_en?'Safety, truth and privacy are never traded for a nice moment.':'La seguridad, la verdad y la privacidad nunca se cambian por un momento bonito.'}</p>`:''}
+  return head + `<div class="hsp2-verdict v-${R.v}">${tit}</div>${R.limite?`<p class="hsp2-limite">${_hspT(D,'lim') ? escapeHTML(_hspT(D,'lim')) : (_en?'Safety, truth and privacy are never traded for a nice moment.':'La seguridad, la verdad y la privacidad nunca se cambian por un momento bonito.')}</p>`:''}
     <div class="hsp2-opts">${opts}</div>
     <button type="button" class="hsp2-next" onclick="_hspPaso('nosabias')">${_en?'What you did not know →':'Lo que no sabías →'}</button>`;
 }
@@ -32905,6 +32957,7 @@ function _hspElegir(i){
     // respuesta volvía a encontrarse la misma escena cada vez que entraba
     // (propietario, oct 2026). La consigna se sigue guardando en «Para hoy».
     prog.hechos[S.dia.id]=todayStr();
+    prog.ultima=S.dia.id;
     saveDB();
   }catch(e){}
   if(typeof playSound==='function') playSound(S.res.bien?'correct':'wrong');
@@ -32913,7 +32966,7 @@ function _hspElegir(i){
 function _hspResponderAyer(i){
   const S=_hspState; if(!S||!S.pendDia) return;
   try{ const prog=_hspProgreso(getEmp(currentUser)); prog.resp[S.pendDia.id] = i>=0 ? i : 'saltada'; saveDB(); }catch(e){}
-  S.paso='escena'; _hspRender();
+  S.paso = S.introMod ? 'modulo' : 'escena'; _hspRender();
 }
 function _hspPaso(p){
   const S=_hspState; if(!S) return;
