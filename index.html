@@ -52,7 +52,7 @@
 <meta property="og:description" content="Formación de equipos de sala: carta, alérgenos, vinos, exámenes y juegos de repaso.">
 <meta property="og:url" content="https://meseo.es/">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"Meseo","url":"https://meseo.es/"}</script>
-<meta name="app-version" content="7.520">
+<meta name="app-version" content="7.521">
 <meta name="app-build" content="May 2026">
 <meta name="theme-color" content="#1c2a22">
 <!-- ═══ PWA ═══ -->
@@ -380,7 +380,7 @@
        condición— pero sí se anuncia y sirve de ancla de navegación. -->
   <h1 id="tituloPantalla" class="solo-lectores"></h1>
   <main class="app-content" id="appContent" aria-live="polite"></main>
-  <div class="app-credit" style="color:rgba(28,42,34,.4)">© 2026 Meseo® · Marca registrada</div>
+  <div class="app-credit" id="appCredit" style="color:rgba(28,42,34,.4)">© 2026 Meseo® · Marca registrada</div>
   <!-- El control de sonido deja de flotar. Es SIEMPRE este mismo elemento:
        _sndMount() lo muda al hueco (.snd-slot) de la actividad que suena y lo
        devuelve aquí cuando no hay ninguna, pero nunca lo recrea. Por eso
@@ -1760,6 +1760,9 @@ function applyLangToApp() {
   const _ux2L = { ux2LblHoy:['Hoy','Today'], ux2LblSaber:['Saber','Learn'], ux2LblPracticar:['Practicar','Practise'],
                   ux2LblEquipo:['Equipo','Team'], ux2LblYo:['Yo','Me'], ux2SupLbl:['Panel de supervisor','Supervisor panel'] };
   for (const id in _ux2L) { const e = document.getElementById(id); if (e) e.textContent = _ux2L[id][LANG==='en'?1:0]; }
+  // El pie fijo de la app también cambia de idioma (en EN seguía en español).
+  const _cred = document.getElementById('appCredit');
+  if (_cred) _cred.textContent = LANG==='en' ? '© 2026 Meseo® · Registered trademark' : '© 2026 Meseo® · Marca registrada';
   const _ha = document.getElementById('hdrAjustes');
   if (_ha) { _ha.setAttribute('aria-label', LANG==='en'?'Settings':'Ajustes'); _ha.title = LANG==='en'?'Settings':'Ajustes'; }
   const _hi = document.getElementById('hdrIdioma');
@@ -2882,7 +2885,7 @@ const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><p
 const SRC = 'src';
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='7.520';  // sincronizada con sw.js VERSION (guard de CI)
+const APP_VERSION='7.521';  // sincronizada con sw.js VERSION (guard de CI)
 const APP_BUILD='Jul 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;
@@ -16234,7 +16237,7 @@ function _degPintarViaje(c){
     <header class="deg-cab">
       <div class="deg-eyebrow">${_en ? 'The journey' : 'El viaje'} · ${pases.length} ${_en ? 'courses' : 'pases'}</div>
       <h2 class="deg-tit">${escapeHTML(_degNombre())}</h2>
-      <p class="deg-intro">${_en ? 'The order makes sense: cold to hot, sea to land, light to intense, and sweet at the end. Understand it and you will not need to memorise it.' : 'El orden tiene sentido: de frío a caliente, del mar a la tierra, de ligero a intenso, y al final lo dulce. Si lo entiendes, no tienes que memorizarlo.'}</p>
+      <p class="deg-intro">${_en ? 'The order makes sense: it builds from light to intense and ends with something sweet. Learn why each course goes where it does and you will not need to memorise it.' : 'El orden tiene sentido: va de lo ligero a lo intenso y termina con lo dulce. Si entiendes por qué va cada pase donde va, no tienes que memorizarlo.'}</p>
       ${_degRevisarHTML()}
     </header>
     <ol class="deg-linea">${filas}</ol>
