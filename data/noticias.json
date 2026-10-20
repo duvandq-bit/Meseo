@@ -1,6 +1,64 @@
 {
- "updated": "2026-10-19T17:30:56.578Z",
+ "updated": "2026-10-20T01:52:06.542Z",
  "items": [
+  {
+   "t": "La alta cocina hotelera de Canarias cobra protagonismo en los Culinary Hotel Awards",
+   "u": "https://www.laprovincia.es/canarias/2026/10/20/premios-culinary-canarias-prensa-iberica-alta-cocina-culinary-hotel-awards-135510452.html",
+   "s": "La Provincia",
+   "d": "2026-10-19T23:26:52.000Z",
+   "tags": [
+    "CANARIAS"
+   ]
+  },
+  {
+   "t": "Los fogones de Canarias lucen en la gala gastronómica de los Culinary Hotel Awards",
+   "u": "https://www.laprovincia.es/canarias/2026/10/20/culinary-awards-canarias-hosteleria-hoteles-gastronimia-prensa-iberica-135520175.html",
+   "s": "La Provincia",
+   "d": "2026-10-19T23:23:10.000Z",
+   "tags": [
+    "CANARIAS"
+   ]
+  },
+  {
+   "t": "Una noche donde gana Canarias",
+   "u": "https://www.laprovincia.es/canarias/2026/10/18/noche-gana-canarias-culinary-hotel-awards-135463844.html",
+   "s": "La Provincia",
+   "d": "2026-10-19T23:01:52.000Z",
+   "tags": [
+    "CANARIAS"
+   ]
+  },
+  {
+   "t": "Nacho Gil le da un punto al Tenerife y luego le quita dos",
+   "u": "https://www.eldiario.es/canariasahora/Deportes/futbol/nacho-gil-le-da-punto-tenerife-luego-le-quita_1_13598743.html",
+   "s": "elDiario.es",
+   "d": "2026-10-19T22:37:18.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://static.eldiario.es/clip/78685f41-8c84-4ff3-9ae5-fdbf504c6c49_facebook-aspect-ratio-1200-675_default_0_x388y225.jpg"
+  },
+  {
+   "t": "Chef chileno que integró equipo con estrella Michelin llega a Punta Arenas para liderar AIMA",
+   "u": "https://www.radioagricultura.cl/tendencias/chef-chileno-que-integro-equipo-con-estrella-michelin-llega-a-punta-arenas-para-liderar-aima_20261019/",
+   "s": "Radio Agricultura",
+   "d": "2026-10-19T19:56:30.000Z",
+   "tags": [
+    "ALTA COCINA",
+    "MICHELIN"
+   ],
+   "img": "https://assets.radioagricultura.cl/2026/10/Renzo-Tissinetti-1024x538.jpg"
+  },
+  {
+   "t": "Feria de la Cerveza de Los Cristianos",
+   "u": "https://lagenda.org/programacion/feria-de-la-cerveza-de-los-cristianos-tenerife-octubre-2026-44195",
+   "s": "Lagenda",
+   "d": "2026-10-19T19:38:08.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://s3-eu-west-1.amazonaws.com/beta.lagenda/programacion/feria-cerveza-los-cristianos-2026.jpg"
+  },
   {
    "t": "La carne de caza de la Sierra de la Culebra, protagonista de unas jornadas gastronómicas con chefs Michelin en Zamora",
    "u": "https://www.laopiniondezamora.es/zamora/2026/10/19/carne-caza-sierra-culebra-protagonista-135514406.html",
@@ -12,6 +70,28 @@
    ]
   },
   {
+   "t": "Santa Úrsula celebra su IX Feria de Calidad con vinos, gastronomía y reconocimiento a mujeres agricultoras",
+   "u": "https://lavozcanaria.com/acentejo/santa-ursula/santa-ursula-celebra-su-ix-feria-de-calidad-con-vinos-gastronomia-y-reconocimiento-a-mujeres-agricultoras",
+   "s": "La Voz Canaria",
+   "d": "2026-10-19T16:59:41.000Z",
+   "tags": [
+    "CANARIAS",
+    "VINO"
+   ],
+   "img": "https://lavozcanaria.com/media/2026/10/santa-ursula-celebra-su-ix-feria-de-calidad-con-vinos-gastronomia-y-reconocimiento-a-mujeres-agricultoras.webp"
+  },
+  {
+   "t": "Entra en vigor el marco normativo que flexibiliza los requisitos para las bodegas criadoras de Rioja",
+   "u": "https://www.europapress.es/la-rioja/noticia-entra-vigor-marco-normativo-flexibiliza-requisitos-bodegas-criadoras-rioja-20261019185558.html",
+   "s": "Europa Press",
+   "d": "2026-10-19T16:55:58.000Z",
+   "tags": [
+    "VINO",
+    "CANARIAS"
+   ],
+   "img": "https://img.europapress.es/fotoweb/fotonoticia_20261019185558_1200.jpg"
+  },
+  {
    "t": "Ferran Adrià desvela cuánto dinero se gasta al año en restaurantes: \"30.000 o 40.000 euros\"",
    "u": "https://www.ondacero.es/noticias/gastronomia/ferran-adria-desvela-cuanto-dinero-gasta-ano-restaurantes-30000-40000-euros_202610196ad64b6eb79b18452fca26b9.html",
    "s": "Onda Cero",
@@ -20,6 +100,27 @@
     "ALTA COCINA"
    ],
    "img": "https://image.ondacero.es/clipping/cmsimages01/2026/10/19/AF43DD86-B18C-48A8-8D84-C1BE7C6CCE5D/ferran-adria-imagen-archivo_69.jpg?crop=4329,2435,x0,y0&width=1280&height=720&optimize=low&format=webply"
+  },
+  {
+   "t": "La XV Feria Regional de Vino, Queso y Miel de Canarias propone subir a las medianías para conocer, probar y comprar directamente a quienes elaboran el producto del campo canario",
+   "u": "https://elsurdigitalgc.es/art/24286/la-mancomunidad-de-medianias-invita-a-toda-la-isla-a-su-mesa-alma-de-medianias-del-31-de-octubre-al-1-de-noviembre-en-valsequillo",
+   "s": "El Sur Digital Gran Canaria",
+   "d": "2026-10-19T16:24:14.000Z",
+   "tags": [
+    "VINO",
+    "CANARIAS"
+   ],
+   "img": "https://elsurdigitalgc.es/upload/images/11_2022/542_vaso-de-vino.png"
+  },
+  {
+   "t": "El restaurante donde para a comer Samantha Vallejo-Nágera en Madrid: un bar \"de tapeo divertido y canalla\" en Chueca",
+   "u": "https://www.elespanol.com/corazon/famosos/20261019/restaurante-comer-samantha-vallejo-nagera-madrid-bar-tapeo-divertido-canalla-chueca/1003744421139_0.amp.html",
+   "s": "El Español",
+   "d": "2026-10-19T15:46:17.000Z",
+   "tags": [
+    "ALTA COCINA"
+   ],
+   "img": "https://s3.elespanol.com/k/imgp/cms/elespanol/11378173.jpg?p=f:jpeg/c:1286:725:nowe:364:0/w:1706/h:960&h=XM8TFk68"
   },
   {
    "t": "Gobierno de Canarias y sindicatos alcanzan un acuerdo para implantar la carrera profesional en la Administración General",
@@ -43,25 +144,14 @@
    "img": "https://s1.ppllstatics.com/canarias7/www/multimedia/local/2026/10/19/feria.jpg"
   },
   {
-   "t": "Canarias aprueba un nuevo Fondo de Desarrollo con 1.626 millones de euros para los próximos diez años",
-   "u": "https://www.eldiario.es/canariasahora/economia/canarias-aprueba-nuevo-fondo-desarrollo-1-626-millones-euros-proximos-diez-anos_1_13597942.html",
-   "s": "elDiario.es",
-   "d": "2026-10-19T15:19:13.000Z",
+   "t": "Santa Cruz de Tenerife elegida como Capital Española de la Gastronomía 2027",
+   "u": "https://theshowroommag.com/santa-cruz-de-tenerife-elegida-como-capital-espanola-de-la-gastronomia-2027/",
+   "s": "The Showroom Mag",
+   "d": "2026-10-19T15:14:36.000Z",
    "tags": [
     "CANARIAS"
    ],
-   "img": "https://static.eldiario.es/clip/e4610c0d-4679-4d03-97ba-a92ae96491bf_facebook-aspect-ratio-1200-675_default_0_x944y416.jpg"
-  },
-  {
-   "t": "El vino español La Faraona 2024 alcanza los 100 puntos Parker",
-   "u": "https://www.europapress.es/economia/noticia-vino-espanol-faraona-2024-alcanza-100-puntos-parker-20261019170125.html",
-   "s": "Europa Press",
-   "d": "2026-10-19T15:01:25.000Z",
-   "tags": [
-    "VINO",
-    "CANARIAS"
-   ],
-   "img": "https://img.europapress.es/fotoweb/fotonoticia_20261019170125_1200.jpg"
+   "img": "https://theshowroommag.com/wp-content/uploads/2026/09/7-1.jpg"
   },
   {
    "t": "La Audiencia de Cuentas saca los colores al Gobierno de Canarias: declaración de bienes y agendas públicas, en el punto de mira",
@@ -153,14 +243,14 @@
    "img": "https://static.eldiario.es/clip/5eada1a4-c6fd-41cf-9594-676f0b42c218_facebook-aspect-ratio-1200-675_default_0_x987y679.jpg"
   },
   {
-   "t": "Vacuna contra la gripe y la COVID en Canarias: cuándo y cómo pedir cita",
-   "u": "https://www.eldiario.es/canariasahora/sociedad/vacuna-gripe-covid-canarias-pedir-cita_1_13597023.html",
-   "s": "elDiario.es",
-   "d": "2026-10-19T11:23:52.000Z",
+   "t": "Barceló Santa Cruz Contemporáneo renace con una nueva imagen para conquistar a turistas y residentes",
+   "u": "https://theshowroommag.com/barcelo-santa-cruz-contemporaneo-renace-con-una-nueva-imagen-para-conquistar-a-turistas-y-residentes/",
+   "s": "The Showroom Mag",
+   "d": "2026-10-19T10:47:53.000Z",
    "tags": [
     "CANARIAS"
    ],
-   "img": "https://static.eldiario.es/clip/17e8e248-b72c-4be1-a437-3eebefcf2265_facebook-aspect-ratio-1200-675_default_0.jpg"
+   "img": "https://theshowroommag.com/wp-content/uploads/2026/10/Fotos-web-3.jpg"
   },
   {
    "t": "NC exige al Gobierno de Canarias que incorpore en 2027 los fondos para construir el consultorio médico de Tazacorte",
@@ -210,97 +300,6 @@
     "CANARIAS"
    ],
    "img": "https://static.eldiario.es/clip/f3643ed0-5f38-45d1-9eb8-d8f16e45fca0_facebook-aspect-ratio-1200-675_default_0_x577y328.jpg"
-  },
-  {
-   "t": "La dana Adam se siente también en Canarias: Aemet activa avisos amarillos",
-   "u": "https://www.eldiario.es/canariasahora/tiempo-canarias/dana-adam-canarias-aemet-avisos-amarillos_1_13596136.html",
-   "s": "elDiario.es",
-   "d": "2026-10-19T08:04:19.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://static.eldiario.es/clip/aa325ed2-21c8-4959-8f39-9bbc3aa8f5a5_facebook-aspect-ratio-1200-675_default_0.jpg"
-  },
-  {
-   "t": "Ottolenghi, el chef que habla de paz en Oriente Medio a través de la cocina",
-   "u": "https://www.diariodesevilla.es/gente/ottolenghi-chef-habla-paz-oriente_0_2008284544.amp.html",
-   "s": "Diario de Sevilla",
-   "d": "2026-10-19T07:57:06.000Z",
-   "tags": [
-    "ALTA COCINA"
-   ],
-   "img": "https://static.grupojoly.com/clip/9679ec5a-7029-4134-aa6b-dbf48be7c0b7_facebook-aspect-ratio_default_0.jpg"
-  },
-  {
-   "t": "Comer en un aljibe del siglo XIII a 1 minuto de la Alhambra en Granada: el restaurante con 230 vinos bajo tierra, menús degustación desde 93 euros y solo 5 mesas",
-   "u": "https://www.vozpopuli.com/gastropoli/comer-en-un-aljibe-del-siglo-xiii-a-1-minuto-de-la-alhambra-en-granada-el-restaurante-con-230-vinos-bajo-tierra-menus-degustacion-desde-93-euros-y-solo-5-mesas.html",
-   "s": "Vozpopuli",
-   "d": "2026-10-19T07:00:00.000Z",
-   "tags": [
-    "ALTA COCINA",
-    "VINO"
-   ],
-   "img": "https://cdn.vozpopuli.com/cdn/posts/4238886/bodega-con-230-vinos-cauce-2897585-1200-700.jpg"
-  },
-  {
-   "t": "Canarias y Venezuela, dos lugares conectados por sus dulces",
-   "u": "https://www.canarias7.es/gastronomia-c7/canarias-venezuela-dos-lugares-conectados-dulces-20261019070700-nt.html",
-   "s": "Canarias7",
-   "d": "2026-10-19T06:18:55.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://s3.ppllstatics.com/canarias7/www/multimedia/gastronomia-c7/2026/10/19/bienmesabe-receta-U201366525911IkC-U301781536724gfB-1200x840@Canarias7.jpg"
-  },
-  {
-   "t": "Fairmont La Hacienda apuesta por una Navidad de lujo con gas",
-   "u": "http://diariodelsur.com.co/noticias/fairmont-la-hacienda-apuesta-por-una-navidad-de-lujo-con-gastronomia-y-bienestar",
-   "s": "Diario del Sur",
-   "d": "2026-10-18T22:26:53.000Z",
-   "tags": [
-    "ALTA COCINA"
-   ],
-   "img": "https://www.diariodelsur.com.co/uploads/articles/c6f907af-02f0-4dab-9bc8-6c14e547605e.webp"
-  },
-  {
-   "t": "Manila, Los Ángeles, El Bullí: el triángulo que une a dos cocineros españoles que triunfan muy lejos de casa",
-   "u": "https://www.7canibales.com/?post_type",
-   "s": "7 Caníbales",
-   "d": "2026-10-18T22:01:55.000Z",
-   "tags": [
-    "ALTA COCINA"
-   ]
-  },
-  {
-   "t": "El día que Udine homenajeó a Arguinzoniz",
-   "u": "https://www.expansion.com/estilo-vida/rincones-gastronomicos/2026/10/18/dia-udine-homenajeo-arguinzoniz.html",
-   "s": "Expansión",
-   "d": "2026-10-18T21:34:15.000Z",
-   "tags": [
-    "ALTA COCINA"
-   ],
-   "img": "https://e00-xlk-ue-expansion.uecdn.es/files/article_main_microformat/uploads/2026/10/18/6ad4c4e8e700d.jpeg"
-  },
-  {
-   "t": "Tenerife, vinos de origen volcánico y una tradición singular en Canarias",
-   "u": "https://www.diariolasamericas.com/cultura/tenerife-vinos-origen-volcanico-y-una-tradicion-singular-canarias-n5403850",
-   "s": "Diario Las Américas",
-   "d": "2026-10-18T19:55:00.000Z",
-   "tags": [
-    "VINO",
-    "CANARIAS"
-   ],
-   "img": "https://media.diariolasamericas.com/p/3ba7399aa29c9134443eea87aa563063/adjuntos/216/imagenes/100/284/0100284061/1200x675/smart/vinos-tenerife.jpg"
-  },
-  {
-   "t": "Trabajada victoria de La Laguna Tenerife sobre Kosner Baskonia",
-   "u": "https://www.eldiario.es/canariasahora/deportes/baloncesto/trabajada-victoria-laguna-tenerife-kosner-baskonia_1_13595753.html",
-   "s": "elDiario.es",
-   "d": "2026-10-18T19:42:55.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://static.eldiario.es/clip/a8b9ff97-56ea-498f-9cc0-95a7c9ee059e_facebook-aspect-ratio-1200-675_default_0_x927y416.jpg"
   }
  ]
 }
