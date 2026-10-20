@@ -52,7 +52,7 @@
 <meta property="og:description" content="Formación de equipos de sala: carta, alérgenos, vinos, exámenes y juegos de repaso.">
 <meta property="og:url" content="https://meseo.es/">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"Meseo","url":"https://meseo.es/"}</script>
-<meta name="app-version" content="7.524">
+<meta name="app-version" content="7.525">
 <meta name="app-build" content="May 2026">
 <meta name="theme-color" content="#1c2a22">
 <!-- ═══ PWA ═══ -->
@@ -2889,7 +2889,7 @@ const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><p
 const SRC = 'src';
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='7.524';  // sincronizada con sw.js VERSION (guard de CI)
+const APP_VERSION='7.525';  // sincronizada con sw.js VERSION (guard de CI)
 const APP_BUILD='Jul 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;
@@ -14099,7 +14099,7 @@ function _mesaIcono(estado){
 function _mesaEstadoTxt(estado, _en){
   return ({
     apto:      _en ? 'Suitable' : 'Apto',
-    cambio:    _en ? 'Suitable with a change' : 'Apto con cambio',
+    cambio:    _en ? 'Can be adapted' : 'Se puede adaptar',
     consultar: _en ? 'Check with the kitchen' : 'Consultar con cocina',
     pendiente: _en ? 'Pending menu validation' : 'Pendiente de validación',
     noapto:    _en ? 'Not suitable' : 'No apto'
@@ -14154,17 +14154,15 @@ function renderMesa(){
     ? 'Menu pending kitchen validation: confirm everything with the kitchen before ordering.'
     : 'Carta pendiente de validación por cocina: confirma todo antes de comandar.'}</div>`;
 
-  // ── Contadores ──
-  const cnt = [];
-  cnt.push(`<span class="mesa-cnt apto">${n.apto} ${_en?'suitable':(n.apto===1?'apto':'aptos')}</span>`);
-  if(n.cambio)    cnt.push(`<span class="mesa-cnt cambio">${n.cambio} ${_en?'with a change':'con cambio'}</span>`);
-  if(n.consultar) cnt.push(`<span class="mesa-cnt consultar">${n.consultar} ${_en?'to check':'consultar'}</span>`);
-  if(n.pendiente) cnt.push(`<span class="mesa-cnt pendiente">${n.pendiente} ${_en?'pending':'pendientes'}</span>`);
-  if(n.noapto)    cnt.push(`<span class="mesa-cnt noapto">${n.noapto} ${_en?'not suitable':(n.noapto===1?'no apto':'no aptos')}</span>`);
-  const contadoresHTML = `<div class="mesa-contadores" aria-live="polite">${cnt.join('<i>·</i>')}</div>`;
+  // ── Resumen: lo que más importa primero (no apto, se adapta, consultar) ──
+  // Con alergias elegidas la carta se agrupa en ese orden y lo apto va al
+  // final. Cada estado lleva icono, palabra y color: nunca sólo color.
+  const _MESA_ORDEN = ['noapto','cambio','consultar','pendiente','apto'];
+  const resumenHTML = union.length ? `<div class="mesa-resumen" aria-live="polite">${_MESA_ORDEN.filter(e => n[e]).map(e =>
+      `<span class="mesa-cnt ${e}">${_mesaIcono(e)}<b>${n[e]}</b> ${_mesaEstadoTxt(e,_en).toLowerCase()}</span>`).join('')}</div>` : '';
 
-  // ── Tarjetas ──
-  const detalleAl = (d, estado) => {
+  // ── Filas ──
+  const detalleAl = (d) => {
     if(!union.length) return '';
     const dacts = acts[d.id] || {};
     return union.filter(a => (d.allergens||[]).includes(a)).map(a => {
@@ -14175,42 +14173,47 @@ function renderMesa(){
       if(act && (act.r === 1 || act.r === 0) && !validado){
         const cmd = act.r === 1 ? (_en ? (act.c_en || act.c) : act.c) : '';
         cls = 'pendiente';
-        txt = (_en ? 'pending menu validation' : 'pendiente de validación de la carta') + (cmd ? ` · ${_en?'provisional order, not validated':'comanda provisional, sin validar'}: <em>${esc(cmd)}</em>` : '');
+        txt = (_en ? 'pending menu validation' : 'pendiente de validación de la carta') + (cmd ? `. ${_en?'Provisional order, not validated':'Comanda provisional, sin validar'}: <em>${esc(cmd)}</em>` : '');
       } else if(act && act.r === 1){
         const cmd = _en ? (act.c_en || act.c) : act.c;
         cls = 'cambio';
-        txt = cmd ? `${_en?'order':'comandar'}: <em>${esc(cmd)}</em>` : (_en ? 'adaptable' : 'se adapta');
+        txt = cmd ? `${_en?'order':'comanda'}: <em>${esc(cmd)}</em>` : (_en ? 'can be adapted' : 'se adapta');
       } else if(act && act.r === 0){
-        cls = 'noapto'; txt = _en ? 'structural, not suitable' : 'estructural, no apto';
+        cls = 'noapto'; txt = _en ? 'part of the dish, cannot be removed' : 'va en el plato, no se puede quitar';
       }
-      return `<div class="mesa-al ${cls}"><b>${esc(alLbl(a))}${who}</b><span>${txt}</span></div>`;
+      return `<span class="mesa-al ${cls}"><b>${esc(alLbl(a))}${who}</b> <span>${txt}</span></span>`;
     }).join('');
   };
-  const tarjeta = (d, estado) => {
+  const fila = (d, estado) => {
     const dd = getDish(d);
     const foto = (typeof dishPhotoSrc === 'function') ? dishPhotoSrc(d.id) : null;
-    return `<button type="button" class="mesa-plato ${estado}" onclick="_emplOpen(${d.id})" aria-label="${esc(dd.name)} · ${_mesaEstadoTxt(estado,_en)}">
-      ${foto ? `<img ${typeof SRC!=='undefined'?SRC:'src'}="${foto}" alt="" loading="lazy">` : `<span class="mesa-plato-nofoto" aria-hidden="true"></span>`}
+    const lbl = union.length ? ` · ${_mesaEstadoTxt(estado,_en)}` : '';
+    return `<button type="button" class="mesa-plato ${estado}" onclick="_emplOpen(${d.id})" aria-label="${esc(dd.name)}${lbl}">
+      ${foto ? `<img ${typeof SRC!=='undefined'?SRC:'src'}="${foto}" alt="" loading="lazy">` : ''}
       <span class="mesa-plato-txt">
         <span class="mesa-plato-nombre">${esc(dd.name)}</span>
-        <span class="mesa-plato-estado">${_mesaIcono(estado)} ${_mesaEstadoTxt(estado,_en)}</span>
         ${typeof _fsvMiniHTML==='function' ? _fsvMiniHTML(d, _en) : ''}
-        ${detalleAl(d, estado)}
+        ${detalleAl(d)}
       </span>
+      <svg class="mesa-plato-go" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>
     </button>`;
   };
+  const porCatHTML = (lista, estado) => ordenCat.map(k => [k, lista.filter(d => d.cat === k)]).filter(x => x[1].length)
+    .map(([k, ds]) => `<div class="mesa-cat">${esc(cat(k))}</div>${ds.map(d => fila(d, estado)).join('')}`).join('');
   const grupo = (estado) => {
     const lista = porEstado[estado]; if(!lista.length) return '';
-    const porCat = ordenCat.map(k => [k, lista.filter(d => d.cat === k)]).filter(x => x[1].length);
-    const cuerpo = porCat.map(([k, ds]) => `<div class="mesa-cat">${esc(cat(k))}</div>${ds.map(d => tarjeta(d, estado)).join('')}`).join('');
     const plegable = estado === 'noapto' && lista.length > 5 && !_mesa.noaptosAbiertos;
     return `<section class="mesa-grupo ${estado}">
-      <h3 class="mesa-grupo-t">${_mesaIcono(estado)} ${_mesaEstadoTxt(estado,_en)} <span>${lista.length}</span></h3>
+      <h3 class="mesa-grupo-t"><span class="mesa-grupo-ic">${_mesaIcono(estado)}</span>${_mesaEstadoTxt(estado,_en)}<span class="mesa-grupo-n">${lista.length}</span></h3>
       ${plegable
         ? `<button type="button" class="mesa-ver" onclick="_mesa.noaptosAbiertos=true;_mesaPintar()">${_en?`Show the ${lista.length} unsuitable dishes`:`Ver los ${lista.length} platos no aptos`}</button>`
-        : cuerpo}
+        : `<div class="mesa-grupo-lista">${porCatHTML(lista, estado)}</div>`}
     </section>`;
   };
+  // Sin alergias elegidas no hay veredicto que repetir: la carta, limpia.
+  const cartaHTML = union.length
+    ? _MESA_ORDEN.map(grupo).join('')
+    : `<section class="mesa-grupo todo"><div class="mesa-grupo-lista">${porCatHTML(DISHES || [], 'apto')}</div></section>`;
 
   const ayudaHTML = union.length ? '' : `<p class="mesa-ayuda">${_en
     ? 'Tap the allergens of the table. With more than one guest, add a guest and pick theirs: the list below takes everyone into account.'
@@ -14225,8 +14228,8 @@ function renderMesa(){
     ${chipsHTML}
     ${avisoHTML}
     ${ayudaHTML}
-    ${contadoresHTML}
-    ${_MESA_ESTADOS.map(grupo).join('')}
+    ${resumenHTML}
+    ${cartaHTML}
     <p class="mesa-pie">${_en?'The kitchen always has the last word.':'La última palabra la tiene cocina.'}</p>
   </div>`;
 }
@@ -15889,12 +15892,14 @@ function renderEmplatado(){
   const _en=LANG==='en';
   c.innerHTML=`<div class="empl-wrap">
     ${_cartaToggleHTML('fotos')}
-    <div class="empl-search">
+    <div class="carta-buscar empl-search">
+      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4.5 4.5"/></svg>
       <input id="emplSearch" type="search" autocomplete="off"
-        placeholder="${_en?'Search a dish…':'Buscar un plato…'}"
+        aria-label="${_en?'Search a dish':'Buscar un plato'}"
+        placeholder="${_en?'Search a dish':'Buscar un plato'}"
         oninput="_emplRender(this.value)">
     </div>
-    <div id="emplBody"><div style="text-align:center;padding:2rem;font-family:var(--font-mono);font-size:var(--fs-2);color:var(--parch3)">⏳</div></div>
+    <div id="emplBody"><div class="carta-n" style="text-align:center;padding:2rem 0">${_en?'Loading…':'Cargando…'}</div></div>
     ${_cartaPieHTML()}
   </div>`;
   loadDishPhotos().then(()=>{ const s=document.getElementById('emplSearch'); if(s) _emplRender(s.value||''); });
@@ -15917,9 +15922,11 @@ function _emplRender(q){
     return;
   }
   const pend=id=>DISH_PHOTO_PENDING&&DISH_PHOTO_PENDING.has(id);
+  // Con foto, la rejilla; sin foto, una fila corta con el nombre y «Subir
+  // foto». Nada de huecos grandes con un icono en medio.
   body.innerHTML=Object.entries(byCat).map(([cat,g])=>`
-    <div class="tunic-divider"><span>${escapeHtml(typeof catLocal==='function'?catLocal(cat):cat)}</span></div>
-    <div class="empl-grid">
+    <h3 class="carta-h">${escapeHtml(typeof catLocal==='function'?catLocal(cat):cat)}</h3>
+    ${g.w.length?`<div class="empl-grid">
       ${g.w.map(d=>{ const dd=getDish(d); return `
         <div class="empl-card" role="button" tabindex="0" onclick="_emplOpen(${d.id})"
           onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click()}"
@@ -15927,75 +15934,58 @@ function _emplRender(q){
           <img loading="lazy" ${SRC}="${DISH_PHOTOS[String(d.id)]}" alt="${escapeHtml(dd.name)}">
           <div class="empl-card-name">${escapeHtml(dd.name)}</div>
         </div>`; }).join('')}
+    </div>`:''}
+    ${g.wo.length?`<div class="empl-sinfoto">
       ${g.wo.map(d=>{ const dd=getDish(d); return `
         <div class="empl-card empl-card-nophoto" role="button" tabindex="0" onclick="_emplOpen(${d.id})"
           onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click()}"
           aria-label="${escapeHtml(dd.name)}">
-          <div class="empl-nophoto">${CAT_ICONS[dd.cat]||'📷'}</div>
           <div class="empl-card-name">${escapeHtml(dd.name)}</div>
           ${pend(d.id)
-            ?`<div class="empl-pend">🕒 ${_en?'In review':'En revisión'}</div>`
+            ?`<div class="empl-pend">${_en?'Photo in review':'Foto en revisión'}</div>`
             :`<button class="empl-upload-btn" onclick="event.stopPropagation();_dishPhotoPick(${d.id})"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align:-.15em;flex:none"><path d="M3 8.5A1.5 1.5 0 014.5 7h2L8 5h8l1.5 2h2A1.5 1.5 0 0121 8.5v9A1.5 1.5 0 0119.5 19h-15A1.5 1.5 0 013 17.5v-9z"/><circle cx="12" cy="12.5" r="3.2"/></svg> ${_en?'Upload photo':'Subir foto'}</button>`}
         </div>`; }).join('')}
-    </div>`).join('')
+    </div>`:''}`).join('')
     + ((missing.length && _isSupDevice())?`<div class="empl-missing"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align:-.15em;flex:none"><path d="M3 8.5A1.5 1.5 0 014.5 7h2L8 5h8l1.5 2h2A1.5 1.5 0 0121 8.5v9A1.5 1.5 0 0119.5 19h-15A1.5 1.5 0 013 17.5v-9z"/><circle cx="12" cy="12.5" r="3.2"/></svg> ${_en?'No photo yet':'Sin foto aún'} (${_en?'only you see this':'solo tú ves este aviso'}): ${missing.length} ${_en?'dishes':'platos'} · ${escapeHtml(missing.join(' · '))}</div>`:'');
 }
 function _emplOpen(id){
   const d=DISHES.find(x=>x.id===id); if(!d) return;
   const dd=getDish(d); const _en=LANG==='en';
-  // PRIORIDAD A LA INFORMACIÓN CONSTRUIDA (decisión del propietario): la ficha
-  // ampliada muestra la matriz validada de adaptaciones (DISH_ACTIONS) con la
-  // comanda exacta — no solo chips. La foto puede quedar vieja; la ficha manda.
-  const _acts=(typeof DISH_ACTIONS!=='undefined'&&DISH_ACTIONS[d.id])||{};
-  // Las claves de DISH_ACTIONS son los alérgenos canónicos (ES) de DISHES;
-  // dd.allergens llega traducido en inglés y NO sirve como clave — cruzar
-  // idiomas aquí marcaría platos adaptables como «no apto» (dato de seguridad).
-  // Y sin dato en la matriz no se inventa veredicto: se manda a cocina.
-  const al=(d.allergens&&d.allergens.length)
-    ? d.allergens.map(a=>{
-        const act=_acts[a];
-        const lbl=escapeHtml(typeof allergenLocal==='function'?allergenLocal(a):a);
-        // Con la carta sin validar, ni «se adapta» ni «no apto» son veredictos
-        // aprobados: se dice que está pendiente y la comanda va como provisional.
-        if(act&&(act.r===1||act.r===0)&&!(typeof _alergenosValidados!=='function'||_alergenosValidados())){
-          const cmd=act.r===1?(_en?(act.c_en||act.c):act.c):'';
-          return `<div class="empl-ov-adapt unk"><b>${lbl}</b><span>? ${_en?'Pending menu validation':'Pendiente de validación de la carta'}${cmd?` · ${_en?'provisional order, not validated':'comanda provisional, sin validar'}: <em>${escapeHtml(cmd)}</em>`:''}</span></div>`;
-        }
-        if(act&&act.r===1){
-          const cmd=_en?(act.c_en||act.c):act.c;
-          return `<div class="empl-ov-adapt ok"><b>${lbl}</b><span>✓ ${_en?'Adaptable':'Se adapta'}${cmd?` · ${_en?'order':'comandar'}: <em>${escapeHtml(cmd)}</em>`:''}</span></div>`;
-        }
-        if(act&&act.r===0){
-          return `<div class="empl-ov-adapt no"><b>${lbl}</b><span>■ ${_en?'Structural — not suitable':'Estructural — no apto'}</span></div>`;
-        }
-        return `<div class="empl-ov-adapt unk"><b>${lbl}</b><span>? ${_en?'Check with the kitchen':'Consultar con cocina'}</span></div>`;
-      }).join('')
-    : `<div class="empl-ov-adapt free">${(typeof _alergenosValidados!=='function'||_alergenosValidados())?'✓ ':'⚠ '}${((typeof _alergenosValidados!=='function'||_alergenosValidados())?(_en?'No declared allergens':'Sin alérgenos declarados'):_sinAlergenosTxt(_en?'No declared allergens':'Sin alérgenos declarados', _en))}</div>`;
+  // PRIORIDAD A LA INFORMACIÓN CONSTRUIDA (decisión del propietario): la vista
+  // rápida enseña la matriz validada de adaptaciones (DISH_ACTIONS) con la
+  // comanda exacta, igual que la ficha completa y con la misma pieza
+  // (_fpAlergenosHTML, que usa los alérgenos canónicos d.allergens). La foto
+  // puede quedar vieja; la ficha manda. Sin foto, cabecera compacta.
+  // Orden de sala: cómo contarlo, alérgenos, de un vistazo y, plegado, lo demás.
+  const foto=dishPhotoSrc(d.id);
+  const cerrar="document.getElementById('emplOverlay').remove()";
+  const ingRender=dd.ingredients?((typeof _ingPorLineas==='function'&&_ingPorLineas(dd.ingredients))?_bocadosHTML(_ingPorLineas(dd.ingredients)):`<p>${escapeHtml(dd.ingredients)}</p>`):'';
+  const mas=[
+    dd.notes?_fpPleg(_en?'Notes':'Notas', dd.notes, `<div class="empl-ov-note">${escapeHtml(dd.notes)}</div>`, 'nota'):'',
+    (typeof _mesaIdiomaHTML==='function') ? _mesaIdiomaHTML(d, true, _mesaLang) : '',
+    dd.ingredients?_fpPleg(_en?'Ingredients':'Ingredientes', dd.ingredients, `<div class="empl-ov-ing">${ingRender}</div>`):'',
+    _dishTecHTML(d, true),
+    dd.marcaje?_fpPleg(_en?'Cutlery marking':'Marcaje', dd.marcaje, `<div class="empl-ov-marc">${escapeHtml(dd.marcaje)}</div>`):''
+  ].join('');
   const ov=document.createElement('div');
   ov.id='emplOverlay'; ov.setAttribute('role','dialog'); ov.setAttribute('aria-modal','true'); ov.setAttribute('aria-label',dd.name);
   ov.innerHTML=`
-    <div class="empl-ov-scrim" onclick="document.getElementById('emplOverlay').remove()"></div>
-    <div class="empl-ov-card">
-      <button class="empl-ov-x" onclick="document.getElementById('emplOverlay').remove()" aria-label="${_en?'Close':'Cerrar'}">✕</button>
-      ${dishPhotoSrc(d.id)
-        ?`<img ${SRC}="${dishPhotoSrc(d.id)}" alt="${escapeHtml(dd.name)}">`
-        :`<div class="empl-ov-nophoto" aria-hidden="true">${CAT_ICONS[dd.cat]||'🍽️'}</div>`}
+    <div class="empl-ov-scrim" onclick="${cerrar}"></div>
+    <div class="empl-ov-card${foto?'':' sin-foto'}">
+      <button class="empl-ov-x" onclick="${cerrar}" aria-label="${_en?'Close':'Cerrar'}">✕</button>
+      ${foto?`<img ${SRC}="${foto}" alt="${escapeHtml(dd.name)}">`:''}
       <div class="empl-ov-body">
-        <div class="empl-ov-cat">${escapeHtml(dd.cat||'')}</div>
-        <div class="empl-ov-name">${escapeHtml(dd.name)}</div>
-        ${typeof _fsvTiraHTML==='function' ? _fsvTiraHTML(d, _en) : ''}
+        <div class="empl-ov-cat">${escapeHtml(typeof catLocal==='function'?catLocal(dd.cat||''):(dd.cat||''))}</div>
+        <h2 class="empl-ov-name">${escapeHtml(dd.name)}</h2>
         ${(typeof _degContarHTML==='function') ? _degContarHTML(d, true) : ''}
-        <div class="empl-ov-al">${al}</div>
-        ${dd.marcaje?`<div class="empl-ov-marc">🍽️ ${escapeHtml(dd.marcaje)}</div>`:''}
-        ${dd.notes?`<div class="empl-ov-note">${escapeHtml(dd.notes)}</div>`:''}
-        ${(typeof _mesaIdiomaHTML==='function') ? _mesaIdiomaHTML(d, true, _mesaLang) : ''}
-        ${dd.ingredients?`<div class="empl-ov-ing">${(typeof _ingPorLineas==='function'&&_ingPorLineas(dd.ingredients))?_bocadosHTML(_ingPorLineas(dd.ingredients)):escapeHtml(dd.ingredients)}</div>`:''}
-        ${_dishTecHTML(d, true)}
-        <button class="empl-ov-ficha" onclick="document.getElementById('emplOverlay').remove();repasoCat='${escapeHtml(dd.cat||'')}';repasoDishId=${d.id};repasoView='dish';_subTab.aprender='repaso';showTab('repaso')">📖 ${_en?'Full dish sheet':'Ficha completa del plato'}</button>
-        <button class="empl-ov-journey" onclick="document.getElementById('emplOverlay').remove();launchDishJourney(${d.id})">🗺️ ${_en?'Guided journey (optional)':'Recorrido guiado (opcional)'}</button>
+        <div class="empl-ov-al">${_fpAlergenosHTML(d, true)}</div>
+        ${typeof _fsvTiraHTML==='function' ? _fsvTiraHTML(d, _en) : ''}
+        ${mas?`<div class="fp-mas compacto">${mas}</div>`:''}
+        <button class="empl-ov-ficha" onclick="${cerrar};repasoCat='${escapeHtml(dd.cat||'')}';repasoDishId=${d.id};repasoView='dish';_subTab.aprender='repaso';showTab('repaso')">${_fpIc('libro',16)}${_en?'Full dish sheet':'Ficha completa del plato'}</button>
+        <button class="empl-ov-journey" onclick="${cerrar};launchDishJourney(${d.id})">${_fpIc('ruta',16)}${_en?'Guided journey (optional)':'Recorrido guiado (opcional)'}</button>
         ${(DISH_PHOTO_PENDING&&DISH_PHOTO_PENDING.has(d.id))
-          ?`<div class="empl-pend" style="margin-top:.7rem">🕒 ${_en?'A new photo is in review':'Hay una foto nueva en revisión'}</div>`
-          :`<button class="empl-ov-upload" onclick="_dishPhotoPick(${d.id})"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align:-.15em;flex:none"><path d="M3 8.5A1.5 1.5 0 014.5 7h2L8 5h8l1.5 2h2A1.5 1.5 0 0121 8.5v9A1.5 1.5 0 0119.5 19h-15A1.5 1.5 0 013 17.5v-9z"/><circle cx="12" cy="12.5" r="3.2"/></svg> ${_en?'Got a better photo? Submit it':'¿Tienes una foto mejor? Súbela'}</button>`}
+          ?`<div class="empl-pend">${_fpIc('reloj',14)}${_en?'A new photo is in review':'Hay una foto nueva en revisión'}</div>`
+          :`<button class="empl-ov-upload" onclick="_dishPhotoPick(${d.id})"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align:-.15em;flex:none"><path d="M3 8.5A1.5 1.5 0 014.5 7h2L8 5h8l1.5 2h2A1.5 1.5 0 0121 8.5v9A1.5 1.5 0 0119.5 19h-15A1.5 1.5 0 013 17.5v-9z"/><circle cx="12" cy="12.5" r="3.2"/></svg> ${foto?`${_en?'Got a better photo? Submit it':'¿Tienes una foto mejor? Súbela'}`:(_en?'No photo yet: upload one':'Sin foto todavía: sube una')}</button>`}
       </div>
     </div>`;
   document.body.appendChild(ov);
@@ -16934,15 +16924,15 @@ function _dishTecHTML(d, compacto){
   const filas=tecs.map(t=>{
     const nota=src.propia ? (_en ? (t.notaEn||t.nota) : t.nota) : (esTxoko ? t.txoko : '');
     return `<div class="dish-tec-row">
-      <div class="dish-tec-h"><span aria-hidden="true">${t.ic||'🍳'}</span> ${escapeHTML(_en?t.en:t.es)}</div>
+      <div class="dish-tec-h">${escapeHTML(_en?t.en:t.es)}</div>
       <div class="dish-tec-def">${escapeHTML(_en?t.defEn:t.def)}</div>
       ${nota?`<div class="dish-tec-nota">${escapeHTML(nota)}</div>`:''}
     </div>`;
   }).join('');
   const ir=(compacto?"document.getElementById('emplOverlay').remove();":'')+"_subTab.aprender='tecnicas';showTab('tecnicas')";
-  return `<details class="dish-tec${compacto?' compacto':''}">
-    <summary>🍳 ${_en?'How it is cooked':'Cómo se cocina'} <span class="dish-tec-n">${tecs.length}</span></summary>
-    <div class="dish-tec-body">${filas}
+  return `<details class="dish-tec fp-pleg">
+    <summary><span class="fp-pleg-t">${_en?'How it is cooked':'Cómo se cocina'}</span><span class="fp-pleg-pre">${escapeHTML(tecs.map(t=>_en?t.en:t.es).join(', '))}</span></summary>
+    <div class="fp-pleg-body dish-tec-body">${filas}
       <button type="button" class="dish-tec-mas" onclick="${ir}">${_en?'All the techniques ›':'Todas las técnicas ›'}</button>
     </div>
   </details>`;
@@ -17035,21 +17025,21 @@ function _mesaIdiomaHTML(d, compacto, lang){
        ${r.desc?`<div class="mesa-idioma-desc" lang="${lang}">${escapeHTML(r.desc)}</div>`:''}
        <div class="mesa-idioma-al" lang="${lang}">${r.lineas.slice(r.desc?2:1).map(l=>`<div>${escapeHTML(l)}</div>`).join('')}</div>
        <div class="mesa-idioma-acciones">
-         ${hayVoz?`<button type="button" class="mesa-idioma-btn" onclick="_mesaHablar(${d.id},'${lang}')">🔊 ${_en?'Listen':'Escuchar'}</button>`:''}
-         <button type="button" class="mesa-idioma-btn" onclick="_mesaCopiar(${d.id},'${lang}')">⧉ ${_en?'Copy':'Copiar'}</button>
+         ${hayVoz?`<button type="button" class="mesa-idioma-btn" onclick="_mesaHablar(${d.id},'${lang}')">${_fpIc('voz',15)}${_en?'Listen':'Escuchar'}</button>`:''}
+         <button type="button" class="mesa-idioma-btn" onclick="_mesaCopiar(${d.id},'${lang}')">${_fpIc('copiar',15)}${_en?'Copy':'Copiar'}</button>
        </div>`
     : `<div class="mesa-idioma-sin">${_en?'No translation loaded':'Sin traducción cargada'}</div>`;
-  const titulo = `🗣 ${_en?'For the table':'Para la mesa'}`;
+  const titulo = `${_en?'For the table':'Para la mesa'}`;
   if(compacto){
-    return `<details class="dish-tec compacto mesa-idioma" data-dish="${d.id}">
-      <summary>${titulo}</summary>
-      <div class="dish-tec-body">${chips}${cuerpo}</div>
+    return `<details class="dish-tec compacto mesa-idioma fp-pleg" data-dish="${d.id}">
+      <summary><span class="fp-pleg-t">${titulo}</span>${r.ok?`<span class="fp-pleg-pre" lang="${lang}">${escapeHTML(r.name)}</span>`:''}</summary>
+      <div class="dish-tec-body fp-pleg-body">${chips}${cuerpo}</div>
     </details>`;
   }
-  return `<div class="card mesa-idioma" data-dish="${d.id}" style="padding:.9rem;margin-bottom:.75rem">
-    <div style="font-family:var(--font-mono);font-size:var(--fs-1);color:var(--gold);letter-spacing:.12em;text-transform:uppercase;margin-bottom:.5rem">${titulo}</div>
+  return `<section class="card fp-bloque mesa-idioma" data-dish="${d.id}">
+    <div class="fp-lbl">${titulo}</div>
     ${chips}${cuerpo}
-  </div>`;
+  </section>`;
 }
 function _mesaCambiarIdioma(id, lang){
   _mesaLang = lang;
@@ -25926,15 +25916,16 @@ function renderRepasoCats(){
     const dishes=DISHES.filter(d=>d.cat===c);
     const kn=dishes.filter(d=>known[d.id]).length;
     const full=kn===dishes.length&&dishes.length>0;
-    const col=CAT_COLORS[c];
-    return `<button class="dash-row" aria-label="${escapeHTML(catLocal(c))}, ${kn}/${dishes.length} ${LANG==='en'?'mastered':'dominados'}" onclick="openRepasoCat('${escapeHTML(c)}')">
-      <span class="dash-row-num" style="font-size:.8rem;color:${full?'var(--green-deep)':'var(--parch3)'}" aria-hidden="true">${kn}/${dishes.length}</span>
-      <span class="dash-row-body">
-        <span class="dash-row-title"><span style="display:inline-block;width:6px;height:6px;transform:rotate(45deg);background:${col};margin-right:.45rem;vertical-align:1px"></span>${catLocal(c)}</span>
-        <span class="dash-row-sub" style="display:block">${dishes.length} ${t('dishes')} · ${kn} ${t('dominated')}</span>
+    const pct=dishes.length?Math.round(kn/dishes.length*100):0;
+    const meta=`${dishes.length} ${t('dishes')}${kn?` · ${full?(_en?'all mastered':'todos dominados'):`${kn} ${t('dominated')}`}`:''}`;
+    return `<li><button type="button" class="carta-sec${full?' full':''}" aria-label="${escapeHTML(catLocal(c))}, ${kn}/${dishes.length} ${LANG==='en'?'mastered':'dominados'}" onclick="openRepasoCat('${escapeHTML(c)}')">
+      <span class="carta-sec-txt">
+        <span class="carta-sec-nom">${catLocal(c)}</span>
+        <span class="carta-sec-meta">${meta}</span>
       </span>
-      <span class="dash-row-go">›</span>
-    </button>`;
+      <svg class="carta-sec-go" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>
+      <span class="carta-sec-prog" aria-hidden="true"><i style="width:${pct}%"></i></span>
+    </button></li>`;
   }).join('');
 
   // Orientation banner stats
@@ -25953,25 +25944,22 @@ function renderRepasoCats(){
       <span><b style="color:var(--gold-deep)">${masteredCount}</b> ${_en?'mastered':'dominadas'}</span><i>·</i>
       <span><b${dueCount>0?' style="color:#a04848"':''}>${dueCount}</b> ${_en?'to review':'a repasar'}</span>
     </div>
-    <!-- Search bar (manuscript pen-nib) -->
-    <div style="position:relative;margin-bottom:1rem;animation:slideUp .3s ease both">
-      <svg style="position:absolute;left:.9rem;top:50%;transform:translateY(-50%);pointer-events:none" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" opacity=".75"><path d="M15.5 3.5l5 5-10 10-6 1 1-6 10-10z"/><path d="M13 5.5L18.5 11"/><path d="M8 15l1 1"/></svg>
+    <div class="carta-buscar">
+      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4.5 4.5"/></svg>
       <input
         id="repasoSearch"
         type="search"
-        placeholder="${_en?'Search a dish by name, ingredient or allergen…':'Buscar un plato por nombre, ingrediente o alérgeno…'}"
+        aria-label="${_en?'Search the menu':'Buscar en la carta'}"
+        placeholder="${_en?'Dish, ingredient or allergen':'Plato, ingrediente o alérgeno'}"
         oninput="(function(v){clearTimeout(window._rpSearchT);window._rpSearchT=setTimeout(()=>searchRepaso(v),120)})(this.value)"
-        style="width:100%;padding:.78rem 1rem .78rem 2.6rem;border:1.5px solid rgba(196,154,60,.22);border-radius:var(--r2);font-family:var(--font-sans);font-size:var(--fs-4);color:var(--parchment);background:linear-gradient(155deg,#faf6ee,#f0e8d8);outline:none;-webkit-appearance:none;box-shadow:inset 0 1px 2px rgba(0,0,0,.04),0 2px 0 rgba(196,154,60,.08);transition:all .2s"
-        onfocus="this.style.borderColor='rgba(196,154,60,.5)';this.style.boxShadow='inset 0 1px 2px rgba(0,0,0,.04),0 2px 0 rgba(196,154,60,.15),0 0 0 3px rgba(196,154,60,.1)'"
-        onblur="this.style.borderColor='rgba(196,154,60,.22)';this.style.boxShadow='inset 0 1px 2px rgba(0,0,0,.04),0 2px 0 rgba(196,154,60,.08)'"
       />
     </div>
     <!-- Search results -->
     <div id="repasoSearchResults" style="display:none;margin-bottom:1rem"></div>
     <!-- Category grid -->
     <div id="repasoCatGrid">
-      <div class="tunic-divider"><span>${t('selectSection')}</span></div>
-      <div>${cards}</div>
+      <h3 class="carta-h">${_en?'Sections':'Secciones'}</h3>
+      <ul class="carta-secs">${cards}</ul>
     </div>
     ${_cartaPieHTML()}
   `;
@@ -26009,37 +25997,40 @@ function searchRepaso(query) {
     return;
   }
 
-  const rows = matched.map(d => {
-    const dd = getDish(d);
-    const isKnown = !!known[d.id];
-    const isMastered=!!(emp.journeyMastered||{})[d.id];
-    const srs=_srsDishStatus(emp, d.id);
-    const allergenN=(dd.allergens||[]).length;
-    const catCol=CAT_COLORS[dd.cat]||'var(--gold)';
-    return `<div role="button" tabindex="0" aria-label="${escapeHTML(dd.name)}${isMastered?(LANG==='en'?', mastered':', dominado'):''}" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click()}" class="repaso-row${isMastered?' mastered':''}" id="ritem${d.id}" onclick="_aprenderOpenDish(${d.id})" style="cursor:pointer;--cat-color:${catCol}">
-      <div class="repaso-row-icon">${CAT_ICONS[dd.cat]||''}</div>
-      <div class="repaso-row-body">
-        <div class="repaso-row-name">${escapeHTML(dd.name)}</div>
-        <div class="repaso-row-chips">
-          <span class="repaso-chip cat">${escapeHTML(catLocal(dd.cat))}</span>
-          <span class="repaso-chip allerg${allergenN===0?' none':''}">${allergenN===0?((typeof _alergenosValidados!=='function'||_alergenosValidados())?((LANG==='en'?'✓ No allergens':'✓ Sin alérgenos')):_sinAlergenosTxt((LANG==='en'?'✓ No allergens':'✓ Sin alérgenos'), LANG==='en')):`⚠ ${allergenN} ${LANG==='en'?(allergenN===1?'allergen':'allergens'):(allergenN===1?'alérgeno':'alérgenos')}`}</span>
-          <span class="repaso-chip srs srs-${srs.kind}">${escapeHTML(srs.label)}</span>
-          ${isMastered?`<span class="repaso-chip" style="color:var(--gold);border-color:rgba(196,154,60,.4);background:rgba(196,154,60,.08)">✦ ${LANG==='en'?'MASTERED':'DOMINADO'}</span>`:''}
-        </div>
-        ${dd.notes?`<div class="repaso-note">${escapeHTML(dd.notes)}</div>`:''}
-      </div>
-      <div style="display:flex;flex-direction:column;align-items:center;gap:.45rem;flex-shrink:0">
-        <button class="dj-launch-btn${isMastered?' mastered':''}" onclick="event.stopPropagation();launchDishJourney(${d.id})" title="${LANG==='en'?'Immersive Journey':'Viaje Inmersivo'}">${isMastered?'✓ ':'▶ '}${LANG==='en'?'Journey':'Viaje'}</button>
-        <button class="pase-launch-btn" onclick="event.stopPropagation();launchPase(${d.id})" title="${LANG==='en'?'Plating pass game':'Juego del pase'}">🍽 ${LANG==='en'?'Pass':'Pase'}</button>
-        <button class="known-btn${isKnown?' yes':''}" onclick="event.stopPropagation();toggleKnown(${d.id})" title="${LANG==='en'?'Mark as mastered':'Marcar como dominado'}">${isKnown?'✓':'○'}</button>
-      </div>
-    </div>`;
-  }).join('');
+  const rows = matched.map(d => _cartaFilaHTML(d, emp, '', `_aprenderOpenDish(${d.id})`)).join('');
 
   results.innerHTML = `
-    <div style="font-family:var(--font-mono);font-size:var(--fs-1);color:var(--parch3);letter-spacing:.1em;text-transform:uppercase;margin-bottom:.6rem">${matched.length} ${LANG==='en'?'result'+(matched.length!==1?'s':''):'resultado'+(matched.length!==1?'s':'')}</div>
-    <div class="repaso-list">${rows}</div>
+    <div class="carta-n">${matched.length} ${LANG==='en'?'result'+(matched.length!==1?'s':''):'resultado'+(matched.length!==1?'s':'')}</div>
+    <div class="cp-lista">${rows}</div>
   `;
+}
+// Una fila de plato de la Carta (lista de una sección y búsqueda). Foto sólo
+// si la hay; nombre en serif que abre la ficha; debajo lo que se repasa y las
+// dos prácticas del plato. El círculo de la derecha marca «dominado».
+function _cartaFilaHTML(d, emp, extra, abrir){
+  const _en=LANG==='en';
+  const dd=getDish(d);
+  const isKnown=!!((emp.knownDishes||{})[d.id]);
+  const isMastered=!!(emp.journeyMastered||{})[d.id];
+  const srs=_srsDishStatus(emp, d.id);
+  const n=(dd.allergens||[]).length;
+  const val=(typeof _alergenosValidados!=='function'||_alergenosValidados());
+  const sinTxt=_en?'No allergens':'Sin alérgenos';
+  const alTxt=n===0?(val?sinTxt:_sinAlergenosTxt(sinTxt,_en)):`${n} ${_en?(n===1?'allergen':'allergens'):(n===1?'alérgeno':'alérgenos')}`;
+  const ph=(typeof dishPhotoSrc==='function')?dishPhotoSrc(d.id):null;
+  return `<div class="cp-fila${isMastered?' mastered':''}" id="ritem${d.id}">
+    ${ph?`<span class="cp-foto"><img loading="lazy" ${SRC}="${ph}" alt=""></span>`:''}
+    <div class="cp-cuerpo">
+      <button type="button" class="cp-nom" onclick="${abrir}">${escapeHTML(dd.name)}</button>
+      <div class="cp-meta"><span class="${n?'al':'sin'}">${escapeHTML(alTxt)}</span>${srs.kind!=='new'?`<span class="srs srs-${srs.kind}">${escapeHTML(srs.label.toLowerCase())}</span>`:''}${isMastered?`<span class="dom">${_en?'mastered':'dominado'}</span>`:''}</div>
+      ${extra||''}
+      <div class="cp-acc">
+        <button type="button" class="cp-btn" onclick="event.stopPropagation();launchDishJourney(${d.id})">${_fpIc('ruta',15)}${_en?'Guided journey':'Recorrido'}</button>
+        <button type="button" class="cp-btn" onclick="event.stopPropagation();launchPase(${d.id})">${_fpIc('plato',15)}${_en?'Pass':'Pase'}</button>
+      </div>
+    </div>
+    <button type="button" class="known-btn${isKnown?' yes':''}" onclick="event.stopPropagation();toggleKnown(${d.id})" aria-label="${_en?'Mark as mastered':'Marcar como dominado'}" title="${_en?'Mark as mastered':'Marcar como dominado'}">${isKnown?'✓':'○'}</button>
+  </div>`;
 }
 function openRepasoCat(cat){repasoCat=cat;repasoView='topic';renderRepaso();}
 
@@ -26062,42 +26053,24 @@ function renderRepasoTopic(){
 
   const rows=dishes.map(d=>{
     const dd=getDish(d);
-    const isKnown=!!known[d.id];
-    const answer=topic.a(d);
-    const isMastered=!!(emp.journeyMastered||{})[d.id];
-    const srs=_srsDishStatus(emp, d.id);
     const allergenN=(dd.allergens||[]).length;
-    const catCol=CAT_COLORS[dd.cat]||'var(--gold)';
-    const allergenHtml=topic.key==='allergens'
-      ?`<div class="repaso-allergen-row">${allergenN===0?`<span class="allergen-tag safe">${(typeof _alergenosValidados!=='function'||_alergenosValidados())?'✓ ':'⚠ '}${t('noAllergens').replace('.','')}</span>`:dd.allergens.map(a=>`<span class="allergen-tag">⚠ ${allergenLocal(a)}</span>`).join('')}</div>`:'';
-    const _ph=typeof dishPhotoSrc==='function'?dishPhotoSrc(d.id):null;
-    return `<div class="repaso-row${isMastered?' mastered':''}" id="ritem${d.id}" style="--cat-color:${catCol}">
-      <div class="repaso-row-icon">${_ph?`<img loading="lazy" ${SRC}="${_ph}" alt="">`:(CAT_ICONS[dd.cat]||'')}</div>
-      <div class="repaso-row-body">
-        <div role="button" tabindex="0" aria-label="${escapeHTML(dd.name)}" class="repaso-row-name" onclick="repasoDishId=${d.id};repasoView='dish';renderRepaso()" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click()}" style="cursor:pointer">${escapeHTML(dd.name)}</div>
-        <div class="repaso-row-chips">
-          <span class="repaso-chip cat">${escapeHTML(catLocal(dd.cat))}</span>
-          <span class="repaso-chip allerg${allergenN===0?' none':''}">${allergenN===0?((typeof _alergenosValidados!=='function'||_alergenosValidados())?((LANG==='en'?'✓ No allergens':'✓ Sin alérgenos')):_sinAlergenosTxt((LANG==='en'?'✓ No allergens':'✓ Sin alérgenos'), LANG==='en')):`⚠ ${allergenN} ${LANG==='en'?(allergenN===1?'allergen':'allergens'):(allergenN===1?'alérgeno':'alérgenos')}`}</span>
-          <span class="repaso-chip srs srs-${srs.kind}">${escapeHTML(srs.label)}</span>
-          ${isMastered?`<span class="repaso-chip" style="color:var(--gold);border-color:rgba(196,154,60,.4);background:rgba(196,154,60,.08)">✦ ${LANG==='en'?'MASTERED':'DOMINADO'}</span>`:''}
-        </div>
-        ${topic.key!=='allergens'?`<div class="repaso-row-text">${escapeHTML(answer)}</div>`:''}
-        ${allergenHtml}
-        ${dd.notes?`<div class="repaso-note">${escapeHTML(dd.notes)}</div>`:''}
-      </div>
-      <div style="display:flex;flex-direction:column;align-items:center;gap:.45rem;flex-shrink:0">
-        <button class="dj-launch-btn${isMastered?' mastered':''}" onclick="event.stopPropagation();launchDishJourney(${d.id})" title="${LANG==='en'?'Immersive Journey':'Viaje Inmersivo'}">${isMastered?'✓ ':'▶ '}${LANG==='en'?'Journey':'Viaje'}</button>
-        <button class="pase-launch-btn" onclick="event.stopPropagation();launchPase(${d.id})" title="${LANG==='en'?'Plating pass game':'Juego del pase'}">🍽 ${LANG==='en'?'Pass':'Pase'}</button>
-        <button class="known-btn${isKnown?' yes':''}" onclick="toggleKnown(${d.id})" title="${LANG==='en'?'Mark as mastered':'Marcar como dominado'}">${isKnown?'✓':'○'}</button>
-      </div>
-    </div>`;
+    const val=(typeof _alergenosValidados!=='function'||_alergenosValidados());
+    // Lo que se repasa en esta pestaña: los alérgenos (con la nota de cocina,
+    // que en muchas cartas es donde se explican), los ingredientes o la historia.
+    const extra=topic.key==='allergens'
+      ?`<div class="cp-al">${allergenN===0?`<span class="cp-al-i sin">${escapeHTML(val?t('noAllergens').replace('.',''):_sinAlergenosTxt(t('noAllergens').replace('.',''), LANG==='en'))}</span>`:dd.allergens.map(a=>`<span class="cp-al-i">${escapeHTML(allergenLocal(a))}</span>`).join('')}</div>${dd.notes?`<div class="cp-nota">${escapeHTML(dd.notes)}</div>`:''}`
+      :`<div class="cp-texto">${escapeHTML(topic.a(d))}</div>`;
+    return _cartaFilaHTML(d, emp, extra, `repasoDishId=${d.id};repasoView='dish';renderRepaso()`);
   }).join('');
 
   document.getElementById('appContent').innerHTML=`
-    <button class="btn-back" onclick="repasoView='cats';renderRepaso()">${t('back')}</button>
-    <div class="section-eyebrow">${CAT_ICONS[repasoCat]} ${catLocal(repasoCat)}</div>
-    <div class="topic-pills">${pills}</div>
-    <div class="repaso-list">${dishes.length?rows:`<div style="text-align:center;padding:2.2rem 1rem;color:var(--parch3);font-family:var(--font-sans);font-size:var(--fs-3);line-height:1.5">${LANG==='en'?'No dishes from the selected service in this category. Change the shift from the top bar to see them.':'No hay platos de este turno en esta categoría. Cambia el turno en la barra superior para verlos.'}</div>`}</div>
+    <button type="button" class="fp-volver" onclick="repasoView='cats';renderRepaso()">${t('back')}</button>
+    <div class="carta-cab">
+      <div class="fp-eyebrow">${LANG==='en'?'Section':'Sección'} · ${dishes.length} ${t('dishes')}</div>
+      <h2 class="fp-tit">${catLocal(repasoCat)}</h2>
+    </div>
+    <div class="topic-pills carta-temas" role="tablist">${pills}</div>
+    <div class="cp-lista">${dishes.length?rows:`<div style="text-align:center;padding:2.2rem 1rem;color:var(--parch3);font-family:var(--font-sans);font-size:var(--fs-3);line-height:1.5">${LANG==='en'?'No dishes from the selected service in this category. Change the shift from the top bar to see them.':'No hay platos de este turno en esta categoría. Cambia el turno en la barra superior para verlos.'}</div>`}</div>
   `;
 }
 
@@ -26154,182 +26127,82 @@ function renderRepasoDishDetail(dishId){
 
   const emp = getEmp(currentUser);
   const isKnown = emp && emp.knownDishes && emp.knownDishes[dish.id];
-  const ingredientList = dd.ingredients ? dd.ingredients.split(',').map(i=>i.trim()).filter(Boolean) : [];
-  if(ingredientList.length === 0 && dd.ingredients){
-    dd.ingredients.split('.').forEach(s => { if(s.trim()) ingredientList.push(s.trim()); });
-  }
-  const allergenColors = {'Gluten':'#d4a017','Lácteos':'#4888a0','Huevos':'#f5a623','Pescado':'#2e86c1','Mariscos':'#e74c3c','Frutos secos':'#8b4513','Cacahuetes':'#cd853f','Soja':'#5a9a6e','Apio':'#228b22','Mostaza':'#daa520','Sésamo':'#d2691e','Sulfitos':'#7a6aaa','Moluscos':'#dc143c'};
+  const _en = LANG==='en';
+  const _jm = !!(emp.journeyMastered||{})[dish.id];
   const _marcaje = dd.marcaje || '';
-  const plateSize = 220;
-  const cx = plateSize/2, cy = plateSize/2;
-
-
-  // FASE 3b — panel de adaptaciones: cada alérgeno con su veredicto y comanda
-  // exacta desde DISH_ACTIONS (la matriz validada), no desde heurísticas.
-  const _acts = (typeof DISH_ACTIONS !== 'undefined' && DISH_ACTIONS[dish.id]) || {};
-  // FASE 4 — procedencia: qué componente(s) del plato aportan cada alérgeno,
-  // desde DISH_COMPONENTS (derivado de la base única de ingredientes).
-  const _comps = (typeof DISH_COMPONENTS !== 'undefined' && DISH_COMPONENTS[dish.id]) || [];
-  const _aEn = {'Lácteos':'Dairy','Huevos':'Eggs','Pescado':'Fish','Crustáceos':'Crustaceans','Moluscos':'Molluscs','Sulfitos':'Sulphites','Frutos secos':'Tree nuts','Granos de sésamo':'Sesame','Cacahuete':'Peanut','Apio':'Celery','Mostaza':'Mustard','Soja':'Soy','Gluten':'Gluten'};
-  const allergenHtml = dish.allergens.map(a => {
-    const col = allergenColors[a]||'var(--gold)';
-    const act = _acts[a];
-    const label = LANG==='en' ? (_aEn[a]||a) : a;
-    const srcs = _comps.filter(c => c.a.includes(a)).map(c => c.v ? (LANG==='en'?'depends on chosen variant':c.n) : c.n);
-    const provHtml = srcs.length ? `<div style="font-family:var(--font-sans);font-size:var(--fs-2);color:var(--parch3);margin-top:.12rem">${LANG==='en'?'From':'Por'}: ${srcs.map(escapeHTML).join(' · ')}</div>` : '';
-    let status;
-    if(!(typeof _alergenosValidados!=='function'||_alergenosValidados())){
-      // Borrador: ni «se adapta» ni «no apto» están aprobados. La comanda, si la
-      // hay, se enseña como provisional.
-      const cmd = (act && act.r === 1) ? (LANG==='en' ? (act.c_en || act.c) : act.c) : '';
-      status = `<span style="font-family:var(--font-mono);font-size:var(--fs-1);color:var(--parch3);font-weight:700;letter-spacing:.06em">? ${LANG==='en'?'Pending menu validation':'Pendiente de validación de la carta'}</span>`
-        + (cmd ? `<div style="font-family:var(--font-mono);font-size:var(--fs-1);color:var(--parch3);margin-top:.15rem">${LANG==='en'?'Provisional order, not validated':'Comanda provisional, sin validar'}: <b>${escapeHTML(cmd)}</b></div>` : '');
-    } else if(act && act.r === 1){
-      const cmd = LANG==='en' ? (act.c_en || act.c) : act.c;
-      status = `<span style="font-family:var(--font-mono);font-size:var(--fs-1);color:var(--green-deep);font-weight:700;letter-spacing:.06em">✓ ${LANG==='en'?'ADAPTABLE':'SE ADAPTA'}</span>`
-        + (cmd ? `<div style="font-family:var(--font-mono);font-size:var(--fs-1);color:var(--parch2);margin-top:.15rem">${LANG==='en'?'Order':'Comandar'}: <b>${escapeHTML(cmd)}</b></div>` : '')
-        + (act.sub && LANG!=='en' ? `<div style="font-family:var(--font-mono);font-size:var(--fs-1);color:var(--parch3);margin-top:.1rem">↺ ${escapeHTML(act.sub)}</div>` : '')
-        + (act.sub_en && LANG==='en' ? `<div style="font-family:var(--font-mono);font-size:var(--fs-1);color:var(--parch3);margin-top:.1rem">↺ ${escapeHTML(act.sub_en)}</div>` : '');
-    } else {
-      status = `<span style="font-family:var(--font-mono);font-size:var(--fs-1);color:#a04848;font-weight:700;letter-spacing:.06em">■ ${LANG==='en'?'STRUCTURAL — not suitable':'ESTRUCTURAL — no apto'}</span>`;
-    }
-    return `<div style="display:flex;align-items:flex-start;gap:.6rem;padding:.5rem 0;border-bottom:1px solid rgba(28,42,34,.08)">
-      <span style="width:8px;height:8px;transform:rotate(45deg);background:${col};flex-shrink:0;margin-top:.3rem"></span>
-      <div style="flex:1;min-width:0">
-        <div style="font-family:var(--font-sans);font-size:var(--fs-3);font-weight:700;color:var(--parchment)">${escapeHTML(label)}</div>
-        ${provHtml}
-        ${status}
-      </div>
-    </div>`;
-  }).join('');
-
-  const ingredientHtml = ingredientList.map(ing => `<span style="padding:.2rem .5rem;background:rgba(0,0,0,.03);border-radius:20px;font-family:var(--font-sans);font-size:var(--fs-2);color:var(--parch2)">${escapeHTML(ing)}</span>`).join('');
   // Platos de varios bocados (el Mistery box de Akira Back): si la ficha trae
   // un bocado por línea, se enseña así, uno debajo de otro con su nombre en
   // negrita, en vez de trocear por comas cada descripción en fichas sueltas.
   const _bocados = (typeof _ingPorLineas==='function') ? _ingPorLineas(dd.ingredients) : null;
+  const _foto = (typeof dishPhotoSrc==='function') ? dishPhotoSrc(dish.id) : null;
 
   // ── Maridaje ──
-  const _wineTypeCol = {blanco:'#c8a84e',tinto:'#8b2252',rosado:'#e8a0bf',espumoso:'#d4af37',dulce:'#daa520'};
-  const _wineTypeLbl = LANG==='en'
+  // Los vinos emparejados (por precio, máx. 3) dentro de su plegable. Sin
+  // bodega (restaurante sin lista de vinos, o lista vacía) no hay sección: antes
+  // se quedaba en «Cargando maridaje…» para siempre.
+  const _wineTypeLbl = _en
     ? {blanco:'White',tinto:'Red',rosado:'Rosé',espumoso:'Sparkling',dulce:'Sweet'}
     : {blanco:'Blanco',tinto:'Tinto',rosado:'Rosado',espumoso:'Espumoso',dulce:'Dulce'};
   const _pairWines = _dishPairWines(dish, 3);
-  // Sin bodega (restaurante sin lista de vinos, o lista vacía) no hay sección
-  // de maridaje: antes se quedaba en «Cargando maridaje…» para siempre.
   const _sinBodega = _pairWines === null && (!_SABER_HAY.vinos || (Array.isArray(WINES) && !WINES.length));
+  const _marTit = `${LANG==='en'?'Wine pairing':'Maridaje'}`;
   let maridajeHtml = '';
   if(_sinBodega){
     maridajeHtml = '';
   } else if(_pairWines === null){
-    // Los vinos aún no han cargado — placeholder; se repinta al terminar.
-    maridajeHtml = `
-    <div class="card" style="padding:.9rem;margin-bottom:.75rem">
-      <div style="font-family:var(--font-mono);font-size:var(--fs-1);color:var(--gold);letter-spacing:.12em;text-transform:uppercase;margin-bottom:.5rem">🍷 ${LANG==='en'?'Wine pairing':'Maridaje'}</div>
-      <div style="font-family:var(--font-sans);font-size:var(--fs-2);color:var(--parch3)">${LANG==='en'?'Loading pairings…':'Cargando maridaje…'}</div>
-    </div>`;
+    // Los vinos aún no han cargado: se repinta al terminar.
+    maridajeHtml = _fpPleg(_marTit, _en?'Loading pairings…':'Cargando maridaje…', `<p>${_en?'Loading pairings…':'Cargando maridaje…'}</p>`);
   } else if(_pairWines.length){
     const rows = _pairWines.map(w=>{
-      const col = _wineTypeCol[w.type] || 'var(--gold)';
       const typeLbl = _wineTypeLbl[w.type] || (w.type||'');
-      return `<div style="display:flex;align-items:center;gap:.55rem;padding:.4rem 0;border-bottom:1px solid rgba(28,42,34,.08)">
-        <span style="width:9px;height:9px;border-radius:50%;background:${col};flex-shrink:0;box-shadow:0 0 0 1px rgba(0,0,0,.08)"></span>
-        <div style="flex:1;min-width:0">
-          <div style="font-family:var(--font-sans);font-size:var(--fs-3);font-weight:600;color:var(--parchment);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${escapeHTML(w.name)}</div>
-          <div style="font-family:var(--font-mono);font-size:var(--fs-1);color:var(--parch3);letter-spacing:.04em">${escapeHTML(typeLbl)}${w.region?` · ${escapeHTML(w.region)}`:''}</div>
-        </div>
-      </div>`;
+      return `<div class="fp-vino"><b>${escapeHTML(w.name)}</b><span>${escapeHTML(typeLbl)}${w.region?` · ${escapeHTML(w.region)}`:''}</span></div>`;
     }).join('');
-    maridajeHtml = `
-    <div class="card" style="padding:.9rem;margin-bottom:.75rem">
-      <div style="font-family:var(--font-mono);font-size:var(--fs-1);color:var(--gold);letter-spacing:.12em;text-transform:uppercase;margin-bottom:.5rem">🍷 ${LANG==='en'?'Wine pairing':'Maridaje'}</div>
-      ${rows}
-      ${_snsBtnHtml({type:'dish',name:dish.name})}
-      <button onclick="_subTab.aprender='repaso';showTab('vinos')" style="margin-top:.5rem;width:100%;padding:.5rem;background:transparent;border:1px solid var(--gold-a);border-radius:var(--r2);cursor:pointer;font-family:var(--font-mono);font-size:var(--fs-1);color:var(--gold-deep);letter-spacing:.06em">${LANG==='en'?'See all wines →':'Ver todos los vinos →'}</button>
-    </div>`;
+    maridajeHtml = _fpPleg(_marTit, _pairWines.map(w=>w.name).join(', '), `${rows}
+      <div class="fp-pleg-acc">${_snsBtnHtml({type:'dish',name:dish.name})}
+      <button type="button" class="fp-link" onclick="_subTab.aprender='repaso';showTab('vinos')">${_en?'See all wines':'Ver todos los vinos'}</button></div>`);
   } else {
     // Sin vinos emparejados en la carta: aun así se puede explorar por notas.
-    maridajeHtml = `
-    <div class="card" style="padding:.9rem;margin-bottom:.75rem">
-      <div style="font-family:var(--font-mono);font-size:var(--fs-1);color:var(--gold);letter-spacing:.12em;text-transform:uppercase;margin-bottom:.5rem">🍷 ${LANG==='en'?'Wine pairing':'Maridaje'}</div>
-      ${_snsBtnHtml({type:'dish',name:dish.name})}
-    </div>`;
+    maridajeHtml = _fpPleg(_marTit, _en?'Explore by aromas':'Explora por aromas', `<div class="fp-pleg-acc">${_snsBtnHtml({type:'dish',name:dish.name})}</div>`);
   }
 
+  // ── Ingredientes e historia, sin repetir ──
+  // En muchas cartas la historia es la misma frase que los ingredientes: si
+  // una contiene a la otra, se enseña una vez (la más completa).
+  const _dup = _fpMismoTexto(dd.ingredients, dd.history);
+  const _ingTxt = (_dup && !_bocados && String(dd.history||'').length > String(dd.ingredients||'').length) ? dd.history : dd.ingredients;
+  const ingHtml = dd.ingredients
+    ? _fpPleg(_en?'Ingredients':'Ingredientes', _bocados ? _bocados.map(x=>x.n||x.d).join(', ') : _ingTxt,
+        _bocados ? _bocadosHTML(_bocados) : `<p>${escapeHTML(_ingTxt)}</p>`)
+    : '';
+  const histHtml = (dd.history && !_dup) ? _fpPleg(_en?'Story':'Historia', dd.history, `<p>${escapeHTML(dd.history)}</p>`) : '';
+  const notasHtml = dd.notes ? _fpPleg(_en?'Notes':'Notas', dd.notes, `<p>${escapeHTML(dd.notes)}</p>`, 'nota') : '';
+  const marcajeHtml = _marcaje ? _fpPleg(LANG==='en'?'Cutlery marking':'Marcaje', _marcaje, `<p>${escapeHTML(_marcaje)}</p>`) : '';
+  const tecHtml = (typeof _dishTecHTML==='function') ? _dishTecHTML(dish, false) : '';
+  const masHtml = notasHtml + ingHtml + histHtml + tecHtml + maridajeHtml + marcajeHtml;
+
   document.getElementById('appContent').innerHTML = `
-    <button onclick="repasoView='topic';renderRepaso()" class="btn-back">${t('back')}</button>
+    <div class="fp">
+    <button type="button" onclick="repasoView='topic';renderRepaso()" class="fp-volver">${t('back')}</button>
 
-    <div style="text-align:left;margin-bottom:1.2rem;padding-bottom:.65rem;border-bottom:1px solid rgba(28,42,34,.12)">
-      <div style="font-family:var(--font-mono);font-size:var(--fs-1);color:var(--gold-deep);letter-spacing:.15em;text-transform:uppercase;margin-bottom:.3rem">${escapeHTML(catLocal(dish.cat))}${isKnown ? ` · <span style="color:var(--green-deep)">✓ ${LANG==='en'?'Mastered':'Dominado'}</span>` : ''}</div>
-      <div style="font-family:'Cinzel',serif;font-size:1.18rem;font-weight:600;color:var(--parchment);line-height:1.3">${escapeHTML(dd.name)}</div>
-      <button class="dj-launch-btn${(emp.journeyMastered||{})[dish.id]?' mastered':''}" onclick="launchDishJourney(${dish.id})" style="margin-top:.6rem;padding:.45rem .9rem;font-size:.6rem">${(emp.journeyMastered||{})[dish.id]?'✓ ':'🚀 '}${LANG==='en'?'Immersive Journey':'Viaje Inmersivo'}</button>
-    </div>
-
-    <div style="display:flex;justify-content:center;margin-bottom:1.2rem">
-      ${(typeof dishPhotoSrc==='function'&&dishPhotoSrc(dish.id))?`
-      <div class="dish-hero-photo"><img ${SRC}="${dishPhotoSrc(dish.id)}" alt="${escapeHTML(dd.name)}"></div>
-      `:`
-      <svg width="${plateSize}" height="${plateSize}" viewBox="0 0 ${plateSize} ${plateSize}" style="filter:drop-shadow(0 4px 12px rgba(0,0,0,.1))">
-        <circle cx="${cx}" cy="${cy}" r="${cx-5}" fill="none" stroke="var(--gold-a)" stroke-width="1"/>
-        <circle cx="${cx}" cy="${cy}" r="${cx-8}" fill="rgba(255,255,255,.95)" stroke="rgba(196,154,60,.15)" stroke-width=".5"/>
-        <circle cx="${cx}" cy="${cy}" r="${cx-20}" fill="none" stroke="rgba(196,154,60,.1)" stroke-width=".5" stroke-dasharray="4,3"/>
-        <circle cx="${cx}" cy="${cy}" r="28" fill="rgba(200,169,110,.04)" stroke="rgba(200,169,110,.08)" stroke-width=".5"/>
-        <text x="${cx}" y="${cy-6}" text-anchor="middle" font-family="'Cinzel',serif" font-size="10" fill="var(--parch2)" font-weight="500">
-          ${escapeHTML(dd.name.length > 24 ? dd.name.substring(0,22)+'…' : dd.name)}
-        </text>
-        <text x="${cx}" y="${cy+8}" text-anchor="middle" font-family="'DM Mono',monospace" font-size="6.5" fill="var(--parch4)" letter-spacing=".08em">${escapeHTML(catLocal(dish.cat).toUpperCase())}</text>
-      </svg>`}
-    </div>
-
-    ${typeof _fsvTiraHTML==='function' ? _fsvTiraHTML(dish, LANG==='en') : ''}
+    <header class="fp-cab${_foto?' con-foto':''}">
+      ${_foto ? `<div class="dish-hero-photo fp-foto"><img ${SRC}="${_foto}" alt="${escapeHTML(dd.name)}"></div>` : ''}
+      <div class="fp-eyebrow">${escapeHTML(catLocal(dish.cat))}</div>
+      <h2 class="fp-tit">${escapeHTML(dd.name)}</h2>
+      <div class="fp-acciones">
+        <button type="button" class="fp-dom${isKnown?' on':''}" aria-pressed="${isKnown?'true':'false'}" onclick="toggleKnown(${dish.id});repasoView='dish';renderRepaso()">${_fpIc('check',16)}<span>${isKnown ? (_en?'Mastered':'Dominado') : (_en?'I know it':'Ya lo domino')}</span></button>
+        <button type="button" class="fp-ruta${_jm?' on':''}" onclick="launchDishJourney(${dish.id})">${_fpIc('ruta',16)}<span>${_en?'Guided journey':'Recorrido guiado'}</span></button>
+      </div>
+    </header>
 
     ${(typeof _degContarHTML==='function') ? _degContarHTML(dish, false) : ''}
 
-    <div style="margin-bottom:.75rem">
-      <div class="card" style="padding:.9rem">
-        <div style="font-family:var(--font-mono);font-size:var(--fs-1);color:var(--gold);letter-spacing:.12em;text-transform:uppercase;margin-bottom:.35rem">⚠ ${LANG==='en'?'Allergens & adaptations':'Alérgenos y adaptaciones'}</div>
-        <div>
-          ${allergenHtml || `<div style="font-family:var(--font-mono);font-size:var(--fs-1);color:var(--green-deep)">${(typeof _alergenosValidados!=='function'||_alergenosValidados())?'✓ ':'⚠ '}${((typeof _alergenosValidados!=='function'||_alergenosValidados())?(LANG==='en'?'No declared allergens':'Sin alérgenos declarados'):_sinAlergenosTxt(LANG==='en'?'No declared allergens':'Sin alérgenos declarados', LANG==='en'))}</div>`}
-        </div>
-      </div>
-    </div>
+    ${_fpAlergenosHTML(dish, false)}
+
+    ${typeof _fsvTiraHTML==='function' ? _fsvTiraHTML(dish, LANG==='en') : ''}
 
     ${(typeof _mesaIdiomaHTML==='function') ? _mesaIdiomaHTML(dish, false, _mesaLang) : ''}
 
-    ${_marcaje ? `
-    <div class="card" style="padding:.9rem;margin-bottom:.75rem">
-      <div style="font-family:var(--font-mono);font-size:var(--fs-1);color:var(--gold);letter-spacing:.12em;text-transform:uppercase;margin-bottom:.35rem">🍽️ ${LANG==='en'?'Cutlery marking':'Marcaje'}</div>
-      <div style="font-family:var(--font-sans);font-size:var(--fs-3);color:var(--parch2);line-height:1.6">${escapeHTML(_marcaje)}</div>
-    </div>` : ''}
-
-    ${ingredientList.length ? `
-    <div class="card" style="padding:.9rem;margin-bottom:.75rem">
-      <div style="font-family:var(--font-mono);font-size:var(--fs-1);color:var(--gold);letter-spacing:.12em;text-transform:uppercase;margin-bottom:.5rem">◇ ${LANG==='en'?'Ingredients':'Ingredientes'}</div>
-      ${_bocados ? _bocadosHTML(_bocados) : `<div style="display:flex;flex-wrap:wrap;gap:.3rem">
-        ${ingredientHtml}
-      </div>`}
-    </div>` : ''}
-
-    ${(typeof _dishTecHTML==='function') ? _dishTecHTML(dish, false) : ''}
-
-    ${dd.history ? `
-    <div class="card" style="padding:.9rem;margin-bottom:.75rem">
-      <div style="font-family:var(--font-mono);font-size:var(--fs-1);color:var(--gold);letter-spacing:.12em;text-transform:uppercase;margin-bottom:.5rem">◇ ${LANG==='en'?'Story':'Historia'}</div>
-      <div style="font-family:var(--font-sans);font-size:var(--fs-3);color:var(--parch2);line-height:1.6">${escapeHTML(dd.history)}</div>
-    </div>` : ''}
-
-    ${maridajeHtml}
-
-    ${dd.notes ? `
-    <div class="card" style="padding:.9rem;margin-bottom:.75rem;border-color:rgba(196,112,104,.2);background:rgba(196,112,104,.02)">
-      <div style="font-family:var(--font-mono);font-size:var(--fs-1);color:var(--rose);letter-spacing:.12em;text-transform:uppercase;margin-bottom:.5rem">! ${LANG==='en'?'Important Notes':'Notas Importantes'}</div>
-      <div style="font-family:var(--font-sans);font-size:var(--fs-3);color:var(--parch2);line-height:1.6">${escapeHTML(dd.notes)}</div>
-    </div>` : ''}
-
-    <div style="display:flex;gap:.5rem;margin-bottom:1rem">
-      <button onclick="toggleKnown(${dish.id});repasoView='dish';renderRepaso()" style="flex:1;padding:.65rem;background:${isKnown?'rgba(77,138,94,.1)':'var(--gold-b)'};border:1px solid ${isKnown?'rgba(77,138,94,.3)':'var(--gold-a)'};border-radius:var(--r2);cursor:pointer;font-family:var(--font-mono);font-size:var(--fs-1);color:${isKnown?'var(--sage)':'var(--gold)'};letter-spacing:.06em">
-        ${isKnown ? '✓ '+(LANG==='en'?'Mastered':'Dominado') : LANG==='en'?'Mark as Mastered':'Marcar como Dominado'}
-      </button>
+    ${masHtml ? `<section class="fp-mas" aria-label="${_en?'More about the dish':'Más del plato'}">${masHtml}</section>` : ''}
     </div>
   `;
 
@@ -26347,6 +26220,88 @@ function renderRepasoDishDetail(dishId){
           if(repasoView==='dish' && repasoDishId===dishId) renderRepasoDishDetail(dishId); });
     }).catch(()=>{});
   }
+}
+
+// ═══ FICHA DEL PLATO · piezas compartidas con la vista rápida (oct 2026) ═══
+// El mismo lenguaje que el Menú degustación: etiqueta pequeña, nombre en
+// serif, tarjeta crema con filete fino y una idea por bloque. Iconos de línea
+// (los mismos trazos que Mesa y la ficha de servicio); nada de emoji.
+const _FP_IC = {
+  no:     '<path d="M6 6l12 12M18 6L6 18"/>',
+  ok:     '<path d="M4 7h13l-3-3M20 17H7l3 3"/>',
+  unk:    '<path d="M9.5 9a2.5 2.5 0 015 0c0 1.8-2.5 2.2-2.5 4"/><path d="M12 17.2v.1"/>',
+  check:  '<path d="M5 12.5l4.5 4.5L19 7.5"/>',
+  ruta:   '<circle cx="12" cy="12" r="8.5"/><path d="M15.2 8.8l-1.9 4.5-4.5 1.9 1.9-4.5z"/>',
+  libro:  '<path d="M4 5.5A1.5 1.5 0 015.5 4H11v15H5.5A1.5 1.5 0 014 17.5z"/><path d="M20 5.5A1.5 1.5 0 0018.5 4H13v15h5.5a1.5 1.5 0 001.5-1.5z"/>',
+  voz:    '<path d="M4 9.5h3l4-3.5v12l-4-3.5H4z"/><path d="M15 9a4 4 0 010 6"/><path d="M17.5 6.5a7.5 7.5 0 010 11"/>',
+  copiar: '<rect x="8" y="8" width="11" height="12" rx="1.5"/><path d="M5 15.5V5.5A1.5 1.5 0 016.5 4H15"/>',
+  reloj:  '<circle cx="12" cy="12" r="8"/><path d="M12 8v4l3 2"/>',
+  aviso:  '<path d="M12 4l9 16H3z"/><path d="M12 10v4"/><path d="M12 17v.1"/>',
+  plato:  '<circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="4.5"/>',
+  camara: '<path d="M3 8.5A1.5 1.5 0 014.5 7h2L8 5h8l1.5 2h2A1.5 1.5 0 0121 8.5v9A1.5 1.5 0 0119.5 19h-15A1.5 1.5 0 013 17.5v-9z"/><circle cx="12" cy="12.5" r="3.2"/>'
+};
+function _fpIc(k, size){
+  const z = size || 14;
+  return `<svg class="fp-ic" width="${z}" height="${z}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${_FP_IC[k]||''}</svg>`;
+}
+// ¿Dicen lo mismo dos textos? Igual o uno dentro del otro, sin contar
+// mayúsculas, tildes ni puntuación. Así la ficha no repite la historia cuando
+// es la misma frase que los ingredientes.
+function _fpNorm(t){ return String(t||'').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[^a-z0-9ñ]+/g,' ').trim(); }
+function _fpMismoTexto(a, b){
+  const x = _fpNorm(a), y = _fpNorm(b);
+  if(!x || !y) return false;
+  return x === y || x.includes(y) || y.includes(x);
+}
+// Un plegable de «Más del plato»: etiqueta, una línea de adelanto y el cuerpo.
+function _fpPleg(titulo, adelanto, cuerpo, cls){
+  const pre = String(adelanto||'').replace(/\s+/g,' ').trim();
+  return `<details class="fp-pleg${cls?' '+cls:''}"><summary><span class="fp-pleg-t">${escapeHTML(titulo)}</span>${pre?`<span class="fp-pleg-pre">${escapeHTML(pre)}</span>`:''}</summary><div class="fp-pleg-body">${cuerpo}</div></details>`;
+}
+// Alérgenos compactos: un chip por alérgeno con su veredicto en una línea
+// (icono + palabra + color, nunca sólo color) y, plegado, cómo se adapta y de
+// qué parte del plato viene. Veredictos de la matriz validada DISH_ACTIONS con
+// los alérgenos CANÓNICOS del plato (d.allergens, en español: los traducidos
+// no son clave). Sin dato en la matriz no se inventa: se consulta a cocina. Con
+// la carta sin validar no hay veredicto: pendiente, y la comanda es provisional.
+const _FP_AL_ORDEN = { no:0, unk:1, pend:2, ok:3 };
+function _fpAlergenosHTML(d, compacto){
+  const _en = LANG==='en';
+  const val = (typeof _alergenosValidados!=='function' || _alergenosValidados());
+  const acts = (typeof DISH_ACTIONS!=='undefined' && DISH_ACTIONS && DISH_ACTIONS[d.id]) || {};
+  const comps = (typeof DISH_COMPONENTS!=='undefined' && DISH_COMPONENTS && DISH_COMPONENTS[d.id]) || [];
+  const al = (d.allergens&&d.allergens.length) ? d.allergens : [];
+  const lbl = a => escapeHTML(typeof allergenLocal==='function' ? allergenLocal(a) : a);
+  const tit = `<div class="fp-lbl">${_en?'Allergens & adaptations':'Alérgenos y adaptaciones'}</div>`;
+  const cls = `card fp-bloque fp-al${compacto?' compacto':''}`;
+  if(!al.length){
+    const txt = _en ? 'No declared allergens' : 'Sin alérgenos declarados';
+    return `<section class="${cls}">${tit}<p class="fp-al-libre${val?'':' pend'}">${_fpIc(val?'check':'unk',16)}${escapeHTML(val ? txt : (typeof _sinAlergenosTxt==='function' ? _sinAlergenosTxt(txt, _en) : txt))}</p></section>`;
+  }
+  const filas = al.map(a => {
+    const act = acts[a];
+    let k, v;
+    if(!val){ k = 'pend'; v = _en ? 'Pending' : 'Pendiente'; }
+    else if(act && act.r===1){ k = 'ok'; v = _en ? 'Adaptable' : 'Se adapta'; }
+    else if(act && act.r===0){ k = 'no'; v = _en ? 'Not suitable' : 'No apto'; }
+    else { k = 'unk'; v = _en ? 'Check with the kitchen' : 'Consultar con cocina'; }
+    const de = (Array.isArray(comps)?comps:[]).filter(c => c && Array.isArray(c.a) && c.a.includes(a)).map(c => c.v ? (_en?'depends on chosen variant':c.n) : c.n);
+    const cmd = (act && act.r===1) ? (_en ? (act.c_en || act.c) : act.c) : '';
+    const sub = (act && act.r===1) ? (_en ? act.sub_en : act.sub) : '';
+    return { a, k, v, de, cmd, sub };
+  }).sort((x, y) => _FP_AL_ORDEN[x.k] - _FP_AL_ORDEN[y.k]);
+  const chips = filas.map(f => `<li class="fp-al-i ${f.k}">${_fpIc(f.k==='pend'?'unk':f.k)}<b>${lbl(f.a)}</b><span>${f.v}</span></li>`).join('');
+  const det = filas.filter(f => f.cmd || f.sub || f.de.length).map(f => `<div class="fp-al-det ${f.k}"><b>${lbl(f.a)}</b>
+      ${f.cmd ? `<span>${val ? (_en?'Order':'Comandar') : (_en?'Provisional order, not validated':'Comanda provisional, sin validar')}: <em>${escapeHTML(f.cmd)}</em></span>` : ''}
+      ${f.sub ? `<span>${escapeHTML(f.sub)}</span>` : ''}
+      ${f.de.length ? `<small>${_en?'From':'Por'}: ${f.de.map(escapeHTML).join(', ')}</small>` : ''}
+    </div>`).join('');
+  const hayCmd = filas.some(f => f.cmd);
+  const aviso = val ? '' : `<p class="fp-al-aviso">${_fpIc('aviso')}${_en ? 'Menu pending kitchen validation: confirm with the kitchen before ordering.' : 'Carta pendiente de validación por cocina: confírmalo con cocina antes de comandar.'}</p>`;
+  return `<section class="${cls}">${tit}${aviso}
+    <ul class="fp-al-lista">${chips}</ul>
+    ${det ? `<details class="fp-al-mas"><summary>${hayCmd ? (_en?'How to adapt it and where each one comes from':'Cómo se adapta y de dónde viene cada uno') : (_en?'Where each one comes from':'De dónde viene cada uno')}</summary><div class="fp-al-mas-body">${det}</div></details>` : ''}
+  </section>`;
 }
 
 function changeRepasoTopic(t){repasoTopic=t;renderRepasoTopic();}

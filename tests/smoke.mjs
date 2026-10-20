@@ -2708,8 +2708,10 @@ test('dish detail + immersive journey read verdicts from DISH_ACTIONS', () => {
   // its exact comanda / structural), never the old word-sniffing heuristic
   // ("Posiblemente eliminable bajo petición" guessed from notes keywords).
   const detail = html.slice(html.indexOf('function renderRepasoDishDetail'), html.indexOf('function changeRepasoTopic'));
-  assert(/DISH_ACTIONS\[dish\.id\]/.test(detail), 'dish detail panel must read DISH_ACTIONS');
-  assert(/SE ADAPTA/.test(detail) && /ESTRUCTURAL/.test(detail), 'dish detail must show both verdicts');
+  // Rediseño oct 2026: los veredictos los pinta _fpAlergenosHTML (definida entre
+  // la ficha y changeRepasoTopic), la misma pieza que la vista rápida.
+  assert(/DISH_ACTIONS\[d\.id\]/.test(detail) && /_fpAlergenosHTML\(dish, false\)/.test(detail), 'dish detail panel must read DISH_ACTIONS');
+  assert(/'Se adapta'/.test(detail) && /'No apto'/.test(detail), 'dish detail must show both verdicts');
   const dj = html.slice(html.indexOf('function _djPhaseAllergens'), html.indexOf('function _djPhaseAllergens') + 7000);
   assert(/DISH_ACTIONS\[dish\.id\]/.test(dj), 'immersive journey allergen cards must read DISH_ACTIONS');
   assert(!/Posiblemente eliminable bajo petición/.test(html), 'heuristic "maybe removable" chip must stay retired');
@@ -2764,7 +2766,7 @@ test('DISH_COMPONENTS: dish allergens derive exactly from components, zero drift
   // Runtime derivation + service-facing provenance in the dish card.
   assert(/function computeDishAllergens/.test(html), 'computeDishAllergens helper missing');
   const detail = html.slice(html.indexOf('function renderRepasoDishDetail'), html.indexOf('function changeRepasoTopic'));
-  assert(/DISH_COMPONENTS\[dish\.id\]/.test(detail), 'dish detail must read DISH_COMPONENTS for provenance');
+  assert(/DISH_COMPONENTS\[d\.id\]/.test(detail), 'dish detail must read DISH_COMPONENTS for provenance');
   assert(/'From':'Por'/.test(detail), 'allergen provenance line missing from dish detail');
 });
 
@@ -4558,7 +4560,7 @@ test('wine detail speaks the premium carta language', () => {
 test('editorial sweep: quiz + dish headers join the shared recipe', () => {
   assert(/wine-section-title">\$\{LANG==='en'\?'Wine Quiz':'Quiz de Vinos'\}/.test(html),
     'wine quiz header must use the shared editorial classes');
-  assert(/text-align:left;margin-bottom:1\.2rem;padding-bottom:\.65rem;border-bottom:1px solid rgba\(28,42,34,\.12\)/.test(html),
+  assert(/<header class="fp-cab/.test(html) && /\.fp-cab\{display:flex;flex-direction:column/.test(read('styles.css')),
     'explorar dish header must be the left editorial block');
 });
 
@@ -5321,8 +5323,9 @@ test('Explorar is a TUNIC manual page (statline + ledger categories)', () => {
   // Same de-boxing as dashboard/LQA: the boxed stats banner and the seven
   // ~200px category tiles became a mono stat line and hairline ledger rows.
   const rep = html.slice(html.indexOf('const cards=activeCats.map'), html.indexOf('function searchRepaso'));
-  assert(/dash-row" aria-label[^>]*onclick="openRepasoCat/.test(rep),
-    'categories must render as ledger rows');
+  // Oct 2026: las secciones son tarjetas del lenguaje de El viaje (degustación).
+  assert(/class="carta-sec\$\{full\?' full':''\}" aria-label[^>]*onclick="openRepasoCat/.test(rep),
+    'categories must render as section cards');
   assert(/repaso-statline/.test(rep), 'overview must be the mono stat line');
   assert(!/repaso-cat-tile|repaso-orient-stat/.test(rep), 'old boxed tiles/banner must be gone');
   const css = read('styles.css');
@@ -6698,7 +6701,8 @@ test('Hospitalidad: intro del módulo, «ya has hecho la de hoy», sin repetir l
 test('Emplatado: la vista rápida separa los bocados igual que la ficha (oct 2026)', () => {
   // El Mistery Box se leía como un párrafo corrido en la vista rápida del
   // emplatado: los saltos de línea se perdían. Ahora usa el mismo render.
-  assert(/empl-ov-ing[^\n]*_ingPorLineas\(dd\.ingredients\)[^\n]*_bocadosHTML/.test(html), 'la vista rápida pinta un bocado por línea');
+  const q = html.slice(html.indexOf('function _emplOpen('), html.indexOf('async function renderSupPhotoQueue('));
+  assert(/const ingRender=[^\n]*_ingPorLineas\(dd\.ingredients\)[^\n]*_bocadosHTML/.test(q) && /class="empl-ov-ing">\$\{ingRender\}/.test(q), 'la vista rápida pinta un bocado por línea');
 });
 
 test('El Código del Camarero ya no existe (oct 2026, contenido antiguo)', () => {
@@ -8209,7 +8213,10 @@ test('Pase de cocina: el desmontaje obedece a lo que validó cocina', () => {
 
 test('Pase de cocina: cableado, accesibilidad y sin foto', () => {
   // Se lanza desde las DOS listas de Repaso (la de categoría y la del buscador).
-  assert((html.match(/onclick="event\.stopPropagation\(\);launchPase\(\$\{d\.id\}\)"/g) || []).length === 2,
+  // Las dos listas (categoría y buscador) comparten la fila _cartaFilaHTML.
+  assert((html.match(/onclick="event\.stopPropagation\(\);launchPase\(\$\{d\.id\}\)"/g) || []).length === 1 &&
+    /launchPase\(\$\{d\.id\}\)/.test(html.slice(html.indexOf('function _cartaFilaHTML('), html.indexOf('function openRepasoCat('))) &&
+    /=> _cartaFilaHTML\(d, emp, '', `_aprenderOpenDish/.test(html) && /return _cartaFilaHTML\(d, emp, extra,/.test(html),
     'el botón del pase debe estar en las dos listas de Repaso');
   // La foto del plato se enseña SÓLO al completar (propietario, oct 2026): en
   // el veredicto, nunca mientras se monta, porque ahí daría la respuesta.
@@ -8380,12 +8387,14 @@ test('Fotos en toda la app: helper precargado + Explorar + ficha + flashcard + a
     'la precarga de fotos tiene que ir ANTES del primer pintado');
   // Explorar: la foto vive dentro del hexágono de la fila
   const topic = html.slice(html.indexOf('function renderRepasoTopic('), html.indexOf('function renderRepasoDishDetail('));
-  assert(/repaso-row-icon">\$\{_ph\?`<img loading="lazy"/.test(topic), 'Explorar rows must show the dish photo in the hex icon');
+  const fila = html.slice(html.indexOf('function _cartaFilaHTML('), html.indexOf('function openRepasoCat('));
+  assert(/_cartaFilaHTML\(d, emp, extra/.test(topic) && /\$\{ph\?`<span class="cp-foto"><img loading="lazy"/.test(fila), 'Explorar rows must show the dish photo');
   // Ficha: foto-plato circular con respaldo al plato SVG decorativo
   const _iDet = html.indexOf('function renderRepasoDishDetail(');
   const det = html.slice(_iDet, html.indexOf('\nfunction ', _iDet + 10));
-  assert(/dish-hero-photo/.test(det) && /`:`[\s\S]{0,40}<svg width="\$\{plateSize\}"/.test(det),
-    'dish detail must show the real photo with the SVG plate as fallback');
+  // Sin foto, cabecera compacta: ya no hay plato SVG vacío de respaldo.
+  assert(/dish-hero-photo/.test(det) && !/plateSize/.test(det),
+    'dish detail must show the real photo, and no empty plate when there is none');
   // Flashcard: foto circular sobre el nombre
   assert(/class="fc-photo"/.test(html), 'flashcard front must show the dish photo when available');
   // Búsqueda global + búsqueda de Aprender: miniaturas
@@ -8420,9 +8429,10 @@ test('Fotos del equipo: subida con moderación (guía completa, ficha "foto mejo
   // (DISH_ACTIONS), las notas de servicio y el salto a la ficha completa —
   // la foto puede quedar vieja; la ficha es la fuente de verdad.
   const ov = html.slice(html.indexOf('function _emplOpen('), html.indexOf('function _emplOpen(') + 5000);
-  assert(/DISH_ACTIONS\[d\.id\]/.test(ov) && /empl-ov-adapt/.test(ov),
+  const alh = html.slice(html.indexOf('function _fpAlergenosHTML('), html.indexOf('function changeRepasoTopic('));
+  assert(/_fpAlergenosHTML\(d, true\)/.test(ov) && /DISH_ACTIONS\[d\.id\]/.test(alh) && /fp-al-i/.test(alh),
     'the overlay must render the validated adaptation matrix, not just allergen chips');
-  assert(/act\.r===1/.test(ov) && /Se adapta/.test(ov) && /Estructural/.test(ov),
+  assert(/act\.r===1/.test(alh) && /'Se adapta'/.test(alh) && /'No apto'/.test(alh) && /'Comandar'/.test(alh),
     'each allergen must show its verdict (adaptable + comanda / structural)');
   assert(/empl-ov-note/.test(ov), 'service notes must surface in the overlay when present');
   assert(/empl-ov-ficha/.test(ov) && /repasoView='dish'/.test(ov),
@@ -8446,19 +8456,20 @@ test('Ficha ampliada: la información vital no se pierde ni se tergiversa (jul 2
   //     dd.allergens llega TRADUCIDO en modo inglés («Dairy» vs clave «Lácteos»):
   //     el lookup fallaba siempre y 61 alérgenos adaptables se mostraban como
   //     «Structural — not suitable» — dato de seguridad FALSO. Nunca más.
-  assert(/d\.allergens&&d\.allergens\.length/.test(ov) && /d\.allergens\.map/.test(ov),
+  const alh = html.slice(html.indexOf('function _fpAlergenosHTML('), html.indexOf('function changeRepasoTopic('));
+  assert(/_fpAlergenosHTML\(d, true\)/.test(ov) && /const al = \(d\.allergens&&d\.allergens\.length\) \? d\.allergens : \[\];/.test(alh),
     'overlay must key DISH_ACTIONS with canonical d.allergens (ES)');
-  assert(!/dd\.allergens\.map/.test(ov),
+  assert(!/dd\.allergens/.test(ov) && !/dd\.allergens/.test(alh) && !/_fpAlergenosHTML\(dd/.test(html),
     'localized dd.allergens must NEVER key the matrix (EN-mode false "not suitable" verdicts)');
   // (2) Sin dato en la matriz NO se inventa veredicto: «estructural» exige
   //     r===0 explícito; el hueco se manda a cocina, no se afirma.
-  assert(/act&&act\.r===0/.test(ov), 'structural verdict requires explicit r===0');
-  assert(/empl-ov-adapt unk/.test(ov) && /Consultar con cocina/.test(ov) && /Check with the kitchen/.test(ov),
+  assert(/else if\(act && act\.r===0\)\{ k = 'no'/.test(alh), 'structural verdict requires explicit r===0');
+  assert(/else \{ k = 'unk'; v = _en \? 'Check with the kitchen' : 'Consultar con cocina'; \}/.test(alh),
     'missing matrix data must render "consultar con cocina", never an invented verdict');
   // (3) La ficha abre AUNQUE el plato no tenga foto — la información construida
   //     no depende de la foto (y las tarjetas sin foto también la abren).
   assert(!/if\(!d\|\|!DISH_PHOTOS\) return/.test(ov), 'overlay must not require a photo to open');
-  assert(/empl-ov-nophoto/.test(ov), 'photo-less dishes get a placeholder hero with the info intact');
+  assert(!/empl-ov-nophoto/.test(ov) && /sin-foto/.test(ov), 'photo-less dishes get a compact header (no empty placeholder) with the info intact');
   const grid = html.slice(html.indexOf('function _emplRender('), i);
   const noph = grid.slice(grid.indexOf('empl-card-nophoto'));
   assert(/onclick="_emplOpen\(\$\{d\.id\}\)"/.test(noph) && /role="button"/.test(noph),
@@ -8466,8 +8477,8 @@ test('Ficha ampliada: la información vital no se pierde ni se tergiversa (jul 2
   assert(/event\.stopPropagation\(\);_dishPhotoPick/.test(noph),
     'the upload button inside the card must not also trigger the overlay');
   const css = read('styles.css');
-  assert(css.includes('.empl-ov-adapt.unk') && css.includes('.empl-ov-nophoto{'),
-    'styles.css must style the unknown verdict + the photo-less hero');
+  assert(css.includes('.fp-al-i.unk') && css.includes('.empl-ov-card.sin-foto'),
+    'styles.css must style the unknown verdict + the photo-less header');
 });
 
 test('Aprender: la barra de subcategorías sobrevive a la navegación interna (jul 2026)', () => {
@@ -8974,7 +8985,8 @@ test('EN mode: ranking chips and plating category dividers are localized', () =>
   assert(/catLocal\(cat\)/.test(empl),
     'plating dividers must localize the canonical category key via catLocal');
   // Canonical key must still drive the grouping/icons (only the label localizes).
-  assert(/CAT_ICONS\[dd\.cat\]/.test(empl), 'CAT_ICONS must keep using the canonical key');
+  // Oct 2026: sin hexágonos de categoría en la vista Fotos; agrupa por la clave canónica.
+  assert(/byCat\[dd\.cat\]/.test(empl) && !/CAT_ICONS/.test(empl), 'grouping keeps using the canonical key');
 });
 
 test('renames: Terraza / Repaso / Repasar fallos (labels only)', () => {
@@ -9312,9 +9324,9 @@ test('ficha técnica del plato: muestra el maridaje ordenado por precio', () => 
   const ficha = html.slice(html.indexOf('function renderRepasoDishDetail(dishId){'), html.indexOf('function changeRepasoTopic'));
   assert(/const _pairWines = _dishPairWines\(dish, 3\);/.test(ficha),
     'la ficha debe calcular el maridaje (máx 3)');
-  assert(/🍷 \$\{LANG==='en'\?'Wine pairing':'Maridaje'\}/.test(ficha),
+  assert(/\$\{LANG==='en'\?'Wine pairing':'Maridaje'\}/.test(ficha),
     'la ficha debe pintar una tarjeta de Maridaje');
-  assert(/\$\{maridajeHtml\}/.test(ficha),
+  assert(/maridajeHtml \+ marcajeHtml;/.test(ficha) && /\$\{masHtml \?/.test(ficha),
     'la tarjeta de maridaje debe insertarse en el cuerpo de la ficha');
   // Oct 2026: antes de pedir los vinos se comprueba que el restaurante tenga bodega.
   assert(/if\(_pairWines === null && !\(Array\.isArray\(WINES\) && !WINES\.length\) && typeof loadLazyData/.test(ficha) && /repasoView==='dish' && repasoDishId===dishId\) renderRepasoDishDetail\(dishId\)/.test(ficha),
@@ -11452,7 +11464,7 @@ test('Marcaje: la cubertería del plato es un campo, no una frase escondida en l
     'la ficha completa del plato tiene que enseñar el marcaje');
   assert(/const marcajeHtml = dd\.marcaje/.test(html) && /\$\{marcajeHtml\}/.test(html),
     'el reverso de la tarjeta tiene que enseñar el marcaje');
-  assert(/class="empl-ov-marc">🍽️ \$\{escapeHtml\(dd\.marcaje\)\}/.test(html),
+  assert(/class="empl-ov-marc">\$\{escapeHtml\(dd\.marcaje\)\}/.test(html),
     'la ficha rápida del panel tiene que enseñar el marcaje');
   assert(/\.empl-ov-marc\{/.test(read('styles.css')), 'falta el estilo de .empl-ov-marc');
 
@@ -17332,7 +17344,7 @@ test('Ficha: un plato de varios bocados se lee uno por línea', () => {
   assert(r[0].n === '' && /Selección/.test(r[0].d), 'la primera línea sin «:» es la introducción');
   assert(r[1].n === 'Tuna tartar' && r[1].d === 'galleta de plátano, atún.', 'nombre y descripción, sin trocear por comas');
   assert(f('Atún, sésamo, soja.') === null, 'un plato normal sigue con sus fichas de siempre');
-  assert(/\$\{_bocados \? _bocadosHTML\(_bocados\)/.test(html), 'la ficha usa la lista cuando hay bocados');
+  assert(/_bocados \? _bocadosHTML\(_bocados\)/.test(html), 'la ficha usa la lista cuando hay bocados');
 });
 
 // ═══ PANEL DE SUPERVISOR · QUIÉN CUENTA (oct 2026) ════════════════════════
@@ -17609,7 +17621,7 @@ test('ficha del plato: «Cómo se cocina» cuando el plato tiene técnica', () =
   const ficha = html.slice(html.indexOf('function renderRepasoDishDetail('), html.indexOf('function changeRepasoTopic('));
   assert(/_dishTecHTML\(dish, false\)/.test(ficha), 'la ficha completa la pinta');
   const rapida = html.slice(html.indexOf('function _emplOpen('), html.indexOf('// ── Moderación'));
-  assert(/\$\{_dishTecHTML\(d, true\)\}/.test(rapida), 'la vista rápida la pinta');
+  assert(/_dishTecHTML\(d, true\)/.test(rapida), 'la vista rápida la pinta');
   // Y de verdad hay técnica para platos de la demo con las técnicas de la casa.
   const demo = JSON.parse(read('data/carta-demo.json'));
   const k = html.indexOf('const TECNICAS = [');
@@ -17780,15 +17792,15 @@ test('IDIOMAS_MESA: inglés siempre; DE/FR sólo con datos en la carta; frases p
 });
 test('Para la mesa: sección en la ficha completa (tras alérgenos, antes de ingredientes) y plegable en la vista rápida', () => {
   const f = html.slice(html.indexOf('function renderRepasoDishDetail('), html.indexOf('function changeRepasoTopic('));
-  const iAl = f.indexOf("'Allergens & adaptations':'Alérgenos y adaptaciones'");
+  const iAl = f.indexOf('${_fpAlergenosHTML(dish, false)}');
   const iMesa = f.indexOf('_mesaIdiomaHTML(dish, false, _mesaLang)');
-  const iIng = f.indexOf("'Ingredients':'Ingredientes'");
-  assert(iAl > 0 && iMesa > iAl && iIng > iMesa, 'orden: alérgenos → Para la mesa → ingredientes');
+  const iIng = f.indexOf('<section class="fp-mas"');
+  assert(iAl > 0 && iMesa > iAl && iIng > iMesa && /const masHtml = notasHtml \+ ingHtml/.test(f), 'orden: alérgenos → Para la mesa → ingredientes');
   const q = html.slice(html.indexOf('function _emplOpen('), html.indexOf('async function renderSupPhotoQueue('));
   const iNote = q.indexOf('class="empl-ov-note"'), iM = q.indexOf('_mesaIdiomaHTML(d, true, _mesaLang)'), iI = q.indexOf('class="empl-ov-ing"');
   assert(iNote > 0 && iM > iNote && iI > iM, 'vista rápida: debajo de la nota, antes de ingredientes');
   const h = html.slice(html.indexOf('function _mesaIdiomaHTML('), html.indexOf('function _mesaCambiarIdioma('));
-  assert(/<details class="dish-tec compacto mesa-idioma"/.test(h) && /'For the table':'Para la mesa'/.test(h), 'plegable con el mismo estilo que «Cómo se cocina»');
+  assert(/<details class="dish-tec compacto mesa-idioma/.test(h) && /'For the table':'Para la mesa'/.test(h), 'plegable con el mismo estilo que «Cómo se cocina»');
   assert(/typeof speechSynthesis!=='undefined'/.test(h) && /\$\{hayVoz\?`<button/.test(h), 'el botón Escuchar sólo sale si hay speechSynthesis');
   assert(/_mesaCopiar\(/.test(h) && /'Copy':'Copiar'/.test(h), 'botón Copiar');
   assert(/'No translation loaded':'Sin traducción cargada'/.test(h), 'sin traducción se dice y nada más');
@@ -17873,10 +17885,11 @@ test('Ficha de servicio: la búsqueda encuentra por «picante» y «sin cerdo»'
 });
 test('Ficha de servicio: está en la ficha, la vista rápida, Mesa, la lupa y el editor', () => {
   const rd = html.slice(html.indexOf('function renderRepasoDishDetail('), html.indexOf('function changeRepasoTopic('));
-  const iT = rd.indexOf('_fsvTiraHTML(dish'), iA = rd.indexOf("'Allergens & adaptations'");
-  assert(iT > 0 && iT < iA && rd.indexOf('dish-hero-photo') < iT, 'ficha completa: tras la foto, antes de alérgenos');
+  // Rediseño oct 2026 (orden de sala): cómo contarlo, alérgenos, de un vistazo.
+  const iT = rd.indexOf('_fsvTiraHTML(dish'), iA = rd.indexOf('${_fpAlergenosHTML(dish, false)}');
+  assert(iT > 0 && iA > 0 && iT > iA && rd.indexOf('dish-hero-photo') < iA && iT < rd.indexOf('_mesaIdiomaHTML(dish, false'), 'ficha completa: tras alérgenos, antes de Para la mesa');
   const eo = html.slice(html.indexOf('function _emplOpen('), html.indexOf('async function renderSupPhotoQueue('));
-  assert(eo.indexOf('_fsvTiraHTML(d') > eo.indexOf('empl-ov-name') && eo.indexOf('_fsvTiraHTML(d') < eo.indexOf('empl-ov-al">'), 'vista rápida: tras el nombre, antes de alérgenos');
+  assert(eo.indexOf('_fsvTiraHTML(d') > eo.indexOf('empl-ov-al">') && eo.indexOf('_fsvTiraHTML(d') < eo.indexOf('fp-mas compacto'), 'vista rápida: tras alérgenos, antes de lo plegado');
   assert(/_fsvMiniHTML\(d, _en\)/.test(html.slice(html.indexOf('function renderMesa('), html.indexOf('function renderQuesos('))), 'Mesa con alergias: iconos compactos');
   const gs = html.slice(html.indexOf('function _gsRender('), html.indexOf('function openGlobalSearch('));
   assert(gs.indexOf('_fsvConsulta(tokens)') > gs.indexOf('_gsAllergenIntent(tokens)') && gs.indexOf('_fsvConsulta(tokens)') < gs.indexOf('const dishes = _gsDishIndex()'), 'la lupa pregunta por marcas antes de la búsqueda normal');
@@ -18048,10 +18061,81 @@ test('degustación: la demo trae un menú con ids de su carta y el método compl
 });
 test('degustación: «Cómo contarlo» va encima de ingredientes en la ficha y en la vista rápida', () => {
   const f = _fnSrc('renderRepasoDishDetail');
-  assert(f.indexOf('_degContarHTML(dish, false)') > 0 && f.indexOf('_degContarHTML(dish, false)') < f.indexOf("'Ingredients':'Ingredientes'"), 'ficha completa');
+  assert(f.indexOf('_degContarHTML(dish, false)') > 0 && f.indexOf('_degContarHTML(dish, false)') < f.indexOf('<section class="fp-mas"'), 'ficha completa');
   const e = _fnSrc('_emplOpen');
-  assert(e.indexOf('_degContarHTML(d, true)') > 0 && e.indexOf('_degContarHTML(d, true)') < e.indexOf('empl-ov-ing'), 'vista rápida');
+  assert(e.indexOf('_degContarHTML(d, true)') > 0 && e.indexOf('_degContarHTML(d, true)') < e.indexOf('fp-mas compacto'), 'vista rápida');
   assert(/Pendiente de validar por el chef/.test(html), 'falta el aviso de revisión');
+});
+
+console.log('\nRediseño de Carta, ficha y Mesa (oct 2026)');
+test('Ficha: no repite la historia cuando es el mismo texto que los ingredientes', () => {
+  const i0 = html.indexOf('function _fpNorm('), i1 = html.indexOf('// Un plegable de «Más del plato»');
+  const M = new Function(html.slice(i0, i1) + '; return { _fpMismoTexto };')(); // eslint-disable-line no-new-func
+  assert(M._fpMismoTexto('Vieira marinada, beurre blanc', 'Vieira marinada · beurre blanc.'), 'igual salvo puntuación');
+  assert(M._fpMismoTexto('Vieira, beurre blanc', 'vieira beurre blanc, aire de yuzu y caviar'), 'una dentro de la otra');
+  assert(!M._fpMismoTexto('Leche, harina', 'La receta de la abuela.'), 'distintas');
+  assert(!M._fpMismoTexto('', 'Algo'), 'vacío no cuenta');
+  // Y se ejecuta la ficha de verdad con historia == ingredientes: sale una vez.
+  const a = html.indexOf('function renderRepasoDishDetail(dishId){'), b = html.indexOf('function changeRepasoTopic(');
+  let salida = '';
+  const nodo = { set innerHTML(v){ salida = v; }, get innerHTML(){ return salida; } };
+  const F = new Function( // eslint-disable-line no-new-func
+    'DISHES','getDish','getEmp','currentUser','track','escapeHTML','catLocal','dishPhotoSrc','DISH_ACTIONS','DISH_COMPONENTS',
+    '_dishPairWines','WINES','t','LANG','document','SRC','_snsBtnHtml',
+    html.slice(a, b) + '; return renderRepasoDishDetail;');
+  const TXT = 'Vieira marinada en saikyo miso a la parrilla con beurre blanc de sake';
+  const plato = { id: 7, cat: 'Entrantes', name: 'Hotate', ingredients: TXT, history: TXT + '.', allergens: ['Moluscos','Gluten'] };
+  const esc = s => String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  F([plato], d => d, () => ({ knownDishes:{}, journeyMastered:{} }), 'Ana', () => {}, esc, c => c, () => null,
+    { 7: { Gluten: { r:1, c:'sin pan', c_en:'no bread' }, Moluscos: { r:0 } } }, {}, () => [], [], k => k, 'es',
+    { getElementById: () => nodo }, 'src', () => '<button>Maridaje</button>')(7);
+  assert(salida.length > 500, 'la ficha no ha pintado');
+  // El adelanto de una línea del plegable no cuenta: se oculta al abrirlo.
+  const cuerpo = salida.replace(/<span class="fp-pleg-pre">[^<]*<\/span>/g, '');
+  assert(cuerpo.split(TXT).length - 1 === 1, `el texto sale ${cuerpo.split(TXT).length - 1} veces`);
+  assert(!/>Historia</.test(salida) && />Ingredientes</.test(salida), 'sólo el plegable de ingredientes');
+  assert(/fp-al-i no/.test(salida) && /fp-al-i ok/.test(salida) && salida.indexOf('fp-al-i no') < salida.indexOf('fp-al-i ok'), 'chips de alérgenos con el no apto primero');
+  assert(/Comandar: <em>sin pan<\/em>/.test(salida), 'la comanda, en el detalle plegado');
+  assert(!/plateSize|<circle cx="\$/.test(salida) && !/dish-hero-photo/.test(salida), 'sin foto, ni foto ni plato vacío');
+  assert(/class="fp-dom"/.test(salida) && /Ya lo domino/.test(salida), '«Ya lo domino» (marcar como dominado) arriba, en la cabecera');
+  assert(salida.indexOf('fp-dom') < salida.indexOf('fp-al'), 'antes de los bloques');
+});
+test('Ficha, vista rápida, Carta y Mesa: sin emoji ni rayas en lo que pintan', () => {
+  const emoji = /[\u{1F300}-\u{1FAFF}\u{2600}-\u{26FF}\u{2B50}\u{2705}\u{274C}]/u;
+  const trozos = {
+    ficha: html.slice(html.indexOf('function renderRepasoDishDetail('), html.indexOf('function changeRepasoTopic(')),
+    rapida: html.slice(html.indexOf('function _emplOpen('), html.indexOf('// ── Moderación')),
+    fotos: html.slice(html.indexOf('function renderEmplatado('), html.indexOf('function _emplOpen(')),
+    lista: html.slice(html.indexOf('function renderRepasoCats('), html.indexOf('function renderRepasoDishDetail(')),
+    mesa: html.slice(html.indexOf('function _mesaIcono('), html.indexOf('function renderQuesos(')),
+    tecnica: html.slice(html.indexOf('function _dishTecHTML('), html.indexOf('// ═══ PARA LA MESA')),
+    paraLaMesa: html.slice(html.indexOf('function _mesaIdiomaHTML('), html.indexOf('function _mesaCambiarIdioma('))
+  };
+  for (const [k, src] of Object.entries(trozos)) {
+    assert(src.length > 300, `no encuentro ${k}`);
+    const m = src.match(emoji);
+    assert(!m, `${k}: queda un emoji (${m && m[0]})`);
+    // Rayas en textos visibles: entre comillas simples de una cadena.
+    const raya = src.match(/'[^'\n]*—[^'\n]*'/);
+    assert(!raya, `${k}: texto con raya: ${raya && raya[0]}`);
+  }
+});
+test('Carta y Mesa: el diseño usa las variables del restaurante y toques de 44 px', () => {
+  const css = read('styles.css');
+  const bloque = css.slice(css.indexOf('/* ═══ FICHA DEL PLATO Y VISTA RÁPIDA · rediseño'));
+  assert(bloque.length > 3000, 'falta el bloque del rediseño');
+  assert(!/#2d6a3e|#22532f/.test(bloque), 'nada del verde fijo de Txoko: los colores salen de las variables');
+  assert(/\.carta-vista\.tec-vista button\.on\{background:#fff;color:var\(--parchment\)/.test(css), 'el conmutador Fotos/Lista en la paleta');
+  assert(/\.mesa-chip\.q-chip\{min-height:44px/.test(css), 'chips de alérgenos de 44 px');
+  for (const sel of ['.fp-dom,.fp-ruta{', '.carta-sec{', '.mesa-plato{', '.fp-pleg>summary,']) {
+    const r = css.slice(css.lastIndexOf('\n' + sel) + 1);
+    assert(/min-height:(4[4-9]|5\d|6\d)px/.test(r.slice(0, r.indexOf('}'))), `${sel} sin 44 px`);
+  }
+  // Mesa: con alergias, el orden es no apto, se puede adaptar, consultar, apto.
+  const m = html.slice(html.indexOf('function renderMesa('), html.indexOf('function renderQuesos('));
+  assert(/const _MESA_ORDEN = \['noapto','cambio','consultar','pendiente','apto'\];/.test(m), 'orden de los grupos');
+  assert(/union\.length\s*\? _MESA_ORDEN\.map\(grupo\)/.test(m), 'sin alergias no se repite «Apto» plato a plato');
+  assert(/foto \? `<img/.test(m) && !/mesa-plato-nofoto/.test(m), 'miniatura sólo si hay foto');
 });
 
 console.log('\nTest gratuito de alérgenos (test/)');
