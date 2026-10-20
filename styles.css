@@ -11206,6 +11206,15 @@ html[data-venue="demo"] .ri-cta-mesa .ri-cta-icon{border-color:rgba(200,163,90,.
 .deg-nom{font-family:var(--font-serif);font-size:var(--fs-4);font-weight:600;color:var(--parchment);line-height:1.25}
 .deg-frase{font-family:var(--font-sans);font-size:var(--fs-2);color:var(--parch2);line-height:1.45}
 .deg-paso>button:active .deg-txt{border-color:var(--gold)}
+.deg-bocados{border-radius:var(--r);padding:.7rem .85rem;background:#fff;border:1px solid var(--line2);font-family:var(--font-sans)}
+.deg-bocados-tit{display:block;font-family:var(--font-mono);font-size:var(--fs-1);letter-spacing:.12em;text-transform:uppercase;color:var(--gold-ink);margin-bottom:.35rem}
+.deg-bocados ol{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:.55rem;counter-reset:boc}
+.deg-bocados li{display:flex;flex-direction:column;gap:.1rem;padding-left:1.6rem;position:relative;counter-increment:boc}
+.deg-bocados li::before{content:counter(boc);position:absolute;left:0;top:.05rem;width:1.15rem;height:1.15rem;border-radius:50%;background:var(--gold-a,rgba(196,154,60,.15));color:var(--gold-ink);font-family:var(--font-mono);font-size:.7rem;display:flex;align-items:center;justify-content:center}
+.deg-bocados b{font-family:var(--font-serif);font-weight:600;font-size:var(--fs-3);color:var(--parchment);line-height:1.25}
+.deg-bocados li span{font-size:var(--fs-2);line-height:1.45;color:var(--parch2)}
+.deg-bocados.compacto{padding:.5rem 0 0;background:none;border:0;border-top:1px dashed var(--line2);margin-top:.35rem}
+.deg-bocados.compacto ol{gap:.4rem}
 
 /* Practica */
 .deg-prac{display:flex;flex-direction:column;gap:.5rem}
