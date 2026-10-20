@@ -17969,7 +17969,7 @@ const _deg = (() => {
   const i = html.indexOf('function _degValida(');
   const j = html.indexOf('// Semilla de la SESIÓN', i);
   return new Function('LANG', 'DISHES', 'getDish', 'DEGUSTACION', // eslint-disable-line no-new-func
-    html.slice(i, j) + '; return { _degValida, _degBarajar, _degRondaOrdenar, _degOpciones, _degTapar, _degCuentaCola };')('es', [], d => d, null);
+    html.slice(i, j) + '; return { _degValida, _degBarajar, _degRondaOrdenar, _degOpciones, _degTapar, _degCuentaCola, _degBocados };')('es', [], d => d, null);
 })();
 const _fnSrc = (nombre) => {
   const i = html.indexOf('function ' + nombre + '(');
@@ -18019,6 +18019,12 @@ test('degustación: el significado tapa la palabra del propio nombre', () => {
   assert(_deg._degTapar('Hotate es vieira en japonés.', 'Hotate beurre blanc') === '… es vieira en japonés.', 'hotate');
   assert(_deg._degTapar('AB son las iniciales de Akira Back.', 'AB sushi').startsWith('… son'), 'siglas');
   assert(_deg._degTapar('Chocho es como se llama en Canarias al altramuz.', 'Chochos encurtidos, naranja y comino').startsWith('… es'), 'plural');
+});
+test('degustación: bocado a bocado solo con nombre y frase', () => {
+  const b = _deg._degBocados({ bocados: [{ n: 'Amaebi', story: 'Camarón dulce.' }, { n: '', story: 'x' }, { n: 'Sin frase' }, null] });
+  assert(b.length === 1 && b[0].n === 'Amaebi', 'filtra los incompletos');
+  assert(_deg._degBocados({}).length === 0 && _deg._degBocados(null).length === 0, 'sin bocados, vacío');
+  assert(html.includes('${_degBocadosHTML(x.dd, \'compacto\')}'), 'El viaje enseña los bocados');
 });
 test('degustación: en «Cuéntalo» lo que sale «no» vuelve al final', () => {
   assert(_deg._degCuentaCola([1, 2, 3], 0, 'no').join() === '1,2,3,1', 'no');

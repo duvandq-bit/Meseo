@@ -52,7 +52,7 @@
 <meta property="og:description" content="Formación de equipos de sala: carta, alérgenos, vinos, exámenes y juegos de repaso.">
 <meta property="og:url" content="https://meseo.es/">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"Meseo","url":"https://meseo.es/"}</script>
-<meta name="app-version" content="7.523">
+<meta name="app-version" content="7.524">
 <meta name="app-build" content="May 2026">
 <meta name="theme-color" content="#1c2a22">
 <!-- ═══ PWA ═══ -->
@@ -2889,7 +2889,7 @@ const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><p
 const SRC = 'src';
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='7.523';  // sincronizada con sw.js VERSION (guard de CI)
+const APP_VERSION='7.524';  // sincronizada con sw.js VERSION (guard de CI)
 const APP_BUILD='Jul 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;
@@ -16101,6 +16101,14 @@ function _degPlato(id){
   return d ? { d, dd: getDish(d) } : null;
 }
 function _degTres(dd){ return (dd && Array.isArray(dd.tres)) ? dd.tres.filter(x => typeof x === 'string' && x.trim()) : []; }
+// Pases con varios bocados (p. ej. una caja de aperitivos): `bocados` en la
+// carta es [{n:'Nombre', story:'frase para la mesa'}]. Solo los que traen ambos.
+function _degBocados(dd){ return (dd && Array.isArray(dd.bocados)) ? dd.bocados.filter(b => b && typeof b.n === 'string' && b.n.trim() && typeof b.story === 'string' && b.story.trim()) : []; }
+function _degBocadosHTML(dd, cls){
+  const bs = _degBocados(dd); if(!bs.length) return '';
+  const _en = LANG==='en';
+  return `<div class="deg-bocados${cls ? ' ' + cls : ''}"><span class="deg-bocados-tit">${_en ? 'Bite by bite' : 'Bocado a bocado'}</span><ol>${bs.map(b => `<li><b>${escapeHTML(b.n)}</b><span>${escapeHTML(b.story)}</span></li>`).join('')}</ol></div>`;
+}
 
 // ── Funciones puras de las prácticas ──
 // Azar con semilla (mulberry32): la misma semilla da la misma ronda.
@@ -16213,12 +16221,13 @@ function _degContarHTML(d, compacto){
   if(!d) return '';
   const dd = getDish(d);
   const tres = _degTres(dd);
-  if(!tres.length && !dd.story && !dd.significa && !dd.guino) return '';
+  if(!tres.length && !dd.story && !dd.significa && !dd.guino && !_degBocados(dd).length) return '';
   const _en = LANG==='en';
   return `<div class="card deg-contar${compacto ? ' compacto' : ''}">
     <div class="deg-contar-tit">${_en ? 'How to tell it' : 'Cómo contarlo'}</div>
     ${tres.length ? `<ol class="deg-tres">${tres.map(f => `<li>${escapeHTML(f)}</li>`).join('')}</ol>` : ''}
     ${dd.story ? `<div class="deg-story"><p>${escapeHTML(dd.story)}</p>${_degBtnEscuchar(d.id)}</div>` : ''}
+    ${_degBocadosHTML(dd)}
     ${dd.guino ? `<div class="deg-guino"><span>${_en ? 'The house touch' : 'El guiño de la casa'}</span>${escapeHTML(dd.guino)}</div>` : ''}
     ${dd.significa ? `<div class="deg-sig"><span>${_en ? 'What the name means' : 'Qué significa el nombre'}</span>${escapeHTML(dd.significa)}</div>` : ''}
   </div>`;
@@ -16291,6 +16300,7 @@ function _degPintarViaje(c){
         <span class="deg-mom">${escapeHTML(_degMomento(p))}</span>
         <span class="deg-nom">${escapeHTML(x.dd.name)}</span>
         ${x.dd.story ? `<span class="deg-frase">${escapeHTML(x.dd.story)}</span>` : ''}
+        ${_degBocadosHTML(x.dd, 'compacto')}
       </span>
     </button></li>`;
   }).join('');
@@ -16337,6 +16347,7 @@ function _degPintarPase(c){
     ${tres.length ? `<ol class="deg-tres grande">${tres.map(f => `<li>${escapeHTML(f)}</li>`).join('')}</ol>` : ''}
     ${dd.guino ? `<div class="deg-guino"><span>${_en ? 'The house touch' : 'El guiño de la casa'}</span>${escapeHTML(dd.guino)}</div>` : ''}
     ${dd.story ? `<div class="deg-story"><span>${_en ? 'At the table, in ten seconds' : 'En la mesa, en diez segundos'}</span><p>${escapeHTML(dd.story)}</p>${_degBtnEscuchar(d.id)}</div>` : ''}
+    ${_degBocadosHTML(dd)}
     <details class="deg-apoyo">
       <summary>${_en ? 'Ingredients and allergens' : 'Ingredientes y alérgenos'}</summary>
       <div class="deg-apoyo-body">
