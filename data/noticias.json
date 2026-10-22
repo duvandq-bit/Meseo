@@ -1,15 +1,85 @@
 {
- "updated": "2026-10-22T10:15:55.140Z",
+ "updated": "2026-10-22T15:54:05.876Z",
  "items": [
+  {
+   "t": "La silla que mira a la puerta",
+   "u": "https://www.mundiario.com/articulo/salud/silla-que-mira-puerta/20261022162543448427.html",
+   "s": "MUNDIARIO",
+   "d": "2026-10-22T14:25:43.000Z",
+   "tags": [
+    "ALTA COCINA"
+   ],
+   "img": "https://www.mundiario.com/media/mundiario/images/2026/10/22/2026102216242625789.jpg"
+  },
+  {
+   "t": "El PSOE denuncia que Canarias no recibirá 180 millones de euros del Gobierno central por no haber declarado zonas tensionadas",
+   "u": "https://www.eldiario.es/canariasahora/politica/canarias-no-recibira-180-millones-euros-gobierno-central-no-haber-declarado-zonas-tensionadas_1_13607074.html",
+   "s": "elDiario.es",
+   "d": "2026-10-22T13:50:12.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://static.eldiario.es/clip/63d69bd1-261a-4cec-81ae-59d8aac8ba46_facebook-aspect-ratio-1200-675_default_0_x784y213.jpg"
+  },
+  {
+   "t": "Canarias Ahora celebra la cuarta edición de '#Mujeresconectadas: estrategias contra el cibermachismo' en Gran Canaria",
+   "u": "https://www.eldiario.es/canariasahora/sociedad/canarias-ahora-celebra-cuarta-edicion-mujeresconectadas-estrategias-cibermachismo-gran-canaria_1_13606555.html",
+   "s": "elDiario.es",
+   "d": "2026-10-22T12:55:42.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://static.eldiario.es/clip/5dd2ccea-8540-4c14-9afe-0268edc068a4_facebook-aspect-ratio-1200-675_default_0.jpg"
+  },
+  {
+   "t": "Ángel Víctor Torres anuncia un acuerdo con el Gobierno canario para crear un órgano bilateral paritario para los aeropuertos de Canarias",
+   "u": "https://www.eldiario.es/canariasahora/politica/angel-victor-torres-anuncia-acuerdo-gobierno-canario-crear-organo-bilateral-paritario-aeropuertos-canarias_1_13606221.html",
+   "s": "elDiario.es",
+   "d": "2026-10-22T11:27:22.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://static.eldiario.es/clip/b3b2b3ef-6891-4da5-914d-b7906509d88c_facebook-aspect-ratio-1200-675_default_0_x978y261.jpg"
+  },
+  {
+   "t": "Tres aperturas y una reinvención que agitan el mapa gastronómico de Las Palmas de Gran Canaria",
+   "u": "https://www.eldiario.es/canariasahora/por-fogones/losjuernesdeporfogones/tres-aperturas-reinvencion-agitan-mapa-gastronomico-palmas-gran-canaria_1_13606322.html",
+   "s": "elDiario.es",
+   "d": "2026-10-22T11:10:24.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://static.eldiario.es/clip/bcfc9142-c1f3-48b2-9103-63e43dd988d9_facebook-aspect-ratio-1200-675_default_0_x337y407.jpg"
+  },
+  {
+   "t": "Pinktober vuelve a Hard Rock Cafe Tenerife: gastronomía, música y solidaridad contra el cáncer de mama",
+   "u": "https://theshowroommag.com/pinktober-vuelve-a-hard-rock-cafe-tenerife-gastronomia-musica-y-solidaridad-contra-el-cancer-de-mama/",
+   "s": "The Showroom Mag",
+   "d": "2026-10-22T10:32:31.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://theshowroommag.com/wp-content/uploads/2026/10/1-2.jpg"
+  },
   {
    "t": "Asador O'Pazo, uno de los templos españoles de la brasa, llega a Tenerife para cocinar junto a CHAR",
    "u": "https://theshowroommag.com/asador-opazo-uno-de-los-templos-espanoles-de-la-brasa-llega-a-tenerife-para-cocinar-junto-a-char/",
    "s": "The Showroom Mag",
-   "d": "2026-10-22T10:08:55.000Z",
+   "d": "2026-10-22T10:07:46.000Z",
    "tags": [
     "CANARIAS"
    ],
    "img": "https://theshowroommag.com/wp-content/uploads/2026/10/1-7.jpg"
+  },
+  {
+   "t": "Coalición Canaria Tazacorte renueva su Comité Local y elige a Yurguen Hernández como nuevo secretario general",
+   "u": "https://www.eldiario.es/canariasahora/lapalmaahora/municipios/tazacorte/coalicion-canaria-tazacorte-renueva-comite-local-elige-yurguen-hernandez-nuevo-secretario-general_1_13605974.html",
+   "s": "elDiario.es",
+   "d": "2026-10-22T10:03:46.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://static.eldiario.es/clip/78413fec-a9df-4897-9c70-af665a65b18e_facebook-aspect-ratio-1200-675_default_0.jpg"
   },
   {
    "t": "Mensaje ES-Alert en Tenerife y cierre del Parque Nacional del Teide: arranca el simulacro de erupción que involucra por primera vez al sector turístico",
@@ -24,7 +94,7 @@
   {
    "t": "Antigua celebra su Noche en Blanco con circo, música, gastronomía y el primer encuentro de escuelas de música de Fuerteventura",
    "u": "https://radioinsular.es/antigua-celebra-su-noche-en-blanco-con-circo-musica-gastronomia-y-el-primer-encuentro-de-escuelas-de-musica-de-fuerteventura",
-   "s": "radioinsular.es",
+   "s": "• Fuerteventura Hoy",
    "d": "2026-10-22T08:40:00.000Z",
    "tags": [
     "CANARIAS"
@@ -33,23 +103,33 @@
   },
   {
    "t": "Talento emergente y experimentación",
-   "u": "https://www.larazon.es/gastronomia/talento-emergente-experimentacion_202610226ad9c98c3eef771e1ac2eb6b.html?outputType",
+   "u": "https://www.larazon.es/gastronomia/talento-emergente-experimentacion_202610226ad9c98c3eef771e1ac2eb6b.html",
    "s": "La Razón",
-   "d": "2026-10-22T08:30:04.000Z",
+   "d": "2026-10-22T08:36:15.000Z",
    "tags": [
     "CHEF"
    ],
    "img": "https://fotografias-2.larazon.es/clipping/cmsimages01/2026/10/22/E30CB994-5821-4632-A8FA-B809430546D7/enrique-garcia-ceo-avolution-lab-philippe-labbe-director-tecnico-bch-martin-berasategui-junto-autoridades_98.jpg?crop=2449,1378,x0,y128&width=1900&height=1069&optimize=low&format=webply"
   },
   {
+   "t": "Tres islas de Canarias, en aviso naranja por fuertes lluvias: se esperan hasta 100 litros/m2",
+   "u": "https://www.eldiario.es/canariasahora/tiempo-canarias/aviso-naranja-aemet-canarias-fuertes-lluvias-alerta_1_13605444.html",
+   "s": "elDiario.es",
+   "d": "2026-10-22T08:21:48.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://static.eldiario.es/clip/8fd58fb8-80fc-4eca-8e70-49829b831ee2_facebook-aspect-ratio-1200-675_default_0.jpg"
+  },
+  {
    "t": "Anne Igartiburu se emociona en Huesca al recordar a su padre antes de la Gala Michelin 2027: \"Subía al Aneto con él muchas veces\"",
-   "u": "https://www.vozpopuli.com/gastropoli/anne-igartiburu-se-emociona-en-huesca-al-recordar-a-su-padre-antes-de-la-gala-michelin-2027-subia-al-aneto-con-el-muchas-veces.html",
+   "u": "https://www.vozpopuli.com/amp/gastropoli/anne-igartiburu-se-emociona-en-huesca-al-recordar-a-su-padre-antes-de-la-gala-michelin-2027-subia-al-aneto-con-el-muchas-veces.html",
    "s": "Vozpopuli",
    "d": "2026-10-22T08:05:37.000Z",
    "tags": [
     "MICHELIN"
    ],
-   "img": "https://cdn.vozpopuli.com/cdn/posts/4239629/anne-igartiburu-durante-celebracion-antesala-gala-2898799-1200-700.jpg"
+   "img": "https://cdn.vozpopuli.com/cdn/posts/4239629/anne-igartiburu-durante-celebracion-antesala-gala-2898879-1200-700.jpg"
   },
   {
    "t": "Canarias aspira a engordar el 62% los fondos del Posei, pero aún no tiene agarradas ninguna de sus peticiones",
@@ -79,6 +159,16 @@
    "tags": [
     "CANARIAS"
    ]
+  },
+  {
+   "t": "El paso de una dana deja lluvias de más de 50 litros de madrugada en La Palma y Gran Canaria",
+   "u": "https://www.eldiario.es/canariasahora/tiempo-canarias/paso-dana-deja-lluvias-50-litros-madrugada-palma-gran-canaria_1_13605295.html",
+   "s": "elDiario.es",
+   "d": "2026-10-22T07:19:22.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://static.eldiario.es/clip/a2a76a8e-c761-418d-8b82-192423919745_facebook-aspect-ratio-1200-675_default_0_x1560y155.jpg"
   },
   {
    "t": "Andoni Luis Aduriz en Murcia: \"La verdadera vanguardia es elevar lo cotidiano a una dimensión inesperada\"",
@@ -131,16 +221,6 @@
    "img": "https://www.extradigital.es/wp-content/uploads/2026/10/2026102013153997156-e1792588143350.webp"
   },
   {
-   "t": "Orlando a mordidas: Top de lugares para comer como rey",
-   "u": "https://www.revistamoi.com/bienestar/jet-moi/orlando-a-mordidas-top-de-lugares-para-comer-como-rey/",
-   "s": "Revista Moi",
-   "d": "2026-10-22T03:51:05.000Z",
-   "tags": [
-    "ALTA COCINA"
-   ],
-   "img": "https://www.revistamoi.com/wp-content/uploads/2026/10/donde-comer-en-orlando.webp"
-  },
-  {
    "t": "'Tony': los salvajes inicios del chef Anthony Bourdain con Antonio Banderas convertido en su mentor",
    "u": "https://www.elespanol.com/el-cultural/cine/20261022/tony-salvajes-inicios-chef-anthony-bourdain-antonio-banderas-convertido-mentor/1003744429268_0.amp.html",
    "s": "El Español",
@@ -180,24 +260,6 @@
    "img": "https://cdn.diariodeavisos.com/wp-content/uploads/2026/10/gran-hotel-taoro-vista-teide.jpg"
   },
   {
-   "t": "Núria Arnau, de la publicidad a los táperes saludables: \"Quería que mi día a día fuera cocinar para otros\"",
-   "u": "https://amp.elmundo.es/metropoli/gastronomia/2026/10/22/6ad614d5fc6c83232c8b4581.html",
-   "s": "El Mundo",
-   "d": "2026-10-21T22:06:00.000Z",
-   "tags": [
-    "ALTA COCINA"
-   ]
-  },
-  {
-   "t": "Barceló Bávaro Grand Resort reúne a diez chefs en la 11.ª edición de ‘Culinary Week 2026’",
-   "u": "https://www.arecoa.com/hoteles/2026/10/21/barcelo-bavaro-grand-resort-reune-a-diez-chefs-en-la-11-a-edicion-de-culinary-week-2026/",
-   "s": "Arecoa",
-   "d": "2026-10-21T20:37:27.000Z",
-   "tags": [
-    "ALTA COCINA"
-   ]
-  },
-  {
    "t": "Bahía del Duque: un icono del lujo en Tenerife",
    "u": "https://travelandleisure-es.com/worlds-best-awards/spain-best-awards/bahia-del-duque-un-icono-del-lujo-en-tenerife/",
    "s": "Travel + Leisure en Español",
@@ -227,16 +289,6 @@
    ]
   },
   {
-   "t": "Pinktober vuelve a Hard Rock Cafe Tenerife: gastronomía, música y solidaridad contra el cáncer de mama",
-   "u": "https://theshowroommag.com/pinktober-vuelve-a-hard-rock-cafe-tenerife-gastronomia-musica-y-solidaridad-contra-el-cancer-de-mama/",
-   "s": "The Showroom Mag",
-   "d": "2026-10-21T19:19:16.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://theshowroommag.com/wp-content/uploads/2026/10/1-2.jpg"
-  },
-  {
    "t": "Tejeda reune a ocho bodegas isleñas en su fiesta del vino canario",
    "u": "https://www.laprovincia.es/gran-canaria/2026/10/21/tejeda-reune-ocho-bodegas-islenas-135597896.amp.html",
    "s": "La Provincia",
@@ -244,55 +296,6 @@
    "tags": [
     "CANARIAS",
     "VINO"
-   ]
-  },
-  {
-   "t": "La Justicia acepta la petición de una asociación medioambiental de cesar de forma urgente la tala de árboles en Santa Cruz de Tenerife",
-   "u": "https://www.eldiario.es/canariasahora/tenerifeahora/tribunales/justicia-acepta-peticion-asociacion-medioambiental-cesar-tala-arboles-santa-cruz-tenerife_1_13604374.html",
-   "s": "elDiario.es",
-   "d": "2026-10-21T16:06:10.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://static.eldiario.es/clip/2a316e43-9b67-4147-a55f-1570dd26a94a_facebook-aspect-ratio-1200-675_default_0.jpg"
-  },
-  {
-   "t": "CC y PP en Tenerife muestran su \"rechazo\" al \"interés partidista\" de la moción de censura en San Juan de la Rambla",
-   "u": "https://www.eldiario.es/canariasahora/tenerifeahora/politica/cc-pp-tenerife-muestran-rechazo-interes-partidista-mocion-censura-san-juan-rambla_1_13604129.html",
-   "s": "elDiario.es",
-   "d": "2026-10-21T15:43:17.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://static.eldiario.es/clip/86f8c52a-dd1f-4f94-8a1d-e0f76cabeadc_facebook-aspect-ratio-1200-675_default_0_x969y457.jpg"
-  },
-  {
-   "t": "El restaurante de Málaga al que Diego René da nombre entra en la Guía Michelin tras su apertura este mismo año",
-   "u": "https://www.abc.es/gurme/malaga/restaurante-malaga-diego-rene-nombre-entra-guia-20261021173128-nts_amp.html",
-   "s": "ABC",
-   "d": "2026-10-21T15:31:29.000Z",
-   "tags": [
-    "MICHELIN"
-   ],
-   "img": "https://s1.abcstatics.com/abc/www/multimedia/gurme/2026/10/21/rene-malaga-nueve-U32648543351yah-1200x630@diario_abc.jpg"
-  },
-  {
-   "t": "El boom de la alta cocina colombiana: de las recetas de la abuela al talento internacional",
-   "u": "https://www.vanguardia.com/entretenimiento/gastronomia/2026/10/21/el-boom-de-la-alta-cocina-colombiana-de-las-recetas-de-la-abuela-al-talento-internacional/",
-   "s": "Vanguardia",
-   "d": "2026-10-21T15:09:00.000Z",
-   "tags": [
-    "ALTA COCINA"
-   ],
-   "img": "https://www.vanguardia.com/resizer/v2/FDXAZE3Z4FB5ZN7RDWTJQG64OY.jpg?auth=ac0333ce014e594c44eaae38847937e479ecd1a09a205d7f6ef3e3447d057a40&smart=true&width=1200&height=630&quality=70"
-  },
-  {
-   "t": "Tensión y cargas policiales en un acto de Abascal en A Coruña",
-   "u": "https://www.infobae.com/espana/agencias/2026/10/21/tension-y-cargas-policiales-en-un-acto-de-abascal-en-a-coruna/",
-   "s": "Infobae",
-   "d": "2026-10-21T13:27:26.000Z",
-   "tags": [
-    "MICHELIN"
    ]
   }
  ]
