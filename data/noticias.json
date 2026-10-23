@@ -1,11 +1,81 @@
 {
- "updated": "2026-10-23T10:09:01.115Z",
+ "updated": "2026-10-23T15:45:50.213Z",
  "items": [
+  {
+   "t": "Vectalia y la Cátedra de Enoturismo y Cultura del Vino Casa Sicilia renueva su compromiso con la Universidad Miguel Hernández",
+   "u": "https://cadenaser.com/comunitat-valenciana/2026/10/23/vectalia-y-la-catedra-de-enoturismo-y-cultura-del-vino-casa-sicilia-renueva-su-compromiso-con-la-universidad-miguel-hernandez-radio-elda/",
+   "s": "Cadena SER",
+   "d": "2026-10-23T13:17:06.000Z",
+   "tags": [
+    "VINO",
+    "CANARIAS"
+   ],
+   "img": "https://cadenaser.com/resizer/v2/GT4WB44MDFA47AXZFZBZ2RDSZE.jpeg?auth=6aaac04d81874d4335b04af8467d6550e9895fb2cb4b94341e6e58d10e17f6ab&quality=70&width=1200&height=675&smart=true"
+  },
+  {
+   "t": "Tenerife Peñón Fest prepara dos días de conciertos, gastronomía y buena música",
+   "u": "https://theshowroommag.com/tenerife-penon-fest-prepara-dos-dias-de-conciertos-gastronomia-y-buena-musica/",
+   "s": "The Showroom Mag",
+   "d": "2026-10-23T12:02:54.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://theshowroommag.com/wp-content/uploads/2026/10/Fotos-web-2026-10-13T103919.134.jpg"
+  },
+  {
+   "t": "Eva Isanta visita Euskal Herria y comparte su experiencia con Martín Berasategui y Joseba Arguiñano",
+   "u": "https://www.noticiasdegipuzkoa.eus/gente/2026/10/23/eva-isanta-visita-euskal-herria-experiencia-berasategui-arguinano-11679849.html",
+   "s": "Noticias de Gipuzkoa",
+   "d": "2026-10-23T11:25:10.000Z",
+   "tags": [
+    "CHEF"
+   ]
+  },
+  {
+   "t": "El refugio de Dabiz Muñoz que le “resetea el cerebro” y tiene apenas 150 habitantes",
+   "u": "https://www.infobae.com/espana/viajes/2026/10/23/el-refugio-de-david-munoz-que-le-resetea-el-cerebro-y-tiene-apenas-150-habitantes/",
+   "s": "Infobae",
+   "d": "2026-10-23T11:19:35.000Z",
+   "tags": [
+    "ALTA COCINA"
+   ],
+   "img": "https://www.infobae.com/resizer/v2/HWGWOQXXYVED3EHCTAWYOKOX6A.webp?auth=aaf6eeeb91294af7dbf5aadcdea7b8430e0448f3ee71f6e2ca1c6c5a43d43b8c&smart=true&width=1200&height=630&quality=85"
+  },
+  {
+   "t": "Dabiz Muñoz, chef: \"Para que la tortilla francesa quede perfecta, hay que añadir sidra y dejar que reduzca a fuego lento 10 minutos para lograr una textura espesa\"",
+   "u": "https://cronicaglobal.elespanol.com/cronica-directo/famosos/20261023/dabiz-munoz-tortilla-francesa-perfecta-reduzca-minutos-trt/1003742805316_0.html",
+   "s": "Crónica Global",
+   "d": "2026-10-23T11:00:00.000Z",
+   "tags": [
+    "CHEF"
+   ],
+   "img": "https://a2.elespanol.com/k/imgp/cms/asociados/573156.png?p=f:jpeg/c:1901:1069:nowe:0:67/w:1706/h:960&h=4Hjq_4tC"
+  },
+  {
+   "t": "O’Pazo, referente de la brasa, cocina en Tenerife junto a CHAR, nº 46 del mundo",
+   "u": "https://gastrocanarias.com/art/22843/opazo-referente-de-la-brasa-cocina-en-tenerife-junto-a-char-no-46-del-mundo",
+   "s": "Gastrocanarias",
+   "d": "2026-10-23T09:41:52.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://gastrocanarias.com/upload/images/10_2026/4177_char_opazo.jpg"
+  },
+  {
+   "t": "El chef Martín Berasategui: «El sandwich favorito que hago en 15 minutos cuando llego a casa sin ganas de c...",
+   "u": "https://okdiario.com/recetas/berasategui-sandwich-favorito-que-hago-15-minutos-llego-casa-ganas-cocinar-15538425",
+   "s": "OkDiario",
+   "d": "2026-10-23T09:22:18.000Z",
+   "tags": [
+    "CHEF"
+   ],
+   "img": "https://okdiario.com/img/2025/10/06/sandwich-de-aguacate-y-anguila.jpg"
+  },
   {
    "t": "Gran Hotel Taoro, el destino Michelin del norte de Tenerife",
    "u": "https://gastrocanarias.com/art/22844/gran-hotel-taoro-el-destino-michelin-del-norte-de-tenerife",
    "s": "Gastrocanarias",
-   "d": "2026-10-23T09:22:09.000Z",
+   "d": "2026-10-23T09:21:52.000Z",
    "tags": [
     "CANARIAS",
     "MICHELIN"
@@ -22,6 +92,16 @@
     "CANARIAS"
    ],
    "img": "https://www.noticiasdelvino.com/wp-content/uploads/fondo-italia25-1024x724.jpg.webp"
+  },
+  {
+   "t": "José Andrés, chef: \"El mejor chuletón de carne se consigue dejándolo reposar entre 8 y 10 minutos con un trozo de papel de aluminio por encima\"",
+   "u": "https://cronicaglobal.elespanol.com/gastronomia/20261023/jose-andres-chuleton-consigue-dejandolo-reposar-aluminio-trt/1003742805212_30.amp.html",
+   "s": "Crónica Global",
+   "d": "2026-10-23T09:00:00.000Z",
+   "tags": [
+    "CHEF"
+   ],
+   "img": "https://a2.elespanol.com/k/imgp/cms/asociados/573102.png?p=f:jpeg/c:1901:1069:nowe:0:55/w:1706/h:960&h=g9Dhv5zD"
   },
   {
    "t": "Un hotel de Aragón logra el reconocimiento más alto de la Guía Michelin en 2026: solo lo tienen cinco en toda España",
@@ -54,6 +134,15 @@
    "img": "https://theshowroommag.com/wp-content/uploads/2026/10/1-2.jpg"
   },
   {
+   "t": "Cristian Solana, chef de El Puntido en Álava, campeón de España de Cocina junto a Igor González",
+   "u": "https://www.noticiasdealava.eus/alava/2026/10/23/cristian-solana-chef-puntido-alava-campeon-de-espana-de-cocina-junto-a-igor-gonzalez-11678275.amp.html",
+   "s": "Diario de Noticias de Álava",
+   "d": "2026-10-23T08:12:36.000Z",
+   "tags": [
+    "ALTA COCINA"
+   ]
+  },
+  {
    "t": "La Vieja: Tenerife se sienta a la mesa en Raimundo Clar",
    "u": "https://www.diariodemallorca.es/mallorca-delicia/2026/10/23/vieja-tenerife-mesa-raimundo-135659145.html",
    "s": "Diario de Mallorca",
@@ -63,7 +152,7 @@
    ]
   },
   {
-   "t": "Martín Berasategui, chef español (66 años), sobre la hortaliza estrella del otoño: \"La mejor crema de calabaza se hace con naranja y 300 ml de nata\"",
+   "t": "Martín Berasategui, chef español (66 años), sobre la hortaliza estrella del otoño: «La mejor crema de calab...",
    "u": "https://okdiario.com/gastronomia/martin-berasategui-chef-espanol-66-anos-sobre-hortaliza-estrella-del-otono-mejor-crema-calabaza-hace-naranja-300-ml-nata-20560494",
    "s": "OkDiario",
    "d": "2026-10-23T08:00:36.000Z",
@@ -92,6 +181,25 @@
    ]
   },
   {
+   "t": "El Gobierno de Canarias da por finalizada la alerta por lluvias en La Palma, El Hierro y La Gomera",
+   "u": "https://www.eldiario.es/canariasahora/lapalmaahora/sociedad/gobierno-canarias-da-finalizada-alerta-lluvias-palma-hierro-gomera_1_13608615.html",
+   "s": "elDiario.es",
+   "d": "2026-10-23T07:45:49.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://static.eldiario.es/clip/211db22c-cebb-403e-814e-131fc7d8d21a_facebook-aspect-ratio-1200-675_default_0.jpg"
+  },
+  {
+   "t": "Qué hacer en Huesca y dónde comer: 7 planes imprescindibles",
+   "u": "https://guide.michelin.com/es/es/articulo/travel/que-hacer-en-huesca-y-donde-comer-planes-imprescindibles",
+   "s": "MICHELIN Guide",
+   "d": "2026-10-23T07:14:18.000Z",
+   "tags": [
+    "MICHELIN"
+   ]
+  },
+  {
    "t": "El restaurante donde paran a comer Javier Bardem y Messi: gastronomía mediterránea con el mejor marisco de la ciudad",
    "u": "https://cronicaglobal.elespanol.com/gastronomia/20261023/restaurante-javier-bardem-messi-gastronomia-mediterranea-marisco/1003742805278_0.html",
    "s": "Crónica Global",
@@ -112,6 +220,16 @@
    "img": "https://www.infobae.com/resizer/v2/A3JDTYFNPNFNFHL5LC4JHT6AEQ.jpg?auth=138bfa7c2827f2f7a7599e33c85e5af85fb877096821a81df5aebbb25afbfb5f&smart=true&width=1200&height=630&quality=85"
   },
   {
+   "t": "Miguel Ángel Rodríguez: «La rentabilidad de un restaurante va más allá de llenar mesas»",
+   "u": "https://www.canarias7.es/gastronomia-c7/miguel-angel-rodriguez-rentabilidad-restaurante-alla-llenar-20261023070000-nt_amp.html",
+   "s": "Canarias7",
+   "d": "2026-10-23T06:17:32.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://s3.ppllstatics.com/canarias7/www/multimedia/gastronomia-c7/2026/10/22/miguelangel3-kqjF-U302371194020jtC-1200x840@Canarias7.jpg"
+  },
+  {
    "t": "Javier Suárez, crítico gastronómico: \"Se come mejor en Las Palmas de Gran Canaria que en Santa Cruz de Tenerife\"",
    "u": "https://www.laprovincia.es/las-palmas/2026/10/23/javier-suarez-critico-gastronomico-come-dv-135641029.html",
    "s": "La Provincia",
@@ -128,6 +246,16 @@
    "tags": [
     "CANARIAS"
    ]
+  },
+  {
+   "t": "CANCELADO - Burger Fest Canarias Santa Cruz 2026 - Fin de Temporada",
+   "u": "https://lagenda.org/programacion/burger-fest-canarias-santa-cruz-2026-fin-de-temporada-octubre-tenerife-gasto-musica",
+   "s": "Lagenda",
+   "d": "2026-10-23T03:57:14.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://s3-eu-west-1.amazonaws.com/beta.lagenda/programacion/burger_fest.jpg"
   },
   {
    "t": "Los chefs coinciden: \"Para que la salsa de tomate quede perfecta lo que necesitas es elegirlos maduros y dejar que reduzcan sin prisas\"",
@@ -158,144 +286,14 @@
    ]
   },
   {
-   "t": "CANCELADO - Burger Fest Canarias Santa Cruz 2026 - Fin de Temporada",
-   "u": "https://lagenda.org/programacion/burger-fest-canarias-santa-cruz-2026-fin-de-temporada-octubre-tenerife-gasto-musica",
-   "s": "Lagenda",
-   "d": "2026-10-22T21:41:08.000Z",
+   "t": "Cocina china, sake y caracterización: el Canarias Manga Festival también se aprende y se prueba",
+   "u": "https://radioinsular.es/videos/cocina-china-sake-y-caracterizacion-el-canarias-manga-festival-tambien-se-aprende-y-se-prueba",
+   "s": "radioinsular.es",
+   "d": "2026-10-22T22:28:00.000Z",
    "tags": [
     "CANARIAS"
    ],
-   "img": "https://s3-eu-west-1.amazonaws.com/beta.lagenda/programacion/burger_fest.jpg"
-  },
-  {
-   "t": "El viñedo más alto de Europa está en Tenerife: así es el pueblo que desafía a los Alpes",
-   "u": "https://www.noticiasdelvino.com/escapadas/2026/10/22/el-vinedo-mas-alto-de-europa-esta-en-tenerife-asi-es-el-pueblo-que-desafia-a-los-alpes-66331/",
-   "s": "Noticias del Vino",
-   "d": "2026-10-22T21:01:03.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://www.noticiasdelvino.com/wp-content/uploads/El-vinedo-mas-alto-de-Europa-esta-en-Tenerife.jpg.webp"
-  },
-  {
-   "t": "Descubiertos dos nuevos pozos en San Marcial de Rubicón, el primer asentamiento europeo de Canarias",
-   "u": "https://www.eldiario.es/canariasahora/patrimonio-canarias/descubiertos-nuevos-pozos-san-marcial-rubicon-primer-asentamiento-europeo-canarias_1_13608238.html",
-   "s": "elDiario.es",
-   "d": "2026-10-22T20:44:18.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://static.eldiario.es/clip/cd571a77-c602-40ce-abec-76b4ad31282f_facebook-aspect-ratio-1200-675_default_0_x388y283.jpg"
-  },
-  {
-   "t": "El desprecio del Gobierno de Canarias a un evento histórico: el tercer centenario de la fundación de Montevideo",
-   "u": "https://www.eldiario.es/canariasahora/opinion/desprecio-gobierno-canarias-evento-historico-tercer-centenario-fundacion-montevideo_132_13608190.html",
-   "s": "elDiario.es",
-   "d": "2026-10-22T19:47:07.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://static.eldiario.es/clip/c13b91d6-2894-49bc-bf0b-e781c5ea3cb9_facebook-aspect-ratio-1200-675_default_0.jpg"
-  },
-  {
-   "t": "Feria de la Cerveza de Los Cristianos",
-   "u": "https://lagenda.org/programacion/feria-de-la-cerveza-de-los-cristianos-tenerife-octubre-2026-44195",
-   "s": "Lagenda",
-   "d": "2026-10-22T19:39:34.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://s3-eu-west-1.amazonaws.com/beta.lagenda/programacion/feria-cerveza-los-cristianos-2026.jpg"
-  },
-  {
-   "t": "La presidenta del Parlamento canario pide revisar el Portal de Transparencia de la Cámara tras detectar errores",
-   "u": "https://www.eldiario.es/canariasahora/parlamento-canario/parlamento-canarias-portal-transparencia-errores_1_13607983.html",
-   "s": "elDiario.es",
-   "d": "2026-10-22T17:51:23.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://static.eldiario.es/clip/4f9c44f1-2020-45c8-989f-da7264992dcf_facebook-aspect-ratio-1200-675_default_0_x1135y288.jpg"
-  },
-  {
-   "t": "Tenerife Peñón Fest prepara dos días de conciertos, gastronomía y buena música",
-   "u": "https://theshowroommag.com/tenerife-penon-fest-prepara-dos-dias-de-conciertos-gastronomia-y-buena-musica/",
-   "s": "The Showroom Mag",
-   "d": "2026-10-22T17:41:36.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://theshowroommag.com/wp-content/uploads/2026/10/Fotos-web-2026-10-13T103919.134.jpg"
-  },
-  {
-   "t": "El horticultor Emilio Medina, Premio Nacional de Gastronomía 2026 al Talento Joven",
-   "u": "https://www.europapress.es/economia/noticia-horticultor-emilio-medina-premio-nacional-gastronomia-2026-talento-joven-20261022191738.html",
-   "s": "Europa Press",
-   "d": "2026-10-22T17:17:38.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://img.europapress.es/fotoweb/fotonoticia_20261022191738_1200.jpg"
-  },
-  {
-   "t": "Famtàstic rescata la tradición de los finados con una noche de cine, gastronomía y música en El Sauzal",
-   "u": "https://www.eldia.es/canarias/2026/10/22/famtastic-rescata-tradicion-finados-noche-cine-gastronomia-musica-sauzal-135641082.html",
-   "s": "Eldía",
-   "d": "2026-10-22T17:15:35.000Z",
-   "tags": [
-    "CANARIAS"
-   ]
-  },
-  {
-   "t": "Canarias lleva a FINE Italy dos nuevas propuestas para vender mejor su enoturismo fuera de España",
-   "u": "https://www.vinetur.com/es/20261022109491/canarias-lleva-a-fine-italy-dos-nuevas-propuestas-para-vender-mejor-su-enoturismo-fuera-de-espana.html",
-   "s": "Vinetur",
-   "d": "2026-10-22T17:04:56.000Z",
-   "tags": [
-    "VINO",
-    "CANARIAS"
-   ],
-   "img": "https://www.vinetur.com/imagenes/pube/2026-W43/image59.jpg"
-  },
-  {
-   "t": "La silla que mira a la puerta",
-   "u": "https://www.mundiario.com/articulo/salud/silla-que-mira-puerta/20261022162543448427.html",
-   "s": "MUNDIARIO",
-   "d": "2026-10-22T14:25:43.000Z",
-   "tags": [
-    "ALTA COCINA"
-   ],
-   "img": "https://www.mundiario.com/media/mundiario/images/2026/10/22/2026102216242625789.jpg"
-  },
-  {
-   "t": "La Comisión Europea elige a Canarias Ahora como líder del proyecto informativo Cohesión Atlántica",
-   "u": "https://www.eldiario.es/canariasahora/sociedad/comision-europea-canarias-ahora-lider-proyecto-informativo-cohesion-atlantica_1_13607155.html",
-   "s": "elDiario.es",
-   "d": "2026-10-22T14:10:05.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://static.eldiario.es/clip/a2fdc41e-41f3-4fe2-b613-dc397158b3c6_facebook-aspect-ratio-1200-675_default_0.jpg"
-  },
-  {
-   "t": "El PSOE denuncia que Canarias no recibirá 180 millones de euros del Gobierno central por no haber declarado zonas tensionadas",
-   "u": "https://www.eldiario.es/canariasahora/politica/canarias-no-recibira-180-millones-euros-gobierno-central-no-haber-declarado-zonas-tensionadas_1_13607074.html",
-   "s": "elDiario.es",
-   "d": "2026-10-22T13:50:12.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://static.eldiario.es/clip/63d69bd1-261a-4cec-81ae-59d8aac8ba46_facebook-aspect-ratio-1200-675_default_0_x784y213.jpg"
-  },
-  {
-   "t": "Canarias Ahora celebra la cuarta edición de '#Mujeresconectadas: estrategias contra el cibermachismo' en Gran Canaria",
-   "u": "https://www.eldiario.es/canariasahora/sociedad/canarias-ahora-celebra-cuarta-edicion-mujeresconectadas-estrategias-cibermachismo-gran-canaria_1_13606555.html",
-   "s": "elDiario.es",
-   "d": "2026-10-22T12:55:42.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://static.eldiario.es/clip/5dd2ccea-8540-4c14-9afe-0268edc068a4_facebook-aspect-ratio-1200-675_default_0.jpg"
+   "img": "https://i.ytimg.com/vi/X7q0kdX2wV8/maxresdefault.jpg"
   }
  ]
 }
