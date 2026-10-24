@@ -36,10 +36,12 @@
    • script: self + the pinned supabase-js CDN (jsdelivr). connect-src:
      Supabase REST + realtime + same-origin data/*.json. img-src: data:/blob:
      + https: (Actualidad thumbnails, Supabase storage). frame-src: YouTube.
+     media-src: self + blob: (los audios PRIVADOS de la carta se bajan con la
+     sesión y suenan desde un blob: local; nunca desde una URL pública).
      (The MapLibre wine map and its unpkg/cartocdn origins were removed, oct 2026.)
    • Rollback: delete this tag and bump the service-worker VERSION.
 -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data: blob: https: https://advkoujfgbrrjvqexrcu.supabase.co; connect-src 'self' https://advkoujfgbrrjvqexrcu.supabase.co wss://advkoujfgbrrjvqexrcu.supabase.co; worker-src 'self'; frame-src https://www.youtube.com; object-src 'none'; base-uri 'self'; form-action 'self'; manifest-src 'self'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data: blob: https: https://advkoujfgbrrjvqexrcu.supabase.co; connect-src 'self' https://advkoujfgbrrjvqexrcu.supabase.co wss://advkoujfgbrrjvqexrcu.supabase.co; worker-src 'self'; media-src 'self' blob:; frame-src https://www.youtube.com; object-src 'none'; base-uri 'self'; form-action 'self'; manifest-src 'self'">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Meseo · Formación de sala</title>
@@ -52,7 +54,7 @@
 <meta property="og:description" content="Formación de equipos de sala: carta, alérgenos, vinos, exámenes y juegos de repaso.">
 <meta property="og:url" content="https://meseo.es/">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"Meseo","url":"https://meseo.es/"}</script>
-<meta name="app-version" content="7.526">
+<meta name="app-version" content="7.527">
 <meta name="app-build" content="May 2026">
 <meta name="theme-color" content="#1c2a22">
 <!-- ═══ PWA ═══ -->
@@ -2889,7 +2891,7 @@ const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><p
 const SRC = 'src';
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='7.526';  // sincronizada con sw.js VERSION (guard de CI)
+const APP_VERSION='7.527';  // sincronizada con sw.js VERSION (guard de CI)
 const APP_BUILD='Jul 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;
@@ -13898,6 +13900,7 @@ function logout(){
     remoteDuelState._answered = false; remoteDuelState._submitting = false;
   }
   currentUser=null;
+  try{ if(typeof _padAudiosOlvidar === 'function') _padAudiosOlvidar(); }catch(_){}
   localStorage.removeItem('txoko_session');
   // La identidad de Auth se va con el resto. Se hace DESPUÉS de quitar
   // `txoko_session` porque el almacén del token mira esa llave para decidir
@@ -16670,7 +16673,8 @@ function _padPuntuarVoz(v, code){
   if(!(l === base || l.startsWith(base + '-'))) return -1;
   let s = (l === c) ? 3 : 1;
   const n = String(v.name || '').toLowerCase();
-  if(/premium|enhanced|mejorad|natural|neural|wavenet|studio/.test(n)) s += 10;
+  if(/premium/.test(n)) s += 12;
+  else if(/enhanced|mejorad|natural|neural|wavenet|studio|siri/.test(n)) s += 10;
   if(/google/.test(n)) s += 5;
   if(/compact|compacta|espeak|eloquence/.test(n)) s -= 8;
   return s;
@@ -16691,6 +16695,25 @@ function _padFusionar(a, b){
 }
 // La hora del aviso: "HH:MM" válida o ''.
 function _padHoraValida(h){ return (typeof h === 'string' && /^([01]\d|2[0-3]):[0-5]\d$/.test(h)) ? h : ''; }
+
+// Ruta del audio PRIVADO de un plato: exactamente «<venue>/<id>-<es|en>.m4a».
+// Ni URLs, ni carpetas de otro restaurante, ni el audio del otro idioma (en
+// inglés getDish hereda el campo del español si DISHES_EN no lo trae).
+function _padAudioRuta(ruta, venue, id, idioma){
+  if(typeof ruta !== 'string' || !/^[a-z0-9][a-z0-9_-]{0,31}$/.test(String(venue || ''))) return null;
+  if(!/^(es|en)$/.test(String(idioma)) || !Number.isInteger(id)) return null;
+  return ruta === venue + '/' + id + '-' + idioma + '.m4a' ? ruta : null;
+}
+// La voz del teléfono, frase a frase: dicho de un tirón suena a máquina.
+function _padFrases(t){
+  return String(t || '').split(/(?<=[.;:!?])\s+/).map(x => x.trim()).filter(Boolean);
+}
+// Pausa tras una frase (r entre 0 y 1): 380 a 520 ms tras punto, 300 a 400
+// tras dos puntos. Nunca dos iguales seguidas.
+function _padPausa(frase, r){
+  const x = Math.max(0, Math.min(1, Number(r) || 0));
+  return /:$/.test(String(frase || '')) ? 300 + Math.round(x * 100) : 380 + Math.round(x * 140);
+}
 
 // ── Lo que depende de la app ──
 function _padSR(){
@@ -16785,24 +16808,98 @@ function _padParar(){
   if(_padAudio){ try{ _padAudio.pause(); }catch(e){} _padAudio = null; }
 }
 
-// Una frase por la voz del sistema, con la mejor voz que haya. Avisa al
-// acabar y, por si el navegador no avisa nunca (pasa), un reloj de seguridad.
+// Por la voz del sistema, con la mejor voz que haya, FRASE A FRASE y con una
+// pausa distinta entre ellas (lo dicho de un tirón suena a máquina). Avisa al
+// acabar y, por si el navegador no avisa nunca (pasa), un reloj por frase.
 function _padDecir(texto, alAcabar){
   const fin0 = () => { if(alAcabar) alAcabar(); };
   if(typeof _degHayVoz !== 'function' || !_degHayVoz() || !texto){ setTimeout(fin0, 0); return { cancelar(){} }; }
-  let hecho = false, reloj = null;
-  const fin = () => { if(hecho) return; hecho = true; clearTimeout(reloj); fin0(); };
-  try{
-    speechSynthesis.cancel();
-    const code = _padCode();
-    const u = new SpeechSynthesisUtterance(texto);
-    u.lang = code; u.rate = 0.95;
-    const v = _padVoz(code); if(v) u.voice = v;
-    u.onend = fin; u.onerror = fin;
-    reloj = setTimeout(fin, Math.min(60000, 2500 + texto.length * 90));
-    speechSynthesis.speak(u);
-  }catch(e){ setTimeout(fin, 0); }
-  return { cancelar(){ hecho = true; clearTimeout(reloj); try{ speechSynthesis.cancel(); }catch(e){} } };
+  const frases = _padFrases(texto);
+  let hecho = false, reloj = null, pausa = null, k = 0;
+  const fin = () => { if(hecho) return; hecho = true; clearTimeout(reloj); clearTimeout(pausa); fin0(); };
+  const code = _padCode();
+  const v = _padVoz(code);
+  const una = () => {
+    if(hecho) return;
+    if(k >= frases.length) return fin();
+    const f = frases[k++];
+    let pasada = false;
+    const sig = () => {
+      if(pasada || hecho) return; pasada = true; clearTimeout(reloj);
+      if(k >= frases.length) return fin();
+      pausa = setTimeout(una, _padPausa(f, Math.random()));
+    };
+    try{
+      const u = new SpeechSynthesisUtterance(f);
+      u.lang = code; u.rate = 0.95;
+      if(v) u.voice = v;
+      u.onend = sig; u.onerror = fin;
+      reloj = setTimeout(sig, Math.min(30000, 2500 + f.length * 90));
+      speechSynthesis.speak(u);
+    }catch(e){ fin(); }
+  };
+  try{ speechSynthesis.cancel(); }catch(e){}
+  una();
+  return { cancelar(){ hecho = true; clearTimeout(reloj); clearTimeout(pausa); try{ speechSynthesis.cancel(); }catch(e){} } };
+}
+
+// ── Audios PRIVADOS de la carta (bucket `cartas-audio`) ──
+// Igual que las fotos: la carta trae sólo la ruta («r2/3072-es.m4a»), el
+// archivo se pide con la sesión real y RLS en storage.objects decide quién lo
+// recibe (su restaurante o quien revisa esa carta). Nunca una URL pública ni un
+// archivo en el repositorio. La primera escucha lo guarda en la Cache API de
+// este teléfono, así suena sin red después; al cerrar sesión se borra.
+const _AUD_CACHE = 'meseo-audio-privado';
+const _AUD_BUCKET = 'cartas-audio';
+const _audUrls = new Map();       // ruta -> blob: de esta sesión
+const _audPend = new Map();       // ruta -> promesa en curso
+function _padAudioDe(d, dd){
+  const venue = (typeof _cartaMeta !== 'undefined' && _cartaMeta) ? _cartaMeta.venue : null;
+  return _padAudioRuta(dd && dd.audio, venue, d && d.id, LANG === 'en' ? 'en' : 'es');
+}
+function _padAudioListo(ruta){ return (ruta && _audUrls.get(ruta)) || null; }
+function _padAudioSrc(ruta){
+  if(!ruta) return Promise.resolve(null);
+  if(_audUrls.has(ruta)) return Promise.resolve(_audUrls.get(ruta));
+  if(_audPend.has(ruta)) return _audPend.get(ruta);
+  const p = (async () => {
+    const url = `${SUPA_URL}/storage/v1/object/authenticated/${_AUD_BUCKET}/${ruta.split('/').map(encodeURIComponent).join('/')}`;
+    let blob = null;
+    try{
+      if(typeof caches !== 'undefined'){
+        const r = await (await caches.open(_AUD_CACHE)).match(url);
+        if(r && r.ok) blob = await r.blob();
+      }
+    }catch(e){ blob = null; }
+    if(!blob){
+      let token = null;
+      try{ token = (typeof _authCtx === 'function') ? _authCtx().token : null; }catch(e){ token = null; }
+      if(!token) return null;
+      try{
+        const r = await fetchT(url, { headers:{ 'apikey':SUPA_KEY, 'Authorization':`Bearer ${token}` } }, 20000);
+        if(!r.ok) return null;
+        const b = await r.blob();
+        if(!/^audio\/(mp4|x-m4a|m4a|aac)$/i.test(b.type || '')) return null;
+        // Safari quiere el tipo exacto: AAC en contenedor MP4.
+        blob = new Blob([b], { type:'audio/mp4' });
+        try{
+          if(typeof caches !== 'undefined') await (await caches.open(_AUD_CACHE)).put(url, new Response(blob, { headers:{ 'Content-Type':'audio/mp4' } }));
+        }catch(e){ /* sin sitio: se vuelve a pedir la próxima vez */ }
+      }catch(e){ return null; }
+    }
+    const u = URL.createObjectURL(blob);
+    _audUrls.set(ruta, u);
+    return u;
+  })();
+  _audPend.set(ruta, p);
+  p.then(() => _audPend.delete(ruta), () => _audPend.delete(ruta));
+  return p;
+}
+// Al cerrar sesión: fuera las de memoria y las guardadas en el teléfono.
+function _padAudiosOlvidar(){
+  for(const u of _audUrls.values()){ try{ URL.revokeObjectURL(u); }catch(e){} }
+  _audUrls.clear(); _audPend.clear();
+  try{ if(typeof caches !== 'undefined') caches.delete(_AUD_CACHE); }catch(e){}
 }
 
 // ── Grabar ──
@@ -16926,19 +17023,39 @@ function _padEscuchar(){
   const btn = document.getElementById('padEscBtn');
   const sonando = on => { if(btn){ btn.classList.toggle('sonando', on); btn.setAttribute('aria-pressed', on ? 'true' : 'false'); } };
   const porVoz = () => { sonando(true); _padHabla = _padDecir(dd.pron || dd.story, () => { _padHabla = null; sonando(false); }); };
-  if(dd.audio && typeof Audio !== 'undefined'){
+  const ruta = _padAudioDe(d, dd);
+  if(ruta && typeof Audio !== 'undefined'){
+    // El elemento se crea y se pone a sonar DENTRO del toque (iOS no deja
+    // empezar un audio después de una espera); si el archivo aún no está, se
+    // le da en cuanto llega. Sin archivo o sin permiso, la voz del teléfono.
     try{
-      const a = new Audio(dd.audio);
+      const a = new Audio();
       _padAudio = a;
+      a.preload = 'auto';
+      const falla = () => { if(_padAudio === a){ _padAudio = null; porVoz(); } };
       a.onended = () => sonando(false);
-      a.onerror = () => { if(_padAudio === a){ _padAudio = null; porVoz(); } };
+      a.onerror = falla;
       sonando(true);
-      const pr = a.play();
-      if(pr && pr.catch) pr.catch(() => { if(_padAudio === a){ _padAudio = null; porVoz(); } });
+      const dale = src => {
+        if(_padAudio !== a) return;
+        if(!src) return falla();
+        a.src = src;
+        const pr = a.play();
+        if(pr && pr.catch) pr.catch(falla);
+      };
+      const ya = _padAudioListo(ruta);
+      if(ya) dale(ya); else _padAudioSrc(ruta).then(dale, falla);
       return;
     }catch(e){}
   }
   porVoz();
+}
+// Antes de «Escucha cómo se cuenta» se va pidiendo el archivo: al tocar,
+// suena sin esperar (y sin perder el permiso del toque en iOS).
+function _padPrecargar(){
+  const d = DISHES.find(x => x.id === _padS.id); if(!d) return;
+  const ruta = _padAudioDe(d, getDish(d));
+  if(ruta) _padAudioSrc(ruta);
 }
 
 function _padIr(paso){
@@ -16947,6 +17064,7 @@ function _padIr(paso){
   if(paso === 'grabar' || paso === 'otra-grabar'){ _padS.ronda = paso === 'grabar' ? 1 : 2; _padS.texto = ''; _padS.interino = ''; _padS.manual = null; }
   _padPintar();
   try{ window.scrollTo(0, 0); }catch(e){}
+  if(paso === 'resultado' || paso === 'grabar') _padPrecargar();
   if(paso === 'escuchar') _padEscuchar();
 }
 
@@ -17062,7 +17180,7 @@ function _padPintar(){
       ${_padS.texto && _padS.modo === 'voz' ? `<details class="deg-apoyo pad-oido"><summary>${_en ? 'What I understood' : 'Lo que he entendido'}</summary><div class="deg-apoyo-body"><p>«${escapeHTML(_padS.texto)}»</p></div></details>` : ''}
       <button type="button" class="deg-btn pad-grande" onclick="_padIr('escuchar')">${_en ? 'Listen to how it is told' : 'Escucha cómo se cuenta'}</button>`;
   } else if(p === 'escuchar'){
-    const voz = !!(dd.audio || (typeof _degHayVoz === 'function' && _degHayVoz()));
+    const voz = !!(_padAudioDe(d, dd) || (typeof _degHayVoz === 'function' && _degHayVoz()));
     h = `${_padPasosHTML(3)}${mini}
       <div class="deg-story pad-story"><span>${_en ? 'At the table' : 'En la mesa'}</span><p>${escapeHTML(dd.story)}</p>
         ${voz ? `<button type="button" id="padEscBtn" class="pad-escuchar" aria-pressed="false" onclick="_padEscuchar()"><span class="pad-ondas" aria-hidden="true"><i></i><i></i><i></i></span>${_en ? 'Listen again' : 'Escuchar otra vez'}</button>` : ''}
@@ -17228,23 +17346,45 @@ function _caSonar(i){
   _caS.i = i;
   _caPintar();
   _caMeta(d, dd);
+  const ruta = _padAudioDe(d, dd);
+  const porVoz = () => { _caHabla = _padDecir(dd.pron || dd.story, () => { if(vivo()) _caS.timer = setTimeout(() => _caSiguiente(g), 2000); }); };
   const historia = () => {
     if(!vivo()) return;
-    if(dd.audio){
-      try{
-        if(!_caEl){ _caEl = new Audio(); _caEl.preload = 'auto'; }
-        const a = _caEl;
-        a.onended = () => { if(vivo()) _caS.timer = setTimeout(() => _caSiguiente(g), 2000); };
-        a.onerror = () => { if(vivo()) _caHabla = _padDecir(dd.pron || dd.story, () => { if(vivo()) _caS.timer = setTimeout(() => _caSiguiente(g), 2000); }); };
-        a.src = dd.audio;
-        const pr = a.play();
-        if(pr && pr.catch) pr.catch(() => { if(vivo()) a.onerror(); });
-        return;
-      }catch(e){}
-    }
-    _caHabla = _padDecir(dd.pron || dd.story, () => { if(vivo()) _caS.timer = setTimeout(() => _caSiguiente(g), 2000); });
+    porVoz();
   };
+  // Con archivo, suena el archivo directamente: el nombre ya está en pantalla y
+  // en la pantalla bloqueada, y la voz del teléfono, que se calla al bloquear,
+  // no se mete en medio. Mismo <audio> para toda la cola: iOS lo deja seguir
+  // sonando después del primer toque.
+  if(ruta && typeof Audio !== 'undefined'){
+    try{
+      if(!_caEl){ _caEl = new Audio(); _caEl.preload = 'auto'; }
+      const a = _caEl;
+      let caido = false;
+      const falla = () => { if(caido || !vivo()) return; caido = true; _caHabla = _padDecir(dd.name, () => { if(vivo()) _caS.timer = setTimeout(historia, 700); }); };
+      a.onended = () => { if(vivo()) _caS.timer = setTimeout(() => _caSiguiente(g), 2000); };
+      a.onerror = falla;
+      const dale = src => {
+        if(!vivo()) return;
+        if(!src) return falla();
+        a.src = src;
+        const pr = a.play();
+        if(pr && pr.catch) pr.catch(falla);
+        _caPrecargar(i + 1);
+      };
+      const ya = _padAudioListo(ruta);
+      if(ya) dale(ya); else _padAudioSrc(ruta).then(dale, falla);
+      return;
+    }catch(e){}
+  }
   _caHabla = _padDecir(dd.name, () => { if(vivo()) _caS.timer = setTimeout(historia, 700); });
+}
+// El siguiente (o el primero) se pide antes de que toque.
+function _caPrecargar(i){
+  const id = _caS.cola[i]; if(id == null) return;
+  const d = DISHES.find(x => x.id === id); if(!d) return;
+  const ruta = _padAudioDe(d, getDish(d));
+  if(ruta) _padAudioSrc(ruta);
 }
 function _caSiguiente(g){
   if(g !== _caS.gen || !_caS.sonando) return;
@@ -17269,7 +17409,8 @@ function _caPintar(){
   const n = _caS.cola.length;
   const d = DISHES.find(x => x.id === _caS.cola[_caS.i]);
   const dd = d ? getDish(d) : null;
-  const archivos = _caS.cola.every(id => { const x = DISHES.find(y => y.id === id); return x && getDish(x).audio; });
+  const archivos = _caS.cola.every(id => { const x = DISHES.find(y => y.id === id); return x && _padAudioDe(x, getDish(x)); });
+  if(!_caS.sonando) _caPrecargar(_caS.i);
   const ic = {
     ant: '<svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 6h2v12H7zM20 6v12l-9-6z"/></svg>',
     sig: '<svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M15 6h2v12h-2zM4 6v12l9-6z"/></svg>',
