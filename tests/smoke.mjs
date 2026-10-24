@@ -586,6 +586,10 @@ test('UX-02 · NINGÚN destino existente queda inaccesible', () => {
     trozo('function _saberChipsBar(', 'function _saberSync('),
     trozo('function renderPracticar(', 'function _prcVolverHTML('),
     trozo('function renderRankingHub(', '\nfunction '),
+    // Un plato al día (tarjeta de Hoy y de Practicar) y la carta en audio
+    // (entrada en la Carta y en el Menú degustación) abren con su función.
+    trozo('function _padAbrir(', 'function _padSalir('),
+    trozo('function _caAbrir(', 'function _caElegir('),
   ].join('\n');
   assert(!/id="mainNavDD"/.test(html), 'el menú desplegable se retiró');
   const abiertas = new Set([...puertas.matchAll(/showTab\(\\?'([a-z]+)\\?'\)/g)].map(m => m[1]));
@@ -18275,6 +18279,108 @@ test('pie de la app traducido en EN', () => {
 test('degustación: la introducción no promete «de frío a caliente» (el sushi de r2 va frío tras un caliente)', () => {
   assert(!/de frío a caliente|cold to hot/.test(html), 'la regla general contradice la carta real');
   assert(/va de lo ligero a lo intenso y termina con lo dulce/.test(html) && /builds from light to intense/.test(html), 'falta la introducción nueva');
+});
+
+console.log('\nUn plato al día y la carta en audio');
+const _pad = (() => {
+  const i = html.indexOf('const PAD_INTERVALOS');
+  const j = html.indexOf('// ── Lo que depende de la app ──', i);
+  return new Function(html.slice(i, j) + '; return { PAD_INTERVALOS, _padEtiqueta, _padNorm, _padDicha, _padRevisar, _padClaves, _padProgramar, _padElegir, _padHechoHoy, _padPuntuarVoz, _padMejorVoz, _padFusionar, _padHoraValida, _padSumarDias };')(); // eslint-disable-line no-new-func
+})();
+test('plato al día: las claves se reconocen sin tildes, en plural y por sinónimo', () => {
+  const C = [['vieira', 'hotate'], ['saikyo miso', 'miso dulce', 'miso'], ['parrilla', 'brasa', 'robata'], ['beurre blanc'], ['vino canario'], ['caviar']];
+  const r = _pad._padRevisar('Son unas VIEIRAS marinadas en Saikyo Miso, hechas a la brasa, con caviar', C);
+  assert(r.join() === 'true,true,true,false,false,true', 'revisar: ' + r);
+  assert(_pad._padDicha('lleva piñones tostados', ['pinones']), 'tilde de la eñe');
+  assert(_pad._padDicha('con pinones', ['piñón']), 'singular con tilde contra plural sin ella');
+  assert(_pad._padDicha('dos nueces', ['nuez']), 'nuez/nueces');
+  assert(_pad._padDicha('fresh berries', ['berry']), 'berry/berries');
+  assert(_pad._padDicha('el hotate de la casa', ['vieira', 'hotate']), 'sinónimo del grupo');
+  assert(_pad._padDicha('un saikyomiso suave', ['saikyo miso']), 'junto como lo escribe el reconocimiento');
+  assert(_pad._padDicha("goat's milk", ["goat's milk"]), 'apóstrofo');
+  assert(!_pad._padDicha('un vino de la casa', ['vino canario']), 'una frase pide todas sus palabras');
+  assert(!_pad._padDicha('', ['caviar']) && !_pad._padDicha('caviar', []), 'vacíos');
+  assert(!_pad._padDicha('misoshiru', ['miso']), 'no se cuela dentro de otra palabra');
+});
+test('plato al día: claves limpias (grupos con texto) y sin claves no entra', () => {
+  assert(_pad._padClaves({ claves: [['a', ''], [], 'b', [3, 'c']] }).map(g => g.join('|')).join(',') === 'a,b,c', 'limpieza');
+  assert(_pad._padEtiqueta(['japan', 'japon']) === 'Japan' && _pad._padEtiqueta(['con la mano']) === 'Con la mano', 'etiqueta con mayúscula');
+  assert(_pad._padClaves({}).length === 0 && _pad._padClaves(null).length === 0, 'sin claves');
+});
+test('plato al día: repetición espaciada 1, 3, 7, 16, 35 y vuelta a 1 si faltó algo', () => {
+  assert(_pad.PAD_INTERVALOS.join() === '1,3,7,16,35', 'intervalos');
+  let e = null; const dias = [];
+  for (let k = 0; k < 7; k++){ e = _pad._padProgramar(e, true, '2026-10-24', 1); dias.push(e.next); }
+  assert(dias.join() === '2026-10-25,2026-10-27,2026-10-31,2026-11-09,2026-11-28,2026-11-28,2026-11-28', 'escalones: ' + dias);
+  const f = _pad._padProgramar(e, false, '2026-10-24', 2);
+  assert(f.n === 0 && f.next === '2026-10-25' && f.ok === 0 && f.d === '2026-10-24', 'si faltó, mañana');
+  assert(_pad._padSumarDias('2026-12-31', 1) === '2027-01-01', 'cambio de año');
+});
+test('plato al día: el plato de hoy es el más vencido; si no hay, el primero nuevo', () => {
+  const P = [{ id: 1 }, { id: 2 }, { id: 3 }, { id: 4 }];
+  const hoy = '2026-10-24';
+  const est = { 1: { next: '2026-10-30' }, 2: { next: '2026-10-20' }, 3: { next: '2026-10-22' } };
+  assert(_pad._padElegir(P, est, hoy).plato.id === 2, 'el más vencido');
+  assert(_pad._padElegir(P, { 1: { next: '2026-10-30' } }, hoy).plato.id === 2 && _pad._padElegir(P, { 1: { next: '2026-10-30' } }, hoy).tipo === 'nuevo', 'el primero nuevo, en orden');
+  assert(_pad._padElegir(P, { 2: { next: hoy } }, hoy).plato.id === 2, 'vence hoy: toca hoy');
+  const todos = { 1: { next: '2027-01-01' }, 2: { next: '2027-01-01' }, 3: { next: '2027-01-01' }, 4: { next: '2027-01-01' } };
+  assert(_pad._padElegir(P, todos, hoy) === null, 'todo al día');
+  assert(_pad._padHechoHoy({ 5: { d: hoy, t: 1 }, 6: { d: hoy, t: 9 }, 7: { d: '2026-10-23', t: 99 } }, hoy).id === 6, 'lo contado hoy');
+  // Orden: primero lo validado por el chef; el menú degustación delante.
+  const f = html.slice(html.indexOf('function _padPlatos('), html.indexOf('function _padEstado('));
+  assert(/story_revisar/.test(f) && /DEGUSTACION\.pases/.test(f) && /_padClaves\(dd\)\.length/.test(f), 'solo platos con story y claves, validados primero');
+});
+test('plato al día: la mejor voz (mejorada, natural, Google) y nunca la compacta', () => {
+  const V = [{ name: 'Mónica (compacta)', lang: 'es-ES' }, { name: 'Paulina', lang: 'es-MX' }, { name: 'Mónica (mejorada)', lang: 'es-ES' }, { name: 'Daniel', lang: 'en-GB' }];
+  assert(_pad._padMejorVoz(V, 'es-ES').name === 'Mónica (mejorada)', 'mejorada');
+  assert(_pad._padMejorVoz([{ name: 'Jorge', lang: 'es-ES' }, { name: 'Google español', lang: 'es-ES' }], 'es-ES').name === 'Google español', 'Google');
+  assert(_pad._padMejorVoz([{ name: 'Microsoft Elvira Online (Natural)', lang: 'es-ES' }, { name: 'Google español', lang: 'es-ES' }], 'es-ES').name.includes('Natural'), 'natural por delante');
+  assert(_pad._padMejorVoz([{ name: 'Daniel (Enhanced)', lang: 'en_GB' }, { name: 'Samantha', lang: 'en-US' }], 'en-GB').name === 'Daniel (Enhanced)', 'en_GB con guion bajo');
+  assert(_pad._padMejorVoz([{ name: 'Mónica (compacta)', lang: 'es-ES' }, { name: 'Paulina', lang: 'es-MX' }], 'es-ES').name === 'Paulina', 'otra voz antes que la compacta');
+  assert(_pad._padMejorVoz([{ name: 'Daniel', lang: 'en-GB' }], 'es-ES') === null, 'sin voz del idioma, la del sistema');
+  assert(/_padMejorVoz\(speechSynthesis\.getVoices\(\)/.test(html), 'la usa la síntesis');
+  assert(/dd\.pron \|\| dd\.story/.test(html), 'pron sólo para la voz');
+});
+test('plato al día: sin SpeechRecognition o sin permiso, plan B con lista de comprobación', () => {
+  const sr = _fnSrc('_padSR');
+  const sinSR = new Function('window', sr + '; return _padSR();')({}); // eslint-disable-line no-new-func
+  assert(sinSR === null, 'sin reconocimiento devuelve null');
+  assert(new Function('window', sr + '; return _padSR();')({ webkitSpeechRecognition: function(){} }), 'con el prefijo de Chrome y Safari'); // eslint-disable-line no-new-func
+  const g = _fnSrc('_padGrabar');
+  assert(/if\(!SR \|\| _padS\.modo === 'manual'\)\{ _padS\.modo = 'manual'/.test(g), 'sin reconocimiento, manual');
+  const m = _fnSrc('_padAbrirMicro');
+  assert(/not-allowed/.test(m) && /service-not-allowed/.test(m) && /_padS\.modo = 'manual'/.test(m), 'permiso denegado, manual');
+  assert(/r\.interimResults = true/.test(m) && /r\.lang = _padCode\(\)/.test(m), 'texto en vivo y en el idioma de la app');
+  assert(/Dilo en voz alta y pulsa cuando acabes/.test(html) && /Say it out loud and tap when you finish/.test(html), 'textos del plan B');
+  assert(/class="pad-res" role="status" aria-live="polite"/.test(html), 'resultado anunciado');
+  assert(!/inventad|made it up|made up/.test(html.slice(html.indexOf('const PAD_INTERVALOS'), html.indexOf('// ═══ LA CARTA EN AUDIO'))), 'nunca «te lo has inventado»');
+});
+test('plato al día: entrada en Hoy (arriba) y en Practicar; progreso en la ficha', () => {
+  const d = _fnSrc('renderDashboard');
+  assert(d.indexOf("_padTarjetaHTML('dashboard')") > 0 && d.indexOf("_padTarjetaHTML('dashboard')") < d.indexOf('${_parteCard}'), 'Hoy, debajo del saludo y antes que nada');
+  assert(/_padTarjetaHTML\('practicar'\)/.test(_fnSrc('renderPracticar')), 'Practicar');
+  assert(/pd: emp\.pad/.test(_fnSrc('_extrasCompose')) && /pa: emp\.padAviso/.test(_fnSrc('_extrasCompose')), 'viaja en extras');
+  assert(/_padFusionar\(emp\.pad, x\.pd\)/.test(_fnSrc('_extrasMergeInto')), 'se fusiona al leer');
+  const fu = _pad._padFusionar({ 1: { t: 5, n: 1 }, 2: { t: 1 } }, { 1: { t: 3, n: 0 }, 2: { t: 9, n: 4 }, 3: { t: 1 } });
+  assert(fu[1].n === 1 && fu[2].n === 4 && fu[3], 'por plato gana lo último');
+  assert(_pad._padHoraValida('08:30') === '08:30' && _pad._padHoraValida('25:00') === '' && _pad._padHoraValida(null) === '', 'hora del aviso');
+  assert(/activity: 'repaso', competency: 'carta', kind: 'practica'/.test(_fnSrc('_padGuardar')), 'actividad del vocabulario existente');
+});
+test('carta en audio: ruta en Saber, se calla al salir y usa Media Session', () => {
+  assert(_ux2.UX2_SECCION.cartaaudio === 'saber' && _ux2.UX2_SECCION.platodia === 'practicar', 'secciones');
+  const st = _fnSrc('showTab');
+  assert(/currentTab==='platodia' && tab!=='platodia'/.test(st) && /currentTab==='cartaaudio' && tab!=='cartaaudio'/.test(st), 'al salir se para');
+  assert(/navigator\.mediaSession\.setActionHandler\('nexttrack'/.test(html) && /new MediaMetadata\(/.test(html), 'controles de la pantalla bloqueada');
+  assert(/_caEntradaHTML\(\)/.test(_fnSrc('renderEmplatado')) && /_caEntradaHTML\('degustacion'\)/.test(html), 'entradas en la Carta y en el Menú degustación');
+  const so = _fnSrc('_caSonar');
+  assert(/_padDecir\(dd\.name/.test(so) && /setTimeout\(\(\) => _caSiguiente\(g\), 2000\)/.test(so), 'nombre antes y pausa entre platos');
+  const demo = JSON.parse(read('data/carta-demo.json'));
+  for (const [lista, n] of [[demo.DISHES, 'ES'], [demo.DISHES_EN, 'EN']]) {
+    const con = lista.filter(x => x.story);
+    assert(con.length >= 8 && con.every(x => Array.isArray(x.claves) && x.claves.length >= 3 && x.claves.length <= 6), `demo ${n}: claves de 3 a 6 grupos`);
+    assert(con.every(x => x.claves.every(g => g.every(w => w === w.toLowerCase()))), `demo ${n}: claves en minúsculas`);
+    for (const x of con) assert(_pad._padRevisar(x.story, x.claves).filter(Boolean).length >= x.claves.length - 1, `demo ${n} ${x.id}: la propia story dice sus claves`);
+  }
 });
 
 console.log('\nHygiene');
