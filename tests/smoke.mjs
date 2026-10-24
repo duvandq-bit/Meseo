@@ -18383,6 +18383,41 @@ test('carta en audio: ruta en Saber, se calla al salir y usa Media Session', () 
   }
 });
 
+test('audios privados: sólo la ruta de su carpeta, su plato y su idioma', () => {
+  const i = html.indexOf('function _padAudioRuta(');
+  const j = html.indexOf('// ── Lo que depende de la app ──', i);
+  assert(i > 0 && j > i, 'las puras viven antes de lo que depende de la app');
+  const A = new Function(html.slice(i, j) + '; return { _padAudioRuta, _padFrases, _padPausa };')(); // eslint-disable-line no-new-func
+  assert(A._padAudioRuta('r2/3072-es.m4a', 'r2', 3072, 'es') === 'r2/3072-es.m4a', 'la buena');
+  assert(A._padAudioRuta('r2/3072-es.m4a', 'r2', 3072, 'en') === null, 'en inglés no suena el español heredado');
+  assert(A._padAudioRuta('r2/3073-es.m4a', 'r2', 3072, 'es') === null, 'otro plato');
+  assert(A._padAudioRuta('txoko/3072-es.m4a', 'r2', 3072, 'es') === null, 'otra carpeta');
+  assert(A._padAudioRuta('https://x.y/r2/3072-es.m4a', 'r2', 3072, 'es') === null && A._padAudioRuta('../r2/3072-es.m4a', 'r2', 3072, 'es') === null, 'ni URLs ni saltos');
+  assert(A._padAudioRuta('r2/3072-es.m4a', null, 3072, 'es') === null && A._padAudioRuta(null, 'r2', 3072, 'es') === null, 'sin carta o sin campo');
+  assert(A._padFrases('Uno, dos. Tres: cuatro.  Cinco').join('|') === 'Uno, dos.|Tres:|cuatro.|Cinco', 'frases');
+  const p1 = A._padPausa('Fin.', 0), p2 = A._padPausa('Fin.', 1), p3 = A._padPausa('Mira:', .5);
+  assert(p1 === 380 && p2 === 520 && p3 === 350, 'pausas ' + [p1, p2, p3]);
+});
+test('audios privados: bucket privado con la sesión, caché del teléfono y fuera al salir', () => {
+  const src = _fnSrc('_padAudioSrc');
+  assert(/storage\/v1\/object\/authenticated\/\$\{_AUD_BUCKET\}/.test(src) && /'Authorization':`Bearer \$\{token\}`/.test(src), 'GET autenticado al bucket privado');
+  assert(/const _AUD_BUCKET = 'cartas-audio'/.test(html) && !/object\/public\/cartas-audio/.test(html), 'nunca la ruta pública');
+  assert(/caches\.open\(_AUD_CACHE\)\)\.match\(url\)/.test(src) && /\.put\(url, new Response\(blob/.test(src), 'primero el teléfono, y lo guarda');
+  assert(/type:'audio\/mp4'/.test(src), 'AAC en MP4 para Safari');
+  const csp = html.match(/Content-Security-Policy"\s+content="([^"]+)"/i)[1];
+  assert(/media-src 'self' blob:;/.test(csp), 'la CSP deja sonar el blob: local (sin media-src manda default-src y lo rechaza)');
+  assert(/_padAudiosOlvidar\(\)/.test(_fnSrc('logout')) && /caches\.delete\(_AUD_CACHE\)/.test(_fnSrc('_padAudiosOlvidar')), 'al cerrar sesión se borran');
+  assert(/_padAudioDe\(d, dd\)/.test(_fnSrc('_padEscuchar')) && /_padAudioListo\(ruta\)/.test(_fnSrc('_padEscuchar')), 'Un plato al día usa el privado');
+  assert(/_padAudioDe\(d, dd\)/.test(_fnSrc('_caSonar')) && /_caPrecargar\(i \+ 1\)/.test(_fnSrc('_caSonar')), 'la carta en audio también, y pide el siguiente');
+  assert(!/new Audio\(dd\.audio\)|\.src = dd\.audio/.test(html), 'la ruta de la carta nunca va tal cual a un <audio>');
+  const dec = _fnSrc('_padDecir');
+  assert(/_padFrases\(texto\)/.test(dec) && /_padPausa\(f, Math\.random\(\)\)/.test(dec) && /u\.rate = 0\.95/.test(dec), 'voz del teléfono frase a frase, ritmo 0,95');
+  assert(!existsSync(join(ROOT, 'voz', 'r2')) && !readdirSync(ROOT).some(f => /\.m4a$/.test(f)), 'ningún audio de Akira en el repositorio');
+});
+test('voz del teléfono: Premium por delante de Enhanced', () => {
+  assert(_pad._padMejorVoz([{ name: 'Mónica (mejorada)', lang: 'es-ES' }, { name: 'Mónica (Premium)', lang: 'es-ES' }], 'es-ES').name === 'Mónica (Premium)', 'premium');
+});
+
 console.log('\nHygiene');
 test('no git conflict markers in tracked source', () => {
   for (const f of ['index.html', 'sw.js', 'data/wines.json', 'data/lqa-situations.json', 'data/ghost-scenarios.json']) {
