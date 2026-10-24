@@ -1,26 +1,54 @@
 {
- "updated": "2026-10-23T20:29:24.634Z",
+ "updated": "2026-10-24T01:38:25.578Z",
  "items": [
   {
    "t": "Pinktober vuelve a Hard Rock Cafe Tenerife: gastronomía, música y solidaridad contra el cáncer de mama",
    "u": "https://theshowroommag.com/pinktober-vuelve-a-hard-rock-cafe-tenerife-gastronomia-musica-y-solidaridad-contra-el-cancer-de-mama/",
    "s": "The Showroom Mag",
-   "d": "2026-10-23T18:57:11.000Z",
+   "d": "2026-10-23T19:30:25.000Z",
    "tags": [
     "CANARIAS"
    ],
    "img": "https://theshowroommag.com/wp-content/uploads/2026/10/1-2.jpg"
   },
   {
-   "t": "Jerez acoge los comités de Acción Territorial y de Marketing de la Federación Española del Vino",
-   "u": "https://www.europapress.es/economia/noticia-jerez-acoge-comites-accion-territorial-marketing-federacion-espanola-vino-20261023180238.html",
-   "s": "Europa Press",
-   "d": "2026-10-23T16:02:38.000Z",
+   "t": "CANCELADO - Burger Fest Canarias Santa Cruz 2026 - Fin de Temporada",
+   "u": "https://lagenda.org/programacion/burger-fest-canarias-santa-cruz-2026-fin-de-temporada-octubre-tenerife-gasto-musica",
+   "s": "Lagenda",
+   "d": "2026-10-23T19:00:32.000Z",
    "tags": [
-    "VINO",
     "CANARIAS"
    ],
-   "img": "https://img.europapress.es/fotoweb/fotonoticia_20261023180238_1200.jpg"
+   "img": "https://s3-eu-west-1.amazonaws.com/beta.lagenda/programacion/burger_fest.jpg"
+  },
+  {
+   "t": "Candelaria entre Arroces: el duelo gastronómico que pone la Plaza de Los Pescadores en ebullición",
+   "u": "https://www.canariasenpleno.com/candelaria-entre-arroces/",
+   "s": "Canarias en Pleno",
+   "d": "2026-10-23T18:45:00.000Z",
+   "tags": [
+    "CANARIAS"
+   ]
+  },
+  {
+   "t": "José Andrés, 57 años, cocinero: \"Tenemos que alimentar a nuestros perros y gatos con ingredientes reales\"",
+   "u": "https://www.elespanol.com/mascotario/20261023/jose-andres-anos-cocinero-alimentar-perros-gatos-ingredientes-reales/1003744429861_0.amp.html",
+   "s": "El Español",
+   "d": "2026-10-23T18:30:00.000Z",
+   "tags": [
+    "ALTA COCINA"
+   ],
+   "img": "https://s3.elespanol.com/k/imgp/cms/elespanol/11383826.jpg?p=f:jpeg/w:1706/h:960&h=HVrd_UD9"
+  },
+  {
+   "t": "Dani García, chef: \"Las alitas de pollo más sabrosas no se consiguen sazonándolas con orégano, sino con la ralladura de un limón\"",
+   "u": "https://cronicaglobal.elespanol.com/gastronomia/20261023/dani-garcia-sabrosas-consiguen-sazonandolas-oregano-ralladura/1003742805223_30.html",
+   "s": "Crónica Global",
+   "d": "2026-10-23T18:00:00.000Z",
+   "tags": [
+    "CHEF"
+   ],
+   "img": "https://a2.elespanol.com/k/imgp/cms/asociados/573110.png?p=f:jpeg/c:1901:1069:nowe:0:57/w:1706/h:960&h=9ef8380l"
   },
   {
    "t": "Maspalomas reunirá a cuatro referentes de la gastronomía en el XIII Foro Internacional de Turismo",
@@ -40,17 +68,6 @@
     "CANARIAS"
    ],
    "img": "https://cdn.diariodeavisos.com/wp-content/uploads/2026/10/Mejillon-de-Fuerteventura.jpeg"
-  },
-  {
-   "t": "Vectalia y la Cátedra de Enoturismo y Cultura del Vino Casa Sicilia renueva su compromiso con la Universidad Miguel Hernández",
-   "u": "https://cadenaser.com/comunitat-valenciana/2026/10/23/vectalia-y-la-catedra-de-enoturismo-y-cultura-del-vino-casa-sicilia-renueva-su-compromiso-con-la-universidad-miguel-hernandez-radio-elda/",
-   "s": "Cadena SER",
-   "d": "2026-10-23T13:17:06.000Z",
-   "tags": [
-    "VINO",
-    "CANARIAS"
-   ],
-   "img": "https://cadenaser.com/resizer/v2/GT4WB44MDFA47AXZFZBZ2RDSZE.jpeg?auth=6aaac04d81874d4335b04af8467d6550e9895fb2cb4b94341e6e58d10e17f6ab&quality=70&width=1200&height=675&smart=true"
   },
   {
    "t": "Gran Hotel Taoro, el destino Michelin del norte de Tenerife",
@@ -131,17 +148,6 @@
     "CHEF"
    ],
    "img": "https://okdiario.com/img/2025/10/06/sandwich-de-aguacate-y-anguila.jpg"
-  },
-  {
-   "t": "Confirmado: España acude a la cumbre internacional FINE Italy con una oferta enoturística récord",
-   "u": "https://www.noticiasdelvino.com/internacional/2026/10/23/confirmado-espana-acude-a-la-cumbre-internacional-fine-italy-con-una-oferta-enoturistica-record-78732/",
-   "s": "Noticias del Vino",
-   "d": "2026-10-23T09:17:11.000Z",
-   "tags": [
-    "VINO",
-    "CANARIAS"
-   ],
-   "img": "https://www.noticiasdelvino.com/wp-content/uploads/fondo-italia25-1024x724.jpg.webp"
   },
   {
    "t": "José Andrés, chef: \"El mejor chuletón de carne se consigue dejándolo reposar entre 8 y 10 minutos con un trozo de papel de aluminio por encima\"",
@@ -231,6 +237,15 @@
    "img": "https://static.eldiario.es/clip/211db22c-cebb-403e-814e-131fc7d8d21a_facebook-aspect-ratio-1200-675_default_0.jpg"
   },
   {
+   "t": "Qué hacer en Huesca y dónde comer: 7 planes imprescindibles",
+   "u": "https://guide.michelin.com/es/es/articulo/travel/que-hacer-en-huesca-y-donde-comer-planes-imprescindibles",
+   "s": "MICHELIN Guide",
+   "d": "2026-10-23T07:14:18.000Z",
+   "tags": [
+    "MICHELIN"
+   ]
+  },
+  {
    "t": "El restaurante donde paran a comer Javier Bardem y Messi: gastronomía mediterránea con el mejor marisco de la ciudad",
    "u": "https://cronicaglobal.elespanol.com/gastronomia/20261023/restaurante-javier-bardem-messi-gastronomia-mediterranea-marisco/1003742805278_0.html",
    "s": "Crónica Global",
@@ -277,26 +292,6 @@
    "tags": [
     "CANARIAS"
    ]
-  },
-  {
-   "t": "CANCELADO - Burger Fest Canarias Santa Cruz 2026 - Fin de Temporada",
-   "u": "https://lagenda.org/programacion/burger-fest-canarias-santa-cruz-2026-fin-de-temporada-octubre-tenerife-gasto-musica",
-   "s": "Lagenda",
-   "d": "2026-10-23T03:57:14.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://s3-eu-west-1.amazonaws.com/beta.lagenda/programacion/burger_fest.jpg"
-  },
-  {
-   "t": "Los chefs coinciden: \"Para que la salsa de tomate quede perfecta lo que necesitas es elegirlos maduros y dejar que reduzcan sin prisas\"",
-   "u": "https://www.heraldo.es/noticias/gastronomia/2026/10/23/chefs-coinciden-salsa-tomate-quede-perfecta-necesitas-maduros-dejar-reduzcan-sin-prisas-2061644.amp.html",
-   "s": "heraldo.es",
-   "d": "2026-10-23T03:00:00.000Z",
-   "tags": [
-    "CHEF"
-   ],
-   "img": "https://imagenes.heraldo.es/files/image_1920_1080/uploads/imagenes/2026/10/21/6ad8f4eea7aa59-61152515.jpeg"
   }
  ]
 }
