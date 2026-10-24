@@ -126,7 +126,30 @@
     "Aliñados con naranja, comino y pimienta palmera",
     "Se comen con la mano, como en cualquier bar de las islas"
    ],
-   "story": "Empezamos con chochos, que es como llamamos en Canarias al altramuz, encurtidos con naranja y comino. Se comen con la mano, como en cualquier bar de las islas."
+   "story": "Empezamos con chochos, que es como llamamos en Canarias al altramuz, encurtidos con naranja y comino. Se comen con la mano, como en cualquier bar de las islas.",
+   "claves": [
+    [
+     "chochos",
+     "chocho",
+     "altramuz",
+     "altramuces"
+    ],
+    [
+     "encurtido",
+     "encurtidos",
+     "vinagre"
+    ],
+    [
+     "naranja"
+    ],
+    [
+     "comino"
+    ],
+    [
+     "con la mano",
+     "mano"
+    ]
+   ]
   },
   {
    "id": 4002,
@@ -243,7 +266,29 @@
     "Agua de tomate transparente por encima",
     "Tres gotas de aceite de cilantro"
    ],
-   "story": "Una ostra recién abierta con agua de tomate, filtrada toda la noche hasta quedar transparente, y unas gotas de aceite de cilantro. Se puede beber de la concha."
+   "story": "Una ostra recién abierta con agua de tomate, filtrada toda la noche hasta quedar transparente, y unas gotas de aceite de cilantro. Se puede beber de la concha.",
+   "claves": [
+    [
+     "ostra"
+    ],
+    [
+     "agua de tomate",
+     "tomate"
+    ],
+    [
+     "filtrada",
+     "transparente",
+     "clarificada"
+    ],
+    [
+     "aceite de cilantro",
+     "cilantro"
+    ],
+    [
+     "beber de la concha",
+     "concha"
+    ]
+   ]
   },
   {
    "id": 4005,
@@ -284,7 +329,23 @@
     "Granizado de albahaca al centro",
     "Sin ninguno de los 14 alérgenos"
    ],
-   "story": "Tomate de temporada con fresa y albahaca. Dulce, ácido y muy fresco, y sin ninguno de los catorce alérgenos."
+   "story": "Tomate de temporada con fresa y albahaca. Dulce, ácido y muy fresco, y sin ninguno de los catorce alérgenos.",
+   "claves": [
+    [
+     "tomate"
+    ],
+    [
+     "fresa"
+    ],
+    [
+     "albahaca"
+    ],
+    [
+     "sin alergenos",
+     "ningun alergeno",
+     "catorce alergenos"
+    ]
+   ]
   },
   {
    "id": 4006,
@@ -328,7 +389,28 @@
     "Sobre requesón de cabra",
     "Pipas de calabaza y su propia flor"
    ],
-   "story": "El bubango es el calabacín tierno de aquí. Lo hacemos a la brasa y lo servimos sobre requesón de cabra, con pipas de calabaza y su flor."
+   "story": "El bubango es el calabacín tierno de aquí. Lo hacemos a la brasa y lo servimos sobre requesón de cabra, con pipas de calabaza y su flor.",
+   "claves": [
+    [
+     "bubango",
+     "calabacin"
+    ],
+    [
+     "brasa",
+     "parrilla"
+    ],
+    [
+     "requeson",
+     "requeson de cabra"
+    ],
+    [
+     "pipas de calabaza",
+     "pipas"
+    ],
+    [
+     "flor"
+    ]
+   ]
   },
   {
    "id": 4007,
@@ -410,7 +492,29 @@
     "Su coral al lado",
     "Caldo de millo servido en la mesa"
    ],
-   "story": "Carabinero con su coral y un caldo de millo, el maíz canario, que servimos en la mesa. Lo mejor está en la cabeza: les animo a chuparla."
+   "story": "Carabinero con su coral y un caldo de millo, el maíz canario, que servimos en la mesa. Lo mejor está en la cabeza: les animo a chuparla.",
+   "claves": [
+    [
+     "carabinero",
+     "gamba roja"
+    ],
+    [
+     "coral"
+    ],
+    [
+     "caldo de millo",
+     "millo",
+     "maiz"
+    ],
+    [
+     "en la mesa",
+     "delante del cliente"
+    ],
+    [
+     "cabeza",
+     "chupar"
+    ]
+   ]
   },
   {
    "id": 4009,
@@ -532,7 +636,28 @@
     "Papada ibérica fundida por encima",
     "Beurre blanc de malvasía en salsera"
    ],
-   "story": "Cherne, pescado de roca de nuestras aguas, a la brasa. Encima, una lámina de papada ibérica que se funde sola, y una mantequilla de malvasía de Lanzarote."
+   "story": "Cherne, pescado de roca de nuestras aguas, a la brasa. Encima, una lámina de papada ibérica que se funde sola, y una mantequilla de malvasía de Lanzarote.",
+   "claves": [
+    [
+     "cherne"
+    ],
+    [
+     "brasa",
+     "parrilla"
+    ],
+    [
+     "papada",
+     "papada iberica"
+    ],
+    [
+     "malvasia",
+     "beurre blanc",
+     "mantequilla"
+    ],
+    [
+     "lanzarote"
+    ]
+   ]
   },
   {
    "id": 4012,
@@ -577,7 +702,31 @@
     "Lacado con miel de palma y mostaza",
     "Sobre puré de batata"
    ],
-   "story": "Cochino negro, una raza canaria que casi desaparece, lacado con miel de palma y mostaza, sobre un puré de batata."
+   "story": "Cochino negro, una raza canaria que casi desaparece, lacado con miel de palma y mostaza, sobre un puré de batata.",
+   "claves": [
+    [
+     "cochino negro",
+     "cerdo negro",
+     "cochino"
+    ],
+    [
+     "raza canaria",
+     "raza",
+     "desaparece"
+    ],
+    [
+     "miel de palma",
+     "palma"
+    ],
+    [
+     "mostaza"
+    ],
+    [
+     "batata",
+     "pure de batata",
+     "boniato"
+    ]
+   ]
   },
   {
    "id": 4013,
@@ -690,7 +839,23 @@
     "Espuma de coco por encima",
     "Ácido y frío, para limpiar"
    ],
-   "story": "Para limpiar, parchita, que es como llamamos aquí a la fruta de la pasión, con espuma de coco. Ácido y muy fresco."
+   "story": "Para limpiar, parchita, que es como llamamos aquí a la fruta de la pasión, con espuma de coco. Ácido y muy fresco.",
+   "claves": [
+    [
+     "parchita",
+     "fruta de la pasion",
+     "maracuya"
+    ],
+    [
+     "coco",
+     "espuma de coco"
+    ],
+    [
+     "limpiar",
+     "fresco",
+     "acido"
+    ]
+   ]
   },
   {
    "id": 4016,
@@ -735,7 +900,28 @@
     "Caramelo de café por encima",
     "Gofio a un lado"
    ],
-   "story": "El quesillo es nuestro flan, y no lleva queso. Este es de leche de cabra, con caramelo de café y un poco de gofio."
+   "story": "El quesillo es nuestro flan, y no lleva queso. Este es de leche de cabra, con caramelo de café y un poco de gofio.",
+   "claves": [
+    [
+     "quesillo",
+     "flan"
+    ],
+    [
+     "leche de cabra",
+     "cabra"
+    ],
+    [
+     "cafe",
+     "caramelo de cafe"
+    ],
+    [
+     "gofio"
+    ],
+    [
+     "no lleva queso",
+     "sin queso"
+    ]
+   ]
   },
   {
    "id": 4017,
@@ -892,7 +1078,29 @@
     "Pâte de fruit de higo de tunera",
     "Teja de almendra"
    ],
-   "story": "Con el café, tres bocados: una trufa con ron miel, una pâte de fruit de higo de tunera y una teja de almendra."
+   "story": "Con el café, tres bocados: una trufa con ron miel, una pâte de fruit de higo de tunera y una teja de almendra.",
+   "claves": [
+    [
+     "trufa"
+    ],
+    [
+     "ron miel",
+     "ron"
+    ],
+    [
+     "higo de tunera",
+     "tunera",
+     "pate de fruit"
+    ],
+    [
+     "teja de almendra",
+     "teja",
+     "almendra"
+    ],
+    [
+     "cafe"
+    ]
+   ]
   }
  ],
  "DISHES_EN": [
@@ -919,7 +1127,28 @@
     "Dressed with orange, cumin and palm pepper",
     "Eaten by hand, as in any bar on the islands"
    ],
-   "story": "We begin with chochos, the Canarian name for lupin beans, pickled with orange and cumin. They are eaten by hand, as in any bar on the islands."
+   "story": "We begin with chochos, the Canarian name for lupin beans, pickled with orange and cumin. They are eaten by hand, as in any bar on the islands.",
+   "claves": [
+    [
+     "chochos",
+     "lupin",
+     "lupins",
+     "lupin beans"
+    ],
+    [
+     "pickled"
+    ],
+    [
+     "orange"
+    ],
+    [
+     "cumin"
+    ],
+    [
+     "by hand",
+     "hand"
+    ]
+   ]
   },
   {
    "id": 4002,
@@ -979,7 +1208,30 @@
     "Clear tomato water on top",
     "Three drops of coriander oil"
    ],
-   "story": "A freshly opened oyster with tomato water, filtered overnight until it runs clear, and a few drops of coriander oil. You may drink it from the shell."
+   "story": "A freshly opened oyster with tomato water, filtered overnight until it runs clear, and a few drops of coriander oil. You may drink it from the shell.",
+   "claves": [
+    [
+     "oyster"
+    ],
+    [
+     "tomato water",
+     "tomato"
+    ],
+    [
+     "filtered",
+     "clear",
+     "clarified"
+    ],
+    [
+     "coriander oil",
+     "coriander",
+     "cilantro"
+    ],
+    [
+     "drink it from the shell",
+     "shell"
+    ]
+   ]
   },
   {
    "id": 4005,
@@ -1001,7 +1253,24 @@
     "Basil granita in the centre",
     "None of the 14 allergens"
    ],
-   "story": "Seasonal tomato with strawberry and basil. Sweet, sharp and very fresh, and free of all fourteen allergens."
+   "story": "Seasonal tomato with strawberry and basil. Sweet, sharp and very fresh, and free of all fourteen allergens.",
+   "claves": [
+    [
+     "tomato"
+    ],
+    [
+     "strawberry"
+    ],
+    [
+     "basil"
+    ],
+    [
+     "allergen free",
+     "free of all",
+     "no allergens",
+     "fourteen allergens"
+    ]
+   ]
   },
   {
    "id": 4006,
@@ -1026,7 +1295,29 @@
     "On goat's milk ricotta",
     "Pumpkin seeds and its own flower"
    ],
-   "story": "Bubango is our local baby courgette. We grill it and serve it on goat's milk ricotta, with pumpkin seeds and its flower."
+   "story": "Bubango is our local baby courgette. We grill it and serve it on goat's milk ricotta, with pumpkin seeds and its flower.",
+   "claves": [
+    [
+     "bubango",
+     "courgette",
+     "zucchini"
+    ],
+    [
+     "grilled",
+     "grill",
+     "embers"
+    ],
+    [
+     "ricotta"
+    ],
+    [
+     "pumpkin seeds",
+     "seeds"
+    ],
+    [
+     "flower"
+    ]
+   ]
   },
   {
    "id": 4007,
@@ -1070,7 +1361,30 @@
     "Its coral on the side",
     "Corn broth poured at the table"
    ],
-   "story": "Carabinero prawn with its coral and a millo broth, Canarian corn, poured at the table. The best part is in the head: do suck it."
+   "story": "Carabinero prawn with its coral and a millo broth, Canarian corn, poured at the table. The best part is in the head: do suck it.",
+   "claves": [
+    [
+     "carabinero",
+     "prawn",
+     "red prawn"
+    ],
+    [
+     "coral"
+    ],
+    [
+     "corn broth",
+     "millo",
+     "corn"
+    ],
+    [
+     "at the table",
+     "table"
+    ],
+    [
+     "head",
+     "suck"
+    ]
+   ]
   },
   {
    "id": 4009,
@@ -1135,7 +1449,31 @@
     "Iberian pork jowl melted on top",
     "Malvasía beurre blanc in a sauceboat"
    ],
-   "story": "Cherne, a rock fish from our waters, cooked on the grill. On top, a slice of Iberian pork jowl that melts by itself, and a malvasía butter sauce from Lanzarote."
+   "story": "Cherne, a rock fish from our waters, cooked on the grill. On top, a slice of Iberian pork jowl that melts by itself, and a malvasía butter sauce from Lanzarote.",
+   "claves": [
+    [
+     "cherne",
+     "wreckfish"
+    ],
+    [
+     "grill",
+     "grilled",
+     "embers"
+    ],
+    [
+     "pork jowl",
+     "jowl",
+     "iberian"
+    ],
+    [
+     "malvasia",
+     "beurre blanc",
+     "butter sauce"
+    ],
+    [
+     "lanzarote"
+    ]
+   ]
   },
   {
    "id": 4012,
@@ -1161,7 +1499,28 @@
     "Glazed with palm honey and mustard",
     "On sweet potato purée"
    ],
-   "story": "Black pig, a Canarian breed that nearly disappeared, glazed with palm honey and mustard, on a sweet potato purée."
+   "story": "Black pig, a Canarian breed that nearly disappeared, glazed with palm honey and mustard, on a sweet potato purée.",
+   "claves": [
+    [
+     "black pig",
+     "pig",
+     "pork"
+    ],
+    [
+     "breed",
+     "canarian breed",
+     "disappeared"
+    ],
+    [
+     "palm honey"
+    ],
+    [
+     "mustard"
+    ],
+    [
+     "sweet potato"
+    ]
+   ]
   },
   {
    "id": 4013,
@@ -1217,7 +1576,21 @@
     "Coconut foam on top",
     "Sharp and cold, to cleanse"
    ],
-   "story": "To cleanse the palate, parchita, our name for passion fruit, with coconut foam. Sharp and very fresh."
+   "story": "To cleanse the palate, parchita, our name for passion fruit, with coconut foam. Sharp and very fresh.",
+   "claves": [
+    [
+     "passion fruit",
+     "parchita"
+    ],
+    [
+     "coconut"
+    ],
+    [
+     "cleanse",
+     "fresh",
+     "sharp"
+    ]
+   ]
   },
   {
    "id": 4016,
@@ -1243,7 +1616,27 @@
     "Coffee caramel on top",
     "Gofio on the side"
    ],
-   "story": "Quesillo is our flan, and it has no cheese. This one is made with goat's milk, with coffee caramel and a little gofio."
+   "story": "Quesillo is our flan, and it has no cheese. This one is made with goat's milk, with coffee caramel and a little gofio.",
+   "claves": [
+    [
+     "quesillo",
+     "flan"
+    ],
+    [
+     "goat's milk",
+     "goat"
+    ],
+    [
+     "coffee",
+     "coffee caramel"
+    ],
+    [
+     "gofio"
+    ],
+    [
+     "no cheese"
+    ]
+   ]
   },
   {
    "id": 4017,
@@ -1324,7 +1717,28 @@
     "Prickly pear pâte de fruit",
     "Almond tuile"
    ],
-   "story": "With your coffee, three bites: a truffle with honey rum, a prickly pear pâte de fruit and an almond tuile."
+   "story": "With your coffee, three bites: a truffle with honey rum, a prickly pear pâte de fruit and an almond tuile.",
+   "claves": [
+    [
+     "truffle"
+    ],
+    [
+     "honey rum",
+     "rum"
+    ],
+    [
+     "prickly pear",
+     "pate de fruit"
+    ],
+    [
+     "almond tuile",
+     "tuile",
+     "almond"
+    ],
+    [
+     "coffee"
+    ]
+   ]
   }
  ],
  "DISH_COMPONENTS": {

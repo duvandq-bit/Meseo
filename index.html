@@ -52,7 +52,7 @@
 <meta property="og:description" content="Formación de equipos de sala: carta, alérgenos, vinos, exámenes y juegos de repaso.">
 <meta property="og:url" content="https://meseo.es/">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"Meseo","url":"https://meseo.es/"}</script>
-<meta name="app-version" content="7.525">
+<meta name="app-version" content="7.526">
 <meta name="app-build" content="May 2026">
 <meta name="theme-color" content="#1c2a22">
 <!-- ═══ PWA ═══ -->
@@ -2889,7 +2889,7 @@ const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><p
 const SRC = 'src';
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='7.525';  // sincronizada con sw.js VERSION (guard de CI)
+const APP_VERSION='7.526';  // sincronizada con sw.js VERSION (guard de CI)
 const APP_BUILD='Jul 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;
@@ -11416,6 +11416,9 @@ function _extrasCompose(emp){
     ...(emp.modoTranquiloTs ? { mt:{ v: emp.modoTranquilo ? 1 : 0, t: emp.modoTranquiloTs } } : {}),
     // Fechas de los certificados por categoría (se queda la más antigua).
     ...(emp.certFechas && Object.keys(emp.certFechas).length ? { cf: emp.certFechas } : {}),
+    // Un plato al día: cuándo vuelve cada plato y la hora del aviso.
+    ...(emp.pad && Object.keys(emp.pad).length ? { pd: emp.pad } : {}),
+    ...(emp.padAviso && emp.padAviso.t ? { pa: emp.padAviso } : {}),
   });
 }
 function _extrasMergeInto(emp, extrasStr){
@@ -11455,6 +11458,9 @@ function _extrasMergeInto(emp, extrasStr){
   if(x.mt && x.mt.t && String(x.mt.t) > String(emp.modoTranquiloTs||'')){
     emp.modoTranquilo = !!x.mt.v; emp.modoTranquiloTs = String(x.mt.t);
   }
+  // Un plato al día: por plato, lo último que se contó; la hora, el último cambio.
+  if(x.pd && typeof x.pd==='object' && typeof _padFusionar==='function') emp.pad = _padFusionar(emp.pad, x.pd);
+  if(x.pa && x.pa.t && String(x.pa.t) > String((emp.padAviso||{}).t||'')) emp.padAviso = { h: (typeof _padHoraValida==='function' ? _padHoraValida(x.pa.h) : ''), t: String(x.pa.t) };
   // Fechas de certificado: por categoría, la más antigua de las dos.
   if(x.cf && typeof x.cf==='object'){
     emp.certFechas = emp.certFechas || {};
@@ -13011,6 +13017,17 @@ function openAjustes(){
         <span style="font-family:var(--font-sans);font-size:var(--fs-3);font-weight:700;color:#2b2b2b">${_en?'Quiet mode':'Modo tranquilo'}</span>
         <input id="ajMtToggle" type="checkbox" style="width:20px;height:20px;accent-color:#8a5a2b;cursor:pointer" ${_modoTranquilo(emp)?'checked':''}>
       </label>
+      ${(typeof _padPlatos==='function' && _padPlatos().length) ? `
+      ${H(_en?'One dish a day':'Un plato al día')}
+      <div style="font-family:var(--font-sans);font-size:var(--fs-3);color:#5a6a5e;line-height:1.45;margin-bottom:.55rem">${_en
+        ? 'Choose a time. When you open Meseo after that time and have not told today\'s dish yet, we remind you. Reminders with the app closed will come later.'
+        : 'Elige una hora. Si abres Meseo después de esa hora y aún no has contado el plato de hoy, te lo recordamos. El aviso con la app cerrada llegará más adelante.'}</div>
+      <label for="ajPadHora" style="display:flex;align-items:center;justify-content:space-between;gap:.75rem;padding:.4rem .5rem .4rem .75rem;border:1px solid rgba(196,154,60,.35);border-radius:10px;background:#fff;margin-bottom:.4rem;min-height:44px">
+        <span style="font-family:var(--font-sans);font-size:var(--fs-3);font-weight:700;color:#2b2b2b">${_en?'Daily reminder':'Aviso diario'}</span>
+        <input id="ajPadHora" type="time" value="${escapeHTML(_padAvisoHora(emp))}" style="font-size:16px;padding:.35rem .5rem;border:1px solid rgba(196,154,60,.35);border-radius:8px;background:#faf6ee;color:#2b2b2b;min-height:36px">
+      </label>
+      <button id="ajPadSin" type="button" style="background:none;border:none;padding:.3rem 0;font-family:var(--font-sans);font-size:var(--fs-3);color:#8a6a2c;text-decoration:underline;cursor:pointer;min-height:44px">${_en?'No reminder':'Sin aviso'}</button>
+      ` : ''}
       ${H(_en?'Privacy':'Privacidad')}
       <div style="font-family:var(--font-sans);font-size:var(--fs-3);color:#5a6a5e;line-height:1.45;margin-bottom:.55rem">${_en?'We record anonymous learning metrics (which exercises you do, how you progress) to improve your training. Never your messages or search text. Data stays on this device and is deleted after 30 days.':'Registramos métricas de aprendizaje anónimas (qué ejercicios haces, cómo progresas) para mejorar tu formación. Nunca tus mensajes ni el texto de búsqueda. Se guardan en este dispositivo y se borran a los 30 días.'}</div>
       <label for="ajTmToggle" style="display:flex;align-items:center;justify-content:space-between;gap:.75rem;padding:.65rem .75rem;border:1px solid rgba(196,154,60,.35);border-radius:10px;background:#fff;cursor:pointer;margin-bottom:.4rem">
@@ -13143,6 +13160,17 @@ function openAjustes(){
 
   // Modo tranquilo: se guarda en la ficha y se repinta la pestaña que haya
   // debajo, que es donde se nota (Hoy, Yo o Equipo).
+  const padH=$('ajPadHora');
+  if(padH){
+    padH.onchange = ()=>{
+      _padGuardarHora(padH.value);
+      const h=_padAvisoHora(getEmp(currentUser));
+      if(typeof showToast==='function') showToast(h
+        ? (_en?'Reminder at '+h+'.':'Aviso a las '+h+'.')
+        : (_en?'No reminder.':'Sin aviso.'), 'info', 2400);
+    };
+    const sin=$('ajPadSin'); if(sin) sin.onclick = ()=>{ padH.value=''; padH.onchange(); };
+  }
   const mt=$('ajMtToggle');
   if(mt) mt.onchange = ()=>{
     _setModoTranquilo(mt.checked);
@@ -14706,7 +14734,8 @@ const _TITULOS = {
   lqa:['Auditoría LQA','LQA audit'], vinos:['Carta de vinos','Wine list'],
   quesos:['Carro de quesos','Cheese trolley'], sala:['Sala y procedimientos','Floor procedures'],
   mesa:['Mesa con alergias','Table with allergies'],
-  degustacion:['Menú degustación','Tasting menu']
+  degustacion:['Menú degustación','Tasting menu'],
+  platodia:['Un plato al día','One dish a day'], cartaaudio:['La carta en audio','The menu in audio']
 };
 function _ponerTitulo(tab){
   const h = document.getElementById('tituloPantalla');
@@ -14738,6 +14767,8 @@ const UX2_SECCION = {
   repaso:'saber',
   // El menú degustación se consulta y se practica en su propia pantalla, en Saber.
   degustacion:'saber',
+  // La carta en audio se escucha; Un plato al día se practica.
+  cartaaudio:'saber', platodia:'practicar',
   practicar:'practicar', exam:'practicar', smart:'practicar', flashcards:'practicar', txoko:'practicar',
   // Equipo · hay otra persona dentro.
   ranking:'equipo', supervisor:'equipo',
@@ -14748,7 +14779,7 @@ const UX2_SECCION = {
 // Sin 'videos' ni 'chat' desde oct 2026, ni 'horarios' desde el 12 oct 2026
 // (retirados por el propietario). Un aviso antiguo que abra #tab=chat o
 // #tab=horarios cae en INICIO por la regla de abajo.
-const TAB_ROUTES = ['dashboard','mesa','degustacion','practicar','aprender','flashcards','exam','repaso','tecnicas','actualidad','smart','emplatado','stats','logros','txoko','ranking','supervisor','protocolo','lqa','vinos','quesos','sala'];
+const TAB_ROUTES = ['dashboard','mesa','degustacion','platodia','cartaaudio','practicar','aprender','flashcards','exam','repaso','tecnicas','actualidad','smart','emplatado','stats','logros','txoko','ranking','supervisor','protocolo','lqa','vinos','quesos','sala'];
 
 function showTab(tab, instant){
   // ── Pestaña desconocida → INICIO ──────────────────────────────────────
@@ -14770,6 +14801,9 @@ function showTab(tab, instant){
     const _ac = document.getElementById('appContent'); if(_ac) _ac.classList.remove('chat-host');
     document.body.classList.remove('chat-open');
   }
+  // Un plato al día y la carta en audio: al salir, se calla el micro y la voz.
+  if(currentTab==='platodia' && tab!=='platodia' && typeof _padParar==='function') _padParar();
+  if(currentTab==='cartaaudio' && tab!=='cartaaudio' && typeof _caParar==='function') _caParar();
   // Ídem para el canal EN VIVO del panel de supervisor.
   if(currentTab==='supervisor' && tab!=='supervisor'){
     if(typeof _supDisconnect==='function') _supDisconnect();
@@ -14807,7 +14841,7 @@ function showTab(tab, instant){
   _ux2Sync(tab);
   _saberSync(tab);
   const c=document.getElementById('appContent');
-  const renderMap = {practicar:renderPracticar,mesa:renderMesa,quesos:renderQuesos,sala:renderSala,dashboard:renderDashboard,aprender:renderAprender,flashcards:renderAprender,exam:renderExam,repaso:renderAprender,tecnicas:renderAprender,actualidad:renderAprender,smart:renderAprender,emplatado:renderAprender,stats:renderRankingHub,logros:renderRankingHub,txoko:renderTxoko,ranking:renderRankingHub,supervisor:renderSupervisor,protocolo:renderLqa,lqa:renderLqa,vinos:renderVinos,degustacion:renderDegustacion};
+  const renderMap = {practicar:renderPracticar,mesa:renderMesa,quesos:renderQuesos,sala:renderSala,dashboard:renderDashboard,aprender:renderAprender,flashcards:renderAprender,exam:renderExam,repaso:renderAprender,tecnicas:renderAprender,actualidad:renderAprender,smart:renderAprender,emplatado:renderAprender,stats:renderRankingHub,logros:renderRankingHub,txoko:renderTxoko,ranking:renderRankingHub,supervisor:renderSupervisor,protocolo:renderLqa,lqa:renderLqa,vinos:renderVinos,degustacion:renderDegustacion,platodia:renderPlatoDia,cartaaudio:renderCartaAudio};
   const _doRender = ()=>{
     c.innerHTML='';
     c.style.transition='none';
@@ -15892,6 +15926,7 @@ function renderEmplatado(){
   const _en=LANG==='en';
   c.innerHTML=`<div class="empl-wrap">
     ${_cartaToggleHTML('fotos')}
+    ${(typeof _caEntradaHTML==='function') ? _caEntradaHTML() : ''}
     <div class="carta-buscar empl-search">
       <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4.5 4.5"/></svg>
       <input id="emplSearch" type="search" autocomplete="off"
@@ -16307,6 +16342,7 @@ function _degPintarViaje(c){
       <p class="deg-intro">${_en ? 'The order makes sense: it builds from light to intense and ends with something sweet. Learn why each course goes where it does and you will not need to memorise it.' : 'El orden tiene sentido: va de lo ligero a lo intenso y termina con lo dulce. Si entiendes por qué va cada pase donde va, no tienes que memorizarlo.'}</p>
       ${_degRevisarHTML()}
     </header>
+    ${(typeof _caEntradaHTML==='function') ? _caEntradaHTML('degustacion') : ''}
     <ol class="deg-linea">${filas}</ol>
     ${prac.length ? `<section class="deg-prac">
       <h3 class="deg-h3">${_en ? 'Practise' : 'Practica'}</h3>
@@ -16507,6 +16543,773 @@ function _degNota(n){
   renderDegustacion();
 }
 
+// ═══ UN PLATO AL DÍA · contarlo en voz alta ═════════════════════════════
+// Método aprobado por el propietario (Akira, oct 2026): «por más que leo, no
+// se me queda; lo que tengo que aprender es a describir el plato, no a
+// recitar ingredientes». Un plato al día, dos minutos: lo cuentas en voz
+// alta, Meseo comprueba qué ideas clave has dicho, escuchas la versión buena
+// y lo repites una vez. Después el plato vuelve cuando toca (1, 3, 7, 16 y 35
+// días; si faltó alguna idea, mañana otra vez).
+//
+// Datos por plato (DISHES y DISHES_EN), todos opcionales:
+//   story   la frase para la mesa
+//   claves  [["vieira","hotate"],["saikyo miso","miso"],…] grupos de sinónimos;
+//           el primero es el producto principal
+//   audio   ruta del archivo con la story leída (p. ej. voz/r2/3072-es.m4a)
+//   pron    la story reescrita SOLO para que la voz sintética pronuncie bien
+//   story_revisar  true mientras el chef no la valide
+// Sólo entran los platos con story y claves.
+//
+// El reconocimiento es el del navegador (Web Speech API), sin servicios de
+// pago. Comprueba palabras, no entiende frases: por eso nunca dice «te lo
+// has inventado», sólo qué ideas ha oído y cuáles no.
+//
+// Progreso: emp.pad[id] = { n, d, next, ok, t } (n = escalón de
+// PAD_INTERVALOS, d = día en que se contó, next = día en que vuelve). Viaja
+// en `extras` (clave pd) como el resto del progreso por plato, así que sigue
+// a la persona de un móvil a otro. Decide el PRIMER intento, el de memoria:
+// el segundo llega justo después de escuchar la buena y siempre sale mejor.
+const PAD_INTERVALOS = [1, 3, 7, 16, 35];
+
+// ── Funciones puras (se prueban sin navegador) ──
+function _padNorm(s){
+  return String(s == null ? '' : s).toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '')
+    .replace(/[^a-z0-9]+/g, ' ').trim();
+}
+// Singular y plural en español e inglés: vieira/vieiras, piñón/piñones,
+// nuez/nueces, berry/berries.
+function _padFormas(w){
+  const f = new Set([w]);
+  if(w.length > 2){ f.add(w + 's'); f.add(w + 'es'); }
+  if(w.length > 3 && w.endsWith('s')) f.add(w.slice(0, -1));
+  if(w.length > 4 && w.endsWith('es')) f.add(w.slice(0, -2));
+  if(w.length > 4 && w.endsWith('ies')) f.add(w.slice(0, -3) + 'y');
+  if(w.length > 3 && w.endsWith('y')) f.add(w.slice(0, -1) + 'ies');
+  if(w.length > 2 && w.endsWith('z')) f.add(w.slice(0, -1) + 'ces');
+  if(w.length > 4 && w.endsWith('ces')) f.add(w.slice(0, -3) + 'z');
+  return f;
+}
+function _padPalIgual(a, b){ return a === b || _padFormas(a).has(b) || _padFormas(b).has(a); }
+// ¿Está en lo dicho alguna forma del grupo? Palabra a palabra y en orden
+// («saikyo miso»), o junta («saikyomiso»), que es como a veces la escribe
+// el reconocimiento.
+function _padDicha(texto, grupo){
+  const t = _padNorm(texto).split(' ').filter(Boolean);
+  if(!t.length) return false;
+  for(const s of (Array.isArray(grupo) ? grupo : [])){
+    const p = _padNorm(s).split(' ').filter(Boolean);
+    if(!p.length) continue;
+    const junta = p.join('');
+    for(let i = 0; i < t.length; i++){
+      let ok = true;
+      for(let k = 0; k < p.length; k++){
+        if(i + k >= t.length || !_padPalIgual(t[i + k], p[k])){ ok = false; break; }
+      }
+      if(ok) return true;
+      let acc = '';
+      for(let m = 0; m <= p.length && i + m < t.length; m++){
+        acc += t[i + m];
+        if(acc === junta) return true;
+        if(acc.length >= junta.length) break;
+      }
+    }
+  }
+  return false;
+}
+// Cómo se enseña una idea: su primera forma, con mayúscula inicial.
+function _padEtiqueta(g){ const x = String((g && g[0]) || ''); return x.charAt(0).toUpperCase() + x.slice(1); }
+function _padRevisar(texto, claves){ return (claves || []).map(g => _padDicha(texto, g)); }
+// Las claves del plato, limpias: grupos con al menos un texto.
+function _padClaves(dd){
+  if(!dd || !Array.isArray(dd.claves)) return [];
+  return dd.claves
+    .map(g => (Array.isArray(g) ? g : [g]).filter(x => typeof x === 'string' && x.trim()).map(x => x.trim()))
+    .filter(g => g.length);
+}
+function _padSumarDias(dia, n){
+  const d = new Date(dia + 'T12:00:00Z');
+  d.setUTCDate(d.getUTCDate() + n);
+  return d.toISOString().slice(0, 10);
+}
+// Lo que queda guardado tras contarlo. `todas`: ¿dijo todas las ideas en el
+// primer intento? Si sí, sube un escalón; si no, vuelve al primero (mañana).
+function _padProgramar(prev, todas, hoy, ahora){
+  const tope = PAD_INTERVALOS.length - 1;
+  const n = todas ? ((prev && Number.isInteger(prev.n)) ? Math.min(prev.n + 1, tope) : 0) : 0;
+  return { n, d: hoy, next: _padSumarDias(hoy, PAD_INTERVALOS[n]), ok: todas ? 1 : 0, t: ahora || Date.now() };
+}
+// El plato de hoy: el más vencido; si ninguno lo está, el primero nuevo de
+// la lista (que llega ya ordenada: ver _padPlatos). null si todo está al día.
+function _padElegir(platos, estado, hoy){
+  const est = estado || {};
+  let venc = null;
+  for(const p of (platos || [])){
+    const e = est[p.id];
+    if(e && e.next && e.next <= hoy && (!venc || e.next < est[venc.id].next)) venc = p;
+  }
+  if(venc) return { plato: venc, tipo: 'repaso' };
+  const nuevo = (platos || []).find(p => !est[p.id]);
+  return nuevo ? { plato: nuevo, tipo: 'nuevo' } : null;
+}
+// Lo contado hoy (el último), o null.
+function _padHechoHoy(estado, hoy){
+  let r = null;
+  for(const id of Object.keys(estado || {})){
+    const e = estado[id];
+    if(e && e.d === hoy && (!r || (e.t || 0) > (r.e.t || 0))) r = { id: Number(id), e };
+  }
+  return r;
+}
+// La mejor voz del sistema para el idioma: primero las mejoradas o neuronales,
+// después las de Google, y nunca una compacta si hay otra. -1 = no vale.
+function _padPuntuarVoz(v, code){
+  if(!v || !v.lang) return -1;
+  const l = String(v.lang).replace('_', '-').toLowerCase();
+  const c = String(code || '').toLowerCase();
+  const base = c.split('-')[0];
+  if(!(l === base || l.startsWith(base + '-'))) return -1;
+  let s = (l === c) ? 3 : 1;
+  const n = String(v.name || '').toLowerCase();
+  if(/premium|enhanced|mejorad|natural|neural|wavenet|studio/.test(n)) s += 10;
+  if(/google/.test(n)) s += 5;
+  if(/compact|compacta|espeak|eloquence/.test(n)) s -= 8;
+  return s;
+}
+function _padMejorVoz(voces, code){
+  let mejor = null, ms = -1;
+  for(const v of (voces || [])){ const s = _padPuntuarVoz(v, code); if(s > ms){ ms = s; mejor = v; } }
+  return ms >= 0 ? mejor : null;
+}
+// Fusión de dos móviles: por plato gana lo último que se contó.
+function _padFusionar(a, b){
+  const r = Object.assign({}, a || {});
+  for(const id of Object.keys(b || {})){
+    const x = b[id];
+    if(x && typeof x === 'object' && (!r[id] || (x.t || 0) > (r[id].t || 0))) r[id] = x;
+  }
+  return r;
+}
+// La hora del aviso: "HH:MM" válida o ''.
+function _padHoraValida(h){ return (typeof h === 'string' && /^([01]\d|2[0-3]):[0-5]\d$/.test(h)) ? h : ''; }
+
+// ── Lo que depende de la app ──
+function _padSR(){
+  try{ return (typeof window !== 'undefined' && (window.SpeechRecognition || window.webkitSpeechRecognition)) || null; }catch(e){ return null; }
+}
+function _padCode(){ return LANG === 'en' ? 'en-GB' : 'es-ES'; }
+function _padVoz(code){
+  try{ return _padMejorVoz(speechSynthesis.getVoices() || [], code); }catch(e){ return null; }
+}
+// Los platos que pueden salir, en orden: primero los validados por el chef,
+// y dentro de cada grupo el menú degustación en su orden y luego la carta.
+function _padPlatos(){
+  const orden = [];
+  const vistos = new Set();
+  if(typeof DEGUSTACION !== 'undefined' && DEGUSTACION) for(const p of DEGUSTACION.pases){ const d = DISHES.find(x => x.id === p.id); if(d){ orden.push(d); vistos.add(d.id); } }
+  for(const d of DISHES) if(!vistos.has(d.id)) orden.push(d);
+  const ok = orden.filter(d => { const dd = getDish(d); return dd.story && _padClaves(dd).length; });
+  return ok.filter(d => !getDish(d).story_revisar).concat(ok.filter(d => getDish(d).story_revisar));
+}
+function _padEstado(emp){ return (emp && emp.pad && typeof emp.pad === 'object') ? emp.pad : {}; }
+function _padHoy(){ return (typeof todayStr === 'function') ? todayStr() : new Date().toISOString().slice(0, 10); }
+function _padFechaTxt(dia){
+  const hoy = _padHoy();
+  const _en = LANG === 'en';
+  const n = Math.round((new Date(dia + 'T12:00:00Z') - new Date(hoy + 'T12:00:00Z')) / 86400000);
+  if(n <= 0) return _en ? 'today' : 'hoy';
+  if(n === 1) return _en ? 'tomorrow' : 'mañana';
+  return _en ? `in ${n} days` : `en ${n} días`;
+}
+
+const _padS = { base: '', parando: false, inicio: 0, id: null, paso: 'ver', modo: 'voz', texto: '', interino: '', r1: null, r2: null, ronda: 1, desde: 'dashboard', grabando: false, aviso: '', manual: null, t0: 0, oido: false };
+let _padRec = null, _padRecFin = null, _padHabla = null, _padAudio = null;
+
+// Tarjeta de Hoy y de Practicar. Sin platos con story y claves, nada.
+function _padTarjetaHTML(desde){
+  const platos = _padPlatos();
+  if(!platos.length) return '';
+  const _en = LANG === 'en';
+  const emp = getEmp(currentUser) || {};
+  const est = _padEstado(emp);
+  const hoy = _padHoy();
+  const hecho = _padHechoHoy(est, hoy);
+  const mic = '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5.5 11a6.5 6.5 0 0013 0M12 17.5V21"/></svg>';
+  const visto = '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.2 4.2L19 7"/></svg>';
+  let d, meta, ic, cls = '';
+  if(hecho){
+    d = DISHES.find(x => x.id === hecho.id);
+    if(!d) return '';
+    meta = (_en ? 'Told today. It comes back ' : 'Contado hoy. Vuelve ') + _padFechaTxt(hecho.e.next);
+    ic = visto; cls = ' hecho';
+  } else {
+    const el = _padElegir(platos, est, hoy);
+    if(!el) return '';
+    d = el.plato;
+    meta = _en ? '2 minutes, out loud' : '2 minutos, en voz alta';
+    ic = mic;
+  }
+  const dd = getDish(d);
+  const src = (typeof dishPhotoSrc === 'function') ? dishPhotoSrc(d.id) : null;
+  return `<button type="button" class="pad-tarjeta${cls}" onclick="_padAbrir('${desde}')" aria-label="${escapeHTML((_en ? 'One dish a day: ' : 'Un plato al día: ') + dd.name + '. ' + meta)}">
+    <span class="pad-tarjeta-foto${src ? '' : ' sin'}" aria-hidden="true">${src ? `<img ${SRC}="${escapeHTML(src)}" alt="" loading="lazy">` : ''}</span>
+    <span class="pad-tarjeta-txt">
+      <span class="pad-tarjeta-et">${_en ? 'One dish a day' : 'Un plato al día'}</span>
+      <span class="pad-tarjeta-nom">${escapeHTML(dd.name)}</span>
+      <span class="pad-tarjeta-meta">${meta}</span>
+    </span>
+    <span class="pad-tarjeta-ic" aria-hidden="true">${ic}</span>
+  </button>`;
+}
+
+function _padAbrir(desde){
+  const _en = LANG === 'en';
+  const emp = getEmp(currentUser) || {};
+  const el = _padElegir(_padPlatos(), _padEstado(emp), _padHoy());
+  _padParar();
+  Object.assign(_padS, { id: el ? el.plato.id : null, paso: el ? 'ver' : 'aldia', modo: _padSR() ? 'voz' : 'manual',
+    texto: '', interino: '', r1: null, r2: null, ronda: 1, desde: desde === 'practicar' ? 'practicar' : 'dashboard',
+    grabando: false, aviso: '', manual: null, t0: Date.now(), oido: false });
+  showTab('platodia');
+  try{ window.scrollTo(0, 0); }catch(e){}
+}
+function _padSalir(){
+  _padParar();
+  showTab(_padS.desde === 'practicar' ? 'practicar' : 'dashboard');
+}
+// Corta todo lo que suene o escuche: al salir, al cambiar de paso.
+function _padParar(){
+  _padS.grabando = false;
+  if(_padRec){ try{ _padRec.onend = null; _padRec.onresult = null; _padRec.onerror = null; _padRec.abort(); }catch(e){} _padRec = null; }
+  if(_padRecFin){ clearTimeout(_padRecFin); _padRecFin = null; }
+  if(_padHabla){ _padHabla.cancelar(); _padHabla = null; }
+  if(_padAudio){ try{ _padAudio.pause(); }catch(e){} _padAudio = null; }
+}
+
+// Una frase por la voz del sistema, con la mejor voz que haya. Avisa al
+// acabar y, por si el navegador no avisa nunca (pasa), un reloj de seguridad.
+function _padDecir(texto, alAcabar){
+  const fin0 = () => { if(alAcabar) alAcabar(); };
+  if(typeof _degHayVoz !== 'function' || !_degHayVoz() || !texto){ setTimeout(fin0, 0); return { cancelar(){} }; }
+  let hecho = false, reloj = null;
+  const fin = () => { if(hecho) return; hecho = true; clearTimeout(reloj); fin0(); };
+  try{
+    speechSynthesis.cancel();
+    const code = _padCode();
+    const u = new SpeechSynthesisUtterance(texto);
+    u.lang = code; u.rate = 0.95;
+    const v = _padVoz(code); if(v) u.voice = v;
+    u.onend = fin; u.onerror = fin;
+    reloj = setTimeout(fin, Math.min(60000, 2500 + texto.length * 90));
+    speechSynthesis.speak(u);
+  }catch(e){ setTimeout(fin, 0); }
+  return { cancelar(){ hecho = true; clearTimeout(reloj); try{ speechSynthesis.cancel(); }catch(e){} } };
+}
+
+// ── Grabar ──
+// Android corta el reconocimiento en cuanto haces una pausa para pensar, y
+// Chrome de escritorio al rato de silencio. Mientras no pulses «He terminado»,
+// se vuelve a abrir solo y se suma a lo ya dicho (hasta 90 segundos).
+function _padGrabar(){
+  const SR = _padSR();
+  _padS.aviso = '';
+  if(!SR || _padS.modo === 'manual'){ _padS.modo = 'manual'; return _padPintar(); }
+  if(_padHabla){ _padHabla.cancelar(); _padHabla = null; }
+  if(_padAudio){ try{ _padAudio.pause(); }catch(e){} }
+  _padS.texto = ''; _padS.interino = ''; _padS.base = ''; _padS.parando = false; _padS.inicio = Date.now();
+  _padS.grabando = true;
+  _padPintar();
+  _padAbrirMicro();
+}
+function _padAbrirMicro(){
+  const SR = _padSR(); if(!SR) return;
+  let r;
+  try{
+    r = new SR();
+    r.lang = _padCode(); r.interimResults = true; r.continuous = true; r.maxAlternatives = 1;
+    r.onresult = e => {
+      let fin = '', inter = '';
+      for(let i = 0; i < e.results.length; i++){
+        const x = e.results[i];
+        if(x.isFinal) fin += x[0].transcript + ' '; else inter += x[0].transcript + ' ';
+      }
+      _padS.texto = (_padS.base + ' ' + fin).replace(/\s+/g, ' ').trim(); _padS.interino = inter;
+      _padVivo();
+    };
+    r.onerror = e => {
+      const err = e && e.error;
+      if(err === 'not-allowed' || err === 'service-not-allowed' || err === 'audio-capture'){
+        if(_padRec === r){ try{ r.onend = null; }catch(x){} _padRec = null; }
+        _padS.grabando = false; _padS.modo = 'manual'; _padS.manual = null;
+        _padS.aviso = LANG === 'en' ? 'The microphone is not available. Say it out loud anyway and tick what you mentioned.' : 'El micrófono no está disponible. Dilo en voz alta igualmente y marca lo que has mencionado.';
+        _padPintar();
+      }
+    };
+    r.onend = () => {
+      if(_padRec !== r) return;
+      const sigue = !_padS.parando && _padS.grabando && (Date.now() - _padS.inicio) < 90000;
+      if(sigue){
+        _padS.base = (_padS.texto + ' ' + _padS.interino).replace(/\s+/g, ' ').trim();
+        _padS.texto = _padS.base; _padS.interino = '';
+        _padAbrirMicro();
+        return;
+      }
+      _padCerrarGrabacion();
+    };
+    _padRec = r;
+    r.start();
+  }catch(e){
+    _padRec = null; _padS.grabando = false; _padS.modo = 'manual'; _padS.manual = null;
+    _padPintar();
+  }
+}
+// «He terminado»: se para y se espera al último resultado (llega en onend).
+function _padTerminar(){
+  _padS.parando = true;
+  if(!_padRec){ return _padCerrarGrabacion(); }
+  try{ _padRec.stop(); }catch(e){}
+  _padRecFin = setTimeout(() => { if(_padRec) _padCerrarGrabacion(); }, 1800);
+}
+function _padCerrarGrabacion(){
+  if(_padRecFin){ clearTimeout(_padRecFin); _padRecFin = null; }
+  if(_padRec){ try{ _padRec.onend = null; _padRec.abort(); }catch(e){} }
+  _padRec = null;
+  _padS.grabando = false;
+  const dicho = (_padS.texto + ' ' + _padS.interino).trim();
+  if(!dicho){
+    _padS.aviso = LANG === 'en' ? 'I did not hear anything. Try again a little closer to the phone.' : 'No te he oído. Prueba otra vez un poco más cerca del móvil.';
+    return _padPintar();
+  }
+  _padS.texto = dicho; _padS.interino = '';
+  _padResolver(_padRevisar(dicho, _padClaves(getDish(DISHES.find(x => x.id === _padS.id)))));
+}
+// Plan B: lo marca quien lo ha dicho.
+function _padManualListo(){ _padS.manual = []; _padPintar(); }
+function _padManualMarcar(i){
+  if(!Array.isArray(_padS.manual)) return;
+  _padS.manual[i] = !_padS.manual[i];
+  const b = document.querySelector(`.pad-check[data-i="${i}"]`);
+  if(b){ b.setAttribute('aria-pressed', _padS.manual[i] ? 'true' : 'false'); b.classList.toggle('on', !!_padS.manual[i]); }
+}
+function _padManualVer(){
+  const n = _padClaves(getDish(DISHES.find(x => x.id === _padS.id))).length;
+  const r = []; for(let i = 0; i < n; i++) r.push(!!(_padS.manual && _padS.manual[i]));
+  _padS.manual = null;
+  _padResolver(r);
+}
+function _padResolver(r){
+  if(_padS.ronda === 1){ _padS.r1 = r; _padS.paso = 'resultado'; }
+  else { _padS.r2 = r; _padS.paso = 'otra'; _padGuardar(); }
+  _padPintar();
+}
+// Se guarda al acabar la segunda vuelta, con el resultado de la primera.
+function _padGuardar(){
+  const emp = getEmp(currentUser); if(!emp || !_padS.id || !_padS.r1) return;
+  const hoy = _padHoy();
+  emp.pad = emp.pad || {};
+  const todas = _padS.r1.length > 0 && _padS.r1.every(Boolean);
+  emp.pad[_padS.id] = _padProgramar(emp.pad[_padS.id], todas, hoy);
+  try{ saveDB(); }catch(e){}
+  // Vocabulario cerrado de actividades: es un repaso de carta, de práctica.
+  try{
+    if(typeof registrarActividad === 'function') registrarActividad({ activity: 'repaso', competency: 'carta', kind: 'practica',
+      score: _padS.r1.filter(Boolean).length, total: _padS.r1.length || null,
+      seconds: Math.round((Date.now() - _padS.t0) / 1000), meta: { via: 'plato_al_dia', dish: _padS.id } });
+  }catch(e){}
+}
+
+// ── Escuchar la buena ──
+function _padEscuchar(){
+  const d = DISHES.find(x => x.id === _padS.id); if(!d) return;
+  const dd = getDish(d);
+  if(_padHabla){ _padHabla.cancelar(); _padHabla = null; }
+  if(_padAudio){ try{ _padAudio.pause(); }catch(e){} _padAudio = null; }
+  const btn = document.getElementById('padEscBtn');
+  const sonando = on => { if(btn){ btn.classList.toggle('sonando', on); btn.setAttribute('aria-pressed', on ? 'true' : 'false'); } };
+  const porVoz = () => { sonando(true); _padHabla = _padDecir(dd.pron || dd.story, () => { _padHabla = null; sonando(false); }); };
+  if(dd.audio && typeof Audio !== 'undefined'){
+    try{
+      const a = new Audio(dd.audio);
+      _padAudio = a;
+      a.onended = () => sonando(false);
+      a.onerror = () => { if(_padAudio === a){ _padAudio = null; porVoz(); } };
+      sonando(true);
+      const pr = a.play();
+      if(pr && pr.catch) pr.catch(() => { if(_padAudio === a){ _padAudio = null; porVoz(); } });
+      return;
+    }catch(e){}
+  }
+  porVoz();
+}
+
+function _padIr(paso){
+  _padParar();
+  _padS.paso = paso; _padS.aviso = '';
+  if(paso === 'grabar' || paso === 'otra-grabar'){ _padS.ronda = paso === 'grabar' ? 1 : 2; _padS.texto = ''; _padS.interino = ''; _padS.manual = null; }
+  _padPintar();
+  try{ window.scrollTo(0, 0); }catch(e){}
+  if(paso === 'escuchar') _padEscuchar();
+}
+
+// ── Pantalla ──
+function renderPlatoDia(){ _padPintar(); }
+function _padPasosHTML(n){
+  const _en = LANG === 'en';
+  const nombres = _en ? ['Tell it', 'What you said', 'Listen', 'Once more'] : ['Cuéntalo', 'Lo que has dicho', 'Escucha', 'Una vez más'];
+  return `<div class="pad-pasos" aria-label="${_en ? `Step ${n} of 4` : `Paso ${n} de 4`}">
+    <span class="pad-pasos-txt">${_en ? 'Step' : 'Paso'} ${n} ${_en ? 'of' : 'de'} 4 · ${nombres[n - 1]}</span>
+    <span class="pad-pasos-barra" aria-hidden="true">${[1, 2, 3, 4].map(i => `<i class="${i <= n ? 'on' : ''}"></i>`).join('')}</span>
+  </div>`;
+}
+function _padIdeasHTML(r){
+  const _en = LANG === 'en';
+  const n = r.length, si = r.filter(Boolean).length;
+  return `<span class="pad-ideas" role="img" aria-label="${_en ? `${si} of ${n} key ideas heard` : `${si} de ${n} ideas clave oídas`}">${r.map(x => `<i class="${x ? 'on' : ''}"></i>`).join('')}</span>`;
+}
+// Mientras habla: sólo se toca el texto y los rombos, no la pantalla entera.
+function _padVivo(){
+  const t = document.getElementById('padVivo');
+  const ideas = document.getElementById('padIdeas');
+  if(!t) return;
+  const d = DISHES.find(x => x.id === _padS.id); if(!d) return;
+  t.innerHTML = _padS.texto || _padS.interino
+    ? `${escapeHTML(_padS.texto)}<span class="pad-vivo-int">${escapeHTML(_padS.interino)}</span>`
+    : `<span class="pad-vivo-vacio">${LANG === 'en' ? 'Start whenever you like…' : 'Empieza cuando quieras…'}</span>`;
+  if(ideas) ideas.innerHTML = _padIdeasHTML(_padRevisar(_padS.texto + ' ' + _padS.interino, _padClaves(getDish(d))));
+}
+function _padResultadoHTML(r, claves){
+  const _en = LANG === 'en';
+  const si = claves.filter((g, i) => r[i]), no = claves.filter((g, i) => !r[i]);
+  const tit = !no.length
+    ? (_en ? 'You told it whole.' : 'Lo has contado entero.')
+    : !si.length
+      ? (_en ? 'That is normal the first time.' : 'Es normal la primera vez.')
+      : (_en ? 'Good start. Next time, add:' : 'Buen comienzo. La próxima vez, añade:');
+  const li = (g, ok) => `<li class="${ok ? 'si' : 'no'}"><span class="pad-res-ic" aria-hidden="true"></span>${escapeHTML(_padEtiqueta(g))}</li>`;
+  return `<div class="pad-res" role="status" aria-live="polite">
+    <p class="pad-res-tit">${tit}</p>
+    ${no.length && si.length ? `<ul class="pad-res-lista">${no.map(g => li(g, false)).join('')}</ul>` : ''}
+    ${!si.length ? `<p class="pad-res-nota">${_en ? 'These are the ideas that make this dish:' : 'Estas son las ideas que hacen este plato:'}</p><ul class="pad-res-lista">${no.map(g => li(g, false)).join('')}</ul>` : ''}
+    ${si.length ? `<p class="pad-res-nota">${!no.length ? (_en ? 'Every key idea was there:' : 'Estaban todas las ideas clave:') : (_en ? 'You already mentioned:' : 'Ya has mencionado:')}</p><ul class="pad-res-lista">${si.map(g => li(g, true)).join('')}</ul>` : ''}
+  </div>`;
+}
+function _padGrabadorHTML(claves){
+  const _en = LANG === 'en';
+  if(_padS.modo === 'manual'){
+    if(!Array.isArray(_padS.manual)){
+      return `<div class="pad-escena manual">
+        ${_padS.aviso ? `<p class="pad-aviso" role="status">${escapeHTML(_padS.aviso)}</p>` : ''}
+        <p class="pad-escena-tit">${_en ? 'Say it out loud and tap when you finish' : 'Dilo en voz alta y pulsa cuando acabes'}</p>
+        <p class="pad-escena-sub">${_en ? 'As you would at the table: what it is, how it is made and what makes it special.' : 'Como en la mesa: qué es, cómo se hace y qué lo hace especial.'}</p>
+        <button type="button" class="deg-btn pad-grande" onclick="_padManualListo()">${_en ? 'I have said it' : 'Ya lo he contado'}</button>
+      </div>`;
+    }
+    return `<div class="pad-escena manual">
+      <p class="pad-escena-tit">${_en ? 'What did you mention?' : '¿Qué has mencionado?'}</p>
+      <p class="pad-escena-sub">${_en ? 'Tick only what you actually said.' : 'Marca solo lo que de verdad has dicho.'}</p>
+      <div class="pad-checks">${claves.map((g, i) => `<button type="button" class="pad-check${_padS.manual[i] ? ' on' : ''}" data-i="${i}" aria-pressed="${_padS.manual[i] ? 'true' : 'false'}" onclick="_padManualMarcar(${i})"><span class="pad-check-caja" aria-hidden="true"></span>${escapeHTML(_padEtiqueta(g))}</button>`).join('')}</div>
+      <button type="button" class="deg-btn pad-grande" onclick="_padManualVer()">${_en ? 'See how it went' : 'Ver cómo ha ido'}</button>
+    </div>`;
+  }
+  if(!_padS.grabando){
+    return `<div class="pad-escena">
+      ${_padS.aviso ? `<p class="pad-aviso" role="status">${escapeHTML(_padS.aviso)}</p>` : ''}
+      <p class="pad-escena-sub">${_en ? 'As you would at the table: what it is, how it is made and what makes it special. When you finish, tap again.' : 'Como en la mesa: qué es, cómo se hace y qué lo hace especial. Cuando acabes, vuelve a pulsar.'}</p>
+      <button type="button" class="pad-mic" onclick="_padGrabar()"><span class="pad-mic-ic" aria-hidden="true"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5.5 11a6.5 6.5 0 0013 0M12 17.5V21"/></svg></span>${_en ? 'Start talking' : 'Empezar a hablar'}</button>
+    </div>`;
+  }
+  return `<div class="pad-escena grabando">
+    <div class="pad-escucho"><span class="pad-punto" aria-hidden="true"></span>${_en ? 'Listening' : 'Te escucho'}<span id="padIdeas">${_padIdeasHTML(claves.map(() => false))}</span></div>
+    <p class="pad-vivo" id="padVivo" aria-live="off"><span class="pad-vivo-vacio">${_en ? 'Start whenever you like…' : 'Empieza cuando quieras…'}</span></p>
+    <button type="button" class="pad-mic parar" onclick="_padTerminar()"><span class="pad-mic-ic" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24"><rect x="6" y="6" width="12" height="12" rx="2" fill="currentColor"/></svg></span>${_en ? 'I have finished' : 'He terminado'}</button>
+  </div>`;
+}
+function _padPintar(){
+  const c = document.getElementById('appContent'); if(!c) return;
+  if(typeof currentTab !== 'undefined' && currentTab !== 'platodia') return;
+  const _en = LANG === 'en';
+  const salir = `<button type="button" class="deg-volver prc-volver" onclick="_padSalir()">‹ ${_padS.desde === 'practicar' ? (_en ? 'Practise' : 'Practicar') : (_en ? 'Today' : 'Hoy')}</button>`;
+  const d = _padS.id ? DISHES.find(x => x.id === _padS.id) : null;
+  if(!d){
+    const emp = getEmp(currentUser) || {};
+    const est = _padEstado(emp);
+    const prox = Object.values(est).map(e => e && e.next).filter(Boolean).sort()[0];
+    c.innerHTML = `<div class="deg pad">${salir}
+      <h2 class="deg-tit">${_en ? 'One dish a day' : 'Un plato al día'}</h2>
+      <p class="deg-intro">${_padPlatos().length
+        ? (_en ? 'You are up to date. ' : 'Lo llevas al día. ') + (prox ? (_en ? 'The next dish comes back ' : 'El siguiente plato vuelve ') + _padFechaTxt(prox) + '.' : '')
+        : (_en ? 'This menu does not have descriptions to tell yet.' : 'Esta carta todavía no tiene descripciones para contar.')}</p>
+      <button type="button" class="deg-btn" onclick="_padSalir()">${_en ? 'Back' : 'Volver'}</button>
+    </div>`;
+    return;
+  }
+  const dd = getDish(d);
+  const claves = _padClaves(dd);
+  const cab = `${_degFotoHTML(d.id, dd.name, 'deg-hero pad-hero')}<h2 class="deg-tit pad-nom">${escapeHTML(dd.name)}</h2>`;
+  // Mientras hablas o escuchas, la foto se hace pequeña: lo importante es lo de debajo.
+  const mini = `<div class="pad-mini">${_degFotoHTML(d.id, dd.name, 'pad-mini-foto')}<h2 class="deg-tit pad-nom">${escapeHTML(dd.name)}</h2></div>`;
+  const revisar = dd.story_revisar ? `<div class="deg-revisar">${_en ? 'Pending validation by the chef' : 'Pendiente de validar por el chef'}</div>` : '';
+  const p = _padS.paso;
+  let h = '';
+  if(p === 'ver'){
+    h = `${_padPasosHTML(1)}${cab}
+      <p class="deg-intro">${_en ? 'Imagine the guest in front of you. Tell them this dish in your own words, out loud.' : 'Imagina al cliente delante. Cuéntale este plato con tus palabras, en voz alta.'}</p>
+      <button type="button" class="pad-mic" onclick="_padIr('grabar');${_padS.modo === 'voz' ? '_padGrabar()' : ''}"><span class="pad-mic-ic" aria-hidden="true"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5.5 11a6.5 6.5 0 0013 0M12 17.5V21"/></svg></span>${_en ? 'Tell it out loud' : 'Contarlo en voz alta'}</button>`;
+  } else if(p === 'grabar'){
+    h = `${_padPasosHTML(1)}${mini}${_padGrabadorHTML(claves)}`;
+  } else if(p === 'resultado'){
+    h = `${_padPasosHTML(2)}<h2 class="deg-tit pad-nom">${escapeHTML(dd.name)}</h2>
+      ${_padResultadoHTML(_padS.r1 || [], claves)}
+      ${_padS.texto && _padS.modo === 'voz' ? `<details class="deg-apoyo pad-oido"><summary>${_en ? 'What I understood' : 'Lo que he entendido'}</summary><div class="deg-apoyo-body"><p>«${escapeHTML(_padS.texto)}»</p></div></details>` : ''}
+      <button type="button" class="deg-btn pad-grande" onclick="_padIr('escuchar')">${_en ? 'Listen to how it is told' : 'Escucha cómo se cuenta'}</button>`;
+  } else if(p === 'escuchar'){
+    const voz = !!(dd.audio || (typeof _degHayVoz === 'function' && _degHayVoz()));
+    h = `${_padPasosHTML(3)}${mini}
+      <div class="deg-story pad-story"><span>${_en ? 'At the table' : 'En la mesa'}</span><p>${escapeHTML(dd.story)}</p>
+        ${voz ? `<button type="button" id="padEscBtn" class="pad-escuchar" aria-pressed="false" onclick="_padEscuchar()"><span class="pad-ondas" aria-hidden="true"><i></i><i></i><i></i></span>${_en ? 'Listen again' : 'Escuchar otra vez'}</button>` : ''}
+      </div>
+      ${revisar}
+      <button type="button" class="deg-btn pad-grande" onclick="_padIr('otra-grabar');${_padS.modo === 'voz' ? '_padGrabar()' : ''}">${_en ? 'Now you, once more' : 'Ahora tú, una vez más'}</button>`;
+  } else if(p === 'otra-grabar'){
+    h = `${_padPasosHTML(4)}${mini}
+      <p class="deg-intro pad-centro">${_en ? 'Now you, once more.' : 'Ahora tú, una vez más.'}</p>
+      ${_padGrabadorHTML(claves)}`;
+  } else if(p === 'otra'){
+    const r1 = _padS.r1 || [], r2 = _padS.r2 || [];
+    const todas1 = r1.length && r1.every(Boolean);
+    const e = (_padEstado(getEmp(currentUser) || {}))[d.id];
+    const mejora = r2.filter(Boolean).length > r1.filter(Boolean).length;
+    h = `${_padPasosHTML(4)}<h2 class="deg-tit pad-nom">${escapeHTML(dd.name)}</h2>
+      ${_padResultadoHTML(r2, claves)}
+      <div class="pad-cierre">
+        <p>${todas1
+          ? (_en ? 'You knew it from memory.' : 'Te lo sabías de memoria.')
+          : mejora ? (_en ? 'Better the second time. That is how it sticks.' : 'Mejor a la segunda. Así es como se queda.')
+          : (_en ? 'Done for today. Tomorrow it will come easier.' : 'Hecho por hoy. Mañana saldrá más fácil.')}</p>
+        ${e ? `<p class="pad-cierre-prox">${_en ? 'This dish comes back ' : 'Este plato vuelve '}${_padFechaTxt(e.next)}.</p>` : ''}
+      </div>
+      <button type="button" class="deg-btn pad-grande" onclick="_padSalir()">${_padS.desde === 'practicar' ? (_en ? 'Back to Practise' : 'Volver a Practicar') : (_en ? 'Back to Today' : 'Volver a Hoy')}</button>
+      ${_padHoraValida(((getEmp(currentUser) || {}).padAviso || {}).h) ? '' : `<button type="button" class="deg-btn sec" onclick="openAjustes();setTimeout(()=>{const x=document.getElementById('ajPadHora');if(x){x.scrollIntoView({block:'center'});}},120)">${_en ? 'Choose a time for the daily reminder' : 'Elegir hora del aviso diario'}</button>`}`;
+  }
+  c.innerHTML = `<div class="deg pad">${salir}${h}</div>`;
+  if(p === 'grabar' || p === 'otra-grabar') _padVivo();
+}
+
+// ── Aviso dentro de la app ──
+// No hay servidor que mande avisos a una hora fija (send-push sólo reenvía lo
+// que la app le pide en el momento). Hasta que lo haya, la hora elegida se
+// guarda en la ficha y, al abrir Meseo después de esa hora, si el plato de
+// hoy sigue sin contar, se recuerda aquí dentro. Una vez al día.
+function _padAvisoHora(emp){ return _padHoraValida(emp && emp.padAviso && emp.padAviso.h); }
+function _padHoraAhora(){
+  try{ return new Intl.DateTimeFormat('en-GB', { timeZone: 'Atlantic/Canary', hour: '2-digit', minute: '2-digit', hour12: false }).format(new Date()); }
+  catch(e){ const d = new Date(); return String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0'); }
+}
+function _padRecordar(){
+  try{
+    if(!currentUser || typeof currentTab === 'undefined' || currentTab !== 'dashboard') return;
+    const emp = getEmp(currentUser); const h = _padAvisoHora(emp);
+    if(!h || _padHoraAhora() < h) return;
+    const hoy = _padHoy();
+    const est = _padEstado(emp);
+    if(_padHechoHoy(est, hoy)) return;
+    const el = _padElegir(_padPlatos(), est, hoy); if(!el) return;
+    const k = 'meseo_pad_aviso_' + currentUser;
+    try{ if(localStorage.getItem(k) === hoy) return; localStorage.setItem(k, hoy); }catch(e){}
+    const _en = LANG === 'en';
+    const viejo = document.getElementById('padAviso'); if(viejo) viejo.remove();
+    const div = document.createElement('div');
+    div.id = 'padAviso'; div.className = 'pad-aviso-dia'; div.setAttribute('role', 'status');
+    div.innerHTML = `<span class="pad-aviso-txt"><b>${_en ? 'Your dish for today' : 'Tu plato de hoy'}</b>${escapeHTML(getDish(el.plato).name)}</span>
+      <button type="button" class="pad-aviso-si" onclick="document.getElementById('padAviso').remove();_padAbrir('dashboard')">${_en ? 'Tell it' : 'Contarlo'}</button>
+      <button type="button" class="pad-aviso-no" aria-label="${_en ? 'Later' : 'Luego'}" onclick="document.getElementById('padAviso').remove()">${_en ? 'Later' : 'Luego'}</button>`;
+    document.body.appendChild(div);
+  }catch(e){}
+}
+function _padGuardarHora(h){
+  const emp = getEmp(currentUser); if(!emp) return;
+  emp.padAviso = { h: _padHoraValida(h), t: new Date().toISOString() };
+  try{ saveDB(); }catch(e){}
+}
+
+// ═══ LA CARTA EN AUDIO ════════════════════════════════════════════════════
+// Las descripciones seguidas, para escucharlas en el coche o en la moto: el
+// nombre, una pausa corta, la descripción, una pausa y el siguiente. Vive en
+// Saber, con entrada desde la Carta (es donde están todas las secciones) y
+// desde el Menú degustación (es lo que hoy tiene descripciones).
+//
+// Con archivo de audio (`audio`), un <audio> y la Media Session: sigue
+// sonando con la pantalla bloqueada y se controla desde ella. Con la voz del
+// sistema, el navegador suele callarla al bloquear: se dice en pantalla.
+const _caS = { fuente: null, cola: [], i: 0, sonando: false, gen: 0, timer: null, fin: false };
+let _caEl = null, _caHabla = null;
+function _caFuentes(){
+  const _en = LANG === 'en';
+  const con = d => !!getDish(d).story;
+  const r = [];
+  if(typeof DEGUSTACION !== 'undefined' && DEGUSTACION){
+    const ids = DEGUSTACION.pases.map(p => p.id).filter(id => { const d = DISHES.find(x => x.id === id); return d && con(d); });
+    if(ids.length) r.push({ id: 'degustacion', nombre: _degNombre(), ids });
+  }
+  const cats = [];
+  for(const d of DISHES) if(con(d) && cats.indexOf(d.cat) < 0) cats.push(d.cat);
+  // Una sección que es justo el menú degustación (r2 la tiene) no se repite.
+  const enDeg = new Set(r.length ? r[0].ids : []);
+  for(const cat of cats){
+    const ids = DISHES.filter(d => d.cat === cat && con(d)).map(d => d.id);
+    if(ids.every(id => enDeg.has(id))) continue;
+    r.push({ id: 'cat:' + cat, nombre: (typeof catLocal === 'function' ? catLocal(cat) : cat), ids });
+  }
+  return r;
+}
+function _caHayAlgo(){ return _caFuentes().length > 0; }
+function _caAbrir(fuente){
+  _caParar();
+  const fs = _caFuentes();
+  const f = fs.find(x => x.id === fuente) || fs[0] || null;
+  Object.assign(_caS, { fuente: f ? f.id : null, cola: f ? f.ids.slice() : [], i: 0, sonando: false, fin: false });
+  showTab('cartaaudio');
+  try{ window.scrollTo(0, 0); }catch(e){}
+}
+function _caElegir(fuente){
+  _caParar();
+  const f = _caFuentes().find(x => x.id === fuente); if(!f) return;
+  Object.assign(_caS, { fuente: f.id, cola: f.ids.slice(), i: 0, fin: false });
+  _caPintar();
+}
+function _caParar(){
+  _caS.gen++;
+  _caS.sonando = false;
+  clearTimeout(_caS.timer); _caS.timer = null;
+  if(_caHabla){ _caHabla.cancelar(); _caHabla = null; }
+  if(_caEl){ try{ _caEl.pause(); }catch(e){} }
+  try{ if(navigator.mediaSession) navigator.mediaSession.playbackState = 'paused'; }catch(e){}
+}
+function _caPlay(){
+  if(!_caS.cola.length) return;
+  if(_caS.fin){ _caS.i = 0; _caS.fin = false; }
+  _caS.sonando = true;
+  _caSonar(_caS.i);
+}
+function _caAlternar(){ if(_caS.sonando){ _caParar(); _caPintar(); } else _caPlay(); }
+function _caSaltar(delta){
+  const n = _caS.cola.length; if(!n) return;
+  const sonaba = _caS.sonando;
+  _caParar();
+  _caS.fin = false;
+  _caS.i = Math.max(0, Math.min(n - 1, _caS.i + delta));
+  if(sonaba){ _caS.sonando = true; _caSonar(_caS.i); } else _caPintar();
+}
+function _caIrA(i){ _caParar(); _caS.fin = false; _caS.i = i; _caS.sonando = true; _caSonar(i); }
+function _caMeta(d, dd){
+  try{
+    if(!navigator.mediaSession || typeof MediaMetadata === 'undefined') return;
+    const src = (typeof dishPhotoSrc === 'function') ? dishPhotoSrc(d.id) : null;
+    const f = _caFuentes().find(x => x.id === _caS.fuente);
+    navigator.mediaSession.metadata = new MediaMetadata({
+      title: dd.name, artist: (typeof ACTIVE_VENUE !== 'undefined' && ACTIVE_VENUE && ACTIVE_VENUE.name) || 'Meseo',
+      album: f ? f.nombre : '', artwork: src ? [{ src, sizes: '512x512' }] : []
+    });
+    navigator.mediaSession.playbackState = 'playing';
+    navigator.mediaSession.setActionHandler('play', () => { if(!_caS.sonando) _caPlay(); });
+    navigator.mediaSession.setActionHandler('pause', () => { _caParar(); _caPintar(); });
+    navigator.mediaSession.setActionHandler('previoustrack', () => _caSaltar(-1));
+    navigator.mediaSession.setActionHandler('nexttrack', () => _caSaltar(1));
+  }catch(e){}
+}
+// Un plato: nombre, pausa, descripción, pausa, siguiente. `gen` invalida lo
+// que quede pendiente de un plato al saltar o parar.
+function _caSonar(i){
+  const g = ++_caS.gen;
+  const vivo = () => g === _caS.gen && _caS.sonando;
+  const id = _caS.cola[i];
+  const d = DISHES.find(x => x.id === id);
+  if(!d){ return _caSiguiente(g); }
+  const dd = getDish(d);
+  _caS.i = i;
+  _caPintar();
+  _caMeta(d, dd);
+  const historia = () => {
+    if(!vivo()) return;
+    if(dd.audio){
+      try{
+        if(!_caEl){ _caEl = new Audio(); _caEl.preload = 'auto'; }
+        const a = _caEl;
+        a.onended = () => { if(vivo()) _caS.timer = setTimeout(() => _caSiguiente(g), 2000); };
+        a.onerror = () => { if(vivo()) _caHabla = _padDecir(dd.pron || dd.story, () => { if(vivo()) _caS.timer = setTimeout(() => _caSiguiente(g), 2000); }); };
+        a.src = dd.audio;
+        const pr = a.play();
+        if(pr && pr.catch) pr.catch(() => { if(vivo()) a.onerror(); });
+        return;
+      }catch(e){}
+    }
+    _caHabla = _padDecir(dd.pron || dd.story, () => { if(vivo()) _caS.timer = setTimeout(() => _caSiguiente(g), 2000); });
+  };
+  _caHabla = _padDecir(dd.name, () => { if(vivo()) _caS.timer = setTimeout(historia, 700); });
+}
+function _caSiguiente(g){
+  if(g !== _caS.gen || !_caS.sonando) return;
+  if(_caS.i + 1 < _caS.cola.length) return _caSonar(_caS.i + 1);
+  _caS.sonando = false; _caS.fin = true;
+  try{ if(navigator.mediaSession) navigator.mediaSession.playbackState = 'paused'; }catch(e){}
+  _caPintar();
+}
+function renderCartaAudio(){ _caPintar(); }
+function _caPintar(){
+  const c = document.getElementById('appContent'); if(!c) return;
+  if(typeof currentTab !== 'undefined' && currentTab !== 'cartaaudio') return;
+  const _en = LANG === 'en';
+  const fs = _caFuentes();
+  if(!fs.length){
+    c.innerHTML = `<div class="deg ca"><h2 class="deg-tit">${_en ? 'The menu in audio' : 'La carta en audio'}</h2>
+      <p class="deg-intro">${_en ? 'This menu does not have descriptions to listen to yet.' : 'Esta carta todavía no tiene descripciones para escuchar.'}</p>
+      <button type="button" class="deg-btn" onclick="_cartaAbrir()">${_en ? 'Go to the menu' : 'Ir a la carta'}</button></div>`;
+    return;
+  }
+  if(!_caS.fuente || !fs.find(x => x.id === _caS.fuente)){ _caS.fuente = fs[0].id; _caS.cola = fs[0].ids.slice(); _caS.i = 0; }
+  const n = _caS.cola.length;
+  const d = DISHES.find(x => x.id === _caS.cola[_caS.i]);
+  const dd = d ? getDish(d) : null;
+  const archivos = _caS.cola.every(id => { const x = DISHES.find(y => y.id === id); return x && getDish(x).audio; });
+  const ic = {
+    ant: '<svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 6h2v12H7zM20 6v12l-9-6z"/></svg>',
+    sig: '<svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M15 6h2v12h-2zM4 6v12l9-6z"/></svg>',
+    play: '<svg width="30" height="30" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>',
+    pausa: '<svg width="30" height="30" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 5h4v14H7zM13 5h4v14h-4z"/></svg>'
+  };
+  c.innerHTML = `<div class="deg ca">
+    <header class="deg-cab">
+      <h2 class="deg-tit">${_en ? 'The menu in audio' : 'La carta en audio'}</h2>
+    </header>
+    ${fs.length > 1 ? `<div class="ca-fuentes" role="group" aria-label="${_en ? 'What to listen to' : 'Qué escuchar'}">${fs.map(f => `<button type="button" class="q-chip${f.id === _caS.fuente ? ' on' : ''}" aria-pressed="${f.id === _caS.fuente}" onclick="_caElegir('${escapeHTML(f.id).replace(/'/g, '&#39;')}')">${escapeHTML(f.nombre)}</button>`).join('')}</div>` : ''}
+    ${dd ? `<section class="ca-ahora">
+      <div class="ca-cab" aria-live="polite">
+        ${_degFotoHTML(d.id, dd.name, 'pad-mini-foto')}
+        <div><div class="ca-pos">${_caS.fin ? (_en ? 'Finished' : 'Terminado') : `${_caS.i + 1} ${_en ? 'of' : 'de'} ${n}`}</div>
+        <h3 class="ca-nom">${escapeHTML(dd.name)}</h3></div>
+      </div>
+      <p class="ca-story">${escapeHTML(dd.story)}</p>
+    <div class="ca-mandos">
+      <button type="button" class="ca-btn" onclick="_caSaltar(-1)" ${_caS.i <= 0 ? 'disabled' : ''} aria-label="${_en ? 'Previous dish' : 'Plato anterior'}">${ic.ant}</button>
+      <button type="button" class="ca-btn ca-play" onclick="_caAlternar()" aria-label="${_caS.sonando ? (_en ? 'Pause' : 'Pausa') : (_en ? 'Play' : 'Reproducir')}">${_caS.sonando ? ic.pausa : ic.play}</button>
+      <button type="button" class="ca-btn" onclick="_caSaltar(1)" ${_caS.i >= n - 1 ? 'disabled' : ''} aria-label="${_en ? 'Next dish' : 'Plato siguiente'}">${ic.sig}</button>
+    </div>
+    </section>` : ''}
+    <p class="ca-nota">${archivos
+      ? (_en ? 'It keeps playing with the screen locked.' : 'Sigue sonando con la pantalla bloqueada.')
+      : (_en ? 'It uses your phone\'s voice. On most phones it stops when the screen locks, so keep it on.' : 'Usa la voz de tu teléfono. En la mayoría se calla al bloquear la pantalla: déjala encendida.')}</p>
+    <ol class="ca-cola">${_caS.cola.map((id, k) => { const x = DISHES.find(y => y.id === id); if(!x) return ''; return `<li><button type="button" class="${k === _caS.i ? 'on' : ''}" ${k === _caS.i ? 'aria-current="true"' : ''} onclick="_caIrA(${k})"><span class="ca-cola-n">${k + 1}</span>${escapeHTML(getDish(x).name)}</button></li>`; }).join('')}</ol>
+  </div>`;
+}
+// Entrada desde la Carta y desde el Menú degustación.
+function _caEntradaHTML(fuente){
+  if(!_caHayAlgo()) return '';
+  const _en = LANG === 'en';
+  return `<button type="button" class="ca-entrada" onclick="_caAbrir(${fuente ? `'${fuente}'` : ''})">
+    <span class="ca-entrada-ic" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 14v-2a8 8 0 0116 0v2"/><rect x="3" y="14" width="4" height="6" rx="1.5"/><rect x="17" y="14" width="4" height="6" rx="1.5"/></svg></span>
+    <span class="ca-entrada-txt"><b>${fuente === 'degustacion' ? (_en ? 'Listen to the journey' : 'Escuchar el viaje') : (_en ? 'The menu in audio' : 'La carta en audio')}</b><span>${_en ? 'The descriptions one after another' : 'Las descripciones una detrás de otra'}</span></span>
+  </button>`;
+}
+
 // ═══ SABER · sus pestañas ═══════════════════════════════════════════════
 // Todo lo que se consulta: la guía, la carta, los vinos, las técnicas, los
 // estándares LQA y la actualidad; el carro de quesos y la sala, sólo en el
@@ -16519,6 +17322,8 @@ function _saberActivo(tab){
   // Fotos (emplatado) y lista (repaso) son la misma Carta: un solo chip
   // encendido para las dos vistas.
   if(tab==='emplatado' || tab==='repaso') return 'carta';
+  // La carta en audio enciende el chip desde el que se escucha.
+  if(tab==='cartaaudio') return (typeof _caS!=='undefined' && _caS.fuente==='degustacion') ? 'degustacion' : 'carta';
   return tab;
 }
 function _saberChipsBar(tab){
@@ -23556,6 +24361,10 @@ function renderDashboard(){
       ${_tranquilo ? _heroTranquiloHTML(emp,_en) : renderXPBar()}
     </div>
 
+    <!-- Un plato al día: lo primero de Hoy, una sola tarjeta. Sin platos con
+         descripción y claves (Txoko hoy), no aparece. -->
+    ${(typeof _padTarjetaHTML==='function') ? _padTarjetaHTML('dashboard') : ''}
+
     ${_parteCard}
 
     <!-- ── ACCESO EN 1 TOQUE: banner de instalación (solo si no está instalada) ── -->
@@ -23597,6 +24406,7 @@ function renderDashboard(){
   checkNewAchievements();
   _hoyCheckOvertaken();   // trigger rojo si alguien me quitó un nº1 de juego
   _pddAsyncFill();        // foto/maridaje del plato del día
+  if(typeof _padRecordar==='function') setTimeout(_padRecordar, 900);   // aviso de Un plato al día
 }
 
 // Cabecera de Hoy con el modo tranquilo: en vez de la barra de XP, cuántos
@@ -24636,6 +25446,7 @@ function renderPracticar(){
       <p class="prc-sub">${_en?'What you learn by doing it.':'Lo que se aprende haciéndolo.'}</p>
     </header>
     <div class="tunic-divider"><span>${_en?'Every day':'Cada día'}</span></div>
+    ${(typeof _padTarjetaHTML==='function') ? _padTarjetaHTML('practicar') : ''}
     ${(typeof launchPase==='function') ? _paseCtaHTML(_en) : ''}
     ${(typeof _hspCtaHTML==='function') ? _hspCtaHTML(_en) : ''}
     ${_smartCtaHTML(_en, emp)}
@@ -25938,6 +26749,7 @@ function renderRepasoCats(){
 
   document.getElementById('appContent').innerHTML=`
     ${_cartaToggleHTML('lista')}
+    ${(typeof _caEntradaHTML==='function') ? _caEntradaHTML() : ''}
     <!-- Orientation: one mono line, no box -->
     <div class="repaso-statline" role="status" aria-label="${_en?'Overview':'Resumen'}">
       <span><b>${totalRecipes}</b> ${_en?'recipes':'recetas'}</span><i>·</i>
