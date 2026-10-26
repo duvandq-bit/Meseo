@@ -2230,23 +2230,27 @@ test('recorrido guiado: nada por debajo de 12 px ni fuera de contraste', () => {
   // dos: «■ Estructural — no apto para esta alergia» a 9,4 px y 3,25:1 — la
   // frase que decide si un plato se le puede servir a un alérgico.
   const css = read('styles.css');
-  const rem = v => v.endsWith('rem') ? parseFloat(v) * 18 : parseFloat(v);
-  const px = sel => {
-    const b = (css.match(new RegExp('^\\' + sel + '\\{([^}]*)\\}', 'm')) || [])[1] || '';
-    const m = b.match(/font-size:\s*([^;]+)/);
-    return m ? rem(m[1].trim()) : null;
+  // Rediseño «Conocer el plato» (oct 2026): las medidas van con la escala de
+  // la app (var(--fs-N)); se resuelven aquí con los valores de :root.
+  const escala = {};
+  for (const m of css.matchAll(/--fs-(\d):\s*([^;]+);/g)) escala[m[1]] = m[2].trim();
+  const rem = v => {
+    v = v.trim();
+    const vm = v.match(/^var\(--fs-(\d)\)$/); if (vm) v = escala[vm[1]];
+    const mx = v.match(/^max\(([^,]+),([^)]+)\)$/); if (mx) return Math.max(rem(mx[1]), rem(mx[2]));
+    return v.endsWith('rem') ? parseFloat(v) * 18 : parseFloat(v);
   };
-  for (const sel of ['.dj-dot', '.dj-phase-label', '.dj-ing-al', '.dj-ing-count',
-                     '.dj-allerg-info', '.dj-service-label', '.dj-mastery-label',
-                     '.dj-qrv-ans', '.dj-next-cat', '.dj-next-label']) {
+  const px = sel => {
+    const b = (css.match(new RegExp('^\\' + sel.replace(/\./g, '\\.').slice(1) + '\\{([^}]*)\\}', 'm')) || [])[1] || '';
+    const m = b.match(/font-size:\s*([^;]+)/);
+    return m ? rem(m[1]) : null;
+  };
+  for (const sel of ['.cono-momento', '.cono-ing,.cono-hist', '.cono-al-cmd,.cono-al-sub,.cono-al-de', '.cono-al-de',
+                     '.cono-notas', '.cono-q-fb', '.cono-fin-txt,.cono-fin-dom', '.cono-atras', '.cono-nota']) {
     const v = px(sel);
     assert(v !== null, `no encuentro el tamaño de ${sel}`);
     assert(v >= 12, `${sel} va a ${v.toFixed(1)} px: no se lee de pie y cansado`);
   }
-  // Los dos veredictos de la fase de alérgenos van en estilo en línea.
-  for (const m of html.matchAll(/font-size:\.(\d+)rem;color:#[0-9a-f]{6};background:rgba\((?:160,72,72|77,138,94)/g))
-    assert(parseFloat('.' + m[1]) * 18 >= 12,
-      `el veredicto de adaptación vuelve a ${(parseFloat('.' + m[1]) * 18).toFixed(1)} px`);
   // Y la comanda resaltada debe poder partirse: con white-space:nowrap las
   // largas («SIN HUEVO DE CODORNIZ, SIN YEMA Y SIN MAYONESA DE CÍTRICOS»)
   // sacaban la fase 110 px fuera de un móvil de 360.
@@ -2422,8 +2426,11 @@ test('recorrido guiado: la ficha de servicio no corta ninguna comanda', () => {
   // Se busca por el código que cortaba, no por la frase: el comentario que
   // explica el arreglo cita el substring.
   assert(!/shortNotes/.test(html), 'vuelve el corte a 200 caracteres de la ficha de servicio');
-  assert(/value:_djNotasHTML\(dd\.notes\)/.test(html),
-    'la ficha de servicio debe dibujar la nota entera con _djNotasHTML');
+  assert(/_djNotasHTML\(m\.notas\.join\(' · '\)\)/.test(html),
+    'el paso «En la mesa» debe dibujar la nota con _djNotasHTML (comanda resaltada, sin cortes)');
+  // Y el filtro de trozos repetidos no recorta ningún trozo: o entra entero o no entra.
+  const fu = _xFn('_cpNotasUtiles');
+  assert(!/slice\(|substring\(|substr\(/.test(fu), '_cpNotasUtiles no puede cortar un trozo de la nota');
   const fn = _xFn('_djNotasHTML');
   // escapeHtml es una dependencia de la función; se inyecta equivalente.
   const build = new Function('escapeHtml', fn + '; return _djNotasHTML;'); // eslint-disable-line no-new-func
@@ -2526,7 +2533,7 @@ test('recorrido guiado: ningún ingrediente con alérgeno se pinta como seguro',
   // contiene «tuna». Causa: un mapa de trece palabras clave que buscaba
   // subcadenas, teniendo la app la base única de 460 ingredientes.
   // Este guard reconstruye la fase con SUS funciones y comprueba tres cosas.
-  const src = html.slice(html.indexOf('let _djIngBase = null;'), html.indexOf('function _djPhaseIngredients'));
+  const src = html.slice(html.indexOf('let _djIngBase = null;'), html.indexOf('// ── Phase 4: Service ──'));
   const F = new Function(src + `
     return {n:_djNorm, split:_djSplitIngredients, same:_djSameThing,
             base:function(b){ _djIngBase = b; },
@@ -2716,8 +2723,8 @@ test('dish detail + immersive journey read verdicts from DISH_ACTIONS', () => {
   // la ficha y changeRepasoTopic), la misma pieza que la vista rápida.
   assert(/DISH_ACTIONS\[d\.id\]/.test(detail) && /_fpAlergenosHTML\(dish, false\)/.test(detail), 'dish detail panel must read DISH_ACTIONS');
   assert(/'Se adapta'/.test(detail) && /'No apto'/.test(detail), 'dish detail must show both verdicts');
-  const dj = html.slice(html.indexOf('function _djPhaseAllergens'), html.indexOf('function _djPhaseAllergens') + 7000);
-  assert(/DISH_ACTIONS\[dish\.id\]/.test(dj), 'immersive journey allergen cards must read DISH_ACTIONS');
+  const dj = _xFn('_cpPasoProtege');
+  assert(/DISH_ACTIONS\[dish\.id\]/.test(dj), 'el paso «Lo que protege» debe leer DISH_ACTIONS');
   assert(!/Posiblemente eliminable bajo petición/.test(html), 'heuristic "maybe removable" chip must stay retired');
 });
 
@@ -11430,30 +11437,31 @@ test('Marcaje: la cubertería del plato es un campo, no una frase escondida en l
   // párrafo de avisos de alérgenos, y el marcaje es lo PRIMERO que hace el
   // camarero, antes de que el plato salga de cocina.
 
-  // ── 1. Se pinta de verdad. La fase de Servicio del recorrido guiado es
-  //      código puro: se ejecuta, no se lee.
-  const src = html.slice(html.indexOf('function _djNotasHTML(notas){'),
-                         html.indexOf('// ── Phase 5: Quiz Generator ──'));
-  assert(src.includes('_djPhaseService'), 'no encuentro la fase de Servicio');
-  const F = new Function('catLocal', 'allergenLocal', 'escapeHtml', 'WINES', // eslint-disable-line no-new-func
-    src + '; return _djPhaseService;');
+  // ── 1. Se pinta de verdad. El paso «En la mesa» de Conocer el plato es
+  //      código puro: se ejecuta, no se lee. (Y sin marcaje ni más datos, el
+  //      paso entero no existe: lo dice _cpMesaDatos().hay.)
+  const src = html.slice(html.indexOf('const _djNorm ='), html.indexOf('// Palabra COMPLETA'))
+    + _xFn('_djNotasHTML') + _xFn('_cpNotasUtiles') + _xFn('_cpMesaDatos') + _xFn('_cpPasoMesa');
+  const F = new Function('escapeHtml', 'escapeHTML', '_cpMini', '_djAlEn', // eslint-disable-line no-new-func
+    src + '; return { fase:_cpPasoMesa, datos:_cpMesaDatos };');
   const esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-  const fase = F(c => c, a => a, esc, []);
+  const { fase, datos } = F(esc, esc, () => '', a => a);
 
   const conM = fase({ id: 1, cat: 'Postres', allergens: [], name: 'X' },
                     { marcaje: 'Tenedor y cuchara dorados.' }, false);
-  assert(/MARCAJE/.test(conM), 'el plato que trae marcaje tiene que enseñarlo');
+  assert(/Marcaje/.test(conM), 'el plato que trae marcaje tiene que enseñarlo');
   assert(conM.includes('Tenedor y cuchara dorados.'), 'y tiene que enseñar el marcaje que trae');
 
   // La carta de Txoko NO tiene marcaje. No se inventa uno ni se pinta el
-  // hueco vacío.
+  // hueco vacío: sin marcaje ni nota ni vinos, el paso no existe.
   const sinM = fase({ id: 1, cat: 'Postres', allergens: [], name: 'X' }, {}, false);
-  assert(!/MARCAJE|CUTLERY/.test(sinM), 'sin marcaje en la carta no se pinta nada');
+  assert(!/Marcaje|Cutlery/.test(sinM), 'sin marcaje en la carta no se pinta nada');
+  assert(datos({ id: 1, cat: 'Postres', allergens: [], name: 'X' }, {}, false).hay === false, 'sin datos, el paso «En la mesa» no existe');
 
   // En inglés también: «cuchara negra principal» no le sirve a nadie.
   const en = fase({ id: 1, cat: 'Postres', allergens: [], name: 'X' },
                   { marcaje: 'Gold fork and spoon.' }, true);
-  assert(/CUTLERY MARKING/.test(en), 'el marcaje sale traducido');
+  assert(/Cutlery marking/.test(en), 'el marcaje sale traducido');
 
   // Y va escapado: es texto de una carta que se edita a mano.
   const mal = fase({ id: 1, cat: 'Postres', allergens: [], name: 'X' },
@@ -18285,7 +18293,7 @@ console.log('\nUn plato al día y la carta en audio');
 const _pad = (() => {
   const i = html.indexOf('const PAD_INTERVALOS');
   const j = html.indexOf('// ── Lo que depende de la app ──', i);
-  return new Function(html.slice(i, j) + '; return { PAD_INTERVALOS, _padEtiqueta, _padNorm, _padDicha, _padRevisar, _padClaves, _padProgramar, _padElegir, _padHechoHoy, _padPuntuarVoz, _padMejorVoz, _padFusionar, _padHoraValida, _padSumarDias };')(); // eslint-disable-line no-new-func
+  return new Function(html.slice(i, j) + '; return { PAD_INTERVALOS, _padEtiqueta, _padNorm, _padDicha, _padRevisar, _padClaves, _padProgramar, _padElegir, _padHechoHoy, _padPuntuarVoz, _padMejorVoz, _padFusionar, _padHoraValida, _padSumarDias, _cpProgramar, _cpOkDias, _cpDominado };')(); // eslint-disable-line no-new-func
 })();
 test('plato al día: las claves se reconocen sin tildes, en plural y por sinónimo', () => {
   const C = [['vieira', 'hotate'], ['saikyo miso', 'miso dulce', 'miso'], ['parrilla', 'brasa', 'robata'], ['beurre blanc'], ['vino canario'], ['caviar']];
@@ -18366,6 +18374,106 @@ test('plato al día: entrada en Hoy (arriba) y en Practicar; progreso en la fich
   assert(_pad._padHoraValida('08:30') === '08:30' && _pad._padHoraValida('25:00') === '' && _pad._padHoraValida(null) === '', 'hora del aviso');
   assert(/activity: 'repaso', competency: 'carta', kind: 'practica'/.test(_fnSrc('_padGuardar')), 'actividad del vocabulario existente');
 });
+
+console.log('\nConocer el plato');
+const _cono = html.slice(html.indexOf('// CONOCER EL PLATO (antes «Recorrido guiado»)'), html.indexOf('// SPACED REPETITION SYSTEM (SRS)'));
+test('conocer el plato: la frase falsa nunca es una verdadera, mide como ellas y no delata su posición', () => {
+  // El propietario pidió preguntas que no se acierten sin saber el plato. La
+  // falsa es una frase de OTRO plato, del mismo hueco (qué es / cómo se hace /
+  // qué lo hace especial), que no nombra ninguna clave de este y mide como las
+  // verdaderas: ni la más larga ni la más corta la delatan.
+  const demo = JSON.parse(read('data/carta-demo.json'));
+  const src = html.slice(html.indexOf('const PAD_INTERVALOS'), html.indexOf('// ── Lo que depende de la app ──'))
+    + _xFn('_degTres') + _xFn('_djShuffle') + _xFn('_cpPalabras') + _xFn('_cpVerdaderas') + _xFn('_cpQFrasesFalsa')
+    + html.slice(html.indexOf('const _CP_VACIAS'), html.indexOf('\n', html.indexOf('const _CP_VACIAS')));
+  const F = new Function('DISHES', 'getDish', src + '; return _cpQFrasesFalsa;')(demo.DISHES, d => d); // eslint-disable-line no-new-func
+  const con = demo.DISHES.filter(d => Array.isArray(d.tres) && d.tres.length === 3);
+  assert(con.length >= 8, 'la demo tiene que tener platos con tres frases');
+  let n = 0; const pos = [0, 0, 0];
+  for (let r = 0; r < 40; r++) for (const d of con) {
+    const q = F(d, d, false, demo.DISHES);
+    if (!q) continue; n++;
+    const falsa = q.options[q.correctIdx];
+    assert(!d.tres.includes(falsa) && !(d.story || '').includes(falsa), `${d.name}: la falsa es una frase verdadera («${falsa}»)`);
+    const otras = q.options.filter((o, i) => i !== q.correctIdx);
+    const media = (otras[0].length + otras[1].length) / 2;
+    assert(Math.abs(falsa.length - media) / media <= 0.4, `${d.name}: la falsa se delata por longitud («${falsa}» frente a ${media})`);
+    assert(new Set(q.options).size === 3, `${d.name}: opciones repetidas`);
+    assert(/es falsa\?$/.test(q.q) && /^Esa es de "/.test(q.explain), 'enunciado y respuesta de una frase');
+    pos[q.correctIdx]++;
+  }
+  assert(n >= con.length * 30, `esperaba preguntas para casi todos los platos de la demo, hay ${n}`);
+  assert(pos.every(x => x > n * 0.15), `la falsa cae siempre en el mismo sitio: ${pos.join('/')}`);
+});
+test('conocer el plato: un paso sin datos no existe', () => {
+  const src = _xFn('_cpPasos') + _xFn('_cpHaceDatos') + _xFn('_degTres') + _xFn('_degBocados') + _xFn('_fpMismoTexto') + _xFn('_fpNorm') + _xFn('_cpPalabras')
+    + html.slice(html.indexOf('const _CP_VACIAS'), html.indexOf('\n', html.indexOf('const _CP_VACIAS')))
+    + html.slice(html.indexOf('const PAD_INTERVALOS'), html.indexOf('// ── Lo que depende de la app ──'));
+  const F = new Function('_djState', '_cpMesaDatos', '_ingPorLineas', src + '; return { pasos:_cpPasos, hace:_cpHaceDatos };'); // eslint-disable-line no-new-func
+  const sinMesa = () => ({ hay: false }), conMesa = () => ({ hay: true });
+  const porLineas = t => { const l = String(t || '').split(/\n+/).filter(Boolean); return l.length < 2 ? null : l.map(x => ({ n: '', d: x })); };
+  // Plato pelado: ni cómo se hace, ni mesa, ni preguntas.
+  let r = F({ quizQuestions: [] }, sinMesa, porLineas);
+  assert(r.pasos({ id: 1, allergens: [] }, { name: 'X' }, false).join() === 'mira,protege,cuenta,fin', 'sin datos quedan los cuatro pasos de siempre');
+  // Historia igual a los ingredientes (Akira): no hay «cómo se hace» por eso solo.
+  const igual = r.hace({ ingredients: 'Selección de 6 aperitivos.', history: 'Selección de 6 aperitivos.' });
+  assert(igual.hist === '' && igual.ing === 'Selección de 6 aperitivos.', 'historia igual a ingredientes: se pinta una vez, como ingredientes');
+  assert(r.hace({}).hay === false, 'sin nada, no hay paso');
+  assert(r.hace({ ingredients: 'Vieira, miso, caviar.', history: 'Una vieira de Hokkaido.' }).hist === 'Una vieira de Hokkaido.', 'con historia distinta se pinta');
+  assert(r.hace({ tres: ['a', 'b', 'c'] }).hay === true, 'con las tres frases sí');
+  // Con todo: siete pasos.
+  r = F({ quizQuestions: [{}] }, conMesa, porLineas);
+  assert(r.pasos({ id: 1, allergens: [] }, { name: 'X', tres: ['a', 'b', 'c'] }, false).join() === 'mira,hace,protege,mesa,cuenta,prueba,fin', 'con datos, los siete');
+  // Y los ingredientes de una línea que repiten las tres frases no se pintan dos veces.
+  const h = r.hace({ tres: ['Roca de frambuesa', 'Praliné de sésamo', 'Para acompañar el café'], ingredients: 'Roca de frambuesa. Praline de sésamo.' });
+  assert(h.ing === '', 'la línea de ingredientes que repite las tres frases no se pinta');
+});
+test('conocer el plato: «conocido» es terminar el recorrido; «dominado» es contarlo de memoria dos veces con dos días entre medias', () => {
+  assert(_pad._cpDominado(['2026-10-26']) === false && _pad._cpDominado(['2026-10-26', '2026-10-27']) === false, 'un día, o dos seguidos, no es dominar');
+  assert(_pad._cpDominado(['2026-10-26', '2026-10-28']) === true && _pad._cpDominado(['2026-10-26', '2026-10-27', '2026-11-02']) === true, 'dos días con dos de separación sí');
+  assert(_pad._cpOkDias({ okd: ['2026-10-20'] }, '2026-10-20').join() === '2026-10-20', 'el mismo día no cuenta dos veces');
+  // Terminar sin contar: a la cola para mañana, sin marcar el día como contado.
+  const sin = _pad._cpProgramar(undefined, false, false, '2026-10-26', 1);
+  assert(sin.next === '2026-10-27' && sin.d === null && sin.ok === 0 && sin.okd.length === 0, 'sin contar: mañana, sin día');
+  assert(_pad._cpProgramar({ n: 2, d: '2026-10-20', next: '2026-10-30', ok: 1, t: 1 }, false, false, '2026-10-26', 2).next === '2026-10-30', 'no pisa una fecha mejor');
+  // Contado entero: igual que Un plato al día, y se apunta el día.
+  const con = _pad._cpProgramar(undefined, true, true, '2026-10-26', 1);
+  assert(con.d === '2026-10-26' && con.ok === 1 && con.okd.join() === '2026-10-26', 'contado entero: hoy, y apuntado');
+  assert(_pad._cpProgramar({ okd: ['2026-10-24'] }, true, false, '2026-10-26', 1).okd.join() === '2026-10-24', 'contado con faltas: no se apunta el día');
+  // En el código: el cierre escribe conocidos; dominado solo por días contados o, sin claves, por comprobación limpia.
+  const fin = _xFn('_cpTerminar');
+  assert(/emp\.conocidos\[dish\.id\] = hoy/.test(fin), 'el cierre marca el plato como conocido');
+  assert(/_cpMarcarDominado\(emp, dish\.id, nuevo\.okd\)/.test(fin), 'con claves, dominado solo lo decide la cuenta de días');
+  assert(/else if\(total > 0 && score === total && !\(emp\.journeyMastered \|\| \{\}\)\[dish\.id\]\)/.test(fin), 'sin claves, dominado = comprobación sin fallos');
+  assert(/_cpMarcarDominado\(emp, _padS\.id, nuevo\.okd\)/.test(_fnSrc('_padGuardar')), 'Un plato al día también cuenta los días');
+  assert(/cn: emp\.conocidos/.test(_fnSrc('_extrasCompose')) && /jm: emp\.journeyMastered/.test(_fnSrc('_extrasCompose')), 'conocidos y dominados viajan con el progreso');
+});
+test('conocer el plato: sin XP, un solo sistema de repaso, actividad «recorrido» y textos nuevos', () => {
+  assert(!/awardXP/.test(_cono), 'el recorrido ya no da XP');
+  assert(!/_srsUpdate\(/.test(_cono), 'el recorrido no escribe en emp.srs: la cola es la de Un plato al día');
+  assert(/emp\.pad\[dish\.id\] = nuevo/.test(_xFn('_cpTerminar')) && /_cpProgramar\(emp\.pad\[dish\.id\]/.test(_xFn('_cpTerminar')), 'al terminar, el plato entra en la cola de Un plato al día');
+  assert(/activity:'recorrido', competency:'carta', kind:'practica'/.test(_cono), 'sigue registrando la actividad «recorrido»');
+  assert(/score: total > 0 \? score : null, total: total > 0 \? total : null/.test(_cono), 'con score y total de la comprobación (y sin total cuando no hay preguntas)');
+  assert(/_padHost = _cpPintarPractica/.test(_cono) && /if\(typeof _padHost === 'function'\)\{ _padHost\(\); return; \}/.test(_fnSrc('_padPintar')), 'la práctica es el motor de Un plato al día pintando dentro del recorrido');
+  assert(/_padGrabadorHTML\(claves\)/.test(_cono) && /_padResultadoHTML\(_padS\.r1, claves\)/.test(_cono), 'grabador y resultado son los de Un plato al día');
+  // Sin emojis ni números romanos en lo que se pinta.
+  // (El «⚠» que queda es el separador con el que las cartas escriben sus notas; se lee, no se pinta.)
+  assert(!/[\u{1F300}-\u{1FAFF}\u{2700}-\u{27BF}\u{2705}\u{2B50}]/u.test(_cono), 'sin emojis');
+  assert(!/'(I|II|III|IV|V|VI)'/.test(_cono), 'sin números romanos');
+  assert(/carta_sin_ver:\s*\{actividad:'recorrido',[^}]*minutos:3, es:'Conocer el plato',\s*en:'Get to know the dish'\}/.test(html), 'el plan de hoy propone «Conocer el plato», 3 minutos');
+  assert(!/'Recorrido guiado|'Guided journey|Recorrido guiado'|Guided journey'|Recorrido guiado \(|Guided journey \(/.test(html), 'no queda ningún «Recorrido guiado» visible en la app');
+  assert(/function launchDishJourney\(dishId\)/.test(html), 'launchDishJourney sigue siendo el nombre público');
+  // Cada alérgeno una vez y sin el «siempre informar sobre».
+  assert(!/Siempre informar sobre|Always inform guest about/.test(html), 'fuera el texto repetido de alérgenos');
+  // CSS huérfano del recorrido viejo, fuera; lo que comparte la sesión de repaso, dentro.
+  const css = read('styles.css');
+  for (const sel of ['.dj-dot', '.dj-ing-grid', '.dj-allerg-card', '.dj-service-item', '.dj-mastery-xp', '.dj-next-btn', '.dj-launch-btn', '.dj-phase-dots'])
+    assert(!css.includes(sel + '{') && !css.includes(sel + ' '), `queda CSS huérfano: ${sel}`);
+  for (const sel of ['.dj-overlay', '.dj-body', '.dj-quiz-opt', '.dj-mastery-score', '.dj-comanda'])
+    assert(css.includes(sel + '{') || css.includes(sel + ','), `falta CSS que sigue en uso: ${sel}`);
+  assert(/\.dj-overlay\.cono-overlay\{/.test(css) && /\.cono-nav\{/.test(css), 'falta el CSS de Conocer el plato');
+});
+
 test('carta en audio: ruta en Saber, se calla al salir y usa Media Session', () => {
   assert(_ux2.UX2_SECCION.cartaaudio === 'saber' && _ux2.UX2_SECCION.platodia === 'practicar', 'secciones');
   const st = _fnSrc('showTab');
