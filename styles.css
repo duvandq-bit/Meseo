@@ -8462,12 +8462,11 @@ body:has(#gsOverlay.open) .ev-aviso-panel{
 .dj-overlay{position:fixed;inset:0;z-index:9999;background:#0a120e;overflow:hidden;animation:djFadeIn .4s ease}
 @keyframes djFadeIn{from{opacity:0}to{opacity:1}}
 @keyframes djSlideUp{from{transform:translateY(40px);opacity:0}to{transform:translateY(0);opacity:1}}
-@keyframes djSlideLeft{from{transform:translateX(60px);opacity:0}to{transform:translateX(0);opacity:1}}
+
 @keyframes djPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.05)}}
-@keyframes djIngredientPop{from{transform:scale(0) rotate(-10deg);opacity:0}to{transform:scale(1) rotate(0);opacity:1}}
+
 @keyframes djCountUp{from{transform:translateY(20px);opacity:0}to{transform:translateY(0);opacity:1}}
 @keyframes djProgressFill{from{width:0}to{width:var(--target-w)}}
-@keyframes djFloatUp{0%{transform:translateY(0);opacity:1}100%{transform:translateY(-60px);opacity:0}}
 
 .dj-container{width:100%;height:100%;display:flex;flex-direction:column;position:relative;overflow:hidden}
 .dj-bg{position:absolute;inset:0;background:linear-gradient(165deg,#0a120e 0%,#14221a 30%,var(--parchment) 60%,#14221a 100%);z-index:0}
@@ -8478,40 +8477,6 @@ body:has(#gsOverlay.open) .ev-aviso-panel{
 .dj-close{width:36px;height:36px;border-radius:50%;background:rgba(244,237,226,.06);border:1px solid rgba(244,237,226,.08);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .3s}
 .dj-close:hover{background:rgba(244,237,226,.12)}
 .dj-close svg{stroke:var(--ink);width:16px;height:16px}
-.dj-phase-dots{display:flex;gap:4px;align-items:center;position:relative}
-.dj-phase-dots::before{content:'';position:absolute;top:50%;left:4px;right:4px;height:1px;background:linear-gradient(90deg,transparent,rgba(196,154,60,.18) 15%,rgba(196,154,60,.18) 85%,transparent);pointer-events:none;z-index:0}
-.dj-dot{
-  /* Auditoría (sept 2026): .56rem = 10,1 px, el último texto del recorrido por
-     debajo del suelo de 12. Los seis caben de sobra a 360 px: 6×26 + 5×6 de
-     hueco = 186 px. También sube el contraste del capítulo aún no visitado,
-     que a .35 de opacidad casi no se leía. */
-  position:relative;z-index:1;width:26px;height:30px;
-  display:flex;align-items:center;justify-content:center;
-  font-family:'Cinzel',serif;font-size:.7rem;font-weight:700;letter-spacing:.02em;
-  color:rgba(244,237,226,.62);
-  background:linear-gradient(165deg,rgba(244,237,226,.05),rgba(244,237,226,.02));
-  border:1px solid rgba(244,237,226,.1);
-  border-radius:3px;
-  transition:all .35s cubic-bezier(.22,1,.36,1);
-}
-.dj-dot.active{
-  color:#f4c962;
-  background:linear-gradient(165deg,rgba(196,154,60,.3),rgba(196,154,60,.12));
-  border-color:rgba(196,154,60,.55);
-  box-shadow:0 0 14px rgba(196,154,60,.28),inset 0 1px 0 rgba(255,255,255,.14);
-  transform:scaleY(1.12);
-}
-.dj-dot.done{
-  color:rgba(168,216,176,.8);
-  background:linear-gradient(165deg,rgba(77,138,94,.2),rgba(77,138,94,.08));
-  border-color:rgba(77,138,94,.4);
-}
-.dj-dot.done::after{
-  content:'';position:absolute;top:-2px;right:-2px;
-  width:6px;height:6px;border-radius:50%;
-  background:rgba(168,216,176,.9);
-  box-shadow:0 0 5px rgba(168,216,176,.5);
-}
 
 .dj-body{position:relative;z-index:2;flex:1;overflow-y:auto;overflow-x:hidden;touch-action:pan-y;-webkit-overflow-scrolling:touch;padding:0 1.2rem 2rem;scrollbar-width:none}
 .dj-body::-webkit-scrollbar{display:none}
@@ -8529,12 +8494,7 @@ body:has(#gsOverlay.open) .ev-aviso-panel{
   background:linear-gradient(90deg,transparent,rgba(196,154,60,.45));
 }
 .dj-phase-label::after{background:linear-gradient(90deg,rgba(196,154,60,.45),transparent)}
-.dj-phase-icon-large{
-  display:block;text-align:center;font-size:2.1rem;
-  margin-bottom:.35rem;line-height:1;
-  filter:drop-shadow(0 2px 10px rgba(196,154,60,.28));
-  animation:djSlideUp .5s .05s both
-}
+
 .dj-phase-title{
   font-family:'Cinzel',serif;font-size:1.65rem;font-weight:700;color:var(--ink);
   text-align:center;line-height:1.25;margin-bottom:.3rem;letter-spacing:.025em;
@@ -8546,51 +8506,28 @@ body:has(#gsOverlay.open) .ev-aviso-panel{
   color:rgba(226,190,116,.95);text-align:center;margin-bottom:1.2rem;
   animation:djSlideUp .5s .2s both
 }
-.dj-mastered-banner{
-  font-family:'Cinzel',serif;font-size:.72rem;color:rgba(196,154,60,.88);
-  text-align:center;padding:.48rem .9rem;margin:0 auto 1.2rem;
-  max-width:300px;letter-spacing:.06em;line-height:1.5;
-  background:linear-gradient(165deg,rgba(196,154,60,.09),rgba(196,154,60,.02));
-  border-top:1px solid rgba(196,154,60,.3);
-  border-bottom:1px solid rgba(196,154,60,.3);
-  animation:djSlideUp .5s .32s both
-}
 
 /* Phase 1: Story */
-.dj-story-card{background:linear-gradient(165deg,rgba(244,237,226,.04),rgba(244,237,226,.01));border:1px solid rgba(196,154,60,.1);border-radius:16px;padding:1.5rem 1.2rem;margin-bottom:1rem;animation:djSlideUp .6s .3s both}
-.dj-story-text{font-family:'Quicksand',sans-serif;font-size:.82rem;color:rgba(244,237,226,.92);line-height:1.8;text-align:left}
-.dj-story-text::first-letter{font-family:'Cinzel',serif;font-size:2.5rem;float:left;line-height:1;margin-right:.4rem;color:var(--gold);font-weight:700}
-.dj-story-quote{font-family:'Cinzel',serif;font-size:.9rem;color:var(--gold);text-align:center;font-style:italic;margin:1.2rem 0;line-height:1.6;animation:djSlideUp .6s .5s both}
 
 /* Phase 2: Ingredients */
-.dj-ing-grid{display:flex;flex-wrap:wrap;gap:.6rem;justify-content:center;margin-top:1rem}
-.dj-ing-item{padding:.5rem .8rem;background:linear-gradient(135deg,rgba(244,237,226,.06),rgba(244,237,226,.02));border:1px solid rgba(244,237,226,.08);border-radius:12px;font-family:'Quicksand',sans-serif;font-size:.75rem;color:rgba(244,237,226,.8);animation:djIngredientPop .4s var(--delay) both;cursor:default;transition:all .3s}
-.dj-ing-item:hover{background:rgba(196,154,60,.08);border-color:rgba(196,154,60,.2)}
-.dj-ing-item.allergen{border-color:rgba(231,76,60,.3);background:linear-gradient(135deg,rgba(231,76,60,.08),rgba(231,76,60,.03));color:#e8a0a0}
+
 /* El triángulo decía QUE hay alérgeno pero no CUÁL: había que salir de la fase
    para saberlo. Ahora cada ficha lo lleva escrito debajo. */
-.dj-ing-item.allergen{display:flex;flex-direction:column;align-items:flex-start;gap:.15rem;text-align:left}
+
 /* Auditoría (sept 2026): .62rem = 11,2 px, por debajo del suelo de 12 que ya
    se aplicó al Repaso; y 4,47:1 de contraste, por debajo de 4,5. */
-.dj-ing-al{font-family:'DM Mono',monospace;font-size:.7rem;letter-spacing:.04em;color:rgba(240,178,178,.95)}
+
 /* Iba a 9,9 px y 2,48:1: el recuento de ingredientes era el texto más pequeño
    y el menos legible de todo el recorrido. */
-.dj-ing-count{font-family:'DM Mono',monospace;font-size:.7rem;color:rgba(244,237,226,.62);text-align:center;margin-top:1rem;animation:djSlideUp .5s .8s both}
 
 /* Phase 3: Allergens */
-.dj-allerg-card{background:linear-gradient(165deg,rgba(231,76,60,.06),rgba(231,76,60,.02));border:1px solid rgba(231,76,60,.12);border-radius:16px;padding:1rem;margin-bottom:.8rem;animation:djSlideUp .4s var(--delay) both}
-.dj-allerg-name{font-family:'Quicksand',sans-serif;font-size:.82rem;font-weight:700;color:#e8a0a0;margin-bottom:.25rem}
+
 /* 10,8 px y 3,7:1 — es la explicación de dónde se esconde cada alérgeno. */
-.dj-allerg-info{font-family:'DM Mono',monospace;font-size:.7rem;color:rgba(244,237,226,.78);line-height:1.55}
-.dj-safe-card{background:linear-gradient(165deg,rgba(77,138,94,.08),rgba(77,138,94,.02));border:1px solid rgba(77,138,94,.15);border-radius:16px;padding:1rem;text-align:center;animation:djSlideUp .5s .2s both}
-.dj-safe-text{font-family:'Quicksand',sans-serif;font-size:.82rem;color:#6b8f71}
 
 /* Phase 4: Service */
-.dj-service-item{display:flex;gap:.7rem;align-items:flex-start;padding:.8rem;background:linear-gradient(135deg,rgba(244,237,226,.04),rgba(244,237,226,.01));border:1px solid rgba(244,237,226,.06);border-left:3px solid rgba(196,154,60,.3);border-radius:0 12px 12px 0;margin-bottom:.6rem;animation:djSlideLeft .4s var(--delay) both}
-.dj-service-icon{font-size:1.1rem;flex-shrink:0;margin-top:.1rem}
+
 /* 9 px y bajo contraste: es el rótulo que dice qué estás leyendo. */
-.dj-service-label{font-family:'DM Mono',monospace;font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:rgba(214,176,94,.9);margin-bottom:.25rem}
-.dj-service-value{font-family:'Quicksand',sans-serif;font-size:.78rem;color:rgba(244,237,226,.85);line-height:1.5}
+
 /* Un aviso por línea, con su triángulo: la nota ya no se corta, así que hay
    que poder recorrerla con la vista en vez de leer un párrafo seguido. */
 .dj-nota{display:block;position:relative;padding-left:1.15rem;margin-bottom:.55rem}
@@ -8641,88 +8578,25 @@ body:has(#gsOverlay.open) .ev-aviso-panel{
 .dj-mastery-label{font-family:'DM Mono',monospace;font-size:.7rem;color:#e8c98a;letter-spacing:.15em;text-transform:uppercase;margin-bottom:1.5rem}
 .dj-mastery-bar{height:6px;background:rgba(244,237,226,.06);border-radius:3px;margin:0 auto 1.5rem;max-width:240px;overflow:hidden}
 .dj-mastery-fill{height:100%;border-radius:3px;background:linear-gradient(90deg,var(--gold),#e8c44c);animation:djProgressFill 1s .5s both}
-.dj-mastery-xp{font-family:'DM Mono',monospace;font-size:1rem;color:var(--gold);margin-bottom:1.5rem;animation:djCountUp .5s .7s both}
 
 /* Mastery: quiz review */
-.dj-quiz-review{
-  background:linear-gradient(165deg,rgba(244,237,226,.045),rgba(244,237,226,.01));
-  border:1px solid rgba(244,237,226,.08);border-radius:14px;
-  padding:.95rem 1rem;margin:1.3rem auto 0;max-width:340px;text-align:left;
-  animation:djSlideUp .5s .8s both
-}
-.dj-quiz-review-title{
-  font-family:'DM Mono',monospace;font-size:.7rem;letter-spacing:.2em;
-  color:#e8c98a;margin-bottom:.65rem;text-transform:uppercase
-}
-.dj-quiz-review-list{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:.45rem}
-.dj-quiz-review-list li{
-  display:flex;gap:.55rem;padding:.45rem .55rem;border-radius:8px;
-  background:rgba(244,237,226,.025);border-left:2px solid rgba(244,237,226,.08)
-}
-.dj-quiz-review-list li.ok{border-left-color:rgba(77,138,94,.55)}
-.dj-quiz-review-list li.fail{border-left-color:rgba(231,76,60,.55);background:rgba(231,76,60,.04)}
-.dj-qrv-mark{
-  font-family:'DM Mono',monospace;font-weight:700;font-size:.8rem;flex-shrink:0;
-  width:16px;text-align:center;line-height:1.3
-}
-li.ok .dj-qrv-mark{color:#a8d8b0}
-li.fail .dj-qrv-mark{color:#e8a0a0}
-.dj-qrv-body{flex:1;min-width:0}
-.dj-qrv-q{font-family:'Quicksand',sans-serif;font-size:.72rem;color:rgba(244,237,226,.82);line-height:1.4}
+
 /* 11 px: es la respuesta correcta del repaso, hay que poder leerla. */
-.dj-qrv-ans{font-family:'DM Mono',monospace;font-size:.7rem;color:#e8c98a;margin-top:.2rem;letter-spacing:.04em}
 
 /* Mastery: suggested next dish */
-.dj-next-dish{margin:1.1rem auto 0;max-width:340px;text-align:left;animation:djSlideUp .5s .95s both}
-.dj-next-label{
-  font-family:'DM Mono',monospace;font-size:.7rem;letter-spacing:.2em;
-  color:#e8c98a;margin-bottom:.45rem;text-transform:uppercase
-}
-.dj-next-btn{
-  display:flex;align-items:center;gap:.7rem;width:100%;
-  padding:.75rem .9rem;border-radius:12px;cursor:pointer;
-  background:linear-gradient(135deg,rgba(196,154,60,.11),rgba(196,154,60,.04));
-  border:1px solid rgba(196,154,60,.25);color:var(--ink);
-  transition:all .25s;text-align:left
-}
-.dj-next-btn:hover{
-  background:linear-gradient(135deg,rgba(196,154,60,.2),rgba(196,154,60,.08));
-  border-color:rgba(196,154,60,.5);transform:translateY(-1px);
-  box-shadow:0 4px 18px rgba(196,154,60,.2)
-}
-.dj-next-icon{
-  width:34px;height:34px;display:flex;align-items:center;justify-content:center;
-  flex-shrink:0;background:rgba(196,154,60,.12);
-  clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%)
-}
-.dj-next-icon svg{width:18px;height:18px}
-.dj-next-txt{flex:1;min-width:0}
-.dj-next-name{font-family:'Cinzel',serif;font-size:.88rem;font-weight:700;color:var(--ink);line-height:1.25;letter-spacing:.015em}
-.dj-next-cat{font-family:'DM Mono',monospace;font-size:.7rem;letter-spacing:.15em;color:#e8c98a;text-transform:uppercase;margin-top:.15rem}
-.dj-next-arrow{font-family:'Cinzel',serif;color:var(--gold);font-size:1.15rem;flex-shrink:0}
 
 /* Mastery: dual CTA */
-.dj-cta-dual{
-  display:flex;gap:.55rem;justify-content:center;
-  margin:1.3rem auto 0;max-width:340px;flex-wrap:wrap;
-  animation:djSlideUp .5s 1.05s both
-}
-.dj-cta-dual .dj-btn{font-size:.7rem;padding:.55rem 1.05rem;letter-spacing:.04em;flex:1 1 auto}
 
 /* Nav buttons */
 .dj-nav{position:relative;z-index:2;display:flex;justify-content:space-between;align-items:center;padding:.8rem 1rem 1.2rem;flex-shrink:0;gap:.6rem}
 .dj-btn{padding:.7rem 1.5rem;border-radius:30px;font-family:'Quicksand',sans-serif;font-size:.78rem;font-weight:600;cursor:pointer;transition:all .3s;border:none}
-.dj-btn-prev{background:rgba(244,237,226,.06);color:rgba(244,237,226,.6);border:1px solid rgba(244,237,226,.1)}
-.dj-btn-prev:hover{background:rgba(244,237,226,.1)}
+
 .dj-btn-next{background:linear-gradient(135deg,var(--gold),#d4a840);color:var(--parchment);font-weight:700;box-shadow:0 4px 20px rgba(196,154,60,.3)}
 .dj-btn-next:hover{box-shadow:0 4px 30px rgba(196,154,60,.5);transform:translateY(-1px)}
 .dj-btn-next:disabled{opacity:.4;pointer-events:none}
 .dj-btn-next.complete{background:linear-gradient(135deg,var(--sage),#6ba872)}
 
 /* Journey button in dish list */
-.dj-launch-btn{display:inline-flex;align-items:center;gap:.3rem;padding:.3rem .6rem;border-radius:20px;background:linear-gradient(135deg,rgba(196,154,60,.1),rgba(196,154,60,.05));border:1px solid rgba(196,154,60,.2);color:var(--gold);font-family:'DM Mono',monospace;font-size:.52rem;letter-spacing:.05em;cursor:pointer;transition:all .3s;text-transform:uppercase}
-.dj-launch-btn:hover{background:linear-gradient(135deg,rgba(196,154,60,.2),rgba(196,154,60,.1));box-shadow:0 2px 12px rgba(196,154,60,.2)}
-.dj-launch-btn.mastered{background:linear-gradient(135deg,rgba(77,138,94,.12),rgba(77,138,94,.05));border-color:rgba(77,138,94,.25);color:#6b8f71}
 
 /* ═══ MONTAJE DE PLATO · PASE DE COCINA ═══
    Tema PERGAMINO, como el resto de la app y como la Auditoría. La primera
@@ -10678,6 +10552,107 @@ html[data-venue="r2"] .ri-cta-pase .ri-cta-icon{border-color:rgba(194,161,97,.4)
 .pad-aviso-si,.pad-aviso-no{min-height:44px;border-radius:999px;font-family:var(--font-sans);font-size:var(--fs-3);font-weight:600;cursor:pointer;padding:0 .9rem}
 .pad-aviso-si{border:0;background:#e4be68;color:#2a2214}
 .pad-aviso-no{border:1px solid rgba(251,246,236,.3);background:transparent;color:#fbf6ec}
+
+/* ═══ CONOCER EL PLATO ═══
+   Pantalla completa sobre pergamino, con las piezas del Menú degustación y
+   de Un plato al día (.deg-*, .pad-*). Un paso, una idea: cabecera con la
+   barra fina de pasos, cuerpo que desplaza, y abajo «Siguiente» grande con
+   «Atrás» discreto. Comparte #djOverlay/.dj-container con la sesión de
+   repaso solo por el armazón (overlay fijo que no se recrea entre pasos). */
+.dj-overlay.cono-overlay{background:var(--ink);animation:djFadeIn .25s ease}
+.cono-overlay .dj-container{display:flex;flex-direction:column;height:100%;min-height:0;overflow:hidden;color:var(--parchment)}
+.cono-cab{flex:none;display:flex;align-items:flex-start;gap:.6rem;padding:calc(.55rem + env(safe-area-inset-top,0px)) 16px .55rem;border-bottom:1px solid var(--line)}
+.cono-x{flex:none;width:44px;height:44px;margin:-.35rem 0 0 -.6rem;border:0;border-radius:50%;background:transparent;color:var(--parch2);display:flex;align-items:center;justify-content:center;cursor:pointer}
+.cono-x:focus-visible,.cono-atras:focus-visible,.cono-sig:focus-visible,.cono-volver:focus-visible,.cono-auto button:focus-visible,.cono-otra:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
+.cono-pasos{flex:1;min-width:0;padding-top:.45rem}
+.cono-pasos .pad-pasos-txt{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cono-body{flex:1;min-height:0;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;padding:0 16px 1.25rem;display:flex;flex-direction:column;gap:.85rem;scrollbar-width:none}
+.cono-body::-webkit-scrollbar{display:none}
+.cono-body>*{flex:none}
+.cono-nav{flex:none;display:flex;align-items:center;justify-content:space-between;gap:.75rem;padding:.6rem 16px calc(.7rem + env(safe-area-inset-bottom,0px));border-top:1px solid var(--line);background:var(--ink)}
+.cono-nav .cono-sig{flex:1;width:auto;margin:0}
+.cono-nav .cono-sig:disabled{opacity:.38;cursor:default}
+.cono-atras{flex:none;min-height:48px;padding:0 .4rem;border:0;background:none;font-family:var(--font-mono);font-size:var(--fs-2);letter-spacing:.06em;color:var(--parch3);cursor:pointer}
+.cono-nav.fin{flex-direction:column;align-items:stretch;gap:.5rem}
+.cono-nav.fin .cono-sig{display:flex;flex-direction:column;gap:.05rem;line-height:1.2;padding:.45rem 1rem}
+.cono-sig-nom{font-family:var(--font-serif);font-size:var(--fs-2);font-weight:500;opacity:.9}
+.cono-nav .cono-volver{border-radius:999px;min-height:48px}
+
+/* 1 · Míralo: la foto manda; sin foto, cabecera compacta y sin círculo vacío. */
+.cono-foto{margin:0 -16px;background:var(--gold-a);border-bottom:1px solid var(--line2)}
+.cono-foto img{display:block;width:100%;aspect-ratio:4/3;object-fit:cover}
+.cono-mira{display:flex;flex-direction:column;gap:.5rem;padding-top:.15rem}
+.cono-mira.sin-foto{padding-top:.75rem}
+.cono-nom{font-size:var(--fs-6);line-height:1.2}
+.cono-momento{margin:0;font-family:var(--font-sans);font-size:var(--fs-3);font-style:italic;color:var(--parch2);line-height:1.45}
+
+/* Cabecera pequeña de los pasos 2 a 6 */
+.cono-mini{padding-top:.75rem}
+.cono-h{margin:0;font-family:var(--font-serif);font-size:var(--fs-4);font-weight:600;color:var(--parchment);line-height:1.25}
+.cono-lbl{display:block;font-family:var(--font-mono);font-size:var(--fs-1);letter-spacing:.12em;text-transform:uppercase;color:var(--gold-ink);margin-bottom:.4rem}
+.cono-bloque{border-radius:var(--r);padding:.75rem .85rem;background:#fff;border:1px solid var(--line2)}
+.cono-ing,.cono-hist{margin:0;font-family:var(--font-sans);font-size:var(--fs-3);line-height:1.55;color:var(--parch2)}
+.cono-hist{font-size:var(--fs-4);color:var(--parchment)}
+.cono-tres{padding:.35rem 0 .1rem}
+.cono-nota{margin:0;font-family:var(--font-sans);font-size:var(--fs-3);color:var(--parch3);line-height:1.5}
+.cono-libre{font-size:var(--fs-4)}
+
+/* 3 · Lo que protege: cada alérgeno una vez, con su veredicto, la comanda y
+   de dónde viene. El chip es el mismo de la ficha (.fp-al-i). */
+.cono-al{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:.55rem}
+.cono-al-i{display:flex;flex-direction:column;gap:.3rem;padding:.6rem .75rem .65rem;border-radius:var(--r);background:#fff;border:1px solid var(--line2);border-left-width:3px}
+.cono-al-i.no{border-left-color:var(--st-no)}
+.cono-al-i.ok{border-left-color:var(--gold)}
+.cono-al-i.unk,.cono-al-i.pend{border-left-color:var(--line2)}
+.cono-al-i .fp-al-i{align-self:flex-start}
+.cono-al-cmd,.cono-al-sub,.cono-al-de{font-family:var(--font-sans);font-size:var(--fs-3);line-height:1.45;color:var(--parch2)}
+.cono-al-cmd em{font-style:normal;font-weight:700;color:var(--parchment)}
+.cono-al-de{font-size:var(--fs-2);color:var(--parch3)}
+
+/* 4 · En la mesa */
+.cono-body .fsv-tira{margin:0}
+.cono-notas{font-family:var(--font-sans);font-size:var(--fs-3);line-height:1.5;color:var(--parch2)}
+.cono-notas .dj-nota::before{color:var(--gold-ink)}
+.cono-notas .dj-comanda{color:var(--parchment);background:var(--gold-a)}
+.cono-bloque .fp-vino:last-child{border-bottom:0;padding-bottom:0}
+
+/* 5 · Cuéntalo */
+.cono-story{background:#fff}
+.cono-pregunta{margin:.2rem 0 0;font-family:var(--font-sans);font-size:var(--fs-4);font-weight:600;color:var(--parchment);line-height:1.4}
+.cono-intro{margin:0;font-family:var(--font-sans);font-size:var(--fs-4);color:var(--parchment);line-height:1.5}
+.cono-apoyo{background:#fff}
+.cono-auto{grid-template-columns:1fr 1fr}
+.cono-auto button.on{border-color:var(--gold);background:var(--gold-a);color:var(--parchment)}
+.cono-auto button:first-child,.cono-auto button:last-child{border-color:var(--line2);color:var(--parchment)}
+.cono-auto button.on:first-child{border-color:var(--sage);background:var(--sage-a);color:var(--green-deep)}
+.cono-practica{display:flex;flex-direction:column;gap:.75rem}
+.cono-otra{border-radius:999px}
+
+/* 6 · Comprobación: una pregunta, sus opciones, una frase de respuesta. */
+.cono-q{display:flex;flex-direction:column;gap:.55rem;padding-top:.25rem}
+.cono-q+.cono-q{border-top:1px solid var(--line);padding-top:.9rem}
+.cono-q-t{margin:0;font-family:var(--font-serif);font-size:var(--fs-4);font-weight:600;color:var(--parchment);line-height:1.3}
+.cono-q-fb{display:flex;gap:.45rem;align-items:flex-start;margin:0;font-family:var(--font-sans);font-size:var(--fs-3);line-height:1.45;color:var(--parch2)}
+.cono-q-fb .fp-ic{flex:none;margin-top:.15rem}
+.cono-q-fb.ok{color:var(--green-deep)}
+.cono-q-fb.no{color:var(--st-no)}
+
+/* 7 · Cierre */
+.cono-fin{display:flex;flex-direction:column;align-items:center;gap:.6rem;text-align:center;padding:1.6rem 0 .5rem}
+.cono-fin-foto{display:block;width:124px;height:124px;border-radius:50%;overflow:hidden;background:var(--gold-a);border:1px solid var(--line2);margin-bottom:.4rem}
+.cono-fin-foto img{width:100%;height:100%;object-fit:cover;display:block}
+.cono-fin-foto.sin{display:none}
+.cono-fin-tit{font-size:var(--fs-6)}
+.cono-fin-txt,.cono-fin-dom{margin:0;font-family:var(--font-sans);font-size:var(--fs-4);line-height:1.5;color:var(--parch2);max-width:30ch}
+.cono-fin-dom{color:var(--green-deep)}
+.cono-fin-meta{margin:.4rem 0 0;font-family:var(--font-mono);font-size:var(--fs-1);letter-spacing:.1em;text-transform:uppercase;color:var(--parch3)}
+
+/* Barra de Practicar: dominados (fuerte) sobre conocidos (claro). */
+.ri-mast-track{position:relative}
+.ri-mast-fill{position:absolute;left:0;top:0}
+.ri-mast-fill.con{background:rgba(196,154,60,.32);box-shadow:none}
+.cp-meta .dom.con{color:var(--parch3)}
+@media (prefers-reduced-motion:reduce){.dj-overlay.cono-overlay{animation:none}}
 
 /* ═══ LA CARTA EN AUDIO ═══ */
 .ca-entrada{display:flex;align-items:center;gap:.75rem;width:100%;min-height:56px;margin:.2rem 0 .8rem;padding:.6rem .85rem;border-radius:var(--r);border:1px solid var(--line2);background:var(--gold-b);color:var(--parchment);text-align:left;cursor:pointer;font:inherit}

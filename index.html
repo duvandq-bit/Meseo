@@ -54,7 +54,7 @@
 <meta property="og:description" content="Formación de equipos de sala: carta, alérgenos, vinos, exámenes y juegos de repaso.">
 <meta property="og:url" content="https://meseo.es/">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"Meseo","url":"https://meseo.es/"}</script>
-<meta name="app-version" content="7.527">
+<meta name="app-version" content="7.528">
 <meta name="app-build" content="May 2026">
 <meta name="theme-color" content="#1c2a22">
 <!-- ═══ PWA ═══ -->
@@ -2891,7 +2891,7 @@ const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><p
 const SRC = 'src';
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='7.527';  // sincronizada con sw.js VERSION (guard de CI)
+const APP_VERSION='7.528';  // sincronizada con sw.js VERSION (guard de CI)
 const APP_BUILD='Jul 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;
@@ -4032,7 +4032,7 @@ const PLAN_MUESTRA_MINIMA = 5;      // menos de 5 respuestas no es una nota
 const PLAN_CATALOGO = {
   seguridad_alergenos: {actividad:'simulacro_alergenos', competencia:'alergenos', minutos:5, seguridad:true, es:'Simulacro de alérgenos', en:'Allergen drill'},
   repaso_srs:          {actividad:'repaso',              competencia:'carta',     minutos:4, es:'Repaso',             en:'Review'},
-  carta_sin_ver:       {actividad:'recorrido',           competencia:'carta',     minutos:4, es:'Recorrido guiado',   en:'Guided journey'},
+  carta_sin_ver:       {actividad:'recorrido',           competencia:'carta',     minutos:3, es:'Conocer el plato',   en:'Get to know the dish'},
   comp_alergenos:      {actividad:'simulacro_alergenos', competencia:'alergenos', minutos:5, es:'Simulacro de alérgenos', en:'Allergen drill'},
   comp_carta:          {actividad:'examen',              competencia:'carta',     minutos:5, es:'Examen de carta',    en:'Menu exam'},
   comp_vinos:          {actividad:'quiz_vinos',          competencia:'vinos',     minutos:3, es:'Quiz de vinos',      en:'Wine quiz'},
@@ -4242,9 +4242,10 @@ function datosDeHoy(emp, dia){
 
   const platos = (typeof DISHES !== 'undefined' && DISHES) ? DISHES : [];
   const conocidos = e.knownDishes || {};
+  const vistos = e.conocidos || {};        // terminó «Conocer el plato»
   const dominados = e.journeyMastered || {};
-  const nuevos = platos.filter(p => !srs[p.id] && !conocidos[p.id] && !dominados[p.id]);
-  const sinDominar = platos.filter(p => (srs[p.id] || conocidos[p.id]) && !dominados[p.id]);
+  const nuevos = platos.filter(p => !srs[p.id] && !conocidos[p.id] && !vistos[p.id] && !dominados[p.id]);
+  const sinDominar = platos.filter(p => (srs[p.id] || conocidos[p.id] || vistos[p.id]) && !dominados[p.id]);
   // Cuál de ellos, exactamente. Semilla de fecha + nombre: el mismo empleado
   // ve el mismo plato todo el día, y dos compañeros no reciben el mismo.
   const bolsa = nuevos.length ? nuevos : sinDominar;
@@ -6905,42 +6906,107 @@ function showLevelUpModal(levelInfo){
 }
 
 // ═══════════════════════════════════════════════════════════════
-// DISH JOURNEY — Immersive Step-by-Step Learning Mode
+// CONOCER EL PLATO (antes «Recorrido guiado»)
 // ═══════════════════════════════════════════════════════════════
-var _djState = { dishId:null, phase:0, quizScore:0, quizAnswered:0, quizTotal:3 };
+// Diagnóstico aprobado por el propietario (oct 2026): el recorrido de seis
+// capítulos oscuros enseñaba a leer y no a contar; repetía los alérgenos en
+// tres capítulos; en Akira la Historia y los Ingredientes eran la misma frase;
+// troceaba los ingredientes por comas; no usaba tres, story, significa, guiño,
+// bocados, ficha de servicio, audio ni claves; emojis y números romanos; dos
+// sistemas de repaso en paralelo; «dominado» con dos preguntas de tres; y XP.
+//
+// Ahora son pasos de una sola idea, con el lenguaje de Menú degustación y de
+// Un plato al día: míralo, cómo se hace, lo que protege, en la mesa, cuéntalo,
+// una comprobación corta y el cierre. Un paso sin datos no existe, y nada se
+// pinta dos veces.
+//
+// Por debajo:
+//  · launchDishJourney sigue siendo el nombre público: lo llaman la ficha, la
+//    vista rápida, la lista de platos y el plan de hoy.
+//  · UN SOLO sistema de repaso. Al terminar, el plato entra en la cola de Un
+//    plato al día (emp.pad, mismos intervalos: _cpProgramar). El recorrido ya
+//    no escribe en emp.srs. _srsUpdate se queda en la app porque lo siguen
+//    usando la sesión de repaso inteligente y el Pase de cocina; lo que no
+//    puede pasar es que el mismo plato se programe en dos sitios.
+//  · «Conocido» es haber terminado este recorrido: emp.conocidos[id] = día.
+//  · «Dominado» es emp.journeyMastered[id] = {score, date}, que es lo que
+//    leen la cabecera, Yo, la carta y los certificados. Se escribe cuando el
+//    plato se ha CONTADO entero de memoria en Un plato al día dos veces, con
+//    al menos dos días entre medias (_cpDominado, sobre pad[id].okd). Para
+//    platos sin claves (Txoko hoy), dominado = recorrido terminado con la
+//    comprobación sin fallos, para no bloquear a nadie.
+//  · Sin XP. registrarActividad('recorrido') sigue, con el resultado de la
+//    comprobación (y sin total cuando el plato no da para preguntas).
+var _djState = { dishId:null, phase:0, pasos:[], quizScore:0, quizAnswered:0, quizTotal:0, quizQuestions:null, contado:false, todas:false, auto:null, cerrado:false };
 
 function launchDishJourney(dishId){
   const dish = DISHES.find(d=>d.id===dishId);
   if(!dish) return;
-  _djState = { dishId:dishId, phase:0, quizScore:0, quizAnswered:0, quizTotal:3, quizQuestions:null };
-  _djState.quizQuestions = _djGenerateQuiz(dish);
-  // Hay platos que solo dan para dos preguntas honestas: un T-bone con sal
-  // gruesa no tiene una tercera que no sea relleno. El contador sigue al
-  // número real en vez de obligar a inventarla.
+  const dd = getDish(dish);
+  if(typeof _padParar === 'function') _padParar();
+  _djState = { dishId:dishId, phase:0, pasos:[], quizScore:0, quizAnswered:0, quizTotal:0, quizQuestions:null, contado:false, todas:false, auto:null, cerrado:false };
+  _djState.quizQuestions = _cpPreguntas(dish, dd, LANG==='en');
   _djState.quizTotal = _djState.quizQuestions.length;
+  _djState.pasos = _cpPasos(dish, dd, LANG==='en');
+  // La práctica en voz alta es EXACTAMENTE el motor de Un plato al día: se le
+  // apunta a este plato y se le pide que pinte dentro del recorrido.
+  if(typeof _padS !== 'undefined'){
+    Object.assign(_padS, { id: dishId, paso: 'ver', modo: (typeof _padSR === 'function' && _padSR()) ? 'voz' : 'manual',
+      texto: '', interino: '', r1: null, r2: null, ronda: 1, grabando: false, aviso: '', manual: null, t0: Date.now(), oido: false });
+    _padHost = _cpPintarPractica;
+  }
   _djRender();
-  // La base de ingredientes se trae en segundo plano: el recorrido ya se ve con
-  // los componentes validados (van en el propio archivo) y se refresca solo
-  // cuando llega el detalle por ingrediente. Sin base, la fase sigue siendo
-  // correcta — solo menos detallada.
+  // La base de ingredientes llega en segundo plano; el paso de alérgenos se
+  // refresca solo cuando se sabe qué ingrediente trae cada uno.
   _djLoadIngBase().then(b=>{
-    if(b && _djState && _djState.dishId===dishId && document.getElementById('djOverlay')) _djRender();
+    if(b && _djState && _djState.dishId===dishId && document.getElementById('djOverlay') && _djState.pasos[_djState.phase]==='protege') _djRender();
   });
-  // Keyboard navigation: ESC to close, ← → to navigate
   document.addEventListener('keydown', _djKeydown);
+}
+
+// Qué pasos tiene ESTE plato. Sin datos, el paso no existe.
+function _cpPasos(dish, dd, _en){
+  const p = ['mira'];
+  if(_cpHaceDatos(dd).hay) p.push('hace');
+  p.push('protege');
+  if(_cpMesaDatos(dish, dd, _en).hay) p.push('mesa');
+  p.push('cuenta');
+  if(_djState.quizQuestions && _djState.quizQuestions.length) p.push('prueba');
+  p.push('fin');
+  return p;
+}
+function _cpTitulo(paso, _en){
+  return ({
+    mira:    _en ? 'Look at it'        : 'Míralo',
+    hace:    _en ? 'How it is made'    : 'Cómo se hace',
+    protege: _en ? 'What it protects'  : 'Lo que protege',
+    mesa:    _en ? 'At the table'      : 'En la mesa',
+    cuenta:  _en ? 'Tell it'           : 'Cuéntalo',
+    prueba:  _en ? 'Check'             : 'Comprobación',
+    fin:     _en ? 'Done'              : 'Cierre'
+  })[paso] || '';
+}
+// Pase del menú degustación, si el plato está en él.
+function _cpPase(id){
+  if(typeof DEGUSTACION === 'undefined' || !DEGUSTACION) return null;
+  const i = DEGUSTACION.pases.findIndex(p => p.id === id);
+  if(i < 0) return null;
+  return { i: i + 1, n: DEGUSTACION.pases.length, momento: _degMomento(DEGUSTACION.pases[i]) };
 }
 
 function _djKeydown(e){
   if(!document.getElementById('djOverlay')) return;
-  // Ignore when typing in inputs (none in Journey currently, but future-proof)
   const tag = (e.target && e.target.tagName) || '';
   if(tag === 'INPUT' || tag === 'TEXTAREA') return;
   if(e.key === 'Escape'){ e.preventDefault(); _djClose(); }
-  else if(e.key === 'ArrowLeft' && _djState.phase > 0 && _djState.phase < 5){ e.preventDefault(); _djPrev(); }
-  else if(e.key === 'ArrowRight' && _djState.phase < 5){
-    const quizIncomplete = _djState.phase === 4 && _djState.quizAnswered < _djState.quizTotal;
-    if(!quizIncomplete){ e.preventDefault(); _djNext(); }
-  }
+  else if(e.key === 'ArrowLeft'){ if(_djState.phase > 0){ e.preventDefault(); _djPrev(); } }
+  else if(e.key === 'ArrowRight'){ if(_cpPuedeSeguir()){ e.preventDefault(); _djNext(); } }
+}
+function _cpPuedeSeguir(){
+  const paso = _djState.pasos[_djState.phase];
+  if(paso === 'fin') return false;
+  if(paso === 'prueba') return _djState.quizAnswered >= _djState.quizTotal;
+  return true;
 }
 
 function _djRender(){
@@ -6948,111 +7014,525 @@ function _djRender(){
   if(!dish) return;
   const dd = getDish(dish);
   const _en = LANG==='en';
-  const phases = [
-    {label:_en?'CHAPTER':'CAPÍTULO', title:_en?'The Story':'La Historia', icon:'📖'},
-    {label:_en?'CHAPTER':'CAPÍTULO', title:_en?'Ingredients':'Ingredientes', icon:'🧂'},
-    {label:_en?'CHAPTER':'CAPÍTULO', title:_en?'Allergens':'Alérgenos', icon:'⚠️'},
-    {label:_en?'CHAPTER':'CAPÍTULO', title:_en?'Service':'Servicio', icon:'🍽️'},
-    {label:_en?'CHAPTER':'CAPÍTULO', title:_en?'Do You Remember?':'¿Lo Recuerdas?', icon:'🧠'},
-    {label:_en?'COMPLETE':'COMPLETADO', title:_en?'Mastery':'Maestría', icon:'🏆'}
-  ];
-  const ROMAN = ['I','II','III','IV','V','VI'];
+  const pasos = _djState.pasos;
   const p = _djState.phase;
-  const ph = phases[p];
+  const paso = pasos[p];
+  const n = pasos.length;
 
-  // Phase markers: vertical rectangles with Roman numerals
-  const dots = phases.map((pp,i)=>`<div class="dj-dot${i===p?' active':''}${i<p?' done':''}" title="${pp.label} ${ROMAN[i]} — ${pp.title}">${ROMAN[i]}</div>`).join('');
-
-  // Header label: "CAPÍTULO III · VI" / "COMPLETADO"
-  const isComplete = p === 5;
-  const headerLabel = isComplete ? ph.label : `${ph.label} ${ROMAN[p]} · ${ROMAN[5]}`;
-
-  // Mastered banner — only on first phase (story) so it doesn't distract downstream
-  const _empBanner = getEmp(currentUser);
-  const _wasMastered = _empBanner && _empBanner.journeyMastered && _empBanner.journeyMastered[dish.id];
-  const bannerHtml = (_wasMastered && p === 0)
-    ? `<div class="dj-mastered-banner">✦ ${_en?'You already mastered this dish — reinforcing memory':'Ya dominaste este plato — reforzando memoria'} ✦</div>`
-    : '';
-
-  // Phase body
   let body = '';
-  if(p===0) body = _djPhaseStory(dish, dd, _en);
-  else if(p===1) body = _djPhaseIngredients(dish, dd, _en);
-  else if(p===2) body = _djPhaseAllergens(dish, dd, _en);
-  else if(p===3) body = _djPhaseService(dish, dd, _en);
-  else if(p===4) body = _djPhaseQuiz(dish, dd, _en);
-  else if(p===5) body = _djPhaseMastery(dish, dd, _en);
+  if(paso==='mira') body = _cpPasoMira(dish, dd, _en);
+  else if(paso==='hace') body = _cpPasoHace(dish, dd, _en);
+  else if(paso==='protege') body = _cpPasoProtege(dish, dd, _en);
+  else if(paso==='mesa') body = _cpPasoMesa(dish, dd, _en);
+  else if(paso==='cuenta') body = _cpPasoCuenta(dish, dd, _en);
+  else if(paso==='prueba') body = _cpPasoPrueba(dish, dd, _en);
+  else if(paso==='fin') body = _cpPasoFin(dish, dd, _en);
 
-  // Nav buttons
-  const isLast = p===5;
-  const isFirst = p===0;
-  const quizIncomplete = p===4 && _djState.quizAnswered < _djState.quizTotal;
-  let navHtml = '<div class="dj-nav">';
-  if(!isFirst && !isLast) navHtml += `<button class="dj-btn dj-btn-prev" onclick="_djPrev()">← ${_en?'Back':'Atrás'}</button>`;
-  else navHtml += '<div></div>';
-  if(isLast) navHtml += `<button class="dj-btn dj-btn-next complete" onclick="_djClose()">✓ ${_en?'Finish':'Finalizar'}</button>`;
-  else navHtml += `<button class="dj-btn dj-btn-next" ${quizIncomplete?'disabled':''} onclick="_djNext()">${_en?'Continue':'Continuar'} →</button>`;
-  navHtml += '</div>';
+  const barra = `<div class="pad-pasos cono-pasos" aria-label="${_en ? `Step ${p + 1} of ${n}` : `Paso ${p + 1} de ${n}`}">
+      <span class="pad-pasos-txt">${_en ? 'Step' : 'Paso'} ${p + 1} ${_en ? 'of' : 'de'} ${n} · ${_cpTitulo(paso, _en)}</span>
+      <span class="pad-pasos-barra" style="grid-template-columns:repeat(${n},1fr)" aria-hidden="true">${pasos.map((x, i) => `<i class="${i <= p ? 'on' : ''}"></i>`).join('')}</span>
+    </div>`;
 
-  // Contenido interior del overlay (todo menos el propio overlay/fondo). Se
-  // recalcula en cada fase; el overlay OSCURO se conserva entre fases.
+  let navHtml = '';
+  if(paso === 'fin'){
+    const sig = _cpSiguientePlato(dish);
+    navHtml = `<footer class="cono-nav fin">
+      ${sig ? `<button type="button" class="deg-btn pad-grande cono-sig" onclick="_djClose();setTimeout(function(){launchDishJourney(${sig.id});},320)">${_en ? 'Next dish' : 'Siguiente plato'}<span class="cono-sig-nom">${escapeHTML(getDish(sig).name)}</span></button>` : ''}
+      <button type="button" class="deg-btn sec cono-volver" onclick="_djClose()">${_en ? 'Back' : 'Volver'}</button>
+    </footer>`;
+  } else {
+    const puede = _cpPuedeSeguir();
+    navHtml = `<footer class="cono-nav">
+      ${p > 0 ? `<button type="button" class="cono-atras" onclick="_djPrev()">${_en ? 'Back' : 'Atrás'}</button>` : '<span></span>'}
+      <button type="button" class="deg-btn pad-grande cono-sig" ${puede ? '' : 'disabled'} onclick="_djNext()">${_en ? 'Next' : 'Siguiente'}</button>
+    </footer>`;
+  }
+
   const containerHtml = `
-      <div class="dj-bg"></div>
-      <div class="dj-header">
-        <div class="dj-close" onclick="_djClose()" title="${_en?'Close (ESC)':'Cerrar (ESC)'}" role="button" aria-label="${_en?'Close journey':'Cerrar viaje'}" tabindex="0"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg></div>
-        <div class="dj-phase-dots">${dots}</div>
-        <div style="width:36px"></div>
-      </div>
-      <div class="dj-body">
-        <div class="dj-phase-label">${headerLabel}</div>
-        ${isComplete?'':`<div class="dj-phase-icon-large">${ph.icon}</div>`}
-        <div class="dj-phase-title">${ph.title}</div>
-        <div class="dj-dish-name">${dd.name}</div>
-        ${bannerHtml}
-        ${body}
-      </div>
+      <header class="cono-cab">
+        <button type="button" class="cono-x" onclick="_djClose()" aria-label="${_en ? 'Close' : 'Cerrar'}" title="${_en ? 'Close (Esc)' : 'Cerrar (Esc)'}"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+        ${barra}
+      </header>
+      <div class="cono-body" id="conoBody">${body}</div>
       ${navHtml}`;
 
-  // Cambio de fase: NO recrear el overlay (eso destapaba el fondo claro del
-  // dashboard — pantallazo blanco — y repetía el fade de 0.4s en cada toque).
-  // Solo se refresca el contenedor interior; el overlay negro permanece.
+  // Cambio de paso: NO se recrea el overlay (eso destapaba el fondo entre
+  // pasos y repetía el fundido). Solo se refresca el contenedor interior.
   const existing = document.getElementById('djOverlay');
   if(existing){
     const cont = existing.querySelector('.dj-container');
     if(cont){ cont.innerHTML = containerHtml; return; }
     existing.remove();
   }
-  // Primera apertura: crear el overlay (con su fade de entrada, una sola vez).
   const overlay = document.createElement('div');
   overlay.id = 'djOverlay';
-  overlay.className = 'dj-overlay';
+  overlay.className = 'dj-overlay cono-overlay';
   overlay.setAttribute('role','dialog');
   overlay.setAttribute('aria-modal','true');
-  overlay.setAttribute('aria-label', _en?'Dish journey':'Viaje del plato');
+  overlay.setAttribute('aria-label', _en ? 'Get to know the dish' : 'Conocer el plato');
   overlay.innerHTML = `<div class="dj-container">${containerHtml}</div>`;
   document.body.appendChild(overlay);
 }
 
-function _djNext(){ if(_djState.phase<5){_djState.phase++;_djRender();} }
-function _djPrev(){ if(_djState.phase>0){_djState.phase--;_djRender();} }
+function _djNext(){
+  if(!_cpPuedeSeguir()) return;
+  const paso = _djState.pasos[_djState.phase];
+  if(paso === 'cuenta') _cpSalirDeCuenta();
+  _djState.phase++;
+  if(_djState.pasos[_djState.phase] === 'fin') _cpTerminar();
+  _djRender();
+  const b = document.getElementById('conoBody'); if(b) b.scrollTop = 0;
+}
+function _djPrev(){
+  if(_djState.phase <= 0) return;
+  const paso = _djState.pasos[_djState.phase];
+  if(paso === 'cuenta') _cpSalirDeCuenta();
+  _djState.phase--;
+  _djRender();
+  const b = document.getElementById('conoBody'); if(b) b.scrollTop = 0;
+}
+// Al dejar «Cuéntalo»: se calla el micro y la voz, y se apunta si se contó.
+function _cpSalirDeCuenta(){
+  if(typeof _padParar === 'function') _padParar();
+  if(typeof _padS !== 'undefined' && Array.isArray(_padS.r1) && _padS.r1.length){
+    _djState.contado = true;
+    _djState.todas = _padS.r1.every(Boolean);
+  }
+}
 function _djClose(){
   document.removeEventListener('keydown', _djKeydown);
+  if(typeof _padParar === 'function') _padParar();
+  _padHost = null;
   const overlay = document.getElementById('djOverlay');
   if(overlay){
     overlay.style.opacity='0';
-    overlay.style.transition='opacity .3s';
-    setTimeout(()=>overlay.remove(), 300);
+    overlay.style.transition='opacity .25s';
+    setTimeout(()=>overlay.remove(), 250);
   }
 }
 
-// ── Phase 1: Story ──
-function _djPhaseStory(dish, dd, _en){
-  const story = dd.history || (_en?'No story available for this dish yet.':'No hay historia disponible para este plato aún.');
-  return `
-    <div class="dj-story-card">
-      <div class="dj-story-text">${story}</div>
+// ── Piezas ──
+function _cpMini(dish, dd){
+  return `<div class="pad-mini cono-mini">${_degFotoHTML(dish.id, dd.name, 'pad-mini-foto')}<h2 class="deg-tit pad-nom">${escapeHTML(dd.name)}</h2></div>`;
+}
+
+// ── 1 · Míralo ──
+function _cpPasoMira(dish, dd, _en){
+  const foto = (typeof dishPhotoSrc === 'function') ? dishPhotoSrc(dish.id) : null;
+  const pase = _cpPase(dish.id);
+  const cab = [catLocal(dish.cat), pase ? `${_en ? 'Course' : 'Pase'} ${pase.i} ${_en ? 'of' : 'de'} ${pase.n}` : ''].filter(Boolean).join(' · ');
+  return `${foto ? `<div class="cono-foto"><img ${SRC}="${escapeHTML(foto)}" alt="${escapeHTML(dd.name)}"></div>` : ''}
+    <div class="cono-mira${foto ? '' : ' sin-foto'}">
+      <div class="deg-eyebrow">${escapeHTML(cab)}</div>
+      <h2 class="deg-tit cono-nom">${escapeHTML(dd.name)}</h2>
+      ${pase && pase.momento ? `<p class="cono-momento">${escapeHTML(pase.momento)}</p>` : ''}
+      ${dd.significa ? `<div class="deg-sig"><span>${_en ? 'What the name means' : 'Qué significa el nombre'}</span>${escapeHTML(dd.significa)}</div>` : ''}
+    </div>`;
+}
+
+// ── 2 · Cómo se hace ──
+// Las tres frases si las hay; si no, la historia SOLO cuando no es la misma
+// frase que los ingredientes. Debajo, los ingredientes por elaboración (una
+// línea por bocado) o la frase entera, nunca troceada por comas. Para un
+// plato de varios bocados con sus frases (el Mistery box), los bocados.
+function _cpHaceDatos(dd){
+  const tres = _degTres(dd);
+  const hist = (!tres.length && dd.history && !_fpMismoTexto(dd.history, dd.ingredients)) ? dd.history : '';
+  const bocados = _degBocados(dd);
+  const lineas = (!bocados.length && typeof _ingPorLineas === 'function') ? _ingPorLineas(dd.ingredients) : null;
+  let ing = bocados.length ? '' : (lineas ? '' : String(dd.ingredients || '').trim());
+  // Si las tres frases ya dicen lo que pone la línea de ingredientes (seis de
+  // cada diez palabras de peso), la línea no se pinta: sería leerlo dos veces.
+  if(ing && tres.length){
+    const dicho = new Set(_cpPalabras(tres.join(' ') + ' ' + (dd.story || '') + ' ' + (dd.guino || '')));
+    const pal = _cpPalabras(ing);
+    if(pal.length && pal.filter(w => dicho.has(w)).length / pal.length >= 0.6) ing = '';
+  }
+  return { tres, hist, bocados, lineas, ing, guino: dd.guino || '', hay: !!(tres.length || hist || bocados.length || lineas || ing || dd.guino) };
+}
+function _cpPasoHace(dish, dd, _en){
+  const h = _cpHaceDatos(dd);
+  let ing = '';
+  if(h.bocados.length) ing = _degBocadosHTML(dd);
+  else if(h.lineas) ing = `<div class="cono-bloque"><span class="cono-lbl">${_en ? 'Ingredients, by element' : 'Ingredientes, por elaboración'}</span>${_bocadosHTML(h.lineas)}</div>`;
+  else if(h.ing) ing = `<div class="cono-bloque"><span class="cono-lbl">${_en ? 'Ingredients' : 'Ingredientes'}</span><p class="cono-ing">${escapeHTML(h.ing)}</p></div>`;
+  return `${_cpMini(dish, dd)}
+    ${h.tres.length ? `<ol class="deg-tres grande cono-tres">${h.tres.map(f => `<li>${escapeHTML(f)}</li>`).join('')}</ol>` : ''}
+    ${h.hist ? `<p class="cono-hist">${escapeHTML(h.hist)}</p>` : ''}
+    ${ing}
+    ${h.guino ? `<div class="deg-guino"><span>${_en ? 'The house touch' : 'El guiño de la casa'}</span>${escapeHTML(h.guino)}</div>` : ''}`;
+}
+
+// ── 3 · Lo que protege ──
+// Cada alérgeno UNA vez: su veredicto (la matriz validada DISH_ACTIONS, como
+// la ficha), la comanda y el ingrediente que lo trae (la misma lógica de
+// ingrediente→alérgeno de la base y los componentes validados).
+function _cpPasoProtege(dish, dd, _en){
+  const val = (typeof _alergenosValidados !== 'function' || _alergenosValidados());
+  const acts = (typeof DISH_ACTIONS !== 'undefined' && DISH_ACTIONS && DISH_ACTIONS[dish.id]) || {};
+  const al = (dish.allergens && dish.allergens.length) ? dish.allergens : [];
+  const lbl = a => escapeHTML(typeof allergenLocal === 'function' ? allergenLocal(a) : a);
+  let cuerpo;
+  if(!al.length){
+    const txt = _en ? 'No declared allergens' : 'Sin alérgenos declarados';
+    cuerpo = `<p class="fp-al-libre cono-libre${val ? '' : ' pend'}">${_fpIc(val ? 'check' : 'unk', 18)}${escapeHTML(val ? txt : (typeof _sinAlergenosTxt === 'function' ? _sinAlergenosTxt(txt, _en) : txt))}</p>
+      <p class="cono-nota">${_en ? 'If the guest has a severe allergy, still check cross-contamination with the kitchen.' : 'Si la alergia es severa, confirma igualmente con cocina la contaminación cruzada.'}</p>`;
+  } else {
+    // De dónde viene cada uno. Con los ingredientes escritos bocado a bocado
+    // (una línea por elaboración) se nombra el bocado, no su descripción
+    // entera; si no, el ingrediente de la base o del componente validado.
+    let ings = [];
+    const lineas = (typeof _ingPorLineas === 'function') ? _ingPorLineas(dd.ingredients) : null;
+    try{
+      if(lineas && lineas.some(l => l.n)){
+        for(const l of lineas){
+          if(!l.n) continue;
+          const sub = _djIngredients({ id: null, allergens: dish.allergens, ingredients: l.d }, _en);
+          const a = new Set(); for(const x of sub) for(const y of x.a) a.add(y);
+          ings.push({ t: l.n, a: Array.from(a) });
+        }
+      } else ings = _djIngredients(dish, _en) || [];
+    }catch(e){ ings = []; }
+    const filas = al.map(a => {
+      const act = acts[a];
+      let k, v;
+      if(!val){ k = 'pend'; v = _en ? 'Pending' : 'Pendiente'; }
+      else if(act && act.r === 1){ k = 'ok'; v = _en ? 'Adaptable' : 'Se adapta'; }
+      else if(act && act.r === 0){ k = 'no'; v = _en ? 'Not suitable' : 'No apto'; }
+      else { k = 'unk'; v = _en ? 'Check with the kitchen' : 'Consultar con cocina'; }
+      const de = ings.filter(i => (i.a || []).includes(a)).map(i => i.t);
+      const cmd = (act && act.r === 1) ? (_en ? (act.c_en || act.c) : act.c) : '';
+      const sub = (act && act.r === 1) ? (_en ? act.sub_en : act.sub) : '';
+      return { a, k, v, de, cmd, sub };
+    }).sort((x, y) => _FP_AL_ORDEN[x.k] - _FP_AL_ORDEN[y.k]);
+    cuerpo = (val ? '' : `<p class="fp-al-aviso">${_fpIc('aviso')}${_en ? 'Menu pending kitchen validation: confirm with the kitchen before ordering.' : 'Carta pendiente de validación por cocina: confírmalo con cocina antes de comandar.'}</p>`)
+      + `<ul class="cono-al">${filas.map(f => `<li class="cono-al-i ${f.k}">
+        <span class="fp-al-i ${f.k}">${_fpIc(f.k === 'pend' ? 'unk' : f.k)}<b>${lbl(f.a)}</b><span>${f.v}</span></span>
+        ${f.cmd ? `<div class="cono-al-cmd">${val ? (_en ? 'Order' : 'Comandar') : (_en ? 'Provisional order, not validated' : 'Comanda provisional, sin validar')}: <em>${escapeHTML(f.cmd)}</em></div>` : ''}
+        ${f.sub ? `<div class="cono-al-sub">${escapeHTML(f.sub)}</div>` : ''}
+        ${f.de.length ? `<div class="cono-al-de">${_en ? 'From' : 'Por'}: ${f.de.map(escapeHTML).join(', ')}</div>` : ''}
+      </li>`).join('')}</ul>`;
+  }
+  return `${_cpMini(dish, dd)}<h3 class="cono-h">${_en ? 'What it protects' : 'Lo que protege'}</h3>${cuerpo}`;
+}
+
+// ── 4 · En la mesa ──
+// Solo con datos: la ficha de servicio (De un vistazo), el marcaje, la nota
+// de cocina que no repita lo que ya dijo el paso de alérgenos, y el maridaje
+// si el emparejamiento encuentra vinos.
+// Trozos de la nota que ya están dichos en «Lo que protege»: el nombre de un
+// alérgeno a secas y los «no se puede retirar» que la matriz ya pinta como no
+// apto. Lo demás es información de servicio y se queda entero.
+function _cpNotasUtiles(notas, dish){
+  const trozos = String(notas || '').split(/\s*·\s*|(?=⚠)/).map(t => t.replace(/^⚠\s*/, '').trim()).filter(Boolean);
+  const al = new Set();
+  for(const a of (dish && dish.allergens || [])){
+    al.add(_djNorm(a)); al.add(_djNorm(_djAlEn(a)));
+    if(typeof allergenLocal === 'function') al.add(_djNorm(allergenLocal(a)));
+  }
+  return trozos.filter(t => {
+    const n = _djNorm(t);
+    if(al.has(n)) return false;
+    if(/^(no se puede retirar|no se pueden retirar|sin forma confirmada de retirar|cannot be removed|no confirmed way to remove)/.test(n)) return false;
+    return true;
+  });
+}
+function _cpMesaDatos(dish, dd, _en){
+  // La tira «De un vistazo» cuenta como dato solo si el restaurante ha
+  // rellenado la ficha de servicio: una marca deducida de los ingredientes no
+  // justifica un paso entero.
+  const conFicha = (typeof _fsvInfo === 'function') ? !!_fsvInfo(dish, _en).hayDato : false;
+  const tira = (typeof _fsvTiraHTML === 'function') ? _fsvTiraHTML(dish, _en) : '';
+  const marcaje = String(dd.marcaje || '').trim();
+  const notas = _cpNotasUtiles(dd.notes, dish);
+  const vinos = (typeof _dishPairWines === 'function') ? (_dishPairWines(dish, 3) || []) : [];
+  return { tira, marcaje, notas, vinos, hay: !!((tira && conFicha) || marcaje || notas.length || vinos.length) };
+}
+function _cpPasoMesa(dish, dd, _en){
+  const m = _cpMesaDatos(dish, dd, _en);
+  const tipo = _en ? { blanco:'White', tinto:'Red', rosado:'Rosé', espumoso:'Sparkling', dulce:'Sweet' } : { blanco:'Blanco', tinto:'Tinto', rosado:'Rosado', espumoso:'Espumoso', dulce:'Dulce' };
+  return `${_cpMini(dish, dd)}
+    ${m.tira}
+    ${m.marcaje ? `<div class="cono-bloque"><span class="cono-lbl">${_en ? 'Cutlery marking' : 'Marcaje'}</span><p class="cono-ing">${escapeHTML(m.marcaje)}</p></div>` : ''}
+    ${m.notas.length ? `<div class="cono-bloque"><span class="cono-lbl">${_en ? 'Kitchen note' : 'Nota de cocina'}</span><div class="cono-notas">${_djNotasHTML(m.notas.join(' · '))}</div></div>` : ''}
+    ${m.vinos.length ? `<div class="cono-bloque"><span class="cono-lbl">${_en ? 'Wine pairing' : 'Maridaje'}</span>${m.vinos.map(w => `<div class="fp-vino"><b>${escapeHTML(w.name)}</b><span>${escapeHTML(tipo[w.type] || w.type || '')}${w.region ? ` · ${escapeHTML(w.region)}` : ''}</span></div>`).join('')}</div>` : ''}`;
+}
+
+// ── 5 · Cuéntalo ──
+// La story escrita, Escuchar (el archivo de audio si existe, si no la mejor
+// voz del sistema: la misma _padEscuchar de Un plato al día) y la práctica en
+// voz alta con las claves, con el motor de Un plato al día pintando aquí.
+// Sin story ni claves, la descripción y una autoevaluación.
+function _cpPasoCuenta(dish, dd, _en){
+  const claves = _padClaves(dd);
+  if(!dd.story){
+    const h = _cpHaceDatos(dd);
+    const txt = h.hist || (h.lineas ? h.lineas.map(x => x.n ? x.n + ': ' + x.d : x.d).join(' ') : String(dd.ingredients || dd.history || '').trim());
+    // El texto ya se leyó en «Cómo se hace»: aquí va plegado, por si hace falta
+    // volver a él, y lo que manda es la pregunta.
+    return `${_cpMini(dish, dd)}
+      <p class="cono-intro">${_en ? 'Imagine the guest in front of you. Say this dish out loud, in your own words, before you move on.' : 'Imagina al cliente delante. Di este plato en voz alta, con tus palabras, antes de seguir.'}</p>
+      ${txt ? `<details class="deg-apoyo cono-apoyo"><summary>${_en ? 'For the table' : 'Para la mesa'}</summary><div class="deg-apoyo-body"><p>${escapeHTML(txt)}</p></div></details>` : ''}
+      <p class="cono-pregunta">${_en ? 'Could you tell it?' : '¿Sabrías contarlo?'}</p>
+      <div class="deg-auto cono-auto">
+        <button type="button" class="${_djState.auto === 'si' ? 'on' : ''}" aria-pressed="${_djState.auto === 'si'}" onclick="_cpAuto('si')">${_en ? 'Yes' : 'Sí'}</button>
+        <button type="button" class="${_djState.auto === 'no' ? 'on' : ''}" aria-pressed="${_djState.auto === 'no'}" onclick="_cpAuto('no')">${_en ? 'Not yet' : 'Todavía no'}</button>
+      </div>`;
+  }
+  const voz = !!((typeof _padAudioDe === 'function' && _padAudioDe(dish, dd)) || (typeof _degHayVoz === 'function' && _degHayVoz()));
+  return `${_cpMini(dish, dd)}
+    <div class="deg-story pad-story cono-story"><span>${_en ? 'At the table' : 'En la mesa'}</span><p>${escapeHTML(dd.story)}</p>
+      ${voz ? `<button type="button" id="padEscBtn" class="pad-escuchar" aria-pressed="false" onclick="_cpEscuchar()"><span class="pad-ondas" aria-hidden="true"><i></i><i></i><i></i></span>${_en ? 'Listen' : 'Escuchar'}</button>` : ''}
     </div>
-  `;
+    ${dd.story_revisar ? `<div class="deg-revisar">${_en ? 'Pending validation by the chef' : 'Pendiente de validar por el chef'}</div>` : ''}
+    ${claves.length ? `<div class="cono-practica" id="conoPractica">${_cpPracticaHTML(dish, dd, claves, _en)}</div>` : ''}`;
+}
+function _cpAuto(v){ _djState.auto = v; _djRender(); }
+function _cpEscuchar(){
+  if(typeof _padS === 'undefined') return;
+  _padS.id = _djState.dishId;
+  if(typeof _padPrecargar === 'function') _padPrecargar();
+  _padEscuchar();
+}
+// La práctica, con el estado de _padS: antes de empezar, grabando (o el plan
+// B sin reconocimiento) y el resultado.
+function _cpPracticaHTML(dish, dd, claves, _en){
+  if(typeof _padS === 'undefined') return '';
+  if(_padS.paso === 'resultado' && Array.isArray(_padS.r1)){
+    return `${_padResultadoHTML(_padS.r1, claves)}
+      ${_padS.texto && _padS.modo === 'voz' ? `<details class="deg-apoyo pad-oido"><summary>${_en ? 'What I understood' : 'Lo que he entendido'}</summary><div class="deg-apoyo-body"><p>«${escapeHTML(_padS.texto)}»</p></div></details>` : ''}
+      <button type="button" class="deg-btn sec cono-otra" onclick="_cpGrabar()">${_en ? 'Tell it again' : 'Contarlo otra vez'}</button>`;
+  }
+  if(_padS.paso === 'grabar') return _padGrabadorHTML(claves);
+  return `<p class="cono-pregunta">${_en ? 'Now you: tell it out loud, in your own words.' : 'Ahora tú: cuéntalo en voz alta, con tus palabras.'}</p>
+    <button type="button" class="pad-mic" onclick="_cpGrabar()"><span class="pad-mic-ic" aria-hidden="true"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5.5 11a6.5 6.5 0 0013 0M12 17.5V21"/></svg></span>${_en ? 'Tell it out loud' : 'Contarlo en voz alta'}</button>`;
+}
+function _cpGrabar(){
+  if(typeof _padS === 'undefined') return;
+  _padParar();
+  _padS.id = _djState.dishId;
+  _padS.paso = 'grabar'; _padS.ronda = 1; _padS.texto = ''; _padS.interino = ''; _padS.manual = null; _padS.r1 = null; _padS.aviso = '';
+  _padHost = _cpPintarPractica;
+  _cpPintarPractica();
+  if(_padS.modo === 'voz') _padGrabar();
+}
+// Lo que pinta el motor de Un plato al día mientras vive dentro del recorrido:
+// solo el bloque de la práctica, no la pantalla entera.
+function _cpPintarPractica(){
+  const c = document.getElementById('conoPractica'); if(!c) return;
+  const dish = DISHES.find(d => d.id === _djState.dishId); if(!dish) return;
+  const dd = getDish(dish);
+  c.innerHTML = _cpPracticaHTML(dish, dd, _padClaves(dd), LANG === 'en');
+  if(_padS.paso === 'grabar') _padVivo();
+}
+
+// ── 6 · Comprobación ──
+function _cpPasoPrueba(dish, dd, _en){
+  const qs = _djState.quizQuestions || [];
+  return `${_cpMini(dish, dd)}` + qs.map((q, qi) => {
+    const answered = _djState['q' + qi] !== undefined;
+    const userAnswer = _djState['q' + qi];
+    const ok = answered && userAnswer === q.correctIdx;
+    return `<div class="cono-q">
+      <p class="cono-q-t">${q.q}</p>
+      <div class="deg-opciones">${q.options.map((opt, oi) => {
+        let cls = 'deg-opcion';
+        if(answered){ if(oi === q.correctIdx) cls += ' ok'; else if(oi === userAnswer) cls += ' no'; }
+        const txt = String(opt); // mayúscula inicial para todas: un componente en minúscula entre alérgenos en mayúscula se delataba solo
+        return `<button type="button" class="${cls}" ${answered ? 'disabled' : ''} onclick="_djAnswer(${qi},${oi})">${escapeHTML(txt.charAt(0).toUpperCase() + txt.slice(1))}</button>`;
+      }).join('')}</div>
+      ${answered ? `<p class="cono-q-fb ${ok ? 'ok' : 'no'}" role="status">${_fpIc(ok ? 'check' : 'no', 15)}${escapeHTML(q.explain || '')}</p>` : ''}
+    </div>`;
+  }).join('');
+}
+function _djAnswer(qIdx, optIdx){
+  if(_djState['q' + qIdx] !== undefined) return;
+  _djState['q' + qIdx] = optIdx;
+  _djState.quizAnswered++;
+  const qs = _djState.quizQuestions || [];
+  if(optIdx === qs[qIdx].correctIdx) _djState.quizScore++;
+  _djRender();
+}
+
+// ── 7 · Cierre ──
+function _cpPasoFin(dish, dd, _en){
+  const emp = getEmp(currentUser) || {};
+  const enCola = !!(dd.story && _padClaves(dd).length);
+  const e = enCola && emp.pad && emp.pad[dish.id];
+  const dom = !!((emp.journeyMastered || {})[dish.id]);
+  const total = _djState.quizTotal, score = _djState.quizScore;
+  return `<div class="cono-fin">
+    ${_degFotoHTML(dish.id, dd.name, 'cono-fin-foto')}
+    <h2 class="deg-tit cono-fin-tit">${_en ? 'You know this dish now.' : 'Ya conoces este plato.'}</h2>
+    <p class="cono-fin-txt">${enCola
+      ? (_en ? 'It will come back to you in One dish a day' : 'Vuelve a salirte en Un plato al día') + (e && e.next ? ' ' + _padFechaTxt(e.next) : '') + '.'
+      : (_en ? 'Tell it at the table as soon as you can: that is what makes it stick.' : 'Cuéntalo en la mesa en cuanto puedas: así es como se queda.')}</p>
+    ${dom && _djState.dominadoAhora ? `<p class="cono-fin-dom">${_en ? 'And you have mastered it: the check came out clean.' : 'Y lo dominas: la comprobación ha salido sin fallos.'}</p>` : ''}
+    ${total > 0 ? `<p class="cono-fin-meta">${_en ? 'Check' : 'Comprobación'}: ${score} ${_en ? 'of' : 'de'} ${total}</p>` : ''}
+  </div>`;
+}
+// Al llegar al cierre, una sola vez: conocido, cola de Un plato al día,
+// dominado si toca, actividad y datos adaptativos. Nada de XP.
+function _cpTerminar(){
+  if(_djState.cerrado) return;
+  _djState.cerrado = true;
+  const dish = DISHES.find(d => d.id === _djState.dishId); if(!dish) return;
+  const dd = getDish(dish);
+  const emp = getEmp(currentUser); if(!emp) return;
+  const hoy = _padHoy();
+  const total = _djState.quizTotal, score = _djState.quizScore;
+  emp.conocidos = emp.conocidos || {};
+  if(!emp.conocidos[dish.id]) emp.conocidos[dish.id] = hoy;
+  const claves = _padClaves(dd);
+  _djState.dominadoAhora = false;
+  if(dd.story && claves.length){
+    emp.pad = emp.pad || {};
+    const nuevo = _cpProgramar(emp.pad[dish.id], _djState.contado, _djState.todas, hoy);
+    emp.pad[dish.id] = nuevo;
+    if(_cpMarcarDominado(emp, dish.id, nuevo.okd)) _djState.dominadoAhora = true;
+  } else if(total > 0 && score === total && !(emp.journeyMastered || {})[dish.id]){
+    // Sin claves que contar, la comprobación limpia es lo mejor que se puede pedir.
+    emp.journeyMastered = emp.journeyMastered || {};
+    emp.journeyMastered[dish.id] = { score: 100, date: Date.now() };
+    _djState.dominadoAhora = true;
+  }
+  try{
+    registrarActividad({ activity:'recorrido', competency:'carta', kind:'practica',
+      score: total > 0 ? score : null, total: total > 0 ? total : null, meta:{ plato: dish.id } });
+  }catch(e){}
+  const qs = _djState.quizQuestions || [];
+  qs.forEach((q, qi) => {
+    const userAns = _djState['q' + qi];
+    if(userAns === undefined) return;
+    const qType = /alerg|adaptar|componente|declara|seguro|cuantos|quita/.test(q.tipo || '') ? 'allergen' : 'ingredient';
+    try{ _adaptiveRecord(emp, dish.id, qType, userAns === q.correctIdx, null); }catch(e){}
+  });
+  try{ saveDB(); }catch(e){}
+}
+// Escribe «dominado» si la cuenta de días lo da. true si se acaba de escribir.
+function _cpMarcarDominado(emp, id, okd){
+  if(!emp || !_cpDominado(okd)) return false;
+  emp.journeyMastered = emp.journeyMastered || {};
+  if(emp.journeyMastered[id]) return false;
+  emp.journeyMastered[id] = { score: 100, date: Date.now() };
+  return true;
+}
+// El siguiente plato sin conocer de la misma sección, a partir de este; si no
+// queda ninguno en la sección, cualquiera sin conocer. Respeta el turno de
+// estudio activo (a/c) y cae al pool completo si el turno se queda sin nada.
+function _cpSiguientePlato(dish){
+  const emp = getEmp(currentUser) || {};
+  const con = emp.conocidos || {}, dom = emp.journeyMastered || {};
+  const sin = d => d.id !== dish.id && !con[d.id] && !dom[d.id];
+  const i = DISHES.findIndex(d => d.id === dish.id);
+  const orden = DISHES.slice(i + 1).concat(DISHES.slice(0, Math.max(0, i)));
+  const _sameCatAll = orden.filter(d => d.cat === dish.cat && sin(d));
+  const _anyUnAll  = orden.filter(sin);
+  const _sameCatSh = _shiftDishes(_sameCatAll);
+  const _anyUnSh   = _shiftDishes(_anyUnAll);
+  const _sameCat = _sameCatSh.length ? _sameCatSh : _sameCatAll;
+  const _anyUn   = _anyUnSh.length   ? _anyUnSh   : _anyUnAll;
+  return _sameCat[0] || _anyUn[0] || null;
+}
+
+// ── Preguntas de la comprobación ──
+// Dos o tres, con reglas y sin IA:
+//  a) «¿Cuál de estas frases sobre el plato es falsa?»: dos verdaderas de sus
+//     tres frases (o de su story) y una falsa que es, literalmente, una frase
+//     de OTRO plato de la carta: su producto, su técnica o su guiño. Sin pista
+//     de longitud (la falsa mide como las verdaderas) ni de posición.
+//  b) de las de _djGenerateQuiz, primero la comanda de un alérgeno y la de qué
+//     ingrediente lo trae; lo que repita tipo o enunciado no entra.
+const _CP_VACIAS = new Set(['para','como','sobre','entre','desde','hasta','pero','porque','aqui','ahora','todo','toda','todos','todas','cada','otro','otra','unos','unas','mismo','misma','mucho','muy','with','from','that','this','these','those','over','into','very','each','same','their','then','than','when','what','which','also','more','most','some','only','just','about','after','before','made','make','your','ours','have','been','its','our']);
+function _cpPalabras(t){
+  return _padNorm(t).split(' ').filter(w => w.length >= 5 && !_CP_VACIAS.has(w));
+}
+// Frases que afirman algo del plato: sus tres frases, o las de su story.
+function _cpVerdaderas(dd){
+  const tres = _degTres(dd);
+  if(tres.length >= 2) return tres.slice();
+  const fr = _padFrases(dd.story || '').filter(f => f.length >= 12);
+  return fr.length >= 2 ? fr : [];
+}
+function _cpQFrasesFalsa(dish, dd, _en, allDishes){
+  const verdaderas = _cpVerdaderas(dd);
+  if(verdaderas.length < 2) return null;
+  const dos = _djShuffle(verdaderas).slice(0, 2);
+  // Con las tres frases, la falsa es del mismo hueco que falta: si se enseñan
+  // «qué es» y «cómo se hace», la falsa es el «qué lo hace especial» de otro
+  // plato. Así cambia el producto, la técnica o el guiño, no el tema entero.
+  const tresPropias = _degTres(dd);
+  const hueco = tresPropias.length === 3 ? [0, 1, 2].find(i => !dos.includes(tresPropias[i])) : -1;
+  const media = (dos[0].length + dos[1].length) / 2;
+  const propio = new Set(_cpPalabras([dd.name, dd.history, dd.ingredients, dd.story, dd.guino, dd.significa].concat(verdaderas).join(' ')));
+  const claves = _padClaves(dd);
+  const vale = f => {
+    if(!f || verdaderas.some(v => _padNorm(v) === _padNorm(f))) return false;
+    if(Math.abs(f.length - media) / media > 0.4) return false;           // sin pista de longitud
+    if(claves.some(g => _padDicha(f, g))) return false;                   // no nombra una clave de este plato
+    if(_cpPalabras(f).some(w => propio.has(w))) return false;             // ni comparte palabra de peso
+    return true;
+  };
+  const otros = allDishes.filter(o => o.id !== dish.id);
+  const mismaCat = otros.filter(o => o.cat === dish.cat);
+  const deHueco = od => { const t = _degTres(od); return (hueco >= 0 && t.length === 3) ? [t[hueco]] : null; };
+  for(const [grupo, soloHueco] of [[mismaCat, true], [otros, true], [mismaCat, false], [otros, false]]){
+    const cands = [];
+    for(const o of _djShuffle(grupo)){
+      const od = getDish(o);
+      const fr = soloHueco ? deHueco(od) : _cpVerdaderas(od);
+      if(!fr) continue;
+      for(const f of fr) if(vale(f)) cands.push({ f, o: od });
+    }
+    if(!cands.length) continue;
+    const falsa = cands[Math.floor(Math.random() * cands.length)];
+    const opts = _djShuffle([dos[0], dos[1], falsa.f]);
+    return {
+      tipo: 'frase-falsa',
+      q: _en ? `Which of these is NOT true of "${dd.name}"?` : `¿Cuál de estas frases sobre "${dd.name}" es falsa?`,
+      options: opts,
+      correctIdx: opts.indexOf(falsa.f),
+      explain: _en ? `That one belongs to "${falsa.o.name}".` : `Esa es de "${falsa.o.name}".`
+    };
+  }
+  return null;
+}
+// «¿Cuál de estos NO se puede quitar?»: solo cuando el plato tiene un alérgeno
+// estructural y al menos dos que sí se adaptan, para que no sea una moneda.
+function _cpQNoSeQuita(dish, dd, _en){
+  if(!(typeof _alergenosValidados !== 'function' || _alergenosValidados())) return null;
+  const acts = (typeof DISH_ACTIONS !== 'undefined' && DISH_ACTIONS[dish.id]) || {};
+  const al = dish.allergens || [];
+  const fijos = al.filter(a => acts[a] && acts[a].r === 0);
+  const sueltos = al.filter(a => acts[a] && acts[a].r === 1);
+  if(!fijos.length || sueltos.length < 2) return null;
+  const bueno = fijos[Math.floor(Math.random() * fijos.length)];
+  const opts = _djShuffle([bueno].concat(_djShuffle(sueltos).slice(0, 3)));
+  const L = a => _en ? _djAlEn(a) : a;
+  return {
+    tipo: 'no-se-quita',
+    q: _en ? `In "${dd.name}", which of these cannot be removed?` : `En "${dd.name}", ¿cuál de estos no se puede quitar?`,
+    options: opts.map(L),
+    correctIdx: opts.indexOf(bueno),
+    explain: _en ? `${L(bueno)} is structural here: the dish is not suitable for that allergy.` : `${L(bueno)} es estructural aquí: el plato no es apto para esa alergia.`
+  };
+}
+function _cpPreguntas(dish, dd, _en){
+  const out = [];
+  let a = null; try{ a = _cpQFrasesFalsa(dish, dd, _en, DISHES); }catch(e){ a = null; }
+  if(a) out.push(a);
+  let gen = []; try{ gen = _djGenerateQuiz(dish) || []; }catch(e){ gen = []; }
+  let nq = null; try{ nq = _cpQNoSeQuita(dish, dd, _en); }catch(e){ nq = null; }
+  const orden = ['adaptar', 'componente', 'no-se-quita', 'que-alergeno', 'que-declara', 'cual-seguro', 'ingrediente-ausente'];
+  const pool = gen.concat(nq ? [nq] : []).filter(Boolean);
+  const tipos = new Set(out.map(q => q.tipo)), enunciados = new Set(out.map(q => q.q));
+  for(const t of orden){
+    if(out.length >= 3) break;
+    const q = pool.find(x => x.tipo === t);
+    if(!q || tipos.has(q.tipo) || enunciados.has(q.q)) continue;
+    tipos.add(q.tipo); enunciados.add(q.q); out.push(q);
+  }
+  return out;
 }
 
 // ── Phase 2: Ingredients ──
@@ -7243,103 +7723,6 @@ function _djIngredients(dish, _en){
   return [...porNombre.values()].map(i=>({t:i.t, a:[...i.a]}));
 }
 
-function _djPhaseIngredients(dish, dd, _en){
-  const items = _djIngredients(dish, _en);
-  const conAlerg = items.filter(i=>i.a.length).length;
-  const grid = items.map((ing,i)=>{
-    const isA = ing.a.length > 0;
-    // Ya no basta con el triángulo: el recorrido enseña, así que cada ficha
-    // dice QUÉ alérgeno aporta. Era la pregunta que el camarero se lleva a la
-    // mesa, y estaba a dos pantallas de distancia.
-    const lista = isA
-      ? `<span class="dj-ing-al">${ing.a.map(a=>escapeHtml(_en?_djAlEn(a):a)).join(' · ')}</span>`
-      : '';
-    return `<div class="dj-ing-item${isA?' allergen':''}" style="--delay:${0.15+i*0.06}s">${isA?'⚠ ':''}${escapeHtml(ing.t)}${lista}</div>`;
-  }).join('');
-
-  return `
-    <div style="text-align:center;margin-bottom:.8rem;animation:djSlideUp .5s .2s both">
-      <div style="font-family:var(--font-mono);font-size:var(--fs-2);color:#e8c98a;margin-bottom:.35rem">${_en?'TAP TO EXPLORE':'EXPLORA LOS INGREDIENTES'}</div>
-      <div style="font-family:var(--font-sans);font-size:var(--fs-3);color:rgba(244,237,226,.85)">${_en?'Items marked with ⚠ carry an allergen — the name is right there':'Los marcados con ⚠ llevan alérgeno — al lado pone cuál'}</div>
-    </div>
-    <div class="dj-ing-grid">${grid}</div>
-    <div class="dj-ing-count">${items.length} ${_en?'ingredients':'ingredientes'} · ${conAlerg} ${_en?'with allergens':'con alérgeno'}</div>
-  `;
-}
-
-// ── Phase 3: Allergens ──
-function _djPhaseAllergens(dish, dd, _en){
-  const allergens = dish.allergens||[];
-  const notes = dd.notes||'';
-
-  const allergenData = {
-    'Gluten':{icon:'🌾',color:'#d4a017',en:'Gluten',desc_en:'Found in wheat, barley, rye. Present in breading, flour, bread.',desc_es:'Presente en trigo, cebada, centeno. En rebozados, harina, pan.'},
-    'Lácteos':{icon:'🥛',color:'#4888a0',en:'Dairy',desc_en:'Milk, cream, cheese, butter. Common in sauces and desserts.',desc_es:'Leche, nata, queso, mantequilla. Común en salsas y postres.'},
-    'Huevos':{icon:'🥚',color:'#f5a623',en:'Eggs',desc_en:'Eggs, yolk, whites. In mayonnaise, breading, desserts.',desc_es:'Huevos, yema, clara. En mayonesas, rebozados, postres.'},
-    'Pescado':{icon:'🐟',color:'#2e86c1',en:'Fish',desc_en:'All types of fish. Pay attention to sauces and broths.',desc_es:'Todo tipo de pescado. Atención a salsas y caldos.'},
-
-    'Crustáceos':{icon:'🦀',color:'#e74c3c',en:'Crustaceans',desc_en:'Shrimp, lobster, crab and derivatives.',desc_es:'Langostino, bogavante, cangrejo y derivados.'},
-    'Moluscos':{icon:'🦑',color:'#dc143c',en:'Molluscs',desc_en:'Squid, octopus, mussels, oysters.',desc_es:'Calamar, pulpo, mejillones, ostras.'},
-    'Frutos secos':{icon:'🥜',color:'#8b4513',en:'Tree Nuts',desc_en:'Almonds, walnuts, hazelnuts, pistachios.',desc_es:'Almendras, nueces, avellanas, pistachos.'},
-    'Soja':{icon:'🫘',color:'#5a9a6e',en:'Soy',desc_en:'Soy sauce, tofu, edamame, soy lecithin.',desc_es:'Salsa de soja, tofu, edamame, lecitina de soja.'},
-    'Apio':{icon:'🥬',color:'#228b22',en:'Celery',desc_en:'Celery stalks, root, and in spice mixes.',desc_es:'Tallos, raíz de apio, en mezclas de especias.'},
-    'Mostaza':{icon:'🟡',color:'#daa520',en:'Mustard',desc_en:'Mustard seeds, powder, and prepared mustard.',desc_es:'Semillas, polvo y mostaza preparada.'},
-    // Auditoría (sept 2026): faltaban las fichas de «Granos de sésamo»,
-    // «Cacahuete» y «Altramuces» — los tres del canon UE-14 de la app — así que
-    // salían como «⚠️ Precaución» sin explicar nada. Afectaba al Tataki de atún
-    // y al Pincho Moruno, cuyo Ras al hanout lleva justo cacahuete y sésamo.
-    // Y sobraban «Mariscos», «Sésamo» y «Cacahuetes», nombres que no existen en
-    // ninguna otra pantalla. Ahora las catorce fichas son las catorce del canon.
-    'Granos de sésamo':{icon:'⚪',color:'#d2691e',en:'Sesame',desc_en:'Sesame seeds, tahini, sesame oil. Hidden in spice mixes.',desc_es:'Semillas de sésamo, tahini, aceite de sésamo. Escondido en mezclas de especias.'},
-    'Altramuces':{icon:'🌱',color:'#9a8c3c',en:'Lupin',desc_en:'Lupin flour, in some breads, pasta and vegan products.',desc_es:'Harina de altramuz, en algunos panes, pastas y productos veganos.'},
-    'Sulfitos':{icon:'🍷',color:'#7a6aaa',en:'Sulphites',desc_en:'In wines, vinegars, dried fruits, some sauces.',desc_es:'En vinos, vinagres, frutas secas, algunas salsas.'},
-    'Cacahuete':{icon:'🥜',color:'#cd853f',en:'Peanuts',desc_en:'Peanuts and peanut oil. Also in spice mixes such as ras al hanout.',desc_es:'Cacahuete y aceite de cacahuete. También en mezclas de especias como el ras al hanout.'}
-  };
-
-  if(allergens.length===0 && !(typeof _alergenosValidados!=='function'||_alergenosValidados())){
-    return (typeof _alergenosAvisoHTML==='function'?_alergenosAvisoHTML(_en):'') + `<div class="dj-safe-card"><div class="dj-safe-text">${escapeHtml(((typeof _alergenosValidados!=='function'||_alergenosValidados())?(''):_sinAlergenosTxt('', _en)))}</div></div>`;
-  }
-  if(allergens.length===0){
-    return `<div class="dj-safe-card"><div style="font-size:2.5rem;margin-bottom:.5rem">✅</div><div class="dj-safe-text">${_en?'This dish contains no declared allergens!':'¡Este plato no contiene alérgenos declarados!'}</div></div>`;
-  }
-
-  // FASE 3b: el veredicto sale de la matriz DISH_ACTIONS (dato validado por
-  // cocina), no de rastrear palabras en las notas. Con comanda exacta.
-  const _acts = (typeof DISH_ACTIONS !== 'undefined' && DISH_ACTIONS[dish.id]) || {};
-  const cards = allergens.map((a,i)=>{
-    const data = allergenData[a]||{icon:'⚠️',color:'#c49a3c',en:a,desc_en:'Be cautious.',desc_es:'Precaución.'};
-    const act = _acts[a];
-    let verdict = '';
-    if(act && act.r === 1 && !(typeof _alergenosValidados!=='function'||_alergenosValidados())){
-      // Borrador: que la guía diga cómo retirarlo no es una adaptación aprobada.
-      // La comanda se enseña como provisional, nunca como garantía.
-      const cmd = _en ? (act.c_en || act.c) : act.c;
-      verdict = `<div style="margin-top:.3rem;font-family:var(--font-mono);font-size:var(--fs-2);color:#e4d3a4;background:rgba(196,154,60,.16);padding:.25rem .5rem;border-radius:6px;display:inline-block">? ${_en?'Pending menu validation':'Pendiente de validación de la carta'}${cmd?` — ${_en?'provisional order, not validated:':'comanda provisional, sin validar:'} <b>${escapeHTML(cmd)}</b>`:''}</div>`;
-    } else if(act && act.r === 1){
-      const cmd = _en ? (act.c_en || act.c) : act.c;
-      verdict = `<div style="margin-top:.3rem;font-family:var(--font-mono);font-size:var(--fs-2);color:#a8d8b4;background:rgba(77,138,94,.18);padding:.25rem .5rem;border-radius:6px;display:inline-block">✓ ${_en?'Adaptable':'Se adapta'}${cmd?` — ${_en?'order':'comandar'} <b>${escapeHTML(cmd)}</b>`:''}</div>`;
-    } else if(act && act.r === 0 && (typeof _alergenosValidados!=='function'||_alergenosValidados())){
-      // En un borrador, r:0 sólo significa «la guía no dice que se pueda retirar»:
-      // no se enseña como un «no se puede» que nadie ha confirmado.
-      verdict = `<div style="margin-top:.3rem;font-family:var(--font-mono);font-size:var(--fs-2);color:#f0a8a8;background:rgba(160,72,72,.18);padding:.25rem .5rem;border-radius:6px;display:inline-block">■ ${_en?'Structural — not suitable for this allergy':'Estructural — no apto para esta alergia'}</div>`;
-    }
-    return `<div class="dj-allerg-card" style="--delay:${0.15+i*0.12}s;border-left:4px solid ${data.color}">
-      <div class="dj-allerg-name">${data.icon} ${_en?data.en:a}</div>
-      <div class="dj-allerg-info">${_en?data.desc_en:data.desc_es}</div>
-      ${verdict}
-    </div>`;
-  }).join('');
-
-  return (typeof _alergenosAvisoHTML==='function'?_alergenosAvisoHTML(_en):'') + `
-    <div style="text-align:center;margin-bottom:1rem;animation:djSlideUp .4s .1s both">
-      <div style="display:inline-block;padding:.3rem .8rem;border-radius:20px;background:rgba(231,76,60,.08);border:1px solid rgba(231,76,60,.15);font-family:var(--font-mono);font-size:var(--fs-1);color:#e8a0a0">
-        ${allergens.length} ${_en?'allergen'+(allergens.length!==1?'s':''):'alérgeno'+(allergens.length!==1?'s':'')} ${_en?'detected':'detectado'+(allergens.length!==1?'s':'')}
-      </div>
-    </div>
-    ${cards}
-  `;
-}
-
 // ── Phase 4: Service ──
 // Trocea la nota de servicio en avisos y resalta la comanda. El separador real
 // de estas fichas es «⚠» (57 de las 90 lo usan); el « · » solo aparece en 7.
@@ -7360,60 +7743,6 @@ function _djNotasHTML(notas){
       return `<b class="dj-comanda">${t}</b>${m.slice(t.length)}`;
     });
   return trozos.map(t=>`<span class="dj-nota">${marca(t)}</span>`).join('');
-}
-
-function _djPhaseService(dish, dd, _en){
-  const items = [];
-  items.push({icon:'📂', label:_en?'CATEGORY':'CATEGORÍA', value:_en?catLocal(dish.cat):dish.cat});
-
-  // El marcaje — qué cubertería lleva el plato — es lo primero que hace el
-  // camarero, antes de que el plato salga de cocina. Venía escondido dentro
-  // de las notas; M.B. pidió que se vea como lo que es. Sólo se pinta si la
-  // carta lo trae: la de Txoko no lo tiene y no se inventa.
-  if(dd.marcaje) items.push({icon:'🍽️', label:_en?'CUTLERY MARKING':'MARCAJE',
-                             value:escapeHtml(dd.marcaje)});
-
-  if(dish.allergens && dish.allergens.length){
-    items.push({icon:'⚠️', label:_en?'ALLERGEN ALERT':'ALERTA ALÉRGENOS', value:(_en?'Always inform guest about: ':'Siempre informar sobre: ')+dish.allergens.map(a=>allergenLocal?allergenLocal(a):a).join(', ')});
-  }
-
-  if(dd.notes){
-    // Auditoría (sept 2026): esta ficha se cortaba con substring(0,200)+'...'.
-    // Medido: 69 fichas cortadas y 8.302 caracteres ocultos, y en 30 de ellas
-    // se perdía AL MENOS UNA COMANDA de alérgeno. El peor, el Entrecot de
-    // Angus: se veían 0 de 1, y el corte caía en «la mermelada NO...», que
-    // leído a medias dice justo lo contrario de lo que pone.
-    // Instrucción del propietario: «no cortes información cuando es
-    // información valiosa o importante». No se corta nada. Para que además se
-    // lea mejor que el bloque cortado, cada aviso «⚠» va en su propia línea y
-    // la comanda queda resaltada, que es lo que el camarero busca de un golpe.
-    items.push({icon:'📝', label:_en?'SPECIAL NOTES':'NOTAS ESPECIALES',
-                value:_djNotasHTML(dd.notes)});
-  }
-
-  // Add pairing wines if any — match on significant words (len>=4) from dish name
-  const _djStop = new Set(['the','and','with','from','para','con','sin','una','uno','los','las','del','estilo','style']);
-  const _djKeywords = (dish.name||'').toLowerCase().split(/[\s,\-\/]+/).filter(w=>w.length>=4 && !_djStop.has(w));
-  const pairingWines = (WINES && _djKeywords.length) ? WINES.filter(function(w){
-    if(!w.pairings) return false;
-    return w.pairings.some(function(p){
-      const pl = p.toLowerCase();
-      return _djKeywords.some(function(kw){ return pl.includes(kw); });
-    });
-  }).slice(0,3) : [];
-  if(pairingWines.length){
-    items.push({icon:'🍷', label:_en?'WINE PAIRING':'MARIDAJE', value:pairingWines.map(w=>w.name).join(', ')});
-  }
-
-  return items.map((item,i)=>`
-    <div class="dj-service-item" style="--delay:${0.15+i*0.1}s">
-      <div class="dj-service-icon">${item.icon}</div>
-      <div>
-        <div class="dj-service-label">${item.label}</div>
-        <div class="dj-service-value">${item.value}</div>
-      </div>
-    </div>
-  `).join('');
 }
 
 // ── Phase 5: Quiz Generator ──
@@ -7779,164 +8108,6 @@ function _djShuffle(arr){
   const a=[...arr];
   for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}
   return a;
-}
-
-function _djPhaseQuiz(dish, dd, _en){
-  const qs = _djState.quizQuestions||[];
-  return qs.map((q,qi)=>{
-    const answered = _djState['q'+qi] !== undefined;
-    const userAnswer = _djState['q'+qi];
-    return `<div class="dj-quiz-card" style="--delay:${0.1+qi*0.15}s">
-      <div class="dj-quiz-q">${qi+1}. ${q.q}</div>
-      <div class="dj-quiz-opts">
-        ${q.options.map((opt,oi)=>{
-          let cls = 'dj-quiz-opt';
-          if(answered){
-            cls += ' disabled';
-            if(oi===q.correctIdx) cls += ' correct';
-            else if(oi===userAnswer && oi!==q.correctIdx) cls += ' wrong';
-          }
-          return `<div class="${cls}" onclick="_djAnswer(${qi},${oi})">${opt}</div>`;
-        }).join('')}
-      </div>
-      ${answered?`<div class="dj-quiz-result ${userAnswer===q.correctIdx?'ok':'fail'}">${userAnswer===q.correctIdx?'✓ ':('✗ ')}${escapeHTML(q.explain||'').replace(/\n/g,'<br>')}</div>`:''}
-    </div>`;
-  }).join('') + `
-    <div style="text-align:center;margin-top:.8rem;animation:djSlideUp .5s .5s both">
-      <div style="font-family:var(--font-mono);font-size:var(--fs-2);color:rgba(244,237,226,.62)">${_djState.quizAnswered}/${_djState.quizTotal} ${_en?'answered':'respondidas'}</div>
-    </div>
-  `;
-}
-
-function _djAnswer(qIdx, optIdx){
-  if(_djState['q'+qIdx] !== undefined) return; // already answered
-  _djState['q'+qIdx] = optIdx;
-  _djState.quizAnswered++;
-  const qs = _djState.quizQuestions||[];
-  if(optIdx === qs[qIdx].correctIdx) _djState.quizScore++;
-  _djRender();
-}
-
-// ── Phase 6: Mastery ──
-function _djPhaseMastery(dish, dd, _en){
-  const score = _djState.quizScore;
-  const total = _djState.quizTotal;
-  const pct = total > 0 ? Math.round((score/total)*100) : 0;
-  const baseXp = score * 15 + (pct===100 ? 25 : 0); // bonus for perfect
-  const isPerfect = pct === 100;
-  const isGood = pct >= 66;
-
-  // Check if already mastered BEFORE awarding (for diminishing returns)
-  const _empPre = getEmp(currentUser);
-  const _prevMastery = _empPre && _empPre.journeyMastered && _empPre.journeyMastered[dish.id];
-  const _alreadyMastered = !!_prevMastery;
-  const _prevDate = _prevMastery && _prevMastery.date;
-  const _daysSincePrev = _prevDate ? Math.floor((Date.now() - _prevDate) / 86400000) : null;
-  const xpMultiplier = _alreadyMastered ? 0.5 : 1;
-  const xpEarned = Math.round(baseXp * xpMultiplier);
-
-  // Award XP, update SRS, record adaptive data, mark as mastered
-  if(!_djState.xpAwarded && total > 0){
-    _djState.xpAwarded = true;
-    if(xpEarned > 0) awardXP(xpEarned, _en ? 'Dish Journey: '+dd.name : 'Viaje: '+dd.name, 'journey');
-    if(total > 0) registrarActividad({ activity:'recorrido', competency:'carta', kind:'practica',
-      score, total, meta:{ plato: dish && dish.id } });
-    const emp = getEmp(currentUser);
-    // Update SRS with quiz quality
-    const srsQuality = _srsQualityFromScore(score, total);
-    _srsUpdate(emp, dish.id, srsQuality);
-    // Record adaptive learning data per question
-    const qs = _djState.quizQuestions||[];
-    qs.forEach((q,qi) => {
-      const userAns = _djState['q'+qi];
-      if(userAns !== undefined){
-        const qType = !(typeof _alergenosValidados!=='function'||_alergenosValidados()) ? 'ingredient' : qi===0?'allergen':qi===1?'category':'ingredient';
-        _adaptiveRecord(emp, dish.id, qType, userAns===q.correctIdx, null);
-      }
-    });
-    if(isGood){
-      if(!emp.journeyMastered) emp.journeyMastered = {};
-      // Keep best score across attempts
-      const prev = emp.journeyMastered[dish.id];
-      if(!prev || pct >= (prev.score||0)){
-        emp.journeyMastered[dish.id] = { score:pct, date:Date.now() };
-      }
-      saveDB();
-    }
-  }
-
-  // Build quiz review (3 questions with ✓/✗ marks)
-  const qs = _djState.quizQuestions || [];
-  const reviewHtml = qs.length ? `
-    <div class="dj-quiz-review">
-      <div class="dj-quiz-review-title">${_en?'// Question review':'// Repaso de preguntas'}</div>
-      <ol class="dj-quiz-review-list">
-        ${qs.map((q,qi)=>{
-          const userAns = _djState['q'+qi];
-          const ok = userAns === q.correctIdx;
-          const opts = q.options || [];
-          const correctText = opts[q.correctIdx] || '';
-          return `<li class="${ok?'ok':'fail'}">
-            <span class="dj-qrv-mark">${ok?'✓':'✗'}</span>
-            <div class="dj-qrv-body">
-              <div class="dj-qrv-q">${q.q||q.question||''}</div>
-              ${!ok && correctText?`<div class="dj-qrv-ans">→ ${correctText}</div>`:''}
-            </div>
-          </li>`;
-        }).join('')}
-      </ol>
-    </div>
-  ` : '';
-
-  // Next dish suggestion — prefer same category not yet mastered, fall back to any unmastered
-  const _jmAll = (getEmp(currentUser) && getEmp(currentUser).journeyMastered) || {};
-  // Sugerencia de próximo plato: respeta el turno de estudio activo (a/c);
-  // si el turno se queda sin candidatos, cae al pool completo.
-  const _sameCatAll = DISHES.filter(x => x.cat === dish.cat && x.id !== dish.id && !_jmAll[x.id]);
-  const _anyUnAll  = DISHES.filter(x => x.id !== dish.id && !_jmAll[x.id]);
-  const _sameCatSh = _shiftDishes(_sameCatAll);
-  const _anyUnSh   = _shiftDishes(_anyUnAll);
-  const _sameCat = _sameCatSh.length ? _sameCatSh : _sameCatAll;
-  const _anyUn   = _anyUnSh.length   ? _anyUnSh   : _anyUnAll;
-  const _nextDish = _sameCat[Math.floor(Math.random()*_sameCat.length)] || _anyUn[Math.floor(Math.random()*_anyUn.length)] || null;
-  const _nextDd = _nextDish ? getDish(_nextDish) : null;
-  const nextHtml = _nextDish ? `
-    <div class="dj-next-dish">
-      <div class="dj-next-label">${_en?'// Suggested next':'// Próximo plato sugerido'}</div>
-      <button class="dj-next-btn" onclick="_djClose();setTimeout(function(){launchDishJourney(${_nextDish.id});},350)">
-        <span class="dj-next-icon">${CAT_ICONS[_nextDish.cat]||'✦'}</span>
-        <div class="dj-next-txt">
-          <div class="dj-next-name">${_nextDd.name}</div>
-          <div class="dj-next-cat">${catLocal(_nextDish.cat)}</div>
-        </div>
-        <span class="dj-next-arrow">→</span>
-      </button>
-    </div>
-  ` : '';
-
-  // Dual CTA (only when isGood, otherwise we keep the Try Again button)
-  const ctaHtml = isGood ? `
-    <div class="dj-cta-dual">
-      ${_nextDish?`<button class="dj-btn dj-btn-next" onclick="_djClose();setTimeout(function(){launchDishJourney(${_nextDish.id});},350)">${_en?'Master another →':'Dominar otro →'}</button>`:''}
-      <button class="dj-btn dj-btn-prev" onclick="_djClose()">${_en?'Back to index':'Volver al índice'}</button>
-    </div>
-  ` : '';
-
-  return `<div class="dj-mastery">
-    <div class="dj-mastery-icon">${isPerfect?'🏆':isGood?'⭐':'📚'}</div>
-    <div class="dj-mastery-title">${isPerfect?(_en?'Perfect Mastery!':'¡Maestría Perfecta!'):isGood?(_en?'Well Done!':'¡Bien Hecho!'):(_en?'Keep Practicing':'Sigue Practicando')}</div>
-    <div class="dj-mastery-subtitle">${dd.name}</div>
-    <div class="dj-mastery-score">${score}/${total}</div>
-    <div class="dj-mastery-label">${_en?'CORRECT ANSWERS':'RESPUESTAS CORRECTAS'}</div>
-    <div class="dj-mastery-bar"><div class="dj-mastery-fill" style="--target-w:${pct}%;background:linear-gradient(90deg,${isPerfect?'#c49a3c,#e8c44c':isGood?'#4d8a5e,#6ba872':'#c47068,#d48880'})"></div></div>
-    <div class="dj-mastery-xp">+${xpEarned} XP${_alreadyMastered?` <span style="font-size:.65rem;color:rgba(244,237,226,.45);margin-left:.3rem">(${_en?'practice':'práctica'} ×0.5)</span>`:''}</div>
-    ${_alreadyMastered && _daysSincePrev !== null ? `<div style="font-family:var(--font-mono);font-size:var(--fs-1);color:rgba(244,237,226,.45);margin-top:.2rem;letter-spacing:.04em">🕰 ${_en?'Last review':'Último repaso'}: ${_daysSincePrev===0?(_en?'today':'hoy'):_daysSincePrev===1?(_en?'yesterday':'ayer'):(_en?`${_daysSincePrev} days ago`:`hace ${_daysSincePrev} días`)}${_prevMastery.score?` · ${_prevMastery.score}%`:''}</div>` : ''}
-    ${isPerfect && !_alreadyMastered?`<div style="font-family:var(--font-sans);font-size:var(--fs-3);color:rgba(196,154,60,.7);animation:djPulse 2s infinite">🎖 ${_en?'Dish Mastered — Perfect Score Bonus +25 XP':'Plato Dominado — Bonus Puntuación Perfecta +25 XP'}</div>`:''}
-    ${reviewHtml}
-    ${nextHtml}
-    ${ctaHtml}
-    ${!isGood?`<div style="margin-top:1rem"><button class="dj-btn dj-btn-next" onclick="_djState.phase=0;_djState.quizScore=0;_djState.quizAnswered=0;_djState.xpAwarded=false;_djState.quizQuestions=_djGenerateQuiz(DISHES.find(d=>d.id===_djState.dishId));_djRender()" style="font-size:.72rem;padding:.5rem 1.2rem">🔄 ${_en?'Try Again':'Intentar de nuevo'}</button></div>`:''}
-  </div>`;
 }
 
 // ═══════════════════════════════════════════════════════════════
@@ -9641,8 +9812,13 @@ function renderSmartReview(){
   const _nFallos = _smartFallos(emp).length;   // «Repasar fallos» vive aquí como filtro
 
   // ── Platos dominados (barra de progreso de la cabecera) ──
-  const mastered = DISHES.filter(d => { const s = (emp.srs||{})[d.id]; return s && s.reps >= 4 && s.ef >= 2.2; }).length;
+  // «Dominado» es el mismo dato en toda la app (journeyMastered: contado de
+  // memoria dos veces en Un plato al día). «Conocido» es haber hecho Conocer
+  // el plato; va en la misma barra, más claro, para que se vea el camino.
+  const mastered = DISHES.filter(d => (emp.journeyMastered||{})[d.id]).length;
+  const conocidos = DISHES.filter(d => !(emp.journeyMastered||{})[d.id] && (emp.conocidos||{})[d.id]).length;
   const masteryPct = DISHES.length > 0 ? Math.round((mastered / DISHES.length) * 100) : 0;
+  const conocidosPct = DISHES.length > 0 ? Math.round(((mastered + conocidos) / DISHES.length) * 100) : 0;
 
   // ── Stats trio (racha, mejor combo, precisión) ──
   const bestStreak = ad.streakBest || 0;
@@ -9690,9 +9866,10 @@ function renderSmartReview(){
           <div class="ri-mast-track" role="progressbar" aria-valuemin="0" aria-valuemax="100"
                aria-valuenow="${masteryPct}"
                aria-label="${_en?'Menu mastery':'Dominio de la carta'}">
+            <div class="ri-mast-fill con" style="width:${conocidosPct}%"></div>
             <div class="ri-mast-fill" style="width:${masteryPct}%"></div>
           </div>
-          <span class="ri-mast-sub">${mastered}/${DISHES.length} ${_en?'mastered':'dominados'}</span>
+          <span class="ri-mast-sub">${conocidos ? `${mastered} ${_en?'mastered':'dominados'} · ${conocidos} ${_en?'known':'conocidos'}` : `${mastered}/${DISHES.length} ${_en?'mastered':'dominados'}`}</span>
         </div>
       </div>
 
@@ -11420,6 +11597,9 @@ function _extrasCompose(emp){
     ...(emp.certFechas && Object.keys(emp.certFechas).length ? { cf: emp.certFechas } : {}),
     // Un plato al día: cuándo vuelve cada plato y la hora del aviso.
     ...(emp.pad && Object.keys(emp.pad).length ? { pd: emp.pad } : {}),
+    // Conocer el plato: qué platos se han recorrido (día) y cuáles se dominan.
+    ...(emp.conocidos && Object.keys(emp.conocidos).length ? { cn: emp.conocidos } : {}),
+    ...(emp.journeyMastered && Object.keys(emp.journeyMastered).length ? { jm: emp.journeyMastered } : {}),
     ...(emp.padAviso && emp.padAviso.t ? { pa: emp.padAviso } : {}),
   });
 }
@@ -11462,6 +11642,9 @@ function _extrasMergeInto(emp, extrasStr){
   }
   // Un plato al día: por plato, lo último que se contó; la hora, el último cambio.
   if(x.pd && typeof x.pd==='object' && typeof _padFusionar==='function') emp.pad = _padFusionar(emp.pad, x.pd);
+  // Conocido y dominado: se quedan los dos lados (nunca se desaprende por sincronizar).
+  if(x.cn && typeof x.cn==='object'){ emp.conocidos = emp.conocidos || {}; for(const k in x.cn){ if(!emp.conocidos[k] || String(x.cn[k]) < String(emp.conocidos[k])) emp.conocidos[k] = x.cn[k]; } }
+  if(x.jm && typeof x.jm==='object'){ emp.journeyMastered = emp.journeyMastered || {}; for(const k in x.jm){ if(!emp.journeyMastered[k] && x.jm[k] && typeof x.jm[k]==='object') emp.journeyMastered[k] = x.jm[k]; } }
   if(x.pa && x.pa.t && String(x.pa.t) > String((emp.padAviso||{}).t||'')) emp.padAviso = { h: (typeof _padHoraValida==='function' ? _padHoraValida(x.pa.h) : ''), t: String(x.pa.t) };
   // Fechas de certificado: por categoría, la más antigua de las dos.
   if(x.cf && typeof x.cf==='object'){
@@ -16020,7 +16203,7 @@ function _emplOpen(id){
         ${typeof _fsvTiraHTML==='function' ? _fsvTiraHTML(d, _en) : ''}
         ${mas?`<div class="fp-mas compacto">${mas}</div>`:''}
         <button class="empl-ov-ficha" onclick="${cerrar};repasoCat='${escapeHtml(dd.cat||'')}';repasoDishId=${d.id};repasoView='dish';_subTab.aprender='repaso';showTab('repaso')">${_fpIc('libro',16)}${_en?'Full dish sheet':'Ficha completa del plato'}</button>
-        <button class="empl-ov-journey" onclick="${cerrar};launchDishJourney(${d.id})">${_fpIc('ruta',16)}${_en?'Guided journey (optional)':'Recorrido guiado (opcional)'}</button>
+        <button class="empl-ov-journey" onclick="${cerrar};launchDishJourney(${d.id})">${_fpIc('ruta',16)}${_en?'Get to know the dish, 3 minutes':'Conocer el plato, 3 minutos'}</button>
         ${(DISH_PHOTO_PENDING&&DISH_PHOTO_PENDING.has(d.id))
           ?`<div class="empl-pend">${_fpIc('reloj',14)}${_en?'A new photo is in review':'Hay una foto nueva en revisión'}</div>`
           :`<button class="empl-ov-upload" onclick="_dishPhotoPick(${d.id})"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align:-.15em;flex:none"><path d="M3 8.5A1.5 1.5 0 014.5 7h2L8 5h8l1.5 2h2A1.5 1.5 0 0121 8.5v9A1.5 1.5 0 0119.5 19h-15A1.5 1.5 0 013 17.5v-9z"/><circle cx="12" cy="12.5" r="3.2"/></svg> ${foto?`${_en?'Got a better photo? Submit it':'¿Tienes una foto mejor? Súbela'}`:(_en?'No photo yet: upload one':'Sin foto todavía: sube una')}</button>`}
@@ -16693,6 +16876,34 @@ function _padFusionar(a, b){
   }
   return r;
 }
+// ── Conocer el plato: lo que deja en la cola de Un plato al día ──
+// Terminar el recorrido mete el plato en ESTA cola (mismo emp.pad, mismos
+// intervalos). Si dentro del recorrido se contó en voz alta, cuenta como
+// contado hoy (y sube o baja escalón como siempre); si no se contó, vuelve
+// mañana sin marcar el día, y sin pisar una fecha mejor que ya tuviera.
+function _cpProgramar(prev, contado, todas, hoy, ahora){
+  if(contado){
+    const e = _padProgramar(prev, todas, hoy, ahora);
+    e.okd = _cpOkDias(prev, todas ? hoy : null);
+    return e;
+  }
+  if(prev && prev.next && prev.next > hoy) return prev;
+  return { n: 0, d: (prev && prev.d) || null, next: _padSumarDias(hoy, PAD_INTERVALOS[0]), ok: 0, t: ahora || Date.now(), okd: _cpOkDias(prev, null) };
+}
+// Días distintos en los que el plato se contó ENTERO de memoria (los últimos seis).
+function _cpOkDias(prev, dia){
+  const s = new Set(Array.isArray(prev && prev.okd) ? prev.okd : []);
+  if(dia) s.add(dia);
+  return Array.from(s).sort().slice(-6);
+}
+// «Dominado»: contado entero de memoria dos veces, con al menos dos días entre
+// la primera y la última.
+function _cpDominado(okd){
+  const d = Array.isArray(okd) ? okd.slice().sort() : [];
+  if(d.length < 2) return false;
+  const a = new Date(d[0] + 'T12:00:00Z'), b = new Date(d[d.length - 1] + 'T12:00:00Z');
+  return Math.round((b - a) / 86400000) >= 2;
+}
 // La hora del aviso: "HH:MM" válida o ''.
 function _padHoraValida(h){ return (typeof h === 'string' && /^([01]\d|2[0-3]):[0-5]\d$/.test(h)) ? h : ''; }
 
@@ -16746,6 +16957,9 @@ function _padFechaTxt(dia){
 
 const _padS = { base: '', parando: false, inicio: 0, id: null, paso: 'ver', modo: 'voz', texto: '', interino: '', r1: null, r2: null, ronda: 1, desde: 'dashboard', grabando: false, aviso: '', manual: null, t0: 0, oido: false };
 let _padRec = null, _padRecFin = null, _padHabla = null, _padAudio = null;
+// Quien quiera el motor dentro de su pantalla (Conocer el plato) pone aquí su
+// función de pintar: el flujo de grabar, resolver y resultado es el mismo.
+let _padHost = null;
 
 // Tarjeta de Hoy y de Practicar. Sin platos con story y claves, nada.
 function _padTarjetaHTML(desde){
@@ -16786,6 +17000,7 @@ function _padTarjetaHTML(desde){
 
 function _padAbrir(desde){
   const _en = LANG === 'en';
+  _padHost = null;
   const emp = getEmp(currentUser) || {};
   const el = _padElegir(_padPlatos(), _padEstado(emp), _padHoy());
   _padParar();
@@ -17004,7 +17219,13 @@ function _padGuardar(){
   const hoy = _padHoy();
   emp.pad = emp.pad || {};
   const todas = _padS.r1.length > 0 && _padS.r1.every(Boolean);
-  emp.pad[_padS.id] = _padProgramar(emp.pad[_padS.id], todas, hoy);
+  const prev = emp.pad[_padS.id];
+  const nuevo = _padProgramar(prev, todas, hoy);
+  // Contado entero de memoria: se apunta el día. Dos días así, con al menos
+  // dos de separación, es lo que hace «dominado» el plato en toda la app.
+  nuevo.okd = _cpOkDias(prev, todas ? hoy : null);
+  emp.pad[_padS.id] = nuevo;
+  if(typeof _cpMarcarDominado === 'function') _cpMarcarDominado(emp, _padS.id, nuevo.okd);
   try{ saveDB(); }catch(e){}
   // Vocabulario cerrado de actividades: es un repaso de carta, de práctica.
   try{
@@ -17142,6 +17363,7 @@ function _padGrabadorHTML(claves){
   </div>`;
 }
 function _padPintar(){
+  if(typeof _padHost === 'function'){ _padHost(); return; }
   const c = document.getElementById('appContent'); if(!c) return;
   if(typeof currentTab !== 'undefined' && currentTab !== 'platodia') return;
   const _en = LANG === 'en';
@@ -26965,6 +27187,7 @@ function _cartaFilaHTML(d, emp, extra, abrir){
   const dd=getDish(d);
   const isKnown=!!((emp.knownDishes||{})[d.id]);
   const isMastered=!!(emp.journeyMastered||{})[d.id];
+  const isConocido=!isMastered && !!(emp.conocidos||{})[d.id];
   const srs=_srsDishStatus(emp, d.id);
   const n=(dd.allergens||[]).length;
   const val=(typeof _alergenosValidados!=='function'||_alergenosValidados());
@@ -26975,10 +27198,10 @@ function _cartaFilaHTML(d, emp, extra, abrir){
     ${ph?`<span class="cp-foto"><img loading="lazy" ${SRC}="${ph}" alt=""></span>`:''}
     <div class="cp-cuerpo">
       <button type="button" class="cp-nom" onclick="${abrir}">${escapeHTML(dd.name)}</button>
-      <div class="cp-meta"><span class="${n?'al':'sin'}">${escapeHTML(alTxt)}</span>${srs.kind!=='new'?`<span class="srs srs-${srs.kind}">${escapeHTML(srs.label.toLowerCase())}</span>`:''}${isMastered?`<span class="dom">${_en?'mastered':'dominado'}</span>`:''}</div>
+      <div class="cp-meta"><span class="${n?'al':'sin'}">${escapeHTML(alTxt)}</span>${srs.kind!=='new'?`<span class="srs srs-${srs.kind}">${escapeHTML(srs.label.toLowerCase())}</span>`:''}${isMastered?`<span class="dom">${_en?'mastered':'dominado'}</span>`:isConocido?`<span class="dom con">${_en?'known':'conocido'}</span>`:''}</div>
       ${extra||''}
       <div class="cp-acc">
-        <button type="button" class="cp-btn" onclick="event.stopPropagation();launchDishJourney(${d.id})">${_fpIc('ruta',15)}${_en?'Guided journey':'Recorrido'}</button>
+        <button type="button" class="cp-btn" onclick="event.stopPropagation();launchDishJourney(${d.id})">${_fpIc('ruta',15)}${_en?'Get to know it':'Conocerlo'}</button>
         <button type="button" class="cp-btn" onclick="event.stopPropagation();launchPase(${d.id})">${_fpIc('plato',15)}${_en?'Pass':'Pase'}</button>
       </div>
     </div>
@@ -27081,7 +27304,7 @@ function renderRepasoDishDetail(dishId){
   const emp = getEmp(currentUser);
   const isKnown = emp && emp.knownDishes && emp.knownDishes[dish.id];
   const _en = LANG==='en';
-  const _jm = !!(emp.journeyMastered||{})[dish.id];
+  const _jm = !!((emp.journeyMastered||{})[dish.id] || (emp.conocidos||{})[dish.id]);
   const _marcaje = dd.marcaje || '';
   // Platos de varios bocados (el Mistery box de Akira Back): si la ficha trae
   // un bocado por línea, se enseña así, uno debajo de otro con su nombre en
@@ -27143,7 +27366,7 @@ function renderRepasoDishDetail(dishId){
       <h2 class="fp-tit">${escapeHTML(dd.name)}</h2>
       <div class="fp-acciones">
         <button type="button" class="fp-dom${isKnown?' on':''}" aria-pressed="${isKnown?'true':'false'}" onclick="toggleKnown(${dish.id});repasoView='dish';renderRepaso()">${_fpIc('check',16)}<span>${isKnown ? (_en?'Mastered':'Dominado') : (_en?'I know it':'Ya lo domino')}</span></button>
-        <button type="button" class="fp-ruta${_jm?' on':''}" onclick="launchDishJourney(${dish.id})">${_fpIc('ruta',16)}<span>${_en?'Guided journey':'Recorrido guiado'}</span></button>
+        <button type="button" class="fp-ruta${_jm?' on':''}" onclick="launchDishJourney(${dish.id})">${_fpIc('ruta',16)}<span>${_en?'Get to know the dish':'Conocer el plato'}</span></button>
       </div>
     </header>
 
