@@ -1,6 +1,66 @@
 {
- "updated": "2026-10-27T16:42:58.146Z",
+ "updated": "2026-10-27T21:21:46.494Z",
  "items": [
+  {
+   "t": "Martín Berasategui, chef: 'Al pescado ahumado le va mejor una vinagreta de tomate, ajo, mostaza y albahaca que la mayonesa'",
+   "u": "https://www.eltiempo.com/cultura/recetas/martin-berasategui-chef-al-pescado-ahumado-le-va-mejor-una-vinagreta-de-tomate-ajo-mostaza-y-albahaca-que-la-mayonesa-3596729",
+   "s": "El Tiempo",
+   "d": "2026-10-27T20:46:51.000Z",
+   "tags": [
+    "CHEF"
+   ],
+   "img": "https://imagenes2.eltiempo.com/files/og_thumbnail/uploads/2026/10/27/6ae10c8bb9527.png"
+  },
+  {
+   "t": "Las casas que Canarias mantiene vacías mientras sus vecinos buscan dónde vivir",
+   "u": "https://www.eldiario.es/canariasahora/sociedad/casas-canarias-mantiene-vacias-vecinos-buscan-vivir_1_13592494.html",
+   "s": "elDiario.es",
+   "d": "2026-10-27T20:00:37.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://static.eldiario.es/clip/f0450ead-03f6-4bbb-94ee-059bffbcf431_facebook-aspect-ratio-1200-675_default_0.jpg"
+  },
+  {
+   "t": "El personal laboral del Ayuntamiento de Granadilla anuncia protestas por el reparto de la productividad",
+   "u": "https://www.eldiario.es/canariasahora/tenerifeahora/politica/personal-laboral-ayuntamiento-granadilla-anuncia-protestas-reparto-productividad_1_13620066.html",
+   "s": "elDiario.es",
+   "d": "2026-10-27T19:38:31.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://static.eldiario.es/clip/81baa9aa-03e1-473d-88ac-f61f8da07ab8_facebook-aspect-ratio-1200-675_default_0.jpg"
+  },
+  {
+   "t": "Cervezas 1906 apoya cuatro proyectos para preservar la tradición gastronómica",
+   "u": "https://www.eldia.es/ocio/gastronomia/2026/10/27/cervezas-1906-apoya-cuatro-proyectos-preservar-tradicion-gastronomica-135823241.html",
+   "s": "Eldía",
+   "d": "2026-10-27T19:26:59.000Z",
+   "tags": [
+    "CANARIAS"
+   ]
+  },
+  {
+   "t": "Las emociones del paciente guían en directo una cirugía cerebral para preservar sus funciones cognitivas complejas",
+   "u": "https://www.elespanol.com/ciencia/20261027/emociones-paciente-guian-directo-cirugia-cerebral-preservar-funciones-cognitivas-complejas/1003744418862_0.amp.html",
+   "s": "El Español",
+   "d": "2026-10-27T17:39:53.000Z",
+   "tags": [
+    "CHEF"
+   ],
+   "img": "https://s3.elespanol.com/k/imgp/cms/elespanol/11376733.jpg?p=f:jpeg/w:1706/h:960&h=AJkIlwpU"
+  },
+  {
+   "t": "Tejeda reunirá este domingo a ocho bodegas de Gran Canaria en una gran fiesta del vino",
+   "u": "https://www.canarias7.es/canarias/gran-canaria/tejeda-reunira-domingo-ocho-bodegas-gran-canaria-20261027162858-nt_amp.html",
+   "s": "Canarias7",
+   "d": "2026-10-27T16:28:58.000Z",
+   "tags": [
+    "VINO",
+    "CANARIAS"
+   ],
+   "img": "https://s3.ppllstatics.com/canarias7/www/multimedia/local/2026/10/27/tejedavino.jpg"
+  },
   {
    "t": "La Unipol vuelve a las calles de Santa Cruz de Tenerife en los próximos días",
    "u": "https://www.eldiario.es/canariasahora/tenerifeahora/santa_cruz/unipol-santa-cruz-tenerife_1_13619235.html",
@@ -10,6 +70,26 @@
     "CANARIAS"
    ],
    "img": "https://static.eldiario.es/clip/50b4e417-e9dd-43a1-a3d4-38440affb472_facebook-aspect-ratio-1200-675_default_0.jpg"
+  },
+  {
+   "t": "¿Quiénes son los candidatos de Canarias a las elecciones generales de 2026? Todas las listas al Congreso y al Senado",
+   "u": "https://www.eldiario.es/canariasahora/politica/son-candidatos-canarias-elecciones-generales-2026-listas-congreso-senado_1_13618307.html",
+   "s": "elDiario.es",
+   "d": "2026-10-27T14:22:08.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://static.eldiario.es/clip/717517b5-f461-4794-b2f9-ba857edfde31_facebook-aspect-ratio-1200-675_default_0_x592y108.jpg"
+  },
+  {
+   "t": "Cargos peninsulares de Vox se incrustan en las listas del PP al Senado por Gran Canaria y Tenerife",
+   "u": "https://www.eldiario.es/canariasahora/politica/cargos-peninsulares-vox-incrustan-lista-pp-senado-gran-canaria-tenerife_1_13618829.html",
+   "s": "elDiario.es",
+   "d": "2026-10-27T13:48:59.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://static.eldiario.es/clip/867e4617-ef7c-4a1b-86c7-bd6cd386d4c5_facebook-aspect-ratio-1200-675_default_0_x703y225.jpg"
   },
   {
    "t": "Pinktober vuelve a Hard Rock Cafe Tenerife: gastronomía, música y solidaridad contra el cáncer de mama",
@@ -22,6 +102,27 @@
    "img": "https://theshowroommag.com/wp-content/uploads/2026/10/1-2.jpg"
   },
   {
+   "t": "Olga Cerpa y Mestisay llevan la música de Canarias a México y República Dominicana en su próxima gira",
+   "u": "https://www.eldiario.es/canariasahora/cultura/olga-cerpa-mestisay-llevan-musica-canarias-mexico-republica-dominicana-proxima-gira_1_13618596.html",
+   "s": "elDiario.es",
+   "d": "2026-10-27T13:14:27.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://static.eldiario.es/clip/f023563f-ba1f-4e5e-8232-3db1402b6929_facebook-aspect-ratio-1200-675_default_0_x966y372.jpg"
+  },
+  {
+   "t": "Vivanco y DIAVI tienden un puente entre La Rioja y Tenerife a través del vino",
+   "u": "https://lagacetadecanarias.com/vivanco-y-diavi-tienden-un-puente-entre-la-rioja-y-tenerife-a-traves-del-vino/",
+   "s": "La Gaceta de Canarias",
+   "d": "2026-10-27T12:22:29.000Z",
+   "tags": [
+    "VINO",
+    "CANARIAS"
+   ],
+   "img": "https://lagacetadecanarias.com/wp-content/uploads/2026/10/Presentacion-de-vinos-en-Tenerife.png"
+  },
+  {
    "t": "Cepa 21, primera bodega en desarrollar un recomendador de vino con Inteligencia Artificial (IA)",
    "u": "https://www.europapress.es/economia/noticia-cepa-21-primera-bodega-desarrollar-recomendador-vino-inteligencia-artificial-ia-20261027131832.html",
    "s": "Europa Press",
@@ -31,6 +132,26 @@
     "CANARIAS"
    ],
    "img": "https://img.europapress.es/fotoweb/fotonoticia_20261027131832_1200.jpg"
+  },
+  {
+   "t": "Canarias iguala su mejor tasa de paro de justo antes del ‘crack’ de 2008: el 10,9% de diciembre de 2007",
+   "u": "https://www.eldiario.es/canariasahora/economia/canarias-iguala-mejor-tasa-paro-2008-diciembre-2007_1_13618326.html",
+   "s": "elDiario.es",
+   "d": "2026-10-27T11:53:35.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://static.eldiario.es/clip/cf3a160d-764c-4cb3-a96d-419f844a886c_facebook-aspect-ratio-1200-675_default_0_x1294y112.jpg"
+  },
+  {
+   "t": "Nuevo incidente aéreo en Canarias: un avión toma tierra sin tren de aterrizaje",
+   "u": "https://www.eldiario.es/canariasahora/sucesos/avion-tenerife-norte-tren-aterrizaje_1_13618183.html",
+   "s": "elDiario.es",
+   "d": "2026-10-27T11:22:04.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://static.eldiario.es/clip/0b8c541d-3933-41e8-af82-9025e23d0f78_facebook-aspect-ratio-1200-675_default_0.jpg"
   },
   {
    "t": "Dani García, chef, sobre la hostelería en España: \"Es un mundo que tiene que ir cambiando para hacerla un poco más confortable al trabajador\"",
@@ -46,11 +167,71 @@
    "t": "ECOFEST TACORONTE PREMIA A BODEGAS INSUALRES TENERIFE Y BODEGAS PRESAS OCAMPO",
    "u": "https://vinosdo.wine/noticias/ecofest-tacoronte-premia-a-bodegas-insualres-tenerife-y-bodegas-presas-ocampo/",
    "s": "Vinos DO",
-   "d": "2026-10-27T10:47:49.000Z",
+   "d": "2026-10-27T10:52:23.000Z",
    "tags": [
     "VINO",
     "CANARIAS"
    ]
+  },
+  {
+   "t": "El proyecto europeo de Rayas y Tiburones en Canarias, protagonista especial del International Ocean Film Tour en Lanzarote",
+   "u": "https://www.eldiario.es/canariasahora/lanzarote-ahora/proyecto-europeo-rayas-tiburones-canarias-international-ocean-film-lanzarote_1_13617960.html",
+   "s": "elDiario.es",
+   "d": "2026-10-27T10:39:03.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://static.eldiario.es/clip/8efb9aed-fc89-4507-b21a-7d04b501a169_facebook-aspect-ratio-1200-675_default_0_x740y153.jpg"
+  },
+  {
+   "t": "Canarias organiza el simposio ‘Diásporas Patrimoniales’ al que no acude el Museo Arqueológico Nacional “para rehuir el debate de la devolución de la momia guanche”",
+   "u": "https://www.eldiario.es/canariasahora/patrimonio-canarias/canarias-diasporas-patrimoniales-museo-arqueologico-devolucion-momia-guanche_1_13617890.html",
+   "s": "elDiario.es",
+   "d": "2026-10-27T10:22:11.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://static.eldiario.es/clip/a1e0851c-15fa-443e-8453-ac908afb8e20_facebook-aspect-ratio-1200-675_default_0.jpg"
+  },
+  {
+   "t": "Qué tiempo hará en Canarias este puente de Todos los Santos",
+   "u": "https://www.eldiario.es/canariasahora/tiempo-canarias/tiempo-canarias-puente-santos-halloween_1_13617793.html",
+   "s": "elDiario.es",
+   "d": "2026-10-27T10:12:25.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://static.eldiario.es/clip/fe9bae97-9609-4f16-8811-ad45b7c1d01f_facebook-aspect-ratio-1200-675_default_0.jpg"
+  },
+  {
+   "t": "La pensión media en Canarias sube un 4,8% en Canarias en octubre",
+   "u": "https://www.eldiario.es/canariasahora/economia/pension-media-canarias-sube-4-8-canarias-octubre_1_13617765.html",
+   "s": "elDiario.es",
+   "d": "2026-10-27T09:53:53.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://static.eldiario.es/clip/26d0e38c-15c8-43dc-93f8-bced5cc5eadb_facebook-aspect-ratio-1200-675_default_0_x1612y124.jpg"
+  },
+  {
+   "t": "Ninguna naviera se presenta para cubrir las líneas de interés público Canarias-península",
+   "u": "https://www.eldiario.es/canariasahora/economia/naviera-presenta-cubrir-lineas-interes-publico-canarias-peninsula_1_13617574.html",
+   "s": "elDiario.es",
+   "d": "2026-10-27T09:04:48.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://static.eldiario.es/clip/349037f9-d5b3-4ca3-9da4-f972c703ffb4_facebook-aspect-ratio-1200-675_default_0.jpg"
+  },
+  {
+   "t": "MasterChef Celebrity T4 capítulo 7: Repesca y doble expulsión",
+   "u": "https://www.formulatv.com/programas/masterchef-celebrity/capitulos/72555/",
+   "s": "FormulaTV",
+   "d": "2026-10-27T09:03:37.000Z",
+   "tags": [
+    "CHEF"
+   ],
+   "img": "https://www.formulatv.com/images/programas/1000/1535-f1.jpg"
   },
   {
    "t": "Canarias y Brasil unen sus viñedos para formar a los nuevos profesionales del vino",
@@ -74,6 +255,16 @@
    "img": "https://s1.ppllstatics.com/canarias7/www/multimedia/gastronomia-c7/2026/10/26/cocina-kyAB-U40165281554fH-1200x840@Canarias7.jpg"
   },
   {
+   "t": "Canarias lideró el crecimiento del empleo entre julio y septiembre con 38.100 trabajos más",
+   "u": "https://www.eldiario.es/canariasahora/economia/canarias-lidero-crecimiento-empleo-julio-septiembre-38-100-trabajos_1_13617436.html",
+   "s": "elDiario.es",
+   "d": "2026-10-27T08:15:55.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://static.eldiario.es/clip/68afe17e-8b40-440c-81a5-8bd4f2ef5347_facebook-aspect-ratio-1200-675_default_0.jpg"
+  },
+  {
    "t": "El restaurante de Tenerife que sorprende con un arroz caldoso de marisco a un precio muy económico: raciones abundantes y sabor casero",
    "u": "https://www.eldia.es/tenerife/2026/10/27/restaurante-tenerife-sorprende-arroz-caldoso-marisco-dv-135774034.html",
    "s": "Eldía",
@@ -94,6 +285,16 @@
    "img": "https://s2.ppllstatics.com/canarias7/www/multimedia/local/2026/10/26/Cata%20Solidaria%202-kAgF-U4063070667VG-1200x840@Canarias7.jpeg"
   },
   {
+   "t": "El pan de papas de Artenara: de alimento de aprovechamiento a producto gourmet",
+   "u": "https://www.canarias7.es/gastronomia-c7/pan-papas-artenara-alimento-aprovechamiento-producto-gourmet-20261027070000-nt.html",
+   "s": "Canarias7",
+   "d": "2026-10-27T06:00:15.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://s3.ppllstatics.com/canarias7/www/multimedia/gastronomia-c7/2026/10/26/miqueas-kIPD-U4015056072w7D-1200x840@Canarias7.jpg"
+  },
+  {
    "t": "Jorge Rodríguez, enólogo: “La filoxera arrasó la viña en toda Europa, menos en Canarias; somos la única región del mundo que mantiene la planta original”",
    "u": "https://www.lavanguardia.com/comer/beber/20261027/11668023/jorge-rodriguez-enologo-filoxera-arraso-vina-toda-europa-canarias-unica-region-mundo-mantiene-planta-original-cdv.html",
    "s": "La Vanguardia",
@@ -103,209 +304,6 @@
     "CANARIAS"
    ],
    "img": "https://www.lavanguardia.com/files/og_thumbnail/files/fp/uploads/2026/10/27/6ae0c19f8f0ee.r_d.1117-578-7446.jpeg"
-  },
-  {
-   "t": "Tenerife Peñón Fest prepara dos días de conciertos, gastronomía y buena música",
-   "u": "https://theshowroommag.com/tenerife-penon-fest-prepara-dos-dias-de-conciertos-gastronomia-y-buena-musica/",
-   "s": "The Showroom Mag",
-   "d": "2026-10-27T01:29:34.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://theshowroommag.com/wp-content/uploads/2026/10/Fotos-web-2026-10-13T103919.134.jpg"
-  },
-  {
-   "t": "Gastrolovers vuelve al origen de la cocina canaria con Braulio Simancas",
-   "u": "https://diariodeavisos.elespanol.com/2026/10/gastrolovers-cocina-canaria-braulio-simancas/",
-   "s": "Diario de Avisos",
-   "d": "2026-10-27T01:19:34.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://cdn.diariodeavisos.com/wp-content/uploads/2026/10/Jarea-Arona-Gran-Hotel-Braulio-SImancas.jpg"
-  },
-  {
-   "t": "«Vinos y Vinilos» en la Bodega El Grifo el 3 de noviembre",
-   "u": "https://www.teneriffa-news.com/es/agenda/agenda-lanzarote/vinos-vinilos-bodega-grifo-2",
-   "s": "Teneriffa News",
-   "d": "2026-10-26T20:48:33.000Z",
-   "tags": [
-    "VINO",
-    "CANARIAS"
-   ]
-  },
-  {
-   "t": "Cata de vinos «Origen, Territorio y Vino» con la D.O. La Palma",
-   "u": "https://www.teneriffa-news.com/es/agenda/agenda-lanzarote/cata-vinos-origen-territorio-vino",
-   "s": "Teneriffa News",
-   "d": "2026-10-26T20:48:33.000Z",
-   "tags": [
-    "VINO",
-    "CANARIAS"
-   ]
-  },
-  {
-   "t": "Santa Brígida celebra un mes dedicado al vino con Manu Tenorio, catas y visitas a bodegas",
-   "u": "https://www.laprovincia.es/gran-canaria/2026/10/26/santa-brigida-celebra-mes-dedicado-135778857.html",
-   "s": "La Provincia",
-   "d": "2026-10-26T20:24:28.000Z",
-   "tags": [
-    "VINO",
-    "CANARIAS"
-   ]
-  },
-  {
-   "t": "Vivanco y DIAVI tienden un puente entre La Rioja y Tenerife a través del vino",
-   "u": "https://lagacetadecanarias.com/vivanco-y-diavi-tienden-un-puente-entre-la-rioja-y-tenerife-a-traves-del-vino/",
-   "s": "La Gaceta de Canarias",
-   "d": "2026-10-26T20:22:18.000Z",
-   "tags": [
-    "VINO",
-    "CANARIAS"
-   ],
-   "img": "https://lagacetadecanarias.com/wp-content/uploads/2026/10/Presentacion-de-vinos-en-Tenerife.png"
-  },
-  {
-   "t": "Semana Malvasía: Semana del vino en San Bartolomé y La Geria",
-   "u": "https://www.teneriffa-news.com/es/agenda/agenda-lanzarote/semana-malvasia-semana-vino-san",
-   "s": "Teneriffa News",
-   "d": "2026-10-26T19:51:08.000Z",
-   "tags": [
-    "VINO",
-    "CANARIAS"
-   ]
-  },
-  {
-   "t": "Martín Berasategui, chef español: \"Si quieres ser algo en la vida, tienes que ser generoso, tienes que delegar y tienes que confiar. Es la única manera de crecer, porque solo no eres nadie\"",
-   "u": "https://www.clarin.com/internacional/martin-berasategui-chef-espanol-quieres-vida-generoso-delegar-confiar-unica-manera-crecer-solo-nadie_0_R5UTI9U1f0.html",
-   "s": "Clarin.com",
-   "d": "2026-10-26T19:20:10.000Z",
-   "tags": [
-    "CHEF"
-   ],
-   "img": "https://www.clarin.com/img/2026/08/12/wdCzCfnv8_2000x1500__1.jpg"
-  },
-  {
-   "t": "De una botella de 1929 a Frank Gehry: el Hotel Marqués de Riscal cumple 20 años",
-   "u": "https://www.europapress.es/la-rioja/noticia-botella-1929-frank-gehry-hotel-marques-riscal-cumple-20-anos-20261026194725.html",
-   "s": "Europa Press",
-   "d": "2026-10-26T18:47:25.000Z",
-   "tags": [
-    "VINO",
-    "CANARIAS"
-   ],
-   "img": "https://img.europapress.es/fotoweb/fotonoticia_20261026194725_1200.jpg"
-  },
-  {
-   "t": "Sabor a Málaga reúne en Sur Wines & Gourmet casi a una veintena de empresas de productos delicatesen de la provincia",
-   "u": "https://www.europapress.es/andalucia/malaga-00356/noticia-sabor-malaga-reune-sur-wines-gourmet-casi-veintena-empresas-productos-delicatesen-provincia-20261026183048.html",
-   "s": "Europa Press",
-   "d": "2026-10-26T17:30:48.000Z",
-   "tags": [
-    "VINO",
-    "CANARIAS"
-   ],
-   "img": "https://img.europapress.es/fotoweb/fotonoticia_20261026183048_1200.jpg"
-  },
-  {
-   "t": "La Ruta de la Cabra de La Laguna ensalza la cocina de la Comarca Nordeste",
-   "u": "https://www.eldia.es/la-laguna/2026/10/26/ruta-cabra-laguna-ensalza-cocina-135779690.html",
-   "s": "Eldía",
-   "d": "2026-10-26T17:16:47.000Z",
-   "tags": [
-    "CANARIAS"
-   ]
-  },
-  {
-   "t": "Bodega Contador afronta nueva etapa con Andrés Romeo, que asume la gestión para dar continuidad al proyecto",
-   "u": "https://www.europapress.es/economia/noticia-bodega-contador-afronta-nueva-etapa-andres-romeo-asume-gestion-dar-continuidad-proyecto-20261026175238.html",
-   "s": "Europa Press",
-   "d": "2026-10-26T16:52:38.000Z",
-   "tags": [
-    "VINO",
-    "CANARIAS"
-   ],
-   "img": "https://img.europapress.es/fotoweb/fotonoticia_20261026175238_1200.jpg"
-  },
-  {
-   "t": "La Perla Marbella consolida su alta cocina mediterránea con novedades en carta",
-   "u": "https://www.abc.es/gurme/malaga/perla-marbella-consolida-alta-cocina-mediterranea-novedades-20261026170246-nts.html",
-   "s": "ABC",
-   "d": "2026-10-26T16:04:16.000Z",
-   "tags": [
-    "ALTA COCINA"
-   ],
-   "img": "https://s1.abcstatics.com/abc/www/multimedia/gurme/2026/10/26/la-perla-marbella-U58862384182QQS-1200x630@diario_abc.jpg"
-  },
-  {
-   "t": "Brian Rodríguez asume la jefatura de cocina del Mandarin Oriental Ritz, Madrid",
-   "u": "https://www.democrata.es/agricultura-alimentacion/brian-rodriguez-asume-la-jefatura-de-cocina-del-mandarin-oriental-ritz-madrid/",
-   "s": "Demócrata",
-   "d": "2026-10-26T15:44:37.000Z",
-   "tags": [
-    "ALTA COCINA"
-   ]
-  },
-  {
-   "t": "Friends & Fire: la gastronomía se convierte en una historia personal en Bonfire",
-   "u": "https://theshowroommag.com/friends-fire-la-gastronomia-se-convierte-en-una-historia-personal-en-bonfire/",
-   "s": "The Showroom Mag",
-   "d": "2026-10-26T14:10:36.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://theshowroommag.com/wp-content/uploads/2026/10/2-12.jpg"
-  },
-  {
-   "t": "El restaurante de carretera definitivo está en este pueblo medieval de Madrid: Martín Berasategui confiesa su secreto mejor guardado",
-   "u": "https://www.noticiasdelvino.com/escapadas/2026/10/26/el-restaurante-de-carretera-definitivo-esta-en-este-pueblo-medieval-de-madrid-martin-berasategui-confiesa-su-secreto-mejor-guardado-74843/",
-   "s": "Noticias del Vino",
-   "d": "2026-10-26T14:10:03.000Z",
-   "tags": [
-    "CHEF"
-   ],
-   "img": "https://www.noticiasdelvino.com/wp-content/uploads/image-583.png.webp"
-  },
-  {
-   "t": "Gala Guía Estrella Michelín 2027 – Huesca – 1 de diciembre",
-   "u": "https://www.eventoplus.com/notas-de-prensa/gala-guia-estrella-michelin-2027-huesca-1-de-diciembre/",
-   "s": "Eventoplus",
-   "d": "2026-10-26T13:31:59.000Z",
-   "tags": [
-    "MICHELIN"
-   ],
-   "img": "https://www.eventoplus.com/wp-content/uploads/2026/10/FOTO-PRESENTACION-GALA-GUIA-MICHELIN-scaled.jpg"
-  },
-  {
-   "t": "Santa Brígida dedica noviembre al mes del vino » Ayuntamiento de la Villa de Santa Brígida",
-   "u": "https://www.santabrigida.es/santa-brigida-dedica-noviembre-al-mes-del-vino-2/",
-   "s": "santabrigida.es",
-   "d": "2026-10-26T13:31:10.000Z",
-   "tags": [
-    "VINO",
-    "CANARIAS"
-   ],
-   "img": "https://www.santabrigida.es/wp-content/uploads/2026/10/Portada-3.jpeg"
-  },
-  {
-   "t": "Santa Brígida dedica noviembre al mes del vino",
-   "u": "https://www.canarias7.es/canarias/gran-canaria/santa-brigida-dedica-noviembre-mes-vino-20261026132738-nt_amp.html",
-   "s": "Canarias7",
-   "d": "2026-10-26T13:27:38.000Z",
-   "tags": [
-    "VINO",
-    "CANARIAS"
-   ],
-   "img": "https://s3.ppllstatics.com/canarias7/www/multimedia/local/2026/10/26/vino.jpg"
-  },
-  {
-   "t": "La Concepción convierte la cocina viajera en su sello de identidad",
-   "u": "https://www.eldia.es/ocio/gastronomia/2026/10/26/concepcion-convierte-cocina-viajera-sello-bc-135745713.html",
-   "s": "Eldía",
-   "d": "2026-10-26T12:33:30.000Z",
-   "tags": [
-    "CANARIAS"
-   ]
   }
  ]
 }
