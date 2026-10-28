@@ -54,7 +54,7 @@
 <meta property="og:description" content="Formación de equipos de sala: carta, alérgenos, vinos, exámenes y juegos de repaso.">
 <meta property="og:url" content="https://meseo.es/">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"Meseo","url":"https://meseo.es/"}</script>
-<meta name="app-version" content="7.528">
+<meta name="app-version" content="7.529">
 <meta name="app-build" content="May 2026">
 <meta name="theme-color" content="#1c2a22">
 <!-- ═══ PWA ═══ -->
@@ -2891,7 +2891,7 @@ const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><p
 const SRC = 'src';
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='7.528';  // sincronizada con sw.js VERSION (guard de CI)
+const APP_VERSION='7.529';  // sincronizada con sw.js VERSION (guard de CI)
 const APP_BUILD='Jul 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;
@@ -16169,8 +16169,32 @@ function _emplRender(q){
     </div>`:''}`).join('')
     + ((missing.length && _isSupDevice())?`<div class="empl-missing"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align:-.15em;flex:none"><path d="M3 8.5A1.5 1.5 0 014.5 7h2L8 5h8l1.5 2h2A1.5 1.5 0 0121 8.5v9A1.5 1.5 0 0119.5 19h-15A1.5 1.5 0 013 17.5v-9z"/><circle cx="12" cy="12.5" r="3.2"/></svg> ${_en?'No photo yet':'Sin foto aún'} (${_en?'only you see this':'solo tú ves este aviso'}): ${missing.length} ${_en?'dishes':'platos'} · ${escapeHtml(missing.join(' · '))}</div>`:'');
 }
-function _emplOpen(id){
+// Deslizar entre platos en la vista rápida: el orden es el de la lista desde
+// la que se abrió (la que está en pantalla); si no hay lista, la sección del
+// plato en el orden de la carta.
+function _emplSecuencia(id){
+  const ids=[];
+  try{
+    document.querySelectorAll('#appContent [onclick^="_emplOpen("]').forEach(el=>{
+      const m=/_emplOpen\((\d+)\)/.exec(el.getAttribute('onclick')||''); if(m){ const n=+m[1]; if(ids.indexOf(n)<0) ids.push(n); }
+    });
+  }catch(e){}
+  if(ids.indexOf(id)>=0) return ids;
+  const d=DISHES.find(x=>x.id===id); if(!d) return [id];
+  return DISHES.filter(x=>x.cat===d.cat).map(x=>x.id);
+}
+function _emplVecino(id, paso){
+  const seq=_emplSecuencia(id); const i=seq.indexOf(id);
+  if(i<0 || seq.length<2) return null;
+  const j=i+paso; return (j<0||j>=seq.length) ? null : seq[j];
+}
+function _emplIr(id, paso){
+  const n=_emplVecino(id, paso); if(n==null) return;
+  _emplOpen(n, paso>0?'izq':'der');
+}
+function _emplOpen(id, entrada){
   const d=DISHES.find(x=>x.id===id); if(!d) return;
+  { const viejo=document.getElementById('emplOverlay'); if(viejo) viejo.remove(); }
   const dd=getDish(d); const _en=LANG==='en';
   // PRIORIDAD A LA INFORMACIÓN CONSTRUIDA (decisión del propietario): la vista
   // rápida enseña la matriz validada de adaptaciones (DISH_ACTIONS) con la
@@ -16209,6 +16233,27 @@ function _emplOpen(id){
           :`<button class="empl-ov-upload" onclick="_dishPhotoPick(${d.id})"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align:-.15em;flex:none"><path d="M3 8.5A1.5 1.5 0 014.5 7h2L8 5h8l1.5 2h2A1.5 1.5 0 0121 8.5v9A1.5 1.5 0 0119.5 19h-15A1.5 1.5 0 013 17.5v-9z"/><circle cx="12" cy="12.5" r="3.2"/></svg> ${foto?`${_en?'Got a better photo? Submit it':'¿Tienes una foto mejor? Súbela'}`:(_en?'No photo yet: upload one':'Sin foto todavía: sube una')}</button>`}
       </div>
     </div>`;
+  // Posición y flechas (accesibles); deslizar con el dedo hace lo mismo.
+  const seq=_emplSecuencia(d.id), pos=seq.indexOf(d.id);
+  if(pos>=0 && seq.length>1){
+    const ant=pos>0, sig=pos<seq.length-1;
+    const nav=document.createElement('div'); nav.className='empl-ov-nav';
+    nav.innerHTML=`<button type="button" ${ant?'':'disabled'} onclick="_emplIr(${d.id},-1)" aria-label="${_en?'Previous dish':'Plato anterior'}">‹</button>
+      <span>${pos+1} ${_en?'of':'de'} ${seq.length}</span>
+      <button type="button" ${sig?'':'disabled'} onclick="_emplIr(${d.id},1)" aria-label="${_en?'Next dish':'Plato siguiente'}">›</button>`;
+    const body=ov.querySelector('.empl-ov-body'); if(body) body.insertBefore(nav, body.firstChild);
+    const card=ov.querySelector('.empl-ov-card');
+    if(card){
+      let x0=null, y0=null;
+      card.addEventListener('touchstart', e=>{ const t=e.touches[0]; x0=t.clientX; y0=t.clientY; }, {passive:true});
+      card.addEventListener('touchend', e=>{
+        if(x0==null) return; const t=e.changedTouches[0]; const dx=t.clientX-x0, dy=t.clientY-y0; x0=null;
+        if(Math.abs(dx)>60 && Math.abs(dx)>1.5*Math.abs(dy)) _emplIr(d.id, dx<0?1:-1);
+      }, {passive:true});
+      if(entrada) card.classList.add('entra-'+entrada);
+    }
+    ov.addEventListener('keydown', e=>{ if(e.key==='ArrowRight') _emplIr(d.id,1); else if(e.key==='ArrowLeft') _emplIr(d.id,-1); });
+  }
   document.body.appendChild(ov);
 }
 
@@ -17480,7 +17525,15 @@ function _padGuardarHora(h){
 // Con archivo de audio (`audio`), un <audio> y la Media Session: sigue
 // sonando con la pantalla bloqueada y se controla desde ella. Con la voz del
 // sistema, el navegador suele callarla al bloquear: se dice en pantalla.
-const _caS = { fuente: null, cola: [], i: 0, sonando: false, gen: 0, timer: null, fin: false };
+const _caS = { fuente: null, cola: [], i: 0, sonando: false, gen: 0, timer: null, fin: false, repetir: true };
+// Repetir al terminar: encendido por defecto (pensado para el coche: la carta
+// suena en bucle sin tocar el móvil). Se recuerda por persona en este móvil.
+try{ const _r = localStorage.getItem('meseo_ca_repetir'); if(_r === '0') _caS.repetir = false; }catch(e){}
+function _caRepetir(){
+  _caS.repetir = !_caS.repetir;
+  try{ localStorage.setItem('meseo_ca_repetir', _caS.repetir ? '1' : '0'); }catch(e){}
+  _caPintar();
+}
 let _caEl = null, _caHabla = null;
 function _caFuentes(){
   const _en = LANG === 'en';
@@ -17492,6 +17545,11 @@ function _caFuentes(){
   }
   const cats = [];
   for(const d of DISHES) if(con(d) && cats.indexOf(d.cat) < 0) cats.push(d.cat);
+  // «Toda la carta»: primero el menú degustación (si lo hay) y luego cada
+  // sección en el orden de la carta, sin repetir ningún plato. Va la primera.
+  const todo = [];
+  if(r.length) for(const id of r[0].ids) todo.push(id);
+  for(const cat of cats) for(const d of DISHES) if(d.cat === cat && con(d) && todo.indexOf(d.id) < 0) todo.push(d.id);
   // Una sección que es justo el menú degustación (r2 la tiene) no se repite.
   const enDeg = new Set(r.length ? r[0].ids : []);
   for(const cat of cats){
@@ -17499,6 +17557,7 @@ function _caFuentes(){
     if(ids.every(id => enDeg.has(id))) continue;
     r.push({ id: 'cat:' + cat, nombre: (typeof catLocal === 'function' ? catLocal(cat) : cat), ids });
   }
+  if(r.length > 1) r.unshift({ id: 'todo', nombre: _en ? 'The whole menu' : 'Toda la carta', ids: todo });
   return r;
 }
 function _caHayAlgo(){ return _caFuentes().length > 0; }
@@ -17536,7 +17595,9 @@ function _caSaltar(delta){
   const sonaba = _caS.sonando;
   _caParar();
   _caS.fin = false;
-  _caS.i = Math.max(0, Math.min(n - 1, _caS.i + delta));
+  let j = _caS.i + delta;
+  if(_caS.repetir) j = (j + n) % n; else j = Math.max(0, Math.min(n - 1, j));
+  _caS.i = j;
   if(sonaba){ _caS.sonando = true; _caSonar(_caS.i); } else _caPintar();
 }
 function _caIrA(i){ _caParar(); _caS.fin = false; _caS.i = i; _caS.sonando = true; _caSonar(i); }
@@ -17611,6 +17672,8 @@ function _caPrecargar(i){
 function _caSiguiente(g){
   if(g !== _caS.gen || !_caS.sonando) return;
   if(_caS.i + 1 < _caS.cola.length) return _caSonar(_caS.i + 1);
+  // Al terminar, vuelve a empezar si está en bucle.
+  if(_caS.repetir && _caS.cola.length) return _caSonar(0);
   _caS.sonando = false; _caS.fin = true;
   try{ if(navigator.mediaSession) navigator.mediaSession.playbackState = 'paused'; }catch(e){}
   _caPintar();
@@ -17652,13 +17715,17 @@ function _caPintar(){
       </div>
       <p class="ca-story">${escapeHTML(dd.story)}</p>
     <div class="ca-mandos">
-      <button type="button" class="ca-btn" onclick="_caSaltar(-1)" ${_caS.i <= 0 ? 'disabled' : ''} aria-label="${_en ? 'Previous dish' : 'Plato anterior'}">${ic.ant}</button>
+      <button type="button" class="ca-btn" onclick="_caSaltar(-1)" ${_caS.i <= 0 && !_caS.repetir ? 'disabled' : ''} aria-label="${_en ? 'Previous dish' : 'Plato anterior'}">${ic.ant}</button>
       <button type="button" class="ca-btn ca-play" onclick="_caAlternar()" aria-label="${_caS.sonando ? (_en ? 'Pause' : 'Pausa') : (_en ? 'Play' : 'Reproducir')}">${_caS.sonando ? ic.pausa : ic.play}</button>
-      <button type="button" class="ca-btn" onclick="_caSaltar(1)" ${_caS.i >= n - 1 ? 'disabled' : ''} aria-label="${_en ? 'Next dish' : 'Plato siguiente'}">${ic.sig}</button>
+      <button type="button" class="ca-btn" onclick="_caSaltar(1)" ${_caS.i >= n - 1 && !_caS.repetir ? 'disabled' : ''} aria-label="${_en ? 'Next dish' : 'Plato siguiente'}">${ic.sig}</button>
     </div>
+    <button type="button" class="ca-repetir${_caS.repetir ? ' on' : ''}" aria-pressed="${_caS.repetir}" onclick="_caRepetir()">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 2l4 4-4 4"/><path d="M3 11V9a3 3 0 013-3h15"/><path d="M7 22l-4-4 4-4"/><path d="M21 13v2a3 3 0 01-3 3H3"/></svg>
+      <span>${_caS.repetir ? (_en ? 'Repeat on: starts again at the end' : 'En bucle: vuelve a empezar al terminar') : (_en ? 'Repeat off: stops at the end' : 'Sin bucle: se para al terminar')}</span>
+    </button>
     </section>` : ''}
     <p class="ca-nota">${archivos
-      ? (_en ? 'It keeps playing with the screen locked.' : 'Sigue sonando con la pantalla bloqueada.')
+      ? (_en ? 'It keeps playing with the screen locked. If your phone is connected to the car, it plays through the car speakers and the steering wheel buttons skip dishes.' : 'Sigue sonando con la pantalla bloqueada. Si el móvil está conectado al coche, suena por los altavoces del coche y los botones del volante pasan de plato.')
       : (_en ? 'It uses your phone\'s voice. On most phones it stops when the screen locks, so keep it on.' : 'Usa la voz de tu teléfono. En la mayoría se calla al bloquear la pantalla: déjala encendida.')}</p>
     <ol class="ca-cola">${_caS.cola.map((id, k) => { const x = DISHES.find(y => y.id === id); if(!x) return ''; return `<li><button type="button" class="${k === _caS.i ? 'on' : ''}" ${k === _caS.i ? 'aria-current="true"' : ''} onclick="_caIrA(${k})"><span class="ca-cola-n">${k + 1}</span>${escapeHTML(getDish(x).name)}</button></li>`; }).join('')}</ol>
   </div>`;

@@ -11643,3 +11643,17 @@ html[data-venue="demo"] .ri-cta-mesa .ri-cta-icon{border-color:rgba(200,163,90,.
 .mesa-grupo-t .mesa-grupo-ic{color:inherit}
 .empl-ov-ficha{color:var(--parchment)}
 
+
+.ca-repetir{display:flex;align-items:center;justify-content:center;gap:.5rem;width:100%;min-height:44px;margin-top:.6rem;padding:.55rem .8rem;border-radius:var(--r);border:1px solid var(--line2);background:transparent;color:var(--parch2);font-family:var(--font-sans);font-size:var(--fs-2);cursor:pointer}
+.ca-repetir.on{border-color:var(--gold);color:var(--gold-ink);background:var(--gold-a,rgba(196,154,60,.12))}
+
+.empl-ov-nav{display:flex;align-items:center;justify-content:space-between;gap:.5rem;margin:-.2rem 0 .5rem;font-family:var(--font-mono);font-size:var(--fs-1);letter-spacing:.08em;color:var(--parch3)}
+.empl-ov-nav button{min-width:44px;min-height:44px;border:1px solid var(--line2);border-radius:999px;background:transparent;color:var(--gold-ink);font-size:1.4rem;line-height:1;cursor:pointer}
+.empl-ov-nav button:disabled{opacity:.3;cursor:default}
+.empl-ov-card.entra-izq{animation:emplEntraIzq .22s ease-out}
+.empl-ov-card.entra-der{animation:emplEntraDer .22s ease-out}
+@keyframes emplEntraIzq{from{transform:translateX(40px);opacity:.4}to{transform:none;opacity:1}}
+@keyframes emplEntraDer{from{transform:translateX(-40px);opacity:.4}to{transform:none;opacity:1}}
+@media (prefers-reduced-motion:reduce){.empl-ov-card.entra-izq,.empl-ov-card.entra-der{animation:none}}
+.ca-ahora .ca-repetir{color:rgba(244,237,226,.72);border-color:rgba(244,237,226,.22)}
+.ca-ahora .ca-repetir.on{color:#f0d79a;border-color:rgba(232,201,138,.65);background:rgba(232,201,138,.10)}

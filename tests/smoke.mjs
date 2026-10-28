@@ -17989,6 +17989,19 @@ test('Demo: los 20 platos de Orchilla tienen ficha de servicio confirmada y cohe
   assert(c.DISHES.some(d => d.svc.pica > 0) && c.DISHES.some(d => d.svc.cerdo) && c.DISHES.some(d => d.svc.veg === 'vegano'), 'hay de todo para probar la lupa');
 });
 
+test('carta en audio: toda la carta y bucle al terminar', () => {
+  assert(html.includes("r.unshift({ id: 'todo'"), 'falta la fuente Toda la carta');
+  assert(html.includes('if(_caS.repetir && _caS.cola.length) return _caSonar(0);'), 'al terminar no vuelve a empezar');
+  assert(html.includes('repetir: true }'), 'el bucle debe ir encendido por defecto');
+  assert(html.includes("localStorage.setItem('meseo_ca_repetir'"), 'el bucle no se recuerda');
+});
+
+test('vista rápida: se pasa de plato deslizando', () => {
+  assert(html.includes('function _emplSecuencia('), 'falta la secuencia de platos');
+  assert(html.includes("card.addEventListener('touchend'"), 'falta el gesto de deslizar');
+  assert(html.includes("const viejo=document.getElementById('emplOverlay'); if(viejo) viejo.remove();"), 'abrir otro plato debe cerrar el anterior');
+});
+
 console.log('\nMenú degustación');
 const _deg = (() => {
   const i = html.indexOf('function _degValida(');
