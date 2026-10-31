@@ -1,6 +1,47 @@
 {
- "updated": "2026-10-31T16:08:07.989Z",
+ "updated": "2026-10-31T20:28:06.275Z",
  "items": [
+  {
+   "t": "CSIF denuncia el uso abusivo de la cobertura temporal de mandos en la Policía Local de Santa Cruz de Tenerife",
+   "u": "https://www.eldiario.es/canariasahora/tenerifeahora/csif-denuncia-abusivo-cobertura-temporal-mandos-policia-local-santa-cruz-tenerife_1_13629801.html",
+   "s": "elDiario.es",
+   "d": "2026-10-31T20:01:23.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://static.eldiario.es/clip/7e58feb4-0020-4251-a928-3e3e0f0f1f66_facebook-aspect-ratio-1200-675_default_0_x294y116.jpg"
+  },
+  {
+   "t": "Quiénes deciden hoy la gastronomía",
+   "u": "https://www.expansion.com/estilo-vida/rincones-gastronomicos/2026/10/31/quienes-deciden-hoy-gastronomia.html",
+   "s": "Expansión",
+   "d": "2026-10-31T18:56:26.000Z",
+   "tags": [
+    "ALTA COCINA"
+   ],
+   "img": "https://e00-xlk-ue-expansion.uecdn.es/files/article_main_microformat/uploads/2026/10/31/6ae635148671a.png"
+  },
+  {
+   "t": "El Tenerife busca su cuarta victoria ante un Andorra en descenso",
+   "u": "https://www.eldiario.es/canariasahora/Deportes/futbol/tenerife-busca-cuarta-victoria-andorra-descenso_1_13629564.html",
+   "s": "elDiario.es",
+   "d": "2026-10-31T17:38:44.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://static.eldiario.es/clip/f06a7034-ca31-457f-9d84-b78a310a6663_facebook-aspect-ratio-1200-675_default_0_x575y294.jpg"
+  },
+  {
+   "t": "La bodega herreña Elysar recibe el diploma de su medalla de oro en el Brazil Wine Challenge",
+   "u": "https://elhierrohoy.es/bodega-elysar-recibe-diploma-medalla-oro-brazil-wine-challenge-31-oct/",
+   "s": "El Hierro Hoy",
+   "d": "2026-10-31T15:11:15.000Z",
+   "tags": [
+    "VINO",
+    "CANARIAS"
+   ],
+   "img": "https://elhierrohoy.es/wp-content/uploads/2026/10/bodega-elysar-diploma_1.webp"
+  },
   {
    "t": "El chef del mejor restaurante latino se aventura a fusionar cocina nikkei con colombiana",
    "u": "https://www.infobae.com/america/agencias/2026/10/31/el-chef-del-mejor-restaurante-latino-se-aventura-a-fusionar-cocina-nikkei-con-colombiana/",
@@ -9,16 +50,6 @@
    "tags": [
     "ALTA COCINA"
    ]
-  },
-  {
-   "t": "Más figurantes que vecinos: el 'otro' simulacro de emergencia volcánica que cuestiona a la organización",
-   "u": "https://www.eldiario.es/canariasahora/tenerifeahora/figurantes-vecinos-simulacro-emergencia-volcanica-cuestiona-organizacion_1_13629367.html",
-   "s": "elDiario.es",
-   "d": "2026-10-31T14:22:06.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://static.eldiario.es/clip/3b613b74-6862-4159-8e46-bb201386d8c1_facebook-aspect-ratio-1200-675_default_0_x273y320.jpg"
   },
   {
    "t": "Alejandro García y Alejandro Garrido: cocina, emoción y complicidad en Bonfire",
@@ -79,6 +110,15 @@
    "img": "https://static.eldiario.es/clip/ea79c21f-05a6-46a2-ad6c-536157863bfb_facebook-aspect-ratio-1200-675_default_0_x344y101.jpg"
   },
   {
+   "t": "La tecnología abre nuevas fronteras en la alta cocina",
+   "u": "https://www.elperiodico.com/es/tecnologia/20261031/tecnologia-abre-nuevas-fronteras-135951124",
+   "s": "El Periódico",
+   "d": "2026-10-31T11:27:43.000Z",
+   "tags": [
+    "ALTA COCINA"
+   ]
+  },
+  {
    "t": "Bodega Elysar logra cuatro premios en 2026",
    "u": "https://www.canariasdiario.com/noticia/152579/gastronomia/elysar-logra-cuatro-medallas-de-oro-en-certamenes-de-2026.html",
    "s": "Canariasdiario.com",
@@ -87,17 +127,6 @@
     "VINO",
     "CANARIAS"
    ]
-  },
-  {
-   "t": "La bodega herreña Elysar recibe el diploma de su medalla de oro en el Brazil Wine Challenge",
-   "u": "https://elhierrohoy.es/bodega-elysar-recibe-diploma-medalla-oro-brazil-wine-challenge-31-oct/",
-   "s": "El Hierro Hoy",
-   "d": "2026-10-31T10:18:45.000Z",
-   "tags": [
-    "VINO",
-    "CANARIAS"
-   ],
-   "img": "https://elhierrohoy.es/wp-content/uploads/2026/10/bodega-elysar-diploma_1.webp"
   },
   {
    "t": "Canarias ordenará por primera vez de forma integral la protección, conservación, restauración y gestión sostenible de su patrimonio natural",
@@ -142,6 +171,16 @@
    "img": "https://lavozcanaria.com/media/2026/10/bodega-elysar-de-el-hierro-suma-nuevos-premios-internacionales.webp"
   },
   {
+   "t": "Virgilio Martínez, chef ganador de los 50 Best: “Hace 30 años no nos imaginábamos que la gente viajaría al Perú por su gastronomía”",
+   "u": "https://elcomercio.pe/somos/historias/virgilio-martinez-chef-ganador-de-the-worlds-50-best-restaurants-hace-30-anos-no-nos-imaginabamos-que-la-gente-viajaria-al-peru-por-su-gastronomia-apuesplan-noticia/?outputType",
+   "s": "El Comercio Perú",
+   "d": "2026-10-31T05:01:00.000Z",
+   "tags": [
+    "ALTA COCINA"
+   ],
+   "img": "https://elcomercio.pe/resizer/v2/3Z57J6CAT5EMTCVFAKRFGMLHRM.jpg?auth=03c8e28f831f1a85d7dde1ceda1abb2a11164d369ccddbe27d70db2d8135d5f3&width=980&height=528&quality=75&smart=true"
+  },
+  {
    "t": "Fresco, Beso y Manto: Víctor Suárez, de Haydée, presenta sus quesos de autor",
    "u": "https://diariodeavisos.elespanol.com/2026/10/victor-suarez-haydee-quesos-autor/",
    "s": "Diario de Avisos",
@@ -182,6 +221,27 @@
    "img": "https://theshowroommag.com/wp-content/uploads/2026/10/1-7.jpg"
   },
   {
+   "t": "Cata de vinos «Origen, Territorio y Vino»: Lanzarote se encuentra con La Palma",
+   "u": "https://www.teneriffa-news.com/es/agenda/agenda-lanzarote/cata-vinos-origen-territorio-vino",
+   "s": "Teneriffa News",
+   "d": "2026-10-30T20:42:00.000Z",
+   "tags": [
+    "VINO",
+    "CANARIAS"
+   ],
+   "img": "https://www.teneriffa-news.com/media/t/termine-veranstaltungen-kalender-teneriffa-kanaren-1920x1080.jpg"
+  },
+  {
+   "t": "Pinktober vuelve a Hard Rock Cafe Tenerife: gastronomía, música y solidaridad contra el cáncer de mama",
+   "u": "https://theshowroommag.com/pinktober-vuelve-a-hard-rock-cafe-tenerife-gastronomia-musica-y-solidaridad-contra-el-cancer-de-mama/",
+   "s": "The Showroom Mag",
+   "d": "2026-10-30T20:20:57.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://theshowroommag.com/wp-content/uploads/2026/10/1-2.jpg"
+  },
+  {
    "t": "Todas las veces que la Justicia ha tumbado propuestas del Ayuntamiento de Santa Cruz de Tenerife",
    "u": "https://www.eldiario.es/canariasahora/tenerifeahora/veces-justicia-tumbado-propuestas-ayuntamiento-santa-cruz-tenerife-jose-manuel-bermudez_1_13624933.html",
    "s": "elDiario.es",
@@ -201,24 +261,15 @@
    ]
   },
   {
-   "t": "La justicia reprende al equipo de gobierno de Santa Cruz de Tenerife (CC-PP) por negar información al PSOE",
-   "u": "https://www.eldiario.es/canariasahora/tribunales/justicia-reprende-equipo-gobierno-santa-cruz-tenerife-cc-pp-negar-informacion-psoe_1_13628083.html",
-   "s": "elDiario.es",
-   "d": "2026-10-30T16:20:17.000Z",
+   "t": "Olano, Beloki y Olaberria se estrenan en la Marcha del Primer Vino de Bodegas Tarón a beneficio de ASPACE Rioja",
+   "u": "https://www.europapress.es/la-rioja/noticia-olano-beloki-olaberria-estrenan-marcha-primer-vino-bodegas-taron-beneficio-aspace-rioja-20261030170849.html",
+   "s": "Europa Press",
+   "d": "2026-10-30T16:08:49.000Z",
    "tags": [
+    "VINO",
     "CANARIAS"
    ],
-   "img": "https://static.eldiario.es/clip/fcd2c355-b5cc-4bf1-bcce-e968579fae5d_facebook-aspect-ratio-1200-675_default_0.jpg"
-  },
-  {
-   "t": "La subida de la luz amenaza con encarecer los productos y servicios de Canarias",
-   "u": "https://www.canarias7.es/economia/subida-luz-amenaza-encarecer-productos-servicios-canarias-20261030144121-nt.html",
-   "s": "Canarias7",
-   "d": "2026-10-30T15:27:40.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://s3.ppllstatics.com/canarias7/www/multimedia/economia/2026/10/30/factura-luz-kFCG-U4099750098BVF-1200x840@Canarias7.jpg"
+   "img": "https://img.europapress.es/fotoweb/fotonoticia_20261030170849_1200.jpg"
   },
   {
    "t": "“El ego es el mayor cáncer de la cocina”: Martín Berasategui",
@@ -249,57 +300,6 @@
     "CHEF"
    ],
    "img": "https://www.noticiasdelvino.com/wp-content/uploads/image-583.png.webp"
-  },
-  {
-   "t": "El Cabildo de Tenerife propone una multa de 5.400 euros a Aqualia por el derrame en la depuradora de Punta Brava",
-   "u": "https://www.eldiario.es/canariasahora/tenerifeahora/cabildo/cabildo-tenerife-propone-multa-5-400-euros-aqualia-derrame-depuradora-punta-brava_1_13627620.html",
-   "s": "elDiario.es",
-   "d": "2026-10-30T13:36:21.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://static.eldiario.es/clip/f4758504-bd79-4170-8f79-1817b3c2e596_facebook-aspect-ratio-1200-675_default_0.jpg"
-  },
-  {
-   "t": "José Bruno Albertos: “Si tenemos que pagar más por el kilo de uva, lo pagamos para compensar al viticultor y garantizar que siga cuidando la viña”",
-   "u": "https://tribunadecanarias.es/directivos/41032/jose-bruno-albertos-si-tenemos-que-pagar-mas-por-el-kilo-de-uva-lo-pagamos-para-compensar-al-viticultor-y-garantizar-que-siga-cuidando-la-vina/",
-   "s": "Tribuna de Canarias",
-   "d": "2026-10-30T13:16:40.000Z",
-   "tags": [
-    "VINO",
-    "CANARIAS"
-   ],
-   "img": "https://tribunadecanarias.es/cms-media/2026/10/jose-bruno-albertos-si-tenemos-que-pagar-mas-por-el-kilo-de-uva-lo-pagamos-para-compens-c30cb6.jpg"
-  },
-  {
-   "t": "Sergi Arola, chef de 58 años: “Nadie nos enseñó a gestionar. Como empresarios éramos muy malos”",
-   "u": "https://www.cronista.com/espana/actualidad-es/sergi-arola-chef-de-58-anos-nadie-nos-enseno-a-gestionar-como-empresarios-eramos-muy-malos/",
-   "s": "El Cronista",
-   "d": "2026-10-30T12:05:00.000Z",
-   "tags": [
-    "ALTA COCINA"
-   ],
-   "img": "https://www.cronista.com/resizer/v2/NKPTMP5G5ZHJTJV4OVDYUFGDT4.png?auth=1250bc91ae8b29b305be059f1f2c3f04ee867654e6e2d38525f25c9b50313d51&height=630&width=1200&quality=70&smart=true"
-  },
-  {
-   "t": "La Feria del Sureste vuelve a Gran Canaria con 150 puestos de artesanía, gastronomía y actividades para toda la familia",
-   "u": "https://www.laprovincia.es/gran-canaria/2026/10/30/feria-sureste-vuelve-gran-canaria-135911655.html",
-   "s": "La Provincia",
-   "d": "2026-10-30T12:00:55.000Z",
-   "tags": [
-    "CANARIAS"
-   ]
-  },
-  {
-   "t": "Linaje del Pago lleva el diseño y los vinos canarios a lo más alto del panorama internacional",
-   "u": "https://gastrocanarias.com/art/22847/linaje-del-pago-lleva-el-diseno-y-los-vinos-canarios-a-lo-mas-alto-del-panorama-internacional",
-   "s": "Gastrocanarias",
-   "d": "2026-10-30T12:00:38.000Z",
-   "tags": [
-    "VINO",
-    "CANARIAS"
-   ],
-   "img": "https://gastrocanarias.com/upload/images/10_2026/3561_visita-linaje-del-pago-01.jpeg"
   }
  ]
 }
