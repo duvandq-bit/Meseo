@@ -10669,6 +10669,9 @@ html[data-venue="r2"] .ri-cta-pase .ri-cta-icon{border-color:rgba(194,161,97,.4)
 .ca-pos{font-family:var(--font-mono);font-size:var(--fs-1);letter-spacing:.08em;color:#e4be68;margin-bottom:.2rem}
 .ca-nom{margin:0;font-family:var(--font-serif);font-size:var(--fs-4);font-weight:600;line-height:1.25;color:#fbf6ec}
 .ca-story{margin:0;min-height:6.2em;font-family:var(--font-sans);font-size:var(--fs-3);line-height:1.55;color:rgba(251,246,236,.86)}
+.ca-boc{margin:0;padding:.6rem .75rem;border-radius:12px;background:rgba(228,190,104,.12);border:1px solid rgba(228,190,104,.3);font-family:var(--font-sans);font-size:var(--fs-2);line-height:1.5;color:rgba(251,246,236,.86)}
+.ca-boc span{display:block;font-family:var(--font-mono);font-size:var(--fs-1);letter-spacing:.08em;color:#e4be68;margin-bottom:.15rem}
+.ca-boc b{display:block;font-family:var(--font-serif);font-size:var(--fs-3);font-weight:600;color:#fbf6ec}
 .ca-mandos{display:flex;align-items:center;justify-content:center;gap:1.6rem;padding:.2rem 0 .1rem}
 .ca-btn{width:52px;height:52px;border-radius:50%;border:1px solid rgba(251,246,236,.3);background:transparent;color:#fbf6ec;display:flex;align-items:center;justify-content:center;cursor:pointer}
 .ca-btn:disabled{opacity:.3;cursor:default}
@@ -11314,6 +11317,15 @@ html[data-venue="demo"] .ri-cta-mesa .ri-cta-icon{border-color:rgba(200,163,90,.
 .deg-bocados li span{font-size:var(--fs-2);line-height:1.45;color:var(--parch2)}
 .deg-bocados.compacto{padding:.5rem 0 0;background:none;border:0;border-top:1px dashed var(--line2);margin-top:.35rem}
 .deg-bocados.compacto ol{gap:.4rem}
+.deg-bocados li.con-oir{flex-direction:row;align-items:center;gap:.4rem}
+.deg-boc-txt{flex:1;min-width:0;display:flex;flex-direction:column;gap:.1rem}
+.deg-boc-oir{flex:none;width:44px;height:44px;margin:-4px -6px -4px 0;padding:0;border:0;border-radius:50%;background:transparent;color:var(--gold-ink);display:inline-flex;align-items:center;justify-content:center;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.deg-boc-oir svg{width:30px;height:30px;padding:6px;border-radius:50%;border:1px solid var(--gold);box-sizing:border-box}
+.deg-boc-oir.sonando svg,.deg-boc-todos.sonando svg{background:var(--gold);border-color:var(--gold);color:#fff}
+.deg-boc-todos{display:inline-flex;align-items:center;gap:.45rem;margin-top:.6rem;min-height:44px;padding:.3rem .95rem .3rem .45rem;border:1px solid var(--gold);border-radius:999px;background:transparent;font-family:var(--font-mono);font-size:var(--fs-1);letter-spacing:.06em;text-transform:uppercase;color:var(--gold-ink);cursor:pointer}
+.deg-boc-todos svg{width:28px;height:28px;padding:5px;border-radius:50%;box-sizing:border-box}
+.deg-boc-todos.sonando{background:var(--gold-b,rgba(196,154,60,.12))}
+.deg-bocados li .deg-boc-oir,.deg-bocados .deg-boc-todos span{font-size:inherit;line-height:1;color:inherit}
 
 /* Practica */
 .deg-prac{display:flex;flex-direction:column;gap:.5rem}

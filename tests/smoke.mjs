@@ -18535,6 +18535,42 @@ test('audios privados: bucket privado con la sesión, caché del teléfono y fue
   assert(/_padFrases\(texto\)/.test(dec) && /_padPausa\(f, Math\.random\(\)\)/.test(dec) && /u\.rate = 0\.95/.test(dec), 'voz del teléfono frase a frase, ritmo 0,95');
   assert(!existsSync(join(ROOT, 'voz', 'r2')) && !readdirSync(ROOT).some(f => /\.m4a$/.test(f)), 'ningún audio de Akira en el repositorio');
 });
+test('bocados con voz: ruta privada de cada bocado (venue, plato, posición e idioma)', () => {
+  const i = html.indexOf('function _padAudioRuta(');
+  const j = html.indexOf('// ── Lo que depende de la app ──', i);
+  const A = new Function(html.slice(i, j) + '; return { _bocAudioRuta };')(); // eslint-disable-line no-new-func
+  const R = A._bocAudioRuta;
+  assert(R('r2/3070-b1-es.m4a', 'r2', 3070, 1, 'es') === 'r2/3070-b1-es.m4a' && R('r2/3070-b7-en.m4a', 'r2', 3070, 7, 'en') === 'r2/3070-b7-en.m4a', 'las buenas');
+  assert(R('r2/3070-b1-es.m4a', 'r2', 3070, 1, 'en') === null, 'en inglés no suena el español heredado');
+  assert(R('r2/3070-b2-es.m4a', 'r2', 3070, 1, 'es') === null, 'otra posición');
+  assert(R('r2/3071-b1-es.m4a', 'r2', 3070, 1, 'es') === null && R('txoko/3070-b1-es.m4a', 'r2', 3070, 1, 'es') === null, 'otro plato u otra carpeta');
+  assert(R('r2/3070-es.m4a', 'r2', 3070, 1, 'es') === null, 'no el audio del plato');
+  assert(R('https://x.y/r2/3070-b1-es.m4a', 'r2', 3070, 1, 'es') === null && R('../r2/3070-b1-es.m4a', 'r2', 3070, 1, 'es') === null, 'ni URLs ni saltos');
+  assert(R('r2/3070-b0-es.m4a', 'r2', 3070, 0, 'es') === null && R(null, 'r2', 3070, 1, 'es') === null && R('r2/3070-b1-es.m4a', null, 3070, 1, 'es') === null, 'sin posición, campo o carta');
+});
+test('bocados con voz: botón por bocado (44 px), todos seguidos y la lógica del audio privado', () => {
+  const h = _fnSrc('_degBocadosHTML');
+  assert(/_bocBtnHTML\(dd\.id, k, b\.n, compacto\)/.test(h) && /_bocTodosHTML\(dd\.id, bs\.length, compacto\)/.test(h), 'cada bocado con su botón y el de todos');
+  assert(/role="button" tabindex="0" class="deg-boc-oir"/.test(_fnSrc('_bocBtnHTML')) && /role="button"/.test(_fnSrc('_bocTodosHTML')), 'en El viaje (fila que ya es <button>) van como span role=button');
+  assert(/Escuchar los \$\{n\} seguidos/.test(_fnSrc('_bocTodosTxt')) && /Listen to all \$\{n\} in a row/.test(_fnSrc('_bocTodosTxt')), 'texto ES y EN');
+  const so = _fnSrc('_bocSonar');
+  assert(/_bocAudioDe\(d, dd, b\)/.test(so) && /_padAudioListo\(ruta\)/.test(so) && /_padAudioSrc\(ruta\)\.then\(dale, falla\)/.test(so), 'mismo audio privado y caché que los platos');
+  assert(/_padDecir\(todos \? b\.n \+ '\. ' \+ b\.story : b\.story/.test(so), 'sin archivo, la voz del teléfono con su frase');
+  assert(/n > 30/.test(html) && /\.deg-boc-oir\{[^}]*width:44px;height:44px/.test(read('styles.css')), 'toque de 44 px');
+  assert(/_bocParar\(\)/.test(_fnSrc('_padParar')) && /_bocParar\(\)/.test(_fnSrc('_degIr')) && /_bocParar\(\)/.test(_fnSrc('_djNext')) && /_bocParar\(\)/.test(_fnSrc('showTab')), 'se calla al salir o al cambiar de paso');
+  for (const f of ['_degContarHTML', '_degPintarViaje']) assert(/_degBocadosHTML\(/.test(_fnSrc(f)), f + ' pinta los bocados');
+  assert(/_degBocadosHTML\(dd\)/.test(_fnSrc('_cpPasoHace')), 'paso 2 de Conocer el plato');
+});
+test('carta en audio: tras el Mistery box con archivo suenan sus bocados, por el mismo <audio>', () => {
+  const so = _fnSrc('_caSonar');
+  assert(/_caBocados\(g, d, dd, 0\)/.test(so), 'al acabar la descripción, el primer bocado');
+  const b = _fnSrc('_caBocados');
+  assert(/const a = _caEl;/.test(b) && !/new Audio/.test(b), 'el mismo elemento de la cola (sigue con la pantalla bloqueada)');
+  assert(/_caBocados\(g, d, dd, k \+ 1\)/.test(b) && /setTimeout\(\(\) => _caSiguiente\(g\), 2000\)/.test(b), 'en orden y luego el siguiente plato');
+  assert(/g === _caS\.gen && _caS\.sonando/.test(b), 'saltar o parar corta los bocados pendientes');
+  assert(/_padDecir\(b\.n \+ '\. ' \+ b\.story/.test(b), 'sin archivo de un bocado, nombre y frase por la voz');
+  assert(/_caMeta\(d, dd, b\.n\)/.test(b) && /title: sub \? dd\.name \+ ' · ' \+ sub : dd\.name/.test(_fnSrc('_caMeta')), 'la pantalla bloqueada dice qué bocado suena');
+});
 test('voz del teléfono: Premium por delante de Enhanced', () => {
   assert(_pad._padMejorVoz([{ name: 'Mónica (mejorada)', lang: 'es-ES' }, { name: 'Mónica (Premium)', lang: 'es-ES' }], 'es-ES').name === 'Mónica (Premium)', 'premium');
 });

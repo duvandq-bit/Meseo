@@ -54,7 +54,7 @@
 <meta property="og:description" content="Formación de equipos de sala: carta, alérgenos, vinos, exámenes y juegos de repaso.">
 <meta property="og:url" content="https://meseo.es/">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"Meseo","url":"https://meseo.es/"}</script>
-<meta name="app-version" content="7.529">
+<meta name="app-version" content="7.530">
 <meta name="app-build" content="May 2026">
 <meta name="theme-color" content="#1c2a22">
 <!-- ═══ PWA ═══ -->
@@ -2891,7 +2891,7 @@ const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><p
 const SRC = 'src';
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='7.529';  // sincronizada con sw.js VERSION (guard de CI)
+const APP_VERSION='7.530';  // sincronizada con sw.js VERSION (guard de CI)
 const APP_BUILD='Jul 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;
@@ -7076,6 +7076,7 @@ function _djRender(){
 
 function _djNext(){
   if(!_cpPuedeSeguir()) return;
+  if(typeof _bocParar === 'function') _bocParar();
   const paso = _djState.pasos[_djState.phase];
   if(paso === 'cuenta') _cpSalirDeCuenta();
   _djState.phase++;
@@ -7085,6 +7086,7 @@ function _djNext(){
 }
 function _djPrev(){
   if(_djState.phase <= 0) return;
+  if(typeof _bocParar === 'function') _bocParar();
   const paso = _djState.pasos[_djState.phase];
   if(paso === 'cuenta') _cpSalirDeCuenta();
   _djState.phase--;
@@ -14990,6 +14992,8 @@ function showTab(tab, instant){
   // Un plato al día y la carta en audio: al salir, se calla el micro y la voz.
   if(currentTab==='platodia' && tab!=='platodia' && typeof _padParar==='function') _padParar();
   if(currentTab==='cartaaudio' && tab!=='cartaaudio' && typeof _caParar==='function') _caParar();
+  // Los bocados que suenan desde una ficha o el menú degustación, también.
+  if(tab!==currentTab && typeof _bocParar==='function') _bocParar();
   // Ídem para el canal EN VIVO del panel de supervisor.
   if(currentTab==='supervisor' && tab!=='supervisor'){
     if(typeof _supDisconnect==='function') _supDisconnect();
@@ -16363,7 +16367,15 @@ function _degBocados(dd){ return (dd && Array.isArray(dd.bocados)) ? dd.bocados.
 function _degBocadosHTML(dd, cls){
   const bs = _degBocados(dd); if(!bs.length) return '';
   const _en = LANG==='en';
-  return `<div class="deg-bocados${cls ? ' ' + cls : ''}"><span class="deg-bocados-tit">${_en ? 'Bite by bite' : 'Bocado a bocado'}</span><ol>${bs.map(b => `<li><b>${escapeHTML(b.n)}</b><span>${escapeHTML(b.story)}</span></li>`).join('')}</ol></div>`;
+  // Cada bocado con su botón de escuchar y, debajo, todos seguidos. En El
+  // viaje la fila entera ya es un <button>: ahí van como span role=button
+  // (un <button> dentro de otro rompe el HTML).
+  const compacto = /(^|\s)compacto(\s|$)/.test(cls || '');
+  const oir = !!(dd && Number.isInteger(dd.id) && typeof _bocPuedeOir === 'function' && _bocPuedeOir(dd));
+  const li = (b, k) => oir
+    ? `<li class="con-oir"><div class="deg-boc-txt"><b>${escapeHTML(b.n)}</b><span>${escapeHTML(b.story)}</span></div>${_bocBtnHTML(dd.id, k, b.n, compacto)}</li>`
+    : `<li><b>${escapeHTML(b.n)}</b><span>${escapeHTML(b.story)}</span></li>`;
+  return `<div class="deg-bocados${cls ? ' ' + cls : ''}"><span class="deg-bocados-tit">${_en ? 'Bite by bite' : 'Bocado a bocado'}</span><ol>${bs.map(li).join('')}</ol>${oir && bs.length > 1 ? _bocTodosHTML(dd.id, bs.length, compacto) : ''}</div>`;
 }
 
 // ── Funciones puras de las prácticas ──
@@ -16457,6 +16469,7 @@ function _degRevisarHTML(){
 function _degHayVoz(){ return typeof speechSynthesis !== 'undefined' && typeof SpeechSynthesisUtterance !== 'undefined'; }
 function _degHablar(id){
   const p = _degPlato(id); if(!p || !p.dd.story || !_degHayVoz()) return;
+  if(typeof _bocParar === 'function') _bocParar();
   try{
     const code = LANG==='en' ? 'en-GB' : 'es-ES';
     speechSynthesis.cancel();
@@ -16518,6 +16531,7 @@ function _degAlergenosHTML(d){
 
 // ── Pantalla ──
 function _degIr(vista, extra){
+  if(typeof _bocParar === 'function') _bocParar();
   _degS.vista = vista;
   if(extra) Object.assign(_degS, extra);
   if(typeof currentTab !== 'undefined' && currentTab === 'degustacion'){ renderDegustacion(); try{ window.scrollTo(0, 0); }catch(e){} }
@@ -16960,6 +16974,15 @@ function _padAudioRuta(ruta, venue, id, idioma){
   if(!/^(es|en)$/.test(String(idioma)) || !Number.isInteger(id)) return null;
   return ruta === venue + '/' + id + '-' + idioma + '.m4a' ? ruta : null;
 }
+// Ruta del audio PRIVADO de un bocado (el Mistery box): exactamente
+// «<venue>/<id>-b<n>-<es|en>.m4a», con n su posición en la caja (1, 2...).
+// Mismas reglas que la del plato: ni URLs, ni otra carpeta, ni otro idioma.
+function _bocAudioRuta(ruta, venue, id, n, idioma){
+  if(!Number.isInteger(n) || n < 1 || n > 30) return null;
+  if(typeof ruta !== 'string' || !/^[a-z0-9][a-z0-9_-]{0,31}$/.test(String(venue || ''))) return null;
+  if(!/^(es|en)$/.test(String(idioma)) || !Number.isInteger(id)) return null;
+  return ruta === venue + '/' + id + '-b' + n + '-' + idioma + '.m4a' ? ruta : null;
+}
 // La voz del teléfono, frase a frase: dicho de un tirón suena a máquina.
 function _padFrases(t){
   return String(t || '').split(/(?<=[.;:!?])\s+/).map(x => x.trim()).filter(Boolean);
@@ -17066,6 +17089,7 @@ function _padParar(){
   if(_padRecFin){ clearTimeout(_padRecFin); _padRecFin = null; }
   if(_padHabla){ _padHabla.cancelar(); _padHabla = null; }
   if(_padAudio){ try{ _padAudio.pause(); }catch(e){} _padAudio = null; }
+  if(typeof _bocParar === 'function') _bocParar();
 }
 
 // Por la voz del sistema, con la mejor voz que haya, FRASE A FRASE y con una
@@ -17160,6 +17184,117 @@ function _padAudiosOlvidar(){
   for(const u of _audUrls.values()){ try{ URL.revokeObjectURL(u); }catch(e){} }
   _audUrls.clear(); _audPend.clear();
   try{ if(typeof caches !== 'undefined') caches.delete(_AUD_CACHE); }catch(e){}
+}
+
+// ── Bocado a bocado, con voz (el Mistery box) ──
+// Cada bocado puede traer su `audio` privado («r2/3070-b1-es.m4a»: nombre y
+// frase). Su botón suena ese; «Escuchar los N seguidos», todos en orden por el
+// mismo <audio>. Sin archivo (o sin permiso), la mejor voz del teléfono con su
+// frase. Mismo bucket, misma caché y mismo borrado al salir que los platos.
+const _bocS = { el: null, habla: null, gen: 0, id: null, k: -1, todos: false, timer: null };
+function _bocAudioDe(d, dd, b){
+  const venue = (typeof _cartaMeta !== 'undefined' && _cartaMeta) ? _cartaMeta.venue : null;
+  const n = (dd && Array.isArray(dd.bocados) ? dd.bocados.indexOf(b) : -1) + 1;
+  return _bocAudioRuta(b && b.audio, venue, d && d.id, n, LANG === 'en' ? 'en' : 'es');
+}
+function _bocPuedeOir(dd){
+  if(typeof _degHayVoz === 'function' && _degHayVoz()) return true;
+  return _degBocados(dd).some(b => _bocAudioDe(dd, dd, b));
+}
+const _BOC_IC = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9.5v5h3.5L12 18.5v-13L7.5 9.5z"/><path d="M15.5 9a4 4 0 010 6"/><path d="M18 6.5a7.5 7.5 0 010 11"/></svg>';
+function _bocBtnHTML(id, k, nombre, compacto){
+  const lbl = escapeHTML((LANG === 'en' ? 'Listen: ' : 'Escuchar: ') + nombre);
+  const act = `_bocEscuchar(${id},${k})`;
+  if(compacto) return `<span role="button" tabindex="0" class="deg-boc-oir" data-boc-oir="${id}:${k}" aria-pressed="false" aria-label="${lbl}" onclick="event.stopPropagation();${act}" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();event.stopPropagation();${act}}">${_BOC_IC}</span>`;
+  return `<button type="button" class="deg-boc-oir" data-boc-oir="${id}:${k}" aria-pressed="false" aria-label="${lbl}" onclick="event.stopPropagation();${act}">${_BOC_IC}</button>`;
+}
+function _bocTodosTxt(n, on){
+  const _en = LANG === 'en';
+  return on ? (_en ? 'Stop' : 'Parar') : (_en ? `Listen to all ${n} in a row` : `Escuchar los ${n} seguidos`);
+}
+function _bocTodosHTML(id, n, compacto){
+  const act = `_bocTodos(${id})`;
+  const dentro = `${_BOC_IC}<span class="deg-boc-todos-txt" data-n="${n}">${_bocTodosTxt(n, false)}</span>`;
+  if(compacto) return `<span role="button" tabindex="0" class="deg-boc-todos" data-boc-oir="${id}:todos" aria-pressed="false" onclick="event.stopPropagation();${act}" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();event.stopPropagation();${act}}">${dentro}</span>`;
+  return `<button type="button" class="deg-boc-todos" data-boc-oir="${id}:todos" aria-pressed="false" onclick="event.stopPropagation();${act}">${dentro}</button>`;
+}
+// Enciende el botón de lo que suena (y el de «todos» si van seguidos).
+function _bocMarcar(){
+  try{
+    document.querySelectorAll('[data-boc-oir]').forEach(el => {
+      const [i, k] = String(el.getAttribute('data-boc-oir')).split(':');
+      const on = _bocS.id === Number(i) && (k === 'todos' ? _bocS.todos : Number(k) === _bocS.k);
+      el.classList.toggle('sonando', on);
+      el.setAttribute('aria-pressed', on ? 'true' : 'false');
+      const t = el.querySelector('.deg-boc-todos-txt');
+      if(t) t.textContent = _bocTodosTxt(t.getAttribute('data-n'), on);
+    });
+  }catch(e){}
+}
+function _bocParar(){
+  _bocS.gen++;
+  clearTimeout(_bocS.timer); _bocS.timer = null;
+  if(_bocS.habla){ _bocS.habla.cancelar(); _bocS.habla = null; }
+  if(_bocS.el){ try{ _bocS.el.pause(); }catch(e){} }
+  _bocS.id = null; _bocS.k = -1; _bocS.todos = false;
+  _bocMarcar();
+}
+// Un toque suena; otro toque en el mismo, para.
+function _bocEscuchar(id, k){
+  const mismo = _bocS.id === id && !_bocS.todos && _bocS.k === k;
+  _bocParar();
+  if(!mismo) _bocSonar(id, k, false);
+}
+function _bocTodos(id){
+  const mismo = _bocS.id === id && _bocS.todos;
+  _bocParar();
+  if(!mismo) _bocSonar(id, 0, true);
+}
+function _bocSonar(id, k, todos){
+  const d = DISHES.find(x => x.id === id); if(!d) return _bocParar();
+  const dd = getDish(d);
+  const bs = _degBocados(dd);
+  const b = bs[k]; if(!b) return _bocParar();
+  // Se calla lo demás que suene en la app.
+  if(_padHabla){ _padHabla.cancelar(); _padHabla = null; }
+  if(_padAudio){ try{ _padAudio.pause(); }catch(e){} _padAudio = null; }
+  try{ if(typeof speechSynthesis !== 'undefined') speechSynthesis.cancel(); }catch(e){}
+  const g = ++_bocS.gen;
+  const vivo = () => g === _bocS.gen;
+  Object.assign(_bocS, { id, k, todos });
+  _bocMarcar();
+  const sig = () => {
+    if(!vivo()) return;
+    if(todos && k + 1 < bs.length) _bocS.timer = setTimeout(() => { if(vivo()) _bocSonar(id, k + 1, true); }, 900);
+    else _bocParar();
+  };
+  const porVoz = () => { if(!vivo()) return; _bocS.habla = _padDecir(todos ? b.n + '. ' + b.story : b.story, () => { _bocS.habla = null; sig(); }); };
+  const ruta = _bocAudioDe(d, dd, b);
+  if(ruta && typeof Audio !== 'undefined'){
+    // Como en Un plato al día: el <audio> se pone a sonar dentro del toque
+    // (iOS) y, si el archivo aún no está, en cuanto llega.
+    try{
+      if(!_bocS.el){ _bocS.el = new Audio(); _bocS.el.preload = 'auto'; }
+      const a = _bocS.el;
+      let caido = false;
+      const falla = () => { if(caido || !vivo()) return; caido = true; try{ a.pause(); }catch(e){} porVoz(); };
+      a.onended = () => { if(!caido) sig(); };
+      a.onerror = falla;
+      const dale = src => {
+        if(!vivo()) return;
+        if(!src) return falla();
+        a.src = src;
+        const pr = a.play();
+        if(pr && pr.catch) pr.catch(falla);
+        // El siguiente se va pidiendo mientras suena este.
+        if(todos && bs[k + 1]){ const r2 = _bocAudioDe(d, dd, bs[k + 1]); if(r2) _padAudioSrc(r2); }
+      };
+      const ya = _padAudioListo(ruta);
+      if(ya) dale(ya); else _padAudioSrc(ruta).then(dale, falla);
+      return;
+    }catch(e){}
+  }
+  porVoz();
 }
 
 // ── Grabar ──
@@ -17284,6 +17419,7 @@ function _padGuardar(){
 function _padEscuchar(){
   const d = DISHES.find(x => x.id === _padS.id); if(!d) return;
   const dd = getDish(d);
+  if(typeof _bocParar === 'function') _bocParar();
   if(_padHabla){ _padHabla.cancelar(); _padHabla = null; }
   if(_padAudio){ try{ _padAudio.pause(); }catch(e){} _padAudio = null; }
   const btn = document.getElementById('padEscBtn');
@@ -17525,7 +17661,7 @@ function _padGuardarHora(h){
 // Con archivo de audio (`audio`), un <audio> y la Media Session: sigue
 // sonando con la pantalla bloqueada y se controla desde ella. Con la voz del
 // sistema, el navegador suele callarla al bloquear: se dice en pantalla.
-const _caS = { fuente: null, cola: [], i: 0, sonando: false, gen: 0, timer: null, fin: false, repetir: true };
+const _caS = { fuente: null, cola: [], i: 0, sonando: false, gen: 0, timer: null, fin: false, boc: -1, repetir: true };
 // Repetir al terminar: encendido por defecto (pensado para el coche: la carta
 // suena en bucle sin tocar el móvil). Se recuerda por persona en este móvil.
 try{ const _r = localStorage.getItem('meseo_ca_repetir'); if(_r === '0') _caS.repetir = false; }catch(e){}
@@ -17601,13 +17737,13 @@ function _caSaltar(delta){
   if(sonaba){ _caS.sonando = true; _caSonar(_caS.i); } else _caPintar();
 }
 function _caIrA(i){ _caParar(); _caS.fin = false; _caS.i = i; _caS.sonando = true; _caSonar(i); }
-function _caMeta(d, dd){
+function _caMeta(d, dd, sub){
   try{
     if(!navigator.mediaSession || typeof MediaMetadata === 'undefined') return;
     const src = (typeof dishPhotoSrc === 'function') ? dishPhotoSrc(d.id) : null;
     const f = _caFuentes().find(x => x.id === _caS.fuente);
     navigator.mediaSession.metadata = new MediaMetadata({
-      title: dd.name, artist: (typeof ACTIVE_VENUE !== 'undefined' && ACTIVE_VENUE && ACTIVE_VENUE.name) || 'Meseo',
+      title: sub ? dd.name + ' · ' + sub : dd.name, artist: (typeof ACTIVE_VENUE !== 'undefined' && ACTIVE_VENUE && ACTIVE_VENUE.name) || 'Meseo',
       album: f ? f.nombre : '', artwork: src ? [{ src, sizes: '512x512' }] : []
     });
     navigator.mediaSession.playbackState = 'playing';
@@ -17626,7 +17762,7 @@ function _caSonar(i){
   const d = DISHES.find(x => x.id === id);
   if(!d){ return _caSiguiente(g); }
   const dd = getDish(d);
-  _caS.i = i;
+  _caS.i = i; _caS.boc = -1;
   _caPintar();
   _caMeta(d, dd);
   const ruta = _padAudioDe(d, dd);
@@ -17645,7 +17781,10 @@ function _caSonar(i){
       const a = _caEl;
       let caido = false;
       const falla = () => { if(caido || !vivo()) return; caido = true; _caHabla = _padDecir(dd.name, () => { if(vivo()) _caS.timer = setTimeout(historia, 700); }); };
-      a.onended = () => { if(vivo()) _caS.timer = setTimeout(() => _caSiguiente(g), 2000); };
+      // Un plato de varios bocados (el Mistery box): tras su descripción, sus
+      // bocados en orden y luego el plato siguiente.
+      const bs = _degBocados(dd);
+      a.onended = () => { if(!vivo()) return; if(bs.length) _caS.timer = setTimeout(() => _caBocados(g, d, dd, 0), 900); else _caS.timer = setTimeout(() => _caSiguiente(g), 2000); };
       a.onerror = falla;
       const dale = src => {
         if(!vivo()) return;
@@ -17653,7 +17792,8 @@ function _caSonar(i){
         a.src = src;
         const pr = a.play();
         if(pr && pr.catch) pr.catch(falla);
-        _caPrecargar(i + 1);
+        if(bs.length){ const r1 = _bocAudioDe(d, dd, bs[0]); if(r1) _padAudioSrc(r1); }
+        else _caPrecargar(i + 1);
       };
       const ya = _padAudioListo(ruta);
       if(ya) dale(ya); else _padAudioSrc(ruta).then(dale, falla);
@@ -17661,6 +17801,48 @@ function _caSonar(i){
     }catch(e){}
   }
   _caHabla = _padDecir(dd.name, () => { if(vivo()) _caS.timer = setTimeout(historia, 700); });
+}
+// Los bocados de un plato, uno tras otro (nombre y frase) por el MISMO <audio>
+// de la cola: así siguen con la pantalla bloqueada. Sin archivo de un bocado,
+// la voz del teléfono con su nombre y su frase. Al acabar, el plato siguiente
+// (o el primero, en bucle).
+function _caBocados(g, d, dd, k){
+  const vivo = () => g === _caS.gen && _caS.sonando;
+  if(!vivo()) return;
+  const bs = _degBocados(dd);
+  if(k >= bs.length){
+    _caS.boc = -1; _caPintar(); _caMeta(d, dd);
+    _caS.timer = setTimeout(() => _caSiguiente(g), 2000);
+    return;
+  }
+  const b = bs[k];
+  _caS.boc = k;
+  _caPintar();
+  _caMeta(d, dd, b.n);
+  const sig = () => { if(vivo()) _caS.timer = setTimeout(() => _caBocados(g, d, dd, k + 1), 900); };
+  const porVoz = () => { if(vivo()) _caHabla = _padDecir(b.n + '. ' + b.story, sig); };
+  const ruta = _bocAudioDe(d, dd, b);
+  const a = _caEl;
+  if(ruta && a){
+    let caido = false;
+    const falla = () => { if(caido || !vivo()) return; caido = true; porVoz(); };
+    a.onended = () => { if(!caido) sig(); };
+    a.onerror = falla;
+    const dale = src => {
+      if(!vivo()) return;
+      if(!src) return falla();
+      a.src = src;
+      const pr = a.play();
+      if(pr && pr.catch) pr.catch(falla);
+      const n2 = bs[k + 1];
+      if(n2){ const r2 = _bocAudioDe(d, dd, n2); if(r2) _padAudioSrc(r2); }
+      else _caPrecargar(_caS.i + 1);
+    };
+    const ya = _padAudioListo(ruta);
+    if(ya) dale(ya); else _padAudioSrc(ruta).then(dale, falla);
+    return;
+  }
+  porVoz();
 }
 // El siguiente (o el primero) se pide antes de que toque.
 function _caPrecargar(i){
@@ -17714,6 +17896,7 @@ function _caPintar(){
         <h3 class="ca-nom">${escapeHTML(dd.name)}</h3></div>
       </div>
       <p class="ca-story">${escapeHTML(dd.story)}</p>
+      ${(() => { const bs = _degBocados(dd); const b = _caS.boc >= 0 ? bs[_caS.boc] : null; return b ? `<p class="ca-boc" aria-live="polite"><span>${_en ? 'Bite' : 'Bocado'} ${_caS.boc + 1} ${_en ? 'of' : 'de'} ${bs.length}</span><b>${escapeHTML(b.n)}</b>${escapeHTML(b.story)}</p>` : ''; })()}
     <div class="ca-mandos">
       <button type="button" class="ca-btn" onclick="_caSaltar(-1)" ${_caS.i <= 0 && !_caS.repetir ? 'disabled' : ''} aria-label="${_en ? 'Previous dish' : 'Plato anterior'}">${ic.ant}</button>
       <button type="button" class="ca-btn ca-play" onclick="_caAlternar()" aria-label="${_caS.sonando ? (_en ? 'Pause' : 'Pausa') : (_en ? 'Play' : 'Reproducir')}">${_caS.sonando ? ic.pausa : ic.play}</button>
