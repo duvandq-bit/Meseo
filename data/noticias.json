@@ -1,6 +1,105 @@
 {
- "updated": "2026-11-02T13:34:11.296Z",
+ "updated": "2026-11-02T23:53:53.072Z",
  "items": [
+  {
+   "t": "Martín Berasategui, chef de 66 años, sobre la familia de Iñaki Gabilondo: \"Sin ellos yo no estaría aquí y mi familia tampoco. Han sido tremendamente generosos en todo con nosotros\"",
+   "u": "https://www.clarin.com/internacional/martin-berasategui-chef-66-anos-familia-inaki-gabilondo-familia-tremendamente-generosos_0_ivBFN4gK8M.html",
+   "s": "Clarin.com",
+   "d": "2026-11-02T21:02:00.000Z",
+   "tags": [
+    "CHEF"
+   ],
+   "img": "https://www.clarin.com/img/2026/08/12/vbiuiSC5D_2000x1500__1.jpg"
+  },
+  {
+   "t": "Los secretos de los vinos volcánicos de La Frontera que van a dominar el mercado",
+   "u": "https://www.canariasenpleno.com/vinos-frontera-volcanicos-herreno/",
+   "s": "Canarias en Pleno",
+   "d": "2026-11-02T19:33:02.000Z",
+   "tags": [
+    "VINO",
+    "CANARIAS"
+   ]
+  },
+  {
+   "t": "Jesús de Miguel \"estable dentro de la gravedad\" tras su ingreso hospitalario",
+   "u": "https://www.eldiario.es/canariasahora/Deportes/futbol/jesus-miguel-permanece-observacion-ingreso-hospitalario_1_13632311.html",
+   "s": "elDiario.es",
+   "d": "2026-11-02T17:05:17.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://static.eldiario.es/clip/2518a150-5766-46f1-a1a0-34549345a10a_facebook-aspect-ratio-1200-675_default_0_x440y85.jpg"
+  },
+  {
+   "t": "Suspendido el Tenerife-Andorra al desplomarse De Miguel en un choque con Owono",
+   "u": "https://www.eldiario.es/canariasahora/Deportes/futbol/suspendido-tenerife-andorra-desplomarse-miguel-choque-owono_1_13632179.html",
+   "s": "elDiario.es",
+   "d": "2026-11-02T15:55:48.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://static.eldiario.es/clip/436652a9-295b-4b02-931f-e3d983b15e6d_facebook-aspect-ratio-1200-675_default_0_x507y118.jpg"
+  },
+  {
+   "t": "Las dos tartas de queso de Canarias que pueden convertirse mañana en la mejor de España",
+   "u": "https://diariodeavisos.elespanol.com/2026/11/tartas-queso-canarias-mejor-espana/",
+   "s": "Diario de Avisos",
+   "d": "2026-11-02T13:40:47.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://cdn.diariodeavisos.com/wp-content/uploads/2026/11/tartas-queso.jpg"
+  },
+  {
+   "t": "Diez chefs convierten a Barceló Bávaro en una ruta de sabores del mundo",
+   "u": "https://bavarodigital.net/diez-chefs-convierten-a-barcelo-bavaro-en-una-ruta-de-sabores-del-mundo/",
+   "s": "Bavarodigital.net",
+   "d": "2026-11-02T13:13:20.000Z",
+   "tags": [
+    "ALTA COCINA"
+   ],
+   "img": "https://i0.wp.com/bavarodigital.net/wp-content/uploads/2026/11/img_6207.jpeg"
+  },
+  {
+   "t": "El chef Sergi Arola vuelve a Madrid: “Solamente quiero ser honesto con el cocinero que soy ahora”",
+   "u": "https://as.com/tikitakas/gastronomia/el-chef-sergi-arola-vuelve-a-madrid-solamente-quiero-ser-honesto-con-el-cocinero-que-soy-ahora-f202611-n/",
+   "s": "Diario AS",
+   "d": "2026-11-02T13:00:11.000Z",
+   "tags": [
+    "ALTA COCINA"
+   ]
+  },
+  {
+   "t": "Kazoku Izakaya: Japón como punto de partida para una cocina sin fronteras",
+   "u": "https://www.canarias7.es/gastronomia-c7/restaurantes/kazoku-izakaya-japon-punto-partida-cocina-fronteras-20261102140000-nt.html",
+   "s": "Canarias7",
+   "d": "2026-11-02T13:00:00.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://s1.ppllstatics.com/canarias7/www/multimedia/gastronomia-c7/2026/10/29/1-kJJE-U4087954652RNH-1200x840@Canarias7.jpg"
+  },
+  {
+   "t": "Chele González revalida sus dos estrellas en Filipinas",
+   "u": "https://www.eldiariomontanes.es/cantabria-mesa/chele-gonzalez-revalida-dos-estrellas-20261102134147-nt.html",
+   "s": "El Diario Montañés",
+   "d": "2026-11-02T12:41:48.000Z",
+   "tags": [
+    "ALTA COCINA"
+   ],
+   "img": "https://s1.ppllstatics.com/eldiariomontanes/www/multimedia/cantabria-mesa/2026/11/02/chele-kVOC-U40135766670UHE-1200x840@Diario%20Montanes.jpg"
+  },
+  {
+   "t": "España firma diez medallas en la sesión de vinos dulces y fortificados del CMB y reivindica la vigencia de estos grandes vinos",
+   "u": "https://sevi.net/art/24028/espana-firma-diez-medallas-en-la-sesion-de-vinos-dulces-y-fortificados-del-cmb-y-reivindica-la-vigencia-de-estos-grandes-vinos",
+   "s": "La Semana Vitivinícola",
+   "d": "2026-11-02T12:40:47.000Z",
+   "tags": [
+    "VINO",
+    "CANARIAS"
+   ]
+  },
   {
    "t": "La Frontera impulsa el vino herreño con 'Vinos con Estrella'",
    "u": "https://lavozcanaria.com/el-hierro-comarca/frontera/la-frontera-impulsa-el-vino-herreno-con-vinos-con-estrella",
@@ -9,18 +108,38 @@
    "tags": [
     "VINO",
     "CANARIAS"
-   ],
-   "img": "https://lavozcanaria.com/media/2026/11/la-frontera-impulsa-el-vino-herreno-con-vinos-con-estrella.webp"
+   ]
   },
   {
-   "t": "¡Explosión Volcánica! Los secretos de los vinos de La Frontera que van a dominar el mercado",
-   "u": "https://www.canariasenpleno.com/vinos-frontera-volcanicos-herreno/",
-   "s": "Canarias en Pleno",
-   "d": "2026-11-02T11:43:47.000Z",
+   "t": "La Frontera promotes El Hierro wine with 'Vinos con Estrella'",
+   "u": "https://lavozcanaria.com/en/el-hierro-comarca/frontera/la-frontera-promotes-el-hierro-wine-with-vinos-con-estrella",
+   "s": "La Voz Canaria",
+   "d": "2026-11-02T12:01:06.000Z",
    "tags": [
     "VINO",
     "CANARIAS"
    ]
+  },
+  {
+   "t": "Valido critica que Canarias siga sufriendo apagones como el de este lunes en La Palma",
+   "u": "https://www.eldiario.es/canariasahora/lapalmaahora/politica/valido-critica-canarias-siga-sufriendo-apagones-lunes-palma_1_13631634.html",
+   "s": "elDiario.es",
+   "d": "2026-11-02T11:36:14.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://static.eldiario.es/clip/a9ebe2f0-2bb9-4178-b2f4-ba67fbbfe945_facebook-aspect-ratio-1200-675_default_0_x486y273.jpg"
+  },
+  {
+   "t": "La Frontera promueve sus vinos en la segunda edición de ‘Vinos con Estrella’",
+   "u": "https://canariastimes.com/el-hierro/cultura-ocio/frontera-promueve-vinos-segunda-edicion-vinos-con-estrella/",
+   "s": "Canarias Times",
+   "d": "2026-11-02T11:32:19.000Z",
+   "tags": [
+    "VINO",
+    "CANARIAS"
+   ],
+   "img": "https://cdn.canariastimes.com/2026/11/Vinos-con-estrella.jpg"
   },
   {
    "t": "El Gobierno de Canarias advierte de las deficiencias del sistema eléctrico de La Palma",
@@ -72,6 +191,46 @@
    ]
   },
   {
+   "t": "Celebra el segundo aniversario de la suscripción digital de Ultima Hora y participa en este gran sorteo",
+   "u": "https://amp.ultimahora.es/promociones-sorteos/articulos/2026/11/02/2722685/celebra-segundo-aniversario-suscripcion-digital-ultima-hora-participa-este-gran-sorteo.html",
+   "s": "Ultima Hora",
+   "d": "2026-11-02T07:43:00.000Z",
+   "tags": [
+    "CHEF"
+   ],
+   "img": "https://uh.gsstatic.es/sfAttachPlugin/social/4827815.jpg"
+  },
+  {
+   "t": "Quimet d'Horta, el histórico bar de Barcelona que lleva casi 100 años abierto y ofrece 87 tipos de bocadillos y 35 variedades de tortilla",
+   "u": "https://www.mundodeportivo.com/foodie/barcelona/restaurantes/20261102/1004245881/quimet-d-horta-historico-bar-barcelona-lleva-100-anos-abierto-ofrece-87-tipos-bocadillos-35-variedades-tortilla-dct.html",
+   "s": "Mundo Deportivo",
+   "d": "2026-11-02T06:00:00.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://imagenes2.mundodeportivo.com/files/og_thumbnail/files/fp/uploads/2026/11/01/6ae778601d27c.r_d.1498-1158-4093.jpeg"
+  },
+  {
+   "t": "Jordi Cruz, chef: \"Los espaguetis más sabrosos no llevan ternera picada, mi madre les echa 250 g de cebolla y 800 g de tomate\"",
+   "u": "https://www.elespanol.com/cocinillas/recetas/20261102/jordi-cruz-chef-espaguetis-sabrosos-no-llevan-ternera-picada-madre-echa-cebolla-tomate-rwt/1003744443030_30.amp.html",
+   "s": "El Español",
+   "d": "2026-11-02T06:00:00.000Z",
+   "tags": [
+    "ALTA COCINA"
+   ],
+   "img": "https://s3.elespanol.com/k/imgp/cms/elespanol/11392071.jpg?p=f:jpeg/w:1706/h:960&h=3hxvBlE_"
+  },
+  {
+   "t": "Ángel Martín: “Doy por sentado que la gente que desaparece en el momento en el que estás mal no quiere volver\"",
+   "u": "https://www.elespanol.com/madrid/ocio/20261102/angel-martin-doy-sentado-gente-desaparece-momento-mal-no-quiere-volver/1003744440382_0.amp.html",
+   "s": "El Español",
+   "d": "2026-11-02T05:30:00.000Z",
+   "tags": [
+    "CHEF"
+   ],
+   "img": "https://s3.elespanol.com/k/imgp/cms/elespanol/11390409.jpg?p=f:jpeg/w:1706/h:960&h=cF3av0X1"
+  },
+  {
    "t": "Este es el hotel de Aragón con el máximo reconocimiento de la Guía Michelin en 2026: un alojamiento de lujo en la comarca del Matarraña",
    "u": "https://www.elperiodicodearagon.com/aragon/2026/11/02/hotel-aragon-maximo-reconocimiento-guia-dv-135916450.html",
    "s": "El Periódico de Aragón",
@@ -79,17 +238,6 @@
    "tags": [
     "MICHELIN"
    ]
-  },
-  {
-   "t": "Bodega Elysar suma nuevos premios internacionales que avalan la calidad de los vinos de El Hierro",
-   "u": "https://elburgado.com/bodega-elysar-suma-nuevos-premios-internacionales-que-avalan-la-calidad-de-los-vinos-de-el-hierro/",
-   "s": "El Burgado Digital",
-   "d": "2026-11-02T00:03:21.000Z",
-   "tags": [
-    "VINO",
-    "CANARIAS"
-   ],
-   "img": "https://elburgado.com/wp-content/uploads/2026/11/1-scaled.jpeg"
   },
   {
    "t": "El menú Michelin barato de un chef con estrella: alta cocina por menos de 50 euros en Vizcaya",
@@ -110,7 +258,7 @@
    "tags": [
     "ALTA COCINA"
    ],
-   "img": "https://scontent-qro3-1.xx.fbcdn.net/v/t39.99422-6/883647789_1135068362345237_1919310771974599573_n.png?stp=dst-jpg_tt6&cstp=mx1600x2000&ctp=p600x600&_nc_cat=109&ccb=1-7&_nc_sid=cae128&_nc_ohc=pvBfTXHVvewQ7kNvwGesIz4&_nc_oc=AdqyaMk3KA4EdsOTUbN-xs40kn_VAR_5IFipqa-jnfx0_zDifu36jp8CLG10UVEFFrk&_nc_zt=14&_nc_ht=scontent-qro3-1.xx&_nc_gid=q0vDR2FKspe1ZApzpX-1nQ&_nc_ss=7c289&oh=00_AQS2MKCOFRn5E7WUByrSCQjYe8P_Ud2JbD5Za4b1u33pWg&oe=6AEE6F81"
+   "img": "https://scontent-sjc6-1.xx.fbcdn.net/v/t39.99422-6/883647789_1135068362345237_1919310771974599573_n.png?stp=dst-jpg_tt6&cstp=mx1600x2000&ctp=p600x600&_nc_cat=109&ccb=1-7&_nc_sid=cae128&_nc_ohc=pvBfTXHVvewQ7kNvwHqcF45&_nc_oc=AdqiC6d7wG4Jet8H97IO2RV6kPzehc6pZ8f_JnsMgpLJ2VKmXP2ykfjdOaA2wLhT8eU&_nc_zt=14&_nc_ht=scontent-sjc6-1.xx&_nc_gid=QH6UqjJ6sa4gFfjZiEEXCw&_nc_ss=7c289&oh=00_AQSjuczV0eSCg8fWiRmvurv1kwQ98z3rOLmkAKPUOkQg0A&oe=6AEEE001"
   },
   {
    "t": "Tenerife Sur registra 26 litros por metro cuadrado en una hora en una jornada marcada por las lluvias",
@@ -133,6 +281,15 @@
    "img": "https://media.lmneuquen.com/p/c7e1faefc6d032a3a3a11ac1f389cb29/adjuntos/195/imagenes/008/425/0008425443/1200x675/smart/sfp-lucho-ruiz-cocinero-chef-especialista-fuegos-25.jpg"
   },
   {
+   "t": "Dante Ferrero: 'La variedad de la cocina mexicana es inacabable'",
+   "u": "https://www.reporteindigo.com/monterrey/dante-ferrero-la-variedad-de-la-cocina-mexicana-es-inacabable-20261101-0020.html",
+   "s": "Reporte Indigo",
+   "d": "2026-11-01T16:50:25.000Z",
+   "tags": [
+    "ALTA COCINA"
+   ]
+  },
+  {
    "t": "El restaurante de carretera definitivo está en este pueblo medieval de Madrid: Martín Berasategui confiesa su secreto mejor guardado",
    "u": "https://www.noticiasdelvino.com/escapadas/2026/11/01/el-restaurante-de-carretera-definitivo-esta-en-este-pueblo-medieval-de-madrid-martin-berasategui-confiesa-su-secreto-mejor-guardado-74843/",
    "s": "Noticias del Vino",
@@ -141,167 +298,6 @@
     "CHEF"
    ],
    "img": "https://www.noticiasdelvino.com/wp-content/uploads/image-583.png.webp"
-  },
-  {
-   "t": "Bonos Consumo Santa Cruz de Tenerife: fecha límite para canjearlos y comercios participantes",
-   "u": "https://www.eldiario.es/canariasahora/tenerifeahora/bonos-consumo-santa-cruz-tenerife-fecha-limite-canjearlos-comercios-participantes_1_13630503.html",
-   "s": "elDiario.es",
-   "d": "2026-11-01T12:35:59.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://static.eldiario.es/clip/c33bf645-72e8-4f96-a963-84a6d458b377_facebook-aspect-ratio-1200-675_default_0_x130y323.jpg"
-  },
-  {
-   "t": "Tenerife se queda a oscuras: 160.000 viviendas afectadas por un apagón",
-   "u": "https://www.eldiario.es/canariasahora/tenerifeahora/tenerife-queda-oscuras-160-000-clientes-afectados-apagon_1_13630506.html",
-   "s": "elDiario.es",
-   "d": "2026-11-01T12:10:45.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://static.eldiario.es/clip/bc6ead55-e4b8-46af-b9e5-7cb154f986ae_facebook-aspect-ratio-1200-675_default_0.jpg"
-  },
-  {
-   "t": "La gran noche de las brasas en Char junto a O’Pazo",
-   "u": "https://www.laprovincia.es/canarias/2026/11/01/gran-noche-brasas-char-o-pazo-135970585.html",
-   "s": "La Provincia",
-   "d": "2026-11-01T10:05:09.000Z",
-   "tags": [
-    "CANARIAS"
-   ]
-  },
-  {
-   "t": "Contundente victoria del Santa Cruz ADEIN Tenerife Fundación CB Canarias",
-   "u": "https://www.eldiario.es/canariasahora/deportes/baloncesto/contundente-victoria-santa-cruz-adein-tenerife-fundacion-cb-canarias_1_13630065.html",
-   "s": "elDiario.es",
-   "d": "2026-11-01T08:59:35.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://static.eldiario.es/clip/3171d525-7c26-4d9d-85c9-0fdaec73b8f0_facebook-aspect-ratio-1200-675_default_0_x1106y174.jpg"
-  },
-  {
-   "t": "Eduardo Salanova, el chef con estrella Michelin en un antiguo vagón de 1927 en los Pirineos: “Recreamos el sabor de los corderos que pastan algas en Francia”",
-   "u": "https://www.infobae.com/espana/2026/11/01/eduardo-salanova-el-chef-con-estrella-michelin-en-un-antiguo-vagon-de-1927-en-los-pirineos-recreamos-el-sabor-de-los-corderos-que-pastan-algas-en-francia/",
-   "s": "Infobae",
-   "d": "2026-11-01T08:20:00.000Z",
-   "tags": [
-    "ALTA COCINA",
-    "MICHELIN"
-   ],
-   "img": "https://www.infobae.com/resizer/v2/MQQS2FR5PRCRDAJPMXBBTT4VMM.jpg?auth=dab639668fa57536543c54a6efeb82627a0f9b468d84540fa511b6cc4f69be73&smart=true&width=1200&height=630&quality=85"
-  },
-  {
-   "t": "Marc Fosh, el primer británico en lograr una estrella Michelin en España: “Cuando abrimos no existía Google Maps”",
-   "u": "https://www.elespanol.com/viajes/cocinillas-gastro/restaurantes/20261101/marc-fosh-primer-britanico-lograr-estrella-michelin-espana-abrimos-no-existia-google-maps/1003744435057_0.amp.html",
-   "s": "El Español",
-   "d": "2026-11-01T07:00:00.000Z",
-   "tags": [
-    "ALTA COCINA",
-    "MICHELIN"
-   ],
-   "img": "https://s3.elespanol.com/k/imgp/cms/elespanol/11390942.jpg?p=f:jpeg/w:1706/h:960&h=jLBvkRdM"
-  },
-  {
-   "t": "Artesanía, gastronomía, música y actividades infantiles se citan en la XXIII Feria del Sureste",
-   "u": "https://www.canarias7.es/canarias/gran-canaria/artesania-gastronomia-musica-actividades-infantiles-citan-xxiii-20261101073000-nt_amp.html",
-   "s": "Canarias7",
-   "d": "2026-11-01T06:30:06.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://s3.ppllstatics.com/canarias7/www/multimedia/local/2026/10/31/feria-sureste1-kO2E-U40116307837dbF-1200x840@Canarias7.jpg"
-  },
-  {
-   "t": "Un poderoso grupo belga impulsa dos proyectos turísticos de lujo en primera línea de costa en el sur de Tenerife",
-   "u": "https://www.eldiario.es/canariasahora/tenerifeahora/sociedad/poderoso-grupo-belga-proyectos-turisticos-lujo-costa-sur-tenerife-canarias_1_13592180.html",
-   "s": "elDiario.es",
-   "d": "2026-11-01T05:01:29.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://static.eldiario.es/clip/8410527e-1235-44ff-af84-eccb2591430d_facebook-aspect-ratio-1200-675_default_0.jpg"
-  },
-  {
-   "t": "Hotel España Ocean Drive: La herencia de una fonda histórica de la mano de Martín Berasategui",
-   "u": "https://www.elperiodico.com/es/gastronomia/restaurantes/20261101/hotel-espana-ocean-drive-martin-berasategui-150-hoteles-gastronomicos-cataluna-andorra-135290696",
-   "s": "El Periódico",
-   "d": "2026-11-01T02:59:23.000Z",
-   "tags": [
-    "CHEF"
-   ]
-  },
-  {
-   "t": "Monument Hotel: Dos aniversarios que merecen un brindis y una apertura que promete",
-   "u": "https://amp.elperiodico.com/es/gastronomia/restaurantes/20261101/monument-hotel-martin-berasategui-paolo-casagrande-150-hoteles-gastronomicos-cataluna-andorra-135252063",
-   "s": "El Periódico",
-   "d": "2026-11-01T00:59:16.000Z",
-   "tags": [
-    "CHEF"
-   ],
-   "img": "https://estaticos-cdn.prensaiberica.es/clip/263e60b4-e7b0-406c-99d3-beebf12a7e1b_16-9-discover-aspect-ratio_default_1519615.jpg"
-  },
-  {
-   "t": "Tenerife acude a la WTM 2026 para reforzar su liderazgo en el mercado británico con una apuesta por experiencias diversas y diferenciadas",
-   "u": "https://elburgado.com/tenerife-acude-a-la-wtm-2026-para-reforzar-su-liderazgo-en-el-mercado-britanico-con-una-apuesta-por-experiencias-diversas-y-diferenciadas/",
-   "s": "El Burgado Digital",
-   "d": "2026-11-01T00:01:35.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://elburgado.com/wp-content/uploads/2026/11/Dimple-Melwani-y-Lope-Afonso-en-la-edicion-2025-de-la-WTM-de-Londres-1.jpg"
-  },
-  {
-   "t": "Aplazado el Tenerife-Andorra por aviso naranja por lluvias",
-   "u": "https://www.eldiario.es/canariasahora/Deportes/futbol/aplazado-tenerife-andorra-aviso-naranja-lluvias_1_13629939.html",
-   "s": "elDiario.es",
-   "d": "2026-10-31T23:06:34.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://static.eldiario.es/clip/5c0ccc97-b10b-481a-bf79-3a4714405dce_facebook-aspect-ratio-1200-675_default_0.jpg"
-  },
-  {
-   "t": "Quiénes deciden hoy la gastronomía",
-   "u": "https://amp.expansion.com/estilo-vida/rincones-gastronomicos/2026/10/31/quienes-deciden-hoy-gastronomia.html",
-   "s": "Expansión",
-   "d": "2026-10-31T18:56:26.000Z",
-   "tags": [
-    "ALTA COCINA"
-   ],
-   "img": "https://e00-xlk-ue-expansion.uecdn.es/files/article_main_microformat/uploads/2026/10/31/6ae635148671a.png"
-  },
-  {
-   "t": "El Tenerife busca su cuarta victoria ante un Andorra en descenso",
-   "u": "https://www.eldiario.es/canariasahora/Deportes/futbol/tenerife-busca-cuarta-victoria-andorra-descenso_1_13629564.html",
-   "s": "elDiario.es",
-   "d": "2026-10-31T17:38:44.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://static.eldiario.es/clip/f06a7034-ca31-457f-9d84-b78a310a6663_facebook-aspect-ratio-1200-675_default_0_x575y294.jpg"
-  },
-  {
-   "t": "La bodega herreña Elysar recibe el diploma de su medalla de oro en el Brazil Wine Challenge",
-   "u": "https://elhierrohoy.es/bodega-elysar-recibe-diploma-medalla-oro-brazil-wine-challenge-31-oct/",
-   "s": "El Hierro Hoy",
-   "d": "2026-10-31T15:22:04.000Z",
-   "tags": [
-    "VINO",
-    "CANARIAS"
-   ],
-   "img": "https://elhierrohoy.es/wp-content/uploads/2026/10/bodega-elysar-diploma_1.webp"
-  },
-  {
-   "t": "Alejandro García y Alejandro Garrido: cocina, emoción y complicidad en Bonfire",
-   "u": "https://www.canarias7.es/gastronomia-c7/restaurantes/alejandro-garcia-alejandro-garrido-cocina-emocion-complicidad-20261031140000-nt.html",
-   "s": "Canarias7",
-   "d": "2026-10-31T13:00:04.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://s1.ppllstatics.com/canarias7/www/multimedia/gastronomia-c7/2026/10/29/image00001-kkmE-U4086329052t3B-1200x840@Canarias7.jpg"
   }
  ]
 }
