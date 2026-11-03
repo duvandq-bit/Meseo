@@ -18575,6 +18575,50 @@ test('voz del teléfono: Premium por delante de Enhanced', () => {
   assert(_pad._padMejorVoz([{ name: 'Mónica (mejorada)', lang: 'es-ES' }, { name: 'Mónica (Premium)', lang: 'es-ES' }], 'es-ES').name === 'Mónica (Premium)', 'premium');
 });
 
+// ── Prueba de usuario (nov 2026): fallos encontrados probando como camarero,
+//    encargado y restaurante interesado ──
+test('demo: una práctica no deja eventos «sin identidad» ni enciende el aviso de sincronización', () => {
+  // Al terminar Un plato al día en la demo salía «1 prueba hecha en este
+  // dispositivo sin nadie identificado... Hay que repetirlas» tapando el botón.
+  const ra = _fnSrc('registrarActividad');
+  const iDemo = ra.indexOf("_esDemo()) return false;");
+  assert(iDemo > 0, 'registrarActividad no corta en la demo');
+  assert(iDemo > ra.indexOf('_anotarEnDiario(') && iDemo < ra.indexOf("_eventoCrear('actividad'"), 'el corte va después del diario (plan de hoy) y antes de crear el evento');
+  const si = _fnSrc('supaInsertScore');
+  const jDemo = si.indexOf('_esDemo())');
+  assert(jDemo > 0 && jDemo < si.indexOf('_eventoCrear('), 'supaInsertScore no corta en la demo antes de crear el evento');
+});
+test('ingredientes: camarón, amaebi y navajas dicen de dónde viene el alérgeno', () => {
+  // El Mistery box decía «Moluscos · Por: Amaebi» y no nombraba el camarón en
+  // Crustáceos ni las navajas en Moluscos: faltaban en la base única.
+  const src = html.slice(html.indexOf('let _djIngBase = null;'), html.indexOf('// ── Phase 4: Service ──'));
+  const F = new Function(src + `
+    return {n:_djNorm, base:function(b){ _djIngBase = b; },
+            ing:function(dish){ globalThis.DISH_COMPONENTS={}; return _djIngredients(dish); }};`)(); // eslint-disable-line no-new-func
+  const crudo = JSON.parse(read('data/ingredients.json')).ingredientes;
+  const idx = new Map();
+  for (const [k, v] of Object.entries(crudo)) for (const key of [v.nombre, k]) { const nk = F.n(key); if (nk && !idx.has(nk)) idx.set(nk, v.alergenos); }
+  F.base({ idx, claves: [...idx.keys()].sort((a, b) => b.length - a.length) });
+  const items = F.ing({ id: null, allergens: ['Crustáceos', 'Moluscos'], ingredients: 'Camarón dulce con gazpacho de melón, navajas, amaebi' });
+  const de = (a) => items.filter(i => i.a.includes(a)).map(i => i.t.toLowerCase()).join(' | ');
+  assert(/camar/.test(de('Crustáceos')), 'el camarón no da Crustáceos: ' + de('Crustáceos'));
+  assert(/amaebi/.test(de('Crustáceos')), 'el amaebi no da Crustáceos');
+  assert(/navaja/.test(de('Moluscos')), 'las navajas no dan Moluscos: ' + de('Moluscos'));
+  for (const k of ['camaron', 'amaebi', 'navaja', 'navajas']) assert(crudo[k] && crudo[k].nombre_en, 'falta ' + k + ' con su nombre en inglés');
+});
+test('textos visibles sin rayas: Yo, Equipo y los avisos que se ven al usar la app', () => {
+  for (const viejo of ["'PLATOS DOMINADOS'} —", 'Nadie puntúa todavía esta semana —', 'Todo al día — no hay', 'Foto enviada — pendiente',
+                       'Foto aprobada — ya visible', 'Error al enviar duelo —', 'Almacenamiento local lleno —',
+                       'this week yet — first', 'All caught up — no', 'Photo sent — pending', 'Photo approved — live', 'Error submitting duel —', 'storage is full —'])
+    assert(!html.includes(viejo), 'vuelve la raya: ' + viejo);
+  assert(html.includes("'PLATOS DOMINADOS'} · ${knownCount}"), 'Platos dominados con su contador');
+});
+test('toques de 44 px: Escuchar de la ficha y los agotados de Hoy en sala', () => {
+  const css = read('styles.css');
+  assert(/\.deg-escuchar\{[^}]*min-height:44px/.test(css), '.deg-escuchar por debajo de 44 px');
+  assert(/\.parte-chip-x\{[^}]*min-height:44px/.test(css), '.parte-chip-x por debajo de 44 px');
+});
+
 console.log('\nHygiene');
 test('no git conflict markers in tracked source', () => {
   for (const f of ['index.html', 'sw.js', 'data/wines.json', 'data/lqa-situations.json', 'data/ghost-scenarios.json']) {
