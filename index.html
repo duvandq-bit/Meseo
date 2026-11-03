@@ -54,7 +54,7 @@
 <meta property="og:description" content="Formación de equipos de sala: carta, alérgenos, vinos, exámenes y juegos de repaso.">
 <meta property="og:url" content="https://meseo.es/">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"Meseo","url":"https://meseo.es/"}</script>
-<meta name="app-version" content="7.531">
+<meta name="app-version" content="7.532">
 <meta name="app-build" content="May 2026">
 <meta name="theme-color" content="#1c2a22">
 <!-- ═══ PWA ═══ -->
@@ -2891,7 +2891,7 @@ const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><p
 const SRC = 'src';
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='7.531';  // sincronizada con sw.js VERSION (guard de CI)
+const APP_VERSION='7.532';  // sincronizada con sw.js VERSION (guard de CI)
 const APP_BUILD='Jul 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;
@@ -3925,6 +3925,11 @@ async function registrarActividad(a){
   // mitad de un servicio se queda sin cobertura a menudo.
   _anotarEnDiario(a.activity, competency, kind, score, total, a.seconds);
   if(_soloLocal) return false;
+  // La demo no habla con el servidor y no tiene identidad: sin este corte,
+  // cada práctica caía en la cola «sin identidad» y aparecía el aviso
+  // «1 prueba hecha sin nadie identificado, hay que repetirlas» al terminar
+  // Un plato al día, delante de quien está probando la app.
+  if(typeof _esDemo === 'function' && _esDemo()) return false;
 
   const datos = {
     activity: a.activity,
@@ -4388,6 +4393,8 @@ async function supaInsertScore(session, employee) {
   // contenido, no para competir. Se corta ANTES de escribir, no se filtra
   // después: una fila que no existe no se puede colar en un ranking.
   if(_esAdmin(employee)) return { evento:'no-aplica', envio:'no-intentado' };
+  // La demo tampoco: nada sale de este navegador y no hay a quién atribuirlo.
+  if(typeof _esDemo === 'function' && _esDemo()) return { evento:'no-aplica', envio:'no-intentado' };
   // Las dos únicas puertas a `scores` que son evidencia: el examen general y el
   // simulacro de alérgenos. Los récords de juego tienen sus propias funciones y
   // NO son eventos de B2.
@@ -6403,7 +6410,7 @@ function _guardarLocal(){
     if(typeof showToast==='function' && (now - _saveDBErrorShown) > 30000){
       _saveDBErrorShown = now;
       if(isQuota){
-        showToast(LANG==='en'?'⚠ Local storage is full — your progress may not save. Sync online to preserve data.':'⚠ Almacenamiento local lleno — tu progreso puede no guardarse. Sincroniza online para preservar datos.', 'warning', 8000);
+        showToast(LANG==='en'?'Your phone is out of space for Meseo: your progress may not be saved. Connect to the internet so it gets sent.':'El móvil se ha quedado sin espacio para Meseo: puede que tu progreso no se guarde. Conéctate a internet para que se envíe.', 'warning', 8000);
       } else {
         showToast(LANG==='en'?'⚠ Could not save locally. Your session may not persist.':'⚠ No se pudo guardar localmente. Tu sesión puede no persistir.', 'warning', 6000);
       }
@@ -9950,7 +9957,7 @@ function _startSmartSession(soloFallos){
     // F-P0-2: previously a silent click-and-nothing-happens dead-end. Surface
     // an empty-state toast so the user understands they're caught up.
     if(typeof showToast === 'function'){
-      showToast(LANG==='en' ? 'All caught up — no due cards' : 'Todo al día — no hay tarjetas pendientes', 'info', 2400);
+      showToast(LANG==='en' ? 'All caught up: no cards due' : 'Todo al día: no hay tarjetas pendientes', 'info', 2400);
     }
     return;
   }
@@ -16067,7 +16074,7 @@ async function _dishPhotoUpload(dishId, inputEl){
       body:JSON.stringify(_vSello({ dish_id:dishId, url, author:currentUser||null })) });
     if(!ins.ok) throw new Error('insert');
     if(DISH_PHOTO_PENDING) DISH_PHOTO_PENDING.add(dishId);
-    showToast(_en?'Photo sent — pending supervisor approval':'Foto enviada — pendiente de aprobación del supervisor','success',3200);
+    showToast(_en?'Photo sent. Waiting for the supervisor to approve it':'Foto enviada. Queda pendiente de que la apruebe el supervisor','success',3200);
     const ov=document.getElementById('emplOverlay'); if(ov) ov.remove();
     if((_subTab.aprender||'')==='emplatado'){ const s=document.getElementById('emplSearch'); if(s) _emplRender(s.value||''); }
   }catch(_){ showToast(_en?'Could not upload the photo':'No se pudo subir la foto','warning',3000); }
@@ -16311,7 +16318,7 @@ async function _supPhotoModerate(id,status){
       body:JSON.stringify({ status, reviewed_at:new Date().toISOString() }) });
     if(!r.ok) throw new Error('patch');
     DISH_PHOTOS=null; DISH_PHOTO_PENDING=null; loadDishPhotos();   // recarga el mapa fusionado
-    showToast(status==='approved'?(_en?'Photo approved — live for the whole team':'Foto aprobada — ya visible para el equipo'):(_en?'Photo rejected':'Foto rechazada'),'success',2800);
+    showToast(status==='approved'?(_en?'Photo approved: the whole team can see it now':'Foto aprobada: ya la ve todo el equipo'):(_en?'Photo rejected':'Foto rechazada'),'success',2800);
     renderSupPhotoQueue();
   }catch(_){ showToast(_en?'Moderation failed':'Error al moderar','warning',3000); }
 }
@@ -24485,7 +24492,7 @@ function _hoyPlanHTML(emp, _en){
   if(!n){
     return `<div class="plan-hoy plan-hoy-vacio">
       <div class="plan-hoy-eyebrow">◈ ${_en ? 'Your plan for today' : 'Tu plan de hoy'}</div>
-      <div class="plan-hoy-resumen">${_en ? 'All caught up — nothing pending today.' : 'Todo al día: hoy no tienes nada pendiente.'}</div>
+      <div class="plan-hoy-resumen">${_en ? 'All caught up: nothing pending today.' : 'Todo al día: hoy no tienes nada pendiente.'}</div>
     </div>`;
   }
   const hechas = plan.completadas;
@@ -27912,7 +27919,7 @@ function renderStats(){
 
     <!-- Dominados por categoría -->
     <div style="background:linear-gradient(155deg,#faf6ee,var(--ink));border:1.5px solid rgba(196,154,60,.15);border-radius:var(--r2);padding:.8rem;margin-bottom:.75rem">
-      <div style="font-family:var(--font-mono);font-size:var(--fs-1);color:var(--gold);letter-spacing:.1em;margin-bottom:.6rem">${LANG==='en'?'DISHES MASTERED':'PLATOS DOMINADOS'} — ${knownCount}/${totalDishes} (${pctKnown}%)</div>
+      <div style="font-family:var(--font-mono);font-size:var(--fs-1);color:var(--gold);letter-spacing:.1em;margin-bottom:.6rem">${LANG==='en'?'DISHES MASTERED':'PLATOS DOMINADOS'} · ${knownCount}/${totalDishes} (${pctKnown}%)</div>
       ${catBars2}
     </div>
 
@@ -28486,7 +28493,7 @@ function renderRanking(){
     const leagueHTML=`
       <div class="tunic-divider"><span>${LANG==='en'?'Weekly league':'Liga semanal'}</span></div>
       <div style="font-family:var(--font-mono);font-size:var(--fs-1);color:var(--parch3);text-align:center;margin:-.3rem 0 .7rem">${LANG==='en'?'resets every Monday':'se reinicia cada lunes'} · ${_wkDaysLeft===1?(LANG==='en'?'last day!':'¡último día!'):(_wkDaysLeft+(LANG==='en'?' days left':' días restantes'))}</div>
-      ${_wkRows || `<div style="text-align:center;font-size:.78rem;color:var(--parch3);padding:.8rem 0 1rem">${LANG==='en'?'Nobody has scored this week yet — first to study takes the lead':'Nadie puntúa todavía esta semana — el primero en estudiar se pone líder'}</div>`}`;
+      ${_wkRows || `<div style="text-align:center;font-size:.78rem;color:var(--parch3);padding:.8rem 0 1rem">${LANG==='en'?'Nobody has scored this week yet. The first to study takes the lead':'Nadie puntúa todavía esta semana. El primero en estudiar se pone líder'}</div>`}`;
 
     const _rc = document.getElementById('rankingContent');
     _rc.removeAttribute('style');
@@ -32724,7 +32731,7 @@ async function submitDefense() {
   const duelObj = remoteDuelState.duelObj || {};
   const cTimings = jParse(duelObj.challenger_timings, []);
   const result = await supaSubmitDefenderAnswers(duelId, answers, challengerAnswers, questions, cTimings, remoteDuelState.timings || []);
-  if (!result) { showToast(LANG==='en'?'Error submitting duel — try again':'Error al enviar duelo — inténtalo de nuevo','error'); renderDuel(); return; }
+  if (!result) { showToast(LANG==='en'?'Could not send the duel. Try again':'No se ha podido enviar el duelo. Inténtalo de nuevo','error'); renderDuel(); return; }
   const { cScore, dScore, cWins, dWins, tiebreak } = result;
   const iWon = dWins;
   const xpAmt = iWon ? 50 : cWins ? 10 : 25;

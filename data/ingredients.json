@@ -4130,6 +4130,38 @@
       "nombre_en": "Prickly pear",
       "alergenos": [],
       "fuente": "certeza culinaria"
+    },
+    "amaebi": {
+      "nombre": "Amaebi",
+      "nombre_en": "Sweet shrimp",
+      "alergenos": [
+        "Crustáceos"
+      ],
+      "fuente": "certeza culinaria"
+    },
+    "camaron": {
+      "nombre": "Camarón",
+      "nombre_en": "Shrimp",
+      "alergenos": [
+        "Crustáceos"
+      ],
+      "fuente": "certeza culinaria"
+    },
+    "navaja": {
+      "nombre": "Navaja",
+      "nombre_en": "Razor clam",
+      "alergenos": [
+        "Moluscos"
+      ],
+      "fuente": "certeza culinaria"
+    },
+    "navajas": {
+      "nombre": "Navajas",
+      "nombre_en": "Razor clams",
+      "alergenos": [
+        "Moluscos"
+      ],
+      "fuente": "certeza culinaria"
     }
   }
 }

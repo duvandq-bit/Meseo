@@ -11101,7 +11101,7 @@ html[data-venue="demo"] .ri-cta-mesa .ri-cta-icon{border-color:rgba(200,163,90,.
 .parte-chips{display:flex;flex-wrap:wrap;gap:.35rem;margin-bottom:.3rem}
 .parte-chip{display:inline-flex;align-items:center;gap:.3rem;padding:.28rem .6rem;border-radius:999px;background:#fff;border:1px solid var(--line2);font-family:var(--font-sans);font-size:var(--fs-2);font-weight:600;color:var(--parchment);max-width:100%}
 .parte-sec-86 .parte-chip{border-color:rgba(196,112,104,.45);color:var(--rose);text-decoration:line-through;text-decoration-thickness:1px}
-.parte-chip-x{cursor:pointer;min-height:32px}
+.parte-chip-x{cursor:pointer;min-height:44px}
 .parte-chip-ok{border-color:rgba(77,138,94,.4);color:var(--green-deep)}
 .parte-chip small{font-family:var(--font-mono);font-size:var(--fs-1);color:var(--parch3);font-weight:400}
 .parte-foot{display:flex;justify-content:flex-end;align-items:center;margin-top:.6rem;padding-top:.6rem;border-top:1px solid var(--line2)}
@@ -11347,7 +11347,7 @@ html[data-venue="demo"] .ri-cta-mesa .ri-cta-icon{border-color:rgba(200,163,90,.
 .deg-tres li{counter-increment:deg;position:relative;padding-left:1.9rem;font-family:var(--font-sans);font-size:var(--fs-3);color:var(--parchment);line-height:1.4}
 .deg-tres li::before{content:counter(deg);position:absolute;left:0;top:.05rem;width:1.35rem;height:1.35rem;border-radius:50%;border:1px solid var(--gold);color:var(--gold-ink);font-family:var(--font-mono);font-size:var(--fs-1);display:flex;align-items:center;justify-content:center}
 .deg-tres.grande li{font-size:var(--fs-4);font-weight:600;padding-left:2.1rem}
-.deg-escuchar{margin-top:.55rem;background:transparent;border:1px solid var(--gold);border-radius:999px;padding:.35rem .9rem;min-height:36px;font-family:var(--font-mono);font-size:var(--fs-1);letter-spacing:.08em;text-transform:uppercase;color:var(--gold-ink);cursor:pointer}
+.deg-escuchar{margin-top:.55rem;background:transparent;border:1px solid var(--gold);border-radius:999px;padding:.35rem .9rem;min-height:44px;font-family:var(--font-mono);font-size:var(--fs-1);letter-spacing:.08em;text-transform:uppercase;color:var(--gold-ink);cursor:pointer}
 .deg-apoyo{border:1px solid var(--line2);border-radius:var(--r);background:rgba(0,0,0,.02)}
 .deg-apoyo summary{cursor:pointer;padding:.75rem .9rem;font-family:var(--font-mono);font-size:var(--fs-1);letter-spacing:.1em;text-transform:uppercase;color:var(--parch3);min-height:44px;display:flex;align-items:center}
 .deg-apoyo-body{padding:0 .9rem .85rem;display:flex;flex-direction:column;gap:.6rem;font-family:var(--font-sans);font-size:var(--fs-2);color:var(--parch2)}
