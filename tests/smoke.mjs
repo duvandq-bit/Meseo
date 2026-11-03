@@ -1272,9 +1272,10 @@ test('tokenization phase 2: no raw brand hexes in CSS contexts of index.html', (
   const cssCtx = html.match(/[:,]#(c49a3c|e4be68|d4aa4c|7d5c2f|1c2a22|f4ede2|4d8a5e|2d6a3e)/gi) || [];
   assert(cssCtx.length === 0,
     `found ${cssCtx.length} raw brand hexes in CSS contexts: ${cssCtx.slice(0,4).join(' ')}`);
-  // The dashboard greeting eyebrow follows the active venue.
-  assert(/dash-hero-label">\$\{\(typeof ACTIVE_VENUE/.test(html),
-    'dashboard hero label must be venue-aware');
+  // El saludo de Hoy ya no lleva cejilla (nov 2026: tarjeta pequeña); que no
+  // vuelva un lugar escrito a fuego en su lugar.
+  const heroMini = html.slice(html.indexOf('function _heroMiniHTML('), html.indexOf('function _crMesaTileHTML('));
+  assert(heroMini.length > 0 && !/Tenerife/.test(heroMini), 'el saludo de Hoy no lleva un lugar escrito a fuego');
 });
 
 test('brand-token layer drives the palette (multi-restaurant ready)', () => {
@@ -4111,7 +4112,11 @@ test('dashboard: una sola escalera de progreso (la barra de XP)', () => {
   assert(!/dash-statline/.test(dashTpl), 'la statline de 4 cifras debe seguir fuera del Inicio');
   assert(!/'Your progress':'Tu progreso'/.test(dashTpl), 'la sección «Tu progreso» debe seguir fuera del Inicio');
   assert(!/Next rank|Próximo rango/.test(dashTpl), 'la fila «Próximo rango» debe seguir fuera del Inicio');
-  assert(/renderXPBar\(\)/.test(dashTpl), 'la barra de XP es la única medida de progreso del Inicio');
+  // Nov 2026: la barra va dentro de la tarjeta pequeña del saludo, y sigue
+  // siendo la única medida de progreso del Inicio.
+  assert(/_heroMiniHTML\(emp,_en,greeting,_tranquilo\)/.test(dashTpl), 'la tarjeta pequeña del saludo y el nivel está en el Inicio');
+  const mini = html.slice(html.indexOf('function _heroMiniHTML('), html.indexOf('function _crMesaTileHTML('));
+  assert(/xpProgress\(xp\)/.test(mini) && /class="dash-hero-track"/.test(mini), 'la barra de XP es la única medida de progreso del Inicio');
   // El detalle no se pierde: sigue existiendo en la pantalla de Estadísticas.
   const stats = html.slice(html.indexOf('function renderStats()'), html.indexOf('function renderVideos'));
   assert(/topicBars/.test(stats) && /t-stat-row/.test(stats),
@@ -8909,7 +8914,9 @@ test('Inicio en tres bloques: saludo, Consulta rápida, Plan de hoy + Reto del d
   // Repaso inteligente en Practicar y dentro del Plan. Reto semanal y
   // misiones se retiraron del todo.
   const dash = html.slice(html.indexOf('function renderDashboard()'), html.indexOf('// ═══════ FLASHCARDS'));
-  const orden = ['class="dash-hero"', '${_parteCard}', 'class="dash-cr"', '${_hoyPlanHTML(emp,_en)}', '${_pddHeroHTML(emp,_en)}', '${_demoContacto}'];
+  // Nov 2026 (prueba de usuario): lo útil arriba. Un plato al día y Repasar,
+  // Hoy en sala, el plan; el saludo y el nivel, pequeños y debajo.
+  const orden = ["_padTarjetaHTML('dashboard')", "_rtcTarjetaHTML('dashboard')", '${_parteCard}', '${_hoyPlanHTML(emp,_en)}', '${_heroMiniHTML(emp,_en,greeting,_tranquilo)}', 'class="dash-cr"', '${_pddHeroHTML(emp,_en)}', '${_demoContacto}'];
   let pos = -1;
   for (const marca of orden) { const i = dash.indexOf(marca); assert(i > pos, `falta o está fuera de orden: ${marca}`); pos = i; }
   // El gancho del parte del día va justo debajo del saludo y es defensivo.
@@ -9053,7 +9060,7 @@ test('Hook F1: record cards, crowns, duel juice and the overtaken trigger', () =
     'chat must style [récord] messages as cards');
   assert(/chat-author">\$\{_chatEsc\(m\.employee\)\}\$\{_txCrownFor\(m\.employee\)\}/.test(html),
     'chat authors must wear the champion crown');
-  assert(/\$\{escapeHTML\(emp\.name\)\}\$\{_txCrownFor\(emp\.name\)\}/.test(html),
+  assert(/\$\{escapeHTML\(_esDemo\(\)\?_dispName\(emp\.name\):emp\.name\)\}\$\{_txCrownFor\(emp\.name\)\}/.test(html),
     'ranking XP rows must wear the champion crown');
   assert(/<div class="chat-title">La Terraza<\/div>/.test(html),
     'the chat screen title must match the tab (La Terraza)');
@@ -17698,8 +17705,10 @@ test('modoTranquilo: renderStats y renderDashboard consultan el flag', () => {
   assert(/\.\.\.\(_modoTranquilo\(\) \? \[\] : \[\['logros'/.test(html), 'Yo: chip de Logros oculto');
   const dash = fn('renderDashboard');
   assert(/const _tranquilo = _modoTranquilo\(emp\);/.test(dash), 'renderDashboard consulta el flag');
-  assert(dash.includes("${_tranquilo ? _heroTranquiloHTML(emp,_en) : renderXPBar()}"), 'Hoy: barra de XP sustituida');
-  assert(dash.includes("${_tranquilo ? '' : `<div class=\"dash-hero-lvl-badge\">"), 'Hoy: nivel oculto en la cabecera');
+  assert(dash.includes('${_heroMiniHTML(emp,_en,greeting,_tranquilo)}'), 'Hoy: la tarjeta del saludo recibe el flag');
+  const mini = fn('_heroMiniHTML');
+  const tq = mini.slice(mini.indexOf('if(_tranquilo){'), mini.indexOf('const xp = emp.xp||0;'));
+  assert(tq.length > 0 && !/XP|Lv\.|dash-hero-lvl-badge|dash-hero-track/.test(tq) && /platos dominados/.test(tq), 'Hoy: con modo tranquilo, sin nivel ni XP');
   // Equipo: aviso de una línea y mi fila sin XP; los demás siguen igual
   const rk = fn('renderRanking');
   assert(rk.includes('Tienes el modo tranquilo activado.'), 'Equipo: aviso');
@@ -18864,6 +18873,72 @@ test('repasar carta: ruta, entradas, motor compartido y textos', () => {
   const css = read('styles.css');
   for (const sel of ['.rtc-sec', '.rtc-x', '.rtc-op', '.rtc-orden button', '.rtc-atajos button'])
     assert(new RegExp(sel.replace('.', '\\.') + '\\{[^}]*min-(height|width):?\\s*4[4-9]px|' + sel.replace('.', '\\.') + '\\{[^}]*(height|min-height):(4[4-9]|5\\d|6\\d)px').test(css), sel + ' por debajo de 44 px');
+});
+
+// ─── Experiencia diaria del camarero (prueba de usuario, nov 2026) ───
+test('ux camarero · Hoy: lo útil arriba, saludo y nivel en una tarjeta pequeña', () => {
+  const d = _fnSrc('renderDashboard');
+  const i = (x) => d.indexOf(x);
+  assert(i("_padTarjetaHTML('dashboard')") > 0 && i("_padTarjetaHTML('dashboard')") < i('${_heroMiniHTML('), 'Un plato al día antes que el saludo');
+  assert(i('${_parteCard}') < i('${_hoyPlanHTML(emp,_en)}') && i('${_hoyPlanHTML(emp,_en)}') < i('${_heroMiniHTML('), 'Hoy en sala y el plan, antes que el saludo');
+  assert(!/dash-hero-rune|dash-hero-shine|dash-hero-label/.test(d), 'sin runas, brillo ni cejilla en Hoy');
+  const css = read('styles.css');
+  assert(/\.dash-hero\.dash-hero-mini\{[^}]*min-height:44px/.test(css), 'la tarjeta pequeña se toca (44 px)');
+  assert(/\.dash-hero-mini \.dash-hero-top\{[^}]*flex-direction:row/.test(css), 'saludo y nivel en una línea, también en móviles estrechos');
+  const mini = _fnSrc('_heroMiniHTML');
+  assert(/_dispName\(currentUser\)/.test(mini), 'el saludo usa el nombre visible (Guest en la demo en inglés)');
+  assert(/onclick="showTab\('stats'\)"/.test(mini), 'un toque lleva a Yo');
+});
+test('ux camarero · inglés: motivos de la ficha de servicio en inglés', () => {
+  const pal = html.slice(html.indexOf('const _FSV_PALABRAS'), html.indexOf('function _fsvSugerido('));
+  const en = html.slice(html.indexOf('const _FSV_MOTIVO_EN'), html.indexOf('// Las marcas que se pintan'));
+  const M = new Function('let EN=null; const getDish=(d)=>EN||d; const catEn=(c)=>c==="Postres"?"Desserts":c; const allergenLocal=(a)=>a==="Pescado"?"Fish":a;\n'
+    + pal + '\n' + en + '\nreturn { mot:(d,m,e)=>{EN=e||null; return _fsvMotivosEn(d,m);}, txt:_fsvMotivoTxt };')();
+  const es = { name: 'Tofu picante', ingredients: 'Tofu, chiles' };
+  assert(M.mot(es, { pica: 'Picante' }, { name: 'Spicy tofu', ingredients: 'Tofu' }).pica === 'Spicy', 'la señal sale del texto inglés del plato');
+  assert(M.mot(es, { pica: 'Chiles' }).pica === 'Chillies', 'sin texto inglés, la palabra traducida (Chiles)');
+  assert(M.mot(es, { cerdo: 'Cerdo' }, { name: 'Pokuribu', ingredients: 'Costilla de cerdo' }).cerdo === 'Pork', 'inglés sin traducir: manda el diccionario');
+  assert(M.mot(es, { crudo: 'Sashimi' }, { name: 'Sashimi' }).crudo === 'Sashimi', 'palabra igual en los dos idiomas');
+  assert(M.mot(es, { alcohol: 'Flambeada' }).alcohol === 'Flambéed', 'Flambeada');
+  assert(M.mot(es, { pica: 'Picante' }).pica === 'Spicy', 'Picante');
+  assert(M.mot(es, { cerdo: 'Sobrasada' }).cerdo === 'the ingredients', 'lo desconocido no se queda en español');
+  assert(M.mot(es, { veg: 'Pescado' }).veg === 'Fish', 'alérgeno como motivo, en inglés');
+  assert(M.mot(es, { veg: 'cat:Postres' }).veg === 'cat:Desserts' && M.mot(es, { veg: 'sin-animal' }).veg === 'sin-animal', 'categoría y claves internas');
+  assert(M.txt('the ingredients', false) === 'los ingredientes', 'el comodín también tiene español');
+  assert(/motivo: en \? _fsvMotivosEn\(dish, sugerido\.motivo \|\| \{\}\)/.test(_fnSrc('_fsvInfo')), 'la ficha usa el motivo traducido en inglés');
+});
+test('ux camarero · inglés: sección sin traducir, invitado de la demo y parte de ejemplo', () => {
+  const src = html.slice(html.indexOf('const _catEnFalta='), html.indexOf('const catLocal='));
+  const f = new Function(src.split('\n')[0] + '\nreturn _catEnFalta;')();
+  assert(f('Menu degustación', 'Menu degustación') === 'Tasting menu' && f('Menú degustación', '') === 'Tasting menu', 'menú degustación sin inglés');
+  assert(f('Entrantes', 'Starters') === 'Starters' && f('Sashimi', 'Sashimi') === 'Sashimi', 'lo demás, igual');
+  assert(/LANG==='en' \? _catEnFalta\(c\.es, c\.en\)/.test(html) && /_catEnFalta\(k\.es,k\.en\)===c/.test(html), 'selectores y vuelta a español con la misma regla');
+  assert(/if\(name === DEMO_USUARIO && LANG === 'en'\) return 'Guest';/.test(_fnSrc('_dispName')), 'Invitado es Guest en inglés');
+  const st = _fnSrc('renderStats');
+  assert(/escapeHTML\(_dispName\(currentUser\)\)/.test(st), 'Yo usa el nombre visible');
+  assert((html.match(/escapeHTML\(_esDemo\(\)\?_dispName\((emp\.name|n)\):(emp\.name|n)\)/g) || []).length === 2, 'Equipo: el invitado de la demo, Guest en inglés');
+  const demo = _fnSrc('_parteDemoEjemplo');
+  for (const k of ['sugerencias', 'empujar', 'reservas', 'nota'])
+    assert(new RegExp(k + ": LANG === 'en' \\? '").test(demo), 'el parte de ejemplo de la demo, en inglés: ' + k);
+});
+test('ux camarero · detalles: transcripción, volver y barra, agotados, subir foto', () => {
+  assert((html.match(/<details class="deg-apoyo pad-oido" open>/g) || []).length === 3 && !/<details class="deg-apoyo pad-oido">/.test(html), 'Lo que he entendido, abierto');
+  const css = read('styles.css');
+  assert(/\.deg-apoyo summary::after\{/.test(css) && /\.deg-apoyo\[open\] > summary::after\{/.test(css), 'indicador de plegado visible');
+  const src = _fnSrc('_ux2SeccionDe');
+  const M = new Function('const UX2_SECCION={platodia:"practicar",repasar:"practicar",dashboard:"hoy"}; const _padS={desde:"dashboard"}; const _rtcS={desde:"dashboard"};\n' + src + '\nreturn {f:_ux2SeccionDe, pad:_padS, rtc:_rtcS};')();
+  assert(M.f('platodia') === 'hoy', 'Un plato al día desde Hoy marca Hoy');
+  M.pad.desde = 'practicar'; assert(M.f('platodia') === 'practicar', 'desde Practicar marca Practicar');
+  assert(M.f('repasar') === 'hoy', 'Repasar desde Hoy marca Hoy');
+  M.rtc.desde = 'carta'; assert(M.f('repasar') === 'saber', 'Repasar desde la carta marca Saber');
+  M.rtc.desde = 'practicar'; assert(M.f('repasar') === 'practicar' && M.f('dashboard') === 'hoy', 'lo demás, como siempre');
+  assert(/const sec = _ux2SeccionDe\(tab\);/.test(_fnSrc('_ux2Sync')), 'la barra usa el origen');
+  assert(!/\(86\)/.test(html.slice(html.indexOf('function _parteCardHTML('), html.indexOf('function _parteCardHTML(') + 9000)) && !/Agotados \(86\)|Sold out \(86\)/.test(html), 'sin «(86)»');
+  assert(/function _puedeSubirFoto\(\)\{[\s\S]{0,120}_esMando\(\)[\s\S]{0,60}_esAdmin\(\)/.test(html), 'subir foto: mandos y administración');
+  assert(/:!_puedeSubirFoto\(\) \? ''\s*:`<button class="empl-upload-btn"/.test(html), 'carta en fotos: sin botón para el camarero');
+  assert(/:!_puedeSubirFoto\(\) \? ''\s*:`<button class="empl-ov-upload"/.test(html), 'vista rápida: sin botón para el camarero');
+  assert(/function _dishPhotoPick\(dishId\)\{\s*if\(!_puedeSubirFoto\(\)\) return;/.test(html), 'y la función tampoco sube');
+  assert(/\.empl-ov-card\.sin-foto \.empl-ov-nav\{padding-right:3rem\}/.test(css), 'vista rápida sin foto: la X no tapa la flecha');
 });
 
 console.log('\nCarga en red lenta');
