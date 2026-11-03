@@ -54,7 +54,7 @@
 <meta property="og:description" content="Formación de equipos de sala: carta, alérgenos, vinos, exámenes y juegos de repaso.">
 <meta property="og:url" content="https://meseo.es/">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"Meseo","url":"https://meseo.es/"}</script>
-<meta name="app-version" content="7.536">
+<meta name="app-version" content="7.537">
 <meta name="app-build" content="May 2026">
 <meta name="theme-color" content="#1c2a22">
 <!-- ═══ PWA ═══ -->
@@ -65,6 +65,16 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Meseo">
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<!-- ═══ CARGA EN RED LENTA (nov 2026) ═══
+     Medido con CPU x4 y «Fast 3G»: cada ida y vuelta cuesta ~0,6 s.
+     · preconnect a Supabase: la primera llamada (entrar, sincronizar) ya
+       encuentra el DNS + TLS hecho mientras baja el programa.
+     · preload de data/themes.json: initVenues() lo pedía DESPUÉS de ejecutar
+       todo el programa, y hasta que llega no se puede elegir restaurante ni
+       entrar en la demo. Así baja en paralelo con el HTML. crossorigin hace
+       que la precarga case con el fetch() normal (mismo origen). -->
+<link rel="preconnect" href="https://advkoujfgbrrjvqexrcu.supabase.co" crossorigin>
+<link rel="preload" as="fetch" href="data/themes.json" crossorigin>
 <!-- ═══ TIPOGRAFÍAS ═══
      Se sirven desde el propio dominio (fonts/, declaradas al principio de
      styles.css). Antes venían de fonts.googleapis.com con un <link> que BLOQUEA
@@ -1681,8 +1691,16 @@ document.addEventListener('DOMContentLoaded', () => {
   // wine pairings without sending the user to the Vinos tab first, so we
   // warm the cache once the user is past the dashboard. requestIdleCallback
   // yields to user interaction; the timeout is the fallback for Safari.
+  // nov 2026 (carga en red lenta): antes esto corría YA en la pantalla de
+  // entrada, con el restaurante por defecto: bajaba la bodega de Txoko y su
+  // contenido (~120 KB comprimidos) mientras el camarero intentaba entrar, y
+  // en la demo era peso tirado (usa wines-demo.json). Ahora espera a que haya
+  // alguien dentro y pide la bodega del restaurante en el que ha entrado.
+  const _idle = (fn) => ('requestIdleCallback' in window)
+    ? requestIdleCallback(fn, { timeout: 5000 }) : setTimeout(fn, 3000);
   const _preloadWines = () => {
     if(typeof loadLazyData!=='function') return;
+    if(!currentUser){ setTimeout(() => _idle(_preloadWines), 4000); return; }
     if(!WINES){
       loadLazyData(_vinosRuta(), LANG==='en'?'wine list':'lista de vinos', { silent: true })
         .then(arr => { WINES = arr; _vinosVenue = _venueActual(); })
@@ -1694,11 +1712,7 @@ document.addEventListener('DOMContentLoaded', () => {
       loadVinosContent({ silent: true }).catch(() => {});
     }
   };
-  if('requestIdleCallback' in window){
-    requestIdleCallback(_preloadWines, { timeout: 5000 });
-  } else {
-    setTimeout(_preloadWines, 3000);
-  }
+  _idle(_preloadWines);
 });
 window.addEventListener('resize', updateNavFade);
 
@@ -2894,7 +2908,7 @@ const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><p
 const SRC = 'src';
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='7.536';  // sincronizada con sw.js VERSION (guard de CI)
+const APP_VERSION='7.537';  // sincronizada con sw.js VERSION (guard de CI)
 const APP_BUILD='Jul 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;

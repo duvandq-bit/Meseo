@@ -18941,6 +18941,29 @@ test('ux camarero · detalles: transcripción, volver y barra, agotados, subir f
   assert(/\.empl-ov-card\.sin-foto \.empl-ov-nav\{padding-right:3rem\}/.test(css), 'vista rápida sin foto: la X no tapa la flecha');
 });
 
+console.log('\nCarga en red lenta');
+test('carga: preconnect a Supabase y themes.json precargado en <head>', () => {
+  const head = html.slice(0, html.indexOf('</head>'));
+  assert(/<link rel="preconnect" href="https:\/\/advkoujfgbrrjvqexrcu\.supabase\.co" crossorigin>/.test(head),
+    'falta el preconnect a Supabase');
+  // crossorigin es obligatorio: sin él la precarga no casa con fetch() y se baja dos veces
+  assert(/<link rel="preload" as="fetch" href="data\/themes\.json" crossorigin>/.test(head),
+    'themes.json debe precargarse (as=fetch + crossorigin) para no esperar al final del programa');
+  // y la ruta precargada es exactamente la que pide initVenues
+  assert(/async function initVenues\(\)\{\n  try\{\n    const res = await fetch\('data\/themes\.json'\);/.test(html),
+    'initVenues debe pedir la misma URL que se precarga');
+});
+test('carga: la bodega no se precarga en la pantalla de entrada', () => {
+  const i = html.indexOf('const _preloadWines = () => {');
+  assert(i > 0, 'no encuentro _preloadWines');
+  const cuerpo = html.slice(i, html.indexOf('\n  };', i));
+  assert(/if\(!currentUser\)\{ setTimeout\(\(\) => _idle\(_preloadWines\), 4000\); return; \}/.test(cuerpo),
+    '_preloadWines debe esperar a que haya alguien dentro');
+  assert(cuerpo.indexOf('if(!currentUser)') < cuerpo.indexOf('loadLazyData(_vinosRuta()'),
+    'la comprobación de sesión va antes de pedir la bodega');
+  assert(/\n  _idle\(_preloadWines\);\n\}\);/.test(html), 'la precarga se programa en reposo');
+});
+
 console.log('\nHygiene');
 test('no git conflict markers in tracked source', () => {
   for (const f of ['index.html', 'sw.js', 'data/wines.json', 'data/lqa-situations.json', 'data/ghost-scenarios.json']) {
