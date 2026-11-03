@@ -10553,6 +10553,76 @@ html[data-venue="r2"] .ri-cta-pase .ri-cta-icon{border-color:rgba(194,161,97,.4)
 .pad-aviso-si{border:0;background:#e4be68;color:#2a2214}
 .pad-aviso-no{border:1px solid rgba(251,246,236,.3);background:transparent;color:#fbf6ec}
 
+/* ═══ REPASAR TODA LA CARTA ═══
+   Las piezas de Un plato al día y del Menú degustación (.deg-*, .pad-*). Lo
+   propio es el marcador: fijo bajo la cabecera, «12 de 39» en serif y una
+   barra fina con un tramo por plato que se va llenando con cómo salió cada
+   uno (verde salvia entero, dorado discontinuo con ideas de menos). */
+.rtc-entrada .ca-entrada-ic{background:var(--gold-a);color:var(--gold-ink);border:1px solid var(--line2)}
+.rtc-entrada{margin-top:-.4rem}
+.rtc-sec{display:inline-flex;align-items:center;gap:.45rem;min-height:44px;padding:.3rem .9rem .3rem .7rem;border:1px solid var(--line2);border-radius:999px;background:var(--gold-b);color:var(--gold-ink);font-family:var(--font-sans);font-size:var(--fs-2);font-weight:600;cursor:pointer;white-space:nowrap}
+.rtc-sec svg{width:17px;height:17px;flex:none}
+.rtc-sec:focus-visible,.rtc-x:focus-visible,.rtc-op:focus-visible,.rtc-orden button:focus-visible,.rtc-atajos button:focus-visible,.rtc-seguir:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
+.rtc-carta-h{display:flex;align-items:center;justify-content:space-between;gap:.6rem;margin:1.1rem 0 .55rem}
+.rtc-carta-h .carta-h{margin:0;min-width:0}
+.cp-lista~.rtc-sec,.carta-cab+.rtc-sec{align-self:flex-start;margin:0 0 .8rem}
+
+.rtc-marca{position:sticky;top:calc(56px + env(safe-area-inset-top,0px));z-index:20;display:grid;grid-template-columns:auto auto 1fr;align-items:center;column-gap:.55rem;row-gap:.35rem;margin:-.25rem 0 .1rem;padding:.3rem 0 .6rem;background:var(--ink);border-bottom:1px solid var(--line)}
+.rtc-x{width:44px;height:44px;margin-left:-.7rem;border:0;border-radius:50%;background:transparent;color:var(--parch2);display:flex;align-items:center;justify-content:center;cursor:pointer}
+.rtc-cuenta{font-family:var(--font-sans);font-size:var(--fs-2);color:var(--parch3);white-space:nowrap}
+.rtc-cuenta b{font-family:var(--font-serif);font-size:var(--fs-5);font-weight:600;color:var(--parchment);font-variant-numeric:lining-nums tabular-nums;margin-right:.1rem}
+.rtc-fuente{justify-self:end;min-width:0;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-family:var(--font-sans);font-size:var(--fs-2);font-style:italic;color:var(--parch3)}
+.rtc-barra{grid-column:1/-1;display:grid;grid-template-columns:repeat(var(--n),1fr);gap:2px;height:4px}
+.rtc-barra i{display:block;height:4px;border-radius:1px;background:var(--line2)}
+.rtc-barra i.ok{background:var(--sage)}
+.rtc-barra i.falta{background:repeating-linear-gradient(90deg,var(--gold) 0 3px,transparent 3px 5px);box-shadow:inset 0 0 0 1px rgba(196,154,60,.25)}
+.rtc-barra i.ahora{background:var(--parchment)}
+.rtc-barra.continua{display:block;border-radius:2px;background:var(--line2);overflow:hidden}
+.rtc-barra.continua b{display:block;height:100%;background:var(--gold)}
+
+.rtc-hero{margin-top:.15rem}
+.rtc-cab{display:flex;flex-direction:column;gap:.2rem}
+.rtc-cat{font-family:var(--font-sans);font-size:var(--fs-2);font-style:italic;color:var(--parch3)}
+.rtc-cab .pad-nom{font-size:var(--fs-6);line-height:1.15}
+.rtc-boc .deg-boc-todos{margin-top:0}
+.rtc-atajos{display:grid;grid-template-columns:1fr 1fr;gap:.55rem}
+.rtc-atajos button{min-height:48px;padding:.4rem .6rem;border-radius:999px;border:1px solid var(--line2);background:transparent;color:var(--parchment);font-family:var(--font-sans);font-size:var(--fs-3);font-weight:600;cursor:pointer}
+.rtc-atajos button:last-child{color:var(--gold-ink);border-color:var(--gold)}
+.rtc-sig{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.05rem;line-height:1.2;padding:.45rem 1rem}
+.rtc-sig-nom{font-family:var(--font-serif);font-size:var(--fs-2);font-weight:500;opacity:.9}
+
+/* Elegir qué y en qué orden */
+.rtc-h{margin:.4rem 0 -.3rem;font-family:var(--font-serif);font-size:var(--fs-4);font-weight:600;color:var(--parchment)}
+.rtc-ops{display:flex;flex-direction:column;border:1px solid var(--line2);border-radius:var(--r);background:#fff;overflow:hidden}
+.rtc-op{display:flex;align-items:center;gap:.7rem;min-height:52px;padding:.55rem .85rem;border:0;border-top:1px solid var(--line);background:transparent;color:var(--parchment);font-family:var(--font-sans);font-size:var(--fs-3);text-align:left;cursor:pointer}
+.rtc-op:first-child{border-top:0}
+.rtc-op-caja{flex:none;width:20px;height:20px;border-radius:50%;border:1.5px solid var(--gold);display:flex;align-items:center;justify-content:center}
+.rtc-op.on .rtc-op-caja::after{content:"";width:10px;height:10px;border-radius:50%;background:var(--gold)}
+.rtc-op.on{background:var(--gold-b)}
+.rtc-op-nom{flex:1;min-width:0}
+.rtc-op.on .rtc-op-nom{font-weight:600}
+.rtc-op-n{flex:none;font-size:var(--fs-2);color:var(--parch3)}
+.rtc-orden{display:grid;grid-template-columns:1fr 1fr;gap:4px;padding:4px;border-radius:14px;background:var(--gold-a)}
+.rtc-orden button{min-height:48px;padding:.4rem .5rem;border:0;border-radius:10px;background:transparent;color:var(--parch2);font-family:var(--font-sans);font-size:var(--fs-2);font-weight:600;line-height:1.25;cursor:pointer}
+.rtc-orden button.on{background:#fff;color:var(--parchment);box-shadow:0 1px 3px rgba(0,0,0,.08)}
+.rtc-seguir{display:flex;align-items:center;gap:.75rem;width:100%;min-height:64px;padding:.7rem .85rem .7rem 1rem;border:0;border-radius:14px;background:var(--brand-ink);color:#fbf6ec;text-align:left;cursor:pointer;font:inherit}
+.rtc-seguir-txt{flex:1;min-width:0;display:flex;flex-direction:column;gap:.15rem}
+.rtc-seguir-txt b{font-family:var(--font-serif);font-size:var(--fs-4);font-weight:600}
+.rtc-seguir-txt span{font-family:var(--font-sans);font-size:var(--fs-2);color:rgba(251,246,236,.75)}
+.rtc-seguir-ic{flex:none;width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:#e4be68;color:#2a2214}
+
+/* Resumen */
+.rtc-fin .deg-tit{font-size:var(--fs-6);margin-top:.6rem}
+.rtc-sec-res{display:flex;flex-direction:column;gap:.7rem}
+.rtc-lista{list-style:none;margin:.3rem 0 0;padding:0;display:flex;flex-direction:column;border-top:1px solid var(--line)}
+.rtc-lista li{display:flex;flex-direction:column;gap:.15rem;padding:.6rem 0 .6rem 1.1rem;border-bottom:1px solid var(--line);position:relative}
+.rtc-lista li::before{content:"";position:absolute;left:.1rem;top:1.05rem;width:8px;height:8px;transform:rotate(45deg);border-radius:1px}
+.rtc-lista.ok li::before{background:var(--sage)}
+.rtc-lista.falta li::before{border:1.5px dashed var(--gold)}
+.rtc-lista-nom{font-family:var(--font-serif);font-size:var(--fs-4);font-weight:600;color:var(--parchment);line-height:1.3}
+.rtc-lista-f{font-family:var(--font-sans);font-size:var(--fs-2);color:var(--parch3);line-height:1.4}
+.rtc-nota{margin:0;font-family:var(--font-sans);font-size:var(--fs-3);color:var(--parch2);line-height:1.5}
+
 /* ═══ CONOCER EL PLATO ═══
    Pantalla completa sobre pergamino, con las piezas del Menú degustación y
    de Un plato al día (.deg-*, .pad-*). Un paso, una idea: cabecera con la

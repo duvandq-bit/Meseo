@@ -590,6 +590,8 @@ test('UX-02 · NINGÚN destino existente queda inaccesible', () => {
     // (entrada en la Carta y en el Menú degustación) abren con su función.
     trozo('function _padAbrir(', 'function _padSalir('),
     trozo('function _caAbrir(', 'function _caElegir('),
+    // Repasar toda la carta: tarjeta en Hoy y Practicar, botón en la Carta.
+    trozo('function _rtcAbrir(', 'function _rtcCerrar('),
   ].join('\n');
   assert(!/id="mainNavDD"/.test(html), 'el menú desplegable se retiró');
   const abiertas = new Set([...puertas.matchAll(/showTab\(\\?'([a-z]+)\\?'\)/g)].map(m => m[1]));
@@ -18617,6 +18619,96 @@ test('toques de 44 px: Escuchar de la ficha y los agotados de Hoy en sala', () =
   const css = read('styles.css');
   assert(/\.deg-escuchar\{[^}]*min-height:44px/.test(css), '.deg-escuchar por debajo de 44 px');
   assert(/\.parte-chip-x\{[^}]*min-height:44px/.test(css), '.parte-chip-x por debajo de 44 px');
+});
+
+console.log('\nRepasar toda la carta');
+const _rtc = (() => {
+  const i = html.indexOf('const PAD_INTERVALOS');
+  const j = html.indexOf('// ── Lo que depende de la app ──', i);
+  const k = html.indexOf('// ── Repasar toda la carta: funciones puras');
+  const m = html.indexOf('// ── Repasar toda la carta: lo que depende de la app ──', k);
+  return new Function(html.slice(i, j) + html.slice(k, m) + '; return { _padProgramar, _rtcFuentesDe, _rtcRango, _rtcCola, _rtcNueva, _rtcAnotar, _rtcAvanzar, _rtcCompletos, _rtcCostaron, _rtcRetomar, _rtcProgramar };')(); // eslint-disable-line no-new-func
+})();
+const _rtcP = [{ id: 1, cat: 'Entrantes' }, { id: 2, cat: 'Entrantes' }, { id: 3, cat: 'Sashimi' }, { id: 4, cat: 'Degu' }, { id: 5, cat: 'Degu' }, { id: 6, cat: 'Postres' }];
+test('repasar carta: alcances (toda la carta, menú degustación, secciones) sin repetir platos', () => {
+  const f = _rtc._rtcFuentesDe(_rtcP, [4, 5, 3, 99], { todo: 'Toda', deg: 'Degustación', cat: c => 'C:' + c });
+  assert(f.map(x => x.id).join() === 'todo,degustacion,cat:Entrantes,cat:Postres', 'alcances: ' + f.map(x => x.id).join());
+  assert(f[0].ids.join() === '4,5,3,1,2,6', 'toda la carta: el menú primero y luego cada sección, sin repetir: ' + f[0].ids.join());
+  assert(f[1].ids.join() === '4,5,3', 'el menú degustación en su orden y sin pases sin descripción');
+  assert(!f.some(x => x.id === 'cat:Degu' || x.id === 'cat:Sashimi'), 'una sección que cabe entera en el menú degustación no se repite');
+  assert(f[2].nombre === 'C:Entrantes', 'nombre traducido de la sección');
+  const sin = _rtc._rtcFuentesDe([{ id: 1, cat: 'A' }], [], {});
+  assert(sin.length === 1 && sin[0].id === 'cat:A', 'con una sola sección no hay «toda la carta» repetida');
+  assert(_rtc._rtcFuentesDe([], [], {}).length === 0, 'sin platos, nada');
+});
+test('repasar carta: orden de la carta y «primero los que menos domino»', () => {
+  const ids = [1, 2, 3, 4, 5, 6];
+  assert(_rtc._rtcCola(ids, 'carta', {}).join() === '1,2,3,4,5,6', 'orden de la carta');
+  assert(_rtc._rtcCola([1, 1, 2], 'carta', {}).join() === '1,2', 'sin duplicados');
+  const est = { 1: { n: 3, ok: 1, next: '2026-11-10' }, 2: { n: 0, ok: 0, next: '2026-11-04' }, 4: { n: 0, ok: 1, next: '2026-11-05' }, 5: { n: 0, ok: 1, next: '2026-11-04' }, 6: { n: 1, ok: 1, next: '2026-11-06' } };
+  const c = _rtc._rtcCola(ids, 'flojos', est).join();
+  assert(c === '2,3,5,4,6,1', 'primero el que costó, luego el nuevo, luego por escalón y fecha: ' + c);
+  assert(_rtc._rtcNueva('todo', 'Toda', 'flojos', ids, est, 7).cola.join() === c && _rtc._rtcNueva('x', 'X', 'otro', ids, est).orden === 'carta', 'la sesión nueva usa la cola');
+});
+test('repasar carta: anotar, avanzar y «solo los que me costaron»', () => {
+  let s = _rtc._rtcNueva('todo', 'Toda', 'carta', [1, 2, 3, 4], {}, 1);
+  s = _rtc._rtcAvanzar(_rtc._rtcAnotar(s, 1, 'ok', [], false, 2));
+  s = _rtc._rtcAvanzar(_rtc._rtcAnotar(s, 2, 'falta', [1, 3], false, 3));
+  s = _rtc._rtcAvanzar(_rtc._rtcAnotar(s, 3, 'sabe', [], false, 4));
+  s = _rtc._rtcAvanzar(_rtc._rtcAnotar(s, 4, 'falta', [0], true, 5));
+  assert(s.i === 4 && _rtc._rtcAvanzar(s).i === 4, 'avanza hasta el final y no se pasa');
+  assert(_rtc._rtcCompletos(s).join() === '1,3', 'completos: enteros y «ya me lo sé»');
+  assert(_rtc._rtcCostaron(s).join() === '2,4', 'los que costaron, en el orden de la sesión');
+  assert(s.res[2].f.join() === '1,3' && s.res[4].o === 1 && !s.res[1].o, 'qué ideas faltaron y si lo escuchó antes');
+  const otra = _rtc._rtcNueva('costaron', 'Los que me costaron', 'carta', _rtc._rtcCostaron(s), null);
+  assert(otra.cola.join() === '2,4' && otra.i === 0 && !Object.keys(otra.res).length, 'la sesión de repaso empieza limpia con esos');
+});
+test('repasar carta: retomar a medias en el primer plato sin anotar', () => {
+  let s = _rtc._rtcNueva('cat:A', 'A', 'carta', [1, 2, 3, 4], {}, 1);
+  s = _rtc._rtcAnotar(s, 1, 'ok', [], false);   // anotado pero sin pulsar «Siguiente»
+  const g = JSON.parse(JSON.stringify(s));
+  const r = _rtc._rtcRetomar(g, [1, 2, 3, 4]);
+  assert(r && r.i === 1 && r.cola.length === 4 && r.res[1].e === 'ok', 'sigue en el segundo');
+  const sinUno = _rtc._rtcRetomar(g, [1, 3, 4]);
+  assert(sinUno.cola.join() === '1,3,4' && sinUno.i === 1, 'un plato que ya no está en la carta sale de la cola');
+  let fin = s; for (const id of [2, 3, 4]) fin = _rtc._rtcAnotar(fin, id, 'ok', []);
+  assert(_rtc._rtcRetomar(fin, [1, 2, 3, 4]) === null, 'terminada: no hay nada que retomar');
+  assert(_rtc._rtcRetomar(null, [1]) === null && _rtc._rtcRetomar({ v: 2, cola: [1] }, [1]) === null && _rtc._rtcRetomar({ v: 1, cola: 'x' }, [1]) === null, 'basura: null');
+  assert(/function _rtcLeer\(\)\{ try\{/.test(html) && /function _rtcEscribir\(ses\)\{ try\{/.test(html), 'localStorage siempre con try/catch');
+});
+test('repasar carta: alimenta el mismo repaso de Un plato al día (emp.pad), sin XP', () => {
+  const hoy = '2026-11-03';
+  const a = _rtc._rtcProgramar(undefined, 'contado', true, hoy, 1);
+  const b = _rtc._padProgramar(undefined, true, hoy, 1);
+  assert(a.n === b.n && a.next === b.next && a.ok === 1 && a.okd.join() === hoy, 'contado entero: igual que Un plato al día y apunta el día');
+  const f = _rtc._rtcProgramar({ n: 3, ok: 1, next: '2026-11-01', okd: ['2026-10-20'] }, 'contado', false, hoy, 2);
+  assert(f.n === 0 && f.next === '2026-11-04' && f.okd.join() === '2026-10-20', 'con ideas de menos: mañana otra vez');
+  const s = _rtc._rtcProgramar({ n: 1, ok: 1, next: hoy, okd: ['2026-10-30'] }, 'sabe', true, hoy, 3);
+  assert(s.n === 2 && s.ok === 1 && s.okd.join() === '2026-10-30', '«Ya me lo sé» sube escalón sin apuntar día de dominado');
+  const lejos = { n: 4, ok: 1, next: '2026-12-01', okd: [] };
+  assert(_rtc._rtcProgramar(lejos, 'apoyo', true, hoy) === lejos, 'escuchado antes: no pisa una fecha mejor');
+  assert(_rtc._rtcProgramar(undefined, 'apoyo', true, hoy).next === '2026-11-04', 'escuchado antes: vuelve mañana');
+  const g = html.slice(html.indexOf('function _rtcGuardarPad('), html.indexOf('function _rtcResultado('));
+  assert(/emp\.pad\[id\] = nuevo/.test(g) && /_cpMarcarDominado\(emp, id, nuevo\.okd\)/.test(g), 'escribe en emp.pad y marca dominado como siempre');
+  assert(/activity: 'repaso', competency: 'carta', kind: 'practica'/.test(g), 'actividad con el vocabulario de siempre');
+  const todo = html.slice(html.indexOf('// ═══ REPASAR TODA LA CARTA'), html.indexOf('// ═══ LA CARTA EN AUDIO'));
+  assert(!/addXP|awardXP|\bxp\b/i.test(todo.replace(/\/\/[^\n]*/g, '')), 'sin XP');
+  assert(!/allergen|alérgeno/i.test(todo.replace(/Sin alérgenos ni preguntas|No allergens and no questions|sin alérgenos ni preguntas/g, '')), 'sin alérgenos');
+});
+test('repasar carta: ruta, entradas, motor compartido y textos', () => {
+  assert(/const TAB_ROUTES = \[[^\]]*'repasar'/.test(html) && /repasar:renderRepasar/.test(html) && /repasar:'practicar'/.test(html), 'ruta, quien la pinta y su sección');
+  assert(/_rtcTarjetaHTML\('dashboard'\)/.test(html) && /_rtcTarjetaHTML\('practicar'\)/.test(html), 'entrada en Hoy y en Practicar');
+  assert(/_rtcSeccionHTML\('degustacion','degustacion'\)/.test(html) && (html.match(/_rtcSeccionHTML\(_rtcFuenteDeCat\(/g) || []).length === 2, 'entrada en el Menú degustación y en la Carta (fotos y lista)');
+  assert(/currentTab==='repasar' && tab!=='repasar' && typeof _rtcParar==='function'\) _rtcParar\(\)/.test(html), 'al salir se calla el micro');
+  const app = html.slice(html.indexOf('// ── Repasar toda la carta: lo que depende de la app ──'), html.indexOf('// ═══ LA CARTA EN AUDIO'));
+  assert(/_padHost = _rtcPintar/.test(app) && /_padGrabadorHTML\(claves\)/.test(app) && /_padEscuchar\(\)/.test(app) && /_bocTodosHTML\(/.test(app), 'usa el motor de Un plato al día, su audio y los bocados');
+  assert(/function _rtcAtras\(\)/.test(app) && /function _rtcCerrar\(\)/.test(app), 'cerrar y atrás para el botón del sistema');
+  for (const t of ['Repasar toda la carta', 'Go over the whole menu', 'Ya me lo sé', 'I know this one', 'Escuchar primero', 'Listen first', 'Siguiente plato', 'Next dish', 'Repasar solo los que me costaron', 'Go over only the hard ones', 'Escucha cómo se cuenta'])
+    assert(app.includes(t), 'falta el texto: ' + t);
+  assert(!/—/.test(app.replace(/\/\/[^\n]*/g, '')), 'sin rayas en los textos');
+  const css = read('styles.css');
+  for (const sel of ['.rtc-sec', '.rtc-x', '.rtc-op', '.rtc-orden button', '.rtc-atajos button'])
+    assert(new RegExp(sel.replace('.', '\\.') + '\\{[^}]*min-(height|width):?\\s*4[4-9]px|' + sel.replace('.', '\\.') + '\\{[^}]*(height|min-height):(4[4-9]|5\\d|6\\d)px').test(css), sel + ' por debajo de 44 px');
 });
 
 console.log('\nHygiene');

@@ -54,7 +54,7 @@
 <meta property="og:description" content="Formación de equipos de sala: carta, alérgenos, vinos, exámenes y juegos de repaso.">
 <meta property="og:url" content="https://meseo.es/">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"Meseo","url":"https://meseo.es/"}</script>
-<meta name="app-version" content="7.532">
+<meta name="app-version" content="7.533">
 <meta name="app-build" content="May 2026">
 <meta name="theme-color" content="#1c2a22">
 <!-- ═══ PWA ═══ -->
@@ -2891,7 +2891,7 @@ const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><p
 const SRC = 'src';
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='7.532';  // sincronizada con sw.js VERSION (guard de CI)
+const APP_VERSION='7.533';  // sincronizada con sw.js VERSION (guard de CI)
 const APP_BUILD='Jul 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;
@@ -14930,7 +14930,8 @@ const _TITULOS = {
   quesos:['Carro de quesos','Cheese trolley'], sala:['Sala y procedimientos','Floor procedures'],
   mesa:['Mesa con alergias','Table with allergies'],
   degustacion:['Menú degustación','Tasting menu'],
-  platodia:['Un plato al día','One dish a day'], cartaaudio:['La carta en audio','The menu in audio']
+  platodia:['Un plato al día','One dish a day'], cartaaudio:['La carta en audio','The menu in audio'],
+  repasar:['Repasar la carta','Go over the menu']
 };
 function _ponerTitulo(tab){
   const h = document.getElementById('tituloPantalla');
@@ -14964,6 +14965,8 @@ const UX2_SECCION = {
   degustacion:'saber',
   // La carta en audio se escucha; Un plato al día se practica.
   cartaaudio:'saber', platodia:'practicar',
+  // Repasar toda la carta: se practica.
+  repasar:'practicar',
   practicar:'practicar', exam:'practicar', smart:'practicar', flashcards:'practicar', txoko:'practicar',
   // Equipo · hay otra persona dentro.
   ranking:'equipo', supervisor:'equipo',
@@ -14974,7 +14977,7 @@ const UX2_SECCION = {
 // Sin 'videos' ni 'chat' desde oct 2026, ni 'horarios' desde el 12 oct 2026
 // (retirados por el propietario). Un aviso antiguo que abra #tab=chat o
 // #tab=horarios cae en INICIO por la regla de abajo.
-const TAB_ROUTES = ['dashboard','mesa','degustacion','platodia','cartaaudio','practicar','aprender','flashcards','exam','repaso','tecnicas','actualidad','smart','emplatado','stats','logros','txoko','ranking','supervisor','protocolo','lqa','vinos','quesos','sala'];
+const TAB_ROUTES = ['dashboard','mesa','degustacion','platodia','cartaaudio','repasar','practicar','aprender','flashcards','exam','repaso','tecnicas','actualidad','smart','emplatado','stats','logros','txoko','ranking','supervisor','protocolo','lqa','vinos','quesos','sala'];
 
 function showTab(tab, instant){
   // ── Pestaña desconocida → INICIO ──────────────────────────────────────
@@ -14999,6 +15002,7 @@ function showTab(tab, instant){
   // Un plato al día y la carta en audio: al salir, se calla el micro y la voz.
   if(currentTab==='platodia' && tab!=='platodia' && typeof _padParar==='function') _padParar();
   if(currentTab==='cartaaudio' && tab!=='cartaaudio' && typeof _caParar==='function') _caParar();
+  if(currentTab==='repasar' && tab!=='repasar' && typeof _rtcParar==='function') _rtcParar();
   // Los bocados que suenan desde una ficha o el menú degustación, también.
   if(tab!==currentTab && typeof _bocParar==='function') _bocParar();
   // Ídem para el canal EN VIVO del panel de supervisor.
@@ -15038,7 +15042,7 @@ function showTab(tab, instant){
   _ux2Sync(tab);
   _saberSync(tab);
   const c=document.getElementById('appContent');
-  const renderMap = {practicar:renderPracticar,mesa:renderMesa,quesos:renderQuesos,sala:renderSala,dashboard:renderDashboard,aprender:renderAprender,flashcards:renderAprender,exam:renderExam,repaso:renderAprender,tecnicas:renderAprender,actualidad:renderAprender,smart:renderAprender,emplatado:renderAprender,stats:renderRankingHub,logros:renderRankingHub,txoko:renderTxoko,ranking:renderRankingHub,supervisor:renderSupervisor,protocolo:renderLqa,lqa:renderLqa,vinos:renderVinos,degustacion:renderDegustacion,platodia:renderPlatoDia,cartaaudio:renderCartaAudio};
+  const renderMap = {practicar:renderPracticar,mesa:renderMesa,quesos:renderQuesos,sala:renderSala,dashboard:renderDashboard,aprender:renderAprender,flashcards:renderAprender,exam:renderExam,repaso:renderAprender,tecnicas:renderAprender,actualidad:renderAprender,smart:renderAprender,emplatado:renderAprender,stats:renderRankingHub,logros:renderRankingHub,txoko:renderTxoko,ranking:renderRankingHub,supervisor:renderSupervisor,protocolo:renderLqa,lqa:renderLqa,vinos:renderVinos,degustacion:renderDegustacion,platodia:renderPlatoDia,cartaaudio:renderCartaAudio,repasar:renderRepasar};
   const _doRender = ()=>{
     c.innerHTML='';
     c.style.transition='none';
@@ -16157,7 +16161,7 @@ function _emplRender(q){
   // Con foto, la rejilla; sin foto, una fila corta con el nombre y «Subir
   // foto». Nada de huecos grandes con un icono en medio.
   body.innerHTML=Object.entries(byCat).map(([cat,g])=>`
-    <h3 class="carta-h">${escapeHtml(typeof catLocal==='function'?catLocal(cat):cat)}</h3>
+    <div class="rtc-carta-h"><h3 class="carta-h">${escapeHtml(typeof catLocal==='function'?catLocal(cat):cat)}</h3>${(!q && typeof _rtcSeccionHTML==='function') ? _rtcSeccionHTML(_rtcFuenteDeCat(cat),'carta') : ''}</div>
     ${g.w.length?`<div class="empl-grid">
       ${g.w.map(d=>{ const dd=getDish(d); return `
         <div class="empl-card" role="button" tabindex="0" onclick="_emplOpen(${d.id})"
@@ -16595,6 +16599,7 @@ function _degPintarViaje(c){
       ${_degRevisarHTML()}
     </header>
     ${(typeof _caEntradaHTML==='function') ? _caEntradaHTML('degustacion') : ''}
+    ${(typeof _rtcSeccionHTML==='function') ? _rtcSeccionHTML('degustacion','degustacion') : ''}
     <ol class="deg-linea">${filas}</ol>
     ${prac.length ? `<section class="deg-prac">
       <h3 class="deg-h3">${_en ? 'Practise' : 'Practica'}</h3>
@@ -17662,6 +17667,445 @@ function _padGuardarHora(h){
   const emp = getEmp(currentUser); if(!emp) return;
   emp.padAviso = { h: _padHoraValida(h), t: new Date().toISOString() };
   try{ saveDB(); }catch(e){}
+}
+
+// ═══ REPASAR TODA LA CARTA ════════════════════════════════════════════════
+// Petición del propietario (Akira, nov 2026): «necesito aprenderme todos los
+// platos para mañana… solo necesito saber explicarlos al cliente». Un plato al
+// día acaba en uno y Conocer el plato, plato a plato, son cientos de toques.
+// Esto es una sesión en cadena para CONTAR: sin alérgenos ni preguntas.
+//
+// Por plato, una pantalla con el motor de Un plato al día (_padS, _padGrabar,
+// el plan B sin reconocimiento, el audio privado): foto y nombre, «Contarlo»,
+// lo dicho y lo que falta, «Escucha cómo se cuenta» y «Siguiente plato».
+// Atajos: «Ya me lo sé» (salta y cuenta como dicho bien) y «Escuchar primero»
+// (para el primer contacto).
+//
+// Repaso: el MISMO de Un plato al día (emp.pad, PAD_INTERVALOS). Contado de
+// memoria, igual que allí; «Ya me lo sé» sube escalón pero no apunta día de
+// «dominado» (eso se gana contándolo); después de escucharlo primero, vuelve
+// mañana sin pisar una fecha mejor (como Conocer el plato sin contarlo).
+// Sin XP. La actividad, con el vocabulario de siempre (repaso, carta, practica).
+//
+// La sesión a medias se guarda en este móvil (localStorage, por restaurante y
+// persona) y se retoma en el primer plato sin anotar.
+//
+// Para el botón atrás del sistema: _rtcAtras() retrocede dentro (de grabar o
+// escuchar a la foto del plato) o cierra; _rtcCerrar() cierra siempre.
+
+// ── Repasar toda la carta: funciones puras (se prueban sin navegador) ──
+// Qué se puede repasar. `platos`: [{id, cat}] con story y claves, en el orden
+// de la carta; `degIds`: los pases del menú degustación. Primero «Toda la
+// carta» (el menú degustación y luego cada sección, sin repetir), después el
+// menú degustación y cada sección. Una sección que es justo el menú
+// degustación no se repite.
+function _rtcFuentesDe(platos, degIds, nombres){
+  const N = nombres || {};
+  const ps = Array.isArray(platos) ? platos : [];
+  const hay = new Set(ps.map(p => p.id));
+  const deg = (Array.isArray(degIds) ? degIds : []).filter((id, k, a) => hay.has(id) && a.indexOf(id) === k);
+  const r = [];
+  if(deg.length) r.push({ id: 'degustacion', nombre: N.deg || 'degustacion', ids: deg.slice() });
+  const cats = [];
+  for(const p of ps) if(cats.indexOf(p.cat) < 0) cats.push(p.cat);
+  const todo = deg.slice();
+  for(const c of cats) for(const p of ps) if(p.cat === c && todo.indexOf(p.id) < 0) todo.push(p.id);
+  const enDeg = new Set(deg);
+  for(const c of cats){
+    const ids = ps.filter(p => p.cat === c).map(p => p.id);
+    if(ids.every(id => enDeg.has(id))) continue;
+    r.push({ id: 'cat:' + c, nombre: (typeof N.cat === 'function') ? N.cat(c) : c, ids });
+  }
+  if(r.length > 1) r.unshift({ id: 'todo', nombre: N.todo || 'todo', ids: todo });
+  return r;
+}
+// Cuánto se domina un plato según emp.pad: 0 contado con ideas de menos,
+// 1 nunca contado, y de 2 en adelante su escalón de repaso.
+function _rtcRango(e){
+  if(!e || typeof e !== 'object') return 1;
+  if(!e.ok) return 0;
+  return 2 + (Number.isInteger(e.n) ? e.n : 0);
+}
+// La cola de la sesión. 'carta': el orden de la carta. 'flojos': primero los
+// que costaron, luego los nuevos y después de menos a más escalón; a igualdad,
+// el que antes tocaba repasar, y si no, el orden de la carta.
+function _rtcCola(ids, orden, estado){
+  const L = (Array.isArray(ids) ? ids : []).filter((x, k, a) => a.indexOf(x) === k);
+  if(orden !== 'flojos') return L;
+  const est = estado || {};
+  return L.map((id, k) => ({ id, k, r: _rtcRango(est[id]), nx: (est[id] && est[id].next) || '' }))
+    .sort((a, b) => (a.r - b.r) || (a.nx < b.nx ? -1 : a.nx > b.nx ? 1 : 0) || (a.k - b.k))
+    .map(x => x.id);
+}
+function _rtcNueva(fuente, nombre, orden, ids, estado, ahora){
+  return { v: 1, fuente: String(fuente || ''), nombre: String(nombre || ''), orden: orden === 'flojos' ? 'flojos' : 'carta',
+    cola: _rtcCola(ids, orden, estado), i: 0, res: {}, t: ahora || Date.now() };
+}
+// Lo que salió con un plato: 'ok' (todas las ideas), 'falta' (alguna no) o
+// 'sabe' («Ya me lo sé»). `f`: las ideas que faltaron (posiciones en claves);
+// `o`: lo escuchó antes de contarlo.
+function _rtcAnotar(ses, id, e, faltan, oido, ahora){
+  const s = Object.assign({}, ses, { res: Object.assign({}, ses && ses.res) });
+  s.res[id] = { e: (e === 'ok' || e === 'sabe') ? e : 'falta', f: (Array.isArray(faltan) ? faltan : []).slice(0, 8) };
+  if(oido) s.res[id].o = 1;
+  s.t = ahora || Date.now();
+  return s;
+}
+function _rtcAvanzar(ses){ return Object.assign({}, ses, { i: Math.min((ses.i || 0) + 1, ses.cola.length) }); }
+function _rtcCompletos(ses){ return ((ses && ses.cola) || []).filter(id => ses.res[id] && ses.res[id].e !== 'falta'); }
+function _rtcCostaron(ses){ return ((ses && ses.cola) || []).filter(id => ses.res[id] && ses.res[id].e === 'falta'); }
+// Retomar una sesión guardada: sólo con platos que sigan en la carta, en el
+// primero sin anotar. null si no vale o si ya estaba terminada.
+function _rtcRetomar(g, validos){
+  if(!g || typeof g !== 'object' || g.v !== 1 || !Array.isArray(g.cola)) return null;
+  const ok = new Set(Array.isArray(validos) ? validos : []);
+  const cola = g.cola.filter((id, k, a) => ok.has(id) && a.indexOf(id) === k);
+  if(!cola.length) return null;
+  const res0 = (g.res && typeof g.res === 'object') ? g.res : {};
+  const res = {};
+  for(const id of cola) if(res0[id] && typeof res0[id] === 'object') res[id] = res0[id];
+  const i = cola.findIndex(id => !res[id]);
+  if(i < 0) return null;
+  return { v: 1, fuente: String(g.fuente || ''), nombre: String(g.nombre || ''), orden: g.orden === 'flojos' ? 'flojos' : 'carta', cola, i, res, t: g.t || 0 };
+}
+// Lo que se guarda en emp.pad. Usa _padProgramar, _cpProgramar y _cpOkDias.
+//   'contado' de memoria: como en Un plato al día.
+//   'sabe'   («Ya me lo sé»): sube escalón, sin apuntar día de dominado.
+//   'apoyo'  (lo escuchó antes): vuelve mañana sin pisar una fecha mejor.
+function _rtcProgramar(prev, modo, todas, hoy, ahora){
+  if(modo === 'apoyo') return _cpProgramar(prev, false, false, hoy, ahora);
+  if(modo === 'sabe'){ const e = _padProgramar(prev, true, hoy, ahora); e.okd = _cpOkDias(prev, null); return e; }
+  const e = _padProgramar(prev, !!todas, hoy, ahora);
+  e.okd = _cpOkDias(prev, todas ? hoy : null);
+  return e;
+}
+// ── Repasar toda la carta: lo que depende de la app ──
+
+const _rtcS = { fase: 'elegir', desde: 'practicar', fuente: 'todo', orden: 'carta', ses: null, oido: false, fin: null };
+function _rtcPlatosOk(){
+  return DISHES.filter(d => { const dd = getDish(d); return dd.story && _padClaves(dd).length; });
+}
+function _rtcFuentes(){
+  const _en = LANG === 'en';
+  const deg = (typeof DEGUSTACION !== 'undefined' && DEGUSTACION && Array.isArray(DEGUSTACION.pases)) ? DEGUSTACION.pases.map(p => p.id) : [];
+  return _rtcFuentesDe(_rtcPlatosOk().map(d => ({ id: d.id, cat: d.cat })), deg, {
+    todo: _en ? 'The whole menu' : 'Toda la carta',
+    deg: (typeof _degNombre === 'function') ? _degNombre() : (_en ? 'Tasting menu' : 'Menú degustación'),
+    cat: c => (typeof catLocal === 'function' ? catLocal(c) : c)
+  });
+}
+// La sección de la Carta que corresponde a una categoría (o el menú
+// degustación si la categoría es justo eso). null si no hay nada que contar.
+function _rtcFuenteDeCat(cat){
+  const fs = _rtcFuentes();
+  if(fs.some(f => f.id === 'cat:' + cat)) return 'cat:' + cat;
+  const deg = fs.find(f => f.id === 'degustacion');
+  const ids = _rtcPlatosOk().filter(d => d.cat === cat).map(d => d.id);
+  return (deg && ids.length && ids.every(id => deg.ids.indexOf(id) >= 0)) ? 'degustacion' : null;
+}
+function _rtcClave(){
+  const v = (typeof _cartaMeta !== 'undefined' && _cartaMeta && _cartaMeta.venue) || (typeof _esDemo === 'function' && _esDemo() ? 'demo' : 'x');
+  return 'meseo_rtc_' + v + '_' + (currentUser || '');
+}
+function _rtcLeer(){ try{ const t = localStorage.getItem(_rtcClave()); return t ? JSON.parse(t) : null; }catch(e){ return null; } }
+function _rtcEscribir(ses){ try{ localStorage.setItem(_rtcClave(), JSON.stringify(ses)); }catch(e){} }
+function _rtcBorrar(){ try{ localStorage.removeItem(_rtcClave()); }catch(e){} }
+function _rtcGuardada(){ return _rtcRetomar(_rtcLeer(), _rtcPlatosOk().map(d => d.id)); }
+
+// ── Entradas ──
+const _RTC_IC = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="7" width="13" height="13" rx="2"/><path d="M8 4h10a2 2 0 012 2v10"/><path d="M8.5 12.5h4.5M8.5 15.5h3"/></svg>';
+// Bajo «Un plato al día», en Hoy y en Practicar.
+function _rtcTarjetaHTML(desde){
+  const fs = _rtcFuentes(); if(!fs.length) return '';
+  const _en = LANG === 'en';
+  const g = _rtcGuardada();
+  const n = fs[0].ids.length;
+  const sub = g
+    ? (_en ? `Carry on: you are on ${g.i + 1} of ${g.cola.length}` : `Seguir: vas por el ${g.i + 1} de ${g.cola.length}`)
+    : (_en ? `${n} dishes, one after another` : `${n} platos, uno detrás de otro`);
+  return `<button type="button" class="ca-entrada rtc-entrada" onclick="_rtcAbrir('${desde === 'dashboard' ? 'dashboard' : 'practicar'}')">
+    <span class="ca-entrada-ic" aria-hidden="true">${_RTC_IC}</span>
+    <span class="ca-entrada-txt"><b>${_en ? 'Go over the whole menu' : 'Repasar toda la carta'}</b><span>${sub}</span></span>
+  </button>`;
+}
+// En la Carta (cada sección) y en el Menú degustación.
+function _rtcSeccionHTML(fuente, desde){
+  if(!fuente || !_rtcFuentes().some(f => f.id === fuente)) return '';
+  const _en = LANG === 'en';
+  const t = fuente === 'degustacion' ? (_en ? 'Go over this menu' : 'Repasar este menú') : (_en ? 'Go over this section' : 'Repasar esta sección');
+  return `<button type="button" class="rtc-sec" data-f="${escapeHTML(fuente)}" onclick="_rtcAbrir('${desde === 'degustacion' ? 'degustacion' : 'carta'}',this.dataset.f)">${_RTC_IC}<span>${t}</span></button>`;
+}
+
+function _rtcAbrir(desde, fuente){
+  _rtcParar();
+  const fs = _rtcFuentes();
+  _rtcS.desde = ['dashboard', 'practicar', 'carta', 'degustacion'].indexOf(desde) >= 0 ? desde : 'practicar';
+  _rtcS.fuente = (fuente && fs.some(f => f.id === fuente)) ? fuente : (fs[0] ? fs[0].id : 'todo');
+  _rtcS.fase = 'elegir'; _rtcS.ses = null; _rtcS.fin = null; _rtcS.oido = false;
+  showTab('repasar');
+  try{ window.scrollTo(0, 0); }catch(e){}
+}
+function _rtcCerrar(){
+  _rtcParar();
+  const d = _rtcS.desde;
+  if(d === 'carta'){ if(typeof _cartaAbrir === 'function') _cartaAbrir(); else showTab('emplatado'); return; }
+  showTab(d === 'dashboard' ? 'dashboard' : d === 'degustacion' ? 'degustacion' : 'practicar');
+}
+// Atrás: de grabar o de escuchar primero, a la foto del plato; si no, fuera.
+function _rtcAtras(){
+  if(_rtcS.ses && (_rtcS.fase === 'grabar' || _rtcS.fase === 'oir')){
+    _padParar();
+    _rtcS.fase = 'ver'; _rtcS.oido = false;
+    _padS.paso = 'ver'; _padS.r1 = null; _padS.texto = ''; _padS.interino = ''; _padS.manual = null; _padS.aviso = '';
+    _rtcPintar();
+    return true;
+  }
+  _rtcCerrar();
+  return true;
+}
+function _rtcParar(){
+  if(typeof _padParar === 'function') _padParar();
+  if(_padHost === _rtcPintar) _padHost = null;
+}
+function _rtcElegir(k){ const f = _rtcFuentes()[k]; if(f) _rtcS.fuente = f.id; _rtcPintar(); }
+function _rtcOrden(o){ _rtcS.orden = o === 'flojos' ? 'flojos' : 'carta'; _rtcPintar(); }
+function _rtcEmpezar(){
+  const f = _rtcFuentes().find(x => x.id === _rtcS.fuente); if(!f) return;
+  _rtcS.ses = _rtcNueva(f.id, f.nombre, _rtcS.orden, f.ids, _padEstado(getEmp(currentUser) || {}));
+  _rtcEscribir(_rtcS.ses);
+  _rtcIrPlato();
+}
+function _rtcSeguir(){
+  const g = _rtcGuardada(); if(!g) return _rtcPintar();
+  _rtcS.ses = g;
+  _rtcIrPlato();
+}
+function _rtcIdActual(){ const s = _rtcS.ses; return s && s.i < s.cola.length ? s.cola[s.i] : null; }
+function _rtcIrPlato(){
+  _padParar();
+  const id = _rtcIdActual();
+  if(id == null) return _rtcTerminar();
+  _rtcS.fase = 'ver'; _rtcS.oido = false;
+  Object.assign(_padS, { id, paso: 'ver', modo: _padSR() ? 'voz' : 'manual', texto: '', interino: '', r1: null, r2: null, ronda: 1,
+    grabando: false, aviso: '', manual: null, t0: Date.now(), oido: false });
+  _padHost = _rtcPintar;
+  _rtcPintar();
+  try{ window.scrollTo(0, 0); }catch(e){}
+  _padPrecargar();
+}
+function _rtcContar(){
+  _padParar();
+  _rtcS.fase = 'grabar';
+  Object.assign(_padS, { paso: 'grabar', ronda: 1, texto: '', interino: '', manual: null, r1: null, aviso: '' });
+  _padHost = _rtcPintar;
+  _rtcPintar();
+  if(_padS.modo === 'voz') _padGrabar();
+}
+// Primer contacto: se oye antes de contarlo. Suena dentro del toque (iOS).
+function _rtcEscucharPrimero(){
+  _rtcS.fase = 'oir'; _rtcS.oido = true;
+  _rtcPintar();
+  _padEscuchar();
+}
+function _rtcSaber(){
+  const id = _rtcIdActual(); if(id == null) return;
+  _padParar();
+  _rtcGuardarPad(id, 'sabe', true, null);
+  _rtcS.ses = _rtcAvanzar(_rtcAnotar(_rtcS.ses, id, 'sabe', [], false));
+  _rtcEscribir(_rtcS.ses);
+  _rtcIrPlato();
+}
+function _rtcGuardarPad(id, modo, todas, r){
+  const emp = getEmp(currentUser); if(!emp) return;
+  emp.pad = emp.pad || {};
+  const nuevo = _rtcProgramar(emp.pad[id], modo, todas, _padHoy());
+  emp.pad[id] = nuevo;
+  if(typeof _cpMarcarDominado === 'function') _cpMarcarDominado(emp, id, nuevo.okd);
+  try{ saveDB(); }catch(e){}
+  if(!r) return;
+  // Vocabulario cerrado de actividades: es un repaso de carta, de práctica.
+  try{
+    if(typeof registrarActividad === 'function') registrarActividad({ activity: 'repaso', competency: 'carta', kind: 'practica',
+      score: r.filter(Boolean).length, total: r.length || null,
+      seconds: Math.round((Date.now() - (_padS.t0 || Date.now())) / 1000), meta: { via: 'repasar_carta', dish: id } });
+  }catch(e){}
+}
+// El motor ha resuelto el primer intento (por voz o marcando): se anota.
+function _rtcResultado(){
+  const id = _rtcIdActual(); if(id == null) return;
+  const r = Array.isArray(_padS.r1) ? _padS.r1 : [];
+  const todas = r.length > 0 && r.every(Boolean);
+  const faltan = r.map((x, k) => x ? -1 : k).filter(k => k >= 0);
+  _rtcGuardarPad(id, _rtcS.oido ? 'apoyo' : 'contado', todas, r);
+  _rtcS.ses = _rtcAnotar(_rtcS.ses, id, todas ? 'ok' : 'falta', faltan, _rtcS.oido);
+  _rtcEscribir(_rtcS.ses);
+  _rtcS.fase = 'res';
+}
+function _rtcSiguiente(){
+  if(!_rtcS.ses) return;
+  _padParar();
+  _rtcS.ses = _rtcAvanzar(_rtcS.ses);
+  _rtcEscribir(_rtcS.ses);
+  _rtcIrPlato();
+}
+function _rtcTerminar(){
+  _padParar();
+  if(_padHost === _rtcPintar) _padHost = null;
+  _rtcS.fin = _rtcS.ses; _rtcS.ses = null; _rtcS.fase = 'fin';
+  _rtcBorrar();
+  _rtcPintar();
+  try{ window.scrollTo(0, 0); }catch(e){}
+}
+function _rtcRepasarCostaron(){
+  const s = _rtcS.fin; if(!s) return;
+  const ids = _rtcCostaron(s); if(!ids.length) return;
+  const _en = LANG === 'en';
+  _rtcS.ses = _rtcNueva('costaron', _en ? 'The ones that were hard' : 'Los que me costaron', 'carta', ids, null);
+  _rtcS.fin = null;
+  _rtcEscribir(_rtcS.ses);
+  _rtcIrPlato();
+}
+
+// ── Pantalla ──
+function renderRepasar(){ _rtcPintar(); }
+function _rtcXHTML(){
+  const _en = LANG === 'en';
+  return `<button type="button" class="rtc-x" onclick="_rtcCerrar()" aria-label="${_en ? 'Close' : 'Cerrar'}"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>`;
+}
+// El marcador: «12 de 39» y una barra fina con un tramo por plato, que va
+// diciendo cómo salió cada uno (entero, con ideas de menos o pendiente).
+function _rtcMarcadorHTML(){
+  const s = _rtcS.ses; if(!s) return '';
+  const _en = LANG === 'en';
+  const n = s.cola.length, k = Math.min(s.i + 1, n);
+  const tramos = n <= 60
+    ? s.cola.map((id, j) => { const x = s.res[id]; return `<i class="${x ? (x.e === 'falta' ? 'falta' : 'ok') : (j === s.i ? 'ahora' : '')}"></i>`; }).join('')
+    : `<b style="width:${Math.round(k / n * 100)}%"></b>`;
+  return `<div class="rtc-marca">
+    ${_rtcXHTML()}
+    <span class="rtc-cuenta" role="status" aria-label="${_en ? `Dish ${k} of ${n}` : `Plato ${k} de ${n}`}"><b>${k}</b> ${_en ? 'of' : 'de'} ${n}</span>
+    <span class="rtc-fuente">${escapeHTML(s.nombre)}</span>
+    <span class="rtc-barra${n <= 60 ? '' : ' continua'}" style="--n:${n}" aria-hidden="true">${tramos}</span>
+  </div>`;
+}
+function _rtcBocHTML(d, dd){
+  if(typeof _degBocados !== 'function') return '';
+  const bs = _degBocados(dd);
+  if(!bs.length || !(typeof _bocPuedeOir === 'function' && _bocPuedeOir(dd))) return '';
+  return `<div class="rtc-boc">${_bocTodosHTML(d.id, bs.length)}</div>`;
+}
+function _rtcEscucharBtnHTML(d, dd, txt){
+  const voz = !!(_padAudioDe(d, dd) || (typeof _degHayVoz === 'function' && _degHayVoz()));
+  return voz ? `<button type="button" id="padEscBtn" class="pad-escuchar" aria-pressed="false" onclick="_padEscuchar()"><span class="pad-ondas" aria-hidden="true"><i></i><i></i><i></i></span>${txt}</button>` : '';
+}
+function _rtcElegirHTML(){
+  const _en = LANG === 'en';
+  const fs = _rtcFuentes();
+  const volverTxt = { dashboard: _en ? 'Today' : 'Hoy', carta: _en ? 'Menu' : 'Carta', degustacion: _en ? 'Tasting menu' : 'Menú degustación' }[_rtcS.desde] || (_en ? 'Practise' : 'Practicar');
+  const volver = `<button type="button" class="deg-volver prc-volver" onclick="_rtcCerrar()">‹ ${volverTxt}</button>`;
+  if(!fs.length){
+    return `<div class="deg pad rtc">${volver}<h2 class="deg-tit">${_en ? 'Go over the whole menu' : 'Repasar toda la carta'}</h2>
+      <p class="deg-intro">${_en ? 'This menu does not have descriptions to tell yet.' : 'Esta carta todavía no tiene descripciones para contar.'}</p></div>`;
+  }
+  const g = _rtcGuardada();
+  const f = fs.find(x => x.id === _rtcS.fuente) || fs[0];
+  _rtcS.fuente = f.id;
+  const pl = n => n === 1 ? (_en ? '1 dish' : '1 plato') : (_en ? `${n} dishes` : `${n} platos`);
+  const opc = fs.map((x, k) => `<button type="button" role="radio" aria-checked="${x.id === f.id}" class="rtc-op${x.id === f.id ? ' on' : ''}" onclick="_rtcElegir(${k})">
+      <span class="rtc-op-caja" aria-hidden="true"></span><span class="rtc-op-nom">${escapeHTML(x.nombre)}</span><span class="rtc-op-n">${pl(x.ids.length)}</span></button>`).join('');
+  const ord = (o, t) => `<button type="button" role="radio" aria-checked="${_rtcS.orden === o}" class="${_rtcS.orden === o ? 'on' : ''}" onclick="_rtcOrden('${o}')">${t}</button>`;
+  return `<div class="deg pad rtc">${volver}
+    <h2 class="deg-tit">${_en ? 'Go over the menu' : 'Repasar la carta'}</h2>
+    <p class="deg-intro">${_en ? 'Dish after dish: you tell it out loud, hear how it is told and move on. No allergens and no questions.' : 'Plato a plato: lo cuentas en voz alta, escuchas cómo se cuenta y pasas al siguiente. Sin alérgenos ni preguntas.'}</p>
+    ${g ? `<button type="button" class="rtc-seguir" onclick="_rtcSeguir()">
+      <span class="rtc-seguir-txt"><b>${_en ? 'Carry on where you left off' : 'Seguir donde lo dejaste'}</b><span>${escapeHTML(g.nombre)}, ${_en ? `dish ${g.i + 1} of ${g.cola.length}` : `plato ${g.i + 1} de ${g.cola.length}`}</span></span>
+      <span class="rtc-seguir-ic" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></span></button>` : ''}
+    <h3 class="rtc-h" id="rtcQue">${g ? (_en ? 'Or start again with' : 'O empieza de nuevo con') : (_en ? 'What to go over' : 'Qué repasar')}</h3>
+    <div class="rtc-ops" role="radiogroup" aria-labelledby="rtcQue">${opc}</div>
+    <h3 class="rtc-h" id="rtcOrd">${_en ? 'In what order' : 'En qué orden'}</h3>
+    <div class="rtc-orden" role="radiogroup" aria-labelledby="rtcOrd">${ord('carta', _en ? 'As on the menu' : 'Como en la carta')}${ord('flojos', _en ? 'Weakest first' : 'Primero los que menos domino')}</div>
+    <button type="button" class="deg-btn pad-grande" onclick="_rtcEmpezar()">${_en ? `Start with ${pl(f.ids.length)}` : `Empezar con ${pl(f.ids.length)}`}</button>
+  </div>`;
+}
+function _rtcFinHTML(){
+  const _en = LANG === 'en';
+  const s = _rtcS.fin;
+  const volverTxt = { dashboard: _en ? 'Back to Today' : 'Volver a Hoy', carta: _en ? 'Back to the menu' : 'Volver a la Carta', degustacion: _en ? 'Back to the tasting menu' : 'Volver al Menú degustación' }[_rtcS.desde] || (_en ? 'Back to Practise' : 'Volver a Practicar');
+  if(!s) return `<div class="deg pad rtc"><button type="button" class="deg-btn pad-grande" onclick="_rtcCerrar()">${volverTxt}</button></div>`;
+  const si = _rtcCompletos(s), no = _rtcCostaron(s);
+  const nombre = id => { const d = DISHES.find(x => x.id === id); return d ? getDish(d).name : ''; };
+  const faltaTxt = id => {
+    const d = DISHES.find(x => x.id === id); if(!d) return '';
+    const cl = _padClaves(getDish(d));
+    return (s.res[id].f || []).map(k => cl[k]).filter(Boolean).map(_padEtiqueta).join(', ');
+  };
+  const n = si.length + no.length;
+  return `<div class="deg pad rtc rtc-fin">
+    <h2 class="deg-tit">${n === 1 ? (_en ? 'You went over 1 dish.' : 'Has repasado 1 plato.') : (_en ? `You went over ${n} dishes.` : `Has repasado ${n} platos.`)}</h2>
+    <p class="deg-intro">${!no.length
+      ? (_en ? 'You told every one of them whole.' : 'Todos contados enteros.')
+      : (_en ? `${si.length} whole, and ${no.length} where an idea was missing.` : `${si.length} enteros y ${no.length} en los que se te quedó alguna idea.`)}</p>
+    ${no.length ? `<section class="rtc-sec-res">
+      <h3 class="rtc-h">${_en ? 'An idea was missing' : 'Se te quedaron ideas'}</h3>
+      <ul class="rtc-lista falta">${no.map(id => `<li><span class="rtc-lista-nom">${escapeHTML(nombre(id))}</span>${faltaTxt(id) ? `<span class="rtc-lista-f">${_en ? 'Missing: ' : 'Faltó: '}${escapeHTML(faltaTxt(id))}</span>` : ''}</li>`).join('')}</ul>
+      <button type="button" class="deg-btn pad-grande" onclick="_rtcRepasarCostaron()">${_en ? `Go over only the hard ones (${no.length})` : `Repasar solo los que me costaron (${no.length})`}</button>
+    </section>` : ''}
+    ${si.length ? `<section class="rtc-sec-res">
+      <h3 class="rtc-h">${_en ? 'Told whole' : 'Completos'}</h3>
+      <ul class="rtc-lista ok">${si.map(id => `<li><span class="rtc-lista-nom">${escapeHTML(nombre(id))}</span>${s.res[id].e === 'sabe' ? `<span class="rtc-lista-f">${_en ? 'You already knew it' : 'Ya te lo sabías'}</span>` : ''}</li>`).join('')}</ul>
+    </section>` : ''}
+    <p class="rtc-nota">${_en ? 'Each one comes back in One dish a day when it is due.' : 'Cada uno vuelve a salirte en Un plato al día cuando le toque.'}</p>
+    <button type="button" class="deg-btn ${no.length ? 'sec' : 'pad-grande'}" onclick="_rtcCerrar()">${volverTxt}</button>
+  </div>`;
+}
+function _rtcPintar(){
+  // El motor ha resuelto el primer intento: se anota antes de pintar.
+  if(_rtcS.fase === 'grabar' && _padS.paso === 'resultado' && Array.isArray(_padS.r1)) _rtcResultado();
+  const c = document.getElementById('appContent'); if(!c) return;
+  if(typeof currentTab !== 'undefined' && currentTab !== 'repasar') return;
+  const _en = LANG === 'en';
+  if(_rtcS.fase === 'fin'){ c.innerHTML = _rtcFinHTML(); return; }
+  const id = _rtcIdActual();
+  const d = id != null ? DISHES.find(x => x.id === id) : null;
+  if(_rtcS.fase === 'elegir' || !d){ _rtcS.fase = 'elegir'; c.innerHTML = _rtcElegirHTML(); return; }
+  const dd = getDish(d);
+  const claves = _padClaves(dd);
+  const ultimo = _rtcS.ses.i >= _rtcS.ses.cola.length - 1;
+  const mini = `<div class="pad-mini">${_degFotoHTML(d.id, dd.name, 'pad-mini-foto')}<h2 class="deg-tit pad-nom">${escapeHTML(dd.name)}</h2></div>`;
+  const revisar = dd.story_revisar ? `<div class="deg-revisar">${_en ? 'Pending validation by the chef' : 'Pendiente de validar por el chef'}</div>` : '';
+  const mic = t => `<button type="button" class="pad-mic" onclick="_rtcContar()"><span class="pad-mic-ic" aria-hidden="true"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5.5 11a6.5 6.5 0 0013 0M12 17.5V21"/></svg></span>${t}</button>`;
+  const f = _rtcS.fase;
+  let h = '';
+  if(f === 'ver'){
+    h = `${_degFotoHTML(d.id, dd.name, 'deg-hero pad-hero rtc-hero')}
+      <div class="rtc-cab"><span class="rtc-cat">${escapeHTML(typeof catLocal === 'function' ? catLocal(d.cat) : d.cat)}</span><h2 class="deg-tit pad-nom">${escapeHTML(dd.name)}</h2></div>
+      ${_rtcBocHTML(d, dd)}
+      ${mic(_en ? 'Tell it' : 'Contarlo')}
+      <div class="rtc-atajos">
+        <button type="button" onclick="_rtcEscucharPrimero()">${_en ? 'Listen first' : 'Escuchar primero'}</button>
+        <button type="button" onclick="_rtcSaber()">${_en ? 'I know this one' : 'Ya me lo sé'}</button>
+      </div>`;
+  } else if(f === 'oir'){
+    h = `${mini}
+      <div class="deg-story pad-story"><span>${_en ? 'At the table' : 'En la mesa'}</span><p>${escapeHTML(dd.story)}</p>
+        ${_rtcEscucharBtnHTML(d, dd, _en ? 'Listen again' : 'Escuchar otra vez')}</div>
+      ${revisar}
+      ${mic(_en ? 'Now tell it yourself' : 'Ahora cuéntalo tú')}`;
+  } else if(f === 'grabar'){
+    h = `${mini}${_padGrabadorHTML(claves)}`;
+  } else {
+    const sig = !ultimo ? DISHES.find(x => x.id === _rtcS.ses.cola[_rtcS.ses.i + 1]) : null;
+    h = `${mini}
+      ${_padResultadoHTML(_padS.r1 || [], claves)}
+      ${_padS.texto && _padS.modo === 'voz' ? `<details class="deg-apoyo pad-oido"><summary>${_en ? 'What I understood' : 'Lo que he entendido'}</summary><div class="deg-apoyo-body"><p>«${escapeHTML(_padS.texto)}»</p></div></details>` : ''}
+      <div class="deg-story pad-story"><span>${_en ? 'At the table' : 'En la mesa'}</span><p>${escapeHTML(dd.story)}</p>
+        ${_rtcEscucharBtnHTML(d, dd, _en ? 'Listen to how it is told' : 'Escucha cómo se cuenta')}</div>
+      ${revisar}
+      ${_rtcBocHTML(d, dd)}
+      <button type="button" class="deg-btn pad-grande rtc-sig" onclick="_rtcSiguiente()">${ultimo ? (_en ? 'See the summary' : 'Ver el resumen') : `${_en ? 'Next dish' : 'Siguiente plato'}${sig ? `<span class="rtc-sig-nom">${escapeHTML(getDish(sig).name)}</span>` : ''}`}</button>`;
+  }
+  c.innerHTML = `<div class="deg pad rtc rtc-plato">${_rtcMarcadorHTML()}${h}</div>`;
+  if(f === 'grabar') _padVivo();
 }
 
 // ═══ LA CARTA EN AUDIO ════════════════════════════════════════════════════
@@ -24989,6 +25433,7 @@ function renderDashboard(){
     <!-- Un plato al día: lo primero de Hoy, una sola tarjeta. Sin platos con
          descripción y claves (Txoko hoy), no aparece. -->
     ${(typeof _padTarjetaHTML==='function') ? _padTarjetaHTML('dashboard') : ''}
+    ${(typeof _rtcTarjetaHTML==='function') ? _rtcTarjetaHTML('dashboard') : ''}
 
     ${_parteCard}
 
@@ -26072,6 +26517,7 @@ function renderPracticar(){
     </header>
     <div class="tunic-divider"><span>${_en?'Every day':'Cada día'}</span></div>
     ${(typeof _padTarjetaHTML==='function') ? _padTarjetaHTML('practicar') : ''}
+    ${(typeof _rtcTarjetaHTML==='function') ? _rtcTarjetaHTML('practicar') : ''}
     ${(typeof launchPase==='function') ? _paseCtaHTML(_en) : ''}
     ${(typeof _hspCtaHTML==='function') ? _hspCtaHTML(_en) : ''}
     ${_smartCtaHTML(_en, emp)}
@@ -27507,6 +27953,7 @@ function renderRepasoTopic(){
       <div class="fp-eyebrow">${LANG==='en'?'Section':'Sección'} · ${dishes.length} ${t('dishes')}</div>
       <h2 class="fp-tit">${catLocal(repasoCat)}</h2>
     </div>
+    ${(typeof _rtcSeccionHTML==='function') ? _rtcSeccionHTML(_rtcFuenteDeCat(repasoCat),'carta') : ''}
     <div class="topic-pills carta-temas" role="tablist">${pills}</div>
     <div class="cp-lista">${dishes.length?rows:`<div style="text-align:center;padding:2.2rem 1rem;color:var(--parch3);font-family:var(--font-sans);font-size:var(--fs-3);line-height:1.5">${LANG==='en'?'No dishes from the selected service in this category. Change the shift from the top bar to see them.':'No hay platos de este turno en esta categoría. Cambia el turno en la barra superior para verlos.'}</div>`}</div>
   `;
