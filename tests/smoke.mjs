@@ -18619,6 +18619,135 @@ test('toques de 44 px: Escuchar de la ficha y los agotados de Hoy en sala', () =
   assert(/\.parte-chip-x\{[^}]*min-height:44px/.test(css), '.parte-chip-x por debajo de 44 px');
 });
 
+console.log('\nBotón atrás del móvil');
+// El atrás de Android / el gesto de iOS salía de la app desde cualquier
+// pantalla (prueba de usuario, nov 2026). Se prueba la lógica de verdad:
+// el bloque de index.html corre con un historial y un DOM de mentira.
+function _navMontar() {
+  const i = html.indexOf('// ═══ BOTÓN ATRÁS DEL MÓVIL');
+  const j = html.indexOf('// ═══ FIN BOTÓN ATRÁS ═══');
+  assert(i > 0 && j > i, 'no encuentro el bloque del botón atrás');
+  const bloque = html.slice(i, j);
+  const timers = [];
+  const hist = {
+    pila: [null], k: 0, gos: 0,
+    get state() { return this.pila[this.k]; },
+    pushState(s) { this.pila = this.pila.slice(0, this.k + 1); this.pila.push(s); this.k++; },
+    replaceState(s) { this.pila[this.k] = s; },
+    go(n) { this.gos++; this.k = Math.max(0, this.k + n); }
+  };
+  const OV = [];
+  const ov = (id, cerrable = true) => {
+    const o = { id, isConnected: true, style: {}, className: '', parentElement: null,
+      getClientRects: () => (OV.includes(o) ? [1] : []), getAttribute: () => null, closest: () => null,
+      querySelectorAll: () => [], querySelector: () => null, dispatchEvent() {} };
+    if (cerrable) o._navCerrar = () => { const x = OV.indexOf(o); if (x >= 0) OV.splice(x, 1); };
+    return o;
+  };
+  const doc = {
+    getElementById: id => (id === 'screenApp' ? { classList: { contains: () => true } } : null),
+    querySelectorAll: () => OV.slice(), dispatchEvent() {}
+  };
+  const src = `
+    let currentUser = 'Ana', currentTab = 'dashboard', repasoView = 'cats', repasoCat = null, repasoDishId = null;
+    const _subTab = { aprender: 'emplatado' };
+    const _degS = { vista: 'viaje', pase: null };
+    let _djState = null;
+    function showTab(t, inst){ try{ _navTab(t, inst); }catch(_){} currentTab = t; }
+    function renderRepaso(){}
+    function _degIr(v){ _degS.vista = v; if(currentTab !== 'degustacion') showTab('degustacion'); }
+    function _djPrev(){ _djState.phase--; }
+    function _djClose(){}
+    ${bloque}
+    return {
+      N: _nav, showTab, _navPop, _navProfundidad, _navSync,
+      get tab(){ return currentTab; },
+      rep(v, c, d){ repasoView = v; repasoCat = c; repasoDishId = d; },
+      get repasoView(){ return repasoView; },
+      sa(x){ _subTab.aprender = x; }, get subTab(){ return _subTab.aprender; },
+      deg: _degS, set dj(v){ _djState = v; }
+    };`;
+  const M = new Function('history', 'document', 'window', 'setTimeout', 'clearTimeout', 'getComputedStyle', src)( // eslint-disable-line no-new-func
+    hist, doc, { addEventListener() {} }, (f, ms) => { if (ms < 1000) timers.push(f); return timers.length; }, () => {}, () => ({ visibility: 'visible' }));
+  // Sin MutationObserver: cada tick es «el DOM ha cambiado».
+  const tick = () => { while (timers.length) timers.shift()(); M._navSync(); };
+  // Atrás del usuario: el navegador baja una entrada y avisa con popstate.
+  const atras = () => { hist.k = Math.max(0, hist.k - 1); M._navPop(); tick(); };
+  // Nuestro propio history.go() también acaba en popstate.
+  const popPropio = () => { M._navPop(); tick(); };
+  return { M, hist, OV, ov, tick, atras, popPropio };
+}
+test('Botón atrás: cada pantalla apilada es una entrada y el atrás la deshace', () => {
+  const { M, hist, OV, ov, tick, atras } = _navMontar();
+  M.showTab('dashboard'); tick();
+  assert(hist.k === 0, 'Hoy no debe dejar entradas (el atrás sale de la app)');
+  M.showTab('aprender'); tick();
+  assert(hist.k === 1 && hist.state.meseoAtras === 1, 'una pestaña = una entrada');
+  OV.push(ov('emplOverlay')); tick();
+  assert(hist.k === 2, 'un overlay = otra entrada');
+  atras();
+  assert(OV.length === 0 && M.tab === 'aprender' && hist.k === 1, 'el atrás cierra el overlay más alto y nada más');
+  atras();
+  assert(M.tab === 'dashboard' && hist.k === 0, 'luego vuelve a la pestaña anterior (Hoy)');
+});
+test('Botón atrás: cerrar con ✕ consume su entrada, así ✕ + atrás no salta dos pantallas', () => {
+  const { M, hist, OV, ov, tick, atras, popPropio } = _navMontar();
+  M.showTab('dashboard'); M.showTab('mesa'); tick();
+  OV.push(ov('emplOverlay')); tick();
+  assert(hist.k === 2, 'mesa + vista rápida = 2');
+  OV.pop(); tick();                       // ✕ de la app
+  assert(hist.gos === 1 && hist.k === 1 && M.N.esperando === 1, 'el ✕ hace history.go(-1)');
+  popPropio();
+  assert(M.tab === 'mesa' && hist.k === 1 && M.N.esperando === 0, 'su popstate no navega');
+  atras();
+  assert(M.tab === 'dashboard' && hist.k === 0, '✕ + atrás vuelve a la mesa → Hoy, una pantalla');
+});
+test('Botón atrás: repintar o volver a pedir la misma pestaña no duplica entradas', () => {
+  const { M, hist, tick } = _navMontar();
+  M.showTab('dashboard'); M.showTab('repaso'); tick();
+  M.showTab('repaso'); M.showTab('repaso', true); tick(); tick();
+  assert(hist.k === 1 && M.N.pila.length === 2, `esperaba 1 entrada, hay ${hist.k}`);
+  M.showTab('emplatado', true); tick();   // fotos ↔ lista: cambia en el sitio
+  assert(hist.k === 1 && M.N.pila.length === 2, 'cambiar de vista en el sitio no apila');
+  M.showTab('dashboard'); tick();
+  assert(hist.k === 0 && M.N.pila.length === 1, 'tocar Hoy deja la pila en la raíz');
+});
+test('Botón atrás: subvistas (ficha del plato, pase del menú) y Conocer el plato paso a paso', () => {
+  const { M, hist, OV, ov, tick, atras } = _navMontar();
+  M.showTab('dashboard'); M.showTab('repaso'); tick();
+  M.rep('topic', 'Entrantes', null); tick();
+  M.rep('dish', 'Entrantes', 7); tick();
+  assert(hist.k === 3, 'lista de la categoría y ficha suman una entrada cada una');
+  atras(); assert(M.repasoView === 'topic' && hist.k === 2, 'ficha → lista');
+  atras(); assert(M.repasoView === 'cats' && M.tab === 'repaso' && hist.k === 1, 'lista → categorías');
+  // Ficha completa desde la vista rápida de otra pestaña: vuelve a ESA pestaña.
+  M.showTab('emplatado'); tick();
+  OV.push(ov('emplOverlay')); tick();
+  OV.pop(); M.rep('dish', 'Entrantes', 7); M.sa('repaso'); M.showTab('repaso'); tick();
+  atras();
+  assert(M.tab === 'emplatado' && M.subTab === 'emplatado', 'de la ficha completa se vuelve a la carta en fotos');
+  // Menú degustación: el pase vuelve a El viaje.
+  M.showTab('degustacion'); tick(); const k0 = hist.k;
+  M.deg.vista = 'pase'; M.deg.pase = 3; tick();
+  assert(hist.k === k0 + 1, 'el pase es una entrada');
+  atras(); assert(M.deg.vista === 'viaje' && M.tab === 'degustacion', 'pase → El viaje');
+  // Conocer el plato: cada paso es una entrada; el atrás retrocede uno.
+  const dj = ov('djOverlay', false); M.dj = { phase: 0 }; OV.push(dj); tick();
+  const base = hist.k; M.dj = { phase: 4 }; tick();
+  assert(hist.k === base + 4, 'paso 4 = cuatro entradas más');
+  atras(); assert(hist.k === base + 3, 'paso 4 → 3');
+});
+test('Botón atrás: un overlay obligatorio no se salta y los enganches siguen puestos', () => {
+  const { M, hist, OV, ov, tick, atras } = _navMontar();
+  M.showTab('dashboard'); tick();
+  OV.push(ov('onboardingOverlay', false)); tick();
+  assert(hist.k === 1, 'la bienvenida es una entrada');
+  atras();
+  assert(OV.length === 1 && hist.k === 1, 'si no se puede cerrar, el atrás no saca de la app');
+  assert(/_navTab\(tab, instant\)/.test(html) && /overlay\._navCerrar = /.test(html), 'showTab y setupModalA11y enganchados');
+  assert(/history\.scrollRestoration = 'manual'/.test(html), 'el atrás no debe saltar el scroll');
+});
+
 console.log('\nHygiene');
 test('no git conflict markers in tracked source', () => {
   for (const f of ['index.html', 'sw.js', 'data/wines.json', 'data/lqa-situations.json', 'data/ghost-scenarios.json']) {
