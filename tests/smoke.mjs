@@ -18530,7 +18530,7 @@ test('audios privados: bucket privado con la sesión, caché del teléfono y fue
   const csp = html.match(/Content-Security-Policy"\s+content="([^"]+)"/i)[1];
   assert(/media-src 'self' blob:;/.test(csp), 'la CSP deja sonar el blob: local (sin media-src manda default-src y lo rechaza)');
   assert(/_padAudiosOlvidar\(\)/.test(_fnSrc('logout')) && /caches\.delete\(_AUD_CACHE\)/.test(_fnSrc('_padAudiosOlvidar')), 'al cerrar sesión se borran');
-  assert(/_padAudioDe\(d, dd\)/.test(_fnSrc('_padEscuchar')) && /_padAudioListo\(ruta\)/.test(_fnSrc('_padEscuchar')), 'Un plato al día usa el privado');
+  assert(/_padAudioDe\(d, dd\)/.test(_fnSrc('_padEscuchar')) && /_platoSonar\(a, d, dd,/.test(_fnSrc('_padEscuchar')) && /_padAudioListo\(ruta\)/.test(_fnSrc('_platoSonar')), 'Un plato al día usa el privado');
   assert(/_padAudioDe\(d, dd\)/.test(_fnSrc('_caSonar')) && /_caPrecargar\(i \+ 1\)/.test(_fnSrc('_caSonar')), 'la carta en audio también, y pide el siguiente');
   assert(!/new Audio\(dd\.audio\)|\.src = dd\.audio/.test(html), 'la ruta de la carta nunca va tal cual a un <audio>');
   const dec = _fnSrc('_padDecir');
@@ -18572,6 +18572,32 @@ test('carta en audio: tras el Mistery box con archivo suenan sus bocados, por el
   assert(/g === _caS\.gen && _caS\.sonando/.test(b), 'saltar o parar corta los bocados pendientes');
   assert(/_padDecir\(b\.n \+ '\. ' \+ b\.story/.test(b), 'sin archivo de un bocado, nombre y frase por la voz');
   assert(/_caMeta\(d, dd, b\.n\)/.test(b) && /title: sub \? dd\.name \+ ' · ' \+ sub : dd\.name/.test(_fnSrc('_caMeta')), 'la pantalla bloqueada dice qué bocado suena');
+});
+test('nombre del plato en audio: ruta privada «<venue>/<id>-nombre-<es|en>.m4a»', () => {
+  const i = html.indexOf('function _padAudioRuta(');
+  const j = html.indexOf('// ── Lo que depende de la app ──', i);
+  const R = new Function(html.slice(i, j) + '; return _nomAudioRuta;')(); // eslint-disable-line no-new-func
+  assert(R('r2/3072-nombre-es.m4a', 'r2', 3072, 'es') === 'r2/3072-nombre-es.m4a' && R('r2/3072-nombre-en.m4a', 'r2', 3072, 'en') === 'r2/3072-nombre-en.m4a', 'las buenas');
+  assert(R('r2/3072-nombre-es.m4a', 'r2', 3072, 'en') === null, 'en inglés no suena el español heredado');
+  assert(R('r2/3073-nombre-es.m4a', 'r2', 3072, 'es') === null && R('txoko/3072-nombre-es.m4a', 'r2', 3072, 'es') === null, 'otro plato u otra carpeta');
+  assert(R('r2/3072-es.m4a', 'r2', 3072, 'es') === null, 'no la descripción');
+  assert(R('https://x.y/r2/3072-nombre-es.m4a', 'r2', 3072, 'es') === null && R('../r2/3072-nombre-es.m4a', 'r2', 3072, 'es') === null, 'ni URLs ni saltos');
+  assert(R(null, 'r2', 3072, 'es') === null && R('r2/3072-nombre-es.m4a', null, 3072, 'es') === null, 'sin campo o sin carta');
+  assert(/_nomAudioRuta\(dd && dd\.audio_nombre/.test(_fnSrc('_padNombreDe')), 'lee audio_nombre de la carta');
+});
+test('nombre del plato en audio: primero el nombre, ~600 ms y la descripción, por el MISMO <audio>', () => {
+  const so = _fnSrc('_platoSonar');
+  assert(/const _NOM_PAUSA = 600;/.test(html), 'pausa de 600 ms');
+  assert(/const rn = ruta \? _padNombreDe\(d, dd\) : null;/.test(so) && /if\(!rn\) return historia\(\);/.test(so), 'sin audio_nombre (o sin descripción), como siempre');
+  assert(/dicho = true; sigue\(_NOM_PAUSA\)/.test(so) && /const sinNombre = \(\) => sigue\(0\);/.test(so), 'tras el nombre la pausa; si el nombre falla, la descripción directamente');
+  assert(!/new Audio/.test(so) && /a\.src = src;/.test(so), 'no crea otro elemento: suena por el que le pasan (pantalla bloqueada)');
+  assert(/_padAudioSrc\(rn\)\.then\(dale, sinNombre\)/.test(so) && /_padAudioListo\(rn\)/.test(so), 'misma caché privada que la descripción');
+  assert(/_platoSonar\(_caEl, d, dd,/.test(_fnSrc('_caSonar')), 'La carta en audio');
+  assert(/_platoSonar\(a, d, dd,/.test(_fnSrc('_padEscuchar')), 'Un plato al día, Conocer el plato y Repasar (_padEscuchar)');
+  assert(/_platoSonar\(a, p\.d, p\.dd,/.test(_fnSrc('_degHablar')) && /_degHablarVoz\(p\)/.test(_fnSrc('_degHablar')), 'ficha y degustación: el archivo si lo hay; si no, la voz del teléfono');
+  assert(/_degAudioEl\.pause\(\)/.test(_fnSrc('_bocParar')), 'se calla al salir, como los bocados');
+  for (const f of ['_padPrecargar', '_caPrecargar']) assert(/_padNombreDe\(d, dd\)/.test(_fnSrc(f)), f + ' pide también el nombre');
+  assert(/if\(dicho\) return historia\(\);/.test(_fnSrc('_caSonar')), 'si falla la descripción tras el nombre, no repite el nombre');
 });
 test('voz del teléfono: Premium por delante de Enhanced', () => {
   assert(_pad._padMejorVoz([{ name: 'Mónica (mejorada)', lang: 'es-ES' }, { name: 'Mónica (Premium)', lang: 'es-ES' }], 'es-ES').name === 'Mónica (Premium)', 'premium');
