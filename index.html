@@ -30820,7 +30820,7 @@ function renderSupTablaHTML(allEmps, empNames, hist, inactivos){
   </table></div>
   <div class="sup-at-pie">${_en
     ? `Tap a row for the development profile. "Menu" is dishes mastered, "LQA" audit readiness, "Mark" the average of ${filas.reduce((a,f)=>a+f.p.pruebas,0)} real tests. "In app" counts from their first test, not from their hire date — the app does not know that.`
-    : `Toca una fila para el perfil de desarrollo. «Carta» son platos dominados, «LQA» la preparación para auditoría y «Nota» la media de ${filas.reduce((a,f)=>a+f.p.pruebas,0)} pruebas reales. «En la app» cuenta desde su primera prueba, no desde que entró en la casa — eso la app no lo sabe.`}</div>`;
+    : `Toca una fila para el perfil de desarrollo. «Carta» son platos dominados, «LQA» la preparación para auditoría y «Nota» la media de ${filas.reduce((a,f)=>a+f.p.pruebas,0)} pruebas reales. «En la app» cuenta desde su primera prueba, no desde que entró en la casa, porque eso la app no lo sabe.`}</div>`;
   function _tr(f, inact){
     return `<tr role="button" tabindex="0"${inact?' class="sup-tr-inact"':''}
         onclick="renderSupEmployee(${escapeHTML(JSON.stringify(f.n))})"
