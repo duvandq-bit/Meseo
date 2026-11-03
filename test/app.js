@@ -15,6 +15,9 @@ import {
 // Contacto comercial: el mismo que ya publica meseo.es (pie del login y demo).
 const CONTACTO = 'contacto@meseo.es';
 const BASE_URL = 'https://meseo.es/test/';
+// La demo de la app (Orchilla, restaurante inventado): ?demo=1 entra directo,
+// sin cuenta y sin pasar por el selector de restaurantes.
+const DEMO_URL = 'https://meseo.es/?demo=1';
 
 const SUPA_URL = 'https://advkoujfgbrrjvqexrcu.supabase.co';
 // Clave anónima pública (la misma que lleva la app). Solo permite insertar y
@@ -322,7 +325,7 @@ function vistaFinal() {
     <section class="cta">
       <h2>${t('Meseo entrena esto con la carta de tu restaurante', 'Meseo trains this with your own menu')}</h2>
       <p>${t('Plato por plato: qué lleva, qué se puede cambiar y qué se comanda. Un rato al día, desde el móvil.', 'Dish by dish: what is in it, what can be changed and how to put it through. A few minutes a day, on your phone.')}</p>
-      <a class="btn sec fino" href="../">${t('Conocer Meseo', 'Discover Meseo')}</a>
+      <a class="btn" href="${DEMO_URL}">${t('Ver Meseo con una carta de ejemplo', 'See Meseo with a sample menu')}</a>
     </section>`;
   pintarEnvio();
 }
@@ -415,6 +418,7 @@ function htmlCta() {
     <h2>${t('Meseo entrena a tu equipo con tu propia carta', 'Meseo trains your team with your own menu')}</h2>
     <p>${t('Cargamos tu carta, tus alérgenos, tu bodega y tu manual de sala, y tu equipo entrena con ellos desde el primer día.', 'We load your menu, allergens, wines and service manual, and your team trains with them from day one.')}</p>
     <a class="btn" href="mailto:${CONTACTO}?subject=${asunto}">${t('Escríbenos', 'Write to us')}</a>
+    <a class="btn sec fino" href="${DEMO_URL}">${t('Ver Meseo con una carta de ejemplo', 'See Meseo with a sample menu')}</a>
     <p class="mini">${CONTACTO}</p>
   </section>`;
 }

@@ -10009,6 +10009,26 @@ body, .screen{ min-height: 100vh; min-height: 100dvh; }
 .sup-at-pie{ font-family:'Quicksand',sans-serif; font-size:.68rem; color: var(--parch4);
   line-height:1.45; margin-top:.6rem; }
 
+/* ── Esta semana, Hoy en sala leído e ideas que se dejan (nov 2026) ─────── */
+.sup-card-t b{ color: var(--parchment); font-weight:700; letter-spacing:.04em; margin-left:.35rem; }
+.sup-sem-l{ display:flex; flex-wrap:wrap; gap:.35rem; }
+.sup-sem-p{ display:inline-flex; align-items:baseline; gap:.3rem; padding:.3rem .6rem; border-radius:20px;
+  background: rgba(136,176,131,.1); border:1px solid rgba(136,176,131,.25);
+  font-family:'Quicksand',sans-serif; font-size:.78rem; font-weight:600; color: var(--parchment); }
+.sup-sem-p small{ font-family:'DM Mono',monospace; font-size:.6rem; font-weight:400; color: var(--parch3); }
+.sup-idea{ display:flex; align-items:center; justify-content:space-between; gap:.6rem;
+  padding:.45rem 0; border-bottom:1px solid var(--line); }
+.sup-idea:last-of-type{ border-bottom:0; }
+.sup-idea-t{ min-width:0; display:flex; flex-direction:column; }
+.sup-idea-t b{ font-family:'Quicksand',sans-serif; font-size:.85rem; color: var(--parchment); }
+.sup-idea-t span{ font-family:'Quicksand',sans-serif; font-size:.7rem; color: var(--parch3);
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.sup-idea-n{ flex:0 0 auto; font-family:'DM Mono',monospace; font-size:.66rem; font-weight:700; color: var(--rose); }
+.sup-card-btn{ display:flex; align-items:center; justify-content:center; width:100%; min-height:44px; margin-top:.7rem;
+  background:transparent; border:1px solid var(--line2); border-radius:10px; cursor:pointer;
+  font-family:'Quicksand',sans-serif; font-weight:700; font-size:.82rem; color: var(--gold-deep); }
+.sup-demo-nota{ margin-bottom:1rem; }
+
 /* ── La tabla del equipo ──────────────────────────────────────────────────
    Ocho columnas no caben en un móvil: la tabla lleva SU propio scroll lateral
    para que la página no se mueva de lado. */
@@ -10965,19 +10985,50 @@ html[data-venue="r2"] .ri-cta-pase .ri-cta-icon{border-color:rgba(194,161,97,.4)
    Botón del login, banda de aviso arriba del inicio y tarjeta de contacto
    al final. Orchilla es un restaurante inventado.
 ───────────────────────────────────────────────── */
-#screenLogin .login-demo{
+/* La portada para quien llega de fuera (nov 2026): qué es Meseo y «Probar
+   la demo» como acción principal; el acceso del personal, plegado debajo.
+   En un móvil donde ya ha entrado alguien (.login-es-personal) la demo baja a
+   una línea discreta y el formulario sale abierto, como antes. */
+#screenLogin .login-visita{width:100%;max-width:420px;margin:0 0 1rem;text-align:center}
+#screenLogin .login-visita-txt{
+  font-family:var(--font-sans);font-size:var(--fs-4);font-weight:500;line-height:1.45;
+  color:rgba(244,237,226,.88);margin:0 auto 1rem;max-width:34ch;text-wrap:balance;
+}
+#screenLogin .login-visita-btn{
+  display:flex;align-items:center;justify-content:center;width:100%;min-height:54px;padding:.9rem 1rem;
+  border:0;border-radius:14px;cursor:pointer;
+  font-family:var(--font-sans);font-size:var(--fs-5);font-weight:700;letter-spacing:.01em;color:#1a1408;
+  background:linear-gradient(180deg,#f0d68a,#d4ad55 60%,var(--brand-accent));
+  box-shadow:0 10px 26px rgba(201,162,78,.32),inset 0 1px 0 rgba(255,255,255,.45);
+}
+#screenLogin .login-visita-btn:hover{box-shadow:0 12px 30px rgba(201,162,78,.42),inset 0 1px 0 rgba(255,255,255,.45)}
+#screenLogin .login-visita-btn:active{transform:translateY(1px)}
+#screenLogin .login-visita-btn:focus-visible,#screenLogin .login-personal-btn:focus-visible{outline:3px solid var(--lg-gold-hi);outline-offset:3px}
+#screenLogin .login-visita-nota{font-family:var(--font-sans);font-size:var(--fs-2);color:rgba(244,237,226,.62);margin:.55rem 0 0}
+#screenLogin .login-personal-btn{
+  display:flex;align-items:center;justify-content:center;gap:.5rem;width:100%;max-width:420px;min-height:48px;
+  margin:0 0 .4rem;padding:.5rem 1rem;border-radius:12px;cursor:pointer;
+  background:transparent;border:1px solid var(--lg-line);
+  font-family:var(--font-sans);font-size:var(--fs-3);font-weight:600;color:rgba(244,237,226,.82);
+}
+#screenLogin .login-personal-btn svg{width:16px;height:16px;flex:0 0 auto;color:var(--lg-gold-hi)}
+#screenLogin .login-personal-btn:hover{background:rgba(244,237,226,.05)}
+#screenLogin .login-personal-btn[hidden],#screenLogin .login-personal[hidden]{display:none}
+#screenLogin .login-personal{width:100%;display:flex;flex-direction:column;align-items:center}
+#screenLogin .login-personal .login-venue{width:100%}
+/* Móvil de personal: la demo, una línea con botón de contorno. */
+#screenLogin.login-es-personal .login-visita{
   display:flex;align-items:center;justify-content:space-between;gap:.75rem;
-  width:min(100% - 2.5rem, 420px);margin:1rem auto 0;padding:.7rem .8rem .7rem 1rem;
+  margin:1rem 0 0;padding:.6rem .7rem .6rem 1rem;text-align:left;
   border:1px solid var(--lg-line);border-radius:14px;background:var(--lg-field);
 }
-#screenLogin .login-demo-txt{font-family:var(--font-sans);font-size:var(--fs-3);color:rgba(244,237,226,.72);line-height:1.3}
-#screenLogin .login-demo-btn{
-  flex:0 0 auto;min-height:44px;padding:0 1rem;border-radius:10px;cursor:pointer;
-  font-family:var(--font-sans);font-size:var(--fs-3);font-weight:700;letter-spacing:0;
-  color:var(--lg-gold-hi);background:transparent;border:1px solid var(--lg-gold);
+#screenLogin.login-es-personal .login-visita-txt,#screenLogin.login-es-personal .login-visita-nota{display:none}
+#screenLogin .login-visita-corto{display:none}
+#screenLogin.login-es-personal .login-visita-corto{display:block;font-family:var(--font-sans);font-size:var(--fs-3);color:rgba(244,237,226,.72);line-height:1.3}
+#screenLogin.login-es-personal .login-visita-btn{
+  width:auto;flex:0 0 auto;min-height:44px;padding:0 1rem;border-radius:10px;
+  font-size:var(--fs-3);color:var(--lg-gold-hi);background:transparent;border:1px solid var(--lg-gold);box-shadow:none;
 }
-#screenLogin .login-demo-btn:hover{background:rgba(201,162,78,.12)}
-#screenLogin .login-demo-btn:active{transform:translateY(1px)}
 
 .demo-banda{
   display:flex;align-items:center;justify-content:space-between;gap:.75rem;
@@ -11003,6 +11054,12 @@ html[data-venue="r2"] .ri-cta-pase .ri-cta-icon{border-color:rgba(194,161,97,.4)
   font-family:var(--font-sans);font-size:var(--fs-4);font-weight:700;text-decoration:none;
   color:#1a1408;background:linear-gradient(180deg,var(--brand-accent-hi,#e0c88f),var(--brand-accent));
 }
+.demo-panel-btn{
+  display:flex;align-items:center;justify-content:center;width:100%;max-width:320px;min-height:44px;margin:.7rem auto 0;padding:0 1rem;
+  border-radius:12px;cursor:pointer;background:transparent;border:1px solid var(--brand-accent);
+  font-family:var(--font-sans);font-size:var(--fs-3);font-weight:700;color:var(--brand-accent-hi,#e0c88f);
+}
+.demo-panel-btn.claro{color:var(--brand-accent-deep,#7c6331);border-color:color-mix(in srgb, var(--brand-accent) 70%, #000)}
 .demo-contacto-mail{font-family:var(--font-sans);font-size:var(--fs-2);margin-top:.55rem;color:rgba(244,237,226,.6)}
 
 /* ═══ ORCHILLA · la demo ═══

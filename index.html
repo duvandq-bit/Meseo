@@ -54,7 +54,7 @@
 <meta property="og:description" content="Formación de equipos de sala: carta, alérgenos, vinos, exámenes y juegos de repaso.">
 <meta property="og:url" content="https://meseo.es/">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"Meseo","url":"https://meseo.es/"}</script>
-<meta name="app-version" content="7.535">
+<meta name="app-version" content="7.536">
 <meta name="app-build" content="May 2026">
 <meta name="theme-color" content="#1c2a22">
 <!-- ═══ PWA ═══ -->
@@ -149,6 +149,23 @@
   </div>
 
   <div class="login-side">
+  <!-- PORTADA PARA QUIEN LLEGA DE FUERA (nov 2026, prueba de usuario). Lo
+       primero era el selector de restaurantes con un «Suspendido
+       temporalmente»; un restaurante que mira Meseo no sabía qué era ni qué
+       hacer. Ahora lo primero es qué es Meseo y «Probar la demo». El acceso
+       del personal sigue entero debajo, plegado para el visitante y abierto
+       de serie en un móvil donde ya ha entrado alguien (_loginPersonalInit). -->
+  <div class="login-visita" id="loginVisita">
+    <span class="login-visita-corto" id="loginVisitaCorto">¿Tienes un restaurante?</span>
+    <p class="login-visita-txt" id="loginVisitaTxt">Meseo entrena a tu equipo de sala con tu propia carta: platos, alérgenos, vinos y servicio, desde el móvil.</p>
+    <button type="button" class="login-visita-btn" id="loginDemoBtn" onclick="entrarDemo()">Probar la demo</button>
+    <p class="login-visita-nota" id="loginVisitaNota">Un restaurante de ejemplo, sin cuenta y sin instalar nada.</p>
+  </div>
+  <button type="button" class="login-personal-btn" id="loginPersonalBtn" aria-expanded="false" aria-controls="loginPersonal" onclick="_loginPersonalAbrir(true)">
+    <span id="loginPersonalTxt">Soy del equipo de un restaurante: entrar</span>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+  </button>
+  <div class="login-personal" id="loginPersonal" hidden>
   <!-- Multi-restaurant selector (dropdown). Shown whenever the registry lists
        more than one venue; venues with enabled:false appear locked ("Próximamente")
        and cannot be selected. Picking an enabled one reskins via applyTheme(). -->
@@ -237,12 +254,7 @@
       <button type="button" class="login-newuser-hint-link" onclick="openPinRecovery()" id="loginForgotLink">¿Olvidaste tu PIN o contraseña?</button>
     </div>
   </div>
-
-  <!-- La demo: un restaurante inventado, sin cuenta y sin tocar el servidor. -->
-  <div class="login-demo" id="loginDemo">
-    <span class="login-demo-txt" id="loginDemoTxt">¿Tienes un restaurante?</span>
-    <button type="button" class="login-demo-btn" id="loginDemoBtn" onclick="entrarDemo()">Probar la demo</button>
-  </div>
+  </div><!-- /.login-personal -->
 
   <!-- Welcome toast -->
   <div class="login-welcome-toast" id="loginWelcomeToast" aria-live="polite">
@@ -2891,7 +2903,7 @@ const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><p
 const SRC = 'src';
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='7.535';  // sincronizada con sw.js VERSION (guard de CI)
+const APP_VERSION='7.536';  // sincronizada con sw.js VERSION (guard de CI)
 const APP_BUILD='Jul 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;
@@ -6490,8 +6502,9 @@ function _revisionCerrado(c){
     if(c){
       const _en = LANG==='en';
       c.innerHTML = `<div style="padding:1.4rem 1rem;font-size:var(--fs-4);line-height:1.5">${_en
-        ? 'Not available in the demo. Chat, duels, notifications and the supervisor panel work with a real team, so they are switched on when your restaurant joins Meseo.'
-        : 'No disponible en la demo. El chat, los duelos, los avisos y el panel de supervisor funcionan con un equipo de verdad, así que se activan cuando tu restaurante entra en Meseo.'}</div>
+        ? 'Not available in the demo. Chat, duels and notifications work with a real team, so they are switched on when your restaurant joins Meseo. The supervisor panel you can see with a sample team.'
+        : 'No disponible en la demo. El chat, los duelos y los avisos funcionan con un equipo de verdad, así que se activan cuando tu restaurante entra en Meseo. El panel de supervisor sí puedes verlo, con un equipo de ejemplo.'}</div>
+        <div style="padding:0 1rem"><button type="button" class="demo-panel-btn claro" onclick="showTab('supervisor')">${_en ? 'See the supervisor panel' : 'Ver el panel de supervisor'}</button></div>
         ${typeof _demoContactoHTML === 'function' ? _demoContactoHTML() : ''}`;
     } else if(typeof showToast === 'function'){
       showToast(LANG==='en' ? 'Not available in the demo.' : 'No disponible en la demo.', 'info', 3500);
@@ -12646,6 +12659,64 @@ function _pieRender(id, opts){
   if(el) el.innerHTML = _pieHTML(opts);
 }
 
+// ═══ PORTADA: VISITANTE O PERSONAL ═════════════════════════════════════════
+// Un móvil «de personal» es uno en el que alguien ya ha entrado (queda el
+// último usuario o la sesión recordada). Ahí el formulario sale abierto, como
+// siempre, y la demo se queda en una línea discreta encima. En un móvil nuevo
+// lo primero es la demo y el formulario espera tras un toque. Plegar no cambia
+// nada del login: los mismos campos, el mismo «Mantener sesión» y el mismo
+// selector, sólo que dentro de #loginPersonal. Los restaurantes suspendidos
+// (Txoko hoy) siguen en el selector para su personal, pero el visitante ya no
+// los ve como primera opción: están dentro de lo plegado. themes.json no se toca.
+function _loginEsPersonal(){
+  try{ return !!(localStorage.getItem('txoko_last_user') || localStorage.getItem('txoko_session')); }
+  catch(_){ return false; }
+}
+function _loginPersonalAbrir(enfocar){
+  const box = document.getElementById('loginPersonal');
+  const btn = document.getElementById('loginPersonalBtn');
+  if(box) box.hidden = false;
+  if(btn){ btn.setAttribute('aria-expanded', 'true'); btn.hidden = true; }
+  if(enfocar){
+    const u = document.getElementById('loginUser');
+    try{ if(u) u.focus(); }catch(_){}
+  }
+}
+function _loginPersonalInit(){
+  const scr = document.getElementById('screenLogin');
+  const personal = _loginEsPersonal();
+  if(scr) scr.classList.toggle('login-es-personal', personal);
+  if(personal){
+    _loginPersonalAbrir(false);
+    // La demo, debajo del formulario: quien entra a diario no tiene que saltarla.
+    const vis = document.getElementById('loginVisita'), box = document.getElementById('loginPersonal');
+    if(vis && box && box.nextElementSibling !== vis) box.after(vis);
+  }
+}
+// Enlace directo a la demo (meseo.es/?demo=1, desde el test de alérgenos):
+// entra en Orchilla sin pasar por el selector. Sólo abre la demo, que no
+// habla con el servidor. Con una sesión de personal recordada no llega a
+// usarse (autoLogin entra antes). El parámetro se quita de la barra antes de
+// entrar, para que «Salir» (que recarga) no vuelva a meter a nadie en la demo.
+function _demoPorEnlace(){
+  let pide = false;
+  try{ pide = new URLSearchParams(location.search).get('demo') === '1'; }catch(_){ pide = false; }
+  if(!pide) return false;
+  try{
+    const q = new URLSearchParams(location.search); q.delete('demo');
+    const qs = q.toString();
+    history.replaceState(null, '', location.pathname + (qs ? '?' + qs : '') + location.hash);
+  }catch(_){}
+  let intentos = 0;
+  (function esperar(){
+    if(typeof currentUser !== 'undefined' && currentUser) return;
+    const listo = typeof THEMES !== 'undefined' && THEMES && Array.isArray(THEMES.venues);
+    if(listo){ try{ entrarDemo(); }catch(_){} return; }
+    if(++intentos < 60) setTimeout(esperar, 150);
+  })();
+  return true;
+}
+
 function renderLogin(){
   // SUSPENSIÓN: fuera la pestaña de registro y el enlace de «Crear cuenta
   // nueva». No se esconde sólo por estética — mientras esté visible, alguien
@@ -12711,10 +12782,19 @@ function renderLogin(){
   if(hintLnk) hintLnk.textContent = LANG==='en' ? 'Create new account' : 'Crear cuenta nueva';
   const forgotLnk = document.getElementById('loginForgotLink');
   if(forgotLnk) forgotLnk.textContent = LANG==='en' ? 'Forgot your PIN or password?' : '¿Olvidaste tu PIN o contraseña?';
-  const demoTxt = document.getElementById('loginDemoTxt');
-  if(demoTxt) demoTxt.textContent = LANG==='en' ? 'Own a restaurant?' : '¿Tienes un restaurante?';
+  const visTxt = document.getElementById('loginVisitaTxt');
+  if(visTxt) visTxt.textContent = LANG==='en'
+    ? 'Meseo trains your floor team with your own menu: dishes, allergens, wines and service, on their phones.'
+    : 'Meseo entrena a tu equipo de sala con tu propia carta: platos, alérgenos, vinos y servicio, desde el móvil.';
+  const visNota = document.getElementById('loginVisitaNota');
+  if(visNota) visNota.textContent = LANG==='en' ? 'A sample restaurant, no account and nothing to install.' : 'Un restaurante de ejemplo, sin cuenta y sin instalar nada.';
   const demoBtn = document.getElementById('loginDemoBtn');
   if(demoBtn) demoBtn.textContent = LANG==='en' ? 'Try the demo' : 'Probar la demo';
+  const visCorto = document.getElementById('loginVisitaCorto');
+  if(visCorto) visCorto.textContent = LANG==='en' ? 'Own a restaurant?' : '¿Tienes un restaurante?';
+  const persTxt = document.getElementById('loginPersonalTxt');
+  if(persTxt) persTxt.textContent = LANG==='en' ? 'I work at a restaurant: sign in' : 'Soy del equipo de un restaurante: entrar';
+  _loginPersonalInit();
   // Input placeholders
   const userInput = document.getElementById('loginUser');
   if(userInput) userInput.placeholder = LANG==='en' ? 'Your name...' : 'Tu nombre...';
@@ -13917,9 +13997,91 @@ function _demoSemilla(){
   DEMO_EQUIPO.forEach(([n, puesto, puestoEn, xp, racha, duelos]) => {
     const e = db.employees[n] || _demoFichaVacia(n);
     db.employees[n] = Object.assign(e, { venue:DEMO_VENUE, demo:true, puesto, puesto_en:puestoEn,
-      xp, streak:racha, duelWins:duelos });
+      xp, streak:racha, duelWins:duelos }, _demoProgreso(n));
   });
   return db;
+}
+// ── El progreso inventado del equipo de Orchilla, para el Panel de supervisor
+// de la demo. Se rehace en cada entrada con fechas relativas a hoy, así la
+// demo siempre enseña «esta semana» y nunca un equipo de hace un mes. Nadie
+// de aquí existe: nombres genéricos y números de ejemplo.
+//   dias  días atrás de cada prueba (de la más antigua a la última)
+//   base  nota de partida (%) · sube  puntos que gana o pierde hasta la última
+//   alg   mejor nota del simulacro de alérgenos · dom  platos dominados
+//   visto días desde que abrió la app · parte  hace cuántos minutos leyó Hoy en sala
+//   ideas  {plato: posición de la idea que se dejó al contarlo}
+const DEMO_PROGRESO = {
+  Nayra:  { dias:[27,24,20,17,13,10,7,5,3,1,0], base:84, sube:8,  alg:100, dom:17, visto:0, parte:95, lqa:[88,84,82,80], ideas:{4004:2} },
+  Yeray:  { dias:[25,21,18,14,11,8,6,4,2,1],   base:80, sube:6,  alg:95,  dom:14, visto:0, parte:70, lqa:[82,78,0,0],  ideas:{4012:3, 4016:4} },
+  Carla:  { dias:[22,19,15,12,9,6,4,2],        base:86, sube:-6, alg:90,  dom:12, visto:1, parte:45, lqa:[76,0,0,0],   ideas:{4012:3, 4011:4, 4008:3} },
+  Iker:   { dias:[20,16,12,9,6,3],             base:68, sube:6,  alg:85,  dom:9,  visto:0, parte:20, lqa:[0,0,0,0],    ideas:{4012:3, 4004:2, 4016:4, 4001:3} },
+  Aitana: { dias:[9,6,4,2],                    base:62, sube:10, alg:70,  dom:5,  visto:2, parte:0,       lqa:[0,0,0,0],    ideas:{4012:3, 4004:2, 4011:4, 4016:4} },
+  Mateo:  { dias:[30,26,21,16],                base:58, sube:4,  alg:60,  dom:3,  visto:9, parte:0,       lqa:[0,0,0,0],    ideas:{4004:2, 4008:3, 4001:3} },
+};
+// Orden distinto por persona en que «dominan» la carta (ids 4001-4020).
+const DEMO_ORDEN_PLATOS = [4001,4005,4012,4002,4004,4015,4008,4019,4011,4016,4006,4003,4020,4009,4013,4007,4010,4014,4017,4018];
+// Un momento de hace `n` días, siempre en el pasado: hoy, hace `min` minutos;
+// otro día, `horas` antes de esta misma hora. Así «hace 1d» nunca sale «0d» y
+// nada de hoy queda por delante del reloj de quien mira la demo.
+function _demoDiaAtras(n, horas, min){
+  const t = Date.now() - n * 86400000 - (n ? (horas || 2) * 3600000 : (min || 30) * 60000);
+  const d = new Date(t);
+  return { dia: new Intl.DateTimeFormat('en-CA', { timeZone:'Atlantic/Canary' }).format(d), iso: d.toISOString() };
+}
+function _demoProgreso(nombre){
+  const P = DEMO_PROGRESO[nombre];
+  if(!P) return {};
+  const temas = ['allergens', 'ingredients', 'history', 'mixed'];
+  const cats = ['Aperitivos', 'Huerta', 'Del mar', 'De la tierra', 'Postres'];
+  const sessions = [], topicScores = { allergens:{correct:0,total:0}, ingredients:{correct:0,total:0}, history:{correct:0,total:0} };
+  const L = P.dias.length;
+  P.dias.forEach((n, i) => {
+    // Nota de cada prueba: la base, la subida repartida y un pequeño vaivén fijo.
+    const pct = Math.max(30, Math.min(100, Math.round(P.base + P.sube * (L > 1 ? i / (L - 1) : 1) + [0, -4, 3, -2, 4, -3][i % 6])));
+    const total = 10, score = Math.round(pct / 10);
+    const topic = temas[i % temas.length];
+    const f = _demoDiaAtras(n, 1 + i % 5, 50 + i * 7);
+    sessions.push({ date:f.dia, ts:Date.parse(f.iso), score, total, topic, cat:cats[i % cats.length], time:150 + (i * 37) % 120 });
+    if(topic === 'mixed'){
+      for(const k of ['allergens','ingredients','history']){ topicScores[k].total += 3; topicScores[k].correct += Math.round(score * 3 / 10); }
+    } else { topicScores[topic].total += total; topicScores[topic].correct += score; }
+  });
+  const desplaza = Object.keys(DEMO_PROGRESO).indexOf(nombre) * 3;
+  const orden = DEMO_ORDEN_PLATOS.slice(desplaza).concat(DEMO_ORDEN_PLATOS.slice(0, desplaza));
+  const knownDishes = {}, examSeen = {}, examCorrect = {};
+  orden.slice(0, P.dom).forEach(id => { knownDishes[id] = true; });
+  orden.slice(0, Math.min(20, P.dom + 4)).forEach((id, k) => {
+    examSeen[id] = 2 + (k % 3);
+    examCorrect[id] = knownDishes[id] ? examSeen[id] - (k % 4 === 3 ? 1 : 0) : Math.max(0, examSeen[id] - 2);
+  });
+  const ult = sessions.length ? sessions[sessions.length - 1].date : '';
+  const visto = _demoDiaAtras(P.visto, 3, 12).iso;
+  const hoy = todayStr();
+  const padFaltas = {};
+  Object.keys(P.ideas || {}).forEach(id => { padFaltas[id] = { [P.ideas[id]]: 1 }; });
+  return {
+    sessions, topicScores, knownDishes, examSeen, examCorrect,
+    lastStudyDay: ult, lastActiveAt: visto, lastLoginTs: visto,
+    allergenBest: P.alg, padFaltas,
+    lqaExamBest: P.lqa[0] || 0, lqaSituationBest: P.lqa[1] || 0, lqaAuditBest: P.lqa[2] || 0, ghostBest: P.lqa[3] || 0,
+    lqaExamsCompleted: P.lqa[0] ? 2 : 0, lqaSituationsCompleted: P.lqa[1] ? 1 : 0, lqaAuditsCompleted: P.lqa[2] ? 1 : 0, ghostRuns: P.lqa[3] ? 1 : 0,
+    parteVisto: P.parte ? { d: hoy, at: new Date(Date.now() - P.parte * 60000).toISOString() } : null,
+  };
+}
+// Lo que la demo enseña en vez de leer la tabla de evaluaciones del servidor:
+// las mismas filas, sacadas del progreso inventado de arriba.
+function _demoHistorial(){
+  const filas = [];
+  Object.keys(DB.employees || {}).forEach(n => {
+    const e = DB.employees[n];
+    if(!e || !e.demo) return;
+    (e.sessions || []).forEach(x => {
+      if(!x || !x.total) return;
+      filas.push({ employee:n, score:x.score || 0, total:x.total, topic:x.topic, cat:x.cat || null,
+        time_sec:x.time || 0, created_at:new Date(x.ts).toISOString() });
+    });
+  });
+  return filas;
 }
 let _demoEntrando = false;
 async function entrarDemo(){
@@ -13985,6 +14147,7 @@ function _demoContactoHTML(){
       ? 'We load your menu, allergens, wines and service manual, and your team trains with them from day one.'
       : 'Cargamos tu carta, tus alérgenos, tu bodega y tu manual de sala, y tu equipo entrena con ellos desde el primer día.'}</p>
     <a class="demo-contacto-btn" href="mailto:contacto@meseo.es?subject=${asunto}">${en ? 'Write to us' : 'Escríbenos'}</a>
+    <button type="button" class="demo-panel-btn" onclick="showTab('supervisor')">${en ? 'See the supervisor panel' : 'Ver el panel de supervisor'}</button>
     <div class="demo-contacto-mail">contacto@meseo.es</div>
   </div>`;
 }
@@ -15320,7 +15483,8 @@ function _ux2Sync(tab){
   const sup = document.getElementById('ux2Sup');
   if(sup){
     let puede = false;
-    try{ puede = (typeof _esMando === 'function' && _esMando()) || (typeof _esAdmin === 'function' && _esAdmin()); }catch(_){}
+    try{ puede = (typeof _esMando === 'function' && _esMando()) || (typeof _esAdmin === 'function' && _esAdmin())
+      || (typeof _esDemo === 'function' && _esDemo()); }catch(_){}   // en la demo, el panel de ejemplo
     sup.hidden = !(sec === 'equipo' && puede);
   }
 }
@@ -25629,7 +25793,7 @@ async function _parteVistosCargar(){
   let vistos = [];
   let all = {};
   try{
-    Object.keys(DB.employees || {}).forEach(n => { const e = DB.employees[n]; if(n && _esDeMiVenue(e)) all[n] = Object.assign({}, e, { name: n }); });
+    Object.keys(DB.employees || {}).forEach(n => { const e = DB.employees[n]; if(n && _esDeMiVenue(e) && !(_esDemo() && n === DEMO_USUARIO)) all[n] = Object.assign({}, e, { name: n }); });
     if(typeof _esDemo === 'function' && _esDemo()){
       vistos = Object.keys(all).filter(n => all[n].parteVisto && all[n].parteVisto.d === hoy).map(n => ({ empleado: n, visto_at: all[n].parteVisto.at }));
     } else {
@@ -29240,6 +29404,13 @@ function renderRanking(){
 
 
 function renderSupervisor(){
+  // DEMO: el panel se abre sin PIN con el equipo inventado de Orchilla. Todo
+  // sale de la base local de la demo; la red ya está cortada en fetch.
+  if(typeof _esDemo === 'function' && _esDemo()){
+    supAuthenticated = true;
+    renderSupDashboard();
+    return;
+  }
   // Modo revisión: nada de supervisor (ni lecturas ni gestión ni su canal realtime).
   if(typeof _revisionCerrado === 'function' && _revisionCerrado(document.getElementById('appContent'))) return;
   if(!supAuthenticated){
@@ -29406,6 +29577,7 @@ function renderSupScoreTrend(allEmps){
 // Preserves all progress / stats. Local + cloud both cleared so the reset
 // propagates to other devices on next sync; next login routes to PIN setup.
 function _supResetEmployeePin(name) {
+  if(typeof _esDemo === 'function' && _esDemo()){ _supDemoAviso(); return; }
   const _en = LANG === 'en';
   const ok = confirm(_en
     ? `Reset PIN for "${name}"?\n\nThey will be asked to set a new PIN on their next login. Progress and stats are preserved.`
@@ -29444,6 +29616,7 @@ let _supChannel = null, _supPollTimer = null, _supRefreshQueued = false, _supLas
 document.addEventListener('touchstart', ()=>{ window._supLastTouch = Date.now(); }, {passive:true});
 document.addEventListener('pointerdown', ()=>{ window._supLastTouch = Date.now(); }, {passive:true});
 function _supConnectLive(){
+  if(typeof _esDemo === 'function' && _esDemo()) return;   // la demo no abre canales con el servidor
   if(!_supPollTimer) _supPollTimer = setInterval(()=>_supQueueRefresh(), 60000);
   if(_supChannel) return;
   const client = (typeof _getSupaClient==='function') ? _getSupaClient() : null;
@@ -29474,7 +29647,18 @@ function _supQueueRefresh(){
 }
 // Envoltorio de las herramientas: cualquier excepción se muestra como
 // toast (un botón que "no hace nada" sin pista era indepurable en sala).
+// En la demo, las herramientas que escriben en el servidor del restaurante no
+// se abren: un aviso dice qué harían. Hoy en sala (local en la demo), la
+// analítica y LQA sí, porque sólo leen o guardan en este navegador.
+const _SUP_DEMO_ABIERTAS = ['parte', 'analitica', 'lqa'];
+function _supDemoAviso(){
+  if(typeof showToast !== 'function') return;
+  showToast(LANG==='en'
+    ? 'Switched off in the demo: this tool saves to your restaurant\'s account. With your team it works from here.'
+    : 'Desactivado en la demo: esta herramienta guarda en la cuenta de tu restaurante. Con tu equipo funciona desde aquí.', 'info', 4500);
+}
 function _supTool(k){
+  if(typeof _esDemo === 'function' && _esDemo() && _SUP_DEMO_ABIERTAS.indexOf(k) < 0){ _supDemoAviso(); return; }
   try{
     ({ carta: ()=>{ window._fsvFiltro = null; return _fsvSoloFicha() ? renderFsvEditor() : renderCartaEditor(); },
        parte: ()=>_parteEditarAbrir(),
@@ -29512,6 +29696,7 @@ function _supEmpToggle(el){
 function _supStampLive(){
   const el = document.getElementById('supLivePill');
   if(!el) return;
+  if(typeof _esDemo === 'function' && _esDemo()){ el.textContent = LANG==='en' ? 'Sample data' : 'Datos de ejemplo'; return; }
   const d = new Date();
   el.innerHTML = '<span class="sup-live-dot"></span> ' + (LANG==='en'?'LIVE':'EN VIVO') + ' · ' +
     String(d.getHours()).padStart(2,'0') + ':' + String(d.getMinutes()).padStart(2,'0');
@@ -29589,6 +29774,8 @@ function renderSupDashboard(silent){
     // Start with local data — pero sólo la del restaurante activo: el panel
     // de un restaurante no puede enseñar la ficha de otro.
     Object.keys(DB.employees).forEach(name => { const e = DB.employees[name]; if(name && _esDeMiVenue(e)) allEmps[name] = {...e, name}; });
+    // En la demo, el visitante («Invitado») no es parte del equipo de ejemplo.
+    if(_esDemo()) delete allEmps[DEMO_USUARIO];
     // Merge remote data — remote wins for knownDishes, sessions, xp.
     // remoteEmps es un array siempre que la petición no haya fallado: []
     // es «este restaurante todavía no tiene nadie», una respuesta válida.
@@ -29754,10 +29941,10 @@ function renderSupDashboard(silent){
         <div class="sup-hero">
           <div class="sup-hero-icon"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></div>
           <div class="sup-hero-title">${LANG==='en'?'Supervisor Panel':'Panel de Supervisor'}</div>
-          <div class="sup-hero-sub">${LANG==='en'?'Team overview · All devices':'Resumen del equipo · Todos los dispositivos'}</div>
+          <div class="sup-hero-sub">${_esDemo() ? (LANG==='en'?'Orchilla\'s sample team':'El equipo de ejemplo de Orchilla') : (LANG==='en'?'Team overview · All devices':'Resumen del equipo · Todos los dispositivos')}</div>
           <div id="supLivePill" class="sup-live-pill"><span class="sup-live-dot"></span> ${LANG==='en'?'LIVE':'EN VIVO'}</div>
         </div>
-        ${cloudCount===0?`<div style="background:var(--rose-a);border:1px solid rgba(196,112,104,.2);border-radius:var(--r2);padding:.7rem 1rem;margin-bottom:1rem;font-size:.72rem;color:var(--rose);font-family:'DM Mono',monospace">⚠ ${LANG==='en'?'Cloud unavailable — showing local data only':'Nube no disponible — mostrando solo datos locales'}</div>`:''}
+        ${_esDemo() ? _supDemoNotaHTML() : cloudCount===0?`<div style="background:var(--rose-a);border:1px solid rgba(196,112,104,.2);border-radius:var(--r2);padding:.7rem 1rem;margin-bottom:1rem;font-size:.72rem;color:var(--rose);font-family:'DM Mono',monospace">⚠ ${LANG==='en'?'Cloud unavailable — showing local data only':'Nube no disponible — mostrando solo datos locales'}</div>`:''}
         <!-- Reorganización (petición del propietario): el panel era un scroll
              kilométrico. Cuatro secciones — el estado se conserva entre
              refrescos EN VIVO (window._supSection / _supOpenEmps). -->
@@ -29777,6 +29964,9 @@ function renderSupDashboard(silent){
              herramienta de gestión en vez de una pantalla de estadísticas.
              Se rellena aparte porque lee el histórico de evaluaciones. -->
         <div id="supAtencion"></div>
+        <div id="supSemana"></div>
+        ${_esDemo() ? _supParteDemoHTML(allEmps, activos) : ''}
+        ${_supIdeasHTML(allEmps, activos)}
         ${(()=>{
           // Connected today section
           // "Conectados hoy" usaba SOLO lastLoginTs — pero ese campo depende de
@@ -29914,6 +30104,7 @@ function renderSupDashboard(silent){
 
 
 function renderSupDeleteEmployee(empNames) {
+  if(typeof _esDemo === 'function' && _esDemo()){ _supDemoAviso(); return; }
   const c = document.getElementById('appContent');
   c.innerHTML = `<div class="sup-wrap">
     <div class="sup-hero">
@@ -30445,6 +30636,7 @@ function _supInactivosHTML(allEmps, inactivos){
 }
 
 async function _supCargarHistorial(){
+  if(typeof _esDemo === 'function' && _esDemo()) return _demoHistorial();
   try{
     const r = await fetchT(`${SUPA_URL}/rest/v1/scores?select=employee,score,total,topic,cat,time_sec,created_at&limit=5000&${_vq()}`,
       { headers:{ 'apikey':SUPA_KEY, 'Authorization':`Bearer ${_bearer()}` } }, 8000);
@@ -30659,6 +30851,86 @@ async function _supPintarHistorial(allEmps, activos, inactivos){
   if(at) at.innerHTML = renderSupAtencionHTML(allEmps, activos, hist);
   const tb = document.getElementById('supTabla');
   if(tb) tb.innerHTML = renderSupTablaHTML(allEmps, activos, hist, inactivos);
+  const sm = document.getElementById('supSemana');
+  if(sm) sm.innerHTML = renderSupSemanaHTML(allEmps, activos, hist);
+}
+
+// ═══ ESTA SEMANA ═══════════════════════════════════════════════════════════
+// Quién ha hecho al menos una prueba en los últimos 7 días y cuántas. Sale de
+// las mismas filas de evaluaciones que la tabla (hist), sólo con los activos.
+function renderSupSemanaHTML(allEmps, activos, hist){
+  if(!Array.isArray(hist) || !activos || !activos.length) return '';
+  const _en = LANG==='en';
+  const desde = Date.now() - 7 * 86400000;
+  const cuenta = {};
+  for(const f of hist){
+    if(!f || !f.total || _SUP_JUEGOS.indexOf(f.topic) >= 0) continue;
+    const t = Date.parse(f.created_at);
+    if(!isNaN(t) && t >= desde) cuenta[f.employee] = (cuenta[f.employee] || 0) + 1;
+  }
+  const si = activos.filter(n => cuenta[n]).sort((a,b) => cuenta[b] - cuenta[a]);
+  const no = activos.filter(n => !cuenta[n]);
+  return `<div class="sup-card">
+    <div class="sup-card-t">${_en ? 'Practised this week' : 'Han practicado esta semana'} <b>${si.length} ${_en?'of':'de'} ${activos.length}</b></div>
+    ${si.length ? `<div class="sup-sem-l">${si.map(n => `<span class="sup-sem-p">${escapeHTML(_dispName(n))} <small>${cuenta[n]} ${_en?(cuenta[n]===1?'test':'tests'):(cuenta[n]===1?'prueba':'pruebas')}</small></span>`).join('')}</div>` : ''}
+    ${no.length ? `<div class="sup-at-pie">${_en?'No test in 7 days':'Sin pruebas en 7 días'}: ${no.map(n => escapeHTML(_dispName(n))).join(', ')}</div>` : ''}
+  </div>`;
+}
+
+// ═══ LAS IDEAS QUE MÁS SE DEJAN ═══════════════════════════════════════════
+// Al contar un plato de memoria, qué idea se queda fuera y a cuánta gente le
+// pasa. Lee emp.padFaltas {plato: {posición de la idea: 1}}; hoy sólo lo trae
+// el equipo de ejemplo de la demo, y sin datos la tarjeta no sale.
+function _supIdeasDatos(allEmps, nombres){
+  const c = {};
+  for(const n of (nombres || [])){
+    const pf = allEmps[n] && allEmps[n].padFaltas;
+    if(!pf || typeof pf !== 'object') continue;
+    for(const id in pf){
+      for(const i in (pf[id] || {})){ const k = id + ':' + i; c[k] = (c[k] || 0) + 1; }
+    }
+  }
+  const lista = [];
+  for(const k in c){
+    const [id, i] = k.split(':');
+    const d = (typeof DISHES !== 'undefined' ? DISHES : []).find(x => String(x.id) === id);
+    if(!d) continue;
+    const g = _padClaves(getDish(d))[+i];
+    if(!g) continue;
+    lista.push({ id:+id, plato:getDish(d).name, idea:_padEtiqueta(g), n:c[k] });
+  }
+  return lista.sort((a,b) => (b.n - a.n) || (a.id - b.id));
+}
+function _supIdeasHTML(allEmps, nombres){
+  const L = _supIdeasDatos(allEmps, nombres).slice(0, 5);
+  if(!L.length) return '';
+  const _en = LANG==='en', tot = (nombres || []).length;
+  return `<div class="sup-card">
+    <div class="sup-card-t">${_en ? 'Ideas the team leaves out most' : 'Las ideas que más se dejan'}</div>
+    ${L.map(x => `<div class="sup-idea">
+      <div class="sup-idea-t"><b>${escapeHTML(x.idea)}</b><span>${escapeHTML(x.plato)}</span></div>
+      <span class="sup-idea-n">${x.n} ${_en?'of':'de'} ${tot}</span>
+    </div>`).join('')}
+    <div class="sup-at-pie">${_en ? 'When they tell a dish from memory, in Practise.' : 'Al contar el plato de memoria, en Practicar.'}</div>
+  </div>`;
+}
+// Hoy en sala en la demo: quién lo ha leído, de la base local.
+function _supParteDemoHTML(allEmps, activos){
+  const _en = LANG==='en', hoy = todayStr();
+  const leido = (activos || []).filter(n => allEmps[n] && allEmps[n].parteVisto && allEmps[n].parteVisto.d === hoy);
+  const falta = (activos || []).filter(n => leido.indexOf(n) < 0);
+  return `<div class="sup-card">
+    <div class="sup-card-t">${_en ? 'Service notes read today' : 'Hoy en sala, leído'} <b>${leido.length} ${_en?'of':'de'} ${(activos||[]).length}</b></div>
+    ${leido.length ? `<div class="sup-sem-l">${leido.map(n => `<span class="sup-sem-p">${escapeHTML(_dispName(n))} <small>${_parteHora(allEmps[n].parteVisto.at) || ''}</small></span>`).join('')}</div>` : ''}
+    ${falta.length ? `<div class="sup-at-pie">${_en?'Not yet':'Todavía no'}: ${falta.map(n => escapeHTML(_dispName(n))).join(', ')}</div>` : ''}
+    <button type="button" class="sup-card-btn" onclick="_supTool('parte')">${_en ? 'Open service notes' : 'Abrir Hoy en sala'}</button>
+  </div>`;
+}
+function _supDemoNotaHTML(){
+  const _en = LANG==='en';
+  return `<div class="demo-banda sup-demo-nota" role="note"><span class="demo-banda-txt">${_en
+    ? '<b>Demo</b> · Orchilla and its team are made up. These are sample figures and nothing leaves this browser.'
+    : '<b>Demo</b> · Orchilla y su equipo son inventados. Son datos de ejemplo y nada sale de este navegador.'}</span></div>`;
 }
 
 function renderSupAnalytics(allEmps, empNames){
@@ -39563,6 +39835,7 @@ document.addEventListener('visibilitychange', ()=>{
     }
   } catch(e){ localStorage.removeItem('txoko_session'); }
   renderLogin();
+  _demoPorEnlace();
 })();
 // La pantalla de arranque sólo sobrevive si la puerta de entrada la ha hecho
 // suya (cambia de id). Si sigue con su nombre, es que se va al login: fuera.

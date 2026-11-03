@@ -17207,7 +17207,12 @@ test('Revisión: no se ejecuta push', () => {
 });
 test('Revisión: no se ejecuta supervisor', () => {
   assert(_revRes.realesRev.supervisor === 0 && _revRes.realesNormal.supervisor === 1, 'las RPC de supervisor en revisión no salen');
-  assert(/function renderSupervisor\(\)\{\n  \/\/[^\n]*\n  if\(typeof _revisionCerrado === 'function' && _revisionCerrado\(document\.getElementById\('appContent'\)\)\) return;/.test(html),
+  // Nov 2026: la demo abre antes el panel de ejemplo (sólo con _esDemo(), que
+  // no es revisión); para todo lo demás el cierre de revisión sigue primero.
+  const _rs = html.slice(html.indexOf('function renderSupervisor(){'), html.indexOf('function renderSupPinEntry('));
+  assert(/if\(typeof _revisionCerrado === 'function' && _revisionCerrado\(document\.getElementById\('appContent'\)\)\) return;/.test(_rs)
+      && _rs.indexOf('_revisionCerrado(') < _rs.indexOf('if(!supAuthenticated)')
+      && /^function renderSupervisor\(\)\{\n(  \/\/[^\n]*\n)*  if\(typeof _esDemo === 'function' && _esDemo\(\)\)\{\n    supAuthenticated = true;\n    renderSupDashboard\(\);\n    return;\n  \}\n/.test(_rs),
     'el panel de supervisor no se abre en revisión');
 });
 test('Revisión: no se modifica last_active_at', () => {
@@ -18864,6 +18869,92 @@ test('repasar carta: ruta, entradas, motor compartido y textos', () => {
   const css = read('styles.css');
   for (const sel of ['.rtc-sec', '.rtc-x', '.rtc-op', '.rtc-orden button', '.rtc-atajos button'])
     assert(new RegExp(sel.replace('.', '\\.') + '\\{[^}]*min-(height|width):?\\s*4[4-9]px|' + sel.replace('.', '\\.') + '\\{[^}]*(height|min-height):(4[4-9]|5\\d|6\\d)px').test(css), sel + ' por debajo de 44 px');
+});
+
+console.log('\nVenta: portada, panel de la demo y enlace desde el test (nov 2026)');
+test('portada: «Probar la demo» primero y el acceso del personal plegado debajo', () => {
+  const side = html.slice(html.indexOf('<div class="login-side">'), html.indexOf('<!-- /.login-personal -->'));
+  const iDemo = side.indexOf('id="loginDemoBtn"'), iPers = side.indexOf('id="loginPersonal"'), iVenue = side.indexOf('id="loginVenue"'), iCard = side.indexOf('class="login-card"');
+  assert(iDemo > 0 && iDemo < iPers && iPers < iVenue && iVenue < iCard, 'orden: demo, luego el bloque del personal con selector y formulario');
+  assert(/id="loginPersonal" hidden/.test(side), 'el personal empieza plegado');
+  assert(/id="loginPersonalBtn"[^>]*aria-expanded="false"[^>]*aria-controls="loginPersonal"/.test(side), 'botón accesible que lo abre');
+  assert((html.match(/id="loginDemoBtn"/g) || []).length === 1, 'un solo botón de demo');
+  const ini = _fnSrc('_loginPersonalInit'), es = _fnSrc('_loginEsPersonal');
+  assert(/txoko_last_user/.test(es) && /txoko_session/.test(es), 'un móvil con usuario o sesión recordada es de personal');
+  assert(/_loginPersonalAbrir\(false\)/.test(ini) && /login-es-personal/.test(ini), 'en un móvil de personal sale abierto');
+  assert(/_loginPersonalInit\(\);/.test(_fnSrc('renderLogin')), 'renderLogin lo decide');
+  for (const t of ['Probar la demo', 'Try the demo', 'Soy del equipo de un restaurante: entrar', 'I work at a restaurant: sign in', 'Meseo entrena a tu equipo de sala', 'Meseo trains your floor team'])
+    assert(html.includes(t), 'falta el texto: ' + t);
+  const css = read('styles.css');
+  assert(/#screenLogin \.login-visita-btn\{[^}]*min-height:5\dpx/.test(css), 'la demo, botón grande');
+  assert(/#screenLogin \.login-personal-btn\{[^}]*min-height:4[4-9]px/.test(css), 'acceso del personal de 44 px o más');
+  assert(/#screenLogin\.login-es-personal \.login-visita-btn\{[^}]*min-height:44px/.test(css), 'la demo compacta, 44 px');
+});
+test('portada: themes.json no cambia para el personal de Txoko ni de Akira', () => {
+  const T = JSON.parse(read('data/themes.json'));
+  const tx = T.venues.find(v => v.id === 'txoko'), r2 = T.venues.find(v => v.id === 'r2');
+  assert(tx && tx.enabled === true && r2 && r2.revision === true, 'txoko abierto y r2 de revisión, como estaban');
+  assert(/function _venuesLogin\(\)/.test(html) && /renderVenuePicker\(all, current\.id\)/.test(html), 'el selector sigue igual dentro del bloque del personal');
+});
+test('enlace ?demo=1: entra en la demo, quita el parámetro y no pisa una sesión', () => {
+  const f = _fnSrc('_demoPorEnlace');
+  assert(/get\('demo'\) === '1'/.test(f), 'sólo con demo=1');
+  assert(f.indexOf('replaceState') > 0 && f.indexOf('replaceState') < f.indexOf('entrarDemo()'), 'quita el parámetro antes de entrar (Salir recarga)');
+  assert(/currentUser\) return/.test(f), 'con alguien dentro no hace nada');
+  const auto = html.slice(html.indexOf('(function autoLogin(){'), html.indexOf('(function autoLogin(){') + 6000);
+  assert(/renderLogin\(\);\n  _demoPorEnlace\(\);\n\}\)\(\);/.test(auto), 'sólo tras no haber sesión recordada');
+});
+test('panel de supervisor en la demo: equipo de ejemplo, sin PIN y sin servidor', () => {
+  const rs = _fnSrc('renderSupervisor');
+  assert(rs.indexOf('_esDemo()') > 0 && rs.indexOf('_esDemo()') < rs.indexOf('_revisionCerrado'), 'la demo abre el panel antes del cierre de revisión');
+  assert(/_esDemo === 'function' && _esDemo\(\)\) return;/.test(_fnSrc('_supConnectLive')), 'sin canal realtime en la demo');
+  assert(/_esDemo\(\)\) return _demoHistorial\(\)/.test(_fnSrc('_supCargarHistorial')), 'historial local en la demo');
+  assert(/_SUP_DEMO_ABIERTAS\.indexOf\(k\) < 0\)\{ _supDemoAviso\(\); return; \}/.test(_fnSrc('_supTool')), 'las herramientas que escriben, desactivadas');
+  assert(/_supDemoAviso\(\); return;/.test(_fnSrc('renderSupDeleteEmployee')) && /_supDemoAviso\(\); return;/.test(_fnSrc('_supResetEmployeePin')), 'borrar y resetear PIN, desactivados');
+  assert(/_SUP_DEMO_ABIERTAS = \['parte', 'analitica', 'lqa'\]/.test(html), 'sólo Hoy en sala (local), Análisis y LQA abiertas');
+  assert(/if\(_esDemo\(\)\) delete allEmps\[DEMO_USUARIO\];/.test(html) && /_esDemo\(\) && n === DEMO_USUARIO/.test(html), 'el visitante no cuenta como equipo');
+  assert(/_esDemo\(\) \? _supDemoNotaHTML\(\)/.test(html) && /Orchilla y su equipo son inventados/.test(html) && /Orchilla and its team are made up/.test(html), 'marcado como demo');
+  assert(/_esDemo === 'function' && _esDemo\(\)\); \}catch/.test(_fnSrc('_ux2Sync')), 'la puerta del panel se ve en Equipo de la demo');
+});
+test('panel demo: el equipo inventado trae progreso de esta semana', () => {
+  const nombres = (html.match(/const DEMO_EQUIPO = \[([\s\S]*?)\];/) || [,''])[1].match(/\['(\w+)'/g).map(x => x.slice(2, -1));
+  assert(nombres.length >= 6 && nombres.length <= 8, 'de 6 a 8 personas');
+  const prog = html.slice(html.indexOf('const DEMO_PROGRESO = {'), html.indexOf('const DEMO_ORDEN_PLATOS'));
+  for (const n of nombres) assert(prog.includes(n + ':'), 'sin progreso: ' + n);
+  const f = _fnSrc('_demoProgreso');
+  for (const k of ['sessions', 'topicScores', 'knownDishes', 'allergenBest', 'padFaltas', 'parteVisto', 'lastActiveAt'])
+    assert(f.includes(k), 'falta ' + k);
+  assert(/Date\.now\(\)/.test(_fnSrc('_demoDiaAtras')), 'fechas relativas a hoy');
+  assert(/_demoProgreso\(n\)/.test(_fnSrc('_demoSemilla')), 'la semilla lo aplica');
+  // Evaluar el progreso de verdad: notas 0..10 y fechas en el pasado.
+  const F = new Function('DEMO_PROGRESO', 'DEMO_ORDEN_PLATOS', 'todayStr', _fnSrc('_demoDiaAtras') + '\n' + f + '\nreturn _demoProgreso;'); // eslint-disable-line no-new-func
+  const P = eval('(' + prog.slice(prog.indexOf('{'), prog.indexOf('\n};') + 2) + ')');
+  const ORD = eval(html.match(/const DEMO_ORDEN_PLATOS = (\[[^\]]+\])/)[1]);
+  const dp = F(P, ORD, () => new Intl.DateTimeFormat('en-CA', { timeZone: 'Atlantic/Canary' }).format(new Date()));
+  for (const n of nombres) {
+    const e = dp(n);
+    assert(e.sessions.length && e.sessions.every(s => s.score >= 0 && s.score <= s.total && s.ts <= Date.now()), n + ': sesiones');
+    assert(Date.parse(e.lastActiveAt) <= Date.now(), n + ': visto en el futuro');
+    assert(Object.keys(e.knownDishes).every(id => +id >= 4001 && +id <= 4020), n + ': platos fuera de Orchilla');
+  }
+});
+test('panel: esta semana, Hoy en sala leído e ideas que se dejan', () => {
+  assert(/<div id="supSemana"><\/div>/.test(html) && /sm\.innerHTML = renderSupSemanaHTML\(allEmps, activos, hist\)/.test(html), 'esta semana, con el historial');
+  assert(/\$\{_esDemo\(\) \? _supParteDemoHTML\(allEmps, activos\) : ''\}/.test(html), 'Hoy en sala leído, en la demo');
+  assert(/\$\{_supIdeasHTML\(allEmps, activos\)\}/.test(html) && /if\(!L\.length\) return '';/.test(_fnSrc('_supIdeasHTML')), 'ideas: sin datos no sale');
+  for (const t of ['Han practicado esta semana', 'Practised this week', 'Las ideas que más se dejan', 'Ideas the team leaves out most', 'Hoy en sala, leído', 'Service notes read today'])
+    assert(html.includes(t), 'falta el texto: ' + t);
+  const nuevo = ['renderSupSemanaHTML', '_supIdeasHTML', '_supParteDemoHTML', '_supDemoNotaHTML', '_supDemoAviso', '_loginPersonalInit', '_demoPorEnlace'].map(_fnSrc).join('\n');
+  assert(!/—/.test(nuevo.replace(/\/\/[^\n]*/g, '')), 'sin rayas');
+  assert(/\.sup-card-btn\{[^}]*min-height:44px/.test(read('styles.css')) && /\.demo-panel-btn\{[^}]*min-height:44px/.test(read('styles.css')), 'botones de 44 px');
+});
+test('test de alérgenos: enlace a la demo junto al Escríbenos y en el final del camarero', () => {
+  const app = read('test/app.js');
+  assert(/const DEMO_URL = 'https:\/\/meseo\.es\/\?demo=1';/.test(app), 'url de la demo');
+  const cta = app.slice(app.indexOf('function htmlCta()'), app.indexOf('// ═══ 4. CALCULADORA'));
+  assert(/Escríbenos/.test(cta) && /href="\$\{DEMO_URL\}">\$\{t\('Ver Meseo con una carta de ejemplo', 'See Meseo with a sample menu'\)\}/.test(cta), 'resultados del encargado');
+  const fin = app.slice(app.indexOf('function vistaFinal()'), app.indexOf('// ═══ 3. RESULTADOS'));
+  assert(/href="\$\{DEMO_URL\}"/.test(fin), 'final del camarero');
 });
 
 console.log('\nHygiene');
