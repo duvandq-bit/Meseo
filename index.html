@@ -15612,9 +15612,10 @@ function _fsvTiraHTML(dish, en){
   const tag = info.ok ? '' : (info.hayDato
     ? (en ? 'to be confirmed' : 'por confirmar')
     : (en ? 'suggested, to be confirmed' : 'sugerido, por confirmar'));
-  const chips = marcas.map(x => '<span class="fsv-chip' + (x.sug ? ' sug' : '') + '"' + (x.motivo ? ' title="' + _fsvEsc((en ? 'from: ' : 'por: ') + x.motivo) + '"' : '') + '>'
+  const _mot = x => (x.motivo && String(x.motivo).trim().toLowerCase() !== String(x.txt||'').trim().toLowerCase()) ? x.motivo : '';
+  const chips = marcas.map(x => '<span class="fsv-chip' + (x.sug ? ' sug' : '') + '"' + (_mot(x) ? ' title="' + _fsvEsc((en ? 'from: ' : 'por: ') + _mot(x)) + '"' : '') + '>'
     + _fsvIcono(x.k) + '<span class="fsv-chip-t">' + _fsvEsc(x.txt)
-    + (x.motivo ? '<small>' + _fsvEsc((en ? 'from: ' : 'por: ') + x.motivo) + '</small>' : '')
+    + (_mot(x) ? '<small>' + _fsvEsc((en ? 'from: ' : 'por: ') + _mot(x)) + '</small>' : '')
     + '</span></span>').join('');
   return '<div class="fsv-tira' + (todoSug ? ' sug' : '') + '">'
     + '<div class="fsv-cab"><span class="fsv-tit">' + (en ? 'At a glance' : 'De un vistazo') + '</span>'
