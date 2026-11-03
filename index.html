@@ -54,7 +54,7 @@
 <meta property="og:description" content="Formación de equipos de sala: carta, alérgenos, vinos, exámenes y juegos de repaso.">
 <meta property="og:url" content="https://meseo.es/">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"Meseo","url":"https://meseo.es/"}</script>
-<meta name="app-version" content="7.534">
+<meta name="app-version" content="7.535">
 <meta name="app-build" content="May 2026">
 <meta name="theme-color" content="#1c2a22">
 <!-- ═══ PWA ═══ -->
@@ -2891,7 +2891,7 @@ const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><p
 const SRC = 'src';
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='7.534';  // sincronizada con sw.js VERSION (guard de CI)
+const APP_VERSION='7.535';  // sincronizada con sw.js VERSION (guard de CI)
 const APP_BUILD='Jul 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;
@@ -16690,9 +16690,30 @@ function _degRevisarHTML(){
   return `<div class="deg-revisar">${LANG==='en' ? 'Pending validation by the chef' : 'Pendiente de validar por el chef'}</div>`;
 }
 function _degHayVoz(){ return typeof speechSynthesis !== 'undefined' && typeof SpeechSynthesisUtterance !== 'undefined'; }
+// «Escuchar» de la ficha y de la degustación: con archivo, el nombre y la
+// descripción grabados (como en Un plato al día); sin él, la voz del teléfono.
+let _degAudioEl = null;
 function _degHablar(id){
-  const p = _degPlato(id); if(!p || !p.dd.story || !_degHayVoz()) return;
+  const p = _degPlato(id); if(!p || !p.dd.story) return;
   if(typeof _bocParar === 'function') _bocParar();
+  if(typeof _platoSonar === 'function' && _padAudioDe(p.d, p.dd) && typeof Audio !== 'undefined'){
+    try{
+      try{ if(_degHayVoz()) speechSynthesis.cancel(); }catch(e){}
+      const a = new Audio();
+      a.preload = 'auto';
+      _degAudioEl = a;
+      _platoSonar(a, p.d, p.dd, {
+        vivo: () => _degAudioEl === a,
+        alAcabar: () => { if(_degAudioEl === a) _degAudioEl = null; },
+        falla: () => { if(_degAudioEl === a){ _degAudioEl = null; _degHablarVoz(p); } }
+      });
+      return;
+    }catch(e){}
+  }
+  _degHablarVoz(p);
+}
+function _degHablarVoz(p){
+  if(!_degHayVoz()) return;
   try{
     const code = LANG==='en' ? 'en-GB' : 'es-ES';
     speechSynthesis.cancel();
@@ -16703,7 +16724,8 @@ function _degHablar(id){
   }catch(e){ if(typeof showToast === 'function') showToast(LANG==='en' ? 'This device cannot read aloud' : 'Este dispositivo no puede leer en voz alta', 'warning', 2600); }
 }
 function _degBtnEscuchar(id){
-  if(!_degHayVoz()) return '';
+  const p = _degPlato(id);
+  if(!_degHayVoz() && !(p && typeof _padAudioDe === 'function' && _padAudioDe(p.d, p.dd))) return '';
   return `<button type="button" class="deg-escuchar" onclick="event.stopPropagation();_degHablar(${id})">${LANG==='en' ? 'Listen' : 'Escuchar'}</button>`;
 }
 
@@ -17207,6 +17229,14 @@ function _bocAudioRuta(ruta, venue, id, n, idioma){
   if(!/^(es|en)$/.test(String(idioma)) || !Number.isInteger(id)) return null;
   return ruta === venue + '/' + id + '-b' + n + '-' + idioma + '.m4a' ? ruta : null;
 }
+// Ruta del audio PRIVADO con sólo el NOMBRE del plato (suena antes de la
+// descripción para saber qué plato es sin mirar la pantalla): exactamente
+// «<venue>/<id>-nombre-<es|en>.m4a». Mismas reglas que la del plato.
+function _nomAudioRuta(ruta, venue, id, idioma){
+  if(typeof ruta !== 'string' || !/^[a-z0-9][a-z0-9_-]{0,31}$/.test(String(venue || ''))) return null;
+  if(!/^(es|en)$/.test(String(idioma)) || !Number.isInteger(id)) return null;
+  return ruta === venue + '/' + id + '-nombre-' + idioma + '.m4a' ? ruta : null;
+}
 // La voz del teléfono, frase a frase: dicho de un tirón suena a máquina.
 function _padFrases(t){
   return String(t || '').split(/(?<=[.;:!?])\s+/).map(x => x.trim()).filter(Boolean);
@@ -17370,6 +17400,10 @@ function _padAudioDe(d, dd){
   const venue = (typeof _cartaMeta !== 'undefined' && _cartaMeta) ? _cartaMeta.venue : null;
   return _padAudioRuta(dd && dd.audio, venue, d && d.id, LANG === 'en' ? 'en' : 'es');
 }
+function _padNombreDe(d, dd){
+  const venue = (typeof _cartaMeta !== 'undefined' && _cartaMeta) ? _cartaMeta.venue : null;
+  return _nomAudioRuta(dd && dd.audio_nombre, venue, d && d.id, LANG === 'en' ? 'en' : 'es');
+}
 function _padAudioListo(ruta){ return (ruta && _audUrls.get(ruta)) || null; }
 function _padAudioSrc(ruta){
   if(!ruta) return Promise.resolve(null);
@@ -17413,6 +17447,51 @@ function _padAudiosOlvidar(){
   for(const u of _audUrls.values()){ try{ URL.revokeObjectURL(u); }catch(e){} }
   _audUrls.clear(); _audPend.clear();
   try{ if(typeof caches !== 'undefined') caches.delete(_AUD_CACHE); }catch(e){}
+}
+// Un plato por un <audio> que ya existe. Si la carta trae `audio_nombre`,
+// primero el nombre, una pausa corta y luego la descripción, todo por el MISMO
+// elemento (así sigue con la pantalla bloqueada) y con la misma caché privada.
+// Si el nombre no carga, suena directamente la descripción. Sin `audio_nombre`,
+// sólo la descripción, como siempre.
+// o: { vivo(), alAcabar(), falla(nombreDicho), alEmpezar() }, todos opcionales.
+const _NOM_PAUSA = 600;
+function _platoSonar(a, d, dd, o){
+  o = o || {};
+  const vivo = () => !o.vivo || o.vivo();
+  const ruta = _padAudioDe(d, dd);
+  const rn = ruta ? _padNombreDe(d, dd) : null;
+  let dicho = false, caido = false;
+  const falla = () => { if(caido || !vivo()) return; caido = true; if(o.falla) o.falla(dicho); };
+  const toca = (src, alFin, alFallo) => {
+    a.onended = alFin; a.onerror = alFallo;
+    a.src = src;
+    const pr = a.play();
+    if(pr && pr.catch) pr.catch(alFallo);
+  };
+  const historia = () => {
+    if(!vivo() || caido) return;
+    if(!ruta) return falla();
+    const dale = src => {
+      if(!vivo() || caido) return;
+      if(!src) return falla();
+      toca(src, () => { if(vivo() && !caido && o.alAcabar) o.alAcabar(); }, falla);
+      if(o.alEmpezar) o.alEmpezar();
+    };
+    const ya = _padAudioListo(ruta);
+    if(ya) dale(ya); else _padAudioSrc(ruta).then(dale, falla);
+  };
+  if(!rn) return historia();
+  let pasado = false;
+  const sigue = ms => { if(pasado) return; pasado = true; if(!vivo()) return; if(ms) setTimeout(historia, ms); else historia(); };
+  const sinNombre = () => sigue(0);
+  _padAudioSrc(ruta); // la descripción se va pidiendo mientras suena el nombre
+  const dale = src => {
+    if(!vivo() || pasado) return;
+    if(!src) return sinNombre();
+    toca(src, () => { dicho = true; sigue(_NOM_PAUSA); }, sinNombre);
+  };
+  const ya = _padAudioListo(rn);
+  if(ya) dale(ya); else _padAudioSrc(rn).then(dale, sinNombre);
 }
 
 // ── Bocado a bocado, con voz (el Mistery box) ──
@@ -17461,6 +17540,7 @@ function _bocMarcar(){
   }catch(e){}
 }
 function _bocParar(){
+  if(typeof _degAudioEl !== 'undefined' && _degAudioEl){ try{ _degAudioEl.pause(); }catch(e){} _degAudioEl = null; }
   _bocS.gen++;
   clearTimeout(_bocS.timer); _bocS.timer = null;
   if(_bocS.habla){ _bocS.habla.cancelar(); _bocS.habla = null; }
@@ -17659,23 +17739,17 @@ function _padEscuchar(){
     // El elemento se crea y se pone a sonar DENTRO del toque (iOS no deja
     // empezar un audio después de una espera); si el archivo aún no está, se
     // le da en cuanto llega. Sin archivo o sin permiso, la voz del teléfono.
+    // Primero su nombre (si la carta trae ese audio) y luego la descripción.
     try{
       const a = new Audio();
       _padAudio = a;
       a.preload = 'auto';
-      const falla = () => { if(_padAudio === a){ _padAudio = null; porVoz(); } };
-      a.onended = () => sonando(false);
-      a.onerror = falla;
       sonando(true);
-      const dale = src => {
-        if(_padAudio !== a) return;
-        if(!src) return falla();
-        a.src = src;
-        const pr = a.play();
-        if(pr && pr.catch) pr.catch(falla);
-      };
-      const ya = _padAudioListo(ruta);
-      if(ya) dale(ya); else _padAudioSrc(ruta).then(dale, falla);
+      _platoSonar(a, d, dd, {
+        vivo: () => _padAudio === a,
+        alAcabar: () => sonando(false),
+        falla: () => { if(_padAudio === a){ _padAudio = null; porVoz(); } }
+      });
       return;
     }catch(e){}
   }
@@ -17685,8 +17759,9 @@ function _padEscuchar(){
 // suena sin esperar (y sin perder el permiso del toque en iOS).
 function _padPrecargar(){
   const d = DISHES.find(x => x.id === _padS.id); if(!d) return;
-  const ruta = _padAudioDe(d, getDish(d));
-  if(ruta) _padAudioSrc(ruta);
+  const dd = getDish(d);
+  const ruta = _padAudioDe(d, dd);
+  if(ruta){ const rn = _padNombreDe(d, dd); if(rn) _padAudioSrc(rn); _padAudioSrc(ruta); }
 }
 
 function _padIr(paso){
@@ -18439,32 +18514,26 @@ function _caSonar(i){
     if(!vivo()) return;
     porVoz();
   };
-  // Con archivo, suena el archivo directamente: el nombre ya está en pantalla y
-  // en la pantalla bloqueada, y la voz del teléfono, que se calla al bloquear,
-  // no se mete en medio. Mismo <audio> para toda la cola: iOS lo deja seguir
-  // sonando después del primer toque.
+  // Con archivo, suenan los archivos: su nombre (si la carta trae ese audio),
+  // una pausa corta y la descripción. La voz del teléfono, que se calla al
+  // bloquear, no se mete en medio. Mismo <audio> para toda la cola: iOS lo
+  // deja seguir sonando después del primer toque.
   if(ruta && typeof Audio !== 'undefined'){
     try{
       if(!_caEl){ _caEl = new Audio(); _caEl.preload = 'auto'; }
-      const a = _caEl;
-      let caido = false;
-      const falla = () => { if(caido || !vivo()) return; caido = true; _caHabla = _padDecir(dd.name, () => { if(vivo()) _caS.timer = setTimeout(historia, 700); }); };
       // Un plato de varios bocados (el Mistery box): tras su descripción, sus
       // bocados en orden y luego el plato siguiente.
       const bs = _degBocados(dd);
-      a.onended = () => { if(!vivo()) return; if(bs.length) _caS.timer = setTimeout(() => _caBocados(g, d, dd, 0), 900); else _caS.timer = setTimeout(() => _caSiguiente(g), 2000); };
-      a.onerror = falla;
-      const dale = src => {
-        if(!vivo()) return;
-        if(!src) return falla();
-        a.src = src;
-        const pr = a.play();
-        if(pr && pr.catch) pr.catch(falla);
-        if(bs.length){ const r1 = _bocAudioDe(d, dd, bs[0]); if(r1) _padAudioSrc(r1); }
-        else _caPrecargar(i + 1);
-      };
-      const ya = _padAudioListo(ruta);
-      if(ya) dale(ya); else _padAudioSrc(ruta).then(dale, falla);
+      _platoSonar(_caEl, d, dd, {
+        vivo,
+        alAcabar: () => { if(!vivo()) return; if(bs.length) _caS.timer = setTimeout(() => _caBocados(g, d, dd, 0), 900); else _caS.timer = setTimeout(() => _caSiguiente(g), 2000); },
+        // Si la descripción no llega: la voz del teléfono (con el nombre si no sonó ya).
+        falla: dicho => { if(!vivo()) return; if(dicho) return historia(); _caHabla = _padDecir(dd.name, () => { if(vivo()) _caS.timer = setTimeout(historia, 700); }); },
+        alEmpezar: () => {
+          if(bs.length){ const r1 = _bocAudioDe(d, dd, bs[0]); if(r1) _padAudioSrc(r1); }
+          else _caPrecargar(i + 1);
+        }
+      });
       return;
     }catch(e){}
   }
@@ -18516,8 +18585,9 @@ function _caBocados(g, d, dd, k){
 function _caPrecargar(i){
   const id = _caS.cola[i]; if(id == null) return;
   const d = DISHES.find(x => x.id === id); if(!d) return;
-  const ruta = _padAudioDe(d, getDish(d));
-  if(ruta) _padAudioSrc(ruta);
+  const dd = getDish(d);
+  const ruta = _padAudioDe(d, dd);
+  if(ruta){ const rn = _padNombreDe(d, dd); if(rn) _padAudioSrc(rn); _padAudioSrc(ruta); }
 }
 function _caSiguiente(g){
   if(g !== _caS.gen || !_caS.sonando) return;
