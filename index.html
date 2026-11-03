@@ -54,7 +54,7 @@
 <meta property="og:description" content="Formación de equipos de sala: carta, alérgenos, vinos, exámenes y juegos de repaso.">
 <meta property="og:url" content="https://meseo.es/">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"Meseo","url":"https://meseo.es/"}</script>
-<meta name="app-version" content="7.532">
+<meta name="app-version" content="7.533">
 <meta name="app-build" content="May 2026">
 <meta name="theme-color" content="#1c2a22">
 <!-- ═══ PWA ═══ -->
@@ -2891,7 +2891,7 @@ const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><p
 const SRC = 'src';
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='7.532';  // sincronizada con sw.js VERSION (guard de CI)
+const APP_VERSION='7.533';  // sincronizada con sw.js VERSION (guard de CI)
 const APP_BUILD='Jul 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;
@@ -3011,6 +3011,8 @@ function setupModalA11y(overlay, onClose){
       try { previouslyFocused.focus(); } catch(_){}
     }
   }
+  // El botón atrás del móvil la cierra igual que Esc (ver _navCerrarOverlay).
+  overlay._navCerrar = () => { cleanup(); if(typeof onClose === 'function') onClose(); };
 
   document.addEventListener('keydown', onKey, true);
 
@@ -15005,6 +15007,8 @@ function showTab(tab, instant){
   if(currentTab==='supervisor' && tab!=='supervisor'){
     if(typeof _supDisconnect==='function') _supDisconnect();
   }
+  // Botón atrás del móvil: apila la pestaña (ver _navTab).
+  try{ _navTab(tab, instant); }catch(_){}
   track('tab.switch', { to: tab, from: currentTab });
   currentTab=tab;
   // Chip de actualización: comprobación silenciosa al navegar (autolimitada a
@@ -15083,6 +15087,205 @@ function showTab(tab, instant){
   c.style.transition='opacity .12s ease, transform .12s ease';
   setTimeout(_doRender, 120);
 }
+
+// ═══ BOTÓN ATRÁS DEL MÓVIL ═══════════════════════════════════════════════
+// Prueba de usuario (nov 2026): la app no guardaba historial, así que el atrás
+// de Android (y el gesto atrás de iOS) SALÍA de la app desde cualquier ficha,
+// paso o pantalla. Ahora el historial del navegador lleva tantas entradas como
+// pantallas hay apiladas encima de Hoy, y el atrás deshace la última:
+//   1. cierra el overlay abierto más alto (en Conocer el plato, retrocede paso);
+//   2. si no hay overlay, sube un nivel dentro de la pestaña (ficha del plato →
+//      lista; pase del menú degustación → El viaje), pero sólo hasta el nivel
+//      en que se entró en ella;
+//   3. si no, vuelve a la pestaña anterior (o a Hoy). En Hoy, sale de la app.
+// CÓMO SE MANTIENE SIN ENTRADAS HUÉRFANAS: no se toca cada pantalla. Un
+// observador recalcula la PROFUNDIDAD de la app (pestañas apiladas + niveles
+// dentro de la pestaña + overlays + paso de Conocer el plato) y la iguala con
+// la del historial: si sube, pushState({meseoAtras:n}); si baja porque el
+// usuario cerró con ✕ o con un «Volver» de la app, history.go(-k) consume las
+// entradas sobrantes (y ese popstate propio se ignora). Así ✕ + atrás nunca
+// salta dos pantallas y una pantalla repintada no duplica entradas. La URL no
+// cambia (no hay #), por lo que el enlace #tab=… y el service worker siguen igual.
+const _nav = { pila: [], esperando: 0, tEsp: null, t: null, volviendo: false };
+const _NAV_APRENDER = ['aprender','flashcards','repaso','tecnicas','actualidad','smart','emplatado'];
+// Subvistas que se pintan dentro de una pestaña: nivel actual, cómo subir uno,
+// y foto/poner para volver a ellas tal cual al regresar a la pestaña.
+const _NAV_SUB = {
+  repaso: {
+    nivel(){ return (repasoView==='dish' && repasoDishId) ? 2 : ((repasoView==='topic' && repasoCat) ? 1 : 0); },
+    subir(){ repasoView = (repasoView==='dish' && repasoCat) ? 'topic' : 'cats'; renderRepaso(); try{ window.scrollTo(0, 0); }catch(e){} },
+    foto(){ return { v: repasoView, c: repasoCat, d: repasoDishId }; },
+    poner(f){ repasoView = f.v; repasoCat = f.c; repasoDishId = f.d; }
+  },
+  degustacion: {
+    nivel(){ return (_degS.vista && _degS.vista !== 'viaje') ? 1 : 0; },
+    subir(){ _degIr('viaje'); },
+    foto(){ return { v: _degS.vista, p: _degS.pase }; },
+    poner(f){ _degS.vista = f.v; _degS.pase = f.p; }
+  }
+};
+function _navSubDe(tab){
+  if(tab === 'degustacion') return _NAV_SUB.degustacion;
+  if(tab === 'repaso' || (_NAV_APRENDER.indexOf(tab) >= 0 && typeof _subTab !== 'undefined' && _subTab.aprender === 'repaso')) return _NAV_SUB.repaso;
+  return null;
+}
+function _navNivel(tab){ const s = _navSubDe(tab); try{ return s ? s.nivel() : 0; }catch(e){ return 0; } }
+function _navEnApp(){
+  if(typeof currentUser === 'undefined' || !currentUser) return false;
+  const a = document.getElementById('screenApp');
+  return !!(a && a.classList.contains('active'));
+}
+// Overlays modales: lo que se pinta encima de la pestaña. Se excluyen las
+// esperas de carga (no se cierran con atrás) y lo que vive dentro de la página.
+const _NAV_OV_SEL = '[aria-modal="true"],[role="dialog"],[role="alertdialog"],[class*="overlay"],[class*="modal"],[id$="Overlay"],[id$="Modal"],.install-sheet';
+const _NAV_OV_NO = /^(bootEspera|loginLoadingOverlay|puertaEspera|confettiCanvas)$/;
+function _navVisible(el){
+  if(!el || !el.isConnected || !el.getClientRects().length) return false;
+  if(el.style && el.style.opacity === '0') return false;   // cerrándose (fundido)
+  try{ if(getComputedStyle(el).visibility === 'hidden') return false; }catch(e){}
+  return true;
+}
+function _navOverlays(){
+  const out = [];
+  document.querySelectorAll(_NAV_OV_SEL).forEach(el => {
+    if(_NAV_OV_NO.test(el.id || '') || /login-loading/.test(String(el.className || ''))) return;
+    if(el.getAttribute && el.getAttribute('role') === 'status') return;
+    if(el.closest && el.closest('#appContent,#screenLogin')) return;
+    const padre = el.parentElement && el.parentElement.closest ? el.parentElement.closest(_NAV_OV_SEL) : null;
+    if(padre && !_NAV_OV_NO.test(padre.id || '')) return;   // sólo el contenedor de fuera
+    if(_navVisible(el)) out.push(el);
+  });
+  return out;
+}
+function _navPasoDj(ovs){
+  const dj = ovs.find(o => o.id === 'djOverlay');
+  return (dj && typeof _djState !== 'undefined' && _djState) ? Math.max(0, _djState.phase | 0) : 0;
+}
+// Profundidad de la app = entradas que debe haber encima de la base.
+function _navProfundidad(){
+  if(!_navEnApp()) return 0;
+  const p = _nav.pila; let d = 0;
+  for(let i = 0; i < p.length; i++){
+    if(i > 0) d++;
+    const niv = (i === p.length - 1) ? _navNivel(p[i].tab) : (p[i].nivel || 0);
+    d += Math.max(0, niv - (p[i].entrada || 0));
+  }
+  const ovs = _navOverlays();
+  return d + ovs.length + _navPasoDj(ovs);
+}
+// Lo llama showTab al cambiar de pestaña.
+function _navTab(tab, instant){
+  if(_nav.volviendo) return;
+  const p = _nav.pila, top = p[p.length - 1];
+  const entrada = _navNivel(tab);
+  if(tab === 'dashboard'){ _nav.pila = [{ tab, entrada: 0 }]; _navPronto(); return; }
+  if(top && top.tab === tab) return;
+  // Cambio de vista en el sitio (carta en fotos ↔ en lista): misma entrada.
+  if(top && instant){ top.tab = tab; top.entrada = entrada; top.sa = _navSa(tab); return; }
+  // El nivel y la foto de la pestaña que se deja son los de la última
+  // sincronización (_navFoto): el onclick que nos trae aquí ya ha podido
+  // cambiar repasoView o _subTab pensando en el destino.
+  if(!p.length) p.push({ tab: 'dashboard', entrada: 0 });
+  p.push({ tab, entrada, sa: _navSa(tab) });
+  if(p.length > 40) p.splice(1, 1);
+  _navPronto();
+}
+// Subpestaña de Aprender con la que se entró (para volver a la misma).
+function _navSa(tab){
+  if(_NAV_APRENDER.indexOf(tab) < 0 || typeof _subTab === 'undefined') return null;
+  return tab === 'aprender' ? (_subTab.aprender || null) : tab;
+}
+function _navFoto(){
+  const top = _nav.pila[_nav.pila.length - 1]; if(!top) return;
+  const s = _navSubDe(top.tab);
+  top.nivel = _navNivel(top.tab);
+  try{ top.foto = s ? { k: s === _NAV_SUB.repaso ? 'repaso' : 'degustacion', f: s.foto() } : null; }catch(e){ top.foto = null; }
+}
+function _navBotonCerrar(ov){
+  const bs = ov.querySelectorAll('button,[role="button"]');
+  for(const b of bs){
+    if(b.disabled || !b.getClientRects().length) continue;
+    const al = (b.getAttribute('aria-label') || '').trim(), cl = String(b.className || ''), tx = (b.textContent || '').trim();
+    if(/^(cerrar|close)\b/i.test(al) || /(^|[\s_-])(x|close|cerrar)([\s_-]|$)/i.test(cl) || /^(✕|×|✖|cerrar|close)$/i.test(tx)) return b;
+  }
+  return null;
+}
+function _navCerrarOverlay(ov){
+  if(ov.id === 'djOverlay' && typeof _djState !== 'undefined' && _djState){
+    if((_djState.phase | 0) > 0) _djPrev(); else _djClose();
+    return;
+  }
+  if(typeof ov._navCerrar === 'function'){ try{ ov._navCerrar(); }catch(e){} if(!_navVisible(ov)) return; }
+  const b = _navBotonCerrar(ov);
+  if(b){ b.click(); return; }
+  const fondo = ov.querySelector('[class*="scrim"],[class*="backdrop"]');
+  if(fondo){ fondo.click(); if(!_navVisible(ov)) return; }
+  // Los que se cierran tocando fuera (event.target === overlay) o con Esc.
+  try{ ov.dispatchEvent(new MouseEvent('click', { bubbles: true })); }catch(e){}
+  if(!_navVisible(ov)) return;
+  try{ document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true })); }catch(e){}
+  // Si sigue abierto es obligatorio (p. ej. la bienvenida): se queda.
+}
+// Un paso atrás de la app.
+function _navAtrasUno(){
+  const ovs = _navOverlays();
+  if(ovs.length){ _navCerrarOverlay(ovs[ovs.length - 1]); return; }
+  const p = _nav.pila, top = p[p.length - 1];
+  const s = top ? _navSubDe(top.tab) : null;
+  if(top && s && _navNivel(top.tab) > (top.entrada || 0)){ s.subir(); return; }
+  if(p.length > 1){
+    p.pop();
+    const prev = p[p.length - 1];
+    if(prev.sa && typeof _subTab !== 'undefined') _subTab.aprender = prev.sa;
+    if(prev.foto && _NAV_SUB[prev.foto.k]) _NAV_SUB[prev.foto.k].poner(prev.foto.f);
+    _nav.volviendo = true;
+    try{ showTab(prev.tab); } finally { _nav.volviendo = false; }
+    return;
+  }
+  if(typeof currentTab !== 'undefined' && currentTab !== 'dashboard') showTab('dashboard');
+}
+function _navHist(){ const s = history.state; return (s && s.meseoAtras) | 0; }
+// Iguala el historial con la profundidad de la app.
+function _navSync(){
+  _nav.t = null;
+  if(!_navEnApp()) _nav.pila = [];
+  _navFoto();
+  if(_nav.esperando) return;
+  const D = _navProfundidad(), H = _navHist();
+  if(D > H){ for(let d = H + 1; d <= D; d++) history.pushState({ meseoAtras: d }, ''); }
+  else if(D < H){
+    _nav.esperando = 1;
+    _nav.tEsp = setTimeout(() => { _nav.esperando = 0; _navPronto(); }, 1500);
+    history.go(D - H);
+  }
+}
+function _navPronto(){ if(!_nav.t) _nav.t = setTimeout(_navSync, 40); }
+function _navPop(){
+  // El popstate de nuestro propio history.go(): sólo se recoloca.
+  if(_nav.esperando){ _nav.esperando = 0; clearTimeout(_nav.tEsp); _navPronto(); return; }
+  if(!_navEnApp()) return;
+  const H = _navHist();
+  let D = _navProfundidad();
+  for(let n = 0; D > H && n < 6; n++){
+    _navAtrasUno();
+    const D2 = _navProfundidad();
+    if(D2 >= D) break;
+    D = D2;
+  }
+  _navPronto();
+}
+function _navIniciar(){
+  try{ if('scrollRestoration' in history) history.scrollRestoration = 'manual'; }catch(e){}
+  // Tras recargar en una entrada nuestra, la base ya es otro documento.
+  try{ if(history.state && history.state.meseoAtras) history.replaceState(null, ''); }catch(e){}
+  window.addEventListener('popstate', _navPop);
+  const mirar = () => {
+    new MutationObserver(_navPronto).observe(document.body, { childList: true, subtree: true, attributes: true, attributeFilter: ['style', 'hidden'] });
+  };
+  if(document.body) mirar(); else document.addEventListener('DOMContentLoaded', mirar);
+}
+// ═══ FIN BOTÓN ATRÁS ═══
+_navIniciar();
 
 // UX-02 · Encender la sección que toca, y sólo una. Se llama desde `showTab`
 // con la ruta real, así que también acierta cuando se llega por un enlace de
