@@ -54,7 +54,7 @@
 <meta property="og:description" content="Formación de equipos de sala: carta, alérgenos, vinos, exámenes y juegos de repaso.">
 <meta property="og:url" content="https://meseo.es/">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"Meseo","url":"https://meseo.es/"}</script>
-<meta name="app-version" content="7.536">
+<meta name="app-version" content="7.538">
 <meta name="app-build" content="May 2026">
 <meta name="theme-color" content="#1c2a22">
 <!-- ═══ PWA ═══ -->
@@ -65,6 +65,16 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Meseo">
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<!-- ═══ CARGA EN RED LENTA (nov 2026) ═══
+     Medido con CPU x4 y «Fast 3G»: cada ida y vuelta cuesta ~0,6 s.
+     · preconnect a Supabase: la primera llamada (entrar, sincronizar) ya
+       encuentra el DNS + TLS hecho mientras baja el programa.
+     · preload de data/themes.json: initVenues() lo pedía DESPUÉS de ejecutar
+       todo el programa, y hasta que llega no se puede elegir restaurante ni
+       entrar en la demo. Así baja en paralelo con el HTML. crossorigin hace
+       que la precarga case con el fetch() normal (mismo origen). -->
+<link rel="preconnect" href="https://advkoujfgbrrjvqexrcu.supabase.co" crossorigin>
+<link rel="preload" as="fetch" href="data/themes.json" crossorigin>
 <!-- ═══ TIPOGRAFÍAS ═══
      Se sirven desde el propio dominio (fonts/, declaradas al principio de
      styles.css). Antes venían de fonts.googleapis.com con un <link> que BLOQUEA
@@ -1693,8 +1703,16 @@ document.addEventListener('DOMContentLoaded', () => {
   // wine pairings without sending the user to the Vinos tab first, so we
   // warm the cache once the user is past the dashboard. requestIdleCallback
   // yields to user interaction; the timeout is the fallback for Safari.
+  // nov 2026 (carga en red lenta): antes esto corría YA en la pantalla de
+  // entrada, con el restaurante por defecto: bajaba la bodega de Txoko y su
+  // contenido (~120 KB comprimidos) mientras el camarero intentaba entrar, y
+  // en la demo era peso tirado (usa wines-demo.json). Ahora espera a que haya
+  // alguien dentro y pide la bodega del restaurante en el que ha entrado.
+  const _idle = (fn) => ('requestIdleCallback' in window)
+    ? requestIdleCallback(fn, { timeout: 5000 }) : setTimeout(fn, 3000);
   const _preloadWines = () => {
     if(typeof loadLazyData!=='function') return;
+    if(!currentUser){ setTimeout(() => _idle(_preloadWines), 4000); return; }
     if(!WINES){
       loadLazyData(_vinosRuta(), LANG==='en'?'wine list':'lista de vinos', { silent: true })
         .then(arr => { WINES = arr; _vinosVenue = _venueActual(); })
@@ -1706,11 +1724,7 @@ document.addEventListener('DOMContentLoaded', () => {
       loadVinosContent({ silent: true }).catch(() => {});
     }
   };
-  if('requestIdleCallback' in window){
-    requestIdleCallback(_preloadWines, { timeout: 5000 });
-  } else {
-    setTimeout(_preloadWines, 3000);
-  }
+  _idle(_preloadWines);
 });
 window.addEventListener('resize', updateNavFade);
 
@@ -2879,9 +2893,12 @@ _CARTA_BASE.CATS = CATS_ES.map((es, i) => ({ es, en: CATS_EN[i] }));
 function _catsCarta(){ return _cartaInfo().CATS || _CARTA_BASE.CATS; }
 // Las que tienen algún plato, en el orden de la carta.
 function _catsActivas(){ return _catsCarta().filter(c => DISHES.some(d => d.cat === c.es)); }
-const getCats=()=>_catsActivas().map(c => LANG==='en' ? (c.en || c.es) : c.es);
-const catEs=(c)=>{const x=_catsCarta().find(k=>k.en===c);return x?x.es:c;};
-const catEn=(c)=>{const x=_catsCarta().find(k=>k.es===c);return x?(x.en||x.es):c;};
+const getCats=()=>_catsActivas().map(c => LANG==='en' ? _catEnFalta(c.es, c.en) : c.es);
+const catEs=(c)=>{const x=_catsCarta().find(k=>_catEnFalta(k.es,k.en)===c||k.en===c);return x?x.es:c;};
+// Si la carta no trae la sección en inglés (o la trae igual que en español,
+// como «Menu degustación» en Akira), el menú degustación se llama Tasting menu.
+const _catEnFalta=(es,en)=>((!en||en===es)&&/^men[uú]\s+degustaci[oó]n$/i.test(String(es||'').trim()))?'Tasting menu':(en||es);
+const catEn=(c)=>{const x=_catsCarta().find(k=>k.es===c);return _catEnFalta(c, x?x.en:null);};
 const catLocal=(c)=>LANG==='en'?catEn(c):c;
 const CAT_COLORS={'Entrantes':'#c49a3c','Hamburguesas y Bocatas':'#b86050','Platos Principales':'#4888a0','Guarniciones y Salsas':'#4d8a5e','Postres':'#7a6aaa','Vegetariano':'#5a9a6e','Sugerencias':'#d4aa4c'};
 const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#c49a3c"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#a47a2c" opacity=".4"/><path d="M8 8v4a1 1 0 001 1h1v4M10 8v4" stroke="#fff" stroke-width="1.2" stroke-linecap="round" fill="none"/><path d="M15 8v8M14 8v3a1.5 1.5 0 003 0V8" stroke="#fff" stroke-width="1.2" stroke-linecap="round" fill="none"/></svg>`,'Hamburguesas y Bocatas':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#b86050"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#983838" opacity=".4"/><path d="M7 9h10M7 12h10M7 15h10" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/><path d="M8 9c0-2 2-3 4-3s4 1 4 3M8 15c0 2 2 3 4 3s4-1 4-3" fill="none" stroke="#fff" stroke-width="1" opacity=".7"/></svg>`,'Platos Principales':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#4888a0"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#2e6878" opacity=".4"/><path d="M5 15h14" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/><path d="M12 6a6 6 0 016 6H6a6 6 0 016-6z" fill="none" stroke="#fff" stroke-width="1.1"/><circle cx="10" cy="6" r=".7" fill="#fff" opacity=".7"/><circle cx="12" cy="5" r=".7" fill="#fff" opacity=".7"/><circle cx="14" cy="6" r=".7" fill="#fff" opacity=".7"/></svg>`,'Sugerencias':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#d4aa4c"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#a48a2c" opacity=".4"/><polygon points="12,5 14.5,10 20,10.5 16,14 17,20 12,17 7,20 8,14 4,10.5 9.5,10" fill="#fff" opacity=".9"/></svg>`,'Guarniciones y Salsas':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#4d8a5e"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#2d6a3e" opacity=".4"/><path d="M12 18V10M5 10c0-4 3-6 7-6s7 2 7 6c0 5-3 8-7 8s-7-3-7-8z" fill="none" stroke="#fff" stroke-width="1.1"/><path d="M5 10c3 0 5 1 7 2.5" fill="none" stroke="#fff" stroke-width=".8" opacity=".6"/></svg>`,'Postres':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#7a6aaa"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#5a4a8a" opacity=".4"/><path d="M9 19h6M12 12v7M7 6l2 4.5a3 3 0 006 0L17 6H7z" fill="none" stroke="#fff" stroke-width="1.1" stroke-linecap="round"/></svg>`,'Vegetariano':`<svg width="20" height="20" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#5a9a6e"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#3a7a4e" opacity=".4"/><path d="M9 18h6M12 18V10M12 10c0-3 2-5 5-5-.7 2.5-2.5 5-5 5zM12 10c0-3-2-5-5-5 .7 2.5 2.5 5 5 5z" fill="none" stroke="#fff" stroke-width="1.1" stroke-linecap="round"/></svg>`};
@@ -2903,7 +2920,7 @@ const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><p
 const SRC = 'src';
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='7.536';  // sincronizada con sw.js VERSION (guard de CI)
+const APP_VERSION='7.538';  // sincronizada con sw.js VERSION (guard de CI)
 const APP_BUILD='Jul 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;
@@ -3077,6 +3094,8 @@ function _dispName(name){
   const v = _DISP.get(name);
   if(v) return v;
   try{ const e = DB.employees[name]; if(e && e.displayName) return e.displayName; }catch(_){}
+  // El invitado de la demo se llama «Invitado» por dentro; en inglés, Guest.
+  try{ if(name === DEMO_USUARIO && LANG === 'en') return 'Guest'; }catch(_){}
   return name;
 }
 function _dispLearn(rows){
@@ -7324,7 +7343,7 @@ function _cpPracticaHTML(dish, dd, claves, _en){
   if(typeof _padS === 'undefined') return '';
   if(_padS.paso === 'resultado' && Array.isArray(_padS.r1)){
     return `${_padResultadoHTML(_padS.r1, claves)}
-      ${_padS.texto && _padS.modo === 'voz' ? `<details class="deg-apoyo pad-oido"><summary>${_en ? 'What I understood' : 'Lo que he entendido'}</summary><div class="deg-apoyo-body"><p>«${escapeHTML(_padS.texto)}»</p></div></details>` : ''}
+      ${_padS.texto && _padS.modo === 'voz' ? `<details class="deg-apoyo pad-oido" open><summary>${_en ? 'What I understood' : 'Lo que he entendido'}</summary><div class="deg-apoyo-body"><p>«${escapeHTML(_padS.texto)}»</p></div></details>` : ''}
       <button type="button" class="deg-btn sec cono-otra" onclick="_cpGrabar()">${_en ? 'Tell it again' : 'Contarlo otra vez'}</button>`;
   }
   if(_padS.paso === 'grabar') return _padGrabadorHTML(claves);
@@ -10425,38 +10444,6 @@ function _renderSmartSummary(){
 }
 
 // XP bar widget — call inside any render to show the bar
-function renderXPBar(){
-  const emp = getEmp(currentUser);
-  const xp = emp.xp||0;
-  const cur = getLevelInfo(xp);
-  const next = getNextLevel(xp);
-  const pct = xpProgress(xp);
-  const nextXP = next ? next.xp : xp;
-  const needed = next ? nextXP - xp : 0;
-  const streak = emp.streak||0;
-  const barColor = tunicContrastColor(cur.color, true); // ensure readable on light bg
-  const hexIcon = tunicLevelIcon(cur.level, cur.color, 22);
-  const nextHexIcon = next ? tunicLevelIcon(next.level, next.color, 16) : '';
-  return `
-    <div class="xp-bar-wrap" onclick="showTab('stats')" title="Ver estadísticas" style="position:relative;overflow:hidden">
-      <!-- Diamond pattern bg -->
-      <div style="position:absolute;inset:0;background-image:url(${"\"data:image/svg+xml,%3Csvg width='40' height='35' viewBox='0 0 40 35' xmlns='http://www.w3.org/2000/svg'%3E%3Cpolygon points='20,2 38,17.5 20,33 2,17.5' fill='none' stroke='rgba(196,154,60,0.04)' stroke-width='0.4'/%3E%3C/svg%3E\""});pointer-events:none"></div>
-      <div class="xp-bar-top">
-        <span class="xp-bar-title" style="color:${barColor};display:flex;align-items:center;gap:.3rem">${hexIcon} <span>${cur.title}</span></span>
-        <!-- El nivel ya sale en la esquina de la tarjeta. Aqui salia por
-             segunda vez, compitiendo con el titulo del rango que tiene al lado. -->
-      </div>
-      <div class="xp-bar-track" style="position:relative">
-        <div class="xp-bar-fill" style="width:${pct}%;background:linear-gradient(90deg,${cur.color},${barColor})"></div>
-      </div>
-      <div class="xp-bar-sub" style="display:flex;align-items:center;gap:.3rem;flex-wrap:wrap">
-        <span>${xp.toLocaleString()} XP</span>
-        ${next?`<span style="opacity:.5">·</span><span>${LANG==='en'?needed.toLocaleString()+' to Lv.'+next.level:'Faltan '+needed.toLocaleString()+' para Lv.'+next.level}</span>`:`<span style="opacity:.5">·</span><span style="color:${barColor};font-weight:600">${LANG==='en'?'Max level!':'¡Máximo nivel!'}</span>`}
-        ${streak>1?`<span style="opacity:.5">·</span><span style="display:inline-flex;align-items:center;gap:.15rem"><svg width="8" height="8" viewBox="0 0 8 8"><polygon points="4,0 8,4 4,8 0,4" fill="#d4944c" opacity=".7"/></svg>${streak}d</span>`:''}
-      </div>
-      ${renderCertBadges(getEmp(currentUser))}
-    </div>`;
-}
 
 // ═══════ STATE ═══════
 let currentUser=null,currentTab='dashboard';
@@ -13245,7 +13232,7 @@ function openAjustes(){
       </div>
       ${H(_en?'Display name':'Nombre visible')}
       <div style="font-family:var(--font-sans);font-size:var(--fs-3);color:#5a6a5e;line-height:1.45;margin-bottom:.5rem">${_en
-        ? 'How your name appears to the team. You still sign in as <b>'+escapeHTML(currentUser)+'</b>, which never changes.'
+        ? 'How your name appears to the team. You still sign in as <b>'+escapeHTML(_esDemo()?_dispName(currentUser):currentUser)+'</b>, which never changes.'
         : 'Cómo te ve el equipo. Sigues entrando como <b>'+escapeHTML(currentUser)+'</b>, que no cambia.'}</div>
       <input id="ajDisp" type="text" maxlength="24" autocomplete="nickname" placeholder="${escapeHTML(currentUser)}" value="${escapeHTML(_dispName(currentUser))}" style="${inp}">
       <div id="ajDispMsg" role="status" aria-live="polite" style="font-size:.72rem;min-height:1rem;margin-bottom:.4rem"></div>
@@ -15466,8 +15453,22 @@ _navIniciar();
 // UX-02 · Encender la sección que toca, y sólo una. Se llama desde `showTab`
 // con la ruta real, así que también acierta cuando se llega por un enlace de
 // aviso, por el menú de antes o desde dentro de una pantalla.
+// Un plato al día y Repasar toda la carta se abren desde varios sitios: la
+// barra marca la pestaña de donde vienes, la misma que dice su «‹ volver»
+// (prueba de usuario, nov 2026: desde Hoy decía «‹ Hoy» y marcaba Practicar).
+function _ux2SeccionDe(tab){
+  try{
+    if(tab === 'platodia' && _padS.desde === 'dashboard') return 'hoy';
+    if(tab === 'repasar'){
+      const d = _rtcS.desde;
+      if(d === 'dashboard') return 'hoy';
+      if(d === 'carta' || d === 'degustacion') return 'saber';
+    }
+  }catch(_){}
+  return UX2_SECCION[tab] || null;
+}
 function _ux2Sync(tab){
-  const sec = UX2_SECCION[tab] || null;
+  const sec = _ux2SeccionDe(tab);
   const mapa = { hoy:'ux2Hoy', saber:'ux2Saber', practicar:'ux2Practicar', equipo:'ux2Equipo', yo:'ux2Yo' };
   for(const k in mapa){
     const b = document.getElementById(mapa[k]);
@@ -15682,14 +15683,56 @@ function _fsvInfo(dish, en){
   if(deduce.veg && v.veg !== 'no' && v.cerdo === true && !deduce.cerdo){ v.veg = 'no'; }
   const t = (en && dish && dish.svc_en && typeof dish.svc_en === 'object') ? dish.svc_en : {};
   const txt = k => String(t[k] || s[k] || '').trim();
-  return { ok, v, sug, deduce, motivo: sugerido.motivo || {}, hayDato,
+  return { ok, v, sug, deduce, motivo: en ? _fsvMotivosEn(dish, sugerido.motivo || {}) : (sugerido.motivo || {}), hayDato,
     comer: txt('comer'), cambios: txt('cambios'), venta: txt('venta') };
+}
+// La sugerencia se deduce de la carta en español («por: Picante»). En inglés
+// el motivo sale en inglés (prueba de usuario, nov 2026: «from: Picante»,
+// «Chiles», «Flambeada»): primero, la misma señal en el texto inglés del
+// plato; si no está, la palabra traducida; si tampoco, «the ingredients».
+const _FSV_MOTIVO_EN = {
+  picante:'spicy', pica:'spicy', chile:'chilli', chiles:'chillies', guindilla:'chilli', guindillas:'chillies',
+  cayena:'cayenne', 'pimienta palmera':'palm pepper', jalapeno:'jalapeño', jalapenos:'jalapeños', picon:'picón',
+  'aji amarillo':'ají amarillo', mojo:'mojo', vino:'wine', ron:'rum', cerveza:'beer', licor:'liqueur', conac:'cognac',
+  ginebra:'gin', sidra:'cider', champan:'champagne', jerez:'sherry', oporto:'port', vermut:'vermouth',
+  flambe:'flambéed', flambeado:'flambéed', flambeada:'flambéed', flambeados:'flambéed', flambeadas:'flambéed',
+  cerdo:'pork', jamon:'ham', panceta:'pancetta', cochinillo:'suckling pig', cochino:'pork', papada:'pork jowl',
+  iberico:'Ibérico pork', iberica:'Ibérico pork', crudo:'raw', cruda:'raw', ostra:'oyster', ostras:'oysters',
+  carne:'meat', ternera:'veal', vaca:'beef', buey:'beef', pollo:'chicken', pato:'duck', cordero:'lamb',
+  pescado:'fish', atun:'tuna', bacalao:'cod', salmon:'salmon', marisco:'seafood', gamba:'prawn', gambas:'prawns',
+  langostino:'king prawn', langostinos:'king prawns', pulpo:'octopus', calamar:'squid', mejillon:'mussel',
+  vieira:'scallop', vieiras:'scallops', cangrejo:'crab', bogavante:'lobster', huevas:'roe', anguila:'eel'
+};
+function _fsvMotivosEn(dish, mot){
+  const out = {};
+  let txtEn = '';
+  try{
+    const dEn = (typeof getDish === 'function') ? getDish(dish) : null;
+    if(dEn && dEn !== dish) txtEn = [dEn.name, dEn.ingredients, dEn.history].filter(Boolean).join(' · ').normalize('NFC');
+  }catch(_){}
+  const P = _FSV_PALABRAS;
+  const listas = { pica: P.pica2.concat(P.pica), alcohol: P.alcohol, cerdo: P.cerdo, crudo: P.crudo.concat(P.crudoParcial), veg: P.animal };
+  for(const k in mot){
+    const m = mot[k];
+    if(!m || m === 'sin-carne' || m === 'sin-animal'){ out[k] = m; continue; }
+    if(m.indexOf('cat:') === 0){ out[k] = 'cat:' + (typeof catEn === 'function' ? catEn(m.slice(4)) : m.slice(4)); continue; }
+    if(typeof allergenLocal === 'function' && ['Pescado','Crustáceos','Moluscos','Mariscos','Lácteos','Huevos'].indexOf(m) >= 0){ out[k] = allergenLocal(m); continue; }
+    const w = (txtEn && listas[k]) ? _fsvBusca(_fsvSinFrases(_fsvNorm(txtEn), k === 'veg' ? 'animal' : k), txtEn, listas[k]) : null;
+    const n = _fsvNorm(m);
+    // Si el «inglés» del plato es el mismo texto en español (carta sin
+    // traducir), la palabra encontrada es la española: manda el diccionario.
+    const dic = _FSV_MOTIVO_EN[n] || _FSV_MOTIVO_EN[n.replace(/s$/, '')] || null;
+    const t = (w && _fsvNorm(w) !== n) ? w : (dic || w || null);
+    out[k] = t ? t.charAt(0).toUpperCase() + t.slice(1) : 'the ingredients';
+  }
+  return out;
 }
 function _fsvMotivoTxt(m, en){
   if(!m) return '';
   if(m === 'sin-carne') return en ? 'no meat or fish in the ingredients' : 'sin carne ni pescado en ingredientes';
   if(m === 'sin-animal') return en ? 'no animal products in the ingredients' : 'nada de origen animal en ingredientes';
   if(m.indexOf('cat:') === 0) return (en ? 'category ' : 'categoría ') + m.slice(4);
+  if(m === 'the ingredients') return en ? 'the ingredients' : 'los ingredientes';
   return m;
 }
 // Las marcas que se pintan, en orden de lo que más preguntan en sala.
@@ -15747,9 +15790,10 @@ function _fsvTiraHTML(dish, en){
   const tag = info.ok ? '' : (info.hayDato
     ? (en ? 'to be confirmed' : 'por confirmar')
     : (en ? 'suggested, to be confirmed' : 'sugerido, por confirmar'));
-  const chips = marcas.map(x => '<span class="fsv-chip' + (x.sug ? ' sug' : '') + '"' + (x.motivo ? ' title="' + _fsvEsc((en ? 'from: ' : 'por: ') + x.motivo) + '"' : '') + '>'
+  const _mot = x => (x.motivo && String(x.motivo).trim().toLowerCase() !== String(x.txt||'').trim().toLowerCase()) ? x.motivo : '';
+  const chips = marcas.map(x => '<span class="fsv-chip' + (x.sug ? ' sug' : '') + '"' + (_mot(x) ? ' title="' + _fsvEsc((en ? 'from: ' : 'por: ') + _mot(x)) + '"' : '') + '>'
     + _fsvIcono(x.k) + '<span class="fsv-chip-t">' + _fsvEsc(x.txt)
-    + (x.motivo ? '<small>' + _fsvEsc((en ? 'from: ' : 'por: ') + x.motivo) + '</small>' : '')
+    + (_mot(x) ? '<small>' + _fsvEsc((en ? 'from: ' : 'por: ') + _mot(x)) + '</small>' : '')
     + '</span></span>').join('');
   return '<div class="fsv-tira' + (todoSug ? ' sug' : '') + '">'
     + '<div class="fsv-cab"><span class="fsv-tit">' + (en ? 'At a glance' : 'De un vistazo') + '</span>'
@@ -16423,8 +16467,15 @@ async function _loadDishPhotos(){
   return DISH_PHOTOS;
 }
 
-// ── Subida de fotos por el equipo (con moderación del supervisor) ──────────
+// ── Subida de fotos (con moderación del supervisor) ──────────────────────
+// Desde nov 2026 el botón sólo lo ven mandos y la administración: al
+// camarero le estorbaba en la vista rápida, la carta en fotos y la ficha
+// (prueba de usuario). Las fotos del equipo ya enviadas siguen su moderación.
+function _puedeSubirFoto(){
+  try{ return (typeof _esMando === 'function' && _esMando()) || (typeof _esAdmin === 'function' && _esAdmin()); }catch(_){ return false; }
+}
 function _dishPhotoPick(dishId){
+  if(!_puedeSubirFoto()) return;
   // Las fotos del equipo se guardan en un sitio público. En modo revisión (una
   // carta que aún no se puede enseñar) no se sube ninguna.
   if(typeof _modoRevision==='function' && _modoRevision()){
@@ -16555,6 +16606,7 @@ function _emplRender(q){
           <div class="empl-card-name">${escapeHtml(dd.name)}</div>
           ${pend(d.id)
             ?`<div class="empl-pend">${_en?'Photo in review':'Foto en revisión'}</div>`
+            :!_puedeSubirFoto() ? ''
             :`<button class="empl-upload-btn" onclick="event.stopPropagation();_dishPhotoPick(${d.id})"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align:-.15em;flex:none"><path d="M3 8.5A1.5 1.5 0 014.5 7h2L8 5h8l1.5 2h2A1.5 1.5 0 0121 8.5v9A1.5 1.5 0 0119.5 19h-15A1.5 1.5 0 013 17.5v-9z"/><circle cx="12" cy="12.5" r="3.2"/></svg> ${_en?'Upload photo':'Subir foto'}</button>`}
         </div>`; }).join('')}
     </div>`:''}`).join('')
@@ -16621,6 +16673,7 @@ function _emplOpen(id, entrada){
         <button class="empl-ov-journey" onclick="${cerrar};launchDishJourney(${d.id})">${_fpIc('ruta',16)}${_en?'Get to know the dish, 3 minutes':'Conocer el plato, 3 minutos'}</button>
         ${(DISH_PHOTO_PENDING&&DISH_PHOTO_PENDING.has(d.id))
           ?`<div class="empl-pend">${_fpIc('reloj',14)}${_en?'A new photo is in review':'Hay una foto nueva en revisión'}</div>`
+          :!_puedeSubirFoto() ? ''
           :`<button class="empl-ov-upload" onclick="_dishPhotoPick(${d.id})"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align:-.15em;flex:none"><path d="M3 8.5A1.5 1.5 0 014.5 7h2L8 5h8l1.5 2h2A1.5 1.5 0 0121 8.5v9A1.5 1.5 0 0119.5 19h-15A1.5 1.5 0 013 17.5v-9z"/><circle cx="12" cy="12.5" r="3.2"/></svg> ${foto?`${_en?'Got a better photo? Submit it':'¿Tienes una foto mejor? Súbela'}`:(_en?'No photo yet: upload one':'Sin foto todavía: sube una')}</button>`}
       </div>
     </div>`;
@@ -18048,7 +18101,7 @@ function _padPintar(){
   } else if(p === 'resultado'){
     h = `${_padPasosHTML(2)}<h2 class="deg-tit pad-nom">${escapeHTML(dd.name)}</h2>
       ${_padResultadoHTML(_padS.r1 || [], claves)}
-      ${_padS.texto && _padS.modo === 'voz' ? `<details class="deg-apoyo pad-oido"><summary>${_en ? 'What I understood' : 'Lo que he entendido'}</summary><div class="deg-apoyo-body"><p>«${escapeHTML(_padS.texto)}»</p></div></details>` : ''}
+      ${_padS.texto && _padS.modo === 'voz' ? `<details class="deg-apoyo pad-oido" open><summary>${_en ? 'What I understood' : 'Lo que he entendido'}</summary><div class="deg-apoyo-body"><p>«${escapeHTML(_padS.texto)}»</p></div></details>` : ''}
       <button type="button" class="deg-btn pad-grande" onclick="_padIr('escuchar')">${_en ? 'Listen to how it is told' : 'Escucha cómo se cuenta'}</button>`;
   } else if(p === 'escuchar'){
     const voz = !!(_padAudioDe(d, dd) || (typeof _degHayVoz === 'function' && _degHayVoz()));
@@ -18548,7 +18601,7 @@ function _rtcPintar(){
     const sig = !ultimo ? DISHES.find(x => x.id === _rtcS.ses.cola[_rtcS.ses.i + 1]) : null;
     h = `${mini}
       ${_padResultadoHTML(_padS.r1 || [], claves)}
-      ${_padS.texto && _padS.modo === 'voz' ? `<details class="deg-apoyo pad-oido"><summary>${_en ? 'What I understood' : 'Lo que he entendido'}</summary><div class="deg-apoyo-body"><p>«${escapeHTML(_padS.texto)}»</p></div></details>` : ''}
+      ${_padS.texto && _padS.modo === 'voz' ? `<details class="deg-apoyo pad-oido" open><summary>${_en ? 'What I understood' : 'Lo que he entendido'}</summary><div class="deg-apoyo-body"><p>«${escapeHTML(_padS.texto)}»</p></div></details>` : ''}
       <div class="deg-story pad-story"><span>${_en ? 'At the table' : 'En la mesa'}</span><p>${escapeHTML(dd.story)}</p>
         ${_rtcEscucharBtnHTML(d, dd, _en ? 'Listen to how it is told' : 'Escucha cómo se cuenta')}</div>
       ${revisar}
@@ -25445,10 +25498,11 @@ function _parteDemoEjemplo(){
     data: {
       agotados: [4008, 4013],
       agotadosTxt: '',
-      sugerencias: 'Pescado del día: sama roquera a la brasa con mojo de cilantro.',
-      empujar: 'Cráter Listán Negro por copas: quedan seis botellas.',
-      reservas: 'Mesa 12, aniversario a las 21:00 · Grupo de 10 a las 20:30, menú cerrado.',
-      nota: 'Hoy cerramos cocina a las 23:00. El postre de parchita sale sin coco si lo piden.',
+      // Texto de ejemplo de la demo: en inglés cuando la app está en inglés.
+      sugerencias: LANG === 'en' ? 'Fish of the day: grilled red porgy with coriander mojo.' : 'Pescado del día: sama roquera a la brasa con mojo de cilantro.',
+      empujar: LANG === 'en' ? 'Cráter Listán Negro by the glass: six bottles left.' : 'Cráter Listán Negro por copas: quedan seis botellas.',
+      reservas: LANG === 'en' ? 'Table 12, anniversary at 21:00 · Group of 10 at 20:30, set menu.' : 'Mesa 12, aniversario a las 21:00 · Grupo de 10 a las 20:30, menú cerrado.',
+      nota: LANG === 'en' ? 'Kitchen closes at 23:00 tonight. The passion fruit dessert can go without coconut if asked.' : 'Hoy cerramos cocina a las 23:00. El postre de parchita sale sin coco si lo piden.',
       turno: '' } };
 }
 function _parteLsKey(){ return 'meseo_parte_' + _venueActual(); }
@@ -25575,7 +25629,7 @@ function _parteSeccionesHTML(d, _en){
   const ag = Array.isArray(d.agotados) ? d.agotados.map(_parteNombrePlato).filter(Boolean) : [];
   const agTxt = (d.agotadosTxt || '').trim();
   if(ag.length || agTxt){
-    out.push(`<div class="parte-sec parte-sec-86"><div class="parte-sec-t">${_en?'Sold out (86)':'Agotados (86)'}</div>`
+    out.push(`<div class="parte-sec parte-sec-86"><div class="parte-sec-t">${_en?'Sold out':'Agotados'}</div>`
       + (ag.length ? `<div class="parte-chips">${ag.map(n => `<span class="parte-chip">${escapeHTML(n)}</span>`).join('')}</div>` : '')
       + (agTxt ? `<div class="parte-txt">${txt(agTxt)}</div>` : '') + '</div>');
   }
@@ -25661,7 +25715,7 @@ function _parteEditarAbrir(){
   const cuerpo = `
     <form id="parteForm" class="parte-form" onsubmit="event.preventDefault();_parteEditarGuardar()">
       <div class="parte-f">
-        <label class="parte-l" for="parteBuscar">${_en?'Sold out (86)':'Agotados (86)'}</label>
+        <label class="parte-l" for="parteBuscar">${_en?'Sold out':'Agotados'}</label>
         <div id="parteAgChips" class="parte-chips"></div>
         <input id="parteBuscar" class="parte-in" type="search" autocomplete="off" placeholder="${_en?'Search a dish on the menu':'Busca un plato de la carta'}" oninput="_parteEdBuscar(this.value)">
         <div id="parteAgRes" class="parte-res"></div>
@@ -25819,8 +25873,6 @@ async function _parteVistosCargar(){
 
 function renderDashboard(){
   const emp=getEmp(currentUser);
-  const streak=emp.streak||0;
-  const lvl=getLevelInfo(emp.xp||0);
 
   // Time-aware greeting — Canary Islands
   const _now=new Date();
@@ -25843,9 +25895,6 @@ function renderDashboard(){
   // pinta justo debajo del saludo; si no, nada.
   const _parteCard = (typeof _parteCardHTML==='function') ? _parteCardHTML() : '';
 
-  const _runeSvg = `<svg viewBox="0 0 16 16"><polygon points="8,0 16,8 8,16 0,8" fill="none" stroke="rgba(228,190,104,.55)" stroke-width=".7"/><polygon points="8,3 13,8 8,13 3,8" fill="none" stroke="rgba(228,190,104,.35)" stroke-width=".45"/><circle cx="8" cy="8" r="1" fill="rgba(228,190,104,.6)"/></svg>`;
-
-
   const _demoBanda = (typeof _esDemo==='function' && _esDemo()) ? _demoBandaHTML() : '';
   const _demoContacto = (typeof _esDemo==='function' && _esDemo()) ? _demoContactoHTML() : '';
   // Modo tranquilo: la cabecera no enseña nivel, XP ni racha.
@@ -25853,31 +25902,10 @@ function renderDashboard(){
 
   document.getElementById('appContent').innerHTML=`
     ${_demoBanda}
-    <!-- ── HERO ── -->
-    <div class="dash-hero">
-      <div class="dash-hero-shine"></div>
-      <div class="dash-hero-foot"></div>
-      <div class="dash-hero-rune tl">${_runeSvg}</div>
-      <div class="dash-hero-rune tr">${_runeSvg}</div>
-      <div class="dash-hero-rune bl">${_runeSvg}</div>
-      <div class="dash-hero-rune br">${_runeSvg}</div>
-      <div class="dash-hero-top">
-        <div>
-          <div class="dash-hero-label">${(typeof ACTIVE_VENUE!=='undefined' && ACTIVE_VENUE && ACTIVE_VENUE.eyebrow) ? escapeHtml(ACTIVE_VENUE.eyebrow.split(' · ')[0]) : 'Tenerife'}</div>
-          <div class="dash-hero-saludo"><span class="dash-hero-greeting">${greeting},</span> <span class="dash-hero-name">${escapeHTML(currentUser)}</span></div>
-        </div>
-        ${_tranquilo ? '' : `<div class="dash-hero-lvl-badge">
-          <div class="dash-hero-lvl-num">${tunicLevelIcon(lvl.level,lvl.color,14)} Lv.${lvl.level}</div>
-          ${streak>1?`<div class="dash-hero-streak"><svg width="8" height="8" viewBox="0 0 8 8"><polygon points="4,0 8,4 4,8 0,4" fill="#e4be68" opacity=".8"/></svg>${streak}d</div>`:''}
-        </div>`}
-      </div>
-      <!-- XP bar (also shows level title — no need to duplicate it in the badge above).
-           Modo tranquilo: en su lugar, cuántos platos domina. -->
-      ${_tranquilo ? _heroTranquiloHTML(emp,_en) : renderXPBar()}
-    </div>
 
-    <!-- Un plato al día: lo primero de Hoy, una sola tarjeta. Sin platos con
-         descripción y claves (Txoko hoy), no aparece. -->
+    <!-- Lo útil primero (prueba de usuario, nov 2026): Un plato al día y
+         Repasar toda la carta arriba, luego Hoy en sala y el plan. Sin platos
+         con descripción y claves (Txoko hoy), las dos tarjetas no aparecen. -->
     ${(typeof _padTarjetaHTML==='function') ? _padTarjetaHTML('dashboard') : ''}
     ${(typeof _rtcTarjetaHTML==='function') ? _rtcTarjetaHTML('dashboard') : ''}
 
@@ -25885,6 +25913,17 @@ function renderDashboard(){
 
     <!-- ── ACCESO EN 1 TOQUE: banner de instalación (solo si no está instalada) ── -->
     ${renderInstallBanner()}
+
+    <!-- ── HOY: el plan manda la atención (dentro ya salen Pase, Repaso y
+         Hospitalidad cuando toca). Line Up vive en Practicar; racha,
+         precisión, liga y logros, en Yo. El reto semanal y las misiones se
+         retiraron (oct 2026). ── -->
+    <div class="tunic-divider"><span>${_en?'Today':'Hoy'}</span></div>
+    ${_hoyPlanHTML(emp,_en)}
+
+    <!-- ── HERO: el saludo y el nivel, en una tarjeta pequeña y debajo del
+         plan. Antes ocupaba media pantalla antes de lo útil. ── -->
+    ${_heroMiniHTML(emp,_en,greeting,_tranquilo)}
 
     <!-- ── CONSULTA RÁPIDA: dos accesos en una fila (Mesa con alergias · Carta).
          Lo que se mira en mitad del servicio, a un toque. ── -->
@@ -25903,12 +25942,7 @@ function renderDashboard(){
       </div>
     </div>
 
-    <!-- ── HOY: el plan manda la atención (dentro ya salen Pase, Repaso y
-         Hospitalidad cuando toca) y, debajo, la tarjeta del Reto del día.
-         Line Up vive en Practicar; racha, precisión, liga y logros, en Yo.
-         El reto semanal y las misiones se retiraron (oct 2026). ── -->
-    <div class="tunic-divider"><span>${_en?'Today':'Hoy'}</span></div>
-    ${_hoyPlanHTML(emp,_en)}
+    <!-- El Reto del día, debajo: es juego, no servicio. -->
     ${_pddHeroHTML(emp,_en)}
     <div id="hoyOvertaken"></div>
 
@@ -25925,17 +25959,38 @@ function renderDashboard(){
   if(typeof _padRecordar==='function') setTimeout(_padRecordar, 900);   // aviso de Un plato al día
 }
 
-// Cabecera de Hoy con el modo tranquilo: en vez de la barra de XP, cuántos
-// platos domina y de cuántos. Un toque lleva a Yo, como la barra.
-function _heroTranquiloHTML(emp,_en){
-  const known=emp.knownDishes||{};
-  const n=Object.values(known).filter(Boolean).length;
-  const total=(typeof DISHES!=='undefined' && DISHES) ? DISHES.length : 0;
-  return `<div class="xp-bar-wrap hero-tranquilo" onclick="showTab('stats')" title="${_en?'See what you know':'Ver lo que sabes'}">
-      <div class="xp-bar-sub" style="display:flex;align-items:center;gap:.3rem;flex-wrap:wrap">
-        <span>${_en?`${n} of ${total} dishes mastered`:`${n} de ${total} platos dominados`}</span>
-        <span style="opacity:.5">·</span><span>${_en?'quiet mode':'modo tranquilo'}</span>
+// El saludo y el nivel de Hoy en una tarjeta pequeña (nov 2026). Una línea
+// con el saludo y el nivel, y debajo una barra fina con el rango y lo que
+// falta. Con el modo tranquilo, sin nivel ni XP: cuántos platos domina. Un
+// toque lleva a Yo.
+function _heroMiniHTML(emp,_en,greeting,_tranquilo){
+  const nombre = escapeHTML(typeof _dispName==='function' ? _dispName(currentUser) : currentUser);
+  const ir = `role="button" tabindex="0" onclick="showTab('stats')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click()}"`;
+  const saludo = `<div class="dash-hero-saludo"><span class="dash-hero-greeting">${greeting},</span> <span class="dash-hero-name">${nombre}</span></div>`;
+  if(_tranquilo){
+    const known = emp.knownDishes||{};
+    const n = Object.values(known).filter(Boolean).length;
+    const total = (typeof DISHES!=='undefined' && DISHES) ? DISHES.length : 0;
+    return `<div class="dash-hero dash-hero-mini hero-tranquilo" ${ir} aria-label="${_en?'See what you know':'Ver lo que sabes'}">
+      <div class="dash-hero-top">${saludo}</div>
+      <div class="dash-hero-sub">${_en?`${n} of ${total} dishes mastered`:`${n} de ${total} platos dominados`}</div>
+    </div>`;
+  }
+  const xp = emp.xp||0;
+  const cur = getLevelInfo(xp), next = getNextLevel(xp);
+  const pct = xpProgress(xp);
+  const falta = next ? (next.xp - xp) : 0;
+  const streak = emp.streak||0;
+  const sub = next
+    ? (_en ? `${xp.toLocaleString()} XP · ${falta.toLocaleString()} to Lv.${next.level}` : `${xp.toLocaleString()} XP · faltan ${falta.toLocaleString()} para Lv.${next.level}`)
+    : (_en ? `${xp.toLocaleString()} XP · max level` : `${xp.toLocaleString()} XP · nivel máximo`);
+  return `<div class="dash-hero dash-hero-mini" ${ir} aria-label="${_en?'Your level: see your progress':'Tu nivel: ver tu progreso'}">
+      <div class="dash-hero-top">
+        ${saludo}
+        <div class="dash-hero-lvl-badge"><div class="dash-hero-lvl-num">${tunicLevelIcon(cur.level,cur.color,14)} Lv.${cur.level}</div></div>
       </div>
+      <div class="dash-hero-rango"><span class="dash-hero-rango-t">${cur.title}</span><span class="dash-hero-rango-xp">${sub}${streak>1?` · ${streak}d`:''}</span></div>
+      <div class="dash-hero-track" aria-hidden="true"><div class="dash-hero-fill" style="width:${pct}%"></div></div>
     </div>`;
 }
 
@@ -25989,7 +26044,7 @@ function renderFlashcards(){
     <div class="fc-toolbar">
       <select class="select-pill" onchange="changeFcCat(this.value)">
         <option value="all">${t('allDishes')}</option>
-        ${_catsActivas().map(k=>`<option value="${k.es}">${LANG==='en'?(k.en||k.es):k.es}</option>`).join('')}
+        ${_catsActivas().map(k=>`<option value="${k.es}">${LANG==='en'?_catEnFalta(k.es,k.en):k.es}</option>`).join('')}
       </select>
       <span class="fc-counter-badge" id="fcCounter"></span>
       <span class="snd-slot"></span>
@@ -26304,7 +26359,7 @@ function renderExamSetup(){
       <div class="section-eyebrow">${t('topicCategory')}</div>
       <div class="opt-grid" id="catOpts">
         <div class="opt-tile sel" data-cat="all" onclick="selCat(this)">${shine}<div class="opt-tile-icon"><svg width="16" height="16" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#c49a3c"/><polygon points="12,23 22,17.5 22,6.5 12,12" fill="#a47a2c" opacity=".4"/><polygon points="12,6 16,12 12,18 8,12" fill="#fff" opacity=".7"/></svg></div><div class="opt-tile-name">${t('allCats')}</div><div class="opt-tile-sub">${DISHES.length} ${t('dishes')}</div></div>
-        ${_catsActivas().map(k=>{const c=LANG==='en'?(k.en||k.es):k.es;return `<div class="opt-tile" data-cat="${k.es}" style="--tile-cat-color:${getCatColor(k.es)};border-top:2px solid ${getCatColor(k.es)}" onclick="selCat(this)"><div class="opt-tile-icon">${CAT_ICONS[k.es]||''}</div><div class="opt-tile-name">${c}</div><div class="opt-tile-sub">${DISHES.filter(d=>d.cat===k.es).length} ${t('dishes')}</div></div>`;}).join('')}
+        ${_catsActivas().map(k=>{const c=LANG==='en'?_catEnFalta(k.es,k.en):k.es;return `<div class="opt-tile" data-cat="${k.es}" style="--tile-cat-color:${getCatColor(k.es)};border-top:2px solid ${getCatColor(k.es)}" onclick="selCat(this)"><div class="opt-tile-icon">${CAT_ICONS[k.es]||''}</div><div class="opt-tile-name">${c}</div><div class="opt-tile-sub">${DISHES.filter(d=>d.cat===k.es).length} ${t('dishes')}</div></div>`;}).join('')}
       </div>
 
       <div class="section-eyebrow">${t('topicQuestions')}</div>
@@ -28741,7 +28796,7 @@ function renderStats(){
     <div style="display:flex;align-items:center;gap:.75rem;margin-bottom:1.25rem">
       <div style="width:44px;height:44px;clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);background:linear-gradient(135deg,var(--gold),var(--gold2));border:1.5px solid var(--gold-a);display:flex;align-items:center;justify-content:center;font-size:1.2rem;overflow:hidden">${renderSmallAvatar(currentUser, 44)}</div>
       <div>
-        <div style="font-family:'Cinzel',serif;font-size:1.1rem;color:var(--parchment)">${escapeHTML(currentUser)}</div>
+        <div style="font-family:'Cinzel',serif;font-size:1.1rem;color:var(--parchment)">${escapeHTML(_dispName(currentUser))}</div>
         ${_tranquilo
           ? `<div style="font-family:var(--font-mono);font-size:var(--fs-1);color:var(--parch3)">${_en?'quiet mode':'modo tranquilo'}</div>`
           : `<div style="font-family:var(--font-mono);font-size:var(--fs-1);color:var(--gold);display:flex;align-items:center;gap:.2rem">${tunicLevelIcon(lvl.level,lvl.color,14)} ${lvl.title} · Nv.${lvl.level}</div>`}
@@ -28989,16 +29044,6 @@ function showCertModal(cat){
   setTimeout(()=> awardXP(50, LANG==='en'?`${catLocal(cat)} certified `:`Certificado ${catLocal(cat)} `), 500);
 }
 
-function renderCertBadges(emp){
-  const certs = getCertifications(emp);
-  if(!certs.length) return '';
-  return `<div style="margin-top:.75rem">
-    <div style="font-family:var(--font-mono);font-size:var(--fs-1);color:var(--gold);letter-spacing:.12em;text-transform:uppercase;margin-bottom:.5rem;opacity:.8">${LANG==='en'?'Certifications':'Certificados'}</div>
-    <div style="display:flex;flex-wrap:wrap;gap:.35rem">
-      ${certs.map(cat=>`<span title="${catLocal(cat)}" style="display:inline-flex;align-items:center;gap:.3rem;background:var(--gold-b);border:1px solid var(--gold-a);border-radius:20px;padding:.25rem .65rem;font-size:.7rem;color:var(--gold);font-family:'Quicksand',sans-serif;font-weight:500">${CAT_ICONS[cat]||''} ${catLocal(cat)}</span>`).join('')}
-    </div>
-  </div>`;
-}
 
 // ═══ RANKING (visible to all) ═══
 
@@ -29347,7 +29392,7 @@ function renderRanking(){
         <div style="width:28px;text-align:center;flex-shrink:0">${i<3?medals[i]:`<span style="font-family:var(--font-serif);font-size:var(--fs-3);font-weight:700;color:var(--parch3)">${i+1}</span>`}</div>
         <div style="width:36px;height:36px;clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);background:${isMe?'linear-gradient(135deg,var(--gold),#9a7340)':i===0?'linear-gradient(135deg,var(--gold),#9a7340)':i===1?'linear-gradient(135deg,#e8e8e8,#d0d0d0)':i===2?'linear-gradient(135deg,#d4a574,#b8865c)':'rgba(196,154,60,.15)'};border:none;display:flex;align-items:center;justify-content:center;font-size:.85rem;color:${i<3||isMe?'#1c2a22':'var(--parch2)'};font-weight:700;flex-shrink:0;overflow:hidden">${renderSmallAvatar(emp.name, 36)}</div>
         <div style="flex:1;min-width:0">
-          <div style="font-size:.9rem;font-weight:700;${isMe?'color:var(--gold)':'color:var(--parchment)'}">${escapeHTML(emp.name)}${_txCrownFor(emp.name)}${isMe?` <span style="font-size:.6rem;opacity:.6;font-weight:500">${LANG==='en'?'(you)':'(tú)'}</span>`:''}</div>
+          <div style="font-size:.9rem;font-weight:700;${isMe?'color:var(--gold)':'color:var(--parchment)'}">${escapeHTML(_esDemo()?_dispName(emp.name):emp.name)}${_txCrownFor(emp.name)}${isMe?` <span style="font-size:.6rem;opacity:.6;font-weight:500">${LANG==='en'?'(you)':'(tú)'}</span>`:''}</div>
           ${isMe && _soyTranquilo ? '' : `<div style="font-family:var(--font-sans);font-size:var(--fs-2);font-weight:500;color:var(--parch3);margin-top:.1rem">${lvl.title} · ${LANG==='en'?'Lvl':'Nv'}.${lvl.level}${streak>1?` · ●${streak}${LANG==='en'?'d':'d'}`:''}</div>`}
           ${tags.length ? `<div style="font-family:var(--font-sans);font-size:var(--fs-2);font-weight:500;color:var(--parch4);margin-top:.15rem">${tags.join(' · ')}</div>` : ''}
         </div>
@@ -29379,7 +29424,7 @@ function renderRanking(){
       const isMe=n===currentUser;
       return `<div style="display:flex;align-items:center;gap:.8rem;padding:.65rem .9rem;background:${isMe?'linear-gradient(155deg,rgba(196,154,60,.08),rgba(196,154,60,.03))':'linear-gradient(155deg,#faf6ee,#f0e8d8)'};border:1.5px solid ${isMe?'rgba(196,154,60,.3)':'rgba(196,154,60,.12)'};border-radius:10px;margin-bottom:.45rem">
         <div style="width:24px;text-align:center;flex-shrink:0">${i<3?medals[i]:`<span style="font-family:var(--font-serif);font-size:var(--fs-3);font-weight:700;color:var(--parch3)">${i+1}</span>`}</div>
-        <div style="flex:1;min-width:0;font-size:.85rem;font-weight:700;color:${isMe?'var(--gold)':'var(--parchment)'}">${escapeHTML(n)}${isMe?` <span style="font-size:.6rem;opacity:.6;font-weight:500">${LANG==='en'?'(you)':'(tú)'}</span>`:''}</div>
+        <div style="flex:1;min-width:0;font-size:.85rem;font-weight:700;color:${isMe?'var(--gold)':'var(--parchment)'}">${escapeHTML(_esDemo()?_dispName(n):n)}${isMe?` <span style="font-size:.6rem;opacity:.6;font-weight:500">${LANG==='en'?'(you)':'(tú)'}</span>`:''}</div>
         ${isMe && _soyTranquilo ? '' : `<div style="font-family:var(--font-sans);font-size:var(--fs-4);font-weight:800;color:var(--gold-deep);flex-shrink:0">+${weekMap[n].toLocaleString()} <span style="font-size:.55rem;opacity:.6">XP</span></div>`}
       </div>`;
     }).join('');

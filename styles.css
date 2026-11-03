@@ -11796,3 +11796,36 @@ html[data-venue="demo"] .ri-cta-mesa .ri-cta-icon{border-color:rgba(200,163,90,.
 @media (prefers-reduced-motion:reduce){.empl-ov-card.entra-izq,.empl-ov-card.entra-der{animation:none}}
 .ca-ahora .ca-repetir{color:rgba(244,237,226,.72);border-color:rgba(244,237,226,.22)}
 .ca-ahora .ca-repetir.on{color:#f0d79a;border-color:rgba(232,201,138,.65);background:rgba(232,201,138,.10)}
+
+/* Hoy · saludo y nivel en una tarjeta pequeña, debajo del plan (nov 2026).
+   La prueba de usuario: la tarjeta grande de nivel ocupaba media pantalla
+   antes de lo útil. Misma piel que el héroe (fondo y filete de cada venue),
+   sin runas ni cejilla; una línea de saludo, el rango y una barra fina. */
+.dash-hero.dash-hero-mini{padding:.8rem 1rem .85rem;margin:0 0 1.25rem;cursor:pointer;min-height:44px;animation:none}
+.dash-hero.dash-hero-mini::before{opacity:.45}
+.dash-hero-mini .dash-hero-top{flex-direction:row;align-items:center;gap:.75rem;margin-bottom:.45rem}
+.dash-hero-mini .dash-hero-saludo{min-width:0;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.dash-hero-mini .dash-hero-greeting,.dash-hero-mini .dash-hero-name{font-size:var(--fs-5);line-height:1.3}
+.dash-hero-mini .dash-hero-lvl-badge{min-width:0;padding:.3rem .6rem;align-self:center;clip-path:none;border-radius:999px}
+.dash-hero-mini .dash-hero-lvl-num{margin:0;font-size:var(--fs-1)}
+.dash-hero-rango{position:relative;z-index:2;display:flex;align-items:baseline;justify-content:space-between;gap:.6rem;flex-wrap:wrap;margin-bottom:.4rem}
+.dash-hero-rango-t{font-family:var(--font-serif);font-size:var(--fs-3);font-weight:600;color:var(--gold3)}
+.dash-hero-rango-xp{font-family:var(--font-mono);font-size:var(--fs-1);color:rgba(228,190,104,.75);letter-spacing:.04em}
+.dash-hero-track{position:relative;z-index:2;height:4px;border-radius:2px;background:rgba(228,190,104,.14);overflow:hidden}
+.dash-hero-fill{height:100%;border-radius:inherit;background:linear-gradient(90deg,var(--gold2),var(--gold3));min-width:2px}
+.dash-hero-mini .dash-hero-sub{position:relative;z-index:2;font-family:var(--font-mono);font-size:var(--fs-1);color:rgba(228,190,104,.75);letter-spacing:.04em}
+.dash-hero-mini:focus-visible{outline:2px solid var(--gold3);outline-offset:2px}
+
+/* Lo plegable de Conocer el plato / Un plato al día / Repasar: se nota que se
+   abre y se cierra. Con display:flex el triángulo del navegador desaparecía y
+   «Lo que he entendido» parecía una etiqueta suelta (prueba de usuario, nov
+   2026). Ahora lleva su flecha, que gira al abrirse. */
+.deg-apoyo summary{list-style:none;gap:.6rem}
+.deg-apoyo summary::-webkit-details-marker{display:none}
+.deg-apoyo summary::after{content:'';margin-left:auto;flex:none;width:7px;height:7px;border-right:1.5px solid currentColor;border-bottom:1.5px solid currentColor;transform:translateY(-2px) rotate(45deg);transition:transform .2s ease}
+.deg-apoyo[open] > summary::after{transform:translateY(2px) rotate(-135deg)}
+@media (prefers-reduced-motion:reduce){.deg-apoyo summary::after{transition:none}}
+
+/* Vista rápida sin foto: la X de cerrar caía encima de la flecha «siguiente».
+   La fila de navegación deja sitio a la X. */
+.empl-ov-card.sin-foto .empl-ov-nav{padding-right:3rem}
