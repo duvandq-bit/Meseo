@@ -54,7 +54,7 @@
 <meta property="og:description" content="Formación de equipos de sala: carta, alérgenos, vinos, exámenes y juegos de repaso.">
 <meta property="og:url" content="https://meseo.es/">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"Meseo","url":"https://meseo.es/"}</script>
-<meta name="app-version" content="7.538">
+<meta name="app-version" content="7.539">
 <meta name="app-build" content="May 2026">
 <meta name="theme-color" content="#1c2a22">
 <!-- ═══ PWA ═══ -->
@@ -2920,7 +2920,7 @@ const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><p
 const SRC = 'src';
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='7.538';  // sincronizada con sw.js VERSION (guard de CI)
+const APP_VERSION='7.539';  // sincronizada con sw.js VERSION (guard de CI)
 const APP_BUILD='Jul 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;
@@ -17611,6 +17611,34 @@ try{
   if(typeof caches !== 'undefined') caches.keys().then(ks => ks.forEach(k => { if(k.indexOf('meseo-audio-privado') === 0 && k !== _AUD_CACHE) caches.delete(k); })).catch(() => {});
 }catch(e){}
 const _AUD_BUCKET = 'cartas-audio';
+// La DEMO (Orchilla) es pública y no tiene servidor: sus audios están en el
+// repositorio (audio/demo/...) y se piden a este mismo sitio, sin sesión.
+// Sólo con la carta de la demo puesta y sólo rutas «demo/<id>[-b<n>|-nombre]-
+// <es|en>.m4a»: no abre la puerta a leer en local la carpeta de otro
+// restaurante. El service worker no los precachea (pesan): cada uno se guarda
+// en su caché la primera vez que suena, y después funciona sin red.
+const _AUD_DEMO_CACHE = 'meseo-audio-demo-v1';
+function _audDemoLocal(ruta, venue){
+  if(venue !== 'demo' || typeof ruta !== 'string') return null;
+  return /^demo\/\d{4}-(?:(?:b\d{1,2}|nombre)-)?(?:es|en)\.m4a$/.test(ruta) ? 'audio/' + ruta : null;
+}
+async function _audDemoBlob(rel){
+  let url = rel;
+  try{ url = new URL(rel, location.href).href; }catch(e){}
+  let c = null;
+  try{ if(typeof caches !== 'undefined') c = await caches.open(_AUD_DEMO_CACHE); }catch(e){ c = null; }
+  try{
+    if(c){ const r = await c.match(url); if(r && r.ok) return new Blob([await r.blob()], { type:'audio/mp4' }); }
+  }catch(e){}
+  try{
+    const r = await fetchT(url, {}, 20000);
+    if(!r.ok) return null;
+    const b = new Blob([await r.blob()], { type:'audio/mp4' });
+    if(!b.size) return null;
+    try{ if(c) await c.put(url, new Response(b, { headers:{ 'Content-Type':'audio/mp4' } })); }catch(e){ /* sin sitio: se pide otra vez */ }
+    return b;
+  }catch(e){ return null; }
+}
 const _audUrls = new Map();       // ruta -> blob: de esta sesión
 const _audPend = new Map();       // ruta -> promesa en curso
 function _padAudioDe(d, dd){
@@ -17627,6 +17655,14 @@ function _padAudioSrc(ruta){
   if(_audUrls.has(ruta)) return Promise.resolve(_audUrls.get(ruta));
   if(_audPend.has(ruta)) return _audPend.get(ruta);
   const p = (async () => {
+    const local = _audDemoLocal(ruta, (typeof _cartaMeta !== 'undefined' && _cartaMeta) ? _cartaMeta.venue : null);
+    if(local){
+      const b = await _audDemoBlob(local);
+      if(!b) return null;
+      const u0 = URL.createObjectURL(b);
+      _audUrls.set(ruta, u0);
+      return u0;
+    }
     const url = `${SUPA_URL}/storage/v1/object/authenticated/${_AUD_BUCKET}/${ruta.split('/').map(encodeURIComponent).join('/')}`;
     let blob = null;
     try{
@@ -20191,7 +20227,10 @@ function _tecFuente(){
 }
 let _tecVista = 'tec';
 function _tecVer(v){ _tecVista = (v === 'glo') ? 'glo' : 'tec'; renderTecnicas(); }
-const _GLO_ORIGEN = { ja:['Japonés','Japanese'], ko:['Coreano','Korean'], zh:['Chino','Chinese'], ms:['Malayo','Malay'] };
+const _GLO_ORIGEN = { ja:['Japonés','Japanese'], ko:['Coreano','Korean'], zh:['Chino','Chinese'], ms:['Malayo','Malay'],
+  ic:['Canarias','Canary Islands'], es:['Español','Spanish'], fr:['Francés','French'], ar:['Árabe','Arabic'] };
+// ¿Glosario de cocina asiática (el de Akira)? Si no, el subtítulo no habla de japonés y coreano.
+function _gloAsiatico(g){ return Array.isArray(g) && g.every(x => /^(ja|ko|zh|ms)$/.test(x && x.o)); }
 function _gloFiltrar(q){
   const n = String(q || '').trim().toLowerCase();
   let vis = 0;
@@ -20239,7 +20278,9 @@ function renderTecnicas(){
       <div>
         <div class="tec-hero-t">${vistaGlo?(_en?'Menu glossary':'Glosario de la carta'):(_en?'Cooking techniques':'Técnicas de cocina')}</div>
         <div class="tec-hero-s">${vistaGlo
-          ?(_en?`The Japanese and Korean words on the ${escapeHTML(_venueCasa())} menu, explained.`:`Las palabras japonesas y coreanas de la carta de ${escapeHTML(_venueCasa())}, explicadas.`)
+          ?(_gloAsiatico(src.glosario)
+            ?(_en?`The Japanese and Korean words on the ${escapeHTML(_venueCasa())} menu, explained.`:`Las palabras japonesas y coreanas de la carta de ${escapeHTML(_venueCasa())}, explicadas.`)
+            :(_en?`The words on the ${escapeHTML(_venueCasa())} menu that a guest may not know, explained.`:`Las palabras de la carta de ${escapeHTML(_venueCasa())} que un cliente puede no conocer, explicadas.`))
           :(_en?`The techniques of a high-level kitchen: what each one is and, when we use it, the ${escapeHTML(_venueCasa())} dishes where it appears.`:`Las técnicas de una cocina de alto nivel: qué es cada una y, cuando la usamos, los platos de ${escapeHTML(_venueCasa())} donde aparece.`)}</div>
         <div class="tec-hero-stat">${vistaGlo?`${src.glosario.length} ${_en?'words':'palabras'}`:`${LISTA.length} ${_en?'techniques':'técnicas'} · ${nFam} ${_en?'families':'familias'}`}</div>
       </div>
