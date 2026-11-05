@@ -16912,6 +16912,120 @@ test('Glosario: palabras con su escritura original, origen y platos; todo escapa
   assert(/Para alérgenos, manda siempre la ficha del plato/.test(g), 'el glosario recuerda que los alérgenos están en la ficha');
   assert(/oninput="_gloFiltrar\(this\.value\)"/.test(g) && /font-size:16px/.test(read('styles.css').slice(read('styles.css').indexOf('.glo-search{'), read('styles.css').indexOf('.glo-search{') + 400)), 'buscador sin zoom de iOS (16px)');
 });
+// ── Guía del sushi (GUIA_SUSHI en la carta puesta) ──
+const _sushiMuestraCarta = () => ({
+  titulo:'Guía del sushi', titulo_en:'Sushi guide', intro:'Intro ES', intro_en:'Intro EN',
+  nigiris:[ { id:'clasico', nombre:'Nigiri clásico', nombre_en:'Classic nigiri', que:'Arroz y pescado.', que_en:'Rice and fish.', como:'De un bocado.', como_en:'In one bite.' },
+            { id:'malo', nombre:{ x:1 }, que:'x' } ],
+  makis:[ { id:'uramaki', nombre:'Uramaki', nombre_en:'Uramaki', que:'Del revés.', que_en:'Inside out.', como:'Ura significa del revés.', como_en:'Ura means inside out.' } ],
+  pescados:[
+    { id:'alfonsino', nombre:'Alfonsiño', nombre_en:'Alfonsino', familia:'blanco', color:'Blanca nacarada.', color_en:'Pearly white.', sabor:'Suave.', sabor_en:'Mild.',
+      japones:'kinmedai', japones_escrito:'金目鯛', muestra:{ carne:'#f6eee6', piel:'#c3212b' } },
+    { id:'jurel', nombre:'Jurel', nombre_en:'Horse mackerel', familia:'azul', color:'Gris rosado.', color_en:'Pinkish grey.',
+      japones:'aji', japones_escrito:'鯵', muestra:{ carne:'red', franja:'#8c3a3c' } },
+    { id:'loquillo', nombre:'Loquillo', nombre_en:'Lesser amberjack', familia:'azul', color:'Crema rosada.', color_en:'Creamy pink.',
+      revisar:'REVISAR-ES', revisar_en:'REVISAR-EN', japones:'kanpachi', japones_escrito:'間八', japones_nota:'Equivalencia aproximada.', japones_nota_en:'Approximate.' },
+    { id:'salmon', nombre:'<img src=x onerror=alert(1)>', familia:'salmon', color:'Naranja.', muestra:{ carne:'#f08546', vetas:true } },
+    { id:'raro', nombre:'Raro', familia:'rosa', color:'x' },
+  ],
+  familias:{ blanco:{ nombre:'Pescados blancos', nombre_en:'White fish', pista:'PISTA-BLANCO', pista_en:'HINT-WHITE' },
+             azul:{ nombre:'Pescados azules', nombre_en:'Oily fish', pista:'PISTA-AZUL', pista_en:'HINT-OILY' } },
+});
+const _sushiRes = (() => {
+  const a = html.indexOf('// ═══ GUÍA DEL SUSHI'), b = html.indexOf('// De dónde salen las técnicas', a);
+  if (a < 0 || b < 0 || !_tecSrc.vista || !_tecSrc.esc || !_tecSrc.dishes) return null;
+  const mod = html.slice(a, b);
+  const montar = (lang, guia, mando) => {
+    const el = { innerHTML:'' };
+    const document = { getElementById: () => el, querySelectorAll: () => [] };
+    const api = new Function('document','DISHES','TECNICA_FAMS','TECNICAS','_cartaMeta','LANG','_venueCasa','_esMando','_esAdmin','_subTab','showTab', // eslint-disable-line no-new-func
+      _tecSrc.esc + '\nconst escapeHTML = escapeHtml;\n' + _tecSrc.dishes + '\n' + mod + '\n' + _tecSrc.vista
+      + '\nreturn { renderTecnicas, _tecVer, _sushiValida, _sushiVer, _sushiNueva, _sushiResponder, _sushiAbrir, q: () => _sushiQ };')(
+      document, [], [ { k:'seco', es:'Calor seco', en:'Dry heat', col:'#c47838' } ],
+      [ { fam:'seco', ic:'', es:'Brasa', en:'Grill', def:'Fuego.', defEn:'Fire.', kw:['brasa'] } ],
+      null, lang, () => 'R2', () => !!mando, () => false, {}, () => api.renderTecnicas());
+    const meta = guia ? { SUSHI: api._sushiValida(guia) } : null;
+    // _cartaMeta va como parámetro: se rehace la función con la guía ya validada.
+    const api2 = new Function('document','DISHES','TECNICA_FAMS','TECNICAS','_cartaMeta','LANG','_venueCasa','_esMando','_esAdmin','_subTab','showTab', // eslint-disable-line no-new-func
+      _tecSrc.esc + '\nconst escapeHTML = escapeHtml;\n' + _tecSrc.dishes + '\n' + mod + '\n' + _tecSrc.vista
+      + '\nreturn { renderTecnicas, _tecVer, _sushiValida, _sushiVer, _sushiNueva, _sushiResponder, _sushiAbrir, q: () => _sushiQ };')(
+      document, [], [ { k:'seco', es:'Calor seco', en:'Dry heat', col:'#c47838' } ],
+      [ { fam:'seco', ic:'', es:'Brasa', en:'Grill', def:'Fuego.', defEn:'Fire.', kw:['brasa'] } ],
+      meta, lang, () => 'R2', () => !!mando, () => false, {}, () => api2.renderTecnicas());
+    return { api:api2, el, meta };
+  };
+  return { montar };
+})();
+test('Guía del sushi: se valida campo a campo y sin GUIA_SUSHI no hay guía', () => {
+  assert(_sushiRes, 'no encuentro el módulo de la guía del sushi');
+  const { api, meta } = _sushiRes.montar('es', _sushiMuestraCarta());
+  const g = meta.SUSHI;
+  assert(g.nigiris.length === 1 && g.makis.length === 1, 'fuera los tipos con campos que no son texto');
+  assert(g.pescados.length === 4 && !g.pescados.some(p => p.id === 'raro'), 'fuera los pescados de una familia desconocida');
+  assert(g.pescados.find(p => p.id === 'jurel').muestra === null, 'un color que no es #rrggbb no se usa: se dibuja con el de su familia');
+  assert(g.familias.salmon.nombre === 'Salmón' && g.familias.marisco.nombre_en === 'Shellfish', 'familia sin datos: nombre por defecto');
+  assert(api._sushiValida(null) === null && api._sushiValida({ pescados:'x' }) === null && api._sushiValida([]) === null, 'sin guía válida no hay guía');
+  assert(/SUSHI: \(typeof _sushiValida === 'function'\) \? _sushiValida\(c\.GUIA_SUSHI\) : null/.test(html), 'la carta puesta guarda su guía validada');
+  const pie = html.slice(html.indexOf('function _cartaPieHTML('), html.indexOf('function renderEmplatado('));
+  assert(/const g = \(typeof _sushiGuia==='function'\) \? _sushiGuia\(\) : null;/.test(pie) && /\(g \? `<button type="button" class="carta-pie" onclick="_sushiAbrir\(\)">/.test(pie), 'el pie de la Carta lleva a la guía sólo si la carta la trae');
+  assert(/if\(type==='screen' && id==='sushi'\)\{ if\(typeof _sushiAbrir==='function'\) _sushiAbrir\(\); return; \}/.test(html) && /if\(g\) out\.push\(\{ id:'sushi'/.test(html), 'la lupa encuentra la guía si la carta la trae');
+  const sin = _sushiRes.montar('es', null);
+  sin.api._tecVer('sushi');
+  assert(/Brasa/.test(sin.el.innerHTML) && !/Sushi/.test(sin.el.innerHTML) && !/tec-vista/.test(sin.el.innerHTML), 'sin GUIA_SUSHI: técnicas de siempre, sin pestaña de sushi');
+});
+test('Guía del sushi: nigiris, makis y color en ES y EN, con muestras dibujadas y todo escapado', () => {
+  const es = _sushiRes.montar('es', _sushiMuestraCarta());
+  es.api._tecVer('sushi');
+  let h = es.el.innerHTML;
+  assert(/Guía del sushi/.test(h) && /Intro ES/.test(h) && /Nigiri clásico/.test(h) && /onclick="_tecVer\('sushi'\)">Sushi</.test(h), 'vista de nigiris en español');
+  assert(/<svg class="sushi-dib"/.test(h), 'cada tipo conocido lleva su dibujo');
+  es.api._sushiVer('maki'); h = es.el.innerHTML;
+  assert(/Uramaki/.test(h) && /Ura significa del revés/.test(h), 'vista de makis');
+  es.api._sushiVer('color'); h = es.el.innerHTML;
+  assert(/PISTA-BLANCO/.test(h) && /PISTA-AZUL/.test(h), 'cada familia con su pista');
+  assert(/<svg class="sushi-muestra"/.test(h) && /fill="#c3212b"/.test(h) && /fill="#8c3a3c"/.test(h), 'muestra dibujada con piel y franja');
+  assert(/<span class="sushi-jp-r" lang="ja-Latn">kinmedai<\/span><span class="sushi-jp-k" lang="ja">金目鯛<\/span>/.test(h), 'nombre japonés en romaji y en su escritura');
+  assert(/<p class="sushi-jp-nota">Equivalencia aproximada\.<\/p>/.test(h), 'la nota de equivalencia la ve todo el mundo');
+  assert(!/<img src=x/.test(h) && /&lt;img src=x/.test(h), 'el HTML de la carta se pinta como texto');
+  assert(!/REVISAR-ES/.test(h) && !/Por confirmar con cocina/.test(h), 'el camarero no ve lo que está por confirmar');
+  const mando = _sushiRes.montar('es', _sushiMuestraCarta(), true);
+  mando.api._tecVer('sushi'); mando.api._sushiVer('color');
+  assert(/Por confirmar con cocina<\/b> REVISAR-ES/.test(mando.el.innerHTML), 'mandos y administración sí lo ven');
+  const en = _sushiRes.montar('en', _sushiMuestraCarta());
+  en.api._tecVer('sushi'); h = en.el.innerHTML;
+  assert(/Sushi guide/.test(h) && /Classic nigiri/.test(h) && /In one bite\./.test(h) && !/Nigiri clásico/.test(h), 'vista en inglés');
+  en.api._sushiVer('color'); h = en.el.innerHTML;
+  assert(/HINT-WHITE/.test(h) && /Pearly white\./.test(h) && /Approximate\./.test(h) && /Taste/.test(h), 'color en inglés');
+});
+test('Guía del sushi: práctica «¿Qué pescado es?» por color y por nombre japonés; al fallar, la pista', () => {
+  for (const lang of ['es', 'en']) {
+    const { api, el } = _sushiRes.montar(lang, _sushiMuestraCarta());
+    api._tecVer('sushi'); api._sushiVer('practica'); api._sushiNueva('color'); api._tecVer('sushi');
+    let Q = api.q();
+    assert(Q.tipo === 'color' && Q.ops.length === 4 && Q.ops.includes(Q.id) && new Set(Q.ops).size === 4, 'cuatro opciones distintas con la buena');
+    assert(/<svg class="sushi-muestra grande"/.test(el.innerHTML), 'la pregunta de color enseña la muestra');
+    const mal = Q.ops.findIndex(x => x !== Q.id);
+    const fam = { alfonsino:'blanco', jurel:'azul', loquillo:'azul', salmon:'salmon' }[Q.id];
+    api._sushiResponder(mal);
+    const pista = { es:{ blanco:'PISTA-BLANCO', azul:'PISTA-AZUL' }, en:{ blanco:'HINT-WHITE', azul:'HINT-OILY' } }[lang][fam];
+    assert(api.q().total === 1 && api.q().aciertos === 0, 'cuenta el fallo');
+    if (pista) assert(el.innerHTML.includes(pista), 'al fallar se explica la pista de la familia');
+    api._sushiNueva('jp'); api._tecVer('sushi');
+    Q = api.q();
+    const p = _sushiMuestraCarta().pescados.find(x => x.id === Q.id);
+    assert(Q.tipo === 'jp' && p.japones && el.innerHTML.includes('lang="ja-Latn">' + p.japones + '<'), 'la pregunta en japonés enseña el romaji');
+    assert(/onclick="_sushiResponder\(\d\)"/.test(el.innerHTML), 'opciones que se pueden tocar');
+  }
+  const { api, el } = _sushiRes.montar('es', _sushiMuestraCarta());
+  api._sushiVer('practica');
+  for (let i = 0; i < 30 && !(api.q().tipo === 'jp' && api.q().id === 'loquillo'); i++) api._sushiNueva('jp');
+  if (api.q().id === 'loquillo') {
+    api._tecVer('sushi'); api._sushiResponder(api.q().ops.findIndex(x => x !== 'loquillo'));
+    assert(/Kanpachi es loquillo\. Equivalencia aproximada\./.test(el.innerHTML), 'al fallar el japonés, el nombre y su nota');
+  }
+  const css = read('styles.css');
+  assert(/\.sushi-vistas button\{min-height:44px/.test(css) && /\.tec-vista button\{flex:1;min-height:44px/.test(css) && /\.sushi-otra\{[^}]*min-height:48px/.test(css), 'toques de 44 px o más');
+});
 test('Pase: sin componentes validados que expliquen sus alérgenos, el plato se juega de memoria y sin fase de alergia', () => {
   const a = html.indexOf('function _paseMontable(dish){'), b = html.indexOf('\n// A quién le toca.', a);
   assert(a > 0 && b > a, 'no encuentro _paseMontable');
