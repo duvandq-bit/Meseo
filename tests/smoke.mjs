@@ -19054,6 +19054,78 @@ test('carga: la bodega no se precarga en la pantalla de entrada', () => {
   assert(/\n  _idle\(_preloadWines\);\n\}\);/.test(html), 'la precarga se programa en reposo');
 });
 
+console.log('\nDemo completa: Orchilla con todo lo de Akira (nov 2026)');
+test('demo completa: los 20 platos ES y EN para contar, escuchar y repasar', () => {
+  const c = JSON.parse(read('data/carta-demo.json'));
+  for (const [lista, lang] of [[c.DISHES, 'es'], [c.DISHES_EN, 'en']]) {
+    assert(lista.length === 20, `${lang}: veinte platos`);
+    for (const d of lista) {
+      const q = `${lang} ${d.id}`;
+      assert(typeof d.story === 'string' && d.story.split(/\s+/).length >= 15 && d.story.split(/\s+/).length <= 40, `${q}: story para la mesa`);
+      assert(typeof d.story_larga === 'string' && d.story_larga.length > d.story.length, `${q}: story_larga para el audio`);
+      assert(Array.isArray(d.tres) && d.tres.length === 3 && d.tres.every(x => typeof x === 'string' && x.trim()), `${q}: tres frases`);
+      assert(Array.isArray(d.claves) && d.claves.length >= 3 && d.claves.length <= 6 && d.claves.every(g => Array.isArray(g) && g.length && g.every(w => w === w.toLowerCase())), `${q}: claves`);
+      assert(d.audio === `demo/${d.id}-${lang}.m4a` && d.audio_nombre === `demo/${d.id}-nombre-${lang}.m4a`, `${q}: rutas de audio`);
+      for (const r of [d.audio, d.audio_nombre]) assert(existsSync(join(ROOT, 'audio', r)), `${q}: falta audio/${r}`);
+      const textos = [d.story, d.story_larga, d.pron || '', ...(d.tres || []), d.significa || '', d.guino || '', ...((d.bocados || []).flatMap(b => [b.n, b.story]))];
+      assert(!textos.some(t => /[—–]/.test(t)), `${q}: sin rayas`);
+      assert(!textos.some(t => /\p{Extended_Pictographic}/u.test(t)), `${q}: sin emojis`);
+      if (lang === 'es') assert(!textos.some(t => /(?<!\p{L})(vosotros|os|vuestr[oa]s?)(?!\p{L})/iu.test(t)), `${q}: «ustedes», nunca «vosotros»`);
+    }
+  }
+  const en = new Map(c.DISHES_EN.map(d => [d.id, d]));
+  for (const d of c.DISHES) assert(!!d.significa === !!en.get(d.id).significa && !!d.guino === !!en.get(d.id).guino, `${d.id}: significa y guiño en los dos idiomas`);
+});
+test('demo completa: mignardises bocado a bocado, con su audio', () => {
+  const c = JSON.parse(read('data/carta-demo.json'));
+  for (const [lista, lang] of [[c.DISHES, 'es'], [c.DISHES_EN, 'en']]) {
+    const m = lista.find(d => d.id === 4020);
+    assert(Array.isArray(m.bocados) && m.bocados.length === 3, `${lang}: tres bocados`);
+    m.bocados.forEach((b, k) => {
+      assert(b.n && b.story && b.audio === `demo/4020-b${k + 1}-${lang}.m4a` && existsSync(join(ROOT, 'audio', b.audio)), `${lang}: bocado ${k + 1}`);
+    });
+    assert(lista.filter(d => d.bocados).length === 1, `${lang}: sólo el surtido lleva bocados`);
+  }
+});
+test('demo completa: glosario y técnicas propios que pasan la validación de la carta', () => {
+  const c = JSON.parse(read('data/carta-demo.json'));
+  const V = new Function(_fnSrc('_cartaTecValidas') + '; return _cartaTecValidas;')(); // eslint-disable-line no-new-func
+  const r = V(c);
+  assert(r && r.glosario && r.glosario.length === c.GLOSARIO.length && r.glosario.length >= 20, 'el glosario entero sobrevive');
+  assert(r.lista && r.lista.length === c.TECNICAS.lista.length && r.fams.length === c.TECNICAS.fams.length, 'las técnicas enteras sobreviven');
+  const hay = c.DISHES.map(d => ((d.name || '') + ' ' + (d.ingredients || '') + ' ' + (d.history || '') + ' ' + (d.notes || '')).toLowerCase());
+  for (const t of r.lista) assert(hay.some(h => t.kw.some(k => h.includes(k))), `la técnica ${t.es} no cae en ningún plato`);
+  const sinPlato = r.glosario.filter(g => !hay.some(h => g.kw.some(k => h.includes(k))));
+  assert(sinPlato.length <= 2, 'palabras del glosario que no salen en la carta: ' + sinPlato.map(g => g.t).join(', '));
+  assert(/ic:\['Canarias','Canary Islands'\]/.test(html) && /fr:\['Francés','French'\]/.test(html), 'orígenes nuevos con etiqueta');
+  for (const g of c.GLOSARIO) assert(/^(ja|ko|zh|ms|ic|es|fr|ar)$/.test(g.o), `${g.t}: origen sin etiqueta`);
+  assert(/_gloAsiatico\(src\.glosario\)/.test(_fnSrc('renderTecnicas')), 'el subtítulo no dice «japonesas y coreanas» en la demo');
+});
+test('demo completa: audios locales sólo para la demo, sin el bucket privado', () => {
+  const i = html.indexOf('function _audDemoLocal('), j = html.indexOf('\n}\n', i);
+  const L = new Function(html.slice(i, j + 2) + '; return _audDemoLocal;')(); // eslint-disable-line no-new-func
+  assert(L('demo/4001-es.m4a', 'demo') === 'audio/demo/4001-es.m4a' && L('demo/4020-b3-en.m4a', 'demo') === 'audio/demo/4020-b3-en.m4a' && L('demo/4001-nombre-en.m4a', 'demo') === 'audio/demo/4001-nombre-en.m4a', 'las buenas');
+  assert(L('r2/3072-es.m4a', 'r2') === null && L('demo/4001-es.m4a', 'r2') === null && L('r2/3072-es.m4a', 'demo') === null, 'Akira sigue en el bucket privado');
+  assert(L('demo/../r2/3072-es.m4a', 'demo') === null && L('https://x.y/demo/4001-es.m4a', 'demo') === null && L('demo/4001-fr.m4a', 'demo') === null && L(null, 'demo') === null, 'ni saltos, ni URLs, ni otro idioma');
+  const src = _fnSrc('_padAudioSrc');
+  assert(src.indexOf('_audDemoLocal(ruta') > 0 && src.indexOf('_audDemoLocal(ruta') < src.indexOf('storage/v1/object/authenticated'), 'la demo se resuelve antes de pedir sesión');
+  const b = html.slice(html.indexOf('async function _audDemoBlob('), html.indexOf('\n}\n', html.indexOf('async function _audDemoBlob(')));
+  assert(/caches\.open\(_AUD_DEMO_CACHE\)/.test(b) && /c\.put\(url, new Response\(b/.test(b) && /type:'audio\/mp4'/.test(b) && !/Authorization/.test(b), 'se guarda al escucharlo, sin sesión, AAC en MP4');
+  assert(/const _AUD_DEMO_CACHE = 'meseo-audio-demo-v1'/.test(html) && !/caches\.delete\(_AUD_DEMO_CACHE\)/.test(_fnSrc('_padAudiosOlvidar')), 'caché propia, que no se confunde con la privada');
+  const sw = read('sw.js');
+  assert(/if \(url\.pathname\.startsWith\('\/audio\/'\)\) return;/.test(sw) && !/audio\//.test(sw.slice(sw.indexOf('const SHELL_URLS'), sw.indexOf('];', sw.indexOf('const SHELL_URLS')))), 'el service worker no los precachea ni los guarda dos veces');
+});
+test('demo completa: audios en m4a, uno por plato, nombre e idioma, y un peso razonable', () => {
+  const dir = join(ROOT, 'audio', 'demo');
+  const fs = readdirSync(dir);
+  assert(fs.every(f => /^40\d\d-(?:(?:b\d|nombre)-)?(?:es|en)\.m4a$/.test(f)), 'sólo audios de Orchilla con nombre válido');
+  assert(fs.length === 20 * 2 * 2 + 3 * 2, 'descripción y nombre de 20 platos y 3 bocados, en ES y EN: ' + fs.length);
+  let total = 0;
+  for (const f of fs) { const b = readFileSync(join(dir, f)); total += b.length; assert(b.slice(4, 8).toString() === 'ftyp', f + ' no es MP4'); }
+  assert(total < 10 * 1024 * 1024, 'los audios de la demo pesan demasiado: ' + total);
+  assert(!existsSync(join(ROOT, 'audio', 'r2')), 'ni un audio de Akira en el repositorio');
+});
+
 console.log('\nHygiene');
 test('no git conflict markers in tracked source', () => {
   for (const f of ['index.html', 'sw.js', 'data/wines.json', 'data/lqa-situations.json', 'data/ghost-scenarios.json']) {
