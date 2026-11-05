@@ -4838,7 +4838,7 @@ body::after{
 .tec-fam::after{content:'';display:block;height:1px;background:linear-gradient(90deg,color-mix(in srgb,var(--tec-col,#a3502a) 30%,transparent),transparent);margin-top:-.35rem}
 /* Técnicas · Glosario (cartas con glosario propio, p. ej. r2) */
 .tec-vista{display:flex;gap:.4rem;margin:0 0 1rem;padding:.25rem;border-radius:12px;background:var(--ink2);border:1px solid var(--ink3)}
-.tec-vista button{flex:1;min-height:40px;border:none;border-radius:9px;background:transparent;cursor:pointer;
+.tec-vista button{flex:1;min-height:44px;border:none;border-radius:9px;background:transparent;cursor:pointer;
   font-family:'DM Mono',monospace;font-size:.68rem;letter-spacing:.12em;text-transform:uppercase;color:var(--parch3);
   -webkit-tap-highlight-color:transparent;touch-action:manipulation}
 .tec-vista button.on{background:linear-gradient(150deg,#2d6a3e,#22532f);color:#fbf7ee;box-shadow:0 2px 0 rgba(0,0,0,.15)}
@@ -4854,6 +4854,68 @@ body::after{
 .glo-o{margin-left:auto;font-family:'DM Mono',monospace;font-size:.55rem;letter-spacing:.1em;text-transform:uppercase;
   color:#fff;background:var(--tec-col);padding:.1rem .42rem;border-radius:6px}
 .glo-vacio{text-align:center;font-family:'DM Mono',monospace;font-size:.7rem;color:var(--parch3);padding:1.2rem}
+/* Guía del sushi (cartas con GUIA_SUSHI, p. ej. r2): tipos de nigiri y maki
+   con un dibujo de línea, y el color de cada pescado dibujado sobre pizarra. */
+.sushi-hero-ic .sushi-dib{width:46px;height:auto;display:block}
+.sushi-vistas{display:grid;grid-template-columns:repeat(auto-fit,minmax(0,1fr));gap:.2rem;margin:0 0 1rem;padding:.2rem;
+  background:var(--gold-b);border:1px solid var(--line2);border-radius:var(--r)}
+.sushi-vistas button{min-height:44px;border:none;border-radius:calc(var(--r) - 3px);background:transparent;cursor:pointer;
+  font-family:var(--font-sans);font-size:var(--fs-3);font-weight:600;color:var(--parch3);-webkit-tap-highlight-color:transparent;touch-action:manipulation}
+.sushi-vistas button.on{background:#fff;color:var(--parchment);box-shadow:0 0 0 1px var(--line2)}
+.sushi-vistas button:focus-visible,.sushi-otra:focus-visible{outline:2px solid var(--gold);outline-offset:-2px}
+.sushi-lista{display:flex;flex-direction:column;gap:.6rem}
+.sushi-tipo{display:grid;grid-template-columns:80px 1fr;gap:.8rem;align-items:start;background:#fff;border:1px solid var(--line2);
+  border-radius:var(--r2);padding:.85rem .9rem}
+.sushi-tipo-h,.sushi-pez-h{margin:0 0 .3rem;font-family:var(--font-serif);font-size:var(--fs-5);font-weight:700;color:var(--parchment);line-height:1.15}
+.sushi-tipo-q,.sushi-pez-c{margin:0;font-family:var(--font-sans);font-size:var(--fs-3);line-height:1.5;color:var(--parch2)}
+.sushi-tipo-c{margin:.45rem 0 0;font-family:var(--font-sans);font-size:var(--fs-2);line-height:1.45;color:var(--parch3);font-style:italic}
+.sushi-dib{display:block}
+.sushi-dib .arroz{fill:#f6f2e8;stroke:#c9bb9f;stroke-width:1.2}
+.sushi-dib .pez{fill:#f2a07a;stroke:#c4724e;stroke-width:1.2}
+.sushi-dib .nori{fill:#2e3a31;stroke:#1d251f;stroke-width:1}
+.sushi-dib .piel{stroke:#c3212b;stroke-width:3.2;stroke-linecap:round;fill:none}
+.sushi-dib .tostado{stroke:#6b3a1f;stroke-width:2;stroke-linecap:round;fill:none}
+.sushi-dib .huevas{fill:#e8692e;stroke:#b84d1c;stroke-width:1}
+.sushi-dib .verde{fill:#7fa65c}
+.sushi-dib .huevo{fill:#f1cd57}
+.sushi-dib .sesamo{fill:#7a6544}
+.sushi-guia-c{margin:0 0 1rem;font-family:var(--font-sans);font-size:var(--fs-3);line-height:1.5;color:var(--parchment)}
+.sushi-fam{--fam:#a8988a;margin:0 0 1.4rem}
+.sushi-fam-azul{--fam:#55708c}
+.sushi-fam-salmon{--fam:#e07a3c}
+.sushi-fam-marisco{--fam:#c2a26e}
+.sushi-fam-h{display:flex;align-items:center;gap:.5rem;margin:0 0 .35rem;font-family:var(--font-serif);font-size:var(--fs-5);font-weight:700;color:var(--parchment)}
+.sushi-fam-h::before{content:'';width:18px;height:6px;border-radius:3px;background:var(--fam);flex:none}
+.sushi-fam-p{margin:0 0 .7rem;padding:.55rem .7rem;border-left:3px solid var(--fam);background:color-mix(in srgb,var(--fam) 8%,#fff);
+  border-radius:0 var(--r3) var(--r3) 0;font-family:var(--font-sans);font-size:var(--fs-3);line-height:1.5;color:var(--parch2)}
+.sushi-pez{display:grid;grid-template-columns:120px 1fr;gap:.8rem;align-items:start;padding:.8rem 0;border-top:1px solid var(--line)}
+.sushi-pez:first-of-type{border-top:0}
+.sushi-muestra{display:block;width:120px;height:auto;border-radius:9px;box-shadow:0 2px 6px rgba(20,24,26,.18)}
+.sushi-muestra.grande{width:100%;max-width:300px;margin:0 auto}
+.sushi-pez-h{display:flex;flex-wrap:wrap;align-items:baseline;gap:.1rem .5rem}
+.sushi-jp-r{font-family:var(--font-sans);font-size:var(--fs-5);font-weight:700;color:var(--gold-ink)}
+.sushi-jp-k{font-family:'Hiragino Sans','Noto Sans JP','Yu Gothic',sans-serif;font-size:var(--fs-2);font-weight:400;color:var(--parch3)}
+.sushi-jp-nota{margin:0 0 .35rem;font-family:var(--font-sans);font-size:var(--fs-2);line-height:1.45;color:var(--parch3)}
+.sushi-q-jp{display:flex;flex-direction:column;align-items:center;gap:.25rem;padding:1.3rem 1rem;border-radius:var(--r);background:#262a2d;text-align:center}
+.sushi-q-jp-l{font-family:var(--font-sans);font-size:var(--fs-2);color:rgba(251,247,238,.7)}
+.sushi-q-jp-r{font-family:var(--font-sans);font-size:1.9rem;font-weight:700;color:#fbf7ee;line-height:1.15}
+.sushi-q-jp-k{font-family:'Hiragino Sans','Noto Sans JP','Yu Gothic',sans-serif;font-size:var(--fs-4);color:rgba(251,247,238,.8)}
+.sushi-pez-s{margin:.4rem 0 0;font-family:var(--font-sans);font-size:var(--fs-2);line-height:1.45;color:var(--parch3)}
+.sushi-pez-s b{color:var(--parch2);font-weight:700;margin-right:.25rem}
+.sushi-rev{margin:.5rem 0 0;padding:.4rem .55rem;border:1px dashed var(--line2);border-radius:var(--r3);
+  font-family:var(--font-sans);font-size:var(--fs-2);line-height:1.45;color:var(--parch3)}
+.sushi-rev b{display:block;font-weight:700;color:var(--gold-ink)}
+.sushi-q{display:flex;flex-direction:column;gap:.75rem}
+.sushi-q-cab{display:flex;align-items:baseline;justify-content:space-between;gap:.5rem}
+.sushi-q-t{margin:0;font-family:var(--font-serif);font-size:var(--fs-6);font-weight:700;color:var(--parchment)}
+.sushi-q-n{font-family:var(--font-sans);font-size:var(--fs-3);font-weight:600;color:var(--parch3)}
+.sushi-q-muestra{padding:.2rem 0}
+.sushi-q-c{margin:0;font-family:var(--font-sans);font-size:var(--fs-4);line-height:1.5;color:var(--parchment)}
+.sushi-otra{align-self:stretch;min-height:48px;border:1px solid var(--gold);border-radius:999px;background:var(--gold-a);cursor:pointer;
+  font-family:var(--font-sans);font-size:var(--fs-4);font-weight:700;color:var(--parchment)}
+.sushi-vacio{font-family:var(--font-sans);font-size:var(--fs-3);color:var(--parch3)}
+.gs-hit-ic .sushi-dib{width:24px;height:auto}
+@media (max-width:360px){.sushi-pez{grid-template-columns:96px 1fr}.sushi-muestra:not(.grande){width:96px}}
 .tec-card{position:relative;background:linear-gradient(155deg,#fdfaf3,#f4ecdc);border:1px solid var(--ink3);
   border-left:4px solid var(--tec-col,#a3502a);border-radius:var(--r2);
   padding:.8rem .9rem .85rem;margin-bottom:.6rem;box-shadow:0 2px 0 var(--ink4)}
@@ -11260,6 +11322,7 @@ html[data-venue="demo"] .ri-cta-mesa .ri-cta-icon{border-color:rgba(200,163,90,.
 .carta-pie{display:block;width:100%;min-height:44px;margin:1.2rem 0 .4rem;padding:.6rem .8rem;background:transparent;border:none;cursor:pointer;
   font-family:var(--font-mono);font-size:var(--fs-1);letter-spacing:.09em;text-transform:uppercase;color:var(--parch4);text-align:center}
 .carta-pie:active{color:var(--gold-deep)}
+.carta-pie+.carta-pie{margin-top:0}
 
 /* ═══ FICHA DEL PLATO · «Cómo se cocina» ═══
    Las técnicas ya no son pestaña: se pliegan dentro de la ficha completa y de

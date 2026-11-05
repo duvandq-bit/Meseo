@@ -54,7 +54,7 @@
 <meta property="og:description" content="Formación de equipos de sala: carta, alérgenos, vinos, exámenes y juegos de repaso.">
 <meta property="og:url" content="https://meseo.es/">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"Meseo","url":"https://meseo.es/"}</script>
-<meta name="app-version" content="7.538">
+<meta name="app-version" content="7.540">
 <meta name="app-build" content="May 2026">
 <meta name="theme-color" content="#1c2a22">
 <!-- ═══ PWA ═══ -->
@@ -2677,7 +2677,8 @@ function _cartaAplicar(c){
     venue: c.venue || null,
     allergensValidated: c.allergensValidated === true,
     CATS: (Array.isArray(c.CATS) && c.CATS.length) ? c.CATS : null,
-    TEC: _cartaTecValidas(c)
+    TEC: _cartaTecValidas(c),
+    SUSHI: (typeof _sushiValida === 'function') ? _sushiValida(c.GUIA_SUSHI) : null
   };
   _cartaFotos = (c === _CARTA_BASE) ? null : _cartaFotosValidas(c);
   DEGUSTACION = (c === _CARTA_BASE || typeof _degValida !== 'function') ? null : _degValida(c.DEGUSTACION, DISHES);
@@ -2920,7 +2921,7 @@ const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><p
 const SRC = 'src';
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='7.538';  // sincronizada con sw.js VERSION (guard de CI)
+const APP_VERSION='7.540';  // sincronizada con sw.js VERSION (guard de CI)
 const APP_BUILD='Jul 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;
@@ -16254,7 +16255,7 @@ function _gsRender(raw){
   if(screens.length){
     html += '<div class="gs-group-lbl">'+(en?'Screens':'Pantallas')+' · '+screens.length+'</div>';
     html += screens.map(it=>'<button type="button" class="gs-hit" role="option" onclick="_gsGo(\'screen\',\''+it.id+'\')">'
-        + '<span class="gs-hit-ic">'+(it.id==='tecnicas'?'🍳':'📰')+'</span>'
+        + '<span class="gs-hit-ic">'+(it.id==='sushi'?_sushiDibujo('clasico'):it.id==='tecnicas'?'🍳':'📰')+'</span>'
         + '<span class="gs-hit-body"><span class="gs-hit-name">'+_gsMark(it.name,tokens)+'</span><span class="gs-hit-sub">'+escapeHtml(it.sub)+'</span></span>'
         + '<span class="gs-hit-go">›</span></button>').join('');
   }
@@ -16305,6 +16306,11 @@ function _gsScreenIndex(){
       search:_gsNorm('tecnicas de cocina techniques glosario glossary cocina kitchen') }
   ];
   try{
+    const g = (typeof _sushiGuia==='function') ? _sushiGuia() : null;
+    if(g) out.push({ id:'sushi', name:en?g.titulo_en:g.titulo, sub:en?'Nigiri, maki and the colour of each fish':'Nigiris, makis y el color de cada pescado',
+      search:_gsNorm('sushi nigiri nigiris maki makis sashimi pescado fish color colour ' + g.pescados.map(p => p.nombre + ' ' + p.nombre_en).join(' ')) });
+  }catch(_){}
+  try{
     const src = (typeof _tecFuente==='function') ? _tecFuente() : null;
     for(const t of ((src && src.lista) || [])){
       out.push({ id:'tecnicas', name:en?t.en:t.es, sub:en?'Cooking technique':'Técnica de cocina', search:_gsNorm(t.es+' '+t.en+' tecnica technique') });
@@ -16316,6 +16322,8 @@ function _gsGo(type, id){
   closeGlobalSearch();
   setTimeout(()=>{
     try{
+      if(type==='screen' && id==='sushi'){ if(typeof _sushiAbrir==='function') _sushiAbrir(); return; }
+      if(type==='screen' && id==='tecnicas' && typeof _tecVista!=='undefined' && _tecVista==='sushi') _tecVista='tec';
       if(type==='screen'){ if(TAB_ROUTES.includes(id)){ _subTab.aprender = id; showTab(id); } return; }
       // Al tocar un plato en el buscador: abrir la FICHA RÁPIDA (foto + info de
       // adaptaciones) — decisión del propietario. El "viaje" (recorrido guiado)
@@ -16544,10 +16552,14 @@ function _cartaToggleHTML(activa){
   const b = (v, l) => `<button type="button" role="tab" aria-selected="${activa===v}" class="${activa===v?'on':''}" onclick="_cartaVer('${v}')">${l}</button>`;
   return `<div class="carta-vista tec-vista" role="tablist" aria-label="${_en?'Menu view':'Vista de la carta'}">${b('fotos', _en?'Photos':'Fotos')}${b('lista', _en?'List':'Lista')}</div>`;
 }
-// Pie de la Carta: el enlace discreto a Actualidad, que ya no tiene chip.
+// Pie de la Carta: el enlace discreto a Actualidad, que ya no tiene chip, y a
+// la guía del sushi si la carta la trae (vive en Técnicas, junto al glosario:
+// la barra de Saber ya está en su tope de chips).
 function _cartaPieHTML(){
   const _en = LANG==='en';
-  return `<button type="button" class="carta-pie" onclick="_subTab.aprender='actualidad';showTab('actualidad')">${_en?'What\'s going on out there':'Qué se cuece fuera'} ›</button>`;
+  const g = (typeof _sushiGuia==='function') ? _sushiGuia() : null;
+  return (g ? `<button type="button" class="carta-pie" onclick="_sushiAbrir()">${escapeHTML(_en?g.titulo_en:g.titulo)} ›</button>` : '')
+    + `<button type="button" class="carta-pie" onclick="_subTab.aprender='actualidad';showTab('actualidad')">${_en?'What\'s going on out there':'Qué se cuece fuera'} ›</button>`;
 }
 function renderEmplatado(){
   const c=document.getElementById('appContent');
@@ -19302,7 +19314,7 @@ function _dishTecHTML(d, compacto){
       ${nota?`<div class="dish-tec-nota">${escapeHTML(nota)}</div>`:''}
     </div>`;
   }).join('');
-  const ir=(compacto?"document.getElementById('emplOverlay').remove();":'')+"_subTab.aprender='tecnicas';showTab('tecnicas')";
+  const ir=(compacto?"document.getElementById('emplOverlay').remove();":'')+"_tecVista='tec';_subTab.aprender='tecnicas';showTab('tecnicas')";
   return `<details class="dish-tec fp-pleg">
     <summary><span class="fp-pleg-t">${_en?'How it is cooked':'Cómo se cocina'}</span><span class="fp-pleg-pre">${escapeHTML(tecs.map(t=>_en?t.en:t.es).join(', '))}</span></summary>
     <div class="fp-pleg-body dish-tec-body">${filas}
@@ -20182,15 +20194,266 @@ function renderActualidad(){
   _actLoad().then(()=>{ const el=document.getElementById('actWrap'); if(el) el.innerHTML=_actHTML(); });
 }
 
+// ═══ GUÍA DEL SUSHI ═════════════════════════════════════════════════════
+// Tipos de nigiri y de maki y el color de cada pescado. Viaja en la carta
+// puesta como GUIA_SUSHI (hoy, r2): cualquier restaurante con esa clave la
+// tiene, y sin ella no aparece. Se valida campo a campo como las técnicas:
+// sólo texto, colores #rrggbb y familias conocidas; nada se pinta sin
+// escapeHTML. Las muestras de color son dibujos (SVG), no fotos.
+const _SUSHI_FAMS = ['blanco','azul','salmon','marisco'];
+// Si un pescado no trae su muestra, se dibuja con el tono de su familia.
+const _SUSHI_MUESTRA_FAM = {
+  blanco:{ carne:'#f3ebe4' }, azul:{ carne:'#cda9a2', franja:'#8c3a3c' },
+  salmon:{ carne:'#f08546', vetas:true }, marisco:{ carne:'#f1e8d6' }
+};
+function _sushiValida(g){
+  if(!g || typeof g !== 'object' || Array.isArray(g)) return null;
+  const txt = (v, max) => typeof v === 'string' && v.length > 0 && v.length <= (max || 900);
+  const opt = (v, max) => v === undefined || v === null || v === '' || txt(v, max);
+  const idOk = v => typeof v === 'string' && /^[a-z0-9_]{1,24}$/.test(v);
+  const hex = v => typeof v === 'string' && /^#[0-9a-fA-F]{6}$/.test(v);
+  const tipos = (arr) => (Array.isArray(arr) ? arr : [])
+    .filter(t => t && idOk(t.id) && txt(t.nombre, 80) && txt(t.que) && opt(t.nombre_en, 80) && opt(t.que_en) && opt(t.como) && opt(t.como_en))
+    .slice(0, 20)
+    .map(t => ({ id:t.id, nombre:t.nombre, nombre_en:t.nombre_en || '', que:t.que, que_en:t.que_en || '', como:t.como || '', como_en:t.como_en || '' }));
+  const pescados = (Array.isArray(g.pescados) ? g.pescados : [])
+    .filter(p => p && idOk(p.id) && txt(p.nombre, 60) && _SUSHI_FAMS.includes(p.familia) && txt(p.color)
+                 && opt(p.nombre_en, 60) && opt(p.color_en) && opt(p.sabor) && opt(p.sabor_en) && opt(p.revisar) && opt(p.revisar_en)
+                 && opt(p.japones, 40) && opt(p.japones_escrito, 40) && opt(p.japones_nota) && opt(p.japones_nota_en))
+    .slice(0, 30)
+    .map(p => {
+      const m = (p.muestra && typeof p.muestra === 'object') ? p.muestra : {};
+      const muestra = hex(m.carne)
+        ? { carne:m.carne, piel:hex(m.piel) ? m.piel : '', franja:hex(m.franja) ? m.franja : '', vetas:m.vetas === true }
+        : null;
+      return { id:p.id, nombre:p.nombre, nombre_en:p.nombre_en || '', familia:p.familia, color:p.color, color_en:p.color_en || '',
+               sabor:p.sabor || '', sabor_en:p.sabor_en || '', revisar:p.revisar || '', revisar_en:p.revisar_en || '',
+               japones:p.japones || '', japones_escrito:p.japones_escrito || '', japones_nota:p.japones_nota || '', japones_nota_en:p.japones_nota_en || '',
+               muestra };
+    });
+  const familias = {};
+  const F = (g.familias && typeof g.familias === 'object') ? g.familias : {};
+  for(const k of _SUSHI_FAMS){
+    const f = F[k];
+    familias[k] = (f && txt(f.nombre, 60) && opt(f.nombre_en, 60) && opt(f.pista) && opt(f.pista_en))
+      ? { nombre:f.nombre, nombre_en:f.nombre_en || '', pista:f.pista || '', pista_en:f.pista_en || '' }
+      : { nombre:{blanco:'Pescados blancos',azul:'Pescados azules',salmon:'Salmón',marisco:'Marisco'}[k],
+          nombre_en:{blanco:'White fish',azul:'Oily fish',salmon:'Salmon',marisco:'Shellfish'}[k], pista:'', pista_en:'' };
+  }
+  const nigiris = tipos(g.nigiris), makis = tipos(g.makis);
+  if(!nigiris.length && !makis.length && !pescados.length) return null;
+  return { titulo: txt(g.titulo, 60) ? g.titulo : 'Guía del sushi', titulo_en: txt(g.titulo_en, 60) ? g.titulo_en : 'Sushi guide',
+           intro: opt(g.intro) ? (g.intro || '') : '', intro_en: opt(g.intro_en) ? (g.intro_en || '') : '',
+           nigiris, makis, pescados, familias };
+}
+function _sushiGuia(){
+  return (typeof _cartaMeta !== 'undefined' && _cartaMeta && _cartaMeta.SUSHI) || null;
+}
+// Elige el idioma de un campo: el inglés si existe, si no el español.
+function _sushiT(o, k, _en){ return (_en && o[k + '_en']) ? o[k + '_en'] : (o[k] || ''); }
+let _sushiVista = 'nigiri';
+let _sushiQ = null;
+let _sushiN = 0;   // ids únicos para los degradados y recortes de cada dibujo
+function _sushiAbrir(v){
+  _tecVista = 'sushi';
+  if(v) _sushiVista = v;
+  _subTab.aprender = 'tecnicas';
+  showTab('tecnicas');
+}
+function _sushiVer(v){
+  _sushiVista = ['nigiri','maki','color','practica'].includes(v) ? v : 'nigiri';
+  if(_sushiVista === 'practica' && !_sushiQ) _sushiNueva();
+  renderTecnicas();
+}
+// La muestra: una loncha sobre su arroz, en una pizarra oscura para que los
+// blancos se lean. Piel arriba, franja oscura debajo, vetas si las lleva.
+function _sushiMuestraSVG(p, grande){
+  const m = p.muestra || _SUSHI_MUESTRA_FAM[p.familia] || _SUSHI_MUESTRA_FAM.blanco;
+  const n = 'sx' + (++_sushiN);
+  const w = grande ? 240 : 120, h = grande ? 144 : 72;
+  const clara = (p.familia === 'blanco' || p.familia === 'marisco');
+  let capas = '';
+  if(m.franja) capas += `<rect x="6" y="${m.piel ? 22.5 : 19}" width="112" height="${m.piel ? 7 : 8}" fill="${m.franja}" opacity=".9"/>
+    <rect x="6" y="${m.piel ? 27 : 25}" width="112" height="5" fill="url(#${n}f)"/>`;
+  if(m.piel) capas += `<rect x="6" y="18" width="112" height="5" fill="${m.piel}"/><rect x="6" y="18" width="112" height="1.4" fill="#fff" opacity=".35"/>`;
+  if(m.vetas) capas += [0,1,2,3,4,5].map(i => `<path d="M${10 + i*17} 52 L${30 + i*17} 18" stroke="#fff4ea" stroke-width="2.6" stroke-linecap="round" opacity=".78"/>`).join('');
+  return `<svg class="sushi-muestra${grande ? ' grande' : ''}" viewBox="0 0 120 72" width="${w}" height="${h}" role="img" aria-hidden="true" focusable="false">
+    <defs>
+      <linearGradient id="${n}c" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff" stop-opacity="${clara ? .55 : .28}"/><stop offset=".5" stop-color="#fff" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".08"/></linearGradient>
+      <linearGradient id="${n}f" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${m.franja || m.carne}" stop-opacity=".55"/><stop offset="1" stop-color="${m.carne}" stop-opacity="0"/></linearGradient>
+      <clipPath id="${n}k"><rect x="9" y="18" width="102" height="34" rx="14" transform="rotate(-3 60 35)"/></clipPath>
+    </defs>
+    <rect width="120" height="72" rx="9" fill="#262a2d"/>
+    <rect x="20" y="40" width="80" height="24" rx="12" fill="#efebe1"/>
+    <g clip-path="url(#${n}k)">
+      <rect x="0" y="0" width="120" height="72" fill="${m.carne}" opacity="${clara ? .93 : 1}"/>
+      <g transform="rotate(-3 60 35)">${capas}</g>
+      <rect x="0" y="0" width="120" height="72" fill="url(#${n}c)"/>
+      <ellipse cx="48" cy="34" rx="26" ry="5" fill="#fff" opacity="${clara ? .3 : .2}" transform="rotate(-3 60 35)"/>
+    </g>
+  </svg>`;
+}
+// Dibujos de línea de cada tipo, por su id. Un tipo que no conocemos sale sin dibujo.
+const _SUSHI_DIBUJO = {
+  clasico: '<rect x="14" y="30" width="52" height="16" rx="8" class="arroz"/><rect x="8" y="18" width="64" height="16" rx="8" class="pez"/>',
+  aburi:   '<rect x="14" y="30" width="52" height="16" rx="8" class="arroz"/><rect x="8" y="18" width="64" height="16" rx="8" class="pez"/><path d="M20 21l4 4M32 20l4 4M44 20l4 4M56 21l4 4" class="tostado"/>',
+  piel:    '<rect x="14" y="30" width="52" height="16" rx="8" class="arroz"/><rect x="8" y="18" width="64" height="16" rx="8" class="pez"/><path d="M14 19.5h52" class="piel"/>',
+  gunkan:  '<rect x="16" y="22" width="48" height="24" rx="5" class="nori"/><circle cx="28" cy="20" r="4" class="huevas"/><circle cx="40" cy="18" r="4" class="huevas"/><circle cx="52" cy="20" r="4" class="huevas"/>',
+  obi:     '<rect x="14" y="30" width="52" height="16" rx="8" class="arroz"/><rect x="8" y="18" width="64" height="16" rx="8" class="pez"/><rect x="34" y="16" width="12" height="32" rx="2" class="nori"/>',
+  hosomaki:'<circle cx="40" cy="32" r="15" class="nori"/><circle cx="40" cy="32" r="12" class="arroz"/><circle cx="40" cy="32" r="4.5" class="pez"/>',
+  futomaki:'<circle cx="40" cy="32" r="21" class="nori"/><circle cx="40" cy="32" r="18" class="arroz"/><circle cx="34" cy="28" r="5" class="pez"/><circle cx="46" cy="29" r="4" class="verde"/><circle cx="40" cy="38" r="4.5" class="huevo"/>',
+  uramaki: '<circle cx="40" cy="32" r="19" class="arroz"/><circle cx="40" cy="32" r="10" class="nori"/><circle cx="40" cy="32" r="7.5" class="pez"/><g class="sesamo"><circle cx="27" cy="20" r="1.2"/><circle cx="51" cy="18" r="1.2"/><circle cx="57" cy="34" r="1.2"/><circle cx="48" cy="47" r="1.2"/><circle cx="29" cy="45" r="1.2"/><circle cx="23" cy="32" r="1.2"/></g>',
+  temaki:  '<path d="M16 14 L64 14 L40 56 Z" class="nori"/><path d="M20 14 Q40 6 60 14 L52 22 Q40 18 28 22 Z" class="arroz"/><circle cx="34" cy="13" r="4" class="pez"/><circle cx="45" cy="12" r="3.5" class="verde"/>'
+};
+function _sushiDibujo(id){
+  const d = _SUSHI_DIBUJO[id];
+  return d ? `<svg class="sushi-dib" viewBox="0 0 80 64" width="80" height="64" aria-hidden="true" focusable="false">${d}</svg>` : '';
+}
+function _sushiTiposHTML(lista, _en){
+  return lista.map(t => {
+    const como = _sushiT(t, 'como', _en);
+    return `<article class="sushi-tipo">
+      ${_sushiDibujo(t.id)}
+      <div class="sushi-tipo-tx">
+        <h3 class="sushi-tipo-h">${escapeHTML(_sushiT(t, 'nombre', _en))}</h3>
+        <p class="sushi-tipo-q">${escapeHTML(_sushiT(t, 'que', _en))}</p>
+        ${como ? `<p class="sushi-tipo-c">${escapeHTML(como)}</p>` : ''}
+      </div>
+    </article>`;
+  }).join('');
+}
+function _sushiColorHTML(g, _en){
+  // Lo que cocina aún tiene que confirmar lo ven mandos y administración, no el camarero.
+  const verRevisar = (typeof _esMando === 'function' && _esMando()) || (typeof _esAdmin === 'function' && _esAdmin());
+  let h = '';
+  for(const k of _SUSHI_FAMS){
+    const ps = g.pescados.filter(p => p.familia === k);
+    if(!ps.length) continue;
+    const f = g.familias[k];
+    const pista = _sushiT(f, 'pista', _en);
+    h += `<section class="sushi-fam sushi-fam-${k}">
+      <h3 class="sushi-fam-h">${escapeHTML(_sushiT(f, 'nombre', _en))}</h3>
+      ${pista ? `<p class="sushi-fam-p">${escapeHTML(pista)}</p>` : ''}
+      ${ps.map(p => {
+        const sabor = _sushiT(p, 'sabor', _en), rev = _sushiT(p, 'revisar', _en), nota = _sushiT(p, 'japones_nota', _en);
+        return `<article class="sushi-pez">
+          ${_sushiMuestraSVG(p)}
+          <div class="sushi-pez-tx">
+            <h4 class="sushi-pez-h"><span class="sushi-pez-nom">${escapeHTML(_sushiT(p, 'nombre', _en))}</span>${p.japones
+              ? `<span class="sushi-jp-r" lang="ja-Latn">${escapeHTML(p.japones)}</span>` : ''}${p.japones_escrito
+              ? `<span class="sushi-jp-k" lang="ja">${escapeHTML(p.japones_escrito)}</span>` : ''}</h4>
+            ${nota ? `<p class="sushi-jp-nota">${escapeHTML(nota)}</p>` : ''}
+            <p class="sushi-pez-c">${escapeHTML(_sushiT(p, 'color', _en))}</p>
+            ${sabor ? `<p class="sushi-pez-s"><b>${_en ? 'Taste' : 'Sabor'}</b> ${escapeHTML(sabor)}</p>` : ''}
+            ${(rev && verRevisar) ? `<p class="sushi-rev" role="note"><b>${_en ? 'To confirm with the kitchen' : 'Por confirmar con cocina'}</b> ${escapeHTML(rev)}</p>` : ''}
+          </div>
+        </article>`;
+      }).join('')}
+    </section>`;
+  }
+  return h;
+}
+// ── Práctica: ¿qué pescado es? ──
+// La muestra y la descripción de color, cuatro nombres. Al fallar se explica
+// la pista de su familia. Sin XP: sólo la cuenta de la sesión.
+function _sushiBaraja(a){ a = a.slice(); for(let i = a.length - 1; i > 0; i--){ const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
+// Dos clases de pregunta, alternas: por el color (muestra y descripción) y
+// por el nombre japonés (si el pescado lo trae).
+function _sushiNueva(tipo){
+  const g = _sushiGuia(); if(!g || g.pescados.length < 2) { _sushiQ = null; return; }
+  const prev = _sushiQ || { aciertos:0, total:0, id:null, tipo:'jp' };
+  const quiere = tipo || (prev.tipo === 'color' ? 'jp' : 'color');
+  let pool = g.pescados.filter(p => p.id !== prev.id);
+  const conJp = pool.filter(p => p.japones);
+  const esJp = quiere === 'jp' && conJp.length > 0;
+  if(esJp) pool = conJp;
+  const p = pool[Math.floor(Math.random() * pool.length)] || g.pescados[0];
+  // Uno de su misma familia si lo hay, para que haya que mirar de verdad.
+  const misma = _sushiBaraja(g.pescados.filter(x => x.id !== p.id && x.familia === p.familia)).slice(0, 1);
+  const resto = _sushiBaraja(g.pescados.filter(x => x.id !== p.id && !misma.includes(x)));
+  const ops = _sushiBaraja([p, ...misma, ...resto].slice(0, Math.min(4, g.pescados.length)));
+  _sushiQ = { id:p.id, tipo:esJp ? 'jp' : 'color', ops:ops.map(x => x.id), elegida:null, aciertos:prev.aciertos, total:prev.total };
+}
+function _sushiResponder(i){
+  if(!_sushiQ || _sushiQ.elegida !== null) return;
+  _sushiQ.elegida = i;
+  _sushiQ.total++;
+  if(_sushiQ.ops[i] === _sushiQ.id) _sushiQ.aciertos++;
+  _sushiPintarPractica();
+}
+function _sushiOtra(){ _sushiNueva(); _sushiPintarPractica(); }
+function _sushiPintarPractica(){
+  const el = document.getElementById('sushiPractica'); const g = _sushiGuia();
+  if(el && g) el.innerHTML = _sushiPracticaHTML(g, LANG === 'en');
+}
+function _sushiPracticaHTML(g, _en){
+  if(!_sushiQ) _sushiNueva();
+  const Q = _sushiQ;
+  if(!Q) return `<p class="sushi-vacio">${_en ? 'There are not enough fish in the guide to practise.' : 'No hay pescados suficientes en la guía para practicar.'}</p>`;
+  const P = id => g.pescados.find(x => x.id === id);
+  const p = P(Q.id); if(!p) { _sushiQ = null; return ''; }
+  const resp = Q.elegida !== null, ok = resp && Q.ops[Q.elegida] === Q.id;
+  const f = g.familias[p.familia];
+  const nom = escapeHTML(_sushiT(p, 'nombre', _en));
+  const jp = Q.tipo === 'jp' && !!p.japones;
+  const r = escapeHTML(p.japones || '');
+  // En mitad de la frase, el nombre en minúscula; el romaji, si abre la frase, con mayúscula.
+  const nomF = nom.charAt(0).toLowerCase() + nom.slice(1);
+  const rF = r.charAt(0).toUpperCase() + r.slice(1);
+  const nota = _sushiT(p, 'japones_nota', _en);
+  // Al fallar: en la de color, la pista de su familia; en la de japonés, el
+  // nombre y, si la equivalencia es aproximada, su nota.
+  const explica = jp ? (_en ? `${rF} is ${nomF}.` : `${rF} es ${nomF}.`) + (nota ? ' ' + escapeHTML(nota) : '')
+                     : escapeHTML(_sushiT(f, 'pista', _en));
+  return `<div class="sushi-q">
+    <div class="sushi-q-cab"><h3 class="sushi-q-t">${_en ? 'Which fish is it?' : '¿Qué pescado es?'}</h3>
+      ${Q.total ? `<span class="sushi-q-n">${Q.aciertos} ${_en ? 'of' : 'de'} ${Q.total}</span>` : ''}</div>
+    ${jp ? `<div class="sushi-q-jp"><span class="sushi-q-jp-l">${_en ? 'On a Japanese menu' : 'En una carta japonesa'}</span>
+        <span class="sushi-q-jp-r" lang="ja-Latn">${r}</span>${p.japones_escrito ? `<span class="sushi-q-jp-k" lang="ja">${escapeHTML(p.japones_escrito)}</span>` : ''}</div>`
+      : `<div class="sushi-q-muestra">${_sushiMuestraSVG(p, true)}</div>
+    <p class="sushi-q-c">${escapeHTML(_sushiT(p, 'color', _en))}</p>`}
+    <div class="deg-opciones">${Q.ops.map((id, i) => {
+      let cls = 'deg-opcion';
+      if(resp){ if(id === Q.id) cls += ' ok'; else if(i === Q.elegida) cls += ' no'; }
+      return `<button type="button" class="${cls}" ${resp ? 'disabled' : ''} onclick="_sushiResponder(${i})">${escapeHTML(_sushiT(P(id), 'nombre', _en))}</button>`;
+    }).join('')}</div>
+    ${resp ? `<p class="cono-q-fb ${ok ? 'ok' : 'no'}" role="status">${ok
+        ? (jp ? (_en ? `Yes, ${r} is ${nomF}.` : `Sí, ${r} es ${nomF}.`) : (_en ? `Yes, it is ${nomF}.` : `Sí, es ${nomF}.`))
+        : (jp ? explica : (_en ? `It is ${nomF}. ` : `Es ${nomF}. `) + explica)}</p>
+      <button type="button" class="sushi-otra" onclick="_sushiOtra()">${_en ? 'Next fish' : 'Otro pescado'}</button>` : ''}
+  </div>`;
+}
+function _sushiHTML(g, _en){
+  const vistas = [
+    g.nigiris.length ? ['nigiri', 'Nigiris'] : null,
+    g.makis.length ? ['maki', 'Makis'] : null,
+    g.pescados.length ? ['color', _en ? 'Colour' : 'Color'] : null,
+    g.pescados.length >= 2 ? ['practica', _en ? 'Practise' : 'Practica'] : null
+  ].filter(Boolean);
+  if(!vistas.some(v => v[0] === _sushiVista)) _sushiVista = vistas[0][0];
+  if(_sushiVista === 'practica' && !_sushiQ) _sushiNueva();
+  let h = `<div class="sushi-vistas" role="tablist">${vistas.map(([id, l]) =>
+      `<button type="button" role="tab" aria-selected="${_sushiVista === id}" class="${_sushiVista === id ? 'on' : ''}" onclick="_sushiVer('${id}')">${l}</button>`).join('')}</div>`;
+  if(_sushiVista === 'nigiri') h += `<div class="sushi-lista">${_sushiTiposHTML(g.nigiris, _en)}</div>`;
+  else if(_sushiVista === 'maki') h += `<div class="sushi-lista">${_sushiTiposHTML(g.makis, _en)}</div>`;
+  else if(_sushiVista === 'color') h += `<p class="sushi-guia-c">${_en ? 'Look at three things: the colour of the flesh, the edge of the skin and whether there is a dark strip.' : 'Fíjate en tres cosas: el color de la carne, el borde de la piel y si hay franja oscura.'}</p>${_sushiColorHTML(g, _en)}`;
+  else h += `<div id="sushiPractica">${_sushiPracticaHTML(g, _en)}</div>`;
+  return h;
+}
+
 // De dónde salen las técnicas: las propias de la carta puesta si las trae
 // (r2), o las de Txoko. Una carta con glosario lo enseña en una segunda vista.
 function _tecFuente(){
   const m = (typeof _cartaMeta !== 'undefined' && _cartaMeta && _cartaMeta.TEC) || null;
-  if(m && m.lista) return { fams:m.fams, lista:m.lista, glosario:m.glosario || null, propia:true };
-  return { fams:TECNICA_FAMS, lista:TECNICAS, glosario:(m && m.glosario) || null, propia:false };
+  const sushi = (typeof _cartaMeta !== 'undefined' && _cartaMeta && _cartaMeta.SUSHI) || null;
+  if(m && m.lista) return { fams:m.fams, lista:m.lista, glosario:m.glosario || null, sushi, propia:true };
+  return { fams:TECNICA_FAMS, lista:TECNICAS, glosario:(m && m.glosario) || null, sushi, propia:false };
 }
 let _tecVista = 'tec';
-function _tecVer(v){ _tecVista = (v === 'glo') ? 'glo' : 'tec'; renderTecnicas(); }
+function _tecVer(v){
+  _tecVista = (v === 'glo' || v === 'sushi') ? v : 'tec';
+  renderTecnicas();
+}
 const _GLO_ORIGEN = { ja:['Japonés','Japanese'], ko:['Coreano','Korean'], zh:['Chino','Chinese'], ms:['Malayo','Malay'] };
 function _gloFiltrar(q){
   const n = String(q || '').trim().toLowerCase();
@@ -20230,9 +20493,27 @@ function renderTecnicas(){
   const famName=f=>_en?f.en:f.es;
   const src=_tecFuente();
   const FAMS=src.fams, LISTA=src.lista;
-  if(!src.glosario) _tecVista='tec';
+  if((_tecVista==='glo' && !src.glosario) || (_tecVista==='sushi' && !src.sushi)) _tecVista='tec';
   const nFam=FAMS.filter(f=>LISTA.some(t=>t.fam===f.k)).length;
   const vistaGlo = _tecVista==='glo' && !!src.glosario;
+  const vistaSushi = _tecVista==='sushi' && !!src.sushi;
+  const _vistasTec = (src.glosario || src.sushi) ? `<div class="tec-vista" role="tablist">
+      <button role="tab" aria-selected="${_tecVista==='tec'}" class="${_tecVista==='tec'?'on':''}" onclick="_tecVer('tec')">${_en?'Techniques':'Técnicas'}</button>
+      ${src.glosario?`<button role="tab" aria-selected="${vistaGlo}" class="${vistaGlo?'on':''}" onclick="_tecVer('glo')">${_en?'Glossary':'Glosario'}</button>`:''}
+      ${src.sushi?`<button role="tab" aria-selected="${vistaSushi}" class="${vistaSushi?'on':''}" onclick="_tecVer('sushi')">Sushi</button>`:''}
+    </div>` : '';
+  if(vistaSushi){
+    const g = src.sushi;
+    c.innerHTML = `<div class="tec-wrap sushi-wrap">
+      <div class="tec-hero">
+        <div class="tec-hero-ic sushi-hero-ic">${_sushiDibujo('clasico')}</div>
+        <div>
+          <div class="tec-hero-t">${escapeHTML(_sushiT(g, 'titulo', _en))}</div>
+          ${_sushiT(g, 'intro', _en)?`<div class="tec-hero-s">${escapeHTML(_sushiT(g, 'intro', _en))}</div>`:''}
+        </div>
+      </div>${_vistasTec}${_sushiHTML(g, _en)}</div>`;
+    return;
+  }
   let html=`<div class="tec-wrap">
     <div class="tec-hero">
       <div class="tec-hero-ic">${vistaGlo?'📖':'🍳'}</div>
@@ -20244,12 +20525,7 @@ function renderTecnicas(){
         <div class="tec-hero-stat">${vistaGlo?`${src.glosario.length} ${_en?'words':'palabras'}`:`${LISTA.length} ${_en?'techniques':'técnicas'} · ${nFam} ${_en?'families':'familias'}`}</div>
       </div>
     </div>`;
-  if(src.glosario){
-    html+=`<div class="tec-vista" role="tablist">
-      <button role="tab" aria-selected="${!vistaGlo}" class="${vistaGlo?'':'on'}" onclick="_tecVer('tec')">${_en?'Techniques':'Técnicas'}</button>
-      <button role="tab" aria-selected="${vistaGlo}" class="${vistaGlo?'on':''}" onclick="_tecVer('glo')">${_en?'Glossary':'Glosario'}</button>
-    </div>`;
-  }
+  html+=_vistasTec;
   if(vistaGlo){
     c.innerHTML = html + _renderGlosario(src, _en) + `</div>`;
     return;
