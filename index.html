@@ -20428,7 +20428,7 @@ function _sushiHTML(g, _en){
     g.nigiris.length ? ['nigiri', 'Nigiris'] : null,
     g.makis.length ? ['maki', 'Makis'] : null,
     g.pescados.length ? ['color', _en ? 'Colour' : 'Color'] : null,
-    g.pescados.length >= 2 ? ['practica', _en ? 'Practise' : 'Practica'] : null
+    g.pescados.length >= 2 ? ['practica', _en ? 'Practice' : 'Práctica'] : null
   ].filter(Boolean);
   if(!vistas.some(v => v[0] === _sushiVista)) _sushiVista = vistas[0][0];
   if(_sushiVista === 'practica' && !_sushiQ) _sushiNueva();
