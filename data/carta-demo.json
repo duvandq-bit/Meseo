@@ -127,6 +127,7 @@
     "Se comen con la mano, como en cualquier bar de las islas"
    ],
    "story": "Empezamos con chochos, que es como llamamos en Canarias al altramuz, encurtidos con naranja y comino. Se comen con la mano, como en cualquier bar de las islas.",
+   "story_larga": "Empezamos con chochos, que es como llamamos en Canarias al altramuz. Los encurtimos en vinagre de vino y los aliñamos con piel de naranja, comino y un punto de pimienta palmera de La Palma. Se comen con la mano, como en cualquier bar de las islas, y las pieles van al cuenco pequeño.",
    "claves": [
     [
      "chochos",
@@ -137,6 +138,7 @@
     [
      "encurtido",
      "encurtidos",
+     "encurtimos",
      "vinagre"
     ],
     [
@@ -149,7 +151,9 @@
      "con la mano",
      "mano"
     ]
-   ]
+   ],
+   "audio": "demo/4001-es.m4a",
+   "audio_nombre": "demo/4001-nombre-es.m4a"
   },
   {
    "id": 4002,
@@ -187,7 +191,43 @@
     "comer": "One bite, by hand.",
     "cambios": "Without the lemon thyme.",
     "venta": "Smoked island goat cheese with palm honey from La Gomera. A sweet and salty bite."
-   }
+   },
+   "significa": "La miel de palma no es miel: es guarapo, la savia de la palmera canaria, reducida al fuego durante horas.",
+   "guino": "Miel de palma de La Gomera y queso de cabra de la isla.",
+   "tres": [
+    "Tartaleta con crema de queso de cabra ahumado",
+    "Tres gotas de miel de palma de La Gomera",
+    "Tomillo limonero, y se toma de un bocado"
+   ],
+   "story": "Una tartaleta crujiente con crema de queso de cabra ahumado, unas gotas de miel de palma de La Gomera y tomillo limonero. Se toma de un bocado, con la mano.",
+   "story_larga": "Una tartaleta de mantequilla, muy fina, rellena de crema de queso de cabra ahumado de la isla. Encima, tres gotas de miel de palma, que no es miel: es la savia de la palmera canaria reducida al fuego durante horas, como se hace en La Gomera desde hace siglos. Terminamos con tomillo limonero, y se come de un bocado, con la mano.",
+   "claves": [
+    [
+     "queso de cabra",
+     "queso",
+     "cabra"
+    ],
+    [
+     "ahumado",
+     "ahumada"
+    ],
+    [
+     "miel de palma",
+     "palma",
+     "guarapo"
+    ],
+    [
+     "tartaleta",
+     "tartaletas"
+    ],
+    [
+     "la gomera",
+     "gomera",
+     "gomero"
+    ]
+   ],
+   "audio": "demo/4002-es.m4a",
+   "audio_nombre": "demo/4002-nombre-es.m4a"
   },
   {
    "id": 4003,
@@ -224,7 +264,43 @@
     "comer": "By hand, dipped in the mayonnaise.",
     "cambios": "Mayonnaise on the side.",
     "venta": "Market wreckfish in a fritter, with a mayonnaise that tastes of the sea thanks to sea lettuce."
-   }
+   },
+   "significa": "El cherne es un pescado de roca de aguas canarias. Salado, era la despensa de los pescadores.",
+   "guino": "Cherne salado, como lo guardaban los pescadores canarios.",
+   "tres": [
+    "Buñuelos de cherne salado, desalado dos días",
+    "Mayonesa de lechuga de mar, en cuchara aparte",
+    "Receta de abuela, para comer con la mano"
+   ],
+   "story": "Buñuelos de cherne salado, como los hacían las abuelas canarias, con una mayonesa de lechuga de mar que sabe a mar. Se comen con la mano.",
+   "story_larga": "El cherne salado era la despensa de los pescadores canarios cuando no había neveras. Nosotros lo desalamos durante dos días y lo hacemos en buñuelo, como lo hacían las abuelas. Lo acompaña una mayonesa con lechuga de mar, un alga que le da sabor a mar, y polvo de algas por encima. Se come con la mano, mojando en la mayonesa.",
+   "claves": [
+    [
+     "cherne",
+     "pescado"
+    ],
+    [
+     "buñuelo",
+     "buñuelos",
+     "bunuelo"
+    ],
+    [
+     "salado",
+     "desalado",
+     "sal"
+    ],
+    [
+     "mayonesa",
+     "mahonesa"
+    ],
+    [
+     "lechuga de mar",
+     "algas",
+     "alga"
+    ]
+   ],
+   "audio": "demo/4003-es.m4a",
+   "audio_nombre": "demo/4003-nombre-es.m4a"
   },
   {
    "id": 4004,
@@ -267,9 +343,11 @@
     "Tres gotas de aceite de cilantro"
    ],
    "story": "Una ostra recién abierta con agua de tomate, filtrada toda la noche hasta quedar transparente, y unas gotas de aceite de cilantro. Se puede beber de la concha.",
+   "story_larga": "Una ostra que abrimos en el momento, nunca antes, para que no pierda su agua ni su sabor a mar. Por encima, agua de tomate canario, filtrada toda la noche hasta quedar transparente, que servimos en la mesa, y tres gotas de aceite de cilantro. Se toma con el tenedor de ostra y luego se puede beber de la concha.",
    "claves": [
     [
-     "ostra"
+     "ostra",
+     "ostras"
     ],
     [
      "agua de tomate",
@@ -277,6 +355,7 @@
     ],
     [
      "filtrada",
+     "filtrado",
      "transparente",
      "clarificada"
     ],
@@ -288,7 +367,9 @@
      "beber de la concha",
      "concha"
     ]
-   ]
+   ],
+   "audio": "demo/4004-es.m4a",
+   "audio_nombre": "demo/4004-nombre-es.m4a"
   },
   {
    "id": 4005,
@@ -330,22 +411,30 @@
     "Sin ninguno de los 14 alérgenos"
    ],
    "story": "Tomate de temporada con fresa y albahaca. Dulce, ácido y muy fresco, y sin ninguno de los catorce alérgenos.",
+   "story_larga": "Tomate de temporada de la huerta de la isla, en gajos y láminas, con fresa entre el tomate. Tomate y fresa comparten aromas, por eso se entienden tan bien. En el centro, un granizado de albahaca, y terminamos con aceite de oliva virgen extra en la mesa. Es dulce, ácido y muy fresco, y no lleva ninguno de los catorce alérgenos.",
    "claves": [
     [
-     "tomate"
+     "tomate",
+     "tomates"
     ],
     [
-     "fresa"
+     "fresa",
+     "fresas"
     ],
     [
-     "albahaca"
+     "albahaca",
+     "granizado"
     ],
     [
      "sin alergenos",
      "ningun alergeno",
-     "catorce alergenos"
+     "ninguno de los catorce",
+     "catorce alergenos",
+     "14 alergenos"
     ]
-   ]
+   ],
+   "audio": "demo/4005-es.m4a",
+   "audio_nombre": "demo/4005-nombre-es.m4a"
   },
   {
    "id": 4006,
@@ -390,6 +479,7 @@
     "Pipas de calabaza y su propia flor"
    ],
    "story": "El bubango es el calabacín tierno de aquí. Lo hacemos a la brasa y lo servimos sobre requesón de cabra, con pipas de calabaza y su flor.",
+   "story_larga": "Bubango es como llamamos en Canarias al calabacín tierno, cogido pequeño. Lo abrimos, lo hacemos a la brasa y lo servimos sobre requesón de cabra canario, con pipas de calabaza por encima y la flor del propio calabacín al lado.",
    "claves": [
     [
      "bubango",
@@ -410,7 +500,9 @@
     [
      "flor"
     ]
-   ]
+   ],
+   "audio": "demo/4006-es.m4a",
+   "audio_nombre": "demo/4006-nombre-es.m4a"
   },
   {
    "id": 4007,
@@ -448,7 +540,44 @@
     "comer": "With a spoon: break the yolk and mix it all.",
     "cambios": "Without gofio.",
     "venta": "Free range egg with watercress and flower cheese, finished with gofio. Break the yolk and eat with a spoon."
-   }
+   },
+   "significa": "El queso de flor se cuaja con la flor del cardo, no con cuajo animal.",
+   "guino": "Queso de flor y gofio, dos clásicos de las islas.",
+   "tres": [
+    "Yema de huevo de corral sobre crema de berros",
+    "Queso de flor rallado, cuajado con flor de cardo",
+    "Gofio a un lado; se rompe la yema y se mezcla"
+   ],
+   "story": "Una yema de huevo de corral sobre crema de berros, con queso de flor rallado y un poco de gofio. Se rompe la yema y se mezcla todo con la cuchara.",
+   "story_larga": "En plato hondo, una crema de berros y en el centro la yema de un huevo de corral. Por encima rallamos queso de flor, un queso canario que se cuaja con la flor del cardo en lugar de cuajo animal, y a un lado ponemos un poco de gofio, la harina tostada de las islas. Se rompe la yema y se mezcla todo con la cuchara.",
+   "claves": [
+    [
+     "huevo",
+     "yema",
+     "huevo de corral"
+    ],
+    [
+     "berros",
+     "crema de berros"
+    ],
+    [
+     "queso de flor",
+     "queso"
+    ],
+    [
+     "gofio"
+    ],
+    [
+     "rompe",
+     "romper",
+     "rompen",
+     "mezcla",
+     "mezclar",
+     "mezclen"
+    ]
+   ],
+   "audio": "demo/4007-es.m4a",
+   "audio_nombre": "demo/4007-nombre-es.m4a"
   },
   {
    "id": 4008,
@@ -493,9 +622,11 @@
     "Caldo de millo servido en la mesa"
    ],
    "story": "Carabinero con su coral y un caldo de millo, el maíz canario, que servimos en la mesa. Lo mejor está en la cabeza: les animo a chuparla.",
+   "story_larga": "Carabinero a la plancha, pelado y con su cabeza, y al lado un punto de su coral. En la mesa servimos, desde una jarra, un caldo de millo, que es como llamamos al maíz en Canarias, dulce y con mantequilla. Lo mejor del carabinero está en la cabeza, en el coral: les animo a chuparla.",
    "claves": [
     [
      "carabinero",
+     "carabineros",
      "gamba roja"
     ],
     [
@@ -508,13 +639,18 @@
     ],
     [
      "en la mesa",
-     "delante del cliente"
+     "delante del cliente",
+     "jarra"
     ],
     [
      "cabeza",
-     "chupar"
+     "chupar",
+     "chuparla",
+     "chupen"
     ]
-   ]
+   ],
+   "audio": "demo/4008-es.m4a",
+   "audio_nombre": "demo/4008-nombre-es.m4a"
   },
   {
    "id": 4009,
@@ -554,7 +690,41 @@
     "comer": "Fish knife and fork.",
     "cambios": "Without the grapes.",
     "venta": "Bluefin tuna cured in kombu, served raw, with a cold almond ajoblanco."
-   }
+   },
+   "significa": "El kombu es un alga japonesa. Curar el atún envuelto en ella le da umami sin cocinarlo.",
+   "tres": [
+    "Atún rojo curado en alga kombu, crudo",
+    "En láminas sobre ajoblanco frío de almendra",
+    "Uvas en mitades y un hilo de aceite"
+   ],
+   "story": "Atún rojo curado en alga kombu, que le da umami sin cocinarlo, sobre un ajoblanco frío de almendra y con uvas.",
+   "story_larga": "Curamos el atún rojo envuelto en kombu, un alga japonesa, con un poco de soja. El alga le da umami y le afirma la superficie, pero por dentro sigue crudo. Lo servimos en láminas sobre un ajoblanco frío, la sopa andaluza de almendra, pan y ajo, con uvas en mitades y un hilo de aceite.",
+   "claves": [
+    [
+     "atun",
+     "atun rojo"
+    ],
+    [
+     "kombu",
+     "alga"
+    ],
+    [
+     "curado",
+     "cura",
+     "curar",
+     "curamos"
+    ],
+    [
+     "ajoblanco",
+     "almendra"
+    ],
+    [
+     "uva",
+     "uvas"
+    ]
+   ],
+   "audio": "demo/4009-es.m4a",
+   "audio_nombre": "demo/4009-nombre-es.m4a"
   },
   {
    "id": 4010,
@@ -591,7 +761,39 @@
     "comer": "Fish knife and fork; dip the bread in the ink.",
     "cambios": "Without the toasted onion.",
     "venta": "Jig caught squid with toasted onion and its own ink. Pure taste of the sea."
-   }
+   },
+   "significa": "De potera quiere decir pescado con anzuelo, uno a uno, y no con red.",
+   "tres": [
+    "Calamar de potera, pescado uno a uno",
+    "En tallarines sobre cebolla tostada",
+    "Salsa de su propia tinta y un crujiente de pan"
+   ],
+   "story": "Calamar de potera, pescado uno a uno con anzuelo, cortado en tallarines sobre cebolla tostada y con una salsa de su propia tinta.",
+   "story_larga": "De potera quiere decir que el calamar se pesca uno a uno, con anzuelo y no con red, así que llega entero, sin arena y sin golpes. Lo cortamos en tallarines y lo ponemos sobre cebolla tostada, con un espejo de salsa de su propia tinta y un crujiente de pan. Puro sabor a mar, y el pan es para mojar en la tinta.",
+   "claves": [
+    [
+     "calamar",
+     "calamares"
+    ],
+    [
+     "potera",
+     "anzuelo",
+     "uno a uno"
+    ],
+    [
+     "tinta"
+    ],
+    [
+     "cebolla",
+     "cebolla tostada"
+    ],
+    [
+     "tallarines",
+     "tallarin"
+    ]
+   ],
+   "audio": "demo/4010-es.m4a",
+   "audio_nombre": "demo/4010-nombre-es.m4a"
   },
   {
    "id": 4011,
@@ -637,6 +839,7 @@
     "Beurre blanc de malvasía en salsera"
    ],
    "story": "Cherne, pescado de roca de nuestras aguas, a la brasa. Encima, una lámina de papada ibérica que se funde sola, y una mantequilla de malvasía de Lanzarote.",
+   "story_larga": "El cherne es un pescado de roca de nuestras aguas, de carne blanca y firme, y lo hacemos a la brasa. Encima ponemos una lámina fina de papada ibérica, que se funde sola con el calor del pescado. En la mesa servimos, en salsera, un beurre blanc, la salsa francesa de mantequilla, hecho aquí con malvasía de Lanzarote y chalota.",
    "claves": [
     [
      "cherne"
@@ -655,9 +858,12 @@
      "mantequilla"
     ],
     [
-     "lanzarote"
+     "lanzarote",
+     "lanzaroteno"
     ]
-   ]
+   ],
+   "audio": "demo/4011-es.m4a",
+   "audio_nombre": "demo/4011-nombre-es.m4a"
   },
   {
    "id": 4012,
@@ -703,6 +909,7 @@
     "Sobre puré de batata"
    ],
    "story": "Cochino negro, una raza canaria que casi desaparece, lacado con miel de palma y mostaza, sobre un puré de batata.",
+   "story_larga": "El cochino negro es una raza de cerdo canaria que estuvo a punto de desaparecer. Usamos la presa, lacada con miel de palma de La Gomera y mostaza, que van pegadas a la carne. Va sobre un puré de batata, y el jugo lo servimos en la mesa.",
    "claves": [
     [
      "cochino negro",
@@ -712,7 +919,11 @@
     [
      "raza canaria",
      "raza",
-     "desaparece"
+     "desaparecer",
+     "desaparece",
+     "canario",
+     "canaria",
+     "canarias"
     ],
     [
      "miel de palma",
@@ -726,7 +937,9 @@
      "pure de batata",
      "boniato"
     ]
-   ]
+   ],
+   "audio": "demo/4012-es.m4a",
+   "audio_nombre": "demo/4012-nombre-es.m4a"
   },
   {
    "id": 4013,
@@ -762,7 +975,41 @@
     "comer": "Meat knife; served pink.",
     "cambios": "More cooked if asked when ordering.",
     "venta": "Aged pigeon, served pink, with beetroot and a red wine and cocoa jus."
-   }
+   },
+   "significa": "Madurado quiere decir que el pichón reposa unos días en cámara antes de cocinarlo, para ganar sabor y ternura.",
+   "tres": [
+    "Pichón madurado, servido rosado",
+    "Pechuga y muslo sobre remolacha",
+    "Jugo de vino tinto y cacao en la mesa"
+   ],
+   "story": "Pichón madurado, pechuga y muslo, servido rosado sobre remolacha, con un jugo de vino tinto y cacao que terminamos en la mesa.",
+   "story_larga": "El pichón lo maduramos unos días antes de cocinarlo, y así gana sabor y ternura. Servimos la pechuga y el muslo, rosados, como una carne roja, sobre remolacha. En la mesa lo terminamos con un jugo de vino tinto y cacao, profundo y un poco amargo, que va muy bien con el dulzor de la remolacha.",
+   "claves": [
+    [
+     "pichon",
+     "pichones"
+    ],
+    [
+     "madurado",
+     "madurar",
+     "maduramos"
+    ],
+    [
+     "rosado",
+     "rosa",
+     "al punto"
+    ],
+    [
+     "remolacha"
+    ],
+    [
+     "cacao",
+     "jugo de cacao",
+     "vino tinto"
+    ]
+   ],
+   "audio": "demo/4013-es.m4a",
+   "audio_nombre": "demo/4013-nombre-es.m4a"
   },
   {
    "id": 4014,
@@ -798,7 +1045,42 @@
     "comer": "Meat knife; in the middle to share.",
     "cambios": "Yoghurt on the side.",
     "venta": "Slow roast kid with smoked aubergine and goat yoghurt. Made for the middle of the table."
-   }
+   },
+   "significa": "El cabrito es la cría de la cabra, una carne muy de las islas.",
+   "guino": "Cabra en todo el plato: cabrito y yogur de cabra, como en las islas.",
+   "tres": [
+    "Cabrito asado lento y desmigado",
+    "Sobre crema de berenjena ahumada con tahini",
+    "Yogur de cabra alrededor, para compartir"
+   ],
+   "story": "Cabrito asado lentamente y desmigado, sobre una crema de berenjena ahumada con tahini y con puntos de yogur de cabra. Para compartir en el centro.",
+   "story_larga": "Asamos el cabrito despacio, hasta que la carne se desmiga sola. Va sobre una crema de berenjena ahumada que lleva tahini, la pasta de sésamo, y alrededor ponemos puntos de yogur de cabra, fresco y ácido. Es un plato pensado para el centro de la mesa, para compartir.",
+   "claves": [
+    [
+     "cabrito"
+    ],
+    [
+     "asado",
+     "asamos",
+     "lento",
+     "despacio"
+    ],
+    [
+     "berenjena",
+     "berenjena ahumada",
+     "ahumada"
+    ],
+    [
+     "tahini",
+     "sesamo"
+    ],
+    [
+     "yogur",
+     "yogur de cabra"
+    ]
+   ],
+   "audio": "demo/4014-es.m4a",
+   "audio_nombre": "demo/4014-nombre-es.m4a"
   },
   {
    "id": 4015,
@@ -840,6 +1122,7 @@
     "Ácido y frío, para limpiar"
    ],
    "story": "Para limpiar, parchita, que es como llamamos aquí a la fruta de la pasión, con espuma de coco. Ácido y muy fresco.",
+   "story_larga": "Para limpiar la boca antes del postre, parchita, que es como llamamos en Canarias a la fruta de la pasión. Es un sorbete en copa pequeña y fría, con una espuma de leche de coco por encima. Ácido, frío y muy fresco, y no lleva ninguno de los catorce alérgenos.",
    "claves": [
     [
      "parchita",
@@ -853,9 +1136,12 @@
     [
      "limpiar",
      "fresco",
-     "acido"
+     "acido",
+     "sorbete"
     ]
-   ]
+   ],
+   "audio": "demo/4015-es.m4a",
+   "audio_nombre": "demo/4015-nombre-es.m4a"
   },
   {
    "id": 4016,
@@ -901,6 +1187,7 @@
     "Gofio a un lado"
    ],
    "story": "El quesillo es nuestro flan, y no lleva queso. Este es de leche de cabra, con caramelo de café y un poco de gofio.",
+   "story_larga": "El quesillo es el flan canario, y aunque se llame así no lleva queso: se hace con leche condensada. El nuestro es de leche de cabra, con un caramelo de café por encima y un poco de gofio a un lado, la harina tostada de las islas, que le da un punto tostado.",
    "claves": [
     [
      "quesillo",
@@ -919,9 +1206,12 @@
     ],
     [
      "no lleva queso",
-     "sin queso"
+     "sin queso",
+     "no tiene queso"
     ]
-   ]
+   ],
+   "audio": "demo/4016-es.m4a",
+   "audio_nombre": "demo/4016-nombre-es.m4a"
   },
   {
    "id": 4017,
@@ -960,7 +1250,42 @@
     "comer": "Dessert spoon and fork.",
     "cambios": "None.",
     "venta": "Canarian banana with dark chocolate and peanut. The most indulgent dessert on the menu."
-   }
+   },
+   "guino": "Plátano de Canarias, en su punto cuando tiene motitas negras.",
+   "tres": [
+    "Plátano de Canarias asado",
+    "Sobre cremoso de chocolate negro, con helado",
+    "Crujiente de cacahuete por encima"
+   ],
+   "story": "Plátano de Canarias asado sobre un cremoso de chocolate negro, con helado y un crujiente de cacahuete. El postre más goloso de la carta.",
+   "story_larga": "Usamos plátano de Canarias, que está en su punto cuando la piel tiene motitas negras, y lo asamos. Va sobre un cremoso de chocolate negro, con una quenelle de helado y un crujiente de cacahuete por encima. Es el postre más goloso de la carta.",
+   "claves": [
+    [
+     "platano",
+     "platano de canarias",
+     "platano canario"
+    ],
+    [
+     "chocolate",
+     "chocolate negro",
+     "cremoso"
+    ],
+    [
+     "cacahuete",
+     "cacahuetes",
+     "mani"
+    ],
+    [
+     "helado"
+    ],
+    [
+     "asado",
+     "asamos",
+     "asar"
+    ]
+   ],
+   "audio": "demo/4017-es.m4a",
+   "audio_nombre": "demo/4017-nombre-es.m4a"
   },
   {
    "id": 4018,
@@ -997,7 +1322,36 @@
     "comer": "Dessert spoon.",
     "cambios": "None.",
     "venta": "Almond bienmesabe, the sweet from Tejeda, with goat milk ice cream."
-   }
+   },
+   "significa": "Bienmesabe quiere decir «me sabe bien»: crema de almendra, yema y limón.",
+   "guino": "Bienmesabe, el dulce de almendra de Tejeda, en Gran Canaria.",
+   "tres": [
+    "Bienmesabe: almendra, yema y limón",
+    "Almendra tostada por encima",
+    "Helado de leche de cabra al lado"
+   ],
+   "story": "Bienmesabe, que quiere decir «me sabe bien»: el dulce de almendra de Tejeda, con almendra tostada y helado de leche de cabra.",
+   "story_larga": "Bienmesabe quiere decir «me sabe bien», y es el dulce de almendra de Tejeda, en Gran Canaria. Es una crema de almendra molida con yema de huevo, azúcar y limón. La servimos con almendra tostada por encima y un helado de leche de cabra al lado.",
+   "claves": [
+    [
+     "bienmesabe",
+     "me sabe bien"
+    ],
+    [
+     "almendra",
+     "almendras"
+    ],
+    [
+     "tejeda",
+     "gran canaria"
+    ],
+    [
+     "helado",
+     "leche de cabra"
+    ]
+   ],
+   "audio": "demo/4018-es.m4a",
+   "audio_nombre": "demo/4018-nombre-es.m4a"
   },
   {
    "id": 4019,
@@ -1032,7 +1386,39 @@
     "comer": "By hand; butter with its own knife.",
     "cambios": "Olive oil instead of butter.",
     "venta": "Wheat and corn sourdough bread, with smoked goat butter."
-   }
+   },
+   "significa": "Millo es como se dice maíz en Canarias.",
+   "guino": "Millo canario en la masa y mantequilla de cabra ahumada.",
+   "tres": [
+    "Pan de masa madre de trigo y millo",
+    "Templado, y se repone sin preguntar",
+    "Mantequilla de cabra ahumada"
+   ],
+   "story": "Nuestro pan de masa madre, de trigo y millo, el maíz canario, templado y con mantequilla de cabra ahumada.",
+   "story_larga": "Nuestro pan es de masa madre, con harina de trigo y millo, que es como llamamos en Canarias al maíz. Lo servimos templado, después de los aperitivos, con una mantequilla de cabra ahumada, y cuando se acaba lo reponemos.",
+   "claves": [
+    [
+     "pan",
+     "masa madre"
+    ],
+    [
+     "millo",
+     "maiz"
+    ],
+    [
+     "trigo"
+    ],
+    [
+     "mantequilla",
+     "mantequilla de cabra"
+    ],
+    [
+     "ahumada",
+     "ahumado"
+    ]
+   ],
+   "audio": "demo/4019-es.m4a",
+   "audio_nombre": "demo/4019-nombre-es.m4a"
   },
   {
    "id": 4020,
@@ -1079,9 +1465,12 @@
     "Teja de almendra"
    ],
    "story": "Con el café, tres bocados: una trufa con ron miel, una pâte de fruit de higo de tunera y una teja de almendra.",
+   "story_larga": "Con el café, tres pequeños bocados para cerrar. Una trufa de chocolate negro con ron miel canario, una pâte de fruit de higo de tunera, que es el higo chumbo, el fruto del cactus, y una teja fina de almendra. Se comen con la mano, de izquierda a derecha.",
+   "pron": "Con el café, tres bocados: una trufa con ron miel, una pat de fruí de higo de tunera y una teja de almendra.",
    "claves": [
     [
-     "trufa"
+     "trufa",
+     "trufas"
     ],
     [
      "ron miel",
@@ -1090,6 +1479,7 @@
     [
      "higo de tunera",
      "tunera",
+     "higo chumbo",
      "pate de fruit"
     ],
     [
@@ -1100,7 +1490,26 @@
     [
      "cafe"
     ]
-   ]
+   ],
+   "bocados": [
+    {
+     "n": "Trufa de ron miel",
+     "story": "Trufa de chocolate negro con ron miel, el ron canario suavizado con miel.",
+     "audio": "demo/4020-b1-es.m4a"
+    },
+    {
+     "n": "Pâte de fruit de tunera",
+     "story": "Pasta de fruta de higo de tunera, el higo chumbo. No lleva ningún alérgeno: se puede dejar siempre.",
+     "audio": "demo/4020-b2-es.m4a"
+    },
+    {
+     "n": "Teja de almendra",
+     "story": "Una teja de almendra fina y crujiente, para terminar.",
+     "audio": "demo/4020-b3-es.m4a"
+    }
+   ],
+   "audio": "demo/4020-es.m4a",
+   "audio_nombre": "demo/4020-nombre-es.m4a"
   }
  ],
  "DISHES_EN": [
@@ -1128,6 +1537,7 @@
     "Eaten by hand, as in any bar on the islands"
    ],
    "story": "We begin with chochos, the Canarian name for lupin beans, pickled with orange and cumin. They are eaten by hand, as in any bar on the islands.",
+   "story_larga": "We begin with chochos, the Canarian name for lupin beans. We pickle them in wine vinegar and dress them with orange zest, cumin and a touch of palm pepper from La Palma. They are eaten by hand, as in any bar on the islands, and the skins go in the small bowl.",
    "claves": [
     [
      "chochos",
@@ -1136,7 +1546,9 @@
      "lupin beans"
     ],
     [
-     "pickled"
+     "pickled",
+     "pickle",
+     "vinegar"
     ],
     [
      "orange"
@@ -1146,9 +1558,12 @@
     ],
     [
      "by hand",
-     "hand"
+     "hand",
+     "hands"
     ]
-   ]
+   ],
+   "audio": "demo/4001-en.m4a",
+   "audio_nombre": "demo/4001-nombre-en.m4a"
   },
   {
    "id": 4002,
@@ -1167,7 +1582,42 @@
     "Three drops of palm honey",
     "Lemon thyme leaves"
    ],
-   "marcaje": "No cutlery: one bite, by hand."
+   "marcaje": "No cutlery: one bite, by hand.",
+   "significa": "Palm honey is not honey: it is guarapo, the sap of the Canary palm, reduced over the fire for hours.",
+   "guino": "Palm honey from La Gomera and goat's cheese from the island.",
+   "tres": [
+    "Tartlet with smoked goat's cheese cream",
+    "Three drops of palm honey from La Gomera",
+    "Lemon thyme, and it goes in one bite"
+   ],
+   "story": "A crisp tartlet with smoked goat's cheese cream, a few drops of palm honey from La Gomera and lemon thyme. One bite, by hand.",
+   "story_larga": "A very thin butter tartlet, filled with smoked goat's cheese cream from the island. On top, three drops of palm honey, which is not honey at all: it is the sap of the Canary palm, reduced over the fire for hours, as they have done on La Gomera for centuries. We finish it with lemon thyme, and it is eaten in one bite, by hand.",
+   "claves": [
+    [
+     "goat's cheese",
+     "goat cheese",
+     "cheese",
+     "goat"
+    ],
+    [
+     "smoked"
+    ],
+    [
+     "palm honey",
+     "palm",
+     "guarapo"
+    ],
+    [
+     "tartlet",
+     "tart"
+    ],
+    [
+     "la gomera",
+     "gomera"
+    ]
+   ],
+   "audio": "demo/4002-en.m4a",
+   "audio_nombre": "demo/4002-nombre-en.m4a"
   },
   {
    "id": 4003,
@@ -1185,7 +1635,42 @@
     "Mayonnaise on a separate spoon",
     "Seaweed powder on top"
    ],
-   "marcaje": "No cutlery: by hand."
+   "marcaje": "No cutlery: by hand.",
+   "significa": "Cherne is a rock fish from Canarian waters. Salted, it was the fishermen's larder.",
+   "guino": "Salted cherne, the way Canarian fishermen kept it.",
+   "tres": [
+    "Fritters of salted cherne, desalted for two days",
+    "Sea lettuce mayonnaise, on a separate spoon",
+    "A grandmother's recipe, eaten by hand"
+   ],
+   "story": "Fritters of salted cherne, or wreckfish, the way Canarian grandmothers made them, with a sea lettuce mayonnaise that tastes of the sea. Eaten by hand.",
+   "story_larga": "Salted cherne, or wreckfish, was the larder of Canarian fishermen before there were fridges. We desalt it for two days and turn it into fritters, the way grandmothers did. It comes with a mayonnaise made with sea lettuce, a seaweed that gives it the taste of the sea, and seaweed powder on top. Eat it by hand, dipping it in the mayonnaise.",
+   "claves": [
+    [
+     "cherne",
+     "wreckfish",
+     "fish"
+    ],
+    [
+     "fritter",
+     "fritters"
+    ],
+    [
+     "salted",
+     "desalted",
+     "salt"
+    ],
+    [
+     "mayonnaise",
+     "mayo"
+    ],
+    [
+     "sea lettuce",
+     "seaweed"
+    ]
+   ],
+   "audio": "demo/4003-en.m4a",
+   "audio_nombre": "demo/4003-nombre-en.m4a"
   },
   {
    "id": 4004,
@@ -1209,9 +1694,11 @@
     "Three drops of coriander oil"
    ],
    "story": "A freshly opened oyster with tomato water, filtered overnight until it runs clear, and a few drops of coriander oil. You may drink it from the shell.",
+   "story_larga": "An oyster opened to order, never before, so it keeps its water and its taste of the sea. On top, Canarian tomato water, filtered overnight until it runs clear, poured at the table, and three drops of coriander oil. Use the oyster fork, and then you may drink from the shell.",
    "claves": [
     [
-     "oyster"
+     "oyster",
+     "oysters"
     ],
     [
      "tomato water",
@@ -1229,9 +1716,12 @@
     ],
     [
      "drink it from the shell",
+     "drink from the shell",
      "shell"
     ]
-   ]
+   ],
+   "audio": "demo/4004-en.m4a",
+   "audio_nombre": "demo/4004-nombre-en.m4a"
   },
   {
    "id": 4005,
@@ -1254,23 +1744,30 @@
     "None of the 14 allergens"
    ],
    "story": "Seasonal tomato with strawberry and basil. Sweet, sharp and very fresh, and free of all fourteen allergens.",
+   "story_larga": "Seasonal tomato from the island's gardens, in wedges and slices, with strawberry tucked in between. Tomato and strawberry share aromas, which is why they get on so well. In the centre, a basil granita, and we finish with extra virgin olive oil at the table. Sweet, sharp and very fresh, and free of all fourteen allergens.",
    "claves": [
     [
-     "tomato"
+     "tomato",
+     "tomatoes"
     ],
     [
-     "strawberry"
+     "strawberry",
+     "strawberries"
     ],
     [
-     "basil"
+     "basil",
+     "granita"
     ],
     [
      "allergen free",
      "free of all",
      "no allergens",
-     "fourteen allergens"
+     "fourteen allergens",
+     "14 allergens"
     ]
-   ]
+   ],
+   "audio": "demo/4005-en.m4a",
+   "audio_nombre": "demo/4005-nombre-en.m4a"
   },
   {
    "id": 4006,
@@ -1296,6 +1793,7 @@
     "Pumpkin seeds and its own flower"
    ],
    "story": "Bubango is our local baby courgette. We grill it and serve it on goat's milk ricotta, with pumpkin seeds and its flower.",
+   "story_larga": "Bubango is what we call baby courgette in the Canaries, picked small. We open it, cook it over the grill and serve it on Canarian goat's milk ricotta, with pumpkin seeds on top and the courgette's own flower on the side.",
    "claves": [
     [
      "bubango",
@@ -1317,7 +1815,9 @@
     [
      "flower"
     ]
-   ]
+   ],
+   "audio": "demo/4006-en.m4a",
+   "audio_nombre": "demo/4006-nombre-en.m4a"
   },
   {
    "id": 4007,
@@ -1336,7 +1836,39 @@
     "Grated cheese on top",
     "Gofio on one side"
    ],
-   "marcaje": "Starter spoon."
+   "marcaje": "Starter spoon.",
+   "significa": "Flower cheese is curdled with thistle flowers, not with animal rennet.",
+   "guino": "Flower cheese and gofio, two island classics.",
+   "tres": [
+    "Free-range egg yolk on watercress cream",
+    "Grated flower cheese, curdled with thistle",
+    "Gofio on the side; break the yolk and mix"
+   ],
+   "story": "A free-range egg yolk on watercress cream, with grated flower cheese and a little gofio. Break the yolk and mix it all with the spoon.",
+   "story_larga": "In a deep plate, a watercress cream with the yolk of a free-range egg in the centre. On top we grate flower cheese, a Canarian cheese curdled with thistle flowers instead of animal rennet, and on one side a little gofio, the toasted flour of the islands. Break the yolk and mix everything with the spoon.",
+   "claves": [
+    [
+     "egg",
+     "yolk",
+     "free range egg"
+    ],
+    [
+     "watercress"
+    ],
+    [
+     "flower cheese",
+     "cheese"
+    ],
+    [
+     "gofio"
+    ],
+    [
+     "break",
+     "mix"
+    ]
+   ],
+   "audio": "demo/4007-en.m4a",
+   "audio_nombre": "demo/4007-nombre-en.m4a"
   },
   {
    "id": 4008,
@@ -1362,6 +1894,7 @@
     "Corn broth poured at the table"
    ],
    "story": "Carabinero prawn with its coral and a millo broth, Canarian corn, poured at the table. The best part is in the head: do suck it.",
+   "story_larga": "Seared carabinero prawn, peeled, with its head on, and beside it a dot of its own coral. At the table we pour, from a jug, a millo broth, Canarian corn, sweet and finished with butter. The best part of the carabinero is in the head, in the coral: do suck it.",
    "claves": [
     [
      "carabinero",
@@ -1378,13 +1911,16 @@
     ],
     [
      "at the table",
-     "table"
+     "table",
+     "jug"
     ],
     [
      "head",
      "suck"
     ]
-   ]
+   ],
+   "audio": "demo/4008-en.m4a",
+   "audio_nombre": "demo/4008-nombre-en.m4a"
   },
   {
    "id": 4009,
@@ -1405,7 +1941,39 @@
     "Halved grapes",
     "Oil at the pass"
    ],
-   "marcaje": "Fish knife and fork."
+   "marcaje": "Fish knife and fork.",
+   "significa": "Kombu is a Japanese seaweed. Curing the tuna wrapped in it adds umami without cooking it.",
+   "tres": [
+    "Bluefin tuna cured in kombu, served raw",
+    "Sliced over a cold almond ajoblanco",
+    "Halved grapes and a drizzle of oil"
+   ],
+   "story": "Bluefin tuna cured in kombu seaweed, which gives it umami without cooking it, on a cold almond ajoblanco with grapes.",
+   "story_larga": "We cure the bluefin tuna wrapped in kombu, a Japanese seaweed, with a little soy. The seaweed gives it umami and firms the surface, while the inside stays raw. We serve it sliced on a cold ajoblanco, the Andalusian soup of almond, bread and garlic, with halved grapes and a drizzle of oil.",
+   "claves": [
+    [
+     "tuna",
+     "bluefin"
+    ],
+    [
+     "kombu",
+     "seaweed"
+    ],
+    [
+     "cured",
+     "cure"
+    ],
+    [
+     "ajoblanco",
+     "almond"
+    ],
+    [
+     "grape",
+     "grapes"
+    ]
+   ],
+   "audio": "demo/4009-en.m4a",
+   "audio_nombre": "demo/4009-nombre-en.m4a"
   },
   {
    "id": 4010,
@@ -1423,7 +1991,40 @@
     "Squid ribbons on top",
     "Crisp standing up"
    ],
-   "marcaje": "Fish knife and fork."
+   "marcaje": "Fish knife and fork.",
+   "significa": "Jig-caught means fished one by one on a line, not with a net.",
+   "tres": [
+    "Jig-caught squid, fished one by one",
+    "Cut into ribbons on roasted onion",
+    "A sauce of its own ink and a bread crisp"
+   ],
+   "story": "Jig-caught squid, fished one by one on a line, cut into ribbons on roasted onion with a sauce of its own ink.",
+   "story_larga": "Jig-caught means the squid is fished one by one on a line, not with a net, so it arrives whole, without sand or bruising. We cut it into ribbons and set it on roasted onion, with a mirror of sauce made from its own ink and a bread crisp. Pure taste of the sea, and the bread is for dipping in the ink.",
+   "claves": [
+    [
+     "squid"
+    ],
+    [
+     "jig",
+     "jig caught",
+     "line",
+     "one by one"
+    ],
+    [
+     "ink"
+    ],
+    [
+     "onion",
+     "roasted onion"
+    ],
+    [
+     "ribbons",
+     "ribbon",
+     "noodles"
+    ]
+   ],
+   "audio": "demo/4010-en.m4a",
+   "audio_nombre": "demo/4010-nombre-en.m4a"
   },
   {
    "id": 4011,
@@ -1450,6 +2051,8 @@
     "Malvasía beurre blanc in a sauceboat"
    ],
    "story": "Cherne, a rock fish from our waters, cooked on the grill. On top, a slice of Iberian pork jowl that melts by itself, and a malvasía butter sauce from Lanzarote.",
+   "story_larga": "Cherne is a rock fish from our waters, with firm white flesh, and we cook it over the grill. On top goes a thin slice of Iberian pork jowl, which melts by itself with the heat of the fish. At the table we pour, from a sauce boat, a beurre blanc, the French butter sauce, made here with malvasía wine from Lanzarote and shallot.",
+   "pron": "Chair-neh, a rock fish from our waters, cooked on the grill. On top, a slice of Iberian pork jowl that melts by itself, and a mal-va-see-a butter sauce from Lanzarote.",
    "claves": [
     [
      "cherne",
@@ -1473,7 +2076,9 @@
     [
      "lanzarote"
     ]
-   ]
+   ],
+   "audio": "demo/4011-en.m4a",
+   "audio_nombre": "demo/4011-nombre-en.m4a"
   },
   {
    "id": 4012,
@@ -1500,6 +2105,7 @@
     "On sweet potato purée"
    ],
    "story": "Black pig, a Canarian breed that nearly disappeared, glazed with palm honey and mustard, on a sweet potato purée.",
+   "story_larga": "The Canarian black pig is a native breed that very nearly disappeared. We use the presa cut, glazed with palm honey from La Gomera and mustard, which stick to the meat. It sits on a sweet potato purée, and the jus is poured at the table.",
    "claves": [
     [
      "black pig",
@@ -1509,7 +2115,9 @@
     [
      "breed",
      "canarian breed",
-     "disappeared"
+     "native",
+     "disappeared",
+     "canarian"
     ],
     [
      "palm honey"
@@ -1520,7 +2128,9 @@
     [
      "sweet potato"
     ]
-   ]
+   ],
+   "audio": "demo/4012-en.m4a",
+   "audio_nombre": "demo/4012-nombre-en.m4a"
   },
   {
    "id": 4013,
@@ -1537,7 +2147,41 @@
     "Breast and leg on top",
     "Jus poured at the table"
    ],
-   "marcaje": "Meat knife."
+   "marcaje": "Meat knife.",
+   "significa": "Aged means the pigeon rests for a few days in the cold room before cooking, to gain flavour and tenderness.",
+   "tres": [
+    "Aged pigeon, served pink",
+    "Breast and leg on beetroot",
+    "Red wine and cocoa jus at the table"
+   ],
+   "story": "Aged pigeon, breast and leg, served pink on beetroot, with a red wine and cocoa jus that we finish at the table.",
+   "story_larga": "We age the pigeon for a few days before cooking, so it gains flavour and tenderness. We serve the breast and the leg pink, like red meat, on beetroot. At the table we finish it with a red wine and cocoa jus, deep and slightly bitter, which goes very well with the sweetness of the beetroot.",
+   "claves": [
+    [
+     "pigeon",
+     "squab"
+    ],
+    [
+     "aged",
+     "ageing",
+     "aging"
+    ],
+    [
+     "pink",
+     "medium rare"
+    ],
+    [
+     "beetroot",
+     "beet"
+    ],
+    [
+     "cocoa",
+     "red wine",
+     "jus"
+    ]
+   ],
+   "audio": "demo/4013-en.m4a",
+   "audio_nombre": "demo/4013-nombre-en.m4a"
   },
   {
    "id": 4014,
@@ -1554,7 +2198,43 @@
     "Pulled kid on top",
     "Dots of yogurt around"
    ],
-   "marcaje": "Meat knife."
+   "marcaje": "Meat knife.",
+   "significa": "Cabrito is kid, young goat, a very island meat.",
+   "guino": "Goat all through the plate: kid and goat's yogurt, as on the islands.",
+   "tres": [
+    "Slow roast kid, pulled",
+    "On smoked aubergine cream with tahini",
+    "Goat's yogurt around, for sharing"
+   ],
+   "story": "Slow roast kid, pulled, on a smoked aubergine cream with tahini and dots of goat's yogurt. For sharing in the middle.",
+   "story_larga": "We roast the kid slowly, until the meat pulls apart by itself. It sits on a smoked aubergine cream made with tahini, the sesame paste, and around it go dots of goat's yogurt, fresh and sharp. It is a dish made for the middle of the table, for sharing.",
+   "claves": [
+    [
+     "kid",
+     "kid goat",
+     "young goat"
+    ],
+    [
+     "roast",
+     "roasted",
+     "slow"
+    ],
+    [
+     "aubergine",
+     "eggplant",
+     "smoked"
+    ],
+    [
+     "tahini",
+     "sesame"
+    ],
+    [
+     "yogurt",
+     "yoghurt"
+    ]
+   ],
+   "audio": "demo/4014-en.m4a",
+   "audio_nombre": "demo/4014-nombre-en.m4a"
   },
   {
    "id": 4015,
@@ -1577,6 +2257,7 @@
     "Sharp and cold, to cleanse"
    ],
    "story": "To cleanse the palate, parchita, our name for passion fruit, with coconut foam. Sharp and very fresh.",
+   "story_larga": "To cleanse the palate before dessert, parchita, the Canarian name for passion fruit. A sorbet in a small chilled glass, with coconut milk foam on top. Sharp, cold and very fresh, and free of all fourteen allergens.",
    "claves": [
     [
      "passion fruit",
@@ -1588,9 +2269,12 @@
     [
      "cleanse",
      "fresh",
-     "sharp"
+     "sharp",
+     "sorbet"
     ]
-   ]
+   ],
+   "audio": "demo/4015-en.m4a",
+   "audio_nombre": "demo/4015-nombre-en.m4a"
   },
   {
    "id": 4016,
@@ -1617,6 +2301,8 @@
     "Gofio on the side"
    ],
    "story": "Quesillo is our flan, and it has no cheese. This one is made with goat's milk, with coffee caramel and a little gofio.",
+   "story_larga": "Quesillo is the Canarian flan, and despite its name it has no cheese: it is made with condensed milk. Ours uses goat's milk, with a coffee caramel on top and a little gofio on the side, the toasted flour of the islands, which adds a toasty note.",
+   "pron": "Kay-see-yo is our flan, and it has no cheese. This one is made with goat's milk, with coffee caramel and a little gofio.",
    "claves": [
     [
      "quesillo",
@@ -1624,6 +2310,7 @@
     ],
     [
      "goat's milk",
+     "goat milk",
      "goat"
     ],
     [
@@ -1636,7 +2323,9 @@
     [
      "no cheese"
     ]
-   ]
+   ],
+   "audio": "demo/4016-en.m4a",
+   "audio_nombre": "demo/4016-nombre-en.m4a"
   },
   {
    "id": 4017,
@@ -1656,7 +2345,40 @@
     "Ice cream quenelle",
     "Peanut crunch on top"
    ],
-   "marcaje": "Dessert spoon and fork."
+   "marcaje": "Dessert spoon and fork.",
+   "guino": "Canary banana, at its best with little black spots.",
+   "tres": [
+    "Roasted Canary banana",
+    "On dark chocolate cremeux, with ice cream",
+    "Peanut crunch on top"
+   ],
+   "story": "Roasted Canary banana on a dark chocolate cremeux, with ice cream and a peanut crunch. The most indulgent dessert on the menu.",
+   "story_larga": "We use Canary bananas, which are at their best when the skin has little black spots, and we roast them. The banana sits on a dark chocolate cremeux, with a quenelle of ice cream and a peanut crunch on top. It is the most indulgent dessert on the menu.",
+   "claves": [
+    [
+     "banana",
+     "canary banana",
+     "bananas"
+    ],
+    [
+     "chocolate",
+     "dark chocolate",
+     "cremeux"
+    ],
+    [
+     "peanut",
+     "peanuts"
+    ],
+    [
+     "ice cream"
+    ],
+    [
+     "roasted",
+     "roast"
+    ]
+   ],
+   "audio": "demo/4017-en.m4a",
+   "audio_nombre": "demo/4017-nombre-en.m4a"
   },
   {
    "id": 4018,
@@ -1674,7 +2396,38 @@
     "Toasted almond on top",
     "Ice cream quenelle"
    ],
-   "marcaje": "Dessert spoon."
+   "marcaje": "Dessert spoon.",
+   "significa": "Bienmesabe means “it tastes good to me”: a cream of almond, egg yolk and lemon.",
+   "guino": "Bienmesabe, the almond sweet from Tejeda, in Gran Canaria.",
+   "tres": [
+    "Bienmesabe: almond, egg yolk and lemon",
+    "Toasted almond on top",
+    "Goat's milk ice cream on the side"
+   ],
+   "story": "Bienmesabe, which means “it tastes good to me”: the almond sweet from Tejeda, with toasted almond and goat's milk ice cream.",
+   "story_larga": "Bienmesabe means “it tastes good to me”, and it is the almond sweet from Tejeda, in Gran Canaria. It is a cream of ground almond with egg yolk, sugar and lemon. We serve it with toasted almond on top and goat's milk ice cream on the side.",
+   "pron": "Bee-en-meh-sah-beh, which means it tastes good to me: the almond sweet from Teh-heh-da, with toasted almond and goat's milk ice cream.",
+   "claves": [
+    [
+     "bienmesabe",
+     "tastes good"
+    ],
+    [
+     "almond",
+     "almonds"
+    ],
+    [
+     "tejeda",
+     "gran canaria"
+    ],
+    [
+     "ice cream",
+     "goat's milk",
+     "goat milk"
+    ]
+   ],
+   "audio": "demo/4018-en.m4a",
+   "audio_nombre": "demo/4018-nombre-en.m4a"
   },
   {
    "id": 4019,
@@ -1690,7 +2443,40 @@
     "Bread on the bread plate on the left",
     "Butter on a small stone"
    ],
-   "marcaje": "Bread plate and butter knife on the left."
+   "marcaje": "Bread plate and butter knife on the left.",
+   "significa": "Millo is the Canarian word for corn.",
+   "guino": "Canarian millo in the dough and smoked goat's butter.",
+   "tres": [
+    "Wheat and millo sourdough bread",
+    "Served warm, refilled without asking",
+    "Smoked goat's butter"
+   ],
+   "story": "Our sourdough bread, made with wheat and millo, Canarian corn, served warm with smoked goat's butter.",
+   "story_larga": "Our bread is sourdough, made with wheat flour and millo, the Canarian word for corn. We serve it warm, after the snacks, with a smoked goat's butter, and when it runs out we bring more.",
+   "pron": "Our sourdough bread, made with wheat and mee-yo, Canarian corn, served warm with smoked goat's butter.",
+   "claves": [
+    [
+     "bread",
+     "sourdough"
+    ],
+    [
+     "millo",
+     "corn"
+    ],
+    [
+     "wheat"
+    ],
+    [
+     "butter",
+     "goat's butter",
+     "goat butter"
+    ],
+    [
+     "smoked"
+    ]
+   ],
+   "audio": "demo/4019-en.m4a",
+   "audio_nombre": "demo/4019-nombre-en.m4a"
   },
   {
    "id": 4020,
@@ -1718,9 +2504,12 @@
     "Almond tuile"
    ],
    "story": "With your coffee, three bites: a truffle with honey rum, a prickly pear pâte de fruit and an almond tuile.",
+   "story_larga": "With your coffee, three small bites to finish. A dark chocolate truffle with Canarian honey rum, a pâte de fruit of tunera, the prickly pear, fruit of the cactus, and a thin almond tuile. They are eaten by hand, from left to right.",
+   "pron": "With your coffee, three bites: a truffle with honey rum, a prickly pear pat de frwee and an almond tuile.",
    "claves": [
     [
-     "truffle"
+     "truffle",
+     "truffles"
     ],
     [
      "honey rum",
@@ -1728,7 +2517,8 @@
     ],
     [
      "prickly pear",
-     "pate de fruit"
+     "pate de fruit",
+     "tunera"
     ],
     [
      "almond tuile",
@@ -1738,7 +2528,26 @@
     [
      "coffee"
     ]
-   ]
+   ],
+   "bocados": [
+    {
+     "n": "Honey rum truffle",
+     "story": "A dark chocolate truffle with honey rum, the Canarian rum softened with honey.",
+     "audio": "demo/4020-b1-en.m4a"
+    },
+    {
+     "n": "Prickly pear pâte de fruit",
+     "story": "A fruit jelly of prickly pear, the fruit of the cactus. It has no allergens, so it can always stay.",
+     "audio": "demo/4020-b2-en.m4a"
+    },
+    {
+     "n": "Almond tuile",
+     "story": "A thin, crisp almond tuile, to finish.",
+     "audio": "demo/4020-b3-en.m4a"
+    }
+   ],
+   "audio": "demo/4020-en.m4a",
+   "audio_nombre": "demo/4020-nombre-en.m4a"
   }
  ],
  "DISH_COMPONENTS": {
@@ -2313,5 +3122,595 @@
    }
   }
  },
- "DISH_SERVICE": {}
+ "DISH_SERVICE": {},
+ "GLOSARIO": [
+  {
+   "o": "ic",
+   "t": "Chocho",
+   "jp": "",
+   "kw": [
+    "chocho"
+   ],
+   "es": "Altramuz, en Canarias. Se come encurtido como aperitivo. Es uno de los catorce alérgenos y a menudo da reacción cruzada con el cacahuete.",
+   "en": "Lupin bean, in the Canaries. It is eaten pickled as a snack. It is one of the fourteen allergens and often cross-reacts with peanut."
+  },
+  {
+   "o": "ic",
+   "t": "Pimienta palmera",
+   "jp": "",
+   "kw": [
+    "pimienta palmera"
+   ],
+   "es": "Guindilla pequeña y picante de La Palma. En la carta, en el aliño de los chochos.",
+   "en": "Small hot chilli from La Palma. On our menu, in the dressing of the chochos."
+  },
+  {
+   "o": "ic",
+   "t": "Miel de palma",
+   "jp": "",
+   "kw": [
+    "miel de palma"
+   ],
+   "es": "No es miel: es guarapo, la savia de la palmera canaria, reducida al fuego durante horas. Típica de La Gomera.",
+   "en": "It is not honey: it is guarapo, the sap of the Canary palm, reduced over the fire for hours. Typical of La Gomera."
+  },
+  {
+   "o": "ic",
+   "t": "Guarapo",
+   "jp": "",
+   "kw": [
+    "guarapo"
+   ],
+   "es": "La savia de la palmera canaria. Reducida, se convierte en miel de palma.",
+   "en": "The sap of the Canary palm. Reduced, it becomes palm honey."
+  },
+  {
+   "o": "ic",
+   "t": "Cherne",
+   "jp": "",
+   "kw": [
+    "cherne"
+   ],
+   "es": "Pescado de roca de aguas canarias, de carne blanca y firme. Salado, era la despensa de los pescadores.",
+   "en": "Rock fish from Canarian waters (wreckfish), with firm white flesh. Salted, it was the fishermen's larder."
+  },
+  {
+   "o": "es",
+   "t": "Lechuga de mar",
+   "jp": "",
+   "kw": [
+    "lechuga de mar"
+   ],
+   "es": "Alga verde de hoja fina (ulva). Da sabor a mar a la mayonesa del buñuelo.",
+   "en": "Thin green seaweed (ulva). It gives the fritter mayonnaise its taste of the sea."
+  },
+  {
+   "o": "ic",
+   "t": "Bubango",
+   "jp": "",
+   "kw": [
+    "bubango"
+   ],
+   "es": "Calabacín tierno, cogido pequeño. Es la palabra canaria para el calabacín.",
+   "en": "Baby courgette, picked small. It is the Canarian word for courgette."
+  },
+  {
+   "o": "es",
+   "t": "Requesón",
+   "jp": "",
+   "kw": [
+    "requesón"
+   ],
+   "es": "Queso fresco hecho con el suero de la leche. El nuestro es de cabra.",
+   "en": "Fresh cheese made from whey, similar to ricotta. Ours is goat's milk."
+  },
+  {
+   "o": "ic",
+   "t": "Queso de flor",
+   "jp": "",
+   "kw": [
+    "queso de flor"
+   ],
+   "es": "Queso canario que se cuaja con la flor del cardo en lugar de cuajo animal.",
+   "en": "Canarian cheese curdled with thistle flowers instead of animal rennet."
+  },
+  {
+   "o": "ic",
+   "t": "Gofio",
+   "jp": "",
+   "kw": [
+    "gofio"
+   ],
+   "es": "Harina de cereal tostado, base de la cocina canaria. El de trigo lleva gluten; el de millo, no.",
+   "en": "Toasted cereal flour, a staple of Canarian cooking. Wheat gofio contains gluten; corn gofio does not."
+  },
+  {
+   "o": "ic",
+   "t": "Millo",
+   "jp": "",
+   "kw": [
+    "millo"
+   ],
+   "es": "Maíz, en Canarias. En la carta, en el caldo del carabinero y en el pan.",
+   "en": "Corn, in the Canaries. On our menu, in the carabinero broth and in the bread."
+  },
+  {
+   "o": "es",
+   "t": "Carabinero",
+   "jp": "",
+   "kw": [
+    "carabinero"
+   ],
+   "es": "Gamba grande de color rojo intenso. Lo mejor está en la cabeza: el coral.",
+   "en": "Large deep red prawn. The best part is in the head: the coral."
+  },
+  {
+   "o": "es",
+   "t": "Coral",
+   "jp": "",
+   "kw": [
+    "coral"
+   ],
+   "es": "La parte cremosa de la cabeza del marisco, de mucho sabor.",
+   "en": "The creamy part inside the head of shellfish, full of flavour."
+  },
+  {
+   "o": "ja",
+   "t": "Kombu",
+   "jp": "昆布",
+   "kw": [
+    "kombu"
+   ],
+   "es": "Alga japonesa rica en umami. Curar el atún envuelto en ella lo afirma sin cocinarlo.",
+   "en": "Japanese seaweed rich in umami. Curing tuna wrapped in it firms it without cooking."
+  },
+  {
+   "o": "ja",
+   "t": "Umami",
+   "jp": "旨味",
+   "kw": [
+    "umami"
+   ],
+   "es": "El quinto sabor básico, el sabroso. Lo aportan el kombu, la soja o el tomate maduro.",
+   "en": "The fifth basic taste, savouriness. Kombu, soy and ripe tomato all bring it."
+  },
+  {
+   "o": "es",
+   "t": "Ajoblanco",
+   "jp": "",
+   "kw": [
+    "ajoblanco"
+   ],
+   "es": "Sopa fría andaluza de almendra, pan, ajo, aceite y vinagre. Lleva gluten y frutos secos.",
+   "en": "Cold Andalusian soup of almond, bread, garlic, oil and vinegar. It contains gluten and tree nuts."
+  },
+  {
+   "o": "es",
+   "t": "Potera",
+   "jp": "",
+   "kw": [
+    "potera"
+   ],
+   "es": "Aparejo con anzuelos para pescar calamares uno a uno, sin red.",
+   "en": "Jig with hooks used to catch squid one by one, without a net."
+  },
+  {
+   "o": "es",
+   "t": "Papada ibérica",
+   "jp": "",
+   "kw": [
+    "papada"
+   ],
+   "es": "Grasa del cuello del cerdo ibérico, curada. En lámina fina se funde sola sobre el pescado caliente. Es cerdo: ojo con pescetarianos.",
+   "en": "Cured fat from the neck of the Iberian pig. Thinly sliced, it melts by itself on the hot fish. It is pork: careful with pescatarians."
+  },
+  {
+   "o": "es",
+   "t": "Malvasía",
+   "jp": "",
+   "kw": [
+    "malvasía"
+   ],
+   "es": "Uva blanca aromática. La de Lanzarote, cultivada en hoyos de ceniza volcánica, va en el beurre blanc.",
+   "en": "Aromatic white grape. The one from Lanzarote, grown in pits of volcanic ash, goes into the beurre blanc."
+  },
+  {
+   "o": "fr",
+   "t": "Beurre blanc",
+   "jp": "",
+   "kw": [
+    "beurre blanc"
+   ],
+   "es": "Salsa francesa de mantequilla montada sobre una reducción de vino y chalota.",
+   "en": "French butter sauce, whisked into a reduction of wine and shallot."
+  },
+  {
+   "o": "ic",
+   "t": "Cochino negro",
+   "jp": "",
+   "kw": [
+    "cochino negro"
+   ],
+   "es": "Raza de cerdo autóctona de Canarias que estuvo a punto de desaparecer.",
+   "en": "Native Canarian pig breed that nearly disappeared."
+  },
+  {
+   "o": "ar",
+   "t": "Tahini",
+   "jp": "",
+   "kw": [
+    "tahini"
+   ],
+   "es": "Pasta de sésamo. Va dentro de la crema de berenjena del cabrito: no se ve, pero está.",
+   "en": "Sesame paste. It is inside the aubergine cream of the kid: you cannot see it, but it is there."
+  },
+  {
+   "o": "ic",
+   "t": "Parchita",
+   "jp": "",
+   "kw": [
+    "parchita"
+   ],
+   "es": "Fruta de la pasión, en Canarias.",
+   "en": "Passion fruit, in the Canaries."
+  },
+  {
+   "o": "ic",
+   "t": "Quesillo",
+   "jp": "",
+   "kw": [
+    "quesillo"
+   ],
+   "es": "El flan canario, hecho con leche condensada. No lleva queso.",
+   "en": "The Canarian flan, made with condensed milk. It contains no cheese."
+  },
+  {
+   "o": "ic",
+   "t": "Bienmesabe",
+   "jp": "",
+   "kw": [
+    "bienmesabe"
+   ],
+   "es": "«Me sabe bien»: crema de almendra, yema, azúcar y limón, típica de Tejeda.",
+   "en": "“It tastes good to me”: a cream of almond, egg yolk, sugar and lemon, typical of Tejeda."
+  },
+  {
+   "o": "ic",
+   "t": "Tunera",
+   "jp": "",
+   "kw": [
+    "tunera"
+   ],
+   "es": "La chumbera. Su fruto es el higo de tunera o higo chumbo.",
+   "en": "The prickly pear cactus. Its fruit is the prickly pear."
+  },
+  {
+   "o": "ic",
+   "t": "Ron miel",
+   "jp": "",
+   "kw": [
+    "ron miel"
+   ],
+   "es": "Licor canario de ron con miel. Lleva alcohol.",
+   "en": "Canarian liqueur of rum and honey. It contains alcohol."
+  },
+  {
+   "o": "fr",
+   "t": "Pâte de fruit",
+   "jp": "",
+   "kw": [
+    "pâte de fruit"
+   ],
+   "es": "Pasta de fruta: un dulce de fruta gelificada, cortado en dados.",
+   "en": "Fruit paste: a set fruit sweet cut into cubes."
+  },
+  {
+   "o": "fr",
+   "t": "Mignardises",
+   "jp": "",
+   "kw": [
+    "mignardises"
+   ],
+   "es": "Los pequeños dulces que se sirven con el café, al final de la comida.",
+   "en": "The small sweets served with coffee at the end of the meal. In English, petits fours."
+  },
+  {
+   "o": "fr",
+   "t": "Quenelle",
+   "jp": "",
+   "kw": [
+    "quenelle"
+   ],
+   "es": "Forma ovalada de tres caras que se da con dos cucharas a helados, sorbetes y cremas.",
+   "en": "Three-sided oval shape made with two spoons for ice creams, sorbets and creams."
+  },
+  {
+   "o": "es",
+   "t": "Masa madre",
+   "jp": "",
+   "kw": [
+    "masa madre"
+   ],
+   "es": "Fermento natural de harina y agua con el que sube el pan, sin levadura añadida.",
+   "en": "Natural ferment of flour and water that raises the bread without added yeast."
+  }
+ ],
+ "TECNICAS": {
+  "fams": [
+   {
+    "k": "fuego",
+    "es": "Fuego: brasa, plancha y humo",
+    "en": "Fire: grill, griddle and smoke",
+    "col": "#c47838"
+   },
+   {
+    "k": "crudo",
+    "es": "Crudos, curados y salazones",
+    "en": "Raw, cured and salted",
+    "col": "#4888a0"
+   },
+   {
+    "k": "lenta",
+    "es": "Asados y cocción lenta",
+    "en": "Roasts and slow cooking",
+    "col": "#a3502a"
+   },
+   {
+    "k": "fritura",
+    "es": "Fritura",
+    "en": "Frying",
+    "col": "#c99a3c"
+   },
+   {
+    "k": "salsa",
+    "es": "Salsas, jugos y emulsiones",
+    "en": "Sauces, jus and emulsions",
+    "col": "#b06a4a"
+   },
+   {
+    "k": "frio",
+    "es": "Encurtidos, sopas frías y helados",
+    "en": "Pickles, cold soups and ices",
+    "col": "#6a8f4f"
+   },
+   {
+    "k": "dulce",
+    "es": "Pan y repostería",
+    "en": "Bread and pastry",
+    "col": "#c47068"
+   }
+  ],
+  "lista": [
+   {
+    "fam": "fuego",
+    "es": "Brasa",
+    "en": "Grill over embers",
+    "kw": [
+     "brasa"
+    ],
+    "def": "Cocinar sobre carbón o leña ya hechos brasa, sin llama. Marca por fuera, deja un punto ahumado y mantiene jugoso el interior.",
+    "defEn": "Cooking over charcoal or wood that has burnt down to embers, without flame. It marks the outside, leaves a smoky note and keeps the inside juicy.",
+    "nota": "El bubango y el cherne pasan por la brasa.",
+    "notaEn": "The bubango and the cherne go over the embers."
+   },
+   {
+    "fam": "fuego",
+    "es": "Plancha",
+    "en": "Griddle",
+    "kw": [
+     "carabinero"
+    ],
+    "def": "Contacto directo con una superficie de hierro muy caliente. Dora rápido y deja el marisco jugoso.",
+    "defEn": "Direct contact with a very hot iron surface. It browns fast and keeps shellfish juicy.",
+    "nota": "El carabinero se hace a la plancha, con la cabeza.",
+    "notaEn": "The carabinero is seared on the griddle, head on."
+   },
+   {
+    "fam": "fuego",
+    "es": "Ahumado",
+    "en": "Smoking",
+    "kw": [
+     "ahumad"
+    ],
+    "def": "Exponer el producto al humo de madera para darle aroma. En frío no lo cocina; en caliente, sí.",
+    "defEn": "Exposing food to wood smoke for aroma. Cold smoking does not cook it; hot smoking does.",
+    "nota": "Queso de cabra de la tartaleta, berenjena del cabrito y mantequilla del pan.",
+    "notaEn": "The tartlet's goat's cheese, the kid's aubergine and the bread butter."
+   },
+   {
+    "fam": "crudo",
+    "es": "Curado en kombu",
+    "en": "Kombu curing",
+    "kw": [
+     "kombu"
+    ],
+    "def": "Técnica japonesa: el pescado se envuelve en alga kombu unas horas. Gana umami y se afirma por fuera sin cocinarse.",
+    "defEn": "Japanese technique: the fish is wrapped in kombu seaweed for a few hours. It gains umami and firms on the outside without cooking.",
+    "nota": "El atún rojo, servido crudo sobre ajoblanco.",
+    "notaEn": "The bluefin tuna, served raw on ajoblanco."
+   },
+   {
+    "fam": "crudo",
+    "es": "Abierto al momento",
+    "en": "Opened to order",
+    "kw": [
+     "ostra"
+    ],
+    "def": "El marisco vivo se abre justo antes de salir. Abierto y en espera pierde su agua y su sabor.",
+    "defEn": "Live shellfish is opened right before it goes out. Opened and waiting, it loses its water and its flavour.",
+    "nota": "La ostra se abre en el pase, nunca antes.",
+    "notaEn": "The oyster is opened at the pass, never before."
+   },
+   {
+    "fam": "crudo",
+    "es": "Salazón y desalado",
+    "en": "Salting and desalting",
+    "kw": [
+     "desala"
+    ],
+    "def": "El pescado se conserva en sal y, antes de cocinarlo, se tiene en agua fría que se cambia varias veces hasta quitarle la sal.",
+    "defEn": "Fish is preserved in salt and, before cooking, soaked in cold water changed several times until the salt is gone.",
+    "nota": "El cherne del buñuelo se desala dos días.",
+    "notaEn": "The cherne for the fritter is desalted for two days."
+   },
+   {
+    "fam": "lenta",
+    "es": "Asado lento",
+    "en": "Slow roasting",
+    "kw": [
+     "cabrito"
+    ],
+    "def": "Horno a temperatura moderada durante horas, hasta que la carne se separa sola del hueso.",
+    "defEn": "Oven at a moderate temperature for hours, until the meat falls away from the bone.",
+    "nota": "El cabrito, que luego se desmiga.",
+    "notaEn": "The kid, which is then pulled."
+   },
+   {
+    "fam": "lenta",
+    "es": "Maduración",
+    "en": "Ageing",
+    "kw": [
+     "madurado"
+    ],
+    "def": "Dejar reposar la carne en cámara, controlando frío y humedad, para que gane sabor y ternura.",
+    "defEn": "Resting meat in a cold room, with controlled temperature and humidity, so it gains flavour and tenderness.",
+    "nota": "El pichón, que se sirve rosado.",
+    "notaEn": "The pigeon, served pink."
+   },
+   {
+    "fam": "fritura",
+    "es": "Buñuelo",
+    "en": "Fritter",
+    "kw": [
+     "buñuelo"
+    ],
+    "def": "Masa ligera de harina y huevo que se fríe en aceite abundante y se hincha. Crujiente fuera y tierno dentro.",
+    "defEn": "Light batter of flour and egg fried in plenty of oil until it puffs up. Crisp outside and tender inside.",
+    "nota": "El buñuelo de cherne, con mayonesa de algas.",
+    "notaEn": "The cherne fritter, with seaweed mayonnaise."
+   },
+   {
+    "fam": "salsa",
+    "es": "Beurre blanc",
+    "en": "Beurre blanc",
+    "kw": [
+     "beurre blanc"
+    ],
+    "def": "Salsa francesa: se reduce vino con chalota y se monta con mantequilla fría, poco a poco, sin que hierva.",
+    "defEn": "French sauce: wine is reduced with shallot and cold butter is whisked in bit by bit, without boiling.",
+    "nota": "La hacemos con malvasía de Lanzarote para el cherne.",
+    "notaEn": "We make it with Lanzarote malvasía for the cherne."
+   },
+   {
+    "fam": "salsa",
+    "es": "Lacado",
+    "en": "Glazing",
+    "kw": [
+     "lacado"
+    ],
+    "def": "Pintar la carne varias veces con un glaseado dulce mientras se cocina, hasta que brilla y se pega.",
+    "defEn": "Brushing meat several times with a sweet glaze while it cooks, until it shines and sticks.",
+    "nota": "El cochino negro, con miel de palma y mostaza.",
+    "notaEn": "The black pig, with palm honey and mustard."
+   },
+   {
+    "fam": "salsa",
+    "es": "Jugo",
+    "en": "Jus",
+    "kw": [
+     "jugo"
+    ],
+    "def": "Salsa corta hecha con los huesos y recortes tostados, reducida hasta que nape. Se sirve en la mesa.",
+    "defEn": "Short sauce made from roasted bones and trimmings, reduced until it coats the spoon. Poured at the table.",
+    "nota": "El del cochino negro y el de vino tinto y cacao del pichón.",
+    "notaEn": "The black pig jus and the pigeon's red wine and cocoa jus."
+   },
+   {
+    "fam": "salsa",
+    "es": "Clarificado",
+    "en": "Clarifying",
+    "kw": [
+     "agua de tomate"
+    ],
+    "def": "Colar un jugo por un paño durante horas, sin presionar, hasta que sale transparente y conserva todo el sabor.",
+    "defEn": "Letting a juice drip through a cloth for hours, without pressing, until it runs clear and keeps all its flavour.",
+    "nota": "El agua de tomate de la ostra, toda la noche.",
+    "notaEn": "The oyster's tomato water, overnight."
+   },
+   {
+    "fam": "frio",
+    "es": "Encurtido",
+    "en": "Pickling",
+    "kw": [
+     "encurtid"
+    ],
+    "def": "Conservar en vinagre con especias. Da acidez y alarga la vida del producto.",
+    "defEn": "Preserving in vinegar with spices. It adds acidity and extends shelf life.",
+    "nota": "Los chochos, con naranja y comino.",
+    "notaEn": "The chochos, with orange and cumin."
+   },
+   {
+    "fam": "frio",
+    "es": "Sopa fría",
+    "en": "Cold soup",
+    "kw": [
+     "ajoblanco"
+    ],
+    "def": "Triturar en crudo y servir muy frío. El ajoblanco es almendra, pan, ajo, aceite y vinagre.",
+    "defEn": "Blending raw ingredients and serving very cold. Ajoblanco is almond, bread, garlic, oil and vinegar.",
+    "nota": "La base del atún curado en kombu.",
+    "notaEn": "The base of the kombu-cured tuna."
+   },
+   {
+    "fam": "frio",
+    "es": "Sorbete y granizado",
+    "en": "Sorbet and granita",
+    "kw": [
+     "parchita",
+     "albahaca"
+    ],
+    "def": "Fruta o hierba con almíbar, congelada. El sorbete se bate y queda liso; el granizado se rasca y queda en cristales.",
+    "defEn": "Fruit or herb with syrup, frozen. Sorbet is churned until smooth; granita is scraped into crystals.",
+    "nota": "El prepostre de parchita y el granizado de albahaca del tomate.",
+    "notaEn": "The parchita pre-dessert and the basil granita on the tomato."
+   },
+   {
+    "fam": "dulce",
+    "es": "Masa madre",
+    "en": "Sourdough",
+    "kw": [
+     "masa madre"
+    ],
+    "def": "Fermento vivo de harina y agua que hace subir el pan despacio. Da más sabor, más corteza y mejor conservación.",
+    "defEn": "Live ferment of flour and water that raises the bread slowly. More flavour, more crust and better keeping.",
+    "nota": "Nuestro pan de trigo y millo.",
+    "notaEn": "Our wheat and millo bread."
+   },
+   {
+    "fam": "dulce",
+    "es": "Flan al baño maría",
+    "en": "Bain-marie custard",
+    "kw": [
+     "quesillo"
+    ],
+    "def": "Mezcla de leche y huevo cuajada en el horno dentro de agua caliente, para que quede lisa y sin burbujas.",
+    "defEn": "Milk and egg mixture set in the oven inside hot water, so it stays smooth and free of bubbles.",
+    "nota": "El quesillo de leche de cabra.",
+    "notaEn": "The goat's milk quesillo."
+   },
+   {
+    "fam": "dulce",
+    "es": "Trufas y tejas",
+    "en": "Truffles and tuiles",
+    "kw": [
+     "trufa",
+     "teja"
+    ],
+    "def": "La trufa es una ganache de chocolate y nata que se hace bola; la teja, una masa fina horneada que se curva al enfriar.",
+    "defEn": "A truffle is a chocolate and cream ganache rolled into a ball; a tuile is a thin baked biscuit that curves as it cools.",
+    "nota": "En las mignardises, con el café.",
+    "notaEn": "In the petits fours, with coffee."
+   }
+  ]
+ }
 }
