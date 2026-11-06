@@ -7204,7 +7204,7 @@ function _cpPasoHace(dish, dd, _en){
     ${h.tres.length ? `<ol class="deg-tres grande cono-tres">${h.tres.map(f => `<li>${escapeHTML(f)}</li>`).join('')}</ol>` : ''}
     ${h.hist ? `<p class="cono-hist">${escapeHTML(h.hist)}</p>` : ''}
     ${ing}
-    ${_guinoRetiroHTML(h.guino, _en)}`;
+    ${_guinoRetiroHTML(h.guino, _en, dd.retiro)}`;
 }
 
 // ── 3 · Lo que protege ──
@@ -16963,9 +16963,12 @@ function _degBtnEscuchar(id){
 // El guiño de la casa se cuenta AL RETIRAR (propietario, nov 2026): al servir
 // se explica el plato; el guiño se dice de pasada al llevarse el plato, sin
 // pregunta detrás. Mismo rótulo en la ficha, la degustación y Conocer el plato.
-function _guinoRetiroHTML(guino, _en){
-  if(!guino || !String(guino).trim()) return '';
-  return `<div class="deg-guino"><span>${_en ? 'For clearing' : 'Para el retiro'}</span>${escapeHTML(guino)}<em class="deg-guino-ayuda">${_en ? 'Say it in passing as you clear, with no question after it.' : 'Dilo de pasada al retirar, sin pregunta detrás.'}</em></div>`;
+// Si el plato trae `retiro` (la frase ya escrita para decirla al retirar), se
+// enseña esa; si no, el guiño tal cual.
+function _guinoRetiroHTML(guino, _en, retiro){
+  const txt = (retiro && String(retiro).trim()) ? String(retiro).trim() : String(guino || '').trim();
+  if(!txt) return '';
+  return `<div class="deg-guino"><span>${_en ? 'For clearing' : 'Para el retiro'}</span>${escapeHTML(txt)}<em class="deg-guino-ayuda">${_en ? 'Say it in passing as you clear, with no question after it.' : 'Dilo de pasada al retirar, sin pregunta detrás.'}</em></div>`;
 }
 function _degContarHTML(d, compacto){
   if(!d) return '';
@@ -16978,7 +16981,7 @@ function _degContarHTML(d, compacto){
     ${tres.length ? `<ol class="deg-tres">${tres.map(f => `<li>${escapeHTML(f)}</li>`).join('')}</ol>` : ''}
     ${dd.story ? `<div class="deg-story"><p>${escapeHTML(dd.story)}</p>${_degBtnEscuchar(d.id)}</div>` : ''}
     ${_degBocadosHTML(dd)}
-    ${_guinoRetiroHTML(dd.guino, _en)}
+    ${_guinoRetiroHTML(dd.guino, _en, dd.retiro)}
     ${dd.significa ? `<div class="deg-sig"><span>${_en ? 'What the name means' : 'Qué significa el nombre'}</span>${escapeHTML(dd.significa)}</div>` : ''}
   </div>`;
 }
@@ -17098,7 +17101,7 @@ function _degPintarPase(c){
     ${_degFotoHTML(d.id, dd.name, 'deg-hero')}
     ${dd.significa ? `<div class="deg-sig"><span>${_en ? 'What the name means' : 'Qué significa el nombre'}</span>${escapeHTML(dd.significa)}</div>` : ''}
     ${tres.length ? `<ol class="deg-tres grande">${tres.map(f => `<li>${escapeHTML(f)}</li>`).join('')}</ol>` : ''}
-    ${_guinoRetiroHTML(dd.guino, _en)}
+    ${_guinoRetiroHTML(dd.guino, _en, dd.retiro)}
     ${dd.story ? `<div class="deg-story"><span>${_en ? 'At the table, in ten seconds' : 'En la mesa, en diez segundos'}</span><p>${escapeHTML(dd.story)}</p>${_degBtnEscuchar(d.id)}</div>` : ''}
     ${_degBocadosHTML(dd)}
     <details class="deg-apoyo">
@@ -35807,18 +35810,31 @@ function _momGuinoFrase(g){
   if(!_MOM_PROPIOS.test(s) && !/^.[A-ZÁÉÍÓÚÑ]/.test(s)) s = s.charAt(0).toLowerCase() + s.slice(1);
   return s;
 }
-// La escena de guiño de un plato, ya en un idioma, con la plantilla de los datos.
-function _momGuinoLoc(tpl, nombre, guino, en){
+// La escena de guiño de un plato, ya en un idioma. Con `retiro` (la frase de
+// retiro escrita en la carta), esa es la respuesta modelo. Sin él, la
+// plantilla de los datos, descartando la que dejaría dos veces los dos puntos;
+// y si el guiño es largo (más de MOM_GUINO_MAX), el guiño solo: envuelto en
+// una frase ya no se dice de pasada.
+const MOM_GUINO_MAX = 90;
+function _momGuinoLoc(tpl, nombre, guino, en, retiro){
   const T = k => (en && tpl[k + '_en']) ? tpl[k + '_en'] : tpl[k];
+  const punto = x => { let r = String(x || '').trim(); if(r && !/[.!?…]$/.test(r)) r += '.'; return r; };
   const g = _momGuinoFrase(guino);
-  const gMay = g.charAt(0).toUpperCase() + g.slice(1);
-  const pon = s => String(s || '').replace(/\{plato\}/g, nombre).replace(/\{guino\}/g, g);
+  const ret = punto(retiro);
+  const sola = ret || (g.length > MOM_GUINO_MAX ? (g.charAt(0).toUpperCase() + g.slice(1)) : '');
+  const pon = (s, v) => String(s || '').replace(/\{plato\}/g, nombre).replace(/\{guino\}/g, v);
+  let modelos;
+  if(sola) modelos = [sola];
+  else {
+    modelos = (T('modelos') || []).map(m => pon(m, g)).filter(m => (m.match(/:/g) || []).length <= 1);
+    if(!modelos.length) modelos = [g.charAt(0).toUpperCase() + g.slice(1)];
+  }
   return {
-    sit: pon(T('sit')), dice: '', buscar: pon(T('buscar')),
-    modelos: (T('modelos') || []).map(pon),
-    // En la forzada el guiño va detrás de una pregunta: frase propia, con mayúscula.
-    forzada: String(T('forzada') || '').replace(/\{plato\}/g, nombre).replace(/\{guino\}/g, gMay),
-    porque: pon(T('porque'))
+    sit: pon(T('sit'), g), dice: '', buscar: pon(T('buscar'), g),
+    modelos,
+    // En la forzada la frase va delante de una pregunta: con mayúscula.
+    forzada: pon(T('forzada'), sola || (g.charAt(0).toUpperCase() + g.slice(1))),
+    porque: pon(T('porque'), g)
   };
 }
 // Una escena por plato con guiño, en el orden en que llegan (degustación
@@ -35841,7 +35857,7 @@ function _momPlatosCarta(){
     if(typeof DEGUSTACION !== 'undefined' && DEGUSTACION) for(const p of DEGUSTACION.pases){ const d = DISHES.find(x => x.id === p.id); if(d && !vistos.has(d.id)){ orden.push(d); vistos.add(d.id); } }
     for(const d of DISHES) if(!vistos.has(d.id)){ orden.push(d); vistos.add(d.id); }
   }catch(e){ return []; }
-  return orden.map(d => { const dd = getDish(d) || d; return { id: d.id, name: dd.name || d.name, guino: dd.guino || d.guino || '' }; }).filter(p => p.guino);
+  return orden.map(d => { const dd = getDish(d) || d; return { id: d.id, name: dd.name || d.name, guino: dd.guino || d.guino || '', retiro: dd.retiro || '' }; }).filter(p => p.guino);
 }
 // Las de la carta van delante: así la primera ronda ya trae un guiño del
 // restaurante (los tipos se alternan por orden de aparición).
@@ -35853,7 +35869,7 @@ function _momLoc(e){
   const en = LANG === 'en';
   if(e.tipo === 'guino-plato'){
     const p = _momPlatosCarta().find(x => x.id === e.dish);
-    return _momGuinoLoc(MOMENTOS.guino, p ? p.name : '', p ? p.guino : '', en);
+    return _momGuinoLoc(MOMENTOS.guino, p ? p.name : '', p ? p.guino : '', en, p ? p.retiro : '');
   }
   return { sit: _momT(e,'sit'), dice: e.dice ? _momT(e,'dice') : '', buscar: _momT(e,'buscar'),
     modelos: (en ? e.modelos_en : e.modelos) || [], forzada: _momT(e,'forzada'), porque: _momT(e,'porque') };

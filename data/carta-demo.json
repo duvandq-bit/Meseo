@@ -121,6 +121,7 @@
    },
    "significa": "Chocho es como se llama en Canarias al altramuz.",
    "guino": "Pimienta palmera de La Palma en el aliño.",
+   "retiro": "Por cierto, el aliño lleva pimienta palmera de La Palma.",
    "tres": [
     "Chochos encurtidos, el altramuz canario",
     "Aliñados con naranja, comino y pimienta palmera",
@@ -194,6 +195,7 @@
    },
    "significa": "La miel de palma no es miel: es guarapo, la savia de la palmera canaria, reducida al fuego durante horas.",
    "guino": "Miel de palma de La Gomera y queso de cabra de la isla.",
+   "retiro": "Esas gotas eran miel de palma de La Gomera, y el queso es de cabra de la isla.",
    "tres": [
     "Tartaleta con crema de queso de cabra ahumado",
     "Tres gotas de miel de palma de La Gomera",
@@ -267,6 +269,7 @@
    },
    "significa": "El cherne es un pescado de roca de aguas canarias. Salado, era la despensa de los pescadores.",
    "guino": "Cherne salado, como lo guardaban los pescadores canarios.",
+   "retiro": "El cherne va salado, como lo guardaban los pescadores canarios.",
    "tres": [
     "Buñuelos de cherne salado, desalado dos días",
     "Mayonesa de lechuga de mar, en cuchara aparte",
@@ -337,6 +340,7 @@
     "venta": "Raw oyster with tomato water and coriander oil. Fresh, saline, and you finish by sipping from the shell."
    },
    "guino": "El agua de tomate, de tomate canario filtrado toda la noche.",
+   "retiro": "El agua de tomate es de tomate canario, filtrado toda la noche.",
    "tres": [
     "Ostra abierta al momento",
     "Agua de tomate transparente por encima",
@@ -405,6 +409,7 @@
     "venta": "Seasonal tomato with strawberry and basil: sweet, sharp and very fresh to start."
    },
    "guino": "Tomate de temporada de la huerta de la isla.",
+   "retiro": "El tomate es de temporada, de la huerta de la isla.",
    "tres": [
     "Tomate de temporada y fresa",
     "Granizado de albahaca al centro",
@@ -473,6 +478,7 @@
    },
    "significa": "Bubango es como se llama en Canarias al calabacín tierno, cogido pequeño.",
    "guino": "Requesón de cabra canario.",
+   "retiro": "Por cierto, el requesón es de cabra, canario.",
    "tres": [
     "Bubango, el calabacín canario, a la brasa",
     "Sobre requesón de cabra",
@@ -543,6 +549,7 @@
    },
    "significa": "El queso de flor se cuaja con la flor del cardo, no con cuajo animal.",
    "guino": "Queso de flor y gofio, dos clásicos de las islas.",
+   "retiro": "El queso de flor y el gofio son dos clásicos de las islas.",
    "tres": [
     "Yema de huevo de corral sobre crema de berros",
     "Queso de flor rallado, cuajado con flor de cardo",
@@ -616,6 +623,7 @@
    },
    "significa": "Millo es como se dice maíz en Canarias.",
    "guino": "El caldo de millo, el maíz canario.",
+   "retiro": "El caldo es de millo, el maíz canario.",
    "tres": [
     "Carabinero con su cabeza",
     "Su coral al lado",
@@ -833,6 +841,7 @@
    },
    "significa": "El cherne es un pescado de roca de aguas canarias, de carne blanca y firme.",
    "guino": "Malvasía de Lanzarote en el beurre blanc.",
+   "retiro": "Por cierto, la beurre blanc lleva malvasía de Lanzarote.",
    "tres": [
     "Cherne a la brasa",
     "Papada ibérica fundida por encima",
@@ -903,6 +912,7 @@
    },
    "significa": "El cochino negro es la raza de cerdo autóctona de Canarias.",
    "guino": "Miel de palma de La Gomera en el lacado.",
+   "retiro": "El lacado lleva miel de palma de La Gomera.",
    "tres": [
     "Cochino negro canario",
     "Lacado con miel de palma y mostaza",
@@ -1048,6 +1058,7 @@
    },
    "significa": "El cabrito es la cría de la cabra, una carne muy de las islas.",
    "guino": "Cabra en todo el plato: cabrito y yogur de cabra, como en las islas.",
+   "retiro": "Todo el plato es de cabra, el cabrito y el yogur, como en las islas.",
    "tres": [
     "Cabrito asado lento y desmigado",
     "Sobre crema de berenjena ahumada con tahini",
@@ -1116,6 +1127,7 @@
    },
    "significa": "Parchita es como se llama en Canarias a la fruta de la pasión.",
    "guino": "Parchita, la fruta de la pasión de las islas.",
+   "retiro": "La parchita es como llamamos aquí a la fruta de la pasión.",
    "tres": [
     "Sorbete de parchita",
     "Espuma de coco por encima",
@@ -1181,6 +1193,7 @@
    },
    "significa": "El quesillo no lleva queso: es el flan canario, con leche condensada.",
    "guino": "Gofio, la harina tostada canaria.",
+   "retiro": "Por cierto, lleva gofio, la harina tostada canaria.",
    "tres": [
     "Quesillo de leche de cabra",
     "Caramelo de café por encima",
@@ -1252,6 +1265,7 @@
     "venta": "Canarian banana with dark chocolate and peanut. The most indulgent dessert on the menu."
    },
    "guino": "Plátano de Canarias, en su punto cuando tiene motitas negras.",
+   "retiro": "El plátano es de Canarias, en su punto cuando tiene motitas negras.",
    "tres": [
     "Plátano de Canarias asado",
     "Sobre cremoso de chocolate negro, con helado",
@@ -1325,6 +1339,7 @@
    },
    "significa": "Bienmesabe quiere decir «me sabe bien»: crema de almendra, yema y limón.",
    "guino": "Bienmesabe, el dulce de almendra de Tejeda, en Gran Canaria.",
+   "retiro": "El bienmesabe es el dulce de almendra de Tejeda, en Gran Canaria.",
    "tres": [
     "Bienmesabe: almendra, yema y limón",
     "Almendra tostada por encima",
@@ -1389,6 +1404,7 @@
    },
    "significa": "Millo es como se dice maíz en Canarias.",
    "guino": "Millo canario en la masa y mantequilla de cabra ahumada.",
+   "retiro": "El pan lleva millo canario, y la mantequilla es de cabra ahumada.",
    "tres": [
     "Pan de masa madre de trigo y millo",
     "Templado, y se repone sin preguntar",
@@ -1459,6 +1475,7 @@
    },
    "significa": "La tunera es el higo chumbo, el fruto del cactus.",
    "guino": "Ron miel canario en la trufa e higo de tunera.",
+   "retiro": "La trufa lleva ron miel canario, y también hay higo de tunera.",
    "tres": [
     "Trufa de chocolate con ron miel",
     "Pâte de fruit de higo de tunera",
@@ -1531,6 +1548,7 @@
    "marcaje": "No cutlery: eaten by hand. Small bowl for the skins.",
    "significa": "Chocho is the Canarian name for the lupin bean.",
    "guino": "Palm pepper from La Palma in the dressing.",
+   "retiro": "By the way, the dressing has palm pepper from La Palma.",
    "tres": [
     "Pickled chochos, the Canarian lupin bean",
     "Dressed with orange, cumin and palm pepper",
@@ -1585,6 +1603,7 @@
    "marcaje": "No cutlery: one bite, by hand.",
    "significa": "Palm honey is not honey: it is guarapo, the sap of the Canary palm, reduced over the fire for hours.",
    "guino": "Palm honey from La Gomera and goat's cheese from the island.",
+   "retiro": "Those drops were palm honey from La Gomera, and the cheese is island goat's cheese.",
    "tres": [
     "Tartlet with smoked goat's cheese cream",
     "Three drops of palm honey from La Gomera",
@@ -1638,6 +1657,7 @@
    "marcaje": "No cutlery: by hand.",
    "significa": "Cherne is a rock fish from Canarian waters. Salted, it was the fishermen's larder.",
    "guino": "Salted cherne, the way Canarian fishermen kept it.",
+   "retiro": "The cherne is salted, the way Canarian fishermen used to keep it.",
    "tres": [
     "Fritters of salted cherne, desalted for two days",
     "Sea lettuce mayonnaise, on a separate spoon",
@@ -1688,6 +1708,7 @@
    ],
    "marcaje": "Oyster fork on the right. Tell the guest it can be drunk from the shell.",
    "guino": "The tomato water, from Canarian tomatoes filtered overnight.",
+   "retiro": "The tomato water comes from Canarian tomatoes, strained overnight.",
    "tres": [
     "Oyster opened to order",
     "Clear tomato water on top",
@@ -1738,6 +1759,7 @@
    ],
    "marcaje": "Starter knife and fork.",
    "guino": "Seasonal tomatoes from the island's gardens.",
+   "retiro": "The tomatoes are in season, from the island's gardens.",
    "tres": [
     "Seasonal tomato and strawberry",
     "Basil granita in the centre",
@@ -1787,6 +1809,7 @@
    "marcaje": "Starter knife and fork.",
    "significa": "Bubango is the Canarian name for baby courgette, picked small.",
    "guino": "Canarian goat's milk ricotta.",
+   "retiro": "By the way, the ricotta is Canarian, made from goat's milk.",
    "tres": [
     "Bubango, the Canarian courgette, grilled",
     "On goat's milk ricotta",
@@ -1839,6 +1862,7 @@
    "marcaje": "Starter spoon.",
    "significa": "Flower cheese is curdled with thistle flowers, not with animal rennet.",
    "guino": "Flower cheese and gofio, two island classics.",
+   "retiro": "Flower cheese and gofio are two island classics.",
    "tres": [
     "Free-range egg yolk on watercress cream",
     "Grated flower cheese, curdled with thistle",
@@ -1888,6 +1912,7 @@
    "marcaje": "Fish knife and fork. Finger bowl with lemon.",
    "significa": "Millo is the Canarian word for corn.",
    "guino": "The millo broth, made with Canarian corn.",
+   "retiro": "The broth is made with millo, Canarian corn.",
    "tres": [
     "Carabinero prawn with its head",
     "Its coral on the side",
@@ -2045,6 +2070,7 @@
    "marcaje": "Fish knife and fork.",
    "significa": "Cherne is a rock fish from Canarian waters, with firm white flesh.",
    "guino": "Malvasía from Lanzarote in the beurre blanc.",
+   "retiro": "By the way, the beurre blanc is made with malvasía from Lanzarote.",
    "tres": [
     "Grilled cherne",
     "Iberian pork jowl melted on top",
@@ -2099,6 +2125,7 @@
    "marcaje": "Meat knife.",
    "significa": "Cochino negro is the native Canarian black pig.",
    "guino": "Palm honey from La Gomera in the glaze.",
+   "retiro": "The glaze has palm honey from La Gomera.",
    "tres": [
     "Canarian black pig",
     "Glazed with palm honey and mustard",
@@ -2201,6 +2228,7 @@
    "marcaje": "Meat knife.",
    "significa": "Cabrito is kid, young goat, a very island meat.",
    "guino": "Goat all through the plate: kid and goat's yogurt, as on the islands.",
+   "retiro": "It's goat all through the plate, the kid and the yogurt, as on the islands.",
    "tres": [
     "Slow roast kid, pulled",
     "On smoked aubergine cream with tahini",
@@ -2251,6 +2279,7 @@
    "marcaje": "Dessert spoon.",
    "significa": "Parchita is the Canarian name for passion fruit.",
    "guino": "Parchita, the island passion fruit.",
+   "retiro": "Parchita is what we call passion fruit here on the islands.",
    "tres": [
     "Passion fruit sorbet",
     "Coconut foam on top",
@@ -2295,6 +2324,7 @@
    "marcaje": "Dessert spoon.",
    "significa": "Quesillo has no cheese: it is the Canarian flan, made with condensed milk.",
    "guino": "Gofio, the Canarian toasted flour.",
+   "retiro": "By the way, it has gofio, the Canarian toasted flour.",
    "tres": [
     "Goat's milk quesillo",
     "Coffee caramel on top",
@@ -2347,6 +2377,7 @@
    ],
    "marcaje": "Dessert spoon and fork.",
    "guino": "Canary banana, at its best with little black spots.",
+   "retiro": "The banana is from the Canaries, at its best with little black spots.",
    "tres": [
     "Roasted Canary banana",
     "On dark chocolate cremeux, with ice cream",
@@ -2399,6 +2430,7 @@
    "marcaje": "Dessert spoon.",
    "significa": "Bienmesabe means “it tastes good to me”: a cream of almond, egg yolk and lemon.",
    "guino": "Bienmesabe, the almond sweet from Tejeda, in Gran Canaria.",
+   "retiro": "Bienmesabe is the almond sweet from Tejeda, in Gran Canaria.",
    "tres": [
     "Bienmesabe: almond, egg yolk and lemon",
     "Toasted almond on top",
@@ -2446,6 +2478,7 @@
    "marcaje": "Bread plate and butter knife on the left.",
    "significa": "Millo is the Canarian word for corn.",
    "guino": "Canarian millo in the dough and smoked goat's butter.",
+   "retiro": "The bread has Canarian millo in it, and the butter is smoked goat's butter.",
    "tres": [
     "Wheat and millo sourdough bread",
     "Served warm, refilled without asking",
@@ -2498,6 +2531,7 @@
    "marcaje": "No cutlery: by hand.",
    "significa": "Tunera is the prickly pear, the fruit of the cactus.",
    "guino": "Canarian honey rum and prickly pear.",
+   "retiro": "The truffle has Canarian honey rum, and there's prickly pear too.",
    "tres": [
     "Chocolate truffle with honey rum",
     "Prickly pear pâte de fruit",

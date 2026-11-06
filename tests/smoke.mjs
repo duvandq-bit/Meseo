@@ -19242,7 +19242,7 @@ test('demo completa: audios en m4a, uno por plato, nombre e idioma, y un peso ra
 
 console.log('\nMomentos de mesa (nov 2026)');
 const _momMotor = () => new Function( // eslint-disable-line no-new-func
-  'const MOM_INTERVALOS = [2, 5, 12, 30];\n' + html.match(/const _MOM_PROPIOS = [^\n]+\n/)[0]
+  'const MOM_INTERVALOS = [2, 5, 12, 30]; const MOM_GUINO_MAX = 90;\n' + html.match(/const _MOM_PROPIOS = [^\n]+\n/)[0]
   + ['_padSumarDias', '_momValidas', '_momGuinoFrase', '_momGuinoLoc', '_momEscenasGuino', '_momRonda', '_momProgramar'].map(_fnSrc).join('\n')
   + '\nreturn { validas:_momValidas, frase:_momGuinoFrase, loc:_momGuinoLoc, guino:_momEscenasGuino, ronda:_momRonda, prog:_momProgramar };')();
 test('momentos de mesa: datos completos en ES y EN, entre 20 y 30 escenas, sin rayas', () => {
@@ -19276,13 +19276,44 @@ test('momentos de mesa: escenas de guiño desde la carta (sólo platos con guino
   assert(esc.every(e => e.tipo === 'guino-plato'), 'tipo propio para limitarlas por ronda');
   const es = M.loc(d.guino, 'Negi no miso', 'Miel de palma de La Gomera', false);
   assert(es.sit === 'Retiras «Negi no miso». La mesa ha dejado el plato limpio y te mira.', es.sit);
-  assert(es.modelos[0] === 'Gracias. Un detalle del plato: miel de palma de La Gomera.', es.modelos[0]);
+  assert(es.modelos[0] === 'Por cierto, miel de palma de La Gomera.' && es.modelos[1] === 'Gracias. Un detalle del plato: miel de palma de La Gomera.', es.modelos.join(' | '));
   assert(!/\?/.test(es.modelos.join(' ')), 'el guiño modelo va sin pregunta detrás');
-  assert(/\?$/.test(es.forzada) && /Miel de palma/.test(es.forzada), 'la forzada lleva la pregunta detrás');
+  assert(/\?$/.test(es.forzada) && /^Miel de palma/.test(es.forzada), 'la forzada lleva la pregunta detrás');
   const en = M.loc(d.guino, 'Negi no miso', 'The Canary Islands in the bento.', true);
-  assert(/^You clear/.test(en.sit) && en.modelos[0] === 'Thank you. A little detail about the dish: the Canary Islands in the bento.', en.modelos[0]);
+  assert(/^You clear/.test(en.sit) && en.modelos[0] === 'By the way, the Canary Islands in the bento.', en.modelos[0]);
   assert(M.frase('Canarias en el bento') === 'Canarias en el bento.' && M.frase('Korean kimchi.') === 'Korean kimchi.', 'los nombres propios no se bajan');
   assert(/_momEscenasGuino\(_momPlatosCarta\(\)\)/.test(html) && /DEGUSTACION\.pases/.test(_fnSrc('_momPlatosCarta')), 'las escenas salen de la carta activa, degustación primero');
+});
+test('momentos de mesa: frase de retiro (`retiro`) de la carta; sin ella, sin dos puntos dobles ni frases largas', () => {
+  const d = JSON.parse(read('data/momentos-mesa.json'));
+  const M = _momMotor();
+  // Con retiro: la frase de la carta es la respuesta modelo, tal cual.
+  const r = M.loc(d.guino, 'Hotate beurre blanc', 'Vino canario en el beurre blanc.', false, 'Por cierto, la beurre blanc la hacemos con vino blanco canario.');
+  assert(r.modelos.length === 1 && r.modelos[0] === 'Por cierto, la beurre blanc la hacemos con vino blanco canario.', r.modelos.join(' | '));
+  assert(r.forzada === 'Por cierto, la beurre blanc la hacemos con vino blanco canario. ¿Qué les ha parecido?', r.forzada);
+  // Sin retiro y con dos puntos en el guiño: nunca dos veces los dos puntos.
+  const mb = 'The Canary Islands in the bento: palm pepper, banana and red mojo.';
+  const c = M.loc(d.guino, 'Mistery box', mb, true);
+  assert(c.modelos.length >= 1 && c.modelos.every(m => (m.match(/:/g) || []).length <= 1), c.modelos.join(' | '));
+  // Guiño largo (más de 90): el guiño solo, sin envolver.
+  const largo = 'The Canary Islands in the bento: palm pepper, banana and red mojo; and Korean gochugaru on the razor clams.';
+  const l = M.loc(d.guino, 'Mistery box', largo, true);
+  assert(l.modelos.length === 1 && l.modelos[0] === largo, l.modelos.join(' | '));
+  for (const lang of [false, true]) for (const t of (lang ? d.guino.modelos_en : d.guino.modelos)) assert(!/:.*\{guino\}.*:/.test(t), 'plantilla con dos puntos dobles');
+  // La demo trae retiro en ES y EN en los 17 platos con guiño: una frase corta, sin pregunta ni rayas.
+  const carta = JSON.parse(read('data/carta-demo.json'));
+  for (const k of ['DISHES', 'DISHES_EN']) {
+    const con = carta[k].filter(x => x.guino);
+    assert(con.length === 17 && con.every(x => typeof x.retiro === 'string'), k + ': retiro en los 17 platos con guiño');
+    for (const x of con) {
+      assert(x.retiro.length <= 100 && !/[?¿—–]/.test(x.retiro) && /\.$/.test(x.retiro) && (x.retiro.match(/\./g) || []).length === 1, k + ' ' + x.id + ': ' + x.retiro);
+      assert(!/\b(os|vosotros)\b/i.test(x.retiro), 'ustedes: ' + x.retiro);
+    }
+  }
+  // La ficha, la degustación y Conocer el plato enseñan la frase de retiro si existe.
+  assert(/_guinoRetiroHTML\(dd\.guino, _en, dd\.retiro\)/.test(_fnSrc('_degContarHTML')) && /_guinoRetiroHTML\(h\.guino, _en, dd\.retiro\)/.test(_fnSrc('_cpPasoHace')), 'la etiqueta usa retiro');
+  assert((html.match(/_guinoRetiroHTML\(dd\.guino, _en, dd\.retiro\)/g) || []).length === 2, 'también en el pase de la degustación');
+  assert(/retiro: dd\.retiro/.test(_fnSrc('_momPlatosCarta')) && /p \? p\.retiro : ''/.test(_fnSrc('_momLoc')), 'la escena usa retiro');
 });
 test('momentos de mesa: ronda de 5, vencidas primero, tipos alternos y como mucho 2 guiños', () => {
   const M = _momMotor();
@@ -19332,8 +19363,8 @@ test('guiño «Para el retiro» en la ficha, la degustación y Conocer el plato'
   const f = _fnSrc('_guinoRetiroHTML');
   assert(/Para el retiro/.test(f) && /For clearing/.test(f), 'rótulo ES y EN');
   assert(/Dilo de pasada al retirar, sin pregunta detrás\./.test(f) && /with no question after it/.test(f), 'línea de ayuda');
-  assert(/_guinoRetiroHTML\(dd\.guino, _en\)/.test(_fnSrc('_degContarHTML')), 'en la ficha del plato (Cómo contarlo)');
-  assert(/_guinoRetiroHTML\(h\.guino, _en\)/.test(_fnSrc('_cpPasoHace')), 'en Conocer el plato');
+  assert(/_guinoRetiroHTML\(dd\.guino, _en, dd\.retiro\)/.test(_fnSrc('_degContarHTML')), 'en la ficha del plato (Cómo contarlo)');
+  assert(/_guinoRetiroHTML\(h\.guino, _en, dd\.retiro\)/.test(_fnSrc('_cpPasoHace')), 'en Conocer el plato');
   assert(!/El guiño de la casa'\}<\/span>/.test(html), 'no queda el rótulo antiguo');
 });
 
