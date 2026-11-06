@@ -54,7 +54,7 @@
 <meta property="og:description" content="Formación de equipos de sala: carta, alérgenos, vinos, exámenes y juegos de repaso.">
 <meta property="og:url" content="https://meseo.es/">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"Meseo","url":"https://meseo.es/"}</script>
-<meta name="app-version" content="7.540">
+<meta name="app-version" content="7.541">
 <meta name="app-build" content="May 2026">
 <meta name="theme-color" content="#1c2a22">
 <!-- ═══ PWA ═══ -->
@@ -2921,7 +2921,7 @@ const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><p
 const SRC = 'src';
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='7.540';  // sincronizada con sw.js VERSION (guard de CI)
+const APP_VERSION='7.541';  // sincronizada con sw.js VERSION (guard de CI)
 const APP_BUILD='Jul 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;
@@ -7204,7 +7204,7 @@ function _cpPasoHace(dish, dd, _en){
     ${h.tres.length ? `<ol class="deg-tres grande cono-tres">${h.tres.map(f => `<li>${escapeHTML(f)}</li>`).join('')}</ol>` : ''}
     ${h.hist ? `<p class="cono-hist">${escapeHTML(h.hist)}</p>` : ''}
     ${ing}
-    ${h.guino ? `<div class="deg-guino"><span>${_en ? 'The house touch' : 'El guiño de la casa'}</span>${escapeHTML(h.guino)}</div>` : ''}`;
+    ${_guinoRetiroHTML(h.guino, _en)}`;
 }
 
 // ── 3 · Lo que protege ──
@@ -16960,6 +16960,13 @@ function _degBtnEscuchar(id){
 
 // Bloque «Cómo contarlo» de la ficha completa y de la vista rápida. Va ARRIBA
 // de ingredientes y alérgenos: es el método aprobado. Sin datos, nada.
+// El guiño de la casa se cuenta AL RETIRAR (propietario, nov 2026): al servir
+// se explica el plato; el guiño se dice de pasada al llevarse el plato, sin
+// pregunta detrás. Mismo rótulo en la ficha, la degustación y Conocer el plato.
+function _guinoRetiroHTML(guino, _en){
+  if(!guino || !String(guino).trim()) return '';
+  return `<div class="deg-guino"><span>${_en ? 'For clearing' : 'Para el retiro'}</span>${escapeHTML(guino)}<em class="deg-guino-ayuda">${_en ? 'Say it in passing as you clear, with no question after it.' : 'Dilo de pasada al retirar, sin pregunta detrás.'}</em></div>`;
+}
 function _degContarHTML(d, compacto){
   if(!d) return '';
   const dd = getDish(d);
@@ -16971,7 +16978,7 @@ function _degContarHTML(d, compacto){
     ${tres.length ? `<ol class="deg-tres">${tres.map(f => `<li>${escapeHTML(f)}</li>`).join('')}</ol>` : ''}
     ${dd.story ? `<div class="deg-story"><p>${escapeHTML(dd.story)}</p>${_degBtnEscuchar(d.id)}</div>` : ''}
     ${_degBocadosHTML(dd)}
-    ${dd.guino ? `<div class="deg-guino"><span>${_en ? 'The house touch' : 'El guiño de la casa'}</span>${escapeHTML(dd.guino)}</div>` : ''}
+    ${_guinoRetiroHTML(dd.guino, _en)}
     ${dd.significa ? `<div class="deg-sig"><span>${_en ? 'What the name means' : 'Qué significa el nombre'}</span>${escapeHTML(dd.significa)}</div>` : ''}
   </div>`;
 }
@@ -17091,7 +17098,7 @@ function _degPintarPase(c){
     ${_degFotoHTML(d.id, dd.name, 'deg-hero')}
     ${dd.significa ? `<div class="deg-sig"><span>${_en ? 'What the name means' : 'Qué significa el nombre'}</span>${escapeHTML(dd.significa)}</div>` : ''}
     ${tres.length ? `<ol class="deg-tres grande">${tres.map(f => `<li>${escapeHTML(f)}</li>`).join('')}</ol>` : ''}
-    ${dd.guino ? `<div class="deg-guino"><span>${_en ? 'The house touch' : 'El guiño de la casa'}</span>${escapeHTML(dd.guino)}</div>` : ''}
+    ${_guinoRetiroHTML(dd.guino, _en)}
     ${dd.story ? `<div class="deg-story"><span>${_en ? 'At the table, in ten seconds' : 'En la mesa, en diez segundos'}</span><p>${escapeHTML(dd.story)}</p>${_degBtnEscuchar(d.id)}</div>` : ''}
     ${_degBocadosHTML(dd)}
     <details class="deg-apoyo">
@@ -27338,6 +27345,7 @@ function renderPracticar(){
     ${(typeof _rtcTarjetaHTML==='function') ? _rtcTarjetaHTML('practicar') : ''}
     ${(typeof launchPase==='function') ? _paseCtaHTML(_en) : ''}
     ${(typeof _hspCtaHTML==='function') ? _hspCtaHTML(_en) : ''}
+    ${(typeof _momCtaHTML==='function') ? _momCtaHTML(_en) : ''}
     ${_smartCtaHTML(_en, emp)}
     <div class="tunic-divider"><span>${_en?'Train':'Entrenar'}</span></div>
     <div class="prc-lista">
@@ -35752,6 +35760,390 @@ function _hspPaso(p){
   _hspRender();
   const b=document.querySelector('#hspOverlay .pase-body'); if(b) b.scrollTop=0;
 }
+
+// ═══ MOMENTOS DE MESA ════════════════════════════════════════════════════
+// Práctica de lo que se dice al retirar y al preguntar qué tal (propietario,
+// nov 2026): en un menú de siete pases no se pregunta siete veces, a un «muy
+// bien» no se le pone nota y una respuesta corta pide intimidad. Escenas
+// genéricas en data/momentos-mesa.json y, además, una escena por cada plato
+// de la carta activa que tenga `guino` (el guiño se cuenta al retirar).
+//
+// Cada ronda: cinco escenas. Se lee (o se escucha) la situación, se responde
+// en voz alta (con micro, se ve lo que se ha dicho, sin nota: no hay una sola
+// respuesta buena), se ven las respuestas modelo y la que suena forzada, y uno
+// mismo dice si le ha salido natural o le ha costado. Las que cuestan vuelven
+// al día siguiente; las naturales se espacian (MOM_INTERVALOS).
+// Sin XP ni registro de actividad: el registro tiene un vocabulario cerrado.
+// El motor (_momValidas, _momGuinoLoc, _momEscenasGuino, _momRonda,
+// _momProgramar) es puro: las pruebas lo ejecutan en Node.
+let MOMENTOS = null;
+let _momS = null;
+let _momRec = null;
+const MOM_RONDA = 5;
+const MOM_MAX_GUINO = 2;               // escenas de guiño de la carta por ronda
+const MOM_INTERVALOS = [2, 5, 12, 30];  // días hasta que vuelve una que salió natural
+
+function _momT(o, k){ return (LANG==='en' && o && o[k+'_en']) ? o[k+'_en'] : (o ? o[k] : ''); }
+
+// Una escena sólo se juega completa: situación, qué buscar, dos o tres
+// respuestas modelo, la forzada y por qué. En los dos idiomas.
+function _momValidas(data){
+  const ok = s => typeof s === 'string' && s.trim().length > 0;
+  const okL = l => Array.isArray(l) && l.length >= 2 && l.length <= 3 && l.every(ok);
+  return ((data && data.escenas) || []).filter(e => e && ok(e.id) && ok(e.tipo)
+    && ok(e.sit) && ok(e.sit_en) && ok(e.buscar) && ok(e.buscar_en)
+    && okL(e.modelos) && okL(e.modelos_en) && ok(e.forzada) && ok(e.forzada_en)
+    && ok(e.porque) && ok(e.porque_en)
+    && (e.dice === undefined || (ok(e.dice) && ok(e.dice_en))));
+}
+
+// El guiño entra tras dos puntos: en minúscula, salvo que empiece por un
+// nombre propio; y siempre con su punto final.
+const _MOM_PROPIOS = /^(Canarias|Canarian|Canary|Korean|Japanese|Iberian|Spanish|Gran|Tenerife|Lanzarote|Gomera|Palma|Tejeda)\b/;
+function _momGuinoFrase(g){
+  let s = String(g || '').trim();
+  if(!s) return '';
+  if(!/[.!?…]$/.test(s)) s += '.';
+  if(!_MOM_PROPIOS.test(s) && !/^.[A-ZÁÉÍÓÚÑ]/.test(s)) s = s.charAt(0).toLowerCase() + s.slice(1);
+  return s;
+}
+// La escena de guiño de un plato, ya en un idioma, con la plantilla de los datos.
+function _momGuinoLoc(tpl, nombre, guino, en){
+  const T = k => (en && tpl[k + '_en']) ? tpl[k + '_en'] : tpl[k];
+  const g = _momGuinoFrase(guino);
+  const gMay = g.charAt(0).toUpperCase() + g.slice(1);
+  const pon = s => String(s || '').replace(/\{plato\}/g, nombre).replace(/\{guino\}/g, g);
+  return {
+    sit: pon(T('sit')), dice: '', buscar: pon(T('buscar')),
+    modelos: (T('modelos') || []).map(pon),
+    // En la forzada el guiño va detrás de una pregunta: frase propia, con mayúscula.
+    forzada: String(T('forzada') || '').replace(/\{plato\}/g, nombre).replace(/\{guino\}/g, gMay),
+    porque: pon(T('porque'))
+  };
+}
+// Una escena por plato con guiño, en el orden en que llegan (degustación
+// primero). Sin guiño, ese plato no tiene escena.
+function _momEscenasGuino(platos){
+  const vistos = new Set();
+  const out = [];
+  for(const p of (platos || [])){
+    if(!p || !p.guino || !String(p.guino).trim() || vistos.has(p.id)) continue;
+    vistos.add(p.id);
+    out.push({ id: 'g' + p.id, tipo: 'guino-plato', dish: p.id });
+  }
+  return out;
+}
+// Platos de la carta activa con guiño, en el idioma de ahora.
+function _momPlatosCarta(){
+  const orden = [];
+  const vistos = new Set();
+  try{
+    if(typeof DEGUSTACION !== 'undefined' && DEGUSTACION) for(const p of DEGUSTACION.pases){ const d = DISHES.find(x => x.id === p.id); if(d && !vistos.has(d.id)){ orden.push(d); vistos.add(d.id); } }
+    for(const d of DISHES) if(!vistos.has(d.id)){ orden.push(d); vistos.add(d.id); }
+  }catch(e){ return []; }
+  return orden.map(d => { const dd = getDish(d) || d; return { id: d.id, name: dd.name || d.name, guino: dd.guino || d.guino || '' }; }).filter(p => p.guino);
+}
+// Las de la carta van delante: así la primera ronda ya trae un guiño del
+// restaurante (los tipos se alternan por orden de aparición).
+function _momTodas(data){
+  return (data && data.guino ? _momEscenasGuino(_momPlatosCarta()) : []).concat(_momValidas(data));
+}
+// La escena lista para pintar, en el idioma de ahora.
+function _momLoc(e){
+  const en = LANG === 'en';
+  if(e.tipo === 'guino-plato'){
+    const p = _momPlatosCarta().find(x => x.id === e.dish);
+    return _momGuinoLoc(MOMENTOS.guino, p ? p.name : '', p ? p.guino : '', en);
+  }
+  return { sit: _momT(e,'sit'), dice: e.dice ? _momT(e,'dice') : '', buscar: _momT(e,'buscar'),
+    modelos: (en ? e.modelos_en : e.modelos) || [], forzada: _momT(e,'forzada'), porque: _momT(e,'porque') };
+}
+
+// La ronda: primero las que tocan hoy (la más vencida antes), después las
+// nuevas alternando tipos (para que no salgan cinco de degustación seguidas),
+// y si faltan, las que vuelven antes. Como mucho MOM_MAX_GUINO de la carta.
+function _momRonda(escenas, estado, hoy, n, maxGuino){
+  n = n || 5; maxGuino = (maxGuino === undefined) ? 2 : maxGuino;
+  const est = estado || {};
+  const lista = (escenas || []).filter(Boolean);
+  const venc = lista.filter(e => est[e.id] && est[e.id].next && est[e.id].next <= hoy)
+    .sort((a,b) => String(est[a.id].next).localeCompare(String(est[b.id].next)));
+  const grupos = new Map();
+  for(const e of lista) if(!est[e.id]){ if(!grupos.has(e.tipo)) grupos.set(e.tipo, []); grupos.get(e.tipo).push(e); }
+  const nuevas = [];
+  const colas = Array.from(grupos.values());
+  for(let i = 0; colas.some(c => i < c.length); i++) for(const c of colas) if(i < c.length) nuevas.push(c[i]);
+  const resto = lista.filter(e => est[e.id] && !(est[e.id].next && est[e.id].next <= hoy))
+    .sort((a,b) => String(est[a.id].next || '').localeCompare(String(est[b.id].next || '')));
+  const out = [];
+  let g = 0;
+  for(const e of venc.concat(nuevas, resto)){
+    if(out.length >= n) break;
+    if(out.includes(e)) continue;
+    if(e.tipo === 'guino-plato'){ if(g >= maxGuino) continue; g++; }
+    out.push(e);
+  }
+  return out;
+}
+// Lo que queda guardado tras la autoevaluación. Natural: un escalón más (la
+// primera vez, el primero). Ha costado: vuelve mañana y empieza de cero.
+function _momProgramar(prev, natural, hoy){
+  const tope = MOM_INTERVALOS.length - 1;
+  if(!natural) return { n: -1, d: hoy, next: _padSumarDias(hoy, 1), ok: 0 };
+  const n = (prev && Number.isInteger(prev.n)) ? Math.min(prev.n + 1, tope) : 0;
+  return { n: Math.max(0, n), d: hoy, next: _padSumarDias(hoy, MOM_INTERVALOS[Math.max(0, n)]), ok: 1 };
+}
+function _momEstado(emp){ return (emp && emp.mom && typeof emp.mom === 'object') ? emp.mom : {}; }
+// Cuántas tocan hoy, sin cargar los datos (para la tarjeta).
+function _momPendientesHoy(emp){
+  const est = _momEstado(emp), hoy = todayStr();
+  return Object.keys(est).filter(k => est[k] && est[k].next && est[k].next <= hoy).length;
+}
+
+async function _momCargar(){
+  if(MOMENTOS) return MOMENTOS;
+  try{ MOMENTOS = await loadLazyData('data/momentos-mesa.json', LANG==='en'?'Table moments':'Momentos de mesa'); }
+  catch(e){ return null; }
+  return MOMENTOS;
+}
+
+const _MOM_IC = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 15h16"/><path d="M6 15a6 6 0 0112 0"/><path d="M12 9V7"/><path d="M8 19h8"/><path d="M21 6.5c-1 .9-2.2 1.4-3.5 1.5"/></svg>';
+function _momCtaHTML(_en){
+  let pend = 0;
+  try{ pend = _momPendientesHoy(getEmp(currentUser)); }catch(e){}
+  const sub = pend ? (_en ? `${pend} to go over today` : `${pend} para repasar hoy`) : (_en ? '5 scenes · 4 minutes' : '5 escenas · 4 minutos');
+  return `<div class="mom-entrada">
+    <button type="button" class="ri-cta ri-cta-mom" aria-label="${_en?'Table moments':'Momentos de mesa'}" onclick="launchMomentos()">
+      <span class="ri-cta-icon" aria-hidden="true">${_MOM_IC}</span>
+      <span class="ri-cta-text">
+        <span class="ri-cta-top">${_en?'Table moments':'Momentos de mesa'}</span>
+        <span class="ri-cta-sub">${sub}</span>
+      </span>
+    </button>
+    <button type="button" class="mom-claves-link" onclick="launchMomentos('claves')">${_en?'The key ideas':'Las claves'}</button>
+  </div>`;
+}
+
+async function launchMomentos(vista){
+  const data = await _momCargar();
+  if(!data) return;
+  const todas = _momTodas(data);
+  if(!todas.length){ if(typeof showToast==='function') showToast(LANG==='en'?'No content yet':'Aún no hay contenido','warning',3000); return; }
+  _momS = { cola: [], i: 0, paso: vista === 'claves' ? 'claves' : 'escena', desdeClaves: vista === 'claves', res: [], texto: '', grabando: false, aviso: '' };
+  if(vista !== 'claves') _momNuevaRonda(todas);
+  _momRender();
+  document.addEventListener('keydown', _momKeydown);
+}
+function _momNuevaRonda(todas){
+  const S = _momS; if(!S) return;
+  S.cola = _momRonda(todas || _momTodas(MOMENTOS), _momEstado(getEmp(currentUser)), todayStr(), MOM_RONDA, MOM_MAX_GUINO);
+  S.i = 0; S.res = []; S.texto = ''; S.aviso = ''; S.paso = 'escena';
+}
+function _momKeydown(e){ if(e.key==='Escape' && document.getElementById('momOverlay')){ e.preventDefault(); _momClose(); } }
+function _momClose(){
+  document.removeEventListener('keydown', _momKeydown);
+  _momCallar();
+  const o = document.getElementById('momOverlay');
+  if(o){ o.id='momOverlayCerrando'; o.style.opacity='0'; o.style.transition='opacity .3s'; setTimeout(()=>{ if(o.parentNode) o.remove(); },300); }
+  _momS = null;
+  try{ if(typeof currentTab !== 'undefined' && currentTab === 'practicar' && typeof renderPracticar === 'function') renderPracticar(); }catch(e){}
+}
+
+// ── Voz y micro ──
+function _momHayVoz(){ return typeof speechSynthesis !== 'undefined' && typeof SpeechSynthesisUtterance !== 'undefined'; }
+function _momHablar(texto){
+  if(!_momHayVoz() || !texto) return;
+  try{
+    if(typeof _bocParar === 'function') _bocParar();
+    speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(texto);
+    const code = (typeof _padCode === 'function') ? _padCode() : (LANG==='en' ? 'en-GB' : 'es-ES');
+    u.lang = code; u.rate = 0.95;
+    const v = (typeof _padVoz === 'function') ? _padVoz(code) : null; if(v) u.voice = v;
+    speechSynthesis.speak(u);
+  }catch(e){ if(typeof showToast === 'function') showToast(LANG==='en' ? 'This device cannot read aloud' : 'Este dispositivo no puede leer en voz alta', 'warning', 2600); }
+}
+function _momEscucharEscena(){
+  const S = _momS; if(!S || !S.cola[S.i]) return;
+  const L = _momLoc(S.cola[S.i]);
+  _momHablar(L.sit + (L.dice ? ' ' + (LANG==='en' ? 'The guest says: ' : 'El cliente dice: ') + L.dice : ''));
+}
+function _momEscucharModelo(k){
+  const S = _momS; if(!S || !S.cola[S.i]) return;
+  const L = _momLoc(S.cola[S.i]);
+  _momHablar(k < 0 ? L.forzada : L.modelos[k]);
+}
+function _momCallar(){
+  try{ if(_momHayVoz()) speechSynthesis.cancel(); }catch(e){}
+  if(_momRec){ try{ _momRec.onend = null; _momRec.abort(); }catch(e){} _momRec = null; }
+  if(_momS) _momS.grabando = false;
+}
+function _momMicro(){
+  const S = _momS; if(!S) return;
+  if(S.grabando){ if(_momRec){ try{ _momRec.stop(); }catch(e){} } return; }
+  const SR = (typeof _padSR === 'function') ? _padSR() : null;
+  if(!SR) return;
+  try{ if(_momHayVoz()) speechSynthesis.cancel(); }catch(e){}
+  let r;
+  try{
+    r = new SR();
+    r.lang = (typeof _padCode === 'function') ? _padCode() : (LANG==='en' ? 'en-GB' : 'es-ES');
+    r.interimResults = true; r.continuous = false; r.maxAlternatives = 1;
+    S.texto = ''; S.aviso = ''; S.grabando = true;
+    r.onresult = e => {
+      let t = '';
+      for(let i = 0; i < e.results.length; i++) t += e.results[i][0].transcript + ' ';
+      if(_momS && _momRec === r){ _momS.texto = t.replace(/\s+/g, ' ').trim(); const el = document.getElementById('momTrans'); if(el) el.textContent = '«' + _momS.texto + '»'; }
+    };
+    r.onerror = e => {
+      const err = e && e.error;
+      if(_momS && (err === 'not-allowed' || err === 'service-not-allowed' || err === 'audio-capture')){
+        _momS.aviso = LANG==='en' ? 'The microphone is not available. Say it out loud anyway.' : 'El micrófono no está disponible. Dilo en voz alta igualmente.';
+      }
+    };
+    r.onend = () => {
+      if(_momRec !== r) return;
+      _momRec = null;
+      if(_momS){
+        _momS.grabando = false;
+        if(!_momS.texto && !_momS.aviso) _momS.aviso = LANG==='en' ? 'I did not hear anything. You can try again or just say it out loud.' : 'No te he oído. Puedes probar otra vez o decirlo en voz alta sin más.';
+        _momRender();
+      }
+    };
+    _momRec = r;
+    r.start();
+  }catch(e){ _momRec = null; S.grabando = false; }
+  _momRender();
+}
+
+// ── Pintar ──
+function _momRender(){
+  const S = _momS; if(!S) return;
+  const _en = LANG==='en';
+  const cuerpo = S.paso === 'claves' ? _momClavesHTML(_en)
+    : S.paso === 'fin' ? _momFinHTML(_en)
+    : S.paso === 'ver' ? _momVerHTML(_en)
+    : _momEscenaHTML(_en);
+  const enRonda = S.paso === 'escena' || S.paso === 'ver';
+  const puntos = S.cola.map((x,i)=>`<span class="hsp2-dot${i===S.i?' on':''}${(i<S.i || (i===S.i && S.paso==='fin'))?' done':''}"></span>`).join('');
+  const html = `<div class="pase-container hsp2 mom">
+    <div class="hsp2-head">
+      <div class="hsp2-head-top">
+        <div class="hsp2-eyebrow">${_en?'Table moments':'Momentos de mesa'}</div>
+        <button class="pase-x" onclick="_momClose()" aria-label="${_en?'Close':'Cerrar'}">✕</button>
+      </div>
+      ${enRonda ? `<div class="hsp2-dots" aria-hidden="true">${puntos}</div>` : ''}
+    </div>
+    <div class="pase-body hsp2-body mom-body">${cuerpo}</div>
+  </div>`;
+  const ex = document.getElementById('momOverlay');
+  if(ex){ const c = ex.querySelector('.pase-container'); if(c){ c.outerHTML = html; return; } ex.remove(); }
+  const ov = document.createElement('div');
+  ov.id = 'momOverlay'; ov.className = 'pase-overlay';
+  ov.setAttribute('role','dialog'); ov.setAttribute('aria-modal','true');
+  ov.setAttribute('aria-label', _en?'Table moments':'Momentos de mesa');
+  ov.innerHTML = html;
+  document.body.appendChild(ov);
+}
+function _momIrArriba(){ const b = document.querySelector('#momOverlay .pase-body'); if(b) b.scrollTop = 0; }
+
+function _momSituacionHTML(L, _en, compacta){
+  return `<p class="mom-sit${compacta?' compacta':''}">${escapeHTML(L.sit)}</p>
+    ${L.dice ? `<blockquote class="mom-dice${compacta?' compacta':''}"><span class="mom-dice-quien">${_en?'The guest says':'El cliente dice'}</span><span class="mom-dice-txt"><span class="mom-comilla abre" aria-hidden="true">${_en?'“':'«'}</span>${escapeHTML(L.dice)}<span class="mom-comilla" aria-hidden="true">${_en?'”':'»'}</span></span></blockquote>` : ''}`;
+}
+
+function _momEscenaHTML(_en){
+  const S = _momS, e = S.cola[S.i];
+  if(!e) return _momFinHTML(_en);
+  const L = _momLoc(e);
+  const SR = (typeof _padSR === 'function') ? _padSR() : null;
+  const micro = SR ? `<button type="button" class="mom-micro${S.grabando?' grabando':''}" aria-pressed="${S.grabando?'true':'false'}" onclick="_momMicro()">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0014 0M12 18v3"/></svg>
+      ${S.grabando ? (_en?'Stop':'Parar') : (S.texto ? (_en?'Say it again':'Decirlo otra vez') : (_en?'Answer with the microphone':'Responder con el micrófono'))}
+    </button>` : '';
+  return `<div class="hsp2-kicker">${_en?'Scene':'Escena'} ${S.i+1} ${_en?'of':'de'} ${S.cola.length}</div>
+    ${_momSituacionHTML(L, _en)}
+    ${_momHayVoz() ? `<button type="button" class="mom-oir" onclick="_momEscucharEscena()">${_en?'Listen to the scene':'Escuchar la escena'}</button>` : ''}
+    <h3 class="hsp2-q">${_en?'What do you say?':'¿Qué dices tú?'}</h3>
+    <p class="mom-guia">${_en?'Say it out loud, as you would on the floor. There is no single right answer.':'Dilo en voz alta, como en sala. No hay una única respuesta buena.'}</p>
+    ${micro}
+    ${S.texto ? `<p class="mom-trans"><span>${_en?'You said':'Has dicho'}</span><span id="momTrans">«${escapeHTML(S.texto)}»</span></p>` : (S.grabando ? `<p class="mom-trans"><span>${_en?'Listening':'Te escucho'}</span><span id="momTrans"></span></p>` : '')}
+    ${S.aviso ? `<p class="mom-aviso">${escapeHTML(S.aviso)}</p>` : ''}
+    <button type="button" class="hsp2-next" onclick="_momVer()">${_en?'See how it could sound':'Ver cómo podría sonar'}</button>`;
+}
+
+function _momVerHTML(_en){
+  const S = _momS, e = S.cola[S.i];
+  const L = _momLoc(e);
+  const voz = _momHayVoz();
+  const oir = k => voz ? `<button type="button" class="mom-oir-mini" onclick="_momEscucharModelo(${k})" aria-label="${_en?'Listen':'Escuchar'}"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5L6 9H3v6h3l5 4z"/><path d="M15.5 8.5a5 5 0 010 7"/></svg></button>` : '';
+  return `<div class="hsp2-kicker">${_en?'Scene':'Escena'} ${S.i+1} ${_en?'of':'de'} ${S.cola.length}</div>
+    ${_momSituacionHTML(L, _en, true)}
+    ${S.texto ? `<p class="mom-trans"><span>${_en?'You said':'Has dicho'}</span><span>«${escapeHTML(S.texto)}»</span></p>` : ''}
+    <div class="mom-leer"><h4>${_en?'Read the table':'Lee la mesa'}</h4><p>${escapeHTML(L.buscar)}</p></div>
+    <h4 class="mom-h">${_en?'Sounds natural':'Suena natural'}</h4>
+    <ul class="mom-modelos">${L.modelos.map((m,k)=>`<li><span class="mom-frase">${escapeHTML(m)}</span>${oir(k)}</li>`).join('')}</ul>
+    <h4 class="mom-h forzada">${_en?'Sounds forced':'Suena forzada'}</h4>
+    <div class="mom-forzada"><p class="mom-frase">${escapeHTML(L.forzada)}</p><p class="mom-porque">${escapeHTML(L.porque)}</p></div>
+    <h3 class="hsp2-q mom-q-eval">${_en?'How did yours come out?':'¿Cómo te ha salido?'}</h3>
+    <div class="mom-eval">
+      <button type="button" class="mom-eval-btn natural" onclick="_momEvaluar(true)">${_en?'It came out naturally':'Me ha salido natural'}</button>
+      <button type="button" class="mom-eval-btn costado" onclick="_momEvaluar(false)">${_en?'I found it hard':'Me ha costado'}</button>
+    </div>`;
+}
+
+function _momFinHTML(_en){
+  const S = _momS;
+  const nat = S.res.filter(Boolean).length, cost = S.res.length - nat;
+  return `<div class="hsp2-kicker">${_en?'Round finished':'Ronda hecha'}</div>
+    <h2 class="hsp2-t">${nat} ${_en?'came out naturally':(nat===1?'te ha salido natural':'te han salido naturales')}</h2>
+    <p class="hsp2-reveal">${cost
+      ? (_en ? `The ${cost===1?'one':cost} you found hard will come back tomorrow. Repeating them is how they start to sound like you.` : `${cost===1?'La que te ha costado vuelve':'Las '+cost+' que te han costado vuelven'} mañana. Repetirlas es lo que hace que suenen a ti.`)
+      : (_en ? 'The ones that came out naturally will come back in a few days, so they stay.' : 'Las que te salen naturales vuelven dentro de unos días, para que se queden.')}</p>
+    <p class="hsp2-aside">${_en?'Tonight, try one of them at a real table.':'Esta noche, prueba una de ellas en una mesa de verdad.'}</p>
+    <button type="button" class="hsp2-next" onclick="_momOtraRonda()">${_en?'Another round':'Otra ronda'}</button>
+    <button type="button" class="hsp2-btn mom-fin-btn" onclick="_momClose()">${_en?'Done':'Hecho'}</button>
+    <button type="button" class="hsp2-link mom-link" onclick="_momIrClaves()">${_en?'The key ideas':'Las claves'}</button>`;
+}
+
+function _momClavesHTML(_en){
+  const S = _momS;
+  const claves = (MOMENTOS && MOMENTOS.claves) || [];
+  return `<div class="hsp2-kicker">${_en?'Before you practise':'Antes de practicar'}</div>
+    <h2 class="hsp2-t">${_en?'The key ideas':'Las claves'}</h2>
+    <ul class="mom-claves">${claves.map(c=>`<li>${escapeHTML(_momT(c,'t'))}</li>`).join('')}</ul>
+    ${S.desdeClaves
+      ? `<button type="button" class="hsp2-next" onclick="_momEmpezar()">${_en?'Start a round':'Empezar una ronda'}</button>`
+      : `<button type="button" class="hsp2-next" onclick="_momS.paso='fin';_momRender();_momIrArriba()">${_en?'Back':'Volver'}</button>`}`;
+}
+
+// ── Acciones ──
+function _momVer(){
+  const S = _momS; if(!S) return;
+  if(S.grabando){ if(_momRec){ try{ _momRec.onend = null; _momRec.stop(); }catch(e){} _momRec = null; } S.grabando = false; }
+  try{ if(_momHayVoz()) speechSynthesis.cancel(); }catch(e){}
+  S.paso = 'ver'; _momRender(); _momIrArriba();
+}
+function _momEvaluar(natural){
+  const S = _momS; if(!S || S.paso !== 'ver') return;
+  const e = S.cola[S.i]; if(!e) return;
+  try{
+    const emp = getEmp(currentUser);
+    if(emp){
+      emp.mom = (emp.mom && typeof emp.mom === 'object') ? emp.mom : {};
+      emp.mom[e.id] = _momProgramar(emp.mom[e.id], !!natural, todayStr());
+      saveDB();
+    }
+  }catch(x){}
+  S.res.push(!!natural);
+  try{ if(_momHayVoz()) speechSynthesis.cancel(); }catch(x){}
+  if(S.i + 1 < S.cola.length){ S.i++; S.paso = 'escena'; S.texto = ''; S.aviso = ''; }
+  else S.paso = 'fin';
+  _momRender(); _momIrArriba();
+}
+function _momOtraRonda(){ if(!_momS) return; _momNuevaRonda(); _momRender(); _momIrArriba(); }
+function _momIrClaves(){ if(!_momS) return; _momS.desdeClaves = false; _momS.paso = 'claves'; _momRender(); _momIrArriba(); }
+function _momEmpezar(){ if(!_momS) return; _momS.desdeClaves = false; _momNuevaRonda(); _momRender(); _momIrArriba(); }
 
 function renderLqa(){
   lqaView='menu';
