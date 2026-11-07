@@ -1,6 +1,26 @@
 {
- "updated": "2026-11-07T02:51:36.632Z",
+ "updated": "2026-11-07T11:45:54.887Z",
  "items": [
+  {
+   "t": "Café de especialidad, bollería del montón",
+   "u": "https://gastrocanarias.com/art/22851/cafe-de-especialidad-bolleria-del-monton",
+   "s": "Gastrocanarias",
+   "d": "2026-11-07T10:33:20.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://gastrocanarias.com/upload/images/11_2026/7175_1974_gastrocanarias_cafe_cuadrada_2.jpeg"
+  },
+  {
+   "t": "Los chefs coinciden sobre las lentejas: \"Para que queden perfectas, evita que el ajo del refrito se dore demasiado y amargue el guiso\"",
+   "u": "https://www.heraldo.es/noticias/gastronomia/2026/11/07/chefs-coinciden-lentejas-para-que-queden-perfectas-evita-ajo-refrito-dore-demasiado-amargue-guiso-2061653.amp.html",
+   "s": "heraldo.es",
+   "d": "2026-11-07T04:00:00.000Z",
+   "tags": [
+    "CHEF"
+   ],
+   "img": "https://imagenes.heraldo.es/files/image_1920_1080/uploads/imagenes/2025/06/01/lentejas.jpeg"
+  },
   {
    "t": "Prealerta por riesgo de inundaciones y tormentas en Canarias",
    "u": "https://www.eldiario.es/canariasahora/lapalmaahora/sociedad/prealerta-tormentas-canarias_1_13645271.html",
@@ -10,16 +30,6 @@
     "CANARIAS"
    ],
    "img": "https://static.eldiario.es/clip/4541860c-83f5-4991-91f5-b319e8a89b35_facebook-aspect-ratio-1200-675_default_0.jpg"
-  },
-  {
-   "t": "La Villa de Garafía celebra San Martín con humor, música y gastronomía",
-   "u": "https://www.eldiario.es/canariasahora/lapalmaahora/municipios/garafia/villa-garafia-celebra-san-martin-humor-musica-gastronomia_1_13645085.amp.html",
-   "s": "elDiario.es",
-   "d": "2026-11-06T16:31:33.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://static.eldiario.es/clip/e9a25ae7-754a-4082-936f-f224702918ee_facebook-aspect-ratio-1200-675_default_0.jpg"
   },
   {
    "t": "El Santa Cruz ADEIN Tenerife Fundación CB Canarias viaja a Ciudad Real",
@@ -51,16 +61,6 @@
     "MICHELIN"
    ],
    "img": "https://static.excelenciasgourmet.com/cdn/ff/5M03bdET5NmyksLyitv_PM6_Gn9riJmBVDKtDXKLKyo/1793954993/public/articulos/2026-11/origins-dinner.png"
-  },
-  {
-   "t": "Metrotenerife convoca 40 plazas de empleo público, prevé crear otras 15 y estabilizar a seis conductores",
-   "u": "https://www.eldiario.es/canariasahora/tenerifeahora/sociedad/metrotenerife-convoca-40-plazas-preve-crear-15-estabilizar-seis-conductores_1_13644711.html",
-   "s": "elDiario.es",
-   "d": "2026-11-06T14:47:23.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://static.eldiario.es/clip/acd8e0cd-7b46-4b37-b463-37a83c94dd8a_facebook-aspect-ratio-1200-675_default_0.jpg"
   },
   {
    "t": "Tenerife activa el plan insular de emergencias ante la llegada de la borrasca Bruna",
@@ -120,22 +120,11 @@
    "tags": [
     "CANARIAS",
     "VINO"
-   ],
-   "img": "https://img.asmedia.epimg.net/resizer/v2/W27YCSG62BHMVOETVFK35PZZA4.jpg?auth=04fdb17b585e3cea695c5fe10f411cf2c043e11d0668623eb5f1de577884eea6&width=1472&height=828&focal=3262%2C1820"
-  },
-  {
-   "t": "Bahia Principe renueva dos resorts en Jamaica y Tenerife",
-   "u": "https://reportnews.la/blog/2026/11/06/bahia-principe-renueva-dos-resorts-en-jamaica-y-tenerife/",
-   "s": "Report News",
-   "d": "2026-11-06T09:23:38.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://reportnews.la/wp-content/uploads/2026/11/BP-1-Jamaica.jpg"
+   ]
   },
   {
    "t": "El restaurante de Tenerife donde disfrutar de cocina canaria tradicional y carnes a la brasa: una parada gastronómica obligatoria para quienes visitan el Teide",
-   "u": "https://www.eldia.es/tenerife/2026/11/06/restaurante-tenerife-disfrutar-cocina-canaria-carnes-brasa-dv-136135259.amp.html",
+   "u": "https://www.eldia.es/tenerife/2026/11/06/restaurante-tenerife-disfrutar-cocina-canaria-carnes-brasa-dv-136135259.html",
    "s": "Eldía",
    "d": "2026-11-06T08:51:37.000Z",
    "tags": [
@@ -202,16 +191,6 @@
    "img": "https://imagenes.heraldo.es/files/image_1920_1080/uploads/imagenes/2025/10/16/crema-de-calabaza-gsc1.png"
   },
   {
-   "t": "José Andrés, chef español: “Uno de mis desayunos favoritos es huevos fritos con tomates naturales aliñados con aceite de oliva y sal”",
-   "u": "https://radiomitre.cienradios.com/curiosidades/jose-andres-chef-espanol-uno-de-mis-desayunos-favoritos-es-huevos-fritos-con-tomates-naturales-alinados-con-aceite-de-oliva-y-sal/",
-   "s": "Radio Mitre",
-   "d": "2026-11-06T02:22:33.000Z",
-   "tags": [
-    "ALTA COCINA"
-   ],
-   "img": "https://radiomitre.cienradios.com/resizer/v2/SPKCZDZ7UBEZLEC55B4DAT2RGA.png?smart=true&auth=107e353a4303d67dee0a59d8c2ff3f983de2e20718dfa7f75fe204969206c53f&width=1200&height=630"
-  },
-  {
    "t": "La Laguna Tenerife sigue en modo apisonadora en Europa",
    "u": "https://www.eldiario.es/canariasahora/deportes/baloncesto/laguna-tenerife-sigue-apisonadora-europa_1_13642755.html",
    "s": "elDiario.es",
@@ -222,15 +201,23 @@
    "img": "https://static.eldiario.es/clip/4124e139-1d4b-4595-9488-1898905d1bf4_facebook-aspect-ratio-1200-675_default_0.jpg"
   },
   {
-   "t": "The Ritz-Carlton Tenerife, Abama reunirá siete estrellas Michelin para celebrar sus 20 años de trayectoria gastronómica",
-   "u": "https://www.periodistadigital.com/por-todo-lo-alto/20261105/the-ritz-carlton-tenerife-abama-siete-estrellas-michelin-origins-dinner-689405264021/",
-   "s": "Periodista Digital",
-   "d": "2026-11-05T19:16:00.000Z",
+   "t": "Abre en Gran Canaria un nuevo restaurante con hamburguesas de entrecot, carne de cabra y ropa vieja de pulpo",
+   "u": "https://www.laprovincia.es/gran-canaria/2026/11/05/abre-gran-canaria-nuevo-restaurante-136136051.html",
+   "s": "La Provincia",
+   "d": "2026-11-05T18:35:45.000Z",
    "tags": [
-    "CANARIAS",
-    "MICHELIN"
+    "CANARIAS"
+   ]
+  },
+  {
+   "t": "Estos son los 50 mejores restaurantes del mundo y 11 están en América Latina",
+   "u": "https://qpasa.com/actualidad/mejores-restaurantes-del-mundo-2026-america-latina/",
+   "s": "QPASA",
+   "d": "2026-11-05T16:53:00.000Z",
+   "tags": [
+    "ALTA COCINA"
    ],
-   "img": "https://www.periodistadigital.com/por-todo-lo-alto/wp-content/uploads/sites/6/2026/11/Abama.png"
+   "img": "https://qpasa.com/wp-content/uploads/2026/11/50best-qpasa-v2.jpg"
   },
   {
    "t": "El Comité de Disciplina de la RFEF resolverá próximamente sobre acta del Tenerife-Andorra",
@@ -242,6 +229,16 @@
    ]
   },
   {
+   "t": "Todo sobre Etxebarri, el asador vasco elegido como mejor restaurante del mundo en 2026: un menú de 300 euros y un humilde chef de 66 años",
+   "u": "https://www.infobae.com/espana/2026/11/05/todo-sobre-etxebarri-el-asador-vasco-elegido-como-mejor-restaurante-del-mundo-en-2026-un-menu-de-300-euros-y-un-humilde-chef-de-66-anos/",
+   "s": "Infobae",
+   "d": "2026-11-05T15:37:38.000Z",
+   "tags": [
+    "ALTA COCINA"
+   ],
+   "img": "https://www.infobae.com/resizer/v2/BLSJNU7OSFCJBGKLPMOGMEBIIA.jpg?auth=026461bee82f7b09b622134a4d2bed106e54d5479bb2291480ffa4f9135d1dba&smart=true&width=1200&height=630&quality=85"
+  },
+  {
    "t": "Fernaud, un trocito del norte de Tenerife en Malasaña",
    "u": "https://www.tapasmagazine.es/fernaud-un-trocito-del-norte-de-tenerife-en-malasana/",
    "s": "Tapas Magazine",
@@ -250,6 +247,16 @@
     "CANARIAS"
    ],
    "img": "https://www.tapasmagazine.es/wp-content/uploads/2026/11/Proyecto-nuevo-7.jpg"
+  },
+  {
+   "t": "ExpoMarket Arona 2026: grandes descuentos, gastronomía y actuaciones de Kike Pérez y Los Sabandeños",
+   "u": "https://diariodeavisos.elespanol.com/2026/11/arona-descuentos-market/",
+   "s": "Diario de Avisos",
+   "d": "2026-11-05T14:08:09.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://cdn.diariodeavisos.com/wp-content/uploads/2026/11/ARONA-EXPOMARKET.jpg"
   },
   {
    "t": "El restaurante de carretera definitivo está en este pueblo medieval de Madrid: Martín Berasategui confiesa su secreto mejor guardado",
@@ -280,23 +287,14 @@
    ]
   },
   {
-   "t": "El Winter Pride de Maspalomas combina música, gastronomía y turismo sostenible",
-   "u": "https://www.laprovincia.es/gran-canaria/2026/11/05/winter-pride-maspalomas-combina-musica-136105700.html",
-   "s": "La Provincia",
-   "d": "2026-11-05T10:16:02.000Z",
+   "t": "El mejor restaurante del mundo en 2026 es español",
+   "u": "https://algecirasalminuto.com/articulo/actualidad-algeciras/el-mejor-restaurante-del-mundo-en-2026-es-espanol/",
+   "s": "Algecirasalminuto.com",
+   "d": "2026-11-05T12:16:05.000Z",
    "tags": [
-    "CANARIAS"
-   ]
-  },
-  {
-   "t": "Huesca llevará a la Gala Michelin 2027 una alta cocina que también se hace en los pueblos",
-   "u": "https://www.goaragon.es/huesca-llevara-a-la-gala-michelin-2027-una-alta-cocina-que-tambien-se-hace-en-los-pueblos/",
-   "s": "Go Aragón",
-   "d": "2026-11-05T10:03:36.000Z",
-   "tags": [
-    "MICHELIN"
+    "ALTA COCINA"
    ],
-   "img": "https://www.goaragon.es/wp-content/uploads/2026/11/FOTO-PRESENTACION-GALA-GUIA-MICHELIN-1024x576.jpg-e1793700624917.webp"
+   "img": "https://algecirasalminuto.com/wp-content/uploads/2026/11/RESTAURANTE.webp"
   }
  ]
 }
