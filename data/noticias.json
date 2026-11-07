@@ -1,5 +1,5 @@
 {
- "updated": "2026-11-06T22:08:45.153Z",
+ "updated": "2026-11-07T02:51:36.632Z",
  "items": [
   {
    "t": "Prealerta por riesgo de inundaciones y tormentas en Canarias",
@@ -32,6 +32,16 @@
    "img": "https://static.eldiario.es/clip/862733db-ebdc-4d70-88ed-298a9f1fe99e_facebook-aspect-ratio-1200-675_default_0.jpg"
   },
   {
+   "t": "El 14 de noviembre la Avenida de Las Américas se llenará de música, gastronomía y promociones con Arona Shopping Day",
+   "u": "https://theshowroommag.com/el-14-de-noviembre-la-avenida-de-las-americas-se-llenara-de-musica-gastronomia-y-promociones-con-arona-shopping-day/",
+   "s": "The Showroom Mag",
+   "d": "2026-11-06T15:32:38.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://theshowroommag.com/wp-content/uploads/2026/11/Captura-de-Pantalla-2026-11-06-a-las-14.28.07.png"
+  },
+  {
    "t": "Siete estrellas Michelin regresan a Tenerife para una cena irrepetible en The Ritz-Carlton Abama",
    "u": "https://www.excelenciasgourmet.com/es/gastroturismo/ritz-carlton-tenerife-abama-siete-estrellas-michelin",
    "s": "Excelencias Gourmet",
@@ -51,16 +61,6 @@
     "CANARIAS"
    ],
    "img": "https://static.eldiario.es/clip/acd8e0cd-7b46-4b37-b463-37a83c94dd8a_facebook-aspect-ratio-1200-675_default_0.jpg"
-  },
-  {
-   "t": "El 14 de noviembre la Avenida de Las Américas se llenará de música, gastronomía y promociones con Arona Shopping Day",
-   "u": "https://theshowroommag.com/el-14-de-noviembre-la-avenida-de-las-americas-se-llenara-de-musica-gastronomia-y-promociones-con-arona-shopping-day/",
-   "s": "The Showroom Mag",
-   "d": "2026-11-06T14:32:38.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://theshowroommag.com/wp-content/uploads/2026/11/Captura-de-Pantalla-2026-11-06-a-las-14.28.07.png"
   },
   {
    "t": "Tenerife activa el plan insular de emergencias ante la llegada de la borrasca Bruna",
@@ -183,6 +183,15 @@
    "img": "https://s3.ppllstatics.com/canarias7/www/multimedia/gastronomia-c7/2026/11/05/portada-kxDI-U40192698008prG-1200x840@Canarias7.jpg"
   },
   {
+   "t": "Arona Shopping Day: 10 horas de compras, música y gastronomía gratis en la Milla de Oro",
+   "u": "https://www.canariasenpleno.com/arona-shopping-day-milla-oro/",
+   "s": "Canarias en Pleno",
+   "d": "2026-11-06T04:00:56.000Z",
+   "tags": [
+    "CANARIAS"
+   ]
+  },
+  {
    "t": "Los chefs vascos coinciden: la crema de calabaza no mejora con queso; se hace añadiendo alguno de estos dos ingredientes",
    "u": "https://www.heraldo.es/noticias/gastronomia/2026/11/06/chefs-vascos-coinciden-crema-calabaza-no-mejora-queso-hace-anadiendo-alguno-ingredientes-2062987.html",
    "s": "heraldo.es",
@@ -203,19 +212,31 @@
    "img": "https://radiomitre.cienradios.com/resizer/v2/SPKCZDZ7UBEZLEC55B4DAT2RGA.png?smart=true&auth=107e353a4303d67dee0a59d8c2ff3f983de2e20718dfa7f75fe204969206c53f&width=1200&height=630"
   },
   {
+   "t": "La Laguna Tenerife sigue en modo apisonadora en Europa",
+   "u": "https://www.eldiario.es/canariasahora/deportes/baloncesto/laguna-tenerife-sigue-apisonadora-europa_1_13642755.html",
+   "s": "elDiario.es",
+   "d": "2026-11-05T23:41:36.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://static.eldiario.es/clip/4124e139-1d4b-4595-9488-1898905d1bf4_facebook-aspect-ratio-1200-675_default_0.jpg"
+  },
+  {
+   "t": "The Ritz-Carlton Tenerife, Abama reunirá siete estrellas Michelin para celebrar sus 20 años de trayectoria gastronómica",
+   "u": "https://www.periodistadigital.com/por-todo-lo-alto/20261105/the-ritz-carlton-tenerife-abama-siete-estrellas-michelin-origins-dinner-689405264021/",
+   "s": "Periodista Digital",
+   "d": "2026-11-05T19:16:00.000Z",
+   "tags": [
+    "CANARIAS",
+    "MICHELIN"
+   ],
+   "img": "https://www.periodistadigital.com/por-todo-lo-alto/wp-content/uploads/sites/6/2026/11/Abama.png"
+  },
+  {
    "t": "El Comité de Disciplina de la RFEF resolverá próximamente sobre acta del Tenerife-Andorra",
    "u": "https://www.infobae.com/espana/agencias/2026/11/05/el-comite-de-disciplina-de-la-rfef-resolvera-proximamente-sobre-acta-del-tenerife-andorra/",
    "s": "Infobae",
    "d": "2026-11-05T16:31:00.000Z",
-   "tags": [
-    "CANARIAS"
-   ]
-  },
-  {
-   "t": "Arona Shopping Day: 10 horas de compras, música y gastronomía gratis en la Milla de Oro",
-   "u": "https://www.canariasenpleno.com/arona-shopping-day-milla-oro/",
-   "s": "Canarias en Pleno",
-   "d": "2026-11-05T15:56:15.000Z",
    "tags": [
     "CANARIAS"
    ]
@@ -259,15 +280,6 @@
    ]
   },
   {
-   "t": "Haría rechaza el recorrido ciclista habitual del IRONMAN",
-   "u": "https://www.canariasdiario.com/noticia/152696/lanzarote/haria-rechaza-el-recorrido-ciclista-habitual-del-ironman.html",
-   "s": "Canariasdiario.com",
-   "d": "2026-11-05T11:48:09.000Z",
-   "tags": [
-    "CANARIAS"
-   ]
-  },
-  {
    "t": "El Winter Pride de Maspalomas combina música, gastronomía y turismo sostenible",
    "u": "https://www.laprovincia.es/gran-canaria/2026/11/05/winter-pride-maspalomas-combina-musica-136105700.html",
    "s": "La Provincia",
@@ -285,15 +297,6 @@
     "MICHELIN"
    ],
    "img": "https://www.goaragon.es/wp-content/uploads/2026/11/FOTO-PRESENTACION-GALA-GUIA-MICHELIN-1024x576.jpg-e1793700624917.webp"
-  },
-  {
-   "t": "Del todo incluido a descubrir la riqueza local: una tendencia que convive con el modelo tradicional de Canarias",
-   "u": "https://www.eldia.es/canarias/2026/11/05/incluido-descubrir-riqueza-local-tendencia-135902432.amp.html",
-   "s": "Eldía",
-   "d": "2026-11-05T10:00:39.000Z",
-   "tags": [
-    "CANARIAS"
-   ]
   }
  ]
 }
