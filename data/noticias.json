@@ -1,6 +1,46 @@
 {
- "updated": "2026-11-08T02:31:36.471Z",
+ "updated": "2026-11-08T11:58:02.706Z",
  "items": [
+  {
+   "t": "Dabiz Muñoz, chef madrileño: \"No se entendería un Dabiz Muñoz hoy si no hubiese habido un Martín Berasategui, un Pedro Subijana o un Ferrán Adrià\"",
+   "u": "https://www.elle.com/es/gourmet/gastronomia/a74305261/dabiz-munoz-cocineros-espanoles-mejor-mundo/",
+   "s": "ELLE",
+   "d": "2026-11-08T11:04:25.000Z",
+   "tags": [
+    "CHEF"
+   ],
+   "img": "https://hips.hearstapps.com/hmg-prod/images/dabiz-munoz-chef-elle-gourmet-2-699eb5999d09f.jpg?crop=1.00xw:0.368xh;0,0.161xh&resize=1200:*"
+  },
+  {
+   "t": "Martín Berasategui: “Mi héroe de ficción es el que siempre vuelve a empezar, aunque la sopa se le queme”",
+   "u": "https://www.revistavanityfair.es/articulos/martin-berasategui-cuestionario-proust",
+   "s": "Vanity Fair España",
+   "d": "2026-11-08T09:56:11.000Z",
+   "tags": [
+    "CHEF"
+   ],
+   "img": "https://media.revistavanityfair.es/photos/6aea0167f30a870894842c68/16:9/w_1280,c_limit/VF-PROUST-Berasategui-2026%20copia.jpg"
+  },
+  {
+   "t": "Vinos volcánicos, Atlántico y barra: la nueva taberna de Malasaña que sabe a Tenerife",
+   "u": "https://www.elespanol.com/viajes/cocinillas-gastro/restaurantes/20261108/vinos-volcanicos-atlantico-barra-nueva-taberna-malasana-sabe-tenerife/1003744442681_0.html",
+   "s": "El Español",
+   "d": "2026-11-08T07:00:00.000Z",
+   "tags": [
+    "CANARIAS",
+    "VINO"
+   ],
+   "img": "https://s3.elespanol.com/k/imgp/cms/elespanol/11392314.jpg?p=f:jpeg/c:2208:1241:nowe:172:805/w:1706/h:960&h=a05B6i6d"
+  },
+  {
+   "t": "Los otros plátanos de Canarias con toques a frambuesa o vainilla de color rojo y azul",
+   "u": "https://elpais.com/gastronomia/2026-11-08/los-otros-platanos-de-canarias-con-toques-a-frambuesa-o-vainilla-de-color-rojo-y-azul.html",
+   "s": "EL PAÍS",
+   "d": "2026-11-08T04:25:00.000Z",
+   "tags": [
+    "CANARIAS"
+   ]
+  },
   {
    "t": "Restaurante asador junto a la A-1 reconocido por la Guía Michelin por su excelente parrilla de carne en España",
    "u": "https://www.nuevaradio.org/2026/11/08/restaurante-asador-junto-a-la-a-1-reconocido-por-la-guia-michelin-por-su-excelente-parrilla-de-carne-en-espana/",
@@ -12,15 +52,13 @@
    "img": "https://www.nuevaradio.org/wp-content/uploads/2026/11/8ff87d4fbf6c5dc72c9c09f6c11d0d4b.jpg"
   },
   {
-   "t": "Congreso de marketing del vino de Canarias. Fuencaliente",
-   "u": "https://www.larevistadelapalma.com/events/congreso-de-marketing-del-vino-de-canarias-fuencaliente/",
-   "s": "La Revista de La Palma",
-   "d": "2026-11-07T21:56:52.000Z",
+   "t": "Gran Canaria suspende todos los eventos desde este domingo por la borrasca Bruna: también en espacios cerrados",
+   "u": "https://www.laprovincia.es/gran-canaria/2026/11/07/gran-canaria-suspende-eventos-domingo-136209365.html",
+   "s": "La Provincia",
+   "d": "2026-11-07T20:37:55.000Z",
    "tags": [
-    "VINO",
     "CANARIAS"
-   ],
-   "img": "https://www.larevistadelapalma.com/wp-content/uploads/2026/10/11-12-13-congreso-marketing-del-vino.jpeg"
+   ]
   },
   {
    "t": "Trabajada victoria del Santa Cruz ADEIN Tenerife Fundación CB Canarias en Puertollano",
@@ -83,16 +121,6 @@
    "img": "https://www.noticiasdelvino.com/wp-content/uploads/image-583.png.webp"
   },
   {
-   "t": "Donaire, el extraordinario universo de Jesús Camacho",
-   "u": "https://www.canarias7.es/gastronomia-c7/restaurantes/donaire-extraordinario-universo-jesus-camacho-20261107140000-nt.html",
-   "s": "Canarias7",
-   "d": "2026-11-07T13:00:00.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://s1.ppllstatics.com/canarias7/www/multimedia/gastronomia-c7/2026/11/05/image00008-kAt-U40200235985RrE-1200x840@Canarias7.jpg"
-  },
-  {
    "t": "Garachico lleva sus innovadores embutidos de pescado al Gastronomic Forum de Barcelona",
    "u": "https://www.eldia.es/tenerife/2026/11/07/garachico-lleva-innovadores-embutidos-pescado-136197038.html",
    "s": "Eldía",
@@ -152,6 +180,16 @@
    "img": "https://static.eldiario.es/clip/862733db-ebdc-4d70-88ed-298a9f1fe99e_facebook-aspect-ratio-1200-675_default_0.jpg"
   },
   {
+   "t": "El 14 de noviembre la Avenida de Las Américas se llenará de música, gastronomía y promociones con Arona Shopping Day",
+   "u": "https://theshowroommag.com/el-14-de-noviembre-la-avenida-de-las-americas-se-llenara-de-musica-gastronomia-y-promociones-con-arona-shopping-day/",
+   "s": "The Showroom Mag",
+   "d": "2026-11-06T15:32:38.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://theshowroommag.com/wp-content/uploads/2026/11/Captura-de-Pantalla-2026-11-06-a-las-14.28.07.png"
+  },
+  {
    "t": "Siete estrellas Michelin regresan a Tenerife para una cena irrepetible en The Ritz-Carlton Abama",
    "u": "https://www.excelenciasgourmet.com/es/gastroturismo/ritz-carlton-tenerife-abama-siete-estrellas-michelin",
    "s": "Excelencias Gourmet",
@@ -163,16 +201,6 @@
    "img": "https://static.excelenciasgourmet.com/cdn/ff/5M03bdET5NmyksLyitv_PM6_Gn9riJmBVDKtDXKLKyo/1793954993/public/articulos/2026-11/origins-dinner.png"
   },
   {
-   "t": "Tenerife activa el plan insular de emergencias ante la llegada de la borrasca Bruna",
-   "u": "https://www.eldiario.es/canariasahora/tenerifeahora/cabildo/tenerife-activa-plan-insular-emergencias-llegada-borrasca-bruna_1_13644551.html",
-   "s": "elDiario.es",
-   "d": "2026-11-06T14:05:57.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://static.eldiario.es/clip/bcd6020b-5ec7-44a1-bb90-63c35d59e2dc_facebook-aspect-ratio-1200-675_default_0.jpg"
-  },
-  {
    "t": "Martín Berasategui, cocinero: \"La cena más saludable se hace con 6 filetes de anchoa en aceite, 600 g de vinagre de sidra y 6 aceitunas\"",
    "u": "https://cronicaglobal.elespanol.com/gastronomia/20261106/martin-berasategui-cocinero-saludable-filetes-vinagre-aceitunas-trt/1003742809668_30.amp.html",
    "s": "Crónica Global",
@@ -181,16 +209,6 @@
     "CHEF"
    ],
    "img": "https://a2.elespanol.com/k/imgp/cms/asociados/575682.png?p=f:jpeg/c:1901:1069:nowe:0:22/w:1706/h:960&h=vgyVGrbS"
-  },
-  {
-   "t": "El Ayuntamiento de Santa Cruz de Tenerife (CC-PP) pide a la Audiencia Nacional paralizar la retirada del monumento a Franco y alega ahora \"riesgo de derrumbe\"",
-   "u": "https://www.eldiario.es/canariasahora/tenerifeahora/sociedad/ayuntamiento-santa-cruz-tenerife-cc-pp-pide-audiencia-nacional-paralizar-retirada-monumento-franco-alega-ahora-riesgo-derrumbe_1_13643766.html",
-   "s": "elDiario.es",
-   "d": "2026-11-06T11:52:47.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://static.eldiario.es/clip/ac9df7f3-b894-49ac-952d-e351b0087958_facebook-aspect-ratio-1200-675_default_0.jpg"
   },
   {
    "t": "El mejor restaurante del mundo está en España y es el favorito de Marcos Llorente: es el templo de la carne",
@@ -213,8 +231,18 @@
    ]
   },
   {
+   "t": "Bahia Principe renueva dos resorts en Jamaica y Tenerife",
+   "u": "https://reportnews.la/blog/2026/11/06/bahia-principe-renueva-dos-resorts-en-jamaica-y-tenerife/",
+   "s": "Report News",
+   "d": "2026-11-06T09:23:38.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://reportnews.la/wp-content/uploads/2026/11/BP-1-Jamaica.jpg"
+  },
+  {
    "t": "El restaurante de Tenerife donde disfrutar de cocina canaria tradicional y carnes a la brasa: una parada gastronómica obligatoria para quienes visitan el Teide",
-   "u": "https://www.eldia.es/tenerife/2026/11/06/restaurante-tenerife-disfrutar-cocina-canaria-carnes-brasa-dv-136135259.amp.html",
+   "u": "https://www.eldia.es/tenerife/2026/11/06/restaurante-tenerife-disfrutar-cocina-canaria-carnes-brasa-dv-136135259.html",
    "s": "Eldía",
    "d": "2026-11-06T08:51:37.000Z",
    "tags": [
@@ -229,6 +257,17 @@
    "tags": [
     "CHEF"
    ]
+  },
+  {
+   "t": "Spain Fusion propone en Zurich por tercer año una inmersión en la despensa española con chefs que suman 7 estrellas Michelin",
+   "u": "https://www.7canibales.com/noticias/spain-fusion-zurich-despensa-espanola/",
+   "s": "7 Caníbales",
+   "d": "2026-11-06T08:00:00.000Z",
+   "tags": [
+    "ALTA COCINA",
+    "MICHELIN"
+   ],
+   "img": "https://www.7canibales.com/wp-content/uploads/sites/2/2026/06/SPAIN-FUSION-ZURICH.webp"
   },
   {
    "t": "Gala Guía Michelin 2026: fecha, presentadores y todo lo que hay que saber",
@@ -260,45 +299,6 @@
     "CANARIAS"
    ],
    "img": "https://s3.ppllstatics.com/canarias7/www/multimedia/gastronomia-c7/2026/11/05/portada-kxDI-U40192698008prG-1200x840@Canarias7.jpg"
-  },
-  {
-   "t": "Arona Shopping Day: 10 horas de compras, música y gastronomía gratis en la Milla de Oro",
-   "u": "https://www.canariasenpleno.com/arona-shopping-day-milla-oro/",
-   "s": "Canarias en Pleno",
-   "d": "2026-11-06T04:00:56.000Z",
-   "tags": [
-    "CANARIAS"
-   ]
-  },
-  {
-   "t": "Los chefs vascos coinciden: la crema de calabaza no mejora con queso; se hace añadiendo alguno de estos dos ingredientes",
-   "u": "https://www.heraldo.es/noticias/gastronomia/2026/11/06/chefs-vascos-coinciden-crema-calabaza-no-mejora-queso-hace-anadiendo-alguno-ingredientes-2062987.html",
-   "s": "heraldo.es",
-   "d": "2026-11-06T04:00:00.000Z",
-   "tags": [
-    "CHEF"
-   ],
-   "img": "https://imagenes.heraldo.es/files/image_1920_1080/uploads/imagenes/2025/10/16/crema-de-calabaza-gsc1.png"
-  },
-  {
-   "t": "José Andrés, chef español: “Uno de mis desayunos favoritos es huevos fritos con tomates naturales aliñados con aceite de oliva y sal”",
-   "u": "https://radiomitre.cienradios.com/curiosidades/jose-andres-chef-espanol-uno-de-mis-desayunos-favoritos-es-huevos-fritos-con-tomates-naturales-alinados-con-aceite-de-oliva-y-sal/",
-   "s": "Radio Mitre",
-   "d": "2026-11-06T02:22:33.000Z",
-   "tags": [
-    "ALTA COCINA"
-   ],
-   "img": "https://radiomitre.cienradios.com/resizer/v2/SPKCZDZ7UBEZLEC55B4DAT2RGA.png?smart=true&auth=107e353a4303d67dee0a59d8c2ff3f983de2e20718dfa7f75fe204969206c53f&width=1200&height=630"
-  },
-  {
-   "t": "El Córdoba CF - Ceuta sigue adelante, pero con homenaje a Jesús de Miguel",
-   "u": "https://www.abc.es/espana/andalucia/cordoba/cordoba-cf/cordoba-ceuta-sigue-adelante-homenaje-jesus-miguel-20261105200217-nts.html",
-   "s": "ABC",
-   "d": "2026-11-05T19:02:18.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://s1.abcstatics.com/abc/www/multimedia/espana/2026/11/05/minuto-silencio-ccf-U28543660878ESB-1200x630@diario_abc.jpg"
   }
  ]
 }
