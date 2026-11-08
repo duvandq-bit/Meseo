@@ -1,6 +1,27 @@
 {
- "updated": "2026-11-07T20:56:10.173Z",
+ "updated": "2026-11-08T02:31:36.471Z",
  "items": [
+  {
+   "t": "Restaurante asador junto a la A-1 reconocido por la Guía Michelin por su excelente parrilla de carne en España",
+   "u": "https://www.nuevaradio.org/2026/11/08/restaurante-asador-junto-a-la-a-1-reconocido-por-la-guia-michelin-por-su-excelente-parrilla-de-carne-en-espana/",
+   "s": "Nuevaradio",
+   "d": "2026-11-08T01:54:06.000Z",
+   "tags": [
+    "MICHELIN"
+   ],
+   "img": "https://www.nuevaradio.org/wp-content/uploads/2026/11/8ff87d4fbf6c5dc72c9c09f6c11d0d4b.jpg"
+  },
+  {
+   "t": "Congreso de marketing del vino de Canarias. Fuencaliente",
+   "u": "https://www.larevistadelapalma.com/events/congreso-de-marketing-del-vino-de-canarias-fuencaliente/",
+   "s": "La Revista de La Palma",
+   "d": "2026-11-07T21:56:52.000Z",
+   "tags": [
+    "VINO",
+    "CANARIAS"
+   ],
+   "img": "https://www.larevistadelapalma.com/wp-content/uploads/2026/10/11-12-13-congreso-marketing-del-vino.jpeg"
+  },
   {
    "t": "Trabajada victoria del Santa Cruz ADEIN Tenerife Fundación CB Canarias en Puertollano",
    "u": "https://www.eldiario.es/canariasahora/deportes/baloncesto/trabajada-victoria-santa-cruz-adein-tenerife-fundacion-cb-canarias-puertollano_1_13647234.html",
@@ -79,6 +100,16 @@
    "tags": [
     "CANARIAS"
    ]
+  },
+  {
+   "t": "Mishiguene suma a Omri McNabb como chef ejecutivo y lo presenta con una cena a cuatro manos",
+   "u": "https://elplanetaurbano.com/2026/11/mishiguene-suma-a-omri-mcnabb-como-chef-ejecutivo-y-lo-presenta-con-una-cena-a-cuatro-manos/",
+   "s": "El Planeta Urbano",
+   "d": "2026-11-07T11:02:43.000Z",
+   "tags": [
+    "ALTA COCINA"
+   ],
+   "img": "https://i0.wp.com/elplanetaurbano.com/wp-content/uploads/2026/11/Mishguene-Omri-McNabb-Planeta-Urbano-2026-1.jpg?fit=2000%2C1333&ssl=1"
   },
   {
    "t": "Café de especialidad, bollería del montón",
@@ -179,12 +210,11 @@
    "tags": [
     "CANARIAS",
     "VINO"
-   ],
-   "img": "https://img.asmedia.epimg.net/resizer/v2/W27YCSG62BHMVOETVFK35PZZA4.jpg?auth=04fdb17b585e3cea695c5fe10f411cf2c043e11d0668623eb5f1de577884eea6&width=1472&height=828&focal=3262%2C1820"
+   ]
   },
   {
    "t": "El restaurante de Tenerife donde disfrutar de cocina canaria tradicional y carnes a la brasa: una parada gastronómica obligatoria para quienes visitan el Teide",
-   "u": "https://www.eldia.es/tenerife/2026/11/06/restaurante-tenerife-disfrutar-cocina-canaria-carnes-brasa-dv-136135259.html",
+   "u": "https://www.eldia.es/tenerife/2026/11/06/restaurante-tenerife-disfrutar-cocina-canaria-carnes-brasa-dv-136135259.amp.html",
    "s": "Eldía",
    "d": "2026-11-06T08:51:37.000Z",
    "tags": [
@@ -269,34 +299,6 @@
     "CANARIAS"
    ],
    "img": "https://s1.abcstatics.com/abc/www/multimedia/espana/2026/11/05/minuto-silencio-ccf-U28543660878ESB-1200x630@diario_abc.jpg"
-  },
-  {
-   "t": "Abre en Gran Canaria un nuevo restaurante con hamburguesas de entrecot, carne de cabra y ropa vieja de pulpo",
-   "u": "https://www.laprovincia.es/gran-canaria/2026/11/05/abre-gran-canaria-nuevo-restaurante-136136051.html",
-   "s": "La Provincia",
-   "d": "2026-11-05T18:35:45.000Z",
-   "tags": [
-    "CANARIAS"
-   ]
-  },
-  {
-   "t": "Estos son los 50 mejores restaurantes del mundo y 11 están en América Latina",
-   "u": "https://qpasa.com/actualidad/mejores-restaurantes-del-mundo-2026-america-latina/",
-   "s": "QPASA",
-   "d": "2026-11-05T16:53:00.000Z",
-   "tags": [
-    "ALTA COCINA"
-   ],
-   "img": "https://qpasa.com/wp-content/uploads/2026/11/50best-qpasa-v2.jpg"
-  },
-  {
-   "t": "El Comité de Disciplina de la RFEF resolverá próximamente sobre acta del Tenerife-Andorra",
-   "u": "https://www.infobae.com/espana/agencias/2026/11/05/el-comite-de-disciplina-de-la-rfef-resolvera-proximamente-sobre-acta-del-tenerife-andorra/",
-   "s": "Infobae",
-   "d": "2026-11-05T16:31:00.000Z",
-   "tags": [
-    "CANARIAS"
-   ]
   }
  ]
 }
