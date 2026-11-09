@@ -139,6 +139,7 @@ test('Pregunta del día: no se pregunta el turno de un plato que lo lleva en el 
     + html.slice(html.indexOf('const _djNorm ='), html.indexOf('async function _djLoadIngBase'))
     + fn('_djTrozos') + fn('_djSplitIngredients') + fn('_djSameThing') + fn('_djIngName') + fn('_djIngredients')
     + fn('_mulberry32') + fn('_dqSample') + fn('_simExtractIngredients') + fn('_djAlEn') + fn('_dqQuestion')
+    + 'function _nombreUnico(d, n){ return n || d.name; }'
     + `
     const malas=[], repes=[];
     let n=0;
@@ -2876,7 +2877,7 @@ test('supervisor panel: realtime employees channel + silent refresh + live pill'
   assert(/const empWeakCat=\(e\)=>/.test(lqaFn) && /empWeakCat\(r\.e\)/.test(lqaFn),
     'la vista LQA debe mostrar la categoría más floja de cada empleado');
   // Analítica profunda de exámenes, platos y alérgenos (jul 2026).
-  assert(/const allergenRows = empNames\.map/.test(ana) && /Alérgenos — seguridad/.test(ana) && /allergenBest/.test(ana),
+  assert(/const allergenRows = empNames\.map/.test(ana) && /Alérgenos, seguridad/.test(ana) && /allergenBest/.test(ana),
     'debe existir la seguridad de alérgenos por empleado');
   assert(/const examCatAgg=\{\}/.test(ana) && /Exámenes — resumen del equipo/.test(ana) && /Precisión por categoría de carta/.test(ana),
     'debe existir el resumen de exámenes y la precisión por categoría de carta');
@@ -3899,7 +3900,7 @@ test('Reto del Día: ingredient subjects are clean tokens, no section labels', (
   const svcSrc = cut('const DISH_SERVICE = {', '};') + '};';
   const block = html.slice(html.indexOf('const _SIM_PROFILES = {'), html.indexOf('function _srGenerateQuiz('));
   const stub = 'let LANG="es";const DISHES_EN=[];function getDish(d){return d;}function _djShuffle(a){return a;}'
-    + 'function escapeHTML(s){return s;}function _srCap(s){return s;}function _shiftDishes(a){return a;}function catLocal(c){return c;}';
+    + 'function escapeHTML(s){return s;}function _srCap(s){return s;}function _shiftDishes(a){return a;}function catLocal(c){return c;}function _nombreUnico(d,n){return n||d.name;}';
   const M = new Function(stub + '\n' + dishesSrc + '\n' + svcSrc + '\n' + block + '\n' // eslint-disable-line no-new-func
     + fnBody('_mulberry32') + '\n' + fnBody('_dqSample') + '\n' + fnBody('_normName') + '\n' + fnBody('_dqQuestion')
     + '\nreturn {_dqQuestion, setLang:(l)=>{LANG=l;}};')();
@@ -8805,8 +8806,8 @@ test('allergen drill moved from Examen to Aprender → Repaso Inteligente', () =
     'drill card must be bilingual');
   // Results screen returns to its new home, not to Examen.
   const res = html.slice(html.indexOf('function renderAllergenResults'), html.indexOf('function renderSupAnalytics'));
-  assert(/_subTab\.aprender='smart';showTab\('aprender'\)/.test(res),
-    'drill results must navigate back to Aprender (smart)');
+  assert(/onclick="abortAllergenTest\(\)"/.test(res) && /Volver a Hoy/.test(res) && /Volver a Aprender/.test(res),
+    'drill results must navigate back to where the drill was launched (Hoy, Practicar or Aprender)');
   assert(!/renderExam\(\)/.test(res), 'drill results must not route back to Examen');
   const css = read('styles.css');
   assert(/\.ri-drill\{/.test(css) && /\.ri-drill-title\{/.test(css),
@@ -11783,6 +11784,8 @@ test('Examen de sala: las preguntas salen del manual y no se contestan con truco
     'y dar XP, como los demás');
 });
 
+// La ficha enseña las notas filtradas por _notasMostrar (definida lejos de ella).
+const _notasSrc = () => { const i = html.indexOf('function _notasMostrar('); const j = html.indexOf('\n}\n', i); return html.slice(i, j + 3); };
 test('La ficha del plato se PINTA, y en el idioma elegido', () => {
   // Esta prueba nace de un fallo propio. Al traducir la ficha dejé la variable
   // declarada DESPUÉS de usarla: la pantalla reventaba entera y las 338
@@ -11819,7 +11822,7 @@ test('La ficha del plato se PINTA, y en el idioma elegido', () => {
       'DISHES','getDish','getEmp','currentUser','track','escapeHTML','escapeHtml','catLocal',
       'dishPhotoSrc','DISH_ACTIONS','DISH_COMPONENTS','_dishPairWines','WINES','t','LANG',
       'document','repasoView','renderRepaso','loadLazyData','_vinosRuta','SRC','repasoDishId','_snsBtnHtml',
-      html.slice(i0, i1) + '; return renderRepasoDishDetail;');
+      _notasSrc() + html.slice(i0, i1) + '; return renderRepasoDishDetail;');
     const esc = s => String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
     F([PLATO_ES], getDish, () => ({ knownDishes:{}, journeyMastered:{} }), 'Ana', () => {},
       esc, esc, c => c, () => null, {}, {}, () => [], [], k => k, lang,
@@ -16879,7 +16882,7 @@ const _tecRes = (() => {
     const TECNICA_FAMS = [ { k:'seco', es:'Calor seco', en:'Dry heat', col:'#c47838' } ];
     const TECNICAS = [ { fam:'seco', ic:'🔥', es:'Brasa', en:'Grill', def:'Fuego.', defEn:'Fire.', txoko:'NOTA-DE-TXOKO', kw:['brasa'] } ];
     const api = new Function('document','DISHES','TECNICA_FAMS','TECNICAS','_cartaMeta','LANG','_venueCasa', // eslint-disable-line no-new-func
-      _tecSrc.esc + '\nconst escapeHTML = escapeHtml;\n' + _tecSrc.dishes + '\n' + _tecSrc.vista + '\nreturn { renderTecnicas, _tecVer, _tecFuente };')(
+      _tecSrc.esc + '\nconst escapeHTML = escapeHtml; const _ico = () => "<svg></svg>";\n' + _tecSrc.dishes + '\n' + _tecSrc.vista + '\nreturn { renderTecnicas, _tecVer, _tecFuente };')(
       document, DISHES, TECNICA_FAMS, TECNICAS, cartaMeta, 'es', () => 'Restaurante 2');
     if (vista === 'glo') api._tecVer('glo'); else api.renderTecnicas();
     return el.innerHTML;
@@ -16939,7 +16942,7 @@ const _sushiRes = (() => {
     const el = { innerHTML:'' };
     const document = { getElementById: () => el, querySelectorAll: () => [] };
     const api = new Function('document','DISHES','TECNICA_FAMS','TECNICAS','_cartaMeta','LANG','_venueCasa','_esMando','_esAdmin','_subTab','showTab', // eslint-disable-line no-new-func
-      _tecSrc.esc + '\nconst escapeHTML = escapeHtml;\n' + _tecSrc.dishes + '\n' + mod + '\n' + _tecSrc.vista
+      _tecSrc.esc + '\nconst escapeHTML = escapeHtml; const _ico = () => "<svg></svg>";\n' + _tecSrc.dishes + '\n' + mod + '\n' + _tecSrc.vista
       + '\nreturn { renderTecnicas, _tecVer, _sushiValida, _sushiVer, _sushiNueva, _sushiResponder, _sushiAbrir, q: () => _sushiQ };')(
       document, [], [ { k:'seco', es:'Calor seco', en:'Dry heat', col:'#c47838' } ],
       [ { fam:'seco', ic:'', es:'Brasa', en:'Grill', def:'Fuego.', defEn:'Fire.', kw:['brasa'] } ],
@@ -16947,7 +16950,7 @@ const _sushiRes = (() => {
     const meta = guia ? { SUSHI: api._sushiValida(guia) } : null;
     // _cartaMeta va como parámetro: se rehace la función con la guía ya validada.
     const api2 = new Function('document','DISHES','TECNICA_FAMS','TECNICAS','_cartaMeta','LANG','_venueCasa','_esMando','_esAdmin','_subTab','showTab', // eslint-disable-line no-new-func
-      _tecSrc.esc + '\nconst escapeHTML = escapeHtml;\n' + _tecSrc.dishes + '\n' + mod + '\n' + _tecSrc.vista
+      _tecSrc.esc + '\nconst escapeHTML = escapeHtml; const _ico = () => "<svg></svg>";\n' + _tecSrc.dishes + '\n' + mod + '\n' + _tecSrc.vista
       + '\nreturn { renderTecnicas, _tecVer, _sushiValida, _sushiVer, _sushiNueva, _sushiResponder, _sushiAbrir, q: () => _sushiQ };')(
       document, [], [ { k:'seco', es:'Calor seco', en:'Dry heat', col:'#c47838' } ],
       [ { fam:'seco', ic:'', es:'Brasa', en:'Grill', def:'Fuego.', defEn:'Fire.', kw:['brasa'] } ],
@@ -18237,7 +18240,7 @@ test('Ficha: no repite la historia cuando es el mismo texto que los ingredientes
   const F = new Function( // eslint-disable-line no-new-func
     'DISHES','getDish','getEmp','currentUser','track','escapeHTML','catLocal','dishPhotoSrc','DISH_ACTIONS','DISH_COMPONENTS',
     '_dishPairWines','WINES','t','LANG','document','SRC','_snsBtnHtml',
-    html.slice(a, b) + '; return renderRepasoDishDetail;');
+    _notasSrc() + html.slice(a, b) + '; return renderRepasoDishDetail;');
   const TXT = 'Vieira marinada en saikyo miso a la parrilla con beurre blanc de sake';
   const plato = { id: 7, cat: 'Entrantes', name: 'Hotate', ingredients: TXT, history: TXT + '.', allergens: ['Moluscos','Gluten'] };
   const esc = s => String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
@@ -18479,7 +18482,7 @@ test('plato al día: el plato de hoy es el más vencido; si no hay, el primero n
   assert(_pad._padHechoHoy({ 5: { d: hoy, t: 1 }, 6: { d: hoy, t: 9 }, 7: { d: '2026-10-23', t: 99 } }, hoy).id === 6, 'lo contado hoy');
   // Orden: primero lo validado por el chef; el menú degustación delante.
   const f = html.slice(html.indexOf('function _padPlatos('), html.indexOf('function _padEstado('));
-  assert(/story_revisar/.test(f) && /DEGUSTACION\.pases/.test(f) && /_padClaves\(dd\)\.length/.test(f), 'solo platos con story y claves, validados primero');
+  assert(/story_revisar/.test(f) && /DEGUSTACION\.pases/.test(f) && /_platosConHistoria\(orden\)/.test(f), 'solo platos con story y claves, validados primero');
 });
 test('plato al día: la mejor voz (mejorada, natural, Google) y nunca la compacta', () => {
   const V = [{ name: 'Mónica (compacta)', lang: 'es-ES' }, { name: 'Paulina', lang: 'es-MX' }, { name: 'Mónica (mejorada)', lang: 'es-ES' }, { name: 'Daniel', lang: 'en-GB' }];
@@ -18966,8 +18969,9 @@ test('repasar carta: alimenta el mismo repaso de Un plato al día (emp.pad), sin
   assert(a.n === b.n && a.next === b.next && a.ok === 1 && a.okd.join() === hoy, 'contado entero: igual que Un plato al día y apunta el día');
   const f = _rtc._rtcProgramar({ n: 3, ok: 1, next: '2026-11-01', okd: ['2026-10-20'] }, 'contado', false, hoy, 2);
   assert(f.n === 0 && f.next === '2026-11-04' && f.okd.join() === '2026-10-20', 'con ideas de menos: mañana otra vez');
-  const s = _rtc._rtcProgramar({ n: 1, ok: 1, next: hoy, okd: ['2026-10-30'] }, 'sabe', true, hoy, 3);
-  assert(s.n === 2 && s.ok === 1 && s.okd.join() === '2026-10-30', '«Ya me lo sé» sube escalón sin apuntar día de dominado');
+  const s = _rtc._rtcProgramar({ n: 1, ok: 1, next: hoy, d: '2026-10-30', okd: ['2026-10-30'] }, 'sabe', true, hoy, 3);
+  assert(s.n === 0 && s.d === '2026-10-30' && s.next === '2026-11-04' && s.okd.join() === '2026-10-30', '«Ya me lo sé» cuenta como visto: ni sube escalón ni apunta el día (Hoy no dice «Contado hoy»)');
+  assert(_pad._padHechoHoy({ 7: _rtc._rtcProgramar(undefined, 'sabe', true, hoy, 3) }, hoy) === null, '«Ya me lo sé» no deja el plato como hecho hoy');
   const lejos = { n: 4, ok: 1, next: '2026-12-01', okd: [] };
   assert(_rtc._rtcProgramar(lejos, 'apoyo', true, hoy) === lejos, 'escuchado antes: no pisa una fecha mejor');
   assert(_rtc._rtcProgramar(undefined, 'apoyo', true, hoy).next === '2026-11-04', 'escuchado antes: vuelve mañana');
@@ -19366,6 +19370,105 @@ test('guiño «Para el retiro» en la ficha, la degustación y Conocer el plato'
   assert(/_guinoRetiroHTML\(dd\.guino, _en, dd\.retiro\)/.test(_fnSrc('_degContarHTML')), 'en la ficha del plato (Cómo contarlo)');
   assert(/_guinoRetiroHTML\(h\.guino, _en, dd\.retiro\)/.test(_fnSrc('_cpPasoHace')), 'en Conocer el plato');
   assert(!/El guiño de la casa'\}<\/span>/.test(html), 'no queda el rótulo antiguo');
+});
+
+console.log('\nArreglos de la auditoría del 9/11');
+const _aud = (() => {
+  const seg = (a, b) => { const i = html.indexOf(a); const j = html.indexOf(b, i); return html.slice(i, j); };
+  const src = seg('const _AL_FRASE_ES', 'function _notasMostrar(') + _notasSrc();
+  return new Function('normalizeAllergen', 'ALLERGEN_MAP', 'DISHES', 'getDish', 'catLocal', // eslint-disable-line no-new-func
+    src + '; return { _alFrase, _nombreUnico, _notasMostrar };')(
+    a => ({ 'sesame seeds': 'Granos de sésamo' })[String(a).toLowerCase()] || a,
+    { 'Granos de sésamo': 'Sesame seeds', 'Huevos': 'Eggs' },
+    [ { id: 1, name: 'AB sushi', cat: 'Selección del chef' }, { id: 2, name: 'AB sushi', cat: 'Menu degustación' }, { id: 3, name: 'Miso', cat: 'Entrantes' } ],
+    d => d, c => c);
+})();
+test('1 · atrás del móvil en el simulacro de alérgenos: es un nivel de la pestaña, no sale de la app', () => {
+  assert(/simulacro: \{\s*nivel\(\)\{ return \(typeof allergenTestState !== 'undefined' && allergenTestState && allergenTestState\.tab === currentTab\) \? 1 : 0; \},\s*subir\(\)\{ abortAllergenTest\(\); \}/.test(html), 'subvista «simulacro» en _NAV_SUB');
+  assert(/if\(typeof allergenTestState !== 'undefined' && allergenTestState && allergenTestState\.tab === tab && tab === currentTab\) return _NAV_SUB\.simulacro;/.test(html), '_navSubDe la devuelve mientras el simulacro está abierto');
+  const ab = _fnSrc('abortAllergenTest');
+  assert(/_enCurso && !confirm\(/.test(ab) && /else if\(_tab && _tab !== 'exam' && TAB_ROUTES\.includes\(_tab\)\) showTab\(_tab\);/.test(ab), 'salir vuelve a la pestaña desde la que se lanzó y en resultados no pregunta');
+  assert(/if\(typeof allergenTestState!=='undefined' && allergenTestState\) allergenTestState=null;\s*\/\/ Botón atrás del móvil/.test(html), 'cambiar de pestaña cierra el estado del simulacro');
+  assert(/top\.foto = \(k && f\) \? \{ k, f \} : null;/.test(html) && /prev\.foto && prev\.foto\.f && _NAV_SUB\[prev\.foto\.k\]/.test(html), 'las subvistas sin foto no dejan una foto rota en la pila');
+});
+test('2 · notas generadas: concordancia, sin rayas y sin repetir los alérgenos', () => {
+  const es = _aud._alFrase('Huevos', false), se = _aud._alFrase('Granos de sésamo', false), so = _aud._alFrase('Soja', false), gl = _aud._alFrase('Gluten', false);
+  assert(es.el === 'los huevos' && es.verbo === 'forman' && es.a === 'a los huevos', 'los huevos forman');
+  assert(se.el === 'el sésamo' && se.con === 'sésamo' && so.a === 'a la soja' && gl.a === 'al gluten', 'el sésamo, a la soja, al gluten');
+  const en = _aud._alFrase('Huevos', true), enG = _aud._alFrase('Gluten', true);
+  assert(en.el === 'eggs' && en.verbo === 'are' && enG.verbo === 'is', 'inglés: eggs are, gluten is');
+  const q = _fnSrc('buildAllergenQuestions');
+  assert(/No se puede servir: \$\{_af\.el\} \$\{_af\.verbo\} parte de la base del plato\./.test(q) && /It cannot be served: \$\{_af\.el\} \$\{_af\.verbo\} part of the dish's base\./.test(q), 'opción «no se puede servir» concordada');
+  assert(/declara alergia \$\{_af\.a\}/.test(q) && /an allergy to \$\{_af\.a\}/.test(q), 'enunciado concordado');
+  assert(!/Se puede (servir tal cual|adaptar) —/.test(q) && !/Servirlo — /.test(q) && !/Serve it — /.test(q), 'sin rayas en las opciones ni en la trampa');
+  const n = _aud._notasMostrar('⚠ Pescado · ⚠ Gluten — se puede retirar. Comandar CON SOJA SIN GLUTEN. · Sin forma confirmada de retirar Pescado: no ofrecerlo. · Ficha de cocina — sin gluten: Adaptable · sin lactosa: Sí. · La ficha marca «marisco».');
+  assert(n === 'Gluten: se puede retirar. Comandar CON SOJA SIN GLUTEN. · Ficha de cocina, sin gluten: Adaptable · sin lactosa: Sí. · La ficha marca «marisco».', 'sólo frases de cocina y comandas, con «:» o «,» en vez de raya: ' + n);
+  assert(_aud._notasMostrar('⚠ Soja · ⚠ Pescado · Sin forma confirmada de retirar Soja ni Pescado: no ofrecerlo.') === '', 'si sólo repetía los alérgenos, no hay notas');
+  assert(_aud._notasMostrar('⚠ Eggs · No confirmed way to remove Eggs: do not offer it. · Usamos miel de Tenerife.') === 'Usamos miel de Tenerife.', 'inglés igual');
+  assert(_aud._notasMostrar('Gluten en el panko — se puede sustituir. Comandar SIN PANKO.') === 'Gluten en el panko: se puede sustituir. Comandar SIN PANKO.', 'la raya de una nota escrita a mano se enseña como «:»; el dato no se toca');
+  for(const f of ['_emplOpen', 'renderRepasoDishDetail', 'renderRepasoTopic']) assert(/_notasMostrar\(dd\.notes\)/.test(_fnSrc(f) || ''), 'notas filtradas en ' + f);
+  assert(/content:_notasMostrar\(d\.notes\)/.test(html), 'notas filtradas en la ficha con pestañas');
+});
+test('3 · platos homónimos: el nombre lleva la categoría donde sólo se ve el nombre', () => {
+  const D = [ { id: 1, name: 'AB sushi', cat: 'Selección del chef' }, { id: 2, name: 'AB sushi', cat: 'Menu degustación' }, { id: 3, name: 'Miso', cat: 'Entrantes' } ];
+  assert(_aud._nombreUnico(D[1]) === 'AB sushi (Menu degustación)' && _aud._nombreUnico(D[0], 'AB sushi') === 'AB sushi (Selección del chef)', 'con repetido, categoría');
+  assert(_aud._nombreUnico(D[2]) === 'Miso', 'sin repetido, el nombre tal cual');
+  assert(/const dishDisplay = _nombreUnico\(dish,/.test(_fnSrc('buildAllergenQuestions')), 'simulacro');
+  assert((_fnSrc('_dqQuestion').match(/opts\.map\(d=>_nombreUnico\(d, d\.name\)\)/g) || []).length === 3, 'reto del día');
+  assert(/_nombreUnico\(d, dd\.name\)/.test(_fnSrc('_rtcPintar')) && /_nombreUnico\(sig\)/.test(_fnSrc('_rtcPintar')), 'repasar toda la carta');
+  assert(/_nombreUnico\(d, dd\.name\)/.test(_fnSrc('_caPintar')) && /_nombreUnico\(x\)/.test(_fnSrc('_caPintar')), 'la carta en audio');
+  assert(/_nombreUnico\(dish, dd\.name\)/.test(_fnSrc('_cpMini')) && /_nombreUnico\(sig\)/.test(_fnSrc('_djRender')), 'conocer el plato');
+});
+test('4 · contadores: Repasar, Conocer el plato y la carta en audio cuentan los platos con historia', () => {
+  assert(/function _platosConHistoria\(lista\)/.test(html), 'un solo conjunto');
+  assert(/function _rtcPlatosOk\(\)\{ return _platosConHistoria\(DISHES\); \}/.test(html), 'Repasar');
+  assert(/const con = d => _platosConHistoria\(\[d\]\)\.length > 0;/.test(_fnSrc('_caFuentes')), 'audio');
+  assert(/const ok = _platosConHistoria\(orden\);/.test(_fnSrc('_padPlatos')), 'Un plato al día / Conocer');
+  assert(/const platos = _conH\.length \? _conH : _todos;/.test(html), 'el plan de Hoy cuenta los mismos platos');
+  const pc = _fnSrc('_padClaves');
+  assert(/dd\.tres/.test(pc) && /dd\.story/.test(pc), 'sin claves guardadas valen las tres ideas o las frases de la historia');
+  const i = html.indexOf('const PAD_INTERVALOS'), j = html.indexOf('// ── Lo que depende de la app ──', i);
+  const P = new Function(html.slice(i, j) + '; return _padClaves;')(); // eslint-disable-line no-new-func
+  assert(P({ story: 'Una frase larga de prueba. Otra frase igual de larga.', tres: ['Idea uno', 'Idea dos'] }).length === 2, 'prefiere «tres»');
+  assert(P({ story: 'Una frase larga de prueba. Otra frase igual de larga.' }).length === 2 && P({}).length === 0, 'si no, la historia; sin nada, vacío');
+  const sq = _fnSrc('_sushiPracticaHTML');
+  assert(/\$\{Q\.aciertos\} \$\{Q\.aciertos === 1 \? 'acierto' : 'aciertos'\} de \$\{Q\.total\}/.test(sq) && /\$\{Q\.aciertos\} of \$\{Q\.total\} right/.test(sq), 'práctica del sushi: «1 acierto de 1», no «1 de 1»');
+});
+test('5 · panel de supervisor: atrás por vistas, sin banda dentro del panel, tabla con pista de scroll', () => {
+  assert(/supervisor: \{\s*nivel\(\)\{ return \(typeof _supVistas !== 'undefined'\) \? _supVistas\.length : 0; \},\s*subir\(\)\{ _supAtras\(\); \}/.test(html), 'subvista «supervisor» en _NAV_SUB');
+  assert(/if\(tab === 'supervisor'\) return _NAV_SUB\.supervisor;/.test(html), '_navSubDe');
+  assert(/_supVistaPoner\('perfil'\);/.test(_fnSrc('renderSupEmployee')) && /_supVistaPoner\('analitica'\);/.test(_fnSrc('renderSupAnalytics')), 'analítica y perfil se apilan');
+  assert(/if\(!silent\) _supVistas = \[\];/.test(_fnSrc('renderSupDashboard')), 'el panel vacía la pila');
+  assert(/onclick="_supAtras\(\)"/.test(_fnSrc('renderSupEmployee')), 'la flecha del perfil vuelve a la vista anterior');
+  const at = _fnSrc('_supAtras');
+  assert(/if\(prev === 'analitica'\)\{ renderSupAnalytics\(/.test(at) && /showTab\('supervisor'\);/.test(at), 'perfil → analítica → panel');
+  assert(/sup\.hidden = !\(sec === 'equipo' && puede && tab !== 'supervisor'\);/.test(html), 'la banda «Panel de supervisor ›» no sale dentro del panel');
+  const css = read('styles.css');
+  assert(/\.sup-tabla-wrap\{[^}]*no-repeat local[^}]*no-repeat scroll/.test(css), 'la tabla del equipo avisa con sombra de que sigue a la derecha');
+});
+test('6 · emojis de interfaz → SVG (el contenido de las cartas no se toca)', () => {
+  assert(/function _ico\(n, px, extra\)/.test(html) && /function _icoPunto\(k, px\)/.test(html) && /function _icoMedalla\(i, px\)/.test(html), 'iconos');
+  const sup = html.slice(html.indexOf('function renderSupDashboard('), html.indexOf('function renderSupNotifSender('));
+  assert(!/[🔴🟡🟢📷🔑🛠📣📈🎯🧩🥇🥈🥉🏆📊📋]/u.test(sup.replace(/_supResumenTxt[\s\S]*?\n\}\n/, '')), 'panel sin emojis (salvo el texto para WhatsApp)');
+  assert(/_icoPunto\('rojo'\)/.test(sup) && /_ico\('camara', 20\)/.test(sup) && /_ico\('llave', 20\)/.test(sup) && /_ico\('herramientas', 20\)/.test(sup) && /_ico\('megafono', 18\)/.test(sup) && /_icoMedalla\(i, 20\)/.test(sup), 'círculos, cámara, llave, herramientas, megáfono y medallas en SVG');
+  assert(/_ico\(vistaGlo\?'libro':'sarten', 34\)/.test(_fnSrc('renderTecnicas')), 'cabeceras de Técnicas y Glosario');
+  assert(/\$\{t\.ic\|\|_ico\('sarten', 18\)\}/.test(html), 'el `ic` de la carta se respeta; sólo cambia el relleno');
+  assert(/_ico\('estrella', 14\)\+' '\+title/.test(_fnSrc('_renderRankingGames')), 'estrellas de los récords de Equipo');
+});
+test('7 · «Ya me lo sé» en Repasar cuenta como visto, no como contado', () => {
+  assert(/if\(modo === 'apoyo' \|\| modo === 'sabe'\) return _cpProgramar\(prev, false, false, hoy, ahora\);/.test(_fnSrc('_rtcProgramar')), 'misma programación que «lo escuché antes»');
+});
+test('8 · Mesa con alergias: sin «Pica ?» ni «Vegano ?» cuando el dato es una suposición', () => {
+  assert(/filter\(x => !x\.sug && \(x\.k === 'pica'/.test(_fnSrc('_fsvMiniHTML')), 'filtra lo sugerido');
+  assert(_fsv._fsvMiniHTML({ id: 2, name: 'Pámpano', ingredients: 'Pámpano, Tabasco' }, false) === '', 'pica sugerido por el texto: nada en la mesa');
+  const ok = _fsv._fsvMiniHTML({ id: 3, name: 'Pámpano', ingredients: 'Pámpano, Tabasco', svc: { pica: 2, ok: true } }, false);
+  assert(/Pica/.test(ok) && !/<i aria-hidden="true">\?<\/i>/.test(ok), 'confirmado por la ficha: se enseña sin interrogante');
+});
+test('9 · modo tranquilo: en Equipo sólo mi tarjeta y el aviso', () => {
+  const rk = _fnSrc('renderRanking');
+  assert(/if\(_soyTranquilo && emp\.name !== currentUser\) return '';/.test(rk), 'sólo mi fila');
+  assert(/\$\{_soyTranquilo \? '' : leagueHTML\}/.test(rk) && /Solo ves tu tarjeta, sin ranking ni liga\./.test(rk) && /with no ranking or league\./.test(rk), 'sin liga y aviso claro, ES y EN');
+  assert(/_modoTranquilo\(\)\)\{ host\.innerHTML=''; return; \}/.test(_fnSrc('_renderRankingGames')), 'sin récords de juegos');
 });
 
 console.log('\nHygiene');

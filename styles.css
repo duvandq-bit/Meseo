@@ -4821,7 +4821,7 @@ body::after{
 .tec-wrap{animation:slideUp .25s ease both}
 .tec-hero{display:flex;gap:.7rem;align-items:flex-start;background:linear-gradient(150deg,#2d6a3e,#22532f);
   border-radius:var(--r);padding:.95rem 1rem;margin:.1rem 0 1.1rem;box-shadow:0 4px 14px rgba(28,42,34,.18)}
-.tec-hero-ic{font-size:1.9rem;line-height:1;filter:drop-shadow(0 2px 3px rgba(0,0,0,.25))}
+.tec-hero-ic{font-size:1.9rem;line-height:1;color:#f3e3b4;filter:drop-shadow(0 2px 3px rgba(0,0,0,.25))}
 .tec-hero-t{font-family:'Cinzel',serif;font-size:1.22rem;color:#fbf7ee;font-weight:700;line-height:1.1}
 .tec-hero-s{font-size:.75rem;color:rgba(251,247,238,.82);line-height:1.45;margin-top:.28rem}
 .tec-hero-stat{display:inline-block;font-family:'DM Mono',monospace;font-size:.6rem;letter-spacing:.1em;
@@ -10095,7 +10095,15 @@ body, .screen{ min-height: 100vh; min-height: 100dvh; }
    Ocho columnas no caben en un móvil: la tabla lleva SU propio scroll lateral
    para que la página no se mueva de lado. */
 .sup-tabla-wrap{ overflow-x:auto; -webkit-overflow-scrolling:touch;
-  border:1px solid var(--line); border-radius: var(--r); background: rgba(255,255,255,.45); }
+  border:1px solid var(--line); border-radius: var(--r);
+  /* Pista de que hay más columnas: sombra en el borde por donde sigue la tabla
+     (se apaga sola al llegar al final: capas con background-attachment local). */
+  background:
+    linear-gradient(90deg, #f7f2e7 40%, rgba(247,242,231,0)) left / 28px 100% no-repeat local,
+    linear-gradient(270deg, #f7f2e7 40%, rgba(247,242,231,0)) right / 28px 100% no-repeat local,
+    linear-gradient(90deg, rgba(28,42,34,.22), rgba(28,42,34,0)) left / 18px 100% no-repeat scroll,
+    linear-gradient(270deg, rgba(28,42,34,.22), rgba(28,42,34,0)) right / 18px 100% no-repeat scroll,
+    #f7f2e7; }
 .sup-tabla{ border-collapse: collapse; width:100%; min-width:560px;
   font-family:'Quicksand',sans-serif; font-size:.76rem; }
 .sup-tabla th{ font-family:'DM Mono',monospace; font-size:.52rem; letter-spacing:.08em;

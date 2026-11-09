@@ -54,7 +54,7 @@
 <meta property="og:description" content="Formación de equipos de sala: carta, alérgenos, vinos, exámenes y juegos de repaso.">
 <meta property="og:url" content="https://meseo.es/">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"Meseo","url":"https://meseo.es/"}</script>
-<meta name="app-version" content="7.541">
+<meta name="app-version" content="7.542">
 <meta name="app-build" content="May 2026">
 <meta name="theme-color" content="#1c2a22">
 <!-- ═══ PWA ═══ -->
@@ -2885,6 +2885,104 @@ const ALLERGEN_MAP={
 };
 function allergenLocal(a){return LANG==='en'?(ALLERGEN_MAP[a]||a):a;}
 
+// ── Iconos SVG de interfaz (auditoría 9/11: fuera emojis del panel, de las
+// cabeceras de Técnicas y Glosario y de los récords de Equipo; el contenido
+// de las cartas, como el `ic` del glosario, no se toca). Trazo fino, color
+// del texto; `_ico(nombre, px)`.
+const _ICO_PATHS = {
+  camara: '<path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.2"/>',
+  llave: '<circle cx="8" cy="15" r="4"/><path d="M11 12l9-9M16 5l3 3M13 8l3 3"/>',
+  herramientas: '<path d="M14.5 6.5a4 4 0 0 0 5 5l-9 9a2.1 2.1 0 0 1-3-3l9-9z"/><path d="M4 5l4 4M6 3l4 4"/>',
+  megafono: '<path d="M3 10v4h3l7 4V6l-7 4H3z"/><path d="M17 9.5a3.5 3.5 0 0 1 0 5M19.5 7a7 7 0 0 1 0 10"/>',
+  grafico: '<path d="M3 20h18"/><path d="M5 16l4-5 4 3 6-8"/>',
+  diana: '<circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="4.5"/><circle cx="12" cy="12" r="1.2" fill="currentColor"/>',
+  pieza: '<path d="M10 3h4v3a2 2 0 1 0 0 4h3v4h-3a2 2 0 1 0 0 4v3h-4v-3a2 2 0 1 0 0-4H7v-4h3a2 2 0 1 0 0-4V3z"/>',
+  alerta: '<path d="M12 3l10 18H2L12 3z"/><path d="M12 10v5M12 18v.5"/>',
+  libro: '<path d="M4 5a2 2 0 0 1 2-2h14v16H6a2 2 0 0 0-2 2V5z"/><path d="M4 19a2 2 0 0 1 2-2h14"/>',
+  sarten: '<circle cx="9.5" cy="13.5" r="6.5"/><path d="M16 13.5h5.5"/><path d="M7 11a3 3 0 0 1 3-1"/>',
+  estrella: '<path d="M12 3.5l2.6 5.6 6.1.8-4.5 4.2 1.2 6-5.4-3-5.4 3 1.2-6L3.3 9.9l6.1-.8L12 3.5z"/>',
+  trofeo: '<path d="M7 4h10v5a5 5 0 0 1-10 0V4z"/><path d="M7 6H4a3 3 0 0 0 3 4M17 6h3a3 3 0 0 1-3 4"/><path d="M12 14v4M8 20h8"/>',
+  portapapeles: '<rect x="6" y="4" width="12" height="17" rx="2"/><path d="M9 4V2.5h6V4M9 10h6M9 14h6"/>',
+  medalla: '<circle cx="12" cy="14" r="5.5"/><path d="M8.5 9.5L6 3h4l2 4 2-4h4l-2.5 6.5"/>'
+};
+function _ico(n, px, extra){
+  const d = _ICO_PATHS[n]; if(!d) return '';
+  const sz = px || 16;
+  return `<svg width="${sz}" height="${sz}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:inline-block;vertical-align:-.15em;flex:none${extra ? ';' + extra : ''}">${d}</svg>`;
+}
+// Punto de estado (rojo, ámbar, verde) del panel: un círculo con relleno.
+const _ICO_PUNTO = { rojo: '#c4524a', ambar: '#d9a93a', verde: '#4d8a5e' };
+function _icoPunto(k, px){
+  const sz = px || 12;
+  return `<svg width="${sz}" height="${sz}" viewBox="0 0 12 12" aria-hidden="true" style="display:inline-block;vertical-align:-.1em;flex:none"><circle cx="6" cy="6" r="5" fill="${_ICO_PUNTO[k] || '#999'}"/></svg>`;
+}
+// Medalla de podio (1, 2, 3) con el número dentro; a partir del 4º, el número.
+function _icoMedalla(i, px){
+  const col = ['#d4af37', '#a8a9ad', '#b87333'][i];
+  if(!col) return String(i + 1);
+  const sz = px || 20;
+  return `<svg width="${sz}" height="${sz}" viewBox="0 0 24 24" aria-hidden="true" style="display:inline-block;vertical-align:-.25em;flex:none"><path d="M8.5 9.5L6 3h4l2 4 2-4h4l-2.5 6.5" fill="none" stroke="${col}" stroke-width="1.6" stroke-linejoin="round"/><circle cx="12" cy="15" r="6" fill="${col}"/><text x="12" y="17.6" text-anchor="middle" font-size="7.5" font-family="DM Mono,monospace" font-weight="700" fill="#fff">${i + 1}</text></svg>`;
+}
+// El alérgeno dentro de una frase (auditoría 9/11: «el Huevos forma parte de
+// la base», «el Granos de sésamo»). Devuelve el nombre en minúscula con su
+// artículo y si va en plural, en el idioma activo: «los huevos», «el sésamo»,
+// «la soja»; en inglés «eggs» (are), «gluten» (is).
+const _AL_FRASE_ES = {
+  'Gluten':['el','gluten',0],'Huevos':['los','huevos',1],'Lácteos':['los','lácteos',1],
+  'Crustáceos':['los','crustáceos',1],'Pescado':['el','pescado',0],'Sulfitos':['los','sulfitos',1],
+  'Moluscos':['los','moluscos',1],'Frutos secos':['los','frutos secos',1],'Mostaza':['la','mostaza',0],
+  'Apio':['el','apio',0],'Soja':['la','soja',0],'Granos de sésamo':['el','sésamo',0],'Sésamo':['el','sésamo',0],
+  'Cacahuete':['el','cacahuete',0],'Cacahuetes':['los','cacahuetes',1],'Altramuces':['los','altramuces',1],'Cereales':['los','cereales',1]
+};
+const _AL_FRASE_EN = {
+  'Gluten':['gluten',0],'Huevos':['eggs',1],'Lácteos':['dairy',0],'Crustáceos':['crustaceans',1],'Pescado':['fish',0],
+  'Sulfitos':['sulphites',1],'Moluscos':['molluscs',1],'Frutos secos':['tree nuts',1],'Mostaza':['mustard',0],'Apio':['celery',0],
+  'Soja':['soy',0],'Granos de sésamo':['sesame',0],'Sésamo':['sesame',0],'Cacahuete':['peanuts',1],'Cacahuetes':['peanuts',1],
+  'Altramuces':['lupin',0],'Cereales':['cereals',1]
+};
+function _alFrase(a, en){
+  const k = (typeof normalizeAllergen==='function') ? normalizeAllergen(String(a||'')) : String(a||'');
+  if(en){
+    const f = _AL_FRASE_EN[k];
+    const n = f ? f[0] : (ALLERGEN_MAP[k]||k).toLowerCase();
+    const pl = f ? !!f[1] : /s$/.test(n);
+    return { n, pl, con:n, a:n, el:n, verbo: pl ? 'are' : 'is' };
+  }
+  const f = _AL_FRASE_ES[k];
+  const art = f ? f[0] : 'el', n = f ? f[1] : k.toLowerCase(), pl = f ? !!f[2] : false;
+  return { n, pl, el: art+' '+n, a: (art==='el' ? 'al ' : 'a '+art+' ')+n, con: n, verbo: pl ? 'forman' : 'forma' };
+}
+// Nombre del plato para preguntas y listas: si otro plato de la carta se
+// llama igual (Akira: dos «AB sushi», dos «Yuzu mochi»), se añade la categoría
+// para que se sepa cuál es: «Yuzu mochi (Menú degustación)».
+function _nombreUnico(d, nombre){
+  const dd = (typeof getDish==='function') ? getDish(d) : d;
+  const base = nombre || dd.name || d.name || '';
+  const k = String(d.name||'').trim().toLowerCase();
+  const rep = k && typeof DISHES!=='undefined' && DISHES.some(x => x !== d && x.id !== d.id && String(x.name||'').trim().toLowerCase() === k);
+  if(!rep || !d.cat) return base;
+  const cat = (typeof catLocal==='function') ? catLocal(d.cat) : d.cat;
+  return base + ' (' + cat + ')';
+}
+// Notas de cocina tal como se enseñan. Las notas que la app generó al guardar
+// la carta repiten los alérgenos con triángulo, añaden «Sin forma confirmada de
+// retirar…» y llevan rayas. Arriba ya están los chips con el veredicto, así
+// que aquí quedan solo las frases de cocina y las instrucciones de comandar;
+// una nota escrita con raya se enseña con «:» o «,». Los datos no se tocan.
+function _notasMostrar(notes){
+  const segs = String(notes||'').split(/\s·\s/).map(x=>x.trim()).filter(Boolean);
+  const out = [];
+  for(let seg of segs){
+    if(/^⚠\s*[^.—:]+$/.test(seg)) continue;                                   // alérgeno suelto
+    if(/^(Sin forma confirmada de retirar|No confirmed way to remove)\b/i.test(seg)) continue;
+    seg = seg.replace(/^⚠\s*/, '');
+    seg = seg.replace(/\s*—\s*([^·.]*)/g, (m, resto) => (resto.indexOf(':') >= 0 ? ', ' : ': ') + resto);
+    seg = seg.replace(/\s*—\s*/g, ', ');
+    out.push(seg);
+  }
+  return out.join(' · ');
+}
+
 
 // LAS CATEGORÍAS SON DE LA CARTA. CATS_ES/CATS_EN son las de Txoko y siguen
 // siendo exactamente eso; otra carta trae las suyas en `CATS` ([{es, en}], en
@@ -2921,7 +3019,7 @@ const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><p
 const SRC = 'src';
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='7.541';  // sincronizada con sw.js VERSION (guard de CI)
+const APP_VERSION='7.542';  // sincronizada con sw.js VERSION (guard de CI)
 const APP_BUILD='Jul 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;
@@ -4279,7 +4377,11 @@ function datosDeHoy(emp, dia){
   const srs = e.srs || {};
   const srsVencidos = Object.keys(srs).filter(k => srs[k] && srs[k].reps > 0 && ahora >= srs[k].nextReview).length;
 
-  const platos = (typeof DISHES !== 'undefined' && DISHES) ? DISHES : [];
+  // Los mismos platos que recorren Conocer el plato, Repasar y la carta en
+  // audio (con descripción); si la carta no tiene descripciones, todos.
+  const _todos = (typeof DISHES !== 'undefined' && DISHES) ? DISHES : [];
+  const _conH = (typeof _platosConHistoria === 'function') ? _platosConHistoria(_todos) : [];
+  const platos = _conH.length ? _conH : _todos;
   const conocidos = e.knownDishes || {};
   const vistos = e.conocidos || {};        // terminó «Conocer el plato»
   const dominados = e.journeyMastered || {};
@@ -7079,7 +7181,7 @@ function _djRender(){
   if(paso === 'fin'){
     const sig = _cpSiguientePlato(dish);
     navHtml = `<footer class="cono-nav fin">
-      ${sig ? `<button type="button" class="deg-btn pad-grande cono-sig" onclick="_djClose();setTimeout(function(){launchDishJourney(${sig.id});},320)">${_en ? 'Next dish' : 'Siguiente plato'}<span class="cono-sig-nom">${escapeHTML(getDish(sig).name)}</span></button>` : ''}
+      ${sig ? `<button type="button" class="deg-btn pad-grande cono-sig" onclick="_djClose();setTimeout(function(){launchDishJourney(${sig.id});},320)">${_en ? 'Next dish' : 'Siguiente plato'}<span class="cono-sig-nom">${escapeHTML(_nombreUnico(sig))}</span></button>` : ''}
       <button type="button" class="deg-btn sec cono-volver" onclick="_djClose()">${_en ? 'Back' : 'Volver'}</button>
     </footer>`;
   } else {
@@ -7157,7 +7259,7 @@ function _djClose(){
 
 // ── Piezas ──
 function _cpMini(dish, dd){
-  return `<div class="pad-mini cono-mini">${_degFotoHTML(dish.id, dd.name, 'pad-mini-foto')}<h2 class="deg-tit pad-nom">${escapeHTML(dd.name)}</h2></div>`;
+  return `<div class="pad-mini cono-mini">${_degFotoHTML(dish.id, dd.name, 'pad-mini-foto')}<h2 class="deg-tit pad-nom">${escapeHTML(_nombreUnico(dish, dd.name))}</h2></div>`;
 }
 
 // ── 1 · Míralo ──
@@ -11137,8 +11239,8 @@ function _dqQuestion(dayStr){
     const opts=_dqSample([correct].concat(_dqSample(dishes.filter(d=>!(d.allergens||[]).includes(al)),3,rng)),4,rng);
     return { day:dayStr, type,
       q: en?`Which of these dishes declares ${al}?`:`¿Cuál de estos platos lleva ${al} declarado?`,
-      opts: opts.map(d=>d.name), correctIdx: opts.indexOf(correct),
-      info: en?`“${correct.name}” declares: ${(correct.allergens||[]).join(', ')}.`:`«${correct.name}» declara: ${(correct.allergens||[]).join(', ')}.` };
+      opts: opts.map(d=>_nombreUnico(d, d.name)), correctIdx: opts.indexOf(correct),
+      info: en?`“${_nombreUnico(correct, correct.name)}” declares: ${(correct.allergens||[]).join(', ')}.`:`«${_nombreUnico(correct, correct.name)}» declara: ${(correct.allergens||[]).join(', ')}.` };
   }
   if(type==='safe'){
     const al=pick(alPool);
@@ -11150,7 +11252,7 @@ function _dqQuestion(dayStr){
       const opts=_dqSample([correct].concat(_dqSample(withA,3,rng)),4,rng);
       return { day:dayStr, type,
         q: en?`A guest is allergic to ${al}. Which of these dishes is SAFE?`:`Un cliente es alérgico a ${al}. ¿Cuál de estos platos es SEGURO?`,
-        opts: opts.map(d=>d.name), correctIdx: opts.indexOf(correct),
+        opts: opts.map(d=>_nombreUnico(d, d.name)), correctIdx: opts.indexOf(correct),
         info: en?`The other three declare ${al}.`:`Los otros tres llevan ${al} declarado.` };
     }
   }
@@ -11205,7 +11307,7 @@ function _dqQuestion(dayStr){
       const opts=_dqSample([c.d].concat(others),4,rng);
       return { day:dayStr, type,
         q: en?`Which dish includes “${c.tk}”?`:`¿Qué plato lleva «${c.tk}»?`,
-        opts: opts.map(d=>d.name), correctIdx: opts.indexOf(c.d),
+        opts: opts.map(d=>_nombreUnico(d, d.name)), correctIdx: opts.indexOf(c.d),
         info: en?`“${c.d.name}” (${c.d.cat}).`:`«${c.d.name}» (${c.d.cat}).` };
     }
   }
@@ -15162,6 +15264,9 @@ function showTab(tab, instant){
   if(currentTab==='supervisor' && tab!=='supervisor'){
     if(typeof _supDisconnect==='function') _supDisconnect();
   }
+  // Cambiar de pantalla cierra el simulacro de alérgenos que hubiera en curso:
+  // si no, su estado seguía vivo y el atrás del móvil lo creía abierto.
+  if(typeof allergenTestState!=='undefined' && allergenTestState) allergenTestState=null;
   // Botón atrás del móvil: apila la pestaña (ver _navTab).
   try{ _navTab(tab, instant); }catch(_){}
   track('tab.switch', { to: tab, from: currentTab });
@@ -15285,10 +15390,33 @@ const _NAV_SUB = {
     subir(){ _degIr('viaje'); },
     foto(){ return { v: _degS.vista, p: _degS.pase }; },
     poner(f){ _degS.vista = f.v; _degS.pase = f.p; }
+  },
+  // Simulacro de alérgenos: se pinta encima de la pestaña desde la que se
+  // lanza (Hoy, Practicar o Aprender) sin cambiar de pestaña. Auditoría 9/11:
+  // el atrás del móvil salía de la app. Ahora es un nivel más: atrás hace lo
+  // mismo que la flecha ← (pregunta antes de perder la prueba) y, en la
+  // pantalla de resultados, vuelve sin preguntar.
+  simulacro: {
+    nivel(){ return (typeof allergenTestState !== 'undefined' && allergenTestState && allergenTestState.tab === currentTab) ? 1 : 0; },
+    subir(){ abortAllergenTest(); },
+    foto(){ return null; },
+    poner(){}
+  },
+  // Panel de supervisor: analítica, perfil de un empleado y herramientas se
+  // pintan en la misma pestaña. Atrás deshace una vista (perfil → analítica →
+  // panel) en vez de saltar a Hoy (auditoría 9/11).
+  supervisor: {
+    nivel(){ return (typeof _supVistas !== 'undefined') ? _supVistas.length : 0; },
+    subir(){ _supAtras(); },
+    foto(){ return null; },
+    poner(){}
   }
 };
+const _NAV_SUB_K = { repaso: 'repaso', degustacion: 'degustacion' };
 function _navSubDe(tab){
+  if(typeof allergenTestState !== 'undefined' && allergenTestState && allergenTestState.tab === tab && tab === currentTab) return _NAV_SUB.simulacro;
   if(tab === 'degustacion') return _NAV_SUB.degustacion;
+  if(tab === 'supervisor') return _NAV_SUB.supervisor;
   if(tab === 'repasar') return _NAV_SUB.repasar;
   if(tab === 'repaso' || (_NAV_APRENDER.indexOf(tab) >= 0 && typeof _subTab !== 'undefined' && _subTab.aprender === 'repaso')) return _NAV_SUB.repaso;
   return null;
@@ -15363,7 +15491,11 @@ function _navFoto(){
   const top = _nav.pila[_nav.pila.length - 1]; if(!top) return;
   const s = _navSubDe(top.tab);
   top.nivel = _navNivel(top.tab);
-  try{ top.foto = s ? { k: s === _NAV_SUB.repaso ? 'repaso' : 'degustacion', f: s.foto() } : null; }catch(e){ top.foto = null; }
+  try{
+    const k = s === _NAV_SUB.repaso ? 'repaso' : (s === _NAV_SUB.degustacion ? 'degustacion' : null);
+    const f = (s && k) ? s.foto() : null;
+    top.foto = (k && f) ? { k, f } : null;
+  }catch(e){ top.foto = null; }
 }
 function _navBotonCerrar(ov){
   const bs = ov.querySelectorAll('button,[role="button"]');
@@ -15401,7 +15533,7 @@ function _navAtrasUno(){
     p.pop();
     const prev = p[p.length - 1];
     if(prev.sa && typeof _subTab !== 'undefined') _subTab.aprender = prev.sa;
-    if(prev.foto && _NAV_SUB[prev.foto.k]) _NAV_SUB[prev.foto.k].poner(prev.foto.f);
+    if(prev.foto && prev.foto.f && _NAV_SUB[prev.foto.k]) _NAV_SUB[prev.foto.k].poner(prev.foto.f);
     _nav.volviendo = true;
     try{ showTab(prev.tab); } finally { _nav.volviendo = false; }
     return;
@@ -15487,7 +15619,8 @@ function _ux2Sync(tab){
     let puede = false;
     try{ puede = (typeof _esMando === 'function' && _esMando()) || (typeof _esAdmin === 'function' && _esAdmin())
       || (typeof _esDemo === 'function' && _esDemo()); }catch(_){}   // en la demo, el panel de ejemplo
-    sup.hidden = !(sec === 'equipo' && puede);
+    // Dentro del propio panel la banda sobra (auditoría 9/11).
+    sup.hidden = !(sec === 'equipo' && puede && tab !== 'supervisor');
   }
 }
 
@@ -15810,7 +15943,9 @@ function _fsvTiraHTML(dish, en){
 // alcohol y vegetariano/vegano, con icono y una palabra.
 function _fsvMiniHTML(dish, en){
   const info = _fsvInfo(dish, en);
-  const marcas = _fsvMarcas(info, en).filter(x => x.k === 'pica' || x.k === 'cerdo' || x.k === 'alcohol' || x.k === 'veg');
+  // Sólo lo confirmado por la ficha: lo sugerido por el texto («Pica ?»,
+  // «Vegano ?») no se enseña en la mesa, que no es sitio para dudas (auditoría 9/11).
+  const marcas = _fsvMarcas(info, en).filter(x => !x.sug && (x.k === 'pica' || x.k === 'cerdo' || x.k === 'alcohol' || x.k === 'veg'));
   if(!marcas.length) return '';
   const corto = { pica: en ? 'Spicy' : 'Pica', cerdo: en ? 'Pork' : 'Cerdo', alcohol: en ? 'Alcohol' : 'Alcohol' };
   return '<span class="fsv-mini">' + marcas.map(x => '<span class="fsv-mini-i' + (x.sug ? ' sug' : '') + '"'
@@ -16661,7 +16796,7 @@ function _emplOpen(id, entrada){
   const cerrar="document.getElementById('emplOverlay').remove()";
   const ingRender=dd.ingredients?((typeof _ingPorLineas==='function'&&_ingPorLineas(dd.ingredients))?_bocadosHTML(_ingPorLineas(dd.ingredients)):`<p>${escapeHtml(dd.ingredients)}</p>`):'';
   const mas=[
-    dd.notes?_fpPleg(_en?'Notes':'Notas', dd.notes, `<div class="empl-ov-note">${escapeHtml(dd.notes)}</div>`, 'nota'):'',
+    _notasMostrar(dd.notes)?_fpPleg(_en?'Notes':'Notas', _notasMostrar(dd.notes), `<div class="empl-ov-note">${escapeHtml(_notasMostrar(dd.notes))}</div>`, 'nota'):'',
     (typeof _mesaIdiomaHTML==='function') ? _mesaIdiomaHTML(d, true, _mesaLang) : '',
     dd.ingredients?_fpPleg(_en?'Ingredients':'Ingredientes', dd.ingredients, `<div class="empl-ov-ing">${ingRender}</div>`):'',
     _dishTecHTML(d, true),
@@ -16720,7 +16855,7 @@ async function renderSupPhotoQueue(){
   c.innerHTML=`<div class="sup-wrap">
     <button onclick="renderSupDashboard()" class="btn-secondary" style="width:100%;margin-bottom:.75rem">← ${_en?'Back to panel':'Volver al panel'}</button>
     <div class="sup-hero">
-      <div class="sup-hero-icon">📷</div>
+      <div class="sup-hero-icon">${_ico('camara', 32)}</div>
       <div class="sup-hero-title">${_en?'Dish photos':'Fotos de platos'}</div>
       <div class="sup-hero-sub">${_en?'pending your approval':'pendientes de tu aprobación'}</div>
     </div>
@@ -17351,10 +17486,24 @@ function _padEtiqueta(g){ const x = String((g && g[0]) || ''); return x.charAt(0
 function _padRevisar(texto, claves){ return (claves || []).map(g => _padDicha(texto, g)); }
 // Las claves del plato, limpias: grupos con al menos un texto.
 function _padClaves(dd){
-  if(!dd || !Array.isArray(dd.claves)) return [];
-  return dd.claves
+  if(!dd) return [];
+  const limpia = arr => (arr || [])
     .map(g => (Array.isArray(g) ? g : [g]).filter(x => typeof x === 'string' && x.trim()).map(x => x.trim()))
     .filter(g => g.length);
+  const c = Array.isArray(dd.claves) ? limpia(dd.claves) : [];
+  if(c.length) return c;
+  // Sin ideas clave guardadas pero con descripción: valen las tres ideas de
+  // «Cómo contarlo» (tres) y, si tampoco, las frases de la descripción.
+  // Así todo plato con historia entra en Repasar, Conocer el plato y la
+  // carta en audio, y los tres cuentan lo mismo (auditoría 9/11).
+  if(Array.isArray(dd.tres) && limpia(dd.tres).length) return limpia(dd.tres).slice(0, 3);
+  if(dd.story) return limpia(String(dd.story).split(/(?<=[.!?])\s+/).filter(x => x.trim().length > 8)).slice(0, 3);
+  return [];
+}
+// El conjunto que recorren Repasar toda la carta, Conocer el plato y La carta
+// en audio: todos los platos con descripción (story), menú degustación incluido.
+function _platosConHistoria(lista){
+  return (lista || DISHES || []).filter(d => { const dd = getDish(d); return !!(dd && dd.story && _padClaves(dd).length); });
 }
 function _padSumarDias(dia, n){
   const d = new Date(dia + 'T12:00:00Z');
@@ -17502,7 +17651,7 @@ function _padPlatos(){
   const vistos = new Set();
   if(typeof DEGUSTACION !== 'undefined' && DEGUSTACION) for(const p of DEGUSTACION.pases){ const d = DISHES.find(x => x.id === p.id); if(d){ orden.push(d); vistos.add(d.id); } }
   for(const d of DISHES) if(!vistos.has(d.id)) orden.push(d);
-  const ok = orden.filter(d => { const dd = getDish(d); return dd.story && _padClaves(dd).length; });
+  const ok = _platosConHistoria(orden);
   return ok.filter(d => !getDish(d).story_revisar).concat(ok.filter(d => getDish(d).story_revisar));
 }
 function _padEstado(emp){ return (emp && emp.pad && typeof emp.pad === 'object') ? emp.pad : {}; }
@@ -18146,7 +18295,7 @@ function _padPintar(){
   const claves = _padClaves(dd);
   const cab = `${_degFotoHTML(d.id, dd.name, 'deg-hero pad-hero')}<h2 class="deg-tit pad-nom">${escapeHTML(dd.name)}</h2>`;
   // Mientras hablas o escuchas, la foto se hace pequeña: lo importante es lo de debajo.
-  const mini = `<div class="pad-mini">${_degFotoHTML(d.id, dd.name, 'pad-mini-foto')}<h2 class="deg-tit pad-nom">${escapeHTML(dd.name)}</h2></div>`;
+  const mini = `<div class="pad-mini">${_degFotoHTML(d.id, dd.name, 'pad-mini-foto')}<h2 class="deg-tit pad-nom">${escapeHTML(_nombreUnico(d, dd.name))}</h2></div>`;
   const revisar = dd.story_revisar ? `<div class="deg-revisar">${_en ? 'Pending validation by the chef' : 'Pendiente de validar por el chef'}</div>` : '';
   const p = _padS.paso;
   let h = '';
@@ -18240,12 +18389,12 @@ function _padGuardarHora(h){
 // Por plato, una pantalla con el motor de Un plato al día (_padS, _padGrabar,
 // el plan B sin reconocimiento, el audio privado): foto y nombre, «Contarlo»,
 // lo dicho y lo que falta, «Escucha cómo se cuenta» y «Siguiente plato».
-// Atajos: «Ya me lo sé» (salta y cuenta como dicho bien) y «Escuchar primero»
+// Atajos: «Ya me lo sé» (salta; cuenta como visto, no como contado) y «Escuchar primero»
 // (para el primer contacto).
 //
 // Repaso: el MISMO de Un plato al día (emp.pad, PAD_INTERVALOS). Contado de
-// memoria, igual que allí; «Ya me lo sé» sube escalón pero no apunta día de
-// «dominado» (eso se gana contándolo); después de escucharlo primero, vuelve
+// memoria, igual que allí; «Ya me lo sé» no sube escalón ni apunta día (eso
+// se gana contándolo); después de escucharlo primero, vuelve
 // mañana sin pisar una fecha mejor (como Conocer el plato sin contarlo).
 // Sin XP. La actividad, con el vocabulario de siempre (repaso, carta, practica).
 //
@@ -18332,11 +18481,13 @@ function _rtcRetomar(g, validos){
 }
 // Lo que se guarda en emp.pad. Usa _padProgramar, _cpProgramar y _cpOkDias.
 //   'contado' de memoria: como en Un plato al día.
-//   'sabe'   («Ya me lo sé»): sube escalón, sin apuntar día de dominado.
+//   'sabe'   («Ya me lo sé»): cuenta como visto, no como contado. Nadie lo ha
+//            comprobado, así que ni sube escalón ni apunta el día (Hoy no debe
+//            decir «Contado hoy»; auditoría 9/11): vuelve mañana, salvo que ya
+//            tuviera una fecha mejor.
 //   'apoyo'  (lo escuchó antes): vuelve mañana sin pisar una fecha mejor.
 function _rtcProgramar(prev, modo, todas, hoy, ahora){
-  if(modo === 'apoyo') return _cpProgramar(prev, false, false, hoy, ahora);
-  if(modo === 'sabe'){ const e = _padProgramar(prev, true, hoy, ahora); e.okd = _cpOkDias(prev, null); return e; }
+  if(modo === 'apoyo' || modo === 'sabe') return _cpProgramar(prev, false, false, hoy, ahora);
   const e = _padProgramar(prev, !!todas, hoy, ahora);
   e.okd = _cpOkDias(prev, todas ? hoy : null);
   return e;
@@ -18344,9 +18495,7 @@ function _rtcProgramar(prev, modo, todas, hoy, ahora){
 // ── Repasar toda la carta: lo que depende de la app ──
 
 const _rtcS = { fase: 'elegir', desde: 'practicar', fuente: 'todo', orden: 'carta', ses: null, oido: false, fin: null };
-function _rtcPlatosOk(){
-  return DISHES.filter(d => { const dd = getDish(d); return dd.story && _padClaves(dd).length; });
-}
+function _rtcPlatosOk(){ return _platosConHistoria(DISHES); }
 function _rtcFuentes(){
   const _en = LANG === 'en';
   const deg = (typeof DEGUSTACION !== 'undefined' && DEGUSTACION && Array.isArray(DEGUSTACION.pases)) ? DEGUSTACION.pases.map(p => p.id) : [];
@@ -18633,7 +18782,7 @@ function _rtcPintar(){
   const dd = getDish(d);
   const claves = _padClaves(dd);
   const ultimo = _rtcS.ses.i >= _rtcS.ses.cola.length - 1;
-  const mini = `<div class="pad-mini">${_degFotoHTML(d.id, dd.name, 'pad-mini-foto')}<h2 class="deg-tit pad-nom">${escapeHTML(dd.name)}</h2></div>`;
+  const mini = `<div class="pad-mini">${_degFotoHTML(d.id, dd.name, 'pad-mini-foto')}<h2 class="deg-tit pad-nom">${escapeHTML(_nombreUnico(d, dd.name))}</h2></div>`;
   const revisar = dd.story_revisar ? `<div class="deg-revisar">${_en ? 'Pending validation by the chef' : 'Pendiente de validar por el chef'}</div>` : '';
   const mic = t => `<button type="button" class="pad-mic" onclick="_rtcContar()"><span class="pad-mic-ic" aria-hidden="true"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5.5 11a6.5 6.5 0 0013 0M12 17.5V21"/></svg></span>${t}</button>`;
   const f = _rtcS.fase;
@@ -18664,7 +18813,7 @@ function _rtcPintar(){
         ${_rtcEscucharBtnHTML(d, dd, _en ? 'Listen to how it is told' : 'Escucha cómo se cuenta')}</div>
       ${revisar}
       ${_rtcBocHTML(d, dd)}
-      <button type="button" class="deg-btn pad-grande rtc-sig" onclick="_rtcSiguiente()">${ultimo ? (_en ? 'See the summary' : 'Ver el resumen') : `${_en ? 'Next dish' : 'Siguiente plato'}${sig ? `<span class="rtc-sig-nom">${escapeHTML(getDish(sig).name)}</span>` : ''}`}</button>`;
+      <button type="button" class="deg-btn pad-grande rtc-sig" onclick="_rtcSiguiente()">${ultimo ? (_en ? 'See the summary' : 'Ver el resumen') : `${_en ? 'Next dish' : 'Siguiente plato'}${sig ? `<span class="rtc-sig-nom">${escapeHTML(_nombreUnico(sig))}</span>` : ''}`}</button>`;
   }
   c.innerHTML = `<div class="deg pad rtc rtc-plato">${_rtcMarcadorHTML()}${h}</div>`;
   if(f === 'grabar') _padVivo();
@@ -18691,7 +18840,7 @@ function _caRepetir(){
 let _caEl = null, _caHabla = null;
 function _caFuentes(){
   const _en = LANG === 'en';
-  const con = d => !!getDish(d).story;
+  const con = d => _platosConHistoria([d]).length > 0;   // el mismo conjunto que Repasar y Conocer el plato
   const r = [];
   if(typeof DEGUSTACION !== 'undefined' && DEGUSTACION){
     const ids = DEGUSTACION.pases.map(p => p.id).filter(id => { const d = DISHES.find(x => x.id === id); return d && con(d); });
@@ -18906,7 +19055,7 @@ function _caPintar(){
       <div class="ca-cab" aria-live="polite">
         ${_degFotoHTML(d.id, dd.name, 'pad-mini-foto')}
         <div><div class="ca-pos">${_caS.fin ? (_en ? 'Finished' : 'Terminado') : `${_caS.i + 1} ${_en ? 'of' : 'de'} ${n}`}</div>
-        <h3 class="ca-nom">${escapeHTML(dd.name)}</h3></div>
+        <h3 class="ca-nom">${escapeHTML(_nombreUnico(d, dd.name))}</h3></div>
       </div>
       <p class="ca-story">${escapeHTML(dd.story)}</p>
       ${(() => { const bs = _degBocados(dd); const b = _caS.boc >= 0 ? bs[_caS.boc] : null; return b ? `<p class="ca-boc" aria-live="polite"><span>${_en ? 'Bite' : 'Bocado'} ${_caS.boc + 1} ${_en ? 'of' : 'de'} ${bs.length}</span><b>${escapeHTML(b.n)}</b>${escapeHTML(b.story)}</p>` : ''; })()}
@@ -18923,7 +19072,7 @@ function _caPintar(){
     <p class="ca-nota">${archivos
       ? (_en ? 'It keeps playing with the screen locked. If your phone is connected to the car, it plays through the car speakers and the steering wheel buttons skip dishes.' : 'Sigue sonando con la pantalla bloqueada. Si el móvil está conectado al coche, suena por los altavoces del coche y los botones del volante pasan de plato.')
       : (_en ? 'It uses your phone\'s voice. On most phones it stops when the screen locks, so keep it on.' : 'Usa la voz de tu teléfono. En la mayoría se calla al bloquear la pantalla: déjala encendida.')}</p>
-    <ol class="ca-cola">${_caS.cola.map((id, k) => { const x = DISHES.find(y => y.id === id); if(!x) return ''; return `<li><button type="button" class="${k === _caS.i ? 'on' : ''}" ${k === _caS.i ? 'aria-current="true"' : ''} onclick="_caIrA(${k})"><span class="ca-cola-n">${k + 1}</span>${escapeHTML(getDish(x).name)}</button></li>`; }).join('')}</ol>
+    <ol class="ca-cola">${_caS.cola.map((id, k) => { const x = DISHES.find(y => y.id === id); if(!x) return ''; return `<li><button type="button" class="${k === _caS.i ? 'on' : ''}" ${k === _caS.i ? 'aria-current="true"' : ''} onclick="_caIrA(${k})"><span class="ca-cola-n">${k + 1}</span>${escapeHTML(_nombreUnico(x))}</button></li>`; }).join('')}</ol>
   </div>`;
 }
 // Entrada desde la Carta y desde el Menú degustación.
@@ -20453,7 +20602,7 @@ function _sushiPracticaHTML(g, _en){
                      : escapeHTML(_sushiT(f, 'pista', _en));
   return `<div class="sushi-q">
     <div class="sushi-q-cab"><h3 class="sushi-q-t">${_en ? 'Which fish is it?' : '¿Qué pescado es?'}</h3>
-      ${Q.total ? `<span class="sushi-q-n">${Q.aciertos} ${_en ? 'of' : 'de'} ${Q.total}</span>` : ''}</div>
+      ${Q.total ? `<span class="sushi-q-n">${_en ? `${Q.aciertos} of ${Q.total} right` : `${Q.aciertos} ${Q.aciertos === 1 ? 'acierto' : 'aciertos'} de ${Q.total}`}</span>` : ''}</div>
     ${jp ? `<div class="sushi-q-jp"><span class="sushi-q-jp-l">${_en ? 'On a Japanese menu' : 'En una carta japonesa'}</span>
         <span class="sushi-q-jp-r" lang="ja-Latn">${r}</span>${p.japones_escrito ? `<span class="sushi-q-jp-k" lang="ja">${escapeHTML(p.japones_escrito)}</span>` : ''}</div>`
       : `<div class="sushi-q-muestra">${_sushiMuestraSVG(p, true)}</div>
@@ -20565,7 +20714,7 @@ function renderTecnicas(){
   }
   let html=`<div class="tec-wrap">
     <div class="tec-hero">
-      <div class="tec-hero-ic">${vistaGlo?'📖':'🍳'}</div>
+      <div class="tec-hero-ic">${_ico(vistaGlo?'libro':'sarten', 34)}</div>
       <div>
         <div class="tec-hero-t">${vistaGlo?(_en?'Menu glossary':'Glosario de la carta'):(_en?'Cooking techniques':'Técnicas de cocina')}</div>
         <div class="tec-hero-s">${vistaGlo
@@ -20593,7 +20742,7 @@ function renderTecnicas(){
       const more=dishes.length>8?`<span class="tec-more">+${dishes.length-8}</span>`:'';
       html+=`<div class="tec-card">
         <div class="tec-card-top">
-          <span class="tec-ic">${t.ic||'🍳'}</span>
+          <span class="tec-ic">${t.ic||_ico('sarten', 18)}</span>
           <div class="tec-card-h">${escapeHTML(_en?t.en:t.es)}</div>
         </div>
         <div class="tec-def">${escapeHTML(_en?t.defEn:t.def)}</div>
@@ -26513,7 +26662,7 @@ function flipCard(){
           <div style="text-align:center">${allergensHtml}</div>
         </div>
         ${marcajeHtml}
-        ${dd.notes?`<div style="padding:.55rem .75rem;background:rgba(196,154,60,.05);border-left:2px solid var(--gold-a);border-radius:0 var(--r2) var(--r2) 0;font-size:.68rem;color:var(--parch2);line-height:1.5;text-align:left">${dd.notes}</div>`:''}
+        ${_notasMostrar(dd.notes)?`<div style="padding:.55rem .75rem;background:rgba(196,154,60,.05);border-left:2px solid var(--gold-a);border-radius:0 var(--r2) var(--r2) 0;font-size:.68rem;color:var(--parch2);line-height:1.5;text-align:left">${escapeHTML(_notasMostrar(dd.notes))}</div>`:''}
         <div style="text-align:center;font-family:var(--font-mono);font-size:var(--fs-1);letter-spacing:.1em;color:var(--parch4);padding:.3rem 0 .1rem">↩ ${_en?'tap the card to go back':'toca la tarjeta para volver'}</div>
       </div>
     `;
@@ -28771,7 +28920,7 @@ function renderRepasoTopic(){
     // Lo que se repasa en esta pestaña: los alérgenos (con la nota de cocina,
     // que en muchas cartas es donde se explican), los ingredientes o la historia.
     const extra=topic.key==='allergens'
-      ?`<div class="cp-al">${allergenN===0?`<span class="cp-al-i sin">${escapeHTML(val?t('noAllergens').replace('.',''):_sinAlergenosTxt(t('noAllergens').replace('.',''), LANG==='en'))}</span>`:dd.allergens.map(a=>`<span class="cp-al-i">${escapeHTML(allergenLocal(a))}</span>`).join('')}</div>${dd.notes?`<div class="cp-nota">${escapeHTML(dd.notes)}</div>`:''}`
+      ?`<div class="cp-al">${allergenN===0?`<span class="cp-al-i sin">${escapeHTML(val?t('noAllergens').replace('.',''):_sinAlergenosTxt(t('noAllergens').replace('.',''), LANG==='en'))}</span>`:dd.allergens.map(a=>`<span class="cp-al-i">${escapeHTML(allergenLocal(a))}</span>`).join('')}</div>${_notasMostrar(dd.notes)?`<div class="cp-nota">${escapeHTML(_notasMostrar(dd.notes))}</div>`:''}`
       :`<div class="cp-texto">${escapeHTML(topic.a(d))}</div>`;
     return _cartaFilaHTML(d, emp, extra, `repasoDishId=${d.id};repasoView='dish';renderRepaso()`);
   }).join('');
@@ -28889,7 +29038,8 @@ function renderRepasoDishDetail(dishId){
         _bocados ? _bocadosHTML(_bocados) : `<p>${escapeHTML(_ingTxt)}</p>`)
     : '';
   const histHtml = (dd.history && !_dup) ? _fpPleg(_en?'Story':'Historia', dd.history, `<p>${escapeHTML(dd.history)}</p>`) : '';
-  const notasHtml = dd.notes ? _fpPleg(_en?'Notes':'Notas', dd.notes, `<p>${escapeHTML(dd.notes)}</p>`, 'nota') : '';
+  const _notasTxt = _notasMostrar(dd.notes);
+  const notasHtml = _notasTxt ? _fpPleg(_en?'Notes':'Notas', _notasTxt, `<p>${escapeHTML(_notasTxt)}</p>`, 'nota') : '';
   const marcajeHtml = _marcaje ? _fpPleg(LANG==='en'?'Cutlery marking':'Marcaje', _marcaje, `<p>${escapeHTML(_marcaje)}</p>`) : '';
   const tecHtml = (typeof _dishTecHTML==='function') ? _dishTecHTML(dish, false) : '';
   const masHtml = notasHtml + ingHtml + histHtml + tecHtml + maridajeHtml + marcajeHtml;
@@ -29491,7 +29641,7 @@ function renderVideoAccordion(dishName, videoId) {
     {id:'alg', label:LANG==='en'?'Allergens':'Alérgenos', content:allergens, color:allergenColor},
     {id:'str', label:'Storytelling', content:d.history||(LANG==='en'?'Coming soon':'Próximamente'), color:'#7d5c2f'},
   ];
-  if(d.notes) tabs.push({id:'not', label:LANG==='en'?'Notes':'Notas', content:d.notes, color:'#b06828'});
+  if(_notasMostrar(d.notes)) tabs.push({id:'not', label:LANG==='en'?'Notes':'Notas', content:_notasMostrar(d.notes), color:'#b06828'});
   tabs.push({id:'rec', label:LANG==='en'?'Recipe':'Receta', content:LANG==='en'?'PDF coming soon':'PDF próximamente', color:'var(--parch3)'});
   return '<div style="border:1.5px solid rgba(196,154,60,.1);border-radius:12px;overflow:hidden;margin-top:.1rem">' +
     tabs.map((tab,i) =>
@@ -29580,6 +29730,7 @@ function renderVideoDishInfo(dishName, cat) {
 // instante y re-pinta al llegar Supabase. Reutiliza el estilo .tx-top10.
 function _renderRankingGames(){
   const host=document.getElementById('rankingGames'); if(!host) return;
+  if(typeof _modoTranquilo==='function' && _modoTranquilo()){ host.innerHTML=''; return; }   // modo tranquilo: sin tablones
   const _en=LANG==='en';
   const fmtT=s=>Math.floor(s/60)+':'+String(Math.floor(s%60)).padStart(2,'0');
   const board=(title, rows, scoreOf)=>{
@@ -29592,7 +29743,7 @@ function _renderRankingGames(){
         +'<span class="tx-top10-name'+(me?' me':'')+'">'+escapeHTML(e.employee)+(me?(_en?' (you)':' (tú)'):'')+'</span>'
         +'<span class="tx-top10-score">'+scoreOf(e)+'</span></div>';
     }).join('') : '<div style="text-align:center;font-size:.72rem;color:var(--parch3);padding:.7rem">'+(_en?'No one has played yet':'Nadie ha jugado todavía')+'</div>';
-    return '<div class="tx-top10" style="margin-top:.7rem"><div class="tx-top10-title">★ '+title+'</div>'+inner+'</div>';
+    return '<div class="tx-top10" style="margin-top:.7rem"><div class="tx-top10-title">'+_ico('estrella', 14)+' '+title+'</div>'+inner+'</div>';
   };
   const paint=(shoe, et)=>{
     const h=document.getElementById('rankingGames'); if(!h) return;
@@ -29688,7 +29839,10 @@ function renderRanking(){
 
     const medals = [`<div style="width:28px;height:28px;clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);background:linear-gradient(135deg,var(--gold),#9a7340);display:flex;align-items:center;justify-content:center;color:var(--parchment);font-weight:800;font-size:.75rem;font-family:'Cinzel',serif;box-shadow:0 2px 6px rgba(196,154,60,.3);text-shadow:none">${LANG==='en'?'1st':'1.º'}</div>`,`<div style="width:28px;height:28px;clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);background:linear-gradient(135deg,#e8e8e8,#d0d0d0);display:flex;align-items:center;justify-content:center;color:#2a2a2a;font-weight:800;font-size:.75rem;font-family:'Cinzel',serif;box-shadow:0 2px 6px rgba(200,200,200,.4);text-shadow:none">${LANG==='en'?'2nd':'2.º'}</div>`,`<div style="width:28px;height:28px;clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);background:linear-gradient(135deg,#d4a574,#b8865c);display:flex;align-items:center;justify-content:center;color:#2a2a2a;font-weight:800;font-size:.75rem;font-family:'Cinzel',serif;box-shadow:0 2px 6px rgba(180,140,100,.4);text-shadow:none">${LANG==='en'?'3rd':'3.º'}</div>`];
 
+    // Modo tranquilo: prometía «sin ranking» y Equipo lo enseñaba entero
+    // (auditoría 9/11). Ahora sólo sale mi tarjeta, con el aviso, y nada de liga.
     const rows = sorted.map((emp, i) => {
+      if(_soyTranquilo && emp.name !== currentUser) return '';
       const lvl = getLevelInfo(emp.xp||0);
       const isMe = emp.name === currentUser;
       const act = activityMap[emp.name] || { exams:0, allergen:0, protocol:0, total:0 };
@@ -29717,7 +29871,7 @@ function renderRanking(){
       }
 
       return `<div style="display:flex;align-items:center;gap:.9rem;padding:.9rem 1rem;background:${isMe?'linear-gradient(155deg,rgba(196,154,60,.06),rgba(196,154,60,.02))':'linear-gradient(155deg,#faf6ee,#f0e8d8)'};border:1.5px solid ${isMe?'rgba(196,154,60,.25)':'rgba(196,154,60,.12)'};border-radius:12px;margin-bottom:.55rem;box-shadow:${isMe?'0 0 12px rgba(196,154,60,.08)':'0 2px 8px rgba(28,42,34,.04)'};transition:all .2s">
-        <div style="width:28px;text-align:center;flex-shrink:0">${i<3?medals[i]:`<span style="font-family:var(--font-serif);font-size:var(--fs-3);font-weight:700;color:var(--parch3)">${i+1}</span>`}</div>
+        ${_soyTranquilo ? '' : `<div style="width:28px;text-align:center;flex-shrink:0">${i<3?medals[i]:`<span style="font-family:var(--font-serif);font-size:var(--fs-3);font-weight:700;color:var(--parch3)">${i+1}</span>`}</div>`}
         <div style="width:36px;height:36px;clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);background:${isMe?'linear-gradient(135deg,var(--gold),#9a7340)':i===0?'linear-gradient(135deg,var(--gold),#9a7340)':i===1?'linear-gradient(135deg,#e8e8e8,#d0d0d0)':i===2?'linear-gradient(135deg,#d4a574,#b8865c)':'rgba(196,154,60,.15)'};border:none;display:flex;align-items:center;justify-content:center;font-size:.85rem;color:${i<3||isMe?'#1c2a22':'var(--parch2)'};font-weight:700;flex-shrink:0;overflow:hidden">${renderSmallAvatar(emp.name, 36)}</div>
         <div style="flex:1;min-width:0">
           <div style="font-size:.9rem;font-weight:700;${isMe?'color:var(--gold)':'color:var(--parchment)'}">${escapeHTML(_esDemo()?_dispName(emp.name):emp.name)}${_txCrownFor(emp.name)}${isMe?` <span style="font-size:.6rem;opacity:.6;font-weight:500">${LANG==='en'?'(you)':'(tú)'}</span>`:''}</div>
@@ -29765,9 +29919,9 @@ function renderRanking(){
     _rc.removeAttribute('style');
     _rc.innerHTML = `
       ${_soyPruebas ? `<div class="sup-at-pie" style="text-align:center;margin:0 0 .8rem">${LANG==='en'?'Your account is a test account: it does not appear in the rankings.':'Tu cuenta es de pruebas: no sale en los rankings.'}</div>` : ''}
-      ${_soyTranquilo ? `<div class="sup-at-pie" style="text-align:center;margin:0 0 .8rem">${LANG==='en'?'You have quiet mode on.':'Tienes el modo tranquilo activado.'}</div>` : ''}
-      ${leagueHTML}
-      <div class="tunic-divider"><span>${LANG==='en'?'By total XP':'Por XP total'}</span></div>
+      ${_soyTranquilo ? `<div class="sup-at-pie" style="text-align:center;margin:0 0 .8rem">${LANG==='en'?'You have quiet mode on. You only see your own card, with no ranking or league.':'Tienes el modo tranquilo activado. Solo ves tu tarjeta, sin ranking ni liga.'}</div>` : ''}
+      ${_soyTranquilo ? '' : leagueHTML}
+      ${_soyTranquilo ? '' : `<div class="tunic-divider"><span>${LANG==='en'?'By total XP':'Por XP total'}</span></div>`}
       ${rows}`;
   });
 }
@@ -29776,6 +29930,17 @@ function renderRanking(){
 
 
 
+// Vistas apiladas dentro de la pestaña del panel ('analitica', 'perfil',
+// 'aviso', ...). Vacía = el panel. Las lee el botón atrás (_NAV_SUB.supervisor).
+let _supVistas = [];
+function _supVistaPoner(v){ if(_supVistas[_supVistas.length - 1] !== v) _supVistas.push(v); }
+function _supAtras(){
+  _supVistas.pop();
+  const prev = _supVistas[_supVistas.length - 1];
+  if(prev === 'analitica'){ renderSupAnalytics(window._supAllEmps, window._supEmpNames); return; }
+  _supVistas = [];
+  showTab('supervisor');
+}
 function renderSupervisor(){
   // DEMO: el panel se abre sin PIN con el equipo inventado de Orchilla. Todo
   // sale de la base local de la demo; la red ya está cortada en fetch.
@@ -30032,6 +30197,7 @@ function _supDemoAviso(){
 }
 function _supTool(k){
   if(typeof _esDemo === 'function' && _esDemo() && _SUP_DEMO_ABIERTAS.indexOf(k) < 0){ _supDemoAviso(); return; }
+  if(k !== 'parte' && k !== 'analitica') _supVistaPoner(k);   // el parte es un overlay; la analítica se apunta sola
   try{
     ({ carta: ()=>{ window._fsvFiltro = null; return _fsvSoloFicha() ? renderFsvEditor() : renderCartaEditor(); },
        parte: ()=>_parteEditarAbrir(),
@@ -30129,6 +30295,7 @@ function _supKpiBand(allEmps, activos, inactivos){
 }
 
 function renderSupDashboard(silent){
+  if(!silent) _supVistas = [];
   // «Editar» desde la tarjeta del parte en Inicio: tras el PIN, se abre el editor.
   if(window._parteAbrirTrasPin && !silent){ window._parteAbrirTrasPin = false; setTimeout(()=>{ try{ _parteEditarAbrir(); }catch(_){} }, 50); }
   if(!silent) document.getElementById('appContent').innerHTML=`
@@ -30431,7 +30598,7 @@ function renderSupDashboard(silent){
               <span style="font-size:.72rem;font-weight:600;color:var(--parchment)">${LANG==='en'?'Send alert':'Enviar aviso'}</span>
             </button>
             <button onclick="_supTool('fotos')" style="display:flex;align-items:center;gap:.65rem;padding:.75rem .85rem;background:linear-gradient(155deg,#faf6ee,#f0e8d8);border:1.5px solid rgba(196,154,60,.12);border-left:3px solid #b8860b;border-radius:12px;font-family:'Quicksand',sans-serif;cursor:pointer;transition:all .2s;position:relative;overflow:hidden">
-              <span style="font-size:1.05rem">📷</span>
+              <span style="color:var(--gold-deep)">${_ico('camara', 20)}</span>
               <span style="flex:1;text-align:left;font-size:.78rem;font-weight:600;color:var(--parchment)">${LANG==='en'?'Dish photos':'Fotos de platos'}<br><span style="font-size:.6rem;font-weight:400;color:var(--parch3)">${LANG==='en'?'approve team submissions':'aprobar fotos del equipo'}</span></span>
               <span style="color:var(--parch4)">›</span>
             </button>
@@ -30448,11 +30615,11 @@ function renderSupDashboard(silent){
                  código y deja a un equipo sin poder registrarse no puede estar
                  escondido entre las estadísticas. -->
             <button onclick="_supTool('codigo')" style="display:flex;align-items:center;gap:.65rem;padding:.75rem .85rem;background:linear-gradient(155deg,#faf6ee,#f0e8d8);border:1.5px solid rgba(196,154,60,.12);border-left:3px solid #c49a3c;border-radius:12px;font-family:'Quicksand',sans-serif;cursor:pointer;transition:all .2s;position:relative;overflow:hidden">
-              <span style="font-size:1.05rem">🔑</span>
+              <span style="color:var(--gold-deep)">${_ico('llave', 20)}</span>
               <span style="flex:1;text-align:left;font-size:.72rem;font-weight:600;color:var(--parchment)">${LANG==='en'?'Access code':'Código de acceso'}<br><span style="font-size:.58rem;font-weight:400;color:var(--parch3)">${LANG==='en'?'who can register':'quién puede registrarse'}</span></span>
             </button>
             <button onclick="_supTool('cuentas')" style="display:flex;align-items:center;gap:.65rem;padding:.75rem .85rem;background:linear-gradient(155deg,#faf6ee,#f0e8d8);border:1.5px solid rgba(196,154,60,.12);border-left:3px solid #7c6fa8;border-radius:12px;font-family:'Quicksand',sans-serif;cursor:pointer;transition:all .2s;position:relative;overflow:hidden">
-              <span style="font-size:1.05rem">🛠</span>
+              <span style="color:var(--gold-deep)">${_ico('herramientas', 20)}</span>
               <span style="flex:1;text-align:left;font-size:.72rem;font-weight:600;color:var(--parchment)">${LANG==='en'?'Accounts':'Cuentas'}<br><span style="font-size:.58rem;font-weight:400;color:var(--parch3)">${LANG==='en'?'managers and PIN':'managers y PIN'}</span></span>
             </button>
             <button onclick="renderSupDeleteEmployee(window._supTodos||_supEmpNames)" style="display:flex;align-items:center;gap:.65rem;padding:.75rem .85rem;background:linear-gradient(155deg,rgba(196,112,104,.04),rgba(196,112,104,.01));border:1.5px solid rgba(196,112,104,.2);border-left:3px solid #c47068;border-radius:12px;font-family:'Quicksand',sans-serif;cursor:pointer;transition:all .2s;position:relative;overflow:hidden">
@@ -30572,14 +30739,14 @@ function buildAllergenQuestions(cat) {
     'Serve it while informing the guest that some risk remains',
     'Remove the ingredient at the table before serving',
     'It is safe if the kitchen cleans the grill and utensils first',
-    'Serve it — small amounts do not trigger a reaction',
+    'Serve it: small amounts do not trigger a reaction',
     'Offer the same dish without the garnish to avoid the allergen',
     'Ask the guest to double-check with their doctor before ordering'
   ] : [
     'Servirlo informando al huésped de que existe algo de riesgo',
     'Retirar el ingrediente en sala antes de llevarlo a la mesa',
     'Es seguro si cocina limpia la plancha y los utensilios primero',
-    'Servirlo — en cantidades pequeñas no provoca reacción',
+    'Servirlo: en cantidades pequeñas no provoca reacción',
     'Ofrecer el mismo plato sin la guarnición para evitar el alérgeno',
     'Pedir al huésped que lo confirme con su médico antes de comandar'
   ];
@@ -30589,7 +30756,7 @@ function buildAllergenQuestions(cat) {
     const allergens = dish.allergens || [];
     if (!allergens.length) continue;
 
-    const dishDisplay = LANG === 'en' ? (DISHES_EN.find(x=>x.id===dish.id)?.name || dish.name) : dish.name;
+    const dishDisplay = _nombreUnico(dish, LANG === 'en' ? (DISHES_EN.find(x=>x.id===dish.id)?.name || dish.name) : dish.name);
     // FASE 4 — un ~30% de las preguntas son de PROCEDENCIA, reutilizando los
     // mismos builders del Repaso Inteligente (DISH_COMPONENTS, filtro
     // anti-obviedad, distractores verificados). Mismo generador, misma
@@ -30692,15 +30859,18 @@ function buildAllergenQuestions(cat) {
     const _instr = (state === 'adapt')
       ? (_instrReal || _ownComandas[0] || _instrFake)
       : _instrFake;
+    // Frases sin rayas y con el alérgeno concordado («los huevos forman
+    // parte de la base», «no contiene sésamo»), auditoría 9/11.
+    const _af = _alFrase(declaredAllergen, LANG === 'en');
     const optServe = LANG === 'en'
-      ? `Serve it as is — this dish does not contain ${enAllergen}.`
-      : `Se puede servir tal cual — este plato no contiene ${declaredAllergen}.`;
+      ? `Serve it as is: this dish does not contain ${_af.con}.`
+      : `Se puede servir tal cual: este plato no contiene ${_af.con}.`;
     const optAdapt = LANG === 'en'
-      ? `Adapt it — send the order to the kitchen: ${_instr}.`
-      : `Se puede adaptar — comandar ${_instr}.`;
+      ? `Adapt it: send the order to the kitchen, ${_instr}.`
+      : `Se puede adaptar: comandar ${_instr}.`;
     const optBlock = LANG === 'en'
-      ? `It cannot be served — ${enAllergen} is part of the dish's base.`
-      : `No se puede servir — el ${declaredAllergen} forma parte de la base del plato.`;
+      ? `It cannot be served: ${_af.el} ${_af.verbo} part of the dish's base.`
+      : `No se puede servir: ${_af.el} ${_af.verbo} parte de la base del plato.`;
     const trap = _trapBank[Math.floor(Math.random() * _trapBank.length)];
     const correct = state === 'absent' ? optServe : state === 'adapt' ? optAdapt : optBlock;
     const choices = _lqaShuffle([optServe, optAdapt, optBlock, trap]);
@@ -30708,8 +30878,8 @@ function buildAllergenQuestions(cat) {
     questions.push({
       dish, dishDisplay, declaredAllergen, enAllergen,
       situation: LANG === 'en'
-        ? `A guest declares a ${enAllergen} allergy. They want to order "${dishDisplay}". What do you do?`
-        : `Un huésped declara alergia a ${declaredAllergen}. Quiere pedir "${dishDisplay}". ¿Qué haces?`,
+        ? `A guest declares an allergy to ${_af.a}. They want to order "${dishDisplay}". What do you do?`
+        : `Un huésped declara alergia ${_af.a}. Quiere pedir "${dishDisplay}". ¿Qué haces?`,
       correct, choices,
       correctIdx: choices.indexOf(correct),
       color: getCatColor(dish.cat),
@@ -30736,10 +30906,13 @@ function startAllergenTest(cat) {
 // Salida del simulacro (auditoría de botones jul 2026: misma queja que el
 // examen — no había forma de volver atrás).
 function abortAllergenTest(){
-  if(!confirm(LANG==='en'?'Exit the drill? Progress in this session will be lost.':'¿Salir del simulacro? Se perderá el progreso de esta sesión.')) return;
-  const _tab = allergenTestState && allergenTestState.tab;
+  const _st = allergenTestState;
+  const _enCurso = _st && _st.index < _st.questions.length;   // en resultados no hay nada que perder
+  if(_enCurso && !confirm(LANG==='en'?'Exit the drill? Progress in this session will be lost.':'¿Salir del simulacro? Se perderá el progreso de esta sesión.')) return;
+  const _tab = _st && _st.tab;
   allergenTestState=null;
   if(_tab === 'aprender'){ _subTab.aprender='smart'; showTab('aprender'); }
+  else if(_tab && _tab !== 'exam' && TAB_ROUTES.includes(_tab)) showTab(_tab);   // vuelve a donde se lanzó (Hoy, Practicar)
   else renderExam();
 }
 
@@ -30827,6 +31000,8 @@ function renderAllergenResults() {
     saveDB();
   }
   track('drill.finish', { score, total: questions.length, ms: (time|0)*1000, pct });
+  const _tabL = allergenTestState.tab;
+  const _volverA = _tabL === 'dashboard' ? (LANG==='en'?'Back to Today':'Volver a Hoy') : _tabL === 'practicar' ? (LANG==='en'?'Back to Practice':'Volver a Practicar') : (LANG==='en'?'Back to Learn':'Volver a Aprender');
   document.getElementById('appContent').innerHTML = `<div class="sup-wrap">
     <div style="text-align:center;padding:2rem 1rem">
       <div style="font-size:3rem;margin-bottom:.5rem">${pct>=80?`<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>`:pct>=50?`<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle"><polygon points="12,2 20,7 20,17 12,22 4,17 4,7" fill="#c47068"/><polygon points="12,22 20,17 20,7 12,12" fill="#a85848" opacity=".4"/><path d="M12 8v4M12 14v.5" stroke="#fff" stroke-width="1.5" stroke-linecap="round"/></svg>`:`<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle"><polygon points="12,2 20,7 20,17 12,22 4,17 4,7" fill="#4d8a5e"/><polygon points="12,22 20,17 20,7 12,12" fill="#2d6a3e" opacity=".4"/><circle cx="12" cy="9" r="1" fill="#fff"/><path d="M12 12v4" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/></svg>`}</div>
@@ -30837,7 +31012,7 @@ function renderAllergenResults() {
       <div style="font-family:var(--font-mono);font-size:var(--fs-3);color:var(--parch3);margin-bottom:.5rem">${score}/${questions.length} · ${Math.floor(time/60)}m ${time%60}s</div>
       ${pct < 80 ? `<div style="background:rgba(196,112,104,.08);border:1px solid rgba(196,112,104,.2);border-radius:var(--r2);padding:.75rem;margin-bottom:1rem;font-size:.78rem;color:var(--rose)">⚠ ${LANG==='en'?'Review the allergens section before service':'Repasa la sección de alérgenos antes del servicio'}</div>` : ''}
       <button class="btn-primary" onclick="startAllergenTest('${cat||''}')" style="width:100%;margin-bottom:.5rem">${LANG==='en'?'New test':'Nuevo test'}</button>
-      <button onclick="_subTab.aprender='smart';showTab('aprender')" style="width:100%;padding:.65rem;background:transparent;border:1.5px solid rgba(196,154,60,.55);border-radius:var(--r2);font-family:var(--font-sans);font-size:var(--fs-3);color:var(--gold-deep);cursor:pointer">← ${LANG==='en'?'Back to Learn':'Volver a Aprender'}</button>
+      <button onclick="abortAllergenTest()" style="width:100%;padding:.65rem;background:transparent;border:1.5px solid rgba(196,154,60,.55);border-radius:var(--r2);font-family:var(--font-sans);font-size:var(--fs-3);color:var(--gold-deep);cursor:pointer">← ${_volverA}</button>
     </div>
   </div>`;
   checkNewAchievements();
@@ -31104,10 +31279,10 @@ function _supAtencion(allEmps, empNames, hist){
       }
     } else if(est === 'ambar'){
       ambar.push({ n, p, motivo: (p.nota != null && p.nota < _SUP_APROBADO)
-        ? (_en ? `average ${p.nota}% — below ${_SUP_APROBADO}%` : `media del ${p.nota}% — por debajo del ${_SUP_APROBADO}%`)
+        ? (_en ? `average ${p.nota}%, below ${_SUP_APROBADO}%` : `media del ${p.nota}%, por debajo del ${_SUP_APROBADO}%`)
         : (_en ? `dropping (${p.tendencia} points)` : `bajando (${p.tendencia} puntos)`) });
     } else if(p.nota != null && mediaEquipo != null && p.nota > mediaEquipo){
-      verde.push({ n, p, motivo: _en ? `${p.nota}% — above the team average` : `${p.nota}% — por encima de la media` });
+      verde.push({ n, p, motivo: _en ? `${p.nota}%, above the team average` : `${p.nota}%, por encima de la media` });
     }
   }
   const orden = (a,b) => (a.p.nota??0) - (b.p.nota??0);
@@ -31135,9 +31310,9 @@ function renderSupAtencionHTML(allEmps, empNames, hist){
   return `<div class="sup-card">
     <div class="sup-card-t">${_en?'Who needs me this week':'Quién necesita mi atención esta semana'}</div>
     ${nada ? `<div class="sup-vacio">${_en?'Nothing to flag — the whole team is on track.':'Nada que señalar: todo el equipo va en hora.'}</div>` : `
-      ${grupo(a.rojo,  '🔴', _en?'need chasing'      :'hay que buscarles')}
-      ${grupo(a.ambar, '🟡', _en?'below where they should be':'por debajo de donde deberían')}
-      ${grupo(a.verde, '🟢', _en?'above the average'  :'por encima de la media')}
+      ${grupo(a.rojo,  _icoPunto('rojo'), _en?'need chasing'      :'hay que buscarles')}
+      ${grupo(a.ambar, _icoPunto('ambar'), _en?'below where they should be':'por debajo de donde deberían')}
+      ${grupo(a.verde, _icoPunto('verde'), _en?'above the average'  :'por encima de la media')}
       <div class="sup-at-pie">${_en
         ? `Tap anyone to open their development profile. The bar is ${_SUP_APROBADO}%.`
         : `Toca a cualquiera para abrir su perfil de desarrollo. El listón es el ${_SUP_APROBADO}%.`}</div>`}
@@ -31173,7 +31348,7 @@ function renderSupTablaHTML(allEmps, empNames, hist, inactivos){
   // Los inactivos (más de 60 días sin entrar) van al final, en gris y tras
   // una fila de separación: siguen en la tabla, pero no se mezclan.
   const filasInact = inactivos.map(_fila).sort((a,b) => (a.d ?? 1e9) - (b.d ?? 1e9));
-  const punto = { rojo:'🔴', ambar:'🟡', verde:'🟢' };
+  const punto = { rojo:_icoPunto('rojo'), ambar:_icoPunto('ambar'), verde:_icoPunto('verde') };
   const nd = v => v == null ? '—' : v;
   const col = pct => pct == null ? 'var(--parch4)' : pct >= _SUP_APROBADO ? 'var(--sage)' : pct >= 50 ? 'var(--gold)' : 'var(--rose)';
   const total = (typeof DISHES !== 'undefined' && DISHES.length) ? DISHES.length : 0;
@@ -31308,6 +31483,8 @@ function _supDemoNotaHTML(){
 
 function renderSupAnalytics(allEmps, empNames){
   const c = document.getElementById('appContent');
+  if(_supVistas[_supVistas.length - 1] === 'perfil') _supVistas.pop();
+  _supVistaPoner('analitica');
   // Misma puerta que el panel: sin administración ni pruebas, y las medias
   // sólo con los activos. Los inactivos (60+ días sin entrar) van aparte.
   allEmps = allEmps || {};
@@ -31410,12 +31587,12 @@ function renderSupAnalytics(allEmps, empNames){
   const resumenSection = `
     <div style="background:linear-gradient(155deg,#faf6ee,#f0e8d8);border:1px solid var(--line);border-radius:var(--r);padding:1rem;margin-bottom:.75rem">
       <div style="display:flex;align-items:center;gap:.5rem;margin-bottom:.55rem">
-        <div style="font-family:var(--font-mono);font-size:var(--fs-1);color:var(--gold);letter-spacing:.12em;text-transform:uppercase;flex:1">📣 ${LANG==='en'?'Weekly summary — share with the team':'Resumen semanal — para compartir con el equipo'}</div>
+        <div style="font-family:var(--font-mono);font-size:var(--fs-1);color:var(--gold);letter-spacing:.12em;text-transform:uppercase;flex:1">${_ico('megafono', 14)} ${LANG==='en'?'Weekly summary, to share with the team':'Resumen semanal, para compartir con el equipo'}</div>
         ${_resBtn('cur',LANG==='en'?'This week':'Esta semana')}${_resBtn('prev',LANG==='en'?'Last week':'Semana pasada')}
       </div>
       <div style="white-space:pre-wrap;background:rgba(255,255,255,.55);border:1px dashed rgba(140,110,60,.35);border-radius:10px;padding:.65rem .8rem;font-family:var(--font-sans);font-size:var(--fs-3);line-height:1.55;color:var(--brand-ink);margin-bottom:.6rem">${escapeHTML(_resTxt)}</div>
       <div style="display:flex;gap:.5rem">
-        <button type="button" class="btn-primary" style="flex:1;padding:.6rem;font-size:.78rem" onclick="navigator.clipboard&&navigator.clipboard.writeText(window._supResText);showToast('${LANG==='en'?'Summary copied':'Resumen copiado'}','success',1800)">📋 ${LANG==='en'?'Copy':'Copiar'}</button>
+        <button type="button" class="btn-primary" style="flex:1;padding:.6rem;font-size:.78rem" onclick="navigator.clipboard&&navigator.clipboard.writeText(window._supResText);showToast('${LANG==='en'?'Summary copied':'Resumen copiado'}','success',1800)">${_ico('portapapeles', 14)} ${LANG==='en'?'Copy':'Copiar'}</button>
         <button type="button" style="flex:1;padding:.6rem;background:#1faa55;border:none;border-radius:var(--r2);font-family:var(--font-sans);font-size:var(--fs-3);font-weight:700;color:#fff;cursor:pointer" onclick="window.open('https://wa.me/?text='+encodeURIComponent(window._supResText),'_blank','noopener')">WhatsApp</button>
       </div>
     </div>`;
@@ -31679,12 +31856,12 @@ function renderSupAnalytics(allEmps, empNames){
       ${_exM.ok ? `<div class="sup-hl-pill ${exAcc>=80?'good':exAcc>=50?'warn':'bad'}"><b>${exAcc}%</b><span>${_en2?'exam accuracy':'precisión exámenes'}</span></div>` : _sdPill(_exM.n, _en2?'exam accuracy':'precisión exámenes')}
       ${_rdyM.ok ? `<div class="sup-hl-pill ${_rdy>=75?'good':_rdy>=55?'warn':'bad'}"><b>${_rdy}%</b><span>${_en2?'LQA readiness':'preparación LQA'}</span></div>` : _sdPill(_rdyN, _en2?'LQA readiness':'preparación LQA')}
     </div>
-    ${_acc('alg','⚠️',_en2?'Allergens — safety':'Alérgenos — seguridad', `${_riskN} ${_en2?'at risk':'en riesgo'}${allergenUntrained.length?` · ${allergenUntrained.length} ${_en2?'untrained':'sin entrenar'}`:''}`, _algBody)}
-    ${_acc('res','📣',_en2?'Weekly summary':'Resumen semanal', _en2?'ready for WhatsApp':'listo para WhatsApp', resumenSection)}
-    ${_acc('act','📈',_en2?'Activity':'Actividad', `${_inact.length} ${_en2?'inactive':'sin actividad'}${_inactivos60.length?` · ${_inactivos60.length} ${_en2?'60+d':'60+d'}`:''}`, renderSupActivityHeatmap(empNames.map(n=>allEmps[n]))+renderSupScoreTrend(empNames.map(n=>allEmps[n]))+_inactHTML+_supInactivosHTML(allEmps, _inactivos60))}
+    ${_acc('alg',_ico('alerta', 18),_en2?'Allergens, safety':'Alérgenos, seguridad', `${_riskN} ${_en2?'at risk':'en riesgo'}${allergenUntrained.length?` · ${allergenUntrained.length} ${_en2?'untrained':'sin entrenar'}`:''}`, _algBody)}
+    ${_acc('res',_ico('megafono', 18),_en2?'Weekly summary':'Resumen semanal', _en2?'ready for WhatsApp':'listo para WhatsApp', resumenSection)}
+    ${_acc('act',_ico('grafico', 18),_en2?'Activity':'Actividad', `${_inact.length} ${_en2?'inactive':'sin actividad'}${_inactivos60.length?` · ${_inactivos60.length} ${_en2?'60+d':'60+d'}`:''}`, renderSupActivityHeatmap(empNames.map(n=>allEmps[n]))+renderSupScoreTrend(empNames.map(n=>allEmps[n]))+_inactHTML+_supInactivosHTML(allEmps, _inactivos60))}
     ${_acc('pase','◎',_en2?'Plating pass':'Pase de cocina', _psTot?`${_psTot} ${_en2?'passes':'pases'} · ${_psSeguro}% ${_en2?'safe':'seguros'}`:(_en2?'not played yet':'aún sin jugar'), paseSection)}
-    ${_acc('perf','🎯',_en2?'Performance':'Rendimiento', exN?`${exN} ${_en2?'exams':'exámenes'} · ${exAcc}%`:(_en2?'no exams yet':'aún sin exámenes'), _perfBody)}
-    ${_acc('dish','🧩',_en2?'Hardest dishes':'Platos difíciles', hardest.length?`${hardest.length} ${_en2?'to review':'a repasar'}`:'', _dishBody)}
+    ${_acc('perf',_ico('diana', 18),_en2?'Performance':'Rendimiento', exN?`${exN} ${_en2?'exams':'exámenes'} · ${exAcc}%`:(_en2?'no exams yet':'aún sin exámenes'), _perfBody)}
+    ${_acc('dish',_ico('pieza', 18),_en2?'Hardest dishes':'Platos difíciles', hardest.length?`${hardest.length} ${_en2?'to review':'a repasar'}`:'', _dishBody)}
   </div>`;
 }
 // El código de acceso y las cuentas ya NO viven aquí: Análisis es para MIRAR y
@@ -32218,15 +32395,15 @@ function renderSupLqaStats(allEmps, empNames){
     </div>` : ''}
 
     <div style="background:linear-gradient(155deg,#faf6ee,#f0e8d8);border:1px solid var(--line2);border-radius:var(--r);padding:1rem;margin-bottom:1rem">
-      <div style="font-family:var(--font-mono);font-size:var(--fs-1);color:var(--parch3);letter-spacing:.12em;text-transform:uppercase;margin-bottom:.35rem">🏆 ${LANG==='en'?'Readiness Ranking':'Ranking de Preparación'}</div>
+      <div style="font-family:var(--font-mono);font-size:var(--fs-1);color:var(--parch3);letter-spacing:.12em;text-transform:uppercase;margin-bottom:.35rem">${_ico('trofeo', 14)} ${LANG==='en'?'Readiness Ranking':'Ranking de Preparación'}</div>
       ${readiness.length?`<div style="font-family:var(--font-mono);font-size:var(--fs-1);color:var(--parch4);margin-bottom:.6rem">${LANG==='en'?'E=Exam · S=Situations · P=Would pass? · A=Audit':'E=Examen · S=Situaciones · P=¿Pasaría? · A=Auditoría'}</div>`:''}
       ${readiness.length===0
         ? `<div style="font-size:.8rem;color:var(--parch4);font-style:italic;text-align:center;padding:1rem 0">${LANG==='en'?'No LQA activity yet.':'Sin actividad LQA aún.'}</div>`
         : readiness.map((r,i)=>{
             const col=_lqaRank[_lqaCut(r.score)];
-            const medal=i===0?'🥇':i===1?'🥈':i===2?'🥉':'';
+            const medal=_icoMedalla(i, 20);
             return `<div onclick="renderSupEmployee(this.dataset.emp)" data-emp="${escapeHTML(r.name)}" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click()}" style="display:flex;align-items:center;gap:.6rem;padding:.55rem 0;border-bottom:1px solid rgba(196,154,60,.08);cursor:pointer">
-              <span style="font-family:var(--font-mono);font-size:var(--fs-2);color:var(--parch4);width:20px">${medal||(i+1)}</span>
+              <span style="font-family:var(--font-mono);font-size:var(--fs-2);color:var(--parch4);width:22px;text-align:center">${medal}</span>
               <div style="width:28px;height:28px;border-radius:50%;overflow:hidden;flex-shrink:0">${renderSmallAvatar(r.name, 28)}</div>
               <div style="flex:1;min-width:0">
                 <div style="font-size:.82rem;color:var(--parchment);font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${r.name} <span style="color:var(--gold);font-size:.7rem">›</span></div>
@@ -32251,7 +32428,7 @@ function renderSupLqaStats(allEmps, empNames){
     ${_supInactivosHTML(allEmps, _inactivos60)}
 
     <div style="background:linear-gradient(155deg,#faf6ee,#f0e8d8);border:1px solid var(--line2);border-radius:var(--r);padding:1rem;margin-bottom:1rem">
-      <div style="font-family:var(--font-mono);font-size:var(--fs-1);color:var(--parch3);letter-spacing:.12em;text-transform:uppercase;margin-bottom:.6rem">📊 ${LANG==='en'?'What the Readiness Index means':'Qué significa el Índice'}</div>
+      <div style="font-family:var(--font-mono);font-size:var(--fs-1);color:var(--parch3);letter-spacing:.12em;text-transform:uppercase;margin-bottom:.6rem">${_ico('grafico', 14)} ${LANG==='en'?'What the Readiness Index means':'Qué significa el Índice'}</div>
       <div style="font-size:.78rem;color:var(--parch2);line-height:1.6">${LANG==='en'?'A weighted average of all LQA training modes. the Audit weighs most (×2) because it mirrors a real audit; Would-It-Pass weighs ×1.5; Exam and Situations ×1. Above 75% = audit-ready. Below 55% = needs reinforcement.':'Media ponderada de todos los modos de entrenamiento LQA. La Auditoría pesa más (×2) porque refleja una auditoría real; ¿Pasaría? pesa ×1.5; Examen y Situaciones ×1. Por encima del 75% = listo para auditoría. Por debajo del 55% = necesita refuerzo.'}</div>
     </div>
   </div>`;
@@ -32341,6 +32518,7 @@ function renderSupEmployee(name){
   const e = allEmps[name];
   const c = document.getElementById('appContent');
   if(!e){ if(typeof renderSupAnalytics==='function') renderSupAnalytics(allEmps, window._supEmpNames||Object.keys(allEmps)); return; }
+  _supVistaPoner('perfil');
   const _en = LANG==='en';
   const lvl = getLevelInfo(e.xp||0);
   const certs = (typeof getCertifications==='function') ? getCertifications(e) : [];
@@ -32392,7 +32570,7 @@ function renderSupEmployee(name){
 
   c.innerHTML=`<div class="sup-wrap">
     <div style="display:flex;align-items:center;gap:.75rem;margin-bottom:1rem">
-      <button onclick="renderSupAnalytics(window._supAllEmps, window._supEmpNames)" aria-label="${_en?'Back':'Volver'}" style="background:transparent;border:1.5px solid rgba(196,154,60,.55);border-radius:var(--r2);padding:.4rem .8rem;font-size:.75rem;color:var(--gold-deep);font-weight:700;cursor:pointer">←</button>
+      <button onclick="_supAtras()" aria-label="${_en?'Back':'Volver'}" style="background:transparent;border:1.5px solid rgba(196,154,60,.55);border-radius:var(--r2);padding:.4rem .8rem;font-size:.75rem;color:var(--gold-deep);font-weight:700;cursor:pointer">←</button>
       <div style="font-family:'Cinzel',serif;font-size:1.15rem;color:var(--parchment)">${_en?`${escapeHTML(_dispName(name))}’s development`:`Perfil de desarrollo de ${escapeHTML(_dispName(name))}`}</div>
     </div>
 
