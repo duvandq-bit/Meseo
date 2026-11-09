@@ -1,6 +1,37 @@
 {
- "updated": "2026-11-08T21:12:37.433Z",
+ "updated": "2026-11-09T02:42:17.866Z",
  "items": [
+  {
+   "t": "Royal Hideaway Corales Resort, elegido mejor hotel gastronómico de España en los Premios THELOBBY 2026",
+   "u": "https://gastrocanarias.com/art/22853/royal-hideaway-corales-resort-elegido-mejor-hotel-gastronomico-de-espana-en-los-premios-thelobby-2026",
+   "s": "Gastrocanarias",
+   "d": "2026-11-08T21:01:51.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://gastrocanarias.com/upload/images/11_2026/7163_thelobby_escenario_horizontal_1800x1200.jpeg"
+  },
+  {
+   "t": "Canarias reclama una estrategia regional de enoturismo liderada por las empresas del sector",
+   "u": "https://www.vinetur.com/es/20261108110626/canarias-reclama-una-estrategia-regional-de-enoturismo-liderada-por-las-empresas-del-sector.html",
+   "s": "Vinetur",
+   "d": "2026-11-08T20:40:05.000Z",
+   "tags": [
+    "VINO",
+    "CANARIAS"
+   ],
+   "img": "https://www.vinetur.com/visuals/2026/november/8/agent-20261108-143712-f0357724c7718ed0.jpg"
+  },
+  {
+   "t": "Gran éxito de la feria gastronómica Saborea El Rosario",
+   "u": "https://www.soldelsurtenerife.com/el-rosario/gran-exito-feria-gastronomica-saborea-rosario/20261108194920111591.amp.html",
+   "s": "sol del sur tenerife",
+   "d": "2026-11-08T19:49:00.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://www.soldelsurtenerife.com/media/soldetenerifesur/images/2026/11/08/2026110819474063619.jpg"
+  },
   {
    "t": "Quinta victoria de La Laguna Tenerife",
    "u": "https://www.eldiario.es/canariasahora/deportes/baloncesto/quinta-victoria-laguna-tenerife_1_13648097.html",
@@ -31,16 +62,6 @@
     "CANARIAS"
    ],
    "img": "https://www.teneriffa-news.com/media/t/termine-veranstaltungen-kalender-teneriffa-kanaren-1920x1080.jpg"
-  },
-  {
-   "t": "Royal Hideaway Corales Resort, elegido mejor hotel gastronómico de España en los Premios THELOBBY 2026",
-   "u": "https://gastrocanarias.com/art/22853/royal-hideaway-corales-resort-elegido-mejor-hotel-gastronomico-de-espana-en-los-premios-thelobby-2026",
-   "s": "Gastrocanarias",
-   "d": "2026-11-08T15:22:08.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://gastrocanarias.com/upload/images/11_2026/7163_thelobby_escenario_horizontal_1800x1200.jpeg"
   },
   {
    "t": "Martín Berasategui, cocinero español: \"El homenaje que falta por hacer en la cocina española es a las amas de casa. Yo les pondría un monumento en cada calle\"",
@@ -119,8 +140,7 @@
    "d": "2026-11-08T04:25:00.000Z",
    "tags": [
     "CANARIAS"
-   ],
-   "img": "https://imagenes.elpais.com/resizer/v2/FIO3Z2J4VZCNLFE73MRVOSK4DQ.jpg?auth=c5d20d8a4f39c500a58ad9171ed9795f71ef12acab602f771d7ae735436956d0&width=1200"
+   ]
   },
   {
    "t": "Restaurante asador junto a la A-1 reconocido por la Guía Michelin por su excelente parrilla de carne en España",
@@ -140,6 +160,16 @@
    "tags": [
     "CANARIAS"
    ]
+  },
+  {
+   "t": "Trabajada victoria del Santa Cruz ADEIN Tenerife Fundación CB Canarias en Puertollano",
+   "u": "https://www.eldiario.es/canariasahora/deportes/baloncesto/trabajada-victoria-santa-cruz-adein-tenerife-fundacion-cb-canarias-puertollano_1_13647234.html",
+   "s": "elDiario.es",
+   "d": "2026-11-07T20:10:02.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://static.eldiario.es/clip/0f8efe7e-4652-4173-9547-13de6b6c3bfb_facebook-aspect-ratio-1200-675_default_0.jpg"
   },
   {
    "t": "Millesime GNP 2026 presenta “Sounds”: la alta cocina se convierte en discográfica en su XIV edición",
@@ -188,8 +218,7 @@
    "d": "2026-11-07T14:08:04.000Z",
    "tags": [
     "CHEF"
-   ],
-   "img": "https://www.noticiasdelvino.com/wp-content/uploads/image-583.png.webp"
+   ]
   },
   {
    "t": "Garachico lleva sus innovadores embutidos de pescado al Gastronomic Forum de Barcelona",
@@ -237,8 +266,7 @@
    "d": "2026-11-06T15:32:38.000Z",
    "tags": [
     "CANARIAS"
-   ],
-   "img": "https://theshowroommag.com/wp-content/uploads/2026/11/Captura-de-Pantalla-2026-11-06-a-las-14.28.07.png"
+   ]
   },
   {
    "t": "Siete estrellas Michelin regresan a Tenerife para una cena irrepetible en The Ritz-Carlton Abama",
@@ -269,37 +297,6 @@
     "CHEF"
    ],
    "img": "https://a2.elespanol.com/k/imgp/cms/asociados/575682.png?p=f:jpeg/c:1901:1069:nowe:0:22/w:1706/h:960&h=vgyVGrbS"
-  },
-  {
-   "t": "El mejor restaurante del mundo está en España y es el favorito de Marcos Llorente: es el templo de la carne",
-   "u": "https://cronicavasca.elespanol.com/gastronomia/20261106/mejor-restaurante-espana-favorito-marcos-llorente-templo-trt/1003742809604_0.amp.html",
-   "s": "Crónica Vasca",
-   "d": "2026-11-06T11:00:00.000Z",
-   "tags": [
-    "CHEF"
-   ],
-   "img": "https://a2.elespanol.com/k/imgp/cms/asociados/485237.jpg?p=f:jpeg/w:1706/h:960&h=kaYGw5gO"
-  },
-  {
-   "t": "Más de 200 años de historia en la mesa: las tres joyas vinícolas de la bodega más antigua de Canarias para ace",
-   "u": "https://as.com/tikitakas/gastronomia/mas-de-200-anos-de-historia-en-la-mesa-las-tres-joyas-vinicolas-de-la-bodega-mas-antigua-de-canarias-para-acertar-esta-navidad-f202611-n/",
-   "s": "Diario AS",
-   "d": "2026-11-06T09:37:54.000Z",
-   "tags": [
-    "CANARIAS",
-    "VINO"
-   ],
-   "img": "https://img.asmedia.epimg.net/resizer/v2/W27YCSG62BHMVOETVFK35PZZA4.jpg?auth=04fdb17b585e3cea695c5fe10f411cf2c043e11d0668623eb5f1de577884eea6&width=1472&height=828&focal=3262%2C1820"
-  },
-  {
-   "t": "Bahia Principe renueva dos resorts en Jamaica y Tenerife",
-   "u": "https://reportnews.la/blog/2026/11/06/bahia-principe-renueva-dos-resorts-en-jamaica-y-tenerife/",
-   "s": "Report News",
-   "d": "2026-11-06T09:23:38.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://reportnews.la/wp-content/uploads/2026/11/BP-1-Jamaica.jpg"
   }
  ]
 }
