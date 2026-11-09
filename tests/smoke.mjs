@@ -16969,8 +16969,10 @@ test('Guía del sushi: se valida campo a campo y sin GUIA_SUSHI no hay guía', (
   assert(g.familias.salmon.nombre === 'Salmón' && g.familias.marisco.nombre_en === 'Shellfish', 'familia sin datos: nombre por defecto');
   assert(api._sushiValida(null) === null && api._sushiValida({ pescados:'x' }) === null && api._sushiValida([]) === null, 'sin guía válida no hay guía');
   assert(/SUSHI: \(typeof _sushiValida === 'function'\) \? _sushiValida\(c\.GUIA_SUSHI\) : null/.test(html), 'la carta puesta guarda su guía validada');
+  const tog = html.slice(html.indexOf('function _cartaToggleHTML('), html.indexOf('function _cartaPieHTML('));
+  assert(/const g = \(typeof _sushiGuia==='function'\) \? _sushiGuia\(\) : null;/.test(tog) && /g \? `<button type="button" role="tab" aria-selected="false" onclick="_sushiAbrir\(\)">Sushi<\/button>` : ''/.test(tog) && /\$\{sushi\}<\/div>`/.test(tog), 'la guía del sushi va arriba de la Carta como tercera pestaña, sólo si la carta la trae');
   const pie = html.slice(html.indexOf('function _cartaPieHTML('), html.indexOf('function renderEmplatado('));
-  assert(/const g = \(typeof _sushiGuia==='function'\) \? _sushiGuia\(\) : null;/.test(pie) && /\(g \? `<button type="button" class="carta-pie" onclick="_sushiAbrir\(\)">/.test(pie), 'el pie de la Carta lleva a la guía sólo si la carta la trae');
+  assert(!/_sushiAbrir/.test(pie), 'el pie de la Carta ya no repite la guía');
   assert(/if\(type==='screen' && id==='sushi'\)\{ if\(typeof _sushiAbrir==='function'\) _sushiAbrir\(\); return; \}/.test(html) && /if\(g\) out\.push\(\{ id:'sushi'/.test(html), 'la lupa encuentra la guía si la carta la trae');
   const sin = _sushiRes.montar('es', null);
   sin.api._tecVer('sushi');

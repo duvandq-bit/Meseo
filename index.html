@@ -54,7 +54,7 @@
 <meta property="og:description" content="Formación de equipos de sala: carta, alérgenos, vinos, exámenes y juegos de repaso.">
 <meta property="og:url" content="https://meseo.es/">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"Meseo","url":"https://meseo.es/"}</script>
-<meta name="app-version" content="7.542">
+<meta name="app-version" content="7.543">
 <meta name="app-build" content="May 2026">
 <meta name="theme-color" content="#1c2a22">
 <!-- ═══ PWA ═══ -->
@@ -3019,7 +3019,7 @@ const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><p
 const SRC = 'src';
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='7.542';  // sincronizada con sw.js VERSION (guard de CI)
+const APP_VERSION='7.543';  // sincronizada con sw.js VERSION (guard de CI)
 const APP_BUILD='Jul 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;
@@ -16685,16 +16685,18 @@ function _cartaVer(v){
 function _cartaToggleHTML(activa){
   const _en = LANG==='en';
   const b = (v, l) => `<button type="button" role="tab" aria-selected="${activa===v}" class="${activa===v?'on':''}" onclick="_cartaVer('${v}')">${l}</button>`;
-  return `<div class="carta-vista tec-vista" role="tablist" aria-label="${_en?'Menu view':'Vista de la carta'}">${b('fotos', _en?'Photos':'Fotos')}${b('lista', _en?'List':'Lista')}</div>`;
+  // La guía del sushi, si la carta la trae, va aquí arriba como tercera pestaña:
+  // al pie nadie la veía.
+  const g = (typeof _sushiGuia==='function') ? _sushiGuia() : null;
+  const sushi = g ? `<button type="button" role="tab" aria-selected="false" onclick="_sushiAbrir()">Sushi</button>` : '';
+  return `<div class="carta-vista tec-vista" role="tablist" aria-label="${_en?'Menu view':'Vista de la carta'}">${b('fotos', _en?'Photos':'Fotos')}${b('lista', _en?'List':'Lista')}${sushi}</div>`;
 }
 // Pie de la Carta: el enlace discreto a Actualidad, que ya no tiene chip, y a
 // la guía del sushi si la carta la trae (vive en Técnicas, junto al glosario:
 // la barra de Saber ya está en su tope de chips).
 function _cartaPieHTML(){
   const _en = LANG==='en';
-  const g = (typeof _sushiGuia==='function') ? _sushiGuia() : null;
-  return (g ? `<button type="button" class="carta-pie" onclick="_sushiAbrir()">${escapeHTML(_en?g.titulo_en:g.titulo)} ›</button>` : '')
-    + `<button type="button" class="carta-pie" onclick="_subTab.aprender='actualidad';showTab('actualidad')">${_en?'What\'s going on out there':'Qué se cuece fuera'} ›</button>`;
+  return `<button type="button" class="carta-pie" onclick="_subTab.aprender='actualidad';showTab('actualidad')">${_en?'What\'s going on out there':'Qué se cuece fuera'} ›</button>`;
 }
 function renderEmplatado(){
   const c=document.getElementById('appContent');
