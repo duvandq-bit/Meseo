@@ -16923,12 +16923,12 @@ const _sushiMuestraCarta = () => ({
   makis:[ { id:'uramaki', nombre:'Uramaki', nombre_en:'Uramaki', que:'Del revés.', que_en:'Inside out.', como:'Ura significa del revés.', como_en:'Ura means inside out.' } ],
   pescados:[
     { id:'alfonsino', nombre:'Alfonsiño', nombre_en:'Alfonsino', familia:'blanco', color:'Blanca nacarada.', color_en:'Pearly white.', sabor:'Suave.', sabor_en:'Mild.',
-      japones:'kinmedai', japones_escrito:'金目鯛', muestra:{ carne:'#f6eee6', piel:'#c3212b' } },
+      japones:'kinmedai', japones_escrito:'金目鯛', muestra:{ carne:'#f6eee6', piel:'#c3212b' }, foto:'r2/sushi/alfonsino.webp' },
     { id:'jurel', nombre:'Jurel', nombre_en:'Horse mackerel', familia:'azul', color:'Gris rosado.', color_en:'Pinkish grey.',
       japones:'aji', japones_escrito:'鯵', muestra:{ carne:'red', franja:'#8c3a3c' } },
     { id:'loquillo', nombre:'Loquillo', nombre_en:'Lesser amberjack', familia:'azul', color:'Crema rosada.', color_en:'Creamy pink.',
       revisar:'REVISAR-ES', revisar_en:'REVISAR-EN', japones:'kanpachi', japones_escrito:'間八', japones_nota:'Equivalencia aproximada.', japones_nota_en:'Approximate.' },
-    { id:'salmon', nombre:'<img src=x onerror=alert(1)>', familia:'salmon', color:'Naranja.', muestra:{ carne:'#f08546', vetas:true } },
+    { id:'salmon', nombre:'<img src=x onerror=alert(1)>', familia:'salmon', color:'Naranja.', muestra:{ carne:'#f08546', vetas:true }, foto:'https://x/salmon.webp' },
     { id:'raro', nombre:'Raro', familia:'rosa', color:'x' },
   ],
   familias:{ blanco:{ nombre:'Pescados blancos', nombre_en:'White fish', pista:'PISTA-BLANCO', pista_en:'HINT-WHITE' },
@@ -16942,16 +16942,16 @@ const _sushiRes = (() => {
     const el = { innerHTML:'' };
     const document = { getElementById: () => el, querySelectorAll: () => [] };
     const api = new Function('document','DISHES','TECNICA_FAMS','TECNICAS','_cartaMeta','LANG','_venueCasa','_esMando','_esAdmin','_subTab','showTab', // eslint-disable-line no-new-func
-      _tecSrc.esc + '\nconst escapeHTML = escapeHtml; const _ico = () => "<svg></svg>";\n' + _tecSrc.dishes + '\n' + mod + '\n' + _tecSrc.vista
-      + '\nreturn { renderTecnicas, _tecVer, _sushiValida, _sushiVer, _sushiNueva, _sushiResponder, _sushiAbrir, q: () => _sushiQ };')(
+      _tecSrc.esc + '\nconst escapeHTML = escapeHtml; const _ico = () => "<svg></svg>"; const SRC = "src";\n' + _tecSrc.dishes + '\n' + mod + '\n' + _tecSrc.vista
+      + '\nreturn { renderTecnicas, _tecVer, _sushiValida, _sushiVer, _sushiNueva, _sushiResponder, _sushiAbrir, q: () => _sushiQ, setFotos: m => { _sushiFotosUrls = m; }, fotos: () => _sushiFotosUrls, soltar: _sushiFotosSoltar };')(
       document, [], [ { k:'seco', es:'Calor seco', en:'Dry heat', col:'#c47838' } ],
       [ { fam:'seco', ic:'', es:'Brasa', en:'Grill', def:'Fuego.', defEn:'Fire.', kw:['brasa'] } ],
       null, lang, () => 'R2', () => !!mando, () => false, {}, () => api.renderTecnicas());
     const meta = guia ? { SUSHI: api._sushiValida(guia) } : null;
     // _cartaMeta va como parámetro: se rehace la función con la guía ya validada.
     const api2 = new Function('document','DISHES','TECNICA_FAMS','TECNICAS','_cartaMeta','LANG','_venueCasa','_esMando','_esAdmin','_subTab','showTab', // eslint-disable-line no-new-func
-      _tecSrc.esc + '\nconst escapeHTML = escapeHtml; const _ico = () => "<svg></svg>";\n' + _tecSrc.dishes + '\n' + mod + '\n' + _tecSrc.vista
-      + '\nreturn { renderTecnicas, _tecVer, _sushiValida, _sushiVer, _sushiNueva, _sushiResponder, _sushiAbrir, q: () => _sushiQ };')(
+      _tecSrc.esc + '\nconst escapeHTML = escapeHtml; const _ico = () => "<svg></svg>"; const SRC = "src";\n' + _tecSrc.dishes + '\n' + mod + '\n' + _tecSrc.vista
+      + '\nreturn { renderTecnicas, _tecVer, _sushiValida, _sushiVer, _sushiNueva, _sushiResponder, _sushiAbrir, q: () => _sushiQ, setFotos: m => { _sushiFotosUrls = m; }, fotos: () => _sushiFotosUrls, soltar: _sushiFotosSoltar };')(
       document, [], [ { k:'seco', es:'Calor seco', en:'Dry heat', col:'#c47838' } ],
       [ { fam:'seco', ic:'', es:'Brasa', en:'Grill', def:'Fuego.', defEn:'Fire.', kw:['brasa'] } ],
       meta, lang, () => 'R2', () => !!mando, () => false, {}, () => api2.renderTecnicas());
@@ -16969,8 +16969,10 @@ test('Guía del sushi: se valida campo a campo y sin GUIA_SUSHI no hay guía', (
   assert(g.familias.salmon.nombre === 'Salmón' && g.familias.marisco.nombre_en === 'Shellfish', 'familia sin datos: nombre por defecto');
   assert(api._sushiValida(null) === null && api._sushiValida({ pescados:'x' }) === null && api._sushiValida([]) === null, 'sin guía válida no hay guía');
   assert(/SUSHI: \(typeof _sushiValida === 'function'\) \? _sushiValida\(c\.GUIA_SUSHI\) : null/.test(html), 'la carta puesta guarda su guía validada');
+  const tog = html.slice(html.indexOf('function _cartaToggleHTML('), html.indexOf('function _cartaPieHTML('));
+  assert(/const g = \(typeof _sushiGuia==='function'\) \? _sushiGuia\(\) : null;/.test(tog) && /g \? `<button type="button" role="tab" aria-selected="false" onclick="_sushiAbrir\(\)">Sushi<\/button>` : ''/.test(tog) && /\$\{sushi\}<\/div>`/.test(tog), 'la guía del sushi va arriba de la Carta como tercera pestaña, sólo si la carta la trae');
   const pie = html.slice(html.indexOf('function _cartaPieHTML('), html.indexOf('function renderEmplatado('));
-  assert(/const g = \(typeof _sushiGuia==='function'\) \? _sushiGuia\(\) : null;/.test(pie) && /\(g \? `<button type="button" class="carta-pie" onclick="_sushiAbrir\(\)">/.test(pie), 'el pie de la Carta lleva a la guía sólo si la carta la trae');
+  assert(!/_sushiAbrir/.test(pie), 'el pie de la Carta ya no repite la guía');
   assert(/if\(type==='screen' && id==='sushi'\)\{ if\(typeof _sushiAbrir==='function'\) _sushiAbrir\(\); return; \}/.test(html) && /if\(g\) out\.push\(\{ id:'sushi'/.test(html), 'la lupa encuentra la guía si la carta la trae');
   const sin = _sushiRes.montar('es', null);
   sin.api._tecVer('sushi');
@@ -17028,6 +17030,50 @@ test('Guía del sushi: práctica «¿Qué pescado es?» por color y por nombre j
   }
   const css = read('styles.css');
   assert(/\.sushi-vistas button\{min-height:44px/.test(css) && /\.tec-vista button\{flex:1;min-height:44px/.test(css) && /\.sushi-otra\{[^}]*min-height:48px/.test(css), 'toques de 44 px o más');
+});
+test('Guía del sushi: el campo foto se valida (ruta corta del bucket, sin protocolo ni ..) y se baja con la sesión', () => {
+  const { api, meta } = _sushiRes.montar('es', _sushiMuestraCarta());
+  const P = id => meta.SUSHI.pescados.find(x => x.id === id);
+  assert(P('alfonsino').foto === 'r2/sushi/alfonsino.webp', 'una ruta buena se guarda');
+  assert(P('salmon').foto === '' && P('jurel').foto === '', 'una URL con protocolo se descarta; sin foto, cadena vacía');
+  const v = f => api._sushiValida({ pescados:[ { id:'a', nombre:'A', familia:'blanco', color:'x', foto:f } ] }).pescados[0].foto;
+  assert(v('r2/sushi/a.webp') === 'r2/sushi/a.webp' && v('r2/sushi/jurel_real.webp') === 'r2/sushi/jurel_real.webp', 'rutas válidas');
+  for (const mala of ['../r2/a.webp', 'r2//a.webp', 'http://x/a.webp', 'data:image/webp;base64,AA', '/r2/a.webp', 'r2/a.png', 'r2/a.webp?x=1', 'r2/' + 'a'.repeat(130) + '.webp', 42])
+    assert(v(mala) === '', 'se descarta: ' + String(mala).slice(0, 30));
+  const a = html.indexOf('async function _sushiFotos(){'), b = html.indexOf('function _sushiFotosPedir(){', a);
+  const src = html.slice(a, b);
+  assert(a > 0 && b > a, 'no encuentro _sushiFotos');
+  assert(/storage\/v1\/object\/authenticated\/cartas-fotos\//.test(src) && /'Authorization':`Bearer \$\{token\}`/.test(src), 'GET autenticado al bucket privado');
+  assert(!/storage\/v1\/object\/public/.test(src) && /URL\.createObjectURL\(b\)/.test(src), 'nunca URL pública: blob local');
+  assert(/_esDemo\(\)\) return null/.test(src) && /if\(!token\) return null/.test(src), 'sin sesión o en la demo: sin fotos y sin error');
+  assert(/Promise\.all\(\[una\(\), una\(\), una\(\), una\(\)\]\)/.test(src), 'cuatro descargas en paralelo');
+  assert(/_sushiFotosSoltar==='function'\) _sushiFotosSoltar\(\)/.test(html.slice(html.indexOf('function _cartaCachesFuera(){'), html.indexOf('function _cartaCachesFuera(){') + 900)), 'al cambiar de carta se sueltan las fotos');
+  api.setFotos({ alfonsino:'blob:x' }); api.soltar();
+  assert(Object.keys(api.fotos()).length === 0, 'soltar vacía la caché');
+});
+test('Guía del sushi: con foto, la ficha enseña la foto y el dibujo como leyenda; sin foto, el dibujo de siempre', () => {
+  for (const lang of ['es', 'en']) {
+    const { api, el } = _sushiRes.montar(lang, _sushiMuestraCarta());
+    api._tecVer('sushi'); api._sushiVer('color');
+    let h = el.innerHTML;
+    assert(!/sushi-foto/.test(h) && /<article class="sushi-pez">\s*<svg class="sushi-muestra"/.test(h), 'sin fotos cargadas se pinta como siempre');
+    api.setFotos({ alfonsino:'blob:https://meseo.es/abc' }); api._sushiVer('color');
+    h = el.innerHTML;
+    const nom = lang === 'en' ? 'Alfonsino' : 'Alfonsiño';
+    assert(new RegExp('<article class="sushi-pez con-foto">\\s*<figure class="sushi-foto">\\s*<img class="sushi-foto-img" src="blob:https://meseo.es/abc" width="120" height="120" loading="lazy" decoding="async" alt="' + nom + '">').test(h), 'la foto cuadrada con alt y carga perezosa (' + lang + ')');
+    assert(/<figcaption class="sushi-foto-pie"><svg class="sushi-muestra"[\s\S]*?<\/svg><span>(Imagen orientativa|Illustrative image)<\/span><\/figcaption>/.test(h), 'bajo la foto, el dibujo pequeño y «Imagen orientativa»');
+    assert(h.includes(lang === 'en' ? 'Illustrative image' : 'Imagen orientativa'), 'aviso en el idioma de la app');
+    assert((h.match(/sushi-foto-img/g) || []).length === 1 && /<article class="sushi-pez">\s*<svg class="sushi-muestra"/.test(h), 'los demás pescados siguen con su dibujo');
+    // Práctica por color: la foto si existe, si no la muestra grande.
+    api._sushiVer('practica'); api._sushiNueva('color'); api._tecVer('sushi');
+    for (let i = 0; i < 40 && api.q().id !== 'alfonsino'; i++) api._sushiNueva('color');
+    api._tecVer('sushi'); h = el.innerHTML;
+    if (api.q().id === 'alfonsino') assert(/<figure class="sushi-foto grande">\s*<img class="sushi-foto-img" src="blob:https:\/\/meseo\.es\/abc" width="300" height="300"/.test(h) && !/sushi-muestra grande/.test(h), 'en la práctica, la foto en grande en vez de la muestra');
+    else assert(/<div class="sushi-q-muestra"><svg class="sushi-muestra grande"/.test(h), 'sin foto, la muestra grande');
+  }
+  const css = read('styles.css');
+  assert(/\.sushi-foto-img\{[^}]*width:120px;height:120px;object-fit:cover;border-radius:12px/.test(css), 'foto cuadrada con esquinas redondeadas');
+  assert(/\.sushi-foto-pie \.sushi-muestra\{width:44px/.test(css) && /\.sushi-foto\.grande \.sushi-foto-img\{[^}]*aspect-ratio:1\/1/.test(css), 'dibujo pequeño como leyenda; en grande, cuadrada');
 });
 test('Pase: sin componentes validados que expliquen sus alérgenos, el plato se juega de memoria y sin fase de alergia', () => {
   const a = html.indexOf('function _paseMontable(dish){'), b = html.indexOf('\n// A quién le toca.', a);

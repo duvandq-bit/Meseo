@@ -54,7 +54,7 @@
 <meta property="og:description" content="Formación de equipos de sala: carta, alérgenos, vinos, exámenes y juegos de repaso.">
 <meta property="og:url" content="https://meseo.es/">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"Meseo","url":"https://meseo.es/"}</script>
-<meta name="app-version" content="7.542">
+<meta name="app-version" content="7.543">
 <meta name="app-build" content="May 2026">
 <meta name="theme-color" content="#1c2a22">
 <!-- ═══ PWA ═══ -->
@@ -2596,6 +2596,7 @@ function _cartaCachesFuera(){
   try{ if(typeof _gsDishIdx!=='undefined') _gsDishIdx = null; }catch(e){}
   try{ if(typeof DISH_PHOTOS!=='undefined') DISH_PHOTOS = null; }catch(e){}
   try{ if(typeof _fotosPrivadasSoltar==='function') _fotosPrivadasSoltar(); }catch(e){}
+  try{ if(typeof _sushiFotosSoltar==='function') _sushiFotosSoltar(); }catch(e){}
   try{ if(typeof DISH_PHOTO_PENDING!=='undefined') DISH_PHOTO_PENDING = null; }catch(e){}
   try{ if(typeof _paseVistos!=='undefined') _paseVistos.length = 0; }catch(e){}
 }
@@ -3019,7 +3020,7 @@ const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><p
 const SRC = 'src';
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='7.542';  // sincronizada con sw.js VERSION (guard de CI)
+const APP_VERSION='7.543';  // sincronizada con sw.js VERSION (guard de CI)
 const APP_BUILD='Jul 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;
@@ -16685,16 +16686,18 @@ function _cartaVer(v){
 function _cartaToggleHTML(activa){
   const _en = LANG==='en';
   const b = (v, l) => `<button type="button" role="tab" aria-selected="${activa===v}" class="${activa===v?'on':''}" onclick="_cartaVer('${v}')">${l}</button>`;
-  return `<div class="carta-vista tec-vista" role="tablist" aria-label="${_en?'Menu view':'Vista de la carta'}">${b('fotos', _en?'Photos':'Fotos')}${b('lista', _en?'List':'Lista')}</div>`;
+  // La guía del sushi, si la carta la trae, va aquí arriba como tercera pestaña:
+  // al pie nadie la veía.
+  const g = (typeof _sushiGuia==='function') ? _sushiGuia() : null;
+  const sushi = g ? `<button type="button" role="tab" aria-selected="false" onclick="_sushiAbrir()">Sushi</button>` : '';
+  return `<div class="carta-vista tec-vista" role="tablist" aria-label="${_en?'Menu view':'Vista de la carta'}">${b('fotos', _en?'Photos':'Fotos')}${b('lista', _en?'List':'Lista')}${sushi}</div>`;
 }
 // Pie de la Carta: el enlace discreto a Actualidad, que ya no tiene chip, y a
 // la guía del sushi si la carta la trae (vive en Técnicas, junto al glosario:
 // la barra de Saber ya está en su tope de chips).
 function _cartaPieHTML(){
   const _en = LANG==='en';
-  const g = (typeof _sushiGuia==='function') ? _sushiGuia() : null;
-  return (g ? `<button type="button" class="carta-pie" onclick="_sushiAbrir()">${escapeHTML(_en?g.titulo_en:g.titulo)} ›</button>` : '')
-    + `<button type="button" class="carta-pie" onclick="_subTab.aprender='actualidad';showTab('actualidad')">${_en?'What\'s going on out there':'Qué se cuece fuera'} ›</button>`;
+  return `<button type="button" class="carta-pie" onclick="_subTab.aprender='actualidad';showTab('actualidad')">${_en?'What\'s going on out there':'Qué se cuece fuera'} ›</button>`;
 }
 function renderEmplatado(){
   const c=document.getElementById('appContent');
@@ -20394,7 +20397,8 @@ function renderActualidad(){
 // puesta como GUIA_SUSHI (hoy, r2): cualquier restaurante con esa clave la
 // tiene, y sin ella no aparece. Se valida campo a campo como las técnicas:
 // sólo texto, colores #rrggbb y familias conocidas; nada se pinta sin
-// escapeHTML. Las muestras de color son dibujos (SVG), no fotos.
+// escapeHTML. Las muestras de color son dibujos (SVG); si el pescado trae
+// `foto` (ruta en el bucket privado), la foto manda y el dibujo es la leyenda.
 const _SUSHI_FAMS = ['blanco','azul','salmon','marisco'];
 // Si un pescado no trae su muestra, se dibuja con el tono de su familia.
 const _SUSHI_MUESTRA_FAM = {
@@ -20407,6 +20411,9 @@ function _sushiValida(g){
   const opt = (v, max) => v === undefined || v === null || v === '' || txt(v, max);
   const idOk = v => typeof v === 'string' && /^[a-z0-9_]{1,24}$/.test(v);
   const hex = v => typeof v === 'string' && /^#[0-9a-fA-F]{6}$/.test(v);
+  // La foto es una ruta corta dentro del bucket privado (r2/sushi/lubina.webp):
+  // sin protocolo, sin `..` ni `//`. Se baja con la sesión en _sushiFotos().
+  const fotoOk = v => typeof v === 'string' && v.length <= 120 && /^[a-z0-9][a-z0-9_\-./]*\.webp$/i.test(v) && !v.includes('..') && !v.includes('//');
   const tipos = (arr) => (Array.isArray(arr) ? arr : [])
     .filter(t => t && idOk(t.id) && txt(t.nombre, 80) && txt(t.que) && opt(t.nombre_en, 80) && opt(t.que_en) && opt(t.como) && opt(t.como_en))
     .slice(0, 20)
@@ -20424,7 +20431,7 @@ function _sushiValida(g){
       return { id:p.id, nombre:p.nombre, nombre_en:p.nombre_en || '', familia:p.familia, color:p.color, color_en:p.color_en || '',
                sabor:p.sabor || '', sabor_en:p.sabor_en || '', revisar:p.revisar || '', revisar_en:p.revisar_en || '',
                japones:p.japones || '', japones_escrito:p.japones_escrito || '', japones_nota:p.japones_nota || '', japones_nota_en:p.japones_nota_en || '',
-               muestra };
+               muestra, foto:fotoOk(p.foto) ? p.foto : '' };
     });
   const familias = {};
   const F = (g.familias && typeof g.familias === 'object') ? g.familias : {};
@@ -20488,6 +20495,81 @@ function _sushiMuestraSVG(p, grande){
     </g>
   </svg>`;
 }
+// ── Fotos de los pescados (bucket privado `cartas-fotos`) ──
+// Igual que _fotosPrivadas: GET con la sesión real, cada foto a un blob: local
+// que es lo que pinta la app; nunca una URL pública. Caché por sesión y carta;
+// al cambiar de carta se sueltan (_cartaCachesFuera llama a _sushiFotosSoltar).
+// Sin sesión, en la demo o sin red, la guía se queda con sus dibujos y punto.
+let _sushiFotosUrls = {};     // id de pescado → blob: URL
+let _sushiFotosProm = null;
+let _sushiFotosGen = 0;
+function _sushiFotosSoltar(){
+  _sushiFotosGen++;
+  for(const k of Object.keys(_sushiFotosUrls)){ try{ URL.revokeObjectURL(_sushiFotosUrls[k]); }catch(e){} }
+  _sushiFotosUrls = {};
+  _sushiFotosProm = null;
+}
+function _sushiFoto(p){ return (p && _sushiFotosUrls[p.id]) || ''; }
+async function _sushiFotos(){
+  const g = _sushiGuia();
+  const conFoto = g ? g.pescados.filter(p => p.foto) : [];
+  if(!conFoto.length) return {};
+  // null = no se ha intentado (demo o sin sesión todavía): se volverá a pedir.
+  if(typeof _esDemo === 'function' && _esDemo()) return null;
+  if(typeof _authCtx !== 'function' || typeof fetchT !== 'function' || typeof SUPA_URL === 'undefined') return null;
+  let token = null;
+  try{ token = _authCtx().token; }catch(e){ token = null; }
+  if(!token) return null;
+  const gen = _sushiFotosGen;
+  const out = {}, creadas = [];
+  let i = 0;
+  const una = async () => {
+    while(i < conFoto.length){
+      const p = conFoto[i++];
+      if(_sushiFotosUrls[p.id]){ out[p.id] = _sushiFotosUrls[p.id]; continue; }
+      try{
+        const r = await fetchT(`${SUPA_URL}/storage/v1/object/authenticated/cartas-fotos/${p.foto.split('/').map(encodeURIComponent).join('/')}`,
+          { headers:{ 'apikey':SUPA_KEY, 'Authorization':`Bearer ${token}` } }, 15000);
+        if(!r.ok) continue;
+        const b = await r.blob();
+        if(!/^image\/webp$/i.test(b.type || '')) continue;
+        const u = URL.createObjectURL(b);
+        creadas.push(u); out[p.id] = u;
+      }catch(e){ /* sin red o sin permiso: ese pescado se queda con su dibujo */ }
+    }
+  };
+  await Promise.all([una(), una(), una(), una()]);
+  if(gen !== _sushiFotosGen){   // la carta cambió mientras bajaban
+    for(const u of creadas){ try{ URL.revokeObjectURL(u); }catch(e){} }
+    return {};
+  }
+  Object.assign(_sushiFotosUrls, out);
+  return _sushiFotosUrls;
+}
+// Pide las fotos una vez por carta y, cuando llegan, vuelve a pintar la guía
+// si sigue en pantalla. Nunca lanza: la vista ya está pintada con los dibujos.
+function _sushiFotosPedir(){
+  if(_sushiFotosProm) return;
+  const g = _sushiGuia();
+  if(!g || !g.pescados.some(p => p.foto && !_sushiFotosUrls[p.id])) return;
+  if(typeof _authCtx !== 'function' || typeof fetchT !== 'function') return;
+  _sushiFotosProm = _sushiFotos().then(m => {
+    if(m === null){ _sushiFotosProm = null; return; }   // sin sesión aún: otra vez a la próxima
+    if(Object.keys(m).length && typeof document !== 'undefined' && document.querySelector('.sushi-wrap')) renderTecnicas();
+  }).catch(() => {});
+}
+// Ficha con foto: la foto cuadrada manda y el dibujo queda pequeño al lado,
+// como leyenda de los colores. Sin foto, el dibujo de siempre.
+function _sushiVisualHTML(p, _en, grande){
+  const u = _sushiFoto(p);
+  if(!u) return grande ? `<div class="sushi-q-muestra">${_sushiMuestraSVG(p, true)}</div>` : _sushiMuestraSVG(p);
+  const nom = escapeHTML(_sushiT(p, 'nombre', _en));
+  const px = grande ? 300 : 120;
+  return `<figure class="sushi-foto${grande ? ' grande' : ''}">
+    <img class="sushi-foto-img" ${SRC}="${u}" width="${px}" height="${px}" loading="lazy" decoding="async" alt="${nom}">
+    <figcaption class="sushi-foto-pie">${_sushiMuestraSVG(p)}<span>${_en ? 'Illustrative image' : 'Imagen orientativa'}</span></figcaption>
+  </figure>`;
+}
 // Dibujos de línea de cada tipo, por su id. Un tipo que no conocemos sale sin dibujo.
 const _SUSHI_DIBUJO = {
   clasico: '<rect x="14" y="30" width="52" height="16" rx="8" class="arroz"/><rect x="8" y="18" width="64" height="16" rx="8" class="pez"/>',
@@ -20531,8 +20613,8 @@ function _sushiColorHTML(g, _en){
       ${pista ? `<p class="sushi-fam-p">${escapeHTML(pista)}</p>` : ''}
       ${ps.map(p => {
         const sabor = _sushiT(p, 'sabor', _en), rev = _sushiT(p, 'revisar', _en), nota = _sushiT(p, 'japones_nota', _en);
-        return `<article class="sushi-pez">
-          ${_sushiMuestraSVG(p)}
+        return `<article class="sushi-pez${_sushiFoto(p) ? ' con-foto' : ''}">
+          ${_sushiVisualHTML(p, _en, false)}
           <div class="sushi-pez-tx">
             <h4 class="sushi-pez-h"><span class="sushi-pez-nom">${escapeHTML(_sushiT(p, 'nombre', _en))}</span>${p.japones
               ? `<span class="sushi-jp-r" lang="ja-Latn">${escapeHTML(p.japones)}</span>` : ''}${p.japones_escrito
@@ -20605,7 +20687,7 @@ function _sushiPracticaHTML(g, _en){
       ${Q.total ? `<span class="sushi-q-n">${_en ? `${Q.aciertos} of ${Q.total} right` : `${Q.aciertos} ${Q.aciertos === 1 ? 'acierto' : 'aciertos'} de ${Q.total}`}</span>` : ''}</div>
     ${jp ? `<div class="sushi-q-jp"><span class="sushi-q-jp-l">${_en ? 'On a Japanese menu' : 'En una carta japonesa'}</span>
         <span class="sushi-q-jp-r" lang="ja-Latn">${r}</span>${p.japones_escrito ? `<span class="sushi-q-jp-k" lang="ja">${escapeHTML(p.japones_escrito)}</span>` : ''}</div>`
-      : `<div class="sushi-q-muestra">${_sushiMuestraSVG(p, true)}</div>
+      : `${_sushiVisualHTML(p, _en, true)}
     <p class="sushi-q-c">${escapeHTML(_sushiT(p, 'color', _en))}</p>`}
     <div class="deg-opciones">${Q.ops.map((id, i) => {
       let cls = 'deg-opcion';
@@ -20629,6 +20711,7 @@ function _sushiHTML(g, _en){
   if(_sushiVista === 'practica' && !_sushiQ) _sushiNueva();
   let h = `<div class="sushi-vistas" role="tablist">${vistas.map(([id, l]) =>
       `<button type="button" role="tab" aria-selected="${_sushiVista === id}" class="${_sushiVista === id ? 'on' : ''}" onclick="_sushiVer('${id}')">${l}</button>`).join('')}</div>`;
+  if(_sushiVista === 'color' || _sushiVista === 'practica') _sushiFotosPedir();
   if(_sushiVista === 'nigiri') h += `<div class="sushi-lista">${_sushiTiposHTML(g.nigiris, _en)}</div>`;
   else if(_sushiVista === 'maki') h += `<div class="sushi-lista">${_sushiTiposHTML(g.makis, _en)}</div>`;
   else if(_sushiVista === 'color') h += `<p class="sushi-guia-c">${_en ? 'Look at three things: the colour of the flesh, the edge of the skin and whether there is a dark strip.' : 'Fíjate en tres cosas: el color de la carne, el borde de la piel y si hay franja oscura.'}</p>${_sushiColorHTML(g, _en)}`;
