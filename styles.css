@@ -4910,12 +4910,20 @@ body::after{
 .sushi-q-t{margin:0;font-family:var(--font-serif);font-size:var(--fs-6);font-weight:700;color:var(--parchment)}
 .sushi-q-n{font-family:var(--font-sans);font-size:var(--fs-3);font-weight:600;color:var(--parch3)}
 .sushi-q-muestra{padding:.2rem 0}
+.sushi-foto{margin:0;display:flex;flex-direction:column;gap:.4rem;width:120px}
+.sushi-foto-img{display:block;width:120px;height:120px;object-fit:cover;border-radius:12px;background:#262a2d;box-shadow:0 2px 6px rgba(20,24,26,.18)}
+.sushi-foto-pie{display:flex;align-items:center;gap:.4rem;margin:0;font-family:var(--font-sans);font-size:var(--fs-1);line-height:1.3;color:var(--parch3)}
+.sushi-foto-pie .sushi-muestra{width:44px;height:auto;flex:none;border-radius:5px;box-shadow:none}
+.sushi-foto.grande{width:100%;max-width:300px;margin:0 auto;padding:.2rem 0}
+.sushi-foto.grande .sushi-foto-img{width:100%;height:auto;aspect-ratio:1/1;border-radius:var(--r)}
+.sushi-foto.grande .sushi-foto-pie{justify-content:center;font-size:var(--fs-2)}
+.sushi-foto.grande .sushi-foto-pie .sushi-muestra{width:60px}
 .sushi-q-c{margin:0;font-family:var(--font-sans);font-size:var(--fs-4);line-height:1.5;color:var(--parchment)}
 .sushi-otra{align-self:stretch;min-height:48px;border:1px solid var(--gold);border-radius:999px;background:var(--gold-a);cursor:pointer;
   font-family:var(--font-sans);font-size:var(--fs-4);font-weight:700;color:var(--parchment)}
 .sushi-vacio{font-family:var(--font-sans);font-size:var(--fs-3);color:var(--parch3)}
 .gs-hit-ic .sushi-dib{width:24px;height:auto}
-@media (max-width:360px){.sushi-pez{grid-template-columns:96px 1fr}.sushi-muestra:not(.grande){width:96px}}
+@media (max-width:360px){.sushi-pez{grid-template-columns:96px 1fr}.sushi-muestra:not(.grande){width:96px}.sushi-foto:not(.grande){width:96px}.sushi-foto:not(.grande) .sushi-foto-img{width:96px;height:96px}.sushi-foto-pie .sushi-muestra{width:40px}}
 .tec-card{position:relative;background:linear-gradient(155deg,#fdfaf3,#f4ecdc);border:1px solid var(--ink3);
   border-left:4px solid var(--tec-col,#a3502a);border-radius:var(--r2);
   padding:.8rem .9rem .85rem;margin-bottom:.6rem;box-shadow:0 2px 0 var(--ink4)}
