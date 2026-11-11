@@ -1,26 +1,16 @@
 {
- "updated": "2026-11-10T22:24:06.565Z",
+ "updated": "2026-11-11T02:50:08.799Z",
  "items": [
   {
    "t": "La Palma acoge el primer congreso internacional de marketing del vino celebrado en Canarias",
    "u": "https://www.eltime.es/economia/61667-la-palma-acoge-el-primer-congreso-internacional-de-marketing-del-vino-celebrado-en-canarias.html",
    "s": "El Time",
-   "d": "2026-11-10T20:15:00.000Z",
+   "d": "2026-11-10T20:18:57.000Z",
    "tags": [
     "VINO",
     "CANARIAS"
    ],
    "img": "https://www.eltime.es/images/101126 Palma Acoge Primer 01 a899cf236c.jpg"
-  },
-  {
-   "t": "'Un resort, dos mundos' de la cadena Elba abre sus puertas en Corralejo",
-   "u": "https://www.canarias7.es/canarias/fuerteventura/resort-dos-mundos-cadena-elba-abre-puertas-20261110163412-nt.html",
-   "s": "Canarias7",
-   "d": "2026-11-10T16:34:13.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://s3.ppllstatics.com/canarias7/www/multimedia/local/2026/11/10/hotel-elba-inauguracion-familia-kuC-U40276350622JE-1200x840@Canarias7.jpg"
   },
   {
    "t": "Carne de caza: Almagro reúne a la alta cocina para llevarla a casa",
@@ -31,6 +21,16 @@
     "ALTA COCINA"
    ],
    "img": "https://www.clm24.es/media/clm24/images/2026/11/10/2026111017443280996.jpg"
+  },
+  {
+   "t": "‘Con Cúrcuma’ rinde tributo al talento femenino en la gestión gastronómica en las Islas",
+   "u": "https://rtvc.es/con-curcuma-rinde-tributo-talento-femenino-gestion-gastronomica-islas-prensa-11-noviembre-2026/",
+   "s": "Radio Televisión Canaria",
+   "d": "2026-11-10T16:20:27.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://cdn.rtvc.es/archivos/2026/10/3-FOTO-JOSE-LUIS-REINA.webp"
   },
   {
    "t": "Paulo Airaudo alcanza las 10 estrellas Michelin con dos nuevos éxitos en Tailandia",
@@ -71,6 +71,16 @@
     "CANARIAS"
    ],
    "img": "https://static.eldiario.es/clip/85812a09-3633-433d-a211-38ee1a87de9b_facebook-aspect-ratio-1200-675_default_0.jpg"
+  },
+  {
+   "t": "Alerta por fenómenos costeros en Canarias",
+   "u": "https://www.eldiario.es/canariasahora/lapalmaahora/sociedad/alerta-fenomenos-costeros-canarias_1_13653007.html",
+   "s": "elDiario.es",
+   "d": "2026-11-10T15:20:24.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://static.eldiario.es/clip/e0d15f20-ee1e-460d-be16-788ba0b39f95_facebook-aspect-ratio-1200-675_default_0.jpg"
   },
   {
    "t": "Alerta máxima por viento en La Palma y Tenerife: las rachas pueden alcanzar los 140 y 120 km",
@@ -196,15 +206,6 @@
    "img": "https://www.7canibales.com/wp-content/uploads/sites/2/2026/11/PAULO-AIRAUDO.webp"
   },
   {
-   "t": "Servicios mínimos del tranvía para la huelga del 11 de noviembre en Tenerife",
-   "u": "https://www.eldia.es/tenerife/2026/11/10/servicios-minimos-tranvia-huelga-11-136274177.html",
-   "s": "Eldía",
-   "d": "2026-11-10T09:12:26.000Z",
-   "tags": [
-    "CANARIAS"
-   ]
-  },
-  {
    "t": "Qué ver en Tenerife: del Teide a sus piscinas naturales",
    "u": "https://www.noticiasdelvino.com/escapadas/2026/11/10/tenerife-75142/",
    "s": "Noticias del Vino",
@@ -213,16 +214,6 @@
     "CANARIAS"
    ],
    "img": "https://www.noticiasdelvino.com/wp-content/uploads/image-617.png.webp"
-  },
-  {
-   "t": "Eneldo se alía con Javi Estévez para llevar la alta cocina al catering de grandes eventos",
-   "u": "https://www.larazon.es/economia/eneldo-alia-javi-estevez-llevar-alta-cocina-catering-grandes-eventos_202611106af2d82cd3bddc0868ac1d95.html",
-   "s": "La Razón",
-   "d": "2026-11-10T08:42:22.000Z",
-   "tags": [
-    "ALTA COCINA"
-   ],
-   "img": "https://fotografias-2.larazon.es/clipping/cmsimages01/2026/11/03/6D34B428-92D0-40FC-A821-01292A163B56/eneldo-javi-estevez_98.jpg?crop=3616,2034,x0,y1665&width=1900&height=1069&optimize=low&format=webply"
   },
   {
    "t": "El restaurante de Tenerife donde disfrutar de cocina casera en un entorno rural: carne de cabra, cochino y ambiente familiar",
@@ -272,16 +263,6 @@
    "img": "https://static.eldiario.es/clip/ff86153c-1750-42f8-acc8-4786fefaa29e_facebook-aspect-ratio-1200-675_default_0.jpg"
   },
   {
-   "t": "El Tenerife vuelve a entrenar tras el duelo por De Miguel",
-   "u": "https://www.eldiario.es/canariasahora/Deportes/futbol/tenerife-vuelve-entrenar-duelo-miguel_1_13650453.html",
-   "s": "elDiario.es",
-   "d": "2026-11-09T16:55:57.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://static.eldiario.es/clip/020f185a-6b77-4aa5-a568-bf657c7b8484_facebook-aspect-ratio-1200-675_default_0.jpg"
-  },
-  {
    "t": "Mucha gente deja las lentejas en remojo toda la noche, pero Martín Berasategui explica cuándo se puede evitar ese paso",
    "u": "https://tn.com.ar/cocina/recetas/2026/11/09/mucha-gente-deja-las-lentejas-en-remojo-toda-la-noche-pero-martin-berasategui-explica-cuando-se-puede-evitar-ese-paso/",
    "s": "TN",
@@ -298,7 +279,29 @@
    "d": "2026-11-09T14:56:29.000Z",
    "tags": [
     "CHEF"
-   ]
+   ],
+   "img": "https://img.asmedia.epimg.net/resizer/v2/RWNHF645AVA6DB7DHHFM6PQLPM.jpg?auth=77d9f99b6196ba8095ab9d95d9ac5745f28a6b6cfeb50bf6eaf41843ce6fa2db&width=1472&height=828&smart=true"
+  },
+  {
+   "t": "Siete bodegas de Sabor a Málaga exponen sus vinos en Experiencia Verema Sevilla",
+   "u": "https://www.europapress.es/andalucia/malaga-00356/noticia-siete-bodegas-sabor-malaga-exponen-vinos-experiencia-verema-sevilla-20261109152250.html",
+   "s": "Europa Press",
+   "d": "2026-11-09T14:22:50.000Z",
+   "tags": [
+    "VINO",
+    "CANARIAS"
+   ],
+   "img": "https://img.europapress.es/fotoweb/fotonoticia_20261109152250_1200.jpg"
+  },
+  {
+   "t": "El restaurante de carretera definitivo está en este pueblo medieval de Madrid: Martín Berasategui confiesa su secreto mejor guardado",
+   "u": "https://www.noticiasdelvino.com/escapadas/2026/11/09/el-restaurante-de-carretera-definitivo-esta-en-este-pueblo-medieval-de-madrid-martin-berasategui-confiesa-su-secreto-mejor-guardado-74843/",
+   "s": "Noticias del Vino",
+   "d": "2026-11-09T14:08:03.000Z",
+   "tags": [
+    "CHEF"
+   ],
+   "img": "https://www.noticiasdelvino.com/wp-content/uploads/image-583.png.webp"
   }
  ]
 }
