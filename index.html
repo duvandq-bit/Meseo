@@ -54,7 +54,7 @@
 <meta property="og:description" content="Formación de equipos de sala: carta, alérgenos, vinos, exámenes y juegos de repaso.">
 <meta property="og:url" content="https://meseo.es/">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"Meseo","url":"https://meseo.es/"}</script>
-<meta name="app-version" content="7.543">
+<meta name="app-version" content="7.544">
 <meta name="app-build" content="May 2026">
 <meta name="theme-color" content="#1c2a22">
 <!-- ═══ PWA ═══ -->
@@ -1714,7 +1714,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if(typeof loadLazyData!=='function') return;
     if(!currentUser){ setTimeout(() => _idle(_preloadWines), 4000); return; }
     if(!WINES){
-      loadLazyData(_vinosRuta(), LANG==='en'?'wine list':'lista de vinos', { silent: true })
+      _vinosCargar(LANG==='en'?'wine list':'lista de vinos', { silent: true })
         .then(arr => { WINES = arr; _vinosVenue = _venueActual(); })
         .catch(() => { /* silent — feature degrades; user can retry via Vinos tab */ });
     }
@@ -2385,6 +2385,7 @@ function _vinosVigilar(){
 }
 async function hayCartaDeVinos(){
   const v = _venueActual();
+  if(_cartaVinos && _cartaVinos.venue === v) return true;   // la trae su carta (VINOS)
   if(v === _VENUE_POR_DEFECTO) return true;   // la de Txoko va en el paquete
   if(_hayVinos.has(v)) return _hayVinos.get(v);
   let ok = false;
@@ -2393,6 +2394,164 @@ async function hayCartaDeVinos(){
   _hayVinos.set(v, ok);
   return ok;
 }
+// ═══ BODEGA DENTRO DE LA CARTA (Akira Back, nov 2026) ═══════════════════
+// La carta de vinos de un restaurante puede no ser pública: entonces viaja
+// DENTRO de su carta privada (public.cartas), en dos claves de nivel superior:
+//   VINOS: [ {id, name, year, type, grapes, bodega, region, origin, price,
+//             copa, coravin, recomendado, seccion, secciones, formato, format,
+//             story, story_en, revisar}, … ]   // misma forma que data/wines.json
+//                                             // más copa/coravin/seccion/formato/revisar
+//   VINOS_SECCIONES: [ {nombre, tipo}, … ]    // opcional: el orden de la carta
+//   MARIDAJES: { degustacion: [ {pase_id, vino_id, porque, porque_en,
+//                                alternativa?:{tipo, vino_id, porque, porque_en}} ],
+//                platos: { <dish_id>: { copa:{vino_id, porque, porque_en},
+//                                       botella:{…} } } }
+// Si la carta trae VINOS, WINES sale de ahí y no se pide ningún archivo; si no,
+// todo sigue como antes (Txoko por archivo; los demás, sin bodega). Los
+// `pairings` de cada vino (los usan los juegos y la ficha) se derivan de
+// MARIDAJES con el nombre del plato. Lo pone _cartaAplicar y lo quita _cartaVaciar.
+let _cartaVinos = null;          // { venue, lista, secciones, maridajes } o null
+const _VINO_TIPOS = ['espumoso','blanco','rosado','tinto','generoso','sake','sin_alcohol','dulce'];
+function _maridajesValidos(raw, porId, dishes){
+  const ids = new Set((dishes || []).map(d => d && d.id));
+  const ok = x => !!(x && porId.has(Number(x.vino_id)));
+  const limpio = x => ({ vino_id: Number(x.vino_id), porque: String(x.porque || ''),
+    porque_en: String(x.porque_en || x.porque || ''), revisar: x.revisar !== false });
+  const out = { degustacion: [], platos: {} };
+  if(!raw || typeof raw !== 'object') return out;
+  for(const p of (Array.isArray(raw.degustacion) ? raw.degustacion : [])){
+    if(!p || !ids.has(Number(p.pase_id)) || !ok(p)) continue;
+    const e = Object.assign({ pase_id: Number(p.pase_id) }, limpio(p));
+    if(p.alternativa && ok(p.alternativa)) e.alternativa = Object.assign({ tipo: String(p.alternativa.tipo || '') }, limpio(p.alternativa));
+    out.degustacion.push(e);
+  }
+  const platos = (raw.platos && typeof raw.platos === 'object') ? raw.platos : {};
+  for(const k of Object.keys(platos)){
+    const id = Number(k), v = platos[k];
+    if(!ids.has(id) || !v) continue;
+    const o = {};
+    for(const t of ['copa','botella']) if(ok(v[t])) o[t] = limpio(v[t]);
+    if(o.copa || o.botella) out.platos[id] = o;
+  }
+  return out;
+}
+// Pura: se prueba sin navegador. null si la carta no trae bodega usable.
+function _vinosDeCarta(c, dishes){
+  if(!c || !Array.isArray(c.VINOS) || !c.VINOS.length) return null;
+  const lista = [], vistos = new Set();
+  for(const w of c.VINOS){
+    if(!w || !Number.isInteger(w.id) || vistos.has(w.id) || typeof w.name !== 'string' || !w.name.trim()) continue;
+    vistos.add(w.id);
+    lista.push(Object.assign({}, w, { pairings: [] }));
+  }
+  if(!lista.length) return null;
+  const porId = new Map(lista.map(w => [w.id, w]));
+  const maridajes = _maridajesValidos(c.MARIDAJES, porId, dishes);
+  const nombre = id => { const d = (dishes || []).find(x => x && x.id === id); return d ? d.name : null; };
+  const unir = (vid, did) => { const w = porId.get(vid), n = nombre(did); if(w && n && !w.pairings.includes(n)) w.pairings.push(n); };
+  for(const k of Object.keys(maridajes.platos)){
+    const p = maridajes.platos[k];
+    for(const t of ['copa','botella']) if(p[t]) unir(p[t].vino_id, Number(k));
+  }
+  for(const p of maridajes.degustacion){ unir(p.vino_id, p.pase_id); if(p.alternativa) unir(p.alternativa.vino_id, p.pase_id); }
+  const secciones = Array.isArray(c.VINOS_SECCIONES)
+    ? c.VINOS_SECCIONES.filter(s => s && typeof s.nombre === 'string' && s.nombre.trim()).map(s => ({ nombre: s.nombre, tipo: s.tipo || null }))
+    : null;
+  return { venue: c.venue || null, lista, secciones, maridajes };
+}
+// La bodega del restaurante en el que se está: la de su carta si la trae, si
+// no el archivo de siempre. Misma firma que loadLazyData sin la ruta.
+function _vinosCargar(label, opts){
+  if(_cartaVinos && _cartaVinos.venue === _venueActual()) return Promise.resolve(_cartaVinos.lista);
+  return loadLazyData(_vinosRuta(), label, opts);
+}
+function _vinosSonDeCarta(){ return !!(_cartaVinos && _cartaVinos.venue === _venueActual()); }
+
+// ── Maridajes de la carta (propuesta por validar del sumiller) ──
+function _marVino(id){ return _cartaVinos ? (_cartaVinos.lista.find(w => w.id === id) || null) : null; }
+function _marPlato(dishId){ return (_vinosSonDeCarta() && _cartaVinos.maridajes.platos[dishId]) || null; }
+// El del pase del menú degustación; si el pase no tiene uno propio, el de
+// copa de su plato.
+function _marPase(dishId){
+  if(!_vinosSonDeCarta()) return null;
+  const p = _cartaVinos.maridajes.degustacion.find(x => x.pase_id === dishId);
+  if(p) return p;
+  const pl = _marPlato(dishId);
+  return (pl && pl.copa) ? Object.assign({ pase_id: dishId }, pl.copa) : null;
+}
+function _marPorque(x){ return x ? (LANG==='en' ? (x.porque_en || x.porque) : x.porque) : ''; }
+function _vinoTipoTxt(t, _en){
+  const m = _en
+    ? {blanco:'White',tinto:'Red',rosado:'Rosé',espumoso:'Sparkling',dulce:'Sweet',generoso:'Sherry',sake:'Sake',sin_alcohol:'Alcohol free'}
+    : {blanco:'Blanco',tinto:'Tinto',rosado:'Rosado',espumoso:'Espumoso',dulce:'Dulce',generoso:'Generoso',sake:'Sake',sin_alcohol:'Sin alcohol'};
+  return m[t] || (t || '');
+}
+// «Propuesta, por validar»: sólo la ven mandos y administración, y sólo
+// mientras el dato siga marcado `revisar`. El equipo ve el maridaje limpio.
+function _marRevisarHTML(x){
+  if(!x || x.revisar === false) return '';
+  let ve = false;
+  try{ ve = _esMando() || _esAdmin(); }catch(e){ ve = false; }
+  if(!ve) return '';
+  return `<span class="mar-revisar">${LANG==='en' ? 'Proposal, pending validation' : 'Propuesta, por validar'}</span>`;
+}
+function _marPrecioTxt(w, _en){
+  const p = [];
+  if(w.copa != null) p.push(`${w.copa} € ${_en ? 'glass' : 'copa'}`);
+  if(w.coravin) p.push('Coravin');
+  if(w.price != null) p.push(_wPx(w, true) + ` ${_en ? 'bottle' : 'botella'}`);
+  return p.join(' · ');
+}
+function _marVinoBtnHTML(w){
+  return `<button type="button" class="mar-vino" onclick="event.stopPropagation();_marAbrirVino(${w.id})"><b>${escapeHTML(w.name)}${w.year ? ' ' + escapeHTML(String(w.year)) : ''}</b><small>${escapeHTML(_vinoTipoTxt(w.type, LANG==='en'))}${w.formato ? ' · ' + escapeHTML(w.formato) : ''} · ${escapeHTML(_marPrecioTxt(w, LANG==='en'))}</small></button>`;
+}
+function _marAbrirVino(id){
+  if(typeof WINES === 'undefined' || !Array.isArray(WINES) || !WINES.some(w => w.id === id)){
+    if(!_vinosSonDeCarta()) return;
+    WINES = _cartaVinos.lista; _vinosVenue = _cartaVinos.venue;
+  }
+  if(typeof _showWineDetail === 'function') _showWineDetail(id, null, null);
+}
+// La línea «Marida con» (ficha del plato y pase del menú degustación).
+function _marLineaHTML(x, rotulo){
+  const w = x ? _marVino(x.vino_id) : null;
+  if(!w) return '';
+  const _en = LANG==='en';
+  return `<div class="mar-linea">
+    <span class="mar-tit">${escapeHTML(rotulo || (_en ? 'Pairs with' : 'Marida con'))}</span>
+    ${_marVinoBtnHTML(w)}
+    ${_marPorque(x) ? `<p class="mar-porque">${escapeHTML(_marPorque(x))}</p>` : ''}
+    ${_marRevisarHTML(x)}
+  </div>`;
+}
+// El porqué de un vino con un plato (ficha del vino), por el nombre ES del plato.
+function _marPorqueDe(w, nombrePlato){
+  if(!_vinosSonDeCarta() || !w) return '';
+  const d = DISHES.find(x => x.name === nombrePlato);
+  if(!d) return '';
+  const m = _cartaVinos.maridajes;
+  const cand = [];
+  const pl = m.platos[d.id];
+  if(pl){ if(pl.copa) cand.push(pl.copa); if(pl.botella) cand.push(pl.botella); }
+  for(const p of m.degustacion) if(p.pase_id === d.id){ cand.push(p); if(p.alternativa) cand.push(p.alternativa); }
+  const x = cand.find(c => c.vino_id === w.id);
+  return x ? _marPorque(x) : '';
+}
+function _marAltRotulo(tipo, _en){
+  if(tipo === 'sin_alcohol') return _en ? 'Alcohol-free option' : 'Opción sin alcohol';
+  if(tipo === 'premium') return _en ? 'Premium option' : 'Opción premium';
+  return _en ? 'Alternative' : 'Alternativa';
+}
+function _marFichaHTML(dish){
+  const m = dish ? _marPlato(dish.id) : null;
+  if(!m) return '';
+  const _en = LANG==='en';
+  return `<section class="card mar-ficha" aria-label="${_en ? 'Wine pairing' : 'Maridaje'}">
+    ${m.copa ? _marLineaHTML(m.copa, _en ? 'Pairs with · by the glass' : 'Marida con · por copa') : ''}
+    ${m.botella ? _marLineaHTML(m.botella, _en ? 'By the bottle' : 'En botella') : ''}
+  </section>`;
+}
+
 function _navVinosSync(){
   hayCartaDeVinos().then(hay => { if(_SABER_HAY.vinos!==hay){ _SABER_HAY.vinos = hay; _saberSync(); } });
 }
@@ -2594,6 +2753,7 @@ function _alergenosCerrados(){
 function _cartaCachesFuera(){
   try{ if(typeof _PASE_FICHAS_CACHE!=='undefined') _PASE_FICHAS_CACHE.clear(); }catch(e){}
   try{ if(typeof _gsDishIdx!=='undefined') _gsDishIdx = null; }catch(e){}
+  try{ if(typeof _gsWineIdx!=='undefined') _gsWineIdx = null; }catch(e){}
   try{ if(typeof DISH_PHOTOS!=='undefined') DISH_PHOTOS = null; }catch(e){}
   try{ if(typeof _fotosPrivadasSoltar==='function') _fotosPrivadasSoltar(); }catch(e){}
   try{ if(typeof _sushiFotosSoltar==='function') _sushiFotosSoltar(); }catch(e){}
@@ -2683,6 +2843,16 @@ function _cartaAplicar(c){
   };
   _cartaFotos = (c === _CARTA_BASE) ? null : _cartaFotosValidas(c);
   DEGUSTACION = (c === _CARTA_BASE || typeof _degValida !== 'function') ? null : _degValida(c.DEGUSTACION, DISHES);
+  // La bodega que trae la carta (VINOS / MARIDAJES). Si la anterior venía de
+  // una carta y ésta no trae, se tira: no puede quedarse la del vecino.
+  let _vc = null;
+  try{ _vc = (c === _CARTA_BASE || typeof _vinosDeCarta !== 'function') ? null : _vinosDeCarta(c, DISHES); }catch(e){ _vc = null; }
+  try{
+    const _ant = _cartaVinos;
+    _cartaVinos = _vc;
+    if(_vc){ WINES = _vc.lista; _vinosVenue = _vc.venue; }
+    else if(_ant){ WINES = null; _vinosVenue = null; }
+  }catch(e){ /* al arrancar WINES aún no existe: no hay nada que tirar */ }
   _cartaCachesFuera();
   _cartaFranjaSync();
   // La ficha de servicio confirmada por el restaurante va encima (servidor,
@@ -2704,6 +2874,7 @@ function _cartaVaciar(){
   _cartaMeta = { venue:null, allergensValidated:false, CATS:[] };
   _cartaFotos = null;
   DEGUSTACION = null;
+  try{ const _ant = _cartaVinos; _cartaVinos = null; if(_ant){ WINES = null; _vinosVenue = null; } }catch(e){}
   _cartaCachesFuera();
   _cartaFranjaSync();
 }
@@ -3020,7 +3191,7 @@ const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><p
 const SRC = 'src';
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='7.543';  // sincronizada con sw.js VERSION (guard de CI)
+const APP_VERSION='7.544';  // sincronizada con sw.js VERSION (guard de CI)
 const APP_BUILD='Jul 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;
@@ -11506,7 +11677,7 @@ function _pddAsyncFill(){
     }).catch(()=>{});
     const _wines = (typeof WINES!=='undefined' && Array.isArray(WINES))
       ? Promise.resolve(WINES)
-      : loadLazyData(_vinosRuta(), LANG==='en'?'wine list':'lista de vinos', {silent:true}).then(w=>{ if(typeof WINES!=='undefined' && !WINES){ WINES=w; _vinosVenue=_venueActual(); } return w; });
+      : _vinosCargar(LANG==='en'?'wine list':'lista de vinos', {silent:true}).then(w=>{ if(typeof WINES!=='undefined' && !WINES){ WINES=w; _vinosVenue=_venueActual(); } return w; });
     _wines.then(()=>{
       const w=_pddWineFor(d);
       const el=document.getElementById('pddPair');
@@ -11606,7 +11777,7 @@ function _luClose(){
 async function _luWineOpen(){
   const en=LANG==='en';
   if(typeof WINES==='undefined' || !Array.isArray(WINES)){
-    try{ const w=await loadLazyData(_vinosRuta(), en?'wine list':'lista de vinos'); if(!WINES){ WINES=w; _vinosVenue=_venueActual(); } }catch(e){ return; }
+    try{ const w=await _vinosCargar(en?'wine list':'lista de vinos'); if(!WINES){ WINES=w; _vinosVenue=_venueActual(); } }catch(e){ return; }
   }
   const w=_luWineOfWeek();
   if(!w) return;
@@ -16410,7 +16581,7 @@ async function openGlobalSearch(){
   // their results can render. Dishes are always in memory.
   try{
     if((typeof WINES==='undefined' || !WINES) && typeof loadLazyData==='function'){
-      const w = await loadLazyData(_vinosRuta(), LANG==='en'?'wine list':'lista de vinos', { silent:true });
+      const w = await _vinosCargar(LANG==='en'?'wine list':'lista de vinos', { silent:true });
       if(w && (typeof WINES==='undefined' || !WINES)) WINES = w;
       _gsWineIdx = null; // rebuild now that data exists
     }
@@ -17212,6 +17383,7 @@ function _degPintarViaje(c){
     ${(typeof _caEntradaHTML==='function') ? _caEntradaHTML('degustacion') : ''}
     ${(typeof _rtcSeccionHTML==='function') ? _rtcSeccionHTML('degustacion','degustacion') : ''}
     <ol class="deg-linea">${filas}</ol>
+    ${_degMaridajeViajeHTML()}
     ${prac.length ? `<section class="deg-prac">
       <h3 class="deg-h3">${_en ? 'Practise' : 'Practica'}</h3>
       ${prac.map(([id, t, s]) => `<button type="button" class="deg-prac-btn" onclick="_degEmpezar('${id}')"><b>${t}</b><span>${s}</span></button>`).join('')}
@@ -17242,6 +17414,7 @@ function _degPintarPase(c){
     ${_guinoRetiroHTML(dd.guino, _en, dd.retiro)}
     ${dd.story ? `<div class="deg-story"><span>${_en ? 'At the table, in ten seconds' : 'En la mesa, en diez segundos'}</span><p>${escapeHTML(dd.story)}</p>${_degBtnEscuchar(d.id)}</div>` : ''}
     ${_degBocadosHTML(dd)}
+    ${_degMaridajePaseHTML(d.id)}
     <details class="deg-apoyo">
       <summary>${_en ? 'Ingredients and allergens' : 'Ingredientes y alérgenos'}</summary>
       <div class="deg-apoyo-body">
@@ -17255,6 +17428,41 @@ function _degPintarPase(c){
       ${sig ? `<button type="button" onclick="_degIr('pase',{pase:${sig.id}})">${_en ? 'Next' : 'Siguiente'} →</button>` : '<span></span>'}
     </div>
   </div>`;
+}
+
+// ── Maridaje del menú (propuesta del sumiller, de la carta: MARIDAJES) ──
+function _degMaridajePaseHTML(id){
+  const x = (typeof _marPase === 'function') ? _marPase(id) : null;
+  if(!x) return '';
+  const _en = LANG==='en';
+  const alt = x.alternativa ? _marLineaHTML(x.alternativa, _marAltRotulo(x.alternativa.tipo, _en)) : '';
+  return `<div class="card mar-ficha mar-pase">${_marLineaHTML(x)}${alt}</div>`;
+}
+function _degMaridajeViajeHTML(){
+  if(!DEGUSTACION || typeof _marPase !== 'function') return '';
+  const _en = LANG==='en';
+  const filas = DEGUSTACION.pases.map((p, i) => {
+    const x = _marPase(p.id), pl = _degPlato(p.id);
+    const w = x ? _marVino(x.vino_id) : null;
+    if(!w || !pl) return '';
+    const a = x.alternativa ? _marVino(x.alternativa.vino_id) : null;
+    return `<li class="mar-paso">
+      <span class="deg-num">${i + 1}</span>
+      <div class="mar-paso-txt">
+        <span class="mar-paso-plato">${escapeHTML(pl.dd.name)}</span>
+        ${_marVinoBtnHTML(w)}
+        ${_marPorque(x) ? `<p class="mar-porque">${escapeHTML(_marPorque(x))}</p>` : ''}
+        ${a ? `<div class="mar-alt"><span class="mar-tit">${escapeHTML(_marAltRotulo(x.alternativa.tipo, _en))}</span>${_marVinoBtnHTML(a)}${_marPorque(x.alternativa) ? `<p class="mar-porque">${escapeHTML(_marPorque(x.alternativa))}</p>` : ''}</div>` : ''}
+        ${_marRevisarHTML(x)}
+      </div>
+    </li>`;
+  }).filter(Boolean);
+  if(!filas.length) return '';
+  return `<section class="mar-viaje" aria-label="${_en ? 'Wine pairing, course by course' : 'Maridaje pase a pase'}">
+    <h3 class="deg-h3">${_en ? 'Wine pairing, course by course' : 'Maridaje pase a pase'}</h3>
+    <p class="mar-intro">${_en ? 'Wines served by the glass, so the pairing can be offered to the whole table.' : 'Vinos que se sirven por copa, para poder ofrecer el maridaje a toda la mesa.'}</p>
+    <ol class="mar-lista">${filas.join('')}</ol>
+  </section>`;
 }
 
 // ── Prácticas ──
@@ -22097,7 +22305,7 @@ function _snsRefresh(){
 async function _openSensoryMap(detail){
   const _en = LANG==='en';
   try {
-    if(!WINES) WINES = await loadLazyData(_vinosRuta(), _en?'wine list':'lista de vinos');
+    if(!WINES) WINES = await _vinosCargar(_en?'wine list':'lista de vinos');
     await loadVinosContent();
   } catch(e){
     showToast(_en?'Could not load the sensory map':'No se pudo cargar el mapa sensorial','error');
@@ -22576,7 +22784,7 @@ async function renderVinos(){
       + '<div style="margin:1.2rem auto 0;width:60%;height:4px;background:rgba(196,154,60,.1);border-radius:2px;overflow:hidden"><div style="height:100%;width:30%;background:linear-gradient(90deg,transparent,var(--gold),transparent);animation:wineLoaderSweep 1.2s ease-in-out infinite"></div></div></div>';
     try {
       const [w] = await Promise.all([
-        WINES ? Promise.resolve(WINES) : loadLazyData(_vinosRuta(), LANG==='en'?'wine list':'lista de vinos'),
+        WINES ? Promise.resolve(WINES) : _vinosCargar(LANG==='en'?'wine list':'lista de vinos'),
         loadVinosContent()
       ]);
       WINES = w;
@@ -22611,6 +22819,14 @@ async function renderVinos(){
   // se abre desde la ficha del vino o del plato y el mapa WebGL se retiró.
   if(sub==='sensorial' || sub==='mapa'){ sub = _vinoSubTab = 'aprende'; }
   const _en = LANG==='en';
+  // Bodega que viene en la carta (VINOS): la carta por secciones y nada más.
+  // Sommelier, Estudio, Práctica y Servicio se escribieron sobre la bodega de
+  // Txoko (fichas largas, perfiles, mapas sensoriales) y con esta no aplican.
+  if(typeof _vinosSonDeCarta === 'function' && _vinosSonDeCarta()){
+    try{ _vinosCartaPintar(c); }
+    catch(e){ console.error('vinos de carta:', e); c.innerHTML = '<div style="padding:2rem;text-align:center;color:var(--parch3)">'+(_en?'Could not show the wine list.':'No se pudo mostrar la carta de vinos.')+'</div>'; }
+    return;
+  }
   const tabs = [
     ['carta',_en?'Menu':'Carta',''],
     ['sommelier','Sommelier',''],
@@ -22780,6 +22996,77 @@ function _renderSommelier(c, bar){
       requestAnimationFrame(function(){ _sommelierAutocomplete(si.value); });
     }
   }
+}
+
+// ── Carta de vinos por secciones (bodega dentro de la carta) ──
+// Primero lo que se sirve por copa (y por Coravin), que es lo que más se
+// vende y se explica; luego las secciones en el orden de la carta impresa.
+let _vcBusca = '';
+function _vinosCartaGrupos(lista, secciones, _en){
+  const ordenTipo = t => { const i = _VINO_TIPOS.indexOf(t); return i < 0 ? 99 : i; };
+  const porCopa = lista.filter(w => w.copa != null && !w.coravin)
+    .sort((a, b) => ordenTipo(a.type) - ordenTipo(b.type) || (a.copa - b.copa));
+  const coravin = lista.filter(w => w.copa != null && w.coravin).sort((a, b) => a.copa - b.copa);
+  const grupos = [];
+  if(porCopa.length) grupos.push({ id:'copa', nombre: _en ? 'By the glass' : 'Por copa', vinos: porCopa, copa: true });
+  if(coravin.length) grupos.push({ id:'coravin', nombre: _en ? 'Fine wines by the glass, Coravin' : 'Por copa con Coravin', vinos: coravin, copa: true });
+  const yaCopa = new Set(['Vinos por copa', 'Coravin']);
+  const nombres = (secciones && secciones.length)
+    ? secciones.map(x => x.nombre)
+    : [...new Set(lista.map(w => w.seccion).filter(Boolean))];
+  nombres.forEach((n, i) => {
+    if(yaCopa.has(n)) return;
+    const vinos = lista.filter(w => (Array.isArray(w.secciones) ? w.secciones : [w.seccion]).includes(n));
+    if(vinos.length) grupos.push({ id: 's' + i, nombre: n, vinos, copa: false });
+  });
+  // Lo que no tenga sección de la lista (datos a medias) no se pierde.
+  const visto = new Set(grupos.flatMap(g => g.vinos.map(w => w.id)));
+  const resto = lista.filter(w => !visto.has(w.id));
+  if(resto.length) grupos.push({ id:'otros', nombre: _en ? 'Other wines' : 'Otros vinos', vinos: resto, copa: false });
+  return grupos;
+}
+// Ir a una sección sin scrollIntoView: con la cabecera fija, éste desplazaba
+// también el contenedor y dejaba una franja vacía arriba.
+function _vcIr(id){
+  const e = document.getElementById(id); if(!e) return;
+  const top = e.getBoundingClientRect().top + (window.scrollY || 0) - 120;
+  try{ window.scrollTo({ top: Math.max(0, top), behavior: 'smooth' }); }catch(_){ window.scrollTo(0, Math.max(0, top)); }
+}
+function _vinosCartaPintar(c){
+  const _en = LANG==='en';
+  const lista = _cartaVinos.lista;
+  const q = String(_vcBusca || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').trim();
+  const casa = w => !q || [w.name, w.grapes, w.region, w.origin, w.bodega, w.year].some(x => String(x || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').includes(q));
+  const grupos = _vinosCartaGrupos(lista, _cartaVinos.secciones, _en)
+    .map(g => Object.assign({}, g, { vinos: g.vinos.filter(casa) })).filter(g => g.vinos.length);
+  const ids = lista.map(w => w.id);
+  const fila = (w, copa) => {
+    const det = [w.grapes, w.bodega, w.region].filter(Boolean).join(' · ');
+    const precio = copa
+      ? `${w.copa} €<small>${_en ? 'glass' : 'copa'}${w.formato && w.type === 'sake' ? ' ' + escapeHTML(w.formato) : ''}</small>${w.price != null ? `<small>${_wPx(w, true)} ${_en ? 'bottle' : 'botella'}</small>` : ''}`
+      : `${_wPx(w, true)}${w.copa != null ? `<small>${w.copa} € ${_en ? 'glass' : 'copa'}</small>` : ''}`;
+    return `<button type="button" class="vc-fila" onclick="_showWineDetail(${w.id}, [${ids.join(',')}], null)">
+      <span class="vc-fila-txt"><b>${escapeHTML(w.name)}${w.year ? ' ' + escapeHTML(String(w.year)) : ''}${w.formato ? ' · ' + escapeHTML(w.formato) : ''}</b>
+      <span>${escapeHTML(_vinoTipoTxt(w.type, _en))}${det ? ' · ' + escapeHTML(det) : ''}</span></span>
+      <span class="vc-precio">${precio}</span>
+    </button>`;
+  };
+  const nCopa = lista.filter(w => w.copa != null).length;
+  c.innerHTML = `<div class="vc">
+    <header class="vc-cab">
+      <div class="deg-eyebrow">${escapeHTML(_venueRotulo())}</div>
+      <h2 class="deg-tit">${_en ? 'Wine list' : 'Carta de vinos'}</h2>
+      <p class="vc-intro">${_en ? `${lista.length} references, ${nCopa} by the glass. Tap a wine to see how to present it.` : `${lista.length} referencias, ${nCopa} por copa. Toca un vino para ver cómo contarlo.`}</p>
+    </header>
+    <div style="position:relative">
+      <input id="vcBusca" type="search" class="wine-search" value="${escapeHTML(_vcBusca)}" placeholder="${_en ? 'Search wine, grape, region…' : 'Buscar vino, uva, zona…'}" oninput="_vcBusca=this.value;_vinosCartaPintar(document.getElementById('appContent'));const i=document.getElementById('vcBusca');if(i){i.focus();i.setSelectionRange(i.value.length,i.value.length);}">
+    </div>
+    ${q ? '' : `<details class="deg-apoyo vc-ir"><summary>${_en ? 'Go to a section' : 'Ir a una sección'} · ${grupos.length}</summary><nav class="vc-indice deg-apoyo-body" aria-label="${_en ? 'Sections' : 'Secciones'}">${grupos.map(g => `<button type="button" onclick="_vcIr('vc-${g.id}')">${escapeHTML(g.nombre)}</button>`).join('')}</nav></details>`}
+    ${grupos.length ? grupos.map(g => `<section class="vc-sec" id="vc-${g.id}">
+      <h3>${escapeHTML(g.nombre)} <small>${g.vinos.length}</small></h3>
+      ${g.vinos.map(w => fila(w, g.copa)).join('')}
+    </section>`).join('') : `<div class="vc-vacio">${_en ? 'No wine matches that search.' : 'Ningún vino coincide con la búsqueda.'}</div>`}
+  </div>`;
 }
 
 function renderVinosCarta(){
@@ -24716,6 +25003,11 @@ function _showWineDetail(id, list, direction){
   const navCounter = _wineDetailList.length > 1 ? (_wineDetailIdx + 1) + ' / ' + _wineDetailList.length : '';
   const typeLabels = {blanco:_en?'White Wine':'Vino Blanco',tinto:_en?'Red Wine':'Vino Tinto',rosado:_en?'Rosé Wine':'Vino Rosado',espumoso:_en?'Sparkling':'Espumoso',dulce:_en?'Dessert Wine':'Vino Dulce'};
   const isWine = w.type !== 'cocktail';
+  // Vino de una carta que trae su bodega (VINOS): sin los consejos de servicio
+  // calculados por heurística (temperatura, guarda, perfil, radar), que se
+  // escribieron para la bodega de Txoko y aquí serían datos inventados.
+  const deCarta = (typeof _vinosSonDeCarta === 'function') && _vinosSonDeCarta();
+  const fichaLarga = isWine && !deCarta;
 
   const overlay = document.createElement('div');
   overlay.id = 'wineDetailOverlay';
@@ -24742,7 +25034,7 @@ function _showWineDetail(id, list, direction){
     <div class="wd-hero" style="position:relative;overflow:hidden;background:linear-gradient(155deg,var(--brand-ink) 0%,#2a3530 55%,#18251d 100%);border:1px solid rgba(228,190,104,.25);border-radius:18px;padding:1rem 1.1rem 1.2rem;margin-bottom:1rem;box-shadow:0 10px 30px rgba(28,42,34,.25), inset 0 1px 0 rgba(228,190,104,.12);text-align:center">
       <div style="position:absolute;inset:0;background:radial-gradient(circle at 50% 0%, rgba(228,190,104,.14), transparent 60%);pointer-events:none"></div>
       <div class="wc-top" style="margin-bottom:.7rem;position:relative">
-        <span class="wc-type" style="color:var(--gold3);border-color:rgba(228,190,104,.35);background:rgba(228,190,104,.08)"><span class="wc-type-dot" style="background:${({blanco:'var(--candy-yellow)',tinto:'var(--candy-red)',rosado:'var(--candy-pink)',espumoso:'var(--gold)',dulce:'var(--candy-orange)'})[w.type]||'var(--gold)'}"></span>${typeLabels[w.type]||w.type}</span>
+        <span class="wc-type" style="color:var(--gold3);border-color:rgba(228,190,104,.35);background:rgba(228,190,104,.08)"><span class="wc-type-dot" style="background:${({blanco:'var(--candy-yellow)',tinto:'var(--candy-red)',rosado:'var(--candy-pink)',espumoso:'var(--gold)',dulce:'var(--candy-orange)'})[w.type]||'var(--gold)'}"></span>${typeLabels[w.type]||_vinoTipoTxt(w.type,_en)}</span>
         <span class="wc-badges">
           ${w.vegaSicilia?'<span class="wc-rec" style="color:var(--gold3);border-color:rgba(228,190,104,.35);background:rgba(228,190,104,.08)">◆ VEGA SICILIA</span>':''}
           ${w.kosher?'<span class="wc-rec" style="color:rgba(244,237,226,.7);border-color:rgba(244,237,226,.25)">✡ KOSHER</span>':''}
@@ -24758,7 +25050,12 @@ function _showWineDetail(id, list, direction){
         <div class="wine-info-label">${w.format||(_en?'Bottle':'Botella')}</div>
         <div style="font-family:'Cinzel',serif;font-size:1.5rem;color:var(--gold-deep);font-weight:600">${w.price?w.price+' €':'—'}</div>
       </div>
+      ${w.copa!=null?`<div>
+        <div class="wine-info-label">${_en?'Glass':'Copa'}${w.coravin?' · Coravin':''}</div>
+        <div style="font-family:'Cinzel',serif;font-size:1.5rem;color:var(--gold-deep);font-weight:600">${w.copa} €</div>
+      </div>`:''}
     </div>
+    ${deCarta && (w.seccion || w.bodega) ? `<div class="vc-ficha-meta">${w.bodega?`<span>${escapeHTML(w.bodega)}</span>`:''}${w.seccion?`<span>${_en?'On the list':'En la carta'}: ${escapeHTML(w.seccion)}</span>`:''}${(typeof _marRevisarHTML==='function')?_marRevisarHTML(w):''}</div>` : ''}
 
     ${isWine?`
     <div style="display:flex;flex-wrap:wrap;gap:.6rem;margin-bottom:1.2rem">
@@ -24774,9 +25071,9 @@ function _showWineDetail(id, list, direction){
     </div>`:''}
 
     <div class="wine-story-box">
-      <div class="wine-info-label" style="margin-left:.6rem">✦ ${_en?'Story & Production':'Historia y Elaboración'}</div>
+      <div class="wine-info-label" style="margin-left:.6rem">✦ ${deCarta?(_en?'How to tell it':'Cómo contarlo'):(_en?'Story & Production':'Historia y Elaboración')}</div>
       <div style="font-family:'Cormorant Garamond',serif;font-size:1.05rem;color:var(--parchment);line-height:1.5;font-style:italic;margin-left:.6rem;position:relative">"${escapeHTML(_en && w.story_en ? w.story_en : w.story)}"</div>
-      ${isWine ? `<div style="display:flex;flex-wrap:wrap;gap:.4rem;margin-top:.8rem;margin-left:.6rem">${_wineStoryTags(w).map(t=>'<span style="font-family:var(--font-mono);font-size:var(--fs-1);padding:.2rem .5rem;border-radius:6px;background:rgba(196,154,60,.06);border:1px solid rgba(196,154,60,.1);color:var(--parch3)">◇ '+t+'</span>').join('')}</div>` : ''}
+      ${fichaLarga ? `<div style="display:flex;flex-wrap:wrap;gap:.4rem;margin-top:.8rem;margin-left:.6rem">${_wineStoryTags(w).map(t=>'<span style="font-family:var(--font-mono);font-size:var(--fs-1);padding:.2rem .5rem;border-radius:6px;background:rgba(196,154,60,.06);border:1px solid rgba(196,154,60,.1);color:var(--parch3)">◇ '+t+'</span>').join('')}</div>` : ''}
     </div>
 
     ${isWine && w.grapeSelection ? `
@@ -24793,7 +25090,7 @@ function _showWineDetail(id, list, direction){
       </div>
     </div>` : ''}
 
-    ${isWine ? `
+    ${fichaLarga ? `
     <div class="wine-info-box" style="margin-bottom:1.2rem;padding:.9rem 1rem">
       <div class="wine-info-label" style="margin-bottom:.6rem">◇ ${_en?'Serving Card':'Ficha de Servicio'}</div>
       <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:.5rem">
@@ -24816,9 +25113,9 @@ function _showWineDetail(id, list, direction){
       </div>` : ''}
     </div>` : ''}
 
-    ${isWine ? _wineProfileBlock(w, _en) : ''}
+    ${fichaLarga ? _wineProfileBlock(w, _en) : ''}
 
-    ${isWine ? _renderRadarChart(w) : ''}
+    ${fichaLarga ? _renderRadarChart(w) : ''}
 
     ${isWine&&w.notes?`
     <div class="wine-info-box" style="margin-bottom:1.2rem;padding:1rem 1.1rem">
@@ -24835,14 +25132,14 @@ function _showWineDetail(id, list, direction){
         ${w.pairings.map(p=>`
           <div style="padding:.5rem .7rem;border-radius:8px;background:rgba(196,154,60,.03);border-left:3px solid rgba(77,138,94,.25)">
             <div style="font-family:var(--font-serif);font-size:var(--fs-3);color:var(--parchment);margin-bottom:.2rem">${escapeHTML(_translateDish(p))}</div>
-            <div style="font-family:var(--font-sans);font-size:var(--fs-2);color:var(--sage);line-height:1.4;font-style:italic">${escapeHTML(_pairingWhy(w, p))}</div>
+            <div style="font-family:var(--font-sans);font-size:var(--fs-2);color:var(--sage);line-height:1.4;font-style:italic">${escapeHTML(deCarta ? _marPorqueDe(w, p) : _pairingWhy(w, p))}</div>
           </div>
         `).join('')}
       </div>
-      ${isWine ? _snsBtnHtml({type:'wine',id:w.id}) : ''}
-    </div>`:(isWine ? `<div style="margin-bottom:1.2rem">${_snsBtnHtml({type:'wine',id:w.id})}</div>` : '')}
+      ${fichaLarga ? _snsBtnHtml({type:'wine',id:w.id}) : ''}
+    </div>`:(fichaLarga ? `<div style="margin-bottom:1.2rem">${_snsBtnHtml({type:'wine',id:w.id})}</div>` : '')}
 
-    ${isWine ? _renderSimilarWinesSection(w, _en) : ''}
+    ${fichaLarga ? _renderSimilarWinesSection(w, _en) : ''}
   </div>`;
   // Handle direction-based update or fresh append
   if(direction && document.getElementById('wineDetailOverlay')){
@@ -29026,6 +29323,9 @@ function renderRepasoTopic(){
 // (el maridaje que de verdad se vende), luego los recomendados, y como mucho
 // tres. Devuelve null si la lista de vinos aún no ha cargado (carga diferida).
 function _dishPairWines(dish, limit){
+  // Carta con MARIDAJES: el de copa y el de botella, en ese orden.
+  const _m = (typeof _marPlato === 'function' && dish) ? _marPlato(dish.id) : null;
+  if(_m) return [_m.copa, _m.botella].filter(Boolean).map(x => _marVino(x.vino_id)).filter(Boolean).slice(0, limit||3);
   if(typeof WINES==='undefined' || !Array.isArray(WINES) || !WINES.length) return null;
   const norm = s => (s||'').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').trim();
   const n = norm(dish && dish.name);   // el nombre ES es la clave de los pairings
@@ -29086,9 +29386,7 @@ function renderRepasoDishDetail(dishId){
   // Los vinos emparejados (por precio, máx. 3) dentro de su plegable. Sin
   // bodega (restaurante sin lista de vinos, o lista vacía) no hay sección: antes
   // se quedaba en «Cargando maridaje…» para siempre.
-  const _wineTypeLbl = _en
-    ? {blanco:'White',tinto:'Red',rosado:'Rosé',espumoso:'Sparkling',dulce:'Sweet'}
-    : {blanco:'Blanco',tinto:'Tinto',rosado:'Rosado',espumoso:'Espumoso',dulce:'Dulce'};
+  const _wineTypeLbl = new Proxy({}, { get: (o, t) => _vinoTipoTxt(t, _en) });
   const _pairWines = _dishPairWines(dish, 3);
   const _sinBodega = _pairWines === null && (!_SABER_HAY.vinos || (Array.isArray(WINES) && !WINES.length));
   const _marTit = `${LANG==='en'?'Wine pairing':'Maridaje'}`;
@@ -29143,6 +29441,8 @@ function renderRepasoDishDetail(dishId){
 
     ${(typeof _degContarHTML==='function') ? _degContarHTML(dish, false) : ''}
 
+    ${(typeof _marFichaHTML==='function') ? _marFichaHTML(dish) : ''}
+
     ${_fpAlergenosHTML(dish, false)}
 
     ${typeof _fsvTiraHTML==='function' ? _fsvTiraHTML(dish, LANG==='en') : ''}
@@ -29162,7 +29462,7 @@ function renderRepasoDishDetail(dishId){
     _p.then(hay => {
       if(!hay) return;
       if(_SABER_HAY.vinos !== true){ _SABER_HAY.vinos = true; if(typeof _saberSync==='function') _saberSync(); }
-      return loadLazyData(_vinosRuta(), LANG==='en'?'wine list':'lista de vinos', {silent:true})
+      return _vinosCargar(LANG==='en'?'wine list':'lista de vinos', {silent:true})
         .then(w=>{ if(typeof WINES==='undefined' || !WINES) WINES = Array.isArray(w) ? w : [];
           if(repasoView==='dish' && repasoDishId===dishId) renderRepasoDishDetail(dishId); });
     }).catch(()=>{});
