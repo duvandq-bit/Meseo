@@ -11420,8 +11420,10 @@ test('Vinos: la bodega es de un restaurante, y quien no tiene no ve la de otro',
   });
   assert(fuera.length === 0,
     `estas cargas de vinos no pasan por _vinosRuta(): líneas ${fuera.join(', ')}`);
-  assert((html.match(/loadLazyData\(_vinosRuta\(\)/g) || []).length >= 6,
-    'los seis puntos de carga de vinos tienen que ir por _vinosRuta()');
+  // Desde nov 2026 pasan por _vinosCargar(), que sirve la bodega de la carta
+  // si la trae (VINOS) y si no pide _vinosRuta() como siempre.
+  assert((html.match(/_vinosCargar\(/g) || []).length >= 7 && /return loadLazyData\(_vinosRuta\(\), label, opts\);/.test(html),
+    'los puntos de carga de vinos tienen que ir por _vinosCargar() → _vinosRuta()');
 
   // El botón desaparece donde no hay bodega, igual que el del carro de quesos.
   assert(/function _navVinosSync\(\)/.test(html) && /hayCartaDeVinos\(\)\.then\(hay => \{ if\(_SABER_HAY\.vinos!==hay\)\{ _SABER_HAY\.vinos = hay; _saberSync\(\); \} \}\)/.test(html)
@@ -19213,7 +19215,7 @@ test('carga: la bodega no se precarga en la pantalla de entrada', () => {
   const cuerpo = html.slice(i, html.indexOf('\n  };', i));
   assert(/if\(!currentUser\)\{ setTimeout\(\(\) => _idle\(_preloadWines\), 4000\); return; \}/.test(cuerpo),
     '_preloadWines debe esperar a que haya alguien dentro');
-  assert(cuerpo.indexOf('if(!currentUser)') < cuerpo.indexOf('loadLazyData(_vinosRuta()'),
+  assert(cuerpo.indexOf('if(!currentUser)') < cuerpo.indexOf('_vinosCargar('),
     'la comprobación de sesión va antes de pedir la bodega');
   assert(/\n  _idle\(_preloadWines\);\n\}\);/.test(html), 'la precarga se programa en reposo');
 });
@@ -19515,6 +19517,152 @@ test('9 · modo tranquilo: en Equipo sólo mi tarjeta y el aviso', () => {
   assert(/if\(_soyTranquilo && emp\.name !== currentUser\) return '';/.test(rk), 'sólo mi fila');
   assert(/\$\{_soyTranquilo \? '' : leagueHTML\}/.test(rk) && /Solo ves tu tarjeta, sin ranking ni liga\./.test(rk) && /with no ranking or league\./.test(rk), 'sin liga y aviso claro, ES y EN');
   assert(/_modoTranquilo\(\)\)\{ host\.innerHTML=''; return; \}/.test(_fnSrc('_renderRankingGames')), 'sin récords de juegos');
+});
+
+console.log('\nBodega y maridajes dentro de la carta (Akira Back)');
+// El bloque entero, ejecutado con dobles: lo que se prueba es el código real.
+const _bod = (() => {
+  const i = html.indexOf('let _vinosVenue = null;');
+  const j = html.indexOf('function _navVinosSync(){', i);
+  const pedidas = [];
+  const ctx = { venue: 'r2', mando: false };
+  const api = new Function('ctx', 'pedidas', // eslint-disable-line no-new-func
+    `let LANG = 'es'; let WINES = null; const _VENUE_POR_DEFECTO = 'txoko';
+     const DISHES = [{ id: 3072, name: 'Hotate beurre blanc' }, { id: 3051, name: 'Cherne' }, { id: 3076, name: 'Yuzu mochi' }];
+     const _venueActual = () => ctx.venue;
+     const _esMando = () => ctx.mando; const _esAdmin = () => false;
+     const escapeHTML = s => String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+     const loadLazyData = (ruta) => { pedidas.push(ruta); return Promise.resolve([{ id: 1, name: 'de archivo' }]); };
+     const fetch = () => Promise.resolve({ ok: false });
+     ${_fnSrc('_wPx')}
+     ${html.slice(i, j)}
+     return { _vinosDeCarta, _maridajesValidos, _vinosCargar, hayCartaDeVinos, _marPlato, _marPase, _marLineaHTML, _marFichaHTML,
+              _vinoTipoTxt, _marRevisarHTML, _vinosSonDeCarta, _vinosRuta,
+              poner: (c) => { _cartaVinos = _vinosDeCarta(c, DISHES); }, quitar: () => { _cartaVinos = null; },
+              setLang: (l) => { LANG = l; } };`)(ctx, pedidas);
+  return Object.assign(api, { ctx, pedidas });
+})();
+const _cartaR2 = {
+  venue: 'r2',
+  VINOS: [
+    { id: 501, name: 'Viña Gómez 1400', year: '2024', type: 'blanco', price: 70, copa: 16, coravin: false, seccion: 'Islas Canarias · blancos', secciones: ['Vinos por copa', 'Islas Canarias · blancos'], revisar: true },
+    { id: 502, name: 'Go de sake', type: 'sake', price: null, copa: 30, formato: '180ml', seccion: 'Vinos por copa', revisar: true },
+    { id: 503, name: 'Jessica Litaud', year: '2023', type: 'blanco', price: 118, copa: null, seccion: 'Borgoña · blancos', revisar: true },
+    { id: 504, name: 'Kolonne', type: 'sin_alcohol', copa: 12, seccion: 'Vinos por copa' },
+    { id: 501, name: 'repetido' }, { name: 'sin id' }
+  ],
+  VINOS_SECCIONES: [{ nombre: 'Vinos por copa', tipo: 'espumoso' }, { nombre: 'Sake', tipo: 'sake' }, { nombre: 'x' }],
+  MARIDAJES: {
+    degustacion: [
+      { pase_id: 3072, vino_id: 501, porque: 'La salsa lleva vino canario.', porque_en: 'The sauce has Canarian wine.', revisar: true,
+        alternativa: { tipo: 'premium', vino_id: 502, porque: 'El beurre blanc lleva sake.', porque_en: 'Sake in the sauce.' } },
+      { pase_id: 9999, vino_id: 501, porque: 'pase que no existe' },
+      { pase_id: 3076, vino_id: 777, porque: 'vino que no existe' }
+    ],
+    platos: {
+      3051: { copa: { vino_id: 501, porque: 'Acidez para la mantequilla.', porque_en: 'Acidity for the butter.' },
+              botella: { vino_id: 503, porque: 'Chardonnay redondo.', porque_en: 'Round Chardonnay.' } },
+      3999: { copa: { vino_id: 501, porque: 'plato que no existe' } }
+    }
+  }
+};
+test('carta con VINOS: _vinosDeCarta valida la lista y deriva los pairings de MARIDAJES', () => {
+  const v = _bod._vinosDeCarta(_cartaR2, [{ id: 3072, name: 'Hotate beurre blanc' }, { id: 3051, name: 'Cherne' }, { id: 3076, name: 'Yuzu mochi' }]);
+  assert(v && v.venue === 'r2' && v.lista.length === 4, 'cuatro vinos válidos (sin repetidos ni sin id)');
+  const vg = v.lista.find(w => w.id === 501);
+  assert(vg.pairings.includes('Hotate beurre blanc') && vg.pairings.includes('Cherne'), 'pairings por nombre de plato');
+  assert(v.lista.find(w => w.id === 503).pairings.join() === 'Cherne', 'la botella también cuenta');
+  assert(v.maridajes.degustacion.length === 1 && v.maridajes.degustacion[0].alternativa.vino_id === 502, 'fuera pases y vinos que no existen; alternativa guardada');
+  assert(Object.keys(v.maridajes.platos).join() === '3051', 'fuera platos que no existen');
+  assert(v.secciones.length === 3 && v.secciones[1].nombre === 'Sake', 'secciones en orden, también la vacía');
+  assert(_bod._vinosDeCarta({ venue: 'r2' }, []) === null && _bod._vinosDeCarta({ VINOS: [] }, []) === null, 'sin VINOS no hay bodega de carta');
+  assert(!('pairings' in _cartaR2.VINOS[0]), 'no toca el dato de la carta');
+});
+// Lo asíncrono se mide antes, en orden; las pruebas sólo leen el resultado.
+const _bodRes = await (async () => {
+  const r = {};
+  _bod.poner(_cartaR2); _bod.ctx.venue = 'r2'; _bod.pedidas.length = 0;
+  r.deCarta = _bod._vinosSonDeCarta();
+  r.lista = await _bod._vinosCargar('lista de vinos', { silent: true });
+  r.pedidasR2 = _bod.pedidas.slice();
+  r.hayR2 = await _bod.hayCartaDeVinos();
+  _bod.ctx.venue = 'mb'; _bod.pedidas.length = 0;
+  r.deCartaMb = _bod._vinosSonDeCarta(); r.marMb = _bod._marPlato(3051);
+  await _bod._vinosCargar('x'); r.pedidasMb = _bod.pedidas.slice();
+  _bod.quitar(); _bod.ctx.venue = 'txoko'; _bod.pedidas.length = 0;
+  r.hayTxoko = await _bod.hayCartaDeVinos();
+  await _bod._vinosCargar('lista de vinos'); r.pedidasTxoko = _bod.pedidas.slice();
+  r.marTxoko = [_bod._marPlato(1), _bod._marPase(1), _bod._marFichaHTML({ id: 1 })];
+  _bod.ctx.venue = 'r2'; _bod.poner(_cartaR2);
+  return r;
+})();
+test('carta con VINOS: hayCartaDeVinos es true y WINES sale de la carta, sin pedir archivo', () => {
+  const r = _bodRes;
+  assert(r.deCarta, 'los vinos son de la carta puesta');
+  assert(Array.isArray(r.lista) && r.lista.length === 4 && r.pedidasR2.length === 0, 'no pide data/wines-r2.json');
+  assert(r.hayR2 === true, 'hay carta de vinos');
+});
+test('carta con VINOS: con otro restaurante puesto, la bodega de la carta no se usa', () => {
+  const r = _bodRes;
+  assert(!r.deCartaMb && r.marMb === null, 'ni vinos ni maridajes del vecino');
+  assert(r.pedidasMb.join() === 'data/wines-mb.json', 'vuelve al archivo del restaurante');
+});
+test('Txoko sin cambios: sin VINOS en la carta, su bodega sale de data/wines.json', () => {
+  const r = _bodRes;
+  assert(r.hayTxoko === true, 'Txoko tiene bodega');
+  assert(r.pedidasTxoko.join() === 'data/wines.json', 'Txoko pide data/wines.json como siempre');
+  assert(r.marTxoko[0] === null && r.marTxoko[1] === null && r.marTxoko[2] === '', 'Txoko no pinta maridaje de carta');
+  const ap = _fnSrc('_cartaAplicar');
+  assert(/_vc = \(c === _CARTA_BASE \|\| typeof _vinosDeCarta !== 'function'\) \? null : _vinosDeCarta\(c, DISHES\);/.test(ap), 'la carta de Txoko nunca trae bodega de carta');
+  assert(/else if\(_ant\)\{ WINES = null; _vinosVenue = null; \}/.test(ap), 'al poner una carta sin VINOS se tira la bodega de la anterior');
+  assert(/_cartaVinos = null; if\(_ant\)\{ WINES = null; _vinosVenue = null; \}/.test(_fnSrc('_cartaVaciar')), '_cartaVaciar quita la bodega de carta');
+  assert((html.match(/loadLazyData\(_vinosRuta\(\)/g) || []).length === 1, 'todos los usos pasan por _vinosCargar (la única llamada directa es la suya)');
+});
+test('maridaje en la ficha del plato: «Marida con» por copa y botella, con el porqué ES/EN', () => {
+  _bod.poner(_cartaR2); _bod.ctx.venue = 'r2'; _bod.ctx.mando = false;
+  const h = _bod._marFichaHTML({ id: 3051 });
+  assert(/Marida con · por copa/.test(h) && /Viña Gómez 1400 2024/.test(h) && /Acidez para la mantequilla\./.test(h), 'copa con su porqué');
+  assert(/En botella/.test(h) && /Jessica Litaud/.test(h), 'botella');
+  assert(/16 € copa/.test(h) && /70 € botella/.test(h), 'precios');
+  assert(!/Propuesta, por validar/.test(h), 'el equipo no ve la etiqueta de propuesta');
+  _bod.ctx.mando = true;
+  assert(/Propuesta, por validar/.test(_bod._marFichaHTML({ id: 3051 })), 'los mandos sí, mientras revisar sea true');
+  _bod.setLang('en');
+  const e = _bod._marFichaHTML({ id: 3051 });
+  assert(/Pairs with · by the glass/.test(e) && /Acidity for the butter\./.test(e) && /Proposal, pending validation/.test(e), 'en inglés');
+  _bod.setLang('es'); _bod.ctx.mando = false;
+  assert(!/—/.test(h), 'sin rayas');
+  assert(/<button type="button" class="mar-vino"/.test(h) && /\.mar-vino\{[^}]*min-height:44px/.test(read('styles.css')), 'el vino se toca (44 px)');
+});
+test('maridaje en el menú degustación: el del pase, su alternativa y, si falta, el de copa del plato', () => {
+  _bod.poner(_cartaR2);
+  const p = _bod._marPase(3072);
+  assert(p && p.vino_id === 501 && p.alternativa && p.alternativa.tipo === 'premium', 'pase con su maridaje y alternativa');
+  const f = _bod._marPase(3051);
+  assert(f && f.vino_id === 501 && /mantequilla/.test(f.porque), 'sin pase propio, el de copa del plato');
+  assert(_bod._marPase(3076) === null, 'pase sin vino válido: nada');
+  const pa = _fnSrc('_degPintarPase'), vi = _fnSrc('_degPintarViaje');
+  assert(/\$\{_degMaridajePaseHTML\(d\.id\)\}/.test(pa), 'la ficha del pase lleva su «Marida con»');
+  assert(/\$\{_degMaridajeViajeHTML\(\)\}/.test(vi), 'el viaje lleva el maridaje pase a pase');
+  assert(/Maridaje pase a pase/.test(_fnSrc('_degMaridajeViajeHTML')) && /Wine pairing, course by course/.test(_fnSrc('_degMaridajeViajeHTML')), 'ES y EN');
+  assert(/\$\{\(typeof _marFichaHTML==='function'\) \? _marFichaHTML\(dish\) : ''\}/.test(_fnSrc('renderRepasoDishDetail')), 'la ficha completa del plato lleva el maridaje');
+});
+test('Vinos con bodega de carta: carta por secciones, copas primero', () => {
+  const rv = html.slice(html.indexOf('async function renderVinos('), html.indexOf('function _renderSommelier('));
+  assert(/if\(typeof _vinosSonDeCarta === 'function' && _vinosSonDeCarta\(\)\)\{\s*try\{ _vinosCartaPintar\(c\); \}/.test(rv), 'renderVinos pinta la carta por secciones');
+  const g = new Function('_VINO_TIPOS', html.slice(html.indexOf('function _vinosCartaGrupos('), html.indexOf('function _vinosCartaPintar(')) + '; return _vinosCartaGrupos;')( // eslint-disable-line no-new-func
+    ['espumoso','blanco','rosado','tinto','generoso','sake','sin_alcohol','dulce']);
+  const lista = [
+    { id: 1, name: 'A', type: 'tinto', copa: 18, secciones: ['Vinos por copa', 'Islas Canarias · tintos'] },
+    { id: 2, name: 'B', type: 'blanco', copa: 16, secciones: ['Vinos por copa'] },
+    { id: 3, name: 'C', type: 'tinto', copa: 90, coravin: true, secciones: ['Coravin', 'Burdeos'] },
+    { id: 4, name: 'D', type: 'tinto', price: 80, secciones: ['Burdeos'] },
+    { id: 5, name: 'E', type: 'blanco', price: 50, seccion: 'Rara' }
+  ];
+  const gr = g(lista, [{ nombre: 'Vinos por copa' }, { nombre: 'Coravin' }, { nombre: 'Burdeos' }, { nombre: 'Islas Canarias · tintos' }, { nombre: 'Sake' }], false);
+  assert(gr.map(x => x.nombre).join('|') === 'Por copa|Por copa con Coravin|Burdeos|Islas Canarias · tintos|Otros vinos', 'orden: copa, Coravin, secciones de la carta; vacías fuera; nada se pierde');
+  assert(gr[0].vinos.map(w => w.id).join() === '2,1', 'por copa: blancos antes que tintos');
+  assert(gr[2].vinos.map(w => w.id).join() === '3,4', 'un vino sale en cada sección donde está');
 });
 
 console.log('\nHygiene');
