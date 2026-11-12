@@ -1,8 +1,100 @@
 {
- "updated": "2026-11-12T13:48:43.321Z",
+ "updated": "2026-11-12T22:45:16.142Z",
  "items": [
   {
-   "t": "Ciudad Real: el congreso de cocina cinegética de Almagro reúne a más de 400 asistentes y 40 ponentes",
+   "t": "Ainhoa Lozano, con una estrella Michelin en el Pirineo: \"La excelencia es el equilibrio entre la cocina y la sala, entre el producto y su elaboración\"",
+   "u": "https://www.heraldo.es/noticias/gastronomia/2026/11/12/ainhoa-lozano-casa-arcas-estrella-michelin-pirineo-2068116.html",
+   "s": "heraldo.es",
+   "d": "2026-11-12T21:00:00.000Z",
+   "tags": [
+    "CHEF",
+    "MICHELIN"
+   ],
+   "img": "https://imagenes.heraldo.es/files/image_1920_1080/uploads/imagenes/2026/11/12/6af5f8b7b86b21-17251065.jpeg"
+  },
+  {
+   "t": "La alta cocina brilla en el II Congreso Internacional de Gastronomía Cinegética, celebrado en Almagro",
+   "u": "https://www.agroclm.com/2026/11/12/la-alta-cocina-brilla-en-el-ii-congreso-internacional-de-gastronomia-cinegetica-celebrado-en-almagro/",
+   "s": "AgroCLM",
+   "d": "2026-11-12T19:26:40.000Z",
+   "tags": [
+    "ALTA COCINA"
+   ],
+   "img": "https://www.agroclm.com/wp-content/uploads/2026/11/II-CIGAC-ASICCAZA-Matteo-Vergine-Foto-Jose-DaSilva7.jpg"
+  },
+  {
+   "t": "Almagro reúne a más de 400 profesionales en el II Congreso Internacional de Gastronomía Cinegética",
+   "u": "https://www.lavozdeltajo.com/noticia/97569/provincias/almagro-reune-a-mas-de-400-profesionales-en-el-ii-congreso-internacional-de-gastronomia-cinegetica.html",
+   "s": "La Voz del Tajo",
+   "d": "2026-11-12T19:02:42.000Z",
+   "tags": [
+    "ALTA COCINA"
+   ]
+  },
+  {
+   "t": "Gran éxito del II CIGAC: la alta cocina cinegética corona su segunda edición con un histórico homenaje a Abraham García",
+   "u": "https://cazawonke.com/actualidad/181933-gran-exito-del-ii-cigac-la-alta-cocina-cinegetica-corona-su-segunda-edicion-con-un-historico-homenaje-a-abraham-garcia",
+   "s": "CAZA y SAFARIS",
+   "d": "2026-11-12T17:58:31.000Z",
+   "tags": [
+    "ALTA COCINA"
+   ],
+   "img": "https://cazawonke.com/wp-content/uploads/2026/11/1-Apertura-II-CIGAC-Caza-y-Safaris-Wonke.jpg"
+  },
+  {
+   "t": "Canarias llevará a Madrid Top Wine by Peñín 38 vinos de una selección de bodegas de Tenerife, Lanzarote y El Hierro",
+   "u": "https://canariasnoticias.es/2026/11/12/canarias-llevara-38-vinos-a-madrid-top-wine-by-penin",
+   "s": "CanariasNoticias.es",
+   "d": "2026-11-12T17:27:42.000Z",
+   "tags": [
+    "VINO",
+    "CANARIAS"
+   ],
+   "img": "https://lon1.digitaloceanspaces.com/canarias-noticias/media/images/2026/11/General_Madrid_Top_Wine.jpg"
+  },
+  {
+   "t": "Paulo Airaudo, el chef cordobés que alcanzó las 10 estrellas Michelin con sus restaurantes en el mundo",
+   "u": "https://www.infobae.com/historias/2026/11/12/paulo-airaudo-el-chef-cordobes-que-alcanzo-las-10-estrellas-michelin-con-sus-restaurantes-en-el-mundo/",
+   "s": "Infobae",
+   "d": "2026-11-12T15:56:00.000Z",
+   "tags": [
+    "MICHELIN"
+   ],
+   "img": "https://www.infobae.com/resizer/v2/NFPG7NOAOFBAVLM22KLCZNMNTY.jpg?auth=c03f6cb4868a86bce40f0b69dc3763b16feb6b3258a2f6efce6062a43b108637&smart=true&width=1200&height=630&quality=85"
+  },
+  {
+   "t": "‘Cebollas verdes’ apostará en esta entrega por vinos y postres de alta calidad",
+   "u": "https://rtvc.es/cebollas-verdes-apostara-en-esta-entrega-por-vinos-y-postres-de-alta-calidad-prensa-2026/",
+   "s": "Radio Televisión Canaria",
+   "d": "2026-11-12T14:19:01.000Z",
+   "tags": [
+    "VINO",
+    "CANARIAS"
+   ],
+   "img": "https://cdn.rtvc.es/archivos/2026/04/ELENA_BARRIOS-11.webp"
+  },
+  {
+   "t": "Tenerife recupera la cita con la Copa Cabildo de Optimist C aplazada la semana pasada",
+   "u": "https://www.eldiario.es/canariasahora/Deportes/nauticos/tenerife-recupera-cita-copa-cabildo-optimist-c-aplazada-semana-pasada_1_13658792.html",
+   "s": "elDiario.es",
+   "d": "2026-11-12T14:01:06.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://static.eldiario.es/clip/9e89c432-6feb-4b72-bb1a-9fdf7a64ca18_facebook-aspect-ratio-1200-675_default_0.jpg"
+  },
+  {
+   "t": "El XIII Foro de Turismo de Maspalomas aborda la gastronomía sostenible del futuro",
+   "u": "https://lavozcanaria.com/centro-norte-gran-canaria/san-bartolome-de-tirajana/el-xiii-foro-de-turismo-de-maspalomas-aborda-la-gastronomia-sostenible-del-futuro",
+   "s": "La Voz Canaria",
+   "d": "2026-11-12T14:00:47.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://lavozcanaria.com/media/2026/11/el-xiii-foro-de-turismo-de-maspalomas-aborda-la-gastronomia-sostenible-del-futuro.webp"
+  },
+  {
+   "t": "El congreso cinegético de Almagro reúne a más de 400 personas",
    "u": "https://www.latribunadeciudadreal.es/noticia/z2cb5aa2a-16df-438f-959e97fb93f157e2/202611/el-congreso-cinegetico-de-almagro-reune-a-mas-de-400-personas",
    "s": "La Tribuna de Ciudad Real",
    "d": "2026-11-12T13:36:32.000Z",
@@ -31,26 +123,13 @@
    "img": "https://www.lavozdetomelloso.com/api/mediafiles/7e224985-3c6d-4de9-bccc-fabb12580c92"
   },
   {
-   "t": "La Comunitat Valenciana participa en Madrid Top Wine by Peñín con 79 vinos de 16 bodegas y una cata de D.O. Valencia",
-   "u": "https://www.europapress.es/comunitat-valenciana/noticia-comunitat-valenciana-participa-madrid-top-wine-by-penin-79-vinos-16-bodegas-cata-do-valencia-20261112123241.html",
-   "s": "Europa Press",
-   "d": "2026-11-12T11:32:41.000Z",
+   "t": "Maspalomas desvela cómo será el restaurante del futuro: alta cocina, ciencia y sostenibilidad",
+   "u": "https://www.canariasenpleno.com/gastronomia-sostenible-maspalomas-foro/",
+   "s": "Canarias en Pleno",
+   "d": "2026-11-12T12:48:38.000Z",
    "tags": [
-    "VINO",
     "CANARIAS"
-   ],
-   "img": "https://img.europapress.es/fotoweb/fotonoticia_20261112123241_1200.jpg"
-  },
-  {
-   "t": "CyL lidera la presencia en Madrid Top Wine by Peñín con 93 bodegas, 408 vinos y un Bierzo de 100 puntos",
-   "u": "https://www.europapress.es/castilla-y-leon/noticia-cyl-lidera-presencia-madrid-top-wine-by-penin-93-bodegas-408-vinos-bierzo-100-puntos-20261112120725.html",
-   "s": "Europa Press",
-   "d": "2026-11-12T11:07:25.000Z",
-   "tags": [
-    "VINO",
-    "CANARIAS"
-   ],
-   "img": "https://img.europapress.es/fotoweb/fotonoticia_20261112120725_1200.jpg"
+   ]
   },
   {
    "t": "Comienza el IV festival Vinopoesía que llegará a Lanzarote en diciembre",
@@ -166,6 +245,15 @@
    "img": "https://estaticos-cdn.prensaiberica.es/clip/7115f282-e6a5-472c-94f0-b2e7f5ea670f_16-9-discover-aspect-ratio_default_0_x1001y375.jpg"
   },
   {
+   "t": "Candelaria entre Arroces: siete platos que desatan la fiebre del arroz en Tenerife",
+   "u": "https://www.canariasenpleno.com/candelaria-entre-arroces-2024/",
+   "s": "Canarias en Pleno",
+   "d": "2026-11-11T21:21:57.000Z",
+   "tags": [
+    "CANARIAS"
+   ]
+  },
+  {
    "t": "Así es Arguineguín, el pueblo costero de Canarias donde Anabel Pantoja ha encontrado calma y anonimato",
    "u": "https://www.noticiasdelvino.com/escapadas/2026/11/11/asi-es-arguineguin-el-pueblo-costero-de-canarias-donde-anabel-pantoja-ha-encontrado-calma-y-anonimato-69169/",
    "s": "Noticias del Vino",
@@ -196,16 +284,6 @@
    ]
   },
   {
-   "t": "El riesgo por viento en La Palma y las cumbres de Tenerife baja de alerta máxima a alerta",
-   "u": "https://www.eldiario.es/canariasahora/lapalmaahora/riesgo-viento-palma-cumbres-tenerife-baja-alerta-maxima-alerta_1_13655940.html",
-   "s": "elDiario.es",
-   "d": "2026-11-11T15:01:50.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://static.eldiario.es/clip/2bc37dde-faa0-44b1-9190-ce1da669ef5a_facebook-aspect-ratio-1200-675_default_0.jpg"
-  },
-  {
    "t": "El restaurante de carretera definitivo está en este pueblo medieval de Madrid: Martín Berasategui confiesa su secreto mejor guardado",
    "u": "https://www.noticiasdelvino.com/escapadas/2026/11/11/el-restaurante-de-carretera-definitivo-esta-en-este-pueblo-medieval-de-madrid-martin-berasategui-confiesa-su-secreto-mejor-guardado-74843/",
    "s": "Noticias del Vino",
@@ -223,84 +301,6 @@
    "tags": [
     "CANARIAS"
    ]
-  },
-  {
-   "t": "Candelaria entre Arroces: siete platos que desatan la fiebre del arroz en Tenerife",
-   "u": "https://www.canariasenpleno.com/candelaria-entre-arroces-2024/",
-   "s": "Canarias en Pleno",
-   "d": "2026-11-11T13:47:53.000Z",
-   "tags": [
-    "CANARIAS"
-   ]
-  },
-  {
-   "t": "La Salsa: el nombre cuenta la cocina",
-   "u": "https://www.canarias7.es/gastronomia-c7/restaurantes/salsa-nombre-cuenta-cocina-20261111140000-nt_amp.html",
-   "s": "Canarias7",
-   "d": "2026-11-11T13:00:00.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://s3.ppllstatics.com/canarias7/www/multimedia/gastronomia-c7/2026/11/10/3-k3tC-U40269111634UDC-1200x840@Canarias7.jpg"
-  },
-  {
-   "t": "El nuevo restaurante de Tenerife que te transporta a Japón sin salir de la isla: cocina japonesa y decoración inspirada en el manga y el anime",
-   "u": "https://www.eldia.es/tenerife/2026/11/11/nuevo-restaurante-tenerife-transporta-japon-decoracion-anime-manga-dv-136320281.html",
-   "s": "Eldía",
-   "d": "2026-11-11T11:25:49.000Z",
-   "tags": [
-    "CANARIAS"
-   ]
-  },
-  {
-   "t": "Martín Berasategui y los chefs expertos coinciden: para hacer un buen guiso de carne se usa «una zanahoria,...",
-   "u": "https://okdiario.com/recetas/martin-berasategui-chefs-expertos-coinciden-hacer-buen-guiso-carne-usa-zanahoria-puerro-25-gramos-mantequilla-20748714",
-   "s": "OkDiario",
-   "d": "2026-11-11T10:00:20.000Z",
-   "tags": [
-    "CHEF"
-   ],
-   "img": "https://okdiario.com/img/2026/11/11/martin-berasategui-y-los-chefs-expertos-coinciden-para-hacer-un-buen-guiso-de-carne-se-usa-una-zanahoria-un-puerro-y-25-gramos-de-mantequilla.jpg"
-  },
-  {
-   "t": "Bodega Numanthia descorcha dos nuevas añadas: Numanthia 2021 y Termanthia 2018",
-   "u": "https://www.eldia.es/comunicaciones-empresas/2026/11/11/bodega-numanthia-descorcha-nuevas-anadas-136317921.amp.html",
-   "s": "Eldía",
-   "d": "2026-11-11T09:02:43.000Z",
-   "tags": [
-    "VINO",
-    "CANARIAS"
-   ]
-  },
-  {
-   "t": "Foro de la ULPGC: Música y gastronomía en el cine, con coloquio",
-   "u": "https://www.teneriffa-news.com/es/agenda/agenda-gran-canaria/foro-ulpgc-musica-gastronomia-cine",
-   "s": "Teneriffa News",
-   "d": "2026-11-11T08:47:27.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://www.teneriffa-news.com/media/t/termine-veranstaltungen-kalender-teneriffa-kanaren-1920x1080.jpg"
-  },
-  {
-   "t": "Nueva cita para las Jornadas Gastronómicas del Cerdo en el Restaurante Arcos de la Laguna en Valleseco",
-   "u": "https://www.canarias7.es/gastronomia-c7/bp-nueva-cita-jornadas-gastronomicas-cerdo-restaurante-arcos-20261111131126-nt_amp.html",
-   "s": "Canarias7",
-   "d": "2026-11-11T07:26:32.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://s3.ppllstatics.com/canarias7/www/multimedia/gastronomia-c7/2026/11/10/foto%201-k3w-U402718174200EF-1200x840@Canarias7.jpg"
-  },
-  {
-   "t": "Pedrito Sánchez, Premio Nacional de Gastronomía: \"Somos los guardianes de la dieta mediterránea\"",
-   "u": "https://www.jaenhoy.es/ocio/pedrito-sanchez-premio-nacional-gastronomia-mejor-jefe-cocina-baga-jaen_0_2008468014.html",
-   "s": "Jaén Hoy",
-   "d": "2026-11-11T05:30:17.000Z",
-   "tags": [
-    "ALTA COCINA"
-   ],
-   "img": "https://static.grupojoly.com/clip/a248b710-a908-4ddf-acd4-aeafac8136cf_facebook-aspect-ratio_default_0.jpg"
   }
  ]
 }
