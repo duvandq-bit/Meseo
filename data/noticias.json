@@ -1,6 +1,57 @@
 {
- "updated": "2026-11-13T13:10:03.656Z",
+ "updated": "2026-11-13T22:41:06.803Z",
  "items": [
+  {
+   "t": "Las empresas del Clúster de Enoturismo de Canarias lideran la estrategia regional para el sector",
+   "u": "https://www.vinetur.com/es/amp/20261113110995/las-empresas-del-cluster-de-enoturismo-de-canarias-lideran-la-estrategia-regional-para-el-sector.html",
+   "s": "Vinetur",
+   "d": "2026-11-13T19:00:04.000Z",
+   "tags": [
+    "VINO",
+    "CANARIAS"
+   ],
+   "img": "https://www.vinetur.com/imagenes/blog/8635/20261113-162332-bb41bccc6a45a9e7d8a0b534cc7b7b49.jpg"
+  },
+  {
+   "t": "El Santa Cruz ADEIN Tenerife Fundación CB Canarias recibe a un rival directo",
+   "u": "https://www.eldiario.es/canariasahora/deportes/baloncesto/santa-cruz-adein-tenerife-fundacion-cb-canarias-recibe-rival-directo_1_13662641.html",
+   "s": "elDiario.es",
+   "d": "2026-11-13T16:08:23.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://static.eldiario.es/clip/b3e6dbb8-8b70-4161-8d4c-390e25db4acd_facebook-aspect-ratio-1200-675_default_0.jpg"
+  },
+  {
+   "t": "La Nuncia: Canarias también se cocina en Santander",
+   "u": "https://www.canarias7.es/gastronomia-c7/restaurantes/nuncia-canarias-cocina-santander-20261113145821-nt.html",
+   "s": "Canarias7",
+   "d": "2026-11-13T14:58:21.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://s3.ppllstatics.com/canarias7/www/multimedia/gastronomia-c7/2026/11/13/4-kz4-U40337885642qPE-1200x840@Canarias7.jpg"
+  },
+  {
+   "t": "La Justicia anula la condena a dos extrabajadores de una petrolera en Tenerife por un delito de revelación de secretos",
+   "u": "https://www.eldiario.es/canariasahora/tenerifeahora/tribunales/justicia-anula-condena-extrabajadores-petrolera-delito-revelacion-secretos_1_13662391.html",
+   "s": "elDiario.es",
+   "d": "2026-11-13T14:47:46.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://static.eldiario.es/clip/662d1fbb-02af-4039-8e32-99e858c77b0c_facebook-aspect-ratio-1200-675_default_0.jpg"
+  },
+  {
+   "t": "El restaurante de carretera definitivo está en este pueblo medieval de Madrid: Martín Berasategui confiesa su secreto mejor guardado",
+   "u": "https://www.noticiasdelvino.com/escapadas/2026/11/13/el-restaurante-de-carretera-definitivo-esta-en-este-pueblo-medieval-de-madrid-martin-berasategui-confiesa-su-secreto-mejor-guardado-74843/",
+   "s": "Noticias del Vino",
+   "d": "2026-11-13T14:08:04.000Z",
+   "tags": [
+    "CHEF"
+   ],
+   "img": "https://www.noticiasdelvino.com/wp-content/uploads/image-583.png.webp"
+  },
   {
    "t": "Eduardo Fernaud abre una taberna en Malasaña para reivindicar sus raíces canarias: «Queremos recuperar la e...",
    "u": "https://okdiario.com/cool/lifestyle/asi-nueva-taberna-madrid-alma-canaria-queriamos-recuperar-esencia-autentica-malasana-20711295",
@@ -13,13 +64,23 @@
   },
   {
    "t": "Martín Berasategui, chef, demuestra su pasión por la berenjena: “Si las coméis, os vais a quedar como bigotes de gambas”",
-   "u": "https://www.marca.com/tiramillas/gastronomia/2026/11/13/martin-berasategui-chef-demuestra-pasion-berenjena-comeis-vais-quedar-bigotes-gambas.html",
+   "u": "https://amp.marca.com/tiramillas/gastronomia/2026/11/13/martin-berasategui-chef-demuestra-pasion-berenjena-comeis-vais-quedar-bigotes-gambas.html",
    "s": "MARCA",
    "d": "2026-11-13T12:26:41.000Z",
    "tags": [
     "CHEF"
    ],
    "img": "https://objetos-xlk.estaticos-marca.com/files/article_main_microformat/uploads/2026/11/12/6af5b7ccb494a.jpeg"
+  },
+  {
+   "t": "Confort premium y alta gastronomía bajo la suave brisa canaria",
+   "u": "https://www.diariovasco.com/suplementos/brandedcontent/confort-premium-alta-gastronomia-bajo-suave-brisa-20261113131006-nt.html",
+   "s": "El Diario Vasco",
+   "d": "2026-11-13T12:10:07.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://s3.ppllstatics.com/diariovasco/www/multimedia/suplementos/2026/11/13/lopesan-1-kpbF-U40333498840TvG-1200x840@Diario%20Vasco.jpg"
   },
   {
    "t": "Martín Berasategui, chef, 66 años: \"La gente joven es la mejor generación que ha habido nunca en la cocina, tiene un mérito increíble lo que han hecho\"",
@@ -32,25 +93,6 @@
    "img": "https://hips.hearstapps.com/hmg-prod/images/martin-berasategui-elle-gourmet-694927fbf0d7b.jpg?crop=1xw:0.3795404002965159xh;center,top&resize=1200:*"
   },
   {
-   "t": "HD Hotels: cinco hoteles, cuatro islas y muchas formas de descubrir Canarias",
-   "u": "https://www.laprovincia.es/canarias/2026/11/13/hd-hotels-cinco-hoteles-cuatro-bc-136399918.html",
-   "s": "La Provincia",
-   "d": "2026-11-13T09:59:09.000Z",
-   "tags": [
-    "CANARIAS"
-   ]
-  },
-  {
-   "t": "Los precios siguen subiendo en Canarias: el transporte se encarece un 11%",
-   "u": "https://diariodeavisos.elespanol.com/2026/11/ipc-canarias-octubre-2026-inflacion-transporte/",
-   "s": "Diario de Avisos",
-   "d": "2026-11-13T08:25:08.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://cdn.diariodeavisos.com/wp-content/uploads/2026/06/Gasolina.jpg"
-  },
-  {
    "t": "Los precios suben un 1% en octubre en Canarias impulsados por el encarecimiento de los transportes",
    "u": "https://www.eldiario.es/canariasahora/economia/precios-suben-octubre-canarias-ipc-encarecimiento-transportes_1_13660699.html",
    "s": "elDiario.es",
@@ -61,6 +103,15 @@
    "img": "https://static.eldiario.es/clip/b020a313-909f-4abc-b068-037059f63765_facebook-aspect-ratio-1200-675_default_0.jpg"
   },
   {
+   "t": "La cocina del CIS saca a CC del Congreso y da la victoria al PSOE",
+   "u": "https://www.laprovincia.es/canarias/2026/11/13/cocina-cis-saca-cc-congreso-136396700.html",
+   "s": "La Provincia",
+   "d": "2026-11-13T08:00:38.000Z",
+   "tags": [
+    "CANARIAS"
+   ]
+  },
+  {
    "t": "El guachinche de Tenerife donde comer cocina canaria tradicional y carnes a la brasa: un rincón idílico y rural con vino de cosecha propia",
    "u": "https://www.eldia.es/tenerife/2026/11/13/guachinche-tenerife-comer-cocina-canaria-carnes-brasa-dv-136381014.html",
    "s": "Eldía",
@@ -69,16 +120,6 @@
     "CANARIAS",
     "VINO"
    ]
-  },
-  {
-   "t": "Airaudo como un nuevo Berasategui: algo está pasando y tiene base en Donostia",
-   "u": "https://www.diariovasco.com/gastronomia/airaudo-nuevo-berasategui-donostia-20261113121208-nt.html",
-   "s": "El Diario Vasco",
-   "d": "2026-11-13T07:17:02.000Z",
-   "tags": [
-    "CHEF"
-   ],
-   "img": "https://s1.ppllstatics.com/diariovasco/www/multimedia/gastronomia/2026/11/12/airaudo-kaGG-U40310736875hCG-1200x840@Diario%20Vasco.jpg"
   },
   {
    "t": "Quién es Pablo Airaudo, el chef argentino afincado en España que supera a Martín Berasategui en estrellas Michelin",
@@ -121,15 +162,13 @@
    ]
   },
   {
-   "t": "Ainhoa Lozano, con una estrella Michelin en el Pirineo: \"La excelencia es el equilibrio entre la cocina y la sala, entre el producto y su elaboración\"",
-   "u": "https://www.heraldo.es/noticias/gastronomia/2026/11/12/ainhoa-lozano-casa-arcas-estrella-michelin-pirineo-2068116.html",
-   "s": "heraldo.es",
-   "d": "2026-11-12T21:00:00.000Z",
+   "t": "Maspalomas desvela cómo será el restaurante del futuro: alta cocina, ciencia y sostenibilidad",
+   "u": "https://www.canariasenpleno.com/gastronomia-sostenible-maspalomas-foro/",
+   "s": "Canarias en Pleno",
+   "d": "2026-11-12T20:20:06.000Z",
    "tags": [
-    "CHEF",
-    "MICHELIN"
-   ],
-   "img": "https://imagenes.heraldo.es/files/image_1920_1080/uploads/imagenes/2026/11/12/6af5f8b7b86b21-17251065.jpeg"
+    "CANARIAS"
+   ]
   },
   {
    "t": "La alta cocina brilla en el II Congreso Internacional de Gastronomía Cinegética, celebrado en Almagro",
@@ -150,26 +189,6 @@
     "ALTA COCINA"
    ],
    "img": "https://cazawonke.com/wp-content/uploads/2026/11/1-Apertura-II-CIGAC-Caza-y-Safaris-Wonke.jpg"
-  },
-  {
-   "t": "El Gobierno de Canarias dice que \"la última Comisión Mixta de la legislatura deja sin resolver los 300 millones para la reconstrucción de La Palma\"",
-   "u": "https://www.eldiario.es/canariasahora/lapalmaahora/politica/gobierno-canarias-dice-ultima-comision-mixta-legislatura-deja-resolver-300-millones-reconstruccion-palma_1_13659747.html",
-   "s": "elDiario.es",
-   "d": "2026-11-12T17:56:32.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://static.eldiario.es/clip/9f0ca5a7-71da-4321-af70-0ec4a520e161_facebook-aspect-ratio-1200-675_default_0.jpg"
-  },
-  {
-   "t": "Vídeo: Vídeo | El fetiche de Ainhoa Lozano, del restaurante Casa Arcas de Villanova",
-   "u": "https://www.heraldo.es/gastronomia/video-fetiche-ainhoa-lozano-restaurante-casa-arcas-villanova-2068118-2.html",
-   "s": "heraldo.es",
-   "d": "2026-11-12T17:33:07.000Z",
-   "tags": [
-    "CHEF"
-   ],
-   "img": "https://imagenes.heraldo.es/files/image_1920_1080/uploads/imagenes/2026/11/12/6af5f853d29458-55119319.jpeg"
   },
   {
    "t": "Canarias llevará 38 vinos a Madrid Top Wine by Peñín",
@@ -193,14 +212,14 @@
    "img": "https://www.infobae.com/resizer/v2/NFPG7NOAOFBAVLM22KLCZNMNTY.jpg?auth=c03f6cb4868a86bce40f0b69dc3763b16feb6b3258a2f6efce6062a43b108637&smart=true&width=1200&height=630&quality=85"
   },
   {
-   "t": "Canarias y Estado mantienen diferencias por los 100 millones para la reconstrucción la La Palma",
-   "u": "https://www.eldiario.es/canariasahora/lapalmaahora/politica/canarias-mantienen-diferencias-100-millones-reconstruccion-palma_1_13659082.html",
-   "s": "elDiario.es",
-   "d": "2026-11-12T15:33:39.000Z",
+   "t": "Compras, música y 30 bonos regalo de 50 euros: el plan de este sábado en Santa Cruz de Tenerife",
+   "u": "https://diariodeavisos.elespanol.com/2026/11/santa-cruz-dia-comercio-ofra/",
+   "s": "Diario de Avisos",
+   "d": "2026-11-12T15:13:59.000Z",
    "tags": [
     "CANARIAS"
    ],
-   "img": "https://static.eldiario.es/clip/45dba35a-4a21-4036-bb07-048ab0163056_facebook-aspect-ratio-1200-675_default_0.jpg"
+   "img": "https://cdn.diariodeavisos.com/wp-content/uploads/2026/10/dia-del-comercio.jpg"
   },
   {
    "t": "‘Cebollas verdes’ apostará en esta entrega por vinos y postres de alta calidad",
@@ -253,17 +272,6 @@
    "img": "https://www.lavozdetomelloso.com/api/mediafiles/7e224985-3c6d-4de9-bccc-fabb12580c92"
   },
   {
-   "t": "Un total de 29 vinos navarros estarán presentes en Madrid Top Wine by Peñín 2026",
-   "u": "https://www.europapress.es/navarra/noticia-total-29-vinos-navarros-estaran-presentes-madrid-top-wine-by-penin-2026-20261112135515.html",
-   "s": "Europa Press",
-   "d": "2026-11-12T12:55:15.000Z",
-   "tags": [
-    "VINO",
-    "CANARIAS"
-   ],
-   "img": "https://img.europapress.es/fotoweb/fotonoticia_20261112135515_1200.jpg"
-  },
-  {
    "t": "Euskadi estará presente en Madrid Top Wine by Peñín con 108 vinos y txakolis del segmento de calidad",
    "u": "https://www.europapress.es/euskadi/noticia-euskadi-estara-presente-madrid-top-wine-by-penin-108-vinos-txakolis-segmento-calidad-20261112131028.html",
    "s": "Europa Press",
@@ -295,17 +303,6 @@
     "CANARIAS"
    ],
    "img": "https://cadenaser.com/resizer/v2/PW53P6TZ6VDSVE65CWBXDL5YJY.jpeg?auth=d4699a73a0358fcfb02358798cabcd8fb5958e0118be6e6d9bde44a18fad2fcc&quality=70&width=1200&height=675&smart=true"
-  },
-  {
-   "t": "La II Semana del Vino convierte Vallehermoso en el gran escaparate de la cultura vitivinícola y la enogastronomía gomera",
-   "u": "https://www.gomeranoticias.com/2026/11/12/la-ii-semana-del-vino-convierte-vallehermoso-en-el-gran-escaparate-de-la-cultura-vitivinicola-y-la-enogastronomia-gomera/",
-   "s": "Gomera Noticias",
-   "d": "2026-11-12T10:19:22.000Z",
-   "tags": [
-    "VINO",
-    "CANARIAS"
-   ],
-   "img": "https://www.gomeranoticias.com/wp-content/uploads/2026/11/semana-del-vino-vallehermoso.jpeg"
   }
  ]
 }
