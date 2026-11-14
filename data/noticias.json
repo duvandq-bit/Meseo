@@ -1,6 +1,47 @@
 {
- "updated": "2026-11-14T03:20:55.406Z",
+ "updated": "2026-11-14T12:15:18.735Z",
  "items": [
+  {
+   "t": "Los chefs coinciden sobre las lentejas: \"Para que queden perfectas, evita que el ajo del refrito se dore demasiado y amargue el guiso\"",
+   "u": "https://www.elconfidencial.com/alma-corazon-vida/2026-11-14/los-chefs-coinciden-sobre-las-lentejas_4461930/",
+   "s": "El Confidencial",
+   "d": "2026-11-14T10:37:00.000Z",
+   "tags": [
+    "CHEF"
+   ],
+   "img": "https://images.ecestaticos.com/7gy4ZJnzlt2TpkqadA-x1pPy_AE=/0x0:2048x1365/600x315/filters:fill(white):format(jpg):quality(99):watermark(f.elconfidencial.com/file/a73/f85/d17/a73f85d17f0b2300eddff0d114d4ab10.png,0,275,1)/f.elconfidencial.com/original/760/233/a9f/760233a9f78262df8c3543870f7916b1.jpg"
+  },
+  {
+   "t": "Erlantz Gorostiza, chef: \"Abama fue el primer hotel 5 estrellas gran lujo que no tuvo bufé. Hace 20 años, apostó por la alta cocina y por Martín Berasategui, entre otros chefs, y puso a Canarias en el mapa gastronómico y enológico\"",
+   "u": "https://www.telva.com/cocina/2026/11/14/6af7721a01a2f193088b4586.html",
+   "s": "Telva",
+   "d": "2026-11-14T09:57:12.000Z",
+   "tags": [
+    "CANARIAS",
+    "CHEF"
+   ],
+   "img": "https://phantom-telva.uecdn.es/aa48326a68c31143135c1e8bf0b3ad19/resize/1200/f/webp/assets/multimedia/imagenes/2026/11/13/17946027986001.jpg"
+  },
+  {
+   "t": "Qué ver en Tenerife: del Teide a sus piscinas naturales",
+   "u": "https://www.noticiasdelvino.com/escapadas/2026/11/14/tenerife-75142/",
+   "s": "Noticias del Vino",
+   "d": "2026-11-14T09:04:04.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://www.noticiasdelvino.com/wp-content/uploads/image-617.png.webp"
+  },
+  {
+   "t": "Los chefs españoles coinciden: \"El caldo de pollo mejora mucho en cuanto a sabor si incluyes ajo en la receta\"",
+   "u": "https://www.heraldo.es/noticias/gastronomia/2026/11/14/chefs-espanoles-coinciden-caldo-pollo-mejora-mucho-cuanto-sabor-incluyes-ajo-receta-2057544.amp.html",
+   "s": "heraldo.es",
+   "d": "2026-11-14T04:00:00.000Z",
+   "tags": [
+    "CHEF"
+   ],
+   "img": "https://imagenes.heraldo.es/files/image_1920_1080/files/fp/uploads/imagenes/2026/10/06/6ac504268f3954-74430148.r_d.1759-928-8848.jpeg"
+  },
   {
    "t": "Jordi Cruz, chef de España: “Las verduras que crecen bajo tierra van en agua fría y las demás, en agua hirviendo”",
    "u": "https://www.canal26.com/recetas/2026/11/14/jordi-cruz-chef-de-espana-las-verduras-que-crecen-bajo-tierra-van-en-agua-fria-y-las-demas-en-agua-hirviendo/",
@@ -114,13 +155,15 @@
    "img": "https://hips.hearstapps.com/hmg-prod/images/martin-berasategui-elle-gourmet-694927fbf0d7b.jpg?crop=1xw:0.3795404002965159xh;center,top&resize=1200:*"
   },
   {
-   "t": "HD Hotels: cinco hoteles, cuatro islas y muchas formas de descubrir Canarias",
-   "u": "https://www.laprovincia.es/canarias/2026/11/13/hd-hotels-cinco-hoteles-cuatro-bc-136399918.html",
-   "s": "La Provincia",
-   "d": "2026-11-13T09:59:09.000Z",
+   "t": "La Fundación Canaria Alhóndiga de Tacoronte recibe el Galardón de Vitivinicultura Sostenible en La Gomera",
+   "u": "https://www.vinetur.com/es/20261113110956/la-fundacion-canaria-alhondiga-de-tacoronte-recibe-el-galardon-de-vitivinicultura-sostenible-en-la-gomera.html",
+   "s": "Vinetur",
+   "d": "2026-11-13T11:00:00.000Z",
    "tags": [
+    "VINO",
     "CANARIAS"
-   ]
+   ],
+   "img": "https://www.vinetur.com/visuals/2026/november/13/agent-20261113-100309-1dc3dc0f3c3d7235.jpg"
   },
   {
    "t": "Los precios suben un 1% en octubre en Canarias impulsados por el encarecimiento de los transportes",
@@ -131,15 +174,6 @@
     "CANARIAS"
    ],
    "img": "https://static.eldiario.es/clip/b020a313-909f-4abc-b068-037059f63765_facebook-aspect-ratio-1200-675_default_0.jpg"
-  },
-  {
-   "t": "La cocina del CIS saca a CC del Congreso y da la victoria al PSOE",
-   "u": "https://www.laprovincia.es/canarias/2026/11/13/cocina-cis-saca-cc-congreso-136396700.html",
-   "s": "La Provincia",
-   "d": "2026-11-13T08:00:38.000Z",
-   "tags": [
-    "CANARIAS"
-   ]
   },
   {
    "t": "El guachinche de Tenerife donde comer cocina canaria tradicional y carnes a la brasa: un rincón idílico y rural con vino de cosecha propia",
@@ -194,6 +228,25 @@
    "img": "https://s3.ppllstatics.com/canarias7/www/multimedia/gastronomia-c7/2026/11/13/1-kSVE-U40326433307mtE-1200x840@Canarias7.jpg"
   },
   {
+   "t": "Iván Cerdeño traerá la esencia de la cocina castellana a mesa criolla",
+   "u": "https://eldia.com.do/ivan-cerdeno-traera-la-esencia-de-la-cocina-castellana-a-mesa-criolla/",
+   "s": "El Dia.com.do",
+   "d": "2026-11-13T05:00:00.000Z",
+   "tags": [
+    "ALTA COCINA"
+   ],
+   "img": "https://eldia.com.do/wp-content/uploads/2026/11/35_Vid_20_1p01-1200x675.webp"
+  },
+  {
+   "t": "Canarias participa con 149 quesos en el World Cheese Awards, uno de los certámenes más prestigiosos del sector que se celebra en Córdoba",
+   "u": "https://elburgado.com/canarias-participa-con-149-quesos-en-el-world-cheese-awards-uno-de-los-certamenes-mas-prestigiosos-del-sector-que-se-celebra-en-cordoba/",
+   "s": "El Burgado Digital",
+   "d": "2026-11-13T00:03:13.000Z",
+   "tags": [
+    "CANARIAS"
+   ]
+  },
+  {
    "t": "Huesca será sede de la Gala de la Guía Michelín 2027 y muestra su auge gastronómico",
    "u": "https://columnadigital.com/huesca-sera-sede-gala-guia-michelin-2027-muestra-auge-gastronomico/",
    "s": "Columna Digital",
@@ -204,42 +257,24 @@
    "img": "https://columnadigital.com/media/huesca-sera-sede-gala-guia-michelin-2027-muestra-auge-gastronomi-foto.webp"
   },
   {
-   "t": "Almagro reúne a más de 400 profesionales en el II Congreso Internacional de Gastronomía Cinegética",
-   "u": "https://www.lavozdeltajo.com/noticia/97569/provincias/almagro-reune-a-mas-de-400-profesionales-en-el-ii-congreso-internacional-de-gastronomia-cinegetica.html",
-   "s": "La Voz del Tajo",
-   "d": "2026-11-12T21:31:35.000Z",
+   "t": "Gran éxito del II CIGAC: la alta cocina cinegética corona su segunda edición con un histórico homenaje a Abraham García",
+   "u": "https://cazawonke.com/actualidad/181933-gran-exito-del-ii-cigac-la-alta-cocina-cinegetica-corona-su-segunda-edicion-con-un-historico-homenaje-a-abraham-garcia",
+   "s": "CAZA y SAFARIS",
+   "d": "2026-11-12T17:58:31.000Z",
    "tags": [
     "ALTA COCINA"
-   ]
+   ],
+   "img": "https://cazawonke.com/wp-content/uploads/2026/11/1-Apertura-II-CIGAC-Caza-y-Safaris-Wonke.jpg"
   },
   {
-   "t": "Maspalomas desvela cómo será el restaurante del futuro: alta cocina, ciencia y sostenibilidad",
-   "u": "https://www.canariasenpleno.com/gastronomia-sostenible-maspalomas-foro/",
-   "s": "Canarias en Pleno",
-   "d": "2026-11-12T20:20:06.000Z",
+   "t": "El Tenerife Cook Music Fest y el CD Tenerife renuevan su colaboración",
+   "u": "https://www.clubdeportivotenerife.es/noticias/el-tenerife-cook-music-fest-y-el-cd-tenerife-renuevan-su-colaboracion",
+   "s": "CD Tenerife",
+   "d": "2026-11-12T16:51:25.000Z",
    "tags": [
     "CANARIAS"
-   ]
-  },
-  {
-   "t": "La alta cocina brilla en el II Congreso Internacional de Gastronomía Cinegética, celebrado en Almagro",
-   "u": "https://www.agroclm.com/2026/11/12/la-alta-cocina-brilla-en-el-ii-congreso-internacional-de-gastronomia-cinegetica-celebrado-en-almagro/",
-   "s": "AgroCLM",
-   "d": "2026-11-12T19:26:40.000Z",
-   "tags": [
-    "ALTA COCINA"
    ],
-   "img": "https://www.agroclm.com/wp-content/uploads/2026/11/II-CIGAC-ASICCAZA-Matteo-Vergine-Foto-Jose-DaSilva7.jpg"
-  },
-  {
-   "t": "Vídeo: Vídeo | El fetiche de Ainhoa Lozano, del restaurante Casa Arcas de Villanova",
-   "u": "https://www.heraldo.es/gastronomia/video-fetiche-ainhoa-lozano-restaurante-casa-arcas-villanova-2068118-2.html",
-   "s": "heraldo.es",
-   "d": "2026-11-12T17:33:07.000Z",
-   "tags": [
-    "CHEF"
-   ],
-   "img": "https://imagenes.heraldo.es/files/image_1920_1080/uploads/imagenes/2026/11/12/6af5f853d29458-55119319.jpeg"
+   "img": "https://statics-maker.llt-services.com/ten/images/2026/04/28/large/95683e71-c869-4211-9148-3a156e0cf448-91.jpeg"
   },
   {
    "t": "Canarias llevará 38 vinos a Madrid Top Wine by Peñín",
@@ -263,16 +298,6 @@
    "img": "https://www.infobae.com/resizer/v2/NFPG7NOAOFBAVLM22KLCZNMNTY.jpg?auth=c03f6cb4868a86bce40f0b69dc3763b16feb6b3258a2f6efce6062a43b108637&smart=true&width=1200&height=630&quality=85"
   },
   {
-   "t": "Compras, música y 30 bonos regalo de 50 euros: el plan de este sábado en Santa Cruz de Tenerife",
-   "u": "https://diariodeavisos.elespanol.com/2026/11/santa-cruz-dia-comercio-ofra/",
-   "s": "Diario de Avisos",
-   "d": "2026-11-12T15:13:59.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://cdn.diariodeavisos.com/wp-content/uploads/2026/10/dia-del-comercio.jpg"
-  },
-  {
    "t": "‘Cebollas verdes’ apostará en esta entrega por vinos y postres de alta calidad",
    "u": "https://rtvc.es/cebollas-verdes-apostara-en-esta-entrega-por-vinos-y-postres-de-alta-calidad-prensa-2026/",
    "s": "Radio Televisión Canaria",
@@ -282,25 +307,6 @@
     "CANARIAS"
    ],
    "img": "https://cdn.rtvc.es/archivos/2026/04/ELENA_BARRIOS-11.webp"
-  },
-  {
-   "t": "El XIII Foro de Turismo de Maspalomas aborda la gastronomía sostenible del futuro",
-   "u": "https://lavozcanaria.com/centro-norte-gran-canaria/san-bartolome-de-tirajana/el-xiii-foro-de-turismo-de-maspalomas-aborda-la-gastronomia-sostenible-del-futuro",
-   "s": "La Voz Canaria",
-   "d": "2026-11-12T14:00:47.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://lavozcanaria.com/media/2026/11/el-xiii-foro-de-turismo-de-maspalomas-aborda-la-gastronomia-sostenible-del-futuro.webp"
-  },
-  {
-   "t": "El restaurante de Gran Canaria que sorprende con la popular carne de barril colombiana: un plato perfecto para compartir que triunfa junto a sus zumos naturales",
-   "u": "https://www.laprovincia.es/gran-canaria/2026/11/12/restaurante-gran-canaria-sorprende-popular-carne-barril-colombiana-dv-136345524.html",
-   "s": "La Provincia",
-   "d": "2026-11-12T13:31:09.000Z",
-   "tags": [
-    "CANARIAS"
-   ]
   }
  ]
 }
