@@ -1,6 +1,55 @@
 {
- "updated": "2026-11-15T02:44:30.759Z",
+ "updated": "2026-11-15T12:47:33.407Z",
  "items": [
+  {
+   "t": "La Vinal entrelaza el arte textil y la cultura del vino en su undécima edición",
+   "u": "https://www.eldia.es/canarias/2026/11/15/vinal-entrelaza-arte-textil-cultura-136343728.html",
+   "s": "Eldía",
+   "d": "2026-11-15T11:00:16.000Z",
+   "tags": [
+    "VINO",
+    "CANARIAS"
+   ]
+  },
+  {
+   "t": "La IA ya llena restaurantes y organiza equipos: la otra revolución hostelera",
+   "u": "https://www.laprovincia.es/canarias/2026/11/15/ia-llena-restaurantes-organiza-equipos-136460360.html",
+   "s": "La Provincia",
+   "d": "2026-11-15T09:53:10.000Z",
+   "tags": [
+    "CANARIAS"
+   ]
+  },
+  {
+   "t": "La Guía Michelin trasladará a Málaga la gala de sus nuevas estrellas españolas",
+   "u": "https://www.entretantomagazine.com/2026/11/15/la-guia-michelin-trasladara-a-malaga-la-gala-de-sus-nuevas-estrellas-espanolas/",
+   "s": "Magazine de Ocio y Cultura",
+   "d": "2026-11-15T09:04:25.000Z",
+   "tags": [
+    "MICHELIN"
+   ],
+   "img": "https://www.entretantomagazine.com/wp-content/uploads/2026/11/bodega-vino.jpg"
+  },
+  {
+   "t": "Ramón Freixa, chef con dos estrellas Michelin: \"Cuando alguien chilla pierde el respeto y pierde la veracidad\"",
+   "u": "https://www.huffingtonpost.es/sociedad/ramon-freixa-chef-dos-estrellas-michelin-cuando-alguien-chilla-pierde-respeto-pierde-veracidad-f202611.html?outputType",
+   "s": "El HuffPost",
+   "d": "2026-11-15T06:02:46.000Z",
+   "tags": [
+    "ALTA COCINA",
+    "MICHELIN"
+   ]
+  },
+  {
+   "t": "Dónde saborear Gran Canaria según Pedro Ortega, presidente de la Confederación Canaria de Empresarios y director general de La Isleña",
+   "u": "https://www.canarias7.es/gastronomia-c7/a-fuego-lento/saborear-gran-canaria-segun-pedro-ortega-presidente-20261115070000-nt.html",
+   "s": "Canarias7",
+   "d": "2026-11-15T06:01:13.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://s1.ppllstatics.com/canarias7/www/multimedia/gastronomia-c7/2026/11/13/pedro-knwE-U40343477638NUH-1200x840@Canarias7.jpg"
+  },
   {
    "t": "El Santa Cruz ADEIN Tenerife Fundación CB Canarias lo da todo, pero no puede con el Villa de Leganés",
    "u": "https://www.eldiario.es/canariasahora/deportes/baloncesto/santa-cruz-adein-tenerife-fundacion-cb-canarias-da-no-villa-leganes_1_13664981.html",
@@ -53,27 +102,6 @@
    "img": "https://static.eldiario.es/clip/a7b0f403-0f9f-4850-bc12-95a03156b392_facebook-aspect-ratio-1200-675_default_0.jpg"
   },
   {
-   "t": "El pueblo cerca de Santa Cruz donde nació Pedri y su romería",
-   "u": "https://www.noticiasdelvino.com/escapadas/2026/11/14/el-pueblo-media-hora-de-santa-cruz-donde-nacio-pedri-y-se-celebra-una-de-las-romerias-mas-populares-de-canarias-69133/",
-   "s": "Noticias del Vino",
-   "d": "2026-11-14T15:42:03.000Z",
-   "tags": [
-    "VINO",
-    "CANARIAS"
-   ],
-   "img": "https://www.noticiasdelvino.com/wp-content/uploads/image-229.png.webp"
-  },
-  {
-   "t": "Dos mujeres resultan heridas en una colisión de cuatro vehículos en Tenerife",
-   "u": "https://www.eldiario.es/canariasahora/tenerifeahora/sucesos/mujeres-resultan-heridas-colision-cuatro-vehiculos-tenerife_1_13664293.html",
-   "s": "elDiario.es",
-   "d": "2026-11-14T14:54:13.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://static.eldiario.es/clip/c36a39eb-0fc8-4bd6-a47f-d9815a2bc5a3_facebook-aspect-ratio-1200-675_default_0.jpg"
-  },
-  {
    "t": "Lara Álvarez lo tiene claro tras volver a Tenerife: “Siempre es un sí”",
    "u": "https://diariodeavisos.elespanol.com/2026/11/lara-alvarez-tenerife-2/",
    "s": "Diario de Avisos",
@@ -92,6 +120,16 @@
     "CANARIAS"
    ],
    "img": "https://s2.ppllstatics.com/canarias7/www/multimedia/gastronomia-c7/2026/11/13/9-knDD-U40338320892wmB-1200x840@Canarias7.jpg"
+  },
+  {
+   "t": "Marcelinho Huertas se despide de La Laguna Tenerife ante el MoraBanc Andorra",
+   "u": "https://www.eldiario.es/canariasahora/deportes/baloncesto/marcelinho-huertas-despide-laguna-tenerife-morabanc-andorra_1_13664085.html",
+   "s": "elDiario.es",
+   "d": "2026-11-14T12:58:06.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://static.eldiario.es/clip/ff16bd6f-da58-4866-8973-314d2b3f71c1_facebook-aspect-ratio-1200-675_default_0.jpg"
   },
   {
    "t": "Los chefs coinciden sobre las lentejas: \"Para que queden perfectas, evita que el ajo del refrito se dore demasiado y amargue el guiso\"",
@@ -113,6 +151,27 @@
     "CHEF"
    ],
    "img": "https://phantom-telva.uecdn.es/aa48326a68c31143135c1e8bf0b3ad19/resize/1200/f/webp/assets/multimedia/imagenes/2026/11/13/17946027986001.jpg"
+  },
+  {
+   "t": "Chefs con estrella Michelin toman las aulas del CdT de Dénia para enseñar alta cocina a los profesionales de la hostelería valenciana",
+   "u": "https://www.valenciaextra.com/es/sociedad/chefs-con-estrella-michelin-toman-las-aulas-del-cdt-de-denia-para-ensenar-alta-cocina-a-los-profesionales-de-la-hosteleria-valenciana_604267_102.html",
+   "s": "València Extra",
+   "d": "2026-11-14T09:53:04.000Z",
+   "tags": [
+    "ALTA COCINA",
+    "MICHELIN"
+   ]
+  },
+  {
+   "t": "Qué ver en Tenerife: del Teide a sus piscinas naturales",
+   "u": "https://www.noticiasdelvino.com/escapadas/2026/11/14/tenerife-75142/",
+   "s": "Noticias del Vino",
+   "d": "2026-11-14T09:04:04.000Z",
+   "tags": [
+    "VINO",
+    "CANARIAS"
+   ],
+   "img": "https://www.noticiasdelvino.com/wp-content/uploads/image-617.png.webp"
   },
   {
    "t": "Los chefs españoles coinciden: \"El caldo de pollo mejora mucho en cuanto a sabor si incluyes ajo en la receta\"",
@@ -155,6 +214,16 @@
     "CANARIAS"
    ],
    "img": "https://lon1.digitaloceanspaces.com/canarias-noticias/media/images/2026/11/Jose_Quevedo_Destilerias_Aldea_Victor_Diaz_Bodega_Vulcano_11.png"
+  },
+  {
+   "t": "El Santa Cruz ADEIN Tenerife Fundación CB Canarias recibe a un rival directo",
+   "u": "https://www.eldiario.es/canariasahora/deportes/baloncesto/santa-cruz-adein-tenerife-fundacion-cb-canarias-recibe-rival-directo_1_13662641.html",
+   "s": "elDiario.es",
+   "d": "2026-11-13T16:08:23.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://static.eldiario.es/clip/b3e6dbb8-8b70-4161-8d4c-390e25db4acd_facebook-aspect-ratio-1200-675_default_0.jpg"
   },
   {
    "t": "La Nuncia: Canarias también se cocina en Santander",
@@ -217,94 +286,25 @@
    "img": "https://hips.hearstapps.com/hmg-prod/images/martin-berasategui-elle-gourmet-694927fbf0d7b.jpg?crop=1xw:0.3795404002965159xh;center,top&resize=1200:*"
   },
   {
+   "t": "La Fundación Canaria Alhóndiga de Tacoronte recibe el Galardón de Vitivinicultura Sostenible en La Gomera",
+   "u": "https://www.vinetur.com/es/amp/20261113110956/la-fundacion-canaria-alhondiga-de-tacoronte-recibe-el-galardon-de-vitivinicultura-sostenible-en-la-gomera.html",
+   "s": "Vinetur",
+   "d": "2026-11-13T11:00:03.000Z",
+   "tags": [
+    "VINO",
+    "CANARIAS"
+   ],
+   "img": "https://www.vinetur.com/visuals/2026/november/13/agent-20261113-100309-1dc3dc0f3c3d7235.jpg"
+  },
+  {
    "t": "Los precios suben un 1% en octubre en Canarias impulsados por el encarecimiento de los transportes",
-   "u": "https://www.eldiario.es/canariasahora/economia/precios-suben-octubre-canarias-ipc-encarecimiento-transportes_1_13660699.html",
+   "u": "https://www.eldiario.es/canariasahora/economia/precios-suben-octubre-canarias-ipc-encarecimiento-transportes_1_13660699.amp.html",
    "s": "elDiario.es",
    "d": "2026-11-13T08:24:45.000Z",
    "tags": [
     "CANARIAS"
    ],
    "img": "https://static.eldiario.es/clip/b020a313-909f-4abc-b068-037059f63765_facebook-aspect-ratio-1200-675_default_0.jpg"
-  },
-  {
-   "t": "El guachinche de Tenerife donde comer cocina canaria tradicional y carnes a la brasa: un rincón idílico y rural con vino de cosecha propia",
-   "u": "https://www.eldia.es/tenerife/2026/11/13/guachinche-tenerife-comer-cocina-canaria-carnes-brasa-dv-136381014.html",
-   "s": "Eldía",
-   "d": "2026-11-13T07:43:38.000Z",
-   "tags": [
-    "CANARIAS",
-    "VINO"
-   ]
-  },
-  {
-   "t": "Ainhoa Lozano, con una estrella Michelin en el Pirineo: \"La excelencia es el equilibrio entre la cocina y la sala, entre el producto y su elaboración\"",
-   "u": "https://www.heraldo.es/noticias/gastronomia/2026/11/13/ainhoa-lozano-casa-arcas-estrella-michelin-pirineo-2068116.html",
-   "s": "heraldo.es",
-   "d": "2026-11-13T07:40:29.000Z",
-   "tags": [
-    "CHEF",
-    "MICHELIN"
-   ],
-   "img": "https://imagenes.heraldo.es/files/image_1920_1080/uploads/imagenes/2026/11/12/6af5f8b7b86b21-17251065.jpeg"
-  },
-  {
-   "t": "Airaudo como un nuevo Berasategui: algo está pasando y tiene base en Donostia",
-   "u": "https://www.diariovasco.com/gastronomia/airaudo-nuevo-berasategui-donostia-20261113121208-nt.html",
-   "s": "El Diario Vasco",
-   "d": "2026-11-13T07:17:02.000Z",
-   "tags": [
-    "CHEF"
-   ],
-   "img": "https://s1.ppllstatics.com/diariovasco/www/multimedia/gastronomia/2026/11/12/airaudo-kaGG-U40310736875hCG-1200x840@Diario%20Vasco.jpg"
-  },
-  {
-   "t": "Quién es Pablo Airaudo, el chef argentino afincado en España que supera a Martín Berasategui en estrellas Michelin",
-   "u": "https://www.infobae.com/espana/2026/11/13/quien-es-pablo-airaudo-el-chef-argentino-afincado-en-espana-que-supera-a-martin-berasategui-en-estrellas-michelin/",
-   "s": "Infobae",
-   "d": "2026-11-13T06:52:00.000Z",
-   "tags": [
-    "MICHELIN",
-    "CHEF"
-   ],
-   "img": "https://www.infobae.com/resizer/v2/ANJJAQBYJ5CG3DVS44IRTKKX6Q.jpg?auth=4c288fca1064da9cf2474e52c664d23c287959582a9d74b62d77c18a91cbb060&smart=true&width=1200&height=630&quality=85"
-  },
-  {
-   "t": "Frimancha Canarias: la generosidad de compartir lo que se hace con la Academia de Gastronomía de Las Palmas",
-   "u": "https://www.canarias7.es/gastronomia-c7/frimancha-canarias-generosidad-compartir-academia-gastronomia-palmas-20261113070000-nt.html",
-   "s": "Canarias7",
-   "d": "2026-11-13T06:00:18.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://s3.ppllstatics.com/canarias7/www/multimedia/gastronomia-c7/2026/11/13/1-kSVE-U40326433307mtE-1200x840@Canarias7.jpg"
-  },
-  {
-   "t": "Canarias participa con 149 quesos en el World Cheese Awards, uno de los certámenes más prestigiosos del sector que se celebra en Córdoba",
-   "u": "https://elburgado.com/canarias-participa-con-149-quesos-en-el-world-cheese-awards-uno-de-los-certamenes-mas-prestigiosos-del-sector-que-se-celebra-en-cordoba/",
-   "s": "El Burgado Digital",
-   "d": "2026-11-13T00:03:13.000Z",
-   "tags": [
-    "CANARIAS"
-   ]
-  },
-  {
-   "t": "Almagro reúne a más de 400 profesionales en el II Congreso Internacional de Gastronomía Cinegética",
-   "u": "https://www.lavozdeltajo.com/noticia/97569/provincias/almagro-reune-a-mas-de-400-profesionales-en-el-ii-congreso-internacional-de-gastronomia-cinegetica.html",
-   "s": "La Voz del Tajo",
-   "d": "2026-11-12T21:31:35.000Z",
-   "tags": [
-    "ALTA COCINA"
-   ]
-  },
-  {
-   "t": "La alta cocina brilla en el II Congreso Internacional de Gastronomía Cinegética, celebrado en Almagro",
-   "u": "https://www.agroclm.com/2026/11/12/la-alta-cocina-brilla-en-el-ii-congreso-internacional-de-gastronomia-cinegetica-celebrado-en-almagro/",
-   "s": "AgroCLM",
-   "d": "2026-11-12T19:26:40.000Z",
-   "tags": [
-    "ALTA COCINA"
-   ],
-   "img": "https://www.agroclm.com/wp-content/uploads/2026/11/II-CIGAC-ASICCAZA-Matteo-Vergine-Foto-Jose-DaSilva7.jpg"
   }
  ]
 }
