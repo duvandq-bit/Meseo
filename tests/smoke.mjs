@@ -19143,7 +19143,7 @@ test('ux camarero · Hoy: lo útil arriba, saludo y nivel en una tarjeta pequeñ
   const d = _fnSrc('renderDashboard');
   const i = (x) => d.indexOf(x);
   assert(i("_padTarjetaHTML('dashboard')") > 0 && i("_padTarjetaHTML('dashboard')") < i('${_heroMiniHTML('), 'Un plato al día antes que el saludo');
-  assert(i('${_parteCard}') < i('${_hoyPlanHTML(emp,_en)}') && i('${_hoyPlanHTML(emp,_en)}') < i('${_heroMiniHTML('), 'Hoy en sala y el plan, antes que el saludo');
+  assert(i('${_hoyPlanHTML(emp,_en)}') < i('${_parteCard}') && i('${_parteCard}') < i('${_heroMiniHTML('), 'el plan y Hoy en sala (plegado), antes que el saludo');
   assert(!/dash-hero-rune|dash-hero-shine|dash-hero-label/.test(d), 'sin runas, brillo ni cejilla en Hoy');
   const css = read('styles.css');
   assert(/\.dash-hero\.dash-hero-mini\{[^}]*min-height:44px/.test(css), 'la tarjeta pequeña se toca (44 px)');
