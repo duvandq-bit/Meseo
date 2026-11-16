@@ -11294,6 +11294,21 @@ html[data-venue="demo"] .ri-cta-mesa .ri-cta-icon{border-color:rgba(200,163,90,.
 /* ═══ EL PARTE DEL DÍA (Inicio, overlay del Line Up y editor del supervisor) ═══ */
 .parte-card{position:relative;background:linear-gradient(155deg,#fdf9f0,#f3ebdb);border:1.5px solid var(--line2);border-left:4px solid var(--gold);border-radius:16px;padding:1rem 1.05rem .85rem;margin:0 0 1.2rem;box-shadow:var(--elev-2);overflow:hidden}
 .parte-card-ov{margin:0;box-shadow:none;border-left-width:4px}
+.parte-plegable{padding:0}
+.parte-sum{display:flex;align-items:center;gap:.6rem;min-height:56px;padding:.75rem 1.05rem;cursor:pointer;list-style:none;-webkit-tap-highlight-color:transparent}
+.parte-sum::-webkit-details-marker{display:none}
+.parte-sum-tx{flex:1;min-width:0;display:flex;flex-direction:column;gap:.2rem}
+.parte-sum-t{display:flex;flex-wrap:wrap;align-items:center;gap:.4rem;font-family:var(--font-mono);font-size:var(--fs-1);letter-spacing:.16em;text-transform:uppercase;color:var(--gold-deep);font-weight:500}
+.parte-sum-r{font-family:var(--font-sans);font-size:var(--fs-2);color:var(--parchment);line-height:1.35;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+.parte-ej,.parte-sin{font-family:var(--font-sans);font-size:.62rem;letter-spacing:.04em;text-transform:none;font-weight:700;padding:.08rem .45rem;border-radius:999px}
+.parte-ej{background:rgba(160,128,64,.14);color:var(--gold-deep)}
+.parte-sin{background:rgba(196,112,104,.14);color:var(--rose)}
+.parte-sum-ch{flex-shrink:0;color:var(--parch3);transition:transform .2s}
+.parte-plegable[open] .parte-sum-ch{transform:rotate(180deg)}
+.parte-plegable[open] .parte-sum{border-bottom:1px solid var(--line2)}
+.parte-body{padding:.75rem 1.05rem .85rem}
+.parte-plegable .parte-eyebrow{display:none}
+.parte-plegable[open] .parte-sum-r{display:none}
 .parte-head{display:flex;align-items:flex-start;justify-content:space-between;gap:.6rem;margin-bottom:.6rem}
 .parte-eyebrow{font-family:var(--font-mono);font-size:var(--fs-1);letter-spacing:.16em;text-transform:uppercase;color:var(--gold-deep);font-weight:500}
 .parte-meta{font-family:var(--font-sans);font-size:var(--fs-1);color:var(--parch3);margin-top:.15rem}

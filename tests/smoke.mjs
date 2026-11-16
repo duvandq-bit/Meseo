@@ -8917,7 +8917,7 @@ test('Inicio en tres bloques: saludo, Consulta rápida, Plan de hoy + Reto del d
   const dash = html.slice(html.indexOf('function renderDashboard()'), html.indexOf('// ═══════ FLASHCARDS'));
   // Nov 2026 (prueba de usuario): lo útil arriba. Un plato al día y Repasar,
   // Hoy en sala, el plan; el saludo y el nivel, pequeños y debajo.
-  const orden = ["_padTarjetaHTML('dashboard')", "_rtcTarjetaHTML('dashboard')", '${_parteCard}', '${_hoyPlanHTML(emp,_en)}', '${_heroMiniHTML(emp,_en,greeting,_tranquilo)}', 'class="dash-cr"', '${_pddHeroHTML(emp,_en)}', '${_demoContacto}'];
+  const orden = ["_padTarjetaHTML('dashboard')", "_rtcTarjetaHTML('dashboard')", '${_hoyPlanHTML(emp,_en)}', '${_parteCard}', '${_heroMiniHTML(emp,_en,greeting,_tranquilo)}', 'class="dash-cr"', '${_pddHeroHTML(emp,_en)}', '${_demoContacto}'];
   let pos = -1;
   for (const marca of orden) { const i = dash.indexOf(marca); assert(i > pos, `falta o está fuera de orden: ${marca}`); pos = i; }
   // El gancho del parte del día va justo debajo del saludo y es defensivo.
@@ -17746,6 +17746,13 @@ test('Parte: _parteCardHTML no pinta nada sin parte y pinta las secciones con co
   assert(/parte-visto-btn/.test(out) && /_parteMarcarVisto/.test(out), 'botón Visto cuando no está visto');
   const ok = M._parteCardHTML({ fecha: '2026-10-19', data: { nota: 'Hola' } }, { vistoAt: '2026-10-19T19:42:00Z' });
   assert(/parte-visto-ok/.test(ok) && !/parte-visto-btn/.test(ok), 'visto: sello en vez de botón');
+  // Nov 2026: en Inicio va plegado en una línea con lo esencial; en el Line Up, entero.
+  assert(/<details class="parte-card parte-plegable"/.test(out) && !/<details[^>]* open/.test(out), 'Inicio: plegado');
+  assert(/parte-sum-r">1 agotado · Cherne a la brasa · Mesa 12 a las 21:00</.test(out), 'resumen: agotados, sugerencias, reservas');
+  assert(/parte-sin/.test(out) && !/parte-sin/.test(ok), '«Sin leer» solo si no se ha leído');
+  assert(/parte-ej">Ejemplo</.test(out), 'en la demo, «Ejemplo»');
+  const ov = M._parteCardHTML({ fecha: '2026-10-19', data: { nota: 'Hola' } }, { overlay: true, vistoAt: null });
+  assert(/<section class="parte-card parte-card-ov"/.test(ov) && !/<details/.test(ov), 'Line Up: entero');
   assert(!/parte-edit/.test(ok), 'sin mando no hay botón Editar');
 });
 test('Parte: la demo no sale a la red y el Visto no da XP', () => {
@@ -19136,7 +19143,7 @@ test('ux camarero · Hoy: lo útil arriba, saludo y nivel en una tarjeta pequeñ
   const d = _fnSrc('renderDashboard');
   const i = (x) => d.indexOf(x);
   assert(i("_padTarjetaHTML('dashboard')") > 0 && i("_padTarjetaHTML('dashboard')") < i('${_heroMiniHTML('), 'Un plato al día antes que el saludo');
-  assert(i('${_parteCard}') < i('${_hoyPlanHTML(emp,_en)}') && i('${_hoyPlanHTML(emp,_en)}') < i('${_heroMiniHTML('), 'Hoy en sala y el plan, antes que el saludo');
+  assert(i('${_hoyPlanHTML(emp,_en)}') < i('${_parteCard}') && i('${_parteCard}') < i('${_heroMiniHTML('), 'el plan y Hoy en sala (plegado), antes que el saludo');
   assert(!/dash-hero-rune|dash-hero-shine|dash-hero-label/.test(d), 'sin runas, brillo ni cejilla en Hoy');
   const css = read('styles.css');
   assert(/\.dash-hero\.dash-hero-mini\{[^}]*min-height:44px/.test(css), 'la tarjeta pequeña se toca (44 px)');
