@@ -54,7 +54,7 @@
 <meta property="og:description" content="Formación de equipos de sala: carta, alérgenos, vinos, exámenes y juegos de repaso.">
 <meta property="og:url" content="https://meseo.es/">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"Meseo","url":"https://meseo.es/"}</script>
-<meta name="app-version" content="7.544">
+<meta name="app-version" content="7.545">
 <meta name="app-build" content="May 2026">
 <meta name="theme-color" content="#1c2a22">
 <!-- ═══ PWA ═══ -->
@@ -3191,7 +3191,7 @@ const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><p
 const SRC = 'src';
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='7.544';  // sincronizada con sw.js VERSION (guard de CI)
+const APP_VERSION='7.545';  // sincronizada con sw.js VERSION (guard de CI)
 const APP_BUILD='Jul 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;
@@ -26521,8 +26521,7 @@ function _parteCardHTML(parte, opts){
   const autor = p.autor ? `${_en?'by':'por'} ${escapeHTML(p.autor)}` : '';
   const hora = p.updated_at ? _parteHora(p.updated_at) : '';
   const meta = [autor, hora].filter(Boolean).join(' · ');
-  return `<section class="parte-card${opts.overlay?' parte-card-ov':''}" aria-label="${_en?'Service notes':'Hoy en sala'}">
-    <div class="parte-head">
+  const cuerpo = `<div class="parte-head">
       <div>
         <div class="parte-eyebrow">${_en?'Service notes':'Hoy en sala'}${turno?` · ${turno}`:''}</div>
         ${meta?`<div class="parte-meta">${meta}</div>`:''}
@@ -26534,8 +26533,43 @@ function _parteCardHTML(parte, opts){
       ${visto!==null && visto!==undefined
         ? `<span class="parte-visto-ok">${_en?'Read at':'Leído a las'} ${_parteHora(visto)||'--:--'}</span>`
         : `<button type="button" class="parte-visto-btn" onclick="_parteMarcarVisto()">${_en?'Got it':'Leído'}</button>`}
-    </div>
-  </section>`;
+    </div>`;
+  // En el Line Up (overlay) se lee entero. En Inicio va plegado en una línea
+  // con lo esencial; un toque lo abre. En la demo lleva «Ejemplo»: esa nota
+  // la escribe el encargado de cada restaurante.
+  if(opts.overlay) return `<section class="parte-card parte-card-ov" aria-label="${_en?'Service notes':'Hoy en sala'}">${cuerpo}</section>`;
+  const leido = visto!==null && visto!==undefined;
+  const demo = (typeof _esDemo === 'function' && _esDemo()) ? `<span class="parte-ej">${_en?'Example':'Ejemplo'}</span>` : '';
+  const resumen = _parteResumen(d, _en);
+  return `<details class="parte-card parte-plegable${leido?' parte-leido':''}"${opts.abierto?' open':''}>
+    <summary class="parte-sum" aria-label="${_en?'Service notes, tap to open':'Hoy en sala, toca para abrir'}">
+      <span class="parte-sum-tx">
+        <span class="parte-sum-t">${_en?'Service notes':'Hoy en sala'}${demo}${leido?'':`<span class="parte-sin">${_en?'Unread':'Sin leer'}</span>`}</span>
+        ${resumen?`<span class="parte-sum-r">${resumen}</span>`:''}
+      </span>
+      <svg class="parte-sum-ch" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+    </summary>
+    <div class="parte-body">${cuerpo}</div>
+  </details>`;
+}
+// La línea de la tarjeta plegada: cuántos agotados y el arranque de las
+// sugerencias y las reservas. Escapado; nunca más de tres trozos.
+function _parteResumen(d, _en){
+  const corto = (t, n) => {
+    t = String(t || '').replace(/\s+/g, ' ').trim();
+    if(t.length <= n) return t;
+    const c = t.slice(0, n), sp = c.lastIndexOf(' ');
+    return (sp > n * 0.5 ? c.slice(0, sp) : c).replace(/[\s,.;:]+$/, '') + '…';
+  };
+  const out = [];
+  const ag = (Array.isArray(d.agotados) ? d.agotados.length : 0) + ((d.agotadosTxt || '').trim() ? 1 : 0);
+  if(ag) out.push(ag === 1 ? (_en ? '1 sold out' : '1 agotado') : (_en ? `${ag} sold out` : `${ag} agotados`));
+  for(const k of ['sugerencias', 'reservas', 'empujar', 'nota']){
+    if(out.length >= 3) break;
+    const t = (d[k] || '').trim();
+    if(t) out.push(corto(t.split(/\n|·/)[0], 42));
+  }
+  return out.map(x => escapeHTML(x)).join(' · ');
 }
 // Lectura en overlay (paso del Line Up).
 function _parteAbrir(){
@@ -26760,12 +26794,10 @@ function renderDashboard(){
     ${_demoBanda}
 
     <!-- Lo útil primero (prueba de usuario, nov 2026): Un plato al día y
-         Repasar toda la carta arriba, luego Hoy en sala y el plan. Sin platos
+         Repasar toda la carta arriba, luego el plan y Hoy en sala. Sin platos
          con descripción y claves (Txoko hoy), las dos tarjetas no aparecen. -->
     ${(typeof _padTarjetaHTML==='function') ? _padTarjetaHTML('dashboard') : ''}
     ${(typeof _rtcTarjetaHTML==='function') ? _rtcTarjetaHTML('dashboard') : ''}
-
-    ${_parteCard}
 
     <!-- ── ACCESO EN 1 TOQUE: banner de instalación (solo si no está instalada) ── -->
     ${renderInstallBanner()}
@@ -26776,6 +26808,10 @@ function renderDashboard(){
          retiraron (oct 2026). ── -->
     <div class="tunic-divider"><span>${_en?'Today':'Hoy'}</span></div>
     ${_hoyPlanHTML(emp,_en)}
+
+    <!-- Hoy en sala, debajo del plan y plegado en una línea (nov 2026):
+         arriba ocupaba una pantalla de texto antes de saber qué hacer. -->
+    ${_parteCard}
 
     <!-- ── HERO: el saludo y el nivel, en una tarjeta pequeña y debajo del
          plan. Antes ocupaba media pantalla antes de lo útil. ── -->
