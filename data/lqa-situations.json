@@ -746,25 +746,25 @@
   {
     "id": 32,
     "cat": "servicio",
-    "scn": "Tu compañera ha sentado a una mesa de 4 y entregado los menús. Miras el reloj: 2 minutos y medio desde la presentación del menú. Los huéspedes siguen leyendo y conversando.",
-    "scn_en": "Your colleague has seated a 4-top and presented menus. You glance at the clock: 2.5 minutes since menu presentation. The guests are still reading and chatting.",
+    "scn": "Tu compañera ha sentado a una mesa de 4 y entregado los menús. Miras el reloj: han pasado 8 minutos desde la presentación del menú. Los huéspedes siguen leyendo y conversando.",
+    "scn_en": "Your colleague has seated a 4-top and presented menus. You glance at the clock: 8 minutes have passed since menu presentation. The guests are still reading and chatting.",
     "q": "¿Qué acción es la correcta?",
     "q_en": "What is the correct action?",
     "opts": [
       "Esperar a que llamen para no interrumpir su conversación.",
-      "Acercarse antes de cumplirse los 3 minutos y, si aún dudan, ofrecer ayuda con el menú o tomar al menos la comanda de bebidas.",
-      "Esperar unos 10 minutos en total antes de acercarse, para asegurarse por completo de que ya han decidido todo el pedido. Aprovecho para adelantar otras mesas mientras tanto.",
+      "Acercarse antes de que se cumplan los 10 minutos y, si aún dudan, ofrecer ayuda con el menú o tomar al menos la comanda de bebidas.",
+      "Esperar unos 20 minutos en total antes de acercarse, para asegurarse por completo de que ya han decidido todo el pedido. Aprovecho para adelantar otras mesas mientras tanto.",
       "Acercarse y preguntar directamente: \"¿Han decidido ya?\""
     ],
     "opts_en": [
       "Wait until they call you so you don't interrupt their conversation.",
-      "Approach before the 3-minute mark and, if they're still undecided, offer help with the menu or at least take the drinks order.",
-      "Wait a full 10 minutes before approaching the table, just to be completely sure they have decided on their entire order. I use the time to get ahead on other tables.",
+      "Approach before the 10-minute mark and, if they're still undecided, offer help with the menu or at least take the drinks order.",
+      "Wait a full 20 minutes before approaching the table, just to be completely sure they have decided on their entire order. I use the time to get ahead on other tables.",
       "Approach and ask directly: \"Have you decided yet?\""
     ],
     "corr": 1,
-    "expl": "El estándar #2 (Efficiency) exige tomar la comanda dentro de 3 minutos desde la presentación del menú. En la auditoría se marcó Below porque pasaron 7 minutos. La opción 1 cumple el tiempo y aporta valor (ayuda) sin presionar. La 0 deja al cliente esperando. La 2 viola el estándar. La 3 es brusca.",
-    "expl_en": "Standard #2 (Efficiency) requires taking the order within 3 minutes of menu presentation. The audit marked this Below because 7 minutes elapsed. Option 1 meets the time and adds value (help) without pressure. Option 0 leaves the guest waiting. Option 2 violates the standard. Option 3 is abrupt.",
+    "expl": "El estándar #18 (Efficiency) pide tomar la comanda de comida y bebida en 10 minutos desde la entrega del menú. La opción 1 cumple el tiempo y aporta valor (ayuda) sin presionar. La 0 deja al cliente esperando. La 2 incumple el estándar. La 3 es brusca.",
+    "expl_en": "Standard #18 (Efficiency) asks for the food and beverage order to be taken within 10 minutes of the menu being presented. Option 1 meets the time and adds value (help) without pressure. Option 0 leaves the guest waiting. Option 2 misses the standard. Option 3 is abrupt.",
     "real": true
   },
   {
@@ -799,20 +799,20 @@
     "q": "¿Cuál es la secuencia correcta?",
     "q_en": "What is the correct sequence?",
     "opts": [
-      "Limpiar y montar en menos de 10 minutos: retirar a pinza, cambiar mantel, montar bajoplato, cubertería, cristalería y saleros.",
+      "Recoger y remontar en 5 minutos: retirar a pinza, cambiar mantel, montar bajoplato, cubertería, cristalería y saleros.",
       "Pasar un trapo rápido y montar lo mínimo para sentar a la pareja cuanto antes.",
       "Pedir a la hostess que entretenga a la pareja ofreciéndoles unas bebidas en la entrada mientras tú montas la mesa con calma. Le pido que me avise cuando estén listos para pasar.",
       "Esperar a que un compañero pase a ayudar para no equivocarte con la mise en place."
     ],
     "opts_en": [
-      "Clean and reset in under 10 minutes: clear to station, change cloth, set base plate, cutlery, glassware, and salt/pepper.",
+      "Clear and reset within 5 minutes: clear to station, change cloth, set base plate, cutlery, glassware, and salt/pepper.",
       "Wipe quickly and set the minimum to seat the couple ASAP.",
       "Ask the hostess to keep the couple entertained with some drinks at the entrance while you set the table calmly. I ask her to tell me when they are ready to come through.",
       "Wait for a colleague to help so you don't make mistakes with mise en place."
     ],
     "corr": 0,
-    "expl": "El estándar #36 exige limpieza en 5 minutos y montaje en 5 minutos adicionales (10 totales) y que el montaje sea uniforme con el resto del rango. La opción 0 cumple tiempo y completitud. La 1 sacrifica el estándar de mise en place. La 2 traslada el problema al cliente. La 3 viola el tiempo.",
-    "expl_en": "Standard #36 requires clearing in 5 minutes and setting in another 5 (10 total), with setup uniform across the section. Option 0 meets timing and completeness. Option 1 sacrifices mise en place standards. Option 2 shifts the problem to the guest. Option 3 violates timing.",
+    "expl": "El estándar #61 pide que la mesa se recoja y se remonte en 5 minutos cuando los huéspedes se van, y que todas las mesas estén montadas de la misma forma. La opción 0 cumple tiempo y completitud. La 1 sacrifica el estándar de mise en place. La 2 traslada el problema al cliente. La 3 incumple el tiempo.",
+    "expl_en": "Standard #61 asks for the table to be cleared and reset within 5 minutes of the guests leaving, and for all tables to be laid consistently. Option 0 meets timing and completeness. Option 1 sacrifices mise en place standards. Option 2 shifts the problem to the guest. Option 3 misses the timing.",
     "real": false
   },
   {

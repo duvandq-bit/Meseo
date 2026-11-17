@@ -19735,6 +19735,10 @@ test('LQA: las situaciones citan el estándar que de verdad dice eso (nov 2026)'
   for (const [id, n] of [[13, 25], [21, 46], [25, 42], [28, 36], [30, 76], [37, 40], [38, 17], [39, 67], [40, 51], [44, 20], [46, 19], [47, 56]])
     assert(cita(id, n), `la situación ${id} tiene que citar el estándar #${n}`);
   assert(!S.some(x => /#45 \(Interacci|#51 \(Personaliz|#77 \(Despedida/.test(x.expl)), 'sin etiquetas de otra numeración');
+  // Los tiempos, los del estándar: comanda en 10 minutos (#18), mesa remontada en 5 (#61).
+  const s32 = S.find(x => x.id === 32), s34 = S.find(x => x.id === 34);
+  assert(cita(32, 18) && /10 minutos/.test(s32.opts[s32.corr]) && !/3 minutos/.test(JSON.stringify(s32)), 'situación 32: comanda en 10 minutos');
+  assert(cita(34, 61) && /5 minutos/.test(s34.opts[s34.corr]) && !/10 minutos|10 total/.test(JSON.stringify(s34)), 'situación 34: mesa remontada en 5 minutos');
 });
 test('LQA: el examen cubre los 80 estándares y la correcta no se delata por larga', () => {
   const lee = n => { const a = html.indexOf('const ' + n + '['), b = html.indexOf('\n];', a); return new Function('return ' + html.slice(html.indexOf('[', a), b + 2))(); }; // eslint-disable-line no-new-func
