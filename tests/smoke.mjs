@@ -1537,8 +1537,10 @@ test('suspensión · ningún restaurante cerrado se anuncia en ninguna lista', (
   assert(mb && mb.enabled === false, 'M.B. tiene que seguir cerrado');
   const visibles = reg.venues.filter(v => v && v.id !== 'plantilla' && v.enabled);
   assert(!visibles.some(v => /M\.?B\.?/i.test(v.name)), 'no puede anunciarse M.B.');
-  assert(visibles.length === 1 && /Suspendido temporalmente/.test(visibles[0].name),
-    `el único visible tiene que decir que está suspendido: ${JSON.stringify(visibles.map(v => v.name))}`);
+  // Nov 2026: nombre neutro, como «Restaurante 2»; «Suspendido temporalmente»
+  // daba a entender a quien llega de fuera que Meseo era un proyecto parado.
+  assert(visibles.length === 1 && visibles[0].name === 'Restaurante 1' && !/Txoko|suspendid/i.test(visibles[0].name),
+    `el único visible lleva un nombre neutro: ${JSON.stringify(visibles.map(v => v.name))}`);
 });
 
 test('el contenido del local abierto no nombra marcas ni al chef', () => {
