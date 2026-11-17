@@ -1537,8 +1537,10 @@ test('suspensión · ningún restaurante cerrado se anuncia en ninguna lista', (
   assert(mb && mb.enabled === false, 'M.B. tiene que seguir cerrado');
   const visibles = reg.venues.filter(v => v && v.id !== 'plantilla' && v.enabled);
   assert(!visibles.some(v => /M\.?B\.?/i.test(v.name)), 'no puede anunciarse M.B.');
-  assert(visibles.length === 1 && /Suspendido temporalmente/.test(visibles[0].name),
-    `el único visible tiene que decir que está suspendido: ${JSON.stringify(visibles.map(v => v.name))}`);
+  // Nov 2026: nombre neutro, como «Restaurante 2»; «Suspendido temporalmente»
+  // daba a entender a quien llega de fuera que Meseo era un proyecto parado.
+  assert(visibles.length === 1 && visibles[0].name === 'Restaurante 1' && !/Txoko|suspendid/i.test(visibles[0].name),
+    `el único visible lleva un nombre neutro: ${JSON.stringify(visibles.map(v => v.name))}`);
 });
 
 test('el contenido del local abierto no nombra marcas ni al chef', () => {
@@ -19310,14 +19312,14 @@ test('momentos de mesa: datos completos en ES y EN, entre 20 y 30 escenas, sin r
   const M = _momMotor();
   const v = M.validas(d);
   assert(v.length === d.escenas.length, 'todas las escenas tienen que estar completas: ' + v.length + '/' + d.escenas.length);
-  assert(v.length >= 20 && v.length <= 30, 'entre 20 y 30 escenas: ' + v.length);
+  assert(v.length >= 20 && v.length <= 45, 'entre 20 y 45 escenas: ' + v.length);
   assert(new Set(v.map(e => e.id)).size === v.length, 'ids repetidos');
   assert(d.claves.length >= 5 && d.claves.length <= 6 && d.claves.every(c => c.t && c.t_en), '5 o 6 claves, ES y EN');
   assert(!/—|–/.test(raw), 'sin rayas en los textos');
   assert(!/\b(os|vosotros)\b/i.test(d.escenas.map(e => e.modelos.join(' ')).join(' ')), 'tratamiento de ustedes en las frases');
   for (const k of ['sit', 'buscar', 'modelos', 'forzada', 'porque']) assert(d.guino[k] && d.guino[k + '_en'], 'plantilla de guiño sin ' + k);
   const tipos = new Set(v.map(e => e.tipo));
-  for (const t of ['degustacion', 'carta', 'respuesta', 'plato', 'guino']) assert(tipos.has(t), 'falta el tipo ' + t);
+  for (const t of ['degustacion', 'carta', 'respuesta', 'plato', 'guino', 'bienvenida', 'recomendacion', 'espera', 'celebracion', 'despedida']) assert(tipos.has(t), 'falta el tipo ' + t);
   // Los criterios acordados, con sus frases.
   const todo = raw;
   for (const f of ['¿Qué les está pareciendo el menú hasta ahora?', '¿Algún plato que les haya llamado especialmente la atención?', 'Gracias, enseguida viene el siguiente.', '¿Puedo retirar? Gracias.', 'Me alegro mucho, se lo digo al chef.', 'Perfecto, les dejo tranquilos.', '¿Hay algo que le habría gustado diferente?', '¿No era de su gusto? Díganme con confianza y se lo comento a cocina.', 'How are you finding the menu so far?', "I'll pass that on to the chef", "Glad to hear it, I'll leave you to it"])

@@ -54,7 +54,7 @@
 <meta property="og:description" content="Formación de equipos de sala: carta, alérgenos, vinos, exámenes y juegos de repaso.">
 <meta property="og:url" content="https://meseo.es/">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"Meseo","url":"https://meseo.es/"}</script>
-<meta name="app-version" content="7.545">
+<meta name="app-version" content="7.546">
 <meta name="app-build" content="May 2026">
 <meta name="theme-color" content="#1c2a22">
 <!-- ═══ PWA ═══ -->
@@ -2175,8 +2175,8 @@ function _puedeEntrar(nombre){
 }
 function _textoSuspendida(){
   return (typeof LANG !== 'undefined' && LANG === 'en')
-    ? 'The app is temporarily suspended. Please try again later.'
-    : 'La aplicación está suspendida temporalmente. Vuelve a intentarlo más adelante.';
+    ? 'Access to this restaurant is closed for now.'
+    : 'El acceso a este restaurante está cerrado por ahora.';
 }
 // La cuenta de ADMINISTRACIÓN existe para probar el contenido: entra en
 // cualquier restaurante —incluidos los que todavía están cerrados— y no escribe
@@ -3191,7 +3191,7 @@ const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><p
 const SRC = 'src';
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='7.545';  // sincronizada con sw.js VERSION (guard de CI)
+const APP_VERSION='7.546';  // sincronizada con sw.js VERSION (guard de CI)
 const APP_BUILD='Jul 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;

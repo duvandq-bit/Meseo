@@ -87,17 +87,17 @@
   {
    "id": 4001,
    "cat": "Aperitivos",
-   "name": "Chochos encurtidos, naranja y comino",
+   "name": "Altramuces encurtidos, naranja y comino",
    "allergens": [
     "Altramuces",
     "Sulfitos"
    ],
    "ingredients": "Altramuz, piel de naranja, comino, pimienta palmera, vinagre de vino.",
-   "history": "En Canarias el altramuz se llama chocho y se come en cualquier bar. Es uno de los 14 alérgenos y casi nadie lo sabe: hay que avisarlo siempre, sobre todo a quien tiene alergia al cacahuete, porque a menudo reaccionan a los dos.",
+   "history": "En Canarias el altramuz encurtido se come en cualquier bar. Es uno de los 14 alérgenos y casi nadie lo sabe: hay que avisarlo siempre, sobre todo a quien tiene alergia al cacahuete, porque a menudo reaccionan a los dos.",
    "notes": "⚠ No se puede retirar: Altramuces, Sulfitos.",
    "montaje": [
     "Cuenco pequeño de piedra",
-    "Chochos con su aliño",
+    "Altramuces con su aliño",
     "Ralladura de naranja al pase"
    ],
    "marcaje": "Sin cubiertos: se comen con la mano. Cuenco para las pieles.",
@@ -119,22 +119,20 @@
     "cambios": "Without the palmera chilli if they want no heat.",
     "venta": "The snack of every Canarian bar, with orange, cumin and a touch of palmera chilli."
    },
-   "significa": "Chocho es como se llama en Canarias al altramuz.",
+   "significa": "El altramuz es una legumbre que se come encurtida, como aperitivo.",
    "guino": "Pimienta palmera de La Palma en el aliño.",
    "retiro": "Por cierto, el aliño lleva pimienta palmera de La Palma.",
    "tres": [
-    "Chochos encurtidos, el altramuz canario",
+    "Altramuces encurtidos, el aperitivo canario",
     "Aliñados con naranja, comino y pimienta palmera",
     "Se comen con la mano, como en cualquier bar de las islas"
    ],
-   "story": "Empezamos con chochos, que es como llamamos en Canarias al altramuz, encurtidos con naranja y comino. Se comen con la mano, como en cualquier bar de las islas.",
-   "story_larga": "Empezamos con chochos, que es como llamamos en Canarias al altramuz. Los encurtimos en vinagre de vino y los aliñamos con piel de naranja, comino y un punto de pimienta palmera de La Palma. Se comen con la mano, como en cualquier bar de las islas, y las pieles van al cuenco pequeño.",
+   "story": "Empezamos con altramuces, el aperitivo de los bares canarios, encurtidos con naranja y comino. Se comen con la mano, como en cualquier bar de las islas.",
+   "story_larga": "Empezamos con altramuces, el aperitivo de los bares canarios. Los encurtimos en vinagre de vino y los aliñamos con piel de naranja, comino y un punto de pimienta palmera de La Palma. Se comen con la mano, como en cualquier bar de las islas, y las pieles van al cuenco pequeño.",
    "claves": [
     [
-     "chochos",
-     "chocho",
-     "altramuz",
-     "altramuces"
+     "altramuces",
+     "altramuz"
     ],
     [
      "encurtido",
@@ -1538,7 +1536,7 @@
     "Sulphites"
    ],
    "ingredients": "Lupin bean, orange zest, cumin, palmera chilli, wine vinegar.",
-   "history": "In the Canaries lupin beans are called chochos and are eaten in any bar. They are one of the 14 allergens and hardly anyone knows: always mention them, especially to guests allergic to peanut, as they often react to both.",
+   "history": "In the Canaries pickled lupin beans are eaten in any bar. They are one of the 14 allergens and hardly anyone knows: always mention them, especially to guests allergic to peanut, as they often react to both.",
    "notes": "⚠ Cannot be removed: Lupins, Sulphites.",
    "montaje": [
     "Small stone bowl",
@@ -1546,19 +1544,18 @@
     "Orange zest at the pass"
    ],
    "marcaje": "No cutlery: eaten by hand. Small bowl for the skins.",
-   "significa": "Chocho is the Canarian name for the lupin bean.",
+   "significa": "The lupin bean is a legume eaten pickled, as a snack.",
    "guino": "Palm pepper from La Palma in the dressing.",
    "retiro": "By the way, the dressing has palm pepper from La Palma.",
    "tres": [
-    "Pickled chochos, the Canarian lupin bean",
+    "Pickled lupin beans, the Canarian bar snack",
     "Dressed with orange, cumin and palm pepper",
     "Eaten by hand, as in any bar on the islands"
    ],
-   "story": "We begin with chochos, the Canarian name for lupin beans, pickled with orange and cumin. They are eaten by hand, as in any bar on the islands.",
-   "story_larga": "We begin with chochos, the Canarian name for lupin beans. We pickle them in wine vinegar and dress them with orange zest, cumin and a touch of palm pepper from La Palma. They are eaten by hand, as in any bar on the islands, and the skins go in the small bowl.",
+   "story": "We begin with lupin beans, the snack of every Canarian bar, pickled with orange and cumin. They are eaten by hand, as in any bar on the islands.",
+   "story_larga": "We begin with lupin beans, the snack of every Canarian bar. We pickle them in wine vinegar and dress them with orange zest, cumin and a touch of palm pepper from La Palma. They are eaten by hand, as in any bar on the islands, and the skins go in the small bowl.",
    "claves": [
     [
-     "chochos",
      "lupin",
      "lupins",
      "lupin beans"
@@ -2587,7 +2584,7 @@
  "DISH_COMPONENTS": {
   "4001": [
    {
-    "n": "Altramuz (chocho) encurtido",
+    "n": "Altramuz encurtido",
     "a": [
      "Altramuces"
     ],
@@ -3160,13 +3157,14 @@
  "GLOSARIO": [
   {
    "o": "ic",
-   "t": "Chocho",
+   "t": "Altramuz",
    "jp": "",
    "kw": [
-    "chocho"
+    "altramuz",
+    "altramuces"
    ],
-   "es": "Altramuz, en Canarias. Se come encurtido como aperitivo. Es uno de los catorce alérgenos y a menudo da reacción cruzada con el cacahuete.",
-   "en": "Lupin bean, in the Canaries. It is eaten pickled as a snack. It is one of the fourteen allergens and often cross-reacts with peanut."
+   "es": "Legumbre muy típica de los bares canarios. Se come encurtido como aperitivo. Es uno de los catorce alérgenos y a menudo da reacción cruzada con el cacahuete.",
+   "en": "Lupin bean, a classic of Canarian bars. It is eaten pickled as a snack. It is one of the fourteen allergens and often cross-reacts with peanut."
   },
   {
    "o": "ic",
@@ -3175,8 +3173,8 @@
    "kw": [
     "pimienta palmera"
    ],
-   "es": "Guindilla pequeña y picante de La Palma. En la carta, en el aliño de los chochos.",
-   "en": "Small hot chilli from La Palma. On our menu, in the dressing of the chochos."
+   "es": "Guindilla pequeña y picante de La Palma. En la carta, en el aliño de los altramuces.",
+   "en": "Small hot chilli from La Palma. On our menu, in the dressing of the lupin beans."
   },
   {
    "o": "ic",
@@ -3680,8 +3678,8 @@
     ],
     "def": "Conservar en vinagre con especias. Da acidez y alarga la vida del producto.",
     "defEn": "Preserving in vinegar with spices. It adds acidity and extends shelf life.",
-    "nota": "Los chochos, con naranja y comino.",
-    "notaEn": "The chochos, with orange and cumin."
+    "nota": "Los altramuces, con naranja y comino.",
+    "notaEn": "The lupin beans, with orange and cumin."
    },
    {
     "fam": "frio",

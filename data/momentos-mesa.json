@@ -1,5 +1,5 @@
 {
- "version": 1,
+ "version": 2,
  "titulo": "Momentos de mesa",
  "titulo_en": "Table moments",
  "claves": [
@@ -33,8 +33,14 @@
   "sit_en": "You clear the “{plato}”. The plate is clean and the table looks up at you.",
   "buscar": "Plato limpio y te miran: es buen momento para el guiño de la casa. Dilo de pasada, sin pregunta detrás, y sigue con lo tuyo.",
   "buscar_en": "A clean plate and they look up: a good moment for the house touch. Say it in passing, with no question after it, and carry on.",
-  "modelos": ["Por cierto, {guino}", "Gracias. Un detalle del plato: {guino}"],
-  "modelos_en": ["By the way, {guino}", "Thank you. A little detail about the dish: {guino}"],
+  "modelos": [
+   "Por cierto, {guino}",
+   "Gracias. Un detalle del plato: {guino}"
+  ],
+  "modelos_en": [
+   "By the way, {guino}",
+   "Thank you. A little detail about the dish: {guino}"
+  ],
   "forzada": "{guino} ¿Qué les ha parecido?",
   "forzada_en": "{guino} What did you think?",
   "porque": "Con una pregunta detrás, el guiño se convierte en un examen y la mesa tiene que contestar. Se dice y se sigue.",
@@ -48,8 +54,14 @@
    "sit_en": "Tasting menu. You clear the first course. The table is still talking among themselves.",
    "buscar": "Es pronto y están en su conversación. No toca preguntar: retira con una frase que no obligue a contestar.",
    "buscar_en": "It's early and they're in their own conversation. No question yet: clear with a line that needs no answer.",
-   "modelos": ["Gracias, enseguida viene el siguiente.", "Con permiso. Gracias."],
-   "modelos_en": ["Thank you, the next one is on its way.", "Excuse me. Thank you."],
+   "modelos": [
+    "Gracias, enseguida viene el siguiente.",
+    "Con permiso. Gracias."
+   ],
+   "modelos_en": [
+    "Thank you, the next one is on its way.",
+    "Excuse me. Thank you."
+   ],
    "forzada": "¿Qué tal el primer plato? ¿Les ha gustado?",
    "forzada_en": "How was the first dish? Did you like it?",
    "porque": "Si preguntas en cada pase, al séptimo suena a encuesta. La pregunta se guarda para el segundo o tercer pase.",
@@ -62,8 +74,14 @@
    "sit_en": "Tasting menu. You clear the third course. Clean plates, a relaxed table, someone looks up as you arrive.",
    "buscar": "Es el momento de la primera pregunta de la noche: abierta y sobre el menú, no sobre este plato.",
    "buscar_en": "This is the moment for the first question of the night: open, and about the menu rather than this dish.",
-   "modelos": ["¿Qué les está pareciendo el menú hasta ahora?", "¿Qué tal va la noche hasta ahora?"],
-   "modelos_en": ["How are you finding the menu so far?", "How is the evening going so far?"],
+   "modelos": [
+    "¿Qué les está pareciendo el menú hasta ahora?",
+    "¿Qué tal va la noche hasta ahora?"
+   ],
+   "modelos_en": [
+    "How are you finding the menu so far?",
+    "How is the evening going so far?"
+   ],
    "forzada": "¿Todo correcto con el plato?",
    "forzada_en": "Is everything correct with the dish?",
    "porque": "«Correcto» se contesta con un sí y suena a control de calidad. Una pregunta abierta deja que te cuenten algo.",
@@ -76,8 +94,14 @@
    "sit_en": "Tasting menu. You clear the fourth course. The table is deep in conversation and nobody looks up.",
    "buscar": "No interrumpas. Retira en silencio o con una palabra en voz baja. Ni pregunta ni guiño.",
    "buscar_en": "Don't interrupt. Clear in silence or with a quiet word. No question, no house touch.",
-   "modelos": ["Con permiso.", "Gracias."],
-   "modelos_en": ["Excuse me.", "Thank you."],
+   "modelos": [
+    "Con permiso.",
+    "Gracias."
+   ],
+   "modelos_en": [
+    "Excuse me.",
+    "Thank you."
+   ],
    "forzada": "Perdonen que les interrumpa, ¿qué tal este pase?",
    "forzada_en": "Sorry to interrupt, how was this course?",
    "porque": "Cortas una conversación para pedir una opinión. Lo que esa mesa quiere de ti ahora es que casi no se note que estás.",
@@ -90,8 +114,14 @@
    "sit_en": "Tasting menu. You clear the fifth course. You already asked after the third. They glance up at you.",
    "buscar": "La pregunta abierta ya está hecha. Basta una frase amable que no pida respuesta, mejor si anuncia lo que viene.",
    "buscar_en": "The open question has been asked. A kind line that needs no answer is enough, better still if it tells them what's next.",
-   "modelos": ["Gracias, ahora viene el principal.", "Enseguida les traemos el siguiente."],
-   "modelos_en": ["Thank you, the main course is next.", "The next one won't be long."],
+   "modelos": [
+    "Gracias, ahora viene el principal.",
+    "Enseguida les traemos el siguiente."
+   ],
+   "modelos_en": [
+    "Thank you, the main course is next.",
+    "The next one won't be long."
+   ],
    "forzada": "¿Y este qué tal? ¿También les ha gustado?",
    "forzada_en": "And this one? Did you like it as well?",
    "porque": "Repetir la pregunta cansa a la mesa y te pone a ti en modo examen.",
@@ -104,8 +134,14 @@
    "sit_en": "Tasting menu. You clear the main course, a meat dish. They have both finished.",
    "buscar": "Aquí va la pregunta concreta de la noche, sobre algo del plato que se note: el punto de la carne, la salsa, la guarnición.",
    "buscar_en": "This is where the specific question of the night goes, about something they can taste: how the meat was cooked, the sauce, the garnish.",
-   "modelos": ["¿Qué les ha parecido el punto de la carne?", "¿Qué tal la carne? ¿El punto era el que esperaban?"],
-   "modelos_en": ["What did you think of how the meat was cooked?", "How was the meat? Was it cooked the way you like it?"],
+   "modelos": [
+    "¿Qué les ha parecido el punto de la carne?",
+    "¿Qué tal la carne? ¿El punto era el que esperaban?"
+   ],
+   "modelos_en": [
+    "What did you think of how the meat was cooked?",
+    "How was the meat? Was it cooked the way you like it?"
+   ],
    "forzada": "¿Ha estado todo a su gusto?",
    "forzada_en": "Was everything to your satisfaction?",
    "porque": "Vale para cualquier plato. En el principal, una pregunta concreta demuestra que sabes lo que han comido.",
@@ -118,8 +154,14 @@
    "sit_en": "Tasting menu. You bring the coffees. The menu is over and the table is relaxed.",
    "buscar": "Toca la pregunta general del final: que elijan ellos. Lo que digan, a cocina.",
    "buscar_en": "Time for the general question at the end: let them choose. Whatever they say goes to the kitchen.",
-   "modelos": ["¿Algún plato que les haya llamado especialmente la atención?", "Si tuvieran que quedarse con uno, ¿cuál sería?"],
-   "modelos_en": ["Was there a dish that stood out for you?", "If you had to pick one, which would it be?"],
+   "modelos": [
+    "¿Algún plato que les haya llamado especialmente la atención?",
+    "Si tuvieran que quedarse con uno, ¿cuál sería?"
+   ],
+   "modelos_en": [
+    "Was there a dish that stood out for you?",
+    "If you had to pick one, which would it be?"
+   ],
    "forzada": "¿Ha estado todo bien con el menú?",
    "forzada_en": "Was everything all right with the menu?",
    "porque": "Después de siete pases, «todo bien» se contesta con un sí y no te dice nada. Pedirles que elijan abre una conversación de verdad.",
@@ -134,8 +176,14 @@
    "dice_en": "How many more dishes are there?",
    "buscar": "Pregunta práctica: contesta claro y, si encaja, adelanta lo que viene.",
    "buscar_en": "A practical question: answer clearly and, if it fits, give them a hint of what's coming.",
-   "modelos": ["Quedan cinco. El siguiente es el primero caliente.", "Cinco más. Ahora pasamos de lo frío a lo caliente."],
-   "modelos_en": ["Five more. The next one is the first hot dish.", "Five to go. We're moving from cold to hot now."],
+   "modelos": [
+    "Quedan cinco. El siguiente es el primero caliente.",
+    "Cinco más. Ahora pasamos de lo frío a lo caliente."
+   ],
+   "modelos_en": [
+    "Five more. The next one is the first hot dish.",
+    "Five to go. We're moving from cold to hot now."
+   ],
    "forzada": "Todavía unos cuantos, ¡prepárense!",
    "forzada_en": "Quite a few still, get ready!",
    "porque": "Una respuesta vaga a una pregunta concreta. Saber dónde están en el menú les da tranquilidad para dosificarse.",
@@ -148,8 +196,14 @@
    "sit_en": "À la carte. You have just served the dishes. Nobody has tasted anything yet.",
    "buscar": "Es pronto para preguntar. Deja que prueben; vuelves a los dos o tres minutos.",
    "buscar_en": "Too early to ask. Let them taste; you come back in two or three minutes.",
-   "modelos": ["Que aproveche.", "Que lo disfruten."],
-   "modelos_en": ["Enjoy.", "Enjoy your meal."],
+   "modelos": [
+    "Que aproveche.",
+    "Que lo disfruten."
+   ],
+   "modelos_en": [
+    "Enjoy.",
+    "Enjoy your meal."
+   ],
    "forzada": "¿Está todo bien?",
    "forzada_en": "Is everything OK?",
    "porque": "No lo pueden saber: aún no han probado nada. Preguntar ahora es un reflejo, no interés.",
@@ -162,8 +216,14 @@
    "sit_en": "À la carte. You served a fish dish two or three minutes ago. They have tasted it.",
    "buscar": "Es el momento de la única pregunta en carta: concreta, sobre el plato, cuando ya han dado los primeros bocados.",
    "buscar_en": "This is the moment for the one question à la carte: specific, about the dish, once they've had the first few bites.",
-   "modelos": ["¿Qué tal el pescado? ¿El punto es el que esperaban?", "¿Cómo encuentran la salsa con el pescado?"],
-   "modelos_en": ["How is the fish? Is it cooked the way you like it?", "How are you finding the sauce with the fish?"],
+   "modelos": [
+    "¿Qué tal el pescado? ¿El punto es el que esperaban?",
+    "¿Cómo encuentran la salsa con el pescado?"
+   ],
+   "modelos_en": [
+    "How is the fish? Is it cooked the way you like it?",
+    "How are you finding the sauce with the fish?"
+   ],
    "forzada": "¿Todo bien por aquí?",
    "forzada_en": "Everything OK here?",
    "porque": "Pasar por las mesas preguntando «todo bien» lo hace todo el mundo. Una pregunta sobre su plato suena a que te importa.",
@@ -176,8 +236,14 @@
    "sit_en": "À la carte. You already asked while they were eating. They have finished and you are clearing.",
    "buscar": "La pregunta ya está hecha. Al retirar, sencillo: permiso y gracias.",
    "buscar_en": "The question has been asked. When clearing, keep it simple: permission and thanks.",
-   "modelos": ["¿Puedo retirar? Gracias.", "¿Me permiten? Gracias."],
-   "modelos_en": ["May I take these? Thank you.", "Shall I take these for you? Thank you."],
+   "modelos": [
+    "¿Puedo retirar? Gracias.",
+    "¿Me permiten? Gracias."
+   ],
+   "modelos_en": [
+    "May I take these? Thank you.",
+    "Shall I take these for you? Thank you."
+   ],
    "forzada": "¿Qué tal todo? ¿Les ha gustado? ¿Y el punto?",
    "forzada_en": "How was everything? Did you enjoy it? And was it cooked right?",
    "porque": "Tres preguntas seguidas al retirar, y la segunda vez que preguntas lo mismo. Aquí basta con pedir permiso y dar las gracias.",
@@ -192,8 +258,14 @@
    "dice_en": "Very good, thank you.",
    "buscar": "Respuesta corta y amable. No le pongas nota: llévala a algo real, como la cocina.",
    "buscar_en": "A short, kind answer. Don't grade it: take it somewhere real, like the kitchen.",
-   "modelos": ["Me alegro mucho, se lo digo al chef.", "Qué bien. Se lo paso a cocina, les va a gustar oírlo."],
-   "modelos_en": ["Lovely, I'll pass that on to the chef.", "Glad to hear it. I'll tell the kitchen, they'll be pleased."],
+   "modelos": [
+    "Me alegro mucho, se lo digo al chef.",
+    "Qué bien. Se lo paso a cocina, les va a gustar oírlo."
+   ],
+   "modelos_en": [
+    "Lovely, I'll pass that on to the chef.",
+    "Glad to hear it. I'll tell the kitchen, they'll be pleased."
+   ],
    "forzada": "¡Excelente! ¡Magnífico!",
    "forzada_en": "Excellent! Wonderful!",
    "porque": "Valorar su respuesta suena a guion y no lleva a ningún sitio. Llevarla a cocina le da un destino.",
@@ -208,8 +280,14 @@
    "dice_en": "Very good.",
    "buscar": "Respuesta corta. Un puente al siguiente pase da continuidad sin pedirles nada más.",
    "buscar_en": "A short answer. A bridge to the next course keeps things flowing without asking anything more of them.",
-   "modelos": ["Me alegro. Ahora viene el principal.", "Perfecto. El siguiente ya está saliendo."],
-   "modelos_en": ["Glad to hear it. The main course is next.", "Lovely. The next one is on its way."],
+   "modelos": [
+    "Me alegro. Ahora viene el principal.",
+    "Perfecto. El siguiente ya está saliendo."
+   ],
+   "modelos_en": [
+    "Glad to hear it. The main course is next.",
+    "Lovely. The next one is on its way."
+   ],
    "forzada": "¿Solo bien? ¿Qué es lo que más les ha gustado?",
    "forzada_en": "Just good? What did you like most?",
    "porque": "Insistir cuando contestan corto es presionar. Ellos deciden cuánto quieren hablar.",
@@ -224,8 +302,14 @@
    "dice_en": "Very good, the sauce was delicious.",
    "buscar": "Te dan un detalle concreto: es una puerta. Responde a ese detalle en una frase y pásalo a cocina.",
    "buscar_en": "They give you a specific detail: that's an opening. Answer that detail in one line and pass it to the kitchen.",
-   "modelos": ["Qué bien que se haya notado. Se lo digo a cocina.", "Me alegro, se lo comento al chef. Si quieren, les cuento cómo la preparan."],
-   "modelos_en": ["So glad you noticed. I'll tell the kitchen.", "Lovely, I'll pass that on to the chef. Happy to tell you how they make it, if you like."],
+   "modelos": [
+    "Qué bien que se haya notado. Se lo digo a cocina.",
+    "Me alegro, se lo comento al chef. Si quieren, les cuento cómo la preparan."
+   ],
+   "modelos_en": [
+    "So glad you noticed. I'll tell the kitchen.",
+    "Lovely, I'll pass that on to the chef. Happy to tell you how they make it, if you like."
+   ],
    "forzada": "¡Magnífico! Muchas gracias por su valoración.",
    "forzada_en": "Wonderful! Thank you very much for your feedback.",
    "porque": "«Gracias por su valoración» suena a encuesta de hotel. Te han hablado de la salsa: contesta a la salsa.",
@@ -240,8 +324,14 @@
    "dice_en": "Good, thanks.",
    "buscar": "Respuesta corta y vuelven a lo suyo: quieren intimidad. Cierra corto y retírate.",
    "buscar_en": "A short answer and they turn back to each other: they want privacy. Close briefly and step away.",
-   "modelos": ["Me alegro. Que lo disfruten.", "Perfecto, les dejo tranquilos."],
-   "modelos_en": ["Glad to hear it, I'll leave you to it.", "Lovely. Enjoy."],
+   "modelos": [
+    "Me alegro. Que lo disfruten.",
+    "Perfecto, les dejo tranquilos."
+   ],
+   "modelos_en": [
+    "Glad to hear it, I'll leave you to it.",
+    "Lovely. Enjoy."
+   ],
    "forzada": "¿Y qué celebran esta noche?",
    "forzada_en": "And what are you celebrating tonight?",
    "porque": "Abrir conversación cuando la mesa te ha cerrado la puerta con amabilidad incomoda a los dos.",
@@ -254,8 +344,14 @@
    "sit_en": "You ask how the course is. The guest nods with a full mouth and gives a thumbs up.",
    "buscar": "Ya te ha contestado. Una sonrisa, una palabra y te vas. No esperes a que trague.",
    "buscar_en": "They have already answered. A smile, a word and off you go. Don't wait for them to swallow.",
-   "modelos": ["Me alegro. Que lo disfruten.", "Perfecto. Les dejo."],
-   "modelos_en": ["Glad to hear it. Enjoy.", "Lovely. I'll leave you to it."],
+   "modelos": [
+    "Me alegro. Que lo disfruten.",
+    "Perfecto. Les dejo."
+   ],
+   "modelos_en": [
+    "Glad to hear it. Enjoy.",
+    "Lovely. I'll leave you to it."
+   ],
    "forzada": "Perdone, no le he oído, ¿qué tal está?",
    "forzada_en": "Sorry, I didn't catch that, how is it?",
    "porque": "Le obligas a hablar con la boca llena para darte una respuesta que ya te ha dado.",
@@ -270,8 +366,14 @@
    "dice_en": "That was delicious. Is there ginger in it?",
    "buscar": "Te preguntan algo: esta mesa quiere conversación. Contesta lo que sepas con seguridad y, si no lo sabes, lo confirmas en cocina.",
    "buscar_en": "They are asking you something: this table wants to talk. Answer what you know for sure, and if you don't, check with the kitchen.",
-   "modelos": ["Lleva un toque, sí. Si quieren, les cuento qué más lleva la salsa.", "Déjenme confirmarlo en cocina y se lo digo enseguida."],
-   "modelos_en": ["It does, just a touch. Happy to tell you what else goes into the sauce, if you like.", "Let me check with the kitchen and I'll come straight back to you."],
+   "modelos": [
+    "Lleva un toque, sí. Si quieren, les cuento qué más lleva la salsa.",
+    "Déjenme confirmarlo en cocina y se lo digo enseguida."
+   ],
+   "modelos_en": [
+    "It does, just a touch. Happy to tell you what else goes into the sauce, if you like.",
+    "Let me check with the kitchen and I'll come straight back to you."
+   ],
    "forzada": "Creo que sí, pero no estoy seguro.",
    "forzada_en": "I think so, but I'm not sure.",
    "porque": "Si no lo sabes, no lo adivines: se pregunta a cocina. Una duda sobre un ingrediente puede esconder una alergia.",
@@ -286,8 +388,14 @@
    "dice_en": "We were here two years ago, for our anniversary.",
    "buscar": "Te cuentan algo suyo: quieren conversación. Responde a lo que te han contado, en una o dos frases, sin convertirlo en un discurso.",
    "buscar_en": "They tell you something personal: they want to talk. Answer what they told you, in a line or two, without turning it into a speech.",
-   "modelos": ["Qué bonito que hayan vuelto. ¿Han notado muchos cambios desde entonces?", "Gracias por volver. Me alegra mucho que lo celebren otra vez aquí."],
-   "modelos_en": ["How lovely that you came back. Have you noticed many changes since then?", "Thank you for coming back. I'm so glad you're celebrating here again."],
+   "modelos": [
+    "Qué bonito que hayan vuelto. ¿Han notado muchos cambios desde entonces?",
+    "Gracias por volver. Me alegra mucho que lo celebren otra vez aquí."
+   ],
+   "modelos_en": [
+    "How lovely that you came back. Have you noticed many changes since then?",
+    "Thank you for coming back. I'm so glad you're celebrating here again."
+   ],
    "forzada": "Ah, muy bien. ¿Les traigo la cuenta?",
    "forzada_en": "Oh, very nice. Shall I bring the bill?",
    "porque": "Pasar de largo de lo que te cuentan les dice que no te interesa. Una frase sobre ellos basta.",
@@ -302,8 +410,14 @@
    "dice_en": "It's all fantastic!",
    "buscar": "Respuesta en grupo y con ganas. No hace falta más: una frase y les dejas seguir con su fiesta.",
    "buscar_en": "A group answer, full of energy. Nothing more is needed: one line and let them get on with their evening.",
-   "modelos": ["Me alegro mucho, se lo digo a cocina.", "Qué bien. Pues seguimos, que aún queda."],
-   "modelos_en": ["Wonderful, I'll tell the kitchen.", "Lovely. There's more to come."],
+   "modelos": [
+    "Me alegro mucho, se lo digo a cocina.",
+    "Qué bien. Pues seguimos, que aún queda."
+   ],
+   "modelos_en": [
+    "Wonderful, I'll tell the kitchen.",
+    "Lovely. There's more to come."
+   ],
    "forzada": "Muchas gracias, es un placer para nosotros servirles esta noche.",
    "forzada_en": "Thank you very much, it is our pleasure to serve you this evening.",
    "porque": "Frase de manual. En una mesa animada suena todavía más rígida.",
@@ -318,8 +432,14 @@
    "dice_en": "Fine. It was fine.",
    "buscar": "Un «bien» sin ganas es tibio: algo no ha terminado de gustar. Pregunta con calma, sin ponerte a la defensiva.",
    "buscar_en": "A flat “fine” is lukewarm: something didn't quite work. Ask calmly, without getting defensive.",
-   "modelos": ["¿Hay algo que le habría gustado diferente?", "Dígame con confianza, ¿qué le ha faltado?"],
-   "modelos_en": ["Is there anything you'd have liked done differently?", "Please, tell me honestly. What was missing?"],
+   "modelos": [
+    "¿Hay algo que le habría gustado diferente?",
+    "Dígame con confianza, ¿qué le ha faltado?"
+   ],
+   "modelos_en": [
+    "Is there anything you'd have liked done differently?",
+    "Please, tell me honestly. What was missing?"
+   ],
    "forzada": "Me alegro, ¡que lo disfruten!",
    "forzada_en": "Glad to hear it, enjoy!",
    "porque": "Hacer como que no has oído la duda le dice al cliente que no importa. Una pregunta tranquila lo arregla muchas veces.",
@@ -334,8 +454,14 @@
    "dice_en": "A little salty for me, to be honest.",
    "buscar": "Te han dado información. Agradécela sin discutir ni justificar el plato, y pásala a cocina.",
    "buscar_en": "They have given you information. Thank them for it without arguing or defending the dish, and pass it to the kitchen.",
-   "modelos": ["Gracias por decírmelo, se lo comento a cocina ahora mismo.", "Le agradezco que me lo diga. Lo hablo con el chef."],
-   "modelos_en": ["Thank you for telling me, I'll let the kitchen know right away.", "I really appreciate you mentioning it. I'll speak to the chef."],
+   "modelos": [
+    "Gracias por decírmelo, se lo comento a cocina ahora mismo.",
+    "Le agradezco que me lo diga. Lo hablo con el chef."
+   ],
+   "modelos_en": [
+    "Thank you for telling me, I'll let the kitchen know right away.",
+    "I really appreciate you mentioning it. I'll speak to the chef."
+   ],
    "forzada": "Es que la receta lleva así el punto de sal.",
    "forzada_en": "That's just how the recipe is seasoned.",
    "porque": "Justificar el plato convierte un comentario en una discusión. Lo que necesita oír es que se le ha escuchado.",
@@ -350,8 +476,14 @@
    "dice_en": "Honestly, I didn't like it.",
    "buscar": "Una crítica directa. Agradece la sinceridad, no te justifiques y ofrece una salida.",
    "buscar_en": "Direct criticism. Thank them for their honesty, don't make excuses and offer a way out.",
-   "modelos": ["Gracias por decírmelo. ¿Le traigo otra cosa? Se lo comento a cocina.", "Lo siento. ¿Qué le apetecería en su lugar? Se lo paso al chef."],
-   "modelos_en": ["Thank you for being honest. Can I bring you something else? I'll let the kitchen know.", "I'm sorry to hear that. What would you like instead? I'll let the chef know."],
+   "modelos": [
+    "Gracias por decírmelo. ¿Le traigo otra cosa? Se lo comento a cocina.",
+    "Lo siento. ¿Qué le apetecería en su lugar? Se lo paso al chef."
+   ],
+   "modelos_en": [
+    "Thank you for being honest. Can I bring you something else? I'll let the kitchen know.",
+    "I'm sorry to hear that. What would you like instead? I'll let the chef know."
+   ],
    "forzada": "Qué raro, a todo el mundo le encanta.",
    "forzada_en": "That's strange, everyone loves it.",
    "porque": "Compararle con otros clientes le dice que el problema es su gusto.",
@@ -364,8 +496,14 @@
    "sit_en": "You clear a plate that comes back almost full. The guest says nothing.",
    "buscar": "Un plato casi entero es una señal clara. Ni guiño ni frase de trámite: pregunta con confianza.",
    "buscar_en": "A plate that comes back almost full is a clear sign. No house touch, no stock phrase: ask openly.",
-   "modelos": ["¿No era de su gusto? Díganme con confianza y se lo comento a cocina.", "¿Le traigo otra cosa? Dígame con confianza qué no le ha convencido."],
-   "modelos_en": ["Was it not to your liking? Please be honest, I'll let the kitchen know.", "Can I bring you something else? Tell me honestly what didn't work for you."],
+   "modelos": [
+    "¿No era de su gusto? Díganme con confianza y se lo comento a cocina.",
+    "¿Le traigo otra cosa? Dígame con confianza qué no le ha convencido."
+   ],
+   "modelos_en": [
+    "Was it not to your liking? Please be honest, I'll let the kitchen know.",
+    "Can I bring you something else? Tell me honestly what didn't work for you."
+   ],
    "forzada": "¿Ya ha terminado? ¿Le ha gustado?",
    "forzada_en": "Have you finished? Did you enjoy it?",
    "porque": "Preguntar si le ha gustado un plato que vuelve entero suena a que no te has fijado.",
@@ -380,8 +518,14 @@
    "dice_en": "No, no, it was good. I just can't manage any more.",
    "buscar": "Puede ser verdad. Acéptalo sin insistir y deja la puerta abierta.",
    "buscar_en": "It may well be true. Accept it without pushing and leave the door open.",
-   "modelos": ["Claro, lo entiendo. Si cambia de idea, me dice.", "Perfecto. Si más tarde le apetece algo más ligero, me avisa."],
-   "modelos_en": ["Of course, no problem. Just let me know if you change your mind.", "Of course. If you fancy something lighter later, just say."],
+   "modelos": [
+    "Claro, lo entiendo. Si cambia de idea, me dice.",
+    "Perfecto. Si más tarde le apetece algo más ligero, me avisa."
+   ],
+   "modelos_en": [
+    "Of course, no problem. Just let me know if you change your mind.",
+    "Of course. If you fancy something lighter later, just say."
+   ],
    "forzada": "¿Seguro? ¿De verdad no le ha gustado?",
    "forzada_en": "Are you sure? Did you really not like it?",
    "porque": "Insistir le obliga a criticar el plato delante de su mesa.",
@@ -394,8 +538,14 @@
    "sit_en": "You clear a dish with a house touch you like to share. The table is deep in conversation.",
    "buscar": "El guiño se guarda para cuando la mesa te da pie. Hoy no: retira en silencio y deja el guiño para otro pase.",
    "buscar_en": "The house touch waits until the table gives you an opening. Not now: clear quietly and keep it for another course.",
-   "modelos": ["Con permiso.", "Gracias."],
-   "modelos_en": ["Excuse me.", "Thank you."],
+   "modelos": [
+    "Con permiso.",
+    "Gracias."
+   ],
+   "modelos_en": [
+    "Excuse me.",
+    "Thank you."
+   ],
    "forzada": "Perdonen, un detalle: el queso de este plato es de la isla.",
    "forzada_en": "Sorry, just a detail: the cheese in this dish is from the island.",
    "porque": "El guiño es un regalo de pasada, no un anuncio. Si interrumpe, deja de ser un regalo.",
@@ -408,8 +558,14 @@
    "sit_en": "Sixth course. You have already shared two house touches tonight. You clear a clean plate and they look up.",
    "buscar": "Dos o tres guiños por noche bastan. Más, y la mesa siente que le estás dando una clase. Aquí, una frase sencilla.",
    "buscar_en": "Two or three house touches a night are enough. Any more and the table feels it's being lectured. Here, a simple line.",
-   "modelos": ["Gracias, ahora viene el postre.", "Me alegro de verlo así. Enseguida viene el siguiente."],
-   "modelos_en": ["Thank you, dessert is next.", "Lovely to see that. The next one won't be long."],
+   "modelos": [
+    "Gracias, ahora viene el postre.",
+    "Me alegro de verlo así. Enseguida viene el siguiente."
+   ],
+   "modelos_en": [
+    "Thank you, dessert is next.",
+    "Lovely to see that. The next one won't be long."
+   ],
    "forzada": "Y este también tiene su guiño: la mantequilla es de cabra de la isla.",
    "forzada_en": "And this one has its touch too: the butter is island goat's butter.",
    "porque": "Un guiño en cada pase deja de ser un guiño. Lo que se repite pierde la gracia.",
@@ -422,12 +578,298 @@
    "sit_en": "You bring a course to the table. You present it and you're tempted to add the house touch.",
    "buscar": "Al servir, el plato: qué es y lo que hay que saber, breve. El guiño se guarda para el retiro, cuando ya lo han probado.",
    "buscar_en": "When serving, the dish: what it is and what they need to know, briefly. The house touch waits for clearing, once they've tasted it.",
-   "modelos": ["Que lo disfruten.", "Les dejo con él. Que aproveche."],
-   "modelos_en": ["Enjoy.", "I'll leave you to it. Enjoy."],
+   "modelos": [
+    "Que lo disfruten.",
+    "Les dejo con él. Que aproveche."
+   ],
+   "modelos_en": [
+    "Enjoy.",
+    "I'll leave you to it. Enjoy."
+   ],
    "forzada": "Y además lleva miel de palma de La Gomera, gofio, y el queso es de una quesería de la isla que…",
    "forzada_en": "And it also has palm honey from La Gomera, gofio, and the cheese comes from an island dairy that…",
    "porque": "Todo junto al servir es demasiado y el plato se enfría. Guardado para el retiro, el guiño se escucha.",
    "porque_en": "Everything at once when serving is too much and the dish goes cold. Kept for clearing, the touch gets heard."
+  },
+  {
+   "id": "bien-primer-contacto",
+   "tipo": "bienvenida",
+   "sit": "La mesa acaba de sentarse. Te acercas por primera vez: todavía están colocando los abrigos y mirando la sala.",
+   "sit_en": "The table has just sat down. You approach for the first time: they are still settling in and looking around the room.",
+   "buscar": "Primer contacto: saludo, tu nombre si la casa lo pide y una sola cosa práctica. No hace falta ser gracioso ni llenar el silencio.",
+   "buscar_en": "First contact: a greeting, your name if the house asks for it, and one practical thing. No need to be funny or fill the silence.",
+   "modelos": [
+    "Buenas noches, bienvenidos. ¿Les traigo agua mientras miran la carta?",
+    "Buenas noches. Les dejo la carta y vuelvo enseguida."
+   ],
+   "modelos_en": [
+    "Good evening, welcome. May I bring you some water while you look at the menu?",
+    "Good evening. I will leave you the menu and be right back."
+   ],
+   "forzada": "¡Buenas noches! ¿Qué tal, cómo están, qué tal el día, de dónde nos visitan?",
+   "forzada_en": "Good evening! How are you, how was your day, where are you visiting from?",
+   "porque": "Cuatro preguntas seguidas a alguien que aún no se ha sentado bien agobian. Un saludo y una cosa útil bastan.",
+   "porque_en": "Four questions in a row to someone who has barely sat down is too much. A greeting and one useful thing is enough."
+  },
+  {
+   "id": "bien-de-donde-vienen",
+   "tipo": "bienvenida",
+   "sit": "Mientras sirves el agua, uno de los clientes comenta: «Es nuestra primera noche en la isla».",
+   "sit_en": "While you pour the water, one of the guests says: \"It is our first night on the island.\"",
+   "buscar": "Te han dado pie ellos. Recoge lo que han dicho con una frase y, si quieres, una sola pregunta fácil de contestar.",
+   "buscar_en": "They opened the door. Pick up what they said with one line and, if you like, one easy question.",
+   "modelos": [
+    "Pues bienvenidos. Han empezado por un buen sitio.",
+    "Qué bien. ¿Se quedan muchos días?"
+   ],
+   "modelos_en": [
+    "Welcome, then. You have started in a good place.",
+    "How nice. Are you staying long?"
+   ],
+   "forzada": "¿Ah, sí? ¿Y de dónde vienen? ¿Y en qué hotel están? ¿Y qué van a visitar?",
+   "forzada_en": "Oh really? Where are you from? Which hotel are you in? What are you going to visit?",
+   "porque": "Cuando el cliente abre la conversación, se sigue su tema con una frase. Un interrogatorio la cierra.",
+   "porque_en": "When the guest opens the conversation, follow their topic with one line. An interrogation shuts it down."
+  },
+  {
+   "id": "bien-silencio-vino",
+   "tipo": "bienvenida",
+   "sit": "Sirves el vino copa a copa. La mesa se ha quedado callada mirándote servir.",
+   "sit_en": "You pour the wine glass by glass. The table has gone quiet, watching you pour.",
+   "buscar": "El silencio mientras sirves no es incómodo para ellos: es atención. No hay que llenarlo. Termina, una frase y te vas.",
+   "buscar_en": "Silence while you pour is not awkward for them: it is attention. No need to fill it. Finish, one line, and leave.",
+   "modelos": [
+    "Que lo disfruten.",
+    "Les dejo la botella aquí al lado. Que aproveche."
+   ],
+   "modelos_en": [
+    "Enjoy.",
+    "I will leave the bottle right here. Enjoy."
+   ],
+   "forzada": "Bueno, bueno, a ver este vino, que dicen que está muy bien, ya me contarán, ¿eh?",
+   "forzada_en": "Well, well, let us see this wine, they say it is very good, you will have to tell me, eh?",
+   "porque": "Hablar por nervios se nota. Servir bien y en silencio transmite más seguridad que cualquier frase.",
+   "porque_en": "Talking out of nerves shows. Pouring well and quietly says more than any line."
+  },
+  {
+   "id": "rec-que-nos-recomienda",
+   "tipo": "recomendacion",
+   "sit": "Te preguntan: «¿Qué nos recomienda?».",
+   "sit_en": "They ask you: \"What do you recommend?\"",
+   "buscar": "No es un examen de la carta. Dos platos concretos de tu carta, cada uno con su motivo en pocas palabras, y que elijan.",
+   "buscar_en": "It is not a test on the menu. Two specific dishes from your menu, each with a short reason, and let them choose.",
+   "modelos": [
+    "Si les gusta el pescado, el de la brasa. Y si prefieren carne, la que hacemos a fuego lento.",
+    "Yo empezaría con algo crudo para compartir y seguiría con el pescado."
+   ],
+   "modelos_en": [
+    "If you like fish, the one from the grill. And if you prefer meat, the slow-cooked one.",
+    "I would start with something raw to share and follow with the fish."
+   ],
+   "forzada": "Uy, todo está muy bueno, la verdad. Depende de lo que les guste.",
+   "forzada_en": "Oh, everything is very good, really. It depends on what you like.",
+   "porque": "«Todo está bueno» devuelve la pregunta al cliente. Dos nombres concretos le ayudan a decidir.",
+   "porque_en": "\"Everything is good\" hands the question back. Two specific names help them decide."
+  },
+  {
+   "id": "rec-tu-favorito",
+   "tipo": "recomendacion",
+   "sit": "Un cliente te mira y pregunta: «¿Y a usted cuál le gusta más?».",
+   "sit_en": "A guest looks at you and asks: \"And which one do you like best?\"",
+   "buscar": "Quieren una opinión personal, corta. Un plato y un motivo tuyo. No hace falta contar tu vida.",
+   "buscar_en": "They want a short personal opinion. One dish and your own reason. No need to tell your life story.",
+   "modelos": [
+    "A mí, el pescado a la brasa. Por la salsa.",
+    "Mi favorito es el postre de la casa. Lo pediría siempre."
+   ],
+   "modelos_en": [
+    "For me, the grilled fish. For the sauce.",
+    "My favourite is the house dessert. I would order it every time."
+   ],
+   "forzada": "Pues mire, a mí es que me gusta todo, yo no soy quién para decirle.",
+   "forzada_en": "Well, I like everything, really, who am I to say.",
+   "porque": "Te han pedido tu opinión: dársela, en una frase, es parte del servicio. Esquivarla suena a desinterés.",
+   "porque_en": "They asked for your opinion: giving it, in one line, is part of the service. Dodging it sounds like you do not care."
+  },
+  {
+   "id": "rec-no-lo-se",
+   "tipo": "recomendacion",
+   "sit": "Te preguntan de qué zona exacta es un vino y no lo sabes.",
+   "sit_en": "They ask exactly which area a wine comes from and you do not know.",
+   "buscar": "No saber algo no es un fallo si lo resuelves. Dilo sin apuro y vuelve con el dato.",
+   "buscar_en": "Not knowing something is not a failure if you solve it. Say so calmly and come back with the answer.",
+   "modelos": [
+    "No se lo sé decir con seguridad. Lo consulto y se lo digo enseguida.",
+    "Buena pregunta. Se lo pregunto al sumiller y vuelvo."
+   ],
+   "modelos_en": [
+    "I cannot tell you for sure. Let me check and I will tell you right away.",
+    "Good question. I will ask the sommelier and come back."
+   ],
+   "forzada": "Eh, creo que es de por el norte, o algo así, no estoy seguro.",
+   "forzada_en": "Er, I think it is from the north or something, I am not sure.",
+   "porque": "Un dato inventado se nota y resta confianza. «Lo consulto» y volver con la respuesta la suma.",
+   "porque_en": "A made-up answer shows and costs trust. \"Let me check\" and coming back with the answer builds it."
+  },
+  {
+   "id": "esp-cocina-va-lenta",
+   "tipo": "espera",
+   "sit": "La cocina va con retraso. La mesa lleva un rato esperando el principal y te busca con la mirada.",
+   "sit_en": "The kitchen is running late. The table has been waiting a while for the main and is looking for you.",
+   "buscar": "Acércate antes de que pregunten. Reconoce la espera en una frase y da un tiempo real, sin excusas largas.",
+   "buscar_en": "Go to them before they ask. Acknowledge the wait in one line and give a real time, without long excuses.",
+   "modelos": [
+    "Disculpen la espera. Su plato sale en unos cinco minutos.",
+    "Perdonen el retraso. Acabo de preguntar en cocina y viene enseguida."
+   ],
+   "modelos_en": [
+    "Sorry for the wait. Your dish will be out in about five minutes.",
+    "Apologies for the delay. I have just checked with the kitchen and it is on its way."
+   ],
+   "forzada": "Es que hoy la cocina va fatal, tenemos un grupo grande y falta gente, ya saben.",
+   "forzada_en": "The kitchen is a disaster today, we have a big group and we are short of staff, you know.",
+   "porque": "Al cliente no le sirven los problemas de la casa. Le sirve saber que lo has visto y cuánto falta.",
+   "porque_en": "The guest has no use for the house problems. They want to know you have noticed and how long it will be."
+  },
+  {
+   "id": "esp-plato-equivocado",
+   "tipo": "espera",
+   "sit": "Has dejado un plato delante de quien no lo había pedido. Te das cuenta al ver su cara.",
+   "sit_en": "You have put a dish in front of the wrong guest. You notice from their face.",
+   "buscar": "Un error pequeño se arregla con una disculpa corta y el gesto. Sin drama y sin explicaciones.",
+   "buscar_en": "A small mistake is fixed with a short apology and the action. No drama and no explanations.",
+   "modelos": [
+    "Perdón, me he confundido. Este es para la señora.",
+    "Disculpen, se lo cambio ahora mismo."
+   ],
+   "modelos_en": [
+    "Sorry, my mistake. This one is for the lady.",
+    "Excuse me, let me swap those right away."
+   ],
+   "forzada": "Ay, perdón, perdón, qué desastre, es que llevo una noche, lo siento muchísimo.",
+   "forzada_en": "Oh, sorry, sorry, what a mess, I am having such a night, I am so sorry.",
+   "porque": "Disculparse cinco veces hace el error más grande. Una disculpa y arreglarlo lo hace desaparecer.",
+   "porque_en": "Apologising five times makes the mistake bigger. One apology and fixing it makes it disappear."
+  },
+  {
+   "id": "esp-copa-derramada",
+   "tipo": "espera",
+   "sit": "Un cliente tira su copa de vino sobre el mantel y se queda apurado.",
+   "sit_en": "A guest knocks their glass of wine over the tablecloth and looks embarrassed.",
+   "buscar": "El apurado es él. Quítale importancia con una frase y actúa rápido: servilleta, copa nueva.",
+   "buscar_en": "They are the embarrassed one. Play it down with one line and act fast: napkin, fresh glass.",
+   "modelos": [
+    "No se preocupe, pasa todas las noches. Enseguida le traigo otra copa.",
+    "Tranquilo, lo arreglo en un momento."
+   ],
+   "modelos_en": [
+    "Do not worry, it happens every night. I will bring you another glass right away.",
+    "No problem at all, I will sort it in a moment."
+   ],
+   "forzada": "¡Uy! ¡Cuidado! A ver, a ver, déjenme, que esto mancha mucho.",
+   "forzada_en": "Whoa! Careful! Let me see, let me see, this really stains.",
+   "porque": "Si tú le das importancia, el cliente se siente peor. La calma y una copa nueva cierran el momento.",
+   "porque_en": "If you make it a big deal, the guest feels worse. Calm and a fresh glass close the moment."
+  },
+  {
+   "id": "cel-aniversario",
+   "tipo": "celebracion",
+   "sit": "En la reserva pone «aniversario». La pareja no ha dicho nada al sentarse.",
+   "sit_en": "The booking says \"anniversary\". The couple said nothing when they sat down.",
+   "buscar": "Una mención discreta, una vez, al principio o con el postre. Sin anunciarlo a la sala.",
+   "buscar_en": "One discreet mention, once, at the start or with dessert. Without announcing it to the room.",
+   "modelos": [
+    "Nos han dicho que hoy celebran algo. Enhorabuena.",
+    "Feliz aniversario. Gracias por pasarlo con nosotros."
+   ],
+   "modelos_en": [
+    "We hear you are celebrating tonight. Congratulations.",
+    "Happy anniversary. Thank you for spending it with us."
+   ],
+   "forzada": "¡Pero bueno, que están de aniversario! ¿Cuántos años? ¡Cuenten, cuenten!",
+   "forzada_en": "Well now, it is your anniversary! How many years? Tell us everything!",
+   "porque": "Algunas parejas quieren celebrarlo en privado. Una felicitación en voz baja siempre funciona.",
+   "porque_en": "Some couples want to celebrate privately. A quiet congratulation always works."
+  },
+  {
+   "id": "cel-cliente-solo",
+   "tipo": "celebracion",
+   "sit": "Un cliente cena solo. Ha dejado el móvil boca abajo y mira la sala.",
+   "sit_en": "A guest is dining alone. They have put their phone face down and are looking around the room.",
+   "buscar": "Solo no significa que quiera compañía ni que no la quiera. Una frase amable y observa si la sigue.",
+   "buscar_en": "Alone does not mean they want company, or that they do not. One friendly line, and see if they pick it up.",
+   "modelos": [
+    "¿Todo a su gusto? Cualquier cosa, estoy por aquí.",
+    "Si quiere, le cuento algo del siguiente plato cuando llegue."
+   ],
+   "modelos_en": [
+    "Is everything to your liking? I am right here if you need anything.",
+    "If you like, I can tell you about the next dish when it arrives."
+   ],
+   "forzada": "¿Cena solo hoy? ¿Está de viaje de trabajo? Qué pena, con lo bonito que es esto para venir acompañado.",
+   "forzada_en": "Dining alone tonight? On a work trip? What a shame, this place is so nice to share.",
+   "porque": "Señalar que está solo le incomoda. Ofrecer atención sin obligar le deja elegir.",
+   "porque_en": "Pointing out that they are alone makes it awkward. Offering attention without pressure lets them choose."
+  },
+  {
+   "id": "cel-halago-personal",
+   "tipo": "celebracion",
+   "sit": "Al final de la cena, un cliente te dice: «Nos ha atendido usted muy bien».",
+   "sit_en": "At the end of dinner, a guest tells you: \"You have looked after us very well.\"",
+   "buscar": "Un halago a ti se acepta. Dar las gracias mirando a la persona, sin quitarle valor.",
+   "buscar_en": "A compliment to you should be accepted. Say thank you looking at the person, without playing it down.",
+   "modelos": [
+    "Muchas gracias, ha sido un placer atenderles.",
+    "Se lo agradezco mucho. Me alegro de que hayan estado a gusto."
+   ],
+   "modelos_en": [
+    "Thank you very much, it has been a pleasure looking after you.",
+    "I really appreciate it. I am glad you felt at home."
+   ],
+   "forzada": "No, no, qué va, si no he hecho nada, es mi trabajo.",
+   "forzada_en": "No, no, not at all, I did nothing, it is just my job.",
+   "porque": "Rechazar un halago deja al cliente sin saber qué decir. Aceptarlo con un «gracias» cierra bien la noche.",
+   "porque_en": "Turning down a compliment leaves the guest with nothing to say. Accepting it with a \"thank you\" ends the night well."
+  },
+  {
+   "id": "desp-la-cuenta",
+   "tipo": "despedida",
+   "sit": "Te piden la cuenta. Han terminado el café y recogen sus cosas.",
+   "sit_en": "They ask for the bill. They have finished their coffee and are gathering their things.",
+   "buscar": "Ya se van: no es momento de la encuesta. Trae la cuenta rápido y una frase corta de agradecimiento.",
+   "buscar_en": "They are leaving: not the time for a survey. Bring the bill quickly with one short line of thanks.",
+   "modelos": [
+    "Enseguida se la traigo. Gracias por venir.",
+    "Ahora mismo. Espero que hayan disfrutado."
+   ],
+   "modelos_en": [
+    "I will bring it right away. Thank you for coming.",
+    "Right away. I hope you enjoyed it."
+   ],
+   "forzada": "Claro. ¿Y qué tal todo? ¿El menú bien? ¿Qué plato les ha gustado más? ¿Volverán?",
+   "forzada_en": "Of course. And how was everything? The menu? Which dish did you like best? Will you come back?",
+   "porque": "Con el abrigo en la mano, cuatro preguntas retienen al cliente. La despedida es breve y cálida.",
+   "porque_en": "With their coat in hand, four questions hold the guest back. A goodbye is short and warm."
+  },
+  {
+   "id": "desp-salida",
+   "tipo": "despedida",
+   "sit": "La mesa se levanta y pasa a tu lado camino de la puerta.",
+   "sit_en": "The table gets up and walks past you on the way to the door.",
+   "buscar": "El último recuerdo de la noche. Mírales, despídete por la hora del día y, si sabes algo de su viaje, úsalo.",
+   "buscar_en": "The last memory of the night. Look at them, say goodbye, and if you know something about their trip, use it.",
+   "modelos": [
+    "Buenas noches, gracias por venir. Que descansen.",
+    "Buenas noches. Que disfruten de la isla."
+   ],
+   "modelos_en": [
+    "Good night, thank you for coming. Sleep well.",
+    "Good night. Enjoy the island."
+   ],
+   "forzada": "Adiós, adiós. Pónganos cinco estrellas en internet, ¿eh?",
+   "forzada_en": "Bye, bye. Give us five stars online, will you?",
+   "porque": "Pedir la reseña en la puerta convierte la despedida en una petición. Un buen adiós la consigue solo.",
+   "porque_en": "Asking for a review at the door turns the goodbye into a request. A good goodbye earns it on its own."
   }
  ]
 }
