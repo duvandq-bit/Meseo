@@ -12021,3 +12021,6 @@ html[data-venue="demo"] .ri-cta-mom{background:linear-gradient(140deg,#3b5a63 0%
 .vc-precio small{font-size:var(--fs-1);color:var(--parch3)}
 .vc-vacio{font-family:var(--font-sans);font-size:var(--fs-3);color:var(--parch3);padding:1rem 0}
 .vc-ficha-meta{display:flex;flex-direction:column;gap:.25rem;margin:-.4rem 0 1rem;font-family:var(--font-sans);font-size:var(--fs-2);color:var(--parch3)}
+
+/* LQA: el consejo de teclado sólo donde hay teclado (nov 2026). */
+@media (hover:none){.lqa-kbd-tip{display:none}}
