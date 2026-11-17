@@ -6661,7 +6661,7 @@ test('Hospitalidad: siete módulos nuevos, todos válidos y sin delatar la mejor
   const fn = n => { const i = html.indexOf('function ' + n + '('); return html.slice(i, html.indexOf('\n}', i) + 2); };
   const validos = new Function(fn('_hspModulosValidos') + '\nreturn _hspModulosValidos;')(); // eslint-disable-line no-new-func
   const mods = validos(data);
-  assert(data.revision === true, 'sigue en revisión hasta que el propietario lo apruebe');
+  assert(data.revision === false, 'aprobado por el propietario: lo ve todo el equipo (nov 2026)');
   assert(mods.length === data.modulos.length, 'ningún módulo se descarta');
   for (const m of data.modulos) {
     const v = mods.find(x => x.id === m.id);
@@ -17191,7 +17191,7 @@ test('Horarios retirado (oct 2026): sin menú, ruta, fila del inicio ni herramie
 });
 test('Hospitalidad: una mesa al día, motor puro y sin XP ni nube con puntuación', () => {
   const data = JSON.parse(read('data/hospitalidad.json'));
-  assert(data.revision === true, 'mientras se revisa, el archivo lo declara');
+  assert(data.revision === false, 'aprobado: el archivo ya no está en revisión (nov 2026)');
   assert(!/happea/i.test(read('data/hospitalidad.json')) && !/happea/i.test(html), 'la inspiración no se nombra en la app');
   const fn = n => { const i = html.indexOf('function ' + n + '('); return html.slice(i, html.indexOf('\n}', i) + 2); };
   const motor = new Function(fn('_hspModulosValidos') + fn('_hspDia') + fn('_hspCorregir') + fn('_hspPendiente') // eslint-disable-line no-new-func
@@ -19414,11 +19414,30 @@ test('momentos de mesa: escena con voz y micro opcional, claves, tarjeta en Prac
   assert(/Has dicho/.test(esc) && /You said/.test(esc), 'se enseña la transcripción');
   assert(/Lee la mesa/.test(_fnSrc('_momVerHTML')) && /Suena forzada/.test(_fnSrc('_momVerHTML')) && /Sounds forced/.test(_fnSrc('_momVerHTML')), 'modelos, forzada y por qué');
   assert(/Las claves/.test(_fnSrc('_momClavesHTML')) && /The key ideas/.test(_fnSrc('_momClavesHTML')), 'pantalla de claves');
-  assert(/launchMomentos\('claves'\)/.test(_fnSrc('_momCtaHTML')), 'las claves se abren desde la tarjeta');
-  assert(/_momCtaHTML\(_en\)/.test(_fnSrc('renderPracticar')), 'la tarjeta está en Practicar');
+  assert(/_hospAbrir\('claves'\)/.test(_fnSrc('_hospHubRender')) && /launchMomentos\(q==='claves' \? 'claves' : undefined\)/.test(_fnSrc('_hospAbrir')), 'las claves se abren desde el hub');
   assert(/loadLazyData\('data\/momentos-mesa\.json'/.test(html), 'los datos se cargan en diferido');
   const css = read('styles.css');
   assert(/\.mom \.pase-x\{width:44px;height:44px\}/.test(css) && /\.mom-oir-mini\{[^}]*width:44px;height:44px/.test(css) && /\.mom-claves-link\{[^}]*min-height:44px/.test(css), 'toques de 44 px');
+});
+test('Hospitalidad: una sola entrada con el curso y las frases dentro (nov 2026)', () => {
+  // Antes había dos tarjetas que parecían lo mismo. Ahora una entrada abre un hub.
+  const pr = _fnSrc('renderPracticar');
+  assert(/_hspCtaHTML\(_en\)/.test(pr) && !/_momCtaHTML/.test(pr), 'una sola entrada en Practicar, sin la tarjeta vieja de Momentos');
+  assert(html.indexOf('function _momCtaHTML(') === -1, 'la tarjeta vieja de Momentos ya no existe');
+  // La entrada se enseña siempre (las frases no dependen de la revisión) y abre el hub.
+  const cta = _fnSrc('_hspCtaHTML');
+  assert(/onclick="launchHospHub\(\)"/.test(cta) && !/if\(!_hspVisible\(\)\) return '';/.test(cta), 'la entrada abre el hub y no se oculta por la revisión');
+  // El hub lleva a las dos partes, cada una a su motor, intactos.
+  const hub = _fnSrc('_hospHubRender');
+  assert(/_hospAbrir\('curso'\)/.test(hub) && /_hospAbrir\('frases'\)/.test(hub), 'el hub tiene las dos filas');
+  const abrir = _fnSrc('_hospAbrir');
+  assert(/launchHospitalidad\(\)/.test(abrir) && /launchMomentos\(/.test(abrir), 'cada fila abre su motor, sin fundirlos');
+  // Lleva a lo que toca: marca con «hoy»/«today» la parte pendiente.
+  assert(/hosp-hoy/.test(hub) && /'hoy'/.test(hub) && /'today'/.test(hub), 'marca la parte que tiene algo pendiente');
+  // La fila del curso sólo si _hspVisible y hay contenido (estado !== null).
+  assert(/estado===null \? '' :/.test(hub), 'sin curso disponible, no se enseña su fila');
+  // El curso se abre a todo el equipo: su dato ya no está en revisión.
+  assert(JSON.parse(read('data/hospitalidad.json')).revision === false, 'curso aprobado para todos');
 });
 test('guiño «Para el retiro» en la ficha, la degustación y Conocer el plato', () => {
   const f = _fnSrc('_guinoRetiroHTML');

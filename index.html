@@ -54,7 +54,7 @@
 <meta property="og:description" content="Formación de equipos de sala: carta, alérgenos, vinos, exámenes y juegos de repaso.">
 <meta property="og:url" content="https://meseo.es/">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"Meseo","url":"https://meseo.es/"}</script>
-<meta name="app-version" content="7.546">
+<meta name="app-version" content="7.547">
 <meta name="app-build" content="May 2026">
 <meta name="theme-color" content="#1c2a22">
 <!-- ═══ PWA ═══ -->
@@ -3191,7 +3191,7 @@ const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><p
 const SRC = 'src';
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='7.546';  // sincronizada con sw.js VERSION (guard de CI)
+const APP_VERSION='7.547';  // sincronizada con sw.js VERSION (guard de CI)
 const APP_BUILD='Jul 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;
@@ -27913,7 +27913,6 @@ function renderPracticar(){
     ${(typeof _rtcTarjetaHTML==='function') ? _rtcTarjetaHTML('practicar') : ''}
     ${(typeof launchPase==='function') ? _paseCtaHTML(_en) : ''}
     ${(typeof _hspCtaHTML==='function') ? _hspCtaHTML(_en) : ''}
-    ${(typeof _momCtaHTML==='function') ? _momCtaHTML(_en) : ''}
     ${_smartCtaHTML(_en, emp)}
     <div class="tunic-divider"><span>${_en?'Train':'Entrenar'}</span></div>
     <div class="prc-lista">
@@ -36155,15 +36154,106 @@ async function _hspCargar(){
 }
 function _hspT(o, k){ return (LANG==='en' && o && o[k+'_en']) ? o[k+'_en'] : (o ? o[k] : ''); }
 
+// Entrada única de Hospitalidad (nov 2026). Antes había dos tarjetas que
+// parecían lo mismo y confundían: el curso de criterio de sala y las frases de
+// mesa. Ahora una sola tarjeta abre un hub con las dos partes dentro:
+//   · «La mesa de hoy»  → el curso (_hspVisible; se oculta su fila si no toca).
+//   · «Dilo en voz alta» → las frases (siempre disponibles).
+// La tarjeta se enseña siempre, porque las frases no dependen de la revisión.
+const _HSP_IC = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 11c0 5.6-7 10-7 10z"/></svg>';
 function _hspCtaHTML(_en){
-  if(!_hspVisible()) return '';
-  return `<button type="button" class="ri-cta ri-cta-hsp" style="margin:0 0 1rem" aria-label="${_en?'Hospitality':'Hospitalidad'}" onclick="launchHospitalidad()">
-      <span class="ri-cta-icon" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 11c0 5.6-7 10-7 10z"/></svg></span>
+  let pendFr = 0; try{ pendFr = _momPendientesHoy(getEmp(currentUser)); }catch(e){}
+  const curso = _hspVisible();
+  const sub = pendFr
+    ? (curso ? (_en?`The table of the day · ${pendFr} phrases to review`:`La mesa de hoy · ${pendFr} frases para repasar`)
+             : (_en?`${pendFr} phrases to review`:`${pendFr} frases para repasar`))
+    : (curso ? (_en?'Decide and say: two ways to get better':'Decidir y decir: dos maneras de mejorar')
+             : (_en?'Say it out loud · 5 scenes':'Dilo en voz alta · 5 escenas'));
+  return `<button type="button" class="ri-cta ri-cta-hsp" style="margin:0 0 1rem" aria-label="${_en?'Hospitality':'Hospitalidad'}" onclick="launchHospHub()">
+      <span class="ri-cta-icon" aria-hidden="true">${_HSP_IC}</span>
       <span class="ri-cta-text">
-        <span class="ri-cta-top">${_en?'Hospitality':'Hospitalidad'}${(HOSPITALIDAD && HOSPITALIDAD.revision!==false)?` <span style="font-size:.6rem;background:rgba(192,112,58,.16);border:1px solid rgba(192,112,58,.5);border-radius:99px;padding:.05rem .45rem;vertical-align:2px">${_en?'REVIEW':'REVISIÓN'}</span>`:''}</span>
-        <span class="ri-cta-sub">${_en?'One table a day · 5 minutes':'Una mesa al día · 5 minutos'}</span>
+        <span class="ri-cta-top">${_en?'Hospitality':'Hospitalidad'}</span>
+        <span class="ri-cta-sub">${sub}</span>
       </span>
     </button>`;
+}
+
+// ── El hub: las dos partes dentro de una sola entrada ──────────────────────
+// No funde los dos motores (uno es un curso con orden, el otro práctica que se
+// repite): los deja intactos y sólo pone delante una pantalla que lleva a lo
+// que toca, marcando con «hoy» la parte que tiene algo pendiente. Las partes se
+// abren encima del hub; al cerrarlas, el hub sigue debajo, y al cerrar el hub
+// se vuelve a Practicar.
+async function launchHospHub(){
+  let estado = null;
+  // Cargar primero el dato: _hspVisible() mira HOSPITALIDAD.revision, que es
+  // null hasta que se carga, y sin eso la fila del curso no saldría al equipo.
+  const data = await _hspCargar();
+  if(data && _hspVisible()){
+    const modulos = _hspModulosValidos(data);
+    if(modulos.length){
+      const prog = _hspProgreso(getEmp(currentUser)), hoy = todayStr();
+      estado = _hspHechaHoy(modulos, prog, hoy) ? 'hecha' : (_hspPendiente(prog, hoy) ? 'ayer' : 'nueva');
+    }
+  }
+  let pendFr = 0; try{ pendFr = _momPendientesHoy(getEmp(currentUser)); }catch(e){}
+  _hospHubRender(estado, pendFr);
+  document.addEventListener('keydown', _hospHubKeydown);
+}
+function _hospHubKeydown(e){ if(e.key==='Escape' && document.getElementById('hospHubOverlay')){ e.preventDefault(); _hospHubClose(); } }
+function _hospHubClose(){
+  document.removeEventListener('keydown', _hospHubKeydown);
+  const o = document.getElementById('hospHubOverlay');
+  if(o){ o.id='hospHubOverlayCerrando'; o.style.opacity='0'; o.style.transition='opacity .3s'; setTimeout(()=>{ if(o.parentNode) o.remove(); },300); }
+}
+function _hospHubRender(estado, pendFr){
+  const _en = LANG==='en';
+  const hoy = `<span class="hosp-hoy">${_en?'today':'hoy'}</span>`;
+  const rev = (_hspVisible() && HOSPITALIDAD && HOSPITALIDAD.revision!==false)
+    ? ` <span style="font-size:.6rem;background:rgba(255,255,255,.22);border-radius:99px;padding:.05rem .45rem;vertical-align:2px">${_en?'REVIEW':'REVISIÓN'}</span>` : '';
+  const cursoSub = estado==='hecha' ? (_en?'Done today · review the cue':'Hecha hoy · repasa la consigna')
+    : estado==='ayer' ? (_en?'A table and yesterday’s cue':'Una mesa y la consigna de ayer')
+    : (_en?'A new table · 5 minutes':'Una mesa nueva · 5 minutos');
+  const filaCurso = estado===null ? '' : `
+      <button type="button" class="ri-cta ri-cta-hsp hosp-fila" onclick="_hospAbrir('curso')">
+        <span class="ri-cta-icon" aria-hidden="true">${_HSP_IC}</span>
+        <span class="ri-cta-text">
+          <span class="ri-cta-top">${_en?'The table of the day':'La mesa de hoy'}${rev}${(estado==='nueva'||estado==='ayer')?' '+hoy:''}</span>
+          <span class="ri-cta-sub">${cursoSub}</span>
+        </span>
+      </button>`;
+  const filaFrases = `
+      <button type="button" class="ri-cta ri-cta-mom hosp-fila" onclick="_hospAbrir('frases')">
+        <span class="ri-cta-icon" aria-hidden="true">${_MOM_IC}</span>
+        <span class="ri-cta-text">
+          <span class="ri-cta-top">${_en?'Say it out loud':'Dilo en voz alta'}${pendFr?' '+hoy:''}</span>
+          <span class="ri-cta-sub">${pendFr?(_en?`${pendFr} to review today`:`${pendFr} para repasar hoy`):(_en?'5 scenes · 4 minutes':'5 escenas · 4 minutos')}</span>
+        </span>
+      </button>`;
+  const html = `<div class="pase-container hosp-hub">
+    <div class="hsp2-head"><div class="hsp2-head-top">
+      <div class="hsp2-eyebrow">${_en?'Hospitality':'Hospitalidad'}</div>
+      <button class="pase-x" onclick="_hospHubClose()" aria-label="${_en?'Close':'Cerrar'}">✕</button>
+    </div></div>
+    <div class="pase-body hosp-hub-body">
+      <p class="hosp-hub-intro">${_en?'Two ways to get better in the dining room: deciding what to do, and saying it.':'Dos maneras de mejorar en sala: decidir qué hacer y saber decirlo.'}</p>
+      ${filaCurso}
+      ${filaFrases}
+      <button type="button" class="mom-claves-link" onclick="_hospAbrir('claves')">${_en?'The key ideas':'Las claves'}</button>
+    </div>
+  </div>`;
+  const ex = document.getElementById('hospHubOverlay');
+  if(ex){ const c = ex.querySelector('.pase-container'); if(c){ c.outerHTML = html; return; } ex.remove(); }
+  const ov = document.createElement('div');
+  ov.id = 'hospHubOverlay'; ov.className = 'pase-overlay';
+  ov.setAttribute('role','dialog'); ov.setAttribute('aria-modal','true');
+  ov.setAttribute('aria-label', _en?'Hospitality':'Hospitalidad');
+  ov.innerHTML = html;
+  document.body.appendChild(ov);
+}
+function _hospAbrir(q){
+  if(q==='curso'){ if(typeof launchHospitalidad==='function') launchHospitalidad(); return; }
+  if(typeof launchMomentos==='function') launchMomentos(q==='claves' ? 'claves' : undefined);
 }
 
 async function launchHospitalidad(){
@@ -36520,22 +36610,8 @@ async function _momCargar(){
   return MOMENTOS;
 }
 
+// El icono de las frases («Dilo en voz alta»), que usa el hub de Hospitalidad.
 const _MOM_IC = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 15h16"/><path d="M6 15a6 6 0 0112 0"/><path d="M12 9V7"/><path d="M8 19h8"/><path d="M21 6.5c-1 .9-2.2 1.4-3.5 1.5"/></svg>';
-function _momCtaHTML(_en){
-  let pend = 0;
-  try{ pend = _momPendientesHoy(getEmp(currentUser)); }catch(e){}
-  const sub = pend ? (_en ? `${pend} to go over today` : `${pend} para repasar hoy`) : (_en ? '5 scenes · 4 minutes' : '5 escenas · 4 minutos');
-  return `<div class="mom-entrada">
-    <button type="button" class="ri-cta ri-cta-mom" aria-label="${_en?'Table moments':'Momentos de mesa'}" onclick="launchMomentos()">
-      <span class="ri-cta-icon" aria-hidden="true">${_MOM_IC}</span>
-      <span class="ri-cta-text">
-        <span class="ri-cta-top">${_en?'Table moments':'Momentos de mesa'}</span>
-        <span class="ri-cta-sub">${sub}</span>
-      </span>
-    </button>
-    <button type="button" class="mom-claves-link" onclick="launchMomentos('claves')">${_en?'The key ideas':'Las claves'}</button>
-  </div>`;
-}
 
 async function launchMomentos(vista){
   const data = await _momCargar();
