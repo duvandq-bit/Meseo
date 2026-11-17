@@ -608,13 +608,13 @@
     "q_en": "What is the most appropriate response?",
     "opts": [
       "\"¡Hola! Sí claro, ¿preferís dentro o en la terraza? Venid conmigo, os busco sitio.\" Les tuteo desde el primer momento.",
-      "\"Buenas tardes, bienvenidos a Jenfry. Por supuesto, permítanme acompañarles a su mesa.\"",
+      "\"Buenas tardes, bienvenidos al restaurante. Por supuesto, permítanme acompañarles a su mesa.\"",
       "\"Hola, buenas. Por aquí, síganme por favor.\"",
       "\"Buenas tardes. Síganme.\""
     ],
     "opts_en": [
       "\"Hi! Sure, do you prefer inside or on the terrace? Come with me, I'll find you a spot.\" I use first names from the outset.",
-      "\"Good afternoon, welcome to Jenfry. Of course, please allow me to escort you to your table.\"",
+      "\"Good afternoon, welcome to the restaurant. Of course, please allow me to escort you to your table.\"",
       "\"Hi there. This way please, follow me.\"",
       "\"Good afternoon. Follow me.\""
     ],
@@ -716,7 +716,7 @@
     ],
     "corr": 2,
     "expl": "El estándar #51 (Personalización) exige recordar y aplicar datos del huésped a lo largo del servicio, no solo gestos genéricos. En la auditoría se ofreció una revista (opción 0): se calificó como proactividad pero NO como personalización. La opción 2 conecta un dato concreto con una decisión posterior, que es exactamente la diferencia entre proactividad y personalización real.",
-    "expl_en": "Standard #51 (Personalization) requires remembering and applying guest information throughout service, not just generic gestures. In the audit a magazine was offered (option 0) — rated as proactivity but NOT personalization. Option 2 connects a specific cue with a later decision, which is exactly the difference between proactivity and true personalization.",
+    "expl_en": "Standard #51 (Personalization) requires remembering and applying guest information throughout service, not just generic gestures. In the audit a magazine was offered (option 0), rated as proactivity but NOT personalization. Option 2 connects a specific cue with a later decision, which is exactly the difference between proactivity and true personalization.",
     "real": true
   },
   {
@@ -739,8 +739,8 @@
       "Make a mental note and mention it only if the occasion arises later."
     ],
     "corr": 1,
-    "expl": "El estándar #51 (Personalización) y la cultura Ritz-Carlton exigen actuar sobre la información del huésped. La opción 1 cierra el círculo: reconocimiento inicial + acción coordinada con el equipo + cierre referenciado en la despedida. La 0 desperdicia la oportunidad. La 2 desorganiza la operativa. La 3 deja la personalización al azar.",
-    "expl_en": "Standard #51 (Personalization) and Ritz-Carlton culture require acting on guest information. Option 1 closes the loop: initial acknowledgment + coordinated team action + referenced farewell. Option 0 wastes the opportunity. Option 2 disrupts operations. Option 3 leaves personalization to chance.",
+    "expl": "El estándar #51 (Personalización) y la cultura del servicio de lujo exigen actuar sobre la información del huésped. La opción 1 cierra el círculo: reconocimiento inicial + acción coordinada con el equipo + cierre referenciado en la despedida. La 0 desperdicia la oportunidad. La 2 desorganiza la operativa. La 3 deja la personalización al azar.",
+    "expl_en": "Standard #51 (Personalization) and luxury service culture require acting on guest information. Option 1 closes the loop: initial acknowledgment + coordinated team action + referenced farewell. Option 0 wastes the opportunity. Option 2 disrupts operations. Option 3 leaves personalization to chance.",
     "real": false
   },
   {
@@ -884,7 +884,7 @@
     ],
     "corr": 1,
     "expl": "El estándar #22 exige una comprobación proactiva de la experiencia. La auditoría observó que en los rangos 500 y 300 no se realizó. Silencio no equivale a satisfacción: puede ser un problema no comunicado. La opción 1 cumple el estándar. La 0 asume sin verificar. La 2 deja el chequeo demasiado tarde. La 3 evade la responsabilidad propia.",
-    "expl_en": "Standard #22 requires proactive experience checks. The audit noted sections 500 and 300 received none. Silence ≠ satisfaction — it may indicate unspoken issues. Option 1 meets the standard. Option 0 assumes without verifying. Option 2 checks too late. Option 3 deflects responsibility.",
+    "expl_en": "Standard #22 requires proactive experience checks. The audit noted sections 500 and 300 received none. Silence ≠ satisfaction, it may indicate unspoken issues. Option 1 meets the standard. Option 0 assumes without verifying. Option 2 checks too late. Option 3 deflects responsibility.",
     "real": true
   },
   {
@@ -962,21 +962,21 @@
   {
     "id": 41,
     "cat": "llegada",
-    "scn": "Son las 13:45. Un huésped cruza la puerta de Txoko.",
-    "scn_en": "It's 13:45. A guest walks through the door of Txoko.",
+    "scn": "Son las 13:45. Un huésped cruza la puerta del restaurante.",
+    "scn_en": "It's 13:45. A guest walks through the door of the restaurant.",
     "q": "¿Cuál es el saludo correcto?",
     "q_en": "What is the correct greeting?",
     "opts": [
       "\"¡Hola! Bienvenido.\"",
       "\"Hola, buenas. ¿Tiene reserva?\"",
-      "\"Buenas tardes, bienvenido a Txoko.\"",
-      "\"Buenos días, bienvenido a Txoko.\" Y le acompaño directamente a la mesa que toca por rotación."
+      "\"Buenas tardes, bienvenido al restaurante.\"",
+      "\"Buenos días, bienvenido al restaurante.\" Y le acompaño directamente a la mesa que toca por rotación."
     ],
     "opts_en": [
       "\"Hi! Welcome.\"",
       "\"Hi there. Do you have a reservation?\"",
-      "\"Good afternoon, welcome to Jenfry.\"",
-      "\"Good morning, welcome to Jenfry.\" And I walk him straight to the table that is next in rotation."
+      "\"Good afternoon, welcome to the restaurant.\"",
+      "\"Good morning, welcome to the restaurant.\" And I walk him straight to the table that is next in rotation."
     ],
     "corr": 2,
     "expl": "La auditoría señaló como negativo el uso de \"hola\" como saludo de bienvenida; debe sustituirse por \"buenas tardes/noches/días\" según hora. A las 13:45 corresponde \"buenas tardes\". La opción 2 cumple hora correcta + nombra el restaurante + tono formal. Las 0 y 1 usan \"hola\". La 3 usa el tramo horario incorrecto (los días terminan al mediodía).",
@@ -1027,8 +1027,8 @@
       "Devote exactly the same amount of time to each table to ensure equity."
     ],
     "corr": 1,
-    "expl": "El estándar #45 (Interacción) exige naturalidad consistente. La auditoría destacó positivamente que la camarera fue \"igual de natural\" con la mesa contigua que con la huésped sola — eso es lo que valida el servicio auténtico (no actuado). La opción 1 captura el principio. La 0 segmenta artificialmente. La 2 prejuzga al huésped. La 3 confunde igualdad con consistencia de calidad.",
-    "expl_en": "Standard #45 (Interaction) requires consistent naturalness. The audit positively highlighted that the waitress was \"just as natural\" with the adjacent table as with the solo guest — that is what validates authentic (not acted) service. Option 1 captures the principle. Option 0 segments artificially. Option 2 prejudges the guest. Option 3 confuses equality with consistency of quality.",
+    "expl": "El estándar #45 (Interacción) exige naturalidad consistente. La auditoría destacó positivamente que la camarera fue \"igual de natural\" con la mesa contigua que con la huésped sola, eso es lo que valida el servicio auténtico (no actuado). La opción 1 captura el principio. La 0 segmenta artificialmente. La 2 prejuzga al huésped. La 3 confunde igualdad con consistencia de calidad.",
+    "expl_en": "Standard #45 (Interaction) requires consistent naturalness. The audit positively highlighted that the waitress was \"just as natural\" with the adjacent table as with the solo guest, that is what validates authentic (not acted) service. Option 1 captures the principle. Option 0 segments artificially. Option 2 prejudges the guest. Option 3 confuses equality with consistency of quality.",
     "real": true
   },
   {
@@ -1136,19 +1136,19 @@
     "q_en": "Which of these actions is REAL personalization, not just standard service?",
     "opts": [
       "Anotar cuidadosamente en la tablet que la Sra. no come picante y avisar a cocina para que lo tengan en cuenta esta noche Y sigo con la comanda del resto de la mesa sin comentarlo.",
-      "Al servir: \"Llegan en el mejor momento — el sunset desde esta mesa es de los más bonitos de Tenerife. ¿Primera vez en la isla?\"",
+      "Al servir: \"Llegan en el mejor momento, el sunset desde esta mesa es de los más bonitos de Tenerife. ¿Primera vez en la isla?\"",
       "Saludar por el apellido y presentar el menú con eficiencia",
       "Recitar los platos especiales del día con detalle gastronómico"
     ],
     "opts_en": [
       "Carefully note down on the tablet that the lady doesn't eat spicy food and inform the kitchen right away so they keep it in mind throughout tonight's service And I carry on with the rest of the order without mentioning it.",
-      "On serving: \"You've arrived at the perfect moment — the sunset from this table is one of the most beautiful on Tenerife. First time on the island?\"",
+      "On serving: \"You've arrived at the perfect moment, the sunset from this table is one of the most beautiful on Tenerife. First time on the island?\"",
       "Greet them by surname and present the menu efficiently",
       "Recite the day's specials with full gastronomic detail"
     ],
     "corr": 1,
-    "expl": "La personalización real conecta con el momento, el lugar y la historia del huésped — no se queda en lo operativo. La opción correcta reconoce el sunset, el aniversario y la primera visita, y abre conversación. Anotar preferencias es servicio básico; usar el apellido es estándar Forbes mínimo; recitar especiales es información, no reconocimiento.",
-    "expl_en": "Real personalization connects with the moment, the place and the guest's story — it doesn't stop at the operational. The correct option acknowledges the sunset, the anniversary and the first visit, and opens conversation. Noting preferences is basic service; using the surname is minimum Forbes standard; reciting specials is information, not recognition.",
+    "expl": "La personalización real conecta con el momento, el lugar y la historia del huésped, no se queda en lo operativo. La opción correcta reconoce el sunset, el aniversario y la primera visita, y abre conversación. Anotar preferencias es servicio básico; usar el apellido es estándar Forbes mínimo; recitar especiales es información, no reconocimiento.",
+    "expl_en": "Real personalization connects with the moment, the place and the guest's story, it doesn't stop at the operational. The correct option acknowledges the sunset, the anniversary and the first visit, and opens conversation. Noting preferences is basic service; using the surname is minimum Forbes standard; reciting specials is information, not recognition.",
     "real": true
   },
   {
@@ -1178,8 +1178,8 @@
   {
     "id": 50,
     "cat": "servicio",
-    "scn": "Una pareja celebra 50 años de boda. Dicen que su plato favorito es arroz de marisco — saben que no está en la carta pero preguntan si es posible. Acabas de hablar con cocina y el chef te ha dicho que esta noche no se puede.",
-    "scn_en": "A couple is celebrating 50 years of marriage. They say their favorite dish is seafood paella — they know it's not on the menu but ask if it's possible. You've just spoken to the kitchen and the chef has said it can't be done tonight.",
+    "scn": "Una pareja celebra 50 años de boda. Dicen que su plato favorito es arroz de marisco, saben que no está en la carta pero preguntan si es posible. Acabas de hablar con cocina y el chef te ha dicho que esta noche no se puede.",
+    "scn_en": "A couple is celebrating 50 years of marriage. They say their favorite dish is seafood paella, they know it's not on the menu but ask if it's possible. You've just spoken to the kitchen and the chef has said it can't be done tonight.",
     "q": "¿Cómo respondes al huésped?",
     "q_en": "How do you respond to the guest?",
     "opts": [
@@ -1191,12 +1191,12 @@
     "opts_en": [
       "\"I'm sorry, it's not possible. The chef can't do it tonight.\"",
       "\"Unfortunately it won't be possible tonight, but we could have it ready for you tomorrow. Would you like to come back and visit us again? We would love to have you.\"",
-      "\"I've spoken to the kitchen — it's not possible. Would you like to look at the menu again?\"",
+      "\"I've spoken to the kitchen, it's not possible. Would you like to look at the menu again?\"",
       "\"To celebrate your 50 years, let me propose something: we have a black rice with cuttlefish and prawns that we could adapt with today's fresh seafood.\""
     ],
     "corr": 3,
-    "expl": "La regla LQA \"quita el NO\" exige convertir el rechazo en propuesta personalizada conectada al momento. La opción correcta reformula la petición en una alternativa concreta vinculada al aniversario. La opción 1 (\"vuelvan mañana\") también es válida — quita el NO y ofrece alternativa, aunque depende de que vuelvan. Trasladar el NO directo o devolverles a la carta son las dos peores respuestas.",
-    "expl_en": "The LQA \"remove the NO\" rule turns a refusal into a personalized proposal tied to the moment. The correct option reframes the request as a concrete alternative linked to the anniversary. Option 1 (\"come back tomorrow\") is also valid — it removes the NO and offers an alternative, though it depends on them returning. Passing the NO straight on or sending them back to the menu are the two worst responses.",
+    "expl": "La regla LQA \"quita el NO\" exige convertir el rechazo en propuesta personalizada conectada al momento. La opción correcta reformula la petición en una alternativa concreta vinculada al aniversario. La opción 1 (\"vuelvan mañana\") también es válida, quita el NO y ofrece alternativa, aunque depende de que vuelvan. Trasladar el NO directo o devolverles a la carta son las dos peores respuestas.",
+    "expl_en": "The LQA \"remove the NO\" rule turns a refusal into a personalized proposal tied to the moment. The correct option reframes the request as a concrete alternative linked to the anniversary. Option 1 (\"come back tomorrow\") is also valid, it removes the NO and offers an alternative, though it depends on them returning. Passing the NO straight on or sending them back to the menu are the two worst responses.",
     "real": true
   },
   {
@@ -1207,13 +1207,13 @@
     "q": "¿Qué adaptación puedes confirmar SIN consultar antes con cocina?",
     "q_en": "Which adaptation can you confirm WITHOUT consulting the kitchen first?",
     "opts": [
-      "Decir sí a las tres directamente — la cocina se adapta Ya veremos luego con el jefe de partida cómo se resuelve cada una.",
+      "Decir sí a las tres directamente, la cocina se adapta Ya veremos luego con el jefe de partida cómo se resuelve cada una.",
       "Sólo Mesa 1 directa; Mesa 2 y Mesa 3 consultar con cocina",
       "A las tres: \"voy a consultar con cocina\"",
       "Recomendar otro plato del menú sin esa modificación"
     ],
     "opts_en": [
-      "Say yes to all three on the spot — the kitchen will adapt We will work out each one with the section chef later.",
+      "Say yes to all three on the spot, the kitchen will adapt We will work out each one with the section chef later.",
       "Only Table 1 on the spot; consult the kitchen for Tables 2 and 3",
       "For all three: \"I'll check with the kitchen\"",
       "Recommend another menu item without that modification"
@@ -1267,25 +1267,25 @@
       "Only if the guest raises a hand or asks for the bill"
     ],
     "corr": 0,
-    "expl": "Ofrecer al cuarto de capacidad asegura que cuando llegue la segunda bebida no haya tiempo muerto con el vaso vacío — el huésped nunca espera. Esperar al vaso vacío genera ese hueco; ofrecer a la mitad se siente presión a beber rápido; esperar a que el huésped pida es servicio reactivo y se pierde la oportunidad.",
-    "expl_en": "Offering at a quarter full ensures no dead time with an empty glass when the second drink arrives — the guest never waits. Waiting for empty creates that gap; offering at half feels like pressure to drink faster; waiting for the guest to ask is reactive service and misses the opportunity.",
+    "expl": "Ofrecer al cuarto de capacidad asegura que cuando llegue la segunda bebida no haya tiempo muerto con el vaso vacío, el huésped nunca espera. Esperar al vaso vacío genera ese hueco; ofrecer a la mitad se siente presión a beber rápido; esperar a que el huésped pida es servicio reactivo y se pierde la oportunidad.",
+    "expl_en": "Offering at a quarter full ensures no dead time with an empty glass when the second drink arrives, the guest never waits. Waiting for empty creates that gap; offering at half feels like pressure to drink faster; waiting for the guest to ask is reactive service and misses the opportunity.",
     "real": true
   },
   {
     "id": 54,
     "cat": "vino",
-    "scn": "Una mesa se acaba de sentar. En Txoko tienes dos aguas: Solán de Cabras (sin gas) y San Pellegrino (con gas).",
-    "scn_en": "A table has just been seated. At Txoko you have two waters: Solán de Cabras (still) and San Pellegrino (sparkling).",
+    "scn": "Una mesa se acaba de sentar. En tu restaurante hay dos aguas: Solán de Cabras (sin gas) y San Pellegrino (con gas).",
+    "scn_en": "A table has just been seated. Your restaurant has two waters: Solán de Cabras (still) and San Pellegrino (sparkling).",
     "q": "¿Cómo presentas el agua?",
     "q_en": "How do you present the water?",
     "opts": [
-      "Sirvo Solán de Cabras sin gas automáticamente a toda la mesa — es lo que pide casi todo el mundo",
+      "Sirvo Solán de Cabras sin gas automáticamente a toda la mesa, es lo que pide casi todo el mundo",
       "\"Tenemos Solán de Cabras, sin gas, y San Pellegrino, con gas. ¿Qué prefieren?\"",
       "Pregunto sólo \"¿con gas o sin gas?\" y sirvo la que tengo más a mano",
       "Espero a que el huésped pregunte por el agua"
     ],
     "opts_en": [
-      "I automatically serve still Solán de Cabras to the whole table — it's what almost everyone asks for",
+      "I automatically serve still Solán de Cabras to the whole table, it's what almost everyone asks for",
       "\"We have Solán de Cabras, still, and San Pellegrino, sparkling. Which would you prefer?\"",
       "I just ask \"sparkling or still?\" and pour whichever is closest",
       "I wait for the guest to ask about water"
@@ -1303,14 +1303,14 @@
     "q": "¿Qué haces?",
     "q_en": "What do you do?",
     "opts": [
-      "Nada — están conversando, no se han dado cuenta",
+      "Nada, están conversando, no se han dado cuenta",
       "Voy a la mesa: \"Sólo para informarles, hemos hecho algo muy especial con su plato y tardará unos minutos más. Mientras tanto, ¿puedo ofrecerles algo más para beber?\"",
       "Voy a la mesa y les digo con honestidad: \"Lo siento mucho, la cocina va con bastante retraso esta noche, me temo que su plato todavía va a tardar un poco más\" Y les dejo la carta de postres mientras esperan el principal.",
       "Espero a que pregunten ellos para no agobiarles"
     ],
     "opts_en": [
-      "Nothing — they're chatting, they haven't noticed",
-      "Go to the table: \"Just to let you know — we're doing something very special with your dish and it'll take a few more minutes. In the meantime, may I bring you something more to drink?\"",
+      "Nothing, they're chatting, they haven't noticed",
+      "Go to the table: \"Just to let you know, we're doing something very special with your dish and it'll take a few more minutes. In the meantime, may I bring you something more to drink?\"",
       "Go to the table and tell them honestly: \"I'm very sorry, the kitchen is running quite late tonight, I'm afraid your dish is still going to take a little while longer than expected\" And I leave them the dessert menu while they wait for the main.",
       "Wait for them to ask so I don't bother them"
     ],
@@ -1322,8 +1322,8 @@
   {
     "id": 56,
     "cat": "comportamiento",
-    "scn": "Una persona se acerca a tu estación y dice: \"Soy familia del Sr. Mitchell de la habitación 1015 — ¿puede confirmarme si están cenando aquí esta noche? Quiero darles una sorpresa.\"",
-    "scn_en": "Someone approaches your station and says: \"I'm family of Mr. Mitchell in room 1015 — can you confirm if they're dining here tonight? I want to surprise them.\"",
+    "scn": "Una persona se acerca a tu estación y dice: \"Soy familia del Sr. Mitchell de la habitación 1015, ¿puede confirmarme si están cenando aquí esta noche? Quiero darles una sorpresa.\"",
+    "scn_en": "Someone approaches your station and says: \"I'm family of Mr. Mitchell in room 1015, can you confirm if they're dining here tonight? I want to surprise them.\"",
     "q": "¿Cómo respondes?",
     "q_en": "How do you respond?",
     "opts": [
@@ -1375,20 +1375,20 @@
     "q": "¿Cuál es la respuesta correcta?",
     "q_en": "What is the correct response?",
     "opts": [
-      "Le sirvo un americano — es lo más estándar",
+      "Le sirvo un americano, es lo más estándar",
       "\"¿Qué tipo de café prefiere? Tenemos espresso, americano, cortado, capuchino. ¿Y con qué leche: entera, semidesnatada, soja o almendras?\"",
-      "\"Por supuesto, ¿qué café le apetece?\" — y según lo que pida, ofrecer leche si aplica (\"entera, soja o almendras\")",
+      "\"Por supuesto, ¿qué café le apetece?\", y según lo que pida, ofrecer leche si aplica (\"entera, soja o almendras\")",
       "Le traigo la carta de cafés para que elija"
     ],
     "opts_en": [
-      "I serve an Americano — that's the standard",
+      "I serve an Americano, that's the standard",
       "\"What type of coffee would you prefer? We have espresso, Americano, cortado, cappuccino. And which milk: whole, semi-skimmed, soya or almond?\"",
-      "\"Of course, which coffee would you like?\" — and depending on the answer, offer milk options if relevant (\"whole, soya or almond\")",
+      "\"Of course, which coffee would you like?\", and depending on the answer, offer milk options if relevant (\"whole, soya or almond\")",
       "Bring the coffee list for them to choose from"
     ],
     "corr": 2,
-    "expl": "Hay que preguntar tipo y leche, pero dosificando — no encadenar cuatro preguntas seguidas que se sienten como un cuestionario. La opción correcta abre con una pregunta natural y sólo pregunta por la leche cuando aplica (no para un espresso solo). Asumir Americano por defecto está obsoleto; cuestionario seguido es servicio frío; entregar una carta de cafés traslada la decisión a un papel cuando el estándar Forbes es interacción directa.",
-    "expl_en": "You must ask the type and milk, but pace it — don't chain four questions in a row that feel like a survey. The correct option opens with a natural question and only asks about milk when relevant (not for a plain espresso). Defaulting to Americano is outdated; the chained-questions option is cold service; handing over a coffee list pushes the decision to a piece of paper when the Forbes standard is direct interaction.",
+    "expl": "Hay que preguntar tipo y leche, pero dosificando, no encadenar cuatro preguntas seguidas que se sienten como un cuestionario. La opción correcta abre con una pregunta natural y sólo pregunta por la leche cuando aplica (no para un espresso solo). Asumir Americano por defecto está obsoleto; cuestionario seguido es servicio frío; entregar una carta de cafés traslada la decisión a un papel cuando el estándar Forbes es interacción directa.",
+    "expl_en": "You must ask the type and milk, but pace it, don't chain four questions in a row that feel like a survey. The correct option opens with a natural question and only asks about milk when relevant (not for a plain espresso). Defaulting to Americano is outdated; the chained-questions option is cold service; handing over a coffee list pushes the decision to a piece of paper when the Forbes standard is direct interaction.",
     "real": true
   },
   {
@@ -1411,8 +1411,8 @@
       "Carefully check that the billfold is impeccable both inside and out, and then present the bill at the table completely calmly and unhurried"
     ],
     "corr": 1,
-    "expl": "Una vez piden la cuenta hay que llevarla — la pregunta es cómo. En un turno saturado, dar conveniencia (dejar la cuenta + ofrecer cargo a habitación + sin prisa) es el estándar premium: no presiona y resuelve el pago de varias formas. Llevar la cuenta rápido cumple en condiciones normales pero pierde la oportunidad. Hacerles esperar a llamar otra vez es defensivo. Cuidar la presentación es necesario pero no suficiente sin el componente de conveniencia.",
-    "expl_en": "Once they ask for the bill, you must bring it — the question is how. In a busy shift, offering convenience (leave the bill + offer room charge + no rush) is the premium standard: it doesn't pressure and resolves payment in several ways. Bringing the bill quickly meets the standard under normal conditions but misses the opportunity. Making them call again is defensive. Caring for presentation is necessary but not sufficient without the convenience element.",
+    "expl": "Una vez piden la cuenta hay que llevarla, la pregunta es cómo. En un turno saturado, dar conveniencia (dejar la cuenta + ofrecer cargo a habitación + sin prisa) es el estándar premium: no presiona y resuelve el pago de varias formas. Llevar la cuenta rápido cumple en condiciones normales pero pierde la oportunidad. Hacerles esperar a llamar otra vez es defensivo. Cuidar la presentación es necesario pero no suficiente sin el componente de conveniencia.",
+    "expl_en": "Once they ask for the bill, you must bring it, the question is how. In a busy shift, offering convenience (leave the bill + offer room charge + no rush) is the premium standard: it doesn't pressure and resolves payment in several ways. Bringing the bill quickly meets the standard under normal conditions but misses the opportunity. Making them call again is defensive. Caring for presentation is necessary but not sufficient without the convenience element.",
     "real": true
   }
 ]

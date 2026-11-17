@@ -4897,8 +4897,8 @@ test('exam surfaces shuffle options: LQA exam/situations + wine quiz shape guard
   // real data, 44% of situation answers sat on option 2, so position alone
   // scored. Both must build session copies with options shuffled in lockstep.
   assert(/function _lqaShuffledExamQ\(/.test(html), '_lqaShuffledExamQ missing');
-  assert(/_lqaShuffle\(LQA_EXAM_QUESTIONS\)\.slice\(0,10\)\.map\(_lqaShuffledExamQ\)/.test(html),
-    'LQA exam questions must be session-shuffled');
+  assert(/_lqaPickFresh\(LQA_EXAM_QUESTIONS, \(_emp && _emp\.lqaExamRecent\) \|\| \[\], 10\)\.map\(_lqaShuffledExamQ\)/.test(html),
+    'LQA exam questions must be session-shuffled (and skip recent ones)');
   assert(/function _lqaShuffledSituation\(/.test(html), '_lqaShuffledSituation missing');
   assert(/_lqaPickFresh\(LQA_SITUATIONS, recent, 10\)\.map\(_lqaShuffledSituation\)/.test(html),
     'LQA situations must be session-shuffled');
@@ -19691,6 +19691,60 @@ test('Vinos con bodega de carta: carta por secciones, copas primero', () => {
   assert(gr.map(x => x.nombre).join('|') === 'Por copa|Por copa con Coravin|Burdeos|Islas Canarias · tintos|Otros vinos', 'orden: copa, Coravin, secciones de la carta; vacías fuera; nada se pierde');
   assert(gr[0].vinos.map(w => w.id).join() === '2,1', 'por copa: blancos antes que tintos');
   assert(gr[2].vinos.map(w => w.id).join() === '3,4', 'un vino sale en cada sección donde está');
+});
+
+console.log('\nLQA Forbes: auditoría de la sección (nov 2026)');
+test('LQA: sin el resultado fijo de una auditoría ajena; el progreso es de cada persona', () => {
+  const i0 = html.indexOf('const LQA_STANDARDS = ['), i1 = html.indexOf('\n];', i0);
+  const std = html.slice(i0, i1);
+  assert(i0 > 0 && (std.match(/\{id:\d+, cat:'/g) || []).length === 80, 'siguen los 80 estándares');
+  assert(!/met:(true|false)/.test(std), 'los estándares ya no llevan el cumplido/no cumplido de un restaurante');
+  assert(!/estándares cumplidos|standards met|✓ Met|✗ Below|s\.met/.test(html.slice(html.indexOf('function renderLqa(){'), html.indexOf('function _lqaShuffledExamQ('))), 'ni la portada, ni la ficha ni Info lo enseñan');
+  const hub = html.slice(html.indexOf('function renderLqa(){'), html.indexOf('function renderLqaCategory('));
+  assert(/_lqaCatProgreso\(getEmp\(currentUser\), cat\.id\)/.test(hub) && /tus aciertos/.test(hub) && /sin practicar/.test(hub), 'la portada enseña los aciertos propios');
+  // El motor: Situaciones (lqaSitByCat) + Examen y «¿Pasaría?» (lqaCat).
+  const M = new Function('const LQA_STANDARDS=[{id:7,cat:"llegada"},{id:13,cat:"servicio"}];\n' // eslint-disable-line no-new-func
+    + _fnSrc('_lqaAnota') + '\n' + _fnSrc('_lqaCatProgreso') + '\nreturn { anota:_lqaAnota, prog:_lqaCatProgreso };')();
+  const emp = { lqaSitByCat: { llegada: { correct: 1, total: 2 } } };
+  M.anota(emp, 7, true); M.anota(emp, 7, false); M.anota(emp, 13, true); M.anota(emp, 999, true);
+  const p = M.prog(emp, 'llegada');
+  assert(p.total === 4 && p.correct === 2 && p.pct === 50, 'suma situaciones y examen: ' + JSON.stringify(p));
+  assert(M.prog(emp, 'servicio').pct === 100 && M.prog(emp, 'vino').total === 0 && M.prog(null, 'vino').total === 0, 'sin datos, cero');
+  assert(/_lqaAnota\(getEmp\(currentUser\), q\.standardRef, isCorrect\)/.test(html) && /_lqaAnota\(getEmp\(currentUser\), sc\.std, isCorrect\)/.test(html), 'examen y «¿Pasaría?» anotan');
+});
+test('LQA: sin nombres de otro restaurante, sin rayas, sin el nivel «TÚ» y con nota de corte', () => {
+  const sit = read('data/lqa-situations.json');
+  assert(!/Txoko|Jenfry|Ritz|Abama/.test(sit), 'las situaciones no nombran ningún restaurante ni hotel');
+  assert(!/—|–/.test(sit), 'situaciones sin rayas');
+  for (const n of ['LQA_EXAM_QUESTIONS=', 'LQA_AUDIT_SCENARIOS = ']) {
+    const a = html.indexOf('const ' + n + '['), b = html.indexOf('\n];', a);
+    assert(a > 0 && !/—|–/.test(html.slice(a, b)), n + ' sin rayas');
+  }
+  const info = html.slice(html.indexOf('function renderLqaInfo(){'), html.indexOf('function _lqaShuffledExamQ('));
+  assert(/const userEiLevel = 0;/.test(info) && !/' — '/.test(info), 'la escala del huésped no coloca al camarero');
+  assert(/El objetivo es 8 de 10/.test(_fnSrc('renderLqaExamResults')) && /The target is 8 out of 10/.test(_fnSrc('renderLqaExamResults')), 'nota de corte en el examen');
+  assert((html.match(/class="lqa-kbd-tip"/g) || []).length === 3 && /@media \(hover:none\)\{\.lqa-kbd-tip\{display:none\}\}/.test(read('styles.css')), 'el consejo de teclado no sale en el móvil');
+  assert(/_lqaPickFresh\(LQA_AUDIT_SCENARIOS, \(_emp && _emp\.lqaAudRecent\) \|\| \[\], 10\)/.test(html) && /emp\.lqaExamRecent = /.test(html) && /emp\.lqaAudRecent = /.test(html), 'examen y «¿Pasaría?» evitan lo reciente');
+  assert(/\['protocolo', 'LQA Forbes', "showTab\('protocolo'\)"\]/.test(html), 'el chip se llama «LQA Forbes»');
+});
+test('LQA: el examen cubre los 80 estándares y la correcta no se delata por larga', () => {
+  const lee = n => { const a = html.indexOf('const ' + n + '['), b = html.indexOf('\n];', a); return new Function('return ' + html.slice(html.indexOf('[', a), b + 2))(); }; // eslint-disable-line no-new-func
+  const STD = lee('LQA_STANDARDS = '), EX = lee('LQA_EXAM_QUESTIONS=');
+  assert(EX.length === 80 && new Set(EX.map(q => q.id)).size === 80, 'ochenta preguntas con id propio');
+  const cub = new Set(EX.map(q => q.standardRef));
+  assert(STD.every(s => cub.has(s.id)), 'estándares sin pregunta: ' + STD.filter(s => !cub.has(s.id)).map(s => s.id).join(','));
+  for (const q of EX) {
+    assert(q.options.length === 4 && q.options_en.length === 4 && q.correct >= 0 && q.correct < 4, 'forma de la pregunta ' + q.id);
+    assert(q.question && q.question_en && q.explanation && q.explanation_en, 'ES y EN en la pregunta ' + q.id);
+    assert(new Set(q.options).size === 4 && new Set(q.options_en).size === 4, 'opciones repetidas en ' + q.id);
+    assert(q.explanation.includes('#' + q.standardRef) && q.explanation_en.includes('#' + q.standardRef), 'la explicación cita su estándar: ' + q.id);
+    assert(!/(^|[^a-záéíóúñü])(os|vosotros|vuestr[a-z]+)(?![a-záéíóúñü])/i.test(q.question + ' ' + q.options.join(' ')), 'tratamiento de ustedes: ' + q.id);
+  }
+  // La respuesta correcta no puede ser casi siempre la más larga (al azar sería el 25 %).
+  for (const k of ['options', 'options_en']) {
+    const largas = EX.filter(q => { const L = q[k].map(o => o.length), m = Math.max(...L); return L[q.correct] === m && L.filter(x => x === m).length === 1; }).length;
+    assert(largas / EX.length <= 0.35, `${k}: la correcta es la más larga en ${largas} de ${EX.length}`);
+  }
 });
 
 console.log('\nHygiene');
