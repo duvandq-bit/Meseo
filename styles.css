@@ -11929,6 +11929,11 @@ html[data-venue="demo"] .ri-cta-mesa .ri-cta-icon{border-color:rgba(200,163,90,.
    cliente va en grande, como se oye en sala; las frases modelo con su altavoz;
    la forzada, tachada a medias con un borde discontinuo. ── */
 .mom-entrada{margin:0 0 1rem}
+/* Hub de Hospitalidad: las dos partes dentro de una entrada (nov 2026). */
+.hosp-hub-body{padding-top:.4rem}
+.hosp-hub-intro{font-family:var(--font-sans);font-size:var(--fs-3);line-height:1.5;color:var(--parch2);margin:0 0 1.1rem}
+.hosp-fila{margin:0 0 .75rem}
+.hosp-hoy{display:inline-block;font-family:var(--font-sans);font-size:.6rem;letter-spacing:.06em;text-transform:uppercase;font-weight:700;background:rgba(255,255,255,.22);color:#fff;border-radius:99px;padding:.08rem .5rem;vertical-align:2px;margin-left:.35rem}
 .ri-cta-mom{background:linear-gradient(140deg,#35525a 0%,#1f3439 100%)}
 html[data-venue="r2"] .ri-cta-mom{background:linear-gradient(140deg,#3a3a44 0%,#18181c 100%);border:1.5px solid rgba(194,161,97,.4)}
 html[data-venue="demo"] .ri-cta-mom{background:linear-gradient(140deg,#3b5a63 0%,#1c2d32 100%)}
