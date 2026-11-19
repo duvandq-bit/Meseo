@@ -19760,6 +19760,32 @@ test('LQA: el examen cubre los 80 estándares y la correcta no se delata por lar
   }
 });
 
+console.log('\nCócteles de la carta (nov 2026)');
+test('cócteles: viajan en la carta privada, se validan y sólo salen si la carta los trae', () => {
+  const V = new Function(_fnSrc('_coctelesValida').replace('function _coctelesValida', 'const _CO_IDS = /^[a-z0-9_-]{1,40}$/;\nreturn function')) (); // eslint-disable-line no-new-func
+  assert(V(null) === null && V({}) === null && V({ cocteles: [] }) === null, 'sin datos, nada');
+  const r = V({ grupos: [{ id: 'autor', nombre: 'De autor' }, { id: 'sin_alcohol', nombre: 'Sin alcohol', nombre_en: 'Alcohol-free' }],
+    cocteles: [
+      { id: 'kiwi-sour', nombre: 'Kiwi Sour', grupo: 'sin_alcohol', ingredientes: [{ cant: '45 ml', ing: 'Clara de huevo' }], alergenos_probables: ['Huevo (clara)'], alergenos_probables_en: ['Egg (white)'] },
+      { id: 'kiwi-sour', nombre: 'Repetido', ingredientes: [{ cant: '1', ing: 'x' }] },
+      { id: 'MAL ID', nombre: 'X', ingredientes: [{ cant: '1', ing: 'x' }] },
+      { id: 'sin-ings', nombre: 'Sin ingredientes', ingredientes: [] },
+      { id: 'otro', nombre: 'Otro', grupo: 'inventado', ingredientes: [{ cant: '30 ml', ing: 'Gin' }], alergenos: [] }] });
+  assert(r && r.cocteles.length === 2 && r.grupos.length === 2, 'descarta repetidos, ids raros y recetas vacías');
+  assert(r.cocteles[0].grupo === 'sin_alcohol' && r.cocteles[1].grupo === 'autor', 'grupo desconocido → el primero');
+  assert(r.cocteles[0].alergenos === null && r.cocteles[1].alergenos.length === 0, 'null = la hoja no lo dice; [] = la hoja dice que nada');
+  assert(r.cocteles[0].alergenos_probables_en[0] === 'Egg (white)', 'alérgenos también en inglés');
+  assert(/COCTELES: \(typeof _coctelesValida === 'function'\) \? _coctelesValida\(c\.COCTELES\) : null/.test(_fnSrc('_cartaAplicar')), 'lo pone la carta');
+  assert(!/'cocteles'/.test(_fnSrc('_saberChipsBar')), 'sin chip propio: la barra de Saber tiene tope de 7');
+  assert(/_coctelesCarta\(\)\) return ''/.test(_fnSrc('_coConmutador')) && /_coConmutador\('vinos'\)/.test(_fnSrc('renderVinosCarta')), 'se entra desde Vinos, y sólo si la carta los trae');
+  assert(/tab==='cocteles'\) return 'vinos'/.test(_fnSrc('_saberActivo')), 'en Cócteles se enciende el chip Vinos');
+  assert(/cocteles:renderCocteles/.test(html) && /cocteles:'saber'/.test(html) && /'cocteles','protocolo'/.test(html) && /cocteles:\['Cócteles'/.test(html), 'ruta en Saber con título');
+  assert(!existsSync('data/cocteles.json') && !/doble colado|hielo pil[eé]/i.test(html), 'el recetario de Akira no va en el repositorio');
+  assert(/confirmar con barra/.test(_fnSrc('_coFicha')) && /_coVeRevision\(\)/.test(_fnSrc('_coFicha')), 'deducidos: «confirmar con barra»; dudas y versiones, sólo mandos');
+  const css = read('styles.css');
+  assert(/\.co-cab\{[^}]*min-height:56px/.test(css) && /\.co-op\{[^}]*min-height:52px/.test(css), 'toques grandes');
+});
+
 console.log('\nHygiene');
 test('no git conflict markers in tracked source', () => {
   for (const f of ['index.html', 'sw.js', 'data/wines.json', 'data/lqa-situations.json', 'data/ghost-scenarios.json']) {

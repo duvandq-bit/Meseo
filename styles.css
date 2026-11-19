@@ -12024,3 +12024,35 @@ html[data-venue="demo"] .ri-cta-mom{background:linear-gradient(140deg,#3b5a63 0%
 
 /* LQA: el consejo de teclado sólo donde hay teclado (nov 2026). */
 @media (hover:none){.lqa-kbd-tip{display:none}}
+
+/* Cócteles de la carta (nov 2026) */
+.co-practicar{margin:0 0 1rem}
+.co-grupo{margin:0 0 1.1rem}
+.co-grupo-t{font-family:var(--font-mono);font-size:var(--fs-1);letter-spacing:.16em;text-transform:uppercase;color:var(--gold-deep);margin:.6rem 0 .5rem;font-weight:500}
+.co-grupo-t span{color:var(--parch3)}
+.co-card{padding:0}
+.co-cab{display:flex;align-items:center;gap:.6rem;width:100%;min-height:56px;padding:.8rem 1rem;background:none;border:0;text-align:left;cursor:pointer;color:inherit}
+.co-cab-tx{flex:1;min-width:0;display:flex;flex-direction:column;gap:.15rem}
+.co-cab h3{margin:0}
+.co-vaso{font-family:var(--font-sans);font-size:var(--fs-2);color:var(--parch3)}
+.co-perfil{font-family:var(--font-sans);font-size:var(--fs-2);color:var(--parch2);line-height:1.4}
+.co-ch{flex-shrink:0;color:var(--parch3);transition:transform .2s}
+.co-abierto .co-ch{transform:rotate(180deg)}
+.co-card .q-marcas{padding:0 1rem;margin-top:0}
+.co-card .q-dato{padding:0 1rem}
+.co-ings{list-style:none;margin:.4rem 1rem .6rem;padding:0;border-top:1px solid var(--line2)}
+.co-ings li{display:flex;gap:.7rem;padding:.4rem 0;border-bottom:1px solid var(--line2);font-family:var(--font-sans);font-size:var(--fs-3);color:var(--parchment)}
+.co-cant{min-width:4.2rem;color:var(--gold-deep);font-family:var(--font-mono);font-size:var(--fs-2)}
+.co-rev{margin:.5rem 1rem .8rem;padding:.6rem .7rem;border:1px dashed rgba(176,67,43,.4);border-radius:var(--r2);font-family:var(--font-sans);font-size:var(--fs-2);color:var(--parch2);line-height:1.45}
+.co-rev b{display:block;color:#b0432b;margin-bottom:.2rem}
+.co-card > .q-dato:last-child,.co-card > .co-rev:last-child{margin-bottom:.8rem}
+.co-pie{font-family:var(--font-sans);font-size:var(--fs-2);color:var(--parch3);text-align:center;margin:1rem 0 2rem}
+.co-quiz-top{display:flex;align-items:center;justify-content:space-between;font-family:var(--font-mono);color:var(--parch3);margin:.4rem 0 1rem}
+.co-quiz-q{font-family:var(--font-serif);font-size:var(--fs-5);color:var(--parchment);line-height:1.35;margin:0 0 1rem}
+.co-ops{display:flex;flex-direction:column;gap:.55rem;margin-bottom:1rem}
+.co-op{min-height:52px;padding:.75rem .9rem;text-align:left;border:1px solid var(--line2);border-radius:var(--r2);background:var(--surface,#fff);font-family:var(--font-sans);font-size:var(--fs-3);color:var(--parchment);line-height:1.4;cursor:pointer}
+.co-op-ok{border-color:var(--gold);background:rgba(196,154,60,.14)}
+.co-conm{display:flex;gap:4px;padding:4px;margin:.2rem 0 .8rem;border:1px solid rgba(196,154,60,.3);border-radius:12px}
+.co-conm button{flex:1;min-height:44px;border:0;border-radius:9px;background:transparent;color:var(--parch2);font:inherit;font-weight:600;cursor:pointer;touch-action:manipulation}
+.co-conm button.on{background:var(--gold);color:#fff}
+.co-op-mal{border-color:#b0432b;background:rgba(176,67,43,.10)}
