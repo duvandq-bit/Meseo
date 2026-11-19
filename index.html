@@ -15475,7 +15475,7 @@ function showTab(tab, instant){
   _ux2Sync(tab);
   _saberSync(tab);
   const c=document.getElementById('appContent');
-  const renderMap = {practicar:renderPracticar,mesa:renderMesa,quesos:renderQuesos,cocteles:renderCocteles,sala:renderSala,dashboard:renderDashboard,aprender:renderAprender,flashcards:renderAprender,exam:renderExam,repaso:renderAprender,tecnicas:renderAprender,actualidad:renderAprender,smart:renderAprender,emplatado:renderAprender,stats:renderRankingHub,logros:renderRankingHub,txoko:renderTxoko,ranking:renderRankingHub,supervisor:renderSupervisor,protocolo:renderLqa,lqa:renderLqa,vinos:renderVinos,degustacion:renderDegustacion,platodia:renderPlatoDia,cartaaudio:renderCartaAudio,repasar:renderRepasar};
+  const renderMap = {practicar:renderPracticar,mesa:renderMesa,quesos:renderQuesos,sala:renderSala,cocteles:renderCocteles,dashboard:renderDashboard,aprender:renderAprender,flashcards:renderAprender,exam:renderExam,repaso:renderAprender,tecnicas:renderAprender,actualidad:renderAprender,smart:renderAprender,emplatado:renderAprender,stats:renderRankingHub,logros:renderRankingHub,txoko:renderTxoko,ranking:renderRankingHub,supervisor:renderSupervisor,protocolo:renderLqa,lqa:renderLqa,vinos:renderVinos,degustacion:renderDegustacion,platodia:renderPlatoDia,cartaaudio:renderCartaAudio,repasar:renderRepasar};
   const _doRender = ()=>{
     c.innerHTML='';
     c.style.transition='none';
@@ -20725,8 +20725,8 @@ function _coVeRevision(){ try{ return _esMando() || _esAdmin(); }catch(e){ retur
 function _coConmutador(activo){
   if(typeof _coctelesCarta !== 'function' || !_coctelesCarta()) return '';
   const _en = LANG === 'en';
-  const b = (id, txt) => `<button type="button" class="${activo===id?'on':''}" aria-pressed="${activo===id}" onclick="${activo===id?'':"showTab('"+id+"')"}">${txt}</button>`;
-  return `<div class="co-conm" role="group" aria-label="${_en?'Drinks':'Bebidas'}">${b('vinos', _en?'Wines':'Vinos')}${b('cocteles', _en?'Cocktails':'Cócteles')}</div>`;
+  const b = (id, txt, ir) => `<button type="button" class="${activo===id?'on':''}" aria-pressed="${activo===id}" onclick="${activo===id?'':ir}">${txt}</button>`;
+  return `<div class="co-conm" role="group" aria-label="${_en?'Drinks':'Bebidas'}">${b('vinos', _en?'Wines':'Vinos', "showTab('vinos')")}${b('cocteles', _en?'Cocktails':'Cócteles', "showTab('cocteles')")}</div>`;
 }
 function renderCocteles(){
   const c = document.getElementById('appContent');
