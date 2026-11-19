@@ -19763,8 +19763,10 @@ test('cócteles: viajan en la carta privada, se validan y sólo salen si la cart
   assert(r.cocteles[0].alergenos === null && r.cocteles[1].alergenos.length === 0, 'null = la hoja no lo dice; [] = la hoja dice que nada');
   assert(r.cocteles[0].alergenos_probables_en[0] === 'Egg (white)', 'alérgenos también en inglés');
   assert(/COCTELES: \(typeof _coctelesValida === 'function'\) \? _coctelesValida\(c\.COCTELES\) : null/.test(_fnSrc('_cartaAplicar')), 'lo pone la carta');
-  assert(/_coctelesCarta\(\)\) \? \['cocteles'/.test(_fnSrc('_saberChipsBar')), 'chip sólo si la carta los trae');
-  assert(/cocteles:renderCocteles/.test(html) && /cocteles:'saber'/.test(html) && /'sala','cocteles'\]/.test(html), 'ruta en Saber');
+  assert(!/'cocteles'/.test(_fnSrc('_saberChipsBar')), 'sin chip propio: la barra de Saber tiene tope de 7');
+  assert(/_coctelesCarta\(\)\) return ''/.test(_fnSrc('_coConmutador')) && /_coConmutador\('vinos'\)/.test(_fnSrc('renderVinosCarta')), 'se entra desde Vinos, y sólo si la carta los trae');
+  assert(/tab==='cocteles'\) return 'vinos'/.test(_fnSrc('_saberActivo')), 'en Cócteles se enciende el chip Vinos');
+  assert(/cocteles:renderCocteles/.test(html) && /cocteles:'saber'/.test(html) && /'cocteles','protocolo'/.test(html) && /cocteles:\['Cócteles'/.test(html), 'ruta en Saber con título');
   assert(!existsSync('data/cocteles.json') && !/doble colado|hielo pil[eé]/i.test(html), 'el recetario de Akira no va en el repositorio');
   assert(/confirmar con barra/.test(_fnSrc('_coFicha')) && /_coVeRevision\(\)/.test(_fnSrc('_coFicha')), 'deducidos: «confirmar con barra»; dudas y versiones, sólo mandos');
   const css = read('styles.css');

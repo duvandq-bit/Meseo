@@ -12051,5 +12051,8 @@ html[data-venue="demo"] .ri-cta-mom{background:linear-gradient(140deg,#3b5a63 0%
 .co-quiz-q{font-family:var(--font-serif);font-size:var(--fs-5);color:var(--parchment);line-height:1.35;margin:0 0 1rem}
 .co-ops{display:flex;flex-direction:column;gap:.55rem;margin-bottom:1rem}
 .co-op{min-height:52px;padding:.75rem .9rem;text-align:left;border:1px solid var(--line2);border-radius:var(--r2);background:var(--surface,#fff);font-family:var(--font-sans);font-size:var(--fs-3);color:var(--parchment);line-height:1.4;cursor:pointer}
-.co-op-ok{border-color:#2d6a3e;background:rgba(45,106,62,.12)}
+.co-op-ok{border-color:var(--gold);background:rgba(196,154,60,.14)}
+.co-conm{display:flex;gap:4px;padding:4px;margin:.2rem 0 .8rem;border:1px solid rgba(196,154,60,.3);border-radius:12px}
+.co-conm button{flex:1;min-height:44px;border:0;border-radius:9px;background:transparent;color:var(--parch2);font:inherit;font-weight:600;cursor:pointer;touch-action:manipulation}
+.co-conm button.on{background:var(--gold);color:#fff}
 .co-op-mal{border-color:#b0432b;background:rgba(176,67,43,.10)}

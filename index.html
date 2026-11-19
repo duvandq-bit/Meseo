@@ -15349,7 +15349,7 @@ const _TITULOS = {
   dashboard:['Inicio','Home'], practicar:['Practicar','Practise'], aprender:['Aprender','Learn'], flashcards:['Fichas','Flashcards'],
   exam:['Examen','Exam'], repaso:['Carta','Menu'],
   tecnicas:['Técnicas de cocina','Kitchen techniques'], actualidad:['Actualidad','News'],
-  smart:['Repaso','Review'], emplatado:['Carta','Menu'],
+  smart:['Repaso','Review'], emplatado:['Carta','Menu'], cocteles:['Cócteles','Cocktails'],
   stats:['Estadísticas','Statistics'], logros:['Logros','Achievements'],
   txoko:['Juegos','Games'], ranking:['Ranking del equipo','Team ranking'],
   supervisor:['Panel de supervisor','Supervisor panel'],
@@ -15405,7 +15405,7 @@ const UX2_SECCION = {
 // Sin 'videos' ni 'chat' desde oct 2026, ni 'horarios' desde el 12 oct 2026
 // (retirados por el propietario). Un aviso antiguo que abra #tab=chat o
 // #tab=horarios cae en INICIO por la regla de abajo.
-const TAB_ROUTES = ['dashboard','mesa','degustacion','platodia','cartaaudio','repasar','practicar','aprender','flashcards','exam','repaso','tecnicas','actualidad','smart','emplatado','stats','logros','txoko','ranking','supervisor','protocolo','lqa','vinos','quesos','sala','cocteles'];
+const TAB_ROUTES = ['dashboard','mesa','degustacion','platodia','cartaaudio','repasar','practicar','aprender','flashcards','exam','repaso','tecnicas','actualidad','smart','emplatado','stats','logros','txoko','ranking','supervisor','cocteles','protocolo','lqa','vinos','quesos','sala'];
 
 function showTab(tab, instant){
   // ── Pestaña desconocida → INICIO ──────────────────────────────────────
@@ -19305,6 +19305,8 @@ function _caEntradaHTML(fuente){
 const _SABER_HAY = { vinos:false, quesos:false, sala:false };
 function _saberActivo(tab){
   if(tab==='lqa') return 'protocolo';
+  // Cócteles vive dentro de Vinos (la barra no admite más de 7 chips).
+  if(tab==='cocteles') return 'vinos';
   if(tab==='aprender') tab = _subTab.aprender || 'emplatado';
   // Fotos (emplatado) y lista (repaso) son la misma Carta: un solo chip
   // encendido para las dos vistas.
@@ -19328,7 +19330,6 @@ function _saberChipsBar(tab){
     (typeof DEGUSTACION!=='undefined' && DEGUSTACION) ? ['degustacion', escapeHTML(_degNombre()), "_degS.vista='viaje';showTab('degustacion')"] : null,
     _SABER_HAY.vinos ? ['vinos', _en?'Wines':'Vinos', "showTab('vinos')"] : null,
     // Los cócteles, sólo si la carta del restaurante los trae (Akira, nov 2026).
-    (typeof _coctelesCarta === 'function' && _coctelesCarta()) ? ['cocteles', _en?'Cocktails':'Cócteles', "showTab('cocteles')"] : null,
     _SABER_HAY.quesos ? ['quesos', _en?'Cheese':'Quesos', "showTab('quesos')"] : null,
     _SABER_HAY.sala ? ['sala', _en?'Floor':'Sala', "showTab('sala')"] : null,
     ['protocolo', 'LQA Forbes', "showTab('protocolo')"]
@@ -20720,6 +20721,13 @@ function _coCoincide(c){
 }
 function _coVeRevision(){ try{ return _esMando() || _esAdmin(); }catch(e){ return false; } }
 
+// Conmutador Vinos | Cócteles: sólo aparece si la carta trae cócteles.
+function _coConmutador(activo){
+  if(typeof _coctelesCarta !== 'function' || !_coctelesCarta()) return '';
+  const _en = LANG === 'en';
+  const b = (id, txt) => `<button type="button" class="${activo===id?'on':''}" aria-pressed="${activo===id}" onclick="${activo===id?'':"showTab('"+id+"')"}">${txt}</button>`;
+  return `<div class="co-conm" role="group" aria-label="${_en?'Drinks':'Bebidas'}">${b('vinos', _en?'Wines':'Vinos')}${b('cocteles', _en?'Cocktails':'Cócteles')}</div>`;
+}
 function renderCocteles(){
   const c = document.getElementById('appContent');
   const _en = LANG === 'en';
@@ -20733,7 +20741,7 @@ function renderCocteles(){
     if(!de.length) return '';
     return `<section class="co-grupo"><h3 class="co-grupo-t">${escapeHTML(_en ? g.nombre_en : g.nombre)} <span>${de.length}</span></h3>${de.map(_coFicha).join('')}</section>`;
   }).join('');
-  c.innerHTML = `<div class="sup-wrap co-wrap">
+  c.innerHTML = `<div class="sup-wrap co-wrap">${_coConmutador('cocteles')}
     <div class="sup-hero">
       <div class="sup-hero-title">${_en ? 'Cocktails' : 'Cócteles'}</div>
       <div class="sup-hero-sub">${R.cocteles.length} ${_en ? 'on the list' : 'en carta'} · ${_en ? 'what each one has, its glass and its allergens' : 'qué lleva cada uno, su vaso y sus alérgenos'}</div>
@@ -23294,7 +23302,7 @@ function renderVinosCarta(){
     blanco:'#f5e6b8', tinto:'#8b2252', rosado:'#e8a0bf', espumoso:'#d4af37',
     dulce:'#daa520'  };
 
-  c.innerHTML = `
+  c.innerHTML = `${_coConmutador('vinos')}
     <div style="padding:.5rem 0 1rem">
       <div class="wine-section-header">
         <div class="wine-section-title">${_en?'Wine List':'Carta de Vinos'}</div>
