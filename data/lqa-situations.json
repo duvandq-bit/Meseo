@@ -259,8 +259,8 @@
       "Immediately offer to place the bottle in warm water to temper it"
     ],
     "corr": 3,
-    "expl": "El estándar #47 requiere anticipar y resolver preferencias del huésped. Aunque el estándar #45 especifica temperaturas correctas, la preferencia del huésped es prioritaria. La solución correcta es ofrecer temperarla de manera controlada.",
-    "expl_en": "Standard #47 requires anticipating and resolving guest preferences. Although standard #45 specifies correct temperatures, guest preference takes priority. The correct solution is to offer controlled tempering.",
+    "expl": "El estándar #74 pide adaptarse a la necesidad del huésped. Aunque el estándar #45 especifica temperaturas correctas, la preferencia del huésped es prioritaria. La solución correcta es ofrecer temperarla de manera controlada.",
+    "expl_en": "Standard #74 asks you to adapt to the guest's need. Although standard #45 specifies correct temperatures, guest preference takes priority. The correct solution is to offer controlled tempering.",
     "real": false
   },
   {
@@ -307,8 +307,8 @@
       "Find any white wine bottle and present it as the best option without checking the tasting note."
     ],
     "corr": 0,
-    "expl": "El estándar #54 requiere que el personal conozca opciones de vino básicas. El estándar #72 requiere confianza. Si no estás seguro, puedes dar una opción básica o traer al supervisor. Nunca digas que no sabes.",
-    "expl_en": "Standard #54 requires staff to know basic wine options. Standard #72 requires confidence. If unsure, you can give a basic option or bring the supervisor. Never say you don't know.",
+    "expl": "El estándar #25 pide buen conocimiento de vinos y recomendar uno adecuado para la comida. El estándar #72 requiere confianza. Si no estás seguro, puedes dar una opción básica o traer al supervisor. Nunca digas que no sabes.",
+    "expl_en": "Standard #25 asks for good wine knowledge and a suitable recommendation for the meal. Standard #72 requires confidence. If unsure, you can give a basic option or bring the supervisor. Never say you don't know.",
     "real": false
   },
   {
@@ -331,8 +331,8 @@
       "Use the compliment as an opportunity to offer dessert or digestif"
     ],
     "corr": 3,
-    "expl": "El estándar #75 (EI Behavioral - Service Recovery and Upsell) requiere aprovechar momentos positivos para mejorar la experiencia. Un cumplido es una puerta abierta para ofrecer más. Esto demuestra servicio consultivo.",
-    "expl_en": "Standard #75 (EI Behavioral - Service Recovery and Upsell) requires leveraging positive moments to enhance the experience. A compliment is an open door to offer more. This demonstrates consultative service.",
+    "expl": "Los estándares #34 y #39 (ofrecer postre y bebidas de sobremesa) invitan a aprovechar momentos positivos para mejorar la experiencia. Un cumplido es una puerta abierta para ofrecer más. Esto demuestra servicio consultivo.",
+    "expl_en": "Standards #34 and #39 (offering dessert and after-dinner drinks) invite you to leverage positive moments to enhance the experience. A compliment is an open door to offer more. This demonstrates consultative service.",
     "real": false
   },
   {
@@ -355,8 +355,8 @@
       "Help your colleague discreetly without guests noticing"
     ],
     "corr": 3,
-    "expl": "El estándar #73 (Anticipatory Service) también aplica al trabajo en equipo. El estándar #70 requiere apoyo entre empleados y teamwork. Ayudar de forma discreta es parte de la excelencia operacional y demuestra liderazgo.",
-    "expl_en": "Standard #73 (Anticipatory Service) also applies to teamwork. Standard #70 requires employee support and teamwork. Helping discreetly is part of operational excellence and demonstrates leadership.",
+    "expl": "El estándar #73 (Anticipatory Service) también aplica al trabajo en equipo. El estándar #77 pide que los empleados colaboren para que el servicio sea organizado y profesional. Ayudar de forma discreta es parte de la excelencia operacional y demuestra liderazgo.",
+    "expl_en": "Standard #73 (Anticipatory Service) also applies to teamwork. Standard #77 asks employees to work together so the service is organised and professional. Helping discreetly is part of operational excellence and demonstrates leadership.",
     "real": false
   },
   {
@@ -403,8 +403,8 @@
       "Offer them a drink at the bar while seeking a creative solution"
     ],
     "corr": 3,
-    "expl": "El estándar #6 y #11 requieren que huéspedes VIP reciban trato diferenciado. El estándar #73 (Anticipatory) requiere pensar creativo. La acción correcta es no dejarlos ir: ofrece bebida de bienvenida y busca soluciones (mover mesa, crear espacio, ofrecerles la mejor opción disponible).",
-    "expl_en": "Standard #6 and #11 require VIP customers receive differentiated treatment. Standard #73 (Anticipatory) requires creative thinking. The correct action is not to let them leave: offer a welcome drink and seek solutions (relocate a table, create space, offer the best available option).",
+    "expl": "El estándar #76 pide personalizar la interacción y tratar al huésped como individuo. El estándar #73 (Anticipatory) requiere pensar creativo. La acción correcta es no dejarlos ir: ofrece bebida de bienvenida y busca soluciones (mover mesa, crear espacio, ofrecerles la mejor opción disponible).",
+    "expl_en": "Standard #76 asks you to personalise the interaction and treat the guest as an individual. Standard #73 (Anticipatory) requires creative thinking. The correct action is not to let them leave: offer a welcome drink and seek solutions (relocate a table, create space, offer the best available option).",
     "real": false
   },
   {
@@ -427,8 +427,8 @@
       "Kindly suggest that the parents order quickly, so the child doesn't have time to get bored at the table"
     ],
     "corr": 0,
-    "expl": "El estándar #73 (Anticipatory Service) y #75 (EI Behavioral) requieren personalizar la experiencia para TODOS los huéspedes. Un niño entrettenido = padres felices. Esta es una oportunidad para brillar en servicio centrado en la familia.",
-    "expl_en": "Standard #73 (Anticipatory Service) and #75 (EI Behavioral) require personalizing the experience for ALL guests. A happy child = happy parents. This is an opportunity to shine in family-focused service.",
+    "expl": "El estándar #73 (Anticipatory Service) y #76 (personalizar la interacción) requieren personalizar la experiencia para TODOS los huéspedes. Un niño entrettenido = padres felices. Esta es una oportunidad para brillar en servicio centrado en la familia.",
+    "expl_en": "Standard #73 (Anticipatory Service) and #76 (personalising the interaction) require personalizing the experience for ALL guests. A happy child = happy parents. This is an opportunity to shine in family-focused service.",
     "real": false
   },
   {
@@ -451,8 +451,8 @@
       "Elegantly change the subject by saying that absolutely everything on our menu is top quality and carefully sourced throughout."
     ],
     "corr": 0,
-    "expl": "El estándar #54 requiere que el personal conozca detalles del menú, origen e ingredientes. El estándar #19 requiere precisión en información. Una respuesta vaga o evasiva incumple estos estándares. La confianza y precisión son críticas.",
-    "expl_en": "Standard #54 requires staff to know menu details, origins and ingredients. Standard #19 requires precision in information. A vague or evasive response violates these standards. Confidence and precision are critical.",
+    "expl": "El estándar #56 pide que la opción de pescado de origen sostenible la indique la carta o el empleado. El estándar #19 requiere precisión en información. Una respuesta vaga o evasiva incumple estos estándares. La confianza y precisión son críticas.",
+    "expl_en": "Standard #56 asks for the sustainably sourced fish option to be indicated on the menu or by the employee. Standard #19 requires precision in information. A vague or evasive response violates these standards. Confidence and precision are critical.",
     "real": false
   },
   {
@@ -499,8 +499,8 @@
       "Proactively refill when the glass is half full"
     ],
     "corr": 3,
-    "expl": "El estándar #48 requiere que el agua se ofrezca regularmente y se mantenga disponible. El estándar #73 (Anticipatory Service) dice que el personal debe anticipar necesidades. Agua es un elemento crítico: nunca debe estar vacía. Rellena proactivamente.",
-    "expl_en": "Standard #48 requires water to be offered regularly and kept available. Standard #73 (Anticipatory Service) says staff must anticipate needs. Water is a critical element: it should never be empty. Refill proactively.",
+    "expl": "El estándar #46 pide rellenar la copa según sea necesario. El estándar #73 (Anticipatory Service) dice que el personal debe anticipar necesidades. Agua es un elemento crítico: nunca debe estar vacía. Rellena proactivamente.",
+    "expl_en": "Standard #46 asks the waiter to top up the glass as required. Standard #73 (Anticipatory Service) says staff must anticipate needs. Water is a critical element: it should never be empty. Refill proactively.",
     "real": false
   },
   {
@@ -523,8 +523,8 @@
       "Insist that it's cooked correctly"
     ],
     "corr": 0,
-    "expl": "El estándar #75 (Service Recovery y EI Behavioral) y #76 (Conflict Resolution) requieren que SIEMPRE empatices con la percepción del huésped. Si el huésped dice que no le gusta, es su verdad. La acción correcta es resolver sin discutir: \"Permíteme cambiarla de inmediato.\"",
-    "expl_en": "Standard #75 (Service Recovery and EI Behavioral) and #76 (Conflict Resolution) require you to ALWAYS empathize with the guest's perception. If the guest says they don't like it, that's their truth. The correct action is to resolve without arguing: \"Let me change that right away.\"",
+    "expl": "El estándar #80 (autocontrol y empatía en interacciones difíciles) y el #75 (hacer todo lo posible por cumplir la petición) requieren que SIEMPRE empatices con la percepción del huésped. Si el huésped dice que no le gusta, es su verdad. La acción correcta es resolver sin discutir: \"Permíteme cambiarla de inmediato.\"",
+    "expl_en": "Standard #80 (self-control and empathy in difficult interactions) and #75 (doing everything possible to fulfil the request) require you to ALWAYS empathize with the guest's perception. If the guest says they don't like it, that's their truth. The correct action is to resolve without arguing: \"Let me change that right away.\"",
     "real": false
   },
   {
@@ -595,8 +595,8 @@
       "Simply wave goodbye with a warm smile from a distance as they leave the room without walking over to the door."
     ],
     "corr": 1,
-    "expl": "El estándar #77 (Despedida/Farewell) requiere una despedida SINCERA, cálida, y que exprese aprecio genuino. Debes hacer que se sientan valorados. La última impresión es tan importante como la primera. Esta es tu última oportunidad de crear memoria positiva.",
-    "expl_en": "Standard #77 (Farewell) requires a SINCERE, warm farewell that expresses genuine appreciation. You must make them feel valued. The last impression is as important as the first. This is your last chance to create a positive memory.",
+    "expl": "El estándar #42 (despedida) requiere una despedida SINCERA, cálida, y que exprese aprecio genuino. Debes hacer que se sientan valorados. La última impresión es tan importante como la primera. Esta es tu última oportunidad de crear memoria positiva.",
+    "expl_en": "Standard #42 (farewell) requires a SINCERE, warm farewell that expresses genuine appreciation. You must make them feel valued. The last impression is as important as the first. This is your last chance to create a positive memory.",
     "real": false
   },
   {
@@ -619,8 +619,8 @@
       "\"Good afternoon. Follow me.\""
     ],
     "corr": 1,
-    "expl": "El estándar #45 (Interacción) y los aspectos negativos de la auditoría requieren mantener \"ustedes\" aunque el cliente tutee, sustituir \"hola\" por \"buenas tardes/noches\" y nombrar el restaurante en la bienvenida. La opción 1 cumple los tres puntos manteniendo calidez. Las opciones 0 y 2 tutean; la 3 es formal pero seca y omite el nombre del restaurante.",
-    "expl_en": "Standard #45 (Interaction) and the audit findings require maintaining formal \"ustedes\" even when the guest uses informal speech, replacing \"hola\" with \"buenas tardes/noches\", and naming the restaurant in the welcome. Option 1 covers all three with warmth. Options 0 and 2 use informal speech; option 3 is formal but cold and omits the restaurant name.",
+    "expl": "Los aspectos negativos de la auditoría requieren mantener \"ustedes\" aunque el cliente tutee, sustituir \"hola\" por \"buenas tardes/noches\" y nombrar el restaurante en la bienvenida. La opción 1 cumple los tres puntos manteniendo calidez. Las opciones 0 y 2 tutean; la 3 es formal pero seca y omite el nombre del restaurante.",
+    "expl_en": "The audit findings require maintaining formal \"ustedes\" even when the guest uses informal speech, replacing \"hola\" with \"buenas tardes/noches\", and naming the restaurant in the welcome. Option 1 covers all three with warmth. Options 0 and 2 use informal speech; option 3 is formal but cold and omits the restaurant name.",
     "real": true
   },
   {
@@ -643,8 +643,8 @@
       "\"Certainly, sir. Ham or margherita for the young gentleman? And for you, sir and madam, a recommendation?\""
     ],
     "corr": 2,
-    "expl": "El estándar #45 permite calidez extra al dirigirse a un niño, pero exige mantener \"ustedes\" con los padres. La opción 2 tutea al niño con cariño y mantiene el \"ustedes\" con los padres. La 0 contagia el \"vosotros\" a los padres. La 1 trata a todos igual de informal. La 3 es excesivamente formal y rompe la naturalidad con el niño.",
-    "expl_en": "Standard #45 allows extra warmth when addressing a child but requires formal speech with parents. Option 2 uses warm informal address with the child and formal with parents. Option 0 spreads informal speech to the parents. Option 1 treats everyone informally. Option 3 is overly formal and breaks naturalness with the child.",
+    "expl": "El estándar #76 (personalizar la interacción) permite calidez extra al dirigirse a un niño, pero la auditoría exige mantener \"ustedes\" con los padres. La opción 2 tutea al niño con cariño y mantiene el \"ustedes\" con los padres. La 0 contagia el \"vosotros\" a los padres. La 1 trata a todos igual de informal. La 3 es excesivamente formal y rompe la naturalidad con el niño.",
+    "expl_en": "Standard #76 (personalising the interaction) allows extra warmth when addressing a child, but the audit requires formal speech with parents. Option 2 uses warm informal address with the child and formal with parents. Option 0 spreads informal speech to the parents. Option 1 treats everyone informally. Option 3 is overly formal and breaks naturalness with the child.",
     "real": false
   },
   {
@@ -667,8 +667,8 @@
       "Suggest a dessert wine to pair with the cake."
     ],
     "corr": 2,
-    "expl": "El estándar #19 (Sales Opportunity) exige ofrecer café/té automáticamente al pedir postre, especificando opciones (capuchino, expreso, té verde, etc.). En la auditoría se marcó como Below porque el huésped tuvo que pedirlo él mismo. La opción 2 cumple el estándar con detalle. La 1 es genérica y no específica. La 0 lo omite. La 3 desplaza el foco.",
-    "expl_en": "Standard #19 (Sales Opportunity) requires automatically offering coffee/tea when dessert is ordered, specifying options (cappuccino, espresso, green tea, etc.). The audit marked this Below because the guest had to request it themselves. Option 2 meets the standard with detail. Option 1 is generic. Option 0 omits it. Option 3 shifts focus.",
+    "expl": "El estándar #36 (Sales Opportunity) exige ofrecer café/té automáticamente al pedir postre, especificando opciones (capuchino, expreso, té verde, etc.). En la auditoría se marcó como Below porque el huésped tuvo que pedirlo él mismo. La opción 2 cumple el estándar con detalle. La 1 es genérica y no específica. La 0 lo omite. La 3 desplaza el foco.",
+    "expl_en": "Standard #36 (Sales Opportunity) requires automatically offering coffee/tea when dessert is ordered, specifying options (cappuccino, espresso, green tea, etc.). The audit marked this Below because the guest had to request it themselves. Option 2 meets the standard with detail. Option 1 is generic. Option 0 omits it. Option 3 shifts focus.",
     "real": true
   },
   {
@@ -691,8 +691,8 @@
       "Insist on dessert by describing it again in case they change their mind. I describe the cheesecake as well."
     ],
     "corr": 1,
-    "expl": "El estándar #19 trata postre y café/té como dos oportunidades de venta independientes. Rechazar el postre no implica rechazar la bebida caliente. La opción 1 mantiene la oferta sin presión. La 0 acelera el cierre. La 2 cierra sin oportunidad. La 3 incomoda al huésped.",
-    "expl_en": "Standard #19 treats dessert and coffee/tea as two independent sales opportunities. Declining dessert does not imply declining a hot drink. Option 1 keeps the offer open without pressure. Option 0 rushes closure. Option 2 closes without opportunity. Option 3 makes the guest uncomfortable.",
+    "expl": "Los estándares #34 y #36 tratan postre y café/té como dos oportunidades de venta independientes. Rechazar el postre no implica rechazar la bebida caliente. La opción 1 mantiene la oferta sin presión. La 0 acelera el cierre. La 2 cierra sin oportunidad. La 3 incomoda al huésped.",
+    "expl_en": "Standards #34 and #36 treat dessert and coffee/tea as two independent sales opportunities. Declining dessert does not imply declining a hot drink. Option 1 keeps the offer open without pressure. Option 0 rushes closure. Option 2 closes without opportunity. Option 3 makes the guest uncomfortable.",
     "real": false
   },
   {
@@ -715,8 +715,8 @@
       "Take the order as efficiently as possible and without lingering in conversation, so the guest can finish soon and get back to her business matters as quickly as possible, without holding her up with further recommendations."
     ],
     "corr": 2,
-    "expl": "El estándar #51 (Personalización) exige recordar y aplicar datos del huésped a lo largo del servicio, no solo gestos genéricos. En la auditoría se ofreció una revista (opción 0): se calificó como proactividad pero NO como personalización. La opción 2 conecta un dato concreto con una decisión posterior, que es exactamente la diferencia entre proactividad y personalización real.",
-    "expl_en": "Standard #51 (Personalization) requires remembering and applying guest information throughout service, not just generic gestures. In the audit a magazine was offered (option 0), rated as proactivity but NOT personalization. Option 2 connects a specific cue with a later decision, which is exactly the difference between proactivity and true personalization.",
+    "expl": "El estándar #76 (Personalización) exige recordar y aplicar datos del huésped a lo largo del servicio, no solo gestos genéricos. En la auditoría se ofreció una revista (opción 0): se calificó como proactividad pero NO como personalización. La opción 2 conecta un dato concreto con una decisión posterior, que es exactamente la diferencia entre proactividad y personalización real.",
+    "expl_en": "Standard #76 (Personalization) requires remembering and applying guest information throughout service, not just generic gestures. In the audit a magazine was offered (option 0), rated as proactivity but NOT personalization. Option 2 connects a specific cue with a later decision, which is exactly the difference between proactivity and true personalization.",
     "real": true
   },
   {
@@ -739,32 +739,32 @@
       "Make a mental note and mention it only if the occasion arises later."
     ],
     "corr": 1,
-    "expl": "El estándar #51 (Personalización) y la cultura del servicio de lujo exigen actuar sobre la información del huésped. La opción 1 cierra el círculo: reconocimiento inicial + acción coordinada con el equipo + cierre referenciado en la despedida. La 0 desperdicia la oportunidad. La 2 desorganiza la operativa. La 3 deja la personalización al azar.",
-    "expl_en": "Standard #51 (Personalization) and luxury service culture require acting on guest information. Option 1 closes the loop: initial acknowledgment + coordinated team action + referenced farewell. Option 0 wastes the opportunity. Option 2 disrupts operations. Option 3 leaves personalization to chance.",
+    "expl": "El estándar #76 (Personalización) y la cultura del servicio de lujo exigen actuar sobre la información del huésped. La opción 1 cierra el círculo: reconocimiento inicial + acción coordinada con el equipo + cierre referenciado en la despedida. La 0 desperdicia la oportunidad. La 2 desorganiza la operativa. La 3 deja la personalización al azar.",
+    "expl_en": "Standard #76 (Personalization) and luxury service culture require acting on guest information. Option 1 closes the loop: initial acknowledgment + coordinated team action + referenced farewell. Option 0 wastes the opportunity. Option 2 disrupts operations. Option 3 leaves personalization to chance.",
     "real": false
   },
   {
     "id": 32,
     "cat": "servicio",
-    "scn": "Tu compañera ha sentado a una mesa de 4 y entregado los menús. Miras el reloj: 2 minutos y medio desde la presentación del menú. Los huéspedes siguen leyendo y conversando.",
-    "scn_en": "Your colleague has seated a 4-top and presented menus. You glance at the clock: 2.5 minutes since menu presentation. The guests are still reading and chatting.",
+    "scn": "Tu compañera ha sentado a una mesa de 4 y entregado los menús. Miras el reloj: han pasado 8 minutos desde la presentación del menú. Los huéspedes siguen leyendo y conversando.",
+    "scn_en": "Your colleague has seated a 4-top and presented menus. You glance at the clock: 8 minutes have passed since menu presentation. The guests are still reading and chatting.",
     "q": "¿Qué acción es la correcta?",
     "q_en": "What is the correct action?",
     "opts": [
       "Esperar a que llamen para no interrumpir su conversación.",
-      "Acercarse antes de cumplirse los 3 minutos y, si aún dudan, ofrecer ayuda con el menú o tomar al menos la comanda de bebidas.",
-      "Esperar unos 10 minutos en total antes de acercarse, para asegurarse por completo de que ya han decidido todo el pedido. Aprovecho para adelantar otras mesas mientras tanto.",
+      "Acercarse antes de que se cumplan los 10 minutos y, si aún dudan, ofrecer ayuda con el menú o tomar al menos la comanda de bebidas.",
+      "Esperar unos 20 minutos en total antes de acercarse, para asegurarse por completo de que ya han decidido todo el pedido. Aprovecho para adelantar otras mesas mientras tanto.",
       "Acercarse y preguntar directamente: \"¿Han decidido ya?\""
     ],
     "opts_en": [
       "Wait until they call you so you don't interrupt their conversation.",
-      "Approach before the 3-minute mark and, if they're still undecided, offer help with the menu or at least take the drinks order.",
-      "Wait a full 10 minutes before approaching the table, just to be completely sure they have decided on their entire order. I use the time to get ahead on other tables.",
+      "Approach before the 10-minute mark and, if they're still undecided, offer help with the menu or at least take the drinks order.",
+      "Wait a full 20 minutes before approaching the table, just to be completely sure they have decided on their entire order. I use the time to get ahead on other tables.",
       "Approach and ask directly: \"Have you decided yet?\""
     ],
     "corr": 1,
-    "expl": "El estándar #2 (Efficiency) exige tomar la comanda dentro de 3 minutos desde la presentación del menú. En la auditoría se marcó Below porque pasaron 7 minutos. La opción 1 cumple el tiempo y aporta valor (ayuda) sin presionar. La 0 deja al cliente esperando. La 2 viola el estándar. La 3 es brusca.",
-    "expl_en": "Standard #2 (Efficiency) requires taking the order within 3 minutes of menu presentation. The audit marked this Below because 7 minutes elapsed. Option 1 meets the time and adds value (help) without pressure. Option 0 leaves the guest waiting. Option 2 violates the standard. Option 3 is abrupt.",
+    "expl": "El estándar #18 (Efficiency) pide tomar la comanda de comida y bebida en 10 minutos desde la entrega del menú. La opción 1 cumple el tiempo y aporta valor (ayuda) sin presionar. La 0 deja al cliente esperando. La 2 incumple el estándar. La 3 es brusca.",
+    "expl_en": "Standard #18 (Efficiency) asks for the food and beverage order to be taken within 10 minutes of the menu being presented. Option 1 meets the time and adds value (help) without pressure. Option 0 leaves the guest waiting. Option 2 misses the standard. Option 3 is abrupt.",
     "real": true
   },
   {
@@ -787,8 +787,8 @@
       "Wait for shift change to do a deep clean of the station."
     ],
     "corr": 1,
-    "expl": "Los estándares #35 y #36 exigen una experiencia cómoda y mesas/superficies limpias. La auditoría señaló pinzas saturadas como problema crítico de higiene y percepción ante palomas y moscas. La opción 1 actúa en el momento y previene recurrencia. La 0 agrava el problema. La 2 enmascara. La 3 ignora la urgencia.",
-    "expl_en": "Standards #35 and #36 require a comfortable experience and clean tables/surfaces. The audit flagged saturated stations as a critical hygiene and perception issue with pigeons and flies. Option 1 acts immediately and prevents recurrence. Option 0 worsens it. Option 2 masks the issue. Option 3 ignores urgency.",
+    "expl": "Los estándares #60 y #63 exigen una experiencia cómoda y mesas/superficies limpias. La auditoría señaló pinzas saturadas como problema crítico de higiene y percepción ante palomas y moscas. La opción 1 actúa en el momento y previene recurrencia. La 0 agrava el problema. La 2 enmascara. La 3 ignora la urgencia.",
+    "expl_en": "Standards #60 and #63 require a comfortable experience and clean tables/surfaces. The audit flagged saturated stations as a critical hygiene and perception issue with pigeons and flies. Option 1 acts immediately and prevents recurrence. Option 0 worsens it. Option 2 masks the issue. Option 3 ignores urgency.",
     "real": true
   },
   {
@@ -799,20 +799,20 @@
     "q": "¿Cuál es la secuencia correcta?",
     "q_en": "What is the correct sequence?",
     "opts": [
-      "Limpiar y montar en menos de 10 minutos: retirar a pinza, cambiar mantel, montar bajoplato, cubertería, cristalería y saleros.",
+      "Recoger y remontar en 5 minutos: retirar a pinza, cambiar mantel, montar bajoplato, cubertería, cristalería y saleros.",
       "Pasar un trapo rápido y montar lo mínimo para sentar a la pareja cuanto antes.",
       "Pedir a la hostess que entretenga a la pareja ofreciéndoles unas bebidas en la entrada mientras tú montas la mesa con calma. Le pido que me avise cuando estén listos para pasar.",
       "Esperar a que un compañero pase a ayudar para no equivocarte con la mise en place."
     ],
     "opts_en": [
-      "Clean and reset in under 10 minutes: clear to station, change cloth, set base plate, cutlery, glassware, and salt/pepper.",
+      "Clear and reset within 5 minutes: clear to station, change cloth, set base plate, cutlery, glassware, and salt/pepper.",
       "Wipe quickly and set the minimum to seat the couple ASAP.",
       "Ask the hostess to keep the couple entertained with some drinks at the entrance while you set the table calmly. I ask her to tell me when they are ready to come through.",
       "Wait for a colleague to help so you don't make mistakes with mise en place."
     ],
     "corr": 0,
-    "expl": "El estándar #36 exige limpieza en 5 minutos y montaje en 5 minutos adicionales (10 totales) y que el montaje sea uniforme con el resto del rango. La opción 0 cumple tiempo y completitud. La 1 sacrifica el estándar de mise en place. La 2 traslada el problema al cliente. La 3 viola el tiempo.",
-    "expl_en": "Standard #36 requires clearing in 5 minutes and setting in another 5 (10 total), with setup uniform across the section. Option 0 meets timing and completeness. Option 1 sacrifices mise en place standards. Option 2 shifts the problem to the guest. Option 3 violates timing.",
+    "expl": "El estándar #61 pide que la mesa se recoja y se remonte en 5 minutos cuando los huéspedes se van, y que todas las mesas estén montadas de la misma forma. La opción 0 cumple tiempo y completitud. La 1 sacrifica el estándar de mise en place. La 2 traslada el problema al cliente. La 3 incumple el tiempo.",
+    "expl_en": "Standard #61 asks for the table to be cleared and reset within 5 minutes of the guests leaving, and for all tables to be laid consistently. Option 0 meets timing and completeness. Option 1 sacrifices mise en place standards. Option 2 shifts the problem to the guest. Option 3 misses the timing.",
     "real": false
   },
   {
@@ -859,8 +859,8 @@
       "Repeat at every single table exactly the same full explanation, word for word, just as you delivered it at table 1. Without adapting it to the table in front of me."
     ],
     "corr": 2,
-    "expl": "El estándar #13 (servicio coordinado) y la cultura LQA exigen consistencia entre mesas. La auditoría observó que el mismo camarero explicó muy bien una mesa pero a las demás solo dejó los platos. La opción 2 garantiza experiencia mínima uniforme con flexibilidad. Las 0 y 1 incumplen. La 3 es robótica y resta naturalidad.",
-    "expl_en": "Standard #13 (coordinated service) and LQA culture require consistency across tables. The audit noted the same waiter explained well at one table but just dropped plates at others. Option 2 ensures uniform minimum experience with flexibility. Options 0 and 1 fail. Option 3 is robotic and lacks naturalness.",
+    "expl": "El estándar #72 (confianza y conocimiento al presentar los platos) y la cultura LQA exigen consistencia entre mesas. La auditoría observó que el mismo camarero explicó muy bien una mesa pero a las demás solo dejó los platos. La opción 2 garantiza experiencia mínima uniforme con flexibilidad. Las 0 y 1 incumplen. La 3 es robótica y resta naturalidad.",
+    "expl_en": "Standard #72 (confidence and knowledge when presenting dishes) and LQA culture require consistency across tables. The audit noted the same waiter explained well at one table but just dropped plates at others. Option 2 ensures uniform minimum experience with flexibility. Options 0 and 1 fail. Option 3 is robotic and lacks naturalness.",
     "real": true
   },
   {
@@ -883,8 +883,8 @@
       "Ask the head waiter to handle the silent tables."
     ],
     "corr": 1,
-    "expl": "El estándar #22 exige una comprobación proactiva de la experiencia. La auditoría observó que en los rangos 500 y 300 no se realizó. Silencio no equivale a satisfacción: puede ser un problema no comunicado. La opción 1 cumple el estándar. La 0 asume sin verificar. La 2 deja el chequeo demasiado tarde. La 3 evade la responsabilidad propia.",
-    "expl_en": "Standard #22 requires proactive experience checks. The audit noted sections 500 and 300 received none. Silence ≠ satisfaction, it may indicate unspoken issues. Option 1 meets the standard. Option 0 assumes without verifying. Option 2 checks too late. Option 3 deflects responsibility.",
+    "expl": "El estándar #40 exige una comprobación proactiva de la experiencia. La auditoría observó que en los rangos 500 y 300 no se realizó. Silencio no equivale a satisfacción: puede ser un problema no comunicado. La opción 1 cumple el estándar. La 0 asume sin verificar. La 2 deja el chequeo demasiado tarde. La 3 evade la responsabilidad propia.",
+    "expl_en": "Standard #40 requires proactive experience checks. The audit noted sections 500 and 300 received none. Silence ≠ satisfaction, it may indicate unspoken issues. Option 1 meets the standard. Option 0 assumes without verifying. Option 2 checks too late. Option 3 deflects responsibility.",
     "real": true
   },
   {
@@ -907,8 +907,8 @@
       "Show the water list and let them choose without suggesting anything."
     ],
     "corr": 2,
-    "expl": "El estándar #3 (Sustainability) exige ofrecer el agua filtrada del hotel antes que la embotellada. En la auditoría se sirvió Solán de Cabras embotellada sin ofrecer la filtrada, marcado Below. La opción 2 cumple sostenibilidad y deja libertad al huésped. La 0 incumple el estándar. La 1 omite la opción filtrada. La 3 desplaza la responsabilidad de la recomendación.",
-    "expl_en": "Standard #3 (Sustainability) requires offering the hotel's filtered water before bottled water. The audit had bottled Solán de Cabras served without offering the filtered option, marked Below. Option 2 meets sustainability and leaves choice to the guest. Option 0 fails the standard. Option 1 omits the filtered option. Option 3 deflects the recommendation.",
+    "expl": "El estándar #17 (Sustainability) exige ofrecer el agua filtrada del hotel antes que la embotellada. En la auditoría se sirvió Solán de Cabras embotellada sin ofrecer la filtrada, marcado Below. La opción 2 cumple sostenibilidad y deja libertad al huésped. La 0 incumple el estándar. La 1 omite la opción filtrada. La 3 desplaza la responsabilidad de la recomendación.",
+    "expl_en": "Standard #17 (Sustainability) requires offering the hotel's filtered water before bottled water. The audit had bottled Solán de Cabras served without offering the filtered option, marked Below. Option 2 meets sustainability and leaves choice to the guest. Option 0 fails the standard. Option 1 omits the filtered option. Option 3 deflects the recommendation.",
     "real": true
   },
   {
@@ -931,8 +931,8 @@
       "Trust the previous shift; they'll have left them ready."
     ],
     "corr": 1,
-    "expl": "El estándar #42 exige saleros/pimenteros limpios y llenos. La auditoría lo marcó Below. La mise en place es el momento para evitarlo. La opción 1 cubre los cuatro fallos posibles (vacío, sucio, atascado, inconsistente). Las demás dejan margen para descubrir el fallo durante el servicio, ya frente al huésped.",
-    "expl_en": "Standard #42 requires clean and full salt/pepper shakers. The audit marked this Below. Mise en place is the moment to prevent it. Option 1 covers all four possible failures (empty, dirty, clogged, inconsistent). The others leave room for discovery during service, in front of the guest.",
+    "expl": "El estándar #67 exige saleros/pimenteros limpios y llenos. La auditoría lo marcó Below. La mise en place es el momento para evitarlo. La opción 1 cubre los cuatro fallos posibles (vacío, sucio, atascado, inconsistente). Las demás dejan margen para descubrir el fallo durante el servicio, ya frente al huésped.",
+    "expl_en": "Standard #67 requires clean and full salt/pepper shakers. The audit marked this Below. Mise en place is the moment to prevent it. Option 1 covers all four possible failures (empty, dirty, clogged, inconsistent). The others leave room for discovery during service, in front of the guest.",
     "real": true
   },
   {
@@ -955,8 +955,8 @@
       "\"I'd recommend simply ordering anything at all you fancy off the menu tonight; our kitchen will happily adapt whatever it is to your vegan diet without any problem at all.\""
     ],
     "corr": 2,
-    "expl": "El estándar #26 exige al menos 2 entrantes, 2 principales y 1 postre vegano disponibles, en menú o sugeridos verbalmente. La auditoría marcó Below porque el postre vegano (bolsa de helado) existe pero no se ofreció. La opción 2 cumple el estándar y demuestra conocimiento de carta. La 0 traslada el problema. La 1 es insuficiente. La 3 carga al cliente la responsabilidad.",
-    "expl_en": "Standard #26 requires at least 2 starters, 2 mains, and 1 dessert vegan available, on menu or verbally suggested. The audit marked this Below because the vegan dessert (ice cream bag) exists but wasn't offered. Option 2 meets the standard and shows menu knowledge. Option 0 deflects. Option 1 is insufficient. Option 3 burdens the guest.",
+    "expl": "El estándar #51 exige al menos 2 entrantes, 2 principales y 1 postre vegano disponibles, en menú o sugeridos verbalmente. La auditoría marcó Below porque el postre vegano (bolsa de helado) existe pero no se ofreció. La opción 2 cumple el estándar y demuestra conocimiento de carta. La 0 traslada el problema. La 1 es insuficiente. La 3 carga al cliente la responsabilidad.",
+    "expl_en": "Standard #51 requires at least 2 starters, 2 mains, and 1 dessert vegan available, on menu or verbally suggested. The audit marked this Below because the vegan dessert (ice cream bag) exists but wasn't offered. Option 2 meets the standard and shows menu knowledge. Option 0 deflects. Option 1 is insufficient. Option 3 burdens the guest.",
     "real": true
   },
   {
@@ -1003,8 +1003,8 @@
       "Approach and join the conversation showing interest."
     ],
     "corr": 1,
-    "expl": "El estándar #49 (Adaptación) exige adaptarse a la situación del huésped, esperando con paciencia cuando está ocupado. La auditoría destacó este comportamiento como ejemplar (Faride esperó a que la huésped terminara de hablar con otro huésped antes de acompañarla). La opción 1 respeta el momento del huésped sin presión. La 0 interrumpe. La 2 ignora la prioridad. La 3 invade la privacidad.",
-    "expl_en": "Standard #49 (Adaptation) requires adapting to the guest's situation, waiting patiently when the guest is occupied. The audit highlighted this behavior as exemplary (Faride waited for the guest to finish speaking with another guest before escorting her). Option 1 respects the guest's moment without pressure. Option 0 interrupts. Option 2 ignores priority. Option 3 invades privacy.",
+    "expl": "El estándar #74 (Adaptación) exige adaptarse a la situación del huésped, esperando con paciencia cuando está ocupado. La auditoría destacó este comportamiento como ejemplar (Faride esperó a que la huésped terminara de hablar con otro huésped antes de acompañarla). La opción 1 respeta el momento del huésped sin presión. La 0 interrumpe. La 2 ignora la prioridad. La 3 invade la privacidad.",
+    "expl_en": "Standard #74 (Adaptation) requires adapting to the guest's situation, waiting patiently when the guest is occupied. The audit highlighted this behavior as exemplary (Faride waited for the guest to finish speaking with another guest before escorting her). Option 1 respects the guest's moment without pressure. Option 0 interrupts. Option 2 ignores priority. Option 3 invades privacy.",
     "real": true
   },
   {
@@ -1027,8 +1027,8 @@
       "Devote exactly the same amount of time to each table to ensure equity."
     ],
     "corr": 1,
-    "expl": "El estándar #45 (Interacción) exige naturalidad consistente. La auditoría destacó positivamente que la camarera fue \"igual de natural\" con la mesa contigua que con la huésped sola, eso es lo que valida el servicio auténtico (no actuado). La opción 1 captura el principio. La 0 segmenta artificialmente. La 2 prejuzga al huésped. La 3 confunde igualdad con consistencia de calidad.",
-    "expl_en": "Standard #45 (Interaction) requires consistent naturalness. The audit positively highlighted that the waitress was \"just as natural\" with the adjacent table as with the solo guest, that is what validates authentic (not acted) service. Option 1 captures the principle. Option 0 segments artificially. Option 2 prejudges the guest. Option 3 confuses equality with consistency of quality.",
+    "expl": "El estándar #70 (comunicación natural y sin guion) exige naturalidad consistente. La auditoría destacó positivamente que la camarera fue \"igual de natural\" con la mesa contigua que con la huésped sola, eso es lo que valida el servicio auténtico (no actuado). La opción 1 captura el principio. La 0 segmenta artificialmente. La 2 prejuzga al huésped. La 3 confunde igualdad con consistencia de calidad.",
+    "expl_en": "Standard #70 (natural, unscripted communication) requires consistent naturalness. The audit positively highlighted that the waitress was \"just as natural\" with the adjacent table as with the solo guest, that is what validates authentic (not acted) service. Option 1 captures the principle. Option 0 segments artificially. Option 2 prejudges the guest. Option 3 confuses equality with consistency of quality.",
     "real": true
   },
   {
@@ -1051,8 +1051,8 @@
       "\"I'd suggest ordering a simpler dish if you prefer something plain.\""
     ],
     "corr": 1,
-    "expl": "El estándar #6 exige acomodar solicitudes razonables fuera del menú. Quitar una salsa es una modificación trivial que no requiere consulta. La auditoría destacó positivamente este caso (\"se hizo sin ningún problema\"). La opción 1 demuestra confianza, conocimiento de cocina y servicio orientado al huésped. La 0 incumple. La 2 transmite inseguridad innecesaria. La 3 redirige indebidamente.",
-    "expl_en": "Standard #6 requires accommodating reasonable off-menu requests. Removing a sauce is a trivial modification that doesn't require consultation. The audit positively highlighted this case (\"done without any problem\"). Option 1 shows confidence, kitchen knowledge, and guest-focused service. Option 0 fails. Option 2 conveys unnecessary insecurity. Option 3 redirects inappropriately.",
+    "expl": "El estándar #20 exige acomodar solicitudes razonables fuera del menú. Quitar una salsa es una modificación trivial que no requiere consulta. La auditoría destacó positivamente este caso (\"se hizo sin ningún problema\"). La opción 1 demuestra confianza, conocimiento de cocina y servicio orientado al huésped. La 0 incumple. La 2 transmite inseguridad innecesaria. La 3 redirige indebidamente.",
+    "expl_en": "Standard #20 requires accommodating reasonable off-menu requests. Removing a sauce is a trivial modification that doesn't require consultation. The audit positively highlighted this case (\"done without any problem\"). Option 1 shows confidence, kitchen knowledge, and guest-focused service. Option 0 fails. Option 2 conveys unnecessary insecurity. Option 3 redirects inappropriately.",
     "real": true
   },
   {
@@ -1075,8 +1075,8 @@
       "Close the terrace area and relocate the guest indoors."
     ],
     "corr": 2,
-    "expl": "El estándar #48 (Anticipación) exige actuar sobre necesidades futuras del huésped antes de que se manifiesten. La auditoría destacó positivamente este gesto exacto (\"Se me ofreció una vela para las moscas por si me pudiesen llegar a molestar\"). La opción 2 captura el principio: anticipar + ofrecer + permitir al huésped decidir. La 0 es reactiva. La 1 es invasiva. La 3 desproporcionada.",
-    "expl_en": "Standard #48 (Anticipation) requires acting on future guest needs before they manifest. The audit positively highlighted this exact gesture (\"I was offered a candle in case the flies might bother me\"). Option 2 captures the principle: anticipate + offer + let the guest decide. Option 0 is reactive. Option 1 is invasive. Option 3 is disproportionate.",
+    "expl": "El estándar #73 (Anticipación) exige actuar sobre necesidades futuras del huésped antes de que se manifiesten. La auditoría destacó positivamente este gesto exacto (\"Se me ofreció una vela para las moscas por si me pudiesen llegar a molestar\"). La opción 2 captura el principio: anticipar + ofrecer + permitir al huésped decidir. La 0 es reactiva. La 1 es invasiva. La 3 desproporcionada.",
+    "expl_en": "Standard #73 (Anticipation) requires acting on future guest needs before they manifest. The audit positively highlighted this exact gesture (\"I was offered a candle in case the flies might bother me\"). Option 2 captures the principle: anticipate + offer + let the guest decide. Option 0 is reactive. Option 1 is invasive. Option 3 is disproportionate.",
     "real": true
   },
   {
@@ -1099,8 +1099,8 @@
       "\"They are prepared faithfully following the chef's original recipe; they have been a true house specialty for years.\" And I recommend they do not miss them today."
     ],
     "corr": 2,
-    "expl": "El estándar #5 exige que el empleado pueda responder preguntas sobre el menú, ingredientes y alergias. La auditoría destacó positivamente este caso (\"Le pregunté a Alessandra cómo estaban hechos los espárragos y me supo responder\"). La opción 2 cumple el estándar y construye confianza. La 0 traslada el problema. La 1 es genérica/vacía. La 3 apela a autoridad sin contenido informativo.",
-    "expl_en": "Standard #5 requires the employee to answer questions about menu, ingredients, and allergies. The audit positively highlighted this case (\"I asked Alessandra how the asparagus were prepared and she was able to answer\"). Option 2 meets the standard and builds trust. Option 0 deflects. Option 1 is generic/empty. Option 3 appeals to authority without informative content.",
+    "expl": "El estándar #19 exige que el empleado pueda responder preguntas sobre el menú, ingredientes y alergias. La auditoría destacó positivamente este caso (\"Le pregunté a Alessandra cómo estaban hechos los espárragos y me supo responder\"). La opción 2 cumple el estándar y construye confianza. La 0 traslada el problema. La 1 es genérica/vacía. La 3 apela a autoridad sin contenido informativo.",
+    "expl_en": "Standard #19 requires the employee to answer questions about menu, ingredients, and allergies. The audit positively highlighted this case (\"I asked Alessandra how the asparagus were prepared and she was able to answer\"). Option 2 meets the standard and builds trust. Option 0 deflects. Option 1 is generic/empty. Option 3 appeals to authority without informative content.",
     "real": true
   },
   {
@@ -1123,8 +1123,8 @@
       "Always wait for the guest to be the one to ask about the fish's origin before bringing up that detail. In the meantime I serve the dish as normal."
     ],
     "corr": 1,
-    "expl": "El estándar #31 (Sustainability) exige que el pescado de origen local/sostenible esté en carta o sea cantado por el empleado. La auditoría destacó positivamente este caso (\"Fue mencionado por Alessandra. Entre Tenerife y El Hierro\"). La opción 1 cumple el estándar y refuerza el valor de sostenibilidad. La 0 omite información clave. La 2 desplaza el foco. La 3 es pasiva.",
-    "expl_en": "Standard #31 (Sustainability) requires that locally/sustainably sourced fish be on the menu or verbally mentioned by the employee. The audit positively highlighted this case (\"Mentioned by Alessandra. Between Tenerife and El Hierro\"). Option 1 meets the standard and reinforces sustainability value. Option 0 omits key information. Option 2 shifts focus. Option 3 is passive.",
+    "expl": "El estándar #56 (Sustainability) exige que el pescado de origen local/sostenible esté en carta o sea cantado por el empleado. La auditoría destacó positivamente este caso (\"Fue mencionado por Alessandra. Entre Tenerife y El Hierro\"). La opción 1 cumple el estándar y refuerza el valor de sostenibilidad. La 0 omite información clave. La 2 desplaza el foco. La 3 es pasiva.",
+    "expl_en": "Standard #56 (Sustainability) requires that locally/sustainably sourced fish be on the menu or verbally mentioned by the employee. The audit positively highlighted this case (\"Mentioned by Alessandra. Between Tenerife and El Hierro\"). Option 1 meets the standard and reinforces sustainability value. Option 0 omits key information. Option 2 shifts focus. Option 3 is passive.",
     "real": true
   },
   {
