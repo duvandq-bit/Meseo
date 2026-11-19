@@ -54,7 +54,7 @@
 <meta property="og:description" content="Formación de equipos de sala: carta, alérgenos, vinos, exámenes y juegos de repaso.">
 <meta property="og:url" content="https://meseo.es/">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"Meseo","url":"https://meseo.es/"}</script>
-<meta name="app-version" content="7.548">
+<meta name="app-version" content="7.550">
 <meta name="app-build" content="May 2026">
 <meta name="theme-color" content="#1c2a22">
 <!-- ═══ PWA ═══ -->
@@ -2839,7 +2839,8 @@ function _cartaAplicar(c){
     allergensValidated: c.allergensValidated === true,
     CATS: (Array.isArray(c.CATS) && c.CATS.length) ? c.CATS : null,
     TEC: _cartaTecValidas(c),
-    SUSHI: (typeof _sushiValida === 'function') ? _sushiValida(c.GUIA_SUSHI) : null
+    SUSHI: (typeof _sushiValida === 'function') ? _sushiValida(c.GUIA_SUSHI) : null,
+    COCTELES: (typeof _coctelesValida === 'function') ? _coctelesValida(c.COCTELES) : null
   };
   _cartaFotos = (c === _CARTA_BASE) ? null : _cartaFotosValidas(c);
   DEGUSTACION = (c === _CARTA_BASE || typeof _degValida !== 'function') ? null : _degValida(c.DEGUSTACION, DISHES);
@@ -3191,7 +3192,7 @@ const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><p
 const SRC = 'src';
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='7.548';  // sincronizada con sw.js VERSION (guard de CI)
+const APP_VERSION='7.550';  // sincronizada con sw.js VERSION (guard de CI)
 const APP_BUILD='Jul 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;
@@ -15384,7 +15385,7 @@ const UX2_SECCION = {
   // más mirado en servicio; vinos, quesos, sala y la auditoría LQA son
   // consulta igualmente y siguen alcanzándose por el menú hasta UX-07.
   mesa:'saber', aprender:'saber', emplatado:'saber', tecnicas:'saber',
-  actualidad:'saber', vinos:'saber', quesos:'saber', sala:'saber', protocolo:'saber', lqa:'saber',
+  actualidad:'saber', vinos:'saber', quesos:'saber', sala:'saber', cocteles:'saber', protocolo:'saber', lqa:'saber',
   // Practicar · entrenar. `exam` abre la PREPARACIÓN del examen, no un examen.
   // `repaso` es explorar la carta: es consulta, va en Saber.
   repaso:'saber',
@@ -15404,7 +15405,7 @@ const UX2_SECCION = {
 // Sin 'videos' ni 'chat' desde oct 2026, ni 'horarios' desde el 12 oct 2026
 // (retirados por el propietario). Un aviso antiguo que abra #tab=chat o
 // #tab=horarios cae en INICIO por la regla de abajo.
-const TAB_ROUTES = ['dashboard','mesa','degustacion','platodia','cartaaudio','repasar','practicar','aprender','flashcards','exam','repaso','tecnicas','actualidad','smart','emplatado','stats','logros','txoko','ranking','supervisor','protocolo','lqa','vinos','quesos','sala'];
+const TAB_ROUTES = ['dashboard','mesa','degustacion','platodia','cartaaudio','repasar','practicar','aprender','flashcards','exam','repaso','tecnicas','actualidad','smart','emplatado','stats','logros','txoko','ranking','supervisor','protocolo','lqa','vinos','quesos','sala','cocteles'];
 
 function showTab(tab, instant){
   // ── Pestaña desconocida → INICIO ──────────────────────────────────────
@@ -15474,7 +15475,7 @@ function showTab(tab, instant){
   _ux2Sync(tab);
   _saberSync(tab);
   const c=document.getElementById('appContent');
-  const renderMap = {practicar:renderPracticar,mesa:renderMesa,quesos:renderQuesos,sala:renderSala,dashboard:renderDashboard,aprender:renderAprender,flashcards:renderAprender,exam:renderExam,repaso:renderAprender,tecnicas:renderAprender,actualidad:renderAprender,smart:renderAprender,emplatado:renderAprender,stats:renderRankingHub,logros:renderRankingHub,txoko:renderTxoko,ranking:renderRankingHub,supervisor:renderSupervisor,protocolo:renderLqa,lqa:renderLqa,vinos:renderVinos,degustacion:renderDegustacion,platodia:renderPlatoDia,cartaaudio:renderCartaAudio,repasar:renderRepasar};
+  const renderMap = {practicar:renderPracticar,mesa:renderMesa,quesos:renderQuesos,cocteles:renderCocteles,sala:renderSala,dashboard:renderDashboard,aprender:renderAprender,flashcards:renderAprender,exam:renderExam,repaso:renderAprender,tecnicas:renderAprender,actualidad:renderAprender,smart:renderAprender,emplatado:renderAprender,stats:renderRankingHub,logros:renderRankingHub,txoko:renderTxoko,ranking:renderRankingHub,supervisor:renderSupervisor,protocolo:renderLqa,lqa:renderLqa,vinos:renderVinos,degustacion:renderDegustacion,platodia:renderPlatoDia,cartaaudio:renderCartaAudio,repasar:renderRepasar};
   const _doRender = ()=>{
     c.innerHTML='';
     c.style.transition='none';
@@ -19326,6 +19327,8 @@ function _saberChipsBar(tab){
     // El menú degustación, justo detrás de la Carta y sólo si la carta lo trae.
     (typeof DEGUSTACION!=='undefined' && DEGUSTACION) ? ['degustacion', escapeHTML(_degNombre()), "_degS.vista='viaje';showTab('degustacion')"] : null,
     _SABER_HAY.vinos ? ['vinos', _en?'Wines':'Vinos', "showTab('vinos')"] : null,
+    // Los cócteles, sólo si la carta del restaurante los trae (Akira, nov 2026).
+    (typeof _coctelesCarta === 'function' && _coctelesCarta()) ? ['cocteles', _en?'Cocktails':'Cócteles', "showTab('cocteles')"] : null,
     _SABER_HAY.quesos ? ['quesos', _en?'Cheese':'Quesos', "showTab('quesos')"] : null,
     _SABER_HAY.sala ? ['sala', _en?'Floor':'Sala', "showTab('sala')"] : null,
     ['protocolo', 'LQA Forbes', "showTab('protocolo')"]
@@ -20656,6 +20659,197 @@ function _sushiValida(g){
            intro: opt(g.intro) ? (g.intro || '') : '', intro_en: opt(g.intro_en) ? (g.intro_en || '') : '',
            nigiris, makis, pescados, familias };
 }
+// ═══ CÓCTELES DE LA CARTA (Akira Back, nov 2026) ═════════════════════════
+// El recetario de barra viaja DENTRO de la carta privada del restaurante, en
+// la clave COCTELES: { grupos:[{id,nombre,nombre_en}], cocteles:[{id, nombre,
+// grupo, vaso, tecnica, ingredientes:[{cant,ing}], decoracion, perfil,
+// alergenos (de la hoja; null si no lo dice), alergenos_probables (deducidos
+// de la receta), notas, otra_version, dudas, + _en}] }. Sin la clave no hay
+// pestaña: nadie ve el recetario del vecino.
+//
+// Para sala, no para barra: el camarero tiene que poder contar qué lleva, en
+// qué vaso llega y si tiene huevo, leche o frutos secos. Los alérgenos de la
+// hoja van tal cual; los deducidos se dicen como «por confirmar con barra».
+const _CO_IDS = /^[a-z0-9_-]{1,40}$/;
+function _coctelesValida(raw){
+  if(!raw || typeof raw !== 'object' || !Array.isArray(raw.cocteles)) return null;
+  const txt = (v, max) => typeof v === 'string' && v.trim().length > 0 && v.length <= (max || 600);
+  const opt = (v, max) => (v === undefined || v === null || v === '') ? '' : (txt(v, max) ? v : '');
+  const lista = (a, max) => (Array.isArray(a) ? a : []).filter(x => txt(x, max || 120)).slice(0, 12);
+  const ings = a => (Array.isArray(a) ? a : []).filter(x => x && txt(x.ing, 80) && (x.cant === '' || txt(x.cant, 20))).slice(0, 14)
+    .map(x => ({ cant: x.cant || '', ing: x.ing }));
+  const grupos = (Array.isArray(raw.grupos) ? raw.grupos : []).filter(g => g && _CO_IDS.test(g.id || '') && txt(g.nombre, 40))
+    .map(g => ({ id: g.id, nombre: g.nombre, nombre_en: opt(g.nombre_en, 40) || g.nombre }));
+  const vistos = new Set(), cocteles = [];
+  for(const c of raw.cocteles.slice(0, 120)){
+    if(!c || !_CO_IDS.test(c.id || '') || vistos.has(c.id) || !txt(c.nombre, 60)) continue;
+    const ingredientes = ings(c.ingredientes);
+    if(!ingredientes.length) continue;
+    vistos.add(c.id);
+    const en = ings(c.ingredientes_en);
+    cocteles.push({
+      id: c.id, nombre: c.nombre, grupo: grupos.some(g => g.id === c.grupo) ? c.grupo : (grupos[0] ? grupos[0].id : ''),
+      vaso: opt(c.vaso, 80), vaso_en: opt(c.vaso_en, 80), tecnica: opt(c.tecnica), tecnica_en: opt(c.tecnica_en),
+      ingredientes, ingredientes_en: en.length === ingredientes.length ? en : ingredientes,
+      decoracion: opt(c.decoracion), decoracion_en: opt(c.decoracion_en),
+      perfil: opt(c.perfil, 200), perfil_en: opt(c.perfil_en, 200),
+      alergenos: Array.isArray(c.alergenos) ? lista(c.alergenos) : null,
+      alergenos_en: lista(c.alergenos_en),
+      alergenos_probables: lista(c.alergenos_probables),
+      alergenos_probables_en: lista(c.alergenos_probables_en),
+      notas: opt(c.notas), notas_en: opt(c.notas_en),
+      otra_version: opt(c.otra_version), otra_version_en: opt(c.otra_version_en),
+      dudas: lista(c.dudas, 300)
+    });
+  }
+  if(!cocteles.length) return null;
+  return { grupos: grupos.length ? grupos : [{ id: 'autor', nombre: 'Cócteles', nombre_en: 'Cocktails' }], cocteles, revisar: raw.revisar !== false };
+}
+function _coctelesCarta(){
+  return (typeof _cartaMeta !== 'undefined' && _cartaMeta && _cartaMeta.COCTELES) || null;
+}
+let _coBusca = '', _coGrupo = null, _coAbierto = null, _coQuiz = null;
+function _coTxt(c, k){ return (LANG === 'en' && c[k + '_en']) ? c[k + '_en'] : c[k]; }
+function _coIngs(c){ return LANG === 'en' ? c.ingredientes_en : c.ingredientes; }
+function _coCoincide(c){
+  if(_coGrupo && c.grupo !== _coGrupo) return false;
+  if(!_coBusca) return true;
+  const h = _djNorm([c.nombre, c.vaso, c.vaso_en, c.perfil, c.perfil_en, c.decoracion, c.decoracion_en,
+    c.ingredientes.map(i => i.ing).join(' '), c.ingredientes_en.map(i => i.ing).join(' ')].join(' '));
+  return _djNorm(_coBusca).split(' ').filter(Boolean).every(w => h.includes(w));
+}
+function _coVeRevision(){ try{ return _esMando() || _esAdmin(); }catch(e){ return false; } }
+
+function renderCocteles(){
+  const c = document.getElementById('appContent');
+  const _en = LANG === 'en';
+  const R = _coctelesCarta();
+  if(!R){ showTab('vinos'); return; }
+  if(_coQuiz){ c.innerHTML = _coQuizHTML(); return; }
+  const lista = R.cocteles.filter(_coCoincide);
+  const chip = (on, txt, fn) => `<button type="button" onclick="${fn}" class="q-chip${on ? ' on' : ''}">${escapeHTML(txt)}</button>`;
+  const porGrupo = R.grupos.map(g => {
+    const de = lista.filter(x => x.grupo === g.id);
+    if(!de.length) return '';
+    return `<section class="co-grupo"><h3 class="co-grupo-t">${escapeHTML(_en ? g.nombre_en : g.nombre)} <span>${de.length}</span></h3>${de.map(_coFicha).join('')}</section>`;
+  }).join('');
+  c.innerHTML = `<div class="sup-wrap co-wrap">
+    <div class="sup-hero">
+      <div class="sup-hero-title">${_en ? 'Cocktails' : 'Cócteles'}</div>
+      <div class="sup-hero-sub">${R.cocteles.length} ${_en ? 'on the list' : 'en carta'} · ${_en ? 'what each one has, its glass and its allergens' : 'qué lleva cada uno, su vaso y sus alérgenos'}</div>
+    </div>
+    <button type="button" class="ri-cta co-practicar" onclick="_coQuizEmpezar()">
+      <span class="ri-cta-text"><span class="ri-cta-top">${_en ? 'Practise the cocktails' : 'Practicar los cócteles'}</span>
+      <span class="ri-cta-sub">${_en ? '8 questions · ingredients, glass and garnish' : '8 preguntas · ingredientes, vaso y decoración'}</span></span>
+    </button>
+    <input type="search" class="q-busca" value="${escapeHTML(_coBusca)}" oninput="_coBusca=this.value;renderCocteles();this.focus()"
+      placeholder="${_en ? 'Search a cocktail, a spirit, an ingredient…' : 'Busca un cóctel, un destilado, un ingrediente…'}">
+    <div class="q-chips">
+      ${chip(!_coGrupo, _en ? 'All' : 'Todos', '_coGrupo=null;renderCocteles()')}
+      ${R.grupos.map(g => chip(_coGrupo === g.id, _en ? g.nombre_en : g.nombre, `_coGrupo=${JSON.stringify(g.id)};renderCocteles()`)).join('')}
+    </div>
+    ${porGrupo || `<div class="q-vacio">${_en ? 'Nothing matches.' : 'Nada coincide.'}</div>`}
+    <p class="co-pie">${_en ? 'The bar has the last word on recipes and allergens.' : 'La última palabra sobre recetas y alérgenos la tiene la barra.'}</p>
+  </div>`;
+}
+
+function _coFicha(c){
+  const _en = LANG === 'en';
+  const abierto = _coAbierto === c.id;
+  const ings = _coIngs(c);
+  const base = ings.filter(i => /ml|shot|top|float/i.test(i.cant)).slice(0, 3).map(i => i.ing).join(' · ');
+  const al = c.alergenos === null ? null : ((_en && c.alergenos_en.length === c.alergenos.length) ? c.alergenos_en : c.alergenos);
+  const prob = (_en && c.alergenos_probables_en.length === c.alergenos_probables.length) ? c.alergenos_probables_en : c.alergenos_probables;
+  const marcas = [];
+  if(al && al.length) al.forEach(a => marcas.push(`<span class="q-m q-m-avi">${escapeHTML(a)}</span>`));
+  if(prob.length) prob.forEach(a => marcas.push(`<span class="q-m q-m-duda">${escapeHTML(a)} · ${_en ? 'check with the bar' : 'confirmar con barra'}</span>`));
+  if(al && !al.length && !c.alergenos_probables.length) marcas.push(`<span class="q-m q-m-ok">${_en ? 'no allergens on the sheet' : 'sin alérgenos en la hoja'}</span>`);
+  if(c.grupo === 'sin_alcohol') marcas.push(`<span class="q-m q-m-off">${_en ? 'alcohol-free' : 'sin alcohol'}</span>`);
+  const det = abierto ? `
+      <ul class="co-ings">${ings.map(i => `<li><span class="co-cant">${escapeHTML(i.cant)}</span>${escapeHTML(i.ing)}</li>`).join('')}</ul>
+      ${c.tecnica ? `<div class="q-dato"><span>${_en ? 'Method' : 'Técnica'}</span> ${escapeHTML(_coTxt(c, 'tecnica'))}</div>` : ''}
+      ${c.decoracion ? `<div class="q-dato"><span>${_en ? 'Garnish' : 'Decoración'}</span> ${escapeHTML(_coTxt(c, 'decoracion'))}</div>` : ''}
+      ${c.notas ? `<div class="q-dato"><span>${_en ? 'Note' : 'Nota'}</span> ${escapeHTML(_coTxt(c, 'notas'))}</div>` : ''}
+      ${_coVeRevision() && (c.otra_version || c.dudas.length) ? `<div class="co-rev"><b>${_en ? 'To check' : 'Por revisar'}</b>${c.otra_version ? `<div>${escapeHTML(_coTxt(c, 'otra_version'))}</div>` : ''}${c.dudas.map(d => `<div>${escapeHTML(d)}</div>`).join('')}</div>` : ''}` : '';
+  return `<article class="q-card co-card${abierto ? ' co-abierto' : ''}">
+    <button type="button" class="co-cab" aria-expanded="${abierto}" onclick="_coAbierto=${abierto ? 'null' : JSON.stringify(c.id)};renderCocteles()">
+      <span class="co-cab-tx"><h3>${escapeHTML(c.nombre)}</h3>
+      <span class="co-vaso">${escapeHTML(_coTxt(c, 'vaso'))}</span>
+      ${c.perfil ? `<span class="co-perfil">${escapeHTML(_coTxt(c, 'perfil'))}</span>` : `<span class="co-perfil">${escapeHTML(base)}</span>`}</span>
+      <svg class="co-ch" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+    </button>
+    ${marcas.length ? `<div class="q-marcas">${marcas.join('')}</div>` : ''}
+    ${det}
+  </article>`;
+}
+
+// ── Práctica: 8 preguntas de tres tipos, con opciones de otros cócteles ──
+function _coMezcla(a){ const b = a.slice(); for(let i = b.length - 1; i > 0; i--){ const j = Math.floor(Math.random() * (i + 1)); [b[i], b[j]] = [b[j], b[i]]; } return b; }
+function _coPreguntas(R, n){
+  const _en = LANG === 'en', L = R.cocteles, out = [];
+  const tipos = ['ings', 'vaso', 'deco'];
+  for(const c of _coMezcla(L)){
+    if(out.length >= n) break;
+    const t = tipos[out.length % tipos.length];
+    const otros = _coMezcla(L.filter(x => x.id !== c.id));
+    let q, ok, malas;
+    if(t === 'ings'){
+      const txt = x => _coIngs(x).filter(i => i.cant !== '').map(i => i.ing).slice(0, 4).join(', ');
+      q = _en ? `Which cocktail has: ${txt(c)}?` : `¿Qué cóctel lleva: ${txt(c)}?`;
+      ok = c.nombre; malas = otros.map(x => x.nombre);
+    } else if(t === 'vaso'){
+      if(!c.vaso) continue;
+      q = _en ? `In which glass is the ${c.nombre} served?` : `¿En qué vaso se sirve el ${c.nombre}?`;
+      ok = _coTxt(c, 'vaso'); malas = otros.map(x => _coTxt(x, 'vaso')).filter(Boolean);
+    } else {
+      if(!c.decoracion) continue;
+      q = _en ? `What is the garnish of the ${c.nombre}?` : `¿Cuál es la decoración del ${c.nombre}?`;
+      ok = _coTxt(c, 'decoracion'); malas = otros.map(x => _coTxt(x, 'decoracion')).filter(Boolean);
+    }
+    const opciones = [ok];
+    for(const m of malas){ if(opciones.length >= 4) break; if(!opciones.some(o => _djNorm(o) === _djNorm(m))) opciones.push(m); }
+    if(opciones.length < 3) continue;
+    out.push({ q, opciones: _coMezcla(opciones), ok, id: c.id });
+  }
+  return out;
+}
+function _coQuizEmpezar(){
+  const R = _coctelesCarta(); if(!R) return;
+  _coQuiz = { preguntas: _coPreguntas(R, 8), i: 0, aciertos: 0, elegida: null };
+  renderCocteles(); window.scrollTo(0, 0);
+}
+function _coQuizResponder(k){
+  const z = _coQuiz; if(!z || z.elegida !== null) return;
+  z.elegida = k;
+  if(z.preguntas[z.i].opciones[k] === z.preguntas[z.i].ok) z.aciertos++;
+  renderCocteles();
+}
+function _coQuizSiguiente(){ const z = _coQuiz; if(!z) return; z.i++; z.elegida = null; renderCocteles(); window.scrollTo(0, 0); }
+function _coQuizSalir(){ _coQuiz = null; renderCocteles(); window.scrollTo(0, 0); }
+function _coQuizHTML(){
+  const _en = LANG === 'en', z = _coQuiz, n = z.preguntas.length;
+  if(z.i >= n){
+    const R = _coctelesCarta();
+    return `<div class="sup-wrap co-wrap"><div class="sup-hero"><div class="sup-hero-title">${z.aciertos} / ${n}</div>
+      <div class="sup-hero-sub">${z.aciertos >= Math.ceil(n * 0.8) ? (_en ? 'Well done.' : 'Bien hecho.') : (_en ? 'Open the cocktails you missed and try again.' : 'Abre los cócteles que fallaste y vuelve a intentarlo.')}</div></div>
+      <button type="button" class="ri-cta co-practicar" onclick="_coQuizEmpezar()"><span class="ri-cta-text"><span class="ri-cta-top">${_en ? 'Another round' : 'Otra ronda'}</span></span></button>
+      <button type="button" class="mom-claves-link" onclick="_coQuizSalir()">${_en ? 'Back to the cocktails' : 'Volver a los cócteles'}</button>
+      ${R ? '' : ''}</div>`;
+  }
+  const p = z.preguntas[z.i];
+  const ops = p.opciones.map((o, k) => {
+    let cls = 'co-op';
+    if(z.elegida !== null){ if(o === p.ok) cls += ' co-op-ok'; else if(k === z.elegida) cls += ' co-op-mal'; }
+    return `<button type="button" class="${cls}" ${z.elegida !== null ? 'disabled' : ''} onclick="_coQuizResponder(${k})">${escapeHTML(o)}</button>`;
+  }).join('');
+  return `<div class="sup-wrap co-wrap">
+    <div class="co-quiz-top"><span>${z.i + 1} / ${n}</span><button type="button" class="pase-x" onclick="_coQuizSalir()" aria-label="${_en ? 'Close' : 'Cerrar'}">✕</button></div>
+    <h3 class="co-quiz-q">${escapeHTML(p.q)}</h3>
+    <div class="co-ops">${ops}</div>
+    ${z.elegida !== null ? `<button type="button" class="ri-cta co-practicar" onclick="_coQuizSiguiente()"><span class="ri-cta-text"><span class="ri-cta-top">${z.i + 1 < n ? (_en ? 'Next' : 'Siguiente') : (_en ? 'See result' : 'Ver resultado')}</span></span></button>` : ''}
+  </div>`;
+}
+
 function _sushiGuia(){
   return (typeof _cartaMeta !== 'undefined' && _cartaMeta && _cartaMeta.SUSHI) || null;
 }
