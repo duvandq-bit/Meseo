@@ -12056,3 +12056,16 @@ html[data-venue="demo"] .ri-cta-mom{background:linear-gradient(140deg,#3b5a63 0%
 .co-conm button{flex:1;min-height:44px;border:0;border-radius:9px;background:transparent;color:var(--parch2);font:inherit;font-weight:600;cursor:pointer;touch-action:manipulation}
 .co-conm button.on{background:var(--gold);color:#fff}
 .co-op-mal{border-color:#b0432b;background:rgba(176,67,43,.10)}
+
+/* Ficha de sala del vino de carta (frase, servicio, momento, alternativas) */
+.vs-sala{display:flex;flex-direction:column;gap:.7rem;margin-bottom:1.2rem}
+.vs-frase{padding:.9rem 1rem;border-radius:12px;border:1px solid rgba(196,154,60,.35);background:rgba(196,154,60,.06)}
+.vs-frase p{margin:.35rem 0 0;font-family:var(--font-serif);font-size:var(--fs-4);line-height:1.45;color:var(--parchment)}
+.vs-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(96px,1fr));gap:.5rem}
+.vs-celda,.vs-momento{padding:.55rem .7rem;border-radius:10px;background:rgba(196,154,60,.04);border:1px solid rgba(196,154,60,.12)}
+.vs-lab{font-family:var(--font-mono);font-size:var(--fs-1);letter-spacing:.06em;text-transform:uppercase;color:var(--parch4);margin-bottom:.25rem}
+.vs-val{font-family:var(--font-sans);font-size:var(--fs-3);line-height:1.45;color:var(--parch2)}
+.vs-alts{display:flex;flex-direction:column;gap:.45rem}
+.vs-alt{display:flex;flex-direction:column;align-items:flex-start;gap:.15rem;min-height:52px;width:100%;padding:.6rem .8rem;border-radius:10px;border:1px solid rgba(196,154,60,.25);background:transparent;color:var(--parchment);font:inherit;text-align:left;cursor:pointer;touch-action:manipulation}
+.vs-alt-n{font-family:var(--font-serif);font-size:var(--fs-3)}
+.vs-alt-p{font-size:var(--fs-2);color:var(--parch3);line-height:1.35}
