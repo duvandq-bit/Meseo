@@ -1,6 +1,172 @@
 {
- "updated": "2026-11-19T23:36:09.444Z",
+ "updated": "2026-11-20T14:05:15.493Z",
  "items": [
+  {
+   "t": "T de Oro de Navarra para el restaurante del Hotel Boutique Mirador de Deyo",
+   "u": "https://navarracapital.es/la-revista-tapas-otorga-la-t-de-oro-2026-de-navarra-al-restaurante-del-hotel-boutique-mirador-de-deyo/",
+   "s": "Navarra Capital",
+   "d": "2026-11-20T12:02:00.000Z",
+   "tags": [
+    "MICHELIN"
+   ]
+  },
+  {
+   "t": "Santa Cruz de Tenerife ya tiene su tradicional alumbrado navideño",
+   "u": "https://www.eldiario.es/canariasahora/tenerifeahora/sociedad/santa-cruz-tenerife-tradicional-alumbrado-navideno_1_13680044.html",
+   "s": "elDiario.es",
+   "d": "2026-11-20T11:39:37.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://static.eldiario.es/clip/6a98ab81-26e0-4c27-94f8-77fc2430e797_facebook-aspect-ratio-1200-675_default_0.jpg"
+  },
+  {
+   "t": "Dejó Santiago, encontró su vocación en Málaga y sueña con llevar sus conocimientos a Argentina",
+   "u": "https://www.radiolv11.com.ar/noticia/dejo-santiago-encontro-su-vocacion-en-malaga-y-suena-con-llevar-sus-conocimientos-a-argentina",
+   "s": "Radio LV11",
+   "d": "2026-11-20T10:36:00.000Z",
+   "tags": [
+    "MICHELIN"
+   ],
+   "img": "https://dlianyzkmsgbdsswemsh.supabase.co/storage/v1/object/public/uploads/news/1795171041560_Captura_de_pantalla_2026-11-20_073648.webp"
+  },
+  {
+   "t": "Receta de potaje santo de Agüimes, el homenaje de Karlos Arguiñano a las Palmas de Gran Canaria",
+   "u": "https://www.antena3.com/videos/potaje-canario-karlos-arguinano-combatir-frio-guiso-garbanzos-ingrediente-sorprendente_202611206b001df6ff6fec292196a8ed.html",
+   "s": "Antena 3",
+   "d": "2026-11-20T10:16:22.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://fotografias.antena3.com/clipping/cmsimages02/2026/11/19/5123B653-85CC-45BA-B193-22951FB1C276/receta-potaje-santo-aguimes-homenaje-karlos-arguinano-palmas-gran-canaria_97.jpg?crop=191:100&width=1600&height=838&optimize=low&format=webply"
+  },
+  {
+   "t": "Arona Shopping Day convirtió la Milla de Oro en un encuentro del comercio, la música y la gastronomía",
+   "u": "https://theshowroommag.com/arona-shopping-day-convirtio-la-milla-de-oro-en-un-encuentro-del-comercio-la-musica-y-la-gastronomia/",
+   "s": "The Showroom Mag",
+   "d": "2026-11-20T09:51:35.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://theshowroommag.com/wp-content/uploads/2026/11/Captura-de-Pantalla-2026-11-20-a-las-9.36.36.png"
+  },
+  {
+   "t": "Premios Agrocanarias 2026: 165 galardones a la excelencia",
+   "u": "https://www.canariasenpleno.com/premios-agrocanarias-2026/",
+   "s": "Canarias en Pleno",
+   "d": "2026-11-20T09:48:32.000Z",
+   "tags": [
+    "VINO",
+    "CANARIAS"
+   ]
+  },
+  {
+   "t": "Netflix estrena Génesis, serie sobre Ferran Adrià y la gastronomía",
+   "u": "https://vivirediciones.es/netflix-estrena-genesis-ferran-adria/",
+   "s": "vivirEdiciones",
+   "d": "2026-11-20T08:48:07.000Z",
+   "tags": [
+    "ALTA COCINA"
+   ],
+   "img": "https://media.vivirediciones.es/2026/11/netflix-estrena-genesis-ferran-adria-1795164124319.jpg"
+  },
+  {
+   "t": "Premios Agrocanarias 2026: 165 galardones",
+   "u": "https://www.canariasdiario.com/noticia/153015/canarias/agrocanarias-2026-entrega-165-premios-a-productos-del-archipielago.html",
+   "s": "Canariasdiario.com",
+   "d": "2026-11-20T08:20:22.000Z",
+   "tags": [
+    "VINO",
+    "CANARIAS"
+   ]
+  },
+  {
+   "t": "El restaurante italiano de Tenerife a pocos pasos de la playa donde elaboran su propia pasta fresca: cocina casera y vistas al mar",
+   "u": "https://www.eldia.es/tenerife/2026/11/20/restaurante-italiano-tenerife-pasos-playa-pasta-fresca-dv-136637173.html",
+   "s": "Eldía",
+   "d": "2026-11-20T08:15:47.000Z",
+   "tags": [
+    "CANARIAS"
+   ]
+  },
+  {
+   "t": "Una chef recomendada por la Guía Michelin sentencia cómo debe ser una milanesa: \"Las finitas solo saben a fritura y pan rallado; tienen que ser gruesas y rosadas en el centro\"",
+   "u": "https://www.vozpopuli.com/amp/gastropoli/una-chef-recomendada-por-la-guia-michelin-sentencia-como-debe-ser-una-milanesa-las-finitas-solo-saben-a-fritura-y-pan-rallado-tienen-que-ser-gruesas-y-rosadas-en-el-centro.html",
+   "s": "Vozpopuli",
+   "d": "2026-11-20T07:30:00.000Z",
+   "tags": [
+    "MICHELIN"
+   ],
+   "img": "https://cdn.vozpopuli.com/cdn/posts/4242603/lis-ra-creadora-na-num-fatale-2904064-1200-700.jpg"
+  },
+  {
+   "t": "Burger Fest Canarias Santa Cruz - Noviembre 2026",
+   "u": "https://lagenda.org/programacion/burger-fest-canarias-santa-cruz-noviembre-2026-tenerife-gastro-musica-44667",
+   "s": "Lagenda",
+   "d": "2026-11-20T06:40:29.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://s3-eu-west-1.amazonaws.com/beta.lagenda/programacion/burgerfestcanarias.jpg"
+  },
+  {
+   "t": "GastroTanque Rural: charlas especializadas, feria del vino y catas en El Tanque",
+   "u": "https://www.teneriffa-news.com/es/agenda/agenda-tenerife/gastrotanque-rural-charlas-especializadas-feria",
+   "s": "Teneriffa News",
+   "d": "2026-11-20T05:55:45.000Z",
+   "tags": [
+    "VINO",
+    "CANARIAS"
+   ]
+  },
+  {
+   "t": "La Gala Michelin 2027 pone el foco en el talento gastronómico de Huesca",
+   "u": "https://www.elperiodicodearagon.com/aragon/2026/11/20/gala-michelin-2027-pone-foco-bc-136530335.amp.html",
+   "s": "El Periódico de Aragón",
+   "d": "2026-11-20T04:30:10.000Z",
+   "tags": [
+    "MICHELIN"
+   ]
+  },
+  {
+   "t": "Los 12 mejores bares de Puerto del Carmen",
+   "u": "https://www.teneriffa-news.com/es/restaurante/lanzarote/puerto-del-carmen/bares",
+   "s": "Teneriffa News",
+   "d": "2026-11-20T04:22:55.000Z",
+   "tags": [
+    "CANARIAS"
+   ]
+  },
+  {
+   "t": "El bar de Bilbao elegido por la Guía Michelin como uno de los mejores para ir de tapas de España",
+   "u": "https://www.elcorreo.com/jantour/restaurantes/cuatro-bares-vascos-bilbao-elegidos-guia-michelin-20261119010609-nt.html",
+   "s": "El Correo",
+   "d": "2026-11-20T00:06:09.000Z",
+   "tags": [
+    "MICHELIN"
+   ],
+   "img": "https://s1.ppllstatics.com/elcorreo/www/multimedia/jantour/2026/11/19/las-lias-bilbao-kMTE-U40427254470E5H-1200x840@El%20Correo.jpg"
+  },
+  {
+   "t": "Sánchez admite errores en corrupción pero defiende que deja la mejor España \"en décadas\"",
+   "u": "https://www.diariovasco.com/politica/snchez-admite-errores-corrupcin-defiende-deja-mejor-20261119225547-vi_amp.html",
+   "s": "El Diario Vasco",
+   "d": "2026-11-19T22:55:47.000Z",
+   "tags": [
+    "MICHELIN"
+   ],
+   "img": "https://s1.ppllstatics.com/diariovasco/www/multimedia/202611/19/media/cortadas/snchez-admite-errores-corrupcin-defiende-deja-mejor-20261119225547-vi.jpg"
+  },
+  {
+   "t": "Ayuso llama a votar al PP desde Barcelona: \"España tiene que decidir si se suicida\"",
+   "u": "https://www.diariovasco.com/politica/ayuso-llama-votar-barcelona-espaa-decidir-suicida-20261119204505-vi_amp.html",
+   "s": "El Diario Vasco",
+   "d": "2026-11-19T20:45:05.000Z",
+   "tags": [
+    "MICHELIN"
+   ],
+   "img": "https://s1.ppllstatics.com/diariovasco/www/multimedia/202611/19/media/cortadas/ayuso-llama-votar-barcelona-espaa-decidir-suicida-20261119204505-vi.jpg"
+  },
   {
    "t": "Gipuzkoa adelanta a Madrid y Barcelona: tiene los mejores bares de tapas de España",
    "u": "https://www.que.es/2026/11/19/mejores-bares-tapas-gipuzkoa-michelin/",
@@ -27,7 +193,8 @@
    "d": "2026-11-19T18:29:07.000Z",
    "tags": [
     "ALTA COCINA"
-   ]
+   ],
+   "img": "https://img.asmedia.epimg.net/resizer/v2/CWZ2NMX6P5DLPJHV4OGNWML2RE.jpg?auth=9309cda47d1d55c0c981dea8d012c2d8130294d44971aecc248812d952bf1b6b&width=1472&height=828&smart=true"
   },
   {
    "t": "Cayman Cookout 2027 volverá con cuatro días de alta cocina frente al Caribe",
@@ -75,8 +242,7 @@
    "tags": [
     "CANARIAS",
     "VINO"
-   ],
-   "img": "https://www.teneriffa-news.com/media/termine/tarde-de-castanas-suessigkeiten-und-weine-2026-1200x628-cropped.webp"
+   ]
   },
   {
    "t": "Tapas con castañas: fiesta gastronómica en La Orotava",
@@ -90,16 +256,6 @@
   {
    "t": "«Noche en Tinto»: cata de vinos de la nueva cosecha en La Laguna",
    "u": "https://www.teneriffa-news.com/es/agenda/agenda-tenerife/noche-tinto-cata-vinos-nueva",
-   "s": "Teneriffa News",
-   "d": "2026-11-19T17:35:39.000Z",
-   "tags": [
-    "VINO",
-    "CANARIAS"
-   ]
-  },
-  {
-   "t": "Cata de vinos con Tierra Fundida y MRB en La Laguna",
-   "u": "https://www.teneriffa-news.com/es/agenda/agenda-tenerife/cata-vinos-tierra-fundida-mrb",
    "s": "Teneriffa News",
    "d": "2026-11-19T17:35:39.000Z",
    "tags": [
@@ -128,167 +284,10 @@
    ]
   },
   {
-   "t": "Neftalí Luis, el chef de Icod de los Vinos que triunfa en Luxemburgo",
-   "u": "https://www.eldia.es/canarias/2026/11/19/neftali-luis-chef-icod-vinos-luxemburgo-136619227.html",
-   "s": "Eldía",
-   "d": "2026-11-19T14:21:09.000Z",
-   "tags": [
-    "CANARIAS",
-    "VINO"
-   ]
-  },
-  {
    "t": "Neftalí Luis pone el talento canario en las exclusivas mesas de Luxemburgo",
    "u": "https://www.laprovincia.es/canarias/2026/11/19/neftali-luis-pone-talento-canario-luxemburgo-136617341.html",
    "s": "La Provincia",
    "d": "2026-11-19T14:16:55.000Z",
-   "tags": [
-    "CANARIAS"
-   ]
-  },
-  {
-   "t": "El restaurante de carretera definitivo está en este pueblo medieval de Madrid: Martín Berasategui confiesa su secreto mejor guardado",
-   "u": "https://www.noticiasdelvino.com/escapadas/2026/11/19/el-restaurante-de-carretera-definitivo-esta-en-este-pueblo-medieval-de-madrid-martin-berasategui-confiesa-su-secreto-mejor-guardado-74843/",
-   "s": "Noticias del Vino",
-   "d": "2026-11-19T14:08:03.000Z",
-   "tags": [
-    "CHEF"
-   ],
-   "img": "https://www.noticiasdelvino.com/wp-content/uploads/image-583.png.webp"
-  },
-  {
-   "t": "Cada vez menos papas de Canarias en los mercados mientras las importadas ganan terreno",
-   "u": "https://www.eldiario.es/canariasahora/eldiario-agricola/agricultura/vez-papas-canarias-mercados-importadas-ganan-terreno_1_13677488.html",
-   "s": "elDiario.es",
-   "d": "2026-11-19T14:05:24.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://static.eldiario.es/clip/2c6ea9d7-40e2-44a7-9082-5376094f598f_facebook-aspect-ratio-1200-675_default_0.jpg"
-  },
-  {
-   "t": "La Guía Michelin dicta sentencia sobre el tapeo en España: Gipuzkoa supera a Madrid y Barcelona como única provincia con tres bares seleccionados",
-   "u": "https://www.diariovasco.com/gipuzkoa/guia-michelin-dicta-sentencia-sobre-tapeo-espana-20261119123538-nt.html",
-   "s": "El Diario Vasco",
-   "d": "2026-11-19T11:35:39.000Z",
-   "tags": [
-    "MICHELIN"
-   ],
-   "img": "https://s1.ppllstatics.com/diariovasco/www/multimedia/local/2026/11/19/bergara-gros-kl2G-U404287530864YD-1200x840@Diario%20Vasco.jpg"
-  },
-  {
-   "t": "Gastronomía, artesanía, producto local y cocina de primer nivel en el Mercado Navideño GastroIngenio 2026",
-   "u": "https://www.digitalfarocanarias.com/index.php/2026/11/19/gastronomia-artesania-producto-local-y-cocina-de-primer-nivel-en-el-mercado-navideno-gastroingenio-2026/",
-   "s": "Digital Faro Canarias",
-   "d": "2026-11-19T11:01:18.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://www.digitalfarocanarias.com/wp-content/uploads/2026/11/PROGRAMA-GASTROINGENIO.jpeg"
-  },
-  {
-   "t": "Vino de Gran Canaria: expertos analizan su futuro el 26-N",
-   "u": "https://www.canariasenpleno.com/futuro-vino-gran-canaria/",
-   "s": "Canarias en Pleno",
-   "d": "2026-11-19T09:45:00.000Z",
-   "tags": [
-    "VINO",
-    "CANARIAS"
-   ]
-  },
-  {
-   "t": "Huesca llevará a la Gala Michelin una gastronomía que también brilla desde sus pequeños pueblos",
-   "u": "https://www.desdemonegros.com/huesca-llevara-a-la-gala-michelin-una-gastronomia-que-tambien-brilla-desde-sus-pequenos-pueblos/",
-   "s": "Desdemonegros",
-   "d": "2026-11-19T09:29:36.000Z",
-   "tags": [
-    "MICHELIN"
-   ],
-   "img": "https://www.desdemonegros.com/wp-content/uploads/2026/11/IMAGEN-CONTENIDO-PATROCINADO-2.jpg"
-  },
-  {
-   "t": "El nuevo restaurante de Tenerife para disfrutar a pie de playa: cocina casera y una carta que adapta sus platos a la demanda de la zona",
-   "u": "https://www.eldia.es/tenerife/2026/11/19/nuevo-restaurante-tenerife-disfrutar-pie-playa-dv-136603445.html",
-   "s": "Eldía",
-   "d": "2026-11-19T08:42:41.000Z",
-   "tags": [
-    "CANARIAS"
-   ]
-  },
-  {
-   "t": "Burger Fest Canarias Santa Cruz - Noviembre 2026",
-   "u": "https://lagenda.org/programacion/burger-fest-canarias-santa-cruz-noviembre-2026-tenerife-gastro-musica-44667",
-   "s": "Lagenda",
-   "d": "2026-11-19T07:17:06.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://s3-eu-west-1.amazonaws.com/beta.lagenda/programacion/burgerfestcanarias.jpg"
-  },
-  {
-   "t": "SANTA CRUZ | GastroNavidad llenará de música y gastronomía navideña la plaza de España",
-   "u": "https://www.elblogoferoz.com/2026/11/19/santa-cruz-gastronavidad-llenara-de-musica-y-gastronomia-navidena-la-plaza-de-espana/",
-   "s": "Elblogoferoz",
-   "d": "2026-11-19T06:05:53.000Z",
-   "tags": [
-    "CANARIAS"
-   ]
-  },
-  {
-   "t": "Fashion & Friends 2026: tres días de moda, diseño, gastronomía y música con 75 marcas en Gran Canaria",
-   "u": "https://theshowroommag.com/fashion-friends-2026-tres-dias-de-moda-diseno-gastronomia-y-musica-con-75-marcas-en-gran-canaria/",
-   "s": "The Showroom Mag",
-   "d": "2026-11-19T01:05:09.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://theshowroommag.com/wp-content/uploads/2026/10/1-11.jpg"
-  },
-  {
-   "t": "BurgerFest vuelve a Santa Cruz de Tenerife: tres días de hamburguesas, música y entrada gratis",
-   "u": "https://diariodeavisos.elespanol.com/2026/11/burgerfest-santa-cruz-2026/",
-   "s": "Diario de Avisos",
-   "d": "2026-11-18T19:52:57.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://cdn.diariodeavisos.com/wp-content/uploads/2026/09/burger-fest.jpg"
-  },
-  {
-   "t": "Huesca, una provincia que brilla desde sus fogones",
-   "u": "https://www.pirinews.es/huesca-una-provincia-que-brilla-desde-sus-fogones/",
-   "s": "Pirinews",
-   "d": "2026-11-18T18:53:14.000Z",
-   "tags": [
-    "MICHELIN"
-   ],
-   "img": "https://www.pirinews.es/wp-content/uploads/2026/11/IMAGEN-CONTENIDO-PATROCINADO-1-scaled.jpg"
-  },
-  {
-   "t": "Ingenio reúne gastronomía, artesanía y producto local en su mercado navideño",
-   "u": "https://www.canarias7.es/canarias/gran-canaria/ingenio-reune-gastronomia-artesania-producto-local-mercado-20261118180220-nt_amp.html",
-   "s": "Canarias7",
-   "d": "2026-11-18T18:02:21.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://s2.ppllstatics.com/canarias7/www/multimedia/local/2026/11/18/Parque-Nestor-Alamo.jpg"
-  },
-  {
-   "t": "Jordi Cruz, chef y jurado de Masterchef España, sobre cómo cocinar las verduras: \"Cada alimento trae escrita su propia lógica, solo hay que aprender a leerla\"",
-   "u": "https://www.clarin.com/internacional/jordi-cruz-chef-jurado-masterchef-espana-cocinar-verduras-alimento-trae-escrita-propia-logica-solo-aprender-leerla_0_GLKc10Znra.html",
-   "s": "Clarin.com",
-   "d": "2026-11-18T18:00:00.000Z",
-   "tags": [
-    "ALTA COCINA"
-   ],
-   "img": "https://www.clarin.com/img/2026/05/13/EOEp7Tcry_2000x1500__1.jpg"
-  },
-  {
-   "t": "BurgerFest Canarias regresa a Santa Cruz con tres jornadas de música y gastronomía",
-   "u": "https://www.eldia.es/santa-cruz-de-tenerife/2026/11/18/burgerfest-canarias-regresa-santa-cruz-136584884.html",
-   "s": "Eldía",
-   "d": "2026-11-18T16:24:10.000Z",
    "tags": [
     "CANARIAS"
    ]
