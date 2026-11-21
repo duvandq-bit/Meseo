@@ -12070,3 +12070,8 @@ html[data-venue="demo"] .ri-cta-mom{background:linear-gradient(140deg,#3b5a63 0%
 .vs-alt{display:flex;flex-direction:column;align-items:flex-start;gap:.15rem;min-height:52px;width:100%;padding:.6rem .8rem;border-radius:10px;border:1px solid rgba(196,154,60,.25);background:transparent;color:var(--parchment);font:inherit;text-align:left;cursor:pointer;touch-action:manipulation}
 .vs-alt-n{font-family:var(--font-serif);font-size:var(--fs-3)}
 .vs-alt-p{font-size:var(--fs-2);color:var(--parch3);line-height:1.35}
+
+/* Selector de maridaje del menú degustación (canario, español, internacional, sake) */
+.mar-rec{display:flex;flex-wrap:wrap;gap:.4rem;margin:.2rem 0 .8rem}
+.mar-rec button{min-height:44px;padding:.45rem .9rem;border-radius:999px;border:1px solid rgba(196,154,60,.35);background:transparent;color:var(--parch2);font:inherit;font-size:var(--fs-2);font-weight:600;cursor:pointer;touch-action:manipulation}
+.mar-rec button.on{background:var(--gold);border-color:var(--gold);color:#fff}

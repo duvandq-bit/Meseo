@@ -54,7 +54,7 @@
 <meta property="og:description" content="Formación de equipos de sala: carta, alérgenos, vinos, exámenes y juegos de repaso.">
 <meta property="og:url" content="https://meseo.es/">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"Meseo","url":"https://meseo.es/"}</script>
-<meta name="app-version" content="7.551">
+<meta name="app-version" content="7.552">
 <meta name="app-build" content="May 2026">
 <meta name="theme-color" content="#1c2a22">
 <!-- ═══ PWA ═══ -->
@@ -2405,7 +2405,11 @@ async function hayCartaDeVinos(){
 //   MARIDAJES: { degustacion: [ {pase_id, vino_id, porque, porque_en,
 //                                alternativa?:{tipo, vino_id, porque, porque_en}} ],
 //                platos: { <dish_id>: { copa:{vino_id, porque, porque_en},
-//                                       botella:{…} } } }
+//                                       botella:{…} } },
+//                recorridos?: [ {id, nombre, nombre_en, intro?, intro_en?,
+//                                pases:[ {pase_id, vino_id, porque, porque_en} ]} ] }
+//   (recorridos: varios maridajes del menú degustación, p. ej. canario,
+//    español, internacional y sake; el equipo elige cuál ver)
 // Si la carta trae VINOS, WINES sale de ahí y no se pide ningún archivo; si no,
 // todo sigue como antes (Txoko por archivo; los demás, sin bodega). Los
 // `pairings` de cada vino (los usan los juegos y la ficha) se derivan de
@@ -2417,8 +2421,22 @@ function _maridajesValidos(raw, porId, dishes){
   const ok = x => !!(x && porId.has(Number(x.vino_id)));
   const limpio = x => ({ vino_id: Number(x.vino_id), porque: String(x.porque || ''),
     porque_en: String(x.porque_en || x.porque || ''), revisar: x.revisar !== false });
-  const out = { degustacion: [], platos: {} };
+  const out = { degustacion: [], platos: {}, recorridos: [] };
   if(!raw || typeof raw !== 'object') return out;
+  const vistosRec = new Set();
+  for(const r of (Array.isArray(raw.recorridos) ? raw.recorridos : []).slice(0, 6)){
+    if(!r || typeof r.id !== 'string' || !/^[a-z_]{1,20}$/.test(r.id) || vistosRec.has(r.id)) continue;
+    if(typeof r.nombre !== 'string' || !r.nombre.trim()) continue;
+    const pases = [];
+    for(const p of (Array.isArray(r.pases) ? r.pases : [])){
+      if(!p || !ids.has(Number(p.pase_id)) || !ok(p)) continue;
+      pases.push(Object.assign({ pase_id: Number(p.pase_id) }, limpio(p)));
+    }
+    if(!pases.length) continue;
+    vistosRec.add(r.id);
+    out.recorridos.push({ id: r.id, nombre: r.nombre.trim().slice(0, 40), nombre_en: String(r.nombre_en || r.nombre).trim().slice(0, 40),
+      intro: String(r.intro || '').slice(0, 300), intro_en: String(r.intro_en || r.intro || '').slice(0, 300), pases });
+  }
   for(const p of (Array.isArray(raw.degustacion) ? raw.degustacion : [])){
     if(!p || !ids.has(Number(p.pase_id)) || !ok(p)) continue;
     const e = Object.assign({ pase_id: Number(p.pase_id) }, limpio(p));
@@ -2454,6 +2472,7 @@ function _vinosDeCarta(c, dishes){
     for(const t of ['copa','botella']) if(p[t]) unir(p[t].vino_id, Number(k));
   }
   for(const p of maridajes.degustacion){ unir(p.vino_id, p.pase_id); if(p.alternativa) unir(p.alternativa.vino_id, p.pase_id); }
+  for(const r of maridajes.recorridos) for(const p of r.pases) unir(p.vino_id, p.pase_id);
   const secciones = Array.isArray(c.VINOS_SECCIONES)
     ? c.VINOS_SECCIONES.filter(s => s && typeof s.nombre === 'string' && s.nombre.trim()).map(s => ({ nombre: s.nombre, tipo: s.tipo || null }))
     : null;
@@ -2472,8 +2491,35 @@ function _marVino(id){ return _cartaVinos ? (_cartaVinos.lista.find(w => w.id ==
 function _marPlato(dishId){ return (_vinosSonDeCarta() && _cartaVinos.maridajes.platos[dishId]) || null; }
 // El del pase del menú degustación; si el pase no tiene uno propio, el de
 // copa de su plato.
+// Recorridos (varios maridajes del menú): el elegido, o el primero. Se
+// recuerda en este móvil; si el almacenamiento falla, vale el primero.
+let _marRecSel = null;
+try{ _marRecSel = localStorage.getItem('meseo_mar_rec') || null; }catch(e){ _marRecSel = null; }
+function _marRecorridos(){
+  return (_vinosSonDeCarta() && Array.isArray(_cartaVinos.maridajes.recorridos)) ? _cartaVinos.maridajes.recorridos : [];
+}
+function _marRecorrido(){
+  const rs = _marRecorridos();
+  if(!rs.length) return null;
+  return rs.find(r => r.id === _marRecSel) || rs[0];
+}
+function _marRecElegir(id){
+  if(!_marRecorridos().some(r => r.id === id)) return;
+  _marRecSel = id;
+  try{ localStorage.setItem('meseo_mar_rec', id); }catch(e){}
+  if(typeof renderDegustacion === 'function') renderDegustacion();
+}
+function _marRecSelectorHTML(){
+  const rs = _marRecorridos();
+  if(rs.length < 2) return '';
+  const _en = LANG==='en', sel = _marRecorrido();
+  return `<div class="mar-rec" role="group" aria-label="${_en ? 'Choose the pairing' : 'Elige el maridaje'}">${rs.map(r =>
+    `<button type="button" class="${r === sel ? 'on' : ''}" aria-pressed="${r === sel}" onclick="_marRecElegir('${r.id}')">${escapeHTML(_en ? r.nombre_en : r.nombre)}</button>`).join('')}</div>`;
+}
 function _marPase(dishId){
   if(!_vinosSonDeCarta()) return null;
+  const rec = _marRecorrido();
+  if(rec) return rec.pases.find(x => x.pase_id === dishId) || null;
   const p = _cartaVinos.maridajes.degustacion.find(x => x.pase_id === dishId);
   if(p) return p;
   const pl = _marPlato(dishId);
@@ -2534,6 +2580,7 @@ function _marPorqueDe(w, nombrePlato){
   const pl = m.platos[d.id];
   if(pl){ if(pl.copa) cand.push(pl.copa); if(pl.botella) cand.push(pl.botella); }
   for(const p of m.degustacion) if(p.pase_id === d.id){ cand.push(p); if(p.alternativa) cand.push(p.alternativa); }
+  for(const r of (m.recorridos || [])) for(const p of r.pases) if(p.pase_id === d.id) cand.push(p);
   const x = cand.find(c => c.vino_id === w.id);
   return x ? _marPorque(x) : '';
 }
@@ -3192,7 +3239,7 @@ const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><p
 const SRC = 'src';
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='7.551';  // sincronizada con sw.js VERSION (guard de CI)
+const APP_VERSION='7.552';  // sincronizada con sw.js VERSION (guard de CI)
 const APP_BUILD='Jul 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;
@@ -17437,7 +17484,9 @@ function _degMaridajePaseHTML(id){
   if(!x) return '';
   const _en = LANG==='en';
   const alt = x.alternativa ? _marLineaHTML(x.alternativa, _marAltRotulo(x.alternativa.tipo, _en)) : '';
-  return `<div class="card mar-ficha mar-pase">${_marLineaHTML(x)}${alt}</div>`;
+  const rec = _marRecorrido();
+  const rot = rec ? `${_en ? 'Pairing' : 'Maridaje'} ${_en ? rec.nombre_en : rec.nombre}` : null;
+  return `<div class="card mar-ficha mar-pase">${_marRecSelectorHTML()}${_marLineaHTML(x, rot)}${alt}</div>`;
 }
 function _degMaridajeViajeHTML(){
   if(!DEGUSTACION || typeof _marPase !== 'function') return '';
@@ -17458,10 +17507,11 @@ function _degMaridajeViajeHTML(){
       </div>
     </li>`;
   }).filter(Boolean);
-  if(!filas.length) return '';
+  if(!filas.length && _marRecorridos().length < 2) return '';
   return `<section class="mar-viaje" aria-label="${_en ? 'Wine pairing, course by course' : 'Maridaje pase a pase'}">
     <h3 class="deg-h3">${_en ? 'Wine pairing, course by course' : 'Maridaje pase a pase'}</h3>
-    <p class="mar-intro">${_en ? 'Wines served by the glass, so the pairing can be offered to the whole table.' : 'Vinos que se sirven por copa, para poder ofrecer el maridaje a toda la mesa.'}</p>
+    ${_marRecSelectorHTML()}
+    <p class="mar-intro">${(() => { const r = _marRecorrido(); const t = r ? (_en ? r.intro_en : r.intro) : ''; return escapeHTML(t || (_en ? 'Wines served by the glass, so the pairing can be offered to the whole table.' : 'Vinos que se sirven por copa, para poder ofrecer el maridaje a toda la mesa.')); })()}</p>
     <ol class="mar-lista">${filas.join('')}</ol>
   </section>`;
 }
