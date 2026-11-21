@@ -1,6 +1,47 @@
 {
- "updated": "2026-11-21T13:30:53.695Z",
+ "updated": "2026-11-21T22:11:53.026Z",
  "items": [
+  {
+   "t": "Truchas de batata: historia del dulce tradicional de Navidad en Canarias",
+   "u": "https://diariodeavisos.elespanol.com/2026/11/truchas-de-batata-navidad-canarias-historia/",
+   "s": "Diario de Avisos",
+   "d": "2026-11-21T19:51:37.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://cdn.diariodeavisos.com/wp-content/uploads/2026/11/cats-10.jpg"
+  },
+  {
+   "t": "Los chefs oscenses con estrella Michelin: \"La Gala de la Guía Michelin en Huesca marcará un antes y un después\"",
+   "u": "https://www.aragonplay.es/aragonnoticias/huesca/chefs-oscenses-estrella-michelin-gala-guia-michelin-huesca-marcara.html",
+   "s": "Aragón Play",
+   "d": "2026-11-21T18:47:55.000Z",
+   "tags": [
+    "MICHELIN"
+   ],
+   "img": "https://imagenes.aragonplay.es/files/og_thumbnail/uploads/2026/11/21/6b01e67e00c68.jpeg"
+  },
+  {
+   "t": "Así es Arguineguín, el pueblo costero de Canarias donde Anabel Pantoja ha encontrado calma y anonimato",
+   "u": "https://www.noticiasdelvino.com/escapadas/2026/11/21/asi-es-arguineguin-el-pueblo-costero-de-canarias-donde-anabel-pantoja-ha-encontrado-calma-y-anonimato-69169/",
+   "s": "Noticias del Vino",
+   "d": "2026-11-21T17:40:04.000Z",
+   "tags": [
+    "VINO",
+    "CANARIAS"
+   ],
+   "img": "https://www.noticiasdelvino.com/wp-content/uploads/Anabel-Pantoja.jpg.webp"
+  },
+  {
+   "t": "El restaurante de carretera definitivo está en este pueblo medieval de Madrid: Martín Berasategui confiesa su secreto mejor guardado",
+   "u": "https://www.noticiasdelvino.com/escapadas/2026/11/21/el-restaurante-de-carretera-definitivo-esta-en-este-pueblo-medieval-de-madrid-martin-berasategui-confiesa-su-secreto-mejor-guardado-74843/",
+   "s": "Noticias del Vino",
+   "d": "2026-11-21T14:07:03.000Z",
+   "tags": [
+    "CHEF"
+   ],
+   "img": "https://www.noticiasdelvino.com/wp-content/uploads/image-583.png.webp"
+  },
   {
    "t": "Zoco, cocina árabe con la firma de Samuel Hernández",
    "u": "https://www.canarias7.es/gastronomia-c7/restaurantes/zoco-cocina-arabe-firma-samuel-hernandez-20261121140000-nt.html",
@@ -68,21 +109,11 @@
    "t": "‘De la viña a la pista’ - Abailar 2026",
    "u": "https://lagenda.org/programacion/de-la-vina-la-pista-abailar-2026-candelaria-tenerife-noviembre-44706",
    "s": "Lagenda",
-   "d": "2026-11-21T09:56:15.000Z",
+   "d": "2026-11-21T10:00:56.000Z",
    "tags": [
     "CANARIAS"
    ],
    "img": "https://s3-eu-west-1.amazonaws.com/beta.lagenda/programacion/abailar-araya-2026.jpg"
-  },
-  {
-   "t": "Lorena Orduna comparte con los chefs Estrella Michelin de Huesca \"la ilusión\" ante una gala que marcará un antes y un después para la ciudad",
-   "u": "https://cadenaser.com/aragon/2026/11/21/lorena-orduna-comparte-con-los-chefs-estrella-michelin-de-huesca-la-ilusion-ante-una-gala-que-marcara-un-antes-y-un-despues-para-la-ciudad-radio-huesca/?outputType",
-   "s": "Cadena SER",
-   "d": "2026-11-21T09:34:21.000Z",
-   "tags": [
-    "MICHELIN"
-   ],
-   "img": "https://cadenaser.com/resizer/v2/VIUWAWONUJG6ZCOPO77HLY336M.jpeg?auth=9c72c8b807ac0b329db89b9d1d6fd138c25546d7f9dd2395181e49e294cfbc4b&quality=70&width=1200&height=675&smart=true"
   },
   {
    "t": "La cena de 950 euros por comensal en la que un mítico burdeos brilla como nunca en Barcelona",
@@ -152,8 +183,7 @@
    "d": "2026-11-20T18:00:00.000Z",
    "tags": [
     "CANARIAS"
-   ],
-   "img": "https://s1.ppllstatics.com/canarias7/www/multimedia/gastronomia-c7/2026/11/20/pulpo-kVSH-U40455747166crG-1200x840@Canarias7.jpg"
+   ]
   },
   {
    "t": "Pica Pica La Favorita, Tapa de Oro en Degusta.me 2026",
@@ -190,7 +220,8 @@
    "d": "2026-11-20T14:51:39.000Z",
    "tags": [
     "CANARIAS"
-   ]
+   ],
+   "img": "https://theshowroommag.com/wp-content/uploads/2026/11/Captura-de-Pantalla-2026-11-20-a-las-9.36.36.png"
   },
   {
    "t": "La ruta gastronómica favorita de Martín Berasategui, con 9 estrellas michelín, se hace por Euskadi: \"El mejor libro de gastronomía vasca lo ha escrito la naturaleza\"",
@@ -201,16 +232,6 @@
     "CHEF"
    ],
    "img": "https://estaticos-cdn.prensaiberica.es/clip/b09d9f3f-5b3b-471c-8e82-c9811645f4a3_16-9-discover-aspect-ratio_default_0_x960y360.jpg"
-  },
-  {
-   "t": "Santa Cruz de Tenerife ya tiene su tradicional alumbrado navideño",
-   "u": "https://www.eldiario.es/canariasahora/tenerifeahora/sociedad/santa-cruz-tenerife-tradicional-alumbrado-navideno_1_13680044.html",
-   "s": "elDiario.es",
-   "d": "2026-11-20T11:39:37.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://static.eldiario.es/clip/6a98ab81-26e0-4c27-94f8-77fc2430e797_facebook-aspect-ratio-1200-675_default_0.jpg"
   },
   {
    "t": "Así aprendiíó de los cocineros franceses el chef Martín Berasategui: \"han sido una lección para todo el mundo\"",
@@ -253,17 +274,6 @@
    ]
   },
   {
-   "t": "Qué ver en Tenerife: del Teide a sus piscinas naturales",
-   "u": "https://www.noticiasdelvino.com/escapadas/2026/11/20/tenerife-75142/",
-   "s": "Noticias del Vino",
-   "d": "2026-11-20T09:07:03.000Z",
-   "tags": [
-    "VINO",
-    "CANARIAS"
-   ],
-   "img": "https://www.noticiasdelvino.com/wp-content/uploads/image-617.png.webp"
-  },
-  {
    "t": "Agrocanarias 2026 entrega 165 premios a productos del Archipiélago",
    "u": "https://www.canariasdiario.com/noticia/153015/canarias/agrocanarias-2026-entrega-165-premios-a-productos-del-archipielago.html",
    "s": "Canariasdiario.com",
@@ -283,24 +293,14 @@
    ]
   },
   {
-   "t": "Una chef recomendada por la Guía Michelin sentencia cómo debe ser una milanesa: \"Las finitas solo saben a fritura y pan rallado; tienen que ser gruesas y rosadas en el centro\"",
-   "u": "https://www.vozpopuli.com/amp/gastropoli/una-chef-recomendada-por-la-guia-michelin-sentencia-como-debe-ser-una-milanesa-las-finitas-solo-saben-a-fritura-y-pan-rallado-tienen-que-ser-gruesas-y-rosadas-en-el-centro.html",
-   "s": "Vozpopuli",
-   "d": "2026-11-20T07:30:00.000Z",
+   "t": "Serenada",
+   "u": "https://lagenda.org/programacion/serenada-festival-poesia-y-musica-noviembre-tenerife-2026-44451",
+   "s": "Lagenda",
+   "d": "2026-11-20T08:00:00.000Z",
    "tags": [
-    "ALTA COCINA",
-    "MICHELIN"
+    "CANARIAS"
    ],
-   "img": "https://cdn.vozpopuli.com/cdn/posts/4242603/lis-ra-creadora-na-num-fatale-2904064-1200-700.jpg"
-  },
-  {
-   "t": "Arranca una nueva etapa del Martín Berasategui Culinary Hub",
-   "u": "https://www.cuina.cat/es/actualidad/noticias/arranca-nueva-etapa-martin-berasategui-culinary-hub_406851_102.html",
-   "s": "Revista CUINA",
-   "d": "2026-11-20T07:00:00.000Z",
-   "tags": [
-    "CHEF"
-   ]
+   "img": "https://s3-eu-west-1.amazonaws.com/beta.lagenda/programacion/serenada-festival.jpg"
   }
  ]
 }
