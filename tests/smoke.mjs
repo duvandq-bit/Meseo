@@ -19761,6 +19761,25 @@ test('LQA: el examen cubre los 80 estándares y la correcta no se delata por lar
 });
 
 console.log('\nCócteles de la carta (nov 2026)');
+test('vino de carta: ficha de sala (frase, servicio, momento, alternativas) sólo con lo que trae la carta', () => {
+  const src = _fnSrc('_vsTxt') + '\n' + _fnSrc('_vinoSalaHTML');
+  const lista = [{ id: 1, name: 'Uno', price: 50 }, { id: 2, name: 'Dos <b>', price: 90 }];
+  const mk = (lang) => new Function('LANG', 'escapeHTML', '_marVino', src + '\nreturn _vinoSalaHTML;')( // eslint-disable-line no-new-func
+    lang, x => String(x).replace(/</g, '&lt;'), id => lista.find(w => w.id === id) || null);
+  const f = mk('es');
+  assert(f({ id: 1 }, false) === '', 'sin datos de sala, nada: no se deduce del texto');
+  const h = f({ id: 1, frase: 'Venda esto', frase_en: 'Sell this', servicio: { temp: '8 °C', copa: 'Tulipa' },
+    momento: 'En su punto', alternativas: [{ id: 2, nota: 'Un paso más' }, { id: 1 }, { id: 99 }] }, false);
+  assert(/Venda esto/.test(h) && /8 °C/.test(h) && /Tulipa/.test(h) && /En su punto/.test(h), 'pinta lo que trae');
+  assert(!/Decantar/.test(h), 'la celda vacía no sale');
+  assert((h.match(/class="vs-alt"/g) || []).length === 1 && /_showWineDetail\(2\)/.test(h) && /Dos &lt;b>/.test(h),
+    'alternativa: sólo otro vino que exista en la carta, nunca él mismo, y escapado');
+  assert(/Sell this/.test(mk('en')({ id: 1, frase: 'Venda', frase_en: 'Sell this' }, true)), 'en inglés usa _en');
+  assert(/deCarta \? _vinoSalaHTML\(w, _en\)/.test(_fnSrc('_showWineDetail')), 'sale en la ficha de vino de carta');
+  const css = readFileSync('styles.css', 'utf8');
+  assert(/\.vs-alt\{[^}]*min-height:52px/.test(css), 'alternativa tocable en móvil');
+});
+
 test('cócteles: viajan en la carta privada, se validan y sólo salen si la carta los trae', () => {
   const V = new Function(_fnSrc('_coctelesValida').replace('function _coctelesValida', 'const _CO_IDS = /^[a-z0-9_-]{1,40}$/;\nreturn function')) (); // eslint-disable-line no-new-func
   assert(V(null) === null && V({}) === null && V({ cocteles: [] }) === null, 'sin datos, nada');

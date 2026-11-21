@@ -54,7 +54,7 @@
 <meta property="og:description" content="Formación de equipos de sala: carta, alérgenos, vinos, exámenes y juegos de repaso.">
 <meta property="og:url" content="https://meseo.es/">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"Meseo","url":"https://meseo.es/"}</script>
-<meta name="app-version" content="7.550">
+<meta name="app-version" content="7.551">
 <meta name="app-build" content="May 2026">
 <meta name="theme-color" content="#1c2a22">
 <!-- ═══ PWA ═══ -->
@@ -3192,7 +3192,7 @@ const CAT_ICONS={'Entrantes':`<svg width="20" height="20" viewBox="0 0 24 24"><p
 const SRC = 'src';
 
 // ═══════ APP VERSION ═══════
-const APP_VERSION='7.550';  // sincronizada con sw.js VERSION (guard de CI)
+const APP_VERSION='7.551';  // sincronizada con sw.js VERSION (guard de CI)
 const APP_BUILD='Jul 2026';
 window.APP_VERSION=APP_VERSION;
 window.APP_BUILD=APP_BUILD;
@@ -25193,6 +25193,40 @@ function _renderSimilarWinesSection(target, _en){
   </div>`;
 }
 
+// ── Ficha de sala de un vino de carta: lo que el sumiller necesita en mesa ──
+// Todo opcional y solo de la carta privada: frase (cómo venderlo en 10 s),
+// servicio {temp, copa, decantar}, momento (dónde está el vino) y
+// alternativas [{id, nota}] (otro de la MISMA carta, más asequible o un paso
+// más). Lo que no venga, no se pinta; nada se deduce del texto.
+function _vsTxt(x, k, _en){
+  if(!x || typeof x !== 'object') return '';
+  const v = _en ? (x[k + '_en'] || x[k]) : x[k];
+  return (typeof v === 'string' && v.trim()) ? v.trim().slice(0, 400) : '';
+}
+function _vinoSalaHTML(w, _en){
+  if(!w || typeof w !== 'object') return '';
+  const frase = _vsTxt(w, 'frase', _en);
+  const sv = (w.servicio && typeof w.servicio === 'object') ? w.servicio : null;
+  const temp = sv ? _vsTxt(sv, 'temp', _en) : '';
+  const copa = sv ? _vsTxt(sv, 'copa', _en) : '';
+  const dec = sv ? _vsTxt(sv, 'decantar', _en) : '';
+  const momento = _vsTxt(w, 'momento', _en);
+  const alts = (Array.isArray(w.alternativas) ? w.alternativas : []).slice(0, 4)
+    .map(a => {
+      const id = a && Number(a.id);
+      const o = Number.isInteger(id) && id !== w.id && (typeof _marVino === 'function') ? _marVino(id) : null;
+      return o ? { o, nota: _vsTxt(a, 'nota', _en) } : null;
+    }).filter(Boolean);
+  if(!frase && !temp && !copa && !dec && !momento && !alts.length) return '';
+  const celda = (lab, val) => val ? `<div class="vs-celda"><div class="vs-lab">${lab}</div><div class="vs-val">${escapeHTML(val)}</div></div>` : '';
+  const precio = o => o.price ? ` · ${escapeHTML(String(o.price))} €` : '';
+  return `<div class="vs-sala">
+    ${frase ? `<div class="vs-frase"><div class="wine-info-label">✦ ${_en?'At the table, in one line':'En mesa, en una frase'}</div><p>${escapeHTML(frase)}</p></div>` : ''}
+    ${(temp||copa||dec) ? `<div class="vs-grid">${celda(_en?'Temperature':'Temperatura', temp)}${celda(_en?'Glass':'Copa', copa)}${celda(_en?'Decant':'Decantar', dec)}</div>` : ''}
+    ${momento ? `<div class="vs-momento"><div class="vs-lab">${_en?'Where it is now':'En qué momento está'}</div><div class="vs-val">${escapeHTML(momento)}</div></div>` : ''}
+    ${alts.length ? `<div class="vs-alts"><div class="vs-lab">${_en?'If they like it, offer':'Si le gusta, ofrezca'}</div>${alts.map(a => `<button type="button" class="vs-alt" onclick="_showWineDetail(${a.o.id})"><span class="vs-alt-n">${escapeHTML(a.o.name)}${precio(a.o)}</span>${a.nota ? `<span class="vs-alt-p">${escapeHTML(a.nota)}</span>` : ''}</button>`).join('')}</div>` : ''}
+  </div>`;
+}
 function _showWineDetail(id, list, direction){
   const w = WINES.find(x=>x.id===id);
   if(!w) return;
@@ -25277,6 +25311,8 @@ function _showWineDetail(id, list, direction){
       <div style="font-family:'Cormorant Garamond',serif;font-size:1.05rem;color:var(--parchment);line-height:1.5;font-style:italic;margin-left:.6rem;position:relative">"${escapeHTML(_en && w.story_en ? w.story_en : w.story)}"</div>
       ${fichaLarga ? `<div style="display:flex;flex-wrap:wrap;gap:.4rem;margin-top:.8rem;margin-left:.6rem">${_wineStoryTags(w).map(t=>'<span style="font-family:var(--font-mono);font-size:var(--fs-1);padding:.2rem .5rem;border-radius:6px;background:rgba(196,154,60,.06);border:1px solid rgba(196,154,60,.1);color:var(--parch3)">◇ '+t+'</span>').join('')}</div>` : ''}
     </div>
+
+    ${deCarta ? _vinoSalaHTML(w, _en) : ''}
 
     ${isWine && w.grapeSelection ? `
     <div class="wine-info-box" style="margin-bottom:1.2rem;padding:1rem 1.1rem">
