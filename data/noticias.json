@@ -1,6 +1,109 @@
 {
- "updated": "2026-11-21T04:00:05.780Z",
+ "updated": "2026-11-21T13:30:53.695Z",
  "items": [
+  {
+   "t": "Zoco, cocina árabe con la firma de Samuel Hernández",
+   "u": "https://www.canarias7.es/gastronomia-c7/restaurantes/zoco-cocina-arabe-firma-samuel-hernandez-20261121140000-nt.html",
+   "s": "Canarias7",
+   "d": "2026-11-21T13:00:00.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://s2.ppllstatics.com/canarias7/www/multimedia/gastronomia-c7/2026/11/20/image00005-kNhG-U40454488941wtE-1200x840@Canarias7.jpg"
+  },
+  {
+   "t": "Gastronomía de Canarias con Susi Díaz y Yeray Gil",
+   "u": "https://www.rtve.es/play/audios/no-es-un-dia-cualquiera/no-dia-cualquiera-gastronomia-susi-diaz-yeray-gil-canarias/17324791/",
+   "s": "RTVE.es",
+   "d": "2026-11-21T12:17:26.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://img2.rtve.es/a/17324791/?imgProgApi=imgBackground&w=800"
+  },
+  {
+   "t": "Doce chefs y 19 estrellas Michelin se citan en Madrid para disputarse un viaje a Japón cocinando atún rojo",
+   "u": "https://amp.epe.es/es/madrid/20261121/doce-19-estrellas-michelin-chefs-cocinar-atun-balfego-136694401",
+   "s": "El Periódico de España",
+   "d": "2026-11-21T11:51:43.000Z",
+   "tags": [
+    "CHEF",
+    "MICHELIN"
+   ],
+   "img": "https://estaticos-cdn.prensaiberica.es/clip/7b3eb898-99a4-4c49-abbe-686597818d53_16-9-discover-aspect-ratio_default_0_x882y323.jpg"
+  },
+  {
+   "t": "La gala Michelin Huesca 2027 ya tiene fecha: el 1 de diciembre, con la gastronomía rural como protagonista",
+   "u": "https://www.que.es/2026/11/21/gala-michelin-huesca-2027-2/",
+   "s": "Qué.es",
+   "d": "2026-11-21T10:36:01.000Z",
+   "tags": [
+    "MICHELIN"
+   ],
+   "img": "https://static.que.es/wp-content/uploads/2026/11/gala-michelin-malaga-estrellas-portada-1024x683.webp"
+  },
+  {
+   "t": "La ruta gastronómica de Euskadi que recomienda Martín Berasategui: 9 estrellas Michelin para viajar comiendo",
+   "u": "https://www.que.es/2026/11/21/ruta-gastronomica-euskadi-berasategui/",
+   "s": "Qué.es",
+   "d": "2026-11-21T10:31:01.000Z",
+   "tags": [
+    "CHEF",
+    "MICHELIN"
+   ],
+   "img": "https://static.que.es/wp-content/uploads/2026/11/ruta-gastronomica-euskadi-berasategui-portada-1024x683.webp"
+  },
+  {
+   "t": "Pedro Solera Ximénez 1927 de Bodegas Alvear de Motilla, reconocido entre los mejores vinos del mundo por Wine Spectator",
+   "u": "https://www.europapress.es/andalucia/noticia-pedro-solera-ximenez-1927-bodegas-alvear-motilla-reconocido-mejores-vinos-mundo-wine-spectator-20261121112955.html",
+   "s": "Europa Press",
+   "d": "2026-11-21T10:29:55.000Z",
+   "tags": [
+    "VINO",
+    "CANARIAS"
+   ],
+   "img": "https://img.europapress.es/fotoweb/fotonoticia_20261121112955_1200.jpg"
+  },
+  {
+   "t": "‘De la viña a la pista’ - Abailar 2026",
+   "u": "https://lagenda.org/programacion/de-la-vina-la-pista-abailar-2026-candelaria-tenerife-noviembre-44706",
+   "s": "Lagenda",
+   "d": "2026-11-21T09:56:15.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://s3-eu-west-1.amazonaws.com/beta.lagenda/programacion/abailar-araya-2026.jpg"
+  },
+  {
+   "t": "Lorena Orduna comparte con los chefs Estrella Michelin de Huesca \"la ilusión\" ante una gala que marcará un antes y un después para la ciudad",
+   "u": "https://cadenaser.com/aragon/2026/11/21/lorena-orduna-comparte-con-los-chefs-estrella-michelin-de-huesca-la-ilusion-ante-una-gala-que-marcara-un-antes-y-un-despues-para-la-ciudad-radio-huesca/?outputType",
+   "s": "Cadena SER",
+   "d": "2026-11-21T09:34:21.000Z",
+   "tags": [
+    "MICHELIN"
+   ],
+   "img": "https://cadenaser.com/resizer/v2/VIUWAWONUJG6ZCOPO77HLY336M.jpeg?auth=9c72c8b807ac0b329db89b9d1d6fd138c25546d7f9dd2395181e49e294cfbc4b&quality=70&width=1200&height=675&smart=true"
+  },
+  {
+   "t": "La cena de 950 euros por comensal en la que un mítico burdeos brilla como nunca en Barcelona",
+   "u": "https://www.lavanguardia.com/magazine/lifestyle/20261121/11684778/cena-950-euros-comensal-mitico-burdeos-brilla-nunca-barcelona.html",
+   "s": "La Vanguardia",
+   "d": "2026-11-21T08:47:54.000Z",
+   "tags": [
+    "CHEF"
+   ],
+   "img": "https://www.lavanguardia.com/files/image_1920_1080/files/fp/uploads/2026/11/19/6aff1c86716dc.r_d.2241-1494-4283.jpeg"
+  },
+  {
+   "t": "Martín Berasategui: “Lo del menú infantil es para darnos con un palo”",
+   "u": "https://www.mundodeportivo.com/foodie/20261121/1004252882/martin-berasategui-menu-infantil-darnos-palo.html?facet",
+   "s": "Mundo Deportivo",
+   "d": "2026-11-21T06:00:00.000Z",
+   "tags": [
+    "CHEF"
+   ],
+   "img": "https://imagenes2.mundodeportivo.com/files/og_thumbnail/uploads/2026/11/20/6aff895a17eaf.jpeg"
+  },
   {
    "t": "Los chefs y nutricionistas europeos coinciden: “La ensalada de papas es mejor si la cocinas de esta manera y le añades algo con sabor a mar, como atún, salmón o anchoas”",
    "u": "https://radiomitre.cienradios.com/curiosidades/los-chefs-y-nutricionistas-europeos-coinciden-la-ensalada-de-papas-es-mejor-si-la-cocinas-de-esta-manera-y-le-anades-algo-con-sabor-a-mar-como-atun-salmon-o-anchoas/",
@@ -81,25 +184,13 @@
    ]
   },
   {
-   "t": "El pueblo cerca de Santa Cruz donde nació Pedri y su romería",
-   "u": "https://www.noticiasdelvino.com/escapadas/2026/11/20/el-pueblo-media-hora-de-santa-cruz-donde-nacio-pedri-y-se-celebra-una-de-las-romerias-mas-populares-de-canarias-69133/",
-   "s": "Noticias del Vino",
-   "d": "2026-11-20T15:43:04.000Z",
-   "tags": [
-    "VINO",
-    "CANARIAS"
-   ],
-   "img": "https://www.noticiasdelvino.com/wp-content/uploads/image-229.png.webp"
-  },
-  {
    "t": "Arona Shopping Day convirtió la Milla de Oro en un encuentro del comercio, la música y la gastronomía",
    "u": "https://theshowroommag.com/arona-shopping-day-convirtio-la-milla-de-oro-en-un-encuentro-del-comercio-la-musica-y-la-gastronomia/",
    "s": "The Showroom Mag",
    "d": "2026-11-20T14:51:39.000Z",
    "tags": [
     "CANARIAS"
-   ],
-   "img": "https://theshowroommag.com/wp-content/uploads/2026/11/Captura-de-Pantalla-2026-11-20-a-las-9.36.36.png"
+   ]
   },
   {
    "t": "La ruta gastronómica favorita de Martín Berasategui, con 9 estrellas michelín, se hace por Euskadi: \"El mejor libro de gastronomía vasca lo ha escrito la naturaleza\"",
@@ -197,6 +288,7 @@
    "s": "Vozpopuli",
    "d": "2026-11-20T07:30:00.000Z",
    "tags": [
+    "ALTA COCINA",
     "MICHELIN"
    ],
    "img": "https://cdn.vozpopuli.com/cdn/posts/4242603/lis-ra-creadora-na-num-fatale-2904064-1200-700.jpg"
@@ -209,93 +301,6 @@
    "tags": [
     "CHEF"
    ]
-  },
-  {
-   "t": "GastroTanque Rural: charlas especializadas, feria del vino y catas en El Tanque",
-   "u": "https://www.teneriffa-news.com/es/agenda/agenda-tenerife/gastrotanque-rural-charlas-especializadas-feria",
-   "s": "Teneriffa News",
-   "d": "2026-11-20T05:55:45.000Z",
-   "tags": [
-    "VINO",
-    "CANARIAS"
-   ]
-  },
-  {
-   "t": "Un fin de año gastronómico de altísimo vuelo",
-   "u": "https://www.lavanguardia.com/comer/sitios/20261120/11687117/ano-gastronomico-altisimo-vuelo.html",
-   "s": "La Vanguardia",
-   "d": "2026-11-20T05:00:00.000Z",
-   "tags": [
-    "CHEF"
-   ],
-   "img": "https://www.lavanguardia.com/files/image_1920_1080/files/fp/uploads/2026/11/18/6afd862936105.r_d.2959-1973-5795.jpeg"
-  },
-  {
-   "t": "La Gala Michelin 2027 pone el foco en el talento gastronómico de Huesca",
-   "u": "https://www.elperiodicodearagon.com/aragon/2026/11/20/gala-michelin-2027-pone-foco-bc-136530335.amp.html",
-   "s": "El Periódico de Aragón",
-   "d": "2026-11-20T04:30:10.000Z",
-   "tags": [
-    "MICHELIN"
-   ]
-  },
-  {
-   "t": "Bera y Fonda España, la magia de Berasategui al alcance de todos",
-   "u": "https://www.thenewbarcelonapost.com/bera-fonda-espana-magia-berasategui-alcance-todos/",
-   "s": "The New Barcelona Post",
-   "d": "2026-11-20T04:30:00.000Z",
-   "tags": [
-    "CHEF"
-   ],
-   "img": "https://www.thenewbarcelonapost.com/uploads/s1/21/99/70/8/1_23_1200x630.jpeg"
-  },
-  {
-   "t": "Los 12 mejores bares de Puerto del Carmen",
-   "u": "https://www.teneriffa-news.com/es/restaurante/lanzarote/puerto-del-carmen/bares",
-   "s": "Teneriffa News",
-   "d": "2026-11-20T04:22:55.000Z",
-   "tags": [
-    "CANARIAS"
-   ]
-  },
-  {
-   "t": "El bar de Bilbao elegido por la Guía Michelin como uno de los mejores para ir de tapas de España",
-   "u": "https://www.elcorreo.com/jantour/restaurantes/cuatro-bares-vascos-bilbao-elegidos-guia-michelin-20261119010609-nt.html",
-   "s": "El Correo",
-   "d": "2026-11-20T00:06:09.000Z",
-   "tags": [
-    "MICHELIN"
-   ],
-   "img": "https://s1.ppllstatics.com/elcorreo/www/multimedia/jantour/2026/11/19/las-lias-bilbao-kMTE-U40427254470E5H-1200x840@El%20Correo.jpg"
-  },
-  {
-   "t": "Gipuzkoa adelanta a Madrid y Barcelona: tiene los mejores bares de tapas de España",
-   "u": "https://www.que.es/2026/11/19/mejores-bares-tapas-gipuzkoa-michelin/",
-   "s": "Qué.es",
-   "d": "2026-11-19T19:31:17.000Z",
-   "tags": [
-    "MICHELIN"
-   ],
-   "img": "https://static.que.es/wp-content/uploads/2023/04/Pepe-El-Guarro.webp"
-  },
-  {
-   "t": "Michelin vuelve a elegir al Umm entre los mejores bares de tapas de España",
-   "u": "https://nuevecuatrouno.com/2026/11/19/michelin-recomendacion-tapas-bares-umm-san-juan-logrono-gastronomia/",
-   "s": "NueveCuatroUno",
-   "d": "2026-11-19T18:33:25.000Z",
-   "tags": [
-    "MICHELIN"
-   ]
-  },
-  {
-   "t": "Jordi Cruz, chef: “Las hamburguesas más sabrosas y jugosas no se hacen con solomillo, sino con aguja y falda”",
-   "u": "https://as.com/tikitakas/gastronomia/jordi-cruz-chef-las-hamburguesas-mas-sabrosas-y-jugosas-no-se-hacen-con-solomillo-sino-con-aguja-y-falda-f202611-n/?outputType",
-   "s": "Diario AS",
-   "d": "2026-11-19T18:29:07.000Z",
-   "tags": [
-    "ALTA COCINA"
-   ],
-   "img": "https://img.asmedia.epimg.net/resizer/v2/CWZ2NMX6P5DLPJHV4OGNWML2RE.jpg?auth=9309cda47d1d55c0c981dea8d012c2d8130294d44971aecc248812d952bf1b6b&width=1472&height=828&smart=true"
   }
  ]
 }
