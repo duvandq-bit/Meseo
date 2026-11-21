@@ -19761,6 +19761,31 @@ test('LQA: el examen cubre los 80 estándares y la correcta no se delata por lar
 });
 
 console.log('\nCócteles de la carta (nov 2026)');
+test('maridajes del menú: varios recorridos (canario, español...) validados y con selector', () => {
+  const val = new Function(_fnSrc('_maridajesValidos') + '\nreturn _maridajesValidos;')(); // eslint-disable-line no-new-func
+  const porId = new Map([[1, {}], [2, {}]]);
+  const dishes = [{ id: 10 }, { id: 11 }];
+  const m = val({ recorridos: [
+    { id: 'canario', nombre: 'Canario', pases: [{ pase_id: 10, vino_id: 1, porque: 'a' }, { pase_id: 99, vino_id: 1 }, { pase_id: 11, vino_id: 7 }] },
+    { id: 'canario', nombre: 'Repetido', pases: [{ pase_id: 10, vino_id: 2 }] },
+    { id: 'Mal Id', nombre: 'X', pases: [{ pase_id: 10, vino_id: 2 }] },
+    { id: 'sake', nombre: '', pases: [{ pase_id: 10, vino_id: 2 }] },
+    { id: 'vacio', nombre: 'Vacío', pases: [{ pase_id: 99, vino_id: 2 }] },
+    { id: 'sake', nombre: 'Sake', nombre_en: 'Sake', pases: [{ pase_id: 11, vino_id: 2 }] }
+  ] }, porId, dishes);
+  assert(m.recorridos.length === 2 && m.recorridos[0].id === 'canario' && m.recorridos[1].id === 'sake',
+    'solo recorridos con id válido, nombre y algún pase de este menú; sin duplicados');
+  assert(m.recorridos[0].pases.length === 1 && m.recorridos[0].pases[0].vino_id === 1, 'pases de otro menú o con vino que no existe, fuera');
+  assert(Array.isArray(val(null, porId, dishes).recorridos), 'sin MARIDAJES, lista vacía');
+  const pase = _fnSrc('_marPase');
+  assert(/_marRecorrido\(\)/.test(pase) && /rec\.pases\.find/.test(pase), 'el pase usa el recorrido elegido');
+  assert(/_marRecSelectorHTML\(\)/.test(_fnSrc('_degMaridajeViajeHTML')) && /_marRecSelectorHTML\(\)/.test(_fnSrc('_degMaridajePaseHTML')), 'selector en el viaje y en el pase');
+  assert(/rs\.length < 2\) return ''/.test(_fnSrc('_marRecSelectorHTML')), 'con un solo recorrido no hay selector');
+  assert(/try\{ localStorage\.setItem\('meseo_mar_rec'/.test(_fnSrc('_marRecElegir')), 'se recuerda con try');
+  const css = readFileSync('styles.css', 'utf8');
+  assert(/\.mar-rec button\{[^}]*min-height:44px/.test(css), 'botones tocables');
+});
+
 test('vino de carta: ficha de sala (frase, servicio, momento, alternativas) sólo con lo que trae la carta', () => {
   const src = _fnSrc('_vsTxt') + '\n' + _fnSrc('_vinoSalaHTML');
   const lista = [{ id: 1, name: 'Uno', price: 50 }, { id: 2, name: 'Dos <b>', price: 90 }];
