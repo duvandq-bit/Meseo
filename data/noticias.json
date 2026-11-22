@@ -1,18 +1,96 @@
 {
- "updated": "2026-11-22T03:14:46.757Z",
+ "updated": "2026-11-22T13:24:21.164Z",
  "items": [
+  {
+   "t": "Martín Berasategui, chef español, 66 años: \"La gilda se inventó en la parte vieja de San Sebastián\"",
+   "u": "https://www.elle.com/es/gourmet/gastronomia/a74432785/martin-berasategui-pintxos-san-sebastian-gilda/",
+   "s": "ELLE",
+   "d": "2026-11-22T11:01:14.000Z",
+   "tags": [
+    "CHEF"
+   ],
+   "img": "https://hips.hearstapps.com/hmg-prod/images/martin-berasategui-elle-gourmet-2-69aa7a305a266.jpg?crop=1xw:0.3813780260707635xh;center,top&resize=1200:*"
+  },
+  {
+   "t": "La Avenida de Las Américas se prepara para cuatro días de gastronomía, música y experiencias con Arona More Than Fashion 2026",
+   "u": "https://theshowroommag.com/la-avenida-de-las-americas-se-prepara-para-cuatro-dias-de-gastronomia-musica-y-experiencias-con-arona-more-than-fashion-2026/",
+   "s": "The Showroom Mag",
+   "d": "2026-11-22T10:52:02.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://theshowroommag.com/wp-content/uploads/2026/10/Creatividades-display-Youtube-.jpg"
+  },
+  {
+   "t": "El Corte Inglés inaugura Mercados de Navidad en 13 ciudades con gastronomía, regalos y ocio familiar",
+   "u": "https://www.elmundofinanciero.com/noticia/129861/empresas/el-corte-ingles-inaugura-mercados-de-navidad-en-13-ciudades-con-gastronomia-regalos-y-ocio-familiar.html",
+   "s": "El Mundo Financiero",
+   "d": "2026-11-22T09:45:10.000Z",
+   "tags": [
+    "CANARIAS"
+   ]
+  },
+  {
+   "t": "Nanín Pérez, chef: \"Tener la sala igual de llena que la puerta con los premios de las guías sería maravilloso\"",
+   "u": "https://www.elespanol.com/alicante/vivir/gastronomia/20261122/nanin-perez-chef-restaurante-alicante-guia-michelin-trt/1003744464921_0.amp.html",
+   "s": "El Español",
+   "d": "2026-11-22T09:30:00.000Z",
+   "tags": [
+    "ALTA COCINA"
+   ],
+   "img": "https://s3.elespanol.com/k/imgp/cms/elespanol/11407746.jpg?p=f:jpeg/g:fp:0.57:0.3/w:1706/h:960&h=St_cZ4Ui"
+  },
+  {
+   "t": "Qué ver en Tenerife: del Teide a sus piscinas naturales",
+   "u": "https://www.noticiasdelvino.com/escapadas/2026/11/22/tenerife-75142/",
+   "s": "Noticias del Vino",
+   "d": "2026-11-22T09:07:03.000Z",
+   "tags": [
+    "VINO",
+    "CANARIAS"
+   ],
+   "img": "https://www.noticiasdelvino.com/wp-content/uploads/image-617.png.webp"
+  },
+  {
+   "t": "Las raíces 8Aborigen, el restaurante que más brilla en el punto más meridional de España",
+   "u": "https://www.eldia.es/islas/2026/11/22/raices-8aborigen-restaurante-brilla-punto-136705059.amp.html",
+   "s": "Eldía",
+   "d": "2026-11-22T09:00:13.000Z",
+   "tags": [
+    "CANARIAS"
+   ]
+  },
+  {
+   "t": "8Aborigen se encuentra en el puesto 29 entre los cien restaurantes de cocina vegetal del mundo",
+   "u": "https://www.eldia.es/videos/2026/11/22/8aborigen-encuentra-puesto-29-cien-136705324.amp.html",
+   "s": "Eldía",
+   "d": "2026-11-22T08:59:08.000Z",
+   "tags": [
+    "CANARIAS"
+   ]
+  },
+  {
+   "t": "Pepa Muñoz, chef de El Qüenco de Pepa: «Jaylu puede ser de los diez mejores restaurantes de España»",
+   "u": "https://www.abc.es/gurme/sevilla/pepa-munoz-chef-quenco-pepa-jaylu-puede-20261122080652-nts.html",
+   "s": "ABC",
+   "d": "2026-11-22T07:06:53.000Z",
+   "tags": [
+    "ALTA COCINA"
+   ],
+   "img": "https://s1.abcstatics.com/abc/www/multimedia/gurme/2026/11/22/pepa-munoz-sevilla-kUXB--1200x630@diario_abc.jpg"
+  },
   {
    "t": "GASTRONOMÍA | Melvin inicia una nueva etapa: producto, raíz y más de 50 años de alta cocina de Martín Berasategui",
    "u": "https://www.elblogoferoz.com/2026/11/22/gastronomia-melvin-inicia-una-nueva-etapa-producto-raiz-y-mas-de-50-anos-de-alta-cocina-de-martin-berasategui/",
-   "s": "www.elblogoferoz.com",
-   "d": "2026-11-22T00:34:35.000Z",
+   "s": "Elblogoferoz",
+   "d": "2026-11-22T00:52:58.000Z",
    "tags": [
     "CHEF"
    ]
   },
   {
    "t": "La Hoya del Camello: el oficio de sostener un clásico desde 1983",
-   "u": "https://www.eldia.es/tenerife/2026/11/22/hoya-camello-oficio-sostener-clasico-136621575.amp.html",
+   "u": "https://www.eldia.es/tenerife/2026/11/22/hoya-camello-oficio-sostener-clasico-136621575.html",
    "s": "Eldía",
    "d": "2026-11-21T23:59:02.000Z",
    "tags": [
@@ -40,6 +118,16 @@
    "img": "https://cdn.diariodeavisos.com/wp-content/uploads/2026/11/cats-10.jpg"
   },
   {
+   "t": "‘Maridaje Gran Canaria’ gana el premio a Mejor Iniciativa Enoturística",
+   "u": "https://www.canariasdiario.com/noticia/153041/gastronomia/maridaje-gran-canaria-gana-el-premio-a-mejor-iniciativa-enoturistica.html",
+   "s": "Canariasdiario.com",
+   "d": "2026-11-21T19:34:58.000Z",
+   "tags": [
+    "VINO",
+    "CANARIAS"
+   ]
+  },
+  {
    "t": "Los chefs oscenses con estrella Michelin: \"La Gala de la Guía Michelin en Huesca marcará un antes y un después\"",
    "u": "https://www.aragonplay.es/aragonnoticias/huesca/chefs-oscenses-estrella-michelin-gala-guia-michelin-huesca-marcara.html",
    "s": "Aragón Play",
@@ -59,6 +147,16 @@
     "CANARIAS"
    ],
    "img": "https://www.noticiasdelvino.com/wp-content/uploads/Anabel-Pantoja.jpg.webp"
+  },
+  {
+   "t": "Baleària Canarias es transportista oficial de Bestial Race",
+   "u": "https://www.eldiario.es/canariasahora/lapalmaahora/deportes/balearia-canarias-transportista-oficial-bestial-race_1_13683095.html",
+   "s": "elDiario.es",
+   "d": "2026-11-21T14:50:45.000Z",
+   "tags": [
+    "CANARIAS"
+   ],
+   "img": "https://static.eldiario.es/clip/b0b37582-0667-4e40-8810-42cd04391a48_facebook-aspect-ratio-1200-675_default_0.jpg"
   },
   {
    "t": "El restaurante de carretera definitivo está en este pueblo medieval de Madrid: Martín Berasategui confiesa su secreto mejor guardado",
@@ -166,23 +264,13 @@
   },
   {
    "t": "Martín Berasategui: “Lo del menú infantil es para darnos con un palo”",
-   "u": "https://www.mundodeportivo.com/foodie/20261121/1004252882/martin-berasategui-menu-infantil-darnos-palo.html?facet",
+   "u": "https://www.mundodeportivo.com/foodie/20261121/1004252882/martin-berasategui-menu-infantil-darnos-palo.html",
    "s": "Mundo Deportivo",
    "d": "2026-11-21T06:00:00.000Z",
    "tags": [
     "CHEF"
    ],
    "img": "https://imagenes2.mundodeportivo.com/files/og_thumbnail/uploads/2026/11/20/6aff895a17eaf.jpeg"
-  },
-  {
-   "t": "Los chefs y nutricionistas europeos coinciden: “La ensalada de papas es mejor si la cocinas de esta manera y le añades algo con sabor a mar, como atún, salmón o anchoas”",
-   "u": "https://radiomitre.cienradios.com/curiosidades/los-chefs-y-nutricionistas-europeos-coinciden-la-ensalada-de-papas-es-mejor-si-la-cocinas-de-esta-manera-y-le-anades-algo-con-sabor-a-mar-como-atun-salmon-o-anchoas/",
-   "s": "Radio Mitre",
-   "d": "2026-11-20T22:42:49.000Z",
-   "tags": [
-    "CHEF"
-   ],
-   "img": "https://radiomitre.cienradios.com/resizer/v2/LM32RBDW2VGLXJVEKLMCVGB3BM.jpg?smart=true&auth=5ea6419ad7376f261728bda3575529d5df361aa2732f5ca2741af2d227bf2c76&width=1200&height=630"
   },
   {
    "t": "Ventana folclórica, hoy con San Andrés en Tenerife: una tradición que une generaciones alrededor del vino nuevo y la convivencia",
@@ -214,93 +302,6 @@
     "ALTA COCINA"
    ],
    "img": "https://noticiasjovenes.es/wp-content/uploads/2026/11/Albarracín.jpg"
-  },
-  {
-   "t": "El Silbo celebra 25 años en La Laguna y abre una nueva etapa como El Silbo-Cocina Atlántica",
-   "u": "https://www.canarias7.es/gastronomia-c7/silbo-celebra-anos-laguna-abre-nueva-etapa-20261120190000-nt.html",
-   "s": "Canarias7",
-   "d": "2026-11-20T18:00:00.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://s1.ppllstatics.com/canarias7/www/multimedia/gastronomia-c7/2026/11/20/pulpo-kVSH-U40455747166crG-1200x840@Canarias7.jpg"
-  },
-  {
-   "t": "D.O.P. Islas Canarias: lava, mar y ciencia",
-   "u": "https://foodandwineespanol.com/mundo-liquido/vino/d-o-p-islas-canarias-lava-mar-y-ciencia/",
-   "s": "Food & Wine en Español",
-   "d": "2026-11-20T16:44:59.000Z",
-   "tags": [
-    "VINO",
-    "CANARIAS"
-   ]
-  },
-  {
-   "t": "Pica Pica La Favorita, Tapa de Oro en Degusta.me 2026",
-   "u": "https://lagenda.org/noticias/pica-pica-la-favorita-tapa-de-oro-en-degustame-2026-adeje-gastronomia-tenerife-44707",
-   "s": "Lagenda",
-   "d": "2026-11-20T16:42:44.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://s3-eu-west-1.amazonaws.com/beta.lagenda/images/ruta-tapa-adeje-26.jpg"
-  },
-  {
-   "t": "👨‍🍳 Huesca se prepara para acoger la gala de la Guía Michelin el próximo 1 de diciembre. 📌No obstante, gala contará con actos previos ya desde la próxima semana.",
-   "u": "https://www.instagram.com/reel/Df-F6GWiFKe/",
-   "s": "Instagram",
-   "d": "2026-11-20T16:32:54.000Z",
-   "tags": [
-    "MICHELIN"
-   ]
-  },
-  {
-   "t": "BurgerFest Canarias 2026 en Santa Cruz de Tenerife: fechas, horarios, conciertos y restaurantes que participan",
-   "u": "https://www.eldia.es/canarias/2026/11/20/burgerfest-canarias-2026-santa-cruz-136673111.html",
-   "s": "Eldía",
-   "d": "2026-11-20T15:59:00.000Z",
-   "tags": [
-    "CANARIAS"
-   ]
-  },
-  {
-   "t": "La ruta gastronómica favorita de Martín Berasategui, con 9 estrellas michelín, se hace por Euskadi: \"El mejor libro de gastronomía vasca lo ha escrito la naturaleza\"",
-   "u": "https://viajar.elperiodico.com/viajeros/ruta-gastronomica-favorita-martin-berasategui-euskadi-gastronomia-136650510",
-   "s": "Viajar",
-   "d": "2026-11-20T13:25:30.000Z",
-   "tags": [
-    "CHEF"
-   ],
-   "img": "https://estaticos-cdn.prensaiberica.es/clip/b09d9f3f-5b3b-471c-8e82-c9811645f4a3_16-9-discover-aspect-ratio_default_0_x960y360.jpg"
-  },
-  {
-   "t": "Harry Potter, Disney, belenes y gastronomía: los mercados navideños de El Corte Inglés",
-   "u": "https://www.madridiario.es/harry-potter-disney-belenes-gastronomia-mercados-navidenos-el-corte-ingles",
-   "s": "Madridiario",
-   "d": "2026-11-20T12:30:00.000Z",
-   "tags": [
-    "CANARIAS"
-   ]
-  },
-  {
-   "t": "Santa Cruz de Tenerife ya tiene su tradicional alumbrado navideño",
-   "u": "https://www.eldiario.es/canariasahora/tenerifeahora/sociedad/santa-cruz-tenerife-tradicional-alumbrado-navideno_1_13680044.html",
-   "s": "elDiario.es",
-   "d": "2026-11-20T11:39:37.000Z",
-   "tags": [
-    "CANARIAS"
-   ],
-   "img": "https://static.eldiario.es/clip/6a98ab81-26e0-4c27-94f8-77fc2430e797_facebook-aspect-ratio-1200-675_default_0.jpg"
-  },
-  {
-   "t": "Así aprendiíó de los cocineros franceses el chef Martín Berasategui: \"han sido una lección para todo el mundo\"",
-   "u": "https://www.elle.com/es/gourmet/gastronomia/a74367767/martin-berasategui-aprendizaje-cocina-francesa/",
-   "s": "ELLE",
-   "d": "2026-11-20T11:11:01.000Z",
-   "tags": [
-    "CHEF"
-   ],
-   "img": "https://hips.hearstapps.com/hmg-prod/images/martin-berasategui-elle-gourmet-1-69aa7a4e466ce.jpg?crop=1xw:0.7501831501831502xh;center,top&resize=1200:*"
   }
  ]
 }
