@@ -1,15 +1,34 @@
 {
- "updated": "2026-11-22T22:29:20.844Z",
+ "updated": "2026-11-23T03:44:20.772Z",
  "items": [
   {
-   "t": "Fiestas de Santa Catalina Mártir 2026",
-   "u": "https://lagenda.org/programacion/fiestas-de-santa-catalina-martir-2026-la-guancha-tenerife-xxv-noviembre-2026-44749",
-   "s": "Lagenda",
-   "d": "2026-11-22T20:06:41.000Z",
+   "t": "Bambi Gourmet, la cocina rumana que entusiasma en el Puerto de la Cruz",
+   "u": "https://diariodeavisos.elespanol.com/2026/11/bambi-gourmet-restaurante-puerto-cruz-tenerife/",
+   "s": "Diario de Avisos",
+   "d": "2026-11-23T00:06:50.000Z",
    "tags": [
     "CANARIAS"
    ],
-   "img": "https://s3-eu-west-1.amazonaws.com/beta.lagenda/programacion/santa-catalina-2026-la-guancha.jpg"
+   "img": "https://cdn.diariodeavisos.com/wp-content/uploads/2026/11/Bambi-Gourmet.jpg"
+  },
+  {
+   "t": "La castaña de Tenerife reivindica su lugar en la gastronomía y en el campo canario",
+   "u": "https://elburgado.com/la-castana-de-tenerife-reivindica-su-lugar-en-la-gastronomia-y-en-el-campo-canario/",
+   "s": "El Burgado Digital",
+   "d": "2026-11-23T00:00:16.000Z",
+   "tags": [
+    "CANARIAS"
+   ]
+  },
+  {
+   "t": "Viticultura heroica de Gran Canaria, en jaque: expertos analizan su futuro",
+   "u": "https://www.canariasenpleno.com/viticultura-heroica-gran-canaria/",
+   "s": "Canarias en Pleno",
+   "d": "2026-11-22T20:26:43.000Z",
+   "tags": [
+    "VINO",
+    "CANARIAS"
+   ]
   },
   {
    "t": "El Costa Adeje Tenerife cae en inferioridad numérica frente al Madrid CFF",
@@ -33,34 +52,13 @@
   },
   {
    "t": "Un tafallés en la alta cocina francesa",
-   "u": "https://www.diariodenavarra.es/noticias/navarra/2026/11/22/tafalles-alta-cocina-francesa-dnexclusivo-843215-15.html",
+   "u": "https://www.diariodenavarra.es/noticias/navarra/2026/11/22/tafalles-alta-cocina-francesa-843215-15.html",
    "s": "Diario de Navarra",
    "d": "2026-11-22T16:52:01.000Z",
    "tags": [
     "ALTA COCINA"
    ],
    "img": "https://imagenes.diariodenavarra.es/files/og_thumbnail/uploads/2026/11/20/6b00848e27bd8.jpeg"
-  },
-  {
-   "t": "El futuro de la viticultura heroica en Gran Canaria, a debate",
-   "u": "https://www.canariasenpleno.com/viticultura-heroica-gran-canaria/",
-   "s": "Canarias en Pleno",
-   "d": "2026-11-22T16:05:50.000Z",
-   "tags": [
-    "VINO",
-    "CANARIAS"
-   ]
-  },
-  {
-   "t": "El pueblo cerca de Santa Cruz donde nació Pedri y su romería",
-   "u": "https://www.noticiasdelvino.com/escapadas/2026/11/22/el-pueblo-media-hora-de-santa-cruz-donde-nacio-pedri-y-se-celebra-una-de-las-romerias-mas-populares-de-canarias-69133/",
-   "s": "Noticias del Vino",
-   "d": "2026-11-22T15:43:04.000Z",
-   "tags": [
-    "VINO",
-    "CANARIAS"
-   ],
-   "img": "https://www.noticiasdelvino.com/wp-content/uploads/image-229.png.webp"
   },
   {
    "t": "Dani García y los chefs experimentados coinciden: para que el filete a la plancha quede bien, «no untes la ...",
@@ -81,15 +79,6 @@
     "CHEF"
    ],
    "img": "https://hips.hearstapps.com/hmg-prod/images/martin-berasategui-elle-gourmet-2-69aa7a305a266.jpg?crop=1xw:0.3813780260707635xh;center,top&resize=1200:*"
-  },
-  {
-   "t": "El Corte Inglés inaugura Mercados de Navidad en 13 ciudades con gastronomía, regalos y ocio familiar",
-   "u": "https://www.elmundofinanciero.com/noticia/129861/empresas/el-corte-ingles-inaugura-mercados-de-navidad-en-13-ciudades-con-gastronomia-regalos-y-ocio-familiar.html",
-   "s": "El Mundo Financiero",
-   "d": "2026-11-22T09:53:02.000Z",
-   "tags": [
-    "CANARIAS"
-   ]
   },
   {
    "t": "Nanín Pérez, chef: \"Tener la sala igual de llena que la puerta con los premios de las guías sería maravilloso\"",
@@ -151,7 +140,7 @@
   },
   {
    "t": "La Hoya del Camello: el oficio de sostener un clásico desde 1983",
-   "u": "https://www.eldia.es/tenerife/2026/11/22/hoya-camello-oficio-sostener-clasico-136621575.amp.html",
+   "u": "https://www.eldia.es/tenerife/2026/11/22/hoya-camello-oficio-sostener-clasico-136621575.html",
    "s": "Eldía",
    "d": "2026-11-21T23:59:02.000Z",
    "tags": [
@@ -187,17 +176,6 @@
     "MICHELIN"
    ],
    "img": "https://imagenes.aragonplay.es/files/og_thumbnail/uploads/2026/11/21/6b01e67e00c68.jpeg"
-  },
-  {
-   "t": "Así es Arguineguín, el pueblo costero de Canarias donde Anabel Pantoja ha encontrado calma y anonimato",
-   "u": "https://www.noticiasdelvino.com/escapadas/2026/11/21/asi-es-arguineguin-el-pueblo-costero-de-canarias-donde-anabel-pantoja-ha-encontrado-calma-y-anonimato-69169/",
-   "s": "Noticias del Vino",
-   "d": "2026-11-21T17:40:04.000Z",
-   "tags": [
-    "VINO",
-    "CANARIAS"
-   ],
-   "img": "https://www.noticiasdelvino.com/wp-content/uploads/Anabel-Pantoja.jpg.webp"
   },
   {
    "t": "El restaurante de carretera definitivo está en este pueblo medieval de Madrid: Martín Berasategui confiesa su secreto mejor guardado",
@@ -273,26 +251,14 @@
    "img": "https://img.europapress.es/fotoweb/fotonoticia_20261121112955_1200.jpg"
   },
   {
-   "t": "Canarias y Brasil comparan sus culturas del vino y el café en la Universidad de Otoño de La Palma",
-   "u": "https://www.eldiario.es/canariasahora/lapalmaahora/sociedad/canarias-brasil-comparan-culturas-vino-cafe-universidad-otono-palma_1_13682511.html",
-   "s": "elDiario.es",
-   "d": "2026-11-21T10:17:38.000Z",
+   "t": "‘De la viña a la pista’ - Abailar 2026",
+   "u": "https://lagenda.org/programacion/de-la-vina-la-pista-abailar-2026-candelaria-tenerife-noviembre-44706",
+   "s": "Lagenda",
+   "d": "2026-11-21T10:00:56.000Z",
    "tags": [
-    "CANARIAS",
-    "VINO"
-   ],
-   "img": "https://static.eldiario.es/clip/eeb576d7-8759-4597-b886-dabb34361a9a_facebook-aspect-ratio-1200-675_default_0.jpg"
-  },
-  {
-   "t": "Tres vinos y un queso de El Hierro, entre los premiados en Agrocanarias 2026",
-   "u": "https://elhierrohoy.es/vinos-queso-el-hierro-premiados-agrocanarias-2026/",
-   "s": "El Hierro Hoy",
-   "d": "2026-11-21T09:03:44.000Z",
-   "tags": [
-    "VINO",
     "CANARIAS"
    ],
-   "img": "https://elhierrohoy.es/wp-content/uploads/2026/11/premios-agrocanarias.webp"
+   "img": "https://s3-eu-west-1.amazonaws.com/beta.lagenda/programacion/abailar-araya-2026.jpg"
   },
   {
    "t": "La cena de 950 euros por comensal en la que un mítico burdeos brilla como nunca en Barcelona",
@@ -303,6 +269,37 @@
     "CHEF"
    ],
    "img": "https://www.lavanguardia.com/files/image_1920_1080/files/fp/uploads/2026/11/19/6aff1c86716dc.r_d.2241-1494-4283.jpeg"
+  },
+  {
+   "t": "Martín Berasategui: “Lo del menú infantil es para darnos con un palo”",
+   "u": "https://www.mundodeportivo.com/foodie/20261121/1004252882/martin-berasategui-menu-infantil-darnos-palo.html",
+   "s": "Mundo Deportivo",
+   "d": "2026-11-21T06:00:00.000Z",
+   "tags": [
+    "CHEF"
+   ],
+   "img": "https://imagenes2.mundodeportivo.com/files/og_thumbnail/uploads/2026/11/20/6aff895a17eaf.jpeg"
+  },
+  {
+   "t": "Los chefs y nutricionistas europeos coinciden: “La ensalada de papas es mejor si la cocinas de esta manera y le añades algo con sabor a mar, como atún, salmón o anchoas”",
+   "u": "https://radiomitre.cienradios.com/curiosidades/los-chefs-y-nutricionistas-europeos-coinciden-la-ensalada-de-papas-es-mejor-si-la-cocinas-de-esta-manera-y-le-anades-algo-con-sabor-a-mar-como-atun-salmon-o-anchoas/",
+   "s": "Radio Mitre",
+   "d": "2026-11-20T22:42:49.000Z",
+   "tags": [
+    "CHEF"
+   ],
+   "img": "https://radiomitre.cienradios.com/resizer/v2/LM32RBDW2VGLXJVEKLMCVGB3BM.jpg?smart=true&auth=5ea6419ad7376f261728bda3575529d5df361aa2732f5ca2741af2d227bf2c76&width=1200&height=630"
+  },
+  {
+   "t": "Ventana folclórica, hoy con San Andrés en Tenerife: una tradición que une generaciones alrededor del vino nuevo y la convivencia",
+   "u": "https://infonortedigital.com/art/195574/ventana-folclorica-hoy-con-san-andres-en-tenerife-una-tradicion-que-une-generaciones-alrededor-del-vino-nuevo-y-la-convivencia",
+   "s": "InfonorteDigital",
+   "d": "2026-11-20T22:10:36.000Z",
+   "tags": [
+    "VINO",
+    "CANARIAS"
+   ],
+   "img": "https://infonortedigital.com/upload/images/11_2026/7402_guachinches-de-tenerife-1024x931.jpg"
   }
  ]
 }
